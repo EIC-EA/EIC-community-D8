@@ -1,0 +1,120 @@
+version: '2'
+services:
+  web:
+    image: fpfis/httpd-php-dev:7.3
+    working_dir: /var/www/html
+    ports:
+      - 8080:8080
+    volumes:
+      - .:/var/www/html # Non Mac users.
+      - ./docker/bin/mhsendmail:/usr/local/bin/mhsendmail
+      - ./docker/php/php.ini:/usr/local/etc/php/php.ini
+      # - nfsmount:/var/www/html # Mac Users with the nfsmount volume.
+    environment:
+      # ASDA CREDENTIALS
+      # By leaving these variables empty Docker Compose will set them to their host values.
+      ASDA_USER:
+      ASDA_PASSWORD:
+      # XDEBUG CONFIGURATION
+      XDEBUG_CONFIG: "remote_enable=1 remote_host=10.254.254.254 remote_port=9000 idekey=PHPSTORM remote_autostart=1"
+      PHP_IDE_CONFIG: "serverName=Docker"
+      SMTP_SERVER: mailhog
+      SMTP_PORT: 1025
+      # For Xdebug setup, run this command in the terminal:
+      # For Mac users: sudo ifconfig en0 alias 10.254.254.254 255.255.255.0
+      # For Linux users: sudo ip addr add 10.254.254.254/32 dev lo label lo:1
+    env_file:
+      - .env
+
+  mysql:
+    image: percona/percona-server:5.7
+    volumes:
+      - mysql_data:/var/lib/mysql
+    command: --innodb-log-file-size=1G --max_allowed_packet=1G --innodb-buffer-pool-size=512M --wait_timeout=3000 --net_write_timeout=3000 --log_error_verbosity=3
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+#    ports:
+#      - 3306:3306
+
+  pma:
+    image: phpmyadmin/phpmyadmin
+    depends_on:
+      - mysql
+    restart: always
+    ports:
+      - 8081:80
+    environment:
+      PMA_HOST: $PMA_HOST
+      PMA_PORT: $PMA_PORT
+      PMA_USER: $PMA_USER
+      PMA_PASSWORD: $PMA_PASSWORD
+
+  # Spawn a Selenium server which also includes a VNC server on localhost:5900 (the password is "secret")
+  selenium:
+    image: selenium/standalone-chrome-debug:3.11
+    environment:
+      - DISPLAY=:99
+      - SE_OPTS=-debug
+    ports:
+      - 5900:5900
+    expose:
+      - 4444
+
+  mailhog:
+    image: mailhog/mailhog
+    ports:
+      - 1025:1025 # smtp server
+      - 8025:8025 # web ui
+
+  solr:
+    image: solr:7
+    ports:
+      - "8983:8983"
+    volumes:
+      - solr_data:/var/solr
+      - "./docker/solr/7.x:/opt/solr/server/solr/configsets/data_driven_schema_configs/conf"
+    entrypoint:
+      - docker-entrypoint.sh
+      - solr-precreate
+      - easme
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.9.3
+    environment:
+      - cluster.name=docker-cluster
+      - bootstrap.memory_lock=false
+      - xpack.security.enabled=false
+      - discovery.type=single-node
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    mem_limit: 1g
+    volumes:
+      - es_data:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
+
+  # Elasticsearch Admin UI
+  kibana:
+    image: 'docker.elastic.co/kibana/kibana:7.9.3'
+    container_name: kibana
+    environment:
+      SERVER_NAME: kibana.local
+      ELASTICSEARCH_URL: http://elasticsearch:9200
+    ports:
+      - '5601:5601'
+
+volumes:
+  mysql_data:
+  solr_data:
+  es_data:
+
+#### Mac users: uncomment the "volumes" key to enable the NFS file sharing. You can find more information about Docker for Mac here: https://github.com/openeuropa/openeuropa/blob/master/docs/starting/tooling.md#using-docker-on-macos
+
+#volumes:
+#  nfsmount:
+#    driver: local
+#    driver_opts:
+#      type: nfs
+#      o: addr=host.docker.internal,rw,nolock,hard,nointr,nfsvers=3
+#      device: ":${PWD}/"
+
+#### End Mac users.
