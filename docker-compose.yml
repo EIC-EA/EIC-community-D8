@@ -95,7 +95,6 @@ services:
   # Elasticsearch Admin UI
   kibana:
     image: 'docker.elastic.co/kibana/kibana:7.9.3'
-    container_name: kibana
     environment:
       SERVER_NAME: kibana.local
       ELASTICSEARCH_URL: http://elasticsearch:9200
