@@ -1,0 +1,20 @@
+uuid: 2ebda8b9-a64d-4b0d-8fb5-1779dc2c2313
+langcode: en
+status: true
+dependencies:
+  module:
+    - oe_theme_helper
+_core:
+  default_config_hash: jdZNzlVeXfI324TKt8S08J7i2r9tuFAn5WSBFhMZTEU
+name: oe_theme_medium_2x_no_crop
+label: 'Medium 2x (no crop)'
+effects:
+  e998d44c-2855-435c-a564-e1fa92af8705:
+    uuid: e998d44c-2855-435c-a564-e1fa92af8705
+    id: retina_image_scale
+    weight: 1
+    data:
+      width: 1984
+      height: null
+      upscale: false
+      multiplier: 2

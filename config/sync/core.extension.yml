@@ -1,0 +1,46 @@
+module:
+  block: 0
+  block_content: 0
+  breakpoint: 0
+  config: 0
+  contextual: 0
+  datetime: 0
+  dblog: 0
+  dynamic_page_cache: 0
+  editor: 0
+  field: 0
+  field_ui: 0
+  file: 0
+  filter: 0
+  image: 0
+  link: 0
+  menu_link_content: 0
+  menu_ui: 0
+  node: 0
+  oe_theme_helper: 0
+  oe_time_caching: 0
+  options: 0
+  page_cache: 0
+  path: 0
+  path_alias: 0
+  responsive_image: 0
+  smart_trim: 0
+  system: 0
+  taxonomy: 0
+  text: 0
+  toolbar: 0
+  twig_field_value: 0
+  ui_patterns: 0
+  ui_patterns_library: 0
+  update: 0
+  user: 0
+  views: 10
+  oe_profile: 1000
+theme:
+  stable: 0
+  classy: 0
+  seven: 0
+  oe_theme: 0
+profile: oe_profile
+_core:
+  default_config_hash: R4IF-ClDHXxblLcG0L7MgsLvfBIMAvi_skumNFQwkDc

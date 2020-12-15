@@ -1,0 +1,17 @@
+uuid: 27a3dd99-4103-45a0-b3b0-08cb23e614fe
+langcode: en
+status: true
+dependencies: {  }
+_core:
+  default_config_hash: Clm6AGLBTG5oDDXFbcnL71m0Y56sl4WKp9JLIGp6Z7k
+name: oe_theme_ratio_3_2_medium
+label: 'Ratio 3:2 medium'
+effects:
+  5796bb6b-8278-4b53-b64e-080696536311:
+    uuid: 5796bb6b-8278-4b53-b64e-080696536311
+    id: image_scale_and_crop
+    weight: 1
+    data:
+      width: 600
+      height: 400
+      anchor: center-center

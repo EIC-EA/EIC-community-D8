@@ -1,0 +1,17 @@
+uuid: 75cca7f4-beca-4b38-b2b5-f0d35d8a6e7a
+langcode: en
+status: true
+dependencies: {  }
+_core:
+  default_config_hash: AgKxxOgudX7TkFXNNmN5lHkj33IZyQGVCbQmLJB_xjA
+name: oe_theme_medium_no_crop
+label: 'Medium (no crop)'
+effects:
+  2077c648-a473-40d5-8be4-bee254556fd2:
+    uuid: 2077c648-a473-40d5-8be4-bee254556fd2
+    id: image_scale
+    weight: 1
+    data:
+      width: 991
+      height: null
+      upscale: false

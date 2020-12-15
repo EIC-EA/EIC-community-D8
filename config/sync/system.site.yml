@@ -1,0 +1,14 @@
+uuid: ac186409-e65d-4da9-b130-9a1ff8a7f986
+name: EIC-community-D8
+mail: info@example.org
+slogan: ''
+page:
+  403: ''
+  404: ''
+  front: /user/login
+admin_compact_mode: false
+weight_select_max: 100
+langcode: en
+default_langcode: en
+_core:
+  default_config_hash: yXadRE77Va-G6dxhd2kPYapAvbnSvTF6hO4oXiOEynI

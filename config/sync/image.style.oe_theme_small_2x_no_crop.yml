@@ -1,0 +1,20 @@
+uuid: 8606400e-edb8-4742-8a1a-021517fef499
+langcode: en
+status: true
+dependencies:
+  module:
+    - oe_theme_helper
+_core:
+  default_config_hash: fzI3GcJrWK-5Q3UsMTwz9zG7i39QyAztDB0SkjbArzE
+name: oe_theme_small_2x_no_crop
+label: 'Small 2x (no crop)'
+effects:
+  19bc771f-1b42-474c-b300-a82b4fa41de9:
+    uuid: 19bc771f-1b42-474c-b300-a82b4fa41de9
+    id: retina_image_scale
+    weight: 1
+    data:
+      width: 1534
+      height: null
+      upscale: false
+      multiplier: 2
