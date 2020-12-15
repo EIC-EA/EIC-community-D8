@@ -8,10 +8,13 @@ module:
   dblog: 0
   dynamic_page_cache: 0
   editor: 0
+  entity: 0
   field: 0
   field_ui: 0
   file: 0
   filter: 0
+  gnode: 0
+  group: 0
   image: 0
   link: 0
   menu_link_content: 0
@@ -34,6 +37,7 @@ module:
   ui_patterns_library: 0
   update: 0
   user: 0
+  variationcache: 0
   views: 10
   oe_profile: 1000
 theme:
