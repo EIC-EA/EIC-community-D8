@@ -72,7 +72,8 @@ services:
       - "8983:8983"
     volumes:
       - solr_data:/var/solr
-      - "./docker/solr/7.x:/opt/solr/server/solr/configsets/data_driven_schema_configs/conf"
+      - ./docker/solr/7.x:/opt/solr/server/solr/configsets/data_driven_schema_configs/conf
+      - ./docker/solr/7.x:/opt/solr/server/solr/configsets/_default/conf
     entrypoint:
       - docker-entrypoint.sh
       - solr-precreate
