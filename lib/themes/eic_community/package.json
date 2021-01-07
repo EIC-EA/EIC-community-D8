@@ -1,0 +1,31 @@
+{
+  "name": "eic-community",
+  "version": "0.1.0",
+  "description": "The EIC community Drupal 8 Platform",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "storybook": "start-storybook -s ./static -p 6006",
+    "build-storybook": "build-storybook"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/cli": "^7.12.10",
+    "@babel/core": "^7.12.10",
+    "@babel/preset-env": "^7.12.11",
+    "@ecl-twig/ec-components": "^2.35.1",
+    "@storybook/addon-actions": "^6.1.11",
+    "@storybook/addon-essentials": "^6.1.11",
+    "@storybook/addon-knobs": "^6.1.11",
+    "@storybook/addon-links": "^6.1.11",
+    "@storybook/addon-viewport": "^6.1.11",
+    "@storybook/html": "^6.1.11",
+    "babel-loader": "^8.2.2",
+    "babel-plugin-drupal-behaviors": "^0.1.1",
+    "babel-plugin-module-resolver": "^4.1.0",
+    "glob": "^7.1.6",
+    "twing-loader": "^3.0.1",
+    "twing": "^3.0.2"
+  }
+}
