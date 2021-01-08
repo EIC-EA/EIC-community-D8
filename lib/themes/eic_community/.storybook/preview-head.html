@@ -1,57 +1,30 @@
 <link rel="stylesheet" href="css/eic_community.screen.css" media="screen" />
 <link rel="stylesheet" href="css/eic_community.print.css" media="print" />
 
-<link
-  rel="stylesheet"
-  href="https://unpkg.com/tippy.js@6/animations/scale-extreme.css"
-/>
-<link rel="stylesheet" href="https://unpkg.com/tippy.js@6/dist/svg-arrow.css" />
+<script>
+  // Prepare the Drupal behaviors object in order to enable the logic within
+  // storybook without using a different syntax.
+  window.Drupal = {
+    behaviors: {}
+  }
+</script>
 
 <script src="scripts/ecl-ec-preset-legacy-website.js"></script>
+<script src="scripts/drupal.ecl.js"></script>
+<script src="scripts/drupal.svg4everybody.js"></script>
+
 <script src="scripts/svg4everybody.min.js"></script>
 
-<script src="https://unpkg.com/@popperjs/core@2"></script>
-<script src="https://unpkg.com/tippy.js@6"></script>
-<style>
-  .tippy-box {
-    color: white;
-    font-family: arial, sans-serif;
-    padding: 0.25rem;
-    font-weight: 600;
-  }
-  .tippy-box[data-theme~='ecl-compliance-success'] {
-    background-color: #467a39;
-  }
-  .tippy-box[data-theme~='ecl-compliance-success'] > .tippy-svg-arrow {
-    fill: #467a39;
-  }
-  .tippy-box[data-theme~='ecl-compliance-failure'] {
-    background-color: #da2131;
-  }
-  .tippy-box[data-theme~='ecl-compliance-failure'] > .tippy-svg-arrow {
-    fill: #da2131;
-  }
-</style>
 <script>
   // https://github.com/storybookjs/storybook/issues/6113#issuecomment-473965255
   function runOnPageChange() {
-    ECL.autoInit();
-
-    if ((complianceReps = document.querySelectorAll('.ecl-compliance-inner'))) {
-      tippy.setDefaultProps({
-        interactive: true,
-        animation: 'scale-extreme',
-        arrow: tippy.roundArrow,
-      });
-      complianceReps.forEach((e) => {
-        if (e.hasAttribute('title')) {
-          e.setAttribute('data-tippy-content', e.getAttribute('title'));
-          e.removeAttribute('title');
-        }
-      });
-      tippy('.ecl-compliance-success', { theme: 'ecl-compliance-success' });
-      tippy('.ecl-compliance-failure', { theme: 'ecl-compliance-failure' });
-    }
+    // Enables the required script logic from Drupal by calling the defined
+    // attach Drupal handlers.
+    Object.values(window.Drupal).forEach(function(handler) {
+      if (handler.attach) {
+        handler.attach();
+      }
+    });
   }
 
   document.addEventListener(
@@ -68,8 +41,9 @@
       const observer = new MutationObserver(callback);
       const config = { childList: true, subtree: false };
       observer.observe(document.getElementById('root'), config);
+
+      runOnPageChange();
     },
     false
   );
-  svg4everybody();
 </script>

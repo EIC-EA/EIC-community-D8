@@ -1,4 +1,4 @@
-# EIC-community-D8
+#EIC-community-D8
 
 The EIC community Drupal 8 Platform is based on OpenEuropa Drupal codebase using
 [OpenEuropa components](https://github.com/openeuropa/documentation/blob/master/docs/openeuropa-components.md).
@@ -154,4 +154,3 @@ The following conventions apply:
   a deployment on the acceptance environment
 - Every new tag on the site's deployment branch (usually `master`) will
   trigger a deployment on production
-

@@ -20,8 +20,7 @@ The builder can be configured by adjusting `./ecl-builder.config.js`. By default
 
 
 ### Assets: Stylesheets
-The custom stylesheets are defined within `./sass`, the included imports will enable the correct styling for the component library for screen & print viewports.
-
+The custom stylesheets are defined within the `./sass` directory, the included imports will enable the correct styling for the component library for screen & print viewports.
 
 ### Assets: Icons
 Icon Sprite already have been processed by the external component library: **@ecl/ec-preset-legacy-website**. The builder has been configured to copy the required images from the component library:
@@ -40,9 +39,23 @@ copy: [
 The required polyfill [SVG4everybody](https://github.com/jonathantneal/svg4everybody) will be used in order to display the svg sprites within all supported Browsers.
 
 ### Assets: Scripts
-The ECL javascript library is required in order to display the interactive components correctly. The ECL builder copies this required files to `./dist/scripts` and should be called when the DOM is ready.
+The ECL javascript library is required in order to display the interactive components correctly. The ECL builder copies these required files to `./dist/scripts`.
 
-## Styleguide setup
+Actual logic should be defined within the `./js` directory; where the code needs to be wrapped within the Drupal behaviors structure:
+
+```js
+(function (ECL, Drupal) {
+  Drupal.behaviors.defineHANDLER = {
+    attach: function attach() {
+      ...
+    }
+  };
+})(ECL, Drupal);
+```
+
+The defined Drupal behaviors within `./storybook/preview-head.html` will be automatically called within Storybook.
+
+## Styleguide setup with Storybook
 In order to view the EIC community styleguide you first need to install the required packages:
 
 ```shell
