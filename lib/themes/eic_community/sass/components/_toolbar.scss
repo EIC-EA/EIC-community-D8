@@ -1,0 +1,16 @@
+// Add extra margin to components overlay when toolbar tray is present.
+body {
+  &.toolbar-horizontal {
+    .ecl-language-list--overlay .ecl-dialog--wide,
+    .ecl-inpage-navigation {
+      top: 40px;
+    }
+
+    &.toolbar-tray-open {
+      .ecl-language-list--overlay .ecl-dialog--wide,
+      .ecl-inpage-navigation {
+        top: 80px;
+      }
+    }
+  }
+}

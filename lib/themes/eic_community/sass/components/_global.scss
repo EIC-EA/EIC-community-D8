@@ -1,0 +1,24 @@
+@import '@ecl/ec-base/ec-base';
+// Apply global css.
+
+body {
+  font-family: $ecl-font-family;
+}
+
+a {
+  text-decoration: none;
+  &:hover,
+  &:focus {
+    text-decoration: underline;
+  }
+  color: $ecl-color-blue;
+}
+
+.ecl-editor {
+  p:first-child {
+    margin-top: 0;
+  }
+  p:last-child {
+    margin-bottom: 0;
+  }
+}
