@@ -59,7 +59,7 @@ In order to view the EIC community styleguide you first need to install the requ
 Then you can generate the [Storybook](https://storybook.js.org/) styleguide by running:
 
 ```shell
-$ npm run storybook
+$ npm run dev
 ```
 
 Finally you can view the styleguide (http://localhost:6006)

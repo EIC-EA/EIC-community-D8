@@ -20,7 +20,7 @@
   function runOnPageChange() {
     // Enables the required script logic from Drupal by calling the defined
     // attach Drupal handlers.
-    Object.values(window.Drupal).forEach(function(handler) {
+    Object.values(window.Drupal.behaviors).forEach(function(handler) {
       if (handler.attach) {
         handler.attach();
       }

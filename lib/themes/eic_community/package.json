@@ -9,7 +9,11 @@
     "build:copy": "ecl-builder copy",
     "build:styles": "ecl-builder styles",
     "prestorybook": "npm run build",
-    "storybook": "start-storybook -s ./dist -p 6006"
+    "storybook": "start-storybook -s ./dist -p 6006",
+    "watch": "npm-run-all --parallel watch:* -ln",
+    "watch:styles": "chokidar \"./sass/**/*.scss\" -i \"/node_modules/\" -c \"npm run build:styles\"",
+    "watch:scripts": "chokidar \"./js/**/*.js\" -i \"/node_modules/\" -c \"npm run build:copy\"",
+    "dev": "npm-run-all --parallel storybook watch"
   },
   "author": "",
   "license": "ISC",
@@ -35,10 +39,12 @@
     "babel-loader": "^8.2.2",
     "babel-plugin-drupal-behaviors": "^0.1.1",
     "babel-plugin-module-resolver": "^4.1.0",
+    "chokidar-cli": "^2.1.0",
+    "chokidar": "^3.5.0",
     "glob": "^7.1.6",
     "npm-run-all": "^4.1.5",
     "svg4everybody": "^2.1.9",
-    "twing": "2.3.7",
-    "twing-loader": "2.0.2"
+    "twing": "5.0.2",
+    "twing-loader": "3.0.1"
   }
 }
