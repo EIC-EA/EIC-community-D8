@@ -1,14 +1,14 @@
 # EIC community Theme
 The EIC community theme exposes the ECL twig components using [Storybook](https://storybook.js.org/), allowing them to be used seamlessly within Drupal & Storybook.
 
-In order to build the theme correclty you should install the required packages with [npm](https://npmjs.com)
+In order to build the theme correctly you should install the required packages with [npm](https://npmjs.com):
 
 ```shell
 $ npm install
 ```
 
 ## 2 | Preparing Drupal Theme & Styleguide assets
-The assets need to be prepared in order to display the theme correctly and can be started by running:
+The assets should be prepared in order to display the theme correctly and can be started by running:
 
 ```shell
 $ npm run build
@@ -22,7 +22,7 @@ The builder configuration can be adjusted by editing the `./ecl-builder.config.j
 The custom stylesheets are defined within the `./sass` directory, the included imports will enable the correct styling for the component library for screen & print viewports.
 
 #### 2.2 | Icons
-Icon Sprite already have been processed by the external component library: **@ecl/ec-preset-legacy-website**. The builder has been configured to copy the required images from the component library:
+SVG sprites already have been processed by the external component library: **@ecl/ec-preset-legacy-website**. The builder has been configured to copy the required images from the component library:
 
 ```js
 // ./ecl-builder.config.js
@@ -71,5 +71,5 @@ The base templates should be defined within the `./patterns` directory that will
 These Drupal templates should include the actual Twig template that is relative to the `./patterns` directory to ensure the data will be included correctly for the external ECL twig components.
 
 #### 3.2 | About Storybook example data
-Storybook example data can be found within the `./data` directory and can be included while defining a Storybook story.
+Storybook example data can be found within the `./data` directory and can be included while defining a Storybook entry.
 The data structure matches with the structure of the used ECL twig components. Documentation about the component options can be found within [ECL Twig Styleguide](https://ecl-twig-php.netlify.app/ec).
