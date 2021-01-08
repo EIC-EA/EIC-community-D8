@@ -8,8 +8,8 @@
     "build": "npm-run-all --parallel build:* -ln",
     "build:copy": "ecl-builder copy",
     "build:styles": "ecl-builder styles",
-    "storybook": "start-storybook -s ./dist -p 6006",
-    "build-storybook": "build-storybook"
+    "prestorybook": "npm run build",
+    "storybook": "start-storybook -s ./dist -p 6006"
   },
   "author": "",
   "license": "ISC",
@@ -38,7 +38,7 @@
     "glob": "^7.1.6",
     "npm-run-all": "^4.1.5",
     "svg4everybody": "^2.1.9",
-    "twing": "^3.0.2",
-    "twing-loader": "^3.0.1"
+    "twing": "2.3.7",
+    "twing-loader": "2.0.2"
   }
 }
