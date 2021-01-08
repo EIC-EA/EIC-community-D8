@@ -1,0 +1,20 @@
+name: EIC Community theme
+type: theme
+description: EIC community base theme.
+package: EIC-community-D8
+core: 8.x
+php: 7.2
+
+base theme: stable
+
+libraries:
+  - oe_theme/theme
+
+regions:
+  site_top_bar: "Site top bar"
+  site_header: "Site header"
+  site_header_secondary: "Site header secondary"
+  page_header: "Page header"
+  navigation: "Navigation"
+  content: "Content"
+  footer: "Footer"
