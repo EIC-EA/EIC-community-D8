@@ -8,7 +8,7 @@ $ npm install
 ```
 
 ## Preparing Drupal Theme & Styleguide assets
-In order to display the theme correctly for both Drupal and the Styleguide the assets have to be prepared first. After the Node package installation has been completed you can generate the assets by running:
+To display the theme correctly for both Drupal and the Styleguide the assets have to be prepared first. After the Node package installation has been completed you can generate the assets by running:
 
 ```shell
 $ npm run build
@@ -32,7 +32,7 @@ Icon Sprite already have been processed by the external component library: **@ec
 copy: [
   ...
   { from: path.resolve(nodeModules, '@ecl/ec-preset-legacy-website/dist'), to: path.resolve(outputFolder, 'dist') },
-  { from: path.resolve(nodeModules, 'svg4everybody/dist'), patterns: 'svg4everybody.min.js', to: path.resolve(outputFolder, 'dist/js') },
+  { from: path.resolve(nodeModules, 'svg4everybody/dist'), patterns: 'svg4everybody.min.js', to: path.resolve(outputFolder, 'dist/scripts') },
 ],
 ...
 ```
