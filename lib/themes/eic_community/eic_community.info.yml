@@ -8,7 +8,7 @@ php: 7.2
 base theme: stable
 
 libraries:
-  - oe_theme/theme
+  - eic_community/theme
 
 regions:
   site_top_bar: "Site top bar"
