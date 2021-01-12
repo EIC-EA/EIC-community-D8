@@ -1,0 +1,34 @@
+{% set title_element = title_element|default('h2') %}
+
+<header class="ecl-introduction-header {{ extra_classes }}">
+  <div class="ecl-container">
+    <div class="ecl-introduction-header__wrapper">
+      <section class="ecl-introduction-header__content">
+      {% if meta is not empty %}
+        <div class="ecl-introduction-header__meta">{{ meta }}</div>
+      {% endif %}
+
+      {% if title is not empty %}
+        <{{ title_element }} class="ecl-introduction-header__title">{{ title }}</{{ title_element }}>
+      {% endif %}
+
+      {% if call_to_action is not empty %}
+        {% include '@ecl-twig/ec-component-link/ecl-link.html.twig' with {
+          link: call_to_action.link,
+          extra_classes: 'ecl-introduction-header__cta ecl-link--cta',
+        } only %}
+      {% endif %}
+      </section>
+      {% if media is not empty %}
+        <section class="ecl-introduction-header__media">
+          {% include '@ecl-twig/ec-component-media-container/ecl-media-container.html.twig' with {
+            description: false,
+            sources: media.sources,
+            image: media.image,
+            alt: media.alt
+          } %}
+        </section>
+      {% endif %}
+    </div>
+  </div>
+</header>

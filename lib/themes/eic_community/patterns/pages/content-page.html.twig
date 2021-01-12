@@ -1,10 +1,12 @@
 {% extends "@theme/layout/base.html.twig" %}
 
 {% block page_header %}
-  <p>Page header</p>
+  {% include "@theme/compositions/introduction-header.html.twig" with introduction_header|default({}) only %}
 {% endblock %}
 
 
 {% block content %}
-  <p>Content of the content page.</p>
+  {% for item in items %}
+    {{ item.content }}
+  {% endfor %}
 {% endblock %}

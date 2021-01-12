@@ -7,15 +7,7 @@
  */
 #}
 {% block site_header %}
-  {% include "@ecl/ec-component-site-header/ecl-site-header.html.twig" with {
-    icon_file_path: site_header.icon_file_path,
-    logo: {
-      title: site_header.logo.title,
-      alt: site_header.logo.alt,
-      href: site_header.logo.href,
-      src: site_header.logo.src,
-    }
-  } only %}
+  {% include "@theme/compositions/site-header.html.twig" with site_header|default({}) only %}
 {% endblock %}
 
 {% block page_header %}
