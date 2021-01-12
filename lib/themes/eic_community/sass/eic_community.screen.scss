@@ -1,5 +1,12 @@
+@import './core/grid.scss';
+
+@import '@ecl/ec-preset-editor/dist/styles/ecl-ec-preset-editor';
+@import '@ecl/ec-preset-legacy-website/dist/styles/ecl-ec-preset-legacy-website';
+
+@import '@ecl/ec-base/ec-base';
 @import '@ecl/ec-theme-default/exports/all';
 @import '@ecl/ec-theme-default/exports/colors';
+@import '@ecl/ec-theme-default/exports/font-size';
 @import '@ecl/ec-theme-default/exports/colors-bg';
 @import '@ecl/ec-theme-default/exports/spacing';
 @import '@ecl/ec-utility-border/ec-utility-border';
@@ -16,6 +23,3 @@
 @import "./components/page_header";
 @import "./components/global";
 @import "./components/description_list";
-
-@import '@ecl/ec-preset-editor/dist/styles/ecl-ec-preset-editor';
-@import '@ecl/ec-preset-legacy-website/dist/styles/ecl-ec-preset-legacy-website';
