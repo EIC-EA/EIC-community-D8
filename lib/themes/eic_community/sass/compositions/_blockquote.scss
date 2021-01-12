@@ -1,0 +1,19 @@
+.ecl-blockquote {
+  &__attribution {
+    display: flex;
+    align-items: center;
+  }
+
+  &__author {
+    flex-grow: 1;
+  }
+
+  &__media {
+    order: -1;
+    flex-shrink: 0;
+    overflow: hidden;
+    border-radius: 50%;
+    margin-right: map-get($ecl-spacing, 'm');
+    width: map-get($ecl-media, '2xs');
+  }
+}
