@@ -19,6 +19,21 @@
     line-height: $ecl-line-height-m;
   }
 
+
+  &__header {
+    display: flex;
+    align-items: center;
+  }
+
+  &__before,
+  &__after {
+    flex-shrink: 0;
+  }
+
+  &__header-main {
+    flex-grow: 1;
+  }
+
   &__items {
     display: flex;
     flex-wrap: wrap;
@@ -38,7 +53,11 @@
     }
 
     @include ecl-media-breakpoint-up('lg') {
-      width: calc(100% / 3);
+      width: calc(100% / 4);
+
+      #{$node}--is-compact & {
+        width: calc(100% / 3);
+      }
     }
   }
 }

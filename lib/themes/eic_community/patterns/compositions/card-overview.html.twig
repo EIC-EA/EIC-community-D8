@@ -1,16 +1,26 @@
 {% set title_element = title_element|default('h2') %}
 
-<section class="ecl-card-overview">
+<section class="ecl-card-overview {{ extra_classes }}">
   <div class="ecl-container">
-    {% if title is not empty %}
-      <{{ title_element }} class="ecl-card-overview__title">{{ title }}</{{ title_element }}>
-    {% endif %}
+    <div class="ecl-card-overview__header">
+      {% if block('header_before') is defined %}
+        <div class="ecl-card-overview__header-before">{{ block('header_before') }}</div>
+      {% endif %}
+      <div class="ecl-card-overview__header-main">
+        {% if title is not empty %}
+          <{{ title_element }} class="ecl-card-overview__title">{{ title }}</{{ title_element }}>
+        {% endif %}
 
-    {% if description is not empty %}
-      <div class="ecl-card-overview__description">
-        {{ description }}
+        {% if description is not empty %}
+          <div class="ecl-card-overview__description">
+            {{ description }}
+          </div>
+        {% endif %}
       </div>
-    {% endif %}
+      {% if block('header_after') is defined %}
+        <div class="ecl-card-overview__header-after">{{ block('header_after') }}</div>
+      {% endif %}
+    </div>
 
     <div class="ecl-card-overview__items">
       {% for item in items %}
