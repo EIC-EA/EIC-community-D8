@@ -1,13 +1,11 @@
 <blockquote class="ecl-blockquote">
   <p class="ecl-blockquote__body">{{ citation }}</p>
   <footer class="ecl-blockquote__attribution">
-    <cite class="ecl-blockquote__author">{{ author}}</cite>
-    {% include '@ecl-twig/ec-component-media-container/ecl-media-container.html.twig' with {
-      extra_classes: 'ecl-blockquote__media',
-      description: false,
-      sources: [],
-      image: media.image,
-      alt: media.alt,
-    } %}
+    {% include "@theme/compositions/author.html.twig" with {
+      label_element: 'cite',
+      label_classes: 'ecl-blockquote__author',
+      author: author,
+      media: media
+    } only %}
   </footer>
 </blockquote>

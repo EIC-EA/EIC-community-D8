@@ -25,7 +25,7 @@
     <div class="ecl-card-overview__items">
       {% for item in items %}
         <div class="ecl-card-overview__item">
-          {% include "@ecl-twig/ec-component-card/ecl-card.html.twig" with item|default({}) %}
+          {% include "@theme/compositions/card-wrapper.html.twig" with item|default({}) %}
         </div>
       {% endfor %}
     </div>

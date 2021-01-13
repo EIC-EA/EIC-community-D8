@@ -1,0 +1,61 @@
+.ecl-author {
+  $node: &;
+
+  display: flex;
+  align-items: center;
+
+  &__author {
+    flex-grow: 1;
+  }
+
+  &__initials-wrapper,
+  &__media {
+    order: -1;
+    flex-shrink: 0;
+    overflow: hidden;
+    border-radius: 50%;
+    margin-right: map-get($ecl-spacing, 'm');
+    width: map-get($ecl-media, '3xs');
+
+    #{$node}--is-medium & {
+      width: map-get($ecl-media, 'xs');
+    }
+
+    #{$node}--is-large & {
+      width: map-get($ecl-media, 's');
+    }
+  }
+
+  &__initials-wrapper {
+    font: $ecl-font-s;
+    text-transform: uppercase;
+
+    #{$node}--is-medium & {
+      font: $ecl-font-m;
+    }
+
+    #{$node}--is-large & {
+      font: $ecl-font-l;
+    }
+    font-weight: $ecl-font-weight-bold;
+    position: relative;
+    background-color: map-get($ecl-colors, 'grey-10');
+
+    &::before {
+      padding-top: 100%;
+      content: " ";
+      display: block;
+    }
+  }
+
+  &__initials {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}

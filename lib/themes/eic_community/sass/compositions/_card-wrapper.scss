@@ -1,0 +1,31 @@
+.ecl-card-wrapper {
+  display: flex;
+  flex-direction: column;
+
+  & .ecl-card {
+    padding: map-get($ecl-spacing, 's');
+
+    & > :last-child {
+      margin-bottom: 0;
+    }
+
+    &:first-child {
+      padding-top: 0;
+    }
+
+    &:nth-child(1n + 2) {
+      border-top: 0;
+      padding-top: 0;
+    }
+
+    &:nth-last-child(1n + 2) {
+      border-bottom: 0;
+    }
+
+    &__footer {
+      &:empty {
+        display: none;
+      }
+    }
+  }
+}

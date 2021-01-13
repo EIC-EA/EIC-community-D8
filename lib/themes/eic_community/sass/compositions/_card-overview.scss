@@ -43,6 +43,7 @@
   }
 
   &__item {
+    display: flex;
     padding-left: map-get($ecl-spacing, 'l');
     margin-bottom: map-get($ecl-spacing, 'l');
     width: 100%;
@@ -58,6 +59,10 @@
       #{$node}--is-compact & {
         width: calc(100% / 3);
       }
+    }
+
+    & > * {
+      width: 100%;
     }
   }
 }

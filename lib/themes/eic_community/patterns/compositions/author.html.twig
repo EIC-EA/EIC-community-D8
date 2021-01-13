@@ -1,0 +1,22 @@
+{% set label_element = label_element|default('span') %}
+
+<div class="ecl-author ecl-author--is-{{ size|default('default') }}">
+  <{{ label_element}} class="ecl-author__label {{ label_classes }}">{{ author }}</{{ label_element}}>
+  {% if media is not empty %}
+    {% include '@ecl-twig/ec-component-media-container/ecl-media-container.html.twig' with {
+      extra_classes: 'ecl-author__media',
+      description: false,
+      sources: [],
+      image: media.image,
+      alt: media.alt,
+    } %}
+  {% elseif author is not empty %}
+    <span class="ecl-author__initials-wrapper">
+      <span class="ecl-author__initials">
+        {% for name in author|split(' ') %}
+          {{- name|first -}}
+        {% endfor %}
+      </span>
+    </span>
+  {% endif %}
+</div>

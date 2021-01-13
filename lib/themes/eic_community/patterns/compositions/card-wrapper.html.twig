@@ -1,0 +1,13 @@
+<div class="ecl-card-wrapper">
+  {% include "@ecl-twig/ec-component-card/ecl-card.html.twig" %}
+  {% if authors %}
+    <div class="ecl-card">
+      {% for author in authors %}
+        {% include "@theme/compositions/author.html.twig" with {
+          author: author.author,
+          media: author.media,
+        } %}
+      {% endfor %}
+    </div>
+  {% endif %}
+</div>
