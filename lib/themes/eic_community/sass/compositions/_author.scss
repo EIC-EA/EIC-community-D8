@@ -4,8 +4,24 @@
   display: flex;
   align-items: center;
 
+  &--is-large {
+    flex-direction: column;
+  }
+
   &__author {
     flex-grow: 1;
+  }
+
+  &__label {
+    font: $ecl-font-s;
+
+    #{$node}--is-medium & {
+      font: $ecl-font-m;
+    }
+
+    #{$node}--is-large & {
+      font: $ecl-font-l;
+    }
   }
 
   &__initials-wrapper,
@@ -22,6 +38,8 @@
     }
 
     #{$node}--is-large & {
+      margin-right: 0;
+      margin-bottom: map-get($ecl-spacing, 'm');
       width: map-get($ecl-media, 's');
     }
   }
@@ -37,6 +55,7 @@
     #{$node}--is-large & {
       font: $ecl-font-l;
     }
+
     font-weight: $ecl-font-weight-bold;
     position: relative;
     background-color: map-get($ecl-colors, 'grey-10');
