@@ -9,7 +9,7 @@
 
   &__meta {
     color: map-get($ecl-colors, 'grey-50');
-    font-size: map-get($ecl-font-size, 'm');
+    font: $ecl-font-m;
     text-transform: uppercase;
   }
 
