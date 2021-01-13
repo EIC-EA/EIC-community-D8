@@ -1,7 +1,7 @@
 .ecl-text-block {
   $node: &;
 
-  padding: map-get($ecl-spacing, 'm') 0;
+  padding: map-get($ecl-spacing, 'xl') 0;
 
   @include ecl-media-breakpoint-up('md') {
     padding: map-get($ecl-spacing, '3xl') 0;

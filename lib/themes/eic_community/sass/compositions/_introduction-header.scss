@@ -1,7 +1,7 @@
 .ecl-introduction-header {
   $node: &;
 
-  padding-bottom: map-get($ecl-spacing, 'm');
+  padding-bottom: map-get($ecl-spacing, 'xl');
 
   @include ecl-media-breakpoint-up('md') {
     padding-bottom: map-get($ecl-spacing, '3xl');
