@@ -154,4 +154,3 @@ The following conventions apply:
   a deployment on the acceptance environment
 - Every new tag on the site's deployment branch (usually `master`) will
   trigger a deployment on production
-

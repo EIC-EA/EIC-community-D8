@@ -1,0 +1,49 @@
+<link rel="stylesheet" href="css/eic_community.screen.css" media="screen" />
+<link rel="stylesheet" href="css/eic_community.print.css" media="print" />
+
+<script>
+  // Prepare the Drupal behaviors object in order to enable the logic within
+  // storybook without using a different syntax.
+  window.Drupal = {
+    behaviors: {}
+  }
+</script>
+
+<script src="scripts/ecl-ec-preset-legacy-website.js"></script>
+<script src="scripts/drupal.ecl.js"></script>
+<script src="scripts/drupal.svg4everybody.js"></script>
+
+<script src="scripts/svg4everybody.min.js"></script>
+
+<script>
+  // https://github.com/storybookjs/storybook/issues/6113#issuecomment-473965255
+  function runOnPageChange() {
+    // Enables the required script logic from Drupal by calling the defined
+    // attach Drupal handlers.
+    Object.values(window.Drupal.behaviors).forEach(function(handler) {
+      if (handler.attach) {
+        handler.attach();
+      }
+    });
+  }
+
+  document.addEventListener(
+    'DOMContentLoaded',
+    function () {
+      const callback = function (mutationsList) {
+        for (let i = 0, len = mutationsList.length; i < len; i++) {
+          if (mutationsList[i].type == 'childList') {
+            runOnPageChange();
+            break;
+          }
+        }
+      };
+      const observer = new MutationObserver(callback);
+      const config = { childList: true, subtree: false };
+      observer.observe(document.getElementById('root'), config);
+
+      runOnPageChange();
+    },
+    false
+  );
+</script>

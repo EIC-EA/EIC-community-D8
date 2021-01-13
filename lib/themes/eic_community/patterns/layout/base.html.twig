@@ -1,0 +1,31 @@
+{#
+/**
+ * @file
+ * Theme override to display a single page.
+ *
+ * @see ./core/themes/stable/templates/layout/page.html.twig
+ */
+#}
+{% block site_header %}
+  {% include "@ecl/ec-component-site-header/ecl-site-header.html.twig" with {
+    icon_file_path: site_header.icon_file_path,
+    logo: {
+      title: site_header.logo.title,
+      alt: site_header.logo.alt,
+      href: site_header.logo.href,
+      src: site_header.logo.src,
+    }
+  } only %}
+{% endblock %}
+
+{% block page_header %}
+
+{% endblock %}
+
+{% if block('content') is not empty %}
+  <main{{ main_attributes }}>
+    {{ block('content') }}
+  </main>
+{% endif %}
+
+{% block page_footer %}{% endblock %}
