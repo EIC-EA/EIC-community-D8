@@ -14,7 +14,7 @@
 
 {% endblock %}
 
-{% if block('content') is not empty %}
+{% if block('content') is defined %}
   <main{{ main_attributes }}>
     {{ block('content') }}
   </main>

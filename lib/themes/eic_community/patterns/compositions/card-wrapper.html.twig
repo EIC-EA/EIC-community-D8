@@ -3,7 +3,7 @@
   {% if authors %}
     <div class="ecl-card">
       {% for author in authors %}
-        {% include "@theme/compositions/author.html.twig" with {
+        {% include "@theme/components/author.html.twig" with {
           author: author.author,
           media: author.media,
         } %}
