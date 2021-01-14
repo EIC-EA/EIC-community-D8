@@ -1,0 +1,22 @@
+# Blockquote
+
+Displays the adjusted version of the [ECL-Twig blockquote component](https://www.npmjs.com/package/@ecl-twig/ec-component-blockquote) component, which can also display an optional author image.
+
+## Twig include:
+
+```
+{% include "@theme/components/blockquote.html.twig" with {
+  author: 'Jane Doe',
+  ...
+} %}
+```
+
+## Twig parameters:
+
+| Key       | Type   | Description                                                                            | Mandatory |
+| --------- | ------ | -------------------------------------------------------------------------------------- | --------- |
+| citation  | string | Displays the defined citation within the element.                                      | yes       |
+| author    | string | Displays the name of the component. The initials will be defined from the given value. | yes       |
+| image     | object | Display the optional author image if defined.                                          | no        |
+| image.src | string | Path of the actual image to use                                                        | no        |
+| image.alt | string | The value for the alt image attribute.                                                 | no        |

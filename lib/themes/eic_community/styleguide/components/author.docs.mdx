@@ -1,0 +1,25 @@
+# Author
+
+Generic component for displaying an Author name with optional image.
+The initials of the name will be used if no image is defined.
+
+The actual image container is based on the [ECL-Twig Media Container](https://www.npmjs.com/package/@ecl-twig/ec-component-media-container)
+
+## Twig include:
+
+```
+{% include "@theme/components/author.html.twig" with {
+  author: 'Jane Doe',
+  ...
+} %}
+```
+
+## Twig parameters:
+
+| Key       | Type   | Description                                                                            | Mandatory |
+| --------- | ------ | -------------------------------------------------------------------------------------- | --------- |
+| author    | string | Displays the name of the component. The initials will be defined from the given value. | yes       |
+| size      | string | Defines the size of the component: `small`, `medium` or `large`.                       | no        |
+| image     | object | Display the optional author image if defined.                                          | no        |
+| image.src | string | Path of the actual image to use                                                        | no        |
+| image.alt | string | The value for the alt image attribute.                                                 | no        |
