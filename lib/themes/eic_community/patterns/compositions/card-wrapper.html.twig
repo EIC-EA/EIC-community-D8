@@ -5,8 +5,8 @@
       {% for author in authors %}
         {% include "@theme/components/author.html.twig" with {
           author: author.author,
-          media: author.media,
-        } %}
+          image: author.image,
+        } only %}
       {% endfor %}
     </div>
   {% endif %}
