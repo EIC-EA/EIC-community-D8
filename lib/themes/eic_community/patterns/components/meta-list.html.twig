@@ -1,0 +1,9 @@
+{% if items is not empty %}
+  <div class="ecl-meta-list {{ extra_classes }}">
+    <div class="ecl-meta-list__items">
+      {% for item in items %}
+        <span class="ecl-meta-list__item {{ item.extra_classes }}">{{ item.label }}</span>
+      {% endfor %}
+    </div>
+  </div>
+{% endif %}

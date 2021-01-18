@@ -1,0 +1,20 @@
+.ecl-meta-list {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+
+  &__item {
+    color: map-get($ecl-colors, 'grey-50');
+    font: $ecl-font-s;
+    border-right: solid 1px currentColor;
+    padding-right: map-get($ecl-spacing, 'm');
+    margin-right: map-get($ecl-spacing, 'm');
+    text-transform: uppercase;
+
+    &:last-child {
+      border-right: 0;
+      padding-right: 0;
+      margin-right: 0;
+    }
+  }
+}

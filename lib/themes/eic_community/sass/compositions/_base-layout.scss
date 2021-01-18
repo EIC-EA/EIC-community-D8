@@ -1,0 +1,64 @@
+.ecl-base-layout {
+  &--contain {
+    @extend .ecl-container;
+
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  &__content {
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+
+    @include ecl-media-breakpoint-up('md') {
+      flex-direction: row;
+    }
+  }
+
+  &__content-before,
+  &__content-after {
+    &:empty {
+      display: none;
+    }
+  }
+
+  &__content-before {
+    margin-bottom: map-get($ecl-spacing, 'm');
+
+    @include ecl-media-breakpoint-up('md') {
+      margin-bottom: map-get($ecl-spacing, '3xl');
+    }
+  }
+
+  &__content-after {
+    margin-top: map-get($ecl-spacing, 'm');
+
+    @include ecl-media-breakpoint-up('md') {
+      margin-top: map-get($ecl-spacing, '3xl');
+    }
+  }
+
+  &__main {
+    flex-basis: 100%;
+    order: 1;
+
+    &:only-child {
+      width: 100%;
+    }
+
+    @include ecl-media-breakpoint-up('md') {
+      flex-grow: 1;
+    }
+  }
+
+  &__aside {
+    margin-bottom: map-get($ecl-spacing, 'm');
+    flex-shrink: 0;
+
+    @include ecl-media-breakpoint-up('md') {
+      min-width: map-get($ecl-width, 'form-m');
+      margin: 0 map-get($ecl-spacing, '3xl') 0 0;
+    }
+  }
+}

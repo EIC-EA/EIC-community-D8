@@ -6,18 +6,70 @@
  * @see ./core/themes/stable/templates/layout/page.html.twig
  */
 #}
-{% block site_header %}
-  {% include "@theme/compositions/site-header.html.twig" with site_header|default({}) only %}
-{% endblock %}
-
-{% block page_header %}
-
-{% endblock %}
-
-{% if block('content') is defined %}
-  <main{{ main_attributes }}>
-    {{ block('content') }}
-  </main>
+{% if page.sidebar is not empty %}
+  {% set output_sidebar = page.sidebar %}
+{% elseif block('sidebar') is defined %}
+  {% set output_sidebar = block('sidebar') %}
 {% endif %}
 
-{% block page_footer %}{% endblock %}
+<div class="ecl-viewport">
+  <div class="ecl-viewport__top">
+    {% block site_top_bar %}
+      {{ page.site_top_bar }}
+    {% endblock %}
+
+    {% block site_header %}
+      {% include "@theme/patterns/compositions/site-header.html.twig" with site_header|default({}) only %}
+    {% endblock %}
+
+    {% block navigation %}
+      {{ page.navigation }}
+    {% endblock %}
+  </div>
+
+  <div class="ecl-viewport__middle">
+    {% block page_header %}
+      {{ page.header }}
+    {% endblock %}
+
+    {% block breadcrumbs %}
+      {{ page.breadcrumbs }}
+    {% endblock %}
+
+    <div class="ecl-base-layout{{ output_sidebar ? ' ecl-base-layout--contain' }}">
+      <div class="ecl-base-layout__content-before">
+        {% block content_before %}
+          {{ page.content_before }}
+        {% endblock %}
+      </div>
+
+      <div class="ecl-base-layout__content">
+        <div class="ecl-base-layout__main">
+          <main{{ main_attributes }}>
+            {% block content %}
+              {{ page.content }}
+            {% endblock %}
+          </main>
+        </div>
+
+        {% if output_sidebar  %}
+          <div class="ecl-base-layout__aside">
+            {{ output_sidebar }}
+          </div>
+        {% endif %}
+      </div>
+
+      <div class="ecl-base-layout__content-after">
+        {% block content_after %}
+          {{ page.content_after }}
+        {% endblock %}
+      </div>
+    </div>
+  </div>
+
+  <div class="ecl-viewport__bottom">
+    {% block page_footer %}
+      {% include "@theme/patterns/compositions/site-footer.html.twig" with site_footer|default({}) only %}
+    {% endblock %}
+  </div>
+</div>
