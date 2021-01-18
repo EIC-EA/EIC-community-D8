@@ -5,7 +5,7 @@
   {% if card.authors %}
     <div class="ecl-card">
       {% for author in card.authors %}
-        {% include "@theme/components/author.html.twig" with {
+        {% include "@theme/patterns/components/author.html.twig" with {
           author: author.author,
           image: author.image,
         } only %}
