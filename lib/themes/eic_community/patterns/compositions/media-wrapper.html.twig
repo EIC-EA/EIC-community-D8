@@ -1,5 +1,7 @@
-<div class="ecl-media-wrapper">
-  <div class="ecl-container">
-    {% include '@ecl-twig/ec-component-media-container/ecl-media-container.html.twig' with media|default({}) %}
+{% if media is defined and not empty %}
+  <div class="ecl-media-wrapper">
+    <div class="ecl-container">
+      {% include '@ecl-twig/ec-component-media-container/ecl-media-container.html.twig' with media|default({}) %}
+    </div>
   </div>
-</div>
+{% endif %}

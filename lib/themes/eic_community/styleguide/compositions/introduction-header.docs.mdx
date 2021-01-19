@@ -1,0 +1,21 @@
+# Introduction Header
+
+Displays a 2 column section block with content and media that can be reversed in order.
+
+The displayed video is based on the existing [ECL media container](https://ecl-twig-php.netlify.app/ec/?path=/story/components-media-container)
+
+## Example:
+
+```
+{% include "@theme/compositions/introduction-header.html.twig" %}
+```
+
+## Parameters
+
+| Key            | Type   | Description                                                                                                                                                                  | Mandatory |     |
+| -------------- | ------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- | --- |
+| title          | string | The title to display above within the content column.                                                                                                                        | no        |     |
+| title_element  | string | Use an alternative title HTMLElement.                                                                                                                                        | no        |     |
+| meta           | string | Displays the defined meta above the title.                                                                                                                                   | no        |     |
+| call_to_action | object | Displays an optional call to action button below the title. (Based on the [ECL link component](https://ecl-twig-php.netlify.app/ec/?path=/story/components-navigation-link)) | no        |     |
+| media          | object | Displays the [ECL media container](https://ecl-twig-php.netlify.app/ec/?path=/story/components-media-container) within the media column.                                     | no        |     |
