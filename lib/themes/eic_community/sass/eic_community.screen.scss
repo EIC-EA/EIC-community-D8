@@ -19,6 +19,7 @@
 @import '@ecl/ec-component-form-help-block/ec-component-form-help-block';
 
 @import './compositions/base-layout.scss';
+@import './compositions/comments-overview.scss';
 @import './compositions/editorial-article.scss';
 @import './compositions/editorial-header.scss';
 @import "./compositions/card-overview";
@@ -34,6 +35,8 @@
 @import "./components/author";
 @import "./components/banner";
 @import "./components/blockquote";
+@import "./components/comment-thread";
+@import "./components/comment";
 @import "./components/description_list";
 @import "./components/form";
 @import "./components/global";

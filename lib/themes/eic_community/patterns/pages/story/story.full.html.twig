@@ -20,4 +20,7 @@
     {% endblock %}
   {% endembed %}
 
+  {% include "@theme/patterns/compositions/comments-overview.html.twig" with comments|default({})|merge({
+    extra_classes: 'ecl-comments-overview--is-shaded',
+  }) %}
 {% endblock %}
