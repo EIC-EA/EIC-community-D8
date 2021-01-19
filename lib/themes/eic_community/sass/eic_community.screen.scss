@@ -19,6 +19,7 @@
 @import '@ecl/ec-component-form-help-block/ec-component-form-help-block';
 
 @import './compositions/base-layout.scss';
+@import './compositions/editorial-header.scss';
 @import "./compositions/card-overview";
 @import "./compositions/card-wrapper";
 @import "./compositions/content_item";
@@ -29,11 +30,12 @@
 @import "./compositions/text-block";
 
 @import "./components/author";
-@import "./components/blockquote";
-@import "./components/form";
-@import "./components/toolbar";
 @import "./components/banner";
-@import "./components/wysiwyg";
-@import "./components/page_header";
-@import "./components/global";
+@import "./components/blockquote";
 @import "./components/description_list";
+@import "./components/form";
+@import "./components/global";
+@import "./components/meta-list";
+@import "./components/page_header";
+@import "./components/toolbar";
+@import "./components/wysiwyg";
