@@ -1,0 +1,22 @@
+<section class="ecl-hero">
+  {% if image is not empty %}
+    <figure class="ecl-hero__image-wrapper">
+      <img src="{{ image.src }}" alt="{{ image.alt }}" class="ecl-hero__image"/>
+    </figure>
+  {% endif %}
+  {% if items is not empty %}
+    <div class="ecl-container">
+      <div class="ecl-hero__wrapper">
+        <div class="ecl-hero__card">
+          <div class="ecl-hero__items">
+            {% for item in items %}
+              <div class="ecl-hero__card-item">
+                {{ item.content }}
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    {% endif %}
+  </div>
+</section>

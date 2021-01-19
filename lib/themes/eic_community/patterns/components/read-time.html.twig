@@ -1,0 +1,15 @@
+<div class="ecl-read-time">
+  {% if icon_file_path is not empty %}
+    {% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with {
+      extra_classes: 'ecl-read-time__icon',
+      icon: {
+        path: icon_file_path,
+        type: 'general',
+        name: 'tag',
+      },
+    } only %}
+  {% endif %}
+  {% if label is not empty %}
+    <span class="ecl-read-time__label">{{ label }}</span>
+  {% endif %}
+</div>

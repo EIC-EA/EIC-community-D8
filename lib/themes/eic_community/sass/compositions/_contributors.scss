@@ -1,0 +1,19 @@
+.ecl-contributors {
+  &__title {
+    @extend .ecl-u-type-heading-3;
+
+    margin-top: 0;
+  }
+
+  &__item {
+    margin: map-get($ecl-spacing, 'm') 0;
+
+    &:first-child {
+      margin-top: 0;
+    }
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}

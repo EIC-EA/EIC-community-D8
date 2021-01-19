@@ -15,6 +15,10 @@
 
   &__main {
     flex-grow: 1;
+
+    @include ecl-media-breakpoint-up('md') {
+      margin-right: map-get($ecl-spacing, 'xl');
+    }
   }
 
   &__meta {

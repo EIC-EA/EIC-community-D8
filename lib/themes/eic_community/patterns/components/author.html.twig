@@ -1,7 +1,12 @@
 {% set label_element = label_element|default('span') %}
 {% if author is not empty %}
   <div class="ecl-author ecl-author--is-{{ size|default('default') }}">
-    <{{ label_element}} class="ecl-author__label {{ label_classes }}">{{ author }}</{{ label_element}}>
+    <div class="ecl-author__information">
+      {% if description is not empty %}
+        <span class="ecl-author__description">{{ description }}</span>
+      {% endif %}
+      <{{ label_element}} class="ecl-author__label {{ label_classes }}">{{ author }}</{{ label_element}}>
+    </div>
     {% if image is not empty %}
       {% include '@ecl-twig/ec-component-media-container/ecl-media-container.html.twig' with {
         extra_classes: 'ecl-author__media',

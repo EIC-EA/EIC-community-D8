@@ -1,0 +1,19 @@
+# Editorial Header
+
+Displays a hero image with optional renderable fields within the foreground.
+
+## Example:
+
+```
+{% include "@theme/compositions/hero.html.twig" %}
+```
+
+## Parameters
+
+| Key             | Type     | Description                                   | Mandatory |     |
+| --------------- | -------- | --------------------------------------------- | --------- | --- |
+| image           | object   | The image that will be displayed.             | no        |     |
+| image.src       | string   | Links to the defined image path.              | no        |     |
+| alt             | string   | Defines the alt attribute for the hero image. | no        |     |
+| items           | object[] | Displays the renderable fields side by side.  | no        |     |
+| items[].content | object   | The rendered template for the selected field  | no        |     |
