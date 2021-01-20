@@ -30,5 +30,31 @@
         </span>
       </span>
     {% endif %}
+    {% if actions is not empty %}
+        <div class="ecl-author__actions">
+          {% for action in actions %}
+            {% if action.path is not empty %}
+              <div class="ecl-author__action">
+                <a href="{{ action.path }}" class="ecl-author__action-anchor">
+                  {% if action.icon is not empty %}
+                    {% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with {
+                      extra_classes: 'ecl-author-action__icon',
+                      icon: {
+                        path: icon_file_path,
+                        name: action.icon.name,
+                        size: 's',
+                        type: action.icon.type,
+                      },
+                    } only %}
+                  {% endif %}
+                  {% if action.label is not empty %}
+                    <span class="ecl-author__action-label">{{ action.label }}</span>
+                  {% endif %}
+                </a>
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+    {% endif %}
   </div>
 {% endif %}
