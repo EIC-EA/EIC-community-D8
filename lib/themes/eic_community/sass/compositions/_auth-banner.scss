@@ -1,0 +1,25 @@
+.ecl-auth-banner {
+  &__title {
+    @extend .ecl-u-type-heading-3;
+
+    margin-top: 0;
+    text-align: center;
+  }
+
+  &__wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+  }
+
+  &__actions {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  &__action {
+    margin: map-get($ecl-spacing, 's');
+  }
+}

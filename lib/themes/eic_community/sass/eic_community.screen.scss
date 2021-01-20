@@ -18,6 +18,7 @@
 @import '@ecl/ec-utility-background/ec-utility-background';
 @import '@ecl/ec-component-form-help-block/ec-component-form-help-block';
 
+@import './compositions/auth-banner.scss';
 @import './compositions/base-layout.scss';
 @import './compositions/comments-overview.scss';
 @import './compositions/editorial-article.scss';
@@ -29,6 +30,7 @@
 @import "./compositions/featured-list";
 @import "./compositions/introduction-header";
 @import "./compositions/media-wrapper";
+@import "./compositions/section-wrapper";
 @import "./compositions/social-share";
 @import "./compositions/site-header";
 @import "./compositions/text-block";
@@ -47,4 +49,5 @@
 @import "./components/page_header";
 @import "./components/read-time";
 @import "./components/toolbar";
+@import "./components/well";
 @import "./components/wysiwyg";

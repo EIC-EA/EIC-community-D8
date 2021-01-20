@@ -1,0 +1,35 @@
+{% set title_element = title_element|default('h1') %}
+
+<section class="ecl-section-wrapper ecl-auth-banner {{ extra_classes }}">
+  <div class="ecl-container">
+    <div class="ecl-auth-banner__wrapper">
+      {% block before %}{% endblock %}
+
+      <div class="ecl-well">
+        {% if title is not empty %}
+          <{{ title_element }} class="ecl-auth-banner__title">{{ title }}</{{ title_element }}>
+        {% endif %}
+        <div class="ecl-auth-banner__actions">
+          {% if login is not empty %}
+            <div class="ecl-auth-banner__action">
+              {% include "@ecl-twig/ec-component-button/ecl-button.html.twig" with {
+                variant: "ghost",
+                label: login.label
+              } only %}
+            </div>
+          {% endif %}
+
+          {% if register is not empty %}
+            <div class="ecl-auth-banner__action">
+              {% include "@ecl-twig/ec-component-button/ecl-button.html.twig" with {
+                label: register.label
+              } only %}
+            </div>
+          {% endif %}
+        </div>
+      </div>
+
+      {% block after %}{% endblock %}
+    </div>
+  </div>
+</section>

@@ -1,0 +1,15 @@
+.ecl-well {
+  margin: map-get($ecl-spacing, 'xl') 0;
+  padding: map-get($ecl-spacing, 'l');
+  background-color: map-get($ecl-colors, 'white');
+  width: 100%;
+  box-sizing: border-box;
+
+  &:first-child {
+    margin-top: 0;
+  }
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}

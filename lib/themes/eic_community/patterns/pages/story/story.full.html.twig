@@ -26,7 +26,22 @@
     {% endblock %}
   {% endembed %}
 
-  {% include "@theme/patterns/compositions/comments-overview.html.twig" with comments|default({})|merge({
-    extra_classes: 'ecl-comments-overview--is-shaded',
-  }) %}
+  {% if comments is not empty %}
+    {% include "@theme/patterns/compositions/comments-overview.html.twig" with comments|default({})|merge({
+      extra_classes: 'ecl-section-wrapper--is-shaded',
+    }) %}
+  {% else %}
+    {% embed "@theme/patterns/compositions/auth-banner.html.twig" with {
+      title: "Please log in to see comments and contribute",
+      extra_classes: 'ecl-section-wrapper--is-shaded',
+      login: {
+        label: "Login"
+      },
+      register: {
+        label: "Register",
+      },
+    } %}
+    {% endembed %}
+  {% endif %}
+
 {% endblock %}
