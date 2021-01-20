@@ -12,11 +12,15 @@
 {% block content %}
   {% embed "@theme/patterns/compositions/editorial-article.html.twig" with editorial_article|default({}) %}
     {% block content  %}
-      content
+      {{ content }}
     {% endblock %}
 
     {% block sidebar  %}
-      {% include "@theme/patterns/compositions/contributors.html.twig" with contributors|default({}) %}
+      {% include "@theme/patterns/compositions/featured-contributors.html.twig" with contributors|default({}) %}
+
+      {% include "@theme/patterns/compositions/featured-topics.html.twig" with topics|default({}) %}
+
+      {% include "@theme/patterns/compositions/featured-stories.html.twig" with stories|default({}) %}
     {% endblock %}
   {% endembed %}
 

@@ -5,7 +5,13 @@
       {% if description is not empty %}
         <span class="ecl-author__description">{{ description }}</span>
       {% endif %}
-      <{{ label_element}} class="ecl-author__label {{ label_classes }}">{{ author }}</{{ label_element}}>
+      <{{ label_element}} class="ecl-author__label {{ label_classes }}">
+        {% if path is not empty %}
+          <a href="{{ path }}">{{ author }}</a>
+        {% else %}
+          {{ author }}
+        {% endif %}
+      </{{ label_element}}>
     </div>
     {% if image is not empty %}
       {% include '@ecl-twig/ec-component-media-container/ecl-media-container.html.twig' with {

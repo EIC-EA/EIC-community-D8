@@ -14,10 +14,8 @@
   }
 
   &__main {
-    flex-grow: 1;
-
     @include ecl-media-breakpoint-up('md') {
-      margin-right: map-get($ecl-spacing, 'xl');
+      flex-grow: 1;
     }
   }
 
@@ -43,7 +41,12 @@
     @include ecl-media-breakpoint-up('md') {
       flex-direction: column;
       flex-wrap: nowrap;
-      margin: 0;
+      width: calc(100% / #{$ecl-grid-columns} * 4);
+      margin: 0 0 0 map-get($ecl-spacing, 'xl');
+    }
+
+    @include ecl-media-breakpoint-up('lg') {
+      margin-left: map-get($ecl-spacing, '4xl');
     }
   }
 }

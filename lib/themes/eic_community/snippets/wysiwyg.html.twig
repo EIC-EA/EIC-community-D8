@@ -1,0 +1,41 @@
+{% set embed %}
+  <iframe width="560" height="315" src="https://www.youtube.com/embed/fgi-GSCB6ho" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+{% endset %}
+
+<h1>Do nostrud consectetur ullamco laborum amet ea.</h1>
+<p>Magna enim consectetur quis sint officia duis anim nostrud id. Dolor ex reprehenderit nisi officia quis anim eu ea cillum. Ea occaecat laborum exercitation ut amet. Cillum nostrud est aute veniam cillum ut velit dolor. Consequat duis labore ipsum est proident deserunt dolore deserunt. Labore irure est id ex aute adipisicing magna elit occaecat. Magna tempor commodo minim adipisicing.</p>
+
+<h2>Esse cupidatat duis nulla esse.</h2>
+<p>Dolor Lorem tempor proident excepteur proident. Eu enim velit ea ad tempor voluptate. Quis laboris ullamco id irure nostrud cupidatat amet incididunt minim amet aute in. Veniam ad ipsum irure amet ullamco. Ex Lorem nostrud qui duis exercitation laboris fugiat dolore velit pariatur anim quis ea. Eu occaecat sunt incididunt exercitation laborum qui enim nisi do esse irure.</p>
+
+{% include '@ecl-twig/ec-component-media-container/ecl-media-container.html.twig' with {
+  image: "http://placehold.it/800x340",
+  description: "Sunt laborum tempor ullamco adipisicing non et eiusmod.",
+} %}
+
+<h3>Do cupidatat laborum amet velit sint magna.</h3>
+<p>Nisi esse qui <a href="#"> dolore culpa culpa</a> culpa sit aute reprehenderit. Occaecat in culpa sit labore est est occaecat in esse deserunt. Ut duis nulla voluptate ea minim nulla ut do mollit mollit. Officia amet cillum sunt incididunt dolore ex consequat. Aliquip voluptate incididunt elit anim sint aute fugiat exercitation laboris elit laboris enim mollit. Enim consectetur labore incididunt nisi voluptate aliquip pariatur consequat veniam quis in.<p>
+
+<ul>
+  <li>Do velit voluptate dolore ex.</li>
+  <li>Anim ad in nulla in reprehenderit adipisicing ad.</li>
+  <li>Exercitation incididunt ea ipsum dolore nulla nostrud proident ex.</li>
+  <li>Eu duis sunt tempor in reprehenderit.</li>
+  <li>Proident consectetur sunt ut veniam cillum dolore nostrud fugiat incididunt incididunt adipisicing labore excepteur excepteur.</li>
+</ul>
+
+{% include '@ecl-twig/ec-component-media-container/ecl-media-container.html.twig' with {
+  image: "http://placehold.it/800x340",
+  embedded_media: embed
+} %}
+
+<h4>Ad cupidatat sint esse ea nisi cupidatat.</h4>
+<ol>
+  <li>Ullamco deserunt adipisicing exercitation irure sit incididunt do.</li>
+  <li>Non non et reprehenderit cupidatat do.</li>
+  <li>Magna Lorem voluptate enim ad id ullamco pariatur et culpa amet tempor proident laboris in.</li>
+</ol>
+
+{% include "@theme/patterns/components/disclaimer.html.twig" with {
+  content: "All views express in this story are the autors own and do not represent the views of the EIC or European Commission. Please read our <a>terms and conditions</a>"
+} %}

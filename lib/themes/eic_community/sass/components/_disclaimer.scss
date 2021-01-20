@@ -1,0 +1,31 @@
+.ecl-disclaimer {
+  $node: &;
+
+  margin: map-get($ecl-spacing, 'xl') 0;
+  padding: map-get($ecl-spacing, 'l');
+  font: $ecl-font-s;
+  color: map-get($ecl-colors, 'grey-100');
+  background-color: map-get($ecl-colors, 'blue-5');
+
+  &:first-child {
+    margin-top: 0;
+  }
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  & a {
+    color: map-get($ecl-colors, 'blue');
+  }
+
+  & > * {
+    &:first-child {
+      margin-top: 0;
+    }
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}

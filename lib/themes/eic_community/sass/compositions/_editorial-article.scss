@@ -12,8 +12,42 @@
   }
 
   &__content {
+    font: $ecl-font-m;
+
     @include ecl-media-breakpoint-up('md') {
       flex-grow: 1;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      &:first-child {
+        margin-top: 0;
+      }
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+
+    h1,
+    h2 {
+      @extend .ecl-u-type-heading-2;
+    }
+
+    h3 {
+      @extend .ecl-u-type-heading-3;
+    }
+
+    h4 {
+      @extend .ecl-u-type-heading-4;
+    }
+
+    h5, {
+      @extend .ecl-u-type-heading-5;
     }
   }
 
@@ -23,8 +57,12 @@
 
     @include ecl-media-breakpoint-up('md') {
       margin: 0 0 0 map-get($ecl-spacing, 'xl');
-      width: calc(100% / #{$ecl-grid-columns} * 5);
+      width: calc(100% / #{$ecl-grid-columns} * 4);
       flex-shrink: 0;
+    }
+
+    @include ecl-media-breakpoint-up('lg') {
+      margin-left: map-get($ecl-spacing, '4xl');
     }
   }
 

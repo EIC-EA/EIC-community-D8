@@ -25,10 +25,9 @@
 
   &__wrapper {
     position: relative;
-    max-width: $ecl-container-max-width-md;
 
     @include ecl-media-breakpoint-up('lg') {
-      // width: calc(100% / #{$ecl-grid-columns} * 7);
+      width: calc(100% / #{$ecl-grid-columns} * 4);
     }
 
     &::before {
