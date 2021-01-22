@@ -4,8 +4,8 @@
   flex-wrap: wrap;
 
   &__item {
-    color: map-get($ecl-colors, 'grey-50');
-    font: $ecl-font-s;
+    color: ecl-typography('color', 'meta');
+    font-size: ecl-typography('font-size', 'meta');
     border-right: solid 1px currentColor;
     padding-right: map-get($ecl-spacing, 'm');
     margin-right: map-get($ecl-spacing, 'm');

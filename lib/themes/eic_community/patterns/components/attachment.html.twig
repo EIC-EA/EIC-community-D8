@@ -1,0 +1,68 @@
+<div class="ecl-attachment">
+  <aside class="ecl-attachment__aside">
+    {% if image is not empty %}
+
+    {% elseif icon is not empty %}
+      <span class="ecl-attachment__icon-wrapper">
+        {% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with {
+          extra_classes: 'ecl-attachment__icon',
+          icon: {
+            path: icon_file_path,
+            name: icon.name,
+            size: 'm',
+            type: icon.type,
+          },
+        } only %}
+      </span>
+    {% endif %}
+  </aside>
+  <div class="ecl-attachment__content">
+    <div class="ecl-attachment__content-header">
+      <span class="ecl-attachment__title">
+        {{ title|default(path) }}
+      </span>
+      {% if path|split('.')|last %}
+        <span class="ecl-attachment__type">
+          {{- path|split('.')|last -}}
+        </span>
+      {% endif %}
+    </div>
+    <div class="ecl-attachment__actions">
+      {% if author %}
+        <div class="ecl-attachment__action">
+          <span class="ecl-attachment__author">
+            {% if author.path %}
+              <a href="{{ author.path }}">{{ author.author }}</a>
+            {% else %}
+              {{ author.author }}
+            {% endif %}
+          </span>
+        </div>
+      {% endif %}
+      {% if timestamp %}
+        <div class="ecl-attachment__action">
+          {% include "@theme/patterns/components/timestamp.html.twig" with {
+            label: timestamp,
+            icon_file_path: icon_file_path,
+          } only %}
+        </div>
+      {% endif %}
+      {% if path %}
+        <div class="ecl-attachment__action">
+          <a href="{{ path }}" class="ecl-attachment__link" download>
+            {% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with {
+              extra_classes: 'ecl-attachment__link-icon',
+              icon: {
+                path: icon_file_path,
+                name: 'download',
+                size: 's',
+                type: 'ui',
+              },
+            } only %}
+            {{ download_label|default('Download') }}
+          </a>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>

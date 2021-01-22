@@ -9,6 +9,7 @@
 
   &__items {
     display: flex;
+    flex-wrap: wrap;
     margin-bottom: #{0 - map-get($ecl-spacing, 'm')}
   }
 
@@ -43,6 +44,7 @@
     justify-content: center;
     flex-shrink: 0;
     border-radius: 50%;
+    background-color: map-get($ecl-colors, 'blue-75');
 
     @each $name, $color in $ecl-social-media-list {
       #{$node}__item--#{$name} & {

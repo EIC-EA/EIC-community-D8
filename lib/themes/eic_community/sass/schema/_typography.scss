@@ -9,24 +9,11 @@ $ecl-typography: (
     'font-size': $ecl-font-size-s,
     'font-size--md': $ecl-font-size-m,
     'font-size--lg': $ecl-font-size-l,
-    'line-height': $ecl-line-height-l,
+    'line-height': $ecl-line-height-m,
   ),
-  'h1': (
-
-  ),
-  'h2': (
-
-  ),
-  'h3': (
-
-  ),
-  'h4': (
-
-  ),
-  'h5': (
-
-  ),
-  'h6': (
-
+  'label': (
+    'font-size': $ecl-font-size-m,
+    'font-size--lg': $ecl-font-size-l,
+    'font-weight': $ecl-font-weight-bold,
   )
 );

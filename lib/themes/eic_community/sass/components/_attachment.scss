@@ -1,0 +1,92 @@
+.ecl-attachment {
+  margin: ecl-box-model('description') 0;
+  padding: ecl-box-model('padding', 'description');
+  background-color: ecl-box-model('background-color', 'description');
+  border-radius: ecl-box-model('border-radius');
+  display: flex;
+  align-items: flex-start;
+
+  &:first-child {
+    margin-top: 0;
+  }
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  &__aside {
+    flex-shrink: 0;
+    box-sizing: border-box;
+    margin: 0;
+    padding-right: ecl-box-model('padding', 'description');
+  }
+
+  &__icon-wrapper {
+    background-color: map-get($ecl-colors, 'blue-25');
+    width: map-get($ecl-media, '2xs');
+    height: map-get($ecl-media, '2xs');
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    border-radius: 50%;
+    color: map-get($ecl-colors, 'blue-75');
+  }
+
+  &__title,
+  &__link {
+    line-height: ecl-typography('line-height', 'label');
+    font-size: ecl-typography('font-size', 'label');
+    font-weight: ecl-typography('font-weight', 'label');
+  }
+
+  &__link-icon {
+    margin-right: ecl-layout('gutter', 'meta');
+  }
+
+  &__type {
+    text-transform: uppercase;
+    color: ecl-typography('color', 'meta');
+    font-size: ecl-typography('font-size', 'meta');
+
+    &::before,
+    &::after {
+      display: inline;
+    }
+
+    &::before {
+      content: "("
+    }
+
+    &::after {
+      content: ")"
+    }
+  }
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: columm;
+    margin-top: ecl-box-model('padding', 'description');
+    margin-bottom: #{0 - ecl-layout('gutter', 'controls')};
+
+    @include ecl-media-breakpoint-up('md') {
+      flex-direction: row;
+    }
+  }
+
+  &__action {
+    margin: 0 ecl-layout('gutter--md', 'controls') ecl-layout('gutter', 'controls') 0;
+
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+
+  &__author {
+    font-weight: ecl-typography('font-weight', 'label');
+    line-height: ecl-typography('line-height', 'label');
+    font-size: ecl-typography('font-size--md', 'label');
+  }
+}

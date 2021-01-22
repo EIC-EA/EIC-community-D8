@@ -4,21 +4,23 @@
   {% set output_sidebar = block('sidebar') %}
 {% endif %}
 
-<div class="ecl-editorial-article">
-  <div class="ecl-container">
-    <div class="ecl-editorial-article__wrapper">
-      <section class="ecl-editorial-article__content">
-        {% block content %}
-          {{ content }}
-        {% endblock %}
-      </section>
-      {% if output_sidebar is not empty %}
-        <aside class="ecl-editorial-article__aside">
-          <div class="ecl-editorial-article__aside-wrapper">
-            {{ output_sidebar }}
-          </div>
-        </aside>
-      {% endif %}
+<section class="ecl-section-wrapper">
+  <div class="ecl-editorial-article">
+    <div class="ecl-container">
+      <div class="ecl-editorial-article__wrapper">
+        <section class="ecl-editorial-article__content">
+          {% block content %}
+            {{ content }}
+          {% endblock %}
+        </section>
+        {% if output_sidebar is not empty %}
+          <aside class="ecl-editorial-article__aside">
+            <div class="ecl-editorial-article__aside-wrapper">
+              {{ output_sidebar }}
+            </div>
+          </aside>
+        {% endif %}
+      </div>
     </div>
   </div>
-</div>
+</section>

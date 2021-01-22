@@ -1,9 +1,4 @@
 .ecl-editorial-article {
-  padding: map-get($ecl-spacing, 'xl') 0;
-
-  @include ecl-media-breakpoint-up('md') {
-    padding: map-get($ecl-spacing, '3xl') 0;
-  }
   &__wrapper {
     @include ecl-media-breakpoint-up('md') {
       display: flex;
@@ -12,7 +7,9 @@
   }
 
   &__content {
-    font: $ecl-font-m;
+    font-size: ecl-typography('font-size');
+    line-height: ecl-typography('line-height');
+    color: ecl-typography('color');
 
     @include ecl-media-breakpoint-up('md') {
       flex-grow: 1;
@@ -53,23 +50,25 @@
 
   &__aside {
     position: relative;
-    margin-top: map-get($ecl-spacing, 'xl');
+    margin-top: ecl-layout('gutter');
 
     @include ecl-media-breakpoint-up('md') {
-      margin: 0 0 0 map-get($ecl-spacing, 'xl');
+      box-sizing: border-box;
+      margin: 0;
+      padding-left: ecl-layout('gutter');
       width: calc(100% / #{$ecl-grid-columns} * 4);
       flex-shrink: 0;
     }
 
     @include ecl-media-breakpoint-up('lg') {
-      margin-left: map-get($ecl-spacing, '4xl');
+      padding-left: ecl-layout('gutter--lg');
     }
   }
 
   &__aside-wrapper {
     @include ecl-media-breakpoint-up('md') {
       position: sticky;
-      top: map-get($ecl-spacing, 'xl');
+      top: ecl-layout('gutter');
     }
   }
 }

@@ -7,12 +7,17 @@ $ecl-box-model: (
   ),
   'banner': (
     'padding': map-get($ecl-spacing, 'xl'),
+    'padding--md': map-get($ecl-spacing, '5xl'),
     'background-color': map-get($ecl-colors, 'grey-10'),
   ),
   'meta': (
-    'padding': map-get($ecl-spacing, 'm'),
+    'margin': map-get($ecl-spacing, 'xl'),
+    'padding': map-get($ecl-spacing, 'l'),
+    'background-color': map-get($ecl-colors, 'white'),
   ),
   'description': (
+    'margin': map-get($ecl-spacing, 'xl'),
+    'padding': map-get($ecl-spacing, 'l'),
     'background-color': map-get($ecl-colors, 'blue-5'),
   ),
 );

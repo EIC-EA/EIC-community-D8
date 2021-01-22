@@ -18,7 +18,7 @@
     {% block sidebar  %}
       {% include "@theme/patterns/compositions/social-share.html.twig" with social_share|default({}) %}
 
-      {% include "@theme/patterns/compositions/featured-contributors.html.twig" with contributors|default({}) %}
+      {% include "@theme/patterns/compositions/featured-contributors.html.twig" with _contributors|default({}) %}
 
       {% include "@theme/patterns/compositions/featured-topics.html.twig" with topics|default({}) %}
 
@@ -26,14 +26,11 @@
     {% endblock %}
   {% endembed %}
 
-  {% if comments is not empty %}
-    {% include "@theme/patterns/compositions/comments-overview.html.twig" with comments|default({})|merge({
-      extra_classes: 'ecl-section-wrapper--is-shaded',
-    }) %}
-  {% else %}
+  {% if not auth %}
     {% embed "@theme/patterns/compositions/auth-banner.html.twig" with {
       title: "Please log in to see comments and contribute",
       extra_classes: 'ecl-section-wrapper--is-shaded',
+      icon_file_path: common.icon_file_path,
       login: {
         label: "Login"
       },
@@ -42,6 +39,10 @@
       },
     } %}
     {% endembed %}
+  {% elseif comments is not empty %}
+    {% include "@theme/patterns/compositions/comments-overview.html.twig" with comments|default({})|merge({
+      extra_classes: 'ecl-section-wrapper--is-shaded',
+    }) %}
   {% endif %}
 
 {% endblock %}

@@ -14,31 +14,29 @@
 
   &__description {
     display: block;
-    color: map-get($ecl-colors, 'grey-50');
     margin-bottom: map-get($ecl-spacing, 'xs');
 
-    font: $ecl-font-xs;
-
-    #{$node}--is-medium & {
-      font: $ecl-font-s;
-    }
+    color: ecl-typography('color', 'meta');
+    line-height: ecl-typography('line-height', 'meta');
+    font-size: ecl-typography('font-size', 'meta');
 
     #{$node}--is-large & {
+      font-size: ecl-typography('font-size--md', 'meta');
       font: $ecl-font-m;
     }
   }
 
   &__label {
-    font: $ecl-font-s;
+    line-height: ecl-typography('line-height', 'label');
+    font-size: ecl-typography('font-size--md', 'label');
 
     #{$node}--is-medium & {
-      font: $ecl-font-m;
-      font-weight: $ecl-font-weight-bold;
+      font-weight: ecl-typography('font-weight', 'label');
     }
 
     #{$node}--is-large & {
-      font: $ecl-font-l;
-      font-weight: $ecl-font-weight-bold;
+      font-weight: ecl-typography('font-weight', 'label');
+      font-size: ecl-typography('font-size--lg', 'label');
     }
   }
 
@@ -48,7 +46,7 @@
     flex-shrink: 0;
     overflow: hidden;
     border-radius: 50%;
-    margin-right: map-get($ecl-spacing, 'm');
+    margin-right: ecl-layout('gutter', 'meta');
     width: map-get($ecl-media, '3xs');
 
     #{$node}--is-medium & {
@@ -57,7 +55,7 @@
 
     #{$node}--is-large & {
       margin-right: 0;
-      margin-bottom: map-get($ecl-spacing, 'm');
+      margin-bottom: ecl-layout('gutter', 'meta');
       width: map-get($ecl-media, 's');
     }
   }
@@ -83,23 +81,23 @@
   }
 
   &__initials-wrapper {
-    color: map-get($ecl-colors, 'black');
-    font: $ecl-font-s;
+    font-size: ecl-typography('font-size', 'meta');
+    line-height: ecl-typography('line-height', 'meta');
     font-weight: $ecl-font-weight-bold;
     text-transform: uppercase;
 
     #{$node}--is-medium & {
-      font: $ecl-font-m;
+      font-size: ecl-typography('font-size--md', 'meta');
       font-weight: $ecl-font-weight-bold;
     }
 
     #{$node}--is-large & {
-      font: $ecl-font-l;
+      font-size: ecl-typography('font-size--lg', 'meta');
       font-weight: $ecl-font-weight-bold;
     }
 
     position: relative;
-    background-color: map-get($ecl-colors, 'grey-10');
+    background-color: ecl-box-model('background-color', 'banner');
 
     &::before {
       padding-top: 100%;
@@ -117,6 +115,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    color: ecl-typography('color');
   }
 
   &__actions {

@@ -29,6 +29,14 @@
     margin-top: 0;
   }
 
+  &__items {
+    #{$node}--topics & {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-start;
+    }
+  }
+
   &__item {
     margin: map-get($ecl-spacing, 'm') 0;
 
@@ -49,11 +57,7 @@
     }
   }
 
-  &__items {
-    #{$node}--topics & {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: flex-start;
-    }
+  &__item-title {
+    @extend .ecl-u-type-heading-5;
   }
 }

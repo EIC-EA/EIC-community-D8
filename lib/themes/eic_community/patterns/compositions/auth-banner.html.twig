@@ -13,6 +13,14 @@
           {% if login is not empty %}
             <div class="ecl-auth-banner__action">
               {% include "@ecl-twig/ec-component-button/ecl-button.html.twig" with {
+                icon_position: 'after',
+                icon: {
+                  path: icon_file_path,
+                  name: 'rounded-arrow',
+                  type: 'ui',
+                  size: 'xs',
+                  transform: 'rotate-90',
+                },
                 variant: "ghost",
                 label: login.label
               } only %}

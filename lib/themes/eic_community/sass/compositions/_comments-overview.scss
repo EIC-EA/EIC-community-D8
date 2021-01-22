@@ -1,19 +1,8 @@
 .ecl-comments-overview {
   $node: &;
 
-  padding: map-get($ecl-spacing, 'xl') 0;
-
-  @include ecl-media-breakpoint-up('md') {
-    padding: map-get($ecl-spacing, '3xl') 0;
-  }
-
-  &--is-shaded {
-    background-color: map-get($ecl-colors, 'grey-10');
-  }
-
   &__wrapper {
     box-sizing: border-box;
-
 
     @include ecl-media-breakpoint-up('md') {
       width: calc(100% / #{$ecl-grid-columns} * 8);
