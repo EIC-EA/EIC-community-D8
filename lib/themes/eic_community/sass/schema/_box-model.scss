@@ -1,0 +1,18 @@
+$ecl-box-model: (
+  'default': (
+    'background-color': map-get($ecl-colors, 'white'),
+    'margin': map-get($ecl-spacing, 'xl'),
+    'padding': map-get($ecl-spacing, 'l'),
+    'border-radius': 3px,
+  ),
+  'banner': (
+    'padding': map-get($ecl-spacing, 'xl'),
+    'background-color': map-get($ecl-colors, 'grey-10'),
+  ),
+  'meta': (
+    'padding': map-get($ecl-spacing, 'm'),
+  ),
+  'description': (
+    'background-color': map-get($ecl-colors, 'blue-5'),
+  ),
+);
