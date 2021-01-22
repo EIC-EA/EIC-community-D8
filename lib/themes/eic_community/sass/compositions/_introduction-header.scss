@@ -1,0 +1,62 @@
+.ecl-introduction-header {
+  $node: &;
+
+  padding-bottom: map-get($ecl-spacing, 'xl');
+
+  @include ecl-media-breakpoint-up('md') {
+    padding-bottom: map-get($ecl-spacing, '3xl');
+  }
+
+  &__meta {
+    color: map-get($ecl-colors, 'grey-50');
+    font: $ecl-font-m;
+    text-transform: uppercase;
+  }
+
+  &__title {
+    @extend .ecl-u-type-heading-1;
+
+    #{$node}__meta+& {
+      margin-top: 0;
+    }
+  }
+
+  &__wrapper {
+    display: flex;
+    flex-direction: column;
+
+    @include ecl-media-breakpoint-up('md') {
+      flex-direction: row;
+      align-items: center;
+    }
+  }
+
+  &__media {
+    @include ecl-media-breakpoint-down('md') {
+      order: -1;
+    }
+
+    @include ecl-media-breakpoint-up('md') {
+      width: 50%;
+      flex-shrink: 0;
+
+      #{$node}--is-reversed & {
+        order: -1;
+      }
+    }
+  }
+
+  &__content {
+    flex-grow: 1;
+    padding-top: map-get($ecl-spacing, 'xl');
+
+    @include ecl-media-breakpoint-up('md') {
+      padding: 0 map-get($ecl-spacing, 'xl') 0 0;
+
+      #{$node}--is-reversed & {
+        padding: 0 0 0 map-get($ecl-spacing, 'xl');
+      }
+    }
+  }
+
+}

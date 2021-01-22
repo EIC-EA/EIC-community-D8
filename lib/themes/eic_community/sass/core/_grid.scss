@@ -1,0 +1,15 @@
+/*
+ * @file
+ * Enables the usage of the ECL breakpoint mixins.
+ */
+$ecl-breakpoint-xs: 0;
+$ecl-breakpoint-sm: 480px;
+$ecl-breakpoint-md: 768px;
+$ecl-breakpoint-lg: 996px;
+$ecl-breakpoint-xl: 1140px;
+$ecl-container-max-width-sm: 480px;
+$ecl-container-max-width-md: 768px;
+$ecl-container-max-width-lg: 768px;
+$ecl-container-max-width-xl: 1140px;
+
+$ecl-grid-gutter-width: 1rem;

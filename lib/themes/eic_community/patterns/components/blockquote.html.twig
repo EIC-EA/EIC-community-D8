@@ -1,0 +1,13 @@
+{% if author and citation is not empty %}
+  <blockquote class="ecl-blockquote">
+    <p class="ecl-blockquote__body">{{ citation }}</p>
+    <footer class="ecl-blockquote__attribution">
+      {% include "@theme/patterns/components/author.html.twig" with {
+        label_element: 'cite',
+        label_classes: 'ecl-blockquote__author',
+        author: author,
+        image: image
+      } only %}
+    </footer>
+  </blockquote>
+{% endif %}

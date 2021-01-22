@@ -11,8 +11,7 @@
   "plugins": [
     ["module-resolver", {
       "alias": {
-        "@theme": ["./patterns"],
-        "~": ["./"]
+        "@theme": ["./"],
       }
     }]
   ]

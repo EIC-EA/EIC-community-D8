@@ -1,0 +1,26 @@
+# Card overview
+
+Section container that displays a gallery of [ECL-Twig Card components](https://ecl-twig-php.netlify.app/ec/?path=/story/components-card).
+The overview can be displayed within a 3 column or 4 column grid.
+
+The actual data structure of each card should match the [Card Wrapper](/?path=/docs/compositions-card-wrapper--base) composition.
+
+## Example:
+
+```
+{% include "@theme/compositions/card-overview.html.twig" with {
+  items: [
+    {
+      card: ...
+    }
+  ],
+  ...
+} %}
+```
+
+| Key          | Type     | Description                                                                                                             | Mandatory |     |
+| ------------ | -------- | ----------------------------------------------------------------------------------------------------------------------- | --------- | --- |
+| title        | string   | The title to display above the card overview.                                                                           | no        |     |
+| description  | string   | The description that will be displayed below the title.                                                                 | no        |     |
+| items        | object[] | Displays the defined cards within the overview                                                                          | yes       |     |
+| items[].card | object   | The data structure that should match with the [Card Wrapper](/?path=/docs/compositions-card-wrapper--base) composition. | yes       |     |

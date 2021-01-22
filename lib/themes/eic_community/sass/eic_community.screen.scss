@@ -1,14 +1,35 @@
+@import './core/viewport.scss';
+@import './core/grid.scss';
+@import './core/media.scss';
+
 @import '@ecl/ec-theme-default/exports/all';
-@import '@ecl/ec-theme-default/exports/colors';
 @import '@ecl/ec-theme-default/exports/colors-bg';
+@import '@ecl/ec-theme-default/exports/colors';
+@import '@ecl/ec-theme-default/exports/font-size';
+@import '@ecl/ec-theme-default/exports/media';
 @import '@ecl/ec-theme-default/exports/spacing';
+@import '@ecl/ec-theme-default/exports/widths';
+
+@import '@ecl/ec-preset-editor/dist/styles/ecl-ec-preset-editor';
+@import '@ecl/ec-preset-legacy-website/dist/styles/ecl-ec-preset-legacy-website';
+
+@import '@ecl/ec-base/ec-base';
 @import '@ecl/ec-utility-border/ec-utility-border';
 @import '@ecl/ec-utility-background/ec-utility-background';
 @import '@ecl/ec-component-form-help-block/ec-component-form-help-block';
 
+@import './compositions/base-layout.scss';
+@import "./compositions/card-overview";
+@import "./compositions/card-wrapper";
 @import "./compositions/content_item";
 @import "./compositions/content_language_switcher";
+@import "./compositions/introduction-header";
+@import "./compositions/media-wrapper";
+@import "./compositions/site-header";
+@import "./compositions/text-block";
 
+@import "./components/author";
+@import "./components/blockquote";
 @import "./components/form";
 @import "./components/toolbar";
 @import "./components/banner";
@@ -16,6 +37,3 @@
 @import "./components/page_header";
 @import "./components/global";
 @import "./components/description_list";
-
-@import '@ecl/ec-preset-editor/dist/styles/ecl-ec-preset-editor';
-@import '@ecl/ec-preset-legacy-website/dist/styles/ecl-ec-preset-legacy-website';
