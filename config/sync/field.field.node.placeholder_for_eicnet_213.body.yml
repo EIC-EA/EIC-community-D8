@@ -1,0 +1,23 @@
+uuid: c9c40bfb-e8a5-42ee-b4ca-719406ee2259
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.body
+    - node.type.placeholder_for_eicnet_213
+  module:
+    - text
+id: node.placeholder_for_eicnet_213.body
+field_name: body
+entity_type: node
+bundle: placeholder_for_eicnet_213
+label: Body
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  display_summary: true
+  required_summary: false
+field_type: text_with_summary

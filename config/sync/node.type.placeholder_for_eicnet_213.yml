@@ -1,0 +1,17 @@
+uuid: 409717b1-f600-41e8-b36a-927cc807464d
+langcode: en
+status: true
+dependencies:
+  module:
+    - menu_ui
+third_party_settings:
+  menu_ui:
+    available_menus: {  }
+    parent: ''
+name: placeholder-for-EICNET-213
+type: placeholder_for_eicnet_213
+description: 'This is a placeholder content type for EICNET-213 as the created paragraphs type "Tiles content" should refer to a content type. This placeholder content type can and SHOULD be removed once there are other content types available.'
+help: ''
+new_revision: true
+preview_mode: 1
+display_submitted: false

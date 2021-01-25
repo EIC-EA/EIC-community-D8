@@ -1,0 +1,28 @@
+uuid: 42225f81-ef6d-4954-8901-0d6cae7480bf
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.placeholder_for_eicnet_213.body
+    - node.type.placeholder_for_eicnet_213
+  module:
+    - text
+    - user
+id: node.placeholder_for_eicnet_213.default
+targetEntityType: node
+bundle: placeholder_for_eicnet_213
+mode: default
+content:
+  body:
+    label: hidden
+    type: text_default
+    weight: 101
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+  links:
+    weight: 100
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+hidden: {  }

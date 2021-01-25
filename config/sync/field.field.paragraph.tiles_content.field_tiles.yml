@@ -1,0 +1,28 @@
+uuid: 6b5df7a9-496e-4a57-8649-0abf6614c6cc
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_tiles
+    - node.type.placeholder_for_eicnet_213
+    - paragraphs.paragraphs_type.tiles_content
+id: paragraph.tiles_content.field_tiles
+field_name: field_tiles
+entity_type: paragraph
+bundle: tiles_content
+label: Tiles
+description: "Used for displaying tiles of content pages which link to the corresponding internal pages.\r\n"
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      placeholder_for_eicnet_213: placeholder_for_eicnet_213
+    sort:
+      field: _none
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference
