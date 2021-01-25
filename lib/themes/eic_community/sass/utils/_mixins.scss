@@ -1,6 +1,6 @@
 // Outputs a font size for each of the defined ECL breakpoint within a
 // mobile-first order.
-@mixin ecl-responsive-font($type, $breakpoints: ('md', 'lg')) {
+@mixin ecl-responsive-font($type, $breakpoints: ('lg', 'xl')) {
   $size: ecl-typography('font-size', $type);
   font-size: $size;
 

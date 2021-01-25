@@ -14,11 +14,9 @@
 
   &__description {
     display: block;
-    margin-bottom: map-get($ecl-spacing, 'xs');
-
     color: ecl-typography('color', 'meta');
     line-height: ecl-typography('line-height', 'meta');
-    @include ecl-responsive-font('meta');
+    font-size: ecl-typography('font-size', 'meta');
 
     #{$node}--is-large & {
       @include ecl-responsive-font('label');
@@ -48,14 +46,18 @@
     margin-right: ecl-layout('gutter', 'meta');
     width: map-get($ecl-media, '3xs');
 
+    @include ecl-media-breakpoint-up('lg') {
+      margin-right: ecl-layout('gutter--lg', 'meta');
+    }
+
     #{$node}--is-medium & {
-      width: map-get($ecl-media, 'xs');
+      width: map-get($ecl-media, '2xs');
     }
 
     #{$node}--is-large & {
       margin-right: 0;
       margin-bottom: ecl-layout('gutter', 'meta');
-      width: map-get($ecl-media, 's');
+      width: map-get($ecl-media, 'xs');
     }
   }
 

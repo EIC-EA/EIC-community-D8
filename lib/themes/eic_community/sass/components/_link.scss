@@ -11,10 +11,18 @@
   &__icon {
     &:first-child {
       margin-right: ecl-layout('gutter', 'meta');
+
+      @include ecl-media-breakpoint-up('lg') {
+        margin-right: ecl-layout('gutter--lg', 'meta');
+      }
     }
 
     &:last-child {
       margin-left: ecl-layout('gutter', 'meta');
+
+      @include ecl-media-breakpoint-up('lg') {
+        margin-left: ecl-layout('gutter--lg', 'meta');
+      }
     }
 
     &:only-child {
