@@ -60,10 +60,6 @@
     @include ecl-responsive-font('label');
   }
 
-  &__link-icon {
-    margin-right: ecl-layout('gutter', 'meta');
-  }
-
   &__type {
     text-transform: uppercase;
     color: ecl-typography('color', 'meta');

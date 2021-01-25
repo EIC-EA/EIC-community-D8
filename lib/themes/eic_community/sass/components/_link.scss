@@ -1,0 +1,24 @@
+.ecl-link {
+  &--guest {
+    color: ecl-typography('color', 'meta');
+  }
+
+  &--icon {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  &__icon {
+    &:first-child {
+      margin-right: ecl-layout('gutter', 'meta');
+    }
+
+    &:last-child {
+      margin-left: ecl-layout('gutter', 'meta');
+    }
+
+    &:only-child {
+      margin: 0;
+    }
+  }
+}

@@ -16,6 +16,7 @@
   &__main {
     @include ecl-media-breakpoint-up('md') {
       flex-grow: 1;
+      max-width: calc(100% / #{$ecl-grid-columns} * 8);
     }
   }
 

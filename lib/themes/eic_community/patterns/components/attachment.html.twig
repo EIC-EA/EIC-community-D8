@@ -36,13 +36,18 @@
     <div class="ecl-attachment__actions">
       {% if author %}
         <div class="ecl-attachment__action">
-          <span class="ecl-attachment__author">
             {% if author.path %}
-              <a href="{{ author.path }}">{{ author.author }}</a>
+              {% include '@ecl-twig/ec-component-link/ecl-link.html.twig' with {
+                link: {
+                  type: 'standalone',
+                  label: author.author,
+                  path: author.path,
+                },
+                extra_classes: "ecl-attachment__author",
+              } only %}
             {% else %}
-              {{ author.author }}
+              <span class="ecl-attachment__author">{{ author.author }}</span>
             {% endif %}
-          </span>
         </div>
       {% endif %}
       {% if timestamp %}
@@ -55,18 +60,25 @@
       {% endif %}
       {% if path %}
         <div class="ecl-attachment__action">
-          <a href="{{ path }}" class="ecl-attachment__link" download>
-            {% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with {
-              extra_classes: 'ecl-attachment__link-icon',
-              icon: {
-                path: icon_file_path,
-                name: 'download',
-                size: 's',
-                type: 'ui',
-              },
-            } only %}
-            {{ download_label|default('Download') }}
-          </a>
+          {% include '@ecl-twig/ec-component-link/ecl-link.html.twig' with {
+            icon: {
+              path: icon_file_path,
+              type: 'ui',
+              name: 'download',
+              size: 's',
+              extra_classes: "ecl-attachment__link-icon",
+            },
+            link: {
+              type: 'standalone',
+              label: download_label|default('Download'),
+              path: path,
+              icon_position: 'before',
+            },
+            extra_classes: "ecl-attachment__link",
+            extra_attributes: {
+              download: true
+            },
+          } %}
         </div>
       {% endif %}
     </div>
