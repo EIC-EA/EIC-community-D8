@@ -44,17 +44,24 @@
 {% include "@theme/patterns/components/attachment.html.twig" with {
   title: "Et esse mollit irure do nisi laborum ad magna est non reprehenderit magna non tempor.",
   path: "http://example.com/example-document.2020.pdf",
-  download_label: "Direct downloaden",
+  download_label: "Download",
   author: {
     author: "John Doe",
     path: "?author=johndoe"
   },
   icon_file_path: icon_file_path,
   timestamp: "16 hours ago",
+  image: {
+    src: 'http://placehold.it/300x500',
+    alt: '',
+  },
   icon: {
     name: 'pdf',
     type: 'custom',
   },
+  additional_links: [
+
+  ]
 } only %}
 
 {% include "@theme/patterns/components/disclaimer.html.twig" with {

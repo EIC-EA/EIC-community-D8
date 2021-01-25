@@ -18,7 +18,7 @@
     {% block sidebar  %}
       {% include "@theme/patterns/compositions/social-share.html.twig" with social_share|default({}) %}
 
-      {% include "@theme/patterns/compositions/featured-contributors.html.twig" with _contributors|default({}) %}
+      {% include "@theme/patterns/compositions/featured-contributors.html.twig" with contributors|default({}) %}
 
       {% include "@theme/patterns/compositions/featured-topics.html.twig" with topics|default({}) %}
 

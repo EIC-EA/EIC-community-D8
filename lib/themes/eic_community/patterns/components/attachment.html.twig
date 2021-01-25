@@ -1,9 +1,11 @@
 <div class="ecl-attachment">
   <aside class="ecl-attachment__aside">
     {% if image is not empty %}
-
+      <div class="ecl-attachment__image-wrapper">
+        <img class="ecl-attachment__image" src="{{ image.src }}" alt="{{ image.alt }}" />
+      </div>
     {% elseif icon is not empty %}
-      <span class="ecl-attachment__icon-wrapper">
+      <div class="ecl-attachment__icon-wrapper">
         {% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with {
           extra_classes: 'ecl-attachment__icon',
           icon: {
@@ -12,8 +14,12 @@
             size: 'm',
             type: icon.type,
           },
+          extra_attributes: {
+            'aria-hidden': 'true',
+            'focusable': 'false'
+          }
         } only %}
-      </span>
+      </div>
     {% endif %}
   </aside>
   <div class="ecl-attachment__content">
