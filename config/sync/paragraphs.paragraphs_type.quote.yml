@@ -1,0 +1,10 @@
+uuid: b0965768-dab7-46db-a788-552113fef72d
+langcode: en
+status: true
+dependencies: {  }
+id: quote
+label: Quote
+icon_uuid: null
+icon_default: null
+description: ''
+behavior_plugins: {  }

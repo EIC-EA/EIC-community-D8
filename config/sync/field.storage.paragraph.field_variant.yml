@@ -1,0 +1,27 @@
+uuid: 7fba54d5-2da9-4eb3-a185-a462e78a928b
+langcode: en
+status: true
+dependencies:
+  module:
+    - options
+    - paragraphs
+id: paragraph.field_variant
+field_name: field_variant
+entity_type: paragraph
+type: list_string
+settings:
+  allowed_values:
+    -
+      value: manual
+      label: 'Manual entry'
+    -
+      value: reference
+      label: 'Reference a user'
+  allowed_values_function: ''
+module: options
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false
