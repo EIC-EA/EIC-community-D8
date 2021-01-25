@@ -41,7 +41,10 @@
   &__card {
     padding: ecl-box-model('padding', 'meta');
     background-color: ecl-box-model('background-color', 'meta');
-    color: ecl-typography('color', 'meta');
+
+    @include ecl-media-breakpoint-up('md') {
+      padding: ecl-box-model('padding--md', 'meta');
+    }
   }
 
   &__items {

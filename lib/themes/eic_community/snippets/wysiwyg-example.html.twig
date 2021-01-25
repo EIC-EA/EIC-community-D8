@@ -8,6 +8,10 @@
 <h2>Esse cupidatat duis nulla esse.</h2>
 <p>Dolor Lorem tempor proident excepteur proident. Eu enim velit ea ad tempor voluptate. Quis laboris ullamco id irure nostrud cupidatat amet incididunt minim amet aute in. Veniam ad ipsum irure amet ullamco. Ex Lorem nostrud qui duis exercitation laboris fugiat dolore velit pariatur anim quis ea. Eu occaecat sunt incididunt exercitation laborum qui enim nisi do esse irure.</p>
 
+{% include "@theme/patterns/components/disclaimer.html.twig" with {
+  content: "All views express in this story are the autors own and do not represent the views of the EIC or European Commission. Please read our <a>terms and conditions</a>"
+} %}
+
 {% include '@ecl-twig/ec-component-media-container/ecl-media-container.html.twig' with {
   image: "http://placehold.it/800x340",
   description: "Sunt laborum tempor ullamco adipisicing non et eiusmod.",
@@ -51,10 +55,6 @@
   },
   icon_file_path: icon_file_path,
   timestamp: "16 hours ago",
-  image: {
-    src: 'http://placehold.it/300x500',
-    alt: '',
-  },
   icon: {
     name: 'pdf',
     type: 'custom',
@@ -63,7 +63,3 @@
 
   ]
 } only %}
-
-{% include "@theme/patterns/components/disclaimer.html.twig" with {
-  content: "All views express in this story are the autors own and do not represent the views of the EIC or European Commission. Please read our <a>terms and conditions</a>"
-} %}

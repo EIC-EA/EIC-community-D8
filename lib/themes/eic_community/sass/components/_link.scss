@@ -3,6 +3,21 @@
     color: ecl-typography('color', 'meta');
   }
 
+  body &--button {
+    display: inline-block;
+
+    @extend .ecl-button;
+
+    &:hover,
+    &:focus {
+      color: map-get($ecl-colors, 'white');
+    }
+  }
+
+  body &--button-primary {
+    @extend .ecl-button--primary;
+  }
+
   &--icon {
     display: inline-flex;
     align-items: center;

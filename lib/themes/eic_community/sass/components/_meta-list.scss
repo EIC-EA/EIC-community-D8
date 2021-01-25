@@ -1,15 +1,20 @@
 .ecl-meta-list {
+  $node: &;
+
   display: flex;
   align-items: center;
   flex-wrap: wrap;
 
   &__item {
-    color: ecl-typography('color', 'meta');
     font-size: ecl-typography('font-size', 'meta');
     border-right: solid 1px currentColor;
     padding-right: map-get($ecl-spacing, 'm');
     margin-right: map-get($ecl-spacing, 'm');
     text-transform: uppercase;
+
+    #{$node}--large & {
+      font-size: ecl-typography('font-size', 'description');
+    }
 
     &:last-child {
       border-right: 0;

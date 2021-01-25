@@ -1,8 +1,8 @@
 .ecl-editorial-header {
-  margin-bottom: map-get($ecl-spacing, 'm');
+  padding: ecl-box-model('padding') 0;
 
   @include ecl-media-breakpoint-up('md') {
-    margin-bottom: map-get($ecl-spacing, 'xl');
+    padding: ecl-box-model('padding--md') 0;
   }
 
   &__wrapper {

@@ -1,11 +1,11 @@
 {% set title_element = title_element|default('h1') %}
 
-<section class="ecl-editorial-header">
+<section class="ecl-section-wrapper ecl-editorial-header">
   <div class="ecl-container">
     <div class="ecl-editorial-header__wrapper">
       <div class="ecl-editorial-header__main">
         {% include "@theme/patterns/components/meta-list.html.twig" with {
-          extra_classes: "ecl-editorial-header__meta",
+          extra_classes: "ecl-editorial-header__meta ecl-meta-list--large",
           items: meta
         } %}
 
