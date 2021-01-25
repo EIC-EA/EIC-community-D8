@@ -10,8 +10,8 @@ field_name: field_description
 entity_type: paragraph
 bundle: tiles_content
 label: Description
-description: ''
-required: false
+description: 'Description of the component.'
+required: true
 translatable: false
 default_value: {  }
 default_value_callback: ''
