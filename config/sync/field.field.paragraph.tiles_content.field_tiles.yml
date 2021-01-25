@@ -11,8 +11,8 @@ field_name: field_tiles
 entity_type: paragraph
 bundle: tiles_content
 label: Tiles
-description: "Used for displaying tiles of content pages which link to the corresponding internal pages.\r\n"
-required: false
+description: 'List of USP cards.'
+required: true
 translatable: false
 default_value: {  }
 default_value_callback: ''
