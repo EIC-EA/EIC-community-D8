@@ -45,6 +45,10 @@
                         size: 's',
                         type: action.icon.type,
                       },
+                      extra_attributes: {
+                        'aria-hidden': 'true',
+                        'focusable': 'false'
+                      }
                     } only %}
                   {% endif %}
                   {% if action.label is not empty %}

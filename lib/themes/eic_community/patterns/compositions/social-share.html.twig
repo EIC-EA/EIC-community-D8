@@ -21,6 +21,10 @@
                     type: item.type|default('branded'),
                     name: item.name,
                   },
+                  extra_attributes: {
+                    'aria-hidden': 'true',
+                    'focusable': 'false'
+                  }
                 } %}
               </span>
               {% if item.label is not empty %}
