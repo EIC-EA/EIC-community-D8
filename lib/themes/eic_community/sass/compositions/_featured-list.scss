@@ -57,6 +57,10 @@
     }
   }
 
+  &__item-tag {
+    @include ecl-responsive-font('meta');
+  }
+
   &__item-title {
     @extend .ecl-u-type-heading-5;
   }

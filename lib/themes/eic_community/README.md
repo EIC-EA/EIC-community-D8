@@ -24,6 +24,39 @@ The builder configuration can be adjusted by editing the `./ecl-builder.config.j
 
 The custom stylesheets are defined within the `./sass` directory, the included imports will enable the correct styling for the component library for screen & print viewports.
 
+##### Style schematics
+
+Style schematics are defined within the `./sasss/schema` directory where CSS properties are declared within sections. You can output these values by using the proper Sass function for each schema file:
+
+```scss
+.example {
+  padding: ecl-layout(
+    'gutter',
+    'meta'
+  ); // Equal to: map-get(map-get($ecl-layout, 'meta'), 'gutter').
+}
+```
+
+##### Sass Functions
+
+```scss
+// Outputs the value of the defined `$property`argument from the selected`$type` within the `$ecl-box-model` schematic.
+// The box model schematic should contain properties that could be used within reusable components.
+@function ecl-box-model($property: string, $type: string);
+```
+
+```scss
+// Outputs the value of the defined `$property`argument from the selected`$type` within the `$ecl-typography` schematic.
+// The typography schematic should contain properties that could be used within typography specific elements.
+@function ecl-typography($property: string, $type: string);
+```
+
+```scss
+// Outputs the value of the defined `$property`argument from the selected`$type` within the `$ecl-layout` schematic.
+// The typography schematic should contain properties that could be used within layout specific template, like the gutter between a sidebar and it's main content.
+@function ecl-layout($property: string, $type: string);
+```
+
 #### 2.2 | Icons
 
 A custom SVG sprite compiler has been created in order to compile the custom icons together with the external component library: **@ecl/ec-preset-legacy-website**.

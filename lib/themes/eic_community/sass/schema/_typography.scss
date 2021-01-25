@@ -1,19 +1,22 @@
 $ecl-typography: (
   'default': (
     'color': map-get($ecl-colors, 'grey-100'),
-    'font-size': $ecl-font-size-m,
+    'font-size': $ecl-font-size-s,
+    'font-size--md': $ecl-font-size-m,
+    'font-size--lg': $ecl-font-size-m,
     'line-height': $ecl-line-height-l,
   ),
   'meta': (
     'color': map-get($ecl-colors, 'grey-50'),
-    'font-size': $ecl-font-size-s,
-    'font-size--md': $ecl-font-size-m,
-    'font-size--lg': $ecl-font-size-l,
+    'font-size': $ecl-font-size-xs,
+    'font-size--md': $ecl-font-size-xs,
+    'font-size--lg': $ecl-font-size-s,
     'line-height': $ecl-line-height-m,
   ),
   'label': (
-    'font-size': $ecl-font-size-m,
-    'font-size--lg': $ecl-font-size-l,
+    'font-size': $ecl-font-size-s,
+    'font-size--md': $ecl-font-size-m,
+    'font-size--lg': $ecl-font-size-m,
     'font-weight': $ecl-font-weight-bold,
   )
 );
