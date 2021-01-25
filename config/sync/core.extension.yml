@@ -9,6 +9,7 @@ module:
   dynamic_page_cache: 0
   editor: 0
   entity: 0
+  entity_reference_revisions: 0
   entity_browser: 0
   entity_browser_entity_form: 0
   field: 0
@@ -45,6 +46,7 @@ module:
   user: 0
   variationcache: 0
   views: 10
+  paragraphs: 11
   oe_profile: 1000
 theme:
   stable: 0
