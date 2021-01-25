@@ -1,0 +1,30 @@
+uuid: eee26104-087f-4393-9d7d-1d639edb640c
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.placeholder_for_eicnet_213.body
+    - node.type.placeholder_for_eicnet_213
+  module:
+    - text
+    - user
+id: node.placeholder_for_eicnet_213.teaser
+targetEntityType: node
+bundle: placeholder_for_eicnet_213
+mode: teaser
+content:
+  body:
+    label: hidden
+    type: text_summary_or_trimmed
+    weight: 101
+    settings:
+      trim_length: 600
+    third_party_settings: {  }
+    region: content
+  links:
+    weight: 100
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+hidden: {  }
