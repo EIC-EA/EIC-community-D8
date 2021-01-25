@@ -58,6 +58,12 @@
           } only %}
         </div>
       {% endif %}
+      {% if language %}
+        <div class="ecl-attachment__action">{{ language }}</div>
+      {% endif %}
+      {% if filesize %}
+        <div class="ecl-attachment__action">{{ filesize }}</div>
+      {% endif %}
       {% if path %}
         <div class="ecl-attachment__action">
           {% include '@ecl-twig/ec-component-link/ecl-link.html.twig' with {

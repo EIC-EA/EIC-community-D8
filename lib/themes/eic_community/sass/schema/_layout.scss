@@ -16,6 +16,6 @@ $ecl-layout: (
   ),
   'controls': (
     'gutter': map-get($ecl-spacing, 's'),
-    'gutter--md': map-get($ecl-spacing, '2xl'),
+    'gutter--md': map-get($ecl-spacing, 'xl'),
   )
 )
