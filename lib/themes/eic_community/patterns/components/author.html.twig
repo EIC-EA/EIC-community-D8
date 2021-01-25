@@ -7,7 +7,13 @@
       {% endif %}
       <{{ label_element}} class="ecl-author__label {{ label_classes }}">
         {% if path is not empty %}
-          <a href="{{ path }}">{{ author }}</a>
+          {% include '@ecl-twig/ec-component-link/ecl-link.html.twig' with {
+            link: {
+              type: 'standalone',
+              label: author,
+              path: path
+            }
+          } %}
         {% else %}
           {{ author }}
         {% endif %}
