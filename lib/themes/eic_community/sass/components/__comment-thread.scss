@@ -1,0 +1,22 @@
+.ecl-comment-thread {
+  $node: &;
+
+  margin: map-get($ecl-spacing, 'm') 0;
+
+  &:first-child {
+    margin-top: 0;
+  }
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  & & {
+    margin-left: calc(#{map-get($ecl-media, 'm')} + #{map-get($ecl-spacing, '2xs')});
+
+    & > #{$node}__comment {
+      border-left: solid 1px map-get($ecl-colors, 'grey-50');
+      padding-left: map-get($ecl-spacing, 'xl');
+    }
+  }
+}

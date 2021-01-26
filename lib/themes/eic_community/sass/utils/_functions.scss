@@ -1,0 +1,38 @@
+// Returns the defined property from the scss schematic.
+@function ecl-schema-get($schema, $property, $type) {
+  @if not $schema {
+    @error "Unable to defined property from scss schema...";
+  }
+
+  @if $property {
+    $value: map-get($schema, $type);
+
+    @if not $value {
+      @return inherit;
+    }
+
+    @if not map-get($value, $property) {
+      @return inherit;
+    }
+
+    @return map-get($value, $property);
+  }
+
+  @return inherit;
+}
+
+// Returns a box model property from the $ecl-box-model schematic.
+@function ecl-box-model($property, $type: 'default') {
+  @return ecl-schema-get($ecl-box-model, $property, $type);
+}
+
+// Returns a layout property from the $ecl-layout schematic.
+@function ecl-layout($property, $type: 'default') {
+  @return ecl-schema-get($ecl-layout, $property, $type);
+}
+
+
+// Returns a typography property from the $ecl-typography schematic.
+@function ecl-typography($property, $type: 'default') {
+  @return ecl-schema-get($ecl-typography, $property, $type);
+}

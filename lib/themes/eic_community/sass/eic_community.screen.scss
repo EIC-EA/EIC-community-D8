@@ -1,6 +1,9 @@
+@import './core/spacing.scss';
 @import './core/viewport.scss';
-@import './core/grid.scss';
 @import './core/media.scss';
+
+@import './utils/functions';
+@import './utils/mixins';
 
 @import '@ecl/ec-theme-default/exports/all';
 @import '@ecl/ec-theme-default/exports/colors-bg';
@@ -18,6 +21,10 @@
 @import '@ecl/ec-utility-background/ec-utility-background';
 @import '@ecl/ec-component-form-help-block/ec-component-form-help-block';
 
+@import './schema/box-model.scss';
+@import './schema/layout.scss';
+@import './schema/typography.scss';
+
 @import './compositions/base-layout.scss';
 @import "./compositions/card-overview";
 @import "./compositions/card-wrapper";
@@ -25,15 +32,10 @@
 @import "./compositions/content_language_switcher";
 @import "./compositions/introduction-header";
 @import "./compositions/media-wrapper";
+@import "./compositions/overview-header";
 @import "./compositions/site-header";
 @import "./compositions/text-block";
 
 @import "./components/author";
 @import "./components/blockquote";
-@import "./components/form";
-@import "./components/toolbar";
-@import "./components/banner";
-@import "./components/wysiwyg";
-@import "./components/page_header";
 @import "./components/global";
-@import "./components/description_list";
