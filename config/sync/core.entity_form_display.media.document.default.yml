@@ -9,7 +9,6 @@ dependencies:
     - media.type.document
   module:
     - file
-    - file_link
     - path
 _core:
   default_config_hash: gqausAZ4EUT6jvc2qnICbX6ehdupraH71E8YV32iSBs
@@ -27,29 +26,15 @@ content:
       placeholder: ''
     third_party_settings: {  }
   oe_media_file:
-    weight: 2
+    weight: 1
     settings:
       progress_indicator: throbber
     third_party_settings: {  }
     type: file_generic
     region: content
-  oe_media_file_type:
-    weight: 1
-    settings: {  }
-    third_party_settings: {  }
-    type: options_select
-    region: content
-  oe_media_remote_file:
-    weight: 3
-    settings:
-      placeholder_url: ''
-      placeholder_title: ''
-    third_party_settings: {  }
-    type: file_link_default
-    region: content
   path:
     type: path
-    weight: 30
+    weight: 3
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -57,9 +42,11 @@ content:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 4
+    weight: 2
     region: content
     third_party_settings: {  }
 hidden:
   created: true
+  oe_media_file_type: true
+  oe_media_remote_file: true
   uid: true
