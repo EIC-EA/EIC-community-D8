@@ -17,15 +17,21 @@
       {% if actions is not empty %}
         <div class="ecl-editorial-header__actions">
           {% for action in actions %}
-            {% include "@ecl-twig/ec-component-button/ecl-button.html.twig" with action|default({})|merge({
-              variant: "ghost",
-              icon_position: 'before',
-              icon: {
+            {% set action_icon = {} %}
+
+            {% if icon_file_path %}
+              {% set action_icon = {
                 path: icon_file_path,
                 type: action.icon.type,
                 name: action.icon.name,
                 size: 'xs',
-              },
+              } %}
+            {% endif %}
+
+            {% include "@ecl-twig/ec-component-button/ecl-button.html.twig" with action|default({})|merge({
+              variant: "ghost",
+              icon_position: 'before',
+              icon: action_icon,
             }) %}
           {% endfor %}
         </div>

@@ -1,16 +1,24 @@
 .ecl-meta-list {
   $node: &;
 
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
+  &__items {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+
+    &:not(:empty) {
+      margin-bottom: #{0 - map-get($ecl-spacing, 'm')};
+    }
+  }
 
   &__item {
     font-size: ecl-typography('font-size', 'meta');
     border-right: solid 1px currentColor;
     padding-right: map-get($ecl-spacing, 'm');
-    margin-right: map-get($ecl-spacing, 'm');
+    margin: 0 map-get($ecl-spacing, 'm') map-get($ecl-spacing, 'm') 0;
+
     text-transform: uppercase;
+    white-space: nowrap;
 
     #{$node}--large & {
       font-size: ecl-typography('font-size', 'description');
