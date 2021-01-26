@@ -13,20 +13,22 @@
         <div class="ecl-social-share__item{{ item.name ? ' ecl-social-share__item--' ~ item.name }}">
           {% if item.path %}
             <a class="ecl-social-share__item-wrapper" href="{{ item.path }}">
-              <span class="ecl-social-share__item-icon-wrapper">
-                {% include '@ecl-twig/ec-component-icon/ecl-icon.html.twig' with {
-                  icon: {
-                    size: 'm',
-                    path: icon_file_path,
-                    type: item.type|default('branded'),
-                    name: item.name,
-                  },
-                  extra_attributes: {
-                    'aria-hidden': 'true',
-                    'focusable': 'false'
-                  }
-                } %}
-              </span>
+              {% if icon_file_path %}
+                <span class="ecl-social-share__item-icon-wrapper">
+                  {% include '@ecl-twig/ec-component-icon/ecl-icon.html.twig' with {
+                    icon: {
+                      size: 'm',
+                      path: icon_file_path,
+                      type: item.type|default('branded'),
+                      name: item.name,
+                    },
+                    extra_attributes: {
+                      'aria-hidden': 'true',
+                      'focusable': 'false'
+                    }
+                  } %}
+                </span>
+              {% endif %}
               {% if item.label is not empty %}
                 <span class="ecl-social-share__item-label">{{ item.label }}</span>
               {% endif %}
