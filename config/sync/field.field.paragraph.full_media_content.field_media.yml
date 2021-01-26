@@ -12,7 +12,7 @@ field_name: field_media
 entity_type: paragraph
 bundle: full_media_content
 label: Media
-description: ''
+description: 'Add an image or video.'
 required: true
 translatable: false
 default_value: {  }

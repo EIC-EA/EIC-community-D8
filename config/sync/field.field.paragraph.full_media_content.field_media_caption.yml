@@ -10,7 +10,7 @@ field_name: field_media_caption
 entity_type: paragraph
 bundle: full_media_content
 label: 'Media caption'
-description: ''
+description: 'Add a caption text for your image or video.'
 required: false
 translatable: false
 default_value: {  }
