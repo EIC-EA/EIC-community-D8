@@ -9,6 +9,7 @@
     "build:styles": "ecl-builder styles",
     "build:svg": "node ./scripts/svg-sprites.js",
     "storybook": "start-storybook -s ./dist -p 8080",
+    "prewatch": "npm run build",
     "watch": "npm-run-all --parallel watch:* -ln",
     "watch:styles": "chokidar \"./sass/**/*.scss\" -i \"/node_modules/\" -c \"npm run build:styles\"",
     "watch:scripts": "chokidar \"./js/**/*.js\" -i \"/node_modules/\" -c \"npm run build:copy\"",
