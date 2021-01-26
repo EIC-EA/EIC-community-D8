@@ -1,0 +1,23 @@
+# Auth Banner
+
+Displays a section block where the user can login or signup.
+
+## Example:
+
+```
+{% include "@theme/patterns/components/blockquote.html.twig" %}
+```
+
+## Twig parameters:
+
+| Key            | Type   | Description                                              | Mandatory |
+| -------------- | ------ | -------------------------------------------------------- | --------- |
+| title          | string | Displays the title of the section.                       | yes       |
+| title_element  | string | Defines the HTMLElement for the title.                   | no        |
+| login          | object | Will display the login button if defined.                | no        |
+| login.label    | string | Defines the button label for the login button.           | no        |
+| login.path     | string | Should be the URL that links to the login page.          | no        |
+| register       | object | Will display the register button if defined.             | no        |
+| register.path  | string | Should be the URL that links to the login page.          | no        |
+| register.label | string | Defines the button label for the register button.        | no        |
+| icon_file_path | string | Enables the usage of the ECL icons within the component. | no        |

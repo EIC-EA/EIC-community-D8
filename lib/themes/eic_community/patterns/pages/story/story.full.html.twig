@@ -32,7 +32,6 @@
   {% if not auth %}
     {% embed "@theme/patterns/compositions/auth-banner.html.twig" with {
       title: "Please log in to see comments and contribute",
-      extra_classes: 'ecl-section-wrapper--is-shaded',
       icon_file_path: common.icon_file_path,
       login: {
         label: "Login"
