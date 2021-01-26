@@ -9,6 +9,7 @@
     "build:copy": "ecl-builder copy",
     "build:styles": "ecl-builder styles",
     "prestorybook": "npm run build",
+    "build:svg": "node ./scripts/svg-sprites.js",
     "storybook": "start-storybook -s ./dist -p 6006",
     "watch": "npm-run-all --parallel watch:* -ln",
     "watch:styles": "chokidar \"./sass/**/*.scss\" -i \"/node_modules/\" -c \"npm run build:styles\"",
@@ -50,7 +51,13 @@
     "npm-run-all": "^4.1.5",
     "prettier": "^2.2.1",
     "svg4everybody": "^2.1.9",
+    "svgstore": "^3.0.0-2",
     "twing": "2.3.7",
     "twing-loader": "2.0.2"
+  },
+  "dependencies": {
+    "imagemin": "^7.0.1",
+    "imagemin-svgo": "^8.0.0",
+    "mkdirp": "^1.0.4"
   }
 }
