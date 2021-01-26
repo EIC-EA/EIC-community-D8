@@ -1,16 +1,16 @@
-uuid: c9c40bfb-e8a5-42ee-b4ca-719406ee2259
+uuid: e1dbbd0e-2636-485b-a7cd-c8633b144d1e
 langcode: en
 status: true
 dependencies:
   config:
     - field.storage.node.body
-    - node.type.placeholder_for_eicnet_213
+    - node.type.page
   module:
     - text
-id: node.placeholder_for_eicnet_213.body
+id: node.page.body
 field_name: body
 entity_type: node
-bundle: placeholder_for_eicnet_213
+bundle: page
 label: Body
 description: ''
 required: false

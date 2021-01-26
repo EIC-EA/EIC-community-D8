@@ -4,7 +4,7 @@ status: true
 dependencies:
   config:
     - field.storage.paragraph.field_tiles
-    - node.type.placeholder_for_eicnet_213
+    - node.type.page
     - paragraphs.paragraphs_type.tiles_content
 id: paragraph.tiles_content.field_tiles
 field_name: field_tiles
@@ -20,9 +20,9 @@ settings:
   handler: 'default:node'
   handler_settings:
     target_bundles:
-      placeholder_for_eicnet_213: placeholder_for_eicnet_213
+      page: page
     sort:
       field: _none
     auto_create: false
-    auto_create_bundle: ''
+    auto_create_bundle: page
 field_type: entity_reference
