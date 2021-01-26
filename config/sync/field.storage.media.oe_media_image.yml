@@ -1,0 +1,32 @@
+uuid: a3e924e9-658b-4ebe-866c-91e509f70682
+langcode: en
+status: true
+dependencies:
+  module:
+    - file
+    - image
+    - media
+_core:
+  default_config_hash: TJWQijg_st8LHn7YN8KSgsrcDIzls0tYWCzHeHkzBjE
+id: media.oe_media_image
+field_name: oe_media_image
+entity_type: media
+type: image
+settings:
+  default_image:
+    uuid: null
+    alt: ''
+    title: ''
+    width: null
+    height: null
+  target_type: file
+  display_field: false
+  display_default: false
+  uri_scheme: public
+module: image
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false
