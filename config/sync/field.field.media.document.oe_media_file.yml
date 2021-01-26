@@ -1,0 +1,29 @@
+uuid: c5161666-4faf-46cb-977d-65e0f9d9efae
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.media.oe_media_file
+    - media.type.document
+  module:
+    - file
+_core:
+  default_config_hash: 7-spF5nGKTSxE-5V2SHvBc7EZEtRfbpVgajkGU0iCfs
+id: media.document.oe_media_file
+field_name: oe_media_file
+entity_type: media
+bundle: document
+label: File
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  file_directory: '[date:custom:Y]-[date:custom:m]'
+  file_extensions: 'txt text md readme info doc dot docx dotx docm dotm xls xlt xla xlsx xltx xlsm xltm xlam xlsb ppt pot pps ppa pptx potx ppsx ppam pptm potm ppsm pdf ods odt odf'
+  max_filesize: ''
+  description_field: false
+  handler: 'default:file'
+  handler_settings: {  }
+field_type: file

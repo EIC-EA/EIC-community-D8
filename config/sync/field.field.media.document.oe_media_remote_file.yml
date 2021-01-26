@@ -1,0 +1,28 @@
+uuid: 7693d8c5-8d5d-4499-a1e5-20583cfad81b
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.media.oe_media_remote_file
+    - media.type.document
+  module:
+    - file_link
+_core:
+  default_config_hash: we_h3-XE_6IOczP3C9wk3NHxwgQUzl2KK1-RHN22Zi0
+id: media.document.oe_media_remote_file
+field_name: oe_media_remote_file
+entity_type: media
+bundle: document
+label: 'Remote File'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  link_type: 17
+  title: 1
+  file_extensions: 'txt text md readme info doc dot docx dotx docm dotm xls xlt xla xlsx xltx xlsm xltm xlam xlsb ppt pot pps ppa pptx potx ppsx ppam pptm potm ppsm pdf ods odt odf'
+  no_extension: false
+  deferred_request: false
+field_type: file_link
