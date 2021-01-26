@@ -26,7 +26,7 @@ content:
       match_operator: CONTAINS
       match_limit: 10
       size: 60
-      placeholder: ''
+      placeholder: 'Page title contains...'
     third_party_settings: {  }
     type: entity_reference_autocomplete
     region: content

@@ -1,17 +1,17 @@
-uuid: eee26104-087f-4393-9d7d-1d639edb640c
+uuid: 9f46f639-48a1-42d4-83f4-4f8f7cca05eb
 langcode: en
 status: true
 dependencies:
   config:
     - core.entity_view_mode.node.teaser
-    - field.field.node.placeholder_for_eicnet_213.body
-    - node.type.placeholder_for_eicnet_213
+    - field.field.node.page.body
+    - node.type.page
   module:
     - text
     - user
-id: node.placeholder_for_eicnet_213.teaser
+id: node.page.teaser
 targetEntityType: node
-bundle: placeholder_for_eicnet_213
+bundle: page
 mode: teaser
 content:
   body:

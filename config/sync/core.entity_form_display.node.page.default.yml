@@ -1,16 +1,16 @@
-uuid: ceb1719a-9c28-45b1-8817-f07b7b974324
+uuid: bfc6754e-fb09-44b3-9cf2-b15fa5ff8669
 langcode: en
 status: true
 dependencies:
   config:
-    - field.field.node.placeholder_for_eicnet_213.body
-    - node.type.placeholder_for_eicnet_213
+    - field.field.node.page.body
+    - node.type.page
   module:
     - path
     - text
-id: node.placeholder_for_eicnet_213.default
+id: node.page.default
 targetEntityType: node
-bundle: placeholder_for_eicnet_213
+bundle: page
 mode: default
 content:
   body:
