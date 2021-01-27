@@ -187,8 +187,8 @@ screen -R deploy-install-GIT_BRANCH
 
 #### Step 3: Run deploy script
 
-SSH into the staging server, go to the projects root directory `/home/blue4you/websites/eic-d8.stg.blue4you.be` and run
-one of the following shell scripts.
+SSH into the staging server, go to the projects root directory `/home/blue4you/websites/eic-d8.stg.blue4you.be/www` and
+run one of the following shell scripts.
 
 ```shell
 # Deploy and update the site
