@@ -1,15 +1,14 @@
 # EIC-community-D8
 
 The EIC community Drupal 8 Platform is based on OpenEuropa Drupal codebase using
-[OpenEuropa components](https://github.com/openeuropa/documentation/blob/master/docs/openeuropa-components.md).
-It comes with installation of two components:
+[OpenEuropa components](https://github.com/openeuropa/documentation/blob/master/docs/openeuropa-components.md). It comes
+with installation of two components:
 
 - [The OpenEuropa Profile](https://github.com/openeuropa/oe_profile):
-  a lightweight Drupal installation profile that includes the minimal number of
-  modules to help get your started
-- [The OpenEuropa Theme](https://github.com/openeuropa/oe_theme): the official
-  Drupal 8 theme of the European Commission which will ensure that the project
-  complies with the [European Component Library](https://github.com/ec-europa/europa-component-library)
+  a lightweight Drupal installation profile that includes the minimal number of modules to help get your started
+- [The OpenEuropa Theme](https://github.com/openeuropa/oe_theme): the official Drupal 8 theme of the European Commission
+  which will ensure that the project complies with
+  the [European Component Library](https://github.com/ec-europa/europa-component-library)
   guidelines.
 
 In order to build the functionality of the website you are free to use any of the
@@ -26,13 +25,13 @@ Having the following installed locally is also recommended, but not mandatory:
 
 * [Composer](https://getcomposer.org/doc/00-intro.md#installation-linux-unix-osx).
 
-**Please be aware:** the OpenEuropa team will only address support requests
-if you use the provided `docker-compose.yml`.
+**Please be aware:** the OpenEuropa team will only address support requests if you use the provided `docker-compose.yml`
+.
 
 ## Troubleshooting
 
-If you run `composer install` for the first time from within the Docker container GrumPHP
-will set its Git hook paths to the container's ones.
+If you run `composer install` for the first time from within the Docker container GrumPHP will set its Git hook paths to
+the container's ones.
 
 If you get such error messages reinitialize GrumPHP paths on your host machine
 (meaning, outside the container) by running:
@@ -44,8 +43,8 @@ If you get such error messages reinitialize GrumPHP paths on your host machine
 
 ## Configuration
 
-The project ships with default setup configuration that is intended to run the
-website on the Docker containers we provide.
+The project ships with default setup configuration that is intended to run the website on the Docker containers we
+provide.
 
 To customize the default configuration values copy `runner.yml.dist` to `runner.yml`:
 
@@ -53,18 +52,17 @@ To customize the default configuration values copy `runner.yml.dist` to `runner.
 cp runner.yml.dist runner.yml
 ```
 
-Now edit `runner.yml` with your most beloved text editor and change setup
-configuration as needed.
+Now edit `runner.yml` with your most beloved text editor and change setup configuration as needed.
 
 ## Site build and installation
 
-The shipped `docker-compose.yml` file provides the necessary services and tools
-to install, run and test an OpenEuropa Drupal 8 site.
+The shipped `docker-compose.yml` file provides the necessary services and tools to install, run and test an OpenEuropa
+Drupal 8 site.
 
-By default, Docker Compose reads two files, a `docker-compose.yml` and an
-optional `docker-compose.override.yml` file. By convention, the `docker-compose.yml`
-contains your base configuration. The override file, as its name implies,
-can contain configuration overrides for existing services or entirely new services.
+By default, Docker Compose reads two files, a `docker-compose.yml` and an optional `docker-compose.override.yml` file.
+By convention, the `docker-compose.yml`
+contains your base configuration. The override file, as its name implies, can contain configuration overrides for
+existing services or entirely new services.
 
 If a service is defined in both files, Docker Compose merges the configurations.
 
@@ -86,8 +84,8 @@ docker-compose exec web composer install
 docker-compose exec web ./vendor/bin/run toolkit:install-clean
 ```
 
-The site build will be available in the `web` directory and the site itself
-will be reachable at: [http://localhost:8080/web](http://localhost:8080/web).
+The site build will be available in the `web` directory and the site itself will be reachable
+at: [http://localhost:8080/web](http://localhost:8080/web).
 
 Before to commit your project on your repository, export the configuration on `config/sync`
 using the following command:
@@ -101,8 +99,7 @@ docker-compose exec web ./vendor/bin/drush cex
 The final step is to have a new git repository and commit all the files. A
 `.gitignore` file is provided to ensure you only commit your own project files.
 
-If you have not been already provided with one please contact your management
-and/or the Quality Assurance team.
+If you have not been already provided with one please contact your management and/or the Quality Assurance team.
 
 ```bash
 git init
@@ -130,12 +127,10 @@ docker-compose exec web ./vendor/bin/behat
 
 To check the status of the continuous integration of your project, go to [Drone](https://drone.fpfis.eu/).
 
-A pipeline - created and maintained by DevOps - is applied by default.
-It manages the code review of the code, it runs all tests on the repository and
-builds the site artifact for the deployment.
+A pipeline - created and maintained by DevOps - is applied by default. It manages the code review of the code, it runs
+all tests on the repository and builds the site artifact for the deployment.
 
-You can control which commands will be ran during deployment by creating
-and pushing a `.opts.yml` file.
+You can control which commands will be ran during deployment by creating and pushing a `.opts.yml` file.
 
 If none is found the following one will be ran:
 
@@ -150,7 +145,56 @@ upgrade_commands:
 
 The following conventions apply:
 
-- Every push on the site's deployment branch (usually `master`) will trigger
-  a deployment on the acceptance environment
-- Every new tag on the site's deployment branch (usually `master`) will
-  trigger a deployment on production
+- Every push on the site's deployment branch (usually `master`) will trigger a deployment on the acceptance environment
+- Every new tag on the site's deployment branch (usually `master`) will trigger a deployment on production
+
+## Deploy STAG site on Blue4you hosting (https://eic-d8.stg.blue4you.be)
+
+TLDR; Commands:
+
+```shell
+# Deploy and update the site
+sh deploy-update.sh GIT_BRANCH
+
+# Deploy and re-install the site and migrate all content
+sh deploy-install-migrate-clean.sh GIT_BRANCH ADMIN_PASSWORD
+```
+
+### Deploy steps
+
+#### Step 1: Backup database (and drop database for re-install)
+
+Backup the database and drop all tables. Keep the empty database for the new installation.
+
+#### Step 2: Open a virtual terminal session with `screen` (optional, but highly recommended)
+
+Screen or GNU Screen is a terminal multiplexer. In other words, it means that you can start a screen session and then
+open any number of windows (virtual terminals) inside that session. Processes running in Screen will continue to run
+when their window is not visible even if you get disconnected.
+
+Open a **new virtual terminal session**. (change the git branch in the name to make it easily identifiable)
+
+```shell
+screen -S deploy-update-GIT_BRANCH
+```
+
+If you want to check the progress of the script after closing your terminal, you can **resume the virtual terminal
+session**.
+
+```shell
+screen -R deploy-install-GIT_BRANCH
+```
+
+#### Step 3: Run deploy script
+
+SSH into the staging server, go to the projects root directory `/home/blue4you/websites/eic-d8.stg.blue4you.be` and run
+one of the following shell scripts.
+
+```shell
+# Deploy and update the site
+sh deploy-update.sh GIT_BRANCH
+
+# @todo Perhaps changing the admin password is not necessary
+# Deploy and re-install the site and migrate all content and set the admin accounts password
+sh deploy-install-migrate-clean.sh GIT_BRANCH ADMIN_PASSWORD
+```
