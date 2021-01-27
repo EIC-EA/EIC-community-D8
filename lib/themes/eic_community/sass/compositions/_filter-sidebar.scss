@@ -3,7 +3,16 @@
 
   display: flex;
   flex-direction: column;
-  padding: ecl-box-model('padding') 0;
+
+  @include ecl-media-breakpoint-up('md') {
+    padding: ecl-box-model('padding') 0;
+  }
+
+  &__expand,
+  &__collapse {
+    width: 100%;
+    text-align: center;
+  }
 
   &__expand {
     @include ecl-media-breakpoint-down('md') {
@@ -45,6 +54,7 @@
 
     #{$node}--is-ready[aria-expanded="true"] & {
       order: inherit;
+      margin-top: ecl-layout('gutter', 'controls');
     }
 
     @include ecl-media-breakpoint-up('md') {
