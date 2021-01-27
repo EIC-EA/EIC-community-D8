@@ -1,0 +1,21 @@
+uuid: 5ec6403a-18b8-43b0-8dd8-36ac67fdff1a
+langcode: en
+status: true
+dependencies:
+  module:
+    - file_link
+    - media
+_core:
+  default_config_hash: BXeVa7fcLqzw84ZMiDJHZAUoYECzIiuzgWXbpBiLoWk
+id: media.oe_media_remote_file
+field_name: oe_media_remote_file
+entity_type: media
+type: file_link
+settings: {  }
+module: file_link
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

@@ -1,0 +1,25 @@
+uuid: c83a16e0-af81-47f0-a2aa-c8dedd268f42
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.media.oe_media_file_type
+    - media.type.document
+  module:
+    - options
+_core:
+  default_config_hash: tgpdSEo2gZHAKWHq1enPeXpWJcol97B0AOlpMBShBJU
+id: media.document.oe_media_file_type
+field_name: oe_media_file_type
+entity_type: media
+bundle: document
+label: 'File Type'
+description: ''
+required: true
+translatable: false
+default_value:
+  -
+    value: local
+default_value_callback: ''
+settings: {  }
+field_type: list_string

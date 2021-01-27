@@ -15,6 +15,7 @@
         "drupal/paragraphs": "^1.12",
         "drush/drush": "^9.0",
         "openeuropa/composer-artifacts": "~0.1",
+        "openeuropa/oe_media": "^1.11",
         "openeuropa/oe_profile": "^0.4",
         "openeuropa/oe_theme": "^2.0",
         "webflo/drupal-finder": "^1.0",
