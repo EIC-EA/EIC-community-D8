@@ -36,3 +36,8 @@
 @function ecl-typography($property, $type: 'default') {
   @return ecl-schema-get($ecl-typography, $property, $type);
 }
+
+// Returns a border property from the $ecl-typography schematic.
+@function ecl-border($type: 'default') {
+  @return map-get($ecl-border, $type);
+}

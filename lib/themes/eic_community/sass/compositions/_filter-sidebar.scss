@@ -1,0 +1,152 @@
+.ecl-filter-sidebar {
+  $node: &;
+
+  display: flex;
+  flex-direction: column;
+  padding: ecl-box-model('padding') 0;
+
+  &__expand {
+    @include ecl-media-breakpoint-down('md') {
+      display: block;
+
+      #{$node}--is-ready[aria-expanded="true"] & {
+        display: none;
+      }
+    }
+  }
+
+  &__collapse {
+    @include ecl-media-breakpoint-down('md') {
+      display: none;
+
+      #{$node}--is-ready[aria-expanded="true"] & {
+        display: block;
+      }
+    }
+  }
+
+  &__main,
+  &__splash {
+    width: 100%;
+  }
+
+  &__main {
+    @include ecl-media-breakpoint-down('md') {
+      display: none;
+
+      #{$node}--is-ready[aria-expanded="true"] & {
+        display: block;
+      }
+    }
+  }
+
+  &__splash {
+    order: -1;
+
+    #{$node}--is-ready[aria-expanded="true"] & {
+      order: inherit;
+    }
+
+    @include ecl-media-breakpoint-up('md') {
+      display: none;
+    }
+  }
+
+  &__title {
+    @extend .ecl-u-type-heading-3;
+
+    margin-top: 0;
+  }
+
+  &__item {
+    margin-bottom: ecl-layout('gutter', 'controls');
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  &__item-label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: ecl-typography('color', meta);
+    font-weight: $ecl-font-weight-bold;
+    margin-bottom: ecl-layout('gutter', 'controls');
+
+    @include ecl-responsive-font('label');
+
+    &:focus {
+      border: none;
+      outline: none;
+    }
+
+    &[tabindex="0"]:focus {
+      outline: ecl-border('outline');
+    }
+    #{$node}__item--is-collapsible &[tabindex="0"]:focus {
+      border-color: transparent;
+    }
+
+    #{$node}__item--is-collapsible & {
+      border-bottom: ecl-border('teaser');
+      border-color: ecl-typography('color');
+      margin-bottom: ecl-layout('gutter', 'controls');
+      padding: ecl-layout('gutter', 'controls') 0;
+    }
+  }
+
+  &__item-label-icon {
+    display: none;
+    color: ecl-typography('color');
+
+    #{$node}__item--is-collapsible & {
+      display: block;
+      transform: none;
+    }
+
+    #{$node}__item--is-collapsible[aria-collapsed="false"] & {
+      transform: rotate(180deg);
+    }
+  }
+
+  &__item-form {
+    #{$node}__item--is-collapsible[aria-collapsed="true"] & {
+      @include visually-hidden();
+    }
+  }
+
+  &__item-field {
+    margin-bottom: ecl-layout('gutter', 'controls');
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    #{$node}__item--is-collapsible #{$node}__item-form[aria-expanded="false"] &:nth-child(1n+6) {
+      @include visually-hidden();
+    }
+  }
+
+  &__item-options {
+    display: flex;
+    flex-direction: row-reverse;
+  }
+
+  &__item-collapse,
+  &__item-expand {
+    display: none
+  }
+
+  &__item-collapse {
+    #{$node}--is-ready #{$node}__item-form--is-expandable[aria-expanded="true"] & {
+      display: block;
+    }
+  }
+
+  &__item-expand {
+    #{$node}--is-ready #{$node}__item-form--is-expandable[aria-expanded="false"] & {
+      display: block;
+    }
+  }
+}
