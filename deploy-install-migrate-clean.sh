@@ -77,7 +77,7 @@ run_command "git pull"
 # Installation: Install composer dependencies.
 run_command "docker-compose exec web composer install"
 
-# Permission: Change file permissions of settings.php
+# Permission: Change file permissions of settings.php - @todo Uncomment if needed when running locally
 #run_command "chmod 644 ./web/sites/default/settings.php"
 
 # Installation: Install clean website via Toolkit.
