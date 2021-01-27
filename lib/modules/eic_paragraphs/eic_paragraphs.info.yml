@@ -1,0 +1,6 @@
+name: EIC Paragraphs
+description: Logic for paragraps in the EIC project.
+type: module
+core_version_requirement: ^8.8 || ^9
+package: European Innovation Council
+php: 7.3

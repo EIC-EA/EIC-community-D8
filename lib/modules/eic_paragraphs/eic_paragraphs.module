@@ -1,0 +1,16 @@
+<?php
+
+/**
+ * @file
+ * Main module file for EIC Paragraphs module.
+ */
+
+use Drupal\eic_paragraphs\Hooks\FieldWidgetFormAlter;
+
+/**
+ * Implements hook_field_widget_WIDGET_TYPE_form_alter().
+ */
+function eic_paragraphs_field_widget_paragraphs_form_alter(&$element, &$form_state, $context) {
+  \Drupal::classResolver(FieldWidgetFormAlter::class)
+    ->paragraphs($element, $form_state, $context);
+}
