@@ -1,0 +1,43 @@
+uuid: 152e3bd3-3483-4a85-b708-ee5bbd6ffccc
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.tiles_content.field_description
+    - field.field.paragraph.tiles_content.field_tiles
+    - field.field.paragraph.tiles_content.field_title
+    - paragraphs.paragraphs_type.tiles_content
+id: paragraph.tiles_content.default
+targetEntityType: paragraph
+bundle: tiles_content
+mode: default
+content:
+  field_description:
+    weight: 1
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textarea
+    region: content
+  field_tiles:
+    weight: 2
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: 'Page title contains...'
+    third_party_settings: {  }
+    type: entity_reference_autocomplete
+    region: content
+  field_title:
+    weight: 0
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+hidden:
+  created: true
+  status: true
