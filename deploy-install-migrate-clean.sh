@@ -19,8 +19,8 @@ PRINT_USAGE_INFO() {
 Usage: sh install-migrate-clean.sh BRANCH PASSWORD
 
 Arguments:
-  BRANCH    The Git branch to deploy.
-  PASSWORD  The new password for the admin user.
+  BRANCH      The Git branch to deploy.
+  [PASSWORD]  WIP - The new password for the admin user.
 EOF
 }
 
@@ -37,7 +37,8 @@ BRANCH=$1
 PASSWORD=$2
 
 # Exit script if required arguments are missing.
-if [ -z "$BRANCH" ] || [ -z "$PASSWORD" ]; then
+#if [ -z "$BRANCH" ] || [ -z "$PASSWORD" ]; then
+if [ -z "$BRANCH" ]; then
   printf "\n%bMissing required arguments.\n" "$COLOR_RED"
   PRINT_USAGE_INFO
   exit 1
@@ -77,7 +78,7 @@ run_command "git pull"
 run_command "docker-compose exec web composer install"
 
 # Permission: Change file permissions of settings.php
-run_command "chmod 644 ./web/sites/default/settings.php"
+#run_command "chmod 644 ./web/sites/default/settings.php"
 
 # Installation: Install clean website via Toolkit.
 run_command "docker-compose exec web ./vendor/bin/run toolkit:install-clean --config-file runner.dist.yml"
