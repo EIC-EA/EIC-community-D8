@@ -1,0 +1,23 @@
+# Sidebar filter
+
+Displays the filter sidebar composition that should be used within a overview page.
+Filters will be grouped if more than 1 filter exists within the `items[]items` object of the initial item `entry`.
+A filter group will be expandable if more than 5 filters are defined within a group.
+
+The sidebar can also expand and collapse for smaller viewports.
+
+## Parameters
+
+| Key                     | Type     | Description                                                                    | Mandatory |     |
+| ----------------------- | -------- | ------------------------------------------------------------------------------ | --------- | --- |
+| title                   | string   | Displays the title of the composition.                                         | no        |     |
+| title_element           | string   | Use an alternative title HTMLElement.                                          | no        |     |
+| icon_file_path          | string   | The URL to the icon library sprite.                                            | no        |     |
+| items                   | object[] | Contains al renderable field that are bundled within a group.                  | yes       |     |
+| items[].label           | string   | The label of the current filter group.                                         | no        |     |
+| items[].items           | object[] | Contains the actial fields that will be rendered for the current group.        | yes       |     |
+| items[].items[].content | string   | A rendered field for the current filter group.                                 | yes       |     |
+| collapse_label          | string   | Alternative label that will be used within the collapse filter sidebar button. | no        |     |
+| expand_label            | string   | Alternative label that will be used within the expand filter sidebar button.   | no        |     |
+| show_filters_label      | string   | Alternative label that will be used within the show all filters of a group.    | no        |     |
+| hide_filters_label      | string   | Alternative label that will be used within the hide all filters of a group.    | no        |     |
