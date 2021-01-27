@@ -1,0 +1,10 @@
+uuid: ba015255-fba7-4832-b3a6-134f0d93756a
+langcode: en
+status: true
+dependencies: {  }
+id: tiles_content
+label: 'Tiles Content'
+icon_uuid: null
+icon_default: null
+description: 'Used for displaying a title, body and tiles which link to the corresponding internal pages.'
+behavior_plugins: {  }
