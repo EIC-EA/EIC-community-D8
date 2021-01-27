@@ -65,7 +65,7 @@ run_command() {
 }
 
 # Configuration: Enable maintenance mode
-run_command "docker-compose exec web drush state:set system.maintenance_mode 1 --input-format=integer -y"
+docker-compose exec web drush state:set system.maintenance_mode 1 --input-format=integer -y
 
 # Git: Checkout correct branch.
 run_command "git checkout $BRANCH"
@@ -76,27 +76,20 @@ run_command "git pull"
 # Installation: Install composer dependencies.
 run_command "docker-compose exec web composer install"
 
-# @todo Keep for local install but remove for deploy script
-# Installation: Install site via Drush.
-run_command "docker-compose exec web drush site:install -y"
-# Installation: Build site for local development using Toolkit. (Symlinks lib/ directories)
-run_command "docker-compose exec web ./vendor/bin/run toolkit:build-dev"
+# Permission: Change file permissions of settings.php
+run_command "chmod 644 ./web/sites/default/settings.php"
 
-# @todo Uncomment and keep for deploy on STAG
 # Installation: Install clean website via Toolkit.
-#run_command "docker-compose exec web ./vendor/bin/run toolkit:install-clean --config-file runner.dist.yml"
+run_command "docker-compose exec web ./vendor/bin/run toolkit:install-clean --config-file runner.dist.yml"
+
+# Configuration: Enable maintenance mode
+run_command "docker-compose exec web drush state:set system.maintenance_mode 1 --input-format=integer -y"
 
 # Cache: Rebuild Drupal cache.
 run_command "docker-compose exec web drush cache:rebuild"
 
-# @todo Uncomment if necessary
-# Configuration: Fix known error: Site Entities exist of type <em class="placeholder">Shortcut link</em> and <em class="placeholder">Shortcut set</em> <em class="placeholder">Default</em>. These entities need to be deleted before importing.
-#run_command "docker-compose exec web drush entity:delete shortcut_set -y"
-#run_command "docker-compose exec web drush pm:uninstall shortcut -y"
-
-# @todo Uncomment if necessary
 # Configuration: Fix known error: Site UUID in source storage does not match the target storage.
-#run_command "docker-compose exec web drush config:set "system.site" uuid "TODO" -y"
+run_command "docker-compose exec web drush config:set "system.site" uuid "a01abd4a-5998-4549-8d1b-8a9056cd581c" -y"
 
 # Configuration: Apply any database updates required via Drush.
 run_command "docker-compose exec web drush updatedb -y"
@@ -115,17 +108,22 @@ run_command "docker-compose exec web drush cache:rebuild"
 #run_command "docker-compose exec web drush entity:updates -y"
 
 # Cache: Rebuild Drupal cache.
-#run_command "docker-compose exec web drush cache:rebuild"
+run_command "docker-compose exec web drush cache:rebuild"
 
+# @todo Uncomment when working on migrations from EIC D7
 # Migration: Migrate all content from EIC Drupal 7.
 run_command "docker-compose exec web drush migrate:import --group migrate_drupal_7 --continue-on-failure"
 
-# @todo Uncomment when working on Challenge Platform migrations
+# @todo Uncomment when working on migrations from Challenge Platform D7
 # Migration: Migrate all content from Challenge Platform Drupal 7.
 #run_command "docker-compose exec web drush migrate:import --group migrate_drupal_7_challenge_platform --continue-on-failure"
 
+# @todo Uncomment if necessary (perhaps needed after importing scrambled user data)
 # Configuration: Update password of admin user (first user).
-run_command "docker-compose exec web drush user:password MasterChef1 $PASSWORD" "Setting admin user password failed."
+#run_command "docker-compose exec web drush user:password MasterChef1 $PASSWORD" "Setting admin user password failed."
 
 # Configuration: Disable maintenance mode
 run_command "docker-compose exec web drush state:set system.maintenance_mode 0 --input-format=integer -y"
+
+# Cache: Rebuild Drupal cache.
+run_command "docker-compose exec web drush cache:rebuild"

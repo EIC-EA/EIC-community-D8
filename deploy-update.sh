@@ -89,8 +89,8 @@ run_command "docker-compose exec web drush cache:rebuild"
 # Configuration: Apply database entity schema updates via Drush
 #run_command "docker-compose exec web drush entity:updates -y"
 
-# Cache: Rebuild Drupal cache.
-#run_command "docker-compose exec web drush cache:rebuild"
-
 # Configuration: Disable maintenance mode
 run_command "docker-compose exec web drush state:set system.maintenance_mode 0 --input-format=integer -y"
+
+# Cache: Rebuild Drupal cache.
+run_command "docker-compose exec web drush cache:rebuild"
