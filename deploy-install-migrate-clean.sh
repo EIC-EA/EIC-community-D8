@@ -109,11 +109,11 @@ run_command "docker-compose exec web drush cache:rebuild"
 #run_command "docker-compose exec web drush entity:updates -y"
 
 # Cache: Rebuild Drupal cache.
-run_command "docker-compose exec web drush cache:rebuild"
+#run_command "docker-compose exec web drush cache:rebuild"
 
 # @todo Uncomment when working on migrations from EIC D7
 # Migration: Migrate all content from EIC Drupal 7.
-run_command "docker-compose exec web drush migrate:import --group migrate_drupal_7 --continue-on-failure"
+#run_command "docker-compose exec web drush migrate:import --group migrate_drupal_7 --continue-on-failure"
 
 # @todo Uncomment when working on migrations from Challenge Platform D7
 # Migration: Migrate all content from Challenge Platform Drupal 7.

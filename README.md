@@ -157,7 +157,7 @@ TLDR; Commands:
 sh deploy-update.sh GIT_BRANCH
 
 # Deploy and re-install the site and migrate all content
-sh deploy-install-migrate-clean.sh GIT_BRANCH ADMIN_PASSWORD
+sh deploy-install-migrate-clean.sh GIT_BRANCH
 ```
 
 ### Deploy steps
@@ -194,7 +194,6 @@ one of the following shell scripts.
 # Deploy and update the site
 sh deploy-update.sh GIT_BRANCH
 
-# @todo Perhaps changing the admin password is not necessary
 # Deploy and re-install the site and migrate all content and set the admin accounts password
-sh deploy-install-migrate-clean.sh GIT_BRANCH ADMIN_PASSWORD
+sh deploy-install-migrate-clean.sh GIT_BRANCH
 ```
