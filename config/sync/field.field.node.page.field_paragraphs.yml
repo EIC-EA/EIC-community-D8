@@ -1,0 +1,31 @@
+uuid: 77d8faef-1770-4450-b309-5db400e6df8d
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_paragraphs
+    - node.type.page
+    - paragraphs.paragraphs_type.tiles_content
+  module:
+    - entity_reference_revisions
+id: node.page.field_paragraphs
+field_name: field_paragraphs
+entity_type: node
+bundle: page
+label: Paragraphs
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    negate: 0
+    target_bundles:
+      tiles_content: tiles_content
+    target_bundles_drag_drop:
+      tiles_content:
+        enabled: true
+        weight: 2
+field_type: entity_reference_revisions

@@ -1,0 +1,23 @@
+uuid: 7dc56c12-8a28-43e6-a21e-61a92c4d3fde
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_cta
+    - node.type.page
+  module:
+    - link
+id: node.page.field_cta
+field_name: field_cta
+entity_type: node
+bundle: page
+label: 'CTA button'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  link_type: 17
+  title: 1
+field_type: link
