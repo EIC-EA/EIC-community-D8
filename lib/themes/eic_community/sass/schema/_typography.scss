@@ -18,5 +18,12 @@ $ecl-typography: (
     'font-size--md': $ecl-font-size-m,
     'font-size--lg': $ecl-font-size-m,
     'font-weight': $ecl-font-weight-bold,
-  )
+  ),
+  'title': (
+    'color': map-get($ecl-colors, 'blue'),
+    'font-size': $ecl-font-size-s,
+    'font-size--md': $ecl-font-size-m,
+    'font-size--lg': $ecl-font-size-m,
+    'font-weight': $ecl-font-weight-bold,
+  ),
 );

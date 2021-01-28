@@ -20,3 +20,12 @@
     $cache: $s;
   }
 }
+
+// Snippet that makes the element visually hidden for the DOM.
+@mixin visually-hidden() {
+  clip: rect(1px, 1px, 1px, 1px);
+  height: 1px;
+  overflow: hidden;
+  position: absolute;
+  width: 1px;
+}

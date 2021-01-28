@@ -1,3 +1,121 @@
 .ecl-teaser {
-  position: relative;
+  $node: &;
+
+  @include ecl-media-breakpoint-up('sm') {
+    display: flex;
+    align-items: stretch;
+  }
+
+
+  &__image-wrapper {
+    margin: 0 0 ecl-box-model('padding') 0;
+    padding: 0;
+
+    @include ecl-media-breakpoint-up('sm') {
+      margin: 0 ecl-box-model('padding') 0 0;
+      width: map-get($ecl-media, 'l');
+    }
+  }
+
+  &__image {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  &__main-wrapper {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__meta-header,
+  &__meta-footer {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+  }
+
+  &__meta-header {
+    margin-bottom: ecl-box-model('padding');
+
+    #{$node}--story & {
+      margin-left: #{0 - ecl-box-model('padding')};
+    }
+  }
+
+  &__content {
+    flex-grow: 1;
+  }
+
+  &__title {
+    margin-top: 0;
+    color: ecl-typography('color', 'title');
+    font-weight: $ecl-font-weight-bold;
+
+    @include ecl-responsive-font('label');
+  }
+
+  &__meta-column {
+    #{$node}--story & {
+      width: 50%;
+      padding-left: ecl-box-model('padding');
+    }
+  }
+
+  &__type {
+    display: flex;
+    align-items: center;
+    text-transform: uppercase;
+  }
+
+  &__type-icon {
+    color: ecl-typography('color', 'title');
+    margin-right: ecl-box-model('padding', 'meta');
+  }
+
+  &__stats {
+    display: flex;
+    align-items: center;
+
+    #{$node}__meta-footer & {
+      margin-left: auto;
+    }
+  }
+
+  &__stat {
+    display: flex;
+    align-items: center;
+    color: ecl-typography('color', 'meta');
+    margin-right: ecl-box-model('padding');
+
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+
+  &__stat-value {
+    @include ecl-responsive-font('meta');
+
+    &::before,
+    &::after {
+      display: inline;
+    }
+
+    &::before {
+      content: "( ";
+    }
+
+    &::after {
+      content: " )";
+    }
+  }
+
+  &__stat-label {
+    @include visually-hidden;
+  }
+
+  &__stat-icon {
+    margin-right: ecl-box-model('padding', 'meta');
+  }
 }
