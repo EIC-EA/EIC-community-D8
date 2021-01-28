@@ -1,0 +1,121 @@
+.ecl-attachment {
+  margin: ecl-box-model('margin', 'description') 0;
+  padding: ecl-box-model('padding', 'description');
+  background-color: ecl-box-model('background-color', 'description');
+  border-radius: ecl-box-model('border-radius');
+  display: flex;
+  align-items: flex-start;
+
+  &:first-child {
+    margin-top: 0;
+  }
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  &__aside {
+    flex-shrink: 0;
+    box-sizing: border-box;
+    margin: 0;
+    padding-right: ecl-box-model('padding', 'description');
+  }
+
+  &__image-wrapper,
+  &__icon-wrapper {
+    position: relative;
+    width: map-get($ecl-media, '2xs');
+    height: map-get($ecl-media, '2xs');
+  }
+
+  &__image {
+    position: absolute;
+    display: block;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  &__icon-wrapper {
+    background-color: map-get($ecl-colors, 'blue-25');
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    border-radius: 50%;
+    color: map-get($ecl-colors, 'blue-75');
+  }
+
+
+  &__title {
+    line-height: ecl-typography('line-height', 'label');
+  }
+
+  &__title,
+  &__link {
+    font-weight: ecl-typography('font-weight', 'label');
+    @include ecl-responsive-font('label');
+  }
+
+  &__type {
+    text-transform: uppercase;
+    font-size: ecl-typography('font-size', 'meta');
+
+    &::before,
+    &::after {
+      display: inline;
+    }
+
+    &::before {
+      content: "("
+    }
+
+    &::after {
+      content: ")"
+    }
+  }
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: columm;
+    margin-top: ecl-box-model('margin', 'description');
+    margin-bottom: #{0 - ecl-layout('gutter', 'controls')};
+
+    @include ecl-media-breakpoint-up('md') {
+      flex-direction: row;
+    }
+  }
+
+  &__action {
+    margin: 0 0 ecl-layout('gutter', 'controls') ecl-layout('gutter', 'controls');
+    color: ecl-typography('color', 'meta');
+    @include ecl-responsive-font('label');
+
+    @include ecl-media-breakpoint-up('lg') {
+      margin-left: ecl-layout('gutter--md', 'controls');
+    }
+
+    &:first-child {
+      margin-left: 0;
+    }
+
+    &:nth-child(2) {
+      margin-right: auto;
+    }
+
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+
+  &__author {
+    font-weight: ecl-typography('font-weight', 'label');
+    line-height: ecl-typography('line-height', 'label');
+
+    @include ecl-responsive-font('label');
+  }
+}

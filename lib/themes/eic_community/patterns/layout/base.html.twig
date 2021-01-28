@@ -12,6 +12,18 @@
   {% set output_sidebar = block('sidebar') %}
 {% endif %}
 
+{% if page.content_before is not empty %}
+  {% set output_content_before = page.content_before %}
+{% elseif block('content_before') is defined %}
+  {% set output_content_before = block('content_before') %}
+{% endif %}
+
+{% if page.content_after is not empty %}
+  {% set output_content_after = page.content_after %}
+{% elseif block('content_after') is defined %}
+  {% set output_content_after = block('content_after') %}
+{% endif %}
+
 <div class="ecl-viewport">
   <div class="ecl-viewport__top">
     {% block site_top_bar %}
@@ -37,11 +49,11 @@
     {% endblock %}
 
     <div class="ecl-base-layout{{ output_sidebar ? ' ecl-base-layout--contain' }}">
-      <div class="ecl-base-layout__content-before">
-        {% block content_before %}
-          {{ page.content_before }}
-        {% endblock %}
-      </div>
+      {% if output_content_before %}
+        <div class="ecl-base-layout__content-before">
+          {{ output_content_before }}
+        </div>
+      {% endif %}
 
       <div class="ecl-base-layout__content">
         <div class="ecl-base-layout__main">
@@ -59,11 +71,11 @@
         {% endif %}
       </div>
 
-      <div class="ecl-base-layout__content-after">
-        {% block content_after %}
-          {{ page.content_after }}
-        {% endblock %}
-      </div>
+      {% if output_content_after %}
+        <div class="ecl-base-layout__content-before">
+          {{ output_content_after }}
+        </div>
+      {% endif %}
     </div>
   </div>
 

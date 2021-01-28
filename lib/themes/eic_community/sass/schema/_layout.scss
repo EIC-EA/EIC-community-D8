@@ -1,0 +1,21 @@
+$ecl-layout: (
+  'default': (
+    'gutter': map-get($ecl-spacing, 'xl'),
+    'gutter--md': map-get($ecl-spacing, '4xl'),
+    'gutter--lg': map-get($ecl-spacing, '6xl'),
+  ),
+  'description': (
+    'gutter': map-get($ecl-spacing, 's'),
+    'gutter--md': map-get($ecl-spacing, 'm'),
+    'gutter--lg': map-get($ecl-spacing, 'l'),
+  ),
+  'meta': (
+    'gutter': map-get($ecl-spacing, 'xs'),
+    'gutter--md': map-get($ecl-spacing, 's'),
+    'gutter--lg': map-get($ecl-spacing, 's'),
+  ),
+  'controls': (
+    'gutter': map-get($ecl-spacing, 's'),
+    'gutter--md': map-get($ecl-spacing, 'xl'),
+  )
+)

@@ -1,0 +1,16 @@
+.ecl-well {
+  margin: ecl-box-model('margin') 0;
+  padding: ecl-box-model('padding');
+  background-color: ecl-box-model('background-color');
+  width: 100%;
+  border-radius: ecl-box-model('border-radius');
+  box-sizing: border-box;
+
+  &:first-child {
+    margin-top: 0;
+  }
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}

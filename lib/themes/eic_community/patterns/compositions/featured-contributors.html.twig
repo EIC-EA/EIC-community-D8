@@ -1,0 +1,22 @@
+{% set title_element = title_element|default('h3') %}
+
+{% if items is not empty %}
+  <div class="ecl-featured-list ecl-featured-list--contributors">
+    {% if title is not empty %}
+      {% if title is not empty %}
+        <{{ title_element }} class="ecl-featured-list__title">{{ title }}</{{ title_element }}>
+      {% endif %}
+    {% endif %}
+
+    <div class="ecl-featured-list__items">
+      {% for item in items %}
+        <div class="ecl-featured-list__item">
+          {% include "@theme/patterns/components/author.html.twig" with item|default({})|merge({
+            icon_file_path: icon_file_path,
+            size: 'medium'
+          }) only %}
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+{% endif %}
