@@ -1,0 +1,17 @@
+# Featured Contributors
+
+Displays the defined contributors in a list.
+
+## Example:
+
+```
+{% include "@theme/patterns/components/featured-contributors.html.twig" %}
+```
+
+## Twig parameters:
+
+| Key     | Type     | Description                                                                                                                  | Mandatory |
+| ------- | -------- | ---------------------------------------------------------------------------------------------------------------------------- | --------- |
+| title   | string   | Displays an optional title before the overview.                                                                              | no        |
+| items   | object[] | Should contain an array with entries that match the [Author](/?path=/story/components-author--initials-fallback) coomponent. | yes       |
+| items[] | object   | Should be an object of type [Author](/?path=/story/components-author--initials-fallback) component.                          | yes       |

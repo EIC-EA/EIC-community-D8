@@ -1,0 +1,52 @@
+uuid: acd44c09-54a3-4b97-9cb1-5b026099c429
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.media.document.oe_media_file
+    - field.field.media.document.oe_media_file_type
+    - field.field.media.document.oe_media_remote_file
+    - media.type.document
+  module:
+    - file
+    - path
+_core:
+  default_config_hash: gqausAZ4EUT6jvc2qnICbX6ehdupraH71E8YV32iSBs
+id: media.document.default
+targetEntityType: media
+bundle: document
+mode: default
+content:
+  name:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  oe_media_file:
+    weight: 1
+    settings:
+      progress_indicator: throbber
+    third_party_settings: {  }
+    type: file_generic
+    region: content
+  path:
+    type: path
+    weight: 3
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  status:
+    type: boolean_checkbox
+    settings:
+      display_label: true
+    weight: 2
+    region: content
+    third_party_settings: {  }
+hidden:
+  created: true
+  oe_media_file_type: true
+  oe_media_remote_file: true
+  uid: true

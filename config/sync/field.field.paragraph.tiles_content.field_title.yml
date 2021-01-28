@@ -1,0 +1,19 @@
+uuid: ac7d9776-259b-48c4-8561-9036d5abe71b
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_title
+    - paragraphs.paragraphs_type.tiles_content
+id: paragraph.tiles_content.field_title
+field_name: field_title
+entity_type: paragraph
+bundle: tiles_content
+label: Title
+description: 'Title of the component.'
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

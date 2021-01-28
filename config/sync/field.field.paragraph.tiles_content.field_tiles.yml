@@ -1,0 +1,28 @@
+uuid: 6b5df7a9-496e-4a57-8649-0abf6614c6cc
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_tiles
+    - node.type.page
+    - paragraphs.paragraphs_type.tiles_content
+id: paragraph.tiles_content.field_tiles
+field_name: field_tiles
+entity_type: paragraph
+bundle: tiles_content
+label: Tiles
+description: 'List of USP cards.'
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      page: page
+    sort:
+      field: _none
+    auto_create: false
+    auto_create_bundle: page
+field_type: entity_reference

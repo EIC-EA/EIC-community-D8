@@ -1,0 +1,22 @@
+# Editorial Actions
+
+Displays a vertical list with editorial related acctions
+
+## Example:
+
+```twig
+{% include "@theme/patterns/compositions/editorial-actions.html.twig" %}
+```
+
+## Parameters
+
+| Key                   | Type     | Description                                                                  | Mandatory |     |
+| --------------------- | -------- | ---------------------------------------------------------------------------- | --------- | --- |
+| items                 | object[] | The actions that will be displayed.                                          | yes       |     |
+| items[].link          | object   | Defines the link for the current action.                                     | no        |     |
+| items[].link.label    | string   | Displays the label of the current action.                                    | no        |     |
+| items[].link.path     | string   | Defines the URL for the current action.                                      | no        |     |
+| items[].icon          | object   | Displays an optional icon for the action.                                    | no        |     |
+| icon.name             | string   | Should match with a name from the SVG inline sprite.                         | no        |     |
+| icon.type             | string   | Should match with icon type from the ECL icon library or the custom library. | no        |     |
+| items[].extra_classes | string   | Insert extra classnames for the current action.                              | no        |     |

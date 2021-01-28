@@ -1,0 +1,23 @@
+.ecl-timestamp {
+  $node: &;
+
+  display: flex;
+  align-items: center;
+  color: ecl-typography('color', 'meta');
+
+  &--is-large {
+    flex-direction: column;
+  }
+
+  &__label {
+    @include ecl-responsive-font('label');
+  }
+
+  &__icon {
+    margin-right: ecl-layout('gutter', 'meta');
+
+    @include ecl-media-breakpoint-up('lg') {
+      margin-right: ecl-layout('gutter--lg', 'meta');
+    }
+  }
+}

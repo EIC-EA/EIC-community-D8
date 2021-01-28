@@ -1,10 +1,10 @@
 .ecl-introduction-header {
   $node: &;
 
-  padding-bottom: map-get($ecl-spacing, 'xl');
+  padding-bottom: ecl-box-model('padding', 'banner');
 
   @include ecl-media-breakpoint-up('md') {
-    padding-bottom: map-get($ecl-spacing, '3xl');
+    padding-bottom: ecl-box-model('padding--md', 'banner');
   }
 
   &__meta {

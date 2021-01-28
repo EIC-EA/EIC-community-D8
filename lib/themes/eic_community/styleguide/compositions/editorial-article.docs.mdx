@@ -1,0 +1,27 @@
+# Editorial Article
+
+Displays the main content with optional sidebar that can be defined as block or parameter.
+
+## Example:
+
+```twig
+{% include "@theme/patterns/compositions/editorial-article.html.twig" with {
+  sidebar: ...
+  conten: ...
+} %}
+```
+
+```twig
+{% embed "@theme/patterns/compositions/editorial-article.html.twig" %}
+  {% block content %}...{% endblock %}
+
+  {% block sidebar %}...{% endblock %}
+{% endembed %}
+```
+
+## Parameters
+
+| Key     | Type | Description                                               | Mandatory |     |
+| ------- | ---- | --------------------------------------------------------- | --------- | --- |
+| content | any  | Will output the defined content within the first column.  | yes       |     |
+| sidebar | any  | Will output the defined content within the second column. | no        |     |
