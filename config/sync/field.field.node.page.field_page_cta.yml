@@ -1,14 +1,14 @@
-uuid: 7dc56c12-8a28-43e6-a21e-61a92c4d3fde
+uuid: d32fce7b-6638-41df-a592-c2d893f9f058
 langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.node.field_cta
+    - field.storage.node.field_page_cta
     - node.type.page
   module:
     - link
-id: node.page.field_cta
-field_name: field_cta
+id: node.page.field_page_cta
+field_name: field_page_cta
 entity_type: node
 bundle: page
 label: 'CTA button'

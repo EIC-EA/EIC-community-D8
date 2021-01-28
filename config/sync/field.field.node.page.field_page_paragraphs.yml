@@ -1,15 +1,15 @@
-uuid: 77d8faef-1770-4450-b309-5db400e6df8d
+uuid: e15db004-039b-404b-b9af-9d6f043b5671
 langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.node.field_paragraphs
+    - field.storage.node.field_page_paragraphs
     - node.type.page
     - paragraphs.paragraphs_type.tiles_content
   module:
     - entity_reference_revisions
-id: node.page.field_paragraphs
-field_name: field_paragraphs
+id: node.page.field_page_paragraphs
+field_name: field_page_paragraphs
 entity_type: node
 bundle: page
 label: Paragraphs

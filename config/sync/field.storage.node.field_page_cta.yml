@@ -1,12 +1,12 @@
-uuid: ce7deb7f-39e5-44d5-ae73-5c1238400cc4
+uuid: 037aee4a-f83d-4e50-9983-5bc7568ce794
 langcode: en
 status: true
 dependencies:
   module:
     - link
     - node
-id: node.field_cta
-field_name: field_cta
+id: node.field_page_cta
+field_name: field_page_cta
 entity_type: node
 type: link
 settings: {  }

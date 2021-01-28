@@ -3,11 +3,10 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.field.node.page.body
-    - field.field.node.page.field_cta
     - field.field.node.page.field_image
     - field.field.node.page.field_introduction
-    - field.field.node.page.field_paragraphs
+    - field.field.node.page.field_page_cta
+    - field.field.node.page.field_page_paragraphs
     - field.field.node.page.field_subtitle
     - node.type.page
   module:
@@ -20,25 +19,6 @@ targetEntityType: node
 bundle: page
 mode: default
 content:
-  body:
-    label: hidden
-    type: text_default
-    weight: 101
-    settings: {  }
-    third_party_settings: {  }
-    region: content
-  field_cta:
-    weight: 105
-    label: above
-    settings:
-      trim_length: 80
-      url_only: false
-      url_plain: false
-      rel: ''
-      target: ''
-    third_party_settings: {  }
-    type: link
-    region: content
   field_image:
     type: entity_reference_entity_view
     weight: 103
@@ -55,9 +35,21 @@ content:
     third_party_settings: {  }
     type: text_default
     region: content
-  field_paragraphs:
+  field_page_cta:
+    weight: 107
+    label: above
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+    type: link
+    region: content
+  field_page_paragraphs:
     type: entity_reference_revisions_entity_view
-    weight: 106
+    weight: 108
     label: above
     settings:
       view_mode: default
@@ -74,7 +66,7 @@ content:
     region: content
   links:
     weight: 100
+    region: content
     settings: {  }
     third_party_settings: {  }
-    region: content
 hidden: {  }
