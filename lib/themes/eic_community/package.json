@@ -12,7 +12,7 @@
     "storybook": "start-storybook -s ./dist -p 8080",
     "pregenerate-storybook": "[ -d './storybook-static' ] && rm -r ./storybook-static || exit 0",
     "generate-storybook": "build-storybook -o ./storybook-static",
-    "postgenerate-storybook": "[ -d './dist' ] && cp -r ./dist/ ./storybook-static || exit 0",
+    "postgenerate-storybook": "[ -d './dist' ] && cp -r ./dist/* ./storybook-static || exit 0",
     "prewatch": "npm run compile",
     "watch": "npm-run-all --parallel watch:* -ln",
     "watch:styles": "chokidar \"./sass/**/*.scss\" -i \"/node_modules/\" -c \"npm run compile:styles\"",
