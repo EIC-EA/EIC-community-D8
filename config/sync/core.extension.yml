@@ -8,10 +8,12 @@ module:
   dblog: 0
   dynamic_page_cache: 0
   editor: 0
+  eic_media: 0
+  eic_media_document: 0
   entity: 0
-  entity_reference_revisions: 0
   entity_browser: 0
   entity_browser_entity_form: 0
+  entity_reference_revisions: 0
   field: 0
   field_ui: 0
   file: 0
