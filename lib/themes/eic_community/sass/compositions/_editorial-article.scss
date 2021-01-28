@@ -1,0 +1,74 @@
+.ecl-editorial-article {
+  &__wrapper {
+    @include ecl-media-breakpoint-up('md') {
+      display: flex;
+      align-items: stretch;
+    }
+  }
+
+  &__content {
+    font-size: ecl-typography('font-size');
+    line-height: ecl-typography('line-height');
+    color: ecl-typography('color');
+
+    @include ecl-media-breakpoint-up('md') {
+      flex-grow: 1;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      &:first-child {
+        margin-top: 0;
+      }
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+
+    h1,
+    h2 {
+      @extend .ecl-u-type-heading-2;
+    }
+
+    h3 {
+      @extend .ecl-u-type-heading-3;
+    }
+
+    h4 {
+      @extend .ecl-u-type-heading-4;
+    }
+
+    h5, {
+      @extend .ecl-u-type-heading-5;
+    }
+  }
+
+  &__aside {
+    position: relative;
+    margin-top: ecl-layout('gutter');
+
+    @include ecl-media-breakpoint-up('md') {
+      box-sizing: border-box;
+      margin: 0;
+      padding-left: ecl-layout('gutter');
+      width: calc(100% / #{$ecl-grid-columns} * 4);
+      flex-shrink: 0;
+    }
+
+    @include ecl-media-breakpoint-up('lg') {
+      padding-left: ecl-layout('gutter--lg');
+    }
+  }
+
+  &__aside-wrapper {
+    @include ecl-media-breakpoint-up('md') {
+      position: sticky;
+      top: ecl-layout('gutter');
+    }
+  }
+}

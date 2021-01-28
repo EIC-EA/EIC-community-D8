@@ -8,7 +8,7 @@ The actual image container is based on the [ECL-Twig Media Container](https://ww
 ## Example:
 
 ```
-{% include "@theme/components/author.html.twig" with {
+{% include "@theme/patterns/components/author.html.twig" with {
   author: 'Jane Doe',
   ...
 } %}
@@ -16,10 +16,17 @@ The actual image container is based on the [ECL-Twig Media Container](https://ww
 
 ## Twig parameters:
 
-| Key       | Type   | Description                                                                            | Mandatory |
-| --------- | ------ | -------------------------------------------------------------------------------------- | --------- |
-| author    | string | Displays the name of the component. The initials will be defined from the given value. | yes       |
-| size      | string | Defines the size of the component: `small`, `medium` or `large`.                       | no        |
-| image     | object | Display the optional author image if defined.                                          | no        |
-| image.src | string | Path of the actual image to use                                                        | no        |
-| image.alt | string | The value for the alt image attribute.                                                 | no        |
+| Key                 | Type     | Description                                                                                                                  | Mandatory |
+| ------------------- | -------- | ---------------------------------------------------------------------------------------------------------------------------- | --------- | --- |
+| author              | string   | Displays the name of the component. The initials will be defined from the given value.                                       | yes       |     |
+| path                | string   | The path of the author as URL                                                                                                | no        |     |
+| description         | string   | Inserts an optional description before the title.                                                                            | no        |     |
+| size                | string   | Defines the size of the component: `small`, `medium` or `large`.                                                             | no        |     |
+| image               | object   | Display the optional author image if defined.                                                                                | no        |     |
+| image.src           | string   | Path of the actual image to use                                                                                              | no        |     |
+| image.alt           | string   | The value for the alt image attribute.                                                                                       | no        |     |
+| actions             | object[] | Displays optional clickable actions for the current author.                                                                  | no        |     |
+| actions[].label     | string   | The label of the displayed action that should be visually hidden.                                                            | no        |     |
+| actions[].icon      | object   | Follows the [ECL Twig icon component](https://ecl-twig-php.netlify.app/ec/?path=/story/components-icon--general) properties. | no        |     |
+| actions[].icon.type | string   | Should match with the SVG sprite type.                                                                                       | yes       |     |
+| actions[].icon.name | string   | The ID name within the matching SVG sprite.                                                                                  | yes       |     |

@@ -1,0 +1,39 @@
+uuid: d30d1529-c183-441f-a273-c7300ba51e9b
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.tiles_content.field_description
+    - field.field.paragraph.tiles_content.field_tiles
+    - field.field.paragraph.tiles_content.field_title
+    - paragraphs.paragraphs_type.tiles_content
+id: paragraph.tiles_content.default
+targetEntityType: paragraph
+bundle: tiles_content
+mode: default
+content:
+  field_description:
+    weight: 1
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: basic_string
+    region: content
+  field_tiles:
+    weight: 2
+    label: above
+    settings:
+      view_mode: teaser
+      link: false
+    third_party_settings: {  }
+    type: entity_reference_entity_view
+    region: content
+  field_title:
+    weight: 0
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+hidden: {  }

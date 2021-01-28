@@ -1,0 +1,25 @@
+# Meta List
+
+Displays 1 or multiple meta fields in a horizontal order.
+
+## Example:
+
+```
+{% include "@theme/patterns/components/meta-list.html.twig" with {
+  items: [
+    {
+      label: "New York City"
+    },
+    ...
+  ],
+} %}
+```
+
+## Twig parameters:
+
+| Key                   | Type     | Description                                             | Mandatory |
+| --------------------- | -------- | ------------------------------------------------------- | --------- |
+| items                 | object[] | Should contain 1 or multiple renderable fields          | yes       |
+| items[].label         | string   | The displayed label for the current meta field          | yes       |
+| items[].extra_classes | string   | Inserts optional CSS classes to each meta field         | no        |
+| extra_classes         | string   | Inserts optional CSS classes to the meta list container | no        |

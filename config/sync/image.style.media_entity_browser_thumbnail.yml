@@ -1,0 +1,17 @@
+uuid: 87f02ffe-54b7-4a67-b4ed-82b8db672e01
+langcode: en
+status: true
+dependencies: {  }
+_core:
+  default_config_hash: bPnE9JT5k9L_e_spGdMcQCYazPEL6MZxw2APdhPO9M0
+name: media_entity_browser_thumbnail
+label: 'Media Entity Browser thumbnail'
+effects:
+  1d899e87-51e4-4467-90db-e516c31d4688:
+    uuid: 1d899e87-51e4-4467-90db-e516c31d4688
+    id: image_scale_and_crop
+    weight: 1
+    data:
+      width: 350
+      height: 200
+      anchor: center-center

@@ -26,6 +26,11 @@
   @return ecl-schema-get($ecl-box-model, $property, $type);
 }
 
+// Returns a border property from the $ecl-typography schematic.
+@function ecl-border($type: 'default') {
+  @return map-get($ecl-border, $type);
+}
+
 // Returns a layout property from the $ecl-layout schematic.
 @function ecl-layout($property, $type: 'default') {
   @return ecl-schema-get($ecl-layout, $property, $type);
@@ -35,9 +40,4 @@
 // Returns a typography property from the $ecl-typography schematic.
 @function ecl-typography($property, $type: 'default') {
   @return ecl-schema-get($ecl-typography, $property, $type);
-}
-
-// Returns a border property from the $ecl-typography schematic.
-@function ecl-border($type: 'default') {
-  @return map-get($ecl-border, $type);
 }
