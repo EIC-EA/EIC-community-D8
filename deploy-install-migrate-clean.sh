@@ -104,13 +104,6 @@ run_command "docker-compose exec web drush config:import -y"
 # Cache: Rebuild Drupal cache.
 run_command "docker-compose exec web drush cache:rebuild"
 
-# @todo Uncomment if we want entity schema updates in the database using this module: https://www.drupal.org/project/devel_entity_updates
-# Configuration: Apply database entity schema updates via Drush
-#run_command "docker-compose exec web drush entity:updates -y"
-
-# Cache: Rebuild Drupal cache.
-#run_command "docker-compose exec web drush cache:rebuild"
-
 # @todo Uncomment when working on migrations from EIC D7
 # Migration: Migrate all content from EIC Drupal 7.
 #run_command "docker-compose exec web drush migrate:import --group migrate_drupal_7 --continue-on-failure"
