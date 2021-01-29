@@ -1,0 +1,20 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_publication_date
+    - node.type.story
+  module:
+    - datetime
+id: node.story.field_publication_date
+field_name: field_publication_date
+entity_type: node
+bundle: story
+label: 'Publication date'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: datetime
