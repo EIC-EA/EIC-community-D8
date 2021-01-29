@@ -18,6 +18,7 @@
 
     #{$node}--has-image & {
       border: none;
+      padding: ecl-box-model('padding', 'banner--md') 0;
     }
   }
 
