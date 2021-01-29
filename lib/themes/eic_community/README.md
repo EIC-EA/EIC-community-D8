@@ -41,7 +41,7 @@ Style schematics are defined within the `./sasss/schema` directory where CSS pro
 
 ```scss
 // Ouputs the base CSS font-size property with the included breakpoint media query variants from the $ecl-typography schematic.
-@mixin responsive-font($type: string, $breakpoints: SassList);
+@mixin ecl-responsive-font($type: string, $breakpoints: SassList);
 ```
 
 ##### Sass Functions
