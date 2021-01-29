@@ -12,6 +12,12 @@ $ecl-box-model: (
     'padding--lg': map-get($ecl-spacing, '3xl'),
     'background-color': map-get($ecl-colors, 'grey-10'),
   ),
+  'controls': (
+    'margin': map-get($ecl-spacing, 's'),
+    'padding': map-get($ecl-spacing, 's'),
+    'padding--md': map-get($ecl-spacing, 'm'),
+    'padding--lg': map-get($ecl-spacing, 'l'),
+  ),
   'meta': (
     'margin': map-get($ecl-spacing, 'xl'),
     'padding': map-get($ecl-spacing, 's'),
