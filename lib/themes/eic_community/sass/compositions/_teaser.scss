@@ -84,9 +84,32 @@
     }
   }
 
+  &__content-wrapper {
+    display: flex;
+    flex-grow: 1;
+  }
+
   &__content {
     flex-grow: 1;
     margin-bottom: ecl-box-model('margin', 'meta');
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    #{$node}__content-wrapper & {
+      display: flex;
+      flex-direction: column;
+      margin: 0;
+      justify-content: space-between;
+    }
+  }
+
+  &__content-aside {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
   }
 
   &__title {
@@ -144,7 +167,15 @@
       justify-content: space-between;
 
       & > :last-child {
-        margin-left: ecl-box-model('margin', 'controls')
+        margin-left: ecl-box-model('margin', 'controls');
+      }
+    }
+
+    #{$node}--event & {
+      margin-top: ecl-box-model('margin', 'meta');
+
+      @include ecl-media-breakpoint-up('md') {
+        margin-top: 0;
       }
     }
   }
@@ -152,15 +183,33 @@
   &__type {
     display: flex;
 
+    #{$node}--event & {
+      color: ecl-typography('color', 'meta');
+
+      @include ecl-responsive-font('meta');
+    }
+
     #{$node}--story & {
       align-items: center;
       text-transform: uppercase;
+    }
+
+    #{$node}--event #{$node}__meta-header & {
+      margin-left: auto;
+
+      @include ecl-media-breakpoint-up('md') {
+        margin-left: ecl-box-model('margin', 'meta');
+      }
     }
   }
 
   &__type-icon {
     color: ecl-typography('color', 'title');
     margin-right: ecl-box-model('margin', 'controls');
+
+    #{$node}--event & {
+      color: ecl-typography('color', 'meta');
+    }
   }
 
   &__type-label {
@@ -178,6 +227,34 @@
     #{$node}--member #{$node}__meta-footer & {
       width: 100%;
       margin-bottom: ecl-box-model('margin', 'controls');
+    }
+
+     #{$node}--event & {
+      margin-right: ecl-box-model('margin', 'controls');
+     }
+  }
+
+  &__tags {
+    display: flex;
+    margin-bottom: #{0 - ecl-box-model('margin', 'controls')};
+
+    #{$node}__meta-header & {
+      width: 100%;
+      margin-bottom: ecl-box-model('margin', 'controls');
+
+      @include ecl-media-breakpoint-up('md') {
+        margin-bottom: #{0 - ecl-box-model('margin', 'controls')};
+        width: auto;
+        margin-right: auto;
+      }
+    }
+  }
+
+  &__tag {
+    margin: 0 ecl-box-model('margin', 'controls') ecl-box-model('margin', 'controls') 0;
+
+    &:last-child {
+      margin-right: 0;
     }
   }
 
