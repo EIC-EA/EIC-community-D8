@@ -28,16 +28,16 @@ class FieldWidgetFormAlter {
    *   The subform for the paragraph.
    */
   private function paragraphsQuote(array $element, array &$subform): void {
-    $delta = $element;
-    $selector = 'input[name="field_paragraphs[' . $delta . '][subform][field_variant]"]';
+    $delta = $element['#delta'];
+    $selector = 'select[name="field_paragraphs[' . $delta . '][subform][field_view_mode][0][value]"]';
     $subform['field_tx_author']['#states'] = [
       'visible' => [
-        $selector => ['value' => 'manual'],
+        $selector => ['value' => 'external_contributor'],
       ],
     ];
     $subform['field_ur_author']['#states'] = [
       'visible' => [
-        $selector => ['value' => 'reference'],
+        $selector => ['value' => 'platform_member'],
       ],
     ];
   }
