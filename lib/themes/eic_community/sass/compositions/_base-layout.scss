@@ -40,23 +40,26 @@
   }
 
   &__main {
-    flex-basis: 100%;
+    width: 100%;
     order: 1;
 
-    &:only-child {
-      width: 100%;
-    }
-
     @include ecl-media-breakpoint-up('md') {
+      width: auto;
       flex-grow: 1;
+
+      &:only-child {
+        width: 100%;
+      }
     }
   }
 
   &__aside {
-    margin-bottom: map-get($ecl-spacing, 'm');
+    margin: map-get($ecl-spacing, 'm') 0;
     flex-shrink: 0;
+    width: 100%;
 
     @include ecl-media-breakpoint-up('md') {
+      width: auto;
       min-width: map-get($ecl-width, 'form-m');
       margin: 0 map-get($ecl-spacing, '3xl') 0 0;
     }

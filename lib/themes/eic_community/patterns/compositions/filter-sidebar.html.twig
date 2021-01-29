@@ -1,0 +1,107 @@
+{% set title_element = title_element|default('h2') %}
+
+<div class="ecl-filter-sidebar">
+  <div class="ecl-filter-sidebar__main">
+    {% if title is not empty %}
+      <{{ title_element }} class="ecl-filter-sidebar__title">
+        {{ title }}
+      </{{ title_element }}>
+    {% endif %}
+
+    {% if items is not empty %}
+      <div class="ecl-filter-sidebar__items">
+        {% for item in items %}
+          {% set is_collapsible = item.items|length > 1 ? true : false %}
+          {% set label_element = is_collapsible ? 'button' : 'span' %}
+
+          <div class="ecl-filter-sidebar__item {{ is_collapsible ? 'ecl-filter-sidebar__item--is-collapsible' }}"
+            aria-collapsed="{{ item.is_collapsed ? 'true' : 'false' }}"
+          >
+            {% if item.label %}
+              <span class="ecl-filter-sidebar__item-label" tabindex="{{ is_collapsible ? '0' : '-1' }}">
+                {{ item.label }}
+
+                {% if is_collapsible %}
+                  {% include '@ecl-twig/ec-component-icon/ecl-icon.html.twig' with {
+                    icon: {
+                      path: icon_file_path,
+                      type: 'ui',
+                      name: 'rounded-arrow',
+                      size: 'xs',
+                    },
+                    extra_classes: 'ecl-filter-sidebar__item-label-icon',
+                    extra_attributes: {
+                      'aria-hidden': 'true',
+                      'focusable': 'false'
+                    }
+                  } %}
+                {% endif %}
+              </span>
+            {% endif %}
+
+            {% if item.items is not empty %}
+              <div class="ecl-filter-sidebar__item-form"
+                aria-expanded="{{ item.is_expanded ? 'true' : 'false' }}"
+              >
+                <div class="ecl-filter-sidebar__item-fields">
+                  {% for field in item.items %}
+                    <div class="ecl-filter-sidebar__item-field">
+                      {{ field.content }}
+                    </div>
+                  {% endfor %}
+                </div>
+                {% if item.items|length > 1 %}
+                  <div class="ecl-filter-sidebar__item-options">
+                    {% include '@ecl-twig/ec-component-button/ecl-button.html.twig' with {
+                      variant: 'ghost',
+                      label: expand_label|default('Show all'),
+                      icon: {
+                        path: icon_file_path,
+                        type: 'ui',
+                        name: 'rounded-arrow',
+                        size: 'xs',
+                        transform: 'rotate-180',
+                        extra_attributes: {
+                          'aria-hidden': 'true',
+                          'focusable': 'false'
+                        }
+                      },
+                      extra_classes: 'ecl-filter-sidebar__item-expand',
+                    } %}
+                    {% include '@ecl-twig/ec-component-button/ecl-button.html.twig' with {
+                      variant: 'ghost',
+                      label: collapse_label|default('Collapse'),
+                      icon: {
+                        path: icon_file_path,
+                        type: 'ui',
+                        name: 'rounded-arrow',
+                        size: 'xs',
+                        extra_attributes: {
+                          'aria-hidden': 'true',
+                          'focusable': 'false'
+                        }
+                      },
+                      extra_classes: 'ecl-filter-sidebar__item-collapse',
+                    } %}
+                  </div>
+                {% endif %}
+              </div>
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+  <div class="ecl-filter-sidebar__splash">
+    {% include '@ecl-twig/ec-component-button/ecl-button.html.twig' with {
+      variant: 'primary',
+      label: show_filters_label|default('Show filters'),
+      extra_classes: 'ecl-filter-sidebar__expand',
+    } only %}
+    {% include '@ecl-twig/ec-component-button/ecl-button.html.twig' with {
+      variant: 'primary',
+      label: hide_filters_label|default('Hide filters'),
+      extra_classes: 'ecl-filter-sidebar__collapse',
+    } only %}
+  </div>
+</div>
