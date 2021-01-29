@@ -1,48 +1,35 @@
-uuid: 6d918b9c-0d40-4603-875b-d4526be81e90
+uuid: 931c8a79-cc0c-4f5d-a7f6-bf48ce2d613a
 langcode: en
 status: true
 dependencies:
   config:
+    - core.entity_view_mode.paragraph.external_contributor
     - field.field.paragraph.quote.field_body
     - field.field.paragraph.quote.field_tx_author
     - field.field.paragraph.quote.field_ur_author
     - field.field.paragraph.quote.field_view_mode
     - paragraphs.paragraphs_type.quote
   module:
-    - paragraph_view_mode
     - text
-id: paragraph.quote.default
+id: paragraph.quote.external_contributor
 targetEntityType: paragraph
 bundle: quote
-mode: default
+mode: external_contributor
 content:
   field_body:
     weight: 0
-    label: above
+    label: hidden
     settings: {  }
     third_party_settings: {  }
     type: text_default
     region: content
   field_tx_author:
     weight: 1
-    label: above
+    label: hidden
     settings: {  }
     third_party_settings: {  }
     type: text_default
     region: content
-  field_ur_author:
-    weight: 2
-    label: above
-    settings:
-      link: true
-    third_party_settings: {  }
-    type: entity_reference_label
-    region: content
-  field_view_mode:
-    weight: 3
-    label: above
-    settings: {  }
-    third_party_settings: {  }
-    type: paragraph_view_mode
-    region: content
-hidden: {  }
+hidden:
+  field_ur_author: true
+  field_view_mode: true

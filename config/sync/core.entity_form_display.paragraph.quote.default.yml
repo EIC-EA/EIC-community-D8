@@ -6,9 +6,10 @@ dependencies:
     - field.field.paragraph.quote.field_body
     - field.field.paragraph.quote.field_tx_author
     - field.field.paragraph.quote.field_ur_author
-    - field.field.paragraph.quote.field_variant
+    - field.field.paragraph.quote.field_view_mode
     - paragraphs.paragraphs_type.quote
   module:
+    - paragraph_view_mode
     - text
 id: paragraph.quote.default
 targetEntityType: paragraph
@@ -16,7 +17,7 @@ bundle: quote
 mode: default
 content:
   field_body:
-    weight: 0
+    weight: 1
     settings:
       rows: 5
       placeholder: ''
@@ -41,11 +42,16 @@ content:
     third_party_settings: {  }
     type: entity_reference_autocomplete
     region: content
-  field_variant:
-    weight: 1
-    settings: {  }
+  field_view_mode:
+    weight: 0
+    settings:
+      view_modes:
+        external_contributor: external_contributor
+        platform_member: platform_member
+        default: 0
+      default_view_mode: platform_member
     third_party_settings: {  }
-    type: options_buttons
+    type: paragraph_view_mode
     region: content
 hidden:
   created: true
