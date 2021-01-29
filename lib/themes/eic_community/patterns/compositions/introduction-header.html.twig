@@ -4,9 +4,10 @@
   <div class="ecl-container">
     <div class="ecl-introduction-header__wrapper">
       <section class="ecl-introduction-header__content">
-      {% if meta is not empty %}
-        <div class="ecl-introduction-header__meta">{{ meta }}</div>
-      {% endif %}
+        {% include "@theme/patterns/components/meta-list.html.twig" with {
+          extra_classes: "ecl-introduction-header__meta",
+          items: meta
+        } %}
 
       {% if title is not empty %}
         <{{ title_element }} class="ecl-introduction-header__title">{{ title }}</{{ title_element }}>

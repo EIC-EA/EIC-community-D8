@@ -1,0 +1,32 @@
+.ecl-auth-banner {
+  &__title {
+    @extend .ecl-u-type-heading-3;
+
+    margin-top: 0;
+  }
+
+  &__wrapper {
+    display: flex;
+    flex-direction: column;
+
+    @include ecl-media-breakpoint-up('md') {
+      width: calc(100% / #{$ecl-grid-columns} * 8);
+    }
+  }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    margin-top: ecl-box-model('margin', 'description');
+    margin-bottom: #{0 - ecl-layout('gutter', 'controls')};
+  }
+
+  &__action {
+    margin: 0 ecl-layout('gutter', 'controls') ecl-layout('gutter', 'controls') 0;
+    font-weight: ecl-typography('font-weight', 'label');
+
+    @include ecl-media-breakpoint-up('lg') {
+      margin: 0 ecl-layout('gutter--md', 'controls') ecl-layout('gutter', 'controls') 0;
+    }
+  }
+}

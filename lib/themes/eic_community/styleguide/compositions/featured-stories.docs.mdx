@@ -1,0 +1,18 @@
+# Featured Stories
+
+Displays a list of titles from the related stories.
+
+## Example:
+
+```
+{% include "@theme/patterns/components/featured-stories.html.twig" %}
+```
+
+## Twig parameters:
+
+| Key           | Type     | Description                                      | Mandatory |
+| ------------- | -------- | ------------------------------------------------ | --------- |
+| title         | string   | Displays an optional title before the overview.  | no        |
+| items         | object[] | Array of one or multiple related stories display | yes       |
+| items[].title | string   | The title of the related story to display.       | yes       |
+| items[].path  | string   | The URL that should link to the related story.   | yes       |

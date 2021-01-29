@@ -1,7 +1,5 @@
-.ecl-site-header {
-  &__banner {
-    @include ecl-media-breakpoint-up('lg') {
-      padding-right: 0;
-    }
+.ecl-site-header-core {
+  html &__container {
+    padding-bottom: 0;
   }
 }

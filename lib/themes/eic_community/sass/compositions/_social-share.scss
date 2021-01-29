@@ -1,0 +1,56 @@
+.ecl-social-share {
+  $node: &;
+
+  &__title {
+    text-transform: uppercase;
+    color: map-get($ecl-colors, 'grey-50');
+    @include ecl-responsive-font('meta');
+    font-weight: $ecl-font-weight-regular;
+  }
+
+  &__items {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: #{0 - map-get($ecl-spacing, 'm')}
+  }
+
+  &__item {
+    margin: map-get($ecl-spacing, 'm');
+    color: map-get($ecl-colors, white);
+    margin: 0 map-get($ecl-spacing, 'm') map-get($ecl-spacing, 'm') 0;
+
+    &:last-child {
+      margin: 0;
+    }
+  }
+
+  &__item-wrapper {
+    color: map-get($ecl-colors, 'white');
+    display: flex;
+  }
+
+  &__item-label {
+    clip: rect(1px, 1px, 1px, 1px);
+    height: 1px;
+    overflow: hidden;
+    position: absolute;
+    width: 1px;
+  }
+
+  &__item-icon-wrapper {
+    width: map-get($ecl-media, '2xs');
+    height: map-get($ecl-media, '2xs');
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background-color: map-get($ecl-colors, 'blue-75');
+
+    @each $name, $color in $ecl-social-media-list {
+      #{$node}__item--#{$name} & {
+        background-color: #{$color};
+      }
+    }
+  }
+}

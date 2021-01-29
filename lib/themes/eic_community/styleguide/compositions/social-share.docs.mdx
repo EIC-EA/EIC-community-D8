@@ -1,0 +1,21 @@
+# Social share
+
+Displays the custom version of the [ECL-Twig social share component](https://www.npmjs.com/package/@ecl-twig/ec-component-social-media-share).
+
+## Example:
+
+```
+{% include "@theme/patterns/components/social-share.html.twig" %}
+```
+
+## Twig parameters:
+
+| Key            | Type     | Description                                                          | Mandatory |
+| -------------- | -------- | -------------------------------------------------------------------- | --------- |
+| title          | string   | Displays a title before the social buttons.                          | no        |
+| icon_file_path | string   | Enables the usage of the ECL icons within the component.             | no        |
+| items          | object[] | Display the optional author image if defined.                        | yes       |
+| items[].path   | string   | The defined share url that will be used for the current social item. | -         |
+| items[].type   | string   | Defines the SVG type to use within the sprite.                       | -         |
+| items[].name   | string   | The name of the svg icon that should be used.                        | -         |
+| items[].label  | string   | Displays the name of the social share item                           | -         |
