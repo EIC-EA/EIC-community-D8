@@ -1,0 +1,16 @@
+{% set title_element = title_element|default('h1') %}
+
+<div class="ecl-overview-header{{ image is not empty ? ' ecl-overview-header--has-image' }} {{ extra_classes }}">
+  <div class="ecl-container">
+    <div class="ecl-overview-header__content">
+      <{{ title_element }} class="ecl-overview-header__title">
+        {{ title }}
+      </{{ title_element }}>
+    </div>
+  </div>
+  {% if image is not empty %}
+    <figure class="ecl-overview-header__image-wrapper">
+      <img class="ecl-overview-header__image" src="{{ image.src }}" alt="{{ image.alt }}" />
+    </figure>
+  {% endif %}
+</div>

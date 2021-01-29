@@ -1,0 +1,9 @@
+<div class="ecl-comment {{ extra_classes }}">
+  <div class="ecl-comment-content">
+    {{ comment }}
+  </div>
+
+  {% if items is not empty %}
+    {% include "@theme/patterns/components/comment-thread.html.twig" with items|default({}) only %}
+  {% endif %}
+</div>

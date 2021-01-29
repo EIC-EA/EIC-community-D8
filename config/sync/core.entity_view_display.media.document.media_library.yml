@@ -1,0 +1,34 @@
+uuid: f10732d0-0636-4f8d-aae8-3d20a5d88bf5
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.media.media_library
+    - field.field.media.document.oe_media_file
+    - field.field.media.document.oe_media_file_type
+    - field.field.media.document.oe_media_remote_file
+    - image.style.medium
+    - media.type.document
+  module:
+    - image
+id: media.document.media_library
+targetEntityType: media
+bundle: document
+mode: media_library
+content:
+  thumbnail:
+    type: image
+    label: hidden
+    settings:
+      image_style: medium
+      image_link: ''
+    weight: 0
+    third_party_settings: {  }
+    region: content
+hidden:
+  created: true
+  name: true
+  oe_media_file: true
+  oe_media_file_type: true
+  oe_media_remote_file: true
+  uid: true

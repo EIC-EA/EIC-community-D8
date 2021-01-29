@@ -1,0 +1,10 @@
+uuid: d4bca443-dbdf-458c-97e8-40110285a898
+langcode: en
+status: true
+dependencies: {  }
+id: full_media_content
+label: 'Full media content'
+icon_uuid: null
+icon_default: null
+description: 'Used for displaying a media image or video follwed by an optional caption.'
+behavior_plugins: {  }
