@@ -1,6 +1,10 @@
 name: EIC Paragraphs
-description: Logic for paragraps in the EIC project.
 type: module
-core_version_requirement: ^8.8 || ^9
+description: Drupal module that provides paragraphs to be used on EIC Platform.
 package: European Innovation Council
+core: 8.x
+core_version_requirement: ^8 || ^9
 php: 7.3
+dependencies:
+  - paragraphs:paragraphs
+  - oe_media:oe_media

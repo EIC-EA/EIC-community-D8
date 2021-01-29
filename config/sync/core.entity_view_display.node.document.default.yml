@@ -1,0 +1,47 @@
+uuid: 6eae7a8f-be87-4ac0-b5de-327f00b06068
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.document.body
+    - field.field.node.document.field_document_media
+    - field.field.node.document.field_vocab_topics
+    - node.type.document
+  module:
+    - text
+    - user
+id: node.document.default
+targetEntityType: node
+bundle: document
+mode: default
+content:
+  body:
+    label: hidden
+    type: text_default
+    weight: 3
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+  field_document_media:
+    type: entity_reference_entity_view
+    weight: 2
+    label: hidden
+    settings:
+      view_mode: default
+      link: false
+    third_party_settings: {  }
+    region: content
+  field_vocab_topics:
+    type: entity_reference_label
+    weight: 1
+    region: content
+    label: hidden
+    settings:
+      link: false
+    third_party_settings: {  }
+  links:
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden: {  }

@@ -9,7 +9,6 @@ module:
   dynamic_page_cache: 0
   editor: 0
   entity: 0
-  entity_reference_revisions: 0
   entity_browser: 0
   entity_browser_entity_form: 0
   entity_reference_revisions: 0
@@ -24,6 +23,7 @@ module:
   inline_entity_form: 0
   link: 0
   media: 0
+  media_library: 0
   menu_link_content: 0
   menu_ui: 0
   node: 0
@@ -49,6 +49,8 @@ module:
   variationcache: 0
   views: 10
   paragraphs: 11
+  eic_paragraphs: 12
+  eic_paragraph_full_media_content: 13
   oe_profile: 1000
 theme:
   stable: 0

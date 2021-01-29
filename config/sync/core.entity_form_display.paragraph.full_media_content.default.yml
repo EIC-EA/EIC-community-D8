@@ -1,0 +1,35 @@
+uuid: 3e667503-1bb6-464d-917b-c6a7db68b8d6
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.full_media_content.field_media
+    - field.field.paragraph.full_media_content.field_media_caption
+    - paragraphs.paragraphs_type.full_media_content
+  module:
+    - media_library
+id: paragraph.full_media_content.default
+targetEntityType: paragraph
+bundle: full_media_content
+mode: default
+content:
+  field_media:
+    weight: 0
+    settings:
+      media_types:
+        - image
+        - remote_video
+    third_party_settings: {  }
+    type: media_library_widget
+    region: content
+  field_media_caption:
+    weight: 1
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+hidden:
+  created: true
+  status: true

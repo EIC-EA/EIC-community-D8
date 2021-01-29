@@ -1,0 +1,28 @@
+uuid: 67a89eaf-15d6-4159-b0c9-946d96f99e4f
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_document_media
+    - media.type.document
+    - node.type.document
+id: node.document.field_document_media
+field_name: field_document_media
+entity_type: node
+bundle: document
+label: Document
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:media'
+  handler_settings:
+    target_bundles:
+      document: document
+    sort:
+      field: _none
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference
