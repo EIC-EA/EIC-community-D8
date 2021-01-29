@@ -42,7 +42,13 @@
     </div>
 
     <div class="ecl-teaser__content">
-      <{{ title_element }} class="ecl-teaser__title">{{ title }}</{{ title_element }}>
+      <{{ title_element }} class="ecl-teaser__title">
+        {% if path is not empty %}
+          <a href="{{ path }}">{{ title }}</a>
+        {% else %}
+          {{ title }}
+        {% endif %}
+      </{{ title_element }}>
 
       {% if description is not empty %}
         <p class="ecl-teaser__description">{{ description }}</p>

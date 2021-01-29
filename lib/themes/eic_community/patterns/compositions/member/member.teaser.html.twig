@@ -64,7 +64,7 @@
               {% if icon_file_path and action.icon %}
                 {% set _icon = action.icon|default({})|merge({
                   path: icon_file_path,
-                  size: 's',
+                  size: 'm',
                   extra_attributes: {
                     'aria-hidden': 'true',
                     'focusable': 'false'
@@ -86,39 +86,40 @@
         </div>
       {% endif %}
 
-      {% if timestamp %}
-        <div class="ecl-teaser__meta-column">
+      <div class="ecl-teaser__meta-column">
+
+        {% if timestamp %}
           {% include "@theme/patterns/components/timestamp.html.twig" with timestamp|default({})|merge({
             icon_file_path: icon_file_path,
           }) only %}
-        </div>
-      {% endif %}
+        {% endif %}
 
-      {% if stats is not empty %}
-        <div class="ecl-teaser__stats">
-          {% for stat in stats %}
-            <div class="ecl-teaser__stat">
-              {% if stat.icon is not empty and icon_file_path %}
-                {% include '@ecl-twig/ec-component-icon/ecl-icon.html.twig' with {
-                  icon: {
-                    size: 'xs',
-                    path: icon_file_path,
-                    type: stat.icon.type|default('branded'),
-                    name: stat.icon.name,
-                  },
-                  extra_classes: 'ecl-teaser__stat-icon',
-                  extra_attributes: {
-                    'aria-hidden': 'true',
-                    'focusable': 'false'
-                  }
-                } only %}
-              {% endif %}
-              <span class="ecl-teaser__stat-label">{{ stat.label }}</span>
-              <span class="ecl-teaser__stat-value">{{ stat.value }}</span>
-            </div>
-          {% endfor %}
-        </div>
-      {% endif %}
+        {% if stats is not empty %}
+          <div class="ecl-teaser__stats">
+            {% for stat in stats %}
+              <div class="ecl-teaser__stat">
+                {% if stat.icon is not empty and icon_file_path %}
+                  {% include '@ecl-twig/ec-component-icon/ecl-icon.html.twig' with {
+                    icon: {
+                      size: 'xs',
+                      path: icon_file_path,
+                      type: stat.icon.type|default('branded'),
+                      name: stat.icon.name,
+                    },
+                    extra_classes: 'ecl-teaser__stat-icon',
+                    extra_attributes: {
+                      'aria-hidden': 'true',
+                      'focusable': 'false'
+                    }
+                  } only %}
+                {% endif %}
+                <span class="ecl-teaser__stat-label">{{ stat.label }}</span>
+                <span class="ecl-teaser__stat-value">{{ stat.value }}</span>
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+      </div>
     </div>
   </div>
 </div>
