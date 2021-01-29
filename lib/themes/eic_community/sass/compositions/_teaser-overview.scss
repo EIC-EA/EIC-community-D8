@@ -6,11 +6,14 @@
     flex-direction: column;
 
     #{$node}--has-columns & {
+      padding: ecl-box-model('padding') 0;
+      margin-bottom: #{0 - ecl-box-model('padding')};
+
       @include ecl-media-breakpoint-up('md') {
         flex-direction: row;
         flex-wrap: wrap;
-        margin-bottom: #{0 - ecl-box-model('padding')};
         margin-left: #{0 - ecl-box-model('padding')};
+        padding: ecl-box-model('padding--lg') 0;
       }
     }
   }
@@ -25,10 +28,6 @@
       border: none;
       padding: 0;
       margin-bottom: ecl-box-model('padding');
-
-      &:last-child {
-        margin-bottom: 0;
-      }
 
       @include ecl-media-breakpoint-up('md') {
         padding: 0 0 0 ecl-box-model('padding');
