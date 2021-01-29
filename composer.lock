@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5cac1259e2c3ed624c2812fd780493c9",
+    "content-hash": "37285115fa5480d6af9fd8ab34064a61",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -2216,9 +2216,6 @@
                         "[web-root]/profiles/README.txt": "assets/scaffold/files/profiles.README.txt",
                         "[web-root]/themes/README.txt": "assets/scaffold/files/themes.README.txt"
                     }
-                },
-                "patches_applied": {
-                    "https://www.drupal.org/project/drupal/issues/2943172": "https://www.drupal.org/files/issues/2018-07-05/2943172-kernel-test-base-3.patch"
                 }
             },
             "autoload": {
@@ -2927,6 +2924,57 @@
             "homepage": "https://www.drupal.org/project/media_avportal",
             "support": {
                 "source": "https://git.drupalcode.org/project/media_avportal"
+            }
+        },
+        {
+            "name": "drupal/paragraph_view_mode",
+            "version": "2.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/paragraph_view_mode.git",
+                "reference": "2.0.1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/paragraph_view_mode-2.0.1.zip",
+                "reference": "2.0.1",
+                "shasum": "f0032635ee78c9d7c3286f928d861a79812dc3a2"
+            },
+            "require": {
+                "drupal/core": "^8.9 || ^9.0",
+                "drupal/paragraphs": "*"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "2.0.1",
+                    "datestamp": "1605481252",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0+"
+            ],
+            "authors": [
+                {
+                    "name": "Mariusz Andrzejewski (sayco)",
+                    "homepage": "https://www.drupal.org/u/sayco",
+                    "role": "Maintainer"
+                },
+                {
+                    "name": "volodymyr.umanets",
+                    "homepage": "https://www.drupal.org/user/3565617"
+                }
+            ],
+            "description": "This tiny module is meant to easily reuse the same paragraph types with different view mode (display mode).",
+            "homepage": "https://www.drupal.org/project/paragraph_view_mode",
+            "support": {
+                "source": "https://git.drupalcode.org/project/paragraph_view_mode",
+                "issues": "https://www.drupal.org/project/issues/paragraph_view_mode"
             }
         },
         {
