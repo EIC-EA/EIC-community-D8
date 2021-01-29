@@ -1,0 +1,27 @@
+uuid: e40bf2c1-ea5d-42a3-960a-b9a9961a6de0
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.media.field_media_file
+    - media.type.eic_document
+  module:
+    - file
+id: media.eic_document.field_media_file
+field_name: field_media_file
+entity_type: media
+bundle: eic_document
+label: File
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  file_directory: '[date:custom:Y]-[date:custom:m]'
+  file_extensions: 'txt doc docx pdf'
+  max_filesize: ''
+  description_field: false
+  handler: 'default:file'
+  handler_settings: {  }
+field_type: file
