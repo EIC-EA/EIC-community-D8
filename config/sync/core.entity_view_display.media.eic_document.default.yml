@@ -1,0 +1,27 @@
+uuid: 1f67e88b-b0b5-41ed-9bc7-568d054fb4cd
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.media.eic_document.field_media_file
+    - media.type.eic_document
+  module:
+    - file
+id: media.eic_document.default
+targetEntityType: media
+bundle: eic_document
+mode: default
+content:
+  field_media_file:
+    label: visually_hidden
+    weight: 0
+    settings:
+      use_description_as_link_text: true
+    third_party_settings: {  }
+    type: file_default
+    region: content
+hidden:
+  created: true
+  name: true
+  thumbnail: true
+  uid: true

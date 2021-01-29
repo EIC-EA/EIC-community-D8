@@ -1,0 +1,25 @@
+# Teaser Story
+
+Displays the teaser container for the story content type.
+
+## Example
+
+```
+  {% include "@theme/patterns/compositions/story/story.teaser.html.twig" %}
+```
+
+## Parameters
+
+| Key           | Type     | Description                                                                                             | Mandatory |
+| ------------- | -------- | ------------------------------------------------------------------------------------------------------- | --------- |
+| title         | string   | Displays the title of the teaser.                                                                       | no        |
+| description   | string   | Inserts a descriptive text below the title.                                                             | no        |
+| image         | object   | Displays the teaser image                                                                               | no        |
+| image.src     | string   | The URl to the image file.                                                                              | no        |
+| image.alt     | string   | The optional alt attribute for the image.                                                               | no        |
+| timestamp     | object   | Displays the timestamp of the entry. Should inherit the paramaters from the custom timestamp component. | no        |
+| author        | object   | Displays the author of the entry. Should inherit the paramaters from the custom author component.       | no        |
+| stats         | object[] | Displays informative statistics of the current teaser.                                                  | no        |
+| stats[].value | string   | The visible value of the statistic.                                                                     | no        |
+| stats[].label | string   | The semantic value of the statistic that will be visually hidden.                                       | no        |
+| stats[].icon  | object[] | Displays an ECL Icon for the current statistic.                                                         | no        |

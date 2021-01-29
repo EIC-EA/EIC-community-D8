@@ -1,19 +1,19 @@
-uuid: e1dbbd0e-2636-485b-a7cd-c8633b144d1e
+uuid: 4d1451e1-78d0-48d4-bcdd-953f4c83c6bd
 langcode: en
 status: true
 dependencies:
   config:
     - field.storage.node.body
-    - node.type.page
+    - node.type.document
   module:
     - text
-id: node.page.body
+id: node.document.body
 field_name: body
 entity_type: node
-bundle: page
+bundle: document
 label: Body
 description: ''
-required: false
+required: true
 translatable: true
 default_value: {  }
 default_value_callback: ''
