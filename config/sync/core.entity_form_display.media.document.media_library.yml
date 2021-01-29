@@ -1,0 +1,31 @@
+uuid: 964b8a62-f91b-4ba2-8ff9-0fd64b3a29d9
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_form_mode.media.media_library
+    - field.field.media.document.oe_media_file
+    - field.field.media.document.oe_media_file_type
+    - field.field.media.document.oe_media_remote_file
+    - media.type.document
+id: media.document.media_library
+targetEntityType: media
+bundle: document
+mode: media_library
+content:
+  name:
+    type: string_textfield
+    settings:
+      size: 60
+      placeholder: ''
+    weight: 0
+    third_party_settings: {  }
+    region: content
+hidden:
+  created: true
+  oe_media_file: true
+  oe_media_file_type: true
+  oe_media_remote_file: true
+  path: true
+  status: true
+  uid: true
