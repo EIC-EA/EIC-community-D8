@@ -20,6 +20,7 @@ Usage: sh install-migrate-clean.sh [BRANCH|-g] [-c]
 Options:
   -g        SKIP Git checkout. Either specify this, OR a branch to check out.
   -b        SKIP build.
+  -i        Perform a clean install of the site.
 Arguments:
   BRANCH    The Git branch to deploy.
 EOF
@@ -35,7 +36,7 @@ BG_COLOR_GREEN="\e[42m"
 DRUSH_CMD="../vendor/bin/drush"
 
 # Define list of arguments expected in the input
-optstring=":gb"
+optstring=":gbi"
 
 while getopts ${optstring} arg; do
   case ${arg} in
@@ -46,6 +47,10 @@ while getopts ${optstring} arg; do
     b)
       SKIP_BUILD='true'
       echo "Skipping build."
+      ;;
+    i)
+      PERFORM_INSTALL='true'
+      echo "Will perform install."
       ;;
   esac
 done
@@ -83,10 +88,13 @@ run_command() {
   fi
 }
 
-# Configuration: Enable maintenance mode
-cd web
-run_command "$DRUSH_CMD state:set system.maintenance_mode 1 --input-format=integer -y"
-cd ..
+if [ -z "$PERFORM_INSTALL" ]; then
+  # Configuration: Enable maintenance mode (only when not performing an
+  # install).
+  cd web
+  run_command "$DRUSH_CMD state:set system.maintenance_mode 1 --input-format=integer -y"
+  cd ..
+fi
 
 if [ -z "$SKIP_GIT" ]; then
   # Git: Checkout correct branch.
@@ -99,6 +107,11 @@ fi
 if [ -z "$SKIP_BUILD" ]; then
   # Installation: Install composer dependencies.
   run_command "composer install"
+fi
+
+if [ -n "$PERFORM_INSTALL" ]; then
+  # Installation: Install clean website via Toolkit.
+  run_command "./vendor/bin/run toolkit:install-clean --config-file runner.dist.yml"
 fi
 
 # Move into the Drupal webroot.
