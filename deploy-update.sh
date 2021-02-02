@@ -29,6 +29,7 @@ COLOR_GREEN="\e[92m"
 COLOR_RED="\e[91m"
 BG_COLOR_DEFAULT="\e[49m"
 BG_COLOR_GREEN="\e[42m"
+DRUSH_CMD="../vendor/bin/drush"
 
 # Arguments
 BRANCH=$1
@@ -62,7 +63,9 @@ run_command() {
 }
 
 # Configuration: Enable maintenance mode
-run_command "drush state:set system.maintenance_mode 1 --input-format=integer -y"
+cd web
+run_command "$DRUSH_CMD state:set system.maintenance_mode 1 --input-format=integer -y"
+cd ..
 
 # Git: Checkout correct branch.
 run_command "git checkout $BRANCH"
@@ -72,21 +75,23 @@ run_command "git pull"
 
 # Installation: Install composer dependencies.
 run_command "composer install"
+# Move into the Drupal webroot.
+cd web
 
 # Configuration: Apply any database updates via Drush.
-run_command "drush updatedb -y"
+run_command "$DRUSH_CMD updatedb -y"
 
 # Cache: Rebuild Drupal cache.
-run_command "drush cache:rebuild"
+run_command "$DRUSH_CMD cache:rebuild"
 
-# Configuration: Import site configuration via Drush.
-run_command "drush config:import -y"
+# Configuration: Import site configuration via drush.
+run_command "$DRUSH_CMD config:import -y"
 
 # Cache: Rebuild Drupal cache.
-run_command "drush cache:rebuild"
+run_command "$DRUSH_CMD cache:rebuild"
 
 # Configuration: Disable maintenance mode
-run_command "drush state:set system.maintenance_mode 0 --input-format=integer -y"
+run_command "$DRUSH_CMD state:set system.maintenance_mode 0 --input-format=integer -y"
 
 # Cache: Rebuild Drupal cache.
-run_command "drush cache:rebuild"
+run_command "$DRUSH_CMD cache:rebuild"
