@@ -15,8 +15,11 @@ PRINT_USAGE_INFO() {
   COLOR=${1:-$COLOR_DEFAULT}
   printf "\n%b" "$COLOR"
   cat <<EOF
-Usage: sh install-migrate-clean.sh BRANCH
+Usage: sh install-migrate-clean.sh [BRANCH|-g] [-c]
 
+Options:
+  -g        SKIP Git checkout. Either specify this, OR a branch to check out.
+  -b        SKIP build.
 Arguments:
   BRANCH    The Git branch to deploy.
 EOF
@@ -31,14 +34,32 @@ BG_COLOR_DEFAULT="\e[49m"
 BG_COLOR_GREEN="\e[42m"
 DRUSH_CMD="../vendor/bin/drush"
 
-# Arguments
-BRANCH=$1
+# Define list of arguments expected in the input
+optstring=":gb"
 
-# Exit script if required arguments are missing.
-if [ -z "$BRANCH" ]; then
-  printf "\n%bMissing required arguments.\n" "$COLOR_RED"
-  PRINT_USAGE_INFO
-  exit 1
+while getopts ${optstring} arg; do
+  case ${arg} in
+    g)
+      SKIP_GIT='true'
+      echo "Skipping Git checkout/pull."
+      ;;
+    b)
+      SKIP_BUILD='true'
+      echo "Skipping build."
+      ;;
+  esac
+done
+
+# Arguments
+if [ -z "$SKIP_GIT" ]; then
+  BRANCH=$1
+
+  # Exit script if required arguments are missing.
+  if [ -z "$BRANCH" ]; then
+    printf "\n%bMissing required arguments.\n" "$COLOR_RED"
+    PRINT_USAGE_INFO
+    exit 1
+  fi
 fi
 
 # Runs a given command and exits the script if it fails.
@@ -67,14 +88,19 @@ cd web
 run_command "$DRUSH_CMD state:set system.maintenance_mode 1 --input-format=integer -y"
 cd ..
 
-# Git: Checkout correct branch.
-run_command "git checkout $BRANCH"
+if [ -z "$SKIP_GIT" ]; then
+  # Git: Checkout correct branch.
+  run_command "git checkout $BRANCH"
 
-# Git: Pull latest changes.
-run_command "git pull"
+  # Git: Pull latest changes.
+  run_command "git pull"
+fi
 
-# Installation: Install composer dependencies.
-run_command "composer install"
+if [ -z "$SKIP_BUILD" ]; then
+  # Installation: Install composer dependencies.
+  run_command "composer install"
+fi
+
 # Move into the Drupal webroot.
 cd web
 
