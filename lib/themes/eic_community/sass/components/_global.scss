@@ -22,3 +22,16 @@ a {
     margin-bottom: 0;
   }
 }
+
+.ecl-description {
+  @include ecl-responsive-font('description');
+  margin: ecl-box-model('margin', 'description') 0;
+
+  &:first-child {
+    margin-top: 0;
+  }
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}

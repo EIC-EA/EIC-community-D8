@@ -1,17 +1,23 @@
-{% include '@ecl-twig/ec-component-hero-banner/ecl-hero-banner.html.twig' with {
-  title: 'EU Budget for the future',
-  extra_classes: 'ecl-hero-banner--introduction',
-  description: 'The European Commission has put forward ambitious yet realistic proposals for a modern EU budget. It is time for an EU budget that reflects rapid developments in innovation, the economy, the environment and geopolitics, amongst others.',
-  centered: false,
-  type: 'image',
-  image: hero_image.src,
-  link: {
-    link: {
-      label: 'Subscribe',
-      icon_position: 'after',
-    },
-    icon: {
-      path: common.icon_file_path,
-    },
-  },
-} %}
+{% set title_element = title_element|default('h1') %}
+
+{% embed '@theme/patterns/compositions/editable-hero-banner.html.twig' with hero|default({}) %}
+  {% block content %}
+    {% if insertion is not empty %}
+      <span class="ecl-description">{{ insertion }}</span>
+    {% endif %}
+
+    {% if title is not empty %}
+      <{{ title_element }} class="ecl-title ecl-title--display1">
+        {{ title }}
+      </{{ title_element }}>
+    {% endif %}
+
+    {% if description is not empty %}
+      <p class="ecl-description">{{ description }}</p>
+    {% endif %}
+
+    {% include "@theme/patterns/components/inline-actions.html.twig" with {
+      items: actions
+    } %}
+  {% endblock %}
+{% endembed %}
