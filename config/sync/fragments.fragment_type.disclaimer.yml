@@ -1,0 +1,7 @@
+uuid: 8af43bb5-09c8-48dd-88e9-f7ec4d3addff
+langcode: en
+status: true
+dependencies: {  }
+id: disclaimer
+label: Disclaimer
+description: 'The disclaimer will just display reused text.'
