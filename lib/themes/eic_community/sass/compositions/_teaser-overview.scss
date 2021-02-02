@@ -118,7 +118,7 @@
     color: ecl-typography('color', 'title');
   }
 
-  &__active-filters-options,
+  &__active-filters,
   &__amount-options,
   &__sort-options,
   &__interface-options {
@@ -127,16 +127,16 @@
     }
   }
 
-  &__active-filters-options-title {
+  &__active-filters-title {
     @include visually-hidden();
   }
 
-  &__active-filters-options-items {
+  &__active-filters-items {
     display: flex;
     margin-bottom: 0 - ecl-box-model('margin', 'controls');
   }
 
-  &__active-filters-options-item {
+  &__active-filters-item {
     margin: 0 ecl-box-model('margin', 'controls') ecl-box-model('margin', 'controls') 0;
   }
 
