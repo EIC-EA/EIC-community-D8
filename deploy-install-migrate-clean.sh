@@ -66,7 +66,7 @@ run_command() {
 }
 
 # Configuration: Enable maintenance mode
-docker-compose exec web drush state:set system.maintenance_mode 1 --input-format=integer -y
+run_command "drush state:set system.maintenance_mode 1 --input-format=integer -y"
 
 # Git: Checkout correct branch.
 run_command "git checkout $BRANCH"
@@ -75,34 +75,34 @@ run_command "git checkout $BRANCH"
 run_command "git pull"
 
 # Installation: Install composer dependencies.
-run_command "docker-compose exec web composer install"
+run_command "composer install"
 
 # Permission: Change file permissions of settings.php - @todo Uncomment if needed when running locally
 #run_command "chmod 644 ./web/sites/default/settings.php"
 
 # Installation: Install clean website via Toolkit.
-run_command "docker-compose exec web ./vendor/bin/run toolkit:install-clean --config-file runner.dist.yml"
+run_command "./vendor/bin/run toolkit:install-clean --config-file runner.dist.yml"
 
 # Configuration: Enable maintenance mode
-run_command "docker-compose exec web drush state:set system.maintenance_mode 1 --input-format=integer -y"
+run_command "drush state:set system.maintenance_mode 1 --input-format=integer -y"
 
 # Cache: Rebuild Drupal cache.
-run_command "docker-compose exec web drush cache:rebuild"
+run_command "drush cache:rebuild"
 
 # Configuration: Fix known error: Site UUID in source storage does not match the target storage.
-run_command "docker-compose exec web drush config:set "system.site" uuid "a01abd4a-5998-4549-8d1b-8a9056cd581c" -y"
+run_command "drush config:set "system.site" uuid "a01abd4a-5998-4549-8d1b-8a9056cd581c" -y"
 
 # Configuration: Apply any database updates required via Drush.
-run_command "docker-compose exec web drush updatedb -y"
+run_command "drush updatedb -y"
 
 # Cache: Rebuild Drupal cache.
-run_command "docker-compose exec web drush cache:rebuild"
+run_command "drush cache:rebuild"
 
 # Configuration: Import site configuration via Drush.
-run_command "docker-compose exec web drush config:import -y"
+run_command "drush config:import -y"
 
 # Cache: Rebuild Drupal cache.
-run_command "docker-compose exec web drush cache:rebuild"
+run_command "drush cache:rebuild"
 
 # @todo Uncomment when working on migrations from EIC D7
 # Migration: Migrate all content from EIC Drupal 7.
@@ -117,7 +117,7 @@ run_command "docker-compose exec web drush cache:rebuild"
 #run_command "docker-compose exec web drush user:password MasterChef1 $PASSWORD" "Setting admin user password failed."
 
 # Configuration: Disable maintenance mode
-run_command "docker-compose exec web drush state:set system.maintenance_mode 0 --input-format=integer -y"
+run_command "drush state:set system.maintenance_mode 0 --input-format=integer -y"
 
 # Cache: Rebuild Drupal cache.
-run_command "docker-compose exec web drush cache:rebuild"
+run_command "drush cache:rebuild"

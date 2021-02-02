@@ -62,7 +62,7 @@ run_command() {
 }
 
 # Configuration: Enable maintenance mode
-run_command "docker-compose exec web drush state:set system.maintenance_mode 1 --input-format=integer -y"
+run_command "drush state:set system.maintenance_mode 1 --input-format=integer -y"
 
 # Git: Checkout correct branch.
 run_command "git checkout $BRANCH"
@@ -71,22 +71,22 @@ run_command "git checkout $BRANCH"
 run_command "git pull"
 
 # Installation: Install composer dependencies.
-run_command "docker-compose exec web composer install"
+run_command "composer install"
 
 # Configuration: Apply any database updates via Drush.
-run_command "docker-compose exec web drush updatedb -y"
+run_command "drush updatedb -y"
 
 # Cache: Rebuild Drupal cache.
-run_command "docker-compose exec web drush cache:rebuild"
+run_command "drush cache:rebuild"
 
 # Configuration: Import site configuration via Drush.
-run_command "docker-compose exec web drush config:import -y"
+run_command "drush config:import -y"
 
 # Cache: Rebuild Drupal cache.
-run_command "docker-compose exec web drush cache:rebuild"
+run_command "drush cache:rebuild"
 
 # Configuration: Disable maintenance mode
-run_command "docker-compose exec web drush state:set system.maintenance_mode 0 --input-format=integer -y"
+run_command "drush state:set system.maintenance_mode 0 --input-format=integer -y"
 
 # Cache: Rebuild Drupal cache.
-run_command "docker-compose exec web drush cache:rebuild"
+run_command "drush cache:rebuild"
