@@ -15,12 +15,13 @@ PRINT_USAGE_INFO() {
   COLOR=${1:-$COLOR_DEFAULT}
   printf "\n%b" "$COLOR"
   cat <<EOF
-Usage: sh install-migrate-clean.sh [BRANCH|-g] [-c]
+Usage: sh install-migrate-clean.sh [BRANCH|-g] [-c] [-i] [-m PASSWORD]
 
 Options:
   -g        SKIP Git checkout. Either specify this, OR a branch to check out.
   -b        SKIP build.
   -i        Perform a clean install of the site.
+  -m        Perform migration. Specify a password to set the uid 1 password to.
 Arguments:
   BRANCH    The Git branch to deploy.
 EOF
@@ -36,7 +37,7 @@ BG_COLOR_GREEN="\e[42m"
 DRUSH_CMD="../vendor/bin/drush"
 
 # Define list of arguments expected in the input
-optstring=":gbi"
+optstring=":gbim"
 
 while getopts ${optstring} arg; do
   case ${arg} in
@@ -51,6 +52,15 @@ while getopts ${optstring} arg; do
     i)
       PERFORM_INSTALL='true'
       echo "Will perform install."
+      ;;
+    m)
+      PERFORM_MIGRATION='true'
+      echo "Will perform migration."
+      PASSWORD="${OPTARG}"
+      if [ -z "$PASSWORD"]; then
+        printf "\n%b%s\n" "$COLOR_RED" "Please provide a password."
+        exit 2
+      fi
       ;;
   esac
 done
@@ -128,6 +138,17 @@ run_command "$DRUSH_CMD config:import -y"
 
 # Cache: Rebuild Drupal cache.
 run_command "$DRUSH_CMD cache:rebuild"
+
+if [ -n "$PERFORM_MIGRATION" ]; then
+  # Migration: Migrate all content from EIC Drupal 7.
+  run_command "$DRUSH_CMD migrate:import --group migrate_drupal_7 --continue-on-failure"
+
+  # Migration: Migrate all content from Challenge Platform Drupal 7.
+  run_command "$DRUSH_CMD migrate:import --group migrate_drupal_7_challenge_platform --continue-on-failure"
+
+  # Configuration: Update password of admin user (first user).
+  run_command "$DRUSH_CMD user:password MasterChef1 $PASSWORD" "Setting admin user password failed."
+fi
 
 # Configuration: Disable maintenance mode
 run_command "$DRUSH_CMD state:set system.maintenance_mode 0 --input-format=integer -y"
