@@ -18,12 +18,12 @@ PRINT_USAGE_INFO() {
 Usage: sh install-migrate-clean.sh [BRANCH|-g] [-c] [-i] [-m PASSWORD]
 
 Options:
-  -g        SKIP Git checkout. Either specify this, OR a branch to check out.
-  -b        SKIP build.
-  -i        Perform a clean install of the site.
-  -m        Perform migration. Specify a password to set the uid 1 password to.
+  -g          SKIP Git checkout. Either specify this, OR a branch to check out.
+  -b          SKIP build.
+  -i          Perform a clean install of the site.
+  -m PASSWORD Perform migration. Specify a password to set the uid 1 password to.
 Arguments:
-  BRANCH    The Git branch to deploy.
+  BRANCH      The Git branch to deploy.
 EOF
 }
 
@@ -37,7 +37,7 @@ BG_COLOR_GREEN="\e[42m"
 DRUSH_CMD="../vendor/bin/drush"
 
 # Define list of arguments expected in the input
-optstring=":gbim"
+optstring=":gbim:"
 
 while getopts ${optstring} arg; do
   case ${arg} in
@@ -56,11 +56,6 @@ while getopts ${optstring} arg; do
     m)
       PERFORM_MIGRATION='true'
       echo "Will perform migration."
-      PASSWORD="${OPTARG}"
-      if [ -z "$PASSWORD"]; then
-        printf "\n%b%s\n" "$COLOR_RED" "Please provide a password."
-        exit 2
-      fi
       ;;
   esac
 done
