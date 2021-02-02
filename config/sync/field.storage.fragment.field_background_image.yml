@@ -1,0 +1,20 @@
+uuid: 73623448-171f-4265-9f9b-040802c4ed04
+langcode: en
+status: true
+dependencies:
+  module:
+    - fragments
+    - media
+id: fragment.field_background_image
+field_name: field_background_image
+entity_type: fragment
+type: entity_reference
+settings:
+  target_type: media
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

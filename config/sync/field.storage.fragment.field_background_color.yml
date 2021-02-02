@@ -1,0 +1,30 @@
+uuid: 13edcf48-eb97-4c76-869f-c9f3072d677b
+langcode: en
+status: true
+dependencies:
+  module:
+    - fragments
+    - options
+id: fragment.field_background_color
+field_name: field_background_color
+entity_type: fragment
+type: list_string
+settings:
+  allowed_values:
+    -
+      value: blue
+      label: Blue
+    -
+      value: grey
+      label: Grey
+    -
+      value: white
+      label: White
+  allowed_values_function: ''
+module: options
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false
