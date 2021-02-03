@@ -11,6 +11,10 @@
 
   &__label {
     @include ecl-responsive-font('label');
+
+    #{$node}--meta & {
+      @include ecl-responsive-font('meta');
+    }
   }
 
   &__icon {

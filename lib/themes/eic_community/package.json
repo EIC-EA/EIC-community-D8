@@ -4,19 +4,20 @@
   "description": "The EIC community Drupal 8 Platform",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "npm-run-all compile:* generate-storybook",
-    "compile": "npm-run-all --parallel compile:* -ln",
+    "build": "npm-run-all --parallel compile:* -ln",
     "compile:copy": "ecl-builder copy",
+    "compile:scripts": "ecl-builder scripts",
     "compile:styles": "ecl-builder styles",
     "compile:svg": "node ./scripts/svg-sprites.js",
+    "watch": "npm-run-all --parallel watch:* -ln",
+    "watch:scripts": "chokidar \"./js/**/*.js\" -i \"/node_modules/\" -c \"npm run compile:scripts\"",
+    "watch:styles": "chokidar \"./sass/**/*.scss\" -i \"/node_modules/\" -c \"npm run compile:styles\"",
+    "watch:svg": "chokidar \"./images/**/*.svg\" -i \"/node_modules/\" -c \"npm run compile:svg\"",
+    "prestorybook": "npm-run-all compile:*",
     "storybook": "start-storybook -s ./dist -p 8080",
     "pregenerate-storybook": "[ -d './storybook-static' ] && rm -r ./storybook-static || exit 0",
     "generate-storybook": "build-storybook -o ./storybook-static",
     "postgenerate-storybook": "[ -d './dist' ] && cp -r ./dist/* ./storybook-static || exit 0",
-    "prewatch": "npm run compile",
-    "watch": "npm-run-all --parallel watch:* -ln",
-    "watch:styles": "chokidar \"./sass/**/*.scss\" -i \"/node_modules/\" -c \"npm run compile:styles\"",
-    "watch:scripts": "chokidar \"./js/**/*.js\" -i \"/node_modules/\" -c \"npm run compile:copy\"",
     "predev": "[ -d './node_modules/.cache/storybook' ] && rm -r ./node_modules/.cache/storybook || exit 0",
     "dev": "npm-run-all --parallel storybook watch"
   },
@@ -44,6 +45,7 @@
     "babel-loader": "^8.2.2",
     "babel-plugin-drupal-behaviors": "^0.1.1",
     "babel-plugin-module-resolver": "^4.1.0",
+    "chalk": "^4.1.0",
     "chokidar-cli": "^2.1.0",
     "chokidar": "^3.5.0",
     "eslint-config-airbnb-base": "^14.2.1",
@@ -61,8 +63,5 @@
     "svgstore": "^3.0.0-2",
     "twing-loader": "2.0.2",
     "twing": "2.3.7"
-  },
-  "dependencies": {
-    "chalk": "^4.1.0"
   }
 }

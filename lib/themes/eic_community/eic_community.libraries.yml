@@ -1,12 +1,12 @@
 theme:
   css:
     theme:
-      dist/css/eic_community.screen.css: { media: screen }
-      dist/css/eic_community.print.css: { media: print }
+      dist/styles/eic_community.screen.css: { media: screen }
+      dist/styles/eic_community.print.css: { media: print }
   js:
     dist/scripts/ecl-ec-preset-legacy-website.js: {}
     dist/scripts/svg4everybody.min.js: { minified: true }
-    dist/scripts/drupal.svg4everybody.js: { minified: true }
-    dist/scripts/drupal.ecl.js: { minified: true }
+    dist/scripts/common/drupal.svg4everybody.js: { minified: true }
+    dist/scripts/common/drupal.ecl.js: { minified: true }
   dependencies:
     - core/drupal
