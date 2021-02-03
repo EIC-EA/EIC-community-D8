@@ -1,16 +1,16 @@
-uuid: b1316465-dd25-4203-8421-f33e7cadca5e
+uuid: e1056f47-7482-42fe-b5fd-bbee600babfd
 langcode: en
 status: true
 dependencies:
   module:
     - fragments
-id: fragment.field_body
-field_name: field_body
+    - link
+id: fragment.field_cta_link
+field_name: field_cta_link
 entity_type: fragment
-type: string_long
-settings:
-  case_sensitive: false
-module: core
+type: link
+settings: {  }
+module: link
 locked: false
 cardinality: 1
 translatable: true

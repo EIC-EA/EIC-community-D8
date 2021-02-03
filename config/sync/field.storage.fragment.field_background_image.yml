@@ -1,15 +1,16 @@
-uuid: b1316465-dd25-4203-8421-f33e7cadca5e
+uuid: 73623448-171f-4265-9f9b-040802c4ed04
 langcode: en
 status: true
 dependencies:
   module:
     - fragments
-id: fragment.field_body
-field_name: field_body
+    - media
+id: fragment.field_background_image
+field_name: field_background_image
 entity_type: fragment
-type: string_long
+type: entity_reference
 settings:
-  case_sensitive: false
+  target_type: media
 module: core
 locked: false
 cardinality: 1
