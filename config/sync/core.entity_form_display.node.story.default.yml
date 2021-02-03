@@ -3,7 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.field.node.story.body
+    - field.field.node.story.field_body
     - field.field.node.story.field_document_media
     - field.field.node.story.field_header_visual
     - field.field.node.story.field_image
@@ -26,22 +26,20 @@ targetEntityType: node
 bundle: story
 mode: default
 content:
-  body:
-    type: text_textarea_with_summary
-    weight: 4
-    settings:
-      rows: 9
-      summary_rows: 3
-      placeholder: ''
-      show_summary: false
-    third_party_settings: {  }
-    region: content
   created:
     type: datetime_timestamp
     weight: 12
     region: content
     settings: {  }
     third_party_settings: {  }
+  field_body:
+    weight: 2
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+    type: text_textarea
+    region: content
   field_document_media:
     weight: 8
     settings:
@@ -72,7 +70,7 @@ content:
     type: string_textfield
     region: content
   field_introduction:
-    weight: 3
+    weight: 4
     settings:
       rows: 5
       placeholder: ''
@@ -80,7 +78,7 @@ content:
     type: text_textarea
     region: content
   field_publication_date:
-    weight: 2
+    weight: 3
     settings: {  }
     third_party_settings: {  }
     type: datetime_default

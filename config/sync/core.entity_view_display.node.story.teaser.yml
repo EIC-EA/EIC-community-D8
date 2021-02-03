@@ -4,7 +4,7 @@ status: true
 dependencies:
   config:
     - core.entity_view_mode.node.teaser
-    - field.field.node.story.body
+    - field.field.node.story.field_body
     - field.field.node.story.field_document_media
     - field.field.node.story.field_header_visual
     - field.field.node.story.field_image
@@ -16,7 +16,6 @@ dependencies:
     - field.field.node.story.field_vocab_topics
     - node.type.story
   module:
-    - text
     - user
 _core:
   default_config_hash: oIHbZN4dLDY1eYEC0mz4q93ncJZLmY3yWuC88uSnJfo
@@ -25,20 +24,13 @@ targetEntityType: node
 bundle: story
 mode: teaser
 content:
-  body:
-    label: hidden
-    type: text_summary_or_trimmed
-    weight: 101
-    settings:
-      trim_length: 600
-    third_party_settings: {  }
-    region: content
   links:
     weight: 100
     settings: {  }
     third_party_settings: {  }
     region: content
 hidden:
+  field_body: true
   field_document_media: true
   field_header_visual: true
   field_image: true

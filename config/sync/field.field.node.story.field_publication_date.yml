@@ -15,7 +15,7 @@ entity_type: node
 bundle: story
 label: 'Publication date'
 description: ''
-required: false
+required: true
 translatable: false
 default_value: {  }
 default_value_callback: ''

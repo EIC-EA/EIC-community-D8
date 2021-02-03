@@ -1,8 +1,9 @@
+uuid: 008d33dc-a161-43e7-b379-225de54a3d40
 langcode: en
 status: true
 dependencies:
   config:
-    - field.field.node.story.body
+    - field.field.node.story.field_body
     - field.field.node.story.field_document_media
     - field.field.node.story.field_header_visual
     - field.field.node.story.field_image
@@ -17,17 +18,19 @@ dependencies:
     - datetime
     - text
     - user
+_core:
+  default_config_hash: hBeJXbmrhFCaFBaYoFyv9vgBwH1rTi-nDUEBrBod_Og
 id: node.story.default
 targetEntityType: node
 bundle: story
 mode: default
 content:
-  body:
-    label: hidden
-    type: text_default
-    weight: 101
+  field_body:
+    weight: 111
+    label: above
     settings: {  }
     third_party_settings: {  }
+    type: text_default
     region: content
   field_document_media:
     weight: 107

@@ -1,3 +1,4 @@
+uuid: ef71eb25-20a9-4a10-adf7-06435fd6d8bb
 langcode: en
 status: true
 dependencies:
@@ -6,13 +7,15 @@ dependencies:
     - node.type.story
   module:
     - datetime
+_core:
+  default_config_hash: t8uK1aMEWaOoAvACNg2pUyzjoWmtlloEByDGfA8ZnwE
 id: node.story.field_publication_date
 field_name: field_publication_date
 entity_type: node
 bundle: story
 label: 'Publication date'
 description: ''
-required: false
+required: true
 translatable: false
 default_value: {  }
 default_value_callback: ''
