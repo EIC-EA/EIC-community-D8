@@ -116,7 +116,7 @@ fi
 
 if [ -n "$PERFORM_INSTALL" ]; then
   # Installation: Install clean website via Toolkit.
-  run_command "./vendor/bin/run toolkit:install-clean --config-file runner.dist.yml"
+  run_command "./vendor/bin/run toolkit:install-clean --config-file runner.yml.dist"
 fi
 
 # Move into the Drupal webroot.
