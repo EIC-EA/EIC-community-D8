@@ -3,9 +3,22 @@
 <div class="ecl-overview-header{{ image is not empty ? ' ecl-overview-header--has-image' }} {{ extra_classes }}">
   <div class="ecl-container">
     <div class="ecl-overview-header__content">
-      <{{ title_element }} class="ecl-overview-header__title">
-        {{ title }}
-      </{{ title_element }}>
+      <div class="ecl-overview-header__main">
+        <{{ title_element }} class="ecl-overview-header__title">
+          {{ title }}
+        </{{ title_element }}>
+      </div>
+      {% if actions is not empty%}
+      <div class="ecl-overview-header__aside">
+        {% for action in actions %}
+          {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with {
+            link: action|without('icon'),
+            icon: action.icon,
+            extra_classes: "ecl-link--button ecl-link--button-primary",
+          } %}
+        {% endfor %}
+      </div>
+      {% endif %}
     </div>
   </div>
   {% if image is not empty %}
