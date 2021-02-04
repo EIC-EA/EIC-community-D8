@@ -1,0 +1,58 @@
+uuid: b8995179-14bc-4614-ba5d-63b9601e9006
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.quote.field_body
+    - field.field.paragraph.quote.field_tx_author
+    - field.field.paragraph.quote.field_ur_author
+    - field.field.paragraph.quote.field_view_mode
+    - paragraphs.paragraphs_type.quote
+  module:
+    - paragraph_view_mode
+    - text
+id: paragraph.quote.default
+targetEntityType: paragraph
+bundle: quote
+mode: default
+content:
+  field_body:
+    weight: 1
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+    type: text_textarea
+    region: content
+  field_tx_author:
+    weight: 2
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: text_textfield
+    region: content
+  field_ur_author:
+    weight: 3
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: entity_reference_autocomplete
+    region: content
+  field_view_mode:
+    weight: 0
+    settings:
+      view_modes:
+        external_contributor: external_contributor
+        platform_member: platform_member
+        default: 0
+      default_view_mode: platform_member
+    third_party_settings: {  }
+    type: paragraph_view_mode
+    region: content
+hidden:
+  created: true
+  status: true
