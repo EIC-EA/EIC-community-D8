@@ -1,6 +1,6 @@
 {% set label_element = label_element|default('span') %}
 {% if author is not empty %}
-  <div class="ecl-author ecl-author--is-{{ size|default('default') }}">
+  <div class="ecl-author ecl-author--is-{{ size|default('default') }} {{ extra_classes }}">
     <div class="ecl-author__information">
       {% if description is not empty %}
         <span class="ecl-author__description">{{ description }}</span>
@@ -13,7 +13,7 @@
               label: author,
               path: path
             }
-          } %}
+          } only %}
         {% else %}
           {{ author }}
         {% endif %}
