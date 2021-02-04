@@ -1,0 +1,29 @@
+uuid: bf24543e-ecd9-44d9-b5b0-a07a96044733
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_vocab_geo
+    - node.type.discussion
+    - taxonomy.vocabulary.geo
+id: node.discussion.field_vocab_geo
+field_name: field_vocab_geo
+entity_type: node
+bundle: discussion
+label: 'Regions & Countries'
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      geo: geo
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference
