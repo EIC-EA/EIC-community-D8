@@ -14,3 +14,11 @@ function eic_paragraphs_field_widget_paragraphs_form_alter(&$element, &$form_sta
   \Drupal::classResolver(FieldWidgetFormAlter::class)
     ->paragraphs($element, $form_state, $context);
 }
+
+/**
+ * Implements hook_field_widget_WIDGET_TYPE_form_alter().
+ */
+function eic_paragraphs_field_widget_entity_reference_paragraphs_form_alter(&$element, &$form_state, $context) {
+  \Drupal::classResolver(FieldWidgetFormAlter::class)
+    ->paragraphs($element, $form_state, $context);
+}
