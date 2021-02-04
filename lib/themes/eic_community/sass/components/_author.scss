@@ -50,6 +50,10 @@
       margin-right: ecl-layout('gutter--lg', 'meta');
     }
 
+    #{$node}--is-tiny & {
+      width: map-get($ecl-media, '4xs');
+    }
+
     #{$node}--is-medium & {
       width: map-get($ecl-media, '2xs');
     }
@@ -86,6 +90,10 @@
     line-height: ecl-typography('line-height', 'meta');
     font-weight: $ecl-font-weight-bold;
     text-transform: uppercase;
+
+    #{$node}--is-tiny & {
+      font-size: map-get($ecl-font-size, '2xs');
+    }
 
     #{$node}--is-medium & {
       font-size: ecl-typography('font-size--md', 'meta');

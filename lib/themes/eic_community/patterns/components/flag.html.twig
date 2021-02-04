@@ -1,0 +1,8 @@
+<div class="ecl-flag">
+  {% if code %}
+    <img class="ecl-flag__image" src="images/static/flags/{{ size|default('48') }}/{{- code -}}.png" />
+  {% elseif image %}
+    <img class="ecl-flag__image" src="{{ image.src }}" alt="{{ image.alt }}" />
+  {% endif %}
+  <span class="ecl-flag__label">{{ label }}</span>
+</div>

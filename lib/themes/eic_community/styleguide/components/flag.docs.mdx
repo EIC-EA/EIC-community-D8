@@ -1,0 +1,22 @@
+# Flag
+
+Displays a flag image with semantic name that will be visually hidden.
+
+## Example:
+
+```
+{% include "@theme/patterns/components/flag.html.twig" with {
+  label: 'Luxembourg',
+  code: 'LU',
+} %}
+```
+
+## Twig parameters:
+
+| Key                   | Type   | Description                                   | Mandatory |
+| --------------------- | ------ | --------------------------------------------- | --------- | --- |
+| contributor.label     | string | The semantic for the defined flag.            | no        |     |
+| contributor.code      | string | The defined country ISO value.                | no        |     |
+| contributor.image     | object | Displays an image instead of the static flag. | no        |     |
+| contributor.image.src | string | The URL for the defined image.                | no        |     |
+| contributor.image.alt | string | The alt attribute for the defined image.      | no        |     |
