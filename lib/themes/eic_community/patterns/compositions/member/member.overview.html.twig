@@ -1,0 +1,32 @@
+{% extends "@theme/patterns/layout/base.html.twig" %}
+
+{% block page_header %}
+  {% if overview_header.image is not empty  %}
+    {% include "@theme/patterns/compositions/overview-header.html.twig" with overview_header|default({}) only %}
+    {% include "@theme/patterns/compositions/breadcrumb.html.twig" with breadcrumb|default({}) %}
+  {% else %}
+    {% include "@theme/patterns/compositions/breadcrumb.html.twig" with breadcrumb|default({}) %}
+    {% include "@theme/patterns/compositions/overview-header.html.twig" with overview_header|default({}) only %}
+  {% endif %}
+{% endblock %}
+
+{% block breadcrumbs %}{% endblock %}
+
+{% block content %}
+
+  {% include "@theme/patterns/compositions/teaser-overview.html.twig" with {
+    items: items,
+    extra_classes: "ecl-teaser-overview--has-columns",
+    icon_file_path: common.icon_file_path,
+  } only %}
+
+  {% include "@theme/patterns/compositions/pagination.html.twig" with pagination|default({}) only %}
+{% endblock %}
+
+{% block sidebar %}
+  {% include "@theme/patterns/compositions/filter-sidebar.html.twig" with {
+    icon_file_path: common.icon_file_path,
+    title: filter_title,
+    items: filters,
+  } only %}
+{% endblock %}

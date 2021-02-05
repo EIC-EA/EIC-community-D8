@@ -1,0 +1,23 @@
+uuid: 90ded636-cffe-4151-a044-e3c9e2293edd
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.fragment.field_cta_link
+    - fragments.fragment_type.banner
+  module:
+    - link
+id: fragment.banner.field_cta_link
+field_name: field_cta_link
+entity_type: fragment
+bundle: banner
+label: 'CTA link'
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  link_type: 17
+  title: 2
+field_type: link

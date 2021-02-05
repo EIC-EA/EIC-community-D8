@@ -1,11 +1,9 @@
-uuid: 156aba01-0179-435a-951e-f2b296dd4ad9
+uuid: d0286b7a-d530-46fe-907c-3c1328d21123
 langcode: en
 status: true
 dependencies:
   module:
     - node
-_core:
-  default_config_hash: Jfhp2Xc54SxYdExYoGGaH7d3RMJg67FTV4yqjAFAFFI
 id: node.field_image_caption
 field_name: field_image_caption
 entity_type: node

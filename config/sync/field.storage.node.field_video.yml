@@ -1,12 +1,10 @@
-uuid: 4a2baca2-fcff-48b2-8496-5531f9b49da0
+uuid: e40fcd6f-79f8-4453-8b8f-c2f13c49213a
 langcode: en
 status: true
 dependencies:
   module:
     - media
     - node
-_core:
-  default_config_hash: epJNDXeEE6trzqEzwmF5HLEQzihlzpZMpb68dKx_Ca4
 id: node.field_video
 field_name: field_video
 entity_type: node

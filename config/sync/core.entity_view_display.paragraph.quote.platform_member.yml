@@ -1,0 +1,36 @@
+uuid: d619ebe6-edd9-4799-b24f-0854ea3c2748
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.paragraph.platform_member
+    - field.field.paragraph.quote.field_body
+    - field.field.paragraph.quote.field_tx_author
+    - field.field.paragraph.quote.field_ur_author
+    - field.field.paragraph.quote.field_view_mode
+    - paragraphs.paragraphs_type.quote
+  module:
+    - text
+id: paragraph.quote.platform_member
+targetEntityType: paragraph
+bundle: quote
+mode: platform_member
+content:
+  field_body:
+    weight: 0
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    type: text_default
+    region: content
+  field_ur_author:
+    weight: 1
+    label: hidden
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+hidden:
+  field_tx_author: true
+  field_view_mode: true

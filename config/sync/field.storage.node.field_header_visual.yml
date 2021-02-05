@@ -1,12 +1,10 @@
-uuid: f32a48f6-9df5-405c-a490-8f650bddc87d
+uuid: a67dd1b6-5a61-4961-a012-ab543af9ae02
 langcode: en
 status: true
 dependencies:
   module:
     - media
     - node
-_core:
-  default_config_hash: qRSrtU65Sn8Z0a6C301oAc87zJW2pY3-p96uUt33GUI
 id: node.field_header_visual
 field_name: field_header_visual
 entity_type: node

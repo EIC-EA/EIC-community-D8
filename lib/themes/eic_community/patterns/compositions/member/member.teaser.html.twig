@@ -1,0 +1,125 @@
+{% set title_element = title_element|default('h2') %}
+
+<div class="ecl-teaser ecl-teaser--member">
+  <div class="ecl-teaser__meta-header">
+    {% if type is not empty %}
+      <div class="ecl-teaser__type">
+        {% if type.icon and icon_file_path %}
+          {% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with {
+            extra_classes: 'ecl-teaser__type-icon',
+            icon: type.icon|default({})|merge({
+              path: icon_file_path,
+              size: 'xs',
+            }),
+            extra_attributes: {
+              'aria-hidden': 'true',
+              'focusable': 'false'
+            }
+          } only %}
+        {% endif %}
+        <span class="ecl-teaser__type-label">{{ type.label }}</span>
+      </div>
+    {% endif %}
+  </div>
+
+  {% if image is not empty %}
+    <figure class="ecl-teaser__image-wrapper">
+      <img class="ecl-teaser__image" src="{{ image.src }}" alt="{{ image.alt }}" />
+    </figure>
+  {% endif %}
+
+  <div class="ecl-teaser__main-wrapper">
+    <div class="ecl-teaser__content">
+      <{{ title_element }} class="ecl-teaser__title">
+        {% if path is not empty %}
+          <a href="{{ path }}">{{ title }}</a>
+        {% else %}
+          {{ title }}
+        {% endif %}
+      </{{ title_element }}>
+
+      {% if description is not empty %}
+        <p class="ecl-teaser__description">{{ description }}</p>
+      {% endif %}
+      {% if organisations is not empty %}
+        <div class="ecl-teaser__links">
+          {% for organisation in organisations %}
+            <a class="ecl-teaser__link" href="{{ organisation.path }}">{{ organisation.label }}</a>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      {% if location is not empty %}
+        <address class="ecl-teaser__description">{{ location.label }}</address>
+      {% endif %}
+    </div>
+
+    <div class="ecl-teaser__meta-footer">
+      {% if actions is not empty %}
+        <div class="ecl-teaser__actions">
+          {% for action in actions %}
+            <div class="ecl-teaser__action">
+              {% set _icon = {} %}
+
+              {% if icon_file_path and action.icon %}
+                {% set _icon = action.icon|default({})|merge({
+                  path: icon_file_path,
+                  size: 'm',
+                  extra_attributes: {
+                    'aria-hidden': 'true',
+                    'focusable': 'false'
+                  }
+                }) %}
+              {% endif %}
+
+              {% include '@ecl-twig/ec-component-link/ecl-link.html.twig' with {
+                icon: _icon,
+                link: {
+                  path: action.path,
+                  label: action.label,
+                  icon_position: 'before',
+                  type: 'standalone',
+                },
+              } only %}
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      <div class="ecl-teaser__meta-column">
+
+        {% if timestamp %}
+          {% include "@theme/patterns/components/timestamp.html.twig" with timestamp|default({})|merge({
+            icon_file_path: icon_file_path,
+          }) only %}
+        {% endif %}
+
+        {% if stats is not empty %}
+          <div class="ecl-teaser__stats">
+            {% for stat in stats %}
+              <div class="ecl-teaser__stat">
+                {% if stat.icon is not empty and icon_file_path %}
+                  {% include '@ecl-twig/ec-component-icon/ecl-icon.html.twig' with {
+                    icon: {
+                      size: 'xs',
+                      path: icon_file_path,
+                      type: stat.icon.type|default('branded'),
+                      name: stat.icon.name,
+                    },
+                    extra_classes: 'ecl-teaser__stat-icon',
+                    extra_attributes: {
+                      'aria-hidden': 'true',
+                      'focusable': 'false'
+                    }
+                  } only %}
+                {% endif %}
+                <span class="ecl-teaser__stat-label">{{ stat.label }}</span>
+                <span class="ecl-teaser__stat-value">{{ stat.value }}</span>
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
