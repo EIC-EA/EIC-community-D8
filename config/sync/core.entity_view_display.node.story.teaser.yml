@@ -14,6 +14,7 @@ dependencies:
     - field.field.node.story.field_related_stories
     - field.field.node.story.field_time_to_read
     - field.field.node.story.field_video
+    - field.field.node.story.field_vocab_geo
     - field.field.node.story.field_vocab_topics
     - node.type.story
   module:
@@ -41,4 +42,5 @@ hidden:
   field_related_stories: true
   field_time_to_read: true
   field_video: true
+  field_vocab_geo: true
   field_vocab_topics: true
