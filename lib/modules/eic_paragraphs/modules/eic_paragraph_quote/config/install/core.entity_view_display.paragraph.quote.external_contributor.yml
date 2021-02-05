@@ -1,9 +1,8 @@
-uuid: d619ebe6-edd9-4799-b24f-0854ea3c2748
 langcode: en
 status: true
 dependencies:
   config:
-    - core.entity_view_mode.paragraph.platform_member
+    - core.entity_view_mode.paragraph.external_contributor
     - field.field.paragraph.quote.field_quote_author_image
     - field.field.paragraph.quote.field_quote_author_name
     - field.field.paragraph.quote.field_quote_author_ref
@@ -12,18 +11,26 @@ dependencies:
     - paragraphs.paragraphs_type.quote
   module:
     - text
-id: paragraph.quote.platform_member
+id: paragraph.quote.external_contributor
 targetEntityType: paragraph
 bundle: quote
-mode: platform_member
+mode: external_contributor
 content:
-  field_quote_author_ref:
+  field_quote_author_image:
     type: entity_reference_label
-    weight: 1
+    weight: 2
     region: content
     label: above
     settings:
       link: true
+    third_party_settings: {  }
+  field_quote_author_name:
+    type: string
+    weight: 1
+    region: content
+    label: above
+    settings:
+      link_to_entity: false
     third_party_settings: {  }
   field_quote_description:
     type: text_default
@@ -33,6 +40,5 @@ content:
     settings: {  }
     third_party_settings: {  }
 hidden:
-  field_quote_author_image: true
-  field_quote_author_name: true
+  field_quote_author_ref: true
   field_view_mode: true

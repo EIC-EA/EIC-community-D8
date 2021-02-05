@@ -10,6 +10,7 @@ module:
   editor: 0
   eic_media: 0
   eic_media_document: 0
+  eic_paragraph_quote: 0
   entity: 0
   entity_browser: 0
   entity_browser_entity_form: 0

@@ -1,21 +1,21 @@
-uuid: b3824d6c-6bea-4a2a-a979-4d46557b87d8
+uuid: 6729a932-7b62-4e77-af54-15b52dd0a3db
 langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.paragraph.field_tx_author
+    - field.storage.paragraph.field_quote_description
     - paragraphs.paragraphs_type.quote
   module:
     - text
-id: paragraph.quote.field_tx_author
-field_name: field_tx_author
+id: paragraph.quote.field_quote_description
+field_name: field_quote_description
 entity_type: paragraph
 bundle: quote
-label: Author
+label: Quote
 description: ''
 required: false
 translatable: false
 default_value: {  }
 default_value_callback: ''
 settings: {  }
-field_type: text
+field_type: text_long

@@ -4,9 +4,10 @@ status: true
 dependencies:
   config:
     - core.entity_view_mode.paragraph.external_contributor
-    - field.field.paragraph.quote.field_body
-    - field.field.paragraph.quote.field_tx_author
-    - field.field.paragraph.quote.field_ur_author
+    - field.field.paragraph.quote.field_quote_author_image
+    - field.field.paragraph.quote.field_quote_author_name
+    - field.field.paragraph.quote.field_quote_author_ref
+    - field.field.paragraph.quote.field_quote_description
     - field.field.paragraph.quote.field_view_mode
     - paragraphs.paragraphs_type.quote
   module:
@@ -16,20 +17,29 @@ targetEntityType: paragraph
 bundle: quote
 mode: external_contributor
 content:
-  field_body:
-    weight: 0
-    label: hidden
-    settings: {  }
-    third_party_settings: {  }
-    type: text_default
+  field_quote_author_image:
+    type: entity_reference_label
+    weight: 2
     region: content
-  field_tx_author:
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+  field_quote_author_name:
+    type: string
     weight: 1
-    label: hidden
+    region: content
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+  field_quote_description:
+    type: text_default
+    weight: 0
+    region: content
+    label: above
     settings: {  }
     third_party_settings: {  }
-    type: text_default
-    region: content
 hidden:
-  field_ur_author: true
+  field_quote_author_ref: true
   field_view_mode: true

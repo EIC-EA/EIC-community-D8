@@ -5,6 +5,7 @@ dependencies:
   config:
     - field.storage.node.field_page_paragraphs
     - node.type.page
+    - paragraphs.paragraphs_type.quote
     - paragraphs.paragraphs_type.tiles_content
   module:
     - entity_reference_revisions
@@ -24,7 +25,14 @@ settings:
     negate: 0
     target_bundles:
       tiles_content: tiles_content
+      quote: quote
     target_bundles_drag_drop:
+      full_media_content:
+        weight: 4
+        enabled: false
+      quote:
+        enabled: true
+        weight: 5
       tiles_content:
         enabled: true
         weight: 2

@@ -1,17 +1,18 @@
-uuid: 988e401a-ebec-4a6c-aeb7-46e1d3abb6ea
 langcode: en
 status: true
 dependencies:
   module:
+    - paragraph_view_mode
     - paragraphs
-    - user
-id: paragraph.field_ur_author
-field_name: field_ur_author
+id: paragraph.field_view_mode
+field_name: field_view_mode
 entity_type: paragraph
-type: entity_reference
+type: paragraph_view_mode
 settings:
-  target_type: user
-module: core
+  max_length: '255'
+  is_ascii: false
+  case_sensitive: false
+module: paragraph_view_mode
 locked: false
 cardinality: 1
 translatable: true
