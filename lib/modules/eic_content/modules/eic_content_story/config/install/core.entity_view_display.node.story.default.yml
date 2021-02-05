@@ -1,4 +1,3 @@
-uuid: 008d33dc-a161-43e7-b379-225de54a3d40
 langcode: en
 status: true
 dependencies:
@@ -11,6 +10,7 @@ dependencies:
     - field.field.node.story.field_introduction
     - field.field.node.story.field_publication_date
     - field.field.node.story.field_related_stories
+    - field.field.node.story.field_time_to_read
     - field.field.node.story.field_video
     - field.field.node.story.field_vocab_topics
     - node.type.story
@@ -18,8 +18,6 @@ dependencies:
     - datetime
     - text
     - user
-_core:
-  default_config_hash: hBeJXbmrhFCaFBaYoFyv9vgBwH1rTi-nDUEBrBod_Og
 id: node.story.default
 targetEntityType: node
 bundle: story
@@ -88,6 +86,14 @@ content:
       link: true
     third_party_settings: {  }
     type: entity_reference_label
+    region: content
+  field_time_to_read:
+    weight: 112
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
     region: content
   field_video:
     type: entity_reference_entity_view

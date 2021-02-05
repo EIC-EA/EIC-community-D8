@@ -1,4 +1,3 @@
-uuid: 3b5fbb8a-b8bc-4c14-8d64-08442aaa51b4
 langcode: en
 status: true
 dependencies:
@@ -12,13 +11,12 @@ dependencies:
     - field.field.node.story.field_introduction
     - field.field.node.story.field_publication_date
     - field.field.node.story.field_related_stories
+    - field.field.node.story.field_time_to_read
     - field.field.node.story.field_video
     - field.field.node.story.field_vocab_topics
     - node.type.story
   module:
     - user
-_core:
-  default_config_hash: oIHbZN4dLDY1eYEC0mz4q93ncJZLmY3yWuC88uSnJfo
 id: node.story.teaser
 targetEntityType: node
 bundle: story
@@ -38,5 +36,6 @@ hidden:
   field_introduction: true
   field_publication_date: true
   field_related_stories: true
+  field_time_to_read: true
   field_video: true
   field_vocab_topics: true

@@ -11,6 +11,7 @@ dependencies:
     - field.field.node.story.field_introduction
     - field.field.node.story.field_publication_date
     - field.field.node.story.field_related_stories
+    - field.field.node.story.field_time_to_read
     - field.field.node.story.field_video
     - field.field.node.story.field_vocab_topics
     - node.type.story
@@ -88,6 +89,14 @@ content:
       link: true
     third_party_settings: {  }
     type: entity_reference_label
+    region: content
+  field_time_to_read:
+    weight: 112
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
     region: content
   field_video:
     type: entity_reference_entity_view
