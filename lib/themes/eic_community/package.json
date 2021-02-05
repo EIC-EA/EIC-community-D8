@@ -63,5 +63,8 @@
     "svgstore": "^3.0.0-2",
     "twing-loader": "2.0.2",
     "twing": "2.3.7"
+  },
+  "dependencies": {
+    "flag-icons": "^2.0.0"
   }
 }
