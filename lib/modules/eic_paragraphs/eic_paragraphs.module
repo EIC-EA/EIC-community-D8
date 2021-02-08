@@ -2,9 +2,23 @@
 
 /**
  * @file
- * Primary module hooks for EIC Paragraphs module.
- *
- * @DCG
- * This file is no longer required in Drupal 8.
- * @see https://www.drupal.org/node/2217931
+ * Main module file for EIC Paragraphs module.
  */
+
+use Drupal\eic_paragraphs\Hooks\FieldWidgetFormAlter;
+
+/**
+ * Implements hook_field_widget_WIDGET_TYPE_form_alter().
+ */
+function eic_paragraphs_field_widget_paragraphs_form_alter(&$element, &$form_state, $context) {
+  \Drupal::classResolver(FieldWidgetFormAlter::class)
+    ->paragraphs($element, $form_state, $context);
+}
+
+/**
+ * Implements hook_field_widget_WIDGET_TYPE_form_alter().
+ */
+function eic_paragraphs_field_widget_entity_reference_paragraphs_form_alter(&$element, &$form_state, $context) {
+  \Drupal::classResolver(FieldWidgetFormAlter::class)
+    ->paragraphs($element, $form_state, $context);
+}

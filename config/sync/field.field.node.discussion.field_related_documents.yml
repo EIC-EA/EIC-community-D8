@@ -1,0 +1,25 @@
+uuid: 7877614d-5346-43e1-8ff4-ee7f2c0aba34
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_related_documents
+    - node.type.discussion
+id: node.discussion.field_related_documents
+field_name: field_related_documents
+entity_type: node
+bundle: discussion
+label: Documents
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:file'
+  handler_settings:
+    target_bundles: null
+    sort:
+      field: _none
+    auto_create: false
+field_type: entity_reference

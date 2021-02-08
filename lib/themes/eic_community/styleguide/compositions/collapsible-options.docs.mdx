@@ -1,0 +1,20 @@
+# Collapsible Options
+
+Display a one ore multiple buttons or links that can be expanded and collapsed.
+
+## Example
+
+```
+  {% include "@theme/patterns/compositions/collapsible-options.html.twig" %}
+```
+
+## Parameters
+
+| Key            | Type     | Description                                                                                                                       | Mandatory |
+| -------------- | -------- | --------------------------------------------------------------------------------------------------------------------------------- | --------- |
+| collapse_label | string   | Defines the label for the collapse button.                                                                                        | no        |
+| icon_file_path | string   | The URL to the inline SVG sprite.                                                                                                 | no        |
+| items          | object[] | Defines the dropdown items as ECL Button or ECL Link                                                                              | no        |
+| items[].link   | object   | Should contain the parameters inherited from the [ECL Link component](https://www.npmjs.com/package/@ecl-twig/ec-component-link). | no        |
+| items[].label  | string   | Defines the option label if the defined option is displayed as button.                                                            | no        |
+| items[].icon   | object   | Should contain the parameters inherited from the [ECL Icon component](https://www.npmjs.com/package/@ecl-twig/ec-component-icon). | no        |
