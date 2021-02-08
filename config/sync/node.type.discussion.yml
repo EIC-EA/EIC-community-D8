@@ -1,0 +1,18 @@
+uuid: 0e7c4172-9679-4087-b877-9b396f915441
+langcode: en
+status: true
+dependencies:
+  module:
+    - menu_ui
+third_party_settings:
+  menu_ui:
+    available_menus:
+      - main
+    parent: 'main:'
+name: Discussion
+type: discussion
+description: "The content type \"Discussion\" is designed to host a discussion that the author wants to launch. The discussion can start from a question or a more elaborate topic.\r\nOnce created and published, the discussion will occur through comments posted on the \"Discussion\" page "
+help: ''
+new_revision: true
+preview_mode: 2
+display_submitted: true
