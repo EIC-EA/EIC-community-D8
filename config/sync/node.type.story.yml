@@ -1,0 +1,19 @@
+uuid: 2a0ec52d-d99b-4246-af44-a6934dd14c21
+langcode: en
+status: true
+dependencies:
+  module:
+    - menu_ui
+third_party_settings:
+  menu_ui:
+    available_menus: {  }
+    parent: ''
+_core:
+  default_config_hash: vEc0wW2gDpycYU9LUAnZ1xMYBmZ6Hpz6VgMyh_LSYg8
+name: Story
+type: story
+description: ''
+help: ''
+new_revision: true
+preview_mode: 0
+display_submitted: false

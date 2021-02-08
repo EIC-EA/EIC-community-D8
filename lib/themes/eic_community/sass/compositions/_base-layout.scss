@@ -11,7 +11,7 @@
     align-items: flex-start;
     flex-direction: column;
 
-    @include ecl-media-breakpoint-up('md') {
+    @include ecl-media-breakpoint-up('lg') {
       flex-direction: row;
     }
   }
@@ -43,7 +43,7 @@
     width: 100%;
     order: 1;
 
-    @include ecl-media-breakpoint-up('md') {
+    @include ecl-media-breakpoint-up('lg') {
       width: auto;
       flex-grow: 1;
 
@@ -58,7 +58,7 @@
     flex-shrink: 0;
     width: 100%;
 
-    @include ecl-media-breakpoint-up('md') {
+    @include ecl-media-breakpoint-up('lg') {
       width: auto;
       min-width: map-get($ecl-width, 'form-m');
       margin: 0 map-get($ecl-spacing, '3xl') 0 0;
