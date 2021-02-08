@@ -15,7 +15,7 @@ PRINT_USAGE_INFO() {
   COLOR=${1:-$COLOR_DEFAULT}
   printf "\n%b" "$COLOR"
   cat <<EOF
-Usage: sh install-migrate-clean.sh [BRANCH|-g] [-c] [-i] [-m PASSWORD]
+Usage: sh scripts/deploy.sh [BRANCH|-g] [-b] [-i] [-m PASSWORD]
 
 Options:
   -g          SKIP Git checkout. Either specify this, OR a branch to check out.

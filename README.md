@@ -150,14 +150,10 @@ The following conventions apply:
 
 ## Deploy STAG site on Blue4you hosting (https://eic-d8.stg.blue4you.be)
 
-TLDR; Commands:
+TLDR; Command:
 
 ```shell
-# Deploy and update the site
-sh deploy-update.sh GIT_BRANCH
-
-# Deploy and re-install the site and migrate all content
-sh deploy-install-migrate-clean.sh GIT_BRANCH
+sh scripts/deploy.sh [BRANCH|-g] [-b] [-i] [-m PASSWORD]
 ```
 
 ### Deploy steps
@@ -188,12 +184,8 @@ screen -R deploy-install-GIT_BRANCH
 #### Step 3: Run deploy script
 
 SSH into the staging server, go to the projects root directory `/home/blue4you/websites/eic-d8.stg.blue4you.be/www` and
-run one of the following shell scripts.
+execute the deploy script.
 
 ```shell
-# Deploy and update the site
-sh deploy-update.sh GIT_BRANCH
-
-# Deploy and re-install the site and migrate all content and set the admin accounts password
-sh deploy-install-migrate-clean.sh GIT_BRANCH
+sh scripts/deploy.sh [BRANCH|-g] [-b] [-i] [-m PASSWORD]
 ```
