@@ -1,6 +1,7 @@
 .ecl-card-wrapper {
   display: flex;
   flex-direction: column;
+  position: relative;
 
   & .ecl-card {
     padding: map-get($ecl-spacing, 's');
@@ -26,6 +27,33 @@
       &:empty {
         display: none;
       }
+    }
+  }
+
+  &--as-link .ecl-card .ecl-card__title {
+    color: ecl-typography('color', 'title');
+  }
+
+  &__link {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    background-image: url(data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7);
+
+    &::before {
+      display: block;
+      content: " ";
+      width: 100%;
+      height: 100%;
+    }
+
+    &:focus {
+      @include focus-outline;
     }
   }
 }
