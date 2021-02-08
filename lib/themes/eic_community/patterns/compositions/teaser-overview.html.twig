@@ -1,3 +1,5 @@
+{% set id = id|default('base') %}
+
 <div class="ecl-teaser-overview {{ extra_classes }}">
   {% if items is not empty %}
     <div class="ecl-teaser-overview__items">
@@ -10,4 +12,35 @@
   {% elseif no_items_available %}
     <p clas="ecl-teaser-overview__no-content-message">{{ no_items_available }}</p>
   {% endif %}
+  <section class="ecl-teaser-overview__options">
+    {% if interface_options is not empty %}
+      <div class="ecl-teaser-overview__interface-options">
+        <span class="ecl-teaser-overview__interface-options-title">{{ interface_options.title|default('View as') }}</span>
+        <div class="ecl-teaser-overview__interface-options-items">
+          {% for item in interface_options.items %}
+            <button class="ecl-teaser-overview__interface-options-item">
+              {% if icon_file_path and item.icon %}
+                {% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with {
+                  extra_classes: 'ecl-teaser-overview__interface-option-icon',
+                  icon: {
+                    path: icon_file_path,
+                    name: item.icon.name,
+                    size: 's',
+                    type: item.icon.type,
+                  },
+                  extra_attributes: {
+                    'aria-hidden': 'true',
+                    'focusable': 'false'
+                  }
+                } only %}
+                <span class="ecl-teaser-overview__interface-options-item-label">{{ item.label }}</span>
+              {% else %}
+                {{ item.label }}
+              {% endif %}
+            </button>
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
+  </section>
 </div>
