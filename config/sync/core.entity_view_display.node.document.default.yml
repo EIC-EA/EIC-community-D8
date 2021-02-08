@@ -3,7 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.field.node.document.body
+    - field.field.node.document.field_body
     - field.field.node.document.field_document_media
     - field.field.node.document.field_vocab_topics
     - node.type.document
@@ -15,12 +15,12 @@ targetEntityType: node
 bundle: document
 mode: default
 content:
-  body:
+  field_body:
+    weight: 4
     label: hidden
-    type: text_default
-    weight: 3
     settings: {  }
     third_party_settings: {  }
+    type: text_default
     region: content
   field_document_media:
     type: entity_reference_entity_view

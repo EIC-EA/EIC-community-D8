@@ -4,7 +4,7 @@ status: true
 dependencies:
   config:
     - core.entity_view_mode.node.teaser
-    - field.field.node.document.body
+    - field.field.node.document.field_body
     - field.field.node.document.field_document_media
     - field.field.node.document.field_vocab_topics
     - node.type.document
@@ -38,4 +38,4 @@ content:
     settings: {  }
     third_party_settings: {  }
 hidden:
-  body: true
+  field_body: true
