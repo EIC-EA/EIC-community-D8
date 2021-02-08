@@ -47,7 +47,7 @@
   }
 
   &__initials-wrapper,
-  &__media {
+  &__media-wrapper {
     order: -1;
     flex-shrink: 0;
     overflow: hidden;
@@ -75,16 +75,20 @@
     }
   }
 
-  &__media {
+  &__media-wrapper {
     position: relative;
     overflow: hidden;
+    background-color: ecl-box-model('background-color', 'banner');
 
     &::before {
       padding-top: 100%;
       content: " ";
       display: block;
     }
+  }
 
+  &__media {
+    &,
     & img {
       position: absolute;
       top: 0;

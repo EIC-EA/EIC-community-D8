@@ -50,13 +50,15 @@
       {% endif %}
     </div>
     {% if image is not empty %}
-      {% include '@ecl-twig/ec-component-media-container/ecl-media-container.html.twig' with {
-        extra_classes: 'ecl-author__media',
-        description: false,
-        sources: [],
-        image: image.src,
-        alt: image.alt,
-      } only %}
+      <div class="ecl-author__media-wrapper">
+        {% include '@ecl-twig/ec-component-media-container/ecl-media-container.html.twig' with {
+          extra_classes: 'ecl-author__media',
+          description: false,
+          sources: [],
+          image: image.src,
+          alt: image.alt,
+        } only %}
+      </div>
     {% elseif author is not empty %}
       <span class="ecl-author__initials-wrapper">
         <span class="ecl-author__initials">
