@@ -54,7 +54,7 @@
     border-radius: 50%;
     margin-right: ecl-layout('gutter', 'meta');
     width: map-get($ecl-media, '3xs');
-    background-color: ecl-box-model('background-color', 'banner');
+    background-color: map-get($ecl-colors, 'grey-10');
 
     @include ecl-media-breakpoint-up('lg') {
       margin-right: ecl-layout('gutter--lg', 'meta');
@@ -78,7 +78,7 @@
   &__media-wrapper {
     position: relative;
     overflow: hidden;
-    background-color: ecl-box-model('background-color', 'banner');
+    background-color: map-get($ecl-colors, 'grey-10');
 
     &::before {
       padding-top: 100%;
