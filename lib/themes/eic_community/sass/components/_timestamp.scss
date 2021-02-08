@@ -4,6 +4,16 @@
   display: flex;
   align-items: center;
   color: ecl-typography('color', 'meta');
+  margin: map-get($ecl-spacing, 'xs') 0;
+
+  &:first-child {
+    margin-top: 0;
+  }
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
 
   &--is-large {
     flex-direction: column;
