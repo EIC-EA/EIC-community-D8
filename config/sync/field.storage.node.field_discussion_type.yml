@@ -1,0 +1,33 @@
+uuid: 2d887bff-b7e3-46e6-9564-8115cd191151
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+    - options
+id: node.field_discussion_type
+field_name: field_discussion_type
+entity_type: node
+type: list_string
+settings:
+  allowed_values:
+    -
+      value: info
+      label: Information
+    -
+      value: idea
+      label: Idea
+    -
+      value: question
+      label: Question
+    -
+      value: debate
+      label: Debate
+  allowed_values_function: ''
+module: options
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false
