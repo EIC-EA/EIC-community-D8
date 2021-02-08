@@ -1,0 +1,30 @@
+uuid: e746249c-34ff-4f1e-ba90-7ca67aefc214
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.fragment.disclaimer.field_body
+    - fragments.fragment_type.disclaimer
+id: fragment.disclaimer.default
+targetEntityType: fragment
+bundle: disclaimer
+mode: default
+content:
+  field_body:
+    weight: 1
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textarea
+    region: content
+  title:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+hidden:
+  user_id: true

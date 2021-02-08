@@ -1,0 +1,19 @@
+uuid: a4563fcd-b2be-41f3-9aa5-3498788aeeda
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_image_caption
+    - node.type.news
+id: node.news.field_image_caption
+field_name: field_image_caption
+entity_type: node
+bundle: news
+label: 'Image caption'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

@@ -1,0 +1,7 @@
+uuid: 10bde6ce-825b-4988-bf09-418ec52ef98b
+langcode: en
+status: true
+dependencies: {  }
+id: banner
+label: Banner
+description: 'A Banner Fragment highlights some specific content.'

@@ -1,0 +1,108 @@
+.ecl-collapsible-options {
+  $node: &;
+
+  position: relative;
+  display: inline-block;
+
+  &__trigger-wrapper {
+    display: none;
+
+    #{$node}--is-ready & {
+      display: block;
+    }
+  }
+
+  &__trigger {
+    display: none;
+    position: relative;
+
+    &::after {
+      display: block;
+      flex-shrink: 0;
+      width: map-get($ecl-spacing, 'xs');
+      margin-left: ecl-box-model('margin', 'controls');
+      height: map-get($ecl-spacing, 'xs');
+      border: ecl-border();
+      border-color: currentColor;
+      border-bottom: none;
+      border-left: none;
+      transform: rotate(135deg);
+      margin-top: -#{map-get($ecl-spacing, 'xs') / 2};
+      content: " ";
+    }
+
+    #{$node}--is-ready &[aria-visible="true"] {
+      display: flex;
+      align-items: center;
+    }
+
+    #{$node}--is-ready[aria-expanded="true"] & {
+      &::after {
+        transform: rotate(-45deg);
+        margin-top: #{map-get($ecl-spacing, 'xs') / 2};
+      }
+    }
+  }
+
+  &__collapse-wrapper {
+    box-sizing: border-box;
+    min-width: 100%;
+
+    #{$node}--is-ready & {
+      padding-top: ecl-box-model('margin', 'controls');
+    }
+
+    #{$node}--is-ready & {
+      position: absolute;
+      top: 100%;
+      left: 0;
+    }
+
+    #{$node}--aligns-from-right & {
+      left: auto;
+      right: 0;
+    }
+
+    #{$node}--is-ready[aria-expanded="false"] & {
+      display: none;
+    }
+  }
+
+  &__collapse-well {
+    #{$node}--is-ready & {
+      background-color: ecl-box-model('background-color');
+      border: ecl-border();
+    }
+  }
+
+  &__items {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: #{0 - ecl-layout('gutter', 'controls')};
+
+    #{$node}--is-ready & {
+      margin: 0;
+    }
+  }
+
+  &__item {
+    margin: 0 ecl-layout('gutter', 'controls') ecl-layout('gutter', 'controls');
+    flex-shrink: 0;
+    white-space: nowrap;
+
+    #{$node}--is-ready & {
+      margin: 0;
+      border-bottom: ecl-border();
+
+      &:last-child {
+        border-bottom: 0;
+      }
+    }
+  }
+
+  &__button {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+  }
+}

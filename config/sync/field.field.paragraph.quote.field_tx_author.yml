@@ -1,0 +1,21 @@
+uuid: b3824d6c-6bea-4a2a-a979-4d46557b87d8
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_tx_author
+    - paragraphs.paragraphs_type.quote
+  module:
+    - text
+id: paragraph.quote.field_tx_author
+field_name: field_tx_author
+entity_type: paragraph
+bundle: quote
+label: Author
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text

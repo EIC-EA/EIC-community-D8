@@ -8,8 +8,11 @@ module:
   dblog: 0
   dynamic_page_cache: 0
   editor: 0
+  eic_content: 0
+  eic_content_story: 0
   eic_media: 0
   eic_media_document: 0
+  eic_media_video: 0
   entity: 0
   entity_browser: 0
   entity_browser_entity_form: 0
@@ -19,6 +22,7 @@ module:
   file: 0
   file_link: 0
   filter: 0
+  fragments: 0
   gnode: 0
   group: 0
   image: 0
@@ -34,6 +38,7 @@ module:
   oe_time_caching: 0
   options: 0
   page_cache: 0
+  paragraph_view_mode: 0
   path: 0
   path_alias: 0
   responsive_image: 0

@@ -1,0 +1,45 @@
+uuid: e54e9227-6184-4205-a203-8cd094f6477b
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.discussion.field_body
+    - field.field.node.discussion.field_discussion_type
+    - field.field.node.discussion.field_related_documents
+    - field.field.node.discussion.field_vocab_geo
+    - field.field.node.discussion.field_vocab_topics
+    - node.type.discussion
+  module:
+    - options
+    - text
+    - user
+id: node.discussion.teaser
+targetEntityType: node
+bundle: discussion
+mode: teaser
+content:
+  field_body:
+    type: text_trimmed
+    weight: 2
+    region: content
+    label: above
+    settings:
+      trim_length: 250
+    third_party_settings: {  }
+  field_discussion_type:
+    type: list_default
+    weight: 1
+    region: content
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+  links:
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  field_related_documents: true
+  field_vocab_geo: true
+  field_vocab_topics: true

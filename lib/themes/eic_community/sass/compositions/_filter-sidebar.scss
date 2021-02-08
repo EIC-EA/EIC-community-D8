@@ -15,7 +15,7 @@
   }
 
   &__expand {
-    @include ecl-media-breakpoint-down('md') {
+    @include ecl-media-breakpoint-down('lg') {
       display: block;
 
       #{$node}--is-ready[aria-expanded="true"] & {
@@ -25,7 +25,7 @@
   }
 
   &__collapse {
-    @include ecl-media-breakpoint-down('md') {
+    @include ecl-media-breakpoint-down('lg') {
       display: none;
 
       #{$node}--is-ready[aria-expanded="true"] & {
@@ -40,25 +40,34 @@
   }
 
   &__main {
-    @include ecl-media-breakpoint-down('md') {
+    #{$node}--is-ready & {
       display: none;
 
-      #{$node}--is-ready[aria-expanded="true"] & {
+      @include ecl-media-breakpoint-up('lg') {
         display: block;
       }
+    }
+
+    #{$node}--is-ready[aria-expanded="true"] & {
+      display: block;
     }
   }
 
   &__splash {
     order: -1;
+     display: none;
+
+    #{$node}--is-ready & {
+      display: block;
+
+      @include ecl-media-breakpoint-up('lg') {
+        display: none;
+      }
+    }
 
     #{$node}--is-ready[aria-expanded="true"] & {
       order: inherit;
       margin-top: ecl-layout('gutter', 'controls');
-    }
-
-    @include ecl-media-breakpoint-up('md') {
-      display: none;
     }
   }
 

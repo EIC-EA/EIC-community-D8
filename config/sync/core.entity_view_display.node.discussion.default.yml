@@ -1,0 +1,64 @@
+uuid: d7afeada-acdb-4dad-9c87-c456644d0396
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.discussion.field_body
+    - field.field.node.discussion.field_discussion_type
+    - field.field.node.discussion.field_related_documents
+    - field.field.node.discussion.field_vocab_geo
+    - field.field.node.discussion.field_vocab_topics
+    - node.type.discussion
+  module:
+    - options
+    - text
+    - user
+id: node.discussion.default
+targetEntityType: node
+bundle: discussion
+mode: default
+content:
+  field_body:
+    weight: 101
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: text_default
+    region: content
+  field_discussion_type:
+    weight: 102
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: list_default
+    region: content
+  field_related_documents:
+    weight: 105
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+  field_vocab_geo:
+    weight: 104
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+  field_vocab_topics:
+    weight: 103
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+  links:
+    weight: 100
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden: {  }
