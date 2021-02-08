@@ -13,6 +13,10 @@ Displays the teaser container for the story content type.
 ```
 
 ```
+  {% include "@theme/patterns/compositions/organisation/organisation.teaser.html.twig" %}
+```
+
+```
   {% include "@theme/patterns/compositions/story/story.teaser.html.twig" %}
 ```
 
@@ -20,42 +24,54 @@ Displays the teaser container for the story content type.
   {% include "@theme/patterns/compositions/project/project.teaser.html.twig" %}
 ```
 
+```
+  {% include "@theme/patterns/compositions/group/group.teaser.html.twig" %}
+```
+
 ## Parameters
 
-| Key                                 | Type     | Description                                                                                                                                                   | Mandatory |
-| ----------------------------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- | --- |
-| title                               | string   | Displays the title of the teaser.                                                                                                                             | no        |
-| path                                | string   | The URL to the actual entry.                                                                                                                                  | no        |
-| icon_file_path                      | string   | Enables the usage of the ECL icons within the component.                                                                                                      | no        |
-| description                         | string   | Inserts a descriptive text below the title.                                                                                                                   | no        |
-| image                               | object   | Displays the teaser image                                                                                                                                     | no        |
-| image.src                           | string   | The URl to the image file.                                                                                                                                    | no        |
-| image.alt                           | string   | The optional alt attribute for the image.                                                                                                                     | no        |
-| timestamp                           | object   | Displays the timestamp of the entry. Should inherit the paramaters from the custom timestamp component.                                                       | no        |
-| author                              | object   | Displays the author of the entry. Should inherit the paramaters from the custom author component.                                                             | no        |
-| contributor                         | object   | Displays the contributor of the entry. Should inherit the paramaters from the custom author component.                                                        | no        |
-| stats                               | object[] | Displays informative statistics of the current teaser.                                                                                                        | no        |
-| stats[].value                       | string   | The visible value of the statistic.                                                                                                                           | no        |
-| stats[].label                       | string   | The semantic value of the statistic that will be visually hidden.                                                                                             | no        |
-| stats[].icon                        | object[] | Displays an ECL Icon for the current statistic.                                                                                                               | no        |
-| actions                             | object[] | Inserts additional anchor elements within the current teaser.                                                                                                 | no        |
-| actions[].path                      | string   | The URL of the action anchor element.                                                                                                                         | no        |
-| actions[].label                     | string   | The label of the action anchor element.                                                                                                                       | no        |
-| actions[].icon                      | object[] | Displays an ECL Icon for the current action.                                                                                                                  | no        |
-| type                                | object{} | Inserts additional anchor elements within the current teaser.                                                                                                 | no        |
-| type.label                          | string   | Displays the type of the current teaser.                                                                                                                      | no        |
-| type.icon                           | object   | Displays an optional ECL Icon for the teaser type.                                                                                                            | no        |
-| date                                | object   | Displays an optional [ECL Date block](https://www.npmjs.com/package/@ecl-twig/ec-component-date-block) that is visible for the `event` teaser.                | no        |
-| tags                                | object[] | Inserts additional anchor elements within the current teaser.                                                                                                 | no        |
-| tags[].label                        | string   | The label of the tag element.                                                                                                                                 | no        |
-| tags[].path                         | string   | The URL of the tag element.                                                                                                                                   | no        |
-| partners                            | object[] | Displays a list of partners as teaser meta field.                                                                                                             | no        |
-| partners[].link                     | object   | The link structure for the defined partner, should follow the (ECL Twig Link)[https://www.npmjs.com/package/@ecl-twig/ec-component-link] paramater structure. | no        |
-| investments                         | object[] | Displays the given investments and contributor information.                                                                                                   | no        |
-| investments[].label                 | string   | The given investment label.                                                                                                                                   | no        |
-| investments[].contributor           | object   | The contributor information for the given investment. Should follow the custom investment component parameters.                                               | no        |
-| investments[].contributor.label     | string   | The semantic name of the donation contributor.                                                                                                                | no        |     |
-| investments[].contributor.code      | string   | The defined country ISO value of the given contributor.                                                                                                       | no        |     |
-| investments[].contributor.image     | object   | Displays an image instead of the static flags.                                                                                                                | no        |     |
-| investments[].contributor.image.src | string   | The URL for the defined image.                                                                                                                                | no        |     |
-| investments[].contributor.image.alt | string   | The alt attribute for the defined image.                                                                                                                      | no        |     |
+| Key                                 | Type     | Description                                                                                                                                                                        | Mandatory |
+| ----------------------------------- | -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- |
+| actions                             | object[] | Inserts additional anchor elements within the current teaser.                                                                                                                      | no        |
+| actions[].icon                      | object[] | Displays an ECL Icon for the current action.                                                                                                                                       | no        |
+| actions[].label                     | string   | The label of the action anchor element.                                                                                                                                            | no        |
+| actions[].path                      | string   | The URL of the action anchor element.                                                                                                                                              | no        |
+| author                              | object   | Displays the author of the entry. Should inherit the paramaters from the custom author component.                                                                                  | no        |
+| contributor                         | object   | Displays the contributor of the entry. Should inherit the paramaters from the custom author component.                                                                             | no        |
+| date                                | object   | Displays an optional [ECL Date block](https://www.npmjs.com/package/@ecl-twig/ec-component-date-block) that is visible for the `event` teaser.                                     | no        |
+| description                         | string   | Inserts a descriptive text below the title.                                                                                                                                        | no        |
+| icon_file_path                      | string   | Enables the usage of the ECL icons within the component.                                                                                                                           | no        |
+| image                               | object   | Displays the teaser image                                                                                                                                                          | no        |
+| image.alt                           | string   | The optional alt attribute for the image.                                                                                                                                          | no        |
+| image.src                           | string   | The URl to the image file.                                                                                                                                                         | no        |
+| investments                         | object[] | Displays the given investments and contributor information.                                                                                                                        | no        |
+| investments[].contributor           | object   | The contributor information for the given investment. Should follow the custom investment component parameters.                                                                    | no        |
+| investments[].contributor.code      | string   | The defined country ISO value of the given contributor.                                                                                                                            | no        |
+| investments[].contributor.image     | object   | Displays an image instead of the static flags.                                                                                                                                     | no        |
+| investments[].contributor.image.alt | string   | The alt attribute for the defined image.                                                                                                                                           | no        |
+| investments[].contributor.image.src | string   | The URL for the defined image.                                                                                                                                                     | no        |
+| investments[].contributor.label     | string   | The semantic name of the donation contributor.                                                                                                                                     | no        |
+| investments[].label                 | string   | The given investment label.                                                                                                                                                        | no        |
+| location                            | object   | Displays a single location.                                                                                                                                                        | no        |
+| location.icon                       | object   | Displays an optional icon before the location label. Follows the [ECL Twig icon component](https://ecl-twig-php.netlify.app/ec/?path=/story/components-icon--general) properties.  | no        |
+| location.label                      | string   | The label of the single location.                                                                                                                                                  | no        |
+| partners                            | object[] | Displays a list of partners as teaser meta field.                                                                                                                                  | no        |
+| partners[].link                     | object   | The link structure for the defined partner, should follow the (ECL Twig Link)[https://www.npmjs.com/package/@ecl-twig/ec-component-link] paramater structure.                      | no        |
+| path                                | string   | The URL to the actual entry.                                                                                                                                                       | no        |
+| size                                | object   | Displays a the company size.                                                                                                                                                       | no        |
+| size.icon                           | object   | Displays an optional icon before the size label. Follows the [ECL Twig icon component](https://ecl-twig-php.netlify.app/ec/?path=/story/components-icon--general) properties.      | no        |
+| size.label                          | string   | The semantic label for the company size.                                                                                                                                           | no        |
+| stats                               | object[] | Displays informative statistics of the current teaser.                                                                                                                             | no        |
+| stats[].icon                        | object[] | Displays an ECL Icon for the current statistic.                                                                                                                                    | no        |
+| stats[].label                       | string   | The semantic value of the statistic that will be visually hidden.                                                                                                                  | no        |
+| stats[].value                       | string   | The visible value of the statistic.                                                                                                                                                | no        |
+| tags                                | object[] | Inserts additional anchor elements within the current teaser.                                                                                                                      | no        |
+| tags                                | object[] | Inserts additional anchor elements within the current teaser.                                                                                                                      | no        |
+| tags[].label                        | string   | The label of the tag element.                                                                                                                                                      | no        |
+| tags[].path                         | string   | The URL of the tag element.                                                                                                                                                        | no        |
+| timestamp                           | object   | Displays the timestamp of the entry. Should inherit the paramaters from the custom timestamp component.                                                                            | no        |
+| title                               | string   | Displays the title of the teaser.                                                                                                                                                  | no        |
+| type                                | object{} | Inserts additional anchor elements within the current teaser.                                                                                                                      | no        |
+| type.icon                           | object   | Displays an optional ECL Icon for the teaser type.                                                                                                                                 | no        |
+| type.icon                           | object   | Displays an optional ECL Icon for the teaser type.                                                                                                                                 | no        |
+| type.label                          | string   | Displays the type of the current teaser.                                                                                                                                           | no        |
