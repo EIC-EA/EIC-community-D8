@@ -1,0 +1,21 @@
+uuid: 9d3e2176-e07a-4b90-a129-9b9b7b061955
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_display_background
+    - paragraphs.paragraphs_type.text_and_media_content
+  module:
+    - options
+id: paragraph.text_and_media_content.field_display_background
+field_name: field_display_background
+entity_type: paragraph
+bundle: text_and_media_content
+label: 'Display background'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: list_string
