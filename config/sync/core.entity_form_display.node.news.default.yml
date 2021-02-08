@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - field.field.node.news.field_body
+    - field.field.node.news.field_disclaimer
     - field.field.node.news.field_document_media
     - field.field.node.news.field_header_visual
     - field.field.node.news.field_image
@@ -27,7 +28,7 @@ mode: default
 content:
   created:
     type: datetime_timestamp
-    weight: 13
+    weight: 14
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -39,6 +40,12 @@ content:
     third_party_settings: {  }
     type: text_textarea
     region: content
+  field_disclaimer:
+    type: options_select
+    weight: 10
+    region: content
+    settings: {  }
+    third_party_settings: {  }
   field_document_media:
     weight: 9
     settings:
@@ -83,7 +90,7 @@ content:
     type: text_textarea
     region: content
   field_publication_date:
-    weight: 11
+    weight: 12
     settings: {  }
     third_party_settings: {  }
     type: datetime_default
@@ -104,7 +111,7 @@ content:
     third_party_settings: {  }
     region: content
   field_vocab_geo:
-    weight: 10
+    weight: 11
     settings:
       match_operator: CONTAINS
       match_limit: 10
@@ -125,7 +132,7 @@ content:
     region: content
   path:
     type: path
-    weight: 16
+    weight: 17
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -133,21 +140,21 @@ content:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 14
+    weight: 15
     region: content
     third_party_settings: {  }
   status:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 17
+    weight: 18
     region: content
     third_party_settings: {  }
   sticky:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 15
+    weight: 16
     region: content
     third_party_settings: {  }
   title:
@@ -160,7 +167,7 @@ content:
     third_party_settings: {  }
   uid:
     type: entity_reference_autocomplete
-    weight: 12
+    weight: 13
     settings:
       match_operator: CONTAINS
       size: 60
