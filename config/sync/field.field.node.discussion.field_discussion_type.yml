@@ -1,0 +1,21 @@
+uuid: 101f7739-d261-47bf-a4a0-af2ccbe74fc1
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_discussion_type
+    - node.type.discussion
+  module:
+    - options
+id: node.discussion.field_discussion_type
+field_name: field_discussion_type
+entity_type: node
+bundle: discussion
+label: 'Type of Discussion'
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: list_string
