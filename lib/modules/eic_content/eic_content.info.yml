@@ -1,0 +1,9 @@
+name: EIC Content
+type: module
+description: Drupal module that provides Content Types for EIC Platform.
+package: European Innovation Council
+core: 8.x
+core_version_requirement: ^8 || ^9
+php: 7.3
+dependencies:
+  - eic_media:eic_media

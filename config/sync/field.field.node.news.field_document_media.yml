@@ -1,0 +1,28 @@
+uuid: 73f635b6-8130-4eda-b3b9-e0c8e2a8cef3
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_document_media
+    - media.type.eic_document
+    - node.type.news
+id: node.news.field_document_media
+field_name: field_document_media
+entity_type: node
+bundle: news
+label: Document
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:media'
+  handler_settings:
+    target_bundles:
+      eic_document: eic_document
+    sort:
+      field: _none
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

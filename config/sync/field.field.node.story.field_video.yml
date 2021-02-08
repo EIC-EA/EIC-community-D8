@@ -1,0 +1,30 @@
+uuid: abaf64b3-e18b-4de5-8d91-10223c40bf6f
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_video
+    - media.type.remote_video
+    - node.type.story
+_core:
+  default_config_hash: an0Mor7KCYGe2UEIwB-BB1YHCg7iQ-VIe3Halo9YwLU
+id: node.story.field_video
+field_name: field_video
+entity_type: node
+bundle: story
+label: Video
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:media'
+  handler_settings:
+    target_bundles:
+      remote_video: remote_video
+    sort:
+      field: _none
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference
