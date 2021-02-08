@@ -214,7 +214,6 @@
       @include ecl-responsive-font('meta');
     }
 
-    #{$node}--member &,
     .ecl-teaser-overview--has-columns #{$node}--member & {
       text-align: center;
     }
