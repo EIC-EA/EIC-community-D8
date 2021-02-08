@@ -1,0 +1,29 @@
+.ecl-fact-figures-wrapper {
+  & .ecl-fact-figures {
+    border: none;
+
+    &__items {
+      padding: 0;
+      margin-top: #{0 - ecl-layout('gutter--lg', 'description')};
+      margin-left: #{0 - ecl-layout('gutter', 'description')};
+
+      @include ecl-media-breakpoint-up('lg') {
+        margin-left: #{0 - ecl-layout('gutter--lg', 'description')};
+      }
+    }
+
+    &__item {
+      &,
+      &:first-of-type {
+        padding: 0;
+        padding-left: ecl-layout('gutter', 'description');
+        margin-top: ecl-layout('gutter--lg', 'description');
+
+        @include ecl-media-breakpoint-up('lg') {
+          padding-left: ecl-layout('gutter--lg', 'description');
+        }
+      }
+
+    }
+  }
+}

@@ -1,0 +1,25 @@
+{% set _column = facts_figures.column|default(3) %}
+{% set _display_icons = facts_figures.display_icons and icon_file_path ? TRUE : FALSE %}
+
+{% set _items = [] %}
+
+{% for item in facts_figures.items %}
+  {% set _items = _items|merge([item|merge({
+    icon: item.icon|default({})|merge({
+      path: icon_file_path,
+      size: size|default('m'),
+    })
+  })])%}
+{% endfor %}
+
+{% set _fact_figures = facts_figures|default({})|merge({
+  column: _column,
+  display_icons: _display_icons,
+  items: _items,
+}) %}
+
+<section class="ecl-section-wrapper ecl-section-wrapper--is-blue ecl-fact-figures-wrapper">
+  <div class="ecl-container">
+    {% include "@ecl-twig/ec-component-fact-figures/ecl-fact-figures.html.twig" with _fact_figures only %}
+  </div>
+</section>
