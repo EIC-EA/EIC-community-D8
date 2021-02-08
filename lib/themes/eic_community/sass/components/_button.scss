@@ -1,4 +1,6 @@
 .ecl-button {
+  text-align: inherit;
+
   $node: &;
   &__label {
     // Fixes the issue where the ECL Link button variant has a non breaking space after the icon,
