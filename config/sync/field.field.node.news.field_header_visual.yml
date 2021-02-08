@@ -1,0 +1,28 @@
+uuid: 811b9a6a-2e0a-4067-b019-fb7b20deb5f5
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_header_visual
+    - media.type.image
+    - node.type.news
+id: node.news.field_header_visual
+field_name: field_header_visual
+entity_type: node
+bundle: news
+label: 'Header visual'
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:media'
+  handler_settings:
+    target_bundles:
+      image: image
+    sort:
+      field: _none
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

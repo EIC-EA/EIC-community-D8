@@ -1,0 +1,19 @@
+uuid: 34d8ef1d-1cab-4da4-9fa7-fdbeeb724a03
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.fragment.field_body
+    - fragments.fragment_type.banner
+id: fragment.banner.field_body
+field_name: field_body
+entity_type: fragment
+bundle: banner
+label: Description
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string_long

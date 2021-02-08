@@ -1,0 +1,19 @@
+uuid: e1056f47-7482-42fe-b5fd-bbee600babfd
+langcode: en
+status: true
+dependencies:
+  module:
+    - fragments
+    - link
+id: fragment.field_cta_link
+field_name: field_cta_link
+entity_type: fragment
+type: link
+settings: {  }
+module: link
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

@@ -1,0 +1,10 @@
+uuid: 4a03be36-4239-4ff5-a293-f57c2734deaa
+langcode: en
+status: true
+dependencies:
+  module:
+    - paragraphs
+id: paragraph.platform_member
+label: 'Platform member'
+targetEntityType: paragraph
+cache: true

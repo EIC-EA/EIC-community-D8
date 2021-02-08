@@ -1,0 +1,21 @@
+uuid: 93a2db34-bd5a-4e17-acf0-01afe51abe90
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.fragment.field_background_color
+    - fragments.fragment_type.banner
+  module:
+    - options
+id: fragment.banner.field_background_color
+field_name: field_background_color
+entity_type: fragment
+bundle: banner
+label: 'Background color'
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: list_string
