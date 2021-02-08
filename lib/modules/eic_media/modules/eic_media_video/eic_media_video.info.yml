@@ -1,0 +1,10 @@
+name: EIC Media type video
+type: module
+description: Provides a Media type Video.
+package: European Innovation Council
+core: 8.x
+core_version_requirement: ^8 || ^9
+php: 7.3
+dependencies:
+  - media:media
+  - eic_media:eic_media
