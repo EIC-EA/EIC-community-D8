@@ -1,0 +1,10 @@
+uuid: 95ef4b7f-41f9-4dc1-9655-f91ab0afbdb2
+langcode: en
+status: true
+dependencies: {  }
+id: full_text_content
+label: 'Full text content'
+icon_uuid: null
+icon_default: null
+description: 'A Paragraphs type with only a title and body.'
+behavior_plugins: {  }

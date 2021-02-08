@@ -1,6 +1,6 @@
 .ecl-editorial-header {
   &__wrapper {
-    @include ecl-media-breakpoint-up('md') {
+    @include ecl-media-breakpoint-up('lg') {
       display: flex;
       align-items: center;
       flex-direction: row;
@@ -8,8 +8,9 @@
   }
 
   &__main {
-    @include ecl-media-breakpoint-up('md') {
+    @include ecl-media-breakpoint-up('lg') {
       flex-grow: 1;
+      margin-right: map-get($ecl-spacing, 'm');
       max-width: calc(100% / #{$ecl-grid-columns} * 8);
     }
   }
@@ -27,21 +28,18 @@
   }
 
   &__actions {
-    margin: map-get($ecl-spacing, 'm') #{0 - map-get($ecl-spacing, 'm')} 0;
-
     display: flex;
     flex-shrink: 0;
     flex-wrap: wrap;
-
-    @include ecl-media-breakpoint-up('md') {
-      flex-direction: column;
-      flex-wrap: nowrap;
-      width: calc(100% / #{$ecl-grid-columns} * 4);
-      margin: 0 0 0 ecl-layout('gutter--lg');
-    }
+    margin-top: ecl-box-model('margin', 'controls');
+    margin-bottom: #{0 - ecl-layout('gutter', 'controls')};
 
     @include ecl-media-breakpoint-up('lg') {
-      margin-left: ecl-layout('gutter--lg');
+      margin-top: 0;
     }
+  }
+
+  &__action {
+    margin: 0 ecl-layout('gutter', 'controls') ecl-layout('gutter', 'controls') 0;
   }
 }

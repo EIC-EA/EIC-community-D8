@@ -1,19 +1,21 @@
 .ecl-teaser {
   $node: &;
+  position: relative;
 
   @include ecl-media-breakpoint-up('sm') {
     display: flex;
     align-items: stretch;
-    position: relative;
   }
 
   &--member {
     display: flex;
-    flex-direction: column;
-    background-color: ecl-box-model('background-color', 'banner');
-    padding: ecl-box-model('padding');
-  }
+    flex-wrap: wrap;
+    align-items: flex-start;
 
+    .ecl-teaser-overview--has-columns & {
+      flex-direction: column;
+    }
+  }
 
   &__image-wrapper {
     margin: 0 0 ecl-box-model('padding') 0;
@@ -25,17 +27,26 @@
     }
 
     #{$node}--member & {
-      margin: ecl-box-model('padding') auto ecl-box-model('padding');
       border-radius: 50%;
       overflow: hidden;
       position: relative;
-      width: 100%;
-      max-width: map-get($ecl-media, 'm');
+      width: map-get($ecl-media, 'xs');
+      margin: 0 ecl-box-model('padding') 0 0;
+
+      @include ecl-media-breakpoint-up('lg') {
+        width: map-get($ecl-media, 'm');
+      }
 
       &::before {
         padding-top: 100%;
         content: " ";
         display: block;
+      }
+
+      .ecl-teaser-overview--has-columns & {
+        width: 100%;
+        max-width: map-get($ecl-media, 'm');
+        margin: ecl-box-model('padding') auto ecl-box-model('padding');
       }
     }
   }
@@ -59,6 +70,19 @@
     flex-grow: 1;
     display: flex;
     flex-direction: column;
+
+    #{$node}--member & {
+      width: calc(100% - #{map-get($ecl-media, 'xs')} - #{ecl-box-model('padding')});
+
+      @include ecl-media-breakpoint-up('lg') {
+        width: calc(100% - #{map-get($ecl-media, 'm')} - #{ecl-box-model('padding')});
+      }
+
+      .ecl-teaser-overview--has-columns & {
+        width: auto;
+      }
+    }
+
   }
 
   &__meta-header,
@@ -77,10 +101,32 @@
     }
 
     #{$node}--member & {
-      position: absolute;
-      top: 0;
-      left: 0;
-      padding: ecl-box-model('padding', 'controls');
+      width: 100%;
+
+      .ecl-teaser-overview--has-columns & {
+        width: auto;
+        position: absolute;
+        bottom: 100%;
+        left: 0;
+        padding: ecl-box-model('padding', 'controls') 0;
+        transform: translateY(100%);
+      }
+    }
+  }
+
+  &__meta-footer {
+    #{$node}--member & {
+      flex-direction: column;
+      align-items: flex-start;
+      flex-wrap: nowrap;
+
+      @include ecl-media-breakpoint-up('sm') {
+        flex-direction: row;
+
+        .ecl-teaser-overview--has-columns & {
+          flex-direction: column;
+        }
+      }
     }
   }
 
@@ -119,7 +165,7 @@
 
     @include ecl-responsive-font('label');
 
-    #{$node}--member & {
+    .ecl-teaser-overview--has-columns #{$node}--member & {
       text-align: center;
     }
   }
@@ -129,7 +175,7 @@
     font-style: inherit;
     line-height: ecl-typography('line-height');
 
-    #{$node}--member & {
+    .ecl-teaser-overview--has-columns #{$node}--member & {
       text-align: center;
     }
   }
@@ -139,7 +185,7 @@
     flex-direction: column;
     margin-bottom: ecl-box-model('margin', 'controls');
 
-    #{$node}--member &  {
+    .ecl-teaser-overview--has-columns #{$node}--member & {
       align-items: center;
       margin-bottom: 0;
     }
@@ -164,10 +210,18 @@
 
     #{$node}--member & {
       display: flex;
-      justify-content: space-between;
 
       & > :last-child {
         margin-left: ecl-box-model('margin', 'controls');
+      }
+
+      .ecl-teaser-overview--has-columns & {
+        justify-content: space-between;
+        width: 100%;
+
+        @include ecl-media-breakpoint-up('sm') {
+          flex-shrink: 1;
+        }
       }
     }
 
@@ -279,8 +333,27 @@
     align-items: center;
 
     #{$node}--member #{$node}__meta-footer & {
-      width: 100%;
+      flex-grow: 1;
+      flex-shrink: 0;
+      flex-direction: column;
+      align-items: flex-start;
       margin-bottom: ecl-box-model('margin', 'controls');
+
+      .ecl-teaser-overview--has-columns & {
+        align-items: center;
+      }
+
+      @include ecl-media-breakpoint-up('sm') {
+        margin-bottom: 0;
+        margin-right: ecl-box-model('margin', 'controls');
+      }
+
+      .ecl-teaser-overview--has-columns & {
+        width: 100%;
+        flex-direction: column;
+        margin-right: 0;
+        margin-bottom: ecl-box-model('margin', 'controls');
+      }
     }
 
      #{$node}--event & {
@@ -310,6 +383,10 @@
     &:last-child {
       margin-right: 0;
     }
+  }
+
+  &__action {
+    flex-shrink: 0;
   }
 
   &__stats {

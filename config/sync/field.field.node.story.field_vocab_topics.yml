@@ -1,0 +1,31 @@
+uuid: e1c7c90b-eac2-4ab1-bc3e-288b5415a319
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_vocab_topics
+    - node.type.story
+    - taxonomy.vocabulary.topics
+_core:
+  default_config_hash: 0MkDtDrSCp77f_9A8dOsl2FMJkpFQ-JOMy4jDSPlVG0
+id: node.story.field_vocab_topics
+field_name: field_vocab_topics
+entity_type: node
+bundle: story
+label: Topics
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      topics: topics
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

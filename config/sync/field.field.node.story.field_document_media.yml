@@ -1,0 +1,30 @@
+uuid: dc5be546-4bd0-4a1c-b044-66204fa5633d
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_document_media
+    - media.type.eic_document
+    - node.type.story
+_core:
+  default_config_hash: WDGdsizDGZA0EpSve7quhAGjPd7B8K3vqsRGb-YDptc
+id: node.story.field_document_media
+field_name: field_document_media
+entity_type: node
+bundle: story
+label: Document
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:media'
+  handler_settings:
+    target_bundles:
+      eic_document: eic_document
+    sort:
+      field: _none
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

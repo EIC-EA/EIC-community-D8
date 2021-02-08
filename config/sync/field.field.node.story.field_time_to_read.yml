@@ -1,0 +1,19 @@
+uuid: 0f8707f4-c7dd-4e80-a42e-0da7f49bdbb5
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_time_to_read
+    - node.type.story
+id: node.story.field_time_to_read
+field_name: field_time_to_read
+entity_type: node
+bundle: story
+label: 'Time to read'
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string
