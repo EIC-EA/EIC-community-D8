@@ -3,3 +3,7 @@
 {% block page_header %}
   {% include "@theme/patterns/compositions/editorial-header.html.twig" with editorial_header|default({}) only %}
 {% endblock %}
+
+{% block content %}
+  {% include "@theme/patterns/compositions/featured-content-grid.html.twig" with featured_content|default({}) %}
+{% endblock %}
