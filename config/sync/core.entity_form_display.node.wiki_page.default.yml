@@ -31,7 +31,7 @@ content:
     type: text_textarea
     region: content
   field_related_documents:
-    weight: 2
+    weight: 3
     settings:
       match_operator: CONTAINS
       match_limit: 10
@@ -42,7 +42,7 @@ content:
     region: content
   field_related_media:
     type: media_library_widget
-    weight: 3
+    weight: 2
     settings:
       media_types: {  }
     third_party_settings: {  }
