@@ -1,0 +1,19 @@
+import contentTypeIndicatorStories from './content-type-indicator.stories';
+
+# Content Type Indicator
+
+Displays the generic content type label with an optional icon.
+
+## Example
+
+```twig
+  {% include "@theme/patterns/components/content-type-indicator.html.twig" %}
+```
+
+## Twig parameters
+
+| Key            | Type   | Description                                                                                                                                                                         | Mandatory |
+| -------------- | ------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- |
+| label          | string | The label of the defined content type.                                                                                                                                              | yes       |
+| icon           | object | Displays the optional icon for the given content type. Follows the [ECL Twig icon component](https://ecl-twig-php.netlify.app/ec/?path=/story/components-icon--general) properties. | no        |
+| icon_file_path | string | The URL of the inline SVG sprite that will be used for the icon.                                                                                                                    | no        |
