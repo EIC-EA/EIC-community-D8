@@ -37,6 +37,7 @@ module:
   oe_theme_helper: 0
   oe_time_caching: 0
   oe_webtools: 0
+  oe_webtools_social_share: 0
   options: 0
   page_cache: 0
   paragraph_view_mode: 0
