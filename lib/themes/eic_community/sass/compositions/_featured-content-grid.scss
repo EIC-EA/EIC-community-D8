@@ -138,6 +138,11 @@
       justify-content: space-between;
       align-items: center;
       flex-wrap: nowrap;
+
+
+      #{$node}__item:first-child & {
+        padding-bottom: ecl-box-model('padding--md', 'meta');
+      }
     }
   }
 
