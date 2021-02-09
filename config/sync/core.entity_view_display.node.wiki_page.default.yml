@@ -25,9 +25,9 @@ content:
     region: content
   field_related_documents:
     weight: 3
-    label: above
+    label: hidden
     settings:
-      view_mode: default
+      view_mode: teaser
       link: false
     third_party_settings: {  }
     type: entity_reference_entity_view
@@ -35,7 +35,7 @@ content:
   field_related_media:
     type: media_thumbnail
     weight: 2
-    label: above
+    label: hidden
     settings:
       image_style: ''
       image_link: ''

@@ -4,11 +4,8 @@ status: true
 dependencies:
   config:
     - field.storage.node.field_related_media
-    - media.type.document
-    - media.type.eic_document
     - media.type.image
     - media.type.remote_video
-    - media.type.video
     - node.type.wiki_page
 id: node.wiki_page.field_related_media
 field_name: field_related_media
@@ -24,13 +21,10 @@ settings:
   handler: 'default:media'
   handler_settings:
     target_bundles:
-      document: document
-      eic_document: eic_document
       image: image
       remote_video: remote_video
-      video: video
     sort:
       field: _none
     auto_create: false
-    auto_create_bundle: document
+    auto_create_bundle: image
 field_type: entity_reference
