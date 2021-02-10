@@ -1,4 +1,5 @@
 module:
+  big_pipe: 0
   block: 0
   block_content: 0
   breakpoint: 0
@@ -43,6 +44,7 @@ module:
   path_alias: 0
   responsive_image: 0
   smart_trim: 0
+  statistics: 0
   system: 0
   taxonomy: 0
   text: 0
