@@ -8,6 +8,7 @@ module:
   dblog: 0
   dynamic_page_cache: 0
   editor: 0
+  eic_blocks: 0
   eic_content: 0
   eic_content_story: 0
   eic_media: 0
@@ -36,6 +37,7 @@ module:
   oe_media: 0
   oe_theme_helper: 0
   oe_time_caching: 0
+  oe_webtools: 0
   options: 0
   page_cache: 0
   paragraph_view_mode: 0

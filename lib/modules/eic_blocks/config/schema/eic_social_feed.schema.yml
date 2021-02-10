@@ -1,0 +1,7 @@
+block.settings.eic_social_feed_test:
+  type: block_settings
+  label: 'Test block'
+  mapping:
+    foo:
+      type: string
+      label: Foo
