@@ -80,5 +80,11 @@
     margin-top: ecl-layout('gutter');
     padding-top: ecl-box-model('padding');
     border-top: ecl-border();
+
+    @include ecl-media-breakpoint-up('md') {
+      #{$node}--is-compact & {
+        margin-top: ecl-layout('gutter--md');
+      }
+    }
   }
 }
