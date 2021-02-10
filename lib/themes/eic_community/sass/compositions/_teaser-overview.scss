@@ -42,7 +42,7 @@
         width: calc(100% / 2 - #{ecl-box-model('padding')});
       }
 
-      @include ecl-media-breakpoint-up('lg') {
+      @include ecl-media-breakpoint-up('xl') {
         width: calc(100% / 3 - #{ecl-box-model('padding')});
       }
     }

@@ -1,6 +1,6 @@
 {% set title_element = title_element|default('h2') %}
 
-<div class="ecl-teaser ecl-teaser--member">
+<div class="ecl-teaser ecl-teaser--member {{ extra_classes }}">
   {% if type is not empty %}
     <div class="ecl-teaser__meta-header">
       <div class="ecl-teaser__type">
@@ -80,6 +80,7 @@
                   icon_position: 'before',
                   type: 'standalone',
                 },
+                extra_classes: 'ecl-link--action',
               } only %}
             </div>
           {% endfor %}
@@ -87,10 +88,10 @@
       {% endif %}
 
       <div class="ecl-teaser__meta-column">
-
         {% if timestamp %}
           {% include "@theme/patterns/components/timestamp.html.twig" with timestamp|default({})|merge({
             icon_file_path: icon_file_path,
+            extra_classes: 'ecl-teaser__timestamp'
           }) only %}
         {% endif %}
 
