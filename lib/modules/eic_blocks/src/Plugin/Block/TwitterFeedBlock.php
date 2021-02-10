@@ -29,7 +29,7 @@ class TwitterFeedBlock extends BlockBase {
       'display_user_pic' => TRUE,
       'auto_expand_photo' => FALSE,
       'auto_expand_video' => FALSE,
-      'target' => FALSE,
+      'target' => TRUE,
       'screen_name' => 'EUeic',
       'count' => 3,
       'include_rts' => FALSE,
@@ -64,12 +64,13 @@ class TwitterFeedBlock extends BlockBase {
    * {@inheritdoc}
    */
   public function build() {
+    $webtools_configuration = array_intersect_key($this->configuration, array_flip(array_keys($this->defaultConfiguration())));
     // We use webtools to render the twitter feed based
     // on the block configurations.
     $build['content'] = [
       '#type' => 'html_tag',
       '#tag' => 'script',
-      '#value' => Markup::create(Json::encode($this->configuration)),
+      '#value' => Markup::create(Json::encode($webtools_configuration)),
       '#attributes' => ['type' => 'application/json'],
       '#attached' => [
         'library' => ['oe_webtools/drupal.webtools-smartloader'],

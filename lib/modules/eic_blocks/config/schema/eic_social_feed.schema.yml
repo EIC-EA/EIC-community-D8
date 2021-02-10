@@ -1,7 +1,43 @@
-block.settings.eic_social_feed_test:
+block.settings.eic_social_feed:
   type: block_settings
-  label: 'Test block'
+  label: 'EIC Twitter feed'
   mapping:
-    foo:
+    service:
       type: string
-      label: Foo
+      label: Service
+    type:
+      type: string
+      label: Type
+    display_user:
+      type: boolean
+      label: 'Display user name'
+    display_user_pic:
+      type: boolean
+      label: 'Display the user profile picture'
+    auto_expand_photo:
+      type: boolean
+      label: 'Automatically expand an image in the tweet'
+    auto_expand_video:
+      type: boolean
+      label: 'Automatically expand a video in the tweet'
+    target:
+      type: boolean
+      label: 'Open all links in new tab or window'
+    screen_name:
+      type: string
+      label: 'User screen name'
+    count:
+      type: integer
+      label: 'Number of tweets'
+    include_rts:
+      type: boolean
+      label: 'Display retweets'
+    rts_display_original:
+      type: boolean
+      label: 'Display the original profile of a retweet'
+    exclude_replies:
+      type: boolean
+      label: 'Exclude replies'
+    tweet_more_btn:
+      type: boolean
+      label: 'Add a link "More tweets" after the widget.'
