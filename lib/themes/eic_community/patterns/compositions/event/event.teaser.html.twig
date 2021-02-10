@@ -71,6 +71,22 @@
     </div>
     <div class="ecl-teaser__content-wrapper">
       <div class="ecl-teaser__content">
+        {% if tags is not empty %}
+          <div class="ecl-teaser__tags">
+            {% for tag in tags %}
+              <div class="ecl-teaser__tag">
+                {% include '@ecl-twig/ec-component-tag/ecl-tag.html.twig' with {
+                  tag: {
+                    type: 'link',
+                    path: tag.path,
+                    label: tag.label
+                  }
+                } only %}
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+
         <{{ title_element }} class="ecl-teaser__title">
           {% if path is not empty %}
             <a href="{{ path }}">{{ title }}</a>
@@ -115,6 +131,7 @@
             <div class="ecl-teaser__meta-column">
               {% include "@theme/patterns/components/timestamp.html.twig" with timestamp|default({})|merge({
                 icon_file_path: icon_file_path,
+                extra_classes: 'ecl-teaser__timestamp',
               }) only %}
             </div>
           {% endif %}
@@ -126,5 +143,71 @@
       </div>
       {% endif %}
     </div>
+
+    <div class="ecl-teaser__meta-footer">
+      <div class="ecl-teaser__meta-column">
+        {% if type is not empty %}
+          <div class="ecl-teaser__type">
+            {% if type.icon and icon_file_path %}
+              {% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with {
+                extra_classes: 'ecl-teaser__type-icon',
+                icon: type.icon|default({})|merge({
+                  path: icon_file_path,
+                  size: 'xs',
+                }),
+                extra_attributes: {
+                  'aria-hidden': 'true',
+                  'focusable': 'false'
+                }
+              } only %}
+            {% endif %}
+            <span class="ecl-teaser__type-label">{{ type.label }}</span>
+          </div>
+        {% endif %}
+      </div>
+      {% if timestamp or actions %}
+        <div class="ecl-teaser__meta-column">
+          {% if timestamp %}
+            {% include "@theme/patterns/components/timestamp.html.twig" with timestamp|default({})|merge({
+              icon_file_path: icon_file_path,
+              extra_classes: 'ecl-teaser__timestamp',
+            }) only %}
+          {% endif %}
+
+          {% if actions is not empty %}
+            <div class="ecl-teaser__actions">
+              {% for action in actions %}
+                <div class="ecl-teaser__action">
+                  {% set _icon = {} %}
+
+                  {% if icon_file_path and action.icon %}
+                    {% set _icon = action.icon|default({})|merge({
+                      path: icon_file_path,
+                      size: 'm',
+                      extra_attributes: {
+                        'aria-hidden': 'true',
+                        'focusable': 'false'
+                      }
+                    }) %}
+                  {% endif %}
+
+                  {% include '@ecl-twig/ec-component-link/ecl-link.html.twig' with {
+                    icon: _icon,
+                    extra_classes: 'ecl-link--button ecl-link--button-primary',
+                    link: {
+                      path: action.path,
+                      label: action.label,
+                      icon_position: 'before',
+                      type: 'standalone',
+                    },
+                  } only %}
+                </div>
+              {% endfor %}
+            </div>
+          {% endif %}
+        </div>
+      {% endif %}
+    </div>
+
   </div>
 </div>

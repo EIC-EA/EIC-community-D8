@@ -48,6 +48,10 @@
       }
     }
 
+    #{$node}--as-card#{$node}--event & {
+      display: none;
+    }
+
     #{$node}--member & {
       border-radius: 50%;
       overflow: hidden;
@@ -137,6 +141,10 @@
       padding: ecl-box-model('padding', 'controls') 0;
       transform: translateY(100%);
     }
+
+    #{$node}--event#{$node}--as-card & {
+      display: none;
+    }
   }
 
   &__meta-footer {
@@ -155,6 +163,22 @@
     #{$node}--organisation & {
       margin-top: ecl-box-model('margin', 'controls');
     }
+
+    #{$node}--event & {
+      display: none;
+    }
+
+    #{$node}--event #{$node}__content & {
+      display: flex;
+    }
+
+    #{$node}--as-card#{$node}--event #{$node}__content & {
+      display: none;
+    }
+
+    #{$node}--as-card#{$node}--event & {
+      display: block;
+    }
   }
 
   &__meta {
@@ -164,6 +188,7 @@
   &__content-wrapper {
     display: flex;
     flex-grow: 1;
+    align-items: flex-start;
   }
 
   &__content {
@@ -187,17 +212,34 @@
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
+
+    #{$node}--as-card#{$node}--event & {
+      order: -1;
+      padding-right: ecl-box-model('padding');
+    }
   }
 
   &__title {
-    margin-top: 0;
     color: ecl-typography('color', 'title');
     font-weight: $ecl-font-weight-bold;
+
+    &:first-child {
+      margin-top: 0;
+    }
 
     @include ecl-responsive-font('label');
 
     #{$node}--as-card#{$node}--member & {
       text-align: center;
+    }
+
+    #{$node}--event:not(#{$node}--as-card) & {
+      margin-top: 0;
+    }
+
+
+    #{$node}--as-card#{$node}--event & {
+      margin-bottom: 0;
     }
   }
 
@@ -238,6 +280,17 @@
     justify-content: space-between;
     margin-top: map-get($ecl-spacing, 's');
 
+    #{$node}--event & {
+      width: auto;
+      margin-left: map-get($ecl-spacing, 's');
+      margin-top: 0;
+    }
+
+    #{$node}--story & {
+      margin: 0;
+      width: 50%;
+    }
+
     // #{$node}--story & {
     //   width: 50%;
     //   box-sizing: border-box;
@@ -255,6 +308,18 @@
       & > :last-child {
         flex-shrink: 0;
         margin-left: ecl-box-model('margin', 'controls');
+      }
+    }
+
+    #{$node}--as-card #{$node}__main-wrapper > #{$node}__meta-footer & {
+      display: flex;
+      justify-content: space-between;
+      padding-top: ecl-box-model('padding');
+      align-items: center;
+      margin-left: 0;
+
+      & + #{$node}__meta-column {
+        border-top: ecl-border();
       }
     }
   }
@@ -292,6 +357,10 @@
         margin-left: ecl-box-model('margin', 'controls');
       }
     }
+
+    #{$node}--as-card #{$node}__main-wrapper > #{$node}__meta-footer & {
+      margin-left: 0;
+    }
   }
 
   &__type-icon {
@@ -312,17 +381,18 @@
 
   &__actions {
     margin-bottom: #{0 - ecl-box-model('margin', 'controls')};
+    margin-right: #{0 - ecl-box-model('margin', 'controls')};
     display: flex;
     flex-wrap: wrap;
     align-items: center;
 
     #{$node}--as-card & {
-      width: 100%;
       flex-direction: column;
     }
   }
 
   &__action {
+    flex-shrink: 0;
     margin-right: ecl-box-model('margin', 'controls');
     margin-bottom: ecl-box-model('margin', 'controls');
   }
@@ -330,7 +400,9 @@
   &__tags {
     display: flex;
     flex-wrap: wrap;
+    margin-right: auto;
     margin-bottom: #{0 - ecl-box-model('margin', 'controls')};
+    margin-right: #{0 - ecl-box-model('margin', 'controls')};
 
     #{$node}__meta-header & {
       width: 100%;
@@ -340,6 +412,15 @@
         width: auto;
         padding-bottom: 0;
       }
+    }
+
+    #{$node}--as-card#{$node}--event #{$node}__meta-header &,
+    #{$node}--event #{$node}__content & {
+      display: none;
+    }
+
+    #{$node}--as-card#{$node}--event #{$node}__content & {
+      display: flex;
     }
   }
 
@@ -351,15 +432,12 @@
     }
   }
 
-  &__action {
-    flex-shrink: 0;
-  }
-
   &__stats {
     display: flex;
     align-items: center;
     flex-wrap: wrap;
     margin-bottom: #{0 - ecl-box-model('margin', 'controls')};
+    margin-right: #{0 - ecl-box-model('margin', 'controls')};
 
     #{$node}__meta-footer & {
       @include ecl-media-breakpoint-up('md') {
@@ -370,6 +448,10 @@
     #{$node}--group #{$node}__meta-footer &,
     #{$node}--organisation #{$node}__meta-footer & {
       margin-left: 0;
+    }
+
+    #{$node}--as-card#{$node}--event & {
+      display: none;
     }
   }
 
