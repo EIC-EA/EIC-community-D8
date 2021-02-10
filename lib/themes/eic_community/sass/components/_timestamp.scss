@@ -28,6 +28,7 @@
   }
 
   &__icon {
+    flex-shrink: 0;
     margin-right: ecl-layout('gutter', 'meta');
 
     @include ecl-media-breakpoint-up('lg') {
