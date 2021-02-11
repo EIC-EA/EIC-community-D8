@@ -1,0 +1,20 @@
+uuid: 2c5475c6-d64e-430a-abd3-3d2d7450af19
+langcode: en
+status: true
+dependencies:
+  module:
+    - fragments
+    - node
+id: node.field_disclaimer
+field_name: field_disclaimer
+entity_type: node
+type: entity_reference
+settings:
+  target_type: fragment
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

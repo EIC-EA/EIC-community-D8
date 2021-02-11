@@ -26,6 +26,11 @@ targetEntityType: node
 bundle: story
 mode: teaser
 content:
+  flag_bookmark_content:
+    weight: 10
+    settings: {  }
+    third_party_settings: {  }
+    region: content
   links:
     weight: 100
     settings: {  }

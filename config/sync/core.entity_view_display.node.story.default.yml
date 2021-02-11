@@ -125,7 +125,7 @@ content:
     type: entity_reference_label
     region: content
   flag_bookmark_content:
-    weight: 11
+    weight: 13
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -134,13 +134,13 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
-  links:
-    weight: 0
-    region: content
-    settings: {  }
-    third_party_settings: {  }
   number_of_recommendations:
     weight: 15
+    region: content
+    settings: { }
+    third_party_settings: { }
+  links:
+    weight: 0
     region: content
     settings: {  }
     third_party_settings: {  }

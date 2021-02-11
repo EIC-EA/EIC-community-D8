@@ -31,7 +31,9 @@
     {% endblock %}
 
     {% block site_header %}
-      {% include "@theme/patterns/compositions/site-header.html.twig" with site_header|default({}) only %}
+      {% if site_header %}
+        {% include "@theme/patterns/compositions/site-header.html.twig" with site_header|default({}) only %}
+      {% endif %}
     {% endblock %}
 
     {% block navigation %}
@@ -81,7 +83,9 @@
 
   <div class="ecl-viewport__bottom">
     {% block page_footer %}
-      {% include "@theme/patterns/compositions/site-footer.html.twig" with site_footer|default({}) only %}
+      {% if site_footer %}
+        {% include "@theme/patterns/compositions/site-footer.html.twig" with site_footer|default({}) only %}
+      {% endif %}
     {% endblock %}
   </div>
 </div>
