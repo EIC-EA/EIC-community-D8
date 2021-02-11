@@ -1,0 +1,35 @@
+uuid: 9b6c63f8-ba26-4b0c-b6a5-5dd703822d2c
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.media.download
+    - field.field.media.video.field_media_video_file
+    - media.type.video
+  module:
+    - file
+id: media.video.download
+targetEntityType: media
+bundle: video
+mode: download
+content:
+  field_media_video_file:
+    type: file_default
+    label: visually_hidden
+    weight: 1
+    settings:
+      use_description_as_link_text: false
+    third_party_settings: {  }
+    region: content
+  name:
+    type: string
+    weight: 0
+    region: content
+    label: inline
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+hidden:
+  created: true
+  thumbnail: true
+  uid: true
