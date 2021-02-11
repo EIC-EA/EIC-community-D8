@@ -22,7 +22,7 @@
     margin: 0 0 ecl-box-model('padding') 0;
     padding: 0;
     align-self: flex-start;
-    background-color: ecl-box-model('background-color', 'banner');
+    background-color: map-get($ecl-colors, 'grey-10');
 
     @include ecl-media-breakpoint-down('xs') {
       &::before {
@@ -345,7 +345,7 @@
     #{$node}--group & {
       padding: map-get($ecl-spacing, 'xs') map-get($ecl-spacing, 's');
       border-radius: 100px;
-      background-color: ecl-box-model('background-color', 'banner');
+      background-color: map-get($ecl-colors, 'grey-10');
     }
 
 

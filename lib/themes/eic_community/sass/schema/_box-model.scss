@@ -1,6 +1,5 @@
 $ecl-box-model: (
   'default': (
-    'background-color': map-get($ecl-colors, 'white'),
     'margin': map-get($ecl-spacing, 'xl'),
     'padding': map-get($ecl-spacing, 'l'),
     'padding--md': map-get($ecl-spacing, 'xl'),
@@ -11,7 +10,6 @@ $ecl-box-model: (
     'padding': map-get($ecl-spacing, 'xl'),
     'padding--md': map-get($ecl-spacing, '2xl'),
     'padding--lg': map-get($ecl-spacing, '3xl'),
-    'background-color': map-get($ecl-colors, 'grey-10'),
   ),
   'controls': (
     'margin': map-get($ecl-spacing, 's'),
@@ -24,11 +22,9 @@ $ecl-box-model: (
     'padding': map-get($ecl-spacing, 's'),
     'padding--md': map-get($ecl-spacing, 'm'),
     'padding--lg': map-get($ecl-spacing, 'l'),
-    'background-color': map-get($ecl-colors, 'white'),
   ),
   'description': (
     'margin': map-get($ecl-spacing, 'xl'),
     'padding': map-get($ecl-spacing, 'l'),
-    'background-color': map-get($ecl-colors, 'blue-5'),
   ),
 );
