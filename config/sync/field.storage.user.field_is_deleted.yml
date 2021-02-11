@@ -1,0 +1,18 @@
+uuid: 72eb6359-23f9-498a-b508-f34d66f866f1
+langcode: en
+status: true
+dependencies:
+  module:
+    - user
+id: user.field_is_deleted
+field_name: field_is_deleted
+entity_type: user
+type: boolean
+settings: {  }
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false
