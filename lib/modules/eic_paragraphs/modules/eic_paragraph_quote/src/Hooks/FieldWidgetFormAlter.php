@@ -35,7 +35,7 @@ class FieldWidgetFormAlter {
    */
   private function paragraphsQuoteFormAlter($paragraph_field_name, array $element, array &$subform): void {
     $delta = $element['#delta'];
-    $selector = 'select[name="' . $paragraph_field_name . '[' . $delta . '][subform][field_view_mode][0][value]"]';
+    $selector = 'select[name="' . $paragraph_field_name . '[' . $delta . '][subform][paragraph_view_mode][0][value]"]';
     $subform['field_user_ref']['#states'] = [
       'visible' => [
         $selector => ['value' => 'platform_member'],

@@ -7,7 +7,7 @@ dependencies:
     - field.field.paragraph.quote.field_name
     - field.field.paragraph.quote.field_quote_description
     - field.field.paragraph.quote.field_user_ref
-    - field.field.paragraph.quote.field_view_mode
+    - field.field.paragraph.quote.paragraph_view_mode
     - paragraphs.paragraphs_type.quote
   module:
     - text
@@ -41,4 +41,4 @@ content:
     region: content
 hidden:
   field_user_ref: true
-  field_view_mode: true
+  paragraph_view_mode: true

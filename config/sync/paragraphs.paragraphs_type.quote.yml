@@ -6,7 +6,8 @@ dependencies:
     - paragraph_view_mode
 third_party_settings:
   paragraph_view_mode:
-    enabled: false
+    enabled: true
+    label: 'Display variant'
 id: quote
 label: Quote
 icon_uuid: null

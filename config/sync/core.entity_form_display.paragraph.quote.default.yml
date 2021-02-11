@@ -7,7 +7,7 @@ dependencies:
     - field.field.paragraph.quote.field_name
     - field.field.paragraph.quote.field_quote_description
     - field.field.paragraph.quote.field_user_ref
-    - field.field.paragraph.quote.field_view_mode
+    - field.field.paragraph.quote.paragraph_view_mode
     - paragraphs.paragraphs_type.quote
   module:
     - media_library
@@ -51,8 +51,9 @@ content:
     third_party_settings: {  }
     type: entity_reference_autocomplete
     region: content
-  field_view_mode:
-    weight: 0
+  paragraph_view_mode:
+    type: paragraph_view_mode
+    weight: -100
     settings:
       view_modes:
         external_person: external_person
@@ -60,7 +61,6 @@ content:
         default: 0
       default_view_mode: external_person
     third_party_settings: {  }
-    type: paragraph_view_mode
     region: content
 hidden:
   created: true
