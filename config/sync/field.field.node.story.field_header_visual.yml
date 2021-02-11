@@ -1,0 +1,30 @@
+uuid: 96b32393-f0f2-4152-abb6-740a16b73609
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_header_visual
+    - media.type.image
+    - node.type.story
+_core:
+  default_config_hash: vn0zeZnscpLrki03K5BkHaza9hpMYqIs0pWw6sCC4U0
+id: node.story.field_header_visual
+field_name: field_header_visual
+entity_type: node
+bundle: story
+label: 'Header visual'
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:media'
+  handler_settings:
+    target_bundles:
+      image: image
+    sort:
+      field: _none
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

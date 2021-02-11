@@ -29,3 +29,8 @@
   position: absolute;
   width: 1px;
 }
+
+@mixin focus-outline() {
+  outline: none;
+  border: ecl-border('outline');
+}

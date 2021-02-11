@@ -1,0 +1,8 @@
+uuid: aa142bef-e0ec-48fa-b4ab-3c8abde63322
+langcode: en
+status: true
+dependencies: {  }
+name: 'Regions & Countries'
+vid: geo
+description: ''
+weight: 0

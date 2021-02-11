@@ -1,7 +1,14 @@
-{% set _card = card|default({})|without('authors') %}
+{% set _card = card|default({})|without('authors', 'path') %}
 
-<div class="ecl-card-wrapper">
-  {% include "@ecl-twig/ec-component-card/ecl-card.html.twig" with _card %}
+{% set is_link = card.title.path is empty and card.infos is empty and card.tags is empty ? TRUE : FALSE %}
+
+<div class="ecl-card-wrapper {{ is_link ? 'ecl-card-wrapper--as-link' }}">
+  {% include "@ecl-twig/ec-component-card/ecl-card.html.twig" with {
+    card: _card,
+    icon_path: icon_file_path,
+    extra_attributes: extra_attributes,
+    extra_classes: extra_classes,
+  } only %}
   {% if card.authors %}
     <div class="ecl-card">
       {% for author in card.authors %}
@@ -11,5 +18,8 @@
         } only %}
       {% endfor %}
     </div>
+  {% endif %}
+  {% if is_link %}
+    <a class="ecl-card-wrapper__link" href="{{ card.path }}">{{ read_more_label|default('Go to ' ~ card.path) }}</a>
   {% endif %}
 </div>

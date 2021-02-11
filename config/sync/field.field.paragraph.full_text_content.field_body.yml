@@ -1,0 +1,19 @@
+uuid: d87a4443-bdd6-427b-b74d-9fab0d02d283
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_body
+    - paragraphs.paragraphs_type.full_text_content
+id: paragraph.full_text_content.field_body
+field_name: field_body
+entity_type: paragraph
+bundle: full_text_content
+label: Body
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string_long

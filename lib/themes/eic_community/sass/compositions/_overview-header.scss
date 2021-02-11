@@ -5,7 +5,8 @@
 
   &--has-image {
     border: none;
-    background-color: ecl-box-model('background-color', 'banner');
+
+    background-color: map-get($ecl-colors, 'grey-10');
   }
 
   &__content {
@@ -13,12 +14,32 @@
     border-bottom: ecl-border('default');
 
     @include ecl-media-breakpoint-up('md') {
+      display: flex;
       padding: ecl-box-model('padding--md', 'banner') 0;
     }
 
     #{$node}--has-image & {
       border: none;
       padding: ecl-box-model('padding', 'banner--md') 0;
+    }
+  }
+
+  &__main {
+    flex-grow: 1;
+  }
+
+  &__aside {
+    flex-shrink: 0;
+    margin-top: ecl-layout('gutter');
+
+    @include ecl-media-breakpoint-up('md') {
+      box-sizing: border-box;
+      margin: 0;
+      padding-left: ecl-layout('gutter');
+    }
+
+    @include ecl-media-breakpoint-up('lg') {
+      padding-left: ecl-layout('gutter--lg');
     }
   }
 

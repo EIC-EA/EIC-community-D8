@@ -32,8 +32,10 @@
 @import './compositions/editorial-header.scss';
 @import "./compositions/card-overview";
 @import "./compositions/card-wrapper";
+@import "./compositions/collapsible-options";
 @import "./compositions/content_item";
 @import "./compositions/content_language_switcher";
+@import "./compositions/fact-figures-wrapper";
 @import "./compositions/featured-list";
 @import "./compositions/filter-sidebar";
 @import "./compositions/introduction-header";
@@ -49,11 +51,16 @@
 @import "./components/author";
 @import "./components/banner";
 @import "./components/blockquote";
+@import "./components/button";
 @import "./components/description_list";
+@import "./components/investment";
 @import "./components/disclaimer";
 @import "./components/form";
+@import "./components/flag";
 @import "./components/global";
 @import "./components/hero";
+@import "./components/editable-hero-banner";
+@import "./components/inline-actions";
 @import "./components/link";
 @import "./components/media-container";
 @import "./components/meta-list";

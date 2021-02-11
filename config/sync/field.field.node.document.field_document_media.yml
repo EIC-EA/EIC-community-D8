@@ -4,7 +4,7 @@ status: true
 dependencies:
   config:
     - field.storage.node.field_document_media
-    - media.type.document
+    - media.type.eic_document
     - node.type.document
 id: node.document.field_document_media
 field_name: field_document_media
@@ -20,7 +20,7 @@ settings:
   handler: 'default:media'
   handler_settings:
     target_bundles:
-      document: document
+      eic_document: eic_document
     sort:
       field: _none
     auto_create: false
