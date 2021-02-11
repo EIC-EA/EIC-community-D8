@@ -11,7 +11,7 @@ id: node.wiki_page.field_related_media
 field_name: field_related_media
 entity_type: node
 bundle: wiki_page
-label: Media
+label: 'Rendered Media'
 description: ''
 required: false
 translatable: false

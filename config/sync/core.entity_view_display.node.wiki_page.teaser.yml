@@ -5,7 +5,7 @@ dependencies:
   config:
     - core.entity_view_mode.node.teaser
     - field.field.node.wiki_page.field_body
-    - field.field.node.wiki_page.field_related_documents
+    - field.field.node.wiki_page.field_related_downloads
     - field.field.node.wiki_page.field_related_media
     - node.type.wiki_page
   module:
@@ -22,5 +22,5 @@ content:
     region: content
 hidden:
   field_body: true
-  field_related_documents: true
+  field_related_downloads: true
   field_related_media: true

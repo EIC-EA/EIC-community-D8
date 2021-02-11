@@ -4,7 +4,7 @@ status: true
 dependencies:
   config:
     - field.field.node.wiki_page.field_body
-    - field.field.node.wiki_page.field_related_documents
+    - field.field.node.wiki_page.field_related_downloads
     - field.field.node.wiki_page.field_related_media
     - node.type.wiki_page
   module:
@@ -30,15 +30,12 @@ content:
     third_party_settings: {  }
     type: text_textarea
     region: content
-  field_related_documents:
-    weight: 3
+  field_related_downloads:
+    type: media_library_widget
+    weight: 26
     settings:
-      match_operator: CONTAINS
-      match_limit: 10
-      size: 60
-      placeholder: ''
+      media_types: {  }
     third_party_settings: {  }
-    type: entity_reference_autocomplete
     region: content
   field_related_media:
     type: media_library_widget

@@ -4,11 +4,10 @@ status: true
 dependencies:
   config:
     - field.field.node.wiki_page.field_body
-    - field.field.node.wiki_page.field_related_documents
+    - field.field.node.wiki_page.field_related_downloads
     - field.field.node.wiki_page.field_related_media
     - node.type.wiki_page
   module:
-    - media
     - text
     - user
 id: node.wiki_page.default
@@ -23,22 +22,22 @@ content:
     third_party_settings: {  }
     type: text_default
     region: content
-  field_related_documents:
+  field_related_downloads:
+    type: entity_reference_entity_view
     weight: 3
-    label: hidden
+    label: above
     settings:
-      view_mode: teaser
+      view_mode: default
       link: false
     third_party_settings: {  }
-    type: entity_reference_entity_view
     region: content
   field_related_media:
-    type: media_thumbnail
+    type: entity_reference_entity_view
     weight: 2
     label: hidden
     settings:
-      image_style: ''
-      image_link: ''
+      view_mode: oe_theme_main_content
+      link: false
     third_party_settings: {  }
     region: content
   links:
