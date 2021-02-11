@@ -32,7 +32,7 @@ content:
     region: content
   field_related_downloads:
     type: media_library_widget
-    weight: 26
+    weight: 3
     settings:
       media_types: {  }
     third_party_settings: {  }
