@@ -1,0 +1,19 @@
+.ecl-investment {
+  $node: &;
+
+  color: ecl-typography('color', 'meta');
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+
+  &__icon,
+  &__label {
+    display: inline-block;
+    vertical-align: middle;
+    color: ecl-typography('color');
+  }
+
+  &__icon {
+    margin-right: ecl-box-model('margin', 'controls');
+  }
+}
