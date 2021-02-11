@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - field.field.node.news.field_body
+    - field.field.node.news.field_disclaimer
     - field.field.node.news.field_document_media
     - field.field.node.news.field_header_visual
     - field.field.node.news.field_image
@@ -40,6 +41,12 @@ content:
     third_party_settings: {  }
     type: text_textarea
     region: content
+  field_disclaimer:
+    type: options_select
+    weight: 10
+    region: content
+    settings: {  }
+    third_party_settings: {  }
   field_document_media:
     weight: 9
     settings:
