@@ -1,0 +1,26 @@
+.ecl-inline-actions {
+  margin: ecl-box-model('margin', 'description') 0;
+
+  &:first-child {
+    margin-top: 0;
+  }
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  &__items {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-bottom: #{0 - ecl-layout('gutter', 'controls')};
+  }
+
+  &__item {
+    margin: 0 ecl-layout('gutter', 'controls') ecl-layout('gutter', 'controls') 0;
+
+    @include ecl-media-breakpoint-up('lg') {
+      margin-right: ecl-layout('gutter--md', 'controls');
+    }
+  }
+}
