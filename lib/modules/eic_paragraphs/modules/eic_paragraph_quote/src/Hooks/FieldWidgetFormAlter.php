@@ -43,12 +43,12 @@ class FieldWidgetFormAlter {
     ];
     $subform['field_name']['#states'] = [
       'visible' => [
-        $selector => ['value' => 'external_contributor'],
+        $selector => ['value' => 'external_person'],
       ],
     ];
     $subform['field_media']['#states'] = [
       'visible' => [
-        $selector => ['value' => 'external_contributor'],
+        $selector => ['value' => 'external_person'],
       ],
     ];
   }
