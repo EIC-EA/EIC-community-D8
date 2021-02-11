@@ -29,4 +29,11 @@ flagTypeConfig:
   show_contextual_link: false
   extra_permissions:
     owner: '0'
-linkTypeConfig: {  }
+linkTypeConfig:
+  flag_confirmation: 'Enter flagging details'
+  unflag_confirmation: 'Unflag this content?'
+  flag_create_button: 'Create flagging'
+  flag_delete_button: 'Delete flagging'
+  form_behavior: default
+  edit_flagging: 'Edit flagging details'
+  flag_update_button: 'Update flagging'

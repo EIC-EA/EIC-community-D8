@@ -10,6 +10,7 @@ module:
   editor: 0
   eic_content: 0
   eic_content_story: 0
+  eic_flags: 0
   eic_media: 0
   eic_media_document: 0
   eic_media_video: 0
@@ -17,6 +18,7 @@ module:
   entity_browser: 0
   entity_browser_entity_form: 0
   entity_reference_revisions: 0
+  extra_field: 0
   field: 0
   field_ui: 0
   file: 0

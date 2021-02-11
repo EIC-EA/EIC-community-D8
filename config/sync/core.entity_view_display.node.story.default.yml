@@ -109,7 +109,7 @@ content:
     third_party_settings: {  }
     region: content
   field_vocab_geo:
-    weight: 12
+    weight: 13
     label: above
     settings:
       link: true
@@ -117,16 +117,32 @@ content:
     type: entity_reference_label
     region: content
   field_vocab_topics:
-    weight: 11
+    weight: 12
     label: above
     settings:
       link: true
     third_party_settings: {  }
     type: entity_reference_label
     region: content
+  flag_bookmark_content:
+    weight: 11
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  flag_recommend:
+    weight: 14
+    region: content
+    settings: {  }
+    third_party_settings: {  }
   links:
     weight: 0
     region: content
     settings: {  }
     third_party_settings: {  }
-hidden: {  }
+  number_of_recommendations:
+    weight: 15
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  extra_field_oe_theme_helper_short_title_with_fallback: true
