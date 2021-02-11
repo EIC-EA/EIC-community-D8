@@ -27,7 +27,7 @@
 
   &__image-wrapper {
     position: relative;
-    margin: 0;
+    margin: 0 0 ecl-box-model('padding');
     padding: 0;
     align-self: flex-start;
     background-color: ecl-box-model('background-color', 'banner');
