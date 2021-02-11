@@ -20,6 +20,7 @@
         "openeuropa/oe_media": "^1.11",
         "openeuropa/oe_profile": "^0.4",
         "openeuropa/oe_theme": "^2.0",
+        "openeuropa/oe_webtools": "^1.10",
         "webflo/drupal-finder": "^1.0",
         "webmozart/path-util": "^2.3"
     },

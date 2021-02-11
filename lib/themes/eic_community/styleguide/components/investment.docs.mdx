@@ -1,0 +1,29 @@
+# Investment
+
+Generic component for displaying the investment entry with optional image from the contributor.
+The Contributor name will be visually hidden if a contributor flag has been defined.
+
+## Example:
+
+```
+{% include "@theme/patterns/components/investment.html.twig" with {
+  label: '1.000.000',
+  contributor: {
+    label: 'Jane Doe'
+  },
+  ...
+} %}
+```
+
+## Twig parameters:
+
+| Key                   | Type   | Description                                             | Mandatory |
+| --------------------- | ------ | ------------------------------------------------------- | --------- | --- |
+| label                 | string | Displays the actual value of the donation.              | no        |     |
+| from_label            | string | The prefix for the contributor label.                   | no        |     |
+| contributor           | object | Displays the Flag of the investment contributor.        | no        |     |
+| contributor.label     | string | The semantic name of the donation contributor.          | no        |     |
+| contributor.code      | string | The defined country ISO value of the given contributor. | no        |     |
+| contributor.image     | object | Displays an image instead of the static flags.          | no        |     |
+| contributor.image.src | string | The URL for the defined image.                          | no        |     |
+| contributor.image.alt | string | The alt attribute for the defined image.                | no        |     |

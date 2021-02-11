@@ -1,0 +1,20 @@
+<div class="ecl-investment {{ extra_classes }}">
+  {% if icon_file_path %}
+    {% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with {
+      icon: {
+        path: icon_file_path,
+        name: 'euro',
+        type: 'custom',
+        size: 's',
+      },
+      extra_classes: 'ecl-investment__icon',
+    } only %}
+  {% endif %}
+  <div class="ecl-investment__contributor">
+    <span class="ecl-investment__label">{{ label }}</span>
+    {% if contributor %}
+      {{ from_label|default('from') }}
+      {% include "@theme/patterns/components/flag.html.twig" with contributor|default({}) only %}
+    </div>
+  {% endif %}
+</div>
