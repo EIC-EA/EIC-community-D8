@@ -105,6 +105,10 @@
     font-weight: $ecl-font-weight-bold;
     text-transform: uppercase;
 
+    #{$node}--is-tiny & {
+      font-size: map-get($ecl-font-size, '2xs');
+    }
+
     #{$node}--is-medium & {
       font-size: ecl-typography('font-size--md', 'meta');
       font-weight: $ecl-font-weight-bold;

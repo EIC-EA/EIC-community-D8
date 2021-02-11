@@ -1,0 +1,18 @@
+.ecl-flag {
+  $node: &;
+
+  display: inline-block;
+
+  &__image {
+    width: 100%;
+    height: auto;
+    vertical-align: middle;
+    max-width: map-get($ecl-media, '4xs');
+  }
+
+  &__label {
+    #{$node}__image ~ & {
+      @include visually-hidden();
+    }
+  }
+}

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b5f518529f52c0079d14fb8e23e527aa",
+    "content-hash": "23e00110e53494121df607ec70b9859d",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -4813,9 +4813,14 @@
         {
             "name": "openeuropa/oe_theme",
             "version": "2.14.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/openeuropa/oe_theme.git",
+                "reference": "b31b741368c7995e568b19d048c43135dc1214d1"
+            },
             "dist": {
-                "type": "tar",
-                "url": "https://github.com/openeuropa/oe_theme/releases/download/2.14.0/oe_theme-2.14.0.tar.gz",
+                "type": "zip",
+                "url": "https://api.github.com/repos/openeuropa/oe_theme/zipball/b31b741368c7995e568b19d048c43135dc1214d1",
                 "reference": "b31b741368c7995e568b19d048c43135dc1214d1",
                 "shasum": ""
             },
@@ -4980,6 +4985,88 @@
             ],
             "description": "OpenEuropa Time Caching.",
             "time": "2020-05-18T10:05:03+00:00"
+        },
+        {
+            "name": "openeuropa/oe_webtools",
+            "version": "1.10.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/openeuropa/oe_webtools.git",
+                "reference": "6ddc4a2903296fecaf32df20f333e2967ef8623e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/openeuropa/oe_webtools/zipball/6ddc4a2903296fecaf32df20f333e2967ef8623e",
+                "reference": "6ddc4a2903296fecaf32df20f333e2967ef8623e",
+                "shasum": ""
+            },
+            "require": {
+                "drupal/core": "^8.8",
+                "ext-json": "*",
+                "php": ">=7.2"
+            },
+            "conflict": {
+                "openeuropa/oe_webtools_location": "*"
+            },
+            "require-dev": {
+                "composer/installers": "~1.5",
+                "consolidation/annotated-command": "^2.8.2",
+                "consolidation/robo": "~1.4",
+                "drupal/config_devel": "~1.2",
+                "drupal/core-composer-scaffold": "^8.8",
+                "drupal/drupal-extension": "^4.0",
+                "drupal/geocoder": "^3.0",
+                "drupal/geofield": "^1.0",
+                "drupal/json_field": "^1.0@RC",
+                "drupaltest/behat-traits": "~0.1",
+                "drush/drush": "~9.0",
+                "guzzlehttp/guzzle": "~6.3",
+                "nikic/php-parser": "^3.1.5",
+                "openeuropa/behat-transformation-context": "~0.1",
+                "openeuropa/code-review": "~1.5.0",
+                "openeuropa/drupal-core-require-dev": "^8.7",
+                "openeuropa/oe_media": "^1.0@beta",
+                "openeuropa/oe_multilingual": "~1.2",
+                "openeuropa/task-runner": "~1.0.0-beta5",
+                "openeuropa/webtools-geocoding-provider": "~0.1",
+                "phpunit/phpunit": "~6.0",
+                "symfony/dom-crawler": "~3.4"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "composer-exit-on-patch-failure": true,
+                "enable-patching": true,
+                "installer-paths": {
+                    "build/core": [
+                        "type:drupal-core"
+                    ],
+                    "build/profiles/contrib/{$name}": [
+                        "type:drupal-profile"
+                    ],
+                    "build/modules/contrib/{$name}": [
+                        "type:drupal-module"
+                    ],
+                    "build/themes/contrib/{$name}": [
+                        "type:drupal-theme"
+                    ]
+                },
+                "drupal-scaffold": {
+                    "locations": {
+                        "web-root": "./build"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Drupal\\oe_webtools\\": "./src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "EUPL-1.2"
+            ],
+            "description": "OpenEuropa Webtools integration.",
+            "time": "2021-01-25T09:29:18+00:00"
         },
         {
             "name": "pear/archive_tar",
