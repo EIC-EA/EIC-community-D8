@@ -1,11 +1,11 @@
-uuid: 0fe65897-4a59-4808-929f-58d131d97891
+uuid: 0615025a-21d0-4dad-9b67-9819b20e5bed
 langcode: en
 status: true
 dependencies:
   module:
     - paragraphs
-id: paragraph.field_quote_author_name
-field_name: field_quote_author_name
+id: paragraph.field_name
+field_name: field_name
 entity_type: paragraph
 type: string
 settings:

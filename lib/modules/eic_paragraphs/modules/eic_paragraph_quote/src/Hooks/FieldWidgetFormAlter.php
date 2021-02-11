@@ -36,17 +36,17 @@ class FieldWidgetFormAlter {
   private function paragraphsQuoteFormAlter($paragraph_field_name, array $element, array &$subform): void {
     $delta = $element['#delta'];
     $selector = 'select[name="' . $paragraph_field_name . '[' . $delta . '][subform][field_view_mode][0][value]"]';
-    $subform['field_quote_author_ref']['#states'] = [
+    $subform['field_user_ref']['#states'] = [
       'visible' => [
         $selector => ['value' => 'platform_member'],
       ],
     ];
-    $subform['field_quote_author_name']['#states'] = [
+    $subform['field_name']['#states'] = [
       'visible' => [
         $selector => ['value' => 'external_contributor'],
       ],
     ];
-    $subform['field_quote_author_image']['#states'] = [
+    $subform['field_media']['#states'] = [
       'visible' => [
         $selector => ['value' => 'external_contributor'],
       ],

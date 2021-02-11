@@ -3,7 +3,7 @@ status: true
 dependencies:
   module:
     - paragraphs
-id: paragraph.platform_member
-label: 'Platform member'
+id: paragraph.external_person
+label: 'External person'
 targetEntityType: paragraph
 cache: true

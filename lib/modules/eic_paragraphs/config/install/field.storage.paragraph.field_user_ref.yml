@@ -4,8 +4,8 @@ dependencies:
   module:
     - paragraphs
     - user
-id: paragraph.field_quote_author_ref
-field_name: field_quote_author_ref
+id: paragraph.field_user_ref
+field_name: field_user_ref
 entity_type: paragraph
 type: entity_reference
 settings:

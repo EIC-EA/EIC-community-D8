@@ -2,10 +2,10 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.paragraph.field_quote_author_name
+    - field.storage.paragraph.field_name
     - paragraphs.paragraphs_type.quote
-id: paragraph.quote.field_quote_author_name
-field_name: field_quote_author_name
+id: paragraph.quote.field_name
+field_name: field_name
 entity_type: paragraph
 bundle: quote
 label: 'Author name'

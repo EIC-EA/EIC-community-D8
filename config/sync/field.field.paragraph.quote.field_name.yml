@@ -1,12 +1,12 @@
-uuid: b2a9eec2-2d0a-48d1-923f-5b7e0b413d37
+uuid: cf9f7e01-f19b-403d-9b6d-9ba2f3dbbd73
 langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.paragraph.field_quote_author_name
+    - field.storage.paragraph.field_name
     - paragraphs.paragraphs_type.quote
-id: paragraph.quote.field_quote_author_name
-field_name: field_quote_author_name
+id: paragraph.quote.field_name
+field_name: field_name
 entity_type: paragraph
 bundle: quote
 label: 'Author name'

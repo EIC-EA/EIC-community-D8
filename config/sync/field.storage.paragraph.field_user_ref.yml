@@ -1,16 +1,16 @@
-uuid: c5852818-21f2-40e1-9a2e-2a63baaefb02
+uuid: 5c549731-b8e6-4c6c-9eba-d622661f0975
 langcode: en
 status: true
 dependencies:
   module:
-    - media
     - paragraphs
-id: paragraph.field_quote_author_image
-field_name: field_quote_author_image
+    - user
+id: paragraph.field_user_ref
+field_name: field_user_ref
 entity_type: paragraph
 type: entity_reference
 settings:
-  target_type: media
+  target_type: user
 module: core
 locked: false
 cardinality: 1
