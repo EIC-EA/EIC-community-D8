@@ -5,6 +5,11 @@
     @extend .ecl-u-type-heading-2;
 
     margin-top: 0;
+    text-align: center;
+
+    @include ecl-media-breakpoint-up('md') {
+      text-align: inherit;
+    }
   }
 
   &__description {
