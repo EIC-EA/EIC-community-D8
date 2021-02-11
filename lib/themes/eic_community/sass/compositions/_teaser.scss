@@ -11,6 +11,14 @@
     flex-direction: column;
   }
 
+  &--as-card-white {
+    background-color: map-get($ecl-colors, 'white');
+  }
+
+  &--as-card-grey {
+    background-color: map-get($ecl-colors, 'grey-5');
+  }
+
   &--member {
     display: flex;
     flex-wrap: wrap;
@@ -19,7 +27,7 @@
 
   &__image-wrapper {
     position: relative;
-    margin: 0 0 ecl-box-model('padding') 0;
+    margin: 0;
     padding: 0;
     align-self: flex-start;
     background-color: ecl-box-model('background-color', 'banner');
@@ -39,6 +47,7 @@
 
     #{$node}--as-card & {
       width: 100%;
+      box-sizing: border-box;
       margin: 0 0 ecl-box-model('padding');
 
       &::before {
@@ -48,8 +57,19 @@
       }
     }
 
+    // Enables layout adjustments for cards with a color.
+    [class*="ecl-teaser--as-card-"] & {
+      margin: 0;
+    }
+
     #{$node}--as-card#{$node}--event & {
       display: none;
+    }
+
+    @include ecl-media-breakpoint-down('sm') {
+      #{$node}--event & {
+        display: none;
+      }
     }
 
     #{$node}--member & {
@@ -80,6 +100,7 @@
     display: block;
     width: 100%;
     height: auto;
+    box-sizing: border-box;
 
     @include ecl-media-breakpoint-down('xs') {
       position: absolute;
@@ -108,8 +129,13 @@
 
     #{$node}--as-card & {
       width: 100%;
+      box-sizing: border-box;
     }
 
+    // Enables layout adjustments for cards with a color.
+    [class*="ecl-teaser--as-card-"] & {
+      padding: ecl-box-model('padding');
+    }
   }
 
   &__meta-header,
@@ -142,8 +168,14 @@
       transform: translateY(100%);
     }
 
-    #{$node}--event#{$node}--as-card & {
+    #{$node}--as-card#{$node}--event & {
       display: none;
+    }
+
+    @include ecl-media-breakpoint-down('sm') {
+      #{$node}--event & {
+        display: none;
+      }
     }
   }
 
@@ -164,21 +196,44 @@
       margin-top: ecl-box-model('margin', 'controls');
     }
 
-    #{$node}--event & {
-      display: none;
+    // START: Event specific Card style for mobile
+    @include ecl-media-breakpoint-up('md') {
+      #{$node}--event & {
+        display: none;
+      }
+
+      #{$node}--event #{$node}__content & {
+        display: flex;
+      }
     }
 
-    #{$node}--event #{$node}__content & {
-      display: flex;
+    @include ecl-media-breakpoint-down('sm') {
+      #{$node}--event #{$node}__content & {
+        display: flex;
+      }
     }
 
     #{$node}--as-card#{$node}--event #{$node}__content & {
       display: none;
     }
 
+    @include ecl-media-breakpoint-down('sm') {
+      #{$node}--event #{$node}__content & {
+        display: none;
+      }
+    }
+
     #{$node}--as-card#{$node}--event & {
       display: block;
     }
+
+    @include ecl-media-breakpoint-down('sm') {
+      #{$node}--event & {
+        display: block;
+      }
+    }
+
+    // END: Event specific Card style for mobile
   }
 
   &__meta {
@@ -213,10 +268,20 @@
     justify-content: center;
     flex-shrink: 0;
 
+    // START: Event specific Card style for mobile
     #{$node}--as-card#{$node}--event & {
       order: -1;
       padding-right: ecl-box-model('padding');
     }
+
+    @include ecl-media-breakpoint-down('sm') {
+      #{$node}--event & {
+        order: -1;
+        padding-right: ecl-box-model('padding');
+      }
+    }
+
+    // END: Event specific Card style for mobile
   }
 
   &__title {
@@ -233,8 +298,10 @@
       text-align: center;
     }
 
-    #{$node}--event:not(#{$node}--as-card) & {
-      margin-top: 0;
+    @include ecl-media-breakpoint-up('md') {
+      #{$node}--event:not(#{$node}--as-card) & {
+        margin-top: 0;
+      }
     }
 
 
@@ -280,10 +347,12 @@
     justify-content: space-between;
     margin-top: map-get($ecl-spacing, 's');
 
-    #{$node}--event & {
-      width: auto;
-      margin-left: map-get($ecl-spacing, 's');
-      margin-top: 0;
+    @include ecl-media-breakpoint-up('md') {
+      #{$node}--event & {
+        width: auto;
+        margin-left: map-get($ecl-spacing, 's');
+        margin-top: 0;
+      }
     }
 
     #{$node}--story & {
@@ -322,6 +391,20 @@
         border-top: ecl-border();
       }
     }
+
+    @include ecl-media-breakpoint-down('sm') {
+      #{$node}--event #{$node}__main-wrapper > #{$node}__meta-footer & {
+        display: flex;
+        justify-content: space-between;
+        padding-top: ecl-box-model('padding');
+        align-items: center;
+        margin-left: 0;
+
+        & + #{$node}__meta-column {
+          border-top: ecl-border();
+        }
+      }
+    }
   }
 
   & &__timestamp {
@@ -335,7 +418,7 @@
     #{$node}--group & {
       color: ecl-typography('color', 'meta');
 
-      @include ecl-responsive-font('meta');
+      @include ecl-responsive-font('label');
     }
 
     #{$node}--story & {
@@ -346,7 +429,8 @@
     #{$node}--group & {
       padding: map-get($ecl-spacing, 'xs') map-get($ecl-spacing, 's');
       border-radius: 100px;
-      background-color: ecl-box-model('background-color', 'banner');
+      background-color: map-get($ecl-colors, 'grey-15');
+      color: ecl-typography('color');
     }
 
 
@@ -422,6 +506,12 @@
     #{$node}--as-card#{$node}--event #{$node}__content & {
       display: flex;
     }
+
+    @include ecl-media-breakpoint-down('sm') {
+      #{$node}--event #{$node}__content & {
+        display: flex;
+      }
+    }
   }
 
   &__tag {
@@ -448,6 +538,12 @@
     #{$node}--group #{$node}__meta-footer &,
     #{$node}--organisation #{$node}__meta-footer & {
       margin-left: 0;
+    }
+
+    #{$node}--event & {
+      @include ecl-media-breakpoint-up('md') {
+        margin-left: auto;
+      }
     }
 
     #{$node}--as-card#{$node}--event & {
@@ -488,4 +584,5 @@
   &__stat-icon {
     margin-right: ecl-box-model('padding', 'controls');
   }
+
 }
