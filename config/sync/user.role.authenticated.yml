@@ -12,6 +12,8 @@ permissions:
   - 'access content'
   - 'flag bookmark_content'
   - 'flag bookmark_media'
+  - 'flag recommend'
   - 'unflag bookmark_content'
   - 'unflag bookmark_media'
+  - 'unflag recommend'
   - 'view media'
