@@ -10,6 +10,7 @@ module:
   dblog: 0
   dynamic_page_cache: 0
   editor: 0
+  eic_block_type_page_banner: 0
   eic_block_type_tiles_reference: 0
   eic_block_types: 0
   eic_blocks: 0
