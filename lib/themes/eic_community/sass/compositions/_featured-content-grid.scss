@@ -113,15 +113,11 @@
 
   &__item-content-header {
     display: flex;
-    flex-direction: column;
     padding-bottom: ecl-box-model('padding', 'meta');
-
-    @include ecl-media-breakpoint-up('sm') {
-      flex-direction: row;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: nowrap;
-    }
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: nowrap;
   }
 
 
