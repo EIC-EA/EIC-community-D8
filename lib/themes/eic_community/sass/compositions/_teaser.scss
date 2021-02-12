@@ -176,6 +176,11 @@
       }
     }
 
+    #{$node}--as-card#{$node}--story & {
+      justify-content: space-between;
+    }
+
+
     #{$node}--as-card#{$node}--event & {
       display: none;
     }
@@ -383,6 +388,14 @@
         flex-shrink: 0;
         margin-left: ecl-box-model('margin', 'controls');
       }
+
+      & > :only-child {
+        margin: 0;
+      }
+    }
+
+    #{$node}--as-card#{$node}--story & {
+      width: auto;
     }
 
     #{$node}--as-card #{$node}__main-wrapper > #{$node}__meta-footer & {
@@ -463,24 +476,8 @@
       @include ecl-responsive-font('label');
     }
 
-    #{$node}--story & {
-      align-items: center;
-      text-transform: uppercase;
-    }
-
-    #{$node}--group & {
-      padding: map-get($ecl-spacing, 'xs') map-get($ecl-spacing, 's');
-      border-radius: 100px;
-      background-color: map-get($ecl-colors, 'grey-15');
-      color: ecl-typography('color');
-    }
-
     #{$node}--event #{$node}__meta-header & {
-      margin-left: auto;
-
-      @include ecl-media-breakpoint-up('md') {
-        margin-left: ecl-box-model('margin', 'controls');
-      }
+      margin-left: ecl-box-model('margin', 'controls');
     }
 
     #{$node}--as-card #{$node}__main-wrapper > #{$node}__meta-footer & {
