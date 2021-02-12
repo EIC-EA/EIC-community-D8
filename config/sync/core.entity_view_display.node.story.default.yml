@@ -124,6 +124,11 @@ content:
     third_party_settings: {  }
     type: entity_reference_label
     region: content
+  flag_bookmark_content:
+    weight: 13
+    region: content
+    settings: {  }
+    third_party_settings: {  }
   links:
     weight: 0
     region: content
