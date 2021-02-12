@@ -7,6 +7,10 @@
     margin-top: 0;
     text-align: center;
 
+    &:last-child {
+      margin-bottom: 0;
+    }
+
     @include ecl-media-breakpoint-up('md') {
       text-align: inherit;
     }
@@ -22,6 +26,7 @@
   &__header {
     display: flex;
     align-items: center;
+    margin-bottom: map-get($ecl-spacing, '3xl');
   }
 
   &__before,
@@ -39,12 +44,6 @@
     margin-top: map-get($ecl-spacing, 'xl');
     margin-left: #{0 - ecl-layout('gutter')};
     margin-bottom: #{0 - map-get($ecl-spacing, 'xl')};
-
-    @include ecl-media-breakpoint-up('md') {
-      #{$node}--is-compact & {
-        margin-left: #{0 - ecl-layout('gutter--md')};
-      }
-    }
   }
 
   &__item {
@@ -56,10 +55,6 @@
 
     @include ecl-media-breakpoint-up('md') {
       width: calc(100% / 2);
-
-      #{$node}--is-compact & {
-        padding-left: ecl-layout('gutter--md');
-      }
     }
 
     @include ecl-media-breakpoint-up('lg') {

@@ -2,65 +2,63 @@
   $node: &;
 
   &__title {
-    @extend .ecl-u-type-heading-1;
-  }
+    @extend .ecl-u-type-heading-2;
 
-  &__items,
-  &__item-wrapper {
-    display: flex;
-    margin-left: #{0 - ecl-layout('gutter')};
-    margin-bottom: #{0 - ecl-layout('gutter')};
+    margin-bottom: map-get($ecl-spacing, '3xl');
   }
 
   &__items {
+    display: flex;
+    margin-left: #{0 - ecl-layout('gutter')};
+    margin-bottom: #{0 - ecl-layout('gutter')};
     flex-wrap: wrap;
-
-    @include ecl-media-breakpoint-up('md') {
-      margin-left: #{0 - ecl-layout('gutter--md')};
-    }
 
     @include ecl-media-breakpoint-up('lg') {
       margin-bottom: #{0 - ecl-layout('gutter--md')};
     }
   }
 
-  &__item,
-  &__item-media-wrapper,
-  &__item-content-wrapper {
-    box-sizing: border-box;
-    padding-left: ecl-layout('gutter');
-    margin-bottom: ecl-layout('gutter');
+  &__item-wrapper {
+    margin-left: #{0 - ecl-layout('gutter')};
+
+    @include ecl-media-breakpoint-up('md') {
+      #{$node}__item:first-child &,
+      #{$node}--is-compact & {
+        display: flex;
+        flex-wrap: nowrap;
+      }
+    }
   }
 
   &__item {
     box-sizing: border-box;
+    padding-left: ecl-layout('gutter');
+    margin-bottom: ecl-layout('gutter');
     width: 100%;
 
-    @include ecl-media-breakpoint-up('sm') {
-      &:first-child {
-        &::after {
-          content: " ";
-          display: block;
-          margin-top: ecl-layout('gutter');
-          border-bottom: ecl-border();
-
-          @include ecl-media-breakpoint-up('lg') {
-            margin-top: ecl-layout('gutter--md');
-          }
-        }
-      }
+    &::after {
+      display: block;
+      content: " ";
+      border-top: ecl-border();
+      margin-top: ecl-layout('gutter');
     }
 
     @include ecl-media-breakpoint-up('md') {
-      padding-left: ecl-layout('gutter--md');
-
       &:nth-child(1n + 2) {
         width: calc(100% / 2);
+
+        #{$node}--is-compact & {
+          width: 100%;
+        }
       }
     }
 
     @include ecl-media-breakpoint-up('lg') {
       margin-bottom: ecl-layout('gutter--md');
+
+      &:first-child::after {
+        margin-top: ecl-layout('gutter--md');
+      }
 
       &:nth-child(1n + 2) {
         width: calc(100% / 3);
@@ -72,39 +70,22 @@
     }
   }
 
-  &__item-wrapper {
-    @include ecl-media-breakpoint-up('md') {
-      flex-wrap: wrap;
-
-      #{$node}--is-compact & {
-        flex-wrap: nowrap;
-      }
-
-      #{$node}__item:first-child & {
-        flex-wrap: nowrap;
-        margin-left: #{0 - ecl-layout('gutter--md')};
-        margin-bottom: #{0 - ecl-layout('gutter--md')};
-      }
-    }
-  }
-
   &__item-media-wrapper,
   &__item-content-wrapper {
-    @include ecl-media-breakpoint-up('md') {
-      #{$node}__item:first-child & {
-        padding-left: ecl-layout('gutter--md');
-        margin-bottom: ecl-layout('gutter--md');
-      }
-    }
+    box-sizing: border-box;
+    padding-left: ecl-layout('gutter');
   }
 
   &__item-media-wrapper {
     width: calc(100% / 3);
     flex-shrink: 0;
+    width: 100%;
+    margin-bottom: ecl-layout('gutter');
 
-    @include ecl-media-breakpoint-up('sm') {
+    @include ecl-media-breakpoint-up('md') {
       width: calc(100% / 2);
       flex-shrink: 0;
+      margin-bottom: 0;
 
       #{$node}__item:nth-child(1n + 2) & {
         width: calc(100% / 3);
@@ -114,9 +95,11 @@
     @include ecl-media-breakpoint-up('md') {
       #{$node}__item:nth-child(1n + 2) & {
         width: 100%;
+        margin-bottom: ecl-layout('gutter');
 
         #{$node}--is-compact & {
           width: calc(100% / 3);
+          margin-bottom: 0;
         }
       }
     }
@@ -138,11 +121,6 @@
       justify-content: space-between;
       align-items: center;
       flex-wrap: nowrap;
-
-
-      #{$node}__item:first-child & {
-        padding-bottom: ecl-box-model('padding--md', 'meta');
-      }
     }
   }
 
@@ -217,7 +195,5 @@
 
   &__footer {
     margin-top: ecl-layout('gutter');
-    padding-top: ecl-box-model('padding');
-    border-top: ecl-border();
   }
 }
