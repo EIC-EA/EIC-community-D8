@@ -168,6 +168,14 @@
       transform: translateY(100%);
     }
 
+    #{$node}--story & {
+      justify-content: space-between;
+
+      @include ecl-media-breakpoint-up('sm') {
+        justify-content: inherit;
+      }
+    }
+
     #{$node}--as-card#{$node}--event & {
       display: none;
     }
@@ -357,7 +365,10 @@
 
     #{$node}--story & {
       margin: 0;
-      width: 50%;
+
+      @include ecl-media-breakpoint-up('sm') {
+        width: 50%;
+      }
     }
 
     #{$node}--as-card & {
