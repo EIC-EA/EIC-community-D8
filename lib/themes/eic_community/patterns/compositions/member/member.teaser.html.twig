@@ -1,25 +1,35 @@
 {% set title_element = title_element|default('h2') %}
 
+{% set defaults = {
+  name: 'star_circle',
+  type: 'custom',
+} %}
+
+{% set _is_default_type = false %}
+{% if type is empty or type is same as(false) %}
+  {% set _is_default_type = true %}
+{% endif %}
+
 <div class="ecl-teaser ecl-teaser--member {{ extra_classes }}">
-  {% if type is not empty %}
-    <div class="ecl-teaser__meta-header">
+  <div class="ecl-teaser__main-wrapper">
+    <div class="ecl-teaser__meta-header {{ _is_default_type ? 'ecl-teaser__meta-header--is-hidden' }}"
+      aria-hidden="{{ _is_default_type ? 'true' : 'false'}}"
+    >
       {% include "@theme/patterns/components/content-type-indicator.html.twig" with type|default({})|merge({
         extra_classes: 'ecl-teaser__type',
-        icon: type.icon|default({})|merge({
+        icon: type.icon|default(defaults)|merge({
           size: 's',
         }),
         icon_file_path: icon_file_path,
       }) only %}
     </div>
-  {% endif %}
 
-  {% if image is not empty %}
-    <figure class="ecl-teaser__image-wrapper">
-      <img class="ecl-teaser__image" src="{{ image.src }}" alt="{{ image.alt }}" />
-    </figure>
-  {% endif %}
+    {% if image is not empty %}
+      <figure class="ecl-teaser__image-wrapper">
+        <img class="ecl-teaser__image" src="{{ image.src }}" alt="{{ image.alt }}" />
+      </figure>
+    {% endif %}
 
-  <div class="ecl-teaser__main-wrapper">
     <div class="ecl-teaser__content">
       <{{ title_element }} class="ecl-teaser__title">
         {% if path is not empty %}

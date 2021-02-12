@@ -77,7 +77,14 @@
       overflow: hidden;
       position: relative;
       width: map-get($ecl-media, 'xs');
-      margin: 0 ecl-box-model('padding') 0 0;
+      margin: ecl-box-model('padding') auto;
+
+      @include ecl-media-breakpoint-up('sm') {
+        margin: 0;
+        position: absolute;
+        left: 0;
+        top: 0;
+      }
 
       @include ecl-media-breakpoint-up('lg') {
         width: map-get($ecl-media, 'm');
@@ -91,6 +98,7 @@
     }
 
     #{$node}--as-card#{$node}--member & {
+      position: relative;
       max-width: map-get($ecl-media, 'm');
       margin: ecl-box-model('padding') auto ecl-box-model('padding');
     }
@@ -136,6 +144,20 @@
     [class*="ecl-teaser--as-card-"] & {
       padding: ecl-box-model('padding');
     }
+
+    #{$node}--member & {
+      @include ecl-media-breakpoint-up('sm') {
+        padding-left: calc(#{map-get($ecl-media, 'xs')} + #{ecl-box-model('padding')});
+      }
+
+      @include ecl-media-breakpoint-up('lg') {
+        padding-left: calc(#{map-get($ecl-media, 'm')} + #{ecl-box-model('padding')});
+      }
+    }
+
+    #{$node}--as-card[class*="ecl-teaser--as-card-"] & {
+      padding: ecl-box-model('padding');
+    }
   }
 
   &__meta-header,
@@ -149,6 +171,15 @@
   &__meta-header {
     margin-bottom: ecl-box-model('padding');
 
+    &--is-hidden {
+      display: none;
+    }
+
+    #{$node}--as-card &--is-hidden {
+      display: flex;
+      visibility: hidden;
+    }
+
     #{$node}--organisation & {
       @include ecl-media-breakpoint-down('sm') {
         margin-bottom: 0;
@@ -157,15 +188,7 @@
 
     #{$node}--member & {
       width: 100%;
-    }
-
-    #{$node}--member#{$node}--as-card & {
-      width: auto;
-      position: absolute;
-      bottom: 100%;
-      left: 0;
-      padding: ecl-box-model('padding', 'controls') 0;
-      transform: translateY(100%);
+      margin-bottom: 0;
     }
 
     #{$node}--story & {
