@@ -30,7 +30,7 @@
     margin: 0 0 ecl-box-model('padding');
     padding: 0;
     align-self: flex-start;
-    background-color: ecl-box-model('background-color', 'banner');
+    background-color: map-get($ecl-colors, 'grey-10');
 
     @include ecl-media-breakpoint-down('xs') {
       &::before {
@@ -360,12 +360,6 @@
       width: 50%;
     }
 
-    // #{$node}--story & {
-    //   width: 50%;
-    //   box-sizing: border-box;
-    //   padding-left: ecl-layout('gutter', 'meta');
-    // }
-
     #{$node}--as-card & {
       width: 100%;
       margin-top: map-get($ecl-spacing, 's');
@@ -456,7 +450,7 @@
       padding: map-get($ecl-spacing, 'xs') map-get($ecl-spacing, 's');
       margin-right: ecl-box-model('margin', 'controls');
       border-radius: 100px;
-      background-color: ecl-box-model('background-color', 'banner');
+      background-color: map-get($ecl-colors, 'grey-5');
       @include ecl-responsive-font('meta');
 
       &::after {
@@ -487,7 +481,6 @@
       color: ecl-typography('color');
     }
 
-
     #{$node}--event #{$node}__meta-header & {
       margin-left: auto;
 
@@ -508,11 +501,8 @@
     #{$node}--event & {
       color: ecl-typography('color', 'meta');
     }
-  }
 
-  &__type-label {
     #{$node}--member & {
-      color: ecl-typography('color', 'meta');
       @include ecl-responsive-font('label');
     }
   }
@@ -638,5 +628,4 @@
   &__stat-icon {
     margin-right: ecl-box-model('padding', 'controls');
   }
-
 }

@@ -1,0 +1,8 @@
+name: EIC Text and Media content paragraph
+type: module
+description: Provides a paragraph type Text  and media content.
+package: European Innovation Council
+core: 8.x
+core_version_requirement: ^8 || ^9
+dependencies:
+  - eic_paragraphs:eic_paragraphs

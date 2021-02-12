@@ -70,7 +70,7 @@
 
   &__collapse-well {
     #{$node}--is-ready & {
-      background-color: ecl-box-model('background-color');
+      background-color: map-get($ecl-colors, 'white');
       border: ecl-border();
     }
   }

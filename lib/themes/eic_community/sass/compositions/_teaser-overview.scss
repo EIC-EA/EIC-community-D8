@@ -52,7 +52,7 @@
 
     #{$node}--has-columns & {
       border: none;
-      background-color: ecl-box-model('background-color', 'banner');
+      background-color: map-get($ecl-colors, 'grey-10');
       padding: ecl-box-model('padding');
       margin-bottom: ecl-box-model('padding');
 
