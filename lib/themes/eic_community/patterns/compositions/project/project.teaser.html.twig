@@ -12,7 +12,12 @@
         <div class="ecl-teaser__meta-fields ecl-teaser__meta-fields--tags">
           <div class="ecl-teaser__meta-fields-items">
             {% if type %}
-              <div class="ecl-teaser__meta-fields-item">{{ type }}</div>
+              <div class="ecl-teaser__meta-fields-item">
+                {% include "@theme/patterns/components/content-type-indicator.html.twig" with type|default({})|merge({
+                  extra_classes: 'ecl-featured-content-grid__item-type',
+                  icon_file_path: icon_file_path,
+                }) only %}
+              </div>
             {% endif %}
 
             {% if status %}

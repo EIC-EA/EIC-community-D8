@@ -1,0 +1,28 @@
+# Featured Content Grid
+
+Displays featured content items where the first item is presented in a larger layout.
+
+## Example
+
+```twig
+  {% include "@theme/patterns/compositions/featured-content-grid.html.twig" %}
+```
+
+## Twig Parameters
+
+| Key                     | Type   | Description                                                                                                                                                                               | Mandatory |
+| ----------------------- | ------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- |
+| title                   | string | The title that will be displayed before the content items.                                                                                                                                | yes       |
+| title_element           | string | Displays the title within an alternative HTMLElement.                                                                                                                                     | no        |
+| items                   | object | Displays the optional icon for the given content type. Follows the [ECL Twig icon component](https://ecl-twig-php.netlify.app/ec/?path=/story/components-icon--general) parameters.       | no        |
+| items[].title           | string | The title for the current featured content item.                                                                                                                                          | -         |
+| items[].title_element   | string | Defines an alternative HTMLElement for the current featured content item.                                                                                                                 | -         |
+| items[].media           | object | Displays the defined media for the current featured content item. Follow the [ECL Twig media container](https://www.npmjs.com/package/@ecl-twig/ec-component-media-container) parameters. | -         |
+| items[].type            | object | Displays the type of the current featured content item.                                                                                                                                   | -         |
+| items[].type.label      | string | The label of the featured content type.                                                                                                                                                   | -         |
+| items[].type.icon       | object | The icon of the featured content type. Follows the [ECL Twig icon component](https://ecl-twig-php.netlify.app/ec/?path=/story/components-icon--general) properties.                       | -         |
+| items[].timestamp       | object | Displays the timestamp for the current featured content item.                                                                                                                             | -         |
+| items[].timestamp.label | string | The label of the featured content author.                                                                                                                                                 | -         |
+| items[].timestamp.icon  | object | The icon of the featured content author. Follows the [ECL Twig icon component](https://ecl-twig-php.netlify.app/ec/?path=/story/components-icon--general) properties.                     | -         |
+| items[].author          | object | Displays the author of the entry. Should inherit the parameters from the custom author component.                                                                                         | -         |
+| icon_file_path          | string | The URL of the inline SVG sprite that will be used for the icon.                                                                                                                          | no        |
