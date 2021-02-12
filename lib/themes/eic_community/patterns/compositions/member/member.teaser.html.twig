@@ -3,13 +3,13 @@
 <div class="ecl-teaser ecl-teaser--member">
   {% if type is not empty %}
     <div class="ecl-teaser__meta-header">
-      {% include "@theme/patterns/components/content-type-indicator.html.twig" with {
+      {% include "@theme/patterns/components/content-type-indicator.html.twig" with type|default({})|merge({
         extra_classes: 'ecl-teaser__type',
-        icon: type.icon|merge({
+        icon: type.icon|default({})|merge({
           size: 's',
         }),
         icon_file_path: icon_file_path,
-      } %}
+      }) only %}
     </div>
   {% endif %}
 

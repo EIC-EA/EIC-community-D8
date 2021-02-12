@@ -51,11 +51,10 @@
       {% endif %}
 
       {% if type is not empty %}
-        {% include "@theme/patterns/components/content-type-indicator.html.twig" with {
-          extra_classes: 'ecl-teaser__type',
-          icon: type.icon,
+        {% include "@theme/patterns/components/content-type-indicator.html.twig" with type|default({})|merge({
+          extra_classes: 'ecl-featured-content-grid__item-type',
           icon_file_path: icon_file_path,
-        } %}
+        }) only %}
       {% endif %}
     </div>
     <div class="ecl-teaser__content-wrapper">

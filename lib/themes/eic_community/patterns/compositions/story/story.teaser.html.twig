@@ -10,11 +10,10 @@
     <div class="ecl-teaser__meta-header">
       {% if type is not empty %}
         <div class="ecl-teaser__meta-column">
-          {% include "@theme/patterns/components/content-type-indicator.html.twig" with {
+          {% include "@theme/patterns/components/content-type-indicator.html.twig" with type|default({})|merge({
             extra_classes: 'ecl-teaser__type',
-            icon: type.icon,
             icon_file_path: icon_file_path,
-          } %}
+          }) only %}
         </div>
       {% endif %}
 

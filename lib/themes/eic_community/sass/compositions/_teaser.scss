@@ -318,7 +318,7 @@
       padding: map-get($ecl-spacing, 'xs') map-get($ecl-spacing, 's');
       margin-right: ecl-box-model('margin', 'controls');
       border-radius: 100px;
-      background-color: ecl-box-model('background-color', 'banner');
+      background-color: map-get($ecl-colors, 'grey-5');
       @include ecl-responsive-font('meta');
 
       &::after {
