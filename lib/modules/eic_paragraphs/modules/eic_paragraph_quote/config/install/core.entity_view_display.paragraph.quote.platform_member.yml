@@ -20,14 +20,14 @@ content:
     type: text_default
     weight: 0
     region: content
-    label: above
+    label: hidden
     settings: {  }
     third_party_settings: {  }
   field_user_ref:
     type: entity_reference_label
     weight: 1
     region: content
-    label: above
+    label: hidden
     settings:
       link: true
     third_party_settings: {  }
