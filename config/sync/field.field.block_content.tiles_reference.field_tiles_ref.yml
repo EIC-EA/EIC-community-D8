@@ -1,0 +1,30 @@
+uuid: 31a79279-4e14-4a42-8dda-b2c73dbce725
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.tiles_reference
+    - field.storage.block_content.field_tiles_ref
+    - node.type.page
+_core:
+  default_config_hash: FrvtRJAmyOGPIRg1choNQbtiM2gewLfhMNH9ngkTM7M
+id: block_content.tiles_reference.field_tiles_ref
+field_name: field_tiles_ref
+entity_type: block_content
+bundle: tiles_reference
+label: Tiles
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      page: page
+    sort:
+      field: _none
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference
