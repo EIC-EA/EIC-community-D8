@@ -17,10 +17,10 @@
 
       {% include "@theme/patterns/components/inline-actions.html.twig" with {
         items: actions
-      } %}
+      } only %}
     {% endblock %}
   {% endembed %}
-  {% include "@theme/patterns/compositions/breadcrumb.html.twig" with breadcrumb|default({}) %}
+  {% include "@theme/patterns/compositions/breadcrumb.html.twig" with breadcrumb|default({}) only %}
 {% endblock %}
 
 {% block content %}

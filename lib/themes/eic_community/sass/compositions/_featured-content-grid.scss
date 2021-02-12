@@ -172,7 +172,6 @@
 
   &__item-description {
     display: none;
-    margin: ecl-box-model('margin') 0;
     line-height: ecl-typography('line-height', 'default');
     @include ecl-responsive-font('default');
 

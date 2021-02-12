@@ -34,7 +34,7 @@
   }
 
   @include ecl-media-breakpoint-up('lg') {
-    @for $i from 2 to 4 {
+    @for $i from 2 to 5 {
       & .ecl-fact-figures--col-#{$i} .ecl-fact-figures__item {
         width: calc(100% / #{$i});
       }

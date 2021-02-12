@@ -41,7 +41,7 @@
                   name: location.icon.name|default('mappin'),
                   type: location.icon.type|default('custom'),
                 }
-              } %}
+              } only %}
             {% endif %}
             {{ location.label }}
           </address>
@@ -57,7 +57,7 @@
                   name: size.icon.name|default('company'),
                   type: size.icon.type|default('custom'),
                 }
-              } %}
+              } only %}
             {% endif %}
             {{ size.label }}
           </p>
