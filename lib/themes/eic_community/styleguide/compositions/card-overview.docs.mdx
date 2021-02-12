@@ -18,9 +18,10 @@ The actual data structure of each card should match the [Card Wrapper](/?path=/d
 } %}
 ```
 
-| Key          | Type     | Description                                                                                                             | Mandatory |     |
-| ------------ | -------- | ----------------------------------------------------------------------------------------------------------------------- | --------- | --- |
-| title        | string   | The title to display above the card overview.                                                                           | no        |     |
-| description  | string   | The description that will be displayed below the title.                                                                 | no        |     |
-| items        | object[] | Displays the defined cards within the overview                                                                          | yes       |     |
-| items[].card | object   | The data structure that should match with the [Card Wrapper](/?path=/docs/compositions-card-wrapper--base) composition. | yes       |     |
+| Key            | Type     | Description                                                                                                             | Mandatory |     |
+| -------------- | -------- | ----------------------------------------------------------------------------------------------------------------------- | --------- | --- |
+| title          | string   | The title to display above the card overview.                                                                           | no        |     |
+| description    | string   | The description that will be displayed below the title.                                                                 | no        |     |
+| items          | object[] | Displays the defined cards within the overview                                                                          | yes       |     |
+| items[].card   | object   | The data structure that should match with the [Card Wrapper](/?path=/docs/compositions-card-wrapper--base) composition. | yes       |     |
+| icon_file_path | string   | Enables the usage of the ECL icons within the component.                                                                | no        |

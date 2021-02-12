@@ -1,0 +1,15 @@
+uuid: 6540861c-4f2b-4fdd-a3f3-c36eac9b1624
+langcode: en
+status: true
+dependencies:
+  config:
+    - flag.flag.bookmark_content
+  module:
+    - flag
+id: flag_action.bookmark_content_unflag
+label: 'Unflag this item'
+type: node
+plugin: 'flag_action:bookmark_content_unflag'
+configuration:
+  flag_id: bookmark_content
+  flag_action: unflag

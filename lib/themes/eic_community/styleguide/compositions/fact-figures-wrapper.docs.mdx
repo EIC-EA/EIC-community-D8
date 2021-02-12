@@ -1,0 +1,26 @@
+# Fact Figures Wrapper
+
+Displays a custom version of the [ECL Twig Fact Figures](https://www.npmjs.com/package/@ecl-twig/ec-component-fact-figures) component.
+
+## Example:
+
+```
+{% include "@theme/patterns/compositions/fact-figures-wrapper.html.twig" %}
+```
+
+## Features
+
+- Wraps an anchor element around the titles if the `path` parameter for the given item is defined.
+
+## Parameters
+
+| Key                 | Type     | Description                                                                                                        | Mandatory |
+| ------------------- | -------- | ------------------------------------------------------------------------------------------------------------------ | --------- |
+| column              | string   | Defines the items per row count for supported viewports.                                                           | no        |
+| icon_file_path      | string   | The URL of the inline SVG sprite.                                                                                  | yes       |
+| items               | object[] | The items that will be displayed within a column.                                                                  | yes       |
+| items[].icon        | object[] | Should follow the [ECl Twig Icon](https://www.npmjs.com/package/@ecl-twig/ec-component-icon) component parameters. | yes       |
+| items[].value       | string   | The actual data value for the given item.                                                                          | no        |
+| items[].path        | string   | Wraps an anchor element around the defined item title.                                                             | no        |
+| items[].title       | string   | The defined item title that will contain an anchor element.                                                        | no        |
+| items[].description | string   | The defined item description.                                                                                      | no        |

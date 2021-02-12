@@ -10,6 +10,10 @@
   }
 
   &--is-shaded {
-    background-color: ecl-box-model('background-color', 'banner');
+    background-color: map-get($ecl-colors, 'grey-10');
+  }
+
+  &--is-blue {
+    background-color: map-get($ecl-colors, 'blue-5');
   }
 }

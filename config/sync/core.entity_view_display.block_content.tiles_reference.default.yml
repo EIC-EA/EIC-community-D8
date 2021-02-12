@@ -1,0 +1,43 @@
+uuid: e9b96479-10c7-42cc-9002-4474b429b8e6
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.tiles_reference
+    - field.field.block_content.tiles_reference.field_body
+    - field.field.block_content.tiles_reference.field_tiles_ref
+    - field.field.block_content.tiles_reference.field_title
+  module:
+    - text
+_core:
+  default_config_hash: GKv9zNYfUVAEOvd0poR0o0OAImSRyfj1QUVTDatFMs4
+id: block_content.tiles_reference.default
+targetEntityType: block_content
+bundle: tiles_reference
+mode: default
+content:
+  field_body:
+    weight: 1
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    type: text_default
+    region: content
+  field_tiles_ref:
+    weight: 2
+    label: hidden
+    settings:
+      view_mode: teaser
+      link: false
+    third_party_settings: {  }
+    type: entity_reference_entity_view
+    region: content
+  field_title:
+    weight: 0
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+hidden: {  }
