@@ -1,8 +1,9 @@
-uuid: 1f67e88b-b0b5-41ed-9bc7-568d054fb4cd
+uuid: e532d576-6519-45a5-8b6c-2c4ad0155cf1
 langcode: en
-status: true
+status: false
 dependencies:
   config:
+    - core.entity_view_mode.media.oe_theme_main_content
     - field.field.media.eic_document.field_body
     - field.field.media.eic_document.field_media_file
     - field.field.media.eic_document.field_vocab_topics
@@ -10,10 +11,10 @@ dependencies:
   module:
     - file
     - text
-id: media.eic_document.default
+id: media.eic_document.oe_theme_main_content
 targetEntityType: media
 bundle: eic_document
-mode: default
+mode: oe_theme_main_content
 content:
   field_body:
     weight: 2
@@ -45,10 +46,6 @@ content:
     label: hidden
     settings:
       link_to_entity: true
-  flag_bookmark_media:
-    weight: 10
-    region: content
-    settings: {  }
     third_party_settings: {  }
 hidden:
   created: true

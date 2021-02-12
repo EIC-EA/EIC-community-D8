@@ -1,15 +1,16 @@
-uuid: f79af7a9-fab6-4d91-a087-a242f6c2f31b
+uuid: 0747af89-9cdc-455d-af5a-aa52f5d915a3
 langcode: en
 status: true
 dependencies:
   module:
+    - media
     - node
-id: node.field_related_documents
-field_name: field_related_documents
+id: node.field_related_media
+field_name: field_related_media
 entity_type: node
 type: entity_reference
 settings:
-  target_type: node
+  target_type: media
 module: core
 locked: false
 cardinality: -1

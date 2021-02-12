@@ -1,27 +1,20 @@
-uuid: 1f67e88b-b0b5-41ed-9bc7-568d054fb4cd
+uuid: 41362ced-b56b-4bc9-8fea-e3ff7da3e6dd
 langcode: en
 status: true
 dependencies:
   config:
+    - core.entity_view_mode.media.media_library
     - field.field.media.eic_document.field_body
     - field.field.media.eic_document.field_media_file
     - field.field.media.eic_document.field_vocab_topics
     - media.type.eic_document
   module:
     - file
-    - text
-id: media.eic_document.default
+id: media.eic_document.media_library
 targetEntityType: media
 bundle: eic_document
-mode: default
+mode: media_library
 content:
-  field_body:
-    weight: 2
-    label: hidden
-    settings: {  }
-    third_party_settings: {  }
-    type: text_default
-    region: content
   field_media_file:
     label: visually_hidden
     weight: 1
@@ -30,27 +23,17 @@ content:
     third_party_settings: {  }
     type: file_default
     region: content
-  field_vocab_topics:
-    weight: 3
-    label: hidden
-    settings:
-      link: false
-    third_party_settings: {  }
-    type: entity_reference_label
-    region: content
   name:
     type: string
     weight: 0
     region: content
     label: hidden
     settings:
-      link_to_entity: true
-  flag_bookmark_media:
-    weight: 10
-    region: content
-    settings: {  }
+      link_to_entity: false
     third_party_settings: {  }
 hidden:
   created: true
+  field_body: true
+  field_vocab_topics: true
   thumbnail: true
   uid: true

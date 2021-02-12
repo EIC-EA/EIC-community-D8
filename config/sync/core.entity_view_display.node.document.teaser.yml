@@ -9,33 +9,37 @@ dependencies:
     - field.field.node.document.field_vocab_topics
     - node.type.document
   module:
+    - text
     - user
 id: node.document.teaser
 targetEntityType: node
 bundle: document
 mode: teaser
 content:
+  field_body:
+    type: text_trimmed
+    weight: 1
+    region: content
+    label: hidden
+    settings:
+      trim_length: 100
+    third_party_settings: {  }
   field_document_media:
     type: entity_reference_entity_view
     weight: 2
     region: content
     label: hidden
     settings:
-      view_mode: default
+      view_mode: oe_theme_main_content
       link: false
     third_party_settings: {  }
   field_vocab_topics:
     type: entity_reference_label
-    weight: 1
+    weight: 0
     region: content
     label: hidden
     settings:
       link: false
     third_party_settings: {  }
-  links:
-    weight: 0
-    region: content
-    settings: {  }
-    third_party_settings: {  }
 hidden:
-  field_body: true
+  links: true

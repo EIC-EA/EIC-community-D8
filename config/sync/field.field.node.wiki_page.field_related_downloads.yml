@@ -1,18 +1,18 @@
-uuid: 67a89eaf-15d6-4159-b0c9-946d96f99e4f
+uuid: 6f9f0a11-7cdb-46be-8cba-86f7577bedd3
 langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.node.field_document_media
+    - field.storage.node.field_related_downloads
     - media.type.eic_document
     - media.type.video
-    - node.type.document
-id: node.document.field_document_media
-field_name: field_document_media
+    - node.type.wiki_page
+id: node.wiki_page.field_related_downloads
+field_name: field_related_downloads
 entity_type: node
-bundle: document
-label: Document
-description: ''
+bundle: wiki_page
+label: Downloads
+description: 'Add files that should be presented as downloadable items.'
 required: false
 translatable: false
 default_value: {  }

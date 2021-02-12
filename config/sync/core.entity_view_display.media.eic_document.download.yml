@@ -1,8 +1,9 @@
-uuid: 1f67e88b-b0b5-41ed-9bc7-568d054fb4cd
+uuid: 21475741-73da-4d6c-b5d5-a34e47cde9c8
 langcode: en
 status: true
 dependencies:
   config:
+    - core.entity_view_mode.media.download
     - field.field.media.eic_document.field_body
     - field.field.media.eic_document.field_media_file
     - field.field.media.eic_document.field_vocab_topics
@@ -10,10 +11,10 @@ dependencies:
   module:
     - file
     - text
-id: media.eic_document.default
+id: media.eic_document.download
 targetEntityType: media
 bundle: eic_document
-mode: default
+mode: download
 content:
   field_body:
     weight: 2
@@ -30,27 +31,16 @@ content:
     third_party_settings: {  }
     type: file_default
     region: content
-  field_vocab_topics:
-    weight: 3
-    label: hidden
-    settings:
-      link: false
-    third_party_settings: {  }
-    type: entity_reference_label
-    region: content
   name:
     type: string
     weight: 0
     region: content
     label: hidden
     settings:
-      link_to_entity: true
-  flag_bookmark_media:
-    weight: 10
-    region: content
-    settings: {  }
+      link_to_entity: false
     third_party_settings: {  }
 hidden:
   created: true
+  field_vocab_topics: true
   thumbnail: true
   uid: true
