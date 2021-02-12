@@ -2,6 +2,12 @@
   $node: &;
   margin-bottom: ecl-layout('gutter');
 
+  &--has-columns {
+    @include ecl-media-breakpoint-up('lg') {
+      padding-top: ecl-layout('gutter');
+    }
+  }
+
   &__items {
     display: flex;
     flex-direction: column;
