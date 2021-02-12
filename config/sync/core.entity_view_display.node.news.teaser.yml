@@ -5,6 +5,7 @@ dependencies:
   config:
     - core.entity_view_mode.node.teaser
     - field.field.node.news.field_body
+    - field.field.node.news.field_disclaimer
     - field.field.node.news.field_document_media
     - field.field.node.news.field_header_visual
     - field.field.node.news.field_image
@@ -57,3 +58,4 @@ hidden:
   field_video: true
   field_vocab_geo: true
   field_vocab_topics: true
+  flag_bookmark_content: true
