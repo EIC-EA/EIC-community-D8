@@ -9,21 +9,26 @@
   <div class="ecl-teaser__main-wrapper">
     {% if type or status is not empty %}
       <div class="ecl-teaser__meta-header">
-        <div class="ecl-teaser__meta-fields ecl-teaser__meta-fields--tags">
-          <div class="ecl-teaser__meta-fields-items">
-            {% if type %}
-              <div class="ecl-teaser__meta-fields-item">
-                {% include "@theme/patterns/components/content-type-indicator.html.twig" with type|default({})|merge({
-                  extra_classes: 'ecl-featured-content-grid__item-type',
-                  icon_file_path: icon_file_path,
-                }) only %}
-              </div>
-            {% endif %}
+        <div class="ecl-teaser__tags">
+          {% if type %}
+            <div class="ecl-teaser__tag">
+              {% include '@ecl-twig/ec-component-tag/ecl-tag.html.twig' with type|merge({
+                tag: type|merge({
+                  type: status.path ? "link" : "display"
+                })
+              }) only %}
+            </div>
+          {% endif %}
 
-            {% if status %}
-              <div class="ecl-teaser__meta-fields-item">{{ status }}</div>
-            {% endif %}
-          </div>
+          {% if status %}
+            <div class="ecl-teaser__tag">
+              {% include '@ecl-twig/ec-component-tag/ecl-tag.html.twig' with {
+                tag: status|merge({
+                  type: status.path ? "link" : "display"
+                })
+              } only %}
+            </div>
+          {% endif %}
         </div>
       </div>
     {% endif %}

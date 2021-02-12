@@ -440,23 +440,6 @@
       display: 'inline';
       content: ',';
     }
-
-    &:last-child::after {
-      display: none;
-    }
-
-    #{$node}__meta-fields--tags & {
-      color: ecl-typography('color', 'meta');
-      padding: map-get($ecl-spacing, 'xs') map-get($ecl-spacing, 's');
-      margin-right: ecl-box-model('margin', 'controls');
-      border-radius: 100px;
-      background-color: map-get($ecl-colors, 'grey-5');
-      @include ecl-responsive-font('meta');
-
-      &::after {
-        display: none;
-      }
-    }
   }
 
   &__type {
