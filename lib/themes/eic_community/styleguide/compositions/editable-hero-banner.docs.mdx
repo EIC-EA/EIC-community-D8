@@ -1,0 +1,23 @@
+# Editable Hero Banner
+
+Displays the custom version of the [ECL-Twig Hero Banner component](https://www.npmjs.com/package/@ecl-twig/ec-component-hero-banner).
+The base height of the banner is defined by the default 16.9 ratio with a max height of 80vh. Any content can increase this base height to prevent clipping.
+
+## Example:
+
+```
+{% include "@theme/patterns/compositions/editable-hero-banner.html.twig" %}
+```
+
+## Parameters
+
+| Key     | Type   | Description                                                        | Mandatory |
+| ------- | ------ | ------------------------------------------------------------------ | --------- |
+| image   | string | The URL of the used background image for the banner.               | no        |
+| content | string | The actual editable content that will be placed within the banner. | no        |
+
+## Blocks
+
+| Key     | Description                                                                                                  |
+| ------- | ------------------------------------------------------------------------------------------------------------ |
+| content | The actual editable content that will be placed within the banner. This will override the content parameter. |

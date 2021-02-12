@@ -1,0 +1,32 @@
+uuid: 83bb2f79-4823-469a-9cad-d21512f448c9
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: bookmark_content
+label: 'Bookmark (content)'
+bundles:
+  - news
+  - story
+entity_type: node
+global: false
+weight: 0
+flag_short: 'Bookmark this item'
+flag_long: ''
+flag_message: ''
+unflag_short: 'Unbookmark this item'
+unflag_long: ''
+unflag_message: ''
+unflag_denied_text: ''
+flag_type: 'entity:node'
+link_type: ajax_link
+flagTypeConfig:
+  show_in_links:
+    full: full
+  show_as_field: true
+  show_on_form: false
+  show_contextual_link: false
+  extra_permissions:
+    owner: '0'
+linkTypeConfig: {  }

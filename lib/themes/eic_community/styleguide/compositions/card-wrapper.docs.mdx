@@ -15,30 +15,55 @@ Displays the custom version of the [ECL-Twig Card component](https://ecl-twig-ph
 
 ## Parameters
 
-| Key                 | Type     | Description                                                                                               | Mandatory |
-| ------------------- | -------- | --------------------------------------------------------------------------------------------------------- | --------- |
-| card                | object   | Defines the structure of the card.                                                                        | yes       |
-| card.type           | string   | Card type (tile)                                                                                          | no        |
-| card.description    | string   | Displays the card description below the title                                                             | no        |
-| item.meta           | string[] | Displays a basic list of meta values.                                                                     | no        |
-| item.title          | string   | The actual title of the card                                                                              | no        |
-| item.image          | object   | Displays the image above the title.                                                                       | no        |
-| item.image.src      | string   | The path of the card image                                                                                | -         |
-| item.image.alt      | string   | Defines the alt attribute for the optional image                                                          | -         |
-| tags                | object[] | Displays one or multiple optional tags.                                                                   | no        |
-| tags[].label        | string   | The label op the defined tag.                                                                             | -         |
-| tags[].path         | string   | The URL for the defined tag.                                                                              | -         |
-| infos               | object[] | Displays one or multiple info field with optional icon                                                    | no        |
-| infos[].label       | string   | The label of the info field                                                                               | -         |
-| infos[].icon        | object   | Displays the optional icon aside from the defined info label                                              | -         |
-| infos[].icon.type   | string   | Defines the type of the icon that should match the ECL Icon spec.                                         | -         |
-| infos[].icon.name   | string   | Name of the defined icon that should exist within the given icon path                                     | -         |
-| infos[].icon.path   | string   | The URL of the SVG icon sprite where the defined name should exist in.                                    | -         |
-| links               | object[] | Displays the defined links in a vertical flow at the bottom of the defined card                           | no        |
-| links[].label       | string   | Displays the label of the defined link                                                                    | -         |
-| links[].path        | string   | The URL for the defined link.                                                                             | -         |
-| authors             | object[] | Displays the optional authors for the defined card.                                                       | no        |
-| authors[].author    | string   | The name of the defined author                                                                            | -         |
-| authors[].image     | object   | Displays the author image if defined. The initials of the given name will be used if no image is defined. | -         |
-| authors[].image.src | string   | The path of the author image.                                                                             | -         |
-| authors[].image.alt | string   | Defines the alt attribute for the defined author image.                                                   | -         |
+| Key                      | Type     | Description                                                                                               | Mandatory |
+| ------------------------ | -------- | --------------------------------------------------------------------------------------------------------- | --------- |
+| authors                  | object[] | Displays the optional authors for the defined card.                                                       | no        |
+| authors[].author         | string   | The name of the defined author                                                                            | -         |
+| authors[].image          | object   | Displays the author image if defined. The initials of the given name will be used if no image is defined. | -         |
+| authors[].image.alt      | string   | Defines the alt attribute for the defined author image.                                                   | -         |
+| authors[].image.src      | string   | The path of the author image.                                                                             | -         |
+| card                     | object   | Defines the structure of the card.                                                                        | yes       |
+| card.authors             | object[] | Displays the optional authors for the defined card.                                                       | no        |
+| card.authors[].author    | string   | The name of the defined author                                                                            | -         |
+| card.authors[].image     | object   | Displays the author image if defined. The initials of the given name will be used if no image is defined. | -         |
+| card.authors[].image.alt | string   | Defines the alt attribute for the defined author image.                                                   | -         |
+| card.authors[].image.src | string   | The path of the author image.                                                                             | -         |
+| card.description         | string   | Displays the card description below the title                                                             | no        |
+| card.image               | object   | Displays the image above the title.                                                                       | no        |
+| card.image.alt           | string   | Defines the alt attribute for the optional image                                                          | -         |
+| card.image.src           | string   | The path of the card image                                                                                | -         |
+| card.infos               | object[] | Displays one or multiple info field with optional icon                                                    | no        |
+| card.infos[].icon        | object   | Displays the optional icon aside from the defined info label                                              | -         |
+| card.infos[].icon.name   | string   | Name of the defined icon that should exist within the given icon path                                     | -         |
+| card.infos[].icon.path   | string   | The URL of the SVG icon sprite where the defined name should exist in.                                    | -         |
+| card.infos[].icon.type   | string   | Defines the type of the icon that should match the ECL Icon spec.                                         | -         |
+| card.infos[].label       | string   | The label of the info field                                                                               | -         |
+| card.links               | object[] | Displays the defined links in a vertical flow at the bottom of the defined card                           | no        |
+| card.links[].label       | string   | Displays the label of the defined link                                                                    | -         |
+| card.links[].path        | string   | The URL for the defined link.                                                                             | -         |
+| card.meta                | string[] | Displays a basic list of meta values.                                                                     | no        |
+| card.tags                | object[] | Displays one or multiple optional tags.                                                                   | no        |
+| card.tags[].label        | string   | The label op the defined tag.                                                                             | -         |
+| card.tags[].path         | string   | The URL for the defined tag.                                                                              | -         |
+| card.title               | string   | The actual title of the card                                                                              | no        |
+| card.type                | string   | Card type (tile)                                                                                          | no        |
+| extra_attributes         | string   | Optional attributes for the actual ECL Twig card component.                                               | no        |
+| extra_classes            | string   | Optional classes for the actual ECL Twig card component.                                                  | no        |
+| icon_file_path           | string   | The URL to the inline SVG sprite.                                                                         | no        |
+| infos                    | object[] | Displays one or multiple info field with optional icon                                                    | no        |
+| infos[].icon             | object   | Displays the optional icon aside from the defined info label                                              | -         |
+| infos[].icon.name        | string   | Name of the defined icon that should exist within the given icon path                                     | -         |
+| infos[].icon.path        | string   | The URL of the SVG icon sprite where the defined name should exist in.                                    | -         |
+| infos[].icon.type        | string   | Defines the type of the icon that should match the ECL Icon spec.                                         | -         |
+| infos[].label            | string   | The label of the info field                                                                               | -         |
+| item.image               | object   | Displays the image above the title.                                                                       | no        |
+| item.image.alt           | string   | Defines the alt attribute for the optional image                                                          | -         |
+| item.image.src           | string   | The path of the card image                                                                                | -         |
+| item.meta                | string[] | Displays a basic list of meta values.                                                                     | no        |
+| item.title               | string   | The actual title of the card                                                                              | no        |
+| links                    | object[] | Displays the defined links in a vertical flow at the bottom of the defined card                           | no        |
+| links[].label            | string   | Displays the label of the defined link                                                                    | -         |
+| links[].path             | string   | The URL for the defined link.                                                                             | -         |
+| tags                     | object[] | Displays one or multiple optional tags.                                                                   | no        |
+| tags[].label             | string   | The label op the defined tag.                                                                             | -         |
+| tags[].path              | string   | The URL for the defined tag.                                                                              | -         |

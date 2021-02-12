@@ -1,0 +1,11 @@
+{% if items is not empty %}
+  <div class="ecl-inline-actions">
+    <div class="ecl-inline-actions__items">
+      {% for item in items %}
+        <div class="ecl-inline-actions__item">
+          {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with item|default({}) %}
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+{% endif %}

@@ -22,7 +22,7 @@
     margin: 0 0 ecl-box-model('padding') 0;
     padding: 0;
     align-self: flex-start;
-    background-color: ecl-box-model('background-color', 'banner');
+    background-color: map-get($ecl-colors, 'grey-10');
 
     @include ecl-media-breakpoint-down('xs') {
       &::before {
@@ -214,7 +214,6 @@
       @include ecl-responsive-font('meta');
     }
 
-    #{$node}--member &,
     .ecl-teaser-overview--has-columns #{$node}--member & {
       text-align: center;
     }
@@ -274,12 +273,73 @@
     }
   }
 
+  &__meta-fields {
+    display: flex;
+    align-items: flex-start;
+    margin: map-get($ecl-spacing, 'xs') 0;
+
+    &:first-child {
+      margin-top: 0;
+    }
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  &__meta-fields-label {
+    @include visually-hidden();
+  }
+
+  &__meta-fields-icon {
+    margin-right: ecl-layout('gutter', 'controls');
+  }
+
+  &__meta-fields-items {
+    display: flex;
+    margin-bottom: #{0 - ecl-box-model('margin', 'controls')};
+  }
+
+  &__meta-fields-item {
+    display: block;
+    margin: 0 map-get($ecl-spacing, 'xs') ecl-box-model('margin', 'controls') 0;
+
+    &::after {
+      display: 'inline';
+      content: ',';
+    }
+
+    &:last-child::after {
+      display: none;
+    }
+
+    #{$node}__meta-fields--tags & {
+      color: ecl-typography('color', 'meta');
+      padding: map-get($ecl-spacing, 'xs') map-get($ecl-spacing, 's');
+      margin-right: ecl-box-model('margin', 'controls');
+      border-radius: 100px;
+      background-color: ecl-box-model('background-color', 'banner');
+      @include ecl-responsive-font('meta');
+
+      &::after {
+        display: none;
+      }
+    }
+  }
+
   &__type {
     display: flex;
     @include ecl-responsive-font('meta');
 
     #{$node}--story & {
       align-items: center;
+      text-transform: uppercase;
+    }
+
+    #{$node}--group & {
+      padding: map-get($ecl-spacing, 'xs') map-get($ecl-spacing, 's');
+      border-radius: 100px;
+      background-color: map-get($ecl-colors, 'grey-10');
     }
 
     #{$node}--event #{$node}__meta-header & {

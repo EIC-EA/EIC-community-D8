@@ -1,0 +1,14 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - paragraph_view_mode
+third_party_settings:
+  paragraph_view_mode:
+    enabled: false
+id: text_and_media_content
+label: 'Text and media content'
+icon_uuid: null
+icon_default: null
+description: 'A paragraph for showing both media and text.'
+behavior_plugins: {  }
