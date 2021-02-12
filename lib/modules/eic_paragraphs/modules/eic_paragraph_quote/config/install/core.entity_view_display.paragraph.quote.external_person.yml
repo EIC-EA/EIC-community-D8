@@ -1,9 +1,8 @@
-uuid: d619ebe6-edd9-4799-b24f-0854ea3c2748
 langcode: en
 status: true
 dependencies:
   config:
-    - core.entity_view_mode.paragraph.platform_member
+    - core.entity_view_mode.paragraph.external_person
     - field.field.paragraph.quote.field_media
     - field.field.paragraph.quote.field_name
     - field.field.paragraph.quote.field_quote_description
@@ -12,27 +11,35 @@ dependencies:
     - paragraphs.paragraphs_type.quote
   module:
     - text
-id: paragraph.quote.platform_member
+id: paragraph.quote.external_person
 targetEntityType: paragraph
 bundle: quote
-mode: platform_member
+mode: external_person
 content:
-  field_quote_description:
-    type: text_default
-    weight: 0
+  field_media:
+    weight: 2
+    label: hidden
+    settings:
+      view_mode: default
+      link: false
+    third_party_settings: {  }
+    type: entity_reference_entity_view
     region: content
+  field_name:
+    weight: 1
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_quote_description:
+    weight: 0
     label: hidden
     settings: {  }
     third_party_settings: {  }
-  field_user_ref:
-    type: entity_reference_label
-    weight: 1
+    type: text_default
     region: content
-    label: hidden
-    settings:
-      link: true
-    third_party_settings: {  }
 hidden:
-  field_media: true
-  field_name: true
+  field_user_ref: true
   paragraph_view_mode: true

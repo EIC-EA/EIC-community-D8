@@ -65,6 +65,7 @@ module:
   paragraphs: 11
   eic_paragraphs: 12
   eic_paragraph_full_media_content: 13
+  eic_paragraph_quote: 13
   oe_profile: 1000
 theme:
   stable: 0
