@@ -1,0 +1,7 @@
+langcode: en
+status: true
+dependencies: {  }
+id: page_banner
+label: 'Page banner'
+revision: 0
+description: 'This is a block that can be placed as a page header.'

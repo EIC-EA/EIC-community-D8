@@ -1,0 +1,10 @@
+uuid: f6d8a42d-afe5-4d64-b907-dcab384b3539
+langcode: en
+status: true
+dependencies: {  }
+_core:
+  default_config_hash: Tsm2SJ4_667uQLA3V6nFwJWw3aMoUC6L_q-AYZarrG8
+id: page_banner
+label: 'Page banner'
+revision: 0
+description: 'This is a block that can be placed as a page header.'
