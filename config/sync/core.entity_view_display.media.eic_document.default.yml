@@ -45,6 +45,7 @@ content:
     label: hidden
     settings:
       link_to_entity: true
+    third_party_settings: {  }
   flag_bookmark_media:
     weight: 10
     region: content
