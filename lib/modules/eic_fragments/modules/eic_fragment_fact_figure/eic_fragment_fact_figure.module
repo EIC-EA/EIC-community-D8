@@ -8,3 +8,32 @@
  * This file is no longer required in Drupal 8.
  * @see https://www.drupal.org/node/2217931
  */
+
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Entity\EntityInterface;
+
+/**
+ * Implements hook_entity_view_alter().
+ */
+function eic_fragment_fact_figure_entity_view_alter(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display) {
+  // Adds the counter statistic of the Fact and Figure
+  // into the build array.
+  if ($entity->getEntityTypeId() == 'fragment' && $entity->bundle() == 'fact_figure') {
+
+    /** @var \Drupal\eic_statistics\StatisticsStorageInterface $eic_statistics_storage */
+    $eic_statistics_storage = \Drupal::service('eic_statistics.storage');
+
+    // @todo Add conditions for the remaining Fact and Figure types.
+    switch ($entity->get('field_fact_figure_type')->getString()) {
+      case 'members':
+        $counter = $eic_statistics_storage->getEntityCounter('user');
+        $cache_tag = $eic_statistics_storage->getEntityCounterCacheTag('user');
+        break;
+    }
+
+    // Adds the entity counter to the build array.
+    $build['fact_figure_counter'] = $counter;
+    // Adds statistic counter cache tag.
+    $build['#cache']['tags'][] = $cache_tag;
+  }
+}
