@@ -2,6 +2,7 @@
 
 namespace Drupal\eic_statistics;
 
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\State\StateInterface;
 
@@ -41,8 +42,9 @@ class StatisticsStorage implements StatisticsStorageInterface {
    * {@inheritdoc}
    */
   public function updateEntityCounter($value, $entity_type, $bundle = NULL) {
-    $state_key = $bundle === NULL ? "eic_statistics.counter.{$entity_type}" : "eic_statistics.counter.{$entity_type}.{$bundle}";
-    $this->state->set($state_key, $this->state->get($state_key) + $value);
+    $state_key = $bundle == NULL ? "eic_statistics:counter:{$entity_type}" : "eic_statistics:counter:{$entity_type}:{$bundle}";
+    $this->state->set($state_key, $value);
+    $this->invalidateEntityCounterCacheTag($state_key, $value);
   }
 
   /**
@@ -58,7 +60,7 @@ class StatisticsStorage implements StatisticsStorageInterface {
         $query->condition('status', TRUE);
         break;
     }
-    if ($bundle !== NULL) {
+    if ($bundle != NULL) {
       $query->condition('type', $bundle);
     }
     return $query->count()->execute();
@@ -68,7 +70,7 @@ class StatisticsStorage implements StatisticsStorageInterface {
    * {@inheritdoc}
    */
   public function getEntityCounter($entity_type, $bundle = NULL) {
-    $state_key = $bundle === NULL ? "eic_statistics.counter.{$entity_type}" : "eic_statistics.counter.{$entity_type}.{$bundle}";
+    $state_key = $bundle == NULL ? "eic_statistics:counter:{$entity_type}" : "eic_statistics:counter:{$entity_type}:{$bundle}";
     return $this->state->get($state_key);
   }
 
@@ -78,9 +80,23 @@ class StatisticsStorage implements StatisticsStorageInterface {
   public static function getTrackedEntities() {
     return [
       'group' => ['event', 'group', 'organisation', 'project'],
-      'node' => ['challenge', 'page'],
-      'user',
+      'node' => ['challenge'],
+      'user' => 'user',
     ];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getEntityCounterCacheTag($entity_type, $bundle = NULL) {
+    return $bundle == NULL ? "eic_statistics:counter:{$entity_type}" : "eic_statistics:counter:{$entity_type}:{$bundle}";
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function invalidateEntityCounterCacheTag($cache_tag) {
+    Cache::invalidateTags([$cache_tag]);
   }
 
 }

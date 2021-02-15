@@ -18,7 +18,6 @@ interface StatisticsStorageInterface {
    *   The entity type.
    * @param string $bundle
    *   The entity bundle.
-   * @return void
    */
   public function updateEntityCounter($value, $entity_type, $bundle = NULL);
 
@@ -29,6 +28,7 @@ interface StatisticsStorageInterface {
    *   The entity type.
    * @param string $bundle
    *   The entity bundle.
+   *
    * @return string
    *   Number of entities.
    */
@@ -41,18 +41,39 @@ interface StatisticsStorageInterface {
    *   The entity type.
    * @param string $bundle
    *   The entity bundle.
+   *
    * @return string|null
    *   The counter statistic value.
    */
   public function getEntityCounter($entity_type, $bundle = NULL);
 
   /**
-   * The array of entity types and bundles
-   * being tracked for statistics.
+   * The array of entity types and bundles being tracked for statistics.
    *
    * @return array
    *   The array containing each entity and bundles.
    */
   public static function getTrackedEntities();
+
+  /**
+   * Gets cache tag of entity counter statistic.
+   *
+   * @param string $entity_type
+   *   The entity type.
+   * @param string $bundle
+   *   The entity bundle.
+   *
+   * @return string
+   *   The cache tag string.
+   */
+  public function getEntityCounterCacheTag($entity_type, $bundle = NULL);
+
+  /**
+   * Invalidates entity counter statistic cache.
+   *
+   * @param string $cache_tag
+   *   The cache tag.
+   */
+  public function invalidateEntityCounterCacheTag($cache_tag);
 
 }
