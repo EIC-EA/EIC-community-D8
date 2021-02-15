@@ -1,0 +1,66 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.quote.field_media
+    - field.field.paragraph.quote.field_name
+    - field.field.paragraph.quote.field_quote_description
+    - field.field.paragraph.quote.field_user_ref
+    - field.field.paragraph.quote.paragraph_view_mode
+    - paragraphs.paragraphs_type.quote
+  module:
+    - media_library
+    - paragraph_view_mode
+    - text
+id: paragraph.quote.default
+targetEntityType: paragraph
+bundle: quote
+mode: default
+content:
+  field_media:
+    weight: 7
+    settings:
+      media_types: {  }
+    third_party_settings: {  }
+    type: media_library_widget
+    region: content
+  field_name:
+    weight: 5
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_quote_description:
+    weight: 1
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+    type: text_textarea
+    region: content
+  field_user_ref:
+    weight: 6
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: entity_reference_autocomplete
+    region: content
+  paragraph_view_mode:
+    type: paragraph_view_mode
+    weight: -100
+    settings:
+      view_modes:
+        external_person: external_person
+        platform_member: platform_member
+        default: 0
+      default_view_mode: external_person
+    third_party_settings: {  }
+    region: content
+hidden:
+  created: true
+  status: true

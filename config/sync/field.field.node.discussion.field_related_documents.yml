@@ -16,10 +16,6 @@ translatable: false
 default_value: {  }
 default_value_callback: ''
 settings:
-  handler: 'default:file'
-  handler_settings:
-    target_bundles: null
-    sort:
-      field: _none
-    auto_create: false
+  handler: 'default:node'
+  handler_settings: {  }
 field_type: entity_reference

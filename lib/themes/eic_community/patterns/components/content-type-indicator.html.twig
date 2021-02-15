@@ -1,0 +1,18 @@
+{% if label is not empty %}
+  <div class="ecl-content-type-indicator {{ extra_classes }}">
+    {% if icon and icon_file_path %}
+      {% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with {
+        extra_classes: 'ecl-content-type-indicator__icon',
+        icon: icon|default({})|merge({
+          path: icon_file_path,
+          size: icon.size|default('xs'),
+        }),
+        extra_attributes: {
+          'aria-hidden': 'true',
+          'focusable': 'false'
+        }
+      } only %}
+    {% endif %}
+    <span class="ecl-content-type-indicator__label">{{ label }}</span>
+  </div>
+{% endif %}

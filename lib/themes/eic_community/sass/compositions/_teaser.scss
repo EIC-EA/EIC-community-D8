@@ -22,7 +22,7 @@
     margin: 0 0 ecl-box-model('padding') 0;
     padding: 0;
     align-self: flex-start;
-    background-color: ecl-box-model('background-color', 'banner');
+    background-color: map-get($ecl-colors, 'grey-10');
 
     @include ecl-media-breakpoint-down('xs') {
       &::before {
@@ -318,7 +318,7 @@
       padding: map-get($ecl-spacing, 'xs') map-get($ecl-spacing, 's');
       margin-right: ecl-box-model('margin', 'controls');
       border-radius: 100px;
-      background-color: ecl-box-model('background-color', 'banner');
+      background-color: map-get($ecl-colors, 'grey-5');
       @include ecl-responsive-font('meta');
 
       &::after {
@@ -329,13 +329,7 @@
 
   &__type {
     display: flex;
-
-    #{$node}--event &,
-    #{$node}--group & {
-      color: ecl-typography('color', 'meta');
-
-      @include ecl-responsive-font('meta');
-    }
+    @include ecl-responsive-font('meta');
 
     #{$node}--story & {
       align-items: center;
@@ -345,9 +339,8 @@
     #{$node}--group & {
       padding: map-get($ecl-spacing, 'xs') map-get($ecl-spacing, 's');
       border-radius: 100px;
-      background-color: ecl-box-model('background-color', 'banner');
+      background-color: map-get($ecl-colors, 'grey-10');
     }
-
 
     #{$node}--event #{$node}__meta-header & {
       margin-left: auto;
@@ -356,20 +349,8 @@
         margin-left: ecl-box-model('margin', 'controls');
       }
     }
-  }
 
-  &__type-icon {
-    color: ecl-typography('color', 'title');
-    margin-right: ecl-box-model('margin', 'controls');
-
-    #{$node}--event & {
-      color: ecl-typography('color', 'meta');
-    }
-  }
-
-  &__type-label {
     #{$node}--member & {
-      color: ecl-typography('color', 'meta');
       @include ecl-responsive-font('label');
     }
   }

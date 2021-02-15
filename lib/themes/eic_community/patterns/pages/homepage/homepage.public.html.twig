@@ -20,10 +20,15 @@
       } %}
     {% endblock %}
   {% endembed %}
+  {% include "@theme/patterns/compositions/breadcrumb.html.twig" with breadcrumb|default({}) %}
 {% endblock %}
 
 {% block content %}
   {% include "@theme/patterns/compositions/card-overview.html.twig" with usp|default({})|merge({
     extra_classes: 'ecl-card-overview--is-compact'
   }) only %}
+
+  {% include "@theme/patterns/compositions/fact-figures-wrapper.html.twig" with fact_figures|default({}) %}
+
+  {% include "@theme/patterns/compositions/featured-content-grid.html.twig" with featured_content|default({}) %}
 {% endblock %}

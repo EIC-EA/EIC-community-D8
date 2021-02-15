@@ -3,22 +3,13 @@
 <div class="ecl-teaser ecl-teaser--member">
   {% if type is not empty %}
     <div class="ecl-teaser__meta-header">
-      <div class="ecl-teaser__type">
-        {% if type.icon and icon_file_path %}
-          {% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with {
-            extra_classes: 'ecl-teaser__type-icon',
-            icon: type.icon|default({})|merge({
-              path: icon_file_path,
-              size: 'xs',
-            }),
-            extra_attributes: {
-              'aria-hidden': 'true',
-              'focusable': 'false'
-            }
-          } only %}
-      {% endif %}
-        <span class="ecl-teaser__type-label">{{ type.label }}</span>
-      </div>
+      {% include "@theme/patterns/components/content-type-indicator.html.twig" with type|default({})|merge({
+        extra_classes: 'ecl-teaser__type',
+        icon: type.icon|default({})|merge({
+          size: 's',
+        }),
+        icon_file_path: icon_file_path,
+      }) only %}
     </div>
   {% endif %}
 

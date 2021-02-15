@@ -49,4 +49,8 @@
       margin: 0;
     }
   }
+
+  &--call-to-action &__label {
+    font-weight: $ecl-font-weight-bold;
+  }
 }

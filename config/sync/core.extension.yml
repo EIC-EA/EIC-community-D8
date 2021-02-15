@@ -3,6 +3,7 @@ module:
   big_pipe: 0
   block: 0
   block_content: 0
+  block_content_permissions: 0
   breakpoint: 0
   config: 0
   contextual: 0
@@ -10,6 +11,9 @@ module:
   dblog: 0
   dynamic_page_cache: 0
   editor: 0
+  eic_block_type_page_banner: 0
+  eic_block_type_tiles_reference: 0
+  eic_block_types: 0
   eic_blocks: 0
   eic_content: 0
   eic_content_story: 0
@@ -63,6 +67,7 @@ module:
   paragraphs: 11
   eic_paragraphs: 12
   eic_paragraph_full_media_content: 13
+  eic_paragraph_quote: 13
   oe_profile: 1000
 theme:
   stable: 0
