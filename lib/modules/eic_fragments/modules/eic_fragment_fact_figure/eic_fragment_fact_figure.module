@@ -31,6 +31,15 @@ function eic_fragment_fact_figure_entity_view_alter(array &$build, EntityInterfa
         break;
     }
 
+    // Example showing the counter in a div tag.
+    // @todo Remove this example once we have the theme ready.
+    $build['example_counter'] = [
+      '#type' => 'html_tag',
+      '#tag' => 'div',
+      '#value' => $counter,
+      '#weight' => -50,
+    ];
+
     // Adds the entity counter to the build array.
     $build['fact_figure_counter'] = $counter;
     // Adds statistic counter cache tag.
