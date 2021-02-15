@@ -1,16 +1,19 @@
-.ecl-card-overview {
+.ecl-featured-content-collection {
   $node: &;
 
-  padding: map-get($ecl-spacing, 'xl') 0;
-
-  @include ecl-media-breakpoint-up('md') {
-    padding: map-get($ecl-spacing, '3xl') 0;
-  }
-
   &__title {
-    @extend .ecl-u-type-heading-1;
+    @extend .ecl-u-type-heading-2;
 
     margin-top: 0;
+    text-align: center;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    @include ecl-media-breakpoint-up('md') {
+      text-align: inherit;
+    }
   }
 
   &__description {
@@ -23,6 +26,7 @@
   &__header {
     display: flex;
     align-items: center;
+    margin-bottom: map-get($ecl-spacing, '3xl');
   }
 
   &__before,
@@ -38,14 +42,14 @@
     display: flex;
     flex-wrap: wrap;
     margin-top: map-get($ecl-spacing, 'xl');
-    margin-left: #{0 - map-get($ecl-spacing, 'l')};
-    margin-bottom: #{0 - map-get($ecl-spacing, 'l')};
+    margin-left: #{0 - ecl-layout('gutter')};
+    margin-bottom: #{0 - map-get($ecl-spacing, 'xl')};
   }
 
   &__item {
     display: flex;
-    padding-left: map-get($ecl-spacing, 'l');
-    margin-bottom: map-get($ecl-spacing, 'l');
+    padding-left: ecl-layout('gutter');
+    margin-bottom: map-get($ecl-spacing, 'xl');
     width: 100%;
     box-sizing: border-box;
 
@@ -63,6 +67,18 @@
 
     & > * {
       width: 100%;
+    }
+  }
+
+  &__footer {
+    margin-top: ecl-box-model('padding', 'banner');
+
+    @include ecl-media-breakpoint-up('md') {
+      margin-top: ecl-box-model('padding--md', 'banner');
+    }
+
+    @include ecl-media-breakpoint-up('lg') {
+      margin-top: ecl-box-model('padding--lg', 'banner');
     }
   }
 }

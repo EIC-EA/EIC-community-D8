@@ -1,7 +1,7 @@
 {% if items is not empty %}
 <section class="ecl-section-wrapper ecl-section-wrapper--is-blue ecl-fact-figures-wrapper">
   <div class="ecl-container">
-    <div class="ecl-fact-figures ecl-fact-figures--col-{{ colum|default(3) }}">
+    <div class="ecl-fact-figures ecl-fact-figures--col-{{ column|default(3) }}">
         <div class="ecl-fact-figures__items">
           {% for item in items %}
             <div class="ecl-fact-figures__item" {{ item.extra_attributes }}>
@@ -18,7 +18,7 @@
                     'aria-hidden': 'true',
                     'focusable': 'false'
                   }
-                } %}
+                } only %}
               {% endif %}
 
               {% if item.value %}

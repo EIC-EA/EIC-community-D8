@@ -1,5 +1,5 @@
 $ecl-border: (
-  'default': solid 2px map-get($ecl-colors, 'grey-15'),
+  'default': solid 1px map-get($ecl-colors, 'grey-15'),
   'outline': solid 3px map-get($ecl-colors, 'yellow-100'),
   'teaser': solid 1px map-get($ecl-colors, 'grey-15'),
 )

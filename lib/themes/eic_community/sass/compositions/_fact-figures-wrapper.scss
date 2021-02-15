@@ -1,29 +1,43 @@
 .ecl-fact-figures-wrapper {
   & .ecl-fact-figures {
+    $node: &;
+
     border: none;
 
     &__items {
       padding: 0;
       margin-top: #{0 - ecl-layout('gutter--lg', 'description') * 2};
-      margin-left: #{0 - ecl-layout('gutter', 'description')};
+      margin-left: #{0 - ecl-layout('gutter')};
 
-      @include ecl-media-breakpoint-up('lg') {
-        margin-left: #{0 - ecl-layout('gutter--lg', 'description')};
+      @include ecl-media-breakpoint-up('md') {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-start;
       }
     }
 
     &__item {
+      width: 100%;
+
       &,
       &:first-of-type {
         padding: 0;
-        padding-left: ecl-layout('gutter', 'description');
+        padding-left: ecl-layout('gutter');
         margin-top: #{ecl-layout('gutter--lg', 'description') * 2};
+        flex-basis: inherit;
 
-        @include ecl-media-breakpoint-up('lg') {
-          padding-left: ecl-layout('gutter--lg', 'description');
+        @include ecl-media-breakpoint-up('md') {
+          width: 50%;
         }
       }
+    }
+  }
 
+  @include ecl-media-breakpoint-up('lg') {
+    @for $i from 2 to 5 {
+      & .ecl-fact-figures--col-#{$i} .ecl-fact-figures__item {
+        width: calc(100% / #{$i});
+      }
     }
   }
 }
