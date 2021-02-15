@@ -14,13 +14,6 @@
     margin-bottom: 0;
   }
 
-  &--as-tags {
-    padding: map-get($ecl-spacing, 'xs') map-get($ecl-spacing, 's');
-    border-radius: 100px;
-    background-color: ecl-box-model('background-color', 'banner');
-    color: ecl-typography('color', 'meta');
-  }
-
   &__icon {
     color: ecl-typography('color', 'title');
     margin-right: ecl-box-model('margin', 'controls');
@@ -29,6 +22,5 @@
 
   &__label {
     color: ecl-typography('color', 'meta');
-    text-transform: uppercase;
   }
 }

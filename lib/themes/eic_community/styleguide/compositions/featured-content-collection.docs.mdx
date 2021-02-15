@@ -1,0 +1,17 @@
+# Featured Content Collection
+
+Section container that can be displayed within a 3 column or 4 column grid.
+
+## Example:
+
+```
+{% include "@theme/patterns/compositions/featured-content-collection.html.twig" %}
+```
+
+| Key             | Type     | Description                                                                                                 | Mandatory |     |
+| --------------- | -------- | ----------------------------------------------------------------------------------------------------------- | --------- | --- |
+| title           | string   | The title to display above the card overview.                                                               | no        |     |
+| description     | string   | The description that will be displayed below the title.                                                     | no        |     |
+| items           | object[] | Displays the defined cards within the overview.                                                             | no        |     |
+| items[].content | string   | The rendered content for the current overview item.                                                         | -         |     |
+| call_to_action  | object   | Follows the [ECL Twig icon component](npmjs.org/@ecl-twig/ec-component-link/ecl-link.html.twig) properties. | no        |     |
