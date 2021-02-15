@@ -1,6 +1,6 @@
 <div class="ecl-well {{ extra_classes }}">
   <div class="ecl-well__content">
-    {% block content %}{% endblock %}
+    {% block content %}{{ content }}{% endblock %}
   </div>
   {% if block("footer") is not empty %}
     <div class="ecl-well__footer">
