@@ -14,3 +14,7 @@
     margin-bottom: 0;
   }
 }
+
+.ecl-well--is-grey {
+  background-color: map-get($ecl-colors, 'grey-10');
+}
