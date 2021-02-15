@@ -1,0 +1,9 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - paragraphs
+id: paragraph.platform_member
+label: 'Platform member'
+targetEntityType: paragraph
+cache: true

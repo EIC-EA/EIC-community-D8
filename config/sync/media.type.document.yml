@@ -5,7 +5,7 @@ dependencies: {  }
 _core:
   default_config_hash: HuF5l3AktoJ3dbibSdGI0aLfp2-8W3YI7Fn_JJxd8Bg
 id: document
-label: Document
+label: 'OE Document'
 description: 'Basic document media type'
 source: file
 queue_thumbnail_downloads: false
