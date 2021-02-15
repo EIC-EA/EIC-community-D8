@@ -1,0 +1,7 @@
+name: EIC Fragment type Fact & Figure
+type: module
+description: Provides a fragment type to show statistics from EIC Platform.
+package: European Innovation Council
+core: 8.x
+php: 7.3
+core_version_requirement: ^8 || ^9

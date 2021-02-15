@@ -16,6 +16,7 @@ module:
   eic_blocks: 0
   eic_content: 0
   eic_content_story: 0
+  eic_fragment_fact_figure: 0
   eic_media: 0
   eic_media_document: 0
   eic_media_video: 0

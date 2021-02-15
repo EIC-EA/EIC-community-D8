@@ -1,0 +1,23 @@
+uuid: 5fb579d2-3524-4f65-9df5-603ae64b9bd6
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.fragment.field_fact_figure_type
+    - fragments.fragment_type.fact_figure
+  module:
+    - options
+_core:
+  default_config_hash: IvCkYlVY05kzfTcLPUXrhLu6PrS8iMlLs-Hgm4SbdUY
+id: fragment.fact_figure.field_fact_figure_type
+field_name: field_fact_figure_type
+entity_type: fragment
+bundle: fact_figure
+label: 'Fact & Figure type'
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: list_string
