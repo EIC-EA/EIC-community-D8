@@ -32,6 +32,7 @@ module:
   media_library: 0
   menu_link_content: 0
   menu_ui: 0
+  metatag: 0
   node: 0
   oe_media: 0
   oe_theme_helper: 0
@@ -48,6 +49,7 @@ module:
   system: 0
   taxonomy: 0
   text: 0
+  token: 0
   toolbar: 0
   twig_field_value: 0
   ui_patterns: 0
