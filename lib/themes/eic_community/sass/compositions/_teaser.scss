@@ -357,6 +357,10 @@
       @include ecl-responsive-font('meta');
     }
 
+    #{$node}--story & {
+      color: currentColor;
+    }
+
     #{$node}--as-card#{$node}--member & {
       text-align: center;
     }
@@ -453,6 +457,18 @@
     margin: 0;
   }
 
+  #{$node}--story &__author {
+    margin-right: auto;
+
+    @include ecl-media-breakpoint-down('sm') {
+      width: 100%;
+    }
+  }
+
+  #{$node}--as-card#{$node}--story &__author {
+    width: 100%;
+  }
+
   &__meta-fields {
     display: flex;
     align-items: flex-start;
@@ -498,6 +514,10 @@
       color: ecl-typography('color', 'meta');
 
       @include ecl-responsive-font('label');
+    }
+
+    #{$node}--story  & {
+      text-transform: uppercase;
     }
 
     #{$node}--event #{$node}__meta-header & {
@@ -638,19 +658,6 @@
 
   &__stat-value {
     @include ecl-responsive-font('meta');
-
-    &::before,
-    &::after {
-      display: inline;
-    }
-
-    &::before {
-      content: "( ";
-    }
-
-    &::after {
-      content: " )";
-    }
   }
 
   &__stat-label {
