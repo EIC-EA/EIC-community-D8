@@ -1,0 +1,16 @@
+# Inline Actions
+
+Displays the defined items as link within a responsive list.
+
+## Example:
+
+```
+{% include "@theme/patterns/components/inline-actions.html.twig" %}
+```
+
+## Twig parameters:
+
+| Key     | Type     | Description                                                                                                                           | Mandatory |
+| ------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------- | --------- |
+| items   | object[] | Should contain an array with entries that match the [ECL Twig Link](https://www.npmjs.com/package/@ecl/ec-component-link) coomponent. | yes       |
+| items[] | object   | Should be an object of type [ECL Twig Link](https://www.npmjs.com/package/@ecl/ec-component-link) component.                          | yes       |

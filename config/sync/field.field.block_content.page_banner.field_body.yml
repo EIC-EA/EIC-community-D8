@@ -1,0 +1,23 @@
+uuid: 6ca328df-2420-404f-80cb-ed8ec0b9042f
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.page_banner
+    - field.storage.block_content.field_body
+  module:
+    - text
+_core:
+  default_config_hash: GrAlqrZzhtGiTsSbQU3JUO62ekvBwlb46CKDcqc1qiA
+id: block_content.page_banner.field_body
+field_name: field_body
+entity_type: block_content
+bundle: page_banner
+label: Description
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long

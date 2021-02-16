@@ -1,0 +1,28 @@
+uuid: 039c7258-5deb-4edf-ad26-d35f8a7ea4eb
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_user_ref
+    - paragraphs.paragraphs_type.quote
+id: paragraph.quote.field_user_ref
+field_name: field_user_ref
+entity_type: paragraph
+bundle: quote
+label: 'User reference'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:user'
+  handler_settings:
+    include_anonymous: false
+    filter:
+      type: _none
+    target_bundles: null
+    sort:
+      field: _none
+    auto_create: false
+field_type: entity_reference

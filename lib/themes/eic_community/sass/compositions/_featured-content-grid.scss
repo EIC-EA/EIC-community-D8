@@ -1,0 +1,194 @@
+.ecl-featured-content-grid {
+  $node: &;
+
+  &__title {
+    @extend .ecl-u-type-heading-2;
+
+    margin-bottom: map-get($ecl-spacing, '3xl');
+  }
+
+  &__items {
+    display: flex;
+    margin-left: #{0 - ecl-layout('gutter')};
+    margin-bottom: #{0 - ecl-layout('gutter')};
+    flex-wrap: wrap;
+
+    @include ecl-media-breakpoint-up('lg') {
+      margin-bottom: #{0 - ecl-layout('gutter--md')};
+    }
+  }
+
+  &__item-wrapper {
+    margin-left: #{0 - ecl-layout('gutter')};
+
+    @include ecl-media-breakpoint-up('md') {
+      #{$node}__item:first-child &,
+      #{$node}--is-compact & {
+        display: flex;
+        flex-wrap: nowrap;
+      }
+    }
+  }
+
+  &__item {
+    box-sizing: border-box;
+    padding-left: ecl-layout('gutter');
+    margin-bottom: ecl-layout('gutter');
+    width: 100%;
+
+    &::after {
+      display: block;
+      content: " ";
+      border-top: ecl-border();
+      margin-top: ecl-layout('gutter');
+    }
+
+    @include ecl-media-breakpoint-up('md') {
+      &:nth-child(1n + 2) {
+        width: calc(100% / 2);
+
+        #{$node}--is-compact & {
+          width: 100%;
+        }
+      }
+    }
+
+    @include ecl-media-breakpoint-up('lg') {
+      margin-bottom: ecl-layout('gutter--md');
+
+      &:first-child::after {
+        margin-top: ecl-layout('gutter--md');
+      }
+
+      &:nth-child(1n + 2) {
+        width: calc(100% / 3);
+
+        #{$node}--is-compact & {
+          width: calc(100% / 2);
+        }
+      }
+    }
+  }
+
+  &__item-media-wrapper,
+  &__item-content-wrapper {
+    box-sizing: border-box;
+    padding-left: ecl-layout('gutter');
+  }
+
+  &__item-media-wrapper {
+    width: calc(100% / 3);
+    flex-shrink: 0;
+    width: 100%;
+    margin-bottom: ecl-layout('gutter');
+
+    @include ecl-media-breakpoint-up('md') {
+      width: calc(100% / 2);
+      flex-shrink: 0;
+      margin-bottom: 0;
+
+      #{$node}__item:nth-child(1n + 2) & {
+        width: calc(100% / 3);
+      }
+    }
+
+    @include ecl-media-breakpoint-up('md') {
+      #{$node}__item:nth-child(1n + 2) & {
+        width: 100%;
+        margin-bottom: ecl-layout('gutter');
+
+        #{$node}--is-compact & {
+          width: calc(100% / 3);
+          margin-bottom: 0;
+        }
+      }
+    }
+  }
+
+  &__item-content-wrapper {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__item-content-header {
+    display: flex;
+    padding-bottom: ecl-box-model('padding', 'meta');
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: nowrap;
+  }
+
+
+
+  &__item-content-header,
+  &__item-content-main,
+  &__item-content-footer {
+    width: 100%;
+  }
+
+  &__item-content-footer {
+    padding-top: ecl-box-model('padding', 'meta');
+  }
+
+  & &__item-type,
+  & &__item-timestamp {
+    margin: 0;
+  }
+
+  &__item-title {
+    margin-top: 0;
+    line-height: $ecl-line-height-l;
+    font-size: map-get($ecl-font-size, 's');
+
+    @include ecl-media-breakpoint-down('xs') {
+      margin-bottom: 0;
+    }
+
+    @include ecl-media-breakpoint-up('sm') {
+      font-size: map-get($ecl-font-size, 'm');
+      line-height: map-get($ecl-font-size, '3xl');
+
+      #{$node}__item:nth-child(1n + 2) & {
+        margin-bottom: 0;
+      }
+    }
+
+    @include ecl-media-breakpoint-up('md') {
+      font-size: map-get($ecl-font-size, '3xl');
+      line-height: map-get($ecl-font-size, '4xl');
+
+      #{$node}__item:nth-child(1n + 2) & {
+        font-size: map-get($ecl-font-size, 'm');
+        line-height: map-get($ecl-font-size, '3xl');
+      }
+    }
+  }
+
+  &__item-description {
+    display: none;
+    line-height: ecl-typography('line-height', 'default');
+    @include ecl-responsive-font('default');
+
+    @include ecl-media-breakpoint-up('sm') {
+      display: block;
+
+      #{$node}__item:nth-child(1n + 2) & {
+        display: none;
+      }
+    }
+
+    &:first-child {
+      margin-top: 0;
+    }
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  &__footer {
+    margin-top: ecl-layout('gutter');
+  }
+}

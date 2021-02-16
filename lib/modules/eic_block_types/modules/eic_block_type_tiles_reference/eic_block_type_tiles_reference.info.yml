@@ -1,0 +1,9 @@
+name: EIC Block type tiles reference
+type: module
+description: Provides a block type to show Tiles of content pages.
+package: European Innovation Council
+core: 8.x
+core_version_requirement: ^8 || ^9
+php: 7.3
+dependencies:
+  - eic_block_types:eic_block_types

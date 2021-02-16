@@ -29,6 +29,21 @@
     @extend .ecl-button--ghost;
   }
 
+  body &--action {
+    &,
+    &:hover {
+      text-decoration: none;
+    }
+
+    .ecl-link__icon {
+      margin: 0;
+    }
+
+    .ecl-link__label {
+      @include visually-hidden();
+    }
+  }
+
   &--icon {
     display: inline-flex;
     align-items: center;
@@ -48,5 +63,9 @@
     &:only-child {
       margin: 0;
     }
+  }
+
+  &--call-to-action &__label {
+    font-weight: $ecl-font-weight-bold;
   }
 }

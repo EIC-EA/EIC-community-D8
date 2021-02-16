@@ -1,0 +1,23 @@
+uuid: eff7f827-dcd2-4052-b99b-4af167f9dd1b
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.tiles_reference
+    - field.storage.block_content.field_body
+  module:
+    - text
+_core:
+  default_config_hash: vJhg2nkI1YtnYJP7vVdH1hkfwdqbZNKhHQD9mX49ZSc
+id: block_content.tiles_reference.field_body
+field_name: field_body
+entity_type: block_content
+bundle: tiles_reference
+label: Description
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long

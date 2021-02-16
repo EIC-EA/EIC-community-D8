@@ -1,0 +1,26 @@
+.ecl-content-type-indicator {
+  $node: &;
+
+  display: flex;
+  align-items: center;
+
+  margin: map-get($ecl-spacing, 'xs') 0;
+
+  &:first-child {
+    margin-top: 0;
+  }
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  &__icon {
+    color: ecl-typography('color', 'title');
+    margin-right: ecl-box-model('margin', 'controls');
+    flex-shrink: 0;
+  }
+
+  &__label {
+    color: ecl-typography('color', 'meta');
+  }
+}

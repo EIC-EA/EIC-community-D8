@@ -1,0 +1,30 @@
+uuid: 6f9f0a11-7cdb-46be-8cba-86f7577bedd3
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_related_downloads
+    - media.type.eic_document
+    - media.type.video
+    - node.type.wiki_page
+id: node.wiki_page.field_related_downloads
+field_name: field_related_downloads
+entity_type: node
+bundle: wiki_page
+label: Downloads
+description: 'Add files that should be presented as downloadable items.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:media'
+  handler_settings:
+    target_bundles:
+      eic_document: eic_document
+      video: video
+    sort:
+      field: _none
+    auto_create: false
+    auto_create_bundle: eic_document
+field_type: entity_reference

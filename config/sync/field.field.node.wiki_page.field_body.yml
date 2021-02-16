@@ -1,0 +1,21 @@
+uuid: c8cb0d4a-72cc-4084-87f6-00d9f5709bff
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_body
+    - node.type.wiki_page
+  module:
+    - text
+id: node.wiki_page.field_body
+field_name: field_body
+entity_type: node
+bundle: wiki_page
+label: Body
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long

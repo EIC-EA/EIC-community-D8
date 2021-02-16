@@ -1,0 +1,48 @@
+uuid: 73ac6ff0-4892-451b-82e7-45caca819dac
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.wiki_page.field_body
+    - field.field.node.wiki_page.field_related_downloads
+    - field.field.node.wiki_page.field_related_media
+    - node.type.wiki_page
+  module:
+    - text
+    - user
+id: node.wiki_page.default
+targetEntityType: node
+bundle: wiki_page
+mode: default
+content:
+  field_body:
+    weight: 1
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    type: text_default
+    region: content
+  field_related_downloads:
+    type: entity_reference_entity_view
+    weight: 3
+    label: hidden
+    settings:
+      view_mode: download
+      link: false
+    third_party_settings: {  }
+    region: content
+  field_related_media:
+    type: entity_reference_entity_view
+    weight: 2
+    label: hidden
+    settings:
+      view_mode: oe_theme_main_content
+      link: false
+    third_party_settings: {  }
+    region: content
+  links:
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden: {  }

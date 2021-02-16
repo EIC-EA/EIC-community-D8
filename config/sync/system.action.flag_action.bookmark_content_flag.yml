@@ -1,0 +1,15 @@
+uuid: 5c663645-f6e9-415c-9bd8-70f710e82f4a
+langcode: en
+status: true
+dependencies:
+  config:
+    - flag.flag.bookmark_content
+  module:
+    - flag
+id: flag_action.bookmark_content_flag
+label: 'Flag this item'
+type: node
+plugin: 'flag_action:bookmark_content_flag'
+configuration:
+  flag_id: bookmark_content
+  flag_action: flag

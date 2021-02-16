@@ -1,0 +1,15 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - paragraph_view_mode
+third_party_settings:
+  paragraph_view_mode:
+    enabled: true
+    label: 'Display variant'
+id: quote
+label: Quote
+icon_uuid: null
+icon_default: null
+description: 'Used for displaying a quote block.'
+behavior_plugins: {  }

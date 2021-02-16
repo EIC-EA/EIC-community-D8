@@ -1,0 +1,103 @@
+{% set title_element = 'h2'|default('h3') %}
+
+<section class="ecl-section-wrapper">
+  <div class="ecl-container">
+    <div class="ecl-featured-content-grid {{ extra_classes }}">
+      {% if title is not empty %}
+        <{{ title_element }} class="ecl-featured-content-grid__title">{{ title }}</{{ title_element }}>
+      {% endif %}
+      <div class="ecl-featured-content-grid__items-wrapper">
+
+        <div class="ecl-featured-content-grid__items">
+          {% for item in items %}
+            {% set item_title_element = item.title_element|default('h3') %}
+
+            <div class="ecl-featured-content-grid__item">
+              <div class="ecl-featured-content-grid__item-wrapper">
+                {% if item.media %}
+                  <div class="ecl-featured-content-grid__item-media-wrapper">
+                    {% include '@ecl-twig/ec-component-media-container/ecl-media-container.html.twig' with {
+                      description: false,
+                      sources: item.media.sources,
+                      image: item.media.image,
+                      alt: item.media.alt
+                    } only %}
+                  </div>
+                {% endif %}
+                <div class="ecl-featured-content-grid__item-content-wrapper">
+                  {% if item.type or item.timestamp %}
+                    <div class="ecl-featured-content-grid__item-content-header">
+                      {% if item.type %}
+                        {% include "@theme/patterns/components/content-type-indicator.html.twig" with item.type|default({})|merge({
+                          extra_classes: 'ecl-featured-content-grid__item-type',
+                          icon_file_path: icon_file_path,
+                          icon: item.type.icon|default({})|merge({
+                            size: 'm',
+                          })
+                        }) only %}
+                      {% endif %}
+
+                      {% if item.timestamp %}
+                        {% include "@theme/patterns/components/timestamp.html.twig" with item.timestamp|default({})|merge({
+                          extra_classes: 'ecl-featured-content-grid__item-timestamp',
+                          icon_file_path: icon_file_path
+                        }) only %}
+                      {% endif %}
+                    </div>
+                  {% endif %}
+
+                  <div class="ecl-featured-item-content-grid__item-content-main">
+                    {% if item.title is not empty %}
+                      <{{ item_title_element }} class="ecl-featured-content-grid__item-title">
+                        {% if item.path %}
+                          <a href="{{ item.path }}">{{ item.title }}</a>
+                        {% else %}
+                          {{ item.title }}
+                        {% endif %}
+                      </{{ item_title_element }}>
+                    {% endif %}
+
+                    {% if item.description is not empty %}
+                      <p class="ecl-featured-content-grid__item-description">{{ item.description }}</p>
+                    {% endif %}
+                  </div>
+                  {% if item.author is not empty %}
+                    <div class="ecl-featured-content-grid__item-content-footer">
+                      {% include "@theme/patterns/components/author.html.twig" with item.author|default({}) %}
+                    </div>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      {% if call_to_action is not empty %}
+        {% set _icon = {} %}
+
+        {% if icon_file_path is not empty %}
+          {% set _icon = {
+            path: icon_file_path,
+            name: call_to_action.icon.name|default('rounded-arrow'),
+            type: call_to_action.icon.type|default('ui'),
+            size: call_to_action.icon.size|default('xs'),
+            transform: call_to_action.icon.transform|default('rotate-90'),
+          } %}
+        {% endif %}
+
+
+        <footer class="ecl-featured-content-grid__footer">
+          {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with {
+            link: call_to_action.link|default({})|merge({
+              type: 'standalone',
+              icon_position: 'after',
+            }),
+            icon: _icon,
+            extra_classes: 'ecl-link--call-to-action',
+          } only  %}
+        </footer>
+      {% endif %}
+    </div>
+  </div>
+</section>
