@@ -5,6 +5,4 @@ dependencies: {  }
 id: node__page
 label: 'Content: Page'
 tags:
-  description: '[current-page:query:field_introduction]'
-  image_src: '[current-page:query:field_image]'
-  title: '[current-page:title]'
+  og_image: '[node:field_image:entity:oe_media_image]'
