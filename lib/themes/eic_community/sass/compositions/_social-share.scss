@@ -49,7 +49,7 @@
 
     @each $name, $color in $ecl-social-media-list {
       #{$node}__item--#{$name} & {
-        background-color: #{$color};
+        background-color: $color;
       }
     }
   }

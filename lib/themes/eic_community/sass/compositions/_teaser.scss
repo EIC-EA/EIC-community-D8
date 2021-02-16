@@ -351,7 +351,8 @@
     font-style: inherit;
     line-height: ecl-typography('line-height');
 
-    #{$node}--organisation & {
+    #{$node}--organisation &,
+    #{$node}--member & {
       margin: 0;
       @include ecl-responsive-font('meta');
     }
@@ -531,12 +532,24 @@
     #{$node}--as-card & {
       flex-direction: column;
     }
+
+    #{$node}--member#{$node}--as-card & {
+      flex-direction: row;
+      justify-content: center;
+    }
   }
 
   &__action {
     flex-shrink: 0;
     margin-right: ecl-box-model('margin', 'controls');
     margin-bottom: ecl-box-model('margin', 'controls');
+  }
+
+  // Enables custom colors for social media branding.
+  @each $name, $color in $ecl-social-media-list {
+    #{$node}__action-icon-#{$name} {
+      color: $color;
+    }
   }
 
   &__tags {
