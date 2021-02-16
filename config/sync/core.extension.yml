@@ -40,6 +40,8 @@ module:
   menu_link_content: 0
   menu_ui: 0
   metatag: 0
+  metatag_open_graph: 0
+  metatag_twitter_cards: 0
   node: 0
   oe_media: 0
   oe_theme_helper: 0
