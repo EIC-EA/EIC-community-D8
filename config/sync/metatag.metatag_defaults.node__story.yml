@@ -1,0 +1,10 @@
+uuid: dd1b460a-71f5-405b-b243-4b285bb4be69
+langcode: en
+status: true
+dependencies: {  }
+id: node__story
+label: 'Content: Story'
+tags:
+  description: '[current-page:query:field_introduction]'
+  image_src: '[current-page:query:field_header_visual]'
+  title: '[current-page:title]'

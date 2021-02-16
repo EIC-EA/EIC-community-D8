@@ -1,0 +1,10 @@
+uuid: d1dfff86-278d-4705-9c45-21d851c372d5
+langcode: en
+status: true
+dependencies: {  }
+id: node__page
+label: 'Content: Page'
+tags:
+  description: '[current-page:query:field_introduction]'
+  image_src: '[current-page:query:field_image]'
+  title: '[current-page:title]'

@@ -1,0 +1,10 @@
+uuid: 8d42c6bd-fc45-4863-a614-56b0d5e5e566
+langcode: en
+status: true
+dependencies: {  }
+id: node__news
+label: 'Content: News'
+tags:
+  description: '[current-page:query:field_introduction]'
+  image_src: '[current-page:query:field_header_visual]'
+  title: '[current-page:title]'
