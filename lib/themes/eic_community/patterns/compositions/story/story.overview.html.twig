@@ -13,8 +13,11 @@
 {% block breadcrumbs %}{% endblock %}
 
 {% block content %}
-
   {% include "@theme/patterns/compositions/teaser-overview.html.twig" with {
+    amount_options: amount_options,
+    active_filters: active_filters,
+    sort_options: sort_options,
+    interface_options: interface_options,
     items: items,
     icon_file_path: common.icon_file_path,
   } only %}

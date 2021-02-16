@@ -1,6 +1,13 @@
 .ecl-teaser-overview {
   $node: &;
+  display: flex;
+  flex-direction: column;
   margin-bottom: ecl-layout('gutter');
+
+  > * {
+    width: 100%;
+    padding: 0;
+  }
 
   &--has-columns {
     @include ecl-media-breakpoint-up('lg') {
@@ -66,8 +73,7 @@
 
   &__options {
     order: -1;
-    padding-bottom: ecl-box-model('padding');
-    margin-bottom: ecl-box-model('padding');
+    padding: ecl-box-model('padding') 0;
     border-bottom: ecl-border('teaser');
   }
 
@@ -144,17 +150,28 @@
     }
   }
 
+  &__active-filters {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
   &__active-filters-title {
     @include visually-hidden();
   }
 
   &__active-filters-items {
     display: flex;
+    flex-wrap: wrap;
     margin-bottom: 0 - ecl-box-model('margin', 'controls');
   }
 
   &__active-filters-item {
     margin: 0 ecl-box-model('margin', 'controls') ecl-box-model('margin', 'controls') 0;
+  }
+
+  &__active-filters-clear-all {
+    order: -1;
   }
 
   &__interface-options {

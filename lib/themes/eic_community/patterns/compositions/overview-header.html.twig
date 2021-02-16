@@ -14,7 +14,7 @@
           {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with {
             link: action|without('icon'),
             icon: action.icon,
-            extra_classes: "ecl-link--button ecl-link--button-primary",
+            extra_classes: action.extra_classes|default("ecl-link ecl-link--cta"),
           } only %}
         {% endfor %}
       </div>
