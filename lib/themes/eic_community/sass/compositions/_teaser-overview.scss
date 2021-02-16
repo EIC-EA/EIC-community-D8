@@ -65,6 +65,12 @@
         width: calc(100% / 3);
       }
     }
+
+    #{$node}--is-compact#{$node}--has-columns & {
+      @include ecl-media-breakpoint-up('xl') {
+        width: calc(100% / 2);
+      }
+    }
   }
 
   &__options {
@@ -73,6 +79,10 @@
     @include ecl-media-breakpoint-up('sm') {
       padding: ecl-box-model('padding') 0;
       border-bottom: ecl-border('teaser');
+
+      #{$node}--has-columns & {
+        border-bottom: 0;
+      }
     }
   }
 

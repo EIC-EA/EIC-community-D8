@@ -166,6 +166,10 @@
     align-items: center;
     flex-shrink: 0;
     flex-wrap: wrap;
+
+    #{$node}--as-card#{$node}--group & {
+      align-items: flex-start;
+    }
   }
 
   &__meta-header {
@@ -521,7 +525,12 @@
     }
 
     #{$node}--event #{$node}__meta-header & {
+      margin-top: 0;
       margin-left: ecl-box-model('margin', 'controls');
+    }
+
+    #{$node}--event #{$node}__meta-footer & {
+      margin: 0;
     }
 
     #{$node}--as-card #{$node}__main-wrapper > #{$node}__meta-footer & {
