@@ -100,7 +100,7 @@
     #{$node}--as-card#{$node}--member & {
       position: relative;
       max-width: map-get($ecl-media, 'm');
-      margin: ecl-box-model('padding') auto ecl-box-model('padding');
+      margin: 0 auto ecl-box-model('padding');
     }
   }
 
@@ -534,6 +534,7 @@
     }
 
     #{$node}--member#{$node}--as-card & {
+      margin: 0;
       flex-direction: row;
       justify-content: center;
     }
@@ -543,6 +544,10 @@
     flex-shrink: 0;
     margin-right: ecl-box-model('margin', 'controls');
     margin-bottom: ecl-box-model('margin', 'controls');
+
+    #{$node}--member#{$node}--as-card & {
+      margin: #{ecl-box-model('margin', 'controls') / 2} #{ecl-box-model('margin', 'controls') / 4};
+    }
   }
 
   // Enables custom colors for social media branding.
