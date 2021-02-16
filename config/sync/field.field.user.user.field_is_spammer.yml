@@ -1,0 +1,24 @@
+uuid: df37250f-a3e2-4ef5-9b4b-074ee648d3ae
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.user.field_is_spammer
+  module:
+    - user
+id: user.user.field_is_spammer
+field_name: field_is_spammer
+entity_type: user
+bundle: user
+label: 'Is spammer'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean
