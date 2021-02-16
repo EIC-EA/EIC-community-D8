@@ -1,6 +1,10 @@
 module:
   address: 0
   big_pipe: 0
+  admin_toolbar: 0
+  admin_toolbar_links_access_filter: 0
+  admin_toolbar_search: 0
+  admin_toolbar_tools: 0
   block: 0
   block_content: 0
   block_content_permissions: 0
