@@ -23,12 +23,37 @@ function eic_fragment_fact_figure_entity_view_alter(array &$build, EntityInterfa
     /** @var \Drupal\eic_statistics\StatisticsStorageInterface $eic_statistics_storage */
     $eic_statistics_storage = \Drupal::service('eic_statistics.storage');
 
-    // @todo Add conditions for the remaining Fact and Figure types.
     switch ($entity->get('field_fact_figure_type')->getString()) {
       case 'members':
         $counter = $eic_statistics_storage->getEntityCounter('user');
         $cache_tag = $eic_statistics_storage->getEntityCounterCacheTag('user');
         break;
+
+      case 'companies':
+        $counter = $eic_statistics_storage->getEntityCounter('group', 'organisation');
+        $cache_tag = $eic_statistics_storage->getEntityCounterCacheTag('group', 'organisation');
+        break;
+
+      case 'groups':
+        $counter = $eic_statistics_storage->getEntityCounter('group', 'group');
+        $cache_tag = $eic_statistics_storage->getEntityCounterCacheTag('group', 'group');
+        break;
+
+      case 'projects':
+        $counter = $eic_statistics_storage->getEntityCounter('group', 'project');
+        $cache_tag = $eic_statistics_storage->getEntityCounterCacheTag('group', 'peoject');
+        break;
+
+      case 'challenges':
+        $counter = $eic_statistics_storage->getEntityCounter('node', 'challenge');
+        $cache_tag = $eic_statistics_storage->getEntityCounterCacheTag('node', 'challenge');
+        break;
+
+      case 'events':
+        $counter = $eic_statistics_storage->getEntityCounter('group', 'event');
+        $cache_tag = $eic_statistics_storage->getEntityCounterCacheTag('group', 'event');
+        break;
+
     }
 
     // Example showing the counter in a div tag.
