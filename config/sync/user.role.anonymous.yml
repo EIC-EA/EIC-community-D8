@@ -10,4 +10,5 @@ weight: 0
 is_admin: false
 permissions:
   - 'access content'
+  - 'view fact_figure fragments'
   - 'view media'

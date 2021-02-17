@@ -10,7 +10,7 @@ entity_type: fragment
 type: list_string
 settings:
   allowed_values: { }
-  allowed_values_function: 'eic_field_fact_figure_type_allowed_values'
+  allowed_values_function: eic_field_fact_figure_type_allowed_values
 module: options
 locked: false
 cardinality: 1

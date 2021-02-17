@@ -67,7 +67,7 @@ function eic_fragment_fact_figure_entity_view_alter(array &$build, EntityInterfa
 function eic_field_fact_figure_type_allowed_values() {
   return [
     'user__user' => t('Members'),
-    'group__company' => t('Companies'),
+    'group__organisation' => t('Companies'),
     'group__group' => t('Groups'),
     'group__project' => t('Projects'),
     'node__challenge' => t('Challenges'),
