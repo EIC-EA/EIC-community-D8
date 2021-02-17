@@ -23,35 +23,21 @@ function eic_fragment_fact_figure_entity_view_alter(array &$build, EntityInterfa
     /** @var \Drupal\eic_statistics\StatisticsStorageInterface $eic_statistics_storage */
     $eic_statistics_storage = \Drupal::service('eic_statistics.storage');
 
-    switch ($entity->get('field_fact_figure_type')->getString()) {
-      case 'members':
-        $counter = $eic_statistics_storage->getEntityCounter('user');
-        $cache_tag = $eic_statistics_storage->getEntityCounterCacheTag('user');
+    // Extracts the entity type and bundle from
+    // the value of field_fact_figure_type.
+    $entity_info = explode('__', $entity->get('field_fact_figure_type')->getString());
+    $entity_type = reset($entity_info);
+    $bundle = end($entity_info);
+
+    switch ($entity_type) {
+      case 'user':
+        $counter = $eic_statistics_storage->getEntityCounter($entity_type);
+        $cache_tag = $eic_statistics_storage->getEntityCounterCacheTag($entity_type);
         break;
 
-      case 'companies':
-        $counter = $eic_statistics_storage->getEntityCounter('group', 'organisation');
-        $cache_tag = $eic_statistics_storage->getEntityCounterCacheTag('group', 'organisation');
-        break;
-
-      case 'groups':
-        $counter = $eic_statistics_storage->getEntityCounter('group', 'group');
-        $cache_tag = $eic_statistics_storage->getEntityCounterCacheTag('group', 'group');
-        break;
-
-      case 'projects':
-        $counter = $eic_statistics_storage->getEntityCounter('group', 'project');
-        $cache_tag = $eic_statistics_storage->getEntityCounterCacheTag('group', 'peoject');
-        break;
-
-      case 'challenges':
-        $counter = $eic_statistics_storage->getEntityCounter('node', 'challenge');
-        $cache_tag = $eic_statistics_storage->getEntityCounterCacheTag('node', 'challenge');
-        break;
-
-      case 'events':
-        $counter = $eic_statistics_storage->getEntityCounter('group', 'event');
-        $cache_tag = $eic_statistics_storage->getEntityCounterCacheTag('group', 'event');
+      default:
+        $counter = $eic_statistics_storage->getEntityCounter($entity_type, $bundle);
+        $cache_tag = $eic_statistics_storage->getEntityCounterCacheTag($entity_type, $bundle);
         break;
 
     }
@@ -80,11 +66,11 @@ function eic_fragment_fact_figure_entity_view_alter(array &$build, EntityInterfa
  */
 function eic_field_fact_figure_type_allowed_values() {
   return [
-    'members' => t('Members'),
-    'companies' => t('Companies'),
-    'groups' => t('Groups'),
-    'projects' => t('Projects'),
-    'challenges' => t('Challenges'),
-    'events' => t('Events'),
+    'user__user' => t('Members'),
+    'group__company' => t('Companies'),
+    'group__group' => t('Groups'),
+    'group__project' => t('Projects'),
+    'node__challenge' => t('Challenges'),
+    'group__event' => t('Events'),
   ];
 }
