@@ -62,7 +62,7 @@
                   </div>
                   {% if item.author is not empty %}
                     <div class="ecl-featured-content-grid__item-content-footer">
-                      {% include "@theme/patterns/components/author.html.twig" with item.author|default({}) %}
+                      {% include "@theme/patterns/components/author.html.twig" with item.author|default({}) only %}
                     </div>
                   {% endif %}
                 </div>
