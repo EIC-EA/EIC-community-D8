@@ -8,6 +8,7 @@ description: 'Modules and configuration exclusive to development.'
 folder: ../config/development
 module:
   devel: 0
+  devel_generate: 0
 theme: {  }
 blacklist: {  }
 graylist: {  }
