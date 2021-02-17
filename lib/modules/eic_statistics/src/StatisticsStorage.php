@@ -98,7 +98,7 @@ class StatisticsStorage implements StatisticsStorageInterface {
   public static function getTrackedEntities() {
     return [
       'group' => ['event', 'group', 'organisation', 'project'],
-      'node' => ['challenge', 'page'],
+      'node' => ['challenge'],
       'user' => 'user',
     ];
   }
