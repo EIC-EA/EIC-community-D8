@@ -1,0 +1,6 @@
+langcode: en
+status: true
+dependencies: {  }
+id: fact_figure
+label: 'Fact & Figure'
+description: 'A fact & figure is a fragment type that will be used as social proof for potential members, to instantly show the value of the community.'

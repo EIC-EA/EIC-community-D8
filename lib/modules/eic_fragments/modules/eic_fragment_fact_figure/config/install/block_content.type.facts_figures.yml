@@ -1,0 +1,7 @@
+langcode: en
+status: true
+dependencies: {  }
+id: facts_figures
+label: 'Facts & Figures'
+revision: 0
+description: 'A block that shows a list of Facts and Figures.'

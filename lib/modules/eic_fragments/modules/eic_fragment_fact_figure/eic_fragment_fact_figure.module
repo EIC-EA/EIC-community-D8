@@ -1,0 +1,76 @@
+<?php
+
+/**
+ * @file
+ * Primary module hooks for EIC Fragment type Fact &amp; Figure module.
+ *
+ * @DCG
+ * This file is no longer required in Drupal 8.
+ * @see https://www.drupal.org/node/2217931
+ */
+
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Entity\EntityInterface;
+
+/**
+ * Implements hook_entity_view_alter().
+ */
+function eic_fragment_fact_figure_entity_view_alter(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display) {
+  // Adds the counter statistic of the Fact and Figure
+  // into the build array.
+  if ($entity->getEntityTypeId() == 'fragment' && $entity->bundle() == 'fact_figure') {
+
+    /** @var \Drupal\eic_statistics\StatisticsStorageInterface $eic_statistics_storage */
+    $eic_statistics_storage = \Drupal::service('eic_statistics.storage');
+
+    // Extracts the entity type and bundle from
+    // the value of field_fact_figure_type.
+    $entity_info = explode('__', $entity->get('field_fact_figure_type')->getString());
+    $entity_type = reset($entity_info);
+    $bundle = end($entity_info);
+
+    switch ($entity_type) {
+      case 'user':
+        $counter = $eic_statistics_storage->getEntityCounter($entity_type);
+        $cache_tag = $eic_statistics_storage->getEntityCounterCacheTag($entity_type);
+        break;
+
+      default:
+        $counter = $eic_statistics_storage->getEntityCounter($entity_type, $bundle);
+        $cache_tag = $eic_statistics_storage->getEntityCounterCacheTag($entity_type, $bundle);
+        break;
+
+    }
+
+    // Example showing the counter in a div tag.
+    // @todo Remove this example once we have the theme ready.
+    $build['example_counter'] = [
+      '#type' => 'html_tag',
+      '#tag' => 'div',
+      '#value' => $counter,
+      '#weight' => -50,
+    ];
+
+    // Adds the entity counter to the build array.
+    $build['fact_figure_counter'] = $counter;
+    // Adds statistic counter cache tag.
+    $build['#cache']['tags'][] = $cache_tag;
+  }
+}
+
+/**
+ * Allowed values function for field_fact_figure_type.
+ *
+ * @return array
+ *   Array of allowed values.
+ */
+function eic_field_fact_figure_type_allowed_values() {
+  return [
+    'user__user' => t('Members'),
+    'group__company' => t('Companies'),
+    'group__group' => t('Groups'),
+    'group__project' => t('Projects'),
+    'node__challenge' => t('Challenges'),
+    'group__event' => t('Events'),
+  ];
+}
