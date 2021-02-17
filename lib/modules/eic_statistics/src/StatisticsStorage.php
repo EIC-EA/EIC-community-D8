@@ -44,7 +44,7 @@ class StatisticsStorage implements StatisticsStorageInterface {
   public function updateEntityCounter($value, $entity_type, $bundle = NULL) {
     $state_key = $bundle == NULL ? "eic_statistics:counter:{$entity_type}" : "eic_statistics:counter:{$entity_type}:{$bundle}";
     $this->state->set($state_key, $value);
-    $this->invalidateEntityCounterCacheTag($state_key, $value);
+    $this->invalidateEntityCounterCacheTag($this->getEntityCounterCacheTag($entity_type, $bundle));
   }
 
   /**
