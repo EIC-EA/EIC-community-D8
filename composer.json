@@ -12,6 +12,7 @@
         "drupal/address": "^1.9",
         "drupal/admin_toolbar": "^3.0",
         "drupal/block_content_permissions": "^1.10",
+        "drupal/config_split": "^1.7",
         "drupal/core": "^8.7",
         "drupal/core-composer-scaffold": "^8.8",
         "drupal/default_content": "^2.0@alpha",
@@ -32,9 +33,10 @@
         "webmozart/path-util": "^2.3"
     },
     "require-dev": {
+        "drupal/core-dev": "^8.7",
+        "drupal/devel": "^4.1",
         "drupal/drupal-extension": "~4.0",
-        "ec-europa/toolkit": "~4.0.0-beta7",
-        "drupal/core-dev": "^8.7"
+        "ec-europa/toolkit": "~4.0.0-beta7"
     },
     "scripts": {
         "post-install-cmd": [

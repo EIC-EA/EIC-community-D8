@@ -1,0 +1,16 @@
+uuid: 411522f3-cba2-4a04-94f1-6827ea35b9f1
+langcode: en
+status: false
+dependencies: {  }
+id: development
+label: Development
+description: 'Modules and configuration exclusive to development.'
+folder: ../config/development
+module:
+  devel: 0
+theme: {  }
+blacklist: {  }
+graylist: {  }
+graylist_dependents: true
+graylist_skip_equal: true
+weight: 0
