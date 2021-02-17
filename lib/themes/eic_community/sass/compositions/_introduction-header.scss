@@ -27,17 +27,20 @@
   }
 
   &__media {
-    @include ecl-media-breakpoint-down('md') {
-      order: -1;
-    }
+    order: -1;
 
     @include ecl-media-breakpoint-up('md') {
-      width: 50%;
+      width: 40%;
       flex-shrink: 0;
+      order: 0;
 
       #{$node}--is-reversed & {
         order: -1;
       }
+    }
+
+    @include ecl-media-breakpoint-up('lg') {
+      width: 50%;
     }
   }
 
