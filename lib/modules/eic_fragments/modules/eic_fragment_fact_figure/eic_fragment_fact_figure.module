@@ -79,13 +79,12 @@ function eic_fragment_fact_figure_entity_view_alter(array &$build, EntityInterfa
  *   Array of allowed values.
  */
 function eic_field_fact_figure_type_allowed_values() {
-  $string_translation = \Drupal::translation();
   return [
-    'members' => $string_translation->translate('Members'),
-    'companies' => $string_translation->translate('Companies'),
-    'groups' => $string_translation->translate('Groups'),
-    'projects' => $string_translation->translate('Projects'),
-    'challenges' => $string_translation->translate('Challenges'),
-    'events' => $string_translation->translate('Events'),
+    'members' => t('Members'),
+    'companies' => t('Companies'),
+    'groups' => t('Groups'),
+    'projects' => t('Projects'),
+    'challenges' => t('Challenges'),
+    'events' => t('Events'),
   ];
 }
