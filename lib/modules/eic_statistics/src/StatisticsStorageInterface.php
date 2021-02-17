@@ -22,6 +22,16 @@ interface StatisticsStorageInterface {
   public function updateEntityCounter($value, $entity_type, $bundle = NULL);
 
   /**
+   * Deletes the counter statistic for a given entity.
+   *
+   * @param string $entity_type
+   *   The entity type.
+   * @param string $bundle
+   *   The entity bundle.
+   */
+  public function deleteEntityCounter($entity_type, $bundle = NULL);
+
+  /**
    * Counts the number of entities of a given entity type.
    *
    * @param string $entity_type
@@ -33,6 +43,19 @@ interface StatisticsStorageInterface {
    *   Number of entities.
    */
   public function countTotalEntities($entity_type, $bundle = NULL);
+
+  /**
+   * Gets the counter statistic state key for a given entity.
+   *
+   * @param string $entity_type
+   *   The entity type.
+   * @param string $bundle
+   *   The entity bundle.
+   *
+   * @return string
+   *   The state key.
+   */
+  public function getEntityCounterStateKey($entity_type, $bundle = NULL);
 
   /**
    * Gets the counter statistic for a given entity.

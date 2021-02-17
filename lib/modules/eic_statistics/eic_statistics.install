@@ -1,0 +1,66 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the EIC Statistics module.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function eic_statistics_install() {
+  /** @var \Drupal\eic_statistics\StatisticsStorageInterface $eic_statistics_storage */
+  $eic_statistics_storage = \Drupal::service('eic_statistics.storage');
+
+  foreach ($eic_statistics_storage::getTrackedEntities() as $entity_type => $bundles) {
+    // Updates the counter for each entity bundle.
+    // We need this condition because the user
+    // entity doesn't have any bundles.
+    if (is_array($bundles)) {
+      foreach ($bundles as $bundle) {
+        $count = $eic_statistics_storage->countTotalEntities($entity_type, $bundle);
+        $eic_statistics_storage->updateEntityCounter($count, $entity_type, $bundle);
+      }
+    }
+    else {
+      $count = $eic_statistics_storage->countTotalEntities($entity_type);
+      $eic_statistics_storage->updateEntityCounter($count, $entity_type);
+    }
+  }
+
+  // Success message.
+  $success_message = \Drupal::translation()->translate('Module EIC statistics installed successfully.');
+  // Adds a success message to the system log.
+  \Drupal::logger('my_module')->notice($success_message);
+  // Adds a success message to the system message.
+  \Drupal::messenger()->addStatus($success_message);
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function eic_statistics_uninstall() {
+  /** @var \Drupal\eic_statistics\StatisticsStorageInterface $eic_statistics_storage */
+  $eic_statistics_storage = \Drupal::service('eic_statistics.storage');
+
+  foreach ($eic_statistics_storage::getTrackedEntities() as $entity_type => $bundles) {
+    // Deletes the counter for each entity bundle.
+    // We need this condition because the user
+    // entity doesn't have any bundles.
+    if (is_array($bundles)) {
+      foreach ($bundles as $bundle) {
+        $eic_statistics_storage->deleteEntityCounter($entity_type, $bundle);
+      }
+    }
+    else {
+      $eic_statistics_storage->deleteEntityCounter($entity_type);
+    }
+  }
+
+  // Success message.
+  $success_message = \Drupal::translation()->translate('Module EIC statistics was successfully uninstalled.');
+  // Adds a success message to the system log.
+  \Drupal::logger('my_module')->notice($success_message);
+  // Adds a success message to the system message.
+  \Drupal::messenger()->addStatus($success_message);
+}

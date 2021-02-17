@@ -42,7 +42,7 @@ class StatisticsStorage implements StatisticsStorageInterface {
    * {@inheritdoc}
    */
   public function updateEntityCounter($value, $entity_type, $bundle = NULL) {
-    $state_key = $bundle == NULL ? "eic_statistics:counter:{$entity_type}" : "eic_statistics:counter:{$entity_type}:{$bundle}";
+    $state_key = $this->getEntityCounterStateKey($entity_type, $bundle);
     $this->state->set($state_key, $value);
     $this->invalidateEntityCounterCacheTag($this->getEntityCounterCacheTag($entity_type, $bundle));
   }
@@ -50,28 +50,46 @@ class StatisticsStorage implements StatisticsStorageInterface {
   /**
    * {@inheritdoc}
    */
+  public function deleteEntityCounter($entity_type, $bundle = NULL) {
+    $state_key = $this->getEntityCounterStateKey($entity_type, $bundle);
+    $this->state->delete($state_key);
+    $this->invalidateEntityCounterCacheTag($this->getEntityCounterCacheTag($entity_type, $bundle));
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function countTotalEntities($entity_type, $bundle = NULL) {
-    $entity_storage = $this->entityTypeManager->getStorage($entity_type);
-    $query = $entity_storage->getQuery();
-    // Add status condition for node and user entities.
-    switch ($entity_type) {
-      case 'node':
-      case 'user':
-        $query->condition('status', TRUE);
-        break;
+    if ($this->entityTypeManager->hasDefinition($entity_type)) {
+      $entity_storage = $this->entityTypeManager->getStorage($entity_type);
+      $query = $entity_storage->getQuery();
+      // Add status condition for node and user entities.
+      switch ($entity_type) {
+        case 'node':
+        case 'user':
+          $query->condition('status', TRUE);
+          break;
+      }
+      if ($bundle != NULL) {
+        $query->condition('type', $bundle);
+      }
+      return $query->count()->execute();
     }
-    if ($bundle != NULL) {
-      $query->condition('type', $bundle);
-    }
-    return $query->count()->execute();
+    return 0;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getEntityCounterStateKey($entity_type, $bundle = NULL) {
+    return $bundle == NULL ? "eic_statistics:counter:{$entity_type}" : "eic_statistics:counter:{$entity_type}:{$bundle}";
   }
 
   /**
    * {@inheritdoc}
    */
   public function getEntityCounter($entity_type, $bundle = NULL) {
-    $state_key = $bundle == NULL ? "eic_statistics:counter:{$entity_type}" : "eic_statistics:counter:{$entity_type}:{$bundle}";
-    return $this->state->get($state_key);
+    return $this->state->get($this->getEntityCounterStateKey($entity_type, $bundle));
   }
 
   /**
@@ -80,7 +98,7 @@ class StatisticsStorage implements StatisticsStorageInterface {
   public static function getTrackedEntities() {
     return [
       'group' => ['event', 'group', 'organisation', 'project'],
-      'node' => ['challenge'],
+      'node' => ['challenge', 'page'],
       'user' => 'user',
     ];
   }
