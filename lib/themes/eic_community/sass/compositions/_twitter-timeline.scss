@@ -1,0 +1,29 @@
+.ecl-twitter-timeline {
+  $node: &;
+
+  position: relative;
+  padding: ecl-box-model('padding');
+  border: ecl-border();
+
+  &__throbber {
+    margin: auto;
+    width: map-get($ecl-media, 'xl');
+    height: map-get($ecl-media, 'xl');
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    > * {
+      flex-shrink: 0;
+      color: #{map-get($ecl-social-media-list, 'twitter')};
+    }
+  }
+
+  &--is-pending {
+    &::after {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+    }
+  }
+}
