@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "90da5a12d6208dd985c7cea32b5c6c16",
+    "content-hash": "5a9ce65162a1789f6eb38c499dc929d2",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -2576,50 +2576,6 @@
             }
         },
         {
-            "name": "drupal/extra_field",
-            "version": "2.0.0",
-            "source": {
-                "type": "git",
-                "url": "https://git.drupalcode.org/project/extra_field.git",
-                "reference": "8.x-2.0"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/extra_field-8.x-2.0.zip",
-                "reference": "8.x-2.0",
-                "shasum": "aa3ff0ba6348c26739dfd342e66a3d4f1d45d80d"
-            },
-            "require": {
-                "drupal/core": "^8 || ^9"
-            },
-            "type": "drupal-module",
-            "extra": {
-                "drupal": {
-                    "version": "8.x-2.0",
-                    "datestamp": "1611332144",
-                    "security-coverage": {
-                        "status": "covered",
-                        "message": "Covered by Drupal's security advisory policy"
-                    }
-                }
-            },
-            "notification-url": "https://packages.drupal.org/8/downloads",
-            "license": [
-                "GPL-2.0-or-later"
-            ],
-            "authors": [
-                {
-                    "name": "Sutharsan",
-                    "homepage": "https://www.drupal.org/user/73854"
-                }
-            ],
-            "description": "Provides a plugin type for extra fields that look like real fields, but do not store data.",
-            "homepage": "https://www.drupal.org/project/extra_field",
-            "support": {
-                "source": "https://git.drupalcode.org/project/extra_field"
-            }
-        },
-        {
             "name": "drupal/file_link",
             "version": "2.0.3",
             "source": {
@@ -2741,6 +2697,9 @@
                         "status": "not-covered",
                         "message": "Beta releases are not covered by Drupal security advisories."
                     }
+                },
+                "patches_applied": {
+                    "3168014 - TypeError: Argument 1 passed to Drupal\\flag\\TwigExtension\\FlagCount::count() must implement interface": "https://www.drupal.org/files/issues/2020-09-06/show-count-for-visitors--3168014-2.patch"
                 }
             },
             "notification-url": "https://packages.drupal.org/8/downloads",
