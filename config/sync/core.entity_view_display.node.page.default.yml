@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.node.page.field_banner
     - field.field.node.page.field_image
     - field.field.node.page.field_introduction
     - field.field.node.page.field_page_cta
@@ -19,6 +20,15 @@ targetEntityType: node
 bundle: page
 mode: default
 content:
+  field_banner:
+    weight: 109
+    label: hidden
+    settings:
+      link: true
+      view_mode: default
+    third_party_settings: {  }
+    type: entity_reference_entity_view
+    region: content
   field_image:
     type: entity_reference_entity_view
     weight: 103
