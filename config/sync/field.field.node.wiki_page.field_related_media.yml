@@ -1,0 +1,30 @@
+uuid: cf90c4be-36ca-49d5-8de3-8e64a2f6adb0
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_related_media
+    - media.type.image
+    - media.type.remote_video
+    - node.type.wiki_page
+id: node.wiki_page.field_related_media
+field_name: field_related_media
+entity_type: node
+bundle: wiki_page
+label: 'Rendered Media'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:media'
+  handler_settings:
+    target_bundles:
+      image: image
+      remote_video: remote_video
+    sort:
+      field: _none
+    auto_create: false
+    auto_create_bundle: image
+field_type: entity_reference

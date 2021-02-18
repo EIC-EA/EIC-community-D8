@@ -1,0 +1,26 @@
+uuid: 545cfe77-11be-4ca9-aa1c-d527c23bedb4
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.wiki_page.field_body
+    - field.field.node.wiki_page.field_related_downloads
+    - field.field.node.wiki_page.field_related_media
+    - node.type.wiki_page
+  module:
+    - user
+id: node.wiki_page.teaser
+targetEntityType: node
+bundle: wiki_page
+mode: teaser
+content:
+  links:
+    weight: 100
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+hidden:
+  field_body: true
+  field_related_downloads: true
+  field_related_media: true

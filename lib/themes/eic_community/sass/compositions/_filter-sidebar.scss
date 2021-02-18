@@ -4,14 +4,13 @@
   display: flex;
   flex-direction: column;
 
-  @include ecl-media-breakpoint-up('md') {
+  @include ecl-media-breakpoint-up('lg') {
     padding: ecl-box-model('padding') 0;
   }
 
   &__expand,
   &__collapse {
     width: 100%;
-    text-align: center;
   }
 
   &__expand {

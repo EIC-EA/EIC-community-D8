@@ -3,23 +3,49 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.media.eic_document.field_body
     - field.field.media.eic_document.field_media_file
+    - field.field.media.eic_document.field_vocab_topics
     - media.type.eic_document
   module:
     - file
+    - text
 id: media.eic_document.default
 targetEntityType: media
 bundle: eic_document
 mode: default
 content:
+  field_body:
+    weight: 2
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    type: text_default
+    region: content
   field_media_file:
     label: visually_hidden
-    weight: 0
+    weight: 1
     settings:
-      use_description_as_link_text: true
+      use_description_as_link_text: false
     third_party_settings: {  }
     type: file_default
     region: content
+  field_vocab_topics:
+    weight: 3
+    label: hidden
+    settings:
+      link: false
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+  name:
+    type: string
+    weight: 0
+    region: content
+    label: hidden
+    settings:
+      link_to_entity: true
+    third_party_settings: {  }
   flag_bookmark_media:
     weight: 10
     region: content
@@ -27,6 +53,5 @@ content:
     third_party_settings: {  }
 hidden:
   created: true
-  name: true
   thumbnail: true
   uid: true

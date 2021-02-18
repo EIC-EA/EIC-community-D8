@@ -9,7 +9,11 @@
     padding: ecl-box-model('padding--lg', 'banner') 0;
   }
 
-  &--is-shaded {
-    background-color: ecl-box-model('background-color', 'banner');
+  &--is-blue {
+    background-color: map-get($ecl-colors, 'blue-5');
+  }
+
+  &--is-grey {
+    background-color: map-get($ecl-colors, 'grey-10');
   }
 }

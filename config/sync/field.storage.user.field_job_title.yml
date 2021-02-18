@@ -1,0 +1,20 @@
+uuid: 61159fa1-fcf1-414d-858a-d7114a008fa8
+langcode: en
+status: true
+dependencies:
+  module:
+    - taxonomy
+    - user
+id: user.field_job_title
+field_name: field_job_title
+entity_type: user
+type: entity_reference
+settings:
+  target_type: taxonomy_term
+module: core
+locked: false
+cardinality: -1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

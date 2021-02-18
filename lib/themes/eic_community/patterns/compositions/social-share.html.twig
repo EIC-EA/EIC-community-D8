@@ -12,7 +12,7 @@
       {% for item in items %}
         <div class="ecl-social-share__item{{ item.name ? ' ecl-social-share__item--' ~ item.name }}">
           {% if item.path %}
-            <a class="ecl-social-share__item-wrapper" href="{{ item.path }}">
+            <a class="ecl-link ecl-social-share__item-wrapper" href="{{ item.path }}">
               {% if icon_file_path %}
                 <span class="ecl-social-share__item-icon-wrapper">
                   {% include '@ecl-twig/ec-component-icon/ecl-icon.html.twig' with {
@@ -22,6 +22,7 @@
                       type: item.type|default('branded'),
                       name: item.name,
                     },
+                    extra_classes: 'ecl-social-share__item-icon',
                     extra_attributes: {
                       'aria-hidden': 'true',
                       'focusable': 'false'

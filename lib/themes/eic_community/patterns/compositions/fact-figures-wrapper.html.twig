@@ -1,0 +1,47 @@
+{% if items is not empty %}
+<section class="ecl-section-wrapper ecl-section-wrapper--is-blue ecl-fact-figures-wrapper">
+  <div class="ecl-container">
+    <div class="ecl-fact-figures ecl-fact-figures--col-{{ column|default(3) }}">
+        <div class="ecl-fact-figures__items">
+          {% for item in items %}
+            <div class="ecl-fact-figures__item" {{ item.extra_attributes }}>
+              {% if icon_file_path or item.icon.path %}
+                {% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with {
+                  extra_classes: 'ecl-fact-figures__icon',
+                  icon: {
+                    path: item.icon.path|default(icon_file_path),
+                    name: item.icon.name,
+                    size: item.icon.size|default('m'),
+                    type: item.icon.type,
+                  },
+                  extra_attributes: {
+                    'aria-hidden': 'true',
+                    'focusable': 'false'
+                  }
+                } only %}
+              {% endif %}
+
+              {% if item.value %}
+                <div class="ecl-fact-figures__value">{{ item.value }}</div>
+              {% endif %}
+
+              {% if item.title %}
+                <div class="ecl-fact-figures__title">
+                  {%  if item.path %}
+                    <a href="{{ item.path }}">{{ item.title }}</a>
+                  {% else %}
+                    {{ item.title }}
+                  {% endif %}
+                </div>
+              {% endif %}
+
+              {% if item.description %}
+                <div class="ecl-fact-figures__description">{{ item.description }}</div>
+              {% endif %}
+            </div>
+          {% endfor %}
+        </div>
+    </div>
+  </div>
+</section>
+{% endif %}

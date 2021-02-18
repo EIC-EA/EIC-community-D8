@@ -1,0 +1,30 @@
+uuid: a3446c4a-8544-4303-a1a1-5ff2e00d49d2
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.user.field_vocab_topic_interest
+    - taxonomy.vocabulary.topics
+  module:
+    - user
+id: user.user.field_vocab_topic_interest
+field_name: field_vocab_topic_interest
+entity_type: user
+bundle: user
+label: 'Topics of Interest'
+description: "Select one or more topics you are interested in.\r\nYou can select maximum 3 topics and an unlimited number of subtopics."
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      topics: topics
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

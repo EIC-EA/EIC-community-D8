@@ -1,7 +1,9 @@
 .ecl-well {
+  display: flex;
+  flex-direction: column;
   margin: ecl-box-model('margin') 0;
   padding: ecl-box-model('padding');
-  background-color: ecl-box-model('background-color');
+  background-color: map-get($ecl-colors, 'white');
   width: 100%;
   border-radius: ecl-box-model('border-radius');
   box-sizing: border-box;
@@ -12,5 +14,25 @@
 
   &:last-child {
     margin-bottom: 0;
+  }
+
+  &__content,
+  &__footer {
+    box-sizing: border-box;
+    flex-shrink: 0;
+    width: 100%;
+  }
+
+  &__content {
+    flex-grow: 1;
+  }
+
+  &__footer {
+    margin-top: auto;
+    padding-top: ecl-layout('gutter');
+  }
+
+  &--is-grey {
+    background-color: map-get($ecl-colors, 'grey-10');
   }
 }

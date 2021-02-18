@@ -12,5 +12,6 @@ permissions:
   - 'access content'
   - 'view bookmark_content'
   - 'view bookmark_media'
+  - 'view fact_figure fragments'
   - 'view media'
   - 'view recommend'

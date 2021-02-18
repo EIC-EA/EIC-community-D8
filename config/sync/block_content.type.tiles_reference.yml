@@ -1,0 +1,10 @@
+uuid: 591c9496-4be9-4d7c-8ec4-966fb9d14f18
+langcode: en
+status: true
+dependencies: {  }
+_core:
+  default_config_hash: HC8NR3ddqsP6oH84mM2A_DkTKQEguUIFsv0SE8dk_BE
+id: tiles_reference
+label: 'Tiles reference'
+revision: 0
+description: ''

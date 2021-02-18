@@ -1,0 +1,20 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.paragraph_view_mode
+    - paragraphs.paragraphs_type.quote
+  module:
+    - paragraph_view_mode
+id: paragraph.quote.paragraph_view_mode
+field_name: paragraph_view_mode
+entity_type: paragraph
+bundle: quote
+label: 'Display variant'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: paragraph_view_mode

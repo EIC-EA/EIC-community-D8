@@ -20,6 +20,14 @@ This will prepare the required assets which are based on the [Europa Component L
 
 The builder configuration can be adjusted by editing the `./ecl-builder.config.js`. By default, the assets will be written to the `./dist` directory.
 
+By default the ECL builder optimizes the theme assets for the production environment. You disable this by defining the `NODE_ENV` environment variabl within a dotenv file.
+
+```env
+NODE_ENV=development
+```
+
+Defining `NODE_ENV` within the CLI is also supported.
+
 #### 2.1 | Stylesheets
 
 The custom stylesheets are defined within the `./sass` directory, the included imports will enable the correct styling for the component library for screen & print viewports.

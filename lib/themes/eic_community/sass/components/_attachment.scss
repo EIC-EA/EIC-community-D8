@@ -1,7 +1,7 @@
 .ecl-attachment {
   margin: ecl-box-model('margin', 'description') 0;
   padding: ecl-box-model('padding', 'description');
-  background-color: ecl-box-model('background-color', 'description');
+  background-color: map-get($ecl-colors, 'blue-5');
   border-radius: ecl-box-model('border-radius');
   display: flex;
   align-items: flex-start;

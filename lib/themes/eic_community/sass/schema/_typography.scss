@@ -19,6 +19,11 @@ $ecl-typography: (
     'font-size--lg': $ecl-font-size-m,
     'font-weight': $ecl-font-weight-bold,
   ),
+  'introduction': (
+    'font-size': $ecl-font-size-m,
+    'font-size--md': $ecl-font-size-l,
+    'font-size--lg': $ecl-font-size-xl,
+  ),
   'title': (
     'color': map-get($ecl-colors, 'blue'),
     'font-size': $ecl-font-size-s,

@@ -1,0 +1,21 @@
+uuid: c7c65108-0c53-43e6-91b9-b10fc85e3a59
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.media.field_body
+    - media.type.eic_document
+  module:
+    - text
+id: media.eic_document.field_body
+field_name: field_body
+entity_type: media
+bundle: eic_document
+label: Body
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long

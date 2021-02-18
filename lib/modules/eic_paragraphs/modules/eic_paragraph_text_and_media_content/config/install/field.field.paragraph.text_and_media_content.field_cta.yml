@@ -1,0 +1,22 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_cta
+    - paragraphs.paragraphs_type.text_and_media_content
+  module:
+    - link
+id: paragraph.text_and_media_content.field_cta
+field_name: field_cta
+entity_type: paragraph
+bundle: text_and_media_content
+label: 'CTA Button'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  link_type: 17
+  title: 2
+field_type: link

@@ -7,7 +7,7 @@
         {% include "@theme/patterns/components/meta-list.html.twig" with {
           extra_classes: "ecl-introduction-header__meta",
           items: meta
-        } %}
+        } only %}
 
       {% if title is not empty %}
         <{{ title_element }} class="ecl-introduction-header__title">{{ title }}</{{ title_element }}>
@@ -27,7 +27,7 @@
             sources: media.sources,
             image: media.image,
             alt: media.alt
-          } %}
+          } only %}
         </section>
       {% endif %}
     </div>

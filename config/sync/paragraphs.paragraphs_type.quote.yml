@@ -1,10 +1,16 @@
 uuid: b0965768-dab7-46db-a788-552113fef72d
 langcode: en
 status: true
-dependencies: {  }
+dependencies:
+  module:
+    - paragraph_view_mode
+third_party_settings:
+  paragraph_view_mode:
+    enabled: true
+    label: 'Display variant'
 id: quote
 label: Quote
 icon_uuid: null
 icon_default: null
-description: ''
+description: 'Used for displaying a quote block.'
 behavior_plugins: {  }

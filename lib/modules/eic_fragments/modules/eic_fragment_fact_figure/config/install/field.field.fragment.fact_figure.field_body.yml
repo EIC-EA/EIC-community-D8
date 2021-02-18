@@ -1,0 +1,18 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.fragment.field_body
+    - fragments.fragment_type.fact_figure
+id: fragment.fact_figure.field_body
+field_name: field_body
+entity_type: fragment
+bundle: fact_figure
+label: Description
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string_long

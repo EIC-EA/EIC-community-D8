@@ -5,21 +5,24 @@
 
   &--has-image {
     border: none;
-    background-color: ecl-box-model('background-color', 'banner');
+
+    background-color: map-get($ecl-colors, 'grey-10');
   }
 
   &__content {
+    position: relative;
     padding: ecl-box-model('padding', 'banner') 0;
     border-bottom: ecl-border('default');
 
     @include ecl-media-breakpoint-up('md') {
       display: flex;
+      align-items: center;
       padding: ecl-box-model('padding--md', 'banner') 0;
     }
 
     #{$node}--has-image & {
       border: none;
-      padding: ecl-box-model('padding', 'banner--md') 0;
+      padding: ecl-box-model('padding--md', 'banner') 0;
     }
   }
 
@@ -79,8 +82,15 @@
     object-fit: cover;
   }
 
-  &__content {
-    z-index: 1;
-    position: relative;
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    margin-right: #{0 - ecl-box-model('margin', 'controls')};
+    margin-bottom: #{0 - ecl-box-model('margin', 'controls')};
+  }
+
+  &__action {
+    margin-right: ecl-box-model('margin', 'controls');
+    margin-bottom: ecl-box-model('margin', 'controls');
   }
 }

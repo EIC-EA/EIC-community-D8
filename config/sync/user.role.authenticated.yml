@@ -18,5 +18,6 @@ permissions:
   - 'unflag recommend'
   - 'view bookmark_content'
   - 'view bookmark_media'
+  - 'view fact_figure fragments'
   - 'view media'
   - 'view recommend'
