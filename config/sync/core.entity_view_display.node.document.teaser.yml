@@ -42,5 +42,5 @@ content:
       link: false
     third_party_settings: {  }
 hidden:
+  extra_field_oe_theme_helper_short_title_with_fallback: true
   links: true
-  extra_field_oe_theme_helper_short_title_with_fallback: true\
