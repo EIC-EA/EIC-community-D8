@@ -129,9 +129,15 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
+  flag_recommend:
+    weight: 14
+    region: content
+    settings: {  }
+    third_party_settings: {  }
   links:
     weight: 0
     region: content
     settings: {  }
     third_party_settings: {  }
-hidden: {  }
+hidden:
+  extra_field_oe_theme_helper_short_title_with_fallback: true

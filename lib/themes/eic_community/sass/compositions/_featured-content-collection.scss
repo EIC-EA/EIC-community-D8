@@ -17,7 +17,6 @@
   }
 
   &__description {
-    max-width: $ecl-container-max-width-md;
     font: $ecl-font-m;
     line-height: $ecl-line-height-m;
   }
@@ -27,6 +26,7 @@
     display: flex;
     align-items: center;
     margin-bottom: map-get($ecl-spacing, '3xl');
+    max-width: $ecl-container-max-width-md;
   }
 
   &__before,

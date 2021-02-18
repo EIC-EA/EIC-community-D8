@@ -1,0 +1,31 @@
+uuid: 8e582b17-01ac-45f4-8802-8f20acd6875a
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.facts_figures
+    - field.field.block_content.facts_figures.field_facts_figures
+id: block_content.facts_figures.default
+targetEntityType: block_content
+bundle: facts_figures
+mode: default
+content:
+  field_facts_figures:
+    weight: 26
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: entity_reference_autocomplete
+    region: content
+  info:
+    type: string_textfield
+    weight: -5
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+hidden: {  }
