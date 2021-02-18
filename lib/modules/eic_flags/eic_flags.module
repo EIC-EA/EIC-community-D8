@@ -5,40 +5,26 @@
  * Main module file for EIC Flags module.
  */
 
-use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
-
 /**
- * Implements hook_entity_extra_field_info().
+ * Implements hook_theme().
  */
-function eic_flags_entity_extra_field_info() {
-  $fields = [];
-
-  $nodeBundles = \Drupal::service('entity_type.bundle.info')->getBundleInfo('node');
-  foreach (array_keys($nodeBundles) as $bundle) {
-    $fields['node'][$bundle]['display']['number_of_recommendations'] = [
-      'label' => t('Number of recommendations'),
-      'description' => t('The number of recommendations given to the content'),
-      'weight' => 120,
-      'visible' => FALSE,
-    ];
-  }
-
-  return $fields;
-}
-
-/**
- * Implements hook_ENTITY_TYPE_view() for node.
- */
-function eic_flags_node_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
-  // Load the recommend flag.
-  $flag = \Drupal::service('flag')->getFlagById('recommend');
-  if ($display->getComponent('number_of_recommendations') && !empty($flag)) {
-    // Get the flag count and set the field value.
-    $counts = \Drupal::service('flag.count')->getEntityFlagCounts($entity);
-    $counts = empty($counts) || !isset($counts[$flag->id()]) ? '0' : $counts[$flag->id()];
-    $build['comment_date'] = [
-      '#markup' => \Drupal::translation()->formatPlural($counts, '1 recommendation', '@count recommendations'),
-    ];
-  }
+function eic_flags_theme() {
+  return [
+    'eic_flag_count' => [
+      'variables' => [
+        'attributes' => [],
+        'title' => NULL,
+        'action' => 'flag',
+        'flag' => NULL,
+        'flaggable' => NULL,
+      ],
+    ],
+    'eic_flag_count_text' => [
+      'variables' => [
+        'title' => NULL,
+        'flag_count' => NULL,
+        'flag_id' => NULL,
+      ],
+    ],
+  ];
 }
