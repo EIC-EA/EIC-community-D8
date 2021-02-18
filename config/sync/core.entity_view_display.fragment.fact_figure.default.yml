@@ -1,0 +1,34 @@
+uuid: a72a5624-6d23-4c7d-a88f-25b8b72093c9
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.fragment.fact_figure.field_body
+    - field.field.fragment.fact_figure.field_fact_figure_type
+    - fragments.fragment_type.fact_figure
+  module:
+    - options
+_core:
+  default_config_hash: 5zmAVsI9RvWzDVnpaRFWB0-HmwjGMyrw3I6I69eTIbE
+id: fragment.fact_figure.default
+targetEntityType: fragment
+bundle: fact_figure
+mode: default
+content:
+  field_body:
+    weight: 1
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    type: basic_string
+    region: content
+  field_fact_figure_type:
+    weight: 0
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    type: list_default
+    region: content
+hidden:
+  title: true
+  user_id: true

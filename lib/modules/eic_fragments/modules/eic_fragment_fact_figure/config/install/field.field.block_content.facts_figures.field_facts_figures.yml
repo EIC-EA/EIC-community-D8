@@ -1,0 +1,27 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.facts_figures
+    - field.storage.block_content.field_facts_figures
+    - fragments.fragment_type.fact_figure
+id: block_content.facts_figures.field_facts_figures
+field_name: field_facts_figures
+entity_type: block_content
+bundle: facts_figures
+label: 'Facts & Figures'
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:fragment'
+  handler_settings:
+    target_bundles:
+      fact_figure: fact_figure
+    sort:
+      field: _none
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

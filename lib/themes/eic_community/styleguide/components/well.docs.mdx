@@ -1,0 +1,27 @@
+# Well
+
+Simple container element that will display the defined `footer` block contents at the bottom of the component within flexbox based layouts.
+
+## Features
+
+- Optional footer block that will be positioned at the bottom relative with the other `Well` components within grid based layouts.
+
+## Example
+
+```
+  {% include "@theme/patterns/components/well.html.twig" %}
+```
+
+## Twig parameters:
+
+| Key           | Type   | Description                                         | Mandatory |
+| ------------- | ------ | --------------------------------------------------- | --------- | --- |
+| extra_classes | string | Optional classnames for the current well component. | no        |     |
+| content       | string | Alternative method to display the content.          | no        |     |
+
+## Block parameters:
+
+| Key     | Type   | Description                                                              | Mandatory |
+| ------- | ------ | ------------------------------------------------------------------------ | --------- | --- |
+| content | string | The actual content that will be displayed in the current well component. | no        |     |
+| footer  | string | Displays additional content after the main content.                      | no        |     |

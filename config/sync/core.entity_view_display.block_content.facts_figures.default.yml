@@ -1,0 +1,22 @@
+uuid: 12973eba-5a49-4e0a-b335-02749deb7f8b
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.facts_figures
+    - field.field.block_content.facts_figures.field_facts_figures
+id: block_content.facts_figures.default
+targetEntityType: block_content
+bundle: facts_figures
+mode: default
+content:
+  field_facts_figures:
+    weight: 0
+    label: hidden
+    settings:
+      view_mode: default
+      link: false
+    third_party_settings: {  }
+    type: entity_reference_entity_view
+    region: content
+hidden: {  }
