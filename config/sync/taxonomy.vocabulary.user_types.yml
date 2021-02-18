@@ -1,0 +1,8 @@
+uuid: 01a24460-d4ea-40c2-88b1-8cb0be8b3c53
+langcode: en
+status: true
+dependencies: {  }
+name: 'User types'
+vid: user_types
+description: ''
+weight: 0

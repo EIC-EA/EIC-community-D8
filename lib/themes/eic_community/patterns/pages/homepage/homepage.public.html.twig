@@ -39,6 +39,10 @@
   }) only %}
 
   {% embed "@theme/patterns/compositions/layout-block.html.twig" %}
+    {% block content %}
+      {% include "@theme/patterns/compositions/bulletin-block.html.twig" with bulletin_block|default({}) %}
+    {% endblock %}
+
     {% block aside %}
       {% include "@theme/patterns/compositions/social-share.html.twig" with social_share|default({}) %}
 

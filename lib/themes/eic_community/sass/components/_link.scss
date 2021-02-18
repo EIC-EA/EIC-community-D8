@@ -25,6 +25,10 @@
     }
   }
 
+  body &--button-call {
+    @extend .ecl-button--call;
+  }
+
   body &--button-ghost {
     @extend .ecl-button--ghost;
   }
