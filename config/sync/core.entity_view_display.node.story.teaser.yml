@@ -31,12 +31,18 @@ content:
     settings: {  }
     third_party_settings: {  }
     region: content
+  flag_recommend:
+    weight: 10
+    settings: {  }
+    third_party_settings: {  }
+    region: content
   links:
     weight: 100
     settings: {  }
     third_party_settings: {  }
     region: content
 hidden:
+  extra_field_oe_theme_helper_short_title_with_fallback: true
   field_body: true
   field_document_media: true
   field_header_visual: true
@@ -49,3 +55,4 @@ hidden:
   field_video: true
   field_vocab_geo: true
   field_vocab_topics: true
+  number_of_recommendations: true

@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   module:
+    - eic_flags
     - node
 id: recommend
 label: Recommend
@@ -20,7 +21,7 @@ unflag_long: ''
 unflag_message: ''
 unflag_denied_text: ''
 flag_type: 'entity:node'
-link_type: ajax_link
+link_type: eic_count_link
 flagTypeConfig:
   show_in_links:
     full: full

@@ -61,4 +61,6 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
-hidden: {  }
+hidden:
+  extra_field_oe_theme_helper_short_title_with_fallback: true
+  number_of_recommendations: true
