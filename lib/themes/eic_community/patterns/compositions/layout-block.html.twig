@@ -1,0 +1,14 @@
+<div class="ecl-section-wrapper {{ extra_classes }}">
+  <div class="ecl-container">
+      <div class="ecl-row">
+        <div class="ecl-col-12 ecl-col-lg-8">
+          {% block content %}{% endblock %}
+        </div>
+        {% if block("aside") is not empty %}
+          <div class="ecl-col-12 ecl-col-lg-4">
+            {% block aside %}{% endblock %}
+          </div>
+        {% endif %}
+    </div>
+  </div>
+</div>

@@ -1,0 +1,22 @@
+# Bulletin Block
+
+Displays an overview with shaded container elements with in a grid or list.
+
+## Example:
+
+```
+{% include "@theme/patterns/compositions/bulletin-block.html.twig" %}
+```
+
+## Parameters
+
+| Key                   | Type     | Description                                                                                                                                                               | Mandatory |     |
+| --------------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- | --- |
+| extra_classes         | string   | Inserts additional classnames within the root composition.                                                                                                                | no        |     |
+| title                 | string   | Displays the title before the item overview.                                                                                                                              | no        |     |
+| description           | string   | Displays the description before the item overview.                                                                                                                        | no        |     |
+| items                 | object[] | The items that will be displayed.                                                                                                                                         | no        |     |
+| items[].title         | string   | The optional title for the current item.                                                                                                                                  | no        |     |
+| items[].title_element | string   | Defines the title element for the current item.                                                                                                                           | no        |     |
+| items[].description   | string   | Displays the description of the current item after the title.                                                                                                             | no        |     |
+| items[].actions       | object[] | Displays one or multiple links for the current item. Follow the paramaters from the [ECL Twig Link](https://www.npmjs.com/package/@ecl-twig/ec-component-link) component. | no        |     |
