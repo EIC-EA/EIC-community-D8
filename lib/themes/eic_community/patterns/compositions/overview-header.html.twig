@@ -1,6 +1,11 @@
 {% set title_element = title_element|default('h1') %}
 
 <div class="ecl-overview-header{{ image is not empty ? ' ecl-overview-header--has-image' }} {{ extra_classes }}">
+  {% if image is not empty %}
+    <figure class="ecl-overview-header__image-wrapper">
+      <img class="ecl-overview-header__image" src="{{ image.src }}" alt="{{ image.alt }}" />
+    </figure>
+  {% endif %}
   <div class="ecl-container">
     <div class="ecl-overview-header__content">
       <div class="ecl-overview-header__main">
@@ -9,21 +14,20 @@
         </{{ title_element }}>
       </div>
       {% if actions is not empty%}
-      <div class="ecl-overview-header__aside">
-        {% for action in actions %}
-          {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with {
-            link: action|without('icon'),
-            icon: action.icon,
-            extra_classes: "ecl-link--button ecl-link--button-primary",
-          } only %}
-        {% endfor %}
-      </div>
+        <div class="ecl-overview-header__aside">
+          <div class="ecl-overview-header__actions">
+            {% for action in actions %}
+              <div class="ecl-overview-header__action">
+                {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with {
+                  link: action|without('icon'),
+                  icon: action.icon,
+                  extra_classes: action.extra_classes|default("ecl-link ecl-link--cta"),
+                } only %}
+              </div>
+            {% endfor %}
+          </div>
+        </div>
       {% endif %}
     </div>
   </div>
-  {% if image is not empty %}
-    <figure class="ecl-overview-header__image-wrapper">
-      <img class="ecl-overview-header__image" src="{{ image.src }}" alt="{{ image.alt }}" />
-    </figure>
-  {% endif %}
 </div>

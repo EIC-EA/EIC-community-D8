@@ -100,7 +100,7 @@
     #{$node}--as-card#{$node}--member & {
       position: relative;
       max-width: map-get($ecl-media, 'm');
-      margin: ecl-box-model('padding') auto ecl-box-model('padding');
+      margin: 0 auto ecl-box-model('padding');
     }
   }
 
@@ -166,6 +166,10 @@
     align-items: center;
     flex-shrink: 0;
     flex-wrap: wrap;
+
+    #{$node}--as-card#{$node}--group & {
+      align-items: flex-start;
+    }
   }
 
   &__meta-header {
@@ -351,9 +355,14 @@
     font-style: inherit;
     line-height: ecl-typography('line-height');
 
-    #{$node}--organisation & {
+    #{$node}--organisation &,
+    #{$node}--member & {
       margin: 0;
       @include ecl-responsive-font('meta');
+    }
+
+    #{$node}--story & {
+      color: currentColor;
     }
 
     #{$node}--as-card#{$node}--member & {
@@ -452,6 +461,18 @@
     margin: 0;
   }
 
+  #{$node}--story &__author {
+    margin-right: auto;
+
+    @include ecl-media-breakpoint-down('sm') {
+      width: 100%;
+    }
+  }
+
+  #{$node}--as-card#{$node}--story &__author {
+    width: 100%;
+  }
+
   &__meta-fields {
     display: flex;
     align-items: flex-start;
@@ -499,8 +520,17 @@
       @include ecl-responsive-font('label');
     }
 
+    #{$node}--story  & {
+      text-transform: uppercase;
+    }
+
     #{$node}--event #{$node}__meta-header & {
+      margin-top: 0;
       margin-left: ecl-box-model('margin', 'controls');
+    }
+
+    #{$node}--event #{$node}__meta-footer & {
+      margin: 0;
     }
 
     #{$node}--as-card #{$node}__main-wrapper > #{$node}__meta-footer & {
@@ -531,12 +561,29 @@
     #{$node}--as-card & {
       flex-direction: column;
     }
+
+    #{$node}--member#{$node}--as-card & {
+      margin: 0;
+      flex-direction: row;
+      justify-content: center;
+    }
   }
 
   &__action {
     flex-shrink: 0;
     margin-right: ecl-box-model('margin', 'controls');
     margin-bottom: ecl-box-model('margin', 'controls');
+
+    #{$node}--member#{$node}--as-card & {
+      margin: #{ecl-box-model('margin', 'controls') / 2} #{ecl-box-model('margin', 'controls') / 4};
+    }
+  }
+
+  // Enables custom colors for social media branding.
+  @each $name, $color in $ecl-social-media-list {
+    #{$node}__action-icon-#{$name} {
+      color: $color;
+    }
   }
 
   &__tags {
@@ -620,19 +667,6 @@
 
   &__stat-value {
     @include ecl-responsive-font('meta');
-
-    &::before,
-    &::after {
-      display: inline;
-    }
-
-    &::before {
-      content: "( ";
-    }
-
-    &::after {
-      content: " )";
-    }
   }
 
   &__stat-label {

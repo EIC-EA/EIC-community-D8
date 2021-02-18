@@ -59,7 +59,7 @@
     width: 100%;
 
     @include ecl-media-breakpoint-up('lg') {
-      width: auto;
+      width: 21%;
       min-width: map-get($ecl-width, 'form-m');
       margin: 0 map-get($ecl-spacing, '3xl') 0 0;
     }

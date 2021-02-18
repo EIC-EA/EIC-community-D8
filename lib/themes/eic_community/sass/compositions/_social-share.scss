@@ -25,8 +25,13 @@
   }
 
   &__item-wrapper {
-    color: map-get($ecl-colors, 'white');
     display: flex;
+
+    &,
+    &:hover,
+    &:focus {
+      color: map-get($ecl-colors, 'white');
+    }
   }
 
   &__item-label {
@@ -49,7 +54,7 @@
 
     @each $name, $color in $ecl-social-media-list {
       #{$node}__item--#{$name} & {
-        background-color: #{$color};
+        background-color: $color;
       }
     }
   }
