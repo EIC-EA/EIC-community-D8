@@ -1,0 +1,44 @@
+{% set title_element = title_element|default('h2') %}
+
+<div class="ecl-bulletin-block {{ extra_classes }}">
+  <{{ title_element }} class="ecl-bulletin-block__title">{{ title }}</{{ title_element }}>
+  {% if description %}
+    <p class="ecl-bulletin-block__description">{{ description }}</p>
+  {% endif %}
+
+  {% if items is not empty %}
+    <div class="ecl-bulletin-block__items-wrapper">
+
+      <div class="ecl-bulletin-block__items">
+        {% for item in items %}
+          {% set item_title_element = item.title_element|default('h3') %}
+
+          <div class="ecl-bulletin-block__item">
+            {% embed "@theme/patterns/components/well.html.twig" with {
+              extra_classes: 'ecl-well--is-grey',
+              item: item,
+              item_title_element: item_title_element,
+            } only %}
+              {% block content %}
+                {% if item.title %}
+                  <{{ item_title_element }} class="ecl-bulletin-block__item-title" >{{ item.title }}</{{ item_title_element }}>
+                {% endif %}
+                {% if item.description %}
+                  <p class="ecl-bulletin-block__item-description">{{ item.description }}</p>
+                {% endif %}
+              {% endblock %}
+
+              {% block footer %}
+                {% if item.actions is not empty %}
+                    {% include "@theme/patterns/components/inline-actions.html.twig" with {
+                      items: item.actions,
+                    } only %}
+                {% endif %}
+              {% endblock %}
+            {% endembed %}
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  {% endif %}
+</div>

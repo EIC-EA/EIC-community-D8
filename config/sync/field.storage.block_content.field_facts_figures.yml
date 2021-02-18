@@ -1,0 +1,20 @@
+uuid: 8a6e9313-8a18-424a-809f-5d19066f7645
+langcode: en
+status: true
+dependencies:
+  module:
+    - block_content
+    - fragments
+id: block_content.field_facts_figures
+field_name: field_facts_figures
+entity_type: block_content
+type: entity_reference
+settings:
+  target_type: fragment
+module: core
+locked: false
+cardinality: -1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

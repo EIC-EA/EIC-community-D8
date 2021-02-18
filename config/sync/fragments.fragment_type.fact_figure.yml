@@ -1,0 +1,9 @@
+uuid: 207c6391-9327-49b1-8bae-1d3950d327fb
+langcode: en
+status: true
+dependencies: {  }
+_core:
+  default_config_hash: YvVX8qzgOLwIK5rZVW-ONYQoLhTJMBSpceAjfSV7PTE
+id: fact_figure
+label: 'Fact & Figure'
+description: 'A fact & figure is a fragment type that will be used as social proof for potential members, to instantly show the value of the community.'
