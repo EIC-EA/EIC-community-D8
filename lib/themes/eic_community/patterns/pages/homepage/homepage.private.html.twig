@@ -16,4 +16,8 @@
   {% include "@theme/patterns/compositions/featured-content-collection.html.twig" with featured_events|default({})|merge({
     extra_classes: "ecl-featured-content-collection--is-compact ecl-section-wrapper ecl-section-wrapper--is-blue"
   }) only %}
+
+  {% include "@theme/patterns/compositions/featured-content-collection.html.twig" with featured_projects|default({})|merge({
+    extra_classes: "ecl-featured-content-collection--is-compact ecl-section-wrapper"
+  }) only %}
 {% endblock %}
