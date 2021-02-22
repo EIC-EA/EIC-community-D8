@@ -1,52 +1,54 @@
 <div class="ecl-media-wrapper {{ extra_classes }}">
-  <figure class="ecl-media-container">
-    {% if embedded_media is not empty %}
-      <div class="ecl-media-container__media ecl-media-container__media--ratio-{{ _ratio }}">
-        {{ embedded_media }}
-      </div>
-    {% elseif sources is not empty and sources is iterable %}
-      <div class="ecl-media-container__media-wrapper">
-        <video
-          class="ecl-media-container__media"
-          controls
-          poster="{{ image }}"
-        >
-    {% for source in sources %}
-      <source type="{{ source.type }}" src="{{ source.src }}" />
-    {% endfor %}
-      {% if tracks is not empty and tracks is iterable %}
-      {% for track in tracks %}
-        <track
-          kind="{{ track.kind }}"
-          label="{{ track.label }}"
-          src="{{ track.src }}"
-          srclang="{{ track.src_lang }}"
-        />
+  <div class="ecl-container">
+    <figure class="ecl-media-container">
+      {% if embedded_media is not empty %}
+        <div class="ecl-media-container__media ecl-media-container__media--ratio-{{ _ratio }}">
+          {{ embedded_media }}
+        </div>
+      {% elseif sources is not empty and sources is iterable %}
+        <div class="ecl-media-container__media-wrapper">
+          <video
+            class="ecl-media-container__media"
+            controls
+            poster="{{ image }}"
+          >
+      {% for source in sources %}
+        <source type="{{ source.type }}" src="{{ source.src }}" />
       {% endfor %}
-      {% endif %}
-        </video>
-        {% if icon_file_path is not empty %}
-          {% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with {
-            icon: {
-              path: icon_file_path,
-              name: 'play',
-              type: 'custom',
-            },
-            extra_classes: 'ecl-media-container__media-wrapper-icon'
-          } %}
+        {% if tracks is not empty and tracks is iterable %}
+        {% for track in tracks %}
+          <track
+            kind="{{ track.kind }}"
+            label="{{ track.label }}"
+            src="{{ track.src }}"
+            srclang="{{ track.src_lang }}"
+          />
+        {% endfor %}
         {% endif %}
-      </div>
-    {% else %}
-      <img
-        alt="{{ alt }}"
-        class="ecl-media-container__media"
-        src="{{ image }}"
-      />
-    {% endif %}
-    {% if _description is not empty %}
-      <figcaption class="ecl-media-container__caption">
-        {{- _description -}}
-      </figcaption>
-    {% endif %}
-  </figure>
+          </video>
+          {% if icon_file_path is not empty %}
+            {% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with {
+              icon: {
+                path: icon_file_path,
+                name: 'play',
+                type: 'custom',
+              },
+              extra_classes: 'ecl-media-container__media-wrapper-icon'
+            } %}
+          {% endif %}
+        </div>
+      {% else %}
+        <img
+          alt="{{ alt }}"
+          class="ecl-media-container__media"
+          src="{{ image }}"
+        />
+      {% endif %}
+      {% if description is not empty %}
+        <figcaption class="ecl-media-container__caption">
+          {{ description }}
+        </figcaption>
+      {% endif %}
+    </figure>
+  </div>
 </div>
