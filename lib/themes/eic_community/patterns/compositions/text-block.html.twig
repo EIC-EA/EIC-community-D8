@@ -26,11 +26,15 @@
       </section>
       {% if media is not empty %}
         <section class="ecl-text-block__media">
-          {% include '@ecl-twig/ec-component-media-container/ecl-media-container.html.twig' with {
+          {% include "@theme/patterns/compositions/media-wrapper.html.twig" with {
             description: false,
             sources: media.sources,
+            tracks: media.tracks,
             image: media.image,
-            alt: media.alt
+            alt: media.alt,
+            icon_file_path: icon_file_path,
+          } only %}
+          {% include '@ecl-twig/ec-component-media-container/ecl-media-container.html.twig' with {
           } only %}
         </section>
       {% endif %}

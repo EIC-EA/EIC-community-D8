@@ -1,7 +1,8 @@
 .ecl-media-container {
-  background-color: map-get($ecl-colors, 'grey-10');
+  background-color: transparent;
 
   &__caption {
+    background-color: map-get($ecl-colors, 'grey-10');
     color: ecl-typography('color');
     @include ecl-responsive-font('meta');
   }

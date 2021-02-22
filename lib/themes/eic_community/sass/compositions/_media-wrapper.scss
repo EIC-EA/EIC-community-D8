@@ -1,40 +1,54 @@
 .ecl-media-wrapper {
   $node: &;
 
-   padding: map-get($ecl-spacing, 'xl') 0;
+  &:not(.ecl-section-wrapper) {
+    margin-top: ecl-box-model('margin');
+    margin-bottom: ecl-box-model('margin');
 
-   @include ecl-media-breakpoint-up('md') {
-     padding: map-get($ecl-spacing, '3xl') 0;
-   }
+    &:first-child {
+      margin-top: 0;
+    }
 
-   & .ecl-media-container__media-wrapper {
-     position: relative;
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
 
-     &-icon {
-       display: none;
-       pointer-events: none;
-       width: map-get($ecl-media, 'xs');
-       height: map-get($ecl-media, 'xs');
-       position: absolute;
-       top: 50%;
-       left: 50%;
-       transform: translate(-50%, -50%);
-       content: " ";
-       color: map-get($ecl-colors, 'white');
-       background-size: contain;
-       background-position: center center;
-       background-image: url('../images/sprite/custom/svg/custom/play.svg');
-       background-repeat: none;
+  .ecl-container & .ecl-container {
+    padding: 0;
+    margin: 0;
+    max-width: none;
+    width: 100%;
+  }
 
-       @include ecl-media-breakpoint-up('md') {
-        width: map-get($ecl-media, 's');
-        height: map-get($ecl-media, 's');
-       }
-     }
-   }
+  & .ecl-media-container__media-wrapper {
+    position: relative;
 
-   &:hover,
-   &:focus-within {
+    &-icon {
+      display: none;
+      pointer-events: none;
+      width: map-get($ecl-media, 'xs');
+      height: map-get($ecl-media, 'xs');
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      content: " ";
+      color: map-get($ecl-colors, 'white');
+      background-size: contain;
+      background-position: center center;
+      background-image: url('../images/sprite/custom/svg/custom/play.svg');
+      background-repeat: none;
+
+      @include ecl-media-breakpoint-up('md') {
+      width: map-get($ecl-media, 's');
+      height: map-get($ecl-media, 's');
+      }
+    }
+  }
+
+   & .ecl-media-container__media-wrapper:hover,
+   & .ecl-media-container__media-wrapper:focus-within {
      & .ecl-media-container__media-wrapper-icon {
        opacity: 0.6;
      }
