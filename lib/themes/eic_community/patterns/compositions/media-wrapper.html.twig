@@ -33,7 +33,16 @@
                 name: 'play',
                 type: 'custom',
               },
-              extra_classes: 'ecl-media-container__media-wrapper-icon'
+              extra_classes: 'ecl-media-container__media-wrapper-icon ecl-media-container__media-wrapper-icon--play'
+            } %}
+
+            {% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with {
+              icon: {
+                path: icon_file_path,
+                name: 'pause',
+                type: 'custom',
+              },
+              extra_classes: 'ecl-media-container__media-wrapper-icon ecl-media-container__media-wrapper-icon--pause'
             } %}
           {% endif %}
         </div>

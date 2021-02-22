@@ -33,16 +33,11 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      content: " ";
       color: map-get($ecl-colors, 'white');
-      background-size: contain;
-      background-position: center center;
-      background-image: url('../images/sprite/custom/svg/custom/play.svg');
-      background-repeat: none;
 
       @include ecl-media-breakpoint-up('md') {
-      width: map-get($ecl-media, 's');
-      height: map-get($ecl-media, 's');
+        width: map-get($ecl-media, 's');
+        height: map-get($ecl-media, 's');
       }
     }
   }
@@ -54,11 +49,20 @@
      }
    }
 
-   &#{$node}--has-media .ecl-media-container__media-wrapper-icon {
+   &#{$node}--has-media .ecl-media-container__media-wrapper-icon--play {
      display: block;
    }
 
-   &#{$node}--has-media#{$node}--is-playing .ecl-media-container__media-wrapper-icon {
+   &#{$node}--has-media#{$node}--is-playing .ecl-media-container__media-wrapper-icon--play,
+   &#{$node}--has-media#{$node}--is-playing .ecl-media-container__media-wrapper-icon--pause {
      display: none;
+   }
+
+   &#{$node}--has-media#{$node}--is-paused .ecl-media-container__media-wrapper-icon--play {
+     display: none;
+   }
+
+   &#{$node}--has-media#{$node}--is-paused .ecl-media-container__media-wrapper-icon--pause {
+     display: block;
    }
 }
