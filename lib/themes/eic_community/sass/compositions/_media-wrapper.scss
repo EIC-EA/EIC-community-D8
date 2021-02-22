@@ -1,7 +1,50 @@
 .ecl-media-wrapper {
+  $node: &;
+
    padding: map-get($ecl-spacing, 'xl') 0;
 
    @include ecl-media-breakpoint-up('md') {
      padding: map-get($ecl-spacing, '3xl') 0;
+   }
+
+   & .ecl-media-container__media-wrapper {
+     position: relative;
+
+     &-icon {
+       display: none;
+       pointer-events: none;
+       width: map-get($ecl-media, 'xs');
+       height: map-get($ecl-media, 'xs');
+       position: absolute;
+       top: 50%;
+       left: 50%;
+       transform: translate(-50%, -50%);
+       content: " ";
+       color: map-get($ecl-colors, 'white');
+       background-size: contain;
+       background-position: center center;
+       background-image: url('../images/sprite/custom/svg/custom/play.svg');
+       background-repeat: none;
+
+       @include ecl-media-breakpoint-up('md') {
+        width: map-get($ecl-media, 's');
+        height: map-get($ecl-media, 's');
+       }
+     }
+   }
+
+   &:hover,
+   &:focus-within {
+     & .ecl-media-container__media-wrapper-icon {
+       opacity: 0.6;
+     }
+   }
+
+   &#{$node}--has-media .ecl-media-container__media-wrapper-icon {
+     display: block;
+   }
+
+   &#{$node}--has-media#{$node}--is-playing .ecl-media-container__media-wrapper-icon {
+     display: none;
    }
 }

@@ -1,12 +1,8 @@
 .ecl-media-container {
-  background-color: transparent;
+  background-color: map-get($ecl-colors, 'grey-10');
 
   &__caption {
     color: ecl-typography('color');
-    padding: 0;
-    margin-top: ecl-layout('gutter', 'description');
-    padding-top: ecl-layout('gutter', 'description');
-    border-top: solid 1px currentColor;
     @include ecl-responsive-font('meta');
   }
 }
