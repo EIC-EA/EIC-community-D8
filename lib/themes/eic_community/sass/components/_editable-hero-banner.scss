@@ -6,7 +6,7 @@
 
   &--is-blue {
     color: map-get($ecl-colors, 'white');
-    background-color: map-get($ecl-colors, 'blue-75');
+    background-color: map-get($ecl-colors, 'blue');
   }
 
   &--is-grey {
@@ -102,7 +102,9 @@
       }
 
       @media screen and (min-width: $ecl-container-max-width-xl) {
-        display: block;
+        #{$node}__image-wrapper ~ #{$node}__main-wrapper & {
+          display: block;
+        }
       }
     }
   }
@@ -115,44 +117,49 @@
     max-width: $ecl-container-max-width-xl;
     padding: map-get($ecl-spacing, '3xl') map-get($ecl-spacing, 'm');
     width: 100%;
-    background-color: rgba(map-get($ecl-colors, 'white'), 0.78);
+
+    #{$node}__image-wrapper ~ #{$node}__main-wrapper & {
+      background-color: rgba(map-get($ecl-colors, 'white'), 0.78);
+    }
 
     #{$node}--is-wide & {
       text-align: center;
       justify-content: center;
     }
 
-    #{$node}--is-grey & {
+    #{$node}--is-grey #{$node}__image-wrapper ~ #{$node}__main-wrapper & {
       background-color: rgba(map-get($ecl-colors, 'grey-5'), 0.78);
     }
 
-    #{$node}--is-blue & {
+    #{$node}--is-blue #{$node}__image-wrapper ~ #{$node}__main-wrapper & {
       background-color: rgba(map-get($ecl-colors, 'blue-75'), 0.78);
     }
 
     @include ecl-media-breakpoint-up('sm') {
-      background-image: linear-gradient(90deg, rgba(map-get($ecl-colors, 'white'), 0.98) 50%, rgba(map-get($ecl-colors, 'white'), 0) 100%);
-      background-color: transparent;
+      #{$node}__image-wrapper~#{$node}__main-wrapper & {
+        background-color: transparent;
+        background-image: linear-gradient(90deg, rgba(map-get($ecl-colors, 'white'), 0.98) 50%, rgba(map-get($ecl-colors, 'white'), 0) 100%);
+      }
 
-      #{$node}--is-wide & {
+      #{$node}--is-wide #{$node}__image-wrapper ~ #{$node}__main-wrapper & {
         background-image: linear-gradient(90deg, rgba(map-get($ecl-colors, 'white'), 0.98) 0%, rgba(map-get($ecl-colors, 'white'), 0) 100%);
       }
 
-      #{$node}--is-blue & {
+      #{$node}--is-blue #{$node}__image-wrapper ~ #{$node}__main-wrapper & {
         background-color: transparent;
         background-image: linear-gradient(90deg, rgba(map-get($ecl-colors, 'blue-75'), 0.98) 50%, rgba(map-get($ecl-colors, 'blue-75'), 0) 100%);
       }
 
-      #{$node}--is-wide#{$node}--is-blue & {
+      #{$node}--is-wide#{$node}--is-blue #{$node}__image-wrapper ~ #{$node}__main-wrapper & {
         background-image: linear-gradient(90deg, rgba(map-get($ecl-colors, 'blue-75'), 0.98) 0%, rgba(map-get($ecl-colors, 'blue-75'), 0) 100%);
       }
 
-      #{$node}--is-grey & {
+      #{$node}--is-grey #{$node}__image-wrapper ~ #{$node}__main-wrapper & {
         background-color: transparent;
         background-image: linear-gradient(90deg, rgba(map-get($ecl-colors, 'grey-5'), 0.98) 50%, rgba(map-get($ecl-colors, 'grey-5'), 0) 100%);
       }
 
-      #{$node}--is-wide#{$node}--is-grey & {
+      #{$node}--is-wide#{$node}--is-grey #{$node}__image-wrapper ~ #{$node}__main-wrapper & {
         background-image: linear-gradient(90deg, rgba(map-get($ecl-colors, 'grey-5'), 0.98) 0%, rgba(map-get($ecl-colors, 'grey-5'), 0) 100%);
       }
     }
