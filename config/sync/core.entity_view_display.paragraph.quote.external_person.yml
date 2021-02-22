@@ -42,5 +42,9 @@ content:
     type: text_default
     region: content
 hidden:
+  field_body: true
+  field_tx_author: true
+  field_ur_author: true
   field_user_ref: true
+  field_view_mode: true
   paragraph_view_mode: true

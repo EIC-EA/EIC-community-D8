@@ -1,0 +1,18 @@
+entity_type_groups:
+  media:
+    eic_document:
+      open_graph: open_graph
+      twitter_cards: twitter_cards
+  node:
+    discussion:
+      open_graph: open_graph
+      twitter_cards: twitter_cards
+    news:
+      open_graph: open_graph
+      twitter_cards: twitter_cards
+    page:
+      open_graph: open_graph
+      twitter_cards: twitter_cards
+    story:
+      open_graph: open_graph
+      twitter_cards: twitter_cards

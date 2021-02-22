@@ -28,15 +28,21 @@ mode: teaser
 content:
   flag_bookmark_content:
     weight: 10
+    region: content
     settings: {  }
     third_party_settings: {  }
+  flag_recommend:
+    weight: 10
     region: content
+    settings: {  }
+    third_party_settings: {  }
   links:
     weight: 100
+    region: content
     settings: {  }
     third_party_settings: {  }
-    region: content
 hidden:
+  extra_field_oe_theme_helper_short_title_with_fallback: true
   field_body: true
   field_document_media: true
   field_header_visual: true

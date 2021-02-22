@@ -41,12 +41,23 @@ content:
     label: hidden
     settings: {  }
     third_party_settings: {  }
+  flag_bookmark_content:
+    weight: 10
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  flag_recommend:
+    weight: 10
+    region: content
+    settings: {  }
+    third_party_settings: {  }
   links:
     weight: 0
     region: content
     settings: {  }
     third_party_settings: {  }
 hidden:
+  extra_field_oe_theme_helper_short_title_with_fallback: true
   field_body: true
   field_disclaimer: true
   field_document_media: true
