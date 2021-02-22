@@ -15,6 +15,7 @@
 {% block content %}
 
   {% include "@theme/patterns/compositions/teaser-overview.html.twig" with {
+    extra_classes: 'ecl-teaser-overview--is-compact ecl-teaser-overview--has-columns',
     items: items,
     icon_file_path: common.icon_file_path,
   } only %}

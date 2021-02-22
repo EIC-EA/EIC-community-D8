@@ -1,0 +1,20 @@
+<?php
+
+/**
+ * @file
+ * Primary module hooks for EIC Statistics module.
+ *
+ * @DCG
+ * This file is no longer required in Drupal 8.
+ * @see https://www.drupal.org/node/2217931
+ */
+
+use Drupal\eic_statistics\Hooks\CronOperations;
+
+/**
+ * Implements hook_cron().
+ */
+function eic_statistics_cron() {
+  \Drupal::classResolver(CronOperations::class)
+    ->cron();
+}

@@ -1,0 +1,31 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.fragment.fact_figure.field_body
+    - field.field.fragment.fact_figure.field_fact_figure_type
+    - fragments.fragment_type.fact_figure
+  module:
+    - options
+id: fragment.fact_figure.default
+targetEntityType: fragment
+bundle: fact_figure
+mode: default
+content:
+  field_body:
+    weight: 1
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    type: basic_string
+    region: content
+  field_fact_figure_type:
+    weight: 0
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    type: list_default
+    region: content
+hidden:
+  title: true
+  user_id: true
