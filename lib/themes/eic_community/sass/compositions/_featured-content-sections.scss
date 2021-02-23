@@ -1,0 +1,64 @@
+.ecl-featured-content-sections {
+  &__wrapper {
+    display: flex;
+    margin-left: #{0 - ecl-layout('gutter')};
+    align-items: flex-start;
+
+    @include ecl-media-breakpoint-up('md') {
+      margin-left: #{0 - ecl-layout('gutter--md')};
+    }
+  }
+
+  &__main,
+  &__aside {
+    box-sizing: border-box;
+    padding-left: ecl-layout('gutter');
+
+    @include ecl-media-breakpoint-up('md') {
+      padding-left: ecl-layout('gutter--md');
+    }
+  }
+
+  &__main {
+    width: calc(100% / 12 * 8);
+  }
+
+  &__aside {
+    position: relative;
+    flex-shrink: 0;
+    width: calc(100% / 12 * 4);
+  }
+
+  &__item-title {
+    @extend .ecl-u-type-heading-3;
+  }
+
+  &__item-wrapper {
+    padding: ecl-box-model('padding');
+    background-color: map-get($ecl-colors, 'blue-5');
+  }
+
+  &__link {
+    display: block;
+    padding: map-get($ecl-spacing, 'm') 0;
+    text-decoration: none;
+    font-weight: $ecl-font-weight-bold;
+  }
+
+  &__link-item {
+    border-bottom: ecl-border();
+  }
+
+  &__items,
+  &__item {
+    &:first-child {
+      margin-top: 0;
+    }
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    margin: ecl-layout('gutter') 0;
+  }
+}

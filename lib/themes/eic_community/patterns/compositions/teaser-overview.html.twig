@@ -1,6 +1,10 @@
-{% set id = id|default('base') %}
+{% set title_element = title_element|default('h2') %}
 
 <div class="ecl-teaser-overview {{ extra_classes }}">
+  {% if title is not empty %}
+    <{{ title_element }} class="ecl-teaser-overview__title">{{ title }}</{{ title_element }}>
+  {% endif %}
+
   {% if items is not empty %}
     <div class="ecl-teaser-overview__items">
       {% for item in items %}
