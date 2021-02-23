@@ -16,6 +16,8 @@ permissions:
   - 'unflag bookmark_content'
   - 'unflag bookmark_media'
   - 'unflag recommend'
+  - 'use text format basic_text'
+  - 'use text format filtered_html'
   - 'view bookmark_content'
   - 'view bookmark_media'
   - 'view fact_figure fragments'
