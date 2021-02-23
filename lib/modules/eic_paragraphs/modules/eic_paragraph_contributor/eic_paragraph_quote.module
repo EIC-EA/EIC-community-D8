@@ -1,0 +1,28 @@
+<?php
+
+/**
+ * @file
+ * Primary module hooks for EIC Contributor paragraph module.
+ *
+ * @DCG
+ * This file is no longer required in Drupal 8.
+ * @see https://www.drupal.org/node/2217931
+ */
+
+use Drupal\eic_paragraph_contributor\Hooks\FieldWidgetFormAlter;
+
+/**
+ * Implements hook_field_widget_WIDGET_TYPE_form_alter().
+ */
+function eic_paragraph_contributor_field_widget_paragraphs_form_alter(&$element, &$form_state, $context) {
+  \Drupal::classResolver(FieldWidgetFormAlter::class)
+    ->paragraphsFormAlter($element, $form_state, $context);
+}
+
+/**
+ * Implements hook_field_widget_WIDGET_TYPE_form_alter().
+ */
+function eic_paragraph_contributor_field_widget_entity_reference_paragraphs_form_alter(&$element, &$form_state, $context) {
+  \Drupal::classResolver(FieldWidgetFormAlter::class)
+    ->paragraphsFormAlter($element, $form_state, $context);
+}
