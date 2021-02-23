@@ -133,3 +133,39 @@ These Drupal templates should include the actual Twig template that is relative 
 
 Storybook example data can be found within the `./data` directory and can be included while defining a Storybook entry.
 The data structure matches with the structure of the used ECL twig components. Documentation about the component options can be found within [ECL Twig Styleguide](https://ecl-twig-php.netlify.app/ec).
+
+#### 3.3 | Adding extra attributes to the custom compositions.
+
+The initial ECL Twig components can include additional HTML attributes and this function has been defined for each template within the library. This custom theme also supports the usage of adding extra attributes to the required custom templates and can easily be added by using the `attr` Twig macro defined within `./patterns/core/snippets.twig`. The macro accepts the original extra attribute structure, where each attribute is defined within an Object that exists within an Array to include multiple attributes:
+
+```js
+...
+extra_attributes: [
+  {
+    name: 'aria-hidden',
+    value: 'true',
+    ...
+  }
+]
+...
+```
+
+You can also define the attributes within a single Object that will output the same result as the previous example:
+
+```js
+...
+extra_attributes: {
+  'aria-hidden': true
+}
+...
+```
+
+Keep in mind that boolean values will be converted to strings within this structures. You can also output the attribute name only by defining it's value as null.
+
+```js
+...
+extra_attributes: {
+  'aria`': null
+}
+...
+```
