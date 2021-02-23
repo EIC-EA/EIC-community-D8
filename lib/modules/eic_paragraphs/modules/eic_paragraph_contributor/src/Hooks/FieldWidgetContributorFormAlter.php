@@ -7,7 +7,7 @@ namespace Drupal\eic_paragraph_contributor\Hooks;
  *
  * Implementations for hook_field_widget_WIDGET_TYPE_form_alter().
  */
-class FieldWidgetFormAlter {
+class FieldWidgetContributorFormAlter {
 
   /**
    * Implements hook_field_widget_WIDGET_TYPE_form_alter().
