@@ -1,0 +1,28 @@
+# Organisation information Block
+
+Displays the organisation meta information.
+
+| Key               | Type     | Description                                                                                                                                       | Mandatory |
+| ----------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------- | --------- |
+| title             | string   | The name of the organisation.                                                                                                                     | no        |
+| follow            | Object   | Optional folow button that will be displayed after the organisation name.                                                                         | no        |
+| organisation_size | string   | Displays the organisation tags.                                                                                                                   | no        |
+| turnover          | string   | Optional annual turnover that will be displayed after the organisation size.                                                                      | no        |
+| description       | string   | Optional description as HTML output.                                                                                                              | no        |
+| tags              | object[] | Displays the organisation tags.                                                                                                                   | no        |
+| tags[].label      | string   | Displays the organisation tag label.                                                                                                              | no        |
+| tags[].path       | string   | Optional link for the defined tag.                                                                                                                | no        |
+| stats             | object[] | Displays the organisation statistics.                                                                                                             | no        |
+| stats[].icon      | object   | The icon for the defined statistic, should follow the [ECL Icon component](https://www.npmjs.com/package/@ecl-twig/ec-component-icon) parameters. | no        |
+| stats[].value     | string   | The machine value for the given statistic, like timestamp or number.                                                                              | no        |
+| stats[].label     | string   | The semantic value that will be displayed for the defined statistic.                                                                              | no        |
+| image             | object   | Displays the organisation image.                                                                                                                  | no        |
+| image.src         | string   | Defines the image src attribute.                                                                                                                  | no        |
+| image.alt         | string   | Defines the image alt attribute.                                                                                                                  | no        |
+| actions           | object[] | Optional actions that wil be displayed at the bottom of the composition.                                                                          | no        |
+| sidebar_title     | string   | The title that will be displayed within the secondary column.                                                                                     | no        |
+| links             | object[] | Displays a vertical list with (external) links.                                                                                                   | no        |
+| social_share      | object   | Displays a social share composition within the sidebar, should follow the custom social share parameters                                          | no        |
+| meta              | object[] | Optional meta information displayed as collapsible definitions.                                                                                   | no        |
+| meta[].label      | string   | Displays the label for the current definition.                                                                                                    | no        |
+| meta[].path       | string   | Optional URL for the current definition.                                                                                                          | no        |

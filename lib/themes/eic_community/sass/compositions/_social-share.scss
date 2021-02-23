@@ -11,13 +11,23 @@
   &__items {
     display: flex;
     flex-wrap: wrap;
-    margin-bottom: #{0 - map-get($ecl-spacing, 'm')}
+    margin-bottom: #{0 - map-get($ecl-spacing, 'm')};
+    margin-right: #{0 - map-get($ecl-spacing, 'm')};
+
+    #{$node}--is-compact & {
+      margin-bottom: #{0 - map-get($ecl-spacing, 'xs')};
+      margin-right: #{0 - map-get($ecl-spacing, 'xs')};
+    }
   }
 
   &__item {
     margin: map-get($ecl-spacing, 'm');
     color: map-get($ecl-colors, white);
     margin: 0 map-get($ecl-spacing, 'm') map-get($ecl-spacing, 'm') 0;
+
+    #{$node}--is-compact & {
+      margin: 0 map-get($ecl-spacing, 'xs') map-get($ecl-spacing, 'xs') 0;
+    }
 
     &:last-child {
       margin: 0;
@@ -56,6 +66,11 @@
       #{$node}__item--#{$name} & {
         background-color: $color;
       }
+    }
+
+    #{$node}--is-compact & {
+      width: map-get($ecl-media, '3xs');
+      height: map-get($ecl-media, '3xs');
     }
   }
 }

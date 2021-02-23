@@ -1,0 +1,31 @@
+{% set title_element = title_element|default('h1') %}
+
+<section class="ecl-organisation-information-block {{ extra_classes }}">
+  <div class="ecl-container">
+    <div class="ecl-organisation-information-block__wrapper">
+      <div class="ecl-organisation-information-block__main">
+        {% if block('top') is not empty  %}
+          <div class="ecl-organisation-information-block__main-top">
+            {% block top %}{% endblock %}
+          </div>
+        {% endif %}
+
+        <div class="ecl-organisation-information-block__main-content">
+          {% block content %}{% endblock %}
+        </div>
+      </div>
+
+      {% if block('aside') is not empty %}
+        <div class="ecl-organisation-information-block__aside">
+          {% block aside %}{% endblock %}
+        </div>
+      {% endif %}
+
+      {% if image is not empty %}
+        <figure class="ecl-organisation-information-block__image-wrapper">
+          <img class="ecl-organisation-information-block__image" src="{{ image.src }}" alt="{{ image.alt }}" />
+        </figure>
+      {% endif %}
+    </div>
+  </div>
+</section>

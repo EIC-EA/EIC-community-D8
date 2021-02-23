@@ -1,0 +1,81 @@
+.ecl-organisation-information-block {
+  &__wrapper {
+    display: flex;
+    flex-direction: column;
+
+    @include ecl-media-breakpoint-up('md') {
+      flex-direction: row;
+    }
+  }
+
+  &__image-wrapper {
+    position: relative;
+    order: -1;
+    margin: 0 auto ecl-layout('gutter');
+    border: ecl-border();
+    border-radius: 50%;
+    width: map-get($ecl-media, 'xs');
+    height: map-get($ecl-media, 'xs');
+    overflow: hidden;
+    flex-shrink: 0;
+
+    &::before {
+      padding-top: 100%;
+      content: " ";
+      display: block;
+    }
+
+    @include ecl-media-breakpoint-up('md') {
+      margin: 0 ecl-layout('gutter') ecl-layout('gutter') 0;
+      width: map-get($ecl-media, 's');
+      height: map-get($ecl-media, 's');
+    }
+
+    @include ecl-media-breakpoint-up('lg') {
+      width: map-get($ecl-media, 'm');
+      height: map-get($ecl-media, 'm');
+    }
+  }
+
+  &__image {
+    position: absolute;
+    top: 10%;
+    left: 10%;
+    width: 80%;
+    height: 80%;
+    object-position: center;
+    object-fit: contain;
+  }
+
+  &__main {
+    flex-grow: 1;
+    margin-bottom: ecl-layout('gutter');
+
+    @include ecl-media-breakpoint-up('md') {
+      margin-bottom: 0;
+      margin-right: ecl-layout('gutter');
+    }
+  }
+
+  &__main-top {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-right: #{0 - ecl-box-model('margin', 'meta')};
+    margin-bottom: #{0 - ecl-box-model('margin', 'meta')};
+
+    > * {
+      margin: 0 ecl-box-model('margin', 'meta') ecl-box-model('margin', 'meta') 0;
+    }
+  }
+
+  &__aside {
+    background-color: map-get($ecl-colors, 'grey-5');
+    padding: ecl-box-model('padding');
+
+    @include ecl-media-breakpoint-up('md') {
+      width: calc(100% / #{$ecl-grid-columns} * 4);
+      flex-shrink: 0;
+    }
+  }
+}

@@ -1,0 +1,36 @@
+{% extends "@theme/patterns/layout/base.html.twig" %}
+
+{% block page_header %}
+  {% include "@theme/patterns/compositions/editorial-header.html.twig" with editorial_header|default({})|without('title', 'actions') only %}
+
+  {% embed "@theme/patterns/compositions/organisation-information-block.html.twig" with {
+    image: {
+      src: 'http://picsum.photos/128'
+    }
+  } %}
+    {% block top %}
+      <h1>{{ title }}</h1>
+      {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with {
+        link: follow.link|default({})|merge({
+          icon_position: 'before',
+        }),
+        icon: icon_file_path ? {
+          path: icon_file_path,
+          name: 'tag',
+          type: 'custom',
+          size: 's',
+        } : {}
+      } %}
+    {% endblock %}
+
+    {% block content %}
+      <p class="ecl-description">{{ description }}<p>
+    {% endblock %}
+
+    {% block aside %}
+      {% include "@theme/patterns/compositions/social-share.html.twig" with social_share|default({})|merge({
+        compact: true,
+      }) %}
+    {% endblock %}
+  {% endembed %}
+{% endblock %}
