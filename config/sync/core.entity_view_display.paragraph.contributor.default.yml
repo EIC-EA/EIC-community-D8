@@ -1,0 +1,51 @@
+uuid: f0f0259a-2df2-4d4a-b044-d8f6bb943d6b
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.contributor.field_media
+    - field.field.paragraph.contributor.field_name
+    - field.field.paragraph.contributor.field_user_ref
+    - field.field.paragraph.contributor.paragraph_view_mode
+    - paragraphs.paragraphs_type.contributor
+  module:
+    - paragraph_view_mode
+_core:
+  default_config_hash: zpEZx_Gi12q1MuOLF84kDA_jmss4BJwjElh0Lry5LaI
+id: paragraph.contributor.default
+targetEntityType: paragraph
+bundle: contributor
+mode: default
+content:
+  field_media:
+    type: entity_reference_label
+    weight: 4
+    region: content
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+  field_name:
+    type: string
+    weight: 3
+    region: content
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+  field_user_ref:
+    type: entity_reference_label
+    weight: 2
+    region: content
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+  paragraph_view_mode:
+    type: paragraph_view_mode
+    weight: 0
+    region: content
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+hidden: {  }
