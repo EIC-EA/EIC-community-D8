@@ -3,7 +3,7 @@
 namespace Drupal\eic_paragraph_contributor\Hooks;
 
 /**
- * Class FieldWidgetFormAlter.
+ * Class FieldWidgetContributorFormAlter.
  *
  * Implementations for hook_field_widget_WIDGET_TYPE_form_alter().
  */
@@ -37,31 +37,32 @@ class FieldWidgetContributorFormAlter {
     $delta = $element['#delta'];
     $selector = 'select[name="' . $paragraph_field_name . '[' . $delta . '][subform][paragraph_view_mode][0][value]"]';
 
-    $subform['field_user_ref']['#states'] = [
-      'visible' => [
-        $selector => ['value' => 'platform_member'],
-      ],
+    $external_person_fields = [
+      'field_name',
+      'field_media',
+      'field_person_email',
+      'field_organisation',
     ];
-    $subform['field_name']['#states'] = [
-      'visible' => [
-        $selector => ['value' => 'external_person'],
-      ],
+
+    $platform_user_fields = [
+      'field_user_ref',
     ];
-    $subform['field_media']['#states'] = [
-      'visible' => [
-        $selector => ['value' => 'external_person'],
-      ],
-    ];
-    $subform['field_person_email']['#states'] = [
-      'visible' => [
-        $selector => ['value' => 'external_person'],
-      ],
-    ];
-    $subform['field_organisation']['#states'] = [
-      'visible' => [
-        $selector => ['value' => 'external_person'],
-      ],
-    ];
+
+    foreach ($external_person_fields as $field) {
+      $subform[$field]['#states'] = [
+        'visible' => [
+          $selector => ['value' => 'external_person'],
+        ],
+      ];
+    }
+
+    foreach ($platform_user_fields as $field) {
+      $subform[$field]['#states'] = [
+        'visible' => [
+          $selector => ['value' => 'platform_member'],
+        ],
+      ];
+    }
   }
 
 }
