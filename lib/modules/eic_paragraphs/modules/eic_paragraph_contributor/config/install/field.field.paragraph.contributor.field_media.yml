@@ -5,11 +5,13 @@ dependencies:
     - field.storage.paragraph.field_media
     - media.type.image
     - paragraphs.paragraphs_type.contributor
+_core:
+  default_config_hash: SpG7_1boUJmZagIMqxIevaZho8Kf7Nwa5dXlNTe_Tjg
 id: paragraph.contributor.field_media
 field_name: field_media
 entity_type: paragraph
 bundle: contributor
-label: 'Author image'
+label: 'Contributor Image'
 description: ''
 required: false
 translatable: true

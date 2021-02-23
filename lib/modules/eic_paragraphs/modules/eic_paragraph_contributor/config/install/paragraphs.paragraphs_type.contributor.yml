@@ -7,6 +7,8 @@ third_party_settings:
   paragraph_view_mode:
     enabled: true
     label: 'Display variant'
+_core:
+  default_config_hash: ihFT6I17l_CAAhMMW0-5w2kdeHAflfBIanmnX36cv0A
 id: contributor
 label: Contributor
 icon_uuid: null

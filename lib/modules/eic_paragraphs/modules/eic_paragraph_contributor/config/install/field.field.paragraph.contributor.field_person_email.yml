@@ -2,19 +2,17 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.paragraph.field_name
+    - field.storage.paragraph.field_person_email
     - paragraphs.paragraphs_type.contributor
-_core:
-  default_config_hash: GdXUzp0VL2ASL5B6OthdJYIHbDSAl3rnQqCd3zzUFpk
-id: paragraph.contributor.field_name
-field_name: field_name
+id: paragraph.contributor.field_person_email
+field_name: field_person_email
 entity_type: paragraph
 bundle: contributor
-label: 'Contributor Name'
+label: 'Contributor Email'
 description: ''
 required: false
 translatable: false
 default_value: {  }
 default_value_callback: ''
 settings: {  }
-field_type: string
+field_type: email
