@@ -33,13 +33,6 @@ content:
     third_party_settings: {  }
     type: string
     region: content
-  field_contributor_description:
-    weight: 0
-    label: hidden
-    settings: {  }
-    third_party_settings: {  }
-    type: text_default
-    region: content
 hidden:
   field_user_ref: true
   paragraph_view_mode: true
