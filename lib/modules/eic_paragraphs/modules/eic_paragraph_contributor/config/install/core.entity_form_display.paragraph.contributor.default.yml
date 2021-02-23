@@ -32,14 +32,6 @@ content:
     third_party_settings: {  }
     type: string_textfield
     region: content
-  field_contributor_description:
-    weight: 1
-    settings:
-      rows: 5
-      placeholder: ''
-    third_party_settings: {  }
-    type: text_textarea
-    region: content
   field_user_ref:
     weight: 6
     settings:
