@@ -1,0 +1,38 @@
+uuid: 5c42dd56-a811-4de8-9e39-ae2419ddb723
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.paragraph.external_person
+    - field.field.paragraph.contributor.field_media
+    - field.field.paragraph.contributor.field_name
+    - field.field.paragraph.contributor.field_user_ref
+    - field.field.paragraph.contributor.paragraph_view_mode
+    - paragraphs.paragraphs_type.contributor
+_core:
+  default_config_hash: ulqfEw_Yyq8BPOjg0pdkWBxki_DZASCvOp3jcTFRsxk
+id: paragraph.contributor.external_person
+targetEntityType: paragraph
+bundle: contributor
+mode: external_person
+content:
+  field_media:
+    weight: 2
+    label: hidden
+    settings:
+      view_mode: default
+      link: false
+    third_party_settings: {  }
+    type: entity_reference_entity_view
+    region: content
+  field_name:
+    weight: 1
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+hidden:
+  field_user_ref: true
+  paragraph_view_mode: true
