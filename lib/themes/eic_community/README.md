@@ -155,17 +155,17 @@ You can also define the attributes within a single Object that will output the s
 ```js
 ...
 extra_attributes: {
-  'aria-hidden': true
+  'aria-hidden': 'true'
 }
 ...
 ```
 
-Keep in mind that boolean values will be converted to strings within this structures. You can also output the attribute name only by defining it's value as null.
+You can also output an attribute name without an value by using the boolean value `true`.
 
 ```js
 ...
 extra_attributes: {
-  'aria`': null
+  'selected`': true
 }
 ...
 ```

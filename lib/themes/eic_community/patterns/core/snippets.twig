@@ -24,13 +24,9 @@
       {# Implements support for the simpler extra attributes Object Structure #}
       {% for key, value in attributes %}
         {% if value is defined and value is same as(TRUE) %}
-          {% set output = output ~ ' ' ~ key ~ '="true"' %}
-        {% elseif value is defined and value is same as(FALSE) %}
-          {% set output = output ~ ' ' ~ key ~ '="false"' %}
+          {% set output = output ~ ' ' ~ key %}
         {% elseif value is not null %}
           {% set output = output ~ ' ' ~ key ~ '="' ~ value|e('html_attr') ~ '"' %}
-        {% else %}
-          {% set output = output ~ ' ' ~ key %}
         {% endif %}
       {% endfor %}
     {% endif %}
