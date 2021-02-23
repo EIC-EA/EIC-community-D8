@@ -12,7 +12,7 @@ id: paragraph.contributor.field_media
 field_name: field_media
 entity_type: paragraph
 bundle: contributor
-label: 'Author image'
+label: 'Contributor Image'
 description: ''
 required: false
 translatable: true

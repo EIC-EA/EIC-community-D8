@@ -3,12 +3,16 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.paragraph.contributor.field_contributor_link
     - field.field.paragraph.contributor.field_media
     - field.field.paragraph.contributor.field_name
+    - field.field.paragraph.contributor.field_organisation
+    - field.field.paragraph.contributor.field_person_email
     - field.field.paragraph.contributor.field_user_ref
     - field.field.paragraph.contributor.paragraph_view_mode
     - paragraphs.paragraphs_type.contributor
   module:
+    - link
     - paragraph_view_mode
 _core:
   default_config_hash: zpEZx_Gi12q1MuOLF84kDA_jmss4BJwjElh0Lry5LaI
@@ -17,6 +21,18 @@ targetEntityType: paragraph
 bundle: contributor
 mode: default
 content:
+  field_contributor_link:
+    weight: 7
+    label: above
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+    type: link
+    region: content
   field_media:
     type: entity_reference_label
     weight: 4
@@ -33,6 +49,21 @@ content:
     settings:
       link_to_entity: false
     third_party_settings: {  }
+  field_organisation:
+    weight: 5
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_person_email:
+    weight: 6
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: basic_string
+    region: content
   field_user_ref:
     type: entity_reference_label
     weight: 2

@@ -42,6 +42,7 @@ class FieldWidgetContributorFormAlter {
       'field_media',
       'field_person_email',
       'field_organisation',
+      'field_contributor_link',
     ];
 
     $platform_user_fields = [
