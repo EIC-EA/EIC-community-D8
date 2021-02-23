@@ -9,13 +9,13 @@
  * @see https://www.drupal.org/node/2217931
  */
 
-use Drupal\eic_paragraph_contributor\Hooks\FieldWidgetFormAlter;
+use Drupal\eic_paragraph_contributor\Hooks\FieldWidgetContributorFormAlter;
 
 /**
  * Implements hook_field_widget_WIDGET_TYPE_form_alter().
  */
 function eic_paragraph_contributor_field_widget_paragraphs_form_alter(&$element, &$form_state, $context) {
-  \Drupal::classResolver(FieldWidgetFormAlter::class)
+  \Drupal::classResolver(FieldWidgetContributorFormAlter::class)
     ->paragraphsFormAlter($element, $form_state, $context);
 }
 
@@ -23,6 +23,6 @@ function eic_paragraph_contributor_field_widget_paragraphs_form_alter(&$element,
  * Implements hook_field_widget_WIDGET_TYPE_form_alter().
  */
 function eic_paragraph_contributor_field_widget_entity_reference_paragraphs_form_alter(&$element, &$form_state, $context) {
-  \Drupal::classResolver(FieldWidgetFormAlter::class)
+  \Drupal::classResolver(FieldWidgetContributorFormAlter::class)
     ->paragraphsFormAlter($element, $form_state, $context);
 }
