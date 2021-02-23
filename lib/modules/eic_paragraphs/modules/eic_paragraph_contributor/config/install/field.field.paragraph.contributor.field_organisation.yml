@@ -2,15 +2,13 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.paragraph.field_name
+    - field.storage.paragraph.field_organisation
     - paragraphs.paragraphs_type.contributor
-_core:
-  default_config_hash: GdXUzp0VL2ASL5B6OthdJYIHbDSAl3rnQqCd3zzUFpk
-id: paragraph.contributor.field_name
-field_name: field_name
+id: paragraph.contributor.field_organisation
+field_name: field_organisation
 entity_type: paragraph
 bundle: contributor
-label: 'Contributor Name'
+label: 'Contributor Organisation'
 description: ''
 required: false
 translatable: false

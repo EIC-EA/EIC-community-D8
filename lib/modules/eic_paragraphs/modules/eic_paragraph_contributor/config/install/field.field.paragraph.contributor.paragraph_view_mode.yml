@@ -6,6 +6,8 @@ dependencies:
     - paragraphs.paragraphs_type.contributor
   module:
     - paragraph_view_mode
+_core:
+  default_config_hash: h3MDPn-PC2J8v3CDQNl_guHRoOli2F2Mm9Wa6Cj0qZc
 id: paragraph.contributor.paragraph_view_mode
 field_name: paragraph_view_mode
 entity_type: paragraph

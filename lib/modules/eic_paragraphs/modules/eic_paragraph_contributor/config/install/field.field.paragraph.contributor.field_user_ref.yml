@@ -4,6 +4,8 @@ dependencies:
   config:
     - field.storage.paragraph.field_user_ref
     - paragraphs.paragraphs_type.contributor
+_core:
+  default_config_hash: bqJ4nmjLFw1NIxbrlEmSk5_r5-OLUmvfJenjp9FunYo
 id: paragraph.contributor.field_user_ref
 field_name: field_user_ref
 entity_type: paragraph
