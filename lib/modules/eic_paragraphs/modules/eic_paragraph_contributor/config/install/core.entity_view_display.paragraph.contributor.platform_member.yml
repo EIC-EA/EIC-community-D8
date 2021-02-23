@@ -1,0 +1,37 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.paragraph.platform_member
+    - field.field.paragraph.contributor.field_media
+    - field.field.paragraph.contributor.field_name
+    - field.field.paragraph.contributor.field_contributor_description
+    - field.field.paragraph.contributor.field_user_ref
+    - field.field.paragraph.contributor.paragraph_view_mode
+    - paragraphs.paragraphs_type.contributor
+  module:
+    - text
+id: paragraph.contributor.platform_member
+targetEntityType: paragraph
+bundle: contributor
+mode: platform_member
+content:
+  field_contributor_description:
+    type: text_default
+    weight: 0
+    region: content
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+  field_user_ref:
+    type: entity_reference_label
+    weight: 1
+    region: content
+    label: hidden
+    settings:
+      link: true
+    third_party_settings: {  }
+hidden:
+  field_media: true
+  field_name: true
+  paragraph_view_mode: true
