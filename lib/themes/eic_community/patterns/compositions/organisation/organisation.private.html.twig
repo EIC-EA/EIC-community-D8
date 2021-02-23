@@ -3,3 +3,21 @@
 {% block page_header %}
   {% include "@theme/patterns/compositions/editorial-header.html.twig" with editorial_header|default({})|without('title') only %}
 {% endblock %}
+
+{% block content %}
+  {% include "@theme/patterns/compositions/organisation-information-block.html.twig" with {
+    icon_file_path: icon_file_path,
+    description: description,
+    title: title,
+    follow: follow,
+    links: links,
+    social_share: social_share,
+    sidebar_title: sidebar_title,
+    meta: meta,
+    image: image,
+    tags: tags,
+    expertises: expertises,
+    stats: stats,
+    actions: actions,
+  } only %}
+{% endblock %}

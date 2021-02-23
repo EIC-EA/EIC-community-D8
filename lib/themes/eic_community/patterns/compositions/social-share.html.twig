@@ -1,7 +1,7 @@
 {% set title_element = title_element|default('h3') %}
 
 {% if items is not empty %}
-  <div class="ecl-social-share {{ compact ? 'ecl-social-share--is-compact' }} ecl-featured-list">
+  <div class="ecl-social-share {{ compact ? 'ecl-social-share--is-compact' }} {{ extra_classes }}">
     {% if title is not empty %}
       {% if title is not empty %}
         <{{ title_element }} class="ecl-social-share__title">{{ title }}</{{ title_element }}>

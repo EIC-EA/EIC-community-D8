@@ -4,20 +4,123 @@
   <div class="ecl-container">
     <div class="ecl-organisation-information-block__wrapper">
       <div class="ecl-organisation-information-block__main">
-        {% if block('top') is not empty  %}
-          <div class="ecl-organisation-information-block__main-top">
-            {% block top %}{% endblock %}
-          </div>
-        {% endif %}
+        <div class="ecl-organisation-information-block__main-top">
+          <{{ title_element }} class="ecl-organisation-information-block__title">{{ title }}</{{ title_element }}>
+          {% if follow is not empty %}
+            {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with {
+              link: follow.link|default({})|merge({
+                icon_position: 'before',
+              }),
+              extra_classes: 'ecl-organisation-information-block__follow',
+              icon: icon_file_path ? {
+                path: icon_file_path,
+                name: 'tag',
+                type: 'custom',
+                size: 'xs',
+              } : {}
+            } %}
+          {% endif %}
+        </div>
 
         <div class="ecl-organisation-information-block__main-content">
-          {% block content %}{% endblock %}
+          {% if organisation_size or turnover %}
+            <p class="ecl-organisation-information-block__subtitle">{{ organisation_size }}, {{ turnover }}</p>
+          {% endif %}
+
+          {% if description is not empty %}
+            <div class="ecl-organisation-information-block__description">{{ description }}</div>
+          {% endif %}
+
+          {% if expertises is not empty %}
+            <div class="ecl-organisation-information-block__expertises">
+              {% if expertises_label %}
+                <span class="ecl-organisation-information-block__expertises-label">{{ expertises_label }}</span>
+              {% endif %}
+              <div class="ecl-organisation-information-block__expertises-items">
+                {% for expertise in expertises %}
+                  {% include '@ecl-twig/ec-component-tag/ecl-tag.html.twig' with {
+                    extra_classes: 'ecl-organisation-information-block__expertises-item',
+                    tag: {
+                      type: expertise.path ? 'link' : 'display',
+                      path: expertise.path,
+                      label: expertise.label
+                    }
+                  } only %}
+                {% endfor %}
+              </div>
+            </div>
+          {% endif %}
+
+          {% if stats is not empty %}
+            <div class="ecl-organisation-information-block__stats">
+              <div class="ecl-organisation-information-block__stats-items">
+                {% for stat in stats %}
+                  <div class="ecl-organisation-information-block__stats-item">
+                    {% if icon_file_path and stat.icon%}
+                      {% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with {
+                        icon: stat.icon|merge({
+                          path: icon_file_path,
+                          size: 's',
+                        }),
+                        extra_classes: 'ecl-organisation-information-block__stats-icon',
+                        extra_attributes: {
+                          'aria-hidden': 'true',
+                          'focusable': 'false'
+                        }
+                      } %}
+                    {% endif %}
+                    {{ stat.label}}
+                  </div>
+                {% endfor %}
+              </div>
+            </div>
+          {% endif %}
+
+          {% if actions is not empty %}
+            {% include "@theme/patterns/components/inline-actions.html.twig" with {
+              items: actions
+            } %}
+          {% endif %}
         </div>
       </div>
 
-      {% if block('aside') is not empty %}
+      {% if links or social_share or meta %}
         <div class="ecl-organisation-information-block__aside">
-          {% block aside %}{% endblock %}
+          {% if sidebar_title %}
+            {% set sidebar_title_element = sidebar_title_element|default('h2') %}
+            <{{ sidebar_title_element }} class="ecl-organisation-information-block__sidebar-title">{{ sidebar_title }}</{{ sidebar_title_element }}>
+          {% endif %}
+
+          {% if links is not empty %}
+            <div class="ecl-organisation-information-block__links">
+              {% for link in links %}
+                {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with {
+                  link: link.link|merge({
+                    icon_position: 'before',
+                  }),
+                  icon: icon_file_path ? {
+                    path: icon_file_path,
+                    name: 'link',
+                    type: 'custom',
+                    size: 's',
+                  } : {},
+                  extra_attributes: link.extra_attributes,
+                  extra_classes: 'ecl-organisation-information-block__link'
+                } only %}
+              {% endfor %}
+            </div>
+          {% endif %}
+
+          {% include "@theme/patterns/compositions/social-share.html.twig" with social_share|default({})|merge({
+            compact: true,
+          }) %}
+
+          {% if meta is not empty %}
+            {% include "@theme/patterns/components/expandable-definitions.html.twig" with {
+              icon_file_path: icon_file_path,
+              items: meta
+            } only %}
+          {% endif %}
         </div>
       {% endif %}
 

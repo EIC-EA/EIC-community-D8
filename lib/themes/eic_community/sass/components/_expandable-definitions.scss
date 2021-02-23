@@ -24,7 +24,7 @@
 
   &__item-label {
     display: block;
-    margin-bottom: map-get($ecl-spacing, 'xs');
+    margin-bottom: map-get($ecl-spacing, '2xs');
     @include ecl-responsive-font('meta');
     line-height: ecl-typography('line-height', 'meta');
     color: ecl-typography('color', 'meta');
@@ -41,7 +41,7 @@
   }
 
   &__item-subitem {
-    margin: map-get($ecl-spacing, '2xs') 0;
+    margin: 0 0 map-get($ecl-spacing, '2xs');
     @include ecl-responsive-font('meta');
     line-height: ecl-typography('line-height', 'meta');
   }
@@ -54,6 +54,7 @@
     display: none;
     padding: 0;
     @include ecl-responsive-font('meta');
+    font-weight: inherit;
 
     #{$node}__item--is-ready #{$node}__item-subitems[aria-hidden="true"] ~ & {
       display: block;
