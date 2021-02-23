@@ -4,8 +4,11 @@ status: true
 dependencies:
   config:
     - core.entity_view_mode.paragraph.platform_member
+    - field.field.paragraph.contributor.field_contributor_link
     - field.field.paragraph.contributor.field_media
     - field.field.paragraph.contributor.field_name
+    - field.field.paragraph.contributor.field_organisation
+    - field.field.paragraph.contributor.field_person_email
     - field.field.paragraph.contributor.field_user_ref
     - field.field.paragraph.contributor.paragraph_view_mode
     - paragraphs.paragraphs_type.contributor
@@ -25,6 +28,9 @@ content:
       link: true
     third_party_settings: {  }
 hidden:
+  field_contributor_link: true
   field_media: true
   field_name: true
+  field_organisation: true
+  field_person_email: true
   paragraph_view_mode: true
