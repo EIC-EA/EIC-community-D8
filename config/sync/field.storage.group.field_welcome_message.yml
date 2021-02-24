@@ -1,0 +1,19 @@
+uuid: d0de04e2-ccfa-4d5e-ad59-b30fe4273f3d
+langcode: en
+status: true
+dependencies:
+  module:
+    - group
+    - text
+id: group.field_welcome_message
+field_name: field_welcome_message
+entity_type: group
+type: text_long
+settings: {  }
+module: text
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false
