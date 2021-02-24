@@ -18,6 +18,8 @@ permissions:
   - 'view banner fragments'
   - 'view disclaimer fragments'
   - 'unflag recommend'
+  - 'use text format basic_text'
+  - 'use text format filtered_html'
   - 'view bookmark_content'
   - 'view bookmark_media'
   - 'view fact_figure fragments'
