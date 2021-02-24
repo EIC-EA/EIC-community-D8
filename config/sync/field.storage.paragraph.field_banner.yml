@@ -1,13 +1,13 @@
-uuid: 7570747c-9fc4-4fdd-b7ca-5cf6c56f75b8
+uuid: fcadb21e-09ab-431f-8d1a-c1a8565dee38
 langcode: en
 status: true
 dependencies:
   module:
     - fragments
-    - node
-id: node.field_banner
+    - paragraphs
+id: paragraph.field_banner
 field_name: field_banner
-entity_type: node
+entity_type: paragraph
 type: entity_reference
 settings:
   target_type: fragment

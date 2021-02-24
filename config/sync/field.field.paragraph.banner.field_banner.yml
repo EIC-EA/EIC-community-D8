@@ -1,15 +1,15 @@
-uuid: 6a4f540f-5c69-402e-b5d7-4e2394c7ae4e
+uuid: 5da9aaad-49ab-4756-943c-8b81bda637e8
 langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.node.field_banner
+    - field.storage.paragraph.field_banner
     - fragments.fragment_type.banner
-    - node.type.page
-id: node.page.field_banner
+    - paragraphs.paragraphs_type.banner
+id: paragraph.banner.field_banner
 field_name: field_banner
-entity_type: node
-bundle: page
+entity_type: paragraph
+bundle: banner
 label: Banner
 description: ''
 required: false
@@ -22,7 +22,8 @@ settings:
     target_bundles:
       banner: banner
     sort:
-      field: _none
+      field: title
+      direction: ASC
     auto_create: false
     auto_create_bundle: ''
 field_type: entity_reference

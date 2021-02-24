@@ -3,7 +3,6 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.field.node.page.field_banner
     - field.field.node.page.field_image
     - field.field.node.page.field_introduction
     - field.field.node.page.field_page_cta
@@ -26,16 +25,6 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
-  field_banner:
-    weight: 3
-    settings:
-      match_operator: CONTAINS
-      match_limit: 10
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
-    type: entity_reference_autocomplete
-    region: content
   field_image:
     weight: 2
     settings:

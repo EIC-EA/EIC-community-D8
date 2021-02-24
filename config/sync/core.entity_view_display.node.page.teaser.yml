@@ -4,7 +4,6 @@ status: true
 dependencies:
   config:
     - core.entity_view_mode.node.teaser
-    - field.field.node.page.field_banner
     - field.field.node.page.field_image
     - field.field.node.page.field_introduction
     - field.field.node.page.field_page_cta
@@ -48,7 +47,6 @@ content:
     settings: {  }
     third_party_settings: {  }
 hidden:
-  field_banner: true
   extra_field_oe_theme_helper_short_title_with_fallback: true
   field_page_cta: true
   field_page_paragraphs: true
