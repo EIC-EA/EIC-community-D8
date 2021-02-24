@@ -1,0 +1,23 @@
+uuid: 795f91a1-67f6-483b-9310-daa613cc53a5
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_body
+    - paragraphs.paragraphs_type.cta_tile
+  module:
+    - text
+_core:
+  default_config_hash: B-KHN40SgpvmEhr7P0FDd0l4ONfRyAWIumum5JYPJak
+id: paragraph.cta_tile.field_body
+field_name: field_body
+entity_type: paragraph
+bundle: cta_tile
+label: Description
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long
