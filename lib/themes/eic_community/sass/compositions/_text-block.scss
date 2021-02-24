@@ -7,7 +7,7 @@
 
     @include ecl-media-breakpoint-up('md') {
       flex-direction: row;
-      align-items: center;
+      align-items: start;
     }
   }
 

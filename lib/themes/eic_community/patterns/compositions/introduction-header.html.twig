@@ -1,6 +1,6 @@
-{% set title_element = title_element|default('h2') %}
+{% set title_element = title_element|default('h1') %}
 
-<header class="ecl-introduction-header {{ extra_classes }}">
+<header class="ecl-section-wrapper ecl-introduction-header {{ extra_classes }}">
   <div class="ecl-container">
     <div class="ecl-introduction-header__wrapper">
       <section class="ecl-introduction-header__content">
@@ -14,10 +14,9 @@
       {% endif %}
 
       {% if call_to_action is not empty %}
-        {% include '@ecl-twig/ec-component-link/ecl-link.html.twig' with {
-          link: call_to_action.link,
-          extra_classes: 'ecl-introduction-header__cta ecl-link--cta',
-        } only %}
+        {% include '@ecl-twig/ec-component-link/ecl-link.html.twig' with call_to_action|merge({
+          extra_classes: 'ecl-introduction-header__cta ' ~ call_to_action.extra_classes|default('ecl-link--button ecl-link--button-primary'),
+        }) only %}
       {% endif %}
       </section>
       {% if media is not empty %}

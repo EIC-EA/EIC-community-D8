@@ -16,4 +16,8 @@
   &--is-grey {
     background-color: map-get($ecl-colors, 'grey-5');
   }
+
+  &:not([class*="ecl-section-wrapper--is-"]) ~ &:not([class*="ecl-section-wrapper--is-"]):nth-child(even) {
+    background-color: map-get($ecl-colors, 'blue-5');
+  }
 }

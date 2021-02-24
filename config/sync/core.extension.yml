@@ -10,6 +10,7 @@ module:
   block_content_permissions: 0
   breakpoint: 0
   config: 0
+  content_moderation: 0
   contextual: 0
   datetime: 0
   dblog: 0
@@ -47,11 +48,15 @@ module:
   media_library: 0
   menu_link_content: 0
   menu_ui: 0
+  metatag: 0
+  metatag_open_graph: 0
+  metatag_twitter_cards: 0
   node: 0
   oe_media: 0
   oe_theme_helper: 0
   oe_time_caching: 0
   oe_webtools: 0
+  oe_webtools_social_share: 0
   options: 0
   page_cache: 0
   paragraph_view_mode: 0
@@ -63,6 +68,7 @@ module:
   system: 0
   taxonomy: 0
   text: 0
+  token: 0
   toolbar: 0
   twig_field_value: 0
   ui_patterns: 0
@@ -70,6 +76,7 @@ module:
   update: 0
   user: 0
   variationcache: 0
+  workflows: 0
   views: 10
   paragraphs: 11
   eic_paragraphs: 12

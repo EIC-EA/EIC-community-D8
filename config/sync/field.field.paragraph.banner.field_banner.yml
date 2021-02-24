@@ -1,0 +1,29 @@
+uuid: 5da9aaad-49ab-4756-943c-8b81bda637e8
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_banner
+    - fragments.fragment_type.banner
+    - paragraphs.paragraphs_type.banner
+id: paragraph.banner.field_banner
+field_name: field_banner
+entity_type: paragraph
+bundle: banner
+label: Banner
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:fragment'
+  handler_settings:
+    target_bundles:
+      banner: banner
+    sort:
+      field: title
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

@@ -1,0 +1,10 @@
+uuid: 3f99de4d-dd8a-4103-a1c0-a9b2a49d134d
+langcode: en
+status: true
+dependencies:
+  module:
+    - fragments
+id: fragment.token
+label: Token
+targetEntityType: fragment
+cache: true
