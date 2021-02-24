@@ -49,5 +49,6 @@ content:
     third_party_settings: {  }
 hidden:
   field_banner: true
+  extra_field_oe_theme_helper_short_title_with_fallback: true
   field_page_cta: true
   field_page_paragraphs: true

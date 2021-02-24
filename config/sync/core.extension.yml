@@ -1,10 +1,10 @@
 module:
   address: 0
-  big_pipe: 0
   admin_toolbar: 0
   admin_toolbar_links_access_filter: 0
   admin_toolbar_search: 0
   admin_toolbar_tools: 0
+  big_pipe: 0
   block: 0
   block_content: 0
   block_content_permissions: 0
@@ -21,6 +21,7 @@ module:
   eic_blocks: 0
   eic_content: 0
   eic_content_story: 0
+  eic_flags: 0
   eic_fragment_fact_figure: 0
   eic_media: 0
   eic_media_document: 0
@@ -29,6 +30,7 @@ module:
   entity_browser: 0
   entity_browser_entity_form: 0
   entity_reference_revisions: 0
+  extra_field: 0
   field: 0
   field_ui: 0
   file: 0
@@ -45,11 +47,15 @@ module:
   media_library: 0
   menu_link_content: 0
   menu_ui: 0
+  metatag: 0
+  metatag_open_graph: 0
+  metatag_twitter_cards: 0
   node: 0
   oe_media: 0
   oe_theme_helper: 0
   oe_time_caching: 0
   oe_webtools: 0
+  oe_webtools_social_share: 0
   options: 0
   page_cache: 0
   paragraph_view_mode: 0
@@ -61,6 +67,7 @@ module:
   system: 0
   taxonomy: 0
   text: 0
+  token: 0
   toolbar: 0
   twig_field_value: 0
   ui_patterns: 0

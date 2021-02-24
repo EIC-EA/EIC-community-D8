@@ -13,6 +13,9 @@
           {% include "@theme/patterns/components/content-type-indicator.html.twig" with type|default({})|merge({
             extra_classes: 'ecl-teaser__type',
             icon_file_path: icon_file_path,
+            icon: type.icon|merge({
+              'size': 'm'
+            })
           }) only %}
         </div>
       {% endif %}
@@ -21,7 +24,6 @@
         <div class="ecl-teaser__meta-column">
           {% include "@theme/patterns/components/timestamp.html.twig" with timestamp|default({})|merge({
             icon_file_path: icon_file_path,
-            extra_classes: "ecl-timestamp--meta",
           }) only %}
         </div>
       {% endif %}
@@ -42,7 +44,9 @@
     </div>
 
     <div class="ecl-teaser__meta-footer">
-      {% include "@theme/patterns/components/author.html.twig" with author|default({}) only %}
+      {% include "@theme/patterns/components/author.html.twig" with author|default({})|merge({
+        extra_classes: 'ecl-teaser__author'
+      }) only %}
       {% if stats is not empty %}
         <div class="ecl-teaser__stats">
           {% for stat in stats %}

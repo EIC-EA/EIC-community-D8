@@ -1,0 +1,30 @@
+<?php
+
+/**
+ * @file
+ * Main module file for EIC Flags module.
+ */
+
+/**
+ * Implements hook_theme().
+ */
+function eic_flags_theme() {
+  return [
+    'eic_flag_count' => [
+      'variables' => [
+        'attributes' => [],
+        'title' => NULL,
+        'action' => 'flag',
+        'flag' => NULL,
+        'flaggable' => NULL,
+      ],
+    ],
+    'eic_flag_count_text' => [
+      'variables' => [
+        'title' => NULL,
+        'flag_count' => NULL,
+        'flag_id' => NULL,
+      ],
+    ],
+  ];
+}

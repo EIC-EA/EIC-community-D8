@@ -1,6 +1,8 @@
 .ecl-fact-figures-wrapper {
   & .ecl-fact-figures {
     $node: &;
+    padding: 0;
+    background-color: transparent;
 
     border: none;
 

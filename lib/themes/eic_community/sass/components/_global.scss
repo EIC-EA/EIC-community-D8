@@ -14,15 +14,6 @@ a {
   color: $ecl-color-blue;
 }
 
-.ecl-editor {
-  p:first-child {
-    margin-top: 0;
-  }
-  p:last-child {
-    margin-bottom: 0;
-  }
-}
-
 .ecl-description {
   @include ecl-responsive-font('description');
   margin: ecl-box-model('margin', 'description') 0;
@@ -33,5 +24,52 @@ a {
 
   &:last-child {
     margin-bottom: 0;
+  }
+}
+
+.ecl-editable-wrapper {
+  p,
+	address,
+	ul,
+	dl,
+	ol,
+	blockquote,
+	q {
+    @include ecl-responsive-font('default');
+    line-height: ecl-typography('line-height');
+
+    &:first-child {
+      margin-top: 0;
+    }
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  dl {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+
+    &,
+    &:last-child {
+      margn-bottom: #{map-get($ecl-spacing, 'm')}
+    }
+  }
+
+  dt,
+  dd {
+    margin: 0 0 map-get($ecl-spacing, 'm');
+    padding: 0;
+  }
+
+  dt {
+    width: calc(100% / 3);
+    font-weight: $ecl-font-weight-bold;
+  }
+
+  dd {
+    width: calc(100% / 3 * 2);
   }
 }

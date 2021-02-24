@@ -1,8 +1,7 @@
 {% set title_element = 'h2'|default('h3') %}
 
-<section class="ecl-section-wrapper">
+<section class="ecl-featured-content-grid {{ extra_classes }}">
   <div class="ecl-container">
-    <div class="ecl-featured-content-grid {{ extra_classes }}">
       {% if title is not empty %}
         <{{ title_element }} class="ecl-featured-content-grid__title">{{ title }}</{{ title_element }}>
       {% endif %}
@@ -63,7 +62,7 @@
                   </div>
                   {% if item.author is not empty %}
                     <div class="ecl-featured-content-grid__item-content-footer">
-                      {% include "@theme/patterns/components/author.html.twig" with item.author|default({}) %}
+                      {% include "@theme/patterns/components/author.html.twig" with item.author|default({}) only %}
                     </div>
                   {% endif %}
                 </div>
@@ -98,6 +97,5 @@
           } only  %}
         </footer>
       {% endif %}
-    </div>
   </div>
 </section>

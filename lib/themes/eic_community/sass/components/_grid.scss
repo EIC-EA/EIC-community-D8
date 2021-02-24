@@ -1,9 +1,11 @@
 body .ecl-row {
   margin-left: #{0 - ecl-layout('gutter')};
   margin-right: 0;
+  margin-bottom: #{0 - ecl-layout('gutter')};
 
   & > [class*="ecl-col-"] {
     padding-left: ecl-layout('gutter');
+    margin-bottom: ecl-layout('gutter');
     padding-right: 0;
   }
 }

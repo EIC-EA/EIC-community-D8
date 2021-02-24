@@ -1,0 +1,27 @@
+{#
+/**
+ * @file
+ * Overriding base flag link template
+ *
+ * Available variables:
+ * - attributes: HTML attributes for the link element.
+ * - title: The flag link title.
+ * - action: 'flag' or 'unflag'
+ * - flag: The flag object.
+ * - flaggable: The flaggable entity.
+ */
+#}
+{% spaceless %}
+{# Attach the flag CSS library.#}
+{{ attach_library('flag/flag.link') }}
+
+{# Set the remaining Flag CSS classes. #}
+{%
+  set classes = [
+    'flag',
+    'flag-' ~ flag_id|clean_class,
+  ]
+%}
+
+<div class="{{classes|join(' ')}}">{{ title }}: <span>{{ flag_count }}</span></div>
+{% endspaceless %}

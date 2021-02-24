@@ -47,6 +47,7 @@
             {% if active_filters is not empty %}
               <div class="ecl-teaser-overview__active-filters">
                 <span class="ecl-teaser-overview__active-filters-title">{{ active_filters.title|default('Active filters') }}</span>
+
                 <div class="ecl-teaser-overview__active-filters-items">
                   {% for item in active_filters.items %}
                     <div class="ecl-teaser-overview__active-filters-item">
@@ -67,6 +68,19 @@
                     </div>
                   {% endfor %}
                 </div>
+                {% if active_filters.items %}
+                  {% include "@ecl-twig/ec-component-button/ecl-button.html.twig" with {
+                    icon: {
+                      path: icon_file_path,
+                      name: 'clear',
+                      type: 'custom',
+                      size: '2xs',
+                    },
+                    variant: 'ghost',
+                    extra_classes: 'ecl-teaser-overview__active-filters-clear-all',
+                    label: active_filters_clear_all_label|default('Clear all')
+                  } only %}
+                {% endif %}
               </div>
             {% endif %}
             {% if interface_options is not empty %}

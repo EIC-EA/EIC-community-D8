@@ -30,17 +30,29 @@
     extra_classes: "ecl-section-wrapper ecl-featured-content-collection--is-compact"
   }) only %}
 
-  {% include "@theme/patterns/compositions/fact-figures-wrapper.html.twig" with fact_figures|default({})  only %}
+  {% include "@theme/patterns/compositions/fact-figures-wrapper.html.twig" with fact_figures|default({})|merge({
+    extra_classes: 'ecl-section-wrapper ecl-section-wrapper--is-blue',
+  })  only %}
 
-  {% include "@theme/patterns/compositions/featured-content-grid.html.twig" with featured_news|default({})  only %}
+  {% include "@theme/patterns/compositions/featured-content-grid.html.twig" with featured_news|default({})|merge({
+    extra_classes: 'ecl-section-wrapper',
+  })  only %}
 
   {% include "@theme/patterns/compositions/featured-content-collection.html.twig" with featured_events|default({})|merge({
-    extra_classes: "ecl-featured-content-collection--is-compact ecl-section-wrapper ecl-section-wrapper--is-blue"
+    extra_classes: "ecl-section-wrapper ecl-section-wrapper--is-blue ecl-featured-content-collection--is-compact"
   }) only %}
 
   {% embed "@theme/patterns/compositions/layout-block.html.twig" %}
     {% block content %}
       {% include "@theme/patterns/compositions/bulletin-block.html.twig" with bulletin_block|default({}) %}
+    {% endblock %}
+
+    {% block aside %}
+      {% include "@theme/patterns/compositions/social-share.html.twig" with social_share|default({}) %}
+
+      {% include "@theme/patterns/compositions/twitter-timeline.html.twig" with {
+        icon_file_path: common.icon_file_path,
+      } %}
     {% endblock %}
   {% endembed %}
 {% endblock %}
