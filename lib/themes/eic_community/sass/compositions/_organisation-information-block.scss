@@ -123,11 +123,26 @@
     }
   }
 
+  &__expertises {
+    flex-direction: column;
+    align-items: flex-start;
+
+    @include ecl-media-breakpoint-up('sm') {
+      align-items: center;
+      flex-direction: row;
+    }
+  }
+
   &__expertises-label {
     flex-shrink: 0;
-    margin-right: map-get($ecl-spacing, 'l');
     @include ecl-responsive-font('meta');
     color: ecl-typography('color', 'meta');
+    margin-bottom: map-get($ecl-spacing, 'l');
+
+    @include ecl-media-breakpoint-up('sm') {
+      margin-bottom: 0;
+      margin-right: map-get($ecl-spacing, 'l');
+    }
   }
 
   &__expertises-items,
