@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.paragraph.quote.field_body
     - field.field.paragraph.quote.field_media
     - field.field.paragraph.quote.field_name
     - field.field.paragraph.quote.field_quote_description
