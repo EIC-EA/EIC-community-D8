@@ -1,0 +1,37 @@
+{#
+  Outputs the defined attributes Object as valid a HTML attributes string.
+  Based on the original extra attributes iteration from ECL Twig.
+
+  Includes additional support for simpler Objects where you can defined the
+  attribute key directly within the Object instead of using the name/value
+  structure.
+#}
+{% macro attr(attributes) %}
+  {% set output = '' %}
+  {% if attributes is defined and attributes is not empty %}
+    {% if attributes is iterable %}
+      {# Implements support for original extra_attributes Object structure. #}
+      {% for key, value in attributes %}
+        {% if value.name %}
+          {% if value.value is defined %}
+            {% set output = output ~ ' ' ~ value.name ~ '="' ~ value.value|e('html_attr') ~ '"' %}
+          {% else %}
+            {% set output = output ~ ' ' ~ value.name ~ '="' ~ value.value|e('html_attr') ~ '"' %}
+          {% endif %}
+        {% endif %}
+      {% endfor %}
+    {% else %}
+      {# Implements support for the simpler extra attributes Object Structure #}
+      {% for key, value in attributes %}
+        {% if value is defined and value is same as(TRUE) %}
+          {% set output = output ~ ' ' ~ key %}
+        {% elseif value is not null %}
+          {% set output = output ~ ' ' ~ key ~ '="' ~ value|e('html_attr') ~ '"' %}
+        {% endif %}
+      {% endfor %}
+    {% endif %}
+  {% endif %}
+
+  {{ output }}
+
+{% endmacro %}

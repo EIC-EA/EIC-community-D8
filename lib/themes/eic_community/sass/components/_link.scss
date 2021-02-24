@@ -48,6 +48,10 @@
     }
   }
 
+  body &--button-secondary {
+    @extend .ecl-button--secondary;
+  }
+
   &--icon {
     display: inline-flex;
     align-items: center;

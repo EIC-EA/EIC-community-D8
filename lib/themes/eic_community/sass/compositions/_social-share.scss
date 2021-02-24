@@ -1,23 +1,47 @@
 .ecl-social-share {
   $node: &;
 
+  margin: map-get($ecl-spacing, 'l') 0;
+
+  &:first-child {
+    margin-top: 0;
+  }
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
   &__title {
     text-transform: uppercase;
     color: map-get($ecl-colors, 'grey-50');
     @include ecl-responsive-font('meta');
     font-weight: $ecl-font-weight-regular;
+
+    #{$node}--is-compact & {
+      text-transform: inherit;
+    }
   }
 
   &__items {
     display: flex;
     flex-wrap: wrap;
-    margin-bottom: #{0 - map-get($ecl-spacing, 'm')}
+    margin-bottom: #{0 - map-get($ecl-spacing, 'm')};
+    margin-right: #{0 - map-get($ecl-spacing, 'm')};
+
+    #{$node}--is-compact & {
+      margin-bottom: #{0 - map-get($ecl-spacing, 'xs')};
+      margin-right: #{0 - map-get($ecl-spacing, 'xs')};
+    }
   }
 
   &__item {
     margin: map-get($ecl-spacing, 'm');
     color: map-get($ecl-colors, white);
     margin: 0 map-get($ecl-spacing, 'm') map-get($ecl-spacing, 'm') 0;
+
+    #{$node}--is-compact & {
+      margin: 0 map-get($ecl-spacing, 'xs') map-get($ecl-spacing, 'xs') 0;
+    }
 
     &:last-child {
       margin: 0;
@@ -56,6 +80,11 @@
       #{$node}__item--#{$name} & {
         background-color: $color;
       }
+    }
+
+    #{$node}--is-compact & {
+      width: map-get($ecl-media, '3xs');
+      height: map-get($ecl-media, '3xs');
     }
   }
 }
