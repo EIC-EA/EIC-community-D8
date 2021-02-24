@@ -1,16 +1,20 @@
 .ecl-featured-content-sections {
   &__wrapper {
     display: flex;
+    flex-direction: column;
     margin-left: #{0 - ecl-layout('gutter')};
     align-items: flex-start;
 
     @include ecl-media-breakpoint-up('md') {
+      flex-direction: row;
+      align-items: stretch;
       margin-left: #{0 - ecl-layout('gutter--md')};
     }
   }
 
   &__main,
   &__aside {
+    width: 100%;
     box-sizing: border-box;
     padding-left: ecl-layout('gutter');
 
@@ -20,13 +24,28 @@
   }
 
   &__main {
-    width: calc(100% / 12 * 8);
+    @include ecl-media-breakpoint-up('md') {
+      width: calc(100% / 12 * 8);
+    }
   }
 
   &__aside {
     position: relative;
     flex-shrink: 0;
-    width: calc(100% / 12 * 4);
+    display: none;
+
+    @include ecl-media-breakpoint-up('md') {
+      display: block;
+      width: calc(100% / 12 * 4);
+    }
+  }
+
+  &__aside-inside {
+    @include ecl-media-breakpoint-up('md') {
+      position: sticky;
+      width: 100%;
+      top: ecl-layout('gutter');
+    }
   }
 
   &__item-title {
@@ -43,6 +62,10 @@
     padding: map-get($ecl-spacing, 'm') 0;
     text-decoration: none;
     font-weight: $ecl-font-weight-bold;
+
+    &[aria-current="true"] {
+      color: ecl-typography('color', 'meta');
+    }
   }
 
   &__link-item {
