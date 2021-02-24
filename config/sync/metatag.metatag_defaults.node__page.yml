@@ -1,0 +1,9 @@
+uuid: d1dfff86-278d-4705-9c45-21d851c372d5
+langcode: en
+status: true
+dependencies: {  }
+id: node__page
+label: 'Content: Page'
+tags:
+  og_description: '[node:field_introduction]'
+  og_image: '[node:field_image:entity:oe_media_image]'

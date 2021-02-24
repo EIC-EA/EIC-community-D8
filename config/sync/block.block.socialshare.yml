@@ -1,0 +1,30 @@
+uuid: 96e91bdc-76a7-406b-a592-9f9cd9b78ec0
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+    - oe_webtools_social_share
+  theme:
+    - oe_theme
+id: socialshare
+theme: oe_theme
+region: content
+weight: 0
+provider: null
+plugin: social_share
+settings:
+  id: social_share
+  label: 'Social Share'
+  provider: oe_webtools_social_share
+  label_display: '0'
+visibility:
+  node_type:
+    id: node_type
+    bundles:
+      document: document
+      news: news
+      story: story
+    negate: false
+    context_mapping:
+      node: '@node.node_route_context:node'
