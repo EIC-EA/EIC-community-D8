@@ -3,7 +3,6 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.field.paragraph.quote.field_body
     - field.field.paragraph.quote.field_media
     - field.field.paragraph.quote.field_name
     - field.field.paragraph.quote.field_quote_description
@@ -57,7 +56,6 @@ content:
     settings: {  }
     third_party_settings: {  }
 hidden:
-  field_body: true
   field_tx_author: true
   field_ur_author: true
   field_view_mode: true
