@@ -31,11 +31,11 @@ settings:
     target_bundles:
       contributor: contributor
       banner: banner
-      full_text_content: full_text_content
+      tiles_content: tiles_content
       full_media_content: full_media_content
       quote: quote
+      full_text_content: full_text_content
       text_and_media_content: text_and_media_content
-      tiles_content: tiles_content
     target_bundles_drag_drop:
       banner:
         enabled: true
