@@ -1,0 +1,22 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.paragraph_view_mode
+    - paragraphs.paragraphs_type.contributor
+  module:
+    - paragraph_view_mode
+_core:
+  default_config_hash: h3MDPn-PC2J8v3CDQNl_guHRoOli2F2Mm9Wa6Cj0qZc
+id: paragraph.contributor.paragraph_view_mode
+field_name: paragraph_view_mode
+entity_type: paragraph
+bundle: contributor
+label: 'Display variant'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: paragraph_view_mode

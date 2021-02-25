@@ -1,11 +1,10 @@
-uuid: e15db004-039b-404b-b9af-9d6f043b5671
 langcode: en
 status: true
 dependencies:
   config:
     - field.storage.node.field_page_paragraphs
     - node.type.page
-    - paragraphs.paragraphs_type.banner
+    - paragraphs.paragraphs_type.contributor
     - paragraphs.paragraphs_type.full_media_content
     - paragraphs.paragraphs_type.full_text_content
     - paragraphs.paragraphs_type.quote
@@ -28,19 +27,16 @@ settings:
   handler_settings:
     negate: 0
     target_bundles:
-      banner: banner
+      contributor: contributor
+      tiles_content: tiles_content
       full_media_content: full_media_content
       quote: quote
       full_text_content: full_text_content
       text_and_media_content: text_and_media_content
-      tiles_content: tiles_content
     target_bundles_drag_drop:
-      banner:
+      contributor:
         enabled: true
         weight: -13
-      contributor:
-        weight: -12
-        enabled: false
       full_media_content:
         enabled: true
         weight: -11
@@ -55,5 +51,5 @@ settings:
         weight: -8
       tiles_content:
         enabled: true
-        weight: -7
+        weight: -12
 field_type: entity_reference_revisions
