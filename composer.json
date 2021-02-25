@@ -23,6 +23,7 @@
         "drupal/metatag": "^1.15",
         "drupal/paragraph_view_mode": "^2.0",
         "drupal/paragraphs": "^1.12",
+        "drupal/views_bulk_operations": "^3.10",
         "drush/drush": "^9.0",
         "openeuropa/composer-artifacts": "~0.1",
         "openeuropa/oe_media": "^1.11",
