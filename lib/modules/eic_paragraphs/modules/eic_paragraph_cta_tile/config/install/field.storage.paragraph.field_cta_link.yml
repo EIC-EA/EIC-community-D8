@@ -1,17 +1,15 @@
-uuid: 4416b862-b7d2-4a14-ad03-efcefbfe39f3
 langcode: en
 status: true
 dependencies:
   module:
+    - link
     - paragraphs
-    - text
-id: paragraph.field_tx_author
-field_name: field_tx_author
+id: paragraph.field_cta_link
+field_name: field_cta_link
 entity_type: paragraph
-type: text
-settings:
-  max_length: 255
-module: text
+type: link
+settings: {  }
+module: link
 locked: false
 cardinality: 1
 translatable: true

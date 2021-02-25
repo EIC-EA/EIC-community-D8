@@ -64,8 +64,4 @@ content:
     region: content
 hidden:
   created: true
-  field_body: true
-  field_tx_author: true
-  field_ur_author: true
-  field_view_mode: true
   status: true
