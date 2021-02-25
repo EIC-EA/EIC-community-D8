@@ -1,7 +1,7 @@
 {% set title_element = title_element|default('h3') %}
 
 {% if items is not empty %}
-  <div class="ecl-social-share ecl-featured-list">
+  <div class="ecl-social-share {{ compact ? 'ecl-social-share--is-compact' }} {{ extra_classes }}">
     {% if title is not empty %}
       {% if title is not empty %}
         <{{ title_element }} class="ecl-social-share__title">{{ title }}</{{ title_element }}>
@@ -17,7 +17,7 @@
                 <span class="ecl-social-share__item-icon-wrapper">
                   {% include '@ecl-twig/ec-component-icon/ecl-icon.html.twig' with {
                     icon: {
-                      size: 'm',
+                      size: compact ? "xs" : "m",
                       path: icon_file_path,
                       type: item.type|default('branded'),
                       name: item.name,

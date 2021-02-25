@@ -1,20 +1,19 @@
-uuid: a33f9878-35f0-41d5-9ca1-ee79b46a7944
 langcode: en
 status: true
 dependencies:
   config:
     - field.storage.paragraph.field_body
-    - paragraphs.paragraphs_type.quote
+    - paragraphs.paragraphs_type.cta_tile
   module:
     - text
-id: paragraph.quote.field_body
+id: paragraph.cta_tile.field_body
 field_name: field_body
 entity_type: paragraph
-bundle: quote
-label: Quote
+bundle: cta_tile
+label: Description
 description: ''
-required: false
-translatable: false
+required: true
+translatable: true
 default_value: {  }
 default_value_callback: ''
 settings: {  }

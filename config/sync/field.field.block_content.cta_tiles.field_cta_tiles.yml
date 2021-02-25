@@ -1,0 +1,51 @@
+uuid: b288d182-3387-4954-904c-fef9ea34474e
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.cta_tiles
+    - field.storage.block_content.field_cta_tiles
+    - paragraphs.paragraphs_type.cta_tile
+  module:
+    - entity_reference_revisions
+_core:
+  default_config_hash: KDRy5FLR7s1H_0xLT1Rim_JNOK8nmXwCkk_CqusxUUs
+id: block_content.cta_tiles.field_cta_tiles
+field_name: field_cta_tiles
+entity_type: block_content
+bundle: cta_tiles
+label: 'CTA Tiles'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    negate: 0
+    target_bundles:
+      cta_tile: cta_tile
+    target_bundles_drag_drop:
+      banner:
+        weight: 8
+        enabled: false
+      cta_tile:
+        enabled: true
+        weight: 9
+      full_media_content:
+        weight: 10
+        enabled: false
+      full_text_content:
+        weight: 11
+        enabled: false
+      quote:
+        weight: 12
+        enabled: false
+      text_and_media_content:
+        weight: 13
+        enabled: false
+      tiles_content:
+        weight: 14
+        enabled: false
+field_type: entity_reference_revisions

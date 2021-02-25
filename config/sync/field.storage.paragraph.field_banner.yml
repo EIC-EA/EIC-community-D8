@@ -1,17 +1,17 @@
-uuid: 4416b862-b7d2-4a14-ad03-efcefbfe39f3
+uuid: fcadb21e-09ab-431f-8d1a-c1a8565dee38
 langcode: en
 status: true
 dependencies:
   module:
+    - fragments
     - paragraphs
-    - text
-id: paragraph.field_tx_author
-field_name: field_tx_author
+id: paragraph.field_banner
+field_name: field_banner
 entity_type: paragraph
-type: text
+type: entity_reference
 settings:
-  max_length: 255
-module: text
+  target_type: fragment
+module: core
 locked: false
 cardinality: 1
 translatable: true

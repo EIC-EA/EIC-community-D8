@@ -1,17 +1,15 @@
-uuid: 988e401a-ebec-4a6c-aeb7-46e1d3abb6ea
 langcode: en
 status: true
 dependencies:
   module:
+    - link
     - paragraphs
-    - user
-id: paragraph.field_ur_author
-field_name: field_ur_author
+id: paragraph.field_cta_link
+field_name: field_cta_link
 entity_type: paragraph
-type: entity_reference
-settings:
-  target_type: user
-module: core
+type: link
+settings: {  }
+module: link
 locked: false
 cardinality: 1
 translatable: true
