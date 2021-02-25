@@ -1,0 +1,26 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - system
+name: homepage
+label: Homepage
+group: Homepage
+description: 'Base homepage context.'
+requireAllConditions: true
+disabled: false
+conditions:
+  request_path:
+    id: request_path
+    pages: '<front>'
+    negate: false
+    uuid: bdc706e8-bcb4-499f-b539-05ea86c1226c
+    context_mapping: {  }
+reactions:
+  blocks:
+    blocks: {  }
+    id: blocks
+    saved: false
+    uuid: 1172ee8b-57fe-4611-b929-3d99b1b469d8
+    include_default_blocks: 1
+weight: 0

@@ -12,6 +12,7 @@
         "drupal/address": "^1.9",
         "drupal/admin_toolbar": "^3.0",
         "drupal/block_content_permissions": "^1.10",
+        "drupal/context": "^4.0@beta",
         "drupal/core": "^8.7",
         "drupal/core-composer-scaffold": "^8.8",
         "drupal/default_content": "^2.0@alpha",
