@@ -1,0 +1,17 @@
+uuid: 6ea3f022-4ed3-4baf-9b67-362bd4ece8ca
+langcode: en
+status: true
+dependencies:
+  module:
+    - paragraph_view_mode
+third_party_settings:
+  paragraph_view_mode:
+    enabled: false
+_core:
+  default_config_hash: SYslcLJ3rWuCAwVSwNL0Vq_EawJ8VxEPWzLG8yDSrAI
+id: cta_tile
+label: 'CTA Tile'
+icon_uuid: null
+icon_default: null
+description: 'Used for displaying a simple title and text followed by a CTA link.'
+behavior_plugins: {  }

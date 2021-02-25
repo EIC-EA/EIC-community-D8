@@ -1,0 +1,7 @@
+langcode: en
+status: true
+dependencies: {  }
+id: cta_tiles
+label: 'CTA Tiles'
+revision: 0
+description: 'A block that shows a list of CTA Tiles.'

@@ -16,6 +16,7 @@ module:
   dblog: 0
   dynamic_page_cache: 0
   editor: 0
+  eic_block_type_cta_tiles: 0
   eic_block_type_page_banner: 0
   eic_block_type_tiles_reference: 0
   eic_block_types: 0
@@ -27,6 +28,7 @@ module:
   eic_media: 0
   eic_media_document: 0
   eic_media_video: 0
+  eic_paragraph_cta_tile: 0
   entity: 0
   entity_browser: 0
   entity_browser_entity_form: 0
