@@ -1,0 +1,21 @@
+<section class="ecl-mainmenu">
+  <div class="ecl-container">
+    <div class="ecl-mainmenu__wrapper">
+      {% if label is not empty %}
+        <span class="ecl-mainmenu__label">{{ label }}</span>
+      {% endif %}
+
+      {% include "@ecl-twig/ec-component-menu/ecl-menu.html.twig" with mainmenu|default({})|merge({
+        extra_classes: mainmenu.extra_classes|default('') ~ ' ecl-mainmenu__main',
+      }) %}
+
+      {% if searchform %}
+        <div class="ecl-mainmenu__aside">
+          {% include '@ecl-twig/ec-component-search-form/ecl-search-form.html.twig' with searchform|default({})|merge({
+            extra_classes: searchform.extra_classes|default('') ~ 'ecl-mainmenu__searchform',
+          }) %}
+        <div>
+      {% endif %}
+    </div>
+  </div>
+</section>

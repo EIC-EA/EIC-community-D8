@@ -1,0 +1,69 @@
+.ecl-global-header {
+  padding: ecl-box-model('padding') 0;
+  background-color: map-get($ecl-colors, 'white');
+
+  @include ecl-media-breakpoint-up('md') {
+    padding: ecl-box-model('padding--md') 0;
+  }
+
+  &__wrapper {
+    display: flex;
+    align-items: center;
+  }
+
+  &__logo {
+    max-width: map-get($ecl-width, 'form-m');
+    margin-right: auto;
+    padding-right: ecl-box-model('padding');
+  }
+
+  &__logo-image {
+    width: 100%;
+    height: auto;
+  }
+
+  &__logo-link {
+    display: block;
+  }
+
+  &__logo-title {
+    @include visually-hidden();
+  }
+
+  &__language-selector,
+  &__login-link {
+    padding: map-get($ecl-spacing, 's');
+  }
+
+  &__language-selector {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    text-decoration: none;
+  }
+
+  &__language-selector-icon-wrapper {
+    position: relative;
+    flex-shrink: 0;
+    margin-right: ecl-box-model('margin', 'controls');
+  }
+
+  &__language-selector-icon {
+    color: map-get($ecl-colors, 'blue-100');
+  }
+
+  &__language-selector-icon-wrapper-label {
+    position: absolute;
+    top: 36%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: map-get($ecl-colors, 'white');
+    font-size: map-get($ecl-spacing, 's');
+  }
+
+  &__language-list {
+    .ecl-language-list__link {
+      display: flex;
+    }
+  }
+}

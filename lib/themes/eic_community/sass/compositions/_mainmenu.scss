@@ -1,0 +1,94 @@
+.ecl-mainmenu {
+  color: map-get($ecl-colors, 'white');
+  background-color: map-get($ecl-colors, 'blue-100');
+
+  .ecl-container .ecl-container {
+    padding: 0;
+    margin: 0;
+    max-width: none;
+    width: 100%;
+  }
+
+  &__wrapper {
+    display: flex;
+  }
+
+  &__label {
+    display: none;
+    margin: auto 0;
+    padding-right: map-get($ecl-spacing, 'xs');
+    border-right: solid 1px currentColor;
+    font-weight: $ecl-font-weight-bold;
+    @include ecl-responsive-font('meta');
+
+    @include ecl-media-breakpoint-up('lg') {
+      display: block;
+    }
+  }
+
+  &__main {
+    flex-grow: 1;
+  }
+
+  &__aside {
+    display: none;
+    flex-shrink: 0;
+    margin: auto 0;
+
+    @include ecl-media-breakpoint-up('lg') {
+      display: block;
+    }
+  }
+
+  .ecl-menu__link {
+    @include ecl-responsive-font('meta');
+  }
+
+  &__searchform {
+    min-width: map-get($ecl-width, 'form-m');
+
+    .ecl-text-input,
+    .ecl-button {
+      background-color: map-get($ecl-colors, 'blue-75');
+      color: map-get($ecl-colors, 'white');
+
+      & {
+        border: none;
+      }
+
+      &:not(:focus):hover {
+        outline: none;
+      }
+
+      &::-webkit-search-cancel-button {
+        appearance: none;
+      }
+    }
+
+    .ecl-button {
+      color: map-get($ecl-colors, 'white');
+    }
+
+    .ecl-text-input {
+      border-top-left-radius: map-get($ecl-spacing, '2xs');
+      border-bottom-left-radius: map-get($ecl-spacing, '2xs');
+      @include ecl-responsive-font('meta');
+      padding: map-get($ecl-spacing, 'xs');
+    }
+
+    .ecl-button {
+      border-top-right-radius: map-get($ecl-spacing, '2xs');
+      border-bottom-right-radius: map-get($ecl-spacing, '2xs');
+      padding-top: map-get($ecl-spacing, 'xs');
+      padding-bottom: map-get($ecl-spacing, 'xs');
+    }
+
+    .ecl-button__label {
+      @include visually-hidden();
+    }
+
+    .ecl-search-form__button .ecl-button__icon {
+      display: block;
+    }
+  }
+}
