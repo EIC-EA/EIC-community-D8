@@ -31,6 +31,10 @@
     {% endblock %}
 
     {% block site_header %}
+      {% if top_menu %}
+        {% include "@theme/patterns/compositions/top-menu.html.twig" with top_menu|default({}) only %}
+      {% endif %}
+
       {% if site_header %}
         {% include "@theme/patterns/compositions/global-header.html.twig" with site_header|default({})|merge({
           user: user|default(NULL)
