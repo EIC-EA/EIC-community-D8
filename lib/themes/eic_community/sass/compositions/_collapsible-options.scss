@@ -22,7 +22,7 @@
       margin-left: ecl-box-model('margin', 'controls');
       width: map-get($ecl-spacing, 'xs');
       height: map-get($ecl-spacing, 'xs');
-      border: ecl-border();
+      border: solid 2px;
       border-color: currentColor;
       border-bottom: none;
       border-left: none;

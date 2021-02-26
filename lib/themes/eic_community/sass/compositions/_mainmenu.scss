@@ -45,7 +45,9 @@
   }
 
   &__searchform {
-    min-width: map-get($ecl-width, 'form-m');
+    @include ecl-media-breakpoint-up('md') {
+      min-width: map-get($ecl-width, 'form-m');
+    }
 
     .ecl-text-input,
     .ecl-button {
@@ -70,6 +72,12 @@
     }
 
     .ecl-text-input {
+      @include ecl-media-breakpoint-down('xs') {
+        position: absolute;
+        top: 0;
+        right: 100%;
+      }
+
       border-top-left-radius: map-get($ecl-spacing, '2xs');
       border-bottom-left-radius: map-get($ecl-spacing, '2xs');
       @include ecl-responsive-font('meta');
@@ -89,6 +97,26 @@
 
     .ecl-search-form__button .ecl-button__icon {
       display: block;
+    }
+  }
+
+  .ecl-menu {
+    @include ecl-media-breakpoint-down('md') {
+      padding: map-get($ecl-spacing, 's') 0;
+    }
+  }
+
+  // Fixes margin issue for hamburger menu.
+  .ecl-menu__open {
+    display: inline-flex;
+    float: none;
+    margin-top: 0;
+  }
+
+  .ecl-menu__container {
+    @include ecl-media-breakpoint-down('md') {
+      display: flex;
+      flex-direction: row-reverse;
     }
   }
 }

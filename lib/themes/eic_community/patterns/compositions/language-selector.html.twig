@@ -15,7 +15,7 @@
           extra_classes: 'ecl-language-selector__icon'
         } %}
       {% endif %}
-      <span class="ecl-language-selector__icon-wrapper-label">{{ code|upper }}</span>
+      <span class="ecl-language-selector__icon-wrapper-label" aria-hidden>{{ code|upper }}</span>
     </span>
     <span class="ecl-language-selector__label">{{ name ~ " (" ~ code|upper ~ ")" }}</span>
   </a>

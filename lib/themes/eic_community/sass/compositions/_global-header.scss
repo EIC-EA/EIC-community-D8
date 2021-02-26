@@ -1,5 +1,4 @@
 .ecl-global-header {
-  padding: ecl-box-model('padding') 0;
   background-color: map-get($ecl-colors, 'white');
 
   @include ecl-media-breakpoint-up('md') {
