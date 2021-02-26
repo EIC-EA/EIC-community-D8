@@ -1,0 +1,22 @@
+uuid: 69916bff-4dd1-44f5-96a9-422dbe92d898
+langcode: en
+status: true
+dependencies:
+  theme:
+    - eic_community
+_core:
+  default_config_hash: PnhvOOg3dp0eO7NMXGJQijwuDBdEqDF2hag3eVvSMzk
+id: eic_community_tabs
+theme: eic_community
+region: content
+weight: 1
+provider: null
+plugin: local_tasks_block
+settings:
+  id: local_tasks_block
+  label: Tabs
+  provider: core
+  label_display: '0'
+  primary: true
+  secondary: true
+visibility: {  }

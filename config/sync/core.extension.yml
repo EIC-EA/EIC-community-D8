@@ -9,6 +9,7 @@ module:
   block_content: 0
   block_content_permissions: 0
   breakpoint: 0
+  components: 0
   config: 0
   content_moderation: 0
   contextual: 0
@@ -91,6 +92,7 @@ theme:
   classy: 0
   seven: 0
   oe_theme: 0
+  eic_community: 0
 profile: oe_profile
 _core:
   default_config_hash: R4IF-ClDHXxblLcG0L7MgsLvfBIMAvi_skumNFQwkDc
