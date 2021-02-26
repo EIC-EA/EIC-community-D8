@@ -1,8 +1,13 @@
 .ecl-top-menu {
+  display: none;
   background-color: map-get($ecl-colors, 'grey');
   color: map-get($ecl-colors, 'grey-20');
   padding: map-get($ecl-spacing, 'xs');
   @include ecl-responsive-font('meta');
+
+  @include ecl-media-breakpoint-up('md') {
+    display: block;
+  }
 
   &__wrapper {
     display: flex;
