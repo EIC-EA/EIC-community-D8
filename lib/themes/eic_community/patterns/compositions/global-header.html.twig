@@ -30,66 +30,45 @@
       {% endif %}
 
       {% if language_selector is not empty %}
-        <div class="ecl-global-header__auth-wrapper">
-          <a class="ecl-global-header__language-selector ecl-link" href="{{ language_selector.href }}" aria-label="{{ language_selector.name }}"
-            {% if language_selector.overlay is not empty %}
-              aria-controls="global-header-language-list"
-            {% endif %}
-          >
-            <span class="ecl-global-header__language-selector-icon-wrapper">
-              {% if icon_file_path %}
-                {% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with {
-                  icon: {
-                    path: icon_file_path,
-                    name: 'language',
-                    type: 'general',
-                  },
-                  extra_classes: 'ecl-global-header__language-selector-icon'
-                } %}
-              {% endif %}
-              <span class="ecl-global-header__language-selector-icon-wrapper-label">{{ language_selector.code|upper }}</span>
-            </span>
-            {{ language_selector.name ~ " (" ~ language_selector.code|upper ~ ")" }}
-          </a>
+        <div class="ecl-global-header__language-selector-wrapper">
+          {% include "@theme/patterns/compositions/language-selector.html.twig" with language_selector|default({}) %}
         </div>
       {% endif %}
 
       <div class="ecl-global-header__auth-wrapper">
         {% if user %}
-
-        {% elseif login %}
-          {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with {
-            link: login.link|merge({
-              icon_position: 'before',
-              type: 'standalone',
-            }),
-            icon: icon_file_path ? {
-              path: icon_file_path,
-              name: 'user_circle',
-              type: 'custom',
-              size: 'l',
-            } : {},
-            extra_classes: 'ecl-global-header__login-link',
+          {% embed "@theme/patterns/compositions/collapsible-options.html.twig" with {
+            extra_classes: 'ecl-collapsible-options--aligns-from-right ecl-collapsible-options--is-compact',
+            items: user.actions,
           } %}
+            {% block trigger %}
+              {% include "@theme/patterns/components/author.html.twig" with {
+                author: user.label,
+                image: user.image,
+                path: user.path,
+                extra_classes: 'ecl-collapsible-options__trigger ecl-author--is-compact ecl-author--as-block',
+              } %}
+            {% endblock %}
+          {% endembed %}
+
+        {% elseif login and login.link %}
+          {# Static ouput from the ECL link output due to the nbsp output issues. #}
+          <a href="{{ login.link.path }}" class="ecl-link ecl-link--standalone ecl-global-header__login-link">
+            {% if icon_file_path %}
+              {% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with {
+                icon: icon_file_path ? {
+                  path: icon_file_path,
+                  name: 'user_circle',
+                  type: 'custom',
+                  size: 'l',
+                },
+                extra_classes: 'ecl-global-header__login-link-icon'
+              } %}
+            {% endif %}
+            {{ login.link.label }}
+          </a>
         {% endif %}
       </div>
     </div>
   </div>
-
-  {% if language_selector.overlay is not empty %}
-    {% include '@ecl-twig/ec-component-language-list/ecl-language-list.html.twig' with language_selector.overlay|default({})|merge({
-      overlay: true,
-      icon_path: icon_file_path,
-      extra_classes: 'ecl-global-header__language-list',
-      extra_attributes: [
-        {
-          name: 'id',
-          value: language_selector.extra_attributes['global-header-language-list']
-        },
-        {
-          name: 'hidden',
-        }
-      ]
-    }) %}
-  {% endif %}
 </header>

@@ -43,14 +43,14 @@
                   icon_position: 'before',
                 }),
                 icon: _icon,
-                extra_classes: 'ecl-link--button ecl-link--button-ghost ecl-collapsible-options__button',
+                extra_classes: 'ecl-link--button ecl-link--button-ghost ecl-collapsible-options__button ' ~ item.extra_classes|default(''),
               }) only %}
             {% else %}
               {% include "@ecl-twig/ec-component-button/ecl-button.html.twig" with item|default({})|merge({
                 variant: 'ghost',
                 icon: _icon,
                 icon_position: 'before',
-                extra_classes: 'ecl-collapsible-options__button',
+                extra_classes: 'ecl-collapsible-options__button ' ~ item.extra_classes|default(''),
               }) only %}
             {% endif %}
           </div>

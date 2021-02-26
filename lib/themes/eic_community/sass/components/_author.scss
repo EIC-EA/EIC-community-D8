@@ -5,12 +5,20 @@
   align-items: center;
   margin: map-get($ecl-spacing, 'xs') 0;
 
+  &:focus-within {
+    outline: ecl-border('outline');
+  }
+
   &:first-child {
     margin-top: 0;
   }
 
   &:last-child {
     margin-bottom: 0;
+  }
+
+  &--as-block {
+    padding: map-get($ecl-spacing, 's');
   }
 
   &--is-large {
@@ -32,9 +40,25 @@
     }
   }
 
+  &__link {
+    text-decoration: none;
+
+    &,
+    &:hover,
+    &:focus {
+      outline: none;
+    }
+  }
+
   &__label {
     line-height: ecl-typography('line-height', 'label');
     @include ecl-responsive-font('label');
+
+    @include ecl-media-breakpoint-down('md') {
+      #{$node}--is-compact & {
+        @include visually-hidden();
+      }
+    }
 
     #{$node}--is-medium & {
       font-weight: ecl-typography('font-weight', 'label');

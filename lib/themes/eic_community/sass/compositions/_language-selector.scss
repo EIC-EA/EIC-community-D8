@@ -1,0 +1,55 @@
+.ecl-language-selector {
+  &__link {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    flex-direction: column;
+    padding: map-get($ecl-spacing, 's');
+
+    @include ecl-media-breakpoint-up('md') {
+      flex-direction: row;
+    }
+  }
+
+  &__icon-wrapper {
+    position: relative;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    @include ecl-media-breakpoint-up('md') {
+      margin-right: ecl-box-model('margin', 'controls');
+    }
+  }
+
+  &__icon {
+    color: map-get($ecl-colors, 'blue-100');
+  }
+
+  &__icon-wrapper-label {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: map-get($ecl-colors, 'white');
+    font-size: map-get($ecl-spacing, 's');
+  }
+
+  &__label {
+    @include ecl-media-breakpoint-down('md') {
+      @include visually-hidden();
+    }
+  }
+
+  &__language-list {
+    .ecl-language-list__link {
+      display: flex;
+    }
+  }
+
+  // Fixes margin issue for hamburger menu.
+  .ecl-menu__open {
+    float: none;
+  }
+}

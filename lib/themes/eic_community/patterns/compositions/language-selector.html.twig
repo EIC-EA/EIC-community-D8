@@ -1,0 +1,37 @@
+<div class="ecl-language-selector {{ extra_classes }}">
+  <a class="ecl-language-selector__link ecl-link" href="{{ href }}" aria-label="{{ name }}"
+    {% if overlay is not empty %}
+      aria-controls="{{ id|default('language-selector-language-list') }}"
+    {% endif %}
+  >
+    <span class="ecl-language-selector__icon-wrapper">
+      {% if icon_file_path %}
+        {% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with {
+          icon: {
+            path: icon_file_path,
+            name: 'language',
+            type: 'general',
+          },
+          extra_classes: 'ecl-language-selector__icon'
+        } %}
+      {% endif %}
+      <span class="ecl-language-selector__icon-wrapper-label">{{ code|upper }}</span>
+    </span>
+    <span class="ecl-language-selector__label">{{ name ~ " (" ~ code|upper ~ ")" }}</span>
+  </a>
+
+  {% include '@ecl-twig/ec-component-language-list/ecl-language-list.html.twig' with language_selector.overlay|default({})|merge({
+    overlay: true,
+    icon_path: icon_file_path,
+    extra_classes: 'ecl-language-selector__language-list',
+    extra_attributes: [
+      {
+        name: 'id',
+        value: id|default('language-selector-language-list'),
+      },
+      {
+        name: 'hidden',
+      }
+    ]
+  }) %}
+</div>
