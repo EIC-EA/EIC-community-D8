@@ -20,4 +20,10 @@
     stats: stats,
     actions: actions,
   } only %}
+
+  {% include "@theme/patterns/compositions/featured-content-sections.html.twig" with {
+    items: [
+      featured_news,
+    ]
+  } %}
 {% endblock %}
