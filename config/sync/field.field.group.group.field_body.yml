@@ -1,0 +1,21 @@
+uuid: d02064af-780d-44aa-a004-e3f9d5bf3675
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.group.field_body
+    - group.type.group
+  module:
+    - text
+id: group.group.field_body
+field_name: field_body
+entity_type: group
+bundle: group
+label: Body
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long

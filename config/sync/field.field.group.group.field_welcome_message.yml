@@ -1,0 +1,21 @@
+uuid: 5c09ce54-feaa-4479-a574-d040c09fae20
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.group.field_welcome_message
+    - group.type.group
+  module:
+    - text
+id: group.group.field_welcome_message
+field_name: field_welcome_message
+entity_type: group
+bundle: group
+label: 'Welcome message'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long

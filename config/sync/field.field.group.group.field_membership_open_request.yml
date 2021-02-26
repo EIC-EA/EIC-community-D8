@@ -1,0 +1,23 @@
+uuid: ca360bae-49ae-497a-ba56-4a88f3e4b1b3
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.group.field_membership_open_request
+    - group.type.group
+id: group.group.field_membership_open_request
+field_name: field_membership_open_request
+entity_type: group
+bundle: group
+label: 'Membership requests'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean
