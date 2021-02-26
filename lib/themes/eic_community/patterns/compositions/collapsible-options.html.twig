@@ -37,20 +37,25 @@
               } %}
             {% endif %}
 
+            {% set _extra_classes ='ecl-collapsible-options__button ' ~ item.extra_classes|default('') %}
+            {% if item.active %}
+              {% set _extra_classes = _extra_classes ~ ' ecl-collapsible-options__button--is-active'%}
+            {% endif %}
+
             {% if item.link %}
               {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with item|default({})|merge({
                 link: item.link|merge({
                   icon_position: 'before',
                 }),
                 icon: _icon,
-                extra_classes: 'ecl-link--button ecl-link--button-ghost ecl-collapsible-options__button ' ~ item.extra_classes|default(''),
+                extra_classes: 'ecl-link--button ecl-link--button-ghost ' ~ _extra_classes,
               }) only %}
             {% else %}
               {% include "@ecl-twig/ec-component-button/ecl-button.html.twig" with item|default({})|merge({
                 variant: 'ghost',
                 icon: _icon,
                 icon_position: 'before',
-                extra_classes: 'ecl-collapsible-options__button ' ~ item.extra_classes|default(''),
+                extra_classes: _extra_classes,
               }) only %}
             {% endif %}
           </div>
