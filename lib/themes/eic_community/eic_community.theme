@@ -11,7 +11,7 @@ use Drupal\oe_theme\ValueObject\ImageValueObject;
  * Implements hook_preprocess_node() for page node.
  */
 function eic_community_preprocess_node__page(array &$variables) {
-  /** @var \Drupal\Core\Entity\EntityInterface */
+  /** @var \Drupal\Core\Entity\EntityInterface $node */
   $node = $variables['node'];
 
   // Add node title.
