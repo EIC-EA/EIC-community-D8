@@ -1,0 +1,163 @@
+<?php
+
+/**
+ * @file
+ * Functions to support theming.
+ */
+
+use Drupal\oe_theme\ValueObject\ImageValueObject;
+
+/**
+ * Implements hook_preprocess_node() for page node.
+ */
+function eic_community_preprocess_node__page(array &$variables) {
+  /** @var \Drupal\Core\Entity\EntityInterface */
+  $node = $variables['node'];
+
+  // Add node title.
+  $variables['introduction_header'] = [
+    'title' => $node->label(),
+  ];
+
+  // Add subtitle text.
+  if (!$node->get('field_subtitle')->isEmpty()) {
+    $variables['introduction_header']['meta'] = [
+      ['label' => $node->get('field_subtitle')->value],
+    ];
+  }
+
+  // Add call to action link.
+  if (!$node->get('field_page_cta')->isEmpty()) {
+    $variables['introduction_header']['call_to_action'] = [
+      'link' => [
+        'label' => $node->get('field_page_cta')->first()->get('title')->getValue() ?? '',
+        'path' => $node->get('field_page_cta')->first()->getUrl()->toUriString(),
+      ],
+    ];
+  }
+
+  // Add media image.
+  if (!$node->get('field_image')->isEmpty()) {
+    /** @var \Drupal\media\Entity\Media $media */
+    $media = \Drupal::service('entity.repository')->getTranslationFromContext($node->get('field_image')->entity, $node->language()->getId());
+
+    switch ($media->bundle()) {
+      case 'image':
+        $image_item = ImageValueObject::fromImageItem($media->get('oe_media_image')->first());
+        $variables['introduction_header']['media'] = [
+          'image' => $image_item->getSource(),
+          'alt' => $image_item->getAlt(),
+        ];
+        break;
+
+    }
+  }
+}
+
+/**
+ * Implements hook_preprocess_paragraph() for full_text_content paragraph.
+ */
+function eic_community_preprocess_paragraph__full_text_content(array &$variables) {
+  /** @var \Drupal\paragraphs\Entity\Paragraph $paragraph */
+  $paragraph = $variables['paragraph'];
+
+  // Get title text.
+  if (!$paragraph->get('field_title')->isEmpty()) {
+    $variables['paragraph_content']['title'] = $paragraph->get('field_title')->value;
+  }
+
+  // Get body text.
+  if (!$paragraph->get('field_body')->isEmpty()) {
+    $variables['paragraph_content']['items'] = [
+      ['content' => $paragraph->get('field_body')->view()],
+    ];
+  }
+}
+
+/**
+ * Implements hook_preprocess_paragraph() for text_and_media_content paragraph.
+ */
+function eic_community_preprocess_paragraph__text_and_media_content(array &$variables) {
+  /** @var \Drupal\paragraphs\Entity\Paragraph $paragraph */
+  $paragraph = $variables['paragraph'];
+
+  $items = [];
+
+  // Get body text.
+  if (!$paragraph->get('field_body')->isEmpty()) {
+    $items['content'] = $paragraph->get('field_body')->view();
+  }
+
+  // Get call to action link.
+  if (!$paragraph->get('field_cta')->isEmpty()) {
+    $link = $paragraph->get('field_cta')->first()->getValue();
+    $items['call_to_action'] = [
+      'link' => [
+        'label' => $link['title'],
+        'path' => $link['uri'],
+      ],
+    ];
+  }
+
+  // Add body and call to action items.
+  $variables['paragraph_content']['items'] = [$items];
+
+  // Add media field.
+  if (!$paragraph->get('field_media')->isEmpty()) {
+    /** @var \Drupal\media\Entity\Media $media */
+    $media = \Drupal::service('entity.repository')->getTranslationFromContext($paragraph->get('field_media')->entity, $paragraph->language()->getId());
+
+    switch ($media->bundle()) {
+      case 'image':
+        $image_item = ImageValueObject::fromImageItem($media->get('oe_media_image')->first());
+        $variables['paragraph_content']['media'] = [
+          'image' => $image_item->getSource(),
+          'alt' => $image_item->getAlt(),
+        ];
+        break;
+
+    }
+  }
+}
+
+/**
+ * Implements hook_preprocess_paragraph() for full_media_content paragraph.
+ */
+function eic_community_preprocess_paragraph__full_media_content(array &$variables) {
+  /** @var \Drupal\paragraphs\Entity\Paragraph $paragraph */
+  $paragraph = $variables['paragraph'];
+
+  if (!$paragraph->get('field_media')->isEmpty()) {
+    /** @var \Drupal\media\Entity\Media $media */
+    $media = \Drupal::service('entity.repository')->getTranslationFromContext($paragraph->get('field_media')->entity, $paragraph->language()->getId());
+
+    $variables['paragraph_content'] = [
+      'description' => FALSE,
+    ];
+
+    switch ($media->bundle()) {
+      case 'image':
+        $image_item = ImageValueObject::fromImageItem($media->get('oe_media_image')->first());
+        $media = [
+          'image' => $image_item->getSource(),
+          'alt' => $image_item->getAlt(),
+        ];
+        break;
+
+      case 'remote_video':
+        $media = [
+          'embedded_media' => $media->get('oe_media_oembed_video')->view('oe_theme_main_content'),
+        ];
+        break;
+
+    }
+
+    // Add media to the theme variables.
+    $variables['paragraph_content'] = array_merge($variables['paragraph_content'], $media);
+
+    // Add media caption.
+    if (!$paragraph->get('field_media_caption')->isEmpty()) {
+      $variables['paragraph_content']['description'] = $paragraph->get('field_media_caption')->value;
+    }
+  }
+}
