@@ -1,0 +1,49 @@
+uuid: f16b55cf-b7d0-4918-a817-fc264114d80b
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_story_paragraphs
+    - node.type.story
+    - paragraphs.paragraphs_type.contributor
+  module:
+    - entity_reference_revisions
+id: node.story.field_story_paragraphs
+field_name: field_story_paragraphs
+entity_type: node
+bundle: story
+label: 'Story Paragraphs'
+description: 'For now only Contributor Paragraph is enabled.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    negate: 0
+    target_bundles:
+      contributor: contributor
+    target_bundles_drag_drop:
+      banner:
+        weight: 8
+        enabled: false
+      contributor:
+        enabled: true
+        weight: 9
+      full_media_content:
+        weight: 10
+        enabled: false
+      full_text_content:
+        weight: 11
+        enabled: false
+      quote:
+        weight: 12
+        enabled: false
+      text_and_media_content:
+        weight: 13
+        enabled: false
+      tiles_content:
+        weight: 14
+        enabled: false
+field_type: entity_reference_revisions

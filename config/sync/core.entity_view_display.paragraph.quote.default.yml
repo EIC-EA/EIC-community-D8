@@ -55,8 +55,4 @@ content:
     label: above
     settings: {  }
     third_party_settings: {  }
-hidden:
-  field_body: true
-  field_tx_author: true
-  field_ur_author: true
-  field_view_mode: true
+hidden: {  }

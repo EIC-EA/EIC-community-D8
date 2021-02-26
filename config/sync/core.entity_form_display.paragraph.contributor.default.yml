@@ -1,0 +1,87 @@
+uuid: 9a68658d-2808-40e2-8eb1-2da70969bd16
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.contributor.field_contributor_link
+    - field.field.paragraph.contributor.field_media
+    - field.field.paragraph.contributor.field_name
+    - field.field.paragraph.contributor.field_organisation
+    - field.field.paragraph.contributor.field_person_email
+    - field.field.paragraph.contributor.field_user_ref
+    - field.field.paragraph.contributor.paragraph_view_mode
+    - paragraphs.paragraphs_type.contributor
+  module:
+    - link
+    - media_library
+    - paragraph_view_mode
+_core:
+  default_config_hash: RUDsDLYtzkGWOMxoMEZMjUsvbsP7DlFTefCS0SBRctw
+id: paragraph.contributor.default
+targetEntityType: paragraph
+bundle: contributor
+mode: default
+content:
+  field_contributor_link:
+    weight: 10
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: {  }
+    type: link_default
+    region: content
+  field_media:
+    weight: 7
+    settings:
+      media_types: {  }
+    third_party_settings: {  }
+    type: media_library_widget
+    region: content
+  field_name:
+    weight: 5
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_organisation:
+    weight: 8
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_person_email:
+    weight: 9
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: email_default
+    region: content
+  field_user_ref:
+    weight: 6
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: entity_reference_autocomplete
+    region: content
+  paragraph_view_mode:
+    type: paragraph_view_mode
+    weight: -100
+    settings:
+      view_modes:
+        external_person: external_person
+        platform_member: platform_member
+        default: 0
+      default_view_mode: external_person
+    third_party_settings: {  }
+    region: content
+hidden:
+  created: true
+  status: true

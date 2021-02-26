@@ -1,0 +1,20 @@
+uuid: fcadb21e-09ab-431f-8d1a-c1a8565dee38
+langcode: en
+status: true
+dependencies:
+  module:
+    - fragments
+    - paragraphs
+id: paragraph.field_banner
+field_name: field_banner
+entity_type: paragraph
+type: entity_reference
+settings:
+  target_type: fragment
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

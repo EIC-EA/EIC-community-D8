@@ -1,0 +1,14 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - paragraph_view_mode
+third_party_settings:
+  paragraph_view_mode:
+    enabled: false
+id: cta_tile
+label: 'CTA Tile'
+icon_uuid: null
+icon_default: null
+description: 'Used for displaying a simple title and text followed by a CTA link.'
+behavior_plugins: {  }

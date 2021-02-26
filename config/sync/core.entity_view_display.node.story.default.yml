@@ -11,6 +11,7 @@ dependencies:
     - field.field.node.story.field_introduction
     - field.field.node.story.field_publication_date
     - field.field.node.story.field_related_stories
+    - field.field.node.story.field_story_paragraphs
     - field.field.node.story.field_time_to_read
     - field.field.node.story.field_video
     - field.field.node.story.field_vocab_geo
@@ -18,6 +19,7 @@ dependencies:
     - node.type.story
   module:
     - datetime
+    - entity_reference_revisions
     - text
     - user
 _core:
@@ -27,6 +29,11 @@ targetEntityType: node
 bundle: story
 mode: default
 content:
+  content_moderation_control:
+    weight: -20
+    region: content
+    settings: {  }
+    third_party_settings: {  }
   field_body:
     weight: 5
     label: above
@@ -90,6 +97,15 @@ content:
       link: true
     third_party_settings: {  }
     type: entity_reference_label
+    region: content
+  field_story_paragraphs:
+    type: entity_reference_revisions_entity_view
+    weight: 15
+    label: above
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
     region: content
   field_time_to_read:
     weight: 3
