@@ -12,7 +12,6 @@ dependencies:
     - field.field.node.story.field_publication_date
     - field.field.node.story.field_related_stories
     - field.field.node.story.field_story_paragraphs
-    - field.field.node.story.field_time_to_read
     - field.field.node.story.field_video
     - field.field.node.story.field_vocab_geo
     - field.field.node.story.field_vocab_topics
@@ -24,6 +23,7 @@ dependencies:
     - media_library
     - paragraphs
     - path
+    - scheduler
     - text
 _core:
   default_config_hash: LsDJlqOkQALFbvWkBxxCsPzY-CA2N2K9zdQZXXgCoIM
@@ -111,14 +111,6 @@ content:
       default_paragraph_type: ''
     third_party_settings: {  }
     region: content
-  field_time_to_read:
-    weight: 4
-    settings:
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
-    type: string_textfield
-    region: content
   field_video:
     type: media_library_widget
     weight: 8
@@ -168,6 +160,11 @@ content:
   publish_on:
     type: datetime_timestamp_no_default
     weight: 30
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  scheduler_settings:
+    weight: 20
     region: content
     settings: {  }
     third_party_settings: {  }
