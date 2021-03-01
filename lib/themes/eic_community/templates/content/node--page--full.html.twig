@@ -1,0 +1,16 @@
+{#
+/**
+ * @file
+ * Theme override to display a node.
+ *
+ * @see ./themes/custom/eic_community/templates/content/node.html.twig
+ */
+#}
+{% extends "@eic_community/content/node.html.twig" %}
+{% set display_submitted = false %}
+
+{% block content %}
+  {% include "@theme/patterns/compositions/introduction-header.html.twig" with introduction_header only %}
+
+  {{ content.field_page_paragraphs }}
+{% endblock %}

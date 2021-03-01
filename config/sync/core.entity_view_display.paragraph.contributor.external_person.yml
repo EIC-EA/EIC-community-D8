@@ -1,0 +1,70 @@
+uuid: 5c42dd56-a811-4de8-9e39-ae2419ddb723
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.paragraph.external_person
+    - field.field.paragraph.contributor.field_contributor_link
+    - field.field.paragraph.contributor.field_media
+    - field.field.paragraph.contributor.field_name
+    - field.field.paragraph.contributor.field_organisation
+    - field.field.paragraph.contributor.field_person_email
+    - field.field.paragraph.contributor.field_user_ref
+    - field.field.paragraph.contributor.paragraph_view_mode
+    - paragraphs.paragraphs_type.contributor
+  module:
+    - link
+_core:
+  default_config_hash: ulqfEw_Yyq8BPOjg0pdkWBxki_DZASCvOp3jcTFRsxk
+id: paragraph.contributor.external_person
+targetEntityType: paragraph
+bundle: contributor
+mode: external_person
+content:
+  field_contributor_link:
+    type: link
+    weight: 4
+    region: content
+    label: hidden
+    settings:
+      trim_length: 80
+      target: _blank
+      url_only: false
+      url_plain: false
+      rel: '0'
+    third_party_settings: {  }
+  field_media:
+    weight: 1
+    label: hidden
+    settings:
+      view_mode: default
+      link: false
+    third_party_settings: {  }
+    type: entity_reference_entity_view
+    region: content
+  field_name:
+    weight: 0
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_organisation:
+    type: string
+    weight: 2
+    region: content
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+  field_person_email:
+    type: basic_string
+    weight: 3
+    region: content
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  field_user_ref: true
+  paragraph_view_mode: true
