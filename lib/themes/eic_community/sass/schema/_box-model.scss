@@ -4,7 +4,7 @@ $ecl-box-model: (
     'padding': map-get($ecl-spacing, 'l'),
     'padding--md': map-get($ecl-spacing, 'xl'),
     'padding--lg': map-get($ecl-spacing, '2xl'),
-    'border-radius': 3px,
+    'border-radius': 4px,
     'box-shadow': 0px 2px 4px 0px map-get($ecl-colors, 'grey-25'),
   ),
   'banner': (
