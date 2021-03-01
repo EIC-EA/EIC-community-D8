@@ -5,5 +5,7 @@
  *
  * @see ./modules/contrib/paragraphs/templates/paragraph.html.twig
  */
- #}
-{% include "@theme/patterns/compositions/media-wrapper.html.twig" with paragraph_content only %}
+#}
+{% include "@theme/patterns/compositions/media-wrapper.html.twig" with paragraph_content|merge({
+  description: paragraph_content.description|default(false),
+}) only %}

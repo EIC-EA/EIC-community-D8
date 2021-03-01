@@ -1,0 +1,11 @@
+{#
+/**
+ * @file
+ * Theme override to display the 'Tiles content' type paragraph.
+ *
+ * @see ./modules/contrib/paragraphs/templates/paragraph.html.twig
+ */
+#}
+{% include "@theme/patterns/compositions/featured-content-collection.html.twig" with paragraph_content|merge({
+  extra_classes: 'ecl-section-wrapper',
+}) only %}

@@ -70,8 +70,13 @@
  *   in different view modes.
  */
 #}
-<article{{ attributes }}>
+{% set has_wrapper = true %}
 
+{% if has_wrapper %}
+  <article{{ attributes }}>
+{% endif %}
+
+{% block header %}
   {{ title_prefix }}
   {% if not page %}
     <h2{{ title_attributes }}>
@@ -79,7 +84,15 @@
     </h2>
   {% endif %}
   {{ title_suffix }}
+{% endblock %}
 
+{% block content %}
+  <div{{ content_attributes }}>
+    {{ content }}
+  </div>
+{% endblock %}
+
+{% block metadata %}
   {% if display_submitted %}
     <footer>
       {{ author_picture }}
@@ -89,11 +102,9 @@
       </div>
     </footer>
   {% endif %}
+{% endblock %}
 
-  {% block content %}
-    <div{{ content_attributes }}>
-      {{ content }}
-    </div>
-  {% endblock %}
+{% if has_wrapper %}
+  </article>
+{% endif %}
 
-</article>
