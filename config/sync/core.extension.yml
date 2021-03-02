@@ -31,6 +31,7 @@ module:
   eic_media_video: 0
   eic_paragraph_contributor: 0
   eic_paragraph_cta_tile: 0
+  eic_users: 0
   entity: 0
   entity_browser: 0
   entity_browser_entity_form: 0
