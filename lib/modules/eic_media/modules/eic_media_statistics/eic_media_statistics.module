@@ -1,0 +1,40 @@
+<?php
+
+/**
+ * @file
+ * Primary module hooks for EIC Media statistics module.
+ */
+
+/**
+ * Implements hook_file_download().
+ */
+function eic_media_statistics_file_download($uri) {
+  $config = \Drupal::config('eic_media_statistics.settings');
+  if (!$config->get('count_file_downloads')) {
+    return;
+  }
+  $query = \Drupal::entityTypeManager()->getStorage('file')->getQuery();
+  $result = $query->condition('uri', $uri)
+    ->execute();
+  if (count($result) > 0) {
+    $fid = reset($result);
+    \Drupal::getContainer()->get('eic_media_statistics.storage.file')->recordView($fid);
+  }
+}
+
+/**
+ * Implements hook_cron().
+ */
+function eic_media_statistics_cron() {
+  $storage = \Drupal::service('eic_media_statistics.storage.file');
+  $storage->resetDayCount();
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_predelete() for file entities.
+ */
+function eic_media_statistics_file_predelete(EntityInterface $file) {
+  // Clean up statistics table when file is deleted.
+  $id = $file->id();
+  return \Drupal::service('eic_media_statistics.storage.file')->deleteViews($id);
+}
