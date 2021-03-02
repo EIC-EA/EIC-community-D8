@@ -1,0 +1,11 @@
+uuid: 042b537f-7d94-4833-b3a9-bb34a9b3e6d8
+langcode: en
+status: true
+dependencies: {  }
+id: web_service
+label: 'Web service'
+weight: 3
+is_admin: null
+permissions:
+  - 'administer users'
+  - 'restful post user_registration'
