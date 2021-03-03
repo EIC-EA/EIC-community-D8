@@ -75,6 +75,23 @@ reactions:
         unique: 0
         context_id: homepage_anonymous
         uuid: 596d7f88-c45b-4b06-8ba8-925d8f21fbbe
+      20103bdb-6cc0-4481-a3c1-b311abca2f40:
+        id: 'block_content:880aff79-c4fa-416e-9703-0a3119bff5d0'
+        label: 'Homepage - Stay up to date block'
+        provider: block_content
+        label_display: '0'
+        status: true
+        info: ''
+        view_mode: full
+        region: content
+        weight: '0'
+        context_mapping: {  }
+        custom_id: block_homepage_stay_up_to_date
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: homepage_anonymous
+        uuid: 20103bdb-6cc0-4481-a3c1-b311abca2f40
     id: blocks
     saved: false
     uuid: 5a010c1a-216a-427c-8d7e-43702d8b57ec
