@@ -1,0 +1,19 @@
+uuid: 59ccfbae-7e69-497b-a976-b1965f5e5282
+langcode: en
+status: true
+dependencies:
+  module:
+    - group
+id: group.field_related_groups
+field_name: field_related_groups
+entity_type: group
+type: entity_reference
+settings:
+  target_type: group
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

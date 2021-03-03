@@ -29,28 +29,31 @@ settings:
     negate: 0
     target_bundles:
       banner: banner
-      full_text_content: full_text_content
       full_media_content: full_media_content
       quote: quote
+      full_text_content: full_text_content
       text_and_media_content: text_and_media_content
       tiles_content: tiles_content
     target_bundles_drag_drop:
       banner:
         enabled: true
         weight: -13
+      contributor:
+        weight: -12
+        enabled: false
       full_media_content:
         enabled: true
         weight: -11
       full_text_content:
         enabled: true
-        weight: -12
+        weight: -9
       quote:
         enabled: true
         weight: -10
       text_and_media_content:
         enabled: true
-        weight: -9
+        weight: -8
       tiles_content:
         enabled: true
-        weight: -8
+        weight: -7
 field_type: entity_reference_revisions

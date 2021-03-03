@@ -1,0 +1,19 @@
+uuid: df242c01-9cab-4686-9cc6-3f8f9085d4c1
+langcode: en
+status: true
+dependencies:
+  module:
+    - group
+    - text
+id: group.field_body
+field_name: field_body
+entity_type: group
+type: text_long
+settings: {  }
+module: text
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false
