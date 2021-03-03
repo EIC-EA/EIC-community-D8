@@ -43,7 +43,7 @@ reactions:
         weight: '0'
         context_mapping: {  }
         custom_id: block_homepage_facts_figures
-        theme: oe_theme
+        theme: eic_community
         css_class: ''
         unique: 0
         context_id: homepage_anonymous
@@ -70,7 +70,7 @@ reactions:
         weight: '1'
         context_mapping: {  }
         custom_id: eic_social_feed
-        theme: oe_theme
+        theme: eic_community
         css_class: ''
         unique: 0
         context_id: homepage_anonymous
