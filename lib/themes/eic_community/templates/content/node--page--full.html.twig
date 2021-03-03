@@ -10,7 +10,7 @@
 {% set display_submitted = false %}
 
 {% block content %}
-  {% include "@theme/patterns/compositions/introduction-header.html.twig" with introduction_header|merge({
+  {% include "@theme/patterns/compositions/introduction-header.html.twig" with introduction_header|default({})|merge({
     title: label,
     media: media,
   }) only %}

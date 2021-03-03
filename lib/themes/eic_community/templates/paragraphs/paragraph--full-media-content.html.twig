@@ -7,5 +7,5 @@
  */
 #}
 {% include "@theme/patterns/compositions/media-wrapper.html.twig" with paragraph_content|merge({
-  description: paragraph_content.description|default(false),
+  description: paragraph.field_media_caption.value|default(false),
 }) only %}

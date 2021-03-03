@@ -7,5 +7,7 @@
  */
 #}
 {% include "@theme/patterns/compositions/featured-content-collection.html.twig" with paragraph_content|merge({
+  title: paragraph.field_title.value|default(''),
+  description: paragraph.field_description.value|default(''),
   extra_classes: 'ecl-section-wrapper',
 }) only %}

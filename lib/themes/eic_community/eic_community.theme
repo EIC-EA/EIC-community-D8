@@ -145,11 +145,6 @@ function eic_community_preprocess_paragraph__full_media_content(array &$variable
         break;
 
     }
-
-    // Add media caption.
-    if (!$paragraph->get('field_media_caption')->isEmpty()) {
-      $variables['paragraph_content']['description'] = $paragraph->get('field_media_caption')->value;
-    }
   }
 }
 
@@ -159,11 +154,6 @@ function eic_community_preprocess_paragraph__full_media_content(array &$variable
 function eic_community_preprocess_paragraph__quote(array &$variables) {
   /** @var \Drupal\paragraphs\Entity\Paragraph $paragraph */
   $paragraph = $variables['paragraph'];
-
-  // Get quote description text.
-  if (!$paragraph->get('field_quote_description')->isEmpty()) {
-    $variables['paragraph_content']['citation'] = $paragraph->get('field_quote_description')->value;
-  }
 
   switch ($paragraph->get('paragraph_view_mode')->value) {
     case 'external_person':
@@ -262,19 +252,6 @@ function eic_community_preprocess_paragraph__banner(array &$variables) {
  * Implements hook_preprocess_paragraph() for tiles content paragraph.
  */
 function eic_community_preprocess_paragraph__tiles_content(array &$variables) {
-  /** @var \Drupal\paragraphs\Entity\Paragraph $paragraph */
-  $paragraph = $variables['paragraph'];
-
-  // Adds tiles content title.
-  if (!$paragraph->get('field_title')->isEmpty()) {
-    $variables['paragraph_content']['title'] = $paragraph->get('field_title')->value;
-  }
-
-  // Adds tiles description text.
-  if (!$paragraph->get('field_description')->isEmpty()) {
-    $variables['paragraph_content']['description'] = $paragraph->get('field_description')->value;
-  }
-
   // Adds card items content.
   foreach (Element::children($variables['content']['field_tiles']) as $index) {
     $variables['paragraph_content']['items'][$index]['content'] = &$variables['content']['field_tiles'][$index];
