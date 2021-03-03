@@ -100,17 +100,31 @@
 
       {% if attachments is not empty %}
         <div class="ecl-comment__attachments">
-          <span class="ecl-comment__attachments-label">{{  attachments|length ~ ' ' ~ attachments_label|default('attachment(s)')  }}</span>
-          <div class="ecl-comment__attachments-items">
-            {% for attachment in attachments %}
-              <div class="ecl-comment__attachments-item">
-                {% include "@theme/patterns/components/attachment.html.twig" with attachment|default({})|merge({
-                  is_compact: true,
-                  icon_file_path: icon_file_path,
-                  extra_classes: "ecl-comment__attachment",
-                }) only %}
-              </div>
-            {% endfor %}
+          <div class="ecl-comment__attachments-header">
+            <span class="ecl-comment__attachments-label">{{  attachments|length ~ ' ' ~ attachments_label|default('attachment(s)')  }}</span>
+            {% include "@ecl-twig/ec-component-button/ecl-button.html.twig" with {
+              label: attachment_expand_label|default('Show all'),
+              variant: 'ghost',
+              extra_classes: 'ecl-comment__attachments-expand'
+            } %}
+            {% include "@ecl-twig/ec-component-button/ecl-button.html.twig" with {
+              label: attachment_collapse_label|default('Minimize'),
+              variant: 'ghost',
+              extra_classes: 'ecl-comment__attachments-collapse'
+            } %}
+          </div>
+          <div class="ecl-comment__attachments-items-wrapper">
+            <div class="ecl-comment__attachments-items">
+              {% for attachment in attachments %}
+                <div class="ecl-comment__attachments-item">
+                  {% include "@theme/patterns/components/attachment.html.twig" with attachment|default({})|merge({
+                    is_compact: true,
+                    icon_file_path: icon_file_path,
+                    extra_classes: "ecl-comment__attachment",
+                  }) only %}
+                </div>
+              {% endfor %}
+            </div>
           </div>
         </div>
       {% endif %}
