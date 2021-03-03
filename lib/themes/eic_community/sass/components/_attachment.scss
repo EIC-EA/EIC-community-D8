@@ -1,10 +1,15 @@
 .ecl-attachment {
+  $node: &;
+
   margin: ecl-box-model('margin', 'description') 0;
   padding: ecl-box-model('padding', 'description');
   background-color: map-get($ecl-colors, 'blue-5');
   border-radius: ecl-box-model('border-radius');
-  display: flex;
-  align-items: flex-start;
+  display: block;
+
+  &--is-compact {
+    padding: ecl-box-model('padding', 'controls');
+  }
 
   &:first-child {
     margin-top: 0;
@@ -14,11 +19,25 @@
     margin-bottom: 0;
   }
 
+  &__wrapper {
+    display: flex;
+    align-items: flex-start;
+
+    #{$node}--is-compact & {
+      align-items: center;
+    }
+
+  }
+
   &__aside {
     flex-shrink: 0;
     box-sizing: border-box;
     margin: 0;
     padding-right: ecl-box-model('padding', 'description');
+
+    #{$node}--is-compact & {
+      padding-right: ecl-box-model('padding', 'controls');
+    }
   }
 
   &__image-wrapper,
@@ -26,6 +45,11 @@
     position: relative;
     width: map-get($ecl-media, '2xs');
     height: map-get($ecl-media, '2xs');
+
+    #{$node}--is-compact & {
+      width: map-get($ecl-media, '3xs');
+      height: map-get($ecl-media, '3xs');
+    }
   }
 
   &__image {
@@ -52,6 +76,8 @@
 
   &__title {
     line-height: ecl-typography('line-height', 'label');
+    word-break: break-all;
+    color: currentColor;
   }
 
   &__title,

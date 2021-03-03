@@ -9,85 +9,99 @@
   %}
 {% endif %}
 
-<div class="ecl-attachment">
-  <aside class="ecl-attachment__aside">
-    {% if image is not empty %}
-      <div class="ecl-attachment__image-wrapper">
-        <img class="ecl-attachment__image" src="{{ image.src }}" alt="{{ image.alt }}" />
-      </div>
-    {% elseif icon_file_path and icon is not empty %}
-      <div class="ecl-attachment__icon-wrapper">
-        {% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with {
-          extra_classes: 'ecl-attachment__icon',
-          icon: {
-            path: icon_file_path,
-            name: icon.name,
-            size: 'm',
-            type: icon.type,
-          },
-        } only %}
-      </div>
+{% if is_compact %}
+  <a href="{{ path }}" download class="ecl-attachment ecl-attachment--is-compact {{ extra_classes }}">
+{% else %}
+  <div class="ecl-attachment {{ extra_classes }}">
+{% endif %}
+  <div class="ecl-attachment__wrapper">
+    {% if image or icon %}
+      <aside class="ecl-attachment__aside">
+        {% if image is not empty %}
+          <div class="ecl-attachment__image-wrapper">
+            <img class="ecl-attachment__image" src="{{ image.src }}" alt="{{ image.alt }}" />
+          </div>
+        {% elseif icon_file_path and icon is not empty %}
+          <div class="ecl-attachment__icon-wrapper">
+            {% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with {
+              extra_classes: 'ecl-attachment__icon',
+              icon: {
+                path: icon_file_path,
+                name: icon.name,
+                size: is_compact ? 's' : 'm',
+                type: icon.type,
+              },
+            } only %}
+          </div>
+        {% endif %}
+      </aside>
     {% endif %}
-  </aside>
-  <div class="ecl-attachment__content">
-    <div class="ecl-attachment__content-header">
-      <span class="ecl-attachment__title">
-        {{ title|default(path) }}
-      </span>
-      {% if path|split('.')|last %}
-        <span class="ecl-attachment__type">
-          {{- path|split('.')|last -}}
+    <div class="ecl-attachment__content">
+      <div class="ecl-attachment__content-header">
+        <span class="ecl-attachment__title">
+          {{ title|default(path) }}
         </span>
-      {% endif %}
-    </div>
-    <div class="ecl-attachment__actions">
-      {% if author %}
-        <div class="ecl-attachment__action">
-            {% if author.path %}
+        {% if type or path %}
+          <span class="ecl-attachment__type">
+            {{- type|default(path|split('.')|last) -}}
+          </span>
+        {% endif %}
+      </div>
+      {% if not is_compact %}
+        <div class="ecl-attachment__actions">
+          {% if author %}
+            <div class="ecl-attachment__action">
+                {% if author.path %}
+                  {% include '@ecl-twig/ec-component-link/ecl-link.html.twig' with {
+                    link: {
+                      type: 'standalone',
+                      label: author.author,
+                      path: author.path,
+                    },
+                    extra_classes: "ecl-attachment__author",
+                  } only %}
+                {% else %}
+                  <span class="ecl-attachment__author">{{ author.author }}</span>
+                {% endif %}
+            </div>
+          {% endif %}
+          {% if timestamp %}
+            <div class="ecl-attachment__action">
+              {% include "@theme/patterns/components/timestamp.html.twig" with {
+                label: timestamp,
+                icon_file_path: icon_file_path,
+              } only %}
+            </div>
+          {% endif %}
+          {% if language %}
+            <div class="ecl-attachment__action">{{ language }}</div>
+          {% endif %}
+          {% if filesize %}
+            <div class="ecl-attachment__action">{{ filesize }}</div>
+          {% endif %}
+          {% if path %}
+            <div class="ecl-attachment__action">
               {% include '@ecl-twig/ec-component-link/ecl-link.html.twig' with {
+                icon: download_icon|default({}),
                 link: {
                   type: 'standalone',
-                  label: author.author,
-                  path: author.path,
+                  label: download_label|default('Download'),
+                  path: path,
+                  icon_position: 'before',
                 },
-                extra_classes: "ecl-attachment__author",
+                extra_classes: "ecl-attachment__link",
+                extra_attributes: {
+                  download: true
+                },
               } only %}
-            {% else %}
-              <span class="ecl-attachment__author">{{ author.author }}</span>
-            {% endif %}
-        </div>
-      {% endif %}
-      {% if timestamp %}
-        <div class="ecl-attachment__action">
-          {% include "@theme/patterns/components/timestamp.html.twig" with {
-            label: timestamp,
-            icon_file_path: icon_file_path,
-          } only %}
-        </div>
-      {% endif %}
-      {% if language %}
-        <div class="ecl-attachment__action">{{ language }}</div>
-      {% endif %}
-      {% if filesize %}
-        <div class="ecl-attachment__action">{{ filesize }}</div>
-      {% endif %}
-      {% if path %}
-        <div class="ecl-attachment__action">
-          {% include '@ecl-twig/ec-component-link/ecl-link.html.twig' with {
-            icon: download_icon|default({}),
-            link: {
-              type: 'standalone',
-              label: download_label|default('Download'),
-              path: path,
-              icon_position: 'before',
-            },
-            extra_classes: "ecl-attachment__link",
-            extra_attributes: {
-              download: true
-            },
-          } only %}
+            </div>
+          {% endif %}
         </div>
       {% endif %}
     </div>
   </div>
-</div>
+{% if is_compact %}
+  </a>
+{% else %}
+  </div>
+{% endif %}

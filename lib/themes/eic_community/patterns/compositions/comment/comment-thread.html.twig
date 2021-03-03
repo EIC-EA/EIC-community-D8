@@ -3,6 +3,7 @@
     {% include "@theme/patterns/compositions/comment/comment.html.twig" with {
       actions: actions,
       author: author,
+      attachments: attachments,
       comment_id: comment_id,
       comment_origin: comment_origin,
       comment: comment,
@@ -21,6 +22,7 @@
         icon_file_path: icon_file_path,
         user: user,
         comment_origin: {
+          is_owner: is_owner,
           author: author,
           comment_id: comment_id,
         }
