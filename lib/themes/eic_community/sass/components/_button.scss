@@ -10,6 +10,22 @@
     }
   }
 
+  &--as-form-option {
+    color: ecl-typography('color', 'meta');
+    padding: map-get($ecl-spacing, 'xs');
+
+    #{$node}__label {
+      @include visually-hidden;
+    }
+
+    #{$node}__label + #{$node}__icon,
+    #{$node}__icon {
+      margin-right: 0;
+      margin-left: 0;
+    }
+  }
+.ecl-button__icon--after,
+.ecl-button__label+.ecl-button__icon
   &--compact-for-mobile {
     @include ecl-media-breakpoint-down('md') {
       #{$node}__label {

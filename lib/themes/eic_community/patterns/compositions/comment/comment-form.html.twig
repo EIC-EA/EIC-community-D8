@@ -1,0 +1,75 @@
+{% import "@theme/patterns/core/snippets.twig" as snippets %}
+
+<div class="ecl-comment-form {{ extra_classes }}">
+  {% if author %}
+    <div class="ecl-comment-form__author">
+      {% include "@theme/patterns/components/author.html.twig" with author|default({})|without('description', 'actions')|merge({
+        author: author.label,
+        extra_classes: 'ecl-author--hide-info' ~ author.extra_classes|default('')
+      }) only %}
+    </div>
+  {% endif %}
+  <div class="ecl-comment-form__content">
+    <div class="ecl-comment-form__main">
+      <form class=" {{form.extra_classes }}" {{ snippets.attr(form.extra_attributes) }}>
+        <div class="ecl-form-group">
+          <label class="ecl-comment-form__textarea-label ecl-form-label ecl-form-label--hidden" for="{{ form.textarea.id|default(form.textarea.name)|default('ecl-comment-form-reply') }}">{{ form.textarea.label|default('Reply') }}</label>
+          <div class="ecl-comment-form__textarea-wrapper">
+            <textarea
+              class="ecl-text-area ecl-comment-form__textarea"
+              id="{{ form.textarea.id|default(form.textarea.name)|default('ecl-comment-form-reply') }}"
+              name="{{ form.textarea.name|default('') }}" {{ snippets.attr(form.textarea.extra_attributes)}}
+              placeholder="{{ form.textarea.placeholder|default('Type your message here...') }}"></textarea>
+          </div>
+        </div>
+        <div class="ecl-comment-form__toolbar">
+          <div class="ecl-comment-form__toolbar-main">
+            {% include "@ecl-twig/ec-component-button/ecl-button.html.twig" with {
+              label: form.submit.label|default("Publish"),
+              type: "submit",
+              extra_classes: "ecl-comment-form__submit",
+              extra_attributes: form.submit.extra_attributes
+            } %}
+          </div>
+          <div class="ecl-comment-form__toolbar-aside">
+            {% include "@ecl-twig/ec-component-button/ecl-button.html.twig" with {
+              label: form.attachment.label|default('Add attachment'),
+              variant: "ghost",
+              type: "button",
+              extra_classes: "ecl-comment-form__attachment ecl-button--as-form-option",
+              icon: icon_file_path ? {
+                path: icon_file_path,
+                name: "paperclip",
+                type: "custom",
+              }: {},
+            } %}
+
+            {% include "@ecl-twig/ec-component-button/ecl-button.html.twig" with {
+              label: form.media.label|default('Add media'),
+              variant: "ghost",
+              type: "button",
+              extra_classes: "ecl-comment-form__media ecl-button--as-form-option",
+              icon: icon_file_path ? {
+                path: icon_file_path,
+                name: "media",
+                type: "custom",
+              }: {},
+            } %}
+
+            {% include "@ecl-twig/ec-component-button/ecl-button.html.twig" with {
+              label: form.emoji.label|default('Insert Emoji'),
+              variant: "ghost",
+              type: "button",
+              extra_classes: "ecl-comment-form__emoji ecl-button--as-form-option",
+              icon: icon_file_path ? {
+                path: icon_file_path,
+                name: "emoji",
+                type: "custom",
+              }: {},
+            } %}
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
