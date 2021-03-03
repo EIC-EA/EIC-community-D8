@@ -1,6 +1,12 @@
 .ecl-comment-overview {
   $node: &;
 
+  @include ecl-media-breakpoint-down('xs') {
+    .ecl-container {
+      padding: 0;
+    }
+  }
+
   &__form-wrapper,
   &__item {
     padding: map-get($ecl-spacing, 'xl');

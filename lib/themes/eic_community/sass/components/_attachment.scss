@@ -36,7 +36,12 @@
     padding-right: ecl-box-model('padding', 'description');
 
     #{$node}--is-compact & {
+      display: none;
       padding-right: ecl-box-model('padding', 'controls');
+
+      @include ecl-media-breakpoint-up('sm') {
+        display: block;
+      }
     }
   }
 

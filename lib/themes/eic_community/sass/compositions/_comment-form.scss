@@ -4,7 +4,12 @@
   display: flex;
 
   &__author {
+    display: none;
     margin-right: ecl-box-model('padding');
+
+    @include ecl-media-breakpoint-up('sm') {
+      display: block;
+    }
   }
 
   &__content {
@@ -25,16 +30,27 @@
     &::before {
       position: absolute;
       box-sizing: border-box;
-      right: 100%;
-      top: #{map-get($ecl-media, '4xs') / 2};
+
       display: block;
       content: " ";
-      margin-right: #{0 - map-get($ecl-media, '4xs') / 4};
-      width: #{map-get($ecl-media, '4xs') / 2};
-      height: #{map-get($ecl-media, '4xs') / 2};
-      transform: rotate(45deg);
+      bottom: 100%;
+      left: #{map-get($ecl-media, '5xs') / 2};
+      margin-bottom: #{0 - map-get($ecl-media, '5xs') / 4};
+      width: #{map-get($ecl-media, '5xs') / 2};
+      height: #{map-get($ecl-media, '5xs') / 2};
+      transform: rotate(135deg);
       background-color: map-get($ecl-colors, 'grey-10');
       border-bottom-left-radius: ecl-box-model('border-radius');
+
+      @include ecl-media-breakpoint-up('sm') {
+        left: auto;
+        bottom: auto;
+        right: 100%;
+        margin-bottom: 0;
+        margin-right: #{0 - map-get($ecl-media, '4xs') / 4};
+        top: #{map-get($ecl-media, '4xs') / 2};
+        transform: rotate(45deg);
+      }
     }
 
     &:hover::before {
@@ -49,6 +65,12 @@
     }
   }
 
+  &__textarea-label {
+    @include ecl-media-breakpoint-up('sm') {
+      @include visually-hidden;
+    }
+  }
+
   &__textarea {
     width: 100%;
     box-sizing: border-box;
@@ -56,6 +78,10 @@
     background-color: map-get($ecl-colors, 'grey-10');
     border-color: map-get($ecl-colors, 'grey-10');
     border-radius: ecl-box-model('border-radius');
+
+    @include ecl-media-breakpoint-up('xs') {
+      margin: 0;
+    }
   }
 
   &__toolbar {
@@ -70,5 +96,7 @@
 
   &__toolbar-aside {
     flex-shrink: 0;
+    display: flex;
+    flex-wrap: wrap;
   }
 }

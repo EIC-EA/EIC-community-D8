@@ -106,11 +106,27 @@
 
   &__author-info {
     color: ecl-typography('color', 'meta');
-    display: flex;
+
+    @include ecl-media-breakpoint-down('md') {
+      & > *,
+      & .ecl-link--icon {
+        display: inline-block;
+      }
+    }
+
+    @include ecl-media-breakpoint-up('md') {
+      display: flex;
+      flex-direction: column;
+    }
   }
 
   &__author {
     margin-right: ecl-box-model('padding');
+    display: none;
+
+    @include ecl-media-breakpoint-up('sm') {
+      display: block;
+    }
   }
 
   &__content {
@@ -135,12 +151,14 @@
 
     &::after {
       content: "\00A0";
-      dislay: inline;
+      display: inline;
     }
 
-    & ~ &::before {
-      content: "\00A0";
-      dislay: inline;
+    @include ecl-media-breakpoint-up('md') {
+      & ~ &::before {
+        content: "\00A0";
+        display: inline;
+      }
     }
 
     .ecl-link__icon:first-child {

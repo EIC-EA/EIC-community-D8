@@ -25,7 +25,6 @@
     }
   }
 .ecl-button__icon--after,
-.ecl-button__label+.ecl-button__icon
   &--compact-for-mobile {
     @include ecl-media-breakpoint-down('md') {
       #{$node}__label {

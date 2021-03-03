@@ -13,7 +13,7 @@
     <div class="ecl-comment-form__main">
       <form class=" {{form.extra_classes }}" {{ snippets.attr(form.extra_attributes) }}>
         <div class="ecl-form-group">
-          <label class="ecl-comment-form__textarea-label ecl-form-label ecl-form-label--hidden" for="{{ form.textarea.id|default(form.textarea.name)|default('ecl-comment-form-reply') }}">{{ form.textarea.label|default('Reply') }}</label>
+          <label class="ecl-comment-form__textarea-label ecl-form-label" for="{{ form.textarea.id|default(form.textarea.name)|default('ecl-comment-form-reply') }}">{{ form.textarea.label|default('Reply') }}</label>
           <div class="ecl-comment-form__textarea-wrapper">
             <textarea
               class="ecl-text-area ecl-comment-form__textarea"
@@ -56,16 +56,11 @@
               }: {},
             } %}
 
-            {% include "@ecl-twig/ec-component-button/ecl-button.html.twig" with {
+            {% include "@theme/patterns/components/emoji-picker.html.twig" with {
               label: form.emoji.label|default('Insert Emoji'),
-              variant: "ghost",
-              type: "button",
-              extra_classes: "ecl-comment-form__emoji ecl-button--as-form-option",
-              icon: icon_file_path ? {
-                path: icon_file_path,
-                name: "emoji",
-                type: "custom",
-              }: {},
+              extra_classes: 'ecl-emoji-picker--aligns-from-right',
+              target: '#' ~ form.textarea.id|default(form.textarea.name)|default('ecl-comment-form-reply'),
+              icon_file_path: icon_file_path,
             } %}
           </div>
         </div>
