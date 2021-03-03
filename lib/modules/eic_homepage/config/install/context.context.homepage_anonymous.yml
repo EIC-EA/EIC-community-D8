@@ -39,7 +39,7 @@ reactions:
         region: content
         weight: '0'
         context_mapping: {  }
-        custom_id: block_homepage_facts_figures
+        custom_id: homepage_facts_figures
         theme: eic_community
         css_class: ''
         unique: 0
@@ -83,7 +83,7 @@ reactions:
         region: content
         weight: '0'
         context_mapping: {  }
-        custom_id: block_homepage_stay_up_to_date
+        custom_id: homepage_stay_up_to_date
         theme: eic_community
         css_class: ''
         unique: 0
