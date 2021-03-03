@@ -7,6 +7,7 @@ dependencies:
     - field.field.paragraph.text_and_media_content.field_cta
     - field.field.paragraph.text_and_media_content.field_display_background
     - field.field.paragraph.text_and_media_content.field_media
+    - field.field.paragraph.text_and_media_content.field_title
     - field.field.paragraph.text_and_media_content.field_view_mode
     - paragraphs.paragraphs_type.text_and_media_content
   module:
@@ -19,7 +20,7 @@ bundle: text_and_media_content
 mode: default
 content:
   field_body:
-    weight: 0
+    weight: 1
     settings:
       rows: 5
       placeholder: ''
@@ -27,7 +28,7 @@ content:
     type: text_textarea
     region: content
   field_cta:
-    weight: 3
+    weight: 4
     settings:
       placeholder_url: ''
       placeholder_title: ''
@@ -35,13 +36,13 @@ content:
     type: link_default
     region: content
   field_display_background:
-    weight: 4
+    weight: 5
     settings: {  }
     third_party_settings: {  }
     type: options_select
     region: content
   field_media:
-    weight: 1
+    weight: 2
     settings:
       match_operator: CONTAINS
       match_limit: 10
@@ -50,8 +51,16 @@ content:
     third_party_settings: {  }
     type: entity_reference_autocomplete
     region: content
+  field_title:
+    weight: 0
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
   field_view_mode:
-    weight: 2
+    weight: 3
     settings:
       view_modes:
         default: Default
