@@ -1,0 +1,21 @@
+uuid: 284b848b-bbff-4a05-ae4a-67508b50df36
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.latest_news_and_stories.field_article
+    - paragraphs.paragraphs_type.latest_news_and_stories
+id: paragraph.latest_news_and_stories.default
+targetEntityType: paragraph
+bundle: latest_news_and_stories
+mode: default
+content:
+  field_article:
+    weight: 0
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+hidden: {  }

@@ -1,0 +1,25 @@
+uuid: 5934cc07-c17d-4e5a-89f4-106488529739
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.latest_news_and_stories.field_article
+    - paragraphs.paragraphs_type.latest_news_and_stories
+id: paragraph.latest_news_and_stories.default
+targetEntityType: paragraph
+bundle: latest_news_and_stories
+mode: default
+content:
+  field_article:
+    weight: 0
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: entity_reference_autocomplete
+    region: content
+hidden:
+  created: true
+  status: true

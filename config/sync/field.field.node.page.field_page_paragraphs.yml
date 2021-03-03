@@ -8,6 +8,7 @@ dependencies:
     - paragraphs.paragraphs_type.banner
     - paragraphs.paragraphs_type.full_media_content
     - paragraphs.paragraphs_type.full_text_content
+    - paragraphs.paragraphs_type.latest_news_and_stories
     - paragraphs.paragraphs_type.quote
     - paragraphs.paragraphs_type.text_and_media_content
     - paragraphs.paragraphs_type.tiles_content
@@ -34,6 +35,7 @@ settings:
       full_text_content: full_text_content
       text_and_media_content: text_and_media_content
       tiles_content: tiles_content
+      latest_news_and_stories: latest_news_and_stories
     target_bundles_drag_drop:
       banner:
         enabled: true
@@ -41,12 +43,18 @@ settings:
       contributor:
         weight: -12
         enabled: false
+      cta_tile:
+        weight: 12
+        enabled: false
       full_media_content:
         enabled: true
         weight: -11
       full_text_content:
         enabled: true
         weight: -9
+      latest_news_and_stories:
+        enabled: true
+        weight: 15
       quote:
         enabled: true
         weight: -10
