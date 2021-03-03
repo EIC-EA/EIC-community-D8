@@ -38,7 +38,7 @@
 
   // Adjusts the initial emoji Picker module with CSS variables.
   unicode-emoji-picker {
-    font-size: $ecl-font-size-xl;
+    font-size: $ecl-font-size-l;
 
     --max-width: #{map-get($ecl-width, 'form-m')};
     --min-width: #{map-get($ecl-width, 'form-m')};

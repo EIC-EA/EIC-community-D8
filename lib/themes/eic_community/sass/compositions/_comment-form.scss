@@ -27,6 +27,12 @@
   &__textarea-wrapper {
     position: relative;
 
+    @include ecl-media-breakpoint-up('sm') {
+      .ecl-form-group> :not(.ecl-form-label--hidden)+& {
+        margin: 0;
+      }
+    }
+
     &::before {
       position: absolute;
       box-sizing: border-box;
@@ -47,6 +53,8 @@
         bottom: auto;
         right: 100%;
         margin-bottom: 0;
+        width: #{map-get($ecl-media, '4xs') / 2};
+        height: #{map-get($ecl-media, '4xs') / 2};
         margin-right: #{0 - map-get($ecl-media, '4xs') / 4};
         top: #{map-get($ecl-media, '4xs') / 2};
         transform: rotate(45deg);
@@ -78,10 +86,6 @@
     background-color: map-get($ecl-colors, 'grey-10');
     border-color: map-get($ecl-colors, 'grey-10');
     border-radius: ecl-box-model('border-radius');
-
-    @include ecl-media-breakpoint-up('xs') {
-      margin: 0;
-    }
   }
 
   &__toolbar {

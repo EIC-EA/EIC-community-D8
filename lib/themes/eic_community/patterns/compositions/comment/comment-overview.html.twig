@@ -5,7 +5,8 @@
         <div class="ecl-comment-overview__form-wrapper">
           {% include "@theme/patterns/compositions/comment/comment-form.html.twig" with {
             author: user,
-            icon_file_path: icon_file_path
+            icon_file_path: icon_file_path,
+            form: form,
           } only %}
         </div>
       {% endif %}
@@ -19,5 +20,6 @@
         </div>
       {% endfor %}
     </div>
+    <span class="ecl-comment-overview__throbber"></span>
   </div>
 </section>
