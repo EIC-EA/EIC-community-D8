@@ -1,6 +1,23 @@
 reading_time:
-  container: {  }
+  submit: 'Save configuration'
+  container:
+    discussion:
+      is_activated: 0
+    document:
+      is_activated: 0
+    news:
+      is_activated: 1
+    page:
+      is_activated: 0
+    story:
+      is_activated: 1
+    wiki_page:
+      is_activated: 0
   words_per_minute: '225'
   unit_of_time: minute
+  form_build_id: form-RRoTEn8e1lnvhPG7vWBioP21FIcsKyib1GRVTv8aANw
+  form_token: fCi0kYJrwv8kawD2m-PibS6JsfM4iG9fFI_kS64gGdE
+  form_id: reading_time
+  op: 'Save configuration'
 _core:
   default_config_hash: HZwlfaTpnIGoxxZuV_dlyAe9HgcyzOmSr8Bcr_n3RbU
