@@ -9,6 +9,7 @@ module:
   block_content: 0
   block_content_permissions: 0
   breakpoint: 0
+  components: 0
   config: 0
   content_moderation: 0
   context: 0
@@ -17,6 +18,7 @@ module:
   dblog: 0
   dynamic_page_cache: 0
   editor: 0
+  eic_block_type_cta_tiles: 0
   eic_block_type_page_banner: 0
   eic_block_type_tiles_reference: 0
   eic_block_types: 0
@@ -29,6 +31,8 @@ module:
   eic_media: 0
   eic_media_document: 0
   eic_media_video: 0
+  eic_paragraph_contributor: 0
+  eic_paragraph_cta_tile: 0
   entity: 0
   entity_browser: 0
   entity_browser_entity_form: 0
@@ -65,6 +69,7 @@ module:
   path: 0
   path_alias: 0
   responsive_image: 0
+  scheduler: 0
   smart_trim: 0
   statistics: 0
   system: 0
@@ -91,6 +96,7 @@ theme:
   classy: 0
   seven: 0
   oe_theme: 0
+  eic_community: 0
 profile: oe_profile
 _core:
   default_config_hash: R4IF-ClDHXxblLcG0L7MgsLvfBIMAvi_skumNFQwkDc

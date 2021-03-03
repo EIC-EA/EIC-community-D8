@@ -1,0 +1,46 @@
+uuid: b1884065-8727-4ba3-89b5-e3a0a47435de
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.cta_tile.field_body
+    - field.field.paragraph.cta_tile.field_cta_link
+    - field.field.paragraph.cta_tile.field_title
+    - paragraphs.paragraphs_type.cta_tile
+  module:
+    - link
+    - text
+_core:
+  default_config_hash: 6ak1Lcboon4tHLjPry9CdYxd39GqKyFCqXem2gKKibQ
+id: paragraph.cta_tile.default
+targetEntityType: paragraph
+bundle: cta_tile
+mode: default
+content:
+  field_body:
+    weight: 1
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+    type: text_textarea
+    region: content
+  field_cta_link:
+    weight: 2
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: {  }
+    type: link_default
+    region: content
+  field_title:
+    weight: 0
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+hidden:
+  created: true
+  status: true

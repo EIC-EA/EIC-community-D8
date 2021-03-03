@@ -1,0 +1,20 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_name
+    - paragraphs.paragraphs_type.contributor
+_core:
+  default_config_hash: GdXUzp0VL2ASL5B6OthdJYIHbDSAl3rnQqCd3zzUFpk
+id: paragraph.contributor.field_name
+field_name: field_name
+entity_type: paragraph
+bundle: contributor
+label: 'Contributor Name'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

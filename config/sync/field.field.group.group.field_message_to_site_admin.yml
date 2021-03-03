@@ -1,0 +1,21 @@
+uuid: fe71b492-ebc8-4ee2-b359-b9e670bd2f1c
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.group.field_message_to_site_admin
+    - group.type.group
+  module:
+    - text
+id: group.group.field_message_to_site_admin
+field_name: field_message_to_site_admin
+entity_type: group
+bundle: group
+label: 'Message to the site administrator'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long

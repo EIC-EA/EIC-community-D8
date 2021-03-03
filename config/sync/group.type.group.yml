@@ -1,0 +1,10 @@
+uuid: 89bd519a-df26-4277-8dcd-0f52c7f8fce7
+langcode: en
+status: true
+dependencies: {  }
+id: group
+label: Group
+description: ''
+creator_membership: true
+creator_wizard: true
+creator_roles: {  }

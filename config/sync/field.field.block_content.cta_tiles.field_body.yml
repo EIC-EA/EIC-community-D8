@@ -1,0 +1,23 @@
+uuid: 314a66d0-c8e7-40f4-82e8-2da83086c79c
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.cta_tiles
+    - field.storage.block_content.field_body
+  module:
+    - text
+_core:
+  default_config_hash: 2oDY7fpEdQhNQFK6OkD8niiTj6LxpzHdoahtRScOhYc
+id: block_content.cta_tiles.field_body
+field_name: field_body
+entity_type: block_content
+bundle: cta_tiles
+label: Description
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long

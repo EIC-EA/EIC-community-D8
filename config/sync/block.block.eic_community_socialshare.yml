@@ -1,0 +1,30 @@
+uuid: 663dc476-bf91-4e27-8d85-6ea928b62c35
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+    - oe_webtools_social_share
+  theme:
+    - eic_community
+id: eic_community_socialshare
+theme: eic_community
+region: content
+weight: 0
+provider: null
+plugin: social_share
+settings:
+  id: social_share
+  label: 'Social Share'
+  provider: oe_webtools_social_share
+  label_display: '0'
+visibility:
+  node_type:
+    id: node_type
+    bundles:
+      document: document
+      news: news
+      story: story
+    negate: false
+    context_mapping:
+      node: '@node.node_route_context:node'

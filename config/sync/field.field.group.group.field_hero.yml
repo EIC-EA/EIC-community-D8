@@ -1,0 +1,28 @@
+uuid: e117a2e9-d8ad-4386-ac3c-9f2727e64829
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.group.field_hero
+    - group.type.group
+    - media.type.image
+id: group.group.field_hero
+field_name: field_hero
+entity_type: group
+bundle: group
+label: 'Banner image'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:media'
+  handler_settings:
+    target_bundles:
+      image: image
+    sort:
+      field: _none
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference
