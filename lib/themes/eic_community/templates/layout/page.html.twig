@@ -1,0 +1,39 @@
+{#
+/**
+ * @file
+ * Theme override to display a single page.
+ *
+ * @see ./themes/custom/eic_community/patterns/layout/base.html.twig
+ */
+#}
+{% set _wrap_content = true %}
+{% set site_header = {
+    icon_file_path: ecl_icon_path,
+    logo: {
+      title: 'European Commission'|t,
+      alt: 'European Commission logo'|t,
+      path: url('<front>'),
+      src_desktop: ecl_logo_path ~ '/logo--' ~ current_language_id|to_internal_language_id ~ '.svg',
+    },
+    search_toggle: {
+      label: 'Search',
+      href: '#',
+    },
+    search_form: {
+      text_input: {
+        id: 'input-search',
+        name: 'search'|t,
+      },
+      button: {
+        label: 'Search'|t,
+      },
+      extra_attributes: [],
+    },
+  }
+%}
+
+{% extends "@theme/patterns/layout/base.html.twig" %}
+
+{% block page_header %}
+  {{ page.page_header }}
+{% endblock %}

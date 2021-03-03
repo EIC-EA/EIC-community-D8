@@ -21,7 +21,21 @@ conditions:
     context_mapping: {  }
 reactions:
   blocks:
-    blocks: {  }
+    blocks:
+      7c801d32-6355-494f-a1fa-63f501ade7de:
+        id: system_breadcrumb_block
+        label: Breadcrumbs
+        provider: system
+        label_display: '0'
+        region: page_header
+        weight: '0'
+        context_mapping: {  }
+        custom_id: system_breadcrumb_block
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: homepage
+        uuid: 7c801d32-6355-494f-a1fa-63f501ade7de
     id: blocks
     saved: false
     uuid: 1172ee8b-57fe-4611-b929-3d99b1b469d8
