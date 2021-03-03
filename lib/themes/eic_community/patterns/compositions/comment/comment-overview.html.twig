@@ -1,0 +1,14 @@
+<section class="ecl-section-wrapper ecl-section-wrapper--is-grey ecl-comment-overview {{ extra_classes }}">
+  <div class="ecl-container">
+    <div class="ecl-comment-overview__wrapper">
+      {% for item in items %}
+        <div class="ecl-comment-overview__item">
+          {% include "@theme/patterns/compositions/comment/comment-thread.html.twig" with item|default({})|merge({
+            icon_file_path: icon_file_path,
+            user: user,
+          }) %}
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>

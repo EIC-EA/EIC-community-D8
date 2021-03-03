@@ -1,10 +1,10 @@
-.ecl-comments-overview {
+.ecl-comment-overview {
   $node: &;
 
   &__wrapper {
     box-sizing: border-box;
 
-    @include ecl-media-breakpoint-up('md') {
+    @include ecl-media-breakpoint-up('lg') {
       width: calc(100% / #{$ecl-grid-columns} * 8);
       padding-right: map-get($ecl-spacing, 'xl');
     }

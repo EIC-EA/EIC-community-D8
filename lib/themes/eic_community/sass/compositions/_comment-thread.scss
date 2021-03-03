@@ -1,0 +1,53 @@
+.ecl-comment-thread {
+  $node: &;
+
+  margin: ecl-box-model('margin') 0;
+
+  &:first-child {
+    margin-top: 0;
+  }
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  & & {
+    margin-left: calc(#{map-get($ecl-media, '3xs')} + #{ecl-box-model('padding')});
+
+    // & > #{$node}__comment {
+    //   border-left: solid 1px map-get($ecl-colors, 'grey-50');
+    //   padding-left: map-get($ecl-spacing, 'xl');
+    // }
+  }
+
+  &__comment {
+    margin-bottom: ecl-box-model('margin');
+  }
+
+  &__comment ~ & {
+    position: relative;
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-bottom: ecl-box-model('margin');
+
+    &::before {
+      display: block;
+      width: 2px;
+      content: " ";
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: calc(#{map-get($ecl-media, '3xs')} / 2);
+      margin-left: -1px;
+      background-color: ecl-typography('color', 'meta');
+    }
+
+    &:last-child {
+      padding-bottom: 0;
+
+      &::before {
+        display: none;
+      }
+    }
+  }
+}

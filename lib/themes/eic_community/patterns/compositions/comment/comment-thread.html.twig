@@ -1,0 +1,30 @@
+<div class="ecl-comment-thread">
+  {% if comment and comment_id %}
+    {% include "@theme/patterns/compositions/comment/comment.html.twig" with {
+      actions: actions,
+      author: author,
+      comment_id: comment_id,
+      comment_origin: comment_origin,
+      comment: comment,
+      extra_classes: 'ecl-comment-thread__comment',
+      icon_file_path: icon_file_path,
+      stats: stats,
+      timestamp: timestamp,
+      user: user,
+      is_owner: is_owner,
+    } only %}
+  {% endif %}
+
+  {% if items is not empty %}
+    {% for item in items %}
+      {% include "@theme/patterns/compositions/comment/comment-thread.html.twig" with item|default({})|merge({
+        icon_file_path: icon_file_path,
+        user: user,
+        comment_origin: {
+          author: author,
+          comment_id: comment_id,
+        }
+      }) only %}
+    {% endfor %}
+  {% endif %}
+</div>

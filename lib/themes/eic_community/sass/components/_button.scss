@@ -9,4 +9,16 @@
       content: "\00a0";
     }
   }
+
+  &--compact-for-mobile {
+    @include ecl-media-breakpoint-down('md') {
+      #{$node}__label {
+        @include visually-hidden;
+      }
+
+      #{$node}__icon {
+        margin-right: 0;
+      }
+    }
+  }
 }
