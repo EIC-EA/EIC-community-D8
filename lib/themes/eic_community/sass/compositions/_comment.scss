@@ -147,6 +147,7 @@
 
     @include ecl-media-breakpoint-up('lg') {
       width: calc(100% / #{$ecl-grid-columns} * 8);
+      padding-right: #{ecl-box-model('padding') / 2};
     }
   }
 

@@ -21,6 +21,7 @@
 
     @include ecl-media-breakpoint-up('lg') {
       width: calc(100% / #{$ecl-grid-columns} * 8);
+      padding-right: #{ecl-box-model('padding') / 2};
     }
   }
 
@@ -28,7 +29,7 @@
     position: relative;
 
     @include ecl-media-breakpoint-up('sm') {
-      .ecl-form-group> :not(.ecl-form-label--hidden)+& {
+      .ecl-form-group > :not(.ecl-form-label--hidden) + & {
         margin: 0;
       }
     }
