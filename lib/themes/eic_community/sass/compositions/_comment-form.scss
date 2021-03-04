@@ -1,0 +1,107 @@
+.ecl-comment-form {
+  $node: &;
+
+  display: flex;
+
+  &__author {
+    display: none;
+    margin-right: ecl-box-model('padding');
+
+    @include ecl-media-breakpoint-up('sm') {
+      display: block;
+    }
+  }
+
+  &__content {\
+    flex-grow: 1;
+  }
+
+  &__main {
+    box-sizing: border-box;
+
+    @include ecl-media-breakpoint-up('lg') {
+      width: calc(100% / #{$ecl-grid-columns} * 8);
+      padding-right: #{ecl-box-model('padding') / 2};
+    }
+  }
+
+  &__textarea-wrapper {
+    position: relative;
+
+    @include ecl-media-breakpoint-up('sm') {
+      .ecl-form-group > :not(.ecl-form-label--hidden) + & {
+        margin: 0;
+      }
+    }
+
+    &::before {
+      position: absolute;
+      box-sizing: border-box;
+
+      display: block;
+      content: " ";
+      bottom: 100%;
+      left: #{map-get($ecl-media, '5xs') / 2};
+      margin-bottom: #{0 - map-get($ecl-media, '5xs') / 4};
+      width: #{map-get($ecl-media, '5xs') / 2};
+      height: #{map-get($ecl-media, '5xs') / 2};
+      transform: rotate(135deg);
+      background-color: map-get($ecl-colors, 'grey-10');
+      border-bottom-left-radius: ecl-box-model('border-radius');
+
+      @include ecl-media-breakpoint-up('sm') {
+        left: auto;
+        bottom: auto;
+        right: 100%;
+        margin-bottom: 0;
+        width: #{map-get($ecl-media, '4xs') / 2};
+        height: #{map-get($ecl-media, '4xs') / 2};
+        margin-right: #{0 - map-get($ecl-media, '4xs') / 4};
+        top: #{map-get($ecl-media, '4xs') / 2};
+        transform: rotate(45deg);
+      }
+    }
+
+    &:hover::before {
+      border-left: ecl-border();
+      border-bottom: ecl-border();
+      border-color: ecl-typography('color', 'title');
+    }
+
+    &:focus-within::before {
+      border-left: ecl-border('outline');
+      border-bottom: ecl-border('outline');
+    }
+  }
+
+  &__textarea-label {
+    @include ecl-media-breakpoint-up('sm') {
+      @include visually-hidden;
+    }
+  }
+
+  &__textarea {
+    width: 100%;
+    box-sizing: border-box;
+    resize: vertical;
+    background-color: map-get($ecl-colors, 'grey-10');
+    border-color: map-get($ecl-colors, 'grey-10');
+    border-radius: ecl-box-model('border-radius');
+  }
+
+  &__toolbar {
+    display: flex;
+    align-items: center;
+    margin-top: ecl-box-model('padding');
+  }
+
+  &__toolbar-main {
+    flex-grow: 1;
+  }
+
+  &__toolbar-aside {
+    flex-shrink: 0;
+    display: flex;
+    flex-wrap: wrap;
+  }
+}

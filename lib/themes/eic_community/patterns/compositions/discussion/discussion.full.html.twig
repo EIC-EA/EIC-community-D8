@@ -1,13 +1,9 @@
 {% extends "@theme/patterns/layout/base.html.twig" %}
 
-{% block navigation %}
-  {% include "@theme/patterns/compositions/breadcrumb.html.twig" with breadcrumb|default({}) %}
-{% endblock %}
-
 {% block page_header %}
-  {% include "@theme/patterns/compositions/editorial-header.html.twig" with editorial_header|default({}) %}
-
-  {% include "@theme/patterns/compositions/hero.html.twig" with hero|default({}) %}
+  {% include "@theme/patterns/compositions/editorial-header.html.twig" with editorial_header|default({})|without('actions')|merge({
+    extra_classes: 'ecl-editorial-header--is-compact',
+  }) only %}
 {% endblock %}
 
 {% block content %}
@@ -17,17 +13,7 @@
     {% endblock %}
 
     {% block sidebar %}
-      {% include "@theme/patterns/compositions/editorial-actions.html.twig" with editorial_actions|default({}) %}
-
-      {% include "@theme/patterns/compositions/social-share.html.twig" with social_share|default({})|merge({
-        extra_classes: 'ecl-featured-list',
-      }) %}
-
-      {% include "@theme/patterns/compositions/featured-contributors.html.twig" with contributors|default({}) %}
-
       {% include "@theme/patterns/compositions/featured-topics.html.twig" with topics|default({}) %}
-
-      {% include "@theme/patterns/compositions/featured-stories.html.twig" with stories|default({}) %}
     {% endblock %}
   {% endembed %}
 
@@ -35,7 +21,7 @@
     {% embed "@theme/patterns/compositions/auth-banner.html.twig" with {
       title: "Please log in to see comments and contribute",
       icon_file_path: common.icon_file_path,
-      extra_classes: 'ecl-auth-banner--is-compact',
+      invert: true,
       login: {
         label: "Login"
       },
@@ -47,5 +33,4 @@
   {% elseif comments is not empty %}
     {# @Todo: Include comments template. #}
   {% endif %}
-
 {% endblock %}
