@@ -1,0 +1,36 @@
+uuid: 54ddaa5f-a987-4952-b450-459ae24e2ee1
+langcode: en
+status: true
+dependencies:
+  config:
+    - views.view.latest_news_and_stories
+  module:
+    - views
+name: news_stories
+label: 'News&Stories'
+display: modal
+display_configuration:
+  width: ''
+  height: ''
+  link_text: 'Select entities'
+  auto_open: false
+selection_display: multi_step_display
+selection_display_configuration:
+  entity_type: node
+  display: label
+  display_settings: {  }
+  select_text: 'Use selected'
+  selection_hidden: false
+widget_selector: single
+widget_selector_configuration: {  }
+widgets:
+  dfad9e89-d0eb-4faf-b46b-fd258f84a8c9:
+    settings:
+      view: latest_news_and_stories
+      view_display: entity_browser_1
+      submit_text: 'Select Articles'
+      auto_select: true
+    uuid: dfad9e89-d0eb-4faf-b46b-fd258f84a8c9
+    weight: 1
+    label: view
+    id: view

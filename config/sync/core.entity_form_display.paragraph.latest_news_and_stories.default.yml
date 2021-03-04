@@ -3,22 +3,44 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.field.paragraph.latest_news_and_stories.field_article
+    - entity_browser.browser.news_stories
+    - field.field.paragraph.latest_news_and_stories.field_articles
+    - field.field.paragraph.latest_news_and_stories.field_featured_article
     - paragraphs.paragraphs_type.latest_news_and_stories
+  module:
+    - entity_browser
 id: paragraph.latest_news_and_stories.default
 targetEntityType: paragraph
 bundle: latest_news_and_stories
 mode: default
 content:
-  field_article:
-    weight: 0
+  field_articles:
+    weight: 2
     settings:
-      match_operator: CONTAINS
-      match_limit: 10
-      size: 60
-      placeholder: ''
+      entity_browser: news_stories
+      field_widget_display: label
+      field_widget_remove: true
+      open: true
+      selection_mode: selection_edit
+      field_widget_edit: false
+      field_widget_replace: false
+      field_widget_display_settings: {  }
     third_party_settings: {  }
-    type: entity_reference_autocomplete
+    type: entity_browser_entity_reference
+    region: content
+  field_featured_article:
+    weight: 1
+    settings:
+      entity_browser: news_stories
+      field_widget_display: label
+      field_widget_remove: true
+      field_widget_replace: true
+      open: true
+      selection_mode: selection_edit
+      field_widget_edit: false
+      field_widget_display_settings: {  }
+    third_party_settings: {  }
+    type: entity_browser_entity_reference
     region: content
 hidden:
   created: true

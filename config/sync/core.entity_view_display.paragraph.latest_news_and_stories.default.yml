@@ -3,15 +3,25 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.field.paragraph.latest_news_and_stories.field_article
+    - field.field.paragraph.latest_news_and_stories.field_articles
+    - field.field.paragraph.latest_news_and_stories.field_featured_article
     - paragraphs.paragraphs_type.latest_news_and_stories
 id: paragraph.latest_news_and_stories.default
 targetEntityType: paragraph
 bundle: latest_news_and_stories
 mode: default
 content:
-  field_article:
-    weight: 0
+  field_articles:
+    weight: 2
+    label: hidden
+    settings:
+      view_mode: teaser
+      link: false
+    third_party_settings: {  }
+    type: entity_reference_entity_view
+    region: content
+  field_featured_article:
+    weight: 1
     label: hidden
     settings:
       view_mode: teaser

@@ -1,16 +1,16 @@
-uuid: ab9e192c-afbb-427a-8ab1-cc1c32df2c8b
+uuid: cecb7a02-a9c2-4647-a385-2a92cad3787b
 langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.paragraph.field_article
+    - field.storage.paragraph.field_articles
     - paragraphs.paragraphs_type.latest_news_and_stories
-id: paragraph.latest_news_and_stories.field_article
-field_name: field_article
+id: paragraph.latest_news_and_stories.field_articles
+field_name: field_articles
 entity_type: paragraph
 bundle: latest_news_and_stories
 label: Articles
-description: 'Select News or Story items to be shown.'
+description: ''
 required: false
 translatable: false
 default_value: {  }
