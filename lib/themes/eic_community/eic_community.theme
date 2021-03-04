@@ -48,31 +48,6 @@ function eic_community_preprocess_node__page(array &$variables) {
 
     }
   }
-
-  // Adds introduction text.
-  if (!$node->get('field_introduction')->isEmpty()) {
-    $variables['introduction'] = $node->get('field_introduction')->value;
-  }
-}
-
-/**
- * Implements hook_preprocess_paragraph() for full_text_content paragraph.
- */
-function eic_community_preprocess_paragraph__full_text_content(array &$variables) {
-  /** @var \Drupal\paragraphs\Entity\Paragraph $paragraph */
-  $paragraph = $variables['paragraph'];
-
-  // Get title text.
-  if (!$paragraph->get('field_title')->isEmpty()) {
-    $variables['paragraph_content']['title'] = $paragraph->get('field_title')->value;
-  }
-
-  // Get body text.
-  if (!$paragraph->get('field_body')->isEmpty()) {
-    $variables['paragraph_content']['items'] = [
-      ['content' => $paragraph->get('field_body')->view()],
-    ];
-  }
 }
 
 /**

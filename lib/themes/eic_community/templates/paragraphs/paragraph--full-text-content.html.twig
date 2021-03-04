@@ -6,6 +6,10 @@
  * @see ./modules/contrib/paragraphs/templates/paragraph.html.twig
  */
 #}
-{% include "@theme/patterns/compositions/text-block.html.twig" with paragraph_content|merge({
+{% include "@theme/patterns/compositions/text-block.html.twig" with paragraph_content|default({})|merge({
+  title: paragraph.field_title.value|default(''),
+  items: [{
+    content: content.field_body
+  }],
   extra_classes: 'ecl-section-wrapper',
 }) only %}
