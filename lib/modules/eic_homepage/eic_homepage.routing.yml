@@ -1,0 +1,8 @@
+eic_homepage.front:
+  path: '/homepage'
+  defaults:
+    _title_callback: '\Drupal\eic_homepage\Controller\HomepageController::title'
+    _controller: '\Drupal\eic_homepage\Controller\HomepageController::build'
+  requirements:
+    # Access to the homepage granted to all users.
+    _access: 'TRUE'
