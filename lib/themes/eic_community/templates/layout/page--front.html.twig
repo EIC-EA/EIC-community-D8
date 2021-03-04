@@ -37,6 +37,10 @@
 
 {% extends "@theme/patterns/pages/homepage/homepage.private.html.twig" %}
 
+{% block page_header %}
+  {{ page.page_header }}
+{% endblock %}
+
 {% block content %}
   {{ page.content }}
 {% endblock %}
