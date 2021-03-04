@@ -37,10 +37,26 @@
     }
 
     #{$node}--is-ready[aria-expanded="true"] & {
-      &::after {
+      &button::after {
         transform: rotate(-45deg);
         margin-top: #{map-get($ecl-spacing, 'xs') / 2};
       }
+
+      .ecl-icon {
+        color: ecl-typography('color', 'title');
+      }
+    }
+
+    &:not(button)::after {
+      display: none;
+    }
+
+    &:not(button) > *:focus {
+      outline: none;
+    }
+
+    &:not(button):focus-within {
+      outline: ecl-border('outline');
     }
   }
 
