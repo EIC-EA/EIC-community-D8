@@ -193,6 +193,22 @@ function eic_community_preprocess_block(array &$variables) {
     $block_content = $variables['content']['#block_content'];
 
     switch ($block_content->bundle()) {
+      case 'page_banner':
+        // Preprocess variables for page_banner block.
+        if (!$block_content->get('field_media')->isEmpty()) {
+          /** @var \Drupal\media\Entity\Media $media */
+          $media = \Drupal::service('entity.repository')->getTranslationFromContext($block_content->get('field_media')->entity, $block_content->language()->getId());
+
+          switch ($media->bundle()) {
+            case 'image':
+              $image_item = ImageValueObject::fromImageItem($media->get('oe_media_image')->first());
+              $variables['hero']['image'] = $image_item->getSource();
+              break;
+
+          }
+        }
+        break;
+
       case 'cta_tiles':
         // Preprocess variables for cta_tiles block.
         if (!$block_content->get('field_cta_tiles')->isEmpty()) {
