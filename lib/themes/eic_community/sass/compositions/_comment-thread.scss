@@ -28,10 +28,14 @@
   }
 
   &__comment {
-    margin-bottom: ecl-box-model('margin');
+    margin-bottom: map-get($ecl-spacing, 'xl');
 
     &:last-child {
       margin-bottom: 0;
+    }
+
+    @include ecl-media-breakpoint-up('md') {
+      margin-bottom: map-get($ecl-spacing, '2xl');
     }
   }
 
@@ -62,14 +66,13 @@
 
     &::before {
       display: none;
-      width: 2px;
+      width: 1px;
       content: " ";
       position: absolute;
       top: 0;
       left: calc(#{map-get($ecl-media, '3xs')} / 2);
       bottom: 0;
-      margin-left: -1px;
-      background-color: ecl-typography('color', 'meta');
+      background-color: map-get($ecl-colors, 'grey-15');
 
       @include ecl-media-breakpoint-up('md') {
         display: block;
