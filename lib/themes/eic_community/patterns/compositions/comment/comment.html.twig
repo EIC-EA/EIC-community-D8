@@ -66,29 +66,44 @@
       </div>
 
       {% if user and comment_id %}
-      <div class="ecl-comment__header-aside">
-        {% include "@theme/patterns/compositions/collapsible-options.html.twig" with {
-          extra_classes: 'ecl-collapsible-options--aligns-from-right',
-          items: [
-            {
-              label: remove_label|default('Report comment'),
-              extra_classes: 'ecl-comment__report',
-              extra_attributes: action_attributes,
-            },
-          ]|merge(is_owner ? [
-            {
-              label: edit_label|default('Edit comment'),
-              extra_classes: 'ecl-comment__edit',
-              extra_attributes: action_attributes,
-            },
-            {
-              label: remove_label|default('Delete comment'),
-              extra_classes: 'ecl-comment__delete',
-              extra_attributes: action_attributes,
-            },
-          ] : [])
-        } %}
-      </div>
+        <div class="ecl-comment__header-aside">
+          {% embed "@theme/patterns/compositions/collapsible-options.html.twig" with {
+            extra_classes: 'ecl-collapsible-options--aligns-from-right',
+            items: [
+              {
+                label: remove_label|default('Report comment'),
+                extra_classes: 'ecl-comment__report',
+                extra_attributes: action_attributes,
+              },
+            ]|merge(is_owner ? [
+              {
+                label: edit_label|default('Edit comment'),
+                extra_classes: 'ecl-comment__edit',
+                extra_attributes: action_attributes,
+              },
+              {
+                label: remove_label|default('Delete comment'),
+                extra_classes: 'ecl-comment__delete',
+                extra_attributes: action_attributes,
+              },
+            ] : [])
+          } %}
+            {% block trigger%}
+              {% include "@ecl-twig/ec-component-button/ecl-button.html.twig" with {
+                label: options_label|default('Options'),
+                extra_classes: "ecl-button--as-form-option",
+                variant: 'ghost',
+                icon: icon_file_path ? {
+                  path: icon_file_path,
+                  name: 'ellipsis',
+                  type: 'custom',
+                  transform: 'rotate-90',
+                  size: 's',
+                } : {},
+              } %}
+            {% endblock %}
+          {% endembed %}
+        </div>
       {% endif %}
 
     </header>
