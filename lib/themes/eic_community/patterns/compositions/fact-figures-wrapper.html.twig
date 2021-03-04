@@ -17,7 +17,7 @@
                 } only %}
               {% endif %}
 
-              {% if item.value %}
+              {% if item.value is not empty %}
                 <div class="ecl-fact-figures__value">{{ item.value }}</div>
               {% endif %}
 
