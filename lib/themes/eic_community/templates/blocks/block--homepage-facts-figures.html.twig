@@ -25,8 +25,30 @@
  * @see template_preprocess_block()
  */
 #}
-{% include "@theme/patterns/compositions/bulletin-block.html.twig" with block_content|default({})|merge({
-  title: content['#block_content'].field_title.value|default(''),
-  description: content['#block_content'].field_body.value|default(''),
-  extra_classes: 'ecl-bulletin-block--as-list',
-}) only %}
+{%
+  set _facts_figures_icons = {
+    'user__user': 'user_circle',
+    'group__organisation': 'company',
+    'group__group': 'group',
+    'group__project': 'documents',
+    'node__challenge': 'objectif',
+    'group__event': 'calendar',
+  }
+%}
+{% set _items = [] %}
+
+{% for key, item in block_content.items %}
+  {% set _items = _items|merge([item|merge({
+    icon: {
+      type: 'custom',
+      name: _facts_figures_icons[item.fact_figure_type],
+    }
+  })]) %}
+{% endfor %}
+
+{% include "@theme/patterns/compositions/fact-figures-wrapper.html.twig" with block_content|default({})|merge({
+  items: _items,
+  display_icons: true,
+  icon_file_path: eic_icon_path,
+  extra_classes: 'ecl-section-wrapper ecl-section-wrapper--is-blue',
+})  only %}
