@@ -16,6 +16,10 @@
     padding-left: ecl-box-model('padding');
     border-left: ecl-border();
 
+    &:last-child {
+      border-left-color: transparent;
+    }
+
     @include ecl-media-breakpoint-up('md') {
       padding-left: 0;
       border-left: 0;
@@ -55,6 +59,10 @@
       @include ecl-media-breakpoint-up('md') {
         display: none;
       }
+    }
+
+    &:last-child::after {
+      display: none;
     }
   }
 
