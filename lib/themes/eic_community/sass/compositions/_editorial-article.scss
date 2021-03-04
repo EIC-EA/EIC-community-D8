@@ -66,4 +66,22 @@
       top: ecl-layout('gutter');
     }
   }
+
+  &__meta {
+    display: flex;
+    align-items: center;
+    margin-top: map-get($ecl-spacing, 's');
+
+    @include ecl-media-breakpoint-up('md') {
+      margin-top: map-get($ecl-spacing, 'm');
+    }
+  }
+
+  &__meta-item {
+    margin-right: ecl-layout('gutter');
+
+    &:last-chid {
+      margin-right: 0;
+    }
+  }
 }
