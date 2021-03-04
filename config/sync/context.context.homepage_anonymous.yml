@@ -92,6 +92,23 @@ reactions:
         unique: 0
         context_id: homepage_anonymous
         uuid: 20103bdb-6cc0-4481-a3c1-b311abca2f40
+      649919c3-9c20-41dc-b941-5b1de1519758:
+        id: 'block_content:5b0c5199-f4b0-4b8a-90fa-68d424e8315b'
+        label: 'Homepage - Banner block'
+        provider: block_content
+        label_display: '0'
+        status: true
+        info: ''
+        view_mode: full
+        region: page_header
+        weight: '0'
+        context_mapping: {  }
+        custom_id: homepage_banner_anonymous
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: homepage_anonymous
+        uuid: 649919c3-9c20-41dc-b941-5b1de1519758
     id: blocks
     saved: false
     uuid: 5a010c1a-216a-427c-8d7e-43702d8b57ec
