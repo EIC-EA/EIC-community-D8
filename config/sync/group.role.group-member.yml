@@ -1,0 +1,19 @@
+uuid: c4b864f0-ca8c-4790-adbe-2135414ac3ff
+langcode: en
+status: true
+dependencies:
+  config:
+    - group.type.group
+id: group-member
+label: Member
+weight: -100
+internal: true
+audience: member
+group_type: group
+permissions_ui: true
+permissions:
+  - 'access content overview'
+  - 'access group_node overview'
+  - 'leave group'
+  - 'update own group_membership content'
+  - 'view group_membership content'

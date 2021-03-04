@@ -1,0 +1,25 @@
+uuid: a390250b-eaec-43e9-bcfb-175e80fafc5d
+langcode: en
+status: false
+dependencies:
+  module:
+    - system
+  theme:
+    - eic_community
+_core:
+  default_config_hash: srD-xdd3JdU8nrH08J0aENrUFBrCU-vuGT6BX9FLIpQ
+id: eic_community_site_branding
+theme: eic_community
+region: site_header
+weight: 0
+provider: null
+plugin: system_branding_block
+settings:
+  id: system_branding_block
+  label: 'Site branding'
+  provider: system
+  label_display: '0'
+  use_site_logo: true
+  use_site_name: true
+  use_site_slogan: false
+visibility: {  }

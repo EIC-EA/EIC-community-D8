@@ -37,8 +37,10 @@
 @import "./compositions/collapsible-options";
 @import "./compositions/content_item";
 @import "./compositions/content_language_switcher";
+@import "./compositions/organisation-information-block";
 @import "./compositions/fact-figures-wrapper";
 @import "./compositions/featured-content-grid";
+@import "./compositions/featured-content-sections";
 @import "./compositions/featured-list";
 @import "./compositions/featured-content-collection";
 @import "./compositions/filter-sidebar";
@@ -58,6 +60,7 @@
 @import "./components/blockquote";
 @import "./components/button";
 @import "./components/content-type-indicator";
+@import "./components/expandable-definitions";
 @import "./components/description_list";
 @import "./components/disclaimer";
 @import "./components/editable-hero-banner";

@@ -3,9 +3,10 @@ type: theme
 description: EIC community base theme.
 package: EIC-community-D8
 core: 8.x
+core_version_requirement: ^8
 php: 7.2
 
-base theme: stable
+base theme: oe_theme
 
 libraries:
   - eic_community/theme
@@ -18,3 +19,9 @@ regions:
   navigation: "Navigation"
   content: "Content"
   footer: "Footer"
+
+# Registers twig namespace for EIC components.
+components:
+  namespaces:
+    theme:
+      - './'

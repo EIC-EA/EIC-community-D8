@@ -1,0 +1,23 @@
+uuid: 1f47af7a-0de9-42dd-86d5-13244a59b81c
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_contributor_link
+    - paragraphs.paragraphs_type.contributor
+  module:
+    - link
+id: paragraph.contributor.field_contributor_link
+field_name: field_contributor_link
+entity_type: paragraph
+bundle: contributor
+label: 'Contributor Link'
+description: 'Can be used for Linkedin or Twitter URLs of the contributor. Or anything else related to the contributor.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  link_type: 16
+  title: 2
+field_type: link

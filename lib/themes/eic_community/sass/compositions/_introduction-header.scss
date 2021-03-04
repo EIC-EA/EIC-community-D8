@@ -1,16 +1,11 @@
 .ecl-introduction-header {
   $node: &;
 
-  padding-bottom: ecl-box-model('padding', 'banner');
-
-  @include ecl-media-breakpoint-up('md') {
-    padding-bottom: ecl-box-model('padding--md', 'banner');
-  }
-
   &__meta {
     color: map-get($ecl-colors, 'grey-50');
-    font: $ecl-font-m;
+    @include ecl-responsive-font('label');
     text-transform: uppercase;
+    margin-bottom: map-get($ecl-spacing, 'm');
   }
 
   &__title {
@@ -32,17 +27,20 @@
   }
 
   &__media {
-    @include ecl-media-breakpoint-down('md') {
-      order: -1;
-    }
+    order: -1;
 
     @include ecl-media-breakpoint-up('md') {
-      width: 50%;
+      width: 40%;
       flex-shrink: 0;
+      order: 0;
 
       #{$node}--is-reversed & {
         order: -1;
       }
+    }
+
+    @include ecl-media-breakpoint-up('lg') {
+      width: 50%;
     }
   }
 

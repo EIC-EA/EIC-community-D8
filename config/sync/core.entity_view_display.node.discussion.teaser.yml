@@ -40,6 +40,7 @@ content:
     settings: {  }
     third_party_settings: {  }
 hidden:
+  extra_field_oe_theme_helper_short_title_with_fallback: true
   field_related_documents: true
   field_vocab_geo: true
   field_vocab_topics: true

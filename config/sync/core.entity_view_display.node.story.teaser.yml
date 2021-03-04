@@ -5,6 +5,7 @@ dependencies:
   config:
     - core.entity_view_mode.node.teaser
     - field.field.node.story.field_body
+    - field.field.node.story.field_disclaimer
     - field.field.node.story.field_document_media
     - field.field.node.story.field_header_visual
     - field.field.node.story.field_image
@@ -12,7 +13,7 @@ dependencies:
     - field.field.node.story.field_introduction
     - field.field.node.story.field_publication_date
     - field.field.node.story.field_related_stories
-    - field.field.node.story.field_time_to_read
+    - field.field.node.story.field_story_paragraphs
     - field.field.node.story.field_video
     - field.field.node.story.field_vocab_geo
     - field.field.node.story.field_vocab_topics
@@ -26,18 +27,30 @@ targetEntityType: node
 bundle: story
 mode: teaser
 content:
+  content_moderation_control:
+    weight: -20
+    settings: {  }
+    third_party_settings: {  }
+    region: content
   flag_bookmark_content:
     weight: 10
+    region: content
     settings: {  }
     third_party_settings: {  }
+  flag_recommend:
+    weight: 10
     region: content
+    settings: {  }
+    third_party_settings: {  }
   links:
     weight: 100
+    region: content
     settings: {  }
     third_party_settings: {  }
-    region: content
 hidden:
+  extra_field_oe_theme_helper_short_title_with_fallback: true
   field_body: true
+  field_disclaimer: true
   field_document_media: true
   field_header_visual: true
   field_image: true
@@ -45,7 +58,7 @@ hidden:
   field_introduction: true
   field_publication_date: true
   field_related_stories: true
-  field_time_to_read: true
+  field_story_paragraphs: true
   field_video: true
   field_vocab_geo: true
   field_vocab_topics: true

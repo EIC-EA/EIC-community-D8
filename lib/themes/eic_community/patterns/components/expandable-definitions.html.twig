@@ -1,0 +1,41 @@
+<div class="ecl-expandable-definitions">
+  <div class="ecl-expandable-definitions__items">
+    {% for item in items %}
+      <div class="ecl-expandable-definitions__item">
+        {% if item.label %}
+          <span class="ecl-expandable-definitions__item-label">{{ item.label }}</span>
+        {% endif %}
+
+        <div class="ecl-expandable-definitions__item-subitems">
+          {% for subitem in item.items %}
+            {% if subitem.path %}
+              <a href="{{ subitem.path }}" class="ecl-expandable-definitions__item-subitem">
+            {% else %}
+              <span class="ecl-expandable-definitions__item-subitem">
+            {% endif %}
+              {{ subitem.label}}
+            {% if subitem.path %}
+              </a>
+            {% else %}
+              </span>
+            {% endif %}
+          {% endfor %}
+        </div>
+
+        {% include "@ecl-twig/ec-component-button/ecl-button.html.twig" with {
+          label: item.items|length ~ " " ~ item.label|lower ,
+          variant: 'ghost',
+          icon_position: 'after',
+          icon: icon_file_path ? {
+            path: icon_file_path,
+            type: 'ui',
+            name: 'rounded-arrow',
+            transform: 'rotate-180',
+            size: '2xs',
+          } : {},
+          extra_classes: 'ecl-expandable-definitions__item-more',
+        } only %}
+      </div>
+    {% endfor %}
+  </div>
+</div>

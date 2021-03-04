@@ -1,0 +1,40 @@
+{% set id = id|default('featured-content-section') %}
+
+<div class="ecl-featured-content-sections">
+  <div class="ecl-container">
+    <div class="ecl-featured-content-sections__wrapper">
+      <div class="ecl-featured-content-sections__aside">
+        <div class="ecl-featured-content-sections__aside-inside">
+          <div class="ecl-featured-content-sections__link-items">
+            {% for item in items %}
+              {% if item.content and item.title %}
+                <div class="ecl-featured-content-sections__link-item">
+                  {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with {
+                    link: {
+                      label: item.title,
+                      path: '#' ~ id ~ '-' ~ item.id|default(loop.index)
+                    },
+                    extra_classes: 'ecl-featured-content-sections__link',
+                  } %}
+                </div>
+              {% endif %}
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+      <div class="ecl-featured-content-sections__main">
+        <div class="ecl-featured-content-sections__main-inside">
+          <div class="ecl-featured-content-sections__items">
+            {% for item in items %}
+              {% if item.content %}
+                <div class="ecl-featured-content-sections__item" id="{{ id ~ '-' ~ item.id|default(loop.index) }}">
+                  {{ item.content }}
+                </div>
+              {% endif %}
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -10,5 +10,10 @@ weight: 0
 is_admin: false
 permissions:
   - 'access content'
+  - 'view banner fragments'
+  - 'view disclaimer fragments'
+  - 'view bookmark_content'
+  - 'view bookmark_media'
   - 'view fact_figure fragments'
   - 'view media'
+  - 'view recommend'

@@ -1,0 +1,22 @@
+uuid: cfbda6c1-3bce-4213-9a7d-ef66da54d667
+langcode: en
+status: true
+dependencies:
+  module:
+    - system
+  theme:
+    - eic_community
+_core:
+  default_config_hash: '-d03U8iQFWFSM_KnLXP_dMC-9-QI5FJ-js-siIV0Zbw'
+id: eic_community_main_page_content
+theme: eic_community
+region: content
+weight: 2
+provider: null
+plugin: system_main_block
+settings:
+  id: system_main_block
+  label: 'Main page content'
+  provider: system
+  label_display: '0'
+visibility: {  }

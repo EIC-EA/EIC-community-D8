@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - field.field.node.story.field_body
+    - field.field.node.story.field_disclaimer
     - field.field.node.story.field_document_media
     - field.field.node.story.field_header_visual
     - field.field.node.story.field_image
@@ -11,13 +12,14 @@ dependencies:
     - field.field.node.story.field_introduction
     - field.field.node.story.field_publication_date
     - field.field.node.story.field_related_stories
-    - field.field.node.story.field_time_to_read
+    - field.field.node.story.field_story_paragraphs
     - field.field.node.story.field_video
     - field.field.node.story.field_vocab_geo
     - field.field.node.story.field_vocab_topics
     - node.type.story
   module:
     - datetime
+    - entity_reference_revisions
     - text
     - user
 _core:
@@ -27,12 +29,25 @@ targetEntityType: node
 bundle: story
 mode: default
 content:
+  content_moderation_control:
+    weight: -20
+    region: content
+    settings: {  }
+    third_party_settings: {  }
   field_body:
     weight: 5
     label: above
     settings: {  }
     third_party_settings: {  }
     type: text_default
+    region: content
+  field_disclaimer:
+    weight: 16
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
     region: content
   field_document_media:
     weight: 9
@@ -91,13 +106,14 @@ content:
     third_party_settings: {  }
     type: entity_reference_label
     region: content
-  field_time_to_read:
-    weight: 3
+  field_story_paragraphs:
+    type: entity_reference_revisions_entity_view
+    weight: 15
     label: above
     settings:
-      link_to_entity: false
+      view_mode: default
+      link: ''
     third_party_settings: {  }
-    type: string
     region: content
   field_video:
     type: entity_reference_entity_view
@@ -129,9 +145,15 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
+  flag_recommend:
+    weight: 14
+    region: content
+    settings: {  }
+    third_party_settings: {  }
   links:
     weight: 0
     region: content
     settings: {  }
     third_party_settings: {  }
-hidden: {  }
+hidden:
+  extra_field_oe_theme_helper_short_title_with_fallback: true

@@ -5,6 +5,7 @@ dependencies:
   config:
     - field.storage.node.field_page_paragraphs
     - node.type.page
+    - paragraphs.paragraphs_type.banner
     - paragraphs.paragraphs_type.full_media_content
     - paragraphs.paragraphs_type.full_text_content
     - paragraphs.paragraphs_type.quote
@@ -27,25 +28,32 @@ settings:
   handler_settings:
     negate: 0
     target_bundles:
-      tiles_content: tiles_content
+      banner: banner
       full_media_content: full_media_content
       quote: quote
       full_text_content: full_text_content
       text_and_media_content: text_and_media_content
+      tiles_content: tiles_content
     target_bundles_drag_drop:
+      banner:
+        enabled: true
+        weight: -13
+      contributor:
+        weight: -12
+        enabled: false
       full_media_content:
         enabled: true
-        weight: 4
+        weight: -11
       full_text_content:
         enabled: true
-        weight: 7
+        weight: -9
       quote:
         enabled: true
-        weight: 5
+        weight: -10
       text_and_media_content:
         enabled: true
-        weight: 9
+        weight: -8
       tiles_content:
         enabled: true
-        weight: 2
+        weight: -7
 field_type: entity_reference_revisions

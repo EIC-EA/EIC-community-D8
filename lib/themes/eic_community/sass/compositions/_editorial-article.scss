@@ -59,10 +59,6 @@
       width: calc(100% / #{$ecl-grid-columns} * 4);
       flex-shrink: 0;
     }
-
-    @include ecl-media-breakpoint-up('lg') {
-      padding-left: ecl-layout('gutter--lg');
-    }
   }
 
   &__aside-wrapper {

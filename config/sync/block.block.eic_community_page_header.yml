@@ -1,0 +1,41 @@
+uuid: ba477037-dc55-4784-85f4-9e541c3181ff
+langcode: en
+status: true
+dependencies:
+  module:
+    - context
+    - oe_theme_helper
+    - system
+  theme:
+    - eic_community
+_core:
+  default_config_hash: z_TX8X43Q1PvtS-_u-npjhLVLmh_0t3n9fmv3DOqKk8
+id: eic_community_page_header
+theme: eic_community
+region: page_header
+weight: 0
+provider: null
+plugin: oe_theme_helper_page_header
+settings:
+  id: oe_theme_helper_page_header
+  label: 'Page header'
+  provider: oe_theme_helper
+  label_display: '0'
+  context_mapping:
+    page_header: '@oe_theme_helper.page_header_context:page_header'
+visibility:
+  view_inclusion:
+    id: view_inclusion
+    negate: null
+    view_inclusion: {  }
+    context_mapping: {  }
+  request_path_exclusion:
+    id: request_path_exclusion
+    pages: ''
+    negate: null
+    context_mapping: {  }
+  request_path:
+    id: request_path
+    pages: '<front>'
+    negate: true
+    context_mapping: {  }

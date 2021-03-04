@@ -3,7 +3,9 @@
 {% extends "@theme/patterns/layout/base.html.twig" %}
 
 {% block page_header %}
-  {% embed "@theme/patterns/compositions/editable-hero-banner.html.twig" with hero|default({}) %}
+  {% embed "@theme/patterns/compositions/editable-hero-banner.html.twig" with hero|default({})|merge({
+    extra_classes: 'ecl-editable-hero-banner--is-blue',
+  }) only %}
     {% block content %}
       {% if insertion is not empty %}
         <span class="ecl-description">{{ insertion }}</span>
@@ -30,12 +32,16 @@
     extra_classes: "ecl-section-wrapper ecl-featured-content-collection--is-compact"
   }) only %}
 
-  {% include "@theme/patterns/compositions/fact-figures-wrapper.html.twig" with fact_figures|default({})  only %}
+  {% include "@theme/patterns/compositions/fact-figures-wrapper.html.twig" with fact_figures|default({})|merge({
+    extra_classes: 'ecl-section-wrapper ecl-section-wrapper--is-blue',
+  })  only %}
 
-  {% include "@theme/patterns/compositions/featured-content-grid.html.twig" with featured_news|default({})  only %}
+  {% include "@theme/patterns/compositions/featured-content-grid.html.twig" with featured_news|default({})|merge({
+    extra_classes: 'ecl-section-wrapper',
+  })  only %}
 
   {% include "@theme/patterns/compositions/featured-content-collection.html.twig" with featured_events|default({})|merge({
-    extra_classes: "ecl-featured-content-collection--is-compact ecl-section-wrapper ecl-section-wrapper--is-blue"
+    extra_classes: "ecl-section-wrapper ecl-section-wrapper--is-blue ecl-featured-content-collection--is-compact"
   }) only %}
 
   {% embed "@theme/patterns/compositions/layout-block.html.twig" %}
@@ -44,7 +50,9 @@
     {% endblock %}
 
     {% block aside %}
-      {% include "@theme/patterns/compositions/social-share.html.twig" with social_share|default({}) %}
+      {% include "@theme/patterns/compositions/social-share.html.twig" with social_share|default({})|merge({
+        extra_classes: 'ecl-featured-list',
+      }) %}
 
       {% include "@theme/patterns/compositions/twitter-timeline.html.twig" with {
         icon_file_path: common.icon_file_path,
