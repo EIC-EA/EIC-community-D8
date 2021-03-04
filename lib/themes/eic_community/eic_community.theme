@@ -177,9 +177,17 @@ function eic_community_preprocess_block(array &$variables) {
           /** @var \Drupal\paragraphs\ParagraphInterface[] $paragraphs */
           $paragraphs = $block_content->get('field_cta_tiles')->referencedEntities();
 
-          foreach ($paragraphs as $paragraph) {
+          foreach ($paragraphs as $key => $paragraph) {
             $paragraph_translation = \Drupal::service('entity.repository')->getTranslationFromContext($paragraph, $block_content->language()->getId());
             $link = $paragraph_translation->get('field_cta_link')->first()->getValue();
+
+            // Adds default cta link classes.
+            $extra_classes = 'ecl-link--button ecl-link--button-primary';
+
+            // Adds extra classes for the first cta link.
+            if ($key === 0) {
+              $extra_classes = 'ecl-link--button ecl-link--button-call';
+            }
 
             // Adds CTA Tiles to the theme variables.
             $variables['paragraph_content']['items'][] = [
@@ -191,7 +199,7 @@ function eic_community_preprocess_block(array &$variables) {
                     'label' => $link['title'],
                     'path' => $link['uri'],
                   ],
-                  'extra_classes' => 'ecl-link--button ecl-link--button-primary',
+                  'extra_classes' => $extra_classes,
                 ],
               ],
             ];
