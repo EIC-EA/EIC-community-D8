@@ -193,6 +193,9 @@ function eic_community_preprocess_block(array &$variables) {
     /** @var \Drupal\block_content\Entity\BlockContent $block_content */
     $block_content = $variables['content']['#block_content'];
 
+    // Initializes cache tags.
+    $cache_tags = [];
+
     switch ($block_content->bundle()) {
       case 'page_banner':
         // Preprocess variables for page_banner block.
@@ -219,6 +222,7 @@ function eic_community_preprocess_block(array &$variables) {
           foreach ($paragraphs as $paragraph) {
             $paragraph_translation = \Drupal::service('entity.repository')->getTranslationFromContext($paragraph, $block_content->language()->getId());
             $link = $paragraph_translation->get('field_cta_link')->first()->getValue();
+            $cache_tags = Cache::mergeTags($cache_tags, $paragraph->getCacheTags());
 
             // Adds CTA Tiles to the theme variables.
             $variables['block_content']['items'][] = [
@@ -246,9 +250,6 @@ function eic_community_preprocess_block(array &$variables) {
 
           /** @var \Drupal\fragments\Entity\FragmentInterface[] $fragments */
           $fragments = $block_content->get('field_facts_figures')->referencedEntities();
-
-          // Initializes cache tags.
-          $cache_tags = [];
 
           // Adds each fact and figure to the theme variables.
           foreach ($fragments as $fragment) {
@@ -281,12 +282,12 @@ function eic_community_preprocess_block(array &$variables) {
               'fact_figure_type' => $fragment_translation->get('field_fact_figure_type')->getString(),
             ];
           }
-
-          // Adds cache tag for the fact and figure.
-          $variables['#cache']['tags'] = $cache_tags;
         }
         break;
 
     }
+
+    // Adds cache tags.
+    $variables['#cache']['tags'] = $cache_tags;
   }
 }
