@@ -78,6 +78,7 @@ module:
   token: 0
   toolbar: 0
   twig_field_value: 0
+  typed_link: 0
   ui_patterns: 0
   ui_patterns_library: 0
   update: 0
