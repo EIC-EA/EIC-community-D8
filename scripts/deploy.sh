@@ -35,6 +35,7 @@ COLOR_RED="\e[91m"
 BG_COLOR_DEFAULT="\e[49m"
 BG_COLOR_GREEN="\e[42m"
 DRUSH_CMD="../vendor/bin/drush"
+THEME_PATH="themes/custom/eic_community"
 
 # Define list of arguments expected in the input
 optstring=":gbim:"
@@ -147,6 +148,15 @@ fi
 
 # Configuration: Disable maintenance mode
 run_command "$DRUSH_CMD state:set system.maintenance_mode 0 --input-format=integer -y"
+
+# Cache: Rebuild Drupal cache.
+run_command "$DRUSH_CMD cache:rebuild"
+
+# Install new npm packages on eic_community theme.
+run_command "npm install --prefix $THEME_PATH"
+
+# Rebuild eic_community theme assets.
+run_command "npm run build --prefix $THEME_PATH"
 
 # Cache: Rebuild Drupal cache.
 run_command "$DRUSH_CMD cache:rebuild"
