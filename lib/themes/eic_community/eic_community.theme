@@ -215,16 +215,22 @@ function eic_community_preprocess_block(array &$variables) {
           /** @var \Drupal\paragraphs\ParagraphInterface[] $paragraphs */
           $paragraphs = $block_content->get('field_cta_tiles')->referencedEntities();
 
-          foreach ($paragraphs as $key => $paragraph) {
+          foreach ($paragraphs as $paragraph) {
             $paragraph_translation = \Drupal::service('entity.repository')->getTranslationFromContext($paragraph, $block_content->language()->getId());
             $link = $paragraph_translation->get('field_cta_link')->first()->getValue();
 
-            // Adds default cta link classes.
-            $extra_classes = 'ecl-link--button ecl-link--button-primary';
+            $link_classes = 'ecl-link--button';
 
-            // Adds extra classes for the first cta link.
-            if ($key === 0) {
-              $extra_classes = 'ecl-link--button ecl-link--button-call';
+            // Adds cta link classes based on the link type.
+            switch ($link['link_type']) {
+              case 'call_to_action':
+                $link_classes .= ' ecl-link--button-call';
+                break;
+
+              default:
+                $link_classes .= " ecl-link--button-{$link['link_type']}";
+                break;
+
             }
 
             // Adds CTA Tiles to the theme variables.
@@ -237,7 +243,7 @@ function eic_community_preprocess_block(array &$variables) {
                     'label' => $link['title'],
                     'path' => $link['uri'],
                   ],
-                  'extra_classes' => $extra_classes,
+                  'extra_classes' => $link_classes,
                 ],
               ],
             ];
@@ -255,7 +261,7 @@ function eic_community_preprocess_block(array &$variables) {
           $fragments = $block_content->get('field_facts_figures')->referencedEntities();
 
           // Adds each fact and figure to the theme variables.
-          foreach ($fragments as $key => $fragment) {
+          foreach ($fragments as $fragment) {
             $fragment_translation = \Drupal::service('entity.repository')->getTranslationFromContext($fragment, $block_content->language()->getId());
 
             // Extracts the entity type and bundle from

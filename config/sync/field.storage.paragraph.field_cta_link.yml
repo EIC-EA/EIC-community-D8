@@ -12,7 +12,7 @@ type: typed_link
 settings:
   allowed_values:
     default: Default
-    call_to_action: 'Call to action'
+    call: 'Call to action'
     primary: Primary
   allowed_values_function: ''
 module: typed_link
