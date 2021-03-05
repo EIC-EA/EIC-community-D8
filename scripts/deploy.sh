@@ -36,6 +36,7 @@ BG_COLOR_DEFAULT="\e[49m"
 BG_COLOR_GREEN="\e[42m"
 DRUSH_CMD="../vendor/bin/drush"
 THEME_PATH="themes/custom/eic_community"
+DEFAULT_CONTENT_MODULES="eic_default_content default_content hal serialization"
 
 # Define list of arguments expected in the input
 optstring=":gbim:"
@@ -118,6 +119,18 @@ fi
 if [ -n "$PERFORM_INSTALL" ]; then
   # Installation: Install clean website via Toolkit.
   run_command "./vendor/bin/run toolkit:install-clean --config-file runner.yml.dist"
+
+  # Move into the Drupal webroot in order to execute drush commands.
+  cd web
+
+  # Install EIC default content module.
+  run_command "$DRUSH_CMD en $DEFAULT_CONTENT_MODULES -y"
+
+  # Uninstall EIC default content module and dependencies.
+  run_command "$DRUSH_CMD pmu $DEFAULT_CONTENT_MODULES -y"
+
+  # Move back to the project's root folder.
+  cd ..
 fi
 
 # Move into the Drupal webroot.
