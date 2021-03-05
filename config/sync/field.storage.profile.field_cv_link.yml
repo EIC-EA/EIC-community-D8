@@ -1,16 +1,16 @@
-uuid: a27faf97-f6db-444e-b18c-027da07b7f38
+uuid: 9c3acc38-fc61-4bb9-8a19-aca2d5dadf00
 langcode: en
 status: true
 dependencies:
   module:
-    - text
-    - user
-id: user.field_body
-field_name: field_body
-entity_type: user
-type: text_with_summary
+    - link
+    - profile
+id: profile.field_cv_link
+field_name: field_cv_link
+entity_type: profile
+type: link
 settings: {  }
-module: text
+module: link
 locked: false
 cardinality: 1
 translatable: true

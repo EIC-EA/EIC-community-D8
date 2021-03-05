@@ -1,19 +1,18 @@
-uuid: 8ab71cff-65a1-4e3f-9dfc-7e5279fe8aca
+uuid: d749f9ec-3bc6-46f6-b68f-5b1b85b2c0a1
 langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.user.field_vocab_user_type
-    - taxonomy.vocabulary.user_types
-  module:
-    - user
-id: user.user.field_vocab_user_type
-field_name: field_vocab_user_type
-entity_type: user
-bundle: user
-label: 'User type'
+    - field.storage.profile.field_vocab_topic_interest
+    - profile.type.member
+    - taxonomy.vocabulary.topics
+id: profile.member.field_vocab_topic_interest
+field_name: field_vocab_topic_interest
+entity_type: profile
+bundle: member
+label: 'Topics of Interest'
 description: ''
-required: false
+required: true
 translatable: false
 default_value: {  }
 default_value_callback: ''
@@ -21,7 +20,7 @@ settings:
   handler: 'default:taxonomy_term'
   handler_settings:
     target_bundles:
-      user_types: user_types
+      topics: topics
     sort:
       field: name
       direction: asc

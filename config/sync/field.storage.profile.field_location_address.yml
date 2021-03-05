@@ -1,13 +1,13 @@
-uuid: 9dae4429-74bc-42c0-95c8-218b72bc538e
+uuid: 056f1c57-2607-4fd5-8bce-70a7ff0ad235
 langcode: en
 status: true
 dependencies:
   module:
     - address
-    - user
-id: user.field_location_address
+    - profile
+id: profile.field_location_address
 field_name: field_location_address
-entity_type: user
+entity_type: profile
 type: address
 settings: {  }
 module: address

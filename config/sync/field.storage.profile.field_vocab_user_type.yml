@@ -1,13 +1,13 @@
-uuid: c2398a04-a8ef-431d-8842-aa8ffafb098f
+uuid: 32fff4e6-8e53-445e-bab9-b44cadeb0416
 langcode: en
 status: true
 dependencies:
   module:
+    - profile
     - taxonomy
-    - user
-id: user.field_vocab_topic_interest
-field_name: field_vocab_topic_interest
-entity_type: user
+id: profile.field_vocab_user_type
+field_name: field_vocab_user_type
+entity_type: profile
 type: entity_reference
 settings:
   target_type: taxonomy_term

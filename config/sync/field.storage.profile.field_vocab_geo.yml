@@ -1,13 +1,13 @@
-uuid: 00cd6801-2929-47b5-bf1a-a70c4ab6082a
+uuid: 41a9bb43-aa0d-4a47-ad90-701a02794fc7
 langcode: en
 status: true
 dependencies:
   module:
+    - profile
     - taxonomy
-    - user
-id: user.field_vocab_topic_expertise
-field_name: field_vocab_topic_expertise
-entity_type: user
+id: profile.field_vocab_geo
+field_name: field_vocab_geo
+entity_type: profile
 type: entity_reference
 settings:
   target_type: taxonomy_term

@@ -1,17 +1,16 @@
-uuid: 7e2b09c9-50af-41b7-8cac-00f1ceda0d9e
+uuid: 6e7e0c27-5573-4165-b740-20d844abd434
 langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.user.field_job_title
-    - taxonomy.vocabulary.job_titles
-  module:
-    - user
-id: user.user.field_job_title
-field_name: field_job_title
-entity_type: user
-bundle: user
-label: 'Job title'
+    - field.storage.profile.field_vocab_user_type
+    - profile.type.member
+    - taxonomy.vocabulary.user_types
+id: profile.member.field_vocab_user_type
+field_name: field_vocab_user_type
+entity_type: profile
+bundle: member
+label: 'User type'
 description: ''
 required: false
 translatable: false
@@ -21,7 +20,7 @@ settings:
   handler: 'default:taxonomy_term'
   handler_settings:
     target_bundles:
-      job_titles: job_titles
+      user_types: user_types
     sort:
       field: name
       direction: asc

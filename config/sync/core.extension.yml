@@ -72,6 +72,7 @@ module:
   paragraph_view_mode: 0
   path: 0
   path_alias: 0
+  profile: 0
   responsive_image: 0
   rest: 0
   restui: 0

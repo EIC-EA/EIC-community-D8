@@ -1,19 +1,18 @@
-uuid: b8f6137b-0f74-445b-8ec5-57f5ad372202
+uuid: 167a720c-6f94-475a-8f4e-49ef5336f2c3
 langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.user.field_vocab_topic_expertise
+    - field.storage.profile.field_vocab_topic_expertise
+    - profile.type.member
     - taxonomy.vocabulary.topics
-  module:
-    - user
-id: user.user.field_vocab_topic_expertise
+id: profile.member.field_vocab_topic_expertise
 field_name: field_vocab_topic_expertise
-entity_type: user
-bundle: user
+entity_type: profile
+bundle: member
 label: 'Topics of Expertise'
 description: "Select your area(s) of expertise.\r\nYou can select maximum 3 topics and an unlimited number of subtopics."
-required: false
+required: true
 translatable: false
 default_value: {  }
 default_value_callback: ''

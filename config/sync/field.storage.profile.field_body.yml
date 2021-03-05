@@ -1,16 +1,16 @@
-uuid: 56f45dc7-173c-4262-8c9d-fa11dbf451e7
+uuid: 689bf347-6b5c-4d40-bab7-ffcd031b117b
 langcode: en
 status: true
 dependencies:
   module:
-    - link
-    - user
-id: user.field_cv_link
-field_name: field_cv_link
-entity_type: user
-type: link
+    - profile
+    - text
+id: profile.field_body
+field_name: field_body
+entity_type: profile
+type: text_long
 settings: {  }
-module: link
+module: text
 locked: false
 cardinality: 1
 translatable: true

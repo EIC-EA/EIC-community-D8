@@ -1,19 +1,18 @@
-uuid: 9715f22c-97e4-4e93-8c4d-9c569770bcd8
+uuid: 2bdd7f53-bf37-4341-8a30-8d9691d153ae
 langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.user.field_vocab_geo
+    - field.storage.profile.field_vocab_geo
+    - profile.type.member
     - taxonomy.vocabulary.geo
-  module:
-    - user
-id: user.user.field_vocab_geo
+id: profile.member.field_vocab_geo
 field_name: field_vocab_geo
-entity_type: user
-bundle: user
+entity_type: profile
+bundle: member
 label: 'Target Region & Countries'
 description: "Select all countries and/or regions which you are targetting.\r\nYou can select maximum 3 regions and an unlimited number of subregions or countries."
-required: false
+required: true
 translatable: false
 default_value: {  }
 default_value_callback: ''
