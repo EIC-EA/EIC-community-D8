@@ -5,6 +5,7 @@
  * Functions to support theming.
  */
 
+use Drupal\Core\Cache\Cache;
 use Drupal\oe_theme\ValueObject\ImageValueObject;
 
 /**
@@ -246,9 +247,13 @@ function eic_community_preprocess_block(array &$variables) {
           /** @var \Drupal\fragments\Entity\FragmentInterface[] $fragments */
           $fragments = $block_content->get('field_facts_figures')->referencedEntities();
 
+          // Initializes cache tags.
+          $cache_tags = [];
+
           // Adds each fact and figure to the theme variables.
           foreach ($fragments as $fragment) {
             $fragment_translation = \Drupal::service('entity.repository')->getTranslationFromContext($fragment, $block_content->language()->getId());
+            $cache_tags = Cache::mergeTags($cache_tags, $fragment->getCacheTags());
 
             // Extracts the entity type and bundle from
             // the value of field_fact_figure_type.
@@ -259,12 +264,12 @@ function eic_community_preprocess_block(array &$variables) {
             switch ($entity_type) {
               case 'user':
                 $counter = $eic_statistics_storage->getEntityCounter($entity_type);
-                $cache_tag = $eic_statistics_storage->getEntityCounterCacheTag($entity_type);
+                $cache_tags[] = $eic_statistics_storage->getEntityCounterCacheTag($entity_type);
                 break;
 
               default:
                 $counter = $eic_statistics_storage->getEntityCounter($entity_type, $bundle);
-                $cache_tag = $eic_statistics_storage->getEntityCounterCacheTag($entity_type, $bundle);
+                $cache_tags[] = $eic_statistics_storage->getEntityCounterCacheTag($entity_type, $bundle);
                 break;
 
             }
@@ -275,9 +280,10 @@ function eic_community_preprocess_block(array &$variables) {
               'value' => $counter,
               'fact_figure_type' => $fragment_translation->get('field_fact_figure_type')->getString(),
             ];
-            // Adds cache tag for the fact and figure.
-            $variables['#cache']['tags'][] = $cache_tag;
           }
+
+          // Adds cache tag for the fact and figure.
+          $variables['#cache']['tags'] = $cache_tags;
         }
         break;
 
