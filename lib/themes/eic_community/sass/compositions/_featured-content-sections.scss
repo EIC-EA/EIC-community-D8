@@ -52,24 +52,26 @@
     @extend .ecl-u-type-heading-3;
   }
 
-  &__item-wrapper {
-    padding: ecl-box-model('padding');
-    background-color: map-get($ecl-colors, 'blue-5');
-  }
-
   &__link {
-    display: block;
-    padding: map-get($ecl-spacing, 'm') 0;
+    display: flex;
+    align-items: center;
+    padding: map-get($ecl-spacing, 'm');
     text-decoration: none;
     font-weight: $ecl-font-weight-bold;
+    border-left: solid 4px transparent;
+    color: ecl-typography('color', 'title');
+    justify-content: space-between;
 
     &[aria-current="true"] {
-      color: ecl-typography('color', 'meta');
+      color: currentColor;
+      background-color: map-get($ecl-colors, 'grey-15');
+      border-color: ecl-typography('color', 'title');
     }
   }
 
-  &__link-item {
-    border-bottom: ecl-border();
+  &__update-indicator {
+    flex-shrink: 0;
+    margin-left: map-get($ecl-spacing, 'm');
   }
 
   &__items,
@@ -83,5 +85,11 @@
     }
 
     margin: ecl-layout('gutter') 0;
+  }
+
+  & &__update-indicator {
+    background-color: map-get($ecl-colors, 'yellow');
+    color: map-get($ecl-colors, 'black');
+    font-weight: $ecl-font-weight-regular;
   }
 }

@@ -1,0 +1,17 @@
+.ecl-update-indicator {
+  width: map-get($ecl-media, '4xs');
+  height: map-get($ecl-media, '4xs');
+  font-size: $ecl-font-size-s;
+  background-color: map-get($ecl-colors, 'orange-100');
+  color: map-get($ecl-colors, 'white');
+  border-radius: map-get($ecl-media, '4xs');
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-weight: $ecl-font-weight-bold;
+
+  &__label {
+    @include visually-hidden();
+  }
+}
