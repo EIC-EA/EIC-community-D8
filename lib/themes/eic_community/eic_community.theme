@@ -219,20 +219,6 @@ function eic_community_preprocess_block(array &$variables) {
             $paragraph_translation = \Drupal::service('entity.repository')->getTranslationFromContext($paragraph, $block_content->language()->getId());
             $link = $paragraph_translation->get('field_cta_link')->first()->getValue();
 
-            $link_classes = 'ecl-link--button';
-
-            // Adds cta link classes based on the link type.
-            switch ($link['link_type']) {
-              case 'call_to_action':
-                $link_classes .= ' ecl-link--button-call';
-                break;
-
-              default:
-                $link_classes .= " ecl-link--button-{$link['link_type']}";
-                break;
-
-            }
-
             // Adds CTA Tiles to the theme variables.
             $variables['block_content']['items'][] = [
               'title' => $paragraph_translation->get('field_title')->value,
@@ -243,7 +229,7 @@ function eic_community_preprocess_block(array &$variables) {
                     'label' => $link['title'],
                     'path' => $link['uri'],
                   ],
-                  'extra_classes' => $link_classes,
+                  'extra_classes' => "ecl-link--button ecl-link--button-{$link['link_type']}",
                 ],
               ],
             ];
