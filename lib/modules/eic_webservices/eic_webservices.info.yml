@@ -1,0 +1,9 @@
+name: EIC Webservices
+type: module
+description: Provides web services to communicate with the SME Dashboard.
+package: European Innovation Council
+core: 8.x
+core_version_requirement: ^8 || ^9
+php: 7.3
+dependencies:
+  - drupal:rest
