@@ -5,4 +5,4 @@ dependencies: {  }
 id: latest_news_stories
 label: 'Latest News & Stories'
 revision: 0
-description: ''
+description: 'Manually choose which News and/or Stories are shown, including one highlighted.'
