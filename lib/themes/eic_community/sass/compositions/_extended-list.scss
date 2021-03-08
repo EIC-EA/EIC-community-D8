@@ -1,0 +1,81 @@
+.ecl-extended-list {
+  $node: &;
+
+  &__items {
+    box-sizing: border-box;
+
+    #{$node} > & > #{$node}__item>& {
+      width: 100%;
+    }
+
+    #{$node} > & > #{$node}__item > & > #{$node}__item > & {
+      padding-left: map-get($ecl-spacing, 'm');
+      margin-left: auto;
+      width: 60%;
+      flex-shrink: 0;
+    }
+  }
+
+  &__item {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: map-get($ecl-spacing, 'm');
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    #{$node} > #{$node}__items > & {
+      flex-direction: column;
+    }
+
+    #{$node} > #{$node}__items>& > #{$node}__items>& > #{$node}__items & {
+      display: block;
+      margin-bottom: map-get($ecl-spacing, 's');
+    }
+  }
+
+  &__item-title {
+    font-weight: $ecl-font-weight-bold;
+    margin-bottom: map-get($ecl-spacing, 's');
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    #{$node} > #{$node}__items > #{$node}__item > & {
+      border-bottom: ecl-border();
+      padding-bottom: map-get($ecl-spacing, 'm');
+      margin-bottom: map-get($ecl-spacing, 'm');
+      width: 100%;
+      @extend .ecl-u-type-heading-3;
+    }
+
+    #{$node} > #{$node}__items>#{$node}__item>#{$node}__items>#{$node}__item>#{$node}__items>#{$node}__item & {
+      display: flex;
+      align-items: center;
+      font-weight: inherit;
+
+      &::before {
+        display: block;
+        content: " ";
+        box-sizing: border-box;
+        border-radius: 50%;
+        width: map-get($ecl-spacing, '2xs');
+        height: map-get($ecl-spacing, '2xs');
+        background-color: map-get($ecl-colors, 'blue-100');
+        margin-right: map-get($ecl-spacing, '2xs');
+      }
+    }
+
+    #{$node} > #{$node}__items>#{$node}__item>#{$node}__items>#{$node}__item>#{$node}__items>#{$node}__item #{$node}__item & {
+      margin-left: map-get($ecl-spacing, 'm');
+
+      &::before {
+        background-color: transparent;
+        border: ecl-border();
+        border-color: map-get($ecl-colors, 'blue-100');
+      }
+    }
+  }
+}
