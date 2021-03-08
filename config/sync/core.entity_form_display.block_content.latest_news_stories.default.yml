@@ -15,7 +15,7 @@ bundle: latest_news_stories
 mode: default
 content:
   field_articles:
-    weight: 1
+    weight: 2
     settings:
       entity_browser: news_stories
       field_widget_display: label
@@ -29,7 +29,7 @@ content:
     type: entity_browser_entity_reference
     region: content
   field_featured_article:
-    weight: 0
+    weight: 1
     settings:
       entity_browser: news_stories
       field_widget_display: label
@@ -42,5 +42,12 @@ content:
     third_party_settings: {  }
     type: entity_browser_entity_reference
     region: content
-hidden:
-  info: true
+  info:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+hidden: {  }
