@@ -1,0 +1,29 @@
+uuid: d749f9ec-3bc6-46f6-b68f-5b1b85b2c0a1
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.profile.field_vocab_topic_interest
+    - profile.type.member
+    - taxonomy.vocabulary.topics
+id: profile.member.field_vocab_topic_interest
+field_name: field_vocab_topic_interest
+entity_type: profile
+bundle: member
+label: 'Topics of Interest'
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      topics: topics
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference
