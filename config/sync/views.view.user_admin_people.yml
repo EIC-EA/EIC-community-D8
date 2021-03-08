@@ -893,10 +893,10 @@ display:
         - user.permissions
       max-age: 0
       tags: {  }
-  entity_reference_1:
+  entity_reference_users_full_name:
     display_plugin: entity_reference
-    id: entity_reference_1
-    display_title: 'Entity Reference'
+    id: entity_reference_users_full_name
+    display_title: 'Entity Reference Users Full Name'
     position: 2
     display_options:
       display_extenders: {  }
@@ -1125,6 +1125,7 @@ display:
           expose:
             label: ''
           plugin_id: standard
+      display_description: ''
     cache_metadata:
       max-age: -1
       contexts:
