@@ -10,7 +10,6 @@ dependencies:
     - field.field.node.story.field_image
     - field.field.node.story.field_image_caption
     - field.field.node.story.field_introduction
-    - field.field.node.story.field_publication_date
     - field.field.node.story.field_related_stories
     - field.field.node.story.field_story_paragraphs
     - field.field.node.story.field_video
@@ -20,10 +19,10 @@ dependencies:
     - workflows.workflow.news_stories
   module:
     - content_moderation
-    - datetime
     - media_library
     - paragraphs
     - path
+    - publication_date
     - scheduler
     - text
 _core:
@@ -93,12 +92,6 @@ content:
       placeholder: ''
     third_party_settings: {  }
     type: text_textarea
-    region: content
-  field_publication_date:
-    weight: 3
-    settings: {  }
-    third_party_settings: {  }
-    type: datetime_default
     region: content
   field_related_stories:
     weight: 10
@@ -174,6 +167,17 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
+  published_at:
+    type: publication_date_timestamp
+    weight: 10
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  scheduler_settings:
+    weight: 20
+    settings: {  }
+    third_party_settings: {  }
+    region: content
   scheduler_settings:
     weight: 20
     region: content
