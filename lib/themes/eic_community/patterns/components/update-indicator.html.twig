@@ -1,0 +1,8 @@
+{% if value and value is not same as(0) %}
+  <div class="ecl-update-indicator {{ extra_classes }}">
+    {% if label is not empty %}
+      <span class="ecl-update-indicator__label">{{ label }}</span>
+    {% endif %}
+    {{ value }}
+  </div>
+{% endif %}

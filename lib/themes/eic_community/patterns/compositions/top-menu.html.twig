@@ -1,0 +1,33 @@
+<div class="ecl-top-menu">
+  <div class="ecl-container">
+    <div class="ecl-top-menu__wrapper">
+
+      <div class="ecl-top-menu__main">
+        {% include "@theme/patterns/components/flag.html.twig" with {
+          code: 'EU',
+        extra_classes: 'ecl-top-menu__flag',
+        } %}
+        {% if description is not empty %}
+          <p class="ecl-top-menu__description">{{ description}}</p>
+        {% endif %}
+      </div>
+
+      {% if items is not empty %}
+        <div class="ecl-top-menu__aside">
+          <div class="ecl-top-menu__items">
+            {% for item in items %}
+              <div class="ecl-top-menu__item">
+                {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with item|default({})|merge({
+                  link: item.link|default({})|merge({
+                    type: 'standalone'
+                  }),
+                  extra_classes: 'ecl-top-menu__item-link',
+                }) %}
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>

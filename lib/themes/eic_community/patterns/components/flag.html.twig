@@ -1,4 +1,4 @@
-<div class="ecl-flag">
+<div class="ecl-flag {{ extra_classes }}">
   {% if code %}
     <img class="ecl-flag__image" src="images/flags/{{ size|default('48') }}/{{- code -}}.png" />
   {% elseif image %}

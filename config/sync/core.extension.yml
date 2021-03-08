@@ -34,6 +34,7 @@ module:
   eic_media_video: 0
   eic_paragraph_contributor: 0
   eic_paragraph_cta_tile: 0
+  eic_users: 0
   entity: 0
   entity_browser: 0
   entity_browser_entity_form: 0
@@ -85,12 +86,14 @@ module:
   update: 0
   user: 0
   variationcache: 0
+  views_ui: 0
   workflows: 0
   views: 10
   paragraphs: 11
   eic_paragraphs: 12
   eic_paragraph_full_media_content: 13
   eic_paragraph_quote: 13
+  publication_date: 99
   eic_statistics: 1000
   oe_profile: 1000
 theme:
