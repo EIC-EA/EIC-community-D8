@@ -15,6 +15,10 @@
       <div class="ecl-collapsible-options__trigger" tabindex="0">
         {{ block('trigger') }}
       </div>
+    {% elseif trigger %}
+        <div class="ecl-collapsible-options__trigger" tabindex="0">
+          {{ trigger }}
+        </div>
     {% else %}
       {% include "@ecl-twig/ec-component-button/ecl-button.html.twig" with {
         extra_classes: 'ecl-collapsible-options__trigger',
