@@ -1,0 +1,32 @@
+# Global Header
+
+The custom global header that is based on the original [ECL Site header])(https://www.npmjs.com/package/@ecl-twig/ec-component-site-header) component.
+
+## Features
+
+- Excluded the searchfield since it will be present within the custom mainmenu.
+- Rewritten original JS functionality for the language selector & list composition.
+- Option to only define a single logo if the specific `src_desktop` & `src_mobile` are not defined.
+- Implements optional login button & active user with updates & dropdown options.
+
+| Key                       | Type   | Description                                                                                                                                                                                         | Mandatory |
+| ------------------------- | ------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- | --- |
+| icon_file_path            | string | The URL for the defined Icon SVG sprite.                                                                                                                                                            | no        |     |
+| logo                      | object | Displays the logo within the global header, option for a global, desktop & mobile specific images.                                                                                                  | no        |     |
+| logo.title                | string | Implements a hidden title for screenreaders.                                                                                                                                                        | no        |     |
+| logo.alt                  | string | Defines the alt attribute for screenreaders.                                                                                                                                                        | no        |     |
+| logo.href                 | string | The defined href attribute for the logo.                                                                                                                                                            | no        |     |
+| logo.src                  | string | The image path that will be used if `src_desktop` or `src_mobile` is empty.                                                                                                                         | no        |     |
+| logo.src_desktop          | string | Displays the logo speficic for desktop viewports.                                                                                                                                                   | no        |     |
+| logo.src_mobile           | string | Displays the logo speficic for mobile viewports.                                                                                                                                                    | no        |     |
+| login                     | object | Displays a login link for guests.                                                                                                                                                                   | no        |     |
+| login.link                | object | The link structure for the login link. Should follow [ECL Twig Link component](https://www.npmjs.com/package/@ecl-twig/ec-component-link) component parameters.                                     | no        |     |
+| login.link.label          | string | The label for the login link.                                                                                                                                                                       | no        |     |
+| login.path                | string | The path for the login link.                                                                                                                                                                        | no        |     |
+| language_selector         | object | Displays the language selector if defined.                                                                                                                                                          | no        |     |
+| language_selector.overlay | object | The defined parameters for the language select language list. Should follow the [ECL Twig Link component](https://www.npmjs.com/package/@ecl-twig/ec-component-language-list) component parameters. | no        |     |
+| language_selector.href    | string | Fallback url that should link to the lanugage list.                                                                                                                                                 | no        |     |
+| language_selector.name    | string | Displays the current language as a semantic label.                                                                                                                                                  | no        |     |
+| language_selector.code    | string | The selected language written in the ISO format.                                                                                                                                                    | no        |     |
+| user                      | Object | Displays the loggin in user instead of the login link.                                                                                                                                              | no        |     |
+| user                      | Object | Displays the loggin in user instead of the login link.                                                                                                                                              | no        |     |
