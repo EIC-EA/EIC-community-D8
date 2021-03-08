@@ -1,0 +1,71 @@
+.ecl-global-header {
+  background-color: map-get($ecl-colors, 'white');
+
+  @include ecl-media-breakpoint-up('md') {
+    padding: ecl-box-model('padding--md') 0;
+  }
+
+  &__wrapper {
+    display: flex;
+    align-items: center;
+  }
+
+  &__logo {
+    width: map-get($ecl-media, 's');
+    margin-right: auto;
+    flex-shrink: 0;
+    padding-right: ecl-box-model('padding');
+
+    @include ecl-media-breakpoint-up('md') {
+      width: 100%;
+      max-width: map-get($ecl-width, 'form-m');
+    }
+  }
+
+  &__logo-image {
+    width: 100%;
+    height: auto;
+  }
+
+  &__logo-link {
+    display: block;
+  }
+
+  &__logo-title {
+    @include visually-hidden();
+  }
+
+  &__login-link {
+    padding: map-get($ecl-spacing, 's');
+  }
+
+  &__language-selector-wrapper,
+  &__auth-wrapper {
+    flex-shrink: 0;
+  }
+
+  &__login-link {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    flex-direction: column;
+
+    @include ecl-media-breakpoint-up('md') {
+      flex-direction: row;
+    }
+  }
+
+  &__login-link {
+    @include ecl-media-breakpoint-down('xs') {
+      margin: 0;
+    }
+  }
+
+  &__login-link-icon {
+    margin-bottom: map-get($ecl-spacing, 's');
+
+    @include ecl-media-breakpoint-up('md') {
+      margin: 0 map-get($ecl-spacing, 's') 0 0;
+    }
+  }
+}
