@@ -194,7 +194,7 @@ function eic_community_preprocess_block(array &$variables) {
     $block_content = $variables['content']['#block_content'];
 
     // Initializes cache tags.
-    $cache_tags = [];
+    $cache_tags = $block_content->getCacheTags();
 
     switch ($block_content->bundle()) {
       case 'page_banner':
