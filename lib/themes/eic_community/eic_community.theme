@@ -192,6 +192,9 @@ function eic_community_preprocess_block(array &$variables) {
     /** @var \Drupal\block_content\Entity\BlockContent $block_content */
     $block_content = $variables['content']['#block_content'];
 
+    // Add block content entity cache tags.
+    $variables['#cache']['tags'] = $block_content->getCacheTags();
+
     switch ($block_content->bundle()) {
       case 'page_banner':
         // Preprocess variables for page_banner block.
