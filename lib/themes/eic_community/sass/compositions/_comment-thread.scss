@@ -25,10 +25,6 @@
       border-left: 0;
       margin-left: calc(#{map-get($ecl-media, '3xs')} + #{ecl-box-model('padding')});
     }
-    // & > #{$node}__comment {
-    //   border-left: solid 1px map-get($ecl-colors, 'grey-50');
-    //   padding-left: map-get($ecl-spacing, 'xl');
-    // }
   }
 
   &__comment {
