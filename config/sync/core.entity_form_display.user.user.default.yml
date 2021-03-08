@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - field.field.user.user.field_first_name
+    - field.field.user.user.field_full_name
     - field.field.user.user.field_is_deleted
     - field.field.user.user.field_is_deleted_anonymous
     - field.field.user.user.field_is_deleted_by_uid
@@ -26,12 +27,12 @@ bundle: user
 mode: default
 content:
   account:
-    weight: -10
+    weight: 0
     region: content
     settings: {  }
     third_party_settings: {  }
   field_first_name:
-    weight: 7
+    weight: 3
     settings:
       size: 60
       placeholder: ''
@@ -39,21 +40,21 @@ content:
     type: string_textfield
     region: content
   field_is_deleted:
-    weight: 20
+    weight: 15
     settings:
       display_label: true
     third_party_settings: {  }
     type: boolean_checkbox
     region: content
   field_is_deleted_anonymous:
-    weight: 21
+    weight: 16
     settings:
       display_label: true
     third_party_settings: {  }
     type: boolean_checkbox
     region: content
   field_is_deleted_by_uid:
-    weight: 22
+    weight: 17
     settings:
       match_operator: CONTAINS
       match_limit: 10
@@ -63,28 +64,28 @@ content:
     type: entity_reference_autocomplete
     region: content
   field_is_invalid_email:
-    weight: 25
+    weight: 20
     settings:
       display_label: true
     third_party_settings: {  }
     type: boolean_checkbox
     region: content
   field_is_organisation_user:
-    weight: 24
+    weight: 19
     settings:
       display_label: true
     third_party_settings: {  }
     type: boolean_checkbox
     region: content
   field_is_spammer:
-    weight: 23
+    weight: 18
     settings:
       display_label: true
     third_party_settings: {  }
     type: boolean_checkbox
     region: content
   field_last_name:
-    weight: 8
+    weight: 4
     settings:
       size: 60
       placeholder: ''
@@ -93,13 +94,13 @@ content:
     region: content
   field_media:
     type: media_library_widget
-    weight: 17
+    weight: 12
     settings:
       media_types: {  }
     third_party_settings: {  }
     region: content
   field_message_from_service:
-    weight: 28
+    weight: 23
     settings:
       rows: 5
       placeholder: ''
@@ -114,19 +115,19 @@ content:
     type: number
     region: content
   field_updated_profile_by_service:
-    weight: 27
+    weight: 22
     settings: {  }
     third_party_settings: {  }
     type: datetime_timestamp
     region: content
   field_updated_profile_by_user:
-    weight: 26
+    weight: 21
     settings: {  }
     third_party_settings: {  }
     type: datetime_timestamp
     region: content
   field_user_status:
-    weight: 29
+    weight: 24
     settings: {  }
     third_party_settings: {  }
     type: options_select
@@ -137,9 +138,10 @@ content:
     settings: {  }
     third_party_settings: {  }
   timezone:
-    weight: 6
+    weight: null
     region: content
     settings: {  }
     third_party_settings: {  }
 hidden:
+  field_full_name: true
   member_profiles: true

@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - field.field.user.user.field_first_name
+    - field.field.user.user.field_full_name
     - field.field.user.user.field_is_deleted
     - field.field.user.user.field_is_deleted_anonymous
     - field.field.user.user.field_is_deleted_by_uid
@@ -26,7 +27,7 @@ bundle: user
 mode: default
 content:
   field_first_name:
-    weight: 6
+    weight: 1
     label: above
     settings:
       link_to_entity: false
@@ -34,7 +35,7 @@ content:
     type: string
     region: content
   field_is_deleted:
-    weight: 19
+    weight: 4
     label: above
     settings:
       format: default
@@ -44,7 +45,7 @@ content:
     type: boolean
     region: content
   field_is_deleted_anonymous:
-    weight: 20
+    weight: 5
     label: above
     settings:
       format: default
@@ -54,7 +55,7 @@ content:
     type: boolean
     region: content
   field_is_deleted_by_uid:
-    weight: 21
+    weight: 6
     label: above
     settings:
       link: true
@@ -62,7 +63,7 @@ content:
     type: entity_reference_label
     region: content
   field_is_invalid_email:
-    weight: 24
+    weight: 9
     label: above
     settings:
       format: default
@@ -72,7 +73,7 @@ content:
     type: boolean
     region: content
   field_is_organisation_user:
-    weight: 23
+    weight: 8
     label: above
     settings:
       format: default
@@ -82,7 +83,7 @@ content:
     type: boolean
     region: content
   field_is_spammer:
-    weight: 22
+    weight: 7
     label: above
     settings:
       format: default
@@ -92,7 +93,7 @@ content:
     type: boolean
     region: content
   field_last_name:
-    weight: 7
+    weight: 2
     label: above
     settings:
       link_to_entity: false
@@ -101,7 +102,7 @@ content:
     region: content
   field_media:
     type: entity_reference_entity_view
-    weight: 16
+    weight: 3
     label: above
     settings:
       view_mode: default
@@ -109,14 +110,14 @@ content:
     third_party_settings: {  }
     region: content
   field_message_from_service:
-    weight: 27
+    weight: 12
     label: above
     settings: {  }
     third_party_settings: {  }
     type: basic_string
     region: content
   field_smed_id:
-    weight: 29
+    weight: 14
     label: above
     settings:
       thousand_separator: ''
@@ -125,7 +126,7 @@ content:
     type: number_integer
     region: content
   field_updated_profile_by_service:
-    weight: 26
+    weight: 11
     label: above
     settings:
       date_format: medium
@@ -135,7 +136,7 @@ content:
     type: timestamp
     region: content
   field_updated_profile_by_user:
-    weight: 25
+    weight: 10
     label: above
     settings:
       date_format: medium
@@ -145,16 +146,17 @@ content:
     type: timestamp
     region: content
   field_user_status:
-    weight: 28
+    weight: 13
     label: above
     settings: {  }
     third_party_settings: {  }
     type: list_default
     region: content
   member_for:
-    weight: 5
+    weight: 0
+    region: content
     settings: {  }
     third_party_settings: {  }
-    region: content
 hidden:
+  field_full_name: true
   member_profiles: true
