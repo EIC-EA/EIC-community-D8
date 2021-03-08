@@ -1,0 +1,20 @@
+uuid: d85a6741-c02a-4a67-a792-becf4a447861
+langcode: en
+status: true
+dependencies:
+  module:
+    - profile
+    - taxonomy
+id: profile.field_vocab_language
+field_name: field_vocab_language
+entity_type: profile
+type: entity_reference
+settings:
+  target_type: taxonomy_term
+module: core
+locked: false
+cardinality: -1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false
