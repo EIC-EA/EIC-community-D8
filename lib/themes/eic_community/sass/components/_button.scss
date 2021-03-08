@@ -24,7 +24,8 @@
       margin-left: 0;
     }
   }
-.ecl-button__icon--after,
+
+  &__icon--after,
   &--compact-for-mobile {
     @include ecl-media-breakpoint-down('md') {
       #{$node}__label {
