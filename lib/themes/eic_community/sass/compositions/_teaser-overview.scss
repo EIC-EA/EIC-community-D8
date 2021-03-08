@@ -49,11 +49,28 @@
       margin-bottom: 0;
       border-bottom: ecl-border('teaser');
       padding: ecl-box-model('padding') 0;
+
+      #{$node}--is-compact & {
+        padding: 0;
+        border: 0;
+      }
     }
 
     @include ecl-media-breakpoint-up('lg') {
       &:first-child {
         padding: ecl-box-model('padding') 0;
+      }
+
+      #{$node}--is-compact & {
+        padding: 0;
+      }
+    }
+
+    #{$node}--is-compact & {
+      margin-bottom: ecl-box-model('padding');
+
+      &:last-child {
+        margin-bottom: 0;
       }
     }
 
