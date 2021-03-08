@@ -28,5 +28,8 @@ The actual image container is based on the [ECL-Twig Media Container](https://ww
 | actions             | object[] | Displays optional clickable actions for the current author.                                                                  | no        |     |
 | actions[].label     | string   | The label of the displayed action that should be visually hidden.                                                            | no        |     |
 | actions[].icon      | object   | Follows the [ECL Twig icon component](https://ecl-twig-php.netlify.app/ec/?path=/story/components-icon--general) properties. | no        |     |
-| actions[].icon.type | string   | Should match with the SVG sprite type.                                                                                       | yes       |     |
-| actions[].icon.name | string   | The ID name within the matching SVG sprite.                                                                                  | yes       |     |
+| actions[].icon.type | string   | Should match with the SVG sprite type.                                                                                       | no        |     |
+| actions[].icon.name | string   | The ID name within the matching SVG sprite.                                                                                  | no        |     |
+| updates             | object   | Displays the update amount for the current author.                                                                           | no        |     |
+| updates.label       | string   | The semantic name for the updates label value.                                                                               | no        |     |
+| updates.value       | number   | The actual update value for the current author.                                                                              | no        |     |

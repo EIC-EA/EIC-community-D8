@@ -11,7 +11,6 @@ dependencies:
     - field.field.node.news.field_image_caption
     - field.field.node.news.field_introduction
     - field.field.node.news.field_news_paragraphs
-    - field.field.node.news.field_publication_date
     - field.field.node.news.field_related_stories
     - field.field.node.news.field_video
     - field.field.node.news.field_vocab_geo
@@ -24,6 +23,7 @@ dependencies:
     - media_library
     - paragraphs
     - path
+    - publication_date
     - scheduler
     - text
 id: node.news.default
@@ -106,12 +106,6 @@ content:
       default_paragraph_type: ''
     third_party_settings: {  }
     region: content
-  field_publication_date:
-    weight: 13
-    settings: {  }
-    third_party_settings: {  }
-    type: datetime_default
-    region: content
   field_related_stories:
     weight: 11
     settings:
@@ -167,11 +161,17 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
-  scheduler_settings:
-    weight: 19
+  published_at:
+    type: publication_date_timestamp
+    weight: 10
     region: content
     settings: {  }
     third_party_settings: {  }
+  scheduler_settings:
+    weight: 20
+    settings: {  }
+    third_party_settings: {  }
+    region: content
   status:
     type: boolean_checkbox
     settings:
