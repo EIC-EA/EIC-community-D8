@@ -4,11 +4,13 @@ Displays one or multiple content section that that has anchor navigation next to
 
 ## Twig parameters:
 
-| Key             | Type   | Description                                                                | Mandatory |
-| --------------- | ------ | -------------------------------------------------------------------------- | --------- | --- |
-| id              | string | Defines the base ID for the anchor navigation for the current composition. | no        |     |
-| items[]         | object | Contains the displayed sections.                                           | yes       |     |
-| items[].id      | string | Optional id that will be used for the anchor navigation.                   | no        |     |
-| items[].title   | string | The title that will be used for the navigation item label.                 | yes       |     |
-| items[].content | string | The displayed content of the selected section.                             | yes       |     |
-| items[].updates | string | Displays an update indicator for the navigation item.                      | no        |     |
+| Key             | Type    | Description                                                                | Mandatory |
+| --------------- | ------- | -------------------------------------------------------------------------- | --------- | --- |
+| extra_classes   | string  | Optional classnames for the composition.                                   | no        |     |
+| as_tabs         | boolean | Displays the composition with tabs behaviour.                              | no        |     |
+| id              | string  | Defines the base ID for the anchor navigation for the current composition. | no        |     |
+| items[]         | object  | Contains the displayed sections.                                           | yes       |     |
+| items[].id      | string  | Optional id that will be used for the anchor navigation.                   | no        |     |
+| items[].title   | string  | The title that will be used for the navigation item label.                 | yes       |     |
+| items[].content | string  | The displayed content of the selected section.                             | yes       |     |
+| items[].updates | string  | Displays an update indicator for the navigation item.                      | no        |     |

@@ -6,7 +6,7 @@
 
 {% block content %}
     {% include "@theme/patterns/compositions/featured-content-sections.html.twig" with {
-    extra_classes: 'ecl-featured-content-sections--as-tabs',
+    as_tabs: true,
     items: [
       flagged_groups|default({}),
       flagged_projects|default({}),

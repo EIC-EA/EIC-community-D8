@@ -1,9 +1,8 @@
 {% import "@theme/patterns/core/snippets.twig" as snippets %}
 
-
 {% set id = id|default('featured-content-section') %}
 
-<div class="ecl-featured-content-sections {{ extra_classes }}" {{ snippets.attr(extra_attributes) }}>
+<div class="ecl-featured-content-sections {{ as_tabs ? 'ecl-featured-content-sections--as-tabs' }} {{ extra_classes }}" {{ snippets.attr(extra_attributes) }}>
   <div class="ecl-container">
     <div class="ecl-featured-content-sections__wrapper">
       <div class="ecl-featured-content-sections__aside">
