@@ -12,6 +12,7 @@ module:
   components: 0
   config: 0
   content_moderation: 0
+  context: 0
   contextual: 0
   datetime: 0
   dblog: 0
@@ -26,6 +27,7 @@ module:
   eic_content_story: 0
   eic_flags: 0
   eic_fragment_fact_figure: 0
+  eic_homepage: 0
   eic_media: 0
   eic_media_document: 0
   eic_media_video: 0
@@ -89,6 +91,7 @@ module:
   eic_paragraphs: 12
   eic_paragraph_full_media_content: 13
   eic_paragraph_quote: 13
+  publication_date: 99
   eic_statistics: 1000
   oe_profile: 1000
 theme:
