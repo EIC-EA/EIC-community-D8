@@ -40,7 +40,7 @@ reactions:
         info: ''
         view_mode: full
         region: content
-        weight: '0'
+        weight: '-1'
         context_mapping: {  }
         custom_id: homepage_facts_figures
         theme: eic_community
@@ -109,6 +109,23 @@ reactions:
         unique: 0
         context_id: homepage_anonymous
         uuid: 649919c3-9c20-41dc-b941-5b1de1519758
+      9c111e17-643d-4fdd-b1f7-d6c144f86c3a:
+        id: 'block_content:8271c779-92e1-43f2-beb5-3addbfd84c70'
+        label: 'Homepage - USP Tiles'
+        provider: block_content
+        label_display: '0'
+        status: true
+        info: ''
+        view_mode: full
+        region: content
+        weight: '-2'
+        context_mapping: {  }
+        custom_id: homepage_usp_tiles
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: homepage_anonymous
+        uuid: 9c111e17-643d-4fdd-b1f7-d6c144f86c3a
     id: blocks
     saved: false
     uuid: 5a010c1a-216a-427c-8d7e-43702d8b57ec
