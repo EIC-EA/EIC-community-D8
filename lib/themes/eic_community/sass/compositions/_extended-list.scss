@@ -1,6 +1,10 @@
 .ecl-extended-list {
   $node: &;
 
+  &__title {
+    @extend .ecl-u-type-heading-3;
+  }
+
   &__items {
     box-sizing: border-box;
 
@@ -11,8 +15,7 @@
     #{$node} > & > #{$node}__item > & > #{$node}__item > & {
       padding-left: map-get($ecl-spacing, 'm');
       margin-left: auto;
-      width: 60%;
-      flex-shrink: 0;
+      width: 77%;
     }
   }
 
@@ -31,6 +34,10 @@
 
     #{$node} > #{$node}__items>& > #{$node}__items>& > #{$node}__items & {
       display: block;
+      margin-bottom: map-get($ecl-spacing, 'l');
+    }
+
+    #{$node}>#{$node}__items>&>#{$node}__items>&>#{$node}__items & & {
       margin-bottom: map-get($ecl-spacing, 's');
     }
   }
@@ -48,7 +55,7 @@
       padding-bottom: map-get($ecl-spacing, 'm');
       margin-bottom: map-get($ecl-spacing, 'm');
       width: 100%;
-      @extend .ecl-u-type-heading-3;
+      @extend .ecl-u-type-heading-4;
     }
 
     #{$node} > #{$node}__items>#{$node}__item>#{$node}__items>#{$node}__item>#{$node}__items>#{$node}__item & {
@@ -64,7 +71,7 @@
         width: map-get($ecl-spacing, '2xs');
         height: map-get($ecl-spacing, '2xs');
         background-color: map-get($ecl-colors, 'blue-100');
-        margin-right: map-get($ecl-spacing, '2xs');
+        margin-right: map-get($ecl-spacing, 'xs');
       }
     }
 

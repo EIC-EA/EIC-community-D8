@@ -6,10 +6,11 @@
 
 {% block content %}
     {% include "@theme/patterns/compositions/featured-content-sections.html.twig" with {
+    extra_classes: 'ecl-featured-content-sections--as-tabs',
     items: [
       flagged_groups|default({}),
       flagged_projects|default({}),
       flagged_interests|default({}),
     ]
-  } %}
+  } only %}
 {% endblock %}
