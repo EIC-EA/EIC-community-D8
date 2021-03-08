@@ -36,6 +36,10 @@
     flex-shrink: 0;
     display: none;
 
+    #{$node}--as-tabs & {
+      display: block;
+    }
+
     @include ecl-media-breakpoint-up('md') {
       display: block;
       width: calc(100% / 12 * 4);
@@ -54,6 +58,23 @@
     @extend .ecl-u-type-heading-3;
   }
 
+  &__link-items {
+    #{$node}--as-tabs & {
+      @include ecl-media-breakpoint-down('sm') {
+        display: flex;
+        flex-wrap: nowrap;
+      }
+    }
+  }
+
+  &__link-item {
+    #{$node}--as-tabs & {
+      @include ecl-media-breakpoint-down('sm') {
+        flex-grow: 1;
+      }
+    }
+  }
+
   &__link {
     display: flex;
     align-items: center;
@@ -63,6 +84,15 @@
     border-left: solid 4px transparent;
     color: ecl-typography('color', 'title');
     justify-content: space-between;
+
+    #{$node}--as-tabs & {
+      @include ecl-media-breakpoint-down('sm') {
+        border-left: none;
+        border-bottom: solid 4px map-get($ecl-colors, 'grey-15');
+        text-align: center;
+        justify-content: center;
+      }
+    }
 
     &[aria-current="true"] {
       color: currentColor;
@@ -90,6 +120,15 @@
   }
 
   &__item {
+    #{$node}--is-ready#{$node}--as-tabs & {
+      margin: 0;
+
+      @include ecl-media-breakpoint-down('sm') {
+        padding-top: ecl-box-model('padding');
+        padding-bottom: ecl-box-model('padding');
+      }
+    }
+
     #{$node}--is-ready#{$node}--as-tabs &:not([aria-current]) {
       @include visually-hidden();
     }

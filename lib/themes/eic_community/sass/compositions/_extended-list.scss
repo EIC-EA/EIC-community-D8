@@ -3,6 +3,8 @@
 
   &__title {
     @extend .ecl-u-type-heading-3;
+
+    margin-top: 0;
   }
 
   &__items {
@@ -56,6 +58,7 @@
       margin-bottom: map-get($ecl-spacing, 'm');
       width: 100%;
       @extend .ecl-u-type-heading-4;
+      margin-top: 0;
     }
 
     #{$node} > #{$node}__items>#{$node}__item>#{$node}__items>#{$node}__item>#{$node}__items>#{$node}__item & {
