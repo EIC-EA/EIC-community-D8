@@ -18,6 +18,10 @@
   &--has-columns {
     @include ecl-media-breakpoint-up('lg') {
       padding-top: ecl-layout('gutter');
+
+      &:first-child {
+        padding-top: 0;
+      }
     }
   }
 

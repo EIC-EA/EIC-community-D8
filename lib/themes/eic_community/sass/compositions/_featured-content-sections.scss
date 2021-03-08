@@ -1,4 +1,6 @@
 .ecl-featured-content-sections {
+  $node: &;
+
   &__wrapper {
     display: flex;
     flex-direction: column;
@@ -85,6 +87,12 @@
     }
 
     margin: ecl-layout('gutter') 0;
+  }
+
+  &__item {
+    #{$node}--is-ready#{$node}--as-tabs &:not([aria-current]) {
+      @include visually-hidden();
+    }
   }
 
   & &__update-indicator {
