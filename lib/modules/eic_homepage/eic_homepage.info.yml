@@ -1,0 +1,13 @@
+name: EIC Homepage
+type: module
+description: EIC module that provides various features for the homepage.
+package: European Innovation Council
+core: 8.x
+core_version_requirement: ^8 || ^9
+php: 7.3
+dependencies:
+  - context:context
+  - eic_block_type_cta_tiles:eic_block_type_cta_tiles
+  - eic_block_type_page_banner:eic_block_type_page_banner
+  - eic_block_type_tiles_reference:eic_block_type_tiles_reference
+  - eic_fragment_fact_figure:eic_fragment_fact_figure
