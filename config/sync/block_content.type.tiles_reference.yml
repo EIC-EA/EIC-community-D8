@@ -7,4 +7,4 @@ _core:
 id: tiles_reference
 label: 'Tiles reference'
 revision: 0
-description: ''
+description: 'A block that shows a list of USP Tiles.'
