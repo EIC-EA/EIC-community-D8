@@ -13,7 +13,7 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Provides a resource to get and patch asset type terms.
+ * Provides a resource to get, create and update users.
  *
  * @RestResource(
  *   id = "eic_webservices_user",
