@@ -3,7 +3,9 @@ langcode: en
 status: true
 dependencies:
   module:
+    - context
     - oe_theme_helper
+    - system
   theme:
     - eic_community
 _core:
@@ -21,4 +23,19 @@ settings:
   label_display: '0'
   context_mapping:
     page_header: '@oe_theme_helper.page_header_context:page_header'
-visibility: {  }
+visibility:
+  view_inclusion:
+    id: view_inclusion
+    negate: null
+    view_inclusion: {  }
+    context_mapping: {  }
+  request_path_exclusion:
+    id: request_path_exclusion
+    pages: ''
+    negate: null
+    context_mapping: {  }
+  request_path:
+    id: request_path
+    pages: '<front>'
+    negate: true
+    context_mapping: {  }

@@ -1,0 +1,76 @@
+{#
+/**
+ * @file
+ * Theme override to display a single page.
+ *
+ * @see ./themes/custom/eic_community/patterns/pages/homepage.public.html.twig
+ */
+#}
+{% set _wrap_content = true %}
+{% set _stay_up_to_date_section_left = '' %}
+{% set _stay_up_to_date_section_right = '' %}
+{%
+  set site_header = {
+    icon_file_path: ecl_icon_path,
+    logo: {
+      title: 'European Commission'|t,
+      alt: 'European Commission logo'|t,
+      path: url('<front>'),
+      src_desktop: ecl_logo_path ~ '/logo--' ~ current_language_id|to_internal_language_id ~ '.svg',
+    },
+    search_toggle: {
+      label: 'Search',
+      href: '#',
+    },
+    search_form: {
+      text_input: {
+        id: 'input-search',
+        name: 'search'|t,
+      },
+      button: {
+        label: 'Search'|t,
+      },
+      extra_attributes: [],
+    },
+  }
+%}
+
+{% extends "@theme/patterns/pages/homepage/homepage.public.html.twig" %}
+
+{% block page_header %}
+  {{ page.page_header }}
+{% endblock %}
+
+{% block content %}
+  {#
+    We loop through all blocks in the main content region and grab the block
+    keys for the stay up to date section.
+  #}
+  {% for key in page.content|keys %}
+    {% if 'block_content:' in key %}
+      {% if page.content[key]['#id'] == 'homepage_stay_up_to_date' %}
+        {% set _stay_up_to_date_section_left = key %}
+      {% endif %}
+    {% endif %}
+  {% endfor %}
+
+  {{ page.content|without(_stay_up_to_date_section_left, 'eic_social_feed') }}
+
+  {% embed "@theme/patterns/compositions/layout-block.html.twig" %}
+    {% if _stay_up_to_date_section_left is not empty %}
+      {% block content %}
+        {{ page.content[_stay_up_to_date_section_left] }}
+      {% endblock %}
+    {% endif %}
+
+    {% block aside %}
+      {% if _stay_up_to_date_section_right is not empty %}
+        {{ page.content[_stay_up_to_date_section_right] }}
+      {% endif %}
+
+      {% if page.content.eic_social_feed %}
+        {{ page.content.eic_social_feed }}
+      {% endif %}
+    {% endblock %}
+  {% endembed %}
+{% endblock %}
