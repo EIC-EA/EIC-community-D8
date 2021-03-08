@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "278a47da1fc56a5e6eec5492c44da18c",
+    "content-hash": "b3d43e9a5727cd21573e801653e51479",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -4109,6 +4109,63 @@
             "homepage": "https://www.drupal.org/project/twig_field_value",
             "support": {
                 "source": "https://git.drupalcode.org/project/twig_field_value"
+            }
+        },
+        {
+            "name": "drupal/typed_link",
+            "version": "1.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/typed_link.git",
+                "reference": "8.x-1.1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/typed_link-8.x-1.1.zip",
+                "reference": "8.x-1.1",
+                "shasum": "624c6e5016963d047d777e75d56aa3e01cf3f808"
+            },
+            "require": {
+                "drupal/core": "^8"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "8.x-1.1",
+                    "datestamp": "1591973472",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0+"
+            ],
+            "authors": [
+                {
+                    "name": "Bryan Heisler (geekygnr)",
+                    "homepage": "https://www.drupal.org/u/geekygnr",
+                    "role": "Maintainer"
+                },
+                {
+                    "name": "geekygnr",
+                    "homepage": "https://www.drupal.org/user/2775199"
+                },
+                {
+                    "name": "juanolalla",
+                    "homepage": "https://www.drupal.org/user/913844"
+                }
+            ],
+            "description": "This module provides a link field with a drop down.",
+            "homepage": "https://www.drupal.org/project/typed_link",
+            "keywords": [
+                "Drupal"
+            ],
+            "support": {
+                "source": "http://cgit.drupalcode.org/typed_link",
+                "issues": "https://www.drupal.org/project/issues/typed_link"
             }
         },
         {
