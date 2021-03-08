@@ -8,4 +8,5 @@ weight: 3
 is_admin: null
 permissions:
   - 'administer users'
+  - 'restful post eic_webservices_user_update'
   - 'restful post user_registration'
