@@ -19,27 +19,20 @@ bundle: page
 mode: teaser
 content:
   field_image:
-    type: entity_reference_label
-    weight: 2
-    region: content
-    label: hidden
-    settings:
-      link: true
-    third_party_settings: {  }
-  field_introduction:
-    type: text_default
-    weight: 3
-    region: content
-    label: hidden
-    settings: {  }
-    third_party_settings: {  }
-  field_subtitle:
-    type: string
+    type: entity_reference_entity_view
     weight: 1
     region: content
     label: hidden
     settings:
-      link_to_entity: false
+      link: true
+      view_mode: default
+    third_party_settings: {  }
+  field_introduction:
+    type: text_default
+    weight: 2
+    region: content
+    label: hidden
+    settings: {  }
     third_party_settings: {  }
   links:
     weight: 0
@@ -50,3 +43,4 @@ hidden:
   extra_field_oe_theme_helper_short_title_with_fallback: true
   field_page_cta: true
   field_page_paragraphs: true
+  field_subtitle: true

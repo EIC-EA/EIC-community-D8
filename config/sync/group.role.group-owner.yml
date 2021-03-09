@@ -1,0 +1,14 @@
+uuid: 088eac44-60bb-48b1-b859-51ed75d78cff
+langcode: en
+status: true
+dependencies:
+  config:
+    - group.type.group
+id: group-owner
+label: Owner
+weight: 5
+internal: false
+audience: member
+group_type: group
+permissions_ui: true
+permissions: {  }

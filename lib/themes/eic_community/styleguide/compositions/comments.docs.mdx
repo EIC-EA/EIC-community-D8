@@ -1,0 +1,40 @@
+# Comments
+
+Displays the comments composition.
+
+## Comments Parameters
+
+| Key   | Type     | Description                                                                                                                                         | Mandatory |
+| ----- | -------- | --------------------------------------------------------------------------------------------------------------------------------------------------- | --------- |
+| items | object[] | Should contain one or multiple comments that can also nested. Each item should contain the properties of a single comment that can also have items. | no        |
+
+## Comment Parameters
+
+| Key                       | Type           | Description                                                                                                                                                                             | Mandatory |
+| ------------------------- | -------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- |
+| attachment_collapse_label | string         | The optional label for the collapse button to minize the amount of visible attachments.                                                                                                 | no        |
+| attachment_expand_label   | string         | The optional label for the expand button to show all attachments.                                                                                                                       | no        |
+| attachments               | object[]       | The inserted attachments (both document and media) that will be displayed below the comment. Should contain the properties of the custom attachment component.                          | no        |
+| author                    | object         | The actual author of the comment.                                                                                                                                                       | no        |
+| bookmark_label            | string         | Adjusts the label for the bookmark button.                                                                                                                                              | no        |
+| comment                   | string         | The actual comment.                                                                                                                                                                     | no        |
+| comment_id                | string         | The ID of the current comment.                                                                                                                                                          | no        |
+| comment_origin            | object         | Contains the required properties from the origin comment.                                                                                                                               | no        |
+| comment_origin.author     | object         | The actual author of the parent comment.                                                                                                                                                | no        |
+| comment_origin.comment_id | string         | The given id of the parent comment.                                                                                                                                                     | no        |
+| comment_origin.is_owner   | object         | Diplays a logged in icon if the parent comment is created by the user.                                                                                                                  | no        |
+| extra_classes             | string         | Inserts additional classnames for the current comment.                                                                                                                                  | no        |
+| icon_file_path            | string         | Path to the SVG icon sprite.                                                                                                                                                            | no        |
+| is_owner                  | boolean        | Diplays a logged in icon if the comment is created by the user.                                                                                                                         | no        |
+| items                     | object[]       | Contains all the replies within the current comment that should contain the same data structure.                                                                                        | no        |
+| items[].icon              | object         | Should contain the parameters inherited from the [ECL Icon component](https://www.npmjs.com/package/@ecl-twig/ec-component-icon).                                                       | no        |
+| items[].label             | string         | Defines the option label if the defined option is displayed as button.                                                                                                                  | no        |
+| like_label                | string         | Adjusts the label for the like comment button.                                                                                                                                          | no        |
+| reply_label               | string         | Adjusts the label for the reply button.                                                                                                                                                 | no        |
+| show_bookmark             | boolean        | Displays the bookmark button.                                                                                                                                                           | no        |
+| stats                     | object[]       | Displays statistics of the comments For example likes.                                                                                                                                  | no        |
+| stats[].icon              | object         | The icon that will be displayed for the current stat. Should contain the parameters inherited from the [ECL Icon component](https://www.npmjs.com/package/@ecl-twig/ec-component-icon). | no        |
+| stats[].label             | string         | The semantic label of the current stat.                                                                                                                                                 | no        |
+| stats[].value             | string         | The displayed amount of the current stat.                                                                                                                                               | no        |
+| timestamp                 | string         | The timestamp of the comment.                                                                                                                                                           | no        |
+| user                      | object/boolean | Should contain the required properties of the logged in user in order to operation on the comment.                                                                                      | no        |

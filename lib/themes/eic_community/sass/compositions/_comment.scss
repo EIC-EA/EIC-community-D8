@@ -1,0 +1,208 @@
+.ecl-comment {
+  $node: &;
+
+  display: flex;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    margin-bottom: map-get($ecl-spacing, 's');
+
+    @include ecl-media-breakpoint-up('md') {
+      margin-bottom: map-get($ecl-spacing, 'l');
+    }
+  }
+
+  &__header-main {
+    flex-grow: 1;
+  }
+
+  &__header-aside {
+    margin-left: map-get($ecl-spacing, 'l');
+    flex-shrink: 0;
+  }
+
+  &__attachments {
+    margin: map-get($ecl-spacing, 'l') 0;
+
+    &:first-child {
+      margin-top: 0;
+    }
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  &__attachment {
+    width: 100%;
+  }
+
+  &__attachments-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: map-get($ecl-spacing, 's');
+  }
+
+  &__attachments-label {
+    display: block;
+    font-weight: $ecl-font-weight-bold;
+  }
+
+  &__attachments-items {
+    display: flex;
+    flex-wrap: wrap;
+    margin-left: #{0 - map-get($ecl-spacing, 'l')};
+    margin-bottom: #{0 - map-get($ecl-spacing, 'l')};
+  }
+
+  &__attachments-item {
+    box-sizing: border-box;
+    display: flex;
+    width: 100%;
+    padding-left: map-get($ecl-spacing, 'l');
+    margin-bottom: map-get($ecl-spacing, 'l');
+
+    @include ecl-media-breakpoint-up('lg') {
+      width: 50%;
+    }
+
+    #{$node}__attachments--is-ready[aria-collapsed="true"] &:nth-child(1n+ 3) {
+      @include visually-hidden;
+    }
+  }
+
+  &__attachments-expand,
+  &__attachments-collapse {
+    display: none;
+  }
+
+  &__attachments-expand {
+    #{$node}__attachments--is-ready {
+      display: none;
+    }
+
+    #{$node}__attachments--is-ready[aria-collapsed="true"] & {
+      display: block;
+    }
+  }
+
+  &__attachments-collapse {
+    #{$node}__attachments--is-ready & {
+      display: block;
+    }
+
+    #{$node}__attachments--is-ready[aria-collapsed="true"] & {
+      display: none;
+    }
+  }
+
+  &__footer {
+    border-top: ecl-border();
+    margin-top: map-get($ecl-spacing, 'l');
+    padding-top: ecl-layout('gutter', 'controls');
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  &__author-info {
+    color: ecl-typography('color', 'meta');
+
+    @include ecl-media-breakpoint-down('md') {
+      & > *,
+      & .ecl-link--icon {
+        display: inline-block;
+      }
+    }
+
+    @include ecl-media-breakpoint-up('md') {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+  }
+
+  &__author {
+    margin-right: map-get($ecl-spacing, 'l');
+    display: none;
+
+    @include ecl-media-breakpoint-up('sm') {
+      display: block;
+    }
+  }
+
+  &__content {
+    flex-grow: 1;
+  }
+
+  &__main {
+    box-sizing: border-box;
+
+    #{$node}--is-reply &{
+      @include ecl-responsive-font('meta');
+    }
+
+    @include ecl-media-breakpoint-up('lg') {
+      width: calc(100% / #{$ecl-grid-columns} * 8);
+      padding-right: #{ecl-box-model('padding') / 2};
+    }
+  }
+
+  &__author-name {
+    font-weight: $ecl-font-weight-bold;
+    color: ecl-typography('color', 'title');
+
+    &::after {
+      content: "\00A0";
+      display: inline;
+    }
+
+    @include ecl-media-breakpoint-up('md') {
+      & ~ &::before {
+        content: "\00A0";
+        display: inline;
+      }
+    }
+
+    .ecl-link__icon:first-child {
+      margin: 0;
+    }
+  }
+
+  &__timestamp {
+    color: ecl-typography('color', 'meta');
+    @include ecl-responsive-font('meta');
+  }
+
+  &__stat-label{
+    @include visually-hidden;
+  }
+
+  &__stat-value {
+    @include ecl-responsive-font('meta');
+  }
+
+  &__actions,
+  &__stats {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  &__actions {
+    align-items: center
+  }
+
+  &__stats {
+    margin-right: #{0 - ecl-layout('gutter', 'controls')};
+    margin-bottom: #{0 - ecl-layout('gutter', 'controls')};
+  }
+
+  &__stat {
+    margin-bottom: ecl-layout('gutter', 'controls');
+    margin-right: ecl-layout('gutter', 'controls');
+    color: ecl-typography('color', 'meta');
+  }
+}
