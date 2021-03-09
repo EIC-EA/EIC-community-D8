@@ -57,7 +57,7 @@
 
   <div class="ecl-viewport__middle">
     {% block page_header %}
-      {{ page.header }}
+      {{ page.page_header }}
     {% endblock %}
 
     {% block breadcrumbs %}
@@ -96,7 +96,7 @@
   </div>
 
   <div class="ecl-viewport__bottom">
-    {% block page_footer %}
+    {% block footer %}
       {% if site_footer %}
         {% include "@theme/patterns/compositions/site-footer.html.twig" with site_footer|default({}) only %}
       {% endif %}
