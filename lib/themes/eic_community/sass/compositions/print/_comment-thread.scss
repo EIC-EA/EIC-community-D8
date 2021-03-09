@@ -1,0 +1,17 @@
+.ecl-comment-thread {
+  $node: &;
+
+  margin: ecl-box-model('margin') 0;
+
+  & & {
+    margin-left: ecl-box-model('padding');
+  }
+
+  &:first-child {
+    margin-top: 0;
+  }
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}

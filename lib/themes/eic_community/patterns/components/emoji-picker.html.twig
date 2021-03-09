@@ -1,0 +1,22 @@
+{% if target %}
+  <div class="ecl-emoji-picker {{ extra_classes }}" data-emoji-picker-target="{{ target }}">
+    <div class="ecl-emoji-picker__trigger-wrapper">
+      {% include "@ecl-twig/ec-component-button/ecl-button.html.twig" with {
+        label: label,
+        variant: "ghost",
+        type: "button",
+        extra_classes: "ecl-emoji-picker__trigger ecl-button--as-form-option",
+        icon: icon_file_path ? {
+          path: icon_file_path,
+          name: "emoji",
+          type: "custom",
+        }: {},
+      } only %}
+    </div>
+    <div class="ecl-emoji-picker__dropdown-wrapper">
+      <div class="ecl-emoji-picker__dropdown">
+        <unicode-emoji-picker></unicode-emoji-picker>
+      </div>
+    </div>
+  </div>
+{% endif %}
