@@ -10,10 +10,6 @@
               {% set _icon = item.icon|default({})|merge({
                 path: icon_file_path,
                 size: 's',
-                extra_attributes: {
-                  'aria-hidden': 'true',
-                  'focusable': 'false'
-                }
               }) %}
             {% endif %}
 
