@@ -5,12 +5,24 @@
   align-items: center;
   margin: map-get($ecl-spacing, 'xs') 0;
 
+  &:focus-within {
+    outline: ecl-border('outline');
+  }
+
   &:first-child {
     margin-top: 0;
   }
 
   &:last-child {
     margin-bottom: 0;
+  }
+
+  &--has-updates {
+    padding-top: map-get($ecl-spacing, 's');
+  }
+
+  &--as-block {
+    padding: map-get($ecl-spacing, 's');
   }
 
   &--is-large {
@@ -36,9 +48,25 @@
     }
   }
 
+  &__link {
+    text-decoration: none;
+
+    &,
+    &:hover,
+    &:focus {
+      outline: none;
+    }
+  }
+
   &__label {
     line-height: ecl-typography('line-height', 'label');
     @include ecl-responsive-font('label');
+
+    @include ecl-media-breakpoint-down('md') {
+      #{$node}--is-compact & {
+        @include visually-hidden();
+      }
+    }
 
     #{$node}--is-medium & {
       font-weight: ecl-typography('font-weight', 'label');
@@ -50,15 +78,18 @@
     }
   }
 
-  &__initials-wrapper,
-  &__media-wrapper {
+  &__aside {
+    position: relative;
     order: -1;
     flex-shrink: 0;
-    overflow: hidden;
-    border-radius: 50%;
     margin-right: ecl-layout('gutter', 'meta');
     width: map-get($ecl-media, '3xs');
-    background-color: map-get($ecl-colors, 'grey-10');
+
+    @include ecl-media-breakpoint-down('md') {
+      #{$node}--is-compact & {
+        margin-right: 0;
+      }
+    }
 
     @include ecl-media-breakpoint-up('lg') {
       margin-right: ecl-layout('gutter--lg', 'meta');
@@ -84,6 +115,8 @@
   }
 
   &__media-wrapper {
+    overflow: hidden;
+    border-radius: 50%;
     position: relative;
     overflow: hidden;
     background-color: map-get($ecl-colors, 'grey-10');
@@ -108,10 +141,15 @@
   }
 
   &__initials-wrapper {
+    display: block;
+    position: relative;
+    overflow: hidden;
+    border-radius: 50%;
     font-size: ecl-typography('font-size', 'meta');
     line-height: ecl-typography('line-height', 'meta');
     font-weight: $ecl-font-weight-bold;
     text-transform: uppercase;
+    background-color: map-get($ecl-colors, 'grey-10');
 
     #{$node}--is-tiny & {
       font-size: map-get($ecl-font-size, '2xs');
@@ -126,8 +164,6 @@
       font-size: ecl-typography('font-size--lg', 'meta');
       font-weight: $ecl-font-weight-bold;
     }
-
-    position: relative;
 
     &::before {
       padding-top: 100%;
@@ -167,5 +203,12 @@
     overflow: hidden;
     position: absolute;
     width: 1px;
+  }
+
+  &__update-indicator {
+    position: absolute;
+    top: 0;
+    right: 0;
+    transform: translate(50%, -50%);
   }
 }

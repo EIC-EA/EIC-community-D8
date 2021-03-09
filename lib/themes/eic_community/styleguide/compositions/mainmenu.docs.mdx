@@ -1,0 +1,22 @@
+# mainmenu
+
+Displays the main navigation with optional label & searchform.
+This composition uses the actual [ECL Twig menu](https://www.npmjs.com/package/ec-component-menu) component to display the menu & dropdown.
+
+## Example:
+
+```
+{% include "@theme/patterns/compositions/mainmenu.html.twig" with {
+  mainmenu: ...,
+} %}
+```
+
+## Twig parameters:
+
+| Key                   | Type   | Description                                                                                                                                                                 | Mandatory |
+| --------------------- | ------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- | --- |
+| label                 | string | Displays an optional label before the mainmenu.                                                                                                                             | no        |     |
+| mainmenu              | object | The defined main menu object, should follow the [ECL Twig Menu](https://www.npmjs.com/package/ec-component-menu) component parameters.                                      | no        |     |
+| searchform            | object | The defined properties for the searchform. Should follow the [ECL Twig Search form](https://www.npmjs.com/package/@ecl-twig/ec-component-search-form) component parameters. | no        |     |
+| searchform.text_input | object | Defines the properties for the searchform input.                                                                                                                            | no        |     |
+| searchform.button     | object | Defines the properties for the searchform submit.                                                                                                                           | no        |     |

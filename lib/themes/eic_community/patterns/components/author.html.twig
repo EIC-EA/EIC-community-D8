@@ -1,6 +1,6 @@
 {% set label_element = label_element|default('span') %}
 {% if author is not empty %}
-  <div class="ecl-author ecl-author--is-{{ size|default('default') }} {{ extra_classes }}">
+  <div class="ecl-author ecl-author--is-{{ size|default('default') }} {{ updates.value ? ' ecl-author--has-updates ' }} {{ extra_classes }}">
     <div class="ecl-author__information">
       {% if description is not empty %}
         <span class="ecl-author__description">{{ description }}</span>
@@ -12,7 +12,8 @@
               type: 'standalone',
               label: author,
               path: path
-            }
+            },
+            extra_classes: 'ecl-author__link',
           } only %}
         {% else %}
           {{ author }}
@@ -45,24 +46,33 @@
         </div>
       {% endif %}
     </div>
-    {% if image is not empty %}
-      <div class="ecl-author__media-wrapper">
-        {% include '@ecl-twig/ec-component-media-container/ecl-media-container.html.twig' with {
-          extra_classes: 'ecl-author__media',
-          description: false,
-          sources: [],
-          image: image.src,
-          alt: image.alt,
-        } only %}
+    {% if image or author %}
+      <div class="ecl-author__aside">
+        {% if image is not empty %}
+          <div class="ecl-author__media-wrapper">
+            {% include '@ecl-twig/ec-component-media-container/ecl-media-container.html.twig' with {
+              extra_classes: 'ecl-author__media',
+              description: false,
+              sources: [],
+              image: image.src,
+              alt: image.alt,
+            } only %}
+          </div>
+        {% elseif author is not empty %}
+          <span class="ecl-author__initials-wrapper">
+            <span class="ecl-author__initials">
+              {% for name in author|split(' ') %}
+                {{- name|first -}}
+              {% endfor %}
+            </span>
+          </span>
+        {% endif %}
+        {% if updates %}
+          {% include "@theme/patterns/components/update-indicator.html.twig" with updates|default({})|merge({
+            extra_classes: 'ecl-author__update-indicator',
+          }) %}
+        {% endif %}
       </div>
-    {% elseif author is not empty %}
-      <span class="ecl-author__initials-wrapper">
-        <span class="ecl-author__initials">
-          {% for name in author|split(' ') %}
-            {{- name|first -}}
-          {% endfor %}
-        </span>
-      </span>
     {% endif %}
   </div>
 {% endif %}

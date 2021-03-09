@@ -49,14 +49,19 @@
 @import "./compositions/featured-list";
 @import "./compositions/featured-content-collection";
 @import "./compositions/filter-sidebar";
+@import "./compositions/global-header";
 @import "./compositions/introduction-header";
+@import "./compositions/language-selector";
+@import "./compositions/mainmenu";
 @import "./compositions/media-wrapper";
 @import "./compositions/overview-header";
 @import "./compositions/section-wrapper";
 @import "./compositions/social-share";
+@import "./compositions/site-footer";
 @import "./compositions/teaser-overview";
 @import "./compositions/teaser";
 @import "./compositions/text-block";
+@import "./compositions/top-menu";
 @import "./compositions/twitter-timeline";
 
 @import "./components/attachment";
@@ -83,5 +88,6 @@
 @import "./components/page_header";
 @import "./components/timestamp";
 @import "./components/toolbar";
+@import "./components/update-indicator";
 @import "./components/well";
 @import "./components/wysiwyg";
