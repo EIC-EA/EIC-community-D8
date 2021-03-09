@@ -1,0 +1,15 @@
+.ecl-comment {
+  padding-bottom: ecl-box-model('padding');
+  border-bottom: ecl-border();
+
+  &__footer {
+    margin-top: ecl-box-model('margin', 'controls');
+  }
+
+  &__actions-wrapper,
+  &__attachments-items-wrapper,
+  &__attachments-collapse,
+  &__attachments-expand {
+    display: none;
+  }
+}

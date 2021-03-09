@@ -5,7 +5,30 @@
  * Functions to support theming.
  */
 
+use Drupal\Core\Render\Element;
 use Drupal\oe_theme\ValueObject\ImageValueObject;
+
+/**
+ * Implements hook_preprocess().
+ */
+function eic_community_preprocess(&$variables) {
+  $variables['eic_images_path'] = base_path() . drupal_get_path('theme', 'eic_community') . '/dist/images';
+  $variables['eic_icon_path'] = $variables['eic_images_path'] . '/sprite/custom/sprites/custom.svg';
+  $variables['eic_logo_path'] = $variables['eic_images_path'] . '/logo';
+  $variables['eic_social_icon_path'] = $variables['eic_images_path'] . '/social-icons/sprites/icons-social.svg';
+}
+
+/**
+ * Implements hook_theme_suggestions_page_alter().
+ */
+function eic_community_theme_suggestions_page_alter(array &$suggestions, array $variables) {
+  // Adds suggestions for the front page.
+  if (\Drupal::service('path.matcher')->isFrontPage()) {
+    if (\Drupal::currentUser()->isAnonymous()) {
+      $suggestions[] = 'page__front__anonymous';
+    }
+  }
+}
 
 /**
  * Implements hook_preprocess_node() for page node.
@@ -14,19 +37,14 @@ function eic_community_preprocess_node__page(array &$variables) {
   /** @var \Drupal\Core\Entity\EntityInterface $node */
   $node = $variables['node'];
 
-  // Add node title.
-  $variables['introduction_header'] = [
-    'title' => $node->label(),
-  ];
-
-  // Add subtitle text.
+  // Adds subtitle text.
   if (!$node->get('field_subtitle')->isEmpty()) {
     $variables['introduction_header']['meta'] = [
       ['label' => $node->get('field_subtitle')->value],
     ];
   }
 
-  // Add call to action link.
+  // Adds call to action link.
   if (!$node->get('field_page_cta')->isEmpty()) {
     $variables['introduction_header']['call_to_action'] = [
       'link' => [
@@ -36,7 +54,7 @@ function eic_community_preprocess_node__page(array &$variables) {
     ];
   }
 
-  // Add media image.
+  // Adds media image.
   if (!$node->get('field_image')->isEmpty()) {
     /** @var \Drupal\media\Entity\Media $media */
     $media = \Drupal::service('entity.repository')->getTranslationFromContext($node->get('field_image')->entity, $node->language()->getId());
@@ -44,33 +62,13 @@ function eic_community_preprocess_node__page(array &$variables) {
     switch ($media->bundle()) {
       case 'image':
         $image_item = ImageValueObject::fromImageItem($media->get('oe_media_image')->first());
-        $variables['introduction_header']['media'] = [
+        $variables['media'] = [
           'image' => $image_item->getSource(),
           'alt' => $image_item->getAlt(),
         ];
         break;
 
     }
-  }
-}
-
-/**
- * Implements hook_preprocess_paragraph() for full_text_content paragraph.
- */
-function eic_community_preprocess_paragraph__full_text_content(array &$variables) {
-  /** @var \Drupal\paragraphs\Entity\Paragraph $paragraph */
-  $paragraph = $variables['paragraph'];
-
-  // Get title text.
-  if (!$paragraph->get('field_title')->isEmpty()) {
-    $variables['paragraph_content']['title'] = $paragraph->get('field_title')->value;
-  }
-
-  // Get body text.
-  if (!$paragraph->get('field_body')->isEmpty()) {
-    $variables['paragraph_content']['items'] = [
-      ['content' => $paragraph->get('field_body')->view()],
-    ];
   }
 }
 
@@ -131,33 +129,268 @@ function eic_community_preprocess_paragraph__full_media_content(array &$variable
     /** @var \Drupal\media\Entity\Media $media */
     $media = \Drupal::service('entity.repository')->getTranslationFromContext($paragraph->get('field_media')->entity, $paragraph->language()->getId());
 
-    $variables['paragraph_content'] = [
-      'description' => FALSE,
-    ];
-
+    // Add media to the theme variables.
     switch ($media->bundle()) {
       case 'image':
         $image_item = ImageValueObject::fromImageItem($media->get('oe_media_image')->first());
-        $media = [
-          'image' => $image_item->getSource(),
-          'alt' => $image_item->getAlt(),
-        ];
+        $variables['paragraph_content']['image'] = $image_item->getSource();
+        $variables['paragraph_content']['alt'] = $image_item->getAlt();
         break;
 
       case 'remote_video':
-        $media = [
-          'embedded_media' => $media->get('oe_media_oembed_video')->view('oe_theme_main_content'),
-        ];
+        $variables['paragraph_content']['embedded_media'] = $media->get('oe_media_oembed_video')->view('oe_theme_main_content');
         break;
 
     }
+  }
+}
 
-    // Add media to the theme variables.
-    $variables['paragraph_content'] = array_merge($variables['paragraph_content'], $media);
+/**
+ * Implements hook_preprocess_paragraph() for quote paragraph.
+ */
+function eic_community_preprocess_paragraph__quote(array &$variables) {
+  /** @var \Drupal\paragraphs\Entity\Paragraph $paragraph */
+  $paragraph = $variables['paragraph'];
 
-    // Add media caption.
-    if (!$paragraph->get('field_media_caption')->isEmpty()) {
-      $variables['paragraph_content']['description'] = $paragraph->get('field_media_caption')->value;
+  switch ($paragraph->get('paragraph_view_mode')->value) {
+    case 'external_person':
+      // Add external person name.
+      if (!$paragraph->get('field_name')->isEmpty()) {
+        $variables['paragraph_content']['author'] = $paragraph->get('field_name')->value;
+      }
+
+      // Add external person image.
+      if (!$paragraph->get('field_media')->isEmpty()) {
+        /** @var \Drupal\media\Entity\Media $media */
+        $media = \Drupal::service('entity.repository')->getTranslationFromContext($paragraph->get('field_media')->entity, $paragraph->language()->getId());
+
+        $image_item = ImageValueObject::fromImageItem($media->get('oe_media_image')->first());
+        $variables['paragraph_content']['image'] = [
+          'src' => $image_item->getSource(),
+          'alt' => $image_item->getAlt(),
+        ];
+      }
+      break;
+
+    case 'platform_member':
+      if (!$paragraph->get('field_user_ref')->isEmpty()) {
+        /** @var \Drupal\user\UserInterface $user */
+        $user = $paragraph->get('field_user_ref')->entity;
+
+        $full_name = [];
+
+        // Gets first name.
+        if (!$user->get('field_first_name')->isEmpty()) {
+          $full_name[] = $user->get('field_first_name')->value;
+        }
+        // Gets last name.
+        if (!$user->get('field_last_name')->isEmpty()) {
+          $full_name[] = $user->get('field_last_name')->value;
+        }
+        // Add user full name to the theme variables.
+        if (!empty($full_name)) {
+          $variables['paragraph_content']['author'] = implode(' ', $full_name);
+        }
+
+        // Add user image.
+        if (!$user->get('field_media')->isEmpty()) {
+          /** @var \Drupal\media\Entity\Media $media */
+          $media = $user->get('field_media')->entity;
+
+          $image_item = ImageValueObject::fromImageItem($media->get('oe_media_image')->first());
+          $variables['paragraph_content']['image'] = [
+            'src' => $image_item->getSource(),
+            'alt' => $image_item->getAlt(),
+          ];
+        }
+      }
+      break;
+
+  }
+}
+
+/**
+ * Implements hook_preprocess_paragraph() for banner paragraph.
+ */
+function eic_community_preprocess_paragraph__banner(array &$variables) {
+  /** @var \Drupal\paragraphs\Entity\Paragraph $paragraph */
+  $paragraph = $variables['paragraph'];
+
+  // Adds paragraph variables from field_banner.
+  if (!$paragraph->get('field_banner')->isEmpty()) {
+    /** @var \Drupal\fragments\Entity\FragmentInterface $fragment_banner */
+    $fragment_banner = \Drupal::service('entity.repository')->getTranslationFromContext($paragraph->get('field_banner')->entity, $paragraph->language()->getId());
+
+    // Sets default extra classes.
+    $extra_classes = ['ecl-editable-hero-banner--is-wide'];
+
+    // Sets background classes.
+    if (!$fragment_banner->get('field_background_color')->isEmpty()) {
+      $extra_classes[] = "ecl-editable-hero-banner--is-{$fragment_banner->get('field_background_color')->value}";
+    }
+
+    // Adds banner image.
+    if (!$fragment_banner->get('field_background_image')->isEmpty()) {
+      /** @var \Drupal\media\Entity\Media $media */
+      $media = \Drupal::service('entity.repository')->getTranslationFromContext($fragment_banner->get('field_background_image')->entity, $fragment_banner->language()->getId());
+
+      $image_item = ImageValueObject::fromImageItem($media->get('oe_media_image')->first());
+      $variables['paragraph_content']['image'] = $image_item->getSource();
+    }
+
+    // Adds extra classes.
+    if (!empty($extra_classes)) {
+      $variables['paragraph_content']['extra_classes'] = implode(' ', $extra_classes);
+    }
+  }
+}
+
+/**
+ * Implements hook_preprocess_paragraph() for tiles content paragraph.
+ */
+function eic_community_preprocess_paragraph__tiles_content(array &$variables) {
+  // Adds card items content.
+  foreach (Element::children($variables['content']['field_tiles']) as $index) {
+    $variables['paragraph_content']['items'][$index]['content'] = &$variables['content']['field_tiles'][$index];
+  }
+}
+
+/**
+ * Implements hook_preprocess_fragment() for banner fragment.
+ */
+function eic_community_preprocess_fragment__banner(array &$variables) {
+  // Adds h2 wrapper around title.
+  $variables['content']['title'][0]['#prefix'] = '<h2>';
+  $variables['content']['title'][0]['#suffix'] = '</h2>';
+
+  // Massage field_cta_link in order to add extra ECL link classes.
+  foreach (Element::children($variables['content']['field_cta_link']) as $index) {
+    $variables['content']['field_cta_link'][$index]['#options']['attributes']['class'] = ['ecl-link--cta'];
+  }
+}
+
+/**
+ * Implements hook_preprocess_field() for link fields.
+ */
+function eic_community_preprocess_field__link(array &$variables) {
+  foreach ($variables['items'] as &$value) {
+    if (isset($value['content']['#options']['attributes']['class'])) {
+      array_unshift($value['content']['#options']['attributes']['class'], 'ecl-link', 'ecl-link--default');
+    }
+    else {
+      $value['content']['#options']['attributes']['class'] = [
+        'ecl-link',
+        'ecl-link--default',
+      ];
+    }
+  }
+}
+
+/**
+ * Implements hook_preprocess_block() for all blocks.
+ */
+function eic_community_preprocess_block(array &$variables) {
+  if ($variables['base_plugin_id'] == 'block_content') {
+    /** @var \Drupal\block_content\Entity\BlockContent $block_content */
+    $block_content = $variables['content']['#block_content'];
+
+    switch ($block_content->bundle()) {
+      case 'page_banner':
+        // Preprocess variables for page_banner block.
+        if (!$block_content->get('field_media')->isEmpty()) {
+          /** @var \Drupal\media\Entity\Media $media */
+          $media = \Drupal::service('entity.repository')->getTranslationFromContext($block_content->get('field_media')->entity, $block_content->language()->getId());
+
+          switch ($media->bundle()) {
+            case 'image':
+              $image_item = ImageValueObject::fromImageItem($media->get('oe_media_image')->first());
+              $variables['hero']['image'] = $image_item->getSource();
+              break;
+
+          }
+        }
+        break;
+
+      case 'cta_tiles':
+        // Preprocess variables for cta_tiles block.
+        if (!$block_content->get('field_cta_tiles')->isEmpty()) {
+          /** @var \Drupal\paragraphs\ParagraphInterface[] $paragraphs */
+          $paragraphs = $block_content->get('field_cta_tiles')->referencedEntities();
+
+          foreach ($paragraphs as $key => $paragraph) {
+            $paragraph_translation = \Drupal::service('entity.repository')->getTranslationFromContext($paragraph, $block_content->language()->getId());
+            $link = $paragraph_translation->get('field_cta_link')->first()->getValue();
+
+            // Adds default cta link classes.
+            $extra_classes = 'ecl-link--button ecl-link--button-primary';
+
+            // Adds extra classes for the first cta link.
+            if ($key === 0) {
+              $extra_classes = 'ecl-link--button ecl-link--button-call';
+            }
+
+            // Adds CTA Tiles to the theme variables.
+            $variables['block_content']['items'][] = [
+              'title' => $paragraph_translation->get('field_title')->value,
+              'description' => $paragraph_translation->get('field_body')->value,
+              'actions' => [
+                [
+                  'link' => [
+                    'label' => $link['title'],
+                    'path' => $link['uri'],
+                  ],
+                  'extra_classes' => $extra_classes,
+                ],
+              ],
+            ];
+          }
+        }
+        break;
+
+      case 'facts_figures':
+        // Preprocess variables for facts_figures block.
+        if (!$block_content->get('field_facts_figures')->isEmpty()) {
+          /** @var \Drupal\eic_statistics\StatisticsStorageInterface $eic_statistics_storage */
+          $eic_statistics_storage = \Drupal::service('eic_statistics.storage');
+
+          /** @var \Drupal\fragments\Entity\FragmentInterface[] $fragments */
+          $fragments = $block_content->get('field_facts_figures')->referencedEntities();
+
+          // Adds each fact and figure to the theme variables.
+          foreach ($fragments as $key => $fragment) {
+            $fragment_translation = \Drupal::service('entity.repository')->getTranslationFromContext($fragment, $block_content->language()->getId());
+
+            // Extracts the entity type and bundle from
+            // the value of field_fact_figure_type.
+            $entity_info = explode('__', $fragment_translation->get('field_fact_figure_type')->getString());
+            $entity_type = reset($entity_info);
+            $bundle = end($entity_info);
+
+            switch ($entity_type) {
+              case 'user':
+                $counter = $eic_statistics_storage->getEntityCounter($entity_type);
+                $cache_tag = $eic_statistics_storage->getEntityCounterCacheTag($entity_type);
+                break;
+
+              default:
+                $counter = $eic_statistics_storage->getEntityCounter($entity_type, $bundle);
+                $cache_tag = $eic_statistics_storage->getEntityCounterCacheTag($entity_type, $bundle);
+                break;
+
+            }
+
+            $variables['block_content']['items'][] = [
+              'title' => eic_field_fact_figure_type_allowed_values()[$fragment_translation->get('field_fact_figure_type')->getString()],
+              'description' => $fragment_translation->get('field_body')->value,
+              'value' => $counter,
+              'fact_figure_type' => $fragment_translation->get('field_fact_figure_type')->getString(),
+            ];
+            // Adds cache tag for the fact and figure.
+            $variables['#cache']['tags'][] = $cache_tag;
+          }
+        }
+        break;
+
     }
   }
 }

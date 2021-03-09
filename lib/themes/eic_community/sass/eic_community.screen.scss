@@ -1,6 +1,7 @@
 @import './core/spacing.scss';
 @import './core/viewport.scss';
 @import './core/media.scss';
+@import './core/animation.scss';
 
 @import './utils/functions';
 @import './utils/mixins';
@@ -35,6 +36,10 @@
 @import './compositions/editorial-header.scss';
 @import "./compositions/card-wrapper";
 @import "./compositions/collapsible-options";
+@import "./compositions/comment-form";
+@import "./compositions/comment-overview";
+@import "./compositions/comment-thread";
+@import "./compositions/comment";
 @import "./compositions/content_item";
 @import "./compositions/content_language_switcher";
 @import "./compositions/organisation-information-block";
@@ -44,14 +49,19 @@
 @import "./compositions/featured-list";
 @import "./compositions/featured-content-collection";
 @import "./compositions/filter-sidebar";
+@import "./compositions/global-header";
 @import "./compositions/introduction-header";
+@import "./compositions/language-selector";
+@import "./compositions/mainmenu";
 @import "./compositions/media-wrapper";
 @import "./compositions/overview-header";
 @import "./compositions/section-wrapper";
 @import "./compositions/social-share";
+@import "./compositions/site-footer";
 @import "./compositions/teaser-overview";
 @import "./compositions/teaser";
 @import "./compositions/text-block";
+@import "./compositions/top-menu";
 @import "./compositions/twitter-timeline";
 
 @import "./components/attachment";
@@ -60,6 +70,7 @@
 @import "./components/blockquote";
 @import "./components/button";
 @import "./components/content-type-indicator";
+@import "./components/emoji-picker";
 @import "./components/expandable-definitions";
 @import "./components/description_list";
 @import "./components/disclaimer";
@@ -77,5 +88,6 @@
 @import "./components/page_header";
 @import "./components/timestamp";
 @import "./components/toolbar";
+@import "./components/update-indicator";
 @import "./components/well";
 @import "./components/wysiwyg";

@@ -4,15 +4,14 @@ status: true
 dependencies:
   config:
     - field.field.node.story.field_body
+    - field.field.node.story.field_disclaimer
     - field.field.node.story.field_document_media
     - field.field.node.story.field_header_visual
     - field.field.node.story.field_image
     - field.field.node.story.field_image_caption
     - field.field.node.story.field_introduction
-    - field.field.node.story.field_publication_date
     - field.field.node.story.field_related_stories
     - field.field.node.story.field_story_paragraphs
-    - field.field.node.story.field_time_to_read
     - field.field.node.story.field_video
     - field.field.node.story.field_vocab_geo
     - field.field.node.story.field_vocab_topics
@@ -20,10 +19,11 @@ dependencies:
     - workflows.workflow.news_stories
   module:
     - content_moderation
-    - datetime
     - media_library
     - paragraphs
     - path
+    - publication_date
+    - scheduler
     - text
 _core:
   default_config_hash: LsDJlqOkQALFbvWkBxxCsPzY-CA2N2K9zdQZXXgCoIM
@@ -45,6 +45,16 @@ content:
       placeholder: ''
     third_party_settings: {  }
     type: text_textarea
+    region: content
+  field_disclaimer:
+    weight: 31
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: entity_reference_autocomplete
     region: content
   field_document_media:
     weight: 9
@@ -83,12 +93,6 @@ content:
     third_party_settings: {  }
     type: text_textarea
     region: content
-  field_publication_date:
-    weight: 3
-    settings: {  }
-    third_party_settings: {  }
-    type: datetime_default
-    region: content
   field_related_stories:
     weight: 10
     settings:
@@ -110,14 +114,6 @@ content:
       form_display_mode: default
       default_paragraph_type: ''
     third_party_settings: {  }
-    region: content
-  field_time_to_read:
-    weight: 4
-    settings:
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
-    type: string_textfield
     region: content
   field_video:
     type: media_library_widget
@@ -171,6 +167,17 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
+  published_at:
+    type: publication_date_timestamp
+    weight: 10
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  scheduler_settings:
+    weight: 20
+    settings: {  }
+    third_party_settings: {  }
+    region: content
   status:
     type: boolean_checkbox
     settings:
