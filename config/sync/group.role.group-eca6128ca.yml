@@ -1,4 +1,4 @@
-uuid: ceeb6d6f-22f0-4cf2-8ad2-15bfc8155136
+uuid: 306ef5b3-c545-43a2-b16a-36e6106300b0
 langcode: en
 status: true
 dependencies:
@@ -6,10 +6,10 @@ dependencies:
     - group.type.group
   enforced:
     config:
-      - user.role.administrator
-id: group-a416e6833
-label: 'Site admin'
-weight: 2
+      - user.role.content_administrator
+id: group-eca6128ca
+label: 'Content administrator'
+weight: 3
 internal: true
 audience: outsider
 group_type: group

@@ -1,4 +1,4 @@
-uuid: ceeb6d6f-22f0-4cf2-8ad2-15bfc8155136
+uuid: 86554b67-cad1-4175-9b0c-ac5567cd341b
 langcode: en
 status: true
 dependencies:
@@ -6,10 +6,10 @@ dependencies:
     - group.type.group
   enforced:
     config:
-      - user.role.administrator
-id: group-a416e6833
-label: 'Site admin'
-weight: 2
+      - user.role.service_authentication
+id: group-4c7e676f7
+label: 'Service authentication'
+weight: 4
 internal: true
 audience: outsider
 group_type: group

@@ -3,7 +3,7 @@ langcode: en
 status: true
 dependencies: {  }
 id: administrator
-label: Administrator
+label: 'Site admin'
 weight: 2
 is_admin: true
 permissions: {  }
