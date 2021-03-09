@@ -89,4 +89,25 @@
         visibility 0ms ease-in-out 0ms;
     }
   }
+
+  &__is-disabled,
+  &__no-items {
+    text-align: center;
+    font-weight: $ecl-font-weight-bold;
+    @include ecl-responsive-font('introduction');
+    margin: map-get($ecl-spacing, 'xl') 0;
+    color: ecl-typography('color', 'meta');
+
+    @include ecl-media-breakpoint-up('md') {
+      margin: map-get($ecl-spacing, '2xl') 0;
+    }
+
+    &:first-child {
+      margin-top: 0;
+    }
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
 }
