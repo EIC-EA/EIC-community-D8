@@ -1,0 +1,14 @@
+uuid: af26446d-0e60-45fc-be11-9f4c6d3989bf
+langcode: en
+status: true
+dependencies:
+  config:
+    - user.role.service_authentication
+  module:
+    - user
+id: user_remove_role_action.service_authentication
+label: 'Remove the Service authentication role from the selected user(s)'
+type: user
+plugin: user_remove_role_action
+configuration:
+  rid: service_authentication
