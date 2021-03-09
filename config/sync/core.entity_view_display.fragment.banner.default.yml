@@ -10,28 +10,11 @@ dependencies:
     - fragments.fragment_type.banner
   module:
     - link
-    - options
 id: fragment.banner.default
 targetEntityType: fragment
 bundle: banner
 mode: default
 content:
-  field_background_color:
-    weight: 4
-    label: hidden
-    settings: {  }
-    third_party_settings: {  }
-    type: list_default
-    region: content
-  field_background_image:
-    type: entity_reference_entity_view
-    weight: 3
-    label: hidden
-    settings:
-      view_mode: default
-      link: false
-    third_party_settings: {  }
-    region: content
   field_body:
     weight: 1
     label: hidden
@@ -60,4 +43,6 @@ content:
       link_to_entity: false
     third_party_settings: {  }
 hidden:
+  field_background_color: true
+  field_background_image: true
   user_id: true
