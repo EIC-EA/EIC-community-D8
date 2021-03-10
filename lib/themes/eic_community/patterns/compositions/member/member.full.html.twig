@@ -5,25 +5,17 @@
 {% endblock %}
 
 {% block content %}
-  {% include "@theme/patterns/compositions/organisation-information-block.html.twig" with {
+  {% include "@theme/patterns/compositions/member-information-block.html.twig" with {
     icon_file_path: icon_file_path,
     description: description,
     title: title,
-    follow: follow,
-    links: links,
+    job_titles: job_titles,
     social_share: social_share,
     sidebar_title: sidebar_title,
     meta: meta,
+    type: type,
     image: image,
-    tags: tags,
-    expertises: expertises,
     stats: stats,
     actions: actions,
   } only %}
-
-  {% include "@theme/patterns/compositions/featured-content-sections.html.twig" with {
-    items: [
-      featured_news,
-    ]
-  } %}
 {% endblock %}

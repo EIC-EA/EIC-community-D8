@@ -1,0 +1,55 @@
+.ecl-emoji-picker {
+  $node: &;
+
+  position: relative;
+
+  &__trigger-wrapper {
+    display: none;
+
+
+    #{$node}--is-ready & {
+      display: block;
+    }
+  }
+
+  &__dropdown-wrapper {
+    display: none;
+    position: absolute;
+    z-index: 100;
+    top: 100%;
+    left: 0;
+
+    #{$node}--aligns-from-right & {
+      left: auto;
+      right: 0;
+    }
+
+    #{$node}--is-ready[aria-expanded="true"] & {
+      display: block;
+    }
+  }
+
+  &__dropdown {
+    overflow: hidden;
+    border-radius: ecl-box-model('border-radius');
+    box-shadow: ecl-box-model('box-shadow');
+    background-color: map-get($ecl-colors, 'grey-5');
+  }
+
+  // Adjusts the initial emoji Picker module with CSS variables.
+  unicode-emoji-picker {
+    font-size: $ecl-font-size-l;
+
+    --max-width: #{map-get($ecl-width, 'form-m')};
+    --min-width: #{map-get($ecl-width, 'form-m')};
+    --border-radius: 0;
+    --box-shadow: none;
+    --fill-color: #{map-get($ecl-colors, 'grey-5')};
+    --title-bar-fill-color: #{map-get($ecl-colors, 'grey-5')};
+
+    @include ecl-media-breakpoint-up('md') {
+      --min-width: #{$ecl-container-max-width-sm};
+      --max-width: #{$ecl-container-max-width-sm};
+    }
+  }
+}
