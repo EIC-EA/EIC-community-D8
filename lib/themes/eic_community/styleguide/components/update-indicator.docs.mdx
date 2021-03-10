@@ -1,0 +1,17 @@
+# Update Indicator
+
+Displays a bullet with a value and a readble value label.
+
+```
+{% include "@theme/patterns/components/update-indicator.html.twig" with {
+  label: 'Unread mails',
+  value: 38,
+} %}
+```
+
+## Twig parameters:
+
+| Key   | Type   | Description                                    | Mandatory |
+| ----- | ------ | ---------------------------------------------- | --------- |
+| value | string | The displayed value for the defined indicator. | yes       |
+| label | string | The semantic for the defined indicator.        | no        |

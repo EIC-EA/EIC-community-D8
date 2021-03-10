@@ -9,4 +9,32 @@
       content: "\00a0";
     }
   }
+
+  &--as-form-option {
+    color: ecl-typography('color', 'meta');
+    padding: map-get($ecl-spacing, 'xs');
+
+    #{$node}__label {
+      @include visually-hidden;
+    }
+
+    #{$node}__label + #{$node}__icon,
+    #{$node}__icon {
+      margin-right: 0;
+      margin-left: 0;
+    }
+  }
+
+  &__icon--after,
+  &--compact-for-mobile {
+    @include ecl-media-breakpoint-down('md') {
+      #{$node}__label {
+        @include visually-hidden;
+      }
+
+      #{$node}__icon {
+        margin-right: 0;
+      }
+    }
+  }
 }

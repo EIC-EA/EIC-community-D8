@@ -20,6 +20,10 @@
 
   &__item {
     margin: map-get($ecl-spacing, 'm') 0;
+
+    #{$node}--is-compact & {
+      display: flex;
+    }
   }
 
   &__item-label {
@@ -28,12 +32,20 @@
     @include ecl-responsive-font('meta');
     line-height: ecl-typography('line-height', 'meta');
     color: ecl-typography('color', 'meta');
+
+    #{$node}--is-compact & {
+      margin: 0 map-get($ecl-spacing, 'xs') map-get($ecl-spacing, 'xs') 0;
+    }
   }
 
   &__item-subitems {
     display: flex;
     flex-direction: column;
     margin: map-get($ecl-spacing, 'xs') 0;
+
+    #{$node}--is-compact & {
+      margin: 0;
+    }
 
     #{$node}__item--is-ready &[aria-hidden="true"] {
       @include visually-hidden();

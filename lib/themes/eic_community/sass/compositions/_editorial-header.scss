@@ -33,6 +33,7 @@
     flex-wrap: wrap;
     margin-top: ecl-box-model('margin', 'controls');
     margin-bottom: #{0 - ecl-layout('gutter', 'controls')};
+    margin-right: #{0 - ecl-layout('gutter', 'controls')};
 
     @include ecl-media-breakpoint-up('lg') {
       margin-top: 0;

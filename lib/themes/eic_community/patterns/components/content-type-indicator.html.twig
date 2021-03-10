@@ -6,10 +6,6 @@
         path: icon_file_path,
         size: icon.size|default('xs'),
       }),
-      extra_attributes: {
-        'aria-hidden': 'true',
-        'focusable': 'false'
-      }
     } only %}
   {% endif %}
   <span class="ecl-content-type-indicator__label">{{ label ? label : '&nbsp;' }}</span>

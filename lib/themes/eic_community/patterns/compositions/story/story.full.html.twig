@@ -44,7 +44,10 @@
     } only %}
     {% endembed %}
   {% elseif comments is not empty %}
-    {# @Todo: Include comments template. #}
+    {% include "@theme/patterns/compositions/comment/comment-overview.html.twig" with comments|default({})|merge({
+      user: auth,
+      icon_file_path: common.icon_file_path,
+    }) %}
   {% endif %}
 
 {% endblock %}

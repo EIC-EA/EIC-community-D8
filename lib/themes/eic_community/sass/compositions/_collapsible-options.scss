@@ -19,15 +19,22 @@
     &::after {
       display: block;
       flex-shrink: 0;
-      width: map-get($ecl-spacing, 'xs');
       margin-left: ecl-box-model('margin', 'controls');
+      width: map-get($ecl-spacing, 'xs');
       height: map-get($ecl-spacing, 'xs');
-      border: ecl-border();
+      border: solid 2px;
       border-color: currentColor;
       border-bottom: none;
       border-left: none;
       transform: rotate(135deg);
       margin-top: -#{map-get($ecl-spacing, 'xs') / 2};
+
+      #{$node}--is-compact & {
+        width: map-get($ecl-spacing, '2xs');
+        height: map-get($ecl-spacing, '2xs');
+        margin-top: -#{map-get($ecl-spacing, '2xs') / 2};
+      }
+
       content: " ";
     }
 
@@ -37,10 +44,26 @@
     }
 
     #{$node}--is-ready[aria-expanded="true"] & {
-      &::after {
+      &button::after {
         transform: rotate(-45deg);
         margin-top: #{map-get($ecl-spacing, 'xs') / 2};
       }
+
+      .ecl-icon {
+        color: ecl-typography('color', 'title');
+      }
+    }
+
+    &:not(button)::after {
+      display: none;
+    }
+
+    & > *:focus {
+      outline: none;
+    }
+
+    &:not(button):focus-within {
+      outline: ecl-border('outline');
     }
   }
 
@@ -72,7 +95,9 @@
   &__collapse-well {
     #{$node}--is-ready & {
       background-color: map-get($ecl-colors, 'white');
-      border: ecl-border();
+      box-shadow: ecl-box-model('box-shadow');
+      overflow: hidden;
+      border-radius: ecl-box-model('border-radius');
     }
   }
 
@@ -103,7 +128,27 @@
 
   &__button {
     display: block;
+    position: relative;
     width: 100%;
     box-sizing: border-box;
+
+    &::before {
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      bottom: 0px;
+      content: " ";
+    }
+
+    &--is-active,
+    &:hover {
+      background-color: map-get($ecl-colors, 'blue-5');
+
+      &::before {
+        background-color: map-get($ecl-colors, 'blue-100');
+      }
+    }
   }
 }
