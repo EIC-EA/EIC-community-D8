@@ -1,0 +1,116 @@
+uuid: 33e2644b-c0fb-4304-b6b1-e1082003965c
+langcode: en
+status: true
+dependencies:
+  module:
+    - system
+    - user
+_core:
+  default_config_hash: 3MabB3skNsvvRzMXLpt2tNEtZc376b-KA3Q0Lewbhgg
+name: homepage_anonymous
+label: 'Homepage anonymous'
+group: Homepage
+description: 'Homepage context for anonymous users.'
+requireAllConditions: true
+disabled: false
+conditions:
+  request_path:
+    id: request_path
+    pages: '<front>'
+    negate: false
+    uuid: 2f226b88-171f-4906-8c9b-3a55164a9a8c
+    context_mapping: {  }
+  user_role:
+    id: user_role
+    roles:
+      anonymous: anonymous
+    negate: false
+    uuid: 81bfb169-cd2b-4a50-871f-6c3261be5276
+    context_mapping:
+      user: '@user.current_user_context:current_user'
+reactions:
+  blocks:
+    blocks:
+      33935a7f-fefb-4352-809f-c74242273d62:
+        id: 'block_content:e1aefa16-ad60-4d15-ac07-4a9a2d8b6044'
+        label: 'Homepage - Facts & Figures block'
+        provider: block_content
+        label_display: '0'
+        status: true
+        info: ''
+        view_mode: full
+        region: content
+        weight: '0'
+        context_mapping: {  }
+        custom_id: homepage_facts_figures
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: homepage_anonymous
+        uuid: 33935a7f-fefb-4352-809f-c74242273d62
+      596d7f88-c45b-4b06-8ba8-925d8f21fbbe:
+        id: eic_social_feed
+        label: 'EIC Twitter feed'
+        provider: eic_blocks
+        label_display: '0'
+        service: smk
+        type: user
+        display_user: true
+        display_user_pic: true
+        auto_expand_photo: false
+        auto_expand_video: false
+        target: true
+        screen_name: EUeic
+        count: '3'
+        include_rts: false
+        rts_display_original: false
+        exclude_replies: true
+        tweet_more_btn: true
+        region: content
+        weight: '1'
+        context_mapping: {  }
+        custom_id: eic_social_feed
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: homepage_anonymous
+        uuid: 596d7f88-c45b-4b06-8ba8-925d8f21fbbe
+      20103bdb-6cc0-4481-a3c1-b311abca2f40:
+        id: 'block_content:880aff79-c4fa-416e-9703-0a3119bff5d0'
+        label: 'Homepage - Stay up to date block'
+        provider: block_content
+        label_display: '0'
+        status: true
+        info: ''
+        view_mode: full
+        region: content
+        weight: '0'
+        context_mapping: {  }
+        custom_id: homepage_stay_up_to_date
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: homepage_anonymous
+        uuid: 20103bdb-6cc0-4481-a3c1-b311abca2f40
+      649919c3-9c20-41dc-b941-5b1de1519758:
+        id: 'block_content:5b0c5199-f4b0-4b8a-90fa-68d424e8315b'
+        label: 'Homepage - Banner block'
+        provider: block_content
+        label_display: '0'
+        status: true
+        info: ''
+        view_mode: full
+        region: page_header
+        weight: '0'
+        context_mapping: {  }
+        custom_id: homepage_banner_anonymous
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: homepage_anonymous
+        uuid: 649919c3-9c20-41dc-b941-5b1de1519758
+    id: blocks
+    saved: false
+    uuid: 5a010c1a-216a-427c-8d7e-43702d8b57ec
+    include_default_blocks: 0
+weight: 0

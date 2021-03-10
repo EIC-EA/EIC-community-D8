@@ -1,0 +1,28 @@
+uuid: ff70c1b1-36e9-41ee-903c-72dd932071da
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_disclaimer
+    - fragments.fragment_type.disclaimer
+    - node.type.story
+id: node.story.field_disclaimer
+field_name: field_disclaimer
+entity_type: node
+bundle: story
+label: Disclaimer
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:fragment'
+  handler_settings:
+    target_bundles:
+      disclaimer: disclaimer
+    sort:
+      field: _none
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

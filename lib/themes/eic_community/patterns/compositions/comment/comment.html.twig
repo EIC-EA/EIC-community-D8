@@ -8,7 +8,7 @@
 <div class="ecl-comment {{ comment_origin ? 'ecl-comment--is-reply' }} {{ extra_classes }}" id="{{ comment_id }}">
   {% if author %}
     <div class="ecl-comment__author">
-      {% include "@theme/patterns/components/author.html.twig" with author|default({})|without('description', 'actions')|merge({
+      {% include "@theme/patterns/components/author.html.twig" with author|default({})|without('description', 'actions', 'updates')|merge({
         extra_classes: 'ecl-author--hide-info' ~ author.extra_classes|default('')
       }) %}
     </div>

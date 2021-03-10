@@ -31,8 +31,22 @@
     {% endblock %}
 
     {% block site_header %}
+      {% if top_menu %}
+        {% include "@theme/patterns/compositions/top-menu.html.twig" with top_menu|default({}) only %}
+      {% endif %}
+
       {% if site_header %}
-        {% include "@theme/patterns/compositions/site-header.html.twig" with site_header|default({}) only %}
+        {% include "@theme/patterns/compositions/global-header.html.twig" with site_header|default({})|merge({
+          user: user|default(NULL)
+        }) only %}
+      {% endif %}
+
+      {% if mainmenu %}
+        {% include "@theme/patterns/compositions/mainmenu.html.twig" with {
+          label: mainmenu_label,
+          mainmenu: mainmenu|default({}),
+          searchform: searchform|default({}),
+        } only %}
       {% endif %}
     {% endblock %}
 

@@ -1,0 +1,18 @@
+# Emoji Picker
+
+Displays a the [Unicode Emoji Picker](https://www.npmjs.com/package/unicode-emoji-picker) component within a collapse container.
+
+## Example:
+
+```
+{% include "@theme/patterns/components/emoji-picker.html.twig" %}
+```
+
+## Twig parameters:
+
+| Key            | Type   | Description                                                     | Mandatory |
+| -------------- | ------ | --------------------------------------------------------------- | --------- |
+| label          | string | The semantic trigger label that will collapse the Emoji Picker. | no        |
+| extra_classes  | string | Optional classnames for the component.                          | no        |
+| target         | string | Inserts the selected Emoji within the defined target selector.  | yes       |
+| icon_file_path | string | The SVG sprite path.                                            | no        |
