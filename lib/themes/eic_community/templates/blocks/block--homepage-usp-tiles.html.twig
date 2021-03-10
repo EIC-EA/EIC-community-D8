@@ -25,7 +25,7 @@
  * @see template_preprocess_block()
  */
 #}
-{% set _tiles_length = content.field_tiles_ref|length %}
+{% set _tiles_length = content['#block_content'].field_tiles_ref|length %}
 {% set _items = [] %}
 
 {% if _tiles_length > 0 %}
@@ -37,15 +37,6 @@
       %}
   {% endfor %}
 {% endif %}
-
-
-{# {% for key, item in content['#block_content'].field_tiles_ref %}
-  {%
-    set _items = _items|merge([{
-      content: content.field_tiles_ref[key],
-    }])
-  %}
-{% endfor %} #}
 
 {% include "@theme/patterns/compositions/featured-content-collection.html.twig" with {
   title: content['#block_content'].field_title.value|default(''),
