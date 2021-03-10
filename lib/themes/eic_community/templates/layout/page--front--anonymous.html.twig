@@ -50,11 +50,13 @@
     {% if 'block_content:' in key %}
       {% if page.content[key]['#id'] == 'homepage_stay_up_to_date' %}
         {% set _stay_up_to_date_section_left = key %}
+      {% elseif page.content[key]['#id'] == 'homepage_follow_us' %}
+        {% set _stay_up_to_date_section_right = key %}
       {% endif %}
     {% endif %}
   {% endfor %}
 
-  {{ page.content|without(_stay_up_to_date_section_left, 'eic_social_feed') }}
+  {{ page.content|without(_stay_up_to_date_section_left, _stay_up_to_date_section_right, 'eic_social_feed') }}
 
   {% embed "@theme/patterns/compositions/layout-block.html.twig" %}
     {% if _stay_up_to_date_section_left is not empty %}
