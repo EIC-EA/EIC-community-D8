@@ -4,6 +4,8 @@ _meta:
   uuid: 31acecdc-7e2a-4521-8a42-340a2ee15f6b
   bundle: page
   default_langcode: en
+  depends:
+    f8df97c3-5505-47a6-8910-3f2282e6abcf: media
 default:
   revision_uid:
     -
@@ -36,3 +38,10 @@ default:
   published_at:
     -
       value: 1615212352
+  field_image:
+    -
+      entity: f8df97c3-5505-47a6-8910-3f2282e6abcf
+  field_introduction:
+    -
+      value: 'Aliquip labore elit qui dolore exercitation ea veniam cillum adipisicing nostrud eu id.'
+      format: plain_text
