@@ -1,23 +1,21 @@
-uuid: 27896bea-efdb-4d1d-bbd3-dbbc61e1a49d
 langcode: en
 status: true
 dependencies:
   module:
-    - paragraphs
+    - block_content
     - typed_link
-id: paragraph.field_cta_link
-field_name: field_cta_link
-entity_type: paragraph
+id: block_content.field_cta_links
+field_name: field_cta_links
+entity_type: block_content
 type: typed_link
 settings:
   allowed_values:
     default: Default
-    call: 'Call to action'
-    primary: Primary
+    cta: 'Call to action'
   allowed_values_function: ''
 module: typed_link
 locked: false
-cardinality: 1
+cardinality: -1
 translatable: true
 indexes: {  }
 persist_with_no_fields: false
