@@ -14,14 +14,10 @@
                     size: item.icon.size|default('m'),
                     type: item.icon.type,
                   },
-                  extra_attributes: {
-                    'aria-hidden': 'true',
-                    'focusable': 'false'
-                  }
                 } only %}
               {% endif %}
 
-              {% if item.value %}
+              {% if item.value is not empty %}
                 <div class="ecl-fact-figures__value">{{ item.value }}</div>
               {% endif %}
 

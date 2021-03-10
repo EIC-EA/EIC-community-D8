@@ -62,17 +62,29 @@
                 {% set _action = {} %}
 
                 {% if action is not empty %}
-                  {% set _link = action.link|default({})|merge({
-                    icon_position: 'before'
-                  }) %}
 
-                  {% set _action = action|merge({
-                    icon: _icon,
-                    link: _link,
-                    extra_classes: 'ecl-link--button ecl-link--button-primary'
-                  }) %}
+                  {% if action.link %}
+                    {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with action|default({})|merge({
+                      link: action.link|merge({
+                        icon_position: 'before',
+                      }),
+                      icon: icon_file_path ? action.icon|default({})|merge({
+                        path: icon_file_path,
+                        size: 's',
+                      }) : {},
+                      extra_classes: loop.first ? 'ecl-link--button ecl-link--button-primary' : 'ecl-link--button ecl-link--button-secondary',
+                    }) only %}
+                  {% else %}
+                    {% include "@ecl-twig/ec-component-button/ecl-button.html.twig" with action|default({})|merge({
+                      icon_position: 'before',
+                      variant: loop.first ? 'primary' : 'secondary',
+                      icon: icon_file_path ? action.icon|default({})|merge({
+                        path: icon_file_path,
+                        size: 's',
+                      }) : {},
+                    }) %}
+                  {% endif %}
                 {% endif %}
-                {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with _action|default({}) only %}
               {% endif %}
             </div>
           {% endfor %}

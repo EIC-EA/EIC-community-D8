@@ -40,7 +40,7 @@ reactions:
         info: ''
         view_mode: full
         region: content
-        weight: '-1'
+        weight: '-2'
         context_mapping: {  }
         custom_id: homepage_facts_figures
         theme: eic_community
@@ -84,7 +84,7 @@ reactions:
         info: ''
         view_mode: full
         region: content
-        weight: '0'
+        weight: '-1'
         context_mapping: {  }
         custom_id: homepage_stay_up_to_date
         theme: eic_community
@@ -109,6 +109,23 @@ reactions:
         unique: 0
         context_id: homepage_anonymous
         uuid: 649919c3-9c20-41dc-b941-5b1de1519758
+      9bd8af0d-9728-4728-9055-2e51ae9cd21b:
+        id: 'block_content:4b678ea5-f56e-45af-8399-7adde0abab77'
+        label: 'Homepage - Follow us block'
+        provider: block_content
+        label_display: '0'
+        status: true
+        info: ''
+        view_mode: full
+        region: content
+        weight: '0'
+        context_mapping: {  }
+        custom_id: homepage_follow_us
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: homepage_anonymous
+        uuid: 9bd8af0d-9728-4728-9055-2e51ae9cd21b
       9c111e17-643d-4fdd-b1f7-d6c144f86c3a:
         id: 'block_content:8271c779-92e1-43f2-beb5-3addbfd84c70'
         label: 'Homepage - USP Tiles'
@@ -118,7 +135,7 @@ reactions:
         info: ''
         view_mode: full
         region: content
-        weight: '-2'
+        weight: '-3'
         context_mapping: {  }
         custom_id: homepage_usp_tiles
         theme: eic_community

@@ -1,3 +1,11 @@
 # Expandable definitions
 
 Displays a vertical list where each item can be expanded if it has more than 1 item.
+
+| Key             | Type     | Description                                                                 | Mandatory |
+| --------------- | -------- | --------------------------------------------------------------------------- | --------- |
+| icon_file_path  | string   | Path to the SVG inline sprite.                                              | no        |
+| items           | object[] | The definitions to displays.                                                | no        |
+| items[].content | string   | Outputs rendered content instead of a item label construction.              | no        |
+| items[].label   | string   | The definition item label will only be used if no content has been defined. | no        |
+| items[].path    | string   | Optional URL for the current definition item.                               | no        |
