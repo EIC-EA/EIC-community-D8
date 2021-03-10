@@ -10,7 +10,6 @@ dependencies:
     - field.field.node.story.field_image
     - field.field.node.story.field_image_caption
     - field.field.node.story.field_introduction
-    - field.field.node.story.field_publication_date
     - field.field.node.story.field_related_stories
     - field.field.node.story.field_story_paragraphs
     - field.field.node.story.field_video
@@ -18,7 +17,6 @@ dependencies:
     - field.field.node.story.field_vocab_topics
     - node.type.story
   module:
-    - datetime
     - entity_reference_revisions
     - text
     - user
@@ -30,7 +28,7 @@ bundle: story
 mode: default
 content:
   content_moderation_control:
-    weight: -20
+    weight: 0
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -59,7 +57,7 @@ content:
     region: content
   field_header_visual:
     type: entity_reference_entity_view
-    weight: 1
+    weight: 2
     label: above
     settings:
       view_mode: default
@@ -88,15 +86,6 @@ content:
     settings: {  }
     third_party_settings: {  }
     type: text_default
-    region: content
-  field_publication_date:
-    weight: 2
-    label: above
-    settings:
-      format_type: medium
-      timezone_override: ''
-    third_party_settings: {  }
-    type: datetime_default
     region: content
   field_related_stories:
     weight: 10
@@ -151,9 +140,19 @@ content:
     settings: {  }
     third_party_settings: {  }
   links:
-    weight: 0
+    weight: 1
     region: content
     settings: {  }
+    third_party_settings: {  }
+  published_at:
+    type: timestamp
+    weight: 16
+    region: content
+    label: above
+    settings:
+      date_format: short
+      custom_date_format: ''
+      timezone: ''
     third_party_settings: {  }
 hidden:
   extra_field_oe_theme_helper_short_title_with_fallback: true

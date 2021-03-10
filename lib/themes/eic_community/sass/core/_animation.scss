@@ -1,0 +1,11 @@
+@keyframes scale-up-and-down {
+
+  0%,
+  100% {
+    transform: scale(0.5);
+  }
+
+  50% {
+    transform: scale(1.0);
+  }
+}

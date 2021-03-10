@@ -1,0 +1,11 @@
+{#
+/**
+ * @file
+ * Theme override to display the 'Banner' type paragraph.
+ *
+ * @see ./modules/contrib/paragraphs/templates/paragraph.html.twig
+ */
+#}
+{% include "@theme/patterns/compositions/editable-hero-banner.html.twig" with paragraph_content|merge({
+  'content': content,
+}) only %}
