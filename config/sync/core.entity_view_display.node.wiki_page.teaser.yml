@@ -25,3 +25,4 @@ hidden:
   field_body: true
   field_related_downloads: true
   field_related_media: true
+  published_at: true
