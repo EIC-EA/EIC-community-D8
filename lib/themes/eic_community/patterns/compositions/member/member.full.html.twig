@@ -5,7 +5,21 @@
 {% endblock %}
 
 {% block content %}
-    {% include "@theme/patterns/compositions/featured-content-sections.html.twig" with {
+  {% include "@theme/patterns/compositions/member-information-block.html.twig" with {
+    icon_file_path: icon_file_path,
+    description: description,
+    title: title,
+    job_titles: job_titles,
+    social_share: social_share,
+    sidebar_title: sidebar_title,
+    meta: meta,
+    type: type,
+    image: image,
+    stats: stats,
+    actions: actions,
+  } only %}
+
+  {% include "@theme/patterns/compositions/featured-content-sections.html.twig" with {
     as_tabs: true,
     items: [
       flagged_groups|default({}),

@@ -1,6 +1,6 @@
 {% set title_element = title_element|default('h1') %}
 
-<section class="ecl-section-wrapper ecl-editorial-header">
+<section class="ecl-section-wrapper ecl-editorial-header {{ extra_classes }}">
   <div class="ecl-container">
     <div class="ecl-editorial-header__wrapper">
       <div class="ecl-editorial-header__main">
@@ -30,6 +30,22 @@
             extra_classes: 'ecl-link--call-to-action',
             icon: _parent_icon,
           }) only %}
+        {% endif %}
+
+        {% if tags is not empty %}
+          <div class="ecl-editorial-header__tags-wrapper">
+            <div class="ecl-editorial-header__tags">
+              {% for tag in tags %}
+                <div class="ecl-editorial-header__tag">
+                  {% include '@ecl-twig/ec-component-tag/ecl-tag.html.twig' with tag|default({})|merge({
+                    tag: tag.tag|merge({
+                      type: 'display'
+                    })
+                  }) only %}
+                </div>
+              {% endfor %}
+            </div>
+          </div>
         {% endif %}
 
         {% if title is not empty %}

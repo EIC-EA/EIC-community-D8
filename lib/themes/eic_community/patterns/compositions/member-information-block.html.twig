@@ -1,0 +1,99 @@
+{% set title_element = title_element|default('h1') %}
+
+<section class="ecl-contact-information-block ecl-contact-information-block--member {{ extra_classes }}">
+  <div class="ecl-container">
+    <div class="ecl-contact-information-block__wrapper">
+      <div class="ecl-contact-information-block__main">
+        <div class="ecl-contact-information-block__main-top">
+          {% if type.label %}
+            <span class="ecl-contact-information-block__type-label">{{ type.label }}</span>
+          {% endif %}
+
+          <{{ title_element }} class="ecl-contact-information-block__title">
+            {{ title }}
+            {% if icon_file_path and type.icon %}
+              {% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with {
+                icon: type.icon|merge({
+                  path: icon_file_path,
+                  size: 's',
+                }),
+                extra_classes: "ecl-contact-information-block__type-icon",
+              } %}
+            {% endif %}
+          </{{ title_element }}>
+        </div>
+
+        <div class="ecl-contact-information-block__main-content">
+          {% if job_titles is not empty %}
+            {% include "@theme/patterns/components/expandable-definitions.html.twig" with {
+              extra_classes: 'ecl-expandable-definitions--is-compact',
+              icon_file_path: icon_file_path,
+              items: job_titles
+            } only %}
+          {% endif %}
+
+          {% if description is not empty %}
+            <div class="ecl-contact-information-block__description">{{ description }}</div>
+          {% endif %}
+
+          {% if stats is not empty %}
+            <div class="ecl-contact-information-block__stats">
+              <div class="ecl-contact-information-block__stats-items">
+                {% for stat in stats %}
+                  <div class="ecl-contact-information-block__stats-item">
+                    {% if icon_file_path and stat.icon%}
+                      {% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with {
+                        icon: stat.icon|merge({
+                          path: icon_file_path,
+                          size: 's',
+                        }),
+                        extra_classes: 'ecl-contact-information-block__stats-icon',
+                        extra_attributes: {
+                          'aria-hidden': 'true',
+                          'focusable': 'false'
+                        }
+                      } %}
+                    {% endif %}
+                    {{ stat.label}}
+                  </div>
+                {% endfor %}
+              </div>
+            </div>
+          {% endif %}
+
+          {% if actions is not empty %}
+            {% include "@theme/patterns/components/inline-actions.html.twig" with {
+              items: actions
+            } %}
+          {% endif %}
+        </div>
+      </div>
+
+      {% if links or social_share or meta %}
+        <div class="ecl-contact-information-block__aside">
+          {% if sidebar_title %}
+            {% set sidebar_title_element = sidebar_title_element|default('h2') %}
+            <{{ sidebar_title_element }} class="ecl-contact-information-block__sidebar-title">{{ sidebar_title }}</{{ sidebar_title_element }}>
+          {% endif %}
+
+          {% if meta is not empty %}
+            {% include "@theme/patterns/components/expandable-definitions.html.twig" with {
+              icon_file_path: icon_file_path,
+              items: meta
+            } only %}
+          {% endif %}
+
+          {% include "@theme/patterns/compositions/social-share.html.twig" with social_share|default({})|merge({
+            compact: true,
+          }) %}
+        </div>
+      {% endif %}
+
+      {% if image is not empty %}
+        <figure class="ecl-contact-information-block__image-wrapper">
+          <img class="ecl-contact-information-block__image" src="{{ image.src }}" alt="{{ image.alt }}" />
+        </figure>
+      {% endif %}
+    </div>
+  </div>
+</section>
