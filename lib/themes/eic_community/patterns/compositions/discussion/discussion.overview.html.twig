@@ -8,6 +8,10 @@
     {% include "@theme/patterns/compositions/breadcrumb.html.twig" with breadcrumb|default({}) only %}
     {% include "@theme/patterns/compositions/overview-header.html.twig" with overview_header|default({}) only %}
   {% endif %}
+
+  {% include "@theme/patterns/compositions/subnavigation.html.twig" with subnavigation|default({})|merge({
+    icon_file_path: common.icon_file_path
+  }) only %}
 {% endblock %}
 
 {% block breadcrumbs %}{% endblock %}

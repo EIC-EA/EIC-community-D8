@@ -1,0 +1,120 @@
+.ecl-subnavigation {
+  $node: &;
+
+  margin: ecl-box-model('padding') 0;
+
+  &:first-child {
+    margin-top: 0;
+  }
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  &__inner {
+    display: flex;
+    border-bottom: ecl-border();
+    align-items: center;
+  }
+
+  &__items-wrapper {
+    flex-grow: 1;
+    overflow: hidden;
+    height: map-get($ecl-media, '2xs');
+
+    @include ecl-media-breakpoint-up('md') {
+      height: auto;
+      overflow: visible;
+    }
+  }
+
+  &__items {
+    display: flex;
+    width: 100%;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    overflow-x: auto;
+    height: map-get($ecl-media, 'xs');
+
+    @include ecl-media-breakpoint-up('md') {
+      height: auto;
+      overflow: visible;
+    }
+  }
+
+  &__item {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-grow: 1;
+  }
+
+  &__item-link {
+    box-sizing: border-box;
+    display: flex;
+    flex-grow: 1;
+    align-items: center;
+    justify-content: center;
+    height: map-get($ecl-media, '2xs');
+    padding: ecl-box-model('padding', 'controls');
+    border-bottom: solid 4px transparent;
+    @include ecl-responsive-font('meta');
+    font-weight: $ecl-font-weight-bold;
+
+    @include ecl-media-breakpoint-up('md') {
+      height: auto;
+      padding: ecl-box-model('padding--md', 'controls') ecl-box-model('padding', 'controls');
+    }
+
+    &:hover,
+    #{$node}__item--is-active & {
+      border-color: map-get($ecl-colors, 'blue-100');
+    }
+  }
+
+  &__stats-wrapper {
+    flex-shrink: 0;
+    display: none;
+    margin-left: ecl-box-model('padding');
+
+    @include ecl-media-breakpoint-up('md') {
+      display: block;
+    }
+  }
+
+  &__stats {
+    display: flex;
+    margin-right: #{0 - ecl-box-model('margin', 'controls')};
+    margin-bottom: #{0 - ecl-box-model('margin', 'controls')};
+  }
+
+  &__stat {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    color: ecl-typography('color', 'meta');
+    margin-right: ecl-box-model('margin', 'controls');
+    margin-bottom: ecl-box-model('margin', 'controls');
+  }
+
+  &__stat-value {
+    @include ecl-responsive-font('meta');
+  }
+
+  &__stat-label {
+    @include visually-hidden;
+  }
+
+  &__stat-icon {
+    margin-right: ecl-box-model('padding', 'controls');
+  }
+
+  & &__update-indicator {
+    order: -1;
+    margin-right: #{  ecl-box-model('margin', 'controls') / 2};
+    color: map-get($ecl-colors, 'black');
+    background-color: map-get($ecl-colors, 'yellow-100');
+  }
+}

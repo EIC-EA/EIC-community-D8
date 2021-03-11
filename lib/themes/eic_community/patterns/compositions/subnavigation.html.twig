@@ -1,0 +1,50 @@
+<div class="ecl-subnavigation">
+  <div class="ecl-container">
+    <div class="ecl-subnavigation__inner">
+      {% if items is not empty %}
+        <nav class="ecl-subnavigation__items-wrapper">
+          <ul class="ecl-subnavigation__items">
+            {% for item in items %}
+              <li class="ecl-subnavigation__item {{ item.is_active ? 'ecl-subnavigation__item--is-active' }}">
+                {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with item|default({})|merge({
+                  link: item.link|default({})|merge({
+                    type: 'standalone'
+                  }),
+                  extra_classes: 'ecl-subnavigation__item-link ' ~ item.extra_classes
+                }) %}
+              </li>
+            {% endfor %}
+          </ul>
+        </nav>
+        {% if stats is not empty %}
+          <div class="ecl-subnavigation__stats-wrapper">
+            <div class="ecl-subnavigation__stats">
+              {% for stat in stats %}
+                <div class="ecl-subnavigation__stat">
+                  {% if stat.icon is not empty and icon_file_path %}
+                    {% include '@ecl-twig/ec-component-icon/ecl-icon.html.twig' with {
+                      icon: {
+                        size: 'xs',
+                        path: icon_file_path,
+                        type: stat.icon.type|default('branded'),
+                        name: stat.icon.name,
+                      },
+                      extra_classes: 'ecl-subnavigation__stat-icon',
+                    } only %}
+                  {% endif %}
+                  <span class="ecl-subnavigation__stat-label">{{ stat.label }}</span>
+                  <span class="ecl-subnavigation__stat-value">{{ stat.value }}</span>
+                  {% if stat.updates %}
+                    {% include "@theme/patterns/components/update-indicator.html.twig" with stat.updates|default({})|merge({
+                      extra_classes: 'ecl-subnavigation__update-indicator ' ~ stat.extra_classes|default(''),
+                    }) %}
+                  {% endif %}
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        {% endif %}
+      {% endif %}
+    </div>
+  </div>
+</div>

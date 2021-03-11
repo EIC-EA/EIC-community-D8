@@ -1,0 +1,23 @@
+# Subnavigation
+
+Displays a horizontal navigation bar with optional statistic items.
+
+## Example:
+
+```
+{% include "@theme/patterns/components/subnavigation.html.twig" %}
+```
+
+## Twig parameters:
+
+| Key                   | Type     | Description                                                                                                      | Mandatory |
+| --------------------- | -------- | ---------------------------------------------------------------------------------------------------------------- | --------- |
+| items                 | object[] | Contains a collection of [ECL link](https://www.npmjs.com/package/@ecl-twig/ec-component-link) links to display. | no        |
+| stats                 | object[] | The optional stats that will be displayed for larger viewports to the side.                                      | no        |
+| stats[].label         | string   | The semantic label for the current statistic.                                                                    | no        |
+| stats[].value         | string   | The displayed statistic value.                                                                                   | no        |
+| stats[].icon          | object   | The displayed ECL icon for the current statistic.                                                                | no        |
+| stats[].updates       | object   | Displays an optional update indicator for the current statistic.                                                 | no        |
+| stats[].updates.label | string   | The semantic label for the statisicic update indicator.                                                          | no        |
+| stats[].updates.value | string   | The displayed value for the statisicic update indicator.                                                         | no        |
+| icon_file_path        | string   | The URL of the SVG inline icon sprite.                                                                           | no        |
