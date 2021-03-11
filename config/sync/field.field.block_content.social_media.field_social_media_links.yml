@@ -1,0 +1,23 @@
+uuid: 396f86f4-01e9-4ba6-9395-94f32a76df13
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.social_media
+    - field.storage.block_content.field_social_media_links
+  module:
+    - typed_link
+id: block_content.social_media.field_social_media_links
+field_name: field_social_media_links
+entity_type: block_content
+bundle: social_media
+label: 'Social media links'
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  link_type: 16
+  title: 0
+field_type: typed_link

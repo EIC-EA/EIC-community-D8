@@ -9,7 +9,6 @@
   &__content {
     font-size: ecl-typography('font-size');
     line-height: ecl-typography('line-height');
-    color: ecl-typography('color');
 
     @include ecl-media-breakpoint-up('md') {
       flex-grow: 1;
@@ -65,6 +64,24 @@
     @include ecl-media-breakpoint-up('md') {
       position: sticky;
       top: ecl-layout('gutter');
+    }
+  }
+
+  &__meta {
+    display: flex;
+    align-items: center;
+    margin-top: map-get($ecl-spacing, 's');
+
+    @include ecl-media-breakpoint-up('md') {
+      margin-top: map-get($ecl-spacing, 'm');
+    }
+  }
+
+  &__meta-item {
+    margin-right: ecl-layout('gutter');
+
+    &:last-chid {
+      margin-right: 0;
     }
   }
 }

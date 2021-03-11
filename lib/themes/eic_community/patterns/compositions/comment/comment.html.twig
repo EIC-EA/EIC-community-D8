@@ -1,0 +1,238 @@
+{% set action_attributes = [
+  {
+    name: 'data-comment-id',
+    value: comment_id
+  }
+] %}
+
+<div class="ecl-comment {{ comment_origin ? 'ecl-comment--is-reply' }} {{ extra_classes }}" id="{{ comment_id }}">
+  {% if author %}
+    <div class="ecl-comment__author">
+      {% include "@theme/patterns/components/author.html.twig" with author|default({})|without('description', 'actions', 'updates')|merge({
+        extra_classes: 'ecl-author--hide-info' ~ author.extra_classes|default('')
+      }) %}
+    </div>
+  {% endif %}
+
+  <div class="ecl-comment__content">
+    <header class="ecl-comment__header">
+      <div class="ecl-comment__header-main">
+
+        <div class="ecl-comment__author-info">
+          {% if author %}
+            {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with {
+              link: {
+                label: author.author,
+                path: author.path,
+                icon_position: 'before',
+                type: 'standalone',
+              },
+              icon: is_owner ? {
+                path: icon_file_path,
+                type: 'general',
+                size: 'xs',
+                name: 'logged-in',
+              } : {},
+              extra_classes: 'ecl-comment__author-name',
+            } %}
+          {% else %}
+            <span class="ecl-comment__author-name">
+              {{ anonymous_label|default("Anonymous") }}
+            </span>
+          {% endif %}
+
+          {% if comment_origin.author is not empty %}
+            <span class="ecl-comment__origin">{{ comment_origin.label|default('in reply to') }}</span>
+            {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with {
+              link: {
+                type: 'standalone',
+                label: comment_origin.author.author,
+                path: '#' ~ comment_origin.comment_id,
+                icon_position: 'before',
+              },
+              icon: comment_origin.is_owner ? {
+                path: icon_file_path,
+                type: 'general',
+                size: 'xs',
+                name: 'logged-in',
+              } : {},
+              extra_classes: 'ecl-comment__author-name',
+            } %}
+          {% endif %}
+        </div>
+        {% if timestamp %}
+          <time class="ecl-comment__timestamp">{{ timestamp }}</time>
+        {% endif %}
+      </div>
+
+      {% if user and comment_id %}
+        <div class="ecl-comment__header-aside">
+          {% embed "@theme/patterns/compositions/collapsible-options.html.twig" with {
+            extra_classes: 'ecl-collapsible-options--aligns-from-right',
+            items: [
+              {
+                label: remove_label|default('Report comment'),
+                extra_classes: 'ecl-comment__report',
+                extra_attributes: action_attributes,
+              },
+            ]|merge(is_owner ? [
+              {
+                label: edit_label|default('Edit comment'),
+                extra_classes: 'ecl-comment__edit',
+                extra_attributes: action_attributes,
+              },
+              {
+                label: remove_label|default('Delete comment'),
+                extra_classes: 'ecl-comment__delete',
+                extra_attributes: action_attributes,
+              },
+            ] : [])
+          } %}
+            {% block trigger%}
+              {% include "@ecl-twig/ec-component-button/ecl-button.html.twig" with {
+                label: options_label|default('Options'),
+                extra_classes: "ecl-button--as-form-option",
+                variant: 'ghost',
+                icon: icon_file_path ? {
+                  path: icon_file_path,
+                  name: 'ellipsis',
+                  type: 'custom',
+                  transform: 'rotate-90',
+                  size: 's',
+                } : {},
+              } %}
+            {% endblock %}
+          {% endembed %}
+        </div>
+      {% endif %}
+
+    </header>
+
+    <div class="ecl-comment__main">
+      <div class="ecl-editable-wrapper">
+        {{ comment }}
+      </div>
+
+      {% if attachments is not empty %}
+        <div class="ecl-comment__attachments" data-comment-attachment-max-length="{{ attachment_length|default(10) }}">
+          <div class="ecl-comment__attachments-header">
+            <span class="ecl-comment__attachments-label">{{  attachments|length ~ ' ' ~ attachments_label|default('attachment(s)')  }}</span>
+            {% include "@ecl-twig/ec-component-button/ecl-button.html.twig" with {
+              label: attachment_expand_label|default('Show all'),
+              variant: 'ghost',
+              extra_classes: 'ecl-comment__attachments-expand'
+            } %}
+            {% include "@ecl-twig/ec-component-button/ecl-button.html.twig" with {
+              label: attachment_collapse_label|default('Minimize'),
+              variant: 'ghost',
+              extra_classes: 'ecl-comment__attachments-collapse'
+            } %}
+          </div>
+          <div class="ecl-comment__attachments-items-wrapper">
+            <div class="ecl-comment__attachments-items">
+              {% for attachment in attachments %}
+                <div class="ecl-comment__attachments-item">
+                  {% include "@theme/patterns/components/attachment.html.twig" with attachment|default({})|merge({
+                    is_compact: true,
+                    icon_file_path: icon_file_path,
+                    extra_classes: "ecl-comment__attachment",
+                  }) only %}
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      {% endif %}
+    </div>
+
+    {% if user or stats %}
+      <footer class="ecl-comment__footer">
+        {% if user and comment_id %}
+          <div class="ecl-comment__actions-wrapper">
+            <div class="ecl-comment__actions">
+              <div class="ecl-comment__action">
+                {% include "@ecl-twig/ec-component-button/ecl-button.html.twig" with {
+                  label: reply_label|default('Reply'),
+                  variant: 'ghost',
+                  type: 'button',
+                  extra_classes: 'ecl-comment__reply',
+                  extra_attributes: action_attributes,
+                } %}
+              </div>
+
+              {% if show_bookmark %}
+                <div class="ecl-comment__action">
+                  {% include "@ecl-twig/ec-component-button/ecl-button.html.twig" with {
+                    label: bookmark_label|default('Bookmark'),
+                    variant: 'ghost',
+                    type: 'button',
+                    icon: icon_file_path ? {
+                      path: icon_file_path,
+                      type: 'custom',
+                      name: 'tag',
+                      size: 'xs',
+                    },
+                    icon_position: 'before',
+                    extra_classes: 'ecl-comment__bookmark ecl-button--compact-for-mobile',
+                    extra_attributes: action_attributes,
+                  } %}
+                </div>
+              {% endif %}
+
+              <div class="ecl-comment__action">
+                {% include "@ecl-twig/ec-component-button/ecl-button.html.twig" with {
+                  label: like_label|default('Like'),
+                  variant: 'ghost',
+                  type: 'button',
+                  icon: icon_file_path ? {
+                    path: icon_file_path,
+                    type: 'custom',
+                    name: 'like',
+                    size: 'xs',
+                  },
+                  icon_position: 'before',
+                  extra_classes: 'ecl-comment__like ecl-button--compact-for-mobile',
+                  extra_attributes: action_attributes,
+                } %}
+              </div>
+            </div>
+          </div>
+        {% endif %}
+
+        {% if stats %}
+          <div class="ecl-comment__stats-wrapper">
+            <div class="ecl-comment__stats">
+              {% for stat in stats %}
+                <div class="ecl-comment__stat">
+                  {% if stat.icon is not empty and icon_file_path %}
+                    {% include '@ecl-twig/ec-component-icon/ecl-icon.html.twig' with stat|default({})|merge({
+                      icon: stat.icon|default({})|merge({
+                        size: 'xs',
+                        path: icon_file_path,
+                      }),
+                      extra_classes: 'ecl-comment__stat-icon',
+                    }) only %}
+                  {% endif %}
+                  <span class="ecl-comment__stat-label">{{ stat.label }}</span>
+                  <span class="ecl-comment__stat-value">{{ stat.value }}</span>
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        {% endif %}
+      </footer>
+    {% endif %}
+  </div>
+
+  {% if items is not empty %}
+    {% include "@theme/patterns/compositions/comment/comment-thread.html.twig" with {
+      items: items,
+      user: user,
+      comment_origin: {
+        author: author,
+        comment_id: comment_id,
+        is_owner: is_owner,
+      }
+    } only %}
+  {% endif %}
+</div>

@@ -1,0 +1,21 @@
+{% extends "@theme/patterns/layout/base.html.twig" %}
+
+{% block page_header %}
+  {% include "@theme/patterns/compositions/editorial-header.html.twig" with editorial_header|default({})|without('title') only %}
+{% endblock %}
+
+{% block content %}
+  {% include "@theme/patterns/compositions/member-information-block.html.twig" with {
+    icon_file_path: icon_file_path,
+    description: description,
+    title: title,
+    job_titles: job_titles,
+    social_share: social_share,
+    sidebar_title: sidebar_title,
+    meta: meta,
+    type: type,
+    image: image,
+    stats: stats,
+    actions: actions,
+  } only %}
+{% endblock %}

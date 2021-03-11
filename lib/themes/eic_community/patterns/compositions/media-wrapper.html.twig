@@ -2,7 +2,7 @@
   <div class="ecl-container">
     <figure class="ecl-media-container">
       {% if embedded_media is not empty %}
-        <div class="ecl-media-container__media ecl-media-container__media--ratio-{{ _ratio }}">
+        <div class="ecl-media-container__media ecl-media-container__media--ratio-{{ ratio|default('16-9') }}">
           {{ embedded_media }}
         </div>
       {% elseif sources is not empty and sources is iterable %}
@@ -34,10 +34,6 @@
                 type: 'custom',
               },
               extra_classes: 'ecl-media-container__media-wrapper-icon ecl-media-container__media-wrapper-icon--play',
-              extra_attributes: {
-                'aria-hidden': 'true',
-                'focusable': 'false'
-              }
             } %}
 
             {% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with {
@@ -47,10 +43,6 @@
                 type: 'custom',
               },
               extra_classes: 'ecl-media-container__media-wrapper-icon ecl-media-container__media-wrapper-icon--pause',
-               extra_attributes: {
-                'aria-hidden': 'true',
-                'focusable': 'false'
-              }
             } %}
           {% endif %}
         </div>

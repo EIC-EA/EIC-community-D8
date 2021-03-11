@@ -31,6 +31,10 @@
 
   &__information {
     flex-grow: 1;
+
+    #{$node}--hide-info & {
+      @include visually-hidden;
+    }
   }
 
   &__description {
@@ -89,6 +93,10 @@
 
     @include ecl-media-breakpoint-up('lg') {
       margin-right: ecl-layout('gutter--lg', 'meta');
+    }
+
+    #{$node}--hide-info & {
+      margin: 0;
     }
 
     #{$node}--is-tiny & {
