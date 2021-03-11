@@ -31,6 +31,7 @@ module:
   eic_homepage: 0
   eic_media: 0
   eic_media_document: 0
+  eic_media_statistics: 0
   eic_media_video: 0
   eic_paragraph_contributor: 0
   eic_paragraph_cta_tile: 0

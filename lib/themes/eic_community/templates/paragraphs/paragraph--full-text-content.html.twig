@@ -6,10 +6,23 @@
  * @see ./modules/contrib/paragraphs/templates/paragraph.html.twig
  */
 #}
+{% set _call_to_action = {} %}
+
+{% if paragraph.field_cta_link is not empty %}
+  {% set  _call_to_action = {
+    link: {
+      label: paragraph.field_cta_link[0].title,
+      path: paragraph.field_cta_link[0].url,
+    },
+    extra_classes: paragraph.field_cta_link[0].link_type == 'default' ? 'ecl-link--button' : 'ecl-link--button ecl-link--button-' ~ paragraph.field_cta_link[0].link_type,
+  } %}
+{% endif %}
+
 {% include "@theme/patterns/compositions/text-block.html.twig" with paragraph_content|default({})|merge({
   title: paragraph.field_title.value|default(''),
   items: [{
-    content: content.field_body
+    content: content.field_body,
+    call_to_action: _call_to_action,
   }],
   extra_classes: 'ecl-section-wrapper',
 }) only %}
