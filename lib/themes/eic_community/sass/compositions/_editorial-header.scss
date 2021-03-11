@@ -2,9 +2,44 @@
   &__wrapper {
     @include ecl-media-breakpoint-up('lg') {
       display: flex;
-      align-items: center;
-      flex-direction: row;
     }
+  }
+
+  &__parent-link {
+    margin-bottom: ecl-box-model('margin');
+  }
+
+  &__aside {
+    margin-bottom: ecl-box-model('padding');
+
+    @include ecl-media-breakpoint-up('lg') {
+      width: map-get($ecl-media, 'l');
+      margin-bottom: 0;
+      margin-right: ecl-box-model('padding');
+    }
+  }
+
+  &__image-wrapper {
+    position: relative;
+    background-color: map-get($ecl-colors, 'grey-10');
+    overflow: hidden;
+    padding: 0;
+    margin: 0;
+
+    &::before {
+      padding-top: calc(100% / 16 * 9);
+      content: " ";
+      display: block;
+    }
+  }
+
+  &__image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
 
   body &--is-compact {

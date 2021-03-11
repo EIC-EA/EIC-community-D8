@@ -2,35 +2,42 @@
 
 <section class="ecl-section-wrapper ecl-editorial-header {{ extra_classes }}">
   <div class="ecl-container">
+    {% if parent is not empty %}
+      {% set _parent_icon = {} %}
+
+      {% if icon_file_path %}
+        {% set _parent_icon = {
+          path: icon_file_path,
+          type: 'ui',
+          name: 'rounded-arrow',
+          transform: 'rotate-270',
+          size: 'xs',
+        } %}
+      {% endif %}
+
+      {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with parent|default({})|merge({
+        link: parent.link|merge({
+          type: 'standalone',
+          icon_position: 'before',
+        }),
+        extra_classes: 'ecl-editorial-header__parent-link ecl-link--call-to-action ' ~ parent.extra_classes|default(''),
+        icon: _parent_icon,
+      }) only %}
+    {% endif %}
+
     <div class="ecl-editorial-header__wrapper">
+      {% if image is not empty %}
+        <div class="ecl-editorial-header__aside">
+          <figure class="ecl-editorial-header__image-wrapper">
+            <img class="ecl-editorial-header__image" src="{{ image.src }}" alt="{{ image.alt }}" />
+          </figure>
+        </div>
+      {% endif %}
       <div class="ecl-editorial-header__main">
         {% include "@theme/patterns/components/meta-list.html.twig" with {
           extra_classes: "ecl-editorial-header__meta ecl-meta-list--large",
           items: meta
         } only %}
-
-        {% if parent is not empty %}
-          {% set _parent_icon = {} %}
-
-          {% if icon_file_path %}
-            {% set _parent_icon = {
-              path: icon_file_path,
-              type: 'ui',
-              name: 'rounded-arrow',
-              transform: 'rotate-270',
-              size: 'xs',
-            } %}
-          {% endif %}
-
-          {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with parent|default({})|merge({
-            link: parent.link|merge({
-              type: 'standalone',
-              icon_position: 'before',
-            }),
-            extra_classes: 'ecl-link--call-to-action',
-            icon: _parent_icon,
-          }) only %}
-        {% endif %}
 
         {% if tags is not empty %}
           <div class="ecl-editorial-header__tags-wrapper">
@@ -50,6 +57,10 @@
 
         {% if title is not empty %}
           <{{ title_element }} class="ecl-editorial-header__title">{{ title }}</{{ title_element }}>
+        {% endif %}
+
+        {% if description %}
+          <div class="ecl-editorial-header__description">{{ description }}</div>
         {% endif %}
       </div>
       {% if actions is not empty %}
