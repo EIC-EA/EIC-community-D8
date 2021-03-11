@@ -1,0 +1,6 @@
+services:
+  eic_media_statistics.storage.file:
+    class: Drupal\eic_media_statistics\FileStatisticsDatabaseStorage
+    arguments: ['@database', '@state', '@request_stack']
+    tags:
+      - { name: backend_overridable }
