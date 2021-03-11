@@ -12,11 +12,11 @@
 
 {% block content %}
   {% embed "@theme/patterns/compositions/editorial-article.html.twig" with editorial_article|default({}) %}
-    {% block content  %}
+    {% block content %}
       {{ content }}
     {% endblock %}
 
-    {% block sidebar  %}
+    {% block sidebar %}
       {% include "@theme/patterns/compositions/editorial-actions.html.twig" with editorial_actions|default({}) %}
 
       {% include "@theme/patterns/compositions/social-share.html.twig" with social_share|default({})|merge({
@@ -31,10 +31,11 @@
     {% endblock %}
   {% endembed %}
 
-  {% if not auth %}
+  {% if not user %}
     {% embed "@theme/patterns/compositions/auth-banner.html.twig" with {
       title: "Please log in to see comments and contribute",
       icon_file_path: common.icon_file_path,
+      extra_classes: 'ecl-auth-banner--is-compact',
       login: {
         label: "Login"
       },

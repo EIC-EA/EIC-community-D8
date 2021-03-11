@@ -41,17 +41,19 @@
       <p class="ecl-description">{{ content.field_body.0 }}</p>
     {% endif %}
 
-    {% if content.field_cta_link is not empty %}
-      {% include "@theme/patterns/components/inline-actions.html.twig" with {
-        items: [
-          {
+    {% if content.field_cta_links is not empty %}
+      {% set _items = [] %}
+      {% for item in content['#block_content'].field_cta_links %}
+        {% set  _items = _items|merge([{
             link: {
-              label: content.field_cta_link.0['#title'],
-              path: content.field_cta_link.0['#url'],
-              type: 'cta'
-            }
-          }
-        ]
+              label: item.title,
+              path: item.url,
+              type: item.link_type == 'default' ? 'standalone' : item.link_type,
+            },
+          }]) %}
+      {% endfor %}
+      {% include "@theme/patterns/components/inline-actions.html.twig" with {
+        items: _items
       } only %}
     {% endif %}
   {% endblock %}

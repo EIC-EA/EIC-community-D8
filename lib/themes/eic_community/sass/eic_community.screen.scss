@@ -43,7 +43,7 @@
 @import "./compositions/content_item";
 @import "./compositions/content_language_switcher";
 @import "./compositions/discussion-thread";
-@import "./compositions/organisation-information-block";
+@import "./compositions/contact-information-block";
 @import "./compositions/fact-figures-wrapper";
 @import "./compositions/featured-content-grid";
 @import "./compositions/featured-content-sections";
@@ -65,6 +65,7 @@
 @import "./compositions/top-menu";
 @import "./compositions/twitter-timeline";
 
+@import "./components/address";
 @import "./components/attachment";
 @import "./components/author";
 @import "./components/author-collection";
@@ -77,6 +78,7 @@
 @import "./components/description_list";
 @import "./components/disclaimer";
 @import "./components/editable-hero-banner";
+@import "./components/expandable-definitions";
 @import "./components/flag";
 @import "./components/form";
 @import "./components/global";
@@ -88,6 +90,7 @@
 @import "./components/media-container";
 @import "./components/meta-list";
 @import "./components/page_header";
+@import "./components/tag";
 @import "./components/timestamp";
 @import "./components/toolbar";
 @import "./components/update-indicator";
