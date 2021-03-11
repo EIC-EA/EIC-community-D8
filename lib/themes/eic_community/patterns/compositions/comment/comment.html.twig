@@ -160,22 +160,24 @@
                 } %}
               </div>
 
-              <div class="ecl-comment__action">
-                {% include "@ecl-twig/ec-component-button/ecl-button.html.twig" with {
-                  label: bookmark_label|default('Bookmark'),
-                  variant: 'ghost',
-                  type: 'button',
-                  icon: icon_file_path ? {
-                    path: icon_file_path,
-                    type: 'custom',
-                    name: 'tag',
-                    size: 'xs',
-                  },
-                  icon_position: 'before',
-                  extra_classes: 'ecl-comment__bookmark ecl-button--compact-for-mobile',
-                  extra_attributes: action_attributes,
-                } %}
-              </div>
+              {% if show_bookmark %}
+                <div class="ecl-comment__action">
+                  {% include "@ecl-twig/ec-component-button/ecl-button.html.twig" with {
+                    label: bookmark_label|default('Bookmark'),
+                    variant: 'ghost',
+                    type: 'button',
+                    icon: icon_file_path ? {
+                      path: icon_file_path,
+                      type: 'custom',
+                      name: 'tag',
+                      size: 'xs',
+                    },
+                    icon_position: 'before',
+                    extra_classes: 'ecl-comment__bookmark ecl-button--compact-for-mobile',
+                    extra_attributes: action_attributes,
+                  } %}
+                </div>
+              {% endif %}
 
               <div class="ecl-comment__action">
                 {% include "@ecl-twig/ec-component-button/ecl-button.html.twig" with {
