@@ -36,7 +36,7 @@
                   <span class="ecl-subnavigation__stat-value">{{ stat.value }}</span>
                   {% if stat.updates %}
                     {% include "@theme/patterns/components/update-indicator.html.twig" with stat.updates|default({})|merge({
-                      extra_classes: 'ecl-subnavigation__update-indicator ' ~ stat.extra_classes|default(''),
+                      extra_classes: 'ecl-subnavigation__update-indicator ecl-update-indicator--is-small' ~ stat.extra_classes|default(''),
                     }) %}
                   {% endif %}
                 </div>

@@ -90,6 +90,7 @@
   }
 
   &__stat {
+    position: relative;
     display: flex;
     flex-shrink: 0;
     align-items: center;
@@ -112,9 +113,11 @@
   }
 
   & &__update-indicator {
-    order: -1;
-    margin-right: #{  ecl-box-model('margin', 'controls') / 2};
+    position: absolute;
+    bottom: 100%;
+    right: 100%;
     color: map-get($ecl-colors, 'black');
     background-color: map-get($ecl-colors, 'yellow-100');
+    transform: translate(50%, 50%);
   }
 }

@@ -15,4 +15,9 @@
   &__label {
     @include visually-hidden();
   }
+
+  &--is-small {
+    width: map-get($ecl-media, '5xs');
+    height: map-get($ecl-media, '5xs');
+  }
 }
