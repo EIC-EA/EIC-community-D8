@@ -26,7 +26,7 @@ function eic_media_statistics_file_download($uri) {
     $success = \Drupal::getContainer()->get('eic_media_statistics.storage.file')->recordView($fid);
   }
   if ($success) {
-    $file = $entityTypeMananer->loadMultiple($fid);
+    $file = $entityTypeMananer->load($fid);
     Cache::invalidateTags($file->getCacheTags());
   }
 }
