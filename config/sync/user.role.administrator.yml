@@ -4,6 +4,6 @@ status: true
 dependencies: {  }
 id: administrator
 label: 'Site admin'
-weight: 2
+weight: -5
 is_admin: true
 permissions: {  }

@@ -1,0 +1,14 @@
+uuid: 917e75e9-b894-437d-9f46-e9367f375301
+langcode: en
+status: true
+dependencies:
+  config:
+    - user.role.trusted_user
+  module:
+    - user
+id: user_add_role_action.trusted_user
+label: 'Add the Trusted user role to the selected user(s)'
+type: user
+plugin: user_add_role_action
+configuration:
+  rid: trusted_user

@@ -6,7 +6,7 @@ _core:
   default_config_hash: dJ0L2DNSj5q6XVZAGsuVDpJTh5UeYkIPwKrUOOpr8YI
 id: authenticated
 label: 'Authenticated user'
-weight: 1
+weight: -9
 is_admin: false
 permissions:
   - 'access content'
@@ -15,13 +15,13 @@ permissions:
   - 'flag recommend'
   - 'unflag bookmark_content'
   - 'unflag bookmark_media'
-  - 'view banner fragments'
-  - 'view disclaimer fragments'
   - 'unflag recommend'
   - 'use text format basic_text'
   - 'use text format filtered_html'
+  - 'view banner fragments'
   - 'view bookmark_content'
   - 'view bookmark_media'
+  - 'view disclaimer fragments'
   - 'view fact_figure fragments'
   - 'view media'
   - 'view recommend'

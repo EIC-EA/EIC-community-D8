@@ -1,0 +1,9 @@
+uuid: 7dc837fb-2dc3-49f8-b647-0ff006e590b7
+langcode: en
+status: true
+dependencies: {  }
+id: trusted_user
+label: 'Trusted user'
+weight: -8
+is_admin: null
+permissions: {  }
