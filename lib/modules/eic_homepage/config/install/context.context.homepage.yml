@@ -33,6 +33,23 @@ reactions:
         unique: 0
         context_id: homepage
         uuid: 7c801d32-6355-494f-a1fa-63f501ade7de
+      a7f19dfd-8068-4d20-a426-636b23637090:
+        id: 'block_content:844a381c-6076-4279-834e-a75de967cf65'
+        label: 'Homepage - Latest News & Stories'
+        provider: block_content
+        label_display: '0'
+        status: true
+        info: ''
+        view_mode: full
+        region: content
+        weight: '-1'
+        context_mapping: {  }
+        custom_id: homepage_latest_news_stories
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: homepage
+        uuid: a7f19dfd-8068-4d20-a426-636b23637090
     id: blocks
     saved: false
     uuid: 1172ee8b-57fe-4611-b929-3d99b1b469d8
