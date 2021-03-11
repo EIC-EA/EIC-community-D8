@@ -22,7 +22,7 @@
     overflow: hidden;
     height: map-get($ecl-media, '2xs');
 
-    @include ecl-media-breakpoint-up('md') {
+    @include ecl-media-breakpoint-up('lg') {
       height: auto;
       overflow: visible;
     }
@@ -37,7 +37,7 @@
     overflow-x: auto;
     height: map-get($ecl-media, 'xs');
 
-    @include ecl-media-breakpoint-up('md') {
+    @include ecl-media-breakpoint-up('lg') {
       height: auto;
       overflow: visible;
     }
@@ -62,7 +62,7 @@
     @include ecl-responsive-font('meta');
     font-weight: $ecl-font-weight-bold;
 
-    @include ecl-media-breakpoint-up('md') {
+    @include ecl-media-breakpoint-up('lg') {
       height: auto;
       padding: ecl-box-model('padding--md', 'controls') ecl-box-model('padding', 'controls');
     }
@@ -78,7 +78,7 @@
     display: none;
     margin-left: ecl-box-model('padding');
 
-    @include ecl-media-breakpoint-up('md') {
+    @include ecl-media-breakpoint-up('lg') {
       display: block;
     }
   }
