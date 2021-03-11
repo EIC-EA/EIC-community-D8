@@ -1,0 +1,24 @@
+# Author Collection
+
+Displays a certain amount of members next to each other.
+An indicator will be displayed if there are more authors than `the max_amount`.
+
+## Example:
+
+```
+{% include "@theme/patterns/components/author-collection.html.twig" with {
+  items: [
+    ...
+  ],
+  ...
+} %}
+```
+
+## Twig parameters:
+
+| Key           | Type     | Description                                                                                                                         | Mandatory |
+| ------------- | -------- | ----------------------------------------------------------------------------------------------------------------------------------- | --------- |
+| max_amount    | number   | Defines the max amount of authors to display.                                                                                       | yes       |
+| extra_classes | string   | Optional classnames for the component.                                                                                              | no        |
+| items         | object[] | The actual authors to display, will be limited by the defined max amount (2 by default). Should follow the custom author parameters | no        |
+| length        | string   | Overrides the calculated items length, usable if the items parameter is filled partially.                                           | no        |
