@@ -34,10 +34,9 @@
         {% endif %}
 
         {% if members is not empty %}
-          {% include "@theme/patterns/components/author-collection.html.twig" with {
-            items: members,
+          {% include "@theme/patterns/components/author-collection.html.twig" with members|default({})|merge({
             extra_classes: 'ecl-discussion-thread__members',
-          } %}
+          }) %}
         {% endif %}
       </div>
 
