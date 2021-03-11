@@ -397,7 +397,6 @@ function eic_community_preprocess_block(array &$variables) {
         break;
 
       case 'latest_news_stories':
-        /** @var \Drupal\node\NodeInterface[] $nodes */
         $nodes = [];
 
         // Adds News/Stories to the array of nodes to process.
