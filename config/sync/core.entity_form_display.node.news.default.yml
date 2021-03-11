@@ -161,6 +161,12 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
+  publish_state:
+    type: scheduler_moderation
+    weight: 30
+    region: content
+    settings: {  }
+    third_party_settings: {  }
   published_at:
     type: publication_date_timestamp
     weight: 10
@@ -207,6 +213,12 @@ content:
   unpublish_on:
     type: datetime_timestamp_no_default
     weight: 20
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  unpublish_state:
+    type: scheduler_moderation
+    weight: 30
     region: content
     settings: {  }
     third_party_settings: {  }

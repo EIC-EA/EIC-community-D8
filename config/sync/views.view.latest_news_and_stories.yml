@@ -4,12 +4,10 @@ status: true
 dependencies:
   config:
     - field.storage.node.field_header_visual
-    - field.storage.node.field_publication_date
     - image.style.thumbnail
     - node.type.news
     - node.type.story
   module:
-    - datetime
     - entity_browser
     - media
     - node
@@ -133,70 +131,6 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-        field_publication_date:
-          id: field_publication_date
-          table: node__field_publication_date
-          field: field_publication_date
-          relationship: none
-          group_type: group
-          admin_label: ''
-          label: ''
-          exclude: false
-          alter:
-            alter_text: false
-            text: ''
-            make_link: false
-            path: ''
-            absolute: false
-            external: false
-            replace_spaces: false
-            path_case: none
-            trim_whitespace: false
-            alt: ''
-            rel: ''
-            link_class: ''
-            prefix: ''
-            suffix: ''
-            target: ''
-            nl2br: false
-            max_length: 0
-            word_boundary: true
-            ellipsis: true
-            more_link: false
-            more_link_text: ''
-            more_link_path: ''
-            strip_tags: false
-            trim: false
-            preserve_tags: ''
-            html: false
-          element_type: ''
-          element_class: ''
-          element_label_type: ''
-          element_label_class: ''
-          element_label_colon: false
-          element_wrapper_type: ''
-          element_wrapper_class: ''
-          element_default_classes: true
-          empty: ''
-          hide_empty: false
-          empty_zero: false
-          hide_alter_empty: true
-          click_sort_column: value
-          type: datetime_default
-          settings:
-            timezone_override: ''
-            format_type: medium
-          group_column: value
-          group_columns: {  }
-          group_rows: true
-          delta_limit: 0
-          delta_offset: 0
-          delta_reversed: false
-          delta_first_last: false
-          multi_type: separator
-          separator: ', '
-          field_api_classes: false
-          plugin_id: field
         field_header_visual:
           id: field_header_visual
           table: node__field_header_visual
@@ -275,19 +209,6 @@ display:
           expose:
             label: ''
           granularity: second
-        field_publication_date_value:
-          id: field_publication_date_value
-          table: node__field_publication_date
-          field: field_publication_date_value
-          relationship: none
-          group_type: group
-          admin_label: ''
-          order: ASC
-          exposed: true
-          expose:
-            label: 'Publication date (field_publication_date)'
-          granularity: second
-          plugin_id: datetime
       header: {  }
       footer: {  }
       empty: {  }
@@ -301,17 +222,14 @@ display:
         - 'languages:language_content'
         - 'languages:language_interface'
         - url.query_args
-        - 'url.query_args:sort_by'
-        - 'url.query_args:sort_order'
         - 'user.node_grants:view'
         - user.permissions
       tags:
         - 'config:field.storage.node.field_header_visual'
-        - 'config:field.storage.node.field_publication_date'
-  entity_browser_1:
+  entity_browser_news_stories:
     display_plugin: entity_browser
-    id: entity_browser_1
-    display_title: 'Entity browser'
+    id: entity_browser_news_stories
+    display_title: 'Entity browser News and Stories'
     position: 2
     display_options:
       display_extenders: {  }
@@ -327,11 +245,23 @@ display:
           summary: ''
           description: ''
           columns:
-            title: title
-            field_publication_date: field_publication_date
-            field_header_visual: field_header_visual
             entity_browser_select: entity_browser_select
+            field_header_visual: field_header_visual
+            title: title
+            published_at: published_at
           info:
+            entity_browser_select:
+              align: views-align-left
+              separator: ''
+              empty_column: false
+              responsive: ''
+            field_header_visual:
+              sortable: false
+              default_sort_order: asc
+              align: views-align-left
+              separator: ''
+              empty_column: false
+              responsive: ''
             title:
               sortable: true
               default_sort_order: asc
@@ -339,26 +269,14 @@ display:
               separator: ''
               empty_column: false
               responsive: ''
-            field_publication_date:
+            published_at:
               sortable: true
-              default_sort_order: desc
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
-            field_header_visual:
-              sortable: false
               default_sort_order: asc
-              align: ''
+              align: views-align-left
               separator: ''
               empty_column: false
               responsive: ''
-            entity_browser_select:
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
-          default: field_publication_date
+          default: published_at
           empty_table: false
       defaults:
         style: false
@@ -376,6 +294,57 @@ display:
           hide_empty: false
           default_field_elements: true
       fields:
+        entity_browser_select:
+          id: entity_browser_select
+          table: node
+          field: entity_browser_select
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: 'Entity browser bulk select form'
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          use_field_cardinality: true
+          entity_type: node
+          plugin_id: entity_browser_select
         field_header_visual:
           id: field_header_visual
           table: node__field_header_visual
@@ -444,27 +413,38 @@ display:
           id: title
           table: node_field_data
           field: title
-          entity_type: node
-          entity_field: title
-          label: ''
-          alter:
-            alter_text: false
-            make_link: false
-            absolute: false
-            trim: false
-            word_boundary: false
-            ellipsis: false
-            strip_tags: false
-            html: false
-          hide_empty: false
-          empty_zero: false
-          settings:
-            link_to_entity: true
-          plugin_id: field
           relationship: none
           group_type: group
           admin_label: ''
+          label: Title
           exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: false
+            ellipsis: false
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
           element_type: ''
           element_class: ''
           element_label_type: ''
@@ -474,9 +454,13 @@ display:
           element_wrapper_class: ''
           element_default_classes: true
           empty: ''
+          hide_empty: false
+          empty_zero: false
           hide_alter_empty: true
           click_sort_column: value
           type: string
+          settings:
+            link_to_entity: true
           group_column: value
           group_columns: {  }
           group_rows: true
@@ -487,14 +471,17 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-        field_publication_date:
-          id: field_publication_date
-          table: node__field_publication_date
-          field: field_publication_date
+          entity_type: node
+          entity_field: title
+          plugin_id: field
+        published_at:
+          id: published_at
+          table: node_field_revision
+          field: published_at
           relationship: none
           group_type: group
           admin_label: ''
-          label: ''
+          label: 'Published on'
           exclude: false
           alter:
             alter_text: false
@@ -527,7 +514,7 @@ display:
           element_class: ''
           element_label_type: ''
           element_label_class: ''
-          element_label_colon: false
+          element_label_colon: true
           element_wrapper_type: ''
           element_wrapper_class: ''
           element_default_classes: true
@@ -536,10 +523,11 @@ display:
           empty_zero: false
           hide_alter_empty: true
           click_sort_column: value
-          type: datetime_default
+          type: timestamp
           settings:
-            timezone_override: ''
-            format_type: medium
+            date_format: medium
+            custom_date_format: ''
+            timezone: ''
           group_column: value
           group_columns: {  }
           group_rows: true
@@ -550,72 +538,39 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-          plugin_id: field
-        entity_browser_select:
-          id: entity_browser_select
-          table: node
-          field: entity_browser_select
-          relationship: none
-          group_type: group
-          admin_label: ''
-          label: 'Entity browser bulk select form'
-          exclude: false
-          alter:
-            alter_text: false
-            text: ''
-            make_link: false
-            path: ''
-            absolute: false
-            external: false
-            replace_spaces: false
-            path_case: none
-            trim_whitespace: false
-            alt: ''
-            rel: ''
-            link_class: ''
-            prefix: ''
-            suffix: ''
-            target: ''
-            nl2br: false
-            max_length: 0
-            word_boundary: true
-            ellipsis: true
-            more_link: false
-            more_link_text: ''
-            more_link_path: ''
-            strip_tags: false
-            trim: false
-            preserve_tags: ''
-            html: false
-          element_type: ''
-          element_class: ''
-          element_label_type: ''
-          element_label_class: ''
-          element_label_colon: false
-          element_wrapper_type: ''
-          element_wrapper_class: ''
-          element_default_classes: true
-          empty: ''
-          hide_empty: false
-          empty_zero: false
-          hide_alter_empty: true
-          use_field_cardinality: true
           entity_type: node
-          plugin_id: entity_browser_select
+          entity_field: published_at
+          plugin_id: field
       sorts:
-        field_publication_date_value:
-          id: field_publication_date_value
-          table: node__field_publication_date
-          field: field_publication_date_value
+        published_at:
+          id: published_at
+          table: node_field_data
+          field: published_at
           relationship: none
           group_type: group
           admin_label: ''
           order: DESC
           exposed: true
           expose:
-            label: 'Publication date'
-          granularity: second
-          plugin_id: datetime
+            label: 'Published on'
+          granularity: minute
+          entity_type: node
+          entity_field: published_at
+          plugin_id: date
+        title:
+          id: title
+          table: node_field_data
+          field: title
+          relationship: none
+          group_type: group
+          admin_label: ''
+          order: ASC
+          exposed: true
+          expose:
+            label: Title
+          entity_type: node
+          entity_field: title
+          plugin_id: standard
       access:
         type: perm
         options:
@@ -724,6 +679,7 @@ display:
         operator: AND
         groups:
           1: AND
+      display_description: ''
     cache_metadata:
       max-age: -1
       contexts:
@@ -737,7 +693,6 @@ display:
         - user.permissions
       tags:
         - 'config:field.storage.node.field_header_visual'
-        - 'config:field.storage.node.field_publication_date'
   entity_reference_1:
     display_plugin: entity_reference
     id: entity_reference_1
@@ -750,7 +705,7 @@ display:
         options:
           search_fields:
             title: title
-            field_publication_date: field_publication_date
+            field_header_visual: '0'
       row:
         type: entity_reference
         options:
@@ -765,10 +720,7 @@ display:
       contexts:
         - 'languages:language_content'
         - 'languages:language_interface'
-        - 'url.query_args:sort_by'
-        - 'url.query_args:sort_order'
         - 'user.node_grants:view'
         - user.permissions
       tags:
         - 'config:field.storage.node.field_header_visual'
-        - 'config:field.storage.node.field_publication_date'
