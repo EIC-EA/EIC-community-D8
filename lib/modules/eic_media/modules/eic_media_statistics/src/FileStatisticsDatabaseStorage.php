@@ -6,6 +6,7 @@ use Drupal\Core\Database\Connection;
 use Drupal\Core\State\StateInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Drupal\statistics\StatisticsStorageInterface;
+use Drupal\statistics\StatisticsViewsResult;
 
 /**
  * Provides the default database storage backend for statistics.

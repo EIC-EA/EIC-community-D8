@@ -5,6 +5,8 @@
  * Primary module hooks for EIC Media statistics module.
  */
 
+use Drupal\Core\Entity\EntityInterface;
+
 /**
  * Implements hook_file_download().
  */
@@ -33,8 +35,8 @@ function eic_media_statistics_cron() {
 /**
  * Implements hook_ENTITY_TYPE_predelete() for file entities.
  */
-function eic_media_statistics_file_predelete(EntityInterface $file) {
+function eic_media_statistics_file_predelete(EntityInterface $entity) {
   // Clean up statistics table when file is deleted.
-  $id = $file->id();
+  $id = $entity->id();
   return \Drupal::service('eic_media_statistics.storage.file')->deleteViews($id);
 }
