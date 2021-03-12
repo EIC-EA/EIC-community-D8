@@ -6,6 +6,7 @@ dependencies:
     - field.field.paragraph.text_and_media_content.field_cta
     - field.field.paragraph.text_and_media_content.field_display_background
     - field.field.paragraph.text_and_media_content.field_media
+    - field.field.paragraph.text_and_media_content.field_title
     - field.field.paragraph.text_and_media_content.field_view_mode
     - paragraphs.paragraphs_type.text_and_media_content
   module:
@@ -17,14 +18,14 @@ bundle: text_and_media_content
 mode: default
 content:
   field_body:
-    weight: 0
+    weight: 1
     label: hidden
     settings: {  }
     third_party_settings: {  }
     type: text_default
     region: content
   field_cta:
-    weight: 2
+    weight: 3
     label: hidden
     settings:
       trim_length: 80
@@ -36,12 +37,20 @@ content:
     type: link
     region: content
   field_media:
-    weight: 1
+    weight: 2
     label: hidden
     settings:
       link: true
     third_party_settings: {  }
     type: entity_reference_label
+    region: content
+  field_title:
+    weight: 0
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
     region: content
 hidden:
   field_display_background: true

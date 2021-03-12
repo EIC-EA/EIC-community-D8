@@ -17,10 +17,9 @@
 
                 {% if item.call_to_action is not empty %}
                   <div class="ecl-text-block__cta">
-                    {% include '@ecl-twig/ec-component-link/ecl-link.html.twig' with {
-                      link: item.call_to_action.link,
-                      extra_classes: call_to_action.extra_classes|default('ecl-link--button ecl-link--button-call'),
-                    } only %}
+                    {% include '@ecl-twig/ec-component-link/ecl-link.html.twig' with item.call_to_action|default({})|merge({
+                      extra_classes: item.call_to_action.extra_classes|default('ecl-link--button ecl-link--button-call'),
+                    }) only %}
                   </div>
                 {% endif %}
               </div>

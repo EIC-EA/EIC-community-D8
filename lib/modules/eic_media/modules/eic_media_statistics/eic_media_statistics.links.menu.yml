@@ -1,0 +1,6 @@
+eic_media_statistics.settings:
+  title: File Statistics
+  description: 'Configure the logging of file statistics.'
+  route_name: eic_media_statistics.settings
+  parent: statistics.settings
+  weight: -15

@@ -17,6 +17,10 @@
     }
   }
 
+  &--is-white {
+    background-color: map-get($ecl-colors, 'white');
+  }
+
   &--is-blue {
     background-color: map-get($ecl-colors, 'blue-5');
   }

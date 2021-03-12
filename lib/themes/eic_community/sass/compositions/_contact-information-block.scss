@@ -1,4 +1,6 @@
-.ecl-organisation-information-block {
+.ecl-contact-information-block {
+  $node: &;
+
   margin-bottom: ecl-box-model('padding', 'banner');
 
   &:last-child {
@@ -75,14 +77,16 @@
   }
 
   &__main-top {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    margin-right: #{0 - ecl-box-model('margin', 'meta')};
-    margin-bottom: #{0 - ecl-box-model('margin', 'meta')};
+    #{$node}--organisation & {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-right: #{0 - ecl-box-model('margin', 'meta')};
+      margin-bottom: #{0 - ecl-box-model('margin', 'meta')};
 
-    > * {
-      margin: 0 ecl-box-model('margin', 'meta') ecl-box-model('margin', 'meta') 0;
+      > * {
+        margin: 0 ecl-box-model('margin', 'meta') ecl-box-model('margin', 'meta') 0;
+      }
     }
   }
 
@@ -94,6 +98,11 @@
       width: calc(100% / #{$ecl-grid-columns} * 4);
       flex-shrink: 0;
     }
+  }
+
+  &__title {
+    display: flex;
+    flex-wrap: wrap;
   }
 
   &__title,
@@ -179,5 +188,17 @@
   &__description {
     @include ecl-responsive-font('meta');
     line-height: ecl-typography('line-height');
+  }
+
+  &__type-label {
+    display: block;
+    margin-bottom: map-get($ecl-spacing, 'xs');
+    color: ecl-typography('color', 'meta');
+    @include ecl-responsive-font('label');
+  }
+
+  &__type-icon {
+    color: ecl-typography('color', 'title');
+    margin-left: map-get($ecl-spacing, 'xs');
   }
 }

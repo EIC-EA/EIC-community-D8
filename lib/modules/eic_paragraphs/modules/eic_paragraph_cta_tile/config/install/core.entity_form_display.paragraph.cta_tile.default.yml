@@ -7,8 +7,8 @@ dependencies:
     - field.field.paragraph.cta_tile.field_title
     - paragraphs.paragraphs_type.cta_tile
   module:
-    - link
     - text
+    - typed_link
 id: paragraph.cta_tile.default
 targetEntityType: paragraph
 bundle: cta_tile
@@ -28,7 +28,7 @@ content:
       placeholder_url: ''
       placeholder_title: ''
     third_party_settings: {  }
-    type: link_default
+    type: typed_link
     region: content
   field_title:
     weight: 0

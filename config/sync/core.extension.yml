@@ -20,6 +20,7 @@ module:
   editor: 0
   eic_block_type_cta_tiles: 0
   eic_block_type_page_banner: 0
+  eic_block_type_social_media: 0
   eic_block_type_tiles_reference: 0
   eic_block_types: 0
   eic_blocks: 0
@@ -30,6 +31,7 @@ module:
   eic_homepage: 0
   eic_media: 0
   eic_media_document: 0
+  eic_media_statistics: 0
   eic_media_video: 0
   eic_paragraph_contributor: 0
   eic_paragraph_cta_tile: 0
@@ -81,6 +83,7 @@ module:
   token: 0
   toolbar: 0
   twig_field_value: 0
+  typed_link: 0
   ui_patterns: 0
   ui_patterns_library: 0
   update: 0

@@ -70,6 +70,7 @@
  *   in different view modes.
  */
 #}
+
 {% block content %}
   <div class="ecl-section-wrapper">
     <div class="ecl-container">
@@ -82,20 +83,21 @@
         {% endif %}
         {{ title_suffix }}
 
-        {% if display_submitted %}
-          <footer>
-            {{ author_picture }}
-            <div{{ author_attributes }}>
-              {% trans %}Submitted by {{ author_name }} on {{ date }}{% endtrans %}
-              {{ metadata }}
-            </div>
-          </footer>
-        {% endif %}
-          <div{{ content_attributes }}>
-            <div class="ecl-editable-wrapper">
-              {{ content }}
-            </div>
+        <div{{ content_attributes }}>
+          <div class="ecl-editable-wrapper">
+            {{ content }}
           </div>
+
+          {% if display_submitted %}
+            <footer>
+              {{ author_picture }}
+              <div{{ author_attributes }}>
+                {% trans %}Submitted by {{ author_name }} on {{ date }}{% endtrans %}
+                {{ metadata }}
+              </div>
+            </footer>
+          {% endif %}
+        </div>
       </article>
     </div>
   </div>
