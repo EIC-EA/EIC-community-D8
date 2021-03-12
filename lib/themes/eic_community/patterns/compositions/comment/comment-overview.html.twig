@@ -2,7 +2,7 @@
   <div class="ecl-container">
     <div class="ecl-comment-overview__wrapper">
       {% if is_disabled %}
-        <p class="ecl-comment-overview__is-disabled">{{ is_disabled_label|default('Placing comments has been disabled.') }}</p>
+        <p class="ecl-comment-overview__disabled-label">{{ disabled_label|default('Placing comments has been disabled.') }}</p>
       {% else %}
         {% if user is not empty %}
           <div class="ecl-comment-overview__form-wrapper">
