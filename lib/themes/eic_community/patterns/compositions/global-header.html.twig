@@ -38,7 +38,7 @@
       <div class="ecl-global-header__auth-wrapper">
         {% if user %}
           {% embed "@theme/patterns/compositions/collapsible-options.html.twig" with {
-            extra_classes: 'ecl-collapsible-options--aligns-from-right ecl-collapsible-options--is-compact',
+            extra_classes: 'ecl-collapsible-options--aligns-from-right ecl-collapsible-options--has-compact-layout',
             items: user.actions,
           } %}
             {% block trigger %}
@@ -46,7 +46,7 @@
                 author: user.label,
                 image: user.image,
                 path: user.path,
-                extra_classes: 'ecl-collapsible-options__trigger ecl-author--is-compact ecl-author--as-block',
+                extra_classes: 'ecl-collapsible-options__trigger ecl-author--has-compact-layout ecl-author--as-block',
                 updates: user.updates,
               } %}
             {% endblock %}

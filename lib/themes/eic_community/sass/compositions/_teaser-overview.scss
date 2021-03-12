@@ -72,7 +72,7 @@
       }
     }
 
-    #{$node}--is-compact#{$node}--has-columns & {
+    #{$node}--has-compact-layout#{$node}--has-columns & {
       @include ecl-media-breakpoint-up('xl') {
         width: calc(100% / 2);
       }
