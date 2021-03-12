@@ -34,6 +34,12 @@
   }
 
   &__collapsible-options {
+    @include ecl-media-breakpoint-down('xs') {
+      & .ecl-button__label {
+        @include visually-hidden;
+      }
+    }
+
     @include ecl-media-breakpoint-up('lg') {
       display: none;
     }
