@@ -22,7 +22,8 @@
               {% include "@theme/patterns/compositions/comment/comment-thread.html.twig" with item|default({})|merge({
                 icon_file_path: icon_file_path,
                 user: user,
-              }) %}
+                items: item.items,
+              }) only %}
             </div>
           {% endfor %}
         </div>

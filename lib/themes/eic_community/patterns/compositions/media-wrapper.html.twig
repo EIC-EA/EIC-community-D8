@@ -34,7 +34,7 @@
                 type: 'custom',
               },
               extra_classes: 'ecl-media-container__media-wrapper-icon ecl-media-container__media-wrapper-icon--play',
-            } %}
+            } only %}
 
             {% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with {
               icon: {
@@ -43,7 +43,7 @@
                 type: 'custom',
               },
               extra_classes: 'ecl-media-container__media-wrapper-icon ecl-media-container__media-wrapper-icon--pause',
-            } %}
+            } only %}
           {% endif %}
         </div>
       {% else %}
