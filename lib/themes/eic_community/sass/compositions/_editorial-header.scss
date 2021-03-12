@@ -13,9 +13,16 @@
     margin-bottom: ecl-box-model('padding');
 
     @include ecl-media-breakpoint-up('lg') {
-      width: map-get($ecl-media, 'l');
+      width: map-get($ecl-media, 'xl');
+      flex-shrink: 0;
       margin-bottom: 0;
       margin-right: ecl-box-model('padding');
+    }
+  }
+
+  &__meta {
+    @include ecl-media-breakpoint-up('lg') {
+      align-self: center;
     }
   }
 
@@ -47,18 +54,14 @@
   }
 
   &__main {
+    display: flex;
+    flex-direction: column;
+
     @include ecl-media-breakpoint-up('lg') {
       flex-grow: 1;
-      margin-right: map-get($ecl-spacing, 'm');
-      max-width: calc(100% / #{$ecl-grid-columns} * 8);
-    }
-  }
-
-  &__meta {
-    margin-bottom: map-get($ecl-spacing, 's');
-
-    @include ecl-media-breakpoint-up('md') {
-      margin-bottom: map-get($ecl-spacing, 'm');
+      flex-direction: row;
+      justify-content: space-between;
+      flex-wrap: wrap;
     }
   }
 
@@ -68,6 +71,7 @@
 
   &__actions {
     display: flex;
+    order: 1;
     flex-shrink: 0;
     flex-wrap: wrap;
     margin-top: ecl-box-model('margin', 'controls');
@@ -75,7 +79,12 @@
     margin-right: #{0 - ecl-layout('gutter', 'controls')};
 
     @include ecl-media-breakpoint-up('lg') {
+      order: 0;
       margin-top: 0;
+
+      &:first-child {
+        margin-left: auto;
+      }
     }
   }
 
@@ -85,6 +94,14 @@
 
   &__tags-wrapper {
     margin: ecl-box-model('margin', 'controls') 0;
+
+    &:first-child {
+      margin-top: 0;
+    }
+
+    &:last-child {
+      margin-bottom: 0;
+    }
   }
 
   &__tags {
@@ -97,5 +114,10 @@
   &__tag {
     margin-bototm: ecl-box-model('margin', 'controls');
     margin-right: ecl-box-model('margin', 'controls');
+  }
+
+  &__content {
+    margin-top: map-get($ecl-spacing, 's');
+    width: 100%;
   }
 }
