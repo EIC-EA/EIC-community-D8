@@ -2,6 +2,27 @@
   <div class="ecl-container">
     <div class="ecl-subnavigation__inner">
       {% if items is not empty %}
+        {% embed "@theme/patterns/compositions/collapsible-options.html.twig" with {
+          items: items,
+          extra_classes: 'ecl-subnavigation__collapsible-options',
+          icon_file_path: icon_file_path,
+        } only %}
+          {% block trigger%}
+            {% include "@ecl-twig/ec-component-button/ecl-button.html.twig" with {
+              label: title|default('Menu'),
+              extra_classes: "ecl-button--as-form-option",
+              variant: 'ghost',
+              icon: icon_file_path ? {
+                path: icon_file_path,
+                name: 'ellipsis',
+                type: 'custom',
+                transform: 'rotate-90',
+                size: 's',
+              } : {},
+            } %}
+          {% endblock %}
+        {% endembed %}
+
         <nav class="ecl-subnavigation__items-wrapper">
           <ul class="ecl-subnavigation__items">
             {% for item in items %}
@@ -21,6 +42,9 @@
             <div class="ecl-subnavigation__stats">
               {% for stat in stats %}
                 <div class="ecl-subnavigation__stat">
+                  {% if stat.path %}
+                    <a href="{{ stat.path }}" class="ecl-subnavigation__stat-link">
+                  {% endif %}
                   {% if stat.icon is not empty and icon_file_path %}
                     {% include '@ecl-twig/ec-component-icon/ecl-icon.html.twig' with {
                       icon: {
@@ -38,6 +62,9 @@
                     {% include "@theme/patterns/components/update-indicator.html.twig" with stat.updates|default({})|merge({
                       extra_classes: 'ecl-subnavigation__update-indicator ecl-update-indicator--is-small' ~ stat.extra_classes|default(''),
                     }) %}
+                  {% endif %}
+                  {% if stat.path %}
+                    </a>
                   {% endif %}
                 </div>
               {% endfor %}
