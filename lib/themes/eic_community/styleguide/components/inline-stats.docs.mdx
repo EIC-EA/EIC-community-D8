@@ -1,0 +1,22 @@
+# Inline Stats
+
+Displays a list with statistics, the semantic label will be visible if the defined statistic has no icon.
+
+## Example:
+
+```
+{% include "@theme/patterns/components/inline-stats.html.twig" %}
+```
+
+## Twig parameters:
+
+| Key                   | Type     | Description                                                                                                                           | Mandatory |
+| --------------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------- | --------- |
+| items                 | object[] | Should contain an array with entries that match the [ECL Twig Link](https://www.npmjs.com/package/@ecl/ec-component-link) coomponent. | yes       |
+| items                 | object[] | The optional clickable statistics.                                                                                                    | no        |
+| items[].label         | string   | The semantic label for the current statistic.                                                                                         | no        |
+| items[].value         | string   | The displayed statistic value.                                                                                                        | no        |
+| items[].icon          | object   | The displayed ECL icon for the current statistic.                                                                                     | no        |
+| items[].updates       | object   | Displays an optional update indicator for the current statistic.                                                                      | no        |
+| items[].updates.label | string   | The semantic label for the statisicic update indicator.                                                                               | no        |
+| items[].updates.value | string   | The displayed value for the statisicic update indicator.                                                                              | no        |

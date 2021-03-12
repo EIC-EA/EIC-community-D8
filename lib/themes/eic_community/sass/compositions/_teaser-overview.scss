@@ -57,11 +57,18 @@
       }
     }
 
-    #{$node}--has-columns & {
+    #{$node}--has-columns &,
+    #{$node}--has-blocks & {
       border: none;
       padding: 0;
       margin-bottom: ecl-box-model('padding');
+    }
 
+    #{$node}--has-blocks & {
+      padding-top: ecl-box-model('padding');
+    }
+
+    #{$node}--has-columns & {
       @include ecl-media-breakpoint-up('md') {
         padding-left: ecl-box-model('padding');
         width: calc(100% / 2);

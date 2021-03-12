@@ -120,37 +120,10 @@
             {% endif %}
 
             {% if stats is not empty %}
-              <div class="ecl-editorial-header__stats-wrapper">
-                <div class="ecl-editorial-header__stats">
-                  {% for stat in stats %}
-                    <div class="ecl-editorial-header__stat">
-                      {% if stat.path %}
-                        <a href="{{ stat.path }}" class="ecl-editorial-header__stat-link">
-                      {% endif %}
-                      {% if stat.icon is not empty and icon_file_path %}
-                        {% include '@ecl-twig/ec-component-icon/ecl-icon.html.twig' with {
-                          icon: {
-                            size: 'xs',
-                            path: icon_file_path,
-                            type: stat.icon.type|default('branded'),
-                            name: stat.icon.name,
-                          },
-                          extra_classes: 'ecl-editorial-header__stat-icon',
-                        } only %}
-                      {% endif %}
-                      <span class="ecl-editorial-header__stat-label">{{ stat.label }}</span>
-                      <span class="ecl-editorial-header__stat-value">{{ stat.value }}</span>
-                      {% if stat.updates %}
-                        {% include "@theme/patterns/components/update-indicator.html.twig" with stat.updates|default({})|merge({
-                          extra_classes: 'ecl-editorial-header__update-indicator ecl-update-indicator--is-small' ~ stat.extra_classes|default(''),
-                        }) %}
-                      {% endif %}
-                      {% if stat.path %}
-                        </a>
-                      {% endif %}
-                    </div>
-                  {% endfor %}
-                </div>
+              <div class="ecl-editorial-header__stats">
+                {% include "@theme/patterns/components/inline-stats.html.twig" with {
+                  items: stats,
+                } %}
               </div>
             {% endif %}
           </div>
