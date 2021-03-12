@@ -46,7 +46,7 @@
             {% endif %}
 
             {% set _extra_classes ='ecl-collapsible-options__button ' ~ item.extra_classes|default('') %}
-            {% if item.active %}
+            {% if item.is_active %}
               {% set _extra_classes = _extra_classes ~ ' ecl-collapsible-options__button--is-active'%}
             {% endif %}
 

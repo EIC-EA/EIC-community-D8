@@ -16,14 +16,21 @@
     border-bottom: ecl-border();
     align-items: center;
     padding: ecl-box-model('padding', 'controls') 0;
+    justify-content: space-between;
 
     @include ecl-media-breakpoint-up('lg') {
+      justify-content: start;
       padding: 0;
     }
   }
 
   &__items-wrapper {
     flex-grow: 1;
+    display: none;
+
+    @include ecl-media-breakpoint-up('lg') {
+      display: block;
+    }
   }
 
   &__collapsible-options {
@@ -33,15 +40,11 @@
   }
 
   &__items {
-    display: none;
+    display: flex;
     width: 100%;
     list-style: none;
     margin: 0;
     padding: 0;
-
-    @include ecl-media-breakpoint-up('lg') {
-      display: flex;
-    }
   }
 
   &__item {
@@ -68,7 +71,9 @@
 
     &:hover,
     #{$node}__item--is-active & {
+      text-decoration: none;
       border-color: map-get($ecl-colors, 'blue-100');
+      background-color: map-get($ecl-colors, 'grey-5');
     }
   }
 
