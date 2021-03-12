@@ -1,19 +1,17 @@
-uuid: 8b20346c-3706-499a-99f6-46cece37201d
+uuid: 3325e783-06ae-4a5e-847b-c3108f285342
 langcode: en
 status: true
 dependencies:
   config:
     - block_content.type.page_banner
-    - field.storage.block_content.field_cta_link
+    - field.storage.block_content.field_cta_links
   module:
-    - link
-_core:
-  default_config_hash: MctfVG2ThlYc4bmn-7JOaVmotnrp-zD1xqLgs6MqmWg
-id: block_content.page_banner.field_cta_link
-field_name: field_cta_link
+    - typed_link
+id: block_content.page_banner.field_cta_links
+field_name: field_cta_links
 entity_type: block_content
 bundle: page_banner
-label: Link
+label: Links
 description: ''
 required: false
 translatable: false
@@ -22,4 +20,4 @@ default_value_callback: ''
 settings:
   link_type: 17
   title: 2
-field_type: link
+field_type: typed_link

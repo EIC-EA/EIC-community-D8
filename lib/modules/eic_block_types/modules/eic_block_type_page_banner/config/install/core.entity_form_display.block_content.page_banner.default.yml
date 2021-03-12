@@ -4,14 +4,14 @@ dependencies:
   config:
     - block_content.type.page_banner
     - field.field.block_content.page_banner.field_body
-    - field.field.block_content.page_banner.field_cta_link
+    - field.field.block_content.page_banner.field_cta_links
     - field.field.block_content.page_banner.field_media
     - field.field.block_content.page_banner.field_subtitle
     - field.field.block_content.page_banner.field_title
   module:
-    - link
     - media_library
     - text
+    - typed_link
 id: block_content.page_banner.default
 targetEntityType: block_content
 bundle: page_banner
@@ -25,13 +25,13 @@ content:
     third_party_settings: {  }
     type: text_textarea
     region: content
-  field_cta_link:
-    weight: 5
+  field_cta_links:
+    weight: 26
     settings:
       placeholder_url: ''
       placeholder_title: ''
     third_party_settings: {  }
-    type: link_default
+    type: typed_link
     region: content
   field_media:
     type: media_library_widget

@@ -1,18 +1,21 @@
-uuid: 63df6237-2b2f-4366-a215-2d5aa3e75ace
+uuid: 27896bea-efdb-4d1d-bbd3-dbbc61e1a49d
 langcode: en
 status: true
 dependencies:
   module:
-    - link
     - paragraphs
-_core:
-  default_config_hash: Dn9-dbj5Xo5xKiNtIKAlNxKaYPpZ08d5aU3fXNdTB0g
+    - typed_link
 id: paragraph.field_cta_link
 field_name: field_cta_link
 entity_type: paragraph
-type: link
-settings: {  }
-module: link
+type: typed_link
+settings:
+  allowed_values:
+    default: Default
+    call: 'Call to action'
+    primary: Primary
+  allowed_values_function: ''
+module: typed_link
 locked: false
 cardinality: 1
 translatable: true

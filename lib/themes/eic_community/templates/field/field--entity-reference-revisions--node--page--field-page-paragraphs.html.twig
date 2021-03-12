@@ -1,0 +1,11 @@
+{#
+/**
+ * @file
+ * Theme override for the entity reference revisions field wich allowed to use paragraphs.
+ *
+ * @see ./themes/contrib/oe_theme/templates/field/field--entity-reference-revisions--paragraph.html.twig
+ */
+#}
+{% for item in items %}
+  {{ item.content }}
+{% endfor %}

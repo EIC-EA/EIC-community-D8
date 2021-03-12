@@ -9,6 +9,10 @@
     padding: ecl-box-model('padding--lg', 'banner') 0;
   }
 
+  &--is-white {
+    background-color: map-get($ecl-colors, 'white');
+  }
+
   &--is-blue {
     background-color: map-get($ecl-colors, 'blue-5');
   }

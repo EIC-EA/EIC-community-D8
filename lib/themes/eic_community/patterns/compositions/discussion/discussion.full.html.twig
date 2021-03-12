@@ -8,19 +8,58 @@
 {% endblock %}
 
 {% block content %}
+  {% embed "@theme/patterns/compositions/editorial-article.html.twig" with editorial_article|default({}) %}
+    {% block content %}
+      {{ content }}
+
+      {% if author or timestamp %}
+        <div class="ecl-editorial-article__meta">
+          {% if author %}
+            <div class="ecl-editorial-article__meta-item">
+              {% include "@theme/patterns/components/author.html.twig" with {
+                author: author.author,
+                path: author.path,
+                image: author.image,
+                extra_classes: 'ecl-editorial-article__author',
+              } %}
+            </div>
+          {% endif %}
+
+          {% if timestamp %}
+            <div class="ecl-editorial-article__meta-item">
+              {% include "@theme/patterns/components/timestamp.html.twig" with timestamp|default({})|merge({
+                icon_file_path: common.icon_file_path,
+                extra_classes: 'ecl-editorial-article__timestamp',
+              }) %}
+            </div>
+          {% endif %}
+        </div>
+      {% endif %}
+
+    {% endblock %}
+
+    {% block sidebar %}
+      {% include "@theme/patterns/compositions/featured-topics.html.twig" with topics|default({}) %}
+    {% endblock %}
+  {% endembed %}
+
   {% if not user %}
     {% embed "@theme/patterns/compositions/auth-banner.html.twig" with {
-      title: common.login_title,
+      title: "Please log in to see comments and contribute",
       icon_file_path: common.icon_file_path,
       invert: true,
-      login: common.login,
-      register: common.register,
+      login: {
+        label: "Login"
+      },
+      register: {
+        label: "Register",
+      },
     } only %}
     {% endembed %}
-  {% else %}
+  {% elseif comments is not empty %}
     {% include "@theme/patterns/compositions/comment/comment-overview.html.twig" with comments|default({})|merge({
       user: user,
       icon_file_path: common.icon_file_path,
-    }) %}
+    }) only %}
   {% endif %}
 {% endblock %}

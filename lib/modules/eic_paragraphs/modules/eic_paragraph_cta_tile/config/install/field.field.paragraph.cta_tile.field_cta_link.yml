@@ -5,7 +5,7 @@ dependencies:
     - field.storage.paragraph.field_cta_link
     - paragraphs.paragraphs_type.cta_tile
   module:
-    - link
+    - typed_link
 id: paragraph.cta_tile.field_cta_link
 field_name: field_cta_link
 entity_type: paragraph
@@ -19,4 +19,4 @@ default_value_callback: ''
 settings:
   link_type: 17
   title: 2
-field_type: link
+field_type: typed_link

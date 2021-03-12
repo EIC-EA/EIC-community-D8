@@ -5,13 +5,13 @@ dependencies:
   config:
     - block_content.type.page_banner
     - field.field.block_content.page_banner.field_body
-    - field.field.block_content.page_banner.field_cta_link
+    - field.field.block_content.page_banner.field_cta_links
     - field.field.block_content.page_banner.field_media
     - field.field.block_content.page_banner.field_subtitle
     - field.field.block_content.page_banner.field_title
   module:
-    - link
     - text
+    - typed_link
 _core:
   default_config_hash: V-8w_8q6qiCKPeJ1cO9aJqHfUwKmi9QqcNbYbbrHWCg
 id: block_content.page_banner.default
@@ -26,7 +26,7 @@ content:
     third_party_settings: {  }
     type: text_default
     region: content
-  field_cta_link:
+  field_cta_links:
     weight: 4
     label: hidden
     settings:
@@ -36,7 +36,7 @@ content:
       rel: ''
       target: ''
     third_party_settings: {  }
-    type: link
+    type: typed_link
     region: content
   field_media:
     type: entity_reference_entity_view

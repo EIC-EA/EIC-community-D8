@@ -1,0 +1,7 @@
+eic_media_statistics.settings:
+  path: '/admin/config/system/statistics/files'
+  defaults:
+    _form: '\Drupal\eic_media_statistics\Form\StatisticsSettingsForm'
+    _title: 'File Statistics'
+  requirements:
+    _permission: 'administer statistics'
