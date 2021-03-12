@@ -7,7 +7,7 @@
   border-radius: ecl-box-model('border-radius');
   display: block;
 
-  &--is-compact {
+  &--has-compact-layout {
     padding: ecl-box-model('padding', 'controls');
   }
 
@@ -23,7 +23,7 @@
     display: flex;
     align-items: flex-start;
 
-    #{$node}--is-compact & {
+    #{$node}--has-compact-layout & {
       align-items: center;
     }
 
@@ -35,7 +35,7 @@
     margin: 0;
     padding-right: ecl-box-model('padding', 'description');
 
-    #{$node}--is-compact & {
+    #{$node}--has-compact-layout & {
       display: none;
       padding-right: ecl-box-model('padding', 'controls');
 
@@ -51,7 +51,7 @@
     width: map-get($ecl-media, '2xs');
     height: map-get($ecl-media, '2xs');
 
-    #{$node}--is-compact & {
+    #{$node}--has-compact-layout & {
       width: map-get($ecl-media, '3xs');
       height: map-get($ecl-media, '3xs');
     }

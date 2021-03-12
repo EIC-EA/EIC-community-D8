@@ -63,7 +63,7 @@
     @include ecl-responsive-font('label');
 
     @include ecl-media-breakpoint-down('md') {
-      #{$node}--is-compact & {
+      #{$node}--has-compact-layout & {
         @include visually-hidden();
       }
     }
@@ -86,7 +86,7 @@
     width: map-get($ecl-media, '3xs');
 
     @include ecl-media-breakpoint-down('md') {
-      #{$node}--is-compact & {
+      #{$node}--has-compact-layout & {
         margin-right: 0;
       }
     }
