@@ -44,41 +44,6 @@
             } %}
           {% endblock %}
         {% endembed %}
-
-        {% if stats is not empty %}
-          <div class="ecl-subnavigation__stats-wrapper">
-            <div class="ecl-subnavigation__stats">
-              {% for stat in stats %}
-                <div class="ecl-subnavigation__stat">
-                  {% if stat.path %}
-                    <a href="{{ stat.path }}" class="ecl-subnavigation__stat-link">
-                  {% endif %}
-                  {% if stat.icon is not empty and icon_file_path %}
-                    {% include '@ecl-twig/ec-component-icon/ecl-icon.html.twig' with {
-                      icon: {
-                        size: 'xs',
-                        path: icon_file_path,
-                        type: stat.icon.type|default('branded'),
-                        name: stat.icon.name,
-                      },
-                      extra_classes: 'ecl-subnavigation__stat-icon',
-                    } only %}
-                  {% endif %}
-                  <span class="ecl-subnavigation__stat-label">{{ stat.label }}</span>
-                  <span class="ecl-subnavigation__stat-value">{{ stat.value }}</span>
-                  {% if stat.updates %}
-                    {% include "@theme/patterns/components/update-indicator.html.twig" with stat.updates|default({})|merge({
-                      extra_classes: 'ecl-subnavigation__update-indicator ecl-update-indicator--is-small' ~ stat.extra_classes|default(''),
-                    }) %}
-                  {% endif %}
-                  {% if stat.path %}
-                    </a>
-                  {% endif %}
-                </div>
-              {% endfor %}
-            </div>
-          </div>
-        {% endif %}
       {% endif %}
     </div>
   </div>

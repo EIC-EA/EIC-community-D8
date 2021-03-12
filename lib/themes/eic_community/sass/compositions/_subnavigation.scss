@@ -34,13 +34,7 @@
   }
 
   &__collapsible-options {
-    @include ecl-media-breakpoint-down('xs') {
-      & .ecl-button__label {
-        @include visually-hidden;
-      }
-    }
-
-    @include ecl-media-breakpoint-up('lg') {
+   @include ecl-media-breakpoint-up('lg') {
       display: none;
     }
   }
@@ -84,54 +78,7 @@
   }
 
   &__stats-wrapper {
-    flex-shrink: 0;
     display: block;
     margin-left: ecl-box-model('padding');
-  }
-
-  &__stats {
-    display: flex;
-    margin-right: #{0 - ecl-box-model('margin', 'controls')};
-    margin-bottom: #{0 - ecl-box-model('margin', 'controls')};
-  }
-
-  &__stat {
-    position: relative;
-    display: flex;
-    flex-shrink: 0;
-    align-items: center;
-    justify-content: center;
-    color: ecl-typography('color', 'meta');
-    margin-right: ecl-box-model('margin', 'controls');
-    margin-bottom: ecl-box-model('margin', 'controls');
-  }
-
-  &__stat-link {
-    color: currentColor;
-
-    &:hover {
-      color: ecl-typograpy('color', 'title');
-    }
-  }
-
-  &__stat-value {
-    @include ecl-responsive-font('meta');
-  }
-
-  &__stat-label {
-    @include visually-hidden;
-  }
-
-  &__stat-icon {
-    margin-right: ecl-box-model('padding', 'controls');
-  }
-
-  & &__update-indicator {
-    position: absolute;
-    bottom: 100%;
-    right: 100%;
-    color: map-get($ecl-colors, 'black');
-    background-color: map-get($ecl-colors, 'yellow-100');
-    transform: translate(50%, 50%);
   }
 }
