@@ -8,6 +8,10 @@
 #}
 {% set _extra_classes = 'ecl-section-wrapper' %}
 
+{% if extra_classes %}
+  {% set _extra_classes = _extra_classes ~ ' ' ~ extra_classes %}
+{% endif %}
+
 {% if paragraph.field_display_background.value %}
   {% set _extra_classes = _extra_classes ~ ' ecl-section-wrapper--is-' ~ paragraph.field_display_background.value %}
 {% endif %}
