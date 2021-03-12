@@ -1,0 +1,10 @@
+uuid: ebf375c8-c4fc-4306-a1af-47bb6aabde37
+langcode: en
+status: true
+dependencies:
+  module:
+    - paragraphs
+id: paragraph.media_right
+label: 'Media aligned to right'
+targetEntityType: paragraph
+cache: true

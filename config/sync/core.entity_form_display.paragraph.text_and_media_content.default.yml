@@ -8,7 +8,7 @@ dependencies:
     - field.field.paragraph.text_and_media_content.field_display_background
     - field.field.paragraph.text_and_media_content.field_media
     - field.field.paragraph.text_and_media_content.field_title
-    - field.field.paragraph.text_and_media_content.field_view_mode
+    - field.field.paragraph.text_and_media_content.paragraph_view_mode
     - paragraphs.paragraphs_type.text_and_media_content
   module:
     - link
@@ -59,14 +59,16 @@ content:
     third_party_settings: {  }
     type: string_textfield
     region: content
-  field_view_mode:
+  paragraph_view_mode:
+    type: paragraph_view_mode
     weight: 3
     settings:
       view_modes:
-        default: Default
-      default_view_mode: default
+        media_left: media_left
+        media_right: media_right
+        default: 0
+      default_view_mode: media_left
     third_party_settings: {  }
-    type: paragraph_view_mode
     region: content
 hidden:
   created: true
