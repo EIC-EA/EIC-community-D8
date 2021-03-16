@@ -78,7 +78,6 @@
                 {% set _action = {} %}
 
                 {% if action is not empty %}
-
                   {% if action.link %}
                     {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with action|default({})|merge({
                       link: action.link|merge({
