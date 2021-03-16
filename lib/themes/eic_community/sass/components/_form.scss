@@ -19,9 +19,11 @@
   }
 
   .ecl-form-group {
-    display: flex;
-    flex-direction: column;
     margin: map-get($ecl-spacing, 'l') 0;
+    &:not(fieldset) {
+      display: flex;
+      flex-direction: column;
+    }
 
     &:first-child {
       margin-top: 0;
