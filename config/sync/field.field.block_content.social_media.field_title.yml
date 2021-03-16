@@ -1,0 +1,19 @@
+uuid: 2b72dfbc-eb94-439c-a747-75a8ee28f0cf
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.social_media
+    - field.storage.block_content.field_title
+id: block_content.social_media.field_title
+field_name: field_title
+entity_type: block_content
+bundle: social_media
+label: Title
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

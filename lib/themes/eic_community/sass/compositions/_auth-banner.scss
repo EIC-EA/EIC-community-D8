@@ -1,4 +1,6 @@
 .ecl-auth-banner {
+  $node: &;
+
   &__title {
     @extend .ecl-u-type-heading-3;
 
@@ -8,10 +10,16 @@
   &__wrapper {
     display: flex;
     flex-direction: column;
+    align-items: center;
 
-    @include ecl-media-breakpoint-up('md') {
-      width: calc(100% / #{$ecl-grid-columns} * 8);
+    #{$node}--is-compact & {
+      align-items: flex-start;
+
+      @include ecl-media-breakpoint-up('md') {
+        width: calc(100% / #{$ecl-grid-columns} * 8);
+      }
     }
+
   }
 
   &__actions {

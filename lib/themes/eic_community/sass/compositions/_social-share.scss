@@ -17,7 +17,7 @@
     @include ecl-responsive-font('meta');
     font-weight: $ecl-font-weight-regular;
 
-    #{$node}--is-compact & {
+    #{$node}--has-compact-layout & {
       text-transform: inherit;
     }
   }
@@ -28,7 +28,7 @@
     margin-bottom: #{0 - map-get($ecl-spacing, 'm')};
     margin-right: #{0 - map-get($ecl-spacing, 'm')};
 
-    #{$node}--is-compact & {
+    #{$node}--has-compact-layout & {
       margin-bottom: #{0 - map-get($ecl-spacing, 'xs')};
       margin-right: #{0 - map-get($ecl-spacing, 'xs')};
     }
@@ -39,7 +39,7 @@
     color: map-get($ecl-colors, white);
     margin: 0 map-get($ecl-spacing, 'm') map-get($ecl-spacing, 'm') 0;
 
-    #{$node}--is-compact & {
+    #{$node}--has-compact-layout & {
       margin: 0 map-get($ecl-spacing, 'xs') map-get($ecl-spacing, 'xs') 0;
     }
 
@@ -82,7 +82,7 @@
       }
     }
 
-    #{$node}--is-compact & {
+    #{$node}--has-compact-layout & {
       width: map-get($ecl-media, '3xs');
       height: map-get($ecl-media, '3xs');
     }

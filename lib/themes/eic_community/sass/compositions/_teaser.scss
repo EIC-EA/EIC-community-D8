@@ -19,6 +19,11 @@
     background-color: map-get($ecl-colors, 'grey-5');
   }
 
+  &--as-grey {
+    padding: ecl-box-model('padding');
+    background-color: map-get($ecl-colors, 'grey-5');
+  }
+
   &--member {
     display: flex;
     flex-wrap: wrap;

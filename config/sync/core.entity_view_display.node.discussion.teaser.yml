@@ -44,3 +44,4 @@ hidden:
   field_related_documents: true
   field_vocab_geo: true
   field_vocab_topics: true
+  published_at: true

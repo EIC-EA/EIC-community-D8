@@ -46,8 +46,9 @@ default:
           field_cta_link:
             -
               uri: 'internal:/'
-              title: 'Keep me updated'
+              title: 'Keep me up to date'
               options: {  }
+              link_type: call
           field_title:
             -
               value: 'Sign up to the EIC Newsletter'
@@ -81,6 +82,7 @@ default:
               uri: 'https://ec.europa.eu/easme'
               title: 'Visit EASME'
               options: {  }
+              link_type: primary
           field_title:
             -
               value: 'Executive Agency for SMEs'

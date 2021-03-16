@@ -1,4 +1,4 @@
-uuid: 45ca7b7e-abda-4484-a566-54b44986c407
+uuid: ba4fbc2c-21bb-4a73-b9df-e790a67be568
 langcode: en
 status: true
 dependencies:
@@ -6,9 +6,7 @@ dependencies:
     - field.storage.paragraph.field_cta_link
     - paragraphs.paragraphs_type.cta_tile
   module:
-    - link
-_core:
-  default_config_hash: TsIcFE46g6gMN2t5kbMLm03Nu-tY2alfcnYFmC22X3M
+    - typed_link
 id: paragraph.cta_tile.field_cta_link
 field_name: field_cta_link
 entity_type: paragraph
@@ -22,4 +20,4 @@ default_value_callback: ''
 settings:
   link_type: 17
   title: 2
-field_type: link
+field_type: typed_link

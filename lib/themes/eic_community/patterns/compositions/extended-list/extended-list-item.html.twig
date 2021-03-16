@@ -1,0 +1,14 @@
+{% set item_title_element = item_title_element|default('span') %}
+
+<div class="ecl-extended-list__item {{ extra_classes }}">
+  {% if title %}
+    <{{ item_title_element }} class="ecl-extended-list__item-title">
+      {{ title}}
+    </{{ item_title_element }}>
+  {% endif %}
+  {% if items %}
+    {% include "@theme/patterns/compositions/extended-list/extended-list-items.html.twig" with {
+      items: items
+    } only %}
+  {% endif %}
+</div>

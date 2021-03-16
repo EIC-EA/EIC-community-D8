@@ -1,0 +1,50 @@
+<?php
+
+/**
+ * @file
+ * Install and update functions for the Statistics module.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function eic_media_statistics_schema() {
+  $schema['file_counter'] = [
+    'description' => 'Download statistics for {file_managed}s.',
+    'fields' => [
+      'fid' => [
+        'description' => 'The {file_managed}.fid for these statistics.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+      'totalcount' => [
+        'description' => 'The total number of times the {file_managed} has been downloaded.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'size' => 'big',
+      ],
+      'daycount' => [
+        'description' => 'The total number of times the {file_managed} has been downloaded today.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'size' => 'medium',
+      ],
+      'timestamp' => [
+        'description' => 'The most recent time the {file_managed} has been downloaded.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+    ],
+    'primary key' => ['fid'],
+  ];
+
+  return $schema;
+}

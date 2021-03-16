@@ -1,0 +1,14 @@
+uuid: 92437f11-1e26-439c-ab9d-59e81175d00d
+langcode: en
+status: true
+dependencies:
+  config:
+    - user.role.service_authentication
+  module:
+    - user
+id: user_add_role_action.service_authentication
+label: 'Add the Service authentication role to the selected user(s)'
+type: user
+plugin: user_add_role_action
+configuration:
+  rid: service_authentication
