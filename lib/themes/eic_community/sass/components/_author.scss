@@ -71,7 +71,7 @@
     }
 
     @include ecl-media-breakpoint-down('md') {
-      #{$node}--is-compact & {
+      #{$node}--has-compact-layout & {
         @include visually-hidden();
       }
     }
@@ -102,7 +102,7 @@
     }
 
     @include ecl-media-breakpoint-down('md') {
-      #{$node}--is-compact & {
+      #{$node}--has-compact-layout & {
         margin-right: 0;
       }
     }

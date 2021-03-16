@@ -11,6 +11,7 @@
   text-align: center;
   line-height: 1;
   font-size: $ecl-font-size-xs;
+  font-weight: $ecl-font-weight-bold;
 
   &__label {
     @include visually-hidden();
