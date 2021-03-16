@@ -1,12 +1,12 @@
-uuid: 9f5524a9-95fb-4a79-9e03-1e160d76386a
+uuid: 0b9255d7-c8d0-4fcf-9f0f-090774f4254b
 langcode: en
 status: true
 dependencies:
   module:
     - profile
     - taxonomy
-id: profile.field_job_title
-field_name: field_job_title
+id: profile.field_vocab_job_title
+field_name: field_vocab_job_title
 entity_type: profile
 type: entity_reference
 settings:

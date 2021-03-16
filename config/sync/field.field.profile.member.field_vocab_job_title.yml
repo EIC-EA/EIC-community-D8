@@ -1,13 +1,13 @@
-uuid: 3762ee1c-3ad7-4788-91c1-7e317eb72463
+uuid: ae361fda-e4dc-43c3-827c-cf7f3173cf69
 langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.profile.field_job_title
+    - field.storage.profile.field_vocab_job_title
     - profile.type.member
     - taxonomy.vocabulary.job_titles
-id: profile.member.field_job_title
-field_name: field_job_title
+id: profile.member.field_vocab_job_title
+field_name: field_vocab_job_title
 entity_type: profile
 bundle: member
 label: 'Job title'

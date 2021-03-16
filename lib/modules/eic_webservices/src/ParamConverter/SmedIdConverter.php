@@ -3,7 +3,6 @@
 namespace Drupal\eic_webservices\ParamConverter;
 
 use Drupal\Core\Config\ConfigFactory;
-use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\ParamConverter\EntityConverter;
 use Symfony\Component\Routing\Route;
 
@@ -13,13 +12,6 @@ use Symfony\Component\Routing\Route;
  * @see \Drupal\Core\ParamConverter\EntityConverter
  */
 class SmedIdConverter extends EntityConverter {
-
-  /**
-   * The language manager.
-   *
-   * @var \Drupal\Core\Language\LanguageManagerInterface
-   */
-  protected $languageManager;
 
   /**
    * Drupal\Core\Config\ConfigFactory definition.
@@ -62,16 +54,6 @@ class SmedIdConverter extends EntityConverter {
       return TRUE;
     }
     return FALSE;
-  }
-
-  /**
-   * Injects the language manager.
-   *
-   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
-   *   The language manager to get the current content language.
-   */
-  public function setLanguageManager(LanguageManagerInterface $language_manager) {
-    $this->languageManager = $language_manager;
   }
 
   /**
