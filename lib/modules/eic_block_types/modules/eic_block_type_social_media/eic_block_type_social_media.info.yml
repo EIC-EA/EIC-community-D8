@@ -1,0 +1,10 @@
+name: EIC Block type Social Media
+type: module
+description: Provides a block type to show social media links.
+package: European Innovation Council
+core: 8.x
+core_version_requirement: ^8 || ^9
+php: 7.3
+dependencies:
+  - eic_block_types:eic_block_types
+  - typed_link:typed_link

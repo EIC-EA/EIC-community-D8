@@ -1,4 +1,4 @@
-<div class="ecl-expandable-definitions">
+<div class="ecl-expandable-definitions {{ extra_classes }}">
   <div class="ecl-expandable-definitions__items">
     {% for item in items %}
       <div class="ecl-expandable-definitions__item">
@@ -8,16 +8,22 @@
 
         <div class="ecl-expandable-definitions__item-subitems">
           {% for subitem in item.items %}
-            {% if subitem.path %}
-              <a href="{{ subitem.path }}" class="ecl-expandable-definitions__item-subitem">
-            {% else %}
-              <span class="ecl-expandable-definitions__item-subitem">
-            {% endif %}
-              {{ subitem.label}}
-            {% if subitem.path %}
-              </a>
-            {% else %}
-              </span>
+            {% if subitem.content %}
+              <div class="ecl-expandable-definitions__item-subitem">
+                {{ subitem.content }}
+              </div>
+            {% elseif subitem.label %}
+              {% if subitem.path %}
+                <a href="{{ subitem.path }}" class="ecl-expandable-definitions__item-subitem">
+              {% else %}
+                <span class="ecl-expandable-definitions__item-subitem">
+              {% endif %}
+                {{ subitem.label}}
+              {% if subitem.path %}
+                </a>
+              {% else %}
+                </span>
+              {% endif %}
             {% endif %}
           {% endfor %}
         </div>

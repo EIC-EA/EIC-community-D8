@@ -41,12 +41,18 @@ settings:
       contributor:
         weight: -12
         enabled: false
+      cta_tile:
+        weight: 12
+        enabled: false
       full_media_content:
         enabled: true
         weight: -11
       full_text_content:
         enabled: true
         weight: -9
+      latest_news_and_stories:
+        enabled: true
+        weight: 15
       quote:
         enabled: true
         weight: -10

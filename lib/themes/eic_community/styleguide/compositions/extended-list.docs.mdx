@@ -1,0 +1,23 @@
+# Extended List
+
+## Example:
+
+```
+{% include "@theme/patterns/components/extended-list/extended-list.html.twig" with {
+  title: 'Example list',
+  items: [
+    {
+      title: 'First item',
+    },
+    ...
+  ],
+} %}
+```
+
+## Twig parameters:
+
+| Key           | Type     | Description                                                                       | Mandatory |
+| ------------- | -------- | --------------------------------------------------------------------------------- | --------- | --- |
+| title         | string   | The initial title for the list.                                                   | no        |     |
+| items         | object[] | The actual list items, can be nested where a `title` and/or `items` should exist. | no        |     |
+| items[].title | string   | The title value for each (sub)item.                                               | no        |     |

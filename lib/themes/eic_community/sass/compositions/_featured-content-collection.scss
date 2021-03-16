@@ -60,7 +60,7 @@
     @include ecl-media-breakpoint-up('lg') {
       width: calc(100% / 4);
 
-      #{$node}--is-compact & {
+      #{$node}--has-compact-layout & {
         width: calc(100% / 3);
       }
     }

@@ -1,0 +1,25 @@
+uuid: 48354d22-f54c-40e9-b9c6-84be9dac792c
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.latest_news_stories
+    - field.storage.block_content.field_articles
+id: block_content.latest_news_stories.field_articles
+field_name: field_articles
+entity_type: block_content
+bundle: latest_news_stories
+label: Articles
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: views
+  handler_settings:
+    view:
+      view_name: latest_news_and_stories
+      display_name: entity_reference_1
+      arguments: {  }
+field_type: entity_reference

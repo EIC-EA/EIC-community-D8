@@ -46,7 +46,7 @@
             {% endif %}
 
             {% set _extra_classes ='ecl-collapsible-options__button ' ~ item.extra_classes|default('') %}
-            {% if item.active %}
+            {% if item.is_active %}
               {% set _extra_classes = _extra_classes ~ ' ecl-collapsible-options__button--is-active'%}
             {% endif %}
 
@@ -56,7 +56,7 @@
                   icon_position: 'before',
                 }),
                 icon: _icon,
-                extra_classes: 'ecl-link--button ecl-link--button-ghost ' ~ _extra_classes,
+                extra_classes: 'ecl-link--button ecl-link--button-ghost ' ~ _extra_classes|default(''),
               }) only %}
             {% else %}
               {% include "@ecl-twig/ec-component-button/ecl-button.html.twig" with item|default({})|merge({

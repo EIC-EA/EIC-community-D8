@@ -12,11 +12,11 @@
 
 {% block content %}
   {% embed "@theme/patterns/compositions/editorial-article.html.twig" with editorial_article|default({}) %}
-    {% block content  %}
+    {% block content %}
       {{ content }}
     {% endblock %}
 
-    {% block sidebar  %}
+    {% block sidebar %}
       {% include "@theme/patterns/compositions/editorial-actions.html.twig" with editorial_actions|default({}) %}
 
       {% include "@theme/patterns/compositions/social-share.html.twig" with social_share|default({})|merge({
@@ -31,21 +31,18 @@
     {% endblock %}
   {% endembed %}
 
-  {% if not auth %}
+  {% if not user %}
     {% embed "@theme/patterns/compositions/auth-banner.html.twig" with {
-      title: "Please log in to see comments and contribute",
+      title: common.login_title,
       icon_file_path: common.icon_file_path,
-      login: {
-        label: "Login"
-      },
-      register: {
-        label: "Register",
-      },
+      login: common.login,
+      register: common.register,
+      extra_classes: 'ecl-auth-banner--is-compact',
     } only %}
     {% endembed %}
-  {% elseif comments is not empty %}
+  {% else %}
     {% include "@theme/patterns/compositions/comment/comment-overview.html.twig" with comments|default({})|merge({
-      user: auth,
+      user: user,
       icon_file_path: common.icon_file_path,
     }) %}
   {% endif %}

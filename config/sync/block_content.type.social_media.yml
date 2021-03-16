@@ -1,0 +1,8 @@
+uuid: 2b74476a-cbe9-46c5-b0a0-66b03c481f6f
+langcode: en
+status: true
+dependencies: {  }
+id: social_media
+label: 'Social media'
+revision: 0
+description: 'A block that shows a list of social media links.'
