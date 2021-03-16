@@ -11,6 +11,8 @@ module:
   breakpoint: 0
   components: 0
   config: 0
+  config_filter: 0
+  config_split: 0
   content_moderation: 0
   context: 0
   contextual: 0
