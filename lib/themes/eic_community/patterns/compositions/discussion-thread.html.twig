@@ -1,0 +1,123 @@
+{% set contributor_label = contributor_label|default('Contributor') %}
+{% set started_by_label = started_by_label|default('Started by') %}
+{% set title_element = title_element|default('h3') %}
+
+<div class="ecl-discussion-thread {{ from_contributor ? 'ecl-discussion-thread--from-contributor' }} {{ extra_classes }}">
+  <div class="ecl-discussion-thread__main">
+    {% if author.image %}
+      <div class="ecl-discussion-thread__image-wrapper">
+        {% include "@theme/patterns/components/author.html.twig" with {
+          image: author.image,
+          author: author.author,
+          size: 'medium',
+          extra_classes: 'ecl-author--is-minimal ecl-discussion-thread__author-image',
+        } only %}
+      </div>
+    {% endif %}
+    <div class="ecl-discussion-thread__content">
+      <div class="ecl-discussion-thread__header">
+        {% if tags is not empty %}
+          <div class="ecl-discussion-thread__tags">
+            <div class="ecl-discussion-thread__tags-items">
+              {% for tag in tags %}
+                <div class="ecl-discussion-thread__tags-item">
+                  {% include "@ecl-twig/ec-component-tag/ecl-tag.html.twig" with {
+                    tag: tag|merge({
+                      type: tag.path ? "link" : "display"
+                    }),
+                    extra_classes: 'ecl-discussion-thread__tag',
+                  } only %}
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        {% endif %}
+
+        {% if members is not empty %}
+          {% include "@theme/patterns/components/author-collection.html.twig" with members|default({})|merge({
+            extra_classes: 'ecl-discussion-thread__members',
+          }) %}
+        {% endif %}
+      </div>
+
+      <{{ title_element }} class="ecl-discussion-thread__title">
+        {% if path %}
+          {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with {
+            link: {
+              label: title,
+              path: path,
+              type: 'standalone',
+            }
+          } only %}
+        {% else %}
+          {{ title }}
+        {% endif %}
+      </{{ title_element }}>
+      {% if description %}
+        <p class="ecl-discussion-thread__description">{{ description }}</p>
+      {% endif %}
+    </div>
+  </div>
+  <div class="ecl-discussion-thread__footer">
+    {% if from_contributor %}
+      <div class="ecl-discussion-thread__contributor">
+        {% if icon_file_path %}
+          {% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with {
+            icon: {
+              path: icon_file_path,
+              name: 'star_circle',
+              size: 's',
+              type: 'custom',
+            },
+          } %}
+        {% endif %}
+        <span class="ecl-discussion-thread__contributor-label">
+          {{ contributor_label }}
+        </span>
+      </div>
+    {% endif %}
+
+    {% if author.author %}
+      <span class="ecl-discussion-thread__started-by-label">
+        {{ started_by_label }}
+      </span>
+      {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with {
+        link: {
+          label: author.author,
+          path: author.path,
+          type: 'standalone',
+        },
+        extra_classes: 'ecl-discussion-thread__author'
+      } only %}
+    {% endif %}
+
+    {% if timestamp %}
+      {% include "@theme/patterns/components/timestamp.html.twig" with timestamp|default({})|merge({
+        icon_file_path: icon_file_path,
+        extra_classes: timestamp.extra_classes ~ ' ecl-discussion-thread__timestamp',
+      }) only %}
+    {% endif %}
+
+    {% if stats is not empty %}
+      <div class="ecl-discussion-thread__stats">
+        <div class="ecl-discussion-thread__stats-items">
+          {% for stat in stats %}
+            <div class="ecl-discussion-thread__stats-item">
+              {% if stat.icon is not empty and icon_file_path %}
+                {% include '@ecl-twig/ec-component-icon/ecl-icon.html.twig' with stat|default({})|merge({
+                  icon: icon_file_path ? stat.icon|default({})|merge({
+                    size: 'xs',
+                    path: icon_file_path,
+                  }) : {},
+                  extra_classes: 'ecl-discussion-thread__stats-item-icon',
+                }) only %}
+              {% endif %}
+              <span class="ecl-discussion-thread__stats-item-label">{{ stat.label }}</span>
+              <span class="ecl-discussion-thread__stats-item-value">{{ stat.value }}</span>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
+  </div>
+</div>

@@ -4,14 +4,21 @@
   font-size: $ecl-font-size-s;
   background-color: map-get($ecl-colors, 'orange-100');
   color: map-get($ecl-colors, 'white');
-  border-radius: map-get($ecl-media, '4xs');
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
+  line-height: 1;
+  font-size: $ecl-font-size-xs;
   font-weight: $ecl-font-weight-bold;
 
   &__label {
     @include visually-hidden();
+  }
+
+  &--is-small {
+    width: map-get($ecl-media, '5xs');
+    height: map-get($ecl-media, '5xs');
   }
 }
