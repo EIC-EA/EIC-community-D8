@@ -1,0 +1,9 @@
+{% import "@theme/patterns/core/snippets.twig" as snippets %}
+
+<form class="ecl-form {{ extra_classes }}" {{ snippets.attr(extra_attributes)}}>
+  {% for field in fields %}
+    {% include "@theme/patterns/components/form/form-section.html.twig" with field|default({})|merge({
+      icon_file_path: icon_file_path,
+    }) only %}
+  {% endfor %}
+</form>

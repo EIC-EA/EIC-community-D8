@@ -5,7 +5,9 @@
 {% endblock %}
 
 {% block content %}
-  {% include "@theme/patterns/compositions/introduction-header.html.twig" with introduction_header|default({}) only %}
+  {% include "@theme/patterns/compositions/introduction-header.html.twig" with introduction_header|default({})|merge({
+    extra_classes: 'ecl-section-wrapper ' ~ introduction_header.extra_classes|default('')
+  }) only %}
 
   {% for item in items %}
     {{ item.content }}
