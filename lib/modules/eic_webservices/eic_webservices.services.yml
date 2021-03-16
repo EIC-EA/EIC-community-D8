@@ -6,7 +6,6 @@ services:
     parent: paramconverter.entity
     class: Drupal\eic_webservices\ParamConverter\SmedIdConverter
     calls:
-      - [setLanguageManager, ['@language_manager']]
       - [setConfigFactory, ['@config.factory']]
     tags:
       # Priority 10, to ensure it runs before @paramconverter.entity.
