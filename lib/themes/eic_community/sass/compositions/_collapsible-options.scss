@@ -29,7 +29,7 @@
       transform: rotate(135deg);
       margin-top: -#{map-get($ecl-spacing, 'xs') / 2};
 
-      #{$node}--is-compact & {
+      #{$node}--has-compact-layout & {
         width: map-get($ecl-spacing, '2xs');
         height: map-get($ecl-spacing, '2xs');
         margin-top: -#{map-get($ecl-spacing, '2xs') / 2};
