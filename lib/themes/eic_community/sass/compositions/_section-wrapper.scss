@@ -12,7 +12,7 @@
   @include ecl-media-breakpoint-up('lg') {
     padding: ecl-box-model('padding--lg', 'banner') 0;
 
-    &--has-compact-layout
+    &--has-compact-layout {
       padding: ecl-box-model('padding', 'banner') 0;
     }
   }
