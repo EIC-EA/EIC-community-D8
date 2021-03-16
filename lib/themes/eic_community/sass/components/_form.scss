@@ -17,7 +17,6 @@
       margin-bottom: 0;
     }
   }
-
   .ecl-form-group {
     margin: map-get($ecl-spacing, 'l') 0;
     &:not(fieldset) {
@@ -31,6 +30,13 @@
 
     &:last-child {
       margin-bottom: 0;
+    }
+
+    > :not(.ecl-form-label--hidden) + .ecl-file-upload__list {
+      // Removes the empty space if no file has been added.
+      &:empty {
+        margin: 0;
+      }
     }
   }
 

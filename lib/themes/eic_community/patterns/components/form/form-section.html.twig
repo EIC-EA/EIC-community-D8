@@ -24,6 +24,16 @@
           icon_path: icon_file_path,
           width: 'full',
         }) %}
+      {% elseif field.type == 'file' %}
+        {% embed "@theme/patterns/components/well.html.twig" with field|default({})|merge({
+          extra_classes: 'ecl-well--is-blue',
+        }) only %}
+          {% block content %}
+            {% include '@ecl-twig/ec-component-file-upload/ecl-file-upload.html.twig' with field|default({})|without('type')|merge({
+              width: 'full',
+            }) %}
+          {% endblock %}
+        {% endembed %}
       {% elseif field.type == 'submit' %}
         {% include '@ecl-twig/ec-component-button/ecl-button.html.twig' with field|default({})|without('type')|merge({
           type: 'submit',
