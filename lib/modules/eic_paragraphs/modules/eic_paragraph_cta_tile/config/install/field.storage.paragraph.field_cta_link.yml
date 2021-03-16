@@ -2,14 +2,19 @@ langcode: en
 status: true
 dependencies:
   module:
-    - link
     - paragraphs
+    - typed_link
 id: paragraph.field_cta_link
 field_name: field_cta_link
 entity_type: paragraph
-type: link
-settings: {  }
-module: link
+type: typed_link
+settings:
+  allowed_values:
+    default: Default
+    call: 'Call to action'
+    primary: Primary
+  allowed_values_function: ''
+module: typed_link
 locked: false
 cardinality: 1
 translatable: true

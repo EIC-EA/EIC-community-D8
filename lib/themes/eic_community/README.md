@@ -120,7 +120,7 @@ Then you can generate the [Storybook](https://storybook.js.org/) styleguide by r
 $ npm run dev
 ```
 
-Finally you can view the styleguide (http://localhost:6006)
+Finally you can view the styleguide (http://localhost:9000)
 
 #### 3.1 | Usage of Twig in combination with Drupal & Storybook
 

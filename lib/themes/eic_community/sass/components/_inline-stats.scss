@@ -1,0 +1,44 @@
+.ecl-inline-stats {
+  &__items {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  &__item {
+    position: relative;
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    color: ecl-typography('color', 'meta');
+    padding: ecl-box-model('padding', 'controls');
+  }
+
+  &__item-link {
+    color: currentColor;
+
+    &:hover {
+      color: ecl-typograpy('color', 'title');
+    }
+  }
+
+  &__item-value {
+    @include ecl-responsive-font('meta');
+  }
+
+  &__item-icon ~ &__item-label {
+    @include visually-hidden;
+  }
+
+  &__item-icon {
+    margin-right: ecl-box-model('padding', 'controls');
+  }
+
+  & &__update-indicator {
+    position: absolute;
+    top: 0;
+    left: 0;
+    color: map-get($ecl-colors, 'black');
+    background-color: map-get($ecl-colors, 'yellow-100');
+  }
+}

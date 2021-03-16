@@ -3,7 +3,8 @@
  * Lists of media sizes to be used for displaying layout images.
  */
 $ecl-media: (
-  '5xs': 12px,
+  '6xs': 12px,
+  '5xs': 18px,
   '4xs': 24px,
   '3xs': 36px,
   '2xs': 48px,
@@ -11,4 +12,5 @@ $ecl-media: (
   's': 96px,
   'm': 128px,
   'l': 160px,
+  'xl': 260px,
 );

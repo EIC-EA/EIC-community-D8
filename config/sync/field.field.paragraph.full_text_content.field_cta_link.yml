@@ -1,0 +1,23 @@
+uuid: c365ec10-916b-4e25-9c27-5478c2297302
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_cta_link
+    - paragraphs.paragraphs_type.full_text_content
+  module:
+    - typed_link
+id: paragraph.full_text_content.field_cta_link
+field_name: field_cta_link
+entity_type: paragraph
+bundle: full_text_content
+label: 'CTA link'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  link_type: 17
+  title: 2
+field_type: typed_link

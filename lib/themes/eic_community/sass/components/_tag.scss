@@ -1,0 +1,11 @@
+.ecl-tag {
+  &--is-public {
+    background-color: map-get($ecl-colors, 'blue-50');
+    color: map-get($ecl-colors, 'white');
+  }
+
+  &--is-private {
+    background-color: map-get($ecl-colors, 'red-100');
+    color: map-get($ecl-colors, 'white');
+  }
+}

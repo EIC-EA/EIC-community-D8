@@ -1,9 +1,16 @@
+{% if embedded_media is not empty %}
+  {% set output_embedded_media = embedded_media %}
+{% elseif block('embedded_media') is defined %}
+  {% set output_embedded_media = block('embedded_media') %}
+{% endif %}
+
+
 <div class="ecl-media-wrapper {{ extra_classes }}">
   <div class="ecl-container">
     <figure class="ecl-media-container">
-      {% if embedded_media is not empty %}
-        <div class="ecl-media-container__media ecl-media-container__media--ratio-{{ _ratio }}">
-          {{ embedded_media }}
+      {% if output_embedded_media is not empty %}
+        <div class="ecl-media-container__media ecl-media-container__media--ratio-{{ ratio|default('16-9') }}">
+          {{ output_embedded_media }}
         </div>
       {% elseif sources is not empty and sources is iterable %}
         <div class="ecl-media-container__media-wrapper">
@@ -34,7 +41,7 @@
                 type: 'custom',
               },
               extra_classes: 'ecl-media-container__media-wrapper-icon ecl-media-container__media-wrapper-icon--play',
-            } %}
+            } only %}
 
             {% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with {
               icon: {
@@ -43,7 +50,7 @@
                 type: 'custom',
               },
               extra_classes: 'ecl-media-container__media-wrapper-icon ecl-media-container__media-wrapper-icon--pause',
-            } %}
+            } only %}
           {% endif %}
         </div>
       {% else %}

@@ -60,6 +60,11 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
+  reading_time:
+    weight: 100
+    settings: {  }
+    third_party_settings: {  }
+    region: content
 hidden:
   extra_field_oe_theme_helper_short_title_with_fallback: true
   field_body: true
