@@ -30,7 +30,14 @@ function eic_community_include($theme, $path) {
  * file so they are properly detected when drupal_alter() is invoked.
  */
 if (is_dir(__DIR__ . '/' . INCLUDES_PREPROCESS_FOLDER)) {
-  $preprocess_folders = ['', 'blocks', 'content', 'paragraphs'];
+  $preprocess_folders = [
+    '',
+    'blocks',
+    'content',
+    'field',
+    'fragments',
+    'paragraphs',
+  ];
 
   foreach ($preprocess_folders as $folder) {
     $files = scandir(__DIR__ . '/' . INCLUDES_PREPROCESS_FOLDER . '/' . $folder);
