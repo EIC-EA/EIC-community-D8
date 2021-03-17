@@ -9,6 +9,48 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Render\Element;
 use Drupal\oe_theme\ValueObject\ImageValueObject;
 
+// Define constant variable for the `./includes/preprocess` directory.
+define('INCLUDES_PREPROCESS_FOLDER', 'includes/preprocess');
+
+/**
+ * Includes a theme file.
+ *
+ * @param string $theme
+ *   Name of the theme to use for base path.
+ * @param string $path
+ *   Path relative to $theme.
+ */
+function eic_community_include($theme, $path) {
+  $theme_path = drupal_get_path('theme', $theme);
+  if ($theme_path && ($file = DRUPAL_ROOT . '/' . $theme_path . '/' . $path) && file_exists($file) && pathinfo($file, PATHINFO_EXTENSION) === 'inc') {
+    include_once $file;
+  }
+}
+
+/**
+ * Declare various [pre]process/hook functions.
+ *
+ * All [pre]process/hook functions must live (via include) inside this
+ * file so they are properly detected when drupal_alter() is invoked.
+ */
+if (is_dir(__DIR__ . '/' . INCLUDES_PREPROCESS_FOLDER)) {
+  $preprocess_folders = ['', 'blocks', 'content', 'paragraphs'];
+
+  foreach ($preprocess_folders as $folder) {
+    $files = scandir(__DIR__ . '/' . INCLUDES_PREPROCESS_FOLDER . '/' . $folder);
+    if (!empty($files)) {
+      foreach ($files as $file) {
+        if (empty($folder)) {
+          eic_community_include('eic_community', INCLUDES_PREPROCESS_FOLDER . '/' . $file);
+        }
+        else {
+          eic_community_include('eic_community', INCLUDES_PREPROCESS_FOLDER . '/' . $folder . '/' . $file);
+        }
+      }
+    }
+  }
+}
+
 /**
  * Implements hook_preprocess().
  */
