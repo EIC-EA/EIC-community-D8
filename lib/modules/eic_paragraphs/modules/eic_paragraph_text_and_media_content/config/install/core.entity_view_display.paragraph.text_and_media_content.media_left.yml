@@ -1,8 +1,8 @@
-uuid: 6e64db69-25d7-4497-a0b5-47f86b3c58fc
 langcode: en
 status: true
 dependencies:
   config:
+    - core.entity_view_mode.paragraph.media_left
     - field.field.paragraph.text_and_media_content.field_body
     - field.field.paragraph.text_and_media_content.field_cta
     - field.field.paragraph.text_and_media_content.field_display_background
@@ -13,10 +13,10 @@ dependencies:
   module:
     - link
     - text
-id: paragraph.text_and_media_content.default
+id: paragraph.text_and_media_content.media_left
 targetEntityType: paragraph
 bundle: text_and_media_content
-mode: default
+mode: media_left
 content:
   field_body:
     weight: 1

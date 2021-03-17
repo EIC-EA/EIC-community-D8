@@ -1,23 +1,21 @@
-uuid: 17154759-1ff4-453c-8b92-110b90520288
+uuid: 386f7861-1608-4f9f-be24-e7e5823d3b6d
 langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.paragraph.field_view_mode
+    - field.storage.paragraph.paragraph_view_mode
     - paragraphs.paragraphs_type.text_and_media_content
   module:
     - paragraph_view_mode
-id: paragraph.text_and_media_content.field_view_mode
-field_name: field_view_mode
+id: paragraph.text_and_media_content.paragraph_view_mode
+field_name: paragraph_view_mode
 entity_type: paragraph
 bundle: text_and_media_content
 label: Style
 description: ''
-required: true
+required: false
 translatable: true
-default_value:
-  -
-    value: default
+default_value: {  }
 default_value_callback: ''
 settings: {  }
 field_type: paragraph_view_mode
