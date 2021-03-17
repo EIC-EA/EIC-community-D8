@@ -12,6 +12,7 @@ dependencies:
     - paragraphs.paragraphs_type.text_and_media_content
   module:
     - link
+    - media_library
     - paragraph_view_mode
     - text
 id: paragraph.text_and_media_content.default
@@ -44,12 +45,9 @@ content:
   field_media:
     weight: 2
     settings:
-      match_operator: CONTAINS
-      match_limit: 10
-      size: 60
-      placeholder: ''
+      media_types: {  }
     third_party_settings: {  }
-    type: entity_reference_autocomplete
+    type: media_library_widget
     region: content
   field_title:
     weight: 0
