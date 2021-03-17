@@ -6,14 +6,14 @@ _core:
   default_config_hash: j5zLMOdJBqC0bMvSdth5UebkprJB8g_2FXHqhfpJzow
 id: anonymous
 label: 'Anonymous user'
-weight: 0
+weight: -10
 is_admin: false
 permissions:
   - 'access content'
   - 'view banner fragments'
-  - 'view disclaimer fragments'
   - 'view bookmark_content'
   - 'view bookmark_media'
+  - 'view disclaimer fragments'
   - 'view fact_figure fragments'
   - 'view media'
   - 'view recommend'

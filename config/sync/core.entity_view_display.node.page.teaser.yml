@@ -43,5 +43,5 @@ hidden:
   extra_field_oe_theme_helper_short_title_with_fallback: true
   field_page_cta: true
   field_page_paragraphs: true
-  published_at: true
   field_subtitle: true
+  published_at: true
