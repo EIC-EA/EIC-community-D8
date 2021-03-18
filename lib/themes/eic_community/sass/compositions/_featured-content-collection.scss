@@ -25,7 +25,12 @@
   &__header {
     display: flex;
     align-items: center;
-    margin-bottom: map-get($ecl-spacing, '3xl');
+    margin-bottom: map-get($ecl-spacing, 'xl');
+
+    @include ecl-media-breakpoint-up('md') {
+      margin-bottom: map-get($ecl-spacing, '3xl');
+    }
+
     max-width: $ecl-container-max-width-md;
   }
 
@@ -59,13 +64,17 @@
     flex-wrap: wrap;
     margin-top: map-get($ecl-spacing, 'xl');
     margin-left: #{0 - ecl-layout('gutter')};
-    margin-bottom: #{0 - map-get($ecl-spacing, 'xl')};
+    margin-bottom: #{0 - map-get($ecl-spacing, 'l')};
+
+    @include ecl-media-breakpoint-up('md') {
+      margin-bottom: #{0 - map-get($ecl-spacing, 'xl')};
+    }
   }
 
   &__item {
     display: flex;
     padding-left: ecl-layout('gutter');
-    margin-bottom: map-get($ecl-spacing, 'xl');
+    margin-bottom: map-get($ecl-spacing, 'l');
     width: 100%;
     box-sizing: border-box;
 
@@ -75,6 +84,7 @@
 
     @include ecl-media-breakpoint-up('md') {
       width: calc(100% / 2);
+      margin-bottom: map-get($ecl-spacing, 'xl');
     }
 
     @include ecl-media-breakpoint-up('lg') {
