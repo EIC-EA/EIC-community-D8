@@ -1,34 +1,19 @@
 {% extends "@theme/patterns/layout/base.html.twig" %}
 
 {% block page_header %}
-  {% include "@theme/patterns/compositions/breadcrumb.html.twig" with breadcrumb|default({}) only %}
+  {% if breadcrumb %}
+    {% include "@theme/patterns/compositions/breadcrumb.html.twig" with breadcrumb|default({}) only %}
+  {% endif %}
 
-  {% include "@theme/patterns/compositions/editorial-header.html.twig" with editorial_header|default({}) %}
+  {% if editorial_header %}
+    {% include "@theme/patterns/compositions/editorial-header.html.twig" with editorial_header|default({}) %}
+  {% endif %}
 
-  {% include "@theme/patterns/compositions/subnavigation.html.twig" with subnavigation|default({})|merge({
-    icon_file_path: common.icon_file_path
-  }) only %}
+  {% if subnavigation %}
+    {% include "@theme/patterns/compositions/subnavigation.html.twig" with subnavigation|default({})|merge({
+      icon_file_path: common.icon_file_path
+    }) only %}
+  {% endif %}
 {% endblock %}
 
-{% block breadcrumbs %}{% endblock %}
-
-{% block content %}
-  {% include "@theme/patterns/compositions/teaser-overview.html.twig" with {
-    amount_options: amount_options,
-    active_filters: active_filters,
-    sort_options: sort_options,
-    items: items,
-    extra_classes: 'ecl-teaser-overview--has-blocks',
-    icon_file_path: common.icon_file_path,
-  } only %}
-
-  {% include "@theme/patterns/compositions/pagination.html.twig" with pagination|default({}) only %}
-{% endblock %}
-
-{% block sidebar %}
-  {% include "@theme/patterns/compositions/filter-sidebar.html.twig" with {
-    icon_file_path: common.icon_file_path,
-    title: filter_title,
-    items: filters,
-  } only %}
-{% endblock %}
+{% block breadcrumb %}{% endblock %}

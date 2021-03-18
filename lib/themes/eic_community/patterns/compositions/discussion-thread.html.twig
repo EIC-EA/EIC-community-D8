@@ -2,7 +2,7 @@
 {% set started_by_label = started_by_label|default('Started by') %}
 {% set title_element = title_element|default('h3') %}
 
-<div class="ecl-discussion-thread {{ from_contributor ? 'ecl-discussion-thread--from-contributor' }} {{ extra_classes }}">
+<div class="ecl-discussion-thread {{ from_contributor ? 'ecl-discussion-thread--from-contributor' }} {{ extra_classes|default('') }}">
   <div class="ecl-discussion-thread__main">
     {% if author.image %}
       <div class="ecl-discussion-thread__image-wrapper">
@@ -94,7 +94,7 @@
     {% if timestamp %}
       {% include "@theme/patterns/components/timestamp.html.twig" with timestamp|default({})|merge({
         icon_file_path: icon_file_path,
-        extra_classes: timestamp.extra_classes ~ ' ecl-discussion-thread__timestamp',
+        extra_classes: 'ecl-discussion-thread__timestamp ' ~ timestamp.extra_classes|default(''),
       }) only %}
     {% endif %}
 

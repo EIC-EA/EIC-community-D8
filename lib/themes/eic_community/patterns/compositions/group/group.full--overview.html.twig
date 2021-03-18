@@ -1,0 +1,11 @@
+{% extends "@theme/patterns/compositions/group/group.full.html.twig" %}
+
+{% block content %}
+  {% if highlights %}
+    {% include "@theme/patterns/compositions/featured-content-collection.html.twig" with highlights|default({})|merge({
+      icon_file_path: common.icon_file_path,
+      is_collapsible: true,
+      extra_classes: "ecl-section-wrapper ecl-featured-content-collection--has-overview-layout"
+    }) only %}
+  {% endif %}
+{% endblock %}

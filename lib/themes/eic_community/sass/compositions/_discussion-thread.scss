@@ -11,11 +11,20 @@
     background-color: map-get($ecl-colors, 'blue-5');
   }
 
+  &--has-compact-layout {
+    padding: ecl-box-model('padding', 'controls');
+  }
+
   &__main {
     display: flex;
     padding-bottom: ecl-box-model('padding');
     margin-bottom: ecl-box-model('padding');
     border-bottom: ecl-border();
+
+    #{$node}--has-compact-layout & {
+      padding-bottom: ecl-box-model('margin', 'controls');
+      margin-bottom: ecl-box-model('margin', 'controls');
+    }
 
     &:last-child {
       margin-bottom: 0;
@@ -27,6 +36,10 @@
   &__image-wrapper {
     flex-shrink: 0;
     padding-right: ecl-box-model('padding');
+
+    #{$node}--has-compact-layout & {
+      padding-right: ecl-box-model('padding', 'controls');
+    }
   }
 
   &__content {
@@ -45,6 +58,10 @@
 
   &__description {
     @include ecl-responsive-font('meta');
+
+    #{$node}--has-compact-layout & {
+      @include visually-hidden;
+    }
   }
 
   &__header {
@@ -58,6 +75,10 @@
       margin-bottom: ecl-box-model('padding');
       order: 0;
     }
+
+    #{$node}--has-compact-layout & {
+      @include visually-hidden;
+    }
   }
 
   &__footer {
@@ -67,6 +88,10 @@
 
     @include ecl-media-breakpoint-up('md') {
       padding-left: calc(#{map-get($ecl-media, '2xs')} + #{ecl-box-model('padding')});
+
+      #{$node}--has-compact-layout & {
+        padding-left: calc(#{map-get($ecl-media, '2xs')} + #{ecl-box-model('padding', 'controls')});
+      }
     }
   }
 
@@ -89,7 +114,7 @@
   }
 
   &__author,
-  &__timestamp {
+  & &__timestamp {
     margin: 0 ecl-box-model('padding') 0 0;
   }
 
