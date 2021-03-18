@@ -7,6 +7,11 @@
   border-radius: ecl-box-model('border-radius');
   display: block;
 
+  [class*="ecl-section-wrapper--is-"] [class*="ecl-featured-content"] &,
+  .ecl-section-wrapper:not([class*="ecl-section-wrapper--is-"]) ~ .ecl-section-wrapper:not([class*="ecl-section-wrapper--is-"]):nth-child(even) & {
+    background-color: map-get($ecl-colors, 'white');
+  }
+
   &--has-compact-layout {
     padding: ecl-box-model('padding', 'controls');
   }

@@ -6,6 +6,11 @@
   background-color: map-get($ecl-colors, 'grey-5');
   border-left: solid 4px transparent;
 
+  [class*="ecl-section-wrapper--is-"] [class*="ecl-featured-content"] &,
+  .ecl-section-wrapper:not([class*="ecl-section-wrapper--is-"])~.ecl-section-wrapper:not([class*="ecl-section-wrapper--is-"]):nth-child(even) & {
+    background-color: map-get($ecl-colors, 'white');
+  }
+
   &--from-contributor {
     border-color: ecl-typography('color', 'title');
     background-color: map-get($ecl-colors, 'blue-5');

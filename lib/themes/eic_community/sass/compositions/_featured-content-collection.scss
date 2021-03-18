@@ -112,7 +112,7 @@
 
   &__call-to-action {
     #{$node}--is-ready[aria-collapsed="true"] & {
-      dispay: none;
+      display: none;
     }
   }
 }

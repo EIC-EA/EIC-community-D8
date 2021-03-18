@@ -29,6 +29,10 @@
     margin-top: 0;
   }
 
+  h2#{$node}__title {
+    @extend .ecl-u-type-heading-2;
+  }
+
   &__items {
     #{$node}--topics & {
       display: flex;
