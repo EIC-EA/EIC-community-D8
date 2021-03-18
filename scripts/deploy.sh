@@ -114,6 +114,12 @@ fi
 if [ -z "$SKIP_BUILD" ]; then
   # Installation: Install composer dependencies.
   run_command "composer install"
+
+  # Install new npm packages on eic_community theme.
+  run_command "npm install --prefix $THEME_PATH"
+
+  # Rebuild eic_community theme assets.
+  run_command "npm run build --prefix $THEME_PATH"
 fi
 
 if [ -n "$PERFORM_INSTALL" ]; then
@@ -164,12 +170,6 @@ run_command "$DRUSH_CMD state:set system.maintenance_mode 0 --input-format=integ
 
 # Cache: Rebuild Drupal cache.
 run_command "$DRUSH_CMD cache:rebuild"
-
-# Install new npm packages on eic_community theme.
-run_command "npm install --prefix $THEME_PATH"
-
-# Rebuild eic_community theme assets.
-run_command "npm run build --prefix $THEME_PATH"
 
 # Cache: Rebuild Drupal cache.
 run_command "$DRUSH_CMD cache:rebuild"
