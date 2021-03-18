@@ -100,7 +100,7 @@
     }
   }
 
-  &__contributor {
+  &__highlighted {
     color: ecl-typography('color', 'title');
     margin-right: ecl-box-model('padding');
 
@@ -113,7 +113,7 @@
     }
   }
 
-  &__contributor-label,
+  &__highlighted-label,
   &__started-by-label {
     @include visually-hidden;
   }

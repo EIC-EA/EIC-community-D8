@@ -2,7 +2,7 @@
 {% set started_by_label = started_by_label|default('Started by') %}
 {% set title_element = title_element|default('h3') %}
 
-<div class="ecl-discussion-thread {{ from_contributor ? 'ecl-discussion-thread--from-contributor' }} {{ extra_classes|default('') }}">
+<div class="ecl-discussion-thread {{ is_highlighted ? 'ecl-discussion-thread--from-contributor' }} {{ extra_classes|default('') }}">
   <div class="ecl-discussion-thread__main">
     {% if author.image %}
       <div class="ecl-discussion-thread__image-wrapper">
@@ -59,8 +59,8 @@
     </div>
   </div>
   <div class="ecl-discussion-thread__footer">
-    {% if from_contributor %}
-      <div class="ecl-discussion-thread__contributor">
+    {% if is_highlighted %}
+      <div class="ecl-discussion-thread__highlighted">
         {% if icon_file_path %}
           {% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with {
             icon: {
@@ -71,7 +71,7 @@
             },
           } %}
         {% endif %}
-        <span class="ecl-discussion-thread__contributor-label">
+        <span class="ecl-discussion-thread__highlighted-label">
           {{ contributor_label }}
         </span>
       </div>
