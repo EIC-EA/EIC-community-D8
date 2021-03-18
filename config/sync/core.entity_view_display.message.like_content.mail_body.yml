@@ -1,0 +1,17 @@
+uuid: 21dea874-9fc2-43b3-b070-35f561db3737
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.message.mail_body
+    - message.template.like_content
+id: message.like_content.mail_body
+targetEntityType: message
+bundle: like_content
+mode: mail_body
+content:
+  partial_1:
+    weight: 0
+    region: content
+hidden:
+  partial_0: true

@@ -1,0 +1,19 @@
+uuid: 9a8bc178-9166-4007-88a6-e7184b734b27
+langcode: en
+status: true
+dependencies:
+  config:
+    - filter.format.full_html
+template: like_content
+label: 'Like Content'
+description: ''
+text:
+  -
+    value: "Dear [node:author:field_first_name:value] [node:author:field_last_name:value],\r\n\r\n<br>\r\n\r\n<p>\r\nA new activity concerning the [content-type:name] [node:title] you created, has been reported:\r\n</p>\r\n\r\n[site_event_related_system_message]\r\n\r\n<br>\r\n\r\n<p>\r\n  Kind regards,<br>\r\nThe [site_name] team.\r\n</p>\r\n<br>\r\n\r\n<p>\r\n<em>You receive this e-mail because you have enabled notifications for likes on the [site:name]. \r\n</p>\r\n\r\n<p>\r\n<em>\r\nYou can also manage your by clicking <a href=\"[site:url]\">here</a></em>.\r\n</p>"
+    format: full_html
+settings:
+  'token options':
+    clear: false
+    'token replace': true
+  purge_override: false
+  purge_methods: {  }

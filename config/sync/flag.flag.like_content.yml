@@ -1,0 +1,33 @@
+uuid: 9ee8dda0-b98d-486f-8788-7a536e8b31e1
+langcode: en
+status: true
+dependencies:
+  module:
+    - eic_flags
+    - node
+id: like_content
+label: 'Like (content)'
+bundles:
+  - news
+  - story
+entity_type: node
+global: false
+weight: 0
+flag_short: 'Like this item'
+flag_long: ''
+flag_message: ''
+unflag_short: 'Unlike this item'
+unflag_long: ''
+unflag_message: ''
+unflag_denied_text: ''
+flag_type: 'entity:node'
+link_type: eic_count_link
+flagTypeConfig:
+  show_in_links:
+    full: full
+  show_as_field: true
+  show_on_form: false
+  show_contextual_link: false
+  extra_permissions:
+    owner: '0'
+linkTypeConfig: {  }

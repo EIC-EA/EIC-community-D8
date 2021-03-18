@@ -1,0 +1,17 @@
+uuid: 290e38a2-49d3-400d-8c0c-222ce03add17
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.message.mail_subject
+    - message.template.like_content
+id: message.like_content.mail_subject
+targetEntityType: message
+bundle: like_content
+mode: mail_subject
+content:
+  partial_0:
+    weight: 0
+    region: content
+hidden:
+  partial_1: true
