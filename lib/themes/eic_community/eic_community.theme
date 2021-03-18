@@ -24,32 +24,28 @@ function eic_community_include($theme, $path) {
 }
 
 /**
- * Declare various [pre]process/hook functions.
+ * Scan and declare various [pre]process/hook functions.
  *
  * All [pre]process/hook functions must live (via include) inside this
  * file so they are properly detected when drupal_alter() is invoked.
  */
-if (is_dir(__DIR__ . '/' . INCLUDES_PREPROCESS_FOLDER)) {
-  $preprocess_folders = [
-    '',
-    'blocks',
-    'content',
-    'field',
-    'fragments',
-    'paragraphs',
-  ];
-
-  foreach ($preprocess_folders as $folder) {
-    $files = scandir(__DIR__ . '/' . INCLUDES_PREPROCESS_FOLDER . '/' . $folder);
-    if (!empty($files)) {
-      foreach ($files as $file) {
-        if (empty($folder)) {
-          eic_community_include('eic_community', INCLUDES_PREPROCESS_FOLDER . '/' . $file);
-        }
-        else {
-          eic_community_include('eic_community', INCLUDES_PREPROCESS_FOLDER . '/' . $folder . '/' . $file);
-        }
+function eic_community_scan_include_files($folder) {
+  $files = scandir(__DIR__ . '/' . $folder);
+  if (!empty($files)) {
+    foreach (array_diff($files, ['..', '.']) as $file) {
+      if (is_dir(__DIR__ . '/' . $folder . '/' . $file)) {
+        eic_community_scan_files("$folder/$file");
+      }
+      else {
+        eic_community_include('eic_community', "$folder/$file");
       }
     }
   }
+}
+
+/**
+ * Scan and include files from preprocess folder.
+ */
+if (is_dir(__DIR__ . '/' . INCLUDES_PREPROCESS_FOLDER)) {
+  eic_community_scan_include_files(INCLUDES_PREPROCESS_FOLDER);
 }
