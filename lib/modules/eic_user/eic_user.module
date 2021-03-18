@@ -1,0 +1,19 @@
+<?php
+
+/**
+ * @file
+ * Primary module hooks for EIC User module.
+ */
+
+use Drupal\Core\Entity\EntityInterface;
+
+/**
+ * Implements hook_user_presave().
+ */
+function eic_users_user_presave(EntityInterface $entity) {
+  // Add full name as concatenated first and last name.
+  $entity->set('field_full_name', implode(' ', [
+    $entity->get('field_first_name')->value,
+    $entity->get('field_last_name')->value,
+  ]));
+}

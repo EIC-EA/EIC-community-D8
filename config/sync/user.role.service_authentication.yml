@@ -6,4 +6,6 @@ id: service_authentication
 label: 'Service authentication'
 weight: -6
 is_admin: null
-permissions: {  }
+permissions:
+  - 'administer users'
+  - 'restful post eic_webservices_user_update'

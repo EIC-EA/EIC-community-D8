@@ -4,6 +4,7 @@ module:
   admin_toolbar_links_access_filter: 0
   admin_toolbar_search: 0
   admin_toolbar_tools: 0
+  basic_auth: 0
   big_pipe: 0
   block: 0
   block_content: 0
@@ -37,7 +38,8 @@ module:
   eic_media_video: 0
   eic_paragraph_contributor: 0
   eic_paragraph_cta_tile: 0
-  eic_users: 0
+  eic_user: 0
+  eic_webservices: 0
   entity: 0
   entity_browser: 0
   entity_browser_entity_form: 0
@@ -52,6 +54,7 @@ module:
   fragments: 0
   gnode: 0
   group: 0
+  hal: 0
   image: 0
   inline_entity_form: 0
   link: 0
@@ -69,13 +72,21 @@ module:
   oe_time_caching: 0
   oe_webtools: 0
   oe_webtools_social_share: 0
+  openapi: 0
+  openapi_rest: 0
   options: 0
   page_cache: 0
   paragraph_view_mode: 0
   path: 0
   path_alias: 0
+  profile: 0
   responsive_image: 0
+  rest: 0
+  restui: 0
   scheduler: 0
+  schemata: 0
+  schemata_json_schema: 0
+  serialization: 0
   scheduler_content_moderation_integration: 0
   smart_trim: 0
   statistics: 0

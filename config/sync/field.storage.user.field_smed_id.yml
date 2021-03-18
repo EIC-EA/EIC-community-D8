@@ -1,0 +1,20 @@
+uuid: 7a340f22-5eac-4bd8-b9a4-7bf72af476cc
+langcode: en
+status: true
+dependencies:
+  module:
+    - user
+id: user.field_smed_id
+field_name: field_smed_id
+entity_type: user
+type: integer
+settings:
+  unsigned: false
+  size: normal
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false
