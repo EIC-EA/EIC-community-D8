@@ -63,6 +63,20 @@
 
   &__item-tag {
     @include ecl-responsive-font('meta');
+
+    #{$node}--topics-filter & {
+      text-decoration: none;
+      font-weight: $ecl-font-weight-bold;
+      background-color: transparent;
+      border: solid 2px ecl-typography('color', 'title');
+      color: ecl-typography('color', 'title');
+    }
+
+    #{$node}--topics-filter &:hover,
+    #{$node}--topics-filter #{$node}__item--is-active & {
+      color: map-get($ecl-colors, 'white');
+      background-color: ecl-typography('color', 'title');
+    }
   }
 
   &__item-title {

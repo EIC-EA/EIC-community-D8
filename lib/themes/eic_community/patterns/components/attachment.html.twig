@@ -38,67 +38,68 @@
       </div>
     </div>
   </div>
-  <div class="ecl-attachment__footer">
-
+  {% if author or timestamp or language or filesize or path %}
     {% if not is_clickable %}
-      <div class="ecl-attachment__actions">
-        {% if author %}
-          <div class="ecl-attachment__action ecl-attachment__action--author">
-              {% if author.path %}
-                {% include '@ecl-twig/ec-component-link/ecl-link.html.twig' with {
-                  link: {
-                    type: 'standalone',
-                    label: author.author,
-                    path: author.path,
-                  },
-                  extra_classes: "ecl-attachment__author",
-                } only %}
-              {% else %}
-                <span class="ecl-attachment__author">{{ author.author }}</span>
-              {% endif %}
-          </div>
-        {% endif %}
-        {% if timestamp %}
-          <div class="ecl-attachment__action">
-            {% include "@theme/patterns/components/timestamp.html.twig" with {
-              extra_classes: 'ecl-attachment__timestamp ecl-timestamp--meta ' ~ timestamp.extra_classes|default(''),
-              label: timestamp,
-              icon_file_path: icon_file_path,
-            } only %}
-          </div>
-        {% endif %}
-        {% if language %}
-          <div class="ecl-attachment__action">{{ language }}</div>
-        {% endif %}
-        {% if filesize %}
-          <div class="ecl-attachment__action">{{ filesize }}</div>
-        {% endif %}
-        {% if path %}
-          <div class="ecl-attachment__action">
-            {% include '@ecl-twig/ec-component-link/ecl-link.html.twig' with {
-              icon: icon_file_path ? {
-                path: icon_file_path,
-                type: 'custom',
-                name: 'download',
-                size: 'xs',
-                extra_classes: "ecl-attachment__link-icon",
-              } : {},
-              link: {
-                type: 'standalone',
-                label: download_label|default('Download'),
-                path: path,
-                icon_position: 'before',
-              },
-              extra_classes: "ecl-attachment__link",
-              extra_attributes: {
-                download: true
-              },
-            } only %}
-          </div>
-        {% endif %}
+      <div class="ecl-attachment__footer">
+        <div class="ecl-attachment__actions">
+          {% if author %}
+            <div class="ecl-attachment__action ecl-attachment__action--author">
+                {% if author.path %}
+                  {% include '@ecl-twig/ec-component-link/ecl-link.html.twig' with {
+                    link: {
+                      type: 'standalone',
+                      label: author.author,
+                      path: author.path,
+                    },
+                    extra_classes: "ecl-attachment__author",
+                  } only %}
+                {% else %}
+                  <span class="ecl-attachment__author">{{ author.author }}</span>
+                {% endif %}
+            </div>
+          {% endif %}
+          {% if timestamp %}
+            <div class="ecl-attachment__action">
+              {% include "@theme/patterns/components/timestamp.html.twig" with {
+                extra_classes: 'ecl-attachment__timestamp ecl-timestamp--meta ' ~ timestamp.extra_classes|default(''),
+                label: timestamp,
+                icon_file_path: icon_file_path,
+              } only %}
+            </div>
+          {% endif %}
+          {% if language %}
+            <div class="ecl-attachment__action">{{ language }}</div>
+          {% endif %}
+          {% if filesize %}
+            <div class="ecl-attachment__action">{{ filesize }}</div>
+          {% endif %}
+          {% if path %}
+            <div class="ecl-attachment__action">
+              {% include '@ecl-twig/ec-component-link/ecl-link.html.twig' with {
+                icon: icon_file_path ? {
+                  path: icon_file_path,
+                  type: 'custom',
+                  name: 'download',
+                  size: 'xs',
+                  extra_classes: "ecl-attachment__link-icon",
+                } : {},
+                link: {
+                  type: 'standalone',
+                  label: download_label|default('Download'),
+                  path: path,
+                  icon_position: 'before',
+                },
+                extra_classes: "ecl-attachment__link",
+                extra_attributes: {
+                  download: true
+                },
+              } only %}
+            </div>
+          {% endif %}
+        </div>
       </div>
     {% endif %}
-  </div>
+  {% endif %}
 {% if is_clickable %}
   </a>
 {% else %}

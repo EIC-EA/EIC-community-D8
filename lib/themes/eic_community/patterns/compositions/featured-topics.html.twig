@@ -1,7 +1,7 @@
 {% set title_element = title_element|default('h3') %}
 
 {% if items is not empty %}
-  <div class="ecl-featured-list ecl-featured-list--topics">
+  <div class="ecl-featured-list ecl-featured-list--topics {{ extra_classes }}">
     {% if title is not empty %}
       {% if title is not empty %}
         <{{ title_element }} class="ecl-featured-list__title">{{ title }}</{{ title_element }}>
@@ -10,7 +10,7 @@
 
     <div class="ecl-featured-list__items">
       {% for item in items %}
-        <div class="ecl-featured-list__item">
+        <div class="ecl-featured-list__item {{ item.is_active ? 'ecl-featured-list__item--is-active' }} {{ item.extra_classes }}">
           {% include '@ecl-twig/ec-component-tag/ecl-tag.html.twig' with {
             extra_classes: 'ecl-featured-list__item-tag',
             tag: {

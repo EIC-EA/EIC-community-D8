@@ -6,6 +6,7 @@
       <div class="ecl-container">
         {% include "@theme/patterns/compositions/featured-topics.html.twig" with latest_tags|default({})|merge({
           title_element: 'h2',
+          extra_classes: 'ecl-featured-list--topics-filter',
         }) only %}
       </div>
     </div>
