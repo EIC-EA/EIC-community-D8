@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0cf97f1f13e50e84b6f6adfccf36a445",
+    "content-hash": "466ac2675af521c87288240cec98885a",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -6480,17 +6480,11 @@
         },
         {
             "name": "openeuropa/oe_theme",
-            "version": "2.14.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/openeuropa/oe_theme.git",
-                "reference": "b31b741368c7995e568b19d048c43135dc1214d1"
-            },
+            "version": "dev-Issue-737_Fix_drupal_9_compatibilities",
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/openeuropa/oe_theme/zipball/b31b741368c7995e568b19d048c43135dc1214d1",
-                "reference": "b31b741368c7995e568b19d048c43135dc1214d1",
-                "shasum": ""
+                "url": "https://github.com/4hardfire/oe_theme/archive/Issue-737_Fix_drupal_9_compatibilities.zip",
+                "reference": "7289e508ba66d0bbfd4dca8b4512ed35f83b57b4"
             },
             "require": {
                 "drupal/core": "^8.8",
@@ -6535,11 +6529,11 @@
                 "openeuropa/code-review": "~1.5",
                 "openeuropa/drupal-core-require-dev": "^8.7",
                 "openeuropa/oe_contact_forms": "~0.5",
-                "openeuropa/oe_content": "~1.13",
+                "openeuropa/oe_content": "dev-master",
                 "openeuropa/oe_corporate_blocks": "~3.1",
                 "openeuropa/oe_corporate_countries": "~1.0.0-beta4",
                 "openeuropa/oe_media": "~1.11",
-                "openeuropa/oe_multilingual": "~1.5",
+                "openeuropa/oe_multilingual": "~1.6",
                 "openeuropa/oe_paragraphs": "~1.6",
                 "openeuropa/oe_search": "~1.0",
                 "openeuropa/oe_webtools": "~1.10",
@@ -6585,12 +6579,26 @@
                     "Drupal\\oe_theme\\": "./src/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
+            "autoload-dev": {
+                "psr-4": {
+                    "Drupal\\Tests\\oe_theme\\": "./tests/",
+                    "Drupal\\Tests\\oe_content\\": "./build/modules/contrib/oe_content/tests/",
+                    "Drupal\\Tests\\oe_media\\": "./build/modules/contrib/oe_media/tests/"
+                }
+            },
+            "scripts": {
+                "post-install-cmd": [
+                    "./vendor/bin/run drupal:site-setup"
+                ],
+                "post-update-cmd": [
+                    "./vendor/bin/run drupal:site-setup"
+                ]
+            },
             "license": [
                 "EUPL-1.2"
             ],
             "description": "OpenEuropa base theme.",
-            "time": "2021-01-25T18:18:26+00:00"
+            "time": "2021-03-18T10:55:10+00:00"
         },
         {
             "name": "openeuropa/oe_time_caching",
@@ -13790,7 +13798,14 @@
             "time": "2020-07-12T23:59:07+00:00"
         }
     ],
-    "aliases": [],
+    "aliases": [
+        {
+            "alias": "2.15.1",
+            "alias_normalized": "2.15.1.0",
+            "version": "dev-Issue-737_Fix_drupal_9_compatibilities",
+            "package": "openeuropa/oe_theme"
+        }
+    ],
     "minimum-stability": "dev",
     "stability-flags": {
         "drupal/context": 10,
@@ -13798,7 +13813,8 @@
         "drupal/flag": 10,
         "drupal/openapi": 5,
         "drupal/openapi_rest": 5,
-        "drupal/publication_date": 10
+        "drupal/publication_date": 10,
+        "openeuropa/oe_theme": 20
     },
     "prefer-stable": true,
     "prefer-lowest": false,

@@ -39,7 +39,7 @@
         "openeuropa/composer-artifacts": "~0.1",
         "openeuropa/oe_media": "^1.11",
         "openeuropa/oe_profile": "^0.4",
-        "openeuropa/oe_theme": "^2.0",
+        "openeuropa/oe_theme": "dev-Issue-737_Fix_drupal_9_compatibilities as 2.15.1",
         "openeuropa/oe_webtools": "^1.10",
         "webflo/drupal-finder": "^1.0",
         "webmozart/path-util": "^2.3"
@@ -59,14 +59,19 @@
         "drupal": {
             "type": "composer",
             "url": "https://packages.drupal.org/8"
+        },
+        "oe_theme_fork": {
+            "url": "https://github.com/4hardfire/oe_theme.git",
+            "type": "git",
+            "reference": "origin/Issue-737_Fix_drupal_9_compatibilities"
         }
     },
     "extra": {
         "artifacts": {
             "openeuropa/oe_theme": {
                 "dist": {
-                    "url": "https://github.com/{name}/releases/download/{pretty-version}/{project-name}-{pretty-version}.tar.gz",
-                    "type": "tar"
+                    "url": "https://github.com/4hardfire/oe_theme/archive/Issue-737_Fix_drupal_9_compatibilities.zip",
+                    "type": "zip"
                 }
             }
         },
