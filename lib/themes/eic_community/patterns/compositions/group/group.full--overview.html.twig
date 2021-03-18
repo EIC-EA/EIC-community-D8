@@ -2,7 +2,7 @@
 
 {% block content %}
   {% if latest_tags %}
-    <div class="ecl-section-wrapper">
+    <div class="ecl-section-wrapper  ecl-section-wrapper--is-white">
       <div class="ecl-container">
         {% include "@theme/patterns/compositions/featured-topics.html.twig" with latest_tags|default({})|merge({
           title_element: 'h2',
@@ -15,6 +15,20 @@
     {% include "@theme/patterns/compositions/featured-content-collection.html.twig" with highlights|default({})|merge({
       icon_file_path: common.icon_file_path,
       is_collapsible: true,
+      extra_classes: "ecl-section-wrapper ecl-featured-content-collection--has-overview-layout"
+    }) only %}
+  {% endif %}
+
+  {% if discussions %}
+    {% include "@theme/patterns/compositions/featured-content-collection.html.twig" with discussions|default({})|merge({
+      icon_file_path: common.icon_file_path,
+      extra_classes: "ecl-section-wrapper ecl-featured-content-collection--has-overview-layout"
+    }) only %}
+  {% endif %}
+
+  {% if attachments %}
+    {% include "@theme/patterns/compositions/featured-content-collection.html.twig" with attachments|default({})|merge({
+      icon_file_path: common.icon_file_path,
       extra_classes: "ecl-section-wrapper ecl-featured-content-collection--has-overview-layout"
     }) only %}
   {% endif %}

@@ -1,10 +1,10 @@
 {% extends "@theme/patterns/layout/base.html.twig" %}
 
-{% block page_header %}
-  {% if breadcrumb %}
-    {% include "@theme/patterns/compositions/breadcrumb.html.twig" with breadcrumb|default({}) only %}
-  {% endif %}
+{% block breadcrumbs %}
+  {% include "@theme/patterns/compositions/breadcrumb.html.twig" with breadcrumb|default({}) only %}
+{% endblock %}
 
+{% block page_header %}
   {% if editorial_header %}
     {% include "@theme/patterns/compositions/editorial-header.html.twig" with editorial_header|default({}) %}
   {% endif %}
@@ -15,5 +15,3 @@
     }) only %}
   {% endif %}
 {% endblock %}
-
-{% block breadcrumb %}{% endblock %}

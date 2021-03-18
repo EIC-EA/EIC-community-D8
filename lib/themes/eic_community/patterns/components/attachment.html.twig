@@ -1,7 +1,7 @@
 {% if is_clickable %}
-  <a href="{{ path }}" download class="ecl-attachment ecl-attachment--has-compact-layout {{ extra_classes }}">
+  <a href="{{ path }}" download class="ecl-attachment ecl-attachment--has-compact-layout {{ from_contributor ? 'ecl-attachment--from-contributor' }} {{ extra_classes }}">
 {% else %}
-  <div class="ecl-attachment {{ extra_classes }}">
+  <div class="ecl-attachment {{ from_contributor ? 'ecl-attachment--from-contributor' }} {{ extra_classes }}">
 {% endif %}
   <div class="ecl-attachment__main">
     {% if image or icon %}
@@ -61,7 +61,7 @@
         {% if timestamp %}
           <div class="ecl-attachment__action">
             {% include "@theme/patterns/components/timestamp.html.twig" with {
-              extra_classes: 'ecl-attachment--meta ' ~ timestamp.extra_classes|default(''),
+              extra_classes: 'ecl-attachment__timestamp ecl-timestamp--meta ' ~ timestamp.extra_classes|default(''),
               label: timestamp,
               icon_file_path: icon_file_path,
             } only %}
@@ -78,7 +78,7 @@
             {% include '@ecl-twig/ec-component-link/ecl-link.html.twig' with {
               icon: icon_file_path ? {
                 path: icon_file_path,
-                type: 'ui',
+                type: 'custom',
                 name: 'download',
                 size: 'xs',
                 extra_classes: "ecl-attachment__link-icon",

@@ -4,12 +4,22 @@
   margin: ecl-box-model('margin', 'description') 0;
   padding: ecl-box-model('padding', 'description');
   background-color: map-get($ecl-colors, 'blue-5');
-  border-radius: ecl-box-model('border-radius');
   display: block;
+  border-left: solid 4px transparent;
 
+  &--from-contributor {
+    border-color: ecl-typography('color', 'title');
+  }
+
+  // Overrides the background color if the composition exists within a colored section.
   [class*="ecl-section-wrapper--is-"] [class*="ecl-featured-content"] &,
-  .ecl-section-wrapper:not([class*="ecl-section-wrapper--is-"]) ~ .ecl-section-wrapper:not([class*="ecl-section-wrapper--is-"]):nth-child(even) & {
+  .ecl-section-wrapper:not([class*="ecl-section-wrapper--is-"]) ~ .ecl-section-wrapper:not([class*="ecl-section-wrapper--is-"]):nth-child(2n - 1) &,
+  &--is-white {
     background-color: map-get($ecl-colors, 'white');
+
+    & #{$node}__icon-wrapper {
+      background-color: map-get($ecl-colors, 'grey-5');
+    }
   }
 
   &--has-compact-layout {
@@ -178,5 +188,11 @@
     line-height: ecl-typography('line-height', 'label');
 
     @include ecl-responsive-font('label');
+  }
+
+  &__timestamp {
+    .ecl-timestamp__label {
+      font-size: inherit;
+    }
   }
 }

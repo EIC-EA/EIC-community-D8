@@ -23,7 +23,7 @@
     @include ecl-responsive-font('label');
 
     #{$node}--meta & {
-      @include ecl-responsive-font('meta');
+      font-size: inherit;
     }
   }
 

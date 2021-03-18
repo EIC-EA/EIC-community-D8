@@ -94,7 +94,7 @@
     {% if timestamp %}
       {% include "@theme/patterns/components/timestamp.html.twig" with timestamp|default({})|merge({
         icon_file_path: icon_file_path,
-        extra_classes: 'ecl-discussion-thread__timestamp ' ~ timestamp.extra_classes|default(''),
+        extra_classes: 'ecl-discussion-thread__timestamp ecl-timestamp--meta' ~ timestamp.extra_classes|default(''),
       }) only %}
     {% endif %}
 
