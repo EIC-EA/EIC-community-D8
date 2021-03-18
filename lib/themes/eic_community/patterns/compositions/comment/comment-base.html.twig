@@ -61,7 +61,7 @@
           {% endif %}
         </div>
         {% if timestamp %}
-          <time class="ecl-comment__timestamp">{{ timestamp }}</time>
+          <time class="ecl-comment__timestamp">{{ timestamp|format_date() }}</time>
         {% endif %}
       </div>
 

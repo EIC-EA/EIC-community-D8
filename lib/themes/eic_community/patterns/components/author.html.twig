@@ -46,7 +46,7 @@
         </div>
       {% endif %}
     </div>
-    {% if image or author_full_name %}
+    {% if image or author %}
       <div class="ecl-author__aside">
         {% if image is not empty %}
           <div class="ecl-author__media-wrapper">
@@ -61,7 +61,7 @@
         {% elseif author is not empty %}
           <span class="ecl-author__initials-wrapper">
             <span class="ecl-author__initials">
-              {% for name in author_full_name|split(' ') %}
+              {% for name in author|split(' ') %}
                 {{- name|first -}}
               {% endfor %}
             </span>

@@ -6,6 +6,7 @@
  */
 
 use Drupal\file\Entity\File;
+use Drupal\comment\Entity\Comment;
 use Drupal\media\Entity\Media;
 use Drupal\oe_theme\ValueObject\ImageValueObject;
 use Drupal\user\Entity\User;
@@ -301,9 +302,10 @@ function eic_community_preprocess_block(array &$variables) {
  */
 function eic_community_preprocess_comment(&$variables) {
   $author = User::load($variables['author_id']);
+  $current_user = $variables['user'];
 
   $author_image = NULL;
-  if ($author->hasField('field_media')) {
+  if ($author->field_media->target_id !== NULL) {
     $author_image_media = Media::load($author->field_media->target_id);
     $author_image_media_fid = $author_image_media->getSource()
       ->getSourceFieldValue($author_image_media);
@@ -315,17 +317,32 @@ function eic_community_preprocess_comment(&$variables) {
     ];
   }
 
+  $comment = $variables['comment'];
+  $comment_origin = NULL;
+  if ($comment->pid->target_id !== NULL) {
+    $comment_origin_entity = Comment::load($comment->pid->target_id);
+    $comment_origin_author = User::load($comment_origin_entity->getOwnerId());
+    $comment_origin = [
+      'author' => [
+        'author' => $comment_origin_author->get("field_full_name")->value,
+      ],
+      'comment_id' => $comment_origin_entity->id(),
+      'is_owner' => $current_user->id() == $comment_origin_entity->getOwnerId(),
+    ];
+  }
+
   $variables['comment'] = [
     'author' => [
       'author' => $author->get('field_full_name')->getString(),
       'path' => '',
       'image' => $author_image,
     ],
-    'comment_id' => '',
-    'comment_origin' => '',
-    'comment_origin' => [
-      'author' => '',
-      'comment_id' => '',
-    ],
+    'comment' => $comment->comment_body->value,
+    'comment_id' => $comment->cid->value,
+    'comment_origin' => $comment_origin,
+    'is_owner' => $current_user->id() == $comment->getOwnerId(),
+
+    'timestamp' => $comment->getCreatedTime(),
+    'user' => $current_user,
   ];
 }
