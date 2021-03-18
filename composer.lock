@@ -6484,10 +6484,9 @@
             "dist": {
                 "type": "zip",
                 "url": "https://github.com/4hardfire/oe_theme/archive/Issue-737_Fix_drupal_9_compatibilities.zip",
-                "reference": "7289e508ba66d0bbfd4dca8b4512ed35f83b57b4"
+                "reference": "2e46314a709660322ce2ce7eeeba370a69b3c225"
             },
             "require": {
-                "drupal/core": "^8.8",
                 "drupal/smart_trim": "^1.2",
                 "drupal/twig_field_value": "^2.0",
                 "drupal/ui_patterns": "^1.0",
@@ -6598,7 +6597,7 @@
                 "EUPL-1.2"
             ],
             "description": "OpenEuropa base theme.",
-            "time": "2021-03-18T10:55:10+00:00"
+            "time": "2021-03-18T13:51:16+00:00"
         },
         {
             "name": "openeuropa/oe_time_caching",
