@@ -341,7 +341,8 @@ function eic_community_preprocess_comment(&$variables) {
     'comment_id' => $comment->cid->value,
     'comment_origin' => $comment_origin,
     'is_owner' => $current_user->id() == $comment->getOwnerId(),
-
+    'edit_path' => $comment->toUrl('edit-form'),
+    'remove_path' => $comment->toUrl('delete-form'),
     'timestamp' => $comment->getCreatedTime(),
     'user' => $current_user,
   ];
