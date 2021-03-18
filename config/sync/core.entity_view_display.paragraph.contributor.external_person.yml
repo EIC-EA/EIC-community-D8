@@ -68,3 +68,4 @@ content:
 hidden:
   field_user_ref: true
   paragraph_view_mode: true
+  search_api_excerpt: true

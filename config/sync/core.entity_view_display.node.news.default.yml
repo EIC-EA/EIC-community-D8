@@ -161,3 +161,5 @@ content:
     region: content
 hidden:
   extra_field_oe_theme_helper_short_title_with_fallback: true
+  langcode: true
+  search_api_excerpt: true
