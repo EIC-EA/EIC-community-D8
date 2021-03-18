@@ -19,7 +19,7 @@ third_party_settings:
     publish_revision: false
     publish_touch: false
     show_message_after_update: true
-    unpublish_enable: false
+    unpublish_enable: true
     unpublish_required: false
     unpublish_revision: false
 _core:
