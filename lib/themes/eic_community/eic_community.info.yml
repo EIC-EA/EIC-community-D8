@@ -12,13 +12,14 @@ libraries:
   - eic_community/theme
 
 regions:
-  site_top_bar: "Site top bar"
-  site_header: "Site header"
-  site_header_secondary: "Site header secondary"
-  page_header: "Page header"
-  navigation: "Navigation"
-  content: "Content"
-  footer: "Footer"
+  breadcrumbs: 'Breadcrumbs'
+  content: 'Content'
+  footer: 'Footer'
+  navigation: 'Navigation'
+  page_header: 'Page header'
+  sidebar: 'Sidebar'
+  site_header: 'Site header'
+  site_top_bar: 'Site top bar'
 
 # Registers twig namespace for EIC components.
 components:

@@ -36,35 +36,6 @@ function eic_community_preprocess_block(array &$variables) {
         }
         break;
 
-      case 'cta_tiles':
-        // Preprocess variables for cta_tiles block.
-        if (!$block_content->get('field_cta_tiles')->isEmpty()) {
-          /** @var \Drupal\paragraphs\ParagraphInterface[] $paragraphs */
-          $paragraphs = $block_content->get('field_cta_tiles')->referencedEntities();
-
-          foreach ($paragraphs as $paragraph) {
-            $paragraph_translation = \Drupal::service('entity.repository')->getTranslationFromContext($paragraph, $block_content->language()->getId());
-            $link = $paragraph_translation->get('field_cta_link')->first()->getValue();
-            $cache_tags = Cache::mergeTags($cache_tags, $paragraph->getCacheTags());
-
-            // Adds CTA Tiles to the theme variables.
-            $variables['block_content']['items'][] = [
-              'title' => $paragraph_translation->get('field_title')->value,
-              'description' => $paragraph_translation->get('field_body')->value,
-              'actions' => [
-                [
-                  'link' => [
-                    'label' => $link['title'],
-                    'path' => $link['uri'],
-                  ],
-                  'extra_classes' => "ecl-link--button ecl-link--button-{$link['link_type']}",
-                ],
-              ],
-            ];
-          }
-        }
-        break;
-
       case 'facts_figures':
         // Preprocess variables for facts_figures block.
         if (!$block_content->get('field_facts_figures')->isEmpty()) {
