@@ -69,6 +69,14 @@
       &:last-child {
         margin: 0 map-get($ecl-spacing, 'm') map-get($ecl-spacing, 'm') 0;
       }
+
+      &--expand {
+        &,
+        &:first-child,
+        &:last-child {
+          margin: 0;
+        }
+      }
     }
 
     &--expand {
