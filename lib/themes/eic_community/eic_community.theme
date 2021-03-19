@@ -34,7 +34,7 @@ function eic_community_scan_include_files($folder) {
   if (!empty($files)) {
     foreach (array_diff($files, ['..', '.']) as $file) {
       if (is_dir(__DIR__ . '/' . $folder . '/' . $file)) {
-        eic_community_scan_files("$folder/$file");
+        eic_community_scan_include_files("$folder/$file");
       }
       else {
         eic_community_include('eic_community', "$folder/$file");
