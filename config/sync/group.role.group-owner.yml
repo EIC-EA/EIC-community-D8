@@ -1,0 +1,29 @@
+uuid: 0d97784a-9ad3-4992-a81f-d386348c1583
+langcode: en
+status: true
+dependencies:
+  config:
+    - group.type.group
+id: group-owner
+label: Owner
+weight: 7
+internal: false
+audience: member
+group_type: group
+permissions_ui: true
+permissions:
+  - 'administer members'
+  - 'create group_node:discussion entity'
+  - 'delete any group_node:discussion entity'
+  - 'delete any group_node:document entity'
+  - 'delete any group_node:wiki_page entity'
+  - 'delete group'
+  - 'edit group'
+  - 'update any group_node:discussion entity'
+  - 'update any group_node:document entity'
+  - 'update any group_node:wiki_page entity'
+  - 'update own group_membership content'
+  - 'view group'
+  - 'view group_membership content'
+  - 'view unpublished group_node:document entity'
+  - 'view unpublished group_node:wiki_page entity'
