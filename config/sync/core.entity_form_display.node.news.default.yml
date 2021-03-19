@@ -16,8 +16,10 @@ dependencies:
     - field.field.node.news.field_vocab_geo
     - field.field.node.news.field_vocab_topics
     - node.type.news
+    - workflows.workflow.news_stories
   module:
     - content_moderation
+    - datetime
     - media_library
     - paragraphs
     - path
