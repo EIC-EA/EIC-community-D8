@@ -19,12 +19,12 @@ dependencies:
     - workflows.workflow.news_stories
   module:
     - content_moderation
-    - datetime
     - media_library
     - paragraphs
     - path
     - publication_date
     - scheduler
+    - scheduler_content_moderation_integration
     - text
 id: node.news.default
 targetEntityType: node
@@ -71,12 +71,9 @@ content:
   field_image:
     weight: 4
     settings:
-      match_operator: CONTAINS
-      match_limit: 10
-      size: 60
-      placeholder: ''
+      media_types: {  }
     third_party_settings: {  }
-    type: entity_reference_autocomplete
+    type: media_library_widget
     region: content
   field_image_caption:
     weight: 5
@@ -175,9 +172,9 @@ content:
     third_party_settings: {  }
   scheduler_settings:
     weight: 20
+    region: content
     settings: {  }
     third_party_settings: {  }
-    region: content
   status:
     type: boolean_checkbox
     settings:
