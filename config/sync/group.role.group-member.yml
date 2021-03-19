@@ -13,11 +13,16 @@ group_type: group
 permissions_ui: true
 permissions:
   - 'access content overview'
-  - 'access group_node overview'
   - 'create group_node:discussion entity'
+  - 'create group_node:wiki_page entity'
   - 'delete own group_node:discussion entity'
+  - 'delete own group_node:wiki_page entity'
   - 'leave group'
   - 'update own group_membership content'
+  - 'update own group_node:wiki_page entity'
+  - 'view group'
   - 'view group_membership content'
   - 'view group_node:discussion content'
   - 'view group_node:discussion entity'
+  - 'view group_node:wiki_page content'
+  - 'view group_node:wiki_page entity'
