@@ -16,6 +16,7 @@ dependencies:
     - field.field.node.story.field_vocab_geo
     - field.field.node.story.field_vocab_topics
     - node.type.story
+    - workflows.workflow.news_stories
   module:
     - content_moderation
     - media_library
