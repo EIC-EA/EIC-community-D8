@@ -1,0 +1,34 @@
+uuid: 0116d550-1d76-41e5-b44e-7098f3fbca54
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.message.notify_group_admin_promoted.field_event_executing_user
+    - field.field.message.notify_group_admin_promoted.field_group_ref
+    - message.template.notify_group_admin_promoted
+id: message.notify_group_admin_promoted.default
+targetEntityType: message
+bundle: notify_group_admin_promoted
+mode: default
+content:
+  field_event_executing_user:
+    weight: 1
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: entity_reference_autocomplete
+    region: content
+  field_group_ref:
+    weight: 0
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: entity_reference_autocomplete
+    region: content
+hidden: {  }
