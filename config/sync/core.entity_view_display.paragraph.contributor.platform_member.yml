@@ -34,3 +34,4 @@ hidden:
   field_organisation: true
   field_person_email: true
   paragraph_view_mode: true
+  search_api_excerpt: true
