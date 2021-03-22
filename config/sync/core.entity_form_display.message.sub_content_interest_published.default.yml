@@ -1,0 +1,56 @@
+uuid: 02d42c23-bbb1-4607-ba88-478bec314ab1
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.message.sub_content_interest_published.field_event_executing_user
+    - field.field.message.sub_content_interest_published.field_group_ref
+    - field.field.message.sub_content_interest_published.field_node_ref
+    - field.field.message.sub_content_interest_published.field_topic_term
+    - message.template.sub_content_interest_published
+id: message.sub_content_interest_published.default
+targetEntityType: message
+bundle: sub_content_interest_published
+mode: default
+content:
+  field_event_executing_user:
+    weight: 0
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: entity_reference_autocomplete
+    region: content
+  field_group_ref:
+    weight: 3
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: entity_reference_autocomplete
+    region: content
+  field_node_ref:
+    weight: 2
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: entity_reference_autocomplete
+    region: content
+  field_topic_term:
+    weight: 1
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: entity_reference_autocomplete
+    region: content
+hidden: {  }
