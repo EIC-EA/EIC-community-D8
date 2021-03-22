@@ -15,8 +15,8 @@
         "drupal/components": "^2.2",
         "drupal/config_split": "^1.7",
         "drupal/context": "^4.0@beta",
-        "drupal/core": "^8.7",
-        "drupal/core-composer-scaffold": "^8.8",
+        "drupal/core": "^9.1",
+        "drupal/core-composer-scaffold": "^9.1",
         "drupal/default_content": "^2.0@alpha",
         "drupal/extra_field": "^2.0",
         "drupal/flag": "^4.0@beta",
@@ -39,14 +39,14 @@
         "openeuropa/composer-artifacts": "~0.1",
         "openeuropa/oe_media": "dev-ISSUE-160-Drupal-9-support as 1.11.0",
         "openeuropa/oe_profile": "^0.4",
-        "openeuropa/oe_theme": "^2.0",
         "openeuropa/oe_time_caching": "dev-ISSUE-6-Drupal-9-support as 1.0.0",
+        "openeuropa/oe_theme": "dev-Issue-737_Fix_drupal_9_compatibilities as 2.15.1",
         "webflo/drupal-finder": "^1.0",
         "webmozart/path-util": "^2.3",
         "openeuropa/oe_webtools": "dev-ISSUE-153-Drupal-9-support as 1.11.0"
     },
     "require-dev": {
-        "drupal/core-dev": "^8.7",
+        "drupal/core-dev": "^9.1",
         "drupal/devel": "^4.1",
         "drupal/drupal-extension": "~4.0",
         "ec-europa/toolkit": "~4.0.0-beta7"
@@ -72,14 +72,19 @@
         "oe_webtools_fork": {
             "url": "https://github.com/didierdemaeyer/oe_webtools.git",
             "type": "vcs"
+        },
+        "oe_theme_fork": {
+            "url": "https://github.com/4hardfire/oe_theme.git",
+            "type": "git",
+            "reference": "origin/Issue-737_Fix_drupal_9_compatibilities"
         }
     },
     "extra": {
         "artifacts": {
             "openeuropa/oe_theme": {
                 "dist": {
-                    "url": "https://github.com/{name}/releases/download/{pretty-version}/{project-name}-{pretty-version}.tar.gz",
-                    "type": "tar"
+                    "url": "https://github.com/4hardfire/oe_theme/archive/Issue-737_Fix_drupal_9_compatibilities.zip",
+                    "type": "zip"
                 }
             }
         },
