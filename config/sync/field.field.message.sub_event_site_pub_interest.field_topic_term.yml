@@ -1,0 +1,29 @@
+uuid: 8c8cacf1-0800-41d5-855c-59a057e6053d
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.message.field_topic_term
+    - message.template.sub_event_site_pub_interest
+    - taxonomy.vocabulary.topics
+id: message.sub_event_site_pub_interest.field_topic_term
+field_name: field_topic_term
+entity_type: message
+bundle: sub_event_site_pub_interest
+label: 'Topic term'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      topics: topics
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

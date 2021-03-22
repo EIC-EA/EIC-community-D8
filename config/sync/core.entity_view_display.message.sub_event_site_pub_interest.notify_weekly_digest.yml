@@ -1,0 +1,24 @@
+uuid: b2bd8f9c-b54f-4543-9a47-763307708e5c
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.message.notify_weekly_digest
+    - field.field.message.sub_event_site_pub_interest.field_event_executing_user
+    - field.field.message.sub_event_site_pub_interest.field_topic_term
+    - message.template.sub_event_site_pub_interest
+id: message.sub_event_site_pub_interest.notify_weekly_digest
+targetEntityType: message
+bundle: sub_event_site_pub_interest
+mode: notify_weekly_digest
+content:
+  partial_2:
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  field_event_executing_user: true
+  field_topic_term: true
+  partial_0: true
+  partial_1: true
