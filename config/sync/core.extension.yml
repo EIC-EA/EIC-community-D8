@@ -24,6 +24,7 @@ module:
   eic_block_type_tiles_reference: 0
   eic_block_types: 0
   eic_blocks: 0
+  eic_comments: 0
   eic_content: 0
   eic_content_story: 0
   eic_flags: 0
