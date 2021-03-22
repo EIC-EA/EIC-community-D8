@@ -1,0 +1,28 @@
+uuid: 68a3c664-abc8-403c-b1f0-5733259d35b2
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.message.field_event_executing_user
+    - message.template.notify_membership_request_rej
+id: message.notify_membership_request_rej.field_event_executing_user
+field_name: field_event_executing_user
+entity_type: message
+bundle: notify_membership_request_rej
+label: 'Event executing user'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:user'
+  handler_settings:
+    include_anonymous: false
+    filter:
+      type: _none
+    target_bundles: null
+    sort:
+      field: _none
+    auto_create: false
+field_type: entity_reference
