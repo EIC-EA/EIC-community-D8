@@ -1,0 +1,28 @@
+uuid: 5239f6a3-b057-4df4-9bb9-3e49a65707cc
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.message.field_event_executing_user
+    - message.template.sub_new_comment_on_content
+id: message.sub_new_comment_on_content.field_event_executing_user
+field_name: field_event_executing_user
+entity_type: message
+bundle: sub_new_comment_on_content
+label: 'Event executing user'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:user'
+  handler_settings:
+    include_anonymous: false
+    filter:
+      type: _none
+    target_bundles: null
+    sort:
+      field: _none
+    auto_create: false
+field_type: entity_reference

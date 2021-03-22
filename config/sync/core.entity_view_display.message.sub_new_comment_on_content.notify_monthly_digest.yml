@@ -1,0 +1,22 @@
+uuid: 67ca9d4c-8a59-4afb-bf9a-99e37c0f3d85
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.message.notify_monthly_digest
+    - field.field.message.sub_new_comment_on_content.field_event_executing_user
+    - message.template.sub_new_comment_on_content
+id: message.sub_new_comment_on_content.notify_monthly_digest
+targetEntityType: message
+bundle: sub_new_comment_on_content
+mode: notify_monthly_digest
+content:
+  partial_2:
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  field_event_executing_user: true
+  partial_0: true
+  partial_1: true
