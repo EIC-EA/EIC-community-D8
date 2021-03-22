@@ -72,26 +72,26 @@
             items: [
               {
                 link: {
-                label: report_label|default('Report comment'),
-                path: '...',
-              },
+                  label: report_label|default('Report comment'),
+                  path: '...',
+                },
                 extra_classes: 'ecl-comment__report',
                 extra_attributes: action_attributes,
               },
             ]|merge(is_owner ? [
               {
                 link: {
-                label: edit_label|default('Edit comment'),
-                path: edit_path,
-              },
+                  label: edit_label|default('Edit comment'),
+                  path: edit_path,
+                },
                 extra_classes: 'ecl-comment__edit',
                 extra_attributes: action_attributes,
               },
               {
                 link: {
-                label: remove_label|default('Delete comment'),
-                path: remove_path,
-              },
+                  label: remove_label|default('Delete comment'),
+                  path: remove_path,
+                },
                 extra_classes: 'ecl-comment__delete',
                 extra_attributes: action_attributes,
               },
@@ -160,11 +160,12 @@
           <div class="ecl-comment__actions-wrapper">
             <div class="ecl-comment__actions">
               <div class="ecl-comment__action">
-                {% include "@ecl-twig/ec-component-button/ecl-button.html.twig" with {
-                  label: reply_label|default('Reply'),
-                  variant: 'ghost',
-                  type: 'button',
-                  extra_classes: 'ecl-comment__reply',
+                {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with {
+                  link: {
+                    path: reply_path,
+                    label: reply_label|default('Reply'),
+                  },
+                  extra_classes: 'ecl-comment__reply ecl-link--button ecl-link--button-ghost',
                   extra_attributes: action_attributes,
                 } %}
               </div>

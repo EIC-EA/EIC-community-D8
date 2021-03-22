@@ -10,6 +10,7 @@ use Drupal\comment\Entity\Comment;
 use Drupal\media\Entity\Media;
 use Drupal\oe_theme\ValueObject\ImageValueObject;
 use Drupal\user\Entity\User;
+use Drupal\Core\Url;
 
 /**
  * Implements hook_preprocess().
@@ -331,6 +332,17 @@ function eic_community_preprocess_comment(&$variables) {
     ];
   }
 
+  $comment_reply = Url::fromRoute('comment.reply', [
+    'entity_type' => $comment
+      ->getCommentedEntityTypeId(),
+    'entity' => $comment
+      ->getCommentedEntityId(),
+    'field_name' => $comment
+      ->getFieldName(),
+    'pid' => $comment
+      ->id(),
+  ]);
+
   $variables['comment'] = [
     'author' => [
       'author' => $author->get('field_full_name')->getString(),
@@ -343,6 +355,7 @@ function eic_community_preprocess_comment(&$variables) {
     'is_owner' => $current_user->id() == $comment->getOwnerId(),
     'edit_path' => $comment->toUrl('edit-form'),
     'remove_path' => $comment->toUrl('delete-form'),
+    'reply_path' => $comment_reply->toString(),
     'timestamp' => $comment->getCreatedTime(),
     'user' => $current_user,
   ];
