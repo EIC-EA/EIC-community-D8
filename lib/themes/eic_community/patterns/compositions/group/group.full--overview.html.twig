@@ -27,4 +27,25 @@
       extra_classes: "ecl-section-wrapper ecl-featured-content-collection--has-overview-layout"
     }) only %}
   {% endif %}
+
+  {% if events %}
+    {% include "@theme/patterns/compositions/featured-content-collection.html.twig" with events|default({})|merge({
+      icon_file_path: common.icon_file_path,
+      extra_classes: "ecl-section-wrapper ecl-featured-content-collection--has-overview-layout"
+    }) only %}
+  {% endif %}
+
+  {% if related_stories %}
+    {% include "@theme/patterns/compositions/featured-content-collection.html.twig" with related_stories|default({})|merge({
+      icon_file_path: common.icon_file_path,
+      extra_classes: "ecl-section-wrapper ecl-featured-content-collection--has-overview-layout"
+    }) only %}
+  {% endif %}
+
+  {% if related_groups %}
+    {% include "@theme/patterns/compositions/featured-content-collection.html.twig" with related_groups|default({})|merge({
+      icon_file_path: common.icon_file_path,
+      extra_classes: "ecl-section-wrapper ecl-featured-content-collection--has-compact-layout"
+    }) only %}
+  {% endif %}
 {% endblock %}

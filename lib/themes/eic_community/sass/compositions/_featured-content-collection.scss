@@ -44,16 +44,6 @@
   }
 
   &__main {
-    margin-bottom: ecl-box-model('padding', 'banner');
-
-    @include ecl-media-breakpoint-up('md') {
-      margin-bottom: ecl-box-model('padding--md', 'banner');
-    }
-
-    @include ecl-media-breakpoint-up('lg') {
-      margin-bottom: ecl-box-model('padding--lg', 'banner');
-    }
-
     &:last-child {
       margin-bottom: 0;
     }
@@ -66,8 +56,16 @@
     margin-left: #{0 - ecl-layout('gutter')};
     margin-bottom: #{0 - map-get($ecl-spacing, 'l')};
 
+    &:first-child {
+      margin-top: 0;
+    }
+
     @include ecl-media-breakpoint-up('md') {
       margin-bottom: #{0 - map-get($ecl-spacing, 'xl')};
+    }
+
+    #{$node}--has-overview-layout & {
+      align-items: flex-start;
     }
   }
 

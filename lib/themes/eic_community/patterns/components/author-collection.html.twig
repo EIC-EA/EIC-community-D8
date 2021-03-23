@@ -1,26 +1,24 @@
 {% set max_amount = max_amount|default(2) %}
 
-{% if items is not empty %}
-  <div class="ecl-author-collection {{ extra_classes }}">
-    {% if items is not empty %}
-      <div class="ecl-author-collection__items">
-        {% for item in items %}
-          {% if loop.index0 < max_amount %}
-            <div class="ecl-author-collection__item">
-              {% include "@theme/patterns/components/author.html.twig" with {
-                image: author.image,
-                author: item.author,
-                extra_classes: 'ecl-author-collection__author ecl-author--is-fluid ecl-author--is-minimal',
-              } only %}
-            </div>
-          {% endif %}
-        {% endfor %}
-      </div>
-    {% endif %}
-    {% if length > max_amount or items|length > max_amount %}
-      <div class="ecl-author-collection__amount">
-        {{ length|default(items|length - max_amount) }}
-      </div>
-    {% endif %}
-  </div>
-{% endif %}
+<div class="ecl-author-collection {{ extra_classes }}">
+  {% if items is not empty %}
+    <div class="ecl-author-collection__items">
+      {% for item in items %}
+        {% if loop.index0 < max_amount %}
+          <div class="ecl-author-collection__item">
+            {% include "@theme/patterns/components/author.html.twig" with {
+              image: author.image,
+              author: item.author,
+              extra_classes: 'ecl-author-collection__author ecl-author--is-fluid ecl-author--is-minimal',
+            } only %}
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  {% endif %}
+  {% if length > max_amount or items|length > max_amount %}
+    <div class="ecl-author-collection__amount">
+      {{ length|default(items|length - max_amount) }}
+    </div>
+  {% endif %}
+</div>

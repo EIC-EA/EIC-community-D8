@@ -1,6 +1,10 @@
 .ecl-tag {
   border-radius: map-get($ecl-spacing, '4xl');
 
+  .ecl-teaser--is-highlighted & {
+    background-color: map-get($ecl-colors, 'white');
+  }
+
   &--is-public {
     background-color: map-get($ecl-colors, 'blue-50');
     color: map-get($ecl-colors, 'white');

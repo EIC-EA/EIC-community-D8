@@ -19,6 +19,11 @@
     background-color: map-get($ecl-colors, 'grey-5');
   }
 
+  &--as-white {
+    padding: ecl-box-model('padding');
+    background-color: map-get($ecl-colors, 'white');
+  }
+
   &--as-grey {
     padding: ecl-box-model('padding');
     background-color: map-get($ecl-colors, 'grey-5');
@@ -28,6 +33,20 @@
     display: flex;
     flex-wrap: wrap;
     align-items: flex-start;
+  }
+
+  &--is-highlighted {
+    background-color: map-get($ecl-colors, 'blue-5');
+
+    &::before {
+      position: absolute;
+      width: 4px;
+      background-color: ecl-typography('color', 'title');
+      top: 0;
+      left: 0;
+      bottom: 0;
+      content: " ";
+    }
   }
 
   &__image-wrapper {
@@ -48,6 +67,10 @@
     @include ecl-media-breakpoint-up('sm') {
       width: map-get($ecl-media, 'l');
       margin: 0 ecl-box-model('padding') 0 0;
+    }
+
+    @include ecl-media-breakpoint-up('lg') {
+      width: map-get($ecl-media, 'xl');
     }
 
     #{$node}--as-card & {
@@ -206,6 +229,10 @@
       @include ecl-media-breakpoint-up('sm') {
         justify-content: inherit;
       }
+    }
+
+    #{$node}--story#{$node}--has-compact-layout & {
+      justify-content: space-between;
     }
 
     #{$node}--as-card#{$node}--story & {
@@ -413,6 +440,10 @@
       }
     }
 
+    #{$node}--story#{$node}--has-compact-layout & {
+      width: auto;
+    }
+
     #{$node}--as-card & {
       width: 100%;
       margin-top: map-get($ecl-spacing, 's');
@@ -438,12 +469,17 @@
     #{$node}--as-card #{$node}__main-wrapper > #{$node}__meta-footer & {
       display: flex;
       justify-content: space-between;
-      padding-top: ecl-box-model('padding');
       align-items: center;
       margin-left: 0;
 
       & + #{$node}__meta-column {
         border-top: ecl-border();
+      }
+    }
+
+    #{$node}--event#{$node}--as-card #{$node}__main-wrapper>#{$node}__meta-footer & {
+      & + #{$node}__meta-column {
+        padding-top: ecl-box-model('margin', 'controls');
       }
     }
 
@@ -656,7 +692,8 @@
       }
     }
 
-    #{$node}--as-card#{$node}--event & {
+    #{$node}--as-card#{$node}--event &,
+    #{$node}--has-compact-layout#{$node}--story & {
       display: none;
     }
   }

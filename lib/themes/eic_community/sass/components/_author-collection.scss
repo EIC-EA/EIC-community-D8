@@ -17,6 +17,10 @@
     background-color: map-get($ecl-colors, 'blue-50');
     margin-right: #{0 - map-get($ecl-media, '3xs') / 2};
 
+    &:last-child {
+      margin-right: 0;
+    }
+
     &:before {
       content: "+";
       display: inline;
