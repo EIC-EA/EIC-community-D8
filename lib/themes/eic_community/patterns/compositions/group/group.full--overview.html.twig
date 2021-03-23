@@ -17,7 +17,7 @@
   {% if discussions %}
     {% include "@theme/patterns/compositions/featured-content-collection.html.twig" with discussions|default({})|merge({
       icon_file_path: common.icon_file_path,
-      extra_classes: "ecl-section-wrapper ecl-featured-content-collection--has-overview-layout"
+      extra_classes: "ecl-section-wrapper ecl-section-wrapper--is-white ecl-featured-content-collection--has-overview-layout"
     }) only %}
   {% endif %}
 

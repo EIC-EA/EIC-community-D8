@@ -5,10 +5,15 @@
   flex-direction: column;
   margin: ecl-box-model('margin') 0;
   padding: ecl-box-model('padding');
-  background-color: map-get($ecl-colors, 'white');
+  background-color: map-get($ecl-colors, 'grey-10');
   width: 100%;
   border-radius: ecl-box-model('border-radius');
   box-sizing: border-box;
+
+  [class*="ecl-section-wrapper--is-"] [class*="ecl-featured-content"] &:not([class*=".ecl-well--is"]),
+  .ecl-section-wrapper:not([class*="ecl-section-wrapper--is-"])~.ecl-section-wrapper:not([class*="ecl-section-wrapper--is-"]):nth-child(2n + 1) &:not([class*=".ecl-well--is"]) {
+    background-color: map-get($ecl-colors, 'white');
+  }
 
   &:first-child {
     margin-top: 0;
@@ -41,11 +46,11 @@
     padding-top: ecl-layout('gutter');
   }
 
-  &--is-blue {
-    background-color: map-get($ecl-colors, 'blue-5');
+  &--is-white {
+    background-color: map-get($ecl-colors, 'white');
   }
 
-  &--is-grey {
-    background-color: map-get($ecl-colors, 'grey-10');
+  &--is-blue {
+    background-color: map-get($ecl-colors, 'blue-5');
   }
 }
