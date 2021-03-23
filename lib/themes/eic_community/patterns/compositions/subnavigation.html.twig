@@ -23,8 +23,23 @@
           </ul>
         </nav>
 
+        {% set output_searchform = '' %}
+        {% if searchform %}
+          <div class="ecl-subnavigation__searchform-wrapper">
+          {% set output_searchform %}
+            {% include '@ecl-twig/ec-component-search-form/ecl-search-form.html.twig' with searchform|default({})|merge({
+              extra_classes: searchform.extra_classes|default('') ~ 'ecl-subnavigation__searchform',
+            }) %}
+          {% endset %}
+
+          {{ output_searchform }}
+          </div>
+        {% endif %}
+
         {% embed "@theme/patterns/compositions/collapsible-options.html.twig" with {
-          items: items,
+          items: items|merge([{
+            content: output_searchform
+          }]),
           extra_classes: 'ecl-subnavigation__collapsible-options',
           icon_file_path: icon_file_path,
           active_item_label: active_item_label,

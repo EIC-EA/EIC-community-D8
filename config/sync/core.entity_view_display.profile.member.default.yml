@@ -1,0 +1,100 @@
+uuid: d3d0e305-4938-4673-8039-26824ca8938b
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.profile.member.field_body
+    - field.field.profile.member.field_cv_link
+    - field.field.profile.member.field_location_address
+    - field.field.profile.member.field_vocab_geo
+    - field.field.profile.member.field_vocab_job_title
+    - field.field.profile.member.field_vocab_language
+    - field.field.profile.member.field_vocab_topic_expertise
+    - field.field.profile.member.field_vocab_topic_interest
+    - field.field.profile.member.field_vocab_user_type
+    - profile.type.member
+  module:
+    - address
+    - link
+    - text
+id: profile.member.default
+targetEntityType: profile
+bundle: member
+mode: default
+content:
+  field_body:
+    weight: 0
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: text_default
+    region: content
+  field_cv_link:
+    weight: 3
+    label: above
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+    type: link
+    region: content
+  field_location_address:
+    weight: 1
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: address_default
+    region: content
+  field_vocab_geo:
+    weight: 7
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+  field_vocab_job_title:
+    weight: 12
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+  field_vocab_language:
+    weight: 11
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+  field_vocab_topic_expertise:
+    weight: 8
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+  field_vocab_topic_interest:
+    weight: 9
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+  field_vocab_user_type:
+    weight: 10
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+hidden:
+  search_api_excerpt: true

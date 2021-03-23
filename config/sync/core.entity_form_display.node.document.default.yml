@@ -8,7 +8,11 @@ dependencies:
     - field.field.node.document.field_vocab_topics
     - node.type.document
   module:
+    - content_moderation
     - path
+    - publication_date
+    - scheduler
+    - scheduler_content_moderation_integration
     - text
 id: node.document.default
 targetEntityType: node
@@ -45,6 +49,13 @@ content:
     third_party_settings: {  }
     type: options_select
     region: content
+  langcode:
+    type: language_select
+    weight: 2
+    region: content
+    settings:
+      include_locked: true
+    third_party_settings: {  }
   moderation_state:
     type: moderation_state_default
     weight: 100

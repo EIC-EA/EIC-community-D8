@@ -48,3 +48,4 @@ hidden:
   field_user_ref: true
   field_view_mode: true
   paragraph_view_mode: true
+  search_api_excerpt: true

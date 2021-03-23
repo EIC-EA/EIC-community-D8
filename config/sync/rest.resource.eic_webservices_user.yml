@@ -1,0 +1,21 @@
+uuid: b328b0b5-765e-4b9d-a5d0-b6273460c043
+langcode: en
+status: true
+dependencies:
+  module:
+    - basic_auth
+    - eic_webservices
+    - hal
+    - user
+id: eic_webservices_user
+plugin_id: eic_webservices_user
+granularity: resource
+configuration:
+  methods:
+    - GET
+    - POST
+  formats:
+    - hal_json
+  authentication:
+    - basic_auth
+    - cookie

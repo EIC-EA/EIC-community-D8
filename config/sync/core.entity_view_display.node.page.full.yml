@@ -72,4 +72,6 @@ content:
     third_party_settings: {  }
 hidden:
   extra_field_oe_theme_helper_short_title_with_fallback: true
+  langcode: true
   published_at: true
+  search_api_excerpt: true

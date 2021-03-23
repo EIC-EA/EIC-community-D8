@@ -40,3 +40,4 @@ hidden:
   field_ur_author: true
   field_view_mode: true
   paragraph_view_mode: true
+  search_api_excerpt: true

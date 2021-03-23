@@ -41,6 +41,10 @@
     padding-top: ecl-layout('gutter');
   }
 
+  &--is-blue {
+    background-color: map-get($ecl-colors, 'blue-5');
+  }
+
   &--is-grey {
     background-color: map-get($ecl-colors, 'grey-10');
   }

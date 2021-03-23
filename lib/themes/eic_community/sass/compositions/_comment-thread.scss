@@ -12,7 +12,7 @@
     margin-bottom: 0;
   }
 
-  & & {
+  & &:not(:first-child) {
     padding-left: ecl-box-model('padding');
     border-left: ecl-border();
 
@@ -43,7 +43,7 @@
     &::after {
       position: absolute;
       display: block;
-      content: " ";
+      content: ' ';
       top: 0;
       left: 0;
       width: map-get($ecl-media, '6xs');
@@ -71,7 +71,7 @@
     &::before {
       display: none;
       width: 1px;
-      content: " ";
+      content: ' ';
       position: absolute;
       top: 0;
       left: calc(#{map-get($ecl-media, '3xs')} / 2);

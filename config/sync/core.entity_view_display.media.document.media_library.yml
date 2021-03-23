@@ -27,8 +27,10 @@ content:
     region: content
 hidden:
   created: true
+  langcode: true
   name: true
   oe_media_file: true
   oe_media_file_type: true
   oe_media_remote_file: true
+  search_api_excerpt: true
   uid: true

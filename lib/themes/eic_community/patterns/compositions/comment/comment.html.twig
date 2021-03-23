@@ -61,7 +61,11 @@
           {% endif %}
         </div>
         {% if timestamp %}
-          <time class="ecl-comment__timestamp">{{ timestamp }}</time>
+          {% include "@theme/patterns/components/timestamp.html.twig" with {
+            extra_classes: 'ecl-comment__timestamp ecl-timestamp--meta',
+            icon_file_path: icon_file_path,
+            label: timestamp
+          } only %}
         {% endif %}
       </div>
 

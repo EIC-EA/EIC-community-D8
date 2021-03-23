@@ -1,0 +1,29 @@
+uuid: 558f78c8-2754-48f7-a185-ec155cdde3ae
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.profile.field_vocab_language
+    - profile.type.member
+    - taxonomy.vocabulary.languages
+id: profile.member.field_vocab_language
+field_name: field_vocab_language
+entity_type: profile
+bundle: member
+label: 'Languages spoken'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      languages: languages
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

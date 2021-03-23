@@ -1,0 +1,12 @@
+services:
+  eic_webservices.ws_helper:
+    class: Drupal\eic_webservices\Utility\EicWsHelper
+    arguments: ['@config.factory', '@entity_type.manager']
+  paramconverter.eic_webservices.entity_smed_id:
+    parent: paramconverter.entity
+    class: Drupal\eic_webservices\ParamConverter\SmedIdConverter
+    calls:
+      - [setConfigFactory, ['@config.factory']]
+    tags:
+      # Priority 10, to ensure it runs before @paramconverter.entity.
+      - { name: paramconverter, priority: 10 }

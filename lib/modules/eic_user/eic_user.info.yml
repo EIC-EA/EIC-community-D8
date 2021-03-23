@@ -1,0 +1,10 @@
+name: EIC User
+type: module
+description: Provides functionnality around user accounts and profiles.
+package: European Innovation Council
+core: 8.x
+core_version_requirement: ^8 || ^9
+php: 7.3
+dependencies:
+  - drupal:user
+  - drupal:profile

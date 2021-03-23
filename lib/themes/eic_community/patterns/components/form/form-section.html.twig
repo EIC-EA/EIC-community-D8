@@ -1,0 +1,55 @@
+{% set title_element = title_element|default('h3') %}
+
+<section class="ecl-form__section">
+  {% if title is not empty %}
+    <{{ title_element}} class="ecl-form__section-title">{{ title }}</{{ title_element }}>
+  {% endif %}
+
+  {% if description %}
+    <div class="ecl-form__description ecl-editable-wrapper">{{ description }}</div>
+  {% endif %}
+
+  {% for field in fields %}
+    {% if field.type or field.name or field.id %}
+      {% if field.type == 'textarea' %}
+        {% include '@ecl-twig/ec-component-text-area/ecl-text-area.html.twig' with field|default({})|without('type')|merge({
+          width: 'full',
+        }) %}
+      {% elseif field.type == 'checkbox' %}
+        {% include '@ecl-twig/ec-component-checkbox/ecl-checkbox-group.html.twig' with field|default({})|without('type') %}
+      {% elseif field.type == 'radio' %}
+        {% include '@ecl-twig/ec-component-radio/ecl-radio-group.html.twig' with field|default({})|without('type') %}
+      {% elseif field.type == 'select' %}
+        {% include '@ecl-twig/ec-component-select/ecl-select.html.twig' with field|default({})|without('type')|merge({
+          icon_path: icon_file_path,
+          width: 'full',
+        }) %}
+      {% elseif field.type == 'file' %}
+        {% embed "@theme/patterns/components/well.html.twig" with field|default({})|merge({
+          extra_classes: 'ecl-well--is-blue',
+        }) only %}
+          {% block content %}
+            {% include '@ecl-twig/ec-component-file-upload/ecl-file-upload.html.twig' with field|default({})|without('type')|merge({
+              width: 'full',
+            }) %}
+          {% endblock %}
+        {% endembed %}
+      {% elseif field.type == 'submit' %}
+        {% include '@ecl-twig/ec-component-button/ecl-button.html.twig' with field|default({})|without('type')|merge({
+          type: 'submit',
+          icon_path: icon_file_path
+        }) %}
+      {% else %}
+        {% include '@ecl-twig/ec-component-text-input/ecl-text-input.html.twig' with field|default({})|merge({
+          width: 'full',
+        }) %}
+      {% endif %}
+    {% endif %}
+
+    {% if field.fields is not empty %}
+      {% include "@theme/patterns/components/form/form-section.html.twig" with field|default({})|merge({
+        icon_file_path: icon_file_path,
+      }) only %}
+    {% endif %}
+  {% endfor %}
+</section>

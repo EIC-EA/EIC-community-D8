@@ -35,7 +35,7 @@ COLOR_RED="\e[91m"
 BG_COLOR_DEFAULT="\e[49m"
 BG_COLOR_GREEN="\e[42m"
 DRUSH_CMD="../vendor/bin/drush"
-THEME_PATH="themes/custom/eic_community"
+THEME_PATH="web/themes/custom/eic_community"
 DEFAULT_CONTENT_MODULES="eic_default_content default_content hal serialization"
 
 # Define list of arguments expected in the input
@@ -114,6 +114,12 @@ fi
 if [ -z "$SKIP_BUILD" ]; then
   # Installation: Install composer dependencies.
   run_command "composer install"
+
+  # Install new npm packages on eic_community theme.
+  run_command "npm install --prefix $THEME_PATH"
+
+  # Rebuild eic_community theme assets.
+  run_command "npm run build --prefix $THEME_PATH"
 fi
 
 if [ -n "$PERFORM_INSTALL" ]; then
@@ -164,12 +170,6 @@ run_command "$DRUSH_CMD state:set system.maintenance_mode 0 --input-format=integ
 
 # Cache: Rebuild Drupal cache.
 run_command "$DRUSH_CMD cache:rebuild"
-
-# Install new npm packages on eic_community theme.
-run_command "npm install --prefix $THEME_PATH"
-
-# Rebuild eic_community theme assets.
-run_command "npm run build --prefix $THEME_PATH"
 
 # Cache: Rebuild Drupal cache.
 run_command "$DRUSH_CMD cache:rebuild"
