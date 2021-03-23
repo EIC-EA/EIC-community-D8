@@ -14,7 +14,6 @@ function eic_comments_form_comment_node_comment_form_alter(&$form, FormStateInte
   $form_comment_body = &$form['comment_body']['widget'];
 
   $form['comment_body']['#attributes']['class'][] = 'ecl-comment-form__textarea-wrapper';
-  $form_comment_body[0]['#placeholder'] = 'Jot something down!';
   $form_comment_body[0]['#title_display'] = 'invisible';
 
   array_push($form_comment_body[0]['#attributes']['class'],
