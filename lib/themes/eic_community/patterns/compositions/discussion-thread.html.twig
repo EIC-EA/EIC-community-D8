@@ -15,6 +15,23 @@
       </div>
     {% endif %}
     <div class="ecl-discussion-thread__content">
+      {% if type or actions %}
+        <div class="ecl-discussion-thread__toolbar">
+          {% if type is not empty %}
+            <div class="ecl-discussion-thread__type">
+              {% if type.icon and icon_file_path %}
+                {% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with {
+                  icon: type.icon|merge({
+                    path: icon_file_path,
+                  })
+                } %}
+              {% endif %}
+              <span class="ecl-discussion-thread__type-label">{{ type.label }}</span>
+            </div>
+          {% endif %}
+
+        </div>
+      {% endif %}
       <div class="ecl-discussion-thread__header">
         {% if tags is not empty %}
           <div class="ecl-discussion-thread__tags">

@@ -363,7 +363,7 @@
     #{$node}--organisation &,
     #{$node}--member & {
       margin: 0;
-      @include ecl-responsive-font('meta');
+      @include ecl-responsive-font('label');
     }
 
     #{$node}--story & {
@@ -671,7 +671,7 @@
   }
 
   &__stat-value {
-    @include ecl-responsive-font('meta');
+    @include ecl-responsive-font('label');
   }
 
   &__stat-label {

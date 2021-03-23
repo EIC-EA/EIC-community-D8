@@ -159,7 +159,7 @@
     margin-right: ecl-layout('gutter', 'controls');
     margin-bottom: ecl-layout('gutter', 'controls');
     color: ecl-typography('color', 'meta');
-    @include ecl-responsive-font('meta');
+    @include ecl-responsive-font('label');
 
     &--author {
       #{$node}--has-compact-layout & {
