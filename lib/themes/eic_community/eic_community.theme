@@ -360,3 +360,16 @@ function eic_community_preprocess_comment(&$variables) {
     'user' => $current_user,
   ];
 }
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function eic_community_preprocess_form(&$variables) {
+  if ($variables['element']['#id'] == 'comment-form') {
+    $variables['comment_form']['author'] = [
+      'author' => 'Voornaam Achternaam',
+      'path' => '',
+      'image' => NULL,
+    ];
+  }
+}

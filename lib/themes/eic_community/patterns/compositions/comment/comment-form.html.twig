@@ -11,7 +11,10 @@
   {% endif %}
   <div class="ecl-comment-form__content">
     <div class="ecl-comment-form__main">
-      <form class=" {{form.extra_classes }}" {{ snippets.attr(form.extra_attributes) }}>
+      <form{{ attributes}} class=" {{form.extra_classes }}" {{ snippets.attr(form.extra_attributes) }}>
+        {{ element.form_build_id }}
+        {{ element.form_id }}
+        {{ element.form_token }}
         <div class="ecl-form-group">
           <label class="ecl-comment-form__textarea-label ecl-form-label" for="{{ form.textarea.id|default(form.textarea.name)|default('ecl-comment-form-reply') }}">{{ form.textarea.label|default('Reply') }}</label>
           <div class="ecl-comment-form__textarea-wrapper">
@@ -64,6 +67,7 @@
             } %}
           </div>
         </div>
+        {{ children }}
       </form>
     </div>
   </div>
