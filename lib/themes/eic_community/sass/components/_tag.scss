@@ -5,6 +5,11 @@
     background-color: map-get($ecl-colors, 'white');
   }
 
+  [class*="ecl-section-wrapper--is-"] [class*="ecl-featured-content"] &,
+  .ecl-section-wrapper:not([class*="ecl-section-wrapper--is-"])~.ecl-section-wrapper:not([class*="ecl-section-wrapper--is-"]):nth-child(2n) & {
+    background-color: map-get($ecl-colors, 'grey-15');
+  }
+
   &--is-public {
     background-color: map-get($ecl-colors, 'blue-50');
     color: map-get($ecl-colors, 'white');

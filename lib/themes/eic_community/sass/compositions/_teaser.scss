@@ -29,9 +29,16 @@
     background-color: map-get($ecl-colors, 'grey-5');
   }
 
-  [class*="ecl-section-wrapper--is-"] [class*="ecl-featured-content"] &:not([class*=ecl-teaser--as]),
-  .ecl-section-wrapper:not([class*="ecl-section-wrapper--is-"])~.ecl-section-wrapper:not([class*="ecl-section-wrapper--is-"]):nth-child(2n) &:not([class*=ecl-teaser--as]) {
-    padding: ecl-box-model('padding');
+  [class*="ecl-section-wrapper--is-"] [class*="ecl-featured-content"] &:not([class*=ecl-teaser--as-card-]),
+  .ecl-section-wrapper:not([class*="ecl-section-wrapper--is-"])~.ecl-section-wrapper:not([class*="ecl-section-wrapper--is-"]):nth-child(2n) &:not([class*=ecl-teaser--as-card-]) {
+    &:not(.ecl-teaser--event):not(.ecl-teaser--as-card) {
+      padding: ecl-box-model('padding');
+    }
+
+    &:not(.ecl-teaser--event).ecl-teaser--as-card .ecl-teaser__main-wrapper {
+      padding: 0 ecl-box-model('padding') ecl-box-model('padding');
+    }
+
     background-color: map-get($ecl-colors, 'white');
   }
 
