@@ -1,8 +1,8 @@
 {% extends "@theme/patterns/compositions/group/group.full.html.twig" %}
 
-{% block content %}
+{% block page_header %}
   {% if latest_tags %}
-    <div class="ecl-section-wrapper">
+    <div class="ecl-section-wrapper ecl-section-wrapper--is-white">
       <div class="ecl-container">
         {% include "@theme/patterns/compositions/featured-topics.html.twig" with latest_tags|default({})|merge({
           title_element: 'h2',
@@ -13,11 +13,13 @@
       </div>
     </div>
   {% endif %}
+{% endblock %}
 
+{% block content %}
   {% if discussions %}
     {% include "@theme/patterns/compositions/featured-content-collection.html.twig" with discussions|default({})|merge({
       icon_file_path: common.icon_file_path,
-      extra_classes: "ecl-section-wrapper ecl-section-wrapper--is-white ecl-featured-content-collection--has-overview-layout"
+      extra_classes: "ecl-section-wrapper ecl-featured-content-collection--has-overview-layout"
     }) only %}
   {% endif %}
 

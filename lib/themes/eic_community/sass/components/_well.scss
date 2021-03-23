@@ -11,7 +11,7 @@
   box-sizing: border-box;
 
   [class*="ecl-section-wrapper--is-"] [class*="ecl-featured-content"] &:not([class*=".ecl-well--is"]),
-  .ecl-section-wrapper:not([class*="ecl-section-wrapper--is-"])~.ecl-section-wrapper:not([class*="ecl-section-wrapper--is-"]):nth-child(2n + 1) &:not([class*=".ecl-well--is"]) {
+  .ecl-section-wrapper:not([class*="ecl-section-wrapper--is-"])~.ecl-section-wrapper:not([class*="ecl-section-wrapper--is-"]):nth-child(2n) &:not([class*=".ecl-well--is"]) {
     background-color: map-get($ecl-colors, 'white');
   }
 

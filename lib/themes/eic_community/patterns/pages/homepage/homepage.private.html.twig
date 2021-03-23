@@ -11,7 +11,7 @@
 
   {% include "@theme/patterns/compositions/fact-figures-wrapper.html.twig" with fact_figures|default({})|merge({
     column: 4,
-    extra_classes: 'ecl-section-wrapper',
+    extra_classes: 'ecl-section-wrapper ecl-section-wrapper--is-blue',
   })  only %}
 
   {% include "@theme/patterns/compositions/featured-content-grid.html.twig" with featured_news|default({})|merge({
