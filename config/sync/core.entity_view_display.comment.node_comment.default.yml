@@ -5,6 +5,7 @@ dependencies:
   config:
     - comment.type.node_comment
     - field.field.comment.node_comment.comment_body
+    - field.field.comment.node_comment.field_comment_attachment
   module:
     - text
 id: comment.node_comment.default
@@ -19,9 +20,18 @@ content:
     settings: {  }
     third_party_settings: {  }
     region: content
-  links:
-    weight: 100
-    settings: {  }
+  field_comment_attachment:
+    type: entity_reference_entity_view
+    weight: 101
+    label: above
+    settings:
+      view_mode: default
+      link: false
     third_party_settings: {  }
     region: content
+  links:
+    weight: 100
+    region: content
+    settings: {  }
+    third_party_settings: {  }
 hidden: {  }

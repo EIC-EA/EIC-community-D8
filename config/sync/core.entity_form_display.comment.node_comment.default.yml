@@ -5,7 +5,9 @@ dependencies:
   config:
     - comment.type.node_comment
     - field.field.comment.node_comment.comment_body
+    - field.field.comment.node_comment.field_comment_attachment
   module:
+    - media_library
     - text
 id: comment.node_comment.default
 targetEntityType: comment
@@ -13,24 +15,24 @@ bundle: node_comment
 mode: default
 content:
   author:
-    weight: -2
+    weight: 0
+    region: content
     settings: {  }
     third_party_settings: {  }
-    region: content
   comment_body:
     type: text_textarea
-    weight: 11
+    weight: 1
     settings:
       rows: 5
       placeholder: ''
     third_party_settings: {  }
     region: content
-  subject:
-    type: string_textfield
-    weight: 10
-    region: content
+  field_comment_attachment:
+    type: media_library_widget
+    weight: 3
     settings:
-      size: 60
-      placeholder: ''
+      media_types: {  }
     third_party_settings: {  }
-hidden: {  }
+    region: content
+hidden:
+  subject: true

@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - core.entity_view_display.comment.node_comment.default
     - field.field.node.discussion.field_body
     - field.field.node.discussion.field_comments
     - field.field.node.discussion.field_discussion_type
@@ -29,7 +30,7 @@ content:
     region: content
   field_comments:
     weight: 106
-    label: above
+    label: hidden
     settings:
       view_mode: default
       pager_id: 0
