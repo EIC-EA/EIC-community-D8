@@ -1,0 +1,52 @@
+uuid: 6a9719dc-22e3-4225-94da-ee9177b66092
+langcode: en
+status: true
+dependencies:
+  module:
+    - group
+    - system
+name: group_group_hompeage
+label: 'Group - Group hompeage'
+group: Groups
+description: 'Group group type homepage'
+requireAllConditions: false
+disabled: false
+conditions:
+  group_type:
+    id: group_type
+    group_types:
+      group: group
+    negate: 0
+    uuid: cd16a846-32d1-4143-a6e3-3decbdf486b0
+    context_mapping:
+      group: '@group.group_route_context:group'
+  request_path:
+    id: request_path
+    pages: '/group/*'
+    negate: false
+    uuid: f69044fd-fbcb-45c6-986d-7032a711eaa8
+    context_mapping: {  }
+reactions:
+  blocks:
+    blocks:
+      3a090b19-4584-4fb0-bc17-47df386de8da:
+        id: 'views_block:group_discussions-block_1'
+        label: ''
+        provider: views
+        label_display: visible
+        views_label: ''
+        items_per_page: none
+        region: content
+        weight: '0'
+        context_mapping: {  }
+        custom_id: views_block_group_discussions_block_1
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: group_group_hompeage
+        uuid: 3a090b19-4584-4fb0-bc17-47df386de8da
+    id: blocks
+    saved: false
+    uuid: db598f5e-00b5-4ba6-b443-bbe6d3ca2c59
+    include_default_blocks: 0
+weight: 0
