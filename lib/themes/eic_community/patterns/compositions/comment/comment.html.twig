@@ -75,18 +75,27 @@
             extra_classes: 'ecl-collapsible-options--aligns-from-right',
             items: [
               {
-                label: remove_label|default('Report comment'),
+                link: {
+                  label: remove_label|default('Report comment'),
+                  path: '...',
+                },
                 extra_classes: 'ecl-comment__report',
                 extra_attributes: action_attributes,
               },
             ]|merge(is_owner ? [
               {
-                label: edit_label|default('Edit comment'),
+                link: {
+                  label: edit_label|default('Edit comment'),
+                  path: '...',
+                },
                 extra_classes: 'ecl-comment__edit',
                 extra_attributes: action_attributes,
               },
               {
-                label: remove_label|default('Delete comment'),
+                link: {
+                  label: remove_label|default('Delete comment'),
+                  path: '...',
+                },
                 extra_classes: 'ecl-comment__delete',
                 extra_attributes: action_attributes,
               },
@@ -137,7 +146,7 @@
               {% for attachment in attachments %}
                 <div class="ecl-comment__attachments-item">
                   {% include "@theme/patterns/components/attachment.html.twig" with attachment|default({})|merge({
-                    is_compact: true,
+                    is_clickable: true,
                     icon_file_path: icon_file_path,
                     extra_classes: "ecl-comment__attachment",
                   }) only %}

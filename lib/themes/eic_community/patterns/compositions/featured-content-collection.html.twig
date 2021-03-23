@@ -1,6 +1,6 @@
 {% set title_element = title_element|default('h2') %}
 
-<section class="ecl-featured-content-collection {{ extra_classes }}">
+<section class="ecl-featured-content-collection {{ is_collapsible ? 'ecl-featured-content-collection--is-collapsible' }} {{ extra_classes }}">
   <div class="ecl-container">
     <div class="ecl-featured-content-collection__header">
       {% if block('header_before') is defined %}
@@ -22,36 +22,49 @@
       {% endif %}
     </div>
 
-    <div class="ecl-featured-content-collection__items">
-      {% for item in items %}
-        <div class="ecl-featured-content-collection__item">
-          {{ item.content }}
-        </div>
-      {% endfor %}
+
+    <div class="ecl-featured-content-collection__main">
+      <div class="ecl-featured-content-collection__items">
+        {% for item in items %}
+          <div class="ecl-featured-content-collection__item">
+            {{ item.content }}
+          </div>
+        {% endfor %}
+      </div>
     </div>
-    {% if call_to_action is not empty %}
-      {% set _icon = {} %}
-
-      {% if icon_file_path is not empty %}
-        {% set _icon = {
-          path: icon_file_path,
-          name: call_to_action.icon.name|default('rounded-arrow'),
-          type: call_to_action.icon.type|default('ui'),
-          size: call_to_action.icon.size|default('xs'),
-          transform: call_to_action.icon.transform|default('rotate-90'),
-        } %}
-      {% endif %}
-
-
+    {% if call_to_action or (is_collapsible and items|length > 2) %}
       <footer class="ecl-featured-content-collection__footer">
-        {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with {
-          link: call_to_action.link|default({})|merge({
-            type: 'standalone',
-            icon_position: 'after',
-          }),
-          icon: _icon,
-          extra_classes: 'ecl-link--call-to-action',
-        } only %}
+        {% if items|length > 2 and is_collapsible %}
+          {% include "@ecl-twig/ec-component-button/ecl-button.html.twig" with {
+            label: collapsible_label|default('Show all'),
+            variant: 'ghost',
+            icon: icon_file_path ? {
+              path: icon_file_path,
+              type: 'ui',
+              name: 'rounded-arrow',
+              transform: 'rotate-180',
+              size: 'xs',
+            } : {},
+            extra_classes: 'ecl-featured-content-collection__expand',
+          } only %}
+        {% endif %}
+
+        {% if call_to_action %}
+          {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with {
+            link: call_to_action.link|default({})|merge({
+              type: 'standalone',
+              icon_position: 'after',
+            }),
+            icon: icon_file_path ? {} : {
+              path: icon_file_path,
+              name: call_to_action.icon.name|default('rounded-arrow'),
+              type: call_to_action.icon.type|default('ui'),
+              size: call_to_action.icon.size|default('xs'),
+              transform: call_to_action.icon.transform|default('rotate-90')
+            },
+            extra_classes: 'ecl-featured-content-collection__call-to-action ecl-link--button ecl-link--button-ghost',
+          } only %}
+        {% endif %}
       </footer>
     {% endif %}
   </div>
