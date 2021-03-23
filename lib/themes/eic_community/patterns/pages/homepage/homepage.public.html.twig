@@ -33,7 +33,7 @@
   }) only %}
 
   {% include "@theme/patterns/compositions/fact-figures-wrapper.html.twig" with fact_figures|default({})|merge({
-    extra_classes: 'ecl-section-wrapper ecl-section-wrapper--is-blue',
+    extra_classes: 'ecl-section-wrapper',
   })  only %}
 
   {% include "@theme/patterns/compositions/featured-content-grid.html.twig" with featured_news|default({})|merge({
@@ -41,7 +41,7 @@
   })  only %}
 
   {% include "@theme/patterns/compositions/featured-content-collection.html.twig" with featured_events|default({})|merge({
-    extra_classes: "ecl-section-wrapper ecl-section-wrapper--is-blue ecl-featured-content-collection--has-compact-layout"
+    extra_classes: "ecl-section-wrapper ecl-featured-content-collection--has-compact-layout"
   }) only %}
 
   {% embed "@theme/patterns/compositions/layout-block.html.twig" %}

@@ -27,9 +27,11 @@
     {% endif %}
     <div class="ecl-attachment__content">
       <div class="ecl-attachment__content-header">
-        <span class="ecl-attachment__title">
-          {{ title|default(path) }}
-        </span>
+        {% if is_clickable %}
+          <span class="ecl-attachment__title">{{ title|default(path) }}</span>
+        {% else %}
+          <a class="ecl-attachment__title" href="{{ path }}">{{ title|default(path) }}</a>
+        {% endif %}
         {% if type or path %}
           <span class="ecl-attachment__type">
             {{- type|default(path|split('.')|last) -}}

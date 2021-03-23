@@ -13,7 +13,7 @@
 
   // Overrides the background color if the composition exists within a colored section.
   [class*="ecl-section-wrapper--is-"] [class*="ecl-featured-content"] &,
-  .ecl-section-wrapper:not([class*="ecl-section-wrapper--is-"]) ~ .ecl-section-wrapper:not([class*="ecl-section-wrapper--is-"]):nth-child(2n - 1) &,
+  .ecl-section-wrapper:not([class*="ecl-section-wrapper--is-"]) ~ .ecl-section-wrapper:not([class*="ecl-section-wrapper--is-"]):nth-child(2n) &,
   &--is-white {
     background-color: map-get($ecl-colors, 'white');
 
@@ -36,7 +36,7 @@
 
   &__main {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     padding-bottom: ecl-box-model('padding');
     margin-bottom: ecl-box-model('padding');
     border-bottom: ecl-border();
@@ -114,7 +114,7 @@
   &__title {
     line-height: ecl-typography('line-height', 'label');
     word-break: break-all;
-    color: currentColor;
+    color: ecl-typography('color', 'title');
   }
 
   &__title,
@@ -126,6 +126,7 @@
   &__type {
     text-transform: uppercase;
     font-size: ecl-typography('font-size', 'meta');
+    @include visually-hidden();
 
     &::before,
     &::after {

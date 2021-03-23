@@ -11,6 +11,16 @@
     flex-direction: column;
   }
 
+  &--event#{$node}--as-card {
+    padding: ecl-box-model('padding');
+    background-color: map-get($ecl-colors, 'grey-5');
+
+    [class*="ecl-section-wrapper--is-"] [class*="ecl-featured-content"] &,
+    .ecl-section-wrapper:not([class*="ecl-section-wrapper--is-"])~.ecl-section-wrapper:not([class*="ecl-section-wrapper--is-"]):nth-child(2n) & {
+      background-color: map-get($ecl-colors, 'white');
+    }
+  }
+
   &--as-card-white {
     background-color: map-get($ecl-colors, 'white');
   }
@@ -19,7 +29,8 @@
     background-color: map-get($ecl-colors, 'grey-5');
   }
 
-  &--as-white {
+  [class*="ecl-section-wrapper--is-"] [class*="ecl-featured-content"] &:not([class*=ecl-teaser--as]),
+  .ecl-section-wrapper:not([class*="ecl-section-wrapper--is-"])~.ecl-section-wrapper:not([class*="ecl-section-wrapper--is-"]):nth-child(2n) &:not([class*=ecl-teaser--as]) {
     padding: ecl-box-model('padding');
     background-color: map-get($ecl-colors, 'white');
   }
@@ -35,7 +46,9 @@
     align-items: flex-start;
   }
 
-  &--is-highlighted {
+  &--is-highlighted,
+  &--event#{$node}--is-highlighted#{$node}--event {
+    padding: ecl-box-model('padding');
     background-color: map-get($ecl-colors, 'blue-5');
 
     &::before {
