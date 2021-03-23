@@ -6,4 +6,5 @@ id: content_administrator
 label: 'Content administrator'
 weight: -7
 is_admin: null
-permissions: {  }
+permissions:
+  - 'create group group'
