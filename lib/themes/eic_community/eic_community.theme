@@ -11,6 +11,7 @@ use Drupal\media\Entity\Media;
 use Drupal\oe_theme\ValueObject\ImageValueObject;
 use Drupal\user\Entity\User;
 use Drupal\Core\Url;
+use Drupal\Core\Entity\EntityInterface;
 
 /**
  * Implements hook_preprocess().
@@ -304,19 +305,7 @@ function eic_community_preprocess_block(array &$variables) {
 function eic_community_preprocess_comment(&$variables) {
   $author = User::load($variables['author_id']);
   $current_user = $variables['user'];
-
-  $author_image = NULL;
-  if ($author->field_media->target_id !== NULL) {
-    $author_image_media = Media::load($author->field_media->target_id);
-    $author_image_media_fid = $author_image_media->getSource()
-      ->getSourceFieldValue($author_image_media);
-    $author_image_file = File::load($author_image_media_fid);
-
-    $author_image = [
-      'src' => $author_image_file->createFileUrl(),
-      'alt' => $author_image_media->oe_media_image->alt,
-    ];
-  }
+  $author_image = _get_profile_image_array($author);
 
   $comment = $variables['comment'];
   $comment_origin = NULL;
@@ -366,10 +355,39 @@ function eic_community_preprocess_comment(&$variables) {
  */
 function eic_community_preprocess_form(&$variables) {
   if ($variables['element']['#id'] == 'comment-form') {
+    $author = User::load($variables['user']->id());
+    $author_image = _get_profile_image_array($author);
+
     $variables['comment_form']['author'] = [
-      'author' => 'Voornaam Achternaam',
+      'author' => $author->get('field_full_name')->getString(),
       'path' => '',
-      'image' => NULL,
+      'image' => $author_image,
     ];
   }
+}
+
+/**
+ * Creates image array for twig templates.
+ *
+ * @param Drupal\Core\Entity\EntityInterface $user
+ *   User entity of which you want the image array.
+ *
+ * @return mixed
+ *   Returns array or NULL.
+ */
+function _get_profile_image_array(EntityInterface $user) : ?array {
+  if ($user->field_media->target_id == NULL) {
+    return NULL;
+  }
+
+  $user_image_media = Media::load($user->field_media->target_id);
+  $user_image_media_fid = $user_image_media->getSource()
+    ->getSourceFieldValue($user_image_media);
+  $user_image_file = File::load($user_image_media_fid);
+
+  return [
+    'src' => $user_image_file->createFileUrl(),
+    'alt' => $user_image_media->oe_media_image->alt,
+  ];
+
 }
