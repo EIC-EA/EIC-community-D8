@@ -15,6 +15,7 @@
         {{ element.form_id }}
         {{ element.form_token }}
         <div class="ecl-form-group">
+          {{ children }}
           <label class="ecl-comment-form__textarea-label ecl-form-label" for="{{ form.textarea.id|default(form.textarea.name)|default('ecl-comment-form-reply') }}">{{ form.textarea.label|default('Reply') }}</label>
           <div class="ecl-comment-form__textarea-wrapper">
             <textarea
@@ -66,7 +67,6 @@
             } %}
           </div>
         </div>
-        {{ children }}
       </form>
     </div>
   </div>
