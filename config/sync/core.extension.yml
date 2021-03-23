@@ -38,6 +38,7 @@ module:
   eic_media_video: 0
   eic_paragraph_contributor: 0
   eic_paragraph_cta_tile: 0
+  eic_theme_helper: 0
   eic_user: 0
   eic_webservices: 0
   entity: 0
@@ -69,7 +70,6 @@ module:
   node: 0
   node_read_time: 0
   oe_media: 0
-  oe_theme_helper: 0
   oe_time_caching: 0
   oe_webtools: 0
   oe_webtools_social_share: 0

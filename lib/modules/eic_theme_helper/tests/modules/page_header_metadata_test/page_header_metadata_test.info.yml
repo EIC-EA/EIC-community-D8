@@ -1,0 +1,6 @@
+name: 'PageHeaderMetadata test'
+type: module
+description: 'PageHeaderMetadata test module.'
+package: Testing
+php: 7.3
+core_version_requirement: ^8 || ^9
