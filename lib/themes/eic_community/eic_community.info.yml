@@ -2,8 +2,7 @@ name: EIC Community theme
 type: theme
 description: EIC community base theme.
 package: EIC-community-D8
-core: 8.x
-core_version_requirement: ^8
+core_version_requirement: ^8.8 || ^9
 php: 7.2
 
 libraries:
