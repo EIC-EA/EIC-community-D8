@@ -16,6 +16,7 @@ module:
   config_split: 0
   content_moderation: 0
   context: 0
+  context_ui: 0
   contextual: 0
   datetime: 0
   dblog: 0
@@ -84,6 +85,7 @@ module:
   responsive_image: 0
   rest: 0
   restui: 0
+  route_condition: 0
   scheduler: 0
   scheduler_content_moderation_integration: 0
   schemata: 0
