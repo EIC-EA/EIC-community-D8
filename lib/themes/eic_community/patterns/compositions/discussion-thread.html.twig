@@ -58,7 +58,8 @@
       {% endif %}
     </div>
   </div>
-  <div class="ecl-discussion-thread__footer">
+
+  <div class="ecl-discussion-thread__meta">
     {% if from_contributor %}
       <div class="ecl-discussion-thread__contributor">
         {% if icon_file_path %}
@@ -120,4 +121,13 @@
       </div>
     {% endif %}
   </div>
+
+  {% if featured %}
+    <div class="ecl-discussion-thread__featured-items">
+      {% include "@theme/patterns/compositions/comment/comment-thread.html.twig" with featured|default({})|merge({
+        icon_file_path: icon_file_path,
+        extra_classes: 'ecl-discussion-thread__comment-thread ' ~ featured.extra_classes|default('')
+      }) %}
+    </div>
+  {% endif %}
 </div>
