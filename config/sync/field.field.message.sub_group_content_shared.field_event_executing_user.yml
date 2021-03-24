@@ -1,0 +1,28 @@
+uuid: 8df61259-03ad-4ce4-bb7b-6a3874af97be
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.message.field_event_executing_user
+    - message.template.sub_group_content_shared
+id: message.sub_group_content_shared.field_event_executing_user
+field_name: field_event_executing_user
+entity_type: message
+bundle: sub_group_content_shared
+label: 'Event executing user'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:user'
+  handler_settings:
+    include_anonymous: false
+    filter:
+      type: _none
+    target_bundles: null
+    sort:
+      field: _none
+    auto_create: false
+field_type: entity_reference

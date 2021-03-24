@@ -1,0 +1,23 @@
+uuid: 1a231502-ae04-4d2e-9b72-2950075f4562
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.message.sub_group_content_shared.field_event_executing_user
+    - message.template.sub_group_content_shared
+id: message.sub_group_content_shared.default
+targetEntityType: message
+bundle: sub_group_content_shared
+mode: default
+content:
+  field_event_executing_user:
+    weight: 0
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: entity_reference_autocomplete
+    region: content
+hidden: {  }
