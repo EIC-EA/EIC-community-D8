@@ -1,0 +1,20 @@
+{#
+/**
+ * @file
+ * Theme override to display a block eic_group_header.
+ *
+ * Available variables:
+ * - group_values: A list of the block's configuration values.
+ *   - id: The group ID.
+ *   - type: The group bundle machine name.
+ *   - title: The title of the group.
+ *   - description: The description of the group.
+ *
+ * @see template_preprocess_eic_group_header_block()
+ */
+#}
+{% include "@theme/patterns/compositions/editorial-header.html.twig" with {
+  title: group_values.title,
+  description: group_values.description,
+  image: group_values.image|default({}),
+} only %}
