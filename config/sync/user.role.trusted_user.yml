@@ -6,4 +6,5 @@ id: trusted_user
 label: 'Trusted user'
 weight: -8
 is_admin: null
-permissions: {  }
+permissions:
+  - 'create group group'
