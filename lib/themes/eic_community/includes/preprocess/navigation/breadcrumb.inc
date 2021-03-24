@@ -31,5 +31,5 @@ function eic_community_preprocess_breadcrumb(array &$variables): void {
 
   $variables['navigation_text'] = '';
   $variables['ellipsis_label'] = '';
-  $variables['icon_file_path'] = $variables['ecl_icon_path'];
+  $variables['icon_file_path'] = $variables['eic_icon_path'];
 }

@@ -190,7 +190,7 @@ function eic_community_preprocess_pager(array &$variables): void {
   $nav_link = [
     'link' => [
       'icon' => [
-        'path' => $variables['ecl_icon_path'],
+        'path' => $variables['eic_icon_path'],
         'type' => 'ui',
         'name' => 'corner-arrow',
         'size' => 'xs',
