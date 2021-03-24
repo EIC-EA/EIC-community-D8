@@ -1,14 +1,14 @@
-uuid: 5258f06e-3b83-4f0d-9e4e-3691982b4e60
+uuid: 826504d3-5ad3-41ad-97f0-193b854cd80f
 langcode: en
 status: true
 dependencies:
   config:
-    - field.field.message.sub_event_site_pub_interest.field_event_executing_user
-    - field.field.message.sub_event_site_pub_interest.field_topic_term
-    - message.template.sub_event_site_pub_interest
-id: message.sub_event_site_pub_interest.default
+    - field.field.message.sub_site_event_pub_interest.field_event_executing_user
+    - field.field.message.sub_site_event_pub_interest.field_topic_term
+    - message.template.sub_site_event_pub_interest
+id: message.sub_site_event_pub_interest.default
 targetEntityType: message
-bundle: sub_event_site_pub_interest
+bundle: sub_site_event_pub_interest
 mode: default
 content:
   field_event_executing_user:

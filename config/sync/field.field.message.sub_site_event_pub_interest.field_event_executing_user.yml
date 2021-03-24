@@ -1,14 +1,14 @@
-uuid: d3987338-bbed-4938-b440-14e89b0351aa
+uuid: 969cd778-f496-476e-8a6a-c8fef72c8996
 langcode: en
 status: true
 dependencies:
   config:
     - field.storage.message.field_event_executing_user
-    - message.template.sub_event_site_pub_interest
-id: message.sub_event_site_pub_interest.field_event_executing_user
+    - message.template.sub_site_event_pub_interest
+id: message.sub_site_event_pub_interest.field_event_executing_user
 field_name: field_event_executing_user
 entity_type: message
-bundle: sub_event_site_pub_interest
+bundle: sub_site_event_pub_interest
 label: 'Event executing user'
 description: ''
 required: false

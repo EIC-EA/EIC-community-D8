@@ -1,15 +1,15 @@
-uuid: 9db1f10b-54c2-44af-9596-dce076397faa
+uuid: 1d2dfea7-f1e6-4f5a-b788-502f6d9f7db5
 langcode: en
 status: true
 dependencies:
   config:
     - core.entity_view_mode.message.notify_email_body
-    - field.field.message.sub_event_site_pub_interest.field_event_executing_user
-    - field.field.message.sub_event_site_pub_interest.field_topic_term
-    - message.template.sub_event_site_pub_interest
-id: message.sub_event_site_pub_interest.notify_email_body
+    - field.field.message.sub_site_event_pub_interest.field_event_executing_user
+    - field.field.message.sub_site_event_pub_interest.field_topic_term
+    - message.template.sub_site_event_pub_interest
+id: message.sub_site_event_pub_interest.notify_email_body
 targetEntityType: message
-bundle: sub_event_site_pub_interest
+bundle: sub_site_event_pub_interest
 mode: notify_email_body
 content:
   partial_1:

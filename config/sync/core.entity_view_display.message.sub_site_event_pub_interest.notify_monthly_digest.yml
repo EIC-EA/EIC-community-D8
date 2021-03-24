@@ -1,15 +1,15 @@
-uuid: e43e60c0-1e83-464d-807a-431a1c607b7f
+uuid: 75c8d90a-2d1b-49d9-917e-87fd7897c2a9
 langcode: en
 status: true
 dependencies:
   config:
     - core.entity_view_mode.message.notify_monthly_digest
-    - field.field.message.sub_event_site_pub_interest.field_event_executing_user
-    - field.field.message.sub_event_site_pub_interest.field_topic_term
-    - message.template.sub_event_site_pub_interest
-id: message.sub_event_site_pub_interest.notify_monthly_digest
+    - field.field.message.sub_site_event_pub_interest.field_event_executing_user
+    - field.field.message.sub_site_event_pub_interest.field_topic_term
+    - message.template.sub_site_event_pub_interest
+id: message.sub_site_event_pub_interest.notify_monthly_digest
 targetEntityType: message
-bundle: sub_event_site_pub_interest
+bundle: sub_site_event_pub_interest
 mode: notify_monthly_digest
 content:
   partial_2:
