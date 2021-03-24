@@ -1,6 +1,6 @@
 {% set max_amount = max_amount|default(2) %}
 
-<div class="ecl-author-collection {{ extra_classes }}">
+<div class="ecl-author-collection {{ length > 99 or items|length - max_amount > 99 ? 'ecl-author-collection--more'  }} {{ extra_classes }}">
   {% if items is not empty %}
     <div class="ecl-author-collection__items">
       {% for item in items %}

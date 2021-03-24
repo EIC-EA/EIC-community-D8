@@ -91,6 +91,10 @@
 
     @include ecl-media-breakpoint-up('lg') {
       width: map-get($ecl-media, 'xl');
+
+      #{$node}--event & {
+        width: map-get($ecl-media, 'l');
+      }
     }
 
     #{$node}--as-card & {

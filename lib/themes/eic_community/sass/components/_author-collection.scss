@@ -20,11 +20,6 @@
     &:only-child {
       margin-right: 0;
     }
-
-    &:before {
-      content: "+";
-      display: inline;
-    }
   }
 
   &__items {
