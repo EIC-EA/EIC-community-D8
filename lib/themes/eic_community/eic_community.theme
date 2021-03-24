@@ -64,15 +64,6 @@ if (is_dir(__DIR__ . '/' . INCLUDES_FOLDER)) {
 }
 
 /**
- * Implements hook_preprocess_form().
- */
-function eic_community_preprocess_form__oe_search_search_form(array &$variables): void {
-  $variables['input_array'] = _eic_community_preprocess_search_input_text($variables['element']['keys']);
-  $variables['input_array']['hide_label'] = TRUE;
-  $variables['label'] = $variables['input_array']['label'] = t('Search');
-}
-
-/**
  * Helper function to additionally preprocess textfield search elements.
  *
  * Moves the label element to the input template and creates some helper
