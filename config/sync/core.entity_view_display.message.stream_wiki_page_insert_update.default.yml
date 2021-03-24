@@ -1,0 +1,17 @@
+uuid: 2073df2a-f114-47ea-8885-d4b589936e1c
+langcode: en
+status: true
+dependencies:
+  config:
+    - message.template.stream_wiki_page_insert_update
+id: message.stream_wiki_page_insert_update.default
+targetEntityType: message
+bundle: stream_wiki_page_insert_update
+mode: default
+content:
+  partial_0:
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden: {  }
