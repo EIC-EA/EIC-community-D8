@@ -1,4 +1,4 @@
-uuid: 342debb3-02d9-4aa6-80a3-13673abff4a4
+uuid: 2727029b-46c7-4a47-92a0-c58620909dfd
 langcode: en
 status: true
 dependencies:
@@ -10,6 +10,8 @@ dependencies:
     - flag
     - node
     - user
+_core:
+  default_config_hash: eKWN3z9j-zM3Sn_r3-u4y7-TtiRshBKXOJLqXRtFfwc
 id: group_discussions
 label: 'Group - Discussions'
 module: views
