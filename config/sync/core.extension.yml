@@ -16,6 +16,7 @@ module:
   config_split: 0
   content_moderation: 0
   context: 0
+  context_ui: 0
   contextual: 0
   datetime: 0
   dblog: 0
@@ -31,6 +32,7 @@ module:
   eic_content_story: 0
   eic_flags: 0
   eic_fragment_fact_figure: 0
+  eic_groups: 0
   eic_homepage: 0
   eic_media: 0
   eic_media_document: 0
@@ -84,6 +86,7 @@ module:
   responsive_image: 0
   rest: 0
   restui: 0
+  route_condition: 0
   scheduler: 0
   scheduler_content_moderation_integration: 0
   schemata: 0
