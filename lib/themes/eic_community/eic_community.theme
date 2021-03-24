@@ -74,15 +74,6 @@ if (is_dir(__DIR__ . '/' . INCLUDES_FOLDER)) {
 }
 
 /**
- * Implements hook_preprocess_fieldset().
- */
-function eic_community_preprocess_fieldset(array &$variables): void {
-  if (isset($variables['element']['#type']) && $variables['element']['#type'] == 'radios') {
-    $variables['legend_display'] = FALSE;
-  }
-}
-
-/**
  * Implements hook_preprocess_form_element().
  *
  * Disables displaying of the label for checkbox and radio elements, as the
