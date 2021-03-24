@@ -4,13 +4,15 @@ status: true
 dependencies:
   module:
     - search_api_solr
+    - group
     - search_api
-    - node
     - content_moderation
     - flag
-    - group
+    - node
     - user
   config:
+    - field.storage.group.field_vocab_geo
+    - field.storage.group.field_vocab_topics
     - search_api.server.global
 third_party_settings:
   search_api_solr:
@@ -57,7 +59,39 @@ id: global
 name: Global
 description: ''
 read_only: false
-field_settings: {  }
+field_settings:
+  field_vocab_geo:
+    label: 'Region & Countries'
+    datasource_id: 'entity:group'
+    property_path: field_vocab_geo
+    type: integer
+    dependencies:
+      config:
+        - field.storage.group.field_vocab_geo
+  field_vocab_topics:
+    label: Topics
+    datasource_id: 'entity:group'
+    property_path: field_vocab_topics
+    type: integer
+    dependencies:
+      config:
+        - field.storage.group.field_vocab_topics
+  label:
+    label: Title
+    datasource_id: 'entity:group'
+    property_path: label
+    type: string
+    dependencies:
+      module:
+        - group
+  type:
+    label: 'Group type'
+    datasource_id: 'entity:group'
+    property_path: type
+    type: string
+    dependencies:
+      module:
+        - group
 datasource_settings:
   'entity:content_moderation_state':
     languages:
