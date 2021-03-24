@@ -19,6 +19,7 @@
         "drupal/core-composer-scaffold": "^8.8",
         "drupal/default_content": "^2.0@alpha",
         "drupal/extra_field": "^2.0",
+        "drupal/facets": "^1.7",
         "drupal/flag": "^4.0@beta",
         "drupal/fragments": "^2.0",
         "drupal/group": "^1.3",
