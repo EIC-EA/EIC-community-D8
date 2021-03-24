@@ -204,8 +204,7 @@ function eic_community_theme_suggestions_paragraph_alter(
 /**
  * Implements hook_preprocess_paragraph().
  */
-function eic_community_preprocess_paragraph__oe_links_block(array &$variables
-): void {
+function eic_community_preprocess_paragraph__oe_links_block(array &$variables): void {
   // Massage data to be compliant with ECL links block component data structure.
   foreach (Element::children($variables['content']['field_oe_links']) as $index) {
     $variables['links'][] = [
@@ -328,7 +327,6 @@ function eic_community_preprocess_input__date(array &$variables): void {
   $variables['placeholder'] = $ecl_format;
 }
 
-
 /**
  * Helper function to additionally preprocess checkbox and radio elements.
  *
@@ -382,7 +380,7 @@ function eic_community_preprocess_radios(array &$variables): void {
  */
 function eic_community_preprocess_fieldset(array &$variables): void {
   if (isset($variables['element']['#type']) && $variables['element']['#type'] == 'radios') {
-    $variables['legend_display'] = false;
+    $variables['legend_display'] = FALSE;
   }
 }
 
@@ -536,14 +534,15 @@ function eic_community_preprocess_pager(array &$variables): void {
 
   // Generate page link items.
   for ($i = $pager_first; $i <= $pager_current + $pager_offset && $i <= $pager_last; $i++) {
-    $label = (string)$i;
+    $label = (string) $i;
     if ($i == $pager_current) {
       $ecl_items[] = [
         'type' => 'current',
         'label' => $label,
         'aria_label' => t('Page @number', ['@number' => $label]),
       ];
-    } else {
+    }
+    else {
       // Skip first or last page.
       if ($i == 1 || $i == $pager_max) {
         continue;
@@ -578,7 +577,7 @@ function eic_community_preprocess_pager(array &$variables): void {
       'link' => [
         'link' => [
           'path' => Url::fromRoute($route_name, $route_parameters, $options),
-          'label' => (string)$pager_max,
+          'label' => (string) $pager_max,
         ],
       ],
       'aria_label' => t('Go to page @number', ['@number' => $pager_max]),
@@ -616,7 +615,7 @@ function eic_community_preprocess_links__language_block(array &$variables): void
     $url = $link['link']['#url'];
     $href = $url
       ->setOptions($link['link']['#options'])
-      ->setAbsolute(true)
+      ->setAbsolute(TRUE)
       ->toString();
 
     $language_internal = $language_code;
@@ -640,7 +639,7 @@ function eic_community_preprocess_links__language_block(array &$variables): void
         'lang' => $language_internal,
         'label' => $link['link']['#title'],
       ];
-      $language['active'] = true;
+      $language['active'] = TRUE;
     }
 
     $variables['languages'][] = $language;
@@ -679,7 +678,7 @@ function eic_community_preprocess_links__oe_multilingual_content_language_block(
     $url = $link['link']['#url'];
     $href = $url
       ->setOptions($link['link']['#options'])
-      ->setAbsolute(true)
+      ->setAbsolute(TRUE)
       ->toString();
 
     $variables['options'][] = [
@@ -793,14 +792,13 @@ function eic_community_preprocess_paragraph__oe_list_item(array &$variables): vo
 /**
  * Implements hook_preprocess_paragraph() for paragraph--oe-list-item-block.html.twig.
  */
-function eic_community_preprocess_paragraph__oe_list_item_block(array &$variables
-): void {
+function eic_community_preprocess_paragraph__oe_list_item_block(array &$variables): void {
   /** @var \Drupal\paragraphs\Entity\Paragraph $paragraph */
   $paragraph = $variables['paragraph'];
 
   // Set up the correct variant name.
-  $variables['variant'] = 'list_item_block_' . $paragraph->get('field_oe_list_item_block_layout')
-      ->first()->value;
+  $variables['variant'] = 'list_item_block_' .
+    $paragraph->get('field_oe_list_item_block_layout')->first()->value;
 
   $variables['items'] = [];
   foreach ($variables['paragraph']->get('field_oe_paragraphs') as $delta => $item) {
@@ -843,11 +841,12 @@ function eic_community_preprocess_paragraph__oe_content_row__variant_inpage_navi
   // Create a shortcut to the render array for the field.
   $field_render = &$variables['content']['field_oe_paragraphs'];
   $links = [];
-  foreach ($paragraph->get('field_oe_paragraphs')
-             ->referencedEntities() as $delta => $sub_paragraph) {
+  $referenced_entities = $paragraph->get('field_oe_paragraphs')
+    ->referencedEntities();
+  foreach ($referenced_entities as $delta => $sub_paragraph) {
     /** @var \Drupal\paragraphs\Entity\Paragraph $sub_paragraph */
-    if (!$sub_paragraph->hasField('field_oe_title') || $sub_paragraph->get('field_oe_title')
-        ->isEmpty()) {
+    $has_field = $sub_paragraph->hasField('field_oe_title');
+    if (!$has_field || $sub_paragraph->get('field_oe_title')->isEmpty()) {
       continue;
     }
 
@@ -875,8 +874,7 @@ function eic_community_preprocess_paragraph__oe_content_row__variant_inpage_navi
 /**
  * Implements hook_preprocess_paragraph() for paragraph--oe-text-feature-media.html.twig.
  */
-function eic_community_preprocess_paragraph__oe_text_feature_media(array &$variables
-): void {
+function eic_community_preprocess_paragraph__oe_text_feature_media(array &$variables): void {
   $variables['image'] = [];
 
   /** @var \Drupal\paragraphs\Entity\Paragraph $paragraph */
@@ -973,7 +971,7 @@ function eic_community_preprocess_pattern_date_block(array &$variables): void {
   ];
 
   $variables['variant'] = in_array($variables['variant'], $variants,
-    true) ? $variables['variant'] : 'default';
+    TRUE) ? $variables['variant'] : 'default';
 }
 
 /**
@@ -986,8 +984,7 @@ function eic_community_preprocess_pattern_file__preview(array &$variables): void
 /**
  * Implements hook_preprocess_HOOK().
  */
-function eic_community_preprocess_pattern_file_translation__preview(array &$variables
-): void {
+function eic_community_preprocess_pattern_file_translation__preview(array &$variables): void {
   $variables['file'] = FileValueObject::fromArray($variables['file']);
 
   foreach ($variables['translations'] as $index => $translation) {
@@ -998,8 +995,7 @@ function eic_community_preprocess_pattern_file_translation__preview(array &$vari
 /**
  * Implements hook_preprocess_pattern_file_teaser__preview().
  */
-function eic_community_preprocess_pattern_file_teaser__preview(array &$variables
-): void {
+function eic_community_preprocess_pattern_file_teaser__preview(array &$variables): void {
   $variables['file'] = FileValueObject::fromArray($variables['file']);
 
   foreach ($variables['translations'] as $index => $translation) {
@@ -1011,63 +1007,49 @@ function eic_community_preprocess_pattern_file_teaser__preview(array &$variables
 /**
  * Implements hook_preprocess_HOOK().
  */
-function eic_community_preprocess_pattern_list_item__variant_date__preview(
-  array &$variables
-): void {
+function eic_community_preprocess_pattern_list_item__variant_date__preview(array &$variables): void {
   $variables['date'] = DateValueObject::fromArray($variables['date']);
 }
 
 /**
  * Implements hook_preprocess_HOOK().
  */
-function eic_community_preprocess_pattern_list_item__variant_date_cancelled__preview(
-  array &$variables
-): void {
+function eic_community_preprocess_pattern_list_item__variant_date_cancelled__preview(array &$variables): void {
   $variables['date'] = DateValueObject::fromArray($variables['date']);
 }
 
 /**
  * Implements hook_preprocess_HOOK().
  */
-function eic_community_preprocess_pattern_list_item__variant_date_ongoing__preview(
-  array &$variables
-): void {
+function eic_community_preprocess_pattern_list_item__variant_date_ongoing__preview(array &$variables): void {
   $variables['date'] = DateValueObject::fromArray($variables['date']);
 }
 
 /**
  * Implements hook_preprocess_HOOK().
  */
-function eic_community_preprocess_pattern_list_item__variant_date_past__preview(
-  array &$variables
-): void {
+function eic_community_preprocess_pattern_list_item__variant_date_past__preview(array &$variables): void {
   $variables['date'] = DateValueObject::fromArray($variables['date']);
 }
 
 /**
  * Implements hook_preprocess_HOOK().
  */
-function eic_community_preprocess_pattern_date_block__preview(array &$variables
-): void {
+function eic_community_preprocess_pattern_date_block__preview(array &$variables): void {
   $variables['date'] = DateValueObject::fromArray($variables['date']);
 }
 
 /**
  * Implements hook_preprocess_HOOK().
  */
-function eic_community_preprocess_pattern_text_featured_media__preview(
-  array &$variables
-): void {
+function eic_community_preprocess_pattern_text_featured_media__preview(array &$variables): void {
   $variables['image'] = ImageValueObject::fromArray($variables['image']);
 }
 
 /**
  * Implements hook_theme_suggestions_HOOK_alter().
  */
-function eic_community_theme_suggestions_form_alter(
-  array &$suggestions,
-  array $variables
-): void {
+function eic_community_theme_suggestions_form_alter(array &$suggestions, array $variables): void {
   $suggestions[] = $variables['theme_hook_original'] . '__' . $variables['element']['#form_id'];
 }
 
@@ -1081,10 +1063,9 @@ function eic_community_preprocess_input__search(array &$variables): void {
 /**
  * Implements hook_preprocess_form().
  */
-function eic_community_preprocess_form__oe_search_search_form(array &$variables
-): void {
+function eic_community_preprocess_form__oe_search_search_form(array &$variables): void {
   $variables['input_array'] = _eic_community_preprocess_search_input_text($variables['element']['keys']);
-  $variables['input_array']['hide_label'] = true;
+  $variables['input_array']['hide_label'] = TRUE;
   $variables['label'] = $variables['input_array']['label'] = t('Search');
 }
 
@@ -1105,7 +1086,7 @@ function _eic_community_preprocess_search_input_text(array $element): array {
   $ecl_array = [
     'id' => $element['#attributes']['id'],
     'name' => $element['#attributes']['name'],
-    'disabled' => isset($element['#attributes']['disabled']) ? $element['#attributes']['disabled'] : false,
+    'disabled' => isset($element['#attributes']['disabled']) ? $element['#attributes']['disabled'] : FALSE,
     'type' => $element['#attributes']['type'],
     'class' => $element['#attributes']['class'],
   ];
@@ -1148,7 +1129,7 @@ function eic_community_preprocess_block__system_branding_block(&$variables) {
     t('@site_name logo', ['@site_name' => $variables['site_name']]) :
     '';
 
-  $route_options = ['absolute' => true];
+  $route_options = ['absolute' => TRUE];
   $variables['site_logo_href'] = Url::fromRoute('<front>', [], $route_options)
     ->toString();
 }
@@ -1188,8 +1169,7 @@ function eic_community_preprocess_media__document__default(&$variables) {
  *
  * Style the view mode used for embedding the document media entity.
  */
-function eic_community_preprocess_media__document__eic_community_main_content(&$variables
-) {
+function eic_community_preprocess_media__document__eic_community_main_content(&$variables) {
   eic_community_preprocess_media__document__default($variables);
 }
 
@@ -1233,7 +1213,7 @@ function eic_community_preprocess_table(array &$variables): void {
 
     // Assign colspan value to the cell, if any. It will be used later.
     if (isset($cell['attributes']['colspan'])) {
-      $cell['colspan'] = (int)$cell['attributes']['colspan']->value();
+      $cell['colspan'] = (int) $cell['attributes']['colspan']->value();
     }
 
     // Account for colspan values when counting the number of columns.
@@ -1276,8 +1256,7 @@ function eic_community_preprocess_block__eic_community_tabs(&$variables) {
 /**
  * Implements hook_preprocess_paragraph() for oe_social_media_follow paragraph.
  */
-function eic_community_preprocess_paragraph__oe_social_media_follow(array &$variables
-): void {
+function eic_community_preprocess_paragraph__oe_social_media_follow(array &$variables): void {
   /** @var \Drupal\paragraphs\Entity\Paragraph $paragraph */
   $paragraph = $variables['paragraph'];
   $variables['variant'] = $paragraph->get('field_oe_social_media_variant')->value;
@@ -1315,7 +1294,7 @@ function eic_community_preprocess_pattern_link(array &$variables): void {
 
   // Extract attributes from the URL object and set them as default.
   if ($variables['url'] instanceof Url) {
-    $attributes = (array)$variables['url']->getOption('attributes');
+    $attributes = (array) $variables['url']->getOption('attributes');
   }
 
   // Add ECL link classes to attributes.
@@ -1329,24 +1308,24 @@ function eic_community_preprocess_pattern_link(array &$variables): void {
  */
 function eic_community_preprocess_pattern_link__preview(array &$variables): void {
   // Pattern preview will pass along a \Drupal\Core\Render\Markup object.
-  $variables['url'] = Url::fromUserInput((string)$variables['url']);
+  $variables['url'] = Url::fromUserInput((string) $variables['url']);
 }
 
 /**
  * Implements hook_preprocess_HOOK().
  */
-function eic_community_preprocess_pattern_page_header__preview(array &$variables
-): void {
-  // We are going to accept only local images for the background image of the preview.
-  $variables['background_image_url'] = base_path() . drupal_get_path('module',
-      'eic_community_helper') . '/images/' . $variables['background_image_url'];
+function eic_community_preprocess_pattern_page_header__preview(array &$variables): void {
+  // We are going to accept only local images for the background image of the
+  // preview.
+  $variables['background_image_url'] = base_path() .
+    drupal_get_path('module', 'eic_community_helper') .
+    '/images/' . $variables['background_image_url'];
 }
 
 /**
  * Implements hook_preprocess_paragraph().
  */
-function eic_community_preprocess_paragraph__oe_facts_figures(array &$variables
-): void {
+function eic_community_preprocess_paragraph__oe_facts_figures(array &$variables): void {
   $paragraph = $variables['paragraph'];
   if (!$paragraph->get('field_oe_title')->isEmpty()) {
     $variables['title'] = $paragraph->get('field_oe_title')->value;
@@ -1363,8 +1342,9 @@ function eic_community_preprocess_paragraph__oe_facts_figures(array &$variables
   $variables['items'] = [];
 
   /** @var \Drupal\paragraphs\Entity\Paragraph $sub_paragraph */
-  foreach ($paragraph->get('field_oe_paragraphs')
-             ->referencedEntities() as $sub_paragraph) {
+  $referenced_entities = $paragraph->get('field_oe_paragraphs')
+    ->referencedEntities();
+  foreach ($referenced_entities as $sub_paragraph) {
     // Get sub-paragraph translation.
     $sub_paragraph = \Drupal::service('entity.repository')
       ->getTranslationFromContext($sub_paragraph,
@@ -1403,10 +1383,10 @@ function eic_community_preprocess_paragraph__oe_banner(array &$variables): void 
   if (!$paragraph->get('field_oe_link')->isEmpty()) {
     $link = $paragraph->get('field_oe_link')->first();
     $variables['url'] = $link->getUrl();
-    $variables['label'] = $link->get('title')->getValue();;
+    $variables['label'] = $link->get('title')->getValue();
   }
 
-  $variables['full_width'] = (bool)$paragraph->get('field_oe_banner_full_width')->value;
+  $variables['full_width'] = (bool) $paragraph->get('field_oe_banner_full_width')->value;
 
   // The alignment field value contains the information regarding the pattern
   // type and centering.
@@ -1420,7 +1400,8 @@ function eic_community_preprocess_paragraph__oe_banner(array &$variables): void 
   $variant = $paragraph->get('oe_paragraphs_variant')->first()->value;
   if ($variant) {
     $variables['variant'] = str_replace('oe_banner_', '', $variant);
-  } else {
+  }
+  else {
     $variables['variant'] = 'default';
   }
 
@@ -1461,7 +1442,8 @@ function eic_community_preprocess_paragraph__oe_banner(array &$variables): void 
   if ($source instanceof Image && ($file_entity = $media->get($field_name)->entity)) {
     $uri = $file_entity->getFileUri();
     $cacheability->addCacheableDependency($file_entity);
-  } elseif ($source instanceof MediaAvPortalSourceInterface) {
+  }
+  elseif ($source instanceof MediaAvPortalSourceInterface) {
     $resource_ref = $media->get($field_name)->value;
     $uri = 'avportal://' . $resource_ref . '.jpg';
   }
@@ -1488,7 +1470,7 @@ function eic_community_preprocess_paragraph__oe_banner(array &$variables): void 
  * Implements hook_preprocess_HOOK().
  */
 function eic_community_preprocess_pattern_banner_hero(array &$variables): void {
-  if ($variables['full_width'] === true) {
+  if ($variables['full_width'] === TRUE) {
     $variables['container_attributes'] = new Attribute(['class' => 'ecl-page-banner--full-width']);
   }
 }
@@ -1505,10 +1487,10 @@ function eic_community_theme_suggestions_page_alter(
     $suggestions[] = 'page__node__' . $route->getParameter('node')->bundle();
   }
   if ($route->getRouteName() === 'entity.node.preview') {
-    $suggestions[] = 'page__node__' . $route->getParameter('node_preview')
-        ->bundle();
-    $suggestions[] = 'page__node__preview__' . $route->getParameter('node_preview')
-        ->bundle();
+    $suggestions[] = 'page__node__' .
+      $route->getParameter('node_preview')->bundle();
+    $suggestions[] = 'page__node__preview__' .
+      $route->getParameter('node_preview')->bundle();
   }
 }
 
@@ -1516,7 +1498,7 @@ function eic_community_theme_suggestions_page_alter(
  * Implements hook_preprocess_HOOK().
  */
 function eic_community_preprocess_pattern_banner_page(array &$variables): void {
-  if ($variables['full_width'] === true) {
+  if ($variables['full_width'] === TRUE) {
     $variables['container_attributes'] = new Attribute(['class' => 'ecl-page-banner--full-width']);
   }
 }
@@ -1543,20 +1525,18 @@ function eic_community_preprocess_pattern_organisation_teaser__preview(
 /**
  * Implements hook_preprocess_HOOK().
  */
-function eic_community_preprocess_field__media__oe_media_iframe__video_iframe__eic_community_main_content(
-  array &$variables
-): void {
-  // Set video aspect ratio when rendering "eic_community_main_content" display mode.
+function eic_community_preprocess_field__media__oe_media_iframe__video_iframe__eic_community_main_content(array &$variables): void {
+  // Set video aspect ratio when rendering "eic_community_main_content" display
+  // mode.
   $variables['ratio'] = $variables['element']['#object']->get('oe_media_iframe_ratio')->value;
 }
 
 /**
  * Implements hook_preprocess_HOOK().
  */
-function eic_community_preprocess_field__media__oe_media_iframe__iframe__eic_community_main_content(
-  array &$variables
-): void {
-  // Set iframe aspect ratio when rendering "eic_community_main_content" display mode.
+function eic_community_preprocess_field__media__oe_media_iframe__iframe__eic_community_main_content(array &$variables): void {
+  // Set iframe aspect ratio when rendering "eic_community_main_content" display
+  // mode.
   $variables['ratio'] = $variables['element']['#object']->get('oe_media_iframe_ratio')->value ?? 'custom';
 }
 
@@ -1615,5 +1595,4 @@ function eic_community_preprocess_oe_corporate_blocks_eu_footer(array &$variable
     '@link' => new FormattableMarkup('<a href="https://europa.eu/" class="ecl-link ecl-link--standalone">europa.eu</a>',
       []),
   ]);
->>>>>>> Stashed changes
 }
