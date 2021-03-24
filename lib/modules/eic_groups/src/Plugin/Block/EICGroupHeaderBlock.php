@@ -67,31 +67,35 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
   public function build() {
     $build = [];
 
-    if (($group = $this->getContextValue('group')) && $group->id()) {
-      // The content of this is block is shown depending on the current user's
-      // permissions. It obviously also varies per group, but we cannot know for
-      // sure how we got that group as it is up to the context provider to
-      // implement that. This block will then inherit the appropriate cacheable
-      // metadata from the context, as set by the context provider.
-      $cacheable_metadata = new CacheableMetadata();
-      $cacheable_metadata->setCacheContexts([
-        'user.group_permissions',
-        'url.path',
-      ]);
-
-      $build['content'] = [
-        '#theme' => 'eic_group_header_block',
-        '#group' => $group,
-        '#group_values' => [
-          'id' => $group->id(),
-          'bundle' => $group->bundle(),
-          'title' => $group->label(),
-          'description' => $group->get('field_body')->value,
-        ],
-      ];
-
-      $cacheable_metadata->applyTo($build);
+    if ((!$group = $this->getContextValue('group')) || !$group->id()) {
+      return $build;
     }
+
+    // The content of this is block is shown depending on the current user's
+    // permissions. It obviously also varies per group, but we cannot know for
+    // sure how we got that group as it is up to the context provider to
+    // implement that. This block will then inherit the appropriate cacheable
+    // metadata from the context, as set by the context provider.
+    $cacheable_metadata = new CacheableMetadata();
+    $cacheable_metadata->setCacheContexts([
+      'user.group_permissions',
+      'url.path',
+    ]);
+
+    $build['content'] = [
+      '#theme' => 'eic_group_header_block',
+      '#group' => $group,
+      '#group_values' => [
+        'id' => $group->id(),
+        'bundle' => $group->bundle(),
+        'title' => $group->label(),
+        'description' => $group->get('field_body')->value,
+      ],
+    ];
+
+    // Apply cacheable metadata to the renderable array.
+    $cacheable_metadata->applyTo($build);
+
     return $build;
   }
 
