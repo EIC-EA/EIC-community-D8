@@ -1,0 +1,18 @@
+{#
+/**
+ * @file
+ * Theme override for a set of links used in the language switcher block.
+ *
+ * @see ./core/modules/stable/navigation/links.html.twig
+ */
+#}
+{% if links -%}
+  {% include '@oe_theme/compositions/ec-component-language-list/language-list-selector.html.twig' with {
+    label: current_language.label,
+    path: current_language.path,
+    code: current_language.lang,
+    icon_path: ecl_icon_path,
+    items: languages,
+    ecl_branding: ecl_branding
+  } only %}
+{%- endif %}

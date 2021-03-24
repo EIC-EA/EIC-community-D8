@@ -1,0 +1,12 @@
+{#
+/**
+ * @file
+ * Theme override to display the 'links block' #type paragraph.
+ *
+ * @see ./modules/contrib/paragraphs/templates/paragraph.html.twig
+ */
+#}
+{{ pattern('link_block', {
+  'title': content.field_oe_text,
+  'links': links,
+}) }}

@@ -1,0 +1,20 @@
+{#
+/**
+ * @file
+ * Theme override to display the "content row" type paragraph in the "inpage" variant.
+ *
+ * @see ./modules/contrib/paragraphs/templates/paragraph.html.twig
+ */
+#}
+<div class="ecl-row">
+  <div class="ecl-col-lg-3 ecl-u-z-navigation">
+    {% include '@ecl-twig/inpage-navigation' with {
+      'title': title,
+      'links': links,
+      'icon_path': ecl_icon_path
+    } %}
+  </div>
+  <div class="ecl-col-lg-9">
+    {{ content.field_oe_paragraphs }}
+  </div>
+</div>

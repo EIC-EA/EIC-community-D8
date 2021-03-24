@@ -1,0 +1,12 @@
+{#
+/**
+ * @file
+ * Theme override to display the 'quote' type paragraph.
+ *
+ * @see ./modules/contrib/paragraphs/templates/paragraph.html.twig
+ */
+#}
+{{ pattern('blockquote', {
+    'body': content.field_oe_plain_text_long,
+    'author': content.field_oe_text,
+}) }}

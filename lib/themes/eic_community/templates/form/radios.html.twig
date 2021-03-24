@@ -1,0 +1,25 @@
+{#
+/**
+ * @file
+ * Theme override for a 'radios' #type form element.
+ *
+ * @see ./core/themes/stable/templates/form/radios.html.twig
+ */
+#}
+{% set _label = label|default('') %}
+{% set _label_id = label_id|default('') %}
+
+{%
+  set classes = [
+    'ecl-radio__group',
+    invalid ? 'ecl-radio__group--invalid',
+  ]
+%}
+<div{{ attributes.setAttribute("role", "radiogroup").addClass(classes) }}>
+  {%- if _label is not empty %}
+    <div class="ecl-form-label" id="{{ _label_id }}"{{ hide_label ? ' hidden'}}>
+      {%- block label _label -%}
+    </div>
+  {% endif %}
+  {{ children }}
+</div>

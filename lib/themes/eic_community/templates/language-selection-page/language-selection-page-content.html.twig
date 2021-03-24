@@ -1,0 +1,16 @@
+{#
+/**
+ * @file
+ * The body template file of the language_selection_page module.
+ *
+ * @see /contrib/language_selection_page/template/language-selection-page-content.html.twig
+ */
+#}
+{% include '@ecl-twig/language-list/language-list' with {
+  items: languages,
+  icon_path: ecl_icon_path,
+  logo: {
+    alt: 'European Commission logo'|t,
+    path: ecl_logo_path ~ '/logo--mute.svg'
+  }
+} only %}

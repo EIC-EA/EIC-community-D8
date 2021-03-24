@@ -1,0 +1,22 @@
+{#
+/**
+ * @file
+ * Theme override for an 'input' #type form element.
+ *
+ * Available variables:
+ * - attributes: A list of HTML attributes for the input element.
+ * - children: Optional additional rendered elements.
+ * - disabled: Optional (boolean): is disabled (optional, default: false).
+ *
+ * @see ./core/themes/stable/templates/form/input.html.twig
+ */
+#}
+{% include '@ecl-twig/radio/radio-button' with {
+  id: attributes.id,
+  name: attributes.name,
+  value: attributes.value,
+  checked: attributes.checked == 'checked',
+  disabled: attributes.disabled is defined,
+  label: title,
+  extra_attributes: input_attributes
+} %}{{ children }}
