@@ -129,9 +129,17 @@ datasource_settings:
 processor_settings:
   add_url: {  }
   aggregated_field: {  }
+  hierarchy:
+    fields:
+      field_vocab_geo: taxonomy_term-parent
+      field_vocab_topics: taxonomy_term-parent
+    weights:
+      preprocess_index: -45
   language_with_fallback: {  }
   rendered_item: {  }
-  solr_date_range: {  }
+  solr_date_range:
+    weights:
+      preprocess_index: 0
 tracker_settings:
   default:
     indexing_order: fifo
