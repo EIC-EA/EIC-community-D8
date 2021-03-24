@@ -25,7 +25,7 @@ reactions:
         provider: facets
         label_display: visible
         region: sidebar
-        weight: '1'
+        weight: '0'
         context_mapping: {  }
         custom_id: facet_block_groups_region_countries
         theme: eic_community
@@ -39,7 +39,7 @@ reactions:
         provider: facets
         label_display: visible
         region: sidebar
-        weight: '0'
+        weight: '-1'
         context_mapping: {  }
         custom_id: facet_block_groups_topics
         theme: eic_community
@@ -75,6 +75,21 @@ reactions:
         unique: 0
         context_id: global_overview
         uuid: 2bdaf363-b983-4094-8b13-e3549984347b
+      79a2623a-2200-4cd9-b86f-3b25ea41eb02:
+        id: 'views_exposed_filter_block:global_overviews-page_1'
+        label: ''
+        provider: views
+        label_display: '0'
+        views_label: ''
+        region: sidebar
+        weight: '-2'
+        context_mapping: {  }
+        custom_id: views_exposed_filter_block_global_overviews_page_1
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: global_overview
+        uuid: 79a2623a-2200-4cd9-b86f-3b25ea41eb02
     id: blocks
     saved: false
     uuid: deeaf135-b781-47ec-b086-7d9fec72c007

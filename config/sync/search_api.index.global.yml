@@ -11,6 +11,7 @@ dependencies:
     - node
     - user
   config:
+    - field.storage.group.field_body
     - field.storage.group.field_vocab_geo
     - field.storage.group.field_vocab_topics
     - search_api.server.global
@@ -60,6 +61,14 @@ name: Global
 description: ''
 read_only: false
 field_settings:
+  field_body:
+    label: Body
+    datasource_id: 'entity:group'
+    property_path: field_body
+    type: text
+    dependencies:
+      config:
+        - field.storage.group.field_body
   field_vocab_geo:
     label: 'Region & Countries'
     datasource_id: 'entity:group'
@@ -80,7 +89,8 @@ field_settings:
     label: Title
     datasource_id: 'entity:group'
     property_path: label
-    type: string
+    type: text
+    boost: !!float 3
     dependencies:
       module:
         - group
