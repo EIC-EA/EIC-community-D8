@@ -25,8 +25,7 @@ use Drupal\eic_community\ValueObject\GalleryItemValueObject;
 use Drupal\eic_community\ValueObject\ImageValueObject;
 use Drupal\eic_community_helper\EuropeanUnionLanguages;
 use Drupal\oe_media_iframe\Plugin\media\Source\Iframe;
-use \Drupal\Component\Render\FormattableMarkup;
-
+use Drupal\Component\Render\FormattableMarkup;
 
 // Define constant for the includes folder. This .theme file should contain as
 // little code as possible. Instead, place theme implemenations in separate
