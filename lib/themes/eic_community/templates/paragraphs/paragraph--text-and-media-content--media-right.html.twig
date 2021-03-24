@@ -1,0 +1,11 @@
+{#
+/**
+ * @file
+ * Theme override to display the 'Text and media content' type paragraph.
+ *
+ * @see ./modules/contrib/paragraphs/templates/paragraph.html.twig
+ */
+#}
+{% set extra_classes = 'ecl-text-block--is-reversed' %}
+
+{% extends "@eic_community/paragraphs/paragraph--text-and-media-content.html.twig" %}

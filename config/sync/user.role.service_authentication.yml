@@ -1,0 +1,11 @@
+uuid: a9225216-2e03-4874-a1f1-3ed8da1d128a
+langcode: en
+status: true
+dependencies: {  }
+id: service_authentication
+label: 'Service authentication'
+weight: -6
+is_admin: null
+permissions:
+  - 'administer users'
+  - 'restful post eic_webservices_user_update'

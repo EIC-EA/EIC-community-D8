@@ -6,7 +6,8 @@ dependencies:
     - paragraph_view_mode
 third_party_settings:
   paragraph_view_mode:
-    enabled: false
+    enabled: true
+    label: Style
 id: text_and_media_content
 label: 'Text and media content'
 icon_uuid: null

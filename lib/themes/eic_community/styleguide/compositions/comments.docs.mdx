@@ -4,9 +4,14 @@ Displays the comments composition.
 
 ## Comments Parameters
 
-| Key   | Type     | Description                                                                                                                                         | Mandatory |
-| ----- | -------- | --------------------------------------------------------------------------------------------------------------------------------------------------- | --------- |
-| items | object[] | Should contain one or multiple comments that can also nested. Each item should contain the properties of a single comment that can also have items. | no        |
+| Key               | Type     | Description                                                                                                                                         | Mandatory |
+| ----------------- | -------- | --------------------------------------------------------------------------------------------------------------------------------------------------- | --------- |
+| items             | object[] | Should contain one or multiple comments that can also nested. Each item should contain the properties of a single comment that can also have items. | no        |
+| no_items_label    | string   | Message that will be visible if there are no comments to display.                                                                                   | no        |
+| is_disabled       | boolean  | Hides the comment form for logged in users.                                                                                                         | no        |
+| is_disabled_label | string   | Message that will be visible if the `is_disabled` is TRUE.                                                                                          | no        |
+| user              | object[] | Should exist if the overview should be displayed for a logged in user.                                                                              | no        |
+| icon_file_path    | string   | The path to the SVG inline sprite.                                                                                                                  | no        |
 
 ## Comment Parameters
 

@@ -35,36 +35,37 @@
       <div class="ecl-collapsible-options__items">
         {% for item in items %}
           <div class="ecl-collapsible-options__item">
-            {% set _icon = {} %}
-            {% if icon_file_path is not empty %}
-              {% set _icon = {
-                name: item.icon.name,
-                path: icon_file_path,
-                type: item.icon.type,
-                size: 'xs',
-              } %}
-            {% endif %}
+            {% if item.content is not empty %}
+              {{ item.content }}
+            {% elseif item.link or item.label %}
+              {% set _extra_classes ='ecl-collapsible-options__button ' ~ item.extra_classes|default('') %}
 
-            {% set _extra_classes ='ecl-collapsible-options__button ' ~ item.extra_classes|default('') %}
-            {% if item.active %}
-              {% set _extra_classes = _extra_classes ~ ' ecl-collapsible-options__button--is-active'%}
-            {% endif %}
+              {% if item.is_active %}
+                {% set _extra_classes = _extra_classes ~ ' ecl-collapsible-options__button--is-active'%}
+              {% endif %}
 
-            {% if item.link %}
-              {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with item|default({})|merge({
-                link: item.link|merge({
+              {% if item.link %}
+                {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with item|default({})|merge({
+                  link: item.link|merge({
+                    icon_position: 'before',
+                  }),
+                  icon: icon_file_path ? item.icon|default({})|merge({
+                    path: icon_file_path,
+                    size: 'xs',
+                  }) : {},
+                  extra_classes: 'ecl-link--button ecl-link--button-ghost ' ~ _extra_classes|default(''),
+                }) only %}
+              {% else %}
+                {% include "@ecl-twig/ec-component-button/ecl-button.html.twig" with item|default({})|merge({
+                  extra_classes: _extra_classes,
                   icon_position: 'before',
-                }),
-                icon: _icon,
-                extra_classes: 'ecl-link--button ecl-link--button-ghost ' ~ _extra_classes,
-              }) only %}
-            {% else %}
-              {% include "@ecl-twig/ec-component-button/ecl-button.html.twig" with item|default({})|merge({
-                extra_classes: _extra_classes,
-                icon_position: 'before',
-                icon: _icon,
-                variant: 'ghost',
-              }) only %}
+                  icon: icon_file_path ? item.icon|default({})|merge({
+                    path: icon_file_path,
+                    size: 'xs',
+                  }) : {},
+                  variant: 'ghost',
+                }) only %}
+              {% endif %}
             {% endif %}
           </div>
         {% endfor %}

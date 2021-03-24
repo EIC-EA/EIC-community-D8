@@ -1,7 +1,9 @@
 {% extends "@theme/patterns/layout/base.html.twig" %}
 
+{% block breadcrumbs %}{% endblock %}
+
 {% block page_header %}
-  {% if overview_header.image is not empty  %}
+  {% if overview_header.image is not empty %}
     {% include "@theme/patterns/compositions/overview-header.html.twig" with overview_header|default({}) only %}
     {% include "@theme/patterns/compositions/breadcrumb.html.twig" with breadcrumb|default({}) only %}
   {% else %}
@@ -10,10 +12,8 @@
   {% endif %}
 {% endblock %}
 
-{% block breadcrumbs %}{% endblock %}
 
 {% block content %}
-
   {% include "@theme/patterns/compositions/teaser-overview.html.twig" with {
     items: items,
     icon_file_path: common.icon_file_path,

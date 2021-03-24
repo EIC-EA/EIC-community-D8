@@ -72,16 +72,12 @@
     }
 
     .ecl-text-input {
-      @include ecl-media-breakpoint-down('xs') {
-        position: absolute;
-        top: 0;
-        right: 100%;
-      }
-
       border-top-left-radius: map-get($ecl-spacing, '2xs');
       border-bottom-left-radius: map-get($ecl-spacing, '2xs');
       @include ecl-responsive-font('meta');
       padding: map-get($ecl-spacing, 'xs');
+
+      @include placeholder-color(map-get($ecl-colors, 'blue-25'));
     }
 
     .ecl-button {

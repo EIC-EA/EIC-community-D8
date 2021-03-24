@@ -1,0 +1,27 @@
+# Discussion Thread
+
+Displays the Discussion thread that could be used within the Teaser Overview composition.
+
+## Example:
+
+```
+{% include "@theme/patterns/compositions/discussion-thread.html.twig" %}
+```
+
+## Twig parameters:
+
+| Key               | Type     | Description                                                                                                                    | Mandatory |
+| ----------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------ | --------- |
+| author            | boolean  | The author of the discussion. Should match the author component parameters                                                     | no        |
+| contributor_label | string   | Adjusts the semantic label of the discussion contributor.                                                                      | no        |
+| description       | string   | The description of the discussion.                                                                                             | no        |
+| featured          | object   | Displays featured comments that should exist within the comment thread. Follows the comment thread composition data structure. | no        |
+| icon_file_path    | string   | The URL for the SVG icon sprite.                                                                                               | no        |
+| is_highlighted    | boolean  | Displays the styling if the discussion is from a contributor.                                                                  | no        |
+| members           | object   | The members that are active within the discussion. Should follow the author collection composition parameter structure.        | no        |
+| path              | string   | The URL to the actual discussion.                                                                                              | no        |
+| started_by_label  | string   | Adjusts the visible label of the discussion author.                                                                            | no        |
+| tags              | object[] | Displays the defined tags within the [ECL Tag component](https://www.npmjs.com/package/@ecl-twig/ec-component-tag) parameters. | no        |
+| timestamp         | object   | The given timestamp of the discussion, should follow the custom timestamp component structure.                                 | no        |
+| title             | string   | The title of the discussion.                                                                                                   | no        |
+| title_element     | string   | Displays the discussion title within the selected element.                                                                     | no        |

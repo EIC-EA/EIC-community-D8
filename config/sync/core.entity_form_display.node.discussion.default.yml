@@ -11,8 +11,8 @@ dependencies:
     - field.field.node.discussion.field_vocab_topics
     - node.type.discussion
   module:
-    - comment
     - content_moderation
+    - comment
     - path
     - publication_date
     - scheduler
@@ -79,6 +79,13 @@ content:
     third_party_settings: {  }
     type: entity_reference_autocomplete
     region: content
+  langcode:
+    type: language_select
+    weight: 2
+    region: content
+    settings:
+      include_locked: true
+    third_party_settings: {  }
   moderation_state:
     type: moderation_state_default
     weight: 100

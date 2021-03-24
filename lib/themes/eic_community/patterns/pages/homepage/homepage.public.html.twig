@@ -1,5 +1,7 @@
 {% extends "@theme/patterns/layout/base.html.twig" %}
 
+{% block breadcrumbs %}{% endblock %}
+
 {% block page_header %}
   {% embed "@theme/patterns/compositions/editable-hero-banner.html.twig" with hero|default({})|merge({
     extra_classes: 'ecl-editable-hero-banner--is-blue',
@@ -27,7 +29,7 @@
 
 {% block content %}
   {% include "@theme/patterns/compositions/featured-content-collection.html.twig" with usp|default({})|merge({
-    extra_classes: "ecl-section-wrapper ecl-featured-content-collection--is-compact"
+    extra_classes: "ecl-section-wrapper ecl-featured-content-collection--has-compact-layout"
   }) only %}
 
   {% include "@theme/patterns/compositions/fact-figures-wrapper.html.twig" with fact_figures|default({})|merge({
@@ -39,7 +41,7 @@
   })  only %}
 
   {% include "@theme/patterns/compositions/featured-content-collection.html.twig" with featured_events|default({})|merge({
-    extra_classes: "ecl-section-wrapper ecl-section-wrapper--is-blue ecl-featured-content-collection--is-compact"
+    extra_classes: "ecl-section-wrapper ecl-section-wrapper--is-blue ecl-featured-content-collection--has-compact-layout"
   }) only %}
 
   {% embed "@theme/patterns/compositions/layout-block.html.twig" %}

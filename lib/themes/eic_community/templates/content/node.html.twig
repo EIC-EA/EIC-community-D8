@@ -70,30 +70,35 @@
  *   in different view modes.
  */
 #}
-<article{{ attributes }}>
 
-  {{ title_prefix }}
-  {% if not page %}
-    <h2{{ title_attributes }}>
-      <a href="{{ url }}" rel="bookmark">{{ label }}</a>
-    </h2>
-  {% endif %}
-  {{ title_suffix }}
+{% block content %}
+  <div class="ecl-section-wrapper">
+    <div class="ecl-container">
+      <article{{ attributes }}>
+        {{ title_prefix }}
+        {% if not page %}
+          <h2{{ title_attributes }}>
+            <a href="{{ url }}" rel="bookmark">{{ label }}</a>
+          </h2>
+        {% endif %}
+        {{ title_suffix }}
 
-  {% if display_submitted %}
-    <footer>
-      {{ author_picture }}
-      <div{{ author_attributes }}>
-        {% trans %}Submitted by {{ author_name }} on {{ date }}{% endtrans %}
-        {{ metadata }}
-      </div>
-    </footer>
-  {% endif %}
+        <div{{ content_attributes }}>
+          <div class="ecl-editable-wrapper">
+            {{ content }}
+          </div>
 
-  {% block content %}
-    <div{{ content_attributes }}>
-      {{ content }}
+          {% if display_submitted %}
+            <footer>
+              {{ author_picture }}
+              <div{{ author_attributes }}>
+                {% trans %}Submitted by {{ author_name }} on {{ date }}{% endtrans %}
+                {{ metadata }}
+              </div>
+            </footer>
+          {% endif %}
+        </div>
+      </article>
     </div>
-  {% endblock %}
-
-</article>
+  </div>
+{% endblock %}

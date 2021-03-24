@@ -16,6 +16,7 @@ dependencies:
     - field.field.node.news.field_vocab_geo
     - field.field.node.news.field_vocab_topics
     - node.type.news
+    - workflows.workflow.news_stories
   module:
     - entity_reference_revisions
     - text
@@ -161,3 +162,5 @@ content:
     region: content
 hidden:
   extra_field_oe_theme_helper_short_title_with_fallback: true
+  langcode: true
+  search_api_excerpt: true

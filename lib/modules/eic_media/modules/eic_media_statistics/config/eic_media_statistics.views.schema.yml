@@ -1,0 +1,5 @@
+# Schema for the views plugins of the Statistics module.
+
+views.field.file_counter_timestamp:
+  type: views.field.date
+  label: 'The most recent time the file has been downloaded'

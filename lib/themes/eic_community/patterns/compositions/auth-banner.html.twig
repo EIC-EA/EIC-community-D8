@@ -5,30 +5,27 @@
     <div class="ecl-auth-banner__wrapper">
       {% block before %}{% endblock %}
 
-      <div class="ecl-well">
-        {% if title is not empty %}
-          <{{ title_element }} class="ecl-auth-banner__title">{{ title }}</{{ title_element }}>
-        {% endif %}
-        <div class="ecl-auth-banner__actions">
-          {% if login is not empty %}
-            <div class="ecl-auth-banner__action">
-              {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with {
-                link: {
-                  icon_position: 'after',
-                  type: 'standalone',
-                  label: login.label,
-                  path: login.path
-                },
-                icon: {
-                  path: icon_file_path,
-                  name: 'rounded-arrow',
-                  type: 'ui',
-                  size: 'xs',
-                  transform: 'rotate-90',
-                },
-              } only %}
-            </div>
-          {% endif %}
+      {% embed "@theme/patterns/components/well.html.twig" with {
+        extra_classes: invert ? 'ecl-well--is-centered ecl-well--is-grey',
+      } %}
+        {% block content %}
+            {% if title is not empty %}
+              <{{ title_element }} class="ecl-auth-banner__title">{{ title }}</{{ title_element }}>
+            {% endif %}
+            <div class="ecl-auth-banner__actions">
+              {% if login is not empty %}
+                <div class="ecl-auth-banner__action">
+                  {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with {
+                    link: {
+                      icon_position: 'after',
+                      type: 'standalone',
+                      label: login.label,
+                      path: login.path
+                    },
+                    extra_classes: 'ecl-link--button ecl-link--button-primary',
+                  } only %}
+                </div>
+              {% endif %}
 
           {% if register is not empty %}
             <div class="ecl-auth-banner__action">
@@ -46,6 +43,5 @@
       </div>
 
       {% block after %}{% endblock %}
-    </div>
   </div>
 </section>

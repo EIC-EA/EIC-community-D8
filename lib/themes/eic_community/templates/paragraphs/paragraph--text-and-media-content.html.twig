@@ -5,5 +5,18 @@
  *
  * @see ./modules/contrib/paragraphs/templates/paragraph.html.twig
  */
- #}
-{% include "@theme/patterns/compositions/text-block.html.twig" with paragraph_content only %}
+#}
+{% set _extra_classes = 'ecl-section-wrapper' %}
+
+{% if extra_classes %}
+  {% set _extra_classes = _extra_classes ~ ' ' ~ extra_classes %}
+{% endif %}
+
+{% if paragraph.field_display_background.value %}
+  {% set _extra_classes = _extra_classes ~ ' ecl-section-wrapper--is-' ~ paragraph.field_display_background.value %}
+{% endif %}
+
+{% include "@theme/patterns/compositions/text-block.html.twig" with paragraph_content|default({})|merge({
+  title: paragraph.field_title.value|default(''),
+  extra_classes: _extra_classes,
+}) only %}

@@ -1,0 +1,60 @@
+uuid: 3712131b-ef96-4229-afe5-d1c3fb003b13
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.latest_news_stories
+    - entity_browser.browser.news_stories
+    - field.field.block_content.latest_news_stories.field_articles
+    - field.field.block_content.latest_news_stories.field_featured_article
+  module:
+    - entity_browser
+id: block_content.latest_news_stories.default
+targetEntityType: block_content
+bundle: latest_news_stories
+mode: default
+content:
+  field_articles:
+    weight: 2
+    settings:
+      entity_browser: news_stories
+      field_widget_display: label
+      field_widget_remove: true
+      open: true
+      selection_mode: selection_append
+      field_widget_edit: false
+      field_widget_replace: false
+      field_widget_display_settings: {  }
+    third_party_settings: {  }
+    type: entity_browser_entity_reference
+    region: content
+  field_featured_article:
+    weight: 1
+    settings:
+      entity_browser: news_stories
+      field_widget_display: label
+      field_widget_remove: true
+      open: true
+      selection_mode: selection_edit
+      field_widget_edit: false
+      field_widget_replace: false
+      field_widget_display_settings: {  }
+    third_party_settings: {  }
+    type: entity_browser_entity_reference
+    region: content
+  info:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  langcode:
+    type: language_select
+    weight: 2
+    region: content
+    settings:
+      include_locked: true
+    third_party_settings: {  }
+hidden: {  }

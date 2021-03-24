@@ -14,7 +14,7 @@
     "watch:styles": "chokidar \"./sass/**/*.scss\" -i \"/node_modules/\" -c \"npm run compile:styles\"",
     "watch:svg": "chokidar \"./images/**/*.svg\" -i \"/node_modules/\" -c \"npm run compile:svg\"",
     "prestorybook": "npm-run-all compile:*",
-    "storybook": "start-storybook -s ./dist -p 8080",
+    "storybook": "start-storybook -s ./dist -p 9000",
     "pregenerate-storybook": "[ -d './storybook-static' ] && rm -r ./storybook-static || exit 0",
     "generate-storybook": "build-storybook -o ./storybook-static",
     "postgenerate-storybook": "[ -d './dist' ] && cp -r ./dist/* ./storybook-static || exit 0",

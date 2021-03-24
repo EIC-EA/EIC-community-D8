@@ -61,7 +61,11 @@
           {% endif %}
         </div>
         {% if timestamp %}
-          <time class="ecl-comment__timestamp">{{ timestamp|format_date() }}</time>
+          {% include "@theme/patterns/components/timestamp.html.twig" with {
+            extra_classes: 'ecl-comment__timestamp ecl-timestamp--meta',
+            icon_file_path: icon_file_path,
+            label: timestamp
+          } only %}
         {% endif %}
       </div>
 
@@ -160,12 +164,11 @@
           <div class="ecl-comment__actions-wrapper">
             <div class="ecl-comment__actions">
               <div class="ecl-comment__action">
-                {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with {
-                  link: {
-                    path: reply_path,
-                    label: reply_label|default('Reply'),
-                  },
-                  extra_classes: 'ecl-comment__reply ecl-link--button ecl-link--button-ghost',
+                {% include "@ecl-twig/ec-component-button/ecl-button.html.twig" with {
+                  label: reply_label|default('Reply'),
+                  variant: 'ghost',
+                  type: 'button',
+                  extra_classes: 'ecl-comment__reply',
                   extra_attributes: action_attributes,
                 } %}
               </div>

@@ -5,10 +5,7 @@
     display: flex;
     align-items: center;
     flex-wrap: wrap;
-
-    &:not(:empty) {
-      margin-bottom: #{0 - map-get($ecl-spacing, 'm')};
-    }
+    margin: 0 #{0 - map-get($ecl-spacing, 'm')} #{0 - map-get($ecl-spacing, 'm')} 0;
   }
 
   &__item {
@@ -26,8 +23,6 @@
 
     &:last-child {
       border-right: 0;
-      padding-right: 0;
-      margin-right: 0;
     }
   }
 }

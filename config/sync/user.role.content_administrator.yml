@@ -1,0 +1,10 @@
+uuid: eb00b806-2955-4072-a637-acba397088f5
+langcode: en
+status: true
+dependencies: {  }
+id: content_administrator
+label: 'Content administrator'
+weight: -7
+is_admin: null
+permissions:
+  - 'create group group'

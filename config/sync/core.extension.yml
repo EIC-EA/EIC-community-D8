@@ -4,6 +4,7 @@ module:
   admin_toolbar_links_access_filter: 0
   admin_toolbar_search: 0
   admin_toolbar_tools: 0
+  basic_auth: 0
   big_pipe: 0
   block: 0
   block_content: 0
@@ -12,8 +13,11 @@ module:
   comment: 0
   components: 0
   config: 0
+  config_filter: 0
+  config_split: 0
   content_moderation: 0
   context: 0
+  context_ui: 0
   contextual: 0
   datetime: 0
   dblog: 0
@@ -21,6 +25,7 @@ module:
   editor: 0
   eic_block_type_cta_tiles: 0
   eic_block_type_page_banner: 0
+  eic_block_type_social_media: 0
   eic_block_type_tiles_reference: 0
   eic_block_types: 0
   eic_blocks: 0
@@ -29,13 +34,16 @@ module:
   eic_content_story: 0
   eic_flags: 0
   eic_fragment_fact_figure: 0
+  eic_groups: 0
   eic_homepage: 0
   eic_media: 0
   eic_media_document: 0
+  eic_media_statistics: 0
   eic_media_video: 0
   eic_paragraph_contributor: 0
   eic_paragraph_cta_tile: 0
-  eic_users: 0
+  eic_user: 0
+  eic_webservices: 0
   entity: 0
   entity_browser: 0
   entity_browser_entity_form: 0
@@ -50,8 +58,10 @@ module:
   fragments: 0
   gnode: 0
   group: 0
+  hal: 0
   image: 0
   inline_entity_form: 0
+  language: 0
   link: 0
   media: 0
   media_library: 0
@@ -67,14 +77,25 @@ module:
   oe_time_caching: 0
   oe_webtools: 0
   oe_webtools_social_share: 0
+  openapi: 0
+  openapi_rest: 0
   options: 0
   page_cache: 0
   paragraph_view_mode: 0
   path: 0
   path_alias: 0
+  profile: 0
   responsive_image: 0
+  rest: 0
+  restui: 0
+  route_condition: 0
   scheduler: 0
   scheduler_content_moderation_integration: 0
+  schemata: 0
+  schemata_json_schema: 0
+  search_api: 0
+  search_api_solr: 0
+  serialization: 0
   smart_trim: 0
   statistics: 0
   system: 0
@@ -83,6 +104,7 @@ module:
   token: 0
   toolbar: 0
   twig_field_value: 0
+  typed_link: 0
   ui_patterns: 0
   ui_patterns_library: 0
   update: 0

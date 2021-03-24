@@ -1,0 +1,8 @@
+uuid: f7540497-5a6d-4d43-8701-568eff60d173
+langcode: en
+status: true
+dependencies: {  }
+id: latest_news_stories
+label: 'Latest News & Stories'
+revision: 0
+description: 'Manually choose which News and/or Stories are shown, including one highlighted.'

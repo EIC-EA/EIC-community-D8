@@ -1,0 +1,54 @@
+uuid: 052929ef-8be6-47b1-8eb3-717780b4df69
+langcode: en
+status: true
+dependencies:
+  module:
+    - group
+    - route_condition
+_core:
+  default_config_hash: CvMPzdzpKqV5FrlT6rMu3GzdbzGoPdWXKcYNdM1SsTQ
+name: group_group_hompeage
+label: 'Group - Group hompeage'
+group: Groups
+description: 'Group group type homepage'
+requireAllConditions: true
+disabled: false
+conditions:
+  route:
+    id: route
+    routes: entity.group.canonical
+    negate: false
+    uuid: 3ddae2df-50c1-4419-b826-804ea96fcc07
+    context_mapping: {  }
+  group_type:
+    id: group_type
+    group_types:
+      group: group
+    negate: 0
+    uuid: efd9045b-7859-4375-b6bd-3c8ba6bf8fa0
+    context_mapping:
+      group: '@group.group_route_context:group'
+reactions:
+  blocks:
+    blocks:
+      3a090b19-4584-4fb0-bc17-47df386de8da:
+        id: 'views_block:group_discussions-block_1'
+        label: ''
+        provider: views
+        label_display: visible
+        views_label: ''
+        items_per_page: none
+        region: content
+        weight: '0'
+        context_mapping: {  }
+        custom_id: views_block_group_discussions_block_1
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: group_group_hompeage
+        uuid: 3a090b19-4584-4fb0-bc17-47df386de8da
+    id: blocks
+    saved: false
+    uuid: db598f5e-00b5-4ba6-b443-bbe6d3ca2c59
+    include_default_blocks: 0
+weight: 0

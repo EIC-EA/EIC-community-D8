@@ -1,0 +1,28 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.profile.field_vocab_user_type
+    - profile.type.member
+    - taxonomy.vocabulary.user_types
+id: profile.member.field_vocab_user_type
+field_name: field_vocab_user_type
+entity_type: profile
+bundle: member
+label: 'User type'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      user_types: user_types
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

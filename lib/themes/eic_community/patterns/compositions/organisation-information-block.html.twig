@@ -1,17 +1,17 @@
 {% set title_element = title_element|default('h1') %}
 
-<section class="ecl-organisation-information-block {{ extra_classes }}">
+<section class="ecl-contact-information-block ecl-contact-information-block--organisation {{ extra_classes }}">
   <div class="ecl-container">
-    <div class="ecl-organisation-information-block__wrapper">
-      <div class="ecl-organisation-information-block__main">
-        <div class="ecl-organisation-information-block__main-top">
-          <{{ title_element }} class="ecl-organisation-information-block__title">{{ title }}</{{ title_element }}>
+    <div class="ecl-contact-information-block__wrapper">
+      <div class="ecl-contact-information-block__main">
+        <div class="ecl-contact-information-block__main-top">
+          <{{ title_element }} class="ecl-contact-information-block__title">{{ title }}</{{ title_element }}>
           {% if follow is not empty %}
             {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with {
               link: follow.link|default({})|merge({
                 icon_position: 'before',
               }),
-              extra_classes: 'ecl-organisation-information-block__follow',
+              extra_classes: 'ecl-contact-information-block__follow',
               icon: icon_file_path ? {
                 path: icon_file_path,
                 name: 'tag',
@@ -22,24 +22,24 @@
           {% endif %}
         </div>
 
-        <div class="ecl-organisation-information-block__main-content">
+        <div class="ecl-contact-information-block__main-content">
           {% if organisation_size or turnover %}
-            <p class="ecl-organisation-information-block__subtitle">{{ organisation_size }}, {{ turnover }}</p>
+            <p class="ecl-contact-information-block__subtitle">{{ organisation_size }}, {{ turnover }}</p>
           {% endif %}
 
           {% if description is not empty %}
-            <div class="ecl-organisation-information-block__description">{{ description }}</div>
+            <div class="ecl-contact-information-block__description">{{ description }}</div>
           {% endif %}
 
           {% if expertises is not empty %}
-            <div class="ecl-organisation-information-block__expertises">
+            <div class="ecl-contact-information-block__expertises">
               {% if expertises_label %}
-                <span class="ecl-organisation-information-block__expertises-label">{{ expertises_label }}</span>
+                <span class="ecl-contact-information-block__expertises-label">{{ expertises_label }}</span>
               {% endif %}
-              <div class="ecl-organisation-information-block__expertises-items">
+              <div class="ecl-contact-information-block__expertises-items">
                 {% for expertise in expertises %}
                   {% include '@ecl-twig/ec-component-tag/ecl-tag.html.twig' with {
-                    extra_classes: 'ecl-organisation-information-block__expertises-item',
+                    extra_classes: 'ecl-contact-information-block__expertises-item',
                     tag: {
                       type: expertise.path ? 'link' : 'display',
                       path: expertise.path,
@@ -52,10 +52,10 @@
           {% endif %}
 
           {% if stats is not empty %}
-            <div class="ecl-organisation-information-block__stats">
-              <div class="ecl-organisation-information-block__stats-items">
+            <div class="ecl-contact-information-block__stats">
+              <div class="ecl-contact-information-block__stats-items">
                 {% for stat in stats %}
-                  <div class="ecl-organisation-information-block__stats-item">
+                  <div class="ecl-contact-information-block__stats-item">
                     {% if icon_file_path and stat.icon%}
                       {% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with {
                         icon: stat.icon|merge({
@@ -81,14 +81,14 @@
       </div>
 
       {% if links or social_share or meta %}
-        <div class="ecl-organisation-information-block__aside">
+        <div class="ecl-contact-information-block__aside">
           {% if sidebar_title %}
             {% set sidebar_title_element = sidebar_title_element|default('h2') %}
-            <{{ sidebar_title_element }} class="ecl-organisation-information-block__sidebar-title">{{ sidebar_title }}</{{ sidebar_title_element }}>
+            <{{ sidebar_title_element }} class="ecl-contact-information-block__sidebar-title">{{ sidebar_title }}</{{ sidebar_title_element }}>
           {% endif %}
 
           {% if links is not empty %}
-            <div class="ecl-organisation-information-block__links">
+            <div class="ecl-contact-information-block__links">
               {% for link in links %}
                 {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with {
                   link: link.link|merge({
@@ -101,7 +101,7 @@
                     size: 's',
                   } : {},
                   extra_attributes: link.extra_attributes,
-                  extra_classes: 'ecl-organisation-information-block__link'
+                  extra_classes: 'ecl-contact-information-block__link'
                 } only %}
               {% endfor %}
             </div>
@@ -121,8 +121,8 @@
       {% endif %}
 
       {% if image is not empty %}
-        <figure class="ecl-organisation-information-block__image-wrapper">
-          <img class="ecl-organisation-information-block__image" src="{{ image.src }}" alt="{{ image.alt }}" />
+        <figure class="ecl-contact-information-block__image-wrapper">
+          <img class="ecl-contact-information-block__image" src="{{ image.src }}" alt="{{ image.alt }}" />
         </figure>
       {% endif %}
     </div>

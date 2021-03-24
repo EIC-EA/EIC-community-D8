@@ -10,8 +10,10 @@ Displays the defined topics in a tag overview.
 
 ## Twig parameters:
 
-| Key     | Type     | Description                                                                                                                               | Mandatory |
-| ------- | -------- | ----------------------------------------------------------------------------------------------------------------------------------------- | --------- |
-| title   | string   | Displays an optional title before the overview.                                                                                           | no        |
-| items   | object[] | Should contain an array with entries that match the [ECL Twig Tag](https://ecl-twig-php.netlify.app/ec/?path=/story/components-tag--link) | yes       |
-| items[] | object   | Should be an object of type [ECL Twig Tag](https://ecl-twig-php.netlify.app/ec/?path=/story/components-tag--link)                         | yes       |
+| Key            | Type     | Description                                                                                                                               | Mandatory |
+| -------------- | -------- | ----------------------------------------------------------------------------------------------------------------------------------------- | --------- |
+| title          | string   | Displays an optional title before the overview.                                                                                           | no        |
+| items          | object[] | Should contain an array with entries that match the [ECL Twig Tag](https://ecl-twig-php.netlify.app/ec/?path=/story/components-tag--link) | yes       |
+| items[]        | object   | Should be an object of type [ECL Twig Tag](https://ecl-twig-php.netlify.app/ec/?path=/story/components-tag--link)                         | yes       |
+| is_collapsible | boolean  | Only shows the first 5 topics. The rest can be expanded with a button.                                                                    | yes       |
+| collapse_label | string   | Adjusts the collapse label to show all items.                                                                                             | yes       |
