@@ -9,4 +9,5 @@ targetEntityType: flagging
 bundle: recommend
 mode: default
 content: {  }
-hidden: {  }
+hidden:
+  search_api_excerpt: true

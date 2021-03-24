@@ -1,11 +1,7 @@
 .ecl-subnavigation {
   $node: &;
 
-  margin: ecl-box-model('padding') 0;
-
-  &:first-child {
-    margin-top: 0;
-  }
+  margin: 0 0 ecl-box-model('padding');
 
   &:last-child {
     margin-bottom: 0;
@@ -43,7 +39,7 @@
     display: flex;
     width: 100%;
     list-style: none;
-    margin: 0;
+    margin: 0 0 -1px;
     padding: 0;
   }
 
@@ -51,7 +47,6 @@
     margin: 0;
     padding: 0;
     display: flex;
-    flex-grow: 1;
   }
 
   &__item-link {
@@ -65,10 +60,6 @@
     @include ecl-responsive-font('meta');
     font-weight: $ecl-font-weight-bold;
 
-    @include ecl-media-breakpoint-up('lg') {
-      padding: ecl-box-model('padding--md', 'controls') ecl-box-model('padding', 'controls');
-    }
-
     &:hover,
     #{$node}__item--is-active & {
       text-decoration: none;
@@ -77,8 +68,79 @@
     }
   }
 
-  &__stats-wrapper {
-    display: block;
-    margin-left: ecl-box-model('padding');
+  &__searchform-wrapper {
+    display: none;
+
+    @include ecl-media-breakpoint-up('lg') {
+      display: block;
+    }
+  }
+
+  &__searchform {
+    min-width: map-get($ecl-width, 'form-m');
+
+    .ecl-text-input,
+    .ecl-button {
+      border: ecl-border();
+      background-color: map-get($ecl-colors, 'white');
+
+      #{$node}__collapsible-options & {
+        background-color: map-get($ecl-colors, 'grey-5');
+      }
+
+
+      &:not(:focus):hover {
+        outline: none;
+      }
+
+      &::-webkit-search-cancel-button {
+        appearance: none;
+      }
+
+      #{$node}__collapsible-options & {
+        border: none;
+      }
+    }
+
+    .ecl-text-input {
+      border-right: none;
+      color: currentColor;
+    }
+
+    .ecl-button {
+      border-left: none;
+      color: ecl-typography('color', 'title');
+
+      #{$node}__collapsible-options & {
+        border-right: 0;
+      }
+    }
+
+    .ecl-text-input {
+      border-top-left-radius: map-get($ecl-spacing, '2xs');
+      border-bottom-left-radius: map-get($ecl-spacing, '2xs');
+      @include ecl-responsive-font('meta');
+      padding: map-get($ecl-spacing, 'xs');
+
+      #{$node}__collapsible-options & {
+        padding: map-get($ecl-spacing, 'm');
+        @include ecl-responsive-font('label');
+      }
+    }
+
+    .ecl-button {
+      border-top-right-radius: map-get($ecl-spacing, '2xs');
+      border-bottom-right-radius: map-get($ecl-spacing, '2xs');
+      padding-top: map-get($ecl-spacing, 'xs');
+      padding-bottom: map-get($ecl-spacing, 'xs');
+    }
+
+    .ecl-button__label {
+      @include visually-hidden();
+    }
+
+    .ecl-search-form__button .ecl-button__icon {
+      display: block;
+    }
   }
 }

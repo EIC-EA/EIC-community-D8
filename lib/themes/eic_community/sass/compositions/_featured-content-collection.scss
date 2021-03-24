@@ -25,7 +25,12 @@
   &__header {
     display: flex;
     align-items: center;
-    margin-bottom: map-get($ecl-spacing, '3xl');
+    margin-bottom: map-get($ecl-spacing, 'xl');
+
+    @include ecl-media-breakpoint-up('md') {
+      margin-bottom: map-get($ecl-spacing, '3xl');
+    }
+
     max-width: $ecl-container-max-width-md;
   }
 
@@ -38,23 +43,48 @@
     flex-grow: 1;
   }
 
+  &__main {
+    margin-bottom: ecl-box-model('padding', 'banner');
+
+    @include ecl-media-breakpoint-up('md') {
+      margin-bottom: ecl-box-model('padding--md', 'banner');
+    }
+
+    @include ecl-media-breakpoint-up('lg') {
+      margin-bottom: ecl-box-model('padding--lg', 'banner');
+    }
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
   &__items {
     display: flex;
     flex-wrap: wrap;
     margin-top: map-get($ecl-spacing, 'xl');
     margin-left: #{0 - ecl-layout('gutter')};
-    margin-bottom: #{0 - map-get($ecl-spacing, 'xl')};
+    margin-bottom: #{0 - map-get($ecl-spacing, 'l')};
+
+    @include ecl-media-breakpoint-up('md') {
+      margin-bottom: #{0 - map-get($ecl-spacing, 'xl')};
+    }
   }
 
   &__item {
     display: flex;
     padding-left: ecl-layout('gutter');
-    margin-bottom: map-get($ecl-spacing, 'xl');
+    margin-bottom: map-get($ecl-spacing, 'l');
     width: 100%;
     box-sizing: border-box;
 
+    #{$node}--is-ready[aria-collapsed="true"] &:nth-child(1n+3) {
+      @include visually-hidden();
+    }
+
     @include ecl-media-breakpoint-up('md') {
       width: calc(100% / 2);
+      margin-bottom: map-get($ecl-spacing, 'xl');
     }
 
     @include ecl-media-breakpoint-up('lg') {
@@ -62,6 +92,10 @@
 
       #{$node}--has-compact-layout & {
         width: calc(100% / 3);
+      }
+
+      #{$node}--has-overview-layout & {
+        width: calc(100% / 2);
       }
     }
 
@@ -71,14 +105,24 @@
   }
 
   &__footer {
-    margin-top: ecl-box-model('padding', 'banner');
+    display: flex;
 
-    @include ecl-media-breakpoint-up('md') {
-      margin-top: ecl-box-model('padding--md', 'banner');
+    #{$node}--is-collapsible & {
+      justify-content: center;
     }
+  }
 
-    @include ecl-media-breakpoint-up('lg') {
-      margin-top: ecl-box-model('padding--lg', 'banner');
+  &__expand {
+    display: none;
+
+    #{$node}--is-ready[aria-collapsed="true"] & {
+      display: block;
+    }
+  }
+
+  &__call-to-action {
+    #{$node}--is-ready[aria-collapsed="true"] & {
+      display: none;
     }
   }
 }

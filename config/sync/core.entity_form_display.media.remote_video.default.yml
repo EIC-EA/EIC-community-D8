@@ -15,6 +15,13 @@ targetEntityType: media
 bundle: remote_video
 mode: default
 content:
+  langcode:
+    type: language_select
+    weight: 2
+    region: content
+    settings:
+      include_locked: true
+    third_party_settings: {  }
   oe_media_oembed_video:
     type: oembed_textfield
     weight: 0
