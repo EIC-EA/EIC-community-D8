@@ -35,14 +35,10 @@ function eic_community_preprocess_comment(&$variables) {
   }
 
   $comment_reply = Url::fromRoute('comment.reply', [
-    'entity_type' => $comment
-      ->getCommentedEntityTypeId(),
-    'entity' => $comment
-      ->getCommentedEntityId(),
-    'field_name' => $comment
-      ->getFieldName(),
-    'pid' => $comment
-      ->id(),
+    'entity_type' => $comment->getCommentedEntityTypeId(),
+    'entity' => $comment->getCommentedEntityId(),
+    'field_name' => $comment->getFieldName(),
+    'pid' => $comment->id(),
   ]);
 
   $variables['comment'] = [
@@ -88,7 +84,7 @@ function eic_community_preprocess_form(&$variables) {
  * @return mixed
  *   Returns array or NULL.
  */
-function _get_profile_image_array(EntityInterface $user) : ?array {
+function _get_profile_image_array(EntityInterface $user): ?array {
   if ($user->field_media->target_id == NULL) {
     return NULL;
   }
