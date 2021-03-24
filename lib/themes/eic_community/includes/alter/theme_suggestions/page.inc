@@ -15,4 +15,15 @@ function eic_community_theme_suggestions_page_alter(array &$suggestions, array $
       $suggestions[] = 'page__front__anonymous';
     }
   }
+
+  $route = \Drupal::routeMatch();
+  if ($route->getRouteName() === 'entity.node.canonical') {
+    $suggestions[] = 'page__node__' . $route->getParameter('node')->bundle();
+  }
+  if ($route->getRouteName() === 'entity.node.preview') {
+    $suggestions[] = 'page__node__' .
+      $route->getParameter('node_preview')->bundle();
+    $suggestions[] = 'page__node__preview__' .
+      $route->getParameter('node_preview')->bundle();
+  }
 }
