@@ -12,6 +12,14 @@ use Drupal\oe_theme\ValueObject\ImageValueObject;
  * Implements hook_preprocess_block() for all blocks.
  */
 function eic_community_preprocess_block(array &$variables) {
+  // Style block titles using ECL.
+  $variables['title_attributes'] = array_merge_recursive($variables['title_attributes'],
+    [
+      'class' => [
+        'ecl-u-type-heading-2',
+      ],
+    ]);
+
   if ($variables['base_plugin_id'] == 'block_content') {
     /** @var \Drupal\block_content\Entity\BlockContent $block_content */
     $block_content = $variables['content']['#block_content'];
