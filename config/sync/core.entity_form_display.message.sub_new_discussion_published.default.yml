@@ -1,0 +1,23 @@
+uuid: 962b0979-b69b-4c68-aed7-1d7c3612e576
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.message.sub_new_discussion_published.field_event_executing_user
+    - message.template.sub_new_discussion_published
+id: message.sub_new_discussion_published.default
+targetEntityType: message
+bundle: sub_new_discussion_published
+mode: default
+content:
+  field_event_executing_user:
+    weight: 0
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: entity_reference_autocomplete
+    region: content
+hidden: {  }

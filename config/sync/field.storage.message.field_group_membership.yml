@@ -1,0 +1,20 @@
+uuid: e88e784c-6016-4510-b2ff-af987c48a366
+langcode: en
+status: true
+dependencies:
+  module:
+    - group
+    - message
+id: message.field_group_membership
+field_name: field_group_membership
+entity_type: message
+type: entity_reference
+settings:
+  target_type: group_content
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

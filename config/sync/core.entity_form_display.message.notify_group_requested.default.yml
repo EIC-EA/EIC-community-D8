@@ -1,0 +1,23 @@
+uuid: 2c47d8b8-35d1-438b-b779-f6f77ad9f922
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.message.notify_group_requested.field_group_ref
+    - message.template.notify_group_requested
+id: message.notify_group_requested.default
+targetEntityType: message
+bundle: notify_group_requested
+mode: default
+content:
+  field_group_ref:
+    weight: 0
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: entity_reference_autocomplete
+    region: content
+hidden: {  }

@@ -1,0 +1,34 @@
+uuid: b32e6638-624a-4730-91f9-1352526e29de
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.message.notify_group_request_submitted.field_event_executing_user
+    - field.field.message.notify_group_request_submitted.field_group_ref
+    - message.template.notify_group_request_submitted
+id: message.notify_group_request_submitted.default
+targetEntityType: message
+bundle: notify_group_request_submitted
+mode: default
+content:
+  field_event_executing_user:
+    weight: 1
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: entity_reference_autocomplete
+    region: content
+  field_group_ref:
+    weight: 0
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: entity_reference_autocomplete
+    region: content
+hidden: {  }

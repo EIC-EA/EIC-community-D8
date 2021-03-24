@@ -1,0 +1,17 @@
+uuid: ee86b974-da46-4eda-b226-85ce943939b1
+langcode: en
+status: true
+dependencies:
+  config:
+    - message.template.stream_share_insert_update
+id: message.stream_share_insert_update.default
+targetEntityType: message
+bundle: stream_share_insert_update
+mode: default
+content:
+  partial_0:
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden: {  }
