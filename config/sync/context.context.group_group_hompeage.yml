@@ -62,6 +62,20 @@ reactions:
         unique: 0
         context_id: group_group_hompeage
         uuid: 3fc74879-9f2f-4f36-a94c-bd5dd6938596
+      245a6924-137e-4daf-a868-9a8a414047a2:
+        id: system_breadcrumb_block
+        label: Breadcrumbs
+        provider: system
+        label_display: '0'
+        region: breadcrumbs
+        weight: '0'
+        context_mapping: {  }
+        custom_id: system_breadcrumb_block
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: group_group_hompeage
+        uuid: 245a6924-137e-4daf-a868-9a8a414047a2
     id: blocks
     saved: false
     uuid: db598f5e-00b5-4ba6-b443-bbe6d3ca2c59
