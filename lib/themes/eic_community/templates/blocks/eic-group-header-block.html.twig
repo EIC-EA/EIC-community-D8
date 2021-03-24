@@ -14,7 +14,14 @@
  */
 #}
 {% include "@theme/patterns/compositions/editorial-header.html.twig" with {
+  icon_file_path: eic_icon_path,
   title: group_values.title,
   description: group_values.description,
   image: group_values.image|default({}),
+  parent: {
+    link: {
+      path: '/' ~ current_language_id|to_internal_language_id ~ '/groups',
+      label: 'All groups'|t,
+    }
+  }
 } only %}
