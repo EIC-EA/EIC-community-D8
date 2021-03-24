@@ -1,4 +1,4 @@
-uuid: 27329c38-77df-4fd3-aed4-71147916c8e4
+uuid: 0fbbc603-20f3-44c9-ae7d-360f3fd941af
 langcode: en
 status: true
 dependencies:
@@ -6,8 +6,8 @@ dependencies:
     - search_api.index.global
   module:
     - search_api
-id: groups_overview
-label: 'Groups - Overview'
+id: global_overviews
+label: 'Global Overviews'
 module: views
 description: ''
 tag: EIC
@@ -55,9 +55,9 @@ display:
             first: '« First'
             last: 'Last »'
           expose:
-            items_per_page: false
+            items_per_page: true
             items_per_page_label: 'Items per page'
-            items_per_page_options: '5, 10, 25, 50'
+            items_per_page_options: '10,20,50,100'
             items_per_page_options_all: false
             items_per_page_options_all_label: '- All -'
             offset: false
@@ -240,6 +240,7 @@ display:
         title: false
         filters: false
         filter_groups: false
+        cache: false
       filters:
         search_api_datasource:
           id: search_api_datasource
@@ -327,6 +328,8 @@ display:
         operator: AND
         groups:
           1: AND
+      cache:
+        type: none
     cache_metadata:
       max-age: -1
       contexts:
