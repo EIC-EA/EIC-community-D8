@@ -74,13 +74,6 @@ if (is_dir(__DIR__ . '/' . INCLUDES_FOLDER)) {
 }
 
 /**
- * Implements hook_preprocess_input__checkbox().
- */
-function eic_community_preprocess_input__checkbox(array &$variables): void {
-  _eic_community_preprocess_input_label_wrapper($variables);
-}
-
-/**
  * Implements template_preprocess_input__date().
  */
 function eic_community_preprocess_input__date(array &$variables): void {
