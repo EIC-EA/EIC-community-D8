@@ -1,0 +1,17 @@
+uuid: 29f6afa1-2be9-4d67-8d51-ef0833e407fd
+langcode: en
+status: true
+dependencies:
+  config:
+    - message.template.stream_article_insert_update
+id: message.stream_article_insert_update.default
+targetEntityType: message
+bundle: stream_article_insert_update
+mode: default
+content:
+  partial_0:
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden: {  }
