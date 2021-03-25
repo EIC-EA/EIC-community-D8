@@ -1,0 +1,23 @@
+uuid: d3d44d08-e8bc-4768-910b-21bfa9ef7141
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.message.sub_group_content_updated.field_event_executing_user
+    - message.template.sub_group_content_updated
+id: message.sub_group_content_updated.default
+targetEntityType: message
+bundle: sub_group_content_updated
+mode: default
+content:
+  field_event_executing_user:
+    weight: 0
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: entity_reference_autocomplete
+    region: content
+hidden: {  }

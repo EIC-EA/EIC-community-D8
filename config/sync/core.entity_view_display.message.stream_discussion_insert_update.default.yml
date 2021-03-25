@@ -1,0 +1,17 @@
+uuid: ef4b4635-b193-4510-bc53-9a89bf1c1db5
+langcode: en
+status: true
+dependencies:
+  config:
+    - message.template.stream_discussion_insert_update
+id: message.stream_discussion_insert_update.default
+targetEntityType: message
+bundle: stream_discussion_insert_update
+mode: default
+content:
+  partial_0:
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden: {  }

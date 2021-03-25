@@ -1,0 +1,45 @@
+uuid: 4531995a-35c3-4e59-b5ed-5e77d7f4af42
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.message.notify_new_member_joined.field_group_membership
+    - field.field.message.notify_new_member_joined.field_group_ref
+    - field.field.message.notify_new_member_joined.field_related_user
+    - message.template.notify_new_member_joined
+id: message.notify_new_member_joined.default
+targetEntityType: message
+bundle: notify_new_member_joined
+mode: default
+content:
+  field_group_membership:
+    weight: 2
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: entity_reference_autocomplete
+    region: content
+  field_group_ref:
+    weight: 0
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: entity_reference_autocomplete
+    region: content
+  field_related_user:
+    weight: 1
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: entity_reference_autocomplete
+    region: content
+hidden: {  }

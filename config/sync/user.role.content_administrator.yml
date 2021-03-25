@@ -8,3 +8,4 @@ weight: -7
 is_admin: null
 permissions:
   - 'create group group'
+  - 'skip comment approval'

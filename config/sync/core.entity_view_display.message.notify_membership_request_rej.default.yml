@@ -1,0 +1,40 @@
+uuid: c5c253a5-d2a2-4ad1-8e0a-58366fb3bd02
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.message.notify_membership_request_rej.field_event_executing_user
+    - field.field.message.notify_membership_request_rej.field_group_ref
+    - message.template.notify_membership_request_rej
+id: message.notify_membership_request_rej.default
+targetEntityType: message
+bundle: notify_membership_request_rej
+mode: default
+content:
+  field_event_executing_user:
+    weight: 2
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+  field_group_ref:
+    weight: 1
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+  partial_0:
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  partial_1:
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden: {  }

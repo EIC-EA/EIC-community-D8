@@ -1,0 +1,22 @@
+uuid: ee9f5e22-86b0-448b-879e-99163549762f
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.message.notify_weekly_digest
+    - field.field.message.sub_new_comment_on_content.field_event_executing_user
+    - message.template.sub_new_comment_on_content
+id: message.sub_new_comment_on_content.notify_weekly_digest
+targetEntityType: message
+bundle: sub_new_comment_on_content
+mode: notify_weekly_digest
+content:
+  partial_2:
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  field_event_executing_user: true
+  partial_0: true
+  partial_1: true

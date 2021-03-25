@@ -4,10 +4,12 @@ status: true
 dependencies:
   config:
     - field.field.node.wiki_page.field_body
+    - field.field.node.wiki_page.field_comments
     - field.field.node.wiki_page.field_related_downloads
     - field.field.node.wiki_page.field_related_media
     - node.type.wiki_page
   module:
+    - comment
     - content_moderation
     - media_library
     - path
@@ -33,6 +35,12 @@ content:
       placeholder: ''
     third_party_settings: {  }
     type: text_textarea
+    region: content
+  field_comments:
+    weight: 101
+    settings: {  }
+    third_party_settings: {  }
+    type: comment_default
     region: content
   field_related_downloads:
     type: media_library_widget
