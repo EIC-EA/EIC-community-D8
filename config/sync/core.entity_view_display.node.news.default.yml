@@ -134,6 +134,11 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
+  flag_like_content:
+    weight: 16
+    region: content
+    settings: {  }
+    third_party_settings: {  }
   flag_recommend:
     weight: 15
     region: content
@@ -146,7 +151,7 @@ content:
     third_party_settings: {  }
   published_at:
     type: timestamp
-    weight: 16
+    weight: 17
     region: content
     label: above
     settings:
@@ -155,9 +160,9 @@ content:
       timezone: ''
     third_party_settings: {  }
   reading_time:
-    weight: 100
+    weight: 18
+    region: content
     settings: {  }
     third_party_settings: {  }
-    region: content
 hidden:
   extra_field_oe_theme_helper_short_title_with_fallback: true
