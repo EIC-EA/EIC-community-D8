@@ -5,6 +5,7 @@ dependencies:
   config:
     - core.entity_view_mode.node.teaser
     - field.field.node.story.field_body
+    - field.field.node.story.field_comments
     - field.field.node.story.field_disclaimer
     - field.field.node.story.field_document_media
     - field.field.node.story.field_header_visual
@@ -54,6 +55,7 @@ content:
 hidden:
   extra_field_eic_theme_helper_short_title_with_fallback: true
   field_body: true
+  field_comments: true
   field_disclaimer: true
   field_document_media: true
   field_header_visual: true

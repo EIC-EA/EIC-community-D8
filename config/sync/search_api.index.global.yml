@@ -1,0 +1,159 @@
+uuid: 590b9406-6314-4246-a658-8e5ff93d713d
+langcode: en
+status: true
+dependencies:
+  module:
+    - search_api_solr
+    - group
+    - search_api
+    - content_moderation
+    - flag
+    - node
+    - user
+  config:
+    - field.storage.group.field_body
+    - field.storage.group.field_vocab_geo
+    - field.storage.group.field_vocab_topics
+    - search_api.server.global
+third_party_settings:
+  search_api_solr:
+    finalize: false
+    commit_before_finalize: false
+    commit_after_finalize: false
+    multilingual:
+      limit_to_content_language: false
+      include_language_independent: true
+    highlighter:
+      maxAnalyzedChars: 51200
+      fragmenter: gap
+      regex:
+        slop: 0.5
+        pattern: blank
+        maxAnalyzedChars: 10000
+      usePhraseHighlighter: true
+      highlightMultiTerm: true
+      preserveMulti: false
+      highlight:
+        mergeContiguous: false
+        requireFieldMatch: false
+        snippets: 3
+        fragsize: 0
+    mlt:
+      mintf: 1
+      mindf: 1
+      maxdf: 0
+      maxdfpct: 0
+      minwl: 0
+      maxwl: 0
+      maxqt: 100
+      maxntp: 2000
+      boost: false
+      interestingTerms: none
+    term_modifiers:
+      slop: 3
+      fuzzy: 1
+    advanced:
+      index_prefix: ''
+      collection: ''
+      timezone: ''
+id: global
+name: Global
+description: ''
+read_only: false
+field_settings:
+  field_body:
+    label: Body
+    datasource_id: 'entity:group'
+    property_path: field_body
+    type: text
+    dependencies:
+      config:
+        - field.storage.group.field_body
+  field_vocab_geo:
+    label: 'Region & Countries'
+    datasource_id: 'entity:group'
+    property_path: field_vocab_geo
+    type: integer
+    dependencies:
+      config:
+        - field.storage.group.field_vocab_geo
+  field_vocab_topics:
+    label: Topics
+    datasource_id: 'entity:group'
+    property_path: field_vocab_topics
+    type: integer
+    dependencies:
+      config:
+        - field.storage.group.field_vocab_topics
+  label:
+    label: Title
+    datasource_id: 'entity:group'
+    property_path: label
+    type: text
+    boost: !!float 3
+    dependencies:
+      module:
+        - group
+  type:
+    label: 'Group type'
+    datasource_id: 'entity:group'
+    property_path: type
+    type: string
+    dependencies:
+      module:
+        - group
+datasource_settings:
+  'entity:content_moderation_state':
+    languages:
+      default: true
+      selected: {  }
+  'entity:flagging':
+    bundles:
+      default: true
+      selected: {  }
+  'entity:group':
+    bundles:
+      default: true
+      selected: {  }
+    languages:
+      default: true
+      selected: {  }
+  'entity:group_content':
+    bundles:
+      default: true
+      selected: {  }
+    languages:
+      default: true
+      selected: {  }
+  'entity:node':
+    bundles:
+      default: true
+      selected: {  }
+    languages:
+      default: true
+      selected: {  }
+  'entity:user':
+    languages:
+      default: true
+      selected: {  }
+processor_settings:
+  add_url: {  }
+  aggregated_field: {  }
+  hierarchy:
+    fields:
+      field_vocab_geo: taxonomy_term-parent
+      field_vocab_topics: taxonomy_term-parent
+    weights:
+      preprocess_index: -45
+  language_with_fallback: {  }
+  rendered_item: {  }
+  solr_date_range:
+    weights:
+      preprocess_index: 0
+tracker_settings:
+  default:
+    indexing_order: fifo
+options:
+  index_directly: true
+  cron_limit: 50
+server: global

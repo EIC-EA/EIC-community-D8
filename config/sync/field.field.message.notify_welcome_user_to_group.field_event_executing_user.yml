@@ -1,0 +1,28 @@
+uuid: c65ba061-842a-48e8-ad7a-d6ccd1506e6a
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.message.field_event_executing_user
+    - message.template.notify_welcome_user_to_group
+id: message.notify_welcome_user_to_group.field_event_executing_user
+field_name: field_event_executing_user
+entity_type: message
+bundle: notify_welcome_user_to_group
+label: 'Event executing user'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:user'
+  handler_settings:
+    include_anonymous: false
+    filter:
+      type: _none
+    target_bundles: null
+    sort:
+      field: _none
+    auto_create: false
+field_type: entity_reference

@@ -10,12 +10,14 @@ module:
   block_content: 0
   block_content_permissions: 0
   breakpoint: 0
+  comment: 0
   components: 0
   config: 0
   config_filter: 0
   config_split: 0
   content_moderation: 0
   context: 0
+  context_ui: 0
   contextual: 0
   datetime: 0
   dblog: 0
@@ -27,10 +29,12 @@ module:
   eic_block_type_tiles_reference: 0
   eic_block_types: 0
   eic_blocks: 0
+  eic_comments: 0
   eic_content: 0
   eic_content_story: 0
   eic_flags: 0
   eic_fragment_fact_figure: 0
+  eic_groups: 0
   eic_homepage: 0
   eic_media: 0
   eic_media_document: 0
@@ -46,6 +50,8 @@ module:
   entity_browser_entity_form: 0
   entity_reference_revisions: 0
   extra_field: 0
+  facets: 0
+  facets_summary: 0
   field: 0
   field_ui: 0
   file: 0
@@ -64,6 +70,7 @@ module:
   media_library: 0
   menu_link_content: 0
   menu_ui: 0
+  message: 0
   metatag: 0
   metatag_open_graph: 0
   metatag_twitter_cards: 0
@@ -84,6 +91,7 @@ module:
   responsive_image: 0
   rest: 0
   restui: 0
+  route_condition: 0
   scheduler: 0
   scheduler_content_moderation_integration: 0
   schemata: 0

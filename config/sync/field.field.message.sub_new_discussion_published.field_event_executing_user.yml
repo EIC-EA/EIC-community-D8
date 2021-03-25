@@ -1,0 +1,28 @@
+uuid: d4a63eab-a059-4fa8-8dcf-6b2c757da822
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.message.field_event_executing_user
+    - message.template.sub_new_discussion_published
+id: message.sub_new_discussion_published.field_event_executing_user
+field_name: field_event_executing_user
+entity_type: message
+bundle: sub_new_discussion_published
+label: 'Event executing user'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:user'
+  handler_settings:
+    include_anonymous: false
+    filter:
+      type: _none
+    target_bundles: null
+    sort:
+      field: _none
+    auto_create: false
+field_type: entity_reference
