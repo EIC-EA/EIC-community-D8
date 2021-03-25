@@ -1,9 +1,12 @@
+uuid: 052929ef-8be6-47b1-8eb3-717780b4df69
 langcode: en
 status: true
 dependencies:
   module:
     - group
     - route_condition
+_core:
+  default_config_hash: CvMPzdzpKqV5FrlT6rMu3GzdbzGoPdWXKcYNdM1SsTQ
 name: group_group_homepage
 label: 'Group - Group homepage'
 group: Groups
