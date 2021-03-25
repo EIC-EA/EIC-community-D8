@@ -3,8 +3,18 @@
 /**
  * @file
  * Primary module hooks for EIC Groups module.
- *
- * @DCG
- * This file is no longer required in Drupal 8.
- * @see https://www.drupal.org/node/2217931
  */
+
+/**
+ * Implements hook_theme().
+ */
+function eic_groups_theme($existing, $type, $theme, $path) {
+  return [
+    'eic_group_header_block' => [
+      'variables' => [
+        'group' => NULL,
+        'group_values' => NULL,
+      ],
+    ],
+  ];
+}
