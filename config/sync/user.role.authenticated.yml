@@ -9,13 +9,10 @@ label: 'Authenticated user'
 weight: -9
 is_admin: false
 permissions:
-  - 'access comments'
   - 'access content'
-  - 'edit own comments'
   - 'flag bookmark_content'
   - 'flag bookmark_media'
   - 'flag recommend'
-  - 'post comments'
   - 'unflag bookmark_content'
   - 'unflag bookmark_media'
   - 'unflag recommend'

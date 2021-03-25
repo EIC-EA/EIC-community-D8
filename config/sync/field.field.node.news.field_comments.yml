@@ -1,0 +1,33 @@
+uuid: 8b5ebc56-5d7b-4252-8591-95dfc9a6f1dd
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_comments
+    - node.type.news
+  module:
+    - comment
+id: node.news.field_comments
+field_name: field_comments
+entity_type: node
+bundle: news
+label: Comments
+description: ''
+required: false
+translatable: true
+default_value:
+  -
+    status: 2
+    cid: 0
+    last_comment_timestamp: 0
+    last_comment_name: null
+    last_comment_uid: 0
+    comment_count: 0
+default_value_callback: ''
+settings:
+  default_mode: 1
+  per_page: 10
+  anonymous: 0
+  form_location: true
+  preview: 1
+field_type: comment
