@@ -44,6 +44,22 @@ reactions:
         unique: 0
         context_id: group_group_hompeage
         uuid: 3a090b19-4584-4fb0-bc17-47df386de8da
+      5d7c3ce0-d0fc-4267-912b-52115526298f:
+        id: 'views_block:group_documents-block_1'
+        label: ''
+        provider: views
+        label_display: visible
+        views_label: ''
+        items_per_page: none
+        region: content
+        weight: '1'
+        context_mapping: { }
+        custom_id: views_block_group_documents_block_1
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: group_group_hompeage
+        uuid: 5d7c3ce0-d0fc-4267-912b-52115526298f
     id: blocks
     saved: false
     uuid: db598f5e-00b5-4ba6-b443-bbe6d3ca2c59
