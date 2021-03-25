@@ -4,7 +4,6 @@
     value: comment_id
   }
 ] %}
-
 <div class="ecl-comment {{ comment_origin ? 'ecl-comment--is-reply' }} {{ extra_classes }}" id="{{ comment_id }}">
   {% if author %}
     <div class="ecl-comment__author">
@@ -146,7 +145,7 @@
               {% for attachment in attachments %}
                 <div class="ecl-comment__attachments-item">
                   {% include "@theme/patterns/components/attachment.html.twig" with attachment|default({})|merge({
-                    is_compact: true,
+                    is_clickable: true,
                     icon_file_path: icon_file_path,
                     extra_classes: "ecl-comment__attachment",
                   }) only %}
