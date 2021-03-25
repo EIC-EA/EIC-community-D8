@@ -63,13 +63,6 @@ if (is_dir(__DIR__ . '/' . INCLUDES_FOLDER)) {
 }
 
 /**
- * Implements template_preprocess_block__eic_community_main_page_content().
- */
-function eic_community_preprocess_block__eic_community_main_page_content(&$variables) {
-  $variables['attributes']['class'][] = 'ecl-u-mb-2xl';
-}
-
-/**
  * Implements template_preprocess_block__eic_community_tabs().
  */
 function eic_community_preprocess_block__eic_community_tabs(&$variables) {
