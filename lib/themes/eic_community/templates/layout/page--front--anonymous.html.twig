@@ -54,10 +54,6 @@
 
   {{ page.content|without(_stay_up_to_date_section_left, _stay_up_to_date_section_right, 'eic_social_feed') }}
 
-  {% include "@theme/patterns/compositions/featured-content-collection.html.twig" with featured_events|default({})|merge({
-    extra_classes: "ecl-section-wrapper ecl-section-wrapper--is-blue ecl-featured-content-collection--is-compact"
-  }) only %}
-
   {% embed "@theme/patterns/compositions/layout-block.html.twig" %}
     {% if _stay_up_to_date_section_left is not empty %}
       {% block content %}
