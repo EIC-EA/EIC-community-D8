@@ -260,10 +260,10 @@ display:
           fields: {  }
           plugin_id: search_api_fulltext
       sorts:
-        created:
-          id: created
+        content_created:
+          id: content_created
           table: search_api_index_global
-          field: created
+          field: content_created
           relationship: none
           group_type: group
           admin_label: ''
@@ -392,10 +392,10 @@ display:
           min_length: 2
           fields: {  }
           plugin_id: search_api_fulltext
-        type_2:
-          id: type_2
+        content_type:
+          id: content_type
           table: search_api_index_global
-          field: type_2
+          field: content_type
           relationship: none
           group_type: group
           admin_label: ''
