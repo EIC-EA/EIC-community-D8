@@ -23,7 +23,6 @@ function eic_comments_form_comment_node_comment_form_alter(&$form, FormStateInte
   );
   $form_comment_body['#after_build'][] = 'eic_comments_configure_comment_form';
 
-  $form['actions']['preview']['#access'] = FALSE;
   $form["actions"]["submit"]["#value"] = t('Publish');
 }
 
