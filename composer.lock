@@ -2475,6 +2475,9 @@
                         "status": "not-covered",
                         "message": "Beta releases are not covered by Drupal security advisories."
                     }
+                },
+                "patches_applied": {
+                    "3173470 - Error: Call to a member function getCacheTags": "https://www.drupal.org/files/issues/2020-11-10/context-3173470-16.patch"
                 }
             },
             "notification-url": "https://packages.drupal.org/8/downloads",
@@ -2770,9 +2773,6 @@
                         "[web-root]/profiles/README.txt": "assets/scaffold/files/profiles.README.txt",
                         "[web-root]/themes/README.txt": "assets/scaffold/files/themes.README.txt"
                     }
-                },
-                "patches_applied": {
-                    "https://www.drupal.org/project/drupal/issues/2943172": "https://www.drupal.org/files/issues/2018-07-05/2943172-kernel-test-base-3.patch"
                 }
             },
             "autoload": {
@@ -6390,12 +6390,6 @@
                 "stream",
                 "zip"
             ],
-            "funding": [
-                {
-                    "url": "https://opencollective.com/zipstream",
-                    "type": "open_collective"
-                }
-            ],
             "time": "2020-05-30T13:11:16+00:00"
         },
         {
@@ -6506,16 +6500,6 @@
             "homepage": "http://github.com/myclabs/php-enum",
             "keywords": [
                 "enum"
-            ],
-            "funding": [
-                {
-                    "url": "https://github.com/mnapoli",
-                    "type": "github"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/myclabs/php-enum",
-                    "type": "tidelift"
-                }
             ],
             "time": "2021-02-15T16:11:48+00:00"
         },
@@ -6890,9 +6874,14 @@
         {
             "name": "openeuropa/oe_theme",
             "version": "2.15.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/openeuropa/oe_theme.git",
+                "reference": "85ebe9269b41a60279dbedae7104b246ccb2ed8e"
+            },
             "dist": {
-                "type": "tar",
-                "url": "https://github.com/openeuropa/oe_theme/releases/download/2.15.1/oe_theme-2.15.1.tar.gz",
+                "type": "zip",
+                "url": "https://api.github.com/repos/openeuropa/oe_theme/zipball/85ebe9269b41a60279dbedae7104b246ccb2ed8e",
                 "reference": "85ebe9269b41a60279dbedae7104b246ccb2ed8e",
                 "shasum": ""
             },
@@ -8393,20 +8382,6 @@
                 "interfaces",
                 "interoperability",
                 "standards"
-            ],
-            "funding": [
-                {
-                    "url": "https://symfony.com/sponsor",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://github.com/fabpot",
-                    "type": "github"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
-                    "type": "tidelift"
-                }
             ],
             "time": "2020-09-07T11:33:47+00:00"
         },
