@@ -1,0 +1,28 @@
+uuid: a2736838-42ab-4c5b-b38d-a523ffe19fd7
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.message.field_group_ref
+    - group.type.group
+    - message.template.notify_admin_group_new_member
+id: message.notify_admin_group_new_member.field_group_ref
+field_name: field_group_ref
+entity_type: message
+bundle: notify_admin_group_new_member
+label: Group
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:group'
+  handler_settings:
+    target_bundles:
+      group: group
+    sort:
+      field: _none
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

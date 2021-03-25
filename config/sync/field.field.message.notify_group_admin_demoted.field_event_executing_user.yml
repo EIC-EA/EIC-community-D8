@@ -1,0 +1,28 @@
+uuid: e976f693-1c1e-467f-b290-8e55644ba2c7
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.message.field_event_executing_user
+    - message.template.notify_group_admin_demoted
+id: message.notify_group_admin_demoted.field_event_executing_user
+field_name: field_event_executing_user
+entity_type: message
+bundle: notify_group_admin_demoted
+label: 'Event executing user'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:user'
+  handler_settings:
+    include_anonymous: false
+    filter:
+      type: _none
+    target_bundles: null
+    sort:
+      field: _none
+    auto_create: false
+field_type: entity_reference

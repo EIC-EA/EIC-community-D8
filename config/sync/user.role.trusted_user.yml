@@ -6,4 +6,12 @@ id: trusted_user
 label: 'Trusted user'
 weight: -8
 is_admin: null
-permissions: {  }
+permissions:
+  - 'access comments'
+  - 'create eic_document media'
+  - 'create group group'
+  - 'create image media'
+  - 'edit own comments'
+  - 'edit own eic_document media'
+  - 'edit own image media'
+  - 'post comments'

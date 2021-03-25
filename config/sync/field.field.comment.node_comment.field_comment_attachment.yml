@@ -1,0 +1,30 @@
+uuid: 25e08a64-fb19-4eb5-8d6a-2ab6a301b8cb
+langcode: en
+status: true
+dependencies:
+  config:
+    - comment.type.node_comment
+    - field.storage.comment.field_comment_attachment
+    - media.type.eic_document
+    - media.type.image
+id: comment.node_comment.field_comment_attachment
+field_name: field_comment_attachment
+entity_type: comment
+bundle: node_comment
+label: Attachment
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:media'
+  handler_settings:
+    target_bundles:
+      eic_document: eic_document
+      image: image
+    sort:
+      field: _none
+    auto_create: false
+    auto_create_bundle: eic_document
+field_type: entity_reference

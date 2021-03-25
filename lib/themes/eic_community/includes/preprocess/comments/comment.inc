@@ -1,0 +1,73 @@
+<?php
+
+/**
+ * @file
+ * Functions to support theming.
+ */
+
+use Drupal\comment\Entity\Comment;
+use Drupal\user\Entity\User;
+use Drupal\Core\Url;
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function eic_community_preprocess_comment(&$variables) {
+  $author = User::load($variables['author_id']);
+  $current_user = $variables['user'];
+  $author_image = _get_profile_image_array($author);
+
+  $comment = $variables['comment'];
+  $comment_origin = NULL;
+  if ($comment->pid->target_id !== NULL) {
+    $comment_origin_entity = Comment::load($comment->pid->target_id);
+    $comment_origin_author = User::load($comment_origin_entity->getOwnerId());
+    $comment_origin = [
+      'author' => [
+        'author' => $comment_origin_author->get("field_full_name")->value,
+      ],
+      'comment_id' => $comment_origin_entity->id(),
+      'is_owner' => $current_user->id() == $comment_origin_entity->getOwnerId(),
+    ];
+  }
+
+  $comment_reply = Url::fromRoute('comment.reply', [
+    'entity_type' => $comment->getCommentedEntityTypeId(),
+    'entity' => $comment->getCommentedEntityId(),
+    'field_name' => $comment->getFieldName(),
+    'pid' => $comment->id(),
+  ]);
+
+  $variables['comment'] = [
+    'author' => [
+      'author' => $author->get('field_full_name')->getString(),
+      'path' => '',
+      'image' => $author_image,
+    ],
+    'comment' => $comment->comment_body->value,
+    'comment_id' => $comment->cid->value,
+    'comment_origin' => $comment_origin,
+    'is_owner' => $current_user->id() == $comment->getOwnerId(),
+    'edit_path' => $comment->toUrl('edit-form'),
+    'remove_path' => $comment->toUrl('delete-form'),
+    'reply_path' => $comment_reply->toString(),
+    'timestamp' => $comment->getCreatedTime(),
+    'user' => $current_user,
+  ];
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ *
+ * Through forms/form.inc.
+ */
+function _eic_community_preprocess_comment_form(&$variables) {
+  $author = User::load($variables['user']->id());
+  $author_image = _get_profile_image_array($author);
+
+  $variables['comment_form']['author'] = [
+    'author' => $author->get('field_full_name')->getString(),
+    'path' => '',
+    'image' => $author_image,
+  ];
+}

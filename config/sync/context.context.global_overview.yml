@@ -1,0 +1,97 @@
+uuid: a30d1160-badc-4d1a-90c9-f75c651b580d
+langcode: en
+status: true
+dependencies: {  }
+name: global_overview
+label: 'Global - Overview'
+group: 'Global overviews'
+description: 'This context is used for all global overviews'
+requireAllConditions: false
+disabled: false
+conditions:
+  view_inclusion:
+    id: view_inclusion
+    negate: null
+    uuid: 4a6ec31c-af26-4d0a-9279-80ba5a4221d0
+    view_inclusion:
+      view-global_overviews-page_1: view-global_overviews-page_1
+    context_mapping: {  }
+reactions:
+  blocks:
+    blocks:
+      ec46db71-f607-49f6-b002-012876ee1cc3:
+        id: 'facet_block:groups_region_countries'
+        label: 'Region & Countries'
+        provider: facets
+        label_display: visible
+        region: sidebar
+        weight: '0'
+        context_mapping: {  }
+        custom_id: facet_block_groups_region_countries
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: global_overview
+        uuid: ec46db71-f607-49f6-b002-012876ee1cc3
+      91fff041-f47c-4505-8300-ee741e5918ad:
+        id: 'facet_block:groups_topics'
+        label: Topics
+        provider: facets
+        label_display: visible
+        region: sidebar
+        weight: '-1'
+        context_mapping: {  }
+        custom_id: facet_block_groups_topics
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: global_overview
+        uuid: 91fff041-f47c-4505-8300-ee741e5918ad
+      556c183b-2af1-42dc-8c53-57aa7af6ef70:
+        id: 'facets_summary_block:groups_summary'
+        label: 'Groups summary'
+        provider: facets_summary
+        label_display: '0'
+        region: content
+        weight: '-1'
+        context_mapping: {  }
+        custom_id: facets_summary_block_groups_summary
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: global_overview
+        uuid: 556c183b-2af1-42dc-8c53-57aa7af6ef70
+      2bdaf363-b983-4094-8b13-e3549984347b:
+        id: system_main_block
+        label: 'Main page content'
+        provider: system
+        label_display: '0'
+        region: content
+        weight: '0'
+        context_mapping: {  }
+        custom_id: system_main_block
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: global_overview
+        uuid: 2bdaf363-b983-4094-8b13-e3549984347b
+      79a2623a-2200-4cd9-b86f-3b25ea41eb02:
+        id: 'views_exposed_filter_block:global_overviews-page_1'
+        label: ''
+        provider: views
+        label_display: '0'
+        views_label: ''
+        region: sidebar
+        weight: '-2'
+        context_mapping: {  }
+        custom_id: views_exposed_filter_block_global_overviews_page_1
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: global_overview
+        uuid: 79a2623a-2200-4cd9-b86f-3b25ea41eb02
+    id: blocks
+    saved: false
+    uuid: deeaf135-b781-47ec-b086-7d9fec72c007
+    include_default_blocks: 0
+weight: 0

@@ -1,0 +1,34 @@
+uuid: a99a8b66-03ae-4904-abe1-7a0b0d25b0ad
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.message.notify_group_unpublished.field_event_executing_user
+    - field.field.message.notify_group_unpublished.field_group_ref
+    - message.template.notify_group_unpublished
+id: message.notify_group_unpublished.default
+targetEntityType: message
+bundle: notify_group_unpublished
+mode: default
+content:
+  field_event_executing_user:
+    weight: 1
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: entity_reference_autocomplete
+    region: content
+  field_group_ref:
+    weight: 0
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: entity_reference_autocomplete
+    region: content
+hidden: {  }

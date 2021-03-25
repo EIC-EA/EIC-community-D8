@@ -7,4 +7,5 @@ label: Group
 description: ''
 creator_membership: true
 creator_wizard: true
-creator_roles: {  }
+creator_roles:
+  - group-owner

@@ -1,0 +1,19 @@
+uuid: f9c8456a-1912-4b48-bff2-66b81455c2e9
+langcode: en
+status: true
+dependencies:
+  config:
+    - filter.format.plain_text
+template: stream_share_insert_update
+label: 'STREAM :: MT34 :: Share insert/update'
+description: ''
+text:
+  -
+    value: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
+    format: plain_text
+settings:
+  'token options':
+    clear: false
+    'token replace': true
+  purge_override: false
+  purge_methods: {  }

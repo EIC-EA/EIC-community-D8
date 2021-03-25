@@ -1,0 +1,34 @@
+uuid: e507791c-a6e5-4199-ac36-5f402abc2675
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.message.notify_group_admin_demoted.field_event_executing_user
+    - field.field.message.notify_group_admin_demoted.field_group_ref
+    - message.template.notify_group_admin_demoted
+id: message.notify_group_admin_demoted.default
+targetEntityType: message
+bundle: notify_group_admin_demoted
+mode: default
+content:
+  field_event_executing_user:
+    weight: 1
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: entity_reference_autocomplete
+    region: content
+  field_group_ref:
+    weight: 0
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: entity_reference_autocomplete
+    region: content
+hidden: {  }
