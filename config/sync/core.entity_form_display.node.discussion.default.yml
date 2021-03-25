@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - field.field.node.discussion.field_body
+    - field.field.node.discussion.field_comments
     - field.field.node.discussion.field_discussion_type
     - field.field.node.discussion.field_related_documents
     - field.field.node.discussion.field_vocab_geo
@@ -11,6 +12,7 @@ dependencies:
     - node.type.discussion
   module:
     - content_moderation
+    - comment
     - path
     - publication_date
     - scheduler
@@ -34,6 +36,12 @@ content:
       placeholder: ''
     third_party_settings: {  }
     type: text_textarea
+    region: content
+  field_comments:
+    weight: 101
+    settings: {  }
+    third_party_settings: {  }
+    type: comment_default
     region: content
   field_discussion_type:
     weight: 3
