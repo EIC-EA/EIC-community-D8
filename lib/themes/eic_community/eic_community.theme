@@ -6,7 +6,6 @@
  */
 
 use Drupal\block\BlockInterface;
-use Drupal\Core\Template\Attribute;
 use Drupal\eic_community\ValueObject\ImageValueObject;
 use Drupal\Component\Render\FormattableMarkup;
 
@@ -55,16 +54,6 @@ function eic_community_scan_include_files($folder) {
  */
 if (is_dir(__DIR__ . '/' . INCLUDES_FOLDER)) {
   eic_community_scan_include_files(INCLUDES_FOLDER);
-}
-
-/**
- * Implements hook_preprocess_page().
- */
-function eic_community_preprocess_page(array &$variables): void {
-  $variables['main_attributes'] = new Attribute([
-    'class' => ['ecl-u-pb-xl'],
-    'id' => ['main-content'],
-  ]);
 }
 
 /**
