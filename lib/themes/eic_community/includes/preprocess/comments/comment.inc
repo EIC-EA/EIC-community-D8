@@ -5,12 +5,9 @@
  * Functions to support theming.
  */
 
-use Drupal\file\Entity\File;
 use Drupal\comment\Entity\Comment;
-use Drupal\media\Entity\Media;
 use Drupal\user\Entity\User;
 use Drupal\Core\Url;
-use Drupal\Core\Entity\EntityInterface;
 
 /**
  * Implements hook_preprocess_HOOK().
@@ -61,42 +58,16 @@ function eic_community_preprocess_comment(&$variables) {
 
 /**
  * Implements hook_preprocess_HOOK().
- */
-function eic_community_preprocess_form(&$variables) {
-  if ($variables['element']['#id'] == 'comment-form') {
-    $author = User::load($variables['user']->id());
-    $author_image = _get_profile_image_array($author);
-
-    $variables['comment_form']['author'] = [
-      'author' => $author->get('field_full_name')->getString(),
-      'path' => '',
-      'image' => $author_image,
-    ];
-  }
-}
-
-/**
- * Creates image array for twig templates.
  *
- * @param Drupal\Core\Entity\EntityInterface $user
- *   User entity of which you want the image array.
- *
- * @return mixed
- *   Returns array or NULL.
+ * Through forms/form.inc.
  */
-function _get_profile_image_array(EntityInterface $user): ?array {
-  if ($user->field_media->target_id == NULL) {
-    return NULL;
-  }
+function _eic_community_preprocess_comment_form(&$variables) {
+  $author = User::load($variables['user']->id());
+  $author_image = _get_profile_image_array($author);
 
-  $user_image_media = Media::load($user->field_media->target_id);
-  $user_image_media_fid = $user_image_media->getSource()
-    ->getSourceFieldValue($user_image_media);
-  $user_image_file = File::load($user_image_media_fid);
-
-  return [
-    'src' => $user_image_file->createFileUrl(),
-    'alt' => $user_image_media->oe_media_image->alt,
+  $variables['comment_form']['author'] = [
+    'author' => $author->get('field_full_name')->getString(),
+    'path' => '',
+    'image' => $author_image,
   ];
-
 }
