@@ -1,6 +1,16 @@
 {% extends "@theme/patterns/compositions/group/group.full.html.twig" %}
 
 {% block page_header %}
+  {% if editorial_header %}
+    {% include "@theme/patterns/compositions/editorial-header.html.twig" with editorial_header|default({}) %}
+  {% endif %}
+
+  {% if subnavigation %}
+    {% include "@theme/patterns/compositions/subnavigation.html.twig" with subnavigation|default({})|merge({
+      icon_file_path: common.icon_file_path
+    }) only %}
+  {% endif %}
+
   {% if latest_tags %}
     <div class="ecl-section-wrapper ecl-section-wrapper--is-white">
       <div class="ecl-container">
