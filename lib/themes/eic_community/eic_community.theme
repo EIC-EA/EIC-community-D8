@@ -12,7 +12,6 @@ use Drupal\Core\Url;
 use Drupal\media\MediaInterface;
 use Drupal\media\Plugin\media\Source\Image;
 use Drupal\media_avportal\Plugin\media\Source\MediaAvPortalSourceInterface;
-use Drupal\eic_community\DocumentMediaValueExtractor;
 use Drupal\eic_community\ValueObject\ImageValueObject;
 use Drupal\Component\Render\FormattableMarkup;
 
@@ -61,36 +60,6 @@ function eic_community_scan_include_files($folder) {
  */
 if (is_dir(__DIR__ . '/' . INCLUDES_FOLDER)) {
   eic_community_scan_include_files(INCLUDES_FOLDER);
-}
-
-/**
- * Implements hook_preprocess_media__document__default().
- *
- * Prepares the default view mode for the document media type.
- */
-function eic_community_preprocess_media__document__default(&$variables) {
-  /** @var \Drupal\media\Entity\Media $media */
-  $media = $variables['media'];
-  $file_value = DocumentMediaValueExtractor::getFileValue($media);
-  if (!$file_value) {
-    return;
-  }
-
-  $variables['file'] = $file_value;
-
-  // Generate the file information for all available translations.
-  foreach ($media->getTranslationLanguages() as $langcode => $language) {
-    // We don't want to include the information of the current language again.
-    if ($media->language()->getId() === $langcode) {
-      continue;
-    }
-
-    $translation = $media->getTranslation($langcode);
-    $translation_file_value = DocumentMediaValueExtractor::getFileValue($translation);
-    if ($translation_file_value) {
-      $variables['translations'][] = $translation_file_value;
-    }
-  }
 }
 
 /**
