@@ -63,19 +63,6 @@ if (is_dir(__DIR__ . '/' . INCLUDES_FOLDER)) {
 }
 
 /**
- * Implements template_preprocess_language_selection_page_content().
- */
-function eic_community_preprocess_language_selection_page_content(&$variables) {
-  if (empty($variables['languages'])) {
-    return;
-  }
-
-  foreach ($variables['languages'] as &$language) {
-    $language['path'] = $language['href'];
-  }
-}
-
-/**
  * Implements hook_preprocess_table().
  */
 function eic_community_preprocess_table(array &$variables): void {
