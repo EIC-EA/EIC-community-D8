@@ -7,8 +7,8 @@ dependencies:
     - route_condition
 _core:
   default_config_hash: CvMPzdzpKqV5FrlT6rMu3GzdbzGoPdWXKcYNdM1SsTQ
-name: group_group_hompeage
-label: 'Group - Group hompeage'
+name: group_group_homepage
+label: 'Group - Group homepage'
 group: Groups
 description: 'Group group type homepage'
 requireAllConditions: true
