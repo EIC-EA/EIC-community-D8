@@ -5,6 +5,8 @@
  * Contains implementation for hook_preprocess_pager().
  */
 
+use Drupal\Core\Url;
+
 /**
  * Implements hook_preprocess_pager().
  *
