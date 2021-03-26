@@ -1,7 +1,7 @@
 {% if is_clickable %}
-  <a href="{{ path }}" download class="ecl-attachment ecl-attachment--has-compact-layout {{ is_highlighted ? 'ecl-attachment--is-highlighted' }} {{ extra_classes }}">
+  <a href="{{ path }}" download class="ecl-attachment ecl-attachment--has-compact-layout {{ highlight.is_active ? 'ecl-attachment--is-highlighted' }} {{ extra_classes }}">
 {% else %}
-  <div class="ecl-attachment {{ is_highlighted ? 'ecl-attachment--is-highlighted' }} {{ extra_classes }}">
+  <div class="ecl-attachment {{ highlight.is_active ? 'ecl-attachment--is-highlighted' }} {{ extra_classes }}">
 {% endif %}
   <div class="ecl-attachment__main">
     {% if image or icon %}
