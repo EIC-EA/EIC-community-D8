@@ -11,7 +11,7 @@
   {% endif %}
   <div class="ecl-comment-form__content">
     <div class="ecl-comment-form__main">
-      <form class=" {{ form.extra_classes }}" {{ attributes|without('class') }}>
+      <form class=" {{ form.extra_classes }}" {{ attributes|default({})|without('class') }}>
         {% block form %}
           <div class="ecl-form-group">
             <label class="ecl-comment-form__textarea-label ecl-form-label"
