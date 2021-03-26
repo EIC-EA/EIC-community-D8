@@ -1,4 +1,4 @@
-uuid: 0fbbc603-20f3-44c9-ae7d-360f3fd941af
+uuid: e3f76d1c-1f69-4bf7-a113-cc7bfbcbaefe
 langcode: en
 status: true
 dependencies:
@@ -6,10 +6,10 @@ dependencies:
     - search_api.index.global
   module:
     - search_api
-id: global_overviews
-label: 'Global Overviews'
+id: group_overviews
+label: 'Group - Overviews'
 module: views
-description: ''
+description: 'This view contains all group content overviews'
 tag: EIC
 base_table: search_api_index_global
 base_field: search_api_id
@@ -81,14 +81,14 @@ display:
               bookmark_media: default
               recommend: default
             'entity:group':
-              group: teaser
+              group: default
             'entity:group_content':
               group-group_membership: default
               group-group_node-discussion: default
               group-group_node-document: default
               group-group_node-wiki_page: default
             'entity:node':
-              discussion: default
+              discussion: teaser
               document: default
               news: default
               page: default
@@ -97,10 +97,10 @@ display:
             'entity:user':
               user: default
       fields:
-        label:
-          id: label
-          table: search_api_datasource_global_entity_group
-          field: label
+        title:
+          id: title
+          table: search_api_datasource_global_entity_node
+          field: title
           relationship: none
           group_type: group
           admin_label: ''
@@ -166,7 +166,7 @@ display:
             use_highlighting: false
             multi_type: separator
             multi_separator: ', '
-          entity_type: group
+          entity_type: node
           plugin_id: search_api_field
       filters:
         search_api_datasource:
@@ -178,7 +178,7 @@ display:
           admin_label: ''
           operator: or
           value:
-            'entity:group': 'entity:group'
+            'entity:node': 'entity:node'
           group: 1
           exposed: false
           expose:
@@ -259,7 +259,19 @@ display:
           min_length: 2
           fields: {  }
           plugin_id: search_api_fulltext
-      sorts: {  }
+      sorts:
+        content_created:
+          id: content_created
+          table: search_api_index_global
+          field: content_created
+          relationship: none
+          group_type: group
+          admin_label: ''
+          order: DESC
+          exposed: false
+          expose:
+            label: ''
+          plugin_id: search_api
       header: {  }
       footer: {  }
       empty: {  }
@@ -279,13 +291,11 @@ display:
   page_1:
     display_plugin: page
     id: page_1
-    display_title: Groups
+    display_title: Discussions
     position: 1
     display_options:
       display_extenders: {  }
-      display_description: ''
-      path: groups
-      title: Groups
+      title: Discussions
       defaults:
         title: false
         filters: false
@@ -301,7 +311,7 @@ display:
           admin_label: ''
           operator: or
           value:
-            'entity:group': 'entity:group'
+            'entity:node': 'entity:node'
           group: 1
           exposed: false
           expose:
@@ -363,7 +373,7 @@ display:
               content_administrator: '0'
               service_authentication: '0'
               administrator: '0'
-            placeholder: 'Search for a group'
+            placeholder: ''
             expose_fields: false
             searched_fields_id: search_api_fulltext_searched_fields
           is_grouped: false
@@ -382,16 +392,16 @@ display:
           min_length: 2
           fields: {  }
           plugin_id: search_api_fulltext
-        group_type:
-          id: group_type
+        content_type:
+          id: content_type
           table: search_api_index_global
-          field: group_type
+          field: content_type
           relationship: none
           group_type: group
           admin_label: ''
           operator: or
           value:
-            group: group
+            discussion: discussion
           group: 1
           exposed: false
           expose:
@@ -427,9 +437,11 @@ display:
         operator: AND
         groups:
           1: AND
+      path: discussions
+      exposed_block: true
+      display_description: ''
       cache:
         type: none
-      exposed_block: true
     cache_metadata:
       max-age: -1
       contexts:

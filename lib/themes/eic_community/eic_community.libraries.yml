@@ -4,9 +4,20 @@ theme:
       dist/styles/eic_community.screen.css: { media: screen }
       dist/styles/eic_community.print.css: { media: print }
   js:
-    dist/scripts/ecl-ec-preset-legacy-website.js: {}
-    dist/scripts/svg4everybody.min.js: { minified: true }
-    dist/scripts/common/drupal.svg4everybody.js: { minified: true }
+    dist/scripts/vendor/ecl/ecl-ec-preset-legacy-website.js: { minified: true }
+    dist/scripts/vendor/svg4everybody/svg4everybody.min.js: { minified: true }
+    dist/scripts/vendor/unicode-emoji-picker.js: { minified: true }
     dist/scripts/common/drupal.ecl.js: { minified: true }
+    dist/scripts/common/drupal.svg4everybody.js: { minified: true }
+    dist/scripts/components/drupal.expandable-definitions.js: { minified: true }
+    dist/scripts/components/drupal.emoji-picker.js: { minified: true }
+    dist/scripts/compositions/drupal.collapsible-options.js: { minified: true }
+    dist/scripts/compositions/drupal.comment-attachments.js: { minified: true }
+    dist/scripts/compositions/drupal.featured-list.js: { minified: true }
+    dist/scripts/compositions/drupal.featured-content-collection.js: { minified: true }
+    dist/scripts/compositions/drupal.featured-content-sections.js: { minified: true }
+    dist/scripts/compositions/drupal.filter-sidebar.js: { minified: true }
+    dist/scripts/compositions/drupal.language-selector.js: { minified: true }
+    dist/scripts/compositions/drupal.media-wrapper.js: { minified: true }
   dependencies:
     - core/drupal

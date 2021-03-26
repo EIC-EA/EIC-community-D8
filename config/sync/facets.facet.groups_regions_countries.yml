@@ -1,4 +1,4 @@
-uuid: 71d62973-12e6-41e2-b8c5-4fd2fee011e3
+uuid: b0f929b8-d6c9-4f77-bd4b-611129328f1d
 langcode: en
 status: true
 dependencies:
@@ -7,13 +7,13 @@ dependencies:
     - views.view.global_overviews
   module:
     - search_api
-id: groups_topics
-name: Topics
-url_alias: topics
+id: groups_regions_countries
+name: 'Region & Countries'
+url_alias: regions_countries
 weight: 0
 min_count: 1
 show_only_one_result: false
-field_identifier: group_field_vocab_topics
+field_identifier: group_field_vocab_geo
 facet_source_id: 'search_api:views_page__global_overviews__page_1'
 widget:
   type: checkbox
