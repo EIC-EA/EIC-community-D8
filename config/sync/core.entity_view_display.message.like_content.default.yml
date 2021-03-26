@@ -1,19 +1,19 @@
-uuid: 290e38a2-49d3-400d-8c0c-222ce03add17
+uuid: f83b6c45-c9ce-4fe3-99b6-88ce198d4e0a
 langcode: en
 status: true
 dependencies:
   config:
-    - core.entity_view_mode.message.mail_subject
     - field.field.message.like_content.field_referenced_node
     - message.template.like_content
-id: message.like_content.mail_subject
+id: message.like_content.default
 targetEntityType: message
 bundle: like_content
-mode: mail_subject
+mode: default
 content:
   partial_0:
     weight: 0
     region: content
+    settings: {  }
+    third_party_settings: {  }
 hidden:
   field_referenced_node: true
-  partial_1: true

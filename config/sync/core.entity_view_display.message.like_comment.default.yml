@@ -1,0 +1,19 @@
+uuid: 67b7b31f-9910-46e5-904c-75895ab49529
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.message.like_comment.field_referenced_node
+    - message.template.like_comment
+id: message.like_comment.default
+targetEntityType: message
+bundle: like_comment
+mode: default
+content:
+  partial_0:
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  field_referenced_node: true

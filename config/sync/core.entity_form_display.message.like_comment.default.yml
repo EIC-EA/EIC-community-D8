@@ -1,0 +1,23 @@
+uuid: 8895da9c-716a-4f62-91e0-8d476fac2164
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.message.like_comment.field_referenced_node
+    - message.template.like_comment
+id: message.like_comment.default
+targetEntityType: message
+bundle: like_comment
+mode: default
+content:
+  field_referenced_node:
+    weight: 0
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: entity_reference_autocomplete
+    region: content
+hidden: {  }
