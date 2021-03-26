@@ -1,20 +1,20 @@
-uuid: c0e97180-7267-416a-a699-9ff8ceed0dda
+uuid: 6ad679ac-4322-406c-b531-d49347f85382
 langcode: en
 status: true
 dependencies:
   config:
     - search_api.index.global
-    - views.view.global_overviews
+    - views.view.group_overviews
   module:
     - search_api
-id: groups_region_countries
-name: 'Region & Countries'
-url_alias: groups_region_countries
+id: discussions_regions_countries
+name: 'Regions & Countries'
+url_alias: regions_countries
 weight: 0
 min_count: 1
 show_only_one_result: false
-field_identifier: field_vocab_geo
-facet_source_id: 'search_api:views_page__global_overviews__page_1'
+field_identifier: content_field_vocab_geo
+facet_source_id: 'search_api:views_page__group_overviews__page_1'
 widget:
   type: checkbox
   config:
@@ -28,7 +28,7 @@ widget:
     hide_reset_when_no_selection: false
 query_operator: or
 use_hierarchy: true
-expand_hierarchy: false
+expand_hierarchy: true
 enable_parent_when_child_gets_disabled: true
 hard_limit: 0
 exclude: false

@@ -5,15 +5,19 @@ dependencies:
   module:
     - search_api_solr
     - group
+    - node
     - search_api
     - content_moderation
     - flag
-    - node
     - user
   config:
     - field.storage.group.field_body
     - field.storage.group.field_vocab_geo
     - field.storage.group.field_vocab_topics
+    - field.storage.node.field_vocab_geo
+    - field.storage.node.field_subtitle
+    - field.storage.node.field_vocab_topics
+    - field.storage.node.field_discussion_type
     - search_api.server.global
 third_party_settings:
   search_api_solr:
@@ -61,7 +65,87 @@ name: Global
 description: ''
 read_only: false
 field_settings:
-  field_body:
+  content_created:
+    label: 'Authored on'
+    datasource_id: 'entity:node'
+    property_path: created
+    type: date
+    dependencies:
+      module:
+        - node
+  content_field_discussion_type:
+    label: 'Type of Discussion'
+    datasource_id: 'entity:node'
+    property_path: field_discussion_type
+    type: string
+    dependencies:
+      config:
+        - field.storage.node.field_discussion_type
+  content_field_subtitle:
+    label: Subtitle
+    datasource_id: 'entity:node'
+    property_path: field_subtitle
+    type: string
+    dependencies:
+      config:
+        - field.storage.node.field_subtitle
+  content_field_vocab_geo:
+    label: 'Regions & Countries'
+    datasource_id: 'entity:node'
+    property_path: field_vocab_geo
+    type: integer
+    dependencies:
+      config:
+        - field.storage.node.field_vocab_geo
+  content_field_vocab_topics:
+    label: Topics
+    datasource_id: 'entity:node'
+    property_path: field_vocab_topics
+    type: integer
+    dependencies:
+      config:
+        - field.storage.node.field_vocab_topics
+  content_title:
+    label: Title
+    datasource_id: 'entity:node'
+    property_path: title
+    type: string
+    dependencies:
+      module:
+        - node
+  content_type:
+    label: 'Content type'
+    datasource_id: 'entity:node'
+    property_path: type
+    type: string
+    dependencies:
+      module:
+        - node
+  group_content_entity_id:
+    label: Content
+    datasource_id: 'entity:group_content'
+    property_path: entity_id
+    type: integer
+    dependencies:
+      module:
+        - group
+  group_content_gid:
+    label: 'Parent group'
+    datasource_id: 'entity:group_content'
+    property_path: gid
+    type: integer
+    dependencies:
+      module:
+        - group
+  group_content_type:
+    label: 'Group content type'
+    datasource_id: 'entity:group_content'
+    property_path: type
+    type: string
+    dependencies:
+      module:
+        - group
+  group_field_body:
     label: Body
     datasource_id: 'entity:group'
     property_path: field_body
@@ -69,7 +153,7 @@ field_settings:
     dependencies:
       config:
         - field.storage.group.field_body
-  field_vocab_geo:
+  group_field_vocab_geo:
     label: 'Region & Countries'
     datasource_id: 'entity:group'
     property_path: field_vocab_geo
@@ -77,7 +161,7 @@ field_settings:
     dependencies:
       config:
         - field.storage.group.field_vocab_geo
-  field_vocab_topics:
+  group_field_vocab_topics:
     label: Topics
     datasource_id: 'entity:group'
     property_path: field_vocab_topics
@@ -85,7 +169,7 @@ field_settings:
     dependencies:
       config:
         - field.storage.group.field_vocab_topics
-  label:
+  group_label:
     label: Title
     datasource_id: 'entity:group'
     property_path: label
@@ -94,7 +178,7 @@ field_settings:
     dependencies:
       module:
         - group
-  type:
+  group_type:
     label: 'Group type'
     datasource_id: 'entity:group'
     property_path: type
