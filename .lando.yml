@@ -1,0 +1,61 @@
+name: eic-community
+recipe: drupal8
+config:
+  webroot: web
+  php: "7.3"
+  xdebug: true
+proxy:
+  node:
+    - storybook-eic.lndo.site:8080
+tooling:
+  drush:
+    service: appserver
+    description: Runs drush
+    cmd: drush --root=/app/web
+  clean-install:
+    service: appserver
+    description: Clean install.
+    cmd:
+      - /app/vendor/bin/run toolkit:install-clean
+  deploy:
+    service: appserver
+    description: Run the deploy script (including build).
+    dir: /app
+    cmd:
+      - ./scripts/deploy.sh -g
+  npm:
+    service: node
+    description: Run npm commands.
+    cmd: npm
+  xdebug-on:
+    service: appserver
+    description: Enable xdebug for Apache.
+    cmd: docker-php-ext-enable xdebug && service apache2 reload
+    user: root
+  xdebug-off:
+    service: appserver
+    description: Disable xdebug for Apache.
+    cmd: rm /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini && service apache2 reload
+    user: root
+services:
+  appserver:
+    build:
+      - composer install
+    overrides:
+      environment:
+        DRUPAL_DATABASE_NAME: drupal8
+        DRUPAL_DATABASE_USERNAME: drupal8
+        DRUPAL_DATABASE_PASSWORD: drupal8
+        DRUPAL_DATABASE_HOST: database
+        DRUPAL_ACCOUNT_USERNAME: root
+        DRUPAL_ACCOUNT_PASSWORD: password
+        COMPOSER_PROCESS_TIMEOUT: 600
+  mailhog:
+    type: mailhog
+    portforward: true
+    hogfrom:
+      - appserver
+  node:
+    type: node:10
+    port: 8080
+    scanner: false

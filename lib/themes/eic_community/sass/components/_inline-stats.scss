@@ -23,7 +23,7 @@
   }
 
   &__item-value {
-    @include ecl-responsive-font('meta');
+    @include ecl-responsive-font('label');
   }
 
   &__item-icon ~ &__item-label {

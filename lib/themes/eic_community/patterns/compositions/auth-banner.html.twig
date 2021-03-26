@@ -6,7 +6,7 @@
       {% block before %}{% endblock %}
 
       {% embed "@theme/patterns/components/well.html.twig" with {
-        extra_classes: invert ? 'ecl-well--is-centered ecl-well--is-grey',
+        extra_classes: invert ? 'ecl-well--is-centered ecl-well--is-grey' : 'ecl-well--is-white',
       } %}
         {% block content %}
           {% if title is not empty %}

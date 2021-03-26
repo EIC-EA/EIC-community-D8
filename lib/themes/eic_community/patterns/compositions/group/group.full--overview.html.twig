@@ -1,8 +1,18 @@
 {% extends "@theme/patterns/compositions/group/group.full.html.twig" %}
 
-{% block content %}
+{% block page_header %}
+  {% if editorial_header %}
+    {% include "@theme/patterns/compositions/editorial-header.html.twig" with editorial_header|default({}) %}
+  {% endif %}
+
+  {% if subnavigation %}
+    {% include "@theme/patterns/compositions/subnavigation.html.twig" with subnavigation|default({})|merge({
+      icon_file_path: common.icon_file_path
+    }) only %}
+  {% endif %}
+
   {% if latest_tags %}
-    <div class="ecl-section-wrapper">
+    <div class="ecl-section-wrapper ecl-section-wrapper--is-white">
       <div class="ecl-container">
         {% include "@theme/patterns/compositions/featured-topics.html.twig" with latest_tags|default({})|merge({
           title_element: 'h2',
@@ -13,7 +23,9 @@
       </div>
     </div>
   {% endif %}
+{% endblock %}
 
+{% block content %}
   {% if discussions %}
     {% include "@theme/patterns/compositions/featured-content-collection.html.twig" with discussions|default({})|merge({
       icon_file_path: common.icon_file_path,
@@ -25,6 +37,27 @@
     {% include "@theme/patterns/compositions/featured-content-collection.html.twig" with attachments|default({})|merge({
       icon_file_path: common.icon_file_path,
       extra_classes: "ecl-section-wrapper ecl-featured-content-collection--has-overview-layout"
+    }) only %}
+  {% endif %}
+
+  {% if events %}
+    {% include "@theme/patterns/compositions/featured-content-collection.html.twig" with events|default({})|merge({
+      icon_file_path: common.icon_file_path,
+      extra_classes: "ecl-section-wrapper ecl-featured-content-collection--has-overview-layout"
+    }) only %}
+  {% endif %}
+
+  {% if related_stories %}
+    {% include "@theme/patterns/compositions/featured-content-collection.html.twig" with related_stories|default({})|merge({
+      icon_file_path: common.icon_file_path,
+      extra_classes: "ecl-section-wrapper ecl-featured-content-collection--has-overview-layout"
+    }) only %}
+  {% endif %}
+
+  {% if related_groups %}
+    {% include "@theme/patterns/compositions/featured-content-collection.html.twig" with related_groups|default({})|merge({
+      icon_file_path: common.icon_file_path,
+      extra_classes: "ecl-section-wrapper ecl-featured-content-collection--has-compact-layout"
     }) only %}
   {% endif %}
 {% endblock %}

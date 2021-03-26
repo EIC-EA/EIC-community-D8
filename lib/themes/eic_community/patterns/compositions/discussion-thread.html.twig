@@ -2,7 +2,7 @@
 {% set started_by_label = started_by_label|default('Started by') %}
 {% set title_element = title_element|default('h3') %}
 
-<div class="ecl-discussion-thread {{ is_highlighted ? 'ecl-discussion-thread--from-contributor' }} {{ extra_classes|default('') }}">
+<div class="ecl-discussion-thread {{ highlight.is_active ? 'ecl-discussion-thread--is-highlighted' }} {{ extra_classes|default('') }}">
   <div class="ecl-discussion-thread__main">
     {% if author.image %}
       <div class="ecl-discussion-thread__image-wrapper">
@@ -15,6 +15,42 @@
       </div>
     {% endif %}
     <div class="ecl-discussion-thread__content">
+      {% if type or highlight %}
+        <div class="ecl-discussion-thread__toolbar">
+          {% if type is not empty %}
+            <div class="ecl-discussion-thread__type">
+              {% if type.icon and icon_file_path %}
+                {% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with {
+                  icon: type.icon|merge({
+                    path: icon_file_path,
+                    size: 's',
+                  }),
+                  extra_classes: 'ecl-discussion-thread__type-icon',
+                } only %}
+              {% endif %}
+              <span class="ecl-discussion-thread__type-label">{{ type.label }}</span>
+            </div>
+          {% endif %}
+          {% if highlight %}
+            <button class="ecl-discussion-thread__highlight">
+              {% if icon_file_path %}
+                {% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with {
+                  icon: {
+                    path: icon_file_path,
+                    name: 'star_circle',
+                    size: 'm',
+                    type: 'custom',
+                  },
+                  extra_classes: 'ecl-discussion-thread__highlight-icon ',
+                } only %}
+              {% endif %}
+              <span class="ecl-discussion-thread__highlight-label">
+                {{ highlight.label|default('Highlight') }}
+              </span>
+            </button>
+          {% endif %}
+        </div>
+      {% endif %}
       <div class="ecl-discussion-thread__header">
         {% if tags is not empty %}
           <div class="ecl-discussion-thread__tags">
@@ -58,27 +94,9 @@
       {% endif %}
     </div>
   </div>
-  {% if is_highlighted or author or timestamp or stats %}
+  {% if author or timestamp or stats %}
     <div class="ecl-discussion-thread__footer">
       <div class="ecl-discussion-thread__meta">
-        {% if is_highlighted %}
-          <div class="ecl-discussion-thread__highlighted">
-            {% if icon_file_path %}
-              {% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with {
-                icon: {
-                  path: icon_file_path,
-                  name: 'star_circle',
-                  size: 's',
-                  type: 'custom',
-                },
-              } %}
-            {% endif %}
-            <span class="ecl-discussion-thread__highlighted-label">
-              {{ contributor_label }}
-            </span>
-          </div>
-        {% endif %}
-
         {% if author.author %}
           <span class="ecl-discussion-thread__started-by-label">
             {{ started_by_label }}
