@@ -37,6 +37,25 @@
             {{- type|default(path|split('.')|last) -}}
           </span>
         {% endif %}
+
+        {% if highlight %}
+          <button class="ecl-attachment__highlight">
+            {% if icon_file_path %}
+              {% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with {
+                icon: {
+                  path: icon_file_path,
+                  name: 'star_circle',
+                  size: 'm',
+                  type: 'custom',
+                },
+                extra_classes: 'ecl-attachment__highlight-icon ',
+              } only %}
+            {% endif %}
+            <span class="ecl-attachment__highlight-label">
+              {{ highlight.label|default('Highlight') }}
+            </span>
+          </button>
+        {% endif %}
       </div>
     </div>
   </div>
