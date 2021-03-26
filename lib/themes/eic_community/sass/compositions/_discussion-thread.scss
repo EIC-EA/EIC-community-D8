@@ -49,16 +49,8 @@
 
   &__content {
     flex-grow: 1;
-
-    @include ecl-media-breakpoint-down('sm') {
-      display: flex;
-      flex-direction: column;
-    }
-
-    #{$node}--has-compact-layout & {
-      display: flex;
-      flex-direction: column;
-    }
+    display: flex;
+    flex-direction: column;
   }
 
   &__title {
@@ -67,6 +59,7 @@
   }
 
   &__description {
+    margin-top: 0;
     @include ecl-responsive-font('label');
 
     #{$node}--has-compact-layout & {
