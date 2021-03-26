@@ -6,7 +6,6 @@ theme:
   js:
     dist/scripts/vendor/ecl/ecl-ec-preset-legacy-website.js: { minified: true }
     dist/scripts/vendor/svg4everybody/svg4everybody.min.js: { minified: true }
-    dist/scripts/vendor/unicode-emoji-picker.js: { minified: true }
     dist/scripts/common/drupal.ecl.js: { minified: true }
     dist/scripts/common/drupal.svg4everybody.js: { minified: true }
     dist/scripts/components/drupal.expandable-definitions.js: { minified: true }
