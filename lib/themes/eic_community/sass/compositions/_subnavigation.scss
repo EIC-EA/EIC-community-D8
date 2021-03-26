@@ -57,7 +57,7 @@
     justify-content: center;
     padding: ecl-box-model('padding', 'controls');
     border-bottom: solid 4px transparent;
-    @include ecl-responsive-font('meta');
+    @include ecl-responsive-font('label');
     font-weight: $ecl-font-weight-bold;
 
     &:hover,
@@ -119,7 +119,7 @@
     .ecl-text-input {
       border-top-left-radius: map-get($ecl-spacing, '2xs');
       border-bottom-left-radius: map-get($ecl-spacing, '2xs');
-      @include ecl-responsive-font('meta');
+      @include ecl-responsive-font('label');
       padding: map-get($ecl-spacing, 'xs');
 
       #{$node}__collapsible-options & {

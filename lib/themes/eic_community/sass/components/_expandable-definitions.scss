@@ -29,7 +29,7 @@
   &__item-label {
     display: block;
     margin-bottom: map-get($ecl-spacing, '2xs');
-    @include ecl-responsive-font('meta');
+    @include ecl-responsive-font('label');
     line-height: ecl-typography('line-height', 'meta');
     color: ecl-typography('color', 'meta');
 
@@ -54,7 +54,7 @@
 
   &__item-subitem {
     margin: 0 0 map-get($ecl-spacing, '2xs');
-    @include ecl-responsive-font('meta');
+    @include ecl-responsive-font('label');
     line-height: ecl-typography('line-height', 'meta');
   }
 
@@ -65,7 +65,7 @@
   &__item-more {
     display: none;
     padding: 0;
-    @include ecl-responsive-font('meta');
+    @include ecl-responsive-font('label');
     font-weight: inherit;
 
     #{$node}__item--is-ready #{$node}__item-subitems[aria-hidden="true"] ~ & {
