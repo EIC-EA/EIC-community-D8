@@ -2,20 +2,20 @@
 
 /**
  * @file
- * Prepares variables for node page template.
+ * Prepares variables for node News and Story templates.
  */
 
 use Drupal\oe_theme\ValueObject\ImageValueObject;
 
 /**
- * Implements hook_preprocess_node() for page node.
+ * Implements hook_preprocess_node__story() for story node.
  */
 function eic_community_preprocess_node__story(array &$variables) {
   _eic_community_preprocess_node_news_story($variables);
 }
 
 /**
- * Implements hook_preprocess_node() for page node.
+ * Implements hook_preprocess_node__news() for news node.
  */
 function eic_community_preprocess_node__news(array &$variables) {
   _eic_community_preprocess_node_news_story($variables);
