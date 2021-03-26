@@ -5,8 +5,7 @@
     background-color: map-get($ecl-colors, 'white');
   }
 
-  [class*="ecl-section-wrapper--is-"] [class*="ecl-featured-content"] &,
-  .ecl-section-wrapper:not([class*="ecl-section-wrapper--is-"])~.ecl-section-wrapper:not([class*="ecl-section-wrapper--is-"]):nth-child(2n) & {
+  @include adjust-from-section-color() {
     background-color: map-get($ecl-colors, 'grey-15');
   }
 

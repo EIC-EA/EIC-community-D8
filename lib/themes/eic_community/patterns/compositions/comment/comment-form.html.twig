@@ -4,7 +4,6 @@
   {% if author %}
     <div class="ecl-comment-form__author">
       {% include "@theme/patterns/components/author.html.twig" with author|default({})|without('description', 'actions', 'updates')|merge({
-        author: author.label,
         extra_classes: 'ecl-author--hide-info' ~ author.extra_classes|default('')
       }) only %}
     </div>

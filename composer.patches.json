@@ -4,7 +4,8 @@
       "2920739 - Allow accessing the \"Custom block library\" page without \"Administer blocks\" permission": "https://www.drupal.org/files/issues/2020-07-27/block_content_permissions-access_listing_page-2920739-38.patch"
     },
     "drupal/context": {
-      "3173470 - Error: Call to a member function getCacheTags": "https://www.drupal.org/files/issues/2020-11-10/context-3173470-16.patch"
+      "3173470 - Error: Call to a member function getCacheTags": "https://www.drupal.org/files/issues/2020-11-10/context-3173470-16.patch",
+      "3072991 - Can't clone context": "https://www.drupal.org/files/issues/2020-08-21/context-cannot-clone-context-3072991-9.patch"
     },
     "drupal/group": {
         "2881769 - group/{group}/node/create uses the permissions of group/{group}/node/add": "https://www.drupal.org/files/issues/2020-10-01/2881769-22.patch",

@@ -47,6 +47,22 @@ reactions:
         unique: 0
         context_id: group_group_homepage
         uuid: 3a090b19-4584-4fb0-bc17-47df386de8da
+      5d7c3ce0-d0fc-4267-912b-52115526298f:
+        id: 'views_block:group_documents-block_1'
+        label: ''
+        provider: views
+        label_display: visible
+        views_label: ''
+        items_per_page: none
+        region: content
+        weight: '1'
+        context_mapping: { }
+        custom_id: views_block_group_documents_block_1
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: group_group_homepage
+        uuid: 5d7c3ce0-d0fc-4267-912b-52115526298f
       3fc74879-9f2f-4f36-a94c-bd5dd6938596:
         id: eic_group_header
         label: 'EIC Group header'

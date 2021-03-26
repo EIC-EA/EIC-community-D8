@@ -1,20 +1,20 @@
-uuid: 71d62973-12e6-41e2-b8c5-4fd2fee011e3
+uuid: 6a97e845-4592-4397-bb53-7114b4976a9f
 langcode: en
 status: true
 dependencies:
   config:
     - search_api.index.global
-    - views.view.global_overviews
+    - views.view.group_overviews
   module:
     - search_api
-id: groups_topics
-name: Topics
-url_alias: topics
+id: discussions_type
+name: Type
+url_alias: type
 weight: 0
 min_count: 1
 show_only_one_result: false
-field_identifier: group_field_vocab_topics
-facet_source_id: 'search_api:views_page__global_overviews__page_1'
+field_identifier: content_field_discussion_type
+facet_source_id: 'search_api:views_page__group_overviews__page_1'
 widget:
   type: checkbox
   config:
@@ -27,8 +27,8 @@ widget:
     reset_text: 'Show all'
     hide_reset_when_no_selection: false
 query_operator: or
-use_hierarchy: true
-expand_hierarchy: true
+use_hierarchy: false
+expand_hierarchy: false
 enable_parent_when_child_gets_disabled: true
 hard_limit: 0
 exclude: false
@@ -52,8 +52,8 @@ processor_configs:
       sort: 40
     settings:
       sort: ASC
-  translate_entity:
-    processor_id: translate_entity
+  list_item:
+    processor_id: list_item
     weights:
       build: 5
     settings: {  }
