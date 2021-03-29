@@ -1,7 +1,7 @@
 {% if is_clickable %}
-  <a href="{{ path }}" download class="ecl-attachment ecl-attachment--has-compact-layout {{ is_highlighted ? 'ecl-attachment--is-highlighted' }} {{ extra_classes }}">
+  <a href="{{ path }}" download class="ecl-attachment ecl-attachment--has-compact-layout {{ highlight.is_active ? 'ecl-attachment--is-highlighted' }} {{ extra_classes }}">
 {% else %}
-  <div class="ecl-attachment {{ is_highlighted ? 'ecl-attachment--is-highlighted' }} {{ extra_classes }}">
+  <div class="ecl-attachment {{ highlight.is_active ? 'ecl-attachment--is-highlighted' }} {{ extra_classes }}">
 {% endif %}
   <div class="ecl-attachment__main">
     {% if image or icon %}
@@ -36,6 +36,25 @@
           <span class="ecl-attachment__type">
             {{- type|default(path|split('.')|last) -}}
           </span>
+        {% endif %}
+
+        {% if highlight %}
+          <button class="ecl-attachment__highlight">
+            {% if icon_file_path %}
+              {% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with {
+                icon: {
+                  path: icon_file_path,
+                  name: 'star_circle',
+                  size: 'm',
+                  type: 'custom',
+                },
+                extra_classes: 'ecl-attachment__highlight-icon ',
+              } only %}
+            {% endif %}
+            <span class="ecl-attachment__highlight-label">
+              {{ highlight.label|default('Highlight') }}
+            </span>
+          </button>
         {% endif %}
       </div>
     </div>

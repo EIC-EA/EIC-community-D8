@@ -10,22 +10,24 @@ Displays a custom version of the [ECL-Twig file component](https://www.npmjs.com
 
 ## Twig parameters:
 
-| Key            | Type    | Description                                                                  | Mandatory |
-| -------------- | ------- | ---------------------------------------------------------------------------- | --------- |
-| title          | string  | Displays the title of the attachment, this should be semantic.               | yes       |
-| path           | string  | The URL to links to the attachment.                                          | yes       |
-| download_label | string  | Adjusts the label for the download button.                                   | no        |
-| language       | string  | Displays the attachment language.                                            | no        |
-| filesize       | string  | The filesize of the document.                                                | no        |
-| author         | object  | Displays the author of the attachment.                                       | no        |
-| author.author  | string  | The name of the author.                                                      | no        |
-| author.path    | string  | The URL of the author page.                                                  | no        |
-| icon_file_path | string  | Enables the usage of the ECL icons within the component.                     | no        |
-| timestamp      | string  | Displays the timestamp of the document.                                      | no        |
-| icon           | object  | Displays an optional icon next to the title.                                 | no        |
-| icon.name      | string  | Should match with a name from the SVG inline sprite.                         | no        |
-| icon.type      | string  | Should match with icon type from the ECL icon library or the custom library. | no        |
-| image          | object  | Displays an optional thumbnail of the attachment.                            | no        |
-| src            | string  | The URL to the image of the defined attachment.                              | no        |
-| alt            | string  | The optional alt attribute for the image.                                    | no        |
-| is_highlighted | boolean | Includes additional styling for highlighted content.                         | no        |
+| Key                 | Type           | Description                                                                  | Mandatory |
+| ------------------- | -------------- | ---------------------------------------------------------------------------- | --------- |
+| title               | string         | Displays the title of the attachment, this should be semantic.               | yes       |
+| path                | string         | The URL to links to the attachment.                                          | yes       |
+| download_label      | string         | Adjusts the label for the download button.                                   | no        |
+| language            | string         | Displays the attachment language.                                            | no        |
+| filesize            | string         | The filesize of the document.                                                | no        |
+| author              | object         | Displays the author of the attachment.                                       | no        |
+| author.author       | string         | The name of the author.                                                      | no        |
+| author.path         | string         | The URL of the author page.                                                  | no        |
+| icon_file_path      | string         | Enables the usage of the ECL icons within the component.                     | no        |
+| timestamp           | string         | Displays the timestamp of the document.                                      | no        |
+| icon                | object         | Displays an optional icon next to the title.                                 | no        |
+| icon.name           | string         | Should match with a name from the SVG inline sprite.                         | no        |
+| icon.type           | string         | Should match with icon type from the ECL icon library or the custom library. | no        |
+| image               | object         | Displays an optional thumbnail of the attachment.                            | no        |
+| src                 | string         | The URL to the image of the defined attachment.                              | no        |
+| alt                 | string         | The optional alt attribute for the image.                                    | no        |
+| highlight           | boolean/object | Displays the highlight button when defined.                                  | no        |
+| highlight.label     | string         | The semantic label for the highlight button.                                 | no        |
+| highlight.is_active | boolean        | Displays the active state for the current highlight button.                  | no        |
