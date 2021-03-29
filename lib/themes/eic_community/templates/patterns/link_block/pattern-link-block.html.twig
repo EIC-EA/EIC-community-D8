@@ -1,0 +1,23 @@
+{#
+/**
+ * @file
+ * Link block.
+ */
+#}
+
+{% set _links = {} %}
+{% for link in links %}
+  {% set _link = {
+    link: {
+      label : link.label,
+      path : link.url,
+      type: 'standalone'
+    }
+  } %}
+  {% set _links = _links|merge([_link]) %}
+{% endfor %}
+
+{% include '@eic_community/compositions/ec-component-link-block/link-block.html.twig' with {
+  title: title,
+  links: _links,
+} %}

@@ -1,0 +1,64 @@
+{#
+/**
+ * @file
+ * Default implementation for the page header component.
+ */
+#}
+
+{% set _meta = '' %}
+{% for meta in metas %}
+  {% if _meta != '' %}
+    {% set _meta = _meta ~ ' | ' %}
+  {% endif %}
+  {% set _meta = _meta ~ meta %}
+{% endfor %}
+
+{% set _breadcrumb_links = {} %}
+{% for breadcrumb_item in breadcrumb %}
+  {% set _links = {
+    'label' : breadcrumb_item.label,
+    'path' : breadcrumb_item.href
+  } %}
+  {% set _breadcrumb_links = _breadcrumb_links|merge([_links]) %}
+{% endfor %}
+
+{% if _breadcrumb_links %}
+  {% set _breadcrumb = {
+    'links' : _breadcrumb_links,
+    'navigation_text' : '',
+    'ellipsis_label': '',
+    'icon_file_path' : eic_icon_path
+  } %}
+{% endif %}
+
+{%
+  set _extra_classes = [
+  ecl_branding == 'core' ? 'ecl-u-mb-xl',
+  not _breadcrumb_links and background_image_url is empty ? 'ecl-u-pt-m'
+]
+%}
+
+{% if language_switcher %}
+  {% set _language_switcher %}
+    {% include '@eic_community/compositions/ec-component-content-language-switcher/content-language-switcher.html.twig' with {
+      'expandable_id': language_switcher.expandable_id,
+      'unavailable': language_switcher.unavailable,
+      'current': language_switcher.current,
+      'options': language_switcher.options,
+      'icon_path': eic_icon_path,
+      'ecl_branding': ecl_branding,
+    } only %}
+  {% endset %}
+{% endif %}
+
+{% include '@ecl-twig/page-header-' ~ ecl_branding with {
+  'title': title,
+  'description': introduction,
+  'breadcrumb': _breadcrumb,
+  'meta': _meta,
+  'infos': _infos,
+  'background_image': ecl_branding == 'core' and background_image_url is not empty,
+  'background_image_url': background_image_url,
+  'composition': _language_switcher,
+  'extra_classes': _extra_classes|join(' '),
+} %}
