@@ -39,6 +39,13 @@
           items: meta
         } only %}
 
+        {% if type is not empty %}
+          {% include "@theme/patterns/components/content-type-indicator.html.twig" with type|default({})|merge({
+            extra_classes: 'ecl-editorial-header__type',
+            icon_file_path: icon_file_path,
+          }) only %}
+        {% endif %}
+
         {% if tags is not empty %}
           <div class="ecl-editorial-header__tags-wrapper">
             <div class="ecl-editorial-header__tags">
@@ -101,7 +108,7 @@
                           path: icon_file_path,
                           size: 's',
                         }) : {},
-                      }) %}
+                      }) only %}
                     {% endif %}
                   {% endif %}
                 {% endif %}
