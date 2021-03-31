@@ -1,0 +1,18 @@
+{#
+/**
+ * @file
+ * Social icon.
+ */
+#}
+{% include '@ecl-twig/link' with {
+  'link': {
+    'label': label,
+    'type': 'standalone',
+    'path': url,
+    'icon_position': 'before'
+  },
+  'icon': {
+    'path': ecl_social_icon_path,
+    'name': service
+  }
+} only %}
