@@ -10,7 +10,7 @@ $ecl-typography: (
     'color': map-get($ecl-colors, 'grey-50'),
     'font-size': $ecl-font-size-xs,
     'font-size--md': $ecl-font-size-xs,
-    'font-size--lg': $ecl-font-size-s,
+    'font-size--lg': $ecl-font-size-xs,
     'line-height': $ecl-line-height-m,
     ),
     'label': (

@@ -75,6 +75,10 @@
     }
   }
 
+  & &__type {
+    margin: 0;
+  }
+
   &__actions {
     display: flex;
     order: 1;

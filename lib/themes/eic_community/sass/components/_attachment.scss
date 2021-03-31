@@ -7,13 +7,19 @@
   display: block;
   border-left: solid 4px transparent;
 
-  &--from-contributor {
+  &--is-highlighted {
     border-color: ecl-typography('color', 'title');
   }
 
   // Overrides the background color if the composition exists within a colored section.
-  [class*="ecl-section-wrapper--is-"] [class*="ecl-featured-content"] &,
-  .ecl-section-wrapper:not([class*="ecl-section-wrapper--is-"]) ~ .ecl-section-wrapper:not([class*="ecl-section-wrapper--is-"]):nth-child(2n - 1) &,
+  @include adjust-from-section-color() {
+    background-color: map-get($ecl-colors, 'white');
+
+    & #{$node}__icon-wrapper {
+      background-color: map-get($ecl-colors, 'grey-5');
+    }
+  }
+
   &--is-white {
     background-color: map-get($ecl-colors, 'white');
 
@@ -36,7 +42,7 @@
 
   &__main {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     padding-bottom: ecl-box-model('padding');
     margin-bottom: ecl-box-model('padding');
     border-bottom: ecl-border();
@@ -111,10 +117,14 @@
     flex-grow: 1;
   }
 
+  &__content-header {
+    display: flex;
+  }
+
   &__title {
     line-height: ecl-typography('line-height', 'label');
     word-break: break-all;
-    color: currentColor;
+    color: ecl-typography('color', 'title');
   }
 
   &__title,
@@ -126,6 +136,7 @@
   &__type {
     text-transform: uppercase;
     font-size: ecl-typography('font-size', 'meta');
+    @include visually-hidden();
 
     &::before,
     &::after {
@@ -159,7 +170,7 @@
     margin-right: ecl-layout('gutter', 'controls');
     margin-bottom: ecl-layout('gutter', 'controls');
     color: ecl-typography('color', 'meta');
-    @include ecl-responsive-font('meta');
+    @include ecl-responsive-font('label');
 
     &--author {
       #{$node}--has-compact-layout & {
@@ -194,5 +205,52 @@
     .ecl-timestamp__label {
       font-size: inherit;
     }
+  }
+
+  &__highlight {
+    margin-left: auto;
+    padding-left: map-get($ecl-spacing, 'm');
+    background-color: transparent;
+    color: map-get($ecl-colors, 'blue-25');
+    line-height: 0;
+    outline: none;
+    flex-shrink: 0;
+    order: 1;
+    border: 0;
+    position: relative;
+    padding: map-get($ecl-spacing, 'xs');
+
+    &::before {
+      position: absolute;
+      content: " ";
+      top: 50%;
+      display: block;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 40%;
+      height: 40%;
+      border-radius: 50%;
+      background-color: map-get($ecl-colors, 'white');
+    }
+
+    &:hover,
+    #{$node}--is-highlighted & {
+      color: map-get($ecl-colors, 'yellow-100');
+      opacity: 1;
+
+      &::before {
+        background-color: map-get($ecl-colors, 'black');
+      }
+    }
+  }
+
+  &__highlight-icon {
+    margin: 0;
+    display: block;
+    position: relative;
+  }
+
+  &__highlight-label {
+    @include visually-hidden;
   }
 }

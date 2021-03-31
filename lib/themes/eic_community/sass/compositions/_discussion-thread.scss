@@ -6,12 +6,12 @@
   background-color: map-get($ecl-colors, 'grey-5');
   border-left: solid 4px transparent;
 
-  [class*="ecl-section-wrapper--is-"] [class*="ecl-featured-content"] &,
-  .ecl-section-wrapper:not([class*="ecl-section-wrapper--is-"])~.ecl-section-wrapper:not([class*="ecl-section-wrapper--is-"]):nth-child(2n - 1) & {
+  [class*="ecl-section-wrapper--is-"]:not(.ecl-section-wrapper--is-white) [class*="ecl-featured-content"] &,
+  .ecl-section-wrapper:not([class*="ecl-section-wrapper--is-"])~.ecl-section-wrapper:not([class*="ecl-section-wrapper--is-"]):nth-child(2n + 1) & {
     background-color: map-get($ecl-colors, 'white');
   }
 
-  &--from-contributor {
+  &--is-highlighted {
     border-color: ecl-typography('color', 'title');
     background-color: map-get($ecl-colors, 'blue-5');
   }
@@ -49,11 +49,8 @@
 
   &__content {
     flex-grow: 1;
-
-    @include ecl-media-breakpoint-down('sm') {
-      display: flex;
-      flex-direction: column;
-    }
+    display: flex;
+    flex-direction: column;
   }
 
   &__title {
@@ -62,28 +59,78 @@
   }
 
   &__description {
-    @include ecl-responsive-font('meta');
+    margin-top: 0;
+    @include ecl-responsive-font('label');
 
     #{$node}--has-compact-layout & {
       @include visually-hidden;
     }
   }
 
+  &__toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  &__type {
+    display: flex;
+    align-items: center;
+    align-items: center;
+    color: ecl-typography('color', 'meta');
+    text-transform: uppercase;
+    @include ecl-responsive-font('meta');
+  }
+
+  &__type-icon {
+    color: ecl-typography('color', 'title');
+    margin-right: ecl-box-model('margin', 'controls');
+  }
+
+  &__highlight {
+    margin-left: auto;
+    background-color: transparent;
+    color: map-get($ecl-colors, 'blue-25');
+    line-height: 0;
+    outline: none;
+    border: 0;
+    position: relative;
+    padding: map-get($ecl-spacing, 'xs');
+
+    &::before {
+      position: absolute;
+      content: " ";
+      top: 50%;
+      display: block;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 40%;
+      height: 40%;
+      border-radius: 50%;
+      background-color: map-get($ecl-colors, 'white');
+    }
+
+    &:hover,
+    #{$node}--is-highlighted & {
+      color: map-get($ecl-colors, 'yellow-100');
+      opacity: 1;
+
+      &::before {
+        background-color: map-get($ecl-colors, 'black');
+      }
+    }
+  }
+
+  &__highlight-icon {
+    margin: 0;
+    display: block;
+    position: relative;
+  }
+
   &__header {
     display: flex;
     justify-content: space-between;
-    margin-top: ecl-box-model('padding');
     order: 1;
-
-    @include ecl-media-breakpoint-up('md') {
-      margin-top: 0;
-      margin-bottom: ecl-box-model('padding');
-      order: 0;
-    }
-
-    #{$node}--has-compact-layout & {
-      @include visually-hidden;
-    }
   }
 
   &__meta,
@@ -114,20 +161,7 @@
     align-items: center;
   }
 
-  &__highlighted {
-    color: ecl-typography('color', 'title');
-    margin-right: ecl-box-model('padding');
-
-    @include ecl-media-breakpoint-up('md') {
-      position: absolute;
-      margin: 0;
-      left: 0;
-      top: 50%;
-      transform: translateY(-50%);
-    }
-  }
-
-  &__highlighted-label,
+  &__highlight-label,
   &__started-by-label {
     @include visually-hidden;
   }
@@ -137,12 +171,13 @@
     margin: 0 ecl-box-model('padding') 0 0;
   }
 
-  &__author,
   &__timestamp {
+    @include ecl-responsive-font('meta');
     @include ecl-responsive-font('meta');
   }
 
   &__author {
+    @include ecl-responsive-font('label');
     font-weight: $ecl-font-weight-bold;
   }
 
@@ -152,12 +187,14 @@
     margin-left: auto;
   }
 
+  &__members {
+    #{$node}--has-compact-layout & {
+      display: none;
+    }
+  }
+
   &__tags {
     margin-right: ecl-box-model('padding');
-
-    @include ecl-media-breakpoint-down('sm') {
-      @include visually-hidden;
-    }
   }
 
   &__stats-items,
@@ -193,10 +230,10 @@
 
   &__tag {
     @include ecl-responsive-font('meta');
-
-    #{$node}--from-contributor & {
-      background-color: map-get($ecl-colors, 'white');
-    }
+    background-color: map-get($ecl-colors, 'white');
+    text-decoration: none;
+    color: ecl-typography('color', 'title');
+    padding: map-get($ecl-spacing, '2xs') map-get($ecl-spacing, 'xs');
   }
 
   &__comment-thread {

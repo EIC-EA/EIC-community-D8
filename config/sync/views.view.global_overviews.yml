@@ -382,10 +382,10 @@ display:
           min_length: 2
           fields: {  }
           plugin_id: search_api_fulltext
-        type:
-          id: type
+        group_type:
+          id: group_type
           table: search_api_index_global
-          field: type
+          field: group_type
           relationship: none
           group_type: group
           admin_label: ''

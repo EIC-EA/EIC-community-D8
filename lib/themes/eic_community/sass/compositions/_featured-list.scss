@@ -89,7 +89,7 @@
   }
 
   &__item-tag {
-    @include ecl-responsive-font('meta');
+    @include ecl-responsive-font('label');
 
     #{$node}--topics-filter & {
       text-decoration: none;

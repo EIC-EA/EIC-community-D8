@@ -142,6 +142,11 @@ fi
 # Move into the Drupal webroot.
 cd web
 
+# Make sure the eic_deploy module is enabled *before* we run updates.
+# This may be removed again when the module has been successfully enabled on
+# all installed environments.
+run_command "$DRUSH_CMD en eic_deploy -y"
+
 # Configuration: Apply any database updates via Drush.
 run_command "$DRUSH_CMD updatedb -y"
 

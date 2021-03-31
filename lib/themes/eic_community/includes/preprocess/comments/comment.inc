@@ -53,6 +53,7 @@ function eic_community_preprocess_comment(&$variables) {
     'reply_path' => $comment_reply->toString(),
     'timestamp' => $comment->getCreatedTime(),
     'user' => $current_user,
+    'icon_file_path' => $variables['eic_icon_path'],
   ];
 }
 

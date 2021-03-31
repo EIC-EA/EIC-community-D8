@@ -8,6 +8,7 @@ dependencies:
     - field.field.group.group.field_membership_open_request
     - field.field.group.group.field_message_to_site_admin
     - field.field.group.group.field_related_groups
+    - field.field.group.group.field_related_news_stories
     - field.field.group.group.field_thumbnail
     - field.field.group.group.field_vocab_geo
     - field.field.group.group.field_vocab_topics
@@ -17,7 +18,15 @@ id: group.group.default
 targetEntityType: group
 bundle: group
 mode: default
-content: {  }
+content:
+  field_related_news_stories:
+    weight: 0
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
 hidden:
   changed: true
   created: true
