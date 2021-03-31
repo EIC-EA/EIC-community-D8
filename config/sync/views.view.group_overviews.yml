@@ -5,6 +5,7 @@ dependencies:
   config:
     - search_api.index.global
   module:
+    - group
     - profile
     - search_api
 id: group_overviews
@@ -399,16 +400,31 @@ display:
             group_items: {  }
           parse_mode: terms
           min_length: 2
-          fields: {  }
+          fields:
+            - user_field_full_name
+            - user_profile_field_body
           plugin_id: search_api_fulltext
       filter_groups:
         operator: AND
         groups:
           1: AND
       access:
-        type: none
-        options: {  }
-      sorts: {  }
+        type: group_permission
+        options:
+          group_permission: 'view group_membership content'
+      sorts:
+        user_field_full_name:
+          id: user_field_full_name
+          table: search_api_index_global
+          field: user_field_full_name
+          relationship: none
+          group_type: group
+          admin_label: ''
+          order: ASC
+          exposed: false
+          expose:
+            label: ''
+          plugin_id: search_api
       relationships:
         member_profiles:
           id: member_profiles
@@ -426,8 +442,10 @@ display:
       contexts:
         - 'languages:language_content'
         - 'languages:language_interface'
+        - route.group
         - url
         - url.query_args
+        - user.group_permissions
         - 'user.node_grants:view'
       tags:
         - 'config:search_api.index.global'

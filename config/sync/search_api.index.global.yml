@@ -19,7 +19,8 @@ dependencies:
     - field.storage.node.field_subtitle
     - field.storage.node.field_vocab_topics
     - field.storage.node.field_discussion_type
-    - field.storage.profile.field_location_address
+    - field.storage.user.field_full_name
+    - field.storage.profile.field_body
     - field.storage.profile.field_vocab_job_title
     - field.storage.profile.field_vocab_language
     - field.storage.profile.field_vocab_topic_expertise
@@ -192,6 +193,14 @@ field_settings:
     dependencies:
       module:
         - group
+  user_field_full_name:
+    label: 'Full Name'
+    datasource_id: 'entity:user'
+    property_path: field_full_name
+    type: text
+    dependencies:
+      config:
+        - field.storage.user.field_full_name
   user_profile:
     label: 'Member profiles'
     datasource_id: 'entity:user'
@@ -200,24 +209,14 @@ field_settings:
     dependencies:
       module:
         - profile
-  user_profile_address_country_code:
-    label: 'Member profiles » Profile » Address » The two-letter country code'
+  user_profile_field_body:
+    label: 'Member profiles » Profile » About You'
     datasource_id: 'entity:user'
-    property_path: 'member_profiles:entity:field_location_address:country_code'
-    type: string
+    property_path: 'member_profiles:entity:field_body'
+    type: text
     dependencies:
       config:
-        - field.storage.profile.field_location_address
-      module:
-        - profile
-  user_profile_address_locality:
-    label: 'Member profiles » Profile » Address » The locality (i.e. city)'
-    datasource_id: 'entity:user'
-    property_path: 'member_profiles:entity:field_location_address:locality'
-    type: string
-    dependencies:
-      config:
-        - field.storage.profile.field_location_address
+        - field.storage.profile.field_body
       module:
         - profile
   user_profile_field_vocab_job_title:
