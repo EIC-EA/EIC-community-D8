@@ -3271,6 +3271,9 @@
                 },
                 "branch-alias": {
                     "dev-8.x-1.x": "1.x-dev"
+                },
+                "patches_applied": {
+                    "3199156 - Module installation is broken if search_api will be installed as dependency": "https://www.drupal.org/files/issues/2021-03-16/3199156-19.patch"
                 }
             },
             "notification-url": "https://packages.drupal.org/8/downloads",
@@ -5545,6 +5548,12 @@
             ],
             "description": "Drush is a command line shell and scripting interface for Drupal, a veritable Swiss Army knife designed to make life easier for those of us who spend some of our working hours hacking away at the command prompt.",
             "homepage": "http://www.drush.org",
+            "funding": [
+                {
+                    "url": "https://github.com/weitzman",
+                    "type": "github"
+                }
+            ],
             "time": "2021-03-22T17:00:48+00:00"
         },
         {
@@ -6079,6 +6088,12 @@
                 "escaper",
                 "laminas"
             ],
+            "funding": [
+                {
+                    "url": "https://funding.communitybridge.org/projects/laminas-project",
+                    "type": "community_bridge"
+                }
+            ],
             "time": "2020-11-17T21:26:43+00:00"
         },
         {
@@ -6145,6 +6160,12 @@
                 "feed",
                 "laminas"
             ],
+            "funding": [
+                {
+                    "url": "https://funding.communitybridge.org/projects/laminas-project",
+                    "type": "community_bridge"
+                }
+            ],
             "time": "2021-03-16T16:01:42+00:00"
         },
         {
@@ -6188,6 +6209,12 @@
             "keywords": [
                 "laminas",
                 "stdlib"
+            ],
+            "funding": [
+                {
+                    "url": "https://funding.communitybridge.org/projects/laminas-project",
+                    "type": "community_bridge"
+                }
             ],
             "time": "2020-11-19T20:18:59+00:00"
         },
@@ -6238,6 +6265,12 @@
                 "autoloading",
                 "laminas",
                 "zf"
+            ],
+            "funding": [
+                {
+                    "url": "https://funding.communitybridge.org/projects/laminas-project",
+                    "type": "community_bridge"
+                }
             ],
             "time": "2021-02-25T21:54:58+00:00"
         },
@@ -11984,6 +12017,12 @@
                 "BSD-3-Clause"
             ],
             "description": "Official version of pdepend to be handled with Composer",
+            "funding": [
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/pdepend/pdepend",
+                    "type": "tidelift"
+                }
+            ],
             "time": "2021-03-11T09:20:40+00:00"
         },
         {

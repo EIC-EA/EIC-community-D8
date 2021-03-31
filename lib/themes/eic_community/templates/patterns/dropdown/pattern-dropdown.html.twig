@@ -1,0 +1,31 @@
+{#
+/**
+ * @file
+ * Dropdown component.
+ */
+#}
+{% set _links = {} %}
+{% for link in links %}
+  {% set _link = {
+    label: link(link.label, link.url)
+  } %}
+  {% set _links = _links|merge([_link]) %}
+{% endfor %}
+
+{% include '@ecl-twig/dropdown-legacy' with {
+  'id': id,
+  'button': {
+    'label': button_label,
+    'variant': 'secondary',
+    'icon': {
+      'path': eic_icon_path,
+      'type': 'ui',
+      'name': 'corner-arrow',
+      'transform': 'rotate-180',
+      'size': 'fluid',
+    },
+  },
+  'list': {
+    'items': _links,
+  },
+} %}

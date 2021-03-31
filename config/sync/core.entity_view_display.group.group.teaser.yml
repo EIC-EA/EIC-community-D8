@@ -45,6 +45,7 @@ hidden:
   field_membership_open_request: true
   field_message_to_site_admin: true
   field_related_groups: true
+  field_related_news_stories: true
   field_vocab_geo: true
   field_vocab_topics: true
   field_welcome_message: true

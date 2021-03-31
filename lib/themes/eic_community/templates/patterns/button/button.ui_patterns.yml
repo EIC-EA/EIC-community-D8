@@ -1,0 +1,67 @@
+button:
+  label: "Button"
+  description: "Buttons indicate actions the users can take."
+  variants:
+    default:
+      label: "Default"
+      description: "The default button is used for important links on the page."
+    primary:
+      label: "Primary"
+      description: "Used for primary actions in case of forms, to initiate a search query, to apply a filter."
+    secondary:
+      label: "Secondary"
+      description: "Used for secondary actions to cancel a form."
+    call:
+      label: "Call to action"
+      description: "Use these buttons sparingly on the most important actions like “Apply for funding” or “Watch live streaming”."
+    ghost:
+      label: "Ghost"
+      description: "Ghost button."
+    search:
+      label: "Search"
+      description: "Search button."
+    form:
+      label: "Form (deprecated)"
+      description: "The form buttons are used to confirm a choice or send information. This was deprecated in ECL 2.x."
+    form_primary:
+      label: "Form primary (deprecated)"
+      description: "The form buttons are used to confirm a choice or send information. This was deprecated in ECL 2.x."
+    splash_page:
+      label: "Splash page (deprecated)"
+      description: "Special buttons used on the site's splash page. This was deprecated in ECL 2.x."
+  fields:
+    type_attribute:
+      type: "text"
+      label: "Type attribute"
+      description: "The buttons type attribute"
+      preview: "submit"
+    href:
+      type: "Url"
+      label: "URL"
+      description: "URL to use if button needs to be a link (A Drupal Url object)"
+      preview: "http://www.example.com"
+    icon:
+      type: "text"
+      label: "Icon"
+      description: "An icon to use with the button."
+      preview: "check"
+    icon_position:
+      type: "text"
+      label: "Icon position"
+      description: "Position of link icon (can be 'before' or 'after') if icon is available"
+      preview: 'after'
+    label:
+      type: "text"
+      label: "Label"
+      description: "Label of the button."
+      preview: "Button"
+    is_block:
+      type: "boolean"
+      label: "Block status"
+      description: "Whether the button needs to be treated as a block or not. (deprecated)"
+      preview: false
+    disabled:
+      type: "boolean"
+      label: "Disabled status"
+      description: "Define if button should be disabled."
+      preview: false

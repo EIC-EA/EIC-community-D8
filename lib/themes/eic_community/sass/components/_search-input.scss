@@ -1,0 +1,16 @@
+.ecl-search-input {
+  position: relative;
+
+  &__field {
+    padding-right: map-get($ecl-spacing, 'xl');
+  }
+
+  &__icon {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: map-get($ecl-spacing, 'xs');
+    user-select: none;
+    color: ecl-typography('color', 'title');
+  }
+}
