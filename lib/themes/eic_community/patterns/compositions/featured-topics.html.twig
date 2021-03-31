@@ -1,26 +1,46 @@
 {% set title_element = title_element|default('h3') %}
 
 {% if items is not empty %}
-  <div class="ecl-featured-list ecl-featured-list--topics">
+  <div class="ecl-featured-list ecl-featured-list--topics {{ is_collapsible ? 'ecl-featured-list--is-collapsible' }} {{ extra_classes }}">
     {% if title is not empty %}
       {% if title is not empty %}
         <{{ title_element }} class="ecl-featured-list__title">{{ title }}</{{ title_element }}>
       {% endif %}
     {% endif %}
 
-    <div class="ecl-featured-list__items">
-      {% for item in items %}
-        <div class="ecl-featured-list__item">
-          {% include '@ecl-twig/ec-component-tag/ecl-tag.html.twig' with {
-            extra_classes: 'ecl-featured-list__item-tag',
-            tag: {
-              type: 'link',
-              path: item.path,
-              label: item.label
-            }
-          } only %}
-        </div>
-      {% endfor %}
+    <div class="ecl-featured-list__items-wrapper">
+      <div class="ecl-featured-list__items">
+        {% for item in items %}
+          <div class="ecl-featured-list__item {{ item.is_active ? 'ecl-featured-list__item--is-active' }} {{ item.extra_classes }}">
+            {% include '@ecl-twig/ec-component-tag/ecl-tag.html.twig' with {
+              extra_classes: 'ecl-featured-list__item-tag',
+              tag: {
+                type: 'link',
+                path: item.path,
+                label: item.label
+              }
+            } only %}
+          </div>
+        {% endfor %}
+        {% if is_collapsible %}
+          <div class="ecl-featured-list__item ecl-featured-list__item--expand">
+            {% include "@ecl-twig/ec-component-button/ecl-button.html.twig" with {
+              icon_position: 'after',
+              icon: icon_file_path ? {
+                path: icon_file_path,
+                type: 'ui',
+                name: 'rounded-arrow',
+                transform: 'rotate-180',
+                size: '2xs',
+              } : {},
+              label: collapse_label|default('Show all'),
+              variant: 'ghost',
+              extra_classes: 'ecl-featured-list__expand'
+            } %}
+          </div>
+        {% endif %}
+      </div>
     </div>
+
   </div>
 {% endif %}

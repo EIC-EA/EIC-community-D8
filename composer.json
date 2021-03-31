@@ -15,38 +15,44 @@
         "drupal/components": "^2.2",
         "drupal/config_split": "^1.7",
         "drupal/context": "^4.0@beta",
-        "drupal/core": "^9.1",
-        "drupal/core-composer-scaffold": "^9.1",
+        "drupal/core": "^8.7",
+        "drupal/core-composer-scaffold": "^8.8",
         "drupal/default_content": "^2.0@alpha",
         "drupal/extra_field": "^2.0",
+        "drupal/facets": "^1.7",
         "drupal/flag": "^4.0@beta",
         "drupal/fragments": "^2.0",
         "drupal/group": "^1.3",
+        "drupal/message": "^1.2",
         "drupal/metatag": "^1.15",
         "drupal/node_read_time": "^1.3",
         "drupal/openapi": "^2.0@RC",
         "drupal/openapi_rest": "^2.0@RC",
-        "drupal/profile": "^1.2",
-        "drupal/restui": "^1.19",
         "drupal/paragraph_view_mode": "^2.0",
         "drupal/paragraphs": "^1.12",
+        "drupal/profile": "^1.2",
         "drupal/publication_date": "^2.0@beta",
+        "drupal/restui": "^1.19",
+        "drupal/route_condition": "^2.0",
         "drupal/scheduler": "^1.3",
         "drupal/scheduler_content_moderation_integration": "^1.3",
+        "drupal/search_api_solr": "^4.1",
+        "drupal/smart_trim": "^1.3",
+        "drupal/twig_field_value": "^2.0",
         "drupal/typed_link": "^1.1",
+        "drupal/ui_patterns": "^1.2",
         "drupal/views_bulk_operations": "^3.10",
         "drush/drush": "^9.0",
         "openeuropa/composer-artifacts": "~0.1",
         "openeuropa/oe_media": "dev-ISSUE-160-Drupal-9-support as 1.11.0",
-        "openeuropa/oe_profile": "^0.4",
         "openeuropa/oe_time_caching": "dev-ISSUE-6-Drupal-9-support as 1.0.0",
-        "openeuropa/oe_theme": "dev-Issue-737_Fix_drupal_9_compatibilities as 2.15.1",
+        "openeuropa/oe_webtools": "dev-ISSUE-153-Drupal-9-support as 1.11.0",
+        "openeuropa/ecl-twig-loader": "^2.1",
         "webflo/drupal-finder": "^1.0",
-        "webmozart/path-util": "^2.3",
-        "openeuropa/oe_webtools": "dev-ISSUE-153-Drupal-9-support as 1.11.0"
+        "webmozart/path-util": "^2.3"
     },
     "require-dev": {
-        "drupal/core-dev": "^9.1",
+        "drupal/core-dev": "^8.7",
         "drupal/devel": "^4.1",
         "drupal/drupal-extension": "~4.0",
         "ec-europa/toolkit": "~4.0.0-beta7"
@@ -63,20 +69,18 @@
         },
         "oe_media_fork": {
             "url": "https://github.com/didierdemaeyer/oe_media.git",
-            "type": "vcs"
+            "type": "git",
+            "reference": "origin/ISSUE-160-Drupal-9-support"
         },
         "oe_time_caching_fork": {
             "url": "https://github.com/didierdemaeyer/oe_time_caching.git",
-            "type": "vcs"
+            "type": "git",
+            "reference": "origin/ISSUE-6-Drupal-9-support"
         },
         "oe_webtools_fork": {
             "url": "https://github.com/didierdemaeyer/oe_webtools.git",
-            "type": "vcs"
-        },
-        "oe_theme_fork": {
-            "url": "https://github.com/4hardfire/oe_theme.git",
             "type": "git",
-            "reference": "origin/Issue-737_Fix_drupal_9_compatibilities"
+            "reference": "origin/ISSUE-153-Drupal-9-support"
         }
     },
     "extra": {

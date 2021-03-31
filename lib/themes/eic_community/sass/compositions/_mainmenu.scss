@@ -19,7 +19,7 @@
     padding-right: map-get($ecl-spacing, 'xs');
     border-right: solid 1px currentColor;
     font-weight: $ecl-font-weight-bold;
-    @include ecl-responsive-font('meta');
+    @include ecl-responsive-font('label');
 
     @include ecl-media-breakpoint-up('lg') {
       display: block;
@@ -41,7 +41,7 @@
   }
 
   .ecl-menu__link {
-    @include ecl-responsive-font('meta');
+    @include ecl-responsive-font('label');
   }
 
   &__searchform {
@@ -72,16 +72,12 @@
     }
 
     .ecl-text-input {
-      @include ecl-media-breakpoint-down('xs') {
-        position: absolute;
-        top: 0;
-        right: 100%;
-      }
-
       border-top-left-radius: map-get($ecl-spacing, '2xs');
       border-bottom-left-radius: map-get($ecl-spacing, '2xs');
-      @include ecl-responsive-font('meta');
+      @include ecl-responsive-font('label');
       padding: map-get($ecl-spacing, 'xs');
+
+      @include placeholder-color(map-get($ecl-colors, 'blue-25'));
     }
 
     .ecl-button {

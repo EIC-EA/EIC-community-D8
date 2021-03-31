@@ -1,0 +1,112 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - group
+    - route_condition
+name: group_group_homepage
+label: 'Group - Group homepage'
+group: Groups
+description: 'Group group type homepage'
+requireAllConditions: true
+disabled: false
+conditions:
+  route:
+    id: route
+    routes: entity.group.canonical
+    negate: false
+    uuid: 3ddae2df-50c1-4419-b826-804ea96fcc07
+    context_mapping: {  }
+  group_type:
+    id: group_type
+    group_types:
+      group: group
+    negate: 0
+    uuid: efd9045b-7859-4375-b6bd-3c8ba6bf8fa0
+    context_mapping:
+      group: '@group.group_route_context:group'
+reactions:
+  blocks:
+    blocks:
+      3a090b19-4584-4fb0-bc17-47df386de8da:
+        id: 'views_block:group_discussions-block_1'
+        label: ''
+        provider: views
+        label_display: visible
+        views_label: ''
+        items_per_page: none
+        region: content
+        weight: '0'
+        context_mapping: {  }
+        custom_id: views_block_group_discussions_block_1
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: group_group_homepage
+        uuid: 3a090b19-4584-4fb0-bc17-47df386de8da
+      5d7c3ce0-d0fc-4267-912b-52115526298f:
+        id: 'views_block:group_documents-block_1'
+        label: ''
+        provider: views
+        label_display: visible
+        views_label: ''
+        items_per_page: none
+        region: content
+        weight: '1'
+        context_mapping: { }
+        custom_id: views_block_group_documents_block_1
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: group_group_homepage
+        uuid: 5d7c3ce0-d0fc-4267-912b-52115526298f
+      3fc74879-9f2f-4f36-a94c-bd5dd6938596:
+        id: eic_group_header
+        label: 'EIC Group header'
+        provider: eic_groups
+        label_display: '0'
+        region: page_header
+        weight: '0'
+        context_mapping:
+          group: '@group.group_route_context:group'
+        custom_id: eic_group_header
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: group_group_homepage
+        uuid: 3fc74879-9f2f-4f36-a94c-bd5dd6938596
+      245a6924-137e-4daf-a868-9a8a414047a2:
+        id: system_breadcrumb_block
+        label: Breadcrumbs
+        provider: system
+        label_display: '0'
+        region: breadcrumbs
+        weight: '0'
+        context_mapping: {  }
+        custom_id: system_breadcrumb_block
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: group_group_homepage
+        uuid: 245a6924-137e-4daf-a868-9a8a414047a2
+      a12c24ef-18fa-49a2-9b47-5d87b945f86e:
+        id: 'views_block:group_related_news_stories-block_related_news_stories'
+        label: ''
+        provider: views
+        label_display: '0'
+        views_label: ''
+        items_per_page: none
+        region: content
+        weight: '0'
+        context_mapping: {  }
+        custom_id: views_block_group_related_news_stories
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: group_group_homepage
+        uuid: a12c24ef-18fa-49a2-9b47-5d87b945f86e
+    id: blocks
+    saved: false
+    uuid: db598f5e-00b5-4ba6-b443-bbe6d3ca2c59
+    include_default_blocks: 0
+weight: 0

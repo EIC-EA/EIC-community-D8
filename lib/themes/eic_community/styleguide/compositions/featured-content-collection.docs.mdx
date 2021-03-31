@@ -11,6 +11,8 @@ Section container that can be displayed within a 3 column or 4 column grid.
 | Key             | Type     | Description                                                                                                 | Mandatory |     |
 | --------------- | -------- | ----------------------------------------------------------------------------------------------------------- | --------- | --- |
 | title           | string   | The title to display above the card overview.                                                               | no        |     |
+| is_collapsible  | boolean  | Show only the first 2 items, the other items can be expanded.                                               | no        |     |
+| collapse_label  | string   | Defines the label for the button that will show the collapsed items.                                        | no        |     |
 | description     | string   | The description that will be displayed below the title.                                                     | no        |     |
 | items           | object[] | Displays the defined cards within the overview.                                                             | no        |     |
 | items[].content | string   | The rendered content for the current overview item.                                                         | -         |     |

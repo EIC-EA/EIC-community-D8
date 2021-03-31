@@ -1,48 +1,49 @@
 {% set title_element = title_element|default('h2') %}
 
-<section class="ecl-section-wrapper {{ invert ? 'ecl-section-wrapper--is-white' : 'ecl-section-wrapper--is-grey' }} ecl-auth-banner {{ extra_classes }}">
+<section class="ecl-section-wrapper {{ invert ? 'ecl-section-wrapper--is-white' : 'ecl-section-wrapper--is-grey ecl-auth-banner' }} {{ extra_classes }}">
   <div class="ecl-container">
     <div class="ecl-auth-banner__wrapper">
       {% block before %}{% endblock %}
 
       {% embed "@theme/patterns/components/well.html.twig" with {
-        extra_classes: invert ? 'ecl-well--is-centered ecl-well--is-grey',
+        extra_classes: invert ? 'ecl-well--is-centered ecl-well--is-grey' : 'ecl-well--is-white',
       } %}
         {% block content %}
-            {% if title is not empty %}
-              <{{ title_element }} class="ecl-auth-banner__title">{{ title }}</{{ title_element }}>
+          {% if title is not empty %}
+            <{{ title_element }} class="ecl-auth-banner__title">{{ title }}</{{ title_element }}>
+          {% endif %}
+          <div class="ecl-auth-banner__actions">
+            {% if login is not empty %}
+              <div class="ecl-auth-banner__action">
+                {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with {
+                  link: {
+                    icon_position: 'after',
+                    type: 'standalone',
+                    label: login.label,
+                    path: login.path
+                  },
+                  extra_classes: 'ecl-link--button ecl-link--button-primary',
+                } only %}
+              </div>
             {% endif %}
-            <div class="ecl-auth-banner__actions">
-              {% if login is not empty %}
-                <div class="ecl-auth-banner__action">
-                  {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with {
-                    link: {
-                      icon_position: 'after',
-                      type: 'standalone',
-                      label: login.label
-                    },
-                    extra_classes: 'ecl-link--button ecl-link--button-primary',
-                  } only %}
-                </div>
-              {% endif %}
 
-              {% if register is not empty %}
-                <div class="ecl-auth-banner__action">
-                  {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with {
-                    link: {
-                      type: 'standalone',
-                      label: register.label,
-                      path: register.path,
-                    },
-                    extra_classes: 'ecl-link--button ecl-link--button-call'
-                  } only %}
-                </div>
-              {% endif %}
-            </div>
+            {% if register is not empty %}
+              <div class="ecl-auth-banner__action">
+                {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with {
+                  link: {
+                    type: 'standalone',
+                    label: register.label,
+                    path: register.path,
+                  },
+                  extra_classes: 'ecl-link--button ecl-link--button-primary'
+                } only %}
+              </div>
+            {% endif %}
           </div>
         {% endblock %}
       {% endembed %}
 
       {% block after %}{% endblock %}
+    </div>
   </div>
 </section>

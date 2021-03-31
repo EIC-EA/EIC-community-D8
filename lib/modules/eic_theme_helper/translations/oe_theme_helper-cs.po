@@ -1,0 +1,278 @@
+msgid ""
+msgstr ""
+
+msgid "Organisation type"
+msgstr "Typ organizace"
+
+msgid "Show @numb more items"
+msgstr "Zobrazit další položky: @numb"
+
+msgid "When"
+msgstr "Kdy"
+
+msgid "Where"
+msgstr "Kde"
+
+msgid "Organiser"
+msgstr "Organizátor/Organizátorka"
+
+msgid "Website"
+msgstr "Internetové stránky"
+
+msgid "Social media"
+msgstr "Sociální média"
+
+msgid "Number of seats"
+msgstr "Počet míst k sezení"
+
+msgid "Entrance fee"
+msgstr "Vstupní poplatek"
+
+msgid "Book your seat, @time_left left to register, registration will end on @end_date"
+msgstr "Zarezervujte si místo. Do konce registrace zbývá: @time_left. Konec registrace: @end_date."
+
+msgid "Registration will open in @time_left. You can register from @start_date, until @end_date."
+msgstr "Registrace bude zahájena za @time_left dní. Můžete se zaregistrovat od @start_date do @end_date."
+
+msgid "Registration period ended on @date."
+msgstr "Registrace skončila @end_date."
+
+msgid "Postal address"
+msgstr "Poštovní adresa"
+
+msgid "Authors"
+msgstr "Autoři"
+
+msgid "Department"
+msgstr "Útvar"
+
+msgid "Project duration"
+msgstr "Doba trvání projektu"
+
+msgid "Project website"
+msgstr "Internetové stránky projektu"
+
+msgid "Contact organisation"
+msgstr "Kontaktní organizace"
+
+msgid "Call status: @label"
+msgstr "Status výzvy: @label"
+
+msgid "Press contacts"
+msgstr "Kontakty pro tisk a média"
+
+msgid "Call for tenders"
+msgstr "Výzva k podávání nabídek"
+
+msgid "Related links"
+msgstr "Související odkazy"
+
+msgid "Practical information"
+msgstr "Praktické informace"
+
+msgid "Phone number"
+msgstr "Telefonní číslo"
+
+msgid "Opening date"
+msgstr "Datum zahájení"
+
+msgid "Deadline date"
+msgstr "Lhůta (datum)"
+
+msgid "Deadline dates"
+msgstr "Lhůty"
+
+msgid "Publication date"
+msgstr "Datum vydání publikace"
+
+msgid "Author"
+msgstr "Autor /Autorka"
+
+msgid "Location"
+msgstr "Místo konání"
+
+msgid "News type"
+msgstr "Typ aktuality"
+
+msgid "Project locations"
+msgstr "Místa realizace projektu"
+
+msgid "Overall budget"
+msgstr "Celkový rozpočet"
+
+msgid "EU contribution"
+msgstr "Příspěvek EU"
+
+msgid "Departments"
+msgstr "Útvary"
+
+msgid "Results"
+msgstr "Výsledky"
+
+msgid "Stakeholders"
+msgstr "Zúčastněné strany"
+
+msgid "Coordinators"
+msgstr "Koordinátoři"
+
+msgid "Participants"
+msgstr "Účastníci"
+
+msgid "Country"
+msgstr "Země"
+
+msgid "Countries"
+msgstr "Země"
+
+msgid "EU Organisation"
+msgstr "Organizace EU"
+
+msgid "Non-EU organisation"
+msgstr "Organizace mimo EU"
+
+msgid "Reference"
+msgstr "Odkaz"
+
+msgid "Upcoming"
+msgstr "Plánované"
+
+msgid "Open"
+msgstr "Probíhá"
+
+msgid "Closed"
+msgstr "ukončeno"
+
+msgid "Details"
+msgstr "Podrobnosti"
+
+msgid "Status"
+msgstr "Status"
+
+msgid "Publication"
+msgstr "Publikace"
+
+msgid "Description"
+msgstr "Popis"
+
+msgid "Email"
+msgstr "E-mail"
+
+msgid "Contact"
+msgstr "Kontakt"
+
+msgid "Contacts"
+msgstr "Kontakty"
+
+msgid "Organisation"
+msgstr "Organizace"
+
+msgid "Fax number"
+msgstr "Číslo faxu"
+
+msgid "Mobile number"
+msgstr "Mobilní telefon"
+
+msgid "Office"
+msgstr "Kancelář"
+
+msgid "Documents"
+msgstr "Dokumenty"
+
+msgid "Funding"
+msgstr "Financování"
+
+msgid "As planned"
+msgstr "Plánovaný / Plánovaná / Plánováno"
+
+msgid "Cancelled"
+msgstr "zrušeno"
+
+msgid "Rescheduled"
+msgstr "Změna termínu"
+
+msgid "Postponed"
+msgstr "Odloženo"
+
+msgid "Address"
+msgstr "Adresa"
+
+msgid "Live stream"
+msgstr "Živý přenos"
+
+msgid "Live streaming available"
+msgstr "Živý přenos je k dispozici"
+
+msgid "Project"
+msgstr "Projekt"
+
+msgid "Publication type"
+msgstr "Typ publikace"
+
+msgid "Call for proposals"
+msgstr "Výzva k podávání návrhů"
+
+msgid "Funding programme"
+msgstr "Program financování"
+
+msgid "Deadline model"
+msgstr "Druh lhůty"
+
+msgid "Single-stage"
+msgstr "Jednostupňové"
+
+msgid "Two-stage"
+msgstr "Dvoufázové"
+
+msgid "Multiple cut-off"
+msgstr "Několik termínů"
+
+msgid "Permanent"
+msgstr "Stálý"
+
+msgid "in"
+msgstr "v"
+
+msgid "Contact us"
+msgstr "Kontakt"
+
+msgid "Follow us"
+msgstr "Sledujte nás"
+
+msgid "About us"
+msgstr "O nás"
+
+msgid "Related sites"
+msgstr "Související stránky"
+
+msgid "More information on:"
+msgstr "Více informací na:"
+
+msgid "Discover more on @link"
+msgstr "Další informace @link"
+
+msgid "This site is managed by the @name"
+msgstr "Tento web spravuje @name"
+
+msgid "This site is managed by the European Commission, @name"
+msgstr "Tento web spravuje Evropská komise, @name"
+
+msgid "Last updated on: @date"
+msgstr "Poslední aktualizace: @date"
+
+msgid "File"
+msgstr "Soubor"
+
+msgid "Files"
+msgstr "Soubory"
+
+msgid "Identification"
+msgstr "Identifikace"
+
+msgid "Identifications"
+msgstr "Identifikace"
+
+msgid "Related department"
+msgstr "Zapojený útvar"
+
+msgid "Related departments"
+msgstr "Zapojené útvary"

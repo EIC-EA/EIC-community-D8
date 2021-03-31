@@ -5,7 +5,7 @@
  * Prepares variables for node page template.
  */
 
-use Drupal\oe_theme\ValueObject\ImageValueObject;
+use Drupal\eic_community\ValueObject\ImageValueObject;
 
 /**
  * Implements hook_preprocess_node() for page node.

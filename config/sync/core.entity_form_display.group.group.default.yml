@@ -8,6 +8,7 @@ dependencies:
     - field.field.group.group.field_membership_open_request
     - field.field.group.group.field_message_to_site_admin
     - field.field.group.group.field_related_groups
+    - field.field.group.group.field_related_news_stories
     - field.field.group.group.field_thumbnail
     - field.field.group.group.field_vocab_geo
     - field.field.group.group.field_vocab_topics
@@ -23,7 +24,7 @@ bundle: group
 mode: default
 content:
   field_body:
-    weight: 4
+    weight: 5
     settings:
       rows: 5
       placeholder: ''
@@ -32,7 +33,7 @@ content:
     region: content
   field_hero:
     type: media_library_widget
-    weight: 3
+    weight: 4
     settings:
       media_types: {  }
     third_party_settings: {  }
@@ -45,7 +46,7 @@ content:
     type: boolean_checkbox
     region: content
   field_message_to_site_admin:
-    weight: 8
+    weight: 10
     settings:
       rows: 5
       placeholder: ''
@@ -53,7 +54,17 @@ content:
     type: text_textarea
     region: content
   field_related_groups:
-    weight: 5
+    weight: 6
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: entity_reference_autocomplete
+    region: content
+  field_related_news_stories:
+    weight: 7
     settings:
       match_operator: CONTAINS
       match_limit: 10
@@ -64,13 +75,13 @@ content:
     region: content
   field_thumbnail:
     type: media_library_widget
-    weight: 2
+    weight: 3
     settings:
       media_types: {  }
     third_party_settings: {  }
     region: content
   field_vocab_geo:
-    weight: 7
+    weight: 9
     settings:
       match_operator: CONTAINS
       match_limit: 10
@@ -80,7 +91,7 @@ content:
     type: entity_reference_autocomplete
     region: content
   field_vocab_topics:
-    weight: 6
+    weight: 8
     settings:
       match_operator: CONTAINS
       match_limit: 10
@@ -90,7 +101,7 @@ content:
     type: entity_reference_autocomplete
     region: content
   field_welcome_message:
-    weight: 9
+    weight: 11
     settings:
       rows: 5
       placeholder: ''
@@ -105,9 +116,16 @@ content:
       size: 60
       placeholder: ''
     third_party_settings: {  }
+  langcode:
+    type: language_select
+    weight: 2
+    region: content
+    settings:
+      include_locked: true
+    third_party_settings: {  }
   path:
     type: path
-    weight: 10
+    weight: 12
     region: content
     settings: {  }
     third_party_settings: {  }

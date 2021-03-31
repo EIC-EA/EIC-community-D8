@@ -1,0 +1,54 @@
+uuid: ce2f9e5d-3d64-4f0c-a9ff-980cc1b090c5
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.group.teaser
+    - field.field.group.group.field_body
+    - field.field.group.group.field_hero
+    - field.field.group.group.field_membership_open_request
+    - field.field.group.group.field_message_to_site_admin
+    - field.field.group.group.field_related_groups
+    - field.field.group.group.field_thumbnail
+    - field.field.group.group.field_vocab_geo
+    - field.field.group.group.field_vocab_topics
+    - field.field.group.group.field_welcome_message
+    - group.type.group
+  module:
+    - user
+id: group.group.teaser
+targetEntityType: group
+bundle: group
+mode: teaser
+content:
+  field_thumbnail:
+    type: entity_reference_entity_view
+    weight: 0
+    label: hidden
+    settings:
+      view_mode: default
+      link: false
+    third_party_settings: {  }
+    region: content
+  uid:
+    type: author
+    weight: 1
+    region: content
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  changed: true
+  created: true
+  field_body: true
+  field_hero: true
+  field_membership_open_request: true
+  field_message_to_site_admin: true
+  field_related_groups: true
+  field_related_news_stories: true
+  field_vocab_geo: true
+  field_vocab_topics: true
+  field_welcome_message: true
+  label: true
+  langcode: true
+  search_api_excerpt: true

@@ -1,0 +1,5 @@
+{% embed "@theme/patterns/compositions/comment/comment-form.html.twig" with comment_form|default({}) %}
+  {% block form %}
+    {{ children }}
+  {% endblock %}
+{% endembed %}

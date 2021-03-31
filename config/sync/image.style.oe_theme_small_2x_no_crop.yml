@@ -3,7 +3,7 @@ langcode: en
 status: true
 dependencies:
   module:
-    - oe_theme_helper
+    - eic_theme_helper
 _core:
   default_config_hash: fzI3GcJrWK-5Q3UsMTwz9zG7i39QyAztDB0SkjbArzE
 name: oe_theme_small_2x_no_crop

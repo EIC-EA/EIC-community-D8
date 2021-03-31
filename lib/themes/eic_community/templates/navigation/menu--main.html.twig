@@ -1,0 +1,15 @@
+{#
+/**
+ * @file
+ * Theme override to display a menu.
+ *
+ * @see ./core/themes/stable/templates/navigation/menu.html.twig
+ */
+#}
+{% if links %}
+  {{ pattern('navigation_menu', {
+    label: 'Menu'|t,
+    items: links,
+    variant: 'vertical',
+  }) }}
+{% endif %}

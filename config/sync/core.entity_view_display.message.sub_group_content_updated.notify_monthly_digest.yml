@@ -1,0 +1,22 @@
+uuid: 0361bd1d-08a2-415c-9e27-c6a94b649f4a
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.message.notify_monthly_digest
+    - field.field.message.sub_group_content_updated.field_event_executing_user
+    - message.template.sub_group_content_updated
+id: message.sub_group_content_updated.notify_monthly_digest
+targetEntityType: message
+bundle: sub_group_content_updated
+mode: notify_monthly_digest
+content:
+  partial_2:
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  field_event_executing_user: true
+  partial_0: true
+  partial_1: true

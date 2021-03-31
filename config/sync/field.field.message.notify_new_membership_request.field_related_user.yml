@@ -1,0 +1,28 @@
+uuid: fa66fcc4-3e6c-4a2d-bc50-798976756f33
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.message.field_related_user
+    - message.template.notify_new_membership_request
+id: message.notify_new_membership_request.field_related_user
+field_name: field_related_user
+entity_type: message
+bundle: notify_new_membership_request
+label: 'New Member'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:user'
+  handler_settings:
+    include_anonymous: false
+    filter:
+      type: _none
+    target_bundles: null
+    sort:
+      field: _none
+    auto_create: false
+field_type: entity_reference
