@@ -21,3 +21,4 @@ hidden:
   field_event_executing_user: true
   field_group_ref: true
   partial_0: true
+  search_api_excerpt: true
