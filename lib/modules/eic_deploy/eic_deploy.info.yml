@@ -1,0 +1,7 @@
+name: EIC Deploy
+type: module
+description: Code to assist with deployments that can not naturally be added to a specific module.
+package: European Innovation Council
+core: 8.x
+core_version_requirement: ^8 || ^9
+php: 7.3

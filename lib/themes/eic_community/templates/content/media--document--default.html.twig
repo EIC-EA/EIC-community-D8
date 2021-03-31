@@ -1,0 +1,15 @@
+{#
+/**
+ * @file
+ * Theme override to display a media item.
+ *
+ * @see ./core/themes/stable/templates/content/media.html.twig
+ */
+#}
+{% if file %}
+  {{ pattern('file_translation', {
+    'button_label': 'Download'|t,
+    'file': file,
+    'translations': translations|default([]),
+  }) }}
+{% endif %}

@@ -1,7 +1,9 @@
 {% extends "@theme/patterns/layout/base.html.twig" %}
 
+{% set title_element = title_element|default('h1') %}
+
 {% block page_header %}
-  {% include "@theme/patterns/compositions/editorial-header.html.twig" with editorial_header|default({})|without('actions')|merge({
+  {% include "@theme/patterns/compositions/editorial-header.html.twig" with editorial_header|default({})|without('title')|merge({
     icon_file_path: common.icon_file_path,
     extra_classes: 'ecl-editorial-header--is-compact',
   }) only %}
@@ -10,6 +12,10 @@
 {% block content %}
   {% embed "@theme/patterns/compositions/editorial-article.html.twig" with editorial_article|default({}) %}
     {% block content %}
+      {% if editorial_header.title|default(title) %}
+        <{{ title_element }}>{{ editorial_header.title|default(title) }}</{{ title_element}}>
+      {% endif %}
+
       {{ content }}
 
       {% if author or timestamp %}

@@ -5,8 +5,10 @@
  * Functions to support theming.
  */
 
-// Define constant variable for the `./includes/preprocess` directory.
-define('INCLUDES_PREPROCESS_FOLDER', 'includes/preprocess');
+// Define constant for the includes folder. This .theme file should contain as
+// little code as possible. Instead, place theme implementations in separate
+// files.
+define('INCLUDES_FOLDER', 'includes');
 
 /**
  * Includes a theme file.
@@ -46,6 +48,6 @@ function eic_community_scan_include_files($folder) {
 /**
  * Scan and include files from preprocess folder.
  */
-if (is_dir(__DIR__ . '/' . INCLUDES_PREPROCESS_FOLDER)) {
-  eic_community_scan_include_files(INCLUDES_PREPROCESS_FOLDER);
+if (is_dir(__DIR__ . '/' . INCLUDES_FOLDER)) {
+  eic_community_scan_include_files(INCLUDES_FOLDER);
 }

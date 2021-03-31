@@ -5,6 +5,10 @@
     color: ecl-typography('color', 'meta');
   }
 
+  &--full {
+    display: block;
+  }
+
   body &--button {
     @extend .ecl-button;
 

@@ -49,16 +49,8 @@
 
   &__content {
     flex-grow: 1;
-
-    @include ecl-media-breakpoint-down('sm') {
-      display: flex;
-      flex-direction: column;
-    }
-
-    #{$node}--has-compact-layout & {
-      display: flex;
-      flex-direction: column;
-    }
+    display: flex;
+    flex-direction: column;
   }
 
   &__title {
@@ -67,6 +59,7 @@
   }
 
   &__description {
+    margin-top: 0;
     @include ecl-responsive-font('label');
 
     #{$node}--has-compact-layout & {
@@ -97,8 +90,7 @@
   &__highlight {
     margin-left: auto;
     background-color: transparent;
-    color: map-get($ecl-colors, 'black');
-    opacity: 0.4;
+    color: map-get($ecl-colors, 'blue-25');
     line-height: 0;
     outline: none;
     border: 0;
@@ -109,13 +101,13 @@
       position: absolute;
       content: " ";
       top: 50%;
+      display: block;
       left: 50%;
-      background-color: map-get($ecl-colors, 'black');
-      display: none;
       transform: translate(-50%, -50%);
       width: 40%;
       height: 40%;
       border-radius: 50%;
+      background-color: map-get($ecl-colors, 'white');
     }
 
     &:hover,
@@ -124,7 +116,7 @@
       opacity: 1;
 
       &::before {
-        display: block;
+        background-color: map-get($ecl-colors, 'black');
       }
     }
   }
@@ -139,17 +131,6 @@
     display: flex;
     justify-content: space-between;
     order: 1;
-
-    @include ecl-media-breakpoint-up('md') {
-      margin-top: 0;
-      margin-bottom: ecl-box-model('padding');
-      order: 0;
-
-      #{$node}--has-compact-layout & {
-        order: 1;
-        margin-bottom: 0;
-      }
-    }
   }
 
   &__meta,
@@ -252,7 +233,7 @@
     background-color: map-get($ecl-colors, 'white');
     text-decoration: none;
     color: ecl-typography('color', 'title');
-    padding: map-get($ecl-spacing, 'xs') map-get($ecl-spacing, 's');
+    padding: map-get($ecl-spacing, '2xs') map-get($ecl-spacing, 'xs');
   }
 
   &__comment-thread {

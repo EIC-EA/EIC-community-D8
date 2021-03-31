@@ -5,7 +5,7 @@ dependencies:
   config:
     - system.menu.main
   module:
-    - oe_theme_helper
+    - eic_theme_helper
   theme:
     - eic_community
 _core:
@@ -15,16 +15,16 @@ theme: eic_community
 region: navigation
 weight: 0
 provider: null
-plugin: 'oe_theme_helper_site_navigation:main'
+plugin: 'eic_theme_helper_site_navigation:main'
 settings:
-  id: 'oe_theme_helper_site_navigation:main'
+  id: 'eic_theme_helper_site_navigation:main'
   label: 'Main navigation'
-  provider: oe_theme_helper
+  provider: eic_theme_helper
   label_display: '0'
   level: 1
 visibility:
-  oe_theme_helper_current_branding:
-    id: oe_theme_helper_current_branding
+  eic_theme_helper_current_branding:
+    id: eic_theme_helper_current_branding
     branding: standardised
     negate: false
     context_mapping: {  }

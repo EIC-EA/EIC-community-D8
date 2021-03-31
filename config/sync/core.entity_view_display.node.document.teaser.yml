@@ -42,7 +42,7 @@ content:
       link: false
     third_party_settings: {  }
 hidden:
-  extra_field_oe_theme_helper_short_title_with_fallback: true
+  extra_field_eic_theme_helper_short_title_with_fallback: true
   langcode: true
   links: true
   published_at: true
