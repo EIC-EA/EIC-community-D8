@@ -8,6 +8,18 @@
 #}
 <div class="ecl-section-wrapper ecl-section-wrapper--has-compact-layout">
   <div class="ecl-container">
-    {% include "@oe_theme/navigation/menu-local-tasks.html.twig" %}
+    {% if primary %}
+      {% include '@eic_community/compositions/ec-component-navigation/local-tasks.html.twig' with {
+        title: 'Primary tabs'|t,
+        links: primary_links
+      } %}
+    {% endif %}
+    {% if secondary %}
+      {% include '@eic_community/compositions/ec-component-navigation/local-tasks.html.twig' with {
+        title: 'Secondary tabs'|t,
+        links: secondary_links,
+        variant: 'secondary'
+      } %}
+    {% endif %}
   </div>
 </div>
