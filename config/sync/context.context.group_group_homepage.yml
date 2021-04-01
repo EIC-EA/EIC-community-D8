@@ -56,7 +56,7 @@ reactions:
         items_per_page: none
         region: content
         weight: '1'
-        context_mapping: { }
+        context_mapping: {  }
         custom_id: views_block_group_documents_block_1
         theme: eic_community
         css_class: ''
