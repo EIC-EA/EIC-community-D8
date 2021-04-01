@@ -44,10 +44,10 @@
         "drupal/views_bulk_operations": "^3.10",
         "drush/drush": "^9.0",
         "openeuropa/composer-artifacts": "~0.1",
-        "openeuropa/oe_media": "dev-ISSUE-160-Drupal-9-support as 1.11.0",
+        "openeuropa/ecl-twig-loader": "^2.1",
+        "openeuropa/oe_media": "dev-ISSUE-160-Drupal-9-support-without-media_avportal as 1.11.0",
         "openeuropa/oe_time_caching": "dev-ISSUE-6-Drupal-9-support as 1.0.0",
         "openeuropa/oe_webtools": "dev-ISSUE-153-Drupal-9-support as 1.11.0",
-        "openeuropa/ecl-twig-loader": "^2.1",
         "webflo/drupal-finder": "^1.0",
         "webmozart/path-util": "^2.3"
     },
@@ -70,7 +70,7 @@
         "oe_media_fork": {
             "url": "https://github.com/didierdemaeyer/oe_media.git",
             "type": "git",
-            "reference": "origin/ISSUE-160-Drupal-9-support"
+            "reference": "origin/ISSUE-160-Drupal-9-support-without-media_avportal"
         },
         "oe_time_caching_fork": {
             "url": "https://github.com/didierdemaeyer/oe_time_caching.git",

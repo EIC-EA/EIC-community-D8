@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3f305544932b44110d5690b9cde1b934",
+    "content-hash": "91f80f340ca353e8fba922e44d99ab54",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -3666,137 +3666,6 @@
             }
         },
         {
-            "name": "drupal/media_avportal",
-            "version": "1.0.0-beta11",
-            "source": {
-                "type": "git",
-                "url": "https://git.drupalcode.org/project/media_avportal.git",
-                "reference": "8.x-1.0-beta11"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/media_avportal-8.x-1.0-beta11.zip",
-                "reference": "8.x-1.0-beta11",
-                "shasum": "889d31a49ecdee8dc758f58c7988111330484d7c"
-            },
-            "require": {
-                "drupal/core": "^8.7",
-                "drupal/remote_stream_wrapper": "^1.5",
-                "php": ">=7.2"
-            },
-            "require-dev": {
-                "behat/mink-selenium2-driver": "1.4.x-dev as 1.3.x-dev",
-                "composer/installers": "~1.5",
-                "cweagans/composer-patches": "^1.6",
-                "drupal-composer/drupal-scaffold": "~2.5.2",
-                "drupal/config_devel": "~1.2",
-                "drupal/drupal-extension": "~4.0",
-                "drush/drush": "~9.0",
-                "guzzlehttp/guzzle": "^6.3",
-                "nikic/php-parser": "^3.1.5",
-                "openeuropa/code-review": "~1.0@beta",
-                "openeuropa/drupal-core-require-dev": "^8.7",
-                "openeuropa/task-runner": "^1.0.0-beta5",
-                "phpunit/phpunit": "~6.0"
-            },
-            "type": "drupal-module",
-            "extra": {
-                "drupal": {
-                    "version": "8.x-1.0-beta11",
-                    "datestamp": "1607016595",
-                    "security-coverage": {
-                        "status": "not-covered",
-                        "message": "Beta releases are not covered by Drupal security advisories."
-                    }
-                },
-                "patches": {
-                    "drupal/remote_stream_wrapper": {
-                        "https://www.drupal.org/project/remote_stream_wrapper/issues/3050183": "https://www.drupal.org/files/issues/2020-08-21/3050183-4.patch"
-                    }
-                },
-                "composer-exit-on-patch-failure": true,
-                "enable-patching": true,
-                "installer-paths": {
-                    "build/core": [
-                        "type:drupal-core"
-                    ],
-                    "build/profiles/contrib/{$name}": [
-                        "type:drupal-profile"
-                    ],
-                    "build/modules/contrib/{$name}": [
-                        "type:drupal-module"
-                    ],
-                    "build/themes/contrib/{$name}": [
-                        "type:drupal-theme"
-                    ]
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Drupal\\media_avportal\\": "./src/"
-                }
-            },
-            "autoload-dev": {
-                "psr-4": {
-                    "Drupal\\Tests\\media_avportal\\": "./tests/"
-                }
-            },
-            "notification-url": "https://packages.drupal.org/8/downloads",
-            "scripts": {
-                "drupal-scaffold": [
-                    "DrupalComposer\\DrupalScaffold\\Plugin::scaffold"
-                ],
-                "post-install-cmd": [
-                    "./vendor/bin/run drupal:site-setup"
-                ],
-                "post-update-cmd": [
-                    "./vendor/bin/run drupal:site-setup"
-                ]
-            },
-            "license": [
-                "EUPL-1.2"
-            ],
-            "authors": [
-                {
-                    "name": "Delphine Lepers",
-                    "homepage": "https://www.drupal.org/user/821730"
-                },
-                {
-                    "name": "albapb",
-                    "homepage": "https://www.drupal.org/user/3572561"
-                },
-                {
-                    "name": "hernani",
-                    "homepage": "https://www.drupal.org/user/448086"
-                },
-                {
-                    "name": "ieguskiza",
-                    "homepage": "https://www.drupal.org/user/2652665"
-                },
-                {
-                    "name": "jyraya",
-                    "homepage": "https://www.drupal.org/user/1210442"
-                },
-                {
-                    "name": "netlooker",
-                    "homepage": "https://www.drupal.org/user/141800"
-                },
-                {
-                    "name": "sardara",
-                    "homepage": "https://www.drupal.org/user/2353864"
-                },
-                {
-                    "name": "stred",
-                    "homepage": "https://www.drupal.org/user/956840"
-                }
-            ],
-            "description": "Media AV Portal adds European Audiovisual Services as a supported media provider.",
-            "homepage": "https://www.drupal.org/project/media_avportal",
-            "support": {
-                "source": "https://git.drupalcode.org/project/media_avportal"
-            }
-        },
-        {
             "name": "drupal/message",
             "version": "1.2.0",
             "source": {
@@ -4363,61 +4232,6 @@
             "homepage": "https://www.drupal.org/project/publication_date",
             "support": {
                 "source": "https://git.drupalcode.org/project/publication_date"
-            }
-        },
-        {
-            "name": "drupal/remote_stream_wrapper",
-            "version": "1.5.0",
-            "source": {
-                "type": "git",
-                "url": "https://git.drupalcode.org/project/remote_stream_wrapper.git",
-                "reference": "8.x-1.5"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/remote_stream_wrapper-8.x-1.5.zip",
-                "reference": "8.x-1.5",
-                "shasum": "1fa53144d3b5d70efc5481f95b6ba36ce927036b"
-            },
-            "require": {
-                "drupal/core": "^8.8 || ^9"
-            },
-            "type": "drupal-module",
-            "extra": {
-                "drupal": {
-                    "version": "8.x-1.5",
-                    "datestamp": "1597938476",
-                    "security-coverage": {
-                        "status": "covered",
-                        "message": "Covered by Drupal's security advisory policy"
-                    }
-                },
-                "patches_applied": {
-                    "https://www.drupal.org/project/remote_stream_wrapper/issues/3050183": "https://www.drupal.org/files/issues/2020-08-21/3050183-4.patch"
-                }
-            },
-            "notification-url": "https://packages.drupal.org/8/downloads",
-            "license": [
-                "GPL-2.0-or-later"
-            ],
-            "authors": [
-                {
-                    "name": "Dave Reid",
-                    "homepage": "https://www.drupal.org/user/53892"
-                },
-                {
-                    "name": "arthurf",
-                    "homepage": "https://www.drupal.org/user/27259"
-                },
-                {
-                    "name": "becw",
-                    "homepage": "https://www.drupal.org/user/81067"
-                }
-            ],
-            "description": "Provides the ability to use external files over HTTP",
-            "homepage": "https://www.drupal.org/project/remote_stream_wrapper",
-            "support": {
-                "source": "https://git.drupalcode.org/project/remote_stream_wrapper"
             }
         },
         {
@@ -6802,18 +6616,17 @@
         },
         {
             "name": "openeuropa/oe_media",
-            "version": "dev-ISSUE-160-Drupal-9-support",
+            "version": "dev-ISSUE-160-Drupal-9-support-without-media_avportal",
             "source": {
                 "type": "git",
                 "url": "https://github.com/didierdemaeyer/oe_media.git",
-                "reference": "7101206bec94e40576c6fc8820481c10af2818ea"
+                "reference": "f9563b393e44bd25b62e9e12051415db89e89017"
             },
             "require": {
                 "drupal/embed": "^1.0",
                 "drupal/entity_browser": "^2.2",
                 "drupal/file_link": "^2.0.3",
                 "drupal/inline_entity_form": "^1.0",
-                "drupal/media_avportal": "^1.0-beta9",
                 "php": ">=7.2"
             },
             "require-dev": {
@@ -6885,7 +6698,7 @@
                 "EUPL-1.2"
             ],
             "description": "Media features for the OpenEuropa project.",
-            "time": "2021-03-21T21:04:37+00:00"
+            "time": "2021-03-22T15:37:27+00:00"
         },
         {
             "name": "openeuropa/oe_time_caching",
@@ -9691,16 +9504,16 @@
         },
         {
             "name": "symfony/var-dumper",
-            "version": "v4.4.20",
+            "version": "v4.4.21",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/var-dumper.git",
-                "reference": "a1eab2f69906dc83c5ddba4632180260d0ab4f7f"
+                "reference": "0da0e174f728996f5d5072d6a9f0a42259dbc806"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/var-dumper/zipball/a1eab2f69906dc83c5ddba4632180260d0ab4f7f",
-                "reference": "a1eab2f69906dc83c5ddba4632180260d0ab4f7f",
+                "url": "https://api.github.com/repos/symfony/var-dumper/zipball/0da0e174f728996f5d5072d6a9f0a42259dbc806",
+                "reference": "0da0e174f728996f5d5072d6a9f0a42259dbc806",
                 "shasum": ""
             },
             "require": {
@@ -9773,7 +9586,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-01-27T09:09:26+00:00"
+            "time": "2021-03-27T19:49:03+00:00"
         },
         {
             "name": "symfony/yaml",
@@ -10829,16 +10642,16 @@
         },
         {
             "name": "composer/xdebug-handler",
-            "version": "1.4.5",
+            "version": "1.4.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/xdebug-handler.git",
-                "reference": "f28d44c286812c714741478d968104c5e604a1d4"
+                "reference": "f27e06cd9675801df441b3656569b328e04aa37c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/xdebug-handler/zipball/f28d44c286812c714741478d968104c5e604a1d4",
-                "reference": "f28d44c286812c714741478d968104c5e604a1d4",
+                "url": "https://api.github.com/repos/composer/xdebug-handler/zipball/f27e06cd9675801df441b3656569b328e04aa37c",
+                "reference": "f27e06cd9675801df441b3656569b328e04aa37c",
                 "shasum": ""
             },
             "require": {
@@ -10846,7 +10659,8 @@
                 "psr/log": "^1.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "^4.8.35 || ^5.7 || 6.5 - 8"
+                "phpstan/phpstan": "^0.12.55",
+                "symfony/phpunit-bridge": "^4.2 || ^5"
             },
             "type": "library",
             "autoload": {
@@ -10883,7 +10697,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-11-13T08:04:11+00:00"
+            "time": "2021-03-25T17:01:18+00:00"
         },
         {
             "name": "doctrine/instantiator",
@@ -14332,7 +14146,7 @@
         {
             "alias": "1.11.0",
             "alias_normalized": "1.11.0.0",
-            "version": "dev-ISSUE-160-Drupal-9-support",
+            "version": "dev-ISSUE-160-Drupal-9-support-without-media_avportal",
             "package": "openeuropa/oe_media"
         },
         {
