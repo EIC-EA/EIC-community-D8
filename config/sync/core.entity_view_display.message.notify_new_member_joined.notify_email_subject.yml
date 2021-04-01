@@ -23,3 +23,4 @@ hidden:
   field_group_ref: true
   field_related_user: true
   partial_1: true
+  search_api_excerpt: true
