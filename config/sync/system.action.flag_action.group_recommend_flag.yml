@@ -1,0 +1,15 @@
+uuid: b516064b-7b47-4067-a16b-1e5f3c467ee0
+langcode: en
+status: true
+dependencies:
+  config:
+    - flag.flag.group_recommend
+  module:
+    - flag
+id: flag_action.group_recommend_flag
+label: 'Flag this item'
+type: group
+plugin: 'flag_action:group_recommend_flag'
+configuration:
+  flag_id: group_recommend
+  flag_action: flag
