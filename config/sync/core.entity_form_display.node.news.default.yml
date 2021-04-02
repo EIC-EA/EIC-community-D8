@@ -12,6 +12,7 @@ dependencies:
     - field.field.node.news.field_image_caption
     - field.field.node.news.field_introduction
     - field.field.node.news.field_news_paragraphs
+    - field.field.node.news.field_related_groups
     - field.field.node.news.field_related_stories
     - field.field.node.news.field_video
     - field.field.node.news.field_vocab_geo
@@ -110,6 +111,16 @@ content:
       form_display_mode: default
       default_paragraph_type: ''
     third_party_settings: {  }
+    region: content
+  field_related_groups:
+    weight: 32
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: entity_reference_autocomplete
     region: content
   field_related_stories:
     weight: 11
