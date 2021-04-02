@@ -8,7 +8,7 @@ dependencies:
     - image.style.oe_theme_small_2x_no_crop
     - image.style.oe_theme_small_no_crop
   theme:
-    - oe_theme
+    - eic_community
 _core:
   default_config_hash: UJnzGRHPV4nai-nNqm9mtcpMzjvYSb8nk22F_14hCIo
 id: oe_theme_main_content
