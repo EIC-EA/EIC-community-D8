@@ -7,6 +7,7 @@ dependencies:
     - group
     - node
     - search_api
+    - flag_search_api
     - content_moderation
     - flag
     - user
@@ -66,7 +67,7 @@ description: ''
 read_only: false
 field_settings:
   content_created:
-    label: 'Authored on'
+    label: '[Content] Authored on'
     datasource_id: 'entity:node'
     property_path: created
     type: date
@@ -74,7 +75,7 @@ field_settings:
       module:
         - node
   content_field_discussion_type:
-    label: 'Type of Discussion'
+    label: '[Content] Type of Discussion'
     datasource_id: 'entity:node'
     property_path: field_discussion_type
     type: string
@@ -82,7 +83,7 @@ field_settings:
       config:
         - field.storage.node.field_discussion_type
   content_field_subtitle:
-    label: Subtitle
+    label: '[Content] Subtitle'
     datasource_id: 'entity:node'
     property_path: field_subtitle
     type: string
@@ -90,7 +91,7 @@ field_settings:
       config:
         - field.storage.node.field_subtitle
   content_field_vocab_geo:
-    label: 'Regions & Countries'
+    label: '[Content] Regions & Countries'
     datasource_id: 'entity:node'
     property_path: field_vocab_geo
     type: integer
@@ -98,7 +99,7 @@ field_settings:
       config:
         - field.storage.node.field_vocab_geo
   content_field_vocab_topics:
-    label: Topics
+    label: '[Content] Topics'
     datasource_id: 'entity:node'
     property_path: field_vocab_topics
     type: integer
@@ -106,7 +107,7 @@ field_settings:
       config:
         - field.storage.node.field_vocab_topics
   content_title:
-    label: Title
+    label: '[Content] Title'
     datasource_id: 'entity:node'
     property_path: title
     type: string
@@ -114,15 +115,21 @@ field_settings:
       module:
         - node
   content_type:
-    label: 'Content type'
+    label: '[Content] Content type'
     datasource_id: 'entity:node'
     property_path: type
     type: string
     dependencies:
       module:
         - node
+  flag_group_recommend_count:
+    label: 'Group Recommend count'
+    property_path: flag_group_recommend_count
+    type: integer
+    indexed_locked: true
+    type_locked: true
   group_content_entity_id:
-    label: Content
+    label: '[Group content] Content'
     datasource_id: 'entity:group_content'
     property_path: entity_id
     type: integer
@@ -130,7 +137,7 @@ field_settings:
       module:
         - group
   group_content_gid:
-    label: 'Parent group'
+    label: '[Group content] Parent group'
     datasource_id: 'entity:group_content'
     property_path: gid
     type: integer
@@ -138,15 +145,23 @@ field_settings:
       module:
         - group
   group_content_type:
-    label: 'Group content type'
+    label: '[Group content] Group content type'
     datasource_id: 'entity:group_content'
     property_path: type
     type: string
     dependencies:
       module:
         - group
+  group_created:
+    label: '[Group] Created on'
+    datasource_id: 'entity:group'
+    property_path: created
+    type: date
+    dependencies:
+      module:
+        - group
   group_field_body:
-    label: Body
+    label: '[Group] Body'
     datasource_id: 'entity:group'
     property_path: field_body
     type: text
@@ -154,7 +169,7 @@ field_settings:
       config:
         - field.storage.group.field_body
   group_field_vocab_geo:
-    label: 'Region & Countries'
+    label: '[Group] Region & Countries'
     datasource_id: 'entity:group'
     property_path: field_vocab_geo
     type: integer
@@ -162,7 +177,7 @@ field_settings:
       config:
         - field.storage.group.field_vocab_geo
   group_field_vocab_topics:
-    label: Topics
+    label: '[Group] Topics'
     datasource_id: 'entity:group'
     property_path: field_vocab_topics
     type: integer
@@ -170,16 +185,16 @@ field_settings:
       config:
         - field.storage.group.field_vocab_topics
   group_label:
-    label: Title
+    label: '[Group] Title'
     datasource_id: 'entity:group'
     property_path: label
-    type: text
+    type: string
     boost: !!float 3
     dependencies:
       module:
         - group
   group_type:
-    label: 'Group type'
+    label: '[Group] Group type'
     datasource_id: 'entity:group'
     property_path: type
     type: string
@@ -223,10 +238,15 @@ datasource_settings:
 processor_settings:
   add_url: {  }
   aggregated_field: {  }
+  flag_count_indexer:
+    flag_index:
+      - group_recommend
   hierarchy:
     fields:
-      field_vocab_geo: taxonomy_term-parent
-      field_vocab_topics: taxonomy_term-parent
+      content_field_vocab_geo: taxonomy_term-parent
+      content_field_vocab_topics: taxonomy_term-parent
+      group_field_vocab_geo: taxonomy_term-parent
+      group_field_vocab_topics: taxonomy_term-parent
     weights:
       preprocess_index: -45
   language_with_fallback: {  }
