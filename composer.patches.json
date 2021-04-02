@@ -16,6 +16,9 @@
     },
     "drupal/flag": {
       "3168014 - TypeError: Argument 1 passed to Drupal\\flag\\TwigExtension\\FlagCount::count() must implement interface" : "https://www.drupal.org/files/issues/2020-09-06/show-count-for-visitors--3168014-2.patch"
+    },
+    "drupal/flag_search_api": {
+      "3123595 - Add support for global flag status indexing and flag counts" : "https://www.drupal.org/files/issues/2020-07-21/flag-counts-indexer-3123595-1.patch"
     }
   }
 }
