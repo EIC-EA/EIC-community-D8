@@ -35,3 +35,28 @@
   outline: none;
   border: ecl-border('outline');
 }
+
+@mixin placeholder-color($color: currentColor) {
+  &::-webkit-input-placeholder {
+    color: $color;
+  }
+
+  &::-moz-placeholder {
+    color: $color;
+  }
+
+  &:-ms-input-placeholder {
+    color: $color;
+  }
+
+  &:-moz-placeholder {
+    color: $color;
+  }
+}
+
+@mixin adjust-from-section-color() {
+  [class*="ecl-section-wrapper--is-"] [class*="ecl-featured-content"] &,
+  .ecl-section-wrapper:not([class*="ecl-section-wrapper--is-"])~.ecl-section-wrapper:not([class*="ecl-section-wrapper--is-"]):nth-child(2n) & {
+    @content;
+  }
+}

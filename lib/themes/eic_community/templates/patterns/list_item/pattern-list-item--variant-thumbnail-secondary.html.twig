@@ -1,0 +1,16 @@
+{#
+/**
+ * @file
+ * Default theme implementation for a ECL thumbnail list item component.
+ */
+#}
+{% include '@eic_community/patterns/list_item/pattern-list-item.html.twig' with {
+  title: title,
+  url: url,
+  detail: detail,
+  length: length,
+  image: image,
+  image_position: 'after',
+  additional_information: additional_information,
+  meta: meta
+} only %}

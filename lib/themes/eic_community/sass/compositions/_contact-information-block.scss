@@ -186,7 +186,7 @@
 
   &__subtitle,
   &__description {
-    @include ecl-responsive-font('meta');
+    @include ecl-responsive-font('label');
     line-height: ecl-typography('line-height');
   }
 

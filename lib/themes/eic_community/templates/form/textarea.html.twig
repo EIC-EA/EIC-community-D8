@@ -1,0 +1,15 @@
+{#
+/**
+ * @file
+ * Theme override for a 'textarea' #type form element.
+ *
+ * @see ./core/themes/stable/templates/form/textarea.html.twig
+ */
+#}
+
+{% if attributes.hasClass('error') %}
+  {% set attributes = attributes.addClass('ecl-text-area--invalid') %}
+{% endif %}
+<div{{ wrapper_attributes }}>
+  <textarea{{ attributes.addClass('ecl-text-area') }}>{{ value }}</textarea>
+</div>

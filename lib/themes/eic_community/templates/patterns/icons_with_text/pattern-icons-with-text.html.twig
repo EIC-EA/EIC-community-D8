@@ -1,0 +1,11 @@
+{#
+/**
+ * @file
+ * A list of icons with a text.
+ */
+#}
+{% include '@eic_community/compositions/ec-component-icons-with-text/icons-with-text.html.twig' with {
+  'items': items,
+  'icon_path': eic_icon_path,
+  'compact': compact|default(false),
+} only %}

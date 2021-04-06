@@ -1,0 +1,32 @@
+uuid: 08fa6c21-c7b6-472f-a0a3-6b225c3e2293
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.message.notify_group_request_approved.field_group_ref
+    - message.template.notify_group_request_approved
+id: message.notify_group_request_approved.default
+targetEntityType: message
+bundle: notify_group_request_approved
+mode: default
+content:
+  field_group_ref:
+    weight: 1
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+  partial_0:
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  partial_1:
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  search_api_excerpt: true

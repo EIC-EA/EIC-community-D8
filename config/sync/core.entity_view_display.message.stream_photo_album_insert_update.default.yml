@@ -1,0 +1,18 @@
+uuid: d37c6462-19a9-4e66-9f8c-850c8eca6f58
+langcode: en
+status: true
+dependencies:
+  config:
+    - message.template.stream_photo_album_insert_update
+id: message.stream_photo_album_insert_update.default
+targetEntityType: message
+bundle: stream_photo_album_insert_update
+mode: default
+content:
+  partial_0:
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  search_api_excerpt: true

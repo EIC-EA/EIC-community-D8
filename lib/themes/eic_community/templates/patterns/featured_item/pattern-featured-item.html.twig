@@ -1,0 +1,59 @@
+{#
+/**
+ * @file
+ * Featured item pattern.
+ */
+#}
+
+{#
+  In order to replicate the extended functionality we add a button
+  at the end of the description if the variant is set to "extended".
+ #}
+{% if variant == 'extended' %}
+  {% set _description %}
+    {% if description %}
+      <p class="ecl-paragraph">
+        {{ description|smart_trim(length) }}
+      </p>
+    {% endif %}
+    <a href="{{ link.href }}" class="ecl-button ecl-button--call">
+      <span class="ecl-button__container">
+        <span class="ecl-button__label">{{ link.label }}</span>
+        {% include '@ecl-twig/icon' with {
+          icon: {
+            path: eic_icon_path,
+            type: "ui",
+            name: "corner-arrow",
+            size: "xs",
+            transform: "rotate-90"
+          },
+          extra_classes: "ecl-button__icon ecl-button__icon--after"
+        } only %}
+      </span>
+    </a>
+  {% endset %}
+{% endif %}
+
+{% set _footer_items = [] %}
+{% for item in footer_items %}
+  {% set _footer_items = _footer_items|merge([{
+    'label': item.text,
+    'icon': to_ecl_icon(item.icon, 'xs'),
+  }]) %}
+{% endfor %}
+
+{% set card = {
+  'description': _description|default(description|smart_trim(length)),
+  'meta': metas,
+  'title': {
+    'label': title,
+    'path': link.href,
+    'type': "standalone"
+  },
+  'infos': _footer_items,
+  'image': image
+} %}
+
+{% include '@ecl-twig/card' with {
+  'card': card,
+} %}

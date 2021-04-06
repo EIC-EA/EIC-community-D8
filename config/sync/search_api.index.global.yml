@@ -1,0 +1,316 @@
+uuid: 590b9406-6314-4246-a658-8e5ff93d713d
+langcode: en
+status: true
+dependencies:
+  module:
+    - search_api_solr
+    - group
+    - node
+    - profile
+    - search_api
+    - content_moderation
+    - flag
+    - user
+  config:
+    - field.storage.group.field_body
+    - field.storage.group.field_vocab_geo
+    - field.storage.group.field_vocab_topics
+    - field.storage.node.field_vocab_geo
+    - field.storage.node.field_subtitle
+    - field.storage.node.field_vocab_topics
+    - field.storage.node.field_discussion_type
+    - field.storage.user.field_full_name
+    - field.storage.profile.field_body
+    - field.storage.profile.field_vocab_job_title
+    - field.storage.profile.field_vocab_language
+    - field.storage.profile.field_vocab_topic_expertise
+    - field.storage.profile.field_vocab_topic_interest
+    - search_api.server.global
+third_party_settings:
+  search_api_solr:
+    finalize: false
+    commit_before_finalize: false
+    commit_after_finalize: false
+    multilingual:
+      limit_to_content_language: false
+      include_language_independent: true
+    highlighter:
+      maxAnalyzedChars: 51200
+      fragmenter: gap
+      regex:
+        slop: 0.5
+        pattern: blank
+        maxAnalyzedChars: 10000
+      usePhraseHighlighter: true
+      highlightMultiTerm: true
+      preserveMulti: false
+      highlight:
+        mergeContiguous: false
+        requireFieldMatch: false
+        snippets: 3
+        fragsize: 0
+    mlt:
+      mintf: 1
+      mindf: 1
+      maxdf: 0
+      maxdfpct: 0
+      minwl: 0
+      maxwl: 0
+      maxqt: 100
+      maxntp: 2000
+      boost: false
+      interestingTerms: none
+    term_modifiers:
+      slop: 3
+      fuzzy: 1
+    advanced:
+      index_prefix: ''
+      collection: ''
+      timezone: ''
+id: global
+name: Global
+description: ''
+read_only: false
+field_settings:
+  content_created:
+    label: 'Authored on'
+    datasource_id: 'entity:node'
+    property_path: created
+    type: date
+    dependencies:
+      module:
+        - node
+  content_field_discussion_type:
+    label: 'Type of Discussion'
+    datasource_id: 'entity:node'
+    property_path: field_discussion_type
+    type: string
+    dependencies:
+      config:
+        - field.storage.node.field_discussion_type
+  content_field_subtitle:
+    label: Subtitle
+    datasource_id: 'entity:node'
+    property_path: field_subtitle
+    type: string
+    dependencies:
+      config:
+        - field.storage.node.field_subtitle
+  content_field_vocab_geo:
+    label: 'Regions & Countries'
+    datasource_id: 'entity:node'
+    property_path: field_vocab_geo
+    type: integer
+    dependencies:
+      config:
+        - field.storage.node.field_vocab_geo
+  content_field_vocab_topics:
+    label: Topics
+    datasource_id: 'entity:node'
+    property_path: field_vocab_topics
+    type: integer
+    dependencies:
+      config:
+        - field.storage.node.field_vocab_topics
+  content_title:
+    label: Title
+    datasource_id: 'entity:node'
+    property_path: title
+    type: string
+    dependencies:
+      module:
+        - node
+  content_type:
+    label: 'Content type'
+    datasource_id: 'entity:node'
+    property_path: type
+    type: string
+    dependencies:
+      module:
+        - node
+  group_content_entity_id:
+    label: Content
+    datasource_id: 'entity:group_content'
+    property_path: entity_id
+    type: integer
+    dependencies:
+      module:
+        - group
+  group_content_gid:
+    label: 'Parent group'
+    datasource_id: 'entity:group_content'
+    property_path: gid
+    type: integer
+    dependencies:
+      module:
+        - group
+  group_content_type:
+    label: 'Group content type'
+    datasource_id: 'entity:group_content'
+    property_path: type
+    type: string
+    dependencies:
+      module:
+        - group
+  group_field_body:
+    label: Body
+    datasource_id: 'entity:group'
+    property_path: field_body
+    type: text
+    dependencies:
+      config:
+        - field.storage.group.field_body
+  group_field_vocab_geo:
+    label: 'Region & Countries'
+    datasource_id: 'entity:group'
+    property_path: field_vocab_geo
+    type: integer
+    dependencies:
+      config:
+        - field.storage.group.field_vocab_geo
+  group_field_vocab_topics:
+    label: Topics
+    datasource_id: 'entity:group'
+    property_path: field_vocab_topics
+    type: integer
+    dependencies:
+      config:
+        - field.storage.group.field_vocab_topics
+  group_label:
+    label: Title
+    datasource_id: 'entity:group'
+    property_path: label
+    type: text
+    boost: !!float 3
+    dependencies:
+      module:
+        - group
+  group_type:
+    label: 'Group type'
+    datasource_id: 'entity:group'
+    property_path: type
+    type: string
+    dependencies:
+      module:
+        - group
+  user_field_full_name:
+    label: 'Full Name'
+    datasource_id: 'entity:user'
+    property_path: field_full_name
+    type: text
+    dependencies:
+      config:
+        - field.storage.user.field_full_name
+  user_profile:
+    label: 'Member profiles'
+    datasource_id: 'entity:user'
+    property_path: member_profiles
+    type: integer
+    dependencies:
+      module:
+        - profile
+  user_profile_field_body:
+    label: 'Member profiles » Profile » About You'
+    datasource_id: 'entity:user'
+    property_path: 'member_profiles:entity:field_body'
+    type: text
+    dependencies:
+      config:
+        - field.storage.profile.field_body
+      module:
+        - profile
+  user_profile_field_vocab_job_title:
+    label: 'Member profiles » Profile » Job title'
+    datasource_id: 'entity:user'
+    property_path: 'member_profiles:entity:field_vocab_job_title'
+    type: integer
+    dependencies:
+      config:
+        - field.storage.profile.field_vocab_job_title
+      module:
+        - profile
+  user_profile_field_vocab_language:
+    label: 'Member profiles » Profile » Languages spoken'
+    datasource_id: 'entity:user'
+    property_path: 'member_profiles:entity:field_vocab_language'
+    type: integer
+    dependencies:
+      config:
+        - field.storage.profile.field_vocab_language
+      module:
+        - profile
+  user_profile_field_vocab_topic_expertise:
+    label: 'Member profiles » Profile » Topics of Expertise'
+    datasource_id: 'entity:user'
+    property_path: 'member_profiles:entity:field_vocab_topic_expertise'
+    type: integer
+    dependencies:
+      config:
+        - field.storage.profile.field_vocab_topic_expertise
+      module:
+        - profile
+  user_profile_field_vocab_topic_interest:
+    label: 'Member profiles » Profile » Topics of Interest'
+    datasource_id: 'entity:user'
+    property_path: 'member_profiles:entity:field_vocab_topic_interest'
+    type: integer
+    dependencies:
+      config:
+        - field.storage.profile.field_vocab_topic_interest
+      module:
+        - profile
+datasource_settings:
+  'entity:content_moderation_state':
+    languages:
+      default: true
+      selected: {  }
+  'entity:flagging':
+    bundles:
+      default: true
+      selected: {  }
+  'entity:group':
+    bundles:
+      default: true
+      selected: {  }
+    languages:
+      default: true
+      selected: {  }
+  'entity:group_content':
+    bundles:
+      default: true
+      selected: {  }
+    languages:
+      default: true
+      selected: {  }
+  'entity:node':
+    bundles:
+      default: true
+      selected: {  }
+    languages:
+      default: true
+      selected: {  }
+  'entity:user':
+    languages:
+      default: true
+      selected: {  }
+processor_settings:
+  add_url: {  }
+  aggregated_field: {  }
+  hierarchy:
+    fields:
+      field_vocab_geo: taxonomy_term-parent
+      field_vocab_topics: taxonomy_term-parent
+    weights:
+      preprocess_index: -45
+  language_with_fallback: {  }
+  rendered_item: {  }
+  solr_date_range:
+    weights:
+      preprocess_index: 0
+tracker_settings:
+  default:
+    indexing_order: fifo
+options:
+  index_directly: true
+  cron_limit: 50
+server: global

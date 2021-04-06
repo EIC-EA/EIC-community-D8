@@ -1,0 +1,32 @@
+uuid: 31e47bf3-0bff-49a6-a30a-00d66ae9abb6
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.message.notify_group_membership_pending.field_group_ref
+    - message.template.notify_group_membership_pending
+id: message.notify_group_membership_pending.default
+targetEntityType: message
+bundle: notify_group_membership_pending
+mode: default
+content:
+  field_group_ref:
+    weight: 1
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+  partial_0:
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  partial_1:
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  search_api_excerpt: true

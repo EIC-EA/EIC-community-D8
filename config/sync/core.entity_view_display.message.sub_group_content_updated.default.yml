@@ -1,0 +1,37 @@
+uuid: cd1386f6-c96e-43f8-8474-0606027c7d3e
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.message.sub_group_content_updated.field_event_executing_user
+    - message.template.sub_group_content_updated
+id: message.sub_group_content_updated.default
+targetEntityType: message
+bundle: sub_group_content_updated
+mode: default
+content:
+  field_event_executing_user:
+    weight: 1
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+  partial_0:
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  partial_1:
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  partial_2:
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  search_api_excerpt: true

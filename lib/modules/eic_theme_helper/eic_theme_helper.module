@@ -1,0 +1,199 @@
+<?php
+
+/**
+ * @file
+ * The OE Theme Helper module.
+ */
+
+declare(strict_types = 1);
+
+use Drupal\Component\Utility\Html;
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Entity\EntityInterface;
+
+/**
+ * Implements hook_page_attachments().
+ */
+function eic_theme_helper_page_attachments(array &$page) {
+  // Add ECL 2.0 required meta tags.
+  $meta_default = [
+    'ie_legacy_support' => [
+      '#tag' => 'meta',
+      '#attributes' => [
+        'http-equiv' => 'X-UA-Compatible',
+        'content' => 'IE=edge,chrome=1',
+      ],
+    ],
+  ];
+  foreach ($meta_default as $key => $value) {
+    $page['#attached']['html_head'][] = [$value, $key];
+  }
+
+  // Load ECL component library assets for oe_theme and its subthemes.
+  $active_theme = \Drupal::theme()->getActiveTheme();
+  if ($active_theme->getName() === 'oe_theme' || array_key_exists('oe_theme', $active_theme->getBaseThemeExtensions())) {
+    $component_library = theme_get_setting('component_library') ?? 'ec';
+    $page['#attached']['library'][] = 'oe_theme/component_library_' . $component_library;
+  }
+}
+
+/**
+ * Implements hook_entity_view_alter().
+ */
+function eic_theme_helper_entity_view_alter(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display) {
+  if (!isset($build['content_moderation_control'])) {
+    return;
+  }
+
+  // Ensure that the content moderation control block will always
+  // show at the top, above any other elements.
+  $build['content_moderation_control']['#weight'] = -500;
+}
+
+/**
+ * Implements hook_theme().
+ */
+function eic_theme_helper_theme($existing, $type, $theme, $path) {
+  return [
+    'eic_theme_helper_address_inline' => [
+      'variables' => [
+        'address' => NULL,
+        'address_items' => [],
+        'address_delimiter' => NULL,
+      ],
+    ],
+    'eic_theme_helper_in_page_navigation' => [
+      'render element' => 'element',
+    ],
+    'eic_theme_helper_featured_media' => [
+      'variables' => [
+        'params' => [],
+      ],
+    ],
+    'eic_theme_helper_social_media_icons_list' => [
+      'variables' => [
+        'items' => [],
+      ],
+    ],
+    'eic_theme_helper_social_media_links' => [
+      'variables' => [
+        'content' => [],
+      ],
+    ],
+    'eic_theme_helper_site_navigation' => [
+      'variables' => [
+        'site_name' => '',
+        'menu_items' => [],
+      ],
+    ],
+    'eic_theme_helper_call_status' => [
+      'variables' => [
+        'label' => '',
+        'name' => '',
+      ],
+    ],
+    'eic_theme_helper_call_label_status' => [
+      'variables' => [
+        'label' => '',
+        'name' => '',
+      ],
+    ],
+  ];
+}
+
+/**
+ * Prepares variables for in-page navigation.
+ *
+ * Default template: oe-theme-helper-in-page-navigation.html.twig.
+ *
+ * @param array $variables
+ *   An array of variables.
+ */
+function template_preprocess_eic_theme_helper_in_page_navigation(array &$variables) {
+  $variables['title'] = $variables['element']['#title'];
+  $variables['entity'] = $variables['element']['#entity'];
+  $variables['items'] = isset($variables['element']['#items']) ? $variables['element']['#items'] : [];
+
+  // Process in-page navigation items, assigning them a unique ID.
+  foreach ($variables['items'] as $key => $item) {
+    $variables['items'][$key]['id'] = strtolower(Html::cleanCssIdentifier($variables['items'][$key]['label']));
+  }
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK().
+ */
+function eic_theme_helper_theme_suggestions_eic_theme_helper_in_page_navigation(array $variables) {
+  $suggestions = [];
+  $element = $variables['element'];
+  $hook = 'eic_theme_helper_in_page_navigation';
+
+  $name = !empty($element['#group_name']) ? $element['#group_name'] : NULL;
+  $entity_type = !empty($element['#entity_type']) ? $element['#entity_type'] : NULL;
+  $bundle = !empty($element['#bundle']) ? $element['#bundle'] : NULL;
+
+  if (!empty($name)) {
+    $suggestions[] = $hook . '__' . $name;
+
+    if (!empty($entity_type)) {
+      $suggestions[] = $hook . '__' . $entity_type . '__' . $name;
+    }
+  }
+
+  if (!empty($entity_type) && !empty($bundle)) {
+    $suggestions[] = $hook . '__' . $entity_type . '__' . $bundle;
+
+    if (!empty($name)) {
+      $suggestions[] = $hook . '__' . $entity_type . '__' . $bundle . '__' . $name;
+    }
+  }
+
+  return $suggestions;
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK().
+ */
+function eic_theme_helper_theme_suggestions_eic_theme_helper_call_status(array $variables) {
+  $suggestions = [];
+
+  if (!empty($variables['name'])) {
+    $suggestions[] = 'eic_theme_helper_call_status' . '__' . $variables['name'];
+  }
+
+  return $suggestions;
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK().
+ */
+function eic_theme_helper_theme_suggestions_eic_theme_helper_call_label_status(array $variables) {
+  $suggestions = [];
+
+  if (!empty($variables['name'])) {
+    $suggestions[] = 'eic_theme_helper_call_label_status' . '__' . $variables['name'];
+  }
+
+  return $suggestions;
+}
+
+/**
+ * Prepares variables for call status.
+ *
+ * Default template: oe-theme-helper-call-status.html.twig.
+ *
+ * @param array $variables
+ *   An array of variables.
+ */
+function template_preprocess_eic_theme_helper_call_status(array &$variables) {
+  if (!empty($variables['name'])) {
+    $variables['attributes']['class'] = $variables['name'];
+  }
+}
+
+/**
+ * Implements hook_locale_translation_projects_alter().
+ */
+function eic_theme_helper_locale_translation_projects_alter(&$projects) {
+  $projects['eic_theme_helper']['info']['interface translation server pattern'] = drupal_get_path('module', 'eic_theme_helper') . '/translations/%project-%language.po';
+}

@@ -53,15 +53,15 @@
     {% block navigation %}
       {{ page.navigation }}
     {% endblock %}
+
+    {% block breadcrumbs %}
+      {{ page.breadcrumbs }}
+    {% endblock %}
   </div>
 
   <div class="ecl-viewport__middle">
     {% block page_header %}
       {{ page.page_header }}
-    {% endblock %}
-
-    {% block breadcrumbs %}
-      {{ page.breadcrumbs }}
     {% endblock %}
 
     <div class="ecl-base-layout{{ output_sidebar ? ' ecl-base-layout--contain' }}">

@@ -5,6 +5,7 @@ dependencies:
   config:
     - core.entity_view_mode.node.teaser
     - field.field.node.wiki_page.field_body
+    - field.field.node.wiki_page.field_comments
     - field.field.node.wiki_page.field_related_downloads
     - field.field.node.wiki_page.field_related_media
     - node.type.wiki_page
@@ -21,8 +22,11 @@ content:
     third_party_settings: {  }
     region: content
 hidden:
-  extra_field_oe_theme_helper_short_title_with_fallback: true
+  extra_field_eic_theme_helper_short_title_with_fallback: true
   field_body: true
+  field_comments: true
   field_related_downloads: true
   field_related_media: true
+  langcode: true
   published_at: true
+  search_api_excerpt: true

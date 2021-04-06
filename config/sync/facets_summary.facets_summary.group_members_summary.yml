@@ -1,0 +1,51 @@
+uuid: 60699561-e811-4651-bae7-5510d23cddf2
+langcode: en
+status: true
+dependencies:
+  config:
+    - search_api.index.global
+    - views.view.group_overviews
+  module:
+    - search_api
+id: group_members_summary
+name: 'Group members summary'
+facets:
+  members_topics_of_expertise:
+    checked: true
+    label: 'Topics of expertise'
+    separator: ', '
+    weight: 0
+    show_count: false
+  members_topics_of_interest:
+    checked: true
+    label: 'Topics of interest'
+    separator: ', '
+    weight: 0
+    show_count: false
+  members_languages:
+    checked: true
+    label: Languages
+    separator: ', '
+    weight: 0
+    show_count: false
+facet_source_id: 'search_api:views_page__group_overviews__members'
+processor_configs:
+  hide_when_not_rendered:
+    processor_id: hide_when_not_rendered
+    weights:
+      build: '45'
+    settings: {  }
+  reset_facets:
+    processor_id: reset_facets
+    weights:
+      build: '30'
+    settings:
+      link_text: 'Clear all'
+  show_text_when_empty:
+    processor_id: show_text_when_empty
+    weights:
+      build: '10'
+    settings:
+      text:
+        value: 'No results found.'
+        format: plain_text

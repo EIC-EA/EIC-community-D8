@@ -29,6 +29,10 @@
     display: flex;
     flex-direction: column;
 
+    &:only-child {
+      margin-top: ecl-box-model('padding');
+    }
+
     #{$node}--has-columns & {
       margin-bottom: #{0 - ecl-box-model('padding')};
 

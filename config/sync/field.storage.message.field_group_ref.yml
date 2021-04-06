@@ -1,0 +1,20 @@
+uuid: f08e33c0-0d9c-4d82-bb30-5b6495a6f8b6
+langcode: en
+status: true
+dependencies:
+  module:
+    - group
+    - message
+id: message.field_group_ref
+field_name: field_group_ref
+entity_type: message
+type: entity_reference
+settings:
+  target_type: group
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

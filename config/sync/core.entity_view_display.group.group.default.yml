@@ -8,100 +8,38 @@ dependencies:
     - field.field.group.group.field_membership_open_request
     - field.field.group.group.field_message_to_site_admin
     - field.field.group.group.field_related_groups
+    - field.field.group.group.field_related_news_stories
     - field.field.group.group.field_thumbnail
     - field.field.group.group.field_vocab_geo
     - field.field.group.group.field_vocab_topics
     - field.field.group.group.field_welcome_message
     - group.type.group
-  module:
-    - text
 id: group.group.default
 targetEntityType: group
 bundle: group
 mode: default
 content:
-  field_body:
-    weight: -4
-    label: hidden
-    settings: {  }
-    third_party_settings: {  }
-    type: text_default
-    region: content
-  field_hero:
-    type: entity_reference_entity_view
-    weight: -1
-    label: hidden
-    settings:
-      view_mode: default
-      link: false
-    third_party_settings: {  }
-    region: content
-  field_membership_open_request:
-    weight: 4
-    label: hidden
-    settings:
-      format: default
-      format_custom_false: ''
-      format_custom_true: ''
-    third_party_settings: {  }
-    type: boolean
-    region: content
-  field_message_to_site_admin:
-    weight: 1
-    label: hidden
-    settings: {  }
-    third_party_settings: {  }
-    type: text_default
-    region: content
-  field_related_groups:
-    weight: 3
-    label: hidden
-    settings:
-      link: true
-    third_party_settings: {  }
-    type: entity_reference_label
-    region: content
-  field_thumbnail:
-    type: entity_reference_entity_view
+  field_related_news_stories:
     weight: 0
-    label: hidden
-    settings:
-      view_mode: default
-      link: false
-    third_party_settings: {  }
-    region: content
-  field_vocab_geo:
-    weight: -2
-    label: hidden
+    label: above
     settings:
       link: true
     third_party_settings: {  }
     type: entity_reference_label
     region: content
-  field_vocab_topics:
-    weight: -3
-    label: hidden
-    settings:
-      link: true
-    third_party_settings: {  }
-    type: entity_reference_label
-    region: content
-  field_welcome_message:
-    weight: 2
-    label: hidden
-    settings: {  }
-    third_party_settings: {  }
-    type: text_default
-    region: content
-  label:
-    label: hidden
-    type: string
-    weight: -5
-    region: content
-    settings:
-      link_to_entity: false
-    third_party_settings: {  }
 hidden:
   changed: true
   created: true
+  field_body: true
+  field_hero: true
+  field_membership_open_request: true
+  field_message_to_site_admin: true
+  field_related_groups: true
+  field_thumbnail: true
+  field_vocab_geo: true
+  field_vocab_topics: true
+  field_welcome_message: true
+  label: true
+  langcode: true
+  search_api_excerpt: true
   uid: true

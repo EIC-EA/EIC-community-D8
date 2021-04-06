@@ -4,6 +4,6 @@
   &__caption {
     background-color: map-get($ecl-colors, 'grey-10');
     color: ecl-typography('color');
-    @include ecl-responsive-font('meta');
+    @include ecl-responsive-font('label');
   }
 }
