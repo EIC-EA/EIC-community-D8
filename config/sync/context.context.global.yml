@@ -1,0 +1,18 @@
+uuid: 44d144c1-950b-4ce1-b861-08c50e272eea
+langcode: en
+status: true
+dependencies: {  }
+name: global
+label: Global
+group: Global
+description: ''
+requireAllConditions: false
+disabled: false
+conditions: {  }
+reactions:
+  menu:
+    id: menu
+    menu:
+      - 'main:views_view:views.global_overviews.page_1'
+    saved: false
+weight: 0
