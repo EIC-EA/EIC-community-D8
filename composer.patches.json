@@ -16,6 +16,9 @@
     },
     "drupal/flag": {
       "3168014 - TypeError: Argument 1 passed to Drupal\\flag\\TwigExtension\\FlagCount::count() must implement interface" : "https://www.drupal.org/files/issues/2020-09-06/show-count-for-visitors--3168014-2.patch"
+    },
+    "drupal/typed_link": {
+      "3204933 - D9 compatibility": "https://git.drupalcode.org/project/typed_link/-/commit/398c69b0246b9b85fb3cfb114b0fd0e970f3bf8c.diff"
     }
   }
 }
