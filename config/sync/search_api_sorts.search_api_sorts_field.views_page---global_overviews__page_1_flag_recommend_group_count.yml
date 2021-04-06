@@ -2,9 +2,9 @@ uuid: e774272f-e235-4392-ab5e-ccbb26bd1bbe
 langcode: en
 status: true
 dependencies: {  }
-id: views_page---global_overviews__page_1_flag_group_recommend_count
+id: views_page---global_overviews__page_1_flag_recommend_group_count
 display_id: views_page---global_overviews__page_1
-field_identifier: flag_group_recommend_count
+field_identifier: flag_recommend_group_count
 default_sort: true
 default_order: desc
 label: Recommendations

@@ -5,7 +5,7 @@ dependencies:
   module:
     - eic_flags
     - group
-id: group_recommend
+id: recommend_group
 label: 'Recommend (group)'
 bundles: {  }
 entity_type: group
@@ -24,7 +24,7 @@ flagTypeConfig:
   show_in_links:
     teaser: teaser
   show_as_field: true
-  show_on_form: true
+  show_on_form: false
   show_contextual_link: true
   extra_permissions:
     owner: '0'

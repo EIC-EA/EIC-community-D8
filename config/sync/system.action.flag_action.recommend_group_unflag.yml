@@ -3,13 +3,13 @@ langcode: en
 status: true
 dependencies:
   config:
-    - flag.flag.group_recommend
+    - flag.flag.recommend_group
   module:
     - flag
-id: flag_action.group_recommend_unflag
+id: flag_action.recommend_group_unflag
 label: 'Unflag this item'
 type: group
-plugin: 'flag_action:group_recommend_unflag'
+plugin: 'flag_action:recommend_group_unflag'
 configuration:
-  flag_id: group_recommend
+  flag_id: recommend_group
   flag_action: unflag

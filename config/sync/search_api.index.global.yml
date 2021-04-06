@@ -122,9 +122,9 @@ field_settings:
     dependencies:
       module:
         - node
-  flag_group_recommend_count:
+  flag_recommend_group_count:
     label: 'Group Recommend count'
-    property_path: flag_group_recommend_count
+    property_path: flag_recommend_group_count
     type: integer
     indexed_locked: true
     type_locked: true
@@ -240,7 +240,7 @@ processor_settings:
   aggregated_field: {  }
   flag_count_indexer:
     flag_index:
-      - group_recommend
+      - recommend_group
   hierarchy:
     fields:
       content_field_vocab_geo: taxonomy_term-parent
