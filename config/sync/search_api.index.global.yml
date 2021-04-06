@@ -195,7 +195,7 @@ field_settings:
     label: '[Group] Title'
     datasource_id: 'entity:group'
     property_path: label
-    type: string
+    type: text
     boost: !!float 3
     dependencies:
       module:
