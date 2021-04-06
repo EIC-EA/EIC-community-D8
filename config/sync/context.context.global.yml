@@ -10,9 +10,25 @@ requireAllConditions: false
 disabled: false
 conditions: {  }
 reactions:
-  menu:
-    id: menu
-    menu:
-      - 'main:views_view:views.global_overviews.page_1'
+  blocks:
+    blocks:
+      8a784846-74f8-451c-b47b-fcc1177d6629:
+        id: 'eic_theme_helper_site_navigation:main'
+        label: 'Main navigation'
+        provider: eic_theme_helper
+        label_display: '0'
+        level: '1'
+        region: navigation
+        weight: '0'
+        context_mapping: {  }
+        custom_id: eic_theme_helper_site_navigation_main
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: global
+        uuid: 8a784846-74f8-451c-b47b-fcc1177d6629
+    id: blocks
     saved: false
+    uuid: c1979d39-89a3-4939-97f7-0af5a52467f1
+    include_default_blocks: 0
 weight: 0
