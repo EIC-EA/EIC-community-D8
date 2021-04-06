@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - search_api.index.global
+    - system.menu.main
   module:
     - search_api
 id: global_overviews
@@ -430,6 +431,15 @@ display:
       cache:
         type: none
       exposed_block: true
+      menu:
+        type: normal
+        title: Groups
+        description: ''
+        expanded: false
+        parent: ''
+        weight: 0
+        context: '0'
+        menu_name: main
     cache_metadata:
       max-age: -1
       contexts:
