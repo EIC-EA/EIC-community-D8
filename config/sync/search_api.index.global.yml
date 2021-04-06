@@ -6,6 +6,7 @@ dependencies:
     - search_api_solr
     - group
     - node
+    - profile
     - search_api
     - flag_search_api
     - content_moderation
@@ -19,6 +20,12 @@ dependencies:
     - field.storage.node.field_subtitle
     - field.storage.node.field_vocab_topics
     - field.storage.node.field_discussion_type
+    - field.storage.user.field_full_name
+    - field.storage.profile.field_body
+    - field.storage.profile.field_vocab_job_title
+    - field.storage.profile.field_vocab_language
+    - field.storage.profile.field_vocab_topic_expertise
+    - field.storage.profile.field_vocab_topic_interest
     - search_api.server.global
 third_party_settings:
   search_api_solr:
@@ -201,6 +208,72 @@ field_settings:
     dependencies:
       module:
         - group
+  user_field_full_name:
+    label: 'Full Name'
+    datasource_id: 'entity:user'
+    property_path: field_full_name
+    type: text
+    dependencies:
+      config:
+        - field.storage.user.field_full_name
+  user_profile:
+    label: 'Member profiles'
+    datasource_id: 'entity:user'
+    property_path: member_profiles
+    type: integer
+    dependencies:
+      module:
+        - profile
+  user_profile_field_body:
+    label: 'Member profiles » Profile » About You'
+    datasource_id: 'entity:user'
+    property_path: 'member_profiles:entity:field_body'
+    type: text
+    dependencies:
+      config:
+        - field.storage.profile.field_body
+      module:
+        - profile
+  user_profile_field_vocab_job_title:
+    label: 'Member profiles » Profile » Job title'
+    datasource_id: 'entity:user'
+    property_path: 'member_profiles:entity:field_vocab_job_title'
+    type: integer
+    dependencies:
+      config:
+        - field.storage.profile.field_vocab_job_title
+      module:
+        - profile
+  user_profile_field_vocab_language:
+    label: 'Member profiles » Profile » Languages spoken'
+    datasource_id: 'entity:user'
+    property_path: 'member_profiles:entity:field_vocab_language'
+    type: integer
+    dependencies:
+      config:
+        - field.storage.profile.field_vocab_language
+      module:
+        - profile
+  user_profile_field_vocab_topic_expertise:
+    label: 'Member profiles » Profile » Topics of Expertise'
+    datasource_id: 'entity:user'
+    property_path: 'member_profiles:entity:field_vocab_topic_expertise'
+    type: integer
+    dependencies:
+      config:
+        - field.storage.profile.field_vocab_topic_expertise
+      module:
+        - profile
+  user_profile_field_vocab_topic_interest:
+    label: 'Member profiles » Profile » Topics of Interest'
+    datasource_id: 'entity:user'
+    property_path: 'member_profiles:entity:field_vocab_topic_interest'
+    type: integer
+    dependencies:
+      config:
+        - field.storage.profile.field_vocab_topic_interest
+      module:
+        - profile
 datasource_settings:
   'entity:content_moderation_state':
     languages:

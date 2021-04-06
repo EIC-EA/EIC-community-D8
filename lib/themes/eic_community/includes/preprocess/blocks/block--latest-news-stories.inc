@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Cache\Cache;
+use Drupal\eic_community\ValueObject\ImageValueObject;
 
 /**
  * Implements hook_preprocess_block() for latest_news_stories.

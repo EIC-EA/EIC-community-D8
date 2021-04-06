@@ -5,6 +5,8 @@ dependencies:
   config:
     - search_api.index.global
   module:
+    - group
+    - profile
     - search_api
 id: group_overviews
 label: 'Group - Overviews'
@@ -95,7 +97,7 @@ display:
               story: default
               wiki_page: default
             'entity:user':
-              user: default
+              user: teaser
       fields:
         title:
           id: title
@@ -285,6 +287,165 @@ display:
         - 'languages:language_interface'
         - url
         - url.query_args
+        - 'user.node_grants:view'
+      tags:
+        - 'config:search_api.index.global'
+  members:
+    display_plugin: page
+    id: members
+    display_title: Members
+    position: 2
+    display_options:
+      display_extenders: {  }
+      display_description: ''
+      title: Members
+      defaults:
+        title: false
+        cache: false
+        filters: false
+        filter_groups: false
+        access: false
+        sorts: false
+        relationships: false
+      path: members
+      exposed_block: true
+      cache:
+        type: none
+      filters:
+        search_api_datasource:
+          id: search_api_datasource
+          table: search_api_index_global
+          field: search_api_datasource
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: or
+          value:
+            'entity:user': 'entity:user'
+          group: 1
+          exposed: false
+          expose:
+            operator_id: ''
+            label: ''
+            description: ''
+            use_operator: false
+            operator: ''
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: ''
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+            reduce: false
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          reduce_duplicates: false
+          plugin_id: search_api_datasource
+        search_api_fulltext:
+          id: search_api_fulltext
+          table: search_api_index_global
+          field: search_api_fulltext
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: and
+          value: ''
+          group: 1
+          exposed: true
+          expose:
+            operator_id: search_api_fulltext_op
+            label: ''
+            description: ''
+            use_operator: false
+            operator: search_api_fulltext_op
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: keywords
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              trusted_user: '0'
+              content_administrator: '0'
+              service_authentication: '0'
+              administrator: '0'
+            placeholder: ''
+            expose_fields: false
+            searched_fields_id: search_api_fulltext_searched_fields
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          parse_mode: terms
+          min_length: 2
+          fields:
+            - user_field_full_name
+            - user_profile_field_body
+          plugin_id: search_api_fulltext
+      filter_groups:
+        operator: AND
+        groups:
+          1: AND
+      access:
+        type: group_permission
+        options:
+          group_permission: 'view group_membership content'
+      sorts:
+        user_field_full_name:
+          id: user_field_full_name
+          table: search_api_index_global
+          field: user_field_full_name
+          relationship: none
+          group_type: group
+          admin_label: ''
+          order: ASC
+          exposed: false
+          expose:
+            label: ''
+          plugin_id: search_api
+      relationships:
+        member_profiles:
+          id: member_profiles
+          table: search_api_datasource_global_entity_user
+          field: member_profiles
+          relationship: none
+          group_type: group
+          admin_label: 'Member profiles: Profile'
+          required: false
+          skip_access: false
+          entity_type: user
+          plugin_id: search_api
+    cache_metadata:
+      max-age: -1
+      contexts:
+        - 'languages:language_content'
+        - 'languages:language_interface'
+        - route.group
+        - url
+        - url.query_args
+        - user.group_permissions
         - 'user.node_grants:view'
       tags:
         - 'config:search_api.index.global'

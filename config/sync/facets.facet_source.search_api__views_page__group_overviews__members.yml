@@ -1,0 +1,9 @@
+uuid: a7a52505-5cf2-4682-8aff-d57241b44dd6
+langcode: en
+status: true
+dependencies: {  }
+id: search_api__views_page__group_overviews__members
+name: 'search_api:views_page__group_overviews__members'
+filter_key: null
+url_processor: query_string
+breadcrumb: {  }
