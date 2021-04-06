@@ -5,7 +5,7 @@
  * Prepares variables for node News and Story templates.
  */
 
-use Drupal\oe_theme\ValueObject\ImageValueObject;
+use Drupal\eic_community\ValueObject\ImageValueObject;
 
 /**
  * Implements hook_preprocess_node__story() for story node.
