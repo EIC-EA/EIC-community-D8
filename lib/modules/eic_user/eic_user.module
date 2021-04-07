@@ -6,6 +6,8 @@
  */
 
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\views\ViewExecutable;
 
 /**
  * Implements hook_user_presave().
@@ -16,4 +18,29 @@ function eic_user_user_presave(EntityInterface $entity) {
     $entity->get('field_first_name')->value,
     $entity->get('field_last_name')->value,
   ]));
+}
+
+/**
+ * Implements hook_views_pre_render().
+ */
+function eic_user_views_pre_render(ViewExecutable $view) {
+  // Replace header "Roles" with "Technical Roles" in view Admin people.
+  if ($view->id() == 'user_admin_people' && $view->current_display == 'page_1') {
+    if (isset($view->field['roles_target_id'])) {
+      $view->field['roles_target_id']->options['label'] = t('Technical roles');
+    }
+  }
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function eic_user_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  // Replace filter "Role" with "Technical role" in exposed form
+  // of view Admin people.
+  if ($form['#id'] == 'views-exposed-form-user-admin-people-page-1') {
+    if (isset($form['#info']['filter-roles_target_id']['label'])) {
+      $form['#info']['filter-roles_target_id']['label'] = t('Technical role');
+    }
+  }
 }
