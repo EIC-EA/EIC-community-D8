@@ -6072,7 +6072,8 @@
                 "composer-exit-on-patch-failure": true,
                 "enable-patching": true,
                 "patches_applied": {
-                    "7f697ba - Add parseName() function to EuropaComponentLibraryLoader (protected parseName() from twig function is private since D9)": "patches/ecl-twig-loader/7f697ba-add-parsename-function-to-ecl-loader.patch"
+                    "7f697ba - Add OpenEuropa\\Twig\\Loader\\EuropaComponentLibraryLoader::parseName() function (protected parseName() function from twig function is private since D9)": "patches/ecl-twig-loader/7f697ba-add-parsename-function-to-ecl-loader.patch",
+                    "7f697ba - Make OpenEuropa\\Twig\\Loader\\EuropaComponentLibraryLoader::findTemplate($name) compatible with Twig\\Loader\\FilesystemLoader::findTemplate($name, $throw = true)": "patches/ecl-twig-loader/7f697ba-make-ecl-loader-findtemplate-function-compatible-with-parent-function.patch"
                 }
             },
             "autoload": {
