@@ -30,6 +30,11 @@ content:
       link: false
     third_party_settings: {  }
     region: content
+  flag_recommend_group:
+    weight: 10
+    settings: {  }
+    third_party_settings: {  }
+    region: content
   uid:
     type: author
     weight: 1

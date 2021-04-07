@@ -1,0 +1,15 @@
+uuid: 1a2801de-26d7-41ba-a76f-03422658e59e
+langcode: en
+status: true
+dependencies:
+  config:
+    - flag.flag.recommend_group
+  module:
+    - flag
+id: flag_action.recommend_group_unflag
+label: 'Unflag this item'
+type: group
+plugin: 'flag_action:recommend_group_unflag'
+configuration:
+  flag_id: recommend_group
+  flag_action: unflag

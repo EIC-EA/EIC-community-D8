@@ -8,4 +8,6 @@ weight: -7
 is_admin: null
 permissions:
   - 'create group group'
+  - 'flag recommend_group'
   - 'skip comment approval'
+  - 'unflag recommend_group'

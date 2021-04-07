@@ -108,6 +108,11 @@ content:
     third_party_settings: {  }
     type: text_textarea
     region: content
+  flag:
+    weight: 10
+    settings: {  }
+    third_party_settings: {  }
+    region: content
   label:
     type: string_textfield
     weight: 0
