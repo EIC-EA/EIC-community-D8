@@ -1,0 +1,34 @@
+diff --git a/src/Loader/EuropaComponentLibraryLoader.php b/src/Loader/EuropaComponentLibraryLoader.php
+index 6f8e8dc..fc9e021 100644
+--- a/src/Loader/EuropaComponentLibraryLoader.php
++++ b/src/Loader/EuropaComponentLibraryLoader.php
+@@ -2,6 +2,8 @@
+ 
+ namespace OpenEuropa\Twig\Loader;
+ 
++use Twig\Error\LoaderError;
++
+ /**
+  * Class EuropaComponentLibraryLoader.
+  *
+@@ -128,4 +130,20 @@ class EuropaComponentLibraryLoader extends \Twig_Loader_Filesystem
+     {
+         return (bool) preg_match("/^{$this->prefix}(.*)\/{$this->templatePrefix}(.*){$this->extension}$/", $componentName);
+     }
++
++    private function parseName($name, $default = self::MAIN_NAMESPACE)
++    {
++        if (isset($name[0]) && '@' == $name[0]) {
++            if (false === $pos = strpos($name, '/')) {
++                throw new LoaderError(sprintf('Malformed namespaced template name "%s" (expecting "@namespace/template_name").', $name));
++            }
++
++            $namespace = substr($name, 1, $pos - 1);
++            $shortname = substr($name, $pos + 1);
++
++            return [$namespace, $shortname];
++        }
++
++        return [$default, $name];
++    }
+ }

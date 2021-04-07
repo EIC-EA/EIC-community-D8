@@ -19,6 +19,9 @@
     },
     "drupal/flag_search_api": {
       "3123595 - Add support for global flag status indexing and flag counts": "https://www.drupal.org/files/issues/2020-07-21/flag-counts-indexer-3123595-1.patch"
+    },
+    "openeuropa/ecl-twig-loader": {
+      "7f697ba - Add parseName() function to EuropaComponentLibraryLoader (protected parseName() from twig function is private since D9)": "patches/ecl-twig-loader/7f697ba-add-parsename-function-to-ecl-loader.patch"
     }
   }
 }
