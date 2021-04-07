@@ -1,0 +1,22 @@
+{% extends "@theme/patterns/compositions/group/group.full.html.twig" %}
+
+{% block content %}
+  {% include "@theme/patterns/compositions/teaser-overview.html.twig" with {
+    amount_options: amount_options,
+    active_filters: active_filters,
+    sort_options: sort_options,
+    items: items,
+    extra_classes: 'ecl-teaser-overview--has-columns',
+    icon_file_path: common.icon_file_path,
+  } only %}
+
+  {% include "@theme/patterns/compositions/pagination.html.twig" with pagination|default({}) only %}
+{% endblock %}
+
+{% block sidebar %}
+  {% include "@theme/patterns/compositions/filter-sidebar.html.twig" with {
+    icon_file_path: common.icon_file_path,
+    title: filter_title,
+    items: filters,
+  } only %}
+{% endblock %}
