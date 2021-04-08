@@ -45,7 +45,7 @@
         "drupal/views_bulk_operations": "^3.10",
         "drush/drush": "^9.0",
         "ethosce/group_purl": "2.x-dev",
-        "ethosce/purl": "2.x-dev",
+        "lramarojaona/purl": "^2.0@beta",
         "openeuropa/composer-artifacts": "~0.1",
         "openeuropa/ecl-twig-loader": "^2.1",
         "openeuropa/oe_media": "^1.11",

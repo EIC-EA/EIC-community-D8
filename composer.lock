@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1e440e9f808543fc007b6cfd741d14e5",
+    "content-hash": "902180c9b0c1f4473c32a3dbcdbf0f35",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -5799,25 +5799,6 @@
             "time": "2021-03-19T17:03:54+00:00"
         },
         {
-            "name": "ethosce/purl",
-            "version": "2.x-dev",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/ethosce/purl.git",
-                "reference": "3c97da92223c52d71ed7170b2eb9239381dc818c"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/ethosce/purl/zipball/3c97da92223c52d71ed7170b2eb9239381dc818c",
-                "reference": "3c97da92223c52d71ed7170b2eb9239381dc818c",
-                "shasum": ""
-            },
-            "type": "drupal-module",
-            "notification-url": "https://packagist.org/downloads/",
-            "description": "Persistent URL module for Drupal 8+",
-            "time": "2021-03-19T17:14:31+00:00"
-        },
-        {
             "name": "grasmash/expander",
             "version": "1.0.0",
             "source": {
@@ -6456,6 +6437,25 @@
                 "service"
             ],
             "time": "2021-02-22T09:20:06+00:00"
+        },
+        {
+            "name": "lramarojaona/purl",
+            "version": "2.0.0-beta1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/lramarojaona/purl.git",
+                "reference": "90e96b0fda15a252f5502855b501783cf268075c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/lramarojaona/purl/zipball/90e96b0fda15a252f5502855b501783cf268075c",
+                "reference": "90e96b0fda15a252f5502855b501783cf268075c",
+                "shasum": ""
+            },
+            "type": "drupal-module",
+            "notification-url": "https://packagist.org/downloads/",
+            "description": "Persistent URL module for Drupal 8+",
+            "time": "2021-04-08T10:41:43+00:00"
         },
         {
             "name": "maennchen/zipstream-php",
@@ -13700,7 +13700,7 @@
         "drupal/openapi_rest": 5,
         "drupal/publication_date": 10,
         "ethosce/group_purl": 20,
-        "ethosce/purl": 20
+        "lramarojaona/purl": 10
     },
     "prefer-stable": true,
     "prefer-lowest": false,
