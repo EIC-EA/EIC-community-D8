@@ -21,6 +21,7 @@ permissions:
   - 'update any group_node:discussion entity'
   - 'update any group_node:document entity'
   - 'update any group_node:wiki_page entity'
+  - 'view unpublished group_node:book entity'
   - 'view unpublished group_node:discussion entity'
   - 'view unpublished group_node:document entity'
   - 'view unpublished group_node:wiki_page entity'
