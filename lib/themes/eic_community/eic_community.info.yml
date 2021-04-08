@@ -5,6 +5,8 @@ package: EIC-community-D8
 core_version_requirement: ^8.8 || ^9
 php: 7.2
 
+base theme: stable
+
 libraries:
   - eic_community/theme
 

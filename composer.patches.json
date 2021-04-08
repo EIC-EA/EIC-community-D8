@@ -8,20 +8,21 @@
       "3072991 - Can't clone context": "https://www.drupal.org/files/issues/2020-08-21/context-cannot-clone-context-3072991-9.patch"
     },
     "drupal/group": {
-        "2881769 - group/{group}/node/create uses the permissions of group/{group}/node/add": "https://www.drupal.org/files/issues/2020-10-01/2881769-22.patch",
-        "2746839 - Add Devel plugin for generating groups": "patches/group/2746839-add-devel-plugin-for-generating-groups-12.patch"
+      "2881769 - group/{group}/node/create uses the permissions of group/{group}/node/add": "https://www.drupal.org/files/issues/2020-10-01/2881769-22.patch",
+      "2746839 - Add Devel plugin for generating groups": "patches/group/2746839-add-devel-plugin-for-generating-groups-12.patch"
     },
     "drupal/facets": {
       "3199156 - Module installation is broken if search_api will be installed as dependency": "https://www.drupal.org/files/issues/2021-03-16/3199156-19.patch"
     },
     "drupal/flag": {
-      "3168014 - TypeError: Argument 1 passed to Drupal\\flag\\TwigExtension\\FlagCount::count() must implement interface" : "https://www.drupal.org/files/issues/2020-09-06/show-count-for-visitors--3168014-2.patch"
+      "3168014 - TypeError: Argument 1 passed to Drupal\\flag\\TwigExtension\\FlagCount::count() must implement interface": "https://www.drupal.org/files/issues/2020-09-06/show-count-for-visitors--3168014-2.patch"
     },
     "drupal/flag_search_api": {
       "3123595 - Add support for global flag status indexing and flag counts": "https://www.drupal.org/files/issues/2020-07-21/flag-counts-indexer-3123595-1.patch"
     },
-    "drupal/typed_link": {
-      "3204933 - D9 compatibility": "https://git.drupalcode.org/project/typed_link/-/commit/398c69b0246b9b85fb3cfb114b0fd0e970f3bf8c.diff"
+    "openeuropa/ecl-twig-loader": {
+      "7f697ba - Add OpenEuropa\\Twig\\Loader\\EuropaComponentLibraryLoader::parseName() function (protected parseName() function from twig function is private since D9)": "patches/ecl-twig-loader/7f697ba-add-parsename-function-to-ecl-loader.patch",
+      "7f697ba - Make OpenEuropa\\Twig\\Loader\\EuropaComponentLibraryLoader::findTemplate($name) compatible with Twig\\Loader\\FilesystemLoader::findTemplate($name, $throw = true)": "patches/ecl-twig-loader/7f697ba-make-ecl-loader-findtemplate-function-compatible-with-parent-function.patch"
     }
   }
 }

@@ -1,0 +1,35 @@
+diff --git a/src/Loader/EuropaComponentLibraryLoader.php b/src/Loader/EuropaComponentLibraryLoader.php
+index 6f8e8dc..d32faed 100644
+--- a/src/Loader/EuropaComponentLibraryLoader.php
++++ b/src/Loader/EuropaComponentLibraryLoader.php
+@@ -66,18 +68,18 @@ class EuropaComponentLibraryLoader extends \Twig_Loader_Filesystem
+     /**
+      * {@inheritdoc}
+      */
+-    protected function findTemplate($name)
++    protected function findTemplate($name, $throw = true)
+     {
+         list($namespace, $componentName) = $this->parseName($name);
+
+         // If namespace is not one of ours just move along, nothing to see here.
+         if (!in_array($namespace, $this->namespaces)) {
+-            return parent::findTemplate($name);
++            return parent::findTemplate($name, $throw);
+         }
+
+         // If component uses full name just use it, our job is done.
+         if ($this->isFullName($componentName)) {
+-            return parent::findTemplate($componentName);
++            return parent::findTemplate($componentName, $throw);
+         }
+
+         // If component uses the short form then expand it into its full name.
+@@ -93,7 +95,7 @@ class EuropaComponentLibraryLoader extends \Twig_Loader_Filesystem
+         }
+         $name = $prefixedName.DIRECTORY_SEPARATOR.$this->templatePrefix.$templateName.$this->extension;
+
+-        return parent::findTemplate($name);
++        return parent::findTemplate($name, $throw);
+     }
+
+     /**
