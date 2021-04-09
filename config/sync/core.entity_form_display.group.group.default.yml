@@ -16,7 +16,6 @@ dependencies:
     - group.type.group
   module:
     - media_library
-    - path
     - text
 id: group.group.default
 targetEntityType: group
@@ -123,11 +122,14 @@ content:
     settings:
       include_locked: true
     third_party_settings: {  }
-  path:
-    type: path
+  purl:
+    type: string_textfield
     weight: 12
     region: content
-    settings: {  }
+    settings:
+      size: 60
+      placeholder: ''
     third_party_settings: {  }
 hidden:
+  path: true
   uid: true
