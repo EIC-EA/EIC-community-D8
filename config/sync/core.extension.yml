@@ -63,6 +63,8 @@ module:
   fragments: 0
   gnode: 0
   group: 0
+  group_flex: 0
+  group_permissions: 0
   hal: 0
   image: 0
   inline_entity_form: 0
