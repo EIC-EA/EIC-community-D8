@@ -1,0 +1,11 @@
+eic_groups.wiki_overview:
+  path: '/group/{group}/wiki'
+  defaults:
+    _title: 'Wiki'
+    _controller: '\Drupal\eic_groups\Controller\GroupWikiOverviewController::build'
+  requirements:
+    _group_member: 'TRUE'
+  options:
+    parameters:
+      group:
+        type: 'entity:group'
