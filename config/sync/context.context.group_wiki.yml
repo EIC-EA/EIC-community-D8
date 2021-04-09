@@ -3,7 +3,7 @@ langcode: en
 status: true
 dependencies:
   module:
-    - route_condition
+    - node
 name: group_wiki
 label: 'Group - Wiki'
 group: Groups
@@ -11,12 +11,14 @@ description: 'Context used when viewing group wiki pages'
 requireAllConditions: false
 disabled: false
 conditions:
-  route:
-    id: route
-    routes: eic_groups.wiki_overview
+  node_type:
+    id: node_type
+    bundles:
+      wiki_page: wiki_page
     negate: false
-    uuid: b9d2c045-06fd-4a2a-91b3-4c41de18444c
-    context_mapping: {  }
+    uuid: 118a3ee8-d75a-43fa-8dc7-13e7c95a283f
+    context_mapping:
+      node: '@node.node_route_context:node'
 reactions:
   blocks:
     blocks:
