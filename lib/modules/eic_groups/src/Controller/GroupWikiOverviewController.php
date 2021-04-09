@@ -44,19 +44,18 @@ class GroupWikiOverviewController extends ControllerBase {
    */
   public function build(GroupInterface $group) {
     $group_top_level_wiki_pages = $this->getGroupTopLevelWikiPages($group);
-    $build['content'] = [];
 
-    if (empty($group_top_level_wiki_pages)) {
-      $build['content'] = [
-        '#type' => 'item',
-        '#markup' => $this->t('No Wiki pages (yet)'),
-      ];
-    }
-    else {
+    if (!empty($group_top_level_wiki_pages)) {
       $wiki_page = $this->entityTypeManager()->getStorage('node')->load($group_top_level_wiki_pages[0]->nid);
       $response = new RedirectResponse($wiki_page->toUrl()->toString());
       return $response->send();
     }
+
+    $build['content'] = [
+      '#type' => 'item',
+      '#markup' => $this->t('No Wiki pages (yet)'),
+    ];
+    return $build;
   }
 
   /**
