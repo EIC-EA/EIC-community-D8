@@ -1,0 +1,42 @@
+uuid: 5ccc2292-2a19-485b-a29a-b6fcfb888574
+langcode: en
+status: true
+dependencies:
+  module:
+    - route_condition
+name: group_wiki
+label: 'Group - Wiki'
+group: Groups
+description: 'Context used when viewing group wiki pages'
+requireAllConditions: false
+disabled: false
+conditions:
+  route:
+    id: route
+    routes: eic_groups.wiki_overview
+    negate: false
+    uuid: b9d2c045-06fd-4a2a-91b3-4c41de18444c
+    context_mapping: {  }
+reactions:
+  blocks:
+    blocks:
+      2089ac99-521b-4bba-b1e0-030d675b287f:
+        id: eic_groups_wiki_book_navigation
+        label: 'EIC Group Wiki Book navigation'
+        provider: eic_groups
+        label_display: '0'
+        region: sidebar
+        weight: '0'
+        block_mode: null
+        context_mapping: {  }
+        custom_id: eic_groups_wiki_book_navigation
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: group_wiki
+        uuid: 2089ac99-521b-4bba-b1e0-030d675b287f
+    id: blocks
+    saved: false
+    uuid: 4d77c57f-3626-4134-8271-8983fa46b50e
+    include_default_blocks: 0
+weight: 0
