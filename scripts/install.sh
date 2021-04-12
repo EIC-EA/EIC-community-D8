@@ -8,17 +8,17 @@ print_usage_info() {
 
 Install/update the site and migrate the content.
 
-Usage: sh scripts/install.sh [-h|--help] [--root=CMD_ROOT] [--drush=DRUSH] [--git=BRANCH] [--no-build] [--clean] [--migrate] [--admin-password=PASSWORD]
+Usage: sh scripts/install.sh [-h|--help] [--docker=DOCKER_CMD] [--drush=DRUSH_CMD] [--git=BRANCH] [--no-build] [--clean] [--migrate] [--password=ADMIN_PASSWORD]
 
 Options:
   -h | --help                 Print command usage info.
-  --root=CMD_ROOT             Location to run the commands from. E.g. "docker-compose exec web"
-  --drush=DRUSH               Location of the of the drush command. E.g. "docker-compose exec web drush"
+  --docker=DOCKER_CMD         Execute commands, other than Drush, in the the Docker container. E.g. "docker-compose exec web"
+  --drush=DRUSH_CMD           Location of the of the drush command. E.g. "docker-compose exec web drush"
   --git=BRANCH                Perform git checkout. Git branch to checkout.
   --no-build                  SKIP build.
   --clean                     Perform clean install of the site.
   --migrate                   Perform migration.
-  --admin-password=PASSWORD   Password to set for the admin user. (first user)
+  --password=ADMIN_PASSWORD   Password to set for the admin user. (first user)
 EOF
 }
 
@@ -40,7 +40,7 @@ PERFORM_MIGRATION=false
 PERFORM_ADMIN_PASSWORD_CHANGE=false
 SKIP_BUILD=false
 GIT_BRANCH="develop"
-CMD_ROOT=""
+DOCKER_CMD=""
 DRUSH_CMD="vendor/bin/drush --root=$PWD/web"
 ADMIN_PASSWORD=""
 
@@ -53,9 +53,9 @@ while [ "$1" != "" ]; do
     print_usage_info
     exit
     ;;
-  --root)
-    CMD_ROOT=$VALUE
-    echo "Changed command root location to '$CMD_ROOT'"
+  --docker)
+    DOCKER_CMD=$VALUE
+    echo "Will execute commands, other than drush, inside Docker container. Command: '$DOCKER_CMD'"
     ;;
   --drush)
     DRUSH_CMD=${VALUE:-$DRUSH_CMD}
@@ -124,26 +124,26 @@ fi
 
 if [ "$PERFORM_GIT_CHECKOUT" = true ]; then
   # Git: Checkout correct branch.
-  run_command "$CMD_ROOT git checkout $GIT_BRANCH"
+  run_command "$DOCKER_CMD git checkout $GIT_BRANCH"
 
   # Git: Pull latest changes.
-  run_command "$CMD_ROOT git pull"
+  run_command "$DOCKER_CMD git pull"
 fi
 
 if [ "$SKIP_BUILD" = false ]; then
   # Installation: Install composer dependencies.
-  run_command "$CMD_ROOT composer install"
+  run_command "$DOCKER_CMD composer install"
 
   # Install new npm packages on eic_community theme.
-  run_command "$CMD_ROOT npm install --prefix $THEME_PATH"
+  run_command "$DOCKER_CMD npm install --prefix $THEME_PATH"
 
   # Rebuild eic_community theme assets.
-  run_command "$CMD_ROOT npm run build --prefix $THEME_PATH"
+  run_command "$DOCKER_CMD npm run build --prefix $THEME_PATH"
 fi
 
 if [ "$PERFORM_CLEAN_INSTALL" = true ]; then
   # Installation: Install clean website via Toolkit.
-  run_command "$CMD_ROOT ./vendor/bin/run toolkit:install-clean --config-file runner.yml.dist"
+  run_command "$DOCKER_CMD ./vendor/bin/run toolkit:install-clean --config-file runner.yml.dist"
 
   # Install EIC default content module.
   run_command "$DRUSH_CMD en $DEFAULT_CONTENT_MODULES -y"
