@@ -66,6 +66,6 @@ function eic_community_preprocess_block__latest_news_stories(&$variables) {
     $variables['news_stories_items'][] = $item;
 
     // Add node cache tags.
-    $cache_tags[] = Cache::mergeTags($cache_tags, $node->getCacheTags());
+    $cache_tags = Cache::mergeTags($cache_tags, $node->getCacheTags());
   }
 }

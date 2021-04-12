@@ -25,3 +25,4 @@ permissions:
   - 'view fact_figure fragments'
   - 'view media'
   - 'view recommend'
+  - 'view recommend_group'

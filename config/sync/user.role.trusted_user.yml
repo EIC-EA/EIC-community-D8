@@ -14,4 +14,7 @@ permissions:
   - 'edit own comments'
   - 'edit own eic_document media'
   - 'edit own image media'
+  - 'flag recommend_group'
   - 'post comments'
+  - 'unflag recommend_group'
+  - 'view recommend_group'

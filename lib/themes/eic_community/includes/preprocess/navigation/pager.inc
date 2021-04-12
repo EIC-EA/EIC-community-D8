@@ -24,6 +24,11 @@ function eic_community_preprocess_pager(array &$variables): void {
   $pager_manager = \Drupal::service('pager.manager');
   $pager = $pager_manager->getPager($element);
 
+  // Nothing to do if pager is empty.
+  if (empty($pager)) {
+    return;
+  }
+
   // Maximum page number for this pager.
   $pager_max = $pager->getTotalPages();
   // Nothing to do if there is only one page.
