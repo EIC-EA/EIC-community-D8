@@ -41,7 +41,7 @@ PERFORM_ADMIN_PASSWORD_CHANGE=false
 SKIP_BUILD=false
 GIT_BRANCH="develop"
 CMD_ROOT=""
-DRUSH_CMD="../vendor/bin/drush"
+DRUSH_CMD="vendor/bin/drush --root=$PWD/web"
 ADMIN_PASSWORD=""
 
 # Get input parameters
@@ -119,9 +119,7 @@ run_command() {
 
 if [ "$PERFORM_CLEAN_INSTALL" = false ]; then
   # Configuration: Enable maintenance mode (only when not performing a clean install).
-  cd web # Move into the Drupal webroot
   run_command "$DRUSH_CMD state:set system.maintenance_mode 1 --input-format=integer -y"
-  cd ..
 fi
 
 if [ "$PERFORM_GIT_CHECKOUT" = true ]; then
@@ -147,21 +145,12 @@ if [ "$PERFORM_CLEAN_INSTALL" = true ]; then
   # Installation: Install clean website via Toolkit.
   run_command "$CMD_ROOT ./vendor/bin/run toolkit:install-clean --config-file runner.yml.dist"
 
-  # Move into the Drupal webroot in order to execute drush commands.
-  cd web
-
   # Install EIC default content module.
   run_command "$DRUSH_CMD en $DEFAULT_CONTENT_MODULES -y"
 
   # Uninstall EIC default content module and dependencies.
   run_command "$DRUSH_CMD pmu $DEFAULT_CONTENT_MODULES -y"
-
-  # Move back to the project's root folder.
-  cd ..
 fi
-
-# Move into the Drupal webroot.
-cd web
 
 # Make sure the eic_deploy module is enabled *before* we run updates.
 # This may be removed again when the module has been successfully enabled on
