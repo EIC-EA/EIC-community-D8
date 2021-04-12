@@ -4,7 +4,6 @@ status: true
 dependencies:
   config:
     - field.field.user.user.field_first_name
-    - field.field.user.user.field_full_name
     - field.field.user.user.field_is_deleted
     - field.field.user.user.field_is_deleted_anonymous
     - field.field.user.user.field_is_deleted_by_uid
@@ -143,6 +142,5 @@ content:
     settings: {  }
     third_party_settings: {  }
 hidden:
-  field_full_name: true
   langcode: true
   member_profiles: true
