@@ -26,14 +26,6 @@ targetEntityType: user
 bundle: user
 mode: teaser
 content:
-  field_full_name:
-    type: string
-    weight: 1
-    region: content
-    label: hidden
-    settings:
-      link_to_entity: false
-    third_party_settings: {  }
   field_media:
     type: entity_reference_entity_view
     weight: 0
@@ -51,8 +43,14 @@ content:
     settings:
       link: false
     third_party_settings: {  }
+  realname:
+    weight: 1
+    region: content
+    settings: {  }
+    third_party_settings: {  }
 hidden:
   field_first_name: true
+  field_full_name: true
   field_is_deleted: true
   field_is_deleted_anonymous: true
   field_is_deleted_by_uid: true
