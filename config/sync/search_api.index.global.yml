@@ -198,6 +198,11 @@ field_settings:
     dependencies:
       module:
         - group
+  user__group_content__uid_gid:
+    label: 'Reverse reference: Group content using Group content creator » Parent group'
+    datasource_id: 'entity:user'
+    property_path: 'search_api_reverse_entity_references_group_content__uid:gid'
+    type: integer
   user_field_full_name:
     label: 'Full Name'
     datasource_id: 'entity:user'
