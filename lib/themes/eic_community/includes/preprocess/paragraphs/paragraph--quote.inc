@@ -5,7 +5,7 @@
  * Prepares variables for paragraph quote template.
  */
 
-use Drupal\oe_theme\ValueObject\ImageValueObject;
+use Drupal\eic_community\ValueObject\ImageValueObject;
 
 /**
  * Implements hook_preprocess_paragraph() for quote paragraph.
@@ -39,20 +39,8 @@ function eic_community_preprocess_paragraph__quote(array &$variables) {
         /** @var \Drupal\user\UserInterface $user */
         $user = $paragraph->get('field_user_ref')->entity;
 
-        $full_name = [];
-
-        // Gets first name.
-        if (!$user->get('field_first_name')->isEmpty()) {
-          $full_name[] = $user->get('field_first_name')->value;
-        }
-        // Gets last name.
-        if (!$user->get('field_last_name')->isEmpty()) {
-          $full_name[] = $user->get('field_last_name')->value;
-        }
         // Add user full name to the theme variables.
-        if (!empty($full_name)) {
-          $variables['paragraph_content']['author'] = implode(' ', $full_name);
-        }
+        $variables['paragraph_content']['author'] = $user->getDisplayName();
 
         // Add user image.
         if (!$user->get('field_media')->isEmpty()) {
