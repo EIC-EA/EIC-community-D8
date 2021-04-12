@@ -72,6 +72,11 @@ name: Global
 description: ''
 read_only: false
 field_settings:
+  content__group_content__entity_id_gid:
+    label: 'Reverse reference: Group content using Content » Parent group'
+    datasource_id: 'entity:node'
+    property_path: 'search_api_reverse_entity_references_group_content__entity_id:gid'
+    type: integer
   content_created:
     label: 'Authored on'
     datasource_id: 'entity:node'
@@ -298,12 +303,15 @@ processor_settings:
   aggregated_field: {  }
   hierarchy:
     fields:
-      field_vocab_geo: taxonomy_term-parent
-      field_vocab_topics: taxonomy_term-parent
+      content_field_vocab_geo: taxonomy_term-parent
+      content_field_vocab_topics: taxonomy_term-parent
+      group_field_vocab_geo: taxonomy_term-parent
+      group_field_vocab_topics: taxonomy_term-parent
     weights:
       preprocess_index: -45
   language_with_fallback: {  }
   rendered_item: {  }
+  reverse_entity_references: {  }
   solr_date_range:
     weights:
       preprocess_index: 0
