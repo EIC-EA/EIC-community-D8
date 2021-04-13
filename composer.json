@@ -36,6 +36,7 @@
         "drupal/pathauto": "^1.8",
         "drupal/profile": "^1.2",
         "drupal/publication_date": "^2.0@beta",
+        "drupal/realname": "1.x-dev#b0c5f70d5140768ab52d8facf9b6939748500209",
         "drupal/restui": "^1.19",
         "drupal/route_condition": "^2.0",
         "drupal/scheduler": "^1.3",
