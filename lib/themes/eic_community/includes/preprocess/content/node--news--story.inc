@@ -43,7 +43,7 @@ function _eic_community_preprocess_node_news_story(array &$variables) {
       'label' => t('@time ago', ['@time' => $time_ago]),
     ],
     'author' => [
-      'author' => $node_author->get('field_full_name')->value,
+      'author' => $node_author->getDisplayName(),
       'path' => $node_author->toUrl()->toString(),
     ],
   ];
