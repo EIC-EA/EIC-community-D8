@@ -24,7 +24,7 @@ function eic_community_preprocess_comment(&$variables) {
     $comment_origin_author = User::load($comment_origin_entity->getOwnerId());
     $comment_origin = [
       'author' => [
-        'author' => $comment_origin_author->get("field_full_name")->value,
+        'author' => $comment_origin_author->getDisplayName(),
       ],
       'comment_id' => $comment_origin_entity->id(),
       'is_owner' => $current_user->id() == $comment_origin_entity->getOwnerId(),
@@ -40,7 +40,7 @@ function eic_community_preprocess_comment(&$variables) {
 
   $variables['comment'] = [
     'author' => [
-      'author' => $author->get('field_full_name')->getString(),
+      'author' => $author->getDisplayName(),
       'path' => '',
       'image' => $author_image,
     ],
@@ -67,7 +67,7 @@ function _eic_community_preprocess_comment_form(&$variables) {
   $author_image = _get_profile_image_array($author);
 
   $variables['comment_form']['author'] = [
-    'author' => $author->get('field_full_name')->getString(),
+    'author' => $author->getDisplayName(),
     'path' => '',
     'image' => $author_image,
   ];
