@@ -104,43 +104,46 @@ class GroupWikiBookNavigationBlock extends BookNavigationBlock {
   public function build() {
     $current_bid = 0;
 
-    if ($group = $this->getGroupFromRoute()) {
-      $results = $this->getGroupTopLevelWikiPages($group);
+    if (!$group = $this->getGroupFromRoute()) {
+      return [];
+    }
 
-      if ($node = $this->requestStack->getCurrentRequest()->get('node')) {
-        $current_bid = empty($node->book['bid']) ? 0 : $node->book['bid'];
+    $results = $this->getGroupTopLevelWikiPages($group);
+
+    if ($node = $this->requestStack->getCurrentRequest()->get('node')) {
+      $current_bid = empty($node->book['bid']) ? 0 : $node->book['bid'];
+    }
+
+    $book_menus = [];
+    $pseudo_tree = [0 => ['below' => FALSE]];
+    foreach ($results as $row) {
+      $book = $this->bookManager->loadBookLink($row->bid);
+      // Check whether user can access the book link.
+      $book_node = Node::load($book['nid']);
+      $book['access'] = $book_node->access('view');
+
+      if ($row->bid == $current_bid) {
+        // If the current page is a node associated with a book, the whole
+        // parent tree needs to be retrieved.
+        $data = $this->bookManager->bookTreeAllData($node->book['bid'], $node->book);
+        $book_menus[$row->bid] = $this->bookManager->bookTreeOutput($data);
       }
-
-      $book_menus = [];
-      $pseudo_tree = [0 => ['below' => FALSE]];
-      foreach ($results as $row) {
-        $book = $this->bookManager->loadBookLink($row->bid);
-        // Check whether user can access the book link.
-        $book_node = Node::load($book['nid']);
-        $book['access'] = $book_node->access('view');
-
-        if ($row->bid == $current_bid) {
-          // If the current page is a node associated with a book, the whole
-          // parent tree needs to be retrieved.
-          $data = $this->bookManager->bookTreeAllData($node->book['bid'], $node->book);
-          $book_menus[$row->bid] = $this->bookManager->bookTreeOutput($data);
-        }
-        else {
-          // Since we know we will only display a link to the top node, there
-          // is no reason to run an additional menu tree query for each book.
-          $book['in_active_trail'] = FALSE;
-          $pseudo_tree[0]['link'] = $book;
-          $book_menus[$row->bid] = $this->bookManager->bookTreeOutput($pseudo_tree);
-        }
-      }
-      if ($book_menus) {
-        return [
-          '#theme' => 'book_all_books_block',
-        ] + $book_menus;
+      else {
+        // Since we know we will only display a link to the top node, there
+        // is no reason to run an additional menu tree query for each book.
+        $book['in_active_trail'] = FALSE;
+        $pseudo_tree[0]['link'] = $book;
+        $book_menus[$row->bid] = $this->bookManager->bookTreeOutput($pseudo_tree);
       }
     }
 
-    return [];
+    if (empty($book_menus)) {
+      return [];
+    }
+
+    return [
+      '#theme' => 'book_all_books_block',
+    ] + $book_menus;
   }
 
   /**
