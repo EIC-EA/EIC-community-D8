@@ -49,7 +49,6 @@
         "drupal/ui_patterns": "^1.2",
         "drupal/views_bulk_operations": "^3.10",
         "drush/drush": "^10.3",
-        "openeuropa/composer-artifacts": "~0.1",
         "openeuropa/ecl-twig-loader": "^2.12",
         "openeuropa/oe_media": "dev-ISSUE-160-Drupal-9-support-without-media_avportal as 1.11.0",
         "openeuropa/oe_time_caching": "dev-ISSUE-6-Drupal-9-support as 1.0.0",
