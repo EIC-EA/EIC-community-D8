@@ -12,7 +12,6 @@ use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\group\Entity\Group;
 use Drupal\group\Entity\GroupContent;
 use Drupal\group\Entity\GroupInterface;
-use Drupal\node\Entity\Node;
 use Drupal\node\NodeInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -102,48 +101,33 @@ class GroupWikiBookNavigationBlock extends BookNavigationBlock {
    * {@inheritdoc}
    */
   public function build() {
-    $current_bid = 0;
-
-    if (!$group = $this->getGroupFromRoute()) {
+    if (!$this->getGroupFromRoute()) {
       return [];
     }
 
-    $results = $this->getGroupTopLevelWikiPages($group);
-
-    if ($node = $this->requestStack->getCurrentRequest()->get('node')) {
-      $current_bid = empty($node->book['bid']) ? 0 : $node->book['bid'];
-    }
-
-    $book_menus = [];
-    $pseudo_tree = [0 => ['below' => FALSE]];
-    foreach ($results as $row) {
-      $book = $this->bookManager->loadBookLink($row->bid);
-      // Check whether user can access the book link.
-      $book_node = Node::load($book['nid']);
-      $book['access'] = $book_node->access('view');
-
-      if ($row->bid == $current_bid) {
-        // If the current page is a node associated with a book, the whole
-        // parent tree needs to be retrieved.
-        $data = $this->bookManager->bookTreeAllData($node->book['bid'], $node->book);
-        $book_menus[$row->bid] = $this->bookManager->bookTreeOutput($data);
-      }
-      else {
-        // Since we know we will only display a link to the top node, there
-        // is no reason to run an additional menu tree query for each book.
-        $book['in_active_trail'] = FALSE;
-        $pseudo_tree[0]['link'] = $book;
-        $book_menus[$row->bid] = $this->bookManager->bookTreeOutput($pseudo_tree);
-      }
-    }
-
-    if (empty($book_menus)) {
+    if (!$node = $this->requestStack->getCurrentRequest()->get('node')) {
       return [];
     }
+
+    if ($node->bundle() !== 'wiki_page') {
+      return [];
+    }
+
+    $data = $this->bookManager->bookTreeAllData($node->book['bid'], $node->book);
+    $book_data = reset($data);
+
+    if (empty($book_data['below'])) {
+      return [];
+    }
+
+    // Ignore top level book page from the menu data.
+    $wiki_pages_data = $book_data['below'];
+    // Get book menu renderable array.
+    $book_menu = [$this->bookManager->bookTreeOutput($wiki_pages_data)];
 
     return [
       '#theme' => 'book_all_books_block',
-    ] + $book_menus;
+    ] + $book_menu;
   }
 
   /**
@@ -201,27 +185,6 @@ class GroupWikiBookNavigationBlock extends BookNavigationBlock {
       }
     }
     return $group;
-  }
-
-  /**
-   * Get top level wiki pages of a group.
-   *
-   * @param \Drupal\group\Entity\GroupInterface $group
-   *   The Group entity.
-   *
-   * @return array
-   *   An array of top level wiki page books.
-   */
-  private function getGroupTopLevelWikiPages(GroupInterface $group) {
-    $query = $this->database->select('group_content_field_data', 'gp');
-    $query->fields('gp', ['entity_id']);
-    $query->condition('gp.type', 'group-group_node-wiki_page');
-    $query->condition('gp.gid', $group->id());
-    $query->join('book', 'b', 'gp.entity_id = b.nid');
-    $query->fields('b', ['bid']);
-    $query->condition('b.pid', 0);
-    $query->orderBy('b.weight');
-    return $query->execute()->fetchAll(\PDO::FETCH_OBJ);
   }
 
 }
