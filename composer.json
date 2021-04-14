@@ -63,6 +63,7 @@
         "drupal/devel": "^4.1",
         "drupal/drupal-extension": "~4.0",
         "ec-europa/toolkit": "^4.1",
+        "openeuropa/task-runner": "1.0.0-beta6",
         "zaporylie/composer-drupal-optimizations": "^1.2"
     },
     "scripts": {
