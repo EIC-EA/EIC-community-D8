@@ -54,7 +54,9 @@
 
   {{ page.content|without(_stay_up_to_date_section_left, _stay_up_to_date_section_right, 'eic_social_feed', 'homepage_facts_figures') }}
 
-  {% embed "@theme/patterns/compositions/layout-block.html.twig" %}
+  {% embed "@theme/patterns/compositions/layout-block.html.twig" with {
+    extra_classes: 'ecl-section-wrapper--is-white',
+  } %}
     {% if _stay_up_to_date_section_left is not empty %}
       {% block content %}
         {{ page.content[_stay_up_to_date_section_left] }}
