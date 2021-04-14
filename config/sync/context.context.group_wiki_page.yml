@@ -4,8 +4,8 @@ status: true
 dependencies:
   module:
     - node
-name: group_wiki
-label: 'Group - Wiki'
+name: group_wiki_page
+label: 'Group - Wiki page'
 group: Groups
 description: 'Context used when viewing group wiki pages'
 requireAllConditions: false
@@ -37,6 +37,21 @@ reactions:
         unique: 0
         context_id: group_wiki
         uuid: 2089ac99-521b-4bba-b1e0-030d675b287f
+      008e6760-9abd-4730-9c0a-891b0085e534:
+        id: eic_group_header
+        label: 'EIC Group header'
+        provider: eic_groups
+        label_display: '0'
+        region: page_header
+        weight: '0'
+        context_mapping:
+          group: '@group.group_route_context:group'
+        custom_id: eic_group_header
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: group_wiki_page
+        uuid: 008e6760-9abd-4730-9c0a-891b0085e534
     id: blocks
     saved: false
     uuid: 4d77c57f-3626-4134-8271-8983fa46b50e
