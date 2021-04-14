@@ -52,7 +52,7 @@
     {% endif %}
   {% endfor %}
 
-  {{ page.content|without(_stay_up_to_date_section_left, _stay_up_to_date_section_right, 'eic_social_feed') }}
+  {{ page.content|without(_stay_up_to_date_section_left, _stay_up_to_date_section_right, 'eic_social_feed', 'homepage_facts_figures') }}
 
   {% embed "@theme/patterns/compositions/layout-block.html.twig" %}
     {% if _stay_up_to_date_section_left is not empty %}
@@ -71,4 +71,9 @@
       {% endif %}
     {% endblock %}
   {% endembed %}
+
+  {% if page.content.homepage_facts_figures is not empty %}
+    {{ page.content.homepage_facts_figures }}
+  {% endif %}
+
 {% endblock %}
