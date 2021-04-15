@@ -7,9 +7,9 @@ use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\group\Entity\GroupContent;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\eic_groups\EICGroupsHelperInterface;
 use Drupal\group\Entity\GroupInterface;
-use Drupal\node\NodeInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
@@ -27,17 +27,44 @@ class EntityOperations implements ContainerInjectionInterface {
    */
   protected $entityTypeManager;
 
+  /**
+   * The book manager.
+   *
+   * @var \Drupal\book\BookManagerInterface
+   */
   protected $bookManager;
+
+  /**
+   * The current route match service.
+   *
+   * @var \Drupal\Core\Routing\RouteMatchInterface
+   */
+  protected $routeMatch;
+
+  /**
+   * The EIC Groups helper service.
+   *
+   * @var \Drupal\eic_groups\EICGroupsHelperInterface
+   */
+  protected $eicGroupsHelper;
 
   /**
    * Constructs a new EntityOperations object.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
+   * @param \Drupal\book\BookManagerInterface $book_manager
+   *   The book manager.
+   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
+   *   The current route match service.
+   * @param \Drupal\eic_groups\EICGroupsHelperInterface $eic_groups_helper
+   *   The EIC Groups helper service.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, BookManagerInterface $book_manager) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, BookManagerInterface $book_manager, RouteMatchInterface $route_match, EICGroupsHelperInterface $eic_groups_helper) {
     $this->entityTypeManager = $entity_type_manager;
     $this->bookManager = $book_manager;
+    $this->routeMatch = $route_match;
+    $this->eicGroupsHelper = $eic_groups_helper;
   }
 
   /**
@@ -47,6 +74,8 @@ class EntityOperations implements ContainerInjectionInterface {
     return new static(
       $container->get('entity_type.manager'),
       $container->get('book.manager'),
+      $container->get('current_route_match'),
+      $container->get('eic_groups.helper')
     );
   }
 
@@ -62,8 +91,8 @@ class EntityOperations implements ContainerInjectionInterface {
    */
   public function nodeView(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
     // Redirect user to first level wiki page if the group book has wiki pages.
-    if (\Drupal::routeMatch()->getRouteName() === 'entity.node.canonical' && $entity->bundle() === 'book') {
-      if ($this->getGroupByEntity($entity)) {
+    if ($this->routeMatch->getRouteName() === 'entity.node.canonical' && $entity->bundle() === 'book') {
+      if ($this->eicGroupsHelper->getGroupByEntity($entity)) {
         $data = $this->bookManager->bookTreeAllData($entity->book['bid'], $entity->book, 2);
         $book_data = reset($data);
         if (!empty($book_data['below'])) {
@@ -94,34 +123,6 @@ class EntityOperations implements ContainerInjectionInterface {
     $node = $this->entityTypeManager->getStorage('node')->create($node_values);
     $node->save();
     $entity->addContent($node, 'group_node:book');
-  }
-
-  /**
-   * Get Group of a given entity.
-   *
-   * @param \Drupal\Core\Entity\EntityInterface $entity
-   *   The content entity.
-   *
-   * @return bool|\Drupal\group\Entity\GroupInterface
-   *   The Group entity.
-   *
-   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
-   */
-  private function getGroupByEntity(EntityInterface $entity) {
-    $group = FALSE;
-    if ($entity instanceof GroupInterface) {
-      return $entity;
-    }
-    elseif ($entity instanceof NodeInterface) {
-      // Load all the group content for this entity.
-      $group_content = GroupContent::loadByEntity($entity);
-      // Assuming that the content can be related only to 1 group.
-      $group_content = reset($group_content);
-      if (!empty($group_content)) {
-        $group = $group_content->getGroup();
-      }
-    }
-    return $group;
   }
 
 }

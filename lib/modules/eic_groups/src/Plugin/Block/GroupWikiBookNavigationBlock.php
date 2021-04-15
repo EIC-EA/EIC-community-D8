@@ -9,6 +9,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\eic_groups\EICGroupsHelperInterface;
 use Drupal\group\Entity\Group;
 use Drupal\group\Entity\GroupContent;
 use Drupal\group\Entity\GroupInterface;
@@ -35,11 +36,11 @@ class GroupWikiBookNavigationBlock extends BookNavigationBlock {
   protected $database;
 
   /**
-   * The route match service.
+   * The EIC Groups helper service.
    *
-   * @var \Drupal\Core\Routing\RouteMatchInterface
+   * @var \Drupal\eic_groups\EICGroupsHelperInterface
    */
-  protected $routeMatch;
+  protected $eicGroupsHelper;
 
   /**
    * Constructs a new BookNavigationBlock instance.
@@ -58,13 +59,13 @@ class GroupWikiBookNavigationBlock extends BookNavigationBlock {
    *   The node storage.
    * @param \Drupal\Core\Database\Connection $database
    *   The database service.
-   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
-   *   The route match service.
+   * @param \Drupal\eic_groups\EICGroupsHelperInterface $eic_groups_helper
+   *   The EIC Groups helper service.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, RequestStack $request_stack, BookManagerInterface $book_manager, EntityStorageInterface $node_storage, Connection $database, RouteMatchInterface $route_match) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, RequestStack $request_stack, BookManagerInterface $book_manager, EntityStorageInterface $node_storage, Connection $database, EICGroupsHelperInterface $eic_groups_helper) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $request_stack, $book_manager, $node_storage);
     $this->database = $database;
-    $this->routeMatch = $route_match;
+    $this->eicGroupsHelper = $eic_groups_helper;
   }
 
   /**
@@ -79,7 +80,7 @@ class GroupWikiBookNavigationBlock extends BookNavigationBlock {
       $container->get('book.manager'),
       $container->get('entity_type.manager')->getStorage('node'),
       $container->get('database'),
-      $container->get('current_route_match'),
+      $container->get('eic_groups.helper')
     );
   }
 
@@ -101,7 +102,7 @@ class GroupWikiBookNavigationBlock extends BookNavigationBlock {
    * {@inheritdoc}
    */
   public function build() {
-    if (!$this->getGroupFromRoute()) {
+    if (!$this->eicGroupsHelper->getGroupFromRoute()) {
       return [];
     }
 
@@ -128,63 +129,6 @@ class GroupWikiBookNavigationBlock extends BookNavigationBlock {
     return [
       '#theme' => 'book_all_books_block',
     ] + $book_menu;
-  }
-
-  /**
-   * Get the group from the current route match.
-   *
-   * @return bool|\Drupal\group\Entity\GroupInterface
-   *   The Group entity.
-   *
-   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
-   */
-  private function getGroupFromRoute() {
-    $entity = FALSE;
-    $parameters = $this->routeMatch->getParameters()->all();
-    if (!empty($parameters['group']) && is_numeric($parameters['group'])) {
-      $group = Group::load($parameters['group']);
-      return $group;
-    }
-    if (!empty($parameters)) {
-      foreach ($parameters as $parameter) {
-        if ($parameter instanceof EntityInterface) {
-          $entity = $parameter;
-          break;
-        }
-      }
-    }
-    if ($entity) {
-      return $this->getGroupByEntity($entity);
-    }
-    return FALSE;
-  }
-
-  /**
-   * Get Group of a given entity.
-   *
-   * @param \Drupal\Core\Entity\EntityInterface $entity
-   *   The content entity.
-   *
-   * @return bool|\Drupal\group\Entity\GroupInterface
-   *   The Group entity.
-   *
-   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
-   */
-  private function getGroupByEntity(EntityInterface $entity) {
-    $group = FALSE;
-    if ($entity instanceof GroupInterface) {
-      return $entity;
-    }
-    elseif ($entity instanceof NodeInterface) {
-      // Load all the group content for this entity.
-      $group_content = GroupContent::loadByEntity($entity);
-      // Assuming that the content can be related only to 1 group.
-      $group_content = reset($group_content);
-      if (!empty($group_content)) {
-        $group = $group_content->getGroup();
-      }
-    }
-    return $group;
   }
 
 }
