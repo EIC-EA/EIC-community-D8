@@ -64,6 +64,9 @@ module:
   fragments: 0
   gnode: 0
   group: 0
+  group_content_menu: 0
+  group_flex: 0
+  group_permissions: 0
   hal: 0
   image: 0
   inline_entity_form: 0
@@ -91,6 +94,7 @@ module:
   path: 0
   path_alias: 0
   profile: 0
+  realname: 0
   responsive_image: 0
   rest: 0
   restui: 0

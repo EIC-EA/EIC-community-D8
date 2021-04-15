@@ -49,7 +49,7 @@ function eic_community_preprocess_block__latest_news_stories(&$variables) {
         'label' => t('@time ago', ['@time' => $time_ago]),
       ],
       'author' => [
-        'author' => $node_author->get('field_full_name')->value,
+        'author' => $node_author->getDisplayName(),
         'path' => $node_author->toUrl()->toString(),
       ],
     ];
@@ -66,6 +66,6 @@ function eic_community_preprocess_block__latest_news_stories(&$variables) {
     $variables['news_stories_items'][] = $item;
 
     // Add node cache tags.
-    $cache_tags[] = Cache::mergeTags($cache_tags, $node->getCacheTags());
+    $cache_tags = Cache::mergeTags($cache_tags, $node->getCacheTags());
   }
 }
