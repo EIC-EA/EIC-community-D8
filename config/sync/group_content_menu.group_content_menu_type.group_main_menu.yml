@@ -1,0 +1,6 @@
+uuid: cae36e62-1e39-4ad3-bf0b-7d34d716990f
+langcode: en
+status: true
+dependencies: {  }
+id: group_main_menu
+label: 'Group - Main menu'
