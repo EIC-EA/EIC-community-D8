@@ -50,7 +50,7 @@
         "drupal/views_bulk_operations": "^3.10",
         "drush/drush": "^10.3",
         "ethosce/group_purl": "2.x-dev",
-        "lramarojaona/purl": "^2.0@beta",
+        "lramarojaona/purl": "^1.0@alpha",
         "openeuropa/composer-artifacts": "~0.1",
         "openeuropa/ecl-twig-loader": "^2.12",
         "openeuropa/oe_media": "dev-ISSUE-160-Drupal-9-support-without-media_avportal as 1.11.0",
