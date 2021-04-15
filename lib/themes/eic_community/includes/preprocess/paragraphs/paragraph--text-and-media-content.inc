@@ -5,7 +5,7 @@
  * Prepares variables for paragraph text and media content template.
  */
 
-use Drupal\oe_theme\ValueObject\ImageValueObject;
+use Drupal\eic_community\ValueObject\ImageValueObject;
 
 /**
  * Implements hook_preprocess_paragraph() for text_and_media_content paragraph.
