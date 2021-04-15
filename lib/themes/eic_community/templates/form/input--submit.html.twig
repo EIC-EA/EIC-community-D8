@@ -7,7 +7,7 @@
  */
 #}
 {% set extraAttributes = [] %}
-{% for name,value in attributes %}
+{% for name,value in attributes.toArray %}
   {% set extraAttributes = extraAttributes|merge([{'name': name, 'value': value}]) %}
 {% endfor %}
 
