@@ -3,7 +3,7 @@ langcode: en
 status: true
 dependencies:
   module:
-    - route_condition
+    - node
 name: group_wiki_overview
 label: 'Group - Wiki overview'
 group: Groups
@@ -11,12 +11,14 @@ description: 'Context used when viewing group wiki overview page'
 requireAllConditions: false
 disabled: false
 conditions:
-  route:
-    id: route
-    routes: eic_groups.wiki_overview
+  node_type:
+    id: node_type
+    bundles:
+      book: book
     negate: false
-    uuid: 39826190-e02d-4e1d-a468-3977bfd99cdb
-    context_mapping: {  }
+    uuid: ae0a82e4-5b80-4de1-b309-c2241ca6722e
+    context_mapping:
+      node: '@node.node_route_context:node'
 reactions:
   blocks:
     blocks:
@@ -50,6 +52,20 @@ reactions:
         unique: 0
         context_id: group_wiki
         uuid: 04974156-0f3e-411b-a62d-f961cff1e0c9
+      365c1731-6e0c-49b4-90f0-9d8bbdb1a924:
+        id: system_breadcrumb_block
+        label: Breadcrumbs
+        provider: system
+        label_display: '0'
+        region: breadcrumbs
+        weight: '0'
+        context_mapping: {  }
+        custom_id: system_breadcrumb_block
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: group_wiki_overview
+        uuid: 365c1731-6e0c-49b4-90f0-9d8bbdb1a924
     id: blocks
     saved: false
     uuid: 4d77c57f-3626-4134-8271-8983fa46b50e

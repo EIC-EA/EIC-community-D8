@@ -52,6 +52,20 @@ reactions:
         unique: 0
         context_id: group_wiki_page
         uuid: 008e6760-9abd-4730-9c0a-891b0085e534
+      f70b719f-27cc-45ce-8a97-c7801eb362eb:
+        id: system_breadcrumb_block
+        label: Breadcrumbs
+        provider: system
+        label_display: '0'
+        region: breadcrumbs
+        weight: '0'
+        context_mapping: {  }
+        custom_id: system_breadcrumb_block
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: group_wiki_page
+        uuid: f70b719f-27cc-45ce-8a97-c7801eb362eb
     id: blocks
     saved: false
     uuid: 4d77c57f-3626-4134-8271-8983fa46b50e
