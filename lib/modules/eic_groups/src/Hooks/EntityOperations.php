@@ -7,7 +7,10 @@ use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Link;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\Core\Url;
 use Drupal\eic_groups\EICGroupsHelperInterface;
 use Drupal\group\Entity\GroupInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -19,6 +22,8 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
  * Implementations for entity hooks.
  */
 class EntityOperations implements ContainerInjectionInterface {
+
+  use StringTranslationTrait;
 
   /**
    * The entity type manager.
@@ -90,18 +95,61 @@ class EntityOperations implements ContainerInjectionInterface {
    * Implements hook_node_access().
    */
   public function nodeView(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
-    // Redirect user to first level wiki page if the group book has wiki pages.
-    if ($this->routeMatch->getRouteName() === 'entity.node.canonical' && $entity->bundle() === 'book') {
-      if ($this->eicGroupsHelper->getGroupByEntity($entity)) {
-        $data = $this->bookManager->bookTreeAllData($entity->book['bid'], $entity->book, 2);
-        $book_data = reset($data);
-        if (!empty($book_data['below'])) {
-          $wiki_page_nid = reset($book_data['below'])['link']['nid'];
-          $wiki_page = $this->entityTypeManager->getStorage('node')->load($wiki_page_nid);
-          $redirect_response = new RedirectResponse($wiki_page->toUrl()->toString());
-          $redirect_response->send();
+    switch ($this->routeMatch->getRouteName()) {
+      case 'entity.node.canonical':
+        // Redirect user to first level wiki page if the group book has wiki pages.
+        if ($entity->bundle() === 'book') {
+          if ($group = $this->eicGroupsHelper->getGroupByEntity($entity)) {
+            $data = $this->bookManager->bookTreeAllData($entity->book['bid'], $entity->book, 2);
+            $book_data = reset($data);
+            if (!empty($book_data['below'])) {
+              $wiki_page_nid = reset($book_data['below'])['link']['nid'];
+              $wiki_page = $this->entityTypeManager->getStorage('node')->load($wiki_page_nid);
+              $redirect_response = new RedirectResponse($wiki_page->toUrl()->toString());
+              $redirect_response->send();
+            }
+            else {
+              $build['wiki_section_message'] = [
+                '#type' => 'item',
+                '#markup' => $this->t('No Wiki pages (yet)'),
+              ];
+              // @todo Create a EICGroupsWiki helper service and place the
+              // following code in a method like getLinkAddWikiPage.
+              $add_wiki_page_route_parameters = [
+                'group' => $group->id(),
+                'plugin_id' => 'group_node:wiki_page',
+              ];
+              $add_wiki_page_link_options = [
+                'query' => [
+                  'parent' => $entity->id(),
+                ],
+              ];
+              $add_wiki_page_url = Url::fromRoute('entity.group_content.create_form', $add_wiki_page_route_parameters, $add_wiki_page_link_options);
+              $build['link_add_wiki_page'] = $add_wiki_page_url->toString();
+              $build['link_add_wiki_page_renderable'] = Link::fromTextAndUrl($this->t('Add a new wiki page'), $add_wiki_page_url)->toRenderable();
+            }
+          }
         }
-      }
+        elseif ($entity->bundle() === 'wiki_page') {
+          if ($group = $this->eicGroupsHelper->getGroupByEntity($entity)) {
+            // @todo Create a EICGroupsWiki helper service and place the
+            // following code in a method like getLinkAddWikiPage.
+            $add_wiki_page_route_parameters = [
+              'group' => $group->id(),
+              'plugin_id' => 'group_node:wiki_page',
+            ];
+            $add_wiki_page_link_options = [
+              'query' => [
+                'parent' => $entity->id(),
+              ],
+            ];
+            $add_wiki_page_url = Url::fromRoute('entity.group_content.create_form', $add_wiki_page_route_parameters, $add_wiki_page_link_options);
+            $build['link_add_wiki_page'] = $add_wiki_page_url->toString();
+            $build['link_add_wiki_page_renderable'] = Link::fromTextAndUrl($this->t('Add a new wiki page'), $add_wiki_page_url)->toRenderable();
+          }
+        }
+        break;
+
     }
   }
 
