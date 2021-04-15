@@ -113,37 +113,17 @@ class EntityOperations implements ContainerInjectionInterface {
                 '#type' => 'item',
                 '#markup' => $this->t('No Wiki pages (yet)'),
               ];
-              // @todo Create a EICGroupsWiki helper service and place the
-              // following code in a method like getLinkAddWikiPage.
-              $add_wiki_page_route_parameters = [
-                'group' => $group->id(),
-                'plugin_id' => 'group_node:wiki_page',
-              ];
-              $add_wiki_page_link_options = [
-                'query' => [
-                  'parent' => $entity->id(),
-                ],
-              ];
-              $add_wiki_page_url = Url::fromRoute('entity.group_content.create_form', $add_wiki_page_route_parameters, $add_wiki_page_link_options);
-              $build['link_add_wiki_page'] = $add_wiki_page_url->toString();
-              $build['link_add_wiki_page_renderable'] = Link::fromTextAndUrl($this->t('Add a new wiki page'), $add_wiki_page_url)->toRenderable();
+              // Add wiki page create form url to the build array.
+              if ($add_wiki_page_url = $this->getWikiPageAddFormUrl($entity, $group)) {
+                $build['link_add_wiki_page'] = $add_wiki_page_url->toString();
+                $build['link_add_wiki_page_renderable'] = Link::fromTextAndUrl($this->t('Add a new wiki page'), $add_wiki_page_url)->toRenderable();
+              }
             }
           }
         }
         elseif ($entity->bundle() === 'wiki_page') {
-          if ($group = $this->eicGroupsHelper->getGroupByEntity($entity)) {
-            // @todo Create a EICGroupsWiki helper service and place the
-            // following code in a method like getLinkAddWikiPage.
-            $add_wiki_page_route_parameters = [
-              'group' => $group->id(),
-              'plugin_id' => 'group_node:wiki_page',
-            ];
-            $add_wiki_page_link_options = [
-              'query' => [
-                'parent' => $entity->id(),
-              ],
-            ];
-            $add_wiki_page_url = Url::fromRoute('entity.group_content.create_form', $add_wiki_page_route_parameters, $add_wiki_page_link_options);
+          // Add wiki page create form url to the build array.
+          if ($add_wiki_page_url = $this->getWikiPageAddFormUrl($entity)) {
             $build['link_add_wiki_page'] = $add_wiki_page_url->toString();
             $build['link_add_wiki_page_renderable'] = Link::fromTextAndUrl($this->t('Add a new wiki page'), $add_wiki_page_url)->toRenderable();
           }
@@ -171,6 +151,37 @@ class EntityOperations implements ContainerInjectionInterface {
     $node = $this->entityTypeManager->getStorage('node')->create($node_values);
     $node->save();
     $entity->addContent($node, 'group_node:book');
+  }
+
+  /**
+   * Gets wiki page add form Url from the current wiki/book page.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The parent entity (either a node book or wiki_page).
+   * @param bool|\Drupal\Core\Entity\EntityInterface $group
+   *   The group entity.
+   *
+   * @return bool|\Drupal\Core\Url
+   *   The Url object for the wiki page add form route.
+   */
+  private function getWikiPageAddFormUrl(EntityInterface $entity, $group = FALSE) {
+    if (!($group instanceof GroupInterface)) {
+      if (!$group = $this->eicGroupsHelper->getGroupByEntity($entity)) {
+        return $group;
+      }
+    }
+
+    $add_wiki_page_route_parameters = [
+      'group' => $group->id(),
+      'plugin_id' => 'group_node:wiki_page',
+    ];
+    $add_wiki_page_link_options = [
+      'query' => [
+        'parent' => $entity->id(),
+      ],
+    ];
+    $add_wiki_page_url = Url::fromRoute('entity.group_content.create_form', $add_wiki_page_route_parameters, $add_wiki_page_link_options);
+    return $add_wiki_page_url;
   }
 
 }
