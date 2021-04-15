@@ -61,6 +61,7 @@ module:
   flag: 0
   flag_search_api: 0
   fragments: 0
+  ginvite: 0
   gnode: 0
   group: 0
   group_content_menu: 0
