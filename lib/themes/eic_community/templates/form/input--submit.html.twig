@@ -8,7 +8,7 @@
 #}
 {% set extraAttributes = [] %}
 {% for name,value in attributes.toArray %}
-  {% set extraAttributes = extraAttributes|merge([{'name': name, 'value': value}]) %}
+  {% set extraAttributes = extraAttributes|merge([{'name': name, 'value': value|join(' ')}]) %}
 {% endfor %}
 
 {% include '@ecl-twig/button' with {
