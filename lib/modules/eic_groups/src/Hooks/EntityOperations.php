@@ -92,7 +92,7 @@ class EntityOperations implements ContainerInjectionInterface {
   }
 
   /**
-   * Implements hook_node_access().
+   * Implements hook_node_view().
    */
   public function nodeView(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
     switch ($this->routeMatch->getRouteName()) {
