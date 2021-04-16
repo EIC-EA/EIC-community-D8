@@ -1,0 +1,9 @@
+<div class="ecl-form__checkbox">
+{% if icon and icon_file_path %}
+  {% include "@ecl-twig/ecl-component-icon/ec-icon.html.twig" with icon|default({})|merge({
+    icon_file_path: icon_file_path
+  }) %}
+{% endif %}
+
+{% include "@ecl-twig/ec-component-checkbox/ecl-checkbox-group.html.twig" %}
+</div>
