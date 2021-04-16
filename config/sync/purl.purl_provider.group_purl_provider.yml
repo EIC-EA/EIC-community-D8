@@ -1,0 +1,7 @@
+uuid: ed15f530-0c23-435d-8e94-3d5568109696
+langcode: en
+status: true
+dependencies: {  }
+provider_key: group_purl_provider
+label: 'Group - Group'
+method_key: group_prefix
