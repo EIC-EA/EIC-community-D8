@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "13f72949b5cb2e37fd9dafbaa07806dc",
+    "content-hash": "952bcd1b8b2bcd4e5e17e1ee9bde3b93",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -6210,50 +6210,6 @@
                 "php"
             ],
             "time": "2020-12-20T10:01:03+00:00"
-        },
-        {
-            "name": "openeuropa/composer-artifacts",
-            "version": "0.1.3",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/openeuropa/composer-artifacts.git",
-                "reference": "11e0ef32c0340493d3196653e684ae38843b0667"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/openeuropa/composer-artifacts/zipball/11e0ef32c0340493d3196653e684ae38843b0667",
-                "reference": "11e0ef32c0340493d3196653e684ae38843b0667",
-                "shasum": ""
-            },
-            "require": {
-                "composer-plugin-api": "^1.1",
-                "php": ">=5.6"
-            },
-            "require-dev": {
-                "composer/composer": "~1.4",
-                "openeuropa/code-review": "~1.0.0-alpha3",
-                "phpunit/phpunit": "~5.5||~6.0",
-                "symfony/yaml": "~3.4"
-            },
-            "type": "composer-plugin",
-            "extra": {
-                "class": "OpenEuropa\\ComposerArtifacts\\Plugin"
-            },
-            "autoload": {
-                "psr-4": {
-                    "OpenEuropa\\ComposerArtifacts\\": "./src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "EUPL-1.2"
-            ],
-            "description": "Composer plugin that allows to download a specified artifact instead of the default package.",
-            "keywords": [
-                "artifacts",
-                "composer-plugin"
-            ],
-            "time": "2018-10-15T12:13:47+00:00"
         },
         {
             "name": "openeuropa/ecl-twig-loader",
@@ -14311,28 +14267,28 @@
     ],
     "aliases": [
         {
-            "alias": "1.11.0",
-            "alias_normalized": "1.11.0.0",
+            "package": "openeuropa/oe_media",
             "version": "dev-ISSUE-160-Drupal-9-support-without-media_avportal",
-            "package": "openeuropa/oe_media"
-        },
-        {
-            "alias": "1.0.0",
-            "alias_normalized": "1.0.0.0",
-            "version": "dev-ISSUE-6-Drupal-9-support",
-            "package": "openeuropa/oe_time_caching"
-        },
-        {
             "alias": "1.11.0",
-            "alias_normalized": "1.11.0.0",
-            "version": "dev-ISSUE-153-Drupal-9-support",
-            "package": "openeuropa/oe_webtools"
+            "alias_normalized": "1.11.0.0"
         },
         {
-            "alias": "1.44.2",
-            "alias_normalized": "1.44.2.0",
+            "package": "openeuropa/oe_time_caching",
+            "version": "dev-ISSUE-6-Drupal-9-support",
+            "alias": "1.0.0",
+            "alias_normalized": "1.0.0.0"
+        },
+        {
+            "package": "openeuropa/oe_webtools",
+            "version": "dev-ISSUE-153-Drupal-9-support",
+            "alias": "1.11.0",
+            "alias_normalized": "1.11.0.0"
+        },
+        {
+            "package": "twig/twig",
             "version": "2.14.3.0",
-            "package": "twig/twig"
+            "alias": "1.44.2",
+            "alias_normalized": "1.44.2.0"
         }
     ],
     "minimum-stability": "dev",
@@ -14358,5 +14314,5 @@
         "php": ">=7.2"
     },
     "platform-dev": [],
-    "plugin-api-version": "1.1.0"
+    "plugin-api-version": "2.0.0"
 }
