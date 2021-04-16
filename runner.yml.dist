@@ -2,7 +2,7 @@ drupal:
   root: "web"
   base_url: ${env.DRUPAL_BASE_URL}
   site:
-    profile: "oe_profile"
+    profile: "minimal"
     name: "EIC-community-D8"
     generate_db_url: false
   account:

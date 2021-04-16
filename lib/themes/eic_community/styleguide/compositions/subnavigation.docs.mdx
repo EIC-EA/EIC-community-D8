@@ -1,0 +1,19 @@
+# Subnavigation
+
+Displays a horizontal navigation bar with optional statistic items.
+
+## Example:
+
+```
+{% include "@theme/patterns/components/subnavigation.html.twig" %}
+```
+
+## Twig parameters:
+
+| Key                   | Type     | Description                                                                                                                                                                 | Mandatory |
+| --------------------- | -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- |
+| icon_file_path        | string   | The URL of the SVG inline icon sprite.                                                                                                                                      | no        |
+| items                 | object[] | Contains a collection of [ECL link](https://www.npmjs.com/package/@ecl-twig/ec-component-link) links to display.                                                            | no        |
+| searchform            | object   | The defined properties for the searchform. Should follow the [ECL Twig Search form](https://www.npmjs.com/package/@ecl-twig/ec-component-search-form) component parameters. | no        |
+| searchform.button     | object   | Defines the properties for the searchform submit.                                                                                                                           | no        |
+| searchform.text_input | object   | Defines the properties for the searchform input.                                                                                                                            | no        |

@@ -11,12 +11,12 @@
 {% set _stay_up_to_date_section_right = '' %}
 {%
   set site_header = {
-    icon_file_path: ecl_icon_path,
+    icon_file_path: eic_icon_path,
     logo: {
       title: 'European Commission'|t,
       alt: 'European Commission logo'|t,
       path: url('<front>'),
-      src_desktop: ecl_logo_path ~ '/logo--' ~ current_language_id|to_internal_language_id ~ '.svg',
+      src_desktop: eic_logo_path ~ '/logo--' ~ current_language_id|to_internal_language_id ~ '.svg',
     },
     search_toggle: {
       label: 'Search',
@@ -35,12 +35,4 @@
   }
 %}
 
-{% extends "@theme/patterns/pages/homepage/homepage.private.html.twig" %}
-
-{% block page_header %}
-  {{ page.page_header }}
-{% endblock %}
-
-{% block content %}
-  {{ page.content }}
-{% endblock %}
+{% extends "@theme/patterns/layout/base.html.twig" %}

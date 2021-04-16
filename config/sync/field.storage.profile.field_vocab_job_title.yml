@@ -1,0 +1,20 @@
+uuid: 0b9255d7-c8d0-4fcf-9f0f-090774f4254b
+langcode: en
+status: true
+dependencies:
+  module:
+    - profile
+    - taxonomy
+id: profile.field_vocab_job_title
+field_name: field_vocab_job_title
+entity_type: profile
+type: entity_reference
+settings:
+  target_type: taxonomy_term
+module: core
+locked: false
+cardinality: -1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

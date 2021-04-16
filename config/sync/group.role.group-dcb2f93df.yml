@@ -1,0 +1,17 @@
+uuid: 9cf6746a-f8d0-4e2e-8bec-c184872e86b8
+langcode: en
+status: true
+dependencies:
+  config:
+    - group.type.group
+  enforced:
+    config:
+      - user.role.trusted_user
+id: group-dcb2f93df
+label: 'Trusted user'
+weight: 5
+internal: true
+audience: outsider
+group_type: group
+permissions_ui: false
+permissions: {  }

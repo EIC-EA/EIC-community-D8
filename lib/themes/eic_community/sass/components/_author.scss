@@ -46,6 +46,10 @@
     #{$node}--is-large & {
       @include ecl-responsive-font('label');
     }
+
+    #{$node}--is-minimal & {
+      display: none;
+    }
   }
 
   &__link {
@@ -62,8 +66,12 @@
     line-height: ecl-typography('line-height', 'label');
     @include ecl-responsive-font('label');
 
+    #{$node}--is-minimal & {
+      @include visually-hidden();
+    }
+
     @include ecl-media-breakpoint-down('md') {
-      #{$node}--is-compact & {
+      #{$node}--has-compact-layout & {
         @include visually-hidden();
       }
     }
@@ -85,8 +93,16 @@
     margin-right: ecl-layout('gutter', 'meta');
     width: map-get($ecl-media, '3xs');
 
+    #{$node}--is-fluid & {
+      width: 100%;
+    }
+
+    #{$node}--is-minimal & {
+      margin-right: 0;
+    }
+
     @include ecl-media-breakpoint-down('md') {
-      #{$node}--is-compact & {
+      #{$node}--has-compact-layout & {
         margin-right: 0;
       }
     }
@@ -188,6 +204,10 @@
     flex-shrink: 0;
     display: flex;
     flex-direction: column;
+
+    #{$node}--is-minimal & {
+      display: none;
+    }
   }
 
   &__action {
@@ -210,5 +230,9 @@
     top: 0;
     right: 0;
     transform: translate(50%, -50%);
+
+    #{$node}--is-minimal & {
+      display: none;
+    }
   }
 }

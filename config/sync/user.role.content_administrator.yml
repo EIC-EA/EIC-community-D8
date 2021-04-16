@@ -4,6 +4,11 @@ status: true
 dependencies: {  }
 id: content_administrator
 label: 'Content administrator'
-weight: 3
+weight: -7
 is_admin: null
-permissions: {  }
+permissions:
+  - 'bypass node access'
+  - 'create group group'
+  - 'flag recommend_group'
+  - 'skip comment approval'
+  - 'unflag recommend_group'

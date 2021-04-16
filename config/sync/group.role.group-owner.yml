@@ -1,4 +1,4 @@
-uuid: 088eac44-60bb-48b1-b859-51ed75d78cff
+uuid: 0d97784a-9ad3-4992-a81f-d386348c1583
 langcode: en
 status: true
 dependencies:
@@ -6,9 +6,36 @@ dependencies:
     - group.type.group
 id: group-owner
 label: Owner
-weight: 5
+weight: 7
 internal: false
 audience: member
 group_type: group
 permissions_ui: true
-permissions: {  }
+permissions:
+  - 'administer members'
+  - 'create group_node:discussion entity'
+  - 'create group_node:document entity'
+  - 'create group_node:wiki_page entity'
+  - 'delete any group_node:discussion entity'
+  - 'delete any group_node:document entity'
+  - 'delete any group_node:wiki_page entity'
+  - 'delete group'
+  - 'delete own group_node:discussion entity'
+  - 'delete own group_node:document entity'
+  - 'delete own group_node:wiki_page entity'
+  - 'edit group'
+  - 'update any group_node:discussion entity'
+  - 'update any group_node:document entity'
+  - 'update any group_node:wiki_page entity'
+  - 'update own group_node:discussion entity'
+  - 'update own group_node:document entity'
+  - 'update own group_node:wiki_page entity'
+  - 'view group'
+  - 'view group_membership content'
+  - 'view group_node:discussion entity'
+  - 'view group_node:document entity'
+  - 'view group_node:wiki_page entity'
+  - 'view unpublished group_node:book entity'
+  - 'view unpublished group_node:discussion entity'
+  - 'view unpublished group_node:document entity'
+  - 'view unpublished group_node:wiki_page entity'

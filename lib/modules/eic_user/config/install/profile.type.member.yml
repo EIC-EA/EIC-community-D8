@@ -1,0 +1,12 @@
+langcode: en
+status: true
+dependencies: {  }
+id: member
+label: Member
+display_label: ''
+multiple: false
+registration: false
+roles:
+  authenticated: authenticated
+allow_revisions: true
+new_revision: true

@@ -8,7 +8,7 @@ dependencies:
     - field.field.paragraph.text_and_media_content.field_display_background
     - field.field.paragraph.text_and_media_content.field_media
     - field.field.paragraph.text_and_media_content.field_title
-    - field.field.paragraph.text_and_media_content.field_view_mode
+    - field.field.paragraph.text_and_media_content.paragraph_view_mode
     - paragraphs.paragraphs_type.text_and_media_content
   module:
     - link
@@ -55,4 +55,5 @@ content:
     region: content
 hidden:
   field_display_background: true
-  field_view_mode: true
+  paragraph_view_mode: true
+  search_api_excerpt: true

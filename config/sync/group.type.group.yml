@@ -1,10 +1,20 @@
 uuid: 89bd519a-df26-4277-8dcd-0f52c7f8fce7
 langcode: en
 status: true
-dependencies: {  }
+dependencies:
+  module:
+    - group_flex
+third_party_settings:
+  group_flex:
+    group_flex_enabler: true
+    group_type_visibility: flex
+    group_type_joining_method:
+      join_button: join_button
+    group_type_joining_method_override: true
 id: group
 label: Group
 description: ''
 creator_membership: true
 creator_wizard: true
-creator_roles: {  }
+creator_roles:
+  - group-owner

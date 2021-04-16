@@ -1,0 +1,37 @@
+uuid: 0ac43a7e-5000-4cb2-9490-729df5b8c567
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.message.sub_new_content_recommendation.field_event_executing_user
+    - message.template.sub_new_content_recommendation
+id: message.sub_new_content_recommendation.default
+targetEntityType: message
+bundle: sub_new_content_recommendation
+mode: default
+content:
+  field_event_executing_user:
+    weight: 1
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+  partial_0:
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  partial_1:
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  partial_2:
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  search_api_excerpt: true

@@ -1,0 +1,46 @@
+.ecl-author-collection {
+  $node: &;
+
+  display: flex;
+  flex-direction: row-reverse;
+  flex-wrap: nowrap;
+
+  &__amount {
+    position: relative;
+    width: map-get($ecl-media, '3xs');
+    height: map-get($ecl-media, '3xs');
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: map-get($ecl-colors, 'white');
+    border-radius: 50%;
+    background-color: map-get($ecl-colors, 'blue-50');
+    margin-right: #{0 - map-get($ecl-media, '3xs') / 2};
+
+    &:only-child {
+      margin-right: 0;
+    }
+  }
+
+  &__items {
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: row-reverse;
+  }
+
+  &__item {
+    width: #{map-get($ecl-media, '3xs') / 2};
+
+    &:first-child {
+      width: map-get($ecl-media, '3xs');
+    }
+  }
+
+  &__author {
+    width: 200%;
+
+    #{$node}__item:first-child & {
+      width: auto;
+    }
+  }
+}

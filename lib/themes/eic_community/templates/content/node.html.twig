@@ -70,41 +70,30 @@
  *   in different view modes.
  */
 #}
-{% set has_wrapper = true %}
-
-{% if has_wrapper %}
-  <article{{ attributes }}>
-{% endif %}
-
-{% block header %}
-  {{ title_prefix }}
-  {% if not page %}
-    <h2{{ title_attributes }}>
-      <a href="{{ url }}" rel="bookmark">{{ label }}</a>
-    </h2>
-  {% endif %}
-  {{ title_suffix }}
-{% endblock %}
+{% set icon_file_path = eic_icon_path %}
 
 {% block content %}
-  <div{{ content_attributes }}>
-    {{ content }}
-  </div>
-{% endblock %}
+  <article{{ attributes }}>
+    {{ title_prefix }}
+    {% if not page %}
+      <h2{{ title_attributes }}>
+        <a href="{{ url }}" rel="bookmark">{{ label }}</a>
+      </h2>
+    {% endif %}
+    {{ title_suffix }}
 
-{% block metadata %}
-  {% if display_submitted %}
-    <footer>
-      {{ author_picture }}
-      <div{{ author_attributes }}>
-        {% trans %}Submitted by {{ author_name }} on {{ date }}{% endtrans %}
-        {{ metadata }}
+    <div{{ content_attributes }}>
+        {{ content }}
       </div>
-    </footer>
-  {% endif %}
-{% endblock %}
 
-{% if has_wrapper %}
+      {% if display_submitted %}
+        <footer>
+          {{ author_picture }}
+          <div{{ author_attributes }}>
+            {% trans %}Submitted by {{ author_name }} on {{ date }}{% endtrans %}
+            {{ metadata }}
+          </div>
+        </footer>
+      {% endif %}
   </article>
-{% endif %}
-
+{% endblock %}

@@ -18,4 +18,13 @@
     stats: stats,
     actions: actions,
   } only %}
+
+  {% include "@theme/patterns/compositions/featured-content-sections.html.twig" with {
+    as_tabs: true,
+    items: [
+      flagged_groups|default({}),
+      flagged_projects|default({}),
+      flagged_interests|default({}),
+    ]
+  } only %}
 {% endblock %}

@@ -1,0 +1,34 @@
+uuid: d5a003e2-4512-460e-98e7-f3cbefd2f39a
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.message.log_group_state_change.field_event_executing_user
+    - field.field.message.log_group_state_change.field_group_ref
+    - message.template.log_group_state_change
+id: message.log_group_state_change.default
+targetEntityType: message
+bundle: log_group_state_change
+mode: default
+content:
+  field_event_executing_user:
+    weight: 0
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: entity_reference_autocomplete
+    region: content
+  field_group_ref:
+    weight: 1
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: entity_reference_autocomplete
+    region: content
+hidden: {  }

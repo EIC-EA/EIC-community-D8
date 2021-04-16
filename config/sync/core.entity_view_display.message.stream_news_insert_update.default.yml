@@ -1,0 +1,18 @@
+uuid: 6ab09723-fac0-45fb-bb86-03a74cd05dfa
+langcode: en
+status: true
+dependencies:
+  config:
+    - message.template.stream_news_insert_update
+id: message.stream_news_insert_update.default
+targetEntityType: message
+bundle: stream_news_insert_update
+mode: default
+content:
+  partial_0:
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  search_api_excerpt: true

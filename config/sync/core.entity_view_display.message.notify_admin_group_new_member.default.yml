@@ -1,0 +1,41 @@
+uuid: 0e477be8-f9c1-41dc-988f-f38566287771
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.message.notify_admin_group_new_member.field_group_ref
+    - field.field.message.notify_admin_group_new_member.field_related_user
+    - message.template.notify_admin_group_new_member
+id: message.notify_admin_group_new_member.default
+targetEntityType: message
+bundle: notify_admin_group_new_member
+mode: default
+content:
+  field_group_ref:
+    weight: 1
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+  field_related_user:
+    weight: 2
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+  partial_0:
+    weight: 0
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+  partial_1:
+    weight: 0
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+hidden:
+  search_api_excerpt: true

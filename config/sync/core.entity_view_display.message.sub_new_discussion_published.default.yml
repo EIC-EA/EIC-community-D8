@@ -1,0 +1,37 @@
+uuid: fd8e120b-dd6a-4011-bb16-68ee83727f70
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.message.sub_new_discussion_published.field_event_executing_user
+    - message.template.sub_new_discussion_published
+id: message.sub_new_discussion_published.default
+targetEntityType: message
+bundle: sub_new_discussion_published
+mode: default
+content:
+  field_event_executing_user:
+    weight: 1
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+  partial_0:
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  partial_1:
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  partial_2:
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  search_api_excerpt: true

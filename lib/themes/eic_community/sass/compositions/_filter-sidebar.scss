@@ -13,6 +13,13 @@
     width: 100%;
   }
 
+  body & &__link {
+    @include ecl-media-breakpoint-up('lg') {
+      display: flex;
+      justify-content: center;
+    }
+  }
+
   &__expand {
     @include ecl-media-breakpoint-down('lg') {
       display: block;

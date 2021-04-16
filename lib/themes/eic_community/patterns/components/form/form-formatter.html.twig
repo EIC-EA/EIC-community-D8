@@ -1,0 +1,14 @@
+{% import "@theme/patterns/core/snippets.twig" as snippets %}
+
+<form class="ecl-form {{ extra_classes }}" {{ snippets.attr(extra_attributes)}}>
+  {% if description %}
+    <div class="ecl-form__description ecl-editable-wrapper">
+      {{ description }}
+    </div>
+  {% endif %}
+
+  {% include "@theme/patterns/components/form/form-section.html.twig" with {
+    icon_file_path: icon_file_path,
+    fields: fields,
+  } only %}
+</form>

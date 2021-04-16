@@ -1,0 +1,11 @@
+{% set title_element = title_element|default('h2') %}
+
+<div class="ecl-extended-list {{ extra_classes }}">
+  {% if title is not empty %}
+    <{{ title_element }} class="ecl-extended-list__title">{{ title }}</{{ title_element }}>
+  {% endif %}
+
+  {% include "@theme/patterns/compositions/extended-list/extended-list-items.html.twig" with {
+    items: items
+  } only %}
+</div>

@@ -1,0 +1,31 @@
+uuid: 2899b3e6-6129-4f9a-be7f-f5a02c757fd0
+langcode: en
+status: true
+dependencies:
+  module:
+    - eic_flags
+    - group
+id: recommend_group
+label: 'Recommend (group)'
+bundles: {  }
+entity_type: group
+global: false
+weight: 0
+flag_short: 'Recommend this item'
+flag_long: ''
+flag_message: ''
+unflag_short: 'Unrecommend this item'
+unflag_long: ''
+unflag_message: ''
+unflag_denied_text: ''
+flag_type: 'entity:group'
+link_type: eic_count_link
+flagTypeConfig:
+  show_in_links:
+    teaser: teaser
+  show_as_field: true
+  show_on_form: false
+  show_contextual_link: true
+  extra_permissions:
+    owner: '0'
+linkTypeConfig: {  }

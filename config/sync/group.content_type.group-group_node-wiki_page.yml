@@ -1,0 +1,19 @@
+uuid: df71d740-273a-4769-9ecf-b95c128fc950
+langcode: en
+status: true
+dependencies:
+  config:
+    - group.type.group
+    - node.type.wiki_page
+  module:
+    - gnode
+    - node
+id: group-group_node-wiki_page
+label: 'Group: Group node (Wiki Page)'
+description: 'Adds <em class="placeholder">Wiki Page</em> content to groups both publicly and privately.'
+group_type: group
+content_plugin: 'group_node:wiki_page'
+plugin_config:
+  group_cardinality: 0
+  entity_cardinality: 1
+  use_creation_wizard: false

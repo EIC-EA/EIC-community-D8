@@ -1,6 +1,21 @@
 .ecl-tag {
+  border-radius: map-get($ecl-spacing, '4xl');
+
+  .ecl-teaser--is-highlighted & {
+    background-color: map-get($ecl-colors, 'white');
+  }
+
+  @include adjust-from-section-color() {
+    background-color: map-get($ecl-colors, 'grey-15');
+  }
+
   &--is-public {
     background-color: map-get($ecl-colors, 'blue-50');
+    color: map-get($ecl-colors, 'white');
+  }
+
+  &--is-private {
+    background-color: map-get($ecl-colors, 'red-100');
     color: map-get($ecl-colors, 'white');
   }
 }

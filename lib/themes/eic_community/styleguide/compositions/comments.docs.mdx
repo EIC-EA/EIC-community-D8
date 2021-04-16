@@ -4,15 +4,20 @@ Displays the comments composition.
 
 ## Comments Parameters
 
-| Key   | Type     | Description                                                                                                                                         | Mandatory |
-| ----- | -------- | --------------------------------------------------------------------------------------------------------------------------------------------------- | --------- |
-| items | object[] | Should contain one or multiple comments that can also nested. Each item should contain the properties of a single comment that can also have items. | no        |
+| Key               | Type     | Description                                                                                                                                         | Mandatory |
+| ----------------- | -------- | --------------------------------------------------------------------------------------------------------------------------------------------------- | --------- |
+| items             | object[] | Should contain one or multiple comments that can also nested. Each item should contain the properties of a single comment that can also have items. | no        |
+| no_items_label    | string   | Message that will be visible if there are no comments to display.                                                                                   | no        |
+| is_disabled       | boolean  | Hides the comment form for logged in users.                                                                                                         | no        |
+| is_disabled_label | string   | Message that will be visible if the `is_disabled` is TRUE.                                                                                          | no        |
+| user              | object[] | Should exist if the overview should be displayed for a logged in user.                                                                              | no        |
+| icon_file_path    | string   | The path to the SVG inline sprite.                                                                                                                  | no        |
 
 ## Comment Parameters
 
 | Key                       | Type           | Description                                                                                                                                                                             | Mandatory |
 | ------------------------- | -------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- |
-| attachment_collapse_label | string         | The optional label for the collapse button to minize the amount of visible attachments.                                                                                                 | no        |
+| attachment_collapse_label | string         | The optional label for the collapse button to minimize the amount of visible attachments.                                                                                                 | no        |
 | attachment_expand_label   | string         | The optional label for the expand button to show all attachments.                                                                                                                       | no        |
 | attachments               | object[]       | The inserted attachments (both document and media) that will be displayed below the comment. Should contain the properties of the custom attachment component.                          | no        |
 | author                    | object         | The actual author of the comment.                                                                                                                                                       | no        |
@@ -22,10 +27,10 @@ Displays the comments composition.
 | comment_origin            | object         | Contains the required properties from the origin comment.                                                                                                                               | no        |
 | comment_origin.author     | object         | The actual author of the parent comment.                                                                                                                                                | no        |
 | comment_origin.comment_id | string         | The given id of the parent comment.                                                                                                                                                     | no        |
-| comment_origin.is_owner   | object         | Diplays a logged in icon if the parent comment is created by the user.                                                                                                                  | no        |
+| comment_origin.is_owner   | object         | Displays a logged in icon if the parent comment is created by the user.                                                                                                                 | no        |
 | extra_classes             | string         | Inserts additional classnames for the current comment.                                                                                                                                  | no        |
 | icon_file_path            | string         | Path to the SVG icon sprite.                                                                                                                                                            | no        |
-| is_owner                  | boolean        | Diplays a logged in icon if the comment is created by the user.                                                                                                                         | no        |
+| is_owner                  | boolean        | Displays a logged in icon if the comment is created by the user.                                                                                                                        | no        |
 | items                     | object[]       | Contains all the replies within the current comment that should contain the same data structure.                                                                                        | no        |
 | items[].icon              | object         | Should contain the parameters inherited from the [ECL Icon component](https://www.npmjs.com/package/@ecl-twig/ec-component-icon).                                                       | no        |
 | items[].label             | string         | Defines the option label if the defined option is displayed as button.                                                                                                                  | no        |

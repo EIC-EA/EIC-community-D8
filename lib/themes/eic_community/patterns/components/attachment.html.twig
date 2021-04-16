@@ -1,20 +1,9 @@
-{% if icon_file_path %}
-  {% set download_icon = {
-      path: icon_file_path,
-      type: 'ui',
-      name: 'download',
-      size: 's',
-      extra_classes: "ecl-attachment__link-icon",
-    }
- %}
-{% endif %}
-
-{% if is_compact %}
-  <a href="{{ path }}" download class="ecl-attachment ecl-attachment--is-compact {{ extra_classes }}">
+{% if is_clickable %}
+  <a href="{{ path }}" download class="ecl-attachment ecl-attachment--has-compact-layout {{ highlight.is_active ? 'ecl-attachment--is-highlighted' }} {{ extra_classes }}">
 {% else %}
-  <div class="ecl-attachment {{ extra_classes }}">
+  <div class="ecl-attachment {{ highlight.is_active ? 'ecl-attachment--is-highlighted' }} {{ extra_classes }}">
 {% endif %}
-  <div class="ecl-attachment__wrapper">
+  <div class="ecl-attachment__main">
     {% if image or icon %}
       <aside class="ecl-attachment__aside">
         {% if image is not empty %}
@@ -25,12 +14,12 @@
           <div class="ecl-attachment__icon-wrapper">
             {% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with {
               extra_classes: 'ecl-attachment__icon',
-              icon: {
+              icon: icon_file_path ? {
                 path: icon_file_path,
                 name: icon.name,
-                size: is_compact ? 's' : 'm',
+                size: is_clickable ? 's' : 'm',
                 type: icon.type,
-              },
+              } : {},
             } only %}
           </div>
         {% endif %}
@@ -38,19 +27,44 @@
     {% endif %}
     <div class="ecl-attachment__content">
       <div class="ecl-attachment__content-header">
-        <span class="ecl-attachment__title">
-          {{ title|default(path) }}
-        </span>
+        {% if is_clickable %}
+          <span class="ecl-attachment__title">{{ title|default(path) }}</span>
+        {% else %}
+          <a class="ecl-attachment__title" href="{{ path }}">{{ title|default(path) }}</a>
+        {% endif %}
         {% if type or path %}
           <span class="ecl-attachment__type">
             {{- type|default(path|split('.')|last) -}}
           </span>
         {% endif %}
+
+        {% if highlight %}
+          <button class="ecl-attachment__highlight">
+            {% if icon_file_path %}
+              {% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with {
+                icon: {
+                  path: icon_file_path,
+                  name: 'star_circle',
+                  size: 'm',
+                  type: 'custom',
+                },
+                extra_classes: 'ecl-attachment__highlight-icon ',
+              } only %}
+            {% endif %}
+            <span class="ecl-attachment__highlight-label">
+              {{ highlight.label|default('Highlight') }}
+            </span>
+          </button>
+        {% endif %}
       </div>
-      {% if not is_compact %}
+    </div>
+  </div>
+  {% if author or timestamp or language or filesize or path %}
+    {% if not is_clickable %}
+      <div class="ecl-attachment__footer">
         <div class="ecl-attachment__actions">
           {% if author %}
-            <div class="ecl-attachment__action">
+            <div class="ecl-attachment__action ecl-attachment__action--author">
                 {% if author.path %}
                   {% include '@ecl-twig/ec-component-link/ecl-link.html.twig' with {
                     link: {
@@ -68,6 +82,7 @@
           {% if timestamp %}
             <div class="ecl-attachment__action">
               {% include "@theme/patterns/components/timestamp.html.twig" with {
+                extra_classes: 'ecl-attachment__timestamp ecl-timestamp--meta ' ~ timestamp.extra_classes|default(''),
                 label: timestamp,
                 icon_file_path: icon_file_path,
               } only %}
@@ -82,7 +97,13 @@
           {% if path %}
             <div class="ecl-attachment__action">
               {% include '@ecl-twig/ec-component-link/ecl-link.html.twig' with {
-                icon: download_icon|default({}),
+                icon: icon_file_path ? {
+                  path: icon_file_path,
+                  type: 'custom',
+                  name: 'download',
+                  size: 'xs',
+                  extra_classes: "ecl-attachment__link-icon",
+                } : {},
                 link: {
                   type: 'standalone',
                   label: download_label|default('Download'),
@@ -97,10 +118,10 @@
             </div>
           {% endif %}
         </div>
-      {% endif %}
-    </div>
-  </div>
-{% if is_compact %}
+      </div>
+    {% endif %}
+  {% endif %}
+{% if is_clickable %}
   </a>
 {% else %}
   </div>

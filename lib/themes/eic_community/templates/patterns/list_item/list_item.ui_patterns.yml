@@ -1,0 +1,92 @@
+list_item:
+  label: "List item"
+  description: "List item pattern with variants."
+  variants:
+    default:
+      label: "List item: default"
+      description: "Default list items, contains metadata information and linked title."
+    block:
+      label: "List item: block"
+      description: "Block list item, contains a linked title and standfirst."
+    highlight:
+      label: "List item: highlight"
+      description: "Highlight list item, contains a primary image and a linked title."
+    navigation:
+      label: "List item: navigation"
+      description: "Navigation list item, contains a linked title and stand first."
+    thumbnail_primary:
+      label: "List item: thumbnail "
+      description: "Thumbnail list item, contains a primary image, metadata information and a linked title."
+    thumbnail_secondary:
+      label: "List item: thumbnail with secondary image"
+      description: "Thumbnail list item, contains a secondary image, metadata information and a linked title."
+    date:
+      label: "List item: event"
+      description: "Default list item elements and date."
+    date_ongoing:
+      label: "List item: ongoing event"
+      description: "Default list item elements and date."
+    date_past:
+      label: "List item: past event"
+      description: "Default list item elements and date."
+    date_cancelled:
+      label: "List item: cancelled event"
+      description: "Default list item elements and date."
+  fields:
+    url:
+      type: "Url"
+      label: "URL"
+      description: "List item link URL (A Drupal Url object)"
+      preview: "#"
+    title:
+      type: "text"
+      label: "Title"
+      description: "List item title"
+      preview: "Citizens' Dialogue in Kraków with Commissioner Elżbieta Bieńkowska"
+    detail:
+      type: "text"
+      label: "Detail"
+      description: "Description text accompanying the link item."
+      preview: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ratio quidem vestra sic cogit. Respondeat totidem verbis. Praeclarae mortes sunt imperatoriae; Sed erat aequius Triarium aliquid de dissensione nostra iudicare. Quae similitudo in genere etiam humano apparet."
+    length:
+      type: numeric
+      label: "Max length"
+      description: "Used to trim the length of the 'Detail' field (optional)."
+      preview: 250
+      escape: false
+    additional_information:
+      type: array
+      label: "Additional information"
+      description: "Additional information to be displayed right below the 'Detail' field. Make sure you pass an array of renderable items. This field is not displayed on the following variants: 'navigation', 'block' and 'highlight'."
+      preview:
+        - '#type': pattern
+          '#id': field_list
+          '#variant': horizontal
+          '#fields':
+            items:
+              - label: "When"
+                body: "Thursday 15 November, 08:00 AM to Friday 16 November"
+              - label: "Where"
+                body: "The EGG, Rue Barra 175, 1070 Brussels, Belgium"
+    meta:
+      type: "array"
+      label: "Metadata"
+      description: "Meta information items list"
+      preview:
+        - "Service department"
+        - "PMO"
+    date:
+      type: "DateValueObject"
+      label: "Date"
+      description: "A date value object."
+      preview:
+        start: 1545732000
+        end: 1546250400
+        timezone: "Europe/Brussels"
+    image:
+      type: "array"
+      label: "Primary image"
+      description: "Attributes of the image to render"
+      preview:
+        src: "https://placeimg.com/1200/900/arch"
+        alt: "Alternative text for image"

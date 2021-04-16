@@ -12,8 +12,16 @@ audience: member
 group_type: group
 permissions_ui: true
 permissions:
-  - 'access content overview'
-  - 'access group_node overview'
+  - 'create group_node:discussion entity'
+  - 'create group_node:document entity'
+  - 'delete own group_node:discussion entity'
+  - 'delete own group_node:document entity'
   - 'leave group'
-  - 'update own group_membership content'
+  - 'update own group_node:discussion entity'
+  - 'update own group_node:document entity'
+  - 'view group'
   - 'view group_membership content'
+  - 'view group_node:book entity'
+  - 'view group_node:discussion entity'
+  - 'view group_node:document entity'
+  - 'view group_node:wiki_page entity'

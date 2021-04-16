@@ -1,0 +1,28 @@
+uuid: de388247-72be-400e-b1bc-e777f79b86ba
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.message.field_group_ref
+    - group.type.group
+    - message.template.notify_group_membership_pending
+id: message.notify_group_membership_pending.field_group_ref
+field_name: field_group_ref
+entity_type: message
+bundle: notify_group_membership_pending
+label: Group
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:group'
+  handler_settings:
+    target_bundles:
+      group: group
+    sort:
+      field: _none
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

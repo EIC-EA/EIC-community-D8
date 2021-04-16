@@ -1,0 +1,23 @@
+uuid: 0b511ded-c270-4ef9-83d3-cd6666005850
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.message.notify_weekly_digest
+    - field.field.message.sub_new_group_content_published.field_event_executing_user
+    - message.template.sub_new_group_content_published
+id: message.sub_new_group_content_published.notify_weekly_digest
+targetEntityType: message
+bundle: sub_new_group_content_published
+mode: notify_weekly_digest
+content:
+  partial_2:
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  field_event_executing_user: true
+  partial_0: true
+  partial_1: true
+  search_api_excerpt: true

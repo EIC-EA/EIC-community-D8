@@ -1,0 +1,18 @@
+{#
+/**
+ * @file
+ * Theme override for an 'input' #type form element.
+ *
+ * @see ./core/themes/stable/templates/form/input.html.twig
+ */
+#}
+{% set extraAttributes = [] %}
+{% for name,value in attributes.toArray %}
+  {% set extraAttributes = extraAttributes|merge([{'name': name ~ '=' ~ value|join(' ')|e('html_attr')}]) %}
+{% endfor %}
+
+{% include '@ecl-twig/button' with {
+  label: attributes.value,
+  variant: 'primary',
+  extra_attributes: extraAttributes
+} %}

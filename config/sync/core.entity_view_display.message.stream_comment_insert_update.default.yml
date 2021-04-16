@@ -1,0 +1,18 @@
+uuid: 5c6d3c37-c04f-4584-8619-0013f324a2df
+langcode: en
+status: true
+dependencies:
+  config:
+    - message.template.stream_comment_insert_update
+id: message.stream_comment_insert_update.default
+targetEntityType: message
+bundle: stream_comment_insert_update
+mode: default
+content:
+  partial_0:
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  search_api_excerpt: true

@@ -3,34 +3,22 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.field.user.user.field_body
-    - field.field.user.user.field_cv_link
     - field.field.user.user.field_first_name
-    - field.field.user.user.field_full_name
     - field.field.user.user.field_is_deleted
     - field.field.user.user.field_is_deleted_anonymous
     - field.field.user.user.field_is_deleted_by_uid
     - field.field.user.user.field_is_invalid_email
     - field.field.user.user.field_is_organisation_user
     - field.field.user.user.field_is_spammer
-    - field.field.user.user.field_job_title
     - field.field.user.user.field_last_name
-    - field.field.user.user.field_location_address
     - field.field.user.user.field_media
     - field.field.user.user.field_message_from_service
+    - field.field.user.user.field_smed_id
     - field.field.user.user.field_updated_profile_by_service
     - field.field.user.user.field_updated_profile_by_user
-    - field.field.user.user.field_user_dashboard_id
     - field.field.user.user.field_user_status
-    - field.field.user.user.field_vocab_geo
-    - field.field.user.user.field_vocab_topic_expertise
-    - field.field.user.user.field_vocab_topic_interest
-    - field.field.user.user.field_vocab_user_type
   module:
-    - address
-    - link
     - media_library
-    - text
     - user
 id: user.user.default
 targetEntityType: user
@@ -42,24 +30,6 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
-  field_body:
-    weight: 7
-    settings:
-      rows: 9
-      summary_rows: 3
-      placeholder: ''
-      show_summary: false
-    third_party_settings: {  }
-    type: text_textarea_with_summary
-    region: content
-  field_cv_link:
-    weight: 14
-    settings:
-      placeholder_url: ''
-      placeholder_title: ''
-    third_party_settings: {  }
-    type: link_default
-    region: content
   field_first_name:
     weight: 3
     settings:
@@ -113,16 +83,6 @@ content:
     third_party_settings: {  }
     type: boolean_checkbox
     region: content
-  field_job_title:
-    weight: 6
-    settings:
-      match_operator: CONTAINS
-      match_limit: 10
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
-    type: entity_reference_autocomplete
-    region: content
   field_last_name:
     weight: 4
     settings:
@@ -130,12 +90,6 @@ content:
       placeholder: ''
     third_party_settings: {  }
     type: string_textfield
-    region: content
-  field_location_address:
-    weight: 13
-    settings: {  }
-    third_party_settings: {  }
-    type: address_default
     region: content
   field_media:
     type: media_library_widget
@@ -152,6 +106,13 @@ content:
     third_party_settings: {  }
     type: string_textarea
     region: content
+  field_smed_id:
+    weight: 30
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+    type: number
+    region: content
   field_updated_profile_by_service:
     weight: 22
     settings: {  }
@@ -164,68 +125,22 @@ content:
     third_party_settings: {  }
     type: datetime_timestamp
     region: content
-  field_user_dashboard_id:
-    weight: 5
-    settings:
-      placeholder: ''
-    third_party_settings: {  }
-    type: number
-    region: content
   field_user_status:
     weight: 24
     settings: {  }
     third_party_settings: {  }
     type: options_select
     region: content
-  field_vocab_geo:
-    weight: 11
-    settings:
-      match_operator: CONTAINS
-      match_limit: 10
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
-    type: entity_reference_autocomplete
-    region: content
-  field_vocab_topic_expertise:
-    weight: 9
-    settings:
-      match_operator: CONTAINS
-      match_limit: 10
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
-    type: entity_reference_autocomplete
-    region: content
-  field_vocab_topic_interest:
-    weight: 10
-    settings:
-      match_operator: CONTAINS
-      match_limit: 10
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
-    type: entity_reference_autocomplete
-    region: content
-  field_vocab_user_type:
-    weight: 8
-    settings:
-      match_operator: CONTAINS
-      match_limit: 10
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
-    type: entity_reference_autocomplete
-    region: content
   language:
-    weight: 1
+    weight: 0
     region: content
     settings: {  }
     third_party_settings: {  }
   timezone:
-    weight: 2
+    weight: null
     region: content
     settings: {  }
     third_party_settings: {  }
 hidden:
-  field_full_name: true
+  langcode: true
+  member_profiles: true

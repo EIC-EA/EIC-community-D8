@@ -3,7 +3,9 @@ langcode: en
 status: true
 dependencies:
   config:
+    - core.entity_view_display.comment.node_comment.default
     - field.field.node.news.field_body
+    - field.field.node.news.field_comments
     - field.field.node.news.field_disclaimer
     - field.field.node.news.field_document_media
     - field.field.node.news.field_header_visual
@@ -11,12 +13,14 @@ dependencies:
     - field.field.node.news.field_image_caption
     - field.field.node.news.field_introduction
     - field.field.node.news.field_news_paragraphs
+    - field.field.node.news.field_related_groups
     - field.field.node.news.field_related_stories
     - field.field.node.news.field_video
     - field.field.node.news.field_vocab_geo
     - field.field.node.news.field_vocab_topics
     - node.type.news
   module:
+    - comment
     - entity_reference_revisions
     - text
     - user
@@ -36,6 +40,15 @@ content:
     settings: {  }
     third_party_settings: {  }
     type: text_default
+    region: content
+  field_comments:
+    weight: 101
+    label: above
+    settings:
+      view_mode: default
+      pager_id: 0
+    third_party_settings: {  }
+    type: comment_default
     region: content
   field_disclaimer:
     type: entity_reference_entity_view
@@ -95,6 +108,14 @@ content:
       view_mode: default
       link: ''
     third_party_settings: {  }
+    region: content
+  field_related_groups:
+    weight: 102
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
     region: content
   field_related_stories:
     weight: 12
@@ -165,4 +186,6 @@ content:
     settings: {  }
     third_party_settings: {  }
 hidden:
-  extra_field_oe_theme_helper_short_title_with_fallback: true
+  extra_field_eic_theme_helper_short_title_with_fallback: true
+  langcode: true
+  search_api_excerpt: true

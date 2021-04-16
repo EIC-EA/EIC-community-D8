@@ -2,33 +2,47 @@
 
 <section class="ecl-section-wrapper ecl-editorial-header {{ extra_classes }}">
   <div class="ecl-container">
+    {% if parent is not empty %}
+      {% set _parent_icon = {} %}
+
+      {% if icon_file_path %}
+        {% set _parent_icon = {
+          path: icon_file_path,
+          type: 'ui',
+          name: 'rounded-arrow',
+          transform: 'rotate-270',
+          size: 'xs',
+        } %}
+      {% endif %}
+
+      {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with parent|default({})|merge({
+        link: parent.link|merge({
+          type: 'standalone',
+          icon_position: 'before',
+        }),
+        extra_classes: 'ecl-editorial-header__parent-link ecl-link--call-to-action ' ~ parent.extra_classes|default(''),
+        icon: _parent_icon,
+      }) only %}
+    {% endif %}
+
     <div class="ecl-editorial-header__wrapper">
+      {% if image is not empty %}
+        <div class="ecl-editorial-header__aside">
+          <figure class="ecl-editorial-header__image-wrapper">
+            <img class="ecl-editorial-header__image" src="{{ image.src }}" alt="{{ image.alt }}" />
+          </figure>
+        </div>
+      {% endif %}
       <div class="ecl-editorial-header__main">
         {% include "@theme/patterns/components/meta-list.html.twig" with {
           extra_classes: "ecl-editorial-header__meta ecl-meta-list--large",
           items: meta
         } only %}
 
-        {% if parent is not empty %}
-          {% set _parent_icon = {} %}
-
-          {% if icon_file_path %}
-            {% set _parent_icon = {
-              path: icon_file_path,
-              type: 'ui',
-              name: 'rounded-arrow',
-              transform: 'rotate-270',
-              size: 'xs',
-            } %}
-          {% endif %}
-
-          {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with parent|default({})|merge({
-            link: parent.link|merge({
-              type: 'standalone',
-              icon_position: 'before',
-            }),
-            extra_classes: 'ecl-link--call-to-action',
-            icon: _parent_icon,
+        {% if type is not empty %}
+          {% include "@theme/patterns/components/content-type-indicator.html.twig" with type|default({})|merge({
+            extra_classes: 'ecl-editorial-header__type',
+            icon_file_path: icon_file_path,
           }) only %}
         {% endif %}
 
@@ -48,64 +62,80 @@
           </div>
         {% endif %}
 
-        {% if title is not empty %}
-          <{{ title_element }} class="ecl-editorial-header__title">{{ title }}</{{ title_element }}>
-        {% endif %}
-      </div>
-      {% if actions is not empty %}
-        <div class="ecl-editorial-header__actions">
-          {% for action in actions %}
-            <div class="ecl-editorial-header__action">
-              {% set _icon = {} %}
+        {% if actions is not empty %}
+          <div class="ecl-editorial-header__actions">
+            {% for action in actions %}
+              <div class="ecl-editorial-header__action">
+                {% set _icon = {} %}
 
-              {% if icon_file_path %}
-                {% set _icon = {
-                  path: icon_file_path,
-                  type: action.icon.type,
-                  name: action.icon.name,
-                  size: 'xs',
-                } %}
-              {% endif %}
+                {% if icon_file_path %}
+                  {% set _icon = {
+                    path: icon_file_path,
+                    type: action.icon.type,
+                    name: action.icon.name,
+                    size: 'xs',
+                  } %}
+                {% endif %}
 
-              {% if action.items %}
-                {% include "@theme/patterns/compositions/collapsible-options.html.twig" with {
-                  extra_classes: 'ecl-collapsible-options--aligns-from-right',
-                  collapse_label: action.label|default(action.link.label),
-                  icon_file_path: icon_file_path,
-                  items: action.items,
-                } only %}
-              {% else %}
-                {% set _action = {} %}
+                {% if action.items %}
+                  {% include "@theme/patterns/compositions/collapsible-options.html.twig" with {
+                    extra_classes: 'ecl-collapsible-options--aligns-from-right',
+                    collapse_label: action.label|default(action.link.label),
+                    icon_file_path: icon_file_path,
+                    items: action.items,
+                  } only %}
+                {% else %}
+                  {% set _action = {} %}
 
-                {% if action is not empty %}
+                  {% if action is not empty %}
 
-                  {% if action.link %}
-                    {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with action|default({})|merge({
-                      link: action.link|merge({
+                    {% if action.link %}
+                      {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with action|default({})|merge({
+                        link: action.link|merge({
+                          icon_position: 'before',
+                        }),
+                        icon: icon_file_path ? action.icon|default({})|merge({
+                          path: icon_file_path,
+                          size: 's',
+                        }) : {},
+                        extra_classes: loop.first ? 'ecl-link--button ecl-link--button-primary' : 'ecl-link--button ecl-link--button-secondary',
+                      }) only %}
+                    {% else %}
+                      {% include "@ecl-twig/ec-component-button/ecl-button.html.twig" with action|default({})|merge({
                         icon_position: 'before',
-                      }),
-                      icon: icon_file_path ? action.icon|default({})|merge({
-                        path: icon_file_path,
-                        size: 's',
-                      }) : {},
-                      extra_classes: loop.first ? 'ecl-link--button ecl-link--button-primary' : 'ecl-link--button ecl-link--button-secondary',
-                    }) only %}
-                  {% else %}
-                    {% include "@ecl-twig/ec-component-button/ecl-button.html.twig" with action|default({})|merge({
-                      icon_position: 'before',
-                      variant: loop.first ? 'primary' : 'secondary',
-                      icon: icon_file_path ? action.icon|default({})|merge({
-                        path: icon_file_path,
-                        size: 's',
-                      }) : {},
-                    }) %}
+                        variant: loop.first ? 'primary' : 'secondary',
+                        icon: icon_file_path ? action.icon|default({})|merge({
+                          path: icon_file_path,
+                          size: 's',
+                        }) : {},
+                      }) only %}
+                    {% endif %}
                   {% endif %}
                 {% endif %}
-              {% endif %}
-            </div>
-          {% endfor %}
-        </div>
-      {% endif %}
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+        {% if title or description %}
+          <div class="ecl-editorial-header__content">
+            {% if title is not empty %}
+              <{{ title_element }} class="ecl-editorial-header__title">{{ title }}</{{ title_element }}>
+            {% endif %}
+
+            {% if description %}
+              <div class="ecl-editorial-header__description">{{ description }}</div>
+            {% endif %}
+
+            {% if stats is not empty %}
+              <div class="ecl-editorial-header__stats">
+                {% include "@theme/patterns/components/inline-stats.html.twig" with {
+                  items: stats,
+                } %}
+              </div>
+            {% endif %}
+          </div>
+        {% endif %}
+      </div>
     </div>
   </div>
 </section>

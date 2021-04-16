@@ -6,10 +6,20 @@
  * @see ./core/themes/stable/templates/navigation/menu-local-tasks.html.twig
  */
 #}
-<div class="ecl-container">
-  <div class="ecl-row">
-    <div class="ecl-col-sm-12">
-      {% include "@oe_theme/navigation/menu-local-tasks.html.twig" %}
-    </div>
+<div class="ecl-section-wrapper ecl-section-wrapper--has-compact-layout">
+  <div class="ecl-container">
+    {% if primary %}
+      {% include '@eic_community/compositions/ec-component-navigation/local-tasks.html.twig' with {
+        title: 'Primary tabs'|t,
+        links: primary_links
+      } %}
+    {% endif %}
+    {% if secondary %}
+      {% include '@eic_community/compositions/ec-component-navigation/local-tasks.html.twig' with {
+        title: 'Secondary tabs'|t,
+        links: secondary_links,
+        variant: 'secondary'
+      } %}
+    {% endif %}
   </div>
 </div>

@@ -45,4 +45,6 @@ content:
 hidden:
   field_background_color: true
   field_background_image: true
+  langcode: true
+  search_api_excerpt: true
   user_id: true

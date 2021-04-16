@@ -1,0 +1,18 @@
+uuid: 640f91a7-c00c-4c0b-b7c6-33b4ebd9fadc
+langcode: en
+status: true
+dependencies:
+  config:
+    - message.template.stream_document_insert_update
+id: message.stream_document_insert_update.default
+targetEntityType: message
+bundle: stream_document_insert_update
+mode: default
+content:
+  partial_0:
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  search_api_excerpt: true

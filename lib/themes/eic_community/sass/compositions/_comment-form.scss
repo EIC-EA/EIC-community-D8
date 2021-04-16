@@ -41,10 +41,10 @@
       display: block;
       content: " ";
       bottom: 100%;
-      left: #{map-get($ecl-media, '5xs') / 2};
-      margin-bottom: #{0 - map-get($ecl-media, '5xs') / 4};
-      width: #{map-get($ecl-media, '5xs') / 2};
-      height: #{map-get($ecl-media, '5xs') / 2};
+      left: #{map-get($ecl-media, '6xs') / 2};
+      margin-bottom: #{0 - map-get($ecl-media, '6xs') / 4};
+      width: #{map-get($ecl-media, '6xs') / 2};
+      height: #{map-get($ecl-media, '6xs') / 2};
       transform: rotate(135deg);
       background-color: map-get($ecl-colors, 'grey-10');
       border-bottom-left-radius: ecl-box-model('border-radius');

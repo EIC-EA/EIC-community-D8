@@ -1,0 +1,65 @@
+<div class="ecl-subnavigation">
+  <div class="ecl-container">
+    <div class="ecl-subnavigation__inner">
+      {% if items is not empty %}
+        {% set active_item_label = title %}
+
+        <nav class="ecl-subnavigation__items-wrapper">
+          <ul class="ecl-subnavigation__items">
+            {% for item in items %}
+              <li class="ecl-subnavigation__item {{ item.is_active ? 'ecl-subnavigation__item--is-active' }}">
+                {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with item|default({})|merge({
+                  link: item.link|default({})|merge({
+                    type: 'standalone'
+                  }),
+                  extra_classes: 'ecl-subnavigation__item-link ' ~ item.extra_classes
+                }) %}
+              </li>
+
+              {% if item.is_active %}
+                {% set active_item_label = item.link.label %}
+              {% endif %}
+            {% endfor %}
+          </ul>
+        </nav>
+
+        {% set output_searchform = '' %}
+        {% if searchform %}
+          <div class="ecl-subnavigation__searchform-wrapper">
+          {% set output_searchform %}
+            {% include '@ecl-twig/ec-component-search-form/ecl-search-form.html.twig' with searchform|default({})|merge({
+              extra_classes: searchform.extra_classes|default('') ~ 'ecl-subnavigation__searchform',
+            }) %}
+          {% endset %}
+
+          {{ output_searchform }}
+          </div>
+        {% endif %}
+
+        {% embed "@theme/patterns/compositions/collapsible-options.html.twig" with {
+          items: items|merge([{
+            content: output_searchform
+          }]),
+          extra_classes: 'ecl-subnavigation__collapsible-options',
+          icon_file_path: icon_file_path,
+          active_item_label: active_item_label,
+        } only %}
+          {% block trigger%}
+            {% include "@ecl-twig/ec-component-button/ecl-button.html.twig" with {
+              label: active_item_label,
+              variant: 'ghost',
+              icon_position: 'before',
+              icon: icon_file_path ? {
+                path: icon_file_path,
+                name: 'ellipsis',
+                type: 'custom',
+                transform: 'rotate-90',
+                size: 's',
+              } : {},
+            } %}
+          {% endblock %}
+        {% endembed %}
+      {% endif %}
+    </div>
+  </div>
+</div>

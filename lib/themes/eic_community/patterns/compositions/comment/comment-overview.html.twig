@@ -1,24 +1,35 @@
 <section class="ecl-section-wrapper ecl-section-wrapper--is-grey ecl-comment-overview {{ extra_classes }}">
   <div class="ecl-container">
     <div class="ecl-comment-overview__wrapper">
-      {% if user is not empty %}
-        <div class="ecl-comment-overview__form-wrapper">
-          {% include "@theme/patterns/compositions/comment/comment-form.html.twig" with {
-            author: user,
-            icon_file_path: icon_file_path,
-            form: form,
-          } only %}
-        </div>
+      {% if is_disabled %}
+        <p class="ecl-comment-overview__disabled-label">{{ disabled_label|default('Placing comments has been disabled.') }}</p>
+      {% else %}
+        {% if user is not empty %}
+          <div class="ecl-comment-overview__form-wrapper">
+            {% include "@theme/patterns/compositions/comment/comment-form.html.twig" with {
+              author: user,
+              icon_file_path: icon_file_path,
+              form: form,
+            } only %}
+          </div>
+        {% endif %}
       {% endif %}
 
-      {% for item in items %}
-        <div class="ecl-comment-overview__item">
-          {% include "@theme/patterns/compositions/comment/comment-thread.html.twig" with item|default({})|merge({
-            icon_file_path: icon_file_path,
-            user: user,
-          }) %}
+      {% if items is not empty %}
+        <div class="ecl-comment-overview__items">
+          {% for item in items %}
+            <div class="ecl-comment-overview__item">
+              {% include "@theme/patterns/compositions/comment/comment-thread.html.twig" with item|default({})|merge({
+                icon_file_path: icon_file_path,
+                user: user,
+                items: item.items,
+              }) only %}
+            </div>
+          {% endfor %}
         </div>
-      {% endfor %}
+      {% else %}
+        <p class="ecl-comment-overview__no-items">{{ no_items_label|default('There are currently no comments.') }}</p>
+      {% endif %}
     </div>
     <span class="ecl-comment-overview__throbber"></span>
   </div>

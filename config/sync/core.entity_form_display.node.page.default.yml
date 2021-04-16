@@ -10,9 +10,13 @@ dependencies:
     - field.field.node.page.field_subtitle
     - node.type.page
   module:
+    - content_moderation
     - link
     - paragraphs
     - path
+    - publication_date
+    - scheduler
+    - scheduler_content_moderation_integration
     - text
 id: node.page.default
 targetEntityType: node
@@ -71,6 +75,13 @@ content:
     third_party_settings: {  }
     type: string_textfield
     region: content
+  langcode:
+    type: language_select
+    weight: 2
+    region: content
+    settings:
+      include_locked: true
+    third_party_settings: {  }
   moderation_state:
     type: moderation_state_default
     weight: 100

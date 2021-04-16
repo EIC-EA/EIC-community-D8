@@ -1,0 +1,19 @@
+uuid: 9c3acc38-fc61-4bb9-8a19-aca2d5dadf00
+langcode: en
+status: true
+dependencies:
+  module:
+    - link
+    - profile
+id: profile.field_cv_link
+field_name: field_cv_link
+entity_type: profile
+type: link
+settings: {  }
+module: link
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

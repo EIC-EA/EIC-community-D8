@@ -2,23 +2,23 @@ name: EIC Community theme
 type: theme
 description: EIC community base theme.
 package: EIC-community-D8
-core: 8.x
-core_version_requirement: ^8
+core_version_requirement: ^8.8 || ^9
 php: 7.2
 
-base theme: oe_theme
+base theme: stable
 
 libraries:
   - eic_community/theme
 
 regions:
-  site_top_bar: "Site top bar"
-  site_header: "Site header"
-  site_header_secondary: "Site header secondary"
-  page_header: "Page header"
-  navigation: "Navigation"
-  content: "Content"
-  footer: "Footer"
+  breadcrumbs: 'Breadcrumbs'
+  content: 'Content'
+  footer: 'Footer'
+  navigation: 'Navigation'
+  page_header: 'Page header'
+  sidebar: 'Sidebar'
+  site_header: 'Site header'
+  site_top_bar: 'Site top bar'
 
 # Registers twig namespace for EIC components.
 components:
