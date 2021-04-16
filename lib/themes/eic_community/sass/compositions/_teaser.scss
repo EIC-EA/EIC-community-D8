@@ -71,6 +71,7 @@
     position: relative;
     margin: 0 0 ecl-box-model('padding');
     padding: 0;
+    flex-shrink: 0;
     align-self: flex-start;
     background-color: map-get($ecl-colors, 'grey-10');
 
@@ -85,14 +86,6 @@
     @include ecl-media-breakpoint-up('sm') {
       width: map-get($ecl-media, 'l');
       margin: 0 ecl-box-model('padding') 0 0;
-    }
-
-    @include ecl-media-breakpoint-up('lg') {
-      width: map-get($ecl-media, 'xl');
-
-      #{$node}--event & {
-        width: map-get($ecl-media, 'l');
-      }
     }
 
     #{$node}--as-card & {
