@@ -1,0 +1,20 @@
+uuid: f9c3bd79-a1bc-4a8f-bde0-777e5501b25b
+langcode: en
+status: true
+dependencies:
+  module:
+    - group
+_core:
+  default_config_hash: sFNKZWBDgPSahxVndnw-GvRKjiwAeT80xyRALjjfnBM
+id: group_content.invitee_mail
+field_name: invitee_mail
+entity_type: group_content
+type: email
+settings: {  }
+module: core
+locked: true
+cardinality: 1
+translatable: false
+indexes: {  }
+persist_with_no_fields: true
+custom_storage: false
