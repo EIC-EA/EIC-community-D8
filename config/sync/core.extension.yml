@@ -9,6 +9,7 @@ module:
   block: 0
   block_content: 0
   block_content_permissions: 0
+  book: 0
   breakpoint: 0
   comment: 0
   components: 0
@@ -62,6 +63,7 @@ module:
   flag: 0
   flag_search_api: 0
   fragments: 0
+  ginvite: 0
   gnode: 0
   group: 0
   group_content_menu: 0

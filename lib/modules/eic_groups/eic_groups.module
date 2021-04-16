@@ -5,6 +5,10 @@
  * Primary module hooks for EIC Groups module.
  */
 
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\eic_groups\Hooks\EntityOperations;
+
 /**
  * Implements hook_theme().
  */
@@ -17,4 +21,20 @@ function eic_groups_theme($existing, $type, $theme, $path) {
       ],
     ],
   ];
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_insert().
+ */
+function eic_groups_group_insert(EntityInterface $entity) {
+  \Drupal::classResolver(EntityOperations::class)
+    ->groupInsert($entity);
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_view().
+ */
+function eic_groups_node_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
+  \Drupal::classResolver(EntityOperations::class)
+    ->nodeView($build, $entity, $display, $view_mode);
 }

@@ -5,7 +5,7 @@
  * Prepares variables for paragraph banner template.
  */
 
-use Drupal\oe_theme\ValueObject\ImageValueObject;
+use Drupal\eic_community\ValueObject\ImageValueObject;
 
 /**
  * Implements hook_preprocess_paragraph() for banner paragraph.
