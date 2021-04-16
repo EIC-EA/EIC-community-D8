@@ -1,0 +1,4 @@
+services:
+  eic_groups.helper:
+    class: Drupal\eic_groups\EICGroupsHelper
+    arguments: ['@current_route_match']
