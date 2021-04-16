@@ -1,0 +1,15 @@
+uuid: 6fe9fa02-d0ed-4f1e-9e2e-3a324300c3c9
+langcode: en
+status: true
+dependencies:
+  config:
+    - flag.flag.like_comment
+  module:
+    - flag
+id: flag_action.like_comment_unflag
+label: 'Unlike this item'
+type: comment
+plugin: 'flag_action:like_comment_unflag'
+configuration:
+  flag_id: like_comment
+  flag_action: unflag

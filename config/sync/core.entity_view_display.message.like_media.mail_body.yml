@@ -1,0 +1,19 @@
+uuid: c11726f8-0f5c-4248-8ac9-077287e52728
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.message.mail_body
+    - field.field.message.like_media.field_referenced_media
+    - message.template.like_media
+id: message.like_media.mail_body
+targetEntityType: message
+bundle: like_media
+mode: mail_body
+content:
+  partial_1:
+    weight: 0
+    region: content
+hidden:
+  field_referenced_media: true
+  partial_0: true

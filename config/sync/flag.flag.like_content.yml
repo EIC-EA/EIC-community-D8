@@ -1,28 +1,30 @@
-uuid: 5137fb47-aa43-42b1-a4a9-aebb7c9a959c
+uuid: 9ee8dda0-b98d-486f-8788-7a536e8b31e1
 langcode: en
 status: true
 dependencies:
   module:
-    - media
-id: bookmark_media
-label: 'Bookmark (media)'
+    - eic_flags
+    - node
+id: like_content
+label: 'Like (content)'
 bundles:
-  - eic_document
-entity_type: media
+  - news
+  - story
+entity_type: node
 global: false
 weight: 0
-flag_short: 'Bookmark this item'
+flag_short: 'Like this item'
 flag_long: ''
 flag_message: ''
-unflag_short: 'Unbookmark this item'
+unflag_short: 'Unlike this item'
 unflag_long: ''
 unflag_message: ''
 unflag_denied_text: ''
-flood_control_active: false
-flood_control_limit: 0
-flood_control_window: 0
-flag_type: 'entity:media'
-link_type: ajax_link
+flood_control_active: true
+flood_control_limit: 5
+flood_control_window: 300
+flag_type: 'entity:node'
+link_type: eic_count_link
 flagTypeConfig:
   show_in_links:
     full: full

@@ -1,0 +1,19 @@
+uuid: d99efa22-0062-406d-bdd4-f1ff54b31352
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.message.like_media.field_referenced_media
+    - message.template.like_media
+id: message.like_media.default
+targetEntityType: message
+bundle: like_media
+mode: default
+content:
+  partial_0:
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  field_referenced_media: true
