@@ -34,11 +34,11 @@ class RestrictedVisibility extends GroupVisibilityBase {
       'trusted_user',
       'content_administrator',
     ];
-    $outsider_roles = $this->getOutsiderRoleIdsFromInteralRoles($groupType, $internal_roles);
+    $outsider_roles = $this->getOutsiderRolesFromInteralRoles($groupType, $internal_roles);
 
     if (!empty($outsider_roles)) {
       foreach ($outsider_roles as $outsider_role) {
-        $mappedPerm[$outsider_role] = ['view group' => TRUE];
+        $mappedPerm[$outsider_role->id()] = ['view group' => TRUE];
       }
     }
 
@@ -62,11 +62,11 @@ class RestrictedVisibility extends GroupVisibilityBase {
       'trusted_user',
       'content_administrator',
     ];
-    $outsider_roles = $this->getOutsiderRoleIdsFromInteralRoles($groupType, $internal_roles);
+    $outsider_roles = $this->getOutsiderRolesFromInteralRoles($groupType, $internal_roles);
 
     if (!empty($outsider_roles)) {
       foreach ($outsider_roles as $outsider_role) {
-        $mappedPerm[$outsider_role] = ['view group' => TRUE];
+        $mappedPerm[$outsider_role->id()] = ['view group' => FALSE];
       }
     }
 
@@ -85,11 +85,11 @@ class RestrictedVisibility extends GroupVisibilityBase {
       'trusted_user',
       'content_administrator',
     ];
-    $outsider_roles = $this->getOutsiderRoleIdsFromInteralRoles($group->getGroupType(), $internal_roles);
+    $outsider_roles = $this->getOutsiderRolesFromInteralRoles($group->getGroupType(), $internal_roles);
 
     if (!empty($outsider_roles)) {
       foreach ($outsider_roles as $outsider_role) {
-        $permissions[$outsider_role] = ['view group'];
+        $permissions[$outsider_role->id()] = ['view group'];
       }
     }
 
@@ -100,10 +100,24 @@ class RestrictedVisibility extends GroupVisibilityBase {
    * {@inheritdoc}
    */
   public function getDisallowedGroupPermissions(GroupInterface $group): array {
-    return [
+    $permissions = [
       $group->getGroupType()->getAnonymousRoleId() => ['view group'],
       $group->getGroupType()->getOutsiderRoleId() => ['view group'],
     ];
+
+    $internal_roles = [
+      'trusted_user',
+      'content_administrator',
+    ];
+    $outsider_roles = $this->getOutsiderRolesFromInteralRoles($group->getGroupType(), $internal_roles);
+
+    if (!empty($outsider_roles)) {
+      foreach ($outsider_roles as $outsider_role) {
+        $permissions[$outsider_role->id()] = ['view group'];
+      }
+    }
+
+    return $permissions;
   }
 
   /**
@@ -121,24 +135,24 @@ class RestrictedVisibility extends GroupVisibilityBase {
   }
 
   /**
-   * Get outsider drupal role ids.
+   * Get group outsider drupal roles.
    *
    * @param \Drupal\group\Entity\GroupTypeInterface $groupType
    *   The Group Type entity.
    * @param array $internal_rids
    *   The outsider role id.
    *
-   * @return array
-   *   The outsider role ids of the group type.
+   * @return \Drupal\group\Entity\GroupRoleInterface[]
+   *   The outsider roles of the group.
    */
-  private function getOutsiderRoleIdsFromInteralRoles(GroupTypeInterface $groupType, array $internal_rids): array {
-    $rids = [];
-    $roles = $groupType->getRoles();
-    if (!empty($roles)) {
-      foreach ($roles as $role) {
+  private function getOutsiderRolesFromInteralRoles(GroupTypeInterface $groupType, array $internal_rids): array {
+    $roles = [];
+    $group_roles = $groupType->getRoles();
+    if (!empty($group_roles)) {
+      foreach ($group_roles as $role) {
         foreach ($internal_rids as $key => $internal_rid) {
           if ($role->isInternal() && in_array("user.role.{$internal_rid}", $role->getDependencies()['config'])) {
-            $rids[] = $role->id();
+            $roles[] = $role;
             // We unset the role from $internal_rids array to avoid redundant
             // checks.
             unset($internal_rids[$key]);
@@ -147,7 +161,7 @@ class RestrictedVisibility extends GroupVisibilityBase {
         }
       }
     }
-    return $rids;
+    return $roles;
   }
 
 }
