@@ -3,10 +3,11 @@
 namespace Drupal\eic_flags\Plugin\QueueWorker;
 
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Logger\LoggerChannelTrait;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Queue\QueueFactory;
 use Drupal\Core\Queue\QueueWorkerBase;
 use Drupal\message\Entity\Message;
-use Drupal\message_notify\MessageNotifier;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -19,6 +20,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * )
  */
 class EICFlagNotifyQueueWorker extends QueueWorkerBase implements ContainerFactoryPluginInterface {
+
+  use LoggerChannelTrait;
 
   /**
    * Service container.
@@ -35,28 +38,42 @@ class EICFlagNotifyQueueWorker extends QueueWorkerBase implements ContainerFacto
   protected $entityTypeManager;
 
   /**
-   * The message notifier.
+   * The message notify queue worker.
    *
-   * @var \Drupal\message_notify\MessageNotifier
+   * @var \Drupal\eic_messages\Plugin\QueueWorker\MessageNotifyQueueWorker
    */
-  protected $notifier;
+  protected $notifyQueue;
 
   /**
    * {@inheritdoc}
    */
   public function processItem($data) {
+    $message = NULL;
+
     switch ($data['flag_id']) {
       case 'like_content':
-        $this->processContentItem($data);
+        $message = $this->processContentItem($data);
         break;
 
       case 'like_media':
-        $this->processMediaItem($data);
+        $message = $this->processMediaItem($data);
         break;
 
       case 'like_comment':
-        $this->processCommentItem($data);
+        $message = $this->processCommentItem($data);
         break;
+    }
+
+    if ($message) {
+      try {
+        // Save the message and create the message notify queue item.
+        $message->save();
+        $this->notifyQueue->createItem(['mid' => $message->id()]);
+      }
+      catch (\Exception $e) {
+        $logger = $this->getLogger('eic_flags');
+        $logger->error($e->getMessage());
+      }
     }
   }
 
@@ -65,6 +82,9 @@ class EICFlagNotifyQueueWorker extends QueueWorkerBase implements ContainerFacto
    *
    * @param array $data
    *   Data needed for processing.
+   *
+   * @return Message
+   *   The message to be added.
    */
   private function processContentItem(array $data) {
     $node = $this->entityTypeManager->getStorage('node')->load($data['entity_id']);
@@ -73,7 +93,7 @@ class EICFlagNotifyQueueWorker extends QueueWorkerBase implements ContainerFacto
       'uid' => $node->getOwnerId(),
     ]);
     $message->set('field_referenced_node', $node);
-    $this->notifier->send($message, [], 'email');
+    return $message;
   }
 
   /**
@@ -81,6 +101,9 @@ class EICFlagNotifyQueueWorker extends QueueWorkerBase implements ContainerFacto
    *
    * @param array $data
    *   Data needed for processing.
+   *
+   * @return Message
+   *   The message to be added.
    */
   private function processMediaItem(array $data) {
     $media = $this->entityTypeManager->getStorage('media')->load($data['entity_id']);
@@ -89,7 +112,7 @@ class EICFlagNotifyQueueWorker extends QueueWorkerBase implements ContainerFacto
       'uid' => $media->getOwnerId(),
     ]);
     $message->set('field_referenced_media', $media);
-    $this->notifier->send($message, [], 'email');
+    return $message;
   }
 
   /**
@@ -97,6 +120,9 @@ class EICFlagNotifyQueueWorker extends QueueWorkerBase implements ContainerFacto
    *
    * @param array $data
    *   Data needed for processing.
+   *
+   * @return Message
+   *   The message to be added.
    */
   private function processCommentItem(array $data) {
     $comment = $this->entityTypeManager->getStorage('comment')->load($data['entity_id']);
@@ -106,7 +132,7 @@ class EICFlagNotifyQueueWorker extends QueueWorkerBase implements ContainerFacto
       'uid' => $node->getOwnerId(),
     ]);
     $message->set('field_referenced_node', $node);
-    $this->notifier->send($message, [], 'email');
+    return $message;
   }
 
   /**
@@ -116,7 +142,7 @@ class EICFlagNotifyQueueWorker extends QueueWorkerBase implements ContainerFacto
     /** @var \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager */
     $entityTypeManager = $container->get('entity_type.manager');
     /** @var \Drupal\Core\Logger\LoggerChannelInterface $logger */
-    $notifier = $container->get('message_notify.sender');
+    $queue_factory = $container->get('queue');
 
     return new static(
       $configuration,
@@ -124,7 +150,7 @@ class EICFlagNotifyQueueWorker extends QueueWorkerBase implements ContainerFacto
       $plugin_definition,
       $container,
       $entityTypeManager,
-      $notifier
+      $queue_factory
     );
   }
 
@@ -141,8 +167,8 @@ class EICFlagNotifyQueueWorker extends QueueWorkerBase implements ContainerFacto
    *   The service container.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   Entity type manager.
-   * @param \Drupal\message_notify\MessageNotifier $notifier
-   *   The message notifier.
+   * @param \Drupal\Core\Queue\QueueFactory $queue_factory
+   *   The queue factory.
    */
   public function __construct(
     array $configuration,
@@ -150,12 +176,12 @@ class EICFlagNotifyQueueWorker extends QueueWorkerBase implements ContainerFacto
     $plugin_definition,
     ContainerInterface $container,
     EntityTypeManagerInterface $entityTypeManager,
-    MessageNotifier $notifier
+    QueueFactory $queue_factory
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->container = $container;
     $this->entityTypeManager = $entityTypeManager;
-    $this->notifier = $notifier;
+    $this->notifyQueue = $queue_factory->get('eic_message_notify_queue');
   }
 
 }
