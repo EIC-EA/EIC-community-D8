@@ -4,11 +4,28 @@ status: true
 dependencies:
   module:
     - menu_ui
+    - purl
+    - scheduler
 third_party_settings:
   menu_ui:
     available_menus:
       - main
     parent: 'main:'
+  purl:
+    keep_context: 1
+  scheduler:
+    expand_fieldset: when_required
+    fields_display_mode: vertical_tab
+    publish_enable: false
+    publish_past_date: error
+    publish_past_date_created: false
+    publish_required: false
+    publish_revision: false
+    publish_touch: false
+    show_message_after_update: true
+    unpublish_enable: false
+    unpublish_required: false
+    unpublish_revision: false
 name: Discussion
 type: discussion
 description: "The content type \"Discussion\" is designed to host a discussion that the author wants to launch. The discussion can start from a question or a more elaborate topic.\r\nOnce created and published, the discussion will occur through comments posted on the \"Discussion\" page "

@@ -28,3 +28,23 @@ function eic_flags_theme() {
     ],
   ];
 }
+
+/**
+ * Implements hook_cron().
+ */
+function eic_flags_cron() {
+  $queue = \Drupal::service('queue')->get('eic_flags_notify_queue');
+  $five_minutes_ago = strtotime('-5 minutes');
+  $ten_minutes_ago = strtotime('-10 minutes');
+  $database = \Drupal::database();
+  $query = $database->select('flagging', 'f');
+  $query->condition('f.created', $five_minutes_ago, '>');
+  $query->condition('f.created', $ten_minutes_ago, '<');
+  $query->fields('f', ['flag_id', 'entity_type', 'entity_id']);
+  $query->distinct(TRUE);
+  $result = $query->execute()->fetchAll();
+  foreach ($result as $row) {
+    $row = (array) $row;
+    $queue->createItem($row);
+  }
+}

@@ -1,0 +1,15 @@
+uuid: b9bc2297-7f0c-4861-9035-6521c0d8a36c
+langcode: en
+status: true
+dependencies:
+  config:
+    - flag.flag.like_content
+  module:
+    - flag
+id: flag_action.like_content_flag
+label: 'Like this item'
+type: node
+plugin: 'flag_action:like_content_flag'
+configuration:
+  flag_id: like_content
+  flag_action: flag

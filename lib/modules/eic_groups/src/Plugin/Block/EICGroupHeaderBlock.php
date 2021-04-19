@@ -6,6 +6,7 @@ use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\eic_groups\EICGroupsHelperInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -30,6 +31,13 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
   protected $routeMatch;
 
   /**
+   * The EIC Groups helper service.
+   *
+   * @var \Drupal\eic_groups\EICGroupsHelperInterface
+   */
+  protected $eicGroupsHelper;
+
+  /**
    * Constructs a new EICGroupHeaderBlock instance.
    *
    * @param array $configuration
@@ -43,10 +51,13 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
    *   The plugin implementation definition.
    * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
    *   The current route match.
+   * @param \Drupal\eic_groups\EICGroupsHelperInterface $eic_groups_helper
+   *   The EIC Groups helper service.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, RouteMatchInterface $route_match) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, RouteMatchInterface $route_match, EICGroupsHelperInterface $eic_groups_helper) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->routeMatch = $route_match;
+    $this->eicGroupsHelper = $eic_groups_helper;
   }
 
   /**
@@ -57,7 +68,8 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('current_route_match')
+      $container->get('current_route_match'),
+      $container->get('eic_groups.helper')
     );
   }
 
@@ -67,8 +79,11 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
   public function build() {
     $build = [];
 
+    // Do nothing if no group was found in the context or in the current route.
     if ((!$group = $this->getContextValue('group')) || !$group->id()) {
-      return $build;
+      if (!$group = $this->eicGroupsHelper->getGroupFromRoute()) {
+        return $build;
+      }
     }
 
     // The content of this is block is shown depending on the current user's

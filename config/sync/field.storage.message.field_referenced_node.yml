@@ -1,0 +1,20 @@
+uuid: 17e0a65c-1896-4cb4-afc3-26a1dcfc9e09
+langcode: en
+status: true
+dependencies:
+  module:
+    - message
+    - node
+id: message.field_referenced_node
+field_name: field_referenced_node
+entity_type: message
+type: entity_reference
+settings:
+  target_type: node
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

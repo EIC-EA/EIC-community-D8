@@ -8,7 +8,7 @@ print_usage_info() {
 
 Install/update the site and migrate the content.
 
-Usage: sh scripts/install.sh [-h|--help] [--docker=DOCKER_CMD] [--drush=DRUSH_CMD] [--git=BRANCH] [--no-build] [--clean] [--migrate] [--password=ADMIN_PASSWORD]
+Usage: sh scripts/install.sh [-h|--help] [--docker=DOCKER_CMD] [--drush=DRUSH_CMD] [--git=BRANCH] [--no-build] [--no-maintenance] [--clean] [--migrate] [--password=ADMIN_PASSWORD]
 
 Options:
   -h | --help                 Print command usage info.
@@ -16,6 +16,7 @@ Options:
   --drush=DRUSH_CMD           Location of the of the drush command. E.g. "docker-compose exec web drush"
   --git=BRANCH                Perform git checkout. Git branch to checkout.
   --no-build                  SKIP build.
+  --no-maintenance            SKIP set maintenance mode.
   --clean                     Perform clean install of the site.
   --migrate                   Perform migration.
   --password=ADMIN_PASSWORD   Password to set for the admin user. (first user)
@@ -39,6 +40,7 @@ PERFORM_CLEAN_INSTALL=false
 PERFORM_MIGRATION=false
 PERFORM_ADMIN_PASSWORD_CHANGE=false
 SKIP_BUILD=false
+SKIP_MAINTENANCE_MODE=false
 GIT_BRANCH="develop"
 DOCKER_CMD=""
 DRUSH_CMD="vendor/bin/drush --root=$PWD/web"
@@ -87,6 +89,10 @@ while [ "$1" != "" ]; do
     SKIP_BUILD=true
     echo "Skipping build."
     ;;
+  --no-maintenance)
+    SKIP_MAINTENANCE_MODE=true
+    echo "Skipping set maintenance mode."
+    ;;
   *)
     printf "\n%bERROR: Unknown parameter \"$PARAM\"%b\n" "$COLOR_RED" "$COLOR_DEFAULT"
     print_usage_info
@@ -117,7 +123,7 @@ run_command() {
   fi
 }
 
-if [ "$PERFORM_CLEAN_INSTALL" = false ]; then
+if [ "$SKIP_MAINTENANCE_MODE" = false ] && [ "$PERFORM_CLEAN_INSTALL" = false ]; then
   # Configuration: Enable maintenance mode (only when not performing a clean install).
   run_command "$DRUSH_CMD state:set system.maintenance_mode 1 --input-format=integer -y"
 fi
@@ -182,8 +188,10 @@ if [ "$PERFORM_ADMIN_PASSWORD_CHANGE" = true ]; then
   run_command "$DRUSH_CMD user:password MasterChef1 $ADMIN_PASSWORD" "Setting admin user password failed."
 fi
 
-# Configuration: Disable maintenance mode
-run_command "$DRUSH_CMD state:set system.maintenance_mode 0 --input-format=integer -y"
+if [ "$SKIP_MAINTENANCE_MODE" = false ]; then
+  # Configuration: Disable maintenance mode
+  run_command "$DRUSH_CMD state:set system.maintenance_mode 0 --input-format=integer -y"
+fi
 
 # Cache: Rebuild Drupal cache.
 run_command "$DRUSH_CMD cache:rebuild"
