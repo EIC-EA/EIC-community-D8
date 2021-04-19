@@ -1,0 +1,9 @@
+services:
+  eic_groups.search_api_subscriber:
+    class: Drupal\eic_groups\EventSubscriber\SearchApiSubscriber
+    arguments: ['@group_purl.context_provider']
+    tags:
+      - { name: event_subscriber }
+  eic_groups.helper:
+    class: Drupal\eic_groups\EICGroupsHelper
+    arguments: ['@current_route_match']

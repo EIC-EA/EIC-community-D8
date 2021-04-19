@@ -72,6 +72,11 @@ name: Global
 description: ''
 read_only: false
 field_settings:
+  content__group_content__entity_id_gid:
+    label: 'Reverse reference: Group content using Content » Parent group'
+    datasource_id: 'entity:node'
+    property_path: 'search_api_reverse_entity_references_group_content__entity_id:gid'
+    type: integer
   content_created:
     label: '[Content] Authored on'
     datasource_id: 'entity:node'
@@ -207,6 +212,11 @@ field_settings:
     dependencies:
       module:
         - group
+  user__group_content__uid_gid:
+    label: 'Reverse reference: Group content using Group content creator » Parent group'
+    datasource_id: 'entity:user'
+    property_path: 'search_api_reverse_entity_references_group_content__uid:gid'
+    type: integer
   user_full_name:
     label: '[User] Full name'
     property_path: aggregated_field
@@ -324,6 +334,7 @@ processor_settings:
       preprocess_index: -45
   language_with_fallback: {  }
   rendered_item: {  }
+  reverse_entity_references: {  }
   solr_date_range:
     weights:
       preprocess_index: 0

@@ -34,6 +34,7 @@ permissions:
   - 'view group_node:discussion entity'
   - 'view group_node:document entity'
   - 'view group_node:wiki_page entity'
+  - 'view unpublished group_node:book entity'
   - 'view unpublished group_node:discussion entity'
   - 'view unpublished group_node:document entity'
   - 'view unpublished group_node:wiki_page entity'

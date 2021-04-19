@@ -1,0 +1,15 @@
+uuid: c4ee717c-2ed4-437f-9d72-743ac434bc33
+langcode: en
+status: true
+dependencies:
+  config:
+    - flag.flag.like_media
+  module:
+    - flag
+id: flag_action.like_media_flag
+label: 'Like this item'
+type: media
+plugin: 'flag_action:like_media_flag'
+configuration:
+  flag_id: like_media
+  flag_action: flag

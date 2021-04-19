@@ -9,6 +9,7 @@ module:
   block: 0
   block_content: 0
   block_content_permissions: 0
+  book: 0
   breakpoint: 0
   comment: 0
   components: 0
@@ -19,6 +20,7 @@ module:
   context: 0
   context_ui: 0
   contextual: 0
+  ctools: 0
   datetime: 0
   dblog: 0
   dynamic_page_cache: 0
@@ -61,11 +63,13 @@ module:
   flag: 0
   flag_search_api: 0
   fragments: 0
+  ginvite: 0
   gnode: 0
   group: 0
   group_content_menu: 0
   group_flex: 0
   group_permissions: 0
+  group_purl: 0
   hal: 0
   image: 0
   inline_entity_form: 0
@@ -76,6 +80,7 @@ module:
   menu_link_content: 0
   menu_ui: 0
   message: 0
+  message_notify: 0
   metatag: 0
   metatag_open_graph: 0
   metatag_twitter_cards: 0
@@ -93,6 +98,7 @@ module:
   path: 0
   path_alias: 0
   profile: 0
+  purl: 0
   realname: 0
   responsive_image: 0
   rest: 0
@@ -122,6 +128,7 @@ module:
   variationcache: 0
   views_ui: 0
   workflows: 0
+  pathauto: 1
   views: 10
   paragraphs: 11
   eic_paragraphs: 12

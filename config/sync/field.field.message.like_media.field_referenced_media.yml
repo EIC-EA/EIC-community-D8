@@ -1,0 +1,34 @@
+uuid: 773a2d50-82ff-4a55-b3a9-d220e8f928db
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.message.field_referenced_media
+    - media.type.eic_document
+    - media.type.image
+    - media.type.remote_video
+    - media.type.video
+    - message.template.like_media
+id: message.like_media.field_referenced_media
+field_name: field_referenced_media
+entity_type: message
+bundle: like_media
+label: 'Referenced Media'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:media'
+  handler_settings:
+    target_bundles:
+      eic_document: eic_document
+      image: image
+      remote_video: remote_video
+      video: video
+    sort:
+      field: _none
+    auto_create: false
+    auto_create_bundle: eic_document
+field_type: entity_reference
