@@ -38,6 +38,11 @@ function eic_community_preprocess_comment(&$variables) {
     'pid' => $comment->id(),
   ]);
 
+  $dateFormatter = \Drupal::service('date.formatter');
+  $createdAt = $dateFormatter->format($comment->getCreatedTime(), 'short');
+  // If a diff-date is needed, use this.
+//  $createdAtDiff = $dateFormatter->formatDiff($comment->getCreatedTime(), Drupal\Core\Datetime\Entity\DateFormat::create());
+
   $variables['comment'] = [
     'author' => [
       'author' => $author->getDisplayName(),
@@ -51,7 +56,7 @@ function eic_community_preprocess_comment(&$variables) {
     'edit_path' => $comment->toUrl('edit-form'),
     'remove_path' => $comment->toUrl('delete-form'),
     'reply_path' => $comment_reply->toString(),
-    'timestamp' => $comment->getCreatedTime(),
+    'timestamp' => $createdAt,
     'user' => $current_user,
     'icon_file_path' => $variables['eic_icon_path'],
   ];
