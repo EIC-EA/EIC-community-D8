@@ -69,19 +69,11 @@
       </div>
 
       {% if user and comment_id %}
+        {% if is_owner %}
         <div class="ecl-comment__header-aside">
           {% embed "@theme/patterns/compositions/collapsible-options.html.twig" with {
             extra_classes: 'ecl-collapsible-options--aligns-from-right',
             items: [
-              {
-                link: {
-                  label: report_label|default('Report comment'),
-                  path: '...',
-                },
-                extra_classes: 'ecl-comment__report',
-                extra_attributes: action_attributes,
-              },
-            ]|merge(is_owner ? [
               {
                 link: {
                   label: edit_label|default('Edit comment'),
@@ -98,7 +90,7 @@
                 extra_classes: 'ecl-comment__delete',
                 extra_attributes: action_attributes,
               },
-            ] : [])
+          ]
           } %}
             {% block trigger%}
               {% include "@ecl-twig/ec-component-button/ecl-button.html.twig" with {
@@ -116,6 +108,7 @@
             {% endblock %}
           {% endembed %}
         </div>
+          {% endif %}
       {% endif %}
 
     </header>
