@@ -1,0 +1,8 @@
+name: EIC Messages
+type: module
+description: Provides functionnality around messages.
+package: European Innovation Council
+core: 8.x
+core_version_requirement: ^8 || ^9
+dependencies:
+  - message
