@@ -60,6 +60,9 @@ function eic_community_preprocess_comment(&$variables) {
   ];
 
   // Stored in render array as twig does some logic with it.
+  // @TODO: Create Logic for role Content Administrator to overwrite "ownership"
+  // @TODO: If there are replies to the comment, disable 'can_edit'.
+  // @SEE: EICNET-639
   $variables['comment']['can_edit'] = $current_user->hasPermission('edit own comments');
   if ($variables['comment']['can_edit']) {
     $variables['comment']['edit_path'] = $comment->toUrl('edit-form');
