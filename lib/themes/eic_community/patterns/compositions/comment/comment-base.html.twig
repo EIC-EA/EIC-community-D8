@@ -69,7 +69,7 @@
       </div>
 
       {% if user and comment_id %}
-        {% if is_owner %}
+        {% if is_owner and can_edit %}
         <div class="ecl-comment__header-aside">
           {% embed "@theme/patterns/compositions/collapsible-options.html.twig" with {
             extra_classes: 'ecl-collapsible-options--aligns-from-right',

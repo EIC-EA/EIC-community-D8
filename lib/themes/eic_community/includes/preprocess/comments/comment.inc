@@ -38,8 +38,8 @@ function eic_community_preprocess_comment(&$variables) {
     'pid' => $comment->id(),
   ]);
 
-  $dateFormatter = \Drupal::service('date.formatter');
-  $createdAt = $dateFormatter->format($comment->getCreatedTime(), 'short');
+  $date_formatter = \Drupal::service('date.formatter');
+  $created_at = $date_formatter->format($comment->getCreatedTime(), 'short');
   // If a diff-date is needed, use this.
 //  $createdAtDiff = $dateFormatter->formatDiff($comment->getCreatedTime(), Drupal\Core\Datetime\Entity\DateFormat::create());
 
@@ -53,13 +53,18 @@ function eic_community_preprocess_comment(&$variables) {
     'comment_id' => $comment->cid->value,
     'comment_origin' => $comment_origin,
     'is_owner' => $current_user->id() == $comment->getOwnerId(),
-    'edit_path' => $comment->toUrl('edit-form'),
-    'remove_path' => $comment->toUrl('delete-form'),
     'reply_path' => $comment_reply->toString(),
-    'timestamp' => $createdAt,
+    'timestamp' => $created_at,
     'user' => $current_user,
     'icon_file_path' => $variables['eic_icon_path'],
   ];
+
+  // Stored in render array as twig does some logic with it.
+  $variables['comment']['can_edit'] = $current_user->hasPermission('edit own comments');
+  if ($variables['comment']['can_edit']) {
+    $variables['comment']['edit_path'] = $comment->toUrl('edit-form');
+    $variables['comment']['remove_path'] = $comment->toUrl('delete-form');
+  }
 }
 
 /**
