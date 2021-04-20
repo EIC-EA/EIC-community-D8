@@ -13,7 +13,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Provides a 'restricted' group visibility.
  *
  * @GroupVisibility(
- *  id = "restricted",
+ *  id = "restricted_role",
  *  label = @Translation("Restricted (visible by members and trusted users)"),
  *  weight = -89
  * )
@@ -70,8 +70,7 @@ class RestrictedVisibility extends GroupVisibilityBase implements ContainerFacto
         'view group' => TRUE,
       ],
     ];
-
-    $outsider_roles = $this->getOutsiderRolesFromInteralRoles($groupType, $this->oecGroupFlexConfigSettings->get('oec_group_visibility_setings.restricted.internal_roles'));
+    $outsider_roles = $this->getOutsiderRolesFromInteralRoles($groupType, $this->oecGroupFlexConfigSettings->get('oec_group_visibility_setings.' . $this->pluginId . '.internal_roles'));
 
     if (!empty($outsider_roles)) {
       foreach ($outsider_roles as $outsider_role) {
@@ -95,7 +94,7 @@ class RestrictedVisibility extends GroupVisibilityBase implements ContainerFacto
       ],
     ];
 
-    $outsider_roles = $this->getOutsiderRolesFromInteralRoles($groupType, $this->oecGroupFlexConfigSettings->get('oec_group_visibility_setings.restricted.internal_roles'));
+    $outsider_roles = $this->getOutsiderRolesFromInteralRoles($groupType, $this->oecGroupFlexConfigSettings->get('oec_group_visibility_setings.' . $this->pluginId . '.internal_roles'));
 
     if (!empty($outsider_roles)) {
       foreach ($outsider_roles as $outsider_role) {
@@ -114,7 +113,7 @@ class RestrictedVisibility extends GroupVisibilityBase implements ContainerFacto
       $group->getGroupType()->getMemberRoleId() => ['view group'],
     ];
 
-    $outsider_roles = $this->getOutsiderRolesFromInteralRoles($group->getGroupType(), $this->oecGroupFlexConfigSettings->get('oec_group_visibility_setings.restricted.internal_roles'));
+    $outsider_roles = $this->getOutsiderRolesFromInteralRoles($group->getGroupType(), $this->oecGroupFlexConfigSettings->get('oec_group_visibility_setings.' . $this->pluginId . '.internal_roles'));
 
     if (!empty($outsider_roles)) {
       foreach ($outsider_roles as $outsider_role) {

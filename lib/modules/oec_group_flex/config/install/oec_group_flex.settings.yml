@@ -1,5 +1,5 @@
 oec_group_visibility_setings:
-  restricted:
+  restricted_role:
     internal_roles:
       - trusted_user
       - content_administrator

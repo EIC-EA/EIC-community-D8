@@ -77,7 +77,7 @@ class OECGroupFlexGroupDecorator extends GroupFlexGroup {
     switch ($default_visibility) {
       case GroupVisibilityInterface::GROUP_FLEX_TYPE_VIS_PRIVATE:
         if ($this->isGroupVisibilityRestricted($group)) {
-          $default_visibility = OECGroupVisibilityInterface::GROUP_FLEX_TYPE_VIS_RESTRICTED;
+          $default_visibility = OECGroupVisibilityInterface::GROUP_FLEX_TYPE_VIS_RESTRICTED_ROLE;
         }
         break;
 
@@ -103,7 +103,7 @@ class OECGroupFlexGroupDecorator extends GroupFlexGroup {
    *   TRUE if the group is restricted based on outsider permissions.
    */
   private function isGroupVisibilityRestricted(GroupInterface $group) {
-    $outsider_roles = $this->getOutsiderRolesFromInteralRoles($group->getGroupType(), $this->oecGroupFlexConfigSettings->get('oec_group_visibility_setings.restricted.internal_roles'));
+    $outsider_roles = $this->getOutsiderRolesFromInteralRoles($group->getGroupType(), $this->oecGroupFlexConfigSettings->get('oec_group_visibility_setings.restricted_role.internal_roles'));
 
     if (empty($outsider_roles)) {
       return FALSE;
