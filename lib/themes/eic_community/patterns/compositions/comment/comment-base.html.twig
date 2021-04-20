@@ -69,11 +69,11 @@
       </div>
 
       {% if user and comment_id %}
-        {% if can_edit_comment %}
+        {% if can_remove_comment %}
         <div class="ecl-comment__header-aside">
           {% embed "@theme/patterns/compositions/collapsible-options.html.twig" with {
             extra_classes: 'ecl-collapsible-options--aligns-from-right',
-            items: [
+            items: []|merge( can_edit_comment? [
               {
                 link: {
                   label: edit_label|default('Edit comment'),
@@ -81,7 +81,8 @@
                 },
                 extra_classes: 'ecl-comment__edit',
                 extra_attributes: action_attributes,
-              },
+              }
+            ] : [])|merge( can_remove_comment? [
               {
                 link: {
                   label: remove_label|default('Delete comment'),
@@ -90,7 +91,7 @@
                 extra_classes: 'ecl-comment__delete',
                 extra_attributes: action_attributes,
               },
-          ]
+          ] : [])
           } %}
             {% block trigger%}
               {% include "@ecl-twig/ec-component-button/ecl-button.html.twig" with {

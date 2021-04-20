@@ -74,10 +74,20 @@ function eic_community_preprocess_comment(&$variables) {
       $current_user->hasPermission('edit own comments')
       && $current_user->id() == $comment->getOwnerId()
       && $num_of_replies === 0
-    ) || $current_user->hasPermission('administer comments');
+    );
+
+  $variables['comment']['can_remove_comment'] =
+    $variables['comment']['can_edit_comment']
+    || (
+      $current_user->hasPermission('administer comments')
+      && $num_of_replies === 0
+    );
 
   if ($variables['comment']['can_edit_comment']) {
     $variables['comment']['edit_path'] = $comment->toUrl('edit-form');
+  }
+
+  if ($variables['comment']['can_remove_comment']) {
     $variables['comment']['remove_path'] = $comment->toUrl('delete-form');
   }
 }
