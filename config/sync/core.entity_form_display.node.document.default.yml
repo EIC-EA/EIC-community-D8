@@ -4,10 +4,12 @@ status: true
 dependencies:
   config:
     - field.field.node.document.field_body
+    - field.field.node.document.field_comments
     - field.field.node.document.field_document_media
     - field.field.node.document.field_vocab_topics
     - node.type.document
   module:
+    - comment
     - content_moderation
     - path
     - publication_date
@@ -32,6 +34,12 @@ content:
       placeholder: ''
     third_party_settings: {  }
     type: text_textarea
+    region: content
+  field_comments:
+    weight: 101
+    settings: {  }
+    third_party_settings: {  }
+    type: comment_default
     region: content
   field_document_media:
     weight: 4
