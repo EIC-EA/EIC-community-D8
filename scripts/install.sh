@@ -157,7 +157,7 @@ fi
 
 if [ "$PERFORM_CLEAN_INSTALL" = true ]; then
   # Installation: Install clean website via Toolkit.
-  run_command "$DOCKER_CMD drush site-install minimal --account-name=admin --account-pass=admin --existing-config -y"
+  run_command "$DRUSH_CMD site-install minimal --account-name=admin --account-pass=admin --existing-config -y"
 
   # Install EIC default content module.
   run_command "$DRUSH_CMD en $DEFAULT_CONTENT_MODULES -y"
