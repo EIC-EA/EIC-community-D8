@@ -32,7 +32,10 @@ COLOR_RED="\e[91m"
 BG_COLOR_DEFAULT="\e[49m"
 BG_COLOR_GREEN="\e[42m"
 THEME_PATH="web/themes/custom/eic_community"
-DEFAULT_CONTENT_MODULES="eic_default_content default_content hal serialization"
+CUSTOM_THEMES_PATH="web/themes/custom"
+CUSTOM_MODULES_PATH="web/modules/custom"
+CUSTOM_PROFILES_PATH="web/profiles/custom"
+DEFAULT_CONTENT_MODULES="eic_default_content default_content"
 
 # Defaults
 PERFORM_GIT_CHECKOUT=false
@@ -145,11 +148,16 @@ if [ "$SKIP_BUILD" = false ]; then
 
   # Rebuild eic_community theme assets.
   run_command "$DOCKER_CMD npm run build --prefix $THEME_PATH"
+
+  # Create symlinks for the lib folders
+  run_command "ln -sf lib/modules $CUSTOM_PROFILES_PATH"
+  run_command "ln -sf lib/modules $CUSTOM_MODULES_PATH"
+  run_command "ln -sf lib/modules $CUSTOM_THEMES_PATH"
 fi
 
 if [ "$PERFORM_CLEAN_INSTALL" = true ]; then
   # Installation: Install clean website via Toolkit.
-  run_command "$DOCKER_CMD ./vendor/bin/run toolkit:install-clean --config-file runner.yml.dist"
+  run_command "$DOCKER_CMD drush site-install minimal --account-name=admin --account-pass=admin --existing-config -y"
 
   # Install EIC default content module.
   run_command "$DRUSH_CMD en $DEFAULT_CONTENT_MODULES -y"
@@ -192,9 +200,6 @@ if [ "$SKIP_MAINTENANCE_MODE" = false ]; then
   # Configuration: Disable maintenance mode
   run_command "$DRUSH_CMD state:set system.maintenance_mode 0 --input-format=integer -y"
 fi
-
-# Cache: Rebuild Drupal cache.
-run_command "$DRUSH_CMD cache:rebuild"
 
 # Cache: Rebuild Drupal cache.
 run_command "$DRUSH_CMD cache:rebuild"
