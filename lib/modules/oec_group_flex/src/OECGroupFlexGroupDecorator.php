@@ -2,6 +2,7 @@
 
 namespace Drupal\oec_group_flex;
 
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\group\Entity\GroupTypeInterface;
@@ -24,10 +25,19 @@ class OECGroupFlexGroupDecorator extends GroupFlexGroup {
   protected $groupFlexGroup;
 
   /**
+   * The OEC module configuration settings.
+   *
+   * @var \Drupal\Core\Config\ImmutableConfig
+   */
+  protected $oecGroupFlexConfigSettings;
+
+  /**
    * Constructs a new OECGroupFlexGroupDecorator.
    *
    * @param \Drupal\group_flex\GroupFlexGroup $groupFlexGroup
    *   The flex group inner service.
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
+   *   The configuration factory service.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager.
    * @param \Drupal\group_permissions\GroupPermissionsManager $groupPermManager
@@ -35,9 +45,10 @@ class OECGroupFlexGroupDecorator extends GroupFlexGroup {
    * @param \Drupal\group_flex\GroupFlexGroupType $flexGroupType
    *   The group type flex.
    */
-  public function __construct(GroupFlexGroup $groupFlexGroup, EntityTypeManagerInterface $entityTypeManager, GroupPermissionsManager $groupPermManager, GroupFlexGroupType $flexGroupType) {
+  public function __construct(GroupFlexGroup $groupFlexGroup, ConfigFactoryInterface $configFactory, EntityTypeManagerInterface $entityTypeManager, GroupPermissionsManager $groupPermManager, GroupFlexGroupType $flexGroupType) {
     parent::__construct($entityTypeManager, $groupPermManager, $flexGroupType);
     $this->groupFlexGroup = $groupFlexGroup;
+    $this->oecGroupFlexConfigSettings = $configFactory->get('oec_group_flex.settings');
   }
 
   /**
@@ -92,11 +103,7 @@ class OECGroupFlexGroupDecorator extends GroupFlexGroup {
    *   TRUE if the group is restricted based on outsider permissions.
    */
   private function isGroupVisibilityRestricted(GroupInterface $group) {
-    $internal_roles = [
-      'trusted_user',
-      'content_administrator',
-    ];
-    $outsider_roles = $this->getOutsiderRolesFromInteralRoles($group->getGroupType(), $internal_roles);
+    $outsider_roles = $this->getOutsiderRolesFromInteralRoles($group->getGroupType(), $this->oecGroupFlexConfigSettings->get('oec_group_visibility_setings.restricted.internal_roles'));
 
     if (empty($outsider_roles)) {
       return FALSE;

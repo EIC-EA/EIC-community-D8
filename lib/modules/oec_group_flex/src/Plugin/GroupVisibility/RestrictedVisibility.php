@@ -2,9 +2,12 @@
 
 namespace Drupal\oec_group_flex\Plugin\GroupVisibility;
 
+use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\group\Entity\GroupTypeInterface;
 use Drupal\group_flex\Plugin\GroupVisibilityBase;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a 'restricted' group visibility.
@@ -15,7 +18,45 @@ use Drupal\group_flex\Plugin\GroupVisibilityBase;
  *  weight = -89
  * )
  */
-class RestrictedVisibility extends GroupVisibilityBase {
+class RestrictedVisibility extends GroupVisibilityBase implements ContainerFactoryPluginInterface {
+
+  /**
+   * The OEC module configuration settings.
+   *
+   * @var \Drupal\Core\Config\ImmutableConfig
+   */
+  protected $oecGroupFlexConfigSettings;
+
+  /**
+   * Constructs a new RestrictedVisibility plugin object.
+   *
+   * @param array $configuration
+   *   A configuration array containing information about the plugin instance.
+   * @param string $plugin_id
+   *   The plugin_id for the plugin instance.
+   * @param mixed $plugin_definition
+   *   The plugin implementation definition.
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
+   *   The configuration factory service.
+   *
+   * @SuppressWarnings(PHPMD.StaticAccess)
+   */
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, ConfigFactoryInterface $configFactory) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+    $this->oecGroupFlexConfigSettings = $configFactory->get('oec_group_flex.settings');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->get('config.factory')
+    );
+  }
 
   /**
    * {@inheritdoc}
@@ -30,11 +71,7 @@ class RestrictedVisibility extends GroupVisibilityBase {
       ],
     ];
 
-    $internal_roles = [
-      'trusted_user',
-      'content_administrator',
-    ];
-    $outsider_roles = $this->getOutsiderRolesFromInteralRoles($groupType, $internal_roles);
+    $outsider_roles = $this->getOutsiderRolesFromInteralRoles($groupType, $this->oecGroupFlexConfigSettings->get('oec_group_visibility_setings.restricted.internal_roles'));
 
     if (!empty($outsider_roles)) {
       foreach ($outsider_roles as $outsider_role) {
@@ -58,11 +95,7 @@ class RestrictedVisibility extends GroupVisibilityBase {
       ],
     ];
 
-    $internal_roles = [
-      'trusted_user',
-      'content_administrator',
-    ];
-    $outsider_roles = $this->getOutsiderRolesFromInteralRoles($groupType, $internal_roles);
+    $outsider_roles = $this->getOutsiderRolesFromInteralRoles($groupType, $this->oecGroupFlexConfigSettings->get('oec_group_visibility_setings.restricted.internal_roles'));
 
     if (!empty($outsider_roles)) {
       foreach ($outsider_roles as $outsider_role) {
@@ -81,11 +114,7 @@ class RestrictedVisibility extends GroupVisibilityBase {
       $group->getGroupType()->getMemberRoleId() => ['view group'],
     ];
 
-    $internal_roles = [
-      'trusted_user',
-      'content_administrator',
-    ];
-    $outsider_roles = $this->getOutsiderRolesFromInteralRoles($group->getGroupType(), $internal_roles);
+    $outsider_roles = $this->getOutsiderRolesFromInteralRoles($group->getGroupType(), $this->oecGroupFlexConfigSettings->get('oec_group_visibility_setings.restricted.internal_roles'));
 
     if (!empty($outsider_roles)) {
       foreach ($outsider_roles as $outsider_role) {
@@ -104,18 +133,6 @@ class RestrictedVisibility extends GroupVisibilityBase {
       $group->getGroupType()->getAnonymousRoleId() => ['view group'],
       $group->getGroupType()->getOutsiderRoleId() => ['view group'],
     ];
-
-    $internal_roles = [
-      'trusted_user',
-      'content_administrator',
-    ];
-    $outsider_roles = $this->getOutsiderRolesFromInteralRoles($group->getGroupType(), $internal_roles);
-
-    if (!empty($outsider_roles)) {
-      foreach ($outsider_roles as $outsider_role) {
-        $permissions[$outsider_role->id()] = ['view group'];
-      }
-    }
 
     return $permissions;
   }
