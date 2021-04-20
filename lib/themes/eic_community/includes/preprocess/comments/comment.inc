@@ -59,12 +59,16 @@ function eic_community_preprocess_comment(&$variables) {
     'icon_file_path' => $variables['eic_icon_path'],
   ];
 
-  // Stored in render array as twig does some logic with it.
-  // @TODO: Create Logic for role Content Administrator to overwrite "ownership"
   // @TODO: If there are replies to the comment, disable 'can_edit'.
-  // @SEE: EICNET-639
-  $variables['comment']['can_edit'] = $current_user->hasPermission('edit own comments');
-  if ($variables['comment']['can_edit']) {
+  // @TODO: Add permission checks with Group Implementation.
+
+  // Stored in render array as twig does some logic with it.
+  $variables['comment']['can_edit_comment'] = (
+    $current_user->hasPermission('edit own comments') &&
+    $current_user->id() == $comment->getOwnerId()
+  ) || $current_user->hasPermission('administer comments');
+
+  if ($variables['comment']['can_edit_comment']) {
     $variables['comment']['edit_path'] = $comment->toUrl('edit-form');
     $variables['comment']['remove_path'] = $comment->toUrl('delete-form');
   }

@@ -7,8 +7,8 @@ label: 'Content administrator'
 weight: -7
 is_admin: null
 permissions:
+  - 'administer comments'
   - 'bypass node access'
   - 'create group group'
   - 'flag recommend_group'
-  - 'skip comment approval'
   - 'unflag recommend_group'
