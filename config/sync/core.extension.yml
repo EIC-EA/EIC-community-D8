@@ -43,6 +43,7 @@ module:
   eic_media_document: 0
   eic_media_statistics: 0
   eic_media_video: 0
+  eic_messages: 0
   eic_paragraph_contributor: 0
   eic_paragraph_cta_tile: 0
   eic_theme_helper: 0
