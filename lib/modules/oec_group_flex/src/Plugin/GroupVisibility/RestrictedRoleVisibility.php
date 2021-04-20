@@ -18,7 +18,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *  weight = -89
  * )
  */
-class RestrictedVisibility extends GroupVisibilityBase implements ContainerFactoryPluginInterface {
+class RestrictedRoleVisibility extends GroupVisibilityBase implements ContainerFactoryPluginInterface {
 
   /**
    * The OEC module configuration settings.
