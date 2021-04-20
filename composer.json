@@ -7,6 +7,8 @@
     "prefer-stable": true,
     "require": {
         "php": ">=7.2",
+        "composer/composer": "1.10.21 as 2.0.12",
+        "composer/semver": "1.7.2 as 3.2.4",
         "composer/installers": "^1.9",
         "cweagans/composer-patches": "^1.7",
         "drupal/address": "^1.9",
@@ -67,6 +69,9 @@
         "drupal/devel": "^4.1",
         "drupal/drupal-extension": "~4.0",
         "ec-europa/toolkit": "^4.1",
+        "ec-europa/qa-automation": "^3.0|^4.0",
+        "openeuropa/task-runner": "^0.6",
+        "openeuropa/code-review": "^1.0",
         "zaporylie/composer-drupal-optimizations": "^1.2"
     },
     "scripts": {
