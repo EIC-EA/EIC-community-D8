@@ -93,6 +93,7 @@
 
     #{$node}--is-ready[aria-collapsed="true"] & {
       margin-bottom: 0;
+      margin-left: ecl-box-model('padding');
     }
   }
 
