@@ -43,6 +43,13 @@ function eic_community_preprocess_comment(&$variables) {
   // If a diff-date is needed, use this.
 //  $createdAtDiff = $dateFormatter->formatDiff($comment->getCreatedTime(), Drupal\Core\Datetime\Entity\DateFormat::create());
 
+  // @TODO: If there are replies to the comment, disable 'can_edit'.
+  $cid = $comment->id();
+  $nid = $comment->getCommentedEntityId();
+  $entity_type = $comment->getCommentedEntityTypeId();
+
+  $num_of_replies = intval(comment_reply_count($cid, $nid, $entity_type));
+
   $variables['comment'] = [
     'author' => [
       'author' => $author->getDisplayName(),
@@ -58,15 +65,16 @@ function eic_community_preprocess_comment(&$variables) {
     'user' => $current_user,
     'icon_file_path' => $variables['eic_icon_path'],
   ];
-
-  // @TODO: If there are replies to the comment, disable 'can_edit'.
   // @TODO: Add permission checks with Group Implementation.
 
   // Stored in render array as twig does some logic with it.
-  $variables['comment']['can_edit_comment'] = (
-    $current_user->hasPermission('edit own comments') &&
-    $current_user->id() == $comment->getOwnerId()
-  ) || $current_user->hasPermission('administer comments');
+  $variables['comment']['can_edit_comment'] =
+    (
+      $current_user->hasPermission('edit own comments')
+      && $current_user->id() == $comment->getOwnerId()
+      && $num_of_replies === 0
+    )
+    || $current_user->hasPermission('administer comments');
 
   if ($variables['comment']['can_edit_comment']) {
     $variables['comment']['edit_path'] = $comment->toUrl('edit-form');
@@ -89,3 +97,18 @@ function _eic_community_preprocess_comment_form(&$variables) {
     'image' => $author_image,
   ];
 }
+
+/**
+ * Helper function to fetch Comment reply count.
+ * Ripped from the module comment_reply_count.
+ */
+function comment_reply_count($cid, $nid, $entity_type) {
+  $result = \Drupal::entityQuery('comment')
+    ->condition('entity_type', $entity_type)
+    ->condition('entity_id', $nid)
+    ->condition('pid', $cid)
+    ->count()
+    ->execute();
+  return $result;
+}
+
