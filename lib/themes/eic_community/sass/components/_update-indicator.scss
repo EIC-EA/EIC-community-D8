@@ -3,6 +3,7 @@
   height: map-get($ecl-media, '4xs');
   font-size: $ecl-font-size-s;
   background-color: map-get($ecl-colors, 'orange-100');
+  text-decoration: none;
   color: map-get($ecl-colors, 'white');
   border-radius: 50%;
   display: flex;

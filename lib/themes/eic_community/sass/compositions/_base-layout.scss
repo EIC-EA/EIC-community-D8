@@ -57,6 +57,7 @@
     margin: map-get($ecl-spacing, 'm') 0;
     flex-shrink: 0;
     width: 100%;
+    padding-bottom: map-get($ecl-spacing, 'm');
 
     @include ecl-media-breakpoint-up('lg') {
       width: 21%;
