@@ -1,0 +1,28 @@
+# Navigation List
+
+Displays a vertical collapsible navigation list that can also be completely collapsed.
+
+## Example:
+
+```
+{% include "@theme/patterns/components/navigation-list.html.twig" %}
+```
+
+## Block parameters:
+
+| Key    | Type   | Description                                        | Mandatory |
+| ------ | ------ | -------------------------------------------------- | --------- |
+| before | string | Displays optional HTML before the navigation list. | no        |
+| before | string | Displays optional HTML after the navigation list.  | no        |
+
+## Twig parameters:
+
+| Key             | Type     | Description                                                          | Mandatory |
+| --------------- | -------- | -------------------------------------------------------------------- | --------- |
+| icon_file_path  | string   | The URL of the SVG inline icon sprite.                               | no        |
+| collapse        | object   | Displays the collapse toggle to expand/collapse the whole component. | no        |
+| collapse.label  | string   | The semantic label for the collapse toggle.                          | no        |
+| items           | object[] | The subjects that are relevant for this menu context.                | no        |
+| items[].link    | object   | Displays an ECL link component for the current item.                 | no        |
+| items[].updates | object   | Displays the custom update indicator component.                      | no        |
+| items[].items   | object[] | The subitems of the current item.                                    | no        |
