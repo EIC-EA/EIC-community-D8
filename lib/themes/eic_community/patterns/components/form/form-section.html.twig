@@ -1,6 +1,6 @@
 {% set title_element = title_element|default('h3') %}
 
-<section class="ecl-form__section">
+<section class="ecl-form__section {{ extra_classes }}">
   {% if title is not empty %}
     <{{ title_element}} class="ecl-form__section-title">{{ title }}</{{ title_element }}>
   {% endif %}
@@ -10,15 +10,19 @@
   {% endif %}
 
   {% for field in fields %}
-    {% if field.type or field.name or field.id %}
+    {% if field.type or field.name or field.id or field.link %}
       {% if field.type == 'textarea' %}
         {% include '@ecl-twig/ec-component-text-area/ecl-text-area.html.twig' with field|default({})|without('type')|merge({
           width: 'full',
         }) %}
       {% elseif field.type == 'checkbox' %}
-        {% include '@ecl-twig/ec-component-checkbox/ecl-checkbox-group.html.twig' with field|default({})|without('type') %}
+        {% include '@theme/patterns/components/form/form-checkbox.html.twig' with field|default({})|without('type')|merge({
+          icon_file_path: icon_file_path
+        }) only %}
       {% elseif field.type == 'radio' %}
-        {% include '@ecl-twig/ec-component-radio/ecl-radio-group.html.twig' with field|default({})|without('type') %}
+        {% include '@theme/patterns/components/form/form-radio.html.twig' with field|default({})|without('type')|merge({
+          icon_file_path: icon_file_path
+        }) only %}
       {% elseif field.type == 'select' %}
         {% include '@ecl-twig/ec-component-select/ecl-select.html.twig' with field|default({})|without('type')|merge({
           icon_path: icon_file_path,
@@ -38,6 +42,17 @@
         {% include '@ecl-twig/ec-component-button/ecl-button.html.twig' with field|default({})|without('type')|merge({
           type: 'submit',
           icon_path: icon_file_path
+        }) %}
+      {% elseif field.type == 'button' %}
+        {% include '@ecl-twig/ec-component-button/ecl-button.html.twig' with field|default({})|without('type')|merge({
+          type: 'button',
+          variant: 'secondary',
+          icon_path: icon_file_path
+        }) %}
+      {% elseif field.link %}
+        {% include '@ecl-twig/ec-component-link/ecl-link.html.twig' with field|default({})|without('type')|merge({
+          icon_path: icon_file_path,
+          extra_classes: 'ecl-link--button ecl-link--button-ghost',
         }) %}
       {% else %}
         {% include '@ecl-twig/ec-component-text-input/ecl-text-input.html.twig' with field|default({})|merge({

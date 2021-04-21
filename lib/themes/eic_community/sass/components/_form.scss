@@ -17,6 +17,54 @@
       margin-bottom: 0;
     }
   }
+
+  &__section--has-toolbar-layout {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: map-get($ecl-spacing, 's');
+
+    @include ecl-media-breakpoint-up('sm') {
+      flex-direction: row;
+      align-items: center;
+    }
+
+    > * {
+      @include ecl-media-breakpoint-up('sm') {
+        flex-shrink: 0;
+        margin-bottom: 0;
+        margin-right: map-get($ecl-spacing, 's');
+
+        &:last-child {
+          margin-left: auto;
+          margin-right: 0;
+        }
+      }
+    }
+  }
+
+  &__items {
+    display: inline-flex;
+    flex-wrap: wrap;
+    margin-right: #{0 - map-get($ecl-spacing, 'm')};
+    margin-bottom: #{0 - map-get($ecl-spacing, 's')};
+  }
+
+  &__radio-item {
+    display: inline-flex;
+    align-items: center;
+    margin-right: map-get($ecl-spacing, 'm');
+    margin-bottom: map-get($ecl-spacing, 's');
+  }
+
+  &__radio-icon {
+    flex-shrink: 0;
+    margin-right: map-get($ecl-spacing, 'xs');
+    fill: ecl-typography('color', 'title');
+  }
+
+
+
   .ecl-form-group {
     margin: map-get($ecl-spacing, 'l') 0;
     &:not(fieldset) {
