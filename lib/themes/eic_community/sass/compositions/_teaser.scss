@@ -37,8 +37,13 @@
     background-color: map-get($ecl-colors, 'white');
   }
 
+  &--grey,
   &--as-card-grey {
     background-color: map-get($ecl-colors, 'grey-5');
+  }
+
+  &--grey {
+    padding: ecl-box-model('padding');
   }
 
   @include adjust-from-section-color() {
@@ -143,7 +148,7 @@
       }
 
       @include ecl-media-breakpoint-up('lg') {
-        width: map-get($ecl-media, 'm');
+        width: map-get($ecl-media, 's');
       }
 
       &::before {
@@ -157,6 +162,13 @@
       position: relative;
       max-width: map-get($ecl-media, 'm');
       margin: 0 auto ecl-box-model('padding');
+    }
+
+    #{$node}--as-grey#{$node}--member & {
+      @include ecl-media-breakpoint-up('sm') {
+        top: ecl-box-model('padding');
+        left: ecl-box-model('padding');
+      }
     }
   }
 
@@ -207,7 +219,7 @@
       }
 
       @include ecl-media-breakpoint-up('lg') {
-        padding-left: calc(#{map-get($ecl-media, 'm')} + #{ecl-box-model('padding')});
+        padding-left: calc(#{map-get($ecl-media, 's')} + #{ecl-box-model('padding')});
       }
     }
 
@@ -548,6 +560,10 @@
 
   & &__timestamp {
     margin: 0;
+  }
+
+  #{$node}--member &__timestamp {
+    @include ecl-responsive-font('meta');
   }
 
   #{$node}--story &__author {

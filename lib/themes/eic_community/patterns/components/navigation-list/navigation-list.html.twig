@@ -1,0 +1,34 @@
+<div class="ecl-navigation-list">
+  <div class="ecl-navigation-list__controls">
+    {% if collapse is not empty %}
+      {% include "@ecl-twig/ec-component-button/ecl-button.html.twig" with {
+        label: collapse.label|default('Toggle menu'),
+        icon: {
+          name: 'download',
+          type: 'custom',
+          path: icon_file_path,
+          size: 's',
+        },
+        type: 'button',
+        variant: 'secondary',
+        extra_classes: 'ecl-navigation-list__toggle ecl-button--has-compact-layout',
+      } %}
+    {% endif %}
+  </div>
+
+  <div class="ecl-navigation-list__main">
+    {% if block('before') is not empty %}
+      <div class="ecl-navigation-list__main-before">
+        {% block before %}{% endblock %}
+      </div>
+    {% endif %}
+
+    {% include "@theme/patterns/components/navigation-list/navigation-list-items.html.twig" %}
+
+    {% if block('after') is not empty %}
+      <div class="ecl-navigation-list__main-after">
+        {%- block after -%}{%- endblock -%}
+      </div>
+    {% endif %}
+  </div>
+</div>

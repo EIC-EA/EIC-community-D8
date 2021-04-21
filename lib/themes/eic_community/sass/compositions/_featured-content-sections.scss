@@ -117,6 +117,10 @@
     }
 
     margin: ecl-layout('gutter') 0;
+
+    @include ecl-media-breakpoint-down('md') {
+      margin: ecl-layout('gutter--md') 0;
+    }
   }
 
   &__item {

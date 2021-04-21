@@ -1,0 +1,127 @@
+.ecl-navigation-list {
+  $node: &;
+  padding: map-get($ecl-spacing, 'xs');
+  border: ecl-border();
+
+  &,
+  &__main-before,
+  &__main-after {
+    margin: ecl-box-model('margin') 0;
+
+    &:first-child {
+      margin-top: 0;
+    }
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  &__main-before,
+  &__main-after {
+    & > & {
+      box-sizing: border-box;
+      width: 100%;
+    }
+  }
+
+  &--is-ready[aria-collapsed="true"] {
+    display: inline-block;
+  }
+
+  &__items,
+  &__item {
+    padding: 0;
+    margin: 0;
+  }
+
+  &__items {
+    list-style: none;
+
+    & & {
+      margin-left: ecl-layout('box-model') 0;
+    }
+
+    #{$node}--is-ready #{$node}__item:not([aria-active="true"]) >  & {
+      @include visually-hidden();
+    }
+  }
+
+  &__item {
+    &[aria-active="true"] {
+      & > #{$node}__link {
+       background-color: map-get($ecl-colors, 'grey-15');
+       border-color: ecl-typography('color', 'title');
+       color: ecl-typography('color');
+
+        #{$node}__item-icon {
+          transform: none;
+          color: ecl-typography('color', 'title');
+        }
+      }
+    }
+  }
+
+  &__item-icon {
+    margin-left: map-get($ecl-spacing, 'm');
+    transform: rotate(180deg);
+    color: map-get($ecl-colors, 'grey-75');
+  }
+
+
+  &__link {
+    display: flex;
+    align-items: center;
+    padding: map-get($ecl-spacing, 'xs') map-get($ecl-spacing, 's');
+    text-decoration: none;
+    font-weight: $ecl-font-weight-bold;
+    border-left: solid 4px transparent;
+    color: ecl-typography('color', 'title');
+    justify-content: space-between;
+    @include ecl-responsive-font('label');
+
+    #{$node}__items #{$node}__items & {
+      font-weight: $ecl-font-weight-regular;
+      @include ecl-responsive-font('meta');
+    }
+  }
+
+  &__controls {
+    display: flex;
+    flex-direction: row-reverse;
+    margin-bottom: ecl-box-model('padding');
+
+    #{$node}--is-ready[aria-collapsed="true"] & {
+      margin-bottom: 0;
+      margin-left: ecl-box-model('padding');
+    }
+  }
+
+  &__link-controls {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+  }
+
+  & &__update-indicator {
+    background-color: map-get($ecl-colors, 'yellow-100');
+    color: ecl-typography('color');
+  }
+
+  &__main {
+    #{$node}--is-ready[aria-collapsed="true"] & {
+      @include visually-hidden();
+    }
+  }
+
+  &__toggle {
+    .ecl-icon {
+      transform: rotate(90deg);
+      transition: none;
+
+      #{$node}--is-ready[aria-collapsed="true"] & {
+        transform: rotate(270deg);
+      }
+    }
+  }
+}
