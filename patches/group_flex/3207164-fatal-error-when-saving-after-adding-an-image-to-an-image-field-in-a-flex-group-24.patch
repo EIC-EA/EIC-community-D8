@@ -1,0 +1,146 @@
+From be3c98dc67b53b07250b586bc4468bfc1f609858 Mon Sep 17 00:00:00 2001
+From: Jaap Jan <mail@jaapjan.nl>
+Date: Tue, 6 Apr 2021 20:29:44 +0200
+Subject: [PATCH] Issue #3207164 by Yuri, jaapjan: fatal error when saving
+ after adding an image to an image field in a flex group
+
+---
+ src/Entity/Form/GroupForm.php     | 10 +++++-----
+ src/Entity/Form/GroupTypeForm.php |  4 ++--
+ src/GroupFlexGroupSaver.php       |  6 +++---
+ src/GroupFlexGroupType.php        |  2 +-
+ src/GroupFlexGroupTypeSaver.php   |  4 ++--
+ 5 files changed, 13 insertions(+), 13 deletions(-)
+
+diff --git a/src/Entity/Form/GroupForm.php b/src/Entity/Form/GroupForm.php
+index be95bda..1c03c3b 100644
+--- a/src/Entity/Form/GroupForm.php
++++ b/src/Entity/Form/GroupForm.php
+@@ -19,35 +19,35 @@ class GroupForm extends GroupFormBase {
+    *
+    * @var array
+    */
+-  private $groupFlexSettings;
++  protected $groupFlexSettings;
+ 
+   /**
+    * The group type flex service.
+    *
+    * @var \Drupal\group_flex\GroupFlexGroupType
+    */
+-  private $groupTypeFlex;
++  protected $groupTypeFlex;
+ 
+   /**
+    * The group flex service.
+    *
+    * @var \Drupal\group_flex\GroupFlexGroup
+    */
+-  private $groupFlex;
++  protected $groupFlex;
+ 
+   /**
+    * The group visibility manager.
+    *
+    * @var \Drupal\group_flex\Plugin\GroupVisibilityManager
+    */
+-  private $visibilityManager;
++  protected $visibilityManager;
+ 
+   /**
+    * The flex group type saver.
+    *
+    * @var \Drupal\group_flex\GroupFlexGroupSaver
+    */
+-  private $groupFlexSaver;
++  protected $groupFlexSaver;
+ 
+   /**
+    * {@inheritdoc}
+diff --git a/src/Entity/Form/GroupTypeForm.php b/src/Entity/Form/GroupTypeForm.php
+index 27a0227..2401aa1 100644
+--- a/src/Entity/Form/GroupTypeForm.php
++++ b/src/Entity/Form/GroupTypeForm.php
+@@ -22,14 +22,14 @@ class GroupTypeForm extends GroupTypeFormBase {
+    *
+    * @var \Drupal\group_flex\GroupFlexGroupTypeSaver
+    */
+-  private $groupTypeSaver;
++  protected $groupTypeSaver;
+ 
+   /**
+    * The Group Type service to retrieve the values.
+    *
+    * @var \Drupal\group_flex\GroupFlexGroupType
+    */
+-  private $flexGroupType;
++  protected $flexGroupType;
+ 
+   /**
+    * Constructs a new GroupTypeForm.
+diff --git a/src/GroupFlexGroupSaver.php b/src/GroupFlexGroupSaver.php
+index e2ef7e1..4110718 100644
+--- a/src/GroupFlexGroupSaver.php
++++ b/src/GroupFlexGroupSaver.php
+@@ -37,21 +37,21 @@ class GroupFlexGroupSaver {
+    *
+    * @var \Drupal\group_flex\Plugin\GroupVisibilityManager
+    */
+-  private $visibilityManager;
++  protected $visibilityManager;
+ 
+   /**
+    * The group joining method manager.
+    *
+    * @var \Drupal\group_flex\Plugin\GroupJoiningMethodManager
+    */
+-  private $joiningMethodManager;
++  protected $joiningMethodManager;
+ 
+   /**
+    * The group flex group object.
+    *
+    * @var \Drupal\group_flex\GroupFlexGroup
+    */
+-  private $groupFlex;
++  protected $groupFlex;
+ 
+   /**
+    * Constructs a new GroupFlexGroupSaver object.
+diff --git a/src/GroupFlexGroupType.php b/src/GroupFlexGroupType.php
+index 438130a..aab60a7 100644
+--- a/src/GroupFlexGroupType.php
++++ b/src/GroupFlexGroupType.php
+@@ -24,7 +24,7 @@ class GroupFlexGroupType {
+    *
+    * @var \Drupal\group_flex\Plugin\GroupJoiningMethodManager
+    */
+-  private $joiningMethodManager;
++  protected $joiningMethodManager;
+ 
+   /**
+    * Constructs a new GroupFlexGroupType.
+diff --git a/src/GroupFlexGroupTypeSaver.php b/src/GroupFlexGroupTypeSaver.php
+index eb84db3..7558fae 100644
+--- a/src/GroupFlexGroupTypeSaver.php
++++ b/src/GroupFlexGroupTypeSaver.php
+@@ -24,14 +24,14 @@ class GroupFlexGroupTypeSaver {
+    *
+    * @var \Drupal\group_flex\Plugin\GroupVisibilityManager
+    */
+-  private $visibilityManager;
++  protected $visibilityManager;
+ 
+   /**
+    * The group joining method manager.
+    *
+    * @var \Drupal\group_flex\Plugin\GroupJoiningMethodManager
+    */
+-  private $joiningMethodManager;
++  protected $joiningMethodManager;
+ 
+   /**
+    * Constructs a new GroupFlexGroupTypeSaver.
+-- 
+GitLab
+
