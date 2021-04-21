@@ -1,27 +1,11 @@
 .ecl-contact-information-block {
   $node: &;
 
-  margin-bottom: ecl-box-model('padding', 'banner');
-
-  &:last-child {
-    margin-bottom: 0;
-  }
-  &:last-child &__wrapper {
-    border-bottom: 0;
-  }
-
-  @include ecl-media-breakpoint-up('md') {
-    margin-bottom: ecl-box-model('padding--md', 'banner');
-  }
-
   &__wrapper {
     display: flex;
     flex-direction: column;
-    border-bottom: ecl-border();
-    padding-bottom: ecl-box-model('padding', 'banner');
 
     @include ecl-media-breakpoint-up('md') {
-      padding-bottom: ecl-box-model('padding--md', 'banner');
       flex-direction: row;
     }
   }
