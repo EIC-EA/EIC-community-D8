@@ -18,6 +18,9 @@ unflag_short: 'Unrecommend this item'
 unflag_long: ''
 unflag_message: ''
 unflag_denied_text: ''
+flood_control_active: null
+flood_control_limit: null
+flood_control_window: null
 flag_type: 'entity:group'
 link_type: eic_count_link
 flagTypeConfig:
