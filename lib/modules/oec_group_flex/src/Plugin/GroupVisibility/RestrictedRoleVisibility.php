@@ -10,7 +10,7 @@ use Drupal\group_flex\Plugin\GroupVisibilityBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Provides a 'restricted' group visibility.
+ * Provides a 'restricted_role' group visibility.
  *
  * @GroupVisibility(
  *  id = "restricted_role",
@@ -132,6 +132,14 @@ class RestrictedRoleVisibility extends GroupVisibilityBase implements ContainerF
       $group->getGroupType()->getAnonymousRoleId() => ['view group'],
       $group->getGroupType()->getOutsiderRoleId() => ['view group'],
     ];
+
+    $outsider_roles = $this->getOutsiderRolesFromInteralRoles($group->getGroupType(), $this->oecGroupFlexConfigSettings->get('oec_group_visibility_setings.' . $this->pluginId . '.internal_roles'));
+
+    if (!empty($outsider_roles)) {
+      foreach ($outsider_roles as $outsider_role) {
+        $permissions[$outsider_role->id()] = ['view group'];
+      }
+    }
 
     return $permissions;
   }

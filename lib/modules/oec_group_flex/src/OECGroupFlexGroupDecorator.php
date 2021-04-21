@@ -123,7 +123,7 @@ class OECGroupFlexGroupDecorator extends GroupFlexGroup {
       $groupPermissions = $this->groupPermManager->getCustomPermissions($group);
 
       foreach ($outsider_roles as $outsider_role) {
-        if (!array_key_exists($outsider_role->id(), $groupPermissions) &&
+        if (!array_key_exists($outsider_role->id(), $groupPermissions) ||
           !in_array('view group', $groupPermissions[$outsider_role->id()], TRUE)) {
           return FALSE;
         }
