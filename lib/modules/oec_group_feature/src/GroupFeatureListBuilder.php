@@ -79,8 +79,8 @@ class GroupFeatureListBuilder extends EntityListBuilder {
    */
   public function buildHeader() {
     $header['id'] = $this->t('ID');
-    $header['title'] = $this->t('Title');
-    $header['status'] = $this->t('Status');
+    $header['created'] = $this->t('Created');
+    $header['changed'] = $this->t('Updated');
     return $header + parent::buildHeader();
   }
 
@@ -89,9 +89,9 @@ class GroupFeatureListBuilder extends EntityListBuilder {
    */
   public function buildRow(EntityInterface $entity) {
     /** @var \Drupal\oec_group_feature\GroupFeatureInterface $entity */
-    $row['id'] = $entity->id();
-    $row['title'] = $entity->toLink();
-    $row['status'] = $entity->isEnabled() ? $this->t('Enabled') : $this->t('Disabled');
+    $row['id'] = $entity->toLink();
+    $row['created'] = $this->dateFormatter->format($entity->getCreatedTime());
+    $row['changed'] = $this->dateFormatter->format($entity->getChangedTime());
     return $row + parent::buildRow($entity);
   }
 

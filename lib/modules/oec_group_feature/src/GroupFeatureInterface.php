@@ -4,11 +4,31 @@ namespace Drupal\oec_group_feature;
 
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\group\Entity\GroupInterface;
+use Drupal\Core\Entity\EntityChangedInterface;
 
 /**
  * Provides an interface defining a group feature entity type.
  */
-interface GroupFeatureInterface extends ContentEntityInterface {
+interface GroupFeatureInterface extends ContentEntityInterface, EntityChangedInterface {
+
+  /**
+   * Gets the group feature creation timestamp.
+   *
+   * @return int
+   *   Creation timestamp of the group feature.
+   */
+  public function getCreatedTime();
+
+  /**
+   * Sets the group feature creation timestamp.
+   *
+   * @param int $timestamp
+   *   The group feature creation timestamp.
+   *
+   * @return \Drupal\oec_group_feature\GroupFeatureInterface
+   *   The called group feature entity.
+   */
+  public function setCreatedTime($timestamp);
 
   /**
    * Gets the Group.
@@ -30,7 +50,7 @@ interface GroupFeatureInterface extends ContentEntityInterface {
    * Gets group features.
    *
    * @return array
-   *   Features.
+   *   Group features.
    */
   public function getFeatures();
 
