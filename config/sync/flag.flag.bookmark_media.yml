@@ -18,6 +18,9 @@ unflag_short: 'Unbookmark this item'
 unflag_long: ''
 unflag_message: ''
 unflag_denied_text: ''
+flood_control_active: false
+flood_control_limit: 0
+flood_control_window: 0
 flag_type: 'entity:media'
 link_type: ajax_link
 flagTypeConfig:

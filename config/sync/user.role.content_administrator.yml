@@ -8,6 +8,7 @@ weight: -7
 is_admin: null
 permissions:
   - 'access group overview'
+  - 'bypass node access'
   - 'create group group'
   - 'flag recommend_group'
   - 'skip comment approval'

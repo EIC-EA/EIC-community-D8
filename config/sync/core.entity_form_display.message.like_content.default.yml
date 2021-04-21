@@ -1,0 +1,23 @@
+uuid: f6b3c71d-f4d9-4423-9bb5-22d07518c959
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.message.like_content.field_referenced_node
+    - message.template.like_content
+id: message.like_content.default
+targetEntityType: message
+bundle: like_content
+mode: default
+content:
+  field_referenced_node:
+    weight: 0
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: entity_reference_autocomplete
+    region: content
+hidden: {  }

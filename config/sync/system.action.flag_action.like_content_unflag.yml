@@ -1,0 +1,15 @@
+uuid: 3462b1d5-a05c-470d-9280-150f43c0905f
+langcode: en
+status: true
+dependencies:
+  config:
+    - flag.flag.like_content
+  module:
+    - flag
+id: flag_action.like_content_unflag
+label: 'Unlike this item'
+type: node
+plugin: 'flag_action:like_content_unflag'
+configuration:
+  flag_id: like_content
+  flag_action: unflag

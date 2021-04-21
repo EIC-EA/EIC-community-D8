@@ -1,0 +1,19 @@
+uuid: 0d9dc7ec-10c5-4c5b-8e34-d55d54e602ea
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.message.mail_body
+    - field.field.message.like_comment.field_referenced_node
+    - message.template.like_comment
+id: message.like_comment.mail_body
+targetEntityType: message
+bundle: like_comment
+mode: mail_body
+content:
+  partial_1:
+    weight: 0
+    region: content
+hidden:
+  field_referenced_node: true
+  partial_0: true

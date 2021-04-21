@@ -43,6 +43,11 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
+  flag_like_media:
+    weight: 10
+    region: content
+    settings: {  }
+    third_party_settings: {  }
   name:
     type: string
     weight: 0
