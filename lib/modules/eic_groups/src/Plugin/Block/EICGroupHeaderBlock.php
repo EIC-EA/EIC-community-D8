@@ -6,7 +6,7 @@ use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\eic_groups\EICGroupsHelperInterface;
+use Drupal\group_purl\Context\GroupPurlContext;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -31,11 +31,11 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
   protected $routeMatch;
 
   /**
-   * The EIC Groups helper service.
+   * The group purl context.
    *
-   * @var \Drupal\eic_groups\EICGroupsHelperInterface
+   * @var \Drupal\group_purl\Context\GroupPurlContext
    */
-  protected $eicGroupsHelper;
+  protected $groupPurlContext;
 
   /**
    * Constructs a new EICGroupHeaderBlock instance.
@@ -51,13 +51,13 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
    *   The plugin implementation definition.
    * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
    *   The current route match.
-   * @param \Drupal\eic_groups\EICGroupsHelperInterface $eic_groups_helper
-   *   The EIC Groups helper service.
+   * @param \Drupal\group_purl\Context\GroupPurlContext $group_purl_context
+   *   The group purl context.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, RouteMatchInterface $route_match, EICGroupsHelperInterface $eic_groups_helper) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, RouteMatchInterface $route_match, GroupPurlContext $group_purl_context) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->routeMatch = $route_match;
-    $this->eicGroupsHelper = $eic_groups_helper;
+    $this->groupPurlContext = $group_purl_context;
   }
 
   /**
@@ -69,7 +69,7 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
       $plugin_id,
       $plugin_definition,
       $container->get('current_route_match'),
-      $container->get('eic_groups.helper')
+      $container->get('group_purl.context_provider')
     );
   }
 
@@ -81,9 +81,7 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
 
     // Do nothing if no group was found in the context or in the current route.
     if ((!$group = $this->getContextValue('group')) || !$group->id()) {
-      if (!$group = $this->eicGroupsHelper->getGroupFromRoute()) {
-        return $build;
-      }
+      return $build;
     }
 
     // The content of this is block is shown depending on the current user's
