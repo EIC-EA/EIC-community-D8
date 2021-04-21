@@ -7,7 +7,10 @@ label: 'Content administrator'
 weight: -7
 is_admin: null
 permissions:
+  - 'access group overview'
   - 'create group group'
   - 'flag recommend_group'
   - 'skip comment approval'
   - 'unflag recommend_group'
+  - 'use groups transition publish'
+  - 'use groups transition upgrade_to_draft'
