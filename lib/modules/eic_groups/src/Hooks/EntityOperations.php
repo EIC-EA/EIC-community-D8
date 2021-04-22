@@ -2,7 +2,6 @@
 
 namespace Drupal\eic_groups\Hooks;
 
-use Drupal\book\BookManagerInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
@@ -14,7 +13,6 @@ use Drupal\Core\Url;
 use Drupal\eic_groups\EICGroupsHelperInterface;
 use Drupal\group\Entity\GroupInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Class EntityOperations.
@@ -31,13 +29,6 @@ class EntityOperations implements ContainerInjectionInterface {
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
   protected $entityTypeManager;
-
-  /**
-   * The book manager.
-   *
-   * @var \Drupal\book\BookManagerInterface
-   */
-  protected $bookManager;
 
   /**
    * The current route match service.
@@ -58,16 +49,13 @@ class EntityOperations implements ContainerInjectionInterface {
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
-   * @param \Drupal\book\BookManagerInterface $book_manager
-   *   The book manager.
    * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
    *   The current route match service.
    * @param \Drupal\eic_groups\EICGroupsHelperInterface $eic_groups_helper
    *   The EIC Groups helper service.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, BookManagerInterface $book_manager, RouteMatchInterface $route_match, EICGroupsHelperInterface $eic_groups_helper) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, RouteMatchInterface $route_match, EICGroupsHelperInterface $eic_groups_helper) {
     $this->entityTypeManager = $entity_type_manager;
-    $this->bookManager = $book_manager;
     $this->routeMatch = $route_match;
     $this->eicGroupsHelper = $eic_groups_helper;
   }
@@ -78,7 +66,6 @@ class EntityOperations implements ContainerInjectionInterface {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('entity_type.manager'),
-      $container->get('book.manager'),
       $container->get('current_route_match'),
       $container->get('eic_groups.helper')
     );
@@ -97,27 +84,17 @@ class EntityOperations implements ContainerInjectionInterface {
   public function nodeView(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
     switch ($this->routeMatch->getRouteName()) {
       case 'entity.node.canonical':
-        // Redirect user to first level wiki page if the group book has wiki pages.
         if ($entity->bundle() === 'book') {
           if ($group = $this->eicGroupsHelper->getGroupByEntity($entity)) {
-            $data = $this->bookManager->bookTreeAllData($entity->book['bid'], $entity->book, 2);
-            $book_data = reset($data);
-            if (!empty($book_data['below'])) {
-              $wiki_page_nid = reset($book_data['below'])['link']['nid'];
-              $wiki_page = $this->entityTypeManager->getStorage('node')->load($wiki_page_nid);
-              $redirect_response = new RedirectResponse($wiki_page->toUrl()->toString());
-              $redirect_response->send();
-            }
-            else {
-              $build['wiki_section_message'] = [
-                '#type' => 'item',
-                '#markup' => $this->t('No Wiki pages (yet)'),
-              ];
-              // Add wiki page create form url to the build array.
-              if ($add_wiki_page_url = $this->getWikiPageAddFormUrl($entity, $group)) {
-                $build['link_add_wiki_page'] = $add_wiki_page_url->toString();
-                $build['link_add_wiki_page_renderable'] = Link::fromTextAndUrl($this->t('Add a new wiki page'), $add_wiki_page_url)->toRenderable();
-              }
+            // Add empty wiki section message.
+            $build['wiki_section_message'] = [
+              '#type' => 'item',
+              '#markup' => $this->t('No Wiki pages (yet)'),
+            ];
+            // Add wiki page create form url to the build array.
+            if ($add_wiki_page_url = $this->getWikiPageAddFormUrl($entity, $group)) {
+              $build['link_add_wiki_page'] = $add_wiki_page_url->toString();
+              $build['link_add_wiki_page_renderable'] = Link::fromTextAndUrl($this->t('Add a new wiki page'), $add_wiki_page_url)->toRenderable();
             }
           }
         }
