@@ -8,7 +8,7 @@ print_usage_info() {
 
 Install/update the site and migrate the content.
 
-Usage: sh scripts/install.sh [-h|--help] [--docker=DOCKER_CMD] [--drush=DRUSH_CMD] [--git=BRANCH] [--no-build] [--no-maintenance] [--clean] [--migrate] [--password=ADMIN_PASSWORD]
+Usage: sh scripts/install.sh [-h|--help] [--docker=DOCKER_CMD] [--drush=DRUSH_CMD] [--git=BRANCH] [--no-build] [--no-maintenance] [--storybook] [--clean] [--migrate] [--password=ADMIN_PASSWORD]
 
 Options:
   -h | --help                 Print command usage info.
@@ -17,6 +17,7 @@ Options:
   --git=BRANCH                Perform git checkout. Git branch to checkout.
   --no-build                  SKIP build.
   --no-maintenance            SKIP set maintenance mode.
+  --storybook                 Perform eic_community theme Storybook generation. (NOT FOR PRODUCTION USE)
   --clean                     Perform clean install of the site.
   --migrate                   Perform migration.
   --password=ADMIN_PASSWORD   Password to set for the admin user. (first user)
@@ -31,7 +32,7 @@ COLOR_YELLOW="\e[93m"
 COLOR_RED="\e[91m"
 BG_COLOR_DEFAULT="\e[49m"
 BG_COLOR_GREEN="\e[42m"
-THEME_PATH="web/themes/custom/eic_community"
+THEME_PATH="lib/themes/eic_community"
 CUSTOM_THEMES_PATH="web/themes/custom"
 CUSTOM_MODULES_PATH="web/modules/custom"
 CUSTOM_PROFILES_PATH="web/profiles/custom"
@@ -39,6 +40,7 @@ DEFAULT_CONTENT_MODULES="eic_default_content default_content"
 
 # Defaults
 PERFORM_GIT_CHECKOUT=false
+PERFORM_GENERATE_STORYBOOK=false
 PERFORM_CLEAN_INSTALL=false
 PERFORM_MIGRATION=false
 PERFORM_ADMIN_PASSWORD_CHANGE=false
@@ -70,6 +72,10 @@ while [ "$1" != "" ]; do
     PERFORM_GIT_CHECKOUT=true
     GIT_BRANCH=${VALUE:-$GIT_BRANCH}
     echo "Will perform git checkout. Branch: '$GIT_BRANCH'"
+    ;;
+  --storybook)
+    PERFORM_GENERATE_STORYBOOK=true
+    echo "Will perform generate storybook. (only if --no-build option is not set)"
     ;;
   --clean)
     PERFORM_CLEAN_INSTALL=true
@@ -149,6 +155,11 @@ if [ "$SKIP_BUILD" = false ]; then
   # Rebuild eic_community theme assets.
   run_command "$DOCKER_CMD npm run build --prefix $THEME_PATH"
 
+  if [ "$PERFORM_GENERATE_STORYBOOK" = true ]; then
+    # Generate eic_community theme Storybook (For testing environments, on local run `npm run dev`)
+    run_command "$DOCKER_CMD npm run generate-storybook --prefix $THEME_PATH"
+  fi
+
   # Create symlinks for the lib folders
   run_command "ln -sf lib/modules $CUSTOM_PROFILES_PATH"
   run_command "ln -sf lib/modules $CUSTOM_MODULES_PATH"
@@ -157,7 +168,7 @@ fi
 
 if [ "$PERFORM_CLEAN_INSTALL" = true ]; then
   # Installation: Install clean website via Toolkit.
-  run_command "$DOCKER_CMD drush site-install minimal --account-name=admin --account-pass=admin --existing-config -y"
+  run_command "$DRUSH_CMD site-install minimal --account-name=admin --account-pass=admin --existing-config -y"
 
   # Install EIC default content module.
   run_command "$DRUSH_CMD en $DEFAULT_CONTENT_MODULES -y"

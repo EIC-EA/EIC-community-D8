@@ -8,6 +8,7 @@ weight: -8
 is_admin: null
 permissions:
   - 'access comments'
+  - 'access group overview'
   - 'create eic_document media'
   - 'create group group'
   - 'create image media'
@@ -17,4 +18,7 @@ permissions:
   - 'flag recommend_group'
   - 'post comments'
   - 'unflag recommend_group'
+  - 'use groups transition create_new_draft'
+  - 'use groups transition create_new_group'
+  - 'use groups transition publish'
   - 'view recommend_group'

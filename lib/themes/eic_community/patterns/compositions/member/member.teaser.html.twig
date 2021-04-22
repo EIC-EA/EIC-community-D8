@@ -85,4 +85,10 @@
       {% endif %}
     </div>
   </div>
+  {% if timestamp %}
+    {% include "@theme/patterns/components/timestamp.html.twig" with timestamp|default({})|merge({
+      extra_classes: "ecl-timestamp--meta ecl-teaser__timestamp",
+      icon_file_path: icon_file_path,
+    }) only %}
+  {% endif %}
 </div>
