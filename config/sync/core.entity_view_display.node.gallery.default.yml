@@ -36,12 +36,13 @@ content:
       pager_id: 0
     third_party_settings: {  }
   field_photos:
-    type: entity_reference_label
+    type: entity_reference_entity_view
     weight: 4
     region: content
     label: above
     settings:
       link: true
+      view_mode: default
     third_party_settings: {  }
   field_vocab_geo:
     type: entity_reference_label
