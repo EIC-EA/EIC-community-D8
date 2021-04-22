@@ -4,6 +4,10 @@
   flex-direction: column;
   margin-bottom: ecl-layout('gutter');
 
+  &:last-child {
+    margin-bottom: 0;
+  }
+
   > * {
     width: 100%;
     padding: 0;
@@ -58,7 +62,7 @@
       border-bottom: ecl-border('teaser');
       padding: ecl-box-model('padding') 0;
 
-      #{$node}--is-compact & {
+      #{$node}--has-compact-layout & {
         padding: 0;
         border: 0;
       }
@@ -69,12 +73,12 @@
         padding: ecl-box-model('padding') 0;
       }
 
-      #{$node}--is-compact & {
+      #{$node}--has-compact-layout & {
         padding: 0;
       }
     }
 
-    #{$node}--is-compact & {
+    #{$node}--has-compact-layout & {
       margin-bottom: ecl-box-model('padding');
 
       &:last-child {

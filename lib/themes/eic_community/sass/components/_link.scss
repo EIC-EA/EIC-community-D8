@@ -79,6 +79,11 @@
     }
   }
 
+  body &--has-full-width {
+    display: block;
+    text-align: center;
+  }
+
   &--call-to-action &__label {
     font-weight: $ecl-font-weight-bold;
   }
