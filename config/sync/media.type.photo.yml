@@ -1,0 +1,13 @@
+uuid: a440bc1b-4ad9-45cc-b869-dcad00c4937c
+langcode: en
+status: true
+dependencies: {  }
+id: photo
+label: Photo
+description: 'A Photo is used within Groups to add photo''s to a Gallery.'
+source: image
+queue_thumbnail_downloads: false
+new_revision: true
+source_configuration:
+  source_field: oe_media_image
+field_map: {  }
