@@ -26,7 +26,7 @@ function eic_community_preprocess_block(array &$variables) {
 
     switch ($block_content->bundle()) {
       case 'page_banner':
-        eic_community_preprocess_block__page_banner($variables);
+        eic_community_preprocess_block__page_banner($variables, $cache_tags);
         break;
 
       case 'cta_tiles':
@@ -34,15 +34,15 @@ function eic_community_preprocess_block(array &$variables) {
         break;
 
       case 'facts_figures':
-        eic_community_preprocess_block__facts_figures($variables);
+        eic_community_preprocess_block__facts_figures($variables, $cache_tags);
         break;
 
       case 'social_media':
-        eic_community_preprocess_block__social_media($variables);
+        eic_community_preprocess_block__social_media($variables, $cache_tags);
         break;
 
       case 'latest_news_stories':
-        eic_community_preprocess_block__latest_news_stories($variables);
+        eic_community_preprocess_block__latest_news_stories($variables, $cache_tags);
         break;
 
     }
