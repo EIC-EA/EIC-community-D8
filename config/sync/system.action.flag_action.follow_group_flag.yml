@@ -1,0 +1,15 @@
+uuid: fb77c040-4f3a-4788-88fc-031613518fcd
+langcode: en
+status: true
+dependencies:
+  config:
+    - flag.flag.follow_group
+  module:
+    - flag
+id: flag_action.follow_group_flag
+label: 'Follow this item'
+type: group
+plugin: 'flag_action:follow_group_flag'
+configuration:
+  flag_id: follow_group
+  flag_action: flag
