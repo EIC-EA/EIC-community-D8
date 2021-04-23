@@ -17,7 +17,7 @@ use Drupal\group_permissions\GroupPermissionsManager;
  *
  * @SuppressWarnings(PHPMD.MissingImport)
  */
-class OECGroupFlexGroupSaver extends GroupFlexGroupSaver {
+class OECGroupFlexGroupSaverDecorator extends GroupFlexGroupSaver {
 
   /**
    * The group flex saver service.
