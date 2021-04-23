@@ -1,0 +1,32 @@
+uuid: b3102df6-9a62-4097-8e85-162dba62ffb3
+langcode: en
+status: true
+dependencies:
+  module:
+    - group
+id: follow_group
+label: 'Follow (group)'
+bundles: {  }
+entity_type: group
+global: false
+weight: 0
+flag_short: 'Follow this item'
+flag_long: ''
+flag_message: ''
+unflag_short: 'Unfollow this item'
+unflag_long: ''
+unflag_message: ''
+unflag_denied_text: ''
+flood_control_active: false
+flood_control_limit: 0
+flood_control_window: 0
+flag_type: 'entity:group'
+link_type: ajax_link
+flagTypeConfig:
+  show_in_links: {  }
+  show_as_field: true
+  show_on_form: false
+  show_contextual_link: false
+  extra_permissions:
+    owner: '0'
+linkTypeConfig: {  }

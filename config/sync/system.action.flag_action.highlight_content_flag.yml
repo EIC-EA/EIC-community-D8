@@ -1,0 +1,15 @@
+uuid: 66e4ca98-3acf-4964-84cf-0456b3df98bd
+langcode: en
+status: true
+dependencies:
+  config:
+    - flag.flag.highlight_content
+  module:
+    - flag
+id: flag_action.highlight_content_flag
+label: 'Highlight this item'
+type: node
+plugin: 'flag_action:highlight_content_flag'
+configuration:
+  flag_id: highlight_content
+  flag_action: flag

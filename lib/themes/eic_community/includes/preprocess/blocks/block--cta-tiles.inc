@@ -10,7 +10,7 @@ use Drupal\Core\Cache\Cache;
 /**
  * Implements hook_preprocess_block() for cta_tiles.
  */
-function eic_community_preprocess_block__cta_tiles(&$variables, &$cache_tags) {
+function eic_community_preprocess_block__cta_tiles(&$variables, &$cache_tags = []) {
   /** @var \Drupal\block_content\Entity\BlockContent $block_content */
   $block_content = $variables['content']['#block_content'];
 

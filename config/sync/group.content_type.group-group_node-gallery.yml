@@ -1,0 +1,19 @@
+uuid: c0312edb-b84a-40d7-8a18-180e5f9fe3e3
+langcode: en
+status: true
+dependencies:
+  config:
+    - group.type.group
+    - node.type.gallery
+  module:
+    - gnode
+    - node
+id: group-group_node-gallery
+label: 'Group: Group node (Gallery)'
+description: 'Adds <em class="placeholder">Gallery</em> content to groups both publicly and privately.'
+group_type: group
+content_plugin: 'group_node:gallery'
+plugin_config:
+  group_cardinality: 0
+  entity_cardinality: 1
+  use_creation_wizard: false

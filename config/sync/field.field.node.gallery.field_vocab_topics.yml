@@ -1,0 +1,29 @@
+uuid: b814ce2f-69b6-48b2-ae30-bb4cf2b8ab23
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_vocab_topics
+    - node.type.gallery
+    - taxonomy.vocabulary.topics
+id: node.gallery.field_vocab_topics
+field_name: field_vocab_topics
+entity_type: node
+bundle: gallery
+label: Topics
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      topics: topics
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

@@ -8,7 +8,7 @@
 /**
  * Implements hook_preprocess_block() for social_media.
  */
-function eic_community_preprocess_block__social_media(&$variables) {
+function eic_community_preprocess_block__social_media(&$variables, &$cache_tags = []) {
   /** @var \Drupal\block_content\Entity\BlockContent $block_content */
   $block_content = $variables['content']['#block_content'];
 

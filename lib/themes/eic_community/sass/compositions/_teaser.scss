@@ -7,6 +7,19 @@
     align-items: stretch;
   }
 
+  @include ecl-media-breakpoint-up('sm') {
+    &--event {
+      flex-direction: column;
+    }
+  }
+
+  &__main {
+    @include ecl-media-breakpoint-up('sm') {
+      display: flex;
+      align-items: stretch;
+    }
+  }
+
   &--as-card {
     flex-direction: column;
   }
@@ -24,8 +37,13 @@
     background-color: map-get($ecl-colors, 'white');
   }
 
+  &--grey,
   &--as-card-grey {
     background-color: map-get($ecl-colors, 'grey-5');
+  }
+
+  &--grey {
+    padding: ecl-box-model('padding');
   }
 
   @include adjust-from-section-color() {
@@ -130,7 +148,7 @@
       }
 
       @include ecl-media-breakpoint-up('lg') {
-        width: map-get($ecl-media, 'm');
+        width: map-get($ecl-media, 's');
       }
 
       &::before {
@@ -144,6 +162,13 @@
       position: relative;
       max-width: map-get($ecl-media, 'm');
       margin: 0 auto ecl-box-model('padding');
+    }
+
+    #{$node}--as-grey#{$node}--member & {
+      @include ecl-media-breakpoint-up('sm') {
+        top: ecl-box-model('padding');
+        left: ecl-box-model('padding');
+      }
     }
   }
 
@@ -194,13 +219,22 @@
       }
 
       @include ecl-media-breakpoint-up('lg') {
-        padding-left: calc(#{map-get($ecl-media, 'm')} + #{ecl-box-model('padding')});
+        padding-left: calc(#{map-get($ecl-media, 's')} + #{ecl-box-model('padding')});
       }
     }
 
     #{$node}--as-card[class*="ecl-teaser--as-card-"] & {
       padding: ecl-box-model('padding');
     }
+  }
+
+  &__footer {
+    justify-content: space-between;
+    width: 100%;
+    display: flex;
+    margin-top: ecl-box-model('padding', 'controls');
+    padding-top: ecl-box-model('padding', 'controls');
+    border-top: ecl-border();
   }
 
   &__meta-header,
@@ -283,16 +317,16 @@
       margin-top: ecl-box-model('margin', 'controls');
     }
 
-    // START: Event specific Card style for mobile
-    @include ecl-media-breakpoint-up('md') {
-      #{$node}--event & {
-        display: none;
-      }
+    // // START: Event specific Card style for mobile
+    // @include ecl-media-breakpoint-up('md') {
+    //   #{$node}--event & {
+    //     display: none;
+    //   }
 
-      #{$node}--event #{$node}__content & {
-        display: flex;
-      }
-    }
+    //   #{$node}--event #{$node}__content & {
+    //     display: flex;
+    //   }
+    // }
 
     @include ecl-media-breakpoint-down('sm') {
       #{$node}--event #{$node}__content & {
@@ -331,6 +365,12 @@
     display: flex;
     flex-grow: 1;
     align-items: flex-start;
+
+    @include ecl-media-breakpoint-down('md') {
+      #{$node}--event & {
+        flex-direction: column;
+      }
+    }
   }
 
   &__content {
@@ -354,17 +394,20 @@
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
+    padding-left: ecl-box-model('padding');
 
     // START: Event specific Card style for mobile
     #{$node}--as-card#{$node}--event & {
       order: -1;
       padding-right: ecl-box-model('padding');
+      padding-left: 0;
     }
 
     @include ecl-media-breakpoint-down('sm') {
       #{$node}--event & {
         order: -1;
         padding-right: ecl-box-model('padding');
+        padding-left: 0;
       }
     }
 
@@ -384,13 +427,6 @@
     #{$node}--as-card#{$node}--member & {
       text-align: center;
     }
-
-    @include ecl-media-breakpoint-up('md') {
-      #{$node}--event:not(#{$node}--as-card) & {
-        margin-top: 0;
-      }
-    }
-
 
     #{$node}--as-card#{$node}--event & {
       margin-bottom: 0;
@@ -438,6 +474,15 @@
     display: flex;
     justify-content: space-between;
     margin-top: map-get($ecl-spacing, 's');
+
+    #{$node } & > * {
+      margin: 0;
+      margin-right: ecl-box-model('margin', 'controls');
+
+      &:last-child {
+        margin-right: 0;
+      }
+    }
 
     @include ecl-media-breakpoint-up('md') {
       #{$node}--event & {
@@ -517,6 +562,10 @@
     margin: 0;
   }
 
+  #{$node}--member &__timestamp {
+    @include ecl-responsive-font('meta');
+  }
+
   #{$node}--story &__author {
     margin-right: auto;
 
@@ -572,7 +621,9 @@
     #{$node}--event &,
     #{$node}--group & {
       color: ecl-typography('color', 'meta');
+    }
 
+    #{$node}--group & {
       @include ecl-responsive-font('label');
     }
 
@@ -583,10 +634,6 @@
     #{$node}--event #{$node}__meta-header & {
       margin-top: 0;
       margin-left: ecl-box-model('margin', 'controls');
-    }
-
-    #{$node}--event #{$node}__meta-footer & {
-      margin: 0;
     }
 
     #{$node}--as-card #{$node}__main-wrapper > #{$node}__meta-footer & {
@@ -659,15 +706,6 @@
       }
     }
 
-    #{$node}--as-card#{$node}--event #{$node}__meta-header &,
-    #{$node}--event #{$node}__content & {
-      display: none;
-    }
-
-    #{$node}--as-card#{$node}--event #{$node}__content & {
-      display: flex;
-    }
-
     @include ecl-media-breakpoint-down('sm') {
       #{$node}--event #{$node}__content & {
         display: flex;
@@ -699,12 +737,6 @@
     #{$node}--group #{$node}__meta-footer &,
     #{$node}--organisation #{$node}__meta-footer & {
       margin-left: 0;
-    }
-
-    #{$node}--event & {
-      @include ecl-media-breakpoint-up('md') {
-        margin-left: auto;
-      }
     }
 
     #{$node}--as-card#{$node}--event &,

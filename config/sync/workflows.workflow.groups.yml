@@ -1,0 +1,52 @@
+uuid: c6b70995-0cb9-4717-a179-40b66bee2bdc
+langcode: en
+status: true
+dependencies:
+  config:
+    - group.type.group
+  module:
+    - content_moderation
+id: groups
+label: Groups
+type: content_moderation
+type_settings:
+  states:
+    draft:
+      label: Draft
+      published: false
+      default_revision: false
+      weight: 0
+    pending:
+      published: false
+      default_revision: true
+      label: Pending
+      weight: 2
+    published:
+      label: Published
+      published: true
+      default_revision: true
+      weight: 1
+  transitions:
+    create_new_group:
+      label: 'Create new group'
+      from:
+        - pending
+      to: pending
+      weight: -2
+    publish:
+      label: Publish
+      to: published
+      weight: 0
+      from:
+        - draft
+        - published
+    upgrade_to_draft:
+      label: 'Upgrade to draft'
+      from:
+        - pending
+      to: draft
+      weight: -1
+  entity_types:
+    group:
+      - group
+  default_moderation_state: pending
