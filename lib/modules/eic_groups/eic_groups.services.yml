@@ -7,3 +7,8 @@ services:
   eic_groups.helper:
     class: Drupal\eic_groups\EICGroupsHelper
     arguments: ['@current_route_match']
+  eic_groups.book_page_redirect_subscriber:
+    class: Drupal\eic_groups\EventSubscriber\BookPageRedirectSubscriber
+    arguments: ['@group_purl.context_provider', '@book.manager']
+    tags:
+      - { name: event_subscriber }
