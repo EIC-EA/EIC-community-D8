@@ -12,17 +12,14 @@ type: list_string
 settings:
   allowed_values:
     -
-      value: info
-      label: Information
-    -
       value: idea
       label: Idea
     -
       value: question
       label: Question
     -
-      value: debate
-      label: Debate
+      value: discussion
+      label: Discussion
   allowed_values_function: ''
 module: options
 locked: false
