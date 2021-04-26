@@ -1,0 +1,47 @@
+uuid: 2fba4dfb-854e-4bca-90ae-aa8a427dd9f8
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.gallery.field_body
+    - field.field.node.gallery.field_comments
+    - field.field.node.gallery.field_photos
+    - field.field.node.gallery.field_vocab_geo
+    - field.field.node.gallery.field_vocab_topics
+    - node.type.gallery
+  module:
+    - smart_trim
+    - user
+id: node.gallery.teaser
+targetEntityType: node
+bundle: gallery
+mode: teaser
+content:
+  field_body:
+    type: smart_trim
+    weight: 0
+    region: content
+    label: above
+    settings:
+      trim_length: 600
+      trim_type: chars
+      trim_suffix: ''
+      wrap_output: false
+      wrap_class: trimmed
+      more_link: false
+      more_class: more-link
+      more_text: More
+      summary_handler: full
+      trim_options: {  }
+    third_party_settings: {  }
+hidden:
+  extra_field_eic_theme_helper_short_title_with_fallback: true
+  field_comments: true
+  field_photos: true
+  field_vocab_geo: true
+  field_vocab_topics: true
+  langcode: true
+  links: true
+  published_at: true
+  search_api_excerpt: true
