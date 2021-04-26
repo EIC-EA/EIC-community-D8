@@ -19,6 +19,11 @@ targetEntityType: group
 bundle: group
 mode: default
 content:
+  content_moderation_control:
+    weight: -20
+    settings: {  }
+    third_party_settings: {  }
+    region: content
   field_related_news_stories:
     weight: 0
     label: above
@@ -26,6 +31,11 @@ content:
       link: true
     third_party_settings: {  }
     type: entity_reference_label
+    region: content
+  flag_follow_group:
+    weight: 10
+    settings: {  }
+    third_party_settings: {  }
     region: content
   flag_recommend_group:
     weight: 10

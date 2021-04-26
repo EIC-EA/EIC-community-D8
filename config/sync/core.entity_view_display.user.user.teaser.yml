@@ -34,6 +34,11 @@ content:
       link: false
     third_party_settings: {  }
     region: content
+  flag_follow_user:
+    weight: 10
+    settings: {  }
+    third_party_settings: {  }
+    region: content
   member_profiles:
     type: entity_reference_label
     weight: 2
