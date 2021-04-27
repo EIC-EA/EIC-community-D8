@@ -32,10 +32,10 @@ COLOR_YELLOW="\e[93m"
 COLOR_RED="\e[91m"
 BG_COLOR_DEFAULT="\e[49m"
 BG_COLOR_GREEN="\e[42m"
-THEME_PATH="lib/themes/eic_community"
-CUSTOM_THEMES_PATH="web/themes/custom"
-CUSTOM_MODULES_PATH="web/modules/custom"
-CUSTOM_PROFILES_PATH="web/profiles/custom"
+THEME_PATH="./lib/themes/eic_community"
+CUSTOM_THEMES_PATH="./web/themes/custom"
+CUSTOM_MODULES_PATH="./web/modules/custom"
+CUSTOM_PROFILES_PATH="./web/profiles/custom"
 DEFAULT_CONTENT_MODULES="eic_default_content default_content"
 
 # Defaults
@@ -160,10 +160,17 @@ if [ "$SKIP_BUILD" = false ]; then
     run_command "$DOCKER_CMD npm run generate-storybook --prefix $THEME_PATH"
   fi
 
-  # Create symlinks for the lib folders
-  run_command "ln -sf lib/modules $CUSTOM_PROFILES_PATH"
-  run_command "ln -sf lib/modules $CUSTOM_MODULES_PATH"
-  run_command "ln -sf lib/modules $CUSTOM_THEMES_PATH"
+  # Recreate symlinks for the custom profiles folder
+  run_command "$DOCKER_CMD rm -rf $CUSTOM_PROFILES_PATH"
+  run_command "$DOCKER_CMD ln -sf ../../lib/profiles $CUSTOM_PROFILES_PATH"
+
+  # Recreate symlinks for the custom modules folder
+  run_command "$DOCKER_CMD rm -rf $CUSTOM_MODULES_PATH"
+  run_command "$DOCKER_CMD ln -sf ../../lib/modules $CUSTOM_MODULES_PATH"
+
+  # Recreate symlinks for the custom themes folder
+  run_command "$DOCKER_CMD rm -rf $CUSTOM_THEMES_PATH"
+  run_command "$DOCKER_CMD ln -sf ../../lib/themes $CUSTOM_THEMES_PATH"
 fi
 
 if [ "$PERFORM_CLEAN_INSTALL" = true ]; then
