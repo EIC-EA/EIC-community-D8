@@ -7,7 +7,7 @@
 {% endblock %}
 
 {% block content %}
-  {% include "@theme/patterns/compositions/organisation-information-block.html.twig" with {
+  {% include "@theme/patterns/compositions/contact-information-block.html.twig" with {
     icon_file_path: icon_file_path,
     description: description,
     title: title,
@@ -26,6 +26,8 @@
   {% include "@theme/patterns/compositions/featured-content-sections.html.twig" with {
     items: [
       featured_news,
+      featured_events ,
+      featured_team,
     ]
   } %}
 {% endblock %}

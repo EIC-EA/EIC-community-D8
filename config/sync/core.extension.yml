@@ -90,6 +90,7 @@ module:
   oe_time_caching: 0
   oe_webtools: 0
   oe_webtools_social_share: 0
+  oec_group_flex: 0
   openapi: 0
   openapi_rest: 0
   options: 0

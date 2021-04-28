@@ -1,0 +1,15 @@
+uuid: 85ddf67d-bce4-487e-9d27-658b9b5f8e1a
+langcode: en
+status: true
+dependencies:
+  config:
+    - flag.flag.highlight_content
+  module:
+    - flag
+id: flag_action.highlight_content_unflag
+label: 'Unhighlight this item'
+type: node
+plugin: 'flag_action:highlight_content_unflag'
+configuration:
+  flag_id: highlight_content
+  flag_action: unflag

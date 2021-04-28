@@ -1,9 +1,20 @@
 .ecl-base-layout {
+  $node: &;
+
   &--contain {
     @extend .ecl-container;
 
     margin-left: auto;
     margin-right: auto;
+
+    & #{$node}__main,
+    & #{$node}__aside {
+      padding-bottom: map-get($ecl-spacing, 'xl');
+
+      @include ecl-media-breakpoint-up('md') {
+        padding-bottom: map-get($ecl-spacing, '3xl');
+      }
+    }
   }
 
   &__content {

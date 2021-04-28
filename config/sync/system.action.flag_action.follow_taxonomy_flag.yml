@@ -1,0 +1,15 @@
+uuid: 25ed6a7c-b635-4a07-af1e-a60e2199fc6b
+langcode: en
+status: true
+dependencies:
+  config:
+    - flag.flag.follow_taxonomy
+  module:
+    - flag
+id: flag_action.follow_taxonomy_flag
+label: 'Follow this item'
+type: taxonomy_term
+plugin: 'flag_action:follow_taxonomy_flag'
+configuration:
+  flag_id: follow_taxonomy
+  flag_action: flag

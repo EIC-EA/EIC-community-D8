@@ -10,11 +10,8 @@ use Drupal\Core\Cache\Cache;
 /**
  * Implements hook_preprocess_block() for facts_figures.
  */
-function eic_community_preprocess_block__facts_figures(&$variables) {
+function eic_community_preprocess_block__facts_figures(&$variables, &$cache_tags = []) {
   $block_content = $variables['content']['#block_content'];
-
-  // Initializes cache tags.
-  $cache_tags = $block_content->getCacheTags();
 
   if (!$block_content->get('field_facts_figures')->isEmpty()) {
     /** @var \Drupal\eic_statistics\StatisticsStorageInterface $eic_statistics_storage */

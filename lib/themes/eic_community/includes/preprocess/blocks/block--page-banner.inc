@@ -10,7 +10,7 @@ use Drupal\eic_community\ValueObject\ImageValueObject;
 /**
  * Implements hook_preprocess_block() for page_banner.
  */
-function eic_community_preprocess_block__page_banner(&$variables) {
+function eic_community_preprocess_block__page_banner(&$variables, &$cache_tags = []) {
   /** @var \Drupal\block_content\Entity\BlockContent $block_content */
   $block_content = $variables['content']['#block_content'];
 

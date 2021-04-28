@@ -45,12 +45,12 @@ reactions:
         region: page_header
         weight: '0'
         context_mapping:
-          group: '@group.group_route_context:group'
+          group: '@group_purl.context_provider:group'
         custom_id: eic_group_header
         theme: eic_community
         css_class: ''
         unique: 0
-        context_id: group_wiki
+        context_id: group_wiki_overview
         uuid: 04974156-0f3e-411b-a62d-f961cff1e0c9
       365c1731-6e0c-49b4-90f0-9d8bbdb1a924:
         id: system_breadcrumb_block

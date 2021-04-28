@@ -48,6 +48,7 @@
 
 {% include "@theme/patterns/compositions/fact-figures-wrapper.html.twig" with block_content|default({})|merge({
   items: _items,
+  compact: true,
   display_icons: true,
   icon_file_path: eic_icon_path,
   extra_classes: 'ecl-section-wrapper ecl-section-wrapper--is-blue',

@@ -1,0 +1,15 @@
+uuid: e48757f1-ae72-44cb-b858-9257d01e26a2
+langcode: en
+status: true
+dependencies:
+  config:
+    - flag.flag.follow_group
+  module:
+    - flag
+id: flag_action.follow_group_unflag
+label: 'Unfollow this item'
+type: group
+plugin: 'flag_action:follow_group_unflag'
+configuration:
+  flag_id: follow_group
+  flag_action: unflag

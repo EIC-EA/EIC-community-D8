@@ -35,6 +35,31 @@
     }
   }
 
+  &--has-compact-layout .ecl-fact-figures {
+    &__item {
+      position: relative;
+    }
+
+    &__icon {
+      position: absolute;
+      top: 0;
+      left: ecl-layout('gutter');
+      width: map-get($ecl-media, '3xs');
+      height: map-get($ecl-media, '3xs');
+    }
+
+    &__value,
+    &__title,
+    &__description {
+      margin-left: calc(#{map-get($ecl-media, '3xs')} + #{ecl-box-model('padding')});
+    }
+
+    &__title {
+      margin-top: 0;
+      @include ecl-responsive-font('label');
+    }
+  }
+
   @include ecl-media-breakpoint-up('lg') {
     @for $i from 2 to 5 {
       & .ecl-fact-figures--col-#{$i} .ecl-fact-figures__item {

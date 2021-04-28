@@ -1,0 +1,9 @@
+name: OEC Group Flex
+type: module
+description: Add extra features on top of group flex module.
+package: Open Europa Communities
+core: 8.x
+core_version_requirement: ^8 || ^9
+php: 7.3
+dependencies:
+  - group_flex:group_flex
