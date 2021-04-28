@@ -16,6 +16,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * OEC Form controller for group forms.
+ *
+ * @ingroup group
  */
 class OECGroupForm extends GroupForm {
 

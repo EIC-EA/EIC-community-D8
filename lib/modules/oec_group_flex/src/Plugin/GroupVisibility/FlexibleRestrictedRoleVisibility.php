@@ -5,9 +5,12 @@ namespace Drupal\oec_group_flex\Plugin\GroupVisibility;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityFormInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\group\Access\GroupAccessResult;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\group\Entity\GroupTypeInterface;
 use Drupal\oec_group_flex\GroupVisibilityDatabaseStorageInterface;
+use Drupal\oec_group_flex\GroupVisibilityRecord;
 use Drupal\oec_group_flex\Plugin\GroupVisibilityOptionsInterface;
 use Drupal\oec_group_flex\Plugin\RestrictedGroupVisibilityBase;
 use Drupal\user\Entity\User;
@@ -83,6 +86,7 @@ class FlexibleRestrictedRoleVisibility extends RestrictedGroupVisibilityBase imp
     $form['oec_group_visibility_option_restricted_users'] = [
       '#title' => ('Select trusted users'),
       '#type' => 'entity_autocomplete',
+      '#tags' => TRUE,
       '#target_type' => 'user',
       '#required' => FALSE,
       '#selection_settings' => [
@@ -96,14 +100,7 @@ class FlexibleRestrictedRoleVisibility extends RestrictedGroupVisibilityBase imp
     if (!$group->isNew()) {
       $group_visibility_record = $this->groupVisibilityStorage->load($group->id());
 
-      if ($restricted_users = $form_state->getValue('oec_group_visibility_option_restricted_users')) {
-        $form['oec_group_visibility_option_restricted_users']['#default_value'] = User::load($restricted_users);
-      }
-      else {
-        if (array_key_exists('restricted_users', $group_visibility_record->getOptions())) {
-          $form['oec_group_visibility_option_restricted_users']['#default_value'] = User::load($group_visibility_record->getOptions()['restricted_users']);
-        }
-      }
+      $this->setFormDefaultRestrictedUsers($form, $form_state, $group_visibility_record);
     }
 
     return $form;
@@ -131,6 +128,52 @@ class FlexibleRestrictedRoleVisibility extends RestrictedGroupVisibilityBase imp
    */
   public function getValueDescription(GroupTypeInterface $groupType): string {
     return $this->t('The @group_type_name will be viewed by group members and trusted users', ['@group_type_name' => $groupType->label()]);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function groupAccess(GroupInterface $entity, $operation, AccountInterface $account) {
+    if ($operation == 'view') {
+      if (!$entity->getMember($account)) {
+        if ($entity->hasPermission('view group', $account)) {
+          // @todo Check if user has been referenced.
+          return GroupAccessResult::allowed()
+            ->addCacheableDependency($account)
+            ->addCacheableDependency($entity);
+        }
+      }
+    }
+
+    return GroupAccessResult::neutral();
+  }
+
+  /**
+   * Set default values for restricted_users field.
+   *
+   * @param array $form
+   *   The form renderable array.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
+   * @param \Drupal\oec_group_flex\GroupVisibilityRecord $group_visibility_record
+   *   The Group visibility record object.
+   */
+  private function setFormDefaultRestrictedUsers(array &$form, FormStateInterface $form_state, GroupVisibilityRecord $group_visibility_record) {
+    if ($restricted_users = $form_state->getValue('oec_group_visibility_option_restricted_users')) {
+      $load_users = [];
+      foreach ($restricted_users as $user) {
+        $load_users[] = $user['target_id'];
+      }
+      $form['oec_group_visibility_option_restricted_users']['#default_value'] = User::loadMultiple($load_users);
+    }
+    elseif (array_key_exists('restricted_users', $group_visibility_record->getOptions())) {
+      $restricted_users = $group_visibility_record->getOptions()['restricted_users'];
+    }
+    if ($restricted_users) {
+      foreach ($restricted_users as $user) {
+        $form['oec_group_visibility_option_restricted_users']['#default_value'][] = User::load($user['target_id']);
+      }
+    }
   }
 
 }

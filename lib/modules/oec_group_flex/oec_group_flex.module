@@ -9,8 +9,13 @@
  * @see https://www.drupal.org/node/2217931
  */
 
+use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\group\Entity\GroupInterface;
 use Drupal\oec_group_flex\Entity\Form\OECGroupForm;
+use Drupal\oec_group_flex\Plugin\GroupVisibilityOptionsInterface;
 
 /**
  * Implements hook_entity_type_alter().
@@ -42,4 +47,27 @@ function oec_group_flex_form_group_content_form_alter(&$form, FormStateInterface
       }
     }
   }
+}
+
+/**
+ * Implements hook_entity_access().
+ */
+function oec_group_flex_entity_access(EntityInterface $entity, $operation, AccountInterface $account) {
+  if ($entity instanceof GroupInterface) {
+    /** @var \Drupal\group_flex\Plugin\GroupVisibilityManager $group_visibility_plugin_manager */
+    $group_visibility_plugin_manager = \Drupal::service('plugin.manager.group_visibility');
+
+    /** @var \Drupal\oec_group_flex\GroupVisibilityDatabaseStorageInterface $group_visibility_storage */
+    $group_visibility_storage = \Drupal::service('oec_group_flex.group_visibility.storage');
+
+    if ($group_visibility_record = $group_visibility_storage->load($entity->id())) {
+      $group_visibility_plugin = $group_visibility_plugin_manager->createInstance($group_visibility_record->getType());
+
+      if ($group_visibility_plugin instanceof GroupVisibilityOptionsInterface) {
+        return $group_visibility_plugin->groupAccess($entity, $operation, $account);
+      }
+    }
+  }
+
+  return AccessResult::neutral();
 }

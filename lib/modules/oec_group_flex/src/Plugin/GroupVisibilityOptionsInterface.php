@@ -3,6 +3,8 @@
 namespace Drupal\oec_group_flex\Plugin;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\group\Entity\GroupInterface;
 
 /**
  * Extends GroupVisibilityOptionsInterface for Group visibility plugins.
@@ -27,5 +29,17 @@ interface GroupVisibilityOptionsInterface {
    *   The group visibility options array.
    */
   public function getFormStateValues(FormStateInterface $form_state);
+
+  /**
+   * Check group access based on the group visibility options.
+   *
+   * @param \Drupal\group\Entity\GroupInterface $entity
+   *   The group entity.
+   * @param string $operation
+   *   The group operation.
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *   The current user account object.
+   */
+  public function groupAccess(GroupInterface $entity, $operation, AccountInterface $account);
 
 }

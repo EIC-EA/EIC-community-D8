@@ -4,12 +4,15 @@ namespace Drupal\oec_group_flex;
 
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Database\Connection;
+use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 
 /**
  * Provides the default storage backend for Group visibility plugins.
  */
 class GroupVisibilityDatabaseStorage implements GroupVisibilityDatabaseStorageInterface {
+
+  use DependencySerializationTrait;
 
   /**
    * The entity type manager service.

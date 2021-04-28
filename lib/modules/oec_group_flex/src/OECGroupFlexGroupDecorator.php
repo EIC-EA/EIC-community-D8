@@ -3,16 +3,20 @@
 namespace Drupal\oec_group_flex;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\group_flex\GroupFlexGroup;
 use Drupal\group_flex\GroupFlexGroupType;
+use Drupal\group_flex\Plugin\GroupVisibilityInterface;
 use Drupal\group_permissions\GroupPermissionsManager;
 
 /**
  * Get the group flex settings from a group.
  */
 class OECGroupFlexGroupDecorator extends GroupFlexGroup {
+
+  use DependencySerializationTrait;
 
   /**
    * The flex group inner service.
@@ -64,12 +68,12 @@ class OECGroupFlexGroupDecorator extends GroupFlexGroup {
    * @param \Drupal\group\Entity\GroupInterface $group
    *   The group to return the default value for.
    *
-   * @return string|bool
-   *   The group visibility. FALSE is there is no record.
+   * @return string
+   *   The group visibility.
    */
   public function getGroupVisibility(GroupInterface $group): string {
     if (!($group_visibility_record = $this->groupVisibilityStorage->load($group->id()))) {
-      return FALSE;
+      return GroupVisibilityInterface::GROUP_FLEX_TYPE_VIS_PUBLIC;
     }
     return $group_visibility_record->getType();
   }
