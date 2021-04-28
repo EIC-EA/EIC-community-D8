@@ -2,6 +2,7 @@
 
 namespace Drupal\oec_group_flex;
 
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\group\Entity\GroupInterface;
@@ -27,10 +28,19 @@ class OECGroupFlexGroupSaverDecorator extends GroupFlexGroupSaver {
   protected $groupFlexSaver;
 
   /**
+   * The group visibility storage service.
+   *
+   * @var \Drupal\oec_group_flex\GroupVisibilityDatabaseStorageInterface
+   */
+  protected $groupVisibilityStorage;
+
+  /**
    * Constructs a new GroupFlexGroupSaver object.
    *
    * @param \Drupal\group_flex\GroupFlexGroupSaver $groupFlexSaver
    *   The group flex saver inner service.
+   * @param \Drupal\oec_group_flex\GroupVisibilityDatabaseStorageInterface $groupVisibilityStorage
+   *   The group visibility storage service.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager.
    * @param \Drupal\group_permissions\GroupPermissionsManager $groupPermManager
@@ -42,9 +52,10 @@ class OECGroupFlexGroupSaverDecorator extends GroupFlexGroupSaver {
    * @param \Drupal\group_flex\GroupFlexGroup $groupFlex
    *   The group flex.
    */
-  public function __construct(GroupFlexGroupSaver $groupFlexSaver, EntityTypeManagerInterface $entityTypeManager, GroupPermissionsManager $groupPermManager, GroupVisibilityManager $visibilityManager, GroupJoiningMethodManager $joiningMethodManager, GroupFlexGroup $groupFlex) {
+  public function __construct(GroupFlexGroupSaver $groupFlexSaver, GroupVisibilityDatabaseStorageInterface $groupVisibilityStorage, EntityTypeManagerInterface $entityTypeManager, GroupPermissionsManager $groupPermManager, GroupVisibilityManager $visibilityManager, GroupJoiningMethodManager $joiningMethodManager, GroupFlexGroup $groupFlex) {
     parent::__construct($entityTypeManager, $groupPermManager, $visibilityManager, $joiningMethodManager, $groupFlex);
     $this->groupFlexSaver = $groupFlexSaver;
+    $this->groupVisibilityStorage = $groupVisibilityStorage;
   }
 
   /**
@@ -54,10 +65,12 @@ class OECGroupFlexGroupSaverDecorator extends GroupFlexGroupSaver {
    *   The group to save.
    * @param string $groupVisibility
    *   The desired visibility of the group.
+   * @param array $groupVisibilityOptions
+   *   The group visibility options array.
    *
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
-  public function saveGroupVisibility(GroupInterface $group, string $groupVisibility) {
+  public function saveGroupVisibility(GroupInterface $group, string $groupVisibility, array $groupVisibilityOptions = []) {
     $groupPermission = $this->getGroupPermissionObject($group);
 
     if (!$groupPermission) {
@@ -92,8 +105,19 @@ class OECGroupFlexGroupSaverDecorator extends GroupFlexGroupSaver {
     }
     $groupPermission->save();
 
-    // Save the group entity to reset the cache tags.
-    $group->save();
+    if (!($item = $this->groupVisibilityStorage->load($group->id()))) {
+      $item = $this->groupVisibilityStorage->create([
+        'id' => 0,
+        'gid' => (int) $group->id(),
+        'type' => $groupVisibility,
+        'options' => $groupVisibilityOptions,
+      ]);
+    }
+
+    $this->groupVisibilityStorage->save($item);
+
+    // Invalidates group cache tags.
+    Cache::invalidateTags($group->getCacheTags());
   }
 
   /**
@@ -114,7 +138,7 @@ class OECGroupFlexGroupSaverDecorator extends GroupFlexGroupSaver {
    *
    * @SuppressWarnings(PHPMD.StaticAccess)
    */
-  private function getGroupPermissionObject(GroupInterface $group): ?GroupPermission {
+  protected function getGroupPermissionObject(GroupInterface $group): ?GroupPermission {
     /** @var \Drupal\group_permissions\Entity\GroupPermission $groupPermission */
     $groupPermission = $this->groupPermManager->getGroupPermission($group);
 
@@ -146,7 +170,7 @@ class OECGroupFlexGroupSaverDecorator extends GroupFlexGroupSaver {
    * @return \Drupal\group_permissions\Entity\GroupPermission
    *   The group permission object with the updated permissions.
    */
-  private function addRolePermissionsToGroup(GroupPermission $groupPermission, string $role, array $rolePermissions): GroupPermission {
+  protected function addRolePermissionsToGroup(GroupPermission $groupPermission, string $role, array $rolePermissions): GroupPermission {
     $permissions = $groupPermission->getPermissions();
     foreach ($rolePermissions as $permission) {
       if (!array_key_exists($role, $permissions) || !in_array($permission, $permissions[$role], TRUE)) {
@@ -170,7 +194,7 @@ class OECGroupFlexGroupSaverDecorator extends GroupFlexGroupSaver {
    * @return \Drupal\group_permissions\Entity\GroupPermission
    *   The group permission object with the updated permissions.
    */
-  private function removeRolePermissionsFromGroup(GroupPermission $groupPermission, string $role, array $rolePermissions): GroupPermission {
+  protected function removeRolePermissionsFromGroup(GroupPermission $groupPermission, string $role, array $rolePermissions): GroupPermission {
     $permissions = $groupPermission->getPermissions();
     foreach ($rolePermissions as $permission) {
       if (array_key_exists($role, $permissions) || in_array($permission, $permissions[$role], TRUE)) {
