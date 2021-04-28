@@ -110,9 +110,11 @@ class OECGroupFlexGroupSaverDecorator extends GroupFlexGroupSaver {
         'id' => 0,
         'gid' => (int) $group->id(),
         'type' => $groupVisibility,
-        'options' => $groupVisibilityOptions,
       ]);
     }
+
+    $item->setType($groupVisibility);
+    $item->setOptions($groupVisibilityOptions);
 
     $this->groupVisibilityStorage->save($item);
 

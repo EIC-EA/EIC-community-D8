@@ -3,16 +3,18 @@
 namespace Drupal\oec_group_flex\Plugin\GroupVisibility;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Entity\EntityFormInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\group\Entity\GroupTypeInterface;
-use Drupal\group_flex\Plugin\GroupVisibilityBase;
+use Drupal\oec_group_flex\GroupVisibilityDatabaseStorageInterface;
 use Drupal\oec_group_flex\Plugin\GroupVisibilityOptionsInterface;
+use Drupal\oec_group_flex\Plugin\RestrictedGroupVisibilityBase;
+use Drupal\user\Entity\User;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Provides a 'restricted_role' group visibility.
+ * Provides a 'flexible_restricted_role' group visibility.
  *
  * @GroupVisibility(
  *  id = "flexible_restricted_role",
@@ -20,14 +22,14 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *  weight = -88
  * )
  */
-class FlexibleRestrictedRoleVisibility extends GroupVisibilityBase implements ContainerFactoryPluginInterface, GroupVisibilityOptionsInterface {
+class FlexibleRestrictedRoleVisibility extends RestrictedGroupVisibilityBase implements GroupVisibilityOptionsInterface {
 
   /**
-   * The OEC module configuration settings.
+   * The group visibility storage service.
    *
-   * @var \Drupal\Core\Config\ImmutableConfig
+   * @var \Drupal\oec_group_flex\GroupVisibilityDatabaseStorageInterface
    */
-  protected $oecGroupFlexConfigSettings;
+  protected $groupVisibilityStorage;
 
   /**
    * Constructs a new RestrictedVisibility plugin object.
@@ -40,12 +42,12 @@ class FlexibleRestrictedRoleVisibility extends GroupVisibilityBase implements Co
    *   The plugin implementation definition.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
    *   The configuration factory service.
-   *
-   * @SuppressWarnings(PHPMD.StaticAccess)
+   * @param \Drupal\oec_group_flex\GroupVisibilityDatabaseStorageInterface $groupVisibilityStorage
+   *   The group visibility storage service.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, ConfigFactoryInterface $configFactory) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->oecGroupFlexConfigSettings = $configFactory->get('oec_group_flex.settings');
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, ConfigFactoryInterface $configFactory, GroupVisibilityDatabaseStorageInterface $groupVisibilityStorage) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition, $configFactory);
+    $this->groupVisibilityStorage = $groupVisibilityStorage;
   }
 
   /**
@@ -56,15 +58,27 @@ class FlexibleRestrictedRoleVisibility extends GroupVisibilityBase implements Co
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('config.factory')
+      $container->get('config.factory'),
+      $container->get('oec_group_flex.group_visibility.storage')
     );
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getPluginForm() {
+  public function getPluginOptionsForm(FormStateInterface $form_state) {
     $form = [];
+    $form_object = $form_state->getFormObject();
+
+    if (!$form_object instanceof EntityFormInterface) {
+      return $form;
+    }
+
+    $group = $form_object->getEntity();
+
+    if (!$group instanceof GroupInterface) {
+      return $form;
+    }
 
     $form['oec_group_visibility_option_restricted_users'] = [
       '#title' => ('Select trusted users'),
@@ -79,103 +93,30 @@ class FlexibleRestrictedRoleVisibility extends GroupVisibilityBase implements Co
       ],
     ];
 
+    if (!$group->isNew()) {
+      $group_visibility_record = $this->groupVisibilityStorage->load($group->id());
+
+      if ($restricted_users = $form_state->getValue('oec_group_visibility_option_restricted_users')) {
+        $form['oec_group_visibility_option_restricted_users']['#default_value'] = User::load($restricted_users);
+      }
+      else {
+        if (array_key_exists('restricted_users', $group_visibility_record->getOptions())) {
+          $form['oec_group_visibility_option_restricted_users']['#default_value'] = User::load($group_visibility_record->getOptions()['restricted_users']);
+        }
+      }
+    }
+
     return $form;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getFormStateValues(array &$form, FormStateInterface $form_state) {
+  public function getFormStateValues(FormStateInterface $form_state) {
     $groupVisibilityOptions = [
       'restricted_users' => $form_state->getValue('oec_group_visibility_option_restricted_users'),
     ];
     return $groupVisibilityOptions;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function enableGroupType(GroupTypeInterface $groupType) {
-    $mappedPerm = [
-      $groupType->getOutsiderRoleId() => [
-        'view group' => FALSE,
-      ],
-      $groupType->getMemberRoleId() => [
-        'view group' => TRUE,
-      ],
-    ];
-    $outsider_roles = $this->getOutsiderRolesFromInteralRoles($groupType, $this->oecGroupFlexConfigSettings->get('oec_group_visibility_setings.' . $this->pluginId . '.internal_roles'));
-
-    if (!empty($outsider_roles)) {
-      foreach ($outsider_roles as $outsider_role) {
-        $mappedPerm[$outsider_role->id()] = ['view group' => TRUE];
-      }
-    }
-
-    $this->saveMappedPerm($mappedPerm, $groupType);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function disableGroupType(GroupTypeInterface $groupType) {
-    $mappedPerm = [
-      $groupType->getOutsiderRoleId() => [
-        'view group' => FALSE,
-      ],
-      $groupType->getMemberRoleId() => [
-        'view group' => TRUE,
-      ],
-    ];
-
-    $outsider_roles = $this->getOutsiderRolesFromInteralRoles($groupType, $this->oecGroupFlexConfigSettings->get('oec_group_visibility_setings.' . $this->pluginId . '.internal_roles'));
-
-    if (!empty($outsider_roles)) {
-      foreach ($outsider_roles as $outsider_role) {
-        $mappedPerm[$outsider_role->id()] = ['view group' => FALSE];
-      }
-    }
-
-    $this->saveMappedPerm($mappedPerm, $groupType);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getGroupPermissions(GroupInterface $group): array {
-    $permissions = [
-      $group->getGroupType()->getMemberRoleId() => ['view group'],
-    ];
-
-    $outsider_roles = $this->getOutsiderRolesFromInteralRoles($group->getGroupType(), $this->oecGroupFlexConfigSettings->get('oec_group_visibility_setings.' . $this->pluginId . '.internal_roles'));
-
-    if (!empty($outsider_roles)) {
-      foreach ($outsider_roles as $outsider_role) {
-        $permissions[$outsider_role->id()] = ['view group'];
-      }
-    }
-
-    return $permissions;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getDisallowedGroupPermissions(GroupInterface $group): array {
-    $permissions = [
-      $group->getGroupType()->getAnonymousRoleId() => ['view group'],
-      $group->getGroupType()->getOutsiderRoleId() => ['view group'],
-    ];
-
-    $outsider_roles = $this->getOutsiderRolesFromInteralRoles($group->getGroupType(), $this->oecGroupFlexConfigSettings->get('oec_group_visibility_setings.' . $this->pluginId . '.internal_roles'));
-
-    if (!empty($outsider_roles)) {
-      foreach ($outsider_roles as $outsider_role) {
-        $permissions[$outsider_role->id()] = ['view group'];
-      }
-    }
-
-    return $permissions;
   }
 
   /**
@@ -190,36 +131,6 @@ class FlexibleRestrictedRoleVisibility extends GroupVisibilityBase implements Co
    */
   public function getValueDescription(GroupTypeInterface $groupType): string {
     return $this->t('The @group_type_name will be viewed by group members and trusted users', ['@group_type_name' => $groupType->label()]);
-  }
-
-  /**
-   * Get group outsider drupal roles.
-   *
-   * @param \Drupal\group\Entity\GroupTypeInterface $groupType
-   *   The Group Type entity.
-   * @param array $internal_rids
-   *   The outsider role id.
-   *
-   * @return \Drupal\group\Entity\GroupRoleInterface[]
-   *   The outsider roles of the group.
-   */
-  private function getOutsiderRolesFromInteralRoles(GroupTypeInterface $groupType, array $internal_rids): array {
-    $roles = [];
-    $group_roles = $groupType->getRoles();
-    if (!empty($group_roles)) {
-      foreach ($group_roles as $role) {
-        foreach ($internal_rids as $key => $internal_rid) {
-          if ($role->isInternal() && in_array("user.role.{$internal_rid}", $role->getDependencies()['config'])) {
-            $roles[] = $role;
-            // We unset the role from $internal_rids array to avoid redundant
-            // checks.
-            unset($internal_rids[$key]);
-            break;
-          }
-        }
-      }
-    }
-    return $roles;
   }
 
 }

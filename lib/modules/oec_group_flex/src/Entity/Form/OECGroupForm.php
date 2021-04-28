@@ -8,6 +8,7 @@ use Drupal\Core\TypedData\Exception\MissingDataException;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\group\Entity\Form\GroupForm;
 use Drupal\group\Entity\GroupContentInterface;
+use Drupal\group\Entity\GroupInterface;
 use Drupal\group\Entity\GroupTypeInterface;
 use Drupal\group_flex\Plugin\GroupVisibilityInterface;
 use Drupal\oec_group_flex\Plugin\GroupVisibilityOptionsInterface;
@@ -90,7 +91,12 @@ class OECGroupForm extends GroupForm {
 
       // The group visibility is flexible on a group level.
       if ($this->groupTypeFlex->hasFlexibleGroupTypeVisibility($groupType)) {
+        // Initialize list of array options for the visibility radio buttons.
         $visibilityOptions = [];
+
+        // Loops through each group visibility plugins to set the labels for
+        // the radio buttons and the plugin forms if the plugin implements the
+        // interface GroupVisibilityOptionsInterface.
         foreach ($visibilityPlugins as $id => $pluginInstance) {
           $visibilityOptions[$id] = $pluginInstance->getGroupLabel($groupType);
 
@@ -105,9 +111,10 @@ class OECGroupForm extends GroupForm {
                 ],
               ],
             ];
-            $form['footer']['group_visibility_options'][$id][] = $pluginInstance->getPluginForm();
+            $form['footer']['group_visibility_options'][$id][] = $pluginInstance->getPluginOptionsForm($form_state);
           }
         }
+
         if (!empty($visibilityOptions)) {
           $form['footer']['group_visibility']['#required'] = TRUE;
           $form['footer']['group_visibility']['#type'] = 'radios';
@@ -193,7 +200,7 @@ class OECGroupForm extends GroupForm {
     $groupVisibilityPlugin = $this->visibilityManager->createInstance($groupFlexSettings['visibility']['plugin_id']);
 
     if ($groupVisibilityPlugin instanceof GroupVisibilityOptionsInterface) {
-      $groupFlexSettings['visibility']['visibility_options'] = $groupVisibilityPlugin->getFormStateValues($form, $form_state);
+      $groupFlexSettings['visibility']['visibility_options'] = $groupVisibilityPlugin->getFormStateValues($form_state);
     }
 
     $this->groupFlexSettings = $groupFlexSettings;
@@ -205,8 +212,6 @@ class OECGroupForm extends GroupForm {
   public function save(array $form, FormStateInterface $form_state): int {
     $return = parent::save($form, $form_state);
 
-    $groupFlexSettings = $this->getGroupFlexSettingsFormValues($form, $form_state);
-
     if (!$groupFlexSettings = $this->getGroupFlexSettingsFormValues($form, $form_state)) {
       return $return;
     }
@@ -217,44 +222,47 @@ class OECGroupForm extends GroupForm {
 
     $group = $groupFlexSettings['group'];
 
+    if (!$group || !$group instanceof GroupInterface) {
+      return $return;
+    }
+
     foreach ($groupFlexSettings['settings'] as $key => $value) {
-      if ($group && $group->id()) {
-        switch ($key) {
-          case 'visibility':
-            if (!isset($value['plugin_id'])) {
-              break;
-            }
-
-            extract($value);
-
-            if (is_null($visibility_options)) {
-              $visibility_options = [];
-            }
-
-            $this->groupFlexSaver->saveGroupVisibility($group, $plugin_id, $visibility_options);
+      switch ($key) {
+        case 'visibility':
+          if (!isset($value['plugin_id'])) {
             break;
+          }
 
-          case 'joining_methods':
-            // Because we can change the group visibility to private of existing
-            // group causing the joining method not to be disabled after this.
-            if ($value === NULL) {
-              $value = [];
-            }
-            // This is needed to support the use of radios.
-            if (is_string($value)) {
-              $value = [$value => $value];
-            }
-            $this->groupFlexSaver->saveGroupJoiningMethods($group, $value);
-            break;
-        }
+          // Extract array into variables.
+          extract($value);
+
+          if (is_null($visibility_options)) {
+            $visibility_options = [];
+          }
+
+          $this->groupFlexSaver->saveGroupVisibility($group, $plugin_id, $visibility_options);
+          break;
+
+        case 'joining_methods':
+          // Because we can change the group visibility to private of existing
+          // group causing the joining method not to be disabled after this.
+          if ($value === NULL) {
+            $value = [];
+          }
+          // This is needed to support the use of radios.
+          if (is_string($value)) {
+            $value = [$value => $value];
+          }
+          $this->groupFlexSaver->saveGroupJoiningMethods($group, $value);
+          break;
+
       }
-
     }
     return $return;
   }
 
   /**
-   * Gets the group flex settings from the form or tempstore.
+   * Gets the group flex settings from the form object or tempstore.
    *
    * @param array $form
    *   An associative array containing the structure of the form.
@@ -308,7 +316,7 @@ class OECGroupForm extends GroupForm {
       }
     }
 
-    if (!empty($this->groupFlexSettings)) {
+    if (empty($this->groupFlexSettings)) {
       return FALSE;
     }
 

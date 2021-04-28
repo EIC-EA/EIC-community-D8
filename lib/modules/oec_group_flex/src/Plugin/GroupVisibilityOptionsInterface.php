@@ -10,24 +10,22 @@ use Drupal\Core\Form\FormStateInterface;
 interface GroupVisibilityOptionsInterface {
 
   /**
-   * Get options form.
+   * Gets plugin options form.
    *
    * @return array
    *   The options form renderable array.
    */
-  public function getPluginForm();
+  public function getPluginOptionsForm(FormStateInterface $form_state);
 
   /**
    * Gets the group visibility options from the form state.
    *
-   * @param array $form
-   *   An associative array containing the structure of the form.
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the form.
    *
    * @return array
    *   The group visibility options array.
    */
-  public function getFormStateValues(array &$form, FormStateInterface $form_state);
+  public function getFormStateValues(FormStateInterface $form_state);
 
 }
