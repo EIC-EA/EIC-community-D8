@@ -3,7 +3,7 @@
 namespace Drupal\oec_group_flex;
 
 /**
- * Provides the default storage backend for Group visibility plugins.
+ * Defines a class for oec_group_visibility database records.
  */
 class GroupVisibilityRecord implements GroupVisibilityRecordInterface {
 
@@ -36,7 +36,7 @@ class GroupVisibilityRecord implements GroupVisibilityRecordInterface {
   private $options;
 
   /**
-   * Constructs a new GroupVisibility object.
+   * Constructs a new GroupVisibilityRecord object.
    *
    * @param int $id
    *   The Group visibility record ID.

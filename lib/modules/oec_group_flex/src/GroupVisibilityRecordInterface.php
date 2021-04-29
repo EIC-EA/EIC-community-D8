@@ -3,17 +3,18 @@
 namespace Drupal\oec_group_flex;
 
 /**
- * Interface GroupVisibilityRecordInterface.
+ * Interface for GroupVisibilityRecord objects.
  */
 interface GroupVisibilityRecordInterface {
 
   /**
-   * Gets the group visibility item ID.
+   * Gets the group visibility record ID.
    *
    * @return int
-   *   The group visibility item ID.
+   *   The group visibility record ID.
    */
   public function getId();
+
   /**
    * Gets the group entity ID.
    *
@@ -39,10 +40,10 @@ interface GroupVisibilityRecordInterface {
   public function getOptions();
 
   /**
-   * Sets the group visibility item ID.
+   * Sets the group visibility record ID.
    *
    * @return \Drupal\oec_group_flex\GroupVisibilityRecordInterface
-   *   The group visibility item object.
+   *   The group visibility record object.
    */
   public function setId($id);
 
@@ -53,7 +54,7 @@ interface GroupVisibilityRecordInterface {
    *   The group entity ID.
    *
    * @return \Drupal\oec_group_flex\GroupVisibilityRecordInterface
-   *   The group visibility item object.
+   *   The group visibility record object.
    */
   public function setGroupId($gid);
 
@@ -64,7 +65,7 @@ interface GroupVisibilityRecordInterface {
    *   The group visibility plugin ID.
    *
    * @return \Drupal\oec_group_flex\GroupVisibilityRecordInterface
-   *   The group visibility item object.
+   *   The group visibility record object.
    */
   public function setType($type);
 
@@ -75,7 +76,7 @@ interface GroupVisibilityRecordInterface {
    *   The group visibility options array.
    *
    * @return \Drupal\oec_group_flex\GroupVisibilityRecordInterface
-   *   The group visibility item object.
+   *   The group visibility record object.
    */
   public function setOptions(array $options = []);
 
