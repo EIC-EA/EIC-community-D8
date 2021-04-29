@@ -28,6 +28,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class FlexibleRestrictedRoleVisibility extends RestrictedGroupVisibilityBase implements GroupVisibilityOptionsInterface {
 
   /**
+   * The option name to restrict group visibility for specific users.
+   */
+  const VISIBILITY_OPTION_RESTRICTED_USERS = 'restricted_users';
+
+  /**
    * The group visibility storage service.
    *
    * @var \Drupal\oec_group_flex\GroupVisibilityDatabaseStorageInterface
@@ -98,9 +103,9 @@ class FlexibleRestrictedRoleVisibility extends RestrictedGroupVisibilityBase imp
     ];
 
     if (!$group->isNew()) {
-      $group_visibility_record = $this->groupVisibilityStorage->load($group->id());
-
-      $this->setFormDefaultRestrictedUsers($form, $form_state, $group_visibility_record);
+      if ($group_visibility_record = $this->groupVisibilityStorage->load($group->id())) {
+        $this->setFormDefaultRestrictedUsers($form, $form_state, $group_visibility_record);
+      }
     }
 
     return $form;
@@ -111,7 +116,7 @@ class FlexibleRestrictedRoleVisibility extends RestrictedGroupVisibilityBase imp
    */
   public function getFormStateValues(FormStateInterface $form_state) {
     $groupVisibilityOptions = [
-      'restricted_users' => $form_state->getValue('oec_group_visibility_option_restricted_users'),
+      self::VISIBILITY_OPTION_RESTRICTED_USERS => $form_state->getValue('oec_group_visibility_option_restricted_users'),
     ];
     return $groupVisibilityOptions;
   }
@@ -137,10 +142,37 @@ class FlexibleRestrictedRoleVisibility extends RestrictedGroupVisibilityBase imp
     if ($operation == 'view') {
       if (!$entity->getMember($account)) {
         if ($entity->hasPermission('view group', $account)) {
-          // @todo Check if user has been referenced.
-          return GroupAccessResult::allowed()
-            ->addCacheableDependency($account)
-            ->addCacheableDependency($entity);
+
+          $group_visibility_record = $this->groupVisibilityStorage->load($entity->id());
+          $has_options = FALSE;
+
+          foreach ($group_visibility_record->getOptions() as $key => $option) {
+            if (!empty($option)) {
+              $has_options = TRUE;
+              switch ($key) {
+                case self::VISIBILITY_OPTION_RESTRICTED_USERS:
+                  // Allow access if user is referenced in restricted_users
+                  // option.
+                  foreach ($option as $restricted_user_id) {
+                    if ($account->id() == $restricted_user_id['target_id']) {
+                      return GroupAccessResult::allowed()
+                        ->addCacheableDependency($account)
+                        ->addCacheableDependency($entity);
+                    }
+                  }
+                  break;
+
+              }
+            }
+          }
+
+          // If the group visibility has options and the current user's account
+          // doesn't meet any of those options, we return access forbidden.
+          if ($has_options) {
+            return GroupAccessResult::forbidden()
+              ->addCacheableDependency($account)
+              ->addCacheableDependency($entity);
+          }
         }
       }
     }
