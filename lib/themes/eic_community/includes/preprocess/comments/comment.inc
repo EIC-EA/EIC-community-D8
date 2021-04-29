@@ -96,7 +96,10 @@ function eic_community_preprocess_comment(&$variables) {
   //--------------------------------//
   $flag_link_builder = \Drupal::service('flag.link_builder');
   $link = $flag_link_builder->build('comment', $cid, 'like_comment');
+
   $variables['comment']['flag_link'] = $link;
+  $variables['comment']['flag_link']['icon_file_path'] = $variables['eic_icon_path'];
+
 }
 
 /**

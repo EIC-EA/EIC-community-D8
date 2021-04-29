@@ -155,8 +155,8 @@
       <footer class="ecl-comment__footer">
         {% if user and comment_id %}
           <div class="ecl-comment__actions-wrapper">
-            <div class="ecl-comment__action">
-              <div class="ecl-comment__actions">
+            <div class="ecl-comment__actions">
+              <div class="ecl-comment__action">
                 {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with {
                   link: {
                     label: reply_label|default('Reply'),
@@ -166,30 +166,9 @@
                   extra_attributes: action_attributes,
                 } %}
               </div>
-              <div class="ecl-comment__actions">
-                {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with {
-                  link: {},
-                  extra_classes: 'ecl-comment__like ecl-link--button ecl-link--button-ghost',
-                  extra_attributes: action_attributes,
-                } %}
+              <div class="ecl-comment__action">
                 {{ flag_link }}
               </div>
-{#              <div class="ecl-comment__action">#}
-{#                {% include "@ecl-twig/ec-component-button/ecl-button.html.twig" with {#}
-{#                  label: like_label|default('Like'),#}
-{#                  variant: 'ghost',#}
-{#                  type: 'button',#}
-{#                  icon: icon_file_path ? {#}
-{#                    path: icon_file_path,#}
-{#                    type: 'custom',#}
-{#                    name: 'like',#}
-{#                    size: 'xs',#}
-{#                  },#}
-{#                  icon_position: 'before',#}
-{#                  extra_classes: 'ecl-comment__like ecl-button--compact-for-mobile',#}
-{#                  extra_attributes: action_attributes,#}
-{#                } %}#}
-{#              </div>#}
             </div>
           </div>
         {% endif %}
