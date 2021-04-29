@@ -14,7 +14,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\group\Entity\GroupInterface;
-use Drupal\oec_group_flex\Entity\Form\OECGroupForm;
+use Drupal\oec_group_flex\Entity\Form\GroupForm;
 use Drupal\oec_group_flex\Plugin\GroupVisibilityOptionsInterface;
 
 /**
@@ -25,8 +25,8 @@ use Drupal\oec_group_flex\Plugin\GroupVisibilityOptionsInterface;
 function oec_group_flex_entity_type_alter(array &$entity_types) {
   $groupHandlerClasses = $entity_types['group']->getHandlerClasses();
   $formHandlerClasses = $groupHandlerClasses['form'];
-  $formHandlerClasses['add'] = OECGroupForm::class;
-  $formHandlerClasses['edit'] = OECGroupForm::class;
+  $formHandlerClasses['add'] = GroupForm::class;
+  $formHandlerClasses['edit'] = GroupForm::class;
   $entity_types['group']->setHandlerClass('form', $formHandlerClasses);
 }
 

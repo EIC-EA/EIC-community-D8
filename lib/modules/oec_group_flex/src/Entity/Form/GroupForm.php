@@ -6,7 +6,7 @@ use Drupal\Core\Entity\EntityFormInterface;
 use Drupal\Core\TempStore\TempStoreException;
 use Drupal\Core\TypedData\Exception\MissingDataException;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\group\Entity\Form\GroupForm;
+use Drupal\group\Entity\Form\GroupForm as GroupFormBase;
 use Drupal\group\Entity\GroupContentInterface;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\group\Entity\GroupTypeInterface;
@@ -15,11 +15,11 @@ use Drupal\oec_group_flex\Plugin\GroupVisibilityOptionsInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * OEC Form controller for group forms.
+ * OEC Form controller extension for group forms.
  *
  * @ingroup group
  */
-class OECGroupForm extends GroupForm {
+class GroupForm extends GroupFormBase {
 
   /**
    * The group flex settings array.
@@ -112,6 +112,7 @@ class OECGroupForm extends GroupForm {
                   ],
                 ],
               ],
+              '#weight' => $form['footer']['group_visibility']['#weight'] + 1,
             ];
             $form['footer']['group_visibility_options'][$id][] = $pluginInstance->getPluginOptionsForm($form_state);
           }
@@ -156,7 +157,7 @@ class OECGroupForm extends GroupForm {
           '#title' => $this->t('Joining methods'),
           '#type' => 'radios',
           '#options' => $methodOptions,
-          '#weight' => $form['footer']['group_visibility']['#weight'] + 1,
+          '#weight' => $form['footer']['group_visibility']['#weight'] + 2,
         ];
         try {
           $defaultOptions = $this->groupFlex->getDefaultJoiningMethods($group);
