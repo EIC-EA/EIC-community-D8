@@ -32,11 +32,6 @@
   ]
 %}
 
-  {# @TODO: Load icon_file_path through the backend. #}
-{%
-  set icon_file_path = "/themes/custom/eic_community/dist/images/sprite/custom/sprites/custom.svg"
-%}
-
 {# Attach flag count. #}
 {% set count = ' (' ~ flagcount(flag, flaggable) ~ ')' %}
 
@@ -45,10 +40,10 @@
 
 <div class="{{classes|join(' ')}}">
   <a {{ attributes|without('class') }} class="{{ attributes.class }} ecl-comment__like ecl-link--button ecl-link--button-ghost">
-    {% if icon_file_path %}
+    {% if eic_icon_path %}
       {% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with {
         icon: {
-          path: icon_file_path,
+          path: eic_icon_path,
           type: 'custom',
           name: 'like',
           size: 'xs',

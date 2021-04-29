@@ -91,15 +91,10 @@ function eic_community_preprocess_comment(&$variables) {
     $variables['comment']['remove_path'] = $comment->toUrl('delete-form');
   }
 
-  //--------------------------------//
-  //--> Like Flag Implementation <--//
-  //--------------------------------//
   $flag_link_builder = \Drupal::service('flag.link_builder');
   $link = $flag_link_builder->build('comment', $cid, 'like_comment');
 
   $variables['comment']['flag_link'] = $link;
-  $variables['comment']['flag_link']['icon_file_path'] = $variables['eic_icon_path'];
-
 }
 
 /**
@@ -131,4 +126,3 @@ function comment_reply_count($cid, $nid, $entity_type) {
     ->execute();
   return $result;
 }
-
