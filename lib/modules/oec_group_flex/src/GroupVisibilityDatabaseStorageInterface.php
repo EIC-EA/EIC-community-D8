@@ -32,18 +32,7 @@ interface GroupVisibilityDatabaseStorageInterface {
   public function create(array $values = []);
 
   /**
-   * Deletes permanently saved entities.
-   *
-   * @param array $entities
-   *   An array of entity objects to delete.
-   *
-   * @throws \Drupal\Core\Entity\EntityStorageException
-   *   In case of failures, an exception is thrown.
-   */
-  public function delete(array $entities);
-
-  /**
-   * Saves the entity permanently.
+   * Saves the group visibility record permanently.
    *
    * @param \Drupal\oec_group_flex\GroupVisibilityRecord $group_visibility_record
    *   The group visibility record to save.
@@ -52,5 +41,13 @@ interface GroupVisibilityDatabaseStorageInterface {
    *   TRUE if the record was saved in the database.
    */
   public function save(GroupVisibilityRecord $group_visibility_record);
+
+  /**
+   * Deletes permanently saved group visibility records.
+   *
+   * @param \Drupal\oec_group_flex\GroupVisibilityRecord[] $entities
+   *   An array of entity objects to delete.
+   */
+  public function delete(array $entities);
 
 }

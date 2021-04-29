@@ -71,3 +71,16 @@ function oec_group_flex_entity_access(EntityInterface $entity, $operation, Accou
 
   return AccessResult::neutral();
 }
+
+/**
+ * Implements hook_ENTITY_TYPE_delete().
+ */
+function oec_group_flex_group_delete(EntityInterface $entity) {
+  /** @var \Drupal\oec_group_flex\GroupVisibilityDatabaseStorageInterface $group_visibility_storage */
+  $group_visibility_storage = \Drupal::service('oec_group_flex.group_visibility.storage');
+
+  // Deletes the group visibility record entry from database.
+  if ($group_visibility_record = $group_visibility_storage->load($entity->id())) {
+    $group_visibility_storage->delete([$group_visibility_record]);
+  }
+}

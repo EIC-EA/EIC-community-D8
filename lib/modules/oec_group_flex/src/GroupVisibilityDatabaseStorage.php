@@ -63,13 +63,6 @@ class GroupVisibilityDatabaseStorage implements GroupVisibilityDatabaseStorageIn
   /**
    * {@inheritdoc}
    */
-  public function delete($id) {
-    return FALSE;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function create(array $values = []) {
     $final_values = [];
 
@@ -81,7 +74,7 @@ class GroupVisibilityDatabaseStorage implements GroupVisibilityDatabaseStorageIn
 
     // Re-orders array $values into a final array that will contain the right
     // parameters order when creating the GroupVisibilityItem object.
-    foreach ($this->getGroupVisibilityProperties() as $property) {
+    foreach (self::getGroupVisibilityRecordProperties() as $property) {
       if (isset($values[$property])) {
         $final_values[] = $values[$property];
       }
@@ -112,12 +105,28 @@ class GroupVisibilityDatabaseStorage implements GroupVisibilityDatabaseStorageIn
   }
 
   /**
-   * Gets GroupVisibility Record properties.
+   * {@inheritdoc}
+   */
+  public function delete(array $entities) {
+    $entity_ids = [];
+
+    foreach ($entities as $entity) {
+      $entity_ids[] = $entity->getId();
+    }
+
+    return (bool) $this->connection
+      ->delete('oec_group_visibility')
+      ->condition('id', $entity_ids, 'IN')
+      ->execute();
+  }
+
+  /**
+   * Gets GroupVisibilityRecord properties.
    *
    * @return array
    *   The array of properties.
    */
-  public function getGroupVisibilityProperties() {
+  public static function getGroupVisibilityRecordProperties() {
     return [
       'id',
       'gid',
