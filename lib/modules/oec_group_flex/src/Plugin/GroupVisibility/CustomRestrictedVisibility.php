@@ -17,15 +17,15 @@ use Drupal\user\Entity\User;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Provides a 'flexible_restricted_role' group visibility.
+ * Provides a 'custom_restricted' group visibility.
  *
  * @GroupVisibility(
- *  id = "flexible_restricted_role",
- *  label = @Translation("Flexible Restricted (visible by members and trusted users)"),
+ *  id = "custom_restricted",
+ *  label = @Translation("Custom restriction"),
  *  weight = -88
  * )
  */
-class FlexibleRestrictedRoleVisibility extends RestrictedGroupVisibilityBase implements GroupVisibilityOptionsInterface {
+class CustomRestrictedVisibility extends RestrictedGroupVisibilityBase implements GroupVisibilityOptionsInterface {
 
   /**
    * The option name to restrict group visibility for specific users.
@@ -125,14 +125,14 @@ class FlexibleRestrictedRoleVisibility extends RestrictedGroupVisibilityBase imp
    * {@inheritdoc}
    */
   public function getGroupLabel(GroupTypeInterface $groupType): string {
-    return $this->t('Flexible Restricted (The @group_type_name will be viewed by group members and trusted users)', ['@group_type_name' => $groupType->label()]);
+    return $this->t('Custom restriction');
   }
 
   /**
    * {@inheritdoc}
    */
   public function getValueDescription(GroupTypeInterface $groupType): string {
-    return $this->t('The @group_type_name will be viewed by group members and trusted users', ['@group_type_name' => $groupType->label()]);
+    return $this->t('This means the restricted group will be visible to each of the trusted users that comply with any of the following restrictions.');
   }
 
   /**
