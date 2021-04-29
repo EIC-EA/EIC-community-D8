@@ -15,7 +15,7 @@ interface GroupVisibilityDatabaseStorageInterface {
    * @param mixed $id
    *   The ID of the group visibility record to load.
    *
-   * @return \Drupal\oec_group_flex\GroupVisibilityRecord|bool
+   * @return \Drupal\oec_group_flex\GroupVisibilityRecordInterface|bool
    *   A GroupVisibilityRecord object. FALSE if no matching records were found.
    */
   public function load($id);
@@ -26,7 +26,7 @@ interface GroupVisibilityDatabaseStorageInterface {
    * @param array $values
    *   (optional) An array of values to set, keyed by property name.
    *
-   * @return \Drupal\oec_group_flex\GroupVisibilityRecord
+   * @return \Drupal\oec_group_flex\GroupVisibilityRecordInterface
    *   A new GroupVisibilityRecord object.
    */
   public function create(array $values = []);
@@ -34,18 +34,18 @@ interface GroupVisibilityDatabaseStorageInterface {
   /**
    * Saves the group visibility record permanently.
    *
-   * @param \Drupal\oec_group_flex\GroupVisibilityRecord $group_visibility_record
+   * @param \Drupal\oec_group_flex\GroupVisibilityRecordInterface $group_visibility_record
    *   The group visibility record to save.
    *
    * @return bool
    *   TRUE if the record was saved in the database.
    */
-  public function save(GroupVisibilityRecord $group_visibility_record);
+  public function save(GroupVisibilityRecordInterface $group_visibility_record);
 
   /**
    * Deletes permanently saved group visibility records.
    *
-   * @param \Drupal\oec_group_flex\GroupVisibilityRecord[] $entities
+   * @param \Drupal\oec_group_flex\GroupVisibilityRecordInterface[] $entities
    *   An array of entity objects to delete.
    */
   public function delete(array $entities);

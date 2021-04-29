@@ -5,7 +5,7 @@ namespace Drupal\oec_group_flex;
 /**
  * Provides the default storage backend for Group visibility plugins.
  */
-class GroupVisibilityRecord {
+class GroupVisibilityRecord implements GroupVisibilityRecordInterface {
 
   /**
    * Group visibility record ID.
@@ -55,50 +55,35 @@ class GroupVisibilityRecord {
   }
 
   /**
-   * Gets the group visibility item ID.
-   *
-   * @return int
-   *   The group visibility item ID.
+   * {@inheritdoc}
    */
   public function getId() {
     return $this->id;
   }
 
   /**
-   * Gets the group entity ID.
-   *
-   * @return int
-   *   The group entity ID.
+   * {@inheritdoc}
    */
   public function getGroupId() {
     return $this->gid;
   }
 
   /**
-   * Gets group visibility plugin ID.
-   *
-   * @return string
-   *   The group visibility plugin ID.
+   * {@inheritdoc}
    */
   public function getType() {
     return $this->type;
   }
 
   /**
-   * Gets group visibility options.
-   *
-   * @return array
-   *   The group visibility options array.
+   * {@inheritdoc}
    */
   public function getOptions() {
     return $this->options;
   }
 
   /**
-   * Sets the group visibility item ID.
-   *
-   * @return \Drupal\oec_group_flex\GroupVisibilityItem
-   *   The group visibility item object.
+   * {@inheritdoc}
    */
   public function setId($id) {
     $this->id = $id;
@@ -106,13 +91,7 @@ class GroupVisibilityRecord {
   }
 
   /**
-   * Sets the group entity ID.
-   *
-   * @param int $gid
-   *   The group entity ID.
-   *
-   * @return \Drupal\oec_group_flex\GroupVisibilityItem
-   *   The group visibility item object.
+   * {@inheritdoc}
    */
   public function setGroupId($gid) {
     $this->gid = $gid;
@@ -120,13 +99,7 @@ class GroupVisibilityRecord {
   }
 
   /**
-   * Sets the group visibility plugin ID.
-   *
-   * @param string $type
-   *   The group visibility plugin ID.
-   *
-   * @return \Drupal\oec_group_flex\GroupVisibilityItem
-   *   The group visibility item object.
+   * {@inheritdoc}
    */
   public function setType($type) {
     $this->type = $type;
@@ -134,13 +107,7 @@ class GroupVisibilityRecord {
   }
 
   /**
-   * Sets the group visibility options.
-   *
-   * @param array $options
-   *   The group visibility options array.
-   *
-   * @return \Drupal\oec_group_flex\GroupVisibilityItem
-   *   The group visibility item object.
+   * {@inheritdoc}
    */
   public function setOptions(array $options = []) {
     $this->options = $options;

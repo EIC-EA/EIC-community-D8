@@ -92,7 +92,7 @@ class GroupVisibilityDatabaseStorage implements GroupVisibilityDatabaseStorageIn
   /**
    * {@inheritdoc}
    */
-  public function save(GroupVisibilityRecord $entity) {
+  public function save(GroupVisibilityRecordInterface $entity) {
     return (bool) $this->connection
       ->merge('oec_group_visibility')
       ->key('id', $entity->getId())
