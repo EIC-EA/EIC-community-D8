@@ -90,6 +90,13 @@ function eic_community_preprocess_comment(&$variables) {
   if ($variables['comment']['can_remove_comment']) {
     $variables['comment']['remove_path'] = $comment->toUrl('delete-form');
   }
+
+  //--------------------------------//
+  //--> Like Flag Implementation <--//
+  //--------------------------------//
+  $flag_link_builder = \Drupal::service('flag.link_builder');
+  $link = $flag_link_builder->build('comment', $cid, 'like_comment');
+  $variables['comment']['flag_link'] = $link;
 }
 
 /**
