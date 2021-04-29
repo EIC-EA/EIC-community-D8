@@ -278,8 +278,7 @@ class OECGroupForm extends GroupForm {
     $wizard_id = 'group_creator';
     if ($form_state->get('group_wizard') && $form_state->get('group_wizard_id') === $wizard_id) {
       $store_id = $form_state->get('store_id');
-      $privateTempStore = \Drupal::service('tempstore.private');
-      $store = $privateTempStore->get($wizard_id);
+      $store = $this->privateTempStoreFactory->get($wizard_id);
 
       if (!($group_type = $this->entityTypeManager->getStorage('group_type')->load($store_id))) {
         return FALSE;
