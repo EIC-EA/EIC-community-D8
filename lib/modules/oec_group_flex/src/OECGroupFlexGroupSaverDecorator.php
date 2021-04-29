@@ -79,9 +79,9 @@ class OECGroupFlexGroupSaverDecorator extends GroupFlexGroupSaver {
 
     $visibilityPlugins = $this->getAllGroupVisibility();
 
-    /** @var \Drupal\group_flex\Plugin\GroupVisibilityBase $pluginInstance */
+    // Clears group role permissions.
     foreach ($visibilityPlugins as $id => $pluginInstance) {
-      // Remove role permissions from group.
+      /** @var \Drupal\group_flex\Plugin\GroupVisibilityBase $pluginInstance */
       if ($groupVisibility !== $id) {
         foreach ($pluginInstance->getDisallowedGroupPermissions($group) as $role => $rolePermissions) {
           $groupPermission = $this->removeRolePermissionsFromGroup($groupPermission, $role, $rolePermissions);
@@ -89,6 +89,8 @@ class OECGroupFlexGroupSaverDecorator extends GroupFlexGroupSaver {
       }
     }
 
+    // Adds role permissions to the group based on the selected visibility
+    // plugin.
     if (isset($visibilityPlugins[$groupVisibility])) {
       foreach ($visibilityPlugins[$groupVisibility]->getGroupPermissions($group) as $role => $rolePermissions) {
         $groupPermission = $this->addRolePermissionsToGroup($groupPermission, $role, $rolePermissions);
