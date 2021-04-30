@@ -1,5 +1,0 @@
-group_feature.add_form:
-  route_name: entity.group_feature.add_form
-  title: 'Add group feature'
-  appears_on:
-    - entity.group_feature.collection
