@@ -4,6 +4,7 @@ status: true
 dependencies:
   module:
     - menu_ui
+    - purl
     - scheduler
 third_party_settings:
   menu_ui:
@@ -22,6 +23,8 @@ third_party_settings:
     unpublish_enable: false
     unpublish_required: false
     unpublish_revision: false
+  purl:
+    keep_context: 1
 name: Gallery
 type: gallery
 description: 'A Gallery is used within Groups to group uploaded Photo''s.'

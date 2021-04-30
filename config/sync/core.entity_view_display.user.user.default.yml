@@ -151,6 +151,11 @@ content:
     third_party_settings: {  }
     type: list_default
     region: content
+  flag_follow_user:
+    weight: 10
+    settings: {  }
+    third_party_settings: {  }
+    region: content
   member_for:
     weight: 0
     region: content
