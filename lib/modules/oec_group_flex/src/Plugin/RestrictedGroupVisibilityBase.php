@@ -3,6 +3,7 @@
 namespace Drupal\oec_group_flex\Plugin;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\group\Entity\GroupTypeInterface;
@@ -13,6 +14,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Extends GroupVisibilityBase class for restricted group visibility plugins.
  */
 abstract class RestrictedGroupVisibilityBase extends GroupVisibilityBase implements ContainerFactoryPluginInterface {
+
+  use DependencySerializationTrait;
 
   /**
    * The OEC module configuration settings.
