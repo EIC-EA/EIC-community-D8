@@ -2,10 +2,12 @@
 
 namespace Drupal\eic_groups;
 
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\group\Entity\GroupInterface;
 
 /**
- * Interface EICGroupsHelperInterface.
+ * Interface EICGroupsHelperInterface to implement in EICGroupHeader.
  */
 interface EICGroupsHelperInterface {
 
@@ -27,5 +29,22 @@ interface EICGroupsHelperInterface {
    *   The Group entity.
    */
   public function getGroupByEntity(EntityInterface $entity);
+
+  /**
+   * Get operations links of a given group.
+   *
+   * @param \Drupal\group\Entity\GroupInterface $group
+   *   The Group entity.
+   * @param \Drupal\Core\Cache\CacheableMetadata $cacheable_metadata
+   *   An optional cacheable metadata object.
+   *
+   * @return array
+   *   An associative array of operation links to show when in a group context,
+   *   keyed by operation name, containing the following key-value pairs:
+   *   - title: The localized title of the operation.
+   *   - url: An instance of \Drupal\Core\Url for the operation URL.
+   *   - weight: The weight of the operation.
+   */
+  public function getGroupOperationLinks(GroupInterface $group, CacheableMetadata $cacheable_metadata = NULL);
 
 }

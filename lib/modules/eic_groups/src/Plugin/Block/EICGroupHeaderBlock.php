@@ -6,6 +6,7 @@ use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\eic_groups\EICGroupsHelperInterface;
 use Drupal\group_purl\Context\GroupPurlContext;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -38,6 +39,13 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
   protected $groupPurlContext;
 
   /**
+   * The EIC groups helper service.
+   *
+   * @var \Drupal\eic_groups\EICGroupsHelperInterface
+   */
+  protected $eicGroupsHelper;
+
+  /**
    * Constructs a new EICGroupHeaderBlock instance.
    *
    * @param array $configuration
@@ -53,11 +61,14 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
    *   The current route match.
    * @param \Drupal\group_purl\Context\GroupPurlContext $group_purl_context
    *   The group purl context.
+   * @param \Drupal\eic_groups\EICGroupsHelperInterface $eic_groups_helper
+   *   The EIC groups helper service.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, RouteMatchInterface $route_match, GroupPurlContext $group_purl_context) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, RouteMatchInterface $route_match, GroupPurlContext $group_purl_context, EICGroupsHelperInterface $eic_groups_helper) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->routeMatch = $route_match;
     $this->groupPurlContext = $group_purl_context;
+    $this->eicGroupsHelper = $eic_groups_helper;
   }
 
   /**
@@ -69,7 +80,8 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
       $plugin_id,
       $plugin_definition,
       $container->get('current_route_match'),
-      $container->get('group_purl.context_provider')
+      $container->get('group_purl.context_provider'),
+      $container->get('eic_groups.helper')
     );
   }
 
@@ -103,6 +115,7 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
         'bundle' => $group->bundle(),
         'title' => $group->label(),
         'description' => $group->get('field_body')->value,
+        'operation_links' => $this->eicGroupsHelper->getGroupOperationLinks($group, $cacheable_metadata),
       ],
     ];
 
