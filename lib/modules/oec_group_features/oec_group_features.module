@@ -1,0 +1,58 @@
+<?php
+
+/**
+ * @file
+ * Primary module hooks for OEC Group Features module.
+ */
+
+use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\oec_group_features\Hooks\EntityOperations;
+
+/**
+ * Implements hook_base_field_info().
+ *
+ * Add a features field to groups.
+ */
+function oec_group_features_entity_base_field_info(EntityTypeInterface $entity_type) {
+  $fields = [];
+  if ($entity_type->id() == 'group') {
+    // Get available features.
+    $available_features = [];
+    $plugin_manager = \Drupal::service('plugin.manager.group_feature');
+    foreach ($plugin_manager->getDefinitions() as $definition) {
+      $available_features[$definition['id']] = $definition['label'];
+    }
+
+    // Add our extra field to the Group entity type.
+    $fields['features'] = BaseFieldDefinition::create('list_string')
+      ->setLabel(t('Features'))
+      ->setDescription(t('Select the features you would like to enable.'))
+      ->setDisplayOptions('form', [
+        'type' => 'options_select',
+        'settings' => [
+          'display_label' => TRUE,
+        ],
+        'weight' => -10,
+      ])
+      ->setSettings([
+        'allowed_values' => $available_features,
+      ])
+      ->setReadOnly(FALSE)
+      ->setRevisionable(FALSE)
+      ->setTranslatable(FALSE)
+      ->setRequired(FALSE)
+      ->setCardinality(-1)
+      ->setDisplayConfigurable('form', TRUE);
+  }
+  return $fields;
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_update().
+ */
+function oec_group_features_group_update(EntityInterface $entity) {
+  \Drupal::classResolver(EntityOperations::class)
+    ->groupUpdate($entity);
+}
