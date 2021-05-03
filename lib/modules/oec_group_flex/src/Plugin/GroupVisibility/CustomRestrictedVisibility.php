@@ -110,6 +110,9 @@ class CustomRestrictedVisibility extends RestrictedGroupVisibilityBase implement
 
     $form[$form_fields_container] = [
       '#type' => 'container',
+      '#element_validate' => [
+        [$this, 'validatePluginForm'],
+      ],
     ];
 
     // Specific email domains checkbox.
@@ -276,6 +279,30 @@ class CustomRestrictedVisibility extends RestrictedGroupVisibilityBase implement
   }
 
   /**
+   * Form validation for the whole container element.
+   *
+   * @param array $element
+   *   An associative array containing the properties of the element.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
+   */
+  public function validatePluginForm(array &$element, FormStateInterface $form_state) {
+    $form_values = $this->getFormStateValues($form_state);
+
+    if (empty($form_values)) {
+      return;
+    }
+
+    foreach (array_keys($form_values) as $key) {
+      // Clear form state value if visibility option checkbox is unchecked.
+      if ($form_state->isValueEmpty('oec_group_visibility_option_status_' . $key)) {
+        $form_state->setValue('oec_group_visibility_option_' . $key, NULL);
+      }
+    }
+
+  }
+
+  /**
    * Form element validation for restricted_email_domains field.
    *
    * @param array $element
@@ -287,6 +314,10 @@ class CustomRestrictedVisibility extends RestrictedGroupVisibilityBase implement
     $form_values = $this->getFormStateValues($form_state);
 
     if (empty($form_values[self::VISIBILITY_OPTION_RESTRICTED_EMAIL_DOMAINS])) {
+      return;
+    }
+
+    if ($form_state->isValueEmpty('oec_group_visibility_option_status_' . self::VISIBILITY_OPTION_RESTRICTED_EMAIL_DOMAINS)) {
       return;
     }
 
