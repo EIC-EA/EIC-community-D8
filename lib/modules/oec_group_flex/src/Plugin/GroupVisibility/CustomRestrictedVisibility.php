@@ -176,7 +176,6 @@ class CustomRestrictedVisibility extends RestrictedGroupVisibilityBase implement
       }
     }
     else {
-      // $this->setFormStateFromTempStore($form, $form_state);
       $this->setFormDefaultRestrictedUsers($form, $form_state);
       $this->setFormDefaultRestrictedEmailDomains($form, $form_state);
     }
