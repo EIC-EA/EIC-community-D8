@@ -10,7 +10,6 @@ use Drupal\group\Entity\Form\GroupForm as GroupFormBase;
 use Drupal\group\Entity\GroupContentInterface;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\group\Entity\GroupTypeInterface;
-use Drupal\group_flex\Plugin\GroupVisibilityInterface;
 use Drupal\oec_group_flex\Plugin\GroupVisibilityOptionsInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -81,6 +80,9 @@ class GroupForm extends GroupFormBase {
     /** @var \Drupal\group\Entity\GroupTypeInterface $groupType */
     $groupType = $group->getGroupType();
 
+    // Sets form state values from private tempstore.
+    $this->setFormStateValuesFromTempStore($form_state);
+
     // The group flex logic is enabled for this group type.
     if ($this->groupTypeFlex->hasFlexEnabled($groupType)) {
       $visibilityPlugins = $this->visibilityManager->getAllAsArrayForGroup();
@@ -96,8 +98,8 @@ class GroupForm extends GroupFormBase {
         // Initialize list of array options for the visibility radio buttons.
         $visibilityOptions = [];
 
-        // Loops through each group visibility plugins to set the labels for
-        // the radio buttons and the plugin forms if the plugin implements the
+        // Loops through each group visibility plugin to set the labels for
+        // the radio buttons and the plugin forms in case it implements the
         // interface GroupVisibilityOptionsInterface.
         foreach ($visibilityPlugins as $id => $pluginInstance) {
           $visibilityOptions[$id] = $pluginInstance->getGroupLabel($groupType);
@@ -122,11 +124,13 @@ class GroupForm extends GroupFormBase {
           $form['footer']['group_visibility']['#required'] = TRUE;
           $form['footer']['group_visibility']['#type'] = 'radios';
           $form['footer']['group_visibility']['#options'] = $visibilityOptions;
-          try {
-            $default = $this->groupFlex->getGroupVisibility($group);
+
+          // Sets default visibility from the form_state.
+          if ($form_state->hasValue('group_visibility')) {
+            $default = $form_state->getValue('group_visibility');
           }
-          catch (MissingDataException $e) {
-            $default = GroupVisibilityInterface::GROUP_FLEX_TYPE_VIS_PUBLIC;
+          else {
+            $default = $this->groupFlex->getGroupVisibility($group);
           }
           $form['footer']['group_visibility']['#default_value'] = $default;
         }
@@ -293,8 +297,7 @@ class GroupForm extends GroupFormBase {
       // their membership details. Also pass this info to the form state.
       $creatorMustComplete = $group_type->creatorMustCompleteMembership();
       if ($creatorMustComplete && $store->get("$store_id:step") === 2) {
-        $privateTempStore = \Drupal::service('tempstore.private');
-        $store = $privateTempStore->get('group_creator_flex');
+        $store = $this->privateTempStoreFactory->get('group_creator_flex');
         $store_id = $form_state->get('store_id');
 
         $formObject = $form_state->getFormObject();
@@ -326,6 +329,67 @@ class GroupForm extends GroupFormBase {
       'settings' => $this->groupFlexSettings,
       'group' => $this->entity,
     ];
+  }
+
+  /**
+   * Sets form state values from private tempstore.
+   *
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
+   */
+  protected function setFormStateValuesFromTempStore(FormStateInterface $form_state) {
+    $wizard_id = 'group_creator';
+    if ($form_state->get('group_wizard') && $form_state->get('group_wizard_id') === $wizard_id) {
+      $store_id = $form_state->get('store_id');
+      $store = $this->privateTempStoreFactory->get($wizard_id);
+
+      if (!($group_type = $this->entityTypeManager->getStorage('group_type')->load($store_id))) {
+        return FALSE;
+      }
+
+      if (!$group_type instanceof GroupTypeInterface) {
+        return FALSE;
+      }
+
+      // See if the group type is configured to ask the creator to fill out
+      // their membership details. Also pass this info to the form state.
+      $creatorMustComplete = $group_type->creatorMustCompleteMembership();
+      if ($creatorMustComplete && $store->get("$store_id:step") === 1) {
+        $store = $this->privateTempStoreFactory->get('group_creator_flex');
+        $store_id = $form_state->get('store_id');
+
+        $formObject = $form_state->getFormObject();
+
+        if (!$formObject instanceof EntityFormInterface) {
+          return FALSE;
+        }
+
+        $group = $formObject->getEntity();
+        if (!$group instanceof GroupInterface) {
+          return FALSE;
+        }
+
+        $group_visibility_settings = $store->get("$store_id:visibility");
+
+        if (isset($group_visibility_settings['plugin_id'])) {
+          $group_visibility_plugin = $this->visibilityManager->createInstance($group_visibility_settings['plugin_id']);
+
+          $form_state->setValue('group_visibility', $group_visibility_settings['plugin_id']);
+
+          // Sets form state values for RestrictedGroupVisibility plugins.
+          if ($group_visibility_plugin instanceof GroupVisibilityOptionsInterface) {
+            if (isset($group_visibility_settings['visibility_options'])) {
+              foreach ($group_visibility_plugin->getPluginFormElementsFieldNames() as $key => $option_field_name) {
+                if (in_array($key, array_keys($group_visibility_settings['visibility_options']))) {
+                  $form_state->setValue($option_field_name, $group_visibility_settings['visibility_options'][$key]);
+                }
+              }
+            }
+          }
+        }
+
+      }
+    }
   }
 
   /**
