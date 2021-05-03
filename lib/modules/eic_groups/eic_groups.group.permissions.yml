@@ -1,0 +1,3 @@
+access group search:
+  title: Search group
+  description: 'Allow users to search the group content'
