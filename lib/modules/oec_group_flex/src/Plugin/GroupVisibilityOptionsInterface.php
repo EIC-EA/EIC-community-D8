@@ -42,4 +42,12 @@ interface GroupVisibilityOptionsInterface {
    */
   public function groupAccess(GroupInterface $entity, $operation, AccountInterface $account);
 
+  /**
+   * Gets field names of all form elements of the plugin.
+   *
+   * @return array
+   *   Array with list of form field names (option_name => form_field_name).
+   */
+  public static function getPluginFormElementsFieldNames();
+
 }
