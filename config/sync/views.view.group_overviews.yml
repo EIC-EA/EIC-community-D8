@@ -773,7 +773,9 @@ display:
             group_items: {  }
           parse_mode: terms
           min_length: 2
-          fields: {  }
+          fields:
+            - content_field_body_fulltext
+            - content_title_fulltext
           plugin_id: search_api_fulltext
         content_type:
           id: content_type
