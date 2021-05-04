@@ -117,11 +117,27 @@ field_settings:
     dependencies:
       config:
         - field.storage.node.field_vocab_topics
+  content_status:
+    label: '[Content] Published'
+    datasource_id: 'entity:node'
+    property_path: status
+    type: boolean
+    dependencies:
+      module:
+        - node
   content_title:
     label: '[Content] Title'
     datasource_id: 'entity:node'
     property_path: title
     type: string
+    dependencies:
+      module:
+        - node
+  content_title_fulltext:
+    label: '[Content] Title - Fulltext'
+    datasource_id: 'entity:node'
+    property_path: title
+    type: text
     dependencies:
       module:
         - node
