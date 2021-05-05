@@ -25,7 +25,7 @@ reactions:
         provider: facets_summary
         label_display: '0'
         region: content
-        weight: '0'
+        weight: '-3'
         context_mapping: {  }
         custom_id: facets_summary_block_group_search_summary
         theme: eic_community
@@ -39,7 +39,7 @@ reactions:
         provider: system
         label_display: '0'
         region: content
-        weight: '0'
+        weight: '-1'
         context_mapping: {  }
         custom_id: system_main_block
         theme: eic_community
@@ -104,6 +104,20 @@ reactions:
         unique: 0
         context_id: group_search
         uuid: 56bcdb52-c2f7-49a6-a990-2c4fa40bc700
+      e6bfb557-f856-4e62-bda3-c0bf436010ab:
+        id: 'search_api_sorts_block:views_page:group_overviews__search_group'
+        label: 'Sort by'
+        provider: search_api_sorts
+        label_display: visible
+        region: content
+        weight: '-2'
+        context_mapping: {  }
+        custom_id: search_api_sorts_block_views_page_group_overviews__search_group
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: group_search
+        uuid: e6bfb557-f856-4e62-bda3-c0bf436010ab
     id: blocks
     saved: false
     uuid: 8505c4ba-7948-4741-9628-279e035d4c6e

@@ -1,0 +1,11 @@
+uuid: c8bac428-e3a4-45ad-98ab-7029de3c6478
+langcode: en
+status: true
+dependencies: {  }
+id: views_page---group_overviews__search_group_search_api_relevance
+display_id: views_page---group_overviews__search_group
+field_identifier: search_api_relevance
+default_sort: true
+default_order: desc
+label: Relevance
+weight: 0
