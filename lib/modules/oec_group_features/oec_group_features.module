@@ -26,11 +26,13 @@ function oec_group_features_entity_base_field_info(EntityTypeInterface $entity_t
     }
 
     // Add our extra field to the Group entity type.
+    // @todo Switch the 'list_string' a 'map' field type to avoid having an
+    // extra table for this.
     $fields['features'] = BaseFieldDefinition::create('list_string')
       ->setLabel(t('Features'))
       ->setDescription(t('Select the features you would like to enable.'))
       ->setDisplayOptions('form', [
-        'type' => 'options_select',
+        'type' => 'options_buttons',
         'settings' => [
           'display_label' => TRUE,
         ],
