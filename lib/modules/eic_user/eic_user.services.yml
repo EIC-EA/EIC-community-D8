@@ -1,0 +1,4 @@
+services:
+  eic_user.helper:
+    class: Drupal\eic_user\UserHelper
+    arguments: ['@entity_type.manager']
