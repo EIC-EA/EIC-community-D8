@@ -20,7 +20,7 @@
   image: group_values.image|default({}),
   parent: {
     link: {
-      path: '/' ~ current_language_id|to_internal_language_id ~ '/groups',
+      path: back_url,
       label: 'All groups'|t,
     }
   }

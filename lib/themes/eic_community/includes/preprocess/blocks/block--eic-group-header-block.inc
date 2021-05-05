@@ -5,6 +5,7 @@
  * Contains implementation for hook_preprocess_block() for eic_group_header.
  */
 
+use Drupal\Core\Url;
 use Drupal\eic_community\ValueObject\ImageValueObject;
 
 /**
@@ -23,4 +24,8 @@ function eic_community_preprocess_eic_group_header_block(array &$variables) {
       'alt' => $image_item->getAlt(),
     ];
   }
+
+  // Adds url to navigate back to the list of groups.
+  $back_url = Url::fromRoute('view.global_overviews.page_1');
+  $variables['back_url'] = $back_url->getInternalPath();
 }
