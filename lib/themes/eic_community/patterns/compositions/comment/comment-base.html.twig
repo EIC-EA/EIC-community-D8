@@ -21,7 +21,7 @@
           {% if author %}
             {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with {
               link: {
-                label: author.author,
+                label: author.name,
                 path: author.path,
                 icon_position: 'before',
                 type: 'standalone',
@@ -45,7 +45,7 @@
             {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with {
               link: {
                 type: 'standalone',
-                label: comment_origin.author.author,
+                label: comment_origin.author.name,
                 path: '#' ~ comment_origin.comment_id,
                 icon_position: 'before',
               },

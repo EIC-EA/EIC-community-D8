@@ -8,7 +8,7 @@
       <div class="ecl-discussion-thread__image-wrapper">
         {% include "@theme/patterns/components/author.html.twig" with {
           image: author.image,
-          author: author.author,
+          name: author.name,
           size: 'medium',
           extra_classes: 'ecl-author--is-minimal ecl-discussion-thread__author-image',
         } only %}
@@ -97,13 +97,13 @@
   {% if author or timestamp or stats %}
     <div class="ecl-discussion-thread__footer">
       <div class="ecl-discussion-thread__meta">
-        {% if author.author %}
+        {% if author.name %}
           <span class="ecl-discussion-thread__started-by-label">
             {{ started_by_label }}
           </span>
           {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with {
             link: {
-              label: author.author,
+              label: author.name,
               path: author.path,
               type: 'standalone',
             },

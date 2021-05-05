@@ -31,7 +31,7 @@
           {% include "@theme/patterns/components/author.html.twig" with owner|default({})|merge({
             extra_classes: 'ecl-teaser__meta',
             size: 'tiny',
-            author: owner.label,
+            author: owner.name,
             image: owner.image,
             icon_file_path: icon_file_path,
           }) only %}

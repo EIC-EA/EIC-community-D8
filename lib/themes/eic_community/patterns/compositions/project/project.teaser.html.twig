@@ -46,7 +46,7 @@
         {% if coordinator %}
           {% include "@theme/patterns/components/author.html.twig" with {
             image: coordinator.image,
-            author: coordinator.label,
+            author: coordinator.name,
             size: 'tiny',
           } only %}
         {% endif %}
