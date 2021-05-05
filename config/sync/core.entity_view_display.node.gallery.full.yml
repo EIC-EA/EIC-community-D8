@@ -1,0 +1,82 @@
+uuid: 2fc0fb05-9b7b-4812-9564-d30d2ba90066
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_display.comment.node_comment.default
+    - core.entity_view_mode.node.full
+    - field.field.node.gallery.field_body
+    - field.field.node.gallery.field_comments
+    - field.field.node.gallery.field_photos
+    - field.field.node.gallery.field_vocab_geo
+    - field.field.node.gallery.field_vocab_topics
+    - node.type.gallery
+  module:
+    - comment
+    - text
+    - user
+id: node.gallery.full
+targetEntityType: node
+bundle: gallery
+mode: full
+content:
+  field_body:
+    type: text_default
+    weight: 4
+    region: content
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+  field_comments:
+    type: comment_default
+    weight: 6
+    region: content
+    label: above
+    settings:
+      view_mode: default
+      pager_id: 0
+    third_party_settings: {  }
+  field_photos:
+    type: entity_reference_entity_view
+    weight: 5
+    region: content
+    label: above
+    settings:
+      link: true
+      view_mode: default
+    third_party_settings: {  }
+  field_vocab_geo:
+    type: entity_reference_label
+    weight: 2
+    region: content
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+  field_vocab_topics:
+    type: entity_reference_label
+    weight: 3
+    region: content
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+  links:
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  published_at:
+    type: timestamp
+    region: content
+    weight: 1
+    label: above
+    settings:
+      date_format: medium
+      custom_date_format: ''
+      timezone: ''
+    third_party_settings: {  }
+hidden:
+  extra_field_eic_theme_helper_short_title_with_fallback: true
+  langcode: true
+  search_api_excerpt: true

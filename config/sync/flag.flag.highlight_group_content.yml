@@ -1,0 +1,34 @@
+uuid: ee889ef9-0591-484b-a763-48f5e66087c3
+langcode: en
+status: true
+dependencies:
+  module:
+    - group
+id: highlight_group_content
+label: 'Highlight (group content)'
+bundles:
+  - group-group_node-discussion
+  - group-group_node-document
+entity_type: group_content
+global: false
+weight: 0
+flag_short: 'Highlight this item'
+flag_long: ''
+flag_message: ''
+unflag_short: 'Unhighlight this item'
+unflag_long: ''
+unflag_message: ''
+unflag_denied_text: ''
+flood_control_active: false
+flood_control_limit: 0
+flood_control_window: 0
+flag_type: 'entity:group_content'
+link_type: ajax_link
+flagTypeConfig:
+  show_in_links: {  }
+  show_as_field: true
+  show_on_form: false
+  show_contextual_link: false
+  extra_permissions:
+    owner: '0'
+linkTypeConfig: {  }

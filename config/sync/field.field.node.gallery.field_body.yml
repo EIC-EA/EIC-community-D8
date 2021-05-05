@@ -1,14 +1,14 @@
-uuid: 6489907c-e4f0-4ebd-a1f9-d7277ffe91e3
+uuid: 24ca3e45-b1b4-478f-aa57-016634f193ab
 langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.node.body
+    - field.storage.node.field_body
     - node.type.gallery
   module:
     - text
-id: node.gallery.body
-field_name: body
+id: node.gallery.field_body
+field_name: field_body
 entity_type: node
 bundle: gallery
 label: Body
@@ -17,7 +17,5 @@ required: false
 translatable: true
 default_value: {  }
 default_value_callback: ''
-settings:
-  display_summary: false
-  required_summary: false
-field_type: text_with_summary
+settings: {  }
+field_type: text_long

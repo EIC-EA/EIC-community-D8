@@ -68,6 +68,16 @@ content:
     third_party_settings: {  }
     type: entity_reference_label
     region: content
+  flag_follow_content:
+    weight: 10
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+  flag_highlight_content:
+    weight: 10
+    settings: {  }
+    third_party_settings: {  }
+    region: content
   links:
     weight: 100
     region: content

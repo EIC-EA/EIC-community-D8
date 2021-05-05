@@ -3,7 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.field.node.gallery.body
+    - field.field.node.gallery.field_body
     - field.field.node.gallery.field_comments
     - field.field.node.gallery.field_photos
     - field.field.node.gallery.field_vocab_geo
@@ -23,22 +23,20 @@ targetEntityType: node
 bundle: gallery
 mode: default
 content:
-  body:
-    weight: 1
-    settings:
-      rows: 9
-      summary_rows: 3
-      placeholder: ''
-      show_summary: false
-    third_party_settings: {  }
-    type: text_textarea_with_summary
-    region: content
   created:
     type: datetime_timestamp
     weight: 7
     region: content
     settings: {  }
     third_party_settings: {  }
+  field_body:
+    weight: 1
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+    type: text_textarea
+    region: content
   field_comments:
     weight: 18
     settings: {  }

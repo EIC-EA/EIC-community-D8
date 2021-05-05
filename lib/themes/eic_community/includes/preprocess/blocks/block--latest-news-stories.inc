@@ -11,11 +11,9 @@ use Drupal\eic_community\ValueObject\ImageValueObject;
 /**
  * Implements hook_preprocess_block() for latest_news_stories.
  */
-function eic_community_preprocess_block__latest_news_stories(&$variables) {
+function eic_community_preprocess_block__latest_news_stories(&$variables, &$cache_tags = []) {
   $block_content = $variables['content']['#block_content'];
 
-  // Initializes cache tags.
-  $cache_tags = $block_content->getCacheTags();
   $nodes = [];
 
   // Adds News/Stories to the array of nodes to process.

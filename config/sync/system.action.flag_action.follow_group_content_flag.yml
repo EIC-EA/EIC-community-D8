@@ -1,0 +1,15 @@
+uuid: 6d4c78a3-784e-469b-b54d-d684602b96b5
+langcode: en
+status: true
+dependencies:
+  config:
+    - flag.flag.follow_group_content
+  module:
+    - flag
+id: flag_action.follow_group_content_flag
+label: 'Follow this item'
+type: group_content
+plugin: 'flag_action:follow_group_content_flag'
+configuration:
+  flag_id: follow_group_content
+  flag_action: flag
