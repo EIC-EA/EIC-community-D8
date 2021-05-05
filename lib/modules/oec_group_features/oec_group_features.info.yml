@@ -1,0 +1,9 @@
+name: OEC Group Features
+type: module
+description: The description.
+package: Open Europa Communities
+core: 8.x
+core_version_requirement: ^8 || ^9
+php: 7.3
+dependencies:
+  - group:group

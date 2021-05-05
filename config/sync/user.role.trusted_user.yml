@@ -17,6 +17,7 @@ permissions:
   - 'edit own image media'
   - 'flag recommend_group'
   - 'post comments'
+  - 'skip comment approval'
   - 'unflag recommend_group'
   - 'use groups transition create_new_draft'
   - 'use groups transition create_new_group'

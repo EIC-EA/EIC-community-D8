@@ -497,6 +497,7 @@ display:
         filters: false
         filter_groups: false
         cache: false
+        access: false
       filters:
         search_api_datasource:
           id: search_api_datasource
@@ -638,14 +639,20 @@ display:
       display_description: ''
       cache:
         type: none
+      access:
+        type: group_permission
+        options:
+          group_permission: 'access discussions overview'
     cache_metadata:
       max-age: -1
       contexts:
         - 'languages:language_content'
         - 'languages:language_interface'
         - purl
+        - route.group
         - url
         - url.query_args
+        - user.group_permissions
         - 'user.node_grants:view'
       tags:
         - 'config:search_api.index.global'
