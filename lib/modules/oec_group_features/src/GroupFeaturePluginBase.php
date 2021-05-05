@@ -93,7 +93,7 @@ abstract class GroupFeaturePluginBase extends PluginBase implements GroupFeature
   protected function disableMenuItem(MenuLinkContent $menu_item) {
     if ($existing_menu_item = $this->getExistingMenuItem($menu_item)) {
       $existing_menu_item->enabled->value = 0;
-      if (!$this->saveMenuItem($menu_item)) {
+      if (!$this->saveMenuItem($existing_menu_item)) {
         return FALSE;
       }
     }
