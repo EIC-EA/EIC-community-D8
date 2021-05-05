@@ -15,7 +15,7 @@ id: group
 label: Group
 description: ''
 creator_membership: true
-creator_wizard: true
+creator_wizard: false
 creator_roles:
   - group-owner
 new_revision: true
