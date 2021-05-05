@@ -1,0 +1,4 @@
+access discussions overview:
+  title: 'Access Discussions overview'
+  description: 'Gives access to the Discussions overview.'
+  restrict access: FALSE

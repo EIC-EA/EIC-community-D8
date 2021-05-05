@@ -1,0 +1,4 @@
+services:
+  plugin.manager.group_feature:
+    class: Drupal\oec_group_features\GroupFeaturePluginManager
+    parent: default_plugin_manager
