@@ -1,3 +1,6 @@
+access group search:
+  title: Search group
+  description: 'Allow users to search the group content'
 access discussions overview:
   title: 'Access Discussions overview'
   description: 'Gives access to the Discussions overview.'
