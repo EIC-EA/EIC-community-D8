@@ -90,6 +90,11 @@ function eic_community_preprocess_comment(&$variables) {
   if ($variables['comment']['can_remove_comment']) {
     $variables['comment']['remove_path'] = $comment->toUrl('delete-form');
   }
+
+  $flag_link_builder = \Drupal::service('flag.link_builder');
+  $link = $flag_link_builder->build('comment', $cid, 'like_comment');
+
+  $variables['comment']['flag_link'] = $link;
 }
 
 /**
@@ -121,4 +126,3 @@ function comment_reply_count($cid, $nid, $entity_type) {
     ->execute();
   return $result;
 }
-
