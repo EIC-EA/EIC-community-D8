@@ -77,12 +77,14 @@ class EntityOperations implements ContainerInjectionInterface {
    */
   public function groupInsert(EntityInterface $entity) {
     $messages = [];
+    $author_id = $entity->get('uid')->getValue()[0]['target_id'];
+
     // Prepare the message to the requester.
     $message = $this->entityTypeManager->getStorage('message')->create([
       'template' => 'notify_group_requested',
-      'uid' => $entity->get('uid')->getValue()[0]['target_id'],
+      'uid' => $author_id,
+      'field_group_ref' => ['target_id' => $entity->id()],
     ]);
-    $message->set('field_group_ref', $entity->id());
     $messages[] = $message;
 
     // Prepare messages to SA/CA.
@@ -90,6 +92,8 @@ class EntityOperations implements ContainerInjectionInterface {
       $message = $this->entityTypeManager->getStorage('message')->create([
         'template' => 'notify_group_request_submitted',
         'uid' => $uid,
+        'field_group_ref' => ['target_id' => $entity->id()],
+        'field_event_executing_user' => ['target_id' => $author_id],
       ]);
       $messages[] = $message;
     }
@@ -118,6 +122,9 @@ class EntityOperations implements ContainerInjectionInterface {
       return;
     }
 
+    $messages = [];
+    $author_id = $entity->get('uid')->getValue()[0]['target_id'];
+
     // Get the current and original Moderation states.
     $current_state = $entity->get('moderation_state')->getValue()[0]['value'];
     $original_state = $entity->original->get('moderation_state')->getValue()[0]['value'];
@@ -126,24 +133,22 @@ class EntityOperations implements ContainerInjectionInterface {
     $delimiter = '-->';
     $workflow_transition = $original_state . $delimiter . $current_state;
 
-    $message = NULL;
     switch ($workflow_transition) {
       // Group has been approved.
       case GroupsModerationHelper::GROUP_PENDING_STATE . $delimiter . GroupsModerationHelper::GROUP_DRAFT_STATE:
         $message = $this->entityTypeManager->getStorage('message')->create([
           'template' => 'notify_group_request_approved',
-          'uid' => $entity->get('uid')->getValue()[0]['target_id'],
+          'uid' => $author_id,
+          'field_group_ref' => ['target_id' => $entity->id()],
         ]);
-        $message->set('field_group_ref', $entity->id());
+        $messages[] = $message;
         break;
 
     }
 
-    if ($message) {
+    foreach ($messages as $message) {
       try {
-        // Save the message and create the message notify queue item.
-        // @todo check if this type of message should live/stay in the DB.
-        $message->save();
+        // Create the message notify queue item.
         $this->eicMessagesHelper->queueMessageNotification($message);
       }
       catch (\Exception $e) {
