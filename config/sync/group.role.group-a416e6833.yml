@@ -16,4 +16,5 @@ group_type: group
 permissions_ui: false
 permissions:
   - 'access group content menu overview'
+  - 'access group search'
   - 'manage group_content_menu'

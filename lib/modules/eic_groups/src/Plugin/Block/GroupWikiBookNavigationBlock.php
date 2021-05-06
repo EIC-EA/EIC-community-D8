@@ -108,7 +108,7 @@ class GroupWikiBookNavigationBlock extends BookNavigationBlock {
       return [];
     }
 
-    $data = $this->bookManager->bookTreeAllData($node->book['bid'], $node->book);
+    $data = $this->bookManager->bookTreeAllData($node->book['bid']);
     $book_data = reset($data);
 
     if (empty($book_data['below'])) {
