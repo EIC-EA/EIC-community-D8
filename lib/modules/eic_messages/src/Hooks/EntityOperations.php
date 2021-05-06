@@ -9,6 +9,7 @@ use Drupal\Core\Logger\LoggerChannelTrait;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\eic_groups\GroupsModerationHelper;
 use Drupal\eic_messages\MessageHelper;
+use Drupal\eic_user\UserHelper;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -36,16 +37,26 @@ class EntityOperations implements ContainerInjectionInterface {
   protected $eicMessagesHelper;
 
   /**
+   * The EIC User helper service.
+   *
+   * @var \Drupal\eic_user\UserHelper
+   */
+  protected $eicUserHelper;
+
+  /**
    * Constructs a new EntityOperations object.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
    * @param \Drupal\eic_messages\MessageHelper $eic_messages_helper
    *   The EIC Message helper service.
+   * @param \Drupal\eic_user\UserHelper $eic_user_helper
+   *   The EIC User helper service.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, MessageHelper $eic_messages_helper) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, MessageHelper $eic_messages_helper, UserHelper $eic_user_helper) {
     $this->entityTypeManager = $entity_type_manager;
     $this->eicMessagesHelper = $eic_messages_helper;
+    $this->eicUserHelper = $eic_user_helper;
   }
 
   /**
@@ -54,7 +65,8 @@ class EntityOperations implements ContainerInjectionInterface {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('entity_type.manager'),
-      $container->get('eic_messages.helper')
+      $container->get('eic_messages.helper'),
+      $container->get('eic_user.helper')
     );
   }
 
@@ -64,23 +76,28 @@ class EntityOperations implements ContainerInjectionInterface {
    * Sends out message notifications upon group creation.
    */
   public function groupInsert(EntityInterface $entity) {
-    $message_types = [
-      'notify_group_requested',
-      'notify_group_request_submitted',
-    ];
+    $messages = [];
+    // Prepare the message to the requester.
+    $message = $this->entityTypeManager->getStorage('message')->create([
+      'template' => 'notify_group_requested',
+      'uid' => $entity->get('uid')->getValue()[0]['target_id'],
+    ]);
+    $message->set('field_group_ref', $entity->id());
+    $messages[] = $message;
 
-    foreach ($message_types as $message_type) {
-      // Create the message.
+    // Prepare messages to SA/CA.
+    foreach ($this->eicUserHelper->getSitePowerUsers() as $uid) {
       $message = $this->entityTypeManager->getStorage('message')->create([
-        'template' => $message_type,
-        'uid' => $entity->get('uid')->getValue()[0]['target_id'],
+        'template' => 'notify_group_request_submitted',
+        'uid' => $uid,
       ]);
-      $message->set('field_group_ref', $entity->id());
+      $messages[] = $message;
+    }
 
+    foreach ($messages as $message) {
       try {
-        // Save the message and create the message notify queue item.
+        // Create the message notify queue item.
         // @todo check if this type of message should live/stay in the DB.
-        $message->save();
         $this->eicMessagesHelper->queueMessageNotification($message);
       }
       catch (\Exception $e) {

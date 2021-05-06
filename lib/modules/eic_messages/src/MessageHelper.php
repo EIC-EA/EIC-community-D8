@@ -6,7 +6,6 @@ use Drupal\Core\Logger\LoggerChannelTrait;
 use Drupal\Core\Queue\QueueFactory;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\message\Entity\Message;
-use Drupal\eic_user\UserHelper;
 
 /**
  * MessageHelper service that provides helper functions for messages.
@@ -24,23 +23,13 @@ class MessageHelper {
   protected $notifyQueue;
 
   /**
-   * The EIC user helper class.
-   *
-   * @var \Drupal\eic_user\UserHelper
-   */
-  protected $eicUserHelper;
-
-  /**
    * Constructs a new MessageHelper object.
    *
    * @param \Drupal\Core\Queue\QueueFactory $queue_factory
    *   The queue factory.
-   * @param \Drupal\eic_user\UserHelper $eic_user_helper
-   *   The EIC user helper.
    */
-  public function __construct(QueueFactory $queue_factory, UserHelper $eic_user_helper) {
+  public function __construct(QueueFactory $queue_factory) {
     $this->notifyQueue = $queue_factory->get('eic_message_notify_queue');
-    $this->eicUserHelper = $eic_user_helper;
   }
 
   /**
@@ -52,7 +41,14 @@ class MessageHelper {
   public function queueMessageNotification(Message $message) {
     try {
       // Create the message notify queue item.
-      $this->notifyQueue->createItem(['mid' => $message->id()]);
+      if (!empty($message->id())) {
+        // If this is a saved messaged, just pass the mid.
+        $this->notifyQueue->createItem(['mid' => $message->id()]);
+      }
+      else {
+        // Otherwise pass the message object.
+        $this->notifyQueue->createItem(['message' => $message]);
+      }
     }
     catch (\Exception $e) {
       $logger = $this->getLogger('eic_messages');

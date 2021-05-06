@@ -1,4 +1,4 @@
 services:
   eic_messages.helper:
     class: Drupal\eic_messages\MessageHelper
-    arguments: ['@queue', '@eic_user.helper']
+    arguments: ['@queue']
