@@ -6,20 +6,6 @@
  */
 
 /**
- * Implements hook_install().
- */
-function oec_group_flex_install() {
-  \Drupal::messenger()->addStatus(__FUNCTION__);
-}
-
-/**
- * Implements hook_uninstall().
- */
-function oec_group_flex_uninstall() {
-  \Drupal::messenger()->addStatus(__FUNCTION__);
-}
-
-/**
  * Implements hook_schema().
  */
 function oec_group_flex_schema() {
