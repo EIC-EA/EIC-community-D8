@@ -3,8 +3,14 @@
 /**
  * @file
  * Primary module hooks for OEC Group Flex module.
- *
- * @DCG
- * This file is no longer required in Drupal 8.
- * @see https://www.drupal.org/node/2217931
  */
+
+/**
+ * Implements hook_group_flex_group_joining_method_info_alter().
+ */
+function oec_group_flex_group_flex_group_joining_method_info_alter(array &$definitions) {
+  // Remove the standard join_button provided by group flex.
+  if (isset($definitions['join_button'])) {
+    unset($definitions['join_button']);
+  }
+}
