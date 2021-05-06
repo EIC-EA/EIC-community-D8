@@ -36,7 +36,8 @@ class MessageHelper {
    * Adds a message to the notification queue.
    *
    * @param \Drupal\message\Entity\Message $message
-   *   The message object to be sent. This message needs to be saved beforehand.
+   *   The message object to be sent. The message does not need to be saved in
+   *   the database.
    */
   public function queueMessageNotification(Message $message) {
     try {
