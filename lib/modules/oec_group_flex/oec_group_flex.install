@@ -1,0 +1,50 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the OEC Group Flex module.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function oec_group_flex_schema() {
+  $schema['oec_group_visibility'] = [
+    'description' => 'Stores group visibility information.',
+    'fields' => [
+      'id' => [
+        'type' => 'serial',
+        'not null' => TRUE,
+        'description' => 'Primary Key: Unique record ID.',
+      ],
+      'gid' => [
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'The group ID.',
+      ],
+      'type' => [
+        'type' => 'varchar_ascii',
+        'length' => 64,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'The Group visibility plugin id.',
+      ],
+      'options' => [
+        'type' => 'blob',
+        'not null' => TRUE,
+        'size' => 'big',
+        'description' => 'The group visibility options of the item.',
+        'serialize' => TRUE,
+      ],
+    ],
+    'primary key' => ['id'],
+    'indexes' => [
+      'type' => ['type'],
+      'gid' => ['gid'],
+    ],
+  ];
+
+  return $schema;
+}

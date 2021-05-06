@@ -8,3 +8,79 @@
  * This file is no longer required in Drupal 8.
  * @see https://www.drupal.org/node/2217931
  */
+
+use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\group\Entity\GroupInterface;
+use Drupal\oec_group_flex\Entity\Form\GroupForm;
+use Drupal\oec_group_flex\Plugin\GroupVisibilityOptionsInterface;
+
+/**
+ * Implements hook_entity_type_alter().
+ *
+ * This overrides the Group(Type) Form provided by the Group module.
+ */
+function oec_group_flex_entity_type_alter(array &$entity_types) {
+  $groupHandlerClasses = $entity_types['group']->getHandlerClasses();
+  $formHandlerClasses = $groupHandlerClasses['form'];
+  $formHandlerClasses['add'] = GroupForm::class;
+  $formHandlerClasses['edit'] = GroupForm::class;
+  $entity_types['group']->setHandlerClass('form', $formHandlerClasses);
+}
+
+/**
+ * Implements hook_form_BASE_FORM_ID_alter().
+ *
+ * Alters the step 2 form of a group creation and removes submit action from
+ * declared by group_flex module. The submit will now be handled in the
+ * OECGroupForm class.
+ */
+function oec_group_flex_form_group_content_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  $wizard_id = 'group_creator';
+  if ($form_state->get('group_wizard') && $form_state->get('group_wizard_id') === $wizard_id) {
+    foreach ($form['actions']['submit']['#submit'] as $key => $value) {
+      if ($value === '_group_flex_form_group_step2_form_submit') {
+        unset($form['actions']['submit']['#submit'][$key]);
+        break;
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_entity_access().
+ */
+function oec_group_flex_entity_access(EntityInterface $entity, $operation, AccountInterface $account) {
+  if ($entity instanceof GroupInterface) {
+    /** @var \Drupal\group_flex\Plugin\GroupVisibilityManager $group_visibility_plugin_manager */
+    $group_visibility_plugin_manager = \Drupal::service('plugin.manager.group_visibility');
+
+    /** @var \Drupal\oec_group_flex\GroupVisibilityDatabaseStorageInterface $group_visibility_storage */
+    $group_visibility_storage = \Drupal::service('oec_group_flex.group_visibility.storage');
+
+    if ($group_visibility_record = $group_visibility_storage->load($entity->id())) {
+      $group_visibility_plugin = $group_visibility_plugin_manager->createInstance($group_visibility_record->getType());
+
+      if ($group_visibility_plugin instanceof GroupVisibilityOptionsInterface) {
+        return $group_visibility_plugin->groupAccess($entity, $operation, $account);
+      }
+    }
+  }
+
+  return AccessResult::neutral();
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_delete().
+ */
+function oec_group_flex_group_delete(EntityInterface $entity) {
+  /** @var \Drupal\oec_group_flex\GroupVisibilityDatabaseStorageInterface $group_visibility_storage */
+  $group_visibility_storage = \Drupal::service('oec_group_flex.group_visibility.storage');
+
+  // Deletes the group visibility record entry from database.
+  if ($group_visibility_record = $group_visibility_storage->load($entity->id())) {
+    $group_visibility_storage->delete([$group_visibility_record]);
+  }
+}
