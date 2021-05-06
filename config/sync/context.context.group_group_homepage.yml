@@ -35,7 +35,7 @@ reactions:
         id: 'views_block:group_discussions-block_1'
         label: ''
         provider: views
-        label_display: visible
+        label_display: '0'
         views_label: ''
         items_per_page: none
         region: content
@@ -51,7 +51,7 @@ reactions:
         id: 'views_block:group_documents-block_1'
         label: ''
         provider: views
-        label_display: visible
+        label_display: '0'
         views_label: ''
         items_per_page: none
         region: content
@@ -112,7 +112,7 @@ reactions:
         id: 'views_block:group_related_groups-block_related_groups'
         label: ''
         provider: views
-        label_display: visible
+        label_display: '0'
         views_label: ''
         items_per_page: none
         region: content
