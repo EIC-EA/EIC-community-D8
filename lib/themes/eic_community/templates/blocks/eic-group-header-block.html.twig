@@ -9,10 +9,18 @@
  *   - type: The group bundle machine name.
  *   - title: The title of the group.
  *   - description: The description of the group.
+ *   - actions: the actions the user can do in the group
+ *   - stats: statistics of the group.
+ *   - tags: for now only the private/public visibility of the group
  *
  * @see template_preprocess_eic_group_header_block()
  */
 #}
+{% block header %}
+  {{ title_prefix }}
+  {{ title_suffix }}
+{% endblock %}
+
 {% include "@theme/patterns/compositions/editorial-header.html.twig" with {
   icon_file_path: eic_icon_path,
   title: group_values.title,
@@ -23,5 +31,8 @@
       path: back_url,
       label: 'All groups'|t,
     }
-  }
+  },
+  actions: group_values.actions,
+  stats: group_values.stats,
+  tags: group_values.tags
 } only %}

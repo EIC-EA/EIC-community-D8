@@ -25,7 +25,27 @@ function eic_community_preprocess_eic_group_header_block(array &$variables) {
     ];
   }
 
+  // @todo replace the hardcoded items with structure coming form operation_links.
+  $actions = [
+    [
+      'label' => t('Post content'),
+      'items' => [],
+    ],
+  ];
+
+  foreach ($variables['group_values']['operation_links'] as $action) {
+    $actions[0]['items'][]['link'] = [
+      'label' => $action['title'],
+      'path' => $action['url'],
+    ];
+  }
+
+  $variables['group_values']['actions'] = $actions;
+  // @todo add content from module for these sections.
+  $variables['group_values']['stats'] = [];
+  $variables['group_values']['tags'] = [];
   // Adds url to navigate back to the list of groups.
   $back_url = Url::fromRoute('view.global_overviews.page_1');
   $variables['back_url'] = $back_url->getInternalPath();
+
 }

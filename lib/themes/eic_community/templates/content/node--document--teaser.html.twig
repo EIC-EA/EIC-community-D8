@@ -1,0 +1,15 @@
+{% extends "@eic_community/content/node.html.twig" %}
+{% set display_submitted = false %}
+{% set has_wrapper = false %}
+
+{% block content %}
+  <div {{ attributes }}>
+  {{ title_prefix }}
+  {{ title_suffix }}
+  {% include "@theme/patterns/components/attachment.html.twig" with document_item|default({})|merge({
+    title: label|default(''),
+    path: url,
+  }) %}
+  </div>
+{% endblock %}
+

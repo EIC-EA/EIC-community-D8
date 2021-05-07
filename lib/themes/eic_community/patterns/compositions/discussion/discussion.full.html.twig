@@ -23,7 +23,7 @@
           {% if author %}
             <div class="ecl-editorial-article__meta-item">
               {% include "@theme/patterns/components/author.html.twig" with {
-                author: author.author,
+                author: author.name,
                 path: author.path,
                 image: author.image,
                 extra_classes: 'ecl-editorial-article__author',

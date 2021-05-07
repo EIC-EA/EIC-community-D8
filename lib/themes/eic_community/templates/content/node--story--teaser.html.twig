@@ -10,15 +10,14 @@
 {% set display_submitted = false %}
 {% set has_wrapper = false %}
 
-{% block header %}
-  {{ title_prefix }}
-  {{ title_suffix }}
-{% endblock %}
-
 {% block content %}
-  {% include "@theme/patterns/compositions/story/story.teaser.html.twig" with story_item|default({})|merge({
-    title: label|default(''),
-    description: node.field_introduction.value|default(''),
-    path: url,
-  }) %}
+  <div {{ attributes }}>
+    {{ title_prefix }}
+    {{ title_suffix }}
+    {% include "@theme/patterns/compositions/story/story.teaser.html.twig" with story_item|default({})|merge({
+      title: label|default(''),
+      description: node.field_introduction.value|default(''),
+      path: url,
+    }) %}
+  </div>
 {% endblock %}

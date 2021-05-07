@@ -1,0 +1,15 @@
+<div {{ attributes }}>
+{% block header %}
+  {{ title_prefix }}
+  {{ title_suffix }}
+{% endblock %}
+
+{% block content %}
+  {% include "@theme/patterns/compositions/group/group.teaser.html.twig" with group_item|default({})|merge({
+    title: label|default(''),
+    description: node.field_introduction.value|default(''),
+    path: url,
+    extra_classes: 'ecl-teaser--as-card ecl-teaser--as-card-grey',
+  }) %}
+{% endblock %}
+</div>
