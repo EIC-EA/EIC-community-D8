@@ -87,8 +87,21 @@ class MessageNotifyQueueWorker extends QueueWorkerBase implements ContainerFacto
    * {@inheritdoc}
    */
   public function processItem($data) {
-    if ($message = Message::load($data['mid'])) {
-      $this->notifier->send($message, [], 'email');
+    // Get the message.
+    $message = NULL;
+    $conf = [];
+    if (!empty($data['mid'])) {
+      $message = Message::load($data['mid']);
+    }
+    elseif ($data['message']) {
+      $message = $data['message'];
+      // If message is not saved, avoid saving it in the postSend() method.
+      $conf['save on success'] = FALSE;
+    }
+
+    // Send the message.
+    if ($message) {
+      $this->notifier->send($message, $conf, 'email');
     }
   }
 

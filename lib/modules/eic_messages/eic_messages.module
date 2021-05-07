@@ -5,3 +5,21 @@
  * Primary module hooks for EIC Messages module.
  */
 
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\eic_messages\Hooks\EntityOperations;
+
+/**
+ * Implements hook_ENTITY_TYPE_insert().
+ */
+function eic_messages_group_insert(EntityInterface $entity) {
+  \Drupal::classResolver(EntityOperations::class)
+    ->groupInsert($entity);
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_update().
+ */
+function eic_messages_group_update(EntityInterface $entity) {
+  \Drupal::classResolver(EntityOperations::class)
+    ->groupUpdate($entity);
+}
