@@ -7,7 +7,9 @@
 
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\eic_groups\Hooks\EntityOperations;
+use Drupal\eic_groups\Hooks\FormAlter;
 
 /**
  * Implements hook_theme().
@@ -21,6 +23,14 @@ function eic_groups_theme($existing, $type, $theme, $path) {
       ],
     ],
   ];
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function eic_groups_form_group_group_add_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  \Drupal::classResolver(FormAlter::class)
+    ->groupGroupAddForm($form, $form_state);
 }
 
 /**
