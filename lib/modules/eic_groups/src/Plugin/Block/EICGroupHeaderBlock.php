@@ -107,6 +107,13 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
       'url.path',
     ]);
 
+    $operation_links = $this->eicGroupsHelper->getGroupOperationLinks($group, ['node'], $cacheable_metadata);
+
+    // Removes operation link of wiki page group content.
+    if (isset($operation_links['gnode-create-wiki_page'])) {
+      unset($operation_links['gnode-create-wiki_page']);
+    }
+
     $build['content'] = [
       '#theme' => 'eic_group_header_block',
       '#group' => $group,
@@ -115,7 +122,7 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
         'bundle' => $group->bundle(),
         'title' => $group->label(),
         'description' => $group->get('field_body')->value,
-        'operation_links' => $this->eicGroupsHelper->getGroupOperationLinks($group, $cacheable_metadata),
+        'operation_links' => $operation_links,
       ],
     ];
 
