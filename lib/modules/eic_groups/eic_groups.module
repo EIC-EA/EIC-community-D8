@@ -7,6 +7,7 @@
 
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\eic_groups\Hooks\EntityOperations;
 
 /**
@@ -37,4 +38,18 @@ function eic_groups_group_insert(EntityInterface $entity) {
 function eic_groups_node_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
   \Drupal::classResolver(EntityOperations::class)
     ->nodeView($build, $entity, $display, $view_mode);
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function eic_groups_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  // Hide book select list from wiki page forms.
+  switch ($form_id) {
+    case 'node_wiki_page_form':
+    case 'node_wiki_page_edit_form':
+      $form['book']['bid']['#access'] = FALSE;
+      break;
+
+  }
 }
