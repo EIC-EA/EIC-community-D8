@@ -158,7 +158,7 @@ class EntityOperations implements ContainerInjectionInterface {
     $link_options = [
       'add_current_level_wiki_page' => [
         'query' => [
-          'parent' => $entity->book['bid'],
+          'parent' => $entity->book['pid'],
         ],
       ],
       'add_child_wiki_page' => [
