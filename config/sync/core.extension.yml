@@ -43,6 +43,7 @@ module:
   eic_media_document: 0
   eic_media_statistics: 0
   eic_media_video: 0
+  eic_messages: 0
   eic_paragraph_contributor: 0
   eic_paragraph_cta_tile: 0
   eic_theme_helper: 0
@@ -90,6 +91,7 @@ module:
   oe_time_caching: 0
   oe_webtools: 0
   oe_webtools_social_share: 0
+  oec_group_features: 0
   oec_group_flex: 0
   openapi: 0
   openapi_rest: 0
