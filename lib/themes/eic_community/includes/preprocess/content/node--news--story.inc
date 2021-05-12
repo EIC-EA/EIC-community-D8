@@ -28,9 +28,6 @@ function _eic_community_preprocess_node_news_story(array &$variables) {
   /** @var \Drupal\Core\Entity\EntityInterface $node */
   $node = $variables['node'];
 
-  $node_author = $node->getOwner();
-  $time_ago = \Drupal::service('date.formatter')->formatTimeDiffSince($node->get('published_at')->value, ['granularity' => 1]);
-
   $item = [
     'type' => [
       'label' => $node->type->entity->label(),
@@ -40,12 +37,9 @@ function _eic_community_preprocess_node_news_story(array &$variables) {
       ],
     ],
     'timestamp' => [
-      'label' => t('@time ago', ['@time' => $time_ago]),
+      'label' => eic_community_get_teaser_time_display($node->get('published_at')->value),
     ],
-    'author' => [
-      'author' => $node_author->getDisplayName(),
-      'path' => $node_author->toUrl()->toString(),
-    ],
+    'author' => eic_community_get_teaser_user_display($node->getOwner()),
   ];
 
   if (!$node->get('field_header_visual')->isEmpty()) {

@@ -1,8 +1,9 @@
 <?php
 
-namespace Drupal\oec_group_flex\Plugin\GroupVisibility;
+namespace Drupal\oec_group_flex\Plugin;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\group\Entity\GroupTypeInterface;
@@ -10,15 +11,11 @@ use Drupal\group_flex\Plugin\GroupVisibilityBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Provides a 'restricted_role' group visibility.
- *
- * @GroupVisibility(
- *  id = "restricted_role",
- *  label = @Translation("Restricted (visible by members and trusted users)"),
- *  weight = -89
- * )
+ * Extends GroupVisibilityBase class for restricted group visibility plugins.
  */
-class RestrictedRoleVisibility extends GroupVisibilityBase implements ContainerFactoryPluginInterface {
+abstract class RestrictedGroupVisibilityBase extends GroupVisibilityBase implements ContainerFactoryPluginInterface {
+
+  use DependencySerializationTrait;
 
   /**
    * The OEC module configuration settings.
@@ -38,8 +35,6 @@ class RestrictedRoleVisibility extends GroupVisibilityBase implements ContainerF
    *   The plugin implementation definition.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
    *   The configuration factory service.
-   *
-   * @SuppressWarnings(PHPMD.StaticAccess)
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, ConfigFactoryInterface $configFactory) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
@@ -145,20 +140,6 @@ class RestrictedRoleVisibility extends GroupVisibilityBase implements ContainerF
   }
 
   /**
-   * {@inheritdoc}
-   */
-  public function getGroupLabel(GroupTypeInterface $groupType): string {
-    return $this->t('Restricted (The @group_type_name will be viewed by group members and trusted users)', ['@group_type_name' => $groupType->label()]);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getValueDescription(GroupTypeInterface $groupType): string {
-    return $this->t('The @group_type_name will be viewed by group members and trusted users', ['@group_type_name' => $groupType->label()]);
-  }
-
-  /**
    * Get group outsider drupal roles.
    *
    * @param \Drupal\group\Entity\GroupTypeInterface $groupType
@@ -169,7 +150,7 @@ class RestrictedRoleVisibility extends GroupVisibilityBase implements ContainerF
    * @return \Drupal\group\Entity\GroupRoleInterface[]
    *   The outsider roles of the group.
    */
-  private function getOutsiderRolesFromInteralRoles(GroupTypeInterface $groupType, array $internal_rids): array {
+  protected function getOutsiderRolesFromInteralRoles(GroupTypeInterface $groupType, array $internal_rids): array {
     $roles = [];
     $group_roles = $groupType->getRoles();
     if (!empty($group_roles)) {

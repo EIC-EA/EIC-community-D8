@@ -1,5 +1,5 @@
 {% set label_element = label_element|default('span') %}
-{% if author is not empty %}
+{% if name is not empty %}
   <div class="ecl-author ecl-author--is-{{ size|default('default') }} {{ updates.value ? ' ecl-author--has-updates ' }} {{ extra_classes }}">
     <div class="ecl-author__information">
       {% if description is not empty %}
@@ -10,13 +10,13 @@
           {% include '@ecl-twig/ec-component-link/ecl-link.html.twig' with {
             link: {
               type: 'standalone',
-              label: author,
+              label: name,
               path: path
             },
             extra_classes: 'ecl-author__link',
           } only %}
         {% else %}
-          {{ author }}
+          {{ name }}
         {% endif %}
       </{{ label_element}}>
       {% if actions is not empty %}
@@ -46,7 +46,7 @@
         </div>
       {% endif %}
     </div>
-    {% if image or author %}
+    {% if image or name %}
       <div class="ecl-author__aside">
         {% if image is not empty %}
           <div class="ecl-author__media-wrapper">
@@ -58,11 +58,11 @@
               alt: image.alt,
             } only %}
           </div>
-        {% elseif author is not empty %}
+        {% elseif name is not empty %}
           <span class="ecl-author__initials-wrapper">
             <span class="ecl-author__initials">
-              {% for name in author|split(' ')|slice(0,2) %}
-                {{- name|first -}}
+              {% for author in name|split(' ')|slice(0,2) %}
+                {{- author|first -}}
               {% endfor %}
             </span>
           </span>
