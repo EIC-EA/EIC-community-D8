@@ -23,3 +23,12 @@ function eic_messages_group_update(EntityInterface $entity) {
   \Drupal::classResolver(EntityOperations::class)
     ->groupUpdate($entity);
 }
+
+/**
+ * Implements hook_ENTITY_TYPE_insert().
+ */
+function eic_messages_group_content_insert(EntityInterface $entity) {
+  /** @var EntityOperations $class */
+  $class = \Drupal::classResolver(EntityOperations::class);
+  $class->groupContentInsert($entity);
+}
