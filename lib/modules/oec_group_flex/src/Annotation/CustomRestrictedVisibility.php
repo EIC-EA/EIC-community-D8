@@ -31,4 +31,11 @@ class CustomRestrictedVisibility extends Plugin {
    */
   public $label;
 
+  /**
+   * The weight of the plugin.
+   *
+   * @var int
+   */
+  public $weight = 0;
+
 }
