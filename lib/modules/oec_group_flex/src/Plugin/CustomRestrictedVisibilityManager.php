@@ -5,12 +5,12 @@ namespace Drupal\oec_group_flex\Plugin;
 use Drupal\Core\Plugin\DefaultPluginManager;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\group_flex\Plugin\GroupFlexPluginCollection;
 
 /**
  * Provides the Custom restricted visibility plugin manager.
  */
 class CustomRestrictedVisibilityManager extends DefaultPluginManager {
-
 
   /**
    * Constructs a new CustomRestrictedVisibilityManager object.
@@ -28,6 +28,42 @@ class CustomRestrictedVisibilityManager extends DefaultPluginManager {
 
     $this->alterInfo('oec_group_flex_custom_restricted_visibility_info');
     $this->setCacheBackend($cache_backend, 'oec_group_flex_custom_restricted_visibility_plugins');
+  }
+
+  /**
+   * Get all plugins.
+   *
+   * @return \Drupal\group_flex\Plugin\GroupFlexPluginCollection
+   *   The plugin collection.
+   */
+  public function getAll(): GroupFlexPluginCollection {
+    if (!isset($this->allPlugins)) {
+      $collection = new GroupFlexPluginCollection($this, []);
+
+      // Add every known plugin to the collection with a vanilla configuration.
+      foreach ($this->getDefinitions() as $plugin_id => $unUsedPluginInfo) {
+        $collection->setInstanceConfiguration($plugin_id, ['id' => $plugin_id]);
+      }
+
+      // Sort and set the plugin collection.
+      $this->allPlugins = $collection->sort();
+    }
+
+    return $this->allPlugins;
+  }
+
+  /**
+   * Get all plugins as array.
+   *
+   * @return array
+   *   An array of plugin implementation.
+   */
+  public function getAllAsArray(): array {
+    $plugins = [];
+    foreach ($this->getAll() as $id => $pluginInstance) {
+      $plugins[$id] = $pluginInstance;
+    }
+    return $plugins;
   }
 
 }
