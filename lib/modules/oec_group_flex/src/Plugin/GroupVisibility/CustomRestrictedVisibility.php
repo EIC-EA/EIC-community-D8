@@ -12,6 +12,7 @@ use Drupal\group\Entity\GroupInterface;
 use Drupal\group\Entity\GroupTypeInterface;
 use Drupal\oec_group_flex\GroupVisibilityDatabaseStorageInterface;
 use Drupal\oec_group_flex\GroupVisibilityRecordInterface;
+use Drupal\oec_group_flex\Plugin\CustomRestrictedVisibilityManager;
 use Drupal\oec_group_flex\Plugin\GroupVisibilityOptionsInterface;
 use Drupal\oec_group_flex\Plugin\RestrictedGroupVisibilityBase;
 use Drupal\user\Entity\User;
@@ -53,6 +54,16 @@ class CustomRestrictedVisibility extends RestrictedGroupVisibilityBase implement
   protected $emailValidator;
 
   /**
+   * @var \Drupal\oec_group_flex\Plugin\CustomRestrictedVisibilityManager
+   */
+  private $customRestrictedVisibilityManager;
+
+  /**
+   * @var array
+   */
+  private $plugins;
+
+  /**
    * Constructs a new RestrictedVisibility plugin object.
    *
    * @param array $configuration
@@ -68,10 +79,12 @@ class CustomRestrictedVisibility extends RestrictedGroupVisibilityBase implement
    * @param \Drupal\Component\Utility\EmailValidatorInterface $email_validator
    *   The email validator service.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, ConfigFactoryInterface $configFactory, GroupVisibilityDatabaseStorageInterface $groupVisibilityStorage, EmailValidatorInterface $email_validator) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, ConfigFactoryInterface $configFactory, GroupVisibilityDatabaseStorageInterface $groupVisibilityStorage, EmailValidatorInterface $email_validator, CustomRestrictedVisibilityManager $customRestrictedVisibilityManager) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $configFactory);
     $this->groupVisibilityStorage = $groupVisibilityStorage;
     $this->emailValidator = $email_validator;
+    $this->customRestrictedVisibilityManager = $customRestrictedVisibilityManager;
+    $this->plugins = $this->customRestrictedVisibilityManager->getAllAsArray();
   }
 
   /**
@@ -84,7 +97,8 @@ class CustomRestrictedVisibility extends RestrictedGroupVisibilityBase implement
       $plugin_definition,
       $container->get('config.factory'),
       $container->get('oec_group_flex.group_visibility.storage'),
-      $container->get('email.validator')
+      $container->get('email.validator'),
+      $container->get('plugin.manager.custom_restricted_visibility')
     );
   }
 
@@ -110,74 +124,18 @@ class CustomRestrictedVisibility extends RestrictedGroupVisibilityBase implement
 
     $form[$form_fields_container] = [
       '#type' => 'container',
-      '#element_validate' => [
-        [$this, 'validatePluginForm'],
-      ],
     ];
 
-    // Specific email domains checkbox.
-    $form[$form_fields_container][$form_fields_base_name . '_status_' . self::VISIBILITY_OPTION_RESTRICTED_EMAIL_DOMAINS] = [
-      '#title' => ('Specific email domains'),
-      '#type' => 'checkbox',
-      '#weight' => 0,
-    ];
-    // Specific email domains textbox.
-    $form[$form_fields_container][$form_fields_base_name . '_' . self::VISIBILITY_OPTION_RESTRICTED_EMAIL_DOMAINS] = [
-      '#title' => ('Email domain'),
-      '#description' => $this->t('Add multiple email domains but separating them with a comma'),
-      '#type' => 'textfield',
-      '#element_validate' => [
-        [$this, 'validateEmailDomains'],
-      ],
-      '#states' => [
-        'visible' => [
-          ':input[name="' . $form_fields_base_name . '_status_' . self::VISIBILITY_OPTION_RESTRICTED_EMAIL_DOMAINS . '"]' => [
-            'checked' => TRUE,
-          ],
-        ],
-      ],
-      '#weight' => 1,
-    ];
-
-    // Specific trusted users checkbox.
-    $form[$form_fields_container][$form_fields_base_name . '_status_' . self::VISIBILITY_OPTION_RESTRICTED_USERS] = [
-      '#title' => ('Specific trusted users'),
-      '#type' => 'checkbox',
-      '#weight' => 2,
-    ];
-    // Specific trusted users textbox.
-    $form[$form_fields_container][$form_fields_base_name . '_' . self::VISIBILITY_OPTION_RESTRICTED_USERS] = [
-      '#title' => ('Select trusted users'),
-      '#type' => 'entity_autocomplete',
-      '#tags' => TRUE,
-      '#target_type' => 'user',
-      '#required' => FALSE,
-      '#selection_settings' => [
-        'include_anonymous' => FALSE,
-        'filter' => [
-          'role' => ['trusted_user'],
-        ],
-      ],
-      '#states' => [
-        'visible' => [
-          ':input[name="' . $form_fields_base_name . '_status_' . self::VISIBILITY_OPTION_RESTRICTED_USERS . '"]' => [
-            'checked' => TRUE,
-          ],
-        ],
-      ],
-      '#weight' => 3,
-    ];
-
-    // Prepopulate fields with default values from database.
+    $group_visibility_record = NULL;
     if (!$group->isNew()) {
-      if ($group_visibility_record = $this->groupVisibilityStorage->load($group->id())) {
-        $this->setFormDefaultRestrictedUsers($form, $form_state, $group_visibility_record);
-        $this->setFormDefaultRestrictedEmailDomains($form, $form_state, $group_visibility_record);
-      }
+      $group_visibility_record = $this->groupVisibilityStorage->load($group->id());
     }
-    else {
-      $this->setFormDefaultRestrictedUsers($form, $form_state);
-      $this->setFormDefaultRestrictedEmailDomains($form, $form_state);
+
+    /** @var \Drupal\oec_group_flex\Plugin\CustomRestrictedVisibilityBase $pluginInstance */
+    foreach ($this->plugins as $id => $pluginInstance) {
+      foreach ($pluginInstance->getPluginForm() as $pluginForm) {
+        $form[$form_fields_container][$id] = $pluginInstance->setDefaultFormValues($pluginForm, $group_visibility_record);
+      }
     }
 
     return $form;
@@ -187,19 +145,16 @@ class CustomRestrictedVisibility extends RestrictedGroupVisibilityBase implement
    * {@inheritdoc}
    */
   public function getFormStateValues(FormStateInterface $form_state) {
-    $form_fields_base_name = 'oec_group_visibility_option_';
     $group_visibility_options = [];
-    $group_visibility_option_fields = [
-      self::VISIBILITY_OPTION_RESTRICTED_USERS,
-      self::VISIBILITY_OPTION_RESTRICTED_EMAIL_DOMAINS,
-    ];
 
-    foreach ($group_visibility_option_fields as $field) {
-      if ($value = $form_state->getValue($form_fields_base_name . $field)) {
-        $group_visibility_options[$field] = $value;
+    foreach ($this->plugins as $id => $plugin) {
+      $status_field = $id . '_status';
+      if ($status_value = $form_state->getValue($status_field)) {
+        $group_visibility_options[$status_field] = $status_value;
+        $conf_field = $id . '_conf';
+        $group_visibility_options[$conf_field] = $form_state->getValue($conf_field);
       }
     }
-
     return $group_visibility_options;
   }
 
@@ -278,137 +233,16 @@ class CustomRestrictedVisibility extends RestrictedGroupVisibilityBase implement
   }
 
   /**
-   * Form validation for the whole container element.
-   *
-   * @param array $element
-   *   An associative array containing the properties of the element.
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   The current state of the form.
-   */
-  public function validatePluginForm(array &$element, FormStateInterface $form_state) {
-    $form_values = $this->getFormStateValues($form_state);
-
-    if (empty($form_values)) {
-      return;
-    }
-
-    foreach (array_keys($form_values) as $key) {
-      // Clear form state value if visibility option checkbox is unchecked.
-      if ($form_state->isValueEmpty('oec_group_visibility_option_status_' . $key)) {
-        $form_state->setValue('oec_group_visibility_option_' . $key, NULL);
-      }
-    }
-
-  }
-
-  /**
-   * Form element validation for restricted_email_domains field.
-   *
-   * @param array $element
-   *   An associative array containing the properties of the element.
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   The current state of the form.
-   */
-  public function validateEmailDomains(array &$element, FormStateInterface $form_state) {
-    $form_values = $this->getFormStateValues($form_state);
-
-    if (empty($form_values[self::VISIBILITY_OPTION_RESTRICTED_EMAIL_DOMAINS])) {
-      return;
-    }
-
-    if ($form_state->isValueEmpty('oec_group_visibility_option_status_' . self::VISIBILITY_OPTION_RESTRICTED_EMAIL_DOMAINS)) {
-      return;
-    }
-
-    $domain_names = explode(',', $form_values[self::VISIBILITY_OPTION_RESTRICTED_EMAIL_DOMAINS]);
-
-    foreach ($domain_names as $domain_name) {
-      if (!$this->emailValidator->isvalid("placeholder@$domain_name")) {
-        return $form_state->setError($element, $this->t('One of the email domains is not valid.'));
-      }
-    }
-
-  }
-
-  /**
    * {@inheritdoc}
    */
   public static function getPluginFormElementsFieldNames() {
-    $form_field_base_name = 'oec_group_visibility_option_';
+    // @todo make dynamic
     return [
-      self::VISIBILITY_OPTION_RESTRICTED_EMAIL_DOMAINS => $form_field_base_name . self::VISIBILITY_OPTION_RESTRICTED_EMAIL_DOMAINS,
-      self::VISIBILITY_OPTION_RESTRICTED_USERS => $form_field_base_name . self::VISIBILITY_OPTION_RESTRICTED_USERS,
+      'email_domains_status' => 'email_domains_status',
+      'email_domains_conf' => 'email_domains_conf',
+      'restricted_users_status' => 'restricted_users_status',
+      'restricted_users_conf' => 'restricted_users_conf',
     ];
-  }
-
-  /**
-   * Set default values for restricted_users field.
-   *
-   * @param array $form
-   *   The form renderable array.
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   The current state of the form.
-   * @param \Drupal\oec_group_flex\GroupVisibilityRecordInterface $group_visibility_record
-   *   The Group visibility record object.
-   */
-  private function setFormDefaultRestrictedUsers(array &$form, FormStateInterface $form_state, GroupVisibilityRecordInterface $group_visibility_record = NULL) {
-    $form_field_checkbox = 'oec_group_visibility_option_status_' . self::VISIBILITY_OPTION_RESTRICTED_USERS;
-    $form_field_name = 'oec_group_visibility_option_' . self::VISIBILITY_OPTION_RESTRICTED_USERS;
-    $form_field_container = 'oec_group_visibility_option_container';
-
-    if ($restricted_users = $form_state->getValue($form_field_name)) {
-      $load_users = [];
-      foreach ($restricted_users as $user) {
-        $load_users[] = $user['target_id'];
-      }
-    }
-    else {
-      if (is_null($group_visibility_record)) {
-        return;
-      }
-
-      if (array_key_exists(self::VISIBILITY_OPTION_RESTRICTED_USERS, $group_visibility_record->getOptions())) {
-        $restricted_users = $group_visibility_record->getOptions()[self::VISIBILITY_OPTION_RESTRICTED_USERS];
-      }
-    }
-
-    if ($restricted_users) {
-      $form[$form_field_container][$form_field_checkbox]['#default_value'] = TRUE;
-      foreach ($restricted_users as $user) {
-        $form[$form_field_container][$form_field_name]['#default_value'][] = User::load($user['target_id']);
-      }
-    }
-  }
-
-  /**
-   * Set default values for restricted_email_domains field.
-   *
-   * @param array $form
-   *   The form renderable array.
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   The current state of the form.
-   * @param \Drupal\oec_group_flex\GroupVisibilityRecordInterface $group_visibility_record
-   *   The Group visibility record object.
-   */
-  private function setFormDefaultRestrictedEmailDomains(array &$form, FormStateInterface $form_state, GroupVisibilityRecordInterface $group_visibility_record = NULL) {
-    $form_field_checkbox = 'oec_group_visibility_option_status_' . self::VISIBILITY_OPTION_RESTRICTED_EMAIL_DOMAINS;
-    $form_field_name = 'oec_group_visibility_option_' . self::VISIBILITY_OPTION_RESTRICTED_EMAIL_DOMAINS;
-    $form_field_container = 'oec_group_visibility_option_container';
-
-    if ($restricted_email_domains = $form_state->getValue($form_field_name)) {
-      $form[$form_field_container][$form_field_checkbox]['#default_value'] = TRUE;
-      $form[$form_field_container][$form_field_name]['#default_value'] = $restricted_email_domains;
-    }
-    else {
-      if (is_null($group_visibility_record)) {
-        return;
-      }
-
-      if (array_key_exists(self::VISIBILITY_OPTION_RESTRICTED_EMAIL_DOMAINS, $group_visibility_record->getOptions())) {
-        $form[$form_field_container][$form_field_checkbox]['#default_value'] = TRUE;
-        $form[$form_field_container][$form_field_name]['#default_value'] = $group_visibility_record->getOptions()[self::VISIBILITY_OPTION_RESTRICTED_EMAIL_DOMAINS];
-      }
-    }
   }
 
 }

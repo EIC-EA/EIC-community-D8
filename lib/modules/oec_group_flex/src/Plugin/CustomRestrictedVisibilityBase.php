@@ -3,13 +3,74 @@
 namespace Drupal\oec_group_flex\Plugin;
 
 use Drupal\Component\Plugin\PluginBase;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\group\Entity\GroupInterface;
+use Drupal\oec_group_flex\GroupVisibilityRecordInterface;
 
 /**
  * Base class for Custom restricted visibility plugins.
  */
 abstract class CustomRestrictedVisibilityBase extends PluginBase implements CustomRestrictedVisibilityInterface {
 
+  public function getPluginForm() {
+    $form[$this->getPluginId()] = [
+      '#type' => 'container',
+      '#element_validate' => [
+        [$this, 'validatePluginForm'],
+      ],
+    ];
+    $form[$this->getPluginId()][$this->getPluginId() . '_status'] = [
+      '#title' => $this->getLabel(),
+      '#type' => 'checkbox',
+      '#weight' => $this->getWeight(),
+      '#default_value' => 0,
+    ];
+    return $form;
+  }
 
-  // Add common methods and abstract methods for your plugin type here.
+  /**
+   * Form validation for the whole container element.
+   *
+   * @param array $element
+   *   An associative array containing the properties of the element.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
+   */
+  public function validatePluginForm(array &$element, FormStateInterface $form_state) {
+  }
+
+  public function setDefaultFormValues(array &$pluginForm, GroupVisibilityRecordInterface $group_visibility_record = NULL) {
+    if (is_null($group_visibility_record)) {
+      return $pluginForm;
+    }
+
+    $options = $group_visibility_record->getOptions();
+    $status_key = $this->getPluginId() . '_status';
+    if (array_key_exists($status_key, $options) && $options[$status_key] === 1) {
+      $pluginForm[$status_key]['#default_value'] = 1;
+      $conf_key = $this->getPluginId() . '_conf';
+      $pluginForm[$conf_key]['#default_value'] = $options[$conf_key];
+    }
+    return $pluginForm;
+  }
+
+  public function getGroupVisibilitySettings(GroupInterface $group) {
+    return \Drupal::service('oec_group_flex.group_visibility.storage')->load($group->id());
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getLabel(): string {
+    return $this->pluginDefinition['label'];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getWeight(): int {
+    return $this->pluginDefinition['weight'];
+  }
+
 
 }
