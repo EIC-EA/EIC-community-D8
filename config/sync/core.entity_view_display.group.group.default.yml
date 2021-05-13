@@ -5,7 +5,6 @@ dependencies:
   config:
     - field.field.group.group.field_body
     - field.field.group.group.field_hero
-    - field.field.group.group.field_membership_open_request
     - field.field.group.group.field_message_to_site_admin
     - field.field.group.group.field_related_groups
     - field.field.group.group.field_related_news_stories
@@ -47,7 +46,6 @@ hidden:
   created: true
   field_body: true
   field_hero: true
-  field_membership_open_request: true
   field_message_to_site_admin: true
   field_related_groups: true
   field_thumbnail: true

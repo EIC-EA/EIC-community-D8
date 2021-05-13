@@ -5,7 +5,6 @@ dependencies:
   config:
     - field.field.group.group.field_body
     - field.field.group.group.field_hero
-    - field.field.group.group.field_membership_open_request
     - field.field.group.group.field_message_to_site_admin
     - field.field.group.group.field_related_groups
     - field.field.group.group.field_related_news_stories
@@ -44,13 +43,6 @@ content:
     settings:
       media_types: {  }
     third_party_settings: {  }
-    region: content
-  field_membership_open_request:
-    weight: 1
-    settings:
-      display_label: true
-    third_party_settings: {  }
-    type: boolean_checkbox
     region: content
   field_message_to_site_admin:
     weight: 10
