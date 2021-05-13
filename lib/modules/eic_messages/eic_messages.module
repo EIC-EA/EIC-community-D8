@@ -23,3 +23,37 @@ function eic_messages_group_update(EntityInterface $entity) {
   \Drupal::classResolver(EntityOperations::class)
     ->groupUpdate($entity);
 }
+
+/**
+ * Implements hook_ENTITY_TYPE_insert().
+ */
+function eic_messages_group_content_insert(EntityInterface $entity) {
+  // @todo place all the code in the correct class after merging #750.
+  $messages = [];
+
+  /** @var \Drupal\group\Entity\GroupContent $entity */
+  $group_content_type = $entity->getGroupContentType();
+  if ($group_content_type->get('content_plugin') === 'group_membership_request') {
+    $relatedUser = $entity->getEntity();
+    $relatedGroup = $entity->getGroup();
+
+    // Prepare the message to the group owner.
+    $message = \Drupal::entityTypeManager()->getStorage('message')->create([
+      'template' => 'notify_new_membership_request',
+      'uid' => $relatedGroup->getOwnerId(),
+      'field_group_ref' => ['target_id' => $relatedGroup->id()],
+      'field_group_membership' => ['target_id' => $entity->id()],
+      'field_related_user' => ['target_id' => $relatedUser->id()],
+    ]);
+    $messages[] = $message;
+  }
+  foreach ($messages as $message) {
+    try {
+      // Create the message notify queue item.
+      \Drupal::service('eic_messages.helper')->queueMessageNotification($message);
+    }
+    catch (\Exception $e) {
+    }
+  }
+
+}
