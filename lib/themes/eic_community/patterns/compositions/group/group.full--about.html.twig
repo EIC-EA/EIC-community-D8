@@ -1,0 +1,9 @@
+{% extends "@theme/patterns/compositions/group/group.full.html.twig" %}
+
+{% block content %}
+  {% if items is not empty %}
+    {% include "@theme/patterns/compositions/featured-content-sections.html.twig" with {
+      items: items
+    } %}
+  {% endif %}
+{% endblock %}
