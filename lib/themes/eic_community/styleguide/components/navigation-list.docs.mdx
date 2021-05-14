@@ -8,6 +8,20 @@ Displays a vertical collapsible navigation list that can also be completely coll
 {% include "@theme/patterns/components/navigation-list.html.twig" %}
 ```
 
+The component can also apply the collapsed state to a parent container in order to implement within the layout.
+You can do this by defining the parent-selector data attribute within the component data structure:
+
+```
+  {% include "@theme/patterns/components/navigation-list.html.twig" with {
+    extra_attributes: {
+      name: 'data-navigation-list-parent-selector',
+      value: '.selector',
+    }
+  } %}
+```
+
+This will apply the aria-collapsed state also on the parent element `.selector`.
+
 ## Block parameters:
 
 | Key    | Type   | Description                                        | Mandatory |
