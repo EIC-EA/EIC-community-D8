@@ -1,6 +1,7 @@
 .ecl-fact-figures-wrapper {
   & .ecl-fact-figures {
     $node: &;
+
     padding: 0;
     background-color: transparent;
 
@@ -9,7 +10,7 @@
     &__items {
       padding: 0;
       margin-top: #{0 - ecl-layout('gutter--lg', 'description') * 2};
-      margin-left: #{0 - ecl-layout('gutter')};
+      margin-right: #{0 - ecl-layout('gutter')};
 
       @include ecl-media-breakpoint-up('md') {
         display: flex;
@@ -24,7 +25,7 @@
       &,
       &:first-of-type {
         padding: 0;
-        padding-left: ecl-layout('gutter');
+        padding-right: ecl-layout('gutter');
         margin-top: #{ecl-layout('gutter--lg', 'description') * 2};
         flex-basis: inherit;
 
@@ -37,25 +38,33 @@
 
   &--has-compact-layout .ecl-fact-figures {
     &__item {
-      position: relative;
+      &,
+      &:first-of-type {
+        position: relative;
+        display: flex;
+        flex-wrap: wrap;
+        box-sizing: border-box;
+        flex-direction: row;
+        align-items: center;
+        padding-left: calc(#{map-get($ecl-media, '3xs')} + #{ecl-box-model('padding')});
+      }
     }
 
     &__icon {
       position: absolute;
-      top: 0;
-      left: ecl-layout('gutter');
+      top: #{0 - map-get($ecl-spacing, 'xs')};
+      left: 0;
       width: map-get($ecl-media, '3xs');
       height: map-get($ecl-media, '3xs');
     }
 
-    &__value,
-    &__title,
-    &__description {
-      margin-left: calc(#{map-get($ecl-media, '3xs')} + #{ecl-box-model('padding')});
+    &__value {
+      margin-right: map-get($ecl-spacing, 's');
     }
 
     &__title {
       margin-top: 0;
+      font-weight: inherit;
       @include ecl-responsive-font('label');
     }
   }
