@@ -40,8 +40,6 @@ function eic_community_preprocess_comment(&$variables) {
 
   $date_formatter = \Drupal::service('date.formatter');
   $created_at = $date_formatter->format($comment->getCreatedTime(), 'short');
-  // If a diff-date is needed, use this.
-//  $createdAtDiff = $dateFormatter->formatDiff($comment->getCreatedTime(), Drupal\Core\Datetime\Entity\DateFormat::create());
 
   $variables['comment'] = [
     'author' => [
@@ -59,9 +57,8 @@ function eic_community_preprocess_comment(&$variables) {
     'icon_file_path' => $variables['eic_icon_path'],
   ];
 
-  // @TODO: Add permission checks with Group Implementation.
+  // @todo Fix/add permission checks for Group Implementation.
   // @see: EICNET-728.
-
   // If there are replies to the comment, disable 'can_edit'.
   $cid = $comment->id();
   $nid = $comment->getCommentedEntityId();
@@ -115,6 +112,7 @@ function _eic_community_preprocess_comment_form(&$variables) {
 
 /**
  * Helper function to fetch Comment reply count.
+ *
  * Ripped from the module comment_reply_count.
  */
 function comment_reply_count($cid, $nid, $entity_type) {
