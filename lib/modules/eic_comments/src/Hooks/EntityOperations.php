@@ -83,8 +83,7 @@ class EntityOperations implements ContainerInjectionInterface {
     }
 
     // If current user is already a Contributor, return.
-    $currentUserId = $entity->getOwnerId();
-    if (in_array($currentUserId, $contributorUserIds)) {
+    if (in_array($entity->getOwnerId(), $contributorUserIds)) {
       return;
     }
 
@@ -92,7 +91,7 @@ class EntityOperations implements ContainerInjectionInterface {
     $newContributorParagraph = Paragraph::create([
       'type' => 'contributor',
       'field_user_ref' => [
-        'target_id' => $currentUserId,
+        'target_id' => $entity->getOwnerId(),
       ],
       'paragraph_view_mode' => 'platform_member',
     ]);
