@@ -83,7 +83,7 @@ class EntityOperations implements ContainerInjectionInterface {
     }
 
     // If current user is already a Contributor, return.
-    $currentUserId = \Drupal::currentUser()->id();
+    $currentUserId = $entity->getOwnerId();
     if (in_array($currentUserId, $contributorUserIds)) {
       return;
     }
