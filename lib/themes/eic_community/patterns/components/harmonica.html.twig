@@ -1,0 +1,50 @@
+{% set title_element = "h3" %}
+
+<div class="ecl-harmonica">
+  {% if title %}
+    <{{ title_element }} class="ecl-harmonica__title">
+      {% if icon and icon_file_path %}
+        {% include "@ecl-twig/ecl-component-icon/ec-icon.html.twig" with icon|default({})|merge({
+          icon: icon.icon|default({})|merge({
+            path: icon_file_path,
+          }),
+          extra_classes: 'ecl-harmonica__title-icon',
+        }) %}
+      {% endif %}
+      {{ title }}
+    </{{ title_element }}>
+  {% endif %}
+  {% if description %}
+    <p class="ecl-description">{{ description }}</p>
+  {% endif %}
+  {% if items is not empty %}
+  <div class="ecl-harmonica__items">
+      {% for item in items %}
+        <div class="ecl-harmonica__item">
+          <button class="ecl-harmonica__item-header">
+            {% if item.title %}
+              <span class="ecl-harmonica__item-title">{{ item.title }}</span>
+            {% endif %}
+            {% if item.content and icon_file_path %}
+              {% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with item.icon|default({})|merge({
+                icon: item.icon.icon|default({})|merge({
+                  name: 'corner-arrow',
+                  type: 'ui',
+                  path: icon_file_path,
+                  size: '2xs',
+                }),
+                extra_classes: item.icon.extra_classes|default('') ~ 'ecl-harmonica__item-icon',
+              }) %}
+            {% endif %}
+          </button>
+          {% if item.content %}
+            <div class="ecl-harmonica__item-content">
+              <div class="ecl-editable-wrapper">
+                {{ item.content }}</div>
+              </div>
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+</div>
