@@ -92,17 +92,20 @@ class EntityOperations implements ContainerInjectionInterface {
               '#markup' => $this->t('No Wiki pages (yet)'),
             ];
             // Add wiki page create form url to the build array.
-            if ($add_wiki_page_url = $this->getWikiPageAddFormUrl($entity, $group)) {
-              $build['link_add_wiki_page'] = $add_wiki_page_url->toString();
-              $build['link_add_wiki_page_renderable'] = Link::fromTextAndUrl($this->t('Add a new wiki page'), $add_wiki_page_url)->toRenderable();
+            if ($add_wiki_page_urls = $this->getWikiPageAddFormUrls($entity, $group)) {
+              $build['link_add_child_wiki_page'] = $add_wiki_page_urls['add_child_wiki_page']->toString();
+              $build['link_add_child_wiki_page_renderable'] = Link::fromTextAndUrl($this->t('Add a new wiki page'), $add_wiki_page_urls['add_child_wiki_page'])->toRenderable();
             }
           }
         }
         elseif ($entity->bundle() === 'wiki_page') {
           // Add wiki page create form url to the build array.
-          if ($add_wiki_page_url = $this->getWikiPageAddFormUrl($entity)) {
-            $build['link_add_wiki_page'] = $add_wiki_page_url->toString();
-            $build['link_add_wiki_page_renderable'] = Link::fromTextAndUrl($this->t('Add a new wiki page'), $add_wiki_page_url)->toRenderable();
+          if ($add_wiki_page_urls = $this->getWikiPageAddFormUrls($entity)) {
+            $build['link_add_current_level_wiki_page'] = $add_wiki_page_urls['add_current_level_wiki_page']->toString();
+            $build['link_add_current_level_wiki_page_renderable'] = Link::fromTextAndUrl($this->t('Add a new wiki page at the current level'), $add_wiki_page_urls['add_current_level_wiki_page'])->toRenderable();
+            $build['link_add_current_level_wiki_page_renderable']['#suffix'] = '<br>';
+            $build['link_add_child_wiki_page'] = $add_wiki_page_urls['add_child_wiki_page']->toString();
+            $build['link_add_child_wiki_page_renderable'] = Link::fromTextAndUrl($this->t('Add a new wiki page bellow this level'), $add_wiki_page_urls['add_child_wiki_page'])->toRenderable();
           }
         }
         break;
@@ -131,7 +134,7 @@ class EntityOperations implements ContainerInjectionInterface {
   }
 
   /**
-   * Gets wiki page add form Url from the current wiki/book page.
+   * Gets wiki page add form Urls from the current wiki/book page.
    *
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The parent entity (either a node book or wiki_page).
@@ -141,24 +144,34 @@ class EntityOperations implements ContainerInjectionInterface {
    * @return bool|\Drupal\Core\Url
    *   The Url object for the wiki page add form route.
    */
-  private function getWikiPageAddFormUrl(EntityInterface $entity, $group = FALSE) {
+  private function getWikiPageAddFormUrls(EntityInterface $entity, $group = FALSE) {
     if (!($group instanceof GroupInterface)) {
       if (!$group = $this->eicGroupsHelper->getGroupByEntity($entity)) {
         return $group;
       }
     }
 
-    $add_wiki_page_route_parameters = [
+    $link_wiki_page_route_parameters = [
       'group' => $group->id(),
       'plugin_id' => 'group_node:wiki_page',
     ];
-    $add_wiki_page_link_options = [
-      'query' => [
-        'parent' => $entity->id(),
+    $link_options = [
+      'add_current_level_wiki_page' => [
+        'query' => [
+          'parent' => $entity->book['pid'],
+        ],
+      ],
+      'add_child_wiki_page' => [
+        'query' => [
+          'parent' => $entity->id(),
+        ],
       ],
     ];
-    $add_wiki_page_url = Url::fromRoute('entity.group_content.create_form', $add_wiki_page_route_parameters, $add_wiki_page_link_options);
-    return $add_wiki_page_url;
+    $links = [];
+    foreach ($link_options as $key => $options) {
+      $links[$key] = Url::fromRoute('entity.group_content.create_form', $link_wiki_page_route_parameters, $options);
+    }
+    return $links;
   }
 
 }
