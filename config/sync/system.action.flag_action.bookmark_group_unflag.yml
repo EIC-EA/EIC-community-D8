@@ -1,0 +1,15 @@
+uuid: e49a9188-8ceb-4eaa-91ab-8a47fe1b8d7b
+langcode: en
+status: true
+dependencies:
+  config:
+    - flag.flag.bookmark_group
+  module:
+    - flag
+id: flag_action.bookmark_group_unflag
+label: 'Unbookmark this item'
+type: group
+plugin: 'flag_action:bookmark_group_unflag'
+configuration:
+  flag_id: bookmark_group
+  flag_action: unflag

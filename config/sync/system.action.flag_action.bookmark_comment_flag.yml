@@ -1,0 +1,15 @@
+uuid: 6d38bbf7-51e1-40c2-b5ac-8ee7ca84d9f1
+langcode: en
+status: true
+dependencies:
+  config:
+    - flag.flag.bookmark_comment
+  module:
+    - flag
+id: flag_action.bookmark_comment_flag
+label: 'Bookmark this item'
+type: comment
+plugin: 'flag_action:bookmark_comment_flag'
+configuration:
+  flag_id: bookmark_comment
+  flag_action: flag

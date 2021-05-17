@@ -1,0 +1,15 @@
+uuid: bf97aa9f-1d9d-47e3-8694-dafe07b4072b
+langcode: en
+status: true
+dependencies:
+  config:
+    - flag.flag.bookmark_group
+  module:
+    - flag
+id: flag_action.bookmark_group_flag
+label: 'Bookmark this item'
+type: group
+plugin: 'flag_action:bookmark_group_flag'
+configuration:
+  flag_id: bookmark_group
+  flag_action: flag

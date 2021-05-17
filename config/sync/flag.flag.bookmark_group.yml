@@ -1,17 +1,13 @@
-uuid: 83bb2f79-4823-469a-9cad-d21512f448c9
+uuid: 381e2fa6-286f-4747-8735-38285fac0b37
 langcode: en
 status: true
 dependencies:
   module:
-    - node
-id: bookmark_content
-label: 'Bookmark (content)'
-bundles:
-  - discussion
-  - document
-  - news
-  - story
-entity_type: node
+    - group
+id: bookmark_group
+label: 'Bookmark (group)'
+bundles: {  }
+entity_type: group
 global: false
 weight: 0
 flag_short: 'Bookmark this item'
@@ -24,11 +20,10 @@ unflag_denied_text: ''
 flood_control_active: false
 flood_control_limit: 0
 flood_control_window: 0
-flag_type: 'entity:node'
+flag_type: 'entity:group'
 link_type: ajax_link
 flagTypeConfig:
-  show_in_links:
-    full: full
+  show_in_links: {  }
   show_as_field: true
   show_on_form: false
   show_contextual_link: false
