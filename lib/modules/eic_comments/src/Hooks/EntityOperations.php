@@ -33,7 +33,6 @@ class EntityOperations implements ContainerInjectionInterface {
    */
   protected $routeMatch;
 
-
   /**
    * Constructs a new EntityOperations object.
    *
@@ -68,7 +67,7 @@ class EntityOperations implements ContainerInjectionInterface {
       return;
     }
 
-    // Get all contributors of CT Discussion
+    // Get all contributors of CT Discussion.
     $contributorsFieldList = $commentedEntity->get('field_related_contributors');
     $contributorParagraphs = $contributorsFieldList->referencedEntities();
 
@@ -103,8 +102,8 @@ class EntityOperations implements ContainerInjectionInterface {
     $contributorParagraphs[] = $newContributorParagraph;
     foreach ($contributorParagraphs as $contributorParagraph) {
       $contributors[] = [
-          'target_id' => $contributorParagraph->id(),
-          'target_revision_id' => $contributorParagraph->getRevisionId(),
+        'target_id' => $contributorParagraph->id(),
+        'target_revision_id' => $contributorParagraph->getRevisionId(),
       ];
     }
 
@@ -112,4 +111,5 @@ class EntityOperations implements ContainerInjectionInterface {
     $commentedEntity->set('field_related_contributors', $contributors);
     $commentedEntity->save();
   }
+
 }

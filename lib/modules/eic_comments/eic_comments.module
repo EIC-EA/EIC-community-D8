@@ -7,7 +7,7 @@
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\eic_comments\Hooks\EntityOperations;
-
+use Drupal\Core\Entity\EntityInterface;
 
 /**
  * Implements hook_form_FORM_ID_alter().
@@ -37,14 +37,9 @@ function eic_comments_configure_comment_form($form) {
 }
 
 /**
- * Demo function to write out what is needed.
- *
- * @param $comment
- */
-/**
  * Implements hook_ENTITY_TYPE_insert().
  */
-function eic_comments_comment_insert(Drupal\Core\Entity\EntityInterface $entity) {
+function eic_comments_comment_insert(EntityInterface $entity) {
   \Drupal::classResolver(EntityOperations::class)
     ->commentInsert($entity);
 }
