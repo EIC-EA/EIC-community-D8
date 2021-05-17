@@ -94,6 +94,7 @@ class EntityOperations implements ContainerInjectionInterface {
       'field_user_ref' => [
         'target_id' => $currentUserId,
       ],
+      'paragraph_view_mode' => 'platform_member',
     ]);
     $newContributorParagraph->save();
 
