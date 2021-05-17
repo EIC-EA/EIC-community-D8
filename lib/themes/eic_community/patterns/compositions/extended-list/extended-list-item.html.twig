@@ -3,11 +3,25 @@
 <div class="ecl-extended-list__item {{ extra_classes }}">
   {% if title %}
     <{{ item_title_element }} class="ecl-extended-list__item-title">
-      {{ title}}
+      {% if path is not empty %}
+        <a href="{{ path }}" class="ecl-extended-list__item-link">
+          {{ title}}
+        </a>
+      {% else %}
+        {{ title}}
+      {% endif %}
     </{{ item_title_element }}>
   {% endif %}
+
+  {% if content is not empty %}
+    <div class="ecl-extended-list__item-content ecl-editable-wrapper">
+      {{ content }}
+    </div>
+  {% endif %}
+
   {% if items %}
     {% include "@theme/patterns/compositions/extended-list/extended-list-items.html.twig" with {
+      group: group,
       items: items
     } only %}
   {% endif %}
