@@ -76,6 +76,7 @@ class EntityOperations implements ContainerInjectionInterface {
     foreach ($contributorParagraphs as $contributorParagraph) {
       $userRef = $contributorParagraph->get('field_user_ref');
       $user = reset($userRef->referencedEntities());
+      // If Contributor is not a Platform Member, continue.
       if ($user === FALSE) {
         continue;
       }
@@ -88,8 +89,27 @@ class EntityOperations implements ContainerInjectionInterface {
       return;
     }
 
-    // @TODO: Add comment user as contributor
-//    $newContributor = new Paragraph([],'contributor');
+    // Create a new Paragraph for Comment Author.
+    $newContributorParagraph = Paragraph::create([
+      'type' => 'contributor',
+      'field_user_ref' => [
+        'target_id' => $currentUserId,
+      ],
+    ]);
+    $newContributorParagraph->save();
 
+    // Add newly created Paragraph to already listed Contributors.
+    $contributors = [];
+    $contributorParagraphs[] = $newContributorParagraph;
+    foreach ($contributorParagraphs as $contributorParagraph) {
+      $contributors[] = [
+          'target_id' => $contributorParagraph->id(),
+          'target_revision_id' => $contributorParagraph->getRevisionId(),
+      ];
+    }
+
+    // Add entire list of Contributors to the Commented Entity.
+    $commentedEntity->set('field_related_contributors', $contributors);
+    $commentedEntity->save();
   }
 }
