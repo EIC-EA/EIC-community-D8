@@ -5,6 +5,10 @@
     <{{ title_element }} class="ecl-extended-list__title">{{ title }}</{{ title_element }}>
   {% endif %}
 
+  {% if description is not empty %}
+    <p class="ecl-extended-list ecl-description">{{ description }}</p>
+  {% endif %}
+
   {% include "@theme/patterns/compositions/extended-list/extended-list-items.html.twig" with {
     items: items,
     group: group,

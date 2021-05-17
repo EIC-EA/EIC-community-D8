@@ -4,9 +4,10 @@
   {% if title %}
     <{{ title_element }} class="ecl-harmonica__title">
       {% if icon and icon_file_path %}
-        {% include "@ecl-twig/ecl-component-icon/ec-icon.html.twig" with icon|default({})|merge({
+        {% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with icon|default({})|merge({
           icon: icon.icon|default({})|merge({
             path: icon_file_path,
+            size: 'xs',
           }),
           extra_classes: 'ecl-harmonica__title-icon',
         }) %}

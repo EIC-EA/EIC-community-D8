@@ -10,7 +10,24 @@
     margin-bottom: 0;
   }
 
+  &__title {
+    margin: 0;
+    border-bottom: ecl-border();
+    padding: 0 0 map-get($ecl-spacing, 's');
+    font-weight: $ecl-font-weight-bold;
+    font-size: inherit;
+    display: flex;
+    align-items: center;
+  }
+
+  &__title-icon {
+    margin-right: map-get($ecl-spacing, 's');
+    fill: ecl-typography('color', 'title');
+  }
+
   &__item {
+    border-bottom: ecl-border();
+
     &--is-ready[aria-expanded=true] {
       padding-bottom: map-get($ecl-spacing, 'm');
     }
@@ -53,7 +70,7 @@
 
   &__item-header,
   &__item-content {
-    @include ecl-responsive-font('default');
+    @include ecl-responsive-font('label');
   }
 
   &__item-icon {

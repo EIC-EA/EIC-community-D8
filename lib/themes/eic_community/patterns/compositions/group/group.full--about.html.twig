@@ -3,6 +3,7 @@
 {% block content %}
   {% if items is not empty %}
     {% include "@theme/patterns/compositions/featured-content-sections.html.twig" with {
+      extra_classes: 'ecl-featured-content-sections--as-tabs',
       items: items
     } %}
   {% endif %}
