@@ -8,9 +8,6 @@
 // Define constant for the includes folder. This .theme file should contain as
 // little code as possible. Instead, place theme implementations in separate
 // files.
-use Drupal\user\Entity\User;
-use Drupal\file\Entity\File;
-
 define('INCLUDES_FOLDER', 'includes');
 
 /**
@@ -53,32 +50,4 @@ function eic_community_scan_include_files($folder) {
  */
 if (is_dir(__DIR__ . '/' . INCLUDES_FOLDER)) {
   eic_community_scan_include_files(INCLUDES_FOLDER);
-}
-
-/**
- * Transform a user entity for a storybook template.
- */
-function eic_community_get_teaser_user_display(User $user) {
-  $author = [
-    'name' => $user->getDisplayName(),
-    'path' => $user->toUrl()->toString(),
-  ];
-
-  if (!$user->get('field_media')->isEmpty()) {
-    $author['image'] = [
-      'src' => File::load($user->get('field_media')->getString())->createFileUrl(),
-      'alt' => $author['name'],
-    ];
-  }
-
-  return $author;
-}
-
-/**
- * Transform a timestamp for a storybook template.
- */
-function eic_community_get_teaser_time_display($timestamp) {
-  $time_ago = \Drupal::service('date.formatter')->formatTimeDiffSince($timestamp, ['granularity' => 1]);
-
-  return t('@time ago', ['@time' => $time_ago]);
 }

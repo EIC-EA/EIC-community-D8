@@ -18,3 +18,12 @@ function eic_community_preprocess(&$variables) {
     ->getCurrentLanguage()
     ->getId();
 }
+
+/**
+ * Transform a timestamp for a storybook template.
+ */
+function eic_community_get_teaser_time_display($timestamp) {
+  $time_ago = \Drupal::service('date.formatter')->formatTimeDiffSince($timestamp, ['granularity' => 1]);
+
+  return t('@time ago', ['@time' => $time_ago]);
+}
