@@ -34,6 +34,10 @@
     align-items: flex-start;
     margin-bottom: map-get($ecl-spacing, 'm');
 
+     &--has-full-layout {
+       display: block;
+     }
+
     &:last-child {
       margin-bottom: 0;
     }
@@ -84,6 +88,7 @@
   }
 
   &__item-title {
+    display: block;
     font-weight: $ecl-font-weight-bold;
     margin-bottom: map-get($ecl-spacing, 's');
 
@@ -125,12 +130,6 @@
         border: ecl-border();
         border-color: map-get($ecl-colors, 'blue-100');
       }
-    }
-  }
-
-  &__item-content {
-    #{$node}>#{$node}__items>#{$node}__item>&--has-full-layout {
-      width: 100%;
     }
   }
 

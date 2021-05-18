@@ -1,6 +1,8 @@
+{% import "@theme/patterns/core/snippets.twig" as snippets %}
+
 {% set title_element = "h3" %}
 
-<div class="ecl-harmonica">
+<div class="ecl-harmonica {{ extra_classes }}" {{ snippets.attr(extra_attributes)}}>
   {% if title %}
     <{{ title_element }} class="ecl-harmonica__title">
       {% if icon and icon_file_path %}
