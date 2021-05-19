@@ -22,6 +22,6 @@ settings:
   handler_settings:
     view:
       view_name: user_admin_people
-      display_name: entity_reference_1
+      display_name: entity_reference_users_full_name
       arguments: {  }
 field_type: entity_reference
