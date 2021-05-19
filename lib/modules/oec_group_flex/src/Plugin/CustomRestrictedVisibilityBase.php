@@ -19,7 +19,7 @@ abstract class CustomRestrictedVisibilityBase extends PluginBase implements Cust
         [$this, 'validatePluginForm'],
       ],
     ];
-    $form[$this->getPluginId()][$this->getPluginId() . '_status'] = [
+    $form[$this->getPluginId()][$this->getStatusKey()] = [
       '#title' => $this->getLabel(),
       '#type' => 'checkbox',
       '#weight' => $this->getWeight(),
@@ -44,10 +44,10 @@ abstract class CustomRestrictedVisibilityBase extends PluginBase implements Cust
       return $pluginForm;
     }
 
-    $options = $group_visibility_record->getOptions();
-    $status_key = $this->getPluginId() . '_status';
-    if (array_key_exists($status_key, $options) && $options[$status_key] === 1) {
-      $pluginForm[$status_key]['#default_value'] = 1;
+    $allOptions = $group_visibility_record->getOptions();
+    $options = isset($allOptions[$this->getPluginId()]) ? $allOptions[$this->getPluginId()] : [];
+    if (array_key_exists($this->getStatusKey(), $options) && $options[$this->getStatusKey()] === 1) {
+      $pluginForm[$this->getStatusKey()]['#default_value'] = 1;
       $conf_key = $this->getPluginId() . '_conf';
       $pluginForm[$conf_key]['#default_value'] = $options[$conf_key];
     }
@@ -72,5 +72,11 @@ abstract class CustomRestrictedVisibilityBase extends PluginBase implements Cust
     return $this->pluginDefinition['weight'];
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getStatusKey(): string {
+    return $this->getPluginId() . '_status';
+  }
 
 }

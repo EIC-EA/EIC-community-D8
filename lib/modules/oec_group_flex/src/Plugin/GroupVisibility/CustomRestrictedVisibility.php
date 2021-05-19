@@ -150,9 +150,10 @@ class CustomRestrictedVisibility extends RestrictedGroupVisibilityBase implement
     foreach ($this->plugins as $id => $plugin) {
       $status_field = $id . '_status';
       if ($status_value = $form_state->getValue($status_field)) {
-        $group_visibility_options[$status_field] = $status_value;
+        $group_visibility_options[$id] = [];
+        $group_visibility_options[$id][$status_field] = $status_value;
         $conf_field = $id . '_conf';
-        $group_visibility_options[$conf_field] = $form_state->getValue($conf_field);
+        $group_visibility_options[$id][$conf_field] = $form_state->getValue($conf_field);
       }
     }
     return $group_visibility_options;
