@@ -44,8 +44,7 @@ abstract class CustomRestrictedVisibilityBase extends PluginBase implements Cust
       return $pluginForm;
     }
 
-    $allOptions = $group_visibility_record->getOptions();
-    $options = isset($allOptions[$this->getPluginId()]) ? $allOptions[$this->getPluginId()] : [];
+    $options = $this->getOptionsForPlugin($group_visibility_record);
     if (array_key_exists($this->getStatusKey(), $options) && $options[$this->getStatusKey()] === 1) {
       $pluginForm[$this->getStatusKey()]['#default_value'] = 1;
       $conf_key = $this->getPluginId() . '_conf';
@@ -77,6 +76,11 @@ abstract class CustomRestrictedVisibilityBase extends PluginBase implements Cust
    */
   public function getStatusKey(): string {
     return $this->getPluginId() . '_status';
+  }
+
+  protected function getOptionsForPlugin(GroupVisibilityRecordInterface $group_visibility_record) {
+    $allOptions = $group_visibility_record->getOptions();
+    return isset($allOptions[$this->getPluginId()]) ? $allOptions[$this->getPluginId()] : [];
   }
 
 }

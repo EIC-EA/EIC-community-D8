@@ -51,16 +51,15 @@ class RestrictedUsers extends CustomRestrictedVisibilityBase {
       return $pluginForm;
     }
 
-    $options = $group_visibility_record->getOptions();
-    $status_key = $this->getPluginId() . '_status';
-    if (array_key_exists($status_key, $options) && $options[$status_key] === 1) {
-      $pluginForm[$status_key]['#default_value'] = 1;
+    $options = $this->getOptionsForPlugin($group_visibility_record);
+    if (array_key_exists($this->getStatusKey(), $options) && $options[$this->getStatusKey()] === 1) {
+      $pluginForm[$this->getStatusKey()]['#default_value'] = 1;
       $conf_key = $this->getPluginId() . '_conf';
 
       $restricted_users = $options[$conf_key];
       if ($restricted_users) {
         foreach ($restricted_users as $user) {
-          $pluginForm[$conf_key]['#default_value']['#default_value'][] = User::load($user['target_id']);
+          $pluginForm[$conf_key]['#default_value'][] = User::load($user['target_id']);
         }
       }
     }
