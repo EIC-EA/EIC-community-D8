@@ -48,6 +48,6 @@ interface GroupVisibilityOptionsInterface {
    * @return array
    *   Array with list of form field names (option_name => form_field_name).
    */
-  public static function getPluginFormElementsFieldNames();
+  public function getPluginFormElementsFieldNames();
 
 }

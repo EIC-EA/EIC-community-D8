@@ -147,7 +147,6 @@ class CustomRestrictedVisibility extends RestrictedGroupVisibilityBase implement
    */
   public function getFormStateValues(FormStateInterface $form_state) {
     $group_visibility_options = [];
-
     foreach ($this->plugins as $id => $plugin) {
       $status_field = $id . '_status';
       if ($status_value = $form_state->getValue($status_field)) {
@@ -214,14 +213,15 @@ class CustomRestrictedVisibility extends RestrictedGroupVisibilityBase implement
   /**
    * {@inheritdoc}
    */
-  public static function getPluginFormElementsFieldNames() {
-    // @todo make dynamic
-    return [
-      'email_domains_status' => 'email_domains_status',
-      'email_domains_conf' => 'email_domains_conf',
-      'restricted_users_status' => 'restricted_users_status',
-      'restricted_users_conf' => 'restricted_users_conf',
-    ];
+  public function getPluginFormElementsFieldNames() {
+    $fieldNames = [];
+    foreach ($this->plugins as $plugin) {
+      $pluginFieldNames = $plugin->getFormFieldNames();
+      foreach ($pluginFieldNames as $fieldName) {
+        $fieldNames[$fieldName] = $fieldNames;
+      }
+    }
+    return $fieldNames;
   }
 
 }

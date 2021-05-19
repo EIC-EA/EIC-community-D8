@@ -55,6 +55,18 @@ abstract class CustomRestrictedVisibilityBase extends PluginBase implements Cust
     return $pluginForm;
   }
 
+  /**
+   * Get an array of form field names for this plugin.
+   */
+  public function getFormFieldNames() {
+    $status_field = $this->getPluginId() . '_status';
+    $conf_field = $this->getPluginId() . '_conf';
+    return [
+      $status_field => $status_field,
+      $conf_field => $conf_field,
+    ];
+  }
+
   public function getGroupVisibilitySettings(GroupInterface $group) {
     return \Drupal::service('oec_group_flex.group_visibility.storage')->load($group->id());
   }
