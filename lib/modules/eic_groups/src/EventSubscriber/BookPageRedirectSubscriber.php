@@ -4,7 +4,7 @@ namespace Drupal\eic_groups\EventSubscriber;
 
 use Drupal\book\BookManagerInterface;
 use Drupal\Core\Cache\CacheableRedirectResponse;
-use Drupal\group_purl\Context\GroupPurlContext;
+use Drupal\eic_groups\EICGroupsHelperInterface;
 use Drupal\node\Entity\Node;
 use Drupal\node\NodeInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -33,13 +33,13 @@ class BookPageRedirectSubscriber implements EventSubscriberInterface {
   /**
    * Constructs a new BookPageRedirectSubscriber instance.
    *
-   * @param \Drupal\group_purl\Context\GroupPurlContext $group_purl_context
-   *   The group purl context.
+   * @param \Drupal\eic_groups\EICGroupsHelperInterface $eic_groups_helper
+   *   The EIC Groups helper service.
    * @param \Drupal\book\BookManagerInterface $book_manager
    *   The book manager.
    */
-  public function __construct(GroupPurlContext $group_purl_context, BookManagerInterface $book_manager) {
-    $this->group = $group_purl_context->getGroupFromRoute();
+  public function __construct(EICGroupsHelperInterface $eic_groups_helper, BookManagerInterface $book_manager) {
+    $this->group = $eic_groups_helper->getGroupFromRoute();
     $this->bookManager = $book_manager;
   }
 
@@ -50,17 +50,15 @@ class BookPageRedirectSubscriber implements EventSubscriberInterface {
     return [
       KernelEvents::REQUEST => [
         ['redirectBookPage'],
-      ]
+      ],
     ];
   }
 
   /**
    * Redirect requests from book node detail pages to the 1st level wiki page.
    *
-   * @param RequestEvent $event
+   * @param \Symfony\Component\HttpKernel\Event\RequestEvent $event
    *   The event object.
-   *
-   * @return void
    */
   public function redirectBookPage(RequestEvent $event) {
     $request = $event->getRequest();
@@ -72,7 +70,7 @@ class BookPageRedirectSubscriber implements EventSubscriberInterface {
       return;
     }
 
-    $node = \Drupal::request()->attributes->get('node');
+    $node = $request->attributes->get('node');
 
     if (!($node instanceof NodeInterface)) {
       return;

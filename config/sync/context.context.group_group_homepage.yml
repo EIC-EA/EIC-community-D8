@@ -71,7 +71,7 @@ reactions:
         region: page_header
         weight: '0'
         context_mapping:
-          group: '@group_purl.context_provider:group'
+          group: '@group.group_route_context:group'
         custom_id: eic_group_header
         theme: eic_community
         css_class: ''
