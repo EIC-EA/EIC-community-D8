@@ -12,5 +12,4 @@ audience: outsider
 group_type: group
 permissions_ui: true
 permissions:
-  - 'join group'
   - 'view group'

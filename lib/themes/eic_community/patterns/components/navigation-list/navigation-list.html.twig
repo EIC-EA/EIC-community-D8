@@ -1,4 +1,6 @@
-<div class="ecl-navigation-list">
+{% import "@theme/patterns/core/snippets.twig" as snippets %}
+
+<div class="ecl-navigation-list" {{ snippets.attr(extra_attributes) }}>
   <div class="ecl-navigation-list__controls">
     {% if collapse is not empty %}
       {% include "@ecl-twig/ec-component-button/ecl-button.html.twig" with {
@@ -7,7 +9,7 @@
           name: 'download',
           type: 'custom',
           path: icon_file_path,
-          size: 's',
+          size: 'xs',
         },
         type: 'button',
         variant: 'secondary',

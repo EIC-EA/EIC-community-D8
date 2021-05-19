@@ -6,22 +6,34 @@
  */
 
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\eic_messages\Hooks\EntityOperations;
+use Drupal\eic_messages\Hooks\GroupContentMessageCreator;
+use Drupal\eic_messages\Hooks\GroupMessageCreator;
 
 /**
  * Implements hook_ENTITY_TYPE_insert().
  */
 function eic_messages_group_insert(EntityInterface $entity) {
-  \Drupal::classResolver(EntityOperations::class)
-    ->groupInsert($entity);
+  /** @var GroupMessageCreator $class */
+  $class = \Drupal::classResolver(GroupMessageCreator::class);
+  $class->groupInsert($entity);
 }
 
 /**
  * Implements hook_ENTITY_TYPE_update().
  */
 function eic_messages_group_update(EntityInterface $entity) {
-  \Drupal::classResolver(EntityOperations::class)
-    ->groupUpdate($entity);
+  /** @var GroupMessageCreator $class */
+  $class = \Drupal::classResolver(GroupMessageCreator::class);
+  $class->groupUpdate($entity);
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_insert().
+ */
+function eic_messages_group_content_insert(EntityInterface $entity) {
+  /** @var GroupContentMessageCreator $class */
+  $class = \Drupal::classResolver(GroupContentMessageCreator::class);
+  $class->groupContentInsert($entity);
 }
 
 /**

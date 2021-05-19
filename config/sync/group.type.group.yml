@@ -9,9 +9,8 @@ third_party_settings:
     group_flex_enabler: true
     group_type_visibility: flex
     group_type_joining_method:
-      join_button: join_button
       tu_group_membership_request: tu_group_membership_request
-      group_membership_request: '0'
+      tu_open_method: tu_open_method
     group_type_joining_method_override: true
 id: group
 label: Group

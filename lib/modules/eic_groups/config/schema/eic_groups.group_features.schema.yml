@@ -1,0 +1,9 @@
+eic_groups.group_features.*:
+  type: config_object
+  mapping:
+    permissions:
+      type: sequence
+      label: 'Permissions'
+    roles:
+      type: sequence
+      label: 'Roles'

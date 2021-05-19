@@ -5,9 +5,18 @@
 {% endif %}
 
 <section class="ecl-section-wrapper">
-  <div class="ecl-editorial-article">
+  <div class="ecl-editorial-article {{ extra_classes }}">
     <div class="ecl-container">
       <div class="ecl-editorial-article__wrapper">
+        <section class="ecl-editorial-article__header">
+          {% if actions is not empty %}
+            {% include "@theme/patterns/components/inline-actions.html.twig" with actions|default({})|merge({
+              items: actions.items ? actions.items|map(i => i|merge({
+                extra_classes: i.extra_classes|default('') ~ ' ecl-link--button ecl-link--button-primary'
+              }))
+            }) %}
+          {% endif %}
+        </section>
         <section class="ecl-editorial-article__content">
           {% block content %}
             {{ content }}
