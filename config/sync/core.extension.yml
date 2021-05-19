@@ -70,7 +70,6 @@ module:
   group_content_menu: 0
   group_flex: 0
   group_permissions: 0
-  group_purl: 0
   hal: 0
   image: 0
   inline_entity_form: 0

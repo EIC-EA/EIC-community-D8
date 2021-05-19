@@ -5,5 +5,3 @@ package: European Innovation Council
 core: 8.x
 core_version_requirement: ^8 || ^9
 php: 7.3
-dependencies:
-  - group_purl:group_purl
