@@ -11,12 +11,10 @@ use Drupal\group\Access\GroupAccessResult;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\group\Entity\GroupTypeInterface;
 use Drupal\oec_group_flex\GroupVisibilityDatabaseStorageInterface;
-use Drupal\oec_group_flex\GroupVisibilityRecordInterface;
 use Drupal\oec_group_flex\Plugin\CustomRestrictedVisibilityInterface;
 use Drupal\oec_group_flex\Plugin\CustomRestrictedVisibilityManager;
 use Drupal\oec_group_flex\Plugin\GroupVisibilityOptionsInterface;
 use Drupal\oec_group_flex\Plugin\RestrictedGroupVisibilityBase;
-use Drupal\user\Entity\User;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -29,16 +27,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * )
  */
 class CustomRestrictedVisibility extends RestrictedGroupVisibilityBase implements GroupVisibilityOptionsInterface {
-
-  /**
-   * The option name to restrict group visibility for specific users.
-   */
-  const VISIBILITY_OPTION_RESTRICTED_USERS = 'restricted_users';
-
-  /**
-   * The option name to restrict group visibility for specific email domains.
-   */
-  const VISIBILITY_OPTION_RESTRICTED_EMAIL_DOMAINS = 'restricted_email_domains';
 
   /**
    * The group visibility storage service.
@@ -60,7 +48,7 @@ class CustomRestrictedVisibility extends RestrictedGroupVisibilityBase implement
   private $customRestrictedVisibilityManager;
 
   /**
-   * @var array
+   * @var CustomRestrictedVisibilityInterface[]
    */
   private $plugins;
 
@@ -148,7 +136,7 @@ class CustomRestrictedVisibility extends RestrictedGroupVisibilityBase implement
   public function getFormStateValues(FormStateInterface $form_state) {
     $group_visibility_options = [];
     foreach ($this->plugins as $id => $plugin) {
-      $status_field = $id . '_status';
+      $status_field = $plugin->getStatusKey();
       if ($status_value = $form_state->getValue($status_field)) {
         $group_visibility_options[$id] = [];
         $group_visibility_options[$id][$status_field] = $status_value;
@@ -177,7 +165,7 @@ class CustomRestrictedVisibility extends RestrictedGroupVisibilityBase implement
    * {@inheritdoc}
    */
   public function groupAccess(GroupInterface $entity, $operation, AccountInterface $account) {
-    if ($operation == 'view') {
+    if ($operation === 'view') {
       if (!$entity->getMember($account)) {
         if ($entity->hasPermission('view group', $account)) {
           $group_visibility_record = $this->groupVisibilityStorage->load($entity->id());
