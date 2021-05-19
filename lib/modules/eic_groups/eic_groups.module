@@ -8,7 +8,9 @@
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\eic_groups\Hooks\EntityOperations;
+use Drupal\eic_groups\Hooks\GroupTokens;
 
 /**
  * Implements hook_theme().
@@ -52,4 +54,22 @@ function eic_groups_form_alter(&$form, FormStateInterface $form_state, $form_id)
       break;
 
   }
+}
+
+/**
+ * Implements hook_token_info().
+ */
+function eic_groups_token_info() {
+  /** @var \Drupal\eic_groups\Hooks\GroupTokens $class */
+  $class = \Drupal::classResolver(GroupTokens::class);
+  return $class->tokenInfo();
+}
+
+/**
+ * Implements hook_tokens().
+ */
+function eic_groups_tokens($type, $tokens, array $data, array $options, BubbleableMetadata $bubbleable_metadata) {
+  /** @var \Drupal\eic_groups\Hooks\GroupTokens $class */
+  $class = \Drupal::classResolver(GroupTokens::class);
+  return $class->tokens($type, $tokens, $data, $options, $bubbleable_metadata);
 }
