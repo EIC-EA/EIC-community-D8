@@ -3,7 +3,9 @@
 namespace Drupal\oec_group_flex\Plugin;
 
 use Drupal\Component\Plugin\PluginBase;
+use Drupal\Core\Access\AccessResultNeutral;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\oec_group_flex\GroupVisibilityRecordInterface;
 
@@ -76,6 +78,17 @@ abstract class CustomRestrictedVisibilityBase extends PluginBase implements Cust
    */
   public function getStatusKey(): string {
     return $this->getPluginId() . '_status';
+  }
+
+  /**
+   * Whether a given user has view access to an entity.
+   *
+   * @param \Drupal\group\Entity\GroupInterface $entity
+   * @param \Drupal\Core\Session\AccountInterface $account
+   * @param \Drupal\oec_group_flex\GroupVisibilityRecordInterface $group_visibility_record
+   */
+  public function hasViewAccess(GroupInterface $entity, AccountInterface $account, GroupVisibilityRecordInterface $group_visibility_record) {
+    return AccessResultNeutral::neutral();
   }
 
   protected function getOptionsForPlugin(GroupVisibilityRecordInterface $group_visibility_record) {

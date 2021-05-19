@@ -2,6 +2,9 @@
 
 namespace Drupal\oec_group_flex\Plugin\CustomRestrictedVisibility;
 
+use Drupal\Core\Session\AccountInterface;
+use Drupal\group\Access\GroupAccessResult;
+use Drupal\group\Entity\GroupInterface;
 use Drupal\group\Entity\GroupTypeInterface;
 use Drupal\oec_group_flex\Annotation\CustomRestrictedVisibility;
 use Drupal\oec_group_flex\GroupVisibilityRecordInterface;
@@ -64,6 +67,29 @@ class RestrictedUsers extends CustomRestrictedVisibilityBase {
       }
     }
     return $pluginForm;
+  }
+
+  /**
+   * Whether a given user has view access to an entity.
+   *
+   * @param \Drupal\group\Entity\GroupInterface $entity
+   * @param \Drupal\Core\Session\AccountInterface $account
+   * @param \Drupal\oec_group_flex\GroupVisibilityRecordInterface $group_visibility_record
+   */
+  public function hasViewAccess(GroupInterface $entity, AccountInterface $account, GroupVisibilityRecordInterface $group_visibility_record) {
+    $options = $this->getOptionsForPlugin($group_visibility_record);
+    $restricted_users_conf = array_key_exists('restricted_users_conf', $options) ? $options['restricted_users_conf'] : '';
+
+    // Allow access if user is referenced in restricted_users.
+    foreach ($restricted_users_conf as $restricted_user_id) {
+      if ($account->id() == $restricted_user_id['target_id']) {
+        return GroupAccessResult::allowed()
+          ->addCacheableDependency($account)
+          ->addCacheableDependency($entity);
+      }
+    }
+    // Fallback to neutral access.
+    return parent::hasViewAccess($entity, $account, $group_visibility_record);
   }
 
 }

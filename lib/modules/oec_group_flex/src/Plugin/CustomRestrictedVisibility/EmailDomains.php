@@ -2,7 +2,11 @@
 
 namespace Drupal\oec_group_flex\Plugin\CustomRestrictedVisibility;
 
+use Drupal\Core\Access\AccessResultNeutral;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\group\Access\GroupAccessResult;
+use Drupal\group\Entity\GroupInterface;
 use Drupal\group\Entity\GroupTypeInterface;
 use Drupal\oec_group_flex\Annotation\CustomRestrictedVisibility;
 use Drupal\oec_group_flex\GroupVisibilityRecordInterface;
@@ -58,6 +62,32 @@ class EmailDomains extends CustomRestrictedVisibilityBase {
         }
       }
     }
+  }
+
+  /**
+   * Whether a given user has view access to an entity.
+   *
+   * @param \Drupal\group\Entity\GroupInterface $entity
+   * @param \Drupal\Core\Session\AccountInterface $account
+   * @param \Drupal\oec_group_flex\GroupVisibilityRecordInterface $group_visibility_record
+   */
+  public function hasViewAccess(GroupInterface $entity, AccountInterface $account, GroupVisibilityRecordInterface $group_visibility_record) {
+    $options = $this->getOptionsForPlugin($group_visibility_record);
+    $configurated_emails = array_key_exists('email_domains_conf', $options) ? $options['email_domains_conf'] : '';
+
+    $email_domains = explode(',', $configurated_emails);
+    $account_email_domain = explode('@', $account->getEmail())[1];
+
+    // Allow access if user's email domain is one of the restricted ones.
+    foreach ($email_domains as $email_domain) {
+      if ($account_email_domain === $email_domain) {
+        return GroupAccessResult::allowed()
+          ->addCacheableDependency($account)
+          ->addCacheableDependency($entity);
+      }
+    }
+    // Fallback to neutral access.
+    return parent::hasViewAccess($entity, $account, $group_visibility_record);
   }
 
 }

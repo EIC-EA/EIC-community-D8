@@ -12,6 +12,7 @@ use Drupal\group\Entity\GroupInterface;
 use Drupal\group\Entity\GroupTypeInterface;
 use Drupal\oec_group_flex\GroupVisibilityDatabaseStorageInterface;
 use Drupal\oec_group_flex\GroupVisibilityRecordInterface;
+use Drupal\oec_group_flex\Plugin\CustomRestrictedVisibilityInterface;
 use Drupal\oec_group_flex\Plugin\CustomRestrictedVisibilityManager;
 use Drupal\oec_group_flex\Plugin\GroupVisibilityOptionsInterface;
 use Drupal\oec_group_flex\Plugin\RestrictedGroupVisibilityBase;
@@ -180,48 +181,25 @@ class CustomRestrictedVisibility extends RestrictedGroupVisibilityBase implement
     if ($operation == 'view') {
       if (!$entity->getMember($account)) {
         if ($entity->hasPermission('view group', $account)) {
-
           $group_visibility_record = $this->groupVisibilityStorage->load($entity->id());
-          $has_options = FALSE;
 
-          foreach ($group_visibility_record->getOptions() as $key => $option) {
-            if (!empty($option)) {
-              $has_options = TRUE;
-              switch ($key) {
-                case self::VISIBILITY_OPTION_RESTRICTED_USERS:
-                  // Allow access if user is referenced in restricted_users
-                  // option.
-                  foreach ($option as $restricted_user_id) {
-                    if ($account->id() == $restricted_user_id['target_id']) {
-                      return GroupAccessResult::allowed()
-                        ->addCacheableDependency($account)
-                        ->addCacheableDependency($entity);
-                    }
-                  }
-                  break;
-
-                case self::VISIBILITY_OPTION_RESTRICTED_EMAIL_DOMAINS:
-                  $email_domains = explode(',', $option);
-                  $account_email_domain = explode('@', $account->getEmail())[1];
-
-                  // Allow access if user's email domain is one of the
-                  // restricted ones.
-                  foreach ($email_domains as $email_domain) {
-                    if ($account_email_domain === $email_domain) {
-                      return GroupAccessResult::allowed()
-                        ->addCacheableDependency($account)
-                        ->addCacheableDependency($entity);
-                    }
-                  }
-                  break;
-
+          // Loop through all of the options, they are keyed by pluginId.
+          // If we have a match and the plugin returns not neutral we
+          // return the access result as well.
+          foreach ($group_visibility_record->getOptions() as $pluginId => $groupPluginOptions) {
+            /** @var \Drupal\oec_group_flex\Plugin\CustomRestrictedVisibilityBase $plugin */
+            $plugin = isset($this->plugins[$pluginId]) ? $this->plugins[$pluginId] : NULL;
+            if ($plugin instanceof CustomRestrictedVisibilityInterface) {
+              $pluginAccess = $plugin->hasViewAccess($entity, $account, $group_visibility_record);
+              if (!$pluginAccess->isNeutral()) {
+                return $pluginAccess;
               }
             }
           }
 
           // If the group visibility has options and the current user's account
           // doesn't meet any of those options, we return access forbidden.
-          if ($has_options) {
+          if (!empty($group_visibility_record->getOptions())) {
             return GroupAccessResult::forbidden()
               ->addCacheableDependency($account)
               ->addCacheableDependency($entity);
