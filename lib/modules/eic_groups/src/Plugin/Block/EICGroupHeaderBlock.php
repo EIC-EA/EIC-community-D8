@@ -81,7 +81,9 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
 
     // Do nothing if no group was found in the context or in the current route.
     if ((!$group = $this->getContextValue('group')) || !$group->id()) {
-      return $build;
+      if (!$group = $this->eicGroupsHelper->getGroupFromRoute()) {
+        return $build;
+      }
     }
 
     // The content of this is block is shown depending on the current user's
