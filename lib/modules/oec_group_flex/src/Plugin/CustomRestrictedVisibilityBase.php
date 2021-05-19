@@ -7,6 +7,7 @@ use Drupal\Core\Access\AccessResultNeutral;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\group\Entity\GroupInterface;
+use Drupal\oec_group_flex\GroupVisibilityRecord;
 use Drupal\oec_group_flex\GroupVisibilityRecordInterface;
 
 /**
@@ -14,7 +15,10 @@ use Drupal\oec_group_flex\GroupVisibilityRecordInterface;
  */
 abstract class CustomRestrictedVisibilityBase extends PluginBase implements CustomRestrictedVisibilityInterface {
 
-  public function getPluginForm() {
+  /**
+   * {@inheritdoc}
+   */
+  public function getPluginForm(): array {
     $form[$this->getPluginId()] = [
       '#type' => 'container',
       '#element_validate' => [
@@ -31,17 +35,15 @@ abstract class CustomRestrictedVisibilityBase extends PluginBase implements Cust
   }
 
   /**
-   * Form validation for the whole container element.
-   *
-   * @param array $element
-   *   An associative array containing the properties of the element.
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   The current state of the form.
+   * {@inheritdoc}
    */
   public function validatePluginForm(array &$element, FormStateInterface $form_state) {
   }
 
-  public function setDefaultFormValues(array &$pluginForm, GroupVisibilityRecordInterface $group_visibility_record = NULL) {
+  /**
+   * {@inheritdoc}
+   */
+  public function setDefaultFormValues(array &$pluginForm, GroupVisibilityRecordInterface $group_visibility_record = NULL): array {
     if (is_null($group_visibility_record)) {
       return $pluginForm;
     }
@@ -56,9 +58,9 @@ abstract class CustomRestrictedVisibilityBase extends PluginBase implements Cust
   }
 
   /**
-   * Get an array of form field names for this plugin.
+   * {@inheritdoc}
    */
-  public function getFormFieldNames() {
+  public function getFormFieldNames(): array {
     $status_field = $this->getPluginId() . '_status';
     $conf_field = $this->getPluginId() . '_conf';
     return [
@@ -67,6 +69,13 @@ abstract class CustomRestrictedVisibilityBase extends PluginBase implements Cust
     ];
   }
 
+  /**
+   * Get the group visibility settings.
+   *
+   * @param \Drupal\group\Entity\GroupInterface $group
+   *
+   * @return GroupVisibilityRecord|bool
+   */
   public function getGroupVisibilitySettings(GroupInterface $group) {
     return \Drupal::service('oec_group_flex.group_visibility.storage')->load($group->id());
   }
@@ -93,16 +102,21 @@ abstract class CustomRestrictedVisibilityBase extends PluginBase implements Cust
   }
 
   /**
-   * Whether a given user has view access to an entity.
-   *
-   * @param \Drupal\group\Entity\GroupInterface $entity
-   * @param \Drupal\Core\Session\AccountInterface $account
-   * @param \Drupal\oec_group_flex\GroupVisibilityRecordInterface $group_visibility_record
+   * {@inheritdoc}
    */
   public function hasViewAccess(GroupInterface $entity, AccountInterface $account, GroupVisibilityRecordInterface $group_visibility_record) {
     return AccessResultNeutral::neutral();
   }
 
+  /**
+   * Get the stored options for a given plugin.
+   *
+   * @param \Drupal\oec_group_flex\GroupVisibilityRecordInterface $group_visibility_record
+   *   The group visibility record to retrieve the options from.
+   *
+   * @return array|mixed
+   *   The options for the given plugin.
+   */
   protected function getOptionsForPlugin(GroupVisibilityRecordInterface $group_visibility_record) {
     $allOptions = $group_visibility_record->getOptions();
     return isset($allOptions[$this->getPluginId()]) ? $allOptions[$this->getPluginId()] : [];
