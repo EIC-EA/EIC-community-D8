@@ -16,11 +16,8 @@ function eic_community_preprocess_node__discussion(array &$variables) {
   $node = $variables['node'];
 
   if ($variables['teaser']) {
-    $comment_count = \Drupal::entityQuery('comment')
-      ->condition('entity_id', $node->id())
-      ->condition('entity_type', 'node')
-      ->count()
-      ->execute();
+    // @todo get comment count from backend.
+    $comment_count = 0;
     $discussion_type = $node->get('field_discussion_type')->getString();
 
     $tags = [];

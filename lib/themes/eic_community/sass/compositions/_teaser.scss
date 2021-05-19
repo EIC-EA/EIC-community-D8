@@ -198,6 +198,14 @@
     }
   }
 
+  &__image-fallback-wrapper {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: map-get($ecl-colors, 'white');
+  }
+
   &__main-wrapper {
     flex-grow: 1;
     display: flex;

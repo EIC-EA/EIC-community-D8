@@ -29,19 +29,10 @@ class GroupDiscussions extends GroupFeaturePluginBase {
   const OVERVIEW_DISCUSSIONS_ROUTE = 'view.group_overviews.page_1';
 
   /**
-   * Permissions to grant or revoke.
-   *
-   * @var array
-   */
-  const DISCUSSIONS_PERMS = [
-    'access discussions overview',
-    'create group_node:discussion entity',
-  ];
-
-  /**
    * {@inheritdoc}
    */
   public function enable(GroupInterface $group) {
+    // Menu.
     if ($url = Url::fromRoute(self::OVERVIEW_DISCUSSIONS_ROUTE)) {
       // Check if we have a main menu for this group.
       foreach ($group_menus = group_content_menu_get_menus_per_group($group) as $group_menu) {
@@ -53,10 +44,12 @@ class GroupDiscussions extends GroupFeaturePluginBase {
       }
     }
 
-    // Enable the permissions.
+    // Permissions: enable the permissions.
+    $config = $this->configFactory->get('eic_groups.group_features.eic_groups_discussions');
     $group_permissions = $this->getGroupPermissions($group);
-    $group_permissions = $this->addRolePermissionsToGroup($group_permissions, 'group-member', self::DISCUSSIONS_PERMS);
-    // @todo Get additional roles from the (oec_)group_flex settings.
+    foreach ($config->get('roles') as $role) {
+      $group_permissions = $this->addRolePermissionsToGroup($group_permissions, $role, $config->get('permissions'));
+    }
     $this->saveGroupPermissions($group_permissions);
   }
 
@@ -64,6 +57,7 @@ class GroupDiscussions extends GroupFeaturePluginBase {
    * {@inheritdoc}
    */
   public function disable(GroupInterface $group) {
+    // Menu.
     if ($url = Url::fromRoute(self::OVERVIEW_DISCUSSIONS_ROUTE)) {
       // Check if we have a main menu for this group.
       foreach ($group_menus = group_content_menu_get_menus_per_group($group) as $group_menu) {
@@ -75,10 +69,12 @@ class GroupDiscussions extends GroupFeaturePluginBase {
       }
     }
 
-    // Disable the permissions.
+    // Permissions: disable the permissions.
+    $config = $this->configFactory->get('eic_groups.group_features.eic_groups_discussions');
     $group_permissions = $this->getGroupPermissions($group);
-    $group_permissions = $this->removeRolePermissionsFromGroup($group_permissions, 'group-member', self::DISCUSSIONS_PERMS);
-    // @todo Get additional roles from the (oec_)group_flex settings.
+    foreach ($config->get('roles') as $role) {
+      $group_permissions = $this->removeRolePermissionsFromGroup($group_permissions, $role, $config->get('permissions'));
+    }
     $this->saveGroupPermissions($group_permissions);
   }
 

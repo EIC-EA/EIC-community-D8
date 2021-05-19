@@ -64,7 +64,7 @@
       {{ page.page_header }}
     {% endblock %}
 
-    <div class="ecl-base-layout{{ output_sidebar ? ' ecl-base-layout--contain' }}">
+    <div class="ecl-base-layout{{ output_sidebar ? ' ecl-base-layout--contain' }} {{ layout ? layout.extra_classes }}">
       {% if output_content_before %}
         <div class="ecl-base-layout__content-before">
           {{ output_content_before }}

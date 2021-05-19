@@ -90,7 +90,7 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
   /**
    * {@inheritdoc}
    */
-  public function getGroupOperationLinks(GroupInterface $group, CacheableMetadata $cacheable_metadata = NULL) {
+  public function getGroupOperationLinks(GroupInterface $group, $limit_entities = [], CacheableMetadata $cacheable_metadata = NULL) {
     $operation_links = [];
 
     if (!is_null($cacheable_metadata)) {
@@ -98,6 +98,10 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
       // cacheable metadata.
       foreach ($group->getGroupType()->getInstalledContentPlugins() as $plugin) {
         /** @var \Drupal\group\Plugin\GroupContentEnablerInterface $plugin */
+        if (!empty($limit_entities) && !in_array($plugin->getEntityTypeId(), $limit_entities)) {
+          continue;
+        }
+
         $operation_links += $plugin->getGroupOperations($group);
         $cacheable_metadata = $cacheable_metadata->merge($plugin->getGroupOperationsCacheableMetadata());
       }
@@ -107,6 +111,10 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
       // merging cacheable metadata.
       foreach ($group->getGroupType()->getInstalledContentPlugins() as $plugin) {
         /** @var \Drupal\group\Plugin\GroupContentEnablerInterface $plugin */
+        if (!empty($limit_entities) && !in_array($plugin->getEntityTypeId(), $limit_entities)) {
+          continue;
+        }
+
         $operation_links += $plugin->getGroupOperations($group);
       }
     }

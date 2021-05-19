@@ -35,6 +35,8 @@ interface EICGroupsHelperInterface {
    *
    * @param \Drupal\group\Entity\GroupInterface $group
    *   The Group entity.
+   * @param array $limit_entities
+   *   Array of entities types to limit operation links.
    * @param \Drupal\Core\Cache\CacheableMetadata $cacheable_metadata
    *   An optional cacheable metadata object.
    *
@@ -45,6 +47,6 @@ interface EICGroupsHelperInterface {
    *   - url: An instance of \Drupal\Core\Url for the operation URL.
    *   - weight: The weight of the operation.
    */
-  public function getGroupOperationLinks(GroupInterface $group, CacheableMetadata $cacheable_metadata = NULL);
+  public function getGroupOperationLinks(GroupInterface $group, array $limit_entities = [], CacheableMetadata $cacheable_metadata = NULL);
 
 }

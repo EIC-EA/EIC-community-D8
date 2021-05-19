@@ -9,7 +9,25 @@ dependencies:
     - search_api
 id: group_search_summary
 name: 'Group search summary'
-facets: {  }
+facets:
+  search_group_content_type:
+    checked: true
+    label: 'Content type'
+    separator: ', '
+    weight: 0
+    show_count: false
+  search_group_regions_countries:
+    checked: true
+    label: 'Regions & Countries'
+    separator: ', '
+    weight: 0
+    show_count: false
+  search_group_topics:
+    checked: true
+    label: Topics
+    separator: ', '
+    weight: 0
+    show_count: false
 facet_source_id: 'search_api:views_page__group_overviews__search_group'
 processor_configs:
   hide_when_not_rendered:
@@ -17,6 +35,12 @@ processor_configs:
     weights:
       build: '45'
     settings: {  }
+  reset_facets:
+    processor_id: reset_facets
+    weights:
+      build: '30'
+    settings:
+      link_text: 'Clear all'
   show_text_when_empty:
     processor_id: show_text_when_empty
     weights:

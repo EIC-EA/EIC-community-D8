@@ -3,17 +3,25 @@
 namespace Drupal\oec_group_features;
 
 use Drupal\Component\Plugin\PluginBase;
+use Drupal\Core\Config\ConfigFactory;
+use Drupal\Core\Entity\EntityRepository;
 use Drupal\Core\Entity\EntityStorageException;
+use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\Messenger\MessengerTrait;
 use Drupal\Core\Logger\LoggerChannelTrait;
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\group\Entity\GroupInterface;
+use Drupal\group\Entity\GroupTypeInterface;
+use Drupal\group\GroupRoleSynchronizer;
 use Drupal\group_permissions\Entity\GroupPermission;
+use Drupal\group_permissions\GroupPermissionsManager;
 use Drupal\menu_link_content\Entity\MenuLinkContent;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Base class for group_feature plugins.
  */
-abstract class GroupFeaturePluginBase extends PluginBase implements GroupFeatureInterface {
+abstract class GroupFeaturePluginBase extends PluginBase implements GroupFeatureInterface, ContainerFactoryPluginInterface {
 
   use LoggerChannelTrait;
   use MessengerTrait;
@@ -21,34 +29,82 @@ abstract class GroupFeaturePluginBase extends PluginBase implements GroupFeature
   /**
    * The menu link storage.
    *
-   * @var \Drupal\Core\Entity\EntityStorageInterface
+   * @var \Drupal\Core\Entity\EntityStorage
    */
   protected $menuLinkContentStorage;
 
   /**
    * The entity repository.
    *
-   * @var \Drupal\Core\Entity\EntityRepositoryInterface
+   * @var \Drupal\Core\Entity\EntityRepository
    */
   protected $entityRepository;
 
   /**
    * The group permissions manager.
    *
-   * @var \Drupal\group_permissions\GroupPermissionsManagerInterface
+   * @var \Drupal\group_permissions\GroupPermissionsManager
    */
   protected $groupPermissionsManager;
 
   /**
-   * Creates a new GroupFeaturesHelper object.
+   * The group permissions manager.
+   *
+   * @var \Drupal\group\GroupRoleSynchronizer
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition) {
+  protected $groupRoleSynchronizer;
+
+  /**
+   * The config factory.
+   *
+   * @var \Drupal\Core\Config\ConfigFactory
+   */
+  protected $configFactory;
+
+  /**
+   * Creates a new GroupFeaturePluginBase object.
+   *
+   * @param array $configuration
+   *   A configuration array containing information about the plugin instance.
+   * @param string $plugin_id
+   *   The plugin_id for the plugin instance.
+   * @param mixed $plugin_definition
+   *   The plugin implementation definition.
+   * @param \Drupal\Core\Entity\EntityTypeManager $entity_type_manager
+   *   The entity type manager.
+   * @param \Drupal\Core\Entity\EntityRepository $entity_repository
+   *   The entity repository.
+   * @param \Drupal\group_permissions\GroupPermissionsManager $group_permissions_manager
+   *   The group permissions manager.
+   * @param \Drupal\group\GroupRoleSynchronizer $group_role_synchronizer
+   *   The group permissions manager.
+   * @param \Drupal\Core\Config\ConfigFactory $config_factory
+   *   The configuration factory service.
+   */
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManager $entity_type_manager, EntityRepository $entity_repository, GroupPermissionsManager $group_permissions_manager, GroupRoleSynchronizer $group_role_synchronizer, ConfigFactory $config_factory) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $entity_type_manager = \Drupal::service('entity_type.manager');
 
     $this->menuLinkContentStorage = $entity_type_manager->getStorage('menu_link_content');
-    $this->entityRepository = \Drupal::service('entity.repository');
-    $this->groupPermissionsManager = \Drupal::service('group_permission.group_permissions_manager');
+    $this->entityRepository = $entity_repository;
+    $this->groupPermissionsManager = $group_permissions_manager;
+    $this->groupRoleSynchronizer = $group_role_synchronizer;
+    $this->configFactory = $config_factory;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->get('entity_type.manager'),
+      $container->get('entity.repository'),
+      $container->get('group_permission.group_permissions_manager'),
+      $container->get('group_role.synchronizer'),
+      $container->get('config.factory')
+    );
   }
 
   /**
