@@ -10,9 +10,9 @@ use Drupal\node\NodeInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Class EntityOperations.
+ * Class GroupTokens.
  *
- * Implementations for entity hooks.
+ * Implementations of token hooks.
  */
 class GroupTokens implements ContainerInjectionInterface {
 
@@ -26,7 +26,7 @@ class GroupTokens implements ContainerInjectionInterface {
   protected $entityTypeManager;
 
   /**
-   * Constructs a new EntityOperations object.
+   * Constructs a new GroupTokens object.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
@@ -80,11 +80,17 @@ class GroupTokens implements ContainerInjectionInterface {
                 if ($group_contents = $this->entityTypeManager->getStorage('group_content')->loadByEntity($node)) {
                   /** @var \Drupal\group\Entity\GroupContentInterface $group_content */
                   $group_content = reset($group_contents);
-                  $replacements[$original] = $group_content->getGroup()->label();
+                  if ($group_content->hasTranslation($node->language())) {
+                    $replacements[$original] = $group_content->getGroup()->getTranslation($node->language())->toUrl()->toString();
+                  }
+                  else {
+                    $replacements[$original] = $group_content->getGroup()->toUrl()->toString();
+                  }
                 }
               }
             }
             break;
+
         }
       }
     }
