@@ -1,0 +1,8 @@
+eic_groups.group_features.default_features.*:
+  type: config_object
+  mapping:
+    default_features:
+      type: sequence
+      label: 'Default features'
+      sequence:
+        type: eic_groups.group_features.default_features.[type]

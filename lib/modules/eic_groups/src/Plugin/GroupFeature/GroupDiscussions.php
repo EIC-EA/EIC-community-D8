@@ -54,10 +54,11 @@ class GroupDiscussions extends GroupFeaturePluginBase {
     }
 
     // Enable the permissions.
-    $group_permissions = $this->getGroupPermissions($group);
-    $group_permissions = $this->addRolePermissionsToGroup($group_permissions, 'group-member', self::DISCUSSIONS_PERMS);
-    // @todo Get additional roles from the (oec_)group_flex settings.
-    $this->saveGroupPermissions($group_permissions);
+    if ($group_permissions = $this->getGroupPermissions($group)) {
+      $group_permissions = $this->addRolePermissionsToGroup($group_permissions, 'group-member', self::DISCUSSIONS_PERMS);
+      // @todo Get additional roles from the (oec_)group_flex settings.
+      $this->saveGroupPermissions($group_permissions);
+    }
   }
 
   /**
@@ -76,10 +77,11 @@ class GroupDiscussions extends GroupFeaturePluginBase {
     }
 
     // Disable the permissions.
-    $group_permissions = $this->getGroupPermissions($group);
-    $group_permissions = $this->removeRolePermissionsFromGroup($group_permissions, 'group-member', self::DISCUSSIONS_PERMS);
-    // @todo Get additional roles from the (oec_)group_flex settings.
-    $this->saveGroupPermissions($group_permissions);
+    if ($group_permissions = $this->getGroupPermissions($group)) {
+      $group_permissions = $this->removeRolePermissionsFromGroup($group_permissions, 'group-member', self::DISCUSSIONS_PERMS);
+      // @todo Get additional roles from the (oec_)group_flex settings.
+      $this->saveGroupPermissions($group_permissions);
+    }
   }
 
   /**
