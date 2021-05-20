@@ -6,13 +6,15 @@ dependencies:
     - field.field.node.discussion.field_body
     - field.field.node.discussion.field_comments
     - field.field.node.discussion.field_discussion_type
+    - field.field.node.discussion.field_related_contributors
     - field.field.node.discussion.field_related_documents
     - field.field.node.discussion.field_vocab_geo
     - field.field.node.discussion.field_vocab_topics
     - node.type.discussion
   module:
-    - content_moderation
     - comment
+    - content_moderation
+    - paragraphs
     - path
     - publication_date
     - scheduler
@@ -48,6 +50,18 @@ content:
     settings: {  }
     third_party_settings: {  }
     type: options_select
+    region: content
+  field_related_contributors:
+    type: entity_reference_paragraphs
+    weight: 102
+    settings:
+      title: Paragraph
+      title_plural: Paragraphs
+      edit_mode: open
+      add_mode: dropdown
+      form_display_mode: default
+      default_paragraph_type: ''
+    third_party_settings: {  }
     region: content
   field_related_documents:
     weight: 6
