@@ -1,0 +1,52 @@
+uuid: 4963c7a3-48a8-4619-94b0-e6abd7b3a539
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_related_contributors
+    - node.type.discussion
+    - paragraphs.paragraphs_type.contributor
+  module:
+    - entity_reference_revisions
+id: node.discussion.field_related_contributors
+field_name: field_related_contributors
+entity_type: node
+bundle: discussion
+label: 'Related Contributors'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    negate: 0
+    target_bundles:
+      contributor: contributor
+    target_bundles_drag_drop:
+      banner:
+        weight: 9
+        enabled: false
+      contributor:
+        enabled: true
+        weight: 10
+      cta_tile:
+        weight: 11
+        enabled: false
+      full_media_content:
+        weight: 12
+        enabled: false
+      full_text_content:
+        weight: 13
+        enabled: false
+      quote:
+        weight: 14
+        enabled: false
+      text_and_media_content:
+        weight: 15
+        enabled: false
+      tiles_content:
+        weight: 16
+        enabled: false
+field_type: entity_reference_revisions

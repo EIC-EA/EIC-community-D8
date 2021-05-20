@@ -4,7 +4,7 @@ status: true
 dependencies:
   config:
     - field.storage.message.field_group_membership
-    - group.content_type.group-group_membership
+    - group.content_type.group-group_membership_request
     - message.template.notify_new_membership_request
 id: message.notify_new_membership_request.field_group_membership
 field_name: field_group_membership
@@ -20,9 +20,10 @@ settings:
   handler: 'default:group_content'
   handler_settings:
     target_bundles:
-      group-group_membership: group-group_membership
+      group-group_membership_request: group-group_membership_request
     sort:
       field: _none
+      direction: ASC
     auto_create: false
     auto_create_bundle: ''
 field_type: entity_reference
