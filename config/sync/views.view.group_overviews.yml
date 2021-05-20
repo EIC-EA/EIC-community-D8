@@ -344,7 +344,7 @@ display:
         sorts: false
         relationships: false
         arguments: false
-      path: members
+      path: group/%group/members
       exposed_block: true
       cache:
         type: none
@@ -634,7 +634,7 @@ display:
         operator: AND
         groups:
           1: AND
-      path: discussions
+      path: group/%group/discussions
       exposed_block: true
       display_description: ''
       cache:
@@ -672,7 +672,7 @@ display:
         filters: false
         filter_groups: false
       exposed_block: true
-      path: search-group
+      path: group/%group/search-group
       cache:
         type: none
       access:
