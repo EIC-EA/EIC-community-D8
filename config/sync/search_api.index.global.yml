@@ -73,6 +73,33 @@ name: Global
 description: ''
 read_only: false
 field_settings:
+  aggregated_created:
+    label: '[Aggregated] Created on'
+    property_path: aggregated_field
+    type: date
+    configuration:
+      type: union
+      fields:
+        - 'entity:group/created'
+        - 'entity:node/created'
+  aggregated_field_vocab_geo:
+    label: '[Aggregated] Regions & Countries'
+    property_path: aggregated_field
+    type: integer
+    configuration:
+      type: union
+      fields:
+        - 'entity:group/field_vocab_geo'
+        - 'entity:node/field_vocab_geo'
+  aggregated_field_vocab_topics:
+    label: '[Aggregated] Topics'
+    property_path: aggregated_field
+    type: integer
+    configuration:
+      type: union
+      fields:
+        - 'entity:group/field_vocab_topics'
+        - 'entity:node/field_vocab_topics'
   content__group_content__entity_id_gid:
     label: 'Reverse reference: Group content using Content » Parent group'
     datasource_id: 'entity:node'
@@ -226,6 +253,14 @@ field_settings:
     property_path: label
     type: text
     boost: !!float 3
+    dependencies:
+      module:
+        - group
+  group_status:
+    label: '[Group] Published'
+    datasource_id: 'entity:group'
+    property_path: status
+    type: boolean
     dependencies:
       module:
         - group

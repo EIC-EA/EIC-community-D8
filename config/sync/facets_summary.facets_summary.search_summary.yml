@@ -1,0 +1,51 @@
+uuid: 831a383d-0f54-43e6-9f4b-db1c1ffc8e37
+langcode: en
+status: true
+dependencies:
+  config:
+    - search_api.index.global
+    - views.view.global_overviews
+  module:
+    - search_api
+id: search_summary
+name: 'Search summary'
+facets:
+  search_content_type:
+    checked: true
+    label: 'Content type'
+    separator: ', '
+    weight: 0
+    show_count: false
+  search_regions_countries:
+    checked: true
+    label: 'Regions & Countries'
+    separator: ', '
+    weight: 0
+    show_count: false
+  search_topics:
+    checked: true
+    label: Topics
+    separator: ', '
+    weight: 0
+    show_count: false
+facet_source_id: 'search_api:views_page__global_overviews__search'
+processor_configs:
+  hide_when_not_rendered:
+    processor_id: hide_when_not_rendered
+    weights:
+      build: '45'
+    settings: {  }
+  reset_facets:
+    processor_id: reset_facets
+    weights:
+      build: '30'
+    settings:
+      link_text: 'Clear all'
+  show_text_when_empty:
+    processor_id: show_text_when_empty
+    weights:
+      build: '10'
+    settings:
+      text:
+        value: 'No results found.'
+        format: plain_text
