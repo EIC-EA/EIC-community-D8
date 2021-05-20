@@ -85,10 +85,6 @@
 
   &__item {
     margin-bottom: ecl-layout('gutter', 'controls');
-
-    &:last-child {
-      margin-bottom: 0;
-    }
   }
 
   &__item-label {
