@@ -21,7 +21,8 @@ use Drupal\user\Entity\User;
  * )
  */
 class RestrictedUsers extends CustomRestrictedVisibilityBase {
-  public function getPluginForm() {
+
+  public function getPluginForm(): array {
     $form = parent::getPluginForm();
 
     // Specific trusted users text box.
@@ -49,7 +50,7 @@ class RestrictedUsers extends CustomRestrictedVisibilityBase {
     return $form;
   }
 
-  public function setDefaultFormValues(array &$pluginForm, GroupVisibilityRecordInterface $group_visibility_record = NULL) {
+  public function setDefaultFormValues(array &$pluginForm, GroupVisibilityRecordInterface $group_visibility_record = NULL): array {
     if (is_null($group_visibility_record)) {
       return $pluginForm;
     }

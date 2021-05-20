@@ -22,7 +22,8 @@ use Drupal\oec_group_flex\Plugin\CustomRestrictedVisibilityBase;
  * )
  */
 class EmailDomains extends CustomRestrictedVisibilityBase {
-  public function getPluginForm() {
+
+  public function getPluginForm():array {
     $form = parent::getPluginForm();
     $form[$this->getPluginId()][$this->getPluginId() . '_conf'] = [
       '#title' => ('Email domain'),
