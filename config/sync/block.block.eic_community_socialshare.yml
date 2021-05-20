@@ -10,7 +10,7 @@ dependencies:
 id: eic_community_socialshare
 theme: eic_community
 region: content
-weight: 0
+weight: -3
 provider: null
 plugin: social_share
 settings:
