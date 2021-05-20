@@ -7,16 +7,16 @@ dependencies:
 id: discussions
 label: Discussions
 type: 'canonical_entities:node'
-pattern: 'discussions/[node:title]'
+pattern: '[eic_groups_tokens:node_group_url]/discussions/[node:title]'
 selection_criteria:
-  609df130-597f-471e-9cf9-9ac38102db47:
+  070972a0-f22e-46fc-bed4-3fa7b8beb222:
     id: node_type
     bundles:
       discussion: discussion
     negate: false
     context_mapping:
       node: node
-    uuid: 609df130-597f-471e-9cf9-9ac38102db47
+    uuid: 070972a0-f22e-46fc-bed4-3fa7b8beb222
 selection_logic: and
 weight: -5
 relationships: {  }
