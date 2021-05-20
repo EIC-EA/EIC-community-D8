@@ -5,9 +5,6 @@
  * Contains preprocessor for block__login-block.
  */
 
-use Drupal\Core\Cache\Cache;
-
-
 /**
  * Implements hook_preprocess_block() for login_block.
  */
@@ -25,4 +22,3 @@ function eic_community_preprocess_block__login_block(&$variables, &$cache_tags =
     'icon_file_path' => $variables['eic_icon_path'],
   ];
 }
-

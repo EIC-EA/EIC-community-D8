@@ -10,6 +10,7 @@ use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\node\NodeInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -37,6 +38,9 @@ class LoginBlock extends BlockBase implements ContainerFactoryPluginInterface {
     return ['label_display' => FALSE];
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function __construct(
     array $configuration,
     $plugin_id,
@@ -121,7 +125,7 @@ class LoginBlock extends BlockBase implements ContainerFactoryPluginInterface {
     $login_route = Url::fromRoute('user.login');
     $login_link = Link::fromTextAndUrl($login_text, $login_route);
 
-    $build['title'] = $this->t($title);
+    $build['title'] = $title;
 
     $build['login_link'] = $login_link;
     $build['registration_link'] = $registration_link;
@@ -129,6 +133,9 @@ class LoginBlock extends BlockBase implements ContainerFactoryPluginInterface {
     return $build;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   protected function blockAccess(AccountInterface $account) {
     if ($this->nodeHasCommentsEnabled() && $account->isAnonymous()) {
       return AccessResult::allowed();
@@ -137,10 +144,18 @@ class LoginBlock extends BlockBase implements ContainerFactoryPluginInterface {
     return AccessResult::forbidden();
   }
 
+  /**
+   * Helper function to validate whether the node has comments enabled.
+   *
+   * @return bool
+   *   Boolean whether node has comments with status 'open'.
+   *
+   * @throws \Drupal\Core\TypedData\Exception\MissingDataException
+   */
   private function nodeHasCommentsEnabled() : bool {
     $node = $this->routeMatch->getParameter('node');
 
-    if (FALSE === $node instanceof \Drupal\node\NodeInterface) {
+    if (FALSE === $node instanceof NodeInterface) {
       return FALSE;
     }
 
@@ -160,4 +175,5 @@ class LoginBlock extends BlockBase implements ContainerFactoryPluginInterface {
 
     return TRUE;
   }
+
 }
