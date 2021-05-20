@@ -5294,7 +5294,8 @@
                     }
                 },
                 "patches_applied": {
-                    "3130139 - Group Content Add/Create Paths do not work": "https://www.drupal.org/files/issues/2020-04-23/subpathauto-group-content-create-urls-3130139-2.patch"
+                    "3130139 - Group Content Add/Create Paths do not work": "https://www.drupal.org/files/issues/2020-04-23/subpathauto-group-content-create-urls-3130139-2.patch",
+                    "3188768 - Install from configuration fails due to missing dependencies": "./patches/subpathauto/3188768-subpathauto-add-dependencies.patch"
                 }
             },
             "notification-url": "https://packages.drupal.org/8/downloads",
