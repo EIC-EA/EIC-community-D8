@@ -11,6 +11,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\eic_groups\Hooks\EntityOperations;
 use Drupal\eic_groups\Hooks\GroupTokens;
+use Drupal\eic_groups\Hooks\FormOperations;
 
 /**
  * Implements hook_theme().
@@ -24,6 +25,14 @@ function eic_groups_theme($existing, $type, $theme, $path) {
       ],
     ],
   ];
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function eic_groups_form_group_group_add_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  \Drupal::classResolver(FormOperations::class)
+    ->groupGroupAddForm($form, $form_state);
 }
 
 /**

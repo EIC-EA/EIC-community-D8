@@ -1,9 +1,10 @@
 {% set item_title_element = item_title_element|default('span') %}
 
-<div class="ecl-extended-list__items">
+<div class="ecl-extended-list__items {{ group ? 'ecl-extended-list__items--has-grouped-layout' }}">
     {% for item in items %}
       {% include "@theme/patterns/compositions/extended-list/extended-list-item.html.twig" with item|merge({
-        item_title_element: item.item_title_element|default(item_title_element)
+        item_title_element: item.item_title_element|default(item_title_element),
+        group: item.group,
       }) only %}
     {% endfor %}
   </div>

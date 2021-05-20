@@ -1,0 +1,22 @@
+# Harmonica
+
+Displays a simple harmonica component that can be expanded and collapsed.
+A specific harmonica item can be openend with the data attribute `data-harmonica-initial-index` or the GET parameter `harmonica-index` or if the component has a specified id you can use `harmonica--{{ID}}-index`.
+
+## Example:
+
+```
+{% include "@theme/patterns/components/harmonica.html.twig" %}
+```
+
+## Twig parameters:
+
+| Key             | Type     | Description                                                                                                                                                                         | Mandatory |
+| --------------- | -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- | --- |
+| title           | string   | Displays a title above the harmonica.                                                                                                                                               | no        |     |
+| description     | string   | Displays a description below the harmonica title.                                                                                                                                   | no        |     |
+| icon            | object   | Displays the optional icon for the given content type. Follows the [ECL Twig icon component](https://ecl-twig-php.netlify.app/ec/?path=/story/components-icon--general) properties. | no        |
+| icon_file_path  | string   | The URL of the inline SVG sprite that will be used for the icon.                                                                                                                    | no        |
+| items           | object[] | The actual harmonica items to display.                                                                                                                                              | no        |
+| items[].title   | object[] | The title of the current harmonica item.                                                                                                                                            | no        |
+| items[].content | string   | The rendered content of the harmonica item.                                                                                                                                         | no        |
