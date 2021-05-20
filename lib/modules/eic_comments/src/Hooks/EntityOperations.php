@@ -63,7 +63,7 @@ class EntityOperations implements ContainerInjectionInterface {
     $commentedEntity = $entity->getCommentedEntity();
     $commentedEntityBundle = $commentedEntity->bundle();
 
-    if ($commentedEntityBundle !== "discussion") {
+    if ($commentedEntityBundle !== 'discussion') {
       return;
     }
 
