@@ -16,7 +16,7 @@ function eic_community_preprocess_media__document__default(&$variables) {
   /** @var \Drupal\media\Entity\Media $media */
   $media = $variables['media'];
   $file_value = DocumentMediaValueExtractor::getFileValue($media);
-  if (!$file_value) {
+  if (!$file_value || is_null($file_value)) {
     return;
   }
 
