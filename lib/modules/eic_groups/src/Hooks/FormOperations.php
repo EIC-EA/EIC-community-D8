@@ -14,7 +14,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * Implementations for entity hooks.
  */
-class FormAlter implements ContainerInjectionInterface {
+class FormOperations implements ContainerInjectionInterface {
 
   use StringTranslationTrait;
 
