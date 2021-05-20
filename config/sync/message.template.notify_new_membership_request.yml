@@ -3,17 +3,17 @@ langcode: en
 status: true
 dependencies:
   config:
-    - filter.format.plain_text
+    - filter.format.full_html
 template: notify_new_membership_request
 label: 'NOTIFY :: MT14 :: New membership request'
 description: ''
 text:
   -
-    value: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
-    format: plain_text
+    value: 'A new member requested to join [message:field_group_ref:entity:title]'
+    format: full_html
   -
-    value: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
-    format: plain_text
+    value: "Dear [message:field_group_ref:entity:author],\r\n\r\nA new member requested to join [message:field_group_ref:entity:title] at [site:name].\r\n\r\n<a href=\"[message:field_group_membership:entity:url]\">Manage this request</a>.\r\n\r\nPlease find their details below:\r\n\r\n[message:field_related_user:entity:account-name]\r\nBased in ...\r\nExpertise: ..\r\nAbout: ...\r\n\r\nMessage from this member:\r\n...\r\n\r\nView this member's <a href=\"[message:field_related_user:entity:url]\">profile</a> at European Innovation Council.\r\n\r\n<a href=\"[message:field_group_membership:entity:url]/approve-membership\">Approve</a> - <a href=\"[message:field_group_membership:entity:url]/reject-membership\">Reject</a>\r\n"
+    format: full_html
 settings:
   'token options':
     clear: false

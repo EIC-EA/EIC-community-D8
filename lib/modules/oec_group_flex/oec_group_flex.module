@@ -85,6 +85,10 @@ function oec_group_flex_group_delete(EntityInterface $entity) {
  * Implements hook_group_flex_group_joining_method_info_alter().
  */
 function oec_group_flex_group_flex_group_joining_method_info_alter(array &$definitions) {
+  // Remove the standard request method provided by group flex.
+  if (isset($definitions['group_membership_request'])) {
+    unset($definitions['group_membership_request']);
+  }
   // Remove the standard join_button provided by group flex.
   if (isset($definitions['join_button'])) {
     unset($definitions['join_button']);

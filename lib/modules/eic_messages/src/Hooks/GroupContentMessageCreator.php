@@ -33,6 +33,24 @@ class GroupContentMessageCreator extends MessageCreatorBase {
       ]);
       $messages[] = $message;
     }
+
+    /** @var \Drupal\group\Entity\GroupContent $entity */
+    $group_content_type = $entity->getGroupContentType();
+    if ($group_content_type->get('content_plugin') === 'group_membership_request') {
+      $relatedUser = $entity->getEntity();
+      $relatedGroup = $entity->getGroup();
+
+      // Prepare the message to the group owner.
+      $message = \Drupal::entityTypeManager()->getStorage('message')->create([
+        'template' => 'notify_new_membership_request',
+        'uid' => $relatedGroup->getOwnerId(),
+        'field_group_ref' => ['target_id' => $relatedGroup->id()],
+        'field_group_membership' => ['target_id' => $entity->id()],
+        'field_related_user' => ['target_id' => $relatedUser->id()],
+      ]);
+      $messages[] = $message;
+    }
+
     $this->processMessages($messages);
   }
 
