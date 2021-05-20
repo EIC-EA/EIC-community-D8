@@ -2,15 +2,18 @@
 
 namespace Drupal\eic_comments\Plugin\Block;
 
-use Drupal\Component\Serialization\Json;
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Link;
-use Drupal\Core\Render\Markup;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Provides an Login block.
+ * Provides a Login block.
  *
  * @Block(
  *   id = "login_block",
@@ -18,13 +21,43 @@ use Drupal\Core\Url;
  *   category = @Translation("Custom")
  * )
  */
-class LoginBlock extends BlockBase {
+class LoginBlock extends BlockBase implements ContainerFactoryPluginInterface {
+
+  /**
+   * The current route match.
+   *
+   * @var \Drupal\Core\Routing\RouteMatchInterface
+   */
+  protected $routeMatch;
 
   /**
    * {@inheritdoc}
    */
   public function defaultConfiguration() {
     return ['label_display' => FALSE];
+  }
+
+  public function __construct(
+    array $configuration,
+    $plugin_id,
+    $plugin_definition,
+    RouteMatchInterface $route_match
+  ) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+
+    $this->routeMatch = $route_match;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->get('current_route_match')
+    );
   }
 
   /**
@@ -67,19 +100,19 @@ class LoginBlock extends BlockBase {
   public function build() {
     $config = $this->getConfiguration();
 
-    $title = $this->t('Please log in to see comment and contribute');
+    $title = $this->t('Please log in to see comments and contribute');
     if (!empty($config['headline'])) {
       $title = $config['headline'];
     }
 
     $login_text = $this->t('Log in');
-    if (!empty($config['$login_text'])) {
-      $login_text = $config['$login_text'];
+    if (!empty($config['login_text'])) {
+      $login_text = $config['login_text'];
     }
 
     $register_text = $this->t('Register');
-    if (!empty($config['$register_text'])) {
-      $register_text = $config['$register_text'];
+    if (!empty($config['register_text'])) {
+      $register_text = $config['register_text'];
     }
 
     $register_route = Url::fromRoute('user.register');
@@ -96,4 +129,35 @@ class LoginBlock extends BlockBase {
     return $build;
   }
 
+  protected function blockAccess(AccountInterface $account) {
+    if ($this->nodeHasCommentsEnabled() && $account->isAnonymous()) {
+      return AccessResult::allowed();
+    }
+
+    return AccessResult::forbidden();
+  }
+
+  private function nodeHasCommentsEnabled() : bool {
+    $node = $this->routeMatch->getParameter('node');
+
+    if (FALSE === $node instanceof \Drupal\node\NodeInterface) {
+      return FALSE;
+    }
+
+    if (!$node->hasField('field_comments')) {
+      return FALSE;
+    }
+
+    $field_comments = $node->get('field_comments')->first()->getValue();
+    $status = intval($field_comments['status']);
+
+    // Status 0: Comments are "hidden".
+    // Status 1: Comments are "closed".
+    // Status 2: Comments are "open".
+    if ($status !== 2) {
+      return FALSE;
+    }
+
+    return TRUE;
+  }
 }
