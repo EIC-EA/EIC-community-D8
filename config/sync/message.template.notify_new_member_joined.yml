@@ -3,17 +3,17 @@ langcode: en
 status: true
 dependencies:
   config:
-    - filter.format.plain_text
+    - filter.format.full_html
 template: notify_new_member_joined
 label: 'NOTIFY :: MT13 :: New member joined'
 description: ''
 text:
   -
-    value: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
-    format: plain_text
+    value: 'A new member joined [message:field_group_ref:entity:title]'
+    format: full_html
   -
-    value: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
-    format: plain_text
+    value: "Dear [message:field_group_ref:entity:author],\r\n\r\nA new member joined <a href=\"[message:field_group_ref:entity:url]\">[message:field_group_ref:entity:title]</a>[message:field_group_ref] at [site:name].\r\n\r\nPlease find their details below:\r\n\r\n[message:field_related_user:entity:account-name]\r\nBased in ...\r\nExpertise: ..\r\nAbout: ...\r\n\r\nView this member's <a href=\"[message:field_related_user:entity:url]\">profile</a> at European Innovation Council."
+    format: full_html
 settings:
   'token options':
     clear: false

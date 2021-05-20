@@ -3,10 +3,6 @@
 /**
  * @file
  * Primary module hooks for OEC Group Flex module.
- *
- * @DCG
- * This file is no longer required in Drupal 8.
- * @see https://www.drupal.org/node/2217931
  */
 
 use Drupal\Core\Access\AccessResult;
@@ -82,5 +78,15 @@ function oec_group_flex_group_delete(EntityInterface $entity) {
   // Deletes the group visibility record entry from database.
   if ($group_visibility_record = $group_visibility_storage->load($entity->id())) {
     $group_visibility_storage->delete([$group_visibility_record]);
+  }
+}
+
+/**
+ * Implements hook_group_flex_group_joining_method_info_alter().
+ */
+function oec_group_flex_group_flex_group_joining_method_info_alter(array &$definitions) {
+  // Remove the standard join_button provided by group flex.
+  if (isset($definitions['join_button'])) {
+    unset($definitions['join_button']);
   }
 }
