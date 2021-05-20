@@ -70,17 +70,6 @@ abstract class CustomRestrictedVisibilityBase extends PluginBase implements Cust
   }
 
   /**
-   * Get the group visibility settings.
-   *
-   * @param \Drupal\group\Entity\GroupInterface $group
-   *
-   * @return GroupVisibilityRecord|bool
-   */
-  public function getGroupVisibilitySettings(GroupInterface $group) {
-    return \Drupal::service('oec_group_flex.group_visibility.storage')->load($group->id());
-  }
-
-  /**
    * {@inheritdoc}
    */
   public function getLabel(): string {
