@@ -22,6 +22,9 @@ use Drupal\user\Entity\User;
  */
 class RestrictedUsers extends CustomRestrictedVisibilityBase {
 
+  /**
+   * {@inheritdoc}
+   */
   public function getPluginForm(): array {
     $form = parent::getPluginForm();
 
@@ -50,6 +53,9 @@ class RestrictedUsers extends CustomRestrictedVisibilityBase {
     return $form;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function setDefaultFormValues(array &$pluginForm, GroupVisibilityRecordInterface $group_visibility_record = NULL): array {
     if (is_null($group_visibility_record)) {
       return $pluginForm;
@@ -71,11 +77,7 @@ class RestrictedUsers extends CustomRestrictedVisibilityBase {
   }
 
   /**
-   * Whether a given user has view access to an entity.
-   *
-   * @param \Drupal\group\Entity\GroupInterface $entity
-   * @param \Drupal\Core\Session\AccountInterface $account
-   * @param \Drupal\oec_group_flex\GroupVisibilityRecordInterface $group_visibility_record
+   * {@inheritdoc}
    */
   public function hasViewAccess(GroupInterface $entity, AccountInterface $account, GroupVisibilityRecordInterface $group_visibility_record) {
     $options = $this->getOptionsForPlugin($group_visibility_record);
