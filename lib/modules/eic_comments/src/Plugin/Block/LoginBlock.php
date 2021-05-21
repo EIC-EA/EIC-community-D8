@@ -2,6 +2,7 @@
 
 namespace Drupal\eic_comments\Plugin\Block;
 
+use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -169,7 +170,7 @@ class LoginBlock extends BlockBase implements ContainerFactoryPluginInterface {
     // Status 0: Comments are "hidden".
     // Status 1: Comments are "closed".
     // Status 2: Comments are "open".
-    if ($status !== 2) {
+    if ($status !== CommentItemInterface::OPEN) {
       return FALSE;
     }
 
