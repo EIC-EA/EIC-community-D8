@@ -46,7 +46,9 @@ function eic_community_get_teaser_user_display(User $user) {
   ];
 
   if (!$user->get('field_media')->isEmpty()) {
-    $image_item = ImageValueObject::fromImageItem($user->get('field_media')->first());
+    /** @var \Drupal\media\Entity\Media $media */
+    $media = \Drupal::service('entity.repository')->getTranslationFromContext($user->get('field_media')->entity);
+    $image_item = ImageValueObject::fromImageItem($media->get('oe_media_image')->first());
     $author['image'] = [
       'src' => $image_item->getSource(),
       'alt' => $author['name'],
