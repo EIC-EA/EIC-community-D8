@@ -1,0 +1,22 @@
+uuid: 9e52b726-f7e6-4b34-9f31-a0dddeb8dcf6
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: books
+label: Books
+type: 'canonical_entities:node'
+pattern: '[eic_groups_tokens:node_group_url]/[node:title]'
+selection_criteria:
+  492c0f0d-fe56-447e-94a5-3de244bd53ff:
+    id: node_type
+    bundles:
+      book: book
+    negate: false
+    context_mapping:
+      node: node
+    uuid: 492c0f0d-fe56-447e-94a5-3de244bd53ff
+selection_logic: and
+weight: -10
+relationships: {  }

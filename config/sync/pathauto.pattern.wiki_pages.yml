@@ -1,0 +1,22 @@
+uuid: 30db2b25-edc5-47f1-8e7d-2c4aa2c836c8
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: wiki_pages
+label: 'Wiki pages'
+type: 'canonical_entities:node'
+pattern: '[eic_groups_tokens:node_group_url]/[node:book:parents:join-path]/[node:title]'
+selection_criteria:
+  2a195ea2-0fb2-4aee-b499-8320caaf3125:
+    id: node_type
+    bundles:
+      wiki_page: wiki_page
+    negate: false
+    context_mapping:
+      node: node
+    uuid: 2a195ea2-0fb2-4aee-b499-8320caaf3125
+selection_logic: and
+weight: -8
+relationships: {  }

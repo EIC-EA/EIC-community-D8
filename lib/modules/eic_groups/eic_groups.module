@@ -82,3 +82,11 @@ function eic_groups_tokens($type, $tokens, array $data, array $options, Bubbleab
   $class = \Drupal::classResolver(GroupTokens::class);
   return $class->tokens($type, $tokens, $data, $options, $bubbleable_metadata);
 }
+
+/**
+ * Implements hook_group_update().
+ */
+function eic_groups_group_update(EntityInterface $entity) {
+  \Drupal::classResolver(EntityOperations::class)
+    ->groupUpdate($entity);
+}

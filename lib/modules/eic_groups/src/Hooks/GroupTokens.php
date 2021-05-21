@@ -81,10 +81,15 @@ class GroupTokens implements ContainerInjectionInterface {
                   /** @var \Drupal\group\Entity\GroupContentInterface $group_content */
                   $group_content = reset($group_contents);
                   if ($group_content->hasTranslation($node->language())) {
-                    $replacements[$original] = $group_content->getGroup()->getTranslation($node->language())->toUrl()->toString();
+                    $group = $group_content->getGroup()->getTranslation($node->language());
                   }
                   else {
-                    $replacements[$original] = $group_content->getGroup()->toUrl()->toString();
+                    $group = $group_content->getGroup();
+                  }
+
+                  if ($group->isPublished()) {
+                    $replacements[$original] = $group->toUrl()->toString();
+                    break;
                   }
                 }
               }

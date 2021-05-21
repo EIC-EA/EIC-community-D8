@@ -19,5 +19,5 @@ selection_criteria:
       group: group
     uuid: 7b70289a-ef5c-4c7c-9933-cf064ce3ec3c
 selection_logic: and
-weight: -5
+weight: -7
 relationships: {  }
