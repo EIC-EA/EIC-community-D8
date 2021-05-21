@@ -96,6 +96,9 @@ class EntityOperations implements ContainerInjectionInterface {
               $build['link_add_child_wiki_page'] = $add_wiki_page_urls['add_child_wiki_page']->toString();
               $build['link_add_child_wiki_page_renderable'] = Link::fromTextAndUrl($this->t('Add a new wiki page'), $add_wiki_page_urls['add_child_wiki_page'])->toRenderable();
             }
+            // Unsets book navigation since we already have that show in the
+            // eic_groups_wiki_book_navigation block plugin.
+            unset($build['book_navigation']);
           }
         }
         elseif ($entity->bundle() === 'wiki_page') {
