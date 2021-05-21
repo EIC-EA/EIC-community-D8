@@ -1,0 +1,34 @@
+uuid: 7d130385-ea9b-4309-abc2-d557c5b2c195
+langcode: en
+status: true
+dependencies: {  }
+name: comment_pages
+label: 'Comment pages'
+group: Global
+description: ''
+requireAllConditions: false
+disabled: false
+conditions: {  }
+reactions:
+  blocks:
+    blocks:
+      bb14acf0-0379-4169-8b58-0075ade6944c:
+        id: login_block
+        label: 'EIC Comment Login Block'
+        provider: eic_comments
+        label_display: '0'
+        region: content
+        weight: '0'
+        headline: 'Log in to see comments and contribute'
+        context_mapping: {  }
+        custom_id: login_block
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: comment_pages
+        uuid: bb14acf0-0379-4169-8b58-0075ade6944c
+    id: blocks
+    saved: false
+    uuid: 00b2bc6d-551d-42bb-8187-6eb0be6d22a5
+    include_default_blocks: 0
+weight: 0

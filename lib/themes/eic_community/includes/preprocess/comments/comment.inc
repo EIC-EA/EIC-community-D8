@@ -57,8 +57,6 @@ function eic_community_preprocess_comment(&$variables) {
     'icon_file_path' => $variables['eic_icon_path'],
   ];
 
-  // @todo Fix/add permission checks for Group Implementation.
-  // @see: EICNET-728.
   // If there are replies to the comment, disable 'can_edit'.
   $cid = $comment->id();
   $nid = $comment->getCommentedEntityId();

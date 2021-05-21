@@ -9,7 +9,7 @@ _core:
 id: eic_community_tabs
 theme: eic_community
 region: content
-weight: 1
+weight: -2
 provider: null
 plugin: local_tasks_block
 settings:
