@@ -152,11 +152,14 @@ class CustomRestrictedVisibility extends RestrictedGroupVisibilityBase implement
       '#tags' => TRUE,
       '#target_type' => 'user',
       '#required' => FALSE,
+      '#selection_handler' => 'views',
       '#selection_settings' => [
-        'include_anonymous' => FALSE,
-        'filter' => [
-          'role' => ['trusted_user'],
+        'view' => [
+          'view_name' => 'entity_reference_user',
+          'display_name' => 'full_name_trusted',
+          'arguments' => [],
         ],
+        'match_operator' => 'CONTAINS',
       ],
       '#states' => [
         'visible' => [
