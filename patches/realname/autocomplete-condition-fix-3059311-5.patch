@@ -1,0 +1,14 @@
+diff --git a/src/Controller/RealnameAutocompleteController.php b/src/Controller/RealnameAutocompleteController.php
+index 77aeea2..e62f92c 100644
+--- a/src/Controller/RealnameAutocompleteController.php
++++ b/src/Controller/RealnameAutocompleteController.php
+@@ -21,7 +21,9 @@ class RealnameAutocompleteController extends EntityAutocompleteController {
+    * {@inheritdoc}
+    */
+   public function handleAutocomplete(Request $request, $target_type, $selection_handler, $selection_settings_key) {
+-    if ($target_type != 'user') {
++    $allowed_selection_handlers = ['default:user', 'default'];
++    if ($target_type != 'user' || !in_array($selection_handler,
++        $allowed_selection_handlers)) {
+       return parent::handleAutocomplete($request, $target_type, $selection_handler, $selection_settings_key);
+     }
