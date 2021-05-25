@@ -19,7 +19,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *  visibilityOptions = {
  *   "public",
  *   "flex",
- *   "restricted"
+ *   "restricted_community_members",
+ *   "custom_restricted"
  *  }
  * )
  */
@@ -28,7 +29,7 @@ class TuOpenMethod extends GroupJoiningMethodBase implements ContainerFactoryPlu
   /**
    * The group role synchronizer.
    *
-   * @var GroupRoleSynchronizer
+   * @var \Drupal\group\GroupRoleSynchronizer
    */
   protected $groupRoleSynchronizer;
 

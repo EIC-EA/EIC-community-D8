@@ -7,12 +7,14 @@ dependencies:
     - field.field.node.discussion.field_body
     - field.field.node.discussion.field_comments
     - field.field.node.discussion.field_discussion_type
+    - field.field.node.discussion.field_related_contributors
     - field.field.node.discussion.field_related_documents
     - field.field.node.discussion.field_vocab_geo
     - field.field.node.discussion.field_vocab_topics
     - node.type.discussion
   module:
     - comment
+    - entity_reference_revisions
     - options
     - text
     - user
@@ -43,6 +45,15 @@ content:
     settings: {  }
     third_party_settings: {  }
     type: list_default
+    region: content
+  field_related_contributors:
+    type: entity_reference_revisions_entity_view
+    weight: 107
+    label: above
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
     region: content
   field_related_documents:
     weight: 105

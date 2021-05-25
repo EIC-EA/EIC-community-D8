@@ -19,6 +19,8 @@ function eic_community_theme_suggestions_views_view_alter(array &$suggestions, a
     case 'group_related_groups':
       $suggestions[] = "views_view__featured_content_collection";
       break;
-
+    case 'global_overviews':
+      $suggestions[] = "views_view__teaser_overview";
+      break;
   }
 }

@@ -19,5 +19,8 @@
 | Key           | Type     | Description                                                                       | Mandatory |
 | ------------- | -------- | --------------------------------------------------------------------------------- | --------- | --- |
 | title         | string   | The initial title for the list.                                                   | no        |     |
+| description   | string   | Displays an optional description below the title.                                 | no        |     |
+| group         | boolean  | Groups the defined items as a comma separated list.                               | no        |     |
 | items         | object[] | The actual list items, can be nested where a `title` and/or `items` should exist. | no        |     |
 | items[].title | string   | The title value for each (sub)item.                                               | no        |     |
+| items[].path  | string   | Wraps the defined title in an anchor element                                      | no        |     |

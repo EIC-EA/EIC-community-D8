@@ -1,0 +1,11 @@
+uuid: 2c97220e-a82a-4f4b-b3fa-8db1fbb4aa2e
+langcode: en
+status: true
+dependencies: {  }
+id: views_page---global_overviews__search_aggregated_created
+display_id: views_page---global_overviews__search
+field_identifier: aggregated_created
+default_sort: false
+default_order: desc
+label: 'Date created'
+weight: 0

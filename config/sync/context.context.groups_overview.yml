@@ -25,7 +25,7 @@ reactions:
         provider: facets_summary
         label_display: '0'
         region: content
-        weight: '-2'
+        weight: '-1'
         context_mapping: {  }
         custom_id: facets_summary_block_groups_summary
         theme: eic_community
@@ -96,7 +96,7 @@ reactions:
         provider: search_api_sorts
         label_display: visible
         region: content
-        weight: '-1'
+        weight: '-2'
         context_mapping: {  }
         custom_id: search_api_sorts_block_views_page_global_overviews__page_1
         theme: eic_community

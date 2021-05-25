@@ -5,7 +5,6 @@ namespace Drupal\oec_group_flex\Plugin\CustomRestrictedVisibility;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\group\Access\GroupAccessResult;
 use Drupal\group\Entity\GroupInterface;
-use Drupal\group\Entity\GroupTypeInterface;
 use Drupal\oec_group_flex\Annotation\CustomRestrictedVisibility;
 use Drupal\oec_group_flex\GroupVisibilityRecordInterface;
 use Drupal\oec_group_flex\Plugin\CustomRestrictedVisibilityBase;
@@ -35,11 +34,14 @@ class RestrictedUsers extends CustomRestrictedVisibilityBase {
       '#tags' => TRUE,
       '#target_type' => 'user',
       '#required' => FALSE,
+      '#selection_handler' => 'views',
       '#selection_settings' => [
-        'include_anonymous' => FALSE,
-        'filter' => [
-          'role' => ['trusted_user'],
+        'view' => [
+          'view_name' => 'entity_reference_user',
+          'display_name' => 'full_name_trusted',
+          'arguments' => [],
         ],
+        'match_operator' => 'CONTAINS',
       ],
       '#states' => [
         'visible' => [

@@ -9,6 +9,8 @@ use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\eic_groups\Hooks\EntityOperations;
+use Drupal\eic_groups\Hooks\FormOperations;
+use Drupal\eic_groups\Hooks\Preprocess;
 
 /**
  * Implements hook_theme().
@@ -22,6 +24,14 @@ function eic_groups_theme($existing, $type, $theme, $path) {
       ],
     ],
   ];
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function eic_groups_form_group_group_add_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  \Drupal::classResolver(FormOperations::class)
+    ->groupGroupAddForm($form, $form_state);
 }
 
 /**
@@ -52,4 +62,13 @@ function eic_groups_form_alter(&$form, FormStateInterface $form_state, $form_id)
       break;
 
   }
+}
+
+/**
+ * Implements hook_preprocess_links__node().
+ */
+function eic_groups_preprocess_links__node(&$variables) {
+  /** @var \Drupal\eic_groups\Hooks\Preprocess $class */
+  $class = \Drupal::classResolver(Preprocess::class);
+  $class->preprocessLinksNode($variables);
 }
