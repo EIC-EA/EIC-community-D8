@@ -42,6 +42,11 @@ content:
     settings:
       link: false
     third_party_settings: {  }
+  flag_bookmark_content:
+    weight: 10
+    settings: {  }
+    third_party_settings: {  }
+    region: content
   flag_highlight_content:
     weight: 10
     settings: {  }

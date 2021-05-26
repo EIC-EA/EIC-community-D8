@@ -1,27 +1,30 @@
-uuid: 381e2fa6-286f-4747-8735-38285fac0b37
+uuid: dc0b0a64-e0b1-49c5-982c-0bb2b2810056
 langcode: en
 status: true
 dependencies:
   module:
+    - eic_flags
     - group
-id: bookmark_group
-label: 'Bookmark (group)'
-bundles: {  }
-entity_type: group
+id: recommend_group_content
+label: 'Recommend (group content)'
+bundles:
+  - group-group_node-discussion
+  - group-group_node-document
+entity_type: group_content
 global: false
 weight: 0
-flag_short: 'Bookmark this item'
+flag_short: 'Recommend this item'
 flag_long: ''
 flag_message: ''
-unflag_short: 'Unbookmark this item'
+unflag_short: 'Unrecommend this item'
 unflag_long: ''
 unflag_message: ''
 unflag_denied_text: ''
 flood_control_active: false
 flood_control_limit: 0
 flood_control_window: 0
-flag_type: 'entity:group'
-link_type: ajax_link
+flag_type: 'entity:group_content'
+link_type: eic_count_link
 flagTypeConfig:
   show_in_links: {  }
   show_as_field: true

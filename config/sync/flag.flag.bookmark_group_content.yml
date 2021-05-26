@@ -6,7 +6,9 @@ dependencies:
     - group
 id: bookmark_group_content
 label: 'Bookmark (group content)'
-bundles: {  }
+bundles:
+  - group-group_node-discussion
+  - group-group_node-document
 entity_type: group_content
 global: false
 weight: 0

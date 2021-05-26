@@ -1,0 +1,15 @@
+uuid: f95b8c0c-58a3-4320-aa46-150e86794ac8
+langcode: en
+status: true
+dependencies:
+  config:
+    - flag.flag.like_group_content
+  module:
+    - flag
+id: flag_action.like_group_content_unflag
+label: 'Unlike this item'
+type: group_content
+plugin: 'flag_action:like_group_content_unflag'
+configuration:
+  flag_id: like_group_content
+  flag_action: unflag
