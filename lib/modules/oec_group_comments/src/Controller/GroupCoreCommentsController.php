@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\group_core_comments\Controller;
+namespace Drupal\oec_group_comments\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Entity\EntityTypeManagerInterface;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\group_core_comments;
+namespace Drupal\oec_group_comments;
 
 use Drupal\Core\Access\AccessResult;
 use Drupal\comment\CommentAccessControlHandler;

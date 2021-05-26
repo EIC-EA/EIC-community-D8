@@ -2,15 +2,15 @@
 
 /**
  * @file
- * Contains Drupal\group_core_comments\group_core_comments.module.
+ * Contains Drupal\oec_group_comments\oec_group_comments.module.
  */
 
 /**
  * Implements hook_entity_type_alter().
  */
-function group_core_comments_entity_type_alter(array &$entity_types) {
+function oec_group_comments_entity_type_alter(array &$entity_types) {
   if (isset($entity_types['comment'])) {
-    $class = 'Drupal\group_core_comments\GroupCommentAccessControlHandler';
+    $class = 'Drupal\oec_group_comments\GroupCommentAccessControlHandler';
     $entity_types['comment']->setAccessClass($class);
   }
 }
