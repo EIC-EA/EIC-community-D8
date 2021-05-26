@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 /**
  * Provides group core comments controllers.
  */
-class GroupCoreCommentsController extends ControllerBase {
+class OecGroupCommentsController extends ControllerBase {
 
   /**
    * Request service.

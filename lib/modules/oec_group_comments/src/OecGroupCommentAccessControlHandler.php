@@ -16,7 +16,7 @@ use Drupal\Core\Session\AccountInterface;
  *
  * @todo Implement setting to make it possible overridden on per-group basis.
  */
-class GroupCommentAccessControlHandler extends CommentAccessControlHandler {
+class OecGroupCommentAccessControlHandler extends CommentAccessControlHandler {
 
   /**
    * {@inheritdoc}
