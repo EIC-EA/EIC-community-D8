@@ -43,12 +43,16 @@ class CustomRestrictedVisibility extends RestrictedGroupVisibilityBase implement
   protected $emailValidator;
 
   /**
+   * The custom restricted visibility manager.
+   *
    * @var \Drupal\oec_group_flex\Plugin\CustomRestrictedVisibilityManager
    */
   private $customRestrictedVisibilityManager;
 
   /**
-   * @var CustomRestrictedVisibilityInterface[]
+   * The custom restricted visibility plugins.
+   *
+   * @var \Drupal\oec_group_flex\Plugin\CustomRestrictedVisibilityInterface[]
    */
   private $plugins;
 
@@ -67,6 +71,8 @@ class CustomRestrictedVisibility extends RestrictedGroupVisibilityBase implement
    *   The group visibility storage service.
    * @param \Drupal\Component\Utility\EmailValidatorInterface $email_validator
    *   The email validator service.
+   * @param \Drupal\oec_group_flex\Plugin\CustomRestrictedVisibilityManager $customRestrictedVisibilityManager
+   *   The custom restricted visibility manager.
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, ConfigFactoryInterface $configFactory, GroupVisibilityDatabaseStorageInterface $groupVisibilityStorage, EmailValidatorInterface $email_validator, CustomRestrictedVisibilityManager $customRestrictedVisibilityManager) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $configFactory);
@@ -113,6 +119,9 @@ class CustomRestrictedVisibility extends RestrictedGroupVisibilityBase implement
 
     $form[$form_fields_container] = [
       '#type' => 'container',
+      '#element_validate' => [
+        [$this, 'validateGroupVisibilityOptions'],
+      ],
     ];
 
     $group_visibility_record = NULL;
@@ -145,6 +154,23 @@ class CustomRestrictedVisibility extends RestrictedGroupVisibilityBase implement
       }
     }
     return $group_visibility_options;
+  }
+
+  /**
+   * Validate the group visibility options.
+   */
+  public function validateGroupVisibilityOptions(array &$element, FormStateInterface $form_state) {
+    $selectedGroupVisibility = $form_state->getValue('group_visibility');
+    if ($selectedGroupVisibility === 'custom_restricted') {
+      foreach ($this->plugins as $plugin) {
+        if ($form_state->getValue($plugin->getStatusKey()) === 1) {
+          return;
+        }
+      }
+
+      $form_state->setError($element, $this->t('Please select a visibility option.'));
+    }
+
   }
 
   /**
