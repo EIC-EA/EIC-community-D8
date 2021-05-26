@@ -191,37 +191,36 @@ class CustomRestrictedVisibility extends RestrictedGroupVisibilityBase implement
    * {@inheritdoc}
    */
   public function groupAccess(GroupInterface $entity, $operation, AccountInterface $account) {
-    if ($operation === 'view') {
-      if (!$entity->getMember($account)) {
-        if ($entity->hasPermission('view group', $account) && $entity->isPublished()) {
-          $group_visibility_record = $this->groupVisibilityStorage->load($entity->id());
+    $neutral = GroupAccessResult::neutral();
+    if ($this->skipAccessCheck($entity, $operation, $account)) {
+      return $neutral;
+    }
 
-          // Loop through all of the options, they are keyed by pluginId.
-          // If we have a match and the plugin returns not neutral we
-          // return the access result as well.
-          foreach ($group_visibility_record->getOptions() as $pluginId => $groupPluginOptions) {
-            /** @var \Drupal\oec_group_flex\Plugin\CustomRestrictedVisibilityBase $plugin */
-            $plugin = isset($this->plugins[$pluginId]) ? $this->plugins[$pluginId] : NULL;
-            if ($plugin instanceof CustomRestrictedVisibilityInterface) {
-              $pluginAccess = $plugin->hasViewAccess($entity, $account, $group_visibility_record);
-              if (!$pluginAccess->isNeutral()) {
-                return $pluginAccess;
-              }
-            }
-          }
+    $group_visibility_record = $this->groupVisibilityStorage->load($entity->id());
 
-          // If the group visibility has options and the current user's account
-          // doesn't meet any of those options, we return access forbidden.
-          if (!empty($group_visibility_record->getOptions())) {
-            return GroupAccessResult::forbidden()
-              ->addCacheableDependency($account)
-              ->addCacheableDependency($entity);
-          }
+    // Loop through all of the options, they are keyed by pluginId.
+    // If we have a match and the plugin returns not neutral we
+    // return the access result as well.
+    foreach ($group_visibility_record->getOptions() as $pluginId => $groupPluginOptions) {
+      /** @var \Drupal\oec_group_flex\Plugin\CustomRestrictedVisibilityBase $plugin */
+      $plugin = isset($this->plugins[$pluginId]) ? $this->plugins[$pluginId] : NULL;
+      if ($plugin instanceof CustomRestrictedVisibilityInterface) {
+        $pluginAccess = $plugin->hasViewAccess($entity, $account, $group_visibility_record);
+        if (!$pluginAccess->isNeutral()) {
+          return $pluginAccess;
         }
       }
     }
 
-    return GroupAccessResult::neutral();
+    // If the group visibility has options and the current users account
+    // doesn't meet any of those options, we return access forbidden.
+    if (!empty($group_visibility_record->getOptions())) {
+      return GroupAccessResult::forbidden()
+        ->addCacheableDependency($account)
+        ->addCacheableDependency($entity);
+    }
+
+    return $neutral;
   }
 
   /**
@@ -236,6 +235,23 @@ class CustomRestrictedVisibility extends RestrictedGroupVisibilityBase implement
       }
     }
     return $fieldNames;
+  }
+
+  /**
+   * Checks if the access check can be skipped.
+   *
+   * @param \Drupal\group\Entity\GroupInterface $entity
+   *   The group entity to check for skipping access.
+   * @param string $operation
+   *   The operation on the entity.
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *   The performing account.
+   *
+   * @return bool
+   *   True when the skip access check can be skipped.
+   */
+  private function skipAccessCheck(GroupInterface $entity, $operation, AccountInterface $account) {
+    return ($operation !== 'view' || !$entity->isPublished() || $entity->getMember($account) || !$entity->hasPermission('view group', $account));
   }
 
 }
