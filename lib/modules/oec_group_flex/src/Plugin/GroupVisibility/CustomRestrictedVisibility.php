@@ -193,7 +193,7 @@ class CustomRestrictedVisibility extends RestrictedGroupVisibilityBase implement
   public function groupAccess(GroupInterface $entity, $operation, AccountInterface $account) {
     if ($operation === 'view') {
       if (!$entity->getMember($account)) {
-        if ($entity->hasPermission('view group', $account)) {
+        if ($entity->hasPermission('view group', $account) && $entity->isPublished()) {
           $group_visibility_record = $this->groupVisibilityStorage->load($entity->id());
 
           // Loop through all of the options, they are keyed by pluginId.
