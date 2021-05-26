@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "58a076a2d10b6414900f557fc8ee1dc6",
+    "content-hash": "1326d368bd6cf27072cb0dd637166ef5",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -5055,31 +5055,31 @@
             }
         },
         {
-            "name": "drupal/search_api_sorts",
-            "version": "1.0.0",
+            "name": "drupal/search_api_spellcheck",
+            "version": "3.0.0-beta1",
             "source": {
                 "type": "git",
-                "url": "https://git.drupalcode.org/project/search_api_sorts.git",
-                "reference": "8.x-1.0"
+                "url": "https://git.drupalcode.org/project/search_api_spellcheck.git",
+                "reference": "8.x-3.0-beta1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/search_api_sorts-8.x-1.0.zip",
-                "reference": "8.x-1.0",
-                "shasum": "ee25bc0ce195a5b40d09c3ac7fb358391c48fb0e"
+                "url": "https://ftp.drupal.org/files/projects/search_api_spellcheck-8.x-3.0-beta1.zip",
+                "reference": "8.x-3.0-beta1",
+                "shasum": "b5bd31765918170c55370a16defc0e6ec8374feb"
             },
             "require": {
-                "drupal/core": "^8.8 || ^9",
-                "drupal/search_api": "^1.14"
+                "drupal/core": "^8 || ^9",
+                "drupal/search_api": "~1.17"
             },
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "8.x-1.0",
-                    "datestamp": "1599830574",
+                    "version": "8.x-3.0-beta1",
+                    "datestamp": "1605436873",
                     "security-coverage": {
-                        "status": "covered",
-                        "message": "Covered by Drupal's security advisory policy"
+                        "status": "not-covered",
+                        "message": "Beta releases are not covered by Drupal security advisories."
                     }
                 }
             },
@@ -5089,22 +5089,23 @@
             ],
             "authors": [
                 {
-                    "name": "JeroenT",
-                    "homepage": "https://www.drupal.org/user/2228934"
+                    "name": "Contributors",
+                    "homepage": "https://www.drupal.org/node/1150950/committers"
                 },
                 {
-                    "name": "StryKaizer",
-                    "homepage": "https://www.drupal.org/user/462700"
+                    "name": "mkalkbrenner",
+                    "homepage": "https://www.drupal.org/user/124705"
                 },
                 {
-                    "name": "borisson_",
-                    "homepage": "https://www.drupal.org/user/2393360"
+                    "name": "welly",
+                    "homepage": "https://www.drupal.org/user/354705"
                 }
             ],
-            "description": "Create sort options for search queries executed via the Search API.",
-            "homepage": "https://www.drupal.org/project/search_api_sorts",
+            "description": "Allows you to display search spellcheck suggestions in views.",
+            "homepage": "https://www.drupal.org/project/search_api_spellcheck",
             "support": {
-                "source": "https://git.drupalcode.org/project/search_api_sorts"
+                "source": "http://git.drupal.org/project/search_api_spellcheck.git",
+                "issues": "https://www.drupal.org/project/issues/search_api_spellcheck"
             }
         },
         {
@@ -12181,6 +12182,59 @@
             "time": "2020-06-01T18:13:52+00:00"
         },
         {
+            "name": "drupal/search_api_sorts",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/search_api_sorts.git",
+                "reference": "8.x-1.0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/search_api_sorts-8.x-1.0.zip",
+                "reference": "8.x-1.0",
+                "shasum": "ee25bc0ce195a5b40d09c3ac7fb358391c48fb0e"
+            },
+            "require": {
+                "drupal/core": "^8.8 || ^9",
+                "drupal/search_api": "^1.14"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "8.x-1.0",
+                    "datestamp": "1599830574",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "JeroenT",
+                    "homepage": "https://www.drupal.org/user/2228934"
+                },
+                {
+                    "name": "StryKaizer",
+                    "homepage": "https://www.drupal.org/user/462700"
+                },
+                {
+                    "name": "borisson_",
+                    "homepage": "https://www.drupal.org/user/2393360"
+                }
+            ],
+            "description": "Create sort options for search queries executed via the Search API.",
+            "homepage": "https://www.drupal.org/project/search_api_sorts",
+            "support": {
+                "source": "https://git.drupalcode.org/project/search_api_sorts"
+            }
+        },
+        {
             "name": "easyrdf/easyrdf",
             "version": "1.1.1",
             "source": {
@@ -15465,6 +15519,7 @@
         "drupal/openapi_rest": 5,
         "drupal/publication_date": 10,
         "drupal/realname": 20,
+        "drupal/search_api_spellcheck": 10,
         "drupal/typed_link": 20,
         "ethosce/group_purl": 20,
         "lramarojaona/purl": 15,
