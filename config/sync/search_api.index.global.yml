@@ -4,8 +4,8 @@ status: true
 dependencies:
   module:
     - search_api_solr
-    - group
     - node
+    - group
     - profile
     - search_api
     - flag_search_api
@@ -13,14 +13,14 @@ dependencies:
     - flag
     - user
   config:
+    - field.storage.node.field_body
+    - field.storage.node.field_discussion_type
+    - field.storage.node.field_subtitle
+    - field.storage.node.field_vocab_geo
+    - field.storage.node.field_vocab_topics
     - field.storage.group.field_body
     - field.storage.group.field_vocab_geo
     - field.storage.group.field_vocab_topics
-    - field.storage.node.field_body
-    - field.storage.node.field_vocab_geo
-    - field.storage.node.field_subtitle
-    - field.storage.node.field_vocab_topics
-    - field.storage.node.field_discussion_type
     - field.storage.profile.field_body
     - field.storage.profile.field_vocab_job_title
     - field.storage.profile.field_vocab_language
@@ -100,6 +100,17 @@ field_settings:
       fields:
         - 'entity:group/field_vocab_topics'
         - 'entity:node/field_vocab_topics'
+  aggregated_search_spellcheck:
+    label: '[Aggregated] Search spellcheck'
+    property_path: aggregated_field
+    type: solr_text_spellcheck
+    configuration:
+      type: concat
+      fields:
+        - 'entity:group/field_body'
+        - 'entity:group/label'
+        - 'entity:node/field_body'
+        - 'entity:node/title'
   content__group_content__entity_id_gid:
     label: 'Reverse reference: Group content using Content » Parent group'
     datasource_id: 'entity:node'
