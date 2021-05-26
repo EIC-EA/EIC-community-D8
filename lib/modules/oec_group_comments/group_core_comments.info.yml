@@ -1,4 +1,4 @@
-name: Group Core Comments support
+name: OEC Group Comments
 type: module
 description: Enables Group functionality for the Comment module
 core_version_requirement: ^8.8 || ^9

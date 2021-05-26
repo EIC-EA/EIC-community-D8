@@ -66,43 +66,4 @@ class GroupCoreCommentsController extends ControllerBase {
     );
   }
 
-  /**
-   * Callback to quick joining group.
-   *
-   * @param \Drupal\group\Entity\GroupInterface $group
-   *   Group entity.
-   *
-   * @return \Symfony\Component\HttpFoundation\RedirectResponse
-   *   Redirect response.
-   *
-   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
-   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
-   * @throws \Drupal\Core\Entity\EntityStorageException
-   */
-  public function quickJoinGroup(GroupInterface $group) {
-    /** @var \Drupal\group\Plugin\GroupContentEnablerInterface $plugin */
-    $plugin = $group->getGroupType()->getContentPlugin('group_membership');
-
-    $group_content = $this->entityTypeManager()->getStorage('group_content')->create([
-      'type' => $plugin->getContentTypeConfigId(),
-      'gid' => $group->id(),
-      'entity_id' => $this->currentUser()->id(),
-    ]);
-
-    $result = $group_content->save();
-
-    if ($result) {
-      $this->messenger()->addMessage($this->t('You have joined the group and you can leave your comment now.'));
-    }
-    else {
-      $this->messenger()->addError($this->t('Error when joining the group.'));
-    }
-
-    $previous_url = $this->requestService->getCurrentRequest()->headers->get('referer');
-    $request = Request::create($previous_url);
-    $referer_path = $request->getRequestUri();
-
-    return new RedirectResponse($referer_path);
-  }
-
 }
