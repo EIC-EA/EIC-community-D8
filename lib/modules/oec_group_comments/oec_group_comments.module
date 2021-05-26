@@ -10,7 +10,7 @@
  */
 function oec_group_comments_entity_type_alter(array &$entity_types) {
   if (isset($entity_types['comment'])) {
-    $class = 'Drupal\oec_group_comments\OecGroupCommentAccessControlHandler';
+    $class = 'Drupal\oec_group_comments\OecGroupCommentsAccessControlHandler';
     $entity_types['comment']->setAccessClass($class);
   }
 }
