@@ -26,7 +26,7 @@ class OecGroupCommentsController extends ControllerBase {
   protected $requestService;
 
   /**
-   * Constructs a new GroupCoreCommentsController.
+   * Constructs a new OecGroupCommentsController.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The Entity type manager.
