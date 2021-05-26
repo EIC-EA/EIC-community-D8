@@ -11,23 +11,8 @@
     padding: ecl-box-model('padding--lg', 'banner') 0;
   }
 
-  & .ecl-container::before {
-    display: block;
-    margin-bottom: ecl-box-model('padding', 'banner');
-    content: "";
-    border-bottom: ecl-border();
-
-      @include ecl-media-breakpoint-up('md') {
-        margin-bottom: ecl-box-model('padding--md', 'banner');
-      }
-
-      @include ecl-media-breakpoint-up('lg') {
-        margin-bottom: ecl-box-model('padding--lg', 'banner');
-      }
-
-    #{$node}:first-child & {
-      display: none
-    }
+  .ecl-contact-information-block + & {
+    padding-top: 0;
   }
 
   &__wrapper {

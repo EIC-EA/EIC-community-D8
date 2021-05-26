@@ -13,7 +13,7 @@
     <div class="ecl-card">
       {% for author in card.authors %}
         {% include "@theme/patterns/components/author.html.twig" with {
-          author: author.author,
+          name: author.name,
           image: author.image,
         } only %}
       {% endfor %}

@@ -8,6 +8,20 @@
     @include ecl-media-breakpoint-up('md') {
       flex-direction: row;
     }
+
+    padding-bottom: ecl-box-model('padding', 'banner');
+    margin-bottom: ecl-box-model('padding', 'banner');
+    border-bottom: ecl-border();
+
+    @include ecl-media-breakpoint-up('md') {
+      margin-bottom: ecl-box-model('padding--md', 'banner');
+      padding-bottom: ecl-box-model('padding--md', 'banner');
+    }
+
+    @include ecl-media-breakpoint-up('lg') {
+      margin-bottom: ecl-box-model('padding--lg', 'banner');
+      padding-bottom: ecl-box-model('padding--lg', 'banner');
+    }
   }
 
   &__image-wrapper {

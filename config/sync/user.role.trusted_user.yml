@@ -9,6 +9,7 @@ is_admin: null
 permissions:
   - 'access comments'
   - 'access group overview'
+  - 'add content to books'
   - 'create eic_document media'
   - 'create group group'
   - 'create image media'
@@ -17,6 +18,7 @@ permissions:
   - 'edit own image media'
   - 'flag recommend_group'
   - 'post comments'
+  - 'skip comment approval'
   - 'unflag recommend_group'
   - 'use groups transition create_new_draft'
   - 'use groups transition create_new_group'

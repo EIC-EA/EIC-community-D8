@@ -1,14 +1,45 @@
 .ecl-editorial-article {
+  $node: &;
+
   &__wrapper {
+    display: flex;
+    flex-direction: column;
+
     @include ecl-media-breakpoint-up('md') {
-      display: flex;
       align-items: stretch;
+      flex-direction: row;
+
+      #{$node}--is-collapsible & {
+        @include ecl-media-breakpoint-up('md') {
+          flex-wrap: wrap;
+        }
+      }
+    }
+  }
+
+  &__header,
+  &__content {
+    #{$node}--is-ready#{$node}--is-collapsible & {
+      @include ecl-media-breakpoint-up('md') {
+        margin-left: calc(100% / #{$ecl-grid-columns} * 4);
+      }
+    }
+
+    #{$node}--is-ready#{$node}--is-collapsible[aria-collapsed="true"] & {
+      @include ecl-media-breakpoint-up('md') {
+        margin-left: 0;
+      }
     }
   }
 
   &__content {
     font-size: ecl-typography('font-size');
     line-height: ecl-typography('line-height');
+    margin-top: ecl-layout('gutter');
+
+    &:first-child {
+      margin-top: 0;
+    }
 
     @include ecl-media-breakpoint-up('md') {
       flex-grow: 1;
@@ -51,11 +82,37 @@
     position: relative;
     margin-top: ecl-layout('gutter');
 
+    #{$node}--is-collapsible & {
+      margin-top: 0;
+      margin-bottom: ecl-layout('gutter');
+      order: -1;
+    }
+
     @include ecl-media-breakpoint-up('md') {
       box-sizing: border-box;
       margin: 0;
       padding-left: ecl-layout('gutter');
       width: calc(100% / #{$ecl-grid-columns} * 4);
+
+      #{$node}--has-reversed-layout & {
+        @include ecl-media-breakpoint-up('md') {
+          padding-left: 0;
+          order: -1;
+          padding-right: ecl-layout('gutter');
+        }
+      }
+
+      #{$node}--is-ready#{$node}--is-collapsible & {
+        height: 0;
+        margin: 0;
+      }
+
+      #{$node}--is-ready#{$node}--is-collapsible[aria-collapsed="true"] & {
+        height: auto;
+        width: auto;
+      }
+
+
       flex-shrink: 0;
     }
   }
@@ -64,6 +121,11 @@
     @include ecl-media-breakpoint-up('md') {
       position: sticky;
       top: ecl-layout('gutter');
+
+      #{$node}--is-collapsible#{$node}--is-ready & {
+        position: relative;
+        top: auto;
+      }
     }
   }
 

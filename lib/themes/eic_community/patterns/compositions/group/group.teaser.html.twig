@@ -1,11 +1,24 @@
 {% set title_element = title_element|default('h2') %}
 
 <div class="ecl-teaser ecl-teaser--group {{ highlight.is_active ? 'ecl-teaser--is-highlighted' }} {{ extra_classes }}">
-  {% if image is not empty %}
     <figure class="ecl-teaser__image-wrapper">
-      <img class="ecl-teaser__image" src="{{ image.src }}" alt="{{ image.alt }}" />
+      {% if image is not empty %}
+        <img class="ecl-teaser__image" src="{{ image.src }}" alt="{{ image.alt }}" />
+      {% else %}
+        {% if icon_file_path %}
+          <div class="ecl-teaser__image-fallback-wrapper">
+            {% include '@ecl-twig/ec-component-icon/ecl-icon.html.twig' with {
+              icon: {
+                size: '3xl',
+                path: icon_file_path,
+                type: 'custom',
+                name: 'group_circle',
+              },
+            } only %}
+          </div>
+        {% endif %}
+      {% endif %}
     </figure>
-  {% endif %}
   <div class="ecl-teaser__main-wrapper">
     {% if type is not empty %}
       <div class="ecl-teaser__meta-header">
@@ -31,7 +44,7 @@
           {% include "@theme/patterns/components/author.html.twig" with owner|default({})|merge({
             extra_classes: 'ecl-teaser__meta',
             size: 'tiny',
-            author: owner.label,
+            author: owner.name,
             image: owner.image,
             icon_file_path: icon_file_path,
           }) only %}

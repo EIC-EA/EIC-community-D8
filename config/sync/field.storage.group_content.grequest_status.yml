@@ -1,0 +1,26 @@
+uuid: 78ee6462-8cb7-422b-9ecf-d1a929843101
+langcode: en
+status: true
+dependencies:
+  enforced:
+    module:
+      - group
+      - state_machine
+      - grequest
+  module:
+    - group
+    - state_machine
+_core:
+  default_config_hash: _jUH1PyNTCinGYkAGqy_jBTXOjS_GiMrE80MDZuKxbI
+id: group_content.grequest_status
+field_name: grequest_status
+entity_type: group_content
+type: state
+settings: {  }
+module: state_machine
+locked: false
+cardinality: 1
+translatable: false
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

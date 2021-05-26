@@ -1,0 +1,13 @@
+block.settings.login_block:
+  type: block_settings
+  label: 'EIC Comments Login Block'
+  mapping:
+    headline:
+      type: text
+      label: 'Login to comment and contribute'
+    login_link:
+      type: link
+      label: 'Path to login page'
+    register_link:
+      type: link
+      label: 'Path to register page'

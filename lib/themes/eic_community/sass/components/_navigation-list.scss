@@ -1,7 +1,8 @@
 .ecl-navigation-list {
   $node: &;
   padding: map-get($ecl-spacing, 'xs');
-  border: ecl-border();
+  outline: ecl-border();
+  outline-offset: -1px;
 
   &,
   &__main-before,
@@ -27,6 +28,7 @@
 
   &--is-ready[aria-collapsed="true"] {
     display: inline-block;
+    padding: map-get($ecl-spacing, '2xs');
   }
 
   &__items,

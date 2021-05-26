@@ -8,6 +8,8 @@
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\media\Entity\Media;
 use Drupal\file\Entity\File;
+use Drupal\eic_community\ValueObject\ImageValueObject;
+use Drupal\user\Entity\User;
 
 /**
  * Creates image array for twig templates.
@@ -32,4 +34,26 @@ function _get_profile_image_array(EntityInterface $user): ?array {
     'src' => $user_image_file->createFileUrl(),
     'alt' => $user_image_media->oe_media_image->alt,
   ];
+}
+
+/**
+ * Transform a user entity for a storybook template.
+ */
+function eic_community_get_teaser_user_display(User $user) {
+  $author = [
+    'name' => $user->getDisplayName(),
+    'path' => $user->toUrl()->toString(),
+  ];
+
+  if (!$user->get('field_media')->isEmpty()) {
+    /** @var \Drupal\media\Entity\Media $media */
+    $media = \Drupal::service('entity.repository')->getTranslationFromContext($user->get('field_media')->entity);
+    $image_item = ImageValueObject::fromImageItem($media->get('oe_media_image')->first());
+    $author['image'] = [
+      'src' => $image_item->getSource(),
+      'alt' => $author['name'],
+    ];
+  }
+
+  return $author;
 }
