@@ -127,9 +127,12 @@ class LoginBlock extends BlockBase implements ContainerFactoryPluginInterface {
     $login_link = Link::fromTextAndUrl($login_text, $login_route);
 
     $build['title'] = $title;
-
-    $build['login_link'] = $login_link;
-    $build['registration_link'] = $registration_link;
+    $build['login_link'] = $login_link->toRenderable();
+    $build['login_link']['label'] = $login_link->getText();
+    $build['login_link']['url'] = $login_link->getUrl();
+    $build['registration_link'] = $registration_link->toRenderable();
+    $build['registration_link']['label'] = $registration_link->getText();
+    $build['registration_link']['url'] = $registration_link->getUrl();
 
     return $build;
   }
