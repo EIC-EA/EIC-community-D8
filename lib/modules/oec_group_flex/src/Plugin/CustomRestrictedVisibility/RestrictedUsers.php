@@ -3,6 +3,7 @@
 namespace Drupal\oec_group_flex\Plugin\CustomRestrictedVisibility;
 
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\group\Access\GroupAccessResult;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\oec_group_flex\Annotation\CustomRestrictedVisibility;
@@ -21,6 +22,8 @@ use Drupal\user\Entity\User;
  */
 class RestrictedUsers extends CustomRestrictedVisibilityBase {
 
+  use StringTranslationTrait;
+
   /**
    * {@inheritdoc}
    */
@@ -29,7 +32,7 @@ class RestrictedUsers extends CustomRestrictedVisibilityBase {
 
     // Specific trusted users text box.
     $form[$this->getPluginId()][$this->getPluginId() . '_conf'] = [
-      '#title' => ('Select trusted users'),
+      '#title' => $this->t('Select trusted users'),
       '#type' => 'entity_autocomplete',
       '#tags' => TRUE,
       '#target_type' => 'user',

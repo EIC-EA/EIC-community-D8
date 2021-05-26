@@ -2,26 +2,27 @@
 
 namespace Drupal\oec_group_flex\Plugin\CustomRestrictedVisibility;
 
-use Drupal\Core\Access\AccessResultNeutral;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\group\Access\GroupAccessResult;
 use Drupal\group\Entity\GroupInterface;
-use Drupal\group\Entity\GroupTypeInterface;
 use Drupal\oec_group_flex\Annotation\CustomRestrictedVisibility;
 use Drupal\oec_group_flex\GroupVisibilityRecordInterface;
 use Drupal\oec_group_flex\Plugin\CustomRestrictedVisibilityBase;
 
 /**
- * Provides a 'email_domains' custom restricted visibility.
+ * Provides a 'restricted_email_domains' custom restricted visibility.
  *
  * @CustomRestrictedVisibility(
- *  id = "email_domains",
+ *  id = "restricted_email_domains",
  *  label = @Translation("Specific email domains"),
  *  weight = 0
  * )
  */
-class EmailDomains extends CustomRestrictedVisibilityBase {
+class RestrictedEmailDomains extends CustomRestrictedVisibilityBase {
+
+  use StringTranslationTrait;
 
   /**
    * {@inheritdoc}
@@ -29,8 +30,8 @@ class EmailDomains extends CustomRestrictedVisibilityBase {
   public function getPluginForm():array {
     $form = parent::getPluginForm();
     $form[$this->getPluginId()][$this->getPluginId() . '_conf'] = [
-      '#title' => ('Email domain'),
-      '#description' => t('Add multiple email domains but separating them with a comma'),
+      '#title' => $this->t('Email domain'),
+      '#description' => $this->t('Add multiple email domains but separating them with a comma'),
       '#type' => 'textfield',
       '#element_validate' => [
         [$this, 'validateEmailDomains'],
@@ -62,7 +63,7 @@ class EmailDomains extends CustomRestrictedVisibilityBase {
       foreach ($domain_names as $domain_name) {
         $valid = \Drupal::service('email.validator')->isvalid("placeholder@$domain_name");
         if (!$valid) {
-          return $form_state->setError($element, t('One of the email domains is not valid.'));
+          return $form_state->setError($element, $this->t('One of the email domains is not valid.'));
         }
       }
     }
