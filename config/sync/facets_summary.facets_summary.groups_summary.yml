@@ -10,15 +10,15 @@ dependencies:
 id: groups_summary
 name: 'Groups summary'
 facets:
-  groups_region_countries:
-    checked: true
-    label: 'Region & Countries'
-    separator: ', '
-    weight: 0
-    show_count: false
   groups_topics:
     checked: true
     label: Topics
+    separator: ', '
+    weight: 0
+    show_count: false
+  groups_regions_countries:
+    checked: true
+    label: 'Region & Countries'
     separator: ', '
     weight: 0
     show_count: false
