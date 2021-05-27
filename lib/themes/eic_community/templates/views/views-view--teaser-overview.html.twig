@@ -36,6 +36,12 @@
   ]
 %}
 
+{% if header %}
+  <header>
+    {{ header }}
+  </header>
+{% endif %}
+
 {% if rows -%}
   {% set _rows_length = rows[0]['#rows']|length %}
   {% set _items = [] %}
