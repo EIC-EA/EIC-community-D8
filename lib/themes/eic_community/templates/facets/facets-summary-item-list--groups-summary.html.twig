@@ -1,0 +1,60 @@
+{#
+/**
+ * @file
+ * Theme override implementation for a facets summary item list.
+ *
+ * Available variables:
+ * - items: A list of items. Each item contains:
+ *   - attributes: HTML attributes to be applied to each list item.
+ *   - value: The content of the list element.
+ * - title: The title of the list.
+ * - list_type: The tag for list element ("ul" or "ol").
+ * - wrapper_attributes: HTML attributes to be applied to the list wrapper.
+ * - attributes: HTML attributes to be applied to the list.
+ * - empty: A message to display when there are no items. Allowed value is a
+ *   string or render array.
+ * - context: A list of contextual data associated with the list. May contain:
+ *   - list_style: The custom list style.
+ *
+ * @see facets_summary_preprocess_facets_summary_item_list()
+ *
+ * @ingroup themeable
+ */
+#}
+{% if context.list_style %}
+  {%- set attributes = attributes.addClass('item-list__' ~ context.list_style) %}
+{% endif %}
+{% if items or empty %}
+  {%- if title is not empty -%}
+    <h3>{{ title }}</h3>
+  {%- endif -%}
+
+  {%- if items -%}
+    <div class="ecl-teaser-overview__active-filters">
+    {%- for item in items -%}
+      {% if loop.index == 1 %}
+        {% include "@ecl-twig/ec-component-button/ecl-button.html.twig" with {
+          icon: {
+            path: eic_icon_path,
+            name: 'clear',
+            type: 'custom',
+            size: '2xs',
+          },
+          variant: 'ghost',
+          extra_classes: 'ecl-teaser-overview__active-filters-clear-all',
+          label: item.value
+        } only %}
+      {% else %}
+        {% include "@ecl-twig/ec-component-tag/ecl-tag.html.twig" with {
+          tag: {
+            type: 'removable',
+            label: item.value
+          },
+          default_icon_path: eic_icon_path,
+          extra_classes: 'ecl-teaser-overview__active-filters-tag'
+        } only %}
+      {% endif %}
+    {%- endfor -%}
+    </div>
+  {%- endif -%}
+{%- endif %}

@@ -27,6 +27,9 @@
     "drupal/group_flex": {
       "3207164 - fatal error when saving after adding an image to an image field in a flex group" : "patches/group_flex/3207164-fatal-error-when-saving-after-adding-an-image-to-an-image-field-in-a-flex-group-24.patch"
     },
+    "drupal/realname": {
+      "#3059311 - Autocomplete suggestions should respect the entity reference View": "patches/realname/autocomplete-condition-fix-3059311-5.patch"
+    },
     "drupal/subpathauto": {
       "3130139 - Group Content Add/Create Paths do not work": "https://www.drupal.org/files/issues/2020-04-23/subpathauto-group-content-create-urls-3130139-2.patch",
       "3188768 - Install from configuration fails due to missing dependencies": "./patches/subpathauto/3188768-subpathauto-add-dependencies.patch"

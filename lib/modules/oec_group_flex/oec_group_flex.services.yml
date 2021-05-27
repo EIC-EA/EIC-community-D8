@@ -14,3 +14,6 @@ services:
   oec_group_flex.group_visibility.storage:
     class: Drupal\oec_group_flex\GroupVisibilityDatabaseStorage
     arguments: ['@entity_type.manager', '@database']
+  plugin.manager.custom_restricted_visibility:
+    class: Drupal\oec_group_flex\Plugin\CustomRestrictedVisibilityManager
+    parent: default_plugin_manager

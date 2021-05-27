@@ -4434,12 +4434,15 @@
                     "dev-1.x": "1.x-dev"
                 },
                 "drupal": {
-                    "version": "8.x-1.0-rc2+8-dev",
-                    "datestamp": "1616902710",
+                    "version": "8.x-1.0-rc2+10-dev",
+                    "datestamp": "1619972369",
                     "security-coverage": {
                         "status": "not-covered",
                         "message": "Dev releases are not covered by Drupal security advisories."
                     }
+                },
+                "patches_applied": {
+                    "#3059311 - Autocomplete suggestions should respect the entity reference View": "patches/realname/autocomplete-condition-fix-3059311-5.patch"
                 }
             },
             "notification-url": "https://packages.drupal.org/8/downloads",

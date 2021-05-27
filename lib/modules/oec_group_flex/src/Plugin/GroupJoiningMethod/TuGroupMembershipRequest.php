@@ -18,7 +18,9 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *  weight = -90,
  *  visibilityOptions = {
  *   "public",
- *   "flex"
+ *   "flex",
+ *   "restricted_community_members",
+ *   "custom_restricted"
  *  }
  * )
  */
@@ -27,7 +29,7 @@ class TuGroupMembershipRequest extends GroupJoiningMethodBase implements Contain
   /**
    * The group role synchronizer.
    *
-   * @var GroupRoleSynchronizer
+   * @var \Drupal\group\GroupRoleSynchronizer
    */
   protected $groupRoleSynchronizer;
 

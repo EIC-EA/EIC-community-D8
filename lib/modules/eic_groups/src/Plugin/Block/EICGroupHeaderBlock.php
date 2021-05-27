@@ -97,7 +97,10 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
       'url.path',
     ]);
 
+    // Get group operation links.
     $operation_links = $this->eicGroupsHelper->getGroupOperationLinks($group, ['node'], $cacheable_metadata);
+    // Get group membership links.
+    $membership_links = $this->eicGroupsHelper->getGroupOperationLinks($group, ['user'], $cacheable_metadata);
 
     // Removes operation link of wiki page group content.
     if (isset($operation_links['gnode-create-wiki_page'])) {
@@ -113,6 +116,7 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
         'title' => $group->label(),
         'description' => $group->get('field_body')->value,
         'operation_links' => $operation_links,
+        'membership_links' => $membership_links,
       ],
     ];
 
