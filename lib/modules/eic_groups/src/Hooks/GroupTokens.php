@@ -77,20 +77,19 @@ class GroupTokens implements ContainerInjectionInterface {
           case 'node_group_url':
             if (isset($data['node'])) {
               if (($node = $data['node']) && $node instanceof NodeInterface) {
+                // If node belongs to a group.
                 if ($group_contents = $this->entityTypeManager->getStorage('group_content')->loadByEntity($node)) {
                   /** @var \Drupal\group\Entity\GroupContentInterface $group_content */
                   $group_content = reset($group_contents);
-                  if ($group_content->hasTranslation($node->language())) {
-                    $group = $group_content->getGroup()->getTranslation($node->language());
+
+                  if ($group_content->hasTranslation($node->language()->getId())) {
+                    $group = $group_content->getGroup()->getTranslation($node->language()->getId());
                   }
                   else {
                     $group = $group_content->getGroup();
                   }
 
-                  if ($group->isPublished()) {
-                    $replacements[$original] = $group->toUrl()->toString();
-                    break;
-                  }
+                  $replacements[$original] = $group->toUrl()->toString();
                 }
               }
             }

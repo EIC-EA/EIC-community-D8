@@ -7,16 +7,16 @@ dependencies:
 id: books
 label: Books
 type: 'canonical_entities:node'
-pattern: '[eic_groups_tokens:node_group_url]/[node:title]'
+pattern: '[node:title]'
 selection_criteria:
-  492c0f0d-fe56-447e-94a5-3de244bd53ff:
+  fdab11e7-299e-415c-aa79-a01432230c59:
     id: node_type
     bundles:
       book: book
     negate: false
     context_mapping:
       node: node
-    uuid: 492c0f0d-fe56-447e-94a5-3de244bd53ff
+    uuid: fdab11e7-299e-415c-aa79-a01432230c59
 selection_logic: and
 weight: -10
 relationships: {  }
