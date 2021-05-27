@@ -24,7 +24,7 @@ reactions:
         label: 'Groups summary'
         provider: facets_summary
         label_display: '0'
-        region: content
+        region: content_before
         weight: '-1'
         context_mapping: {  }
         custom_id: facets_summary_block_groups_summary
@@ -95,7 +95,7 @@ reactions:
         label: 'Sort by'
         provider: search_api_sorts
         label_display: visible
-        region: content
+        region: content_before
         weight: '-2'
         context_mapping: {  }
         custom_id: search_api_sorts_block_views_page_global_overviews__page_1

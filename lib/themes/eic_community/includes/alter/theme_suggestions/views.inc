@@ -20,6 +20,10 @@ function eic_community_theme_suggestions_views_view_alter(array &$suggestions, a
       $suggestions[] = "views_view__featured_content_collection";
       break;
     case 'global_overviews':
+      if($variables['view']->getDisplay()->display['id'] === 'search') {
+        return;
+      }
+
       $suggestions[] = "views_view__teaser_overview";
       break;
   }
