@@ -8,7 +8,7 @@ dependencies:
   module:
     - search_api
 id: groups_regions_countries
-name: 'Region & Countries'
+name: 'Regions & Countries'
 url_alias: regions_countries
 weight: 0
 min_count: 1

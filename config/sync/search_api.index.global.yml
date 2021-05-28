@@ -243,7 +243,7 @@ field_settings:
       config:
         - field.storage.group.field_body
   group_field_vocab_geo:
-    label: '[Group] Region & Countries'
+    label: '[Group] Regions & Countries'
     datasource_id: 'entity:group'
     property_path: field_vocab_geo
     type: integer
