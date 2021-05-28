@@ -55,7 +55,10 @@ class EntityOperations implements ContainerInjectionInterface {
    * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
    *   The current route match service.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, RouteMatchInterface $route_match) {
+  public function __construct(
+    EntityTypeManagerInterface $entity_type_manager,
+    RouteMatchInterface $route_match
+  ) {
     $this->entityTypeManager = $entity_type_manager;
     $this->routeMatch = $route_match;
   }
@@ -125,7 +128,7 @@ class EntityOperations implements ContainerInjectionInterface {
     $newContributorParagraph->save();
 
     $contributors = [];
-    $this->contributors[] = $newContributorParagraph;
+    $contributors[] = $newContributorParagraph;
     foreach ($this->contributors as $contributorParagraph) {
       $contributors[] = [
         'target_id' => $contributorParagraph->id(),
@@ -133,6 +136,7 @@ class EntityOperations implements ContainerInjectionInterface {
       ];
     }
 
+    $this->contributors = $contributors;
     $this->discussion->set('field_related_contributors', $contributors);
   }
 }
