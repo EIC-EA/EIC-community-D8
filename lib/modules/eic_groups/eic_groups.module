@@ -10,6 +10,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\eic_groups\Hooks\EntityOperations;
 use Drupal\eic_groups\Hooks\FormOperations;
+use Drupal\eic_groups\Hooks\Preprocess;
 
 /**
  * Implements hook_theme().
@@ -84,4 +85,26 @@ function eic_groups_module_implements_alter(&$implementations, $hook) {
       }
       break;
   }
+
+ /**
+ * Implements hook_form_alter().
+ */
+function eic_groups_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  // Hide book select list from wiki page forms.
+  switch ($form_id) {
+    case 'node_wiki_page_form':
+    case 'node_wiki_page_edit_form':
+      $form['book']['bid']['#access'] = FALSE;
+      break;
+
+  }
+}
+
+/**
+ * Implements hook_preprocess_links__node().
+ */
+function eic_groups_preprocess_links__node(&$variables) {
+  /** @var \Drupal\eic_groups\Hooks\Preprocess $class */
+  $class = \Drupal::classResolver(Preprocess::class);
+  $class->preprocessLinksNode($variables);
 }

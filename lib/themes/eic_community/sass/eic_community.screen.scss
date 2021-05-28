@@ -1,3 +1,4 @@
+@import './core/dom.scss';
 @import './core/spacing.scss';
 @import './core/viewport.scss';
 @import './core/media.scss';
@@ -86,7 +87,9 @@
 @import "./components/form";
 @import "./components/global";
 @import "./components/grid";
+@import "./components/harmonica";
 @import "./components/hero";
+@import "./components/icon";
 @import "./components/inline-actions";
 @import "./components/inline-stats";
 @import "./components/investment";

@@ -22,7 +22,14 @@
                     label: login.label,
                     path: login.path
                   },
-                  extra_classes: 'ecl-link--button ecl-link--button-primary',
+                  icon: icon_file_path ? {
+                    path: icon_file_path,
+                    name: login.icon.name|default('rounded-arrow'),
+                    type: login.icon.type|default('ui'),
+                    size: login.icon.size|default('xs'),
+                    transform: login.icon.transform|default('rotate-90')
+                  } : {},
+                  extra_classes: 'ecl-link--button ecl-link--button-ghost',
                 } only %}
               </div>
             {% endif %}

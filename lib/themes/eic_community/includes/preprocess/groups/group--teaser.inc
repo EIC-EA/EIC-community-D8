@@ -17,6 +17,7 @@ function eic_community_preprocess_group(array &$variables) {
   $item = [
     'owner' => eic_community_get_teaser_user_display($group->getOwner()),
     'stats' => [],
+    'icon_file_path' => $variables['eic_icon_path'],
   ];
 
   if (!$group->get('field_hero')->isEmpty()) {

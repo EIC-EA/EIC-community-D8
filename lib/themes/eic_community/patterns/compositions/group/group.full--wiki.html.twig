@@ -1,55 +1,79 @@
+{% set layout = {
+  extra_classes: 'ecl-base-layout--is-fluid'
+ } %}
+
 {% extends "@theme/patterns/compositions/group/group.full.html.twig" %}
 
-{% block content %}
-  {% if items is empty %}
-    <div class="ecl-section-wrapper">
-      <div class="ecl-container">
-        {% embed "@theme/patterns/components/well.html.twig" with {
-          extra_classes: 'ecl-well--is-centered ecl-well--is-grey',
-        } %}
-          {% block content %}
-            {% set label = no_items.label|default('No wiki pages (yet).') %}
-            {% set title_element = no_items.title_element|default('h2') %}
+{% set contents %}
+  {% embed "@theme/patterns/compositions/editorial-article.html.twig" with {
+    extra_classes: 'ecl-editorial-article--is-collapsible ecl-editorial-article--has-reversed-layout',
+    actions: actions,
+  } %}
+    {% block content %}
+      {% if items is empty %}
+        <div class="ecl-section-wrapper">
+          <div class="ecl-container">
+            {% embed "@theme/patterns/components/well.html.twig" with {
+              extra_classes: 'ecl-well--is-centered ecl-well--is-grey',
+            } %}
+              {% block content %}
+                {% set label = no_items.label|default('No wiki pages (yet).') %}
+                {% set title_element = no_items.title_element|default('h2') %}
 
-            <{{ title_element }}>{{ label }}</{{ title_element}}>
+                <{{ title_element }}>{{ label }}</{{ title_element}}>
 
-            {% if no_items.link and no_items.link.path %}
-              {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with {
-                link: no_items.link|merge({
-                  icon_position: 'after',
-                  type: 'standalone',
-                }),
-                extra_classes: 'ecl-link--button ecl-link--button-primary',
-              } only %}
-            {% endif %}
+                {% if no_items.link and no_items.link.path %}
+                  {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with {
+                    link: no_items.link|merge({
+                      icon_position: 'after',
+                      type: 'standalone',
+                    }),
+                    extra_classes: 'ecl-link--button ecl-link--button-primary',
+                  } only %}
+                {% endif %}
+              {% endblock %}
+            {% endembed %}
+          </div>
+        </div>
+      {% else %}
+        {{ content }}
+      {% endif %}
+    {% endblock %}
+
+    {%- block sidebar -%}
+      {% if items is not empty %}
+        {% embed "@theme/patterns/components/navigation-list/navigation-list.html.twig" with {
+          extra_attributes: [
+            {
+              name: 'data-navigation-list-parent-selector',
+              value: '.ecl-editorial-article',
+
+            }
+          ],
+          icon_file_path: common.icon_file_path,
+          items: items,
+          collapse: {
+            label: 'Subjects',
+          }
+        }  %}
+
+          {% block before %}
+            {{ new_wiki }}
           {% endblock %}
+
+          {% block after %}
+            {{ contributors}}
+          {% endblock %}
+
         {% endembed %}
-      </div>
-    </div>
-  {% else %}
-    {{ content }}
-  {% endif %}
+
+      {% endif %}
+    {%- endblock -%}
+  {% endembed %}
+{% endset %}
+
+{% block sidebar %}{% endblock %}
+
+{% block content %}
+  {{ contents }}
 {% endblock %}
-
-{%- block sidebar -%}
-  {% if items is not empty %}
-    {% embed "@theme/patterns/components/navigation-list/navigation-list.html.twig" with {
-      icon_file_path: common.icon_file_path,
-      items: items,
-      collapse: {
-        label: 'Subjects',
-      }
-    }  %}
-
-      {% block before %}
-        {{ new_wiki }}
-      {% endblock %}
-
-      {% block after %}
-        {{ contributors}}
-      {% endblock %}
-
-    {% endembed %}
-
-  {% endif %}
-{%- endblock -%}

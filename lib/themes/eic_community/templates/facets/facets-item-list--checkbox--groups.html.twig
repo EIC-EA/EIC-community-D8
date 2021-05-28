@@ -1,0 +1,95 @@
+{#
+/**
+ * @file
+ * Default theme implementation for a facets item list.
+ *
+ * Available variables:
+ * - items: A list of items. Each item contains:
+ *   - attributes: HTML attributes to be applied to each list item.
+ *   - value: The content of the list element.
+ * - title: The title of the list.
+ * - list_type: The tag for list element ("ul" or "ol").
+ * - wrapper_attributes: HTML attributes to be applied to the list wrapper.
+ * - attributes: HTML attributes to be applied to the list.
+ * - empty: A message to display when there are no items. Allowed value is a
+ *   string or render array.
+ * - context: A list of contextual data associated with the list. May contain:
+ *   - list_style: The ID of the widget plugin this facet uses.
+ * - facet: The facet for this result item.
+ *   - id: the machine name for the facet.
+ *   - label: The facet label.
+ *
+ * @see facets_preprocess_facets_item_list()
+ *
+ * @ingroup themeable
+ */#}
+{{ attach }}
+{% if facet.widget.type %}
+  {%- set attributes = attributes.addClass('item-list__' ~ facet.widget.type) %}
+{% endif %}
+
+<div class="ecl-filter-sidebar__items facets-widget- {{- facet.widget.type -}}">
+  {% set is_collapsible = items|length > 1 ? true : false %}
+  {% set label_element = is_collapsible ? 'button' : 'span' %}
+
+  <div class="ecl-filter-sidebar__item {{ is_collapsible ? 'ecl-filter-sidebar__item--is-collapsible' }}"
+       aria-collapsed="{{ is_collapsed ? 'true' : 'false' }}"
+  >
+    <span class="ecl-filter-sidebar__item-label" tabindex="{{ is_collapsible ? '0' : '-1' }}">
+                {{ title }}
+
+      {% if is_collapsible %}
+        {% include '@ecl-twig/ec-component-icon/ecl-icon.html.twig' with {
+          icon: {
+            path: eic_icon_path,
+            type: 'ui',
+            name: 'rounded-arrow',
+            size: 'xs',
+          },
+          extra_classes: 'ecl-filter-sidebar__item-label-icon',
+        } only %}
+      {% endif %}
+              </span>
+
+    {% if items is not empty %}
+      <div class="ecl-filter-sidebar__item-form ecl-filter-sidebar__item"
+           aria-expanded="{{ true ? 'true' : 'false' }}"
+      >
+        <div class="ecl-filter-sidebar__item-fields js-facets-checkbox-links {{ attributes }}">
+          {% for field in items %}
+            <div class="ecl-filter-sidebar__item-field facet-item" {{ field.attributes }}>
+              {{ field.value }}
+            </div>
+          {% endfor %}
+        </div>
+        {% if items|length > 1 %}
+          <div class="ecl-filter-sidebar__item-options">
+            {% include '@ecl-twig/ec-component-button/ecl-button.html.twig' with {
+              variant: 'ghost',
+              label: expand_label|default('Show all'),
+              icon: {
+                path: eic_icon_path,
+                type: 'ui',
+                name: 'rounded-arrow',
+                size: 'xs',
+                transform: 'rotate-180',
+              },
+              extra_classes: 'ecl-filter-sidebar__item-expand',
+            } only %}
+            {% include '@ecl-twig/ec-component-button/ecl-button.html.twig' with {
+              variant: 'ghost',
+              label: collapse_label|default('Collapse'),
+              icon: {
+                path: eic_icon_path,
+                type: 'ui',
+                name: 'rounded-arrow',
+                size: 'xs',
+              },
+              extra_classes: 'ecl-filter-sidebar__item-collapse',
+            } only %}
+          </div>
+        {% endif %}
+      </div>
+    {% endif %}
+  </div>
+</div>

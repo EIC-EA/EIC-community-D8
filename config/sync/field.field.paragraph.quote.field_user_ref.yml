@@ -19,7 +19,7 @@ settings:
   handler: views
   handler_settings:
     view:
-      view_name: user_admin_people
-      display_name: entity_reference_1
+      view_name: entity_reference_user
+      display_name: full_name_all
       arguments: {  }
 field_type: entity_reference

@@ -1,0 +1,106 @@
+{#
+/**
+ * @file
+ * Theme override to display a single page.
+ *
+ * @see ./core/themes/stable/templates/layout/page.html.twig
+ */
+#}
+{% if page.sidebar is not empty %}
+  {% set output_sidebar = page.sidebar %}
+{% elseif block('sidebar') is defined %}
+  {% set output_sidebar = block('sidebar') %}
+{% endif %}
+
+{% if page.content_before is not empty %}
+  {% set output_content_before = page.content_before %}
+{% elseif block('content_before') is defined %}
+  {% set output_content_before = block('content_before') %}
+{% endif %}
+
+{% if page.content_after is not empty %}
+  {% set output_content_after = page.content_after %}
+{% elseif block('content_after') is defined %}
+  {% set output_content_after = block('content_after') %}
+{% endif %}
+
+<div class="ecl-viewport">
+  <div class="ecl-viewport__top">
+    {% block site_top_bar %}
+      {{ page.site_top_bar }}
+    {% endblock %}
+
+    {% block site_header %}
+      {% if top_menu %}
+        {% include "@theme/patterns/compositions/top-menu.html.twig" with top_menu|default({}) only %}
+      {% endif %}
+
+      {% if site_header %}
+        {% include "@theme/patterns/compositions/global-header.html.twig" with site_header|default({})|merge({
+          user: user|default(NULL)
+        }) only %}
+      {% endif %}
+
+      {% if mainmenu %}
+        {% include "@theme/patterns/compositions/mainmenu.html.twig" with {
+          label: mainmenu_label,
+          mainmenu: mainmenu|default({}),
+          searchform: searchform|default({}),
+        } only %}
+      {% endif %}
+    {% endblock %}
+
+    {% block navigation %}
+      {{ page.navigation }}
+    {% endblock %}
+
+    {% block breadcrumbs %}
+      {{ page.breadcrumbs }}
+    {% endblock %}
+  </div>
+
+  <div class="ecl-viewport__middle">
+    {% block page_header %}
+      {{ page.page_header }}
+    {% endblock %}
+
+    <div class="ecl-base-layout{{ output_sidebar ? ' ecl-base-layout--contain' }} {{ layout ? layout.extra_classes }}">
+      <div class="ecl-base-layout__content">
+        <div class="ecl-base-layout__main">
+          <main{{ main_attributes }}>
+            <div class="ecl-teaser-overview ecl-teaser-overview--has-compact-layout ecl-teaser-overview--has-columns">
+            {% block content %}
+              {{ page.content }}
+            {% endblock %}
+            {% if output_content_before %}
+              <section class="ecl-teaser-overview__options">
+                {{ output_content_before }}
+              </section>
+            {% endif %}
+            </div>
+          </main>
+        </div>
+
+        {% if output_sidebar %}
+          <div class="ecl-base-layout__aside">
+            {{ output_sidebar }}
+          </div>
+        {% endif %}
+      </div>
+
+      {% if output_content_after %}
+        <div class="ecl-base-layout__content-after">
+          {{ output_content_after }}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="ecl-viewport__bottom">
+    {% block footer %}
+      {% if site_footer %}
+        {% include "@theme/patterns/compositions/site-footer.html.twig" with site_footer|default({}) only %}
+      {% endif %}
+    {% endblock %}
+  </div>
+</div>

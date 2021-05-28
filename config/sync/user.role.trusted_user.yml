@@ -9,6 +9,7 @@ is_admin: null
 permissions:
   - 'access comments'
   - 'access group overview'
+  - 'add content to books'
   - 'create eic_document media'
   - 'create group group'
   - 'create image media'
