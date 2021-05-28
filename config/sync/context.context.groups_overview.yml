@@ -104,21 +104,20 @@ reactions:
         unique: 0
         context_id: groups_overview
         uuid: 97b594dc-7529-4ac6-973d-b43ffc569246
-      5cd6129d-7c65-4162-956e-641051af13d4:
-        id: 'views_exposed_filter_block:global_overviews-page_1'
-        label: ''
-        provider: views
+      bdf030ef-84f4-4a8e-a081-da63174cb1d1:
+        id: eic_theme_helper_views_filter_items_per_page
+        label: 'Views filter items per page block'
+        provider: eic_theme_helper
         label_display: '0'
-        views_label: ''
         region: content_before
         weight: '-3'
         context_mapping: {  }
-        custom_id: views_exposed_filter_block_global_overviews_page_1
+        custom_id: eic_theme_helper_views_filter_items_per_page
         theme: eic_community
         css_class: ''
         unique: 0
         context_id: groups_overview
-        uuid: 5cd6129d-7c65-4162-956e-641051af13d4
+        uuid: bdf030ef-84f4-4a8e-a081-da63174cb1d1
     id: blocks
     saved: false
     uuid: deeaf135-b781-47ec-b086-7d9fec72c007
