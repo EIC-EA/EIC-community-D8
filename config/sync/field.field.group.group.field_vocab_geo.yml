@@ -10,7 +10,7 @@ id: group.group.field_vocab_geo
 field_name: field_vocab_geo
 entity_type: group
 bundle: group
-label: 'Region & Countries'
+label: 'Regions & Countries'
 description: ''
 required: false
 translatable: false
