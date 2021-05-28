@@ -85,8 +85,9 @@ function eic_groups_module_implements_alter(&$implementations, $hook) {
       }
       break;
   }
+}
 
- /**
+/**
  * Implements hook_form_alter().
  */
 function eic_groups_form_alter(&$form, FormStateInterface $form_state, $form_id) {
