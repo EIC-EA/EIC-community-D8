@@ -33,6 +33,7 @@ module:
   eic_blocks: 0
   eic_comments: 0
   eic_content: 0
+  eic_content_discussion: 0
   eic_content_story: 0
   eic_deploy: 0
   eic_flags: 0
