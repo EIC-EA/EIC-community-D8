@@ -10,6 +10,7 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\group\Access\GroupAccessResult;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\group\Entity\GroupTypeInterface;
+use Drupal\group\GroupRoleSynchronizer;
 use Drupal\oec_group_flex\GroupVisibilityDatabaseStorageInterface;
 use Drupal\oec_group_flex\Plugin\CustomRestrictedVisibilityInterface;
 use Drupal\oec_group_flex\Plugin\CustomRestrictedVisibilityManager;
@@ -67,6 +68,8 @@ class CustomRestrictedVisibility extends RestrictedGroupVisibilityBase implement
    *   The plugin implementation definition.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
    *   The configuration factory service.
+   * @param \Drupal\group\GroupRoleSynchronizer $groupRoleSynchronizer
+   *   The group role synchronizer.
    * @param \Drupal\oec_group_flex\GroupVisibilityDatabaseStorageInterface $groupVisibilityStorage
    *   The group visibility storage service.
    * @param \Drupal\Component\Utility\EmailValidatorInterface $email_validator
@@ -74,8 +77,8 @@ class CustomRestrictedVisibility extends RestrictedGroupVisibilityBase implement
    * @param \Drupal\oec_group_flex\Plugin\CustomRestrictedVisibilityManager $customRestrictedVisibilityManager
    *   The custom restricted visibility manager.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, ConfigFactoryInterface $configFactory, GroupVisibilityDatabaseStorageInterface $groupVisibilityStorage, EmailValidatorInterface $email_validator, CustomRestrictedVisibilityManager $customRestrictedVisibilityManager) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition, $configFactory);
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, ConfigFactoryInterface $configFactory, GroupRoleSynchronizer $groupRoleSynchronizer, GroupVisibilityDatabaseStorageInterface $groupVisibilityStorage, EmailValidatorInterface $email_validator, CustomRestrictedVisibilityManager $customRestrictedVisibilityManager) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition, $configFactory, $groupRoleSynchronizer);
     $this->groupVisibilityStorage = $groupVisibilityStorage;
     $this->emailValidator = $email_validator;
     $this->customRestrictedVisibilityManager = $customRestrictedVisibilityManager;
@@ -91,6 +94,7 @@ class CustomRestrictedVisibility extends RestrictedGroupVisibilityBase implement
       $plugin_id,
       $plugin_definition,
       $container->get('config.factory'),
+      $container->get('group_role.synchronizer'),
       $container->get('oec_group_flex.group_visibility.storage'),
       $container->get('email.validator'),
       $container->get('plugin.manager.custom_restricted_visibility')
