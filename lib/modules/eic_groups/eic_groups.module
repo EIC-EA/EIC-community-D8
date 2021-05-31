@@ -61,6 +61,18 @@ function eic_groups_form_alter(&$form, FormStateInterface $form_state, $form_id)
       $form['book']['bid']['#access'] = FALSE;
       break;
 
+    case 'views_exposed_form':
+      $view_machine_name = str_replace('views-exposed-form-', '', $form['#id']);
+
+      switch ($view_machine_name) {
+        case 'global-overviews-page-1':
+          // Removes items_per_page pager from the form.
+          unset($form['items_per_page']);
+          break;
+
+      }
+      break;
+
   }
 }
 
