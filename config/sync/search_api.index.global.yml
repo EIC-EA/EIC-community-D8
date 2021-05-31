@@ -272,6 +272,14 @@ field_settings:
     dependencies:
       module:
         - group
+  status:
+    label: 'Member profiles » Profile » Active'
+    datasource_id: 'entity:user'
+    property_path: 'member_profiles:entity:status'
+    type: boolean
+    dependencies:
+      module:
+        - profile
   user__group_content__uid_gid:
     label: 'Reverse reference: Group content using Group content creator » Parent group'
     datasource_id: 'entity:user'

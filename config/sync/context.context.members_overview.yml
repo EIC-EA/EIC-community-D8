@@ -1,0 +1,83 @@
+uuid: 912c4b98-f366-44db-922a-f9361c349c21
+langcode: en
+status: true
+dependencies: {  }
+name: members_overview
+label: 'Members - Overview'
+group: 'Global overviews'
+description: 'This context is used for the Members overview'
+requireAllConditions: false
+disabled: false
+conditions:
+  view_inclusion:
+    id: view_inclusion
+    negate: null
+    uuid: 4a6ec31c-af26-4d0a-9279-80ba5a4221d0
+    view_inclusion:
+      view-global_overviews-page_2: view-global_overviews-page_2
+    context_mapping: {  }
+reactions:
+  blocks:
+    blocks:
+      556c183b-2af1-42dc-8c53-57aa7af6ef70:
+        id: 'facets_summary_block:groups_summary'
+        label: 'Groups summary'
+        provider: facets_summary
+        label_display: '0'
+        region: content_before
+        weight: '-1'
+        context_mapping: {  }
+        custom_id: facets_summary_block_groups_summary
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: global_overview
+        uuid: 556c183b-2af1-42dc-8c53-57aa7af6ef70
+      2bdaf363-b983-4094-8b13-e3549984347b:
+        id: system_main_block
+        label: 'Main page content'
+        provider: system
+        label_display: '0'
+        region: content
+        weight: '0'
+        context_mapping: {  }
+        custom_id: system_main_block
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: global_overview
+        uuid: 2bdaf363-b983-4094-8b13-e3549984347b
+      97b594dc-7529-4ac6-973d-b43ffc569246:
+        id: 'search_api_sorts_block:views_page:global_overviews__page_1'
+        label: 'Sort by'
+        provider: search_api_sorts
+        label_display: visible
+        region: content_before
+        weight: '-2'
+        context_mapping: {  }
+        custom_id: search_api_sorts_block_views_page_global_overviews__page_1
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: groups_overview
+        uuid: 97b594dc-7529-4ac6-973d-b43ffc569246
+      c8c194e9-1d46-441f-9663-777593ba3947:
+        id: 'views_exposed_filter_block:group_overviews-members'
+        label: ''
+        provider: views
+        label_display: '0'
+        views_label: ''
+        region: sidebar
+        weight: '-3'
+        context_mapping: {  }
+        custom_id: views_exposed_filter_block_group_overviews_members
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: members_overview
+        uuid: c8c194e9-1d46-441f-9663-777593ba3947
+    id: blocks
+    saved: false
+    uuid: deeaf135-b781-47ec-b086-7d9fec72c007
+    include_default_blocks: 0
+weight: 0
