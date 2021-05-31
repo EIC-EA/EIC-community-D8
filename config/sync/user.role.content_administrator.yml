@@ -16,3 +16,6 @@ permissions:
   - 'unflag recommend_group'
   - 'use groups transition publish'
   - 'use groups transition upgrade_to_draft'
+  - 'use text format basic_text'
+  - 'use text format filtered_html'
+  - 'use text format full_html'
