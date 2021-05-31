@@ -15,9 +15,6 @@
       "2746839 - Add Devel plugin for generating groups": "patches/group/2746839-add-devel-plugin-for-generating-groups-12.patch",
       "2829966 - Support for revisions on groups": "https://www.drupal.org/files/issues/2020-12-16/groups-revisions-2829966-65--after-merge-2873212-36-3029907-14-3029908-12-for-1.x-dev-9b469da0.patch"
     },
-    "drupal/facets": {
-      "3199156 - Module installation is broken if search_api will be installed as dependency": "https://www.drupal.org/files/issues/2021-03-16/3199156-19.patch"
-    },
     "drupal/flag": {
       "3168014 - TypeError: Argument 1 passed to Drupal\\flag\\TwigExtension\\FlagCount::count() must implement interface" : "https://www.drupal.org/files/issues/2020-09-06/show-count-for-visitors--3168014-2.patch",
       "3112986 - Add Flood Control": "https://www.drupal.org/files/issues/2020-07-08/3112986-20.patch"},
