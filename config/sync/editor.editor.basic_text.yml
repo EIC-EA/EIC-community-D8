@@ -17,25 +17,14 @@ settings:
           items:
             - Bold
             - Italic
-        -
-          name: Links
-          items:
-            - DrupalLink
-            - DrupalUnlink
-        -
-          name: Lists
-          items:
-            - BulletedList
-            - NumberedList
-        -
-          name: Media
-          items:
-            - Blockquote
-            - DrupalImage
+            - Underline
         -
           name: Tools
           items:
-            - Source
+            - PasteText
+            - RemoveFormat
+            - Undo
+            - Redo
   plugins:
     stylescombo:
       styles: ''

@@ -20,9 +20,10 @@ filters:
   media_embed:
     id: media_embed
     provider: media
-    status: false
+    status: true
     weight: 100
     settings:
       default_view_mode: default
-      allowed_media_types: {  }
+      allowed_media_types:
+        image: image
       allowed_view_modes: {  }

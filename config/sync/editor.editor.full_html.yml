@@ -17,25 +17,45 @@ settings:
           items:
             - Bold
             - Italic
-        -
-          name: Links
-          items:
-            - DrupalLink
-            - DrupalUnlink
+            - Underline
+            - Superscript
+            - Subscript
         -
           name: Lists
           items:
             - BulletedList
             - NumberedList
+            - Outdent
+            - Indent
+        -
+          name: Links
+          items:
+            - DrupalLink
+            - DrupalUnlink
+            - Blockquote
+            - Table
         -
           name: Media
           items:
-            - Blockquote
             - DrupalImage
+            - DrupalMediaLibrary
         -
           name: Tools
           items:
+            - PasteText
+            - PasteFromWord
+            - RemoveFormat
+            - Undo
+            - Redo
+            - Maximize
             - Source
+        -
+          name: Alignment
+          items:
+            - JustifyLeft
+            - JustifyRight
+            - JustifyCenter
+            - JustifyBlock
   plugins:
     stylescombo:
       styles: ''
