@@ -1867,17 +1867,17 @@
         },
         {
             "name": "drupal/components",
-            "version": "2.2.0",
+            "version": "2.4.0",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/components.git",
-                "reference": "8.x-2.2"
+                "reference": "8.x-2.4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/components-8.x-2.2.zip",
-                "reference": "8.x-2.2",
-                "shasum": "02a57b2274348c7b9c14800c1bc5f5954d64df88"
+                "url": "https://ftp.drupal.org/files/projects/components-8.x-2.4.zip",
+                "reference": "8.x-2.4",
+                "shasum": "9b083c2f845ff2e1a1632efcf24f88cecd7479cc"
             },
             "require": {
                 "drupal/core": "^8.7.7 || ^9"
@@ -1885,8 +1885,8 @@
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "8.x-2.2",
-                    "datestamp": "1611799702",
+                    "version": "8.x-2.4",
+                    "datestamp": "1618861606",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
@@ -2058,17 +2058,17 @@
         },
         {
             "name": "drupal/context",
-            "version": "4.0.0-beta5",
+            "version": "4.0.0-beta6",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/context.git",
-                "reference": "8.x-4.0-beta5"
+                "reference": "8.x-4.0-beta6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/context-8.x-4.0-beta5.zip",
-                "reference": "8.x-4.0-beta5",
-                "shasum": "893d7e6ce07b23764baa6fd609da811ec80c5a04"
+                "url": "https://ftp.drupal.org/files/projects/context-8.x-4.0-beta6.zip",
+                "reference": "8.x-4.0-beta6",
+                "shasum": "c377c12d8c23e8f39151f2da1d85d58b294033df"
             },
             "require": {
                 "drupal/core": "^8.8 || ^9"
@@ -2076,16 +2076,12 @@
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "8.x-4.0-beta5",
-                    "datestamp": "1600783508",
+                    "version": "8.x-4.0-beta6",
+                    "datestamp": "1619440410",
                     "security-coverage": {
                         "status": "not-covered",
                         "message": "Beta releases are not covered by Drupal security advisories."
                     }
-                },
-                "patches_applied": {
-                    "3173470 - Error: Call to a member function getCacheTags": "https://www.drupal.org/files/issues/2020-11-10/context-3173470-16.patch",
-                    "3072991 - Can't clone context": "https://www.drupal.org/files/issues/2020-08-21/context-cannot-clone-context-3072991-9.patch"
                 }
             },
             "notification-url": "https://packages.drupal.org/8/downloads",
@@ -2922,17 +2918,17 @@
         },
         {
             "name": "drupal/extra_field",
-            "version": "2.0.0",
+            "version": "2.1.0",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/extra_field.git",
-                "reference": "8.x-2.0"
+                "reference": "8.x-2.1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/extra_field-8.x-2.0.zip",
-                "reference": "8.x-2.0",
-                "shasum": "aa3ff0ba6348c26739dfd342e66a3d4f1d45d80d"
+                "url": "https://ftp.drupal.org/files/projects/extra_field-8.x-2.1.zip",
+                "reference": "8.x-2.1",
+                "shasum": "c1acf24feff92efb5537003fabc66c4738cc1481"
             },
             "require": {
                 "drupal/core": "^8 || ^9"
@@ -2940,8 +2936,8 @@
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "8.x-2.0",
-                    "datestamp": "1611332144",
+                    "version": "8.x-2.1",
+                    "datestamp": "1619442008",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
