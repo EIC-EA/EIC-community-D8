@@ -46,6 +46,9 @@ class OecGroupCommentsAccessControlHandler extends CommentAccessControlHandler {
       return ($operation != 'view') ? $access : $access->andIf($entity->getCommentedEntity()->access($operation, $account, TRUE));
     }
 
+    // If there are replies to the comment, disable 'can_edit'.
+    $num_of_replies = intval(comment_reply_count($entity->id(), $commented_entity->id(), $commented_entity->getEntityTypeId()));
+
     // @todo Only react on if $parent === allowed Is this good/safe enough?
     if ($parent_access->isAllowed()) {
       // Only react if it is actually posted inside a group.
@@ -55,6 +58,10 @@ class OecGroupCommentsAccessControlHandler extends CommentAccessControlHandler {
             return $this->getPermissionInGroups('access comments', $account, $group_contents);
 
           case 'update':
+          case 'delete':
+            if ($num_of_replies > 0) {
+              return AccessResult::forbidden('There may not be replies to the comment.');
+            }
             return $this->getPermissionInGroups('edit own comments', $account, $group_contents);
 
           default:

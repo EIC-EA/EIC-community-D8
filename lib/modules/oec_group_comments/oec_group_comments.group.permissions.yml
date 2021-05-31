@@ -1,6 +1,6 @@
 administer comments:
   title: 'Administer comments'
-access comments:
+view comments:
   title: 'View comments'
 post comments:
   title: 'Post comments'
