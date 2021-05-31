@@ -242,7 +242,7 @@ class GroupForm extends GroupFormBase {
           // Extract array into variables.
           extract($value);
 
-          if (is_null($visibility_options)) {
+          if (!isset($visibility_options) || is_null($visibility_options)) {
             $visibility_options = [];
           }
 
