@@ -203,10 +203,12 @@ class GroupForm extends GroupFormBase {
       'joining_methods' => $form_state->getValue('group_joining_methods'),
     ];
 
-    $groupVisibilityPlugin = $this->visibilityManager->createInstance($groupFlexSettings['visibility']['plugin_id']);
+    if ($groupFlexSettings['visibility']['plugin_id']) {
+      $groupVisibilityPlugin = $this->visibilityManager->createInstance($groupFlexSettings['visibility']['plugin_id']);
 
-    if ($groupVisibilityPlugin instanceof GroupVisibilityOptionsInterface) {
-      $groupFlexSettings['visibility']['visibility_options'] = $groupVisibilityPlugin->getFormStateValues($form_state);
+      if ($groupVisibilityPlugin instanceof GroupVisibilityOptionsInterface) {
+        $groupFlexSettings['visibility']['visibility_options'] = $groupVisibilityPlugin->getFormStateValues($form_state);
+      }
     }
 
     $this->groupFlexSettings = $groupFlexSettings;
