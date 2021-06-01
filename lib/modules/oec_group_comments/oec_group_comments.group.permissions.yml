@@ -5,4 +5,10 @@ view comments:
 post comments:
   title: 'Post comments'
 edit own comments:
-    title: 'Edit own comments'
+  title: 'Edit own comments'
+edit all comments:
+  title: 'Edit all comments'
+request delete own comments:
+  title: 'Delete own comments (request)'
+request delete all comments:
+  title: 'Delete all comments (request)'

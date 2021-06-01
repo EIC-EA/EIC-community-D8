@@ -47,31 +47,53 @@ class OecGroupCommentsAccessControlHandler extends CommentAccessControlHandler {
     }
 
     // If there are replies to the comment, disable 'can_edit'.
-    $num_of_replies = intval(comment_reply_count($entity->id(), $commented_entity->id(), $commented_entity->getEntityTypeId()));
+    $reply_count = intval($this->comment_reply_count($entity->id(), $commented_entity->id(), $commented_entity->getEntityTypeId()));
+
+    // Fallback.
+    $access = AccessResult::neutral();
 
     // @todo Only react on if $parent === allowed Is this good/safe enough?
-    if ($parent_access->isAllowed()) {
+    // Disabled parent_access check as this prevents the delete check.
+//    if ($parent_access->isAllowed()) {
+
       // Only react if it is actually posted inside a group.
       if (!empty($group_contents)) {
         switch ($operation) {
           case 'view':
-            return $this->getPermissionInGroups('access comments', $account, $group_contents);
+            $access = $this->getPermissionInGroups('view comments', $account, $group_contents);
+            break;
 
           case 'update':
-          case 'delete':
-            if ($num_of_replies > 0) {
-              return AccessResult::forbidden('There may not be replies to the comment.');
+            if ($entity->getOwnerId() == $account->id() && $reply_count == 0) {
+              $access = $this->getPermissionInGroups('edit own comments', $account, $group_contents);
             }
-            return $this->getPermissionInGroups('edit own comments', $account, $group_contents);
+            if ($this->getPermissionInGroups('edit all comments', $account, $group_contents)->isAllowed()) {
+              $access = AccessResult::allowed();
+            }
+            break;
+
+          case 'delete':
+            // The 'Request Deletion' workflow will be implemented with EICNET-745.
+            // For now only 'direct deleting' is implemented.
+            // This can be turned of by simple uncommenting the following line:
+//            $access = AccessResult::forbidden('Deleting is not allowed for users who don\'t have administer_comments'); break;
+
+            if ($entity->getOwnerId() == $account->id() && $reply_count == 0) {
+              $access = $this->getPermissionInGroups('request delete own comments', $account, $group_contents);
+            }
+            if ($this->getPermissionInGroups('request delete all comments', $account, $group_contents)->isAllowed()) {
+              $access = AccessResult::allowed();
+            }
+            break;
 
           default:
             // No opinion.
-            return AccessResult::neutral()->cachePerPermissions();
+            $access = AccessResult::neutral();
         }
       }
-    }
-    // Fallback.
-    return $parent_access;
+//    }
+
+    return $access;
   }
 
   /**
@@ -90,6 +112,21 @@ class OecGroupCommentsAccessControlHandler extends CommentAccessControlHandler {
     }
     // Fallback.
     return AccessResult::forbidden()->cachePerUser();
+  }
+
+  /**
+   * Helper function to fetch Comment reply count.
+   *
+   * Ripped from the module comment_reply_count.
+   */
+  protected function comment_reply_count($cid, $nid, $entity_type) {
+    $result = \Drupal::entityQuery('comment')
+      ->condition('entity_type', $entity_type)
+      ->condition('entity_id', $nid)
+      ->condition('pid', $cid)
+      ->count()
+      ->execute();
+    return $result;
   }
 
 }
