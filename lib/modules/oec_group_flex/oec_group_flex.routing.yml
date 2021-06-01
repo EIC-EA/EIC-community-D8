@@ -1,0 +1,8 @@
+# General routes for the OEC Group Flex module.
+oec_group_flex.visibility_settings:
+  path: '/admin/group/visibility-settings'
+  defaults:
+    _form: '\Drupal\oec_group_flex\Form\GroupVisibilitySettingsForm'
+    _title: 'Group visibility settings'
+  requirements:
+    _permission: 'administer group'
