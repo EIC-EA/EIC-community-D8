@@ -12,6 +12,7 @@ permissions:
   - 'administer comments'
   - 'bypass node access'
   - 'create group group'
+  - 'create new books'
   - 'flag recommend_group'
   - 'unflag recommend_group'
   - 'use groups transition publish'
