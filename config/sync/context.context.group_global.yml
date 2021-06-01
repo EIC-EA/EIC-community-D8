@@ -30,8 +30,8 @@ reactions:
         level: '1'
         depth: '0'
         expand_all_items: 0
-        region: navigation
-        weight: '0'
+        region: page_header
+        weight: '1'
         context_mapping:
           group: '@group.group_route_context:group'
         custom_id: group_content_menu_group_main_menu
