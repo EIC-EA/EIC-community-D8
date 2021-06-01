@@ -46,7 +46,7 @@ class OecGroupCommentsAccessControlHandler extends CommentAccessControlHandler {
     }
 
     // If there are replies to the comment, disable 'can_edit'.
-    $reply_count = intval($this->commentReplyCount($entity->id(), $commented_entity->id(), $commented_entity->getEntityTypeId()));
+    $reply_count = $this->commentReplyCount($entity->id(), $commented_entity->id(), $commented_entity->getEntityTypeId());
 
     // Fallback.
     $access = AccessResult::neutral();
@@ -103,14 +103,14 @@ class OecGroupCommentsAccessControlHandler extends CommentAccessControlHandler {
    *
    * Ripped from the module comment_reply_count.
    */
-  protected function commentReplyCount($cid, $nid, $entity_type) {
+  protected function commentReplyCount($cid, $nid, $entity_type): int {
     $result = \Drupal::entityQuery('comment')
       ->condition('entity_type', $entity_type)
       ->condition('entity_id', $nid)
       ->condition('pid', $cid)
       ->count()
       ->execute();
-    return $result;
+    return (int) $result;
   }
 
 }
