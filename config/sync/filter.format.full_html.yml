@@ -6,7 +6,7 @@ dependencies:
     - media
 name: 'Full HTML'
 format: full_html
-weight: 1
+weight: -10
 filters:
   filter_html:
     id: filter_html
@@ -24,6 +24,6 @@ filters:
     weight: 100
     settings:
       default_view_mode: default
+      allowed_view_modes: {  }
       allowed_media_types:
         image: image
-      allowed_view_modes: {  }
