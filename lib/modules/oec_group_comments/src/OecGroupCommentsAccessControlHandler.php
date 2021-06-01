@@ -24,8 +24,6 @@ class OecGroupCommentsAccessControlHandler extends CommentAccessControlHandler {
   protected function checkAccess(EntityInterface $entity, $operation, AccountInterface $account) {
     /** @var \Drupal\comment\CommentInterface|\Drupal\user\EntityOwnerInterface $entity */
 
-    $parent_access = parent::checkAccess($entity, $operation, $account);
-
     $commented_entity = $entity->getCommentedEntity();
     if (!($commented_entity instanceof ContentEntityInterface)) {
       return AccessResult::neutral();
@@ -43,7 +41,8 @@ class OecGroupCommentsAccessControlHandler extends CommentAccessControlHandler {
 
     if ($administer_access->isAllowed()) {
       $access = AccessResult::allowed()->cachePerPermissions();
-      return ($operation != 'view') ? $access : $access->andIf($entity->getCommentedEntity()->access($operation, $account, TRUE));
+      return ($operation != 'view') ? $access : $access->andIf($entity->getCommentedEntity()
+        ->access($operation, $account, TRUE));
     }
 
     // If there are replies to the comment, disable 'can_edit'.
@@ -52,46 +51,43 @@ class OecGroupCommentsAccessControlHandler extends CommentAccessControlHandler {
     // Fallback.
     $access = AccessResult::neutral();
 
-    // @todo Only react on if $parent === allowed Is this good/safe enough?
-    // Disabled parent_access check as this prevents the delete check.
-//    if ($parent_access->isAllowed()) {
+    // Only react if it is actually posted inside a group.
+    if (!empty($group_contents)) {
+      switch ($operation) {
+        case 'view':
+          $access = $this->getPermissionInGroups('view comments', $account, $group_contents);
+          break;
 
-      // Only react if it is actually posted inside a group.
-      if (!empty($group_contents)) {
-        switch ($operation) {
-          case 'view':
-            $access = $this->getPermissionInGroups('view comments', $account, $group_contents);
-            break;
+        case 'update':
+          if ($entity->getOwnerId() == $account->id() && $reply_count == 0) {
+            $access = $this->getPermissionInGroups('edit own comments', $account, $group_contents);
+          }
+          if ($this->getPermissionInGroups('edit all comments', $account, $group_contents)
+            ->isAllowed()) {
+            $access = AccessResult::allowed();
+          }
+          break;
 
-          case 'update':
-            if ($entity->getOwnerId() == $account->id() && $reply_count == 0) {
-              $access = $this->getPermissionInGroups('edit own comments', $account, $group_contents);
-            }
-            if ($this->getPermissionInGroups('edit all comments', $account, $group_contents)->isAllowed()) {
-              $access = AccessResult::allowed();
-            }
-            break;
+        case 'delete':
+          // The 'Request Deletion' workflow will be implemented with EICNET-745.
+          // For now only 'direct deleting' is implemented.
+          // This can be turned of by simple uncommenting the following line:
+          //            $access = AccessResult::forbidden('Deleting is not allowed for users who don\'t have administer_comments'); break;
 
-          case 'delete':
-            // The 'Request Deletion' workflow will be implemented with EICNET-745.
-            // For now only 'direct deleting' is implemented.
-            // This can be turned of by simple uncommenting the following line:
-//            $access = AccessResult::forbidden('Deleting is not allowed for users who don\'t have administer_comments'); break;
+          if ($entity->getOwnerId() == $account->id() && $reply_count == 0) {
+            $access = $this->getPermissionInGroups('request delete own comments', $account, $group_contents);
+          }
+          if ($this->getPermissionInGroups('request delete all comments', $account, $group_contents)
+            ->isAllowed()) {
+            $access = AccessResult::allowed();
+          }
+          break;
 
-            if ($entity->getOwnerId() == $account->id() && $reply_count == 0) {
-              $access = $this->getPermissionInGroups('request delete own comments', $account, $group_contents);
-            }
-            if ($this->getPermissionInGroups('request delete all comments', $account, $group_contents)->isAllowed()) {
-              $access = AccessResult::allowed();
-            }
-            break;
-
-          default:
-            // No opinion.
-            $access = AccessResult::neutral();
-        }
+        default:
+          // No opinion.
+          $access = AccessResult::neutral();
       }
-//    }
+    }
 
     return $access;
   }
