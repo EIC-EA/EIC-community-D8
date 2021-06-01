@@ -18,7 +18,6 @@ function eic_community_preprocess_comment(&$variables) {
   $author_image = _get_profile_image_array($author);
   $comment = $variables['comment'];
 
-
   $comment_origin = NULL;
   if ($comment->pid->target_id !== NULL) {
     $comment_origin_entity = Comment::load($comment->pid->target_id);

@@ -68,7 +68,8 @@ class OecGroupCommentsAccessControlHandler extends CommentAccessControlHandler {
 
       case 'delete':
         // The 'Request Deletion' workflow will be implemented with EICNET-745.
-        // For now deleting a comment is completely disabled for other permissions than administer_comments.
+        // For now deleting a comment is completely disabled for other
+        // permissions than administer_comments.
         $access = AccessResult::forbidden('Deleting is not allowed for users who don\'t have administer_comments');
         break;
 
