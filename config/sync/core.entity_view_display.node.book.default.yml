@@ -3,7 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.field.node.book.body
+    - field.field.node.book.field_body
     - node.type.book
   module:
     - text
@@ -15,16 +15,18 @@ targetEntityType: node
 bundle: book
 mode: default
 content:
-  body:
+  field_body:
+    weight: 102
     label: hidden
-    type: text_default
-    weight: 100
-    region: content
     settings: {  }
     third_party_settings: {  }
+    type: text_default
+    region: content
   links:
     weight: 101
     region: content
+    settings: {  }
+    third_party_settings: {  }
 hidden:
   extra_field_eic_theme_helper_short_title_with_fallback: true
   langcode: true
