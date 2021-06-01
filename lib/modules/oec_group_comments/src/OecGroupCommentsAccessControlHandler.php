@@ -28,25 +28,19 @@ class OecGroupCommentsAccessControlHandler extends CommentAccessControlHandler {
     if (!($commented_entity instanceof ContentEntityInterface)) {
       return AccessResult::neutral();
     }
-    $group_contents = GroupContent::loadByEntity($commented_entity);
 
-    // Check for 'delete all comments' permission in case content is not from
-    // group.
-    if (empty($group_contents) && $account->hasPermission('delete all comments')) {
-      $administer_access = AccessResult::allowed();
-    }
-    else {
-      $administer_access = $this->getPermissionInGroups('administer comments', $account, $group_contents);
-    }
-
-    if ($administer_access->isAllowed()) {
+    // If user has 'administer comments', the user
+    // is always allowed to do everything with a comment.
+    if ($account->hasPermission('administer comments')) {
       $access = AccessResult::allowed()->cachePerPermissions();
       return ($operation != 'view') ? $access : $access->andIf($entity->getCommentedEntity()
         ->access($operation, $account, TRUE));
     }
 
+    $group_contents = GroupContent::loadByEntity($commented_entity);
+
     // If there are replies to the comment, disable 'can_edit'.
-    $reply_count = intval($this->comment_reply_count($entity->id(), $commented_entity->id(), $commented_entity->getEntityTypeId()));
+    $reply_count = intval($this->commentReplyCount($entity->id(), $commented_entity->id(), $commented_entity->getEntityTypeId()));
 
     // Fallback.
     $access = AccessResult::neutral();
@@ -70,17 +64,8 @@ class OecGroupCommentsAccessControlHandler extends CommentAccessControlHandler {
 
         case 'delete':
           // The 'Request Deletion' workflow will be implemented with EICNET-745.
-          // For now only 'direct deleting' is implemented.
-          // This can be turned of by simple uncommenting the following line:
-          //            $access = AccessResult::forbidden('Deleting is not allowed for users who don\'t have administer_comments'); break;
-
-          if ($entity->getOwnerId() == $account->id() && $reply_count == 0) {
-            $access = $this->getPermissionInGroups('request delete own comments', $account, $group_contents);
-          }
-          if ($this->getPermissionInGroups('request delete all comments', $account, $group_contents)
-            ->isAllowed()) {
-            $access = AccessResult::allowed();
-          }
+          // For now deleting a comment is completely disabled for other permissions than administer_comments.
+          $access = AccessResult::forbidden('Deleting is not allowed for users who don\'t have administer_comments');
           break;
 
         default:
@@ -115,7 +100,7 @@ class OecGroupCommentsAccessControlHandler extends CommentAccessControlHandler {
    *
    * Ripped from the module comment_reply_count.
    */
-  protected function comment_reply_count($cid, $nid, $entity_type) {
+  protected function commentReplyCount($cid, $nid, $entity_type) {
     $result = \Drupal::entityQuery('comment')
       ->condition('entity_type', $entity_type)
       ->condition('entity_id', $nid)
