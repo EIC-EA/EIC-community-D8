@@ -38,6 +38,12 @@ class OecGroupCommentsAccessControlHandler extends CommentAccessControlHandler {
     }
 
     $group_contents = GroupContent::loadByEntity($commented_entity);
+    $parent_access = parent::checkAccess($entity, $operation, $account);
+
+    // If not posted in a group, don't bother doing the logic for it.
+    if (empty($group_contents)) {
+      return $parent_access;
+    }
 
     // If there are replies to the comment, disable 'can_edit'.
     $reply_count = intval($this->commentReplyCount($entity->id(), $commented_entity->id(), $commented_entity->getEntityTypeId()));
@@ -45,33 +51,30 @@ class OecGroupCommentsAccessControlHandler extends CommentAccessControlHandler {
     // Fallback.
     $access = AccessResult::neutral();
 
-    // Only react if it is actually posted inside a group.
-    if (!empty($group_contents)) {
-      switch ($operation) {
-        case 'view':
-          $access = $this->getPermissionInGroups('view comments', $account, $group_contents);
-          break;
+    switch ($operation) {
+      case 'view':
+        $access = $this->getPermissionInGroups('view comments', $account, $group_contents);
+        break;
 
-        case 'update':
-          if ($entity->getOwnerId() == $account->id() && $reply_count == 0) {
-            $access = $this->getPermissionInGroups('edit own comments', $account, $group_contents);
-          }
-          if ($this->getPermissionInGroups('edit all comments', $account, $group_contents)
-            ->isAllowed()) {
-            $access = AccessResult::allowed();
-          }
-          break;
+      case 'update':
+        if ($entity->getOwnerId() == $account->id() && $reply_count == 0) {
+          $access = $this->getPermissionInGroups('edit own comments', $account, $group_contents);
+        }
+        if ($this->getPermissionInGroups('edit all comments', $account, $group_contents)
+          ->isAllowed()) {
+          $access = AccessResult::allowed();
+        }
+        break;
 
-        case 'delete':
-          // The 'Request Deletion' workflow will be implemented with EICNET-745.
-          // For now deleting a comment is completely disabled for other permissions than administer_comments.
-          $access = AccessResult::forbidden('Deleting is not allowed for users who don\'t have administer_comments');
-          break;
+      case 'delete':
+        // The 'Request Deletion' workflow will be implemented with EICNET-745.
+        // For now deleting a comment is completely disabled for other permissions than administer_comments.
+        $access = AccessResult::forbidden('Deleting is not allowed for users who don\'t have administer_comments');
+        break;
 
-        default:
-          // No opinion.
-          $access = AccessResult::neutral();
-      }
+      default:
+        // No opinion.
+        $access = AccessResult::neutral();
     }
 
     return $access;
