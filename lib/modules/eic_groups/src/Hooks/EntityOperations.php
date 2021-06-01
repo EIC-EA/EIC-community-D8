@@ -108,7 +108,7 @@ class EntityOperations implements ContainerInjectionInterface {
             $build['link_add_current_level_wiki_page_renderable'] = Link::fromTextAndUrl($this->t('Add a new wiki page at the current level'), $add_wiki_page_urls['add_current_level_wiki_page'])->toRenderable();
             $build['link_add_current_level_wiki_page_renderable']['#suffix'] = '<br>';
             $build['link_add_child_wiki_page'] = $add_wiki_page_urls['add_child_wiki_page']->toString();
-            $build['link_add_child_wiki_page_renderable'] = Link::fromTextAndUrl($this->t('Add a new wiki page bellow this level'), $add_wiki_page_urls['add_child_wiki_page'])->toRenderable();
+            $build['link_add_child_wiki_page_renderable'] = Link::fromTextAndUrl($this->t('Add a new wiki page below this level'), $add_wiki_page_urls['add_child_wiki_page'])->toRenderable();
           }
         }
         break;
