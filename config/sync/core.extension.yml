@@ -11,6 +11,7 @@ module:
   block_content_permissions: 0
   book: 0
   breakpoint: 0
+  ckeditor: 0
   comment: 0
   components: 0
   config: 0
@@ -116,6 +117,7 @@ module:
   search_api: 0
   search_api_solr: 0
   search_api_sorts: 0
+  search_api_spellcheck: 0
   serialization: 0
   smart_trim: 0
   state_machine: 0

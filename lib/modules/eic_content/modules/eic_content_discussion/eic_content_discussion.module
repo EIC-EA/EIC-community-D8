@@ -15,13 +15,19 @@ use Drupal\eic_content_discussion\Hooks\EntityOperations;
 use Drupal\node\NodeInterface;
 
 /**
- * Implements hook_ENTITY_TYPE_insert().
+ * Implements hook_entity_presave().
  */
-function eic_content_discussion_node_insert(NodeInterface $entity) {
-  if ('discussion' === $entity->bundle()) {
-    \Drupal::classResolver(EntityOperations::class)
-      ->discussionInsert($entity);
+function eic_content_discussion_entity_presave(EntityInterface $entity) {
+  if (FALSE === $entity instanceof NodeInterface) {
+    return;
   }
+
+  if ($entity->bundle() !== 'discussion') {
+    return;
+  }
+
+  \Drupal::classResolver(EntityOperations::class)
+    ->discussionPreSave($entity);
 }
 
 /**

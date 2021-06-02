@@ -89,22 +89,22 @@ class EntityOperations implements ContainerInjectionInterface {
   }
 
   /**
-   * Implements hook_node_insert().
+   * Implements hook_entity_presave().
    */
-  public function discussionInsert(NodeInterface $discussion) {
+  public function discussionPreSave(NodeInterface $discussion) {
     $this->discussion = $discussion;
 
-    // Get all contributors of CT Discussion.
-    $contributorsFieldList = $this->discussion->get('field_related_contributors');
-    $this->contributors = $contributorsFieldList->referencedEntities();
+    if ($discussion->isNew()) {
+      // Get all contributors of CT Discussion.
+      $contributorsFieldList = $this->discussion->get('field_related_contributors');
+      $this->contributors = $contributorsFieldList->referencedEntities();
 
-    $related_contributorIds = $this->getRelatedContributorIds();
+      $related_contributorIds = $this->getRelatedContributorIds();
 
-    if (!in_array($this->discussion->getOwnerId(), $related_contributorIds)) {
-      $this->addOwnerAsContributor();
+      if (!in_array($this->discussion->getOwnerId(), $related_contributorIds)) {
+        $this->addOwnerAsContributor();
+      }
     }
-
-    $this->discussion->save();
   }
 
   /**

@@ -36,22 +36,31 @@
   ]
 %}
 
+{% if header %}
+  <header>
+    {{ header }}
+  </header>
+{% endif %}
+
 {% if rows -%}
   {% set _rows_length = rows[0]['#rows']|length %}
-  {% set _items = [] %}
+  {% set items = [] %}
 
   {% for row in rows[0]['#rows'] %}
     {%
-      set _items = _items|merge([{
+      set items = items|merge([{
         content: row,
       }])
     %}
   {% endfor %}
+  <div class="ecl-teaser-overview__items">
+    {% for item in items %}
+      <div class="ecl-teaser-overview__item {{ item.extra_classes }}">
+        {{ item.content }}
+      </div>
+    {% endfor %}
+  </div>
 
-  {% include "@theme/patterns/compositions/teaser-overview.html.twig" with {
-    items: _items,
-    extra_classes: 'ecl-teaser-overview ecl-teaser-overview--has-compact-layout ecl-teaser-overview--has-columns',
-  } only %}
 {% endif %}
 
 {{ pager }}

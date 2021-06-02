@@ -23,6 +23,7 @@
  *
  * @ingroup themeable
  */#}
+{{ attach }}
 {% if facet.widget.type %}
   {%- set attributes = attributes.addClass('item-list__' ~ facet.widget.type) %}
 {% endif %}
@@ -67,7 +68,7 @@
               variant: 'ghost',
               label: expand_label|default('Show all'),
               icon: {
-                path: icon_file_path,
+                path: eic_icon_path,
                 type: 'ui',
                 name: 'rounded-arrow',
                 size: 'xs',
@@ -79,7 +80,7 @@
               variant: 'ghost',
               label: collapse_label|default('Collapse'),
               icon: {
-                path: icon_file_path,
+                path: eic_icon_path,
                 type: 'ui',
                 name: 'rounded-arrow',
                 size: 'xs',
