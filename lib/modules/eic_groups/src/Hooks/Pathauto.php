@@ -90,14 +90,14 @@ class Pathauto implements ContainerInjectionInterface {
             $group = $group_content->getGroup();
           }
 
-          // If the group has an alias we use it has a prefix.
+          // If the group has an alias we use it as a prefix.
           if ($group_alias = $this->aliasStorageHelper->loadBySource($group->toUrl()->getInternalPath(), $group->language()->getId())) {
             $alias = "{$group_alias['alias']}/wiki";
             return;
           }
 
           // We use pathauto generator to retrieve the group alias so we can
-          // use it has a prefix.
+          // use it as a prefix.
           $group_alias = $this->pathautoGenerator->createEntityAlias($group, 'return');
 
           $alias = "{$group_alias}/wiki";
