@@ -2,6 +2,8 @@
   &__items {
     display: flex;
     flex-wrap: wrap;
+    margin-right: #{0 - map-get($ecl-spacing, 'm')};
+    margin-bottom: #{0 - map-get($ecl-spacing, 's')};
   }
 
   &__item {
@@ -10,8 +12,9 @@
     flex-shrink: 0;
     align-items: center;
     justify-content: center;
+    margin-right: map-get($ecl-spacing, 'm');
+    margin-bottom: map-get($ecl-spacing, 's');
     color: ecl-typography('color', 'meta');
-    padding: ecl-box-model('padding', 'controls');
   }
 
   &__item-link {
@@ -23,7 +26,7 @@
   }
 
   &__item-value {
-    @include ecl-responsive-font('label');
+    @include ecl-responsive-font('meta');
   }
 
   &__item-icon ~ &__item-label {
@@ -31,13 +34,15 @@
   }
 
   &__item-icon {
-    margin-right: ecl-box-model('padding', 'controls');
+    margin-right: map-get($ecl-spacing, '2xs');
   }
 
   & &__update-indicator {
     position: absolute;
-    top: 0;
-    left: 0;
+    bottom: 100%;
+    right: 100%;
+    transform: translate(25%, 50%);
+    font-size: map-get($ecl-font-size, '2xs');
     color: map-get($ecl-colors, 'black');
     background-color: map-get($ecl-colors, 'yellow-100');
   }
