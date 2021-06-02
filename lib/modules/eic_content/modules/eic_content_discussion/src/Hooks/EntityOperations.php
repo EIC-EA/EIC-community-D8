@@ -206,12 +206,7 @@ class EntityOperations implements ContainerInjectionInterface {
     // We group by uid to avoid duplicated results.
     $query->groupBy('c.uid');
     $results = $query->execute()->fetchAll(\PDO::FETCH_ASSOC);
-
-    if (empty($results)) {
-      return FALSE;
-    }
-
-    return $results;
+    return $results ?: FALSE;
   }
 
 }
