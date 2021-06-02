@@ -29,9 +29,21 @@ class GroupPermissionChecker {
   }
 
   /**
-   * Checks if account was granted permission in group.
+   * Checks if given account was granted permission in group.
+   *
+   * @param string $perm
+   *   The permission to check for, e.g. 'view comments'.
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *   The user account to check.
+   * @param \Drupal\group\Entity\GroupContentInterface[] $group_contents
+   *   The array of group contents.
+   * @param array|null $output
+   *   The output to add cacheable dependency to.
+   *
+   * @return \Drupal\Core\Access\AccessResult
+   *   Returns allowed or forbidden access result.
    */
-  public function getPermissionInGroups($perm, AccountInterface $account, $group_contents, &$output = NULL) {
+  public function getPermissionInGroups($perm, AccountInterface $account, array $group_contents, &$output = NULL) {
     foreach ($group_contents as $group_content) {
       /** @var \Drupal\group\Entity\GroupInterface $group */
       $group = $group_content->getGroup();
