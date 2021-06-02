@@ -17,7 +17,7 @@ use Symfony\Component\HttpKernel\KernelEvents;
 class BookPageRedirectSubscriber implements EventSubscriberInterface {
 
   /**
-   * The group entity from the group purl context.
+   * The group entity from the route context.
    *
    * @var \Drupal\group\Entity\GroupInterface
    */
