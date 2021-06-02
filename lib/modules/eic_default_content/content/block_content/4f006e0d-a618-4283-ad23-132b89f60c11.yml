@@ -1,12 +1,6 @@
 _meta:
   version: '1.0'
   entity_type: block_content
-  uuid: _meta:
-  version: '1.0'
-  entity_type: block_content
-  uuid: _meta:
-  version: '1.0'
-  entity_type: block_content
   uuid: 4f006e0d-a618-4283-ad23-132b89f60c11
   bundle: page_banner
   default_langcode: en
@@ -37,9 +31,4 @@ default:
       value: 'Required Subtitle'
   field_title:
     -
-      value: 'People'
-
-  bundle: page_banner
-  default_langcode: en
-  depends:
-    f8df97c3-5505-47a6-8910-3f2282e6abcf: media
+      value: 'Members Banner Block'

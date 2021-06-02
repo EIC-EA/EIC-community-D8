@@ -98,6 +98,7 @@ display:
             'entity:group_content':
               group-group_invitation: default
               group-group_membership: default
+              group-group_membership_request: default
               group-group_node-book: default
               group-group_node-discussion: default
               group-group_node-document: default

@@ -46,6 +46,17 @@ function eic_community_scan_include_files($folder) {
 }
 
 /**
+ * Implements...
+ */
+function eic_community_theme_suggestions_alter(array &$suggestions, array $variables, $hook) {
+  //var_dump($variables['elements']['#view_mode']);exit;
+  if (isset($variables['elements']['#view_mode'])) {
+    $sanitized_view_mode = strtr($variables['elements']['#view_mode'], '.', '_');
+    $suggestions[] = $hook . '__' . $sanitized_view_mode;
+  }
+}
+
+/**
  * Scan and include files from preprocess folder.
  */
 if (is_dir(__DIR__ . '/' . INCLUDES_FOLDER)) {

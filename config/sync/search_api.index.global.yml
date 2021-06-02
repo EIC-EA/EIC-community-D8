@@ -4,23 +4,23 @@ status: true
 dependencies:
   module:
     - search_api_solr
-    - node
     - group
+    - node
     - profile
+    - user
     - search_api
     - flag_search_api
     - content_moderation
     - flag
-    - user
   config:
-    - field.storage.node.field_body
-    - field.storage.node.field_discussion_type
-    - field.storage.node.field_subtitle
-    - field.storage.node.field_vocab_geo
-    - field.storage.node.field_vocab_topics
     - field.storage.group.field_body
     - field.storage.group.field_vocab_geo
     - field.storage.group.field_vocab_topics
+    - field.storage.node.field_body
+    - field.storage.node.field_vocab_geo
+    - field.storage.node.field_subtitle
+    - field.storage.node.field_vocab_topics
+    - field.storage.node.field_discussion_type
     - field.storage.profile.field_body
     - field.storage.profile.field_vocab_job_title
     - field.storage.profile.field_vocab_language
@@ -273,13 +273,13 @@ field_settings:
       module:
         - group
   status:
-    label: 'Member profiles » Profile » Active'
+    label: 'User status'
     datasource_id: 'entity:user'
-    property_path: 'member_profiles:entity:status'
+    property_path: status
     type: boolean
     dependencies:
       module:
-        - profile
+        - user
   user__group_content__uid_gid:
     label: 'Reverse reference: Group content using Group content creator » Parent group'
     datasource_id: 'entity:user'

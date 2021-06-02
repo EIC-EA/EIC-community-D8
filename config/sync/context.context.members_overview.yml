@@ -87,7 +87,7 @@ reactions:
         region: page_header
         weight: '0'
         context_mapping: {  }
-        custom_id: block_content_4f006e0d_a618_4283_ad23_132b89f60c11
+        custom_id: members_banner
         theme: eic_community
         css_class: ''
         unique: 0
