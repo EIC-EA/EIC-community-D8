@@ -1,0 +1,9 @@
+name: EIC Content Discussions Extensions
+type: module
+description: Provides extra logic for CT Discussion.
+package: Custom
+core: 8.x
+core_version_requirement: ^8 || ^9
+php: 7.3
+dependencies:
+  - eic_content:eic_content
