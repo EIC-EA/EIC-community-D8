@@ -4,7 +4,7 @@ status: true
 dependencies: {  }
 name: search
 label: Search
-group: null
+group: 'Global overviews'
 description: 'Context used when viewing global search results.'
 requireAllConditions: false
 disabled: false
@@ -122,4 +122,4 @@ reactions:
     saved: false
     uuid: b2e2c0ac-50de-49b1-b2e3-f957728678f0
     include_default_blocks: 0
-weight: 0
+weight: -7

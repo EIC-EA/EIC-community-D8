@@ -7,6 +7,7 @@ dependencies:
     - system.menu.main
   module:
     - search_api
+    - search_api_spellcheck
 id: global_overviews
 label: 'Global Overviews'
 module: views
@@ -482,6 +483,8 @@ display:
         filter_groups: false
         cache: false
         arguments: false
+        footer: false
+        header: false
       path: search
       filters:
         search_api_datasource:
@@ -660,6 +663,20 @@ display:
         type: none
       exposed_block: true
       arguments: {  }
+      footer: {  }
+      header:
+        search_api_spellcheck_did_you_mean:
+          id: search_api_spellcheck_did_you_mean
+          table: views
+          field: search_api_spellcheck_did_you_mean
+          relationship: none
+          group_type: group
+          admin_label: ''
+          empty: true
+          search_api_spellcheck_count: 1
+          search_api_spellcheck_hide_on_result: 0
+          search_api_spellcheck_collate: true
+          plugin_id: search_api_spellcheck_did_you_mean
     cache_metadata:
       max-age: -1
       contexts:
