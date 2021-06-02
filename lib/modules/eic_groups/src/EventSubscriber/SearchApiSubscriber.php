@@ -18,7 +18,7 @@ class SearchApiSubscriber implements EventSubscriberInterface {
   const USER_GROUP_MEMBERSHIP_FIELD = 'user__group_content__uid_gid';
 
   /**
-   * The group entity from the group purl context.
+   * The group entity from the route context.
    *
    * @var \Drupal\group\Entity\GroupInterface
    */
