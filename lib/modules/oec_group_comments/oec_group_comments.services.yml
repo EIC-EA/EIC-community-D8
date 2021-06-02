@@ -1,0 +1,4 @@
+services:
+  oec_group_comments.group_permission_checker:
+    class: Drupal\oec_group_comments\GroupPermissionChecker
+    arguments: ['@renderer']
