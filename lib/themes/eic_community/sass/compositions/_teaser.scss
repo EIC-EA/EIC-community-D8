@@ -51,7 +51,7 @@
       padding: ecl-box-model('padding');
     }
 
-    &:not(.ecl-teaser--event).ecl-teaser--as-card .ecl-teaser__main-wrapper {
+    &:not(.ecl-teaser--event):not(.ecl-teaser--group).ecl-teaser--as-card .ecl-teaser__main-wrapper {
       padding: 0 ecl-box-model('padding') ecl-box-model('padding');
     }
 
