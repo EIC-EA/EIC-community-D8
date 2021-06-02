@@ -65,17 +65,13 @@ function eic_community_preprocess_comment(&$variables) {
 
   // Stored in render array as twig does some logic with it.
   $variables['comment']['can_edit_comment'] =
+  $variables['comment']['can_remove_comment'] =
     (
       $current_user->hasPermission('edit own comments')
       && $current_user->id() == $comment->getOwnerId()
       && $num_of_replies === 0
-    );
-
-  $variables['comment']['can_remove_comment'] =
-    $variables['comment']['can_edit_comment']
-    || (
+    ) || (
       $current_user->hasPermission('administer comments')
-      && $num_of_replies === 0
     );
 
   if ($variables['comment']['can_edit_comment']) {
