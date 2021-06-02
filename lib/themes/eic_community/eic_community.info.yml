@@ -12,7 +12,9 @@ libraries:
 
 regions:
   breadcrumbs: 'Breadcrumbs'
+  content_before: 'Before content'
   content: 'Content'
+  content_after: 'After content'
   footer: 'Footer'
   navigation: 'Navigation'
   page_header: 'Page header'
