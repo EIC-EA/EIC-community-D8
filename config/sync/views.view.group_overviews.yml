@@ -8,6 +8,7 @@ dependencies:
     - group
     - profile
     - search_api
+    - search_api_spellcheck
 id: group_overviews
 label: 'Group - Overviews'
 module: views
@@ -671,6 +672,8 @@ display:
         access: false
         filters: false
         filter_groups: false
+        header: false
+        footer: false
       exposed_block: true
       path: search-group
       cache:
@@ -858,6 +861,20 @@ display:
         operator: AND
         groups:
           1: AND
+      header:
+        search_api_spellcheck_did_you_mean:
+          id: search_api_spellcheck_did_you_mean
+          table: views
+          field: search_api_spellcheck_did_you_mean
+          relationship: none
+          group_type: group
+          admin_label: ''
+          empty: true
+          search_api_spellcheck_count: 1
+          search_api_spellcheck_hide_on_result: 0
+          search_api_spellcheck_collate: true
+          plugin_id: search_api_spellcheck_did_you_mean
+      footer: {  }
     cache_metadata:
       max-age: -1
       contexts:

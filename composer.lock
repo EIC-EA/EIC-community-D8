@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "58a076a2d10b6414900f557fc8ee1dc6",
+    "content-hash": "7bd0ecf7072e8fdf423d86daa0b7767e",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -5108,6 +5108,60 @@
             "homepage": "https://www.drupal.org/project/search_api_sorts",
             "support": {
                 "source": "https://git.drupalcode.org/project/search_api_sorts"
+            }
+        },
+        {
+            "name": "drupal/search_api_spellcheck",
+            "version": "3.0.0-beta1",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/search_api_spellcheck.git",
+                "reference": "8.x-3.0-beta1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/search_api_spellcheck-8.x-3.0-beta1.zip",
+                "reference": "8.x-3.0-beta1",
+                "shasum": "b5bd31765918170c55370a16defc0e6ec8374feb"
+            },
+            "require": {
+                "drupal/core": "^8 || ^9",
+                "drupal/search_api": "~1.17"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "8.x-3.0-beta1",
+                    "datestamp": "1605436873",
+                    "security-coverage": {
+                        "status": "not-covered",
+                        "message": "Beta releases are not covered by Drupal security advisories."
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Contributors",
+                    "homepage": "https://www.drupal.org/node/1150950/committers"
+                },
+                {
+                    "name": "mkalkbrenner",
+                    "homepage": "https://www.drupal.org/user/124705"
+                },
+                {
+                    "name": "welly",
+                    "homepage": "https://www.drupal.org/user/354705"
+                }
+            ],
+            "description": "Allows you to display search spellcheck suggestions in views.",
+            "homepage": "https://www.drupal.org/project/search_api_spellcheck",
+            "support": {
+                "source": "http://git.drupal.org/project/search_api_spellcheck.git",
+                "issues": "https://www.drupal.org/project/issues/search_api_spellcheck"
             }
         },
         {
@@ -15468,6 +15522,7 @@
         "drupal/openapi_rest": 5,
         "drupal/publication_date": 10,
         "drupal/realname": 20,
+        "drupal/search_api_spellcheck": 10,
         "drupal/typed_link": 20,
         "ethosce/group_purl": 20,
         "lramarojaona/purl": 15,
