@@ -51,7 +51,7 @@ function eic_community_preprocess_block(array &$variables) {
     $variables['#cache']['tags'] = $cache_tags;
   }
 
-  if($variables['base_plugin_id'] == 'group_content_menu') {
+  if ($variables['base_plugin_id'] === 'group_content_menu') {
     eic_community_preprocess_block__group_menu($variables);
   }
 }

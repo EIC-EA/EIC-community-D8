@@ -14,7 +14,7 @@ use Drupal\eic_community\ValueObject\ImageValueObject;
 function eic_community_preprocess_block__group_menu(&$variables, &$cache_tags = []) {
   $items = [];
 
-  foreach($variables['content']['#items'] as $link) {
+  foreach ($variables['content']['#items'] as $link) {
     $items[] = [
       'is_active' => $link['in_active_trail'],
       'link' => [
