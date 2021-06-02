@@ -19,8 +19,8 @@ dependencies:
     - field.field.node.story.field_vocab_topics
     - node.type.story
   module:
-    - comment
     - entity_reference_revisions
+    - oec_group_comments
     - text
     - user
 _core:
@@ -49,7 +49,7 @@ content:
       view_mode: default
       pager_id: 0
     third_party_settings: {  }
-    type: comment_default
+    type: comment_group_content
     region: content
   field_disclaimer:
     weight: 17
@@ -148,9 +148,9 @@ content:
     third_party_settings: {  }
   flag_follow_content:
     weight: 10
+    region: content
     settings: {  }
     third_party_settings: {  }
-    region: content
   flag_like_content:
     weight: 14
     region: content
