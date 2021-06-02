@@ -474,6 +474,7 @@ display:
           entity_type: user
           plugin_id: search_api
       arguments: {  }
+      enabled: true
     cache_metadata:
       max-age: -1
       contexts:

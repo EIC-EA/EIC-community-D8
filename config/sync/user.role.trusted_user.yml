@@ -23,4 +23,6 @@ permissions:
   - 'use groups transition create_new_draft'
   - 'use groups transition create_new_group'
   - 'use groups transition publish'
+  - 'view any profile'
+  - 'view own profile'
   - 'view recommend_group'

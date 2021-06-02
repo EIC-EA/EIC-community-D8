@@ -76,8 +76,25 @@ reactions:
         unique: 0
         context_id: members_overview
         uuid: c8c194e9-1d46-441f-9663-777593ba3947
+      4c4cb85b-6c50-4230-a9c6-717a3f23ee0f:
+        id: 'block_content:4f006e0d-a618-4283-ad23-132b89f60c11'
+        label: 'Members - Banner block'
+        provider: block_content
+        label_display: '0'
+        status: true
+        info: ''
+        view_mode: full
+        region: page_header
+        weight: '0'
+        context_mapping: {  }
+        custom_id: block_content_4f006e0d_a618_4283_ad23_132b89f60c11
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: members_overview
+        uuid: 4c4cb85b-6c50-4230-a9c6-717a3f23ee0f
     id: blocks
     saved: false
     uuid: deeaf135-b781-47ec-b086-7d9fec72c007
-    include_default_blocks: 0
+    include_default_blocks: 1
 weight: 0
