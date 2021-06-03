@@ -1,0 +1,34 @@
+{% set title_element = title_element|default('h3') %}
+
+<div class="ecl-state-banner">
+  {% if icon and icon_file_path %}
+    {% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with {
+      icon: icon|merge({
+        path: icon_file_path,
+        size: 'l',
+      }),
+      extra_classes: 'ecl-state-banner__icon',
+    } only %}
+  {% endif %}
+  {% if title is not empty %}
+    <{{ title_element }} class="ecl-state-banner__title">
+      {{ title }}
+    </{{ title_element }}>
+  {% endif %}
+  {% if description %}
+    <div class="ecl-state-banner__description ecl-editable-wrapper">{{ description}}</div>
+  {% endif %}
+  {% if dismiss %}
+    {% include "@ecl-twig/ec-component-button/ecl-button.html.twig" with dismiss|default({})|merge({
+      label: dismiss.label|default('Dismiss'),
+      variant: dismiss.variant|default('ghost'),
+      icon: icon_file_path ? dismiss.icon|default({})|merge({
+        name: dismiss.icon.name|default('clear'),
+        type: dismiss.icon.name|default('custom'),
+        path: icon_file_path,
+        size: '2xs',
+      }),
+      extra_classes: dismiss.extra_classes|default('') ~ ' ecl-button--compact-for-mobile ecl-state-banner__dismiss',
+    }) only %}
+  {% endif %}
+</div>

@@ -1,0 +1,44 @@
+.ecl-state-banner {
+  position: relative;
+  padding: map-get($ecl-spacing, 'm');
+  background-color: map-get($ecl-colors, 'grey-10');
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+
+  &disitle {
+    margin-top: map-get($ecl-spacing, 'xs');
+    margin-bottom: map-get($ecl-spacing, 'm');
+
+    @include ecl-media-breakpoint-up('lg') {
+      margin-bottom: map-get($ecl-spacing, 'l');
+    }
+  }
+
+  &__title,
+  &__description {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: map-get($ecl-width, 'form-l');
+  }
+
+  &__icon {
+    fill: none;
+    margin-left: auto;
+    margin-right: auto;
+    color: ecl-typography('color', 'title');
+  }
+
+  &[aria-hidden] {
+    @include visually-hidden;
+  }
+
+  &__dismiss {
+    order: -1;
+    margin-left: auto;
+    margin-top: #{0 - map-get($ecl-spacing, 'm')};
+    margin-right: #{0 - map-get($ecl-spacing, 's')};
+    margin-bottom: #{0 - map-get($ecl-spacing, 'm')};
+  }
+}
