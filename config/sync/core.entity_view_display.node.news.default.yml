@@ -20,8 +20,8 @@ dependencies:
     - field.field.node.news.field_vocab_topics
     - node.type.news
   module:
-    - comment
     - entity_reference_revisions
+    - oec_group_comments
     - text
     - user
 id: node.news.default
@@ -48,7 +48,7 @@ content:
       view_mode: default
       pager_id: 0
     third_party_settings: {  }
-    type: comment_default
+    type: comment_group_content
     region: content
   field_disclaimer:
     type: entity_reference_entity_view
@@ -157,9 +157,9 @@ content:
     third_party_settings: {  }
   flag_follow_content:
     weight: 10
+    region: content
     settings: {  }
     third_party_settings: {  }
-    region: content
   flag_like_content:
     weight: 16
     region: content

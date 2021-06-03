@@ -7,5 +7,6 @@ label: 'Service authentication'
 weight: -6
 is_admin: null
 permissions:
+  - 'administer comments'
   - 'administer users'
   - 'restful post eic_webservices_user_update'

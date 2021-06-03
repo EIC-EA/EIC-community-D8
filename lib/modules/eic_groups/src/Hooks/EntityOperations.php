@@ -117,10 +117,10 @@ class EntityOperations implements ContainerInjectionInterface {
           // Add wiki page create form url to the build array.
           if ($add_wiki_page_urls = $this->getWikiPageAddFormUrls($entity)) {
             $build['link_add_current_level_wiki_page'] = $add_wiki_page_urls['add_current_level_wiki_page']->toString();
-            $build['link_add_current_level_wiki_page_renderable'] = Link::fromTextAndUrl($this->t('Add a new wiki page at the current level'), $add_wiki_page_urls['add_current_level_wiki_page'])->toRenderable();
+            $build['link_add_current_level_wiki_page_renderable'] = Link::fromTextAndUrl($this->t('Add a new page on the current level'), $add_wiki_page_urls['add_current_level_wiki_page'])->toRenderable();
             $build['link_add_current_level_wiki_page_renderable']['#suffix'] = '<br>';
             $build['link_add_child_wiki_page'] = $add_wiki_page_urls['add_child_wiki_page']->toString();
-            $build['link_add_child_wiki_page_renderable'] = Link::fromTextAndUrl($this->t('Add a new wiki page bellow this level'), $add_wiki_page_urls['add_child_wiki_page'])->toRenderable();
+            $build['link_add_child_wiki_page_renderable'] = Link::fromTextAndUrl($this->t('Add a new wiki page below this page'), $add_wiki_page_urls['add_child_wiki_page'])->toRenderable();
           }
         }
         break;
@@ -132,20 +132,23 @@ class EntityOperations implements ContainerInjectionInterface {
    * Creates top level book page for group wiki section.
    */
   public function createGroupWikiBook(GroupInterface $entity) {
-    $node_values = [
-      'title' => "{$entity->label()} - Wiki",
-      'type' => 'book',
-      'uid' => $entity->getOwnerId(),
-      'status' => $entity->get('status')->value,
-      'langcode' => $entity->language()->getId(),
-      'book' => [
-        'bid' => 'new',
-        'plid' => 0,
-      ],
-    ];
-    $node = $this->entityTypeManager->getStorage('node')->create($node_values);
-    $node->save();
-    $entity->addContent($node, 'group_node:book');
+    $installedContentPlugins = $entity->getGroupType()->getInstalledContentPlugins();
+    if ($installedContentPlugins && in_array('group_node:book', $installedContentPlugins->getInstanceIds())) {
+      $node_values = [
+        'title' => "{$entity->label()} - Wiki",
+        'type' => 'book',
+        'uid' => $entity->getOwnerId(),
+        'status' => $entity->get('status')->value,
+        'langcode' => $entity->language()->getId(),
+        'book' => [
+          'bid' => 'new',
+          'plid' => 0,
+        ],
+      ];
+      $node = $this->entityTypeManager->getStorage('node')->create($node_values);
+      $node->save();
+      $entity->addContent($node, 'group_node:book');
+    }
   }
 
   /**

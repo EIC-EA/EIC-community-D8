@@ -1,0 +1,5 @@
+oec_group_flex.visibility_settings:
+  title: 'Visibility settings'
+  base_route: 'entity.group.collection'
+  route_name: 'oec_group_flex.visibility_settings'
+  weight: 15

@@ -16,8 +16,8 @@ function eic_community_preprocess_comment(&$variables) {
   $author = User::load($variables['author_id']);
   $current_user = $variables['user'];
   $author_image = _get_profile_image_array($author);
-
   $comment = $variables['comment'];
+
   $comment_origin = NULL;
   if ($comment->pid->target_id !== NULL) {
     $comment_origin_entity = Comment::load($comment->pid->target_id);
@@ -57,37 +57,15 @@ function eic_community_preprocess_comment(&$variables) {
     'icon_file_path' => $variables['eic_icon_path'],
   ];
 
-  // If there are replies to the comment, disable 'can_edit'.
-  $cid = $comment->id();
-  $nid = $comment->getCommentedEntityId();
-  $entity_type = $comment->getCommentedEntityTypeId();
-  $num_of_replies = intval(comment_reply_count($cid, $nid, $entity_type));
+  $operations = \Drupal::entityTypeManager()->getListBuilder('comment')->getOperations($comment);
 
-  // Stored in render array as twig does some logic with it.
-  $variables['comment']['can_edit_comment'] =
-    (
-      $current_user->hasPermission('edit own comments')
-      && $current_user->id() == $comment->getOwnerId()
-      && $num_of_replies === 0
-    );
-
-  $variables['comment']['can_remove_comment'] =
-    $variables['comment']['can_edit_comment']
-    || (
-      $current_user->hasPermission('administer comments')
-      && $num_of_replies === 0
-    );
-
-  if ($variables['comment']['can_edit_comment']) {
-    $variables['comment']['edit_path'] = $comment->toUrl('edit-form');
-  }
-
-  if ($variables['comment']['can_remove_comment']) {
-    $variables['comment']['remove_path'] = $comment->toUrl('delete-form');
+  foreach ($operations as $key => $operation) {
+    $variables['comment']['can_' . $key . '_comment'] = TRUE;
+    $variables['comment'][$key . '_path'] = $operation['url']->toString();
   }
 
   $flag_link_builder = \Drupal::service('flag.link_builder');
-  $link = $flag_link_builder->build('comment', $cid, 'like_comment');
+  $link = $flag_link_builder->build('comment', $comment->id(), 'like_comment');
 
   $variables['comment']['flag_link'] = $link;
 }
@@ -106,19 +84,4 @@ function _eic_community_preprocess_comment_form(&$variables) {
     'path' => '',
     'image' => $author_image,
   ];
-}
-
-/**
- * Helper function to fetch Comment reply count.
- *
- * Ripped from the module comment_reply_count.
- */
-function comment_reply_count($cid, $nid, $entity_type) {
-  $result = \Drupal::entityQuery('comment')
-    ->condition('entity_type', $entity_type)
-    ->condition('entity_id', $nid)
-    ->condition('pid', $cid)
-    ->count()
-    ->execute();
-  return $result;
 }
