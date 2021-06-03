@@ -120,20 +120,23 @@ class EntityOperations implements ContainerInjectionInterface {
    * Creates top level book page for group wiki section.
    */
   public function createGroupWikiBook(GroupInterface $entity) {
-    $node_values = [
-      'title' => "{$entity->label()} - Wiki",
-      'type' => 'book',
-      'uid' => $entity->getOwnerId(),
-      'status' => 1,
-      'langcode' => $entity->language()->getId(),
-      'book' => [
-        'bid' => 'new',
-        'plid' => 0,
-      ],
-    ];
-    $node = $this->entityTypeManager->getStorage('node')->create($node_values);
-    $node->save();
-    $entity->addContent($node, 'group_node:book');
+    $installedContentPlugins = $entity->getGroupType()->getInstalledContentPlugins();
+    if ($installedContentPlugins && in_array('group_node:book', $installedContentPlugins->getInstanceIds())) {
+      $node_values = [
+        'title' => "{$entity->label()} - Wiki",
+        'type' => 'book',
+        'uid' => $entity->getOwnerId(),
+        'status' => 1,
+        'langcode' => $entity->language()->getId(),
+        'book' => [
+          'bid' => 'new',
+          'plid' => 0,
+        ],
+      ];
+      $node = $this->entityTypeManager->getStorage('node')->create($node_values);
+      $node->save();
+      $entity->addContent($node, 'group_node:book');
+    }
   }
 
   /**
