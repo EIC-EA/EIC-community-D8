@@ -36,13 +36,6 @@ class CommentGroupContentFormatter extends CommentDefaultFormatter {
   protected $renderer;
 
   /**
-   * TRUE if the request is a XMLHttpRequest.
-   *
-   * @var bool
-   */
-  protected $isXmlHttpRequest;
-
-  /**
    * The group permission checker.
    *
    * @var \Drupal\oec_group_comments\GroupPermissionChecker
@@ -67,7 +60,6 @@ class CommentGroupContentFormatter extends CommentDefaultFormatter {
       $container->get('current_route_match'),
       $container->get('entity_display.repository'),
       $container->get('renderer'),
-      $container->get('request_stack')->getCurrentRequest()->isXmlHttpRequest(),
       $container->get('oec_group_comments.group_permission_checker')
     );
   }
@@ -101,8 +93,6 @@ class CommentGroupContentFormatter extends CommentDefaultFormatter {
    *   The entity display repository.
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer interface.
-   * @param bool $is_xml_http_request
-   *   TRUE if the request is a XMLHttpRequest.
    * @param \Drupal\oec_group_comments\GroupPermissionChecker $groupPermissionChecker
    *   The group permission checker.
    */
@@ -120,7 +110,6 @@ class CommentGroupContentFormatter extends CommentDefaultFormatter {
     RouteMatchInterface $route_match,
     EntityDisplayRepositoryInterface $entity_display_repository,
     RendererInterface $renderer,
-    $is_xml_http_request,
     GroupPermissionChecker $groupPermissionChecker
   ) {
     parent::__construct(
@@ -139,7 +128,6 @@ class CommentGroupContentFormatter extends CommentDefaultFormatter {
     );
 
     $this->renderer = $renderer;
-    $this->isXmlHttpRequest = $is_xml_http_request;
     $this->groupPermissionChecker = $groupPermissionChecker;
   }
 
