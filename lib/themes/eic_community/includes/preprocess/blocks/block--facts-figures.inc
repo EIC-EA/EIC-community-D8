@@ -51,5 +51,7 @@ function eic_community_preprocess_block__facts_figures(&$variables, &$cache_tags
         'fact_figure_type' => $fragment_translation->get('field_fact_figure_type')->getString(),
       ];
     }
+
+    $variables['block_content']['column'] = 4;
   }
 }

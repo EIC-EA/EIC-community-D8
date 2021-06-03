@@ -31,8 +31,19 @@
 
   {%- if items -%}
     <div class="ecl-teaser-overview__active-filters">
-    {%- for item in items -%}
-      {% if loop.index == 1 %}
+      {% set clearItem = items|first %}
+      {% include "@ecl-twig/ec-component-button/ecl-button.html.twig" with {
+        icon: {
+          path: eic_icon_path,
+          name: 'clear',
+          type: 'custom',
+          size: '2xs',
+        },
+        variant: 'ghost',
+        extra_classes: 'ecl-teaser-overview__active-filters-clear-all facet-summary-item--clear',
+        label: clearItem.value
+      } only %}
+      {%- for item in items|slice(start + 1, length) -%}
         {% include "@ecl-twig/ec-component-button/ecl-button.html.twig" with {
           icon: {
             path: eic_icon_path,
@@ -41,20 +52,10 @@
             size: '2xs',
           },
           variant: 'ghost',
-          extra_classes: 'ecl-teaser-overview__active-filters-clear-all',
+          extra_classes: 'facet-summary-item--facet',
           label: item.value
         } only %}
-      {% else %}
-        {% include "@ecl-twig/ec-component-tag/ecl-tag.html.twig" with {
-          tag: {
-            type: 'removable',
-            label: item.value
-          },
-          default_icon_path: eic_icon_path,
-          extra_classes: 'ecl-teaser-overview__active-filters-tag'
-        } only %}
-      {% endif %}
-    {%- endfor -%}
+      {%- endfor -%}
     </div>
   {%- endif -%}
 {%- endif %}

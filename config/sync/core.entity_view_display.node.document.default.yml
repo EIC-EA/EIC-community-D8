@@ -10,7 +10,7 @@ dependencies:
     - field.field.node.document.field_vocab_topics
     - node.type.document
   module:
-    - comment
+    - oec_group_comments
     - text
     - user
 id: node.document.default
@@ -32,7 +32,7 @@ content:
       view_mode: default
       pager_id: 0
     third_party_settings: {  }
-    type: comment_default
+    type: comment_group_content
     region: content
   field_document_media:
     type: entity_reference_entity_view
@@ -58,6 +58,7 @@ content:
     region: content
   flag_highlight_content:
     weight: 10
+    region: content
     settings: {  }
     third_party_settings: {  }
     region: content

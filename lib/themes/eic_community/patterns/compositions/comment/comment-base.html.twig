@@ -69,7 +69,7 @@
       </div>
 
       {% if user and comment_id %}
-        {% if can_remove_comment %}
+        {% if can_delete_comment or can_edit_comment %}
         <div class="ecl-comment__header-aside">
           {% embed "@theme/patterns/compositions/collapsible-options.html.twig" with {
             extra_classes: 'ecl-collapsible-options--aligns-from-right',
@@ -82,11 +82,11 @@
                 extra_classes: 'ecl-comment__edit',
                 extra_attributes: action_attributes,
               }
-            ] : [])|merge( can_remove_comment? [
+            ] : [])|merge( can_delete_comment? [
               {
                 link: {
-                  label: remove_label|default('Delete comment'),
-                  path: remove_path,
+                  label: delete_label|default('Delete comment'),
+                  path: delete_path,
                 },
                 extra_classes: 'ecl-comment__delete',
                 extra_attributes: action_attributes,

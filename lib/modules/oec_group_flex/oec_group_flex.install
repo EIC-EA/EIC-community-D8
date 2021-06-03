@@ -48,3 +48,33 @@ function oec_group_flex_schema() {
 
   return $schema;
 }
+
+/**
+ * Update group visibility options to new data structure.
+ */
+function oec_group_flex_update_9001(&$sandbox) {
+  /** @var \Drupal\oec_group_flex\GroupVisibilityDatabaseStorageInterface $group_visibility_storage */
+  $group_visibility_storage = \Drupal::service('oec_group_flex.group_visibility.storage');
+
+  $group_visibilities_select = \Drupal::database()->select('oec_group_visibility')
+    ->fields('oec_group_visibility', ['gid'])
+    ->execute();
+  if ($group_visibilities_select) {
+    $group_visibilities = $group_visibilities_select->fetchCol('gid');
+
+    foreach ($group_visibilities as $gid) {
+      $group_visibility = $group_visibility_storage->load($gid);
+      $options = $group_visibility->getOptions();
+
+      $newOptions = [];
+      foreach ($options as $option => $option_value) {
+        $newOptions[$option] = [];
+        $newOptions[$option][$option . '_status'] = 1;
+        $newOptions[$option][$option . '_conf'] = $option_value;
+      }
+      $group_visibility->setOptions($newOptions);
+
+      $group_visibility_storage->save($group_visibility);
+    }
+  }
+}
