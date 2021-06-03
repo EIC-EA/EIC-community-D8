@@ -93,8 +93,22 @@ reactions:
         unique: 0
         context_id: members_overview
         uuid: 4c4cb85b-6c50-4230-a9c6-717a3f23ee0f
+      88555819-dd97-4d5c-9376-6f0274ad620b:
+        id: system_breadcrumb_block
+        label: Breadcrumbs
+        provider: system
+        label_display: '0'
+        region: breadcrumbs
+        weight: '0'
+        context_mapping: {  }
+        custom_id: system_breadcrumb_block
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: members_overview
+        uuid: 88555819-dd97-4d5c-9376-6f0274ad620b
     id: blocks
     saved: false
     uuid: deeaf135-b781-47ec-b086-7d9fec72c007
-    include_default_blocks: 1
+    include_default_blocks: 0
 weight: 0
