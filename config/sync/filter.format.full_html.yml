@@ -6,7 +6,7 @@ dependencies:
     - media
 name: 'Full HTML'
 format: full_html
-weight: -7
+weight: -10
 filters:
   filter_html:
     id: filter_html
@@ -20,9 +20,10 @@ filters:
   media_embed:
     id: media_embed
     provider: media
-    status: false
+    status: true
     weight: 100
     settings:
       default_view_mode: default
-      allowed_media_types: {  }
       allowed_view_modes: {  }
+      allowed_media_types:
+        image: image

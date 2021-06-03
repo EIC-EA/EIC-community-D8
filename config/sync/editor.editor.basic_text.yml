@@ -1,0 +1,40 @@
+uuid: 137072ad-8aaa-4c05-9002-654526a32299
+langcode: en
+status: true
+dependencies:
+  config:
+    - filter.format.basic_text
+  module:
+    - ckeditor
+format: basic_text
+editor: ckeditor
+settings:
+  toolbar:
+    rows:
+      -
+        -
+          name: Formatting
+          items:
+            - Bold
+            - Italic
+            - Underline
+        -
+          name: Tools
+          items:
+            - PasteText
+            - RemoveFormat
+            - Undo
+            - Redo
+  plugins:
+    stylescombo:
+      styles: ''
+    language:
+      language_list: un
+image_upload:
+  status: false
+  scheme: public
+  directory: inline-images
+  max_size: ''
+  max_dimensions:
+    width: null
+    height: null
