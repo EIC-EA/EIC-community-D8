@@ -2,13 +2,15 @@
   $node: &;
 
   &__wrapper {
+    position: relative;
+
     @include ecl-media-breakpoint-up('lg') {
       display: flex;
     }
   }
 
   &__parent-link {
-    margin-bottom: ecl-box-model('margin');
+    margin-bottom: map-get($ecl-spacing, 's');
   }
 
   &__aside {
@@ -67,7 +69,7 @@
 
   &__push {
     #{$node}__aside & {
-      dislpay: none;
+      display: none;
 
       @include ecl-media-breakpoint-up('lg') {
         display: block;
@@ -89,11 +91,14 @@
   &__main-header {
     margin-bottom: map-get($ecl-spacing, 'm');
 
-    @include ecl-media-breakpoint-up('md') {
+    @include ecl-media-breakpoint-up('lg') {
       display: flex;
       align-items: flex-end;
       margin-bottom: map-get($ecl-spacing, 'l');
     }
+  }
+
+  &__main-header {
   }
 
   &__main-content {
@@ -147,6 +152,12 @@
     margin-bottom: #{0 - ecl-layout('gutter', 'controls')};
     margin-right: #{0 - ecl-layout('gutter', 'controls')};
 
+    @include ecl-media-breakpoint-down('md') {
+      #{$node}__aside + #{$node}__main & {
+        margin-top: 0;
+      }
+    }
+
     @include ecl-media-breakpoint-up('lg') {
       order: 0;
       margin-top: 0;
@@ -163,17 +174,26 @@
 
   &__tags-wrapper {
     flex-grow: 1;
+
+    @include ecl-media-breakpoint-down('md') {
+      #{$node}__aside + #{$node}__main & {
+        position: absolute;
+        top: 0;
+        right: 0;
+        padding: map-get($ecl-spacing, 'm');
+      }
+    }
   }
 
   &__tags {
     display: flex;
     flex-wrap: wrap;
-    margin-bototm: #{0 - ecl-box-model('margin', 'controls')};
+    margin-bottom: #{0 - ecl-box-model('margin', 'controls')};
     margin-right: #{0 - ecl-box-model('margin', 'controls')};
   }
 
   &__tag {
-    margin-bototm: ecl-box-model('margin', 'controls');
+    margin-bottom: ecl-box-model('margin', 'controls');
     margin-right: ecl-box-model('margin', 'controls');
   }
 
