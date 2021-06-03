@@ -56,6 +56,9 @@ function eic_groups_node_view(array &$build, EntityInterface $entity, EntityView
 function eic_groups_form_group_form_alter(&$form, FormStateInterface $form_state, $form_id) {
   // Since the group permissions do not exist when hook_group_insert() is
   // invoked, we use a submit handler that will be called after it is created.
+  // @todo This might not be sufficient when creating groups programmatically,
+  //   e.g. when migrating groups, we should then create the group permissions
+  //   ourselves and not rely on group_flex module to create the permissions.
   // Only act on group creation.
   if ($form_state->getFormObject()->getOperation() == 'add') {
     $form['actions']['submit']['#submit'][] = 'eic_groups_group_form_submit';
