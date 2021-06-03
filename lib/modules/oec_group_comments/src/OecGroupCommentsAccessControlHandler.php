@@ -112,11 +112,11 @@ class OecGroupCommentsAccessControlHandler extends CommentAccessControlHandler i
   /**
    * Helper function to fetch comment reply count.
    *
-   * @param $cid
+   * @param int $cid
    *   Entity ID.
-   * @param $nid
+   * @param int $nid
    *   Commented Entity ID.
-   * @param $entity_type
+   * @param int $entity_type
    *   Commented Entity Type ID.
    *
    * @return int
