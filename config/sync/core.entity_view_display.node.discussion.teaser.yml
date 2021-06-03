@@ -36,12 +36,27 @@ content:
     label: above
     settings: {  }
     third_party_settings: {  }
+  flag_bookmark_content:
+    weight: 10
+    settings: {  }
+    third_party_settings: {  }
+    region: content
   flag_follow_content:
     weight: 10
     settings: {  }
     third_party_settings: {  }
     region: content
   flag_highlight_content:
+    weight: 10
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+  flag_like_content:
+    weight: 10
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+  flag_recommend:
     weight: 10
     settings: {  }
     third_party_settings: {  }
