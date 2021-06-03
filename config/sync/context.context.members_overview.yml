@@ -61,21 +61,6 @@ reactions:
         unique: 0
         context_id: groups_overview
         uuid: 97b594dc-7529-4ac6-973d-b43ffc569246
-      c8c194e9-1d46-441f-9663-777593ba3947:
-        id: 'views_exposed_filter_block:group_overviews-members'
-        label: ''
-        provider: views
-        label_display: '0'
-        views_label: ''
-        region: sidebar
-        weight: '-3'
-        context_mapping: {  }
-        custom_id: views_exposed_filter_block_group_overviews_members
-        theme: eic_community
-        css_class: ''
-        unique: 0
-        context_id: members_overview
-        uuid: c8c194e9-1d46-441f-9663-777593ba3947
       4c4cb85b-6c50-4230-a9c6-717a3f23ee0f:
         id: 'block_content:4f006e0d-a618-4283-ad23-132b89f60c11'
         label: 'Members - Banner block'
@@ -107,6 +92,21 @@ reactions:
         unique: 0
         context_id: members_overview
         uuid: 88555819-dd97-4d5c-9376-6f0274ad620b
+      f54ba8ef-f4be-4d83-9993-51cb9a74db19:
+        id: 'views_exposed_filter_block:global_overviews-page_2'
+        label: ''
+        provider: views
+        label_display: '0'
+        views_label: ''
+        region: sidebar
+        weight: '0'
+        context_mapping: {  }
+        custom_id: views_exposed_filter_block_global_overviews_page_2
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: members_overview
+        uuid: f54ba8ef-f4be-4d83-9993-51cb9a74db19
     id: blocks
     saved: false
     uuid: deeaf135-b781-47ec-b086-7d9fec72c007

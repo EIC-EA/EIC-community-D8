@@ -7,8 +7,8 @@ dependencies:
     - system.menu.main
   module:
     - search_api
-    - user
     - search_api_spellcheck
+    - user
 id: global_overviews
 label: 'Global Overviews'
 module: views
@@ -631,6 +631,7 @@ display:
           perm: 'view any member profile'
       display_description: ''
       title: Members
+      exposed_block: true
     cache_metadata:
       max-age: -1
       contexts:
