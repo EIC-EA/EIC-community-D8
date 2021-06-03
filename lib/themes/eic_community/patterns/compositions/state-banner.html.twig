@@ -19,16 +19,33 @@
     <div class="ecl-state-banner__description ecl-editable-wrapper">{{ description}}</div>
   {% endif %}
   {% if dismiss %}
-    {% include "@ecl-twig/ec-component-button/ecl-button.html.twig" with dismiss|default({})|merge({
-      label: dismiss.label|default('Dismiss'),
-      variant: dismiss.variant|default('ghost'),
-      icon: icon_file_path ? dismiss.icon|default({})|merge({
-        name: dismiss.icon.name|default('clear'),
-        type: dismiss.icon.name|default('custom'),
-        path: icon_file_path,
-        size: '2xs',
-      }),
-      extra_classes: dismiss.extra_classes|default('') ~ ' ecl-button--compact-for-mobile ecl-state-banner__dismiss',
-    }) only %}
+    {% if dismiss.link %}
+      {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with dismiss|default({})|merge({
+        link: dismiss.link|merge({
+          icon_position: 'after',
+          type: 'standalone',
+          label: dismiss.link.label|default('Dismiss'),
+        }),
+        icon: icon_file_path ? {
+          name: dismiss.link.icon.name|default('clear'),
+          type: dismiss.link.icon.name|default('custom'),
+          size: '2xs',
+          path: icon_file_path,
+        },
+        extra_classes: dismiss.extra_classes|default('') ~ ' ecl-link--button ecl-link--button-ghost ecl-button--compact-for-mobile ecl-state-banner__dismiss',
+      }) only %}
+    {% else %}
+      {% include "@ecl-twig/ec-component-button/ecl-button.html.twig" with dismiss|default({})|merge({
+        label: dismiss.label|default('Dismiss'),
+        variant: dismiss.variant|default('ghost'),
+        icon: icon_file_path ? dismiss.icon|default({})|merge({
+          name: dismiss.icon.name|default('clear'),
+          type: dismiss.icon.name|default('custom'),
+          path: icon_file_path,
+          size: '2xs',
+        }),
+        extra_classes: dismiss.extra_classes|default('') ~ ' ecl-button--compact-for-mobile ecl-state-banner__dismiss',
+      }) only %}
+    {% endif %}
   {% endif %}
 </div>

@@ -22,6 +22,7 @@
 
   &__items-wrapper {
     flex-grow: 1;
+    flex-shrink: 0;
     display: none;
 
     @include ecl-media-breakpoint-up('lg') {

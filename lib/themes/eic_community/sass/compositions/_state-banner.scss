@@ -23,6 +23,12 @@
     max-width: map-get($ecl-width, 'form-l');
   }
 
+  &__description {
+    a {
+      font-weight: $ecl-font-weight-bold;
+    }
+  }
+
   &__icon {
     fill: none;
     margin-left: auto;
@@ -34,7 +40,7 @@
     @include visually-hidden;
   }
 
-  &__dismiss {
+  & &__dismiss {
     order: -1;
     margin-left: auto;
     margin-top: #{0 - map-get($ecl-spacing, 'm')};
