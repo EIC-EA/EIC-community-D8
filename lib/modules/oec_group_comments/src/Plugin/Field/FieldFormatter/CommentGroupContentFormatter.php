@@ -144,28 +144,28 @@ class CommentGroupContentFormatter extends CommentDefaultFormatter {
     }
 
     // Check if the content is posted in groups.
-    if (!empty($group_contents)) {
+    if (empty($group_contents)) {
+      return $output;
+    }
 
-      /** @var \Drupal\group\Entity\GroupInterface $group */
-      $group = reset($group_contents)->getGroup();
+    /** @var \Drupal\group\Entity\GroupInterface $group */
+    $group = reset($group_contents)->getGroup();
 
-      // Add cache contexts.
-      $output['#cache']['contexts'][] = 'route.group';
-      $output['#cache']['contexts'][] = 'user.group_permissions';
-      $output['#cache']['contexts'][] = 'user.is_group_member:' . $group->id();
+    // Add cache contexts.
+    $output['#cache']['contexts'][] = 'route.group';
+    $output['#cache']['contexts'][] = 'user.group_permissions';
+    $output['#cache']['contexts'][] = 'user.is_group_member:' . $group->id();
 
-      $account = $this->currentUser;
+    $account = $this->currentUser;
 
-      $access_post_comments = $this->groupPermissionChecker->getPermissionInGroups('post comments', $account, $group_contents, $output);
-      if ($access_post_comments->isForbidden()) {
-        $output[0]['comment_form'] = [];
-      }
+    $access_post_comments = $this->groupPermissionChecker->getPermissionInGroups('post comments', $account, $group_contents, $output);
+    if ($access_post_comments->isForbidden()) {
+      $output[0]['comment_form'] = [];
+    }
 
-      $access_view_comments = $this->groupPermissionChecker->getPermissionInGroups('view comments', $account, $group_contents, $output);
-      if ($access_view_comments->isForbidden()) {
-        $output[0]['comments'] = [];
-      }
-
+    $access_view_comments = $this->groupPermissionChecker->getPermissionInGroups('view comments', $account, $group_contents, $output);
+    if ($access_view_comments->isForbidden()) {
+      $output[0]['comments'] = [];
     }
 
     return $output;
