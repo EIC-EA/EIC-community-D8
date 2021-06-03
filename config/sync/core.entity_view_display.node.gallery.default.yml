@@ -11,7 +11,7 @@ dependencies:
     - field.field.node.gallery.field_vocab_topics
     - node.type.gallery
   module:
-    - comment
+    - oec_group_comments
     - text
     - user
 id: node.gallery.default
@@ -27,7 +27,7 @@ content:
     type: text_default
     region: content
   field_comments:
-    type: comment_default
+    type: comment_group_content
     weight: 5
     region: content
     label: above
