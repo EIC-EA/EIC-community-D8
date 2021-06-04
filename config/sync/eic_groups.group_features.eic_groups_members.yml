@@ -1,0 +1,6 @@
+permissions:
+  - 'access members overview'
+roles:
+  - group-member
+  - group-admin
+  - group-owner
