@@ -6,7 +6,17 @@
   display: flex;
   flex-direction: column;
 
-  &disitle {
+  @include ecl-media-breakpoint-up('md') {
+    padding-top: map-get($ecl-spacing, 'xl');
+    padding-bottom: map-get($ecl-spacing, '2xl');
+  }
+
+  @include ecl-media-breakpoint-up('lg') {
+    padding-top: map-get($ecl-spacing, '2xl');
+    padding-bottom: map-get($ecl-spacing, '3xl');
+  }
+
+  &__title {
     margin-top: map-get($ecl-spacing, 'xs');
     margin-bottom: map-get($ecl-spacing, 'm');
 
@@ -20,7 +30,6 @@
     width: 100%;
     margin-left: auto;
     margin-right: auto;
-    max-width: map-get($ecl-width, 'form-l');
   }
 
   &__description {
@@ -30,12 +39,14 @@
 
     li {
       text-align: left;
+      max-width: map-get($ecl-width, 'form-l');
     }
   }
 
   &__icon {
     margin-left: auto;
     margin-right: auto;
+    margin-bottom: map-get($ecl-spacing, 'm');
     color: ecl-typography('color', 'title');
   }
 
