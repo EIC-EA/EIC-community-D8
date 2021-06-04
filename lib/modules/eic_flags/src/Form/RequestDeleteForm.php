@@ -31,7 +31,12 @@ class RequestDeleteForm extends ContentEntityDeleteForm {
    * @param \Drupal\Component\Datetime\TimeInterface $time
    * @param \Drupal\eic_flags\Service\DeleteRequestManager $deleteRequestManager
    */
-  public function __construct(EntityRepositoryInterface $entity_repository, EntityTypeBundleInfoInterface $entity_type_bundle_info, TimeInterface $time, DeleteRequestManager $deleteRequestManager) {
+  public function __construct(
+    EntityRepositoryInterface $entity_repository,
+    EntityTypeBundleInfoInterface $entity_type_bundle_info,
+    TimeInterface $time,
+    DeleteRequestManager $deleteRequestManager
+  ) {
     parent::__construct($entity_repository, $entity_type_bundle_info, $time);
 
     $this->deleteRequestManager = $deleteRequestManager;
