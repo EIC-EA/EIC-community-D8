@@ -1,6 +1,6 @@
 {% set title_element = title_element|default('h3') %}
 
-<div class="ecl-state-banner">
+<div class="ecl-state-banner {{ extra_classes }}">
   {% if icon and icon_file_path %}
     {% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with {
       icon: icon|merge({
@@ -21,7 +21,7 @@
   {% if dismiss %}
     {% if dismiss.link %}
       {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with dismiss|default({})|merge({
-        link: dismiss.link|merge({
+        link: dismiss.link|default({})|merge({
           icon_position: 'after',
           type: 'standalone',
           label: dismiss.link.label|default('Dismiss'),

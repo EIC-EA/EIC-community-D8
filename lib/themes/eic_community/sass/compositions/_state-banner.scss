@@ -27,10 +27,13 @@
     a {
       font-weight: $ecl-font-weight-bold;
     }
+
+    li {
+      text-align: left;
+    }
   }
 
   &__icon {
-    fill: none;
     margin-left: auto;
     margin-right: auto;
     color: ecl-typography('color', 'title');
@@ -46,5 +49,9 @@
     margin-top: #{0 - map-get($ecl-spacing, 'm')};
     margin-right: #{0 - map-get($ecl-spacing, 's')};
     margin-bottom: #{0 - map-get($ecl-spacing, 'm')};
+  }
+
+  &--is-blue {
+    background-color: map-get($ecl-colors, 'blue-5');
   }
 }
