@@ -7,13 +7,16 @@ use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Link;
+use Drupal\Core\Queue\QueueFactory;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\State\StateInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
 use Drupal\eic_groups\EICGroupsHelperInterface;
 use Drupal\group\Entity\GroupContent;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\node\NodeInterface;
+use Drupal\pathauto\PathautoGeneratorInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -47,6 +50,27 @@ class EntityOperations implements ContainerInjectionInterface {
   protected $eicGroupsHelper;
 
   /**
+   * The pathauto generator.
+   *
+   * @var \Drupal\pathauto\PathautoGeneratorInterface
+   */
+  protected $pathautoGenerator;
+
+  /**
+   * The queue factory service.
+   *
+   * @var \Drupal\Core\Queue\QueueFactory
+   */
+  protected $queueFactory;
+
+  /**
+   * The state service.
+   *
+   * @var \Drupal\Core\State\StateInterface
+   */
+  protected $state;
+
+  /**
    * Constructs a new EntityOperations object.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
@@ -55,11 +79,20 @@ class EntityOperations implements ContainerInjectionInterface {
    *   The current route match service.
    * @param \Drupal\eic_groups\EICGroupsHelperInterface $eic_groups_helper
    *   The EIC Groups helper service.
+   * @param \Drupal\pathauto\PathautoGeneratorInterface $pathauto_generator
+   *   The pathauto generator.
+   * @param \Drupal\Core\Queue\QueueFactory $queue_factory
+   *   The queue factory service.
+   * @param \Drupal\Core\State\StateInterface $state
+   *   The state service.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, RouteMatchInterface $route_match, EICGroupsHelperInterface $eic_groups_helper) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, RouteMatchInterface $route_match, EICGroupsHelperInterface $eic_groups_helper, PathautoGeneratorInterface $pathauto_generator, QueueFactory $queue_factory, StateInterface $state) {
     $this->entityTypeManager = $entity_type_manager;
     $this->routeMatch = $route_match;
     $this->eicGroupsHelper = $eic_groups_helper;
+    $this->pathautoGenerator = $pathauto_generator;
+    $this->queueFactory = $queue_factory;
+    $this->state = $state;
   }
 
   /**
@@ -69,7 +102,10 @@ class EntityOperations implements ContainerInjectionInterface {
     return new static(
       $container->get('entity_type.manager'),
       $container->get('current_route_match'),
-      $container->get('eic_groups.helper')
+      $container->get('eic_groups.helper'),
+      $container->get('pathauto.generator'),
+      $container->get('queue'),
+      $container->get('state')
     );
   }
 
@@ -83,10 +119,22 @@ class EntityOperations implements ContainerInjectionInterface {
   /**
    * Implements hook_group_update().
    */
-  public function groupUpdate(EntityInterface $entity) {
+  public function groupUpdate(GroupInterface $entity) {
     // Publish group wiki when group is published.
     if (!$entity->original->isPublished() && $entity->isPublished()) {
       $this->publishGroupWiki($entity);
+    }
+
+    // If group alias has changed we add the group id into a queue so all group
+    // content url aliases can be updated at a later stage with cron.
+    if ($entity->get('path')->alias !== $this->pathautoGenerator->createEntityAlias($entity, 'return')) {
+      if (is_null($this->state->get(CronOperations::GROUP_URL_ALIAS_UPDATE_STATE_CACHE . $entity->id()))) {
+        $queue = $this->queueFactory->get(CronOperations::GROUP_URL_ALIAS_UPDATE_QUEUE);
+        $queue->createItem([
+          'gid' => $entity->id(),
+        ]);
+        $this->state->set(CronOperations::GROUP_URL_ALIAS_UPDATE_STATE_CACHE . $entity->id(), TRUE);
+      }
     }
   }
 

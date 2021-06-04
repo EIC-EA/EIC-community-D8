@@ -9,6 +9,7 @@ use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\BubbleableMetadata;
+use Drupal\eic_groups\Hooks\CronOperations;
 use Drupal\eic_groups\Hooks\EntityOperations;
 use Drupal\eic_groups\Hooks\GroupTokens;
 use Drupal\eic_groups\Hooks\FormOperations;
@@ -109,4 +110,12 @@ function eic_groups_pathauto_alias_alter(&$alias, array &$context) {
   /** @var \Drupal\eic_groups\Hooks\Pathauto $class */
   $class = \Drupal::classResolver(Pathauto::class);
   $class->aliasAlter($alias, $context);
+}
+
+/**
+ * Implements hook_cron().
+ */
+function eic_groups_cron() {
+  \Drupal::classResolver(CronOperations::class)
+    ->cron();
 }
