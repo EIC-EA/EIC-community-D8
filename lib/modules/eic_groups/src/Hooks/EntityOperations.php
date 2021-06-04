@@ -125,16 +125,10 @@ class EntityOperations implements ContainerInjectionInterface {
       $this->publishGroupWiki($entity);
     }
 
-    // If group alias has changed we add the group id into a queue so all group
-    // content url aliases can be updated at a later stage with cron.
+    // If group alias has changed we add the group id into a queue so that all
+    // group content url aliases can be updated at a later stage with cron.
     if ($entity->get('path')->alias !== $this->pathautoGenerator->createEntityAlias($entity, 'return')) {
-      if (is_null($this->state->get(CronOperations::GROUP_URL_ALIAS_UPDATE_STATE_CACHE . $entity->id()))) {
-        $queue = $this->queueFactory->get(CronOperations::GROUP_URL_ALIAS_UPDATE_QUEUE);
-        $queue->createItem([
-          'gid' => $entity->id(),
-        ]);
-        $this->state->set(CronOperations::GROUP_URL_ALIAS_UPDATE_STATE_CACHE . $entity->id(), TRUE);
-      }
+      $this->createGroupUrlAliasUpdateQueueItem($entity);
     }
   }
 
@@ -259,6 +253,22 @@ class EntityOperations implements ContainerInjectionInterface {
         $node_book->setPublished();
         $node_book->save();
       }
+    }
+  }
+
+  /**
+   * Creates an item in the queue CronOperations::GROUP_URL_ALIAS_UPDATE_QUEUE.
+   *
+   * @param \Drupal\group\Entity\GroupInterface $entity
+   *   The group entity object.
+   */
+  private function createGroupUrlAliasUpdateQueueItem(GroupInterface $entity) {
+    if (is_null($this->state->get(CronOperations::GROUP_URL_ALIAS_UPDATE_STATE_CACHE . $entity->id()))) {
+      $queue = $this->queueFactory->get(CronOperations::GROUP_URL_ALIAS_UPDATE_QUEUE);
+      $queue->createItem([
+        'gid' => $entity->id(),
+      ]);
+      $this->state->set(CronOperations::GROUP_URL_ALIAS_UPDATE_STATE_CACHE . $entity->id(), TRUE);
     }
   }
 

@@ -114,8 +114,7 @@ class CronOperations implements ContainerInjectionInterface {
   /**
    * Process Group alias update queue.
    *
-   * @todo We should update all url alias of group content and nodes using
-   * a queue worker and the queue should be filled using ultimate cron.
+   * @todo In the future this method should be called by ultimate cron module.
    */
   protected function processGroupUrlAliasUpdateQueue() {
     $group_alias_queue = $this->queueFactory->get(self::GROUP_URL_ALIAS_UPDATE_QUEUE);
@@ -157,8 +156,8 @@ class CronOperations implements ContainerInjectionInterface {
   /**
    * Process Group content url alias update queue.
    *
-   * @todo We should update all url alias of group content and nodes using
-   * a queue worker.
+   * @todo This method should be removed after installing and configure
+   * ultimate cron module.
    */
   protected function processGroupContentUrlAliasUpdateQueue() {
     $queue = $this->queueFactory->get(self::GROUP_CONTENT_URL_ALIAS_UPDATE_QUEUE);
