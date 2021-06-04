@@ -14,6 +14,7 @@ The assets should be prepared in order to display the theme correctly and can be
 
 ```shell
 $ npm run build
+$ npm run react-production
 ```
 
 This will prepare the required assets which are based on the [Europa Component Library](https://ec.europa.eu/component-library/).

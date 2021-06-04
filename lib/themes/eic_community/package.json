@@ -19,7 +19,12 @@
     "generate-storybook": "build-storybook -o ./storybook-static",
     "postgenerate-storybook": "[ -d './dist' ] && cp -r ./dist/* ./storybook-static || exit 0",
     "predev": "[ -d './node_modules/.cache/storybook' ] && rm -r ./node_modules/.cache/storybook || exit 0",
-    "dev": "npm-run-all --parallel storybook watch"
+    "dev": "npm-run-all --parallel storybook watch",
+    "react-development": "mix",
+    "react-watch": "mix watch",
+    "react-watch-poll": "mix watch -- --watch-options-poll=1000",
+    "react-hot": "mix watch --hot",
+    "react-production": "mix --production"
   },
   "author": "",
   "license": "ISC",
@@ -48,6 +53,7 @@
     "chalk": "^4.1.0",
     "chokidar": "^3.5.0",
     "chokidar-cli": "^2.1.0",
+    "cross-env": "^7.0.3",
     "dotenv": "^8.2.0",
     "eslint": "^7.17.0",
     "eslint-config-airbnb-base": "^14.2.1",
@@ -59,6 +65,7 @@
     "glob": "^7.1.6",
     "imagemin": "^7.0.1",
     "imagemin-svgo": "^8.0.0",
+    "laravel-mix": "^6.0.19",
     "mkdirp": "^1.0.4",
     "npm-run-all": "^4.1.5",
     "prettier": "^2.2.1",
@@ -66,6 +73,11 @@
     "svgstore": "^3.0.0-2",
     "twing": "2.3.7",
     "twing-loader": "2.0.2",
-    "unicode-emoji-picker": "^1.1.1"
+    "unicode-emoji-picker": "^1.1.1",
+    "webpack": "^5.9.0"
+  },
+  "dependencies": {
+    "@babel/preset-react": "^7.13.13",
+    "react-dom": "^17.0.2"
   }
 }

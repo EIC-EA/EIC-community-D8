@@ -1,17 +1,9 @@
-<div class="ecl-editable-hero-banner {{ extra_classes }}">
-  {% if image %}
-    <figure class="ecl-editable-hero-banner__image-wrapper">
-      <img class="ecl-editable-hero-banner__image" src="{{ image }}" />
-    </figure>
-  {% endif %}
-  <div class="ecl-editable-hero-banner__main-wrapper">
-    <div class="ecl-editable-hero-banner__push"></div>
-    <div class="ecl-editable-hero-banner__main">
-      <div class="ecl-editable-hero-banner__content-wrapper">
-        <div class="ecl-editable-hero-banner__content">
-          {% block content %}{{ content }}{% endblock %}
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+<div
+  class="hero-paragraph {{ extra_classes }}"
+  data-hero-bg="{{ image }}"
+  data-hero-title="{{ paragraph.field_banner.entity.title.value }}"
+  data-hero-body="{{ paragraph.field_banner.entity.body.value }}"
+  data-hero-link-label="{{ paragraph.field_banner.entity.field_cta_link.0.title }}"
+  data-hero-link-url="{{ paragraph.field_banner.entity.field_cta_link.0.url }}"
+  data-hero-bg-color="{{ paragraph.field_banner.entity.field_background_color.value }}"
+></div>
