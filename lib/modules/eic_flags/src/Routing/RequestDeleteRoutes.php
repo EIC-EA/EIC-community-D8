@@ -33,6 +33,16 @@ class RequestDeleteRoutes {
       $route_collection->add('entity.' . $entity_type . '.request_delete_form', $route);
     }
 
+    // Define the route displaying entities flagged for removal
+    $route = (new Route('/admin/content/request/delete'))
+      ->addDefaults([
+        '_controller' => 'Drupal\eic_flags\Controller\DeleteRequestController::listing',
+      ])
+      ->setRequirement('_role', 'administrator+content_administrator')
+      ->setOption('_admin_route', TRUE);
+
+    $route_collection->add('eic_flags.delete_request.list', $route);
+
     return $route_collection;
   }
 
