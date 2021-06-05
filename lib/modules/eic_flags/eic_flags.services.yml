@@ -1,4 +1,4 @@
 services:
   eic_flags.delete_request_manager:
     class: Drupal\eic_flags\Service\DeleteRequestManager
-    arguments: [ '@flag' ]
+    arguments: [ '@flag', '@module_handler' ]

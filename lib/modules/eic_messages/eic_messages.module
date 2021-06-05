@@ -5,9 +5,12 @@
  * Primary module hooks for EIC Messages module.
  */
 
+use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\eic_messages\Hooks\DeleteRequestMessageCreator;
 use Drupal\eic_messages\Hooks\GroupContentMessageCreator;
 use Drupal\eic_messages\Hooks\GroupMessageCreator;
+use Drupal\flag\FlaggingInterface;
 
 /**
  * Implements hook_ENTITY_TYPE_insert().
@@ -34,4 +37,13 @@ function eic_messages_group_content_insert(EntityInterface $entity) {
   /** @var GroupContentMessageCreator $class */
   $class = \Drupal::classResolver(GroupContentMessageCreator::class);
   $class->groupContentInsert($entity);
+}
+
+/**
+ * Implements hook_delete_request_insert().
+ */
+function eic_messages_delete_request_insert(FlaggingInterface $flag, ContentEntityInterface $entity) {
+  /** @var DeleteRequestMessageCreator $class */
+  $class = \Drupal::classResolver(DeleteRequestMessageCreator::class);
+  $class->deleteRequestInsert($flag, $entity);
 }
