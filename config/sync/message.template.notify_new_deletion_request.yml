@@ -1,0 +1,19 @@
+uuid: 7dffe605-b4ae-4069-9a0d-d4584e1544b4
+langcode: en
+status: true
+dependencies:
+  config:
+    - filter.format.full_html
+template: notify_new_deletion_request
+label: 'NOTIFY :: MT38 :: New deletion request'
+description: 'Notifies site admins for a new deletion request'
+text:
+  -
+    value: "<p>Dear administrator</p>\r\n\r\n<p><u>&lt; deletion requester full name &gt;</u>&nbsp;requested to delete&nbsp;<u>&lt; entity type title &gt;</u>. Click&nbsp;<u>here</u>&nbsp;to review the request.</p>\r\n\r\n<p>Reason:</p>\r\n\r\n<p>The EIC Community team</p>\r\n"
+    format: full_html
+settings:
+  'token options':
+    clear: false
+    'token replace': true
+  purge_override: false
+  purge_methods: {  }

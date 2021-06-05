@@ -1,0 +1,4 @@
+text:
+  -
+    value: "<p>Dear administrator</p>\r\n\r\n<p><u>&lt; deletion requester full name &gt;</u>&nbsp;requested to delete&nbsp;<u>&lt; entity type title &gt;</u>. Click&nbsp;<u>here</u>&nbsp;to review the request.</p>\r\n\r\n<p>Reason:</p>\r\n\r\n<p>The EIC Community team</p>\r\n"
+    format: full_html

@@ -1,0 +1,17 @@
+uuid: 057246ec-fb4c-4774-9f6b-39f298b05bcc
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.message.mail_body
+    - message.template.notify_new_deletion_request
+id: message.notify_new_deletion_request.mail_body
+targetEntityType: message
+bundle: notify_new_deletion_request
+mode: mail_body
+content:
+  partial_1:
+    weight: 0
+    region: content
+hidden:
+  partial_0: true

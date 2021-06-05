@@ -3,6 +3,7 @@
 namespace Drupal\eic_flags\Service;
 
 use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\flag\Entity\Flag;
 use Drupal\flag\FlagService;
 use Drupal\user\Entity\User;
@@ -31,12 +32,19 @@ class DeleteRequestManager {
   private $flagService;
 
   /**
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface
+   */
+  private $moduleHandler;
+
+  /**
    * DeleteRequestManager constructor.
    *
    * @param \Drupal\flag\FlagService $flagService
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
    */
-  public function __construct(FlagService $flagService) {
+  public function __construct(FlagService $flagService, ModuleHandlerInterface $moduleHandler) {
     $this->flagService = $flagService;
+    $this->moduleHandler = $moduleHandler;
   }
 
   /**
@@ -68,6 +76,8 @@ class DeleteRequestManager {
     $flag->set('field_deletion_reason', $reason);
     $flag->set('field_deletion_status', TRUE);
     $flag->save();
+
+    $this->moduleHandler->invokeAll('delete_request_insert', [$flag, $entity]);
 
     return $flag;
   }
