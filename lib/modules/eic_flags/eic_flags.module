@@ -79,7 +79,8 @@ function eic_flags_entity_operation(EntityInterface $entity) {
   $class_name = strtolower((new \ReflectionClass($entity))->getShortName());
   if (!$entity instanceof ContentEntityInterface
     || !in_array($class_name, DeleteRequestManager::$supportedEntityTypes)
-    || !$entity->access('request-delete')) {
+    || !$entity->access('request-delete')
+    || \Drupal::service('router.admin_context')->isAdminRoute()) {
     return [];
   }
 
