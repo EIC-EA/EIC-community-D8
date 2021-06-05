@@ -21,7 +21,7 @@ class RequestDeleteRoutes {
 
     // We must define a route for each supported entity type and set the 'entity_form' default on the route
     // This will ensure that the form controller handling this request is "HtmlEntityFormController"
-    foreach (DeleteRequestManager::$supportedEntityTypes as $entity_type) {
+    foreach (array_keys(DeleteRequestManager::$supportedEntityTypes) as $entity_type) {
       $route = (new Route('/' . $entity_type . '/{' . $entity_type . '}/request-delete'))
         ->addDefaults([
           '_entity_form' => $entity_type . '.request-delete',

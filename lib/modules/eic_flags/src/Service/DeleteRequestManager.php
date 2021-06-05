@@ -20,24 +20,15 @@ class DeleteRequestManager {
    * @var string[]
    */
   public static $supportedEntityTypes = [
-    'node',
-    'group',
-    'comment',
+    'node' => 'request_delete_content',
+    'group' => 'request_delete_group',
+    'comment' => 'request_delete_comment',
   ];
 
   /**
    * @var \Drupal\flag\FlagService
    */
   private $flagService;
-
-  /**
-   * @var string[]
-   */
-  private static $flagsByType = [
-    'node' => 'request_delete_content',
-    'group' => 'request_delete_group',
-    'comment' => 'request_delete_comment',
-  ];
 
   /**
    * DeleteRequestManager constructor.
@@ -58,7 +49,7 @@ class DeleteRequestManager {
   public function flagEntity(ContentEntityInterface $entity, string $reason) {
     // Entity type is not supported
     $class_name = strtolower((new \ReflectionClass($entity))->getShortName());
-    if (!array_key_exists($class_name, self::$flagsByType)) {
+    if (!array_key_exists($class_name, self::$supportedEntityTypes)) {
       return NULL;
     }
 
@@ -68,7 +59,7 @@ class DeleteRequestManager {
     }
 
     $current_user = User::load($current_user->id());
-    $flag = $this->flagService->getFlagById(self::$flagsByType[$class_name]);
+    $flag = $this->flagService->getFlagById(self::$supportedEntityTypes[$class_name]);
     if (!$flag instanceof Flag || $flag->isFlagged($entity, $current_user)) {
       return NULL;
     }

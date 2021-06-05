@@ -3,6 +3,7 @@
 namespace Drupal\eic_flags\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\eic_flags\DeleteRequestListBuilder;
 
 /**
  * Class DeleteRequestController
@@ -11,9 +12,14 @@ use Drupal\Core\Controller\ControllerBase;
  */
 class DeleteRequestController extends ControllerBase {
 
-
+  /**
+   * @return \Symfony\Component\HttpFoundation\Response
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   */
   public function listing() {
-    return $this->entityTypeManager()->getListBuilder('node')->render();
+    $definition = $this->entityTypeManager()->getDefinition('flagging');
+
+    return $this->entityTypeManager()->createHandlerInstance(DeleteRequestListBuilder::class, $definition)->render();
   }
 
 }

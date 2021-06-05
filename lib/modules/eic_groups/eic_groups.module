@@ -110,3 +110,17 @@ function eic_groups_pathauto_alias_alter(&$alias, array &$context) {
   $class = \Drupal::classResolver(Pathauto::class);
   $class->aliasAlter($alias, $context);
 }
+
+/**
+ * Implements hook_group_operations().
+ */
+function eic_groups_group_operations(EntityInterface $entity) {
+  $operations = [];
+  $operations['request_delete'] = [
+    'title' => t('Request delete'),
+    'url' => $entity->toUrl('request-delete-form')->setRouteParameter('destination', \Drupal::request()
+      ->getRequestUri()),
+  ];
+
+  return $operations;
+}

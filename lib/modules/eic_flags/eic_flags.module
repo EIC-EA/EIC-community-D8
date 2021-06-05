@@ -61,7 +61,7 @@ function eic_flags_cron() {
  * Implements hook_entity_type_alter.
  */
 function eic_flags_entity_type_build(array &$entity_types) {
-  foreach (DeleteRequestManager::$supportedEntityTypes as $entity_id) {
+  foreach (array_keys(DeleteRequestManager::$supportedEntityTypes) as $entity_id) {
     if (!isset($entity_types[$entity_id])) {
       continue;
     }
@@ -78,7 +78,7 @@ function eic_flags_entity_type_build(array &$entity_types) {
 function eic_flags_entity_operation(EntityInterface $entity) {
   $class_name = strtolower((new \ReflectionClass($entity))->getShortName());
   if (!$entity instanceof ContentEntityInterface
-    || !in_array($class_name, DeleteRequestManager::$supportedEntityTypes)
+    || !in_array($class_name, array_keys(DeleteRequestManager::$supportedEntityTypes))
     || !$entity->access('request-delete')
     || \Drupal::service('router.admin_context')->isAdminRoute()) {
     return [];
@@ -99,7 +99,7 @@ function eic_flags_entity_operation(EntityInterface $entity) {
  */
 function eic_flags_entity_access(EntityInterface $entity, $operation, AccountInterface $account) {
   $class_name = strtolower((new \ReflectionClass($entity))->getShortName());
-  if (!in_array($class_name, DeleteRequestManager::$supportedEntityTypes) || $operation !== 'request-delete') {
+  if (!in_array($class_name, array_keys(DeleteRequestManager::$supportedEntityTypes)) || $operation !== 'request-delete') {
     return AccessResult::neutral();
   }
 
