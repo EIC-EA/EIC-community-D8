@@ -78,6 +78,8 @@
   },
   "dependencies": {
     "@babel/preset-react": "^7.13.13",
+    "@material-ui/core": "^4.11.4",
+    "@material-ui/lab": "^4.0.0-alpha.58",
     "axios": "^0.21.1",
     "react-dom": "^17.0.2"
   }

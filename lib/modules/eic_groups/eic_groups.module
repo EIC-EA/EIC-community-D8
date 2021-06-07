@@ -14,6 +14,7 @@ use Drupal\eic_groups\Hooks\GroupTokens;
 use Drupal\eic_groups\Hooks\FormOperations;
 use Drupal\eic_groups\Hooks\Pathauto;
 use Drupal\eic_groups\Hooks\Preprocess;
+use Drupal\group_flex\Plugin\GroupVisibilityInterface;
 
 /**
  * Implements hook_theme().
@@ -28,8 +29,9 @@ function eic_groups_theme($existing, $type, $theme, $path) {
     ],
     'group_overview_block' => [
       'variables' => [
-        'facets' => [],
-        'datasource' => '',
+        'url' => '',
+        'isAnonymous' => TRUE,
+        'translations' => [],
       ],
     ],
   ];
@@ -121,7 +123,30 @@ function eic_groups_pathauto_alias_alter(&$alias, array &$context) {
  * @implements hook_search_api_solr_documents_alter
  */
 function eic_groups_search_api_solr_documents_alter(array &$documents, \Drupal\search_api\IndexInterface $index, array $items) {
+  /** @var \Solarium\QueryType\Update\Query\Document $document */
   foreach ($documents as $document) {
-    $i = $document;
+    $fields = $document->getFields();
+    $entity_type = array_key_exists('ss_search_api_datasource', $fields) ? $fields['ss_search_api_datasource'] : NULL;
+
+    if (!$entity_type || 'entity:group' !== $fields['ss_search_api_datasource']) {
+      continue;
+    }
+
+    $group = \Drupal\group\Entity\Group::load($fields['its_group_id']);
+
+    if (!$group) {
+      continue;
+    }
+
+    /** @var \Drupal\oec_group_flex\GroupVisibilityDatabaseStorage $group_visibility_storage */
+    $group_visibility_storage = \Drupal::service('oec_group_flex.group_visibility.storage');
+    $group_visibility_entity = $group_visibility_storage->load($group->id());
+    $group_visibility = GroupVisibilityInterface::GROUP_FLEX_TYPE_VIS_PUBLIC;
+
+    if ($group_visibility_entity) {
+      $group_visibility = $group_visibility_entity->getType();
+    }
+
+    $document->addField('ss_group_visibility', $group_visibility);
   }
 }
