@@ -1,0 +1,28 @@
+{% extends "@theme/patterns/layout/base.html.twig" %}
+
+{% block page_header %}
+  {% include "@theme/patterns/compositions/overview-header.html.twig" with {
+    title_element: 'h1',
+    title: title,
+    image: image,
+  } only %}
+
+  {% include "@theme/patterns/compositions/breadcrumb.html.twig" with breadcrumb|default({}) only %}
+
+  {% include "@theme/patterns/compositions/search/searchform.html.twig" with searchform|default({}) only %}
+{% endblock %}
+
+{% block content %}
+  {% include "@theme/patterns/compositions/teaser-overview.html.twig" with {
+    icon_file_path: common.icon_file_path,
+    title: NULL,
+  } %}
+{% endblock %}
+
+{% block sidebar %}
+  {% include "@theme/patterns/compositions/filter-sidebar.html.twig" with {
+    icon_file_path: common.icon_file_path,
+    title: filter_title,
+    items: filters,
+  } only %}
+{% endblock %}

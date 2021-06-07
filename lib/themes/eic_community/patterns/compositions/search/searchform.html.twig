@@ -1,0 +1,38 @@
+{% import "@theme/patterns/core/snippets.twig" as snippets %}
+
+{% set container_element = container_element|default('form') %}
+
+<{{ container_element }} class="ecl-searchform {{ extra_classes }}" {{ snippets.attr(extra_attributes)}}>
+  <div class="ecl-container">
+    {% if tooltip is not empty %}
+      {% include "@theme/patterns/components/tooltip.html.twig" with tooltip|merge({
+        extra_classes: 'ecl-tooltip--aligns-from-right',
+        icon_file_path: icon_file_path
+      }) %}
+    {% endif %}
+
+    <div class="ecl-searchform__fields">
+      {% include '@ecl-twig/ec-component-text-input/ecl-text-input.html.twig' with field|default({})|merge({
+        width: 'full',
+        extra_classes: field.extra_classes|default('') ~ ' ecl-searchform__field'
+      }) %}
+
+      {% include "@ecl-twig/ec-component-button/ecl-button.html.twig" with submit|default({})|merge({
+        label: submit.label|default('Submit'),
+        extra_classes: submit.extra_classes|default('') ~ (icon_file_path ? 'ecl-searchform__submit ecl-button--has-compact-layout'),
+        variant: 'primary',
+        icon: icon_file_path ? {
+          path: icon_file_path,
+          name: submit.icon.name|default('search'),
+          type: submit.icon.type|default('general'),
+          size: submit.icon.size|default('s'),
+        },
+        extra_attributes: submit.extra_attributes|default({}),
+      }) %}
+    </div>
+
+    {% if suggestion %}
+      <p class="ecl-searchform__suggestion">{{ suggestion }}</p>
+    {% endif %}
+  </div>
+</{{ container_element }}>

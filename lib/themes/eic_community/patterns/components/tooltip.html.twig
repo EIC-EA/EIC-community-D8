@@ -1,0 +1,37 @@
+{% if content is not empty or block('content') is not empty %}
+  <div class="ecl-tooltip {{ extra_classes }}">
+    <button class="ecl-tooltip__toggle">
+      {% if icon_file_path %}
+        {% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with {
+          icon: {
+            path: icon_file_path,
+            name: 'faq',
+            type: 'general',
+            size: 'xs',
+          },
+          extra_classes: 'ecl-tooltip__toggle-icon'
+        } %}
+      {% endif %}
+      {% if label is not same as(false) %}
+        <span class="ecl-tooltip__toggle-label">
+          {{ label|default('More information') }}
+        </span>
+      {% endif %}
+    </button>
+
+    <div class="ecl-tooltip__content">
+      <div class="ecl-tooltip__panel">
+        <div class="ecl-tooltip__panel-corner"></div>
+        {% if not hide_label %}
+          <span class="ecl-tooltip__panel-label">{{ label }}</span>
+        {% endif %}
+        <div class="ecl-tooltip__panel-main">
+          <div class="ecl-editable-wrapper">
+            {% block content %}{{ content }}{% endblock %}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="ecl-tooltip__helper"></div>
+  </div>
+{% endif %}
