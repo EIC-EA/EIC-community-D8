@@ -4,8 +4,8 @@ namespace Drupal\eic_groups\EventSubscriber;
 
 use Drupal\book\BookManagerInterface;
 use Drupal\Core\Cache\CacheableRedirectResponse;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\eic_groups\EICGroupsHelperInterface;
-use Drupal\node\Entity\Node;
 use Drupal\node\NodeInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
@@ -31,16 +31,26 @@ class BookPageRedirectSubscriber implements EventSubscriberInterface {
   protected $bookManager;
 
   /**
+   * The entity type manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
    * Constructs a new BookPageRedirectSubscriber instance.
    *
    * @param \Drupal\eic_groups\EICGroupsHelperInterface $eic_groups_helper
    *   The EIC Groups helper service.
    * @param \Drupal\book\BookManagerInterface $book_manager
    *   The book manager.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
    */
-  public function __construct(EICGroupsHelperInterface $eic_groups_helper, BookManagerInterface $book_manager) {
+  public function __construct(EICGroupsHelperInterface $eic_groups_helper, BookManagerInterface $book_manager, EntityTypeManagerInterface $entity_type_manager) {
     $this->group = $eic_groups_helper->getGroupFromRoute();
     $this->bookManager = $book_manager;
+    $this->entityTypeManager = $entity_type_manager;
   }
 
   /**
@@ -77,7 +87,7 @@ class BookPageRedirectSubscriber implements EventSubscriberInterface {
     }
 
     // Only redirect book pages in the context of group.
-    if ($node->getType() !== 'book' || is_null($this->group)) {
+    if ($this->group === FALSE || $node->getType() !== 'book') {
       return;
     }
 
@@ -85,7 +95,7 @@ class BookPageRedirectSubscriber implements EventSubscriberInterface {
     $book_data = reset($data);
     if (!empty($book_data['below'])) {
       $wiki_page_nid = reset($book_data['below'])['link']['nid'];
-      $wiki_page = Node::load($wiki_page_nid);
+      $wiki_page = $this->entityTypeManager->getStorage('node')->load($wiki_page_nid);
       $redirect_response = new CacheableRedirectResponse($wiki_page->toUrl()->toString());
       $redirect_response->addCacheableDependency($wiki_page);
       $redirect_response->send();
