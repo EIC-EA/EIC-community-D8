@@ -33,7 +33,8 @@ class GroupDiscussions extends GroupFeaturePluginBase {
    */
   public function enable(GroupInterface $group) {
     // Menu.
-    if ($url = Url::fromRoute(self::OVERVIEW_DISCUSSIONS_ROUTE)) {
+    $url_params = ['group' => $group->id()];
+    if ($url = Url::fromRoute(self::OVERVIEW_DISCUSSIONS_ROUTE, $url_params)) {
       // Check if we have a main menu for this group.
       foreach ($group_menus = group_content_menu_get_menus_per_group($group) as $group_menu) {
         if ($group_menu->getGroupContentType()->getContentPlugin()->getPluginId() == 'group_content_menu:group_main_menu') {
@@ -58,7 +59,8 @@ class GroupDiscussions extends GroupFeaturePluginBase {
    */
   public function disable(GroupInterface $group) {
     // Menu.
-    if ($url = Url::fromRoute(self::OVERVIEW_DISCUSSIONS_ROUTE)) {
+    $url_params = ['group' => $group->id()];
+    if ($url = Url::fromRoute(self::OVERVIEW_DISCUSSIONS_ROUTE, $url_params)) {
       // Check if we have a main menu for this group.
       foreach ($group_menus = group_content_menu_get_menus_per_group($group) as $group_menu) {
         if ($group_menu->getGroupContentType()->getContentPlugin()->getPluginId() == 'group_content_menu:group_main_menu') {
@@ -93,7 +95,7 @@ class GroupDiscussions extends GroupFeaturePluginBase {
     return $this->menuLinkContentStorage->create([
       'title' => $this->t('Discussions'),
       'link' => [
-        'uri' => 'route:' . $url->getRouteName(),
+        'uri' => 'internal:/' . $url->getInternalPath(),
       ],
       'menu_name' => $menu_name,
       'weight' => 2,

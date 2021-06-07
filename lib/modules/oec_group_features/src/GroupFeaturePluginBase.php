@@ -284,10 +284,10 @@ abstract class GroupFeaturePluginBase extends PluginBase implements GroupFeature
    * @return \Drupal\menu_link_content\Entity\MenuLinkContent|false
    *   The existing menu item of FALSE if it doesn't exist yet.
    */
-  private function getExistingMenuItem(MenuLinkContent $menu_item) {
+  protected function getExistingMenuItem(MenuLinkContent $menu_item) {
     $items = $this->menuLinkContentStorage->loadByProperties([
       'menu_name' => $menu_item->getMenuName(),
-      'link__uri' => 'route:' . $menu_item->getUrlObject()->getRouteName(),
+      'link__uri' => 'internal:/' . $menu_item->getUrlObject()->getInternalPath(),
     ]);
     if (!empty($items)) {
       return reset($items);
