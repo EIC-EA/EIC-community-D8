@@ -7,7 +7,7 @@ use Drupal\group\Entity\GroupTypeInterface;
 use Drupal\group_flex\Plugin\GroupVisibility\PublicVisibility as PublicVisibilityBase;
 
 /**
- * Provides a custom plugin to extend the 'public' group visibility plugin.
+ * Provides a custom plugin that overrides the 'public' group visibility plugin.
  */
 class PublicVisibility extends PublicVisibilityBase {
 
