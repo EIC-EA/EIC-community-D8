@@ -71,19 +71,19 @@ class EicGroupsGroupFeaturePluginBase extends GroupFeaturePluginBase {
    *
    * @param \Drupal\group\Entity\GroupInterface $group
    *   The group entity.
-   * @param $url
+   * @param \Drupal\Core\Url $url
    *   The URL object for which we handle a menu item.
    * @param string $op
    *   The operation to perform. It can be one of the following:
-   *   - enable
-   *   - disable
+   *   - enable: enables the menu item.
+   *   - disable: disables the menu item.
    * @param string $menu_name
    *   The group menu name for which we perform the operation.
    *
    * @return bool
    *   TRUE if the action was performed successfully, FALSE otherwise.
    */
-  protected function handleMenuItem(GroupInterface $group, $url, $op = 'enable', $menu_name = 'group_main_menu') {
+  protected function handleMenuItem(GroupInterface $group, Url $url, $op = 'enable', $menu_name = 'group_main_menu') {
     // Check if we have the target menu for this group.
     foreach (group_content_menu_get_menus_per_group($group) as $group_menu) {
       if ($group_menu->getGroupContentType()->getContentPlugin()->getPluginId() == "group_content_menu:$menu_name") {
@@ -93,12 +93,13 @@ class EicGroupsGroupFeaturePluginBase extends GroupFeaturePluginBase {
           case 'enable':
             $this->enableMenuItem($this->getMenuItem($url, $menu_name));
             return TRUE;
-            break;
+
           case 'disable':
             $this->disableMenuItem($this->getMenuItem($url, $menu_name));
             return FALSE;
-            break;
+
         }
+
       }
     }
     return FALSE;
@@ -111,8 +112,8 @@ class EicGroupsGroupFeaturePluginBase extends GroupFeaturePluginBase {
    *   The group entity.
    * @param string $op
    *   The operation to perform. It can be one of the following:
-   *   - enable
-   *   - disable
+   *   - enable: enables the group permissions.
+   *   - disable: disables the group permissions.
    *
    * @return bool
    *   TRUE if the action was performed successfully, FALSE otherwise.
@@ -127,9 +128,11 @@ class EicGroupsGroupFeaturePluginBase extends GroupFeaturePluginBase {
           case 'enable':
             $group_permissions = $this->addRolePermissionsToGroup($group_permissions, $role, $config->get('permissions'));
             break;
+
           case 'disable':
             $group_permissions = $this->removeRolePermissionsFromGroup($group_permissions, $role, $config->get('permissions'));
             break;
+
         }
 
       }
