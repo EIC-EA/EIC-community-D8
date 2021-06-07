@@ -14,7 +14,7 @@ conditions:
     negate: null
     uuid: 4a6ec31c-af26-4d0a-9279-80ba5a4221d0
     view_inclusion:
-      view-global_overviews-page_2: view-global_overviews-page_2
+      view-global_overviews-members: view-global_overviews-members
     context_mapping: {  }
 reactions:
   blocks:
@@ -92,8 +92,8 @@ reactions:
         unique: 0
         context_id: members_overview
         uuid: 88555819-dd97-4d5c-9376-6f0274ad620b
-      f54ba8ef-f4be-4d83-9993-51cb9a74db19:
-        id: 'views_exposed_filter_block:global_overviews-page_2'
+      9ad8b74c-8343-4d1b-b882-fa6afa7857bd:
+        id: 'views_exposed_filter_block:global_overviews-members'
         label: ''
         provider: views
         label_display: '0'
@@ -101,12 +101,12 @@ reactions:
         region: sidebar
         weight: '0'
         context_mapping: {  }
-        custom_id: views_exposed_filter_block_global_overviews_page_2
+        custom_id: views_exposed_filter_block_global_overviews_members
         theme: eic_community
         css_class: ''
         unique: 0
         context_id: members_overview
-        uuid: f54ba8ef-f4be-4d83-9993-51cb9a74db19
+        uuid: 9ad8b74c-8343-4d1b-b882-fa6afa7857bd
     id: blocks
     saved: false
     uuid: deeaf135-b781-47ec-b086-7d9fec72c007
