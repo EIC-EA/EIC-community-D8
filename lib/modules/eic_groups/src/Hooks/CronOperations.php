@@ -29,7 +29,7 @@ class CronOperations implements ContainerInjectionInterface {
   const GROUP_URL_ALIAS_UPDATE_STATE_CACHE = 'cron_group_url_alias_update:gid:';
 
   /**
-   * Group alias update queue name.
+   * Group content alias update queue name.
    */
   const GROUP_CONTENT_URL_ALIAS_UPDATE_QUEUE = 'group_content_url_alias_update';
 
