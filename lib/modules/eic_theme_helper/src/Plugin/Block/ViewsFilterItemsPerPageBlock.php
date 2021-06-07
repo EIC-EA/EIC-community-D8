@@ -114,7 +114,7 @@ class ViewsFilterItemsPerPageBlock extends BlockBase implements ContainerFactory
       return $build;
     }
 
-    // // Get the view by id and initializes the right display.
+    // Get the view by id and initializes the right display.
     $view = Views::getView($view_id);
     $view->setDisplay($display_id);
 
