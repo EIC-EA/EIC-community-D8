@@ -46,24 +46,11 @@ class EicGroupsGroupFeaturePluginBase extends GroupFeaturePluginBase {
   public function enable(GroupInterface $group) {
     // Menu: enable the menu item.
     if ($url = $this->getPrimaryOverviewRoute($group)) {
-      // Check if we have a main menu for this group.
-      foreach ($group_menus = group_content_menu_get_menus_per_group($group) as $group_menu) {
-        if ($group_menu->getGroupContentType()->getContentPlugin()->getPluginId() == 'group_content_menu:group_main_menu') {
-          // Enable the menu item.
-          $menu_name = GroupContentMenuInterface::MENU_PREFIX . $group_menu->getEntity()->id();
-          $this->enableMenuItem($this->getMenuItem($url, $menu_name));
-        }
-      }
+      $this->handleMenuItem($group, $url, 'enable');
     }
 
     // Permissions: enable the permissions.
-    if ($group_permissions = $this->getGroupPermissions($group)) {
-      $config = $this->configFactory->get('eic_groups.group_features.' . $this->getPluginId());
-      foreach ($config->get('roles') as $role) {
-        $group_permissions = $this->addRolePermissionsToGroup($group_permissions, $role, $config->get('permissions'));
-      }
-      $this->saveGroupPermissions($group_permissions);
-    }
+    $this->handlePermissions($group, 'enable');
   }
 
   /**
@@ -72,24 +59,84 @@ class EicGroupsGroupFeaturePluginBase extends GroupFeaturePluginBase {
   public function disable(GroupInterface $group) {
     // Menu: disable the menu item.
     if ($url = $this->getPrimaryOverviewRoute($group)) {
-      // Check if we have a main menu for this group.
-      foreach ($group_menus = group_content_menu_get_menus_per_group($group) as $group_menu) {
-        if ($group_menu->getGroupContentType()->getContentPlugin()->getPluginId() == 'group_content_menu:group_main_menu') {
-          // Disable menu item.
-          $menu_name = GroupContentMenuInterface::MENU_PREFIX . $group_menu->getEntity()->id();
-          $this->disableMenuItem($this->getMenuItem($url, $menu_name));
-        }
-      }
+      $this->handleMenuItem($group, $url, 'disable');
     }
 
     // Permissions: disable the permissions.
+    $this->handlePermissions($group, 'disable');
+  }
+
+  /**
+   * Enables or disable a menu item for a specific group menu.
+   *
+   * @param \Drupal\group\Entity\GroupInterface $group
+   *   The group entity.
+   * @param $url
+   *   The URL object for which we handle a menu item.
+   * @param string $op
+   *   The operation to perform. It can be one of the following:
+   *   - enable
+   *   - disable
+   * @param string $menu_name
+   *   The group menu name for which we perform the operation.
+   *
+   * @return bool
+   *   TRUE if the action was performed successfully, FALSE otherwise.
+   */
+  protected function handleMenuItem(GroupInterface $group, $url, $op = 'enable', $menu_name = 'group_main_menu') {
+    // Check if we have the target menu for this group.
+    foreach (group_content_menu_get_menus_per_group($group) as $group_menu) {
+      if ($group_menu->getGroupContentType()->getContentPlugin()->getPluginId() == "group_content_menu:$menu_name") {
+        // Disable menu item.
+        $menu_name = GroupContentMenuInterface::MENU_PREFIX . $group_menu->getEntity()->id();
+        switch ($op) {
+          case 'enable':
+            $this->enableMenuItem($this->getMenuItem($url, $menu_name));
+            return TRUE;
+            break;
+          case 'disable':
+            $this->disableMenuItem($this->getMenuItem($url, $menu_name));
+            return FALSE;
+            break;
+        }
+      }
+    }
+    return FALSE;
+  }
+
+  /**
+   * Enables or disables group permissions for the given group.
+   *
+   * @param \Drupal\group\Entity\GroupInterface $group
+   *   The group entity.
+   * @param string $op
+   *   The operation to perform. It can be one of the following:
+   *   - enable
+   *   - disable
+   *
+   * @return bool
+   *   TRUE if the action was performed successfully, FALSE otherwise.
+   *
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   */
+  protected function handlePermissions(GroupInterface $group, $op = 'enable') {
     if ($group_permissions = $this->getGroupPermissions($group)) {
       $config = $this->configFactory->get('eic_groups.group_features.' . $this->getPluginId());
       foreach ($config->get('roles') as $role) {
-        $group_permissions = $this->removeRolePermissionsFromGroup($group_permissions, $role, $config->get('permissions'));
+        switch ($op) {
+          case 'enable':
+            $group_permissions = $this->addRolePermissionsToGroup($group_permissions, $role, $config->get('permissions'));
+            break;
+          case 'disable':
+            $group_permissions = $this->removeRolePermissionsFromGroup($group_permissions, $role, $config->get('permissions'));
+            break;
+        }
+
       }
       $this->saveGroupPermissions($group_permissions);
+      return TRUE;
     }
+    return FALSE;
   }
 
   /**
