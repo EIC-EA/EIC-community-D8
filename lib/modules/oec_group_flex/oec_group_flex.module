@@ -96,3 +96,14 @@ function oec_group_flex_group_flex_group_joining_method_info_alter(array &$defin
     unset($definitions['join_button']);
   }
 }
+
+/**
+ * Implements hook_group_flex_group_visibility_info_alter().
+ */
+function oec_group_flex_group_flex_group_visibility_info_alter(array &$definitions) {
+  // Overrides the standard public group visibility plugin class provided by
+  // group flex.
+  if (isset($definitions['public'])) {
+    $definitions['public']['class'] = '\Drupal\oec_group_flex\Plugin\GroupVisibility\PublicVisibility';
+  }
+}
