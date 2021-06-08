@@ -161,6 +161,8 @@ function eic_groups_pathauto_alias_alter(&$alias, array &$context) {
 
 /**
  * @implements hook_search_api_solr_documents_alter
+ *
+ * Solr needs to be aware of all group permissions so we can filter it in our querybuilder depending of the user context
  */
 function eic_groups_search_api_solr_documents_alter(array &$documents, \Drupal\search_api\IndexInterface $index, array $items) {
   /** @var \Solarium\QueryType\Update\Query\Document $document */
@@ -189,6 +191,7 @@ function eic_groups_search_api_solr_documents_alter(array &$documents, \Drupal\s
         $group_visibility = $group_visibility_entity->getType();
         break;
 
+      // In this case, when we have a custom restriction, we can have multiple restriction options like email domain, trusted users, organisation, ...
       case GroupVisibilityType::GROUP_VISIBILITY_CUSTOM_RESTRICTED:
         $options = $group_visibility_entity->getOptions();
         foreach ($options as $key => $option) {
@@ -196,10 +199,16 @@ function eic_groups_search_api_solr_documents_alter(array &$documents, \Drupal\s
           if (GroupVisibilityType::GROUP_VISIBILITY_OPTION_EMAIL_DOMAIN === $key && $option[GroupVisibilityType::GROUP_VISIBILITY_OPTION_EMAIL_DOMAIN . '_status']) {
             $group_visibility = GroupVisibilityType::GROUP_VISIBILITY_OPTION_EMAIL_DOMAIN;
 
+            // When it's a email domain restriction we need to add a new value to solr document so we can filter on that
             $document->addField(
               'ss_' . GroupVisibilityType::GROUP_VISIBILITY_OPTION_EMAIL_DOMAIN,
               $option[GroupVisibilityType::GROUP_VISIBILITY_OPTION_EMAIL_DOMAIN . '_conf']
             );
+          }
+
+          // @TODO need the trusted users working on group entity before
+          if (GroupVisibilityType::GROUP_VISIBILITY_OPTION_TRUSTED_USERS === $key && $option[GroupVisibilityType::GROUP_VISIBILITY_OPTION_TRUSTED_USERS . '_status']) {
+            $group_visibility = GroupVisibilityType::GROUP_VISIBILITY_OPTION_TRUSTED_USERS;
           }
         }
         break;
