@@ -91,6 +91,7 @@ class SolrSearchController extends ControllerBase {
       return $group_membership->getGroup()->id();
     }, $groups);
 
+    // If group is private, the user needs to be in group to view it
     $group_ids_formatted = !empty($group_ids) ? implode(' OR ', $group_ids) : 0;
 
     $query = '
@@ -99,6 +100,7 @@ class SolrSearchController extends ControllerBase {
     OR (ss_group_visibility:' . GroupVisibilityType::GROUP_VISIBILITY_OPTION_EMAIL_DOMAIN . ' AND ss_' . GroupVisibilityType::GROUP_VISIBILITY_OPTION_EMAIL_DOMAIN . ':' . $domain . ')
     ';
 
+    // Restricted community group, only trusted_user role can view
     if (!$user->isAnonymous() && $user->hasRole('trusted_user')) {
       $query .= ' OR (ss_group_visibility:' . GroupVisibilityType::GROUP_VISIBILITY_COMMUNITY . ')';
     }
