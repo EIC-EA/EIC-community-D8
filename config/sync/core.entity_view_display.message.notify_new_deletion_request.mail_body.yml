@@ -4,14 +4,21 @@ status: true
 dependencies:
   config:
     - core.entity_view_mode.message.mail_body
+    - field.field.message.notify_new_deletion_request.field_message_subject
     - message.template.notify_new_deletion_request
 id: message.notify_new_deletion_request.mail_body
 targetEntityType: message
 bundle: notify_new_deletion_request
 mode: mail_body
 content:
+  partial_0:
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
   partial_1:
     weight: 0
     region: content
 hidden:
-  partial_0: true
+  field_message_subject: true
+  search_api_excerpt: true

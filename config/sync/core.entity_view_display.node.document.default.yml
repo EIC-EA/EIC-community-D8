@@ -61,7 +61,6 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
-    region: content
   flag_like_content:
     weight: 10
     settings: {  }
