@@ -11,7 +11,7 @@ disabled: false
 conditions:
   view_inclusion:
     id: view_inclusion
-    negate: null
+    negate: false
     uuid: 294120ac-37bd-4c61-9dec-2c2cf501ee0d
     view_inclusion:
       view-group_overviews-page_1: view-group_overviews-page_1
@@ -104,6 +104,21 @@ reactions:
         unique: 0
         context_id: group_discussions_overviews
         uuid: 0c7f1c41-dbe3-4660-b4df-e2e4d42edaca
+      84c9cb38-96e5-498f-91be-23d80f374f4f:
+        id: eic_group_header
+        label: 'EIC Group header'
+        provider: eic_groups
+        label_display: '0'
+        region: page_header
+        weight: '0'
+        context_mapping:
+          group: '@group.group_route_context:group'
+        custom_id: eic_group_header
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: group_discussions_overviews
+        uuid: 84c9cb38-96e5-498f-91be-23d80f374f4f
     id: blocks
     saved: false
     uuid: 9c311d0e-a590-452a-ad85-a32b685d7729
