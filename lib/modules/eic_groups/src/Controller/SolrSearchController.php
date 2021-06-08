@@ -3,6 +3,7 @@
 namespace Drupal\eic_groups\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\Site\Settings;
 use Drupal\group\GroupMembership;
 use Drupal\user\Entity\User;
 use GuzzleHttp\Exception\ConnectException;
@@ -68,7 +69,7 @@ class SolrSearchController extends ControllerBase {
     }
 
     try {
-      $content = $http_client->get('http://solr:8983/solr/eic/select', [
+      $content = $http_client->get(Settings::get('solr_query_url'), [
         'query' => $query,
       ])->getBody()->getContents();
     } catch (ConnectException $e) {
