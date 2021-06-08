@@ -1,7 +1,7 @@
 eic_groups.solr_search:
   path: '/api/solr/search'
   defaults:
-    _title: 'Solr earch'
+    _title: 'Solr search'
     _controller: '\Drupal\eic_groups\Controller\SolrSearchController::search'
   requirements:
     _access: 'TRUE'
