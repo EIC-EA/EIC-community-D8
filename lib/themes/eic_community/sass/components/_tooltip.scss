@@ -63,6 +63,17 @@
     }
   }
 
+  &__close {
+    display: block;
+    width: 100%;
+    margin-top: map-get($ecl-spacing, 'm');
+    text-align: center;
+
+    @include ecl-media-breakpoint-up('lg') {
+      display: none;
+    }
+  }
+
   &__toggle-icon {
     color: map-get($ecl-colors, 'white');
   }
@@ -82,14 +93,22 @@
 
     #{$node}--is-ready[aria-expanded] & {
       position: fixed;
-      top: auto;
+      top: 0;
       bottom: 0;
       width: 100%;
       left: 0;
+      box-sizing: border-box;
+
+      @include ecl-media-breakpoint-down('md') {
+        overflow: auto;
+        display: flex;
+        padding: map-get($ecl-spacing, 'm');
+        flex-direction: column;
+      }
 
       @include ecl-media-breakpoint-up('lg') {
         position: absolute;
-        top: 0;
+        display: block;
         left: 100%;
         width: 100vw;
         padding-left: map-get($ecl-spacing, 'm');
@@ -109,23 +128,39 @@
   &__panel {
     position: relative;
     padding: map-get($ecl-spacing, 'xl');
-    background-color: ecl-typography('color', 'title');
-    color: map-get($ecl-colors, 'white');
+    background-color: map-get($ecl-colors, 'blue-5');
+    color: ecl-typography('color');
     font-size: map-get($ecl-font-size, 's');
+
+    #{$node}--is-inverted & {
+      background-color: ecl-typography('color', 'title');
+      color: map-get($ecl-colors, 'white');
+    }
   }
 
   &__panel-corner {
+    display: none;
     position: absolute;
     width: map-get($ecl-media, '6xs');
     height: map-get($ecl-media, '6xs');
     transform: rotate(45deg);
-    top: 50%;
-    left: 100%;
-    margin-top: #{0 - map-get($ecl-media, '6xs') / 2};
-    margin-left: #{0 - map-get($ecl-media, '6xs') / 2};
+    top: 0;
+    margin-top: #{0 - map-get($ecl-media, '4xs') / 2 - map-get($ecl-media, '6xs') / 2};
+    right: 100%;
+    margin-right: #{0 - map-get($ecl-media, '6xs') / 2};
     background-color: inherit;
-    display: block;
     content: " ";
+
+    @include ecl-media-breakpoint-up('lg') {
+      display: block;
+    }
+
+    #{$node}--aligns-from-right & {
+      right: auto;
+      left: 100%;
+      margin-right: 0;
+      margin-left: #{0 - map-get($ecl-media, '6xs') / 2};
+    }
   }
 
   &__panel-label {

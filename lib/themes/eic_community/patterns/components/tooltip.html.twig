@@ -1,5 +1,5 @@
 {% if content is not empty or block('content') is not empty %}
-  <div class="ecl-tooltip {{ extra_classes }}">
+  <div class="ecl-tooltip {{ invert ? ' ecl-tooltip--is-inverted' }} {{ extra_classes }}">
     <button class="ecl-tooltip__toggle">
       {% if icon_file_path %}
         {% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with {
@@ -29,6 +29,12 @@
           <div class="ecl-editable-wrapper">
             {% block content %}{{ content }}{% endblock %}
           </div>
+
+          {% include "@ecl-twig/ec-component-button/ecl-button.html.twig" with {
+            label: close_label|default('close'),
+            variant: invert ? 'ghost' : 'primary',
+            extra_classes: 'ecl-tooltip__close',
+          } %}
         </div>
       </div>
     </div>

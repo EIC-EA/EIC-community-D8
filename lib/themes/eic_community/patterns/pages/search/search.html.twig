@@ -17,6 +17,8 @@
     icon_file_path: common.icon_file_path,
     title: NULL,
   } %}
+
+  {% include "@theme/patterns/compositions/pagination.html.twig" with pagination|default({}) only %}
 {% endblock %}
 
 {% block sidebar %}
