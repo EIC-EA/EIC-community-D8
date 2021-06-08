@@ -10,6 +10,7 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\group\Access\GroupAccessResult;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\group\Entity\GroupTypeInterface;
+use Drupal\group\GroupRoleSynchronizer;
 use Drupal\oec_group_flex\GroupVisibilityDatabaseStorageInterface;
 use Drupal\oec_group_flex\Plugin\CustomRestrictedVisibilityInterface;
 use Drupal\oec_group_flex\Plugin\CustomRestrictedVisibilityManager;
@@ -43,12 +44,16 @@ class CustomRestrictedVisibility extends RestrictedGroupVisibilityBase implement
   protected $emailValidator;
 
   /**
+   * The custom restricted visibility manager.
+   *
    * @var \Drupal\oec_group_flex\Plugin\CustomRestrictedVisibilityManager
    */
   private $customRestrictedVisibilityManager;
 
   /**
-   * @var CustomRestrictedVisibilityInterface[]
+   * The custom restricted visibility plugins.
+   *
+   * @var \Drupal\oec_group_flex\Plugin\CustomRestrictedVisibilityInterface[]
    */
   private $plugins;
 
@@ -63,13 +68,17 @@ class CustomRestrictedVisibility extends RestrictedGroupVisibilityBase implement
    *   The plugin implementation definition.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
    *   The configuration factory service.
+   * @param \Drupal\group\GroupRoleSynchronizer $groupRoleSynchronizer
+   *   The group role synchronizer.
    * @param \Drupal\oec_group_flex\GroupVisibilityDatabaseStorageInterface $groupVisibilityStorage
    *   The group visibility storage service.
    * @param \Drupal\Component\Utility\EmailValidatorInterface $email_validator
    *   The email validator service.
+   * @param \Drupal\oec_group_flex\Plugin\CustomRestrictedVisibilityManager $customRestrictedVisibilityManager
+   *   The custom restricted visibility manager.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, ConfigFactoryInterface $configFactory, GroupVisibilityDatabaseStorageInterface $groupVisibilityStorage, EmailValidatorInterface $email_validator, CustomRestrictedVisibilityManager $customRestrictedVisibilityManager) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition, $configFactory);
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, ConfigFactoryInterface $configFactory, GroupRoleSynchronizer $groupRoleSynchronizer, GroupVisibilityDatabaseStorageInterface $groupVisibilityStorage, EmailValidatorInterface $email_validator, CustomRestrictedVisibilityManager $customRestrictedVisibilityManager) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition, $configFactory, $groupRoleSynchronizer);
     $this->groupVisibilityStorage = $groupVisibilityStorage;
     $this->emailValidator = $email_validator;
     $this->customRestrictedVisibilityManager = $customRestrictedVisibilityManager;
@@ -85,6 +94,7 @@ class CustomRestrictedVisibility extends RestrictedGroupVisibilityBase implement
       $plugin_id,
       $plugin_definition,
       $container->get('config.factory'),
+      $container->get('group_role.synchronizer'),
       $container->get('oec_group_flex.group_visibility.storage'),
       $container->get('email.validator'),
       $container->get('plugin.manager.custom_restricted_visibility')
@@ -113,6 +123,9 @@ class CustomRestrictedVisibility extends RestrictedGroupVisibilityBase implement
 
     $form[$form_fields_container] = [
       '#type' => 'container',
+      '#element_validate' => [
+        [$this, 'validateGroupVisibilityOptions'],
+      ],
     ];
 
     $group_visibility_record = NULL;
@@ -148,6 +161,23 @@ class CustomRestrictedVisibility extends RestrictedGroupVisibilityBase implement
   }
 
   /**
+   * Validate the group visibility options.
+   */
+  public function validateGroupVisibilityOptions(array &$element, FormStateInterface $form_state) {
+    $selectedGroupVisibility = $form_state->getValue('group_visibility');
+    if ($selectedGroupVisibility === 'custom_restricted') {
+      foreach ($this->plugins as $plugin) {
+        if ($form_state->getValue($plugin->getStatusKey()) === 1) {
+          return;
+        }
+      }
+
+      $form_state->setError($element, $this->t('Please select a visibility option.'));
+    }
+
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function getGroupLabel(GroupTypeInterface $groupType): string {
@@ -165,37 +195,36 @@ class CustomRestrictedVisibility extends RestrictedGroupVisibilityBase implement
    * {@inheritdoc}
    */
   public function groupAccess(GroupInterface $entity, $operation, AccountInterface $account) {
-    if ($operation === 'view') {
-      if (!$entity->getMember($account)) {
-        if ($entity->hasPermission('view group', $account)) {
-          $group_visibility_record = $this->groupVisibilityStorage->load($entity->id());
+    $neutral = GroupAccessResult::neutral();
+    if ($this->skipAccessCheck($entity, $operation, $account)) {
+      return $neutral;
+    }
 
-          // Loop through all of the options, they are keyed by pluginId.
-          // If we have a match and the plugin returns not neutral we
-          // return the access result as well.
-          foreach ($group_visibility_record->getOptions() as $pluginId => $groupPluginOptions) {
-            /** @var \Drupal\oec_group_flex\Plugin\CustomRestrictedVisibilityBase $plugin */
-            $plugin = isset($this->plugins[$pluginId]) ? $this->plugins[$pluginId] : NULL;
-            if ($plugin instanceof CustomRestrictedVisibilityInterface) {
-              $pluginAccess = $plugin->hasViewAccess($entity, $account, $group_visibility_record);
-              if (!$pluginAccess->isNeutral()) {
-                return $pluginAccess;
-              }
-            }
-          }
+    $group_visibility_record = $this->groupVisibilityStorage->load($entity->id());
 
-          // If the group visibility has options and the current user's account
-          // doesn't meet any of those options, we return access forbidden.
-          if (!empty($group_visibility_record->getOptions())) {
-            return GroupAccessResult::forbidden()
-              ->addCacheableDependency($account)
-              ->addCacheableDependency($entity);
-          }
+    // Loop through all of the options, they are keyed by pluginId.
+    // If we have a match and the plugin returns not neutral we
+    // return the access result as well.
+    foreach ($group_visibility_record->getOptions() as $pluginId => $groupPluginOptions) {
+      /** @var \Drupal\oec_group_flex\Plugin\CustomRestrictedVisibilityBase $plugin */
+      $plugin = isset($this->plugins[$pluginId]) ? $this->plugins[$pluginId] : NULL;
+      if ($plugin instanceof CustomRestrictedVisibilityInterface) {
+        $pluginAccess = $plugin->hasViewAccess($entity, $account, $group_visibility_record);
+        if (!$pluginAccess->isNeutral()) {
+          return $pluginAccess;
         }
       }
     }
 
-    return GroupAccessResult::neutral();
+    // If the group visibility has options and the current users account
+    // doesn't meet any of those options, we return access forbidden.
+    if (!empty($group_visibility_record->getOptions())) {
+      return GroupAccessResult::forbidden()
+        ->addCacheableDependency($account)
+        ->addCacheableDependency($entity);
+    }
+
+    return $neutral;
   }
 
   /**
@@ -210,6 +239,23 @@ class CustomRestrictedVisibility extends RestrictedGroupVisibilityBase implement
       }
     }
     return $fieldNames;
+  }
+
+  /**
+   * Checks if the access check can be skipped.
+   *
+   * @param \Drupal\group\Entity\GroupInterface $entity
+   *   The group entity to check for skipping access.
+   * @param string $operation
+   *   The operation on the entity.
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *   The performing account.
+   *
+   * @return bool
+   *   True when the skip access check can be skipped.
+   */
+  private function skipAccessCheck(GroupInterface $entity, $operation, AccountInterface $account) {
+    return ($operation !== 'view' || !$entity->isPublished() || $entity->getMember($account) || !$entity->hasPermission('view group', $account));
   }
 
 }

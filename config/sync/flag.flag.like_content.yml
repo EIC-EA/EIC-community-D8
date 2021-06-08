@@ -8,6 +8,8 @@ dependencies:
 id: like_content
 label: 'Like (content)'
 bundles:
+  - discussion
+  - document
   - news
   - story
 entity_type: node

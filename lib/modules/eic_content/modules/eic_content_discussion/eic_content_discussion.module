@@ -9,6 +9,7 @@
  * @see https://www.drupal.org/node/2217931
  */
 
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\eic_content_discussion\Hooks\EntityOperations;
 use Drupal\node\NodeInterface;
@@ -27,4 +28,14 @@ function eic_content_discussion_entity_presave(EntityInterface $entity) {
 
   \Drupal::classResolver(EntityOperations::class)
     ->discussionPreSave($entity);
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_view().
+ */
+function eic_content_discussion_node_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
+  if ('discussion' === $entity->bundle()) {
+    \Drupal::classResolver(EntityOperations::class)
+      ->nodeView($build, $entity, $display, $view_mode);
+  }
 }

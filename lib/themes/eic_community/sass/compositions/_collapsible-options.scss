@@ -83,6 +83,11 @@
       right: 0;
     }
 
+    #{$node}--aligns-from-center & {
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
     #{$node}--is-ready[aria-expanded="false"] & {
       display: none;
     }

@@ -83,4 +83,14 @@ function eic_community_preprocess_node__discussion(array &$variables) {
 
     $variables['discussion_item'] = $discussion_item;
   }
+
+  switch ($variables['view_mode']) {
+    case 'full':
+      // @todo Show the list of contributors.
+      if (!empty($variables['elements']['contributor_ids'])) {
+        $variables['contributors'] = \Drupal::entityTypeManager()->getStorage('user')->loadMultiple($variables['contributor_ids']);
+      }
+      break;
+
+  }
 }

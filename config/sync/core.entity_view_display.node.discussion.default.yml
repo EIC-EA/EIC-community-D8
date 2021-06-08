@@ -13,8 +13,8 @@ dependencies:
     - field.field.node.discussion.field_vocab_topics
     - node.type.discussion
   module:
-    - comment
     - entity_reference_revisions
+    - oec_group_comments
     - options
     - text
     - user
@@ -37,7 +37,7 @@ content:
       view_mode: default
       pager_id: 0
     third_party_settings: {  }
-    type: comment_default
+    type: comment_group_content
     region: content
   field_discussion_type:
     weight: 102
@@ -79,12 +79,28 @@ content:
     third_party_settings: {  }
     type: entity_reference_label
     region: content
-  flag_follow_content:
+  flag_bookmark_content:
     weight: 10
     settings: {  }
     third_party_settings: {  }
     region: content
+  flag_follow_content:
+    weight: 10
+    region: content
+    settings: {  }
+    third_party_settings: {  }
   flag_highlight_content:
+    weight: 10
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+  flag_like_content:
+    weight: 10
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+  flag_recommend:
     weight: 10
     settings: {  }
     third_party_settings: {  }

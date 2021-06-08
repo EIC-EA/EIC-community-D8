@@ -1,0 +1,6 @@
+oec_group_flex.visibility_settings:
+  title: 'Group visibility'
+  description: 'Configure the group visibility settings.'
+  route_name: 'oec_group_flex.visibility_settings'
+  parent: 'system.admin_group'
+  weight: 15

@@ -24,7 +24,7 @@
 
                 {% if no_items.link and no_items.link.path %}
                   {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with {
-                    link: no_items.link|merge({
+                    link: no_items.link|default({})|merge({
                       icon_position: 'after',
                       type: 'standalone',
                     }),

@@ -20,7 +20,7 @@ function eic_community_preprocess_group(array &$variables) {
     'icon_file_path' => $variables['eic_icon_path'],
   ];
 
-  if (!$group->get('field_hero')->isEmpty()) {
+  if ($group->hasField('field_hero') && !$group->get('field_hero')->isEmpty()) {
     /** @var \Drupal\media\Entity\Media $media */
     $media = \Drupal::service('entity.repository')->getTranslationFromContext($group->get('field_hero')->entity, $group->language()->getId());
     $image_item = ImageValueObject::fromImageItem($media->get('oe_media_image')->first());

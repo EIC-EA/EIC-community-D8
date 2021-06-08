@@ -16,7 +16,7 @@
       {% endif %}
 
       {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with parent|default({})|merge({
-        link: parent.link|merge({
+        link: parent.link|default({})|merge({
           type: 'standalone',
           icon_position: 'before',
         }),
@@ -61,17 +61,6 @@
               <div class="ecl-editorial-header__actions">
                 {% for action in actions %}
                   <div class="ecl-editorial-header__action">
-                    {% set _icon = {} %}
-
-                    {% if icon_file_path %}
-                      {% set _icon = {
-                        path: icon_file_path,
-                        type: action.icon.type,
-                        name: action.icon.name,
-                        size: 'xs',
-                      } %}
-                    {% endif %}
-
                     {% set trigger = '' %}
 
                     {% if action.items %}
@@ -94,31 +83,41 @@
                         trigger: action.is_compact and icon_file_path ? trigger : NULL,
                       } only %}
                     {% else %}
-                      {% set _action = {} %}
-
                       {% if action is not empty %}
-
                         {% if action.link %}
                           {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with action|default({})|merge({
-                            link: action.link|merge({
+                            link: action.link|default({})|merge({
                               icon_position: 'before',
                             }),
                             icon: icon_file_path ? action.icon|default({})|merge({
                               path: icon_file_path,
                               size: 's',
                             }) : {},
-                            extra_classes: (actions[0].items and not loop.first) or loop.first ? 'ecl-link--button ecl-link--button-primary' : 'ecl-link--button ecl-link--button-secondary' ~ (action.is_compact ? 'ecl-link--button-has-icon-layout'),
+                            extra_classes: loop.first ? 'ecl-link--button ecl-link--button-primary' : 'ecl-link--button ecl-link--button-secondary',
                           }) only %}
-                        {% else %}
-                          {% include "@ecl-twig/ec-component-button/ecl-button.html.twig" with action|default({})|merge({
-                            icon_position: 'before',
-                            extra_classes: action.is_compact ? 'ecl-button--has-icon-layout',
-                            variant: (actions[0].items and not loop.first) or loop.first ? 'primary' : 'secondary',
-                            icon: icon_file_path ? action.icon|default({})|merge({
-                              path: icon_file_path,
-                              size: 's',
-                            }) : {},
-                          }) only %}
+                        {% elseif action is not empty %}
+                          {% if action.link %}
+                            {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with action|default({})|merge({
+                              link: action.link|merge({
+                                icon_position: 'before',
+                              }),
+                              icon: icon_file_path ? action.icon|default({})|merge({
+                                path: icon_file_path,
+                                size: 's',
+                              }) : {},
+                              extra_classes: (actions[0].items and not loop.first) or loop.first ? 'ecl-link--button ecl-link--button-primary' : 'ecl-link--button ecl-link--button-secondary' ~ (action.is_compact ? 'ecl-link--button-has-icon-layout'),
+                            }) only %}
+                          {% else %}
+                            {% include "@ecl-twig/ec-component-button/ecl-button.html.twig" with action|default({})|merge({
+                              icon_position: 'before',
+                              extra_classes: action.is_compact ? 'ecl-button--has-icon-layout',
+                              variant: (actions[0].items and not loop.first) or loop.first ? 'primary' : 'secondary',
+                              icon: icon_file_path ? action.icon|default({})|merge({
+                                path: icon_file_path,
+                                size: 's',
+                              }) : {},
+                            }) only %}
+                          {% endif %}
                         {% endif %}
                       {% endif %}
                     {% endif %}

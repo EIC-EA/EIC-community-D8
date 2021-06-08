@@ -32,11 +32,11 @@ reactions:
         id: 'views_block:group_discussions-block_1'
         label: ''
         provider: views
-        label_display: visible
+        label_display: '0'
         views_label: ''
         items_per_page: none
         region: content
-        weight: '0'
+        weight: '-2'
         context_mapping: {  }
         custom_id: views_block_group_discussions_block_1
         theme: eic_community
@@ -48,12 +48,12 @@ reactions:
         id: 'views_block:group_documents-block_1'
         label: ''
         provider: views
-        label_display: visible
+        label_display: '0'
         views_label: ''
         items_per_page: none
         region: content
-        weight: '1'
-        context_mapping: { }
+        weight: '-1'
+        context_mapping: {  }
         custom_id: views_block_group_documents_block_1
         theme: eic_community
         css_class: ''
@@ -105,6 +105,22 @@ reactions:
         unique: 0
         context_id: group_group_homepage
         uuid: a12c24ef-18fa-49a2-9b47-5d87b945f86e
+      f981ffbe-9d2f-455d-af1e-0dde97e7d74d:
+        id: 'views_block:group_related_groups-block_related_groups'
+        label: ''
+        provider: views
+        label_display: '0'
+        views_label: ''
+        items_per_page: none
+        region: content
+        weight: '1'
+        context_mapping: {  }
+        custom_id: views_block_group_related_groups
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: group_group_homepage
+        uuid: f981ffbe-9d2f-455d-af1e-0dde97e7d74d
     id: blocks
     saved: false
     uuid: db598f5e-00b5-4ba6-b443-bbe6d3ca2c59

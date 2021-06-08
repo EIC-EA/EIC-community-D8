@@ -275,7 +275,7 @@ display:
             title: All
           title_enable: false
           title: ''
-          default_argument_type: group_purl_context
+          default_argument_type: group_id_from_url
           default_argument_options: {  }
           default_argument_skip_url: false
           summary_options:
@@ -308,7 +308,7 @@ display:
       contexts:
         - 'languages:language_content'
         - 'languages:language_interface'
-        - purl
+        - route
         - url
         - 'user.node_grants:view'
         - user.permissions
@@ -325,7 +325,7 @@ display:
       contexts:
         - 'languages:language_content'
         - 'languages:language_interface'
-        - purl
+        - route
         - url
         - 'user.node_grants:view'
         - user.permissions
