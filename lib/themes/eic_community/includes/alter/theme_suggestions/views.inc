@@ -26,5 +26,8 @@ function eic_community_theme_suggestions_views_view_alter(array &$suggestions, a
 
       $suggestions[] = "views_view__teaser_overview";
       break;
+    case 'group_overviews':
+      $suggestions[] = "views_view__teaser_discussions";
+      break;
   }
 }
