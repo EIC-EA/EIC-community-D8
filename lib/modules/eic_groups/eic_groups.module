@@ -54,6 +54,46 @@ function eic_groups_node_view(array &$build, EntityInterface $entity, EntityView
 }
 
 /**
+ * Implements hook_form_BASE_FORM_ID_alter().
+ */
+function eic_groups_form_group_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  // Since the group permissions do not exist when hook_group_insert() is
+  // invoked, we use a submit handler that will be called after it is created.
+  // @todo This might not be sufficient when creating groups programmatically,
+  //   e.g. when migrating groups, we should then create the group permissions
+  //   ourselves and not rely on group_flex module to create the permissions.
+  // Only act on group creation.
+  if ($form_state->getFormObject()->getOperation() == 'add') {
+    $form['actions']['submit']['#submit'][] = 'eic_groups_group_form_submit';
+  }
+}
+
+/**
+ * Custom submit handler for form_group forms.
+ */
+function eic_groups_group_form_submit(array $form, FormStateInterface $form_state) {
+  \Drupal::classResolver(FormOperations::class)
+    ->formGroupSubmit($form, $form_state);
+}
+
+/**
+ * Implements hook_module_implements_alter().
+ */
+function eic_groups_module_implements_alter(&$implementations, $hook) {
+  switch ($hook) {
+    case 'group_insert':
+      if (array_key_exists('group_content_menu', $implementations)) {
+        // eic_groups implementation must run after group_content_menu, so we
+        // place it at the end.
+        $value = $implementations['eic_groups'];
+        unset($implementations['eic_groups']);
+        $implementations['eic_groups'] = $value;
+      }
+      break;
+  }
+}
+
+/**
  * Implements hook_form_alter().
  */
 function eic_groups_form_alter(&$form, FormStateInterface $form_state, $form_id) {

@@ -46,12 +46,13 @@ class GroupDiscussions extends GroupFeaturePluginBase {
     }
 
     // Permissions: enable the permissions.
-    $config = $this->configFactory->get('eic_groups.group_features.eic_groups_discussions');
-    $group_permissions = $this->getGroupPermissions($group);
-    foreach ($config->get('roles') as $role) {
-      $group_permissions = $this->addRolePermissionsToGroup($group_permissions, $role, $config->get('permissions'));
+    if ($group_permissions = $this->getGroupPermissions($group)) {
+      $config = $this->configFactory->get('eic_groups.group_features.eic_groups_discussions');
+      foreach ($config->get('roles') as $role) {
+        $group_permissions = $this->addRolePermissionsToGroup($group_permissions, $role, $config->get('permissions'));
+      }
+      $this->saveGroupPermissions($group_permissions);
     }
-    $this->saveGroupPermissions($group_permissions);
   }
 
   /**
@@ -72,12 +73,13 @@ class GroupDiscussions extends GroupFeaturePluginBase {
     }
 
     // Permissions: disable the permissions.
-    $config = $this->configFactory->get('eic_groups.group_features.eic_groups_discussions');
-    $group_permissions = $this->getGroupPermissions($group);
-    foreach ($config->get('roles') as $role) {
-      $group_permissions = $this->removeRolePermissionsFromGroup($group_permissions, $role, $config->get('permissions'));
+    if ($group_permissions = $this->getGroupPermissions($group)) {
+      $config = $this->configFactory->get('eic_groups.group_features.eic_groups_discussions');
+      foreach ($config->get('roles') as $role) {
+        $group_permissions = $this->removeRolePermissionsFromGroup($group_permissions, $role, $config->get('permissions'));
+      }
+      $this->saveGroupPermissions($group_permissions);
     }
-    $this->saveGroupPermissions($group_permissions);
   }
 
   /**

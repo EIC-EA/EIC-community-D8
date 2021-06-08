@@ -34,7 +34,7 @@ class EntityOperations implements ContainerInjectionInterface {
   protected $routeMatch;
 
   /**
-   * The current route match service.
+   * The Group feature plugin manager.
    *
    * @var \Drupal\oec_group_features\GroupFeaturePluginManager
    */
@@ -68,15 +68,35 @@ class EntityOperations implements ContainerInjectionInterface {
   }
 
   /**
+   * Reacts on Group entity insert.
+   *
+   * @param \Drupal\group\Entity\Group $group
+   *   The group entity being created.
+   */
+  public function groupInsert(Group $group) {
+    $this->manageFeatures($group);
+  }
+
+  /**
    * Reacts on Group entity update.
    *
    * @param \Drupal\group\Entity\Group $group
    *   The group entity being updated.
    */
   public function groupUpdate(Group $group) {
+    $this->manageFeatures($group);
+  }
+
+  /**
+   * Enables and disables group features based on the selection.
+   *
+   * @param \Drupal\group\Entity\Group $group
+   *   The group entity.
+   */
+  protected function manageFeatures(Group $group) {
     // Check if feature values have been changed to avoid performing unnecessary
     // actions.
-    if ($group->get('features')->getValue() == $group->original->get('features')->getValue()) {
+    if (!empty($group->original) && $group->get('features')->getValue() == $group->original->get('features')->getValue()) {
       return;
     }
 
@@ -101,6 +121,7 @@ class EntityOperations implements ContainerInjectionInterface {
     foreach (array_diff_key($available_features, $enabled_features) as $feature_key => $disabled_feature) {
       $available_features[$feature_key]->disable($group);
     }
+
   }
 
 }
