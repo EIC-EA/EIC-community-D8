@@ -14,7 +14,7 @@ use Drupal\eic_groups\Hooks\GroupTokens;
 use Drupal\eic_groups\Hooks\FormOperations;
 use Drupal\eic_groups\Hooks\Pathauto;
 use Drupal\eic_groups\Hooks\Preprocess;
-use Drupal\group_flex\Plugin\GroupVisibilityInterface;
+use Drupal\eic_groups\Constants\GroupVisibilityType;
 
 /**
  * Implements hook_theme().
@@ -181,10 +181,28 @@ function eic_groups_search_api_solr_documents_alter(array &$documents, \Drupal\s
     /** @var \Drupal\oec_group_flex\GroupVisibilityDatabaseStorage $group_visibility_storage */
     $group_visibility_storage = \Drupal::service('oec_group_flex.group_visibility.storage');
     $group_visibility_entity = $group_visibility_storage->load($group->id());
-    $group_visibility = GroupVisibilityInterface::GROUP_FLEX_TYPE_VIS_PUBLIC;
+    $group_visibility = GroupVisibilityType::GROUP_VISIBILITY_PUBLIC;
 
-    if ($group_visibility_entity) {
-      $group_visibility = $group_visibility_entity->getType();
+    switch ($group_visibility_entity->getType()) {
+      case GroupVisibilityType::GROUP_VISIBILITY_PRIVATE:
+      case GroupVisibilityType::GROUP_VISIBILITY_COMMUNITY:
+        $group_visibility = $group_visibility_entity->getType();
+        break;
+
+      case GroupVisibilityType::GROUP_VISIBILITY_CUSTOM_RESTRICTED:
+        $options = $group_visibility_entity->getOptions();
+        foreach ($options as $key => $option) {
+          // restricted_email_domains_status can be false so we need to check if enable
+          if (GroupVisibilityType::GROUP_VISIBILITY_OPTION_EMAIL_DOMAIN === $key && $option[GroupVisibilityType::GROUP_VISIBILITY_OPTION_EMAIL_DOMAIN . '_status']) {
+            $group_visibility = GroupVisibilityType::GROUP_VISIBILITY_OPTION_EMAIL_DOMAIN;
+
+            $document->addField(
+              'ss_' . GroupVisibilityType::GROUP_VISIBILITY_OPTION_EMAIL_DOMAIN,
+              $option[GroupVisibilityType::GROUP_VISIBILITY_OPTION_EMAIL_DOMAIN . '_conf']
+            );
+          }
+        }
+        break;
     }
 
     /** @var \Drupal\Core\Session\AccountInterface $owner */

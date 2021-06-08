@@ -17,6 +17,8 @@ $ npm run build
 $ npm run react-production
 ```
 
+Be sure to have node version > 12.14 for react
+
 This will prepare the required assets which are based on the [Europa Component Library](https://ec.europa.eu/component-library/).
 
 The builder configuration can be adjusted by editing the `./ecl-builder.config.js`. By default, the assets will be written to the `./dist` directory.
