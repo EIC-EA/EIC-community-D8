@@ -4,11 +4,9 @@ namespace Drupal\eic_content_book\Plugin\Block;
 
 use Drupal\book\BookManagerInterface;
 use Drupal\book\Plugin\Block\BookNavigationBlock;
-use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityStorageInterface;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\eic_content\EICContentHelperInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -24,25 +22,11 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class EICBookNavigationBlock extends BookNavigationBlock {
 
   /**
-   * The database service.
+   * The EIC content helper.
    *
-   * @var \Drupal\Core\Database\Connection
+   * @var \Drupal\eic_content\EICContentHelperInterface
    */
-  protected $database;
-
-  /**
-   * The module handler service.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
-   */
-  protected $moduleHandler;
-
-  /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
+  protected $eicContentHelper;
 
   /**
    * Constructs a new BookNavigationBlock instance.
@@ -59,18 +43,12 @@ class EICBookNavigationBlock extends BookNavigationBlock {
    *   The book manager.
    * @param \Drupal\Core\Entity\EntityStorageInterface $node_storage
    *   The node storage.
-   * @param \Drupal\Core\Database\Connection $database
-   *   The database service.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
-   *   The module handler service.
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
-   *   The entity type manager.
+   * @param \Drupal\eic_content\EICContentHelperInterface $eic_content_helper
+   *   The EIC content helper.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, RequestStack $request_stack, BookManagerInterface $book_manager, EntityStorageInterface $node_storage, Connection $database, ModuleHandlerInterface $module_handler, EntityTypeManagerInterface $entity_type_manager) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, RequestStack $request_stack, BookManagerInterface $book_manager, EntityStorageInterface $node_storage, EICContentHelperInterface $eic_content_helper) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $request_stack, $book_manager, $node_storage);
-    $this->database = $database;
-    $this->moduleHandler = $module_handler;
-    $this->entityTypeManager = $entity_type_manager;
+    $this->eicContentHelper = $eic_content_helper;
   }
 
   /**
@@ -84,9 +62,7 @@ class EICBookNavigationBlock extends BookNavigationBlock {
       $container->get('request_stack'),
       $container->get('book.manager'),
       $container->get('entity_type.manager')->getStorage('node'),
-      $container->get('database'),
-      $container->get('module_handler'),
-      $container->get('entity_type.manager')
+      $container->get('eic_content.helper')
     );
   }
 
@@ -116,8 +92,8 @@ class EICBookNavigationBlock extends BookNavigationBlock {
       return [];
     }
 
-    // Ignore Book nodes in groups.
-    if ($this->moduleHandler->moduleExists('group_content') && $this->entityTypeManager->getStorage('group_content')->loadByEntity($node)) {
+    // Ignore book page that belongs to a group.
+    if ($this->eicContentHelper->getGroupContentByEntity($node)) {
       return [];
     }
 

@@ -5,13 +5,12 @@ namespace Drupal\eic_content_book\Hooks;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
+use Drupal\eic_content\EICContentHelperInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -24,25 +23,11 @@ class EntityOperations implements ContainerInjectionInterface {
   use StringTranslationTrait;
 
   /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
    * The current route match service.
    *
    * @var \Drupal\Core\Routing\RouteMatchInterface
    */
   protected $routeMatch;
-
-  /**
-   * The module handler service.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
-   */
-  protected $moduleHandler;
 
   /**
    * The current user.
@@ -52,22 +37,26 @@ class EntityOperations implements ContainerInjectionInterface {
   protected $currentUser;
 
   /**
+   * The EIC content helper.
+   *
+   * @var \Drupal\eic_content\EICContentHelperInterface
+   */
+  protected $eicContentHelper;
+
+  /**
    * Constructs a new EntityOperations object.
    *
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
-   *   The entity type manager.
    * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
    *   The current route match service.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
-   *   The module handler service.
    * @param \Drupal\Core\Session\AccountProxyInterface $current_user
    *   The current user.
+   * @param \Drupal\eic_content\EICContentHelperInterface $eic_content_helper
+   *   The EIC content helper.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, RouteMatchInterface $route_match, ModuleHandlerInterface $module_handler, AccountProxyInterface $current_user) {
-    $this->entityTypeManager = $entity_type_manager;
+  public function __construct(RouteMatchInterface $route_match, AccountProxyInterface $current_user, EICContentHelperInterface $eic_content_helper) {
     $this->routeMatch = $route_match;
-    $this->moduleHandler = $module_handler;
     $this->currentUser = $current_user;
+    $this->eicContentHelper = $eic_content_helper;
   }
 
   /**
@@ -75,10 +64,9 @@ class EntityOperations implements ContainerInjectionInterface {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('entity_type.manager'),
       $container->get('current_route_match'),
-      $container->get('module_handler'),
-      $container->get('current_user')
+      $container->get('current_user'),
+      $container->get('eic_content.helper')
     );
   }
 
@@ -89,8 +77,8 @@ class EntityOperations implements ContainerInjectionInterface {
     switch ($this->routeMatch->getRouteName()) {
       case 'entity.node.canonical':
         if ($entity->bundle() === 'book') {
-          // If book belongs to a group.
-          if ($this->moduleHandler->moduleExists('group_content') && $this->entityTypeManager->getStorage('group_content')->loadByEntity($entity)) {
+          // Ignore book page that belongs to a group.
+          if ($this->eicContentHelper->getGroupContentByEntity($entity)) {
             return;
           }
           // Unsets book navigation since we already have that show in the
