@@ -133,14 +133,6 @@ content:
     settings: {  }
     region: content
     third_party_settings: {  }
-  purl:
-    type: string_textfield
-    weight: 13
-    region: content
-    settings:
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
   status:
     type: boolean_checkbox
     settings:

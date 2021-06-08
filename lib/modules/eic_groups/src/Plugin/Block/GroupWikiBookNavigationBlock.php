@@ -7,7 +7,7 @@ use Drupal\book\Plugin\Block\BookNavigationBlock;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\group_purl\Context\GroupPurlContext;
+use Drupal\eic_groups\EICGroupsHelperInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -30,11 +30,11 @@ class GroupWikiBookNavigationBlock extends BookNavigationBlock {
   protected $database;
 
   /**
-   * The group purl context.
+   * The EIC groups helper service.
    *
-   * @var \Drupal\group_purl\Context\GroupPurlContext
+   * @var \Drupal\eic_groups\EICGroupsHelperInterface
    */
-  protected $groupPurlContext;
+  protected $eicGroupsHelper;
 
   /**
    * Constructs a new BookNavigationBlock instance.
@@ -53,13 +53,13 @@ class GroupWikiBookNavigationBlock extends BookNavigationBlock {
    *   The node storage.
    * @param \Drupal\Core\Database\Connection $database
    *   The database service.
-   * @param \Drupal\group_purl\Context\GroupPurlContext $group_purl_context
-   *   The group purl context.
+   * @param \Drupal\eic_groups\EICGroupsHelperInterface $eic_groups_helper
+   *   The EIC groups helper service.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, RequestStack $request_stack, BookManagerInterface $book_manager, EntityStorageInterface $node_storage, Connection $database, GroupPurlContext $group_purl_context) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, RequestStack $request_stack, BookManagerInterface $book_manager, EntityStorageInterface $node_storage, Connection $database, EICGroupsHelperInterface $eic_groups_helper) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $request_stack, $book_manager, $node_storage);
     $this->database = $database;
-    $this->groupPurlContext = $group_purl_context;
+    $this->eicGroupsHelper = $eic_groups_helper;
   }
 
   /**
@@ -74,7 +74,7 @@ class GroupWikiBookNavigationBlock extends BookNavigationBlock {
       $container->get('book.manager'),
       $container->get('entity_type.manager')->getStorage('node'),
       $container->get('database'),
-      $container->get('group_purl.context_provider')
+      $container->get('eic_groups.helper')
     );
   }
 
@@ -96,7 +96,7 @@ class GroupWikiBookNavigationBlock extends BookNavigationBlock {
    * {@inheritdoc}
    */
   public function build() {
-    if (!$this->groupPurlContext->getGroupFromRoute()) {
+    if (!$this->eicGroupsHelper->getGroupFromRoute()) {
       return [];
     }
 

@@ -8,8 +8,11 @@
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\eic_groups\Hooks\EntityOperations;
+use Drupal\eic_groups\Hooks\GroupTokens;
 use Drupal\eic_groups\Hooks\FormOperations;
+use Drupal\eic_groups\Hooks\Pathauto;
 use Drupal\eic_groups\Hooks\Preprocess;
 
 /**
@@ -71,4 +74,39 @@ function eic_groups_preprocess_links__node(&$variables) {
   /** @var \Drupal\eic_groups\Hooks\Preprocess $class */
   $class = \Drupal::classResolver(Preprocess::class);
   $class->preprocessLinksNode($variables);
+}
+
+/**
+ * Implements hook_token_info().
+ */
+function eic_groups_token_info() {
+  /** @var \Drupal\eic_groups\Hooks\GroupTokens $class */
+  $class = \Drupal::classResolver(GroupTokens::class);
+  return $class->tokenInfo();
+}
+
+/**
+ * Implements hook_tokens().
+ */
+function eic_groups_tokens($type, $tokens, array $data, array $options, BubbleableMetadata $bubbleable_metadata) {
+  /** @var \Drupal\eic_groups\Hooks\GroupTokens $class */
+  $class = \Drupal::classResolver(GroupTokens::class);
+  return $class->tokens($type, $tokens, $data, $options, $bubbleable_metadata);
+}
+
+/**
+ * Implements hook_group_update().
+ */
+function eic_groups_group_update(EntityInterface $entity) {
+  \Drupal::classResolver(EntityOperations::class)
+    ->groupUpdate($entity);
+}
+
+/**
+ * Implements hook_pathauto_alias_alter().
+ */
+function eic_groups_pathauto_alias_alter(&$alias, array &$context) {
+  /** @var \Drupal\eic_groups\Hooks\Pathauto $class */
+  $class = \Drupal::classResolver(Pathauto::class);
+  $class->aliasAlter($alias, $context);
 }

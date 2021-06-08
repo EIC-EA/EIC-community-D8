@@ -1,0 +1,13 @@
+{#
+/**
+ * @file
+ * Theme override for the group menu block.
+ *
+ * @see ./core/modules/system/templates/block.html.twig
+ */
+#}
+<div {{ attributes }}>
+  {{ title_prefix }}
+  {{ title_suffix }}
+  {% include '@theme/patterns/compositions/subnavigation.html.twig' with group_menu|default({}) %}
+</div>
