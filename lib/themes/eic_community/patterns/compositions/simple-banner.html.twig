@@ -1,0 +1,49 @@
+{% set title_element = title_element|default('h3') %}
+
+{% embed "@theme/patterns/components/well.html.twig" with {
+  extra_classes: 'ecl-simple-banner ecl-well--has-large-layout',
+} %}
+  {% block content %}
+    {% if title %}
+      <{{ title_element }} class="ecl-simple-banner__title" >{{ title }}</{{ title_element }}>
+    {% endif %}
+    {% if description %}
+      <div class="ecl-simple-banner__description ecl-editable-wrapper">{{ description }}</div>
+    {% endif %}
+    {% if actions is not empty %}
+      <div class="ecl-simple-banner__actions">
+        {% for action in actions %}
+          <div class="ecl-simple-banner__action">
+            {% if action.items is not empty %}
+              {% include "@theme/patterns/compositions/collapsible-options.html.twig" with {
+                extra_classes: 'ecl-collapsible-options--aligns-from-center',
+                collapse_label: action.label|default(action.link.label),
+                icon_file_path: icon_file_path,
+                items: action.items,
+              } only %}
+            {% elseif action.link is not empty %}
+              {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with action|default({})|merge({
+                link: action.link|default({})|merge({
+                  icon_position: 'before',
+                }),
+                icon: icon_file_path ? action.icon|default({})|merge({
+                  path: icon_file_path,
+                  size: 's',
+                }) : {},
+                extra_classes: loop.first ? 'ecl-link--button ecl-link--button-primary' : 'ecl-link--button ecl-link--button-ghost',
+              }) only %}
+            {% else %}
+              {% include "@ecl-twig/ec-component-button/ecl-button.html.twig" with action|default({})|merge({
+                icon_position: 'before',
+                variant: loop.first ? 'primary' : 'ghost',
+                icon: icon_file_path ? action.icon|default({})|merge({
+                  path: icon_file_path,
+                }),
+              }) only %}
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endblock %}
+{% endembed %}

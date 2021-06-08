@@ -16,7 +16,7 @@
       {% endif %}
 
       {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with parent|default({})|merge({
-        link: parent.link|merge({
+        link: parent.link|default({})|merge({
           type: 'standalone',
           icon_position: 'before',
         }),
@@ -91,7 +91,7 @@
 
                     {% if action.link %}
                       {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with action|default({})|merge({
-                        link: action.link|merge({
+                        link: action.link|default({})|merge({
                           icon_position: 'before',
                         }),
                         icon: icon_file_path ? action.icon|default({})|merge({

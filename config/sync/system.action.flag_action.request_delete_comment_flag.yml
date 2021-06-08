@@ -1,0 +1,15 @@
+uuid: b3e5939b-e81b-4839-a62b-04ffc8d21701
+langcode: en
+status: true
+dependencies:
+  config:
+    - flag.flag.request_delete_comment
+  module:
+    - flag
+id: flag_action.request_delete_comment_flag
+label: 'Flag this item'
+type: comment
+plugin: 'flag_action:request_delete_comment_flag'
+configuration:
+  flag_id: request_delete_comment
+  flag_action: flag
