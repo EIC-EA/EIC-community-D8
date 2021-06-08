@@ -12,6 +12,7 @@
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\eic_content_book\Hooks\EntityOperations;
+use Drupal\eic_content_book\Hooks\Preprocess;
 
 /**
  * Implements hook_ENTITY_TYPE_view().
@@ -19,4 +20,12 @@ use Drupal\eic_content_book\Hooks\EntityOperations;
 function eic_content_book_node_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
   \Drupal::classResolver(EntityOperations::class)
     ->nodeView($build, $entity, $display, $view_mode);
+}
+
+/**
+ * Implements hook_preprocess_links__node().
+ */
+function eic_content_book_preprocess_links__node(&$variables) {
+  \Drupal::classResolver(Preprocess::class)
+    ->preprocessLinksNode($variables);
 }
