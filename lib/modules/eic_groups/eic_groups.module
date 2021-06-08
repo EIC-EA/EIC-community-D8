@@ -147,6 +147,12 @@ function eic_groups_search_api_solr_documents_alter(array &$documents, \Drupal\s
       $group_visibility = $group_visibility_entity->getType();
     }
 
+    /** @var \Drupal\Core\Session\AccountInterface $owner */
+    $owner = $group->getOwner();
+
+    $user = \Drupal\user\Entity\User::load($owner->id());
     $document->addField('ss_group_visibility', $group_visibility);
+    $document->addField('ss_group_url', $group->toUrl()->toString());
+    $document->addField('ss_group_user_url', $user->toUrl()->toString());
   }
 }

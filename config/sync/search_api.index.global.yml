@@ -5,6 +5,7 @@ dependencies:
   module:
     - search_api_solr
     - group
+    - user
     - file
     - media
     - taxonomy
@@ -12,10 +13,12 @@ dependencies:
     - profile
     - search_api
     - content_moderation
-    - user
   config:
-    - field.storage.group.field_thumbnail
+    - field.storage.user.field_first_name
+    - field.storage.user.field_last_name
     - field.storage.media.oe_media_image
+    - field.storage.user.field_media
+    - field.storage.group.field_thumbnail
     - field.storage.group.field_vocab_topics
     - field.storage.group.field_body
     - field.storage.group.field_vocab_geo
@@ -310,6 +313,48 @@ field_settings:
     dependencies:
       module:
         - group
+  group_user_first_name:
+    label: 'Group creator » User » First name'
+    datasource_id: 'entity:group'
+    property_path: 'uid:entity:field_first_name'
+    type: string
+    dependencies:
+      config:
+        - field.storage.user.field_first_name
+      module:
+        - group
+        - user
+  group_user_image:
+    label: 'Group creator » User » Picture » Media » Image » File » URI » Root-relative file URL'
+    datasource_id: 'entity:group'
+    property_path: 'uid:entity:field_media:entity:oe_media_image:entity:uri:url'
+    type: string
+    dependencies:
+      config:
+        - field.storage.media.oe_media_image
+        - field.storage.user.field_media
+      module:
+        - file
+        - group
+        - media
+        - user
+  group_user_last_name:
+    label: 'Group creator » User » Last name'
+    datasource_id: 'entity:group'
+    property_path: 'uid:entity:field_last_name'
+    type: string
+    dependencies:
+      config:
+        - field.storage.user.field_last_name
+      module:
+        - group
+        - user
+  url:
+    label: URI
+    property_path: search_api_url
+    type: string
+    configuration:
+      absolute: false
   user__group_content__uid_gid:
     label: 'Reverse reference: Group content using Group content creator » Parent group'
     datasource_id: 'entity:user'

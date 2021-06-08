@@ -48,7 +48,7 @@ class SolrSearchController extends ControllerBase {
       'wt' => 'json',
       'fq' => 'ss_search_api_datasource:"entity:group" AND (ss_group_visibility:public OR (ss_group_visibility:private AND its_group_id:(' . $group_ids_formatted . ')))',
       'json.nl' => 'arrarr',
-      'fl' => 'ss_group_label,ss_group_teaser,its_group_id,ss_group_type,ss_group_visibility',
+      'fl' => 'ss_group_label,ss_group_teaser,its_group_id,ss_group_type,ss_group_visibility,ss_group_url,ss_group_user_url,ss_group_user_image,ss_group_user_last_name,ss_group_user_first_name',
       'facet.field' => 'ss_group_topic_name',
       'facet' => 'on',
       'facet.sort' => 'false',
