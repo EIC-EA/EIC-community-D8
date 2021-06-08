@@ -14,6 +14,13 @@
     background-color: map-get($ecl-colors, 'white');
   }
 
+  @include ecl-media-breakpoint-up('lg') {
+    &--has-large-layout {
+      padding-top: map-get($ecl-spacing, '2xl');
+      padding-bottom: map-get($ecl-spacing, '2xl');
+    }
+  }
+
   &:first-child {
     margin-top: 0;
   }

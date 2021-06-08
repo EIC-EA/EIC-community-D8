@@ -91,7 +91,7 @@
             <div class="ecl-contact-information-block__links">
               {% for link in links %}
                 {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with {
-                  link: link.link|merge({
+                  link: link.link|default({})|merge({
                     icon_position: 'before',
                   }),
                   icon: icon_file_path ? {

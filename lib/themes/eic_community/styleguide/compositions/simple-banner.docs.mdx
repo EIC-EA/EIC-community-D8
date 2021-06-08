@@ -1,0 +1,22 @@
+# Simple Banner
+
+Displays a section block with a title, description and optionally nested buttons.
+
+## Example:
+
+```
+{% include "@theme/patterns/compositions/state-banner.html.twig" %}
+```
+
+## Twig parameters:
+
+| Key             | Type     | Description                                                                                                                                                                     | Mandatory |
+| --------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- |
+| title           | string   | Displays the title of the section.                                                                                                                                              | yes       |
+| title_element   | string   | Defines the HTMLElement for the title.                                                                                                                                          | no        |
+| description     | string   | Displays a description below the title.                                                                                                                                         | no        |
+| actions         | object[] | Displays a one or multiple (nested) buttons.                                                                                                                                    | no        |
+| actions[]       | object[] | Displays the current action if the `items` and/or `link` keys are not defined. Follows the [ECL Button component](https://www.npmjs.com/package/@ecl-twig/ec-component-button). | no        |
+| actions.items[] | object[] | Displays the current action within the custom Collapsible Options component.                                                                                                    | no        |
+| actions.link    | object[] | Displays the current actions as an [ECL Link component](https://www.npmjs.com/package/@ecl-twig/ec-component-link).                                                             | no        |
+| icon_file_path  | string   | Enables the usage of the ECL icons within the component.                                                                                                                        | no        |
