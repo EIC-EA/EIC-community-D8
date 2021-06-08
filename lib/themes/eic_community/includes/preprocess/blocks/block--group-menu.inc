@@ -16,7 +16,7 @@ function eic_community_preprocess_block__group_menu(&$variables, &$cache_tags = 
 
   foreach ($variables['content']['#items'] as $link) {
     $items[] = [
-      'is_active' => $link['in_active_trail'],
+      'is_active' => \Drupal::request()->getPathInfo() === $link['url']->toString(),
       'link' => [
         'label' => $link['title'],
         'path' =>  $link['url']->toString(),

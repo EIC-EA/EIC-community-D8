@@ -1,32 +1,36 @@
-uuid: 5137fb47-aa43-42b1-a4a9-aebb7c9a959c
+uuid: a28f7217-5596-4e65-936e-705e146133f8
 langcode: en
 status: true
 dependencies:
   module:
-    - media
-id: bookmark_media
-label: 'Bookmark (media)'
+    - node
+id: request_delete_content
+label: 'Request Delete (Content)'
 bundles:
-  - eic_document
-entity_type: media
+  - discussion
+  - document
+  - gallery
+  - news
+  - story
+  - wiki_page
+entity_type: node
 global: false
 weight: 0
-flag_short: 'Bookmark this item'
+flag_short: 'Flag this item'
 flag_long: ''
 flag_message: ''
-unflag_short: 'Unbookmark this item'
+unflag_short: 'Unflag this item'
 unflag_long: ''
 unflag_message: ''
 unflag_denied_text: ''
 flood_control_active: false
 flood_control_limit: 0
 flood_control_window: 0
-flag_type: 'entity:media'
+flag_type: 'entity:node'
 link_type: ajax_link
 flagTypeConfig:
-  show_in_links:
-    full: full
-  show_as_field: true
+  show_in_links: {  }
+  show_as_field: false
   show_on_form: false
   show_contextual_link: false
   extra_permissions:

@@ -54,6 +54,7 @@ content:
     third_party_settings: {  }
 hidden:
   field_first_name: true
+  field_full_name: true
   field_is_deleted: true
   field_is_deleted_anonymous: true
   field_is_deleted_by_uid: true
