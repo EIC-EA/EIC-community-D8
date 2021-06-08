@@ -5,6 +5,14 @@
  * Main module file for EIC Flags module.
  */
 
+use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Url;
+use Drupal\eic_flags\Form\RequestDeleteForm;
+use Drupal\eic_flags\Service\DeleteRequestManager;
+
 /**
  * Implements hook_theme().
  */
@@ -46,5 +54,57 @@ function eic_flags_cron() {
   foreach ($result as $row) {
     $row = (array) $row;
     $queue->createItem($row);
+  }
+}
+
+/**
+ * Implements hook_entity_type_alter.
+ */
+function eic_flags_entity_type_build(array &$entity_types) {
+  foreach (DeleteRequestManager::$supportedEntityTypes as $entity_id) {
+    if (!isset($entity_types[$entity_id])) {
+      continue;
+    }
+
+    $entity_types[$entity_id]
+      ->setFormClass('request-delete', RequestDeleteForm::class)
+      ->setLinkTemplate('request-delete-form', '/{entity_type}/{entity_id}/request-delete');
+  }
+}
+
+/**
+ * Implements hook_entity_operation.
+ */
+function eic_flags_entity_operation(EntityInterface $entity) {
+  $class_name = strtolower((new \ReflectionClass($entity))->getShortName());
+  if (!$entity instanceof ContentEntityInterface
+    || !in_array($class_name, DeleteRequestManager::$supportedEntityTypes)
+    || !$entity->access('request-delete')
+    || \Drupal::service('router.admin_context')->isAdminRoute()) {
+    return [];
+  }
+
+  $operations = [];
+  $operations['request_delete'] = [
+    'title' => t('Request delete'),
+    'url' => $entity->toUrl('request-delete-form')->setRouteParameter('destination', \Drupal::request()
+      ->getRequestUri()),
+  ];
+
+  return $operations;
+}
+
+/**
+ * Implements hook_entity_access.
+ */
+function eic_flags_entity_access(EntityInterface $entity, $operation, AccountInterface $account) {
+  $class_name = strtolower((new \ReflectionClass($entity))->getShortName());
+  if (!in_array($class_name, DeleteRequestManager::$supportedEntityTypes) || $operation !== 'request-delete') {
+    return AccessResult::neutral();
+  }
+
+  // We allow delete requests only for certain roles.
+  if (empty(array_intersect(['administrator', 'trusted_user', 'content_administrator'], $account->getRoles()))) {
+    return AccessResult::forbidden();
   }
 }

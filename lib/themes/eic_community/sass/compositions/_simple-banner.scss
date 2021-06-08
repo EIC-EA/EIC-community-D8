@@ -1,0 +1,22 @@
+.ecl-simple-banner {
+  text-align: center;
+
+  &__actions {
+    display: flex;
+    justify-content: center;
+  }
+
+  &__title {
+    @extend .ecl-u-type-heading-4;
+
+    margin-top: 0;
+  }
+
+  &__description {
+    margin-bottom: map-get($ecl-spacing, 'l');
+  }
+
+  &__action {
+    margin: map-get($ecl-spacing, 'xs');
+  }
+}

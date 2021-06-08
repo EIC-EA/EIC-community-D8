@@ -4,6 +4,10 @@ eic_groups.group_features.*:
     permissions:
       type: sequence
       label: 'Permissions'
+      sequence:
+        type: string
     roles:
       type: sequence
       label: 'Roles'
+      sequence:
+        type: string
