@@ -58,7 +58,6 @@ content:
     region: content
   flag_highlight_content:
     weight: 10
-    region: content
     settings: {  }
     third_party_settings: {  }
     region: content

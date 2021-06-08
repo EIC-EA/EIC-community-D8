@@ -60,4 +60,12 @@
       extra_classes: "ecl-section-wrapper ecl-featured-content-collection--has-compact-layout"
     }) only %}
   {% endif %}
+
+  {% if content is not empty %}
+    <div class="ecl-section-wrapper">
+      <div class="ecl-container">
+        {{ content }}
+      </div>
+    </div>
+  {% endif %}
 {% endblock %}
