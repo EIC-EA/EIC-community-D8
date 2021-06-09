@@ -24,9 +24,9 @@ class DeleteRequestMessageCreator extends MessageCreatorBase {
         'template' => 'notify_new_deletion_request',
         'field_message_subject' => $this->t('New deletion request'),
         'field_referenced_flag' => $flag,
-        'field_referenced_entity' => $entity,
         'uid' => $uid,
       ]);
+
       $message->save();
 
       $messages[] = $message;
