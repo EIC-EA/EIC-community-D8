@@ -12,3 +12,8 @@ services:
     arguments: ['@eic_groups.helper', '@book.manager']
     tags:
       - { name: event_subscriber }
+  eic_groups.breadcrumb:
+    class: Drupal\eic_groups\Breadcrumb\GroupBreadcrumbBuilder
+    arguments: ['@book.breadcrumb', '@current_user']
+    tags:
+      - { name: breadcrumb_builder, priority: 1000 }
