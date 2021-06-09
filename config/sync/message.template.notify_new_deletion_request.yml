@@ -9,7 +9,7 @@ label: 'NOTIFY :: MT38 :: New deletion request'
 description: 'Notifies site admins for a new deletion request'
 text:
   -
-    value: "<p>Dear administrator</p>\r\n\r\n<p><u>[message:field_referenced_flag:entity:author:field_first_name:value]&nbsp;[message:field_referenced_flag:entity:author:field_last_name:value]</u>&nbsp;requested to delete&nbsp;<u>[label]</u>. Click&nbsp;<a href=\"[site:url]/admin/content/request/delete\"><u>here</u></a>&nbsp;to review the request.</p>\r\n\r\n<p>Reason: [message:field_referenced_flag:entity:field_deletion_reason:value]</p>\r\n\r\n<p>The EIC Community team</p>\r\n"
+    value: "<p>Dear administrator</p>\r\n\r\n<p><u>[message:field_referenced_flag:entity:author:field_first_name:value]&nbsp;[message:field_referenced_flag:entity:author:field_last_name:value]</u>&nbsp;requested to delete&nbsp;<u>[message:field_referenced_flag:entity:target_entity:title]</u>. Click&nbsp;<a href=\"[site:url]admin/content/request/delete\"><u>here</u></a>&nbsp;to review the request.</p>\r\n\r\n<p>Reason: [message:field_referenced_flag:entity:field_deletion_reason:value]</p>\r\n\r\n<p>The EIC Community team</p>\r\n"
     format: full_html
 settings:
   'token options':

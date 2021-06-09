@@ -5,6 +5,7 @@ dependencies:
   config:
     - core.entity_view_mode.message.mail_body
     - field.field.message.notify_new_deletion_request.field_message_subject
+    - field.field.message.notify_new_deletion_request.field_referenced_flag
     - message.template.notify_new_deletion_request
 id: message.notify_new_deletion_request.mail_body
 targetEntityType: message
@@ -21,4 +22,5 @@ content:
     region: content
 hidden:
   field_message_subject: true
+  field_referenced_flag: true
   search_api_excerpt: true

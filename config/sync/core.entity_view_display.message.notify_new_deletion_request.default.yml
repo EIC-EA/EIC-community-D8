@@ -4,12 +4,21 @@ status: true
 dependencies:
   config:
     - field.field.message.notify_new_deletion_request.field_message_subject
+    - field.field.message.notify_new_deletion_request.field_referenced_flag
     - message.template.notify_new_deletion_request
 id: message.notify_new_deletion_request.default
 targetEntityType: message
 bundle: notify_new_deletion_request
 mode: default
 content:
+  field_referenced_flag:
+    weight: 1
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
   partial_0:
     weight: 0
     region: content
