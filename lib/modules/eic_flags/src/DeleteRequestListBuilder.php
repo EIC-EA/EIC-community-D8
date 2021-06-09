@@ -127,11 +127,11 @@ class DeleteRequestListBuilder extends EntityListBuilder {
     $row['type'] = $type;
     $row['author']['data'] = [
       '#theme' => 'username',
-      '#account' => $entity->getOwner(),
+      '#account' => $flaggedEntity->getOwner(),
     ];
     $row['requester']['data'] = [
       '#theme' => 'username',
-      '#account' => $flaggedEntity->getOwner(),
+      '#account' => $entity->getOwner(),
     ];
     $row['reason'] = $entity->get('field_deletion_reason')->value;
     $row['changed'] = $this->dateFormatter->format($flaggedEntity->getChangedTime(), 'short');
