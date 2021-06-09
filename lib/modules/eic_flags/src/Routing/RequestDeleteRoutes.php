@@ -2,6 +2,7 @@
 
 namespace Drupal\eic_flags\Routing;
 
+use Drupal\eic_flags\RequestTypes;
 use Drupal\eic_flags\Service\DeleteRequestManager;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
@@ -39,6 +40,7 @@ class RequestDeleteRoutes {
         '_controller' => 'Drupal\eic_flags\Controller\FlagRequestController::listing',
       ])
       ->setRequirement('_role', 'administrator+content_administrator')
+      ->setRequirement('flag_type', RequestTypes::DELETE)
       ->setOption('_admin_route', TRUE);
 
     $route_collection->add('eic_flags.flagged_entities.list', $route);
