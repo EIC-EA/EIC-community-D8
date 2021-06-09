@@ -21,17 +21,17 @@ class CronOperations implements ContainerInjectionInterface {
   /**
    * Group alias update queue name.
    */
-  const GROUP_URL_ALIAS_UPDATE_QUEUE = 'cron_group_url_alias_update';
+  const GROUP_URL_ALIAS_UPDATE_QUEUE = 'eic_groups_cron_group_url_alias_update';
 
   /**
    * Group alias update state cache base machine name.
    */
-  const GROUP_URL_ALIAS_UPDATE_STATE_CACHE = 'cron_group_url_alias_update:gid:';
+  const GROUP_URL_ALIAS_UPDATE_STATE_CACHE = 'eic_groups_cron_group_url_alias_update:gid:';
 
   /**
    * Group content alias update queue name.
    */
-  const GROUP_CONTENT_URL_ALIAS_UPDATE_QUEUE = 'group_content_url_alias_update';
+  const GROUP_CONTENT_URL_ALIAS_UPDATE_QUEUE = 'eic_groups_group_content_url_alias_update';
 
   /**
    * The entity type manager.

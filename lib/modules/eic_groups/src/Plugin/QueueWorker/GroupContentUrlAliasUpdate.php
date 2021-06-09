@@ -11,10 +11,10 @@ use Drupal\pathauto\PathautoGeneratorInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Defines 'group_content_url_alias_update' queue worker.
+ * Defines 'eic_groups_group_content_url_alias_update' queue worker.
  *
  * @QueueWorker(
- *   id = "group_content_url_alias_update",
+ *   id = "eic_groups_group_content_url_alias_update",
  *   title = @Translation("Task worker: Update group content url alias"),
  *   cron = {"time" = 60}
  * )
