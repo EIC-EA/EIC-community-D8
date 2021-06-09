@@ -209,6 +209,18 @@ function eic_groups_search_api_solr_documents_alter(array &$documents, \Drupal\s
           // @TODO need the trusted users working on group entity before
           if (GroupVisibilityType::GROUP_VISIBILITY_OPTION_TRUSTED_USERS === $key && $option[GroupVisibilityType::GROUP_VISIBILITY_OPTION_TRUSTED_USERS . '_status']) {
             $group_visibility = GroupVisibilityType::GROUP_VISIBILITY_OPTION_TRUSTED_USERS;
+
+            $user_ids = $option[GroupVisibilityType::GROUP_VISIBILITY_OPTION_TRUSTED_USERS . '_conf'];
+            $users = array_map(function($user_id) {
+              $user = \Drupal\user\Entity\User::load(reset($user_id));
+              if (!$user) {
+                return -1;
+              }
+
+              return $user->id() . '|' . $user->getAccountName();
+            }, $user_ids);
+
+            $document->addField('ss_' . GroupVisibilityType::GROUP_VISIBILITY_OPTION_TRUSTED_USERS, implode(',', $users));
           }
         }
         break;

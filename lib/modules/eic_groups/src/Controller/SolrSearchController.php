@@ -105,6 +105,12 @@ class SolrSearchController extends ControllerBase {
       $query .= ' OR (ss_group_visibility:' . GroupVisibilityType::GROUP_VISIBILITY_COMMUNITY . ')';
     }
 
+    // Trusted users restriction
+    if (!$user->isAnonymous()) {
+      $username = $user->getAccountName();
+      $query .= ' OR (ss_group_visibility:' . GroupVisibilityType::GROUP_VISIBILITY_OPTION_TRUSTED_USERS . ' AND ss_' . GroupVisibilityType::GROUP_VISIBILITY_OPTION_TRUSTED_USERS . ':*'. "$user_id|$username" .'*)';
+    }
+
     return "($query)";
   }
 
