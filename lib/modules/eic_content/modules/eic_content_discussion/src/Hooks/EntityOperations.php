@@ -2,7 +2,10 @@
 
 namespace Drupal\eic_content_discussion\Hooks;
 
+use Drupal\Core\Database\Connection;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
@@ -34,6 +37,13 @@ class EntityOperations implements ContainerInjectionInterface {
   protected $routeMatch;
 
   /**
+   * The database connection service.
+   *
+   * @var \Drupal\Core\Database\Connection
+   */
+  protected $database;
+
+  /**
    * Related Contributors of the discussion.
    *
    * @var \Drupal\paragraphs\Entity\Paragraph
@@ -54,13 +64,17 @@ class EntityOperations implements ContainerInjectionInterface {
    *   The entity type manager.
    * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
    *   The current route match service.
+   * @param \Drupal\Core\Database\Connection $database
+   *   The database connection service.
    */
   public function __construct(
     EntityTypeManagerInterface $entity_type_manager,
-    RouteMatchInterface $route_match
+    RouteMatchInterface $route_match,
+    Connection $database
   ) {
     $this->entityTypeManager = $entity_type_manager;
     $this->routeMatch = $route_match;
+    $this->database = $database;
   }
 
   /**
@@ -69,7 +83,8 @@ class EntityOperations implements ContainerInjectionInterface {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('entity_type.manager'),
-      $container->get('current_route_match')
+      $container->get('current_route_match'),
+      $container->get('database')
     );
   }
 
@@ -93,9 +108,44 @@ class EntityOperations implements ContainerInjectionInterface {
   }
 
   /**
+   * Implements hook_node_view().
+   */
+  public function nodeView(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
+    $this->discussion = $entity;
+
+    switch ($view_mode) {
+      case 'full':
+        // Get all contributors of CT Discussion.
+        $contributorsFieldList = $entity->get('field_related_contributors');
+
+        // Add array of contributor IDs to include in the renderable array.
+        $contributorIds = [];
+
+        if (!$contributorsFieldList->isEmpty()) {
+          $this->contributors = $contributorsFieldList->referencedEntities();
+          $contributorIds = $this->getRelatedContributorIds();
+        }
+
+        if ($comment_contributorIds = $this->getDiscussionCommentContributorIds($entity)) {
+          foreach ($comment_contributorIds as $comment_contributorId) {
+            if (!in_array($comment_contributorId['uid'], $contributorIds)) {
+              $contributorIds[] = intval($comment_contributorId['uid']);
+            }
+          }
+        }
+
+        // Add contributor IDs to the renderable array.
+        $build['contributor_ids'] = $contributorIds;
+        break;
+
+    }
+  }
+
+  /**
    * Helper function to get contributor IDs.
    *
    * @return array
+   *   Array of user IDs.
    */
   private function getRelatedContributorIds() {
     $contributorUserIds = [];
@@ -138,6 +188,25 @@ class EntityOperations implements ContainerInjectionInterface {
 
     $this->contributors = $contributors;
     $this->discussion->set('field_related_contributors', $contributors);
+  }
+
+  /**
+   * Helper function to get contributor IDs from discussion comments.
+   *
+   * @return array|bool
+   *   Array of user IDs or FALSE if no contributors have been found.
+   */
+  private function getDiscussionCommentContributorIds() {
+    $query = $this->database->select('comment_field_data', 'c')
+      ->fields('c', ['uid']);
+    $query->condition('c.entity_id', $this->discussion->id());
+    $query->condition('c.entity_type', 'node');
+    // Skip anonymous users.
+    $query->condition('c.uid', 0, '<>');
+    // We group by uid to avoid duplicated results.
+    $query->groupBy('c.uid');
+    $results = $query->execute()->fetchAll(\PDO::FETCH_ASSOC);
+    return $results ?: FALSE;
   }
 
 }

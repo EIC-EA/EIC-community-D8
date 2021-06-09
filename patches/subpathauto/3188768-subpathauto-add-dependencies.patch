@@ -1,0 +1,11 @@
+diff --git a/subpathauto.info.yml b/subpathauto.info.yml
+index b782d2d..7a983ce 100644
+--- a/subpathauto.info.yml
++++ b/subpathauto.info.yml
+@@ -3,4 +3,6 @@ type: module
+ description: Provides support for extending sub-paths of URL aliases.
+ core_version_requirement: ^8.8 || ^9
+ configure: subpathauto.admin_settings
++dependencies:
++  - drupal:path_alias
+

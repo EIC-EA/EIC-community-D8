@@ -73,8 +73,9 @@ class RestrictedEmailDomains extends CustomRestrictedVisibilityBase {
    * {@inheritdoc}
    */
   public function hasViewAccess(GroupInterface $entity, AccountInterface $account, GroupVisibilityRecordInterface $group_visibility_record) {
+    $conf_key = $this->getPluginId() . '_conf';
     $options = $this->getOptionsForPlugin($group_visibility_record);
-    $configurated_emails = array_key_exists('email_domains_conf', $options) ? $options['email_domains_conf'] : '';
+    $configurated_emails = array_key_exists($conf_key, $options) ? $options[$conf_key] : '';
 
     $email_domains = explode(',', $configurated_emails);
     $account_email_domain = explode('@', $account->getEmail())[1];

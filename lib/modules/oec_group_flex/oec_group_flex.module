@@ -57,10 +57,12 @@ function oec_group_flex_entity_access(EntityInterface $entity, $operation, Accou
     $group_visibility_storage = \Drupal::service('oec_group_flex.group_visibility.storage');
 
     if ($group_visibility_record = $group_visibility_storage->load($entity->id())) {
-      $group_visibility_plugin = $group_visibility_plugin_manager->createInstance($group_visibility_record->getType());
+      if ($group_visibility_record->getType() !== '') {
+        $group_visibility_plugin = $group_visibility_plugin_manager->createInstance($group_visibility_record->getType());
 
-      if ($group_visibility_plugin instanceof GroupVisibilityOptionsInterface) {
-        return $group_visibility_plugin->groupAccess($entity, $operation, $account);
+        if ($group_visibility_plugin instanceof GroupVisibilityOptionsInterface) {
+          return $group_visibility_plugin->groupAccess($entity, $operation, $account);
+        }
       }
     }
   }

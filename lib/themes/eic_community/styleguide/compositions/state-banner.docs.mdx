@@ -1,0 +1,19 @@
+# State Banner
+
+Displays a section block that shows the state of the document.
+
+## Example:
+
+```
+{% include "@theme/patterns/compositions/state-banner.html.twig" %}
+```
+
+## Twig parameters:
+
+| Key            | Type   | Description                                                                                                                                                                                                                                           | Mandatory |
+| -------------- | ------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- |
+| title          | string | Displays the title of the section.                                                                                                                                                                                                                    | no        |
+| title_element  | string | Defines the HTMLElement for the title.                                                                                                                                                                                                                | no        |
+| icon           | object | Displays an optional icon before the title, should follow the [ECL Link component](https://www.npmjs.com/package/@ecl-twig/ec-component-link)                                                                                                         | no        |
+| icon_file_path | string | Enables the usage of the ECL icons within the component.                                                                                                                                                                                              | no        |
+| dismiss        | object | Displays an optional toggle to dismiss the container, can follow the [ECL Link component](https://www.npmjs.com/package/@ecl-twig/ec-component-link) or [ECL Button component](https://www.npmjs.com/package/@ecl-twig/ec-component-button) structure | no        |

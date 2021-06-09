@@ -1,7 +1,7 @@
 services:
   eic_groups.search_api_subscriber:
     class: Drupal\eic_groups\EventSubscriber\SearchApiSubscriber
-    arguments: ['@group_purl.context_provider']
+    arguments: ['@eic_groups.helper']
     tags:
       - { name: event_subscriber }
   eic_groups.helper:
@@ -9,6 +9,6 @@ services:
     arguments: ['@current_route_match', '@module_handler']
   eic_groups.book_page_redirect_subscriber:
     class: Drupal\eic_groups\EventSubscriber\BookPageRedirectSubscriber
-    arguments: ['@group_purl.context_provider', '@book.manager']
+    arguments: ['@eic_groups.helper', '@book.manager']
     tags:
       - { name: event_subscriber }

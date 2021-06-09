@@ -1,0 +1,10 @@
+name: OEC Group Comments
+type: module
+description: Enables Group functionality for the Comment module
+core_version_requirement: ^8.8 || ^9
+php: 7.3
+package: Open Europa Communities
+dependencies:
+  - drupal:comment
+  - drupal:node
+  - group:group

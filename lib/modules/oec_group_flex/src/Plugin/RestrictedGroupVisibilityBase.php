@@ -7,6 +7,7 @@ use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\group\Entity\GroupTypeInterface;
+use Drupal\group\GroupRoleSynchronizer;
 use Drupal\group_flex\Plugin\GroupVisibilityBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -25,6 +26,13 @@ abstract class RestrictedGroupVisibilityBase extends GroupVisibilityBase impleme
   protected $oecGroupFlexConfigSettings;
 
   /**
+   * The group role synchronizer.
+   *
+   * @var \Drupal\group\GroupRoleSynchronizer
+   */
+  protected $groupRoleSynchronizer;
+
+  /**
    * Constructs a new RestrictedVisibility plugin object.
    *
    * @param array $configuration
@@ -35,10 +43,13 @@ abstract class RestrictedGroupVisibilityBase extends GroupVisibilityBase impleme
    *   The plugin implementation definition.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
    *   The configuration factory service.
+   * @param \Drupal\group\GroupRoleSynchronizer $groupRoleSynchronizer
+   *   The group role synchronizer.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, ConfigFactoryInterface $configFactory) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, ConfigFactoryInterface $configFactory, GroupRoleSynchronizer $groupRoleSynchronizer) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->oecGroupFlexConfigSettings = $configFactory->get('oec_group_flex.settings');
+    $this->groupRoleSynchronizer = $groupRoleSynchronizer;
   }
 
   /**
@@ -49,7 +60,8 @@ abstract class RestrictedGroupVisibilityBase extends GroupVisibilityBase impleme
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('config.factory')
+      $container->get('config.factory'),
+      $container->get('group_role.synchronizer')
     );
   }
 
@@ -65,11 +77,11 @@ abstract class RestrictedGroupVisibilityBase extends GroupVisibilityBase impleme
         'view group' => TRUE,
       ],
     ];
-    $outsider_roles = $this->getOutsiderRolesFromInteralRoles($groupType, $this->oecGroupFlexConfigSettings->get('oec_group_visibility_setings.' . $this->pluginId . '.internal_roles'));
 
+    $outsider_roles = $this->getOutsiderRoles($groupType);
     if (!empty($outsider_roles)) {
       foreach ($outsider_roles as $outsider_role) {
-        $mappedPerm[$outsider_role->id()] = ['view group' => TRUE];
+        $mappedPerm[$outsider_role] = ['view group' => TRUE];
       }
     }
 
@@ -89,11 +101,10 @@ abstract class RestrictedGroupVisibilityBase extends GroupVisibilityBase impleme
       ],
     ];
 
-    $outsider_roles = $this->getOutsiderRolesFromInteralRoles($groupType, $this->oecGroupFlexConfigSettings->get('oec_group_visibility_setings.' . $this->pluginId . '.internal_roles'));
-
+    $outsider_roles = $this->getOutsiderRoles($groupType);
     if (!empty($outsider_roles)) {
       foreach ($outsider_roles as $outsider_role) {
-        $mappedPerm[$outsider_role->id()] = ['view group' => FALSE];
+        $mappedPerm[$outsider_role] = ['view group' => FALSE];
       }
     }
 
@@ -108,11 +119,10 @@ abstract class RestrictedGroupVisibilityBase extends GroupVisibilityBase impleme
       $group->getGroupType()->getMemberRoleId() => ['view group'],
     ];
 
-    $outsider_roles = $this->getOutsiderRolesFromInteralRoles($group->getGroupType(), $this->oecGroupFlexConfigSettings->get('oec_group_visibility_setings.' . $this->pluginId . '.internal_roles'));
-
+    $outsider_roles = $this->getOutsiderRoles($group->getGroupType());
     if (!empty($outsider_roles)) {
       foreach ($outsider_roles as $outsider_role) {
-        $permissions[$outsider_role->id()] = ['view group'];
+        $permissions[$outsider_role] = ['view group'];
       }
     }
 
@@ -128,11 +138,10 @@ abstract class RestrictedGroupVisibilityBase extends GroupVisibilityBase impleme
       $group->getGroupType()->getOutsiderRoleId() => ['view group'],
     ];
 
-    $outsider_roles = $this->getOutsiderRolesFromInteralRoles($group->getGroupType(), $this->oecGroupFlexConfigSettings->get('oec_group_visibility_setings.' . $this->pluginId . '.internal_roles'));
-
+    $outsider_roles = $this->getOutsiderRoles($group->getGroupType());
     if (!empty($outsider_roles)) {
       foreach ($outsider_roles as $outsider_role) {
-        $permissions[$outsider_role->id()] = ['view group'];
+        $permissions[$outsider_role] = ['view group'];
       }
     }
 
@@ -140,31 +149,21 @@ abstract class RestrictedGroupVisibilityBase extends GroupVisibilityBase impleme
   }
 
   /**
-   * Get group outsider drupal roles.
+   * Get relevant group outsider Drupal roles.
    *
    * @param \Drupal\group\Entity\GroupTypeInterface $groupType
    *   The Group Type entity.
-   * @param array $internal_rids
-   *   The outsider role id.
    *
-   * @return \Drupal\group\Entity\GroupRoleInterface[]
-   *   The outsider roles of the group.
+   * @return string[]
+   *   The outsider roles of the group, keyed by role id.
    */
-  protected function getOutsiderRolesFromInteralRoles(GroupTypeInterface $groupType, array $internal_rids): array {
+  protected function getOutsiderRoles(GroupTypeInterface $groupType): array {
+    $internal_rids = $this->oecGroupFlexConfigSettings->get('oec_group_visibility_setings.' . $this->pluginId . '.internal_roles');
+
     $roles = [];
-    $group_roles = $groupType->getRoles();
-    if (!empty($group_roles)) {
-      foreach ($group_roles as $role) {
-        foreach ($internal_rids as $key => $internal_rid) {
-          if ($role->isInternal() && in_array("user.role.{$internal_rid}", $role->getDependencies()['config'])) {
-            $roles[] = $role;
-            // We unset the role from $internal_rids array to avoid redundant
-            // checks.
-            unset($internal_rids[$key]);
-            break;
-          }
-        }
-      }
+    foreach ($internal_rids as $internal_rid) {
+      $role = $this->groupRoleSynchronizer->getGroupRoleId($groupType->id(), $internal_rid);
+      $roles[$role] = $role;
     }
     return $roles;
   }

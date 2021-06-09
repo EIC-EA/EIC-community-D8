@@ -22,6 +22,6 @@ settings:
   handler_settings:
     view:
       view_name: entity_reference_user
-      display_name: full_name_trusted
+      display_name: full_name_tu_ca
       arguments: {  }
 field_type: entity_reference

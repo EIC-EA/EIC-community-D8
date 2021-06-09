@@ -35,7 +35,7 @@ reactions:
         theme: eic_community
         css_class: ''
         unique: 0
-        context_id: group_wiki
+        context_id: group_wiki_overview
         uuid: 2089ac99-521b-4bba-b1e0-030d675b287f
       04974156-0f3e-411b-a62d-f961cff1e0c9:
         id: eic_group_header
@@ -45,7 +45,7 @@ reactions:
         region: page_header
         weight: '0'
         context_mapping:
-          group: '@group_purl.context_provider:group'
+          group: '@group.group_route_context:group'
         custom_id: eic_group_header
         theme: eic_community
         css_class: ''

@@ -10,7 +10,7 @@ dependencies:
     - field.field.node.wiki_page.field_related_media
     - node.type.wiki_page
   module:
-    - comment
+    - oec_group_comments
     - text
     - user
 id: node.wiki_page.default
@@ -32,7 +32,7 @@ content:
       view_mode: default
       pager_id: 0
     third_party_settings: {  }
-    type: comment_default
+    type: comment_group_content
     region: content
   field_related_downloads:
     type: entity_reference_entity_view

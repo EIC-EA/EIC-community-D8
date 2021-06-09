@@ -3,10 +3,6 @@
     "drupal/block_content_permissions": {
       "2920739 - Allow accessing the \"Custom block library\" page without \"Administer blocks\" permission": "https://www.drupal.org/files/issues/2020-07-27/block_content_permissions-access_listing_page-2920739-38.patch"
     },
-    "drupal/context": {
-      "3173470 - Error: Call to a member function getCacheTags": "https://www.drupal.org/files/issues/2020-11-10/context-3173470-16.patch",
-      "3072991 - Can't clone context": "https://www.drupal.org/files/issues/2020-08-21/context-cannot-clone-context-3072991-9.patch"
-    },
     "drupal/default_content": {
       "2698425 - Do not reimport existing entities": "https://www.drupal.org/files/issues/2021-01-20/default_content-integrity_constrait_violation-3162987-137-2.0.x.patch"
     },
@@ -14,9 +10,6 @@
       "2881769 - group/{group}/node/create uses the permissions of group/{group}/node/add": "https://www.drupal.org/files/issues/2020-10-01/2881769-22.patch",
       "2746839 - Add Devel plugin for generating groups": "patches/group/2746839-add-devel-plugin-for-generating-groups-12.patch",
       "2829966 - Support for revisions on groups": "https://www.drupal.org/files/issues/2020-12-16/groups-revisions-2829966-65--after-merge-2873212-36-3029907-14-3029908-12-for-1.x-dev-9b469da0.patch"
-    },
-    "drupal/facets": {
-      "3199156 - Module installation is broken if search_api will be installed as dependency": "https://www.drupal.org/files/issues/2021-03-16/3199156-19.patch"
     },
     "drupal/flag": {
       "3168014 - TypeError: Argument 1 passed to Drupal\\flag\\TwigExtension\\FlagCount::count() must implement interface" : "https://www.drupal.org/files/issues/2020-09-06/show-count-for-visitors--3168014-2.patch",
@@ -29,6 +22,10 @@
     },
     "drupal/realname": {
       "#3059311 - Autocomplete suggestions should respect the entity reference View": "patches/realname/autocomplete-condition-fix-3059311-5.patch"
+    },
+    "drupal/subpathauto": {
+      "3130139 - Group Content Add/Create Paths do not work": "https://www.drupal.org/files/issues/2020-04-23/subpathauto-group-content-create-urls-3130139-2.patch",
+      "3188768 - Install from configuration fails due to missing dependencies": "./patches/subpathauto/3188768-subpathauto-add-dependencies.patch"
     },
     "openeuropa/ecl-twig-loader": {
       "7f697ba - Add OpenEuropa\\Twig\\Loader\\EuropaComponentLibraryLoader::parseName() function (protected parseName() function from twig function is private since D9)": "patches/ecl-twig-loader/7f697ba-add-parsename-function-to-ecl-loader.patch",

@@ -6,8 +6,6 @@
  */
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\eic_comments\Hooks\EntityOperations;
-use Drupal\Core\Entity\EntityInterface;
 
 /**
  * Implements hook_form_FORM_ID_alter().
@@ -34,12 +32,4 @@ function eic_comments_form_comment_node_comment_form_alter(&$form, FormStateInte
 function eic_comments_configure_comment_form($form) {
   $form[0]['format']['#access'] = FALSE;
   return $form;
-}
-
-/**
- * Implements hook_ENTITY_TYPE_insert().
- */
-function eic_comments_comment_insert(EntityInterface $entity) {
-  \Drupal::classResolver(EntityOperations::class)
-    ->commentInsert($entity);
 }

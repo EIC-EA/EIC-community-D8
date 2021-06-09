@@ -2,7 +2,7 @@
 
 namespace Drupal\eic_groups\EventSubscriber;
 
-use Drupal\group_purl\Context\GroupPurlContext;
+use Drupal\eic_groups\EICGroupsHelperInterface;
 use Drupal\search_api\Event\QueryPreExecuteEvent;
 use Drupal\search_api\Event\SearchApiEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -18,7 +18,7 @@ class SearchApiSubscriber implements EventSubscriberInterface {
   const USER_GROUP_MEMBERSHIP_FIELD = 'user__group_content__uid_gid';
 
   /**
-   * The group entity from the group purl context.
+   * The group entity from the route context.
    *
    * @var \Drupal\group\Entity\GroupInterface
    */
@@ -27,11 +27,11 @@ class SearchApiSubscriber implements EventSubscriberInterface {
   /**
    * Constructs a new SearchApiSubscriber instance.
    *
-   * @param \Drupal\group_purl\Context\GroupPurlContext $group_purl_context
-   *   The group purl context.
+   * @param \Drupal\eic_groups\EICGroupsHelperInterface $eic_groups_helper
+   *   The EIC Groups helper service.
    */
-  public function __construct(GroupPurlContext $group_purl_context) {
-    $this->group = $group_purl_context->getGroupFromRoute();
+  public function __construct(EICGroupsHelperInterface $eic_groups_helper) {
+    $this->group = $eic_groups_helper->getGroupFromRoute();
   }
 
   /**

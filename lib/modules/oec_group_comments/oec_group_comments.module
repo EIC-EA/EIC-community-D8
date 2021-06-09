@@ -1,0 +1,16 @@
+<?php
+
+/**
+ * @file
+ * Contains Drupal\oec_group_comments\oec_group_comments.module.
+ */
+
+/**
+ * Implements hook_entity_type_alter().
+ */
+function oec_group_comments_entity_type_alter(array &$entity_types) {
+  if (isset($entity_types['comment'])) {
+    $class = 'Drupal\oec_group_comments\OecGroupCommentsAccessControlHandler';
+    $entity_types['comment']->setAccessClass($class);
+  }
+}

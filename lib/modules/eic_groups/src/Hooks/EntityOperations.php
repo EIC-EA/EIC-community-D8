@@ -11,7 +11,9 @@ use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
 use Drupal\eic_groups\EICGroupsHelperInterface;
+use Drupal\group\Entity\GroupContent;
 use Drupal\group\Entity\GroupInterface;
+use Drupal\node\NodeInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -79,6 +81,16 @@ class EntityOperations implements ContainerInjectionInterface {
   }
 
   /**
+   * Implements hook_group_update().
+   */
+  public function groupUpdate(EntityInterface $entity) {
+    // Publish group wiki when group is published.
+    if (!$entity->original->isPublished() && $entity->isPublished()) {
+      $this->publishGroupWiki($entity);
+    }
+  }
+
+  /**
    * Implements hook_node_view().
    */
   public function nodeView(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
@@ -120,20 +132,23 @@ class EntityOperations implements ContainerInjectionInterface {
    * Creates top level book page for group wiki section.
    */
   public function createGroupWikiBook(GroupInterface $entity) {
-    $node_values = [
-      'title' => "{$entity->label()} - Wiki",
-      'type' => 'book',
-      'uid' => $entity->getOwnerId(),
-      'status' => 1,
-      'langcode' => $entity->language()->getId(),
-      'book' => [
-        'bid' => 'new',
-        'plid' => 0,
-      ],
-    ];
-    $node = $this->entityTypeManager->getStorage('node')->create($node_values);
-    $node->save();
-    $entity->addContent($node, 'group_node:book');
+    $installedContentPlugins = $entity->getGroupType()->getInstalledContentPlugins();
+    if ($installedContentPlugins && in_array('group_node:book', $installedContentPlugins->getInstanceIds())) {
+      $node_values = [
+        'title' => "{$entity->label()} - Wiki",
+        'type' => 'book',
+        'uid' => $entity->getOwnerId(),
+        'status' => $entity->get('status')->value,
+        'langcode' => $entity->language()->getId(),
+        'book' => [
+          'bid' => 'new',
+          'plid' => 0,
+        ],
+      ];
+      $node = $this->entityTypeManager->getStorage('node')->create($node_values);
+      $node->save();
+      $entity->addContent($node, 'group_node:book');
+    }
   }
 
   /**
@@ -175,6 +190,28 @@ class EntityOperations implements ContainerInjectionInterface {
       $links[$key] = Url::fromRoute('entity.group_content.create_form', $link_wiki_page_route_parameters, $options);
     }
     return $links;
+  }
+
+  /**
+   * Publishes group wiki book page.
+   *
+   * @param \Drupal\group\Entity\GroupInterface $group
+   *   The group entity.
+   */
+  private function publishGroupWiki(GroupInterface $group) {
+    $query = $this->entityTypeManager->getStorage('group_content')->getQuery();
+    $query->condition('type', 'group-group_node-book');
+    $query->condition('gid', $group->id());
+    $query->range(0, 1);
+    $results = $query->execute();
+
+    if (!empty($results)) {
+      $group_content = GroupContent::load(reset($results));
+      if (($node_book = $group_content->getEntity()) && $node_book instanceof NodeInterface) {
+        $node_book->setPublished();
+        $node_book->save();
+      }
+    }
   }
 
 }
