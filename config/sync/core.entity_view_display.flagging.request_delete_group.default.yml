@@ -1,17 +1,17 @@
-uuid: 4ff61fe8-65e1-45d8-8491-affcc23ff154
+uuid: 26a324c4-3b4b-4d07-963a-59b98e3574d6
 langcode: en
 status: true
 dependencies:
   config:
-    - field.field.flagging.request_delete_comment.field_deletion_reason
-    - flag.flag.request_delete_comment
-id: flagging.request_delete_comment.default
+    - field.field.flagging.request_delete_group.field_deletion_reason
+    - flag.flag.request_delete_group
+id: flagging.request_delete_group.default
 targetEntityType: flagging
-bundle: request_delete_comment
+bundle: request_delete_group
 mode: default
 content:
   field_deletion_reason:
-    weight: 0
+    weight: 1
     label: above
     settings: {  }
     third_party_settings: {  }

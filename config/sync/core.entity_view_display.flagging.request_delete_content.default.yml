@@ -4,7 +4,6 @@ status: true
 dependencies:
   config:
     - field.field.flagging.request_delete_content.field_deletion_reason
-    - field.field.flagging.request_delete_content.field_deletion_status
     - flag.flag.request_delete_content
 id: flagging.request_delete_content.default
 targetEntityType: flagging
@@ -17,16 +16,6 @@ content:
     settings: {  }
     third_party_settings: {  }
     type: basic_string
-    region: content
-  field_deletion_status:
-    weight: 1
-    label: above
-    settings:
-      format: default
-      format_custom_false: ''
-      format_custom_true: ''
-    third_party_settings: {  }
-    type: boolean
     region: content
 hidden:
   search_api_excerpt: true
