@@ -3,6 +3,7 @@
 namespace Drupal\eic_flags\Service;
 
 use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\eic_flags\RequestStatus;
 use Drupal\flag\Entity\Flag;
 use Drupal\flag\FlagService;
 use Drupal\user\Entity\User;
@@ -66,7 +67,7 @@ class DeleteRequestManager {
 
     $flag = $this->flagService->flag($flag, $entity, $current_user);
     $flag->set('field_deletion_reason', $reason);
-    $flag->set('field_deletion_status', TRUE);
+    $flag->set('field_request_status', RequestStatus::OPEN);
     $flag->save();
 
     return $flag;

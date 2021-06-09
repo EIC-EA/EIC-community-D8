@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - field.field.flagging.request_delete_group.field_deletion_reason
+    - field.field.flagging.request_delete_group.field_request_status
     - flag.flag.request_delete_group
 id: flagging.request_delete_group.default
 targetEntityType: flagging
@@ -17,5 +18,11 @@ content:
       placeholder: ''
     third_party_settings: {  }
     type: string_textarea
+    region: content
+  field_request_status:
+    weight: 2
+    settings: {  }
+    third_party_settings: {  }
+    type: options_select
     region: content
 hidden: {  }

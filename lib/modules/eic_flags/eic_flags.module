@@ -9,8 +9,8 @@ use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Session\AccountInterface;
-use Drupal\Core\Url;
 use Drupal\eic_flags\Form\RequestDeleteForm;
+use Drupal\eic_flags\RequestStatus;
 use Drupal\eic_flags\Service\DeleteRequestManager;
 
 /**
@@ -55,6 +55,18 @@ function eic_flags_cron() {
     $row = (array) $row;
     $queue->createItem($row);
   }
+}
+
+/**
+ * Returns an array of allowed values for field 'field_request_status'
+ */
+function eic_flags_field_request_status_allowed_values() {
+  return [
+    RequestStatus::ACCEPTED => t('Accepted'),
+    RequestStatus::ARCHIVED => t('Archived'),
+    RequestStatus::DENIED => t('Denied'),
+    RequestStatus::OPEN => t('Open'),
+  ];
 }
 
 /**
