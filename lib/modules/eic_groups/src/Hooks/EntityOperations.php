@@ -14,6 +14,7 @@ use Drupal\eic_groups\EICGroupsHelperInterface;
 use Drupal\group\Entity\GroupContent;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\node\NodeInterface;
+use Drupal\pathauto\PathautoGeneratorInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -47,6 +48,13 @@ class EntityOperations implements ContainerInjectionInterface {
   protected $eicGroupsHelper;
 
   /**
+   * The pathauto generator.
+   *
+   * @var \Drupal\pathauto\PathautoGeneratorInterface
+   */
+  protected $pathautoGenerator;
+
+  /**
    * Constructs a new EntityOperations object.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
@@ -55,11 +63,14 @@ class EntityOperations implements ContainerInjectionInterface {
    *   The current route match service.
    * @param \Drupal\eic_groups\EICGroupsHelperInterface $eic_groups_helper
    *   The EIC Groups helper service.
+   * @param \Drupal\pathauto\PathautoGeneratorInterface $pathauto_generator
+   *   The pathauto generator.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, RouteMatchInterface $route_match, EICGroupsHelperInterface $eic_groups_helper) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, RouteMatchInterface $route_match, EICGroupsHelperInterface $eic_groups_helper, PathautoGeneratorInterface $pathauto_generator) {
     $this->entityTypeManager = $entity_type_manager;
     $this->routeMatch = $route_match;
     $this->eicGroupsHelper = $eic_groups_helper;
+    $this->pathautoGenerator = $pathauto_generator;
   }
 
   /**
@@ -69,7 +80,8 @@ class EntityOperations implements ContainerInjectionInterface {
     return new static(
       $container->get('entity_type.manager'),
       $container->get('current_route_match'),
-      $container->get('eic_groups.helper')
+      $container->get('eic_groups.helper'),
+      $container->get('pathauto.generator')
     );
   }
 
@@ -83,7 +95,7 @@ class EntityOperations implements ContainerInjectionInterface {
   /**
    * Implements hook_group_update().
    */
-  public function groupUpdate(EntityInterface $entity) {
+  public function groupUpdate(GroupInterface $entity) {
     // Publish group wiki when group is published.
     if (!$entity->original->isPublished() && $entity->isPublished()) {
       $this->publishGroupWiki($entity);
