@@ -11,7 +11,7 @@ disabled: false
 conditions:
   view_inclusion:
     id: view_inclusion
-    negate: null
+    negate: false
     uuid: 4a6ec31c-af26-4d0a-9279-80ba5a4221d0
     view_inclusion:
       view-global_overviews-members: view-global_overviews-members
@@ -19,33 +19,19 @@ conditions:
 reactions:
   blocks:
     blocks:
-      556c183b-2af1-42dc-8c53-57aa7af6ef70:
-        id: 'facets_summary_block:groups_summary'
-        label: 'Groups summary'
-        provider: facets_summary
-        label_display: '0'
-        region: content_before
-        weight: '-1'
-        context_mapping: {  }
-        custom_id: facets_summary_block_groups_summary
-        theme: eic_community
-        css_class: ''
-        unique: 0
-        context_id: global_overview
-        uuid: 556c183b-2af1-42dc-8c53-57aa7af6ef70
       2bdaf363-b983-4094-8b13-e3549984347b:
         id: system_main_block
         label: 'Main page content'
         provider: system
         label_display: '0'
         region: content
-        weight: '0'
+        weight: '-9'
         context_mapping: {  }
         custom_id: system_main_block
         theme: eic_community
         css_class: ''
         unique: 0
-        context_id: global_overview
+        context_id: members_overview
         uuid: 2bdaf363-b983-4094-8b13-e3549984347b
       97b594dc-7529-4ac6-973d-b43ffc569246:
         id: 'search_api_sorts_block:views_page:global_overviews__page_1'
@@ -53,24 +39,24 @@ reactions:
         provider: search_api_sorts
         label_display: visible
         region: content_before
-        weight: '-2'
+        weight: '-4'
         context_mapping: {  }
         custom_id: search_api_sorts_block_views_page_global_overviews__page_1
         theme: eic_community
         css_class: ''
         unique: 0
-        context_id: groups_overview
+        context_id: members_overview
         uuid: 97b594dc-7529-4ac6-973d-b43ffc569246
       4c4cb85b-6c50-4230-a9c6-717a3f23ee0f:
         id: 'block_content:4f006e0d-a618-4283-ad23-132b89f60c11'
         label: 'Members - Banner block'
         provider: block_content
         label_display: '0'
+        region: page_header
+        weight: '0'
         status: true
         info: ''
         view_mode: full
-        region: page_header
-        weight: '0'
         context_mapping: {  }
         custom_id: members_banner
         theme: eic_community
@@ -99,7 +85,7 @@ reactions:
         label_display: '0'
         views_label: ''
         region: sidebar
-        weight: '0'
+        weight: '-4'
         context_mapping: {  }
         custom_id: views_exposed_filter_block_global_overviews_members
         theme: eic_community
@@ -107,6 +93,76 @@ reactions:
         unique: 0
         context_id: members_overview
         uuid: 9ad8b74c-8343-4d1b-b882-fa6afa7857bd
+      d9d57b7a-f3f6-4652-8883-fe512a9a805d:
+        id: 'facet_block:global_members_topics_of_expertise'
+        label: 'Topics of Expertise'
+        provider: facets
+        label_display: '0'
+        region: sidebar
+        weight: '-3'
+        context_mapping: {  }
+        custom_id: facet_block_global_members_topics_of_expertise
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: members_overview
+        uuid: d9d57b7a-f3f6-4652-8883-fe512a9a805d
+      34e5c596-54a5-403c-879f-845ccc9bc081:
+        id: 'facet_block:global_members_topics_of_interest'
+        label: 'Topics of Interest'
+        provider: facets
+        label_display: '0'
+        region: sidebar
+        weight: '-2'
+        context_mapping: {  }
+        custom_id: facet_block_global_members_topics_of_interest
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: members_overview
+        uuid: 34e5c596-54a5-403c-879f-845ccc9bc081
+      4b738ab1-1739-42f8-9983-0cb01ad3a52e:
+        id: 'facet_block:global_members_job_title'
+        label: 'Job title'
+        provider: facets
+        label_display: '0'
+        region: sidebar
+        weight: '-1'
+        context_mapping: {  }
+        custom_id: facet_block_global_members_job_title
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: members_overview
+        uuid: 4b738ab1-1739-42f8-9983-0cb01ad3a52e
+      b3b11796-b8c1-4944-a225-3e0c61889111:
+        id: 'facet_block:global_members_languages'
+        label: Languages
+        provider: facets
+        label_display: '0'
+        region: sidebar
+        weight: '0'
+        context_mapping: {  }
+        custom_id: facet_block_global_members_languages
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: members_overview
+        uuid: b3b11796-b8c1-4944-a225-3e0c61889111
+      93fc8760-8b94-4f2b-b96e-d4176daeaab4:
+        id: 'facets_summary_block:global_members_summary'
+        label: 'Members summary'
+        provider: facets_summary
+        label_display: '0'
+        region: content_before
+        weight: '-3'
+        context_mapping: {  }
+        custom_id: facets_summary_block_global_members_summary
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: members_overview
+        uuid: 93fc8760-8b94-4f2b-b96e-d4176daeaab4
     id: blocks
     saved: false
     uuid: deeaf135-b781-47ec-b086-7d9fec72c007
