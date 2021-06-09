@@ -438,11 +438,12 @@ display:
         filter_groups: false
         access: false
         title: false
+        cache: false
       filter_groups:
         operator: AND
         groups:
           1: AND
-      path: people
+      path: members
       menu:
         type: normal
         title: Members
@@ -459,6 +460,8 @@ display:
       display_description: ''
       title: Members
       exposed_block: true
+      cache:
+        type: none
     cache_metadata:
       max-age: -1
       contexts:
