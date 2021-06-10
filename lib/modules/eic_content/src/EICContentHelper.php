@@ -43,7 +43,7 @@ class EICContentHelper implements EICContentHelperInterface {
    * {@inheritDoc}
    */
   public function getGroupContentByEntity(ContentEntityInterface $entity) {
-    if (!$this->moduleHandler->moduleExists('group_content')) {
+    if (!$this->moduleHandler->moduleExists('group')) {
       return FALSE;
     }
 
