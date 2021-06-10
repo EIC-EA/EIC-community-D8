@@ -1,0 +1,21 @@
+uuid: 4b97a1d9-d2d2-4784-bac6-4d35091a69e4
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.flagging.field_request_status
+    - flag.flag.request_delete_group
+  module:
+    - options
+id: flagging.request_delete_group.field_request_status
+field_name: field_request_status
+entity_type: flagging
+bundle: request_delete_group
+label: Status
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: list_string

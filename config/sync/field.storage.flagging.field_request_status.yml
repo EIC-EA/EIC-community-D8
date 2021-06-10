@@ -1,0 +1,21 @@
+uuid: e774f975-1641-4ab5-bad6-711dd379e0ed
+langcode: en
+status: true
+dependencies:
+  module:
+    - flag
+    - options
+id: flagging.field_request_status
+field_name: field_request_status
+entity_type: flagging
+type: list_string
+settings:
+  allowed_values: {  }
+  allowed_values_function: 'eic_flags_field_request_status_allowed_values'
+module: options
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false
