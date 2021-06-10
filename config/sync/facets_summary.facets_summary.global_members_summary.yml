@@ -34,6 +34,12 @@ facets:
     separator: ', '
     weight: 0
     show_count: false
+  global_members_location_country_code:
+    checked: true
+    label: Location
+    separator: ', '
+    weight: 0
+    show_count: false
 facet_source_id: 'search_api:views_page__global_overviews__members'
 processor_configs:
   hide_when_not_rendered:
@@ -47,11 +53,3 @@ processor_configs:
       build: '30'
     settings:
       link_text: 'Clear all'
-  show_text_when_empty:
-    processor_id: show_text_when_empty
-    weights:
-      build: '10'
-    settings:
-      text:
-        value: 'No results found.'
-        format: plain_text

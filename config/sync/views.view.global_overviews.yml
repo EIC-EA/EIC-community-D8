@@ -439,6 +439,7 @@ display:
         access: false
         title: false
         cache: false
+        empty: false
       filter_groups:
         operator: AND
         groups:
@@ -463,6 +464,18 @@ display:
       exposed_block: true
       cache:
         type: none
+      empty:
+        area_text_custom:
+          id: area_text_custom
+          table: views
+          field: area_text_custom
+          relationship: none
+          group_type: group
+          admin_label: ''
+          empty: true
+          tokenize: false
+          content: 'No results found.'
+          plugin_id: text_custom
     cache_metadata:
       max-age: -1
       contexts:

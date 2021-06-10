@@ -6,8 +6,8 @@ dependencies:
     - search_api_solr
     - group
     - node
-    - user
     - profile
+    - user
     - search_api
     - flag_search_api
     - content_moderation
@@ -22,6 +22,7 @@ dependencies:
     - field.storage.node.field_vocab_topics
     - field.storage.node.field_discussion_type
     - field.storage.profile.field_body
+    - field.storage.profile.field_location_address
     - field.storage.profile.field_vocab_job_title
     - field.storage.profile.field_vocab_language
     - field.storage.profile.field_vocab_topic_expertise
@@ -329,6 +330,16 @@ field_settings:
     dependencies:
       config:
         - field.storage.profile.field_body
+      module:
+        - profile
+  user_profile_field_location_address_country_code:
+    label: 'Member profiles » Profile » Address » The two-letter country code'
+    datasource_id: 'entity:user'
+    property_path: 'member_profiles:entity:field_location_address:country_code'
+    type: string
+    dependencies:
+      config:
+        - field.storage.profile.field_location_address
       module:
         - profile
   user_profile_field_vocab_job_title:
