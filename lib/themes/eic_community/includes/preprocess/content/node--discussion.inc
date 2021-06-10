@@ -7,6 +7,7 @@
 
 use Drupal\taxonomy\Entity\Term;
 use Drupal\comment\Entity\Comment;
+use Drupal\Component\Utility\Xss;
 
 /**
  * Implements hook_preprocess_node() for discussion node.
@@ -45,7 +46,7 @@ function eic_community_preprocess_node__discussion(array &$variables) {
         ],
       ],
       'author' => eic_community_get_teaser_user_display($node->getOwner()),
-      'description' => $node->get('field_body')->first()->getValue()['value'],
+      'description' => Xss::filter($node->get('field_body')->value),
       'tags' => $tags,
       'highlight' => FALSE,
       'timestamp' => [
@@ -74,7 +75,7 @@ function eic_community_preprocess_node__discussion(array &$variables) {
       $comment = Comment::load($last_comment_id);
 
       $discussion_item['featured'] = [
-        'comment' => $comment->get('comment_body')->first()->getValue()['value'],
+        'comment' => $comment->get('comment_body')->value,
         'comment_id' => $last_comment_id,
         'author' => eic_community_get_teaser_user_display($comment->getOwner()),
         'timestamp' => eic_community_get_teaser_time_display($comment->getCreatedTime()),
