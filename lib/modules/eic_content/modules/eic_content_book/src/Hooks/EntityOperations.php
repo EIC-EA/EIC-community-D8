@@ -92,7 +92,7 @@ class EntityOperations implements ContainerInjectionInterface {
             return;
           }
 
-          if (isset($entity->book) && $entity->book['pid'] === '0') {
+          if (isset($entity->book) && empty($entity->book['pid'])) {
             // If top level book page.
             $build['link_add_child_book_page'] = $add_book_page_urls['add_child_book_page']->toString();
             $build['link_add_child_book_page_renderable'] = Link::fromTextAndUrl($this->t('Add a new book page'), $add_book_page_urls['add_child_book_page'])->toRenderable();
