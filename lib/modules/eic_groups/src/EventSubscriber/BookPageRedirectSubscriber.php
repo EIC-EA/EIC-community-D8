@@ -5,7 +5,6 @@ namespace Drupal\eic_groups\EventSubscriber;
 use Drupal\book\BookManagerInterface;
 use Drupal\Core\Cache\CacheableRedirectResponse;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\eic_groups\EICGroupsHelperInterface;
 use Drupal\node\NodeInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
@@ -15,13 +14,6 @@ use Symfony\Component\HttpKernel\KernelEvents;
  * Provides an Event Subscriber for kernel events.
  */
 class BookPageRedirectSubscriber implements EventSubscriberInterface {
-
-  /**
-   * The group entity from the route context.
-   *
-   * @var \Drupal\group\Entity\GroupInterface
-   */
-  protected $group;
 
   /**
    * The book manager.
@@ -40,15 +32,12 @@ class BookPageRedirectSubscriber implements EventSubscriberInterface {
   /**
    * Constructs a new BookPageRedirectSubscriber instance.
    *
-   * @param \Drupal\eic_groups\EICGroupsHelperInterface $eic_groups_helper
-   *   The EIC Groups helper service.
    * @param \Drupal\book\BookManagerInterface $book_manager
    *   The book manager.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
    */
-  public function __construct(EICGroupsHelperInterface $eic_groups_helper, BookManagerInterface $book_manager, EntityTypeManagerInterface $entity_type_manager) {
-    $this->group = $eic_groups_helper->getGroupFromRoute();
+  public function __construct(BookManagerInterface $book_manager, EntityTypeManagerInterface $entity_type_manager) {
     $this->bookManager = $book_manager;
     $this->entityTypeManager = $entity_type_manager;
   }
@@ -86,8 +75,13 @@ class BookPageRedirectSubscriber implements EventSubscriberInterface {
       return;
     }
 
-    // Only redirect book pages in the context of group.
-    if ($this->group === FALSE || $node->getType() !== 'book') {
+    // If node is not a book we skip redirection.
+    if ($node->getType() !== 'book') {
+      return;
+    }
+
+    // If book node is not a group content we skip redirection.
+    if (!$this->entityTypeManager->getStorage('group_content')->loadByEntity($node)) {
       return;
     }
 
