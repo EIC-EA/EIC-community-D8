@@ -6,6 +6,7 @@ use Drupal\Core\Controller\ControllerBase;
 use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_user\UserHelper;
 use Drupal\group\Entity\GroupInterface;
+use Drupal\oec_group_flex\GroupVisibilityRecord;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -88,8 +89,10 @@ class AboutPageController extends ControllerBase {
     }
     $variables['description'] = $group->get('field_body')->value;
     // Get group visibility.
-    $visibility_settings = $this->groupsHelper->getGroupVisibilitySettings($group);
-    $variables['visibility'] = $this->groupsHelper->getGroupVisibilityRecordSettings($visibility_settings['settings']);
+    $variables['visibility'] = $this->groupsHelper->getGroupVisibilitySettings($group);
+    if (!empty($variables['visibility']['settings']) && $variables['visibility']['settings'] instanceof GroupVisibilityRecord) {
+      $variables['visibility']['settings'] = $this->groupsHelper->getGroupVisibilityRecordSettings($variables['visibility']['settings']);
+    }
     // Get joining methods.
     $variables['joining_methods'] = $this->groupsHelper->getGroupJoiningMethod($group);
 

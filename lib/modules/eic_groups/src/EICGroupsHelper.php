@@ -184,6 +184,7 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
    * @return array
    *   An array containing:
    *   - plugin_id: the plugin ID of the selected visibility.
+   *   - label: the plugin label.
    *   - settings (optional): object of type
    *     Drupal\oec_group_flex\GroupVisibilityRecord (currently only for
    *     CustomRestrictedVisibility).
@@ -194,12 +195,14 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
     $visibility_plugins = $this->groupVisibilityManager->getAllAsArray();
     $visibility_settings = [
       'plugin_id' => '',
+      'label' => '',
       'settings' => '',
     ];
 
     $group_visibility = $this->groupFlexGroup->getGroupVisibility($group);
     /** @var \Drupal\group_flex\Plugin\GroupVisibilityInterface $selected_plugin */
     $selected_plugin = $visibility_plugins[$group_visibility];
+    $visibility_settings['label'] = $selected_plugin->getLabel();
 
     $visibility_settings['plugin_id'] = $group_visibility;
     switch ($group_visibility) {
