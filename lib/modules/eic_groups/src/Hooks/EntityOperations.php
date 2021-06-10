@@ -5,6 +5,7 @@ namespace Drupal\eic_groups\Hooks;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Routing\RouteMatchInterface;
@@ -13,6 +14,7 @@ use Drupal\Core\Url;
 use Drupal\eic_groups\EICGroupsHelperInterface;
 use Drupal\group\Entity\GroupContent;
 use Drupal\group\Entity\GroupInterface;
+use Drupal\group_content_menu\GroupContentMenuInterface;
 use Drupal\node\NodeInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -78,6 +80,7 @@ class EntityOperations implements ContainerInjectionInterface {
    */
   public function groupInsert(EntityInterface $entity) {
     $this->createGroupWikiBook($entity);
+    $this->createGroupAboutPageMenuLink($entity);
   }
 
   /**
@@ -210,6 +213,40 @@ class EntityOperations implements ContainerInjectionInterface {
       if (($node_book = $group_content->getEntity()) && $node_book instanceof NodeInterface) {
         $node_book->setPublished();
         $node_book->save();
+      }
+    }
+  }
+
+  /**
+   * Creates a menu item for the About page in the Group main menu.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $group
+   *   The group for which we create the menu item.
+   *
+   * @return \Drupal\menu_link_content\Entity\MenuLinkContent|false
+   *   The saved menu item or FALSE if an error occurred.
+   */
+  protected function createGroupAboutPageMenuLink(EntityInterface $group) {
+    foreach (group_content_menu_get_menus_per_group($group) as $group_menu) {
+      if ($group_menu->getGroupContentType()->getContentPlugin()->getPluginId() == 'group_content_menu:group_main_menu') {
+        // Create menu item.
+        $menu_name = GroupContentMenuInterface::MENU_PREFIX . $group_menu->getEntity()->id();
+        $menu_item = $this->entityTypeManager->getStorage('menu_link_content')->create([
+          'title' => $this->t('About'),
+          'link' => [
+            'uri' => 'internal:/group/' . $group->id() . '/about',
+          ],
+          'menu_name' => $menu_name,
+          'weight' => 1,
+        ]);
+
+        try {
+          $menu_item->save();
+          return $menu_item;
+        }
+        catch (EntityStorageException $e) {
+          return FALSE;
+        }
       }
     }
   }
