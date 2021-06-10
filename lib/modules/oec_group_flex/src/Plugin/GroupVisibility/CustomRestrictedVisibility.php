@@ -242,6 +242,19 @@ class CustomRestrictedVisibility extends RestrictedGroupVisibilityBase implement
   }
 
   /**
+   * Returns custom restricted visibility settings for a group.
+   *
+   * @param \Drupal\group\Entity\GroupInterface $entity
+   *   The group for which we get the visibility settings.
+   *
+   * @return bool|\Drupal\oec_group_flex\GroupVisibilityRecordInterface
+   *   The visibility record or FALSE if not found.
+   */
+  public function getVisibilitySettings(GroupInterface $entity) {
+    return $this->groupVisibilityStorage->load($entity->id());
+  }
+
+  /**
    * Checks if the access check can be skipped.
    *
    * @param \Drupal\group\Entity\GroupInterface $entity
