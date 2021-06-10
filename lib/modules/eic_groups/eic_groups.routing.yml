@@ -4,4 +4,4 @@ eic_groups.about_page:
     _controller: '\Drupal\eic_groups\Controller\AboutPageController::build'
     _title_callback: '\Drupal\eic_groups\Controller\AboutPageController::title'
   requirements:
-    _permission: 'access content'
+    _group_permission: 'view group'
