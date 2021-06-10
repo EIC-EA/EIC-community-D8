@@ -30,4 +30,8 @@ class FlagRequestController extends ControllerBase {
     return $this->entityTypeManager()->createHandlerInstance($list_builder, $definition)->render();
   }
 
+  public function close() {
+    // TODO
+  }
+
 }

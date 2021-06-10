@@ -46,8 +46,7 @@ class DeleteRequestManager implements RequestManagerInterface {
    */
   public function applyFlag(ContentEntityInterface $entity, string $reason) {
     // Entity type is not supported
-    $class_name = strtolower((new \ReflectionClass($entity))->getShortName());
-    if (!array_key_exists($class_name, self::$supportedEntityTypes)) {
+    if (!array_key_exists($entity->getEntityTypeId(), self::$supportedEntityTypes)) {
       return NULL;
     }
 
@@ -57,7 +56,7 @@ class DeleteRequestManager implements RequestManagerInterface {
     }
 
     $current_user = User::load($current_user->id());
-    $flag = $this->flagService->getFlagById(self::$supportedEntityTypes[$class_name]);
+    $flag = $this->flagService->getFlagById(self::$supportedEntityTypes[$entity->getEntityTypeId()]);
     if (!$flag instanceof Flag || $flag->isFlagged($entity, $current_user)) {
       return NULL;
     }

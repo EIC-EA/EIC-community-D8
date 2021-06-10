@@ -9,6 +9,7 @@ use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\eic_flags\Form\RequestCloseForm;
 use Drupal\eic_flags\Form\RequestDeleteForm;
 use Drupal\eic_flags\RequestStatus;
 use Drupal\eic_flags\Service\DeleteRequestManager;
@@ -80,7 +81,9 @@ function eic_flags_entity_type_build(array &$entity_types) {
 
     $entity_types[$entity_id]
       ->setFormClass('request-delete', RequestDeleteForm::class)
-      ->setLinkTemplate('request-delete-form', '/{entity_type}/{entity_id}/request-delete');
+      ->setFormClass('request-close', RequestCloseForm::class)
+      ->setLinkTemplate('request-delete-form', '/{entity_type}/{entity_id}/request-delete')
+      ->setLinkTemplate('request-close', '/admin/community/{entity_type}/{entity_id}/request/{request_type}/close');
   }
 }
 
@@ -88,9 +91,9 @@ function eic_flags_entity_type_build(array &$entity_types) {
  * Implements hook_entity_operation.
  */
 function eic_flags_entity_operation(EntityInterface $entity) {
-  $class_name = strtolower((new \ReflectionClass($entity))->getShortName());
+  $entity_type_id = $entity->getEntityTypeId();
   if (!$entity instanceof ContentEntityInterface
-    || !in_array($class_name, array_keys(DeleteRequestManager::$supportedEntityTypes))
+    || !in_array($entity_type_id, array_keys(DeleteRequestManager::$supportedEntityTypes))
     || !$entity->access('request-delete')
     || \Drupal::service('router.admin_context')->isAdminRoute()) {
     return [];
@@ -110,8 +113,8 @@ function eic_flags_entity_operation(EntityInterface $entity) {
  * Implements hook_entity_access.
  */
 function eic_flags_entity_access(EntityInterface $entity, $operation, AccountInterface $account) {
-  $class_name = strtolower((new \ReflectionClass($entity))->getShortName());
-  if (!in_array($class_name, array_keys(DeleteRequestManager::$supportedEntityTypes)) || $operation !== 'request-delete') {
+  $entity_type_id = $entity->getEntityTypeId();
+  if (!in_array($entity_type_id, array_keys(DeleteRequestManager::$supportedEntityTypes)) || $operation !== 'request-delete') {
     return AccessResult::neutral();
   }
 
