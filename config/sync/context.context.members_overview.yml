@@ -33,20 +33,6 @@ reactions:
         unique: 0
         context_id: members_overview
         uuid: 2bdaf363-b983-4094-8b13-e3549984347b
-      97b594dc-7529-4ac6-973d-b43ffc569246:
-        id: 'search_api_sorts_block:views_page:global_overviews__page_1'
-        label: 'Sort by'
-        provider: search_api_sorts
-        label_display: visible
-        region: content_before
-        weight: '-4'
-        context_mapping: {  }
-        custom_id: search_api_sorts_block_views_page_global_overviews__page_1
-        theme: eic_community
-        css_class: ''
-        unique: 0
-        context_id: members_overview
-        uuid: 97b594dc-7529-4ac6-973d-b43ffc569246
       4c4cb85b-6c50-4230-a9c6-717a3f23ee0f:
         id: 'block_content:4f006e0d-a618-4283-ad23-132b89f60c11'
         label: 'Members - Banner block'
@@ -163,6 +149,20 @@ reactions:
         unique: 0
         context_id: members_overview
         uuid: 93fc8760-8b94-4f2b-b96e-d4176daeaab4
+      1620cbc6-8beb-4624-a2d6-4d82941df19a:
+        id: 'search_api_sorts_block:views_page:global_overviews__members'
+        label: 'Sort by (View Global Overviews, display People)'
+        provider: search_api_sorts
+        label_display: '0'
+        region: content_before
+        weight: '-4'
+        context_mapping: {  }
+        custom_id: search_api_sorts_block_views_page_global_overviews__members
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: members_overview
+        uuid: 1620cbc6-8beb-4624-a2d6-4d82941df19a
     id: blocks
     saved: false
     uuid: deeaf135-b781-47ec-b086-7d9fec72c007

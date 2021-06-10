@@ -300,7 +300,7 @@ display:
   members:
     display_plugin: page
     id: members
-    display_title: Members
+    display_title: People
     position: 3
     display_options:
       display_extenders: {  }
@@ -443,22 +443,23 @@ display:
         operator: AND
         groups:
           1: AND
-      path: members
+      path: people
       menu:
         type: normal
-        title: Members
+        title: People
         description: ''
         expanded: false
         parent: ''
         weight: 0
         context: '0'
         menu_name: main
+        enabled: true
       access:
         type: perm
         options:
           perm: 'view any member profile'
       display_description: ''
-      title: Members
+      title: People
       exposed_block: true
       cache:
         type: none
