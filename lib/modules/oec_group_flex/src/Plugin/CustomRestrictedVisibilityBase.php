@@ -7,7 +7,6 @@ use Drupal\Core\Access\AccessResultNeutral;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\group\Entity\GroupInterface;
-use Drupal\oec_group_flex\GroupVisibilityRecord;
 use Drupal\oec_group_flex\GroupVisibilityRecordInterface;
 
 /**
