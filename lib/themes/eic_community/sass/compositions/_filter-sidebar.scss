@@ -123,11 +123,11 @@
 
     #{$node}__item--is-collapsible & {
       display: block;
-      transform: none;
+      transform: rotate(180deg);
     }
 
     #{$node}__item--is-collapsible[aria-collapsed="false"] & {
-      transform: rotate(180deg);
+      transform: none;
     }
   }
 

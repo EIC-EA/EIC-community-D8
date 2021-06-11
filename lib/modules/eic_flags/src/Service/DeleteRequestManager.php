@@ -4,6 +4,8 @@ namespace Drupal\eic_flags\Service;
 
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\eic_flags\Service\RequestManagerInterface;
+use Drupal\eic_flags\RequestStatus;
 use Drupal\flag\Entity\Flag;
 use Drupal\flag\FlagService;
 use Drupal\user\Entity\User;
@@ -13,7 +15,7 @@ use Drupal\user\Entity\User;
  *
  * @package Drupal\eic_flags\Service
  */
-class DeleteRequestManager {
+class DeleteRequestManager implements RequestManagerInterface {
 
   /**
    * Entity types allowed to go through the request a deletion flow.
@@ -48,13 +50,9 @@ class DeleteRequestManager {
   }
 
   /**
-   * @param \Drupal\Core\Entity\ContentEntityInterface $entity
-   * @param string $reason
-   *
-   * @return \Drupal\Core\Entity\EntityInterface|\Drupal\flag\FlagInterface|null
-   * @throws \Drupal\Core\Entity\EntityStorageException
+   * {@inheritdoc}
    */
-  public function flagEntity(ContentEntityInterface $entity, string $reason) {
+  public function applyFlag(ContentEntityInterface $entity, string $reason) {
     // Entity type is not supported
     $class_name = strtolower((new \ReflectionClass($entity))->getShortName());
     if (!array_key_exists($class_name, self::$supportedEntityTypes)) {
@@ -74,7 +72,7 @@ class DeleteRequestManager {
 
     $flag = $this->flagService->flag($flag, $entity, $current_user);
     $flag->set('field_deletion_reason', $reason);
-    $flag->set('field_deletion_status', TRUE);
+    $flag->set('field_request_status', RequestStatus::OPEN);
     $flag->save();
 
     $this->moduleHandler->invokeAll('delete_request_insert', [$flag, $entity]);

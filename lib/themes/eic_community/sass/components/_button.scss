@@ -11,9 +11,8 @@
   }
 
   &--has-compact-layout,
+  &--has-icon-layout,
   &--as-form-option {
-    padding: map-get($ecl-spacing, 'xs');
-
     #{$node}__label {
       @include visually-hidden;
     }
@@ -24,6 +23,12 @@
       margin-left: 0;
     }
   }
+
+  &--has-compact-layout,
+  &--as-form-option {
+    padding: map-get($ecl-spacing, 'xs');
+  }
+
 
   &--as-form-option {
     color: ecl-typography('color', 'meta');

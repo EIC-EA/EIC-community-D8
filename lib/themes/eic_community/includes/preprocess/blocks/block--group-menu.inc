@@ -16,6 +16,8 @@ function eic_community_preprocess_block__group_menu(&$variables, &$cache_tags = 
 
   foreach ($variables['content']['#items'] as $link) {
     $items[] = [
+      // Temporary workaround due to an issue with group_content_menu module.
+      // @see https://www.drupal.org/project/group_content_menu/issues/3209011
       'is_active' => \Drupal::request()->getPathInfo() === $link['url']->toString(),
       'link' => [
         'label' => $link['title'],

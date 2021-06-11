@@ -96,7 +96,7 @@ class RequestDeleteForm extends ContentEntityDeleteForm {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $flag = $this->deleteRequestManager->flagEntity($this->entity, $form_state->getValue('reason'));
+    $flag = $this->deleteRequestManager->applyFlag($this->entity, $form_state->getValue('reason'));
     if (!$flag instanceof Flag) {
       $this->messenger()->addError($this->t('You are not allowed to do this'));
     }
