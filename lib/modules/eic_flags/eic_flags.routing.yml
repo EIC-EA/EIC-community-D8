@@ -1,2 +1,0 @@
-route_callbacks:
-  - '\Drupal\eic_flags\Routing\RequestDeleteRoutes::routes'
