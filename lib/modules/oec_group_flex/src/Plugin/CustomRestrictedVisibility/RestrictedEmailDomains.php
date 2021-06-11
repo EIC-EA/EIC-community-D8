@@ -95,9 +95,8 @@ class RestrictedEmailDomains extends CustomRestrictedVisibilityBase {
    * {@inheritdoc}
    */
   public function validatePluginForm(array &$element, FormStateInterface $form_state) {
-    $status_key = $this->getPluginId() . '_status';
     // If plugin status is disabled, we do nothing.
-    if (!$form_state->getValue($status_key)) {
+    if (parent::validatePluginForm($element, $form_state)) {
       return;
     }
     $conf_key = $this->getPluginId() . '_conf';
