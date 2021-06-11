@@ -1,55 +1,57 @@
 {% set label_element = label_element|default('span') %}
 {% if name is not empty %}
   <div class="ecl-author ecl-author--is-{{ size|default('default') }} {{ updates.value ? ' ecl-author--has-updates ' }} {{ extra_classes }}">
-    <div class="ecl-author__information">
-      {% if description is not empty %}
-        <span class="ecl-author__description">{{ description }}</span>
-      {% endif %}
-      <{{ label_element}} class="ecl-author__label {{ label_classes }}">
-        {% if path is not empty %}
-          {% include '@ecl-twig/ec-component-link/ecl-link.html.twig' with {
-            link: {
-              type: 'standalone',
-              label: name,
-              path: path
-            },
-            extra_classes: 'ecl-author__link',
-          } only %}
-        {% else %}
-          {{ name }}
+    {% if not display_avatar_only %}
+      <div class="ecl-author__information">
+        {% if description is not empty %}
+          <span class="ecl-author__description">{{ description }}</span>
         {% endif %}
-      </{{ label_element}}>
-      {% if actions is not empty %}
-        <div class="ecl-author__actions">
-          {% for action in actions %}
-            {% if action.path is not empty %}
-              <div class="ecl-author__action">
-                <a href="{{ action.path }}" class="ecl-author__action-anchor">
-                  {% if action.icon is not empty %}
-                    {% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with {
-                      extra_classes: 'ecl-author-action__icon',
-                      icon: {
-                        path: icon_file_path,
-                        name: action.icon.name,
-                        size: 'xs',
-                        type: action.icon.type,
-                      },
-                    } only %}
-                  {% endif %}
-                  {% if action.label is not empty %}
-                    <span class="ecl-author__action-label">{{ action.label }}</span>
-                  {% endif %}
-                </a>
-              </div>
-            {% endif %}
-          {% endfor %}
-        </div>
-      {% endif %}
-    </div>
+        <{{ label_element}} class="ecl-author__label {{ label_classes }}">
+          {% if path is not empty %}
+            {% include '@ecl-twig/ec-component-link/ecl-link.html.twig' with {
+              link: {
+                type: 'standalone',
+                label: name,
+                path: path
+              },
+              extra_classes: 'ecl-author__link',
+            } only %}
+          {% else %}
+            {{ name }}
+          {% endif %}
+        </{{ label_element}}>
+        {% if actions is not empty %}
+          <div class="ecl-author__actions">
+            {% for action in actions %}
+              {% if action.path is not empty %}
+                <div class="ecl-author__action">
+                  <a href="{{ action.path }}" class="ecl-author__action-anchor">
+                    {% if action.icon is not empty %}
+                      {% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with {
+                        extra_classes: 'ecl-author-action__icon',
+                        icon: {
+                          path: icon_file_path,
+                          name: action.icon.name,
+                          size: 'xs',
+                          type: action.icon.type,
+                        },
+                      } only %}
+                    {% endif %}
+                    {% if action.label is not empty %}
+                      <span class="ecl-author__action-label">{{ action.label }}</span>
+                    {% endif %}
+                  </a>
+                </div>
+              {% endif %}
+            {% endfor %}
+          </div>
+        {% endif %}
+      </div>
+    {% endif %}
     {% if image or name %}
       <div class="ecl-author__aside">
         {% if image is not empty %}
-          <div class="ecl-author__media-wrapper">
+          <a href="{{ path }}" class="ecl-author__media-wrapper">
             {% include '@ecl-twig/ec-component-media-container/ecl-media-container.html.twig' with {
               extra_classes: 'ecl-author__media',
               description: false,
@@ -57,20 +59,23 @@
               image: image.src,
               alt: image.alt,
             } only %}
-          </div>
+          </a>
         {% elseif name is not empty %}
-          <span class="ecl-author__initials-wrapper">
+          <a href="{{ path }}" class="ecl-author__initials-wrapper">
             <span class="ecl-author__initials">
               {% for author in name|split(' ')|slice(0,2) %}
                 {{- author|first -}}
               {% endfor %}
             </span>
-          </span>
+          </a>
         {% endif %}
         {% if updates %}
           {% include "@theme/patterns/components/update-indicator.html.twig" with updates|default({})|merge({
             extra_classes: 'ecl-author__update-indicator',
           }) %}
+        {% endif %}
+        {% if display_avatar_only and name %}
+          <div class="ecl-author__name">{{ name }}</div>
         {% endif %}
       </div>
     {% endif %}
