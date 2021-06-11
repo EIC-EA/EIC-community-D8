@@ -3,10 +3,10 @@
 namespace Drupal\eic_groups\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
-use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_user\UserHelper;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\oec_group_flex\GroupVisibilityRecord;
+use Drupal\oec_group_flex\OECGroupFlexHelperInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -22,23 +22,23 @@ class AboutPageController extends ControllerBase {
   protected $userHelper;
 
   /**
-   * The EIC Groups helper service.
+   * The OEC Group Flex helper service.
    *
-   * @var \Drupal\eic_groups\EICGroupsHelper
+   * @var \Drupal\oec_group_flex\OECGroupFlexHelperInterface
    */
-  protected $groupsHelper;
+  protected $oecGroupFlexHelper;
 
   /**
    * Constructs a new AboutPageController object.
    *
    * @param \Drupal\eic_user\UserHelper $user_helper
    *   The EIC User helper service.
-   * @param \Drupal\eic_groups\EICGroupsHelper $groups_helper
-   *   The EIC Groups helper service.
+   * @param \Drupal\oec_group_flex\OECGroupFlexHelperInterface $oec_group_flex_helper
+   *   The OEC Group Flex helper service.
    */
-  public function __construct(UserHelper $user_helper, EICGroupsHelper $groups_helper) {
+  public function __construct(UserHelper $user_helper, OECGroupFlexHelperInterface $oec_group_flex_helper) {
     $this->userHelper = $user_helper;
-    $this->groupsHelper = $groups_helper;
+    $this->oecGroupFlexHelper = $oec_group_flex_helper;
   }
 
   /**
@@ -47,7 +47,7 @@ class AboutPageController extends ControllerBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('eic_user.helper'),
-      $container->get('eic_groups.helper')
+      $container->get('oec_group_flex.helper')
     );
   }
 
@@ -89,12 +89,12 @@ class AboutPageController extends ControllerBase {
     }
     $variables['description'] = $group->get('field_body')->value;
     // Get group visibility.
-    $variables['visibility'] = $this->groupsHelper->getGroupVisibilitySettings($group);
+    $variables['visibility'] = $this->oecGroupFlexHelper->getGroupVisibilitySettings($group);
     if (!empty($variables['visibility']['settings']) && $variables['visibility']['settings'] instanceof GroupVisibilityRecord) {
-      $variables['visibility']['settings'] = $this->groupsHelper->getGroupVisibilityRecordSettings($variables['visibility']['settings']);
+      $variables['visibility']['settings'] = $this->oecGroupFlexHelper->getGroupVisibilityRecordSettings($variables['visibility']['settings']);
     }
     // Get joining methods.
-    $variables['joining_methods'] = $this->groupsHelper->getGroupJoiningMethod($group);
+    $variables['joining_methods'] = $this->oecGroupFlexHelper->getGroupJoiningMethod($group);
 
     return $variables;
   }
