@@ -6,7 +6,7 @@ use Drupal\Core\Controller\ControllerBase;
 use Drupal\eic_user\UserHelper;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\oec_group_flex\GroupVisibilityRecord;
-use Drupal\oec_group_flex\OECGroupFlexHelperInterface;
+use Drupal\oec_group_flex\OECGroupFlexHelper;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -24,7 +24,7 @@ class AboutPageController extends ControllerBase {
   /**
    * The OEC Group Flex helper service.
    *
-   * @var \Drupal\oec_group_flex\OECGroupFlexHelperInterface
+   * @var \Drupal\oec_group_flex\OECGroupFlexHelper
    */
   protected $oecGroupFlexHelper;
 
@@ -33,10 +33,10 @@ class AboutPageController extends ControllerBase {
    *
    * @param \Drupal\eic_user\UserHelper $user_helper
    *   The EIC User helper service.
-   * @param \Drupal\oec_group_flex\OECGroupFlexHelperInterface $oec_group_flex_helper
+   * @param \Drupal\oec_group_flex\OECGroupFlexHelper $oec_group_flex_helper
    *   The OEC Group Flex helper service.
    */
-  public function __construct(UserHelper $user_helper, OECGroupFlexHelperInterface $oec_group_flex_helper) {
+  public function __construct(UserHelper $user_helper, OECGroupFlexHelper $oec_group_flex_helper) {
     $this->userHelper = $user_helper;
     $this->oecGroupFlexHelper = $oec_group_flex_helper;
   }
