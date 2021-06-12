@@ -6,6 +6,7 @@ use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Entity\ContentEntityConfirmFormBase;
 use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Drupal\eic_flags\RequestStatus;
@@ -130,7 +131,19 @@ class RequestCloseForm extends ContentEntityConfirmFormBase {
       throw new InvalidArgumentException('Flag doesn\'t exists');
     }
 
-    $entity_flags = $this->flagService->getEntityFlaggings($flag, $this->entity);
+    $flagging_storage = $this->entityTypeManager->getStorage('flagging');
+    $entity_flags = $flagging_storage->getQuery()
+      ->condition('flag_id', $flag->id())
+      ->condition('entity_type', $this->entity->getEntityTypeId())
+      ->condition('entity_id', $this->entity->id())
+      ->condition('field_request_status', RequestStatus::OPEN)
+      ->execute();
+
+    if (empty($entity_flags)) {
+      return;
+    }
+
+    $entity_flags = $flagging_storage->loadMultiple($entity_flags);
     switch ($response) {
       case RequestStatus::DENIED:
         $action = 'deny';
