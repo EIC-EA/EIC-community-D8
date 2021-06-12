@@ -40,6 +40,11 @@ class FlaggedEntitiesListBuilder extends EntityListBuilder {
   protected $flagService;
 
   /**
+   * @var string
+   */
+  protected $requestType;
+
+  /**
    * @var \Drupal\eic_flags\Service\HandlerInterface|null
    */
   protected $requestHandler;
@@ -72,7 +77,8 @@ class FlaggedEntitiesListBuilder extends EntityListBuilder {
     $this->database = $database;
     $this->dateFormatter = $date_formatter;
     $this->flagService = $flag_service;
-    $this->requestHandler = $collector->getHandlerByType($request->get('request_type'));
+    $this->requestType = $request->get('request_type');
+    $this->requestHandler = $collector->getHandlerByType($this->requestType);
   }
 
   /**
@@ -137,7 +143,10 @@ class FlaggedEntitiesListBuilder extends EntityListBuilder {
    * {@inheritdoc}
    */
   protected function getTitle() {
-    return $this->t('Content requested for delete');
+    return $this->t(
+      'Content requested for @request-type',
+      ['@request-type' => $this->requestType]
+    );
   }
 
   /**

@@ -3,7 +3,6 @@
 namespace Drupal\eic_flags\Routing;
 
 use Drupal\eic_flags\RequestTypes;
-use Drupal\eic_flags\Service\DeleteRequestHandler;
 use Drupal\eic_flags\Service\HandlerInterface;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
