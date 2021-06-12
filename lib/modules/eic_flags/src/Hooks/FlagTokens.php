@@ -99,7 +99,8 @@ class FlagTokens implements ContainerInjectionInterface {
       }
     }
 
-    if ($flag instanceof FlaggingInterface && $author_tokens = $this->tokenService->findWithPrefix($tokens, 'author')) {
+    $author_tokens = $this->tokenService->findWithPrefix($tokens, 'author');
+    if ($flag instanceof FlaggingInterface && $author_tokens) {
       $replacements += $this->tokenService->generate(
         'user', $author_tokens,
         ['user' => $flag->getOwner()],
@@ -108,9 +109,8 @@ class FlagTokens implements ContainerInjectionInterface {
       );
     }
 
-    if ($flag instanceof FlaggingInterface
-      && $target_entity_token = $this->tokenService->findWithPrefix($tokens, 'target_entity')
-    ) {
+    $target_entity_token = $this->tokenService->findWithPrefix($tokens, 'target_entity');
+    if ($flag instanceof FlaggingInterface && $target_entity_token) {
       $target_entity = $this->entityTypeManager
         ->getStorage($flag->getFlaggableType())
         ->load($flag->getFlaggableId());
