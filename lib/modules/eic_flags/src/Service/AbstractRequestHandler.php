@@ -54,7 +54,8 @@ abstract class AbstractRequestHandler implements HandlerInterface {
       $reason,
     ]);
 
-    $flagging->delete();
+    $flagging->set('field_request_status', RequestStatus::DENIED);
+    $flagging->save();
 
     return TRUE;
   }
@@ -81,7 +82,7 @@ abstract class AbstractRequestHandler implements HandlerInterface {
     }
 
     $flag = $this->flagService->flag($flag, $entity, $current_user);
-    $flag->set('field_deletion_reason', $reason);
+    $flag->set('field_request_reason', $reason);
     $flag->set('field_request_status', RequestStatus::OPEN);
     $flag->save();
 
@@ -93,6 +94,13 @@ abstract class AbstractRequestHandler implements HandlerInterface {
    */
   public function getSupportedEntityTypes() {
     return [];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getFlagId(string $entity_type) {
+    return $this->getSupportedEntityTypes()[$entity_type] ?? NULL;
   }
 
 }

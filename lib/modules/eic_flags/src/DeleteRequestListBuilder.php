@@ -247,7 +247,9 @@ class DeleteRequestListBuilder extends EntityListBuilder {
   protected function getEntityIds() {
     $query = $this->database->select('flagging', 'f');
     $query->fields('f', ['entity_id', 'entity_type', 'flag_id'])
-      ->condition('fs.field_request_status_value', RequestStatus::OPEN)
+      ->join('flagging__field_request_status', 'fs', 'fs.entity_id = f.id');
+
+    $query->condition('fs.field_request_status_value', RequestStatus::OPEN)
       ->distinct(TRUE);
 
     $supported_entity_types = $this->requestHandler->getSupportedEntityTypes();
@@ -263,7 +265,6 @@ class DeleteRequestListBuilder extends EntityListBuilder {
       $entity_join_field = 'CONCAT("' . $type . '",' . $type . '.' . $entity_keys['id'] . ')';
 
       // Left join every supported entity types, this will allow us to filter on their attributes
-      $query->join('flagging__field_request_status', 'fs', 'fs.entity_id = f.id');
       $query->leftJoin($data_table, $type, ':entity_join = :flag_join', [
         ':entity_join' => $entity_join_field,
         ':flag_join' => $flag_join_field,

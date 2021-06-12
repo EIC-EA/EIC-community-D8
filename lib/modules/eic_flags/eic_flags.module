@@ -9,6 +9,7 @@ use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Url;
 use Drupal\eic_flags\Form\RequestCloseForm;
 use Drupal\eic_flags\Form\RequestDeleteForm;
 use Drupal\eic_flags\RequestStatus;
@@ -86,9 +87,9 @@ function eic_flags_entity_type_build(array &$entity_types) {
 
     $entity_types[$entity_id]
       ->setFormClass('request-delete', RequestDeleteForm::class)
-      ->setFormClass('request-close', RequestCloseForm::class)
+      ->setFormClass('close-request', RequestCloseForm::class)
       ->setLinkTemplate('request-delete-form', '/{entity_type}/{entity_id}/request-delete')
-      ->setLinkTemplate('request-close', '/admin/community/{entity_type}/{entity_id}/request/{request_type}/close');
+      ->setLinkTemplate('close-request', '/admin/community/{entity_type}/{entity_id}/request/{request_type}/close');
   }
 }
 
@@ -96,19 +97,31 @@ function eic_flags_entity_type_build(array &$entity_types) {
  * Implements hook_entity_operation.
  */
 function eic_flags_entity_operation(EntityInterface $entity) {
-  $entity_type_id = $entity->getEntityTypeId();
   /** @var \Drupal\eic_flags\Service\HandlerInterface $delete_request_handler */
   $delete_request_handler = \Drupal::service('eic_flags.handler_collector')
     ->getHandlerByType(RequestTypes::DELETE);
 
+  $entity_type_id = $entity->getEntityTypeId();
   if (!$entity instanceof ContentEntityInterface
     || !in_array($entity_type_id, array_keys($delete_request_handler->getSupportedEntityTypes()))
-    || !$entity->access('request-delete')
-    || \Drupal::service('router.admin_context')->isAdminRoute()) {
+    || !$entity->access('request-delete')) {
     return [];
   }
 
-  $operations = [];
+  if (\Drupal::service('router.admin_context')->isAdminRoute()
+    && 'eic_flags.flagged_entities.list' === \Drupal::routeMatch()
+      ->getRouteName()) {
+    // TODO implement a more generic approach for available statuses and generate this dynamically
+    return [
+      'deny_request' => [
+        'title' => t('Deny'),
+        'url' => $entity->toUrl('close-request')
+          ->setRouteParameter('request_type', RequestTypes::DELETE)
+          ->setRouteParameter('response', RequestStatus::DENIED),
+      ],
+    ];
+  }
+
   $operations['request_delete'] = [
     'title' => t('Request delete'),
     'url' => $entity->toUrl('request-delete-form')
@@ -123,15 +136,19 @@ function eic_flags_entity_operation(EntityInterface $entity) {
  * Implements hook_entity_access.
  */
 function eic_flags_entity_access(EntityInterface $entity, $operation, AccountInterface $account) {
-  $entity_type_id = $entity->getEntityTypeId();
+  /** @var \Drupal\eic_flags\Service\HandlerInterface $delete_request_handler */
   $delete_request_handler = \Drupal::service('eic_flags.handler_collector')
     ->getHandlerByType(RequestTypes::DELETE);
-  if (!in_array($entity_type_id, array_keys($delete_request_handler->getSupportedEntityTypes()))
-    || $operation !== 'request-delete') {
+
+  $entity_type_id = $entity->getEntityTypeId();
+  if (!in_array(
+    $entity_type_id,
+    array_keys($delete_request_handler->getSupportedEntityTypes()))
+  ) {
     return AccessResult::neutral();
   }
 
-  // We allow delete requests only for certain roles.
+  // We allow requests only for certain roles.
   if (empty(array_intersect([
     'administrator',
     'trusted_user',

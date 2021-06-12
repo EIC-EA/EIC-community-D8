@@ -58,4 +58,13 @@ interface HandlerInterface {
    */
   public function getSupportedEntityTypes();
 
+  /**
+   * Returns the flag id for the given entity type.
+   *
+   * @param string $entity_id
+   *
+   * @return string
+   */
+  public function getFlagId(string $entity_id);
+
 }
