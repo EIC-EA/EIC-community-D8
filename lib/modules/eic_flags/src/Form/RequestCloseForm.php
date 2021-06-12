@@ -87,6 +87,27 @@ class RequestCloseForm extends ContentEntityConfirmFormBase {
     ]);
   }
 
+  public function buildForm(array $form, FormStateInterface $form_state) {
+    $form = parent::buildForm($form, $form_state);
+
+    $form['response_text'] = [
+      '#type' => 'textarea',
+      '#title' => $this->getResponseTitle(),
+      '#required' => TRUE,
+    ];
+
+    return $form;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function validateForm(array &$form, FormStateInterface $form_state) {
+    if (!$form_state->getValue('response_text')) {
+      $form_state->setErrorByName('response_text', $this->t('Reason field is required'));
+    }
+  }
+
   /**
    * @param array $form
    * @param \Drupal\Core\Form\FormStateInterface $form_state
@@ -119,7 +140,27 @@ class RequestCloseForm extends ContentEntityConfirmFormBase {
     }
 
     foreach ($entity_flags as $flag) {
-      call_user_func([$handler, $action], $flag, $this->entity, 'test');
+      call_user_func(
+        [$handler, $action],
+        $flag,
+        $this->entity,
+        $form_state->getValue('response_text')
+      );
+    }
+  }
+
+  /**
+   * @return \Drupal\Core\StringTranslation\TranslatableMarkup
+   */
+  protected function getResponseTitle() {
+    switch ($this->getRequest()->query->get('response')) {
+      case RequestStatus::DENIED:
+        return $this->t(
+          '@entity-type will not be deleted. Please provide a mandatory reason for denying this request.', [
+          '@entity-type' => $this->getEntity()
+            ->getEntityType()
+            ->getSingularLabel(),
+        ]);
     }
   }
 

@@ -117,7 +117,9 @@ function eic_flags_entity_operation(EntityInterface $entity) {
         'title' => t('Deny'),
         'url' => $entity->toUrl('close-request')
           ->setRouteParameter('request_type', RequestTypes::DELETE)
-          ->setRouteParameter('response', RequestStatus::DENIED),
+          ->setRouteParameter('response', RequestStatus::DENIED)
+          ->setRouteParameter('destination', \Drupal::request()
+            ->getRequestUri()),
       ],
     ];
   }
