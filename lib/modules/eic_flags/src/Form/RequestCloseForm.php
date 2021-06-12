@@ -73,7 +73,7 @@ class RequestCloseForm extends ContentEntityConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelUrl() {
-    return Url::fromRoute('eic_flags.flagged_entities.list', ['flag_type' => RequestTypes::DELETE]);
+    return Url::fromRoute('eic_flags.flagged_entities.list', ['request_type' => RequestTypes::DELETE]);
   }
 
   /**

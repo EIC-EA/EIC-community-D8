@@ -3,7 +3,6 @@
 namespace Drupal\eic_flags;
 
 use Drupal\Core\Database\Connection;
-use Drupal\eic_flags\Service\DeleteRequestHandler;
 use Drupal\eic_flags\Service\RequestHandlerCollector;
 use Drupal\flag\FlagService;
 use Drupal\Core\Datetime\DateFormatterInterface;
@@ -13,11 +12,12 @@ use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Defines a class to build a listing of flags with type 'delete_request_*'.
  */
-class DeleteRequestListBuilder extends EntityListBuilder {
+class FlaggedEntitiesListBuilder extends EntityListBuilder {
 
   /**
    * @var \Drupal\Core\Database\Connection
@@ -45,13 +45,14 @@ class DeleteRequestListBuilder extends EntityListBuilder {
   protected $requestHandler;
 
   /**
-   * DeleteRequestListBuilder constructor.
+   * FlaggedEntitiesListBuilder constructor.
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
    * @param \Drupal\Core\Entity\EntityStorageInterface $storage
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    * @param \Drupal\Core\Database\Connection $database
    * @param \Drupal\Core\Datetime\DateFormatterInterface $date_formatter
+   * @param \Symfony\Component\HttpFoundation\Request $request
    * @param \Drupal\flag\FlagService $flag_service
    * @param \Drupal\eic_flags\Service\RequestHandlerCollector $collector
    */
@@ -61,6 +62,7 @@ class DeleteRequestListBuilder extends EntityListBuilder {
     EntityTypeManagerInterface $entityTypeManager,
     Connection $database,
     DateFormatterInterface $date_formatter,
+    Request $request,
     FlagService $flag_service,
     RequestHandlerCollector $collector
   ) {
@@ -70,7 +72,7 @@ class DeleteRequestListBuilder extends EntityListBuilder {
     $this->database = $database;
     $this->dateFormatter = $date_formatter;
     $this->flagService = $flag_service;
-    $this->requestHandler = $collector->getHandlerByType(RequestTypes::DELETE);
+    $this->requestHandler = $collector->getHandlerByType($request->get('request_type'));
   }
 
   /**
@@ -83,6 +85,7 @@ class DeleteRequestListBuilder extends EntityListBuilder {
       $container->get('entity_type.manager'),
       $container->get('database'),
       $container->get('date.formatter'),
+      $container->get('request_stack')->getCurrentRequest(),
       $container->get('flag'),
       $container->get('eic_flags.handler_collector')
     );

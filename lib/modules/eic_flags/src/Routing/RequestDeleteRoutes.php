@@ -19,7 +19,6 @@ class RequestDeleteRoutes {
    * @return \Symfony\Component\Routing\RouteCollection
    */
   public function routes() {
-    $route_collection = new RouteCollection();
     $collector = \Drupal::service('eic_flags.handler_collector');
     $delete_request_handler = $collector->getHandlerByType(RequestTypes::DELETE);
     $available_types = array_map(function (HandlerInterface $handler) {
@@ -27,6 +26,8 @@ class RequestDeleteRoutes {
     }, $collector->getHandlers());
     $flag_type_list = implode('|', $available_types);
 
+
+    $route_collection = new RouteCollection();
     // TODO change this in another PR to loop through every request handler
     // We must define a route for each supported entity type and set the 'entity_form' default on the route
     // This will ensure that the form controller handling this request is "HtmlEntityFormController"
@@ -56,12 +57,12 @@ class RequestDeleteRoutes {
     }
 
     // Define the route displaying entities flagged for removal
-    $route = (new Route('/admin/community/request/{flag_type}'))
+    $route = (new Route('/admin/community/request/{request_type}'))
       ->addDefaults([
         '_controller' => 'Drupal\eic_flags\Controller\FlagRequestController::listing',
       ])
       ->setRequirement('_role', 'administrator+content_administrator')
-      ->setRequirement('flag_type', $flag_type_list)
+      ->setRequirement('request_type', $flag_type_list)
       ->setOption('_admin_route', TRUE);
 
     $route_collection->add('eic_flags.flagged_entities.list', $route);
