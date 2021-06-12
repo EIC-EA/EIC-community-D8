@@ -3,7 +3,7 @@
 namespace Drupal\eic_flags\Routing;
 
 use Drupal\eic_flags\RequestTypes;
-use Drupal\eic_flags\Service\DeleteRequestManager;
+use Drupal\eic_flags\Service\DeleteRequestHandler;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
@@ -19,10 +19,14 @@ class RequestDeleteRoutes {
    */
   public function routes() {
     $route_collection = new RouteCollection();
+    // TODO change this in another PR to loop through every request handler
+    /** @var \Drupal\eic_flags\Service\HandlerInterface $delete_request_handler */
+    $delete_request_handler = \Drupal::service('eic_flags.handler_collector')
+      ->getHandlerByType(RequestTypes::DELETE);
 
     // We must define a route for each supported entity type and set the 'entity_form' default on the route
     // This will ensure that the form controller handling this request is "HtmlEntityFormController"
-    foreach (array_keys(DeleteRequestManager::$supportedEntityTypes) as $entity_type) {
+    foreach (array_keys($delete_request_handler->getSupportedEntityTypes()) as $entity_type) {
       $route = (new Route('/' . $entity_type . '/{' . $entity_type . '}/request-delete'))
         ->addDefaults([
           '_entity_form' => $entity_type . '.request-delete',

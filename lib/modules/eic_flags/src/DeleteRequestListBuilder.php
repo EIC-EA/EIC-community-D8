@@ -3,7 +3,8 @@
 namespace Drupal\eic_flags;
 
 use Drupal\Core\Database\Connection;
-use Drupal\eic_flags\Service\DeleteRequestManager;
+use Drupal\eic_flags\Service\DeleteRequestHandler;
+use Drupal\eic_flags\Service\RequestHandlerCollector;
 use Drupal\flag\FlagService;
 use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Entity\EntityInterface;
@@ -39,6 +40,11 @@ class DeleteRequestListBuilder extends EntityListBuilder {
   protected $flagService;
 
   /**
+   * @var \Drupal\eic_flags\Service\HandlerInterface|null
+   */
+  protected $requestHandler;
+
+  /**
    * DeleteRequestListBuilder constructor.
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
@@ -47,6 +53,7 @@ class DeleteRequestListBuilder extends EntityListBuilder {
    * @param \Drupal\Core\Database\Connection $database
    * @param \Drupal\Core\Datetime\DateFormatterInterface $date_formatter
    * @param \Drupal\flag\FlagService $flag_service
+   * @param \Drupal\eic_flags\Service\RequestHandlerCollector $collector
    */
   public function __construct(
     EntityTypeInterface $entity_type,
@@ -54,7 +61,8 @@ class DeleteRequestListBuilder extends EntityListBuilder {
     EntityTypeManagerInterface $entityTypeManager,
     Connection $database,
     DateFormatterInterface $date_formatter,
-    FlagService $flag_service
+    FlagService $flag_service,
+    RequestHandlerCollector $collector
   ) {
     parent::__construct($entity_type, $storage);
 
@@ -62,6 +70,7 @@ class DeleteRequestListBuilder extends EntityListBuilder {
     $this->database = $database;
     $this->dateFormatter = $date_formatter;
     $this->flagService = $flag_service;
+    $this->requestHandler = $collector->getHandlerByType(RequestTypes::DELETE);
   }
 
   /**
@@ -74,7 +83,8 @@ class DeleteRequestListBuilder extends EntityListBuilder {
       $container->get('entity_type.manager'),
       $container->get('database'),
       $container->get('date.formatter'),
-      $container->get('flag')
+      $container->get('flag'),
+      $container->get('eic_flags.handler_collector')
     );
   }
 
@@ -123,6 +133,13 @@ class DeleteRequestListBuilder extends EntityListBuilder {
   /**
    * {@inheritdoc}
    */
+  protected function getTitle() {
+    return $this->t('Content requested for delete');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function render() {
     $build['table'] = [
       '#type' => 'table',
@@ -161,10 +178,10 @@ class DeleteRequestListBuilder extends EntityListBuilder {
     static $flags;
     /** @var \Drupal\Core\Entity\ContentEntityInterface $flaggedEntity */
     $flaggedEntity = $result['entity'];
-    
+    $supported_entity_types = $this->requestHandler->getSupportedEntityTypes();
     if (!isset($flags[$flaggedEntity->getEntityTypeId()])) {
       $flags[$flaggedEntity->getEntityTypeId()] = $this->flagService
-        ->getFlagById(DeleteRequestManager::$supportedEntityTypes[$flaggedEntity->getEntityTypeId()]);
+        ->getFlagById($supported_entity_types[$flaggedEntity->getEntityTypeId()]);
     }
 
     $type = '';
@@ -204,15 +221,16 @@ class DeleteRequestListBuilder extends EntityListBuilder {
     }
 
     $entities = [];
+    $supported_entity_types = $this->requestHandler->getSupportedEntityTypes();
     foreach ($results as $result) {
-      if (!isset(DeleteRequestManager::$supportedEntityTypes[$result['entity_type']])) {
+      if (!isset($supported_entity_types[$result['entity_type']])) {
         continue;
       }
 
       $entity = $this->entityTypeManager
         ->getStorage($result['entity_type'])
         ->load($result['entity_id']);
-      $flag = $this->flagService->getFlagById(DeleteRequestManager::$supportedEntityTypes[$result['entity_type']]);
+      $flag = $this->flagService->getFlagById($supported_entity_types[$result['entity_type']]);
 
       $entities[] = [
         'entity' => $entity,
@@ -232,7 +250,8 @@ class DeleteRequestListBuilder extends EntityListBuilder {
       ->condition('fs.field_request_status_value', RequestStatus::OPEN)
       ->distinct(TRUE);
 
-    foreach (DeleteRequestManager::$supportedEntityTypes as $type => $flag) {
+    $supported_entity_types = $this->requestHandler->getSupportedEntityTypes();
+    foreach ($supported_entity_types as $type => $flag) {
       $definition = $this->entityTypeManager->getDefinition($type);
       $data_table = $definition->getDataTable();
       $entity_keys = $definition->get('entity_keys');
