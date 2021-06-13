@@ -1,3 +1,7 @@
+# For request flows, we don't use flag module's default permissions.
+# Since using these flags have different implications we want to be sure people manipulating
+# these permissions are aware of them.
+# TLDR; for delete_request_* flags, default permissions are not used.
 make delete request:
   title: Make Delete Request
   description: 'Allow users to send delete requests for content entities'
