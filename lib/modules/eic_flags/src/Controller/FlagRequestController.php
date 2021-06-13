@@ -3,14 +3,15 @@
 namespace Drupal\eic_flags\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
-use Drupal\eic_flags\DeleteRequestListBuilder;
+use Drupal\eic_flags\FlaggedEntitiesListBuilder;
+use Drupal\eic_flags\RequestTypes;
 
 /**
- * Class DeleteRequestController
+ * Class FlagRequestController
  *
  * @package Drupal\eic_flags\Controller
  */
-class DeleteRequestController extends ControllerBase {
+class FlagRequestController extends ControllerBase {
 
   /**
    * @return \Symfony\Component\HttpFoundation\Response
@@ -19,7 +20,9 @@ class DeleteRequestController extends ControllerBase {
   public function listing() {
     $definition = $this->entityTypeManager()->getDefinition('flagging');
 
-    return $this->entityTypeManager()->createHandlerInstance(DeleteRequestListBuilder::class, $definition)->render();
+    return $this->entityTypeManager()
+      ->createHandlerInstance(FlaggedEntitiesListBuilder::class, $definition)
+      ->render();
   }
 
 }

@@ -1,36 +1,49 @@
 <section class="ecl-section-wrapper ecl-section-wrapper--is-grey ecl-comment-overview {{ extra_classes }}">
   <div class="ecl-container">
-    <div class="ecl-comment-overview__wrapper">
-      {% if is_disabled %}
-        <p class="ecl-comment-overview__disabled-label">{{ disabled_label|default('Placing comments has been disabled.') }}</p>
-      {% else %}
-        {% if user is not empty %}
-          <div class="ecl-comment-overview__form-wrapper">
-            {% include "@theme/patterns/compositions/comment/comment-form.html.twig" with {
-              author: user,
-              icon_file_path: icon_file_path,
-              form: form,
-            } only %}
-          </div>
-        {% endif %}
-      {% endif %}
+    {% embed "@theme/patterns/compositions/editorial-article.html.twig" with {
+      extra_classes: 'ecl-editorial-article--has-static-layout',
+    } %}
+      {% block content %}
+        <div class="ecl-comment-overview__wrapper">
+          <span class="ecl-comment-overview__title">{{ title|default('Replies') }}</span>
+          {% if is_disabled %}
+            <p class="ecl-comment-overview__disabled-label">{{ disabled_label|default('Placing comments has been disabled.') }}</p>
+          {% else %}
+            {% if user is not empty %}
+              <div class="ecl-comment-overview__form-wrapper">
+                {% include "@theme/patterns/compositions/comment/comment-form.html.twig" with {
+                  author: user,
+                  icon_file_path: icon_file_path,
+                  form: form,
+                } only %}
+              </div>
+            {% endif %}
+          {% endif %}
 
-      {% if items is not empty %}
-        <div class="ecl-comment-overview__items">
-          {% for item in items %}
-            <div class="ecl-comment-overview__item">
-              {% include "@theme/patterns/compositions/comment/comment-thread.html.twig" with item|default({})|merge({
-                icon_file_path: icon_file_path,
-                user: user,
-                items: item.items,
-              }) only %}
+          {% if items is not empty %}
+            <div class="ecl-comment-overview__items">
+              {% for item in items %}
+                <div class="ecl-comment-overview__item">
+                  {% include "@theme/patterns/compositions/comment/comment-thread.html.twig" with item|default({})|merge({
+                    icon_file_path: icon_file_path,
+                    user: user,
+                    items: item.items,
+                  }) only %}
+                </div>
+              {% endfor %}
             </div>
-          {% endfor %}
+          {% else %}
+            <p class="ecl-comment-overview__no-items">{{ no_items_label|default('There are currently no comments.') }}</p>
+          {% endif %}
         </div>
-      {% else %}
-        <p class="ecl-comment-overview__no-items">{{ no_items_label|default('There are currently no comments.') }}</p>
-      {% endif %}
-    </div>
+      {% endblock %}
+
+      {% block sidebar %}
+        {% include "@theme/patterns/compositions/featured-contributors.html.twig" with contributors|default({})|merge({
+          grid: true
+        }) only %}
+      {% endblock %}
+    {% endembed %}
     <span class="ecl-comment-overview__throbber"></span>
   </div>
 </section>

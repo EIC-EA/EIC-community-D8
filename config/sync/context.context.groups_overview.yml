@@ -11,7 +11,7 @@ disabled: false
 conditions:
   view_inclusion:
     id: view_inclusion
-    negate: null
+    negate: false
     uuid: 4a6ec31c-af26-4d0a-9279-80ba5a4221d0
     view_inclusion:
       view-global_overviews-page_1: view-global_overviews-page_1
@@ -104,6 +104,20 @@ reactions:
         unique: 0
         context_id: groups_overview
         uuid: 97b594dc-7529-4ac6-973d-b43ffc569246
+      1f0f43a4-1636-448f-b378-fbfe33da4fab:
+        id: system_breadcrumb_block
+        label: Breadcrumbs
+        provider: system
+        label_display: '0'
+        region: breadcrumbs
+        weight: '0'
+        context_mapping: {  }
+        custom_id: system_breadcrumb_block
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: groups_overview
+        uuid: 1f0f43a4-1636-448f-b378-fbfe33da4fab
     id: blocks
     saved: false
     uuid: deeaf135-b781-47ec-b086-7d9fec72c007

@@ -1,7 +1,7 @@
 {% set title_element = title_element|default('h3') %}
 
 {% if items is not empty %}
-  <div class="ecl-featured-list {{ is_collapsible ? 'ecl-featured-list--is-collapsible' }} ecl-featured-list--contributors">
+  <div class="ecl-featured-list {{ is_collapsible ? 'ecl-featured-list--is-collapsible' }} {{ grid ? 'ecl-featured-list--has-grid-layout' }} ecl-featured-list--contributors">
     {% if title is not empty %}
       {% if title is not empty %}
         <{{ title_element }} class="ecl-featured-list__title">{{ title }}</{{ title_element }}>
@@ -14,7 +14,8 @@
           <div class="ecl-featured-list__item">
             {% include "@theme/patterns/components/author.html.twig" with item|default({})|merge({
               icon_file_path: icon_file_path,
-              size: 'medium'
+              size: 'medium',
+              display_avatar_only: grid|default(false),
             }) only %}
           </div>
         {% endfor %}

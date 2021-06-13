@@ -1,15 +1,15 @@
-uuid: f2ca9ecd-2c18-4bc5-85a7-2fd0f999c5bc
+uuid: 5fa1257e-1744-47c7-a62c-71b91454e250
 langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.flagging.field_deletion_reason
+    - field.storage.flagging.field_request_reason
     - flag.flag.request_delete_content
-id: flagging.request_delete_content.field_deletion_reason
-field_name: field_deletion_reason
+id: flagging.request_delete_content.field_request_reason
+field_name: field_request_reason
 entity_type: flagging
 bundle: request_delete_content
-label: Reason
+label: 'Request reason'
 description: ''
 required: true
 translatable: true

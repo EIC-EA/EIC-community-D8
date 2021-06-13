@@ -1,0 +1,58 @@
+uuid: bfebbc46-2f78-4d31-8949-a2edc65524a6
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+name: book_page
+label: 'Book page'
+group: null
+description: ''
+requireAllConditions: false
+disabled: false
+conditions:
+  node_type:
+    id: node_type
+    bundles:
+      book: book
+    negate: false
+    uuid: 6ece8dd6-40fc-4f4a-b4cc-87351d4cb228
+    context_mapping:
+      node: '@node.node_route_context:node'
+reactions:
+  blocks:
+    blocks:
+      6f75b510-521a-45c2-8c11-45071427dac5:
+        id: system_breadcrumb_block
+        label: Breadcrumbs
+        provider: system
+        label_display: '0'
+        region: breadcrumbs
+        weight: '0'
+        context_mapping: {  }
+        custom_id: system_breadcrumb_block
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: book_page
+        uuid: 6f75b510-521a-45c2-8c11-45071427dac5
+      f1f33438-3b3b-4c3e-bbeb-92b3ebe5f74b:
+        id: eic_content_book_navigation
+        label: 'EIC Content Book navigation'
+        provider: eic_content_book
+        label_display: '0'
+        region: sidebar
+        weight: '0'
+        block_mode: null
+        context_mapping: {  }
+        custom_id: eic_content_book_navigation
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: book_page
+        uuid: f1f33438-3b3b-4c3e-bbeb-92b3ebe5f74b
+    id: blocks
+    saved: false
+    uuid: 66f27c63-843e-4141-8d84-2e722b3b4555
+    include_default_blocks: 0
+weight: 0

@@ -1,0 +1,7 @@
+eic_groups.about_page:
+  path: '/group/{group}/about'
+  defaults:
+    _controller: '\Drupal\eic_groups\Controller\AboutPageController::build'
+    _title_callback: '\Drupal\eic_groups\Controller\AboutPageController::title'
+  requirements:
+    _group_permission: 'view group'

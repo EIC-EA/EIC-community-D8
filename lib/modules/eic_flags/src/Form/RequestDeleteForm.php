@@ -7,7 +7,9 @@ use Drupal\Core\Entity\ContentEntityDeleteForm;
 use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\eic_flags\Service\DeleteRequestManager;
+use Drupal\eic_flags\RequestTypes;
+use Drupal\eic_flags\Service\DeleteRequestHandler;
+use Drupal\eic_flags\Service\RequestHandlerCollector;
 use Drupal\flag\Entity\Flag;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -19,9 +21,9 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class RequestDeleteForm extends ContentEntityDeleteForm {
 
   /**
-   * @var \Drupal\eic_flags\Service\DeleteRequestManager
+   * @var \Drupal\eic_flags\Service\HandlerInterface
    */
-  private $deleteRequestManager;
+  private $deleteRequestHandler;
 
   /**
    * RequestDeleteForm constructor.
@@ -29,17 +31,17 @@ class RequestDeleteForm extends ContentEntityDeleteForm {
    * @param \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository
    * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface $entity_type_bundle_info
    * @param \Drupal\Component\Datetime\TimeInterface $time
-   * @param \Drupal\eic_flags\Service\DeleteRequestManager $deleteRequestManager
+   * @param \Drupal\eic_flags\Service\RequestHandlerCollector $collector
    */
   public function __construct(
     EntityRepositoryInterface $entity_repository,
     EntityTypeBundleInfoInterface $entity_type_bundle_info,
     TimeInterface $time,
-    DeleteRequestManager $deleteRequestManager
+    RequestHandlerCollector $collector
   ) {
     parent::__construct($entity_repository, $entity_type_bundle_info, $time);
 
-    $this->deleteRequestManager = $deleteRequestManager;
+    $this->deleteRequestHandler = $collector->getHandlerByType(RequestTypes::DELETE);
   }
 
   /**
@@ -50,7 +52,7 @@ class RequestDeleteForm extends ContentEntityDeleteForm {
       $container->get('entity.repository'),
       $container->get('entity_type.bundle.info'),
       $container->get('datetime.time'),
-      $container->get('eic_flags.delete_request_manager')
+      $container->get('eic_flags.handler_collector')
     );
   }
 
@@ -96,7 +98,8 @@ class RequestDeleteForm extends ContentEntityDeleteForm {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $flag = $this->deleteRequestManager->applyFlag($this->entity, $form_state->getValue('reason'));
+    $flag = $this->deleteRequestHandler
+      ->applyFlag($this->entity, $form_state->getValue('reason'));
     if (!$flag instanceof Flag) {
       $this->messenger()->addError($this->t('You are not allowed to do this'));
     }

@@ -1,0 +1,11 @@
+uuid: a052ee7e-c030-4966-8cf5-209e7ac338e8
+langcode: en
+status: true
+dependencies: {  }
+id: views_page---global_overviews__members_user_access
+display_id: views_page---global_overviews__members
+field_identifier: user_access
+default_sort: true
+default_order: desc
+label: 'Last active'
+weight: 0

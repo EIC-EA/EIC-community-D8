@@ -8,16 +8,16 @@ dependencies:
 id: group_group
 label: 'Group - Group'
 type: 'canonical_entities:group'
-pattern: '[group:title]'
+pattern: 'group/[group:title]'
 selection_criteria:
-  7b70289a-ef5c-4c7c-9933-cf064ce3ec3c:
+  e56ddab0-efca-48de-aa22-d30eb66a3604:
     id: 'entity_bundle:group'
     bundles:
       group: group
     negate: false
     context_mapping:
       group: group
-    uuid: 7b70289a-ef5c-4c7c-9933-cf064ce3ec3c
+    uuid: e56ddab0-efca-48de-aa22-d30eb66a3604
 selection_logic: and
-weight: -7
+weight: -4
 relationships: {  }
