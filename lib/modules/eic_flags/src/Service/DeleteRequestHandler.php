@@ -70,12 +70,6 @@ class DeleteRequestHandler extends AbstractRequestHandler {
    * @param \Drupal\group\Entity\GroupInterface $group
    */
   private function deleteGroup(GroupInterface $group) {
-    $related_stories = $group->get('field_related_news_stories')
-      ->referencedEntities();
-    foreach ($related_stories as $related_story) {
-      $related_story->delete();
-    }
-
     // Retrieve group content entities linked to the group
     $group_contents = $group->getContent();
     $batch_builder = (new BatchBuilder())
@@ -85,7 +79,7 @@ class DeleteRequestHandler extends AbstractRequestHandler {
           'deleteGroupContentFinished',
         ]
       )
-      ->setTitle($this->t('User updates'));
+      ->setTitle($this->t('Deleting group @group', ['@group' => $group->label()]));
 
     foreach ($group_contents as $group_content) {
       $batch_builder->addOperation(
