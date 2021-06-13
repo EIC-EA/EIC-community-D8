@@ -5,6 +5,6 @@ services:
       - { name: service_collector, tag: request_handler, call: addHandler }
   eic_flags.delete_request_handler:
     class: Drupal\eic_flags\Service\DeleteRequestHandler
-    arguments: [ '@module_handler', '@flag', '@content_moderation.moderation_information' ]
+    arguments: [ '@module_handler', '@entity_type.manager', '@flag', '@content_moderation.moderation_information' ]
     tags:
       - { name: request_handler }
