@@ -3,6 +3,7 @@
 namespace Drupal\eic_flags\Service;
 
 use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\flag\FlaggingInterface;
 
 /**
@@ -76,4 +77,11 @@ interface HandlerInterface {
    */
   public function supports(ContentEntityInterface $contentEntity);
 
+  /**
+   * @param \Drupal\Core\Entity\ContentEntityInterface $content_entity
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *
+   * @return bool
+   */
+  public function hasOpenRequest(ContentEntityInterface $content_entity, AccountInterface $account);
 }

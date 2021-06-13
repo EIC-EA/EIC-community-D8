@@ -41,6 +41,7 @@ class DeleteRequestHandler extends AbstractRequestHandler {
       case 'node':
       case 'comment':
         $content_entity->delete();
+        $content_entity->save();
         break;
     }
 

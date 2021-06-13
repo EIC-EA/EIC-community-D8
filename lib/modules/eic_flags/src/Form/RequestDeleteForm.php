@@ -41,7 +41,9 @@ class RequestDeleteForm extends ContentEntityDeleteForm {
   ) {
     parent::__construct($entity_repository, $entity_type_bundle_info, $time);
 
-    $this->deleteRequestHandler = $collector->getHandlerByType(RequestTypes::DELETE);
+    $this->deleteRequestHandler = $collector->getHandlerByType(
+      RequestTypes::DELETE
+    );
   }
 
   /**
@@ -67,7 +69,9 @@ class RequestDeleteForm extends ContentEntityDeleteForm {
    * {@inheritdoc}
    */
   public function getDescription() {
-    return $this->t('You\'re about to request a deletion for this entity. Are you sure?');
+    return $this->t(
+      'You\'re about to request a deletion for this entity. Are you sure?'
+    );
   }
 
   /**
@@ -90,7 +94,18 @@ class RequestDeleteForm extends ContentEntityDeleteForm {
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
     if (!$form_state->getValue('reason')) {
-      $form_state->setErrorByName('reason', $this->t('Reason field is required'));
+      $form_state->setErrorByName(
+        'reason', $this->t('Reason field is required')
+      );
+    }
+
+    if ($this->deleteRequestHandler->hasOpenRequest(
+      $this->entity, $this->currentUser()
+    )) {
+      $form_state->setError(
+        $form,
+        $this->t('An open request already exists for this entity.')
+      );
     }
   }
 
