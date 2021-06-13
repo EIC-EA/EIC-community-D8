@@ -2,9 +2,14 @@
 
 namespace Drupal\eic_flags\Service;
 
+use Drupal\Core\Batch\BatchBuilder;
 use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\eic_flags\RequestStatus;
 use Drupal\eic_flags\RequestTypes;
 use Drupal\flag\FlaggingInterface;
+use Drupal\group\Entity\GroupContentInterface;
+use Drupal\group\Entity\GroupInterface;
+use Drupal\user\UserInterface;
 
 /**
  * Class DeleteRequestHandler
@@ -23,8 +28,31 @@ class DeleteRequestHandler extends AbstractRequestHandler {
   /**
    * {@inheritdoc}
    */
-  public function accept(FlaggingInterface $flagging, ContentEntityInterface $content_entity, string $reason) {
-    // TODO: Implement accept() method.
+  public function accept(
+    FlaggingInterface $flagging,
+    ContentEntityInterface $content_entity,
+    string $reason
+  ) {
+    switch ($content_entity->getEntityTypeId()) {
+      case 'group':
+        /** @var GroupInterface $content_entity */
+        $this->deleteGroup($content_entity);
+        break;
+      case 'node':
+      case 'comment':
+        $content_entity->delete();
+        break;
+    }
+
+    $this->moduleHandler->invokeAll(
+      'request_close',
+      [
+        $flagging,
+        $content_entity,
+        RequestStatus::ACCEPTED,
+        $reason,
+      ]
+    );
   }
 
   /**
@@ -36,6 +64,126 @@ class DeleteRequestHandler extends AbstractRequestHandler {
       'group' => 'request_delete_group',
       'comment' => 'request_delete_comment',
     ];
+  }
+
+  /**
+   * @param \Drupal\group\Entity\GroupInterface $group
+   */
+  private function deleteGroup(GroupInterface $group) {
+    $related_stories = $group->get('field_related_news_stories')
+      ->referencedEntities();
+    foreach ($related_stories as $related_story) {
+      $related_story->delete();
+    }
+
+    // Retrieve group content entities linked to the group
+    $group_contents = $group->getContent();
+    $batch_builder = (new BatchBuilder())
+      ->setFinishCallback(
+        [
+          DeleteRequestHandler::class,
+          'deleteGroupContentFinished',
+        ]
+      )
+      ->setTitle($this->t('User updates'));
+
+    foreach ($group_contents as $group_content) {
+      $batch_builder->addOperation(
+        [
+          DeleteRequestHandler::class,
+          'deleteGroupContent',
+        ],
+        [$group_content, $group]
+      );
+    }
+
+    batch_set($batch_builder->toArray());
+  }
+
+  /**
+   * @param \Drupal\group\Entity\GroupContentInterface $group_content
+   * @param \Drupal\group\Entity\GroupInterface $group
+   * @param $context
+   */
+  public static function deleteGroupContent(
+    GroupContentInterface $group_content,
+    GroupInterface $group,
+    &$context
+  ) {
+    if (!isset($context['results']['errors'])) {
+      $context['results']['errors'] = [];
+    }
+
+    if (!isset($context['results']['group'])) {
+      $context['results']['group'] = $group;
+    }
+
+    try {
+      // Clean up everything!
+      $target_entity = $group_content->getEntity();
+      $group_content->delete();
+
+      if ($target_entity instanceof UserInterface) {
+        $group->removeMember($target_entity);
+        // Job done. We don't delete target if it's a user.
+        return;
+      }
+
+      if ($target_entity instanceof ContentEntityInterface) {
+        $target_entity->delete();
+      }
+
+    } catch (\Exception $exception) {
+      $context['results']['errors'][] = t(
+        'Something went wrong during content removal @error',
+        ['@error' => $exception->getMessage()]
+      );
+    }
+  }
+
+  /**
+   * @param bool $success
+   * @param array $results
+   * @param array $operations
+   *
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   */
+  public static function deleteGroupContentFinished(
+    bool $success,
+    array $results,
+    array $operations
+  ) {
+    $messenger = \Drupal::messenger();
+    if (!$success) {
+      $error_operation = reset($operations);
+      $message = t(
+        'An error occurred while processing %error_operation with arguments: @arguments',
+        [
+          '%error_operation' => $error_operation[0],
+          '@arguments' => print_r(
+            $error_operation[1],
+            TRUE
+          ),
+        ]
+      );
+
+      $messenger->addError($message);
+
+      return;
+    }
+
+    if (!empty($results['results']['errors'])) {
+      foreach ($results['results']['errors'] as $error) {
+        $messenger->addError($error);
+      }
+
+      return;
+    }
+
+    if (isset($results['group'])
+      && $results['group'] instanceof GroupInterface) {
+      $results['group']->delete();
+    }
   }
 
 }

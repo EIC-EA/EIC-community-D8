@@ -15,6 +15,7 @@ use Drupal\eic_flags\Form\RequestDeleteForm;
 use Drupal\eic_flags\RequestStatus;
 use Drupal\eic_flags\RequestTypes;
 use Drupal\eic_flags\Service\DeleteRequestHandler;
+use Drupal\eic_flags\Service\HandlerInterface;
 
 /**
  * Implements hook_theme().
@@ -101,16 +102,16 @@ function eic_flags_entity_operation(EntityInterface $entity) {
   $delete_request_handler = \Drupal::service('eic_flags.handler_collector')
     ->getHandlerByType(RequestTypes::DELETE);
 
-  $entity_type_id = $entity->getEntityTypeId();
   if (!$entity instanceof ContentEntityInterface
-    || !in_array($entity_type_id, array_keys($delete_request_handler->getSupportedEntityTypes()))
-    || !$entity->access('request-delete')) {
+    || !$delete_request_handler->supports($entity)
+  ) {
     return [];
   }
 
-  if (\Drupal::service('router.admin_context')->isAdminRoute()
-    && 'eic_flags.flagged_entities.list' === \Drupal::routeMatch()
-      ->getRouteName()) {
+  $operations = [];
+  $route_name = \Drupal::routeMatch()->getRouteName();
+  $is_admin = \Drupal::service('router.admin_context')->isAdminRoute();
+  if ($is_admin && 'eic_flags.flagged_entities.list' === $route_name) {
     // TODO implement a more generic approach for available statuses and generate this dynamically
     return [
       'deny_request' => [
@@ -121,7 +122,19 @@ function eic_flags_entity_operation(EntityInterface $entity) {
           ->setRouteParameter('destination', \Drupal::request()
             ->getRequestUri()),
       ],
+      'accept_request' => [
+        'title' => t('Accept'),
+        'url' => $entity->toUrl('close-request')
+          ->setRouteParameter('request_type', RequestTypes::DELETE)
+          ->setRouteParameter('response', RequestStatus::ACCEPTED)
+          ->setRouteParameter('destination', \Drupal::request()
+            ->getRequestUri()),
+      ],
     ];
+  }
+
+  if (!$entity->access('request-delete') || $is_admin) {
+    return $operations;
   }
 
   $operations['request_delete'] = [
@@ -132,6 +145,33 @@ function eic_flags_entity_operation(EntityInterface $entity) {
   ];
 
   return $operations;
+}
+
+/**
+ * Implements hook_entity_operation_alter().
+ */
+function eic_flags_entity_operation_alter(array &$operations, EntityInterface $entity) {
+  $route_name = \Drupal::routeMatch()->getRouteName();
+  if ('eic_flags.flagged_entities.list' !== $route_name) {
+    return;
+  }
+
+  $request_type = \Drupal::requestStack()
+    ->getCurrentRequest()
+    ->get('request_type');
+  $handler = \Drupal::service('eic_flags.handler_collector')
+    ->getHandlerByType($request_type);
+  if (!$handler instanceof HandlerInterface || !$handler->supports($entity)) {
+    return;
+  }
+
+  $operations = array_filter($operations, function ($operation, $key) {
+    return in_array($key, [
+      'deny_request',
+      'accept_request',
+      'archive_request',
+    ]);
+  }, ARRAY_FILTER_USE_BOTH);
 }
 
 /**

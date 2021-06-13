@@ -4,6 +4,7 @@ namespace Drupal\eic_flags\Service;
 
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\eic_flags\RequestStatus;
 use Drupal\flag\Entity\Flag;
 use Drupal\flag\FlaggingInterface;
@@ -16,6 +17,8 @@ use Drupal\user\Entity\User;
  * @package Drupal\eic_flags\Service\Handler
  */
 abstract class AbstractRequestHandler implements HandlerInterface {
+
+  use StringTranslationTrait;
 
   /**
    * @var \Drupal\Core\Extension\ModuleHandlerInterface
@@ -94,6 +97,16 @@ abstract class AbstractRequestHandler implements HandlerInterface {
    */
   public function getSupportedEntityTypes() {
     return [];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function supports(ContentEntityInterface $contentEntity) {
+    return in_array(
+      $contentEntity->getEntityTypeId(),
+      array_keys($this->getSupportedEntityTypes())
+    );
   }
 
   /**
