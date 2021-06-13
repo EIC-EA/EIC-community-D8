@@ -3,8 +3,13 @@
 namespace Drupal\eic_user;
 
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Link;
 use Drupal\Core\Logger\LoggerChannelTrait;
+use Drupal\Core\Render\Markup;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Url;
+use Drupal\user\UserInterface;
 
 /**
  * UserHelper service that provides helper functions for users.
@@ -36,13 +41,43 @@ class UserHelper {
   protected $userStorage;
 
   /**
+   * The current user.
+   *
+   * @var \Drupal\Core\Session\AccountInterface
+   */
+  protected $currentUser;
+
+  /**
    * Constructs a new UserHelper.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager service.
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *   The current user.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, AccountInterface $account) {
     $this->userStorage = $entity_type_manager->getStorage('user');
+    $this->currentUser = $account;
+  }
+
+  /**
+   * Provides a link to the given account with display name.
+   *
+   * If the current user doesn't have 'access user profiles' permission, the it
+   * will return the name only.
+   *
+   * @param \Drupal\user\UserInterface $account
+   *   The user account for which we return the link.
+   *
+   * @return \Drupal\Component\Render\MarkupInterface|\Drupal\Core\Link|string
+   *   The username, linked if user can access user profiles.
+   */
+  public function getUserLink(UserInterface $account) {
+    if ($this->currentUser->hasPermission('access user profiles')) {
+      $url = Url::fromRoute('entity.user.canonical', ['user' => $account->id()]);
+      return Link::fromTextAndUrl($account->getDisplayName(), $url);
+    }
+    return Markup::create($account->getDisplayName());
   }
 
   /**

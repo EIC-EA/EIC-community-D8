@@ -1,0 +1,55 @@
+uuid: 6ffe333f-db5c-4dac-b7da-b46c9eeb0782
+langcode: en
+status: true
+dependencies:
+  config:
+    - search_api.index.global
+    - views.view.global_overviews
+  module:
+    - search_api
+id: global_members_summary
+name: 'Members summary'
+facets:
+  global_members_topics_of_expertise:
+    checked: true
+    label: 'Topics of Expertise'
+    separator: ', '
+    weight: 0
+    show_count: false
+  global_members_topics_of_interest:
+    checked: true
+    label: 'Topics of Interest'
+    separator: ', '
+    weight: 0
+    show_count: false
+  global_members_job_title:
+    checked: true
+    label: 'Job title'
+    separator: ', '
+    weight: 0
+    show_count: false
+  global_members_languages:
+    checked: true
+    label: Languages
+    separator: ', '
+    weight: 0
+    show_count: false
+  global_members_location_country_code:
+    checked: true
+    label: Location
+    separator: ', '
+    weight: 0
+    show_count: false
+facet_source_id: 'search_api:views_page__global_overviews__members'
+processor_configs:
+  hide_when_not_rendered:
+    processor_id: hide_when_not_rendered
+    weights:
+      build: '45'
+    settings: {  }
+  reset_facets:
+    processor_id: reset_facets
+    weights:
+      build: '30'
+    settings:
+      link_text: 'Clear all'

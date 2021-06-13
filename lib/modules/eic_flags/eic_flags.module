@@ -9,12 +9,10 @@ use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Session\AccountInterface;
-use Drupal\Core\Url;
 use Drupal\eic_flags\Form\RequestCloseForm;
 use Drupal\eic_flags\Form\RequestDeleteForm;
 use Drupal\eic_flags\RequestStatus;
 use Drupal\eic_flags\RequestTypes;
-use Drupal\eic_flags\Service\DeleteRequestHandler;
 use Drupal\eic_flags\Service\HandlerInterface;
 
 /**
@@ -74,7 +72,7 @@ function eic_flags_field_request_status_allowed_values() {
 }
 
 /**
- * Implements hook_entity_type_alter.
+ * Implements hook_entity_type_build().
  */
 function eic_flags_entity_type_build(array &$entity_types) {
   /** @var \Drupal\eic_flags\Service\HandlerInterface $delete_request_handler */
@@ -95,7 +93,7 @@ function eic_flags_entity_type_build(array &$entity_types) {
 }
 
 /**
- * Implements hook_entity_operation.
+ * Implements hook_entity_operation().
  */
 function eic_flags_entity_operation(EntityInterface $entity) {
   /** @var \Drupal\eic_flags\Service\HandlerInterface $delete_request_handler */
@@ -175,7 +173,7 @@ function eic_flags_entity_operation_alter(array &$operations, EntityInterface $e
 }
 
 /**
- * Implements hook_entity_access.
+ * Implements hook_entity_access().
  */
 function eic_flags_entity_access(EntityInterface $entity, $operation, AccountInterface $account) {
   /** @var \Drupal\eic_flags\Service\HandlerInterface $delete_request_handler */
@@ -191,11 +189,7 @@ function eic_flags_entity_access(EntityInterface $entity, $operation, AccountInt
   }
 
   // We allow requests only for certain roles.
-  if (empty(array_intersect([
-    'administrator',
-    'trusted_user',
-    'content_administrator',
-  ], $account->getRoles()))) {
+  if (!$account->hasPermission('make delete request')) {
     return AccessResult::forbidden();
   }
 }

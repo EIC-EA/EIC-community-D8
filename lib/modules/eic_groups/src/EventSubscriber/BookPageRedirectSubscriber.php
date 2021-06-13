@@ -4,8 +4,7 @@ namespace Drupal\eic_groups\EventSubscriber;
 
 use Drupal\book\BookManagerInterface;
 use Drupal\Core\Cache\CacheableRedirectResponse;
-use Drupal\eic_groups\EICGroupsHelperInterface;
-use Drupal\node\Entity\Node;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\node\NodeInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
@@ -17,13 +16,6 @@ use Symfony\Component\HttpKernel\KernelEvents;
 class BookPageRedirectSubscriber implements EventSubscriberInterface {
 
   /**
-   * The group entity from the route context.
-   *
-   * @var \Drupal\group\Entity\GroupInterface
-   */
-  protected $group;
-
-  /**
    * The book manager.
    *
    * @var \Drupal\book\BookManagerInterface
@@ -31,16 +23,23 @@ class BookPageRedirectSubscriber implements EventSubscriberInterface {
   protected $bookManager;
 
   /**
+   * The entity type manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
    * Constructs a new BookPageRedirectSubscriber instance.
    *
-   * @param \Drupal\eic_groups\EICGroupsHelperInterface $eic_groups_helper
-   *   The EIC Groups helper service.
    * @param \Drupal\book\BookManagerInterface $book_manager
    *   The book manager.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
    */
-  public function __construct(EICGroupsHelperInterface $eic_groups_helper, BookManagerInterface $book_manager) {
-    $this->group = $eic_groups_helper->getGroupFromRoute();
+  public function __construct(BookManagerInterface $book_manager, EntityTypeManagerInterface $entity_type_manager) {
     $this->bookManager = $book_manager;
+    $this->entityTypeManager = $entity_type_manager;
   }
 
   /**
@@ -76,8 +75,13 @@ class BookPageRedirectSubscriber implements EventSubscriberInterface {
       return;
     }
 
-    // Only redirect book pages in the context of group.
-    if ($node->getType() !== 'book' || is_null($this->group)) {
+    // If node is not a book we skip redirection.
+    if ($node->getType() !== 'book') {
+      return;
+    }
+
+    // If book node is not a group content we skip redirection.
+    if (!$this->entityTypeManager->getStorage('group_content')->loadByEntity($node)) {
       return;
     }
 
@@ -85,7 +89,7 @@ class BookPageRedirectSubscriber implements EventSubscriberInterface {
     $book_data = reset($data);
     if (!empty($book_data['below'])) {
       $wiki_page_nid = reset($book_data['below'])['link']['nid'];
-      $wiki_page = Node::load($wiki_page_nid);
+      $wiki_page = $this->entityTypeManager->getStorage('node')->load($wiki_page_nid);
       $redirect_response = new CacheableRedirectResponse($wiki_page->toUrl()->toString());
       $redirect_response->addCacheableDependency($wiki_page);
       $redirect_response->send();

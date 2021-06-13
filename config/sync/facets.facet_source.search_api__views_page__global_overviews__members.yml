@@ -1,0 +1,9 @@
+uuid: 5409141d-31c8-4e7b-a85b-1391b5c60116
+langcode: en
+status: true
+dependencies: {  }
+id: search_api__views_page__global_overviews__members
+name: 'search_api:views_page__global_overviews__members'
+filter_key: null
+url_processor: query_string
+breadcrumb: {  }

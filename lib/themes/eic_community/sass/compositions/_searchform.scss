@@ -1,0 +1,46 @@
+.ecl-searchform {
+  padding: map-get($ecl-spacing, 'xl') 0;
+
+  &__fields {
+    display: flex;
+    border: ecl-border('important');
+    margin-top: map-get($ecl-spacing, 'm');
+
+    &:first-child {
+      margin-top: 0;
+    }
+
+    &:focus-within {
+      color: ecl-typography('color', 'title');
+      outline: ecl-border('outline');
+    }
+  }
+
+  .ecl-form-group {
+    flex-grow: 1;
+  }
+
+  &__field {
+    width: 100%;
+
+    &,
+    &:focus,
+    &:hover {
+      border: 0;
+      outline: none;
+    }
+  }
+
+  & &__submit {
+    background-color: map-get($ecl-colors, 'grey');
+    flex-shrink: 0;
+    padding-left: 0.6875rem;
+    padding-right: 0.6875rem;
+  }
+
+  &__suggestion {
+    a {
+      font-weight: $ecl-font-weight-bold;
+    }
+  }
+}

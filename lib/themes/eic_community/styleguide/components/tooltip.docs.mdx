@@ -1,0 +1,20 @@
+# Tooltip
+
+Displays a tooltip that expands editable content.
+
+## Example:
+
+```
+{% include "@theme/patterns/components/tooltip.html.twig" %}
+```
+
+## Twig parameters:
+
+| Key            | Type    | Description                                                                | Mandatory |
+| -------------- | ------- | -------------------------------------------------------------------------- | --------- |
+| label          | string  | Displays a label within the dropdown, will also be used as semantic label. | no        |
+| hide_label     | boolean | Hides the label within the dropdown.                                       | no        |
+| close_label    | string  | Displays a label within the dropdown, will also be used as semantic label. | no        |
+| invert         | boolean | Displays the tooltip with inverted colors.                                 | no        |
+| content        | string  | Displays the content within the dropdown.                                  | yes       |
+| icon_file_path | string  | Enables the usage of the ECL icons within the component.                   | no        |

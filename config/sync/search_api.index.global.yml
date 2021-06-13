@@ -6,12 +6,13 @@ dependencies:
     - search_api_solr
     - node
     - group
+    - user
     - profile
     - search_api
     - flag_search_api
+    - address
     - content_moderation
     - flag
-    - user
   config:
     - field.storage.node.field_body
     - field.storage.node.field_discussion_type
@@ -22,6 +23,7 @@ dependencies:
     - field.storage.group.field_vocab_geo
     - field.storage.group.field_vocab_topics
     - field.storage.profile.field_body
+    - field.storage.profile.field_location_address
     - field.storage.profile.field_vocab_job_title
     - field.storage.profile.field_vocab_language
     - field.storage.profile.field_vocab_topic_expertise
@@ -283,11 +285,27 @@ field_settings:
     dependencies:
       module:
         - group
+  status:
+    label: 'User status'
+    datasource_id: 'entity:user'
+    property_path: status
+    type: boolean
+    dependencies:
+      module:
+        - user
   user__group_content__uid_gid:
     label: 'Reverse reference: Group content using Group content creator » Parent group'
     datasource_id: 'entity:user'
     property_path: 'search_api_reverse_entity_references_group_content__uid:gid'
     type: integer
+  user_access:
+    label: '[User] Last access'
+    datasource_id: 'entity:user'
+    property_path: access
+    type: date
+    dependencies:
+      module:
+        - user
   user_full_name:
     label: '[User] Full name'
     property_path: aggregated_field
@@ -313,6 +331,16 @@ field_settings:
     dependencies:
       config:
         - field.storage.profile.field_body
+      module:
+        - profile
+  user_profile_field_location_address_country_code:
+    label: 'Member profiles » Profile » Address » The two-letter country code'
+    datasource_id: 'entity:user'
+    property_path: 'member_profiles:entity:field_location_address:country_code'
+    type: string
+    dependencies:
+      config:
+        - field.storage.profile.field_location_address
       module:
         - profile
   user_profile_field_vocab_job_title:
@@ -391,6 +419,15 @@ datasource_settings:
       selected: {  }
 processor_settings:
   add_url: {  }
+  address_abbreviations_to_full_form:
+    user_profile_field_location_address_country_code:
+      enable: 1
+      concat: 0
+    fields: {  }
+    all_fields: false
+    weights:
+      preprocess_index: -20
+      preprocess_query: -20
   aggregated_field: {  }
   flag_count_indexer:
     flag_index:

@@ -122,6 +122,11 @@
       position: sticky;
       top: ecl-layout('gutter');
 
+      #{$node}--has-static-layout & {
+        position: relative;
+        top: auto;
+      }
+
       #{$node}--is-collapsible#{$node}--is-ready & {
         position: relative;
         top: auto;
