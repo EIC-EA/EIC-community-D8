@@ -1,0 +1,4 @@
+make delete request:
+  title: Make Delete Request
+  description: 'Allow users to send delete requests for content entities'
+  restrict access: TRUE

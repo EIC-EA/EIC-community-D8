@@ -151,11 +151,7 @@ function eic_flags_entity_access(EntityInterface $entity, $operation, AccountInt
   }
 
   // We allow requests only for certain roles.
-  if (empty(array_intersect([
-    'administrator',
-    'trusted_user',
-    'content_administrator',
-  ], $account->getRoles()))) {
+  if (!$account->hasPermission('make delete request')) {
     return AccessResult::forbidden();
   }
 }
