@@ -78,6 +78,7 @@ class FlagTokens implements ContainerInjectionInterface {
    */
   public function tokens($type, $tokens, array $data, array $options, BubbleableMetadata $bubbleable_metadata) {
     $replacements = [];
+    $flag = NULL;
     if ($type == 'flagging' && isset($data['flagging'])) {
       $flag = $data['flagging'];
       foreach ($tokens as $name => $original) {
