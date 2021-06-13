@@ -40,6 +40,12 @@ type_settings:
       from:
         - draft
         - published
+    unpublish:
+      label: Unpublish
+      from:
+        - published
+      to: pending
+      weight: 1
     upgrade_to_draft:
       label: 'Upgrade to draft'
       from:

@@ -53,6 +53,48 @@ class DeleteRequestHandler extends AbstractRequestHandler {
         $reason,
       ]
     );
+
+    $flagging->set('field_request_status', RequestStatus::ACCEPTED);
+    $flagging->save();
+  }
+
+  /**
+   * Denies the request but un-publish the entity instead
+   *
+   * @param \Drupal\flag\FlaggingInterface $flagging
+   * @param \Drupal\Core\Entity\ContentEntityInterface $content_entity
+   * @param string $reason
+   *
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   */
+  public function archive(
+    FlaggingInterface $flagging,
+    ContentEntityInterface $content_entity,
+    string $reason
+  ) {
+    if (!$this->moderationInformation->isModeratedEntity($content_entity)) {
+      $content_entity->set('status', FALSE);
+    }
+    else {
+      // TODO think about looping through every workflow to find an 'unpublished' state
+      $state = $content_entity->getEntityTypeId() === 'group' ? 'pending' : 'unpublished';
+      $content_entity->set('moderation_state', $state);
+    }
+
+    $content_entity->save();
+
+    $this->moduleHandler->invokeAll(
+      'request_close',
+      [
+        $flagging,
+        $content_entity,
+        RequestStatus::ARCHIVED,
+        $reason,
+      ]
+    );
+
+    $flagging->set('field_request_status', RequestStatus::ARCHIVED);
+    $flagging->save();
   }
 
   /**
@@ -79,7 +121,9 @@ class DeleteRequestHandler extends AbstractRequestHandler {
           'deleteGroupContentFinished',
         ]
       )
-      ->setTitle($this->t('Deleting group @group', ['@group' => $group->label()]));
+      ->setTitle(
+        $this->t('Deleting group @group', ['@group' => $group->label()])
+      );
 
     foreach ($group_contents as $group_content) {
       $batch_builder->addOperation(

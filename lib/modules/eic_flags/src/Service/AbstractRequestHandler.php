@@ -2,6 +2,7 @@
 
 namespace Drupal\eic_flags\Service;
 
+use Drupal\content_moderation\ModerationInformationInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
@@ -31,31 +32,50 @@ abstract class AbstractRequestHandler implements HandlerInterface {
   protected $flagService;
 
   /**
+   * @var \Drupal\content_moderation\ModerationInformationInterface
+   */
+  protected $moderationInformation;
+
+  /**
    * AbstractRequestHandler constructor.
    *
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
-   * @param \Drupal\flag\FlagService $flagService
+   * @param \Drupal\flag\FlagService $flag_service
+   * @param \Drupal\content_moderation\ModerationInformationInterface $moderation_information
    */
-  public function __construct(ModuleHandlerInterface $module_handler, FlagService $flagService) {
+  public function __construct(
+    ModuleHandlerInterface $module_handler,
+    FlagService $flag_service,
+    ModerationInformationInterface $moderation_information
+  ) {
     $this->moduleHandler = $module_handler;
-    $this->flagService = $flagService;
+    $this->flagService = $flag_service;
+    $this->moderationInformation = $moderation_information;
   }
 
   /**
    * {@inheritdoc}
    */
-  abstract function accept(FlaggingInterface $flagging, ContentEntityInterface $content_entity, string $reason);
+  abstract function accept(
+    FlaggingInterface $flagging, ContentEntityInterface $content_entity,
+    string $reason
+  );
 
   /**
    * {@inheritdoc}
    */
-  public function deny(FlaggingInterface $flagging, ContentEntityInterface $content_entity, string $reason) {
-    $this->moduleHandler->invokeAll('request_close', [
-      $flagging,
-      $content_entity,
-      RequestStatus::DENIED,
-      $reason,
-    ]);
+  public function deny(
+    FlaggingInterface $flagging, ContentEntityInterface $content_entity,
+    string $reason
+  ) {
+    $this->moduleHandler->invokeAll(
+      'request_close', [
+        $flagging,
+        $content_entity,
+        RequestStatus::DENIED,
+        $reason,
+      ]
+    );
 
     $flagging->set('field_request_status', RequestStatus::DENIED);
     $flagging->save();
@@ -79,7 +99,9 @@ abstract class AbstractRequestHandler implements HandlerInterface {
     }
 
     $current_user = User::load($current_user->id());
-    $flag = $this->flagService->getFlagById($support_entity_types[$entity->getEntityTypeId()]);
+    $flag = $this->flagService->getFlagById(
+      $support_entity_types[$entity->getEntityTypeId()]
+    );
     if (!$flag instanceof Flag || $flag->isFlagged($entity, $current_user)) {
       return NULL;
     }

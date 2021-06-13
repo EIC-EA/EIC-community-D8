@@ -146,6 +146,14 @@ function eic_flags_entity_operation(EntityInterface $entity) {
           ->setRouteParameter('destination', \Drupal::request()
             ->getRequestUri()),
       ],
+      'archive_request' => [
+        'title' => t('Archive'),
+        'url' => $entity->toUrl('close-request')
+          ->setRouteParameter('request_type', RequestTypes::DELETE)
+          ->setRouteParameter('response', RequestStatus::ARCHIVED)
+          ->setRouteParameter('destination', \Drupal::request()
+            ->getRequestUri()),
+      ]
     ];
   }
 
