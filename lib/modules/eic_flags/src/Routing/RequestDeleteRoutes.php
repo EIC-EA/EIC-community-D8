@@ -66,6 +66,16 @@ class RequestDeleteRoutes {
 
     $route_collection->add('eic_flags.flagged_entities.list', $route);
 
+    $route = (new Route('/admin/community/{entity_type}/{entity_id}/{request_type}/detail'))
+      ->addDefaults([
+        '_controller' => 'Drupal\eic_flags\Controller\FlagRequestController::detail',
+      ])
+      ->setRequirement('_role', 'administrator+content_administrator')
+      ->setRequirement('request_type', $flag_type_list)
+      ->setOption('_admin_route', TRUE);
+
+    $route_collection->add('eic_flags.flagged_entity.detail', $route);
+
     return $route_collection;
   }
 

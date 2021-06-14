@@ -345,7 +345,7 @@ display:
         sorts: false
         relationships: false
         arguments: false
-      path: group/%group/members
+      path: group/%group/people
       exposed_block: true
       cache:
         type: none
@@ -447,21 +447,10 @@ display:
         groups:
           1: AND
       access:
-        type: none
-        options: {  }
-      sorts:
-        user_field_full_name:
-          id: user_field_full_name
-          table: search_api_index_global
-          field: user_field_full_name
-          relationship: none
-          group_type: group
-          admin_label: ''
-          order: ASC
-          exposed: false
-          expose:
-            label: ''
-          plugin_id: search_api
+        type: group_permission
+        options:
+          group_permission: 'access members overview'
+      sorts: {  }
       relationships:
         member_profiles:
           id: member_profiles
@@ -481,8 +470,10 @@ display:
       contexts:
         - 'languages:language_content'
         - 'languages:language_interface'
+        - route.group
         - url
         - url.query_args
+        - user.group_permissions
         - 'user.node_grants:view'
       tags:
         - 'config:search_api.index.global'
