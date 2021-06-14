@@ -92,8 +92,8 @@ class DeleteRequestHandler extends AbstractRequestHandler {
       ]
     );
 
-    //$flagging->set('field_request_status', RequestStatus::ARCHIVED);
-    //$flagging->save();
+    $flagging->set('field_request_status', RequestStatus::ARCHIVED);
+    $flagging->save();
   }
 
   /**
