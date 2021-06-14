@@ -12,13 +12,13 @@ interface GroupVisibilityDatabaseStorageInterface {
   /**
    * Loads a group visibility record from database.
    *
-   * @param mixed $id
-   *   The ID of the group visibility record to load.
+   * @param mixed $gid
+   *   The Group entity ID of the visibility record to load.
    *
    * @return \Drupal\oec_group_flex\GroupVisibilityRecordInterface|bool
    *   A GroupVisibilityRecord object. FALSE if no matching records were found.
    */
-  public function load($id);
+  public function load($gid);
 
   /**
    * Constructs a new GroupVisibilityRecord object, without saving it.

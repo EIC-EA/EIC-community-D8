@@ -52,6 +52,14 @@ function oec_group_features_entity_base_field_info(EntityTypeInterface $entity_t
 }
 
 /**
+ * Implements hook_ENTITY_TYPE_insert().
+ */
+function oec_group_features_group_insert(EntityInterface $entity) {
+  \Drupal::classResolver(EntityOperations::class)
+    ->groupInsert($entity);
+}
+
+/**
  * Implements hook_ENTITY_TYPE_update().
  */
 function oec_group_features_group_update(EntityInterface $entity) {

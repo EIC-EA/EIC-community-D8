@@ -9,6 +9,7 @@ use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\BubbleableMetadata;
+use Drupal\eic_groups\Hooks\CronOperations;
 use Drupal\eic_groups\Hooks\EntityOperations;
 use Drupal\eic_groups\Hooks\GroupTokens;
 use Drupal\eic_groups\Hooks\FormOperations;
@@ -51,6 +52,46 @@ function eic_groups_group_insert(EntityInterface $entity) {
 function eic_groups_node_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
   \Drupal::classResolver(EntityOperations::class)
     ->nodeView($build, $entity, $display, $view_mode);
+}
+
+/**
+ * Implements hook_form_BASE_FORM_ID_alter().
+ */
+function eic_groups_form_group_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  // Since the group permissions do not exist when hook_group_insert() is
+  // invoked, we use a submit handler that will be called after it is created.
+  // @todo This might not be sufficient when creating groups programmatically,
+  //   e.g. when migrating groups, we should then create the group permissions
+  //   ourselves and not rely on group_flex module to create the permissions.
+  // Only act on group creation.
+  if ($form_state->getFormObject()->getOperation() == 'add') {
+    $form['actions']['submit']['#submit'][] = 'eic_groups_group_form_submit';
+  }
+}
+
+/**
+ * Custom submit handler for form_group forms.
+ */
+function eic_groups_group_form_submit(array $form, FormStateInterface $form_state) {
+  \Drupal::classResolver(FormOperations::class)
+    ->formGroupSubmit($form, $form_state);
+}
+
+/**
+ * Implements hook_module_implements_alter().
+ */
+function eic_groups_module_implements_alter(&$implementations, $hook) {
+  switch ($hook) {
+    case 'group_insert':
+      if (array_key_exists('group_content_menu', $implementations)) {
+        // eic_groups implementation must run after group_content_menu, so we
+        // place it at the end.
+        $value = $implementations['eic_groups'];
+        unset($implementations['eic_groups']);
+        $implementations['eic_groups'] = $value;
+      }
+      break;
+  }
 }
 
 /**
@@ -109,4 +150,12 @@ function eic_groups_pathauto_alias_alter(&$alias, array &$context) {
   /** @var \Drupal\eic_groups\Hooks\Pathauto $class */
   $class = \Drupal::classResolver(Pathauto::class);
   $class->aliasAlter($alias, $context);
+}
+
+/**
+ * Implements hook_cron().
+ */
+function eic_groups_cron() {
+  \Drupal::classResolver(CronOperations::class)
+    ->cron();
 }

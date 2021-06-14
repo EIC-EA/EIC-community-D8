@@ -1,0 +1,4 @@
+services:
+  eic_content.helper:
+    class: Drupal\eic_content\EICContentHelper
+    arguments: ['@entity_type.manager', '@module_handler']

@@ -1,0 +1,28 @@
+uuid: 53bcaeec-d05b-446b-b8ea-14dadf5a2303
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.flagging.request_delete_content.field_deletion_reason
+    - field.field.flagging.request_delete_content.field_request_status
+    - flag.flag.request_delete_content
+id: flagging.request_delete_content.default
+targetEntityType: flagging
+bundle: request_delete_content
+mode: default
+content:
+  field_deletion_reason:
+    weight: 0
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textarea
+    region: content
+  field_request_status:
+    weight: 1
+    settings: {  }
+    third_party_settings: {  }
+    type: options_select
+    region: content
+hidden: {  }

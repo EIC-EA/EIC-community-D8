@@ -58,9 +58,12 @@
 @import "./compositions/mainmenu";
 @import "./compositions/media-wrapper";
 @import "./compositions/overview-header";
+@import "./compositions/searchform";
 @import "./compositions/section-wrapper";
 @import "./compositions/social-share";
+@import './compositions/simple-banner.scss';
 @import "./compositions/site-footer";
+@import './compositions/state-banner.scss';
 @import "./compositions/subnavigation";
 @import "./compositions/teaser-overview";
 @import "./compositions/teaser";
@@ -102,6 +105,7 @@
 @import "./components/tag";
 @import "./components/timestamp";
 @import "./components/toolbar";
+@import "./components/tooltip";
 @import "./components/update-indicator";
 @import "./components/well";
 @import "./components/wysiwyg";

@@ -1,0 +1,18 @@
+uuid: fc271958-b8f5-457b-8fb8-3c346aa2d96a
+langcode: en
+status: true
+dependencies:
+  config:
+    - group.type.group
+  module:
+    - eic_flags
+    - user
+id: group-group_request_delete
+label: 'Group: Group Delete Request'
+description: 'Request the deletion of a group'
+group_type: group
+content_plugin: group_request_delete
+plugin_config:
+  group_cardinality: 0
+  entity_cardinality: 0
+  use_creation_wizard: false

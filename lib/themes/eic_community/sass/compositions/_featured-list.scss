@@ -47,6 +47,7 @@
   }
 
   &__items {
+    #{$node}--has-grid-layout &,
     #{$node}--topics & {
       display: flex;
       flex-wrap: wrap;
@@ -54,12 +55,53 @@
       margin-right: #{0 - map-get($ecl-spacing, 'm')};
       margin-bottom: #{0 - map-get($ecl-spacing, 'm')};
     }
+
+    #{$node}--has-grid-layout & {
+      margin-right: #{0 - map-get($ecl-spacing, 'xs')};
+      margin-bottom: #{0 - map-get($ecl-spacing, 'xs')};
+    }
   }
 
   &__item {
-    #{$node}--is-collapsible#{$node}--is-ready[aria-collapsed="true"] &:nth-child(1n+6) {
+    #{$node}--has-grid-layout & {
+      box-sizing: border-box;
+
+      &,
+      &:first-child,
+      &:last-child {
+        margin: 0;
+        padding-left: map-get($ecl-spacing, 'xs');
+        margin-bottom: map-get($ecl-spacing, 'xs');
+      }
+
+      &--expand {
+        width: 100%;
+      }
+    }
+
+    #{$node}--is-collapsible:not(#{$node}--has-grid-layout)#{$node}--is-ready:not([aria-collapsed="false"]) &:nth-child(1n+6) {
       &:not(#{$node}__item--expand) {
         @include visually-hidden();
+      }
+
+      & ~ #{$node}__item--expand {
+        display: block;
+      }
+    }
+
+    #{$node}--has-grid-layout#{$node}--is-collapsible#{$node}--is-ready & {
+      & ~ #{$node}__item--expand {
+        display: none;
+      }
+    }
+
+    #{$node}--has-grid-layout#{$node}--is-collapsible#{$node}--is-ready:not([aria-collapsed="false"]) &:nth-child(1n+65) {
+      &:not(#{$node}__item--expand) {
+        @include visually-hidden();
+      }
+
+      & ~ #{$node}__item--expand {
+        display: block;
       }
     }
 
@@ -81,10 +123,6 @@
 
     &--expand {
       display: none;
-
-      #{$node}--is-collapsible#{$node}--is-ready[aria-collapsed="true"] & {
-        display: block;
-      }
     }
   }
 

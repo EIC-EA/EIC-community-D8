@@ -7,7 +7,7 @@
         path: icon_file_path,
         type: 'ui',
         name: 'plus',
-        size: 'xs',
+        size: 's',
       } %}
     {% endif %}
 
@@ -46,7 +46,7 @@
 
               {% if item.link %}
                 {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with item|default({})|merge({
-                  link: item.link|merge({
+                  link: item.link|default({})|merge({
                     icon_position: 'before',
                   }),
                   icon: icon_file_path ? item.icon|default({})|merge({

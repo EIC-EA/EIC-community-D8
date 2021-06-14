@@ -17,3 +17,6 @@ services:
   plugin.manager.custom_restricted_visibility:
     class: Drupal\oec_group_flex\Plugin\CustomRestrictedVisibilityManager
     parent: default_plugin_manager
+  oec_group_flex.helper:
+    class: Drupal\oec_group_flex\OECGroupFlexHelper
+    arguments: ['@group_flex.group', '@plugin.manager.group_visibility', '@plugin.manager.group_joining_method', '@plugin.manager.custom_restricted_visibility', '@oec_group_flex.group_visibility.storage']

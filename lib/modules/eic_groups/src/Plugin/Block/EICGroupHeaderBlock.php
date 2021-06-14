@@ -5,6 +5,7 @@ namespace Drupal\eic_groups\Plugin\Block;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Render\Markup;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\eic_groups\EICGroupsHelperInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -114,7 +115,7 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
         'id' => $group->id(),
         'bundle' => $group->bundle(),
         'title' => $group->label(),
-        'description' => $group->get('field_body')->value,
+        'description' => Markup::create($group->get('field_body')->value),
         'operation_links' => $operation_links,
         'membership_links' => $membership_links,
       ],

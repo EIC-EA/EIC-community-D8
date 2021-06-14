@@ -31,7 +31,7 @@ reactions:
         theme: eic_community
         css_class: ''
         unique: 0
-        context_id: global_overview
+        context_id: groups_overview
         uuid: 556c183b-2af1-42dc-8c53-57aa7af6ef70
       2bdaf363-b983-4094-8b13-e3549984347b:
         id: system_main_block
@@ -45,7 +45,7 @@ reactions:
         theme: eic_community
         css_class: ''
         unique: 0
-        context_id: global_overview
+        context_id: groups_overview
         uuid: 2bdaf363-b983-4094-8b13-e3549984347b
       79a2623a-2200-4cd9-b86f-3b25ea41eb02:
         id: 'views_exposed_filter_block:global_overviews-page_1'
@@ -60,7 +60,7 @@ reactions:
         theme: eic_community
         css_class: ''
         unique: 0
-        context_id: global_overview
+        context_id: groups_overview
         uuid: 79a2623a-2200-4cd9-b86f-3b25ea41eb02
       fd1fdc75-a0af-4410-abaa-b06cbafb3e0f:
         id: 'facet_block:groups_topics'

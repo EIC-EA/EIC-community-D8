@@ -48,10 +48,6 @@
         transform: rotate(-45deg);
         margin-top: #{map-get($ecl-spacing, 'xs') / 2};
       }
-
-      .ecl-icon {
-        color: ecl-typography('color', 'title');
-      }
     }
 
     &:not(button)::after {
@@ -85,6 +81,11 @@
     #{$node}--aligns-from-right & {
       left: auto;
       right: 0;
+    }
+
+    #{$node}--aligns-from-center & {
+      left: 50%;
+      transform: translateX(-50%);
     }
 
     #{$node}--is-ready[aria-expanded="false"] & {
