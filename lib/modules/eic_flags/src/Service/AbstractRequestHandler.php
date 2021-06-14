@@ -10,6 +10,7 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\eic_flags\RequestStatus;
+use Drupal\eic_flags\RequestTypes;
 use Drupal\flag\Entity\Flag;
 use Drupal\flag\Entity\Flagging;
 use Drupal\flag\FlaggingInterface;
@@ -70,7 +71,8 @@ abstract class AbstractRequestHandler implements HandlerInterface {
    * {@inheritdoc}
    */
   abstract function accept(
-    FlaggingInterface $flagging, ContentEntityInterface $content_entity,
+    FlaggingInterface $flagging,
+    ContentEntityInterface $content_entity,
     string $reason
   );
 
@@ -78,11 +80,13 @@ abstract class AbstractRequestHandler implements HandlerInterface {
    * {@inheritdoc}
    */
   public function deny(
-    FlaggingInterface $flagging, ContentEntityInterface $content_entity,
+    FlaggingInterface $flagging,
+    ContentEntityInterface $content_entity,
     string $reason
   ) {
     $this->moduleHandler->invokeAll(
-      'request_close', [
+      'request_close',
+      [
         $flagging,
         $content_entity,
         RequestStatus::DENIED,
@@ -117,7 +121,8 @@ abstract class AbstractRequestHandler implements HandlerInterface {
     );
 
     if (!$flag instanceof Flag || $this->hasOpenRequest(
-        $entity, $current_user
+        $entity,
+        $current_user
       )) {
       return NULL;
     }
@@ -180,7 +185,8 @@ abstract class AbstractRequestHandler implements HandlerInterface {
       ->getQuery()
       ->condition('field_request_status', RequestStatus::OPEN)
       ->condition(
-        'flag_id', $supported_entity_types[$entity->getEntityTypeId()]
+        'flag_id',
+        $supported_entity_types[$entity->getEntityTypeId()]
       )
       ->condition('entity_type', $entity->getEntityTypeId())
       ->condition('entity_id', $entity->id())
@@ -188,6 +194,36 @@ abstract class AbstractRequestHandler implements HandlerInterface {
       ->execute();
 
     return !empty($flagging_ids);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getActions(ContentEntityInterface $entity) {
+    return [
+      'deny_request' => [
+        'title' => t('Deny'),
+        'url' => $entity->toUrl('close-request')
+          ->setRouteParameter('request_type', $this->getType())
+          ->setRouteParameter('response', RequestStatus::DENIED)
+          ->setRouteParameter(
+            'destination',
+            \Drupal::request()
+              ->getRequestUri()
+          ),
+      ],
+      'accept_request' => [
+        'title' => t('Accept'),
+        'url' => $entity->toUrl('close-request')
+          ->setRouteParameter('request_type', $this->getType())
+          ->setRouteParameter('response', RequestStatus::ACCEPTED)
+          ->setRouteParameter(
+            'destination',
+            \Drupal::request()
+              ->getRequestUri()
+          ),
+      ],
+    ];
   }
 
 }

@@ -171,7 +171,6 @@ class DeleteRequestHandler extends AbstractRequestHandler {
       if ($target_entity instanceof ContentEntityInterface) {
         $target_entity->delete();
       }
-
     } catch (\Exception $exception) {
       $context['results']['errors'][] = t(
         'Something went wrong during content removal @error',
@@ -223,6 +222,25 @@ class DeleteRequestHandler extends AbstractRequestHandler {
       && $results['group'] instanceof GroupInterface) {
       $results['group']->delete();
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getActions(ContentEntityInterface $entity) {
+    return parent::getActions($entity) + [
+        'archive_request' => [
+          'title' => t('Archive'),
+          'url' => $entity->toUrl('close-request')
+            ->setRouteParameter('request_type', $this->getType())
+            ->setRouteParameter('response', RequestStatus::ARCHIVED)
+            ->setRouteParameter(
+              'destination',
+              \Drupal::request()
+                ->getRequestUri()
+            ),
+        ],
+      ];
   }
 
 }

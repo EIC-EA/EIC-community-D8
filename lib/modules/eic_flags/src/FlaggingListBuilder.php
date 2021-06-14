@@ -2,7 +2,9 @@
 
 namespace Drupal\eic_flags;
 
+use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Url;
 use Drupal\eic_flags\Service\RequestHandlerCollector;
 use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Entity\EntityListBuilder;
@@ -72,7 +74,8 @@ class FlaggingListBuilder extends EntityListBuilder {
    * {@inheritdoc}
    */
   public static function createInstance(
-    ContainerInterface $container, EntityTypeInterface $entity_type
+    ContainerInterface $container,
+    EntityTypeInterface $entity_type
   ) {
     return new static(
       $entity_type,
@@ -124,10 +127,24 @@ class FlaggingListBuilder extends EntityListBuilder {
       '#account' => $entity->getOwner(),
     ];
     $row['created'] = $this->dateFormatter->format(
-      $entity->get('created')->value, 'short'
+      $entity->get('created')->value,
+      'short'
     );
 
     return $row;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function render() {
+    $entity_type = $this->currentRequest->attributes->get('entity_type');
+    $entity_id = $this->currentRequest->attributes->get('entity_id');
+
+    $target_entity = $this->entityTypeManager->getStorage($entity_type)
+      ->load($entity_id);
+
+    return $this->getHeaderActions($target_entity) + parent::render();
   }
 
   protected function getEntityIds() {
@@ -138,7 +155,9 @@ class FlaggingListBuilder extends EntityListBuilder {
       ->condition('entity_type', $entity_type)
       ->condition('entity_id', $entity_id)
       ->condition(
-        'flag_id', $this->requestHandler->getSupportedEntityTypes(), 'IN'
+        'flag_id',
+        $this->requestHandler->getSupportedEntityTypes(),
+        'IN'
       )
       ->accessCheck(TRUE)
       ->sort($this->entityType->getKey('id'));
@@ -149,6 +168,36 @@ class FlaggingListBuilder extends EntityListBuilder {
     }
 
     return $query->execute();
+  }
+
+  /**
+   * @return array
+   */
+  private function getHeaderActions(ContentEntityInterface $entity) {
+    $build['action_container'] = [
+      '#type' => 'container',
+      '#attributes' => [
+        'class' => ['action-links'],
+      ],
+    ];
+
+    $actions = $this->requestHandler->getActions($entity);
+    foreach ($actions as $name => $action) {
+      $build['action_container']['actions'][$name] = [
+        '#type' => 'link',
+        '#url' => $action['url'],
+        '#title' => $action['title'],
+        '#attributes' => [
+          'class' => [
+            'button',
+            'button--primary',
+            'button--small',
+          ],
+        ],
+      ];
+    }
+
+    return $build;
   }
 
 }

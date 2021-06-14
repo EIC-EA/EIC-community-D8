@@ -29,7 +29,11 @@ interface HandlerInterface {
    *
    * @return bool
    */
-  public function deny(FlaggingInterface $flagging, ContentEntityInterface $content_entity, string $reason);
+  public function deny(
+    FlaggingInterface $flagging,
+    ContentEntityInterface $content_entity,
+    string $reason
+  );
 
   /**
    * Starts the 'accept' workflow for a request.
@@ -40,7 +44,11 @@ interface HandlerInterface {
    *
    * @return bool
    */
-  public function accept(FlaggingInterface $flagging, ContentEntityInterface $content_entity, string $reason);
+  public function accept(
+    FlaggingInterface $flagging,
+    ContentEntityInterface $content_entity,
+    string $reason
+  );
 
   /**
    * Applies the given the corresponding flag to the given entity.
@@ -84,4 +92,14 @@ interface HandlerInterface {
    * @return bool
    */
   public function hasOpenRequest(ContentEntityInterface $content_entity, AccountInterface $account);
+
+  /**
+   * Return an array of supported actions which are basically responses.
+   *
+   * @param \Drupal\Core\Entity\ContentEntityInterface $entity
+   *
+   * @return array
+   */
+  public function getActions(ContentEntityInterface $entity);
+
 }
