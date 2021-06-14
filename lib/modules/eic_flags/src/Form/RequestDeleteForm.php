@@ -8,9 +8,8 @@ use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\eic_flags\RequestTypes;
-use Drupal\eic_flags\Service\DeleteRequestHandler;
 use Drupal\eic_flags\Service\RequestHandlerCollector;
-use Drupal\flag\Entity\Flag;
+use Drupal\flag\Entity\Flagging;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -117,7 +116,7 @@ class RequestDeleteForm extends ContentEntityDeleteForm {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $flag = $this->deleteRequestHandler
       ->applyFlag($this->entity, $form_state->getValue('reason'));
-    if (!$flag instanceof Flag) {
+    if (!$flag instanceof Flagging) {
       $this->messenger()->addError($this->t('You are not allowed to do this'));
     }
 
