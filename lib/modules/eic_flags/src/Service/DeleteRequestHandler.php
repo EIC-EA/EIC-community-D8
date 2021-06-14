@@ -73,15 +73,13 @@ class DeleteRequestHandler extends AbstractRequestHandler {
     ContentEntityInterface $content_entity,
     string $reason
   ) {
-    if (!$this->moderationInformation->isModeratedEntity($content_entity)) {
-      $content_entity->set('status', FALSE);
-    }
-    else {
+    if ($this->moderationInformation->isModeratedEntity($content_entity)) {
       // TODO think about looping through every workflow to find an 'unpublished' state
       $state = $content_entity->getEntityTypeId() === 'group' ? 'pending' : 'unpublished';
       $content_entity->set('moderation_state', $state);
     }
 
+    $content_entity->set('status', FALSE);
     $content_entity->save();
 
     $this->moduleHandler->invokeAll(
@@ -94,8 +92,8 @@ class DeleteRequestHandler extends AbstractRequestHandler {
       ]
     );
 
-    $flagging->set('field_request_status', RequestStatus::ARCHIVED);
-    $flagging->save();
+    //$flagging->set('field_request_status', RequestStatus::ARCHIVED);
+    //$flagging->save();
   }
 
   /**

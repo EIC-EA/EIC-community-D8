@@ -40,8 +40,8 @@ type_settings:
       from:
         - draft
         - published
-    archived:
-      label: Archived
+    unpublish:
+      label: Unpublish
       from:
         - published
       to: pending
