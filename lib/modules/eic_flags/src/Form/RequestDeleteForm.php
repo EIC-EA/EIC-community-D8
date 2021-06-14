@@ -70,7 +70,7 @@ class RequestDeleteForm extends ContentEntityDeleteForm {
    */
   public function getDescription() {
     return $this->t(
-      'You\'re about to request a deletion for this entity. Are you sure?'
+      "You're about to request a deletion for this entity. Are you sure?"
     );
   }
 
@@ -95,12 +95,14 @@ class RequestDeleteForm extends ContentEntityDeleteForm {
   public function validateForm(array &$form, FormStateInterface $form_state) {
     if (!$form_state->getValue('reason')) {
       $form_state->setErrorByName(
-        'reason', $this->t('Reason field is required')
+        'reason',
+        $this->t('Reason field is required')
       );
     }
 
     if ($this->deleteRequestHandler->hasOpenRequest(
-      $this->entity, $this->currentUser()
+      $this->entity,
+      $this->currentUser()
     )) {
       $form_state->setError(
         $form,
