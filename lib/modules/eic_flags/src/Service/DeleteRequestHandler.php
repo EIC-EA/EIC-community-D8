@@ -171,7 +171,6 @@ class DeleteRequestHandler extends AbstractRequestHandler {
       if ($target_entity instanceof ContentEntityInterface) {
         $target_entity->delete();
       }
-
     } catch (\Exception $exception) {
       $context['results']['errors'][] = t(
         'Something went wrong during content removal @error',
