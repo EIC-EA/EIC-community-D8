@@ -21,7 +21,7 @@ class RequestDeleteRoutes {
 
     // We must define a route for each supported entity type and set the 'entity_form' default on the route
     // This will ensure that the form controller handling this request is "HtmlEntityFormController"
-    foreach (DeleteRequestManager::$supportedEntityTypes as $entity_type) {
+    foreach (array_keys(DeleteRequestManager::$supportedEntityTypes) as $entity_type) {
       $route = (new Route('/' . $entity_type . '/{' . $entity_type . '}/request-delete'))
         ->addDefaults([
           '_entity_form' => $entity_type . '.request-delete',
@@ -32,6 +32,16 @@ class RequestDeleteRoutes {
 
       $route_collection->add('entity.' . $entity_type . '.request_delete_form', $route);
     }
+
+    // Define the route displaying entities flagged for removal
+    $route = (new Route('/admin/community/request/delete'))
+      ->addDefaults([
+        '_controller' => 'Drupal\eic_flags\Controller\DeleteRequestController::listing',
+      ])
+      ->setRequirement('_role', 'administrator+content_administrator')
+      ->setOption('_admin_route', TRUE);
+
+    $route_collection->add('eic_flags.delete_request.list', $route);
 
     return $route_collection;
   }

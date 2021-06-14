@@ -4,7 +4,7 @@ status: true
 dependencies:
   config:
     - field.field.flagging.request_delete_content.field_deletion_reason
-    - field.field.flagging.request_delete_content.field_deletion_status
+    - field.field.flagging.request_delete_content.field_request_status
     - flag.flag.request_delete_content
 id: flagging.request_delete_content.default
 targetEntityType: flagging
@@ -19,11 +19,10 @@ content:
     third_party_settings: {  }
     type: string_textarea
     region: content
-  field_deletion_status:
+  field_request_status:
     weight: 1
-    settings:
-      display_label: true
+    settings: {  }
     third_party_settings: {  }
-    type: boolean_checkbox
+    type: options_select
     region: content
 hidden: {  }

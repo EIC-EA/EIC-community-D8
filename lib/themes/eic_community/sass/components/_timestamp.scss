@@ -19,6 +19,10 @@
     flex-direction: column;
   }
 
+  &--inherits-color {
+    color: currentColor;
+  }
+
   &__label {
     @include ecl-responsive-font('label');
 

@@ -1,0 +1,5 @@
+eic_flags.delete_requested_content:
+  title: 'Delete requests'
+  route_name: eic_flags.delete_request.list
+  parent_id: system.admin_content
+  weight: 1

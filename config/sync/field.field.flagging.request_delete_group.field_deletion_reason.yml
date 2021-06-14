@@ -1,0 +1,19 @@
+uuid: db8df908-fc7a-4f6c-bc29-c7004968d4ef
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.flagging.field_deletion_reason
+    - flag.flag.request_delete_group
+id: flagging.request_delete_group.field_deletion_reason
+field_name: field_deletion_reason
+entity_type: flagging
+bundle: request_delete_group
+label: Reason
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string_long
