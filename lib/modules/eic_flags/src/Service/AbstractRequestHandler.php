@@ -4,7 +4,6 @@ namespace Drupal\eic_flags\Service;
 
 use Drupal\content_moderation\ModerationInformationInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
-use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -141,6 +140,14 @@ abstract class AbstractRequestHandler implements HandlerInterface {
     $flag->set('field_request_status', RequestStatus::OPEN);
     $flag->save();
 
+    $this->moduleHandler->invokeAll(
+      'request_insert',
+      [
+        $flag,
+        $entity,
+      ]
+    );
+
     return $flag;
   }
 
@@ -172,27 +179,44 @@ abstract class AbstractRequestHandler implements HandlerInterface {
    * {@inheritdoc}
    */
   public function hasOpenRequest(
-    ContentEntityInterface $entity,
+    ContentEntityInterface $content_entity,
     AccountInterface $user
   ) {
+    return !empty($this->getOpenRequests($content_entity, $user));
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getOpenRequests(
+    ContentEntityInterface $content_entity,
+    ?AccountInterface $user = NULL
+  ) {
     $supported_entity_types = $this->getSupportedEntityTypes();
-    if (!isset($supported_entity_types[$entity->getEntityTypeId()])) {
+    if (!isset($supported_entity_types[$content_entity->getEntityTypeId()])) {
       throw new InvalidArgumentException('Invalid entity type');
     }
 
-    $flagging_ids = $this->entityTypeManager->getStorage('flagging')
+    $query = $this->entityTypeManager->getStorage('flagging')
       ->getQuery()
       ->condition('field_request_status', RequestStatus::OPEN)
       ->condition(
         'flag_id',
-        $supported_entity_types[$entity->getEntityTypeId()]
+        $supported_entity_types[$content_entity->getEntityTypeId()]
       )
-      ->condition('entity_type', $entity->getEntityTypeId())
-      ->condition('entity_id', $entity->id())
-      ->condition('uid', $user->id())
-      ->execute();
+      ->condition('entity_type', $content_entity->getEntityTypeId())
+      ->condition('entity_id', $content_entity->id());
 
-    return !empty($flagging_ids);
+    if ($user instanceof AccountInterface) {
+      $query->condition('uid', $user->id());
+    }
+
+    $flagging_ids = $query->execute();
+    if (empty($flagging_ids)) {
+      return NULL;
+    }
+
+    return Flagging::loadMultiple($flagging_ids);
   }
 
 }

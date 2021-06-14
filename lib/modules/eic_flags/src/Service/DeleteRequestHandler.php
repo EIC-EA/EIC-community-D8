@@ -33,17 +33,8 @@ class DeleteRequestHandler extends AbstractRequestHandler {
     ContentEntityInterface $content_entity,
     string $reason
   ) {
-    switch ($content_entity->getEntityTypeId()) {
-      case 'group':
-        /** @var GroupInterface $content_entity */
-        $this->deleteGroup($content_entity);
-        break;
-      case 'node':
-      case 'comment':
-        $content_entity->delete();
-        $content_entity->save();
-        break;
-    }
+    $flagging->set('field_request_status', RequestStatus::ACCEPTED);
+    $flagging->save();
 
     $this->moduleHandler->invokeAll(
       'request_close',
@@ -55,8 +46,16 @@ class DeleteRequestHandler extends AbstractRequestHandler {
       ]
     );
 
-    $flagging->set('field_request_status', RequestStatus::ACCEPTED);
-    $flagging->save();
+    switch ($content_entity->getEntityTypeId()) {
+      case 'group':
+        /** @var GroupInterface $content_entity */
+        $this->deleteGroup($content_entity);
+        break;
+      case 'node':
+      case 'comment':
+        $content_entity->delete();
+        break;
+    }
   }
 
   /**
@@ -78,8 +77,10 @@ class DeleteRequestHandler extends AbstractRequestHandler {
       $state = $content_entity->getEntityTypeId() === 'group' ? 'pending' : 'unpublished';
       $content_entity->set('moderation_state', $state);
     }
+    else {
+      $content_entity->set('status', FALSE);
+    }
 
-    $content_entity->set('status', FALSE);
     $content_entity->save();
 
     $this->moduleHandler->invokeAll(
@@ -92,8 +93,8 @@ class DeleteRequestHandler extends AbstractRequestHandler {
       ]
     );
 
-    $flagging->set('field_request_status', RequestStatus::ARCHIVED);
-    $flagging->save();
+    //$flagging->set('field_request_status', RequestStatus::ARCHIVED);
+    //$flagging->save();
   }
 
   /**
