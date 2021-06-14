@@ -25,7 +25,7 @@ reactions:
         provider: system
         label_display: '0'
         region: content
-        weight: '-10'
+        weight: '-2'
         context_mapping: {  }
         custom_id: system_main_block
         theme: eic_community
@@ -71,7 +71,7 @@ reactions:
         label_display: '0'
         views_label: ''
         region: sidebar
-        weight: '-5'
+        weight: '-4'
         context_mapping: {  }
         custom_id: views_exposed_filter_block_global_overviews_members
         theme: eic_community
@@ -85,7 +85,7 @@ reactions:
         provider: facets
         label_display: '0'
         region: sidebar
-        weight: '-4'
+        weight: '-3'
         context_mapping: {  }
         custom_id: facet_block_global_members_topics_of_expertise
         theme: eic_community
@@ -99,7 +99,7 @@ reactions:
         provider: facets
         label_display: '0'
         region: sidebar
-        weight: '-3'
+        weight: '-2'
         context_mapping: {  }
         custom_id: facet_block_global_members_topics_of_interest
         theme: eic_community
@@ -113,7 +113,7 @@ reactions:
         provider: facets
         label_display: '0'
         region: sidebar
-        weight: '-2'
+        weight: '-1'
         context_mapping: {  }
         custom_id: facet_block_global_members_job_title
         theme: eic_community
@@ -127,7 +127,7 @@ reactions:
         provider: facets
         label_display: '0'
         region: sidebar
-        weight: '-1'
+        weight: '0'
         context_mapping: {  }
         custom_id: facet_block_global_members_languages
         theme: eic_community
@@ -140,7 +140,7 @@ reactions:
         label: 'Members summary'
         provider: facets_summary
         label_display: '0'
-        region: content_before
+        region: content
         weight: '-3'
         context_mapping: {  }
         custom_id: facets_summary_block_global_members_summary
@@ -154,7 +154,7 @@ reactions:
         label: 'Sort by (View Global Overviews, display People)'
         provider: search_api_sorts
         label_display: '0'
-        region: content_before
+        region: content
         weight: '-4'
         context_mapping: {  }
         custom_id: search_api_sorts_block_views_page_global_overviews__members
