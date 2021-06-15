@@ -1,0 +1,36 @@
+uuid: df6f6441-50a9-4023-b5cf-ef747b437ea7
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.message.notify_delete_request_accepted.field_message_subject
+    - field.field.message.notify_delete_request_accepted.field_referenced_flag
+    - message.template.notify_delete_request_accepted
+id: message.notify_delete_request_accepted.default
+targetEntityType: message
+bundle: notify_delete_request_accepted
+mode: default
+content:
+  field_message_subject:
+    weight: 1
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_referenced_flag:
+    weight: 2
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+  partial_0:
+    weight: 0
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+hidden:
+  search_api_excerpt: true

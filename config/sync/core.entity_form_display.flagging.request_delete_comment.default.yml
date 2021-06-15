@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.flagging.request_delete_comment.field_request_moderator
     - field.field.flagging.request_delete_comment.field_request_reason
     - field.field.flagging.request_delete_comment.field_request_response
     - field.field.flagging.request_delete_comment.field_request_status
@@ -12,6 +13,16 @@ targetEntityType: flagging
 bundle: request_delete_comment
 mode: default
 content:
+  field_request_moderator:
+    weight: 4
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: entity_reference_autocomplete
+    region: content
   field_request_reason:
     weight: 2
     settings:
