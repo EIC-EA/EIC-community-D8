@@ -28,6 +28,16 @@ class DeleteRequestHandler extends AbstractRequestHandler {
   /**
    * {@inheritdoc}
    */
+  public function getMessages() {
+    return [
+      'insert' => 'notify_new_deletion_request',
+      'denied' => 'notify_delete_request_denied'
+    ];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function accept(
     FlaggingInterface $flagging,
     ContentEntityInterface $content_entity
@@ -58,7 +68,8 @@ class DeleteRequestHandler extends AbstractRequestHandler {
   ) {
     if ($this->moderationInformation->isModeratedEntity($content_entity)) {
       // TODO think about looping through every workflow to find an 'unpublished' state
-      $state = $content_entity->getEntityTypeId() === 'group' ? 'pending' : 'unpublished';
+      $state = $content_entity->getEntityTypeId(
+      ) === 'group' ? 'pending' : 'unpublished';
       $content_entity->set('moderation_state', $state);
     }
     else {
