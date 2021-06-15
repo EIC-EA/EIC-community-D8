@@ -1,40 +1,46 @@
-uuid: 60699561-e811-4651-bae7-5510d23cddf2
+uuid: 6ffe333f-db5c-4dac-b7da-b46c9eeb0782
 langcode: en
 status: true
 dependencies:
   config:
     - search_api.index.global
-    - views.view.group_overviews
+    - views.view.global_overviews
   module:
     - search_api
-id: group_members_summary
-name: 'Group members summary'
+id: global_members_summary
+name: 'Members summary'
 facets:
-  members_topics_of_expertise:
+  global_members_topics_of_expertise:
     checked: true
-    label: 'Topics of expertise'
+    label: 'Topics of Expertise'
     separator: ', '
-    weight: -10
+    weight: 0
     show_count: false
-  members_topics_of_interest:
+  global_members_topics_of_interest:
     checked: true
-    label: 'Topics of interest'
+    label: 'Topics of Interest'
     separator: ', '
-    weight: -9
+    weight: 0
     show_count: false
-  members_job_title:
+  global_members_job_title:
     checked: true
     label: 'Job title'
     separator: ', '
-    weight: -8
+    weight: 0
     show_count: false
-  members_languages:
+  global_members_languages:
     checked: true
     label: Languages
     separator: ', '
-    weight: -7
+    weight: 0
     show_count: false
-facet_source_id: 'search_api:views_page__group_overviews__members'
+  global_members_location_country_code:
+    checked: true
+    label: Location
+    separator: ', '
+    weight: 0
+    show_count: false
+facet_source_id: 'search_api:views_page__global_overviews__members'
 processor_configs:
   hide_when_not_rendered:
     processor_id: hide_when_not_rendered
@@ -47,11 +53,3 @@ processor_configs:
       build: '30'
     settings:
       link_text: 'Clear all'
-  show_text_when_empty:
-    processor_id: show_text_when_empty
-    weights:
-      build: '10'
-    settings:
-      text:
-        value: 'No results found.'
-        format: plain_text
