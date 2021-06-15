@@ -31,7 +31,7 @@ class DeleteRequestHandler extends AbstractRequestHandler {
   public function getMessages() {
     return [
       'insert' => 'notify_new_deletion_request',
-      'denied' => 'notify_delete_request_denied'
+      'denied' => 'notify_delete_request_denied',
     ];
   }
 

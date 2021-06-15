@@ -97,8 +97,8 @@ abstract class AbstractRequestHandler implements HandlerInterface {
       [
         $flagging,
         $content_entity,
+        $this->getType(),
         $response,
-        $reason,
       ]
     );
 

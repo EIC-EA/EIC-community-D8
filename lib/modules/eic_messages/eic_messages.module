@@ -58,7 +58,10 @@ function eic_messages_request_insert(
 function eic_messages_request_close(
   FlaggingInterface $flag,
   ContentEntityInterface $entity,
-  string $response,
-  string $reason
+  string $type,
+  string $response
 ) {
+  /** @var RequestMessageCreator $class */
+  $class = \Drupal::classResolver(RequestMessageCreator::class);
+  $class->requestClose($flag, $entity, $type, $response);
 }

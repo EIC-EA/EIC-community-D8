@@ -1,0 +1,22 @@
+uuid: 9e9f785e-39c6-4051-8281-d84b6d6520c9
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.message.mail_body
+    - field.field.message.notify_delete_request_denied.field_message_subject
+    - field.field.message.notify_delete_request_denied.field_referenced_flag
+    - message.template.notify_delete_request_denied
+id: message.notify_delete_request_denied.mail_body
+targetEntityType: message
+bundle: notify_delete_request_denied
+mode: mail_body
+content:
+  partial_1:
+    weight: 0
+    region: content
+hidden:
+  field_message_subject: true
+  field_referenced_flag: true
+  partial_0: true
+  search_api_excerpt: true

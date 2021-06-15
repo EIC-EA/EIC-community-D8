@@ -5,6 +5,7 @@ namespace Drupal\eic_messages\Hooks;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\eic_flags\RequestStatus;
 use Drupal\eic_flags\Service\HandlerInterface;
 use Drupal\eic_flags\Service\RequestHandlerCollector;
 use Drupal\eic_messages\MessageHelper;
@@ -55,7 +56,7 @@ class RequestMessageCreator extends MessageCreatorBase {
       $container->get('entity_type.manager'),
       $container->get('eic_messages.helper'),
       $container->get('eic_user.helper'),
-      $container->get('eic_flags.eic_flags.handler_collector')
+      $container->get('eic_flags.handler_collector')
     );
   }
 
@@ -107,6 +108,85 @@ class RequestMessageCreator extends MessageCreatorBase {
     }
 
     $this->processMessages($messages);
+  }
+
+  /**
+   * Implements hook_request_close().
+   */
+  public function requestClose(
+    FlaggingInterface $flagging,
+    ContentEntityInterface $entity,
+    string $type,
+    string $response
+  ) {
+    $handler = $this->collector->getHandlerByType($type);
+    if (!$handler instanceof HandlerInterface) {
+      \Drupal::logger('eic_messages')->warning(
+        'Invalid type @type provided on request close',
+        ['@type' => $type]
+      );
+
+      return;
+    }
+
+    /** @var \Drupal\user\UserInterface[] $to */
+    $to = [$entity->getOwner(), $flagging->getOwner()];
+    $message_name = $handler->getMessageByAction($response);
+    if (!$message_name) {
+      \Drupal::logger('eic_messages')->warning(
+        'Message does not exists for response type @response',
+        ['@response' => $response]
+      );
+
+      return;
+    }
+
+    foreach ($to as $user) {
+      $message = $this->entityTypeManager->getStorage('message')->create(
+        [
+          'template' => $message_name,
+          'field_message_subject' => $this->getResponseSubject(
+            $entity,
+            $response
+          ),
+          'field_referenced_flag' => $flagging,
+          'uid' => $user->id(),
+        ]
+      );
+
+      $message->save();
+
+      $messages[] = $message;
+    }
+
+    $this->processMessages($messages);
+  }
+
+  /**
+   * @param \Drupal\Core\Entity\ContentEntityInterface $entity
+   * @param string $response
+   *
+   * @return \Drupal\Core\StringTranslation\TranslatableMarkup|null
+   */
+  private function getResponseSubject(
+    ContentEntityInterface $entity,
+    string $response
+  ) {
+    switch ($response) {
+      case RequestStatus::DENIED:
+      case RequestStatus::ARCHIVED:
+        return $this->t(
+          'Deletion request for @label denied',
+          ['@label' => $entity->label()]
+        );
+      case RequestStatus::ACCEPTED:
+        return $this->t(
+          'Deletion request for @type accepted',
+          ['@label' => $entity->label()]
+        );
+      default:
+        return NULL;
+    }
   }
 
 }
