@@ -78,7 +78,7 @@ class RequestMessageCreator extends MessageCreatorBase {
       return;
     }
 
-    $message_name = $handler->getMessageByAction('insert');
+    $message_name = $handler->getMessageByAction(RequestStatus::OPEN);
     if (!$message_name) {
       \Drupal::logger('eic_messages')->warning(
         'Message does not exists for action insert'
