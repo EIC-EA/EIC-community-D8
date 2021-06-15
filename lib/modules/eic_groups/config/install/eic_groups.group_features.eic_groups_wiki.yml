@@ -1,0 +1,6 @@
+permissions:
+  - 'create group_node:wiki_page entity'
+roles:
+  - 'group-member'
+  - 'group-admin'
+  - 'group-owner'

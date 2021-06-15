@@ -1,0 +1,21 @@
+{#
+/**
+ * @file
+ * Theme override for a field.
+ *
+*/
+#}
+<div class="ecl-featured-list ecl-featured-list--topics  ">
+  <h1 class="ecl-featured-list__title">{{ label }}</h1>
+
+  <div class="ecl-featured-list__items-wrapper">
+    <div class="ecl-featured-list__items">
+      {% for link in items %}
+      <div class="ecl-featured-list__item">
+          {{ link }}
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+</div>

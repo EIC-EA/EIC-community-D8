@@ -1,0 +1,11 @@
+uuid: 4da27133-7b72-4619-9c09-c7b83d42f7d8
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.story
+id: node.story
+target_entity_type_id: node
+target_bundle: story
+default_langcode: site_default
+language_alterable: false

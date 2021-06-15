@@ -14,6 +14,7 @@ use Drupal\group\Entity\GroupInterface;
 use Drupal\group\Entity\GroupTypeInterface;
 use Drupal\group\GroupRoleSynchronizer;
 use Drupal\group_permissions\Entity\GroupPermission;
+use Drupal\group_permissions\Entity\GroupPermissionInterface;
 use Drupal\group_permissions\GroupPermissionsManager;
 use Drupal\menu_link_content\Entity\MenuLinkContent;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -197,7 +198,7 @@ abstract class GroupFeaturePluginBase extends PluginBase implements GroupFeature
   /**
    * Add role permissions to the group.
    *
-   * @param \Drupal\group_permissions\Entity\GroupPermission $groupPermission
+   * @param \Drupal\group_permissions\Entity\GroupPermissionInterface $groupPermission
    *   The group permission object to add the permissions to.
    * @param string $role
    *   The role to add the permissions to.
@@ -207,7 +208,7 @@ abstract class GroupFeaturePluginBase extends PluginBase implements GroupFeature
    * @return \Drupal\group_permissions\Entity\GroupPermission
    *   The unsaved group permission object with the updated permissions.
    */
-  protected function addRolePermissionsToGroup(GroupPermission $groupPermission, string $role, array $rolePermissions): GroupPermission {
+  protected function addRolePermissionsToGroup(GroupPermissionInterface $groupPermission, string $role, array $rolePermissions): GroupPermission {
     $permissions = $groupPermission->getPermissions();
     foreach ($rolePermissions as $permission) {
       if (!array_key_exists($role, $permissions) || !in_array($permission, $permissions[$role], TRUE)) {
@@ -221,7 +222,7 @@ abstract class GroupFeaturePluginBase extends PluginBase implements GroupFeature
   /**
    * Remove role permissions from the group.
    *
-   * @param \Drupal\group_permissions\Entity\GroupPermission $groupPermission
+   * @param \Drupal\group_permissions\Entity\GroupPermissionInterface $groupPermission
    *   The group permission object to set the permissions to.
    * @param string $role
    *   The role to remove the permissions from.
@@ -231,7 +232,7 @@ abstract class GroupFeaturePluginBase extends PluginBase implements GroupFeature
    * @return \Drupal\group_permissions\Entity\GroupPermission
    *   The unsaved group permission object with the updated permissions.
    */
-  protected function removeRolePermissionsFromGroup(GroupPermission $groupPermission, string $role, array $rolePermissions): GroupPermission {
+  protected function removeRolePermissionsFromGroup(GroupPermissionInterface $groupPermission, string $role, array $rolePermissions): GroupPermission {
     $permissions = $groupPermission->getPermissions();
     foreach ($rolePermissions as $permission) {
       if (array_key_exists($role, $permissions) || in_array($permission, $permissions[$role], TRUE)) {

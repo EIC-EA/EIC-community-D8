@@ -87,8 +87,7 @@ class RequestCloseForm extends ContentEntityConfirmFormBase {
     return $this->t(
       'Are you sure you want to apply response "@response" to the @entity-type %label?',
       [
-        '@entity-type' => $this->getEntity()->getEntityType()->getSingularLabel(
-        ),
+        '@entity-type' => $this->getEntity()->getEntityType()->getSingularLabel(),
         '@response' => RequestStatus::DENIED,
         '%label' => $this->getEntity()->label(),
       ]
@@ -113,7 +112,8 @@ class RequestCloseForm extends ContentEntityConfirmFormBase {
   public function validateForm(array &$form, FormStateInterface $form_state) {
     if (!$form_state->getValue('response_text')) {
       $form_state->setErrorByName(
-        'response_text', $this->t('Reason field is required')
+        'response_text',
+        $this->t('Reason field is required')
       );
     }
   }
@@ -138,6 +138,7 @@ class RequestCloseForm extends ContentEntityConfirmFormBase {
     }
 
     $flag_id = $handler->getFlagId($this->entity->getEntityTypeId());
+    /** @var \Drupal\flag\FlaggingInterface $flag */
     $flag = $this->flagService->getFlagById($flag_id);
     if (!$flag instanceof FlagInterface) {
       throw new InvalidArgumentException('Flag doesn\'t exists');
@@ -171,13 +172,21 @@ class RequestCloseForm extends ContentEntityConfirmFormBase {
     }
 
     foreach ($entity_flags as $flag) {
-      call_user_func(
-        [$handler, $action],
+      // Close requests and trigger hooks, events, etc.
+      $handler->closeRequest(
         $flag,
         $this->entity,
+        $response,
         $form_state->getValue('response_text')
       );
     }
+
+    // Execute the response
+    call_user_func(
+      [$handler, $action],
+      $flag,
+      $this->entity
+    );
   }
 
   /**
@@ -197,6 +206,15 @@ class RequestCloseForm extends ContentEntityConfirmFormBase {
       case RequestStatus::ACCEPTED:
         return $this->t(
           '@entity-type will be permanently deleted. This action cannot be undone!',
+          [
+            '@entity-type' => $this->getEntity()
+              ->getEntityType()
+              ->getSingularLabel(),
+          ]
+        );
+      case RequestStatus::ARCHIVED:
+        return $this->t(
+          '@entity-type will be archived. Please provide a mandatory reason for denying this request.',
           [
             '@entity-type' => $this->getEntity()
               ->getEntityType()

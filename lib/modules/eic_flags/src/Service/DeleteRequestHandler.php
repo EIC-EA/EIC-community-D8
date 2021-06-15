@@ -30,8 +30,7 @@ class DeleteRequestHandler extends AbstractRequestHandler {
    */
   public function accept(
     FlaggingInterface $flagging,
-    ContentEntityInterface $content_entity,
-    string $reason
+    ContentEntityInterface $content_entity
   ) {
     switch ($content_entity->getEntityTypeId()) {
       case 'group':
@@ -41,22 +40,8 @@ class DeleteRequestHandler extends AbstractRequestHandler {
       case 'node':
       case 'comment':
         $content_entity->delete();
-        $content_entity->save();
         break;
     }
-
-    $this->moduleHandler->invokeAll(
-      'request_close',
-      [
-        $flagging,
-        $content_entity,
-        RequestStatus::ACCEPTED,
-        $reason,
-      ]
-    );
-
-    $flagging->set('field_request_status', RequestStatus::ACCEPTED);
-    $flagging->save();
   }
 
   /**
@@ -64,38 +49,23 @@ class DeleteRequestHandler extends AbstractRequestHandler {
    *
    * @param \Drupal\flag\FlaggingInterface $flagging
    * @param \Drupal\Core\Entity\ContentEntityInterface $content_entity
-   * @param string $reason
    *
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
   public function archive(
     FlaggingInterface $flagging,
-    ContentEntityInterface $content_entity,
-    string $reason
+    ContentEntityInterface $content_entity
   ) {
-    if (!$this->moderationInformation->isModeratedEntity($content_entity)) {
-      $content_entity->set('status', FALSE);
-    }
-    else {
+    if ($this->moderationInformation->isModeratedEntity($content_entity)) {
       // TODO think about looping through every workflow to find an 'unpublished' state
       $state = $content_entity->getEntityTypeId() === 'group' ? 'pending' : 'unpublished';
       $content_entity->set('moderation_state', $state);
     }
+    else {
+      $content_entity->set('status', FALSE);
+    }
 
     $content_entity->save();
-
-    $this->moduleHandler->invokeAll(
-      'request_close',
-      [
-        $flagging,
-        $content_entity,
-        RequestStatus::ARCHIVED,
-        $reason,
-      ]
-    );
-
-    $flagging->set('field_request_status', RequestStatus::ARCHIVED);
-    $flagging->save();
   }
 
   /**
