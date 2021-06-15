@@ -1,0 +1,77 @@
+{#
+/**
+ * @file
+ * Theme override to display a node page.
+ *
+ * @see ./themes/custom/eic_community/templates/content/node.html.twig
+ */
+#}
+{% extends "@eic_community/content/node.html.twig" %}
+
+{% block content %}
+  <div {{ attributes }}>
+    {{ title_prefix }}
+    {{ title_suffix }}
+  <div class="ecl-container">
+    <div class="ecl-editorial-header__wrapper">
+      <div class="ecl-editorial-header__main">
+        <div class="ecl-content-type-indicator ecl-editorial-header__type">
+          {{ elements.field_discussion_type }}
+        </div>
+        <div class="ecl-editorial-header__actions">
+          {% for key, element in elements %}
+            {% if key starts with 'flag' %}
+            {{ element }}
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+    <div class="ecl-base-layout ">
+
+      <div class="ecl-base-layout__content">
+        <div class="ecl-base-layout__main">
+          <main>
+  <section class="ecl-section-wrapper">
+            <div class="ecl-editorial-article">
+              <div class="ecl-container">
+                <div class="ecl-editorial-article__wrapper">
+                  <section class="ecl-editorial-article__content">
+                    <h1>{{ elements['#title'] }}</h1>
+
+                    {{ elements.field_body }}
+
+                    <div class="ecl-editorial-article__meta">
+                      <div class="ecl-editorial-article__meta-item">
+                        {% include "@theme/patterns/components/author.html.twig" with author only %}
+                      </div>
+
+                      <div class="ecl-editorial-article__meta-item">
+                        {% include "@theme/patterns/components/timestamp.html.twig" with timestamp|default({})|merge({
+                          icon_file_path: icon_file_path,
+                          extra_classes: 'ecl-discussion-thread__timestamp ecl-timestamp--meta' ~ timestamp.extra_classes|default(''),
+                        }) only %}
+                      </div>
+                    </div>
+
+                  </section>
+                  <aside class="ecl-editorial-article__aside">
+                    <div class="ecl-editorial-article__aside-wrapper">
+                      {{ elements.field_vocab_topics }}
+                    </div>
+                  </aside>
+                </div>
+              </div>
+            </div>
+          </section>
+
+  <section class="ecl-section-wrapper ecl-section-wrapper--is-grey ecl-comment-overview ">
+    {{ elements.field_comments }}
+  </section>
+          </main>
+  </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
