@@ -1,0 +1,23 @@
+uuid: e554d421-d16f-487e-9923-1a5843556e97
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.profile.field_linkedin
+    - profile.type.member
+  module:
+    - link
+id: profile.member.field_linkedin
+field_name: field_linkedin
+entity_type: profile
+bundle: member
+label: LinkedIn
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  link_type: 16
+  title: 0
+field_type: link
