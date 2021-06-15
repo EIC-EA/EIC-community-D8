@@ -70,16 +70,16 @@ abstract class AbstractRequestHandler implements HandlerInterface {
    */
   abstract function accept(
     FlaggingInterface $flagging,
-    ContentEntityInterface $content_entity,
-    string $reason
+    ContentEntityInterface $content_entity
   );
 
   /**
    * {@inheritdoc}
    */
-  public function deny(
+  public function closeRequest(
     FlaggingInterface $flagging,
     ContentEntityInterface $content_entity,
+    string $response,
     string $reason
   ) {
     $this->moduleHandler->invokeAll(
@@ -87,14 +87,23 @@ abstract class AbstractRequestHandler implements HandlerInterface {
       [
         $flagging,
         $content_entity,
-        RequestStatus::DENIED,
+        $response,
         $reason,
       ]
     );
 
-    $flagging->set('field_request_status', RequestStatus::DENIED);
+    $flagging->set('field_request_status', $response);
     $flagging->save();
+  }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function deny(
+    FlaggingInterface $flagging,
+    ContentEntityInterface $content_entity
+  ) {
+    // Currently does nothing, this will change
     return TRUE;
   }
 

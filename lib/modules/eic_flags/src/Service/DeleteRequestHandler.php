@@ -30,22 +30,8 @@ class DeleteRequestHandler extends AbstractRequestHandler {
    */
   public function accept(
     FlaggingInterface $flagging,
-    ContentEntityInterface $content_entity,
-    string $reason
+    ContentEntityInterface $content_entity
   ) {
-    $flagging->set('field_request_status', RequestStatus::ACCEPTED);
-    $flagging->save();
-
-    $this->moduleHandler->invokeAll(
-      'request_close',
-      [
-        $flagging,
-        $content_entity,
-        RequestStatus::ACCEPTED,
-        $reason,
-      ]
-    );
-
     switch ($content_entity->getEntityTypeId()) {
       case 'group':
         /** @var GroupInterface $content_entity */
@@ -63,14 +49,12 @@ class DeleteRequestHandler extends AbstractRequestHandler {
    *
    * @param \Drupal\flag\FlaggingInterface $flagging
    * @param \Drupal\Core\Entity\ContentEntityInterface $content_entity
-   * @param string $reason
    *
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
   public function archive(
     FlaggingInterface $flagging,
-    ContentEntityInterface $content_entity,
-    string $reason
+    ContentEntityInterface $content_entity
   ) {
     if ($this->moderationInformation->isModeratedEntity($content_entity)) {
       // TODO think about looping through every workflow to find an 'unpublished' state
@@ -82,19 +66,6 @@ class DeleteRequestHandler extends AbstractRequestHandler {
     }
 
     $content_entity->save();
-
-    $this->moduleHandler->invokeAll(
-      'request_close',
-      [
-        $flagging,
-        $content_entity,
-        RequestStatus::ARCHIVED,
-        $reason,
-      ]
-    );
-
-    $flagging->set('field_request_status', RequestStatus::ARCHIVED);
-    $flagging->save();
   }
 
   /**
