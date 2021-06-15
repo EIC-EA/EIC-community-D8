@@ -174,16 +174,10 @@ class FlaggingListBuilder extends EntityListBuilder {
    * @return array
    */
   private function getHeaderActions(ContentEntityInterface $entity) {
-    $build['action_container'] = [
-      '#type' => 'container',
-      '#attributes' => [
-        'class' => ['action-links'],
-      ],
-    ];
-
     $actions = $this->requestHandler->getActions($entity);
+    $items = [];
     foreach ($actions as $name => $action) {
-      $build['action_container']['actions'][$name] = [
+      $items[$name] = [
         '#type' => 'link',
         '#url' => $action['url'],
         '#title' => $action['title'],
@@ -196,6 +190,16 @@ class FlaggingListBuilder extends EntityListBuilder {
         ],
       ];
     }
+
+    $build['actions'] = [
+      '#theme' => 'item_list',
+      '#list_type' => 'ol',
+      '#items' => $items,
+      '#attributes' => [
+        'class' => ['action-links'],
+      ],
+    ];
+
 
     return $build;
   }
