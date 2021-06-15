@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - field.field.flagging.request_delete_content.field_request_reason
+    - field.field.flagging.request_delete_content.field_request_response
     - field.field.flagging.request_delete_content.field_request_status
     - flag.flag.request_delete_content
   module:
@@ -15,6 +16,13 @@ mode: default
 content:
   field_request_reason:
     weight: 2
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: basic_string
+    region: content
+  field_request_response:
+    weight: 3
     label: above
     settings: {  }
     third_party_settings: {  }
