@@ -1,0 +1,32 @@
+uuid: 33b6d5a9-c011-404b-bade-ecda709179df
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.message.notify_new_deletion_request.field_message_subject
+    - field.field.message.notify_new_deletion_request.field_referenced_flag
+    - message.template.notify_new_deletion_request
+id: message.notify_new_deletion_request.default
+targetEntityType: message
+bundle: notify_new_deletion_request
+mode: default
+content:
+  field_message_subject:
+    weight: 0
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_referenced_flag:
+    weight: 1
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: entity_reference_autocomplete
+    region: content
+hidden: {  }

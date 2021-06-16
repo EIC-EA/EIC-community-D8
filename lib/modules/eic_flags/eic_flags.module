@@ -8,9 +8,11 @@
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\eic_flags\Form\RequestCloseForm;
 use Drupal\eic_flags\Form\RequestDeleteForm;
+use Drupal\eic_flags\Hooks\FlagTokens;
 use Drupal\eic_flags\RequestStatus;
 use Drupal\eic_flags\RequestTypes;
 
@@ -89,6 +91,22 @@ function eic_flags_entity_type_build(array &$entity_types) {
       ->setLinkTemplate('request-delete-form', '/{entity_type}/{entity_id}/request-delete')
       ->setLinkTemplate('close-request', '/admin/community/{entity_type}/{entity_id}/request/{request_type}/close');
   }
+}
+
+/**
+ * Implements hook_token_info().
+ */
+function eic_flags_token_info() {
+  $class = \Drupal::classResolver(FlagTokens::class);
+  return $class->tokenInfo();
+}
+
+/**
+ * Implements hook_tokens().
+ */
+function eic_flags_tokens($type, $tokens, array $data, array $options, BubbleableMetadata $bubbleable_metadata) {
+  $class = \Drupal::classResolver(FlagTokens::class);
+  return $class->tokens($type, $tokens, $data, $options, $bubbleable_metadata);
 }
 
 /**
