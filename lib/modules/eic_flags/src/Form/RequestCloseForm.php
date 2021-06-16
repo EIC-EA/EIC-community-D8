@@ -112,6 +112,9 @@ class RequestCloseForm extends ContentEntityConfirmFormBase {
   /**
    * @param array $form
    * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $response = $this->getRequest()->query->get('response');
@@ -148,6 +151,9 @@ class RequestCloseForm extends ContentEntityConfirmFormBase {
       case RequestStatus::DENIED:
         $action = 'deny';
         break;
+      case RequestStatus::ACCEPTED:
+        $action = 'accept';
+        break;
       default:
         throw new InvalidArgumentException('Action isnt\'t supported');
     }
@@ -169,7 +175,14 @@ class RequestCloseForm extends ContentEntityConfirmFormBase {
     switch ($this->getRequest()->query->get('response')) {
       case RequestStatus::DENIED:
         return $this->t(
-          '@entity-type will not be deleted. Please provide a mandatory reason for denying this request.', [
+          '@entity-type will not be deleted. Please provide a mandatory reason for denying this request.',
+          [
+          '@entity-type' => $this->getEntity()
+            ->getEntityType()
+            ->getSingularLabel(),
+        ]);
+      case RequestStatus::ACCEPTED:
+        return $this->t('@entity-type will be permanently deleted. This action cannot be undone!', [
           '@entity-type' => $this->getEntity()
             ->getEntityType()
             ->getSingularLabel(),

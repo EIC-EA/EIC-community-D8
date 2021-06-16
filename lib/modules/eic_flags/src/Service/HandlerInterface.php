@@ -67,4 +67,13 @@ interface HandlerInterface {
    */
   public function getFlagId(string $entity_id);
 
+  /**
+   * Define if the given entity type is supported by the handler.
+   *
+   * @param \Drupal\Core\Entity\ContentEntityInterface $contentEntity
+   *
+   * @return bool
+   */
+  public function supports(ContentEntityInterface $contentEntity);
+
 }
