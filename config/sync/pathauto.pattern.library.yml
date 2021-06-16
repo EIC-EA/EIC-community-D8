@@ -1,0 +1,23 @@
+uuid: e5e92fcd-1725-4164-8d96-bd6490ec86d8
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: library
+label: Library
+type: 'canonical_entities:node'
+pattern: '[eic_groups_tokens:node_group_url]/library/[node:title]'
+selection_criteria:
+  51ec4726-84c3-4bdc-bab0-0d69ff230f1b:
+    id: node_type
+    bundles:
+      document: document
+      gallery: gallery
+    negate: false
+    context_mapping:
+      node: node
+    uuid: 51ec4726-84c3-4bdc-bab0-0d69ff230f1b
+selection_logic: and
+weight: -8
+relationships: {  }

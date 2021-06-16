@@ -16,6 +16,7 @@ permissions:
   - 'create new books'
   - 'flag recommend_group'
   - 'mark private content'
+  - 'make delete request'
   - 'unflag recommend_group'
   - 'use groups transition publish'
   - 'use groups transition upgrade_to_draft'
