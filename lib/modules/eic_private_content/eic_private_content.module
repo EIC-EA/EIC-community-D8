@@ -45,11 +45,23 @@ function eic_private_content_entity_field_access($operation, FieldDefinitionInte
 
   if (($field_definition->getName() == PrivateContentConst::FIELD_NAME)) {
     /** @var \Drupal\node\NodeTypeInterface $type */
-    $type = $items->getEntity()->type->entity;
+    $entity = $items->getEntity();
+    $type = $entity->type->entity;
 
     if ($type instanceof NodeTypeInterface) {
       $privacy_setting = $type->getThirdPartySetting('eic_private_content', PrivateContentConst::FIELD_NAME, FALSE);
-      $access = AccessResult::forbiddenIf(!$privacy_setting || ($privacy_setting && !$account->hasPermission('mark private content')));
+
+      switch ($operation) {
+        case 'view':
+          $access = AccessResult::forbiddenIf(!$privacy_setting || ($privacy_setting && !$account->hasPermission('view private content') && $entity->getOwnerId() !== $account->id()));
+          break;
+
+        case 'edit':
+          $access = AccessResult::forbiddenIf(!$privacy_setting || ($privacy_setting && !$account->hasPermission('mark private content') && $entity->getOwnerId() !== $account->id()));
+          break;
+
+      }
+
     }
   }
 
@@ -99,10 +111,10 @@ function eic_private_content_form_node_type_form_builder($entity_type, NodeTypeI
  * Implements hook_entity_access().
  */
 function eic_private_content_entity_access(EntityInterface $entity, $operation, AccountInterface $account) {
-  $access = NULL;
+  $access = AccessResult::neutral();
 
   if ($entity->getEntityTypeId() !== 'node') {
-    return AccessResult::neutral();
+    return $access;
   }
 
   switch ($operation) {
@@ -110,7 +122,7 @@ function eic_private_content_entity_access(EntityInterface $entity, $operation, 
       /** @var \Drupal\node\NodeTypeInterface $type */
       $type = $entity->type->entity;
       $privacy_setting = $type->getThirdPartySetting('eic_private_content', PrivateContentConst::FIELD_NAME, FALSE);
-      $access = AccessResult::forbiddenIf(!$privacy_setting || ($privacy_setting && !$account->hasPermission('view private content')));
+      $access = AccessResult::forbiddenIf(!$privacy_setting || ($privacy_setting && !$account->hasPermission('view private content') && $entity->getOwnerId() !== $account->id()));
       break;
 
   }
