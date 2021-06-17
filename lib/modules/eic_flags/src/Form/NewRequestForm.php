@@ -13,11 +13,11 @@ use Drupal\flag\Entity\Flagging;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Class RequestDeleteForm
+ * Class NewRequestForm
  *
  * @package Drupal\eic_flags\Form
  */
-class RequestDeleteForm extends ContentEntityDeleteForm {
+class NewRequestForm extends ContentEntityDeleteForm {
 
   /**
    * @var \Drupal\eic_flags\Service\HandlerInterface
@@ -25,7 +25,7 @@ class RequestDeleteForm extends ContentEntityDeleteForm {
   private $deleteRequestHandler;
 
   /**
-   * RequestDeleteForm constructor.
+   * NewRequestForm constructor.
    *
    * @param \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository
    * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface $entity_type_bundle_info
@@ -61,7 +61,7 @@ class RequestDeleteForm extends ContentEntityDeleteForm {
    * {@inheritdoc}
    */
   public function getFormId() {
-    return 'entity_request_delete_form';
+    return 'entity_new_request_form';
   }
 
   /**

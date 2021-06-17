@@ -12,10 +12,11 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\eic_flags\Form\RequestCloseForm;
-use Drupal\eic_flags\Form\RequestDeleteForm;
+use Drupal\eic_flags\Form\NewRequestForm;
 use Drupal\eic_flags\Hooks\FlagTokens;
 use Drupal\eic_flags\RequestStatus;
 use Drupal\eic_flags\RequestTypes;
+use Drupal\eic_flags\Routing\EntityRequestRouteProvider;
 use Drupal\eic_flags\Service\HandlerInterface;
 
 /**
@@ -95,31 +96,35 @@ function eic_flags_field_request_status_allowed_values() {
 
 /**
  * Implements hook_entity_type_build().
+ *
+ * @var \Drupal\Core\Entity\EntityTypeInterface[] $entity_types
  */
 function eic_flags_entity_type_build(array &$entity_types) {
   /** @var \Drupal\eic_flags\Service\HandlerInterface $delete_request_handler */
   $delete_request_handler = \Drupal::service('eic_flags.handler_collector')
     ->getHandlerByType(RequestTypes::DELETE);
 
-  foreach (
-    array_keys(
-      $delete_request_handler->getSupportedEntityTypes()
-    ) as $entity_id
-  ) {
+  $supported_entities = array_keys($delete_request_handler->getSupportedEntityTypes());
+  foreach ($supported_entities as $entity_id) {
     if (!isset($entity_types[$entity_id])) {
       continue;
     }
 
-    $entity_types[$entity_id]
-      ->setFormClass('request-delete', RequestDeleteForm::class)
+    $entity_type = $entity_types[$entity_id];
+    $handler_classes = $entity_type->getHandlerClasses();
+    $route_providers = $handler_classes['route_provider'];
+    $route_providers['action-request'] = EntityRequestRouteProvider::class;
+
+    $entity_type->setFormClass('new-request', NewRequestForm::class)
       ->setFormClass('close-request', RequestCloseForm::class)
+      ->setHandlerClass('route_provider', $route_providers)
       ->setLinkTemplate(
-        'request-delete-form',
-        '/{entity_type}/{entity_id}/request-delete'
+        'new-request',
+        '/request/{request_type}/' . $entity_id . '/{' . $entity_id . '}'
       )
       ->setLinkTemplate(
         'close-request',
-        '/admin/community/{entity_type}/{entity_id}/request/{request_type}/close'
+        '/admin/community/' . $entity_id . '/{' . $entity_id . '}/request/{request_type}/close'
       );
   }
 }
@@ -173,12 +178,12 @@ function eic_flags_entity_operation(EntityInterface $entity) {
 
   $operations['request_delete'] = [
     'title' => t('Request delete'),
-    'url' => $entity->toUrl('request-delete-form')
+    'url' => $entity->toUrl('new-request')
       ->setRouteParameter(
         'destination',
-        \Drupal::request()
-          ->getRequestUri()
-      ),
+        \Drupal::request()->getRequestUri()
+      )
+      ->setRouteParameter('request_type', RequestTypes::DELETE),
   ];
 
   return $operations;

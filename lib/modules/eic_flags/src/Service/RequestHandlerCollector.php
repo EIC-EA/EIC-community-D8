@@ -35,7 +35,7 @@ class RequestHandlerCollector {
   }
 
   /**
-   * @return array
+   * @return \Drupal\eic_flags\Service\HandlerInterface[]
    */
   public function getHandlers() {
     return $this->requestHandlers;
