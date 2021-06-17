@@ -70,7 +70,8 @@ abstract class AbstractRequestHandler implements HandlerInterface {
    * {@inheritdoc}
    */
   abstract function accept(
-    FlaggingInterface $flagging, ContentEntityInterface $content_entity,
+    FlaggingInterface $flagging,
+    ContentEntityInterface $content_entity,
     string $reason
   );
 
@@ -78,11 +79,13 @@ abstract class AbstractRequestHandler implements HandlerInterface {
    * {@inheritdoc}
    */
   public function deny(
-    FlaggingInterface $flagging, ContentEntityInterface $content_entity,
+    FlaggingInterface $flagging,
+    ContentEntityInterface $content_entity,
     string $reason
   ) {
     $this->moduleHandler->invokeAll(
-      'request_close', [
+      'request_close',
+      [
         $flagging,
         $content_entity,
         RequestStatus::DENIED,
@@ -117,7 +120,8 @@ abstract class AbstractRequestHandler implements HandlerInterface {
     );
 
     if (!$flag instanceof Flag || $this->hasOpenRequest(
-        $entity, $current_user
+        $entity,
+        $current_user
       )) {
       return NULL;
     }
@@ -180,7 +184,8 @@ abstract class AbstractRequestHandler implements HandlerInterface {
       ->getQuery()
       ->condition('field_request_status', RequestStatus::OPEN)
       ->condition(
-        'flag_id', $supported_entity_types[$entity->getEntityTypeId()]
+        'flag_id',
+        $supported_entity_types[$entity->getEntityTypeId()]
       )
       ->condition('entity_type', $entity->getEntityTypeId())
       ->condition('entity_id', $entity->id())

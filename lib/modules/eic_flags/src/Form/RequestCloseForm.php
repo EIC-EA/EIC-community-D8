@@ -203,6 +203,15 @@ class RequestCloseForm extends ContentEntityConfirmFormBase {
               ->getSingularLabel(),
           ]
         );
+      case RequestStatus::ARCHIVED:
+        return $this->t(
+          '@entity-type will be archived. Please provide a mandatory reason for denying this request.',
+          [
+            '@entity-type' => $this->getEntity()
+              ->getEntityType()
+              ->getSingularLabel(),
+          ]
+        );
     }
   }
 
