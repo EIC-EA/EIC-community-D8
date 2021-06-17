@@ -343,7 +343,7 @@ class FlaggedEntitiesListBuilder extends EntityListBuilder {
         'fs',
         'fs.entity_id = f.id'
       );
-      
+
       $query->leftJoin(
         $data_table,
         $type,
@@ -379,8 +379,6 @@ class FlaggedEntitiesListBuilder extends EntityListBuilder {
           $author_id
         );
       }
-
-      $query->addTag('debug');
 
       $results = array_merge(
         $results,
