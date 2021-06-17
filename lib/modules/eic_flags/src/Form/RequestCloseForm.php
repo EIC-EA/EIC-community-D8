@@ -74,18 +74,25 @@ class RequestCloseForm extends ContentEntityConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelUrl() {
-    return Url::fromRoute('eic_flags.flagged_entities.list', ['request_type' => RequestTypes::DELETE]);
+    return Url::fromRoute(
+      'eic_flags.flagged_entities.list',
+      ['request_type' => RequestTypes::DELETE]
+    );
   }
 
   /**
    * {@inheritdoc}
    */
   public function getQuestion() {
-    return $this->t('Are you sure you want to apply response "@response" to the @entity-type %label?', [
-      '@entity-type' => $this->getEntity()->getEntityType()->getSingularLabel(),
-      '@response' => RequestStatus::DENIED,
-      '%label' => $this->getEntity()->label(),
-    ]);
+    return $this->t(
+      'Are you sure you want to apply response "@response" to the @entity-type %label?',
+      [
+        '@entity-type' => $this->getEntity()->getEntityType()->getSingularLabel(
+        ),
+        '@response' => RequestStatus::DENIED,
+        '%label' => $this->getEntity()->label(),
+      ]
+    );
   }
 
   public function buildForm(array $form, FormStateInterface $form_state) {
@@ -105,13 +112,18 @@ class RequestCloseForm extends ContentEntityConfirmFormBase {
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
     if (!$form_state->getValue('response_text')) {
-      $form_state->setErrorByName('response_text', $this->t('Reason field is required'));
+      $form_state->setErrorByName(
+        'response_text', $this->t('Reason field is required')
+      );
     }
   }
 
   /**
    * @param array $form
    * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $response = $this->getRequest()->query->get('response');
@@ -148,6 +160,12 @@ class RequestCloseForm extends ContentEntityConfirmFormBase {
       case RequestStatus::DENIED:
         $action = 'deny';
         break;
+      case RequestStatus::ACCEPTED:
+        $action = 'accept';
+        break;
+      case RequestStatus::ARCHIVED:
+        $action = 'archive';
+        break;
       default:
         throw new InvalidArgumentException('Action isnt\'t supported');
     }
@@ -169,11 +187,31 @@ class RequestCloseForm extends ContentEntityConfirmFormBase {
     switch ($this->getRequest()->query->get('response')) {
       case RequestStatus::DENIED:
         return $this->t(
-          '@entity-type will not be deleted. Please provide a mandatory reason for denying this request.', [
-          '@entity-type' => $this->getEntity()
-            ->getEntityType()
-            ->getSingularLabel(),
-        ]);
+          '@entity-type will not be deleted. Please provide a mandatory reason for denying this request.',
+          [
+            '@entity-type' => $this->getEntity()
+              ->getEntityType()
+              ->getSingularLabel(),
+          ]
+        );
+      case RequestStatus::ACCEPTED:
+        return $this->t(
+          '@entity-type will be permanently deleted. This action cannot be undone!',
+          [
+            '@entity-type' => $this->getEntity()
+              ->getEntityType()
+              ->getSingularLabel(),
+          ]
+        );
+      case RequestStatus::ARCHIVED:
+        return $this->t(
+          '@entity-type will be archived. Please provide a mandatory reason for denying this request.',
+          [
+            '@entity-type' => $this->getEntity()
+              ->getEntityType()
+              ->getSingularLabel(),
+          ]
+        );
     }
   }
 

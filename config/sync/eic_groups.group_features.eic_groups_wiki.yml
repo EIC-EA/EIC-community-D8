@@ -1,0 +1,8 @@
+permissions:
+  - 'create group_node:wiki_page entity'
+roles:
+  - group-member
+  - group-admin
+  - group-owner
+_core:
+  default_config_hash: ELCXUwzvaj4uAvyjzGGCclbiYm1AmUMcBkpP_67wus4
