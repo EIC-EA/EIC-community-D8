@@ -87,7 +87,7 @@ function eic_private_content_form_node_type_form_alter(&$form, FormStateInterfac
   $form['eic_private_content'][PrivateContentConst::FIELD_NAME] = [
     '#type' => 'checkbox',
     '#title' => t('Enable privacy'),
-    '#description' => t('Allow users to mark nodes of this content type as private. Changing this value will update all existing nodes and rebuild access permissions.'),
+    '#description' => t('Allow users to mark nodes of this content type as private. Changing this value will update all existing nodes after running cron.'),
     '#default_value' => $type->getThirdPartySetting('eic_private_content', PrivateContentConst::FIELD_NAME, FALSE),
   ];
 
