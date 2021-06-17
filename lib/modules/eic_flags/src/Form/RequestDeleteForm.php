@@ -76,6 +76,13 @@ class RequestDeleteForm extends ContentEntityDeleteForm {
   /**
    * {@inheritdoc}
    */
+  public function getConfirmText() {
+    return $this->t('Request deletion');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $form = parent::buildForm($form, $form_state);
 
