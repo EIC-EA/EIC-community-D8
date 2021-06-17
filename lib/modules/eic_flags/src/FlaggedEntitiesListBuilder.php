@@ -3,8 +3,6 @@
 namespace Drupal\eic_flags;
 
 use Drupal\Core\Database\Connection;
-use Drupal\Core\Database\Query\ConditionInterface;
-use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Entity\Element\EntityAutocomplete;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Url;
@@ -200,8 +198,7 @@ class FlaggedEntitiesListBuilder extends EntityListBuilder {
     foreach ($this->load() as $result) {
       $entity = $result['entity'];
       if ($row = $this->buildRow($result)) {
-        $build['table']['#rows'][$entity->getEntityTypeId() . '_' . $entity->id(
-        )] = $row;
+        $build['table']['#rows'][$entity->getEntityTypeId() . '_' . $entity->id()] = $row;
       }
     }
 
