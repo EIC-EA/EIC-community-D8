@@ -35,3 +35,14 @@ function eic_messages_group_content_insert(EntityInterface $entity) {
   $class = \Drupal::classResolver(GroupContentMessageCreator::class);
   $class->groupContentInsert($entity);
 }
+
+/**
+ * Implements hook_entity_type_alter().
+ */
+function eic_messages_entity_type_alter(array &$entity_types) {
+  $entity_types['message_template']->setHandlerClass('form', [
+    'add' => 'Drupal\eic_messages\Form\MessageTemplateForm',
+    'edit' => 'Drupal\eic_messages\Form\MessageTemplateForm',
+    'delete' => 'Drupal\message\Form\MessageTemplateDeleteConfirm',
+  ]);
+}
