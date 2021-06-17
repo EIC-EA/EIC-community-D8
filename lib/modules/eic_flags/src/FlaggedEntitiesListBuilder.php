@@ -3,7 +3,9 @@
 namespace Drupal\eic_flags;
 
 use Drupal\Core\Database\Connection;
+use Drupal\Core\Form\FormState;
 use Drupal\Core\Url;
+use Drupal\eic_flags\Form\ListBuilderFilters;
 use Drupal\eic_flags\Service\RequestHandlerCollector;
 use Drupal\flag\FlagService;
 use Drupal\Core\Datetime\DateFormatterInterface;
@@ -168,6 +170,7 @@ class FlaggedEntitiesListBuilder extends EntityListBuilder {
    * {@inheritdoc}
    */
   public function render() {
+    $build['filters'] = $this->getFilters();
     $build['table'] = [
       '#type' => 'table',
       '#header' => $this->buildHeader(),
@@ -333,6 +336,24 @@ class FlaggedEntitiesListBuilder extends EntityListBuilder {
     }
 
     return $query->execute()->fetchAll(\PDO::FETCH_ASSOC);
+  }
+
+  /**
+   * @return array
+   * @throws \Drupal\Core\Form\EnforcedResponseException
+   * @throws \Drupal\Core\Form\FormAjaxException
+   */
+  private function getFilters() {
+    $form_state = (new FormState())
+      ->setMethod('get')
+      ->addBuildInfo('args', [$this->requestHandler])
+      ->setAlwaysProcess()
+      ->disableRedirect();
+
+    return \Drupal::formBuilder()->buildForm(
+      ListBuilderFilters::class,
+      $form_state
+    );
   }
 
 }
