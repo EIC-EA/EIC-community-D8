@@ -33,23 +33,6 @@ reactions:
         unique: 0
         context_id: members_overview
         uuid: 2bdaf363-b983-4094-8b13-e3549984347b
-      4c4cb85b-6c50-4230-a9c6-717a3f23ee0f:
-        id: 'block_content:4f006e0d-a618-4283-ad23-132b89f60c11'
-        label: 'Members - Banner block'
-        provider: block_content
-        label_display: '0'
-        region: page_header
-        weight: '0'
-        status: true
-        info: ''
-        view_mode: full
-        context_mapping: {  }
-        custom_id: members_banner
-        theme: eic_community
-        css_class: ''
-        unique: 0
-        context_id: members_overview
-        uuid: 4c4cb85b-6c50-4230-a9c6-717a3f23ee0f
       88555819-dd97-4d5c-9376-6f0274ad620b:
         id: system_breadcrumb_block
         label: Breadcrumbs
