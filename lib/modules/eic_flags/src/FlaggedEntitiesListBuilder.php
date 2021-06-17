@@ -3,6 +3,9 @@
 namespace Drupal\eic_flags;
 
 use Drupal\Core\Database\Connection;
+use Drupal\Core\Database\Query\ConditionInterface;
+use Drupal\Core\Database\Query\SelectInterface;
+use Drupal\Core\Entity\Element\EntityAutocomplete;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Url;
 use Drupal\eic_flags\Form\ListBuilderFilters;
@@ -18,7 +21,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Defines a class to build a listing of flags with type 'delete_request_*'.
+ * Defines a class to build a listing of flagged entities for the current
+ * request_type.
  */
 class FlaggedEntitiesListBuilder extends EntityListBuilder {
 
@@ -41,6 +45,11 @@ class FlaggedEntitiesListBuilder extends EntityListBuilder {
    * @var \Drupal\flag\FlagService
    */
   protected $flagService;
+
+  /**
+   * @var \Symfony\Component\HttpFoundation\Request
+   */
+  protected $currentRequest;
 
   /**
    * @var string
@@ -80,6 +89,7 @@ class FlaggedEntitiesListBuilder extends EntityListBuilder {
     $this->database = $database;
     $this->dateFormatter = $date_formatter;
     $this->flagService = $flag_service;
+    $this->currentRequest = $request;
     $this->requestType = $request->get('request_type');
     $this->requestHandler = $collector->getHandlerByType($this->requestType);
   }
@@ -142,6 +152,7 @@ class FlaggedEntitiesListBuilder extends EntityListBuilder {
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *
    * @return array
+   * @throws \Drupal\Core\Entity\EntityMalformedException
    */
   protected function getDefaultOperations(EntityInterface $entity) {
     $operations = [];
@@ -304,38 +315,80 @@ class FlaggedEntitiesListBuilder extends EntityListBuilder {
    * {@inheritdoc}
    */
   protected function getEntityIds() {
-    $query = $this->database->select('flagging', 'f');
-    $query->fields('f', ['entity_id', 'entity_type', 'flag_id'])
-      ->join('flagging__field_request_status', 'fs', 'fs.entity_id = f.id');
-
-    $query->condition('fs.field_request_status_value', RequestStatus::OPEN)
-      ->distinct(TRUE);
-
+    $results = [];
+    $query_strings = $this->currentRequest->query->all();
     $supported_entity_types = $this->requestHandler->getSupportedEntityTypes();
+    $requested_type = !empty($query_strings['type'])
+    && $query_strings['type'] !== 'All' ? $query_strings['type'] : NULL;
+
     foreach ($supported_entity_types as $type => $flag) {
+      // If the user requested a certain entity type, just query for it.
+      if (!empty($requested_type) && $type !== $requested_type) {
+        continue;
+      }
+
       $definition = $this->entityTypeManager->getDefinition($type);
       $data_table = $definition->getDataTable();
       $entity_keys = $definition->get('entity_keys');
+      $id_field = $entity_keys['id'];
 
-      // Since flag module doesn't use database relations and target the flagged entity using two columns (entity_id and entity_type)
-      // to make the 'entity_id' field unique, we must concat it with the type of the entity.
-      // This ensures an unique value since within the same type, the id must be unique
-      $flag_join_field = 'CONCAT("' . $type . '",f.entity_id)';
-      $entity_join_field = 'CONCAT("' . $type . '",' . $type . '.' . $entity_keys['id'] . ')';
+      $query = $this->database->select('flagging', 'f')
+        ->fields('f', ['id', 'entity_id', 'entity_type', 'flag_id'])
+        ->distinct(TRUE)
+        ->condition('fs.field_request_status_value', RequestStatus::OPEN)
+        ->condition('f.flag_id', $flag);
 
-      // Left join every supported entity types, this will allow us to filter on their attributes
+      $query->join(
+        'flagging__field_request_status',
+        'fs',
+        'fs.entity_id = f.id'
+      );
+      
       $query->leftJoin(
         $data_table,
         $type,
-        ':entity_join = :flag_join',
-        [
-          ':entity_join' => $entity_join_field,
-          ':flag_join' => $flag_join_field,
-        ]
+        "$type.$id_field = f.entity_id"
+      );
+
+      if (!empty($query_strings['title'])) {
+        $query->condition(
+          $type . '.' . $entity_keys['label'],
+          '%' . $query_strings['title'] . '%',
+          'LIKE'
+        );
+      }
+
+      if (!empty($query_strings['requester'])) {
+        $requester_id = EntityAutocomplete::extractEntityIdFromAutocompleteInput(
+          $query_strings['requester']
+        );
+
+        $query->condition(
+          'f.uid',
+          $requester_id
+        );
+      }
+
+      if (!empty($query_strings['author'])) {
+        $author_id = EntityAutocomplete::extractEntityIdFromAutocompleteInput(
+          $query_strings['author']
+        );
+
+        $query->condition(
+          $type . '.' . $entity_keys['owner'],
+          $author_id
+        );
+      }
+
+      $query->addTag('debug');
+
+      $results = array_merge(
+        $results,
+        $query->execute()->fetchAll(\PDO::FETCH_ASSOC)
       );
     }
 
-    return $query->execute()->fetchAll(\PDO::FETCH_ASSOC);
+    return $results;
   }
 
   /**
