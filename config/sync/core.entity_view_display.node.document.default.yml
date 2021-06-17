@@ -60,6 +60,7 @@ content:
     weight: 10
     settings: {  }
     third_party_settings: {  }
+    region: content
   flag_like_content:
     weight: 10
     settings: {  }
@@ -75,6 +76,16 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
+  private:
+    weight: 1
+    region: content
+    label: above
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    type: boolean
 hidden:
   extra_field_eic_theme_helper_short_title_with_fallback: true
   langcode: true

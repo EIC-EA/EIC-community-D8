@@ -1,0 +1,5 @@
+services:
+  eic_private_content.query_access_subscriber:
+    class: Drupal\eic_private_content\EventSubscriber\QueryAccessSubscriber
+    tags:
+      - { name: event_subscriber }
