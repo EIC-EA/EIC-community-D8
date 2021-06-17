@@ -67,7 +67,17 @@
           </section>
 
   <section class="ecl-section-wrapper ecl-section-wrapper--is-grey ecl-comment-overview ">
+    <section class="ecl-editorial-article__content">
     {{ elements.field_comments }}
+    </section>
+    <aside class="ecl-editorial-article__aside">
+      <div class="ecl-editorial-article__aside-wrapper">
+        {% if contributors is defined %}
+          <h2>{{ "Contributors"|t }}</h2>
+          {% include "@theme/patterns/components/author-collection.html.twig" with contributors %}
+        {% endif %}
+      </div>
+    </aside>
   </section>
           </main>
   </div>

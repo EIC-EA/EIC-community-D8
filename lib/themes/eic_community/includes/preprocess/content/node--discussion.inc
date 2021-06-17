@@ -20,7 +20,14 @@ function eic_community_preprocess_node__discussion(array &$variables) {
     case 'full':
       // @todo Show the list of contributors.
       if (!empty($variables['elements']['contributor_ids'])) {
-        $variables['contributors'] = \Drupal::entityTypeManager()->getStorage('user')->loadMultiple($variables['elements']['contributor_ids']);
+        $users = \Drupal::entityTypeManager()->getStorage('user')->loadMultiple($variables['elements']['contributor_ids']);
+        $contributors= ['items' => []];
+
+        foreach ($users as $user) {
+          $contributors['items'][] = eic_community_get_teaser_user_display($user);
+        }
+
+        $variables['contributors'] =$contributors;
       }
 
       $variables['author'] = eic_community_get_teaser_user_display($node->getOwner());
