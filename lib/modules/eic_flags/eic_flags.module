@@ -112,7 +112,7 @@ function eic_flags_entity_type_build(array &$entity_types) {
 
     $entity_type = $entity_types[$entity_id];
     $handler_classes = $entity_type->getHandlerClasses();
-    $route_providers = $handler_classes['route_provider'];
+    $route_providers = $handler_classes['route_provider'] ?? [];
     $route_providers['action-request'] = EntityRequestRouteProvider::class;
 
     $entity_type->setFormClass('new-request', NewRequestForm::class)
@@ -185,6 +185,15 @@ function eic_flags_entity_operation(EntityInterface $entity) {
       )
       ->setRouteParameter('request_type', RequestTypes::DELETE),
   ];
+  $operations['request_archive'] = [
+    'title' => t('Request archive'),
+    'url' => $entity->toUrl('new-request')
+      ->setRouteParameter(
+        'destination',
+        \Drupal::request()->getRequestUri()
+      )
+      ->setRouteParameter('request_type', RequestTypes::ARCHIVE),
+  ];
 
   return $operations;
 }
@@ -235,7 +244,7 @@ function eic_flags_entity_access(
   $operation,
   AccountInterface $account
 ) {
-  if (!in_array($operation, ['request-delete'])) {
+  if (!in_array($operation, ['request-delete', 'request-archive'])) {
     return AccessResult::neutral();
   }
 

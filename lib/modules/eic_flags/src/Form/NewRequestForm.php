@@ -7,7 +7,7 @@ use Drupal\Core\Entity\ContentEntityDeleteForm;
 use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\eic_flags\RequestTypes;
+use Drupal\eic_flags\Service\ArchiveRequestHandler;
 use Drupal\eic_flags\Service\RequestHandlerCollector;
 use Drupal\flag\Entity\Flagging;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -22,7 +22,7 @@ class NewRequestForm extends ContentEntityDeleteForm {
   /**
    * @var \Drupal\eic_flags\Service\HandlerInterface
    */
-  private $deleteRequestHandler;
+  private $requestHandler;
 
   /**
    * NewRequestForm constructor.
@@ -40,8 +40,8 @@ class NewRequestForm extends ContentEntityDeleteForm {
   ) {
     parent::__construct($entity_repository, $entity_type_bundle_info, $time);
 
-    $this->deleteRequestHandler = $collector->getHandlerByType(
-      RequestTypes::DELETE
+    $this->requestHandler = $collector->getHandlerByType(
+      $this->getRequest()->get('request_type')
     );
   }
 
@@ -68,8 +68,10 @@ class NewRequestForm extends ContentEntityDeleteForm {
    * {@inheritdoc}
    */
   public function getDescription() {
+    $action = $this->requestHandler instanceof ArchiveRequestHandler ? 'archival' : 'deletion';
     return $this->t(
-      "You're about to request a deletion for this entity. Are you sure?"
+      "You're about to request @action for this entity. Are you sure?",
+      ['@action' => $action]
     );
   }
 
@@ -77,7 +79,8 @@ class NewRequestForm extends ContentEntityDeleteForm {
    * {@inheritdoc}
    */
   public function getConfirmText() {
-    return $this->t('Request deletion');
+    $action = $this->requestHandler instanceof ArchiveRequestHandler ? 'archival' : 'deletion';
+    return $this->t('Request @action', ['@action' => $action]);
   }
 
   /**
@@ -86,9 +89,13 @@ class NewRequestForm extends ContentEntityDeleteForm {
   public function buildForm(array $form, FormStateInterface $form_state) {
     $form = parent::buildForm($form, $form_state);
 
+    $action = $this->requestHandler instanceof ArchiveRequestHandler ? 'archived' : 'deleted';
     $form['reason'] = [
       '#type' => 'textarea',
-      '#title' => $this->t('Please explain why this content should be deleted'),
+      '#title' => $this->t(
+        'Please explain why this content should be @action',
+        ['@action' => $action]
+      ),
       '#required' => TRUE,
     ];
 
@@ -106,7 +113,7 @@ class NewRequestForm extends ContentEntityDeleteForm {
       );
     }
 
-    if ($this->deleteRequestHandler->hasOpenRequest(
+    if ($this->requestHandler->hasOpenRequest(
       $this->entity,
       $this->currentUser()
     )) {
@@ -121,7 +128,7 @@ class NewRequestForm extends ContentEntityDeleteForm {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $flag = $this->deleteRequestHandler
+    $flag = $this->requestHandler
       ->applyFlag($this->entity, $form_state->getValue('reason'));
     if (!$flag instanceof Flagging) {
       $this->messenger()->addError($this->t('You are not allowed to do this'));

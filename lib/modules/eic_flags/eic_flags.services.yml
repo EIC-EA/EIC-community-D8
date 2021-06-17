@@ -8,3 +8,8 @@ services:
     arguments: [ '@module_handler', '@entity_type.manager', '@flag', '@content_moderation.moderation_information' ]
     tags:
       - { name: request_handler }
+  eic_flags.delete_archive_handler:
+    class: Drupal\eic_flags\Service\ArchiveRequestHandler
+    arguments: [ '@module_handler', '@entity_type.manager', '@flag', '@content_moderation.moderation_information' ]
+    tags:
+      - { name: request_handler }
