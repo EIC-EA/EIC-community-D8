@@ -50,14 +50,15 @@ function eic_private_content_entity_field_access($operation, FieldDefinitionInte
 
     if ($type instanceof NodeTypeInterface) {
       $privacy_setting = $type->getThirdPartySetting('eic_private_content', PrivateContentConst::FIELD_NAME, FALSE);
+      $is_private = $items->value;
 
       switch ($operation) {
         case 'view':
-          $access = AccessResult::forbiddenIf(!$privacy_setting || ($privacy_setting && !$account->hasPermission('view private content') && $entity->getOwnerId() !== $account->id()));
+          $access = AccessResult::forbiddenIf(!$privacy_setting || ($privacy_setting && $is_private && !$account->hasPermission('view private content') && $entity->getOwnerId() !== $account->id()));
           break;
 
         case 'edit':
-          $access = AccessResult::forbiddenIf(!$privacy_setting || ($privacy_setting && !$account->hasPermission('mark private content') && $entity->getOwnerId() !== $account->id()));
+          $access = AccessResult::forbiddenIf(!$privacy_setting || ($privacy_setting && $is_private && !$account->hasPermission('mark private content') && $entity->getOwnerId() !== $account->id()));
           break;
 
       }
@@ -87,7 +88,7 @@ function eic_private_content_form_node_type_form_alter(&$form, FormStateInterfac
     '#type' => 'checkbox',
     '#title' => t('Enable privacy'),
     '#description' => t('Allow users to mark nodes of this content type as private. Changing this value will update all existing nodes and rebuild access permissions.'),
-    '#default_value' => $type->getThirdPartySetting('private_content', PrivateContentConst::FIELD_NAME, FALSE),
+    '#default_value' => $type->getThirdPartySetting('eic_private_content', PrivateContentConst::FIELD_NAME, FALSE),
   ];
 
   $form['#entity_builders'][] = 'eic_private_content_form_node_type_form_builder';
@@ -103,7 +104,7 @@ function eic_private_content_form_node_type_form_builder($entity_type, NodeTypeI
   $new = $form_state->getValue('private');
   $type->setThirdPartySetting('eic_private_content', PrivateContentConst::FIELD_NAME, $new);
   if ($new != $existing) {
-    // @todo Mark all nodes as non private.
+    // @todo Mark all nodes as non private. This should be done via cron.
   }
 }
 
@@ -122,7 +123,8 @@ function eic_private_content_entity_access(EntityInterface $entity, $operation, 
       /** @var \Drupal\node\NodeTypeInterface $type */
       $type = $entity->type->entity;
       $privacy_setting = $type->getThirdPartySetting('eic_private_content', PrivateContentConst::FIELD_NAME, FALSE);
-      $access = AccessResult::forbiddenIf(!$privacy_setting || ($privacy_setting && !$account->hasPermission('view private content') && $entity->getOwnerId() !== $account->id()));
+      $is_private = $entity->get('private')->value;
+      $access = AccessResult::forbiddenIf(($privacy_setting && $is_private && !$account->hasPermission('view private content') && $entity->getOwnerId() !== $account->id()));
       break;
 
   }
