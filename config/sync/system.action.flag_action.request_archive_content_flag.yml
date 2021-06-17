@@ -1,0 +1,15 @@
+uuid: 4d95cc77-c74c-4657-8517-f941c0376c46
+langcode: en
+status: true
+dependencies:
+  config:
+    - flag.flag.request_archive_content
+  module:
+    - flag
+id: flag_action.request_archive_content_flag
+label: 'Flag this item'
+type: node
+plugin: 'flag_action:request_archive_content_flag'
+configuration:
+  flag_id: request_archive_content
+  flag_action: flag
