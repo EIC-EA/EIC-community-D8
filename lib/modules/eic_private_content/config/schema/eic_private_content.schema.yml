@@ -1,0 +1,9 @@
+# Schema for the configuration files of the eic private content module.
+
+node.type.*.third_party.eic_private_content:
+  type: mapping
+  label: 'Per-content type privacy settings'
+  mapping:
+    private:
+      type: integer
+      label: 'Private visibility on the form'
