@@ -193,7 +193,15 @@ function eic_flags_entity_operation_alter(array &$operations, EntityInterface $e
 /**
  * Implements hook_entity_access().
  */
-function eic_flags_entity_access(EntityInterface $entity, $operation, AccountInterface $account) {
+function eic_flags_entity_access(
+  EntityInterface $entity,
+  $operation,
+  AccountInterface $account
+) {
+  if (!in_array($operation, ['request-delete'])) {
+    return AccessResult::neutral();
+  }
+
   /** @var \Drupal\eic_flags\Service\HandlerInterface $delete_request_handler */
   $delete_request_handler = \Drupal::service('eic_flags.handler_collector')
     ->getHandlerByType(RequestTypes::DELETE);
@@ -201,8 +209,8 @@ function eic_flags_entity_access(EntityInterface $entity, $operation, AccountInt
   $entity_type_id = $entity->getEntityTypeId();
   if (!in_array(
     $entity_type_id,
-    array_keys($delete_request_handler->getSupportedEntityTypes()))
-  ) {
+    array_keys($delete_request_handler->getSupportedEntityTypes())
+  )) {
     return AccessResult::neutral();
   }
 
@@ -210,4 +218,6 @@ function eic_flags_entity_access(EntityInterface $entity, $operation, AccountInt
   if (!$account->hasPermission('make delete request')) {
     return AccessResult::forbidden();
   }
+
+  return AccessResult::allowed();
 }
