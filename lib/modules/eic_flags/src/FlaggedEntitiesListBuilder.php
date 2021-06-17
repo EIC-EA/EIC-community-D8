@@ -86,7 +86,9 @@ class FlaggedEntitiesListBuilder extends EntityListBuilder {
    * {@inheritdoc}
    */
   public static function createInstance(
-    ContainerInterface $container, EntityTypeInterface $entity_type) {
+    ContainerInterface $container,
+    EntityTypeInterface $entity_type
+  ) {
     return new static(
       $entity_type,
       $container->get('entity_type.manager')->getStorage($entity_type->id()),
@@ -105,9 +107,12 @@ class FlaggedEntitiesListBuilder extends EntityListBuilder {
   public function buildHeader() {
     // Enable language column and filter if multiple languages are added.
     $header = [
-      'title' => $this->t('Title'),
+      'title' => [
+        'data' => $this->t('Title'),
+        'class' => [RESPONSIVE_PRIORITY_MEDIUM],
+      ],
       'type' => [
-        'data' => $this->t('Content type'),
+        'data' => $this->t('Type'),
         'class' => [RESPONSIVE_PRIORITY_MEDIUM],
       ],
       'author' => [
@@ -119,7 +124,7 @@ class FlaggedEntitiesListBuilder extends EntityListBuilder {
         'class' => [RESPONSIVE_PRIORITY_MEDIUM],
       ],
       'changed' => [
-        'data' => $this->t('Changed'),
+        'data' => $this->t('Last updated'),
         'class' => [RESPONSIVE_PRIORITY_LOW],
       ],
       'created' => [
@@ -137,8 +142,16 @@ class FlaggedEntitiesListBuilder extends EntityListBuilder {
    * @return array
    */
   protected function getDefaultOperations(EntityInterface $entity) {
-    // Will be implemented with another PR
-    return [];
+    $operations = [];
+    if ($entity->access('update') && $entity->hasLinkTemplate('edit-form')) {
+      $operations['edit'] = [
+        'title' => $this->t('Edit'),
+        'weight' => 10,
+        'url' => $this->ensureDestination($entity->toUrl('edit-form')),
+      ];
+    }
+
+    return $operations;
   }
 
   /**
@@ -161,7 +174,9 @@ class FlaggedEntitiesListBuilder extends EntityListBuilder {
       '#title' => $this->getTitle(),
       '#rows' => [],
       '#empty' => $this->t(
-        'There are no @label yet.', ['@label' => $this->entityType->getPluralLabel()]),
+        'There are no @label yet.',
+        ['@label' => $this->entityType->getPluralLabel()]
+      ),
       '#cache' => [
         'contexts' => $this->entityType->getListCacheContexts(),
         'tags' => $this->entityType->getListCacheTags(),
@@ -171,7 +186,8 @@ class FlaggedEntitiesListBuilder extends EntityListBuilder {
     foreach ($this->load() as $result) {
       $entity = $result['entity'];
       if ($row = $this->buildRow($result)) {
-        $build['table']['#rows'][$entity->getEntityTypeId() . '_' . $entity->id()] = $row;
+        $build['table']['#rows'][$entity->getEntityTypeId() . '_' . $entity->id(
+        )] = $row;
       }
     }
 
@@ -216,25 +232,32 @@ class FlaggedEntitiesListBuilder extends EntityListBuilder {
         break;
     }
 
-    $row['title'] = $flagged_entity->label();
+    $row['title']['data'] = [
+      '#type' => 'link',
+      '#title' => $flagged_entity->label(),
+      '#url' => Url::fromRoute(
+        'eic_flags.flagged_entity.detail',
+        [
+          'request_type' => $this->requestHandler->getType(),
+          'entity_type' => $entity_type_id,
+          'entity_id' => $flagged_entity->id(),
+        ]
+      ),
+    ];
     $row['type'] = $type;
     $row['author']['data'] = [
       '#theme' => 'username',
       '#account' => $flagged_entity->getOwner(),
     ];
-    $row['request_number']['data'] = [
-      '#type' => 'link',
-      '#title' => $request_count,
-      '#url' => Url::fromRoute(
-        'eic_flags.flagged_entity.detail', [
-        'request_type' => $this->requestHandler->getType(),
-        'entity_type' => $entity_type_id,
-        'entity_id' => $flagged_entity->id(),
-      ]),
-    ];
-
-    $row['changed'] = $this->dateFormatter->format($flagged_entity->getChangedTime(), 'short');
-    $row['created'] = $this->dateFormatter->format($flagged_entity->get('created')->value, 'short');
+    $row['request_number'] = $request_count;
+    $row['changed'] = $this->dateFormatter->format(
+      $flagged_entity->getChangedTime(),
+      'short'
+    );
+    $row['created'] = $this->dateFormatter->format(
+      $flagged_entity->get('created')->value,
+      'short'
+    );
     $row['operations']['data'] = $this->buildOperations($flagged_entity);
 
     return $row;
@@ -261,7 +284,9 @@ class FlaggedEntitiesListBuilder extends EntityListBuilder {
       $entity = $this->entityTypeManager
         ->getStorage($result['entity_type'])
         ->load($result['entity_id']);
-      $flag = $this->flagService->getFlagById($supported_entity_types[$result['entity_type']]);
+      $flag = $this->flagService->getFlagById(
+        $supported_entity_types[$result['entity_type']]
+      );
 
       $entities[] = [
         'entity' => $entity,
@@ -297,10 +322,14 @@ class FlaggedEntitiesListBuilder extends EntityListBuilder {
 
       // Left join every supported entity types, this will allow us to filter on their attributes
       $query->leftJoin(
-        $data_table, $type, ':entity_join = :flag_join', [
-        ':entity_join' => $entity_join_field,
-        ':flag_join' => $flag_join_field,
-      ]);
+        $data_table,
+        $type,
+        ':entity_join = :flag_join',
+        [
+          ':entity_join' => $entity_join_field,
+          ':flag_join' => $flag_join_field,
+        ]
+      );
     }
 
     return $query->execute()->fetchAll(\PDO::FETCH_ASSOC);

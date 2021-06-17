@@ -168,6 +168,7 @@ function eic_flags_entity_operation_alter(array &$operations, EntityInterface $e
       'deny_request',
       'accept_request',
       'archive_request',
+      'edit'
     ]);
   }, ARRAY_FILTER_USE_BOTH);
 }
