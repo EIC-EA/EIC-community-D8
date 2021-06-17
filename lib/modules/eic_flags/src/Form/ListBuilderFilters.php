@@ -58,6 +58,9 @@ class ListBuilderFilters extends FormBase {
       '#type' => 'entity_autocomplete',
       '#title' => $this->t('Author'),
       '#target_type' => 'user',
+      '#selection_settings' => ['include_anonymous' => FALSE],
+      '#selection_handler' => 'default',
+      '#validate_reference' => FALSE,
       '#size' => 30,
     ];
 
@@ -93,16 +96,7 @@ class ListBuilderFilters extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $form_state->cleanValues();
-    $exclude = [
-      'submit',
-      'form_build_id',
-      'form_id',
-      'form_token',
-      'exposed_form_plugin',
-      'reset',
-    ];
-    $values = $form_state->getValues();
+    // This form submits to the flagged entities list, so processing happens there.
   }
 
 }
