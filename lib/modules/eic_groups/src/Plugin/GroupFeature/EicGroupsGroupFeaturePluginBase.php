@@ -4,9 +4,9 @@ namespace Drupal\eic_groups\Plugin\GroupFeature;
 
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
-use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\group_content_menu\GroupContentMenuInterface;
+use Drupal\group_permissions\Entity\GroupPermissionInterface;
 use Drupal\oec_group_features\GroupFeaturePluginBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -121,7 +121,7 @@ class EicGroupsGroupFeaturePluginBase extends GroupFeaturePluginBase {
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
   protected function handlePermissions(GroupInterface $group, $op = 'enable') {
-    if ($group_permissions = $this->getGroupPermissions($group)) {
+    if (($group_permissions = $this->getGroupPermissions($group)) && $group_permissions instanceof GroupPermissionInterface) {
       $config = $this->configFactory->get('eic_groups.group_features.' . $this->getPluginId());
       foreach ($config->get('roles') as $role) {
         switch ($op) {
