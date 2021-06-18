@@ -30,7 +30,7 @@ class RequestDelete extends GroupContentEnablerBase {
 
     $operations['group-request-delete'] = [
       'title' => $this->t('Request delete'),
-      'url' => $group->toUrl('request-delete')
+      'url' => $group->toUrl('new-request')
         ->setRouteParameter(
           'destination',
           \Drupal::request()->getRequestUri()
