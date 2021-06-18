@@ -155,13 +155,17 @@ function eic_flags_tokens(
  * Implements hook_entity_operation().
  */
 function eic_flags_entity_operation(EntityInterface $entity) {
+  $current_request = \Drupal::routeMatch();
+  if (!$request_type = $current_request->getParameter('request_type')) {
+    return [];
+  }
+
   /** @var \Drupal\eic_flags\Service\HandlerInterface $delete_request_handler */
   $delete_request_handler = \Drupal::service('eic_flags.handler_collector')
-    ->getHandlerByType(RequestTypes::DELETE);
+    ->getHandlerByType($request_type);
 
   if (!$entity instanceof ContentEntityInterface
-    || !$delete_request_handler->supports($entity)
-  ) {
+    || !$delete_request_handler->supports($entity)) {
     return [];
   }
 
