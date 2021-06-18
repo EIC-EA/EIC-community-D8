@@ -77,8 +77,10 @@
                         <aside class="ecl-editorial-article__aside">
                           <div class="ecl-editorial-article__aside-wrapper">
                             {% if contributors is defined %}
-                              <h2>{{ "Contributors"|t }}</h2>
-                              {% include "@theme/patterns/components/author-collection.html.twig" with contributors %}
+                              {% include "@theme/patterns/compositions/featured-contributors.html.twig" with contributors|default({})|merge({
+                                grid: true,
+                                title: "Contributors"|t
+                              }) only %}
                             {% endif %}
                           </div>
                         </aside>
