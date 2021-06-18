@@ -6,6 +6,7 @@ use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\eic_flags\RequestStatus;
+use Drupal\eic_flags\RequestTypes;
 use Drupal\eic_flags\Service\HandlerInterface;
 use Drupal\eic_flags\Service\RequestHandlerCollector;
 use Drupal\eic_messages\MessageHelper;
@@ -147,6 +148,7 @@ class RequestMessageCreator extends MessageCreatorBase {
           'template' => $message_name,
           'field_message_subject' => $this->getResponseSubject(
             $entity,
+            $handler,
             $response
           ),
           'field_referenced_flag' => $flagging,
@@ -164,29 +166,33 @@ class RequestMessageCreator extends MessageCreatorBase {
 
   /**
    * @param \Drupal\Core\Entity\ContentEntityInterface $entity
+   * @param \Drupal\eic_flags\Service\HandlerInterface $handler
    * @param string $response
    *
    * @return \Drupal\Core\StringTranslation\TranslatableMarkup|null
    */
   private function getResponseSubject(
     ContentEntityInterface $entity,
+    HandlerInterface $handler,
     string $response
   ) {
+    $operation = $handler->getType() === RequestTypes::DELETE ? 'deletion' : 'archival';
+
     switch ($response) {
       case RequestStatus::DENIED:
         return $this->t(
-          'Deletion request for @label denied',
-          ['@label' => $entity->label()]
+          '@operation request for @label denied',
+          ['@label' => $entity->label(), '@operation' => ucfirst($operation)]
         );
       case RequestStatus::ACCEPTED:
         return $this->t(
-          'Deletion request for @type accepted',
-          ['@label' => $entity->label()]
+          '@operation request for @type accepted',
+          ['@label' => $entity->label(), '@operation' => ucfirst($operation)]
         );
       case RequestStatus::ARCHIVED:
         return $this->t(
-          'Deletion request for @label denied and the content has been archived instead',
-          ['@label' => $entity->label()]
+          '@operation request for @label denied and the content has been archived instead',
+          ['@label' => $entity->label(), '@operation' => ucfirst($operation)]
         );
       default:
         return NULL;

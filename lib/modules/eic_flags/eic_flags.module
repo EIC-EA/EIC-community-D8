@@ -155,8 +155,8 @@ function eic_flags_tokens(
  * Implements hook_entity_operation().
  */
 function eic_flags_entity_operation(EntityInterface $entity) {
-  $current_request = \Drupal::routeMatch();
-  if (!$request_type = $current_request->getParameter('request_type')) {
+  $request_type = \Drupal::routeMatch()->getParameter('request_type');
+  if (!$request_type) {
     return [];
   }
 
