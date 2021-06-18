@@ -202,7 +202,7 @@ class FlaggedEntitiesListBuilder extends EntityListBuilder {
     }
 
     $request_count = count(
-      $this->flagService->getEntityFlaggings($flags[$entity_type_id], $flagged_entity)
+      $this->requestHandler->getOpenRequests($flagged_entity)
     );
 
     $type = '';

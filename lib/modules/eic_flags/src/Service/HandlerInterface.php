@@ -21,26 +21,48 @@ interface HandlerInterface {
   public function getType();
 
   /**
+   * Method called before the action is executed.
+   * Can be used for sending notifications, triggering hooks, events, etc.
+   *
+   * @param \Drupal\flag\FlaggingInterface $flagging
+   * @param \Drupal\Core\Entity\ContentEntityInterface $content_entity
+   * @param string $response
+   * @param string $reason
+   *
+   * @return void
+   */
+  public function closeRequest(
+    FlaggingInterface $flagging,
+    ContentEntityInterface $content_entity,
+    string $response,
+    string $reason
+  );
+
+  /**
    * Starts the 'deny' workflow for a request.
    *
    * @param \Drupal\flag\FlaggingInterface $flagging
    * @param \Drupal\Core\Entity\ContentEntityInterface $content_entity
-   * @param string $reason
    *
    * @return bool
    */
-  public function deny(FlaggingInterface $flagging, ContentEntityInterface $content_entity, string $reason);
+  public function deny(
+    FlaggingInterface $flagging,
+    ContentEntityInterface $content_entity
+  );
 
   /**
    * Starts the 'accept' workflow for a request.
    *
    * @param \Drupal\flag\FlaggingInterface $flagging
    * @param \Drupal\Core\Entity\ContentEntityInterface $content_entity
-   * @param string $reason
    *
    * @return bool
    */
-  public function accept(FlaggingInterface $flagging, ContentEntityInterface $content_entity, string $reason);
+  public function accept(
+    FlaggingInterface $flagging,
+    ContentEntityInterface $content_entity
+  );
 
   /**
    * Applies the given the corresponding flag to the given entity.
@@ -79,9 +101,21 @@ interface HandlerInterface {
 
   /**
    * @param \Drupal\Core\Entity\ContentEntityInterface $content_entity
+   * @param \Drupal\Core\Session\AccountInterface|null $account
+   *
+   * @return array
+   */
+  public function getOpenRequests(
+    ContentEntityInterface $content_entity,
+    ?AccountInterface $account = NULL
+  );
+
+  /**
+   * @param \Drupal\Core\Entity\ContentEntityInterface $content_entity
    * @param \Drupal\Core\Session\AccountInterface $account
    *
    * @return bool
    */
   public function hasOpenRequest(ContentEntityInterface $content_entity, AccountInterface $account);
+
 }

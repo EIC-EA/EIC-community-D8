@@ -42,7 +42,7 @@ function eic_messages_group_content_insert(EntityInterface $entity) {
 /**
  * Implements hook_delete_request_insert().
  */
-function eic_messages_delete_request_insert(FlaggingInterface $flag, ContentEntityInterface $entity) {
+function eic_messages_request_insert(FlaggingInterface $flag, ContentEntityInterface $entity) {
   /** @var DeleteRequestMessageCreator $class */
   $class = \Drupal::classResolver(DeleteRequestMessageCreator::class);
   $class->deleteRequestInsert($flag, $entity);
