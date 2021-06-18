@@ -69,10 +69,7 @@ class DeleteRequestHandler extends AbstractRequestHandler {
     ContentEntityInterface $content_entity
   ) {
     if ($this->moderationInformation->isModeratedEntity($content_entity)) {
-      // TODO think about looping through every workflow to find an 'unpublished' state
-      $state = $content_entity->getEntityTypeId(
-      ) === 'group' ? 'pending' : 'unpublished';
-      $content_entity->set('moderation_state', $state);
+      $content_entity->set('moderation_state', 'archived');
     }
     else {
       $content_entity->set('status', FALSE);

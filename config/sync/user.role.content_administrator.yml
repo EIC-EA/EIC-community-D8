@@ -19,6 +19,7 @@ permissions:
   - 'make delete request'
   - 'mark private content'
   - 'unflag recommend_group'
+  - 'use groups transition archive'
   - 'use groups transition publish'
   - 'use groups transition upgrade_to_draft'
   - 'use text format basic_text'
