@@ -131,7 +131,7 @@ class RequestMessageCreator extends MessageCreatorBase {
 
     /** @var \Drupal\user\UserInterface[] $to */
     $to = [$entity->getOwner(), $flagging->getOwner()];
-    $response = $flagging->get('field_request_response')->value;
+    $response = $flagging->get('field_request_status')->value;
     $message_name = $handler->getMessageByAction($response);
     if (!$message_name) {
       \Drupal::logger('eic_messages')->warning(
