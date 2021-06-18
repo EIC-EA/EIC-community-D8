@@ -12,75 +12,84 @@
   <div {{ attributes }}>
     {{ title_prefix }}
     {{ title_suffix }}
-  <div class="ecl-container">
-    <div class="ecl-editorial-header__wrapper">
-      <div class="ecl-editorial-header__main">
-        <div class="ecl-content-type-indicator ecl-editorial-header__type">
-          {{ elements.field_discussion_type }}
-        </div>
-        <div class="ecl-editorial-header__actions">
-          {% for key, element in elements %}
-            {% if key starts with 'flag' %}
-            {{ element }}
-            {% endif %}
-          {% endfor %}
+    <div class="ecl-container">
+      <div class="ecl-editorial-header__wrapper">
+        <div class="ecl-editorial-header__main">
+          <div class="ecl-content-type-indicator ecl-editorial-header__type">
+            {{ elements.field_discussion_type }}
+          </div>
+          <div class="ecl-editorial-header__actions">
+            {% for key, element in elements %}
+              {% if key starts with 'flag' %}
+                {{ element }}
+              {% endif %}
+            {% endfor %}
+          </div>
         </div>
       </div>
     </div>
-  </div>
     <div class="ecl-base-layout ">
-
       <div class="ecl-base-layout__content">
         <div class="ecl-base-layout__main">
           <main>
-  <section class="ecl-section-wrapper">
-            <div class="ecl-editorial-article">
-              <div class="ecl-container">
-                <div class="ecl-editorial-article__wrapper">
-                  <section class="ecl-editorial-article__content">
-                    <h1>{{ elements['#title'] }}</h1>
+            <section class="ecl-section-wrapper">
+              <div class="ecl-editorial-article">
+                <div class="ecl-container">
+                  <div class="ecl-editorial-article__wrapper">
+                    <section class="ecl-editorial-article__content">
+                      <h1>{{ elements['#title'] }}</h1>
 
-                    {{ elements.field_body }}
+                      {{ elements.field_body }}
 
-                    <div class="ecl-editorial-article__meta">
-                      <div class="ecl-editorial-article__meta-item">
-                        {% include "@theme/patterns/components/author.html.twig" with author only %}
+                      <div class="ecl-editorial-article__meta">
+                        <div class="ecl-editorial-article__meta-item">
+                          {% include "@theme/patterns/components/author.html.twig" with author only %}
+                        </div>
+
+                        <div class="ecl-editorial-article__meta-item">
+                          {% include "@theme/patterns/components/timestamp.html.twig" with timestamp|default({})|merge({
+                            icon_file_path: icon_file_path,
+                            extra_classes: 'ecl-discussion-thread__timestamp ecl-timestamp--meta' ~ timestamp.extra_classes|default(''),
+                          }) only %}
+                        </div>
                       </div>
 
-                      <div class="ecl-editorial-article__meta-item">
-                        {% include "@theme/patterns/components/timestamp.html.twig" with timestamp|default({})|merge({
-                          icon_file_path: icon_file_path,
-                          extra_classes: 'ecl-discussion-thread__timestamp ecl-timestamp--meta' ~ timestamp.extra_classes|default(''),
-                        }) only %}
+                    </section>
+                    <aside class="ecl-editorial-article__aside">
+                      <div class="ecl-editorial-article__aside-wrapper">
+                        {{ elements.field_vocab_topics }}
                       </div>
-                    </div>
-
-                  </section>
-                  <aside class="ecl-editorial-article__aside">
-                    <div class="ecl-editorial-article__aside-wrapper">
-                      {{ elements.field_vocab_topics }}
-                    </div>
-                  </aside>
+                    </aside>
+                  </div>
                 </div>
               </div>
-            </div>
-          </section>
+            </section>
 
-  <section class="ecl-section-wrapper ecl-section-wrapper--is-grey ecl-comment-overview ">
-    <section class="ecl-editorial-article__content">
-    {{ elements.field_comments }}
-    </section>
-    <aside class="ecl-editorial-article__aside">
-      <div class="ecl-editorial-article__aside-wrapper">
-        {% if contributors is defined %}
-          <h2>{{ "Contributors"|t }}</h2>
-          {% include "@theme/patterns/components/author-collection.html.twig" with contributors %}
-        {% endif %}
-      </div>
-    </aside>
-  </section>
+            <section class="ecl-section-wrapper ecl-section-wrapper--is-grey ecl-comment-overview ">
+              <div class="ecl-container">
+                <section class="ecl-section-wrapper">
+                  <div class="ecl-editorial-article ecl-editorial-article--has-static-layout">
+                    <div class="ecl-container">
+                      <div class="ecl-editorial-article__wrapper">
+                        <section class="ecl-editorial-article__content">
+                          {{ elements.field_comments }}
+                        </section>
+                        <aside class="ecl-editorial-article__aside">
+                          <div class="ecl-editorial-article__aside-wrapper">
+                            {% if contributors is defined %}
+                              <h2>{{ "Contributors"|t }}</h2>
+                              {% include "@theme/patterns/components/author-collection.html.twig" with contributors %}
+                            {% endif %}
+                          </div>
+                        </aside>
+                      </div>
+                    </div>
+                  </div>
+                </section>
+              </div>
+            </section>
           </main>
-  </div>
+        </div>
       </div>
     </div>
   </div>
