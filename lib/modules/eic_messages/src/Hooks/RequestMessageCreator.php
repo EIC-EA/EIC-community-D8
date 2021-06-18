@@ -117,8 +117,7 @@ class RequestMessageCreator extends MessageCreatorBase {
   public function requestClose(
     FlaggingInterface $flagging,
     ContentEntityInterface $entity,
-    string $type,
-    string $response
+    string $type
   ) {
     $handler = $this->collector->getHandlerByType($type);
     if (!$handler instanceof HandlerInterface) {
@@ -132,6 +131,7 @@ class RequestMessageCreator extends MessageCreatorBase {
 
     /** @var \Drupal\user\UserInterface[] $to */
     $to = [$entity->getOwner(), $flagging->getOwner()];
+    $response = $flagging->get('field_request_response')->value;
     $message_name = $handler->getMessageByAction($response);
     if (!$message_name) {
       \Drupal::logger('eic_messages')->warning(

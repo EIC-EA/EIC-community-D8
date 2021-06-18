@@ -3,6 +3,7 @@
 namespace Drupal\eic_flags;
 
 use Drupal\Core\Database\Connection;
+use Drupal\Core\Database\Query\PagerSelectExtender;
 use Drupal\Core\Entity\Element\EntityAutocomplete;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Url;
@@ -312,12 +313,13 @@ class FlaggedEntitiesListBuilder extends EntityListBuilder {
    * {@inheritdoc}
    */
   protected function getEntityIds() {
-    $results = [];
     $query_strings = $this->currentRequest->query->all();
     $supported_entity_types = $this->requestHandler->getSupportedEntityTypes();
     $requested_type = !empty($query_strings['type'])
     && $query_strings['type'] !== 'All' ? $query_strings['type'] : NULL;
 
+    /** @var \Drupal\Core\Database\Query\SelectInterface[] $sub_queries */
+    $sub_queries = [];
     foreach ($supported_entity_types as $type => $flag) {
       // If the user requested a certain entity type, just query for it.
       if (!empty($requested_type) && $type !== $requested_type) {
@@ -329,8 +331,9 @@ class FlaggedEntitiesListBuilder extends EntityListBuilder {
       $entity_keys = $definition->get('entity_keys');
       $id_field = $entity_keys['id'];
 
-      $query = $this->database->select('flagging', 'f')
-        ->fields('f', ['id', 'entity_id', 'entity_type', 'flag_id'])
+      $query = $this->database->select('flagging', 'f');
+
+      $query->fields('f', ['id', 'entity_id', 'entity_type', 'flag_id'])
         ->distinct(TRUE)
         ->condition('fs.field_request_status_value', RequestStatus::OPEN)
         ->condition('f.flag_id', $flag);
@@ -377,13 +380,19 @@ class FlaggedEntitiesListBuilder extends EntityListBuilder {
         );
       }
 
-      $results = array_merge(
-        $results,
-        $query->execute()->fetchAll(\PDO::FETCH_ASSOC)
-      );
+      $sub_queries[] = $query;
     }
 
-    return $results;
+    // Mix it up !
+    $query = array_shift($sub_queries);
+    foreach ($sub_queries as $sub_query) {
+      $query->union($sub_query);
+    }
+
+    $query = $query->extend(PagerSelectExtender::class);
+    $query->limit($this->limit);
+
+    return $query->execute()->fetchAll(\PDO::FETCH_ASSOC);
   }
 
   /**
