@@ -6,7 +6,6 @@ use Drupal\Core\Controller\ControllerBase;
 use Drupal\eic_flags\FlaggedEntitiesListBuilder;
 use Drupal\eic_flags\FlaggingListBuilder;
 use Drupal\eic_flags\RequestTypes;
-use http\Env\Request;
 
 /**
  * Class FlagRequestController
