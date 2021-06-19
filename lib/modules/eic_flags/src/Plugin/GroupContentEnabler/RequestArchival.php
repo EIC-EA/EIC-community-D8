@@ -8,19 +8,19 @@ use Drupal\group\Plugin\GroupContentEnablerBase;
 use Drupal\group\Annotation\GroupContentEnabler;
 
 /**
- * Provides a content enabler to request the removal of the group.
+ * Provides a content enabler to request the archival of the group.
  *
  * @GroupContentEnabler(
- *   id = "group_request_delete",
- *   label = @Translation("Group Delete Request"),
- *   description = @Translation("Request the deletion of a group"),
+ *   id = "group_request_archival",
+ *   label = @Translation("Group Archival Request"),
+ *   description = @Translation("Request the archival of a group"),
  *   entity_type_id = "user",
- *   pretty_path_key = "request_delete",
- *   reference_label = @Translation("Requete delete"),
- *   reference_description = @Translation("Request delete."),
+ *   pretty_path_key = "request_archival",
+ *   reference_label = @Translation("Requete archival"),
+ *   reference_description = @Translation("Request archival."),
  * )
  */
-class RequestDelete extends GroupContentEnablerBase {
+class RequestArchival extends GroupContentEnablerBase {
 
   /**
    * {@inheritdoc }
@@ -28,14 +28,14 @@ class RequestDelete extends GroupContentEnablerBase {
   public function getGroupOperations(GroupInterface $group) {
     $operations = [];
 
-    $operations['group-request-delete'] = [
-      'title' => $this->t('Request delete'),
+    $operations['group-request-archival'] = [
+      'title' => $this->t('Request archival'),
       'url' => $group->toUrl('new-request')
         ->setRouteParameter(
           'destination',
           \Drupal::request()->getRequestUri()
         )
-        ->setRouteParameter('request_type', RequestTypes::DELETE),
+        ->setRouteParameter('request_type', RequestTypes::ARCHIVE),
     ];
 
     return $operations;

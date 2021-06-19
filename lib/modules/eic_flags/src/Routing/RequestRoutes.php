@@ -3,6 +3,7 @@
 namespace Drupal\eic_flags\Routing;
 
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\eic_flags\Controller\FlagRequestController;
 use Drupal\eic_flags\RequestTypes;
 use Drupal\eic_flags\Service\HandlerInterface;
 use Symfony\Component\Routing\Route;
@@ -36,7 +37,7 @@ class RequestRoutes {
       ->addDefaults(
         [
           '_controller' => 'Drupal\eic_flags\Controller\FlagRequestController::listing',
-          '_title' => $this->t('Pending deletion requests')->render(),
+          '_title_callback' => 'Drupal\eic_flags\Controller\FlagRequestController::getTitle',
         ]
       )
       ->setRequirement('_role', 'administrator+content_administrator')
