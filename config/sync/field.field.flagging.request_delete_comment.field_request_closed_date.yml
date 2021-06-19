@@ -1,0 +1,21 @@
+uuid: b4224603-92d6-43bb-b723-e4b74519b1d8
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.flagging.field_request_closed_date
+    - flag.flag.request_delete_comment
+  module:
+    - datetime
+id: flagging.request_delete_comment.field_request_closed_date
+field_name: field_request_closed_date
+entity_type: flagging
+bundle: request_delete_comment
+label: 'Closed date'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: datetime

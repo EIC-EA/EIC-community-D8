@@ -2382,6 +2382,9 @@
                         "[web-root]/profiles/README.txt": "assets/scaffold/files/profiles.README.txt",
                         "[web-root]/themes/README.txt": "assets/scaffold/files/themes.README.txt"
                     }
+                },
+                "patches_applied": {
+                    "3007424 - Multiple usages of FieldPluginBase::getEntity do not check for NULL, leading to WSOD": "https://www.drupal.org/files/issues/2021-01-06/3007424-108.patch"
                 }
             },
             "autoload": {
@@ -3160,7 +3163,8 @@
                 },
                 "patches_applied": {
                     "3168014 - TypeError: Argument 1 passed to Drupal\\flag\\TwigExtension\\FlagCount::count() must implement interface": "https://www.drupal.org/files/issues/2020-09-06/show-count-for-visitors--3168014-2.patch",
-                    "3112986 - Add Flood Control": "https://www.drupal.org/files/issues/2020-07-08/3112986-20.patch"
+                    "3112986 - Add Flood Control": "https://www.drupal.org/files/issues/2020-07-08/3112986-20.patch",
+                    "2723703 - Add relationship to flagged entities when Flagging is base table": "https://www.drupal.org/files/issues/2021-02-22/2723703-73.patch"
                 }
             },
             "notification-url": "https://packages.drupal.org/8/downloads",
@@ -15776,5 +15780,8 @@
         "php": ">=7.2"
     },
     "platform-dev": [],
+    "platform-overrides": {
+        "php": "7.3.21"
+    },
     "plugin-api-version": "1.1.0"
 }
