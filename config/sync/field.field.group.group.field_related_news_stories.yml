@@ -5,8 +5,6 @@ dependencies:
   config:
     - field.storage.group.field_related_news_stories
     - group.type.group
-    - node.type.news
-    - node.type.story
 id: group.group.field_related_news_stories
 field_name: field_related_news_stories
 entity_type: group
@@ -18,13 +16,10 @@ translatable: false
 default_value: {  }
 default_value_callback: ''
 settings:
-  handler: 'default:node'
+  handler: views
   handler_settings:
-    target_bundles:
-      news: news
-      story: story
-    sort:
-      field: _none
-    auto_create: false
-    auto_create_bundle: news
+    view:
+      view_name: group_related_news_stories
+      display_name: entity_ref_all_news_stories
+      arguments: {  }
 field_type: entity_reference

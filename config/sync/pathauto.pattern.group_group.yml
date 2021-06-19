@@ -8,16 +8,16 @@ dependencies:
 id: group_group
 label: 'Group - Group'
 type: 'canonical_entities:group'
-pattern: 'group/[eic_groups_tokens:eic_groups_truncated_title:40]'
+pattern: 'groups/[eic_groups_tokens:eic_groups_truncated_title:40]'
 selection_criteria:
-  cdcae766-70a0-4442-9b52-8b9298dd2c95:
+  80dac3a4-1524-41f7-a9e4-b9187a06d109:
     id: 'entity_bundle:group'
     bundles:
       group: group
     negate: false
     context_mapping:
       group: group
-    uuid: cdcae766-70a0-4442-9b52-8b9298dd2c95
+    uuid: 80dac3a4-1524-41f7-a9e4-b9187a06d109
 selection_logic: and
 weight: -4
 relationships: {  }

@@ -1,0 +1,74 @@
+<?php
+
+namespace Drupal\eic_content;
+
+use Drupal\Core\Breadcrumb\Breadcrumb;
+use Drupal\Core\Breadcrumb\BreadcrumbBuilderInterface;
+use Drupal\Core\Link;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\node\NodeInterface;
+
+/**
+ * Provides a breadcrumb builder for nodes.
+ */
+class ContentBreadcrumbBuilder implements BreadcrumbBuilderInterface {
+
+  use StringTranslationTrait;
+
+  /**
+   * {@inheritdoc}
+   */
+  public function applies(RouteMatchInterface $route_match) {
+    $applies = FALSE;
+
+    switch ($route_match->getRouteName()) {
+      case 'entity.node.canonical':
+        $applies = TRUE;
+        break;
+
+    }
+
+    return $applies;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function build(RouteMatchInterface $route_match) {
+    $breadcrumb = new Breadcrumb();
+
+    // Adds homepage link.
+    $links[] = Link::createFromRoute($this->t('Home'), '<front>');
+
+    $node = $route_match->getParameter('node');
+
+    if ($node instanceof NodeInterface) {
+      // Adds the user access as cacheable dependency.
+      if ($access = $node->access('view', $this->account, TRUE)) {
+        $breadcrumb->addCacheableDependency($access);
+      }
+
+      switch ($node->bundle()) {
+        case 'news':
+          // @todo Replace link route with overview page route when available.
+          $links[] = Link::createFromRoute($this->t('News'), '<front>');
+          break;
+
+        case 'story':
+          // @todo Replace link route with overview page route when available.
+          $links[] = Link::createFromRoute($this->t('Story'), '<front>');
+          break;
+
+      }
+
+      // We add the node objects as cacheable dependency.
+      $breadcrumb->addCacheableDependency($node);
+    }
+
+    $breadcrumb->setLinks($links);
+    $breadcrumb->addCacheContexts(['url.path']);
+    return $breadcrumb;
+  }
+
+}
