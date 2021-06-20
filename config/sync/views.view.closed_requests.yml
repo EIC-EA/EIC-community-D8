@@ -326,14 +326,14 @@ display:
           empty_zero: false
           hide_alter_empty: false
           plugin_id: custom
-        flag_id:
-          id: flag_id
+        entity_type:
+          id: entity_type
           table: flagging
-          field: flag_id
+          field: entity_type
           relationship: none
           group_type: group
           admin_label: ''
-          label: Type
+          label: 'Content Type'
           exclude: false
           alter:
             alter_text: false
@@ -374,11 +374,10 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
-          click_sort_column: target_id
-          type: entity_reference_label
-          settings:
-            link: true
-          group_column: target_id
+          click_sort_column: value
+          type: string
+          settings: {  }
+          group_column: value
           group_columns: {  }
           group_rows: true
           delta_limit: 0
@@ -389,7 +388,7 @@ display:
           separator: ', '
           field_api_classes: false
           entity_type: flagging
-          entity_field: flag_id
+          entity_field: entity_type
           plugin_id: field
         field_request_moderator:
           id: field_request_moderator
@@ -954,9 +953,9 @@ display:
             operator_limit_selection: false
             operator_list: {  }
             identifier: field_request_status_value
-            required: false
+            required: true
             remember: false
-            multiple: false
+            multiple: true
             remember_roles:
               authenticated: authenticated
               anonymous: '0'
@@ -1112,7 +1111,7 @@ display:
           plugin_id: standard
       arguments: {  }
       display_extenders: {  }
-      use_ajax: true
+      use_ajax: false
       filter_groups:
         operator: AND
         groups:
