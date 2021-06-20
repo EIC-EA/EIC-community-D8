@@ -57,14 +57,23 @@ class EntityRequestRouteProvider implements EntityRouteProviderInterface, Entity
       }
 
       // Define a new request and close request route for the entity type
-      if ($new_request_route = $this->getRouteByTemplate($entity_type, $handler,
-        'new-request')) {
+      $new_request_route = $this->getRouteByTemplate($entity_type, $handler, 'new-request');
+      if ($new_request_route) {
+        $new_request_route->setRequirement('_request_send_access', 'TRUE');
+
         $collection->add('entity.' . $entity_type->id() . '.new_request', $new_request_route);
       }
 
       // Define a new request and close request route for the entity type
-      if ($close_request_route = $this->getRouteByTemplate($entity_type, $handler,
-        'close-request')) {
+      $close_request_route = $this->getRouteByTemplate($entity_type, $handler, 'close-request');
+      if ($close_request_route) {
+        $close_request_route
+          ->setRequirement(
+            '_permission',
+            'close ' . $handler->getType() . ' request'
+          )
+          ->setOption('_admin_route', TRUE);
+
         $collection->add('entity.' . $entity_type->id() . '.close_request', $close_request_route);
       }
     }
@@ -94,10 +103,7 @@ class EntityRequestRouteProvider implements EntityRouteProviderInterface, Entity
         '_title' => ucfirst($handler->getType()),
       ])
       ->setRequirement($entity_type->id(), '\d+')
-      ->setRequirement(
-        '_permission',
-        'make ' . $handler->getType() . ' request'
-      );;
+      ->setOption('entity_type_id', $entity_type->id());
 
     return $route;
   }

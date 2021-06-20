@@ -27,17 +27,22 @@ class RequestDelete extends GroupContentEnablerBase {
    */
   public function getGroupOperations(GroupInterface $group) {
     $operations = [];
+    $account = \Drupal::currentUser();
 
-    $operations['group-request-delete'] = [
-      'title' => $this->t('Request delete'),
-      'url' => $group->toUrl('new-request')
-        ->setRouteParameter(
-          'destination',
-          \Drupal::request()->getRequestUri()
-        )
-        ->setRouteParameter('request_type', RequestTypes::DELETE),
-    ];
+    $url = $group->toUrl('new-request')
+      ->setRouteParameter(
+        'destination',
+        \Drupal::request()->getRequestUri()
+      )
+      ->setRouteParameter('request_type', RequestTypes::DELETE);
 
+    if ($url->access($account)) {
+      $operations['group-request-delete'] = [
+        'title' => $this->t('Request delete'),
+        'url' => $url,
+      ];
+    }
+    
     return $operations;
   }
 

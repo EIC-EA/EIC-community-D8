@@ -13,6 +13,7 @@ use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\eic_flags\Form\RequestCloseForm;
 use Drupal\eic_flags\Form\NewRequestForm;
+use Drupal\eic_flags\Hooks\EntityAccess;
 use Drupal\eic_flags\Hooks\FlagTokens;
 use Drupal\eic_flags\RequestStatus;
 use Drupal\eic_flags\RequestTypes;
@@ -245,20 +246,9 @@ function eic_flags_entity_access(
   }
 
   $type = explode('-', $operation)[1];
-  /** @var \Drupal\eic_flags\Service\HandlerInterface $delete_request_handler */
+  /** @var \Drupal\eic_flags\Service\HandlerInterface $handler */
   $handler = \Drupal::service('eic_flags.handler_collector')
     ->getHandlerByType($type);
 
-  $entity_type_id = $entity->getEntityTypeId();
-  $supported_entities = array_keys($handler->getSupportedEntityTypes());
-  if (!in_array($entity_type_id, $supported_entities)) {
-    return AccessResult::neutral();
-  }
-
-  // We allow requests only for certain roles.
-  if (!$account->hasPermission('make ' . $type . ' request')) {
-    return AccessResult::forbidden();
-  }
-
-  return AccessResult::allowed();
+  return $handler->canRequest($account, $entity);
 }

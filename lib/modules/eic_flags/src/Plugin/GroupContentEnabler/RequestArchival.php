@@ -27,16 +27,21 @@ class RequestArchival extends GroupContentEnablerBase {
    */
   public function getGroupOperations(GroupInterface $group) {
     $operations = [];
+    $account = \Drupal::currentUser();
 
-    $operations['group-request-archival'] = [
-      'title' => $this->t('Request archival'),
-      'url' => $group->toUrl('new-request')
-        ->setRouteParameter(
-          'destination',
-          \Drupal::request()->getRequestUri()
-        )
-        ->setRouteParameter('request_type', RequestTypes::ARCHIVE),
-    ];
+    $url = $group->toUrl('new-request')
+      ->setRouteParameter(
+        'destination',
+        \Drupal::request()->getRequestUri()
+      )
+      ->setRouteParameter('request_type', RequestTypes::ARCHIVE);
+
+    if ($url->access($account)) {
+      $operations['group-request-archival'] = [
+        'title' => $this->t('Request archival'),
+        'url' => $url,
+      ];
+    }
 
     return $operations;
   }
