@@ -21,6 +21,10 @@
   {{ title_suffix }}
 {% endblock %}
 
+{% if group_values.flags is not empty %}
+  {{ attach_library('flag/flag.link') }}
+{% endif %}
+
 {% include "@theme/patterns/compositions/editorial-header.html.twig" with {
   icon_file_path: eic_icon_path,
   title: group_values.title,
@@ -28,11 +32,12 @@
   image: group_values.image|default({}),
   parent: {
     link: {
-      path: back_url,
+      path: group_values.back_url,
       label: 'All groups'|t,
     }
   },
   actions: group_values.actions,
   stats: group_values.stats,
-  tags: group_values.tags
+  tags: group_values.tags,
+  flags: group_values.flags
 } only %}
