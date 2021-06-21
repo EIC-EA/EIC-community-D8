@@ -128,33 +128,7 @@ function eic_flags_entity_operation(EntityInterface $entity) {
   $route_name = \Drupal::routeMatch()->getRouteName();
   $is_admin = \Drupal::service('router.admin_context')->isAdminRoute();
   if ($is_admin && 'eic_flags.flagged_entities.list' === $route_name) {
-    // TODO implement a more generic approach for available statuses and generate this dynamically
-    return [
-      'deny_request' => [
-        'title' => t('Deny'),
-        'url' => $entity->toUrl('close-request')
-          ->setRouteParameter('request_type', RequestTypes::DELETE)
-          ->setRouteParameter('response', RequestStatus::DENIED)
-          ->setRouteParameter('destination', \Drupal::request()
-            ->getRequestUri()),
-      ],
-      'accept_request' => [
-        'title' => t('Accept'),
-        'url' => $entity->toUrl('close-request')
-          ->setRouteParameter('request_type', RequestTypes::DELETE)
-          ->setRouteParameter('response', RequestStatus::ACCEPTED)
-          ->setRouteParameter('destination', \Drupal::request()
-            ->getRequestUri()),
-      ],
-      'archive_request' => [
-        'title' => t('Archive'),
-        'url' => $entity->toUrl('close-request')
-          ->setRouteParameter('request_type', RequestTypes::DELETE)
-          ->setRouteParameter('response', RequestStatus::ARCHIVED)
-          ->setRouteParameter('destination', \Drupal::request()
-            ->getRequestUri()),
-      ]
-    ];
+    return $delete_request_handler->getActions($entity);
   }
 
   if (!$entity->access('request-delete') || $is_admin) {
