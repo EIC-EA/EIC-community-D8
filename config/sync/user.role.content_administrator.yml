@@ -20,6 +20,7 @@ permissions:
   - 'make archive request'
   - 'make delete request'
   - 'mark private content'
+  - 'publish archived content'
   - 'unflag recommend_group'
   - 'use groups transition archive'
   - 'use groups transition publish'
