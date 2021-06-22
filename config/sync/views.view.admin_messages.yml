@@ -5,6 +5,7 @@ dependencies:
   config:
     - field.storage.message.field_event_executing_user
     - message.template.log_group_state_change
+    - message.template.log_request_accepted
   module:
     - eic_messages
     - message
@@ -550,6 +551,7 @@ display:
           operator: in
           value:
             log_group_state_change: log_group_state_change
+            log_request_accepted: log_request_accepted
           group: 1
           exposed: true
           expose:

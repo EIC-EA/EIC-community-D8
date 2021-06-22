@@ -1,0 +1,10 @@
+uuid: 90f85b1e-0294-40ed-be06-05689d9fcd46
+langcode: en
+status: true
+dependencies:
+  module:
+    - message
+id: message.plain_text
+label: 'Plain text'
+targetEntityType: message
+cache: true

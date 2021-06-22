@@ -3,7 +3,10 @@
 namespace Drupal\eic_messages\Hooks;
 
 use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Entity\Entity\EntityViewDisplay;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\eic_flags\RequestStatus;
 use Drupal\eic_flags\RequestTypes;
@@ -12,6 +15,7 @@ use Drupal\eic_flags\Service\RequestHandlerCollector;
 use Drupal\eic_messages\MessageHelper;
 use Drupal\eic_user\UserHelper;
 use Drupal\flag\FlaggingInterface;
+use Drupal\message\MessageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -27,18 +31,25 @@ class RequestMessageCreator extends MessageCreatorBase {
   protected $collector;
 
   /**
+   * @var \Drupal\Core\Render\RendererInterface
+   */
+  protected $renderer;
+
+  /**
    * RequestMessageCreator constructor.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    * @param \Drupal\eic_messages\MessageHelper $eic_messages_helper
    * @param \Drupal\eic_user\UserHelper $eic_user_helper
    * @param \Drupal\eic_flags\Service\RequestHandlerCollector $collector
+   * @param \Drupal\Core\Render\RendererInterface $renderer
    */
   public function __construct(
     EntityTypeManagerInterface $entity_type_manager,
     MessageHelper $eic_messages_helper,
     UserHelper $eic_user_helper,
-    RequestHandlerCollector $collector
+    RequestHandlerCollector $collector,
+    RendererInterface $renderer
   ) {
     parent::__construct(
       $entity_type_manager,
@@ -47,6 +58,7 @@ class RequestMessageCreator extends MessageCreatorBase {
     );
 
     $this->collector = $collector;
+    $this->renderer = $renderer;
   }
 
   /**
@@ -57,7 +69,8 @@ class RequestMessageCreator extends MessageCreatorBase {
       $container->get('entity_type.manager'),
       $container->get('eic_messages.helper'),
       $container->get('eic_user.helper'),
-      $container->get('eic_flags.handler_collector')
+      $container->get('eic_flags.handler_collector'),
+      $container->get('renderer')
     );
   }
 
@@ -156,6 +169,14 @@ class RequestMessageCreator extends MessageCreatorBase {
         ]
       );
 
+      if ($handler->getType() === RequestTypes::DELETE && RequestStatus::ACCEPTED === $response) {
+        // For accepted delete requests things are a bit more different. Since it is a hard delete
+        // the entity is lost forever. This means tokens won't return a valid value anymore.
+        // We have to render the content and store it before the entity is gone.
+        $content = $this->getRenderedContent($message);
+        $message->set('field_rendered_content', ['value' => $content, 'format' => 'full_html']);
+      }
+
       $message->save();
 
       $messages[] = $message;
@@ -197,6 +218,19 @@ class RequestMessageCreator extends MessageCreatorBase {
       default:
         return NULL;
     }
+  }
+
+  /**
+   * @param \Drupal\Core\Entity\EntityInterface $message
+   *    The message being created.
+   *
+   * @return \Drupal\Component\Render\MarkupInterface
+   */
+  private function getRenderedContent(EntityInterface $message) {
+    $view_builder = $this->entityTypeManager->getViewBuilder('message');
+    $build = $view_builder->view($message, 'plain_text');
+
+    return $build['partial_0']['#markup'];
   }
 
 }

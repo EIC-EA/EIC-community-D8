@@ -110,7 +110,7 @@ abstract class AbstractRequestHandler implements HandlerInterface {
     $current_user = User::load($account_proxy->id());
     $flagging->set('field_request_moderator', $current_user);
     $flagging->set('field_request_response', $reason);
-    //$flagging->set('field_request_status', $response);
+    $flagging->set('field_request_status', $response);
     $flagging->set(
       'field_request_closed_date',
       $now->format(DateTimeItemInterface::DATETIME_STORAGE_FORMAT)
@@ -123,6 +123,7 @@ abstract class AbstractRequestHandler implements HandlerInterface {
         $flagging,
         $content_entity,
         $this->getType(),
+
       ]
     );
 
