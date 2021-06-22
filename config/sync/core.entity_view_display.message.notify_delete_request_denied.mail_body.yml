@@ -12,11 +12,15 @@ targetEntityType: message
 bundle: notify_delete_request_denied
 mode: mail_body
 content:
+  partial_0:
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
   partial_1:
     weight: 0
     region: content
 hidden:
   field_message_subject: true
   field_referenced_flag: true
-  partial_0: true
   search_api_excerpt: true

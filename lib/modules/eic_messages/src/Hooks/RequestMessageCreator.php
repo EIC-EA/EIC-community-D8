@@ -187,7 +187,11 @@ class RequestMessageCreator extends MessageCreatorBase {
       case RequestStatus::ACCEPTED:
         return $this->t(
           '@operation request for @type accepted',
-          ['@label' => $entity->label(), '@operation' => ucfirst($operation)]
+          [
+            '@label' => $entity->label(),
+            '@operation' => ucfirst($operation),
+            '@type' => $entity->getEntityTypeId(),
+          ]
         );
       case RequestStatus::ARCHIVED:
         return $this->t(
