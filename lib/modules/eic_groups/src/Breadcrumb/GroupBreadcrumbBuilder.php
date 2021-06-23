@@ -77,7 +77,10 @@ class GroupBreadcrumbBuilder implements BreadcrumbBuilderInterface {
   public function build(RouteMatchInterface $route_match) {
     $breadcrumb = new Breadcrumb();
 
+    // Adds homepage link.
     $links[] = Link::createFromRoute($this->t('Home'), '<front>');
+    // Adds link to navigate back to the list of groups.
+    $links[] = Link::createFromRoute($this->t('Groups'), 'view.global_overviews.page_1');
 
     switch ($route_match->getRouteName()) {
       case 'entity.node.canonical':
@@ -101,6 +104,10 @@ class GroupBreadcrumbBuilder implements BreadcrumbBuilderInterface {
               $links = $book_breadcrumb->getLinks();
               // Places the group link right after the "Home" link.
               array_splice($links, 1, 0, [$group->toLink()]);
+              // Replaces book link text with "Wiki".
+              if ($node->bundle() === 'wiki_page') {
+                $links[2]->setText($this->t('Wiki'));
+              }
               // We want to keep cache contexts and cache tags from book
               // breadcrumb.
               $breadcrumb->addCacheContexts($book_breadcrumb->getCacheContexts());
