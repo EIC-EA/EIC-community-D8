@@ -4,7 +4,10 @@ status: true
 dependencies:
   config:
     - field.field.message.log_request_accepted.field_referenced_flag
+    - field.field.message.log_request_accepted.field_rendered_content
     - message.template.log_request_accepted
+  module:
+    - text
 id: message.log_request_accepted.default
 targetEntityType: message
 bundle: log_request_accepted
@@ -18,10 +21,17 @@ content:
     third_party_settings: {  }
     type: entity_reference_label
     region: content
-  partial_0:
-    weight: 0
+  field_rendered_content:
+    weight: 1
+    label: above
     settings: {  }
     third_party_settings: {  }
+    type: text_default
     region: content
+  partial_0:
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
 hidden:
   search_api_excerpt: true

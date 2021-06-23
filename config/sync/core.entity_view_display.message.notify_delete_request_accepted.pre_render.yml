@@ -1,19 +1,19 @@
-uuid: c3a48685-7f0b-4ab6-8767-5a5196c5ff1f
+uuid: 2dbf0ffd-7e22-47ee-a4c3-28d42acb1b80
 langcode: en
 status: true
 dependencies:
   config:
-    - core.entity_view_mode.message.mail_body
+    - core.entity_view_mode.message.pre_render
     - field.field.message.notify_delete_request_accepted.field_message_subject
     - field.field.message.notify_delete_request_accepted.field_referenced_flag
     - field.field.message.notify_delete_request_accepted.field_rendered_content
     - message.template.notify_delete_request_accepted
-id: message.notify_delete_request_accepted.mail_body
+id: message.notify_delete_request_accepted.pre_render
 targetEntityType: message
 bundle: notify_delete_request_accepted
-mode: mail_body
+mode: pre_render
 content:
-  partial_1:
+  partial_0:
     weight: 0
     region: content
     settings: {  }
@@ -22,5 +22,5 @@ hidden:
   field_message_subject: true
   field_referenced_flag: true
   field_rendered_content: true
-  partial_0: true
+  partial_1: true
   search_api_excerpt: true

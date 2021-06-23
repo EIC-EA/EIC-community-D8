@@ -3,7 +3,6 @@
 namespace Drupal\eic_messages\Hooks;
 
 use Drupal\Core\Entity\ContentEntityInterface;
-use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Render\RendererInterface;
@@ -15,7 +14,6 @@ use Drupal\eic_flags\Service\RequestHandlerCollector;
 use Drupal\eic_messages\MessageHelper;
 use Drupal\eic_user\UserHelper;
 use Drupal\flag\FlaggingInterface;
-use Drupal\message\MessageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -228,11 +226,11 @@ class RequestMessageCreator extends MessageCreatorBase {
    * @param \Drupal\Core\Entity\EntityInterface $message
    *    The message being created.
    *
-   * @return \Drupal\Component\Render\MarkupInterface
+   * @return string
    */
   private function getRenderedContent(EntityInterface $message) {
     $view_builder = $this->entityTypeManager->getViewBuilder('message');
-    $build = $view_builder->view($message, 'plain_text');
+    $build = $view_builder->view($message, 'pre_render');
 
     return $build['partial_0']['#markup'];
   }

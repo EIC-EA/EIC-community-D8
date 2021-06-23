@@ -1,20 +1,22 @@
-uuid: cdcc53bb-a0dc-4399-ad4b-94245aecf804
+uuid: ad32523f-df17-40fe-8b77-7547669d2925
 langcode: en
 status: true
 dependencies:
   config:
-    - core.entity_view_mode.message.mail_subject
+    - core.entity_view_mode.message.pre_render
     - field.field.message.log_request_accepted.field_referenced_flag
     - field.field.message.log_request_accepted.field_rendered_content
     - message.template.log_request_accepted
-id: message.log_request_accepted.mail_subject
+id: message.log_request_accepted.pre_render
 targetEntityType: message
 bundle: log_request_accepted
-mode: mail_subject
+mode: pre_render
 content:
   partial_0:
     weight: 0
     region: content
+    settings: {  }
+    third_party_settings: {  }
 hidden:
   field_referenced_flag: true
   field_rendered_content: true

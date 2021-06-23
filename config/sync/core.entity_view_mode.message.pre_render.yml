@@ -1,10 +1,10 @@
-uuid: 90f85b1e-0294-40ed-be06-05689d9fcd46
+uuid: dfa68a3b-2c79-4847-9144-27ff063a3d6c
 langcode: en
 status: true
 dependencies:
   module:
     - message
-id: message.plain_text
-label: 'Plain text'
+id: message.pre_render
+label: 'Pre Render'
 targetEntityType: message
 cache: true

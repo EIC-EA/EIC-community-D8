@@ -1,17 +1,17 @@
-uuid: 64923425-9da2-4454-9f45-ff6ec1c5dd19
+uuid: b6d17ee5-441f-4ced-b382-9295fbdd57f3
 langcode: en
-status: true
+status: false
 dependencies:
   config:
-    - core.entity_view_mode.message.plain_text
+    - core.entity_view_mode.message.full
     - field.field.message.notify_delete_request_accepted.field_message_subject
     - field.field.message.notify_delete_request_accepted.field_referenced_flag
     - field.field.message.notify_delete_request_accepted.field_rendered_content
     - message.template.notify_delete_request_accepted
-id: message.notify_delete_request_accepted.plain_text
+id: message.notify_delete_request_accepted.full
 targetEntityType: message
 bundle: notify_delete_request_accepted
-mode: plain_text
+mode: full
 content:
   partial_0:
     weight: 0

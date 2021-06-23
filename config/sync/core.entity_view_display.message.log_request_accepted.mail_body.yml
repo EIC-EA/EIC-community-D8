@@ -5,6 +5,7 @@ dependencies:
   config:
     - core.entity_view_mode.message.mail_body
     - field.field.message.log_request_accepted.field_referenced_flag
+    - field.field.message.log_request_accepted.field_rendered_content
     - message.template.log_request_accepted
 id: message.log_request_accepted.mail_body
 targetEntityType: message
@@ -16,5 +17,6 @@ content:
     region: content
 hidden:
   field_referenced_flag: true
+  field_rendered_content: true
   partial_0: true
   search_api_excerpt: true

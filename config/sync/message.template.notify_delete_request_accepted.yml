@@ -14,10 +14,10 @@ label: 'NOTIFY :: MT40 :: Deletion request - request accepted'
 description: 'Notification sent to the request/author when a delete request is accepted'
 text:
   -
-    value: "<p><em>Dear </em>[message:author:field_first_name:value]&nbsp;[message:author:field_last_name:value]<em>,</em></p>\r\n\r\n<p>[message:field_referenced_flag:entity:field_request_moderator:entity:field_first_name:value]&nbsp;[message:field_referenced_flag:entity:field_request_moderator:entity:field_last_name:value]<em> has deleted </em>[message:field_referenced_flag:entity:target_entity:title]<em>.</em></p>\r\n\r\n<p><em>The EIC Community team</em></p>\r\n"
+    value: "<p>Dear [message:author:field_first_name:value]&nbsp;[message:author:field_last_name:value],</p>\r\n\r\n<p>[message:field_referenced_flag:entity:field_request_moderator:entity:field_first_name:value] [message:field_referenced_flag:entity:field_request_moderator:entity:field_last_name:value] has deleted [message:field_referenced_flag:entity:target_entity:title].</p>\r\n\r\n<p>The EIC Community team</p>\r\n"
     format: full_html
   -
-    value: "<p>[message:field_rendered_content:value]</p>\r\n"
+    value: "<p>[message:raw-value:field_rendered_content]</p>\r\n"
     format: full_html
 settings:
   'token options':
