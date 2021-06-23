@@ -46,3 +46,18 @@ function eic_messages_entity_type_alter(array &$entity_types) {
     'delete' => 'Drupal\message\Form\MessageTemplateDeleteConfirm',
   ]);
 }
+
+/**
+ * Implements hook_views_data_alter().
+ */
+function eic_messages_views_data_alter(array &$data) {
+  $data['message']['message_template_type'] = [
+    'title' => t('Message template type'),
+    'filter' => [
+      'title' => t('Message template type'),
+      'help' => t('Select the message template types to filter.'),
+      'field' => 'template',
+      'id' => 'message_template_type',
+    ],
+  ];
+}
