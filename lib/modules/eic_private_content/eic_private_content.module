@@ -44,6 +44,12 @@ function eic_private_content_entity_field_access($operation, FieldDefinitionInte
   $access = AccessResult::neutral();
 
   if (($field_definition->getName() == PrivateContentConst::FIELD_NAME)) {
+
+    // In views, we skip the access.
+    if (!$items) {
+      return $access;
+    }
+
     /** @var \Drupal\node\NodeTypeInterface $type */
     $entity = $items->getEntity();
     $type = $entity->type->entity;
