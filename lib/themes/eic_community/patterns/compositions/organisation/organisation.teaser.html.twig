@@ -26,9 +26,28 @@
       <div class="ecl-teaser__content">
         <{{ title_element }} class="ecl-teaser__title">
           {% if path is not empty %}
-            <a href="{{ path }}">{{ title }}</a>
+            <a href="{{ path }}">
+              {% if title_before %}
+                <span class="ecl-teaser__title-before">{{ title_before }}</span>
+              {% endif %}
+
+              <span class="ecl-teaser__title-overflow"><span>{{ title }}</span></span>
+
+              {% if title_after %}
+                <span class="ecl-teaser__title-after">{{ title_after }}</span>
+              {% endif %}
+            </a>
           {% else %}
-            {{ title }}
+            {% if title_before %}
+              <span class="ecl-teaser__title-before">{{ title_before }}</span>
+            {% endif %}
+
+            <span class="ecl-teaser__title-overflow"><span>{{ title }}</span></span>
+
+
+            {% if title_after %}
+              <span class="ecl-teaser__title-after">{{ title_after }}</span>
+            {% endif %}
           {% endif %}
         </{{ title_element }}>
         {% if location is not empty %}

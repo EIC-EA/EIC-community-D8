@@ -3,6 +3,7 @@
 namespace Drupal\eic_flags;
 
 use Drupal\Core\Database\Connection;
+use Drupal\Core\Url;
 use Drupal\eic_flags\Service\RequestHandlerCollector;
 use Drupal\flag\FlagService;
 use Drupal\Core\Datetime\DateFormatterInterface;
@@ -84,7 +85,8 @@ class FlaggedEntitiesListBuilder extends EntityListBuilder {
   /**
    * {@inheritdoc}
    */
-  public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_type) {
+  public static function createInstance(
+    ContainerInterface $container, EntityTypeInterface $entity_type) {
     return new static(
       $entity_type,
       $container->get('entity_type.manager')->getStorage($entity_type->id()),
@@ -158,7 +160,8 @@ class FlaggedEntitiesListBuilder extends EntityListBuilder {
       '#header' => $this->buildHeader(),
       '#title' => $this->getTitle(),
       '#rows' => [],
-      '#empty' => $this->t('There are no @label yet.', ['@label' => $this->entityType->getPluralLabel()]),
+      '#empty' => $this->t(
+        'There are no @label yet.', ['@label' => $this->entityType->getPluralLabel()]),
       '#cache' => [
         'contexts' => $this->entityType->getListCacheContexts(),
         'tags' => $this->entityType->getListCacheTags(),
@@ -188,35 +191,51 @@ class FlaggedEntitiesListBuilder extends EntityListBuilder {
    */
   public function buildRow($result) {
     static $flags;
-    /** @var \Drupal\Core\Entity\ContentEntityInterface $flaggedEntity */
-    $flaggedEntity = $result['entity'];
+    /** @var \Drupal\Core\Entity\ContentEntityInterface $flagged_entity */
+    $flagged_entity = $result['entity'];
     $supported_entity_types = $this->requestHandler->getSupportedEntityTypes();
-    if (!isset($flags[$flaggedEntity->getEntityTypeId()])) {
-      $flags[$flaggedEntity->getEntityTypeId()] = $this->flagService
-        ->getFlagById($supported_entity_types[$flaggedEntity->getEntityTypeId()]);
+    $entity_type_id = $flagged_entity->getEntityTypeId();
+
+    if (!isset($flags[$flagged_entity->getEntityTypeId()])) {
+      $flags[$entity_type_id] = $this->flagService
+        ->getFlagById($supported_entity_types[$entity_type_id]);
     }
 
+    $request_count = count(
+      $this->requestHandler->getOpenRequests($flagged_entity)
+    );
+
     $type = '';
-    switch ($flaggedEntity->getEntityTypeId()) {
+    switch ($flagged_entity->getEntityTypeId()) {
       case 'node':
-        $type = $flaggedEntity->bundle();
+        $type = $flagged_entity->bundle();
         break;
       case 'group':
       case 'comment':
-        $type = $flaggedEntity->getEntityTypeId();
+        $type = $flagged_entity->getEntityTypeId();
         break;
     }
 
-    $row['title'] = $flaggedEntity->label();
+    $row['title'] = $flagged_entity->label();
     $row['type'] = $type;
     $row['author']['data'] = [
       '#theme' => 'username',
-      '#account' => $flaggedEntity->getOwner(),
+      '#account' => $flagged_entity->getOwner(),
     ];
-    $row['request_number'] = count($this->flagService->getEntityFlaggings($flags[$flaggedEntity->getEntityTypeId()], $flaggedEntity));
-    $row['changed'] = $this->dateFormatter->format($flaggedEntity->getChangedTime(), 'short');
-    $row['created'] = $this->dateFormatter->format($flaggedEntity->get('created')->value, 'short');
-    $row['operations']['data'] = $this->buildOperations($flaggedEntity);
+    $row['request_number']['data'] = [
+      '#type' => 'link',
+      '#title' => $request_count,
+      '#url' => Url::fromRoute(
+        'eic_flags.flagged_entity.detail', [
+        'request_type' => $this->requestHandler->getType(),
+        'entity_type' => $entity_type_id,
+        'entity_id' => $flagged_entity->id(),
+      ]),
+    ];
+
+    $row['changed'] = $this->dateFormatter->format($flagged_entity->getChangedTime(), 'short');
+    $row['created'] = $this->dateFormatter->format($flagged_entity->get('created')->value, 'short');
+    $row['operations']['data'] = $this->buildOperations($flagged_entity);
 
     return $row;
   }
@@ -277,7 +296,8 @@ class FlaggedEntitiesListBuilder extends EntityListBuilder {
       $entity_join_field = 'CONCAT("' . $type . '",' . $type . '.' . $entity_keys['id'] . ')';
 
       // Left join every supported entity types, this will allow us to filter on their attributes
-      $query->leftJoin($data_table, $type, ':entity_join = :flag_join', [
+      $query->leftJoin(
+        $data_table, $type, ':entity_join = :flag_join', [
         ':entity_join' => $entity_join_field,
         ':flag_join' => $flag_join_field,
       ]);

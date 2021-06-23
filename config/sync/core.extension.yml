@@ -4,7 +4,6 @@ module:
   admin_toolbar_links_access_filter: 0
   admin_toolbar_search: 0
   admin_toolbar_tools: 0
-  basic_auth: 0
   big_pipe: 0
   block: 0
   block_content: 0
@@ -50,6 +49,7 @@ module:
   eic_messages: 0
   eic_paragraph_contributor: 0
   eic_paragraph_cta_tile: 0
+  eic_private_content: 0
   eic_theme_helper: 0
   eic_user: 0
   eic_webservices: 0

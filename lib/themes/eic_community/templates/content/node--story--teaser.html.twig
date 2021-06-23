@@ -16,7 +16,7 @@
     {{ title_suffix }}
     {% include "@theme/patterns/compositions/story/story.teaser.html.twig" with story_item|default({})|merge({
       title: label|default(''),
-      description: node.field_introduction.value|default(''),
+      description: node.field_introduction.value|striptags|default(''),
       path: url,
     }) %}
   </div>

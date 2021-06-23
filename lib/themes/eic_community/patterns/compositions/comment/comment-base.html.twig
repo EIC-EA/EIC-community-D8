@@ -69,7 +69,7 @@
       </div>
 
       {% if user and comment_id %}
-        {% if can_delete_comment or can_edit_comment %}
+        {% if can_delete_comment or can_edit_comment or can_request_delete_comment %}
         <div class="ecl-comment__header-aside">
           {% embed "@theme/patterns/compositions/collapsible-options.html.twig" with {
             extra_classes: 'ecl-collapsible-options--aligns-from-right',

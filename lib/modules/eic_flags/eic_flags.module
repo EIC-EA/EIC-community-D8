@@ -8,11 +8,14 @@
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\eic_flags\Form\RequestCloseForm;
 use Drupal\eic_flags\Form\RequestDeleteForm;
+use Drupal\eic_flags\Hooks\FlagTokens;
 use Drupal\eic_flags\RequestStatus;
 use Drupal\eic_flags\RequestTypes;
+use Drupal\eic_flags\Service\HandlerInterface;
 
 /**
  * Implements hook_theme().
@@ -92,6 +95,22 @@ function eic_flags_entity_type_build(array &$entity_types) {
 }
 
 /**
+ * Implements hook_token_info().
+ */
+function eic_flags_token_info() {
+  $class = \Drupal::classResolver(FlagTokens::class);
+  return $class->tokenInfo();
+}
+
+/**
+ * Implements hook_tokens().
+ */
+function eic_flags_tokens($type, $tokens, array $data, array $options, BubbleableMetadata $bubbleable_metadata) {
+  $class = \Drupal::classResolver(FlagTokens::class);
+  return $class->tokens($type, $tokens, $data, $options, $bubbleable_metadata);
+}
+
+/**
  * Implements hook_entity_operation().
  */
 function eic_flags_entity_operation(EntityInterface $entity) {
@@ -99,27 +118,21 @@ function eic_flags_entity_operation(EntityInterface $entity) {
   $delete_request_handler = \Drupal::service('eic_flags.handler_collector')
     ->getHandlerByType(RequestTypes::DELETE);
 
-  $entity_type_id = $entity->getEntityTypeId();
   if (!$entity instanceof ContentEntityInterface
-    || !in_array($entity_type_id, array_keys($delete_request_handler->getSupportedEntityTypes()))
-    || !$entity->access('request-delete')) {
+    || !$delete_request_handler->supports($entity)
+  ) {
     return [];
   }
 
-  if (\Drupal::service('router.admin_context')->isAdminRoute()
-    && 'eic_flags.flagged_entities.list' === \Drupal::routeMatch()
-      ->getRouteName()) {
-    // TODO implement a more generic approach for available statuses and generate this dynamically
-    return [
-      'deny_request' => [
-        'title' => t('Deny'),
-        'url' => $entity->toUrl('close-request')
-          ->setRouteParameter('request_type', RequestTypes::DELETE)
-          ->setRouteParameter('response', RequestStatus::DENIED)
-          ->setRouteParameter('destination', \Drupal::request()
-            ->getRequestUri()),
-      ],
-    ];
+  $operations = [];
+  $route_name = \Drupal::routeMatch()->getRouteName();
+  $is_admin = \Drupal::service('router.admin_context')->isAdminRoute();
+  if ($is_admin && 'eic_flags.flagged_entities.list' === $route_name) {
+    return $delete_request_handler->getActions($entity);
+  }
+
+  if (!$entity->access('request-delete') || $is_admin) {
+    return $operations;
   }
 
   $operations['request_delete'] = [
@@ -133,9 +146,44 @@ function eic_flags_entity_operation(EntityInterface $entity) {
 }
 
 /**
+ * Implements hook_entity_operation_alter().
+ */
+function eic_flags_entity_operation_alter(array &$operations, EntityInterface $entity) {
+  $route_name = \Drupal::routeMatch()->getRouteName();
+  if ('eic_flags.flagged_entities.list' !== $route_name) {
+    return;
+  }
+
+  $request_type = \Drupal::requestStack()
+    ->getCurrentRequest()
+    ->get('request_type');
+  $handler = \Drupal::service('eic_flags.handler_collector')
+    ->getHandlerByType($request_type);
+  if (!$handler instanceof HandlerInterface || !$handler->supports($entity)) {
+    return;
+  }
+
+  $operations = array_filter($operations, function ($operation, $key) {
+    return in_array($key, [
+      'deny_request',
+      'accept_request',
+      'archive_request',
+    ]);
+  }, ARRAY_FILTER_USE_BOTH);
+}
+
+/**
  * Implements hook_entity_access().
  */
-function eic_flags_entity_access(EntityInterface $entity, $operation, AccountInterface $account) {
+function eic_flags_entity_access(
+  EntityInterface $entity,
+  $operation,
+  AccountInterface $account
+) {
+  if (!in_array($operation, ['request-delete'])) {
+    return AccessResult::neutral();
+  }
+
   /** @var \Drupal\eic_flags\Service\HandlerInterface $delete_request_handler */
   $delete_request_handler = \Drupal::service('eic_flags.handler_collector')
     ->getHandlerByType(RequestTypes::DELETE);
@@ -143,8 +191,8 @@ function eic_flags_entity_access(EntityInterface $entity, $operation, AccountInt
   $entity_type_id = $entity->getEntityTypeId();
   if (!in_array(
     $entity_type_id,
-    array_keys($delete_request_handler->getSupportedEntityTypes()))
-  ) {
+    array_keys($delete_request_handler->getSupportedEntityTypes())
+  )) {
     return AccessResult::neutral();
   }
 
@@ -152,4 +200,6 @@ function eic_flags_entity_access(EntityInterface $entity, $operation, AccountInt
   if (!$account->hasPermission('make delete request')) {
     return AccessResult::forbidden();
   }
+
+  return AccessResult::allowed();
 }
