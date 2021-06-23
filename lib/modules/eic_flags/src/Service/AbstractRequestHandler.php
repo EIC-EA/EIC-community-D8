@@ -228,4 +228,34 @@ abstract class AbstractRequestHandler implements HandlerInterface {
     return Flagging::loadMultiple($flagging_ids);
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getActions(ContentEntityInterface $entity) {
+    return [
+      'deny_request' => [
+        'title' => t('Deny'),
+        'url' => $entity->toUrl('close-request')
+          ->setRouteParameter('request_type', $this->getType())
+          ->setRouteParameter('response', RequestStatus::DENIED)
+          ->setRouteParameter(
+            'destination',
+            \Drupal::request()
+              ->getRequestUri()
+          ),
+      ],
+      'accept_request' => [
+        'title' => t('Accept'),
+        'url' => $entity->toUrl('close-request')
+          ->setRouteParameter('request_type', $this->getType())
+          ->setRouteParameter('response', RequestStatus::ACCEPTED)
+          ->setRouteParameter(
+            'destination',
+            \Drupal::request()
+              ->getRequestUri()
+          ),
+      ],
+    ];
+  }
+
 }

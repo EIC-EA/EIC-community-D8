@@ -5,6 +5,7 @@
  * Contains implementation for ook_preprocess_block() for latest_news_stories.
  */
 
+use Drupal\Component\Utility\Xss;
 use Drupal\Core\Cache\Cache;
 use Drupal\eic_community\ValueObject\ImageValueObject;
 use Drupal\node\NodeInterface;
@@ -45,7 +46,7 @@ function eic_community_preprocess_block__latest_news_stories(&$variables, &$cach
 
     $item = [
       'title' => $node_translation->label(),
-      'description' => $node_translation->get('field_introduction')->value,
+      'description' => Xss::filter($node_translation->get('field_introduction')->value),
       'path' => $node_translation->toUrl()->toString(),
       'type' => [
         'label' => $node_translation->type->entity->label(),

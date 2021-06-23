@@ -194,4 +194,23 @@ class DeleteRequestHandler extends AbstractRequestHandler {
     }
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getActions(ContentEntityInterface $entity) {
+    return parent::getActions($entity) + [
+        'archive_request' => [
+          'title' => t('Archive'),
+          'url' => $entity->toUrl('close-request')
+            ->setRouteParameter('request_type', $this->getType())
+            ->setRouteParameter('response', RequestStatus::ARCHIVED)
+            ->setRouteParameter(
+              'destination',
+              \Drupal::request()
+                ->getRequestUri()
+            ),
+        ],
+      ];
+  }
+
 }
