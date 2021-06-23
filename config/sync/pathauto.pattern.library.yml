@@ -7,7 +7,7 @@ dependencies:
 id: library
 label: Library
 type: 'canonical_entities:node'
-pattern: '[eic_groups_tokens:node_group_url]/library/[node:title]'
+pattern: '[node:node_group_url]/library/[node:title]'
 selection_criteria:
   51ec4726-84c3-4bdc-bab0-0d69ff230f1b:
     id: node_type

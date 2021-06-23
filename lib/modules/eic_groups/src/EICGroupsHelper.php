@@ -2,20 +2,27 @@
 
 namespace Drupal\eic_groups;
 
+use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Session\AccountProxyInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\group\Entity\Group;
 use Drupal\group\Entity\GroupContent;
 use Drupal\group\Entity\GroupInterface;
+use Drupal\group_permissions\Entity\GroupPermissionInterface;
 use Drupal\node\NodeInterface;
 
 /**
  * EICGroupsHelper service that provides helper functions for groups.
  */
 class EICGroupsHelper implements EICGroupsHelperInterface {
+
+  use StringTranslationTrait;
 
   const GROUP_OWNER_ROLE = 'group-owner';
 
@@ -45,6 +52,20 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
   protected $moduleHandler;
 
   /**
+   * The current user service.
+   *
+   * @var \Drupal\Core\Session\AccountProxyInterface
+   */
+  protected $currentUser;
+
+  /**
+   * The time service.
+   *
+   * @var \Drupal\Component\Datetime\TimeInterface
+   */
+  protected $time;
+
+  /**
    * Constructs a new EventsHelperService object.
    *
    * @param \Drupal\Core\Database\Connection $database
@@ -53,15 +74,23 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
    *   The current route match service.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler service.
+   * @param \Drupal\Core\Session\AccountProxyInterface $current_user
+   *   The current user service.
+   * @param \Drupal\Component\Datetime\TimeInterface $time
+   *   The time service.
    */
   public function __construct(
     Connection $database,
     RouteMatchInterface $route_match,
-    ModuleHandlerInterface $module_handler
+    ModuleHandlerInterface $module_handler,
+    AccountProxyInterface $current_user,
+    TimeInterface $time
   ) {
     $this->database = $database;
     $this->routeMatch = $route_match;
     $this->moduleHandler = $module_handler;
+    $this->currentUser = $current_user;
+    $this->time = $time;
   }
 
   /**
@@ -111,7 +140,7 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
   /**
    * {@inheritdoc}
    */
-  public function getGroupOperationLinks(
+  public function getGroupContentOperationLinks(
     GroupInterface $group,
     $limit_entities = [],
     CacheableMetadata $cacheable_metadata = NULL
@@ -156,15 +185,7 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
   }
 
   /**
-   * Returns the top-level book page for a given group.
-   *
-   * This method will always return the first item found.
-   *
-   * @param \Drupal\group\Entity\GroupInterface $group
-   *   The group entity.
-   *
-   * @return int
-   *   The book page nid or NULL if not found.
+   * {@inheritdoc}
    */
   public function getGroupBookPage(GroupInterface $group) {
     $query = $this->database->select('group_content_field_data', 'gp');
@@ -179,6 +200,104 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
       return $results[0]->nid;
     }
     return NULL;
+  }
+
+  /**
+   * Returns a custom description for the given group_flex plugin.
+   *
+   * @param string $plugin_type
+   *   The plugin type can be one of the following type:
+   *   - visibility: the GroupVisibility plugin type.
+   *   - joining_method: the GroupJoiningMethod plugin type.
+   * @param string $plugin_id
+   *   The plugin ID.
+   *
+   * @return \Drupal\Core\StringTranslation\TranslatableMarkup|string
+   *   The description for the given plugin.
+   */
+  public function getGroupFlexPluginDescription(string $plugin_type, string $plugin_id) {
+    $key = "$plugin_type-$plugin_id";
+
+    switch ($key) {
+      case 'visibility-public':
+        return $this->t("This group is visible to everyone visiting the group. You're welcome to scroll through the group's content. If you want to participate, please become a group member.");
+
+      case 'visibility-restricted_community_members':
+        return $this->t("This group is visible to every person that is a member of the EIC Community and has joined this platform. You're welcome to scroll through the group's content. If you want to participate, please become a group member.");
+
+      case 'visibility-custom_restricted':
+        return $this->t('This group is visible to every person that has joined the EIC community that also complies with the following restrictions. You can see this group because the organisation you work for is allowed to see this content or the group owners and administrators have chosen to specifically grant you access to this group. If you want to participate, please become a group member.');
+
+      case 'visibility-private':
+        return $this->t('A private group is only visible to people who received an invitation via email and accepted it. No one else can see this group.');
+
+      case 'joining_method-tu_open_method':
+        return $this->t('This means that EIC Community members can join this group immediately by clicking "join group".');
+
+      case 'joining_method-tu_group_membership_request':
+        return $this->t('This means that EIC Community members can request to join this group. This request needs to be validated by the group owner or administrator.');
+
+      default:
+        return '';
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function addRolePermissionsToGroup(
+    GroupPermissionInterface $group_permissions,
+    string $role,
+    array $role_permissions
+  ) {
+    $permissions = $group_permissions->getPermissions();
+    foreach ($role_permissions as $permission) {
+      if (!array_key_exists($role, $permissions) || !in_array($permission, $permissions[$role], TRUE)) {
+        $permissions[$role][] = $permission;
+      }
+    }
+    $group_permissions->setPermissions($permissions);
+    return $group_permissions;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function removeRolePermissionsFromGroup(
+    GroupPermissionInterface $group_permissions,
+    string $role,
+    array $role_permissions
+  ) {
+    $permissions = $group_permissions->getPermissions();
+    foreach ($role_permissions as $permission) {
+      if (array_key_exists($role, $permissions) || in_array($permission, $permissions[$role], TRUE)) {
+        $permissions[$role] = array_diff($permissions[$role], [$permission]);
+      }
+    }
+    $group_permissions->setPermissions($permissions);
+    return $group_permissions;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function saveGroupPermissions(GroupPermissionInterface $group_permissions) {
+    $violations = $group_permissions->validate();
+
+    if (count($violations) > 0) {
+      $message = '';
+      foreach ($violations as $violation) {
+        $message .= "\n" . $violation->getMessage();
+      }
+      throw new EntityStorageException('Group permissions were not saved correctly, because:' . $message);
+    }
+
+    // Saves the GroupPermission object with a new revision.
+    $group_permissions->setNewRevision();
+    $group_permissions->setRevisionUserId($this->currentUser->id());
+    $group_permissions->setRevisionCreationTime($this->time->getRequestTime());
+    $group_permissions->setRevisionLogMessage('Group permissions updated successfully.');
+    $group_permissions->save();
   }
 
 }
