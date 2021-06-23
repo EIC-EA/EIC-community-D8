@@ -104,9 +104,11 @@ class GroupBreadcrumbBuilder implements BreadcrumbBuilderInterface {
               $links = $book_breadcrumb->getLinks();
               // Places the group link right after the "Home" link.
               array_splice($links, 1, 0, [$group->toLink()]);
+              // Places the groups overview link right after the "Home" link.
+              array_splice($links, 1, 0, [Link::createFromRoute($this->t('Groups'), 'view.global_overviews.page_1')]);
               // Replaces book link text with "Wiki".
               if ($node->bundle() === 'wiki_page') {
-                $links[2]->setText($this->t('Wiki'));
+                $links[3]->setText($this->t('Wiki'));
               }
               // We want to keep cache contexts and cache tags from book
               // breadcrumb.
