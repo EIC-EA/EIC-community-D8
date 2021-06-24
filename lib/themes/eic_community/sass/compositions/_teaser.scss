@@ -379,6 +379,12 @@
         flex-direction: column;
       }
     }
+
+    @include ecl-media-breakpoint-up('md') {
+      .ecl-teaser-overview--has-columns & {
+        display: block;
+      }
+    }
   }
 
   &__content {
@@ -430,10 +436,13 @@
       margin-top: 0;
     }
 
+    display: flex;
+
     @include ecl-responsive-font('label');
 
     #{$node}--as-card#{$node}--member & {
       text-align: center;
+      display: block;
     }
 
     #{$node}--as-card#{$node}--event & {
@@ -441,10 +450,57 @@
     }
   }
 
+  &__title-before,
+  &__title-after {
+    .ecl-teaser-overview--has-columns & {
+      @include ecl-media-breakpoint-up('md') {
+        display: block;
+        flex-shrink: 0;
+      }
+    }
+  }
+
+  &__title-before {
+    &::after {
+      display: inline;
+      content: "\00A0";
+    }
+  }
+
+  &__title-after {
+    &::before {
+      display: inline;
+      content: "\00A0";
+    }
+  }
+
+  &__title-overflow {
+    .ecl-teaser-overview--has-columns & {
+      @include ecl-media-breakpoint-up('md') {
+        flex: 1;
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      > span {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    }
+  }
+
   &__description {
     color: ecl-typography('color', 'meta');
     font-style: inherit;
     line-height: ecl-typography('line-height');
+
+
+
+    #{$node}--search & {
+      color: ecl-typography('color');
+    }
 
     #{$node}--organisation &,
     #{$node}--member & {
@@ -568,6 +624,10 @@
 
   & &__timestamp {
     margin: 0;
+  }
+
+  &__detail &__timestamp {
+    display: inline-flex;
   }
 
   #{$node}--member &__timestamp {
@@ -729,6 +789,34 @@
     }
   }
 
+  &__details,
+  &__detail {
+    margin-bottom: map-get($ecl-spacing, '2xs');
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  &__detail {
+    color: ecl-typography('color', 'meta');
+
+    a:not([class]) {
+      color: ecl-typography('color', 'label');
+      font-weight: $ecl-font-weight-bold;
+    }
+  }
+
+  &__detail-icon {
+    vertical-align: middle;
+    color: ecl-typography('color', 'title');
+  }
+
+  &__detail-contributor {
+    font-weight: $ecl-font-weight-bold;
+    color: ecl-typography('color', 'title');
+  }
+
   &__stats {
     display: flex;
     align-items: center;
@@ -739,6 +827,10 @@
     #{$node}__meta-footer & {
       @include ecl-media-breakpoint-up('md') {
         margin-left: auto;
+
+        #{$node}--search & {
+          margin-left: 0;
+        }
       }
     }
 
@@ -771,6 +863,7 @@
   }
 
   &__stat-icon {
+    color: ecl-typography('color', 'label');
     margin-right: ecl-box-model('padding', 'controls');
   }
 }

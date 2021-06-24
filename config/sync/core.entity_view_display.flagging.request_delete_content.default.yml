@@ -3,30 +3,29 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.field.flagging.request_delete_content.field_deletion_reason
-    - field.field.flagging.request_delete_content.field_deletion_status
+    - field.field.flagging.request_delete_content.field_request_reason
+    - field.field.flagging.request_delete_content.field_request_status
     - flag.flag.request_delete_content
+  module:
+    - options
 id: flagging.request_delete_content.default
 targetEntityType: flagging
 bundle: request_delete_content
 mode: default
 content:
-  field_deletion_reason:
-    weight: 0
+  field_request_reason:
+    weight: 2
     label: above
     settings: {  }
     third_party_settings: {  }
     type: basic_string
     region: content
-  field_deletion_status:
+  field_request_status:
     weight: 1
     label: above
-    settings:
-      format: default
-      format_custom_false: ''
-      format_custom_true: ''
+    settings: {  }
     third_party_settings: {  }
-    type: boolean
+    type: list_default
     region: content
 hidden:
   search_api_excerpt: true

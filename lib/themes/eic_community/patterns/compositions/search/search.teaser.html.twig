@@ -1,0 +1,93 @@
+{% set title_element = title_element|default('h2') %}
+
+<div class="ecl-teaser ecl-teaser--search {{ highlight.is_active ? 'ecl-teaser--is-highlighted' }} {{ extra_classes }}">
+  <div class="ecl-teaser__main-wrapper">
+    <div class="ecl-teaser__content">
+      <{{ title_element }} class="ecl-teaser__title">
+        {% if path is not empty %}
+          <a href="{{ path }}">
+            {% if title_before %}
+              <span class="ecl-teaser__title-before">{{ title_before }}</span>
+            {% endif %}
+
+            <span class="ecl-teaser__title-overflow"><span>{{ title }}</span></span>
+
+            {% if title_after %}
+              <span class="ecl-teaser__title-after">{{ title_after }}</span>
+            {% endif %}
+          </a>
+        {% else %}
+          {% if title_before %}
+            <span class="ecl-teaser__title-before">{{ title_before }}</span>
+          {% endif %}
+
+          <span class="ecl-teaser__title-overflow"><span>{{ title }}</span></span>
+
+          {% if title_after %}
+            <span class="ecl-teaser__title-after">{{ title_after }}</span>
+          {% endif %}
+        {% endif %}
+      </{{ title_element }}>
+
+      {% if details is not empty %}
+        <div class="ecl-teaser__details">
+          {% for detail in details %}
+            <div class="ecl-teaser__detail">
+              {% if icon_file_path and detail.icon is not empty %}
+                {% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with {
+                  icon: detail.icon|merge({
+                    path: icon_file_path,
+                    size: 's',
+                  }),
+                  extra_classes: 'ecl-teaser__detail-icon',
+                } %}
+              {% endif %}
+              {% if detail.contributor %}
+                {% if detail.contributor.name %}
+                  {% if detail.contributor.path %}
+                    <a href="{{ detail.contributor.path }}" class="ecl-teaser__detail-contributor">{{ detail.contributor.name }}</a>
+                  {% else %}
+                    {{ detail.contributor.name }}
+                  {% endif %}
+                  {{ detail.description }}
+                {% endif %}
+                {% if detail.timestamp %} - {% endif %}
+                {% include "@theme/patterns/components/timestamp.html.twig" with detail.timestamp|default({})|merge({
+                  extra_classes: 'ecl-timestamp--inherits-color ecl-teaser__timestamp',
+                }) only %}
+              {% endif %}
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      {% if description is not empty %}
+        <p class="ecl-teaser__description">{{ description }}</p>
+      {% endif %}
+    </div>
+
+    <div class="ecl-teaser__meta-footer">
+      {% if stats is not empty %}
+        <div class="ecl-teaser__stats">
+          {% for stat in stats %}
+            <div class="ecl-teaser__stat">
+              {% if stat.icon is not empty and icon_file_path %}
+                {% include '@ecl-twig/ec-component-icon/ecl-icon.html.twig' with {
+                  icon: {
+                    size: 'xs',
+                    path: icon_file_path,
+                    type: stat.icon.type|default('branded'),
+                    name: stat.icon.name,
+                  },
+                  extra_classes: 'ecl-teaser__stat-icon',
+                } only %}
+              {% endif %}
+              <span class="ecl-teaser__stat-label">{{ stat.label }}</span>
+              <span class="ecl-teaser__stat-value">{{ stat.value }}</span>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>

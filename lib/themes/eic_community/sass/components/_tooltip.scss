@@ -1,0 +1,185 @@
+.ecl-tooltip {
+  $node: &;
+
+  position: relative;
+  display: block;
+  width: map-get($ecl-media, '4xs');
+
+  &--aligns-from-right {
+    margin-left: auto;
+  }
+
+  &::before {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    display: none;
+    content: " ";
+    background-color: rgba(0, 0, 0, 0.8);
+    z-index: 100;
+  }
+
+  &--is-ready {
+    &::before {
+      display: block;
+      visibility: hidden;
+
+      @include ecl-media-breakpoint-up('lg') {
+        display: none;
+      }
+    }
+
+    &[aria-expanded="true"]::before {
+      visibility: visible;
+    }
+  }
+
+  &__toggle {
+    display: none;
+    appearance: none;
+    border: 0;
+    padding: 0;
+    width: map-get($ecl-media, '4xs');
+    height: map-get($ecl-media, '4xs');
+    align-items: center;
+    justify-content: center;
+    border-radius: map-get($ecl-spacing, 'xl');
+    background-color: ecl-typography('color', 'title');
+    cursor: pointer;
+
+    &:hover,
+    &:focus {
+      background-color: map-get($ecl-colors, 'blue-75');
+    }
+
+    &:focus {
+      outline: ecl-border('outline');
+    }
+
+    #{$node}--is-ready & {
+      display: inline-flex;
+    }
+  }
+
+  &__close {
+    display: block;
+    width: 100%;
+    margin-top: map-get($ecl-spacing, 'm');
+    text-align: center;
+
+    @include ecl-media-breakpoint-up('lg') {
+      display: none;
+    }
+  }
+
+  &__toggle-icon {
+    color: map-get($ecl-colors, 'white');
+  }
+
+  &__toggle-label {
+    #{$node}__toggle-icon ~ & {
+      @include visually-hidden;
+    }
+  }
+
+  &__content {
+    z-index: 101;
+
+    #{$node}--is-ready[aria-expanded="false"] & {
+      @include visually-hidden;
+    }
+
+    #{$node}--is-ready[aria-expanded] & {
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      width: 100%;
+      left: 0;
+      box-sizing: border-box;
+
+      @include ecl-media-breakpoint-down('md') {
+        overflow: auto;
+        display: flex;
+        padding: map-get($ecl-spacing, 'm');
+        flex-direction: column;
+      }
+
+      @include ecl-media-breakpoint-up('lg') {
+        position: absolute;
+        display: block;
+        left: 100%;
+        width: 100vw;
+        padding-left: map-get($ecl-spacing, 'm');
+      }
+    }
+
+    #{$node}--aligns-from-right#{$node}--is-ready[aria-expanded] & {
+      @include ecl-media-breakpoint-up('lg') {
+        right: 100%;
+        left: auto;
+        padding-left: 0;
+        padding-right: map-get($ecl-spacing, 'm');
+      }
+    }
+  }
+
+  &__panel {
+    position: relative;
+    padding: map-get($ecl-spacing, 'xl');
+    background-color: map-get($ecl-colors, 'blue-5');
+    color: ecl-typography('color');
+    font-size: map-get($ecl-font-size, 's');
+
+    #{$node}--is-inverted & {
+      background-color: ecl-typography('color', 'title');
+      color: map-get($ecl-colors, 'white');
+    }
+  }
+
+  &__panel-corner {
+    display: none;
+    position: absolute;
+    width: map-get($ecl-media, '6xs');
+    height: map-get($ecl-media, '6xs');
+    transform: rotate(45deg);
+    top: 0;
+    margin-top: #{0 - map-get($ecl-media, '4xs') / 2 - map-get($ecl-media, '6xs') / 2};
+    right: 100%;
+    margin-right: #{0 - map-get($ecl-media, '6xs') / 2};
+    background-color: inherit;
+    content: " ";
+
+    @include ecl-media-breakpoint-up('lg') {
+      display: block;
+    }
+
+    #{$node}--aligns-from-right & {
+      right: auto;
+      left: 100%;
+      margin-right: 0;
+      margin-left: #{0 - map-get($ecl-media, '6xs') / 2};
+    }
+  }
+
+  &__panel-label {
+    display: block;
+    margin-bottom: map-get($ecl-spacing, 'm');
+    border-bottom: ecl-border();
+    border-color: currentColor;
+    padding-bottom: map-get($ecl-spacing, 'm');
+    font-weight: $ecl-font-weight-bold;
+    @include ecl-responsive-font('title');
+  }
+
+  &__helper {
+    display: none;
+
+    @include ecl-media-breakpoint-up('lg') {
+      #{$node}--is-ready & {
+        display: block;
+      }
+    }
+  }
+}

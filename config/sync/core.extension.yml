@@ -34,6 +34,7 @@ module:
   eic_blocks: 0
   eic_comments: 0
   eic_content: 0
+  eic_content_book: 0
   eic_content_discussion: 0
   eic_content_story: 0
   eic_deploy: 0
@@ -48,6 +49,7 @@ module:
   eic_messages: 0
   eic_paragraph_contributor: 0
   eic_paragraph_cta_tile: 0
+  eic_private_content: 0
   eic_theme_helper: 0
   eic_user: 0
   eic_webservices: 0

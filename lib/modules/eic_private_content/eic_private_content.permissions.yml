@@ -1,0 +1,8 @@
+view private content:
+  title: 'View private content'
+  description: 'Access any content marked as private'
+  restrict access: true
+mark private content:
+  title: 'Mark content as private'
+  description: 'Mark content as private'
+  restrict access: true

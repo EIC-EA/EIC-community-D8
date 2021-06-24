@@ -2,11 +2,11 @@
 
 namespace Drupal\oec_group_flex\Plugin\CustomRestrictedVisibility;
 
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\group\Access\GroupAccessResult;
 use Drupal\group\Entity\GroupInterface;
-use Drupal\oec_group_flex\Annotation\CustomRestrictedVisibility;
 use Drupal\oec_group_flex\GroupVisibilityRecordInterface;
 use Drupal\oec_group_flex\Plugin\CustomRestrictedVisibilityBase;
 use Drupal\user\Entity\User;
@@ -98,6 +98,22 @@ class RestrictedUsers extends CustomRestrictedVisibilityBase {
     }
     // Fallback to neutral access.
     return parent::hasViewAccess($entity, $account, $group_visibility_record);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function validatePluginForm(array &$element, FormStateInterface $form_state) {
+    if (parent::validatePluginForm($element, $form_state)) {
+      return;
+    }
+    $conf_key = $this->getPluginId() . '_conf';
+    // If plugin has configurations, the validation will be handled in
+    // field type itself so we skip it from here.
+    if ($form_state->getValue($conf_key)) {
+      return;
+    }
+    return $form_state->setError($element[$this->getPluginId() . '_conf'], $this->t('You need to select at least 1 trusted user.'));
   }
 
 }

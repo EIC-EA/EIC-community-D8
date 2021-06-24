@@ -1,0 +1,7 @@
+eic_flags.delete_requested_content:
+  title: 'Delete requests'
+  route_name: eic_flags.flagged_entities.list
+  parent_id: system.admin_content
+  weight: 1
+  route_parameters:
+    request_type: 'delete'

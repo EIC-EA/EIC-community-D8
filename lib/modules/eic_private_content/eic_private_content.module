@@ -1,0 +1,133 @@
+<?php
+
+/**
+ * @file
+ * Primary module hooks for EIC Private content module.
+ */
+
+use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Field\FieldItemList;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\eic_private_content\PrivateContentConst;
+use Drupal\node\NodeTypeInterface;
+
+/**
+ * Implements hook_entity_base_field_info().
+ */
+function eic_private_content_entity_base_field_info(EntityTypeInterface $entity_type) {
+  $fields = [];
+
+  if ($entity_type->id() === 'node') {
+    $fields[PrivateContentConst::FIELD_NAME] = BaseFieldDefinition::create('boolean')
+      ->setLabel(t('Private'))
+      ->setName(PrivateContentConst::FIELD_NAME)
+      ->setRevisionable(TRUE)
+      ->setDescription(t('When checked, only users with proper access permissions will be able to see this post.'))
+      ->setDisplayOptions('view', ['weight' => 1])
+      ->setDisplayOptions('form', ['weight' => 1])
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayConfigurable('view', TRUE);
+  }
+
+  return $fields;
+}
+
+/**
+ * Implements hook_entity_field_access().
+ */
+function eic_private_content_entity_field_access($operation, FieldDefinitionInterface $field_definition, AccountInterface $account, FieldItemList $items = NULL) {
+  $access = AccessResult::neutral();
+
+  if (($field_definition->getName() == PrivateContentConst::FIELD_NAME)) {
+    /** @var \Drupal\node\NodeTypeInterface $type */
+    $entity = $items->getEntity();
+    $type = $entity->type->entity;
+
+    if ($type instanceof NodeTypeInterface) {
+      $privacy_setting = $type->getThirdPartySetting('eic_private_content', PrivateContentConst::FIELD_NAME, FALSE);
+      $is_private = $items->value;
+
+      switch ($operation) {
+        case 'view':
+          $access = AccessResult::forbiddenIf(!$privacy_setting || ($privacy_setting && $is_private && !$account->hasPermission('view private content') && $entity->getOwnerId() !== $account->id()));
+          break;
+
+        case 'edit':
+          $access = AccessResult::forbiddenIf(!$privacy_setting || ($privacy_setting && $is_private && !$account->hasPermission('mark private content') && $entity->getOwnerId() !== $account->id()));
+          break;
+
+      }
+
+    }
+  }
+
+  return $access;
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function eic_private_content_form_node_type_form_alter(&$form, FormStateInterface $form_state) {
+  /** @var \Drupal\node\NodeTypeInterface $type */
+  $type = $form_state->getFormObject()->getEntity();
+
+  $form['eic_private_content'] = [
+    '#type' => 'details',
+    '#title' => t('Privacy settings'),
+    '#collapsible' => TRUE,
+    '#group' => 'additional_settings',
+    '#weight' => 20,
+  ];
+
+  $form['eic_private_content'][PrivateContentConst::FIELD_NAME] = [
+    '#type' => 'checkbox',
+    '#title' => t('Enable privacy'),
+    '#description' => t('Allow users to mark nodes of this content type as private. Changing this value will update all existing nodes after running cron.'),
+    '#default_value' => $type->getThirdPartySetting('eic_private_content', PrivateContentConst::FIELD_NAME, FALSE),
+  ];
+
+  $form['#entity_builders'][] = 'eic_private_content_form_node_type_form_builder';
+}
+
+/**
+ * Entity builder for the node type form with private option.
+ *
+ * @see eic_private_content_form_node_type_form_alter()
+ */
+function eic_private_content_form_node_type_form_builder($entity_type, NodeTypeInterface $type, &$form, FormStateInterface $form_state) {
+  $existing = $type->getThirdPartySetting('eic_private_content', PrivateContentConst::FIELD_NAME);
+  $new = $form_state->getValue('private');
+  $type->setThirdPartySetting('eic_private_content', PrivateContentConst::FIELD_NAME, $new);
+  if ($new != $existing) {
+    // @todo Mark all nodes as non private. This should be done via cron.
+  }
+}
+
+/**
+ * Implements hook_entity_access().
+ */
+function eic_private_content_entity_access(EntityInterface $entity, $operation, AccountInterface $account) {
+  $access = AccessResult::neutral();
+
+  if ($entity->getEntityTypeId() !== 'node') {
+    return $access;
+  }
+
+  switch ($operation) {
+    case 'view':
+      /** @var \Drupal\node\NodeTypeInterface $type */
+      $type = $entity->type->entity;
+      $privacy_setting = $type->getThirdPartySetting('eic_private_content', PrivateContentConst::FIELD_NAME, FALSE);
+      $is_private = $entity->get('private')->value;
+      $access = AccessResult::forbiddenIf(($privacy_setting && $is_private && !$account->hasPermission('view private content') && $entity->getOwnerId() !== $account->id()));
+      break;
+
+  }
+
+  return $access;
+}

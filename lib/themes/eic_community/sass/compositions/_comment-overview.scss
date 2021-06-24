@@ -110,4 +110,10 @@
       margin-bottom: 0;
     }
   }
+
+  &__title {
+    @extend .ecl-u-type-heading-3;
+
+    margin-top: 0;
+  }
 }

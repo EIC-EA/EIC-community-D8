@@ -25,7 +25,7 @@ mode: default
 content:
   field_body:
     weight: 101
-    label: above
+    label: hidden
     settings: {  }
     third_party_settings: {  }
     type: text_default
@@ -41,7 +41,7 @@ content:
     region: content
   field_discussion_type:
     weight: 102
-    label: above
+    label: hidden
     settings: {  }
     third_party_settings: {  }
     type: list_default
@@ -49,7 +49,7 @@ content:
   field_related_contributors:
     type: entity_reference_revisions_entity_view
     weight: 107
-    label: above
+    label: hidden
     settings:
       view_mode: default
       link: ''
@@ -57,7 +57,7 @@ content:
     region: content
   field_related_documents:
     weight: 105
-    label: above
+    label: hidden
     settings:
       link: true
     third_party_settings: {  }
@@ -65,7 +65,7 @@ content:
     region: content
   field_vocab_geo:
     weight: 104
-    label: above
+    label: hidden
     settings:
       link: true
     third_party_settings: {  }
@@ -73,7 +73,7 @@ content:
     region: content
   field_vocab_topics:
     weight: 103
-    label: above
+    label: hidden
     settings:
       link: true
     third_party_settings: {  }
@@ -81,9 +81,9 @@ content:
     region: content
   flag_bookmark_content:
     weight: 10
+    region: content
     settings: {  }
     third_party_settings: {  }
-    region: content
   flag_follow_content:
     weight: 10
     region: content
@@ -91,24 +91,34 @@ content:
     third_party_settings: {  }
   flag_highlight_content:
     weight: 10
+    region: content
     settings: {  }
     third_party_settings: {  }
-    region: content
   flag_like_content:
     weight: 10
+    region: content
     settings: {  }
     third_party_settings: {  }
-    region: content
   flag_recommend:
     weight: 10
+    region: content
     settings: {  }
     third_party_settings: {  }
-    region: content
   links:
     weight: 100
     region: content
     settings: {  }
     third_party_settings: {  }
+  private:
+    weight: 1
+    region: content
+    label: hidden
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    type: boolean
 hidden:
   extra_field_eic_theme_helper_short_title_with_fallback: true
   langcode: true

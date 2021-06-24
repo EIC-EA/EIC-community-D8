@@ -26,31 +26,25 @@
  * @see comment_preprocess_field()
  */
 #}
-<section{{ attributes|without('class') }} class="ecl-section-wrapper ecl-section-wrapper--is-grey ecl-comment-overview">
-  <div class="ecl-container">
-    <div class="ecl-comment-overview__wrapper">
-      {% if comment_form %}
-        <div class="ecl-comment-overview__form-wrapper">
-          {{ comment_form }}
-        </div>
-      {% endif %}
-
-      {% if comments is not empty %}
-        <div class="ecl-comment-overview__items">
-          {% for comment in comments %}
-
-            {% set output_comment %}{{ comment }}{% endset %}
-            {% if comment is iterable and output_comment is not empty %}
-              <div class="ecl-comment-overview__item">
-                {{ output_comment }}
-              </div>
-            {% endif %}
-          {% endfor %}
-        </div>
-      {% else %}
-        <p class="ecl-comment-overview__no-items">{{ no_items_label|default('There are currently no comments.') }}</p>
-      {% endif %}
-
-    </div>
+<span class="ecl-comment-overview__title">{{ label }}</span>
+{% if comment_form %}
+  <div class="ecl-comment-overview__form-wrapper">
+    {{ comment_form }}
   </div>
-</section>
+{% endif %}
+
+{% if comments is not empty %}
+  <div class="ecl-comment-overview__items">
+    {% for comment in comments %}
+
+      {% set output_comment %}{{ comment }}{% endset %}
+      {% if comment is iterable and output_comment is not empty %}
+        <div class="ecl-comment-overview__item">
+          {{ output_comment }}
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+{% else %}
+  <p class="ecl-comment-overview__no-items">{{ no_items_label|default('There are currently no comments.') }}</p>
+{% endif %}

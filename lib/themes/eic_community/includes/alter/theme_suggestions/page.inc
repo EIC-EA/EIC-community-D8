@@ -27,3 +27,13 @@ function eic_community_theme_suggestions_page_alter(array &$suggestions, array $
       $route->getParameter('node_preview')->bundle();
   }
 }
+
+/**
+ * Implements hook_theme_suggestions_alter().
+ */
+function eic_community_theme_suggestions_alter(array &$suggestions, array $variables, $hook) {
+  if (isset($variables['elements']['#view_mode'])) {
+    $sanitized_view_mode = strtr($variables['elements']['#view_mode'], '.', '_');
+    $suggestions[] = $hook . '__' . $sanitized_view_mode;
+  }
+}
