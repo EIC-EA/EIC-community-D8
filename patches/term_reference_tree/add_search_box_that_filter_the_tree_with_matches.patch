@@ -1,0 +1,793 @@
+Index: term_reference_tree.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/term_reference_tree.js b/term_reference_tree.js
+--- a/term_reference_tree.js	(revision 198f1a2c02dc32946cf1c74f7130b32ba4d45841)
++++ b/term_reference_tree.js	(date 1624537903280)
+@@ -1,298 +1,359 @@
+ (function($) {
+ 
+-/**
+- * Attaches the tree behavior to the term widget form.
+- */
+-Drupal.behaviors.termReferenceTree = {
+-  attach: function(context, settings) {
+-    // Bind the term expand/contract button to slide toggle the list underneath.
+-    $('.term-reference-tree-button', context).once('term-reference-tree-button').click(function() {
+-      $(this).toggleClass('term-reference-tree-collapsed');
+-      $(this).siblings('ul').slideToggle('fast');
+-    });
++  /**
++   * Attaches the tree behavior to the term widget form.
++   */
++  Drupal.behaviors.termReferenceTree = {
++    attach: function(context, settings) {
++      // Bind the term expand/contract button to slide toggle the list underneath.
++      $('.term-reference-tree-button', context).once('term-reference-tree-button').click(function() {
++        $(this).toggleClass('term-reference-tree-collapsed');
++        $(this).siblings('ul').slideToggle('fast');
++      });
+ 
+-    // An expand all button (unimplemented)
+-    /*
+-    $('.expandbutton').click(function() {
+-      $(this).siblings('.term-reference-tree-button').trigger('click');
+-    });
+-    */
++      $("input[data-depth='1']", context).once('term-data-depth').click(function(event) {
++        var target = event.target;
++        var parentLevel = $(this).parents('.term-reference-tree-level');
++        var numberCheckedParents = parentLevel.find("input[data-depth='1']:checked").length;
++
++        if (numberCheckedParents >= 1) {
++          parentLevel.find("input[data-depth='1']:not(:checked)").each(function() {
++            $(this).attr('disabled', 'disabled').parent().addClass('disabled');
++          });
++        } else {
++          parentLevel.find("input[data-depth='1']:not(:checked)").each(function() {
++            $(this).removeAttr('disabled').parent().removeClass('disabled');
++          });
++        }
++      });
++
++      $('.search-tree', context).once('search_tree').on('input', function(event) {
++        var searchValue = $(event.target).val();
++        var parentElement = $(this).parent();
++        var checkboxesList = $(parentElement).find('.tree-term-checkbox');
++        var collapsedItems = $(parentElement).find('.term-reference-tree-collapsed');
++
++        // Add background to the label that match the search
++        checkboxesList.each(function() {
++          if ($(this).data('label').toLowerCase().indexOf(searchValue.toLowerCase()) >= 0) {
++            $(this).parents('li').removeClass('hidden');
++            if (searchValue) {
++              $(this).parent().find('label').addClass('background-search');
++            } else {
++              $(this).parent().find('label').removeClass('background-search');
++            }
++          } else {
++            $(this).parent().parent('li').addClass('hidden');
++            $(this).parent().find('label').removeClass('background-search');
++          }
++        });
++
++        // Be sure to not hide any li element in the active tree
++        checkboxesList.each(function() {
++          if ($(this).data('label').toLowerCase().indexOf(searchValue.toLowerCase()) >= 0) {
++            $(this).parents('li').removeClass('hidden');
++          }
++        });
++
++        // Uncollapse tree that match with the search
++        collapsedItems.each(function() {
++          if (!$(this).parent('li').hasClass('hidden')) {
++            $(this).toggleClass('term-reference-tree-collapsed');
++            $(this).siblings('ul').slideToggle('fast');
++          }
++        });
++      });
++
++      // An expand all button (unimplemented)
++      /*
++      $('.expandbutton').click(function() {
++        $(this).siblings('.term-reference-tree-button').trigger('click');
++      });
++      */
+ 
+-    $('.term-reference-tree', context).once('term-reference-tree').each(function() {
++      $('.term-reference-tree', context).once('term-reference-tree').each(function() {
+ 
+-      // On page load, check whether the maximum number of choices is already selected.
+-      // If so, disable the other options.
+-      var tree = $(this);
+-      checkMaxChoices(tree, false);
+-      $(this).find('input[type=checkbox]').change(function() {
+-        checkMaxChoices(tree, $(this));
+-      });
++        // On page load, check whether the maximum number of choices is already selected.
++        // If so, disable the other options.
++        var tree = $(this);
++        checkMaxChoices(tree, false);
++        $(this).find('input[type=checkbox]').change(function() {
++          checkMaxChoices(tree, $(this));
++        });
+ 
+-      //On page load, check if the user wants a cascading selection.
+-      if($(this).hasClass('term-reference-tree-select-parents')) {
+-        $(this).find('.form-checkbox').parent().addClass('select-parents');
+-      }
++        //On page load, check if the user wants a cascading selection.
++        if($(this).hasClass('term-reference-tree-select-parents')) {
++          $(this).find('.form-checkbox').parent().addClass('select-parents');
++        }
+ 
+-      //On page load, check if the user wants a track list. If so, add the
+-      //currently selected items to it.
+-      if($(this).hasClass('term-reference-tree-track-list-shown')) {
+-        var track_list_container = $(this).find('.term-reference-tree-track-list');
++        //On page load, check if the user wants a track list. If so, add the
++        //currently selected items to it.
++        if($(this).hasClass('term-reference-tree-track-list-shown')) {
++          var track_list_container = $(this).find('.term-reference-tree-track-list');
+ 
+-        //Var to track whether using checkboxes or radio buttons.
+-        var input_type =
+-          ( $(this).has('input[type=checkbox]').length > 0 ) ? 'checkbox' : 'radio';
++          //Var to track whether using checkboxes or radio buttons.
++          var input_type =
++              ( $(this).has('input[type=checkbox]').length > 0 ) ? 'checkbox' : 'radio';
+ 
+-        //Find all the checked controls.
+-        var checked_controls = $(this).find('input[type=' + input_type + ']:checked');
++          //Find all the checked controls.
++          var checked_controls = $(this).find('input[type=' + input_type + ']:checked');
+ 
+-        //Get their labels.
+-        var labels = checked_controls.next();
+-        var label_element;
++          //Get their labels.
++          var labels = checked_controls.next();
++          var label_element;
+ 
+-        //For each label of the checked boxes, add item to the track list.
+-        labels.each(function(index) {
+-          label_element = $(labels[index]);
+-          addItemToTrackList(
+-            track_list_container,         //Where to add new item.
+-            label_element.html(),         //Text of new item.
+-            $(label_element).attr('for'), //Id of control new item is for.
+-            input_type                    //checkbox or radio
+-          );
+-        }); //End labels.each
++          //For each label of the checked boxes, add item to the track list.
++          labels.each(function(index) {
++            label_element = $(labels[index]);
++            addItemToTrackList(
++                track_list_container,         //Where to add new item.
++                label_element.html(),         //Text of new item.
++                $(label_element).attr('for'), //Id of control new item is for.
++                input_type                    //checkbox or radio
++            );
++          }); //End labels.each
+ 
+-        //Show "nothing selected" message, if needed.
+-        showNothingSelectedMessage(track_list_container);
++          //Show "nothing selected" message, if needed.
++          showNothingSelectedMessage(track_list_container);
+ 
+-        //Event - when an element on the track list is clicked on:
+-        //  1. Delete it.
+-        //  2. Uncheck the associated checkbox.
+-        //The event is bound to the track list container, not each element.
+-        $(track_list_container).click(function(event){
+-          //Remove the "nothing selected" message if showing - add it later if needed.
+-          //removeNothingSelectedMessage(track_list_container);
+-          var event_target = $(event.target);
+-          var control_id = event_target.data('control_id');
++          //Event - when an element on the track list is clicked on:
++          //  1. Delete it.
++          //  2. Uncheck the associated checkbox.
++          //The event is bound to the track list container, not each element.
++          $(track_list_container).click(function(event){
++            //Remove the "nothing selected" message if showing - add it later if needed.
++            //removeNothingSelectedMessage(track_list_container);
++            var event_target = $(event.target);
++            var control_id = event_target.data('control_id');
+ 
+-          if(control_id) {
+-            event_target.remove();
++            if(control_id) {
++              event_target.remove();
+ 
+-            var checkbox = $('#' + control_id);
+-            checkbox.removeAttr('checked');
+-            checkMaxChoices(tree, checkbox);
++              var checkbox = $('#' + control_id);
++              checkbox.removeAttr('checked');
++              checkMaxChoices(tree, checkbox);
+ 
+-            //Show "nothing selected" message, if needed.
+-            showNothingSelectedMessage(track_list_container);
+-          }
+-        });
++              //Show "nothing selected" message, if needed.
++              showNothingSelectedMessage(track_list_container);
++            }
++          });
+ 
+-        //Change track list when controls are clicked.
+-        $(this).find('.form-' + input_type).change(function(event){
+-          //Remove the "nothing selected" message if showing - add it later if needed.
+-          removeNothingSelectedMessage(track_list_container);
+-          var event_target = $(event.target);
+-          var control_id = event_target.attr('id');
+-          if ( event_target.attr('checked') ) {
+-            //Control checked - add item to the track list.
+-            label_element = event_target.next();
+-            addItemToTrackList(
+-              track_list_container,         //Where to add new item.
+-              label_element.html(),         //Text of new item.
+-              $(label_element).attr('for'), //Id of control new item is for.
+-              input_type                    //checkbox or radio
+-            );
+-          }
+-          else {
+-            //Checkbox unchecked. Remove from the track list.
+-            $('#' + control_id + '_list').remove();
+-          }
++          //Change track list when controls are clicked.
++          $(this).find('.form-' + input_type).change(function(event){
++            //Remove the "nothing selected" message if showing - add it later if needed.
++            removeNothingSelectedMessage(track_list_container);
++            var event_target = $(event.target);
++            var control_id = event_target.attr('id');
++            if ( event_target.attr('checked') ) {
++              //Control checked - add item to the track list.
++              label_element = event_target.next();
++              addItemToTrackList(
++                  track_list_container,         //Where to add new item.
++                  label_element.html(),         //Text of new item.
++                  $(label_element).attr('for'), //Id of control new item is for.
++                  input_type                    //checkbox or radio
++              );
++            }
++            else {
++              //Checkbox unchecked. Remove from the track list.
++              $('#' + control_id + '_list').remove();
++            }
+ 
+-          //Show "nothing selected" message, if needed.
+-          showNothingSelectedMessage(track_list_container);
+-        }); //End process checkbox changes.
+-      } //End Want a track list.
++            //Show "nothing selected" message, if needed.
++            showNothingSelectedMessage(track_list_container);
++          }); //End process checkbox changes.
++        } //End Want a track list.
+ 
+-      //On page load, check if the user wants a cascading selection.
+-      if($(this).hasClass('term-reference-tree-cascading-selection')) {
+-        var mode_select = $(this).hasClass('term-reference-tree-cascading-selection-mode-select');
+-        var mode_deselect = $(this).hasClass('term-reference-tree-cascading-selection-mode-deselect');
++        //On page load, check if the user wants a cascading selection.
++        if($(this).hasClass('term-reference-tree-cascading-selection')) {
++          var mode_select = $(this).hasClass('term-reference-tree-cascading-selection-mode-select');
++          var mode_deselect = $(this).hasClass('term-reference-tree-cascading-selection-mode-deselect');
+ 
+-        //Check children when checkboxes are clicked.
+-        $(this).find('.form-checkbox').change(function(event) {
+-          var event_target = $(event.target);
+-          var event_target_checked = event_target.is(':checked');
+-          var control_id = event_target.attr('id');
+-          var children = event_target.parent().next().children().find('> :not(ul) > input[id^="' + control_id + '-children"]');
++          //Check children when checkboxes are clicked.
++          $(this).find('.form-checkbox').change(function(event) {
++            var event_target = $(event.target);
++            var event_target_checked = event_target.is(':checked');
++            var control_id = event_target.attr('id');
++            var children = event_target.parent().next().children().find('> :not(ul) > input[id^="' + control_id + '-children"]');
+ 
+-          if (!mode_select && !mode_deselect) {
+-            if(event_target_checked) {
+-              $(children).filter(':not(:checked)').click().trigger('change');
+-            }
+-            else {
+-              $(children).filter(':checked').click().trigger('change');
+-            }
+-          } else if (mode_select && event_target_checked) {
+-            $(children).filter(':not(:checked)').click().trigger('change');
+-          } else if (mode_deselect && !event_target_checked) {
+-            $(children).filter(':checked').click().trigger('change');
+-          }
+-        });
+-        //End process checkbox changes.
+-      } //End Want a cascading checking.
++            if (!mode_select && !mode_deselect) {
++              if(event_target_checked) {
++                $(children).filter(':not(:checked)').click().trigger('change');
++              }
++              else {
++                $(children).filter(':checked').click().trigger('change');
++              }
++            } else if (mode_select && event_target_checked) {
++              $(children).filter(':not(:checked)').click().trigger('change');
++            } else if (mode_deselect && !event_target_checked) {
++              $(children).filter(':checked').click().trigger('change');
++            }
++          });
++          //End process checkbox changes.
++        } //End Want a cascading checking.
+ 
+-    });
+-  }
+-};
++      });
++    }
++  };
+ 
+-/**
+- * Add a new item to the track list.
+- * If more than one item can be selected, the new item is positioned to
+- * match the order of the terms in the checkbox tree.
+- *
+- * @param track_list_container Container where the new item will be added.
+- *
+- * @param item_text Text of the item to add.
+- *
+- * @param control_id Id of the checkbox/radio control the item matches.
+- *
+- * @param control_type Control type - 'checkbox' or 'radio'.
+- */
+-function addItemToTrackList(track_list_container, item_text, control_id, control_type) {
+-  var new_item = $('<li class="track-item">' + item_text + '</li>');
+-  new_item.data('control_id', control_id);
++  function lockMaxTopLevelChoices() {
++
++  }
++
++  /**
++   * Add a new item to the track list.
++   * If more than one item can be selected, the new item is positioned to
++   * match the order of the terms in the checkbox tree.
++   *
++   * @param track_list_container Container where the new item will be added.
++   *
++   * @param item_text Text of the item to add.
++   *
++   * @param control_id Id of the checkbox/radio control the item matches.
++   *
++   * @param control_type Control type - 'checkbox' or 'radio'.
++   */
++  function addItemToTrackList(track_list_container, item_text, control_id, control_type) {
++    var new_item = $('<li class="track-item">' + item_text + '</li>');
++    new_item.data('control_id', control_id);
+ 
+-  //Add an id for easy finding of the item.
+-  new_item.attr('id', control_id + '_list');
++    //Add an id for easy finding of the item.
++    new_item.attr('id', control_id + '_list');
+ 
+-  //Process radio controls - only one item can be selected.
+-  if ( control_type == 'radio') {
+-    //Find the existing element on the track list, if there is one.
+-    var current_items = track_list_container.find('li');
++    //Process radio controls - only one item can be selected.
++    if ( control_type == 'radio') {
++      //Find the existing element on the track list, if there is one.
++      var current_items = track_list_container.find('li');
+ 
+-    //If there are no items on the track list, add the new item.
+-    if ( current_items.length == 0 ) {
+-      track_list_container.append(new_item);
+-    }
+-    else {
+-      //There is an item on the list.
+-      var current_item = $(current_items.get(0));
++      //If there are no items on the track list, add the new item.
++      if ( current_items.length == 0 ) {
++        track_list_container.append(new_item);
++      }
++      else {
++        //There is an item on the list.
++        var current_item = $(current_items.get(0));
+ 
+-      //Is the item we want to add different from what is there?
+-      if ( current_item.data('control_id') != control_id ) {
+-        //Remove exiting element from track list, and add the new one.
+-        current_item.remove();
+-        track_list_container.append(new_item);
+-      }
+-    }
+-    return;
+-  }
++        //Is the item we want to add different from what is there?
++        if ( current_item.data('control_id') != control_id ) {
++          //Remove exiting element from track list, and add the new one.
++          current_item.remove();
++          track_list_container.append(new_item);
++        }
++      }
++      return;
++    }
+ 
+-  //Using checkboxes, so there can be more than one selected item.
+-  //Find the right place to put the new item, to match the order of the
+-  //checkboxes.
+-  var list_items = track_list_container.find('li');
+-  var item_comparing_to;
++    //Using checkboxes, so there can be more than one selected item.
++    //Find the right place to put the new item, to match the order of the
++    //checkboxes.
++    var list_items = track_list_container.find('li');
++    var item_comparing_to;
+ 
+-  //Flag to tell whether the item was inserted.
+-  var inserted_flag = false;
+-  list_items.each(function(index){
+-    item_comparing_to = $(list_items[index]);
++    //Flag to tell whether the item was inserted.
++    var inserted_flag = false;
++    list_items.each(function(index){
++      item_comparing_to = $(list_items[index]);
+ 
+-    //If item is already on the track list, do nothing.
+-    if ( control_id == item_comparing_to.data('control_id') ) {
+-      inserted_flag = true;
+-      return false; //Returning false stops the loop.
+-    }
+-    else if ( control_id < item_comparing_to.data('control_id') ) {
+-      //Add it here.
+-      item_comparing_to.before(new_item);
+-      inserted_flag = true;
+-      return false; //Returning false stops the loop.
+-    }
+-  });
++      //If item is already on the track list, do nothing.
++      if ( control_id == item_comparing_to.data('control_id') ) {
++        inserted_flag = true;
++        return false; //Returning false stops the loop.
++      }
++      else if ( control_id < item_comparing_to.data('control_id') ) {
++        //Add it here.
++        item_comparing_to.before(new_item);
++        inserted_flag = true;
++        return false; //Returning false stops the loop.
++      }
++    });
+ 
+-  //If not inserted yet, add new item at the end of the track list.
+-  if ( ! inserted_flag ) {
+-    track_list_container.append(new_item);
+-  }
+-}
++    //If not inserted yet, add new item at the end of the track list.
++    if ( ! inserted_flag ) {
++      track_list_container.append(new_item);
++    }
++  }
+ 
+-/**
+- * Show the 'nothing selected' message if it applies.
+- *
+- * @param track_list_container Where the message is to be shown.
+- */
+-function showNothingSelectedMessage(track_list_container) {
+-  //Is the message there already?
+-  var message_showing =
+-      (track_list_container.find('.term_ref_tree_nothing_message').length != 0);
++  /**
++   * Show the 'nothing selected' message if it applies.
++   *
++   * @param track_list_container Where the message is to be shown.
++   */
++  function showNothingSelectedMessage(track_list_container) {
++    //Is the message there already?
++    var message_showing =
++        (track_list_container.find('.term_ref_tree_nothing_message').length != 0);
+ 
+-  //Number of real items showing.
+-  var num_real_items_showing =
+-      message_showing
+-      ? track_list_container.find('li').length - 1
+-      : track_list_container.find('li').length;
+-  if ( num_real_items_showing == 0 ) {
+-    //No items showing, so show the message.
+-    if ( ! message_showing ) {
+-      track_list_container.append(
+-          '<li class="term_ref_tree_nothing_message">' + termReferenceTreeNothingSelectedText + '</li>'
+-      );
+-    }
+-  }
+-  else { // !(num_real_items_showing == 0)
+-    //There are real items.
+-    if ( message_showing ) {
+-      track_list_container.find('.term_ref_tree_nothing_message').remove();
+-    }
+-  }
+-}
++    //Number of real items showing.
++    var num_real_items_showing =
++        message_showing
++            ? track_list_container.find('li').length - 1
++            : track_list_container.find('li').length;
++    if ( num_real_items_showing == 0 ) {
++      //No items showing, so show the message.
++      if ( ! message_showing ) {
++        track_list_container.append(
++            '<li class="term_ref_tree_nothing_message">' + termReferenceTreeNothingSelectedText + '</li>'
++        );
++      }
++    }
++    else { // !(num_real_items_showing == 0)
++      //There are real items.
++      if ( message_showing ) {
++        track_list_container.find('.term_ref_tree_nothing_message').remove();
++      }
++    }
++  }
+ 
+-/**
+- * Remove the 'nothing selected' message. Makes processing easier.
+- *
+- * @param track_list_container Where the message is shown.
+- */
+-function removeNothingSelectedMessage(track_list_container) {
+-  track_list_container.find('.term_ref_tree_nothing_message').remove();
+-}
++  /**
++   * Remove the 'nothing selected' message. Makes processing easier.
++   *
++   * @param track_list_container Where the message is shown.
++   */
++  function removeNothingSelectedMessage(track_list_container) {
++    track_list_container.find('.term_ref_tree_nothing_message').remove();
++  }
+ 
+ // This helper function checks if the maximum number of choices is already selected.
+ // If so, it disables all the other options.  If not, it enables them.
+-function checkMaxChoices(item, checkbox) {
+-  var maxChoices = -1;
+-  try {
+-    maxChoices = parseInt(Drupal.settings.term_reference_tree.trees[item.attr('id')]['max_choices']);
+-  }
+-  catch (e){}
+-  var count = item.find(':checked').length;
++  function checkMaxChoices(item, checkbox) {
++    var maxChoices = -1;
++    try {
++      maxChoices = parseInt(Drupal.settings.term_reference_tree.trees[item.attr('id')]['max_choices']);
++    }
++    catch (e){}
++    var count = item.find(':checked').length;
++    var parentLevel = $("input[data-depth='1']").findOnce().parents('.term-reference-tree-level');
++    var numberCheckedParents = parentLevel.find("input[data-depth='1']:checked").length;
+ 
+-  if(maxChoices > 0 && count >= maxChoices) {
+-    item.find('input[type=checkbox]:not(:checked)').attr('disabled', 'disabled').parent().addClass('disabled');
+-  } else {
+-    item.find('input[type=checkbox]').removeAttr('disabled').parent().removeClass('disabled');
+-  }
++    if (maxChoices !== -1) {
++      if(maxChoices > 0 && count >= maxChoices) {
++        item.find('input[type=checkbox]:not(:checked)').attr('disabled', 'disabled').parent().addClass('disabled');
++      } else {
++        item.find('input[type=checkbox]').removeAttr('disabled').parent().removeClass('disabled');
++      }
++    }
+ 
+-  if(checkbox) {
+-    if(item.hasClass('term-reference-tree-select-parents')) {
+-      var track_list_container = item.find('.term-reference-tree-track-list');
++    if(checkbox) {
++      if(item.hasClass('term-reference-tree-select-parents')) {
++        var track_list_container = item.find('.term-reference-tree-track-list');
+ 
+-      if(checkbox.prop('checked')) {
+-        checkbox.parents('ul.term-reference-tree-level li').children('div.form-item').find('input[type=checkbox]').each(function() {
+-          $(this).prop('checked', true);
++        if(checkbox.prop('checked')) {
++          checkbox.parents('ul.term-reference-tree-level li').children('div.form-item').find('input[type=checkbox]').each(function() {
++            $(this).prop('checked', true);
+ 
+-          if(track_list_container) {
+-            var label_element = $(this).next();
+-            addItemToTrackList(
+-              track_list_container,         //Where to add new item.
+-              label_element.html(),         //Text of new item.
+-              $(label_element).attr('for'), //Id of control new item is for.
+-              (item.has('input[type=checkbox]').length > 0) ? 'checkbox' : 'radio'
+-            );
+-          }
+-        });
+-      }
+-    }
+-  }
+-}
++            if(track_list_container) {
++              var label_element = $(this).next();
++              addItemToTrackList(
++                  track_list_container,         //Where to add new item.
++                  label_element.html(),         //Text of new item.
++                  $(label_element).attr('for'), //Id of control new item is for.
++                  (item.has('input[type=checkbox]').length > 0) ? 'checkbox' : 'radio'
++              );
++            }
++          });
++        }
++      }
++    }
++  }
+ 
+ })(jQuery);
+Index: src/Plugin/Field/FieldWidget/TermReferenceTree.php
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/Plugin/Field/FieldWidget/TermReferenceTree.php b/src/Plugin/Field/FieldWidget/TermReferenceTree.php
+--- a/src/Plugin/Field/FieldWidget/TermReferenceTree.php	(revision 198f1a2c02dc32946cf1c74f7130b32ba4d45841)
++++ b/src/Plugin/Field/FieldWidget/TermReferenceTree.php	(date 1624537921020)
+@@ -38,6 +38,7 @@
+         'select_parents' => FALSE,
+         'cascading_selection' => self::CASCADING_SELECTION_NONE,
+         'max_depth' => 0,
++        'max_top_level_item' => -1,
+       ] + parent::defaultSettings();
+   }
+ 
+@@ -102,6 +103,13 @@
+       '#min' => 0,
+     ];
+ 
++    $form['max_top_level_item'] = [
++      '#type' => 'number',
++      '#title' => $this->t('Max top level item'),
++      '#description' => $this->t("User will be able to select a maximum number of top level items. -1 for infinite choices"),
++      '#default_value' => $this->getSetting('max_top_level_item'),
++    ];
++
+     return $form;
+   }
+ 
+@@ -138,6 +146,10 @@
+       $summary[] = $this->formatPlural($this->getSetting('max_depth'), 'Maximum Depth: @count level', 'Maximum Depth: @count levels');
+     }
+ 
++    if ($this->getSetting('max_top_level_item')) {
++      $summary[] = $this->formatPlural($this->getSetting('max_top_level_item'), 'Maximum top level items to choice : @count item', 'Maximum top level items to choice : @count items');
++    }
++
+     return $summary;
+   }
+ 
+@@ -158,6 +170,7 @@
+     $element['#cascading_selection'] = $this->getSetting('cascading_selection');
+     $element['#value_key'] = 'target_id';
+     $element['#max_depth'] = $this->getSetting('max_depth');
++    $element['#max_top_level_item'] = $this->getSetting('max_top_level_item');
+     $element['#start_minimized'] = $this->getSetting('start_minimized');
+     $element['#element_validate'] = [
+       [
+Index: term_reference_tree.module
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/term_reference_tree.module b/term_reference_tree.module
+--- a/term_reference_tree.module	(revision 198f1a2c02dc32946cf1c74f7130b32ba4d45841)
++++ b/term_reference_tree.module	(date 1624537940900)
+@@ -13,23 +13,23 @@
+   return [
+     'checkbox_tree' => [
+       'render element' => 'element',
+-      'function' => 'theme_checkbox_tree',
++      'function' => '_term_reference_term_tree_list_checkbox_tree',
+     ],
+     'checkbox_tree_level' => [
+       'render element' => 'element',
+-      'function' => 'theme_checkbox_tree_level',
++      'function' => '_term_reference_term_tree_list_checkbox_tree_level',
+     ],
+     'checkbox_tree_item' => [
+       'render element' => 'element',
+-      'function' => 'theme_checkbox_tree_item',
++      'function' => '_term_reference_term_tree_list_checkbox_tree_item',
+     ],
+     'checkbox_tree_label' => [
+       'render element' => 'element',
+-      'function' => 'theme_checkbox_tree_label',
++      'function' => '_term_reference_term_tree_list_checkbox_tree_label',
+     ],
+     'term_tree_list' => [
+       'render element' => 'element',
+-      'function' => 'theme_term_tree_list',
++      'function' => '_term_reference_term_tree_list',
+     ],
+   ];
+ }
+@@ -37,7 +37,7 @@
+ /**
+  * Returns HTML for a checkbox_tree form element.
+  */
+-function theme_checkbox_tree($variables) {
++function _term_reference_term_tree_list_checkbox_tree($variables) {
+ 
+   $element = $variables['element'];
+   foreach (Element::children($element) as $key) {
+@@ -53,6 +53,7 @@
+     $attributes['id'] = $element['#id'];
+   }
+   $attributes['class'][] = 'term-reference-tree';
++  $attributes['data-max-choice'][] = $element['max_top_level_item'];
+ 
+   if (!empty($element['#required'])) {
+     $attributes['class'][] = 'required';
+@@ -87,8 +88,10 @@
+     $attributes['class'] = array_merge($attributes['class'], $element['#attributes']['class']);
+   }
+ 
++  $output = '<input type="text" class="search-tree js-text-full text-full form-text" id="search_tree" size="60" maxlength="255" placeholder="' . t('Search for a term', [], ['context' => 'term_reference_tree']) . '" />';
++
+   return
+-    '<div' . new Attribute($attributes) . '>'
++    $output . '<div' . new Attribute($attributes) . '>'
+     . (!empty($element['#children']) ? $element['#children'] : '')
+     . '</div>';
+ }
+@@ -97,7 +100,7 @@
+  * This function prints a list item with a checkbox and an unordered list
+  * of all the elements inside it.
+  */
+-function theme_checkbox_tree_level($variables) {
++function _term_reference_term_tree_list_checkbox_tree_level($variables) {
+   $element = $variables['element'];
+   $sm = '';
+   if (array_key_exists('#level_start_minimized', $element) && $element['#level_start_minimized']) {
+@@ -121,7 +124,7 @@
+  * This function prints a single item in the tree, followed by that item's
+  * children (which may be another checkbox_tree_level).
+  */
+-function theme_checkbox_tree_item($variables) {
++function _term_reference_term_tree_list_checkbox_tree_item($variables) {
+   $element = $variables['element'];
+   $children = Element::children($element);
+   $output = '';
+@@ -145,7 +148,7 @@
+ /**
+  * This function prints a label that cannot be selected.
+  */
+-function theme_checkbox_tree_label($variables) {
++function _term_reference_term_tree_list_checkbox_tree_label($variables) {
+   $element = $variables['element'];
+   $output = '<div class="parent-term">' . $element['#value'] . '</div>';
+   return $output;
+@@ -371,6 +374,10 @@
+       '#ajax' => isset($element['#ajax']) ? $element['#ajax'] : NULL,
+     ];
+ 
++    $e['#attributes']['class'][] = 'tree-term-checkbox';
++    $e['#attributes']['data-label'][] = $e['#title'];
++    $e['#attributes']['data-depth'] = $depth;
++
+     if (is_array($e)) {
+       if ($e['#type'] == 'radio') {
+         $parents_for_id = array_merge($element['#parents'], [$term->tid]);
+@@ -393,6 +400,7 @@
+     $parents[] = $term->tid;
+     $container[$term->tid . '-children'] = _term_reference_tree_build_level($element, $term, $form_state, $value, $max_choices, $parents, $depth + 1);
+     $container['#level_start_minimized'] = $container[$term->tid . '-children']['#level_start_minimized'];
++    $e['#attributes']['class'][] = 'children-term';
+   }
+ 
+   return $container;
+@@ -401,7 +409,7 @@
+ /**
+  * Themes the term tree display (as opposed to the select widget).
+  */
+-function theme_term_tree_list($variables) {
++function _term_reference_term_tree_list($variables) {
+   $element = &$variables['element'];
+   $data = &$element['#data'];
+ 
