@@ -76,6 +76,16 @@ abstract class AbstractRequestHandler implements HandlerInterface {
   /**
    * {@inheritdoc}
    */
+  abstract function getSupportedEntityTypes();
+
+  /**
+   * {@inheritdoc}
+   */
+  abstract function getMessages();
+
+  /**
+   * {@inheritdoc}
+   */
   public function closeRequest(
     FlaggingInterface $flagging,
     ContentEntityInterface $content_entity,
@@ -87,11 +97,12 @@ abstract class AbstractRequestHandler implements HandlerInterface {
       [
         $flagging,
         $content_entity,
+        $this->getType(),
         $response,
-        $reason,
       ]
     );
 
+    $flagging->set('field_request_response', $reason);
     $flagging->set('field_request_status', $response);
     $flagging->save();
   }
@@ -154,17 +165,11 @@ abstract class AbstractRequestHandler implements HandlerInterface {
       [
         $flag,
         $entity,
+        $this->getType(),
       ]
     );
 
     return $flag;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getSupportedEntityTypes() {
-    return [];
   }
 
   /**
@@ -256,6 +261,15 @@ abstract class AbstractRequestHandler implements HandlerInterface {
           ),
       ],
     ];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getMessageByAction(string $action) {
+    $messages = $this->getMessages();
+
+    return $messages[$action] ?? NULL;
   }
 
 }

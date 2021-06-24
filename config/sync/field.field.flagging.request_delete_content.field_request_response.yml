@@ -1,0 +1,19 @@
+uuid: 013bcded-59b2-4924-9b61-cffc73e35a5d
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.flagging.field_request_response
+    - flag.flag.request_delete_content
+id: flagging.request_delete_content.field_request_response
+field_name: field_request_response
+entity_type: flagging
+bundle: request_delete_content
+label: 'Request response'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string_long

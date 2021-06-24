@@ -154,6 +154,7 @@ class FlaggingListBuilder extends EntityListBuilder {
     $query = $this->getStorage()->getQuery()
       ->condition('entity_type', $entity_type)
       ->condition('entity_id', $entity_id)
+      ->condition('field_request_status', RequestStatus::OPEN)
       ->condition(
         'flag_id',
         $this->requestHandler->getSupportedEntityTypes(),

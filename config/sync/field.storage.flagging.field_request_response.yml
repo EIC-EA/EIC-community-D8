@@ -1,0 +1,19 @@
+uuid: b1df9fe1-26fb-407e-b86c-6d89cae993b8
+langcode: en
+status: true
+dependencies:
+  module:
+    - flag
+id: flagging.field_request_response
+field_name: field_request_response
+entity_type: flagging
+type: string_long
+settings:
+  case_sensitive: false
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false
