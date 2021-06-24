@@ -71,6 +71,8 @@ class MessageTemplateType extends FilterPluginBase {
   public function query() {
     $this->ensureMyTable();
 
+    // We can't query config through a standard SQL query, this is why we need
+    // to filter on message template ID.
     // Get the selected message types.
     $types = [];
     $message_templates = [];
