@@ -33,6 +33,7 @@ class DeleteRequestHandler extends AbstractRequestHandler {
       RequestStatus::OPEN => 'notify_new_deletion_request',
       RequestStatus::DENIED => 'notify_delete_request_denied',
       RequestStatus::ACCEPTED => 'notify_delete_request_accepted',
+      RequestStatus::ARCHIVED => 'notify_delete_request_archived',
     ];
   }
 

@@ -174,7 +174,6 @@ class RequestMessageCreator extends MessageCreatorBase {
   ) {
     switch ($response) {
       case RequestStatus::DENIED:
-      case RequestStatus::ARCHIVED:
         return $this->t(
           'Deletion request for @label denied',
           ['@label' => $entity->label()]
@@ -182,6 +181,11 @@ class RequestMessageCreator extends MessageCreatorBase {
       case RequestStatus::ACCEPTED:
         return $this->t(
           'Deletion request for @type accepted',
+          ['@label' => $entity->label()]
+        );
+      case RequestStatus::ARCHIVED:
+        return $this->t(
+          'Deletion request for @label denied and the content has been archived instead',
           ['@label' => $entity->label()]
         );
       default:
