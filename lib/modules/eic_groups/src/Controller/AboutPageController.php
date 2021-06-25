@@ -96,7 +96,51 @@ class AboutPageController extends ControllerBase {
     // Get joining methods.
     $variables['joining_methods'] = $this->oecGroupFlexHelper->getGroupJoiningMethod($group);
 
+    // Get the descriptions for each plugin.
+    $variables['visibility']['description'] = $this->getPluginDescription('visibility', $variables['visibility']['plugin_id']);
+    foreach ($variables['joining_methods'] as $index => $joining_method) {
+      $variables['joining_methods'][$index]['description'] = $this->getPluginDescription('joining_method', $joining_method['plugin_id']);
+    }
+
     return $variables;
+  }
+
+  /**
+   * Returns a custom description for the given plugin type and plugin ID.
+   *
+   * @param string $plugin_type
+   *   The plugin type set by the build() method of this class.
+   * @param string $plugin_id
+   *   The plugin ID.
+   *
+   * @return \Drupal\Core\StringTranslation\TranslatableMarkup|string
+   *   The description for the given plugin.
+   */
+  public function getPluginDescription(string $plugin_type, string $plugin_id) {
+    $key = "$plugin_type-$plugin_id";
+
+    switch ($key) {
+      case 'visibility-public':
+        return $this->t("This group is visible to everyone visiting the group. You're welcome to scroll through the group's content. If you want to participate, please become a group member.");
+
+      case 'visibility-restricted_community_members':
+        return $this->t("This group is visible to every person that is a member of the EIC Community and has joined this platform. You're welcome to scroll through the group's content. If you want to participate, please become a group member.");
+
+      case 'visibility-custom_restricted':
+        return $this->t('This group is visible to every person that has joined the EIC community that also complies with the following restrictions. You can see this group because the organisation you work for is allowed to see this content or the group owners and administrators have chosen to specifically grant you access to this group. If you want to participate, please become a group member.');
+
+      case 'visibility-private':
+        return $this->t('A private group is only visible to people who received an invitation via email and accepted it. No one else can see this group.');
+
+      case 'joining_method-tu_open_method':
+        return $this->t('This means that EIC Community members can join this group immediately by clicking "join group".');
+
+      case 'joining_method-tu_group_membership_request':
+        return $this->t('This means that EIC Community members can request to join this group. This request needs to be validated by the group owner or administrator.');
+
+      default:
+        return '';
+    }
   }
 
 }
