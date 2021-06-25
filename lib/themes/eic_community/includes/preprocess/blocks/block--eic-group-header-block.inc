@@ -53,7 +53,8 @@ function eic_community_preprocess_eic_group_header_block(array &$variables) {
   }
 
   $variables['group_values']['actions'] = $actions;
-  $flags = eic_community_get_flag_links_display($variables['group']->flags);
+
+  $flags = eic_community_get_flag_links_display($variables['group_values']['flags']);
 
   foreach ($variables['group_values']['membership_links'] as $action) {
     $icon_name = '';
@@ -62,12 +63,16 @@ function eic_community_preprocess_eic_group_header_block(array &$variables) {
       case 'entity.group.request_delete_form':
         $icon_name = '';
         break;
+
       case 'entity.group.leave':
         $icon_name = 'leave';
         break;
-      case 'entity.group_content.add_form': // invite user
+
+      case 'entity.group_content.add_form':
+        // Invite user.
         $icon_name = 'invite';
         break;
+
     }
 
     $flag = [
@@ -80,7 +85,7 @@ function eic_community_preprocess_eic_group_header_block(array &$variables) {
     if (strlen($icon_name) > 0) {
       $flag['icon'] = [
         'name' => $icon_name,
-        'type' => 'custom'
+        'type' => 'custom',
       ];
     }
 
@@ -125,14 +130,14 @@ function eic_community_preprocess_eic_group_header_block(array &$variables) {
   ];
 
   $group_visibility = \Drupal::service('oec_group_flex.helper')->getGroupVisibilitySettings($group);
-  $tag = strpos($group_visibility['plugin_id'], '_') !== false ? strstr($group_visibility['plugin_id'], '_', true) : $group_visibility['plugin_id'];
+  $tag = strpos($group_visibility['plugin_id'], '_') !== FALSE ? strstr($group_visibility['plugin_id'], '_', TRUE) : $group_visibility['plugin_id'];
 
   $variables['group_values']['tags'][] = [
     'extra_classes' => 'ecl-tag--is-' . $tag,
     'tag' => [
       'type' => 'button',
       'label' => $tag,
-    ]
+    ],
   ];
   // Adds url to navigate back to the list of groups.
   $back_url = Url::fromRoute('view.global_overviews.page_1');

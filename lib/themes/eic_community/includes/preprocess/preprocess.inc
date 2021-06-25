@@ -29,16 +29,14 @@ function eic_community_get_teaser_time_display($timestamp) {
 }
 
 /**
- * Transform flags to storybook links
+ * Transform flags to storybook links.
  */
-
-function eic_community_get_flag_links_display(array $flags) {
+function eic_community_get_flag_links_display(array $flags = []) {
   $out = [];
 
-  foreach ($flags as $key => $flag) {
-    $flag_metadata = $flag['#lazy_builder'][1];
+  foreach ($flags as $key => $flag_metadata) {
     $flag_element = \Drupal::service('flag.link_builder')->build($flag_metadata[0], $flag_metadata[1], $flag_metadata[2]);
-    if(isset($flag_element['#flag'])) {
+    if (isset($flag_element['#flag'])) {
       $counts = \Drupal::service('flag.count')->getEntityFlagCounts($flag_element['#flaggable']);
       $flag_count = empty($counts) || !isset($counts[$flag_element['#flag']->id()]) ? '0' : $counts[$flag_element['#flag']->id()];
 
@@ -48,13 +46,15 @@ function eic_community_get_flag_links_display(array $flags) {
         case 'flag_follow_group':
           $icon_name = 'follow';
           break;
+
         case 'flag_recommend_group':
           $icon_name = 'like';
           break;
+
       }
 
       $out[] = [
-        'extra_classes' => 'flag-'.$flag_element['#flag']->id().' js-flag-'.$flag_element['#flag']->id().'-'.$flag_element['#flaggable']->id(),
+        'extra_classes' => 'flag-' . $flag_element['#flag']->id() . ' js-flag-' . $flag_element['#flag']->id() . '-' . $flag_element['#flaggable']->id(),
         'link' => [
           'label' => $flag_element['#title']['#markup'] . " ($flag_count)",
           'path' => $flag_element['#attributes']['href'],

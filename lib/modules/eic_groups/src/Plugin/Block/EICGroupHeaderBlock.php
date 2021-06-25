@@ -118,6 +118,18 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
         'description' => Markup::create($group->get('field_body')->value),
         'operation_links' => $operation_links,
         'membership_links' => $membership_links,
+        'flags' => [
+          [
+            $group->getEntityTypeId(),
+            $group->id(),
+            'follow_group',
+          ],
+          [
+            $group->getEntityTypeId(),
+            $group->id(),
+            'recommend_group',
+          ],
+        ],
       ],
     ];
 
