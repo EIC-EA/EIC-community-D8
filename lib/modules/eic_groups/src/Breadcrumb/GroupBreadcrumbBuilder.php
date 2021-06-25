@@ -141,12 +141,14 @@ class GroupBreadcrumbBuilder implements BreadcrumbBuilderInterface {
             $breadcrumb->addCacheableDependency($access);
           }
 
-          // We add the group as cacheable dependency.
-          $breadcrumb->addCacheableDependency($group);
+
         }
         break;
 
     }
+
+    // We add the group as cacheable dependency.
+    $breadcrumb->addCacheableDependency($group);
 
     $breadcrumb->setLinks($links);
     $breadcrumb->addCacheContexts(['url.path']);
