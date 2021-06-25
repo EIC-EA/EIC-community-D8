@@ -119,6 +119,10 @@ class GroupBreadcrumbBuilder implements BreadcrumbBuilderInterface {
                 $breadcrumb->addCacheTags($book_breadcrumb->getCacheTags());
                 break;
 
+              case 'discussion':
+                $links[] = Link::createFromRoute($this->t('Discussions'), 'view.group_overviews.page_1', ['group' => $group->id()]);
+                break;
+
             }
 
             // We add the node and group objects as cacheable dependency.
