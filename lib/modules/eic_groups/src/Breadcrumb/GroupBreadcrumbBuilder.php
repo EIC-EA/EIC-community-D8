@@ -123,11 +123,16 @@ class GroupBreadcrumbBuilder implements BreadcrumbBuilderInterface {
                 $links[] = Link::createFromRoute($this->t('Discussions'), 'view.group_overviews.page_1', ['group' => $group->id()]);
                 break;
 
+              case 'document':
+              case 'gallery':
+                // @todo Replace link route with overview page route when available.
+                $links[] = Link::createFromRoute($this->t('Library'), '<none>');
+                break;
+
             }
 
-            // We add the node and group objects as cacheable dependency.
+            // We add the node object as cacheable dependency.
             $breadcrumb->addCacheableDependency($node);
-            $breadcrumb->addCacheableDependency($group);
           }
         }
         break;
@@ -140,8 +145,6 @@ class GroupBreadcrumbBuilder implements BreadcrumbBuilderInterface {
           if ($access = $group->access('view', $this->account, TRUE)) {
             $breadcrumb->addCacheableDependency($access);
           }
-
-
         }
         break;
 
