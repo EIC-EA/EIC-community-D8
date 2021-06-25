@@ -25,6 +25,11 @@ function eic_community_preprocess_breadcrumb(array &$variables): void {
         }
       }
       break;
+
+    case 'eic_groups.about_page':
+      $title = t('About');
+      break;
+
   }
 
   if (!isset($title)) {
