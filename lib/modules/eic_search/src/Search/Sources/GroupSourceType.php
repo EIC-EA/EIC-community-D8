@@ -12,28 +12,28 @@ class GroupSourceType implements SourceTypeInterface {
   /**
    * @inheritDoc
    */
-  public static function getSourceId(): string {
+  public function getSourceId(): string {
     return 'group';
   }
 
   /**
    * @inheritDoc
    */
-  public static function getLabel(): string {
+  public function getLabel(): string {
     return t('Group', [], ['context' => 'eic_search']);
   }
 
   /**
    * @inheritDoc
    */
-  public static function getEntityBundle(): string {
+  public function getEntityBundle(): string {
     return 'group';
   }
 
   /**
    * @inheritDoc
    */
-  public static function getAvailableFacets(): array {
+  public function getAvailableFacets(): array {
     return [
       'ss_group_topic_name',
     ];
@@ -42,7 +42,7 @@ class GroupSourceType implements SourceTypeInterface {
   /**
    * @inheritDoc
    */
-  public static function getAvailableSortOptions(): array {
+  public function getAvailableSortOptions(): array {
     return [
       'ss_group_label',
     ];
@@ -51,7 +51,7 @@ class GroupSourceType implements SourceTypeInterface {
   /**
    * @inheritDoc
    */
-  public static function getSearchFieldId(): string {
+  public function getSearchFieldId(): string {
     return 'ss_group_label';
   }
 

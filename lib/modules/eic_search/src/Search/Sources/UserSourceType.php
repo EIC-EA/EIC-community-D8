@@ -12,38 +12,42 @@ class UserSourceType implements SourceTypeInterface {
   /**
    * @inheritDoc
    */
-  public static function getSourceId(): string {
+  public function getSourceId(): string {
     return 'user';
   }
 
   /**
    * @inheritDoc
    */
-  public static function getLabel(): string {
+  public function getLabel(): string {
     return t('User', [], ['context' => 'eic_search']);
   }
 
   /**
    * @inheritDoc
    */
-  public static function getEntityBundle(): string {
+  public function getEntityBundle(): string {
     return 'user';
   }
 
   /**
    * @inheritDoc
    */
-  public static function getAvailableFacets(): array {
+  public function getAvailableFacets(): array {
     return [
-      'ss_group_topiqsdqdqsqsddqc_name',
+      'ss_test1',
       'ss_test2',
+      'ss_test3',
+      'ss_test4',
+      'ss_test5',
+      'ss_test6',
     ];
   }
 
   /**
    * @inheritDoc
    */
-  public static function getAvailableSortOptions(): array {
+  public function getAvailableSortOptions(): array {
     return [
       'ss_group_labsqdqsdel',
       'ss_group_uel',
@@ -53,8 +57,8 @@ class UserSourceType implements SourceTypeInterface {
   /**
    * @inheritDoc
    */
-  public static function getSearchFieldId(): string {
-    return 'ss_group_label';
+  public function getSearchFieldId(): string {
+    return 'ss_user_label';
   }
 
 }

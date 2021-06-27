@@ -51,7 +51,7 @@ class SolrSearchController extends ControllerBase {
     $solariumQuery->addParam('facet', 'on');
     $solariumQuery->addParam('facet.sort', 'false');
     $solariumQuery->setStart(($page * $offset) - $offset);
-    $solariumQuery->setRows($page * $offset);
+    $solariumQuery->setRows($offset);
     $solariumQuery->addSort('ss_group_label', 'asc');
     $solariumQuery->setFields([
       'ss_group_label',

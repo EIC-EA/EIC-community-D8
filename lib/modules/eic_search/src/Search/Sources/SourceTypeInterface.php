@@ -14,37 +14,37 @@ interface SourceTypeInterface {
    *
    * @return string
    */
-  public static function getLabel(): string;
+  public function getLabel(): string;
 
   /**
    * Return the machine name of the source
    *
    * @return string
    */
-  public static function getSourceId(): string;
+  public function getSourceId(): string;
 
   /**
    * Return the bundle type of the source
    *
    * @return string
    */
-  public static function getEntityBundle(): string;
+  public function getEntityBundle(): string;
 
   /**
    * Get available facets of the source
    * @return array
    */
-  public static function getAvailableFacets(): array;
+  public function getAvailableFacets(): array;
 
   /**
    * Get available sorting options of the source
    * @return array
    */
-  public static function getAvailableSortOptions(): array;
+  public function getAvailableSortOptions(): array;
 
   /**
    * Return the field ID on search API to search for
    * @return string
    */
-  public static function getSearchFieldId(): string;
+  public function getSearchFieldId(): string;
 }

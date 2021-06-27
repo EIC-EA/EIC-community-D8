@@ -3,17 +3,16 @@
 namespace Drupal\eic_search\Plugin\Block;
 
 use Drupal\Core\Ajax\AjaxResponse;
-use Drupal\Core\Ajax\ChangedCommand;
-use Drupal\Core\Ajax\ReplaceCommand;
+use Drupal\Core\Ajax\CssCommand;
 use Drupal\Core\Block\Annotation\Block;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Render\Element;
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Url;
+use Drupal\eic_search\Collector\SourcesCollector;
 use Drupal\eic_search\Search\Sources\GroupSourceType;
 use Drupal\eic_search\Search\Sources\SourceTypeInterface;
-use Drupal\eic_search\Search\Sources\UserSourceType;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides an SearchOverviewBlock block.
@@ -24,17 +23,59 @@ use Symfony\Component\HttpFoundation\JsonResponse;
  *   category = @Translation("European Innovation Council"),
  * )
  */
-class SearchOverviewBlock extends BlockBase {
+class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInterface {
 
   const AVAILABLE_TYPES = ['group', 'story', 'event', 'organisation', 'global'];
+
+  /**
+   * @var SourcesCollector sourcesCollector
+   */
+  protected $sourcesCollector;
+
+  /**
+   * @param array $configuration
+   * @param string $plugin_id
+   * @param mixed $plugin_definition
+   * @param SourcesCollector $sources_collector
+   */
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, SourcesCollector $sources_collector) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+    $this->sourcesCollector = $sources_collector;
+  }
+
+  /**
+   * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
+   * @param array $configuration
+   * @param string $plugin_id
+   * @param mixed $plugin_definition
+   *
+   * @return static
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->get('eic_search.sources_collector')
+    );
+  }
 
   /**
    * {@inheritdoc}
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
-    /** @var \Drupal\eic_search\Search\Sources\SourceTypeInterface $current_source */
+    $sources_collected = $this->sourcesCollector->getSources();
+    $sources = [];
+
     $current_source_value = $this->configuration['source_type'] ?: GroupSourceType::class;
-    $current_source = new $current_source_value;
+    $current_source = array_key_exists($current_source_value, $sources_collected) ?
+      $sources_collected[$current_source_value] :
+      NULL;
+
+    /** @var SourceTypeInterface $source */
+    foreach ($sources_collected as $source) {
+      $sources[get_class($source)] = $source->getLabel();
+    }
 
     $form['search'] = [
       '#type' => 'details',
@@ -48,10 +89,7 @@ class SearchOverviewBlock extends BlockBase {
       '#default_value' => $current_source_value,
       '#title' => $this->t('Source type', [], ['context' => 'eic_search']),
       '#description' => $this->t('For which entity type do you want to create the view for ?', [], ['context' => 'eic_search']),
-      '#options' => [
-        GroupSourceType::class => GroupSourceType::getLabel(),
-        UserSourceType::class => UserSourceType::getLabel(),
-      ],
+      '#options' => $sources,
       '#ajax' => [
         'callback' => [$this, 'updateSourceConfig'],
         'disable-refocus' => FALSE,
@@ -75,8 +113,23 @@ class SearchOverviewBlock extends BlockBase {
    * {@inheritdoc}
    */
   public function build() {
+    $facets = $this->configuration['facets'];
+    $sorts = $this->configuration['sort_options'];
+
+    $facets = array_filter($facets, function($facet) {
+      return $facet;
+    });
+
+    $sorts = array_filter($sorts, function($sort) {
+      return $sort;
+    });
+
     return [
       '#theme' => 'search_overview_block',
+      '#facets' => array_keys($facets),
+      '#sorts' => array_keys($sorts),
+      '#results_per_page' => $this->configuration['results_per_page'],
+      '#enable_search' => $this->configuration['enable_search'],
       '#url' => Url::fromRoute('eic_groups.solr_search')->toString(),
       '#isAnonymous' => \Drupal::currentUser()->isAnonymous(),
       '#translations' => [
@@ -93,15 +146,30 @@ class SearchOverviewBlock extends BlockBase {
     ];
   }
 
+  /**
+   * The ajax callback that will hide non selected sources parameters (facets, sorts)
+   *
+   * @param array $form
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *
+   * @return \Drupal\Core\Ajax\AjaxResponse
+   */
   public function updateSourceConfig(array &$form, FormStateInterface $form_state) {
     $current_source_value = $form_state->getValue('settings')['search']['source_type'] ?: GroupSourceType::class;
-    $current_source = new $current_source_value;
     $response = new AjaxResponse();
 
-    $this->addConfigurationRenderer($form, $current_source);
+    /** @var SourceTypeInterface $current_source */
+    $current_source = $this->getCurrentSource($current_source_value);
 
-    $response->addCommand(new ReplaceCommand('#source-configuration-sort', $form['search']['configuration']['sort_by']));
-    $response->addCommand(new ReplaceCommand('#source-configuration-facets', $form['search']['configuration']['facets']));
+    $css = ['display' => 'none'];
+
+
+    $sources_collected = $this->sourcesCollector->getSources();
+    foreach ($sources_collected as $source) {
+      $response->addCommand(new CssCommand('.source-' . $source->getSourceId(), $css));
+    }
+
+    $response->addCommand(new CssCommand('.source-' . $current_source->getSourceId(), ['display' => 'inline-block']));
 
     return $response;
   }
@@ -113,14 +181,36 @@ class SearchOverviewBlock extends BlockBase {
     parent::blockSubmit($form, $form_state);
     $values = $form_state->getValues();
 
+    //First reset values
+    $this->configuration['facets'] = [];
+    $this->configuration['sort_options'] = [];
+
+    $current_source = $this->getCurrentSource($values['search']['source_type']);
+
     $this->configuration['source_type'] = $values['search']['source_type'];
-    $this->configuration['facets'] = $values['search']['configuration']['facets'];
-    $this->configuration['sort_options'] = $values['search']['configuration']['sort_options'];
+    $this->configuration['facets'] = $values['search']['configuration']['filter'][$current_source->getSourceId()]['facets'];
+    $this->configuration['sort_options'] = $values['search']['configuration']['sorts'][$current_source->getSourceId()]['sort_options'];
+    $this->configuration['results_per_page'] = $values['search']['configuration']['pagination']['results_per_page'];
+    $this->configuration['enable_search'] = $values['search']['configuration']['enable_search'];
+  }
+
+  /**
+   * @param string $source_value
+   *
+   * @return SourceTypeInterface|null
+   */
+  private function getCurrentSource(string $source_value):? SourceTypeInterface {
+    $sources_collected = $this->sourcesCollector->getSources();
+
+    /** @var SourceTypeInterface $current_source */
+    return array_key_exists($source_value, $sources_collected) ?
+      $sources_collected[$source_value] :
+      NULL;
   }
 
   /**
    * @param array $form
-   * @param SourceTypeInterface
+   * @param SourceTypeInterface $current_source
    */
   private function addConfigurationRenderer(array &$form, SourceTypeInterface $current_source) {
     $form['search']['configuration'] = [
@@ -128,8 +218,13 @@ class SearchOverviewBlock extends BlockBase {
       '#title' => $this->t('Configuration', [], ['context' => 'eic_search']),
       '#open' => TRUE,
       '#weight' => 4,
-      '#prefix' => '<div id="source-configuration">',
-      '#suffix' => '</div>',
+    ];
+
+    $form['search']['configuration']['enable_search'] = [
+      '#type' => 'checkbox',
+      '#default_value' => $this->configuration['enable_search'],
+      '#title' => $this->t('Enable search ?', [], ['context' => 'eic_search']),
+      '#description' => $this->t('Do you want to enable the search box feature into the overview ?', [], ['context' => 'eic_search']),
     ];
 
     $form['search']['configuration']['filter'] = [
@@ -138,30 +233,10 @@ class SearchOverviewBlock extends BlockBase {
       '#open' => TRUE,
     ];
 
-    $form['search']['configuration']['filter']['facets'] = [
-      '#type' => 'checkboxes',
-      '#title' => $this->t('Facets', [], ['context' => 'eic_search']),
-      '#description' => $this->t('Filters that you want to be available on the overview', [], ['context' => 'eic_search']),
-      '#default_value' => $this->configuration['facets'],
-      '#options' => $this->generateFacetsOptions($current_source),
-      '#prefix' => '<div id="source-configuration-facets">',
-      '#suffix' => '</div>',
-    ];
-
     $form['search']['configuration']['sorts'] = [
       '#type' => 'details',
       '#title' => $this->t('Sorts', [], ['context' => 'eic_search']),
       '#open' => TRUE,
-    ];
-
-    $form['search']['configuration']['sorts']['sort_options'] = [
-      '#type' => 'checkboxes',
-      '#default_value' => $this->configuration['sort_options'],
-      '#title' => $this->t('Sorting', [], ['context' => 'eic_search']),
-      '#description' => $this->t('Choose available sorting options on the overview', [], ['context' => 'eic_search']),
-      '#options' => $this->generateSortOptions($current_source),
-      '#prefix' => '<div id="source-configuration-sort">',
-      '#suffix' => '</div>',
     ];
 
     $form['search']['configuration']['pagination'] = [
@@ -175,6 +250,31 @@ class SearchOverviewBlock extends BlockBase {
       '#default_value' => $this->configuration['results_per_page'] ?: 15,
       '#title' => $this->t('Results per page', [], ['context' => 'eic_search']),
     ];
+
+    /** @var SourceTypeInterface $source */
+    foreach ($this->sourcesCollector->getSources() as $source) {
+      $form['search']['configuration']['filter'][$source->getSourceId()]['facets'] = [
+        '#type' => 'checkboxes',
+        '#title' => $this->t('Facets for @label', ['@label' => $source->getLabel()], ['context' => 'eic_search']),
+        '#description' => $this->t('Filters that you want to be available on the overview', [], ['context' => 'eic_search']),
+        '#default_value' => $this->configuration['facets'],
+        '#options' => $this->generateFacetsOptions($source),
+        '#attributes' => [
+          'class' => ['source-type', 'source-' . $source->getSourceId(), $current_source === $source ?: 'hidden'],
+        ],
+      ];
+
+      $form['search']['configuration']['sorts'][$source->getSourceId()]['sort_options'] = [
+        '#type' => 'checkboxes',
+        '#default_value' => $this->configuration['sort_options'],
+        '#title' => $this->t('Sorting for @label', ['@label' => $source->getLabel()], ['context' => 'eic_search']),
+        '#description' => $this->t('Choose available sorting options on the overview', [], ['context' => 'eic_search']),
+        '#options' => $this->generateSortOptions($source),
+        '#attributes' => [
+          'class' => ['source-type', 'source-' . $source->getSourceId(), $current_source === $source ?: 'hidden'],
+        ],
+      ];
+    }
   }
 
   /**
@@ -185,7 +285,7 @@ class SearchOverviewBlock extends BlockBase {
   private function generateFacetsOptions(SourceTypeInterface $current_source): array {
     $available_facets = [];
 
-    foreach ($current_source::getAvailableFacets() as $facet) {
+    foreach ($current_source->getAvailableFacets() as $facet) {
       $available_facets[$facet] = t($facet, [], ['context' => 'eic_search']);
     }
 
@@ -200,7 +300,7 @@ class SearchOverviewBlock extends BlockBase {
   private function generateSortOptions(SourceTypeInterface $current_source): array {
     $available_sorts = [];
 
-    foreach ($current_source::getAvailableSortOptions() as $sort_option) {
+    foreach ($current_source->getAvailableSortOptions() as $sort_option) {
       $available_sorts[$sort_option] = t($sort_option, [], ['context' => 'eic_search']);
     }
 

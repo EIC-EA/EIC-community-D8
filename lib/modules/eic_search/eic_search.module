@@ -16,6 +16,10 @@ function eic_search_theme($existing, $type, $theme, $path) {
         'blockId' => 0,
         'isAnonymous' => TRUE,
         'translations' => [],
+        'facets' => [],
+        'sorts' => [],
+        'results_per_page' => 0,
+        'enable_search' => TRUE,
       ],
     ],
   ];
