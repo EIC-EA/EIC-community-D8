@@ -1,17 +1,11 @@
 <?php
 
-namespace Drupal\eic_groups\Controller;
+namespace Drupal\eic_search\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
-use Drupal\Core\Site\Settings;
 use Drupal\eic_groups\Constants\GroupVisibilityType;
 use Drupal\group\GroupMembership;
 use Drupal\user\Entity\User;
-use GuzzleHttp\Exception\ConnectException;
-use Solarium\Client;
-use Solarium\Core\Configurable;
-use Solarium\QueryType\Select\Query\FilterQuery;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
