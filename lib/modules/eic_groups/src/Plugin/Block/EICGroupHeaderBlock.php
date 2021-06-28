@@ -4,6 +4,7 @@ namespace Drupal\eic_groups\Plugin\Block;
 
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Cache\CacheableMetadata;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Render\Markup;
 use Drupal\Core\Routing\RouteMatchInterface;
@@ -39,6 +40,13 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
   protected $eicGroupsHelper;
 
   /**
+   * The entity type manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
    * Constructs a new EICGroupHeaderBlock instance.
    *
    * @param array $configuration
@@ -54,11 +62,14 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
    *   The current route match.
    * @param \Drupal\eic_groups\EICGroupsHelperInterface $eic_groups_helper
    *   The EIC groups helper service.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, RouteMatchInterface $route_match, EICGroupsHelperInterface $eic_groups_helper) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, RouteMatchInterface $route_match, EICGroupsHelperInterface $eic_groups_helper, EntityTypeManagerInterface $entity_type_manager) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->routeMatch = $route_match;
     $this->eicGroupsHelper = $eic_groups_helper;
+    $this->entityTypeManager = $entity_type_manager;
   }
 
   /**
@@ -70,7 +81,8 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
       $plugin_id,
       $plugin_definition,
       $container->get('current_route_match'),
-      $container->get('eic_groups.helper')
+      $container->get('eic_groups.helper'),
+      $container->get('entity_type.manager')
     );
   }
 
@@ -87,6 +99,8 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
       }
     }
 
+    /** @var \Drupal\group\Entity\GroupInterface $group */
+
     // The content of this is block is shown depending on the current user's
     // permissions. It obviously also varies per group, but we cannot know for
     // sure how we got that group as it is up to the context provider to
@@ -98,14 +112,16 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
       'url.path',
     ]);
 
-    // Get group operation links.
-    $operation_links = $this->eicGroupsHelper->getGroupOperationLinks($group, ['node'], $cacheable_metadata);
+    // Get group content operation links.
+    $group_content_operation_links = $this->eicGroupsHelper->getGroupContentOperationLinks($group, ['node'], $cacheable_metadata);
     // Get group membership links.
-    $membership_links = $this->eicGroupsHelper->getGroupOperationLinks($group, ['user'], $cacheable_metadata);
+    $membership_links = $this->eicGroupsHelper->getGroupContentOperationLinks($group, ['user'], $cacheable_metadata);
+    // Get group operation links.
+    $group_operation_links = $this->entityTypeManager->getListBuilder($group->getEntityTypeId())->getOperations($group);
 
     // Removes operation link of wiki page group content.
-    if (isset($operation_links['gnode-create-wiki_page'])) {
-      unset($operation_links['gnode-create-wiki_page']);
+    if (isset($group_content_operation_links['gnode-create-wiki_page'])) {
+      unset($group_content_operation_links['gnode-create-wiki_page']);
     }
 
     $build['content'] = [
@@ -116,8 +132,9 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
         'bundle' => $group->bundle(),
         'title' => $group->label(),
         'description' => Markup::create($group->get('field_body')->value),
-        'operation_links' => $operation_links,
+        'operation_links' => $group_content_operation_links,
         'membership_links' => $membership_links,
+        'settings_link' => isset($group_operation_links['edit']) ? $group_operation_links['edit'] : FALSE,
       ],
     ];
 

@@ -47,6 +47,6 @@ interface EICGroupsHelperInterface {
    *   - url: An instance of \Drupal\Core\Url for the operation URL.
    *   - weight: The weight of the operation.
    */
-  public function getGroupOperationLinks(GroupInterface $group, array $limit_entities = [], CacheableMetadata $cacheable_metadata = NULL);
+  public function getGroupContentOperationLinks(GroupInterface $group, array $limit_entities = [], CacheableMetadata $cacheable_metadata = NULL);
 
 }
