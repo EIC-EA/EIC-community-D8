@@ -94,8 +94,8 @@ class FlaggingListBuilder extends EntityListBuilder {
     // Enable language column and filter if multiple languages are added.
     $header = [
       'reason' => $this->t('Reason'),
-      'author' => [
-        'data' => $this->t('Author'),
+      'requester' => [
+        'data' => $this->t('Requester'),
         'class' => [RESPONSIVE_PRIORITY_LOW],
       ],
       'created' => [
@@ -122,7 +122,7 @@ class FlaggingListBuilder extends EntityListBuilder {
    */
   public function buildRow(EntityInterface $entity) {
     $row['reason'] = $entity->get('field_request_reason')->value;
-    $row['author']['data'] = [
+    $row['requester ']['data'] = [
       '#theme' => 'username',
       '#account' => $entity->getOwner(),
     ];
