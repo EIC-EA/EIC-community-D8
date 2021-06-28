@@ -58,7 +58,7 @@ function eic_community_preprocess_eic_group_header_block(array &$variables) {
     ];
   }
 
-  // Adds login link.
+  // @todo Re-adapt variables that will be needed for the login button.
   if ($variables['group_values']['login_link']) {
     $actions[]['items'][]['link'] = [
       'label' => $variables['group_values']['login_link']['title'],
