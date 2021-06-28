@@ -164,7 +164,10 @@ class OECGroupFlexHelper {
     $settings = [];
     foreach ($joining_methods as $joining_method) {
       if (isset($joining_method_plugins[$joining_method])) {
-        $settings[] = $joining_method_plugins[$joining_method]->getLabel();
+        $settings[] = [
+          'plugin_id' => $joining_method,
+          'label' => $joining_method_plugins[$joining_method]->getLabel(),
+        ];
       }
     }
     return $settings;

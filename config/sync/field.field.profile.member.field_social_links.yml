@@ -1,0 +1,21 @@
+uuid: cbca2979-a143-4feb-a180-bcf9fb19c3f6
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.profile.field_social_links
+    - profile.type.member
+  module:
+    - social_link_field
+id: profile.member.field_social_links
+field_name: field_social_links
+entity_type: profile
+bundle: member
+label: 'Social links'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: social_links
