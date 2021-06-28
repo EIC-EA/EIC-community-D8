@@ -15,7 +15,7 @@ function eic_groups_field_widget_social_links_form_alter(&$element, FormStateInt
   $form_build_info = $form_state->getBuildInfo();
 
   // Removes some unused social networks from the widget options.
-  if ($form_build_info['base_form_id'] == 'profile_form') {
+  if ($form_build_info['base_form_id'] === 'profile_form') {
     $allowed_social_networks = ProfileConst::ALLOWED_SOCIAL_NETWORKS;
 
     // Filter out the allowed social networks.
