@@ -1,18 +1,18 @@
-uuid: 5d3f3d35-bfb8-409c-a2f0-dd0b530c278e
+uuid: 08b1bc5a-d59b-48cc-a47d-deed52eed6de
 langcode: en
 status: true
 dependencies:
   module:
-    - link
     - profile
-id: profile.field_twitter
-field_name: field_twitter
+    - social_link_field
+id: profile.field_social_links
+field_name: field_social_links
 entity_type: profile
-type: link
+type: social_links
 settings: {  }
-module: link
+module: social_link_field
 locked: false
-cardinality: 1
+cardinality: -1
 translatable: true
 indexes: {  }
 persist_with_no_fields: false
