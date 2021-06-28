@@ -2,10 +2,13 @@
 
 namespace Drupal\eic_groups\Hooks;
 
+use Drupal\Component\Utility\Unicode;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\Core\Utility\Token;
+use Drupal\group\Entity\GroupInterface;
 use Drupal\node\NodeInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -26,13 +29,23 @@ class GroupTokens implements ContainerInjectionInterface {
   protected $entityTypeManager;
 
   /**
+   * The Token service.
+   *
+   * @var \Drupal\Core\Utility\Token
+   */
+  protected $tokenService;
+
+  /**
    * Constructs a new GroupTokens object.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
+   * @param \Drupal\Core\Utility\Token $token_service
+   *   The Token service.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, Token $token_service) {
     $this->entityTypeManager = $entity_type_manager;
+    $this->tokenService = $token_service;
   }
 
   /**
@@ -40,7 +53,8 @@ class GroupTokens implements ContainerInjectionInterface {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('entity_type.manager')
+      $container->get('entity_type.manager'),
+      $container->get('token')
     );
   }
 
@@ -60,6 +74,11 @@ class GroupTokens implements ContainerInjectionInterface {
           'node_group_url' => [
             'name' => $this->t('Node group url'),
             'description' => $this->t('The url of the group this node belongs to'),
+          ],
+          'eic_groups_truncated_title' => [
+            'name' => $this->t('Truncated group title'),
+            'description' => $this->t('The truncated group title to the given limit. Maximum value is 100.'),
+            'dynamic' => TRUE,
           ],
         ],
       ],
@@ -95,6 +114,13 @@ class GroupTokens implements ContainerInjectionInterface {
             }
             break;
 
+        }
+
+        if (isset($data['group']) && $data['group'] instanceof GroupInterface) {
+          // Provide replacements for truncated title tokens.
+          foreach ($this->tokenService->findWithPrefix($tokens, 'eic_groups_truncated_title') as $value => $token_name) {
+            $replacements[$original] = Unicode::truncate($data['group']->label(), $value);
+          }
         }
       }
     }

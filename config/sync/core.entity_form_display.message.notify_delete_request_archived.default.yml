@@ -1,0 +1,32 @@
+uuid: 97dd92bf-8c5a-49e0-9917-bed4651ef3b8
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.message.notify_delete_request_archived.field_message_subject
+    - field.field.message.notify_delete_request_archived.field_referenced_flag
+    - message.template.notify_delete_request_archived
+id: message.notify_delete_request_archived.default
+targetEntityType: message
+bundle: notify_delete_request_archived
+mode: default
+content:
+  field_message_subject:
+    weight: 1
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_referenced_flag:
+    weight: 0
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: entity_reference_autocomplete
+    region: content
+hidden: {  }

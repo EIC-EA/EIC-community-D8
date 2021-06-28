@@ -1,0 +1,19 @@
+uuid: 4863d568-ba89-45fc-b781-4b18da57123e
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.flagging.field_request_response
+    - flag.flag.request_delete_comment
+id: flagging.request_delete_comment.field_request_response
+field_name: field_request_response
+entity_type: flagging
+bundle: request_delete_comment
+label: 'Request response'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string_long
