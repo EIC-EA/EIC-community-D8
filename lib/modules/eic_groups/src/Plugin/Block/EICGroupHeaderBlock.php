@@ -77,7 +77,15 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
    * @param \Drupal\Core\Session\AccountProxyInterface $current_user
    *   The current user.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, RouteMatchInterface $route_match, EICGroupsHelperInterface $eic_groups_helper, OECGroupFlexHelper $oec_group_flex_helper, AccountProxyInterface $current_user) {
+  public function __construct(
+    array $configuration,
+    $plugin_id,
+    $plugin_definition,
+    RouteMatchInterface $route_match,
+    EICGroupsHelperInterface $eic_groups_helper,
+    OECGroupFlexHelper $oec_group_flex_helper,
+    AccountProxyInterface $current_user
+  ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->routeMatch = $route_match;
     $this->eicGroupsHelper = $eic_groups_helper;
@@ -88,7 +96,12 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+  public static function create(
+    ContainerInterface $container,
+    array $configuration,
+    $plugin_id,
+    $plugin_definition
+  ) {
     return new static(
       $configuration,
       $plugin_id,
