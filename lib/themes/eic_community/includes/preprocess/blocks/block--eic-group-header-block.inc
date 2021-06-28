@@ -29,12 +29,12 @@ function eic_community_preprocess_eic_group_header_block(array &$variables) {
   $actions = [];
 
   // Adds group operation links.
-  if (!empty($variables['group_values']['operation_links'])) {
+  if (!empty($variables['group_values']['group_content_operation_links'])) {
     $actions[] = [
       'label' => t('Post content'),
       'items' => [],
     ];
-    foreach ($variables['group_values']['operation_links'] as $action) {
+    foreach ($variables['group_values']['group_content_operation_links'] as $action) {
       $actions[0]['items'][]['link'] = [
         'label' => $action['title'],
         'path' => $action['url'],
@@ -47,6 +47,14 @@ function eic_community_preprocess_eic_group_header_block(array &$variables) {
     $actions[]['items'][]['link'] = [
       'label' => $action['title'],
       'path' => $action['url'],
+    ];
+  }
+
+  // @todo Re-adapt variables that will be needed for the cog wheel button.
+  if (isset($variables['group_values']['group_operation_links']['edit'])) {
+    $actions[]['items'][]['link'] = [
+      'label' => $variables['group_values']['group_operation_links']['edit']['title'],
+      'path' => $variables['group_values']['group_operation_links']['edit']['url'],
     ];
   }
 
