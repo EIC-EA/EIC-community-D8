@@ -97,31 +97,42 @@ class GroupBreadcrumbBuilder implements BreadcrumbBuilderInterface {
             // group content entity from the array.
             $group_content_entity = reset($group_content);
             $group = $group_content_entity->getGroup();
+            $links[] = $group->toLink();
 
-            if (in_array($node->bundle(), ['book', 'wiki_page'])) {
-              $book_breadcrumb = $this->bookBreadcrumbBuilder->build($route_match);
-              // Replace links with book breadcrumb links.
-              $links = $book_breadcrumb->getLinks();
-              // Places the group link right after the "Home" link.
-              array_splice($links, 1, 0, [$group->toLink()]);
-              // Places the groups overview link right after the "Home" link.
-              array_splice($links, 1, 0, [Link::createFromRoute($this->t('Groups'), 'view.global_overviews.page_1')]);
-              // Replaces book link text with "Wiki".
-              if ($node->bundle() === 'wiki_page') {
-                $links[3]->setText($this->t('Wiki'));
-              }
-              // We want to keep cache contexts and cache tags from book
-              // breadcrumb.
-              $breadcrumb->addCacheContexts($book_breadcrumb->getCacheContexts());
-              $breadcrumb->addCacheTags($book_breadcrumb->getCacheTags());
-            }
-            else {
-              $links[] = $group->toLink();
+            switch ($node->bundle()) {
+              case 'book':
+              case 'wiki_page':
+                $book_breadcrumb = $this->bookBreadcrumbBuilder->build($route_match);
+                // Replace links with book breadcrumb links.
+                $links = $book_breadcrumb->getLinks();
+                // Places the group link right after the "Home" link.
+                array_splice($links, 1, 0, [$group->toLink()]);
+                // Places the groups overview link right after the "Home" link.
+                array_splice($links, 1, 0, [Link::createFromRoute($this->t('Groups'), 'view.global_overviews.page_1')]);
+                // Replaces book link text with "Wiki".
+                if ($node->bundle() === 'wiki_page') {
+                  $links[3]->setText($this->t('Wiki'));
+                }
+                // We want to keep cache contexts and cache tags from book
+                // breadcrumb.
+                $breadcrumb->addCacheContexts($book_breadcrumb->getCacheContexts());
+                $breadcrumb->addCacheTags($book_breadcrumb->getCacheTags());
+                break;
+
+              case 'discussion':
+                $links[] = Link::createFromRoute($this->t('Discussions'), 'view.group_overviews.page_1', ['group' => $group->id()]);
+                break;
+
+              case 'document':
+              case 'gallery':
+                // @todo Replace link route with overview page route when available.
+                $links[] = Link::createFromRoute($this->t('Library'), '<none>');
+                break;
+
             }
 
-            // We add the node and group objects as cacheable dependency.
+            // We add the node object as cacheable dependency.
             $breadcrumb->addCacheableDependency($node);
-            $breadcrumb->addCacheableDependency($group);
           }
         }
         break;
@@ -134,13 +145,13 @@ class GroupBreadcrumbBuilder implements BreadcrumbBuilderInterface {
           if ($access = $group->access('view', $this->account, TRUE)) {
             $breadcrumb->addCacheableDependency($access);
           }
-
-          // We add the group as cacheable dependency.
-          $breadcrumb->addCacheableDependency($group);
         }
         break;
 
     }
+
+    // We add the group as cacheable dependency.
+    $breadcrumb->addCacheableDependency($group);
 
     $breadcrumb->setLinks($links);
     $breadcrumb->addCacheContexts(['url.path']);
