@@ -1,0 +1,19 @@
+uuid: 74aafe3a-7f57-49f9-a82c-b0fc4ace2042
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.flagging.field_request_response
+    - flag.flag.request_archive_content
+id: flagging.request_archive_content.field_request_response
+field_name: field_request_response
+entity_type: flagging
+bundle: request_archive_content
+label: 'Request response'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string_long

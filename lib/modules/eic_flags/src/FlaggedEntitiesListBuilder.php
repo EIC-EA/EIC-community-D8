@@ -3,7 +3,11 @@
 namespace Drupal\eic_flags;
 
 use Drupal\Core\Database\Connection;
+use Drupal\Core\Database\Query\PagerSelectExtender;
+use Drupal\Core\Entity\Element\EntityAutocomplete;
+use Drupal\Core\Form\FormState;
 use Drupal\Core\Url;
+use Drupal\eic_flags\Form\ListBuilderFilters;
 use Drupal\eic_flags\Service\RequestHandlerCollector;
 use Drupal\flag\FlagService;
 use Drupal\Core\Datetime\DateFormatterInterface;
@@ -16,7 +20,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Defines a class to build a listing of flags with type 'delete_request_*'.
+ * Defines a class to build a listing of flagged entities for the current
+ * request_type.
  */
 class FlaggedEntitiesListBuilder extends EntityListBuilder {
 
@@ -39,6 +44,11 @@ class FlaggedEntitiesListBuilder extends EntityListBuilder {
    * @var \Drupal\flag\FlagService
    */
   protected $flagService;
+
+  /**
+   * @var \Symfony\Component\HttpFoundation\Request
+   */
+  protected $currentRequest;
 
   /**
    * @var string
@@ -78,6 +88,7 @@ class FlaggedEntitiesListBuilder extends EntityListBuilder {
     $this->database = $database;
     $this->dateFormatter = $date_formatter;
     $this->flagService = $flag_service;
+    $this->currentRequest = $request;
     $this->requestType = $request->get('request_type');
     $this->requestHandler = $collector->getHandlerByType($this->requestType);
   }
@@ -86,7 +97,9 @@ class FlaggedEntitiesListBuilder extends EntityListBuilder {
    * {@inheritdoc}
    */
   public static function createInstance(
-    ContainerInterface $container, EntityTypeInterface $entity_type) {
+    ContainerInterface $container,
+    EntityTypeInterface $entity_type
+  ) {
     return new static(
       $entity_type,
       $container->get('entity_type.manager')->getStorage($entity_type->id()),
@@ -105,9 +118,12 @@ class FlaggedEntitiesListBuilder extends EntityListBuilder {
   public function buildHeader() {
     // Enable language column and filter if multiple languages are added.
     $header = [
-      'title' => $this->t('Title'),
+      'title' => [
+        'data' => $this->t('Title'),
+        'class' => [RESPONSIVE_PRIORITY_MEDIUM],
+      ],
       'type' => [
-        'data' => $this->t('Content type'),
+        'data' => $this->t('Type'),
         'class' => [RESPONSIVE_PRIORITY_MEDIUM],
       ],
       'author' => [
@@ -119,7 +135,7 @@ class FlaggedEntitiesListBuilder extends EntityListBuilder {
         'class' => [RESPONSIVE_PRIORITY_MEDIUM],
       ],
       'changed' => [
-        'data' => $this->t('Changed'),
+        'data' => $this->t('Last updated'),
         'class' => [RESPONSIVE_PRIORITY_LOW],
       ],
       'created' => [
@@ -135,10 +151,19 @@ class FlaggedEntitiesListBuilder extends EntityListBuilder {
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *
    * @return array
+   * @throws \Drupal\Core\Entity\EntityMalformedException
    */
   protected function getDefaultOperations(EntityInterface $entity) {
-    // Will be implemented with another PR
-    return [];
+    $operations = [];
+    if ($entity->access('update') && $entity->hasLinkTemplate('edit-form')) {
+      $operations['edit'] = [
+        'title' => $this->t('Edit'),
+        'weight' => 10,
+        'url' => $this->ensureDestination($entity->toUrl('edit-form')),
+      ];
+    }
+
+    return $operations;
   }
 
   /**
@@ -155,13 +180,16 @@ class FlaggedEntitiesListBuilder extends EntityListBuilder {
    * {@inheritdoc}
    */
   public function render() {
+    $build['filters'] = $this->getFilters();
     $build['table'] = [
       '#type' => 'table',
       '#header' => $this->buildHeader(),
       '#title' => $this->getTitle(),
       '#rows' => [],
       '#empty' => $this->t(
-        'There are no @label yet.', ['@label' => $this->entityType->getPluralLabel()]),
+        'There are no @label yet.',
+        ['@label' => $this->entityType->getPluralLabel()]
+      ),
       '#cache' => [
         'contexts' => $this->entityType->getListCacheContexts(),
         'tags' => $this->entityType->getListCacheTags(),
@@ -216,25 +244,32 @@ class FlaggedEntitiesListBuilder extends EntityListBuilder {
         break;
     }
 
-    $row['title'] = $flagged_entity->label();
+    $row['title']['data'] = [
+      '#type' => 'link',
+      '#title' => $flagged_entity->label(),
+      '#url' => Url::fromRoute(
+        'eic_flags.flagged_entity.detail',
+        [
+          'request_type' => $this->requestHandler->getType(),
+          'entity_type' => $entity_type_id,
+          'entity_id' => $flagged_entity->id(),
+        ]
+      ),
+    ];
     $row['type'] = $type;
     $row['author']['data'] = [
       '#theme' => 'username',
       '#account' => $flagged_entity->getOwner(),
     ];
-    $row['request_number']['data'] = [
-      '#type' => 'link',
-      '#title' => $request_count,
-      '#url' => Url::fromRoute(
-        'eic_flags.flagged_entity.detail', [
-        'request_type' => $this->requestHandler->getType(),
-        'entity_type' => $entity_type_id,
-        'entity_id' => $flagged_entity->id(),
-      ]),
-    ];
-
-    $row['changed'] = $this->dateFormatter->format($flagged_entity->getChangedTime(), 'short');
-    $row['created'] = $this->dateFormatter->format($flagged_entity->get('created')->value, 'short');
+    $row['request_number'] = $request_count;
+    $row['changed'] = $this->dateFormatter->format(
+      $flagged_entity->getChangedTime(),
+      'short'
+    );
+    $row['created'] = $this->dateFormatter->format(
+      $flagged_entity->get('created')->value,
+      'short'
+    );
     $row['operations']['data'] = $this->buildOperations($flagged_entity);
 
     return $row;
@@ -261,7 +296,9 @@ class FlaggedEntitiesListBuilder extends EntityListBuilder {
       $entity = $this->entityTypeManager
         ->getStorage($result['entity_type'])
         ->load($result['entity_id']);
-      $flag = $this->flagService->getFlagById($supported_entity_types[$result['entity_type']]);
+      $flag = $this->flagService->getFlagById(
+        $supported_entity_types[$result['entity_type']]
+      );
 
       $entities[] = [
         'entity' => $entity,
@@ -276,34 +313,104 @@ class FlaggedEntitiesListBuilder extends EntityListBuilder {
    * {@inheritdoc}
    */
   protected function getEntityIds() {
-    $query = $this->database->select('flagging', 'f');
-    $query->fields('f', ['entity_id', 'entity_type', 'flag_id'])
-      ->join('flagging__field_request_status', 'fs', 'fs.entity_id = f.id');
-
-    $query->condition('fs.field_request_status_value', RequestStatus::OPEN)
-      ->distinct(TRUE);
-
+    $query_strings = $this->currentRequest->query->all();
     $supported_entity_types = $this->requestHandler->getSupportedEntityTypes();
+    $requested_type = !empty($query_strings['type'])
+    && $query_strings['type'] !== 'All' ? $query_strings['type'] : NULL;
+
+    /** @var \Drupal\Core\Database\Query\SelectInterface[] $sub_queries */
+    $sub_queries = [];
     foreach ($supported_entity_types as $type => $flag) {
+      // If the user requested a certain entity type, just query for it.
+      if (!empty($requested_type) && $type !== $requested_type) {
+        continue;
+      }
+
       $definition = $this->entityTypeManager->getDefinition($type);
       $data_table = $definition->getDataTable();
       $entity_keys = $definition->get('entity_keys');
+      $id_field = $entity_keys['id'];
 
-      // Since flag module doesn't use database relations and target the flagged entity using two columns (entity_id and entity_type)
-      // to make the 'entity_id' field unique, we must concat it with the type of the entity.
-      // This ensures an unique value since within the same type, the id must be unique
-      $flag_join_field = 'CONCAT("' . $type . '",f.entity_id)';
-      $entity_join_field = 'CONCAT("' . $type . '",' . $type . '.' . $entity_keys['id'] . ')';
+      $query = $this->database->select('flagging', 'f');
 
-      // Left join every supported entity types, this will allow us to filter on their attributes
+      $query->fields('f', ['id', 'entity_id', 'entity_type', 'flag_id'])
+        ->distinct(TRUE)
+        ->condition('fs.field_request_status_value', RequestStatus::OPEN)
+        ->condition('f.flag_id', $flag);
+
+      $query->join(
+        'flagging__field_request_status',
+        'fs',
+        'fs.entity_id = f.id'
+      );
+
       $query->leftJoin(
-        $data_table, $type, ':entity_join = :flag_join', [
-        ':entity_join' => $entity_join_field,
-        ':flag_join' => $flag_join_field,
-      ]);
+        $data_table,
+        $type,
+        "$type.$id_field = f.entity_id"
+      );
+
+      if (!empty($query_strings['title'])) {
+        $query->condition(
+          $type . '.' . $entity_keys['label'],
+          '%' . $query_strings['title'] . '%',
+          'LIKE'
+        );
+      }
+
+      if (!empty($query_strings['requester'])) {
+        $requester_id = EntityAutocomplete::extractEntityIdFromAutocompleteInput(
+          $query_strings['requester']
+        );
+
+        $query->condition(
+          'f.uid',
+          $requester_id
+        );
+      }
+
+      if (!empty($query_strings['author'])) {
+        $author_id = EntityAutocomplete::extractEntityIdFromAutocompleteInput(
+          $query_strings['author']
+        );
+
+        $query->condition(
+          $type . '.' . $entity_keys['owner'],
+          $author_id
+        );
+      }
+
+      $sub_queries[] = $query;
     }
 
+    // Mix it up !
+    $query = array_shift($sub_queries);
+    foreach ($sub_queries as $sub_query) {
+      $query->union($sub_query);
+    }
+
+    $query = $query->extend(PagerSelectExtender::class);
+    $query->limit($this->limit);
+
     return $query->execute()->fetchAll(\PDO::FETCH_ASSOC);
+  }
+
+  /**
+   * @return array
+   * @throws \Drupal\Core\Form\EnforcedResponseException
+   * @throws \Drupal\Core\Form\FormAjaxException
+   */
+  private function getFilters() {
+    $form_state = (new FormState())
+      ->setMethod('get')
+      ->addBuildInfo('args', [$this->requestHandler])
+      ->setAlwaysProcess()
+      ->disableRedirect();
+
+    return \Drupal::formBuilder()->buildForm(
+      ListBuilderFilters::class,
+      $form_state
+    );
   }
 
 }

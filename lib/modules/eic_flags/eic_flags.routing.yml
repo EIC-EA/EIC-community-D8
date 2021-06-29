@@ -1,2 +1,2 @@
 route_callbacks:
-  - '\Drupal\eic_flags\Routing\RequestDeleteRoutes::routes'
+  - '\Drupal\eic_flags\Routing\RequestRoutes::routes'

@@ -7,6 +7,7 @@ use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\eic_flags\RequestStatus;
 use Drupal\flag\Entity\Flag;
@@ -76,24 +77,43 @@ abstract class AbstractRequestHandler implements HandlerInterface {
   /**
    * {@inheritdoc}
    */
+  abstract function getSupportedEntityTypes();
+
+  /**
+   * {@inheritdoc}
+   */
+  abstract function getMessages();
+
+  /**
+   * {@inheritdoc}
+   */
   public function closeRequest(
     FlaggingInterface $flagging,
     ContentEntityInterface $content_entity,
     string $response,
     string $reason
   ) {
+    $account_proxy = \Drupal::currentUser();
+    if (!$account_proxy->isAuthenticated()) {
+      throw new InvalidArgumentException(
+        'You must be authenticated to do this!'
+      );
+    }
+
+    $current_user = User::load($account_proxy->id());
+    $flagging->set('field_request_moderator', $current_user);
+    $flagging->set('field_request_response', $reason);
+    $flagging->set('field_request_status', $response);
+    $flagging->save();
+
     $this->moduleHandler->invokeAll(
       'request_close',
       [
         $flagging,
         $content_entity,
-        $response,
-        $reason,
+        $this->getType(),
       ]
     );
-
-    $flagging->set('field_request_status', $response);
-    $flagging->save();
   }
 
   /**
@@ -154,17 +174,11 @@ abstract class AbstractRequestHandler implements HandlerInterface {
       [
         $flag,
         $entity,
+        $this->getType(),
       ]
     );
 
     return $flag;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getSupportedEntityTypes() {
-    return [];
   }
 
   /**
@@ -256,6 +270,15 @@ abstract class AbstractRequestHandler implements HandlerInterface {
           ),
       ],
     ];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getMessageByAction(string $action) {
+    $messages = $this->getMessages();
+
+    return $messages[$action] ?? NULL;
   }
 
 }

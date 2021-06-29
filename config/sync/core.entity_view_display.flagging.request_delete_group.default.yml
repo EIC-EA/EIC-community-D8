@@ -3,7 +3,9 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.flagging.request_delete_group.field_request_moderator
     - field.field.flagging.request_delete_group.field_request_reason
+    - field.field.flagging.request_delete_group.field_request_response
     - field.field.flagging.request_delete_group.field_request_status
     - flag.flag.request_delete_group
   module:
@@ -13,8 +15,23 @@ targetEntityType: flagging
 bundle: request_delete_group
 mode: default
 content:
+  field_request_moderator:
+    weight: 5
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
   field_request_reason:
     weight: 3
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: basic_string
+    region: content
+  field_request_response:
+    weight: 4
     label: above
     settings: {  }
     third_party_settings: {  }

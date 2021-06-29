@@ -24,10 +24,10 @@ function eic_private_content_entity_base_field_info(EntityTypeInterface $entity_
 
   if ($entity_type->id() === 'node') {
     $fields[PrivateContentConst::FIELD_NAME] = BaseFieldDefinition::create('boolean')
-      ->setLabel(t('Private'))
+      ->setLabel(t('Only visible to community members'))
       ->setName(PrivateContentConst::FIELD_NAME)
       ->setRevisionable(TRUE)
-      ->setDescription(t('When checked, only users with proper access permissions will be able to see this post.'))
+      ->setDescription(t('When checked, only community members are able to see this article and interact with it.'))
       ->setDisplayOptions('view', ['weight' => 1])
       ->setDisplayOptions('form', ['weight' => 1])
       ->setDisplayConfigurable('form', TRUE)
@@ -44,6 +44,12 @@ function eic_private_content_entity_field_access($operation, FieldDefinitionInte
   $access = AccessResult::neutral();
 
   if (($field_definition->getName() == PrivateContentConst::FIELD_NAME)) {
+
+    // In views, we skip the access.
+    if (!$items) {
+      return $access;
+    }
+
     /** @var \Drupal\node\NodeTypeInterface $type */
     $entity = $items->getEntity();
     $type = $entity->type->entity;

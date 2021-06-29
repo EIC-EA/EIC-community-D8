@@ -51,6 +51,13 @@ function eic_community_preprocess_eic_group_header_block(array &$variables) {
       ];
     }
   }
+  
+  if ($variables['group_values']['login_link']) {
+    $actions[]['items'][]['link'] = [
+      'label' => $variables['group_values']['login_link']['title'],
+      'path' => $variables['group_values']['login_link']['url'],
+    ];
+  }
 
   $variables['group_values']['actions'] = $actions;
 
@@ -139,6 +146,7 @@ function eic_community_preprocess_eic_group_header_block(array &$variables) {
       'label' => $tag,
     ],
   ];
+
   // Adds url to navigate back to the list of groups.
   $back_url = Url::fromRoute('view.global_overviews.page_1');
   $variables['group_values']['back_url'] = $back_url->toString();
