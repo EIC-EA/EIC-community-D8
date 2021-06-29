@@ -1,0 +1,19 @@
+uuid: 58f5dcc9-e335-492b-8ae6-29a3611a0728
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.flagging.field_request_reason
+    - flag.flag.request_archive_comment
+id: flagging.request_archive_comment.field_request_reason
+field_name: field_request_reason
+entity_type: flagging
+bundle: request_archive_comment
+label: 'Request reason'
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string_long

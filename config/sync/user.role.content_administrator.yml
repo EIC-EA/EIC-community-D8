@@ -15,6 +15,7 @@ permissions:
   - 'create group group'
   - 'create new books'
   - 'flag recommend_group'
+  - 'make archive request'
   - 'make delete request'
   - 'mark private content'
   - 'unflag recommend_group'
