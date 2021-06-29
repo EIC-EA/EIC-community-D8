@@ -155,45 +155,36 @@ function eic_flags_tokens(
  * Implements hook_entity_operation().
  */
 function eic_flags_entity_operation(EntityInterface $entity) {
-  /** @var \Drupal\eic_flags\Service\HandlerInterface $delete_request_handler */
-  $delete_request_handler = \Drupal::service('eic_flags.handler_collector')
-    ->getHandlerByType(RequestTypes::DELETE);
-
-  if (!$entity instanceof ContentEntityInterface
-    || !$delete_request_handler->supports($entity)
-  ) {
+  if (!$entity instanceof ContentEntityInterface) {
     return [];
   }
 
   $operations = [];
-  $route_name = \Drupal::routeMatch()->getRouteName();
-  $is_admin = \Drupal::service('router.admin_context')->isAdminRoute();
-  if ($is_admin && 'eic_flags.flagged_entities.list' === $route_name) {
-    return $delete_request_handler->getActions($entity);
+  /** @var \Drupal\eic_flags\Service\RequestHandlerCollector $collector */
+  $collector = \Drupal::service('eic_flags.handler_collector');
+  if ($request_type = \Drupal::routeMatch()->getParameter('request_type')) {
+    $handler = $collector->getHandlerByType($request_type);
+    return $handler->getActions($entity);
   }
 
-  if (!$entity->access('request-delete') || $is_admin) {
-    return $operations;
-  }
+  $handlers = $collector->getHandlers();
+  foreach ($handlers as $handler) {
+    if (!$entity->access('request-' . $handler->getType())
+      || !$handler->supports($entity)) {
+      continue;
+    }
 
-  $operations['request_delete'] = [
-    'title' => t('Request delete'),
-    'url' => $entity->toUrl('new-request')
-      ->setRouteParameter(
-        'destination',
-        \Drupal::request()->getRequestUri()
-      )
-      ->setRouteParameter('request_type', RequestTypes::DELETE),
-  ];
-  $operations['request_archive'] = [
-    'title' => t('Request archive'),
-    'url' => $entity->toUrl('new-request')
-      ->setRouteParameter(
-        'destination',
-        \Drupal::request()->getRequestUri()
-      )
-      ->setRouteParameter('request_type', RequestTypes::ARCHIVE),
-  ];
+    $type = $handler->getType();
+    $operations['request_' . $type] = [
+      'title' => t('Request ' . $type),
+      'url' => $entity->toUrl('new-request')
+        ->setRouteParameter(
+          'destination',
+          \Drupal::request()->getRequestUri()
+        )
+        ->setRouteParameter('request_type', $type),
+    ];
+  }
 
   return $operations;
 }
@@ -248,20 +239,19 @@ function eic_flags_entity_access(
     return AccessResult::neutral();
   }
 
+  $type = explode('-', $operation)[1];
   /** @var \Drupal\eic_flags\Service\HandlerInterface $delete_request_handler */
-  $delete_request_handler = \Drupal::service('eic_flags.handler_collector')
-    ->getHandlerByType(RequestTypes::DELETE);
+  $handler = \Drupal::service('eic_flags.handler_collector')
+    ->getHandlerByType($type);
 
   $entity_type_id = $entity->getEntityTypeId();
-  if (!in_array(
-    $entity_type_id,
-    array_keys($delete_request_handler->getSupportedEntityTypes())
-  )) {
+  $supported_entities = array_keys($handler->getSupportedEntityTypes());
+  if (!in_array($entity_type_id, $supported_entities)) {
     return AccessResult::neutral();
   }
 
   // We allow requests only for certain roles.
-  if (!$account->hasPermission('make delete request')) {
+  if (!$account->hasPermission('make ' . $type . ' request')) {
     return AccessResult::forbidden();
   }
 
