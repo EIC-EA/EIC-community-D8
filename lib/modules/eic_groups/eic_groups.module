@@ -49,6 +49,14 @@ function eic_groups_group_insert(EntityInterface $entity) {
 /**
  * Implements hook_ENTITY_TYPE_view().
  */
+function eic_groups_group_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
+  \Drupal::classResolver(EntityOperations::class)
+    ->groupView($build, $entity, $display, $view_mode);
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_view().
+ */
 function eic_groups_node_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
   \Drupal::classResolver(EntityOperations::class)
     ->nodeView($build, $entity, $display, $view_mode);
