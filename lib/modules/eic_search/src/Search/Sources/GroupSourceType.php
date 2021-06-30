@@ -36,6 +36,8 @@ class GroupSourceType implements SourceTypeInterface {
   public function getAvailableFacets(): array {
     return [
       'ss_group_topic_name',
+      'ss_group_label',
+      'ss_group_user_fullname',
     ];
   }
 
@@ -44,7 +46,9 @@ class GroupSourceType implements SourceTypeInterface {
    */
   public function getAvailableSortOptions(): array {
     return [
+      'timestamp',
       'ss_group_label',
+      'ss_group_user_fullname',
     ];
   }
 

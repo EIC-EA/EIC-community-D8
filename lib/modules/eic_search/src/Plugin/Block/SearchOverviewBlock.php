@@ -116,19 +116,25 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
     $facets = $this->configuration['facets'];
     $sorts = $this->configuration['sort_options'];
 
-    $facets = array_filter($facets, function($facet) {
+    $facets = array_filter($facets, function ($facet) {
       return $facet;
     });
 
-    $sorts = array_filter($sorts, function($sort) {
+    $sorts = array_filter($sorts, function ($sort) {
       return $sort;
     });
+
+    $source_type = $this->configuration['source_type'];
+    $sources = $this->sourcesCollector->getSources();
+
+    $source = array_key_exists($source_type, $sources) ? $sources[$source_type] : NULL;
 
     return [
       '#theme' => 'search_overview_block',
       '#facets' => array_keys($facets),
       '#sorts' => array_keys($sorts),
-      '#results_per_page' => $this->configuration['results_per_page'],
+      '#datasource' => $source instanceof SourceTypeInterface ? $source->getSourceId() : NULL,
+      '#page_options' => $this->configuration['page_options'],
       '#enable_search' => $this->configuration['enable_search'],
       '#url' => Url::fromRoute('eic_groups.solr_search')->toString(),
       '#isAnonymous' => \Drupal::currentUser()->isAnonymous(),
@@ -147,7 +153,8 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
   }
 
   /**
-   * The ajax callback that will hide non selected sources parameters (facets, sorts)
+   * The ajax callback that will hide non selected sources parameters (facets,
+   * sorts)
    *
    * @param array $form
    * @param \Drupal\Core\Form\FormStateInterface $form_state
@@ -190,8 +197,8 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
     $this->configuration['source_type'] = $values['search']['source_type'];
     $this->configuration['facets'] = $values['search']['configuration']['filter'][$current_source->getSourceId()]['facets'];
     $this->configuration['sort_options'] = $values['search']['configuration']['sorts'][$current_source->getSourceId()]['sort_options'];
-    $this->configuration['results_per_page'] = $values['search']['configuration']['pagination']['results_per_page'];
     $this->configuration['enable_search'] = $values['search']['configuration']['enable_search'];
+    $this->configuration['page_options'] = $values['search']['configuration']['pagination']['page_options'];
   }
 
   /**
@@ -199,7 +206,7 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
    *
    * @return SourceTypeInterface|null
    */
-  private function getCurrentSource(string $source_value):? SourceTypeInterface {
+  private function getCurrentSource(string $source_value): ?SourceTypeInterface {
     $sources_collected = $this->sourcesCollector->getSources();
 
     /** @var SourceTypeInterface $current_source */
@@ -245,10 +252,15 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
       '#open' => TRUE,
     ];
 
-    $form['search']['configuration']['pagination']['results_per_page'] = [
-      '#type' => 'number',
-      '#default_value' => $this->configuration['results_per_page'] ?: 15,
-      '#title' => $this->t('Results per page', [], ['context' => 'eic_search']),
+    $form['search']['configuration']['pagination']['page_options'] = [
+      '#type' => 'select',
+      '#default_value' => $this->configuration['page_options'],
+      '#title' => $this->t('Number per page options', [], ['context' => 'eic_search']),
+      '#options' => [
+        'normal' => '10/20/50/100',
+        'each_10' => '10/20/30/40/50',
+        'each_6' => '6/12/18/24',
+      ],
     ];
 
     /** @var SourceTypeInterface $source */
@@ -260,7 +272,11 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
         '#default_value' => $this->configuration['facets'],
         '#options' => $this->generateFacetsOptions($source),
         '#attributes' => [
-          'class' => ['source-type', 'source-' . $source->getSourceId(), $current_source === $source ?: 'hidden'],
+          'class' => [
+            'source-type',
+            'source-' . $source->getSourceId(),
+            $current_source === $source ?: 'hidden',
+          ],
         ],
       ];
 
@@ -271,7 +287,11 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
         '#description' => $this->t('Choose available sorting options on the overview', [], ['context' => 'eic_search']),
         '#options' => $this->generateSortOptions($source),
         '#attributes' => [
-          'class' => ['source-type', 'source-' . $source->getSourceId(), $current_source === $source ?: 'hidden'],
+          'class' => [
+            'source-type',
+            'source-' . $source->getSourceId(),
+            $current_source === $source ?: 'hidden',
+          ],
         ],
       ];
     }

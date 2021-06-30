@@ -28,3 +28,5 @@ react-paragraph-banner:
 react-block-overview-group:
   js:
     dist/react/block/group/overview/entrypoint.js: { minified: true }
+  dependencies:
+    - core/drupal

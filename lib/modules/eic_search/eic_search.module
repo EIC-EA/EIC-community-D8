@@ -14,11 +14,12 @@ function eic_search_theme($existing, $type, $theme, $path) {
       'variables' => [
         'url' => '',
         'blockId' => 0,
+        'datasource' => '',
         'isAnonymous' => TRUE,
         'translations' => [],
         'facets' => [],
         'sorts' => [],
-        'results_per_page' => 0,
+        'page_options' => '',
         'enable_search' => TRUE,
       ],
     ],
@@ -36,4 +37,24 @@ function eic_search_preprocess_block(&$variables) {
   }
 
   $variables['content']['#blockId'] = $plugin_id;
+}
+
+/**
+ * Implements hook_preprocess_html
+ */
+function eic_search_preprocess_html(&$variables) {
+  /** @var \Drupal\eic_search\Collector\SourcesCollector $sources_provider */
+  $sources_provider = \Drupal::service('eic_search.sources_collector');
+  $sources = $sources_provider->getSources();
+
+  /** @var \Drupal\eic_search\Search\Sources\SourceTypeInterface $source */
+  foreach ($sources as $source) {
+    foreach ($source->getAvailableSortOptions() as $sort_option) {
+      $variables['#attached']['drupalSettings']['translations']['sources']['sort'][$sort_option . '__ASC'] = t($sort_option . ' ASC', [], ['context' => 'eic_search']);
+      $variables['#attached']['drupalSettings']['translations']['sources']['sort'][$sort_option . '__DESC'] = t($sort_option . ' DESC', [], ['context' => 'eic_search']);
+    }
+    foreach ($source->getAvailableFacets() as $facet_option) {
+      $variables['#attached']['drupalSettings']['translations']['sources']['facet'][$facet_option] = t($facet_option, [], ['context' => 'eic_search']);
+    }
+  }
 }

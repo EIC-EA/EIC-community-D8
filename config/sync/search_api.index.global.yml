@@ -4,8 +4,6 @@ status: true
 dependencies:
   module:
     - search_api_solr
-    - address
-    - node
     - group
     - user
     - file
@@ -14,10 +12,9 @@ dependencies:
     - node
     - profile
     - search_api
-    - flag_search_api
+    - address
     - content_moderation
-    - flag
-    - user
+    - group_permissions
   config:
     - field.storage.user.field_first_name
     - field.storage.user.field_last_name
@@ -181,6 +178,8 @@ field_settings:
     datasource_id: 'entity:node'
     property_path: status
     type: boolean
+    indexed_locked: true
+    type_locked: true
     dependencies:
       module:
         - node
@@ -208,36 +207,6 @@ field_settings:
     dependencies:
       module:
         - node
-  flag_recommend_group_count:
-    label: 'Group Recommend count'
-    property_path: flag_recommend_group_count
-    type: integer
-    indexed_locked: true
-    type_locked: true
-  group_content_entity_id:
-    label: '[Group content] Content'
-    datasource_id: 'entity:group_content'
-    property_path: entity_id
-    type: integer
-    dependencies:
-      module:
-        - group
-  group_content_gid:
-    label: '[Group content] Parent group'
-    datasource_id: 'entity:group_content'
-    property_path: gid
-    type: integer
-    dependencies:
-      module:
-        - group
-  group_content_type:
-    label: '[Group content] Group content type'
-    datasource_id: 'entity:group_content'
-    property_path: type
-    type: string
-    dependencies:
-      module:
-        - group
   group_created:
     label: '[Group] Created on'
     datasource_id: 'entity:group'
@@ -361,12 +330,13 @@ field_settings:
       module:
         - group
         - user
-  url:
-    label: URI
-    property_path: search_api_url
+  node_grants:
+    label: 'Node access information'
+    property_path: search_api_node_grants
     type: string
-    configuration:
-      absolute: false
+    indexed_locked: true
+    type_locked: true
+    hidden: true
   status:
     label: 'User status'
     datasource_id: 'entity:user'
@@ -375,6 +345,22 @@ field_settings:
     dependencies:
       module:
         - user
+  uid:
+    label: uid
+    datasource_id: 'entity:node'
+    property_path: uid
+    type: integer
+    indexed_locked: true
+    type_locked: true
+    dependencies:
+      module:
+        - node
+  url:
+    label: URI
+    property_path: search_api_url
+    type: string
+    configuration:
+      absolute: false
   user__group_content__uid_gid:
     label: 'Reverse reference: Group content using Group content creator » Parent group'
     datasource_id: 'entity:user'
@@ -388,6 +374,14 @@ field_settings:
     dependencies:
       module:
         - user
+  user_first_name:
+    label: 'First name'
+    datasource_id: 'entity:user'
+    property_path: field_first_name
+    type: string
+    dependencies:
+      config:
+        - field.storage.user.field_first_name
   user_full_name:
     label: '[User] Full name'
     property_path: aggregated_field
@@ -397,6 +391,14 @@ field_settings:
       fields:
         - 'entity:user/field_first_name'
         - 'entity:user/field_last_name'
+  user_last_name:
+    label: 'Last name'
+    datasource_id: 'entity:user'
+    property_path: field_last_name
+    type: string
+    dependencies:
+      config:
+        - field.storage.user.field_last_name
   user_profile:
     label: 'Member profiles'
     datasource_id: 'entity:user'
@@ -465,13 +467,21 @@ field_settings:
         - field.storage.profile.field_vocab_topic_interest
       module:
         - profile
+  user_profile_image:
+    label: 'Picture » Media » Image » File » URI » Root-relative file URL'
+    datasource_id: 'entity:user'
+    property_path: 'field_media:entity:oe_media_image:entity:uri:url'
+    type: string
+    dependencies:
+      config:
+        - field.storage.media.oe_media_image
+        - field.storage.user.field_media
+      module:
+        - file
+        - media
 datasource_settings:
   'entity:content_moderation_state':
     languages:
-      default: true
-      selected: {  }
-  'entity:flagging':
-    bundles:
       default: true
       selected: {  }
   'entity:group':
@@ -481,13 +491,7 @@ datasource_settings:
     languages:
       default: true
       selected: {  }
-  'entity:group_content':
-    bundles:
-      default: true
-      selected: {  }
-    languages:
-      default: true
-      selected: {  }
+  'entity:group_permission': {  }
   'entity:node':
     bundles:
       default: true
@@ -511,9 +515,9 @@ processor_settings:
       preprocess_index: -20
       preprocess_query: -20
   aggregated_field: {  }
-  flag_count_indexer:
-    flag_index:
-      - recommend_group
+  content_access:
+    weights:
+      preprocess_query: -30
   hierarchy:
     fields:
       content_field_vocab_geo: taxonomy_term-parent

@@ -19,13 +19,20 @@ class SolrSearchController extends ControllerBase {
   /**
    * @param \Symfony\Component\HttpFoundation\Request $request
    *
-   * @return \Symfony\Component\HttpFoundation\JsonResponse|\Symfony\Component\HttpFoundation\Response
+   * @return \Symfony\Component\HttpFoundation\Response
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   * @throws \Drupal\search_api\SearchApiException
+   * @throws \Drupal\search_api_solr\SearchApiSolrException
    */
   public function search(Request $request) {
     $search_value = $request->query->get('search_value');
     $facets_value = $request->query->get('facets_value');
+    $sort_value = $request->query->get('sort_value');
+    $facets_options = $request->query->get('facets_options');
     $facets_value = json_decode($facets_value, TRUE);
     $page = $request->query->get('page');
+    $datasource = $request->query->get('datasource');
     $offset = $request->query->get('offset');
     $index_storage = \Drupal::entityTypeManager()
       ->getStorage('search_api_index');
@@ -41,34 +48,33 @@ class SolrSearchController extends ControllerBase {
 
     $solariumQuery->addParam('q', $search_value);
     $solariumQuery->addParam('json.nl', 'arrarr');
-    $solariumQuery->addParam('facet.field', 'ss_group_topic_name');
+    $solariumQuery->addParam('facet.field', $facets_options);
     $solariumQuery->addParam('facet', 'on');
     $solariumQuery->addParam('facet.sort', 'false');
     $solariumQuery->setStart(($page * $offset) - $offset);
     $solariumQuery->setRows($page * $offset);
-    $solariumQuery->addSort('ss_group_label', 'asc');
-    $solariumQuery->setFields([
-      'ss_group_label',
-      'ss_group_teaser',
-      'its_group_id',
-      'ss_group_visibility',
-      'ss_group_user_image',
-      'ss_group_url',
-      'ss_group_user_last_name',
-      'ss_group_user_first_name',
-    ]);
     $solariumQuery->addParam('wt', 'json');
 
-    $fq = 'ss_search_api_datasource:"entity:group" AND ' . $this->buildGroupVisibilityQuery();
+    if ($sort_value) {
+      $sorts = explode('__', $sort_value);
 
-    $facets_value = array_filter($facets_value, function ($value) {
-      return $value;
-    });
+      //Normally sort key have this structure 'FIELD__ASC' but add double check
+      if (2 === count($sorts)) {
+        $solariumQuery->addSort($sorts[0], $sorts[1]);
+      }
+    }
 
-    $facets_value = array_keys($facets_value);
+    $visibility_condition = ' AND ' . $this->buildGroupVisibilityQuery();
+    $fq = 'ss_search_api_datasource:"entity:' . $datasource . '"';
 
-    if ($facets_value) {
-      $fq .= ' AND ss_group_topic_name:"' . implode(' OR ', $facets_value) . '"';
+    if ($datasource === 'group') {
+      $fq .= $visibility_condition;
+    }
+
+    $facets_query = $this->getFacetsQuery($facets_value);
+
+    if ($facets_query) {
+      $fq .= $facets_query;
     }
 
     $solariumQuery->addParam('fq', $fq);
@@ -78,6 +84,29 @@ class SolrSearchController extends ControllerBase {
       'Content-Type' => 'application/json',
       'Accept' => 'application/json',
     ]);
+  }
+
+  /**
+   * @param array $facets_value
+   *
+   * @return string
+   */
+  private function getFacetsQuery($facets_value): string {
+    $facets_query = '';
+
+    foreach ($facets_value as $key => $facet_value) {
+      $filtered_value = array_filter($facet_value, function ($value) {
+        return $value;
+      });
+
+      $values = array_keys($filtered_value);
+
+      if ($filtered_value) {
+        $facets_query .= ' AND ' . $key . ':"' . implode(' OR ', $values) . '"';
+      }
+    }
+
+    return $facets_query;
   }
 
   /**
