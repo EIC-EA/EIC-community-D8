@@ -21,4 +21,42 @@ function eic_community_preprocess_page(array &$variables): void {
       $variables['page']['content'][$key]['#attributes']['class'][] = 'ecl-section-wrapper';
     }
   }
+
+  $variables['site_header'] = [
+    'icon_file_path' =>  $variables['eic_icon_path'],
+    'logo' => [
+      'title' =>  t('European Commission'),
+      'alt' =>  t('European Commission logo'),
+      'path' => \Drupal::urlGenerator()->generateFromRoute('<front>'),
+      'src_desktop' => $variables['eic_logo_path'] . '/logo--' . $variables['language']->getId() . '.svg',
+    ]
+  ];
+
+  if ($variables['user']->id() === 0) {
+    $variables['site_header']['login']['link'] = [
+      'label' => t('Log in'),
+      'path' => '/user/login'
+    ];
+  }else{
+    $account = \Drupal\user\Entity\User::load($variables['user']->id());
+    $user = eic_community_get_teaser_user_display($account);
+    unset($user['path']);
+
+    $user['actions'] = [
+      [
+        'link' => [
+          'label' => t('My profile'),
+          'path' => $account->toUrl()->toString(),
+        ],
+      ],
+      [
+        'link' => [
+          'label' => t('Log out'),
+          'path' => '/user/logout',
+        ],
+      ],
+    ];
+
+    $variables['site_header']['user'] = $user;
+  }
 }

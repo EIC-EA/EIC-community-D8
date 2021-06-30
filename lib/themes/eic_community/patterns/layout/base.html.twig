@@ -36,9 +36,7 @@
       {% endif %}
 
       {% if site_header %}
-        {% include "@theme/patterns/compositions/global-header.html.twig" with site_header|default({})|merge({
-          user: user|default(NULL)
-        }) only %}
+        {% include "@theme/patterns/compositions/global-header.html.twig" with site_header only %}
       {% endif %}
 
       {% if mainmenu %}
