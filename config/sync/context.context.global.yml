@@ -27,6 +27,57 @@ reactions:
         unique: 0
         context_id: global
         uuid: 8a784846-74f8-451c-b47b-fcc1177d6629
+      6e7a0bbc-0152-4e8d-91b4-be66ea3bd664:
+        id: 'system_menu_block:footer---european-commision'
+        label: 'European Commision'
+        provider: system
+        label_display: visible
+        level: '1'
+        depth: '0'
+        expand_all_items: 0
+        region: footer
+        weight: '0'
+        context_mapping: {  }
+        custom_id: system_menu_block_footer_european_commision
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: global
+        uuid: 6e7a0bbc-0152-4e8d-91b4-be66ea3bd664
+      4c79c45d-9cbe-4c6a-9e40-f3f8647544bb:
+        id: 'system_menu_block:footer---european-union'
+        label: 'European Union'
+        provider: system
+        label_display: visible
+        level: '1'
+        depth: '0'
+        expand_all_items: 0
+        region: footer
+        weight: '1'
+        context_mapping: {  }
+        custom_id: system_menu_block_footer_european_union
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: global
+        uuid: 4c79c45d-9cbe-4c6a-9e40-f3f8647544bb
+      88c19636-8f74-41ec-801c-6829bfe3a44d:
+        id: 'block_content:34a810c9-d608-4979-ac40-00657bce344b'
+        label: 'Footer - Site info'
+        provider: block_content
+        label_display: '0'
+        status: true
+        info: ''
+        view_mode: full
+        region: footer
+        weight: '-1'
+        context_mapping: {  }
+        custom_id: block_content_34a810c9_d608_4979_ac40_00657bce344b
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: global
+        uuid: 88c19636-8f74-41ec-801c-6829bfe3a44d
     id: blocks
     saved: false
     uuid: c1979d39-89a3-4939-97f7-0af5a52467f1
