@@ -162,16 +162,20 @@
                     <div class="ecl-editorial-header__flags">
                       {% for flag in flags %}
                         <div class="ecl-editorial-header__flag">
-                          {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with flag|default({})|merge({
-                            link: flag.link|default({})|merge({
-                              icon_position: 'before',
-                            }),
-                            extra_classes: 'ecl-link--standalone ecl-link--flag',
-                            icon: flag.icon|default({})|merge({
-                              path: icon_file_path,
-                              size: 's',
-                            })
-                          }) %}
+                          {% if flag.content is defined %}
+                            {{ flag.content }}
+                          {% else %}
+                            {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with flag|default({})|merge({
+                              link: flag.link|default({})|merge({
+                                icon_position: 'before',
+                              }),
+                              extra_classes: 'ecl-link--standalone ecl-link--flag',
+                              icon: flag.icon|default({})|merge({
+                                path: icon_file_path,
+                                size: 's',
+                              })
+                            }) %}
+                          {% endif %}
                         </div>
                       {% endfor %}
                     </div>
