@@ -1,0 +1,20 @@
+uuid: 372b1525-3f26-4667-8414-4623f941d361
+langcode: en
+status: true
+dependencies:
+  module:
+    - flag
+    - user
+id: flagging.field_request_moderator
+field_name: field_request_moderator
+entity_type: flagging
+type: entity_reference
+settings:
+  target_type: user
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

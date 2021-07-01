@@ -1,0 +1,22 @@
+uuid: 44dacad2-b3dd-421e-a3ba-9294e5ccf3bd
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: stories
+label: Stories
+type: 'canonical_entities:node'
+pattern: '[eic_groups_tokens:node_group_url]/stories/[node:title]'
+selection_criteria:
+  9576bc1d-7c9e-426e-b9c0-23bac8084a58:
+    id: node_type
+    bundles:
+      story: story
+    negate: false
+    context_mapping:
+      node: node
+    uuid: 9576bc1d-7c9e-426e-b9c0-23bac8084a58
+selection_logic: and
+weight: -6
+relationships: {  }

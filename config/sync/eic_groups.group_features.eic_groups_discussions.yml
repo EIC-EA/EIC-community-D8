@@ -5,3 +5,5 @@ roles:
   - group-member
   - group-admin
   - group-owner
+_core:
+  default_config_hash: eCIajfnLSQ_3leyc94dJXpgBJfFUwo6hWKYakS08XUo

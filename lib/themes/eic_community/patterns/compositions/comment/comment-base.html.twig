@@ -69,7 +69,7 @@
       </div>
 
       {% if user and comment_id %}
-        {% if can_delete_comment or can_edit_comment %}
+        {% if can_delete_comment or can_edit_comment or can_request_delete_comment or can_request_archive_comment %}
         <div class="ecl-comment__header-aside">
           {% embed "@theme/patterns/compositions/collapsible-options.html.twig" with {
             extra_classes: 'ecl-collapsible-options--aligns-from-right',
@@ -96,6 +96,15 @@
                 link: {
                   label: request_delete_label|default('Request deletion'),
                   path: request_delete_path
+                },
+                extra_classes: 'ecl-comment__delete',
+                extra_attributes: action_attributes,
+              }
+            ] : [])|merge( can_request_archive_comment ? [
+              {
+                link: {
+                  label: request_archive_label|default('Request archival'),
+                  path: request_archive_path
                 },
                 extra_classes: 'ecl-comment__delete',
                 extra_attributes: action_attributes,

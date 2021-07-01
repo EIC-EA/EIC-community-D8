@@ -1,0 +1,23 @@
+# For request flows, we don't use flag module's default permissions.
+# Since using these flags have different implications we want to be sure people manipulating
+# these permissions are aware of them.
+# TLDR; for delete & archive flags, default permissions are not used.
+make delete request:
+  title: Make Delete Request
+  description: 'Allow users to send delete requests for content entities'
+  restrict access: TRUE
+
+make archive request:
+  title: Make Archive Request
+  description: 'Allow users to send archive requests for content entities'
+  restrict access: TRUE
+
+close delete request:
+  title: Close Delete Request
+  description: 'Allow the user to handle delete requests and give them a response'
+  restrict access: TRUE
+
+close archive request:
+  title: Close Archive Request
+  description: 'Allow the user to handle archive requests and give them a response'
+  restric access: TRUE

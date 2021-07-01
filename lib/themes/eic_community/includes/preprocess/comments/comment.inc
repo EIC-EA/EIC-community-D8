@@ -24,7 +24,9 @@ function eic_community_preprocess_comment(&$variables) {
     $comment_origin_author = User::load($comment_origin_entity->getOwnerId());
     $comment_origin = [
       'author' => [
-        'author' => $comment_origin_author->getDisplayName(),
+        'name' => $comment_origin_author->getDisplayName(),
+        'path' => '',
+        'image' => _get_profile_image_array($comment_origin_author),
       ],
       'comment_id' => $comment_origin_entity->id(),
       'is_owner' => $current_user->id() == $comment_origin_entity->getOwnerId(),
@@ -43,7 +45,7 @@ function eic_community_preprocess_comment(&$variables) {
 
   $variables['comment'] = [
     'author' => [
-      'author' => $author->getDisplayName(),
+      'name' => $author->getDisplayName(),
       'path' => '',
       'image' => $author_image,
     ],

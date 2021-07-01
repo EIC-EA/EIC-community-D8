@@ -9,6 +9,10 @@
     display: block;
   }
 
+  &--flag {
+    text-decoration: none;
+  }
+
   body &--button {
     @extend .ecl-button;
 

@@ -6,9 +6,14 @@ services:
       - { name: event_subscriber }
   eic_groups.helper:
     class: Drupal\eic_groups\EICGroupsHelper
-    arguments: ['@current_route_match', '@module_handler']
+    arguments: ['@database', '@current_route_match', '@module_handler']
   eic_groups.book_page_redirect_subscriber:
     class: Drupal\eic_groups\EventSubscriber\BookPageRedirectSubscriber
-    arguments: ['@eic_groups.helper', '@book.manager']
+    arguments: ['@book.manager', '@entity_type.manager']
     tags:
       - { name: event_subscriber }
+  eic_groups.breadcrumb:
+    class: Drupal\eic_groups\Breadcrumb\GroupBreadcrumbBuilder
+    arguments: ['@book.breadcrumb', '@current_user']
+    tags:
+      - { name: breadcrumb_builder, priority: 1000 }

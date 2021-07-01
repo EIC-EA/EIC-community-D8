@@ -32,4 +32,11 @@ $ecl-typography: (
     'font-size--lg': $ecl-font-size-m,
     'font-weight': $ecl-font-weight-bold,
   ),
+  'h3': (
+    'color': currentColor,
+    'font-size': map-get($ecl-font-size, '2xl'),
+    'font-size--md': map-get($ecl-font-size, '2xl'),
+    'font-size--lg': map-get($ecl-font-size, '2xl'),
+    'font-weight': $ecl-font-weight-bold,
+  )
 );

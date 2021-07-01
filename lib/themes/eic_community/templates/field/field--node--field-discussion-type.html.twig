@@ -1,0 +1,19 @@
+{#
+/**
+ * @file
+ * Theme override for a field.
+ *
+*/
+#}
+{%  set type = items.0.content['#markup'] %}
+
+{% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with {
+  icon: {
+    type: "custom",
+    name: type|lower,
+    path: eic_icon_path,
+    size: 'm',
+  },
+  extra_classes: 'ecl-content-type-indicator__icon',
+} only %}
+<span class="ecl-content-type-indicator__label">{{ type }}</span>

@@ -1,0 +1,9 @@
+services:
+  eic_content.helper:
+    class: Drupal\eic_content\EICContentHelper
+    arguments: ['@entity_type.manager', '@module_handler']
+
+  eic_content.breadcrumb:
+    class: Drupal\eic_content\ContentBreadcrumbBuilder
+    tags:
+      - { name: breadcrumb_builder, priority: 999 }

@@ -89,6 +89,13 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
+  private:
+    weight: 1
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+    type: boolean_checkbox
   promote:
     type: boolean_checkbox
     settings:

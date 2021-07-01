@@ -4,6 +4,11 @@ status: true
 dependencies:
   config:
     - filter.format.plain_text
+  module:
+    - eic_messages
+third_party_settings:
+  eic_messages:
+    message_template_type: subscription
 template: sub_own_group_content_updated
 label: 'SUBSCRIPTION :: MT22 :: Your content edited by admin (to original authors/editors)'
 description: ''

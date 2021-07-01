@@ -1,0 +1,22 @@
+uuid: 2aa43818-6737-41a2-b332-f7b5f23c7cb0
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.message.mail_body
+    - field.field.message.notify_delete_request_archived.field_message_subject
+    - field.field.message.notify_delete_request_archived.field_referenced_flag
+    - message.template.notify_delete_request_archived
+id: message.notify_delete_request_archived.mail_body
+targetEntityType: message
+bundle: notify_delete_request_archived
+mode: mail_body
+content:
+  partial_1:
+    weight: 0
+    region: content
+hidden:
+  field_message_subject: true
+  field_referenced_flag: true
+  partial_0: true
+  search_api_excerpt: true

@@ -7,7 +7,6 @@ use Drupal\Core\Access\AccessResultNeutral;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\group\Entity\GroupInterface;
-use Drupal\oec_group_flex\GroupVisibilityRecord;
 use Drupal\oec_group_flex\GroupVisibilityRecordInterface;
 
 /**
@@ -38,6 +37,13 @@ abstract class CustomRestrictedVisibilityBase extends PluginBase implements Cust
    * {@inheritdoc}
    */
   public function validatePluginForm(array &$element, FormStateInterface $form_state) {
+    $status_key = $this->getPluginId() . '_status';
+    // If plugin status is disabled, we don't need any validation and therefore
+    // we return TRUE.
+    if (!$form_state->getValue($status_key)) {
+      return TRUE;
+    }
+    return FALSE;
   }
 
   /**

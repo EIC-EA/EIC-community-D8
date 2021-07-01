@@ -86,12 +86,52 @@
     }
   }
 
+  &__name {
+    #{$node}__aside & {
+      position: absolute;
+      bottom: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: map-get($ecl-spacing, '2xs') map-get($ecl-spacing, 'xs');
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      max-width: 80vw;
+      background-color: ecl-typography('color', 'title');
+      color: map-get($ecl-colors, 'white');
+      @include ecl-responsive-font('meta');
+
+      &::after {
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 0;
+        height: 0;
+        display: block;
+        content: " ";
+        width: 0;
+        height: 0;
+        border-style: solid;
+        border-width: map-get($ecl-spacing, 'xs') map-get($ecl-spacing, 'xs') 0 map-get($ecl-spacing, 'xs');
+        border-color: ecl-typography('color', 'title') transparent transparent transparent;
+      }
+
+      #{$node}:not(:hover) & {
+        @include visually-hidden;
+      }
+    }
+  }
+
   &__aside {
     position: relative;
     order: -1;
     flex-shrink: 0;
     margin-right: ecl-layout('gutter', 'meta');
     width: map-get($ecl-media, '3xs');
+
+    &:only-child {
+      margin-right: 0;
+    }
 
     #{$node}--is-fluid & {
       width: 100%;
@@ -136,6 +176,11 @@
     position: relative;
     overflow: hidden;
     background-color: map-get($ecl-colors, 'grey-10');
+    display: block;
+
+    #{$node}:hover #{$node}__aside:only-child & {
+      box-shadow: 0 0 0 map-get($ecl-spacing, '2xs') map-get($ecl-colors, 'blue-50');
+    }
 
     &::before {
       padding-top: 100%;
@@ -166,6 +211,10 @@
     font-weight: $ecl-font-weight-bold;
     text-transform: uppercase;
     background-color: map-get($ecl-colors, 'grey-10');
+
+    #{$node}:hover #{$node}__aside:only-child & {
+      box-shadow: 0 0 0 map-get($ecl-spacing, '2xs') map-get($ecl-colors, 'blue-50');
+    }
 
     #{$node}--is-tiny & {
       font-size: map-get($ecl-font-size, '2xs');

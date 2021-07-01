@@ -1,0 +1,29 @@
+uuid: 6eb9ebeb-1232-47a0-9933-e892a23302cf
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.flagging.field_request_moderator
+    - flag.flag.request_archive_comment
+id: flagging.request_archive_comment.field_request_moderator
+field_name: field_request_moderator
+entity_type: flagging
+bundle: request_archive_comment
+label: Moderator
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:user'
+  handler_settings:
+    include_anonymous: false
+    filter:
+      type: _none
+    target_bundles: null
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+field_type: entity_reference

@@ -4,15 +4,20 @@ status: true
 dependencies:
   config:
     - filter.format.full_html
+  module:
+    - eic_messages
+third_party_settings:
+  eic_messages:
+    message_template_type: notification
 template: notify_new_member_joined
 label: 'NOTIFY :: MT13 :: New member joined'
 description: ''
 text:
   -
-    value: 'A new member joined [message:field_group_ref:entity:title]'
+    value: "<p>A new member joined [message:field_group_ref:entity:title]</p>\r\n"
     format: full_html
   -
-    value: "Dear [message:field_group_ref:entity:author],\r\n\r\nA new member joined <a href=\"[message:field_group_ref:entity:url]\">[message:field_group_ref:entity:title]</a>[message:field_group_ref] at [site:name].\r\n\r\nPlease find their details below:\r\n\r\n[message:field_related_user:entity:account-name]\r\nBased in ...\r\nExpertise: ..\r\nAbout: ...\r\n\r\nView this member's <a href=\"[message:field_related_user:entity:url]\">profile</a> at European Innovation Council."
+    value: "<p>Dear [message:field_group_ref:entity:author], A new member joined <a href=\"[message:field_group_ref:entity:url]\">[message:field_group_ref:entity:title]</a>[message:field_group_ref] at [site:name]. Please find their details below: [message:field_related_user:entity:account-name] Based in ... Expertise: .. About: ... View this member's <a href=\"[message:field_related_user:entity:url]\">profile</a> at European Innovation Council.</p>\r\n"
     format: full_html
 settings:
   'token options':

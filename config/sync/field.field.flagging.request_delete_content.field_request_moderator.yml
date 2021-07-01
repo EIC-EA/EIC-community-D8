@@ -1,0 +1,29 @@
+uuid: 8274234d-b329-4887-b360-17dc102b74ca
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.flagging.field_request_moderator
+    - flag.flag.request_delete_content
+id: flagging.request_delete_content.field_request_moderator
+field_name: field_request_moderator
+entity_type: flagging
+bundle: request_delete_content
+label: Moderator
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:user'
+  handler_settings:
+    include_anonymous: false
+    filter:
+      type: _none
+    target_bundles: null
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+field_type: entity_reference

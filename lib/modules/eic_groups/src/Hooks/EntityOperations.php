@@ -5,6 +5,7 @@ namespace Drupal\eic_groups\Hooks;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Routing\RouteMatchInterface;
@@ -13,7 +14,9 @@ use Drupal\Core\Url;
 use Drupal\eic_groups\EICGroupsHelperInterface;
 use Drupal\group\Entity\GroupContent;
 use Drupal\group\Entity\GroupInterface;
+use Drupal\group_content_menu\GroupContentMenuInterface;
 use Drupal\node\NodeInterface;
+use Drupal\pathauto\PathautoGeneratorInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -47,6 +50,13 @@ class EntityOperations implements ContainerInjectionInterface {
   protected $eicGroupsHelper;
 
   /**
+   * The pathauto generator.
+   *
+   * @var \Drupal\pathauto\PathautoGeneratorInterface
+   */
+  protected $pathautoGenerator;
+
+  /**
    * Constructs a new EntityOperations object.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
@@ -55,11 +65,14 @@ class EntityOperations implements ContainerInjectionInterface {
    *   The current route match service.
    * @param \Drupal\eic_groups\EICGroupsHelperInterface $eic_groups_helper
    *   The EIC Groups helper service.
+   * @param \Drupal\pathauto\PathautoGeneratorInterface $pathauto_generator
+   *   The pathauto generator.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, RouteMatchInterface $route_match, EICGroupsHelperInterface $eic_groups_helper) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, RouteMatchInterface $route_match, EICGroupsHelperInterface $eic_groups_helper, PathautoGeneratorInterface $pathauto_generator) {
     $this->entityTypeManager = $entity_type_manager;
     $this->routeMatch = $route_match;
     $this->eicGroupsHelper = $eic_groups_helper;
+    $this->pathautoGenerator = $pathauto_generator;
   }
 
   /**
@@ -69,7 +82,8 @@ class EntityOperations implements ContainerInjectionInterface {
     return new static(
       $container->get('entity_type.manager'),
       $container->get('current_route_match'),
-      $container->get('eic_groups.helper')
+      $container->get('eic_groups.helper'),
+      $container->get('pathauto.generator')
     );
   }
 
@@ -78,12 +92,13 @@ class EntityOperations implements ContainerInjectionInterface {
    */
   public function groupInsert(EntityInterface $entity) {
     $this->createGroupWikiBook($entity);
+    $this->createGroupAboutPageMenuLink($entity);
   }
 
   /**
    * Implements hook_group_update().
    */
-  public function groupUpdate(EntityInterface $entity) {
+  public function groupUpdate(GroupInterface $entity) {
     // Publish group wiki when group is published.
     if (!$entity->original->isPublished() && $entity->isPublished()) {
       $this->publishGroupWiki($entity);
@@ -210,6 +225,40 @@ class EntityOperations implements ContainerInjectionInterface {
       if (($node_book = $group_content->getEntity()) && $node_book instanceof NodeInterface) {
         $node_book->setPublished();
         $node_book->save();
+      }
+    }
+  }
+
+  /**
+   * Creates a menu item for the About page in the Group main menu.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $group
+   *   The group for which we create the menu item.
+   *
+   * @return \Drupal\menu_link_content\Entity\MenuLinkContent|false
+   *   The saved menu item or FALSE if an error occurred.
+   */
+  protected function createGroupAboutPageMenuLink(EntityInterface $group) {
+    foreach (group_content_menu_get_menus_per_group($group) as $group_menu) {
+      if ($group_menu->getGroupContentType()->getContentPlugin()->getPluginId() == 'group_content_menu:group_main_menu') {
+        // Create menu item.
+        $menu_name = GroupContentMenuInterface::MENU_PREFIX . $group_menu->getEntity()->id();
+        $menu_item = $this->entityTypeManager->getStorage('menu_link_content')->create([
+          'title' => $this->t('About'),
+          'link' => [
+            'uri' => 'internal:/group/' . $group->id() . '/about',
+          ],
+          'menu_name' => $menu_name,
+          'weight' => 1,
+        ]);
+
+        try {
+          $menu_item->save();
+          return $menu_item;
+        }
+        catch (EntityStorageException $e) {
+          return FALSE;
+        }
       }
     }
   }

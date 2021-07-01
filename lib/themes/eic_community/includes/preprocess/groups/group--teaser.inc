@@ -30,5 +30,12 @@ function eic_community_preprocess_group(array &$variables) {
     ];
   }
 
+  // Move flags to group to pick them up in the group header.
+  foreach($variables['elements'] as $key => $element) {
+    if (strpos($key, 'flag_') !== false) {
+      $variables['elements']['#group']->flags[$key] = $element;
+    }
+  }
+
   $variables['group_item'] = $item;
 }

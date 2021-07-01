@@ -5,15 +5,21 @@
  * Primary module hooks for EIC Groups module.
  */
 
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\BubbleableMetadata;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\eic_groups\Hooks\CronOperations;
 use Drupal\eic_groups\Hooks\EntityOperations;
 use Drupal\eic_groups\Hooks\GroupTokens;
 use Drupal\eic_groups\Hooks\FormOperations;
 use Drupal\eic_groups\Hooks\Pathauto;
 use Drupal\eic_groups\Hooks\Preprocess;
+use Drupal\group\Entity\GroupInterface;
 
 /**
  * Implements hook_theme().
@@ -149,4 +155,52 @@ function eic_groups_pathauto_alias_alter(&$alias, array &$context) {
   /** @var \Drupal\eic_groups\Hooks\Pathauto $class */
   $class = \Drupal::classResolver(Pathauto::class);
   $class->aliasAlter($alias, $context);
+}
+
+/**
+ * Implements hook_cron().
+ */
+function eic_groups_cron() {
+  \Drupal::classResolver(CronOperations::class)
+    ->cron();
+}
+
+/**
+ * Implements hook_entity_field_access().
+ */
+function eic_groups_entity_field_access($operation, FieldDefinitionInterface $field_definition, AccountInterface $account, FieldItemListInterface $items = NULL) {
+  $access = AccessResult::neutral();
+
+  $group_restricted_fields = [
+    'field_related_groups',
+    'field_related_news_stories',
+  ];
+
+  // If field is non of the restricted ones, we do nothing.
+  if (!in_array($field_definition->getName(), $group_restricted_fields)) {
+    return $access;
+  }
+
+  if (!$items) {
+    return $access;
+  }
+
+  $entity = $items->getEntity();
+
+  if ($entity instanceof GroupInterface && $entity->bundle() === 'group') {
+    switch ($operation) {
+      case 'edit':
+        // Deny access if it's a new group and the user doesn't have
+        // "administator" or "content_administrator" roles.
+        if ($entity->isNew()) {
+          $access = AccessResult::forbiddenIf(!in_array('administrator', $account->getRoles(TRUE)) && !in_array('content_administrator', $account->getRoles(TRUE)))
+            ->addCacheableDependency($account);
+          break;
+        }
+        break;
+
+    }
+  }
+
+  return $access;
 }

@@ -5,14 +5,37 @@
  * Contains hook_preprocess_breadcrumb() implementation.
  */
 
+use Drupal\group\Entity\GroupContent;
+
 /**
  * Implements hook_preprocess_breadcrumb().
  */
 function eic_community_preprocess_breadcrumb(array &$variables): void {
   $request = \Drupal::request();
   $route_match = \Drupal::routeMatch();
-  $title = \Drupal::service('title_resolver')
-    ->getTitle($request, $route_match->getRouteObject());
+
+  switch ($route_match->getRouteName()) {
+    case 'entity.node.canonical':
+      $node = $route_match->getParameter('node');
+      // If the current node is a book page that belongs to a group, we
+      // replace the last breadcrumb slug title with "Wiki".
+      if (GroupContent::loadByEntity($node)) {
+        if ($node->bundle() == 'book') {
+          $title = t('Wiki');
+        }
+      }
+      break;
+
+    case 'eic_groups.about_page':
+      $title = t('About');
+      break;
+
+  }
+
+  if (!isset($title)) {
+    $title = \Drupal::service('title_resolver')
+      ->getTitle($request, $route_match->getRouteObject());
+  }
 
   unset($variables['links']);
   $variables['links'] = array_map(function ($item) {

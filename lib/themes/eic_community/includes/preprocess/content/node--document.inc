@@ -17,6 +17,10 @@ function eic_community_preprocess_node__document(array &$variables) {
   if ($variables['teaser']) {
     $file = File::load($node->get('field_document_media')->getString());
 
+    if (!$file) {
+      return;
+    }
+
     $document = [
       'language' => $node->language()->getName(),
       'timestamp' => eic_community_get_teaser_time_display($node->get('changed')->getString()),

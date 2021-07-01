@@ -1,0 +1,26 @@
+uuid: 057246ec-fb4c-4774-9f6b-39f298b05bcc
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.message.mail_body
+    - field.field.message.notify_new_deletion_request.field_message_subject
+    - field.field.message.notify_new_deletion_request.field_referenced_flag
+    - message.template.notify_new_deletion_request
+id: message.notify_new_deletion_request.mail_body
+targetEntityType: message
+bundle: notify_new_deletion_request
+mode: mail_body
+content:
+  partial_0:
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  partial_1:
+    weight: 0
+    region: content
+hidden:
+  field_message_subject: true
+  field_referenced_flag: true
+  search_api_excerpt: true

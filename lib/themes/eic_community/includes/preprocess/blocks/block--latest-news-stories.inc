@@ -5,8 +5,10 @@
  * Contains implementation for ook_preprocess_block() for latest_news_stories.
  */
 
+use Drupal\Component\Utility\Xss;
 use Drupal\Core\Cache\Cache;
 use Drupal\eic_community\ValueObject\ImageValueObject;
+use Drupal\node\NodeInterface;
 
 /**
  * Implements hook_preprocess_block() for latest_news_stories.
@@ -28,13 +30,23 @@ function eic_community_preprocess_block__latest_news_stories(&$variables, &$cach
 
   // Process the array of nodes and add it to the theme variables.
   foreach ($nodes as $node) {
+    if (!$node instanceof NodeInterface) {
+      continue;
+    }
+
+    // We need to check the node access otherwise private nodes will always be
+    // visible.
+    if (!$node->access('view')) {
+      continue;
+    }
+
     $node_translation = \Drupal::service('entity.repository')->getTranslationFromContext($node, $block_content->language()->getId());
     $node_author = $node_translation->getOwner();
     $time_ago = \Drupal::service('date.formatter')->formatTimeDiffSince($node_translation->get('published_at')->value, ['granularity' => 1]);
 
     $item = [
       'title' => $node_translation->label(),
-      'description' => $node_translation->get('field_introduction')->value,
+      'description' => Xss::filter($node_translation->get('field_introduction')->value),
       'path' => $node_translation->toUrl()->toString(),
       'type' => [
         'label' => $node_translation->type->entity->label(),

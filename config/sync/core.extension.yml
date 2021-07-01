@@ -4,7 +4,6 @@ module:
   admin_toolbar_links_access_filter: 0
   admin_toolbar_search: 0
   admin_toolbar_tools: 0
-  basic_auth: 0
   big_pipe: 0
   block: 0
   block_content: 0
@@ -26,6 +25,7 @@ module:
   dblog: 0
   dynamic_page_cache: 0
   editor: 0
+  eic_admin: 0
   eic_block_type_cta_tiles: 0
   eic_block_type_page_banner: 0
   eic_block_type_social_media: 0
@@ -34,6 +34,7 @@ module:
   eic_blocks: 0
   eic_comments: 0
   eic_content: 0
+  eic_content_book: 0
   eic_content_discussion: 0
   eic_content_story: 0
   eic_deploy: 0
@@ -48,6 +49,7 @@ module:
   eic_messages: 0
   eic_paragraph_contributor: 0
   eic_paragraph_cta_tile: 0
+  eic_private_content: 0
   eic_theme_helper: 0
   eic_user: 0
   eic_webservices: 0
@@ -119,6 +121,7 @@ module:
   search_api_spellcheck: 0
   serialization: 0
   smart_trim: 0
+  social_link_field: 0
   state_machine: 0
   statistics: 0
   subpathauto: 0

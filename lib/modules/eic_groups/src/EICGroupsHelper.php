@@ -3,6 +3,7 @@
 namespace Drupal\eic_groups;
 
 use Drupal\Core\Cache\CacheableMetadata;
+use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
@@ -15,6 +16,19 @@ use Drupal\node\NodeInterface;
  * EICGroupsHelper service that provides helper functions for groups.
  */
 class EICGroupsHelper implements EICGroupsHelperInterface {
+
+  const GROUP_OWNER_ROLE = 'group-owner';
+
+  const GROUP_ADMINISTRATOR_ROLE = 'group-admin';
+
+  const GROUP_MEMBER_ROLE = 'group-member';
+
+  /**
+   * The database connection service.
+   *
+   * @var \Drupal\Core\Database\Connection
+   */
+  protected $database;
 
   /**
    * The current route match service.
@@ -33,12 +47,19 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
   /**
    * Constructs a new EventsHelperService object.
    *
+   * @param \Drupal\Core\Database\Connection $database
+   *   The database connection service.
    * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
    *   The current route match service.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler service.
    */
-  public function __construct(RouteMatchInterface $route_match, ModuleHandlerInterface $module_handler) {
+  public function __construct(
+    Connection $database,
+    RouteMatchInterface $route_match,
+    ModuleHandlerInterface $module_handler
+  ) {
+    $this->database = $database;
     $this->routeMatch = $route_match;
     $this->moduleHandler = $module_handler;
   }
@@ -90,7 +111,11 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
   /**
    * {@inheritdoc}
    */
-  public function getGroupOperationLinks(GroupInterface $group, $limit_entities = [], CacheableMetadata $cacheable_metadata = NULL) {
+  public function getGroupOperationLinks(
+    GroupInterface $group,
+    $limit_entities = [],
+    CacheableMetadata $cacheable_metadata = NULL
+  ) {
     $operation_links = [];
 
     if (!is_null($cacheable_metadata)) {
@@ -128,6 +153,32 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
     }
 
     return $operation_links;
+  }
+
+  /**
+   * Returns the top-level book page for a given group.
+   *
+   * This method will always return the first item found.
+   *
+   * @param \Drupal\group\Entity\GroupInterface $group
+   *   The group entity.
+   *
+   * @return int
+   *   The book page nid or NULL if not found.
+   */
+  public function getGroupBookPage(GroupInterface $group) {
+    $query = $this->database->select('group_content_field_data', 'gp');
+    $query->condition('gp.type', 'group-group_node-book');
+    $query->condition('gp.gid', $group->id());
+    $query->join('book', 'b', 'gp.entity_id = b.nid');
+    $query->fields('b', ['bid', 'nid']);
+    $query->condition('b.pid', 0);
+    $query->orderBy('b.weight');
+    $results = $query->execute()->fetchAll(\PDO::FETCH_OBJ);
+    if (!empty($results)) {
+      return $results[0]->nid;
+    }
+    return NULL;
   }
 
 }
