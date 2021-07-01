@@ -21,10 +21,6 @@ theme:
   dependencies:
     - core/drupal
 
-react-paragraph-banner:
-  js:
-    dist/react/paragraph/banner/entrypoint.js: { minified: true }
-
 react-block-overview-group:
   js:
     dist/react/block/group/overview/entrypoint.js: { minified: true }
