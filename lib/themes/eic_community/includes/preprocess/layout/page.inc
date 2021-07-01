@@ -53,7 +53,7 @@ function eic_community_preprocess_page(array &$variables): void {
       [
         'link' => [
           'label' => t('Log out'),
-          'path' => '/user/logout',
+          'path' => Url::fromRoute('user.logout'),
         ],
       ],
     ];
