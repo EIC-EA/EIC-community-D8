@@ -1,0 +1,8 @@
+uuid: 1380116b-f0ef-4802-acd3-871c394c4c09
+langcode: en
+status: true
+dependencies: {  }
+id: basic
+label: Basic
+revision: 0
+description: 'Block type composed by an optional title and description.'

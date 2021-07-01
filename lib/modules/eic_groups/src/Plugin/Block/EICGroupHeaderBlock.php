@@ -152,16 +152,59 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
       'url.path',
     ]);
 
-    // Get group content operation links.
-    $group_content_operation_links = $this->eicGroupsHelper->getGroupContentOperationLinks($group, ['node'], $cacheable_metadata);
-    // Get group membership links.
-    $membership_links = $this->eicGroupsHelper->getGroupContentOperationLinks($group, ['user'], $cacheable_metadata);
+
     // Get group operation links.
     $group_operation_links = $this->entityTypeManager->getListBuilder($group->getEntityTypeId())->getOperations($group);
 
+    // Get group content operation links.
+    $node_operation_links = $this->eicGroupsHelper->getGroupContentOperationLinks($group, ['node'], $cacheable_metadata);
+    $user_operation_links = $this->eicGroupsHelper->getGroupContentOperationLinks($group, ['user'], $cacheable_metadata);
+
     // Removes operation link of wiki page group content.
-    if (isset($group_content_operation_links['gnode-create-wiki_page'])) {
-      unset($group_content_operation_links['gnode-create-wiki_page']);
+    if (isset($node_operation_links['gnode-create-wiki_page'])) {
+      unset($node_operation_links['gnode-create-wiki_page']);
+    }
+
+    $operation_links = [];
+    // Get login link for anonymous users.
+    if ($login_link = $this->getAnonymousLoginLink($group)) {
+      $operation_links['anonymous_user_link'] = $login_link;
+    }
+
+    // Moves group joining methods operations to the operation_links array.
+    foreach ($user_operation_links as $key => $action) {
+      if (in_array($action['url']->getRouteName(),
+        [
+          'entity.group.group_request_membership',
+          'entity.group.join',
+        ]
+      )) {
+        unset($user_operation_links[$key]);
+        $operation_links[$key] = $action;
+      }
+    }
+
+    // Gather all the group content creation links to create a two dimensional
+    // array.
+    $create_operations = [];
+    foreach ($node_operation_links as $key => $link) {
+      if (strpos($key, 'create') !== FALSE) {
+        $create_operations[$key] = $link;
+        unset($node_operation_links[$key]);
+      }
+    }
+
+    if (count($create_operations) > 0) {
+      $operation_links[] = [
+        'label' => $this->t('Post content'),
+        'links' => $create_operations,
+      ];
+    }
+
+    $membership_links = [];
+
+    if (isset($group->flags)) {
+      $membership_links = $group->flags;
     }
 
     $build['content'] = [
@@ -172,16 +215,11 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
         'bundle' => $group->bundle(),
         'title' => $group->label(),
         'description' => Markup::create($group->get('field_body')->value),
-        'group_content_operation_links' => $group_content_operation_links,
-        'membership_links' => $membership_links,
+        'operation_links' => array_merge($operation_links, $node_operation_links),
+        'membership_links' => array_merge($membership_links, $user_operation_links),
         'group_operation_links' => $group_operation_links,
       ],
     ];
-
-    // Get login link for anonymous users.
-    if ($login_link = $this->getAnonymousLoginLink($group)) {
-      $build['content']['#group_values']['login_link'] = $login_link;
-    }
 
     // Apply cacheable metadata to the renderable array.
     $cacheable_metadata->applyTo($build);
@@ -216,7 +254,7 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
             break;
 
           case 'tu_group_membership_request':
-            $link['title'] = $this->t('Log in to request memebership');
+            $link['title'] = $this->t('Log in to request membership');
             break;
 
         }

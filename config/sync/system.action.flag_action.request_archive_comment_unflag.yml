@@ -1,0 +1,15 @@
+uuid: 57b09b52-c3b0-4b9c-a8c7-218c802b8ce3
+langcode: en
+status: true
+dependencies:
+  config:
+    - flag.flag.request_archive_comment
+  module:
+    - flag
+id: flag_action.request_archive_comment_unflag
+label: 'Unflag this item'
+type: comment
+plugin: 'flag_action:request_archive_comment_unflag'
+configuration:
+  flag_id: request_archive_comment
+  flag_action: unflag

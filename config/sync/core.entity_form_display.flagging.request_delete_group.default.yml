@@ -3,16 +3,25 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.flagging.request_delete_group.field_request_closed_date
     - field.field.flagging.request_delete_group.field_request_moderator
     - field.field.flagging.request_delete_group.field_request_reason
     - field.field.flagging.request_delete_group.field_request_response
     - field.field.flagging.request_delete_group.field_request_status
     - flag.flag.request_delete_group
+  module:
+    - datetime
 id: flagging.request_delete_group.default
 targetEntityType: flagging
 bundle: request_delete_group
 mode: default
 content:
+  field_request_closed_date:
+    weight: 6
+    settings: {  }
+    third_party_settings: {  }
+    type: datetime_default
+    region: content
   field_request_moderator:
     weight: 5
     settings:

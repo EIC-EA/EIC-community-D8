@@ -64,3 +64,29 @@ function eic_messages_request_close(
   $class = \Drupal::classResolver(RequestMessageCreator::class);
   $class->requestClose($flag, $entity, $type);
 }
+
+/**
+ * Implements hook_entity_type_alter().
+ */
+function eic_messages_entity_type_alter(array &$entity_types) {
+  $entity_types['message_template']->setHandlerClass('form', [
+    'add' => 'Drupal\eic_messages\Form\MessageTemplateForm',
+    'edit' => 'Drupal\eic_messages\Form\MessageTemplateForm',
+    'delete' => 'Drupal\message\Form\MessageTemplateDeleteConfirm',
+  ]);
+}
+
+/**
+ * Implements hook_views_data_alter().
+ */
+function eic_messages_views_data_alter(array &$data) {
+  $data['message']['message_template_type'] = [
+    'title' => t('Message template type'),
+    'filter' => [
+      'title' => t('Message template type'),
+      'help' => t('Select the message template types to filter.'),
+      'field' => 'template',
+      'id' => 'message_template_type',
+    ],
+  ];
+}

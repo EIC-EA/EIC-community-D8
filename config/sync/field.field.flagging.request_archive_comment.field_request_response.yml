@@ -1,0 +1,19 @@
+uuid: b7179665-c172-4814-ac83-d6e08529f802
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.flagging.field_request_response
+    - flag.flag.request_archive_comment
+id: flagging.request_archive_comment.field_request_response
+field_name: field_request_response
+entity_type: flagging
+bundle: request_archive_comment
+label: 'Request response'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string_long

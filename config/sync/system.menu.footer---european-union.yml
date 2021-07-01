@@ -1,0 +1,8 @@
+uuid: 04c4232d-cc36-4058-9370-50684bfd63f0
+langcode: en
+status: true
+dependencies: {  }
+id: footer---european-union
+label: 'Footer - European Union'
+description: ''
+locked: false
