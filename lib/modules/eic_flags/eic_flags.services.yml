@@ -13,3 +13,8 @@ services:
     arguments: [ '@module_handler', '@entity_type.manager', '@flag', '@content_moderation.moderation_information' ]
     tags:
       - { name: request_handler }
+  eic_flags.request_access_checker:
+    class: Drupal\eic_flags\Access\RequestAccessCheck
+    arguments: [ '@eic_flags.handler_collector' ]
+    tags:
+      - { name: access_check, applies_to: _request_send_access }

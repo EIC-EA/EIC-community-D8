@@ -146,4 +146,14 @@ interface HandlerInterface {
    */
   public function getMessageByAction(string $action);
 
+  /**
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *   Currently logged in account, anonymous users are not allowed
+   * @param \Drupal\Core\Entity\ContentEntityInterface $entity
+   *   The content entity against the access check is made
+   *
+   * @return \Drupal\Core\Access\AccessResultInterface
+   */
+  public function canRequest(AccountInterface $account, ContentEntityInterface $entity);
+
 }

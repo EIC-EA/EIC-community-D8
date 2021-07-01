@@ -11,3 +11,13 @@ make archive request:
   title: Make Archive Request
   description: 'Allow users to send archive requests for content entities'
   restrict access: TRUE
+
+close delete request:
+  title: Close Delete Request
+  description: 'Allow the user to handle delete requests and give them a response'
+  restrict access: TRUE
+
+close archive request:
+  title: Close Archive Request
+  description: 'Allow the user to handle archive requests and give them a response'
+  restric access: TRUE
