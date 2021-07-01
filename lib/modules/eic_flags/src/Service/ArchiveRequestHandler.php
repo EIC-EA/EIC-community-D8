@@ -39,7 +39,14 @@ class ArchiveRequestHandler extends AbstractRequestHandler {
     FlaggingInterface $flagging,
     ContentEntityInterface $content_entity
   ) {
-    //TODO implement the accept method
+    if ($this->moderationInformation->isModeratedEntity($content_entity)) {
+      $content_entity->set('moderation_state', 'archived');
+    }
+    else {
+      $content_entity->set('status', FALSE);
+    }
+
+    $content_entity->save();
   }
 
   /**
