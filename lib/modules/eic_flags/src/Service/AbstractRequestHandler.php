@@ -3,12 +3,13 @@
 namespace Drupal\eic_flags\Service;
 
 use Drupal\content_moderation\ModerationInformationInterface;
+use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Session\AccountInterface;
-use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
 use Drupal\eic_flags\RequestStatus;
 use Drupal\flag\Entity\Flag;
 use Drupal\flag\Entity\Flagging;
@@ -100,10 +101,15 @@ abstract class AbstractRequestHandler implements HandlerInterface {
       );
     }
 
+    $now = DrupalDateTime::createFromTimestamp(time());
     $current_user = User::load($account_proxy->id());
     $flagging->set('field_request_moderator', $current_user);
     $flagging->set('field_request_response', $reason);
     $flagging->set('field_request_status', $response);
+    $flagging->set(
+      'field_request_closed_date',
+      $now->format(DateTimeItemInterface::DATETIME_STORAGE_FORMAT)
+    );
     $flagging->save();
 
     $this->moduleHandler->invokeAll(

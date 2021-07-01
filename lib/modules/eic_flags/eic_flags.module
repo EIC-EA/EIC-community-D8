@@ -167,6 +167,11 @@ function eic_flags_entity_operation(EntityInterface $entity) {
     return $handler->getActions($entity);
   }
 
+  $is_admin = \Drupal::service('router.admin_context')->isAdminRoute();
+  if ($is_admin) {
+    return $operations;
+  }
+
   $handlers = $collector->getHandlers();
   foreach ($handlers as $handler) {
     if (!$entity->access('request-' . $handler->getType())

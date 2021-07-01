@@ -5,6 +5,8 @@ namespace Drupal\eic_flags\Form;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
+use Drupal\eic_flags\RequestStatus;
+use Drupal\eic_flags\RequestTypes;
 use Drupal\eic_flags\Service\HandlerInterface;
 
 /**
@@ -13,6 +15,8 @@ use Drupal\eic_flags\Service\HandlerInterface;
  * @package Drupal\eic_flags\Form
  */
 class ListBuilderFilters extends FormBase {
+
+  const CLOSED_REQUEST_VIEW = 'view.closed_requests.page_1';
 
   /**
    * {@inheritdoc}
@@ -87,6 +91,29 @@ class ListBuilderFilters extends FormBase {
     $form['container']['actions']['submit'] = [
       '#type' => 'submit',
       '#value' => $this->t('Filter'),
+    ];
+
+    $views_type_option = $handler->getType() === RequestTypes::ARCHIVE ? 1 : 2;
+    $form['closed_requests_container'] = [
+      '#type' => 'container',
+      '#attributes' => [
+        'class' => ['tabledrag-toggle-weight-wrapper'],
+      ],
+    ];
+    $form['closed_requests_container']['closed_requests'] = [
+      '#type' => 'link',
+      '#title' => $this->t('See handled requests'),
+      '#url' => Url::fromRoute(
+        self::CLOSED_REQUEST_VIEW,
+        [
+          'flag_id' => $views_type_option,
+          'field_request_status_value' => [
+            RequestStatus::ARCHIVED,
+            RequestStatus::ACCEPTED,
+            RequestStatus::DENIED,
+          ],
+        ]
+      ),
     ];
 
     return $form;
