@@ -5,7 +5,6 @@
  * Primary module hooks for EIC Groups module.
  */
 
-use Drupal\content_moderation\Entity\ContentModerationState;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
@@ -191,23 +190,12 @@ function eic_groups_entity_field_access($operation, FieldDefinitionInterface $fi
       switch ($operation) {
         case 'edit':
           // Deny access if it's a new group and the user doesn't have
-          // permission to change the group moderation state from pending to
-          // draft.
+          // "administator" or "content_administrator" roles.
           if ($entity->isNew()) {
-            $access = AccessResult::forbiddenIf(!$account->hasPermission('use groups transition upgrade to draft'))
+
+            $access = AccessResult::forbiddenIf(!in_array('administrator', $account->getRoles(TRUE)) && !in_array('content_administrator', $account->getRoles(TRUE)))
               ->addCacheableDependency($account);
             break;
-          }
-
-          $content_moderation_state = ContentModerationState::loadFromModeratedEntity($entity);
-
-          // Deny access if group moderation state is "pending" and the user
-          // doesn't have permission to change the group moderation state from
-          // pending to draft.
-          if ($content_moderation_state) {
-            $access = AccessResult::forbiddenIf($content_moderation_state->get('moderation_state')->value === 'pending' && !$account->hasPermission('use groups transition upgrade to draft'))
-              ->addCacheableDependency($content_moderation_state)
-              ->addCacheableDependency($account);
           }
 
           break;
