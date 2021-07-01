@@ -54,10 +54,6 @@ cp runner.yml.dist runner.yml
 
 Now edit `runner.yml` with your most beloved text editor and change setup configuration as needed.
 
-Be sure to add this following settings into your web/sites/default/settings.php
-
-`$settings['solr_query_url'] = getenv('DRUPAL_SOLR_QUERY_URL');`
-
 ## Site build and installation
 
 The shipped `docker-compose.yml` file provides the necessary services and tools to install, run and test an OpenEuropa
