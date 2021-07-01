@@ -159,7 +159,7 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
         $operation_links[$key] = $action;
       }
     }
-
+    // Gather all the group creation links to create a two dimensional array
     $create_operations = [];
 
     foreach ($node_operation_links as $key => $link) {
@@ -172,7 +172,7 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
     if (count($create_operations) > 0) {
       $operation_links[] = [
         'label' => $this->t('Post content'),
-        'items' => $create_operations
+        'links' => $create_operations
       ];
     }
 

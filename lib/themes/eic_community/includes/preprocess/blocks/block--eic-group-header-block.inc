@@ -28,10 +28,10 @@ function eic_community_preprocess_eic_group_header_block(array &$variables) {
   $actions = [];
 
   foreach ($variables['group_values']['operation_links'] as $link) {
-    if(isset($link['items'])) {
+    if(isset($link['links'])) {
       $items = [];
 
-      foreach ($link['items'] as $item) {
+      foreach ($link['links'] as $item) {
         $items[]['link'] = [
           'label' => $item['title'],
           'path' => $item['url'],
