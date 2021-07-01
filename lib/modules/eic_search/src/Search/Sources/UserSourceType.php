@@ -35,12 +35,7 @@ class UserSourceType implements SourceTypeInterface {
    */
   public function getAvailableFacets(): array {
     return [
-      'ss_test1',
-      'ss_test2',
-      'ss_test3',
-      'ss_test4',
-      'ss_test5',
-      'ss_test6',
+      'ss_user_last_name',
     ];
   }
 
@@ -49,8 +44,7 @@ class UserSourceType implements SourceTypeInterface {
    */
   public function getAvailableSortOptions(): array {
     return [
-      'ss_group_labsqdqsdel',
-      'ss_group_uel',
+      'ss_user_first_name',
     ];
   }
 
