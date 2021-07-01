@@ -149,7 +149,7 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
     $operation_links = [];
     // Get login link for anonymous users.
     if ($login_link = $this->getAnonymousLoginLink($group)) {
-      $operation_links['anonymus_user_link'] = $login_link;
+      $operation_links['anonymous_user_link'] = $login_link;
     }
 
     foreach ($user_operation_links as $key => $action) {
