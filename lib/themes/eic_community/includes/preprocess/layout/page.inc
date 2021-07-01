@@ -38,7 +38,7 @@ function eic_community_preprocess_page(array &$variables): void {
         'path' => '',
       ],
     ],
-    'description' =>  $block_content->body->value,
+    'description' =>  strip_tags($block_content->body->value),
   ];
 
   $menu_sections = array_filter($variables['page']['footer'], function($content, $key){
