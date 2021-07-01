@@ -4,6 +4,11 @@ status: true
 dependencies:
   config:
     - filter.format.plain_text
+  module:
+    - eic_messages
+third_party_settings:
+  eic_messages:
+    message_template_type: subscription
 template: sub_new_comment_on_content
 label: 'SUBSCRIPTION :: MT19 :: New comment on content'
 description: ''

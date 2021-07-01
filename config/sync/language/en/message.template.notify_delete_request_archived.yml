@@ -1,0 +1,4 @@
+text:
+  -
+    value: "<p><em>Dear </em>[message:author:field_first_name:value]&nbsp;[message:author:field_last_name:value]<em>,</em></p>\r\n\r\n<p>[message:field_referenced_flag:entity:field_request_moderator:entity:field_first_name:value]&nbsp;[message:field_referenced_flag:entity:field_request_moderator:entity:field_last_name:value]<em> has not deleted </em>[message:field_referenced_flag:entity:target_entity:title]<em> but has archived the content instead.</em></p>\r\n\r\n<p><em>The EIC Community team</em></p>\r\n"
+    format: full_html

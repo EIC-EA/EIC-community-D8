@@ -9,7 +9,7 @@ _core:
 id: group_content
 label: 'Group content'
 type: 'canonical_entities:group_content'
-pattern: 'group/[group_content:group:id]/[group_content:pretty-path-key]/[group_content:id]'
+pattern: 'groups/[group_content:group:id]/[group_content:pretty-path-key]/[group_content:id]'
 selection_criteria: {  }
 selection_logic: and
 weight: -3

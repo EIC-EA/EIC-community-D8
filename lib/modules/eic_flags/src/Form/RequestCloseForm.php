@@ -88,7 +88,7 @@ class RequestCloseForm extends ContentEntityConfirmFormBase {
       'Are you sure you want to apply response "@response" to the @entity-type %label?',
       [
         '@entity-type' => $this->getEntity()->getEntityType()->getSingularLabel(),
-        '@response' => RequestStatus::DENIED,
+        '@response' => $this->getRequest()->get('response'),
         '%label' => $this->getEntity()->label(),
       ]
     );
@@ -193,23 +193,29 @@ class RequestCloseForm extends ContentEntityConfirmFormBase {
    * @return \Drupal\Core\StringTranslation\TranslatableMarkup
    */
   protected function getResponseTitle() {
+    $operation = $this->getRequest()->get('request_type') === RequestTypes::DELETE
+      ? 'deleted'
+      : 'archived';
+
     switch ($this->getRequest()->query->get('response')) {
       case RequestStatus::DENIED:
         return $this->t(
-          '@entity-type will not be deleted. Please provide a mandatory reason for denying this request.',
+          '@entity-type will not be @operation. Please provide a mandatory reason for denying this request.',
           [
             '@entity-type' => $this->getEntity()
               ->getEntityType()
               ->getSingularLabel(),
+            '@operation' => $operation,
           ]
         );
       case RequestStatus::ACCEPTED:
         return $this->t(
-          '@entity-type will be permanently deleted. This action cannot be undone!',
+          '@entity-type will be permanently @operation. This action cannot be undone!',
           [
             '@entity-type' => $this->getEntity()
               ->getEntityType()
               ->getSingularLabel(),
+            '@operation' => $operation,
           ]
         );
       case RequestStatus::ARCHIVED:

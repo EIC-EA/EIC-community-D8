@@ -2,7 +2,9 @@
 
 namespace Drupal\eic_flags;
 
+use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Url;
 use Drupal\eic_flags\Service\RequestHandlerCollector;
 use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Entity\EntityListBuilder;
@@ -72,7 +74,8 @@ class FlaggingListBuilder extends EntityListBuilder {
    * {@inheritdoc}
    */
   public static function createInstance(
-    ContainerInterface $container, EntityTypeInterface $entity_type
+    ContainerInterface $container,
+    EntityTypeInterface $entity_type
   ) {
     return new static(
       $entity_type,
@@ -91,8 +94,8 @@ class FlaggingListBuilder extends EntityListBuilder {
     // Enable language column and filter if multiple languages are added.
     $header = [
       'reason' => $this->t('Reason'),
-      'author' => [
-        'data' => $this->t('Author'),
+      'requester' => [
+        'data' => $this->t('Requester'),
         'class' => [RESPONSIVE_PRIORITY_LOW],
       ],
       'created' => [
@@ -119,15 +122,29 @@ class FlaggingListBuilder extends EntityListBuilder {
    */
   public function buildRow(EntityInterface $entity) {
     $row['reason'] = $entity->get('field_request_reason')->value;
-    $row['author']['data'] = [
+    $row['requester ']['data'] = [
       '#theme' => 'username',
       '#account' => $entity->getOwner(),
     ];
     $row['created'] = $this->dateFormatter->format(
-      $entity->get('created')->value, 'short'
+      $entity->get('created')->value,
+      'short'
     );
 
     return $row;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function render() {
+    $entity_type = $this->currentRequest->attributes->get('entity_type');
+    $entity_id = $this->currentRequest->attributes->get('entity_id');
+
+    $target_entity = $this->entityTypeManager->getStorage($entity_type)
+      ->load($entity_id);
+
+    return $this->getHeaderActions($target_entity) + parent::render();
   }
 
   protected function getEntityIds() {
@@ -137,8 +154,11 @@ class FlaggingListBuilder extends EntityListBuilder {
     $query = $this->getStorage()->getQuery()
       ->condition('entity_type', $entity_type)
       ->condition('entity_id', $entity_id)
+      ->condition('field_request_status', RequestStatus::OPEN)
       ->condition(
-        'flag_id', $this->requestHandler->getSupportedEntityTypes(), 'IN'
+        'flag_id',
+        $this->requestHandler->getSupportedEntityTypes(),
+        'IN'
       )
       ->accessCheck(TRUE)
       ->sort($this->entityType->getKey('id'));
@@ -149,6 +169,40 @@ class FlaggingListBuilder extends EntityListBuilder {
     }
 
     return $query->execute();
+  }
+
+  /**
+   * @return array
+   */
+  private function getHeaderActions(ContentEntityInterface $entity) {
+    $actions = $this->requestHandler->getActions($entity);
+    $items = [];
+    foreach ($actions as $name => $action) {
+      $items[$name] = [
+        '#type' => 'link',
+        '#url' => $action['url'],
+        '#title' => $action['title'],
+        '#attributes' => [
+          'class' => [
+            'button',
+            'button--primary',
+            'button--small',
+          ],
+        ],
+      ];
+    }
+
+    $build['actions'] = [
+      '#theme' => 'item_list',
+      '#list_type' => 'ol',
+      '#items' => $items,
+      '#attributes' => [
+        'class' => ['action-links'],
+      ],
+    ];
+
+
+    return $build;
   }
 
 }

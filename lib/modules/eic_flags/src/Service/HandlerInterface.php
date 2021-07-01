@@ -116,6 +116,44 @@ interface HandlerInterface {
    *
    * @return bool
    */
-  public function hasOpenRequest(ContentEntityInterface $content_entity, AccountInterface $account);
+  public function hasOpenRequest(
+    ContentEntityInterface $content_entity,
+    AccountInterface $account
+  );
+
+  /**
+   * Return an array of supported actions which are basically responses.
+   *
+   * @param \Drupal\Core\Entity\ContentEntityInterface $entity
+   *
+   * @return array
+   */
+  public function getActions(ContentEntityInterface $entity);
+
+  /**
+   * Returns the list of matching message templates for the request type.
+   *
+   * @return array
+   */
+  public function getMessages();
+
+  /**
+   * Returns the name of the message template to use for the given action
+   *
+   * @param string $action
+   *
+   * @return string|NULL
+   */
+  public function getMessageByAction(string $action);
+
+  /**
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *   Currently logged in account, anonymous users are not allowed
+   * @param \Drupal\Core\Entity\ContentEntityInterface $entity
+   *   The content entity against the access check is made
+   *
+   * @return \Drupal\Core\Access\AccessResultInterface
+   */
+  public function canRequest(AccountInterface $account, ContentEntityInterface $entity);
 
 }

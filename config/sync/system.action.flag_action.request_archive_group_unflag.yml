@@ -1,0 +1,15 @@
+uuid: f0457e22-a7bc-49bd-8e6f-f2b7c9f5c1bb
+langcode: en
+status: true
+dependencies:
+  config:
+    - flag.flag.request_archive_group
+  module:
+    - flag
+id: flag_action.request_archive_group_unflag
+label: 'Unflag this item'
+type: group
+plugin: 'flag_action:request_archive_group_unflag'
+configuration:
+  flag_id: request_archive_group
+  flag_action: unflag

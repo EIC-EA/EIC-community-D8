@@ -4,6 +4,11 @@ status: true
 dependencies:
   config:
     - filter.format.plain_text
+  module:
+    - eic_messages
+third_party_settings:
+  eic_messages:
+    message_template_type: subscription
 template: sub_site_event_pub_interest
 label: 'SUBSCRIPTION :: MT25 :: Site wide event published about Term of Interest'
 description: ''

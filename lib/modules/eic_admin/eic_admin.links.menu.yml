@@ -1,0 +1,13 @@
+eic_admin.dashboard:
+  title: 'Community'
+  description: 'Manage community.'
+  parent: system.admin
+  route_name: eic_admin.dashboard
+  weight: -50
+  # If menu_name is omitted, the "Tools" menu will be used.
+  menu_name: administration
+eic_admin.logs:
+  title: 'Logs'
+  description: 'View logs of actions from the Community.'
+  route_name: view.admin_messages.logs
+  parent: eic_admin.dashboard

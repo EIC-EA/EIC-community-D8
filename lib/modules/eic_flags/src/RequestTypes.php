@@ -11,4 +11,5 @@ final class RequestTypes {
 
   const DELETE = 'delete';
 
+  const ARCHIVE = 'archive';
 }

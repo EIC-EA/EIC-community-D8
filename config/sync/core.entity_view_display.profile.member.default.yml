@@ -5,10 +5,8 @@ dependencies:
   config:
     - field.field.profile.member.field_body
     - field.field.profile.member.field_cv_link
-    - field.field.profile.member.field_facebook
-    - field.field.profile.member.field_linkedin
     - field.field.profile.member.field_location_address
-    - field.field.profile.member.field_twitter
+    - field.field.profile.member.field_social_links
     - field.field.profile.member.field_vocab_geo
     - field.field.profile.member.field_vocab_job_title
     - field.field.profile.member.field_vocab_language
@@ -19,6 +17,7 @@ dependencies:
   module:
     - address
     - link
+    - social_link_field
     - text
 id: profile.member.default
 targetEntityType: profile
@@ -44,30 +43,6 @@ content:
     third_party_settings: {  }
     type: link
     region: content
-  field_facebook:
-    weight: 13
-    label: above
-    settings:
-      trim_length: 80
-      url_only: false
-      url_plain: false
-      rel: ''
-      target: ''
-    third_party_settings: {  }
-    type: link
-    region: content
-  field_linkedin:
-    weight: 15
-    label: above
-    settings:
-      trim_length: 80
-      url_only: false
-      url_plain: false
-      rel: ''
-      target: ''
-    third_party_settings: {  }
-    type: link
-    region: content
   field_location_address:
     weight: 1
     label: above
@@ -75,17 +50,14 @@ content:
     third_party_settings: {  }
     type: address_default
     region: content
-  field_twitter:
-    weight: 14
+  field_social_links:
+    weight: 16
     label: above
     settings:
-      trim_length: 80
-      url_only: false
-      url_plain: false
-      rel: ''
-      target: ''
+      orientation: vertical
+      new_tab: true
     third_party_settings: {  }
-    type: link
+    type: network_name
     region: content
   field_vocab_geo:
     weight: 7
