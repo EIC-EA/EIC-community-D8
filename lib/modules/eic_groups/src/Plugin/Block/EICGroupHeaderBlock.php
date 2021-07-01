@@ -153,17 +153,22 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
     }
 
     foreach ($user_operation_links as $key => $action) {
-      if (in_array($action['url']->getRouteName(), ['entity.group.group_request_membership', 'entity.group.join'])) {
+      if (in_array($action['url']->getRouteName(),
+        [
+          'entity.group.group_request_membership',
+          'entity.group.join',
+        ]
+      )) {
         unset($user_operation_links[$key]);
-
         $operation_links[$key] = $action;
       }
     }
-    // Gather all the group creation links to create a two dimensional array
-    $create_operations = [];
 
+    // Gather all the group content creation links to create a two dimensional
+    // array.
+    $create_operations = [];
     foreach ($node_operation_links as $key => $link) {
-      if (strpos($key, 'create') !== false) {
+      if (strpos($key, 'create') !== FALSE) {
         $create_operations[$key] = $link;
         unset($node_operation_links[$key]);
       }
@@ -172,13 +177,13 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
     if (count($create_operations) > 0) {
       $operation_links[] = [
         'label' => $this->t('Post content'),
-        'links' => $create_operations
+        'links' => $create_operations,
       ];
     }
 
     $membership_links = [];
 
-    if(isset($group->flags)) {
+    if (isset($group->flags)) {
       $membership_links = $group->flags;
     }
 
