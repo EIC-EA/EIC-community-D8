@@ -2,12 +2,12 @@
 
 namespace Drupal\eic_groups\Hooks;
 
-use Drupal\Component\Utility\Unicode;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Utility\Token;
+use Drupal\eic_seo\AliasCleaner;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\node\NodeInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -36,16 +36,26 @@ class GroupTokens implements ContainerInjectionInterface {
   protected $tokenService;
 
   /**
+   * The Token service.
+   *
+   * @var \Drupal\eic_seo\AliasCleaner
+   */
+  protected $eicAliasCleaner;
+
+  /**
    * Constructs a new GroupTokens object.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
    * @param \Drupal\Core\Utility\Token $token_service
    *   The Token service.
+   * @param \Drupal\eic_seo\AliasCleaner $alias_cleaner
+   *   The EIC AliasCleaner service.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, Token $token_service) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, Token $token_service, AliasCleaner $alias_cleaner) {
     $this->entityTypeManager = $entity_type_manager;
     $this->tokenService = $token_service;
+    $this->eicAliasCleaner = $alias_cleaner;
   }
 
   /**
@@ -54,7 +64,8 @@ class GroupTokens implements ContainerInjectionInterface {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('entity_type.manager'),
-      $container->get('token')
+      $container->get('token'),
+      $container->get('eic_seo.alias_cleaner')
     );
   }
 
@@ -119,7 +130,10 @@ class GroupTokens implements ContainerInjectionInterface {
         if (isset($data['group']) && $data['group'] instanceof GroupInterface) {
           // Provide replacements for truncated title tokens.
           foreach ($this->tokenService->findWithPrefix($tokens, 'eic_groups_truncated_title') as $value => $token_name) {
-            $replacements[$original] = Unicode::truncate($data['group']->label(), $value);
+            $customConfig = [
+              'max_component_length' => $value,
+            ];
+            $replacements[$original] = $this->eicAliasCleaner->cleanString($data['group']->label(), [], $customConfig);
           }
         }
       }
