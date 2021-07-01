@@ -1,0 +1,22 @@
+uuid: 277a79ee-8b8a-4121-ac15-44c417b9dc5d
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.message.mail_body
+    - field.field.message.notify_archival_request_accepted.field_message_subject
+    - field.field.message.notify_archival_request_accepted.field_referenced_flag
+    - message.template.notify_archival_request_accepted
+id: message.notify_archival_request_accepted.mail_body
+targetEntityType: message
+bundle: notify_archival_request_accepted
+mode: mail_body
+content:
+  partial_1:
+    weight: 0
+    region: content
+hidden:
+  field_message_subject: true
+  field_referenced_flag: true
+  partial_0: true
+  search_api_excerpt: true

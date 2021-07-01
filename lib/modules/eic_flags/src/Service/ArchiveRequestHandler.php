@@ -27,8 +27,8 @@ class ArchiveRequestHandler extends AbstractRequestHandler {
   public function getMessages() {
     return [
       RequestStatus::OPEN => 'notify_new_archival_request',
-      RequestStatus::DENIED => 'notify_delete_archive_denied',
-      RequestStatus::ACCEPTED => 'notify_delete_archive_accepted',
+      RequestStatus::DENIED => 'notify_archival_request_denied',
+      RequestStatus::ACCEPTED => 'notify_archival_request_accepted',
     ];
   }
 

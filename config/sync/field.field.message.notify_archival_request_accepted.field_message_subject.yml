@@ -1,0 +1,19 @@
+uuid: f45ff660-e824-48d9-8d0a-c573f9cc5e21
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.message.field_message_subject
+    - message.template.notify_archival_request_accepted
+id: message.notify_archival_request_accepted.field_message_subject
+field_name: field_message_subject
+entity_type: message
+bundle: notify_archival_request_accepted
+label: Subject
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

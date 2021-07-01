@@ -1,0 +1,32 @@
+uuid: f9461322-d74f-43ac-a592-6acafdc426a4
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.message.notify_archival_request_denied.field_message_subject
+    - field.field.message.notify_archival_request_denied.field_referenced_flag
+    - message.template.notify_archival_request_denied
+id: message.notify_archival_request_denied.default
+targetEntityType: message
+bundle: notify_archival_request_denied
+mode: default
+content:
+  field_message_subject:
+    weight: 0
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_referenced_flag:
+    weight: 1
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: entity_reference_autocomplete
+    region: content
+hidden: {  }
