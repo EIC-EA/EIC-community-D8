@@ -20,7 +20,3 @@ theme:
     dist/scripts/compositions/drupal.media-wrapper.js: { minified: true }
   dependencies:
     - core/drupal
-
-react-paragraph-banner:
-  js:
-    dist/react/paragraph/banner/entrypoint.js: { minified: true }
