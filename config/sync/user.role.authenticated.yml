@@ -37,6 +37,7 @@ permissions:
   - 'unflag like_content'
   - 'unflag like_media'
   - 'unflag recommend'
+  - 'unflag recommend_group'
   - 'view banner fragments'
   - 'view bookmark_content'
   - 'view bookmark_media'
