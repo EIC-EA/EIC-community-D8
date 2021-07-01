@@ -55,8 +55,10 @@ class GroupSourceType implements SourceTypeInterface {
   /**
    * @inheritDoc
    */
-  public function getSearchFieldId(): string {
-    return 'ss_group_label';
+  public function getSearchFieldsId(): array {
+    return [
+      'ss_group_label',
+    ];
   }
 
 }

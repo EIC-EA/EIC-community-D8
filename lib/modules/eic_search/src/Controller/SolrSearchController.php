@@ -26,6 +26,11 @@ class SolrSearchController extends ControllerBase {
    * @throws \Drupal\search_api_solr\SearchApiSolrException
    */
   public function search(Request $request) {
+    /** @var \Drupal\eic_search\Collector\SourcesCollector $sources_collector */
+    $sources_collector = \Drupal::service('eic_search.sources_collector');
+    $sources = $sources_collector->getSources();
+
+    $source_class = $request->query->get('source_class');
     $search_value = $request->query->get('search_value');
     $facets_value = $request->query->get('facets_value');
     $sort_value = $request->query->get('sort_value');
@@ -46,7 +51,21 @@ class SolrSearchController extends ControllerBase {
     $connector = $backend->getSolrConnector();
     $solariumQuery = $connector->getSelectQuery();
 
-    $solariumQuery->addParam('q', $search_value);
+    if ($source_class) {
+      /** @var \Drupal\eic_search\Search\Sources\SourceTypeInterface $source */
+      $source = array_key_exists($source_class, $sources) ? $sources[$source_class] : NULL;
+      $search_fields_id = $source ? $source->getSearchFieldsId() : NULL;
+      $search_query_value = $search_value ? "*$search_value*" : '*';
+
+      $query_fields = [];
+
+      foreach ($search_fields_id as $search_field_id) {
+        $query_fields[] = "$search_field_id:$search_query_value";
+      }
+
+      $solariumQuery->addParam('q', implode(' OR ', $query_fields));
+    }
+
     $solariumQuery->addParam('json.nl', 'arrarr');
     $solariumQuery->addParam('facet.field', $facets_options);
     $solariumQuery->addParam('facet', 'on');

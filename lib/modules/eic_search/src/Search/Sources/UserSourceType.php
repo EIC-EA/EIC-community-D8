@@ -57,8 +57,11 @@ class UserSourceType implements SourceTypeInterface {
   /**
    * @inheritDoc
    */
-  public function getSearchFieldId(): string {
-    return 'ss_user_label';
+  public function getSearchFieldsId(): array {
+    return [
+      'ss_user_first_name',
+      'ss_user_last_name',
+    ];
   }
 
 }

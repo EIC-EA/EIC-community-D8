@@ -21,6 +21,7 @@ function eic_search_theme($existing, $type, $theme, $path) {
         'sorts' => [],
         'page_options' => '',
         'enable_search' => TRUE,
+        'source_class' => '',
       ],
     ],
   ];

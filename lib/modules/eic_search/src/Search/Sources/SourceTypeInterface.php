@@ -43,8 +43,8 @@ interface SourceTypeInterface {
   public function getAvailableSortOptions(): array;
 
   /**
-   * Return the field ID on search API to search for
-   * @return string
+   * Return the fields ID on search API to search for (will be separated by OR condition)
+   * @return array
    */
-  public function getSearchFieldId(): string;
+  public function getSearchFieldsId(): array;
 }
