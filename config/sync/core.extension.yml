@@ -25,6 +25,7 @@ module:
   dblog: 0
   dynamic_page_cache: 0
   editor: 0
+  eic_admin: 0
   eic_block_type_cta_tiles: 0
   eic_block_type_page_banner: 0
   eic_block_type_social_media: 0

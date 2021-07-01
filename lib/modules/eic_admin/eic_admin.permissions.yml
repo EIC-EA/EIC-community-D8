@@ -1,0 +1,3 @@
+access eic_admin dashboard:
+  title: 'Access Community management dashboard'
+  restrict access: true
