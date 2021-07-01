@@ -28,19 +28,6 @@ function eic_search_theme($existing, $type, $theme, $path) {
 }
 
 /**
- * Implements hook_preprocess_block
- */
-function eic_search_preprocess_block(&$variables) {
-  $plugin_id = $variables['elements']['#plugin_id'];
-
-  if ('eic_search_overview' !== $plugin_id) {
-    return;
-  }
-
-  $variables['content']['#blockId'] = $plugin_id;
-}
-
-/**
  * Implements hook_preprocess_html
  */
 function eic_search_preprocess_html(&$variables) {
