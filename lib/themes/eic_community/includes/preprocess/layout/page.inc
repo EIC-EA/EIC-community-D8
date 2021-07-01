@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Template\Attribute;
+use Drupal\Core\Url;
 
 /**
  * Implements hook_preprocess_page().
@@ -32,10 +33,10 @@ function eic_community_preprocess_page(array &$variables): void {
     ]
   ];
 
-  if ($variables['user']->id() === 0) {
+  if ($variables['user']->isAnonymous()) {
     $variables['site_header']['login']['link'] = [
       'label' => t('Log in'),
-      'path' => '/user/login'
+      'path' => Url::fromRoute('user.login'),
     ];
   }else{
     $account = \Drupal\user\Entity\User::load($variables['user']->id());
