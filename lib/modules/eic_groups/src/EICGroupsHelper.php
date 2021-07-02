@@ -114,7 +114,7 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
   /**
    * {@inheritdoc}
    */
-  public function getGroupOperationLinks(
+  public function getGroupContentOperationLinks(
     GroupInterface $group,
     $limit_entities = [],
     CacheableMetadata $cacheable_metadata = NULL
