@@ -73,27 +73,21 @@ class GroupTokens implements ContainerInjectionInterface {
    * Implements hook_token_info().
    */
   public function tokenInfo() {
-    return [
-      'types' => [
-        'eic_groups_tokens' => [
-          'name' => $this->t('EIC Group tokens'),
-          'description' => $this->t('Custom EIC Group tokens.'),
-        ],
-      ],
-      'tokens' => [
-        'eic_groups_tokens' => [
-          'node_group_url' => [
-            'name' => $this->t('Node group url'),
-            'description' => $this->t('The url of the group this node belongs to'),
-          ],
-          'eic_groups_truncated_title' => [
-            'name' => $this->t('Truncated group title'),
-            'description' => $this->t('The truncated group title to the given limit. Maximum value is 100.'),
-            'dynamic' => TRUE,
-          ],
-        ],
+    $info = [];
+    $info['tokens']['node'] = [
+      'node_group_url' => [
+        'name' => $this->t('Node group url'),
+        'description' => $this->t('The url of the group this node belongs to'),
       ],
     ];
+    $info['tokens']['group'] = [
+      'group_truncated_title' => [
+        'name' => $this->t('Truncated group title'),
+        'description' => $this->t('The truncated group title to the given limit. Maximum value is 100.'),
+        'dynamic' => TRUE,
+      ],
+    ];
+    return $info;
   }
 
   /**
@@ -101,7 +95,9 @@ class GroupTokens implements ContainerInjectionInterface {
    */
   public function tokens($type, $tokens, array $data, array $options, BubbleableMetadata $bubbleable_metadata) {
     $replacements = [];
-    if ($type == 'eic_groups_tokens') {
+
+    // Node tokens.
+    if ($type == 'node' && !empty($data['node'])) {
       foreach ($tokens as $name => $original) {
         switch ($name) {
           case 'node_group_url':
@@ -127,15 +123,21 @@ class GroupTokens implements ContainerInjectionInterface {
 
         }
 
-        if (isset($data['group']) && $data['group'] instanceof GroupInterface) {
-          // Provide replacements for truncated title tokens.
-          foreach ($this->tokenService->findWithPrefix($tokens, 'eic_groups_truncated_title') as $value => $token_name) {
-            $customConfig = [
-              'max_component_length' => $value,
-            ];
-            $replacements[$original] = $this->eicAliasCleaner->cleanString($data['group']->label(), [], $customConfig);
-          }
+      }
+    }
+
+    // Group tokens.
+    if ($type == 'group' && !empty($data['group']) && $data['group'] instanceof GroupInterface) {
+      // Provide replacements for truncated title tokens.
+      foreach ($this->tokenService->findWithPrefix($tokens, 'group_truncated_title') as $value => $token_name) {
+        // Check that we have a numeric value and that it's not above 100.
+        if (!is_numeric($value) || $value > 100) {
+          $value = 100;
         }
+        $customConfig = [
+          'max_component_length' => $value,
+        ];
+        $replacements[$token_name] = $this->eicAliasCleaner->cleanString($data['group']->label(), [], $customConfig);
       }
     }
     return $replacements;

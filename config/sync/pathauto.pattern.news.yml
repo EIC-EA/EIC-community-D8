@@ -7,7 +7,7 @@ dependencies:
 id: news
 label: News
 type: 'canonical_entities:node'
-pattern: '[eic_groups_tokens:node_group_url]/news/[node:title]'
+pattern: '[node:node_group_url]/news/[node:title]'
 selection_criteria:
   fa81abf5-640d-4efc-a8d3-7bea7be61832:
     id: node_type
