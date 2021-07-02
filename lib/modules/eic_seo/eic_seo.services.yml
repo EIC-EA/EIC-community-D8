@@ -1,0 +1,4 @@
+services:
+  eic_seo.alias_cleaner:
+    class: Drupal\eic_seo\AliasCleaner
+    arguments: ['@config.factory', '@pathauto.alias_storage_helper', '@language_manager', '@cache.discovery', '@transliteration', '@module_handler']
