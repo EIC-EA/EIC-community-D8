@@ -159,7 +159,7 @@ class EntityOperations implements ContainerInjectionInterface {
    */
   public function groupPermissionInsert(GroupPermissionInterface $group_permissions) {
     $group = $group_permissions->getGroup();
-    // Adds or removes delete group permission from group owner based on the
+    // Adds or removes "delete group" permission from group owner based on the
     // group moderation state.
     if ($group->get('moderation_state')->value === 'pending') {
       $this->eicGroupsHelper->addRolePermissionsToGroup($group_permissions, EICGroupsHelper::GROUP_OWNER_ROLE, ['delete group']);
@@ -368,7 +368,7 @@ class EntityOperations implements ContainerInjectionInterface {
   }
 
   /**
-   * Updates group owner permissions after based on moderation state.
+   * Updates group owner permissions based on moderation state.
    *
    * @param \Drupal\group\Entity\GroupInterface $entity
    *   The Group entity.
@@ -381,14 +381,21 @@ class EntityOperations implements ContainerInjectionInterface {
     $old_moderation_state = $entity->original->get('moderation_state')->value;
     $new_moderation_state = $entity->get('moderation_state')->value;
 
-    if ($old_moderation_state !== $new_moderation_state && $new_moderation_state === 'pending') {
+    // If group moderation state hasn't changed, we do nothing.
+    if ($old_moderation_state === $new_moderation_state) {
+      return;
+    }
+
+    // We add or remove "delete group" permission from the group owner based on
+    // the new group moderation state.
+    if ($new_moderation_state === 'pending') {
       $this->eicGroupsHelper->addRolePermissionsToGroup($group_permissions, EICGroupsHelper::GROUP_OWNER_ROLE, ['delete group']);
-      $this->eicGroupsHelper->saveGroupPermissions($group_permissions);
     }
-    elseif ($old_moderation_state !== $new_moderation_state && $new_moderation_state !== 'pending') {
+    else {
       $this->eicGroupsHelper->removeRolePermissionsFromGroup($group_permissions, EICGroupsHelper::GROUP_OWNER_ROLE, ['delete group']);
-      $this->eicGroupsHelper->saveGroupPermissions($group_permissions);
     }
+
+    $this->eicGroupsHelper->saveGroupPermissions($group_permissions);
   }
 
 }
