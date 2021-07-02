@@ -13,6 +13,7 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
 use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_groups\EICGroupsHelperInterface;
+use Drupal\eic_groups\GroupsModerationHelper;
 use Drupal\eic_user\UserHelper;
 use Drupal\group\Entity\GroupContent;
 use Drupal\group\Entity\GroupInterface;
@@ -161,7 +162,7 @@ class EntityOperations implements ContainerInjectionInterface {
     $group = $group_permissions->getGroup();
     // Adds or removes "delete group" permission from group owner based on the
     // group moderation state.
-    if ($group->get('moderation_state')->value === 'pending') {
+    if ($group->get('moderation_state')->value === GroupsModerationHelper::GROUP_PENDING_STATE) {
       $this->eicGroupsHelper->addRolePermissionsToGroup($group_permissions, EICGroupsHelper::GROUP_OWNER_ROLE, ['delete group']);
     }
     else {
@@ -388,7 +389,7 @@ class EntityOperations implements ContainerInjectionInterface {
 
     // We add or remove "delete group" permission from the group owner based on
     // the new group moderation state.
-    if ($new_moderation_state === 'pending') {
+    if ($new_moderation_state === GroupsModerationHelper::GROUP_PENDING_STATE) {
       $this->eicGroupsHelper->addRolePermissionsToGroup($group_permissions, EICGroupsHelper::GROUP_OWNER_ROLE, ['delete group']);
     }
     else {
