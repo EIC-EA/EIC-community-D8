@@ -4,6 +4,11 @@ status: true
 dependencies:
   config:
     - filter.format.plain_text
+  module:
+    - eic_messages
+third_party_settings:
+  eic_messages:
+    message_template_type: subscription
 template: sub_new_group_content_published
 label: 'SUBSCRIPTION :: MT18 :: New group content published'
 description: ''

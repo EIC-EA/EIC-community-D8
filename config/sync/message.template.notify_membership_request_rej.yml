@@ -4,6 +4,11 @@ status: true
 dependencies:
   config:
     - filter.format.plain_text
+  module:
+    - eic_messages
+third_party_settings:
+  eic_messages:
+    message_template_type: notification
 template: notify_membership_request_rej
 label: 'NOTIFY :: MT04 :: Membership request rejected'
 description: ''

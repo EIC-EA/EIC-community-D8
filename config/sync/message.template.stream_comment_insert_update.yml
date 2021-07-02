@@ -4,6 +4,11 @@ status: true
 dependencies:
   config:
     - filter.format.plain_text
+  module:
+    - eic_messages
+third_party_settings:
+  eic_messages:
+    message_template_type: stream
 template: stream_comment_insert_update
 label: 'STREAM :: MT27 :: Comment insert/update'
 description: ''

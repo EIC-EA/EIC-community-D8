@@ -38,4 +38,16 @@ class FlagRequestController extends ControllerBase {
       ->render();
   }
 
+  /**
+   * Returns the title for the eic_flags.flagged_entities.list route
+   *
+   * @param $request_type
+   *
+   * @return \Drupal\Core\StringTranslation\TranslatableMarkup
+   */
+  public function getTitle($request_type) {
+    $operation = $request_type === RequestTypes::DELETE ? 'delete' : 'archival';
+    return $this->t('Pending @operation requests', ['@operation' => $operation]);
+  }
+
 }

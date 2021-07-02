@@ -1,0 +1,21 @@
+uuid: dfdc5d18-7c61-4ea8-9f23-846d551b3f62
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.flagging.field_request_closed_date
+    - flag.flag.request_delete_group
+  module:
+    - datetime
+id: flagging.request_delete_group.field_request_closed_date
+field_name: field_request_closed_date
+entity_type: flagging
+bundle: request_delete_group
+label: 'Closed date'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: datetime

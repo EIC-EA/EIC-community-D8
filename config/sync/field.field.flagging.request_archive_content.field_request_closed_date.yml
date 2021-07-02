@@ -1,0 +1,21 @@
+uuid: aa236f21-8fac-4e49-85ef-19491fd772cf
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.flagging.field_request_closed_date
+    - flag.flag.request_archive_content
+  module:
+    - datetime
+id: flagging.request_archive_content.field_request_closed_date
+field_name: field_request_closed_date
+entity_type: flagging
+bundle: request_archive_content
+label: 'Closed date'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: datetime

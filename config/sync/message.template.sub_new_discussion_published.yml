@@ -4,6 +4,11 @@ status: true
 dependencies:
   config:
     - filter.format.plain_text
+  module:
+    - eic_messages
+third_party_settings:
+  eic_messages:
+    message_template_type: subscription
 template: sub_new_discussion_published
 label: 'SUBSCRIPTION :: MT26 :: New discussion published without notification'
 description: ''

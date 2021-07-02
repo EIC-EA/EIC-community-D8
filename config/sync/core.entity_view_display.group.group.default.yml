@@ -20,9 +20,9 @@ mode: default
 content:
   content_moderation_control:
     weight: -20
+    region: content
     settings: {  }
     third_party_settings: {  }
-    region: content
   field_related_news_stories:
     weight: 0
     label: above
@@ -38,14 +38,14 @@ content:
     region: content
   flag_follow_group:
     weight: 10
+    region: content
     settings: {  }
     third_party_settings: {  }
-    region: content
   flag_recommend_group:
     weight: 10
+    region: content
     settings: {  }
     third_party_settings: {  }
-    region: content
 hidden:
   changed: true
   created: true

@@ -4,6 +4,11 @@ status: true
 dependencies:
   config:
     - filter.format.plain_text
+  module:
+    - eic_messages
+third_party_settings:
+  eic_messages:
+    message_template_type: subscription
 template: sub_content_interest_published
 label: 'SUBSCRIPTION :: MT23 :: Content published about Terms of Interest'
 description: ''

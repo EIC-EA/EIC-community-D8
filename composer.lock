@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "45d7a91c1d1e84002e1b471dbe538aec",
+    "content-hash": "24dd9bf64612eaf28ebe5f5d38e45821",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -2382,6 +2382,9 @@
                         "[web-root]/profiles/README.txt": "assets/scaffold/files/profiles.README.txt",
                         "[web-root]/themes/README.txt": "assets/scaffold/files/themes.README.txt"
                     }
+                },
+                "patches_applied": {
+                    "3007424 - Multiple usages of FieldPluginBase::getEntity do not check for NULL, leading to WSOD": "https://www.drupal.org/files/issues/2021-01-06/3007424-108.patch"
                 }
             },
             "autoload": {
@@ -3160,7 +3163,8 @@
                 },
                 "patches_applied": {
                     "3168014 - TypeError: Argument 1 passed to Drupal\\flag\\TwigExtension\\FlagCount::count() must implement interface": "https://www.drupal.org/files/issues/2020-09-06/show-count-for-visitors--3168014-2.patch",
-                    "3112986 - Add Flood Control": "https://www.drupal.org/files/issues/2020-07-08/3112986-20.patch"
+                    "3112986 - Add Flood Control": "https://www.drupal.org/files/issues/2020-07-08/3112986-20.patch",
+                    "2723703 - Add relationship to flagged entities when Flagging is base table": "https://www.drupal.org/files/issues/2021-02-22/2723703-73.patch"
                 }
             },
             "notification-url": "https://packages.drupal.org/8/downloads",
@@ -5234,6 +5238,55 @@
             "support": {
                 "source": "https://cgit.drupalcode.org/smart_trim",
                 "issues": "https://drupal.org/project/issues/smart_trim"
+            }
+        },
+        {
+            "name": "drupal/social_link_field",
+            "version": "1.1.0-alpha1",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/social_link_field.git",
+                "reference": "8.x-1.1-alpha1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/social_link_field-8.x-1.1-alpha1.zip",
+                "reference": "8.x-1.1-alpha1",
+                "shasum": "9c9d6d1225f8cdcce4212ad4746dbec395b7ff03"
+            },
+            "require": {
+                "drupal/core": "^8 || ^9"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "8.x-1.1-alpha1",
+                    "datestamp": "1590232338",
+                    "security-coverage": {
+                        "status": "not-covered",
+                        "message": "Alpha releases are not covered by Drupal security advisories."
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0+"
+            ],
+            "authors": [
+                {
+                    "name": "Roman Hryshkanych",
+                    "homepage": "https://www.drupal.org/u/romixua"
+                },
+                {
+                    "name": "voleger",
+                    "homepage": "https://www.drupal.org/user/3260314"
+                }
+            ],
+            "description": "Provide field type with social links.",
+            "homepage": "https://www.drupal.org/project/social_link_field",
+            "support": {
+                "source": "http://cgit.drupalcode.org/social_link_field",
+                "issues": "https://www.drupal.org/project/issues/social_link_field"
             }
         },
         {
@@ -15713,6 +15766,7 @@
         "drupal/publication_date": 10,
         "drupal/realname": 20,
         "drupal/search_api_spellcheck": 10,
+        "drupal/social_link_field": 15,
         "drupal/typed_link": 20,
         "ethosce/group_purl": 20,
         "lramarojaona/purl": 15,
@@ -15726,5 +15780,8 @@
         "php": ">=7.2"
     },
     "platform-dev": [],
+    "platform-overrides": {
+        "php": "7.3.21"
+    },
     "plugin-api-version": "1.1.0"
 }
