@@ -41,6 +41,8 @@ class AliasCleaner extends AliasCleanerBase {
    *
    * Pathauto config is set globally. This method helps if you need to provide
    * custom configuration for a particular string.
+   * We need this until this issue is resolved:
+   * https://www.drupal.org/project/pathauto/issues/471644.
    *
    * @param string $string
    *   A string to clean.
