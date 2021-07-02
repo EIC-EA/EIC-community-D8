@@ -4,6 +4,7 @@ namespace Drupal\eic_groups\Plugin\Block;
 
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Cache\CacheableMetadata;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Render\Markup;
 use Drupal\Core\Routing\RouteMatchInterface;
@@ -43,6 +44,13 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
   protected $eicGroupsHelper;
 
   /**
+   * The entity type manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
    * The OEC group flex helper service.
    *
    * @var \Drupal\oec_group_flex\OECGroupFlexHelper
@@ -72,6 +80,8 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
    *   The current route match.
    * @param \Drupal\eic_groups\EICGroupsHelperInterface $eic_groups_helper
    *   The EIC groups helper service.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
    * @param \Drupal\oec_group_flex\OECGroupFlexHelper $oec_group_flex_helper
    *   The OEC group flex helper service.
    * @param \Drupal\Core\Session\AccountProxyInterface $current_user
@@ -83,12 +93,14 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
     $plugin_definition,
     RouteMatchInterface $route_match,
     EICGroupsHelperInterface $eic_groups_helper,
+    EntityTypeManagerInterface $entity_type_manager,
     OECGroupFlexHelper $oec_group_flex_helper,
     AccountProxyInterface $current_user
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->routeMatch = $route_match;
     $this->eicGroupsHelper = $eic_groups_helper;
+    $this->entityTypeManager = $entity_type_manager;
     $this->oecGroupFlexHelper = $oec_group_flex_helper;
     $this->currentUser = $current_user;
   }
@@ -108,6 +120,7 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
       $plugin_definition,
       $container->get('current_route_match'),
       $container->get('eic_groups.helper'),
+      $container->get('entity_type.manager'),
       $container->get('oec_group_flex.helper'),
       $container->get('current_user')
     );
@@ -126,6 +139,8 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
       }
     }
 
+    /** @var \Drupal\group\Entity\GroupInterface $group */
+
     // The content of this is block is shown depending on the current user's
     // permissions. It obviously also varies per group, but we cannot know for
     // sure how we got that group as it is up to the context provider to
@@ -138,8 +153,11 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
     ]);
 
     // Get group operation links.
-    $node_operation_links = $this->eicGroupsHelper->getGroupOperationLinks($group, ['node'], $cacheable_metadata);
-    $user_operation_links = $this->eicGroupsHelper->getGroupOperationLinks($group, ['user'], $cacheable_metadata);
+    $group_operation_links = $this->entityTypeManager->getListBuilder($group->getEntityTypeId())->getOperations($group);
+
+    // Get group content operation links.
+    $node_operation_links = $this->eicGroupsHelper->getGroupContentOperationLinks($group, ['node'], $cacheable_metadata);
+    $user_operation_links = $this->eicGroupsHelper->getGroupContentOperationLinks($group, ['user'], $cacheable_metadata);
 
     // Removes operation link of wiki page group content.
     if (isset($node_operation_links['gnode-create-wiki_page'])) {
@@ -152,6 +170,7 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
       $operation_links['anonymous_user_link'] = $login_link;
     }
 
+    // Moves group joining methods operations to the operation_links array.
     foreach ($user_operation_links as $key => $action) {
       if (in_array($action['url']->getRouteName(),
         [
@@ -181,6 +200,10 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
       ];
     }
 
+    $visible_group_operation_links = array_filter($group_operation_links, function ($key) {
+      return $key === 'edit';
+    }, ARRAY_FILTER_USE_KEY);
+
     $membership_links = [];
 
     if (isset($group->flags)) {
@@ -195,7 +218,7 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
         'bundle' => $group->bundle(),
         'title' => $group->label(),
         'description' => Markup::create($group->get('field_body')->value),
-        'operation_links' => array_merge($operation_links, $node_operation_links),
+        'operation_links' => array_merge($operation_links, $node_operation_links, $visible_group_operation_links),
         'membership_links' => array_merge($membership_links, $user_operation_links),
       ],
     ];
