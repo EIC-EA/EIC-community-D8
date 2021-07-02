@@ -25,37 +25,125 @@ function eic_community_preprocess_eic_group_header_block(array &$variables) {
     ];
   }
 
-  // @todo replace the hardcoded items with structure coming form operation_links.
   $actions = [];
 
-  // Adds group operation links.
-  if (!empty($variables['group_values']['operation_links'])) {
-    $actions[] = [
-      'label' => t('Post content'),
-      'items' => [],
-    ];
-    foreach ($variables['group_values']['operation_links'] as $action) {
-      $actions[0]['items'][]['link'] = [
-        'label' => $action['title'],
-        'path' => $action['url'],
+  foreach ($variables['group_values']['operation_links'] as $link) {
+    if(isset($link['links'])) {
+      $items = [];
+
+      foreach ($link['links'] as $item) {
+        $items[]['link'] = [
+          'label' => $item['title'],
+          'path' => $item['url'],
+        ];
+      }
+
+      $actions[] = [
+        'label' => $link['label'],
+        'items' => $items
+      ];
+    }else{
+      $actions[]['link'] = [
+        'label' => $link['title'],
+        'path' => $link['url'],
       ];
     }
   }
 
-  // Adds membership links.
+  $variables['group_values']['actions'] = $actions;
+
+  $flags = [];
+
   foreach ($variables['group_values']['membership_links'] as $action) {
-    $actions[]['items'][]['link'] = [
-      'label' => $action['title'],
-      'path' => $action['url'],
-    ];
+    if(isset($action['#lazy_builder'])) {
+      $flag = ['content' => $action];
+    }else {
+      $icon_name = '';
+
+      switch ($action['url']->getRouteName()) {
+        case 'entity.group.request_delete_form':
+          $icon_name = '';
+          break;
+
+        case 'entity.group.leave':
+          $icon_name = 'leave';
+          break;
+
+        case 'entity.group_content.add_form':
+          // Invite user.
+          $icon_name = 'invite';
+          break;
+
+      }
+
+      $flag = [
+        'link' => [
+          'label' => $action['title'],
+          'path' => $action['url'],
+        ],
+      ];
+
+      if (strlen($icon_name) > 0) {
+        $flag['icon'] = [
+          'name' => $icon_name,
+          'type' => 'custom',
+        ];
+      }
+    }
+
+    $flags[] = $flag;
   }
 
-  $variables['group_values']['actions'] = $actions;
-  // @todo add content from module for these sections.
-  $variables['group_values']['stats'] = [];
-  $variables['group_values']['tags'] = [];
+  $variables['group_values']['flags'] = $flags;
+  // @todo Make statistics dynamic.
+  $variables['group_values']['stats'] = [
+    [
+      'icon' => [
+        'name' => 'user',
+        'type' => 'custom',
+      ],
+      'label' => 'user',
+      'value' => 0,
+    ],
+    [
+      'icon' => [
+        'name' => 'comment',
+        'type' => 'custom',
+      ],
+      'label' => 'comment',
+      'value' => 0,
+    ],
+    [
+      'icon' => [
+        'name' => 'documents',
+        'type' => 'custom',
+      ],
+      'label' => 'documents',
+      'value' => 0,
+    ],
+    [
+      'icon' => [
+        'name' => 'calendar',
+        'type' => 'custom',
+      ],
+      'label' => 'calendar',
+      'value' => 0,
+    ],
+  ];
+
+  $group_visibility = \Drupal::service('oec_group_flex.helper')->getGroupVisibilitySettings($group);
+  $tag = strpos($group_visibility['plugin_id'], '_') !== FALSE ? strstr($group_visibility['plugin_id'], '_', TRUE) : $group_visibility['plugin_id'];
+
+  $variables['group_values']['tags'][] = [
+    'extra_classes' => 'ecl-tag--is-' . $tag,
+    'tag' => [
+      'type' => 'button',
+      'label' => $tag,
+    ],
+  ];
+
   // Adds url to navigate back to the list of groups.
   $back_url = Url::fromRoute('view.global_overviews.page_1');
-  $variables['back_url'] = $back_url->toString();
+  $variables['group_values']['back_url'] = $back_url->toString();
 
 }

@@ -1,0 +1,9 @@
+eic_admin.dashboard:
+  path: '/admin/community'
+  defaults:
+    _title: 'Community Management'
+    _controller: '\Drupal\eic_admin\Controller\EicAdminController::dashboard'
+  requirements:
+    _permission: 'access eic_admin dashboard'
+  options:
+    _admin_route: TRUE

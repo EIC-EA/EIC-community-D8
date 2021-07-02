@@ -1,0 +1,18 @@
+# Schema for custom views plugins.
+
+views.filter.message_template_type:
+  type: views_filter
+  label: 'Message template type'
+  mapping:
+    operator:
+      type: string
+      label: 'Operator'
+    value:
+      type: sequence
+      label: 'Values'
+      sequence:
+        type: string
+        label: 'Value'
+    expose:
+      type: mapping
+      label: 'Exposed'

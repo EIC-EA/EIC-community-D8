@@ -8,13 +8,16 @@
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\eic_flags\Form\RequestCloseForm;
-use Drupal\eic_flags\Form\RequestDeleteForm;
+use Drupal\eic_flags\Form\NewRequestForm;
+use Drupal\eic_flags\Hooks\EntityAccess;
 use Drupal\eic_flags\Hooks\FlagTokens;
 use Drupal\eic_flags\RequestStatus;
 use Drupal\eic_flags\RequestTypes;
+use Drupal\eic_flags\Routing\EntityRequestRouteProvider;
 use Drupal\eic_flags\Service\HandlerInterface;
 
 /**
@@ -39,6 +42,25 @@ function eic_flags_theme() {
       ],
     ],
   ];
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter() for the list_builder_filters form.
+ *
+ * Since the exposed form is a GET form, we don't want it to send the form
+ * tokens. However, you cannot make this happen in the form builder function
+ * itself, because the tokens are added to the form after the builder function
+ * is called. So, we have to do it in a form_alter.
+ *
+ * @see \Drupal\eic_flags\Form\ListBuilderFilters
+ */
+function eic_flags_form_list_builder_filters_alter(
+  &$form,
+  FormStateInterface $form_state
+) {
+  $form['form_build_id']['#access'] = FALSE;
+  $form['form_token']['#access'] = FALSE;
+  $form['form_id']['#access'] = FALSE;
 }
 
 /**
@@ -75,22 +97,36 @@ function eic_flags_field_request_status_allowed_values() {
 
 /**
  * Implements hook_entity_type_build().
+ *
+ * @var \Drupal\Core\Entity\EntityTypeInterface[] $entity_types
  */
 function eic_flags_entity_type_build(array &$entity_types) {
   /** @var \Drupal\eic_flags\Service\HandlerInterface $delete_request_handler */
   $delete_request_handler = \Drupal::service('eic_flags.handler_collector')
     ->getHandlerByType(RequestTypes::DELETE);
 
-  foreach (array_keys($delete_request_handler->getSupportedEntityTypes()) as $entity_id) {
+  $supported_entities = array_keys($delete_request_handler->getSupportedEntityTypes());
+  foreach ($supported_entities as $entity_id) {
     if (!isset($entity_types[$entity_id])) {
       continue;
     }
 
-    $entity_types[$entity_id]
-      ->setFormClass('request-delete', RequestDeleteForm::class)
+    $entity_type = $entity_types[$entity_id];
+    $handler_classes = $entity_type->getHandlerClasses();
+    $route_providers = $handler_classes['route_provider'] ?? [];
+    $route_providers['action-request'] = EntityRequestRouteProvider::class;
+
+    $entity_type->setFormClass('new-request', NewRequestForm::class)
       ->setFormClass('close-request', RequestCloseForm::class)
-      ->setLinkTemplate('request-delete-form', '/{entity_type}/{entity_id}/request-delete')
-      ->setLinkTemplate('close-request', '/admin/community/{entity_type}/{entity_id}/request/{request_type}/close');
+      ->setHandlerClass('route_provider', $route_providers)
+      ->setLinkTemplate(
+        'new-request',
+        '/request/{request_type}/' . $entity_id . '/{' . $entity_id . '}'
+      )
+      ->setLinkTemplate(
+        'close-request',
+        '/admin/community/' . $entity_id . '/{' . $entity_id . '}/request/{request_type}/close'
+      );
   }
 }
 
@@ -105,7 +141,13 @@ function eic_flags_token_info() {
 /**
  * Implements hook_tokens().
  */
-function eic_flags_tokens($type, $tokens, array $data, array $options, BubbleableMetadata $bubbleable_metadata) {
+function eic_flags_tokens(
+  $type,
+  $tokens,
+  array $data,
+  array $options,
+  BubbleableMetadata $bubbleable_metadata
+) {
   $class = \Drupal::classResolver(FlagTokens::class);
   return $class->tokens($type, $tokens, $data, $options, $bubbleable_metadata);
 }
@@ -114,33 +156,41 @@ function eic_flags_tokens($type, $tokens, array $data, array $options, Bubbleabl
  * Implements hook_entity_operation().
  */
 function eic_flags_entity_operation(EntityInterface $entity) {
-  /** @var \Drupal\eic_flags\Service\HandlerInterface $delete_request_handler */
-  $delete_request_handler = \Drupal::service('eic_flags.handler_collector')
-    ->getHandlerByType(RequestTypes::DELETE);
-
-  if (!$entity instanceof ContentEntityInterface
-    || !$delete_request_handler->supports($entity)
-  ) {
+  if (!$entity instanceof ContentEntityInterface) {
     return [];
   }
 
   $operations = [];
-  $route_name = \Drupal::routeMatch()->getRouteName();
-  $is_admin = \Drupal::service('router.admin_context')->isAdminRoute();
-  if ($is_admin && 'eic_flags.flagged_entities.list' === $route_name) {
-    return $delete_request_handler->getActions($entity);
+  /** @var \Drupal\eic_flags\Service\RequestHandlerCollector $collector */
+  $collector = \Drupal::service('eic_flags.handler_collector');
+  if ($request_type = \Drupal::routeMatch()->getParameter('request_type')) {
+    $handler = $collector->getHandlerByType($request_type);
+    return $handler->getActions($entity);
   }
 
-  if (!$entity->access('request-delete') || $is_admin) {
+  $is_admin = \Drupal::service('router.admin_context')->isAdminRoute();
+  if ($is_admin) {
     return $operations;
   }
 
-  $operations['request_delete'] = [
-    'title' => t('Request delete'),
-    'url' => $entity->toUrl('request-delete-form')
-      ->setRouteParameter('destination', \Drupal::request()
-        ->getRequestUri()),
-  ];
+  $handlers = $collector->getHandlers();
+  foreach ($handlers as $handler) {
+    if (!$entity->access('request-' . $handler->getType())
+      || !$handler->supports($entity)) {
+      continue;
+    }
+
+    $type = $handler->getType();
+    $operations['request_' . $type] = [
+      'title' => t('Request ' . $type),
+      'url' => $entity->toUrl('new-request')
+        ->setRouteParameter(
+          'destination',
+          \Drupal::request()->getRequestUri()
+        )
+        ->setRouteParameter('request_type', $type),
+    ];
+  }
 
   return $operations;
 }
@@ -148,7 +198,10 @@ function eic_flags_entity_operation(EntityInterface $entity) {
 /**
  * Implements hook_entity_operation_alter().
  */
-function eic_flags_entity_operation_alter(array &$operations, EntityInterface $entity) {
+function eic_flags_entity_operation_alter(
+  array &$operations,
+  EntityInterface $entity
+) {
   $route_name = \Drupal::routeMatch()->getRouteName();
   if ('eic_flags.flagged_entities.list' !== $route_name) {
     return;
@@ -163,13 +216,21 @@ function eic_flags_entity_operation_alter(array &$operations, EntityInterface $e
     return;
   }
 
-  $operations = array_filter($operations, function ($operation, $key) {
-    return in_array($key, [
-      'deny_request',
-      'accept_request',
-      'archive_request',
-    ]);
-  }, ARRAY_FILTER_USE_BOTH);
+  $operations = array_filter(
+    $operations,
+    function ($operation, $key) {
+      return in_array(
+        $key,
+        [
+          'deny_request',
+          'accept_request',
+          'archive_request',
+          'edit',
+        ]
+      );
+    },
+    ARRAY_FILTER_USE_BOTH
+  );
 }
 
 /**
@@ -180,26 +241,14 @@ function eic_flags_entity_access(
   $operation,
   AccountInterface $account
 ) {
-  if (!in_array($operation, ['request-delete'])) {
+  if (!in_array($operation, ['request-delete', 'request-archive'])) {
     return AccessResult::neutral();
   }
 
-  /** @var \Drupal\eic_flags\Service\HandlerInterface $delete_request_handler */
-  $delete_request_handler = \Drupal::service('eic_flags.handler_collector')
-    ->getHandlerByType(RequestTypes::DELETE);
+  $type = explode('-', $operation)[1];
+  /** @var \Drupal\eic_flags\Service\HandlerInterface $handler */
+  $handler = \Drupal::service('eic_flags.handler_collector')
+    ->getHandlerByType($type);
 
-  $entity_type_id = $entity->getEntityTypeId();
-  if (!in_array(
-    $entity_type_id,
-    array_keys($delete_request_handler->getSupportedEntityTypes())
-  )) {
-    return AccessResult::neutral();
-  }
-
-  // We allow requests only for certain roles.
-  if (!$account->hasPermission('make delete request')) {
-    return AccessResult::forbidden();
-  }
-
-  return AccessResult::allowed();
+  return $handler->canRequest($account, $entity);
 }

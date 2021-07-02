@@ -4,3 +4,26 @@
  * @file
  * Primary module hooks for EIC User module.
  */
+
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\eic_user\ProfileConst;
+
+/**
+ * Implements hook_field_widget_WIDGET_TYPE_form_alter().
+ */
+function eic_groups_field_widget_social_links_form_alter(&$element, FormStateInterface $form_state, $context) {
+  $form_build_info = $form_state->getBuildInfo();
+
+  // Removes some unused social networks from the widget options.
+  if ($form_build_info['base_form_id'] === 'profile_form') {
+    $allowed_social_networks = ProfileConst::ALLOWED_SOCIAL_NETWORKS;
+
+    // Filter out the allowed social networks.
+    $options = array_filter($element['social']['#options'], function ($item) use ($allowed_social_networks) {
+      return in_array($item, $allowed_social_networks);
+    }, ARRAY_FILTER_USE_KEY);
+
+    // Keep only the allowed social networks in the widget options.
+    $element['social']['#options'] = $options;
+  }
+}

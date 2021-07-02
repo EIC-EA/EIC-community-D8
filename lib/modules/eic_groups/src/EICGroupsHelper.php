@@ -20,6 +20,12 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
 
   use StringTranslationTrait;
 
+  const GROUP_OWNER_ROLE = 'group-owner';
+
+  const GROUP_ADMINISTRATOR_ROLE = 'group-admin';
+
+  const GROUP_MEMBER_ROLE = 'group-member';
+
   /**
    * The database connection service.
    *
@@ -51,7 +57,11 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler service.
    */
-  public function __construct(Connection $database, RouteMatchInterface $route_match, ModuleHandlerInterface $module_handler) {
+  public function __construct(
+    Connection $database,
+    RouteMatchInterface $route_match,
+    ModuleHandlerInterface $module_handler
+  ) {
     $this->database = $database;
     $this->routeMatch = $route_match;
     $this->moduleHandler = $module_handler;
@@ -104,7 +114,11 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
   /**
    * {@inheritdoc}
    */
-  public function getGroupOperationLinks(GroupInterface $group, $limit_entities = [], CacheableMetadata $cacheable_metadata = NULL) {
+  public function getGroupOperationLinks(
+    GroupInterface $group,
+    $limit_entities = [],
+    CacheableMetadata $cacheable_metadata = NULL
+  ) {
     $operation_links = [];
 
     if (!is_null($cacheable_metadata)) {

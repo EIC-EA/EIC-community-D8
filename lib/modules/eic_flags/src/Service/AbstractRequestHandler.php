@@ -3,17 +3,23 @@
 namespace Drupal\eic_flags\Service;
 
 use Drupal\content_moderation\ModerationInformationInterface;
+use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Session\AccountInterface;
-use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
 use Drupal\eic_flags\RequestStatus;
+use Drupal\eic_groups\EICGroupsHelper;
+use Drupal\eic_user\UserHelper;
 use Drupal\flag\Entity\Flag;
 use Drupal\flag\Entity\Flagging;
 use Drupal\flag\FlaggingInterface;
 use Drupal\flag\FlagService;
+use Drupal\group\Entity\GroupInterface;
+use Drupal\group\GroupMembership;
 use Drupal\user\Entity\User;
 use InvalidArgumentException;
 
@@ -100,10 +106,15 @@ abstract class AbstractRequestHandler implements HandlerInterface {
       );
     }
 
+    $now = DrupalDateTime::createFromTimestamp(time());
     $current_user = User::load($account_proxy->id());
     $flagging->set('field_request_moderator', $current_user);
     $flagging->set('field_request_response', $reason);
     $flagging->set('field_request_status', $response);
+    $flagging->set(
+      'field_request_closed_date',
+      $now->format(DateTimeItemInterface::DATETIME_STORAGE_FORMAT)
+    );
     $flagging->save();
 
     $this->moduleHandler->invokeAll(
@@ -112,7 +123,6 @@ abstract class AbstractRequestHandler implements HandlerInterface {
         $flagging,
         $content_entity,
         $this->getType(),
-        $response,
       ]
     );
   }
@@ -280,6 +290,52 @@ abstract class AbstractRequestHandler implements HandlerInterface {
     $messages = $this->getMessages();
 
     return $messages[$action] ?? NULL;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function canRequest(AccountInterface $account, ContentEntityInterface $entity) {
+    if (!$account->isAuthenticated()) {
+      return AccessResult::forbidden();
+    }
+
+    $supported_entities = array_keys($this->getSupportedEntityTypes());
+    if (!in_array($entity->getEntityTypeId(), $supported_entities)) {
+      return AccessResult::forbidden();
+    }
+
+    // We allow requests only for certain users having the make permission.
+    if (!$account->hasPermission('make ' . $this->getType() . ' request')) {
+      return AccessResult::forbidden();
+    }
+
+    // For groups, the user must be GM/GO/GA or SA/SCM
+    if ($entity instanceof GroupInterface) {
+      /** @var GroupInterface $entity */
+      $user_roles = $account->getRoles(TRUE);
+      $allowed_global_roles = [
+        UserHelper::ROLE_CONTENT_ADMINISTRATOR,
+        UserHelper::ROLE_SITE_ADMINISTRATOR,
+      ];
+
+      $group_membership = $entity->getMember($account);
+      $user_group_roles = $group_membership instanceof GroupMembership
+        ? array_keys($group_membership->getRoles())
+        : [];
+      $allowed_group_roles = [
+        EICGroupsHelper::GROUP_MEMBER_ROLE,
+        EICGroupsHelper::GROUP_ADMINISTRATOR_ROLE,
+        EICGroupsHelper::GROUP_OWNER_ROLE,
+      ];
+
+      if (empty(array_intersect($user_roles, $allowed_global_roles))
+        && empty(array_intersect($user_group_roles, $allowed_group_roles))) {
+        return AccessResult::forbidden();
+      }
+    }
+
+    return AccessResult::allowed();
   }
 
 }

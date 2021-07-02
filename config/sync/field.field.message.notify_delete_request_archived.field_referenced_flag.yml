@@ -1,0 +1,33 @@
+uuid: ad23c622-fdf6-49e5-bd67-0d416d44f0e0
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.message.field_referenced_flag
+    - flag.flag.request_delete_comment
+    - flag.flag.request_delete_content
+    - flag.flag.request_delete_group
+    - message.template.notify_delete_request_archived
+id: message.notify_delete_request_archived.field_referenced_flag
+field_name: field_referenced_flag
+entity_type: message
+bundle: notify_delete_request_archived
+label: 'Referenced Flag'
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:flagging'
+  handler_settings:
+    target_bundles:
+      request_delete_comment: request_delete_comment
+      request_delete_content: request_delete_content
+      request_delete_group: request_delete_group
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: request_delete_comment
+field_type: entity_reference

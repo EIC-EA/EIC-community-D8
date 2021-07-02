@@ -4,6 +4,11 @@ status: true
 dependencies:
   config:
     - filter.format.plain_text
+  module:
+    - eic_messages
+third_party_settings:
+  eic_messages:
+    message_template_type: notification
 template: notify_welcome_user_to_group
 label: 'NOTIFY :: MT03 :: Welcome user to group'
 description: ''
