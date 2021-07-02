@@ -2,14 +2,18 @@
 
 namespace Drupal\eic_groups;
 
+use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\group\Entity\Group;
 use Drupal\group\Entity\GroupContent;
 use Drupal\group\Entity\GroupInterface;
+use Drupal\group_permissions\Entity\GroupPermissionInterface;
 use Drupal\node\NodeInterface;
 
 /**
@@ -45,6 +49,20 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
   protected $moduleHandler;
 
   /**
+   * The current user service.
+   *
+   * @var \Drupal\Core\Session\AccountProxyInterface
+   */
+  protected $currentUser;
+
+  /**
+   * The time service.
+   *
+   * @var \Drupal\Component\Datetime\TimeInterface
+   */
+  protected $time;
+
+  /**
    * Constructs a new EventsHelperService object.
    *
    * @param \Drupal\Core\Database\Connection $database
@@ -53,15 +71,23 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
    *   The current route match service.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler service.
+   * @param \Drupal\Core\Session\AccountProxyInterface $current_user
+   *   The current user service.
+   * @param \Drupal\Component\Datetime\TimeInterface $time
+   *   The time service.
    */
   public function __construct(
     Connection $database,
     RouteMatchInterface $route_match,
-    ModuleHandlerInterface $module_handler
+    ModuleHandlerInterface $module_handler,
+    AccountProxyInterface $current_user,
+    TimeInterface $time
   ) {
     $this->database = $database;
     $this->routeMatch = $route_match;
     $this->moduleHandler = $module_handler;
+    $this->currentUser = $current_user;
+    $this->time = $time;
   }
 
   /**
@@ -179,6 +205,64 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
       return $results[0]->nid;
     }
     return NULL;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function addRolePermissionsToGroup(
+    GroupPermissionInterface $group_permissions,
+    string $role,
+    array $role_permissions
+  ) {
+    $permissions = $group_permissions->getPermissions();
+    foreach ($role_permissions as $permission) {
+      if (!array_key_exists($role, $permissions) || !in_array($permission, $permissions[$role], TRUE)) {
+        $permissions[$role][] = $permission;
+      }
+    }
+    $group_permissions->setPermissions($permissions);
+    return $group_permissions;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function removeRolePermissionsFromGroup(
+    GroupPermissionInterface $group_permissions,
+    string $role,
+    array $role_permissions
+  ) {
+    $permissions = $group_permissions->getPermissions();
+    foreach ($role_permissions as $permission) {
+      if (array_key_exists($role, $permissions) || in_array($permission, $permissions[$role], TRUE)) {
+        $permissions[$role] = array_diff($permissions[$role], [$permission]);
+      }
+    }
+    $group_permissions->setPermissions($permissions);
+    return $group_permissions;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function saveGroupPermissions(GroupPermissionInterface $group_permissions) {
+    $violations = $group_permissions->validate();
+
+    if (count($violations) > 0) {
+      $message = '';
+      foreach ($violations as $violation) {
+        $message .= "\n" . $violation->getMessage();
+      }
+      throw new EntityStorageException('Group permissions were not saved correctly, because:' . $message);
+    }
+
+    // Saves the GroupPermission object with a new revision.
+    $group_permissions->setNewRevision();
+    $group_permissions->setRevisionUserId($this->currentUser->id());
+    $group_permissions->setRevisionCreationTime($this->time->getRequestTime());
+    $group_permissions->setRevisionLogMessage('Group permissions updated successfully.');
+    $group_permissions->save();
   }
 
 }
