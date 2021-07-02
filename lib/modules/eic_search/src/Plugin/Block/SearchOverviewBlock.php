@@ -151,6 +151,9 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
         'documents' => $this->t('Documents', [], ['context' => 'eic_group']),
         'clear_all' => $this->t('Clear all', [], ['context' => 'eic_group']),
         'active_filter' => $this->t('Active filter', [], ['context' => 'eic_group']),
+        'sort_by' => $this->t('Sort by', [], ['context' => 'eic_group']),
+        'showing' => $this->t('Showing', [], ['context' => 'eic_group']),
+        'sort_any' => $this->t('- Any -', [], ['context' => 'eic_group']),
       ],
     ];
   }
