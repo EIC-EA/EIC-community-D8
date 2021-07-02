@@ -7,6 +7,7 @@
 
 use Drupal\Core\Menu\MenuTreeParameters;
 use Drupal\Core\Template\Attribute;
+use Drupal\Core\Url;
 
 /**
  * Implements hook_preprocess_page().
@@ -21,6 +22,45 @@ function eic_community_preprocess_page(array &$variables): void {
     if (isset($content_section['#theme']) && $content_section['#theme'] === 'block') {
       $variables['page']['content'][$key]['#attributes']['class'][] = 'ecl-section-wrapper';
     }
+  }
+
+
+  $variables['site_header'] = [
+    'icon_file_path' =>  $variables['eic_icon_path'],
+    'logo' => [
+      'title' =>  t('European Commission'),
+      'alt' =>  t('European Commission logo'),
+      'path' => \Drupal::urlGenerator()->generateFromRoute('<front>'),
+      'src_desktop' => $variables['eic_logo_path'] . '/logo--' . $variables['language']->getId() . '.svg',
+    ]
+  ];
+
+  if ($variables['user']->isAnonymous()) {
+    $variables['site_header']['login']['link'] = [
+      'label' => t('Log in'),
+      'path' => Url::fromRoute('user.login'),
+    ];
+  }else{
+    $account = \Drupal\user\Entity\User::load($variables['user']->id());
+    $user = eic_community_get_teaser_user_display($account);
+    unset($user['path']);
+
+    $user['actions'] = [
+      [
+        'link' => [
+          'label' => t('My profile'),
+          'path' => $account->toUrl()->toString(),
+        ],
+      ],
+      [
+        'link' => [
+          'label' => t('Log out'),
+          'path' => Url::fromRoute('user.logout'),
+        ],
+      ],
+    ];
+
+    $variables['site_header']['user'] = $user;
   }
 
   $sections = [];
@@ -83,4 +123,5 @@ function eic_community_preprocess_page(array &$variables): void {
 
 
   $variables['site_footer'] = ['sections' => $sections];
+
 }

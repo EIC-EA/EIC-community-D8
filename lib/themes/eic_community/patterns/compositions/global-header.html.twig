@@ -43,10 +43,10 @@
           } %}
             {% block trigger %}
               {% include "@theme/patterns/components/author.html.twig" with {
-                author: user.name,
+                name: user.name,
                 image: user.image,
                 path: user.path,
-                extra_classes: 'ecl-collapsible-options__trigger ecl-author--has-compact-layout ecl-author--as-block',
+                extra_classes: 'ecl-author--has-compact-layout ecl-author--as-block',
                 updates: user.updates,
               } %}
             {% endblock %}
