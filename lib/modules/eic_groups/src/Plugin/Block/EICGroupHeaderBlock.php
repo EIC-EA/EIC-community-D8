@@ -152,7 +152,6 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
       'url.path',
     ]);
 
-
     // Get group operation links.
     $group_operation_links = $this->entityTypeManager->getListBuilder($group->getEntityTypeId())->getOperations($group);
 
@@ -201,9 +200,9 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
       ];
     }
 
-    $visible_group_operation_links = array_filter($group_operation_links, function($link, $key) {
+    $visible_group_operation_links = array_filter($group_operation_links, function ($key) {
       return $key === 'edit';
-    }, ARRAY_FILTER_USE_BOTH);
+    }, ARRAY_FILTER_USE_KEY);
 
     $membership_links = [];
 
