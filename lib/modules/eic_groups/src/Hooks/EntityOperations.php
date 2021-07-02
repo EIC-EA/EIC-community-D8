@@ -12,10 +12,13 @@ use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
 use Drupal\eic_groups\EICGroupsHelperInterface;
+use Drupal\eic_user\UserHelper;
 use Drupal\group\Entity\GroupContent;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\group_content_menu\GroupContentMenuInterface;
 use Drupal\node\NodeInterface;
+use Drupal\oec_group_flex\GroupVisibilityRecord;
+use Drupal\oec_group_flex\OECGroupFlexHelper;
 use Drupal\pathauto\PathautoGeneratorInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -57,6 +60,20 @@ class EntityOperations implements ContainerInjectionInterface {
   protected $pathautoGenerator;
 
   /**
+   * The EIC User helper service.
+   *
+   * @var \Drupal\eic_user\UserHelper
+   */
+  protected $userHelper;
+
+  /**
+   * The OEC Group Flex helper service.
+   *
+   * @var \Drupal\oec_group_flex\OECGroupFlexHelper
+   */
+  protected $oecGroupFlexHelper;
+
+  /**
    * Constructs a new EntityOperations object.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
@@ -67,12 +84,18 @@ class EntityOperations implements ContainerInjectionInterface {
    *   The EIC Groups helper service.
    * @param \Drupal\pathauto\PathautoGeneratorInterface $pathauto_generator
    *   The pathauto generator.
+   * @param \Drupal\eic_user\UserHelper $user_helper
+   *   The EIC User helper service.
+   * @param \Drupal\oec_group_flex\OECGroupFlexHelper $oec_group_flex_helper
+   *   The OEC Group Flex helper service.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, RouteMatchInterface $route_match, EICGroupsHelperInterface $eic_groups_helper, PathautoGeneratorInterface $pathauto_generator) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, RouteMatchInterface $route_match, EICGroupsHelperInterface $eic_groups_helper, PathautoGeneratorInterface $pathauto_generator, UserHelper $user_helper, OECGroupFlexHelper $oec_group_flex_helper) {
     $this->entityTypeManager = $entity_type_manager;
     $this->routeMatch = $route_match;
     $this->eicGroupsHelper = $eic_groups_helper;
     $this->pathautoGenerator = $pathauto_generator;
+    $this->userHelper = $user_helper;
+    $this->oecGroupFlexHelper = $oec_group_flex_helper;
   }
 
   /**
@@ -83,7 +106,9 @@ class EntityOperations implements ContainerInjectionInterface {
       $container->get('entity_type.manager'),
       $container->get('current_route_match'),
       $container->get('eic_groups.helper'),
-      $container->get('pathauto.generator')
+      $container->get('pathauto.generator'),
+      $container->get('eic_user.helper'),
+      $container->get('oec_group_flex.helper')
     );
   }
 
@@ -102,6 +127,44 @@ class EntityOperations implements ContainerInjectionInterface {
     // Publish group wiki when group is published.
     if (!$entity->original->isPublished() && $entity->isPublished()) {
       $this->publishGroupWiki($entity);
+    }
+  }
+
+  /**
+   * Implements hook_group_view().
+   */
+  public function groupView(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
+    switch ($view_mode) {
+      case 'about_page':
+        // Provides info for the groups About pages.
+        // Initialise variables.
+        $variables['owners'] = [];
+        $variables['admins'] = [];
+
+        // Get group owners.
+        foreach ($entity->getMembers('group-owner') as $item) {
+          $variables['owners'][] = $this->userHelper->getUserLink($item->getUser());
+        }
+        // Get group admins.
+        foreach ($entity->getMembers('group-admin') as $item) {
+          $variables['admins'][] = $this->userHelper->getUserLink($item->getUser());
+        }
+        // Get group visibility.
+        $variables['visibility'] = $this->oecGroupFlexHelper->getGroupVisibilitySettings($entity);
+        if (!empty($variables['visibility']['settings']) && $variables['visibility']['settings'] instanceof GroupVisibilityRecord) {
+          $variables['visibility']['settings'] = $this->oecGroupFlexHelper->getGroupVisibilityRecordSettings($variables['visibility']['settings']);
+        }
+        // Get joining methods.
+        $variables['joining_methods'] = $this->oecGroupFlexHelper->getGroupJoiningMethod($entity);
+
+        // Get the descriptions for each plugin.
+        $variables['visibility']['description'] = $this->eicGroupsHelper->getGroupFlexPluginDescription('visibility', $variables['visibility']['plugin_id']);
+        foreach ($variables['joining_methods'] as $index => $joining_method) {
+          $variables['joining_methods'][$index]['description'] = $this->eicGroupsHelper->getGroupFlexPluginDescription('joining_method', $joining_method['plugin_id']);
+        }
+        $build += $variables;
+        break;
+
     }
   }
 
