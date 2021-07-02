@@ -200,9 +200,14 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
       ];
     }
 
+    // We extract only the group edit/delete operation links into a new array.
     $visible_group_operation_links = array_filter($group_operation_links, function ($key) {
-      return $key === 'edit';
+      return in_array($key, ['edit', 'delete']);
     }, ARRAY_FILTER_USE_KEY);
+
+    // Sorts group operation links by key. "Delete" operation needs to show
+    // first.
+    ksort($visible_group_operation_links);
 
     $membership_links = [];
 
