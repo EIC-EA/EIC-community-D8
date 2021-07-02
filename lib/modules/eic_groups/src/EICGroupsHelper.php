@@ -185,15 +185,7 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
   }
 
   /**
-   * Returns the top-level book page for a given group.
-   *
-   * This method will always return the first item found.
-   *
-   * @param \Drupal\group\Entity\GroupInterface $group
-   *   The group entity.
-   *
-   * @return int
-   *   The book page nid or NULL if not found.
+   * {@inheritdoc}
    */
   public function getGroupBookPage(GroupInterface $group) {
     $query = $this->database->select('group_content_field_data', 'gp');
