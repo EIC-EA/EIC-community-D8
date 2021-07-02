@@ -11,11 +11,15 @@ use Drupal\Core\Link;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
+use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_groups\EICGroupsHelperInterface;
+use Drupal\eic_groups\GroupsModerationHelper;
 use Drupal\eic_user\UserHelper;
 use Drupal\group\Entity\GroupContent;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\group_content_menu\GroupContentMenuInterface;
+use Drupal\group_permissions\Entity\GroupPermissionInterface;
+use Drupal\group_permissions\GroupPermissionsManagerInterface;
 use Drupal\node\NodeInterface;
 use Drupal\oec_group_flex\GroupVisibilityRecord;
 use Drupal\oec_group_flex\OECGroupFlexHelper;
@@ -74,6 +78,13 @@ class EntityOperations implements ContainerInjectionInterface {
   protected $oecGroupFlexHelper;
 
   /**
+   * The group permissions manager.
+   *
+   * @var \Drupal\group_permissions\GroupPermissionsManagerInterface
+   */
+  protected $groupPermissionsManager;
+
+  /**
    * Constructs a new EntityOperations object.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
@@ -88,14 +99,25 @@ class EntityOperations implements ContainerInjectionInterface {
    *   The EIC User helper service.
    * @param \Drupal\oec_group_flex\OECGroupFlexHelper $oec_group_flex_helper
    *   The OEC Group Flex helper service.
+   * @param \Drupal\group_permissions\GroupPermissionsManagerInterface $group_permissions_manager
+   *   The group permissions manager.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, RouteMatchInterface $route_match, EICGroupsHelperInterface $eic_groups_helper, PathautoGeneratorInterface $pathauto_generator, UserHelper $user_helper, OECGroupFlexHelper $oec_group_flex_helper) {
+  public function __construct(
+    EntityTypeManagerInterface $entity_type_manager,
+    RouteMatchInterface $route_match,
+    EICGroupsHelperInterface $eic_groups_helper,
+    PathautoGeneratorInterface $pathauto_generator,
+    UserHelper $user_helper,
+    OECGroupFlexHelper $oec_group_flex_helper,
+    GroupPermissionsManagerInterface $group_permissions_manager
+  ) {
     $this->entityTypeManager = $entity_type_manager;
     $this->routeMatch = $route_match;
     $this->eicGroupsHelper = $eic_groups_helper;
     $this->pathautoGenerator = $pathauto_generator;
     $this->userHelper = $user_helper;
     $this->oecGroupFlexHelper = $oec_group_flex_helper;
+    $this->groupPermissionsManager = $group_permissions_manager;
   }
 
   /**
@@ -108,7 +130,8 @@ class EntityOperations implements ContainerInjectionInterface {
       $container->get('eic_groups.helper'),
       $container->get('pathauto.generator'),
       $container->get('eic_user.helper'),
-      $container->get('oec_group_flex.helper')
+      $container->get('oec_group_flex.helper'),
+      $container->get('group_permission.group_permissions_manager')
     );
   }
 
@@ -128,6 +151,25 @@ class EntityOperations implements ContainerInjectionInterface {
     if (!$entity->original->isPublished() && $entity->isPublished()) {
       $this->publishGroupWiki($entity);
     }
+    // Updates group owner permissions.
+    $this->updateGroupOwnerPermissions($entity);
+  }
+
+  /**
+   * Implements hook_group_permission_insert().
+   */
+  public function groupPermissionInsert(GroupPermissionInterface $group_permissions) {
+    $group = $group_permissions->getGroup();
+    // Adds or removes "delete group" permission from group owner based on the
+    // group moderation state.
+    if ($group->get('moderation_state')->value === GroupsModerationHelper::GROUP_PENDING_STATE) {
+      $this->eicGroupsHelper->addRolePermissionsToGroup($group_permissions, EICGroupsHelper::GROUP_OWNER_ROLE, ['delete group']);
+    }
+    else {
+      $this->eicGroupsHelper->removeRolePermissionsFromGroup($group_permissions, EICGroupsHelper::GROUP_OWNER_ROLE, ['delete group']);
+    }
+    // Save group permissions.
+    $this->eicGroupsHelper->saveGroupPermissions($group_permissions);
   }
 
   /**
@@ -324,6 +366,37 @@ class EntityOperations implements ContainerInjectionInterface {
         }
       }
     }
+  }
+
+  /**
+   * Updates group owner permissions based on moderation state.
+   *
+   * @param \Drupal\group\Entity\GroupInterface $entity
+   *   The Group entity.
+   */
+  protected function updateGroupOwnerPermissions(GroupInterface $entity) {
+    /** @var \Drupal\group_permissions\Entity\GroupPermissionInterface $group_permissions */
+    $group_permissions = $this->groupPermissionsManager->loadByGroup($entity);
+
+    // Get moderation states.
+    $old_moderation_state = $entity->original->get('moderation_state')->value;
+    $new_moderation_state = $entity->get('moderation_state')->value;
+
+    // If group moderation state hasn't changed, we do nothing.
+    if ($old_moderation_state === $new_moderation_state) {
+      return;
+    }
+
+    // We add or remove "delete group" permission from the group owner based on
+    // the new group moderation state.
+    if ($new_moderation_state === GroupsModerationHelper::GROUP_PENDING_STATE) {
+      $this->eicGroupsHelper->addRolePermissionsToGroup($group_permissions, EICGroupsHelper::GROUP_OWNER_ROLE, ['delete group']);
+    }
+    else {
+      $this->eicGroupsHelper->removeRolePermissionsFromGroup($group_permissions, EICGroupsHelper::GROUP_OWNER_ROLE, ['delete group']);
+    }
+
+    $this->eicGroupsHelper->saveGroupPermissions($group_permissions);
   }
 
 }

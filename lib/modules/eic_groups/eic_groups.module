@@ -212,3 +212,11 @@ function eic_groups_entity_field_access($operation, FieldDefinitionInterface $fi
 
   return $access;
 }
+
+/**
+ * Implements hook_ENTITY_TYPE_insert().
+ */
+function eic_groups_group_permission_insert(EntityInterface $entity) {
+  \Drupal::classResolver(EntityOperations::class)
+    ->groupPermissionInsert($entity);
+}
