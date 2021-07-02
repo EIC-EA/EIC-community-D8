@@ -201,6 +201,10 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
       ];
     }
 
+    $visible_group_operation_links = array_filter($group_operation_links, function($link, $key) {
+      return $key === 'edit';
+    }, ARRAY_FILTER_USE_BOTH);
+
     $membership_links = [];
 
     if (isset($group->flags)) {
@@ -215,9 +219,8 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
         'bundle' => $group->bundle(),
         'title' => $group->label(),
         'description' => Markup::create($group->get('field_body')->value),
-        'operation_links' => array_merge($operation_links, $node_operation_links),
+        'operation_links' => array_merge($operation_links, $node_operation_links, $visible_group_operation_links),
         'membership_links' => array_merge($membership_links, $user_operation_links),
-        'group_operation_links' => $group_operation_links,
       ],
     ];
 

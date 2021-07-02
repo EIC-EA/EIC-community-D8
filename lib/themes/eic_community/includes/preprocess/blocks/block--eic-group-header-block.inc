@@ -26,16 +26,35 @@ function eic_community_preprocess_eic_group_header_block(array &$variables) {
   }
 
   $actions = [];
+  // Manipulate operations links, for example add icons to links.
+  if (isset($variables['group_values']['operation_links']['edit'])) {
+    $variables['group_values']['operation_links']['edit']['action'] = [
+      'is_compact' => TRUE,
+      'icon' => [
+        'name' => 'gear',
+        'type' => 'custom',
+      ],
+      'icon_file_path' => $variables['eic_icon_path'],
+    ];
+  }
 
   foreach ($variables['group_values']['operation_links'] as $link) {
     if(isset($link['links'])) {
       $items = [];
 
       foreach ($link['links'] as $item) {
-        $items[]['link'] = [
-          'label' => $item['title'],
-          'path' => $item['url'],
+        $tmp = [
+          'link' => [
+            'label' => $item['title'],
+            'path' => $item['url'],
+          ],
         ];
+
+        if (isset($item['action'])) {
+          $tmp = array_merge($tmp, $item['action']);
+        }
+
+        $items[] = $tmp;
       }
 
       $actions[] = [
@@ -43,19 +62,19 @@ function eic_community_preprocess_eic_group_header_block(array &$variables) {
         'items' => $items
       ];
     }else{
-      $actions[]['link'] = [
-        'label' => $link['title'],
-        'path' => $link['url'],
+      $tmp = [
+        'link' => [
+          'label' => $link['title'],
+          'path' => $link['url'],
+        ]
       ];
-    }
-  }
 
-  // @todo Re-adapt variables that will be needed for the cog wheel button.
-  if (isset($variables['group_values']['group_operation_links']['edit'])) {
-    $actions[]['items'][]['link'] = [
-      'label' => $variables['group_values']['group_operation_links']['edit']['title'],
-      'path' => $variables['group_values']['group_operation_links']['edit']['url'],
-    ];
+      if (isset($link['action'])) {
+        $tmp = array_merge($tmp, $link['action']);
+      }
+
+      $actions[] = $tmp;
+    }
   }
 
   $variables['group_values']['actions'] = $actions;
