@@ -97,7 +97,7 @@ class GroupTokens implements ContainerInjectionInterface {
     $replacements = [];
 
     // Node tokens.
-    if ($type == 'node' && !empty($data['node'])) {
+    if ($type === 'node' && !empty($data['node'])) {
       foreach ($tokens as $name => $original) {
         switch ($name) {
           case 'node_group_url':
@@ -127,7 +127,7 @@ class GroupTokens implements ContainerInjectionInterface {
     }
 
     // Group tokens.
-    if ($type == 'group' && !empty($data['group']) && $data['group'] instanceof GroupInterface) {
+    if ($type === 'group' && !empty($data['group']) && $data['group'] instanceof GroupInterface) {
       // Provide replacements for truncated title tokens.
       foreach ($this->tokenService->findWithPrefix($tokens, 'group_truncated_title') as $value => $token_name) {
         // Check that we have a numeric value and that it's not above 100.
