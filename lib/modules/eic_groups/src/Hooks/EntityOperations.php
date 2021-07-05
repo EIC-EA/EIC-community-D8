@@ -151,8 +151,16 @@ class EntityOperations implements ContainerInjectionInterface {
     if (!$entity->original->isPublished() && $entity->isPublished()) {
       $this->publishGroupWiki($entity);
     }
-    // Updates group owner permissions.
-    $this->updateGroupOwnerPermissions($entity);
+
+    // Get moderation states.
+    $old_moderation_state = $entity->original->get('moderation_state')->value;
+    $new_moderation_state = $entity->get('moderation_state')->value;
+
+    // If group moderation state has changed, we update group permissions.
+    if ($old_moderation_state !== $new_moderation_state) {
+      // Updates group permissions.
+      $this->updateGroupPermissions($entity);
+    }
   }
 
   /**
@@ -160,16 +168,8 @@ class EntityOperations implements ContainerInjectionInterface {
    */
   public function groupPermissionInsert(GroupPermissionInterface $group_permissions) {
     $group = $group_permissions->getGroup();
-    // Adds or removes "delete group" permission from group owner based on the
-    // group moderation state.
-    if ($group->get('moderation_state')->value === GroupsModerationHelper::GROUP_PENDING_STATE) {
-      $this->eicGroupsHelper->addRolePermissionsToGroup($group_permissions, EICGroupsHelper::GROUP_OWNER_ROLE, ['delete group']);
-    }
-    else {
-      $this->eicGroupsHelper->removeRolePermissionsFromGroup($group_permissions, EICGroupsHelper::GROUP_OWNER_ROLE, ['delete group']);
-    }
-    // Save group permissions.
-    $this->eicGroupsHelper->saveGroupPermissions($group_permissions);
+    // Updates group permissions.
+    $this->updateGroupPermissions($group);
   }
 
   /**
@@ -369,33 +369,28 @@ class EntityOperations implements ContainerInjectionInterface {
   }
 
   /**
-   * Updates group owner permissions based on moderation state.
+   * Updates group permissions based on moderation state.
    *
    * @param \Drupal\group\Entity\GroupInterface $entity
    *   The Group entity.
    */
-  protected function updateGroupOwnerPermissions(GroupInterface $entity) {
+  protected function updateGroupPermissions(GroupInterface $entity) {
     /** @var \Drupal\group_permissions\Entity\GroupPermissionInterface $group_permissions */
     $group_permissions = $this->groupPermissionsManager->loadByGroup($entity);
 
     // Get moderation states.
-    $old_moderation_state = $entity->original->get('moderation_state')->value;
-    $new_moderation_state = $entity->get('moderation_state')->value;
-
-    // If group moderation state hasn't changed, we do nothing.
-    if ($old_moderation_state === $new_moderation_state) {
-      return;
-    }
+    $moderation_state = $entity->get('moderation_state')->value;
 
     // We add or remove "delete group" permission from the group owner based on
     // the new group moderation state.
-    if ($new_moderation_state === GroupsModerationHelper::GROUP_PENDING_STATE) {
+    if ($moderation_state === GroupsModerationHelper::GROUP_PENDING_STATE) {
       $this->eicGroupsHelper->addRolePermissionsToGroup($group_permissions, EICGroupsHelper::GROUP_OWNER_ROLE, ['delete group']);
     }
     else {
       $this->eicGroupsHelper->removeRolePermissionsFromGroup($group_permissions, EICGroupsHelper::GROUP_OWNER_ROLE, ['delete group']);
     }
 
+    // Save group permissions.
     $this->eicGroupsHelper->saveGroupPermissions($group_permissions);
   }
 
