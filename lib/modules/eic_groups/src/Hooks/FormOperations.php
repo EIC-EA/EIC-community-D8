@@ -95,7 +95,6 @@ class FormOperations implements ContainerInjectionInterface {
       $container->get('config.factory'),
       $container->get('plugin.manager.group_feature'),
       $container->get('eic_groups.helper'),
-      $container->get('book.manager'),
       $container->get('current_route_match'),
       $container->get('request_stack')
     );
