@@ -4617,6 +4617,9 @@
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
                     }
+                },
+                "patches_applied": {
+                    "#3124287 - Warning on accessing publish_on value on a non-node moderated entity": "https://www.drupal.org/files/issues/2021-04-19/3124287-7.accessing-publish-on-for-non-node-moderated-entity.patch"
                 }
             },
             "notification-url": "https://packages.drupal.org/8/downloads",
