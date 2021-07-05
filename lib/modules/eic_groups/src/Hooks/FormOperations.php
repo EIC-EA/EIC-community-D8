@@ -2,7 +2,6 @@
 
 namespace Drupal\eic_groups\Hooks;
 
-use Drupal\book\BookManagerInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -47,13 +46,6 @@ class FormOperations implements ContainerInjectionInterface {
   protected $eicGroupsHelper;
 
   /**
-   * The Book manager service.
-   *
-   * @var \Drupal\book\BookManagerInterface
-   */
-  protected $bookManager;
-
-  /**
    * The current route match service.
    *
    * @var \Drupal\Core\Routing\RouteMatchInterface
@@ -76,8 +68,6 @@ class FormOperations implements ContainerInjectionInterface {
    *   The Group feature plugin manager.
    * @param \Drupal\eic_groups\EICGroupsHelperInterface $eic_groups_helper
    *   The EIC Groups helper service.
-   * @param \Drupal\book\BookManagerInterface $book_manager
-   *   The Book manager service.
    * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
    *   The current route match service.
    * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
@@ -87,14 +77,12 @@ class FormOperations implements ContainerInjectionInterface {
     ConfigFactoryInterface $config_factory,
     GroupFeaturePluginManager $group_feature_plugin_manager,
     EICGroupsHelperInterface $eic_groups_helper,
-    BookManagerInterface $book_manager,
     RouteMatchInterface $route_match,
     RequestStack $request_stack
   ) {
     $this->configFactory = $config_factory;
     $this->groupFeaturePluginManager = $group_feature_plugin_manager;
     $this->eicGroupsHelper = $eic_groups_helper;
-    $this->bookManager = $book_manager;
     $this->routeMatch = $route_match;
     $this->requestStack = $request_stack;
   }
