@@ -111,11 +111,12 @@ function eic_groups_module_implements_alter(&$implementations, $hook) {
  * Implements hook_form_alter().
  */
 function eic_groups_form_alter(&$form, FormStateInterface $form_state, $form_id) {
-  // Hide book select list from wiki page forms.
   switch ($form_id) {
     case 'node_wiki_page_form':
     case 'node_wiki_page_edit_form':
-      $form['book']['bid']['#access'] = FALSE;
+      // Do custom changes in group wiki page forms.
+      \Drupal::classResolver(FormOperations::class)
+        ->groupWikiPageFormAlter($form, $form_state, $form_id);
       break;
 
   }

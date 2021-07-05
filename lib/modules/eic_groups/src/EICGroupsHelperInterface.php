@@ -51,6 +51,19 @@ interface EICGroupsHelperInterface {
   public function getGroupContentOperationLinks(GroupInterface $group, array $limit_entities = [], CacheableMetadata $cacheable_metadata = NULL);
 
   /**
+   * Returns the top-level book page for a given group.
+   *
+   * This method will always return the first item found.
+   *
+   * @param \Drupal\group\Entity\GroupInterface $group
+   *   The group entity.
+   *
+   * @return int
+   *   The book page nid or NULL if not found.
+   */
+  public function getGroupBookPage(GroupInterface $group);
+
+  /**
    * Add role permissions to a groupPermission object without saving.
    *
    * @param \Drupal\group_permissions\Entity\GroupPermissionInterface $group_permissions

@@ -159,11 +159,6 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
     $node_operation_links = $this->eicGroupsHelper->getGroupContentOperationLinks($group, ['node'], $cacheable_metadata);
     $user_operation_links = $this->eicGroupsHelper->getGroupContentOperationLinks($group, ['user'], $cacheable_metadata);
 
-    // Removes operation link of wiki page group content.
-    if (isset($node_operation_links['gnode-create-wiki_page'])) {
-      unset($node_operation_links['gnode-create-wiki_page']);
-    }
-
     $operation_links = [];
     // Get login link for anonymous users.
     if ($login_link = $this->getAnonymousLoginLink($group)) {
