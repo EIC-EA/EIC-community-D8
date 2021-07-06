@@ -3,9 +3,6 @@
 namespace Drupal\eic_search\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
-use Drupal\eic_groups\Constants\GroupVisibilityType;
-use Drupal\group\GroupMembership;
-use Drupal\user\Entity\User;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -83,13 +80,7 @@ class SolrSearchController extends ControllerBase {
       }
     }
 
-    $visibility_condition = ' AND ' . $this->buildGroupVisibilityQuery();
     $fq = 'ss_search_api_datasource:"entity:' . $datasource . '"';
-
-    if ($datasource === 'group') {
-      $fq .= $visibility_condition;
-    }
-
     $facets_query = $this->getFacetsQuery($facets_value);
 
     if ($facets_query) {
@@ -97,6 +88,12 @@ class SolrSearchController extends ControllerBase {
     }
 
     $solariumQuery->addParam('fq', $fq);
+
+    if ($index->isValidProcessor('group_content_access')) {
+      $index->getProcessor('group_content_access')
+        ->preprocessSolrSearchQuery($solariumQuery);
+    }
+
     $results = $connector->search($solariumQuery)->getBody();
 
     return new Response($results, Response::HTTP_OK, [
@@ -126,49 +123,6 @@ class SolrSearchController extends ControllerBase {
     }
 
     return $facets_query;
-  }
-
-  /**
-   * Create the query string for SOLR to match with group visibility
-   *
-   * @return string
-   */
-  private function buildGroupVisibilityQuery() {
-    $user_id = \Drupal::currentUser()->id();
-
-    $user = User::load($user_id);
-    $email = explode('@', $user->getEmail());
-    $domain = array_pop($email) ?: 0;
-
-    /** @var \Drupal\group\GroupMembershipLoader $group_membership_service */
-    $group_membership_service = \Drupal::service('group.membership_loader');
-    $groups = $group_membership_service->loadByUser($user);
-
-    $group_ids = array_map(function (GroupMembership $group_membership) {
-      return $group_membership->getGroup()->id();
-    }, $groups);
-
-    // If group is private, the user needs to be in group to view it
-    $group_ids_formatted = !empty($group_ids) ? implode(' OR ', $group_ids) : 0;
-
-    $query = '
-    ss_group_visibility:' . GroupVisibilityType::GROUP_VISIBILITY_PUBLIC . '
-    OR (ss_group_visibility:' . GroupVisibilityType::GROUP_VISIBILITY_PRIVATE . ' AND its_group_id:(' . $group_ids_formatted . '))
-    OR (ss_group_visibility:' . GroupVisibilityType::GROUP_VISIBILITY_OPTION_EMAIL_DOMAIN . ' AND ss_' . GroupVisibilityType::GROUP_VISIBILITY_OPTION_EMAIL_DOMAIN . ':*' . $domain . '*)
-    ';
-
-    // Restricted community group, only trusted_user role can view
-    if (!$user->isAnonymous() && $user->hasRole('trusted_user')) {
-      $query .= ' OR (ss_group_visibility:' . GroupVisibilityType::GROUP_VISIBILITY_COMMUNITY . ')';
-    }
-
-    // Trusted users restriction
-    if (!$user->isAnonymous()) {
-      $username = $user->getAccountName();
-      $query .= ' OR (ss_group_visibility:' . GroupVisibilityType::GROUP_VISIBILITY_OPTION_TRUSTED_USERS . ' AND ss_' . GroupVisibilityType::GROUP_VISIBILITY_OPTION_TRUSTED_USERS . ':*' . "$user_id|$username" . '*)';
-    }
-
-    return "($query)";
   }
 
 }
