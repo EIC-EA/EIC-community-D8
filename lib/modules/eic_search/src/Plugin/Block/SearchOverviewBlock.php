@@ -25,8 +25,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInterface {
 
-  const AVAILABLE_TYPES = ['group', 'story', 'event', 'organisation', 'global'];
-
   /**
    * @var SourcesCollector sourcesCollector
    */
@@ -311,8 +309,8 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
   private function generateFacetsOptions(SourceTypeInterface $current_source): array {
     $available_facets = [];
 
-    foreach ($current_source->getAvailableFacets() as $facet) {
-      $available_facets[$facet] = t($facet, [], ['context' => 'eic_search']);
+    foreach ($current_source->getAvailableFacets() as $facet => $label) {
+      $available_facets[$facet] = $label;
     }
 
     return $available_facets;
@@ -326,8 +324,8 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
   private function generateSortOptions(SourceTypeInterface $current_source): array {
     $available_sorts = [];
 
-    foreach ($current_source->getAvailableSortOptions() as $sort_option) {
-      $available_sorts[$sort_option] = t($sort_option, [], ['context' => 'eic_search']);
+    foreach ($current_source->getAvailableSortOptions() as $sort_option => $label) {
+      $available_sorts[$sort_option] = $label;
     }
 
     return $available_sorts;

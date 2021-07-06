@@ -4,4 +4,4 @@ eic_groups.solr_search:
     _title: 'Solr search'
     _controller: '\Drupal\eic_search\Controller\SolrSearchController::search'
   requirements:
-    _access: 'TRUE'
+    _permission: 'access content'

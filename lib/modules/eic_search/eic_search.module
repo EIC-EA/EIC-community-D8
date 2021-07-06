@@ -37,12 +37,12 @@ function eic_search_preprocess_html(&$variables) {
 
   /** @var \Drupal\eic_search\Search\Sources\SourceTypeInterface $source */
   foreach ($sources as $source) {
-    foreach ($source->getAvailableSortOptions() as $sort_option) {
+    foreach ($source->getAvailableSortOptions() as $sort_option => $label) {
       $variables['#attached']['drupalSettings']['translations']['sources']['sort'][$sort_option . '__ASC'] = t($sort_option . ' ASC', [], ['context' => 'eic_search']);
       $variables['#attached']['drupalSettings']['translations']['sources']['sort'][$sort_option . '__DESC'] = t($sort_option . ' DESC', [], ['context' => 'eic_search']);
     }
-    foreach ($source->getAvailableFacets() as $facet_option) {
-      $variables['#attached']['drupalSettings']['translations']['sources']['facet'][$facet_option] = t($facet_option, [], ['context' => 'eic_search']);
+    foreach ($source->getAvailableFacets() as $facet_option => $label) {
+      $variables['#attached']['drupalSettings']['translations']['sources']['facet'][$facet_option] = $label;
     }
   }
 }

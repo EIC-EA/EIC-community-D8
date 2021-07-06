@@ -35,9 +35,9 @@ class GroupSourceType implements SourceTypeInterface {
    */
   public function getAvailableFacets(): array {
     return [
-      'ss_group_topic_name',
-      'ss_group_label',
-      'ss_group_user_fullname',
+      'ss_group_topic_name' => t('Topic', [], ['context' => 'eic_search']),
+      'ss_group_label_string' => t('Group label', [], ['context' => 'eic_search']),
+      'ss_group_user_fullname' => t('Full name', [], ['context' => 'eic_search']),
     ];
   }
 
@@ -46,9 +46,9 @@ class GroupSourceType implements SourceTypeInterface {
    */
   public function getAvailableSortOptions(): array {
     return [
-      'timestamp',
-      'ss_group_label',
-      'ss_group_user_fullname',
+      'timestamp' => t('Created date', [], ['context' => 'eic_search']),
+      'ss_group_label_string' => t('Group label', [], ['context' => 'eic_search']),
+      'ss_group_user_fullname' => t('Fullname', [], ['context' => 'eic_search']),
     ];
   }
 
@@ -57,7 +57,7 @@ class GroupSourceType implements SourceTypeInterface {
    */
   public function getSearchFieldsId(): array {
     return [
-      'ss_group_label',
+      'ss_group_label_string',
     ];
   }
 

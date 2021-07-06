@@ -4,31 +4,32 @@ status: true
 dependencies:
   module:
     - search_api_solr
-    - node
     - group
+    - user
     - file
     - media
     - taxonomy
-    - user
+    - node
     - profile
     - search_api
     - address
     - content_moderation
+    - flag
     - group_permissions
   config:
-    - field.storage.node.field_body
-    - field.storage.node.field_discussion_type
-    - field.storage.node.field_subtitle
-    - field.storage.node.field_vocab_geo
-    - field.storage.node.field_vocab_topics
+    - field.storage.user.field_first_name
+    - field.storage.user.field_last_name
+    - field.storage.media.oe_media_image
+    - field.storage.user.field_media
+    - field.storage.group.field_thumbnail
+    - field.storage.group.field_vocab_topics
     - field.storage.group.field_body
     - field.storage.group.field_vocab_geo
-    - field.storage.group.field_vocab_topics
-    - field.storage.group.field_thumbnail
-    - field.storage.media.oe_media_image
-    - field.storage.user.field_first_name
-    - field.storage.user.field_media
-    - field.storage.user.field_last_name
+    - field.storage.node.field_body
+    - field.storage.node.field_vocab_geo
+    - field.storage.node.field_subtitle
+    - field.storage.node.field_vocab_topics
+    - field.storage.node.field_discussion_type
     - field.storage.profile.field_body
     - field.storage.profile.field_location_address
     - field.storage.profile.field_vocab_job_title
@@ -207,6 +208,30 @@ field_settings:
     dependencies:
       module:
         - node
+  group_content_entity_id:
+    label: '[Group content] Content'
+    datasource_id: 'entity:group_content'
+    property_path: entity_id
+    type: integer
+    dependencies:
+      module:
+        - group
+  group_content_gid:
+    label: '[Group content] Parent group'
+    datasource_id: 'entity:group_content'
+    property_path: gid
+    type: integer
+    dependencies:
+      module:
+        - group
+  group_content_type:
+    label: '[Group content] Group content type'
+    datasource_id: 'entity:group_content'
+    property_path: type
+    type: string
+    dependencies:
+      module:
+        - group
   group_created:
     label: '[Group] Created on'
     datasource_id: 'entity:group'
@@ -247,12 +272,20 @@ field_settings:
     dependencies:
       module:
         - group
-  group_label:
+  group_label_fulltext:
     label: '[Group] Title'
     datasource_id: 'entity:group'
     property_path: label
-    type: string
+    type: text
     boost: !!float 3
+    dependencies:
+      module:
+        - group
+  group_label_string:
+    label: Title
+    datasource_id: 'entity:group'
+    property_path: label
+    type: string
     dependencies:
       module:
         - group
@@ -264,7 +297,7 @@ field_settings:
     dependencies:
       module:
         - group
-  group_teaser:
+  group_teaser_url_string:
     label: 'Thumbnail image » Media » Image » File » URI » Root-relative file URL'
     datasource_id: 'entity:group'
     property_path: 'field_thumbnail:entity:oe_media_image:entity:uri:url'
@@ -484,7 +517,18 @@ datasource_settings:
     languages:
       default: true
       selected: {  }
+  'entity:flagging':
+    bundles:
+      default: true
+      selected: {  }
   'entity:group':
+    bundles:
+      default: true
+      selected: {  }
+    languages:
+      default: true
+      selected: {  }
+  'entity:group_content':
     bundles:
       default: true
       selected: {  }

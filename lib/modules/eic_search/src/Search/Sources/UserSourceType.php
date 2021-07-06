@@ -35,7 +35,7 @@ class UserSourceType implements SourceTypeInterface {
    */
   public function getAvailableFacets(): array {
     return [
-      'ss_user_last_name',
+      'ss_user_last_name' => t('Last name', [], ['context' => 'eic_search']),
     ];
   }
 
@@ -44,7 +44,7 @@ class UserSourceType implements SourceTypeInterface {
    */
   public function getAvailableSortOptions(): array {
     return [
-      'ss_user_first_name',
+      'ss_user_first_name' => t('First name', [], ['context' => 'eic_search']),
     ];
   }
 
