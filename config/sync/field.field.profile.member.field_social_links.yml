@@ -15,7 +15,19 @@ label: 'Social links'
 description: ''
 required: false
 translatable: false
-default_value: {  }
+default_value:
+  -
+    actions: {  }
+    link: ''
+    social: linkedin
+  -
+    actions: {  }
+    link: ''
+    social: twitter
+  -
+    actions: {  }
+    link: ''
+    social: facebook
 default_value_callback: ''
 settings: {  }
 field_type: social_links

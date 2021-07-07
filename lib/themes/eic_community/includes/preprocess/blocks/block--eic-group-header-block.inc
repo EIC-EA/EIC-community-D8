@@ -26,74 +26,96 @@ function eic_community_preprocess_eic_group_header_block(array &$variables) {
   }
 
   $actions = [];
-
-  if (!empty($variables['group_values']['operation_links'])) {
-    // @todo Replace the hardcoded item with structure coming form operation_links.
-    $actions[] = [
-      'label' => t('Post content'),
-      'items' => [],
+  // Manipulate operations links, for example add icons to links.
+  if (isset($variables['group_values']['operation_links']['edit'])) {
+    $variables['group_values']['operation_links']['edit']['action'] = [
+      'is_compact' => TRUE,
+      'icon' => [
+        'name' => 'gear',
+        'type' => 'custom',
+      ],
+      'icon_file_path' => $variables['eic_icon_path'],
     ];
-    foreach ($variables['group_values']['operation_links'] as $action) {
-      $actions[0]['items'][]['link'] = [
-        'label' => $action['title'],
-        'path' => $action['url'],
-      ];
-    }
   }
-  // @todo Find a better way to add the join and request to join links to the action buttons.
-  foreach ($variables['group_values']['membership_links'] as $key => $action) {
-    if ($action['url']->getRouteName() === 'entity.group.join') {
-      unset($variables['group_values']['membership_links'][$key]);
 
-      $actions[]['link'] = [
-        'label' => $action['title'],
-        'path' => $action['url'],
+  foreach ($variables['group_values']['operation_links'] as $link) {
+    if(isset($link['links'])) {
+      $items = [];
+
+      foreach ($link['links'] as $item) {
+        $tmp = [
+          'link' => [
+            'label' => $item['title'],
+            'path' => $item['url'],
+          ],
+        ];
+
+        if (isset($item['action'])) {
+          $tmp = array_merge($tmp, $item['action']);
+        }
+
+        $items[] = $tmp;
+      }
+
+      $actions[] = [
+        'label' => $link['label'],
+        'items' => $items
       ];
+    }else{
+      $tmp = [
+        'link' => [
+          'label' => $link['title'],
+          'path' => $link['url'],
+        ]
+      ];
+
+      if (isset($link['action'])) {
+        $tmp = array_merge($tmp, $link['action']);
+      }
+
+      $actions[] = $tmp;
     }
-  }
-  
-  if ($variables['group_values']['login_link']) {
-    $actions[]['items'][]['link'] = [
-      'label' => $variables['group_values']['login_link']['title'],
-      'path' => $variables['group_values']['login_link']['url'],
-    ];
   }
 
   $variables['group_values']['actions'] = $actions;
 
-  $flags = eic_community_get_flag_links_display($variables['group_values']['flags']);
+  $flags = [];
 
   foreach ($variables['group_values']['membership_links'] as $action) {
-    $icon_name = '';
+    if(isset($action['#lazy_builder'])) {
+      $flag = ['content' => $action];
+    }else {
+      $icon_name = '';
 
-    switch ($action['url']->getRouteName()) {
-      case 'entity.group.request_delete_form':
-        $icon_name = '';
-        break;
+      switch ($action['url']->getRouteName()) {
+        case 'entity.group.request_delete_form':
+          $icon_name = '';
+          break;
 
-      case 'entity.group.leave':
-        $icon_name = 'leave';
-        break;
+        case 'entity.group.leave':
+          $icon_name = 'leave';
+          break;
 
-      case 'entity.group_content.add_form':
-        // Invite user.
-        $icon_name = 'invite';
-        break;
+        case 'entity.group_content.add_form':
+          // Invite user.
+          $icon_name = 'invite';
+          break;
 
-    }
+      }
 
-    $flag = [
-      'link' => [
-        'label' => $action['title'],
-        'path' => $action['url'],
-      ],
-    ];
-
-    if (strlen($icon_name) > 0) {
-      $flag['icon'] = [
-        'name' => $icon_name,
-        'type' => 'custom',
+      $flag = [
+        'link' => [
+          'label' => $action['title'],
+          'path' => $action['url'],
+        ],
       ];
+
+      if (strlen($icon_name) > 0) {
+        $flag['icon'] = [
+          'name' => $icon_name,
+          'type' => 'custom',
+        ];
+      }
     }
 
     $flags[] = $flag;

@@ -1,0 +1,10 @@
+uuid: 7c25f630-d7de-481c-8e56-98793734a5e6
+langcode: en
+status: true
+dependencies:
+  module:
+    - group
+id: group.about_page
+label: 'About page'
+targetEntityType: group
+cache: true
