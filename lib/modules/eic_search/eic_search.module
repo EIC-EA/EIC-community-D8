@@ -66,7 +66,13 @@ function eic_search_search_api_solr_documents_alter(array &$documents, \Drupal\s
       $fields['ss_search_api_id'] :
       NULL;
 
+    // By default we will add the visibility to "public" to every entity.
+    // Even if it's not linked to group but we need to put it public
+    // otherwise solr will not be able to reach content without this property.
+    $group_visibility = GroupVisibilityType::GROUP_VISIBILITY_PUBLIC;
+
     if (!$search_id) {
+      $document->addField('ss_group_visibility', $group_visibility);
       continue;
     }
 
@@ -74,19 +80,20 @@ function eic_search_search_api_solr_documents_alter(array &$documents, \Drupal\s
     $item = array_key_exists($search_id, $items) ? $items[$search_id] : NULL;
 
     if (!$item) {
+      $document->addField('ss_group_visibility', $group_visibility);
       continue;
     }
 
     $group = $group_helper->getGroupByEntity($item->getOriginalObject()->getEntity());
 
     if (!$group) {
+      $document->addField('ss_group_visibility', $group_visibility);
       continue;
     }
 
     /** @var \Drupal\oec_group_flex\GroupVisibilityDatabaseStorage $group_visibility_storage */
     $group_visibility_storage = \Drupal::service('oec_group_flex.group_visibility.storage');
     $group_visibility_entity = $group_visibility_storage->load($group->id());
-    $group_visibility = GroupVisibilityType::GROUP_VISIBILITY_PUBLIC;
 
     switch ($group_visibility_entity->getType()) {
       case GroupVisibilityType::GROUP_VISIBILITY_PRIVATE:

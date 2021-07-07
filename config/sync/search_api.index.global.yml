@@ -577,10 +577,6 @@ processor_settings:
   language_with_fallback: {  }
   rendered_item: {  }
   reverse_entity_references: {  }
-  role_filter:
-    default: true
-    roles:
-      - anonymous
   solr_date_range:
     weights:
       preprocess_index: 0
