@@ -20,3 +20,7 @@ theme:
     dist/scripts/compositions/drupal.media-wrapper.js: { minified: true }
   dependencies:
     - core/drupal
+
+entity_tree:
+  js:
+
