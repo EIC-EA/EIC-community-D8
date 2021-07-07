@@ -8,7 +8,7 @@ dependencies:
 id: group_group
 label: 'Group - Group'
 type: 'canonical_entities:group'
-pattern: 'groups/[eic_groups_tokens:eic_groups_truncated_title:40]'
+pattern: 'groups/[group:group_truncated_title:40]'
 selection_criteria:
   80dac3a4-1524-41f7-a9e4-b9187a06d109:
     id: 'entity_bundle:group'

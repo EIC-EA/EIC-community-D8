@@ -51,6 +51,7 @@ module:
   eic_paragraph_cta_tile: 0
   eic_private_content: 0
   eic_search: 0
+  eic_seo: 0
   eic_theme_helper: 0
   eic_user: 0
   eic_webservices: 0

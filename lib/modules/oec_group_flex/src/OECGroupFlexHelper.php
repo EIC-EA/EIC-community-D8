@@ -97,7 +97,7 @@ class OECGroupFlexHelper {
     $group_visibility_type = $this->groupFlexGroup->getGroupVisibility($group);
     /** @var \Drupal\group_flex\Plugin\GroupVisibilityInterface $selected_plugin */
     $selected_plugin = $visibility_plugins[$group_visibility_type];
-    $visibility_settings['label'] = $selected_plugin->getLabel();
+    $visibility_settings['label'] = $selected_plugin->getValueDescription($group->getGroupType());
 
     $visibility_settings['plugin_id'] = $group_visibility_type;
     switch ($group_visibility_type) {

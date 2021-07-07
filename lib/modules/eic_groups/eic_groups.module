@@ -55,6 +55,14 @@ function eic_groups_group_insert(EntityInterface $entity) {
 /**
  * Implements hook_ENTITY_TYPE_view().
  */
+function eic_groups_group_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
+  \Drupal::classResolver(EntityOperations::class)
+    ->groupView($build, $entity, $display, $view_mode);
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_view().
+ */
 function eic_groups_node_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
   \Drupal::classResolver(EntityOperations::class)
     ->nodeView($build, $entity, $display, $view_mode);
@@ -104,11 +112,12 @@ function eic_groups_module_implements_alter(&$implementations, $hook) {
  * Implements hook_form_alter().
  */
 function eic_groups_form_alter(&$form, FormStateInterface $form_state, $form_id) {
-  // Hide book select list from wiki page forms.
   switch ($form_id) {
     case 'node_wiki_page_form':
     case 'node_wiki_page_edit_form':
-      $form['book']['bid']['#access'] = FALSE;
+      // Do custom changes in group wiki page forms.
+      \Drupal::classResolver(FormOperations::class)
+        ->groupWikiPageFormAlter($form, $form_state, $form_id);
       break;
 
   }
@@ -204,4 +213,12 @@ function eic_groups_entity_field_access($operation, FieldDefinitionInterface $fi
   }
 
   return $access;
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_insert().
+ */
+function eic_groups_group_permission_insert(EntityInterface $entity) {
+  \Drupal::classResolver(EntityOperations::class)
+    ->groupPermissionInsert($entity);
 }

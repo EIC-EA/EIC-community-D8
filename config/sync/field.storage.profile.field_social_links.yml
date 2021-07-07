@@ -12,7 +12,7 @@ type: social_links
 settings: {  }
 module: social_link_field
 locked: false
-cardinality: -1
+cardinality: 3
 translatable: true
 indexes: {  }
 persist_with_no_fields: false

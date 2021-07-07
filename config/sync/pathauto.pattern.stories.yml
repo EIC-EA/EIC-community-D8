@@ -7,7 +7,7 @@ dependencies:
 id: stories
 label: Stories
 type: 'canonical_entities:node'
-pattern: '[eic_groups_tokens:node_group_url]/stories/[node:title]'
+pattern: '[node:node_group_url]/stories/[node:title]'
 selection_criteria:
   9576bc1d-7c9e-426e-b9c0-23bac8084a58:
     id: node_type
