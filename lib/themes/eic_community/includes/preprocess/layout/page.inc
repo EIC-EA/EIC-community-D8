@@ -81,6 +81,5 @@ function eic_community_preprocess_page(array &$variables): void {
     $sections[] = $section;
   }
 
-
   $variables['site_footer'] = ['sections' => $sections];
 }
