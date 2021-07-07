@@ -1,0 +1,15 @@
+uuid: 79090ea7-3e52-4df5-98ae-6999569c5287
+langcode: en
+status: true
+dependencies:
+  config:
+    - flag.flag.request_archive_group
+  module:
+    - flag
+id: flag_action.request_archive_group_flag
+label: 'Flag this item'
+type: group
+plugin: 'flag_action:request_archive_group_flag'
+configuration:
+  flag_id: request_archive_group
+  flag_action: flag

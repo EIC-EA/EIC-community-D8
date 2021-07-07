@@ -1,0 +1,67 @@
+uuid: 19e39dbc-0b53-4913-b249-2456ef4831a6
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.group.about_page
+    - field.field.group.group.field_body
+    - field.field.group.group.field_hero
+    - field.field.group.group.field_message_to_site_admin
+    - field.field.group.group.field_related_groups
+    - field.field.group.group.field_related_news_stories
+    - field.field.group.group.field_thumbnail
+    - field.field.group.group.field_vocab_geo
+    - field.field.group.group.field_vocab_topics
+    - field.field.group.group.field_welcome_message
+    - group.type.group
+  module:
+    - text
+id: group.group.about_page
+targetEntityType: group
+bundle: group
+mode: about_page
+content:
+  field_body:
+    type: text_default
+    weight: 0
+    region: content
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+  field_vocab_geo:
+    type: entity_reference_label
+    weight: 1
+    region: content
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+  field_vocab_topics:
+    type: entity_reference_label
+    weight: 2
+    region: content
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+  flag_bookmark_group:
+    weight: 10
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+hidden:
+  changed: true
+  content_moderation_control: true
+  created: true
+  field_hero: true
+  field_message_to_site_admin: true
+  field_related_groups: true
+  field_related_news_stories: true
+  field_thumbnail: true
+  field_welcome_message: true
+  flag_follow_group: true
+  flag_recommend_group: true
+  label: true
+  langcode: true
+  search_api_excerpt: true
+  uid: true

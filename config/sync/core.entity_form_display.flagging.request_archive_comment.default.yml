@@ -1,0 +1,57 @@
+uuid: 9cce617d-6302-416e-91e7-8d76e0bd62e6
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.flagging.request_archive_comment.field_request_closed_date
+    - field.field.flagging.request_archive_comment.field_request_moderator
+    - field.field.flagging.request_archive_comment.field_request_reason
+    - field.field.flagging.request_archive_comment.field_request_response
+    - field.field.flagging.request_archive_comment.field_request_status
+    - flag.flag.request_archive_comment
+  module:
+    - datetime
+id: flagging.request_archive_comment.default
+targetEntityType: flagging
+bundle: request_archive_comment
+mode: default
+content:
+  field_request_closed_date:
+    weight: 4
+    settings: {  }
+    third_party_settings: {  }
+    type: datetime_default
+    region: content
+  field_request_moderator:
+    weight: 2
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: entity_reference_autocomplete
+    region: content
+  field_request_reason:
+    weight: 1
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textarea
+    region: content
+  field_request_response:
+    weight: 3
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textarea
+    region: content
+  field_request_status:
+    weight: 0
+    settings: {  }
+    third_party_settings: {  }
+    type: options_select
+    region: content
+hidden: {  }

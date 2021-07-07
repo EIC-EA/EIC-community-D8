@@ -4,6 +4,11 @@ status: true
 dependencies:
   config:
     - filter.format.plain_text
+  module:
+    - eic_messages
+third_party_settings:
+  eic_messages:
+    message_template_type: notification
 template: notify_group_request_submitted
 label: 'NOTIFY :: MT01 :: Group request submitted'
 description: ''

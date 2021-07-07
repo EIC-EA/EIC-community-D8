@@ -28,6 +28,18 @@ class DeleteRequestHandler extends AbstractRequestHandler {
   /**
    * {@inheritdoc}
    */
+  public function getMessages() {
+    return [
+      RequestStatus::OPEN => 'notify_new_deletion_request',
+      RequestStatus::DENIED => 'notify_delete_request_denied',
+      RequestStatus::ACCEPTED => 'notify_delete_request_accepted',
+      RequestStatus::ARCHIVED => 'notify_delete_request_archived',
+    ];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function accept(
     FlaggingInterface $flagging,
     ContentEntityInterface $content_entity
@@ -57,9 +69,7 @@ class DeleteRequestHandler extends AbstractRequestHandler {
     ContentEntityInterface $content_entity
   ) {
     if ($this->moderationInformation->isModeratedEntity($content_entity)) {
-      // TODO think about looping through every workflow to find an 'unpublished' state
-      $state = $content_entity->getEntityTypeId() === 'group' ? 'pending' : 'unpublished';
-      $content_entity->set('moderation_state', $state);
+      $content_entity->set('moderation_state', 'archived');
     }
     else {
       $content_entity->set('status', FALSE);
@@ -192,6 +202,25 @@ class DeleteRequestHandler extends AbstractRequestHandler {
       && $results['group'] instanceof GroupInterface) {
       $results['group']->delete();
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getActions(ContentEntityInterface $entity) {
+    return parent::getActions($entity) + [
+        'archive_request' => [
+          'title' => t('Archive'),
+          'url' => $entity->toUrl('close-request')
+            ->setRouteParameter('request_type', $this->getType())
+            ->setRouteParameter('response', RequestStatus::ARCHIVED)
+            ->setRouteParameter(
+              'destination',
+              \Drupal::request()
+                ->getRequestUri()
+            ),
+        ],
+      ];
   }
 
 }

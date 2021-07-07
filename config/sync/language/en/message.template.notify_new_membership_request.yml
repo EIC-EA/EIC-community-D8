@@ -1,0 +1,7 @@
+text:
+  -
+    value: "<p>A new member requested to join [message:field_group_ref:entity:title]</p>\r\n"
+    format: full_html
+  -
+    value: "<p>Dear [message:field_group_ref:entity:author], A new member requested to join [message:field_group_ref:entity:title] at [site:name]. <a href=\"[message:field_group_membership:entity:url]\">Manage this request</a>. Please find their details below: [message:field_related_user:entity:account-name] Based in ... Expertise: .. About: ... Message from this member: ... View this member's <a href=\"[message:field_related_user:entity:url]\">profile</a> at European Innovation Council. <a href=\"[message:field_group_membership:entity:url]/approve-membership\">Approve</a> - <a href=\"[message:field_group_membership:entity:url]/reject-membership\">Reject</a></p>\r\n"
+    format: full_html

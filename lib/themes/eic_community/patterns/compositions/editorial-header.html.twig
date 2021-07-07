@@ -93,7 +93,7 @@
                               path: icon_file_path,
                               size: 's',
                             }) : {},
-                            extra_classes: loop.first ? 'ecl-link--button ecl-link--button-primary' : 'ecl-link--button ecl-link--button-secondary',
+                            extra_classes: 'ecl-link--button ecl-link--button-primary' ~ (action.is_compact ? ' ecl-link--button-has-icon-layout ecl-link--action'),
                           }) only %}
                         {% elseif action is not empty %}
                           {% if action.link %}
@@ -162,16 +162,20 @@
                     <div class="ecl-editorial-header__flags">
                       {% for flag in flags %}
                         <div class="ecl-editorial-header__flag">
-                          {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with flag|default({})|merge({
-                            link: flag.link|default({})|merge({
-                              icon_position: 'before',
-                            }),
-                            extra_classes: 'ecl-link--standalone ecl-link--flag',
-                            icon: flag.icon|default({})|merge({
-                              path: icon_file_path,
-                              size: 's',
-                            })
-                          }) %}
+                          {% if flag.content is defined %}
+                            {{ flag.content }}
+                          {% else %}
+                            {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with flag|default({})|merge({
+                              link: flag.link|default({})|merge({
+                                icon_position: 'before',
+                              }),
+                              extra_classes: 'ecl-link--standalone ecl-link--flag',
+                              icon: flag.icon|default({})|merge({
+                                path: icon_file_path,
+                                size: 's',
+                              })
+                            }) %}
+                          {% endif %}
                         </div>
                       {% endfor %}
                     </div>

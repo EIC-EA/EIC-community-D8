@@ -7,9 +7,10 @@ use Drupal\book\Plugin\Block\BookNavigationBlock;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\eic_groups\EICGroupsHelperInterface;
+use Drupal\node\NodeInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Provides a 'Book navigation' block.
@@ -45,8 +46,8 @@ class GroupWikiBookNavigationBlock extends BookNavigationBlock {
    *   The plugin_id for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
-   *   The request stack object.
+   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
+   *   The current route match.
    * @param \Drupal\book\BookManagerInterface $book_manager
    *   The book manager.
    * @param \Drupal\Core\Entity\EntityStorageInterface $node_storage
@@ -56,8 +57,8 @@ class GroupWikiBookNavigationBlock extends BookNavigationBlock {
    * @param \Drupal\eic_groups\EICGroupsHelperInterface $eic_groups_helper
    *   The EIC groups helper service.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, RequestStack $request_stack, BookManagerInterface $book_manager, EntityStorageInterface $node_storage, Connection $database, EICGroupsHelperInterface $eic_groups_helper) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition, $request_stack, $book_manager, $node_storage);
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, RouteMatchInterface $route_match, BookManagerInterface $book_manager, EntityStorageInterface $node_storage, Connection $database, EICGroupsHelperInterface $eic_groups_helper) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition, $route_match, $book_manager, $node_storage);
     $this->database = $database;
     $this->eicGroupsHelper = $eic_groups_helper;
   }
@@ -70,7 +71,7 @@ class GroupWikiBookNavigationBlock extends BookNavigationBlock {
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('request_stack'),
+      $container->get('current_route_match'),
       $container->get('book.manager'),
       $container->get('entity_type.manager')->getStorage('node'),
       $container->get('database'),
@@ -96,11 +97,17 @@ class GroupWikiBookNavigationBlock extends BookNavigationBlock {
    * {@inheritdoc}
    */
   public function build() {
+    // If group was not found in the route context, we do nothing.
     if (!$this->eicGroupsHelper->getGroupFromRoute()) {
       return [];
     }
 
-    if (!$node = $this->requestStack->getCurrentRequest()->get('node')) {
+    // If there wasn't any node found in the route context, we do nothing.
+    if (!$node = $this->routeMatch->getParameter('node')) {
+      return [];
+    }
+
+    if (!($node instanceof NodeInterface)) {
       return [];
     }
 
