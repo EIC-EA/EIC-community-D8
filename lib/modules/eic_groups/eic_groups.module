@@ -13,6 +13,7 @@ use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\eic_groups\GroupsModerationHelper;
 use Drupal\eic_groups\Hooks\CronOperations;
 use Drupal\eic_groups\Hooks\EntityOperations;
 use Drupal\eic_groups\Hooks\GroupTokens;
@@ -215,9 +216,25 @@ function eic_groups_entity_field_access($operation, FieldDefinitionInterface $fi
 }
 
 /**
- * Implements hook_ENTITY_TYPE_insert().
+ * Implements hook_ENTITY_TYPE_access().
  */
-function eic_groups_group_permission_insert(EntityInterface $entity) {
-  \Drupal::classResolver(EntityOperations::class)
-    ->groupPermissionInsert($entity);
+function eic_groups_group_access(EntityInterface $entity, $operation, AccountInterface $account) {
+  $access = AccessResult::neutral();
+
+  $moderation_state = $entity->get('moderation_state')->value;
+
+  switch ($operation) {
+    case 'delete':
+      // Deny access to delete group if the group is NOT in pending state and
+      // the user is not an "administator" or a "content_administrator".
+      if ($moderation_state !== GroupsModerationHelper::GROUP_PENDING_STATE) {
+        $access = AccessResult::forbiddenIf(!in_array('administrator', $account->getRoles(TRUE)) && !in_array('content_administrator', $account->getRoles(TRUE)))
+          ->addCacheableDependency($account)
+          ->addCacheableDependency($entity);
+      }
+      break;
+
+  }
+
+  return $access;
 }
