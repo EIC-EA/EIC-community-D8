@@ -2,3 +2,7 @@ services:
   oec_group_comments.group_permission_checker:
     class: Drupal\oec_group_comments\GroupPermissionChecker
     arguments: ['@renderer']
+  oec_group_comments.route_subscriber:
+    class: Drupal\oec_group_comments\EventSubscriber\GroupCommentsRouteSubscriber
+    tags:
+      - { name: event_subscriber }
