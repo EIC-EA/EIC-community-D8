@@ -1,0 +1,27 @@
+uuid: a8010306-4b14-4d10-8b52-479243710723
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.message.mail_subject
+    - field.field.message.notify_archived_republished.field_message_subject
+    - field.field.message.notify_archived_republished.field_referenced_entity_label
+    - message.template.notify_archived_republished
+id: message.notify_archived_republished.mail_subject
+targetEntityType: message
+bundle: notify_archived_republished
+mode: mail_subject
+content:
+  field_message_subject:
+    type: string
+    weight: 0
+    region: content
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+hidden:
+  field_referenced_entity_label: true
+  partial_0: true
+  partial_1: true
+  search_api_excerpt: true
