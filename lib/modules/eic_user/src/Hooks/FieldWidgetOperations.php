@@ -8,7 +8,7 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 /**
  * Class FieldWidgetOperations.
  *
- * Implementations for entity hooks.
+ * Implementations for field widget hooks.
  */
 class FieldWidgetOperations {
 
