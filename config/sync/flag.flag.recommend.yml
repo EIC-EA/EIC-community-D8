@@ -6,7 +6,7 @@ dependencies:
     - eic_flags
     - node
 id: recommend
-label: 'Recommend (content)'
+label: 'Recommend (Content)'
 bundles:
   - discussion
   - document
