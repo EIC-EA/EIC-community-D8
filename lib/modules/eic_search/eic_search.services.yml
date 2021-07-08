@@ -1,0 +1,13 @@
+services:
+  eic_search.sources_collector:
+    class: Drupal\eic_search\Collector\SourcesCollector
+    tags:
+      - { name: service_collector, tag: eic_search.source, call: addSource }
+  eic_search.source_group:
+    class: Drupal\eic_search\Search\Sources\GroupSourceType
+    tags:
+      - { name: eic_search.source }
+  eic_search.source_user:
+    class: Drupal\eic_search\Search\Sources\UserSourceType
+    tags:
+      - { name: eic_search.source }

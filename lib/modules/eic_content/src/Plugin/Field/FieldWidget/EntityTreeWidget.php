@@ -6,6 +6,7 @@ use Drupal\Core\Field\Annotation\FieldWidget;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\WidgetBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 
 /**
  * Plugin implementation of the 'entity_tree' widget.
@@ -21,6 +22,7 @@ use Drupal\Core\Form\FormStateInterface;
  * )
  */
 class EntityTreeWidget extends WidgetBase {
+
   /**
    * {@inheritdoc}
    */
@@ -29,10 +31,15 @@ class EntityTreeWidget extends WidgetBase {
       [
         '#type' => 'textfield',
         '#default_value' => isset($items[$delta]->value) ? $items[$delta]->value : NULL,
-        '#attributes' => ['class' => ['testy']],
+        '#attributes' => [
+          'id' => ['testy'],
+          'class' => ['hidden'],
+          'data-terms-url' => Url::fromRoute('eic_content.entity_tree')
+            ->toString(),
+        ],
       ];
 
-    $element['#attached']['library'][] = 'eic_community/library_name';
+    $element['#attached']['library'][] = 'eic_community/react-tree-field';
 
     return $element;
   }
@@ -60,4 +67,5 @@ class EntityTreeWidget extends WidgetBase {
 
     return $summary;
   }
+
 }

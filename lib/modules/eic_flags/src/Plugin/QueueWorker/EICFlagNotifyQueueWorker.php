@@ -126,7 +126,7 @@ class EICFlagNotifyQueueWorker extends QueueWorkerBase implements ContainerFacto
    */
   private function processCommentItem(array $data) {
     $comment = $this->entityTypeManager->getStorage('comment')->load($data['entity_id']);
-    $node = $this->entityTypeManager->getStorage('node')->load($comment->getCommentedEnityId());
+    $node = $this->entityTypeManager->getStorage('node')->load($comment->getCommentedEntityId());
     $message = Message::create([
       'template' => 'like_comment',
       'uid' => $node->getOwnerId(),

@@ -20,6 +20,7 @@ use Drupal\eic_groups\Hooks\FormOperations;
 use Drupal\eic_groups\Hooks\Pathauto;
 use Drupal\eic_groups\Hooks\Preprocess;
 use Drupal\group\Entity\GroupInterface;
+use Drupal\eic_groups\Constants\GroupVisibilityType;
 
 /**
  * Implements hook_theme().

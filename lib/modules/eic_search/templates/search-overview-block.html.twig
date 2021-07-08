@@ -1,0 +1,13 @@
+{{ attach_library('eic_community/react-block-overview-search') }}
+<div
+  id="group-overview"
+  data-facets="{{ facets | json_encode }}"
+  data-sorts="{{ sorts | json_encode }}"
+  data-page-options="{{ page_options }}"
+  data-datasource="{{ datasource }}"
+  data-enable-search="{{ enable_search }}"
+  data-solr-url="{{ url }}"
+  data-solr-is-anonymous="{{ isAnonymous }}"
+  data-solr-translations="{{ translations | json_encode }}"
+  data-source-class="{{ source_class }}"
+></div>

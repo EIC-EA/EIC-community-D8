@@ -6,13 +6,17 @@ dependencies:
     - search_api_solr
     - node
     - group
+    - file
+    - media
+    - taxonomy
     - user
     - profile
     - search_api
-    - flag_search_api
     - address
+    - eic_search
     - content_moderation
     - flag
+    - group_permissions
   config:
     - field.storage.node.field_body
     - field.storage.node.field_discussion_type
@@ -22,6 +26,11 @@ dependencies:
     - field.storage.group.field_body
     - field.storage.group.field_vocab_geo
     - field.storage.group.field_vocab_topics
+    - field.storage.group.field_thumbnail
+    - field.storage.media.oe_media_image
+    - field.storage.user.field_first_name
+    - field.storage.user.field_media
+    - field.storage.user.field_last_name
     - field.storage.profile.field_body
     - field.storage.profile.field_location_address
     - field.storage.profile.field_vocab_job_title
@@ -171,6 +180,8 @@ field_settings:
     datasource_id: 'entity:node'
     property_path: status
     type: boolean
+    indexed_locked: true
+    type_locked: true
     dependencies:
       module:
         - node
@@ -198,12 +209,6 @@ field_settings:
     dependencies:
       module:
         - node
-  flag_recommend_group_count:
-    label: 'Group Recommend count'
-    property_path: flag_recommend_group_count
-    type: integer
-    indexed_locked: true
-    type_locked: true
   group_content_entity_id:
     label: '[Group content] Content'
     datasource_id: 'entity:group_content'
@@ -260,12 +265,28 @@ field_settings:
     dependencies:
       config:
         - field.storage.group.field_vocab_topics
-  group_label:
+  group_id:
+    label: ID
+    datasource_id: 'entity:group'
+    property_path: id
+    type: integer
+    dependencies:
+      module:
+        - group
+  group_label_fulltext:
     label: '[Group] Title'
     datasource_id: 'entity:group'
     property_path: label
     type: text
     boost: !!float 3
+    dependencies:
+      module:
+        - group
+  group_label_string:
+    label: Title
+    datasource_id: 'entity:group'
+    property_path: label
+    type: string
     dependencies:
       module:
         - group
@@ -277,6 +298,28 @@ field_settings:
     dependencies:
       module:
         - group
+  group_teaser_url_string:
+    label: 'Thumbnail image » Media » Image » File » URI » Root-relative file URL'
+    datasource_id: 'entity:group'
+    property_path: 'field_thumbnail:entity:oe_media_image:entity:uri:url'
+    type: string
+    dependencies:
+      config:
+        - field.storage.group.field_thumbnail
+        - field.storage.media.oe_media_image
+      module:
+        - file
+        - media
+  group_topic_name:
+    label: 'Topics » Taxonomy term » Name'
+    datasource_id: 'entity:group'
+    property_path: 'field_vocab_topics:entity:name'
+    type: string
+    dependencies:
+      config:
+        - field.storage.group.field_vocab_topics
+      module:
+        - taxonomy
   group_type:
     label: '[Group] Group type'
     datasource_id: 'entity:group'
@@ -285,6 +328,49 @@ field_settings:
     dependencies:
       module:
         - group
+  group_user_first_name:
+    label: 'Group creator » User » First name'
+    datasource_id: 'entity:group'
+    property_path: 'uid:entity:field_first_name'
+    type: string
+    dependencies:
+      config:
+        - field.storage.user.field_first_name
+      module:
+        - group
+        - user
+  group_user_image:
+    label: 'Group creator » User » Picture » Media » Image » File » URI » Root-relative file URL'
+    datasource_id: 'entity:group'
+    property_path: 'uid:entity:field_media:entity:oe_media_image:entity:uri:url'
+    type: string
+    dependencies:
+      config:
+        - field.storage.media.oe_media_image
+        - field.storage.user.field_media
+      module:
+        - file
+        - group
+        - media
+        - user
+  group_user_last_name:
+    label: 'Group creator » User » Last name'
+    datasource_id: 'entity:group'
+    property_path: 'uid:entity:field_last_name'
+    type: string
+    dependencies:
+      config:
+        - field.storage.user.field_last_name
+      module:
+        - group
+        - user
+  node_grants:
+    label: 'Node access information'
+    property_path: search_api_node_grants
+    type: string
+    indexed_locked: true
+    type_locked: true
+    hidden: true
   status:
     label: 'User status'
     datasource_id: 'entity:user'
@@ -293,6 +379,22 @@ field_settings:
     dependencies:
       module:
         - user
+  uid:
+    label: uid
+    datasource_id: 'entity:node'
+    property_path: uid
+    type: integer
+    indexed_locked: true
+    type_locked: true
+    dependencies:
+      module:
+        - node
+  url:
+    label: URI
+    property_path: search_api_url
+    type: string
+    configuration:
+      absolute: false
   user__group_content__uid_gid:
     label: 'Reverse reference: Group content using Group content creator » Parent group'
     datasource_id: 'entity:user'
@@ -306,6 +408,14 @@ field_settings:
     dependencies:
       module:
         - user
+  user_first_name:
+    label: 'First name'
+    datasource_id: 'entity:user'
+    property_path: field_first_name
+    type: string
+    dependencies:
+      config:
+        - field.storage.user.field_first_name
   user_full_name:
     label: '[User] Full name'
     property_path: aggregated_field
@@ -315,6 +425,14 @@ field_settings:
       fields:
         - 'entity:user/field_first_name'
         - 'entity:user/field_last_name'
+  user_last_name:
+    label: 'Last name'
+    datasource_id: 'entity:user'
+    property_path: field_last_name
+    type: string
+    dependencies:
+      config:
+        - field.storage.user.field_last_name
   user_profile:
     label: 'Member profiles'
     datasource_id: 'entity:user'
@@ -383,6 +501,18 @@ field_settings:
         - field.storage.profile.field_vocab_topic_interest
       module:
         - profile
+  user_profile_image:
+    label: 'Picture » Media » Image » File » URI » Root-relative file URL'
+    datasource_id: 'entity:user'
+    property_path: 'field_media:entity:oe_media_image:entity:uri:url'
+    type: string
+    dependencies:
+      config:
+        - field.storage.media.oe_media_image
+        - field.storage.user.field_media
+      module:
+        - file
+        - media
 datasource_settings:
   'entity:content_moderation_state':
     languages:
@@ -406,6 +536,7 @@ datasource_settings:
     languages:
       default: true
       selected: {  }
+  'entity:group_permission': {  }
   'entity:node':
     bundles:
       default: true
@@ -429,9 +560,12 @@ processor_settings:
       preprocess_index: -20
       preprocess_query: -20
   aggregated_field: {  }
-  flag_count_indexer:
-    flag_index:
-      - recommend_group
+  content_access:
+    weights:
+      preprocess_query: -30
+  group_content_access:
+    weights:
+      preprocess_query: -30
   hierarchy:
     fields:
       content_field_vocab_geo: taxonomy_term-parent

@@ -1,0 +1,38 @@
+.entity-tree {
+  margin: 15px auto;
+
+  .entity-tree--search {
+    margin-bottom: 15px;
+  }
+
+  .entity-tree--options {
+    width: 50%;
+
+    .MuiAccordionSummary-content {
+      margin: 0;
+    }
+
+    .MuiAccordion-root, .MuiAccordion-root.Mui-expanded {
+      margin: 0;
+
+      .MuiAccordionSummary-root {
+        border: solid 1px #bdc3c7;
+
+        &.Mui-expanded {
+          min-height: 48px;
+        }
+
+        .loader {
+          margin-top: 10px;
+        }
+        .MuiTypography-body1 {
+          font-size: 13px;
+        }
+      }
+    }
+
+    .entity-tree--options--label {
+      display: block;
+    }
+  }
+}

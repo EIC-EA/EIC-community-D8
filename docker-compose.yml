@@ -35,7 +35,7 @@ services:
     environment:
       MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
     ports:
-      - 33060:3306
+      - $DRUPAL_DATABASE_PORT:3306
 
   pma:
     image: phpmyadmin/phpmyadmin
