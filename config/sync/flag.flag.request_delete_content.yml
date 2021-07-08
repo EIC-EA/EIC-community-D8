@@ -5,7 +5,7 @@ dependencies:
   module:
     - node
 id: request_delete_content
-label: 'Request Delete (Content)'
+label: 'Delete Request (Content)'
 bundles:
   - discussion
   - document

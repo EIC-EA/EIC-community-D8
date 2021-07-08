@@ -5,7 +5,7 @@ dependencies:
   module:
     - node
 id: bookmark_content
-label: 'Bookmark (content)'
+label: 'Bookmark (Content)'
 bundles:
   - discussion
   - document
