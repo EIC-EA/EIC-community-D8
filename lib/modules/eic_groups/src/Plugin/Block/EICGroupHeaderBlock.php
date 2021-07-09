@@ -175,7 +175,7 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
       )) {
         unset($user_operation_links[$key]);
         // We discard the operation link if user doesn't have access to it.
-        if ($action->access($this->currentUser)) {
+        if ($action['url']->access($this->currentUser)) {
           $operation_links[$key] = $action;
         }
       }
