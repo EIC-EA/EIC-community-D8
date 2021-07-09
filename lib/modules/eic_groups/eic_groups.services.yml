@@ -17,3 +17,15 @@ services:
     arguments: ['@book.breadcrumb', '@current_user']
     tags:
       - { name: breadcrumb_builder, priority: 1000 }
+  eic_groups.access_check.flag.action.decorator:
+    class: Drupal\eic_groups\Access\FlagAccessCheck
+    decorates: access_check.flag.action
+    decoration_priority: 1
+    public: true
+    arguments: ['@eic_groups.access_check.flag.action.decorator.inner', '@flag']
+  eic_groups.access_check.unflag.action.decorator:
+    class: Drupal\eic_groups\Access\UnFlagAccessCheck
+    decorates: access_check.unflag.action
+    decoration_priority: 1
+    public: true
+    arguments: ['@eic_groups.access_check.unflag.action.decorator.inner', '@flag']
