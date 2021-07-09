@@ -83,7 +83,7 @@ class FlagRequestAccessCheck extends RequestAccessCheck {
    * Magic method to return any method call inside the inner service.
    */
   public function __call($method, $args) {
-    return call_user_func_array([$this->flagAccessCheck, $method], $args);
+    return call_user_func_array([$this->requestAccessCheck, $method], $args);
   }
 
 }
