@@ -94,6 +94,14 @@ class RequestCloseForm extends ContentEntityConfirmFormBase {
     );
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getDescription() {
+    return $this->getRequest()
+      ->get('request_type') === RequestTypes::DELETE ? 'This action cannot be undone.' : '';
+  }
+
   public function buildForm(array $form, FormStateInterface $form_state) {
     $form = parent::buildForm($form, $form_state);
 
@@ -210,7 +218,7 @@ class RequestCloseForm extends ContentEntityConfirmFormBase {
         );
       case RequestStatus::ACCEPTED:
         return $this->t(
-          '@entity-type will be permanently @operation. This action cannot be undone!',
+          '@entity-type will be permanently @operation. Please enter a reason or remark why you accept this request.',
           [
             '@entity-type' => $this->getEntity()
               ->getEntityType()
