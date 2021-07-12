@@ -102,7 +102,7 @@ class ListBuilderFilters extends FormBase {
         'class' => ['tabledrag-toggle-weight-wrapper'],
       ],
     ];
-    
+
     $form['closed_requests_container']['closed_requests'] = [
       '#type' => 'link',
       '#title' => $this->t('See handled requests'),
@@ -110,11 +110,6 @@ class ListBuilderFilters extends FormBase {
         FlaggedEntitiesListBuilder::CLOSED_REQUEST_VIEW,
         [
           'flag_id' => $views_type_option,
-          'field_request_status_value' => [
-            RequestStatus::ARCHIVED,
-            RequestStatus::ACCEPTED,
-            RequestStatus::DENIED,
-          ],
         ]
       ),
     ];
