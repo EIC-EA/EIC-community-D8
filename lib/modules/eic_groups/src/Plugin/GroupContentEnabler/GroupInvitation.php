@@ -6,6 +6,7 @@ use Drupal\group\Entity\GroupInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\group\Access\GroupAccessResult;
 use Drupal\eic_groups\GroupsModerationHelper;
+use Drupal\eic_user\UserHelper;
 use Drupal\ginvite\Plugin\GroupContentEnabler\GroupInvitation as GroupInvitationBase;
 
 /**
@@ -43,7 +44,7 @@ class GroupInvitation extends GroupInvitationBase {
           // Deny access to the group invitation form if the group is NOT yet
           // published and the user is not an "administator" or a
           // "content_administrator".
-          if (!in_array('administrator', $account->getRoles(TRUE)) && !in_array('content_administrator', $account->getRoles(TRUE))) {
+          if (!in_array(UserHelper::ROLE_SITE_ADMINISTRATOR, $account->getRoles(TRUE)) && !in_array(UserHelper::ROLE_CONTENT_ADMINISTRATOR, $account->getRoles(TRUE))) {
             $access = GroupAccessResult::forbidden()
               ->addCacheableDependency($account)
               ->addCacheableDependency($group);
