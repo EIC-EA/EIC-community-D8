@@ -124,21 +124,21 @@ reactions:
         unique: 0
         context_id: group_group_homepage
         uuid: f981ffbe-9d2f-455d-af1e-0dde97e7d74d
-      281d84b0-070f-4a70-a76e-00e811da6ce9:
-        id: eic_overview_message
-        label: 'EIC Overview Messages'
+      133eb116-55d1-44d7-a7c0-a9ddcdd1b9f9:
+        id: eic_group_overview_message
+        label: 'EIC Group Overview Messages'
         provider: eic_groups
         label_display: '0'
         region: content
-        weight: '0'
+        weight: '-3'
         context_mapping:
           group: '@group.group_route_context:group'
-        custom_id: eic_overview_message
+        custom_id: eic_group_overview_message
         theme: eic_community
         css_class: ''
         unique: 0
         context_id: group_group_homepage
-        uuid: 281d84b0-070f-4a70-a76e-00e811da6ce9
+        uuid: 133eb116-55d1-44d7-a7c0-a9ddcdd1b9f9
     id: blocks
     saved: false
     uuid: db598f5e-00b5-4ba6-b443-bbe6d3ca2c59

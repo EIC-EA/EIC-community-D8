@@ -17,8 +17,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Provides an EICGroupOverviewMessageBlock block.
  *
  * @Block(
- *   id = "eic_overview_message",
- *   admin_label = @Translation("EIC Overview Messages"),
+ *   id = "eic_group_overview_message",
+ *   admin_label = @Translation("EIC Group Overview Messages"),
  *   category = @Translation("European Innovation Council"),
  *   context_definitions = {
  *     "group" = @ContextDefinition("entity:group")
@@ -26,11 +26,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * )
  */
 class EICGroupOverviewMessageBlock extends BlockBase implements ContainerFactoryPluginInterface {
-
-  /**
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  private $entityTypeManager;
 
   /**
    * @var \Drupal\Core\Session\AccountProxyInterface
@@ -53,7 +48,6 @@ class EICGroupOverviewMessageBlock extends BlockBase implements ContainerFactory
    * @param array $configuration
    * @param $plugin_id
    * @param $plugin_definition
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    * @param \Drupal\content_moderation\ModerationInformationInterface $moderation_information
    * @param \Drupal\Core\Session\AccountProxyInterface $account
    * @param \Drupal\eic_groups\EICGroupsHelper $group_helper
@@ -62,14 +56,12 @@ class EICGroupOverviewMessageBlock extends BlockBase implements ContainerFactory
     array $configuration,
     $plugin_id,
     $plugin_definition,
-    EntityTypeManagerInterface $entity_type_manager,
     ModerationInformationInterface $moderation_information,
     AccountProxyInterface $account,
     EICGroupsHelper $group_helper
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
-    $this->entityTypeManager = $entity_type_manager;
     $this->moderationInformation = $moderation_information;
     $this->account = $account;
     $this->groupHelper = $group_helper;
@@ -88,7 +80,6 @@ class EICGroupOverviewMessageBlock extends BlockBase implements ContainerFactory
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('entity_type.manager'),
       $container->get('content_moderation.moderation_information'),
       $container->get('current_user'),
       $container->get('eic_groups.helper')
@@ -124,6 +115,15 @@ class EICGroupOverviewMessageBlock extends BlockBase implements ContainerFactory
     $has_group_content = $this->groupHelper->hasContent($group);
     if ($this->moderationInformation->isModeratedEntity($group) && !$group->isPublished()) {
       $moderation_state = $group->get('moderation_state')->value;
+      $content_operations[] = [
+        'label' => $this->t('Post content'),
+        'links' => $this->groupHelper->getGroupContentOperationLinks(
+          $group,
+          ['node'],
+          $cacheable_metadata
+        ),
+      ];
+
       if (in_array($moderation_state, [
         GroupsModerationHelper::GROUP_DRAFT_STATE,
         GroupsModerationHelper::GROUP_PENDING_STATE,
@@ -135,11 +135,7 @@ class EICGroupOverviewMessageBlock extends BlockBase implements ContainerFactory
           '#edit_link' => $group->toUrl('edit-form'),
           '#delete_link' => $group->toUrl('delete-form'),
           '#has_content' => $has_group_content,
-          '#operation_links' => $this->groupHelper->getGroupContentOperationLinks(
-            $group,
-            ['node'],
-            $cacheable_metadata
-          ),
+          '#actions' => $content_operations,
         ];
       }
     }
