@@ -1,3 +1,4 @@
+uuid: 0d7ee9df-7032-40b8-9aad-59d7b9b08b16
 langcode: en
 status: true
 dependencies: {  }
@@ -15,50 +16,51 @@ source:
   bundle: c4m_vocab_document_type
   track_changes: true
 process:
-  # Ignore Term ID. A new one will be generated.
-  #tid:
-  #  - plugin: get
-  #    source: tid
-  # Ignore Vocabulary ID. It will be automatically filled by the default_bundle on the destination.
-  #vid:
-  #  - plugin: migration_lookup
-  #    migration: upgrade_d7_taxonomy_vocabulary
-  #    source: vid
   name:
-    - plugin: get
+    -
+      plugin: get
       source: name
   description/value:
-    - plugin: get
+    -
+      plugin: get
       source: description
   description/format:
-    - plugin: get
+    -
+      plugin: get
       source: format
   weight:
-    - plugin: get
+    -
+      plugin: get
       source: weight
   parent_id:
-    - plugin: skip_on_empty
+    -
+      plugin: skip_on_empty
       method: process
       source: parent
-    - plugin: migration_lookup
+    -
+      plugin: migration_lookup
       migration:
         - upgrade_d7_taxonomy_term_c4m_vocab_document_type
   parent:
-    - plugin: default_value
+    -
+      plugin: default_value
       default_value: 0
       source: '@parent_id'
   forum_container:
-    - plugin: get
+    -
+      plugin: get
       source: is_container
   changed:
-    - plugin: get
+    -
+      plugin: get
       source: timestamp
   langcode:
-    - plugin: get
+    -
+      plugin: get
       source: language
 destination:
   plugin: 'entity:taxonomy_term'
   default_bundle: document_types
 migration_dependencies:
-  required: { }
-  optional: { }
+  required: {  }
+  optional: {  }
