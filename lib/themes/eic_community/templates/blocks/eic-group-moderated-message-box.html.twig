@@ -25,7 +25,7 @@
   <p><a href="#">Click here</a> if you need additional help</p>
 {% endif %}
 
-{% if actions is not empty and moderation_state == 'draft' %}
+{% if actions is not empty and moderation_state == 'draft' and has_content == false %}
   <div class="ecl-editorial-header__actions">
     {% for action in actions %}
       <div class="ecl-editorial-header__action">
