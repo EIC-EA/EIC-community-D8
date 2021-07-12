@@ -6,6 +6,7 @@ use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Routing\Access\AccessInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\eic_groups\GroupsModerationHelper;
+use Drupal\eic_user\UserHelper;
 use Drupal\group\Entity\GroupInterface;
 use Symfony\Component\Routing\Route;
 
@@ -46,8 +47,7 @@ class PublishGroupAccessChecker implements AccessInterface {
         // moderation state to publish, we only allow access if the user is an
         // "administrator" or a "content_administrator".
         if (!$account->hasPermission('use groups transition publish')) {
-          $access = AccessResult::allowedIf(in_array('administrator', $account->getRoles(TRUE)) ||
-            !in_array('content_administrator', $account->getRoles(TRUE)))
+          $access = AccessResult::allowedIf(in_array(UserHelper::ROLE_SITE_ADMINISTRATOR, $account->getRoles(TRUE)) || in_array(UserHelper::ROLE_CONTENT_ADMINISTRATOR, $account->getRoles(TRUE)))
             ->addCacheableDependency($account)
             ->addCacheableDependency($group);
         }
@@ -57,14 +57,14 @@ class PublishGroupAccessChecker implements AccessInterface {
           // If the user is not a member of the group, we only allow access if
           // the user is an "administrator" or "content_administrator".
           if (!$membership) {
-            $access = AccessResult::allowedIf(in_array('administrator', $account->getRoles(TRUE)) || in_array('content_administrator', $account->getRoles(TRUE)))
+            $access = AccessResult::allowedIf(in_array(UserHelper::ROLE_SITE_ADMINISTRATOR, $account->getRoles(TRUE)) || in_array(UserHelper::ROLE_CONTENT_ADMINISTRATOR, $account->getRoles(TRUE)))
               ->addCacheableDependency($account)
               ->addCacheableDependency($group);
           }
           else {
             // For group members we only allow access if the user is the group
             // owner or an "administrator" or a "content_administrator".
-            $access = AccessResult::allowedIf(in_array('administrator', $account->getRoles(TRUE)) || in_array('content_administrator', $account->getRoles(TRUE)) ||
+            $access = AccessResult::allowedIf(in_array(UserHelper::ROLE_SITE_ADMINISTRATOR, $account->getRoles(TRUE)) || in_array(UserHelper::ROLE_CONTENT_ADMINISTRATOR, $account->getRoles(TRUE)) ||
               in_array('group-owner', array_keys($membership->getRoles())))
               ->addCacheableDependency($account)
               ->addCacheableDependency($group);
