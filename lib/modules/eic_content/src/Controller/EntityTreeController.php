@@ -22,12 +22,32 @@ class EntityTreeController extends ControllerBase {
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
   public function tree(Request $request) {
-    $parent = $request->query->get('parent_term', NULL);
+    $offset = $request->query->get('offset', 0);
+    $length = $request->query->get('length', 25);
+    // This will check if we need to split result items
+    $loadAll = (int) $request->query->get('loadAll', 0);
 
-    $terms = $this->loadTree('topics', $parent);
+    $vocabulary = 'topics';
+
+    $terms = \Drupal::entityTypeManager()->getStorage('taxonomy_term')
+      ->loadTree('topics', 0, 1);
+
+    if (!$loadAll) {
+      $terms = array_slice($terms, $offset, $length);
+    }
+    $tree = [];
+
+    foreach ($terms as $tree_object) {
+      $this->buildTree($tree, $tree_object, $vocabulary, 1, 0);
+    }
 
     return new JsonResponse([
       'terms' => $terms,
+      'total' => \Drupal::entityTypeManager()
+        ->getStorage('taxonomy_term')
+        ->getQuery()
+        ->count()
+        ->execute(),
     ]);
   }
 
@@ -75,31 +95,15 @@ class EntityTreeController extends ControllerBase {
 
     return new JsonResponse(
       array_map(function (Term $term) {
+        $parent = $term->get('parent')->getValue();
+
         return [
           'name' => $term->getName(),
           'tid' => $term->id(),
+          'parent' => (int) reset($parent)['target_id'],
         ];
       }, $entities)
     );
-  }
-
-  /**
-   * @param $vocabulary
-   * @param $depth
-   *
-   * @return array
-   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
-   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
-   */
-  protected function loadTree($vocabulary, $depth) {
-    $terms = \Drupal::entityTypeManager()->getStorage('taxonomy_term')
-      ->loadTree($vocabulary);
-    $tree = [];
-    foreach ($terms as $tree_object) {
-      $this->buildTree($tree, $tree_object, $vocabulary, $depth, 0);
-    }
-
-    return $tree;
   }
 
   /**
