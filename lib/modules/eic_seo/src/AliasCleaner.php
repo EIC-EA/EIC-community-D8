@@ -88,9 +88,9 @@ class AliasCleaner extends AliasCleanerBase {
       'strings' => [],
       'transliterate' => $customConfig['transliterate'] ?? $config->get('transliterate'),
       'punctuation' => [],
-      'reduce_ascii' => (bool) $customConfig['reduce_ascii'] ?? $config->get('reduce_ascii'),
+      'reduce_ascii' => (bool) ($customConfig['reduce_ascii'] ?? $config->get('reduce_ascii')),
       'ignore_words_regex' => FALSE,
-      'lowercase' => (bool) $customConfig['case'] ?? $config->get('case'),
+      'lowercase' => (bool) ($customConfig['case'] ?? $config->get('case')),
       'maxlength' => min($customConfig['max_component_length'] ?? $config->get('max_component_length'), $this->aliasStorageHelper->getAliasSchemaMaxLength()),
     ];
 
