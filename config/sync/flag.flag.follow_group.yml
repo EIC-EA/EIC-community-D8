@@ -6,7 +6,7 @@ dependencies:
     - eic_flags
     - group
 id: follow_group
-label: 'Follow (group)'
+label: 'Follow (Group)'
 bundles: {  }
 entity_type: group
 global: false

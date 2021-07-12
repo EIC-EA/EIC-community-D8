@@ -1,0 +1,22 @@
+uuid: e06db08f-414d-4540-98f8-be13c92fe5d1
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.message.notify_archived_republished.field_message_subject
+    - field.field.message.notify_archived_republished.field_referenced_entity_label
+    - message.template.notify_archived_republished
+id: message.notify_archived_republished.default
+targetEntityType: message
+bundle: notify_archived_republished
+mode: default
+content:
+  partial_0:
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  field_message_subject: true
+  field_referenced_entity_label: true
+  search_api_excerpt: true

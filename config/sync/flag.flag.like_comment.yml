@@ -6,7 +6,7 @@ dependencies:
     - comment
     - eic_flags
 id: like_comment
-label: 'Like (comment)'
+label: 'Like (Comment)'
 bundles: {  }
 entity_type: comment
 global: false

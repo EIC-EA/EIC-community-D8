@@ -1,15 +1,15 @@
 eic_flags.delete_requested_content:
   title: 'Delete requests'
   route_name: eic_flags.flagged_entities.list
-  parent_id: system.admin_content
+  parent: eic_admin.dashboard
   weight: 1
   route_parameters:
     request_type: 'delete'
-    
+
 eic_flags.archive_requested_content:
   title: 'Archive requests'
   route_name: eic_flags.flagged_entities.list
-  parent_id: system.admin_content
+  parent: eic_admin.dashboard
   weight: 2
   route_parameters:
     request_type: 'archive'

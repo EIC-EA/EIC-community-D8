@@ -53,11 +53,16 @@ function eic_community_preprocess_comment(&$variables) {
     'comment_id' => $comment->cid->value,
     'comment_origin' => $comment_origin,
     'is_owner' => $current_user->id() == $comment->getOwnerId(),
-    'reply_path' => $comment_reply->toString(),
     'timestamp' => $created_at,
     'user' => $current_user,
     'icon_file_path' => $variables['eic_icon_path'],
   ];
+
+  // If user can reply to comments we add the comment reply path to the theme
+  // variables.
+  if ($comment_reply->access($current_user)) {
+    $variables['comment']['reply_path'] = $comment_reply->toString();
+  }
 
   $operations = \Drupal::entityTypeManager()->getListBuilder('comment')->getOperations($comment);
 

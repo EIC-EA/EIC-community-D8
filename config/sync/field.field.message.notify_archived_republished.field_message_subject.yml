@@ -1,0 +1,19 @@
+uuid: 83731daa-a4d3-448a-b2cd-15c71a47681d
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.message.field_message_subject
+    - message.template.notify_archived_republished
+id: message.notify_archived_republished.field_message_subject
+field_name: field_message_subject
+entity_type: message
+bundle: notify_archived_republished
+label: Subject
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

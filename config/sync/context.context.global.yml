@@ -12,21 +12,6 @@ conditions: {  }
 reactions:
   blocks:
     blocks:
-      8a784846-74f8-451c-b47b-fcc1177d6629:
-        id: 'eic_theme_helper_site_navigation:main'
-        label: 'Main navigation'
-        provider: eic_theme_helper
-        label_display: '0'
-        level: '1'
-        region: navigation
-        weight: '0'
-        context_mapping: {  }
-        custom_id: eic_theme_helper_site_navigation_main
-        theme: eic_community
-        css_class: ''
-        unique: 0
-        context_id: global
-        uuid: 8a784846-74f8-451c-b47b-fcc1177d6629
       6e7a0bbc-0152-4e8d-91b4-be66ea3bd664:
         id: 'system_menu_block:footer---european-commision'
         label: 'European Commision'
@@ -78,6 +63,23 @@ reactions:
         unique: 0
         context_id: global
         uuid: 88c19636-8f74-41ec-801c-6829bfe3a44d
+      116105ac-257d-4a9f-9495-133d1ad12d7c:
+        id: 'system_menu_block:main'
+        label: 'Main navigation'
+        provider: system
+        label_display: '0'
+        level: '1'
+        depth: '0'
+        expand_all_items: 0
+        region: navigation
+        weight: '0'
+        context_mapping: {  }
+        custom_id: system_menu_block_main
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: global
+        uuid: 116105ac-257d-4a9f-9495-133d1ad12d7c
     id: blocks
     saved: false
     uuid: c1979d39-89a3-4939-97f7-0af5a52467f1
