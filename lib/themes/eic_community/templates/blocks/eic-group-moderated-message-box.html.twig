@@ -12,6 +12,7 @@
 {% set moderation_state = group.moderation_state.value %}
 
 {% if moderation_state == 'pending' %}
+  <h2>Awaiting approval</h2>
   <p>This group is pending approval from our community team. We will endeavour to approve the group within 3 days.</p>
   <p>You can still <a href="{{ edit_link }}">manage</a> or <a href="{{ delete_link }}">delete</a> your group</p>
 {% elseif moderation_state == 'draft' %}

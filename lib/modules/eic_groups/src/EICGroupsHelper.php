@@ -303,9 +303,11 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
   }
 
   /**
-   * Determines if a group has any content.
+   * Determines if a group has content.
    * Considered as content:
-   *  - Every GroupContent entity other than memberships and menus
+   *  - Discussions
+   *  - Documents
+   *  - Wiki pages
    *
    * @param \Drupal\group\Entity\GroupInterface $group
    *    The group for which the check is.
@@ -313,7 +315,6 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
   public function hasContent(GroupInterface $group) {
     $query = $this->database->select('group_content_field_data', 'gp');
     $query->condition('gp.type', [
-      'group-group_node-book',
       'group-group_node-discussion',
       'group-group_node-document',
       'group-group_node-wiki_page',
