@@ -12,12 +12,11 @@ use Symfony\Component\Routing\Route;
 /**
  * Checks if passed parameter matches the route configuration.
  *
- * @DCG
  * To make use of this access checker add
  * '_publish_group_access_checker: Some value' entry to route definition under
  * requirements section.
  */
-class PublishGroupAccessCheckerAccessChecker implements AccessInterface {
+class PublishGroupAccessChecker implements AccessInterface {
 
   /**
    * Checks routing access for the publish group route.

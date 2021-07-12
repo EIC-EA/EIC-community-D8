@@ -43,7 +43,12 @@ class GroupOperationsController extends ControllerBase {
    * Builds the publish group page title.
    */
   public function publishTitle(GroupInterface $group) {
-    return $this->t('Publish - @group_name', ['@group_name' => $group->label()]);
+    return $this->t('Publish @group-type %label',
+      [
+        '@group-type' => $group->bundle(),
+        '%label' => $group->label(),
+      ]
+    );
   }
 
   /**
@@ -61,6 +66,8 @@ class GroupOperationsController extends ControllerBase {
     if ($destination = $this->redirectDestination->get()) {
       $response = new RedirectResponse($destination);
     }
+
+    $this->messenger()->addStatus($this->t('Group published successfully!'));
 
     return $response->send();
   }

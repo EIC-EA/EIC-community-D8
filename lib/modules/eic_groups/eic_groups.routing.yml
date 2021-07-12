@@ -14,5 +14,16 @@ eic_groups.group.publish:
   requirements:
     _publish_group_access_checker: 'TRUE'
     group: \d+
+
+eic_groups.group.publish.confirm_form:
+  path: '/group/{group}/publish/confirm'
+  defaults:
+    _form: '\Drupal\eic_groups\Form\PublishGroupConfirmForm'
+    _title_callback: '\Drupal\eic_groups\Controller\GroupOperationsController::publishTitle'
+  requirements:
+    _publish_group_access_checker: 'TRUE'
+    group: \d+
   options:
-    _group_operation_route: TRUE
+    parameters:
+      group:
+        type: entity:group

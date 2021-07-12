@@ -233,7 +233,7 @@ function eic_groups_entity_operation_alter(array &$operations, EntityInterface $
 
   // Gets current path alias.
   $current_path = \Drupal::service('path.current')->getPath();
-  $current_path_alias = \Drupal::service('path.alias_manager')->getAliasByPath($current_path);
+  $current_path_alias = \Drupal::service('path_alias.manager')->getAliasByPath($current_path);
 
   // Add publish group operation.
   $publish_url_options = [
@@ -241,7 +241,7 @@ function eic_groups_entity_operation_alter(array &$operations, EntityInterface $
       'destination' => $current_path_alias,
     ],
   ];
-  $publish_url = Url::fromRoute('eic_groups.group.publish', ['group' => $entity->id()], $publish_url_options);
+  $publish_url = Url::fromRoute('eic_groups.group.publish.confirm_form', ['group' => $entity->id()], $publish_url_options);
   if ($publish_url->access()) {
     $operations['publish'] = [
       'title' => t('Publish'),
