@@ -37,21 +37,24 @@ class GroupInvitation extends GroupInvitationBase {
   public function createAccess(GroupInterface $group, AccountInterface $account) {
     $access = parent::createAccess($group, $account);
 
-    if ($access->isAllowed()) {
-      switch ($group->get('moderation_state')->value) {
-        case GroupsModerationHelper::GROUP_PENDING_STATE:
-        case GroupsModerationHelper::GROUP_DRAFT_STATE:
-          // Deny access to the group invitation form if the group is NOT yet
-          // published and the user is not an "administator" or a
-          // "content_administrator".
-          if (!in_array(UserHelper::ROLE_SITE_ADMINISTRATOR, $account->getRoles(TRUE)) && !in_array(UserHelper::ROLE_CONTENT_ADMINISTRATOR, $account->getRoles(TRUE))) {
-            $access = GroupAccessResult::forbidden()
-              ->addCacheableDependency($account)
-              ->addCacheableDependency($group);
-          }
-          break;
+    // If access is not allowed, we do nothing.
+    if (!$access->isAllowed()) {
+      return $access;
+    }
 
-      }
+    switch ($group->get('moderation_state')->value) {
+      case GroupsModerationHelper::GROUP_PENDING_STATE:
+      case GroupsModerationHelper::GROUP_DRAFT_STATE:
+        // Deny access to the group invitation form if the group is NOT yet
+        // published and the user is not an "administator" or a
+        // "content_administrator".
+        if (!in_array(UserHelper::ROLE_SITE_ADMINISTRATOR, $account->getRoles(TRUE)) && !in_array(UserHelper::ROLE_CONTENT_ADMINISTRATOR, $account->getRoles(TRUE))) {
+          $access = GroupAccessResult::forbidden()
+            ->addCacheableDependency($account)
+            ->addCacheableDependency($group);
+        }
+        break;
+
     }
 
     return $access;
