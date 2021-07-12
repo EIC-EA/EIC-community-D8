@@ -42,7 +42,6 @@ class PublishGroupAccessCheckerAccessChecker implements AccessInterface {
 
     switch ($moderation_state) {
       case GroupsModerationHelper::GROUP_DRAFT_STATE:
-      case GroupsModerationHelper::GROUP_PUBLISHED_STATE:
         // Users can only publish a group if the group is in "draft" state.
         // If the current user does not have permission to change group
         // moderation state to publish, we only allow access if the user is an
