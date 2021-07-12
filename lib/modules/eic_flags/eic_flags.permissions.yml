@@ -21,3 +21,8 @@ close archive request:
   title: Close Archive Request
   description: 'Allow the user to handle archive requests and give them a response'
   restric access: TRUE
+
+publish archived content:
+  title: Publish archived content
+  description: 'Allow the user to re-publish an archived content'
+  restrict access: TRUE

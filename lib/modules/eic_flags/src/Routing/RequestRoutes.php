@@ -30,8 +30,8 @@ class RequestRoutes {
       $collector->getHandlers()
     );
     $flag_type_list = implode('|', $available_types);
-    $route_collection = new RouteCollection();
 
+    $route_collection = new RouteCollection();
     // Define the route displaying flagged entities
     $route = (new Route('/admin/community/request/{request_type}'))
       ->addDefaults(
@@ -60,6 +60,15 @@ class RequestRoutes {
       ->setOption('_admin_route', TRUE);
 
     $route_collection->add('eic_flags.flagged_entity.detail', $route);
+
+    $route = (new Route('/admin/publish/{entity_type_id}/{entity_id}'))
+      ->addDefaults([
+        '_controller' => 'Drupal\eic_flags\Controller\FlagRequestController::publish',
+      ])
+      ->setRequirement('_permission', 'publish archived content')
+      ->setOption('_admin_route', TRUE);
+
+    $route_collection->add('eic_flags.publish_archived_content', $route);
 
     return $route_collection;
   }

@@ -11,9 +11,11 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\eic_flags\Form\ListBuilderFilters;
 use Drupal\eic_flags\Form\RequestCloseForm;
 use Drupal\eic_flags\Form\NewRequestForm;
 use Drupal\eic_flags\Hooks\EntityAccess;
+use Drupal\eic_flags\Hooks\EntityOperations;
 use Drupal\eic_flags\Hooks\FlagTokens;
 use Drupal\eic_flags\RequestStatus;
 use Drupal\eic_flags\RequestTypes;
@@ -160,39 +162,9 @@ function eic_flags_entity_operation(EntityInterface $entity) {
     return [];
   }
 
-  $operations = [];
-  /** @var \Drupal\eic_flags\Service\RequestHandlerCollector $collector */
-  $collector = \Drupal::service('eic_flags.handler_collector');
-  if ($request_type = \Drupal::routeMatch()->getParameter('request_type')) {
-    $handler = $collector->getHandlerByType($request_type);
-    return $handler->getActions($entity);
-  }
-
-  $is_admin = \Drupal::service('router.admin_context')->isAdminRoute();
-  if ($is_admin) {
-    return $operations;
-  }
-
-  $handlers = $collector->getHandlers();
-  foreach ($handlers as $handler) {
-    if (!$entity->access('request-' . $handler->getType())
-      || !$handler->supports($entity)) {
-      continue;
-    }
-
-    $type = $handler->getType();
-    $operations['request_' . $type] = [
-      'title' => t('Request ' . $type),
-      'url' => $entity->toUrl('new-request')
-        ->setRouteParameter(
-          'destination',
-          \Drupal::request()->getRequestUri()
-        )
-        ->setRouteParameter('request_type', $type),
-    ];
-  }
-
-  return $operations;
+  /** @var EntityOperations $class */
+  $class = Drupal::classResolver(EntityOperations::class);
+  return $class->getOperations($entity);
 }
 
 /**

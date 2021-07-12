@@ -1,0 +1,19 @@
+uuid: c9acdf12-7d02-4ac8-b952-3195df1a32dc
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.message.field_referenced_entity_label
+    - message.template.notify_archived_republished
+id: message.notify_archived_republished.field_referenced_entity_label
+field_name: field_referenced_entity_label
+entity_type: message
+bundle: notify_archived_republished
+label: 'Entity Label'
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

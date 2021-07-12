@@ -5,7 +5,7 @@ dependencies:
   module:
     - comment
 id: request_delete_comment
-label: 'Request Delete (Comment)'
+label: 'Delete Request (Comment)'
 bundles: {  }
 entity_type: comment
 global: false
