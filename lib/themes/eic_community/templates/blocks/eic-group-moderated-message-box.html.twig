@@ -9,6 +9,18 @@
  * @ingroup themeable
  */
 #}
+{% set moderation_state = group.moderation_state.value %}
 
-<p>This group is pending approval from our community team. We will endeavour to approve the group within 3 days.</p>
-<p>You can still <a href="{{ edit_link }}">manage</a> or <a href="{{ delete_link }}">delete</a> your group</p>
+{% if moderation_state == 'pending' %}
+  <p>This group is pending approval from our community team. We will endeavour to approve the group within 3 days.</p>
+  <p>You can still <a href="{{ edit_link }}">manage</a> or <a href="{{ delete_link }}">delete</a> your group</p>
+{% elseif moderation_state == 'draft' %}
+  <h2>Congratulations! Group approved</h2>
+  <p>We advise these steps to make your group ready:</p>
+  <ul>
+    <li>Configure your group: configure a welcome message for your GM's, configure the content section</li>
+    <li>Create content in the group</li>
+    <li>Publish your group</li>
+  </ul>
+  <p><a href="#">Click here</a> if you need additional help</p>
+{% endif %}

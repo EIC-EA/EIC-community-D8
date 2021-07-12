@@ -252,7 +252,8 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
   ) {
     $permissions = $group_permissions->getPermissions();
     foreach ($role_permissions as $permission) {
-      if (!array_key_exists($role, $permissions) || !in_array($permission, $permissions[$role], TRUE)) {
+      if (!array_key_exists($role, $permissions) || !in_array($permission, $permissions[$role],
+          TRUE)) {
         $permissions[$role][] = $permission;
       }
     }
@@ -270,7 +271,8 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
   ) {
     $permissions = $group_permissions->getPermissions();
     foreach ($role_permissions as $permission) {
-      if (array_key_exists($role, $permissions) || in_array($permission, $permissions[$role], TRUE)) {
+      if (array_key_exists($role, $permissions) || in_array($permission, $permissions[$role],
+          TRUE)) {
         $permissions[$role] = array_diff($permissions[$role], [$permission]);
       }
     }
@@ -298,6 +300,28 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
     $group_permissions->setRevisionCreationTime($this->time->getRequestTime());
     $group_permissions->setRevisionLogMessage('Group permissions updated successfully.');
     $group_permissions->save();
+  }
+
+  /**
+   * Determines if a group has any content.
+   * Considered as content:
+   *  - Every GroupContent entity other than memberships and menus
+   *
+   * @param \Drupal\group\Entity\GroupInterface $group
+   *    The group for which the check is.
+   */
+  public function hasContent(GroupInterface $group) {
+    $query = $this->database->select('group_content_field_data', 'gp');
+    $query->condition('gp.type', [
+      'group-group_node-book',
+      'group-group_node-discussion',
+      'group-group_node-document',
+      'group-group_node-wiki_page',
+    ], 'IN');
+    $query->condition('gp.gid', $group->id());
+    $query->fields('gp', ['id']);
+
+    return !empty($query->execute()->fetchAll(\PDO::FETCH_OBJ));
   }
 
 }

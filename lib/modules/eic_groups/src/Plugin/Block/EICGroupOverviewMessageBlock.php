@@ -5,6 +5,7 @@ namespace Drupal\eic_groups\Plugin\Block;
 use Drupal\content_moderation\ModerationInformationInterface;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Cache\CacheableMetadata;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\eic_groups\EICGroupsHelper;
@@ -27,6 +28,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class EICGroupOverviewMessageBlock extends BlockBase implements ContainerFactoryPluginInterface {
 
   /**
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  private $entityTypeManager;
+
+  /**
    * @var \Drupal\Core\Session\AccountProxyInterface
    */
   private $account;
@@ -37,25 +43,36 @@ class EICGroupOverviewMessageBlock extends BlockBase implements ContainerFactory
   private $moderationInformation;
 
   /**
+   * @var \Drupal\eic_groups\EICGroupsHelper
+   */
+  private $groupHelper;
+
+  /**
    * EICGroupOverviewMessageBlock constructor.
    *
    * @param array $configuration
    * @param $plugin_id
    * @param $plugin_definition
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    * @param \Drupal\content_moderation\ModerationInformationInterface $moderation_information
    * @param \Drupal\Core\Session\AccountProxyInterface $account
+   * @param \Drupal\eic_groups\EICGroupsHelper $group_helper
    */
   public function __construct(
     array $configuration,
     $plugin_id,
     $plugin_definition,
+    EntityTypeManagerInterface $entity_type_manager,
     ModerationInformationInterface $moderation_information,
-    AccountProxyInterface $account
+    AccountProxyInterface $account,
+    EICGroupsHelper $group_helper
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
+    $this->entityTypeManager = $entity_type_manager;
     $this->moderationInformation = $moderation_information;
     $this->account = $account;
+    $this->groupHelper = $group_helper;
   }
 
   /**
@@ -71,8 +88,10 @@ class EICGroupOverviewMessageBlock extends BlockBase implements ContainerFactory
       $configuration,
       $plugin_id,
       $plugin_definition,
+      $container->get('entity_type.manager'),
       $container->get('content_moderation.moderation_information'),
-      $container->get('current_user')
+      $container->get('current_user'),
+      $container->get('eic_groups.helper')
     );
   }
 
@@ -102,22 +121,25 @@ class EICGroupOverviewMessageBlock extends BlockBase implements ContainerFactory
       return $build;
     }
 
-    $has_group_content = FALSE;
-    if (!$has_group_content && $group->isPublished()) {
-      //TODO return the published without content box
-      return $build;
-    }
-
+    $has_group_content = $this->groupHelper->hasContent($group);
     if ($this->moderationInformation->isModeratedEntity($group) && !$group->isPublished()) {
       $moderation_state = $group->get('moderation_state')->value;
-      if ($moderation_state === GroupsModerationHelper::GROUP_PENDING_STATE
-        || $moderation_state === GroupsModerationHelper::GROUP_DRAFT_STATE
-      ) {
+      if (in_array($moderation_state, [
+        GroupsModerationHelper::GROUP_DRAFT_STATE,
+        GroupsModerationHelper::GROUP_PENDING_STATE,
+        GroupsModerationHelper::GROUP_PUBLISHED_STATE,
+      ])) {
         $build = [
           '#theme' => 'eic_group_moderated_message_box',
           '#group' => $group,
           '#edit_link' => $group->toUrl('edit-form'),
           '#delete_link' => $group->toUrl('delete-form'),
+          '#has_content' => $has_group_content,
+          '#operation_links' => $this->groupHelper->getGroupContentOperationLinks(
+            $group,
+            ['node'],
+            $cacheable_metadata
+          ),
         ];
       }
     }
