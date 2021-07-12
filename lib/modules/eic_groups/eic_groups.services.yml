@@ -17,3 +17,7 @@ services:
     arguments: ['@book.breadcrumb', '@current_user']
     tags:
       - { name: breadcrumb_builder, priority: 1000 }
+  eic_groups.publish_group.access_checker:
+    class: Drupal\eic_groups\Access\PublishGroupAccessCheckerAccessChecker
+    tags:
+      - { name: access_check, applies_to: _publish_group_access_checker }

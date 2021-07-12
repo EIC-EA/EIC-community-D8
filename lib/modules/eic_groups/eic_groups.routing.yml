@@ -5,3 +5,14 @@ eic_groups.about_page:
     _title_callback: '\Drupal\eic_groups\Controller\AboutPageController::title'
   requirements:
     _group_permission: 'view group'
+
+eic_groups.group.publish:
+  path: '/group/{group}/publish'
+  defaults:
+    _controller: '\Drupal\eic_groups\Controller\GroupOperationsController::publish'
+    _title_callback: '\Drupal\eic_groups\Controller\GroupOperationsController::publishTitle'
+  requirements:
+    _publish_group_access_checker: 'TRUE'
+    group: \d+
+  options:
+    _group_operation_route: TRUE
