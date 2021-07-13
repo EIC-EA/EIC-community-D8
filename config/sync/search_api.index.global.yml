@@ -4,12 +4,12 @@ status: true
 dependencies:
   module:
     - search_api_solr
-    - node
     - group
+    - user
     - file
     - media
     - taxonomy
-    - user
+    - node
     - profile
     - search_api
     - address
@@ -18,19 +18,19 @@ dependencies:
     - flag
     - group_permissions
   config:
-    - field.storage.node.field_body
-    - field.storage.node.field_discussion_type
-    - field.storage.node.field_subtitle
-    - field.storage.node.field_vocab_geo
-    - field.storage.node.field_vocab_topics
+    - field.storage.user.field_first_name
+    - field.storage.user.field_last_name
+    - field.storage.media.oe_media_image
+    - field.storage.user.field_media
+    - field.storage.group.field_thumbnail
+    - field.storage.group.field_vocab_topics
     - field.storage.group.field_body
     - field.storage.group.field_vocab_geo
-    - field.storage.group.field_vocab_topics
-    - field.storage.group.field_thumbnail
-    - field.storage.media.oe_media_image
-    - field.storage.user.field_first_name
-    - field.storage.user.field_media
-    - field.storage.user.field_last_name
+    - field.storage.node.field_body
+    - field.storage.node.field_vocab_geo
+    - field.storage.node.field_subtitle
+    - field.storage.node.field_vocab_topics
+    - field.storage.node.field_discussion_type
     - field.storage.profile.field_body
     - field.storage.profile.field_location_address
     - field.storage.profile.field_vocab_job_title
@@ -265,7 +265,7 @@ field_settings:
     dependencies:
       config:
         - field.storage.group.field_vocab_topics
-  group_id:
+  group_id_integer:
     label: ID
     datasource_id: 'entity:group'
     property_path: id
