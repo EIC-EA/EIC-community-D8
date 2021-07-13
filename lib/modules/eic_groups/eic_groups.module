@@ -241,7 +241,7 @@ function eic_groups_flagging_access(EntityInterface $entity, $operation, Account
     case 'view':
     case 'flag':
     case 'unflag':
-      // Deny access to group flag if the group is NOT in pending or draft
+      // Deny access to group flag if the group IS in pending or draft
       // state.
       if (in_array($moderation_state, [
         GroupsModerationHelper::GROUP_PENDING_STATE,
