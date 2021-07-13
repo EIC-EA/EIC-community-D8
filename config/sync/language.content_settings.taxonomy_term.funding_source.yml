@@ -1,0 +1,11 @@
+uuid: 23539e35-8c24-42e0-98a8-620262b48aee
+langcode: en
+status: true
+dependencies:
+  config:
+    - taxonomy.vocabulary.funding_source
+id: taxonomy_term.funding_source
+target_entity_type_id: taxonomy_term
+target_bundle: funding_source
+default_langcode: site_default
+language_alterable: false
