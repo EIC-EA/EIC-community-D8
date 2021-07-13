@@ -17,3 +17,4 @@
 /runner.yml
 /docker-compose.*.yml
 /.gitattributes
+.env
