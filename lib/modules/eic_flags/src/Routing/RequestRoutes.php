@@ -38,7 +38,7 @@ class RequestRoutes {
         '_controller' => 'Drupal\eic_flags\Controller\FlagRequestController::listing',
         '_title_callback' => 'Drupal\eic_flags\Controller\FlagRequestController::getTitle',
       ])
-      ->setRequirement('_permission','manage archival deletion requests')
+      ->setRequirement('_permission', 'manage archival deletion requests')
       ->setRequirement('request_type', $flag_type_list)
       ->setOption('_admin_route', TRUE);
 
@@ -51,7 +51,7 @@ class RequestRoutes {
       ->addDefaults([
         '_controller' => 'Drupal\eic_flags\Controller\FlagRequestController::detail',
       ])
-      ->setRequirement('_permission','manage archival deletion requests')
+      ->setRequirement('_permission', 'manage archival deletion requests')
       ->setRequirement('request_type', $flag_type_list)
       ->setOption('_admin_route', TRUE);
 
@@ -61,7 +61,7 @@ class RequestRoutes {
       ->addDefaults([
         '_controller' => 'Drupal\eic_flags\Controller\FlagRequestController::publish',
       ])
-      ->setRequirement('_permission','manage archival deletion requests')
+      ->setRequirement('_permission', 'manage archival deletion requests')
       ->setOption('_admin_route', TRUE);
 
     $route_collection->add('eic_flags.publish_archived_content', $route);
