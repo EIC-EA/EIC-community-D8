@@ -26,7 +26,6 @@ class ContentOperationsBlock extends BlockBase implements ContainerFactoryPlugin
    */
   private $entityTypeManager;
 
-
   /**
    * ContentOperationsBlock constructor.
    *

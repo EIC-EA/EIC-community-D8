@@ -9,11 +9,14 @@
  * @see https://www.drupal.org/node/2217931
  */
 
+/**
+ * Implements hook_theme().
+ */
 function eic_content_theme() {
   return [
     'eic_content_actions' => [
       'variables' => [
-        'actions' => NULL,
+        'actions' => [],
       ],
     ],
   ];
