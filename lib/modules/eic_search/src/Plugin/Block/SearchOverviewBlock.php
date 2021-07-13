@@ -324,8 +324,8 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
   private function generateSortOptions(SourceTypeInterface $current_source): array {
     $available_sorts = [];
 
-    foreach ($current_source->getAvailableSortOptions() as $sort_option => $label) {
-      $available_sorts[$sort_option] = $label;
+    foreach ($current_source->getAvailableSortOptions() as $sort_option => $options) {
+      $available_sorts[$sort_option] = $options['label'];
     }
 
     return $available_sorts;

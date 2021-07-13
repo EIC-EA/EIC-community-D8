@@ -39,9 +39,10 @@ function eic_search_preprocess_html(&$variables) {
 
   /** @var \Drupal\eic_search\Search\Sources\SourceTypeInterface $source */
   foreach ($sources as $source) {
-    foreach ($source->getAvailableSortOptions() as $sort_option => $label) {
-      $variables['#attached']['drupalSettings']['translations']['sources']['sort'][$sort_option . '__ASC'] = t($sort_option . ' ASC', [], ['context' => 'eic_search']);
-      $variables['#attached']['drupalSettings']['translations']['sources']['sort'][$sort_option . '__DESC'] = t($sort_option . ' DESC', [], ['context' => 'eic_search']);
+    foreach ($source->getAvailableSortOptions() as $sort_key => $options) {
+      foreach ($options as $direction => $label) {
+        $variables['#attached']['drupalSettings']['translations']['sources']['sort'][$sort_key . '__' . $direction] = $label;
+      }
     }
     foreach ($source->getAvailableFacets() as $facet_option => $label) {
       $variables['#attached']['drupalSettings']['translations']['sources']['facet'][$facet_option] = $label;
@@ -52,7 +53,8 @@ function eic_search_preprocess_html(&$variables) {
 /**
  * @implements hook_search_api_solr_documents_alter
  *
- * Solr needs to be aware of all group permissions so we can filter it in our querybuilder depending of the user context
+ * Solr needs to be aware of all group permissions so we can filter it in our
+ *   querybuilder depending of the user context
  */
 function eic_search_search_api_solr_documents_alter(array &$documents, \Drupal\search_api\IndexInterface $index, array $items) {
   /** @var \Drupal\eic_groups\EICGroupsHelper $group_helper */
@@ -84,7 +86,8 @@ function eic_search_search_api_solr_documents_alter(array &$documents, \Drupal\s
       continue;
     }
 
-    $group = $group_helper->getGroupByEntity($item->getOriginalObject()->getEntity());
+    $group = $group_helper->getGroupByEntity($item->getOriginalObject()
+      ->getEntity());
 
     if (!$group) {
       $document->addField('ss_group_visibility', $group_visibility);
@@ -121,7 +124,7 @@ function eic_search_search_api_solr_documents_alter(array &$documents, \Drupal\s
             $group_visibility = GroupVisibilityType::GROUP_VISIBILITY_OPTION_TRUSTED_USERS;
 
             $user_ids = $option[GroupVisibilityType::GROUP_VISIBILITY_OPTION_TRUSTED_USERS . '_conf'];
-            $users = array_map(function($user_id) {
+            $users = array_map(function ($user_id) {
               $user = \Drupal\user\Entity\User::load(reset($user_id));
               if (!$user) {
                 return -1;

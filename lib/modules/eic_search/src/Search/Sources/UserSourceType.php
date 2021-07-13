@@ -44,7 +44,11 @@ class UserSourceType implements SourceTypeInterface {
    */
   public function getAvailableSortOptions(): array {
     return [
-      'ss_user_first_name' => t('First name', [], ['context' => 'eic_search']),
+      'ss_user_first_name' => [
+        'label' => t('First name', [], ['context' => 'eic_search']),
+        'ASC' => t('First name A-Z', [], ['context' => 'eic_search']),
+        'DESC' => t('First name Z-A', [], ['context' => 'eic_search']),
+      ]
     ];
   }
 

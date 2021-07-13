@@ -46,9 +46,21 @@ class GroupSourceType implements SourceTypeInterface {
    */
   public function getAvailableSortOptions(): array {
     return [
-      'timestamp' => t('Created date', [], ['context' => 'eic_search']),
-      'ss_group_label_string' => t('Group label', [], ['context' => 'eic_search']),
-      'ss_group_user_fullname' => t('Fullname', [], ['context' => 'eic_search']),
+      'timestamp' => [
+        'label' => t('Timestamp', [], ['context' => 'eic_search']),
+        'ASC' => t('Recent', [], ['context' => 'eic_search']),
+        'DESC' => t('Old', [], ['context' => 'eic_search']),
+      ],
+      'ss_group_label_string' => [
+        'label' => t('Group label', [], ['context' => 'eic_search']),
+        'ASC' => t('Group label A-Z', [], ['context' => 'eic_search']),
+        'DESC' => t('Group label Z-A', [], ['context' => 'eic_search']),
+      ],
+      'ss_group_user_fullname' => [
+        'label' => t('Fullname', [], ['context' => 'eic_search']),
+        'ASC' => t('Fullname A-Z', [], ['context' => 'eic_search']),
+        'DESC' => t('Fullname Z-A', [], ['context' => 'eic_search']),
+      ],
     ];
   }
 
