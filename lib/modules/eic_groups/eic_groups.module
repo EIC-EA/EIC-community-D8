@@ -13,6 +13,7 @@ use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Url;
 use Drupal\eic_groups\GroupsModerationHelper;
 use Drupal\eic_groups\Hooks\CronOperations;
 use Drupal\eic_groups\Hooks\EntityOperations;
@@ -268,4 +269,32 @@ function eic_groups_flagging_access(EntityInterface $entity, $operation, Account
   }
 
   return $access;
+}
+
+/**
+ * Implements hook_entity_operation_alter().
+ */
+function eic_groups_entity_operation_alter(array &$operations, EntityInterface $entity) {
+  if ($entity->getEntityTypeId() !== 'group') {
+    return;
+  }
+
+  // Gets current path alias.
+  $current_path = \Drupal::service('path.current')->getPath();
+  $current_path_alias = \Drupal::service('path_alias.manager')->getAliasByPath($current_path);
+
+  // Add publish group operation.
+  $publish_url_options = [
+    'query' => [
+      'destination' => $current_path_alias,
+    ],
+  ];
+  $publish_url = Url::fromRoute('eic_groups.group.publish.confirm_form', ['group' => $entity->id()], $publish_url_options);
+  if ($publish_url->access()) {
+    $operations['publish'] = [
+      'title' => t('Publish'),
+      'weight' => -50,
+      'url' => $publish_url,
+    ];
+  }
 }
