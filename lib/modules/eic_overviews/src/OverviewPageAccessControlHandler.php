@@ -19,17 +19,22 @@ class OverviewPageAccessControlHandler extends EntityAccessControlHandler {
 
     switch ($operation) {
       case 'view':
-        return AccessResult::allowedIfHasPermission($account, 'view overview page');
+        // Deny access if page is disabled.
+        if (!$entity->isEnabled()) {
+          return AccessResult::forbidden();
+        }
+
+        return AccessResult::allowedIfHasPermission($account, 'view overview pages');
 
       case 'update':
         return AccessResult::allowedIfHasPermissions($account, [
-          'edit overview page',
+          'edit overview pages',
           'administer overview pages',
         ], 'OR');
 
       case 'delete':
         return AccessResult::allowedIfHasPermissions($account, [
-          'delete overview page',
+          'delete overview pages',
           'administer overview pages',
         ], 'OR');
 
@@ -45,7 +50,7 @@ class OverviewPageAccessControlHandler extends EntityAccessControlHandler {
    */
   protected function checkCreateAccess(AccountInterface $account, array $context, $entity_bundle = NULL) {
     return AccessResult::allowedIfHasPermissions($account, [
-      'create overview page',
+      'create overview pages',
       'administer overview pages',
     ], 'OR');
   }
