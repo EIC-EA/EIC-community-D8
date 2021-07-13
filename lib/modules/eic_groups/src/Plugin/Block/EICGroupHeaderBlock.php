@@ -187,7 +187,10 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
         ]
       )) {
         unset($user_operation_links[$key]);
-        $operation_links[$key] = $action;
+        // We discard the operation link if user doesn't have access to it.
+        if ($action['url']->access($this->currentUser)) {
+          $operation_links[$key] = $action;
+        }
       }
     }
 
@@ -196,7 +199,10 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
     $create_operations = [];
     foreach ($node_operation_links as $key => $link) {
       if (strpos($key, 'create') !== FALSE) {
-        $create_operations[$key] = $link;
+        // We discard the operation link if user doesn't have access to it.
+        if ($link['url']->access($this->currentUser)) {
+          $create_operations[$key] = $link;
+        }
         unset($node_operation_links[$key]);
       }
     }
@@ -208,10 +214,15 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
       ];
     }
 
-    // We extract only the group edit/delete operation links into a new array.
-    $visible_group_operation_links = array_filter($group_operation_links, function ($key) {
+    // We extract only the group edit/delete/publish operation links into a new
+    // array.
+    $visible_group_operation_links = array_filter($group_operation_links, function ($item, $key) {
+      // We discard the operation link if user doesn't have access to it.
+      if (!$item['url']->access($this->currentUser)) {
+        return FALSE;
+      }
       return in_array($key, ['edit', 'delete', 'publish']);
-    }, ARRAY_FILTER_USE_KEY);
+    }, ARRAY_FILTER_USE_BOTH);
 
     // Sorts group operation links by key. "Delete" operation needs to show
     // first.
