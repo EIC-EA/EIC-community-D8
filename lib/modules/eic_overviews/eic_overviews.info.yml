@@ -1,0 +1,10 @@
+name: EIC Overviews
+type: module
+description: 'Provides an overview page entity.'
+package: European Innovation Council
+core: 8.x
+core_version_requirement: ^8 || ^9
+php: 7.3
+dependencies:
+  - drupal:text
+configure: entity.overview_page.settings

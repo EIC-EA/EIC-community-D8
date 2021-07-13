@@ -1,0 +1,7 @@
+entity.overview_page.settings:
+  path: 'admin/structure/overview-page'
+  defaults:
+    _form: '\Drupal\eic_overviews\Form\OverviewPageSettingsForm'
+    _title: 'Overview page'
+  requirements:
+    _permission: 'administer overview pages'
