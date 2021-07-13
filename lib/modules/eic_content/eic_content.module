@@ -8,3 +8,13 @@
  * This file is no longer required in Drupal 8.
  * @see https://www.drupal.org/node/2217931
  */
+
+function eic_content_theme() {
+  return [
+    'eic_content_actions' => [
+      'variables' => [
+        'actions' => NULL,
+      ],
+    ],
+  ];
+}
