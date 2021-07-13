@@ -123,6 +123,22 @@ class OverviewPage extends ContentEntityBase implements OverviewPageInterface {
       ])
       ->setDisplayConfigurable('view', TRUE);
 
+    $fields['banner_image'] = BaseFieldDefinition::create('image')
+      ->setLabel(t('Banner image'))
+      ->setDescription(t('The image to be used as page banner.'))
+      ->setRequired(TRUE)
+      ->setDisplayOptions('form', [
+        'type' => 'file',
+        'weight' => 0,
+      ])
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayOptions('view', [
+        'type' => 'image',
+        'label' => 'above',
+        'weight' => 0,
+      ])
+      ->setDisplayConfigurable('view', TRUE);
+
     $fields['status'] = BaseFieldDefinition::create('boolean')
       ->setLabel(t('Status'))
       ->setDescription(t('A boolean indicating whether the overview page is enabled.'))
@@ -146,20 +162,49 @@ class OverviewPage extends ContentEntityBase implements OverviewPageInterface {
       ])
       ->setDisplayConfigurable('view', TRUE);
 
-    $fields['description'] = BaseFieldDefinition::create('text_long')
+    $fields['description'] = BaseFieldDefinition::create('string')
       ->setTranslatable(TRUE)
-      ->setLabel(t('Description'))
-      ->setDescription(t('A description of the overview page.'))
+      ->setLabel(t('Page description'))
+      ->setDescription(t('A brief description of your overview page.'))
+      ->setSetting('max_length', 255)
       ->setDisplayOptions('form', [
-        'type' => 'text_textarea',
+        'type' => 'string_textfield',
         'weight' => 10,
       ])
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayOptions('view', [
-        'type' => 'text_default',
+        'type' => 'string',
         'label' => 'above',
         'weight' => 10,
+      ]);
+
+    $fields['path'] = BaseFieldDefinition::create('path')
+      ->setLabel(t('URL alias'))
+      ->setTranslatable(TRUE)
+      ->setDisplayOptions('form', [
+        'type' => 'path',
+        'weight' => 30,
       ])
+      ->setDisplayConfigurable('form', TRUE)
+      ->setComputed(TRUE);
+
+    $fields['overview_block'] = BaseFieldDefinition::create('entity_reference')
+      ->setLabel(t('Overview block'))
+      ->setDescription(t('Select the overview block to display.'))
+      ->setRequired(TRUE)
+      ->setSetting('target_type', 'block')
+      ->setSetting('handler', 'default')
+      ->setTranslatable(TRUE)
+      ->setDisplayOptions('view', [
+        'label' => 'hidden',
+        'type' => 'entity_reference_entity_view',
+        'weight' => 0,
+      ])
+      ->setDisplayOptions('form', [
+        'type' => 'options_select',
+        'weight' => 5,
+      ])
+      ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
 
     $fields['created'] = BaseFieldDefinition::create('created')
