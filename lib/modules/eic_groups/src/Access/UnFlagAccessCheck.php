@@ -53,27 +53,29 @@ class UnFlagAccessCheck extends UnFlagAccessCheckBase {
   public function access(RouteMatchInterface $route_match, FlagInterface $flag, AccountInterface $account) {
     $access = $this->unFlagAccessCheck->access($route_match, $flag, $account);
 
-    if ($access->isAllowed()) {
+    // If access is not allowed, we do nothing.
+    if (!$access->isAllowed()) {
+      return $access;
+    }
 
-      // If the flaggable entity is not a group, we do nothing.
-      if ($flag->getFlaggableEntityTypeId() !== 'group') {
-        return $access;
-      }
+    // If the flaggable entity is not a group, we do nothing.
+    if ($flag->getFlaggableEntityTypeId() !== 'group') {
+      return $access;
+    }
 
-      $flaggable_id = $route_match->getParameter('entity_id');
-      $flaggable_entity = $this->flagService->getFlaggableById($flag, $flaggable_id);
+    $flaggable_id = $route_match->getParameter('entity_id');
+    $flaggable_entity = $this->flagService->getFlaggableById($flag, $flaggable_id);
 
-      $moderation_state = $flaggable_entity->get('moderation_state')->value;
+    $moderation_state = $flaggable_entity->get('moderation_state')->value;
 
-      // Deny access to flag if the group is NOT in pending or draft state.
-      if (in_array($moderation_state, [
-        GroupsModerationHelper::GROUP_PENDING_STATE,
-        GroupsModerationHelper::GROUP_DRAFT_STATE,
-      ])) {
-        $access = AccessResult::forbidden()
-          ->addCacheableDependency($flaggable_entity)
-          ->addCacheableDependency($flag);
-      }
+    // Deny access to flag if the group IS in pending or draft state.
+    if (in_array($moderation_state, [
+      GroupsModerationHelper::GROUP_PENDING_STATE,
+      GroupsModerationHelper::GROUP_DRAFT_STATE,
+    ])) {
+      $access = AccessResult::forbidden()
+        ->addCacheableDependency($flaggable_entity)
+        ->addCacheableDependency($flag);
     }
 
     return $access;

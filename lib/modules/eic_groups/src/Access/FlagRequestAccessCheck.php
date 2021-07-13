@@ -54,26 +54,28 @@ class FlagRequestAccessCheck extends RequestAccessCheck {
   public function access(Route $route, RouteMatchInterface $route_match, AccountInterface $account) {
     $access = $this->requestAccessCheck->access($route, $route_match, $account);
 
-    if ($access->isAllowed()) {
+    // If access is not allowed, we do nothing.
+    if (!$access->isAllowed()) {
+      return $access;
+    }
 
-      $entity_type_id = $route->getOption('entity_type_id');
-      $entity = $route_match->getParameter($entity_type_id);
+    $entity_type_id = $route->getOption('entity_type_id');
+    $entity = $route_match->getParameter($entity_type_id);
 
-      // If the requested entity is not a group, we do nothing.
-      if (!($entity instanceof GroupInterface)) {
-        return $access;
-      }
+    // If the requested entity is not a group, we do nothing.
+    if (!($entity instanceof GroupInterface)) {
+      return $access;
+    }
 
-      $moderation_state = $entity->get('moderation_state')->value;
+    $moderation_state = $entity->get('moderation_state')->value;
 
-      // Deny access to flag if the group is NOT in pending or draft state.
-      if (in_array($moderation_state, [
-        GroupsModerationHelper::GROUP_PENDING_STATE,
-        GroupsModerationHelper::GROUP_DRAFT_STATE,
-      ])) {
-        $access = AccessResult::forbidden()
-          ->addCacheableDependency($entity);
-      }
+    // Deny access to flag if the group IS in pending or draft state.
+    if (in_array($moderation_state, [
+      GroupsModerationHelper::GROUP_PENDING_STATE,
+      GroupsModerationHelper::GROUP_DRAFT_STATE,
+    ])) {
+      $access = AccessResult::forbidden()
+        ->addCacheableDependency($entity);
     }
 
     return $access;
