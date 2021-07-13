@@ -13,6 +13,7 @@ use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\eic_groups\GroupsModerationHelper;
 use Drupal\eic_groups\Hooks\CronOperations;
 use Drupal\eic_groups\Hooks\EntityOperations;
 use Drupal\eic_groups\Hooks\GroupTokens;
@@ -232,4 +233,39 @@ function eic_groups_group_content_info_alter(array &$definitions) {
   if (isset($definitions['group_invitation'])) {
     $definitions['group_invitation']['class'] = '\Drupal\eic_groups\Plugin\GroupContentEnabler\GroupInvitation';
   }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_access().
+ */
+function eic_groups_flagging_access(EntityInterface $entity, $operation, AccountInterface $account) {
+  $access = AccessResult::neutral();
+
+  $flagged_entity = $entity->get('flagged_entity')->entity;
+
+  if (!($flagged_entity instanceof GroupInterface)) {
+    return $access;
+  }
+
+  $moderation_state = $flagged_entity->get('moderation_state')->value;
+
+  switch ($operation) {
+    case 'view':
+    case 'flag':
+    case 'unflag':
+      // Deny access to group flag if the group IS in pending or draft
+      // state.
+      if (in_array($moderation_state, [
+        GroupsModerationHelper::GROUP_PENDING_STATE,
+        GroupsModerationHelper::GROUP_DRAFT_STATE,
+      ])) {
+        $access = AccessResult::forbidden()
+          ->addCacheableDependency($entity)
+          ->addCacheableDependency($flagged_entity);
+      }
+      break;
+
+  }
+
+  return $access;
 }
