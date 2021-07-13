@@ -239,3 +239,14 @@ function eic_groups_group_access(EntityInterface $entity, $operation, AccountInt
 
   return $access;
 }
+
+/**
+ * Implements hook_group_content_info_alter().
+ */
+function eic_groups_group_content_info_alter(array &$definitions) {
+  // Overrides the standard group invitation plugin class provided by
+  // ginvite module.
+  if (isset($definitions['group_invitation'])) {
+    $definitions['group_invitation']['class'] = '\Drupal\eic_groups\Plugin\GroupContentEnabler\GroupInvitation';
+  }
+}

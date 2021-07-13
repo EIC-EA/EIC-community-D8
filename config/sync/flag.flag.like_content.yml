@@ -6,7 +6,7 @@ dependencies:
     - eic_flags
     - node
 id: like_content
-label: 'Like (content)'
+label: 'Like (Content)'
 bundles:
   - discussion
   - document

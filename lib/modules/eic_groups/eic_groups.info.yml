@@ -8,4 +8,5 @@ php: 7.3
 dependencies:
   - book:book
   - oec_group_flex:oec_group_flex
+  - ginvite:ginvite
   - eic_user:eic_user
