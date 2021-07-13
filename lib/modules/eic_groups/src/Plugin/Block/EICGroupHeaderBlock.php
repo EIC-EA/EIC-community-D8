@@ -287,31 +287,33 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
   private function getGroupFlagLinks(GroupInterface $group) {
     $group_flags = [];
 
-    if (isset($group->flags)) {
+    // If there are no group flags, we do nothing.
+    if (empty($group->flags)) {
+      return $group_flags;
+    }
 
-      // Loops through each group flag and add only the ones the user has
-      // access to.
-      foreach (array_keys($group->flags) as $flag_name) {
-        $flag = $this->flagService->getFlagById(str_replace('flag_', '', $flag_name));
-        $user_flag = $this->flagService->getFlagging($flag, $group, $this->currentUser->getAccount());
+    // Loops through each group flag and add only the ones the user has
+    // access to.
+    foreach (array_keys($group->flags) as $flag_name) {
+      $flag = $this->flagService->getFlagById(str_replace('flag_', '', $flag_name));
+      $user_flag = $this->flagService->getFlagging($flag, $group, $this->currentUser->getAccount());
 
-        // We need to create a fake flag if the user never flagged the content,
-        // otherwise we can't do an access check.
-        if (!$user_flag) {
-          $user_flag = $this->entityTypeManager->getStorage('flagging')->create([
-            'uid' => $this->currentUser->id(),
-            'flag_id' => $flag->id(),
-            'entity_id' => $group->id(),
-            'entity_type' => $group->getEntityTypeId(),
-            'global' => $flag->isGlobal(),
-          ]);
-        }
+      // We need to create a fake flag if the user never flagged the content,
+      // otherwise we can't do an access check.
+      if (!$user_flag) {
+        $user_flag = $this->entityTypeManager->getStorage('flagging')->create([
+          'uid' => $this->currentUser->id(),
+          'flag_id' => $flag->id(),
+          'entity_id' => $group->id(),
+          'entity_type' => $group->getEntityTypeId(),
+          'global' => $flag->isGlobal(),
+        ]);
+      }
 
-        // If user has access to view the flag we add it to the results so that
-        // it can be shown in the group header.
-        if ($user_flag->access('view')) {
-          $group_flags[$flag_name] = $group->flags[$flag_name];
-        }
+      // If user has access to view the flag we add it to the results so that
+      // it can be shown in the group header.
+      if ($user_flag->access('view')) {
+        $group_flags[$flag_name] = $group->flags[$flag_name];
       }
     }
 
