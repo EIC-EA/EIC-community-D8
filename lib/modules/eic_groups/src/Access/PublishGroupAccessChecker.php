@@ -5,6 +5,7 @@ namespace Drupal\eic_groups\Access;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Routing\Access\AccessInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_groups\GroupsModerationHelper;
 use Drupal\eic_user\UserHelper;
 use Drupal\group\Entity\GroupInterface;
@@ -74,7 +75,7 @@ class PublishGroupAccessChecker implements AccessInterface {
 
         // For group members we only allow access if the user is the group
         // owner.
-        $access = AccessResult::allowedIf(in_array('group-owner', array_keys($membership->getRoles())))
+        $access = AccessResult::allowedIf(in_array(EICGroupsHelper::GROUP_OWNER_ROLE, array_keys($membership->getRoles())))
           ->addCacheableDependency($account)
           ->addCacheableDependency($group);
         break;
