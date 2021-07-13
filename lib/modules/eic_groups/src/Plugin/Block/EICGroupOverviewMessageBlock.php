@@ -5,9 +5,9 @@ namespace Drupal\eic_groups\Plugin\Block;
 use Drupal\content_moderation\ModerationInformationInterface;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Cache\CacheableMetadata;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Session\AccountProxyInterface;
+use Drupal\Core\Url;
 use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_groups\GroupsModerationHelper;
 use Drupal\group\GroupMembership;
@@ -113,7 +113,7 @@ class EICGroupOverviewMessageBlock extends BlockBase implements ContainerFactory
     }
 
     $has_group_content = $this->groupHelper->hasContent($group);
-    if ($this->moderationInformation->isModeratedEntity($group) && !$group->isPublished()) {
+    if ($this->moderationInformation->isModeratedEntity($group)) {
       $moderation_state = $group->get('moderation_state')->value;
       $content_operations[] = [
         'label' => $this->t('Post content'),
@@ -134,7 +134,15 @@ class EICGroupOverviewMessageBlock extends BlockBase implements ContainerFactory
           '#group' => $group,
           '#edit_link' => $group->toUrl('edit-form'),
           '#delete_link' => $group->toUrl('delete-form'),
+          '#invite_link' => Url::fromRoute('entity.group_content.add_form', [
+            'group' => $group->id(),
+            'plugin_id' => 'group_invitation',
+          ]),
           '#has_content' => $has_group_content,
+          '#has_member' => !empty($group->getMembers([
+            EICGroupsHelper::GROUP_ADMINISTRATOR_ROLE,
+            EICGroupsHelper::GROUP_MEMBER_ROLE,
+          ])),
           '#actions' => $content_operations,
         ];
       }
