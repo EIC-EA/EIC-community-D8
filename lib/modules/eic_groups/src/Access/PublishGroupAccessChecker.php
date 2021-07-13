@@ -38,44 +38,47 @@ class PublishGroupAccessChecker implements AccessInterface {
       return AccessResult::forbidden();
     }
 
+    // Default access.
+    $access = AccessResult::forbidden()
+      ->addCacheableDependency($account)
+      ->addCacheableDependency($group);
+
     $moderation_state = $group->get('moderation_state')->value;
 
     switch ($moderation_state) {
       case GroupsModerationHelper::GROUP_DRAFT_STATE:
         // Users can only publish a group if the group is in "draft" state.
-        // If the current user does not have permission to change group
-        // moderation state to publish, we only allow access if the user is an
-        // "administrator" or a "content_administrator".
-        if (!$account->hasPermission('use groups transition publish')) {
-          $access = AccessResult::allowedIf(in_array(UserHelper::ROLE_SITE_ADMINISTRATOR, $account->getRoles(TRUE)) || in_array(UserHelper::ROLE_CONTENT_ADMINISTRATOR, $account->getRoles(TRUE)))
+        // If the user is an "administrator" or "content_administrator" we
+        // always allow access.
+        if (in_array(UserHelper::ROLE_SITE_ADMINISTRATOR, $account->getRoles(TRUE)) || in_array(UserHelper::ROLE_CONTENT_ADMINISTRATOR, $account->getRoles(TRUE))) {
+          $access = AccessResult::allowed()
             ->addCacheableDependency($account)
             ->addCacheableDependency($group);
+          break;
         }
-        else {
-          $membership = $group->getMember($account);
 
-          // If the user is not a member of the group, we only allow access if
-          // the user is an "administrator" or "content_administrator".
-          if (!$membership) {
-            $access = AccessResult::allowedIf(in_array(UserHelper::ROLE_SITE_ADMINISTRATOR, $account->getRoles(TRUE)) || in_array(UserHelper::ROLE_CONTENT_ADMINISTRATOR, $account->getRoles(TRUE)))
-              ->addCacheableDependency($account)
-              ->addCacheableDependency($group);
-          }
-          else {
-            // For group members we only allow access if the user is the group
-            // owner or an "administrator" or a "content_administrator".
-            $access = AccessResult::allowedIf(in_array(UserHelper::ROLE_SITE_ADMINISTRATOR, $account->getRoles(TRUE)) || in_array(UserHelper::ROLE_CONTENT_ADMINISTRATOR, $account->getRoles(TRUE)) ||
-              in_array('group-owner', array_keys($membership->getRoles())))
-              ->addCacheableDependency($account)
-              ->addCacheableDependency($group);
-          }
+        // At this point, it means the user is not an admin. If the current
+        // user does not have permission to change group moderation state to
+        // publish, we deny access. Even group owners need this permission in
+        // order to be able to publish their own groups.
+        if (!$account->hasPermission('use groups transition publish')) {
+          break;
         }
-        break;
 
-      default:
-        $access = AccessResult::forbidden()
+        $membership = $group->getMember($account);
+
+        // If the user is not a member of the group, we deny access.
+        if (!$membership) {
+          break;
+        }
+
+        // For group members we only allow access if the user is the group
+        // owner.
+        $access = AccessResult::allowedIf(in_array('group-owner', array_keys($membership->getRoles())))
+          ->addCacheableDependency($account)
           ->addCacheableDependency($group);
         break;
+
     }
 
     return $access;
