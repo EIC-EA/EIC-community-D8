@@ -26,10 +26,6 @@ class ContentOperationsBlock extends BlockBase implements ContainerFactoryPlugin
    */
   private $entityTypeManager;
 
-  /**
-   * @var \Drupal\Core\Session\AccountProxyInterface
-   */
-  private $currentUser;
 
   /**
    * ContentOperationsBlock constructor.
@@ -38,19 +34,16 @@ class ContentOperationsBlock extends BlockBase implements ContainerFactoryPlugin
    * @param $plugin_id
    * @param $plugin_definition
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
-   * @param \Drupal\Core\Session\AccountProxyInterface $account
    */
   public function __construct(
     array $configuration,
     $plugin_id,
     $plugin_definition,
-    EntityTypeManagerInterface $entity_type_manager,
-    AccountProxyInterface $account
+    EntityTypeManagerInterface $entity_type_manager
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     $this->entityTypeManager = $entity_type_manager;
-    $this->currentUser = $account;
   }
 
   /**
@@ -66,8 +59,7 @@ class ContentOperationsBlock extends BlockBase implements ContainerFactoryPlugin
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('entity_type.manager'),
-      $container->get('current_user')
+      $container->get('entity_type.manager')
     );
   }
 
