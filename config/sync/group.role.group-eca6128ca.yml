@@ -17,7 +17,7 @@ permissions_ui: false
 permissions:
   - 'access discussions overview'
   - 'access group content menu overview'
-  - 'access group search'
+  - 'access group search overview'
   - 'access members overview'
   - 'delete any invitation'
   - 'delete own invitations'

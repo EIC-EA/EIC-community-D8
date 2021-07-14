@@ -1,5 +1,5 @@
-access group search:
-  title: Search group
+access group search overview:
+  title: 'Access group search overview'
   description: 'Allow users to search the group content'
 access discussions overview:
   title: 'Access Discussions overview'
