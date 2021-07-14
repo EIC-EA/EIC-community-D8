@@ -80,6 +80,7 @@ class OverviewPageListBuilder extends EntityListBuilder {
   public function buildHeader() {
     $header['id'] = $this->t('ID');
     $header['title'] = $this->t('Title');
+    $header['description'] = $this->t('Description');
     $header['status'] = $this->t('Status');
     $header['created'] = $this->t('Created');
     $header['changed'] = $this->t('Updated');
@@ -93,6 +94,7 @@ class OverviewPageListBuilder extends EntityListBuilder {
     /** @var \Drupal\eic_overviews\OverviewPageInterface $entity */
     $row['id'] = $entity->id();
     $row['title'] = $entity->toLink();
+    $row['description'] = $entity->get('description')->value;
     $row['status'] = $entity->isEnabled() ? $this->t('Enabled') : $this->t('Disabled');
     $row['created'] = $this->dateFormatter->format($entity->getCreatedTime());
     $row['changed'] = $this->dateFormatter->format($entity->getChangedTime());

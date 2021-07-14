@@ -108,7 +108,7 @@ class OverviewPage extends ContentEntityBase implements OverviewPageInterface {
     $fields['title'] = BaseFieldDefinition::create('string')
       ->setTranslatable(TRUE)
       ->setLabel(t('Title'))
-      ->setDescription(t('The title of the overview page entity.'))
+      ->setDescription(t('The title of the overview page.'))
       ->setRequired(TRUE)
       ->setSetting('max_length', 255)
       ->setDisplayOptions('form', [
@@ -129,13 +129,13 @@ class OverviewPage extends ContentEntityBase implements OverviewPageInterface {
       ->setRequired(TRUE)
       ->setDisplayOptions('form', [
         'type' => 'file',
-        'weight' => 0,
+        'weight' => 10,
       ])
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayOptions('view', [
         'type' => 'image',
         'label' => 'above',
-        'weight' => 0,
+        'weight' => 10,
       ])
       ->setDisplayConfigurable('view', TRUE);
 
@@ -149,13 +149,13 @@ class OverviewPage extends ContentEntityBase implements OverviewPageInterface {
         'settings' => [
           'display_label' => FALSE,
         ],
-        'weight' => 0,
+        'weight' => 50,
       ])
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayOptions('view', [
         'type' => 'boolean',
         'label' => 'above',
-        'weight' => 0,
+        'weight' => 50,
         'settings' => [
           'format' => 'enabled-disabled',
         ],
@@ -169,13 +169,13 @@ class OverviewPage extends ContentEntityBase implements OverviewPageInterface {
       ->setSetting('max_length', 255)
       ->setDisplayOptions('form', [
         'type' => 'string_textfield',
-        'weight' => 10,
+        'weight' => 5,
       ])
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayOptions('view', [
         'type' => 'string',
         'label' => 'above',
-        'weight' => 10,
+        'weight' => 5,
       ]);
 
     $fields['path'] = BaseFieldDefinition::create('path')
@@ -198,11 +198,11 @@ class OverviewPage extends ContentEntityBase implements OverviewPageInterface {
       ->setDisplayOptions('view', [
         'label' => 'hidden',
         'type' => 'entity_reference_entity_view',
-        'weight' => 0,
+        'weight' => 15,
       ])
       ->setDisplayOptions('form', [
         'type' => 'options_select',
-        'weight' => 5,
+        'weight' => 15,
       ])
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
@@ -216,11 +216,7 @@ class OverviewPage extends ContentEntityBase implements OverviewPageInterface {
         'type' => 'timestamp',
         'weight' => 20,
       ])
-      ->setDisplayConfigurable('form', TRUE)
-      ->setDisplayOptions('form', [
-        'type' => 'datetime_timestamp',
-        'weight' => 20,
-      ])
+      ->setDisplayConfigurable('form', FALSE)
       ->setDisplayConfigurable('view', TRUE);
 
     $fields['changed'] = BaseFieldDefinition::create('changed')
