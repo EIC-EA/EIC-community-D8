@@ -12,7 +12,7 @@ class WikiPageBookManager extends BookManager {
   /**
    * Overrides the maximum supported depth of the book tree.
    */
-  const BOOK_MAX_DEPTH = 4;
+  const BOOK_MAX_DEPTH = 3;
 
   /**
    * Builds the parent selection form element for the node form or outline tab.

@@ -143,17 +143,17 @@ class FormOperations implements ContainerInjectionInterface {
       return;
     }
 
-    // We accept parents until the 4th level, otherwise it will keep the top
+    // We accept parents until the 3th level, otherwise it will keep the top
     // level book page NID as default.
     if ($query->has('parent') && is_numeric($query->get('parent'))) {
       $wiki_page = Node::load($query->get('parent'));
 
-      if ($wiki_page->bundle() === 'wiki_page') {
+      if ($wiki_page && $wiki_page->bundle() === 'wiki_page') {
         // If the book ID of the parent wiki page is the right book page NID
         // of the group and the parent wiki page depth doesn't reach the
         // maximum defined, then we accept the parent wiki page.
         if ($wiki_page->book['bid'] === $parent_nid && !$wiki_page->book['p' . (WikiPageBookManager::BOOK_MAX_DEPTH + 1)]) {
-          $parent_nid = $wiki_page->id();
+          return;
         }
       }
     }
