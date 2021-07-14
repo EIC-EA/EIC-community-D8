@@ -1,6 +1,6 @@
 uuid: e3f76d1c-1f69-4bf7-a113-cc7bfbcbaefe
 langcode: en
-status: true
+status: false
 dependencies:
   config:
     - search_api.index.global
@@ -9,6 +9,7 @@ dependencies:
     - profile
     - search_api
     - search_api_spellcheck
+    - views_autocomplete_filters
 id: group_overviews
 label: 'Group - Overviews'
 module: views
@@ -673,7 +674,7 @@ display:
       access:
         type: group_permission
         options:
-          group_permission: 'access group search'
+          group_permission: 'access group search overview'
       filters:
         search_api_datasource:
           id: search_api_datasource
