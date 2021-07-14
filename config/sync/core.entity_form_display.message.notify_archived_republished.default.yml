@@ -1,0 +1,30 @@
+uuid: f2eff0ad-4acf-4074-a8e6-49cce9ce1d13
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.message.notify_archived_republished.field_message_subject
+    - field.field.message.notify_archived_republished.field_referenced_entity_label
+    - message.template.notify_archived_republished
+id: message.notify_archived_republished.default
+targetEntityType: message
+bundle: notify_archived_republished
+mode: default
+content:
+  field_message_subject:
+    weight: 0
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_referenced_entity_label:
+    weight: 1
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+hidden: {  }

@@ -1,0 +1,24 @@
+uuid: a8334a32-35ae-4967-8025-8bc1764504c6
+langcode: en
+status: true
+dependencies:
+  config:
+    - filter.format.full_html
+  module:
+    - eic_messages
+third_party_settings:
+  eic_messages:
+    message_template_type: notification
+template: notify_archived_republished
+label: 'NOTIFY :: MT44 :: Republish archived content'
+description: 'Notifies an author that an archived content is published again'
+text:
+  -
+    value: "<p>Dear [message:author:field_first_name:value]&nbsp;[message:author:field_last_name:value],</p>\r\n\r\n<p>[message:field_referenced_entity_label:value] was published once again.</p>\r\n\r\n<p>The EIC Community team</p>\r\n"
+    format: full_html
+settings:
+  'token options':
+    clear: false
+    'token replace': true
+  purge_override: false
+  purge_methods: {  }

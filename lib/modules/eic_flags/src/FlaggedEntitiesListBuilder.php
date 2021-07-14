@@ -25,6 +25,12 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class FlaggedEntitiesListBuilder extends EntityListBuilder {
 
+  const CLOSED_REQUEST_VIEW = 'view.closed_requests.page_1';
+
+  const VIEW_ARCHIVE_FLAG_ID = 1;
+
+  const VIEW_DELETE_FLAG_ID = 2;
+  
   /**
    * @var \Drupal\Core\Database\Connection
    */
