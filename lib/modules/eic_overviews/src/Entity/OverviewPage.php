@@ -192,8 +192,11 @@ class OverviewPage extends ContentEntityBase implements OverviewPageInterface {
       ->setLabel(t('Overview block'))
       ->setDescription(t('Select the overview block to display.'))
       ->setRequired(TRUE)
-      ->setSetting('target_type', 'block')
+      // @todo Change this to the the correct target_type and target_bundle
+      // once it is available.
+      ->setSetting('target_type', 'block_content')
       ->setSetting('handler', 'default')
+      ->setSetting('handler_settings', ['target_bundles' => ['basic' => 'basic']])
       ->setTranslatable(TRUE)
       ->setDisplayOptions('view', [
         'label' => 'hidden',
