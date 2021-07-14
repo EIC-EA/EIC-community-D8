@@ -14,18 +14,18 @@ eic_overviews.groups.overview_page.discussions:
     _controller: '\Drupal\eic_overviews\Controller\GroupOverviewsController::buildGenericPage'
     _title: 'Discussions'
   requirements:
-    _group_permission: 'view group'
+    _group_permission: 'access discussions overview'
 eic_overviews.groups.overview_page.members:
   path: '/group/{group}/people'
   defaults:
     _controller: '\Drupal\eic_overviews\Controller\GroupOverviewsController::buildGenericPage'
     _title: 'Members'
   requirements:
-    _group_permission: 'view group'
+    _group_permission: 'access members overview'
 eic_overviews.groups.overview_page.search:
   path: '/group/{group}/search'
   defaults:
     _controller: '\Drupal\eic_overviews\Controller\GroupOverviewsController::buildGenericPage'
     _title: 'Search group'
   requirements:
-    _group_permission: 'view group'
+    _group_permission: 'access group search overview'
