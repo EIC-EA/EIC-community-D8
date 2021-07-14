@@ -80,7 +80,14 @@ class GroupVisibilityDatabaseStorage implements GroupVisibilityDatabaseStorageIn
       }
     }
 
-    list($id, $gid, $type, $options) = $final_values;
+    // We don't always have a third element in the array, so test if first.
+    if (isset($final_values[3])) {
+      list($id, $gid, $type, $options) = $final_values;
+    }
+    else {
+      $options = [];
+      list($id, $gid, $type) = $final_values;
+    }
 
     if (!is_array($options)) {
       $options = [];

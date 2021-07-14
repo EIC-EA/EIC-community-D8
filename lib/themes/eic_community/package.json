@@ -32,7 +32,7 @@
     "@babel/cli": "^7.12.10",
     "@babel/core": "^7.12.10",
     "@babel/preset-env": "^7.12.11",
-    "@ecl-twig/ec-components": "^2.35.1",
+    "@ecl-twig/ec-components": "^2.35.2",
     "@ecl/builder": "^2.35.0",
     "@ecl/ec-base": "^2.35.0",
     "@ecl/ec-component-form-help-block": "^2.35.0",

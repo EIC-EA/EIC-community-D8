@@ -1,0 +1,21 @@
+uuid: 921f7667-0689-47cc-8445-2f03e49c1075
+langcode: en
+status: true
+dependencies:
+  module:
+    - message
+id: message.field_referenced_entity_label
+field_name: field_referenced_entity_label
+entity_type: message
+type: string
+settings:
+  max_length: 255
+  is_ascii: false
+  case_sensitive: false
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

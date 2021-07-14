@@ -34,6 +34,13 @@ class UserHelper {
   const ROLE_CONTENT_ADMINISTRATOR = 'content_administrator';
 
   /**
+   * Trusted user role.
+   *
+   * @var string
+   */
+  const ROLE_TRUSTED_USER = 'trusted_user';
+
+  /**
    * The user storage interface.
    *
    * @var \Drupal\user\UserStorageInterface

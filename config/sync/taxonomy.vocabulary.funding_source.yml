@@ -1,0 +1,8 @@
+uuid: f8be65ac-2d94-4593-9931-0c3832b8aa81
+langcode: en
+status: true
+dependencies: {  }
+name: 'Funding source'
+vid: funding_source
+description: ''
+weight: 0

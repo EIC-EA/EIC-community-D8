@@ -68,10 +68,7 @@ class EntityRequestRouteProvider implements EntityRouteProviderInterface, Entity
       $close_request_route = $this->getRouteByTemplate($entity_type, $handler, 'close-request');
       if ($close_request_route) {
         $close_request_route
-          ->setRequirement(
-            '_permission',
-            'close ' . $handler->getType() . ' request'
-          )
+          ->setRequirement('_permission', 'manage archival deletion requests')
           ->setOption('_admin_route', TRUE);
 
         $collection->add('entity.' . $entity_type->id() . '.close_request', $close_request_route);
