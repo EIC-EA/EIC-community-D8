@@ -3,9 +3,9 @@
 namespace Drupal\eic_content\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
-use Drupal\taxonomy\Entity\Term;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Class EntityTreeController
@@ -13,6 +13,27 @@ use Symfony\Component\HttpFoundation\Request;
  * @package Drupal\eic_content\Controller
  */
 class EntityTreeController extends ControllerBase {
+
+  /** @var \Drupal\eic_content\Services\EntityTreeManager */
+  private $tree_manager;
+
+  /**
+   * EntityTreeController constructor.
+   *
+   * @param $tree_manager
+   */
+  public function __construct($tree_manager) {
+    $this->tree_manager = $tree_manager;
+  }
+
+  /**
+   * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
+   *
+   * @return \Drupal\eic_content\Controller\EntityTreeController|static
+   */
+  public static function create(ContainerInterface $container) {
+    return new static($container->get('eic_content.entity_tree_manager'));
+  }
 
   /**
    * @param \Symfony\Component\HttpFoundation\Request $request
@@ -24,28 +45,17 @@ class EntityTreeController extends ControllerBase {
   public function tree(Request $request) {
     $offset = $request->query->get('offset', 0);
     $length = $request->query->get('length', 25);
+    $target_entity = $request->query->get('targetEntity');
+    $target_bundle = $request->query->get('targetBundle');
     // This will check if we need to split result items
-    $loadAll = (int) $request->query->get('loadAll', 0);
-
-    $vocabulary = 'topics';
-
-    $terms = \Drupal::entityTypeManager()->getStorage('taxonomy_term')
-      ->loadTree('topics', 0, 1);
-
-    if (!$loadAll) {
-      $terms = array_slice($terms, $offset, $length);
-    }
-    $tree = [];
-
-    foreach ($terms as $tree_object) {
-      $this->buildTree($tree, $tree_object, $vocabulary, 1, 0);
-    }
+    $load_all = (int) $request->query->get('loadAll', 0);
 
     return new JsonResponse([
-      'terms' => $terms,
+      'terms' => $this->tree_manager->generateTree($target_entity, $target_bundle, $load_all, $offset, $length),
       'total' => \Drupal::entityTypeManager()
-        ->getStorage('taxonomy_term')
+        ->getStorage($target_entity)
         ->getQuery()
+        ->condition('vid', $target_bundle)
         ->count()
         ->execute(),
     ]);
@@ -61,20 +71,11 @@ class EntityTreeController extends ControllerBase {
   public function loadChildren(Request $request) {
     $parent = $request->query->get('parent_term', NULL);
     $level = $request->query->get('level', 0);
-
-    $children = \Drupal::entityTypeManager()->getStorage('taxonomy_term')
-      ->loadTree('topics', $parent, 1);
-
-    foreach ($children as &$child) {
-      $child->children = \Drupal::entityTypeManager()
-        ->getStorage('taxonomy_term')
-        ->loadTree('topics', $child->tid, 1);
-
-      $child->level = $level + 1;
-    }
+    $target_entity = $request->query->get('targetEntity');
+    $target_bundle = $request->query->get('targetBundle');
 
     return new JsonResponse([
-      'terms' => $children,
+      'terms' => $this->tree_manager->loadChildrenLevel($target_entity, $target_bundle, $parent, $level),
     ]);
   }
 
@@ -85,65 +86,13 @@ class EntityTreeController extends ControllerBase {
    */
   public function search(Request $request) {
     $text = $request->query->get('search_text', '');
-
-    $entities = \Drupal::entityQuery('taxonomy_term')
-      ->condition('name', $text, 'CONTAINS')
-      ->range(0, 10)
-      ->execute();
-
-    $entities = Term::loadMultiple($entities);
+    $selected_values = $request->query->get('values', []);
+    $target_entity = $request->query->get('targetEntity');
+    $target_bundle = $request->query->get('targetBundle');
 
     return new JsonResponse(
-      array_map(function (Term $term) {
-        $parent = $term->get('parent')->getValue();
-
-        return [
-          'name' => $term->getName(),
-          'tid' => $term->id(),
-          'parent' => (int) reset($parent)['target_id'],
-        ];
-      }, $entities)
+      $this->tree_manager->search($target_entity, $target_bundle, $text, $selected_values),
     );
-  }
-
-  /**
-   * @param $tree
-   * @param $object
-   * @param $vocabulary
-   * @param $depth
-   * @param $level
-   *
-   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
-   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
-   */
-  protected function buildTree(&$tree, $object, $vocabulary, $depth, $level) {
-    if ($object->depth !== 0) {
-      return;
-    }
-    $tree[$object->tid] = $object;
-    $tree[$object->tid]->children = [];
-    $tree[$object->tid]->level = $level;
-    $object_children = &$tree[$object->tid]->children;
-
-    $children = \Drupal::entityTypeManager()->getStorage('taxonomy_term')
-      ->loadChildren($object->tid);
-    if (!$children) {
-      return;
-    }
-
-    $level += 1;
-
-    $child_tree_objects = \Drupal::entityTypeManager()
-      ->getStorage('taxonomy_term')
-      ->loadTree($vocabulary, $object->tid);
-
-    foreach ($children as $child) {
-      foreach ($child_tree_objects as $child_tree_object) {
-        if ($child_tree_object->tid == $child->id()) {
-          $this->buildTree($object_children, $child_tree_object, $vocabulary, $depth, $level);
-        }
-      }
-    }
   }
 
 }

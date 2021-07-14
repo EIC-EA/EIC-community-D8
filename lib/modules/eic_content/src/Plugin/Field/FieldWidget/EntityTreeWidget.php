@@ -77,6 +77,12 @@ class EntityTreeWidget extends WidgetBase {
    * {@inheritdoc}
    */
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
+    $settings = $this->getFieldSetting('handler_settings');
+    $target_entity = $this->fieldDefinition->getFieldStorageDefinition()
+      ->getSetting('target_type');
+    $target_bundles = array_key_exists('target_bundles', $settings) ? $settings['target_bundles'] : [];
+    $target_bundle = reset($target_bundles);
+
     $element +=
       [
         '#type' => 'entity_autocomplete',
@@ -87,8 +93,7 @@ class EntityTreeWidget extends WidgetBase {
           [static::class, 'validate'],
         ],
         '#attributes' => [
-          'id' => ['entity-tree-reference-widget'],
-          'class' => ['hidden'],
+          'class' => ['hidden', 'entity-tree-reference-widget'],
           'data-selected-terms' => json_encode(array_map(function (Term $term) {
             $parent = $term->get('parent')->getValue();
 
@@ -98,13 +103,27 @@ class EntityTreeWidget extends WidgetBase {
               'parent' => reset($parent)['target_id'],
             ];
           }, $items->referencedEntities())),
+          'data-translations' => json_encode([
+            'select_value' => $this->t('Select a value', [], ['context' => 'eic_search']),
+            'match_limit' => $this->t(
+              'You can select only <b>@match_limit</b> top-level items.',
+              ['@match_limit' => $this->getSetting('match_top_level_limit')],
+              ['context' => 'eic_search']
+            ),
+            'search' => $this->t('Search', [], ['context' => 'eic_search']),
+            'your_values' => $this->t('Your selected values', [], ['context' => 'eic_search']),
+          ]),
           'data-terms-url' => Url::fromRoute('eic_content.entity_tree')
+            ->toString(),
+          'data-terms-url-search' => Url::fromRoute('eic_content.entity_tree_search')
             ->toString(),
           'data-terms-url-children' => Url::fromRoute('eic_content.entity_tree_children')
             ->toString(),
           'data-match-limit' => $this->getSetting('match_top_level_limit'),
           'data-items-to-load' => $this->getSetting('items_to_load'),
           'data-load-all' => $this->getSetting('load_all'),
+          'data-target-bundle' => $target_bundle,
+          'data-target-entity' => $target_entity,
         ],
       ];
 
@@ -146,31 +165,6 @@ class EntityTreeWidget extends WidgetBase {
     }
 
     return $summary;
-  }
-
-  private function _removeAll() {
-    $query = \Drupal::entityQuery('taxonomy_term')
-      ->condition('vid', "topics");
-    $uids = $query->execute();
-
-    // Load these entities ($uids) in our case using storage controller.
-    // We call loadMultiple method and give $uids array as argument.
-    $itemsToDelete = \Drupal::entityTypeManager()->getStorage('taxonomy_term')
-      ->loadMultiple($uids);
-
-    // Loop through our entities and deleting them by calling by delete method.
-    foreach ($itemsToDelete as $item) {
-      $item->delete();
-    }
-  }
-
-  private function _addAll() {
-    for ($i = 0; $i <= 2000; $i++) {
-      Term::create([
-        'vid' => 'topics',
-        'name' => 'Topic ' . $i,
-      ])->save();
-    }
   }
 
 }
