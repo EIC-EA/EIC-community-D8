@@ -1,0 +1,22 @@
+uuid: 020d73f8-b129-4f39-bdf8-552759fec1f3
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.message.mail_body
+    - field.field.message.log_request_accepted.field_referenced_flag
+    - field.field.message.log_request_accepted.field_rendered_content
+    - message.template.log_request_accepted
+id: message.log_request_accepted.mail_body
+targetEntityType: message
+bundle: log_request_accepted
+mode: mail_body
+content:
+  partial_1:
+    weight: 0
+    region: content
+hidden:
+  field_referenced_flag: true
+  field_rendered_content: true
+  partial_0: true
+  search_api_excerpt: true

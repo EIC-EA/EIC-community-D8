@@ -5,7 +5,10 @@ dependencies:
   config:
     - field.field.message.notify_delete_request_accepted.field_message_subject
     - field.field.message.notify_delete_request_accepted.field_referenced_flag
+    - field.field.message.notify_delete_request_accepted.field_rendered_content
     - message.template.notify_delete_request_accepted
+  module:
+    - text
 id: message.notify_delete_request_accepted.default
 targetEntityType: message
 bundle: notify_delete_request_accepted
@@ -28,5 +31,13 @@ content:
       placeholder: ''
     third_party_settings: {  }
     type: entity_reference_autocomplete
+    region: content
+  field_rendered_content:
+    weight: 2
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+    type: text_textarea
     region: content
 hidden: {  }

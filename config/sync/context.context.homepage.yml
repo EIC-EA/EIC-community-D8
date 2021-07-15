@@ -126,6 +126,20 @@ reactions:
         unique: 0
         context_id: homepage
         uuid: e90c3870-4793-4704-b242-4506c1ce4982
+      08f9b601-1df8-433a-a10b-28a076f8f760:
+        id: eic_content_operations
+        label: 'EIC Content operations'
+        provider: eic_content
+        label_display: '0'
+        region: content_before
+        weight: '0'
+        context_mapping: {  }
+        custom_id: eic_content_operations
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: homepage
+        uuid: 08f9b601-1df8-433a-a10b-28a076f8f760
     id: blocks
     saved: false
     uuid: 1172ee8b-57fe-4611-b929-3d99b1b469d8
