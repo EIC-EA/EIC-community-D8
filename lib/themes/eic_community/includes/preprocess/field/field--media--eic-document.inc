@@ -6,18 +6,18 @@
  */
 
 use Drupal\file\Entity\File;
+use Drupal\media\Entity\Media;
 
 /**
  * Implements hook_preprocess_HOOK().
  */
 function eic_community_preprocess_field__field_related_downloads(array &$variables): void {
-  /** @var \Drupal\media\Entity\Media $file */
-  $node = $variables['element']['#object'];
   $documents = [];
 
   foreach ($variables['element']['#items'] as $item) {
-    $media = \Drupal\media\Entity\Media::load($item->target_id);
-    $file = File::load($media->field_media_file->target_id);
+    $media = Media::load($item->target_id);
+    $file_meta = isset($media->field_media_file) ? $media->field_media_file : $media->field_media_video_file;
+    $file = File::load($file_meta->target_id);
 
     $document = [
       'title' => $media->getName(),
@@ -31,8 +31,7 @@ function eic_community_preprocess_field__field_related_downloads(array &$variabl
       ],
     ];
 
-
-    $documents[]= $document;
+    $documents[] = $document;
   }
 
   $variables['documents'] = $documents;

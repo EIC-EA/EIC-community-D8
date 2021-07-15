@@ -11,14 +11,11 @@
 
 {% if elements.wiki_section_message is defined %}
   {% block content %}
-  <div class="ecl-section-wrapper">
     <div class="ecl-container">
       {% embed "@theme/patterns/components/well.html.twig" with {
         extra_classes: 'ecl-well--is-centered ecl-well--is-grey',
       } %}
       {% block content %}
-      {% set label = no_items.label|default('No wiki pages (yet).') %}
-      {% set title_element = no_items.title_element|default('h2') %}
 
       <h2>{{ elements.wiki_section_message['#markup'] }}</h2>
 
@@ -35,7 +32,6 @@
 
     {% endblock %}
     {% endembed %}
-  </div>
   </div>
   {% endblock %}
 {% endif %}
