@@ -114,6 +114,8 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
     $facets = $this->configuration['facets'];
     $sorts = $this->configuration['sort_options'];
 
+    $search_value = \Drupal::request()->query->get('search', '');
+
     $facets = array_filter($facets, function ($facet) {
       return $facet;
     });
@@ -129,8 +131,10 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
 
     return [
       '#theme' => 'search_overview_block',
+      '#cache' => ['contexts' => ['url.path', 'url.query_args']],
       '#facets' => array_keys($facets),
       '#sorts' => array_keys($sorts),
+      '#search_string' => $search_value,
       '#source_class' => $source instanceof SourceTypeInterface ? get_class($source) : NULL,
       '#datasource' => $source instanceof SourceTypeInterface ? $source->getSourceId() : NULL,
       '#bundle' => $source instanceof SourceTypeInterface ? $source->getEntityBundle() : NULL,
