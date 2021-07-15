@@ -43,7 +43,7 @@ content:
     region: content
   field_comments:
     weight: 101
-    label: above
+    label: hidden
     settings:
       view_mode: default
       pager_id: 0
@@ -61,7 +61,7 @@ content:
     third_party_settings: {  }
   field_document_media:
     weight: 7
-    label: above
+    label: hidden
     settings:
       link: true
       view_mode: default
@@ -111,7 +111,7 @@ content:
     region: content
   field_related_groups:
     weight: 102
-    label: above
+    label: hidden
     settings:
       link: true
     third_party_settings: {  }
@@ -119,7 +119,7 @@ content:
     region: content
   field_related_stories:
     weight: 12
-    label: above
+    label: hidden
     settings:
       link: true
     third_party_settings: {  }
@@ -128,7 +128,7 @@ content:
   field_video:
     type: entity_reference_entity_view
     weight: 9
-    label: above
+    label: hidden
     settings:
       view_mode: default
       link: false
@@ -136,7 +136,7 @@ content:
     region: content
   field_vocab_geo:
     weight: 13
-    label: above
+    label: hidden
     settings:
       link: true
     third_party_settings: {  }
@@ -144,7 +144,7 @@ content:
     region: content
   field_vocab_topics:
     weight: 8
-    label: above
+    label: hidden
     settings:
       link: true
     third_party_settings: {  }
@@ -178,7 +178,7 @@ content:
   private:
     weight: 1
     region: content
-    label: above
+    label: hidden
     settings:
       format: default
       format_custom_false: ''
@@ -189,7 +189,7 @@ content:
     type: timestamp
     weight: 17
     region: content
-    label: above
+    label: hidden
     settings:
       date_format: short
       custom_date_format: ''
