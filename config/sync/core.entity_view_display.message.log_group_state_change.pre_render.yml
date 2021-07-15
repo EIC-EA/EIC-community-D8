@@ -1,18 +1,17 @@
-uuid: f5c3e1eb-2459-4001-955d-22247494a3d8
+uuid: dea20dbf-6d64-467a-a45e-fca3c0d28d5e
 langcode: en
 status: true
 dependencies:
   config:
+    - core.entity_view_mode.message.pre_render
     - field.field.message.log_group_state_change.field_event_executing_user
     - field.field.message.log_group_state_change.field_group_ref
     - field.field.message.log_group_state_change.field_rendered_content
     - message.template.log_group_state_change
-  module:
-    - text
-id: message.log_group_state_change.default
+id: message.log_group_state_change.pre_render
 targetEntityType: message
 bundle: log_group_state_change
-mode: default
+mode: pre_render
 content:
   field_event_executing_user:
     weight: 1
@@ -30,22 +29,11 @@ content:
     third_party_settings: {  }
     type: entity_reference_label
     region: content
-  field_rendered_content:
-    weight: 3
-    label: above
-    settings: {  }
-    third_party_settings: {  }
-    type: text_default
-    region: content
   partial_0:
-    weight: 0
-    region: content
-    settings: {  }
-    third_party_settings: {  }
-  partial_1:
     weight: 0
     settings: {  }
     third_party_settings: {  }
     region: content
 hidden:
+  field_rendered_content: true
   search_api_excerpt: true

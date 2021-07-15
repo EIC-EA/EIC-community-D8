@@ -1,0 +1,27 @@
+uuid: 46879c6f-b56f-4f0c-8495-2554a1ee75ce
+langcode: en
+status: true
+dependencies:
+  config:
+    - filter.format.full_html
+  module:
+    - eic_messages
+third_party_settings:
+  eic_messages:
+    message_template_type: log
+template: log_request_accepted
+label: 'LOG :: Request Accepted'
+description: 'Log message for accepted delete or archival requests'
+text:
+  -
+    value: "<p>Request&nbsp;[message:field_referenced_flag:entity:flag-type] accepted</p>\r\n\r\n<ul>\r\n\t<li>Entity:&nbsp;[message:field_referenced_flag:entity:target_entity:title]</li>\r\n\t<li>Type of entity:&nbsp;[message:field_referenced_flag:entity:entity-type]</li>\r\n\t<li>Author:&nbsp;[message:field_referenced_flag:entity:target_entity:author:field_first_name:value]&nbsp;[message:field_referenced_flag:entity:target_entity:author:field_last_name:value]</li>\r\n\t<li>Requester:&nbsp;[message:field_referenced_flag:entity:author:field_first_name:value]&nbsp;[message:field_referenced_flag:entity:author:field_last_name:value]</li>\r\n\t<li>Moderator:&nbsp;[message:field_referenced_flag:entity:field_request_moderator:entity:field_first_name:value]&nbsp;[message:field_referenced_flag:entity:field_request_moderator:entity:field_last_name:value]</li>\r\n\t<li>Request reason:&nbsp;[message:field_referenced_flag:entity:field_request_reason:value]</li>\r\n\t<li>Response:&nbsp;[message:field_referenced_flag:entity:field_request_response:value]</li>\r\n\t<li>Created at:&nbsp;[message:field_referenced_flag:entity:date]</li>\r\n\t<li>Closed at:&nbsp;[message:field_referenced_flag:entity:field_request_closed_date]</li>\r\n</ul>\r\n"
+    format: full_html
+  -
+    value: "<p>[message:raw-value:field_rendered_content]</p>\r\n"
+    format: full_html
+settings:
+  'token options':
+    clear: false
+    'token replace': true
+  purge_override: false
+  purge_methods: {  }
