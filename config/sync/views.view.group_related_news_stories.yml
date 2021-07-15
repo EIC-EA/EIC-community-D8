@@ -612,7 +612,7 @@ display:
           type: boolean
           settings:
             format: custom
-            format_custom_true: (Private)
+            format_custom_true: '(For community members only)'
             format_custom_false: (Public)
           group_column: value
           group_columns: {  }

@@ -13,12 +13,15 @@ use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Url;
+use Drupal\eic_groups\GroupsModerationHelper;
 use Drupal\eic_groups\Hooks\CronOperations;
 use Drupal\eic_groups\Hooks\EntityOperations;
 use Drupal\eic_groups\Hooks\GroupTokens;
 use Drupal\eic_groups\Hooks\FormOperations;
 use Drupal\eic_groups\Hooks\Pathauto;
 use Drupal\eic_groups\Hooks\Preprocess;
+use Drupal\eic_user\UserHelper;
 use Drupal\group\Entity\GroupInterface;
 
 /**
@@ -32,6 +35,17 @@ function eic_groups_theme($existing, $type, $theme, $path) {
         'group_values' => NULL,
       ],
     ],
+    'eic_group_moderated_message_box' => [
+      'variables' => [
+        'group' => NULL,
+        'edit_link' => NULL,
+        'delete_link' => NULL,
+        'invite_link' => NULL,
+        'actions' => NULL,
+        'has_content' => NULl,
+        'has_member' => NULl,
+      ],
+    ]
   ];
 }
 
@@ -200,9 +214,9 @@ function eic_groups_entity_field_access($operation, FieldDefinitionInterface $fi
     switch ($operation) {
       case 'edit':
         // Deny access if it's a new group and the user doesn't have
-        // "administator" or "content_administrator" roles.
+        // "administrator" or "content_administrator" roles.
         if ($entity->isNew()) {
-          $access = AccessResult::forbiddenIf(!in_array('administrator', $account->getRoles(TRUE)) && !in_array('content_administrator', $account->getRoles(TRUE)))
+          $access = AccessResult::forbiddenIf(!in_array(UserHelper::ROLE_SITE_ADMINISTRATOR, $account->getRoles(TRUE)) && !in_array(UserHelper::ROLE_CONTENT_ADMINISTRATOR, $account->getRoles(TRUE)))
             ->addCacheableDependency($account);
           break;
         }
@@ -215,9 +229,99 @@ function eic_groups_entity_field_access($operation, FieldDefinitionInterface $fi
 }
 
 /**
- * Implements hook_ENTITY_TYPE_insert().
+ * Implements hook_ENTITY_TYPE_access().
  */
-function eic_groups_group_permission_insert(EntityInterface $entity) {
-  \Drupal::classResolver(EntityOperations::class)
-    ->groupPermissionInsert($entity);
+function eic_groups_group_access(EntityInterface $entity, $operation, AccountInterface $account) {
+  $access = AccessResult::neutral();
+
+  $moderation_state = $entity->get('moderation_state')->value;
+
+  switch ($operation) {
+    case 'delete':
+      // Deny access to delete group if the group is NOT in pending state and
+      // the user is not an "administator" or a "content_administrator".
+      if ($moderation_state !== GroupsModerationHelper::GROUP_PENDING_STATE) {
+        $access = AccessResult::forbiddenIf(!in_array(UserHelper::ROLE_SITE_ADMINISTRATOR, $account->getRoles(TRUE)) && !in_array(UserHelper::ROLE_CONTENT_ADMINISTRATOR, $account->getRoles(TRUE)))
+          ->addCacheableDependency($account)
+          ->addCacheableDependency($entity);
+      }
+      break;
+
+  }
+
+  return $access;
+}
+
+/**
+ * Implements hook_group_content_info_alter().
+ */
+function eic_groups_group_content_info_alter(array &$definitions) {
+  // Overrides the standard group invitation plugin class provided by
+  // ginvite module.
+  if (isset($definitions['group_invitation'])) {
+    $definitions['group_invitation']['class'] = '\Drupal\eic_groups\Plugin\GroupContentEnabler\GroupInvitation';
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_access().
+ */
+function eic_groups_flagging_access(EntityInterface $entity, $operation, AccountInterface $account) {
+  $access = AccessResult::neutral();
+
+  $flagged_entity = $entity->get('flagged_entity')->entity;
+
+  if (!($flagged_entity instanceof GroupInterface)) {
+    return $access;
+  }
+
+  $moderation_state = $flagged_entity->get('moderation_state')->value;
+
+  switch ($operation) {
+    case 'view':
+    case 'flag':
+    case 'unflag':
+      // Deny access to group flag if the group IS in pending or draft
+      // state.
+      if (in_array($moderation_state, [
+        GroupsModerationHelper::GROUP_PENDING_STATE,
+        GroupsModerationHelper::GROUP_DRAFT_STATE,
+      ])) {
+        $access = AccessResult::forbidden()
+          ->addCacheableDependency($entity)
+          ->addCacheableDependency($flagged_entity);
+      }
+      break;
+
+  }
+
+  return $access;
+}
+
+/**
+ * Implements hook_entity_operation_alter().
+ */
+function eic_groups_entity_operation_alter(array &$operations, EntityInterface $entity) {
+  if ($entity->getEntityTypeId() !== 'group') {
+    return;
+  }
+
+  // Gets current path alias.
+  $current_path = \Drupal::service('path.current')->getPath();
+  $current_path_alias = \Drupal::service('path_alias.manager')->getAliasByPath($current_path);
+
+  // Add publish group operation.
+  $publish_url_options = [
+    'query' => [
+      'destination' => $current_path_alias,
+    ],
+  ];
+  $publish_url = Url::fromRoute('eic_groups.group.publish.confirm_form', ['group' => $entity->id()], $publish_url_options);
+  if ($publish_url->access()) {
+    $operations['publish'] = [
+      'title' => t('Publish'),
+      'weight' => -50,
+      'url' => $publish_url,
+    ];
+  }
 }

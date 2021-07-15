@@ -300,4 +300,27 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
     $group_permissions->save();
   }
 
+  /**
+   * Determines if a group has content.
+   * Considered as content:
+   *  - Discussions
+   *  - Documents
+   *  - Wiki pages
+   *
+   * @param \Drupal\group\Entity\GroupInterface $group
+   *    The group for which the check is.
+   */
+  public function hasContent(GroupInterface $group) {
+    $query = $this->database->select('group_content_field_data', 'gp');
+    $query->condition('gp.type', [
+      'group-group_node-discussion',
+      'group-group_node-document',
+      'group-group_node-wiki_page',
+    ], 'IN');
+    $query->condition('gp.gid', $group->id());
+    $query->fields('gp', ['id']);
+
+    return !empty($query->execute()->fetchAll(\PDO::FETCH_OBJ));
+  }
+
 }

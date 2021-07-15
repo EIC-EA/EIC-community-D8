@@ -19,4 +19,8 @@ permissions:
   - 'access group content menu overview'
   - 'access group search'
   - 'access members overview'
+  - 'delete any invitation'
+  - 'delete own invitations'
+  - 'invite users to group'
   - 'manage group_content_menu'
+  - 'view group invitations'
