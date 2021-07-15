@@ -154,11 +154,50 @@ class FormOperations implements ContainerInjectionInterface {
   }
 
   /**
+   * Implements hook_form_alter() for group membership join form.
+   */
+  public function groupMembershipJoinFormAlter(&$form, FormStateInterface $form_state, $form_id) {
+    // Get request query parameters.
+    $query = $this->requestStack->getCurrentRequest()->query;
+    // If destination URL is NOT presented in the query parameters we force
+    // redirection to the group homepage.
+    if (!$query->has('destination')) {
+      $form['actions']['submit']['#submit'][] = [
+        $this,
+        'formRedirectToGroupHomepage',
+      ];
+    }
+  }
+
+  /**
    * Custom submit handler for form_group forms.
    */
   public function formGroupSubmit(&$form, FormStateInterface $form_state) {
     $group = $form_state->getFormObject()->getEntity();
     $this->enableDefaultFeatures($group);
+  }
+
+  /**
+   * Custom submit handler to redirect the user to the group homepage.
+   *
+   * @param array $form
+   *   An associative array containing the structure of the form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
+   */
+  public function formRedirectToGroupHomepage(array &$form, FormStateInterface $form_state) {
+    $entity = $form_state->getFormObject()->getEntity();
+
+    switch ($entity->getEntityTypeId()) {
+      case 'group_content':
+        $form_state->setRedirectUrl($entity->getGroup()->toUrl());
+        break;
+
+      case 'group':
+        $form_state->setRedirectUrl($entity->toUrl());
+        break;
+
+    }
   }
 
   /**
