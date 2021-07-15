@@ -180,9 +180,12 @@ class FormOperations implements ContainerInjectionInterface {
   /**
    * Custom submit handler to redirect the user to the group homepage.
    *
-   * This submit handler can be used in in group or group_content forms.
+   * @param array $form
+   *   An associative array containing the structure of the form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
    */
-  public function formRedirectToGroupHomepage(&$form, FormStateInterface $form_state) {
+  public function formRedirectToGroupHomepage(array &$form, FormStateInterface $form_state) {
     $entity = $form_state->getFormObject()->getEntity();
 
     switch ($entity->getEntityTypeId()) {
