@@ -42,8 +42,8 @@ function eic_groups_theme($existing, $type, $theme, $path) {
         'delete_link' => NULL,
         'invite_link' => NULL,
         'actions' => NULL,
-        'has_content' => NULl,
-        'has_member' => NULl,
+        'has_content' => NULL,
+        'has_member' => NULL,
       ],
     ],
   ];
@@ -220,7 +220,7 @@ function eic_groups_entity_field_access($operation, FieldDefinitionInterface $fi
     switch ($operation) {
       case 'edit':
         // Deny access if it's a new group and the user doesn't have
-        // "administrator" or "content_administrator" roles.
+        // "site_admin" or "content_administrator" roles.
         if ($entity->isNew()) {
           $access = AccessResult::forbiddenIf(!in_array(UserHelper::ROLE_SITE_ADMINISTRATOR, $account->getRoles(TRUE)) && !in_array(UserHelper::ROLE_CONTENT_ADMINISTRATOR, $account->getRoles(TRUE)))
             ->addCacheableDependency($account);
@@ -245,7 +245,7 @@ function eic_groups_group_access(EntityInterface $entity, $operation, AccountInt
   switch ($operation) {
     case 'delete':
       // Deny access to delete group if the group is NOT in pending state and
-      // the user is not an "administator" or a "content_administrator".
+      // the user is NOT a "site_admin" or a "content_administrator".
       if ($moderation_state !== GroupsModerationHelper::GROUP_PENDING_STATE) {
         $access = AccessResult::forbiddenIf(!in_array(UserHelper::ROLE_SITE_ADMINISTRATOR, $account->getRoles(TRUE)) && !in_array(UserHelper::ROLE_CONTENT_ADMINISTRATOR, $account->getRoles(TRUE)))
           ->addCacheableDependency($account)

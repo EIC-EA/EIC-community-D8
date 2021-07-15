@@ -24,7 +24,7 @@ class UserHelper {
    *
    * @var string
    */
-  const ROLE_SITE_ADMINISTRATOR = 'administrator';
+  const ROLE_SITE_ADMINISTRATOR = 'site_admin';
 
   /**
    * Content administrator role.

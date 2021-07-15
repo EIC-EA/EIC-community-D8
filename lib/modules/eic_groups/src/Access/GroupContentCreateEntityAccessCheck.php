@@ -27,7 +27,7 @@ class GroupContentCreateEntityAccessCheck extends GroupContentCreateEntityAccess
       switch ($group->get('moderation_state')->value) {
         case GroupsModerationHelper::GROUP_PENDING_STATE:
           // Deny access to the group content node creation form if the group
-          // is in pending state and the user is not an "administator" or a
+          // is in pending state and the user is not a "site_admin" or a
           // "content_administrator".
           $access = AccessResult::forbiddenIf(!in_array(UserHelper::ROLE_SITE_ADMINISTRATOR, $account->getRoles(TRUE)) && !in_array(UserHelper::ROLE_CONTENT_ADMINISTRATOR, $account->getRoles(TRUE)))
             ->addCacheableDependency($account)
