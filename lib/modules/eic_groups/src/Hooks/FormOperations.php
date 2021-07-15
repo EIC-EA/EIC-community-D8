@@ -8,8 +8,10 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
+use Drupal\eic_content_wiki_page\WikiPageBookManager;
 use Drupal\eic_groups\EICGroupsHelperInterface;
 use Drupal\group\Entity\Group;
+use Drupal\node\Entity\Node;
 use Drupal\oec_group_features\GroupFeaturePluginManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -129,19 +131,35 @@ class FormOperations implements ContainerInjectionInterface {
     }
 
     // Get the NID of the book page that belong to the group.
-    if (!($book_nid = $this->eicGroupsHelper->getGroupBookPage($group))) {
+    if (!($parent_nid = $this->eicGroupsHelper->getGroupBookPage($group))) {
       return;
     }
 
     $query = $this->requestStack->getCurrentRequest()->query;
+
     // If the key "parent" is presented in the request query and it corresponds
-    // to right book page NID, then we don't need to do any redirection.
-    if ($query->has('parent') && (is_numeric($query->get('parent')) && $query->get('parent') === $book_nid)) {
+    // to the right book page NID, then we don't need to do any redirection.
+    if ($query->has('parent') && (is_numeric($query->get('parent')) && $query->get('parent') === $parent_nid)) {
       return;
     }
 
-    // Update "parent" key with the right book page NID.
-    $query->set('parent', $book_nid);
+    // We accept parents until the 3th level, otherwise it will keep the top
+    // level book page NID as default.
+    if ($query->has('parent') && is_numeric($query->get('parent'))) {
+      $wiki_page = Node::load($query->get('parent'));
+
+      if ($wiki_page && $wiki_page->bundle() === 'wiki_page') {
+        // If the book ID of the parent wiki page is the right book page NID
+        // of the group and the parent wiki page depth doesn't reach the
+        // maximum defined, then we accept the parent wiki page.
+        if ($wiki_page->book['bid'] === $parent_nid && !$wiki_page->book['p' . (WikiPageBookManager::BOOK_MAX_DEPTH + 1)]) {
+          return;
+        }
+      }
+    }
+
+    // Update "parent" key with the right book or wiki page NID.
+    $query->set('parent', $parent_nid);
 
     // Generate a new url for the current form with the correct query
     // parameters and redirect the user. This will let the book module set the

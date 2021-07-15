@@ -1,0 +1,4 @@
+services:
+  eic_content_wiki_page.book.manager:
+    class: \Drupal\eic_content_wiki_page\WikiPageBookManager
+    arguments: ['@entity_type.manager', '@string_translation', '@config.factory', '@book.outline_storage', '@renderer', '@language_manager', '@entity.repository']
