@@ -3,11 +3,11 @@
 namespace Drupal\eic_search\Search\Sources;
 
 /**
- * Class UserSourceType
+ * Class UserGallerySourceType
  *
  * @package Drupal\eic_groups\Search\Sources
  */
-class UserSourceType implements SourceTypeInterface {
+class UserGallerySourceType implements SourceTypeInterface {
 
   /**
    * @inheritDoc
@@ -20,14 +20,14 @@ class UserSourceType implements SourceTypeInterface {
    * @inheritDoc
    */
   public function getLabel(): string {
-    return t('User', [], ['context' => 'eic_search']);
+    return t('User gallery', [], ['context' => 'eic_search']);
   }
 
   /**
    * @inheritDoc
    */
   public function getEntityBundle(): string {
-    return 'user';
+    return 'user_gallery';
   }
 
   /**
@@ -35,7 +35,11 @@ class UserSourceType implements SourceTypeInterface {
    */
   public function getAvailableFacets(): array {
     return [
-      'ss_user_last_name' => t('Last name', [], ['context' => 'eic_search']),
+      'sm_user_profile_topic_expertise_string' => t('Topic expertise', [], ['context' => 'eic_search']),
+      'sm_user_profile_job_string' => t('Job title', [], ['context' => 'eic_search']),
+      'sm_user_profile_field_vocab_topic_interest_array' => t('Topic interest', [], ['context' => 'eic_search']),
+      'sm_user_profile_geo_string' => t('Geo interest', [], ['context' => 'eic_search']),
+      'ss_user_profile_field_location_address_country_code' => t('Country', [], ['context' => 'eic_search']),
     ];
   }
 
@@ -60,6 +64,13 @@ class UserSourceType implements SourceTypeInterface {
       'ss_user_first_name',
       'ss_user_last_name',
     ];
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function getLayoutTheme(): string {
+    return self::LAYOUT_COLUMNS;
   }
 
 }

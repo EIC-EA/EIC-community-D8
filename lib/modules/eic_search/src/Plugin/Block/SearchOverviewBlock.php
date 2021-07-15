@@ -102,7 +102,7 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
       ],
     ];
 
-    $this->addConfigurationRenderer($form, $current_source);
+    $this->addConfigurationRenderer($form, $current_source ?: reset($sources_collected));
 
     return $form;
   }
@@ -133,6 +133,8 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
       '#sorts' => array_keys($sorts),
       '#source_class' => $source instanceof SourceTypeInterface ? get_class($source) : NULL,
       '#datasource' => $source instanceof SourceTypeInterface ? $source->getSourceId() : NULL,
+      '#bundle' => $source instanceof SourceTypeInterface ? $source->getEntityBundle() : NULL,
+      '#layout' => $source instanceof SourceTypeInterface ? $source->getLayoutTheme() : NULL,
       '#page_options' => $this->configuration['page_options'],
       '#enable_search' => $this->configuration['enable_search'],
       '#url' => Url::fromRoute('eic_groups.solr_search')->toString(),
@@ -142,7 +144,7 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
         'private' => $this->t('Private', [], ['context' => 'eic_group']),
         'filter' => $this->t('Filter', [], ['context' => 'eic_group']),
         'topics' => $this->t('Topics', [], ['context' => 'eic_group']),
-        'search_text' => $this->t('Search for a group', [], ['context' => 'eic_group']),
+        'search_text' => $this->t('Search', [], ['context' => 'eic_group']),
         'no_results' => $this->t('No results', [], ['context' => 'eic_group']),
         'members' => $this->t('Members', [], ['context' => 'eic_group']),
         'reactions' => $this->t('Reactions', [], ['context' => 'eic_group']),
@@ -177,10 +179,10 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
 
     $sources_collected = $this->sourcesCollector->getSources();
     foreach ($sources_collected as $source) {
-      $response->addCommand(new CssCommand('.source-' . $source->getSourceId(), $css));
+      $response->addCommand(new CssCommand('.source-' . $source->getEntityBundle(), $css));
     }
 
-    $response->addCommand(new CssCommand('.source-' . $current_source->getSourceId(), ['display' => 'inline-block']));
+    $response->addCommand(new CssCommand('.source-' . $current_source->getEntityBundle(), ['display' => 'inline-block']));
 
     return $response;
   }
@@ -199,8 +201,8 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
     $current_source = $this->getCurrentSource($values['search']['source_type']);
 
     $this->configuration['source_type'] = $values['search']['source_type'];
-    $this->configuration['facets'] = $values['search']['configuration']['filter'][$current_source->getSourceId()]['facets'];
-    $this->configuration['sort_options'] = $values['search']['configuration']['sorts'][$current_source->getSourceId()]['sort_options'];
+    $this->configuration['facets'] = $values['search']['configuration']['filter'][$current_source->getEntityBundle()]['facets'];
+    $this->configuration['sort_options'] = $values['search']['configuration']['sorts'][$current_source->getEntityBundle()]['sort_options'];
     $this->configuration['enable_search'] = $values['search']['configuration']['enable_search'];
     $this->configuration['page_options'] = $values['search']['configuration']['pagination']['page_options'];
   }
@@ -269,7 +271,7 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
 
     /** @var SourceTypeInterface $source */
     foreach ($this->sourcesCollector->getSources() as $source) {
-      $form['search']['configuration']['filter'][$source->getSourceId()]['facets'] = [
+      $form['search']['configuration']['filter'][$source->getEntityBundle()]['facets'] = [
         '#type' => 'checkboxes',
         '#title' => $this->t('Facets for @label', ['@label' => $source->getLabel()], ['context' => 'eic_search']),
         '#description' => $this->t('Filters that you want to be available on the overview', [], ['context' => 'eic_search']),
@@ -278,13 +280,13 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
         '#attributes' => [
           'class' => [
             'source-type',
-            'source-' . $source->getSourceId(),
+            'source-' . $source->getEntityBundle(),
             $current_source === $source ?: 'hidden',
           ],
         ],
       ];
 
-      $form['search']['configuration']['sorts'][$source->getSourceId()]['sort_options'] = [
+      $form['search']['configuration']['sorts'][$source->getEntityBundle()]['sort_options'] = [
         '#type' => 'checkboxes',
         '#default_value' => $this->configuration['sort_options'],
         '#title' => $this->t('Sorting for @label', ['@label' => $source->getLabel()], ['context' => 'eic_search']),
@@ -293,7 +295,7 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
         '#attributes' => [
           'class' => [
             'source-type',
-            'source-' . $source->getSourceId(),
+            'source-' . $source->getEntityBundle(),
             $current_source === $source ?: 'hidden',
           ],
         ],
