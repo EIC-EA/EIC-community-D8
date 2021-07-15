@@ -237,7 +237,7 @@ function eic_groups_group_access(EntityInterface $entity, $operation, AccountInt
   switch ($operation) {
     case 'delete':
       // Deny access to delete group if the group is NOT in pending state and
-      // the user is not an "site_admin" or a "content_administrator".
+      // the user is NOT a "site_admin" or a "content_administrator".
       if ($moderation_state !== GroupsModerationHelper::GROUP_PENDING_STATE) {
         $access = AccessResult::forbiddenIf(!in_array(UserHelper::ROLE_SITE_ADMINISTRATOR, $account->getRoles(TRUE)) && !in_array(UserHelper::ROLE_CONTENT_ADMINISTRATOR, $account->getRoles(TRUE)))
           ->addCacheableDependency($account)
