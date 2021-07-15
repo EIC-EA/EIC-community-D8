@@ -32,25 +32,25 @@ function eic_community_preprocess_group(array &$variables) {
 
   // Move flags to group to pick them up in the group header.
   foreach ($variables['elements'] as $key => $element) {
-    if (strpos($key, 'flag_') !== false) {
+    if (strpos($key, 'flag_') !== FALSE) {
       $variables['elements']['#group']->flags[$key] = $element;
     }
   }
 
   $variables['group_item'] = $item;
-  // About page preprocessing
+  // About page preprocessing.
   if (isset($variables['elements']['owners'])) {
     _preprocess_about_page($variables);
   }
 }
 
 /**
- * The about page has two tabs with content
+ * The about page has two tabs with content.
  */
 function _preprocess_about_page(&$variables) {
   $sections = [];
-  // about group tab
-  $owners = array_map(function($owner) {
+  // About group tab.
+  $owners = array_map(function ($owner) {
     return [
       'title' => $owner->getText(),
       'path' => $owner->getUrl(),
@@ -65,7 +65,7 @@ function _preprocess_about_page(&$variables) {
   ];
 
   if (count($variables['elements']['admins']) > 0) {
-    $admins = array_map(function($admin) {
+    $admins = array_map(function ($admin) {
       return [
         'title' => $admin->getText(),
         'path' => $admin->getUrl(),
@@ -79,11 +79,11 @@ function _preprocess_about_page(&$variables) {
   }
 
   if (isset($variables['elements']['field_vocab_topics']['#theme'])) {
-    $render_array_topics = array_filter($variables['elements']['field_vocab_topics'], function($key) {
+    $render_array_topics = array_filter($variables['elements']['field_vocab_topics'], function ($key) {
       return is_int($key);
     }, ARRAY_FILTER_USE_KEY);
 
-    $topics = array_map(function($topic) {
+    $topics = array_map(function ($topic) {
       return [
         'title' => $topic['#title'],
       ];
@@ -96,11 +96,11 @@ function _preprocess_about_page(&$variables) {
   }
 
   if (isset($variables['elements']['field_vocab_geo']['#theme'])) {
-    $render_array_geo = array_filter($variables['elements']['field_vocab_geo'], function($key) {
+    $render_array_geo = array_filter($variables['elements']['field_vocab_geo'], function ($key) {
       return is_int($key);
     }, ARRAY_FILTER_USE_KEY);
 
-    $geo = array_map(function($place) {
+    $geo = array_map(function ($place) {
       return [
         'title' => $place['#title'],
       ];
@@ -124,19 +124,21 @@ function _preprocess_about_page(&$variables) {
       '#theme' => 'eic_community_extended_list',
       '#title' => t('Group details'),
       '#items' => $about_items,
-    ]
+    ],
   ];
-  // permissions and visibility tab
+  // Permissions and visibility tab.
   if (isset($variables['elements']['visibility'])) {
     $admin_items = [];
+    $visibility = $variables['elements']['visibility'];
+    $visibility_id = $visibility['plugin_id'];
 
-    if ($variables['elements']['visibility']['plugin_id'] === 'custom_restricted') {
+    if ($visibility_id === 'custom_restricted') {
       $restrictions = [];
 
-      foreach ($variables['elements']['visibility']['settings'] as $restriction) {
+      foreach ($visibility['settings'] as $restriction) {
         $restrictions[] = [
           'title' => $restriction['label'],
-          'content' => $restriction['options']
+          'content' => $restriction['options'],
         ];
       }
 
@@ -146,7 +148,7 @@ function _preprocess_about_page(&$variables) {
           '#theme' => 'eic_community_well',
           '#content' => [
             '#theme' => 'eic_community_harmonica',
-            '#title' => 'Custom restriction',
+            '#title' => t('Custom restriction'),
             '#icon' => [
               'icon' => [
                 'name' => 'lock',
@@ -160,16 +162,15 @@ function _preprocess_about_page(&$variables) {
       ];
     }
 
-
     $group_visibility_title = count($variables['elements']['joining_methods']) > 0 ? $variables['elements']['joining_methods'][0]['label']
-      : t(ucfirst($variables['elements']['visibility']['plugin_id']));
+      : t(ucfirst($visibility_id));
 
     $admin_items[] = [
       'title' => t('Membership Request type'),
       'items' => [
         [
           'title' => $group_visibility_title,
-          'content' => $variables['elements']['visibility']['label'],
+          'content' => $visibility['label'],
         ],
       ],
     ];
@@ -181,12 +182,12 @@ function _preprocess_about_page(&$variables) {
         '#theme' => 'eic_community_extended_list',
         '#title' => t('Group Permissions'),
         '#items' => $admin_items,
-      ]
+      ],
     ];
   }
-  // output
+  // Output.
   $variables['sections'] = [
-    'as_tabs' => true,
-    'items' => $sections
+    'as_tabs' => TRUE,
+    'items' => $sections,
   ];
 }
