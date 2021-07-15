@@ -94,6 +94,20 @@ reactions:
         unique: 0
         context_id: global
         uuid: 292ff26d-ebfd-4a3b-9b7e-394be1e2a1f8
+      7462f059-07c4-4599-b4c9-2b59abf042a2:
+        id: system_messages_block
+        label: Messages
+        provider: system
+        label_display: '0'
+        region: page_header
+        weight: '-10'
+        context_mapping: {  }
+        custom_id: system_messages_block
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: global
+        uuid: 7462f059-07c4-4599-b4c9-2b59abf042a2
     id: blocks
     saved: false
     uuid: c1979d39-89a3-4939-97f7-0af5a52467f1
