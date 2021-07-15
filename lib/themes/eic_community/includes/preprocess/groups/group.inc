@@ -5,6 +5,7 @@
  * Prepares variables for group templates.
  */
 
+use Drupal\Core\Render\Markup;
 use Drupal\eic_community\ValueObject\ImageValueObject;
 
 /**
@@ -51,10 +52,17 @@ function _preprocess_about_page(&$variables) {
   $sections = [];
   // About group tab.
   $owners = array_map(function ($owner) {
-    return [
-      'title' => $owner->getText(),
-      'path' => $owner->getUrl(),
-    ];
+    if ($owner instanceof Markup) {
+      return [
+        'title' => $owner,
+      ];
+    }
+    else {
+      return [
+        'title' => $owner->getText(),
+        'path' => $owner->getUrl(),
+      ];
+    }
   }, $variables['elements']['owners']);
 
   $about_items = [
