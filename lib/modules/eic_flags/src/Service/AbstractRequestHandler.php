@@ -123,8 +123,21 @@ abstract class AbstractRequestHandler implements HandlerInterface {
         $flagging,
         $content_entity,
         $this->getType(),
+
       ]
     );
+
+    // For accepted requests we create a log entry.
+    if ($response === RequestStatus::ACCEPTED) {
+      $log = $this->entityTypeManager->getStorage('message')
+        ->create([
+          'template' => 'log_request_accepted',
+          'field_referenced_flag' => $flagging,
+          'uid' => $flagging->getOwnerId(),
+        ]);
+
+      $log->save();
+    }
   }
 
   /**

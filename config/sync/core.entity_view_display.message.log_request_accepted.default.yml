@@ -1,0 +1,42 @@
+uuid: 9d0d1eb4-4b39-448b-99cc-5172b2138948
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.message.log_request_accepted.field_referenced_flag
+    - field.field.message.log_request_accepted.field_rendered_content
+    - message.template.log_request_accepted
+  module:
+    - text
+id: message.log_request_accepted.default
+targetEntityType: message
+bundle: log_request_accepted
+mode: default
+content:
+  field_referenced_flag:
+    weight: 0
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+  field_rendered_content:
+    weight: 1
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: text_default
+    region: content
+  partial_0:
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  partial_1:
+    weight: 0
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+hidden:
+  search_api_excerpt: true

@@ -1,0 +1,24 @@
+<?php
+
+/**
+ * @file
+ * Primary module hooks for EIC Content Wiki Page module.
+ */
+
+use Drupal\Core\Form\FormStateInterface;
+
+/**
+ * Implements hook_form_alter().
+ */
+function eic_content_wiki_page_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  switch ($form_id) {
+    case 'node_wiki_page_form':
+    case 'node_wiki_page_edit_form':
+      $node = $form_state->getFormObject()->getEntity();
+      // We use our custom book manager service in order to change the maximum
+      // depth of the wiki page book tree.
+      $form['book']['pid'] = \Drupal::service('eic_content_wiki_page.book.manager')->addWikiPageParentSelectFormElements($node->book);
+      break;
+
+  }
+}
