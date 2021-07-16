@@ -6,7 +6,7 @@ use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
- * Class SearchMenuGroupForm
+ * Provide a small search form next to the group menu
  *
  * @package Drupal\eic_groups\Form
  */
