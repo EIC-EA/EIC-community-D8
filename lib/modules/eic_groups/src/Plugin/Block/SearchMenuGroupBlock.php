@@ -23,7 +23,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class SearchMenuGroupBlock extends BlockBase implements ContainerFactoryPluginInterface {
 
-  /** @var \Drupal\Core\Form\FormBuilderInterface $formBuilder */
+  /**
+   * The form builder service.
+   *
+   * @var \Drupal\Core\Form\FormBuilderInterface $formBuilder
+   */
   private $formBuilder;
 
   /**
@@ -42,9 +46,16 @@ class SearchMenuGroupBlock extends BlockBase implements ContainerFactoryPluginIn
    * SearchMenuGroupBlock constructor.
    *
    * @param array $configuration
-   * @param $plugin_id
-   * @param $plugin_definition
+   *   The plugin configuration, i.e. an array with configuration values keyed
+   *   by configuration option name. The special key 'context' may be used to
+   *   initialize the defined contexts by setting it to an array of context
+   *   values keyed by context names.
+   * @param string $plugin_id
+   *   The plugin_id for the plugin instance.
+   * @param mixed $plugin_definition
+   *   The plugin implementation definition.
    * @param \Drupal\Core\Form\FormBuilderInterface $form_builder
+   *   The Form builder service.
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, FormBuilderInterface $form_builder) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
