@@ -1,0 +1,4 @@
+services:
+  eic_group_statistics.storage:
+    class: Drupal\eic_group_statistics\GroupStatisticsStorage
+    arguments: ['@database']

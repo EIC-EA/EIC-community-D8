@@ -1,0 +1,44 @@
+<?php
+
+/**
+ * @file
+ * Primary module hooks for EIC Group Statistics module.
+ */
+
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\eic_group_statistics\GroupStatisticsStorageInterface;
+
+/**
+ * Implements hook_ENTITY_TYPE_delete().
+ */
+function eic_group_statistics_group_delete(EntityInterface $entity) {
+  \Drupal::service('eic_group_statistics.storage')->deleteGroupStatistics($entity);
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_insert().
+ */
+function eic_group_statistics_group_content_insert(EntityInterface $entity) {
+  $group = $entity->getGroup();
+
+  switch ($entity->bundle()) {
+    case 'group-group_membership':
+      \Drupal::service('eic_group_statistics.storage')->increment($group, GroupStatisticsStorageInterface::STAT_TYPE_MEMBERS);
+      break;
+
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_delete().
+ */
+function eic_group_statistics_group_content_delete(EntityInterface $entity) {
+  $group = $entity->getGroup();
+
+  switch ($entity->bundle()) {
+    case 'group-group_membership':
+      \Drupal::service('eic_group_statistics.storage')->decrement($group, GroupStatisticsStorageInterface::STAT_TYPE_MEMBERS);
+      break;
+
+  }
+}

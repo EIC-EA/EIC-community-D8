@@ -1,0 +1,75 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the EIC Group Statistics module.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function eic_group_statistics_schema() {
+  $schema['eic_group_statistics'] = [
+    'description' => 'Stores group counters information.',
+    'fields' => [
+      'id' => [
+        'type' => 'serial',
+        'not null' => TRUE,
+        'description' => 'Primary Key: Unique record ID.',
+      ],
+      'gid' => [
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'The group ID.',
+      ],
+      'gtype' => [
+        'type' => 'varchar_ascii',
+        'length' => 64,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'The Group bundle.',
+      ],
+      'members' => [
+        'description' => 'Number of group members.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'size' => 'medium',
+      ],
+      'comments' => [
+        'description' => 'Number of comments in the group',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'size' => 'medium',
+      ],
+      'files' => [
+        'description' => 'Number of files added to the group.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'size' => 'medium',
+      ],
+      'events' => [
+        'description' => 'Number of events.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'size' => 'medium',
+      ],
+    ],
+    'primary key' => ['id', 'gid'],
+    'indexes' => [
+      'gid' => ['gid'],
+      'gtype' => ['gtype'],
+    ],
+  ];
+
+  return $schema;
+}
