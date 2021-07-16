@@ -6,6 +6,7 @@ dependencies:
     - core.entity_view_mode.message.mail_body
     - field.field.message.notify_delete_request_accepted.field_message_subject
     - field.field.message.notify_delete_request_accepted.field_referenced_flag
+    - field.field.message.notify_delete_request_accepted.field_rendered_content
     - message.template.notify_delete_request_accepted
 id: message.notify_delete_request_accepted.mail_body
 targetEntityType: message
@@ -15,8 +16,11 @@ content:
   partial_1:
     weight: 0
     region: content
+    settings: {  }
+    third_party_settings: {  }
 hidden:
   field_message_subject: true
   field_referenced_flag: true
+  field_rendered_content: true
   partial_0: true
   search_api_excerpt: true

@@ -4,6 +4,11 @@ status: true
 dependencies:
   config:
     - filter.format.full_html
+  module:
+    - eic_messages
+third_party_settings:
+  eic_messages:
+    message_template_type: notification
 template: notify_new_deletion_request
 label: 'NOTIFY :: MT38 :: New deletion request'
 description: 'Notifies site admins for a new deletion request'

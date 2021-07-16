@@ -30,7 +30,7 @@ function eic_community_preprocess_page(array &$variables): void {
     'logo' => [
       'title' =>  t('European Commission'),
       'alt' =>  t('European Commission logo'),
-      'path' => \Drupal::urlGenerator()->generateFromRoute('<front>'),
+      'href' => \Drupal::urlGenerator()->generateFromRoute('<front>'),
       'src_desktop' => $variables['eic_logo_path'] . '/logo--' . $variables['language']->getId() . '.svg',
     ]
   ];

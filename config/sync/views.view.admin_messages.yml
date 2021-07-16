@@ -5,6 +5,7 @@ dependencies:
   config:
     - field.storage.message.field_event_executing_user
     - message.template.log_group_state_change
+    - message.template.log_request_accepted
   module:
     - eic_messages
     - message
@@ -434,7 +435,7 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
-          delta: null
+          delta: 1
           entity_type: message
           plugin_id: get_text
       filters:
@@ -467,6 +468,7 @@ display:
               trusted_user: '0'
               content_administrator: '0'
               service_authentication: '0'
+              site_admin: '0'
               administrator: '0'
             reduce: false
           is_grouped: false
@@ -550,6 +552,7 @@ display:
           operator: in
           value:
             log_group_state_change: log_group_state_change
+            log_request_accepted: log_request_accepted
           group: 1
           exposed: true
           expose:
@@ -570,6 +573,7 @@ display:
               trusted_user: '0'
               content_administrator: '0'
               service_authentication: '0'
+              site_admin: '0'
               administrator: '0'
             reduce: true
           is_grouped: false
