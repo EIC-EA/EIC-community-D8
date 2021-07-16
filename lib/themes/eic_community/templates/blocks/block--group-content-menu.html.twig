@@ -9,5 +9,7 @@
 <div {{ attributes }}>
   {{ title_prefix }}
   {{ title_suffix }}
-  {% include '@theme/patterns/compositions/subnavigation.html.twig' with group_menu|default({}) %}
+  {% include '@theme/patterns/compositions/subnavigation.html.twig' with group_menu|default({})|merge({
+    search_block: search_block,
+  }) %}
 </div>
