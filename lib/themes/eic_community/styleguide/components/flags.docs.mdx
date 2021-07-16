@@ -1,0 +1,18 @@
+# Flags
+
+Displays a list of flags
+
+## Example:
+
+```
+{% include "@theme/patterns/components/flags.html.twig" %}
+```
+
+## Twig parameters:
+
+| Key               | Type     | Description                                                                                                                                    | Mandatory |
+| ----------------- | -------- | ---------------------------------------------------------------------------------------------------------------------------------------------- | --------- |
+| icon_file_path    | string   | Enables the usage of the ECL icons within the component.                                                                                       | no        |
+| items             | object[] | The list of flags                                                                                                                              | no        |
+| items[].icon      | object   | Displays an optional icon before the title, should follow the [ECL Link component](https://www.npmjs.com/package/@ecl-twig/ec-component-link)  | no        |
+| items[].link      | object   | Displays an ECL link component for the current item.                                                                                           | no        |

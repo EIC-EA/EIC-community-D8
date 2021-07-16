@@ -1,0 +1,16 @@
+.ecl-flags {
+  margin-bottom: map-get($ecl-spacing, 'm');
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  &__item {
+    margin-bottom: map-get($ecl-spacing, 'xs');
+    @include ecl-responsive-font('meta');
+
+    &:last-child {
+      margin-bottom:  0;
+    }
+  }
+}
