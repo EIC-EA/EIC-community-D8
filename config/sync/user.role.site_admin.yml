@@ -1,0 +1,36 @@
+uuid: 3b4416de-a307-4c88-9201-a807568c696e
+langcode: en
+status: true
+dependencies: {  }
+id: site_admin
+label: 'Site Admin'
+weight: -5
+is_admin: null
+permissions:
+  - 'access administration pages'
+  - 'access content overview'
+  - 'access group overview'
+  - 'access toolbar'
+  - 'add content to books'
+  - 'administer comments'
+  - 'bypass node access'
+  - 'close archive request'
+  - 'close delete request'
+  - 'create group group'
+  - 'create new books'
+  - 'flag recommend_group'
+  - 'make archive request'
+  - 'make delete request'
+  - 'manage archival deletion requests'
+  - 'mark private content'
+  - 'publish archived content'
+  - 'unflag recommend_group'
+  - 'use admin toolbar search'
+  - 'use groups transition archive'
+  - 'use groups transition publish'
+  - 'use groups transition upgrade_to_draft'
+  - 'use text format basic_text'
+  - 'use text format filtered_html'
+  - 'use text format full_html'
+  - 'view private content'
+  - 'view the administration theme'

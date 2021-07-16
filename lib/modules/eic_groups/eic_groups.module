@@ -41,10 +41,17 @@ function eic_groups_theme($existing, $type, $theme, $path) {
         'group' => NULL,
         'edit_link' => NULL,
         'delete_link' => NULL,
+        'invite_link' => NULL,
         'actions' => NULL,
-        'has_content' => NULl,
+        'has_content' => NULL,
       ],
-    ]
+    ],
+    'eic_group_search_menu_block_form' => [
+      'render element' => 'form',
+    ],
+    'eic_group_search_menu_field_search_submit' => [
+      'render element' => 'element',
+    ],
   ];
 }
 
@@ -132,6 +139,12 @@ function eic_groups_form_alter(&$form, FormStateInterface $form_state, $form_id)
         ->groupWikiPageFormAlter($form, $form_state, $form_id);
       break;
 
+    case 'group_content_group-group_membership_group-join_form':
+      // Do custom changes in group membership join form.
+      \Drupal::classResolver(FormOperations::class)
+        ->groupMembershipJoinFormAlter($form, $form_state, $form_id);
+      break;
+
   }
 }
 
@@ -213,7 +226,7 @@ function eic_groups_entity_field_access($operation, FieldDefinitionInterface $fi
     switch ($operation) {
       case 'edit':
         // Deny access if it's a new group and the user doesn't have
-        // "administrator" or "content_administrator" roles.
+        // "site_admin" or "content_administrator" roles.
         if ($entity->isNew()) {
           $access = AccessResult::forbiddenIf(!in_array(UserHelper::ROLE_SITE_ADMINISTRATOR, $account->getRoles(TRUE)) && !in_array(UserHelper::ROLE_CONTENT_ADMINISTRATOR, $account->getRoles(TRUE)))
             ->addCacheableDependency($account);
@@ -238,7 +251,7 @@ function eic_groups_group_access(EntityInterface $entity, $operation, AccountInt
   switch ($operation) {
     case 'delete':
       // Deny access to delete group if the group is NOT in pending state and
-      // the user is not an "administator" or a "content_administrator".
+      // the user is NOT a "site_admin" or a "content_administrator".
       if ($moderation_state !== GroupsModerationHelper::GROUP_PENDING_STATE) {
         $access = AccessResult::forbiddenIf(!in_array(UserHelper::ROLE_SITE_ADMINISTRATOR, $account->getRoles(TRUE)) && !in_array(UserHelper::ROLE_CONTENT_ADMINISTRATOR, $account->getRoles(TRUE)))
           ->addCacheableDependency($account)
@@ -307,7 +320,8 @@ function eic_groups_entity_operation_alter(array &$operations, EntityInterface $
 
   // Gets current path alias.
   $current_path = \Drupal::service('path.current')->getPath();
-  $current_path_alias = \Drupal::service('path_alias.manager')->getAliasByPath($current_path);
+  $current_path_alias = \Drupal::service('path_alias.manager')
+    ->getAliasByPath($current_path);
 
   // Add publish group operation.
   $publish_url_options = [
@@ -323,4 +337,13 @@ function eic_groups_entity_operation_alter(array &$operations, EntityInterface $
       'url' => $publish_url,
     ];
   }
+}
+
+/**
+ * Implements hook_preprocess_block__HOOK
+ */
+function eic_groups_preprocess_block__group_content_menu(&$variables) {
+  $block_manager = \Drupal::service('plugin.manager.block');
+  $plugin_block = $block_manager->createInstance('eic_groups_search_menu_group', []);
+  $variables['search_block'] = $plugin_block->build();
 }

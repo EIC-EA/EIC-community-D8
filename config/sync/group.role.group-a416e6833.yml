@@ -8,7 +8,7 @@ dependencies:
     config:
       - user.role.administrator
 id: group-a416e6833
-label: 'Site admin'
+label: Administrator
 weight: 2
 internal: true
 audience: outsider

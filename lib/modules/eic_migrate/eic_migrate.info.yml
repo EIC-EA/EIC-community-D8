@@ -1,0 +1,7 @@
+name: EIC Migrate
+type: module
+description: 'Provides migration files and functionality to migrate EIC site content from Drupal 7 to Drupal 8/9'
+package: European Innovation Council
+core_version_requirement: ^8.9 || ^9
+dependencies:
+  - drupal:migrate
