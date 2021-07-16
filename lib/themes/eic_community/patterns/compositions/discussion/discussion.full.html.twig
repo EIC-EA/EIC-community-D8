@@ -45,7 +45,7 @@
     {% endblock %}
 
     {% block sidebar %}
-      {% if flags is not empty and flags.items is not empty %}
+      {% if flags %}
           {% include "@theme/patterns/components/flags.html.twig" with flags|default({}) %}
       {% endif %}
       {% include "@theme/patterns/compositions/featured-topics.html.twig" with topics|default({}) %}
