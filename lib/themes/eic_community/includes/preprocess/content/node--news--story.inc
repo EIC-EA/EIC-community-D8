@@ -100,13 +100,16 @@ function _eic_community_story_document_field(&$variables) {
   if (isset($variables['content']['field_document_media'][0])) {
     $media = $variables['content']['field_document_media'][0]['#media'];
     $file = File::load($media->field_media_file->target_id);
+    $file_description = isset($media->field_body) ? $media->field_body->value : $media->getName();
 
     $variables['download'] = [
-      'title' => $media->getName(),
+      'title' => $file_description,
       'language' => $media->language()->getName(),
       'timestamp' => eic_community_get_teaser_time_display($media->get('changed')->getString()),
       'filesize' => format_size($file->get('filesize')->getString()),
       'highlight' => FALSE,
+      'path' => file_create_url($file->getFileUri()),
+      'icon_file_path' => $variables['eic_icon_path'],
       'icon' => [
         'type' => 'custom',
         'name' => substr(strrchr($file->get('filemime')->getString(), '/'), 1),
