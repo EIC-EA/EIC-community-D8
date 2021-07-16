@@ -203,7 +203,8 @@ class RequestCloseForm extends ContentEntityConfirmFormBase {
    * @return \Drupal\Core\StringTranslation\TranslatableMarkup
    */
   protected function getResponseTitle() {
-    $operation = $this->getRequest()->get('request_type') === RequestTypes::DELETE
+    $request_type = $this->getRequest()->get('request_type');
+    $operation = $request_type === RequestTypes::DELETE
       ? 'deleted'
       : 'archived';
 
@@ -220,12 +221,13 @@ class RequestCloseForm extends ContentEntityConfirmFormBase {
         );
       case RequestStatus::ACCEPTED:
         return $this->t(
-          '@entity-type will be permanently @operation. Please enter a reason or remark why you accept this request.',
+          '@entity-type will be @operation_prefix @operation. Please enter a reason or remark why you accept this request.',
           [
             '@entity-type' => $this->getEntity()
               ->getEntityType()
               ->getSingularLabel(),
             '@operation' => $operation,
+            '@operation_prefix' => $request_type === RequestTypes::DELETE ? 'permanently' : '',
           ]
         );
       case RequestStatus::ARCHIVED:
