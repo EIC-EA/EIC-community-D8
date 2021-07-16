@@ -1057,6 +1057,7 @@ display:
               trusted_user: '0'
               content_administrator: '0'
               service_authentication: '0'
+              site_admin: '0'
               administrator: '0'
             placeholder: ''
             autocomplete_filter: 1
@@ -1200,6 +1201,7 @@ display:
               trusted_user: '0'
               content_administrator: '0'
               service_authentication: '0'
+              site_admin: '0'
               administrator: '0'
             reduce: true
           is_grouped: false
@@ -1248,6 +1250,7 @@ display:
               trusted_user: '0'
               content_administrator: '0'
               service_authentication: '0'
+              site_admin: '0'
               administrator: '0'
             placeholder: ''
           is_grouped: true
@@ -1310,6 +1313,7 @@ display:
               trusted_user: '0'
               content_administrator: '0'
               service_authentication: '0'
+              site_admin: '0'
               administrator: '0'
             placeholder: ''
             min_placeholder: ''

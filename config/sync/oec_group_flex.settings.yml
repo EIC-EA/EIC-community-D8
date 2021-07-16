@@ -3,7 +3,9 @@ oec_group_visibility_setings:
     internal_roles:
       - trusted_user
       - content_administrator
+      - site_admin
   custom_restricted:
     internal_roles:
       - trusted_user
       - content_administrator
+      - site_admin

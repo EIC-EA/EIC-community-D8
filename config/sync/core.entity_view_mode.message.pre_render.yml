@@ -1,0 +1,10 @@
+uuid: dfa68a3b-2c79-4847-9144-27ff063a3d6c
+langcode: en
+status: true
+dependencies:
+  module:
+    - message
+id: message.pre_render
+label: 'Pre Render'
+targetEntityType: message
+cache: true

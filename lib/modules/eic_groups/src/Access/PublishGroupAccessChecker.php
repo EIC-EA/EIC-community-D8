@@ -49,8 +49,8 @@ class PublishGroupAccessChecker implements AccessInterface {
     switch ($moderation_state) {
       case GroupsModerationHelper::GROUP_DRAFT_STATE:
         // Users can only publish a group if the group is in "draft" state.
-        // If the user is an "administrator" or "content_administrator" we
-        // always allow access.
+        // If the user is a "site_admin" or "content_administrator" we always
+        // allow access.
         if (in_array(UserHelper::ROLE_SITE_ADMINISTRATOR, $account->getRoles(TRUE)) || in_array(UserHelper::ROLE_CONTENT_ADMINISTRATOR, $account->getRoles(TRUE))) {
           $access = AccessResult::allowed()
             ->addCacheableDependency($account)

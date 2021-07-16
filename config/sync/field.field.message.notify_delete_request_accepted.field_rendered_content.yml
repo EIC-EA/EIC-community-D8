@@ -1,0 +1,21 @@
+uuid: 9da1e5a0-2104-46e5-828a-9224f87094b8
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.message.field_rendered_content
+    - message.template.notify_delete_request_accepted
+  module:
+    - text
+id: message.notify_delete_request_accepted.field_rendered_content
+field_name: field_rendered_content
+entity_type: message
+bundle: notify_delete_request_accepted
+label: 'Rendered content'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long

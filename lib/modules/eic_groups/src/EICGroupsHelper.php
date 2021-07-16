@@ -252,8 +252,7 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
   ) {
     $permissions = $group_permissions->getPermissions();
     foreach ($role_permissions as $permission) {
-      if (!array_key_exists($role, $permissions) || !in_array($permission, $permissions[$role],
-          TRUE)) {
+      if (!array_key_exists($role, $permissions) || !in_array($permission, $permissions[$role], TRUE)) {
         $permissions[$role][] = $permission;
       }
     }
@@ -271,8 +270,7 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
   ) {
     $permissions = $group_permissions->getPermissions();
     foreach ($role_permissions as $permission) {
-      if (array_key_exists($role, $permissions) || in_array($permission, $permissions[$role],
-          TRUE)) {
+      if (array_key_exists($role, $permissions) || in_array($permission, $permissions[$role], TRUE)) {
         $permissions[$role] = array_diff($permissions[$role], [$permission]);
       }
     }

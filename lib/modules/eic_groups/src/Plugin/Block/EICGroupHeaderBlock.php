@@ -189,6 +189,13 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
         unset($user_operation_links[$key]);
         // We discard the operation link if user doesn't have access to it.
         if ($action['url']->access($this->currentUser)) {
+          // We add the current page URL as destination so that the user will
+          // be redirected back to the current page after joining the group.
+          $action['url']->setOption('query',
+            [
+              'destination' => Url::fromRouteMatch($this->routeMatch)->toString(),
+            ]
+          );
           $operation_links[$key] = $action;
         }
       }
