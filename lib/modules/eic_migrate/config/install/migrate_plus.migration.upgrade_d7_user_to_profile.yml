@@ -1,0 +1,113 @@
+langcode: en
+status: true
+dependencies: {  }
+id: upgrade_d7_user_to_profile
+class: Drupal\user\Plugin\migrate\User # TODO
+field_plugin_method: null
+cck_plugin_method: null
+migration_tags:
+  - 'Drupal 7'
+  - Content
+migration_group: migrate_drupal_7
+label: 'User accounts to User profiles'
+source:
+  plugin: d7_user
+  track_changes: true
+process:
+  type:
+    - plugin: default_value
+      default_value: 'member'
+  uid:
+    - plugin: migration_lookup
+      source: uid
+      migration: upgrade_d7_user
+  field_body:
+    - plugin: get
+      source: c4m_body
+  field_cv_link:
+    - plugin: field_link
+      source: c4m_cv_link
+  # TODO: Convert to social links
+#  field_social_links:
+#  c4m_facebook:
+#    - plugin: field_link
+#      source: c4m_facebook
+#  c4m_linkedin:
+#    - plugin: field_link
+#      source: c4m_linkedin
+#  c4m_twitter:
+#    - plugin: field_link
+#      source: c4m_twitter
+  field_location_address:
+    - plugin: addressfield
+      source: c4m_location_address
+  # TODO: Implement after taxonomy vocabulary is coming from SMED.
+#  c4m_user_types:
+#    - plugin: sub_process
+#      source: c4m_user_types
+#      process:
+#        target_id: tid
+  # TODO: Implement after taxonomy vocabulary is coming from SMED.
+#  c4m_vocab_geo:
+#    - plugin: sub_process
+#      source: c4m_vocab_geo
+#      process:
+#        target_id: tid
+  # TODO: Implement after taxonomy vocabulary is coming from SMED.
+#  c4m_vocab_language:
+#    - plugin: sub_process
+#      source: c4m_vocab_language
+#      process:
+#        target_id: tid
+  # TODO: Implement after taxonomy vocabulary is coming from SMED.
+#  c4m_vocab_topic:
+#    - plugin: sub_process
+#      source: c4m_vocab_topic
+#      process:
+#        target_id: tid
+  # TODO: Implement after taxonomy vocabulary is coming from SMED.
+#  c4m_vocab_topic_expertise:
+#    - plugin: sub_process
+#      source: c4m_vocab_topic_expertise
+#      process:
+#        target_id: tid
+  # TODO: Implement after taxonomy vocabulary is coming from SMED.
+#  c4m_vocab_job_title:
+#    - plugin: sub_process
+#      source: c4m_vocab_job_title
+#      process:
+#        target_id: tid
+  # TODO: Planning
+#  og_user_node:
+#    - plugin: get
+#      source: og_user_node
+  # TODO: Planning
+#  c4m_unsubscribe_hash:
+#    - plugin: get
+#      source: c4m_unsubscribe_hash
+  # TODO: Planning
+#  c4m_optout_comment:
+#    - plugin: get
+#      source: c4m_optout_comment
+  # TODO: Planning
+#  c4m_optout_group:
+#    - plugin: get
+#      source: c4m_optout_group
+  # TODO: Planning
+#  c4m_optout_node:
+#    - plugin: get
+#      source: c4m_optout_node
+  # TODO: Planning
+#  c4m_optout_taxonomy_term:
+#    - plugin: get
+#      source: c4m_optout_taxonomy_term
+  # TODO: Does this module exist in D7?
+#  field_metatag:
+#    - plugin: d7_metatag_entities
+#      source: pseudo_metatag_entities
+destination:
+  plugin: 'entity:profile'
+migration_dependencies:
+  required: { }
+  optional:
+    - upgrade_d7_user

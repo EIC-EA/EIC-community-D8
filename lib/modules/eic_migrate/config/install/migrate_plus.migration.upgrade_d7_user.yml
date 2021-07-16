@@ -1,4 +1,3 @@
-uuid: e80ed993-e0d3-41c7-9cfe-a882502d10ee
 langcode: en
 status: true
 dependencies: {  }
@@ -13,216 +12,116 @@ migration_group: migrate_drupal_7
 label: 'User accounts'
 source:
   plugin: d7_user
+  track_changes: true
 process:
-  uid:
-    -
-      plugin: get
-      source: uid
+  # Ignore User ID so migration updates can be ran
+#  uid:
+#    - plugin: get
+#      source: uid
   name:
-    -
-      plugin: get
+    - plugin: get
       source: name
   pass:
-    -
-      plugin: get
+    - plugin: get
       source: pass
   mail:
-    -
-      plugin: get
+    - plugin: get
       source: mail
   created:
-    -
-      plugin: get
+    - plugin: get
       source: created
   access:
-    -
-      plugin: get
+    - plugin: get
       source: access
   login:
-    -
-      plugin: get
+    - plugin: get
       source: login
   status:
-    -
-      plugin: get
+    - plugin: get
       source: status
   timezone:
-    -
-      plugin: get
+    - plugin: get
       source: timezone
   langcode:
-    -
-      plugin: user_langcode
+    - plugin: user_langcode
       source: entity_language
       fallback_to_site_default: false
   preferred_langcode:
-    -
-      plugin: user_langcode
+    - plugin: user_langcode
       source: language
       fallback_to_site_default: true
   preferred_admin_langcode:
-    -
-      plugin: user_langcode
+    - plugin: user_langcode
       source: language
       fallback_to_site_default: true
   init:
-    -
-      plugin: get
+    - plugin: get
       source: init
   roles:
-    -
-      plugin: migration_lookup
-      migration: upgrade_d7_user_role
+    - plugin: static_map
       source: roles
-  user_picture:
-    -
-      plugin: default_value
-      source: picture
-      default_value: null
-    -
-      plugin: migration_lookup
-      migration: upgrade_d7_file
-  field_metatag:
-    -
-      plugin: d7_metatag_entities
-      source: pseudo_metatag_entities
-  og_user_node:
-    -
-      plugin: get
-      source: og_user_node
-  c4m_body:
-    -
-      plugin: get
-      source: c4m_body
-  c4m_cv_link:
-    -
-      plugin: field_link
-      source: c4m_cv_link
-  c4m_facebook:
-    -
-      plugin: field_link
-      source: c4m_facebook
-  c4m_first_name:
-    -
-      plugin: get
+      map:
+        1: anonymous
+        2: authenticated
+        3: piwik_admin # TODO: This role is not in D9
+        4: service_authentication
+        5: administrator
+        6: content_administrator
+  # No content in D7. Ignore picture
+#  user_picture:
+#    - plugin: default_value
+#      source: picture
+#      default_value: null
+#    - plugin: migration_lookup
+#      migration: upgrade_d7_file
+  field_first_name:
+    - plugin: get
       source: c4m_first_name
-  c4m_is_deleted:
-    -
-      plugin: get
+  field_is_deleted:
+    - plugin: get
       source: c4m_is_deleted
-  c4m_is_deleted_anonymous:
-    -
-      plugin: get
+  field_is_deleted_anonymous:
+    - plugin: get
       source: c4m_is_deleted_anonymous
-  c4m_is_deleted_by_uid:
-    -
-      plugin: get
+  # TODO: Use migration_lookup
+  field_is_deleted_by_uid:
+    - plugin: migration_lookup
       source: c4m_is_deleted_by_uid
-  c4m_is_invalid_email:
-    -
-      plugin: get
+      migration:
+        - upgrade_d7_user
+#    - plugin: get
+#      source: c4m_is_deleted_by_uid
+  field_is_invalid_email:
+    - plugin: get
       source: c4m_is_invalid_email
-  c4m_is_organisation_user:
-    -
-      plugin: get
+  field_is_organisation_user:
+    - plugin: get
       source: c4m_is_organisation_user
-  c4m_is_spammer:
-    -
-      plugin: get
+  field_is_spammer:
+    - plugin: get
       source: c4m_is_spammer
-  c4m_last_name:
-    -
-      plugin: get
+  field_last_name:
+    - plugin: get
       source: c4m_last_name
-  c4m_linkedin:
-    -
-      plugin: field_link
-      source: c4m_linkedin
-  c4m_location_address:
-    -
-      plugin: addressfield
-      source: c4m_location_address
-  c4m_media:
-    -
-      plugin: sub_process
-      source: c4m_media
-      process:
-        target_id: fid
-        alt: alt
-        title: title
-        width: width
-        height: height
-  c4m_twitter:
-    -
-      plugin: field_link
-      source: c4m_twitter
-  c4m_unsubscribe_hash:
-    -
-      plugin: get
-      source: c4m_unsubscribe_hash
-  c4m_user_types:
-    -
-      plugin: sub_process
-      source: c4m_user_types
-      process:
-        target_id: tid
-  c4m_vocab_geo:
-    -
-      plugin: sub_process
-      source: c4m_vocab_geo
-      process:
-        target_id: tid
-  c4m_vocab_language:
-    -
-      plugin: sub_process
-      source: c4m_vocab_language
-      process:
-        target_id: tid
-  c4m_vocab_topic:
-    -
-      plugin: sub_process
-      source: c4m_vocab_topic
-      process:
-        target_id: tid
-  c4m_vocab_topic_expertise:
-    -
-      plugin: sub_process
-      source: c4m_vocab_topic_expertise
-      process:
-        target_id: tid
-  c4m_vocab_job_title:
-    -
-      plugin: sub_process
-      source: c4m_vocab_job_title
-      process:
-        target_id: tid
-  c4m_optout_comment:
-    -
-      plugin: get
-      source: c4m_optout_comment
-  c4m_optout_group:
-    -
-      plugin: get
-      source: c4m_optout_group
-  c4m_optout_node:
-    -
-      plugin: get
-      source: c4m_optout_node
-  c4m_optout_taxonomy_term:
-    -
-      plugin: get
-      source: c4m_optout_taxonomy_term
-  c4m_user_dashboard_id:
-    -
-      plugin: get
+  # TODO: Implement after files and media migrations are finished.
+#  field_media:
+#    - plugin: sub_process
+#      source: c4m_media
+#      process:
+#        target_id: fid
+#        alt: alt
+#        title: title
+#        width: width
+#        height: height
+  # TODO: Is this field correctly mapped to D9?
+  field_smed_id:
+    - plugin: get
       source: c4m_user_dashboard_id
-  c4m_message_from_service:
-    -
-      plugin: get
+  field_message_from_service:
+    - plugin: get
       source: c4m_message_from_service
-  c4m_updated_profile_by_service:
-    -
-      plugin: sub_process
+  field_updated_profile_by_service:
+    - plugin: sub_process
       source: c4m_updated_profile_by_service
       process:
         value:
@@ -230,9 +129,8 @@ process:
           from_format: U
           to_format: U
           source: value
-  c4m_updated_profile_by_user:
-    -
-      plugin: sub_process
+  field_updated_profile_by_user:
+    - plugin: sub_process
       source: c4m_updated_profile_by_user
       process:
         value:
@@ -240,20 +138,40 @@ process:
           from_format: U
           to_format: U
           source: value
-  c4m_user_status:
-    -
-      plugin: get
-      source: c4m_user_status
+  # TODO: What are the allowed values in this List (text) field?
+#  c4m_user_status:
+#    - plugin: get
+#      source: c4m_user_status
+  # TODO: Planning
+#  og_user_node:
+#    - plugin: get
+#      source: og_user_node
+  # TODO: Planning
+#  c4m_unsubscribe_hash:
+#    - plugin: get
+#      source: c4m_unsubscribe_hash
+  # TODO: Planning
+#  c4m_optout_comment:
+#    - plugin: get
+#      source: c4m_optout_comment
+  # TODO: Planning
+#  c4m_optout_group:
+#    - plugin: get
+#      source: c4m_optout_group
+  # TODO: Planning
+#  c4m_optout_node:
+#    - plugin: get
+#      source: c4m_optout_node
+  # TODO: Planning
+#  c4m_optout_taxonomy_term:
+#    - plugin: get
+#      source: c4m_optout_taxonomy_term
+  # TODO: Does this module exist in D7?
+#  field_metatag:
+#    - plugin: d7_metatag_entities
+#      source: pseudo_metatag_entities
 destination:
   plugin: 'entity:user'
 migration_dependencies:
-  required:
-    - upgrade_d7_user_role
-  optional:
-    - upgrade_d7_field_instance
-    - upgrade_d7_file
-    - upgrade_default_language
-    - upgrade_user_picture_field_instance
-    - upgrade_user_picture_entity_display
-    - upgrade_user_picture_entity_form_display
-    - upgrade_d7_user_role
+  required: { }
+  optional: { }

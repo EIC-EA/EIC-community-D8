@@ -1,0 +1,44 @@
+uuid: dc9bd961-23c8-4678-9609-02f254e7617f
+langcode: en
+status: true
+dependencies: {  }
+id: upgrade_d7_user_to_profile
+class: Drupal\user\Plugin\migrate\User
+field_plugin_method: null
+cck_plugin_method: null
+migration_tags:
+  - 'Drupal 7'
+  - Content
+migration_group: migrate_drupal_7
+label: 'User accounts to User profiles'
+source:
+  plugin: d7_user
+  track_changes: true
+process:
+  type:
+    -
+      plugin: default_value
+      default_value: member
+  uid:
+    -
+      plugin: migration_lookup
+      source: uid
+      migration: upgrade_d7_user
+  field_body:
+    -
+      plugin: get
+      source: c4m_body
+  field_cv_link:
+    -
+      plugin: field_link
+      source: c4m_cv_link
+  field_location_address:
+    -
+      plugin: addressfield
+      source: c4m_location_address
+destination:
+  plugin: 'entity:profile'
+migration_dependencies:
+  required: {  }
+  optional:
+    - upgrade_d7_user
