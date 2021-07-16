@@ -24,7 +24,7 @@ class UserHelper {
    *
    * @var string
    */
-  const ROLE_SITE_ADMINISTRATOR = 'administrator';
+  const ROLE_SITE_ADMINISTRATOR = 'site_admin';
 
   /**
    * Content administrator role.
@@ -32,6 +32,13 @@ class UserHelper {
    * @var string
    */
   const ROLE_CONTENT_ADMINISTRATOR = 'content_administrator';
+
+  /**
+   * Trusted user role.
+   *
+   * @var string
+   */
+  const ROLE_TRUSTED_USER = 'trusted_user';
 
   /**
    * The user storage interface.

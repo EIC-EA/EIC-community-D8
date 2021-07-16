@@ -1,0 +1,21 @@
+uuid: 30830015-cdfb-4980-864d-02a5974ec319
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.message.field_rendered_content
+    - message.template.log_group_state_change
+  module:
+    - text
+id: message.log_group_state_change.field_rendered_content
+field_name: field_rendered_content
+entity_type: message
+bundle: log_group_state_change
+label: 'Rendered content'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long

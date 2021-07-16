@@ -1,0 +1,7 @@
+drush:
+  paths:
+    config:
+      # Load any local config files. Is silently skipped if not found.
+      # Include drush.yml inside default (the only one not being auto-discovered)
+      # See: https://github.com/drush-ops/drush/pull/4345
+      - web/sites/default/drush.local.yml

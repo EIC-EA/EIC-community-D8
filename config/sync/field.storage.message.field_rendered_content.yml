@@ -1,0 +1,19 @@
+uuid: 6e14d149-f428-497d-afa3-50b88369ace8
+langcode: en
+status: true
+dependencies:
+  module:
+    - message
+    - text
+id: message.field_rendered_content
+field_name: field_rendered_content
+entity_type: message
+type: text_long
+settings: {  }
+module: text
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

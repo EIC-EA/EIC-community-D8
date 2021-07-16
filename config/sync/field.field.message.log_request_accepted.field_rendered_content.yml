@@ -1,0 +1,21 @@
+uuid: 6aff95cb-0970-4f81-9982-ffcee5672fe1
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.message.field_rendered_content
+    - message.template.log_request_accepted
+  module:
+    - text
+id: message.log_request_accepted.field_rendered_content
+field_name: field_rendered_content
+entity_type: message
+bundle: log_request_accepted
+label: 'Rendered content'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long
