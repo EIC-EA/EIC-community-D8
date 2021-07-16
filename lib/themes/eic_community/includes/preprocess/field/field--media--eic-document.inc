@@ -24,6 +24,8 @@ function eic_community_preprocess_field__field_related_downloads(array &$variabl
       'language' => $media->language()->getName(),
       'timestamp' => eic_community_get_teaser_time_display($media->get('changed')->getString()),
       'filesize' => format_size($file->get('filesize')->getString()),
+      'path' => file_create_url($file->getFileUri()),
+      'icon_file_path' => $variables['eic_icon_path'],
       'highlight' => FALSE,
       'icon' => [
         'type' => 'custom',
