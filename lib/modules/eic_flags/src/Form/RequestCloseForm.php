@@ -98,8 +98,11 @@ class RequestCloseForm extends ContentEntityConfirmFormBase {
    * {@inheritdoc}
    */
   public function getDescription() {
-    return $this->getRequest()
-      ->get('request_type') === RequestTypes::DELETE
+    $request_type = $this->getRequest()
+      ->get('request_type');
+    $response = $this->getRequest()->get('response');
+
+    return $request_type === RequestTypes::DELETE && $response === RequestStatus::ACCEPTED
       ? $this->t('This action cannot be undone.')
       : '';
   }
