@@ -7,6 +7,7 @@
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\eic_group_statistics\GroupStatisticsStorageInterface;
+use Drupal\group\Entity\GroupContent;
 
 /**
  * Implements hook_ENTITY_TYPE_delete().
@@ -49,4 +50,42 @@ function eic_group_statistics_group_content_delete(EntityInterface $entity) {
       break;
 
   }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_insert().
+ */
+function eic_group_statistics_comment_insert(EntityInterface $entity) {
+  $commented_entity = $entity->getCommentedEntity();
+
+  // We need to make sure the comment belongs to a group content, otherwise we
+  // don't need to update any group statistics.
+  $group_contents = GroupContent::loadByEntity($commented_entity);
+  if (!$group_contents) {
+    return;
+  }
+
+  $group_content = reset($group_contents);
+
+  // Increments group comments statistic counter.
+  \Drupal::service('eic_group_statistics.storage')->increment($group_content->getGroup(), GroupStatisticsStorageInterface::STAT_TYPE_COMMENTS);
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_delete().
+ */
+function eic_group_statistics_comment_delete(EntityInterface $entity) {
+  $commented_entity = $entity->getCommentedEntity();
+
+  // We need to make sure the comment belongs to a group content, otherwise we
+  // don't need to update any group statistics.
+  $group_contents = GroupContent::loadByEntity($commented_entity);
+  if (!$group_contents) {
+    return;
+  }
+
+  $group_content = reset($group_contents);
+
+  // Decrements group comments statistic counter.
+  \Drupal::service('eic_group_statistics.storage')->decrement($group_content->getGroup(), GroupStatisticsStorageInterface::STAT_TYPE_COMMENTS);
 }
