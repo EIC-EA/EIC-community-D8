@@ -22,6 +22,8 @@ function eic_group_statistics_group_delete(EntityInterface $entity) {
 function eic_group_statistics_group_content_insert(EntityInterface $entity) {
   $group = $entity->getGroup();
 
+  $re_index = TRUE;
+
   switch ($entity->bundle()) {
     case 'group-group_membership':
       \Drupal::service('eic_group_statistics.storage')->increment($group, GroupStatisticsStorageInterface::STAT_TYPE_MEMBERS);
@@ -31,7 +33,18 @@ function eic_group_statistics_group_content_insert(EntityInterface $entity) {
       \Drupal::service('eic_group_statistics.storage')->increment($group, GroupStatisticsStorageInterface::STAT_TYPE_FILES);
       break;
 
+    default:
+      $re_index = FALSE;
+      break;
+
   }
+
+  if (!$re_index) {
+    return;
+  }
+
+  // Re-index group statistics.
+  \Drupal::service('eic_group_statistics.search_api.reindex')->reindexItem($group);
 }
 
 /**
@@ -39,6 +52,8 @@ function eic_group_statistics_group_content_insert(EntityInterface $entity) {
  */
 function eic_group_statistics_group_content_delete(EntityInterface $entity) {
   $group = $entity->getGroup();
+
+  $re_index = TRUE;
 
   switch ($entity->bundle()) {
     case 'group-group_membership':
@@ -49,7 +64,18 @@ function eic_group_statistics_group_content_delete(EntityInterface $entity) {
       \Drupal::service('eic_group_statistics.storage')->decrement($group, GroupStatisticsStorageInterface::STAT_TYPE_FILES);
       break;
 
+    default:
+      $re_index = FALSE;
+      break;
+
   }
+
+  if (!$re_index) {
+    return;
+  }
+
+  // Re-index group statistics.
+  \Drupal::service('eic_group_statistics.search_api.reindex')->reindexItem($group);
 }
 
 /**
@@ -69,6 +95,9 @@ function eic_group_statistics_comment_insert(EntityInterface $entity) {
 
   // Increments group comments statistic counter.
   \Drupal::service('eic_group_statistics.storage')->increment($group_content->getGroup(), GroupStatisticsStorageInterface::STAT_TYPE_COMMENTS);
+
+  // Re-index group statistics.
+  \Drupal::service('eic_group_statistics.search_api.reindex')->reindexItem($group_content->getGroup());
 }
 
 /**
@@ -88,4 +117,7 @@ function eic_group_statistics_comment_delete(EntityInterface $entity) {
 
   // Decrements group comments statistic counter.
   \Drupal::service('eic_group_statistics.storage')->decrement($group_content->getGroup(), GroupStatisticsStorageInterface::STAT_TYPE_COMMENTS);
+
+  // Re-index group statistics.
+  \Drupal::service('eic_group_statistics.search_api.reindex')->reindexItem($group_content->getGroup());
 }

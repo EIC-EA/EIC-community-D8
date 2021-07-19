@@ -2,3 +2,6 @@ services:
   eic_group_statistics.storage:
     class: Drupal\eic_group_statistics\GroupStatisticsStorage
     arguments: ['@database']
+  eic_group_statistics.search_api.reindex:
+    class: Drupal\eic_group_statistics\GroupStatisticsSearchApiReindex
+    arguments: ['@eic_group_statistics.storage']
