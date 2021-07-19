@@ -1,0 +1,34 @@
+uuid: cf73506f-5a40-4fa0-841e-ca40cff25826
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.message.log_request_accepted.field_referenced_flag
+    - field.field.message.log_request_accepted.field_rendered_content
+    - message.template.log_request_accepted
+  module:
+    - text
+id: message.log_request_accepted.default
+targetEntityType: message
+bundle: log_request_accepted
+mode: default
+content:
+  field_referenced_flag:
+    weight: 0
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: entity_reference_autocomplete
+    region: content
+  field_rendered_content:
+    weight: 1
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+    type: text_textarea
+    region: content
+hidden: {  }

@@ -21,6 +21,7 @@ dependencies:
     - node
     - options
     - user
+    - views_autocomplete_filters
 id: closed_requests
 label: 'Closed requests'
 module: views
@@ -53,19 +54,24 @@ display:
         type: basic
         options:
           submit_button: Apply
-          reset_button: false
+          reset_button: true
           reset_button_label: Reset
           exposed_sorts_label: 'Sort by'
-          expose_sort_order: true
+          expose_sort_order: false
           sort_asc_label: Asc
           sort_desc_label: Desc
       pager:
-        type: mini
+        type: full
         options:
           items_per_page: 20
           offset: 0
           id: 0
           total_pages: null
+          tags:
+            previous: ‹‹
+            next: ››
+            first: '« First'
+            last: 'Last »'
           expose:
             items_per_page: false
             items_per_page_label: 'Items per page'
@@ -74,11 +80,124 @@ display:
             items_per_page_options_all_label: '- All -'
             offset: false
             offset_label: Offset
-          tags:
-            previous: ‹‹
-            next: ››
+          quantity: 9
       style:
         type: table
+        options:
+          grouping: {  }
+          row_class: ''
+          default_row_class: true
+          override: true
+          sticky: false
+          caption: ''
+          summary: ''
+          description: ''
+          columns:
+            title: title
+            subject: subject
+            label: label
+            nothing: nothing
+            entity_type: entity_type
+            flag_id: flag_id
+            field_request_moderator: field_request_moderator
+            field_request_response: field_request_response
+            field_request_status: field_request_status
+            field_request_closed_date: field_request_closed_date
+            operations: operations
+            operations_1: operations_1
+            operations_2: operations_2
+            nothing_1: nothing_1
+          info:
+            title:
+              sortable: false
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            subject:
+              sortable: false
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            label:
+              sortable: false
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            nothing:
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            entity_type:
+              sortable: true
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            flag_id:
+              sortable: true
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            field_request_moderator:
+              sortable: true
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            field_request_response:
+              sortable: true
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            field_request_status:
+              sortable: true
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            field_request_closed_date:
+              sortable: true
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            operations:
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            operations_1:
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            operations_2:
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            nothing_1:
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+          default: field_request_closed_date
+          empty_table: false
       row:
         type: fields
       fields:
@@ -389,6 +508,71 @@ display:
           field_api_classes: false
           entity_type: flagging
           entity_field: entity_type
+          plugin_id: field
+        flag_id:
+          id: flag_id
+          table: flagging
+          field: flag_id
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: 'Request type'
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: target_id
+          type: entity_reference_label
+          settings:
+            link: false
+          group_column: target_id
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+          entity_type: flagging
+          entity_field: flag_id
           plugin_id: field
         field_request_moderator:
           id: field_request_moderator
@@ -844,6 +1028,61 @@ display:
           hide_alter_empty: false
           plugin_id: custom
       filters:
+        combine:
+          id: combine
+          table: views
+          field: combine
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: contains
+          value: ''
+          group: 1
+          exposed: true
+          expose:
+            operator_id: combine_op
+            label: 'Content title'
+            description: ''
+            use_operator: false
+            operator: combine_op
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: title
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              trusted_user: '0'
+              content_administrator: '0'
+              service_authentication: '0'
+              site_admin: '0'
+              administrator: '0'
+            placeholder: ''
+            autocomplete_filter: 1
+            autocomplete_min_chars: '0'
+            autocomplete_items: '10'
+            autocomplete_raw_suggestion: 1
+            autocomplete_raw_dropdown: 1
+            autocomplete_dependent: 1
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          fields:
+            title: title
+            subject: subject
+            label: label
+          plugin_id: combine
         flag_id:
           id: flag_id
           table: flagging
@@ -881,11 +1120,11 @@ display:
             label: 'Request type'
             description: ''
             identifier: flag_id
-            optional: false
+            optional: true
             widget: select
             multiple: false
             remember: true
-            default_group: '1'
+            default_group: All
             default_group_multiple:
               1: 1
             group_items:
@@ -953,15 +1192,16 @@ display:
             operator_limit_selection: false
             operator_list: {  }
             identifier: field_request_status_value
-            required: true
+            required: false
             remember: false
-            multiple: true
+            multiple: false
             remember_roles:
               authenticated: authenticated
               anonymous: '0'
               trusted_user: '0'
               content_administrator: '0'
               service_authentication: '0'
+              site_admin: '0'
               administrator: '0'
             reduce: true
           is_grouped: false
@@ -1010,6 +1250,7 @@ display:
               trusted_user: '0'
               content_administrator: '0'
               service_authentication: '0'
+              site_admin: '0'
               administrator: '0'
             placeholder: ''
           is_grouped: true
@@ -1039,7 +1280,6 @@ display:
           entity_type: flagging
           entity_field: entity_type
           plugin_id: string
-      sorts:
         field_request_closed_date_value:
           id: field_request_closed_date_value
           table: flagging__field_request_closed_date
@@ -1047,12 +1287,51 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
-          order: DESC
-          exposed: false
+          operator: between
+          value:
+            min: ''
+            max: ''
+            value: ''
+            type: date
+          group: 1
+          exposed: true
           expose:
-            label: 'Closed date (field_request_closed_date)'
-          granularity: day
+            operator_id: field_request_closed_date_value_op
+            label: 'Closed date'
+            description: ''
+            use_operator: false
+            operator: field_request_closed_date_value_op
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: field_request_closed_date_value
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              trusted_user: '0'
+              content_administrator: '0'
+              service_authentication: '0'
+              site_admin: '0'
+              administrator: '0'
+            placeholder: ''
+            min_placeholder: ''
+            max_placeholder: ''
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
           plugin_id: datetime
+      sorts: {  }
       title: 'Closed requests'
       header: {  }
       footer: {  }
@@ -1111,7 +1390,7 @@ display:
           plugin_id: standard
       arguments: {  }
       display_extenders: {  }
-      use_ajax: false
+      use_ajax: true
       filter_groups:
         operator: AND
         groups:

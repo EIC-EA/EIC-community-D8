@@ -5,7 +5,7 @@ dependencies:
   module:
     - group
 id: request_delete_group
-label: 'Request Delete (Group)'
+label: 'Delete Request (Group)'
 bundles: {  }
 entity_type: group
 global: false

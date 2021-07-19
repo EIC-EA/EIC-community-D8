@@ -108,4 +108,4 @@ reactions:
     saved: false
     uuid: 9c311d0e-a590-452a-ad85-a32b685d7729
     include_default_blocks: 0
-weight: 0
+weight: -4

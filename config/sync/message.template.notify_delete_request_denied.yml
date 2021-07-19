@@ -4,6 +4,11 @@ status: true
 dependencies:
   config:
     - filter.format.full_html
+  module:
+    - eic_messages
+third_party_settings:
+  eic_messages:
+    message_template_type: notification
 template: notify_delete_request_denied
 label: 'NOTIFY :: MT39 :: Deletion request - request denied'
 description: 'Notification sent to the requester/author when a delete request is denied'

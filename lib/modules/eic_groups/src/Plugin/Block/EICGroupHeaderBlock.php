@@ -11,6 +11,7 @@ use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\Url;
 use Drupal\eic_groups\EICGroupsHelperInterface;
+use Drupal\flag\FlagServiceInterface;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\oec_group_flex\OECGroupFlexHelper;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -65,6 +66,13 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
   protected $currentUser;
 
   /**
+   * The flag service.
+   *
+   * @var \Drupal\flag\FlagServiceInterface
+   */
+  protected $flagService;
+
+  /**
    * Constructs a new EICGroupHeaderBlock instance.
    *
    * @param array $configuration
@@ -86,6 +94,8 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
    *   The OEC group flex helper service.
    * @param \Drupal\Core\Session\AccountProxyInterface $current_user
    *   The current user.
+   * @param \Drupal\flag\FlagServiceInterface $flag_service
+   *   The flag service.
    */
   public function __construct(
     array $configuration,
@@ -95,7 +105,8 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
     EICGroupsHelperInterface $eic_groups_helper,
     EntityTypeManagerInterface $entity_type_manager,
     OECGroupFlexHelper $oec_group_flex_helper,
-    AccountProxyInterface $current_user
+    AccountProxyInterface $current_user,
+    FlagServiceInterface $flag_service
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->routeMatch = $route_match;
@@ -103,6 +114,7 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
     $this->entityTypeManager = $entity_type_manager;
     $this->oecGroupFlexHelper = $oec_group_flex_helper;
     $this->currentUser = $current_user;
+    $this->flagService = $flag_service;
   }
 
   /**
@@ -122,7 +134,8 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
       $container->get('eic_groups.helper'),
       $container->get('entity_type.manager'),
       $container->get('oec_group_flex.helper'),
-      $container->get('current_user')
+      $container->get('current_user'),
+      $container->get('flag')
     );
   }
 
@@ -174,7 +187,17 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
         ]
       )) {
         unset($user_operation_links[$key]);
-        $operation_links[$key] = $action;
+        // We discard the operation link if user doesn't have access to it.
+        if ($action['url']->access($this->currentUser)) {
+          // We add the current page URL as destination so that the user will
+          // be redirected back to the current page after joining the group.
+          $action['url']->setOption('query',
+            [
+              'destination' => Url::fromRouteMatch($this->routeMatch)->toString(),
+            ]
+          );
+          $operation_links[$key] = $action;
+        }
       }
     }
 
@@ -183,7 +206,10 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
     $create_operations = [];
     foreach ($node_operation_links as $key => $link) {
       if (strpos($key, 'create') !== FALSE) {
-        $create_operations[$key] = $link;
+        // We discard the operation link if user doesn't have access to it.
+        if ($link['url']->access($this->currentUser)) {
+          $create_operations[$key] = $link;
+        }
         unset($node_operation_links[$key]);
       }
     }
@@ -195,20 +221,22 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
       ];
     }
 
-    // We extract only the group edit/delete operation links into a new array.
-    $visible_group_operation_links = array_filter($group_operation_links, function ($key) {
-      return in_array($key, ['edit', 'delete']);
-    }, ARRAY_FILTER_USE_KEY);
+    // We extract only the group edit/delete/publish operation links into a new
+    // array.
+    $visible_group_operation_links = array_filter($group_operation_links, function ($item, $key) {
+      // We discard the operation link if user doesn't have access to it.
+      if (!$item['url']->access($this->currentUser)) {
+        return FALSE;
+      }
+      return in_array($key, ['edit', 'delete', 'publish']);
+    }, ARRAY_FILTER_USE_BOTH);
 
     // Sorts group operation links by key. "Delete" operation needs to show
     // first.
     ksort($visible_group_operation_links);
 
-    $membership_links = [];
-
-    if (isset($group->flags)) {
-      $membership_links = $group->flags;
-    }
+    // Get all group flags the user has access to.
+    $membership_links = $this->getGroupFlagLinks($group);
 
     $build['content'] = [
       '#theme' => 'eic_group_header_block',
@@ -263,6 +291,51 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
       }
     }
     return $link;
+  }
+
+  /**
+   * Get group flag links for the current user.
+   *
+   * @param \Drupal\group\Entity\GroupInterface $group
+   *   The group entity.
+   *
+   * @return array
+   *   A renderable array of flag links.
+   */
+  private function getGroupFlagLinks(GroupInterface $group) {
+    $group_flags = [];
+
+    // If there are no group flags, we do nothing.
+    if (empty($group->flags)) {
+      return $group_flags;
+    }
+
+    // Loops through each group flag and add only the ones the user has
+    // access to.
+    foreach (array_keys($group->flags) as $flag_name) {
+      $flag = $this->flagService->getFlagById(str_replace('flag_', '', $flag_name));
+      $user_flag = $this->flagService->getFlagging($flag, $group);
+
+      // We need to create a fake flag if the user never flagged the content,
+      // otherwise we can't do an access check.
+      if (!$user_flag) {
+        $user_flag = $this->entityTypeManager->getStorage('flagging')->create([
+          'uid' => $this->currentUser->id(),
+          'flag_id' => $flag->id(),
+          'entity_id' => $group->id(),
+          'entity_type' => $group->getEntityTypeId(),
+          'global' => $flag->isGlobal(),
+        ]);
+      }
+
+      // If user has access to view the flag we add it to the results so that
+      // it can be shown in the group header.
+      if ($user_flag->access('view')) {
+        $group_flags[$flag_name] = $group->flags[$flag_name];
+      }
+    }
+
+    return $group_flags;
   }
 
 }
