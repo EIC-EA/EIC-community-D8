@@ -4,11 +4,12 @@ status: true
 dependencies:
   module:
     - group
+    - route_condition
 name: group_global
 label: 'Group - Global'
 group: Groups
 description: 'This context is used as global Group context'
-requireAllConditions: false
+requireAllConditions: true
 disabled: false
 conditions:
   group_type:
@@ -19,6 +20,12 @@ conditions:
     uuid: dbdc709b-c8e7-40ed-aea8-338920304ee4
     context_mapping:
       group: '@group.group_route_context:group'
+  route:
+    id: route
+    routes: entity.user.canonical
+    negate: true
+    uuid: df5ac6fd-1e86-44f6-9ff6-e46b4cfc36f1
+    context_mapping: {  }
 reactions:
   blocks:
     blocks:
@@ -40,7 +47,7 @@ reactions:
         unique: 0
         context_id: group_global
         uuid: 8c64fa91-2806-4f88-a5f2-723a137c6b72
-      eecb5765-2a32-4425-bbc4-d37279a6ec82:
+      6ebffc8d-ce4c-45ab-b138-e6dd4e22db28:
         id: eic_group_header
         label: 'EIC Group header'
         provider: eic_groups
@@ -52,11 +59,11 @@ reactions:
         custom_id: eic_group_header
         theme: eic_community
         css_class: ''
-        unique: 0
+        unique: 1
         context_id: group_global
-        uuid: eecb5765-2a32-4425-bbc4-d37279a6ec82
+        uuid: 6ebffc8d-ce4c-45ab-b138-e6dd4e22db28
     id: blocks
     saved: false
     uuid: eee2af2a-bea1-4c9a-8012-20aa5543365a
     include_default_blocks: 0
-weight: 0
+weight: -7
