@@ -63,4 +63,19 @@ interface SourceTypeInterface {
    */
   public function getLayoutTheme(): string;
 
+  /**
+   * Returns TRUE if the source is able to handle the group pre filtering
+   *
+   * @return bool
+   */
+  public function ableToPrefilteredByGroup(): bool;
+
+  /**
+   * If the overview needs to be prefiltered by group ID
+   * we need to get field in SOLR to search IN
+   *
+   * @return string
+   */
+  public function getPrefilteredGroupFieldId(): string;
+
 }

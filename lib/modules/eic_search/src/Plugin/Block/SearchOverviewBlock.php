@@ -9,6 +9,7 @@ use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Url;
+use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_search\Collector\SourcesCollector;
 use Drupal\eic_search\Search\Sources\GroupSourceType;
 use Drupal\eic_search\Search\Sources\SourceTypeInterface;
@@ -31,14 +32,21 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
   protected $sourcesCollector;
 
   /**
+   * @var EICGroupsHelper $groupsHelper
+   */
+  protected $groupsHelper;
+
+  /**
    * @param array $configuration
    * @param string $plugin_id
    * @param mixed $plugin_definition
    * @param SourcesCollector $sources_collector
+   * @param EICGroupsHelper $groups_helper
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, SourcesCollector $sources_collector) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, SourcesCollector $sources_collector, EICGroupsHelper $groups_helper) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->sourcesCollector = $sources_collector;
+    $this->groupsHelper = $groups_helper;
   }
 
   /**
@@ -54,7 +62,8 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('eic_search.sources_collector')
+      $container->get('eic_search.sources_collector'),
+      $container->get('eic_groups.helper'),
     );
   }
 
@@ -128,6 +137,16 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
     $sources = $this->sourcesCollector->getSources();
 
     $source = array_key_exists($source_type, $sources) ? $sources[$source_type] : NULL;
+    $prefilter_group = $this->configuration['prefilter_group'] ?: FALSE;
+    $current_group_route = NULL;
+
+    if (
+      $source instanceof SourceTypeInterface &&
+      $source->ableToPrefilteredByGroup() &&
+      $prefilter_group
+    ) {
+      $current_group_route = $this->groupsHelper->getGroupFromRoute();
+    }
 
     return [
       '#theme' => 'search_overview_block',
@@ -143,6 +162,7 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
       '#enable_search' => $this->configuration['enable_search'],
       '#url' => Url::fromRoute('eic_groups.solr_search')->toString(),
       '#isAnonymous' => \Drupal::currentUser()->isAnonymous(),
+      '#currentGroup' => $current_group_route,
       '#translations' => [
         'public' => $this->t('Public', [], ['context' => 'eic_group']),
         'private' => $this->t('Private', [], ['context' => 'eic_group']),
@@ -209,6 +229,7 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
     $this->configuration['sort_options'] = $values['search']['configuration']['sorts'][$current_source->getEntityBundle()]['sort_options'];
     $this->configuration['enable_search'] = $values['search']['configuration']['enable_search'];
     $this->configuration['page_options'] = $values['search']['configuration']['pagination']['page_options'];
+    $this->configuration['prefilter_group'] = $values['search']['configuration']['prefilter_group'];
   }
 
   /**
@@ -303,6 +324,15 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
             $current_source === $source ?: 'hidden',
           ],
         ],
+      ];
+    }
+
+    if ($source->ableToPrefilteredByGroup()) {
+      $form['search']['configuration']['prefilter_group'] = [
+        '#type' => 'checkbox',
+        '#default_value' => $this->configuration['prefilter_group'],
+        '#title' => $this->t('Prefilter the overview by group', [], ['context' => 'eic_search']),
+        '#description' => $this->t('It will prefiltered the overview with the current group from page', [], ['context' => 'eic_search']),
       ];
     }
   }

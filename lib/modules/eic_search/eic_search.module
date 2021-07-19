@@ -24,6 +24,7 @@ function eic_search_theme($existing, $type, $theme, $path) {
         'facets' => [],
         'sorts' => [],
         'page_options' => '',
+        'currentGroup' => '',
         'enable_search' => TRUE,
         'source_class' => '',
         'search_string' => '',
@@ -72,6 +73,19 @@ function eic_search_search_api_solr_documents_alter(array &$documents, \Drupal\s
       if ($profile instanceof \Drupal\profile\Entity\ProfileInterface) {
         $socials = $profile->get('field_social_links')->getValue();
         $document->addField('ss_profile_socials', json_encode($socials));
+
+        /** @var \Drupal\user\UserInterface $user */
+        $user = $profile->getOwner();
+
+        /** @var \Drupal\group\GroupMembershipLoader $grp_membership_service */
+        $grp_membership_service = \Drupal::service('group.membership_loader');
+        $grps = $grp_membership_service->loadByUser($user);
+
+        $grp_ids = array_map(function(\Drupal\group\GroupMembership $grp_membership) {
+          return $grp_membership->getGroup()->id();
+        }, $grps);
+
+        $document->setField('itm_user__group_content__uid_gid', $grp_ids);
       }
     }
 
@@ -152,8 +166,8 @@ function eic_search_search_api_solr_documents_alter(array &$documents, \Drupal\s
 
     /** @var \Drupal\Core\Session\AccountInterface $owner */
     $owner = $group->getOwner();
-
     $user = \Drupal\user\Entity\User::load($owner->id());
+
     $document->addField('ss_group_visibility', $group_visibility);
     $document->addField('ss_group_url', $group->toUrl()->toString());
     $document->addField('ss_group_user_url', $user->toUrl()->toString());

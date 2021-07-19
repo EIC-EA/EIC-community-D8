@@ -80,4 +80,18 @@ class GroupSourceType implements SourceTypeInterface {
     return self::LAYOUT_COMPACT;
   }
 
+  /**
+   * @inheritDoc
+   */
+  public function ableToPrefilteredByGroup(): bool {
+    return TRUE;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function getPrefilteredGroupFieldId(): string {
+    return 'its_group_id_integer';
+  }
+
 }

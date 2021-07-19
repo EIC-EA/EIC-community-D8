@@ -73,4 +73,18 @@ class UserListSourceType implements SourceTypeInterface {
     return self::LAYOUT_COMPACT;
   }
 
+  /**
+   * @inheritDoc
+   */
+  public function ableToPrefilteredByGroup(): bool {
+    return TRUE;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function getPrefilteredGroupFieldId(): string {
+    return 'itm_user__group_content__uid_gid';
+  }
+
 }
