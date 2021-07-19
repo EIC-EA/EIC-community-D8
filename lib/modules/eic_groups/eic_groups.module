@@ -302,7 +302,15 @@ function eic_groups_flagging_access(EntityInterface $entity, $operation, Account
         $access = AccessResult::forbidden()
           ->addCacheableDependency($entity)
           ->addCacheableDependency($flagged_entity);
+        break;
       }
+
+      $flag_permission = "$operation {$entity->getFlagId()}";
+
+      // Allow access if user has flag permissions for the current operation.
+      $access = AccessResult::allowedIfHasPermission($account, $flag_permission)
+        ->addCacheableDependency($entity)
+        ->addCacheableDependency($flagged_entity);
       break;
 
   }
@@ -340,7 +348,7 @@ function eic_groups_entity_operation_alter(array &$operations, EntityInterface $
 }
 
 /**
- * Implements hook_preprocess_block__HOOK
+ * Implements hook_preprocess_block__HOOK().
  */
 function eic_groups_preprocess_block__group_content_menu(&$variables) {
   $block_manager = \Drupal::service('plugin.manager.block');
