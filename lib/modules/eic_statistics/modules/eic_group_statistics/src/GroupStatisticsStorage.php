@@ -41,26 +41,11 @@ class GroupStatisticsStorage implements GroupStatisticsStorageInterface {
 
     switch ($statistic_type) {
       case GroupStatisticsStorageInterface::STAT_TYPE_MEMBERS:
-        $query->fields(['members' => 1])
-          ->expression('members', '[members] + 1')
-          ->execute();
-        break;
-
       case GroupStatisticsStorageInterface::STAT_TYPE_COMMENTS:
-        $query->fields(['comments' => 1])
-          ->expression('comments', '[comments] + 1')
-          ->execute();
-        break;
-
       case GroupStatisticsStorageInterface::STAT_TYPE_FILES:
-        $query->fields(['files' => 1])
-          ->expression('files', '[files] + 1')
-          ->execute();
-        break;
-
       case GroupStatisticsStorageInterface::STAT_TYPE_EVENTS:
-        $query->fields(['events' => 1])
-          ->expression('events', '[events] + 1')
+        $query->fields([$statistic_type => 1])
+          ->expression($statistic_type, "[$statistic_type] + :count", [':count' => $count])
           ->execute();
         break;
 
@@ -81,26 +66,11 @@ class GroupStatisticsStorage implements GroupStatisticsStorageInterface {
 
     switch ($statistic_type) {
       case GroupStatisticsStorageInterface::STAT_TYPE_MEMBERS:
-        $query->fields(['members' => 1])
-          ->expression('members', '[members] - 1')
-          ->execute();
-        break;
-
       case GroupStatisticsStorageInterface::STAT_TYPE_COMMENTS:
-        $query->fields(['comments' => 1])
-          ->expression('comments', '[comments] - 1')
-          ->execute();
-        break;
-
       case GroupStatisticsStorageInterface::STAT_TYPE_FILES:
-        $query->fields(['files' => 1])
-          ->expression('files', '[files] - 1')
-          ->execute();
-        break;
-
       case GroupStatisticsStorageInterface::STAT_TYPE_EVENTS:
-        $query->fields(['events' => 1])
-          ->expression('events', '[events] - 1')
+        $query->fields([$statistic_type => 1])
+          ->expression($statistic_type, "[$statistic_type] - :count", [':count' => $count])
           ->execute();
         break;
 
@@ -130,7 +100,13 @@ class GroupStatisticsStorage implements GroupStatisticsStorageInterface {
       return FALSE;
     }
 
-    return $result;
+    return new GroupStatistic(
+      $result['gid'],
+      $result['members'],
+      $result['comments'],
+      $result['files'],
+      $result['events'],
+    );
   }
 
 }
