@@ -26,6 +26,10 @@ function eic_group_statistics_group_content_insert(EntityInterface $entity) {
       \Drupal::service('eic_group_statistics.storage')->increment($group, GroupStatisticsStorageInterface::STAT_TYPE_MEMBERS);
       break;
 
+    case 'group-group_node-document':
+      \Drupal::service('eic_group_statistics.storage')->increment($group, GroupStatisticsStorageInterface::STAT_TYPE_FILES);
+      break;
+
   }
 }
 
@@ -38,6 +42,10 @@ function eic_group_statistics_group_content_delete(EntityInterface $entity) {
   switch ($entity->bundle()) {
     case 'group-group_membership':
       \Drupal::service('eic_group_statistics.storage')->decrement($group, GroupStatisticsStorageInterface::STAT_TYPE_MEMBERS);
+      break;
+
+    case 'group-group_node-document':
+      \Drupal::service('eic_group_statistics.storage')->decrement($group, GroupStatisticsStorageInterface::STAT_TYPE_FILES);
       break;
 
   }
