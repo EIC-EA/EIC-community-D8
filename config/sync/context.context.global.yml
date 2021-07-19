@@ -80,6 +80,20 @@ reactions:
         unique: 0
         context_id: global
         uuid: 116105ac-257d-4a9f-9495-133d1ad12d7c
+      a4147195-0295-4e40-8992-6a1f66a79cdc:
+        id: system_breadcrumb_block
+        label: Breadcrumbs
+        provider: system
+        label_display: visible
+        region: breadcrumbs
+        weight: '0'
+        context_mapping: {  }
+        custom_id: system_breadcrumb_block
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: global
+        uuid: a4147195-0295-4e40-8992-6a1f66a79cdc
     id: blocks
     saved: false
     uuid: c1979d39-89a3-4939-97f7-0af5a52467f1

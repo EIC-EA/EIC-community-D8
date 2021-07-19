@@ -15,8 +15,8 @@ third_party_settings:
 id: group
 label: Group
 description: ''
+new_revision: true
 creator_membership: true
 creator_wizard: false
 creator_roles:
   - group-owner
-new_revision: true

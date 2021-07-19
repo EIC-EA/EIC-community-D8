@@ -1,43 +1,28 @@
-uuid: 5ccc2292-2a19-485b-a29a-b6fcfb888574
+uuid: 449b4c0b-1756-4d5e-adef-a3c10276e703
 langcode: en
 status: true
 dependencies:
   module:
-    - node
-name: group_wiki_page
-label: 'Group - Wiki page'
+    - ctools
+name: group_discussion_detail
+label: 'Group - Discussion detail'
 group: Groups
-description: 'Context used when viewing group wiki pages'
+description: 'Group context of the discussion pages'
 requireAllConditions: false
 disabled: false
 conditions:
-  node_type:
-    id: node_type
+  'entity_bundle:node':
+    id: 'entity_bundle:node'
     bundles:
-      wiki_page: wiki_page
+      discussion: discussion
     negate: false
-    uuid: 118a3ee8-d75a-43fa-8dc7-13e7c95a283f
+    uuid: 04c46e1e-a4d8-4190-805b-04b921bca67f
     context_mapping:
       node: '@node.node_route_context:node'
 reactions:
   blocks:
     blocks:
-      2089ac99-521b-4bba-b1e0-030d675b287f:
-        id: eic_groups_wiki_book_navigation
-        label: 'EIC Group Wiki Book navigation'
-        provider: eic_groups
-        label_display: '0'
-        region: sidebar
-        weight: '0'
-        block_mode: null
-        context_mapping: {  }
-        custom_id: eic_groups_wiki_book_navigation
-        theme: eic_community
-        css_class: ''
-        unique: 0
-        context_id: group_wiki_page
-        uuid: 2089ac99-521b-4bba-b1e0-030d675b287f
-      20ba6aac-dedc-464e-9aee-4bff02f05621:
+      4a713ff6-de1c-4bb1-8198-3e8b28ae1b81:
         id: eic_group_header
         label: 'EIC Group header'
         provider: eic_groups
@@ -50,9 +35,9 @@ reactions:
         theme: eic_community
         css_class: ''
         unique: 0
-        context_id: group_wiki_page
-        uuid: 20ba6aac-dedc-464e-9aee-4bff02f05621
-      7d462b42-9959-4fe2-b3de-ff513c9c8a1e:
+        context_id: group_discussion_detail
+        uuid: 4a713ff6-de1c-4bb1-8198-3e8b28ae1b81
+      78e2aa8e-8ba8-4752-b2f7-4bfa04e951ba:
         id: 'group_content_menu:group_main_menu'
         label: 'Group - Main menu'
         provider: group_content_menu
@@ -68,10 +53,10 @@ reactions:
         theme: eic_community
         css_class: ''
         unique: 0
-        context_id: group_wiki_page
-        uuid: 7d462b42-9959-4fe2-b3de-ff513c9c8a1e
+        context_id: group_discussion_detail
+        uuid: 78e2aa8e-8ba8-4752-b2f7-4bfa04e951ba
     id: blocks
     saved: false
-    uuid: 4d77c57f-3626-4134-8271-8983fa46b50e
+    uuid: 2638f701-9750-4f62-b60e-8cf9bb649629
     include_default_blocks: 0
 weight: 0

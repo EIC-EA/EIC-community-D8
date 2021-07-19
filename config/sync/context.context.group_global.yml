@@ -40,6 +40,21 @@ reactions:
         unique: 0
         context_id: group_global
         uuid: 8c64fa91-2806-4f88-a5f2-723a137c6b72
+      eecb5765-2a32-4425-bbc4-d37279a6ec82:
+        id: eic_group_header
+        label: 'EIC Group header'
+        provider: eic_groups
+        label_display: '0'
+        region: page_header
+        weight: '0'
+        context_mapping:
+          group: '@group.group_route_context:group'
+        custom_id: eic_group_header
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: group_global
+        uuid: eecb5765-2a32-4425-bbc4-d37279a6ec82
     id: blocks
     saved: false
     uuid: eee2af2a-bea1-4c9a-8012-20aa5543365a
