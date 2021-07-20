@@ -1,0 +1,10 @@
+uuid: 3d727a5c-b8a6-489c-b918-247e5d9d3a40
+langcode: en
+status: true
+dependencies: {  }
+id: eic_smed_taxonomy
+label: eic_smed_taxonomy
+description: ''
+source_type: null
+module: null
+shared_configuration: null
