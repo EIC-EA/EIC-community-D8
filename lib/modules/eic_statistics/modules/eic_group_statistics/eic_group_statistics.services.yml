@@ -7,4 +7,4 @@ services:
     arguments: ['@eic_group_statistics.storage']
   eic_group_statistics.helper:
     class: Drupal\eic_group_statistics\GroupStatisticsHelper
-    arguments: ['@eic_group_statistics.storage']
+    arguments: ['@entity_type.manager', '@eic_group_statistics.storage']
