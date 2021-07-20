@@ -2,12 +2,16 @@
 
 namespace Drupal\eic_search\Search\Sources;
 
+use Drupal\Core\StringTranslation\StringTranslationTrait;
+
 /**
  * Class UserSourceType
  *
  * @package Drupal\eic_groups\Search\Sources
  */
 class UserSourceType implements SourceTypeInterface {
+
+  use StringTranslationTrait;
 
   /**
    * @inheritDoc
@@ -20,7 +24,7 @@ class UserSourceType implements SourceTypeInterface {
    * @inheritDoc
    */
   public function getLabel(): string {
-    return t('User', [], ['context' => 'eic_search']);
+    return $this->t('User', [], ['context' => 'eic_search']);
   }
 
   /**
@@ -35,7 +39,7 @@ class UserSourceType implements SourceTypeInterface {
    */
   public function getAvailableFacets(): array {
     return [
-      'ss_user_last_name' => t('Last name', [], ['context' => 'eic_search']),
+      'ss_user_last_name' => $this->t('Last name', [], ['context' => 'eic_search']),
     ];
   }
 
@@ -45,9 +49,9 @@ class UserSourceType implements SourceTypeInterface {
   public function getAvailableSortOptions(): array {
     return [
       'ss_user_first_name' => [
-        'label' => t('First name', [], ['context' => 'eic_search']),
-        'ASC' => t('First name A-Z', [], ['context' => 'eic_search']),
-        'DESC' => t('First name Z-A', [], ['context' => 'eic_search']),
+        'label' => $this->t('First name', [], ['context' => 'eic_search']),
+        'ASC' => $this->t('First name A-Z', [], ['context' => 'eic_search']),
+        'DESC' => $this->t('First name Z-A', [], ['context' => 'eic_search']),
       ]
     ];
   }
