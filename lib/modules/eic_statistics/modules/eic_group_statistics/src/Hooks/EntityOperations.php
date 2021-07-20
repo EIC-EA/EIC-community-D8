@@ -269,8 +269,8 @@ class EntityOperations implements ContainerInjectionInterface {
         }
       }
 
-      // At this point, it means the media is not being referenced more than
-      // once which means we can increment the counter.
+      // At this point, it means the media is not being referenced anywhere
+      // which means we can increment the counter.
       $count_updates++;
     }
 
