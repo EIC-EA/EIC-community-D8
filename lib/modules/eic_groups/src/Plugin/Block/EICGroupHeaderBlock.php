@@ -266,7 +266,7 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
         'description' => Markup::create($group->get('field_body')->value),
         'operation_links' => array_merge($operation_links, $node_operation_links, $visible_group_operation_links),
         'membership_links' => array_merge($membership_links, $user_operation_links),
-        'group_statistics' => [
+        'stats' => [
           'members' => $group_statistics->getMembersCount(),
           'comments' => $group_statistics->getCommentsCount(),
           'files' => $group_statistics->getFilesCount(),
