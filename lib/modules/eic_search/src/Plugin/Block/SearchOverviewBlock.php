@@ -200,7 +200,6 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
 
     $css = ['display' => 'none'];
 
-
     $sources_collected = $this->sourcesCollector->getSources();
     foreach ($sources_collected as $source) {
       $response->addCommand(new CssCommand('.source-' . $source->getEntityBundle(), $css));

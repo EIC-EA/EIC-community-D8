@@ -14,7 +14,8 @@
     },
     "drupal/group": {
       "2881769 - group/{group}/node/create uses the permissions of group/{group}/node/add": "https://www.drupal.org/files/issues/2020-10-01/2881769-22.patch",
-      "2746839 - Add Devel plugin for generating groups": "patches/group/2746839-add-devel-plugin-for-generating-groups-12.patch"
+      "2746839 - Add Devel plugin for generating groups": "patches/group/2746839-add-devel-plugin-for-generating-groups-12.patch",
+      "2815971 - More contexts needed": "https://www.drupal.org/files/issues/2021-02-19/2815971-28.patch"
     },
     "drupal/flag": {
       "3168014 - TypeError: Argument 1 passed to Drupal\\flag\\TwigExtension\\FlagCount::count() must implement interface" : "https://www.drupal.org/files/issues/2020-09-06/show-count-for-visitors--3168014-2.patch",

@@ -63,35 +63,6 @@ reactions:
         unique: 0
         context_id: group_group_homepage
         uuid: 5d7c3ce0-d0fc-4267-912b-52115526298f
-      3fc74879-9f2f-4f36-a94c-bd5dd6938596:
-        id: eic_group_header
-        label: 'EIC Group header'
-        provider: eic_groups
-        label_display: '0'
-        region: page_header
-        weight: '0'
-        context_mapping:
-          group: '@group.group_route_context:group'
-        custom_id: eic_group_header
-        theme: eic_community
-        css_class: ''
-        unique: 0
-        context_id: group_group_homepage
-        uuid: 3fc74879-9f2f-4f36-a94c-bd5dd6938596
-      245a6924-137e-4daf-a868-9a8a414047a2:
-        id: system_breadcrumb_block
-        label: Breadcrumbs
-        provider: system
-        label_display: '0'
-        region: breadcrumbs
-        weight: '-10'
-        context_mapping: {  }
-        custom_id: system_breadcrumb_block
-        theme: eic_community
-        css_class: ''
-        unique: 0
-        context_id: group_group_homepage
-        uuid: 245a6924-137e-4daf-a868-9a8a414047a2
       a12c24ef-18fa-49a2-9b47-5d87b945f86e:
         id: 'views_block:group_related_news_stories-block_related_news_stories'
         label: ''
@@ -143,4 +114,4 @@ reactions:
     saved: false
     uuid: db598f5e-00b5-4ba6-b443-bbe6d3ca2c59
     include_default_blocks: 0
-weight: 0
+weight: -6
