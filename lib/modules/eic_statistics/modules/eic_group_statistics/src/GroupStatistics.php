@@ -5,9 +5,9 @@ namespace Drupal\eic_group_statistics;
 use Drupal\group\Entity\Group;
 
 /**
- * Value object for passing group statistic results.
+ * Value object for passing group statistics results.
  */
-class GroupStatistic {
+class GroupStatistics {
 
   /**
    * The group entity ID.
@@ -45,7 +45,7 @@ class GroupStatistic {
   protected $eventsCount;
 
   /**
-   * Constructs a new GroupStatistic object.
+   * Constructs a new GroupStatistics object.
    *
    * @param int $group_id
    *   The group entity ID.

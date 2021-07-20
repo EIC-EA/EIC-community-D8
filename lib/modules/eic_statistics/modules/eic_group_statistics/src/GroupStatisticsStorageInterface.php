@@ -67,8 +67,8 @@ interface GroupStatisticsStorageInterface {
    * @param \Drupal\group\Entity\GroupInterface $group
    *   The Group entity.
    *
-   * @return \Drupal\eic_group_statistics\GroupStatistic|bool
-   *   The GroupStatistic object or FALSE if not found.
+   * @return \Drupal\eic_group_statistics\GroupStatistics|bool
+   *   The GroupStatistics object or FALSE if not found.
    */
   public function load(GroupInterface $group);
 

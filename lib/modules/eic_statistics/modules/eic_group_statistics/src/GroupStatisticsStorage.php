@@ -100,7 +100,7 @@ class GroupStatisticsStorage implements GroupStatisticsStorageInterface {
       return FALSE;
     }
 
-    return new GroupStatistic(
+    return new GroupStatistics(
       $result['gid'],
       $result['members'],
       $result['comments'],
