@@ -2,6 +2,7 @@
 
 namespace Drupal\eic_group_statistics;
 
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Database\Connection;
 use Drupal\group\Entity\GroupInterface;
 
@@ -47,6 +48,9 @@ class GroupStatisticsStorage implements GroupStatisticsStorageInterface {
         $query->fields([$statistic_type => 1])
           ->expression($statistic_type, "[$statistic_type] + :count", [':count' => $count])
           ->execute();
+
+        // Invalidate group cache tags.
+        Cache::invalidateTags($group->getCacheTagsToInvalidate());
         break;
 
     }
@@ -72,6 +76,9 @@ class GroupStatisticsStorage implements GroupStatisticsStorageInterface {
         $query->fields([$statistic_type => 1])
           ->expression($statistic_type, "[$statistic_type] - :count", [':count' => $count])
           ->execute();
+
+        // Invalidate group cache tags.
+        Cache::invalidateTags($group->getCacheTagsToInvalidate());
         break;
 
     }
@@ -84,6 +91,9 @@ class GroupStatisticsStorage implements GroupStatisticsStorageInterface {
     $this->connection->delete('eic_group_statistics')
       ->condition('gid', $group->id())
       ->execute();
+
+    // Invalidate group cache tags.
+    Cache::invalidateTags($group->getCacheTagsToInvalidate());
   }
 
   /**
