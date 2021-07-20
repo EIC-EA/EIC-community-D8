@@ -2,12 +2,16 @@
 
 namespace Drupal\eic_search\Search\Sources;
 
+use Drupal\Core\StringTranslation\StringTranslationTrait;
+
 /**
  * Class UserListSourceType
  *
  * @package Drupal\eic_groups\Search\Sources
  */
 class UserListSourceType implements SourceTypeInterface {
+
+  use StringTranslationTrait;
 
   /**
    * @inheritDoc
@@ -20,7 +24,7 @@ class UserListSourceType implements SourceTypeInterface {
    * @inheritDoc
    */
   public function getLabel(): string {
-    return t('User list', [], ['context' => 'eic_search']);
+    return $this->t('User list', [], ['context' => 'eic_search']);
   }
 
   /**
@@ -35,11 +39,11 @@ class UserListSourceType implements SourceTypeInterface {
    */
   public function getAvailableFacets(): array {
     return [
-      'sm_user_profile_topic_expertise_string' => t('Topic expertise', [], ['context' => 'eic_search']),
-      'sm_user_profile_job_string' => t('Job title', [], ['context' => 'eic_search']),
-      'sm_user_profile_field_vocab_topic_interest_array' => t('Topic interest', [], ['context' => 'eic_search']),
-      'sm_user_profile_geo_string' => t('Geo interest', [], ['context' => 'eic_search']),
-      'ss_user_profile_field_location_address_country_code' => t('Country', [], ['context' => 'eic_search']),
+      'sm_user_profile_topic_expertise_string' => $this->t('Topic expertise', [], ['context' => 'eic_search']),
+      'sm_user_profile_job_string' => $this->t('Job title', [], ['context' => 'eic_search']),
+      'sm_user_profile_field_vocab_topic_interest_array' => $this->t('Topic interest', [], ['context' => 'eic_search']),
+      'sm_user_profile_geo_string' => $this->t('Geo interest', [], ['context' => 'eic_search']),
+      'ss_user_profile_field_location_address_country_code' => $this->t('Country', [], ['context' => 'eic_search']),
     ];
   }
 
@@ -49,9 +53,9 @@ class UserListSourceType implements SourceTypeInterface {
   public function getAvailableSortOptions(): array {
     return [
       'ss_user_first_name' => [
-        'label' => t('First name', [], ['context' => 'eic_search']),
-        'ASC' => t('First name A-Z', [], ['context' => 'eic_search']),
-        'DESC' => t('First name Z-A', [], ['context' => 'eic_search']),
+        'label' => $this->t('First name', [], ['context' => 'eic_search']),
+        'ASC' => $this->t('First name A-Z', [], ['context' => 'eic_search']),
+        'DESC' => $this->t('First name Z-A', [], ['context' => 'eic_search']),
       ]
     ];
   }
