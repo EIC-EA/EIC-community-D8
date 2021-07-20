@@ -7,6 +7,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\eic_group_statistics\GroupStatisticsSearchApiReindex;
 use Drupal\eic_group_statistics\GroupStatisticsStorageInterface;
+use Drupal\group\Entity\GroupContentInterface;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\node\NodeInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -93,10 +94,16 @@ class EntityOperations implements ContainerInjectionInterface {
         /** @var \Drupal\media\MediaInterface[] $medias */
         $medias = $node->get('field_document_media')->referencedEntities();
 
-        // Update group file statistics.
-        if (!$this->updateGroupFileStatistics($group, $node, $medias)) {
+        // Counts the number of times we need to increment the file statistic.
+        $count = $this->countGroupFileStatistics($group, $node, $medias);
+
+        if (!$count) {
           $re_index = FALSE;
+          break;
         }
+
+        // Update group file statistics.
+        $this->groupStatisticsStorage->increment($group, GroupStatisticsStorageInterface::STAT_TYPE_FILES, $count);
         break;
 
       default:
@@ -129,8 +136,53 @@ class EntityOperations implements ContainerInjectionInterface {
         $this->groupStatisticsStorage->decrement($group, GroupStatisticsStorageInterface::STAT_TYPE_MEMBERS);
         break;
 
-      case 'group-group_node-document':
-        // @todo Decrement group file counter if there are no references.
+      default:
+        $re_index = FALSE;
+        break;
+
+    }
+
+    if (!$re_index) {
+      return;
+    }
+
+    // Re-index group statistics.
+    $this->groupStatisticsSearchApiReindex->reindexItem($group);
+  }
+
+  /**
+   * Acts on hook_node_delete() for node entities that belong to a group.
+   *
+   * We need to implement this hook in order to update some group statistics
+   * that could not be updated in during
+   * eic_group_statistics_group_content_delete phase because the related node
+   * gets deleted first.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The node entity object.
+   * @param \Drupal\group\Entity\GroupContentInterface $group_content
+   *   The group content entity object that relates to the node.
+   */
+  public function groupContentNodeDelete(EntityInterface $entity, GroupContentInterface $group_content) {
+    $group = $group_content->getGroup();
+
+    $re_index = TRUE;
+
+    switch ($entity->bundle()) {
+      case 'document':
+        /** @var \Drupal\media\MediaInterface[] $medias */
+        $medias = $entity->get('field_document_media')->referencedEntities();
+
+        // Counts the number of times we need to decrement the file statistic.
+        $count = $this->countGroupFileStatistics($group, $entity, $medias);
+
+        if (!$count) {
+          $re_index = FALSE;
+          break;
+        }
+
+        // Update group file statistics.
+        $this->groupStatisticsStorage->decrement($group, GroupStatisticsStorageInterface::STAT_TYPE_FILES, $count);
         break;
 
       default:
@@ -148,48 +200,46 @@ class EntityOperations implements ContainerInjectionInterface {
   }
 
   /**
-   * Increments/decrements group file statistics for a given node.
+   * Counts group file statistics for a given node with medias.
    *
    * @param \Drupal\group\Entity\GroupInterface $group
-   *   The group entity for which we want to increment file statistics.
+   *   The group entity for which we want to count file statistics.
    * @param \Drupal\node\NodeInterface $node
    *   The node entity that belongs to the group.
    * @param \Drupal\media\MediaInterface[] $medias
    *   Array of media entities that belong to the node.
-   * @param string $update_type
-   *   The update type: either "increment" or "decrement".
    *
-   * @return bool
-   *   TRUE if the counter has been updated.
+   * @return int
+   *   The number of times we need to increment/decrement in the group file
+   *   statistics.
    */
-  private function updateGroupFileStatistics(GroupInterface $group, NodeInterface $node, array $medias = [], $update_type = 'increment') {
-    $counter_updated = FALSE;
-
-    if (!in_array($update_type, ['increment', 'decrement'])) {
-      return $counter_updated;
-    }
+  private function countGroupFileStatistics(GroupInterface $group, NodeInterface $node, array $medias = []) {
+    $count_updates = 0;
 
     if (!$medias) {
-      return $counter_updated;
+      return $count_updates;
     }
 
     foreach ($medias as $media) {
       // @todo Replace \Drupal::service() with proper dependency injection.
       $media_usage = \Drupal::service('entity_usage.usage')->listSources($media);
 
-      // If there is no media usage, we don't update file statistics.
+      // If there is no media usage, we increment the counter.
       if (!isset($media_usage['node'])) {
+        $count_updates++;
         continue;
+      }
+
+      // We discard the current node from the usage. We just want to know
+      // if the media is referenced in other nodes.
+      if (isset($media_usage['node'][$node->id()])) {
+        unset($media_usage['node'][$node->id()]);
       }
 
       // If media is being referenced elsewhere, then we need to make sure it
       // hasn't been referenced in this group before updating the file
       // statistics.
-      if (count($media_usage['node']) > 1) {
-
-        // We discard the current node from the usage. We just want to know
-        // if the media is referenced in other nodes.
-        unset($media_usage['node'][$node->id()]);
+      if (count($media_usage['node']) > 0) {
 
         // Load the source nodes.
         $source_nodes = $this->entityTypeManager->getStorage('node')->loadMultiple(array_keys($media_usage['node']));
@@ -220,22 +270,11 @@ class EntityOperations implements ContainerInjectionInterface {
       }
 
       // At this point, it means the media is not being referenced more than
-      // once which means we can update the counter.
-      switch ($update_type) {
-        case 'increment':
-          $this->groupStatisticsStorage->increment($group, GroupStatisticsStorageInterface::STAT_TYPE_FILES);
-          break;
-
-        case 'decrement':
-          $this->groupStatisticsStorage->decrement($group, GroupStatisticsStorageInterface::STAT_TYPE_FILES);
-          break;
-
-      }
-
-      $counter_updated = TRUE;
+      // once which means we can increment the counter.
+      $count_updates++;
     }
 
-    return $counter_updated;
+    return $count_updates;
   }
 
 }
