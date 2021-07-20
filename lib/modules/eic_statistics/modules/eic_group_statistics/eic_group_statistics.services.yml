@@ -5,3 +5,6 @@ services:
   eic_group_statistics.search_api.reindex:
     class: Drupal\eic_group_statistics\GroupStatisticsSearchApiReindex
     arguments: ['@eic_group_statistics.storage']
+  eic_group_statistics.helper:
+    class: Drupal\eic_group_statistics\GroupStatisticsHelper
+    arguments: ['@eic_group_statistics.storage']
