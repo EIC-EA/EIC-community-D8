@@ -5,7 +5,6 @@ namespace Drupal\eic_group_statistics\Plugin\search_api\processor;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Plugin\PluginFormInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\eic_group_statistics\GroupStatistics;
 use Drupal\eic_group_statistics\GroupStatisticsStorageInterface;
 use Drupal\search_api\Datasource\DatasourceInterface;
 use Drupal\search_api\IndexInterface;
@@ -183,10 +182,6 @@ class GroupStatisticsIndexer extends ProcessorPluginBase implements PluginFormIn
       }
 
       $group_statistics = $this->groupStatisticsStorage->load($entity);
-
-      if (!$group_statistics) {
-        $group_statistics = new GroupStatistics($entity->id());
-      }
 
       foreach ($config as $statistic_type) {
         $fields = $this
