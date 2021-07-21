@@ -126,6 +126,8 @@ class CronOperations implements ContainerInjectionInterface {
           /** @var \Drupal\group\Entity\GroupInterface $group */
           $group = $this->entityTypeManager->getStorage('group')->load($item->data['gid']);
           if (!$group instanceof GroupInterface) {
+            $group_alias_queue->deleteItem($item);
+            $this->state->delete(self::GROUP_URL_ALIAS_UPDATE_STATE_CACHE . $item->data['gid']);
             continue;
           }
 
