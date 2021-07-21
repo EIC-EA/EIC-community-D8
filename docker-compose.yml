@@ -1,75 +1,48 @@
 version: '3'
 
 services:
-  apache:
-    build:
-      context: ./.docker/apache
-    restart: always
-    ports:
-      - ${APP_PORT}:443
-    volumes:
-      - ./.docker/apache/vhosts:/etc/apache2/sites-enabled
-      - ./.docker/apache/ssl:/etc/apache2/ssl
-      - .:/app
-      - ./logs:/var/www/logs
-    links:
-      - php
-    container_name: ${APP_NAME}_apache
-
-  php:
-    build:
-      context: ./.docker/php
-    volumes:
-      - .:/app
-      - ./docker/bin/mhsendmail:/usr/local/bin/mhsendmail
-      - .docker/php/dev.ini:/usr/local/etc/php/conf.d/dev.ini
-      - ./.logs/php:/var/www/logs
-    env_file:
-      - .env
-    working_dir: /app
-    depends_on:
-      - mysql
-    container_name: ${APP_NAME}_php
-
   web:
     image: fpfis/httpd-php-dev:7.3
+    container_name: ${APP_NAME}_web
     working_dir: /var/www/html
     ports:
-      - 8080:8080
+      - ${APP_PORT}:8080
     volumes:
-      - .:/var/www/html # Non Mac users.
+      - .:/var/www/html
       - ./docker/bin/mhsendmail:/usr/local/bin/mhsendmail
       - ./docker/php/php.ini:/usr/local/etc/php/php.ini
-    environment:
-      # XDEBUG CONFIGURATION
-      XDEBUG_CONFIG: "discover_client_host=true client_host=host.docker.internal client_port=9003 start_with_request=yes"
-      XDEBUG_MODE: "develop,debug"
-      PHP_IDE_CONFIG: "serverName=Docker"
-      SMTP_SERVER: mailhog
-      SMTP_PORT: 1025
     env_file:
       - .env
+
+  nodejs:
+    image: node:14-alpine
+    container_name: ${APP_NAME}_nodejs
+    volumes:
+      - .:/app
 
   mysql:
     image: percona/percona-server:5.7
-    volumes:
-      - mysql_data:/var/lib/mysql
+    container_name: ${APP_NAME}_mysql
+    ports:
+      - ${DATABASE_PORT}:3306
     command: --innodb-log-file-size=1G --max_allowed_packet=1G --innodb-buffer-pool-size=512M --wait_timeout=3000 --net_write_timeout=3000 --log_error_verbosity=3
     environment:
       MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
-    ports:
-      - 33060:3306
+    volumes:
+      - mysql_data:/var/lib/mysql
 
   mailhog:
     image: mailhog/mailhog
+    container_name: ${APP_NAME}_mailhog
     ports:
-      - 1025:1025 # smtp server
-      - 8025:8025 # web ui
+      - 1025:1025
+      - 8025:8025
 
   solr:
     image: solr:7
+    container_name: ${APP_NAME}_solr
     ports:
-      - "8983:8983"
+      - ${SOLR_PORT}:8983
     volumes:
       - solr_data:/var/solr
       - ./docker/solr/7.x:/opt/solr/server/solr/configsets/data_driven_schema_configs/conf
@@ -78,6 +51,10 @@ services:
       - docker-entrypoint.sh
       - solr-precreate
       - eic
+
+  redis:
+    image: redis:alpine
+    container_name: ${APP_NAME}_redis
 
 volumes:
   mysql_data:
