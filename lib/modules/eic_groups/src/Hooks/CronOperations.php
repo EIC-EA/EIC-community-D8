@@ -8,6 +8,7 @@ use Drupal\Core\Queue\QueueFactory;
 use Drupal\Core\Queue\QueueWorkerManagerInterface;
 use Drupal\Core\Queue\SuspendQueueException;
 use Drupal\Core\State\StateInterface;
+use Drupal\group\Entity\GroupInterface;
 use Drupal\pathauto\PathautoGeneratorInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -124,6 +125,9 @@ class CronOperations implements ContainerInjectionInterface {
         if (!empty($item->data['gid'])) {
           /** @var \Drupal\group\Entity\GroupInterface $group */
           $group = $this->entityTypeManager->getStorage('group')->load($item->data['gid']);
+          if (!$group instanceof GroupInterface) {
+            continue;
+          }
 
           $installedContentPluginIds = $group->getGroupType()->getInstalledContentPlugins()->getInstanceIds();
           foreach ($installedContentPluginIds as $key => $pluginId) {
