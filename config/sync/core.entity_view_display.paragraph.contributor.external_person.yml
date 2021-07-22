@@ -11,9 +11,11 @@ dependencies:
     - field.field.paragraph.contributor.field_person_email
     - field.field.paragraph.contributor.field_user_ref
     - field.field.paragraph.contributor.paragraph_view_mode
+    - image.style.thumbnail
     - paragraphs.paragraphs_type.contributor
   module:
     - link
+    - media
 _core:
   default_config_hash: ulqfEw_Yyq8BPOjg0pdkWBxki_DZASCvOp3jcTFRsxk
 id: paragraph.contributor.external_person
@@ -37,10 +39,10 @@ content:
     weight: 1
     label: hidden
     settings:
-      view_mode: default
-      link: false
+      image_style: thumbnail
+      image_link: ''
     third_party_settings: {  }
-    type: entity_reference_entity_view
+    type: media_thumbnail
     region: content
   field_name:
     weight: 0
