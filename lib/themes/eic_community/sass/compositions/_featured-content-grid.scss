@@ -126,10 +126,14 @@
   &__item-content-main,
   &__item-content-footer {
     width: 100%;
-  }
-
-  &__item-content-footer {
     padding-top: ecl-box-model('padding', 'meta');
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    flex-wrap: wrap;
+
+    .ecl-author {margin-right: auto;}
+    .ecl-teaser__stats {margin-left: auto;}
   }
 
   & &__item-type,
