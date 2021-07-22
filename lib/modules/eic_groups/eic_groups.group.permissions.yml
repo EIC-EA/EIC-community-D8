@@ -9,3 +9,6 @@ access members overview:
   title: 'Access Members overview'
   description: 'Gives access to the Members overview.'
   restrict access: FALSE
+create orphan group contents:
+  title: 'Create orphan group contents'
+  description: 'Gives access to node add pages for nodes which should not exist without a group'
