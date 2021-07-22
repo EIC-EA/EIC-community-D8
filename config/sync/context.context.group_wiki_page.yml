@@ -1,0 +1,77 @@
+uuid: 5ccc2292-2a19-485b-a29a-b6fcfb888574
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+name: group_wiki_page
+label: 'Group - Wiki page'
+group: Groups
+description: 'Context used when viewing group wiki pages'
+requireAllConditions: false
+disabled: false
+conditions:
+  node_type:
+    id: node_type
+    bundles:
+      wiki_page: wiki_page
+    negate: false
+    uuid: 118a3ee8-d75a-43fa-8dc7-13e7c95a283f
+    context_mapping:
+      node: '@node.node_route_context:node'
+reactions:
+  blocks:
+    blocks:
+      2089ac99-521b-4bba-b1e0-030d675b287f:
+        id: eic_groups_wiki_book_navigation
+        label: 'EIC Group Wiki Book navigation'
+        provider: eic_groups
+        label_display: '0'
+        region: sidebar
+        weight: '0'
+        block_mode: null
+        context_mapping: {  }
+        custom_id: eic_groups_wiki_book_navigation
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: group_wiki_page
+        uuid: 2089ac99-521b-4bba-b1e0-030d675b287f
+      20ba6aac-dedc-464e-9aee-4bff02f05621:
+        id: eic_group_header
+        label: 'EIC Group header'
+        provider: eic_groups
+        label_display: '0'
+        region: page_header
+        weight: '0'
+        context_mapping:
+          group: '@group.group_route_context:group'
+        custom_id: eic_group_header
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: group_wiki_page
+        uuid: 20ba6aac-dedc-464e-9aee-4bff02f05621
+      7d462b42-9959-4fe2-b3de-ff513c9c8a1e:
+        id: 'group_content_menu:group_main_menu'
+        label: 'Group - Main menu'
+        provider: group_content_menu
+        label_display: '0'
+        level: '1'
+        depth: '0'
+        expand_all_items: 0
+        region: page_header
+        weight: '0'
+        context_mapping:
+          group: '@group.group_route_context:group'
+        custom_id: group_content_menu_group_main_menu
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: group_wiki_page
+        uuid: 7d462b42-9959-4fe2-b3de-ff513c9c8a1e
+    id: blocks
+    saved: false
+    uuid: 4d77c57f-3626-4134-8271-8983fa46b50e
+    include_default_blocks: 0
+weight: 0
