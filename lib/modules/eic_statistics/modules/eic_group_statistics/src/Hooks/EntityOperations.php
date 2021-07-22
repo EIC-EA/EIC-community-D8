@@ -7,6 +7,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\eic_group_statistics\GroupStatisticsSearchApiReindex;
 use Drupal\eic_group_statistics\GroupStatisticsStorageInterface;
+use Drupal\entity_usage\EntityUsageInterface;
 use Drupal\group\Entity\GroupContentInterface;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\node\NodeInterface;
@@ -41,6 +42,13 @@ class EntityOperations implements ContainerInjectionInterface {
   protected $groupStatisticsSearchApiReindex;
 
   /**
+   * The Entity Usage service.
+   *
+   * @var \Drupal\entity_usage\EntityUsageInterface
+   */
+  protected $entityUsage;
+
+  /**
    * Constructs a EntityOperation object.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
@@ -49,15 +57,19 @@ class EntityOperations implements ContainerInjectionInterface {
    *   The Group statistics storage service.
    * @param \Drupal\eic_group_statistics\GroupStatisticsSearchApiReindex $group_statistics_sear_api_reindex
    *   The Group statistics search API Reindex service.
+   * @param \Drupal\entity_usage\EntityUsageInterface $entity_usage
+   *   The Entity Usage service.
    */
   public function __construct(
     EntityTypeManagerInterface $entity_type_manager,
     GroupStatisticsStorageInterface $group_statistics_storage,
-    GroupStatisticsSearchApiReindex $group_statistics_sear_api_reindex
+    GroupStatisticsSearchApiReindex $group_statistics_sear_api_reindex,
+    EntityUsageInterface $entity_usage
   ) {
     $this->entityTypeManager = $entity_type_manager;
     $this->groupStatisticsStorage = $group_statistics_storage;
     $this->groupStatisticsSearchApiReindex = $group_statistics_sear_api_reindex;
+    $this->entityUsage = $entity_usage;
   }
 
   /**
@@ -67,7 +79,8 @@ class EntityOperations implements ContainerInjectionInterface {
     return new static(
       $container->get('entity_type.manager'),
       $container->get('eic_group_statistics.storage'),
-      $container->get('eic_group_statistics.search_api.reindex')
+      $container->get('eic_group_statistics.search_api.reindex'),
+      $container->get('entity_usage.usage')
     );
   }
 
@@ -84,15 +97,38 @@ class EntityOperations implements ContainerInjectionInterface {
 
     switch ($entity->bundle()) {
       case 'group-group_membership':
+        // Increments number of members in the group statistics.
         $this->groupStatisticsStorage->increment($group, GroupStatisticsStorageInterface::STAT_TYPE_MEMBERS);
         break;
 
       case 'group-group_node-document':
+      case 'group-group_node-wiki_page':
+      case 'group-group_node-gallery':
         /** @var \Drupal\node\NodeInterface $node */
         $node = $entity->getEntity();
 
-        /** @var \Drupal\media\MediaInterface[] $medias */
-        $medias = $node->get('field_document_media')->referencedEntities();
+        $medias = [];
+
+        $media_fields = [
+          'field_document_media',
+          'field_related_downloads',
+          'field_photos',
+        ];
+        foreach ($media_fields as $field_name) {
+          if ($node->hasField($field_name)) {
+            foreach ($node->get($field_name)->referencedEntities() as $media) {
+              /** @var \Drupal\media\MediaInterface $media */
+              $medias[] = $media;
+            }
+          }
+        }
+
+        // If node has no media entities, we don't need to update group file
+        // statistics.
+        if (empty($medias)) {
+          $re_index = FALSE;
+          break;
+        }
 
         // Counts the number of times we need to increment the file statistic.
         $count = $this->countGroupFileStatistics($group, $node, $medias);
@@ -133,6 +169,7 @@ class EntityOperations implements ContainerInjectionInterface {
 
     switch ($entity->bundle()) {
       case 'group-group_membership':
+        // Decrements number of members in the group statistics.
         $this->groupStatisticsStorage->decrement($group, GroupStatisticsStorageInterface::STAT_TYPE_MEMBERS);
         break;
 
@@ -170,8 +207,30 @@ class EntityOperations implements ContainerInjectionInterface {
 
     switch ($entity->bundle()) {
       case 'document':
-        /** @var \Drupal\media\MediaInterface[] $medias */
-        $medias = $entity->get('field_document_media')->referencedEntities();
+      case 'wiki_page':
+      case 'gallery':
+        $medias = [];
+
+        $media_fields = [
+          'field_document_media',
+          'field_related_downloads',
+          'field_photos',
+        ];
+        foreach ($media_fields as $field_name) {
+          if ($entity->hasField($field_name)) {
+            foreach ($entity->get($field_name)->referencedEntities() as $media) {
+              /** @var \Drupal\media\MediaInterface $media */
+              $medias[] = $media;
+            }
+          }
+        }
+
+        // If node has no media entities, we don't need to update group file
+        // statistics.
+        if (empty($medias)) {
+          $re_index = FALSE;
+          break;
+        }
 
         // Counts the number of times we need to decrement the file statistic.
         $count = $this->countGroupFileStatistics($group, $entity, $medias);
@@ -221,8 +280,8 @@ class EntityOperations implements ContainerInjectionInterface {
     }
 
     foreach ($medias as $media) {
-      // @todo Replace \Drupal::service() with proper dependency injection.
-      $media_usage = \Drupal::service('entity_usage.usage')->listSources($media);
+      // Loads up the entity usage for the media.
+      $media_usage = $this->entityUsage->listSources($media);
 
       // If there is no media usage, we increment the counter.
       if (!isset($media_usage['node'])) {
