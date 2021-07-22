@@ -16,7 +16,7 @@ class RouteSubscriber extends RouteSubscriberBase {
    * {@inheritdoc}
    */
   public function alterRoutes(RouteCollection $collection): void {
-    foreach (ForbiddenOrphanContentTypes::FORBIDDEN_ENTITIES as $route_name => $definition) {
+    foreach (ForbiddenOrphanContentTypes::FORBIDDEN_ENTITY_ROUTES as $route_name => $definition) {
       $add_route = $collection->get($route_name);
       if (!$add_route instanceof Route) {
         continue;

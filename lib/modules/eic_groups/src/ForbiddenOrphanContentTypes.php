@@ -10,7 +10,7 @@ namespace Drupal\eic_groups;
  */
 final class ForbiddenOrphanContentTypes {
 
-  const FORBIDDEN_ENTITIES = [
+  const FORBIDDEN_ENTITY_ROUTES = [
     'node.add' => [
       'bundles' => [
         'wiki_page',

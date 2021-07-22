@@ -25,7 +25,7 @@ class OrphanGroupContentAccessCheck implements AccessInterface {
     $route_name = $route_match->getRouteName();
     if (!array_key_exists(
       $route_name,
-      ForbiddenOrphanContentTypes::FORBIDDEN_ENTITIES
+      ForbiddenOrphanContentTypes::FORBIDDEN_ENTITY_ROUTES
     )) {
       // Entity type/route is not supported
       return AccessResult::neutral();
@@ -37,7 +37,7 @@ class OrphanGroupContentAccessCheck implements AccessInterface {
       $node_type = $route_match->getParameter('node_type');
 
       return AccessResult::allowedIf(
-        !in_array($node_type->id(), ForbiddenOrphanContentTypes::FORBIDDEN_ENTITIES)
+        !in_array($node_type->id(), ForbiddenOrphanContentTypes::FORBIDDEN_ENTITY_ROUTES)
         || $account->hasPermission('bypass node access'))
         ->addCacheContexts(['url.path']);
     }
