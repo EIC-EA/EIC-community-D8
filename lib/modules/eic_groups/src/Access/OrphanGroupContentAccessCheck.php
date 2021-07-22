@@ -36,13 +36,13 @@ class OrphanGroupContentAccessCheck implements AccessInterface {
     if ('node.add' === $route_name) {
       /** @var \Drupal\node\Entity\NodeType $node_type */
       $node_type = $route_match->getParameter('node_type');
-      $user = User::load($account->id());
       $result = AccessResult::allowedIf(
         !in_array($node_type->id(), ForbiddenOrphanContentTypes::FORBIDDEN_ENTITY_ROUTES)
         || $account->hasPermission('bypass node access'));
+      $user_id = $account->id();
 
       return $result->addCacheContexts(['url.path'])
-        ->addCacheTags($user->getCacheTags());
+        ->addCacheTags(["user:$user_id"]);
     }
 
     // No idea then.
