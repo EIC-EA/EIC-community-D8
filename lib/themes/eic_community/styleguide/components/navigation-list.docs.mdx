@@ -27,12 +27,14 @@ This will apply the aria-collapsed state also on the parent element `.selector`.
 | Key    | Type   | Description                                        | Mandatory |
 | ------ | ------ | -------------------------------------------------- | --------- |
 | before | string | Displays optional HTML before the navigation list. | no        |
-| before | string | Displays optional HTML after the navigation list.  | no        |
+| after | string | Displays optional HTML after the navigation list.  | no        |
 
 ## Twig parameters:
 
 | Key             | Type     | Description                                                          | Mandatory |
 | --------------- | -------- | -------------------------------------------------------------------- | --------- |
+| title           | string   | Displays the title of the navigation                                 | no        |
+| title_element   | string   | Configures the element used for the title. Default "h2"              | no        |
 | icon_file_path  | string   | The URL of the SVG inline icon sprite.                               | no        |
 | collapse        | object   | Displays the collapse toggle to expand/collapse the whole component. | no        |
 | collapse.label  | string   | The semantic label for the collapse toggle.                          | no        |

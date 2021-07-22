@@ -4,6 +4,10 @@
   outline: ecl-border();
   outline-offset: -1px;
 
+  &__title {
+    @extend .ecl-u-type-heading-2;
+  }
+
   &,
   &__main-before,
   &__main-after {
