@@ -12,17 +12,16 @@ migration_group: eic_smed_taxonomy
 label: 'SMED - Spoken languages'
 source:
   plugin: eic_smed_url
-  taxonomy_vocabulary_smed_id: SpokenLanguages
   authentication:
     plugin: basic
     username: xxx
     password: xxx
+  urls: {  }
   data_fetcher_plugin: eic_http_smed_taxonomy_post
+  taxonomy_vocabulary_smed_id: SpokenLanguages
   data_parser_plugin: json
   include_raw_data: true
   track_changes: true
-  urls:
-    - 'https://eic.test.eismea.eu/mydashboard/REST/taxonomies'
   item_selector: Taxonomy/Option
   ids:
     id:

@@ -11,10 +11,9 @@ source:
     # we just keep them here with dummy data for reference.
     username: xxx
     password: xxx
-  urls:
-    # The URL will be set automatically by the eic_smed_url plugin, we just keep
-    # it here with dummy data for reference.
-    - xxx
+  # The URL will be set automatically by the eic_smed_url plugin, we just keep
+  # it here with dummy data for reference.
+  urls: { }
   data_fetcher_plugin: eic_http_smed_taxonomy_post
   taxonomy_vocabulary_smed_id: SpokenLanguages
   data_parser_plugin: json
