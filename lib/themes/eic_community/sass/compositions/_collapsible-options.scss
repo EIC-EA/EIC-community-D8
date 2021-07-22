@@ -54,12 +54,11 @@
       display: none;
     }
 
-    & > *:focus {
-      outline: none;
-    }
-
     &:not(button):focus-within {
       outline: ecl-border('outline');
+    }
+    [class*="ecl-"]:focus-within {
+      outline: none;
     }
   }
 
