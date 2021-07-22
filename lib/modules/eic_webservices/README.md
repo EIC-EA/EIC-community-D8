@@ -12,3 +12,7 @@ The SMED taxonomy webservice uses basic http authentication. The `eic_smed_url` 
 
   - `$settings['smed_api_taxonomy_username'] = 'theusername';`
   - `$settings['smed_api_taxonomy_password'] = 'thepassword';`
+
+We also need to configure the endpoint, which can change based on the environment.
+Therefore we also set it automatically, from the `settings.php` file:
+- `$settings['smed_api_taxonomy_endpoint'] = 'https://the-endpoint-url';`

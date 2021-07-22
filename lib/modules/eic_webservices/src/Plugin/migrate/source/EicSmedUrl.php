@@ -43,6 +43,8 @@ class EicSmedUrl extends Url {
         $configuration['authentication']['password'] = Settings::get('smed_api_taxonomy_password');
       }
     }
+    // Add the URL from the configuration.
+    $configuration['urls'][] = Settings::get('smed_api_taxonomy_endpoint');
 
     // Run the parent constructor.
     parent::__construct($configuration, $plugin_id, $plugin_definition, $migration);

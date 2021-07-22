@@ -5,19 +5,21 @@ migration_tags:
   - eic_smed_api_authentication
 source:
   plugin: eic_smed_url
-  taxonomy_vocabulary_smed_id: SpokenLanguages
   authentication:
     plugin: basic
     # Username and password will be set automatically by the eic_smed_url plugin
     # we just keep them here with dummy data for reference.
     username: xxx
     password: xxx
+  urls:
+    # The URL will be set automatically by the eic_smed_url plugin, we just keep
+    # it here with dummy data for reference.
+    - xxx
   data_fetcher_plugin: eic_http_smed_taxonomy_post
+  taxonomy_vocabulary_smed_id: SpokenLanguages
   data_parser_plugin: json
   include_raw_data: true
   track_changes: true
-  urls:
-    - 'https://eic.test.eismea.eu/mydashboard/REST/taxonomies'
   item_selector: 'Taxonomy/Option'
   ids:
     id:
