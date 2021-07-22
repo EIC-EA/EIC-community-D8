@@ -66,15 +66,16 @@ class GroupStatisticsHelper implements GroupStatisticsHelperInterface {
       return new GroupStatistics($group->id());
     }
 
-    // Get first result item found.
-    $item = reset($results->getResultItems());
+    // Gets first result item found.
+    $items = $results->getResultItems();
+    $item = reset($items);
 
     return new GroupStatistics(
-      $group->id(),
-      reset($item->getField('group_statistic_members')->getValues()),
-      reset($item->getField('group_statistic_comments')->getValues()),
-      reset($item->getField('group_statistic_files')->getValues()),
-      reset($item->getField('group_statistic_events')->getValues()),
+      (int) $group->id(),
+      $item->getField('group_statistic_members')->getValues()[0],
+      $item->getField('group_statistic_comments')->getValues()[0],
+      $item->getField('group_statistic_files')->getValues()[0],
+      $item->getField('group_statistic_events')->getValues()[0],
     );
   }
 
