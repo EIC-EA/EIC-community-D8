@@ -15,6 +15,7 @@ final class ForbiddenOrphanContentTypes {
       'bundles' => [
         'wiki_page',
         'discussion',
+        'gallery',
       ],
     ],
   ];
