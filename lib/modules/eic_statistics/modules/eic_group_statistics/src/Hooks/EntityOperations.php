@@ -259,6 +259,102 @@ class EntityOperations implements ContainerInjectionInterface {
   }
 
   /**
+   * Acts on hook_node_update() for node entities that belong to a group.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The node entity object.
+   * @param \Drupal\group\Entity\GroupContentInterface $group_content
+   *   The group content entity object that relates to the node.
+   */
+  public function groupContentNodeUpdate(EntityInterface $entity, GroupContentInterface $group_content) {
+    $group = $group_content->getGroup();
+
+    $re_index = TRUE;
+
+    switch ($entity->bundle()) {
+      case 'document':
+      case 'wiki_page':
+      case 'gallery':
+        $old_medias = [];
+        $medias = [];
+
+        $media_fields = [
+          'field_document_media',
+          'field_related_downloads',
+          'field_photos',
+        ];
+        foreach ($media_fields as $field_name) {
+          if ($entity->hasField($field_name)) {
+            // Sets array of old medias to decrement from group file
+            // statistics.
+            foreach ($entity->original->get($field_name)->referencedEntities() as $media) {
+              $old_medias[$media->id()] = $media;
+            }
+            // Sets array of new medias to increment to the group file
+            // statistics.
+            foreach ($entity->get($field_name)->referencedEntities() as $media) {
+              if (!isset($old_medias[$media->id()])) {
+                $medias[$media->id()] = $media;
+              }
+              else {
+                unset($old_medias[$media->id()]);
+              }
+            }
+          }
+        }
+
+        // If there are no media entities to increment or decrement, then we
+        // don't need to update group file statistics.
+        if (empty($medias) && empty($old_medias)) {
+          $re_index = FALSE;
+          break;
+        }
+
+        $increment_count = 0;
+        if (!empty($medias)) {
+          // Counts the number of times we need to increment the file statistic.
+          $increment_count = $this->countGroupFileStatistics($group, $entity, $medias);
+        }
+
+        $decrement_count = 0;
+        if (!empty($old_medias)) {
+          // Counts the number of times we need to decrement the file statistic.
+          $decrement_count = $this->countGroupFileStatistics($group, $entity, $old_medias);
+        }
+
+        // If counters are empty, we don't need to update group file
+        // statistics.
+        if (!$increment_count && !$decrement_count) {
+          $re_index = FALSE;
+          break;
+        }
+
+        // Increments group file statistics.
+        if ($increment_count) {
+          $this->groupStatisticsStorage->increment($group, GroupStatisticsStorageInterface::STAT_TYPE_FILES, $increment_count);
+        }
+
+        // Decrements group file statistics.
+        if ($decrement_count) {
+          $this->groupStatisticsStorage->decrement($group, GroupStatisticsStorageInterface::STAT_TYPE_FILES, $decrement_count);
+        }
+        break;
+
+      default:
+        $re_index = FALSE;
+        break;
+
+    }
+
+    if (!$re_index) {
+      return;
+    }
+
+    // Re-index group statistics.
+    $this->groupStatisticsSearchApiReindex->reindexItem($group);
+  }
+
+  /**
    * Counts group file statistics for a given node with medias.
    *
    * @param \Drupal\group\Entity\GroupInterface $group
@@ -280,7 +376,8 @@ class EntityOperations implements ContainerInjectionInterface {
     }
 
     foreach ($medias as $media) {
-      // Loads up the entity usage for the media.
+      // Loads up the entity usage for the media. It includes source entity
+      // revisions IDs.
       $media_usage = $this->entityUsage->listSources($media);
 
       // If there is no media usage, we increment the counter.
@@ -299,9 +396,24 @@ class EntityOperations implements ContainerInjectionInterface {
       // hasn't been referenced in this group before updating the file
       // statistics.
       if (count($media_usage['node']) > 0) {
+        $source_nodes = [];
 
-        // Load the source nodes.
-        $source_nodes = $this->entityTypeManager->getStorage('node')->loadMultiple(array_keys($media_usage['node']));
+        // Because the media usage is saved per node revision, we need to make
+        // sure the media is presented in the latest revision of every node.
+        // If the media is not presented in the latest revision of anode, that
+        // node will be discarded.
+        foreach ($media_usage['node'] as $nid => $media_usage_items) {
+          $latest_vid = $this->entityTypeManager->getStorage('node')->getLatestRevisionId($nid);
+
+          foreach ($media_usage_items as $media_usage_item) {
+            if ((int) $media_usage_item['source_vid'] === $latest_vid) {
+              $source_nodes[] = $this->entityTypeManager->getStorage('node')->loadRevision($latest_vid);
+              // Latest revision has been found in the usage. We don't need
+              // go through the remaining items.
+              break;
+            }
+          }
+        }
 
         $duplicated_media = FALSE;
 
