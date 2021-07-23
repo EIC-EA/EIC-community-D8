@@ -37,38 +37,6 @@ reactions:
         unique: 0
         context_id: group_wiki_overview
         uuid: 2089ac99-521b-4bba-b1e0-030d675b287f
-      5d1d9455-f8e8-468e-9b71-765a900f3953:
-        id: eic_group_header
-        label: 'EIC Group header'
-        provider: eic_groups
-        label_display: '0'
-        region: page_header
-        weight: '0'
-        context_mapping:
-          group: '@group.group_route_context:group'
-        custom_id: eic_group_header
-        theme: eic_community
-        css_class: ''
-        unique: 0
-        context_id: group_wiki_overview
-        uuid: 5d1d9455-f8e8-468e-9b71-765a900f3953
-      16870297-43dc-4d71-b1f4-af56131bec35:
-        id: 'group_content_menu:group_main_menu'
-        label: 'Group - Main menu'
-        provider: group_content_menu
-        label_display: '0'
-        level: '1'
-        depth: '0'
-        expand_all_items: 0
-        region: page_header
-        weight: '0'
-        context_mapping: {  }
-        custom_id: group_content_menu_group_main_menu
-        theme: eic_community
-        css_class: ''
-        unique: 0
-        context_id: group_wiki_overview
-        uuid: 16870297-43dc-4d71-b1f4-af56131bec35
     id: blocks
     saved: false
     uuid: 4d77c57f-3626-4134-8271-8983fa46b50e
