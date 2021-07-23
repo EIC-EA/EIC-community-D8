@@ -72,4 +72,23 @@ interface GroupStatisticsStorageInterface {
    */
   public function load(GroupInterface $group);
 
+  /**
+   * Sets group statistics given a GroupStatistics object.
+   *
+   * @param \Drupal\eic_group_statistics\GroupStatistics $group_statistics
+   *   The GroupStatistics object.
+   */
+  public function setGroupStatistics(GroupStatistics $group_statistics);
+
+  /**
+   * Calculates all statistics for a given group.
+   *
+   * @param \Drupal\group\Entity\GroupInterface $group
+   *   The Group entity.
+   *
+   * @return \Drupal\eic_group_statistics\GroupStatistics
+   *   A GroupStatistics object containing all the group statistics.
+   */
+  public function calculateGroupStatistics(GroupInterface $group);
+
 }
