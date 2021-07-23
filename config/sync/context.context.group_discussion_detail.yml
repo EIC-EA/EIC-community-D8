@@ -21,40 +21,7 @@ conditions:
       node: '@node.node_route_context:node'
 reactions:
   blocks:
-    blocks:
-      4a713ff6-de1c-4bb1-8198-3e8b28ae1b81:
-        id: eic_group_header
-        label: 'EIC Group header'
-        provider: eic_groups
-        label_display: '0'
-        region: page_header
-        weight: '0'
-        context_mapping:
-          group: '@group.group_route_context:group'
-        custom_id: eic_group_header
-        theme: eic_community
-        css_class: ''
-        unique: 0
-        context_id: group_discussion_detail
-        uuid: 4a713ff6-de1c-4bb1-8198-3e8b28ae1b81
-      78e2aa8e-8ba8-4752-b2f7-4bfa04e951ba:
-        id: 'group_content_menu:group_main_menu'
-        label: 'Group - Main menu'
-        provider: group_content_menu
-        label_display: '0'
-        level: '1'
-        depth: '0'
-        expand_all_items: 0
-        region: page_header
-        weight: '0'
-        context_mapping:
-          group: '@group.group_route_context:group'
-        custom_id: group_content_menu_group_main_menu
-        theme: eic_community
-        css_class: ''
-        unique: 0
-        context_id: group_discussion_detail
-        uuid: 78e2aa8e-8ba8-4752-b2f7-4bfa04e951ba
+    blocks: {  }
     id: blocks
     saved: false
     uuid: 2638f701-9750-4f62-b60e-8cf9bb649629

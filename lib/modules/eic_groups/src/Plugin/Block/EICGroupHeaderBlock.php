@@ -274,7 +274,7 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
       if ($joining_methods = $this->oecGroupFlexHelper->getGroupJoiningMethod($group)) {
         $login_link_options = [
           'query' => [
-            'destination' => $group->toUrl()->toString(),
+            'destination' => Url::fromRoute('<current>')->toString(),
           ],
         ];
         $link['url'] = Url::fromRoute('user.login', [], $login_link_options);
