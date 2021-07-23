@@ -81,6 +81,14 @@ interface GroupStatisticsStorageInterface {
   public function setGroupStatistics(GroupStatistics $group_statistics);
 
   /**
+   * Sets group statistics given multiple GroupStatistics objects.
+   *
+   * @param \Drupal\eic_group_statistics\GroupStatistics[] $groups_statistics
+   *   The array of GroupStatistics objects.
+   */
+  public function setMultipleGroupStatistics(array $groups_statistics);
+
+  /**
    * Calculates all statistics for a given group.
    *
    * @param \Drupal\group\Entity\GroupInterface $group
