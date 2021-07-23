@@ -5,6 +5,7 @@
  * Prepares variables for node News and Story templates.
  */
 
+use Drupal\Core\Block\BlockPluginInterface;
 use Drupal\eic_community\ValueObject\ImageValueObject;
 use Drupal\file\Entity\File;
 
@@ -70,7 +71,13 @@ function _eic_community_preprocess_node_news_story(array &$variables) {
       ];
     }
 
-    /* @todo Add share links. */
+    $share_block = \Drupal::service('plugin.manager.block')
+      ->createInstance('social_share', []);
+    if ($share_block instanceof BlockPluginInterface) {
+      $build = $share_block->build();
+      $build['#title'] = t('Share');
+      $variables['social_share'] = $build;
+    }
 
     _eic_community_story_contributors($variables);
     _eic_community_story_topics($variables);
