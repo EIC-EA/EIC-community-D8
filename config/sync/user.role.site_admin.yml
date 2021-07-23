@@ -9,6 +9,7 @@ is_admin: null
 permissions:
   - 'access administration pages'
   - 'access content overview'
+  - 'access eic_admin dashboard'
   - 'access group overview'
   - 'access toolbar'
   - 'add content to books'
