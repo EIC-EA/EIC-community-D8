@@ -44,7 +44,7 @@ class EicSmedUrl extends Url {
       }
     }
     // Add the URL from the configuration.
-    $configuration['urls'][] = Settings::get('smed_api_taxonomy_endpoint');
+    $configuration['urls'] = [Settings::get('smed_api_taxonomy_endpoint')];
 
     // Run the parent constructor.
     parent::__construct($configuration, $plugin_id, $plugin_definition, $migration);
