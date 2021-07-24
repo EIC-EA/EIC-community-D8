@@ -9,6 +9,8 @@ RUN a2enmod rewrite headers \
     && a2enmod rewrite \
     && a2enmod ssl
 
+RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
+
 WORKDIR /app
 EXPOSE 80
 COPY apache-foreground /usr/local/bin/

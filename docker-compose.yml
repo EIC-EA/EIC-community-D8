@@ -1,6 +1,18 @@
 version: '3'
 
 services:
+  apache:
+    build:
+      context: ./docker/apache
+    ports:
+      - 8087:80
+    volumes:
+      - ./docker/apache/vhosts:/etc/apache2/sites-enabled
+      - .:/app
+    links:
+      - web
+    container_name: ${APP_NAME}_apache
+
   web:
     image: fpfis/httpd-php-dev:7.3
     container_name: ${APP_NAME}_web
@@ -10,7 +22,7 @@ services:
     volumes:
       - .:/var/www/html
       - ./docker/bin/mhsendmail:/usr/local/bin/mhsendmail
-      - ./docker/php/php.ini:/usr/local/etc/php/php.ini
+      - ./docker/web/dev.ini:/usr/local/etc/php/php.ini
     env_file:
       - .env
 
