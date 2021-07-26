@@ -293,14 +293,21 @@ function eic_groups_flagging_access(EntityInterface $entity, $operation, Account
     case 'view':
     case 'flag':
     case 'unflag':
-      // Deny access to group flag if the group IS in pending or draft
-      // state.
-      if (in_array($moderation_state, [
-        GroupsModerationHelper::GROUP_PENDING_STATE,
-        GroupsModerationHelper::GROUP_DRAFT_STATE,
-      ])) {
-        $access = AccessResult::forbidden()
-          ->addCacheableDependency($entity)
+      if ($flagged_entity->getEntityTypeId() === 'group') {
+        // Default access.
+        $access = AccessResult::allowed();
+
+        // Deny access to group flag if the group IS in pending or draft
+        // state.
+        if (in_array($moderation_state, [
+          GroupsModerationHelper::GROUP_PENDING_STATE,
+          GroupsModerationHelper::GROUP_DRAFT_STATE,
+        ])) {
+          $access = AccessResult::forbidden();
+        }
+
+        // Add cacheable dependencies.
+        $access->addCacheableDependency($entity)
           ->addCacheableDependency($flagged_entity);
       }
       break;
@@ -340,7 +347,7 @@ function eic_groups_entity_operation_alter(array &$operations, EntityInterface $
 }
 
 /**
- * Implements hook_preprocess_block__HOOK
+ * Implements hook_preprocess_block__HOOK().
  */
 function eic_groups_preprocess_block__group_content_menu(&$variables) {
   $block_manager = \Drupal::service('plugin.manager.block');
