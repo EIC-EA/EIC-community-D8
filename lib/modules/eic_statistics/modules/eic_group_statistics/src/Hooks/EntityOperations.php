@@ -111,6 +111,8 @@ class EntityOperations implements ContainerInjectionInterface {
 
         $medias = [];
 
+        // @todo In the future we should consider configuring which fields to
+        // use via config entity and using an administration form.
         $media_fields = [
           'field_document_media',
           'field_photos',
@@ -215,6 +217,8 @@ class EntityOperations implements ContainerInjectionInterface {
       case 'gallery':
         $medias = [];
 
+        // @todo In the future we should consider configuring which fields to
+        // use via config entity and using an administration form.
         $media_fields = [
           'field_document_media',
           'field_photos',
@@ -284,6 +288,8 @@ class EntityOperations implements ContainerInjectionInterface {
         $old_medias = [];
         $medias = [];
 
+        // @todo In the future we should consider configuring which fields to
+        // use via config entity and using an administration form.
         $media_fields = [
           'field_document_media',
           'field_photos',
