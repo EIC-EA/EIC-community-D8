@@ -15,5 +15,5 @@ audience: outsider
 group_type: group
 permissions_ui: false
 permissions:
-  - 'request group membership'
   - 'join group'
+  - 'request group membership'
