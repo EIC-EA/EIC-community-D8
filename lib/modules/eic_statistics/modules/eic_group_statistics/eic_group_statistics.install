@@ -5,8 +5,6 @@
  * Install, update and uninstall functions for the EIC Group Statistics module.
  */
 
-use Drupal\eic_group_statistics\GroupStatisticsHelper;
-
 /**
  * Implements hook_schema().
  */
@@ -81,6 +79,6 @@ function eic_group_statistics_schema() {
  */
 function eic_group_statistics_install() {
   // Update groups statistics for all groups.
-  \Drupal::classResolver(GroupStatisticsHelper::class)
+  \Drupal::service('eic_group_statistics.helper')
     ->updateAllGroupsStatistics();
 }
