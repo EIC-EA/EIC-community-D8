@@ -48,7 +48,7 @@ class FieldWidgetOperations {
 
         // Exception for LinkedIn since we need to prepend "in/" if missing.
         if ($social_network_name === 'linkedin') {
-          if (substr($social_network_name, 0, 3) !== 'in/') {
+          if (substr($form_state_values[$key]['link'], 0, 3) !== 'in/') {
             $form_state_values[$key]['link'] = 'in/' . $form_state_values[$key]['link'];
           }
         }
