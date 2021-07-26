@@ -314,7 +314,7 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
     // access to.
     foreach (array_keys($group->flags) as $flag_name) {
       $flag = $this->flagService->getFlagById(str_replace('flag_', '', $flag_name));
-      $user_flag = $this->flagService->getFlagging($flag, $group, $this->currentUser->getAccount());
+      $user_flag = $this->flagService->getFlagging($flag, $group);
 
       // We need to create a fake flag if the user never flagged the content,
       // otherwise we can't do an access check.
