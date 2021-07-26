@@ -68,6 +68,29 @@ function eic_search_search_api_solr_documents_alter(array &$documents, \Drupal\s
   foreach ($documents as $document) {
     $fields = $document->getFields();
 
+    switch ($fields['ss_search_api_datasource']) {
+      case 'entity:node':
+        $title = $fields['ss_content_title'];
+        $type = $fields['ss_content_type'];
+        $date = $fields['ds_content_created'];
+        break;
+      case 'entity:group':
+        $title = $fields['ss_group_label_string'];
+        $type = 'group';
+        $date = $fields['ds_group_created'];
+        break;
+      default:
+        $title = '';
+        $type = '';
+        $date = '';
+        break;
+    }
+
+    //We need to use only one field key for the global search on the FE side
+    $document->addField('ss_global_title', $title);
+    $document->addField('ss_global_content_type', $type);
+    $document->addField('ss_global_created_date', $date);
+
     if ($fields['ss_search_api_datasource'] === 'entity:user') {
       $profile = \Drupal\profile\Entity\Profile::load($fields['its_user_profile']);
       if ($profile instanceof \Drupal\profile\Entity\ProfileInterface) {
@@ -81,7 +104,7 @@ function eic_search_search_api_solr_documents_alter(array &$documents, \Drupal\s
         $grp_membership_service = \Drupal::service('group.membership_loader');
         $grps = $grp_membership_service->loadByUser($user);
 
-        $grp_ids = array_map(function(\Drupal\group\GroupMembership $grp_membership) {
+        $grp_ids = array_map(function (\Drupal\group\GroupMembership $grp_membership) {
           return $grp_membership->getGroup()->id();
         }, $grps);
 

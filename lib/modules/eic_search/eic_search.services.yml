@@ -15,3 +15,7 @@ services:
     class: Drupal\eic_search\Search\Sources\UserGallerySourceType
     tags:
       - { name: eic_search.source }
+  eic_search.source_global:
+    class: Drupal\eic_search\Search\Sources\GlobalSourceType
+    tags:
+      - { name: eic_search.source }

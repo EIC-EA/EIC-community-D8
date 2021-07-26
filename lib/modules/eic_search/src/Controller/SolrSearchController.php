@@ -35,7 +35,7 @@ class SolrSearchController extends ControllerBase {
     $facets_options = $request->query->get('facets_options');
     $facets_value = json_decode($facets_value, TRUE);
     $page = $request->query->get('page');
-    $datasource = $request->query->get('datasource');
+    $datasources = json_decode($request->query->get('datasource'), TRUE);
     $offset = $request->query->get('offset');
     $index_storage = \Drupal::entityTypeManager()
       ->getStorage('search_api_index');
@@ -87,7 +87,14 @@ class SolrSearchController extends ControllerBase {
       }
     }
 
-    $fq = 'ss_search_api_datasource:"entity:' . $datasource . '"';
+    $datasources_query = [];
+
+    foreach ($datasources as $datasource) {
+      $datasources_query[] = 'ss_search_api_datasource:"entity:' . $datasource . '"';
+    }
+
+    $fq = implode(' OR ', $datasources_query);
+
     $facets_query = $this->getFacetsQuery($facets_value);
 
     if ($facets_query) {
@@ -96,10 +103,10 @@ class SolrSearchController extends ControllerBase {
 
     $solariumQuery->addParam('fq', $fq);
 
-    if ($index->isValidProcessor('group_content_access')) {
-      $index->getProcessor('group_content_access')
-        ->preprocessSolrSearchQuery($solariumQuery);
-    }
+    //if ($index->isValidProcessor('group_content_access')) {
+    //  $index->getProcessor('group_content_access')
+    //    ->preprocessSolrSearchQuery($solariumQuery);
+    //}
 
     $results = $connector->search($solariumQuery)->getBody();
 

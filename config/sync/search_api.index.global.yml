@@ -40,6 +40,8 @@ dependencies:
     - field.storage.profile.field_vocab_topic_expertise
     - field.storage.profile.field_vocab_topic_interest
     - search_api.server.global
+    - core.entity_view_mode.group.no_html
+    - core.entity_view_mode.node.no_html
 third_party_settings:
   search_api_solr:
     finalize: false
@@ -373,6 +375,58 @@ field_settings:
     indexed_locked: true
     type_locked: true
     hidden: true
+  rendered_item:
+    label: 'Rendered HTML output'
+    property_path: rendered_item
+    type: text
+    configuration:
+      roles:
+        anonymous: anonymous
+      view_mode:
+        'entity:content_moderation_state':
+          content_moderation_state: ''
+        'entity:flagging':
+          bookmark_content: ''
+          follow_group: ''
+          follow_user: ''
+          highlight_content: ''
+          like_comment: ''
+          like_content: ''
+          recommend: ''
+          recommend_group: ''
+          request_archive_comment: ''
+          request_archive_content: ''
+          request_archive_group: ''
+          request_delete_comment: ''
+          request_delete_content: ''
+          request_delete_group: ''
+        'entity:group':
+          group: no_html
+        'entity:group_content':
+          group-group_invitation: ''
+          group-group_membership: ''
+          group-group_membership_request: ''
+          group-group_node-book: ''
+          group-group_node-discussion: ''
+          group-group_node-document: ''
+          group-group_node-gallery: ''
+          group-group_node-wiki_page: ''
+          group-group_request_archival: ''
+          group-group_request_delete: ''
+          group_content_type_ddd92dce39526: ''
+        'entity:group_permission':
+          group_permission: ''
+        'entity:node':
+          book: no_html
+          discussion: no_html
+          document: no_html
+          gallery: no_html
+          news: no_html
+          page: no_html
+          story: no_html
+          wiki_page: no_html
+        'entity:user':
+          user: default
   status:
     label: 'User status'
     datasource_id: 'entity:user'
