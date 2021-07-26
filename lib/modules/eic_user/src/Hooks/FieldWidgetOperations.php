@@ -54,6 +54,9 @@ class FieldWidgetOperations {
     // validation so that users don't need to figure out how to properly insert
     // their usernames.
     foreach ($form_state_values as $key => $value) {
+      // Make sure full URLs start with "www".
+      $value['link'] = str_replace('https://' . $value['social'], 'https://www.' . $value['social'], $value['link']);
+
       if ($value['social'] === $social_network_name) {
         $form_state_values[$key]['link'] = str_replace($social_network_base_url, '', $value['link']);
         break;
