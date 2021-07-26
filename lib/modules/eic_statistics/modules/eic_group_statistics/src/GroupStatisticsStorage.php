@@ -251,6 +251,9 @@ class GroupStatisticsStorage implements GroupStatisticsStorageInterface {
     // Array of media fields per group content where we want to count file
     // statistics. Keyed by group content bundle.
     $files_group_content_types = [
+      "{$group->bundle()}-group_node-discussion" => [
+        'field_related_documents',
+      ],
       "{$group->bundle()}-group_node-document" => [
         'field_document_media',
       ],
