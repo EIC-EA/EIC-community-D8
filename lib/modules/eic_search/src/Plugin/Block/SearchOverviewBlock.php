@@ -162,7 +162,7 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
       '#enable_search' => $this->configuration['enable_search'],
       '#url' => Url::fromRoute('eic_groups.solr_search')->toString(),
       '#isAnonymous' => \Drupal::currentUser()->isAnonymous(),
-      '#currentGroup' => $current_group_route,
+      '#currentGroup' => $current_group_route->id(),
       '#translations' => [
         'public' => $this->t('Public', [], ['context' => 'eic_group']),
         'private' => $this->t('Private', [], ['context' => 'eic_group']),
@@ -216,6 +216,10 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
   public function blockSubmit($form, FormStateInterface $form_state) {
     parent::blockSubmit($form, $form_state);
     $values = $form_state->getValues();
+
+    if (!array_key_exists('search', $values)) {
+      return;
+    }
 
     //First reset values
     $this->configuration['facets'] = [];
@@ -324,15 +328,15 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
           ],
         ],
       ];
-    }
 
-    if ($source->ableToPrefilteredByGroup()) {
-      $form['search']['configuration']['prefilter_group'] = [
-        '#type' => 'checkbox',
-        '#default_value' => $this->configuration['prefilter_group'],
-        '#title' => $this->t('Prefilter the overview by group', [], ['context' => 'eic_search']),
-        '#description' => $this->t('It will prefiltered the overview with the current group from page', [], ['context' => 'eic_search']),
-      ];
+      if ($source->ableToPrefilteredByGroup()) {
+        $form['search']['configuration']['prefilter_group'] = [
+          '#type' => 'checkbox',
+          '#default_value' => $this->configuration['prefilter_group'],
+          '#title' => $this->t('Prefilter the overview by group', [], ['context' => 'eic_search']),
+          '#description' => $this->t('It will prefiltered the overview with the current group from page', [], ['context' => 'eic_search']),
+        ];
+      }
     }
   }
 
