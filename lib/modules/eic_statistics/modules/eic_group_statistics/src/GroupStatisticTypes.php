@@ -30,7 +30,7 @@ final class GroupStatisticTypes {
   const STAT_TYPE_EVENTS = 'events';
 
   /**
-   * Returns an options array with all custom types.
+   * Returns an options array with all statistic types.
    *
    * @return array
    *   An array containing all the types with machine name as key and label as
@@ -38,10 +38,10 @@ final class GroupStatisticTypes {
    */
   public static function getOptionsArray() {
     return [
-      self::STREAM => t('Activity stream'),
-      self::NOTIFICATION => t('Notification'),
-      self::SUBSCRIPTION => t('Subscription'),
-      self::LOG => t('Log'),
+      self::STAT_TYPE_MEMBERS => t('Members'),
+      self::STAT_TYPE_COMMENTS => t('Comments'),
+      self::STAT_TYPE_FILES => t('Files'),
+      self::STAT_TYPE_EVENTS => t('Events'),
     ];
   }
 

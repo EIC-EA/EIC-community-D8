@@ -85,12 +85,7 @@ class GroupStatisticsIndexer extends ProcessorPluginBase implements PluginFormIn
    *   Array containing the type of group statistics group.
    */
   public function getGroupStatisticTypes() {
-    return [
-      GroupStatisticTypes::STAT_TYPE_MEMBERS => $this->t('Members'),
-      GroupStatisticTypes::STAT_TYPE_COMMENTS => $this->t('Comments'),
-      GroupStatisticTypes::STAT_TYPE_FILES => $this->t('Files'),
-      GroupStatisticTypes::STAT_TYPE_EVENTS => $this->t('Events'),
-    ];
+    return GroupStatisticTypes::getOptionsArray();
   }
 
   /**
