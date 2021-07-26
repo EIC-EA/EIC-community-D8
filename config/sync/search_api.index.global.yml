@@ -12,6 +12,7 @@ dependencies:
     - node
     - profile
     - search_api
+    - flag_search_api
     - address
     - eic_search
     - content_moderation
@@ -233,6 +234,12 @@ field_settings:
     dependencies:
       module:
         - group
+  flag_recommend_group_count:
+    label: 'Group Recommend count'
+    property_path: flag_recommend_group_count
+    type: integer
+    indexed_locked: true
+    type_locked: true
   group_created:
     label: '[Group] Created on'
     datasource_id: 'entity:group'
@@ -566,6 +573,9 @@ processor_settings:
   group_content_access:
     weights:
       preprocess_query: -30
+  flag_count_indexer:
+    flag_index:
+      - recommend_group
   hierarchy:
     fields:
       content_field_vocab_geo: taxonomy_term-parent
