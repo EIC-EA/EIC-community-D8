@@ -13,6 +13,7 @@ use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_search\Collector\SourcesCollector;
 use Drupal\eic_search\Search\Sources\GroupSourceType;
 use Drupal\eic_search\Search\Sources\SourceTypeInterface;
+use Drupal\group\Entity\GroupInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -162,7 +163,7 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
       '#enable_search' => $this->configuration['enable_search'],
       '#url' => Url::fromRoute('eic_groups.solr_search')->toString(),
       '#isAnonymous' => \Drupal::currentUser()->isAnonymous(),
-      '#currentGroup' => $current_group_route->id(),
+      '#currentGroup' => $current_group_route instanceof GroupInterface ? $current_group_route->id() : NULL,
       '#translations' => [
         'public' => $this->t('Public', [], ['context' => 'eic_group']),
         'private' => $this->t('Private', [], ['context' => 'eic_group']),
