@@ -31,4 +31,12 @@ interface GroupStatisticsHelperInterface {
    */
   public function loadGroupStatisticsFromSearchIndex(GroupInterface $group);
 
+  /**
+   * Updates group statistics for all groups.
+   *
+   * This is a very exhaustive process and may take some time to finish
+   * depending on the number of groups and group content entities in the DB.
+   */
+  public function updateAllGroupsStatistics();
+
 }

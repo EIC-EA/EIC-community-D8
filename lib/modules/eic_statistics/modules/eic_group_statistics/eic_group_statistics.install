@@ -5,6 +5,8 @@
  * Install, update and uninstall functions for the EIC Group Statistics module.
  */
 
+use Drupal\eic_group_statistics\GroupStatisticsHelper;
+
 /**
  * Implements hook_schema().
  */
@@ -78,30 +80,7 @@ function eic_group_statistics_schema() {
  * Implements hook_install().
  */
 function eic_group_statistics_install() {
-  /**
-   * Gets the Group statistics storage.
-   *
-   * @var \Drupal\group\Entity\GroupInterface[] $groups
-   */
-  $group_statistics_storage = \Drupal::service('eic_group_statistics.storage');
-  /**
-   * Loads all groups.
-   *
-   * @var \Drupal\group\Entity\GroupInterface[] $groups
-   */
-  $groups = \Drupal::entityTypeManager()->getStorage('group')->loadMultiple();
-  /**
-   * Initializes array of group statistics.
-   *
-   * @var \Drupal\eic_group_statistics\GroupStatistics[] $groups_statistics
-   */
-  $groups_statistics = [];
-
-  // Calculate statistics for each group.
-  foreach ($groups as $group) {
-    $groups_statistics[] = $group_statistics_storage->calculateGroupStatistics($group);
-  }
-
-  // Update groups statistics.
-  $group_statistics_storage->setMultipleGroupStatistics($groups_statistics);
+  // Update groups statistics for all groups.
+  \Drupal::classResolver(GroupStatisticsHelper::class)
+    ->updateAllGroupsStatistics();
 }

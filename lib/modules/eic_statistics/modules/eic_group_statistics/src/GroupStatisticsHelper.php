@@ -41,8 +41,7 @@ class GroupStatisticsHelper implements GroupStatisticsHelperInterface {
    * {@inheritdoc}
    */
   public function loadGroupStatistics(GroupInterface $group) {
-    $group_statistics = $this->groupStatisticsStorage->load($group);
-    return $group_statistics;
+    return $this->groupStatisticsStorage->load($group);
   }
 
   /**
@@ -77,6 +76,32 @@ class GroupStatisticsHelper implements GroupStatisticsHelperInterface {
       $item->getField('group_statistic_files')->getValues()[0],
       $item->getField('group_statistic_events')->getValues()[0],
     );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function updateAllGroupsStatistics() {
+    /**
+     * Loads all groups.
+     *
+     * @var \Drupal\group\Entity\GroupInterface[] $groups
+     */
+    $groups = $this->entityTypeManager->getStorage('group')->loadMultiple();
+    /**
+     * Initializes array of group statistics.
+     *
+     * @var \Drupal\eic_group_statistics\GroupStatistics[] $groups_statistics
+     */
+    $groups_statistics = [];
+
+    // Calculate statistics for each group.
+    foreach ($groups as $group) {
+      $groups_statistics[] = $this->groupStatisticsStorage->calculateGroupStatistics($group);
+    }
+
+    // Update groups statistics.
+    $this->groupStatisticsStorage->setMultipleGroupStatistics($groups_statistics);
   }
 
 }
