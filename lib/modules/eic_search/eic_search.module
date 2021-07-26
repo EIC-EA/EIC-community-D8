@@ -73,16 +73,19 @@ function eic_search_search_api_solr_documents_alter(array &$documents, \Drupal\s
         $title = $fields['ss_content_title'];
         $type = $fields['ss_content_type'];
         $date = $fields['ds_content_created'];
+        $fullname = $fields['ss_content_first_name'] . ' ' . $fields['ss_content_last_name'];
         break;
       case 'entity:group':
         $title = $fields['ss_group_label_string'];
         $type = 'group';
         $date = $fields['ds_group_created'];
+        $fullname = $fields['ss_group_user_fullname'];
         break;
       default:
         $title = '';
         $type = '';
         $date = '';
+        $fullname = '';
         break;
     }
 
@@ -90,6 +93,7 @@ function eic_search_search_api_solr_documents_alter(array &$documents, \Drupal\s
     $document->addField('ss_global_title', $title);
     $document->addField('ss_global_content_type', $type);
     $document->addField('ss_global_created_date', $date);
+    $document->addField('ss_global_fullname', $fullname);
 
     $group_parent_label = '';
 

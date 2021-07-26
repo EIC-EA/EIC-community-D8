@@ -93,7 +93,7 @@ class SolrSearchController extends ControllerBase {
       $datasources_query[] = 'ss_search_api_datasource:"entity:' . $datasource . '"';
     }
 
-    $fq = implode(' OR ', $datasources_query);
+    $fq = '(' . implode(' OR ', $datasources_query) . ')';
 
     $facets_query = $this->getFacetsQuery($facets_value);
 
