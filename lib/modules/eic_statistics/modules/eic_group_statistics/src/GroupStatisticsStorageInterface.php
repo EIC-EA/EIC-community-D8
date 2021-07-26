@@ -10,26 +10,6 @@ use Drupal\group\Entity\GroupInterface;
 interface GroupStatisticsStorageInterface {
 
   /**
-   * Database column name for group members counter.
-   */
-  const STAT_TYPE_MEMBERS = 'members';
-
-  /**
-   * Database column name for group comments counter.
-   */
-  const STAT_TYPE_COMMENTS = 'comments';
-
-  /**
-   * Database column name for group files counter.
-   */
-  const STAT_TYPE_FILES = 'files';
-
-  /**
-   * Database column name for group events counter.
-   */
-  const STAT_TYPE_EVENTS = 'events';
-
-  /**
    * Increments counter for a certain statistic type.
    *
    * @param \Drupal\group\Entity\GroupInterface $group

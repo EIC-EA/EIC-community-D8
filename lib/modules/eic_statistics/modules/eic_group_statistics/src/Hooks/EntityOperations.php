@@ -7,6 +7,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\eic_group_statistics\GroupStatisticsSearchApiReindex;
 use Drupal\eic_group_statistics\GroupStatisticsStorageInterface;
+use Drupal\eic_group_statistics\GroupStatisticTypes;
 use Drupal\entity_usage\EntityUsageInterface;
 use Drupal\group\Entity\GroupContentInterface;
 use Drupal\group\Entity\GroupInterface;
@@ -98,7 +99,7 @@ class EntityOperations implements ContainerInjectionInterface {
     switch ($entity->bundle()) {
       case 'group-group_membership':
         // Increments number of members in the group statistics.
-        $this->groupStatisticsStorage->increment($group, GroupStatisticsStorageInterface::STAT_TYPE_MEMBERS);
+        $this->groupStatisticsStorage->increment($group, GroupStatisticTypes::STAT_TYPE_MEMBERS);
         break;
 
       case 'group-group_node-discussion':
@@ -141,7 +142,7 @@ class EntityOperations implements ContainerInjectionInterface {
         }
 
         // Update group file statistics.
-        $this->groupStatisticsStorage->increment($group, GroupStatisticsStorageInterface::STAT_TYPE_FILES, $count);
+        $this->groupStatisticsStorage->increment($group, GroupStatisticTypes::STAT_TYPE_FILES, $count);
         break;
 
       default:
@@ -172,7 +173,7 @@ class EntityOperations implements ContainerInjectionInterface {
     switch ($entity->bundle()) {
       case 'group-group_membership':
         // Decrements number of members in the group statistics.
-        $this->groupStatisticsStorage->decrement($group, GroupStatisticsStorageInterface::STAT_TYPE_MEMBERS);
+        $this->groupStatisticsStorage->decrement($group, GroupStatisticTypes::STAT_TYPE_MEMBERS);
         break;
 
       default:
@@ -245,7 +246,7 @@ class EntityOperations implements ContainerInjectionInterface {
         }
 
         // Update group file statistics.
-        $this->groupStatisticsStorage->decrement($group, GroupStatisticsStorageInterface::STAT_TYPE_FILES, $count);
+        $this->groupStatisticsStorage->decrement($group, GroupStatisticTypes::STAT_TYPE_FILES, $count);
         break;
 
       default:
@@ -337,12 +338,12 @@ class EntityOperations implements ContainerInjectionInterface {
 
         // Increments group file statistics.
         if ($increment_count) {
-          $this->groupStatisticsStorage->increment($group, GroupStatisticsStorageInterface::STAT_TYPE_FILES, $increment_count);
+          $this->groupStatisticsStorage->increment($group, GroupStatisticTypes::STAT_TYPE_FILES, $increment_count);
         }
 
         // Decrements group file statistics.
         if ($decrement_count) {
-          $this->groupStatisticsStorage->decrement($group, GroupStatisticsStorageInterface::STAT_TYPE_FILES, $decrement_count);
+          $this->groupStatisticsStorage->decrement($group, GroupStatisticTypes::STAT_TYPE_FILES, $decrement_count);
         }
         break;
 

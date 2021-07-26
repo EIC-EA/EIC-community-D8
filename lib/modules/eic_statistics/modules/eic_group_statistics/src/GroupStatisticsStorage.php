@@ -41,10 +41,10 @@ class GroupStatisticsStorage implements GroupStatisticsStorageInterface {
       ]);
 
     switch ($statistic_type) {
-      case GroupStatisticsStorageInterface::STAT_TYPE_MEMBERS:
-      case GroupStatisticsStorageInterface::STAT_TYPE_COMMENTS:
-      case GroupStatisticsStorageInterface::STAT_TYPE_FILES:
-      case GroupStatisticsStorageInterface::STAT_TYPE_EVENTS:
+      case GroupStatisticTypes::STAT_TYPE_MEMBERS:
+      case GroupStatisticTypes::STAT_TYPE_COMMENTS:
+      case GroupStatisticTypes::STAT_TYPE_FILES:
+      case GroupStatisticTypes::STAT_TYPE_EVENTS:
         $query->fields([$statistic_type => 1])
           ->expression($statistic_type, "[$statistic_type] + :count", [':count' => $count])
           ->execute();
@@ -69,10 +69,10 @@ class GroupStatisticsStorage implements GroupStatisticsStorageInterface {
       ]);
 
     switch ($statistic_type) {
-      case GroupStatisticsStorageInterface::STAT_TYPE_MEMBERS:
-      case GroupStatisticsStorageInterface::STAT_TYPE_COMMENTS:
-      case GroupStatisticsStorageInterface::STAT_TYPE_FILES:
-      case GroupStatisticsStorageInterface::STAT_TYPE_EVENTS:
+      case GroupStatisticTypes::STAT_TYPE_MEMBERS:
+      case GroupStatisticTypes::STAT_TYPE_COMMENTS:
+      case GroupStatisticTypes::STAT_TYPE_FILES:
+      case GroupStatisticTypes::STAT_TYPE_EVENTS:
         $query->fields([$statistic_type => 1])
           ->expression($statistic_type, "[$statistic_type] - :count", [':count' => $count])
           ->execute();

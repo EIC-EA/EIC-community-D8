@@ -6,7 +6,7 @@
  */
 
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\eic_group_statistics\GroupStatisticsStorageInterface;
+use Drupal\eic_group_statistics\GroupStatisticTypes;
 use Drupal\eic_group_statistics\Hooks\EntityOperations;
 use Drupal\group\Entity\GroupContent;
 
@@ -88,7 +88,7 @@ function eic_group_statistics_comment_insert(EntityInterface $entity) {
   $group_content = reset($group_contents);
 
   // Increments group comments statistic counter.
-  \Drupal::service('eic_group_statistics.storage')->increment($group_content->getGroup(), GroupStatisticsStorageInterface::STAT_TYPE_COMMENTS);
+  \Drupal::service('eic_group_statistics.storage')->increment($group_content->getGroup(), GroupStatisticTypes::STAT_TYPE_COMMENTS);
 
   // Re-index group statistics.
   \Drupal::service('eic_group_statistics.search_api.reindex')->reindexItem($group_content->getGroup());
@@ -110,7 +110,7 @@ function eic_group_statistics_comment_delete(EntityInterface $entity) {
   $group_content = reset($group_contents);
 
   // Decrements group comments statistic counter.
-  \Drupal::service('eic_group_statistics.storage')->decrement($group_content->getGroup(), GroupStatisticsStorageInterface::STAT_TYPE_COMMENTS);
+  \Drupal::service('eic_group_statistics.storage')->decrement($group_content->getGroup(), GroupStatisticTypes::STAT_TYPE_COMMENTS);
 
   // Re-index group statistics.
   \Drupal::service('eic_group_statistics.search_api.reindex')->reindexItem($group_content->getGroup());

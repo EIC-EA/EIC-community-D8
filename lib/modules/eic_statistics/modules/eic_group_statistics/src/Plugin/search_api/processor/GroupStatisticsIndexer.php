@@ -6,6 +6,7 @@ use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Plugin\PluginFormInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\eic_group_statistics\GroupStatisticsStorageInterface;
+use Drupal\eic_group_statistics\GroupStatisticTypes;
 use Drupal\search_api\Datasource\DatasourceInterface;
 use Drupal\search_api\IndexInterface;
 use Drupal\search_api\Processor\ProcessorPluginBase;
@@ -85,10 +86,10 @@ class GroupStatisticsIndexer extends ProcessorPluginBase implements PluginFormIn
    */
   public function getGroupStatisticTypes() {
     return [
-      GroupStatisticsStorageInterface::STAT_TYPE_MEMBERS => $this->t('Members'),
-      GroupStatisticsStorageInterface::STAT_TYPE_COMMENTS => $this->t('Comments'),
-      GroupStatisticsStorageInterface::STAT_TYPE_FILES => $this->t('Files'),
-      GroupStatisticsStorageInterface::STAT_TYPE_EVENTS => $this->t('Events'),
+      GroupStatisticTypes::STAT_TYPE_MEMBERS => $this->t('Members'),
+      GroupStatisticTypes::STAT_TYPE_COMMENTS => $this->t('Comments'),
+      GroupStatisticTypes::STAT_TYPE_FILES => $this->t('Files'),
+      GroupStatisticTypes::STAT_TYPE_EVENTS => $this->t('Events'),
     ];
   }
 
@@ -190,22 +191,22 @@ class GroupStatisticsIndexer extends ProcessorPluginBase implements PluginFormIn
 
         foreach ($fields as $group_statistic_field) {
           switch (str_replace('group_statistic_', '', $group_statistic_field->getFieldIdentifier())) {
-            case GroupStatisticsStorageInterface::STAT_TYPE_MEMBERS:
+            case GroupStatisticTypes::STAT_TYPE_MEMBERS:
               // Adds number of group members to the indexed field.
               $group_statistic_field->addValue($group_statistics->getMembersCount());
               break;
 
-            case GroupStatisticsStorageInterface::STAT_TYPE_COMMENTS:
+            case GroupStatisticTypes::STAT_TYPE_COMMENTS:
               // Adds number of group comments to the indexed field.
               $group_statistic_field->addValue($group_statistics->getCommentsCount());
               break;
 
-            case GroupStatisticsStorageInterface::STAT_TYPE_FILES:
+            case GroupStatisticTypes::STAT_TYPE_FILES:
               // Adds number of group files to the indexed field.
               $group_statistic_field->addValue($group_statistics->getFilesCount());
               break;
 
-            case GroupStatisticsStorageInterface::STAT_TYPE_EVENTS:
+            case GroupStatisticTypes::STAT_TYPE_EVENTS:
               // Adds number of group events to the indexed field.
               $group_statistic_field->addValue($group_statistics->getEventsCount());
               break;
