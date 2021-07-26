@@ -179,6 +179,28 @@ field_settings:
     dependencies:
       config:
         - field.storage.node.field_vocab_topics
+  content_first_name:
+    label: 'Authored by » User » First name'
+    datasource_id: 'entity:node'
+    property_path: 'uid:entity:field_first_name'
+    type: string
+    dependencies:
+      config:
+        - field.storage.user.field_first_name
+      module:
+        - node
+        - user
+  content_last_name:
+    label: 'Authored by » User » Last name'
+    datasource_id: 'entity:node'
+    property_path: 'uid:entity:field_last_name'
+    type: string
+    dependencies:
+      config:
+        - field.storage.user.field_last_name
+      module:
+        - node
+        - user
   content_status:
     label: '[Content] Published'
     datasource_id: 'entity:node'
