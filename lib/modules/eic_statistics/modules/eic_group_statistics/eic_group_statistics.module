@@ -23,6 +23,7 @@ function eic_group_statistics_group_delete(EntityInterface $entity) {
 function eic_group_statistics_group_content_insert(EntityInterface $entity) {
   switch ($entity->bundle()) {
     case 'group-group_membership':
+    case 'group-group_node-discussion':
     case 'group-group_node-document':
     case 'group-group_node-wiki_page':
     case 'group-group_node-gallery':
@@ -51,6 +52,7 @@ function eic_group_statistics_group_content_delete(EntityInterface $entity) {
  */
 function eic_group_statistics_node_delete(EntityInterface $entity) {
   switch ($entity->bundle()) {
+    case 'discussion':
     case 'document':
     case 'wiki_page':
     case 'gallery':

@@ -101,6 +101,7 @@ class EntityOperations implements ContainerInjectionInterface {
         $this->groupStatisticsStorage->increment($group, GroupStatisticsStorageInterface::STAT_TYPE_MEMBERS);
         break;
 
+      case 'group-group_node-discussion':
       case 'group-group_node-document':
       case 'group-group_node-wiki_page':
       case 'group-group_node-gallery':
@@ -111,8 +112,9 @@ class EntityOperations implements ContainerInjectionInterface {
 
         $media_fields = [
           'field_document_media',
-          'field_related_downloads',
           'field_photos',
+          'field_related_downloads',
+          'field_related_documents',
         ];
         foreach ($media_fields as $field_name) {
           if ($node->hasField($field_name)) {
@@ -206,6 +208,7 @@ class EntityOperations implements ContainerInjectionInterface {
     $re_index = TRUE;
 
     switch ($entity->bundle()) {
+      case 'discussion':
       case 'document':
       case 'wiki_page':
       case 'gallery':
@@ -213,8 +216,9 @@ class EntityOperations implements ContainerInjectionInterface {
 
         $media_fields = [
           'field_document_media',
-          'field_related_downloads',
           'field_photos',
+          'field_related_downloads',
+          'field_related_documents',
         ];
         foreach ($media_fields as $field_name) {
           if ($entity->hasField($field_name)) {
@@ -272,6 +276,7 @@ class EntityOperations implements ContainerInjectionInterface {
     $re_index = TRUE;
 
     switch ($entity->bundle()) {
+      case 'discussion':
       case 'document':
       case 'wiki_page':
       case 'gallery':
@@ -280,8 +285,9 @@ class EntityOperations implements ContainerInjectionInterface {
 
         $media_fields = [
           'field_document_media',
-          'field_related_downloads',
           'field_photos',
+          'field_related_downloads',
+          'field_related_documents',
         ];
         foreach ($media_fields as $field_name) {
           if ($entity->hasField($field_name)) {
