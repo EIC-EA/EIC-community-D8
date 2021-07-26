@@ -18,12 +18,11 @@ source:
     username: xxx
     password: xxx
   data_fetcher_plugin: eic_http_smed_taxonomy_post
-  data_parser_plugin: json
+  data_parser_plugin: jsonpath
   include_raw_data: true
   track_changes: true
-  urls:
-    - 'https://eic.test.eismea.eu/mydashboard/REST/taxonomies'
-  item_selector: Taxonomy/Group
+  urls: {  }
+  item_selector: '$.Taxonomy.Group[*]'
   ids:
     id:
       type: string

@@ -18,12 +18,11 @@ source:
     username: xxx
     password: xxx
   data_fetcher_plugin: eic_http_smed_taxonomy_post
-  data_parser_plugin: json
+  data_parser_plugin: jsonpath
   include_raw_data: true
   track_changes: true
-  urls:
-    - 'https://eic.test.eismea.eu/mydashboard/REST/taxonomies'
-  item_selector: Taxonomy/Group/Selector/Group/Selector/Option
+  urls: {  }
+  item_selector: '$.Taxonomy.Group[*].Selector.Group[*].Selector.Option[*]'
   ids:
     id:
       type: string
@@ -41,6 +40,19 @@ process:
     -
       plugin: get
       source: name
+  parent:
+    -
+      plugin: callback
+      unpack_source: true
+      callable:
+        - \Drupal\eic_webservices\Utility\SmedTaxonomyHelper
+        - findTermParentId
+      source:
+        - taxonomy_vocabulary_smed_id
+        - id
+    -
+      plugin: migration_lookup
+      migration: smed_thematics_topics_lvl2
 destination:
   plugin: 'entity:taxonomy_term'
   default_bundle: topics
