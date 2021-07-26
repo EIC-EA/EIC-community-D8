@@ -389,7 +389,7 @@ field_settings:
     type_locked: true
     hidden: true
   status:
-    label: 'User status'
+    label: '[User] Status'
     datasource_id: 'entity:user'
     property_path: status
     type: boolean
@@ -416,7 +416,7 @@ field_settings:
       module:
         - user
   user_first_name:
-    label: 'First name'
+    label: '[User] First name'
     datasource_id: 'entity:user'
     property_path: field_first_name
     type: string
@@ -433,7 +433,7 @@ field_settings:
         - 'entity:user/field_first_name'
         - 'entity:user/field_last_name'
   user_last_name:
-    label: 'Last name'
+    label: '[User] Last name'
     datasource_id: 'entity:user'
     property_path: field_last_name
     type: string
