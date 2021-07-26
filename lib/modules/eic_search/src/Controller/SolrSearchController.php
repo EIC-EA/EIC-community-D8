@@ -103,10 +103,10 @@ class SolrSearchController extends ControllerBase {
 
     $solariumQuery->addParam('fq', $fq);
 
-    //if ($index->isValidProcessor('group_content_access')) {
-    //  $index->getProcessor('group_content_access')
-    //    ->preprocessSolrSearchQuery($solariumQuery);
-    //}
+    if ($index->isValidProcessor('group_content_access')) {
+      $index->getProcessor('group_content_access')
+        ->preprocessSolrSearchQuery($solariumQuery);
+    }
 
     $results = $connector->search($solariumQuery)->getBody();
 
