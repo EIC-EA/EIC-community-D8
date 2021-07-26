@@ -1,6 +1,6 @@
 {% if citation is not empty %}
   <blockquote class="ecl-blockquote">
-    <p class="ecl-blockquote__body">{{ citation }}</p>
+    <div class="ecl-blockquote__body">{{ citation|raw }}</div>
     {% if author %}
     <footer class="ecl-blockquote__attribution">
       {% include "@theme/patterns/components/author.html.twig" with {

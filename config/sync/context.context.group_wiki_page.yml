@@ -37,7 +37,7 @@ reactions:
         unique: 0
         context_id: group_wiki_page
         uuid: 2089ac99-521b-4bba-b1e0-030d675b287f
-      008e6760-9abd-4730-9c0a-891b0085e534:
+      20ba6aac-dedc-464e-9aee-4bff02f05621:
         id: eic_group_header
         label: 'EIC Group header'
         provider: eic_groups
@@ -51,21 +51,25 @@ reactions:
         css_class: ''
         unique: 0
         context_id: group_wiki_page
-        uuid: 008e6760-9abd-4730-9c0a-891b0085e534
-      f70b719f-27cc-45ce-8a97-c7801eb362eb:
-        id: system_breadcrumb_block
-        label: Breadcrumbs
-        provider: system
+        uuid: 20ba6aac-dedc-464e-9aee-4bff02f05621
+      7d462b42-9959-4fe2-b3de-ff513c9c8a1e:
+        id: 'group_content_menu:group_main_menu'
+        label: 'Group - Main menu'
+        provider: group_content_menu
         label_display: '0'
-        region: breadcrumbs
+        level: '1'
+        depth: '0'
+        expand_all_items: 0
+        region: page_header
         weight: '0'
-        context_mapping: {  }
-        custom_id: system_breadcrumb_block
+        context_mapping:
+          group: '@group.group_route_context:group'
+        custom_id: group_content_menu_group_main_menu
         theme: eic_community
         css_class: ''
         unique: 0
         context_id: group_wiki_page
-        uuid: f70b719f-27cc-45ce-8a97-c7801eb362eb
+        uuid: 7d462b42-9959-4fe2-b3de-ff513c9c8a1e
     id: blocks
     saved: false
     uuid: 4d77c57f-3626-4134-8271-8983fa46b50e
