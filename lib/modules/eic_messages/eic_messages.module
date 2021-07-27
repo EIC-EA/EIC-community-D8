@@ -23,7 +23,7 @@ use Drupal\node\Entity\NodeType;
  * Implements hook_ENTITY_TYPE_insert().
  */
 function eic_messages_group_insert(EntityInterface $entity) {
-  /** @var GroupMessageCreator $class */
+  /** @var Drupal\eic_messages\Hooks\GroupMessageCreator $class */
   $class = \Drupal::classResolver(GroupMessageCreator::class);
   $class->groupInsert($entity);
 }
@@ -32,7 +32,7 @@ function eic_messages_group_insert(EntityInterface $entity) {
  * Implements hook_ENTITY_TYPE_update().
  */
 function eic_messages_group_update(EntityInterface $entity) {
-  /** @var GroupMessageCreator $class */
+  /** @var Drupal\eic_messages\Hooks\GroupMessageCreator $class */
   $class = \Drupal::classResolver(GroupMessageCreator::class);
   $class->groupUpdate($entity);
 }
@@ -41,7 +41,7 @@ function eic_messages_group_update(EntityInterface $entity) {
  * Implements hook_ENTITY_TYPE_insert().
  */
 function eic_messages_group_content_insert(EntityInterface $entity) {
-  /** @var GroupContentMessageCreator $class */
+  /** @var Drupal\eic_messages\Hooks\GroupContentMessageCreator $class */
   $class = \Drupal::classResolver(GroupContentMessageCreator::class);
   $class->groupContentInsert($entity);
 }
@@ -58,7 +58,7 @@ function eic_messages_message_insert(EntityInterface $entity) {
  * Implements hook_entity_update().
  */
 function eic_messages_entity_update(EntityInterface $entity) {
-  /** @var EntityOperations $class */
+  /** @var Drupal\eic_messages\Hooks\EntityOperations $class */
   $class = \Drupal::classResolver(EntityOperations::class);
   $class->entityUpdate($entity);
 }
@@ -71,7 +71,7 @@ function eic_messages_request_insert(
   ContentEntityInterface $entity,
   string $type
 ) {
-  /** @var RequestMessageCreator $class */
+  /** @var Drupal\eic_messages\Hooks\RequestMessageCreator $class */
   $class = \Drupal::classResolver(RequestMessageCreator::class);
   $class->requestInsert($flag, $entity, $type);
 }
@@ -84,7 +84,7 @@ function eic_messages_request_close(
   ContentEntityInterface $entity,
   string $type
 ) {
-  /** @var RequestMessageCreator $class */
+  /** @var Drupal\eic_messages\Hooks\RequestMessageCreator $class */
   $class = \Drupal::classResolver(RequestMessageCreator::class);
   $class->requestClose($flag, $entity, $type);
 }
