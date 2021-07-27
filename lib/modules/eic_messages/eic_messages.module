@@ -7,14 +7,17 @@
 
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\eic_messages\Hooks\EntityOperations;
+use Drupal\eic_messages\Hooks\FormOperations;
+use Drupal\eic_messages\Hooks\GroupContentMessageCreator;
+use Drupal\eic_messages\Hooks\GroupMessageCreator;
 use Drupal\eic_messages\Hooks\LogMessageRenderer;
 use Drupal\eic_messages\Hooks\MessageTokens;
 use Drupal\eic_messages\Hooks\RequestMessageCreator;
-use Drupal\eic_messages\Hooks\GroupContentMessageCreator;
-use Drupal\eic_messages\Hooks\GroupMessageCreator;
 use Drupal\flag\FlaggingInterface;
+use Drupal\node\Entity\NodeType;
 
 /**
  * Implements hook_ENTITY_TYPE_insert().
@@ -84,6 +87,33 @@ function eic_messages_request_close(
   /** @var RequestMessageCreator $class */
   $class = \Drupal::classResolver(RequestMessageCreator::class);
   $class->requestClose($flag, $entity, $type);
+}
+
+/**
+ * Implements hook_entity_extra_field_info().
+ */
+function eic_messages_entity_extra_field_info() {
+  $extra = [];
+
+  // We add the extra field for all content types. The display will be handled
+  // in the hook_form_BASE_FORM_ID_alter() function.
+  foreach (NodeType::loadMultiple() as $bundle) {
+    $extra['node'][$bundle->id()]['form']['field_post_activity'] = [
+      'label' => t('Post message in the activity stream'),
+      'description' => '',
+      'visible' => TRUE,
+    ];
+  }
+
+  return $extra;
+}
+
+/**
+ * Implements hook_form_BASE_FORM_ID_alter().
+ */
+function eic_messages_form_node_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  \Drupal::classResolver(FormOperations::class)
+    ->formNodeFormAlter($form, $form_state, $form_id);
 }
 
 /**
