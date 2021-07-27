@@ -9,8 +9,8 @@
 {% extends "@eic_community/content/node.html.twig" %}
 {% set display_submitted = false %}
 
-{% if elements.wiki_section_message is defined %}
-  {% block content %}
+{% block content %}
+  {% if elements.wiki_section_message is defined %}
     <div class="ecl-container">
       {% embed "@theme/patterns/components/well.html.twig" with {
         extra_classes: 'ecl-well--is-centered ecl-well--is-grey',
@@ -32,6 +32,20 @@
 
     {% endblock %}
     {% endembed %}
-  </div>
-  {% endblock %}
-{% endif %}
+    </div>
+  {% else %}
+    {% if actions is not empty %}
+      <section class="ecl-editorial-article__header">
+        {% include "@theme/patterns/components/inline-actions.html.twig" with actions|default({})|merge({
+          items: actions.items ? actions.items|map(i => i|merge({
+            extra_classes: i.extra_classes|default('') ~ ' ecl-link--button ecl-link--button-primary'
+          }))
+        }) %}
+      </section>
+    {% endif %}
+    <section class="ecl-editorial-article__content">
+      {{ content }}
+    </section>
+  {% endif %}
+{% endblock %}
+
