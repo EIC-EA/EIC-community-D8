@@ -33,16 +33,26 @@ class FormOperations implements ContainerInjectionInterface {
   protected $eicContentHelper;
 
   /**
+   * The EIC content helper service.
+   *
+   * @var \Drupal\eic_messages\Hooks\GroupContentMessageCreator
+   */
+  protected $groupContentMessageCreator;
+
+  /**
    * Constructs a new EntityOperations object.
    *
    * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
    *   The current route match service.
    * @param \Drupal\eic_content\EICContentHelper $content_helper
    *   The EIC content helper service.
+   * @param \Drupal\eic_messages\Hooks\GroupContentMessageCreator $group_content_message_creator
+   *   The EIC content helper service.
    */
-  public function __construct(RouteMatchInterface $route_match, EICContentHelper $content_helper) {
+  public function __construct(RouteMatchInterface $route_match, EICContentHelper $content_helper, GroupContentMessageCreator $group_content_message_creator) {
     $this->routeMatch = $route_match;
     $this->eicContentHelper = $content_helper;
+    $this->groupContentMessageCreator = $group_content_message_creator;
   }
 
   /**
@@ -51,7 +61,8 @@ class FormOperations implements ContainerInjectionInterface {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('current_route_match'),
-      $container->get('eic_content.helper')
+      $container->get('eic_content.helper'),
+      $container->get('eic_messages.message_creator.group_content')
     );
   }
 
@@ -95,7 +106,26 @@ class FormOperations implements ContainerInjectionInterface {
         '#type' => 'checkbox',
         '#default_value' => $is_new_content,
       ];
+      $form['actions']['submit']['#submit'][] = [$this, 'postActivitySubmit'];
     }
+  }
+
+  /**
+   * Handles the node form submit for the field_post_activity.
+   *
+   * @param array $form
+   *   The form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The FormState object.
+   */
+  public function postActivitySubmit(array $form, FormStateInterface $form_state) {
+    // If field doesn't exist or value is 0 or empty.
+    if (empty($form_state->getValue('field_post_activity'))) {
+      return;
+    }
+
+    $entity = $form_state->getFormObject()->getEntity();
+    $this->groupContentMessageCreator->createGroupContentActivity($entity);
   }
 
 }
