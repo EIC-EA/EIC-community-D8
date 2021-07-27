@@ -40,7 +40,7 @@ services:
     decorates: access_check.group_content.create_entity
     decoration_priority: 1
     public: true
-    arguments: ['@eic_groups.access_check.group_content.create_entity.decorator.inner', '@eic_user.helper']
+    arguments: ['@eic_groups.access_check.group_content.create_entity.decorator.inner', '@eic_user.helper', '@eic_groups.helper', '@entity_type.manager']
   eic_groups.publish_group.access_checker:
     class: Drupal\eic_groups\Access\PublishGroupAccessChecker
     arguments: ['@eic_user.helper']
