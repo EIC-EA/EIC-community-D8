@@ -3,12 +3,13 @@ langcode: en
 status: true
 dependencies:
   module:
+    - group
     - node
 name: group_wiki_page
 label: 'Group - Wiki page'
 group: Groups
 description: 'Context used when viewing group wiki pages'
-requireAllConditions: false
+requireAllConditions: true
 disabled: false
 conditions:
   node_type:
@@ -19,6 +20,14 @@ conditions:
     uuid: 118a3ee8-d75a-43fa-8dc7-13e7c95a283f
     context_mapping:
       node: '@node.node_route_context:node'
+  group_type:
+    id: group_type
+    group_types:
+      group: group
+    negate: 0
+    uuid: 3fc5c7c9-452a-4dbc-be07-3532e63831ff
+    context_mapping:
+      group: '@group.group_route_context:group'
 reactions:
   blocks:
     blocks:
