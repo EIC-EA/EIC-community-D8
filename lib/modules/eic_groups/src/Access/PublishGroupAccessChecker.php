@@ -21,6 +21,23 @@ use Symfony\Component\Routing\Route;
 class PublishGroupAccessChecker implements AccessInterface {
 
   /**
+   * The user helper service.
+   *
+   * @var \Drupal\eic_user\UserHelper
+   */
+  protected $userHelper;
+
+  /**
+   * Constructs a new PublishGroupAccessChecker instance.
+   *
+   * @param \Drupal\eic_user\UserHelper $user_helper
+   *   The user helper service.
+   */
+  public function __construct(UserHelper $user_helper) {
+    $this->userHelper = $user_helper;
+  }
+
+  /**
    * Checks routing access for the publish group route.
    *
    * @param \Symfony\Component\Routing\Route $route
@@ -51,7 +68,7 @@ class PublishGroupAccessChecker implements AccessInterface {
         // Users can only publish a group if the group is in "draft" state.
         // If the user is a "site_admin" or "content_administrator" we always
         // allow access.
-        if (in_array(UserHelper::ROLE_SITE_ADMINISTRATOR, $account->getRoles(TRUE)) || in_array(UserHelper::ROLE_CONTENT_ADMINISTRATOR, $account->getRoles(TRUE))) {
+        if ($this->userHelper->isPowerUser($account)) {
           $access = AccessResult::allowed()
             ->addCacheableDependency($account)
             ->addCacheableDependency($group);

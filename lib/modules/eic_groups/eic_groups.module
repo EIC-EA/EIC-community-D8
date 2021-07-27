@@ -21,7 +21,6 @@ use Drupal\eic_groups\Hooks\GroupTokens;
 use Drupal\eic_groups\Hooks\FormOperations;
 use Drupal\eic_groups\Hooks\Pathauto;
 use Drupal\eic_groups\Hooks\Preprocess;
-use Drupal\eic_user\UserHelper;
 use Drupal\group\Entity\GroupInterface;
 
 /**
@@ -228,7 +227,7 @@ function eic_groups_entity_field_access($operation, FieldDefinitionInterface $fi
         // Deny access if it's a new group and the user doesn't have
         // "site_admin" or "content_administrator" roles.
         if ($entity->isNew()) {
-          $access = AccessResult::forbiddenIf(!in_array(UserHelper::ROLE_SITE_ADMINISTRATOR, $account->getRoles(TRUE)) && !in_array(UserHelper::ROLE_CONTENT_ADMINISTRATOR, $account->getRoles(TRUE)))
+          $access = AccessResult::forbiddenIf(!\Drupal::service('eic_user.helper')->isPowerUSer($account))
             ->addCacheableDependency($account);
           break;
         }
@@ -253,7 +252,7 @@ function eic_groups_group_access(EntityInterface $entity, $operation, AccountInt
       // Deny access to delete group if the group is NOT in pending state and
       // the user is NOT a "site_admin" or a "content_administrator".
       if ($moderation_state !== GroupsModerationHelper::GROUP_PENDING_STATE) {
-        $access = AccessResult::forbiddenIf(!in_array(UserHelper::ROLE_SITE_ADMINISTRATOR, $account->getRoles(TRUE)) && !in_array(UserHelper::ROLE_CONTENT_ADMINISTRATOR, $account->getRoles(TRUE)))
+        $access = AccessResult::forbiddenIf(!\Drupal::service('eic_user.helper')->isPowerUSer($account))
           ->addCacheableDependency($account)
           ->addCacheableDependency($entity);
       }

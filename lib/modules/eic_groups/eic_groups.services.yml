@@ -35,7 +35,14 @@ services:
     decoration_priority: 1
     public: true
     arguments: ['@eic_groups.eic_flags.request_access_checker.decorator.inner', '@eic_flags.handler_collector']
+  eic_groups.access_check.group_content.create_entity.decorator:
+    class: Drupal\eic_groups\Access\GroupContentCreateEntityAccessCheck
+    decorates: access_check.group_content.create_entity
+    decoration_priority: 1
+    public: true
+    arguments: ['@eic_groups.access_check.group_content.create_entity.decorator.inner', '@eic_user.helper']
   eic_groups.publish_group.access_checker:
     class: Drupal\eic_groups\Access\PublishGroupAccessChecker
+    arguments: ['@eic_user.helper']
     tags:
       - { name: access_check, applies_to: _publish_group_access_checker }
