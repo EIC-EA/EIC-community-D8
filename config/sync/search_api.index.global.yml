@@ -235,6 +235,16 @@ field_settings:
     dependencies:
       module:
         - node
+  content_uid:
+    label: uid
+    datasource_id: 'entity:node'
+    property_path: uid
+    type: integer
+    indexed_locked: true
+    type_locked: true
+    dependencies:
+      module:
+        - node
   group_content_entity_id:
     label: '[Group content] Content'
     datasource_id: 'entity:group_content'
@@ -457,16 +467,6 @@ field_settings:
     dependencies:
       module:
         - user
-  uid:
-    label: uid
-    datasource_id: 'entity:node'
-    property_path: uid
-    type: integer
-    indexed_locked: true
-    type_locked: true
-    dependencies:
-      module:
-        - node
   url:
     label: URI
     property_path: search_api_url
@@ -692,6 +692,9 @@ datasource_settings:
 processor_settings:
   add_url: {  }
   address_abbreviations_to_full_form:
+    user_profile_city_string:
+      enable: 0
+      concat: 0
     user_profile_field_location_address_country_code:
       enable: 1
       concat: 0
@@ -704,6 +707,7 @@ processor_settings:
   content_access:
     weights:
       preprocess_query: -30
+  entity_status: {  }
   group_content_access:
     weights:
       preprocess_query: -30
