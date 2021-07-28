@@ -91,7 +91,7 @@ function eic_search_search_api_solr_documents_alter(array &$documents, \Drupal\s
     $document->addField('ss_global_group_parent_url', $group_parent_url);
     $document->addField('ss_global_group_parent_id', $group_parent_id);
 
-    if ($fields['ss_search_api_datasource'] === 'entity:user') {
+    if ($fields['ss_search_api_datasource'] === 'entity:user' && array_key_exists('its_user_profile', $fields)) {
       $profile = \Drupal\profile\Entity\Profile::load($fields['its_user_profile']);
       if ($profile instanceof \Drupal\profile\Entity\ProfileInterface) {
         $socials = $profile->get('field_social_links')->getValue();

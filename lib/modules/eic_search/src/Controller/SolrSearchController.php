@@ -172,7 +172,18 @@ class SolrSearchController extends ControllerBase {
     }
 
     $user_id = \Drupal::currentUser()->id();
-    $profile = Profile::load($user_id);
+    $profiles = \Drupal::entityTypeManager()
+      ->getStorage('profile')
+      ->loadByProperties([
+        'uid' => $user_id,
+        'type' => 'member',
+      ]);
+
+    if (empty($profiles)) {
+      return;
+    }
+
+    $profile = reset($profiles);
     $user_topics = $profile->get('field_vocab_topic_interest')
       ->referencedEntities();
     $user_topics_id = [0];
@@ -184,8 +195,6 @@ class SolrSearchController extends ControllerBase {
     }
 
     $user_topics_string = implode(' OR ', $user_topics_id);
-    \Drupal::logger('eic_search_test')->debug($user_topics_id);
-    \Drupal::logger('eic_search_test')->debug($profile->getOwner()->id());
     $fq .= " AND (itm_group_field_vocab_topics:($user_topics_string) OR itm_content_field_vocab_topics:($user_topics_string))";
   }
 
