@@ -77,4 +77,25 @@ class GroupSourceType implements SourceTypeInterface {
     ];
   }
 
+  /**
+   * @inheritDoc
+   */
+  public function getLayoutTheme(): string {
+    return self::LAYOUT_COMPACT;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function ableToPrefilteredByGroup(): bool {
+    return TRUE;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function getPrefilteredGroupFieldId(): string {
+    return 'its_group_id_integer';
+  }
+
 }

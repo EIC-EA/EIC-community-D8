@@ -29,6 +29,7 @@ class SolrSearchController extends ControllerBase {
 
     $source_class = $request->query->get('source_class');
     $search_value = $request->query->get('search_value');
+    $current_group = $request->query->get('current_group');
     $facets_value = $request->query->get('facets_value');
     $sort_value = $request->query->get('sort_value');
     $facets_options = $request->query->get('facets_options');
@@ -60,7 +61,13 @@ class SolrSearchController extends ControllerBase {
         $query_fields[] = "$search_field_id:$search_query_value";
       }
 
-      $solariumQuery->addParam('q', implode(' OR ', $query_fields));
+      $query_fields_string = implode(' OR ', $query_fields);
+      if ($current_group) {
+        $group_id_field = $source->getPrefilteredGroupFieldId();
+        $query_fields_string .= " AND ($group_id_field:($current_group))";
+      }
+
+      $solariumQuery->addParam('q', $query_fields_string);
     }
 
     $solariumQuery->addParam('json.nl', 'arrarr');

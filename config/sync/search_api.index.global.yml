@@ -40,6 +40,8 @@ dependencies:
     - field.storage.profile.field_location_address
     - field.storage.profile.field_vocab_job_title
     - field.storage.profile.field_vocab_language
+    - field.storage.profile.field_social_links
+    - field.storage.profile.field_vocab_geo
     - field.storage.profile.field_vocab_topic_expertise
     - field.storage.profile.field_vocab_topic_interest
     - search_api.server.global
@@ -468,12 +470,30 @@ field_settings:
     dependencies:
       config:
         - field.storage.user.field_last_name
+  user_mail:
+    label: Email
+    datasource_id: 'entity:user'
+    property_path: mail
+    type: string
+    dependencies:
+      module:
+        - user
   user_profile:
     label: 'Member profiles'
     datasource_id: 'entity:user'
     property_path: member_profiles
     type: integer
     dependencies:
+      module:
+        - profile
+  user_profile_city_string:
+    label: 'Member profiles » Profile » Address » The locality (i.e. city)'
+    datasource_id: 'entity:user'
+    property_path: 'member_profiles:entity:field_location_address:locality'
+    type: string
+    dependencies:
+      config:
+        - field.storage.profile.field_location_address
       module:
         - profile
   user_profile_field_body:
@@ -496,16 +516,6 @@ field_settings:
         - field.storage.profile.field_location_address
       module:
         - profile
-  user_profile_field_vocab_job_title:
-    label: 'Member profiles » Profile » Job title'
-    datasource_id: 'entity:user'
-    property_path: 'member_profiles:entity:field_vocab_job_title'
-    type: integer
-    dependencies:
-      config:
-        - field.storage.profile.field_vocab_job_title
-      module:
-        - profile
   user_profile_field_vocab_language:
     label: 'Member profiles » Profile » Languages spoken'
     datasource_id: 'entity:user'
@@ -526,16 +536,28 @@ field_settings:
         - field.storage.profile.field_vocab_topic_expertise
       module:
         - profile
-  user_profile_field_vocab_topic_interest:
-    label: 'Member profiles » Profile » Topics of Interest'
+  user_profile_field_vocab_topic_interest_array:
+    label: 'Member profiles » Profile » Topics of Interest » Taxonomy term » Name'
     datasource_id: 'entity:user'
-    property_path: 'member_profiles:entity:field_vocab_topic_interest'
-    type: integer
+    property_path: 'member_profiles:entity:field_vocab_topic_interest:entity:name'
+    type: string
     dependencies:
       config:
         - field.storage.profile.field_vocab_topic_interest
       module:
         - profile
+        - taxonomy
+  user_profile_geo_string:
+    label: 'Member profiles » Profile » Target Region & Countries » Taxonomy term » Name'
+    datasource_id: 'entity:user'
+    property_path: 'member_profiles:entity:field_vocab_geo:entity:name'
+    type: string
+    dependencies:
+      config:
+        - field.storage.profile.field_vocab_geo
+      module:
+        - profile
+        - taxonomy
   user_profile_image:
     label: 'Picture » Media » Image » File » URI » Root-relative file URL'
     datasource_id: 'entity:user'
@@ -548,6 +570,49 @@ field_settings:
       module:
         - file
         - media
+  user_profile_job_string:
+    label: 'Member profiles » Profile » Job title » Taxonomy term » Name'
+    datasource_id: 'entity:user'
+    property_path: 'member_profiles:entity:field_vocab_job_title:entity:name'
+    type: string
+    dependencies:
+      config:
+        - field.storage.profile.field_vocab_job_title
+      module:
+        - profile
+        - taxonomy
+  user_profile_social_links:
+    label: 'Member profiles » Profile » Social links'
+    datasource_id: 'entity:user'
+    property_path: 'member_profiles:entity:field_social_links'
+    type: string
+    dependencies:
+      config:
+        - field.storage.profile.field_social_links
+      module:
+        - profile
+  user_profile_topic_expertise_string:
+    label: 'Member profiles » Profile » Topics of Expertise » Taxonomy term » Name'
+    datasource_id: 'entity:user'
+    property_path: 'member_profiles:entity:field_vocab_topic_expertise:entity:name'
+    type: string
+    dependencies:
+      config:
+        - field.storage.profile.field_vocab_topic_expertise
+      module:
+        - profile
+        - taxonomy
+  user_profile_topic_interest_string:
+    label: 'Member profiles » Profile » Topics of Interest » Taxonomy term » Name'
+    datasource_id: 'entity:user'
+    property_path: 'member_profiles:entity:field_vocab_topic_interest:entity:name'
+    type: string
+    dependencies:
+      config:
+        - field.storage.profile.field_vocab_topic_interest
+      module:
+        - profile
+        - taxonomy
 datasource_settings:
   'entity:content_moderation_state':
     languages:
