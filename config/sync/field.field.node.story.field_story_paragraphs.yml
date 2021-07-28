@@ -12,7 +12,7 @@ id: node.story.field_story_paragraphs
 field_name: field_story_paragraphs
 entity_type: node
 bundle: story
-label: 'Story Paragraphs'
+label: Contributors
 description: 'For now only Contributor Paragraph is enabled.'
 required: false
 translatable: false

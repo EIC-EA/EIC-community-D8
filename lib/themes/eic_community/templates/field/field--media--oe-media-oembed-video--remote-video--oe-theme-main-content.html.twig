@@ -6,4 +6,8 @@
  * @see ./templates/field/field--bare.html.twig
  */
 #}
-{%- include 'field--bare.html.twig' -%}
+{% for item in items %}
+  {% include "@theme/patterns/compositions/media-wrapper.html.twig" with {
+    embedded_media: item.content
+  } only %}
+{% endfor %}

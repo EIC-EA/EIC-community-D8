@@ -39,3 +39,11 @@ services:
     class: Drupal\eic_groups\Access\PublishGroupAccessChecker
     tags:
       - { name: access_check, applies_to: _publish_group_access_checker }
+  eic_groups.orphan_group_content_checker:
+    class: Drupal\eic_groups\Access\OrphanGroupContentAccessCheck
+    tags:
+      - { name: access_check, applies_to: _orphan_group_content_access_check }
+  eic_groups.route_subscriber:
+    class: Drupal\eic_groups\Routing\RouteSubscriber
+    tags:
+      - { name: event_subscriber }

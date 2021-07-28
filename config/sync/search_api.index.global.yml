@@ -5,15 +5,16 @@ dependencies:
   module:
     - search_api_solr
     - group
-    - user
-    - file
-    - media
-    - taxonomy
     - node
     - profile
+    - file
+    - taxonomy
+    - user
+    - media
     - search_api
-    - address
     - eic_search
+    - address
+    - eic_group_statistics
     - flag_search_api
     - content_moderation
     - flag
@@ -28,10 +29,13 @@ dependencies:
     - field.storage.group.field_body
     - field.storage.group.field_vocab_geo
     - field.storage.node.field_body
-    - field.storage.node.field_vocab_geo
-    - field.storage.node.field_subtitle
-    - field.storage.node.field_vocab_topics
     - field.storage.node.field_discussion_type
+    - field.storage.node.field_subtitle
+    - field.storage.node.field_vocab_geo
+    - field.storage.node.field_vocab_topics
+    - field.storage.group.field_body
+    - field.storage.group.field_vocab_geo
+    - field.storage.group.field_vocab_topics
     - field.storage.profile.field_body
     - field.storage.profile.field_location_address
     - field.storage.profile.field_vocab_job_title
@@ -307,6 +311,30 @@ field_settings:
     dependencies:
       module:
         - group
+  group_statistic_comments:
+    label: 'Group statistics - Comments'
+    property_path: group_statistic_comments
+    type: integer
+    indexed_locked: true
+    type_locked: true
+  group_statistic_events:
+    label: 'Group statistics - Events'
+    property_path: group_statistic_events
+    type: integer
+    indexed_locked: true
+    type_locked: true
+  group_statistic_files:
+    label: 'Group statistics - Files'
+    property_path: group_statistic_files
+    type: integer
+    indexed_locked: true
+    type_locked: true
+  group_statistic_members:
+    label: 'Group statistics - Members'
+    property_path: group_statistic_members
+    type: integer
+    indexed_locked: true
+    type_locked: true
   group_status:
     label: '[Group] Published'
     datasource_id: 'entity:group'
@@ -576,6 +604,12 @@ processor_settings:
   group_content_access:
     weights:
       preprocess_query: -30
+  group_statistics_indexer:
+    group_statistics_index:
+      - members
+      - comments
+      - files
+      - events
   hierarchy:
     fields:
       content_field_vocab_geo: taxonomy_term-parent

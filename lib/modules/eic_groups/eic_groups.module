@@ -42,8 +42,9 @@ function eic_groups_theme($existing, $type, $theme, $path) {
         'edit_link' => NULL,
         'delete_link' => NULL,
         'invite_link' => NULL,
-        'actions' => NULL,
+        'actions' => [],
         'has_content' => NULL,
+        'has_member' => FALSE,
       ],
     ],
     'eic_group_search_menu_block_form' => [
@@ -293,24 +294,23 @@ function eic_groups_flagging_access(EntityInterface $entity, $operation, Account
     case 'view':
     case 'flag':
     case 'unflag':
-      // Deny access to group flag if the group IS in pending or draft
-      // state.
-      if (in_array($moderation_state, [
-        GroupsModerationHelper::GROUP_PENDING_STATE,
-        GroupsModerationHelper::GROUP_DRAFT_STATE,
-      ])) {
-        $access = AccessResult::forbidden()
-          ->addCacheableDependency($entity)
+      if ($flagged_entity->getEntityTypeId() === 'group') {
+        // Default access.
+        $access = AccessResult::allowed();
+
+        // Deny access to group flag if the group IS in pending or draft
+        // state.
+        if (in_array($moderation_state, [
+          GroupsModerationHelper::GROUP_PENDING_STATE,
+          GroupsModerationHelper::GROUP_DRAFT_STATE,
+        ])) {
+          $access = AccessResult::forbidden();
+        }
+
+        // Add cacheable dependencies.
+        $access->addCacheableDependency($entity)
           ->addCacheableDependency($flagged_entity);
-        break;
       }
-
-      $flag_permission = "$operation {$entity->getFlagId()}";
-
-      // Allow access if user has flag permissions for the current operation.
-      $access = AccessResult::allowedIfHasPermission($account, $flag_permission)
-        ->addCacheableDependency($entity)
-        ->addCacheableDependency($flagged_entity);
       break;
 
   }
