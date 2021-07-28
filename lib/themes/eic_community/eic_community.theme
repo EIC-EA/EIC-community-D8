@@ -48,7 +48,32 @@ function eic_community_theme() {
         'description' => NULL,
         'items' => NULL,
       ],
-    ]
+    ],
+    'eic_community_author' => [
+      'template' => 'author',
+      'path' => $theme_path . '/patterns/components',
+      'variables' => [
+        'label_element' => NULL,
+        'name' => NULL,
+        'size' => NULL,
+        'updates' => NULL,
+        'display_avatar_only' => NULL,
+        'description' => NULL,
+        'label_classes' => NULL,
+        'path' => NULL,
+        'actions' => NULL,
+        'image' => NULL,
+      ],
+    ],
+    'eic_community_timestamp' => [
+      'template' => 'timestamp',
+      'path' => $theme_path . '/patterns/components',
+      'variables' => [
+        'extra_classes' => NULL,
+        'icon_file_path' => NULL,
+        'label' => NULL,
+      ],
+    ],
   ];
 }
 /**

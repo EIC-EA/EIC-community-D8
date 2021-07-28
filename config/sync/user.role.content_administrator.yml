@@ -11,7 +11,6 @@ permissions:
   - 'access group overview'
   - 'add content to books'
   - 'administer comments'
-  - 'bypass node access'
   - 'close archive request'
   - 'close delete request'
   - 'create group group'

@@ -834,11 +834,6 @@
       }
     }
 
-    #{$node}--group #{$node}__meta-footer &,
-    #{$node}--organisation #{$node}__meta-footer & {
-      margin-left: 0;
-    }
-
     #{$node}--as-card#{$node}--event &,
     #{$node}--has-compact-layout#{$node}--story & {
       display: none;

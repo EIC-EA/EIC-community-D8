@@ -87,7 +87,7 @@ function _eic_community_preprocess_comment_form(&$variables) {
   $author_image = _get_profile_image_array($author);
 
   $variables['comment_form']['author'] = [
-    'author' => $author->getDisplayName(),
+    'name' => $author->getDisplayName(),
     'path' => '',
     'image' => $author_image,
   ];

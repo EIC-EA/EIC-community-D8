@@ -140,48 +140,79 @@ function _preprocess_about_page(&$variables) {
     $visibility = $variables['elements']['visibility'];
     $visibility_id = $visibility['plugin_id'];
 
-    if ($visibility_id === 'custom_restricted') {
-      $restrictions = [];
+    $access_title = '';
+    $access_description = '';
+    $access_items = [];
 
-      foreach ($visibility['settings'] as $restriction) {
-        $restrictions[] = [
-          'title' => $restriction['label'],
-          'content' => $restriction['options'],
-        ];
-      }
+    switch ($visibility_id) {
+      case 'custom_restricted':
+        $restrictions = [];
+
+        foreach ($visibility['settings'] as $restriction) {
+          $restrictions[] = [
+            'title' => $restriction['label'],
+            'content' => $restriction['options'],
+          ];
+        }
+
+        $access_title = t('Restricted group');
+        $access_description = t('This group is visible to every person that has joined the EIC community that also complies with the following restrictions. You can see this group because the organisation you work for is allowed to see this content or the group owners and administrators have chosen to specifically grant you access to this group. If you want to participate, please become a group member.');
+        $access_items = $restrictions;
+        break;
+
+      case 'public':
+        $access_title = t('Public group');
+        $access_description = t("This group is visible to everyone visiting the group. You're welcome to scroll through the group's content. If you want to participate, please become a group member.");
+        break;
+
+      case 'private':
+        $access_title = t('Private group');
+        $access_description = t('A private group is only visible to people who received an invitation via email and accepted it. No one else can see this group.');
+        break;
+
+      case 'restricted_community_members':
+        $access_title = t('Community members only');
+        $access_description = t("This group is visible to every person that is a member of the EIC Community and has joined this platform. You're welcome to scroll through the group's content. If you want to participate, please become a group member.");
+        break;
+
+    }
+
+    $admin_items[] = [
+      'title' => t('Group access'),
+      'content' => [
+        '#theme' => 'eic_community_well',
+        '#content' => [
+          '#theme' => 'eic_community_harmonica',
+          '#title' => $access_title,
+          '#description' => $access_description,
+          '#icon' => [
+            'icon' => [
+              'name' => 'lock',
+              'type' => 'custom',
+            ],
+          ],
+          '#icon_file_path' => $variables['eic_icon_path'],
+          '#items' => $access_items,
+        ],
+      ],
+    ];
+
+    if (count($variables['elements']['joining_methods']) > 0) {
+      $is_open = $variables['elements']['joining_methods'][0]['plugin_id'] === 'open';
+      $request_title = $is_open ? t('Open') : t('Moderated');
+      $request_content = $is_open ? t('This means that EIC Community members can join this group immediately by clicking "join group".')
+        : t('This means that EIC Community members can request to join this group. This request needs to be validated by the group owner or administrator.');
 
       $admin_items[] = [
-        'title' => t('Group access'),
-        'content' => [
-          '#theme' => 'eic_community_well',
-          '#content' => [
-            '#theme' => 'eic_community_harmonica',
-            '#title' => t('Custom restriction'),
-            '#icon' => [
-              'icon' => [
-                'name' => 'lock',
-                'type' => 'custom',
-              ],
-            ],
-            '#icon_file_path' => $variables['eic_icon_path'],
-            '#items' => $restrictions,
+        'title' => t('Membership Request type'),
+        'items' => [
+          [
+            'title' => $request_title,
+            'content' => $request_content,
           ],
         ],
       ];
     }
-
-    $group_visibility_title = count($variables['elements']['joining_methods']) > 0 ? $variables['elements']['joining_methods'][0]['label']
-      : t(ucfirst($visibility_id));
-
-    $admin_items[] = [
-      'title' => t('Membership Request type'),
-      'items' => [
-        [
-          'title' => $group_visibility_title,
-          'content' => $visibility['label'],
-        ],
-      ],
-    ];
 
     $sections[] = [
       'id' => 'admin',
@@ -189,6 +220,7 @@ function _preprocess_about_page(&$variables) {
       'content' => [
         '#theme' => 'eic_community_extended_list',
         '#title' => t('Group Permissions'),
+        '#description' => t("Below is explained to whom this group is visible in order to understand the private or public character of the group's content."),
         '#items' => $admin_items,
       ],
     ];
