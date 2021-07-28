@@ -1,2 +1,2 @@
-{{ node.field_introduction.value |raw|striptags }}
-{{ node.field_body.value |raw|striptags }}
+{{ node.field_introduction.value|raw|default('')|striptags }}
+{{ node.field_body.value |raw|default('')|striptags }}
