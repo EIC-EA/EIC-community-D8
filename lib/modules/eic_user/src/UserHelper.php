@@ -119,7 +119,7 @@ class UserHelper {
   }
 
   /**
-   * Returns an array of uids for all the "power users".
+   * Checks if a user is a "power user".
    *
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The user account to check if is a power user.
