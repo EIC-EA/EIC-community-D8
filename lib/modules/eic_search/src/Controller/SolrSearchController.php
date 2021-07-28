@@ -155,10 +155,14 @@ class SolrSearchController extends ControllerBase {
   }
 
   /**
-   * @param $fq
-   * @param $interests
+   * Generate query for user interests matching by their topics
+   *
+   * @param string $fq
+   *  The field query stringify to send to SOLR
+   * @param array $interests
+   *  Values of interests facet
    */
-  private function generateQueryInterests(&$fq, $interests) {
+  private function generateQueryInterests(string &$fq, array $interests) {
     if (
       empty($interests) ||
       !array_key_exists('my_interests', $interests) ||
@@ -185,10 +189,14 @@ class SolrSearchController extends ControllerBase {
   }
 
   /**
-   * @param $fq
-   * @param $interests
+   * Generate query for user's groups and content
+   *
+   * @param string $fq
+   *  The field query stringify to send to SOLR
+   * @param array $interests
+   *  Values of interests facet
    */
-  private function generateQueryUserGroupsAndContents(&$fq, $interests) {
+  private function generateQueryUserGroupsAndContents(string &$fq, array $interests) {
     if (
       empty($interests) ||
       !array_key_exists('my_groups', $interests) ||
