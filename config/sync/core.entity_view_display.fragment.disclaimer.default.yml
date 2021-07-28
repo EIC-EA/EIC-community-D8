@@ -5,6 +5,8 @@ dependencies:
   config:
     - field.field.fragment.disclaimer.field_body
     - fragments.fragment_type.disclaimer
+  module:
+    - text
 id: fragment.disclaimer.default
 targetEntityType: fragment
 bundle: disclaimer
@@ -15,7 +17,7 @@ content:
     label: hidden
     settings: {  }
     third_party_settings: {  }
-    type: basic_string
+    type: text_default
     region: content
 hidden:
   langcode: true

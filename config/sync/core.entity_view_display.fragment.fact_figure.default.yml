@@ -8,6 +8,7 @@ dependencies:
     - fragments.fragment_type.fact_figure
   module:
     - options
+    - text
 _core:
   default_config_hash: 5zmAVsI9RvWzDVnpaRFWB0-HmwjGMyrw3I6I69eTIbE
 id: fragment.fact_figure.default
@@ -20,7 +21,7 @@ content:
     label: hidden
     settings: {  }
     third_party_settings: {  }
-    type: basic_string
+    type: text_default
     region: content
   field_fact_figure_type:
     weight: 0
