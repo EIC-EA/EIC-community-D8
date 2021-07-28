@@ -727,6 +727,9 @@ datasource_settings:
 processor_settings:
   add_url: {  }
   address_abbreviations_to_full_form:
+    user_profile_city_string:
+      enable: 0
+      concat: 0
     user_profile_field_location_address_country_code:
       enable: 1
       concat: 0
@@ -739,6 +742,7 @@ processor_settings:
   content_access:
     weights:
       preprocess_query: -30
+  entity_status: {  }
   flag_count_indexer:
     flag_index:
       - recommend_group
