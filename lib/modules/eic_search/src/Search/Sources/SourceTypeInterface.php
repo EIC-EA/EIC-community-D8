@@ -13,6 +13,8 @@ interface SourceTypeInterface {
 
   const LAYOUT_COLUMNS = 'columns';
 
+  const LAYOUT_GLOBAL = 'global';
+
   /**
    * Get the label that will be shown into the admin
    *
@@ -21,11 +23,11 @@ interface SourceTypeInterface {
   public function getLabel(): string;
 
   /**
-   * Return the machine name of the source
+   * Return machine names of the source
    *
-   * @return string
+   * @return array
    */
-  public function getSourceId(): string;
+  public function getSourcesId(): array;
 
   /**
    * Return the bundle type of the source

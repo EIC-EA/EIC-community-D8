@@ -5,11 +5,11 @@ namespace Drupal\eic_search\Search\Sources;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
- * Class GroupSourceType
+ * Class GlobalSourceType
  *
  * @package Drupal\eic_groups\Search\Sources
  */
-class GroupSourceType implements SourceTypeInterface {
+class GlobalSourceType implements SourceTypeInterface {
 
   use StringTranslationTrait;
 
@@ -17,21 +17,24 @@ class GroupSourceType implements SourceTypeInterface {
    * @inheritDoc
    */
   public function getSourcesId(): array {
-    return ['group'];
+    return [
+      'group',
+      'node',
+    ];
   }
 
   /**
    * @inheritDoc
    */
   public function getLabel(): string {
-    return $this->t('Group', [], ['context' => 'eic_search']);
+    return $this->t('Global', [], ['context' => 'eic_search']);
   }
 
   /**
    * @inheritDoc
    */
   public function getEntityBundle(): string {
-    return 'group';
+    return 'global';
   }
 
   /**
@@ -39,8 +42,7 @@ class GroupSourceType implements SourceTypeInterface {
    */
   public function getAvailableFacets(): array {
     return [
-      'ss_group_topic_name' => $this->t('Topic', [], ['context' => 'eic_search']),
-      'ss_group_label_string' => $this->t('Group label', [], ['context' => 'eic_search']),
+      'ss_global_content_type' => $this->t('Content type', [], ['context' => 'eic_search']),
       'ss_group_user_fullname' => $this->t('Full name', [], ['context' => 'eic_search']),
     ];
   }
@@ -50,15 +52,15 @@ class GroupSourceType implements SourceTypeInterface {
    */
   public function getAvailableSortOptions(): array {
     return [
-      'timestamp' => [
+      'ss_global_created_date' => [
         'label' => $this->t('Timestamp', [], ['context' => 'eic_search']),
         'ASC' => $this->t('Recent', [], ['context' => 'eic_search']),
         'DESC' => $this->t('Old', [], ['context' => 'eic_search']),
       ],
-      'ss_group_label_string' => [
-        'label' => $this->t('Group label', [], ['context' => 'eic_search']),
-        'ASC' => $this->t('Group label A-Z', [], ['context' => 'eic_search']),
-        'DESC' => $this->t('Group label Z-A', [], ['context' => 'eic_search']),
+      'ss_global_title' => [
+        'label' => $this->t('Title', [], ['context' => 'eic_search']),
+        'ASC' => $this->t('Title A-Z', [], ['context' => 'eic_search']),
+        'DESC' => $this->t('Title Z-A', [], ['context' => 'eic_search']),
       ],
       'ss_group_user_fullname' => [
         'label' => $this->t('Fullname', [], ['context' => 'eic_search']),
@@ -73,7 +75,8 @@ class GroupSourceType implements SourceTypeInterface {
    */
   public function getSearchFieldsId(): array {
     return [
-      'ss_group_label_string',
+      'tm_X3b_en_rendered_item',
+      'ss_global_title'
     ];
   }
 
@@ -81,14 +84,14 @@ class GroupSourceType implements SourceTypeInterface {
    * @inheritDoc
    */
   public function getLayoutTheme(): string {
-    return self::LAYOUT_COMPACT;
+    return self::LAYOUT_GLOBAL;
   }
 
   /**
    * @inheritDoc
    */
   public function ableToPrefilteredByGroup(): bool {
-    return TRUE;
+    return FALSE;
   }
 
   /**

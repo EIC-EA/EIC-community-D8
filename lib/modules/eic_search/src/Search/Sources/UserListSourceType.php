@@ -16,8 +16,8 @@ class UserListSourceType implements SourceTypeInterface {
   /**
    * @inheritDoc
    */
-  public function getSourceId(): string {
-    return 'user';
+  public function getSourcesId(): array {
+    return ['user'];
   }
 
   /**

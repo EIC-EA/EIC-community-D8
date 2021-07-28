@@ -155,7 +155,7 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
       '#sorts' => array_keys($sorts),
       '#search_string' => $search_value,
       '#source_class' => $source instanceof SourceTypeInterface ? get_class($source) : NULL,
-      '#datasource' => $source instanceof SourceTypeInterface ? $source->getSourceId() : NULL,
+      '#datasource' => $source instanceof SourceTypeInterface ? $source->getSourcesId() : NULL,
       '#bundle' => $source instanceof SourceTypeInterface ? $source->getEntityBundle() : NULL,
       '#layout' => $source instanceof SourceTypeInterface ? $source->getLayoutTheme() : NULL,
       '#page_options' => $this->configuration['page_options'],
