@@ -184,7 +184,7 @@ class SolrSearchController extends ControllerBase {
     }
 
     $user_topics_string = implode(' OR ', $user_topics_id);
-
+    \Drupal::logger('eic_search_test')->debug($user_topics_id);
     $fq .= " AND (itm_group_field_vocab_topics:($user_topics_string) OR itm_content_field_vocab_topics:($user_topics_string))";
   }
 

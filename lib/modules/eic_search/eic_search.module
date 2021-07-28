@@ -70,34 +70,9 @@ function eic_search_search_api_solr_documents_alter(array &$documents, \Drupal\s
   foreach ($documents as $document) {
     $fields = $document->getFields();
 
-    switch ($fields['ss_search_api_datasource']) {
-      case 'entity:node':
-        $title = $fields['ss_content_title'];
-        $type = $fields['ss_content_type'];
-        $date = $fields['ds_content_created'];
-        $fullname = $fields['ss_content_first_name'] . ' ' . $fields['ss_content_last_name'];
-        break;
-      case 'entity:group':
-        $title = $fields['ss_group_label_string'];
-        $type = 'group';
-        $date = $fields['ds_group_created'];
-        $fullname = $fields['ss_group_user_fullname'];
-        break;
-      default:
-        $title = '';
-        $type = '';
-        $date = '';
-        $fullname = '';
-        break;
-    }
-
-    //We need to use only one field key for the global search on the FE side
-    $document->addField('ss_global_title', $title);
-    $document->addField('ss_global_content_type', $type);
-    $document->addField('ss_global_created_date', $date);
-    $document->addField('ss_global_fullname', $fullname);
-
     $group_parent_label = '';
+    $group_parent_url = '';
+    $group_parent_id = -1;
 
     if (array_key_exists('its_content__group_content__entity_id_gid', $fields)) {
       $group_content_entity = \Drupal\group\Entity\GroupContent::load($fields['its_content__group_content__entity_id_gid']);
@@ -215,10 +190,38 @@ function eic_search_search_api_solr_documents_alter(array &$documents, \Drupal\s
     /** @var \Drupal\Core\Session\AccountInterface $owner */
     $owner = $group->getOwner();
     $user = \Drupal\user\Entity\User::load($owner->id());
+    $group_fullname = $user->get('field_last_name')->value . ' ' . $user->get('field_first_name')->value;
 
     $document->addField('ss_group_visibility', $group_visibility);
     $document->addField('ss_group_url', $group->toUrl()->toString());
     $document->addField('ss_group_user_url', $user->toUrl()->toString());
-    $document->addField('ss_group_user_fullname', $user->get('field_last_name')->value . ' ' . $user->get('field_first_name')->value);
+    $document->addField('ss_group_user_fullname', $group_fullname);
+
+    switch ($fields['ss_search_api_datasource']) {
+      case 'entity:node':
+        $title = $fields['ss_content_title'];
+        $type = $fields['ss_content_type'];
+        $date = $fields['ds_content_created'];
+        $fullname = $fields['ss_content_first_name'] . ' ' . $fields['ss_content_last_name'];
+        break;
+      case 'entity:group':
+        $title = $fields['ss_group_label_string'];
+        $type = 'group';
+        $date = $fields['ds_group_created'];
+        $fullname = $group_fullname;
+        break;
+      default:
+        $title = '';
+        $type = '';
+        $date = '';
+        $fullname = '';
+        break;
+    }
+
+    //We need to use only one field key for the global search on the FE side
+    $document->addField('ss_global_title', $title);
+    $document->addField('ss_global_content_type', $type);
+    $document->addField('ss_global_created_date', $date);
+    $document->addField('ss_global_fullname', $fullname);
   }
 }
