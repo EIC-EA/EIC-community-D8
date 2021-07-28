@@ -28,6 +28,8 @@ function eic_search_theme($existing, $type, $theme, $path) {
         'enable_search' => TRUE,
         'source_class' => '',
         'search_string' => '',
+        'enable_facet_interests' => FALSE,
+        'enable_facet_my_groups' => FALSE,
       ],
     ],
   ];
@@ -74,18 +76,21 @@ function eic_search_search_api_solr_documents_alter(array &$documents, \Drupal\s
         $type = $fields['ss_content_type'];
         $date = $fields['ds_content_created'];
         $fullname = $fields['ss_content_first_name'] . ' ' . $fields['ss_content_last_name'];
+        $topics = $fields['itm_content_field_vocab_topics'];
         break;
       case 'entity:group':
         $title = $fields['ss_group_label_string'];
         $type = 'group';
         $date = $fields['ds_group_created'];
         $fullname = $fields['ss_group_user_fullname'];
+        $topics = $fields['itm_group_field_vocab_topics'];
         break;
       default:
         $title = '';
         $type = '';
         $date = '';
         $fullname = '';
+        $topics = [];
         break;
     }
 
@@ -94,6 +99,7 @@ function eic_search_search_api_solr_documents_alter(array &$documents, \Drupal\s
     $document->addField('ss_global_content_type', $type);
     $document->addField('ss_global_created_date', $date);
     $document->addField('ss_global_fullname', $fullname);
+    $document->addField('ss_global_topics', $topics);
 
     $group_parent_label = '';
 
@@ -105,10 +111,14 @@ function eic_search_search_api_solr_documents_alter(array &$documents, \Drupal\s
       $group_parent_url = $group_content_entity->getGroup() instanceof \Drupal\group\Entity\GroupInterface ?
         $group_content_entity->getGroup()->toUrl()->toString()
         : '';
+      $group_parent_id = $group_content_entity->getGroup() instanceof \Drupal\group\Entity\GroupInterface ?
+        $group_content_entity->getGroup()->id()
+        : '';
     }
 
     $document->addField('ss_global_group_parent_label', $group_parent_label);
     $document->addField('ss_global_group_parent_url', $group_parent_url);
+    $document->addField('ss_global_group_parent_id', $group_parent_id);
 
     if ($fields['ss_search_api_datasource'] === 'entity:user') {
       $profile = \Drupal\profile\Entity\Profile::load($fields['its_user_profile']);

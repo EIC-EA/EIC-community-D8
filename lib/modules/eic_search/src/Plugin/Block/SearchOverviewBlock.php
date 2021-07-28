@@ -164,6 +164,8 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
       '#url' => Url::fromRoute('eic_groups.solr_search')->toString(),
       '#isAnonymous' => \Drupal::currentUser()->isAnonymous(),
       '#currentGroup' => $current_group_route instanceof GroupInterface ? $current_group_route->id() : NULL,
+      '#enable_facet_interests' => $this->configuration['add_facet_interests'],
+      '#enable_facet_my_groups' => $this->configuration['add_facet_my_groups'],
       '#translations' => [
         'public' => $this->t('Public', [], ['context' => 'eic_group']),
         'private' => $this->t('Private', [], ['context' => 'eic_group']),
@@ -234,6 +236,8 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
     $this->configuration['enable_search'] = $values['search']['configuration']['enable_search'];
     $this->configuration['page_options'] = $values['search']['configuration']['pagination']['page_options'];
     $this->configuration['prefilter_group'] = $values['search']['configuration']['prefilter_group'];
+    $this->configuration['add_facet_interests'] = $values['search']['configuration']['add_facet_interests'];
+    $this->configuration['add_facet_my_groups'] = $values['search']['configuration']['add_facet_my_groups'];
   }
 
   /**
@@ -339,6 +343,20 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
         ];
       }
     }
+
+    $form['search']['configuration']['add_facet_my_groups'] = [
+      '#type' => 'checkbox',
+      '#default_value' => $this->configuration['add_facet_my_groups'],
+      '#title' => $this->t('Add filter for my groups/contents', [], ['context' => 'eic_search']),
+      '#description' => $this->t('Add new checkbox on the sidebar to filter only user groups/contents', [], ['context' => 'eic_search']),
+    ];
+
+    $form['search']['configuration']['add_facet_interests'] = [
+      '#type' => 'checkbox',
+      '#default_value' => $this->configuration['add_facet_interests'],
+      '#title' => $this->t('Add filter for my topics of interests', [], ['context' => 'eic_search']),
+      '#description' => $this->t('Add new checkbox on the sidebar to filter only topics of interests from user', [], ['context' => 'eic_search']),
+    ];
   }
 
   /**
