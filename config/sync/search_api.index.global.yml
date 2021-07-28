@@ -12,9 +12,9 @@ dependencies:
     - node
     - profile
     - search_api
-    - flag_search_api
     - address
     - eic_search
+    - flag_search_api
     - content_moderation
     - flag
     - group_permissions
@@ -210,6 +210,22 @@ field_settings:
     dependencies:
       module:
         - node
+  content_uid:
+    label: '[Content] Author'
+    datasource_id: 'entity:node'
+    property_path: uid
+    type: integer
+    indexed_locked: true
+    type_locked: true
+    dependencies:
+      module:
+        - node
+  flag_recommend_group_count:
+    label: 'Group Recommend count'
+    property_path: flag_recommend_group_count
+    type: integer
+    indexed_locked: true
+    type_locked: true
   group_content_entity_id:
     label: '[Group content] Content'
     datasource_id: 'entity:group_content'
@@ -234,12 +250,6 @@ field_settings:
     dependencies:
       module:
         - group
-  flag_recommend_group_count:
-    label: 'Group Recommend count'
-    property_path: flag_recommend_group_count
-    type: integer
-    indexed_locked: true
-    type_locked: true
   group_created:
     label: '[Group] Created on'
     datasource_id: 'entity:group'
@@ -273,7 +283,7 @@ field_settings:
       config:
         - field.storage.group.field_vocab_topics
   group_id_integer:
-    label: ID
+    label: '[Group] ID'
     datasource_id: 'entity:group'
     property_path: id
     type: integer
@@ -290,7 +300,7 @@ field_settings:
       module:
         - group
   group_label_string:
-    label: Title
+    label: '[Group] Title'
     datasource_id: 'entity:group'
     property_path: label
     type: string
@@ -379,23 +389,13 @@ field_settings:
     type_locked: true
     hidden: true
   status:
-    label: 'User status'
+    label: '[User] Status'
     datasource_id: 'entity:user'
     property_path: status
     type: boolean
     dependencies:
       module:
         - user
-  uid:
-    label: uid
-    datasource_id: 'entity:node'
-    property_path: uid
-    type: integer
-    indexed_locked: true
-    type_locked: true
-    dependencies:
-      module:
-        - node
   url:
     label: URI
     property_path: search_api_url
@@ -416,7 +416,7 @@ field_settings:
       module:
         - user
   user_first_name:
-    label: 'First name'
+    label: '[User] First name'
     datasource_id: 'entity:user'
     property_path: field_first_name
     type: string
@@ -433,7 +433,7 @@ field_settings:
         - 'entity:user/field_first_name'
         - 'entity:user/field_last_name'
   user_last_name:
-    label: 'Last name'
+    label: '[User] Last name'
     datasource_id: 'entity:user'
     property_path: field_last_name
     type: string
@@ -570,12 +570,12 @@ processor_settings:
   content_access:
     weights:
       preprocess_query: -30
-  group_content_access:
-    weights:
-      preprocess_query: -30
   flag_count_indexer:
     flag_index:
       - recommend_group
+  group_content_access:
+    weights:
+      preprocess_query: -30
   hierarchy:
     fields:
       content_field_vocab_geo: taxonomy_term-parent
