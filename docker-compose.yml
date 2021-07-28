@@ -27,6 +27,15 @@ services:
     env_file:
       - .env
 
+  node:
+    image: node:14
+    working_dir: /var/www/html
+    tty: true
+    ports:
+      - 8085:8080
+    volumes:
+      - ./lib/themes/eic_community:/var/www/html
+
   mysql:
     image: percona/percona-server:5.7
     volumes:
