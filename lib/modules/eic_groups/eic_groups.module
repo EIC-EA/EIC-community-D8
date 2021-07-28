@@ -23,6 +23,7 @@ use Drupal\eic_groups\Hooks\Pathauto;
 use Drupal\eic_groups\Hooks\Preprocess;
 use Drupal\eic_user\UserHelper;
 use Drupal\group\Entity\GroupInterface;
+use Drupal\eic_groups\Constants\GroupVisibilityType;
 
 /**
  * Implements hook_theme().
