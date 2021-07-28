@@ -5,15 +5,17 @@ dependencies:
   module:
     - search_api_solr
     - group
-    - user
-    - file
-    - media
-    - taxonomy
     - node
     - profile
+    - file
+    - taxonomy
+    - user
+    - media
     - search_api
-    - address
     - eic_search
+    - address
+    - eic_group_statistics
+    - flag_search_api
     - content_moderation
     - flag
     - group_permissions
@@ -27,10 +29,13 @@ dependencies:
     - field.storage.group.field_body
     - field.storage.group.field_vocab_geo
     - field.storage.node.field_body
-    - field.storage.node.field_vocab_geo
-    - field.storage.node.field_subtitle
-    - field.storage.node.field_vocab_topics
     - field.storage.node.field_discussion_type
+    - field.storage.node.field_subtitle
+    - field.storage.node.field_vocab_geo
+    - field.storage.node.field_vocab_topics
+    - field.storage.group.field_body
+    - field.storage.group.field_vocab_geo
+    - field.storage.group.field_vocab_topics
     - field.storage.profile.field_body
     - field.storage.profile.field_location_address
     - field.storage.profile.field_vocab_job_title
@@ -236,7 +241,7 @@ field_settings:
       module:
         - node
   content_uid:
-    label: uid
+    label: '[Content] Author'
     datasource_id: 'entity:node'
     property_path: uid
     type: integer
@@ -245,6 +250,12 @@ field_settings:
     dependencies:
       module:
         - node
+  flag_recommend_group_count:
+    label: 'Group Recommend count'
+    property_path: flag_recommend_group_count
+    type: integer
+    indexed_locked: true
+    type_locked: true
   group_content_entity_id:
     label: '[Group content] Content'
     datasource_id: 'entity:group_content'
@@ -302,7 +313,7 @@ field_settings:
       config:
         - field.storage.group.field_vocab_topics
   group_id_integer:
-    label: ID
+    label: '[Group] ID'
     datasource_id: 'entity:group'
     property_path: id
     type: integer
@@ -319,13 +330,37 @@ field_settings:
       module:
         - group
   group_label_string:
-    label: Title
+    label: '[Group] Title'
     datasource_id: 'entity:group'
     property_path: label
     type: string
     dependencies:
       module:
         - group
+  group_statistic_comments:
+    label: 'Group statistics - Comments'
+    property_path: group_statistic_comments
+    type: integer
+    indexed_locked: true
+    type_locked: true
+  group_statistic_events:
+    label: 'Group statistics - Events'
+    property_path: group_statistic_events
+    type: integer
+    indexed_locked: true
+    type_locked: true
+  group_statistic_files:
+    label: 'Group statistics - Files'
+    property_path: group_statistic_files
+    type: integer
+    indexed_locked: true
+    type_locked: true
+  group_statistic_members:
+    label: 'Group statistics - Members'
+    property_path: group_statistic_members
+    type: integer
+    indexed_locked: true
+    type_locked: true
   group_status:
     label: '[Group] Published'
     datasource_id: 'entity:group'
@@ -460,7 +495,7 @@ field_settings:
         'entity:user':
           user: default
   status:
-    label: 'User status'
+    label: '[User] Status'
     datasource_id: 'entity:user'
     property_path: status
     type: boolean
@@ -487,7 +522,7 @@ field_settings:
       module:
         - user
   user_first_name:
-    label: 'First name'
+    label: '[User] First name'
     datasource_id: 'entity:user'
     property_path: field_first_name
     type: string
@@ -504,7 +539,7 @@ field_settings:
         - 'entity:user/field_first_name'
         - 'entity:user/field_last_name'
   user_last_name:
-    label: 'Last name'
+    label: '[User] Last name'
     datasource_id: 'entity:user'
     property_path: field_last_name
     type: string
@@ -708,9 +743,18 @@ processor_settings:
     weights:
       preprocess_query: -30
   entity_status: {  }
+  flag_count_indexer:
+    flag_index:
+      - recommend_group
   group_content_access:
     weights:
       preprocess_query: -30
+  group_statistics_indexer:
+    group_statistics_index:
+      - members
+      - comments
+      - files
+      - events
   hierarchy:
     fields:
       content_field_vocab_geo: taxonomy_term-parent

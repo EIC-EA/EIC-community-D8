@@ -27,6 +27,15 @@ services:
     env_file:
       - .env
 
+  node:
+    image: node:14
+    working_dir: /var/www/html
+    tty: true
+    ports:
+      - 8085:8080
+    volumes:
+      - ./lib/themes/eic_community:/var/www/html
+
   mysql:
     image: percona/percona-server:5.7
     volumes:
@@ -35,7 +44,7 @@ services:
     environment:
       MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
     ports:
-      - $DRUPAL_DATABASE_PORT:3306
+      - 33060:3306
 
   pma:
     image: phpmyadmin/phpmyadmin

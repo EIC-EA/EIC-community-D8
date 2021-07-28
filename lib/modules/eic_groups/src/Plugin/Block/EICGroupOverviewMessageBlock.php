@@ -100,6 +100,9 @@ class EICGroupOverviewMessageBlock extends BlockBase implements ContainerFactory
     $cacheable_metadata->setCacheContexts([
       'user.group_permissions',
     ]);
+    $cacheable_metadata->addCacheTags([
+      'group_content_list:group:' . $group->id(),
+    ]);
 
     $required_roles = [EICGroupsHelper::GROUP_OWNER_ROLE];
     $group_membership = $group->getMember($this->account);
