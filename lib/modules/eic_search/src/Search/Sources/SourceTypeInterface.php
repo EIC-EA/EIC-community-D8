@@ -13,6 +13,8 @@ interface SourceTypeInterface {
 
   const LAYOUT_COLUMNS = 'columns';
 
+  const LAYOUT_COLUMNS_COMPACT = 'columns_compact';
+
   const LAYOUT_GLOBAL = 'global';
 
   /**
