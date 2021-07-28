@@ -70,10 +70,11 @@ process:
     -
       plugin: static_map
       source: roles
+      default_value: null
       map:
         1: anonymous
         2: authenticated
-        3: piwik_admin
+        3: piwik_administrator
         4: service_authentication
         5: administrator
         6: content_administrator
@@ -92,7 +93,7 @@ process:
   field_is_deleted_by_uid:
     -
       plugin: migration_lookup
-      source: c4m_is_deleted_by_uid
+      source: c4m_is_deleted_by_uid/0/target_id
       migration:
         - upgrade_d7_user
   field_is_invalid_email:
@@ -125,20 +126,32 @@ process:
       source: c4m_updated_profile_by_service
       process:
         value:
-          plugin: format_date
-          from_format: U
-          to_format: U
-          source: value
+          -
+            plugin: skip_on_empty
+            source: value
+            method: process
+          -
+            plugin: format_date
+            from_format: U
+            to_format: U
   field_updated_profile_by_user:
     -
       plugin: sub_process
       source: c4m_updated_profile_by_user
       process:
         value:
-          plugin: format_date
-          from_format: U
-          to_format: U
-          source: value
+          -
+            plugin: skip_on_empty
+            source: value
+            method: process
+          -
+            plugin: format_date
+            from_format: U
+            to_format: U
+  field_user_status:
+    -
+      plugin: get
+      source: c4m_user_status
 destination:
   plugin: 'entity:user'
 migration_dependencies:

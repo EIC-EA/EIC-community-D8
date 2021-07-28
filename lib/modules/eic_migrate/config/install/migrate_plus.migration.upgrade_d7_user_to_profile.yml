@@ -2,7 +2,7 @@ langcode: en
 status: true
 dependencies: {  }
 id: upgrade_d7_user_to_profile
-class: Drupal\user\Plugin\migrate\User # TODO
+class: Drupal\user\Plugin\migrate\User
 field_plugin_method: null
 cck_plugin_method: null
 migration_tags:
@@ -13,6 +13,10 @@ label: 'User accounts to User profiles'
 source:
   plugin: d7_user
   track_changes: true
+  constants:
+    facebook_type: 'facebook'
+    linkedin_type: 'linkedin'
+    twitter_type: 'twitter'
 process:
   type:
     - plugin: default_value
@@ -27,17 +31,40 @@ process:
   field_cv_link:
     - plugin: field_link
       source: c4m_cv_link
-  # TODO: Convert to social links
-#  field_social_links:
-#  c4m_facebook:
-#    - plugin: field_link
-#      source: c4m_facebook
-#  c4m_linkedin:
-#    - plugin: field_link
-#      source: c4m_linkedin
-#  c4m_twitter:
-#    - plugin: field_link
-#      source: c4m_twitter
+  _social_link_facebook:
+    - plugin: get
+      source:
+        - constants/facebook_type
+        - c4m_facebook/0/url
+  _social_link_linkedin:
+    - plugin: get
+      source:
+        - constants/linkedin_type
+        - c4m_linkedin/0/url
+  _social_link_twitter:
+    - plugin: get
+      source:
+        - constants/twitter_type
+        - c4m_twitter/0/url
+  _field_social_links:
+    - plugin: get
+      source:
+        - '@_social_link_facebook'
+        - '@_social_link_linkedin'
+        - '@_social_link_twitter'
+  field_social_links:
+    - plugin: sub_process
+      source: '@_field_social_links'
+      process:
+        social:
+          - plugin: get
+            source: '0'
+        link:
+          - plugin: str_replace
+            source: '1'
+            regex: true
+            search: "/^((https?:\\/\\/)?(www\\.)?([a-zA-Z-]+\\.)?(facebook|linkedin|kedin|linkediin|twitter)(\\.com)?\\/)/"
+            replace: ""
   field_location_address:
     - plugin: addressfield
       source: c4m_location_address
@@ -77,34 +104,10 @@ process:
 #      source: c4m_vocab_job_title
 #      process:
 #        target_id: tid
-  # TODO: Planning
+  # TODO: Implement after groups migration.
 #  og_user_node:
 #    - plugin: get
 #      source: og_user_node
-  # TODO: Planning
-#  c4m_unsubscribe_hash:
-#    - plugin: get
-#      source: c4m_unsubscribe_hash
-  # TODO: Planning
-#  c4m_optout_comment:
-#    - plugin: get
-#      source: c4m_optout_comment
-  # TODO: Planning
-#  c4m_optout_group:
-#    - plugin: get
-#      source: c4m_optout_group
-  # TODO: Planning
-#  c4m_optout_node:
-#    - plugin: get
-#      source: c4m_optout_node
-  # TODO: Planning
-#  c4m_optout_taxonomy_term:
-#    - plugin: get
-#      source: c4m_optout_taxonomy_term
-  # TODO: Does this module exist in D7?
-#  field_metatag:
-#    - plugin: d7_metatag_entities
-#      source: pseudo_metatag_entities
 destination:
   plugin: 'entity:profile'
 migration_dependencies:

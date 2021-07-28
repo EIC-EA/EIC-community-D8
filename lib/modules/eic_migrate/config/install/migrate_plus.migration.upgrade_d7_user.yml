@@ -60,20 +60,14 @@ process:
   roles:
     - plugin: static_map
       source: roles
+      default_value: NULL
       map:
         1: anonymous
         2: authenticated
-        3: piwik_admin # TODO: This role is not in D9
+        3: piwik_administrator
         4: service_authentication
         5: administrator
         6: content_administrator
-  # No content in D7. Ignore picture
-#  user_picture:
-#    - plugin: default_value
-#      source: picture
-#      default_value: null
-#    - plugin: migration_lookup
-#      migration: upgrade_d7_file
   field_first_name:
     - plugin: get
       source: c4m_first_name
@@ -83,14 +77,11 @@ process:
   field_is_deleted_anonymous:
     - plugin: get
       source: c4m_is_deleted_anonymous
-  # TODO: Use migration_lookup
   field_is_deleted_by_uid:
     - plugin: migration_lookup
-      source: c4m_is_deleted_by_uid
+      source: c4m_is_deleted_by_uid/0/target_id
       migration:
         - upgrade_d7_user
-#    - plugin: get
-#      source: c4m_is_deleted_by_uid
   field_is_invalid_email:
     - plugin: get
       source: c4m_is_invalid_email
@@ -113,7 +104,6 @@ process:
 #        title: title
 #        width: width
 #        height: height
-  # TODO: Is this field correctly mapped to D9?
   field_smed_id:
     - plugin: get
       source: c4m_user_dashboard_id
@@ -125,51 +115,30 @@ process:
       source: c4m_updated_profile_by_service
       process:
         value:
-          plugin: format_date
-          from_format: U
-          to_format: U
-          source: value
+          - plugin: skip_on_empty
+            source: value
+            method: process
+          - plugin: format_date
+            from_format: U
+            to_format: U
   field_updated_profile_by_user:
     - plugin: sub_process
       source: c4m_updated_profile_by_user
       process:
         value:
-          plugin: format_date
-          from_format: U
-          to_format: U
-          source: value
-  # TODO: What are the allowed values in this List (text) field?
-#  c4m_user_status:
-#    - plugin: get
-#      source: c4m_user_status
-  # TODO: Planning
+          - plugin: skip_on_empty
+            source: value
+            method: process
+          - plugin: format_date
+            from_format: U
+            to_format: U
+  field_user_status:
+    - plugin: get
+      source: c4m_user_status
+  # TODO: Implement after groups migration.
 #  og_user_node:
 #    - plugin: get
 #      source: og_user_node
-  # TODO: Planning
-#  c4m_unsubscribe_hash:
-#    - plugin: get
-#      source: c4m_unsubscribe_hash
-  # TODO: Planning
-#  c4m_optout_comment:
-#    - plugin: get
-#      source: c4m_optout_comment
-  # TODO: Planning
-#  c4m_optout_group:
-#    - plugin: get
-#      source: c4m_optout_group
-  # TODO: Planning
-#  c4m_optout_node:
-#    - plugin: get
-#      source: c4m_optout_node
-  # TODO: Planning
-#  c4m_optout_taxonomy_term:
-#    - plugin: get
-#      source: c4m_optout_taxonomy_term
-  # TODO: Does this module exist in D7?
-#  field_metatag:
-#    - plugin: d7_metatag_entities
-#      source: pseudo_metatag_entities
 destination:
   plugin: 'entity:user'
 migration_dependencies:
