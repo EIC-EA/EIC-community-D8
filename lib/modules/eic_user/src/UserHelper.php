@@ -127,7 +127,7 @@ class UserHelper {
    * @return bool
    *   TRUE if user is a power user.
    */
-  public function isPowerUser(AccountInterface $account) {
+  public static function isPowerUser(AccountInterface $account) {
     // User 1 is always considered power user.
     if ((int) $account->id() === 1) {
       return TRUE;

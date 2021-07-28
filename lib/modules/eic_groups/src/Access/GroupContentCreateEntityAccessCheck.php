@@ -25,13 +25,6 @@ class GroupContentCreateEntityAccessCheck extends GroupContentCreateEntityAccess
   protected $groupContentCreateEntityAccessCheck;
 
   /**
-   * The user helper service.
-   *
-   * @var \Drupal\eic_user\UserHelper
-   */
-  protected $userHelper;
-
-  /**
    * The EIC Groups helper service.
    *
    * @var \Drupal\eic_groups\EICGroupsHelperInterface
@@ -50,8 +43,6 @@ class GroupContentCreateEntityAccessCheck extends GroupContentCreateEntityAccess
    *
    * @param \Drupal\group\Access\GroupContentCreateEntityAccessCheck $group_content_create_entity_access_check_inner_service
    *   The flag access check inner service.
-   * @param \Drupal\eic_user\UserHelper $user_helper
-   *   The user helper service.
    * @param \Drupal\eic_groups\EICGroupsHelperInterface $eic_groups_helper
    *   The EIC Groups helper service.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
@@ -59,12 +50,10 @@ class GroupContentCreateEntityAccessCheck extends GroupContentCreateEntityAccess
    */
   public function __construct(
     GroupContentCreateEntityAccessCheckBase $group_content_create_entity_access_check_inner_service,
-    UserHelper $user_helper,
     EICGroupsHelperInterface $eic_groups_helper,
     EntityTypeManagerInterface $entity_type_manager
   ) {
     $this->groupContentCreateEntityAccessCheck = $group_content_create_entity_access_check_inner_service;
-    $this->userHelper = $user_helper;
     $this->eicGroupsHelper = $eic_groups_helper;
     $this->entityTypeManager = $entity_type_manager;
   }
@@ -100,7 +89,7 @@ class GroupContentCreateEntityAccessCheck extends GroupContentCreateEntityAccess
           // Deny access to the group content node creation form if the group
           // is in pending state and the user is not a "site_admin" or a
           // "content_administrator".
-          if (!$this->userHelper->isPowerUser($account)) {
+          if (!UserHelper::isPowerUser($account)) {
             $access = AccessResult::forbidden()
               ->addCacheableDependency($account)
               ->addCacheableDependency($group);
