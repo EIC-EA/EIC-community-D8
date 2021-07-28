@@ -45,11 +45,17 @@ class FieldWidgetOperations {
     foreach ($form_state_values as $key => $value) {
       if ($value['social'] === $social_network_name) {
         $form_state_values[$key]['link'] = str_replace($social_network_base_url, '', $value['link']);
+        $new_url = $form_state_values[$key]['link'];
 
         // Exception for LinkedIn since we need to prepend "in/" if missing.
         if ($social_network_name === 'linkedin') {
-          if (substr($form_state_values[$key]['link'], 0, 3) !== 'in/') {
-            $form_state_values[$key]['link'] = 'in/' . $form_state_values[$key]['link'];
+          // Remove backslash from the beginning if exists.
+          if (substr($form_state_values[$key]['link'], 0, 1) === '/') {
+            $new_url = substr($form_state_values[$key]['link'], 1);
+          }
+
+          if (substr($new_url, 0, 3) !== 'in/') {
+            $form_state_values[$key]['link'] = 'in/' . $new_url;
           }
         }
         break;
