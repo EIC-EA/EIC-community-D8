@@ -46,7 +46,7 @@ function eic_community_preprocess_paragraph__contributor(array &$variables) {
 
     $mail = $paragraph->field_person_email->getString();
 
-    if (strlen($mail) > 0) {
+    if (strlen($mail) > 0 && $variables['logged_in']) {
       $contributor['actions'][] = [
         'label' => t('e-mail'),
         'path' => 'mailto:' . $mail,
