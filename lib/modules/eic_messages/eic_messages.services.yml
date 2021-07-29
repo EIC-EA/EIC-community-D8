@@ -5,11 +5,11 @@ services:
 
   # Message creator services
   eic_messages.message_creator.group:
-    class: Drupal\eic_messages\Hooks\GroupMessageCreator
+    class: Drupal\eic_messages\Service\GroupMessageCreator
     arguments: ['@entity_type.manager', '@eic_messages.helper', '@eic_user.helper']
   eic_messages.message_creator.group_content:
-    class: Drupal\eic_messages\Hooks\GroupContentMessageCreator
+    class: Drupal\eic_messages\Service\GroupContentMessageCreator
     arguments: ['@entity_type.manager', '@eic_messages.helper', '@eic_user.helper']
   eic_messages.message_creator.request:
-    class: Drupal\eic_messages\Hooks\RequestMessageCreator
-    arguments: ['@entity_type.manager', '@eic_messages.helper', '@eic_user.helper']
+    class: Drupal\eic_messages\Service\RequestMessageCreator
+    arguments: ['@entity_type.manager', '@eic_messages.helper', '@eic_user.helper', '@eic_flags.handler_collector', '@renderer']

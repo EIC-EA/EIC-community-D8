@@ -7,6 +7,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\eic_content\EICContentHelper;
+use Drupal\eic_messages\Service\GroupContentMessageCreator;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -35,7 +36,7 @@ class FormOperations implements ContainerInjectionInterface {
   /**
    * The EIC content helper service.
    *
-   * @var \Drupal\eic_messages\Hooks\GroupContentMessageCreator
+   * @var \Drupal\eic_messages\Service\GroupContentMessageCreator
    */
   protected $groupContentMessageCreator;
 
@@ -46,8 +47,8 @@ class FormOperations implements ContainerInjectionInterface {
    *   The current route match service.
    * @param \Drupal\eic_content\EICContentHelper $content_helper
    *   The EIC content helper service.
-   * @param \Drupal\eic_messages\Hooks\GroupContentMessageCreator $group_content_message_creator
-   *   The EIC content helper service.
+   * @param \Drupal\eic_messages\Service\GroupContentMessageCreator $group_content_message_creator
+   *   The GroupContent Message Creator service.
    */
   public function __construct(RouteMatchInterface $route_match, EICContentHelper $content_helper, GroupContentMessageCreator $group_content_message_creator) {
     $this->routeMatch = $route_match;

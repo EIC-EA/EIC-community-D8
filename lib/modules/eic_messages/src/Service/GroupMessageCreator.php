@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\eic_messages\Hooks;
+namespace Drupal\eic_messages\Service;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\eic_groups\GroupsModerationHelper;
