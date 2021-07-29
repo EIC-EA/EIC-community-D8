@@ -54,7 +54,7 @@ class GroupStatisticsHelper implements GroupStatisticsHelperInterface {
     // Create the query.
     $query = $search_api_index->query();
     // Filter by group ID.
-    $query->addCondition('group_id', $group->id());
+    $query->addCondition('group_id_integer', $group->id());
     // Limit query to 1 result.
     $query->range(0, 1);
 
