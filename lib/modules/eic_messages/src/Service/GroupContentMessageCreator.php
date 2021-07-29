@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\eic_messages\Hooks;
+namespace Drupal\eic_messages\Service;
 
 use Drupal\Core\Entity\EntityInterface;
 
@@ -19,6 +19,8 @@ class GroupContentMessageCreator extends MessageCreatorBase {
 
     /** @var \Drupal\group\Entity\GroupContent $entity */
     $group_content_type = $entity->getGroupContentType();
+
+    // New member joined notification.
     if ($group_content_type->get('content_plugin') === 'group_membership') {
       $relatedUser = $entity->getEntity();
       $relatedGroup = $entity->getGroup();
@@ -34,8 +36,7 @@ class GroupContentMessageCreator extends MessageCreatorBase {
       $messages[] = $message;
     }
 
-    /** @var \Drupal\group\Entity\GroupContent $entity */
-    $group_content_type = $entity->getGroupContentType();
+    // User requested membership notification.
     if ($group_content_type->get('content_plugin') === 'group_membership_request') {
       $relatedUser = $entity->getEntity();
       $relatedGroup = $entity->getGroup();
@@ -52,6 +53,41 @@ class GroupContentMessageCreator extends MessageCreatorBase {
     }
 
     $this->processMessages($messages);
+  }
+
+  /**
+   * Creates an activity stream message for an entity inside a group.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The entity object.
+   */
+  public function createGroupContentActivity(EntityInterface $entity) {
+    $messages = [];
+
+    switch ($entity->getEntityTypeId()) {
+      case 'node':
+        switch ($entity->bundle()) {
+          case 'discussion':
+            // @todo Handle all activity messages with correct values.
+            $messages[] = \Drupal::entityTypeManager()->getStorage('message')->create([
+              'template' => 'stream_discussion_insert_update',
+            ]);
+            break;
+        }
+        break;
+    }
+
+    // Save all messages.
+    foreach ($messages as $message) {
+      try {
+        $message->save();
+      }
+      catch (\Exception $e) {
+        $logger = $this->getLogger('eic_messages');
+        $logger->error($e->getMessage());
+      }
+    }
+
   }
 
 }
