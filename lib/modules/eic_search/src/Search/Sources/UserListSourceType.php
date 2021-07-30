@@ -74,7 +74,7 @@ class UserListSourceType implements SourceTypeInterface {
    * @inheritDoc
    */
   public function getLayoutTheme(): string {
-    return self::LAYOUT_COMPACT;
+    return self::LAYOUT_GLOBAL;
   }
 
   /**
