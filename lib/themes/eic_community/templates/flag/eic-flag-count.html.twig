@@ -38,7 +38,7 @@
 {# Set nofollow to prevent search bots from crawling anonymous flag links #}
 {% set attributes = attributes.setAttribute('rel', 'nofollow') %}
 
-{% if flag.id == 'follow_group' %}
+{% if flag.id in ['follow_group' ,'recommend'] %}
   {% set icon_name = 'follow' %}
 {% else %}
   {% set icon_name = 'like' %}

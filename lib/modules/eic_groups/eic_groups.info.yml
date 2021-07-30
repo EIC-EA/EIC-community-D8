@@ -9,3 +9,6 @@ dependencies:
   - book:book
   - oec_group_flex:oec_group_flex
   - ginvite:ginvite
+  - eic_user:eic_user
+  - eic_content:eic_content_wiki_page
+  - eic_statistics:eic_group_statistics

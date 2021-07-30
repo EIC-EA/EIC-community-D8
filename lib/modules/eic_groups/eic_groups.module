@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
@@ -13,6 +14,7 @@ use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Url;
 use Drupal\eic_groups\GroupsModerationHelper;
 use Drupal\eic_groups\Hooks\CronOperations;
 use Drupal\eic_groups\Hooks\EntityOperations;
@@ -21,7 +23,9 @@ use Drupal\eic_groups\Hooks\FormOperations;
 use Drupal\eic_groups\Hooks\Pathauto;
 use Drupal\eic_groups\Hooks\Preprocess;
 use Drupal\eic_user\UserHelper;
+use Drupal\group\Entity\GroupContent;
 use Drupal\group\Entity\GroupInterface;
+use Drupal\eic_groups\Constants\GroupVisibilityType;
 
 /**
  * Implements hook_theme().
@@ -33,6 +37,23 @@ function eic_groups_theme($existing, $type, $theme, $path) {
         'group' => NULL,
         'group_values' => NULL,
       ],
+    ],
+    'eic_group_moderated_message_box' => [
+      'variables' => [
+        'group' => NULL,
+        'edit_link' => NULL,
+        'delete_link' => NULL,
+        'invite_link' => NULL,
+        'actions' => [],
+        'has_content' => NULL,
+        'has_member' => FALSE,
+      ],
+    ],
+    'eic_group_search_menu_block_form' => [
+      'render element' => 'form',
+    ],
+    'eic_group_search_menu_field_search_submit' => [
+      'render element' => 'element',
     ],
   ];
 }
@@ -121,6 +142,12 @@ function eic_groups_form_alter(&$form, FormStateInterface $form_state, $form_id)
         ->groupWikiPageFormAlter($form, $form_state, $form_id);
       break;
 
+    case 'group_content_group-group_membership_group-join_form':
+      // Do custom changes in group membership join form.
+      \Drupal::classResolver(FormOperations::class)
+        ->groupMembershipJoinFormAlter($form, $form_state, $form_id);
+      break;
+
   }
 }
 
@@ -202,9 +229,9 @@ function eic_groups_entity_field_access($operation, FieldDefinitionInterface $fi
     switch ($operation) {
       case 'edit':
         // Deny access if it's a new group and the user doesn't have
-        // "administrator" or "content_administrator" roles.
+        // "site_admin" or "content_administrator" roles.
         if ($entity->isNew()) {
-          $access = AccessResult::forbiddenIf(!in_array(UserHelper::ROLE_SITE_ADMINISTRATOR, $account->getRoles(TRUE)) && !in_array(UserHelper::ROLE_CONTENT_ADMINISTRATOR, $account->getRoles(TRUE)))
+          $access = AccessResult::forbiddenIf(!UserHelper::isPowerUser($account))
             ->addCacheableDependency($account);
           break;
         }
@@ -217,11 +244,27 @@ function eic_groups_entity_field_access($operation, FieldDefinitionInterface $fi
 }
 
 /**
- * Implements hook_ENTITY_TYPE_insert().
+ * Implements hook_ENTITY_TYPE_access().
  */
-function eic_groups_group_permission_insert(EntityInterface $entity) {
-  \Drupal::classResolver(EntityOperations::class)
-    ->groupPermissionInsert($entity);
+function eic_groups_group_access(EntityInterface $entity, $operation, AccountInterface $account) {
+  $access = AccessResult::neutral();
+
+  $moderation_state = $entity->get('moderation_state')->value;
+
+  switch ($operation) {
+    case 'delete':
+      // Deny access to delete group if the group is NOT in pending state and
+      // the user is NOT a "site_admin" or a "content_administrator".
+      if ($moderation_state !== GroupsModerationHelper::GROUP_PENDING_STATE) {
+        $access = AccessResult::forbiddenIf(!UserHelper::isPowerUser($account))
+          ->addCacheableDependency($account)
+          ->addCacheableDependency($entity);
+      }
+      break;
+
+  }
+
+  return $access;
 }
 
 /**
@@ -253,14 +296,21 @@ function eic_groups_flagging_access(EntityInterface $entity, $operation, Account
     case 'view':
     case 'flag':
     case 'unflag':
-      // Deny access to group flag if the group IS in pending or draft
-      // state.
-      if (in_array($moderation_state, [
-        GroupsModerationHelper::GROUP_PENDING_STATE,
-        GroupsModerationHelper::GROUP_DRAFT_STATE,
-      ])) {
-        $access = AccessResult::forbidden()
-          ->addCacheableDependency($entity)
+      if ($flagged_entity->getEntityTypeId() === 'group') {
+        // Default access.
+        $access = AccessResult::allowed();
+
+        // Deny access to group flag if the group IS in pending or draft
+        // state.
+        if (in_array($moderation_state, [
+          GroupsModerationHelper::GROUP_PENDING_STATE,
+          GroupsModerationHelper::GROUP_DRAFT_STATE,
+        ])) {
+          $access = AccessResult::forbidden();
+        }
+
+        // Add cacheable dependencies.
+        $access->addCacheableDependency($entity)
           ->addCacheableDependency($flagged_entity);
       }
       break;
@@ -268,4 +318,65 @@ function eic_groups_flagging_access(EntityInterface $entity, $operation, Account
   }
 
   return $access;
+}
+
+/**
+ * Implements hook_entity_operation_alter().
+ */
+function eic_groups_entity_operation_alter(array &$operations, EntityInterface $entity) {
+  if ($entity->getEntityTypeId() !== 'group') {
+    return;
+  }
+
+  // Gets current path alias.
+  $current_path = \Drupal::service('path.current')->getPath();
+  $current_path_alias = \Drupal::service('path_alias.manager')
+    ->getAliasByPath($current_path);
+
+  // Add publish group operation.
+  $publish_url_options = [
+    'query' => [
+      'destination' => $current_path_alias,
+    ],
+  ];
+  $publish_url = Url::fromRoute('eic_groups.group.publish.confirm_form', ['group' => $entity->id()], $publish_url_options);
+  if ($publish_url->access()) {
+    $operations['publish'] = [
+      'title' => t('Publish'),
+      'weight' => -50,
+      'url' => $publish_url,
+    ];
+  }
+}
+
+/**
+ * Implements hook_preprocess_block__HOOK().
+ */
+function eic_groups_preprocess_block__group_content_menu(&$variables) {
+  $block_manager = \Drupal::service('plugin.manager.block');
+  $plugin_block = $block_manager->createInstance('eic_groups_search_menu_group', []);
+  $variables['search_block'] = $plugin_block->build();
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_delete().
+ */
+function eic_groups_node_delete(EntityInterface $entity) {
+  switch ($entity->bundle()) {
+    case 'book':
+      // We need to invalidate group tags otherwise the "Add book page" link
+      // will not be shown in the group header until we clear all cache
+      // manually. But first, we need to make sure this book node
+      // belongs to a group.
+      $group_contents = GroupContent::loadByEntity($entity);
+      if (!$group_contents) {
+        return;
+      }
+
+      $group_content = reset($group_contents);
+
+      Cache::invalidateTags($group_content->getGroup()->getCacheTags());
+      break;
+
+  }
 }

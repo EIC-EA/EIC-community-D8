@@ -20,11 +20,18 @@ class UserHelper {
   use StringTranslationTrait;
 
   /**
+   * Drupal administrator role.
+   *
+   * @var string
+   */
+  const ROLE_DRUPAL_ADMINISTRATOR = 'administrator';
+
+  /**
    * Site administrator role.
    *
    * @var string
    */
-  const ROLE_SITE_ADMINISTRATOR = 'administrator';
+  const ROLE_SITE_ADMINISTRATOR = 'site_admin';
 
   /**
    * Content administrator role.
@@ -109,6 +116,35 @@ class UserHelper {
     }
 
     return $query->execute();
+  }
+
+  /**
+   * Checks if a user is a "power user".
+   *
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *   The user account to check if is a power user.
+   *
+   * @return bool
+   *   TRUE if user is a power user.
+   */
+  public static function isPowerUser(AccountInterface $account) {
+    // User 1 is always considered power user.
+    if ((int) $account->id() === 1) {
+      return TRUE;
+    }
+
+    foreach ($account->getRoles(TRUE) as $role) {
+      switch ($role) {
+        case static::ROLE_DRUPAL_ADMINISTRATOR:
+        case static::ROLE_SITE_ADMINISTRATOR:
+        case static::ROLE_CONTENT_ADMINISTRATOR:
+          // User is power user if has one of the administation roles.
+          return TRUE;
+
+      }
+    }
+
+    return FALSE;
   }
 
 }

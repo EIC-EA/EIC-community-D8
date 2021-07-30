@@ -39,7 +39,7 @@ function eic_community_preprocess_eic_group_header_block(array &$variables) {
   }
 
   foreach ($variables['group_values']['operation_links'] as $link) {
-    if(isset($link['links'])) {
+    if (isset($link['links'])) {
       $items = [];
 
       foreach ($link['links'] as $item) {
@@ -59,14 +59,15 @@ function eic_community_preprocess_eic_group_header_block(array &$variables) {
 
       $actions[] = [
         'label' => $link['label'],
-        'items' => $items
+        'items' => $items,
       ];
-    }else{
+    }
+    else {
       $tmp = [
         'link' => [
           'label' => $link['title'],
           'path' => $link['url'],
-        ]
+        ],
       ];
 
       if (isset($link['action'])) {
@@ -82,9 +83,10 @@ function eic_community_preprocess_eic_group_header_block(array &$variables) {
   $flags = [];
 
   foreach ($variables['group_values']['membership_links'] as $action) {
-    if(isset($action['#lazy_builder'])) {
+    if (isset($action['#lazy_builder'])) {
       $flag = ['content' => $action];
-    }else {
+    }
+    else {
       $icon_name = '';
 
       switch ($action['url']->getRouteName()) {
@@ -122,41 +124,49 @@ function eic_community_preprocess_eic_group_header_block(array &$variables) {
   }
 
   $variables['group_values']['flags'] = $flags;
-  // @todo Make statistics dynamic.
-  $variables['group_values']['stats'] = [
-    [
+
+  // Prepare group statistics values to send to the template.
+  $stats = [];
+  foreach ($variables['group_values']['stats'] as $stat_type => $statistic) {
+    switch ($stat_type) {
+      case 'members':
+        $icon_name = 'user';
+        $label = t('Users');
+        break;
+
+      case 'comments':
+        $icon_name = 'comment';
+        $label = t('Comments');
+        break;
+
+      case 'files':
+        $icon_name = 'documents';
+        $label = t('Documents');
+        break;
+
+      case 'events':
+        $icon_name = 'calendar';
+        $label = t('Calendar');
+        break;
+
+      default:
+        $icon_name = '';
+        $label = '';
+        break;
+
+    }
+
+    $stats[] = [
       'icon' => [
-        'name' => 'user',
+        'name' => $icon_name,
         'type' => 'custom',
       ],
-      'label' => 'user',
-      'value' => 0,
-    ],
-    [
-      'icon' => [
-        'name' => 'comment',
-        'type' => 'custom',
-      ],
-      'label' => 'comment',
-      'value' => 0,
-    ],
-    [
-      'icon' => [
-        'name' => 'documents',
-        'type' => 'custom',
-      ],
-      'label' => 'documents',
-      'value' => 0,
-    ],
-    [
-      'icon' => [
-        'name' => 'calendar',
-        'type' => 'custom',
-      ],
-      'label' => 'calendar',
-      'value' => 0,
-    ],
-  ];
+      'label' => $label,
+      'value' => $statistic,
+    ];
+  }
+
+  $variables['group_values']['stats'] = $stats;
 
   $group_visibility = \Drupal::service('oec_group_flex.helper')->getGroupVisibilitySettings($group);
   $tag = strpos($group_visibility['plugin_id'], '_') !== FALSE ? strstr($group_visibility['plugin_id'], '_', TRUE) : $group_visibility['plugin_id'];

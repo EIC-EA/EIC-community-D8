@@ -1,0 +1,8 @@
+uuid: f3dc8dbd-cb11-4ea6-85f0-3745aac0cfa0
+langcode: en
+status: true
+dependencies: {  }
+name: 'Type of Document'
+vid: document_types
+description: 'Type indication for documents'
+weight: 0

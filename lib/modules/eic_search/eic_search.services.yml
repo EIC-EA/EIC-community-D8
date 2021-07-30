@@ -1,0 +1,21 @@
+services:
+  eic_search.sources_collector:
+    class: Drupal\eic_search\Collector\SourcesCollector
+    tags:
+      - { name: service_collector, tag: eic_search.source, call: addSource }
+  eic_search.source_group:
+    class: Drupal\eic_search\Search\Sources\GroupSourceType
+    tags:
+      - { name: eic_search.source }
+  eic_search.source_user_list:
+    class: Drupal\eic_search\Search\Sources\UserListSourceType
+    tags:
+      - { name: eic_search.source }
+  eic_search.source_user_gallery:
+    class: Drupal\eic_search\Search\Sources\UserGallerySourceType
+    tags:
+      - { name: eic_search.source }
+  eic_search.source_global:
+    class: Drupal\eic_search\Search\Sources\GlobalSourceType
+    tags:
+      - { name: eic_search.source }

@@ -4,16 +4,30 @@ status: true
 dependencies:
   module:
     - search_api_solr
-    - node
     - group
-    - user
+    - node
     - profile
+    - file
+    - taxonomy
+    - user
+    - media
     - search_api
-    - flag_search_api
+    - eic_search
     - address
+    - eic_group_statistics
+    - flag_search_api
     - content_moderation
     - flag
+    - group_permissions
   config:
+    - field.storage.user.field_first_name
+    - field.storage.user.field_last_name
+    - field.storage.media.oe_media_image
+    - field.storage.user.field_media
+    - field.storage.group.field_thumbnail
+    - field.storage.group.field_vocab_topics
+    - field.storage.group.field_body
+    - field.storage.group.field_vocab_geo
     - field.storage.node.field_body
     - field.storage.node.field_discussion_type
     - field.storage.node.field_subtitle
@@ -26,9 +40,13 @@ dependencies:
     - field.storage.profile.field_location_address
     - field.storage.profile.field_vocab_job_title
     - field.storage.profile.field_vocab_language
+    - field.storage.profile.field_social_links
+    - field.storage.profile.field_vocab_geo
     - field.storage.profile.field_vocab_topic_expertise
     - field.storage.profile.field_vocab_topic_interest
     - search_api.server.global
+    - core.entity_view_mode.group.no_html
+    - core.entity_view_mode.node.no_html
 third_party_settings:
   search_api_solr:
     finalize: false
@@ -166,11 +184,35 @@ field_settings:
     dependencies:
       config:
         - field.storage.node.field_vocab_topics
+  content_first_name:
+    label: 'Authored by » User » First name'
+    datasource_id: 'entity:node'
+    property_path: 'uid:entity:field_first_name'
+    type: string
+    dependencies:
+      config:
+        - field.storage.user.field_first_name
+      module:
+        - node
+        - user
+  content_last_name:
+    label: 'Authored by » User » Last name'
+    datasource_id: 'entity:node'
+    property_path: 'uid:entity:field_last_name'
+    type: string
+    dependencies:
+      config:
+        - field.storage.user.field_last_name
+      module:
+        - node
+        - user
   content_status:
     label: '[Content] Published'
     datasource_id: 'entity:node'
     property_path: status
     type: boolean
+    indexed_locked: true
+    type_locked: true
     dependencies:
       module:
         - node
@@ -195,6 +237,16 @@ field_settings:
     datasource_id: 'entity:node'
     property_path: type
     type: string
+    dependencies:
+      module:
+        - node
+  content_uid:
+    label: '[Content] Author'
+    datasource_id: 'entity:node'
+    property_path: uid
+    type: integer
+    indexed_locked: true
+    type_locked: true
     dependencies:
       module:
         - node
@@ -260,7 +312,15 @@ field_settings:
     dependencies:
       config:
         - field.storage.group.field_vocab_topics
-  group_label:
+  group_id_integer:
+    label: '[Group] ID'
+    datasource_id: 'entity:group'
+    property_path: id
+    type: integer
+    dependencies:
+      module:
+        - group
+  group_label_fulltext:
     label: '[Group] Title'
     datasource_id: 'entity:group'
     property_path: label
@@ -269,6 +329,38 @@ field_settings:
     dependencies:
       module:
         - group
+  group_label_string:
+    label: '[Group] Title'
+    datasource_id: 'entity:group'
+    property_path: label
+    type: string
+    dependencies:
+      module:
+        - group
+  group_statistic_comments:
+    label: 'Group statistics - Comments'
+    property_path: group_statistic_comments
+    type: integer
+    indexed_locked: true
+    type_locked: true
+  group_statistic_events:
+    label: 'Group statistics - Events'
+    property_path: group_statistic_events
+    type: integer
+    indexed_locked: true
+    type_locked: true
+  group_statistic_files:
+    label: 'Group statistics - Files'
+    property_path: group_statistic_files
+    type: integer
+    indexed_locked: true
+    type_locked: true
+  group_statistic_members:
+    label: 'Group statistics - Members'
+    property_path: group_statistic_members
+    type: integer
+    indexed_locked: true
+    type_locked: true
   group_status:
     label: '[Group] Published'
     datasource_id: 'entity:group'
@@ -277,6 +369,28 @@ field_settings:
     dependencies:
       module:
         - group
+  group_teaser_url_string:
+    label: 'Thumbnail image » Media » Image » File » URI » Root-relative file URL'
+    datasource_id: 'entity:group'
+    property_path: 'field_thumbnail:entity:oe_media_image:entity:uri:url'
+    type: string
+    dependencies:
+      config:
+        - field.storage.group.field_thumbnail
+        - field.storage.media.oe_media_image
+      module:
+        - file
+        - media
+  group_topic_name:
+    label: 'Topics » Taxonomy term » Name'
+    datasource_id: 'entity:group'
+    property_path: 'field_vocab_topics:entity:name'
+    type: string
+    dependencies:
+      config:
+        - field.storage.group.field_vocab_topics
+      module:
+        - taxonomy
   group_type:
     label: '[Group] Group type'
     datasource_id: 'entity:group'
@@ -285,14 +399,115 @@ field_settings:
     dependencies:
       module:
         - group
+  group_user_first_name:
+    label: 'Group creator » User » First name'
+    datasource_id: 'entity:group'
+    property_path: 'uid:entity:field_first_name'
+    type: string
+    dependencies:
+      config:
+        - field.storage.user.field_first_name
+      module:
+        - group
+        - user
+  group_user_image:
+    label: 'Group creator » User » Picture » Media » Image » File » URI » Root-relative file URL'
+    datasource_id: 'entity:group'
+    property_path: 'uid:entity:field_media:entity:oe_media_image:entity:uri:url'
+    type: string
+    dependencies:
+      config:
+        - field.storage.media.oe_media_image
+        - field.storage.user.field_media
+      module:
+        - file
+        - group
+        - media
+        - user
+  group_user_last_name:
+    label: 'Group creator » User » Last name'
+    datasource_id: 'entity:group'
+    property_path: 'uid:entity:field_last_name'
+    type: string
+    dependencies:
+      config:
+        - field.storage.user.field_last_name
+      module:
+        - group
+        - user
+  node_grants:
+    label: 'Node access information'
+    property_path: search_api_node_grants
+    type: string
+    indexed_locked: true
+    type_locked: true
+    hidden: true
+  rendered_item:
+    label: 'Rendered HTML output'
+    property_path: rendered_item
+    type: text
+    configuration:
+      roles:
+        anonymous: anonymous
+      view_mode:
+        'entity:content_moderation_state':
+          content_moderation_state: ''
+        'entity:flagging':
+          bookmark_content: ''
+          follow_group: ''
+          follow_user: ''
+          highlight_content: ''
+          like_comment: ''
+          like_content: ''
+          recommend: ''
+          recommend_group: ''
+          request_archive_comment: ''
+          request_archive_content: ''
+          request_archive_group: ''
+          request_delete_comment: ''
+          request_delete_content: ''
+          request_delete_group: ''
+        'entity:group':
+          group: no_html
+        'entity:group_content':
+          group-group_invitation: ''
+          group-group_membership: ''
+          group-group_membership_request: ''
+          group-group_node-book: ''
+          group-group_node-discussion: ''
+          group-group_node-document: ''
+          group-group_node-gallery: ''
+          group-group_node-wiki_page: ''
+          group-group_request_archival: ''
+          group-group_request_delete: ''
+          group_content_type_ddd92dce39526: ''
+        'entity:group_permission':
+          group_permission: ''
+        'entity:node':
+          book: no_html
+          discussion: no_html
+          document: no_html
+          gallery: no_html
+          news: no_html
+          page: no_html
+          story: no_html
+          wiki_page: no_html
+        'entity:user':
+          user: default
   status:
-    label: 'User status'
+    label: '[User] Status'
     datasource_id: 'entity:user'
     property_path: status
     type: boolean
     dependencies:
       module:
         - user
+  url:
+    label: URI
+    property_path: search_api_url
+    type: string
+    configuration:
+      absolute: false
   user__group_content__uid_gid:
     label: 'Reverse reference: Group content using Group content creator » Parent group'
     datasource_id: 'entity:user'
@@ -306,6 +521,14 @@ field_settings:
     dependencies:
       module:
         - user
+  user_first_name:
+    label: '[User] First name'
+    datasource_id: 'entity:user'
+    property_path: field_first_name
+    type: string
+    dependencies:
+      config:
+        - field.storage.user.field_first_name
   user_full_name:
     label: '[User] Full name'
     property_path: aggregated_field
@@ -315,12 +538,38 @@ field_settings:
       fields:
         - 'entity:user/field_first_name'
         - 'entity:user/field_last_name'
+  user_last_name:
+    label: '[User] Last name'
+    datasource_id: 'entity:user'
+    property_path: field_last_name
+    type: string
+    dependencies:
+      config:
+        - field.storage.user.field_last_name
+  user_mail:
+    label: Email
+    datasource_id: 'entity:user'
+    property_path: mail
+    type: string
+    dependencies:
+      module:
+        - user
   user_profile:
     label: 'Member profiles'
     datasource_id: 'entity:user'
     property_path: member_profiles
     type: integer
     dependencies:
+      module:
+        - profile
+  user_profile_city_string:
+    label: 'Member profiles » Profile » Address » The locality (i.e. city)'
+    datasource_id: 'entity:user'
+    property_path: 'member_profiles:entity:field_location_address:locality'
+    type: string
+    dependencies:
+      config:
+        - field.storage.profile.field_location_address
       module:
         - profile
   user_profile_field_body:
@@ -343,16 +592,6 @@ field_settings:
         - field.storage.profile.field_location_address
       module:
         - profile
-  user_profile_field_vocab_job_title:
-    label: 'Member profiles » Profile » Job title'
-    datasource_id: 'entity:user'
-    property_path: 'member_profiles:entity:field_vocab_job_title'
-    type: integer
-    dependencies:
-      config:
-        - field.storage.profile.field_vocab_job_title
-      module:
-        - profile
   user_profile_field_vocab_language:
     label: 'Member profiles » Profile » Languages spoken'
     datasource_id: 'entity:user'
@@ -373,16 +612,83 @@ field_settings:
         - field.storage.profile.field_vocab_topic_expertise
       module:
         - profile
-  user_profile_field_vocab_topic_interest:
-    label: 'Member profiles » Profile » Topics of Interest'
+  user_profile_field_vocab_topic_interest_array:
+    label: 'Member profiles » Profile » Topics of Interest » Taxonomy term » Name'
     datasource_id: 'entity:user'
-    property_path: 'member_profiles:entity:field_vocab_topic_interest'
-    type: integer
+    property_path: 'member_profiles:entity:field_vocab_topic_interest:entity:name'
+    type: string
     dependencies:
       config:
         - field.storage.profile.field_vocab_topic_interest
       module:
         - profile
+        - taxonomy
+  user_profile_geo_string:
+    label: 'Member profiles » Profile » Target Region & Countries » Taxonomy term » Name'
+    datasource_id: 'entity:user'
+    property_path: 'member_profiles:entity:field_vocab_geo:entity:name'
+    type: string
+    dependencies:
+      config:
+        - field.storage.profile.field_vocab_geo
+      module:
+        - profile
+        - taxonomy
+  user_profile_image:
+    label: 'Picture » Media » Image » File » URI » Root-relative file URL'
+    datasource_id: 'entity:user'
+    property_path: 'field_media:entity:oe_media_image:entity:uri:url'
+    type: string
+    dependencies:
+      config:
+        - field.storage.media.oe_media_image
+        - field.storage.user.field_media
+      module:
+        - file
+        - media
+  user_profile_job_string:
+    label: 'Member profiles » Profile » Job title » Taxonomy term » Name'
+    datasource_id: 'entity:user'
+    property_path: 'member_profiles:entity:field_vocab_job_title:entity:name'
+    type: string
+    dependencies:
+      config:
+        - field.storage.profile.field_vocab_job_title
+      module:
+        - profile
+        - taxonomy
+  user_profile_social_links:
+    label: 'Member profiles » Profile » Social links'
+    datasource_id: 'entity:user'
+    property_path: 'member_profiles:entity:field_social_links'
+    type: string
+    dependencies:
+      config:
+        - field.storage.profile.field_social_links
+      module:
+        - profile
+  user_profile_topic_expertise_string:
+    label: 'Member profiles » Profile » Topics of Expertise » Taxonomy term » Name'
+    datasource_id: 'entity:user'
+    property_path: 'member_profiles:entity:field_vocab_topic_expertise:entity:name'
+    type: string
+    dependencies:
+      config:
+        - field.storage.profile.field_vocab_topic_expertise
+      module:
+        - profile
+        - taxonomy
+  user_profile_topic_interest_string:
+    label: 'Member profiles » Profile » Topics of Interest » Taxonomy term » Name'
+    datasource_id: 'entity:user'
+    property_path: 'member_profiles:entity:field_vocab_topic_interest:entity:name'
+    type: string
+    dependencies:
+      config:
+        - field.storage.profile.field_vocab_topic_interest
+      module:
+        - profile
+        - taxonomy
 datasource_settings:
   'entity:content_moderation_state':
     languages:
@@ -406,6 +712,7 @@ datasource_settings:
     languages:
       default: true
       selected: {  }
+  'entity:group_permission': {  }
   'entity:node':
     bundles:
       default: true
@@ -420,6 +727,9 @@ datasource_settings:
 processor_settings:
   add_url: {  }
   address_abbreviations_to_full_form:
+    user_profile_city_string:
+      enable: 0
+      concat: 0
     user_profile_field_location_address_country_code:
       enable: 1
       concat: 0
@@ -429,9 +739,22 @@ processor_settings:
       preprocess_index: -20
       preprocess_query: -20
   aggregated_field: {  }
+  content_access:
+    weights:
+      preprocess_query: -30
+  entity_status: {  }
   flag_count_indexer:
     flag_index:
       - recommend_group
+  group_content_access:
+    weights:
+      preprocess_query: -30
+  group_statistics_indexer:
+    group_statistics_index:
+      - members
+      - comments
+      - files
+      - events
   hierarchy:
     fields:
       content_field_vocab_geo: taxonomy_term-parent

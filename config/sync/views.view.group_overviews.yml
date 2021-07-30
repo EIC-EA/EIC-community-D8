@@ -260,6 +260,7 @@ display:
               trusted_user: '0'
               content_administrator: '0'
               service_authentication: '0'
+              site_admin: '0'
               administrator: '0'
             placeholder: ''
             expose_fields: false
@@ -421,6 +422,7 @@ display:
               trusted_user: '0'
               content_administrator: '0'
               service_authentication: '0'
+              site_admin: '0'
               administrator: '0'
             placeholder: ''
             expose_fields: false
@@ -563,6 +565,7 @@ display:
               trusted_user: '0'
               content_administrator: '0'
               service_authentication: '0'
+              site_admin: '0'
               administrator: '0'
             placeholder: ''
             expose_fields: false
@@ -746,6 +749,7 @@ display:
               trusted_user: '0'
               content_administrator: '0'
               service_authentication: '0'
+              site_admin: '0'
               administrator: '0'
             placeholder: ''
             expose_fields: false

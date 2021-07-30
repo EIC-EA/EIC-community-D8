@@ -35,7 +35,10 @@ class FlagTokens implements ContainerInjectionInterface {
    * @param \Drupal\Core\Utility\Token $token_service
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    */
-  public function __construct(Token $token_service, EntityTypeManagerInterface $entity_type_manager) {
+  public function __construct(
+    Token $token_service,
+    EntityTypeManagerInterface $entity_type_manager
+  ) {
     $this->tokenService = $token_service;
     $this->entityTypeManager = $entity_type_manager;
   }
@@ -61,7 +64,15 @@ class FlagTokens implements ContainerInjectionInterface {
         'flagging' => [
           'target_entity' => [
             'name' => $this->t('Target Entity'),
-            'description' => $this->t('Label of the flagged entity'),
+            'description' => $this->t('Entity the flagged is applied to'),
+          ],
+          'flag-type' => [
+            'name' => $this->t('Flag type'),
+            'description' => $this->t('Type of the flag'),
+          ],
+          'entity-type' => [
+            'name' => $this->t('Entity type'),
+            'description' => $this->t('Type of the entity'),
           ],
           'author' => [
             'name' => $this->t('Author of the flag'),
@@ -76,10 +87,17 @@ class FlagTokens implements ContainerInjectionInterface {
   /**
    * Implements hook_tokens().
    */
-  public function tokens($type, $tokens, array $data, array $options, BubbleableMetadata $bubbleable_metadata) {
+  public function tokens(
+    $type,
+    $tokens,
+    array $data,
+    array $options,
+    BubbleableMetadata $bubbleable_metadata
+  ) {
     $replacements = [];
     $flag = NULL;
     if ($type == 'flagging' && isset($data['flagging'])) {
+      /** @var FlaggingInterface $flag */
       $flag = $data['flagging'];
       foreach ($tokens as $name => $original) {
         switch ($name) {
@@ -90,6 +108,16 @@ class FlagTokens implements ContainerInjectionInterface {
 
             $bubbleable_metadata->addCacheableDependency($target_entity);
             $replacements[$original] = $target_entity->label();
+            break;
+          case 'date':
+            $replacements[$original] = \Drupal::service('date.formatter')
+              ->format($flag->get('created')->value, 'medium');
+            break;
+          case 'flag-type':
+            $replacements[$original] = $flag->get('flag_id')->entity->id();
+            break;
+          case 'entity-type':
+            $replacements[$original] = $flag->get('entity_type')->value;
             break;
           case 'author':
             $account = $flag->getOwner() ? $flag->getOwner() : NULL;

@@ -1,0 +1,29 @@
+uuid: 449b4c0b-1756-4d5e-adef-a3c10276e703
+langcode: en
+status: true
+dependencies:
+  module:
+    - ctools
+name: group_discussion_detail
+label: 'Group - Discussion detail'
+group: Groups
+description: 'Group context of the discussion pages'
+requireAllConditions: false
+disabled: false
+conditions:
+  'entity_bundle:node':
+    id: 'entity_bundle:node'
+    bundles:
+      discussion: discussion
+    negate: false
+    uuid: 04c46e1e-a4d8-4190-805b-04b921bca67f
+    context_mapping:
+      node: '@node.node_route_context:node'
+reactions:
+  blocks:
+    blocks: {  }
+    id: blocks
+    saved: false
+    uuid: 2638f701-9750-4f62-b60e-8cf9bb649629
+    include_default_blocks: 0
+weight: 0
