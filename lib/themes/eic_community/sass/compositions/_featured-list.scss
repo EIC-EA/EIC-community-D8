@@ -63,6 +63,7 @@
   }
 
   &__item {
+    min-width: 1px;
     #{$node}--has-grid-layout & {
       box-sizing: border-box;
 
@@ -127,6 +128,7 @@
   }
 
   &__item-tag {
+    display: block;
     @include ecl-responsive-font('label');
 
     #{$node}--topics-filter & {
