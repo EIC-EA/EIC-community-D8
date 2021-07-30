@@ -13,7 +13,7 @@ disabled: false
 conditions:
   route:
     id: route
-    routes: eic_groups.global_search
+    routes: eic_search.global_search
     negate: false
     uuid: 1724d7b2-12df-489c-a926-0df2f2dec4c1
     context_mapping: {  }

@@ -13,7 +13,7 @@ disabled: false
 conditions:
   route:
     id: route
-    routes: eic_groups.people
+    routes: eic_search.people
     negate: false
     uuid: 2ad6f71f-a7b7-4751-988e-60be0a3c00bc
     context_mapping: {  }

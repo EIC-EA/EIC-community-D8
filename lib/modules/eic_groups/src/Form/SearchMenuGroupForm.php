@@ -60,7 +60,7 @@ class SearchMenuGroupForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $form_state->setRedirect('eic_groups.global_search', [
+    $form_state->setRedirect('eic_search.global_search', [
         'search' => $form_state->getValue('search'),
       ]
     );
