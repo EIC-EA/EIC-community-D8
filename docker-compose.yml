@@ -38,8 +38,8 @@ services:
     image: mailhog/mailhog
     container_name: ${APP_NAME}_mailhog
     ports:
-      - 1025:1025
-      - 8025:8025
+      - 1025
+      - ${MAILHOG_PORT}:8025
 
   solr:
     image: solr:7
