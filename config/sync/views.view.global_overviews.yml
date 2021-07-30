@@ -1,6 +1,6 @@
 uuid: 0fbbc603-20f3-44c9-ae7d-360f3fd941af
 langcode: en
-status: true
+status: false
 dependencies:
   config:
     - search_api.index.global
@@ -9,6 +9,7 @@ dependencies:
     - search_api
     - search_api_spellcheck
     - user
+    - views_autocomplete_filters
 id: global_overviews
 label: 'Global Overviews'
 module: views
