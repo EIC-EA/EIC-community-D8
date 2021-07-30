@@ -171,12 +171,7 @@ class OverviewPage extends ContentEntityBase implements OverviewPageInterface {
         'type' => 'string_textfield',
         'weight' => 5,
       ])
-      ->setDisplayConfigurable('form', TRUE)
-      ->setDisplayOptions('view', [
-        'type' => 'string',
-        'label' => 'above',
-        'weight' => 5,
-      ]);
+      ->setDisplayConfigurable('form', TRUE);
 
     $fields['path'] = BaseFieldDefinition::create('path')
       ->setLabel(t('URL alias'))
@@ -188,27 +183,7 @@ class OverviewPage extends ContentEntityBase implements OverviewPageInterface {
       ->setDisplayConfigurable('form', TRUE)
       ->setComputed(TRUE);
 
-    $fields['overview_block'] = BaseFieldDefinition::create('entity_reference')
-      ->setLabel(t('Overview block'))
-      ->setDescription(t('Select the overview block to display.'))
-      ->setRequired(TRUE)
-      // @todo Change this to the the correct target_type and target_bundle
-      // once it is available.
-      ->setSetting('target_type', 'block_content')
-      ->setSetting('handler', 'default')
-      ->setSetting('handler_settings', ['target_bundles' => ['basic' => 'basic']])
-      ->setTranslatable(TRUE)
-      ->setDisplayOptions('view', [
-        'label' => 'hidden',
-        'type' => 'entity_reference_entity_view',
-        'weight' => 15,
-      ])
-      ->setDisplayOptions('form', [
-        'type' => 'options_select',
-        'weight' => 15,
-      ])
-      ->setDisplayConfigurable('form', TRUE)
-      ->setDisplayConfigurable('view', TRUE);
+    // @todo Add the field_overview_block in here.
 
     $fields['created'] = BaseFieldDefinition::create('created')
       ->setLabel(t('Authored on'))

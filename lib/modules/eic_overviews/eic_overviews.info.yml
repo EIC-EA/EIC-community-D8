@@ -7,4 +7,5 @@ core_version_requirement: ^8 || ^9
 php: 7.3
 dependencies:
   - drupal:text
+  - block_field:block_field
 configure: entity.overview_page.settings
