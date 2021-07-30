@@ -1,0 +1,24 @@
+.ecl-teaser-overview.ecl-teaser-overview--has-columns {
+  &.group {
+    &--user {
+      .ecl-teaser-overview__options {
+        padding: 1.25rem 0;
+        border-bottom: 1px solid #e3e3e3;
+      }
+
+      .ecl-teaser-overview__items {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        padding: 0;
+
+        .ecl-teaser-overview__item {
+          margin-bottom: 0;
+          border-bottom: 1px solid #e3e3e3;
+          padding: 1.25rem 0;
+          width: 100%;
+        }
+      }
+    }
+  }
+}

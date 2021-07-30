@@ -2,12 +2,13 @@
 
 namespace Drupal\eic_messages\Hooks;
 
-use Drupal\content_moderation\ModerationInformationInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\content_moderation\ModerationInformationInterface;
 use Drupal\eic_messages\MessageHelper;
+use Drupal\eic_messages\Service\MessageCreatorBase;
 use Drupal\eic_user\UserHelper;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -16,7 +17,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @package Drupal\eic_messages\Hooks
  */
-class EntityUpdate extends MessageCreatorBase implements ContainerInjectionInterface {
+class EntityOperations extends MessageCreatorBase implements ContainerInjectionInterface {
 
   use StringTranslationTrait;
 

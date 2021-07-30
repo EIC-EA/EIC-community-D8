@@ -65,7 +65,7 @@ function eic_community_preprocess_page(array &$variables): void {
     $variables['site_header']['user'] = $user;
   }
 
-  $sections = [];
+  $footer_sections = [];
 
   $first_section = array_filter($variables['page']['footer'], function ($content, $key) {
     return strpos($key, 'content') !== FALSE;
@@ -73,13 +73,8 @@ function eic_community_preprocess_page(array &$variables): void {
   $first_section = array_shift($first_section);
   $block_content = \Drupal::service('entity.repository')->loadEntityByUuid('block_content', $first_section['#derivative_plugin_id']);
 
-  $sections[] = [
-    'title' => [
-      'link' => [
-        'label' => $block_content->field_title->value,
-        'path' => '',
-      ],
-    ],
+  $footer_sections[] = [
+    'title' => $block_content->field_title->value,
     'description' => strip_tags($block_content->body->value),
   ];
 
@@ -95,7 +90,6 @@ function eic_community_preprocess_page(array &$variables): void {
     $menu_active_trail = \Drupal::service('menu.active_trail')->getActiveTrailIds($menu_name);
     $parameters->setActiveTrail($menu_active_trail);
     $tree = \Drupal::menuTree()->load($menu_name, $parameters);
-    $title_branch = array_shift($tree);
     $links = [];
 
     foreach ($tree as $branch) {
@@ -106,12 +100,7 @@ function eic_community_preprocess_page(array &$variables): void {
     }
 
     $section = [
-      'title' => [
-        'link' => [
-          'label' => $title_branch->link->getTitle(),
-          'path' => $title_branch->link->getUrlObject()->toString(),
-        ],
-      ],
+      'title' => $menu['#configuration']['label'],
       'links' => $links,
     ];
 
@@ -120,10 +109,10 @@ function eic_community_preprocess_page(array &$variables): void {
       $section['section_class_name'] = 'ecl-footer-core__section--separator';
     }
 
-    $sections[] = $section;
+    $footer_sections[] = $section;
   }
 
-  $variables['site_footer'] = ['sections' => $sections];
+  $variables['site_footer'] = ['sections' => $footer_sections];
 
   _preprocess_node_page($variables);
 }
