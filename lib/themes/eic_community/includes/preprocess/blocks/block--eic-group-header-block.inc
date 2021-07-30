@@ -180,7 +180,7 @@ function eic_community_preprocess_eic_group_header_block(array &$variables) {
   ];
 
   // Adds url to navigate back to the list of groups.
-  $back_url = Url::fromRoute('view.global_overviews.page_1');
+  $back_url = Url::fromRoute('eic_groups.groups');
   $variables['group_values']['back_url'] = $back_url->toString();
 
 }

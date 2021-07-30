@@ -1,7 +1,9 @@
 uuid: b482d527-78c7-4520-875f-9bd1606a1abb
 langcode: en
 status: true
-dependencies: {  }
+dependencies:
+  module:
+    - route_condition
 name: search
 label: Search
 group: 'Global overviews'
@@ -9,115 +11,42 @@ description: 'Context used when viewing global search results.'
 requireAllConditions: false
 disabled: false
 conditions:
-  view_inclusion:
-    id: view_inclusion
-    negate: null
-    uuid: ab244b04-6e16-4d7e-807b-a253b4f116b5
-    view_inclusion:
-      view-global_overviews-search: view-global_overviews-search
+  route:
+    id: route
+    routes: eic_groups.global_search
+    negate: false
+    uuid: 1724d7b2-12df-489c-a926-0df2f2dec4c1
     context_mapping: {  }
 reactions:
   blocks:
     blocks:
-      b27ac8cb-7cf7-4536-9488-68ff624b35d7:
-        id: 'facets_summary_block:search_summary'
-        label: 'Search summary'
-        provider: facets_summary
-        label_display: '0'
+      2a43151c-ab9a-445d-9618-0a1b11731575:
+        id: eic_search_overview
+        label: null
+        provider: null
+        label_display: null
         region: content
-        weight: '-3'
-        context_mapping: {  }
-        custom_id: facets_summary_block_search_summary
-        theme: eic_community
-        css_class: ''
-        unique: 0
-        context_id: search
-        uuid: b27ac8cb-7cf7-4536-9488-68ff624b35d7
-      44e147ec-0f73-4eff-bffc-3e113fd0f09c:
-        id: system_main_block
-        label: 'Main page content'
-        provider: system
-        label_display: '0'
-        region: content
-        weight: '-1'
-        context_mapping: {  }
-        custom_id: system_main_block
-        theme: eic_community
-        css_class: ''
-        unique: 0
-        context_id: search
-        uuid: 44e147ec-0f73-4eff-bffc-3e113fd0f09c
-      8da47f9d-3e3c-4c86-92be-3b1d8e618b2d:
-        id: 'views_exposed_filter_block:global_overviews-search'
-        label: ''
-        provider: views
-        label_display: '0'
-        views_label: ''
-        region: sidebar
-        weight: '-3'
-        context_mapping: {  }
-        custom_id: views_exposed_filter_block_global_overviews_search
-        theme: eic_community
-        css_class: ''
-        unique: 0
-        context_id: search
-        uuid: 8da47f9d-3e3c-4c86-92be-3b1d8e618b2d
-      6a376cc5-5dfb-47ba-bfe6-e6f63307476f:
-        id: 'facet_block:search_content_type'
-        label: 'Content type'
-        provider: facets
-        label_display: '0'
-        region: sidebar
-        weight: '-2'
-        context_mapping: {  }
-        custom_id: facet_block_search_content_type
-        theme: eic_community
-        css_class: ''
-        unique: 0
-        context_id: search
-        uuid: 6a376cc5-5dfb-47ba-bfe6-e6f63307476f
-      89cce8b1-efeb-49c5-be09-927fa77f1f1e:
-        id: 'search_api_sorts_block:views_page:global_overviews__search'
-        label: 'Sort by (View Global Overviews, display Search)'
-        provider: search_api_sorts
-        label_display: '0'
-        region: content
-        weight: '-2'
-        context_mapping: {  }
-        custom_id: search_api_sorts_block_views_page_global_overviews__search
-        theme: eic_community
-        css_class: ''
-        unique: 0
-        context_id: search
-        uuid: 89cce8b1-efeb-49c5-be09-927fa77f1f1e
-      37406cf7-7478-4cc0-8331-d8b895615cb9:
-        id: 'facet_block:search_topics'
-        label: Topics
-        provider: facets
-        label_display: '0'
-        region: sidebar
-        weight: '-1'
-        context_mapping: {  }
-        custom_id: facet_block_search_topics
-        theme: eic_community
-        css_class: ''
-        unique: 0
-        context_id: search
-        uuid: 37406cf7-7478-4cc0-8331-d8b895615cb9
-      7946f50b-1860-4054-8d67-6449fc026b7e:
-        id: 'facet_block:search_regions_countries'
-        label: 'Regions & Countries'
-        provider: facets
-        label_display: '0'
-        region: sidebar
         weight: '0'
+        facets:
+          ss_global_content_type: ss_global_content_type
+          ss_group_user_fullname: 0
+        sort_options:
+          ss_global_created_date: ss_global_created_date
+          ss_global_title: ss_global_title
+          ss_group_user_fullname: ss_group_user_fullname
+        source_type: Drupal\eic_search\Search\Sources\GlobalSourceType
+        enable_search: 1
+        page_options: normal
+        prefilter_group: 0
+        add_facet_interests: 1
+        add_facet_my_groups: 1
         context_mapping: {  }
-        custom_id: facet_block_search_regions_countries
+        custom_id: eic_search_overview
         theme: eic_community
         css_class: ''
         unique: 0
         context_id: search
-        uuid: 7946f50b-1860-4054-8d67-6449fc026b7e
+        uuid: 2a43151c-ab9a-445d-9618-0a1b11731575
     id: blocks
     saved: false
     uuid: b2e2c0ac-50de-49b1-b2e3-f957728678f0

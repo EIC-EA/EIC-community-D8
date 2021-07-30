@@ -11,7 +11,7 @@ disabled: false
 conditions:
   view_inclusion:
     id: view_inclusion
-    negate: null
+    negate: false
     uuid: 794bafbf-9553-450a-8274-d35d16f288f7
     view_inclusion:
       view-group_overviews-members: view-group_overviews-members
@@ -90,20 +90,6 @@ reactions:
         unique: 0
         context_id: group_members_overviews
         uuid: 7366f426-97c6-4c58-95c4-b6bf008af270
-      a3197f88-1e1e-4a68-a4ca-e9413a3522f3:
-        id: 'facet_block:members_job_title'
-        label: 'Job title'
-        provider: facets
-        label_display: '0'
-        region: sidebar
-        weight: '1'
-        context_mapping: {  }
-        custom_id: facet_block_members_job_title
-        theme: eic_community
-        css_class: ''
-        unique: 0
-        context_id: group_members_overviews
-        uuid: a3197f88-1e1e-4a68-a4ca-e9413a3522f3
       ca1626cb-f092-415f-ab2f-3645d6a6bb54:
         id: 'facet_block:members_languages'
         label: Languages
