@@ -6,12 +6,10 @@ services:
       context: ./docker/apache
     container_name: ${APP_NAME}_apache
     ports:
-      - 8087:80
+      - ${APP_PORT}:80
     volumes:
       - ./docker/apache/vhosts:/etc/apache2/sites-enabled
       - .:/app
-    links:
-      - web
 
   php:
     build:
@@ -24,25 +22,6 @@ services:
       - ./docker/bin/mhsendmail:/usr/local/bin/mhsendmail
     env_file:
       - .env
-
-  web:
-    image: fpfis/httpd-php-dev:7.3
-    container_name: ${APP_NAME}_web
-    working_dir: /var/www/html
-    ports:
-      - ${APP_PORT}:8080
-    volumes:
-      - .:/var/www/html
-      - ./docker/bin/mhsendmail:/usr/local/bin/mhsendmail
-      - ./docker/web/dev.ini:/usr/local/etc/php/php.ini
-    env_file:
-      - .env
-
-  nodejs:
-    image: node:14-alpine
-    container_name: ${APP_NAME}_nodejs
-    volumes:
-      - .:/app
 
   mysql:
     image: percona/percona-server:5.7

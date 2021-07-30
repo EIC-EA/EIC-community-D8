@@ -1,4 +1,4 @@
-ARG PHP_VERSION=7.4
+ARG PHP_VERSION=7.3
 
 FROM php:${PHP_VERSION}-fpm
 
@@ -8,8 +8,7 @@ ARG DRUSH_VERSION=8
 
 ENV DEBIAN_FRONTEND noninteractive
 
-# Enable secure repository
-RUN apt-get update \
+RUN apt-get -o Acquire::Check-Valid-Until=false -o Acquire::Check-Date=false update \
   && apt-get -y install apt-transport-https apt-utils build-essential xorg libssl-dev libxrender-dev wget gdebi
 
 # Install extensions

@@ -8,10 +8,6 @@ endif
 setup:
 	$(call do_setup)
 
-test:
-	echo -e '\n'
-	echo -e '\e[42m${APP_NAME} setup completed\e[0m'
-
 start:
 	$(call do_start)
 
@@ -31,7 +27,7 @@ destroy:
 	$(call do_destroy)
 
 import-db:
-	docker exec -i ${APP_NAME}_database bash -c 'exec mysql -u${DRUPAL_DATABASE_USERNAME} -p${DRUPAL_DATABASE_PASSWORD} ${DRUPAL_DATABASE_NAME}' < $(FILE)
+	docker exec -i ${APP_NAME}_mysql bash -c 'exec mysql -u${DATABASE_USERNAME} ${DATABASE_NAME}' < $(FILE)
 
 ssh:
 	docker exec -it --user web ${APP_NAME}_php bash
@@ -42,18 +38,33 @@ help:
 info:
 	$(call do_display_app_info)
 
+build-front:
+	$(call do_build_front)
+
+define do_build_front
+	echo -e 'Installing node modules and building...'
+	docker run --rm -v ${PWD}:/app -w /app/lib/themes/eic_community -it node:14 bash -c "npm install \
+		&& npm run build \
+		&& npm run react-production"
+	echo -e 'Generating storybook...'
+	docker run --rm -v ${PWD}:/app -w /app/lib/themes/eic_community -it node:14 bash -c "npm run pregenerate-storybook \
+  		&& npm run generate-storybook \
+  		&& npm run postgenerate-storybook"
+endef
+
 define do_db_healthcheck
-	docker exec -it ${APP_NAME}_web bash -c 'chmod +x /app/docker/web/database-healthcheck.sh'
-	docker exec -it ${APP_NAME}_web bash -c '/app/docker/web/database-healthcheck.sh'
+	docker exec -it ${APP_NAME}_php bash -c 'chmod +x /app/docker/php/database-healthcheck.sh'
+	docker exec -it ${APP_NAME}_php bash -c '/app/docker/php/database-healthcheck.sh'
 endef
 
 define do_setup
 	echo -e 'Setting up ${APP_NAME}...'
-	docker-compose up -d --build
-	docker exec -it ${APP_NAME}_web bash -c 'composer install --no-progress'
+	docker-compose build --build-arg UID=$(shell id -u) --build-arg GID=$(shell id -g)
+	docker-compose up -d
+	docker exec -it ${APP_NAME}_php bash -c 'composer install --no-progress'
 	$(call do_db_healthcheck)
-	docker exec -it ${APP_NAME}_web bash -c  'drush site-install minimal --site-name=${APP_NAME} --account-name=${DRUPAL_ACCOUNT_USERNAME} --account-pass=${DRUPAL_ACCOUNT_PASSWORD} --existing-config -y'
-	docker exec -it ${APP_NAME}_web bash -c  'drush cr'
+	docker exec -it ${APP_NAME}_php bash -c 'drush site-install minimal --site-name=${APP_NAME} --account-name=${DRUPAL_ADMIN_USER} --account-pass=${DRUPAL_ADMIN_PASSWORD} --existing-config -y'
+	docker exec -it ${APP_NAME}_php bash -c 'drush cr'
 	echo -e '\n'
 	echo -e '\e[42m${APP_NAME} setup completed\e[0m'
 	$(call do_display_app_info)
@@ -64,8 +75,8 @@ define do_start
 	echo -e 'Starting ${APP_NAME}...'
 	docker-compose up -d
 	$(call do_db_healthcheck)
-	docker exec -it ${APP_NAME}_web bash -c  'drush cim -y'
-	docker exec -it ${APP_NAME}_web bash -c  'drush cr'
+	docker exec -it ${APP_NAME}_php bash -c 'drush cim -y'
+	docker exec -it ${APP_NAME}_php bash -c 'drush cr'
 	echo -e '\n'
 	echo -e '\e[42m${APP_NAME} started\e[0m'
 	$(call do_display_app_info)
@@ -77,7 +88,7 @@ define do_restart
 	docker-compose down
 	docker-compose up -d
 	$(call do_db_healthcheck)
-	docker exec -it ${APP_NAME}_web bash -c  'drush cr'
+	docker exec -it ${APP_NAME}_php bash -c  'drush cr'
 	echo -e '\n'
 	echo -e '\e[42m${APP_NAME} restarted\e[0m'
 	$(call do_display_app_info)
@@ -86,18 +97,18 @@ endef
 
 define do_update
 	echo -e 'Updating ${APP_NAME}...'
-	docker exec -it ${APP_NAME}_web bash -c 'composer install --no-progress'
-	docker exec -it ${APP_NAME}_web bash -c  'drush cr'
-	docker exec -it ${APP_NAME}_web bash -c  'drush cim -y'
-	docker exec -it ${APP_NAME}_web bash -c 'drush updb -y'
-	docker exec -it ${APP_NAME}_web bash -c  'drush cr'
+	docker exec -it ${APP_NAME}_php bash -c 'composer install --no-progress'
+	docker exec -it ${APP_NAME}_php bash -c 'drush cr'
+	docker exec -it ${APP_NAME}_php bash -c 'drush cim -y'
+	docker exec -it ${APP_NAME}_php bash -c 'drush updb -y'
+	docker exec -it ${APP_NAME}_php bash -c 'drush cr'
 	echo -e '\n'
 	echo -e '\e[42m${APP_NAME} updated\e[0m'
 endef
 
 define do_cc
 	echo -e 'Clearing ${APP_NAME} caches...'
-	docker exec -it ${APP_NAME}_web bash -c 'drush cr'
+	docker exec -it ${APP_NAME}_php bash -c 'drush cr'
 endef
 
 define do_stop
@@ -118,8 +129,7 @@ define do_display_app_info
 	echo -e '\n'
 	echo -e '\e[1m--- ${APP_NAME} APP INFO ---\e[0m'
 	echo -e '\n'
-	$(if (${APP_PORT},443),echo -e 'APP URL: \e[36mhttp://localhost\e[0m\nAdmin user credentials: ${DRUPAL_ADMIN_USER} - ${DRUPAL_ADMIN_PASSWORD}\nDatabase port: ${DB_PORT}',echo -e 'APP URL: \e[36mhttps://localhost:${APP_PORT}\e[0m\nAdmin user credentials: ${DRUPAL_ADMIN_USER} - ${DRUPAL_ADMIN_PASSWORD}\nDatabase port: ${DB_PORT}')
-	echo -e 'To resolve the browser SSL errors, exceute the following commands:\n'
+	echo -e 'APP URL: \e[36mhttp://localhost:${APP_PORT}\e[0m\nAdmin user credentials: ${DRUPAL_ADMIN_USER} - ${DRUPAL_ADMIN_PASSWORD}\nDatabase port: ${DATABASE_PORT}'
 endef
 
 define do_display_commands
