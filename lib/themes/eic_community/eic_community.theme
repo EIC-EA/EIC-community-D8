@@ -11,7 +11,7 @@
 define('INCLUDES_FOLDER', 'includes');
 
 /**
- * Implements hook_theme()
+ * Implements hook_theme().
  */
 function eic_community_theme() {
   $theme_path = drupal_get_path('theme', 'eic_community');
@@ -19,7 +19,7 @@ function eic_community_theme() {
   return [
     'eic_community_extended_list' => [
       'template' => 'extended-list',
-      'path' =>  $theme_path . '/patterns/compositions/extended-list',
+      'path' => $theme_path . '/patterns/compositions/extended-list',
       'variables' => [
         'extra_classes' => NULL,
         'title' => NULL,
@@ -76,6 +76,7 @@ function eic_community_theme() {
     ],
   ];
 }
+
 /**
  * Includes a theme file.
  *
