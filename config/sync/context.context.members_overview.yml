@@ -33,20 +33,6 @@ reactions:
         unique: 0
         context_id: members_overview
         uuid: 2bdaf363-b983-4094-8b13-e3549984347b
-      88555819-dd97-4d5c-9376-6f0274ad620b:
-        id: system_breadcrumb_block
-        label: Breadcrumbs
-        provider: system
-        label_display: '0'
-        region: breadcrumbs
-        weight: '0'
-        context_mapping: {  }
-        custom_id: system_breadcrumb_block
-        theme: eic_community
-        css_class: ''
-        unique: 0
-        context_id: members_overview
-        uuid: 88555819-dd97-4d5c-9376-6f0274ad620b
       9ad8b74c-8343-4d1b-b882-fa6afa7857bd:
         id: 'views_exposed_filter_block:global_overviews-members'
         label: ''

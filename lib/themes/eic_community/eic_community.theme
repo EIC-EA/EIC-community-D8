@@ -49,16 +49,29 @@ function eic_community_theme() {
         'items' => NULL,
       ],
     ],
-    'eic_community_state_banner' => [
-      'template' => 'state-banner',
-      'path' => $theme_path . '/patterns/compositions',
+    'eic_community_author' => [
+      'template' => 'author',
+      'path' => $theme_path . '/patterns/components',
+      'variables' => [
+        'label_element' => NULL,
+        'name' => NULL,
+        'size' => NULL,
+        'updates' => NULL,
+        'display_avatar_only' => NULL,
+        'description' => NULL,
+        'label_classes' => NULL,
+        'path' => NULL,
+        'actions' => NULL,
+        'image' => NULL,
+      ],
+    ],
+    'eic_community_timestamp' => [
+      'template' => 'timestamp',
+      'path' => $theme_path . '/patterns/components',
       'variables' => [
         'extra_classes' => NULL,
-        'title_element' => NULL,
-        'title' => NULL,
-        'icon' => NULL,
         'icon_file_path' => NULL,
-        'description' => NULL,
+        'label' => NULL,
       ],
     ],
   ];

@@ -8,9 +8,8 @@
       <div class="ecl-featured-content-grid__items-wrapper">
 
         <div class="ecl-featured-content-grid__items">
-          {% for item in items %}
+          {% for key, item in items %}
             {% set item_title_element = item.title_element|default('h3') %}
-
             <div class="ecl-featured-content-grid__item">
               <div class="ecl-featured-content-grid__item-wrapper">
                 {% if item.media %}
@@ -60,9 +59,32 @@
                       <p class="ecl-featured-content-grid__item-description">{{ item.description }}</p>
                     {% endif %}
                   </div>
-                  {% if item.author is not empty %}
+                  {% if item.author is not empty or item.stats is not empty %}
                     <div class="ecl-featured-content-grid__item-content-footer">
-                      {% include "@theme/patterns/components/author.html.twig" with item.author|default({}) only %}
+                      {% if item.author is not empty %}
+                        {% include "@theme/patterns/components/author.html.twig" with item.author|default({}) only %}
+                      {% endif %}
+                      {% if item.stats is not empty and key == 0 %}
+                        <div class="ecl-teaser__stats">
+                          {% for stat in item.stats %}
+                            <div class="ecl-teaser__stat">
+                              {% if stat.icon is not empty and icon_file_path %}
+                                {% include '@ecl-twig/ec-component-icon/ecl-icon.html.twig' with {
+                                  icon: {
+                                    size: 'xs',
+                                    path: icon_file_path,
+                                    type: stat.icon.type,
+                                    name: stat.icon.name,
+                                  },
+                                  extra_classes: 'ecl-teaser__stat-icon',
+                                } only %}
+                              {% endif %}
+                              <span class="ecl-teaser__stat-label">{{ stat.label }}</span>
+                              <span class="ecl-teaser__stat-value">{{ stat.value }}</span>
+                            </div>
+                          {% endfor %}
+                        </div>
+                      {% endif %}
                     </div>
                   {% endif %}
                 </div>
