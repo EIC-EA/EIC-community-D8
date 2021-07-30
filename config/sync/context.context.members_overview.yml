@@ -35,7 +35,7 @@ reactions:
           ss_user_profile_field_location_address_country_code: ss_user_profile_field_location_address_country_code
         sort_options:
           ss_user_first_name: ss_user_first_name
-        source_type: Drupal\eic_search\Search\Sources\UserGallerySourceType
+        source_type: Drupal\eic_search\Search\Sources\UserListSourceType
         enable_search: 1
         page_options: normal
         prefilter_group: 0
