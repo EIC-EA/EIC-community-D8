@@ -34,7 +34,7 @@ import-db:
 	docker exec -i ${APP_NAME}_database bash -c 'exec mysql -u${DRUPAL_DATABASE_USERNAME} -p${DRUPAL_DATABASE_PASSWORD} ${DRUPAL_DATABASE_NAME}' < $(FILE)
 
 ssh:
-	docker exec -it --user web ${APP_NAME}_web bash
+	docker exec -it --user web ${APP_NAME}_php bash
 
 help:
 	$(call do_display_commands)

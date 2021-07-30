@@ -4,6 +4,7 @@ services:
   apache:
     build:
       context: ./docker/apache
+    container_name: ${APP_NAME}_apache
     ports:
       - 8087:80
     volumes:
@@ -11,7 +12,18 @@ services:
       - .:/app
     links:
       - web
-    container_name: ${APP_NAME}_apache
+
+  php:
+    build:
+      context: ./docker/php
+    container_name: ${APP_NAME}_php
+    working_dir: /app
+    volumes:
+      - .:/app
+      - ./docker/php/dev.ini:/usr/local/etc/php/conf.d/dev.ini
+      - ./docker/bin/mhsendmail:/usr/local/bin/mhsendmail
+    env_file:
+      - .env
 
   web:
     image: fpfis/httpd-php-dev:7.3
