@@ -12,38 +12,43 @@
   extra_classes: 'ecl-base-layout--is-fluid'
 } %}
 
+{% extends "@theme/patterns/compositions/group/group.full.html.twig"%}
 
-{%  set is_wiki_page = "wiki-message" in page.content.system_main["#markup"]|render %}
-
-{% extends is_wiki_page ? "@theme/patterns/compositions/group/group.full.html.twig" : "@eic_community/layout/page.html.twig" %}
+{%  set is_wiki_page = "wiki-no-pages-message" in page.content.system_main["#markup"]|render  %}
 
 {% if is_wiki_page %}
   {% set sidebar = "" %}
-  {% set page = page|merge({'sidebar': null}) %}
-
-  {% block content %}
-    <div {{ attributes }}>
-      {{ title_prefix }}
-      {{ title_suffix }}
-      {% embed "@theme/patterns/compositions/editorial-article.html.twig" with {
-        extra_classes: 'ecl-editorial-article--has-reversed-layout ecl-editorial-article--is-ready',
-      } %}
-        {% block content %}
-          {{ page.content }}
-        {% endblock %}
-        {%- block sidebar -%}
-          {{ sidebar }}
-        {%- endblock -%}
-      {% endembed %}
-    </div>
-  {% endblock %}
-
-  {% block breadcrumbs %}
-    {{ page.breadcrumbs }}
-  {% endblock %}
-
-  {% block page_header %}
-    {{ page.page_header }}
-  {% endblock %}
+  {% set extra_classes = "ecl-editorial-article--has-reversed-layout ecl-editorial-article--is-ready" %}
+{% else %}
+  {% set sidebar = page.sidebar %}
+  {% set extra_classes = "ecl-editorial-article--has-reversed-layout article--is-collapsible ecl-editorial-article--is-ready" %}
 {% endif %}
+{% set page = page|merge({'sidebar': null}) %}
+
+{% block content %}
+  <section class="ecl-section-wrapper">
+      <div class="ecl-editorial-article {{ extra_classes }}">
+        <div class="ecl-container">
+          <div class="ecl-editorial-article__wrapper">
+            {{ page.content }}
+            {% if is_wiki_page is same as(false) %}
+              <aside class="ecl-editorial-article__aside">
+                <div class="ecl-editorial-article__aside-wrapper">
+                  {{ sidebar }}
+                </div>
+              </aside>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </section>
+{% endblock %}
+
+{% block breadcrumbs %}
+  {{ page.breadcrumbs }}
+{% endblock %}
+
+{% block page_header %}
+  {{ page.page_header }}
+{% endblock %}
 

@@ -18,20 +18,20 @@
 {% extends "@theme/patterns/compositions/group/group.full.html.twig" %}
 
 {% block content %}
-  <div {{ attributes }}>
-    {{ title_prefix }}
-    {{ title_suffix }}
-  {% embed "@theme/patterns/compositions/editorial-article.html.twig" with {
-    extra_classes: 'ecl-editorial-article--has-reversed-layout ecl-editorial-article--is-collapsible  ecl-editorial-article--is-ready',
-  } %}
-    {% block content %}
-      {{ page.content }}
-     {% endblock %}
-     {%- block sidebar -%}
-       {{ sidebar }}
-     {%- endblock -%}
-  {% endembed %}
+<section class="ecl-section-wrapper">
+  <div class="ecl-editorial-article ecl-editorial-article--has-reversed-layout article--is-collapsible ecl-editorial-article--is-ready">
+    <div class="ecl-container">
+      <div class="ecl-editorial-article__wrapper">
+        {{ page.content }}
+        <aside class="ecl-editorial-article__aside">
+          <div class="ecl-editorial-article__aside-wrapper">
+            {{ sidebar }}
+          </div>
+        </aside>
+      </div>
+    </div>
   </div>
+</section>
 {% endblock %}
 
 {% block breadcrumbs %}
