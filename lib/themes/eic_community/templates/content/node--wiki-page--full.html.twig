@@ -1,0 +1,19 @@
+{#
+/**
+ * @file
+ * Theme override to display a node page.
+ *
+ * @see ./themes/custom/eic_community/templates/content/node.html.twig
+ */
+#}
+
+{% block content %}
+  {% if actions is not empty %}
+      {% include "@theme/patterns/components/inline-actions.html.twig" with actions|default({})|merge({
+        items: actions.items ? actions.items|map(i => i|merge({
+          extra_classes: i.extra_classes|default('') ~ ' ecl-link--button ecl-link--button-primary'
+        }))
+      }) %}
+  {% endif %}
+    {{ content }}
+{% endblock %}

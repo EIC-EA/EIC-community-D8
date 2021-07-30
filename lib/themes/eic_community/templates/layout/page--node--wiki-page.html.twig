@@ -1,0 +1,43 @@
+{#
+/**
+ * @file
+ * Theme override to display a single page.
+ *
+ * @see ./themes/custom/eic_community/patterns/compositions/group/group.full--wiki.html.twig
+ */
+#}
+{% set _wrap_content = true %}
+
+{% set layout = {
+  extra_classes: 'ecl-base-layout--is-fluid'
+} %}
+
+{% set sidebar = page.sidebar %}
+{% set page = page|merge({'sidebar': null}) %}
+
+{% extends "@theme/patterns/compositions/group/group.full.html.twig" %}
+
+{% block content %}
+  <div {{ attributes }}>
+    {{ title_prefix }}
+    {{ title_suffix }}
+  {% embed "@theme/patterns/compositions/editorial-article.html.twig" with {
+    extra_classes: 'ecl-editorial-article--has-reversed-layout ecl-editorial-article--is-collapsible  ecl-editorial-article--is-ready',
+  } %}
+    {% block content %}
+      {{ page.content }}
+     {% endblock %}
+     {%- block sidebar -%}
+       {{ sidebar }}
+     {%- endblock -%}
+  {% endembed %}
+  </div>
+{% endblock %}
+
+{% block breadcrumbs %}
+  {{ page.breadcrumbs }}
+{% endblock %}
+
+{% block page_header %}
+  {{ page.page_header }}
+{% endblock %}
