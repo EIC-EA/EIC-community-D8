@@ -92,11 +92,15 @@ function _eic_community_story_image_field(&$variables) {
   if (isset($variables['content']['field_image'][0])) {
     $media = $variables['content']['field_image'][0]['#media'];
     $image_item = ImageValueObject::fromImageItem($media->get('oe_media_image')->first());
-
-    $variables['image_wrapper'] = [
+    $image_wrapper = [
       'image' => $image_item->getSource(),
-      'description' => $variables['content']['field_image_caption'][0]['#context']['value'],
     ];
+
+    if (isset($variables['content']['field_image_caption'][0])) {
+      $image_wrapper['description'] = $variables['content']['field_image_caption'][0]['#context']['value'];
+    }
+
+    $variables['image_wrapper'] = $image_wrapper;
   }
 }
 

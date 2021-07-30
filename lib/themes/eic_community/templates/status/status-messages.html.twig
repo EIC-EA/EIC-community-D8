@@ -6,38 +6,20 @@
  * @see ./core/themes/stable/templates/misc/status-messages.html.twig
  */
 #}
-{%- macro message_list(messages) %}
-  {% for message in messages %}
-    <span{{ not loop.last ? ' class="ecl-u-mb-xs ecl-u-d-block"' }}>{{ message }}</span>
-  {% endfor %}
-{%- endmacro %}
-
-{% set extra_attributes = [] %}
-{% for name,value in attributes %}
-  {% set extra_attributes = extra_attributes|merge([{'name': name, 'value': value}]) %}
-{% endfor %}
-
+<div class="ecl-container">
 {% for type, messages in message_list %}
-  {% include '@ecl-twig/message' with {
-    'title': status_headings[type],
-    'description': _self.message_list(messages),
-    'variant': (type == 'status' ? 'success' : type),
-    'extra_attributes': extra_attributes,
-    'extra_classes': 'ecl-u-mb-2xl',
-    'icon': {
-      'path': eic_icon_path,
-      'type': 'notifications',
-      'name': (type == 'status' ? 'success' : type),
-      'size': 'l',
+  {% include "@theme/patterns/compositions/state-banner.html.twig" with {
+    title: status_headings[type],
+    icon: {
+      type: "notifications",
+      name: type is same as("status") ? "information" : type
     },
-    'close': {
-      'label': 'Close this message'|t,
-      'icon' : {
-        'path': eic_icon_path,
-        'type': 'ui',
-        'name': 'close',
-        'size': 's',
-      }
-    },
+    icon_file_path: eic_icon_path,
+    description: {
+      "#theme": "item_list",
+      "#list-type": "ul",
+      "#items": messages
+    }
   } only %}
 {% endfor %}
+</div>

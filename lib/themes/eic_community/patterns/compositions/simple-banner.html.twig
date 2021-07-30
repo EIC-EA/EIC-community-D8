@@ -1,4 +1,9 @@
 {% set title_element = title_element|default('h3') %}
+{% if description is not empty %}
+  {% set output_description = description %}
+{% elseif block('description') is defined %}
+  {% set output_description = block('description') %}
+{% endif %}
 
 {% embed "@theme/patterns/components/well.html.twig" with {
   extra_classes: 'ecl-simple-banner ecl-well--has-large-layout',
@@ -7,8 +12,8 @@
     {% if title %}
       <{{ title_element }} class="ecl-simple-banner__title" >{{ title }}</{{ title_element }}>
     {% endif %}
-    {% if description %}
-      <div class="ecl-simple-banner__description ecl-editable-wrapper">{{ description }}</div>
+    {% if output_description %}
+      <div class="ecl-simple-banner__description ecl-editable-wrapper">{{ output_description|raw }}</div>
     {% endif %}
     {% if actions is not empty %}
       <div class="ecl-simple-banner__actions">
