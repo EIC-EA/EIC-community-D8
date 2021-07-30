@@ -121,8 +121,25 @@ abstract class RestrictedGroupVisibilityBase extends GroupVisibilityBase impleme
 
     $outsider_roles = $this->getOutsiderRoles($group->getGroupType());
     if (!empty($outsider_roles)) {
-      foreach ($outsider_roles as $outsider_role) {
-        $permissions[$outsider_role] = ['view group'];
+      $permissions = $this->setRolesPermission($outsider_roles, 'view group', $permissions);
+    }
+
+    $groupType = $group->getGroupType();
+
+    $installedContentPlugins = $groupType->getInstalledContentPlugins();
+    foreach ($installedContentPlugins->getIterator() as $pluginId => $plugin) {
+      /** @var \Drupal\group\Plugin\GroupContentEnablerInterface $plugin */
+      switch ($plugin->getPluginDefinition()['id']) {
+        case 'group_node':
+        case 'group_membership':
+        case 'group_content_menu':
+          $permissions[$group->getGroupType()->getMemberRoleId()][] = "view $pluginId entity";
+
+          if (!empty($outsider_roles)) {
+            $permissions = $this->setRolesPermission($outsider_roles, "view $pluginId entity", $permissions);
+          }
+          break;
+
       }
     }
 
@@ -140,8 +157,26 @@ abstract class RestrictedGroupVisibilityBase extends GroupVisibilityBase impleme
 
     $outsider_roles = $this->getOutsiderRoles($group->getGroupType());
     if (!empty($outsider_roles)) {
-      foreach ($outsider_roles as $outsider_role) {
-        $permissions[$outsider_role] = ['view group'];
+      $permissions = $this->setRolesPermission($outsider_roles, "view group", $permissions);
+    }
+
+    $groupType = $group->getGroupType();
+
+    $installedContentPlugins = $groupType->getInstalledContentPlugins();
+    foreach ($installedContentPlugins->getIterator() as $pluginId => $plugin) {
+      /** @var \Drupal\group\Plugin\GroupContentEnablerInterface $plugin */
+      switch ($plugin->getPluginDefinition()['id']) {
+        case 'group_node':
+        case 'group_membership':
+        case 'group_content_menu':
+          $permissions[$group->getGroupType()->getAnonymousRoleId()][] = "view $pluginId entity";
+          $permissions[$group->getGroupType()->getOutsiderRoleId()][] = "view $pluginId entity";
+
+          if (!empty($outsider_roles)) {
+            $permissions = $this->setRolesPermission($outsider_roles, "view $pluginId entity", $permissions);
+          }
+          break;
+
       }
     }
 
@@ -166,6 +201,28 @@ abstract class RestrictedGroupVisibilityBase extends GroupVisibilityBase impleme
       $roles[$role] = $role;
     }
     return $roles;
+  }
+
+  /**
+   * Set permission for multiple roles.
+   *
+   * @param array $roles
+   *   Array containing the list of roles.
+   * @param string $permission
+   *   The permission to add to the roles.
+   * @param array $roles_permissions
+   *   Array containing the list of permissions per role.
+   *
+   * @return array
+   *   Array of roles followed by their permissions.
+   */
+  protected function setRolesPermission(array $roles, $permission, array $roles_permissions = []) {
+    if (!empty($roles)) {
+      foreach ($roles as $role) {
+        $roles_permissions[$role][] = $permission;
+      }
+    }
+    return $roles_permissions;
   }
 
 }

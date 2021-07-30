@@ -187,6 +187,10 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
       $membership_links = $group->flags;
     }
 
+    // Load group statistics from Database.
+    $group_statistics = $this->groupStatisticsHelper->loadGroupStatistics($group);
+
+
     $build['content'] = [
       '#theme' => 'eic_group_header_block',
       '#group' => $group,
