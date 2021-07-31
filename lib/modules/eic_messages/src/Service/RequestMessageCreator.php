@@ -106,8 +106,8 @@ class RequestMessageCreator extends MessageCreatorBase {
         [
           'template' => $message_name,
           'field_message_subject' => $this->t(
-            'New @type request',
-            ['@type' => $handler->getType()]
+            'New @type request for @label',
+            ['@type' => $handler->getType(), '@label' => $entity->label()]
           ),
           'field_referenced_flag' => $flag,
           'uid' => $uid,
