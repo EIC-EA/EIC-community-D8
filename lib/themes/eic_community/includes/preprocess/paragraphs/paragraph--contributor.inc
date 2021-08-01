@@ -7,6 +7,7 @@
 
 use Drupal\eic_community\ValueObject\ImageValueObject;
 use Drupal\user\Entity\User;
+use Drupal\user\UserInterface;
 
 /**
  * Implements hook_preprocess_paragraph().
@@ -59,7 +60,7 @@ function eic_community_preprocess_paragraph__contributor(array &$variables) {
   }
   else {
     $user = User::load($paragraph->field_user_ref->getString());
-    if ($user instanceof User) {
+    if ($user instanceof UserInterface) {
       $user_display = eic_community_get_teaser_user_display($user);
 
       if ($variables['logged_in'] === FALSE) {
