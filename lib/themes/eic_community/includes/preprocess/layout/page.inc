@@ -8,6 +8,8 @@
 use Drupal\Core\Menu\MenuTreeParameters;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Url;
+use Drupal\eic_community\ValueObject\ImageValueObject;
+use Drupal\user\Entity\User;
 
 /**
  * Implements hook_preprocess_page().
@@ -24,15 +26,14 @@ function eic_community_preprocess_page(array &$variables): void {
     }
   }
 
-
   $variables['site_header'] = [
-    'icon_file_path' =>  $variables['eic_icon_path'],
+    'icon_file_path' => $variables['eic_icon_path'],
     'logo' => [
-      'title' =>  t('European Commission'),
-      'alt' =>  t('European Commission logo'),
+      'title' => t('European Commission'),
+      'alt' => t('European Commission logo'),
       'href' => \Drupal::urlGenerator()->generateFromRoute('<front>'),
       'src_desktop' => $variables['eic_logo_path'] . '/logo--' . $variables['language']->getId() . '.svg',
-    ]
+    ],
   ];
 
   if ($variables['user']->isAnonymous()) {
@@ -40,8 +41,9 @@ function eic_community_preprocess_page(array &$variables): void {
       'label' => t('Log in'),
       'path' => Url::fromRoute('user.login'),
     ];
-  }else{
-    $account = \Drupal\user\Entity\User::load($variables['user']->id());
+  }
+  else {
+    $account = User::load($variables['user']->id());
     $user = eic_community_get_teaser_user_display($account);
     unset($user['path']);
 
@@ -63,25 +65,20 @@ function eic_community_preprocess_page(array &$variables): void {
     $variables['site_header']['user'] = $user;
   }
 
-  $sections = [];
+  $footer_sections = [];
 
-  $first_section = array_filter($variables['page']['footer'], function($content, $key){
+  $first_section = array_filter($variables['page']['footer'], function ($content, $key) {
     return strpos($key, 'content') !== FALSE;
   }, ARRAY_FILTER_USE_BOTH);
   $first_section = array_shift($first_section);
   $block_content = \Drupal::service('entity.repository')->loadEntityByUuid('block_content', $first_section['#derivative_plugin_id']);
 
-  $sections[] =[
-    'title' => [
-      'link' => [
-        'label' => $block_content->field_title->value,
-        'path' => '',
-      ],
-    ],
-    'description' =>  strip_tags($block_content->body->value),
+  $footer_sections[] = [
+    'title' => $block_content->field_title->value,
+    'description' => strip_tags($block_content->body->value),
   ];
 
-  $menu_sections = array_filter($variables['page']['footer'], function($content, $key){
+  $menu_sections = array_filter($variables['page']['footer'], function ($content, $key) {
     return strpos($key, 'menu') !== FALSE;
   }, ARRAY_FILTER_USE_BOTH);
   $menu_sections = array_values($menu_sections);
@@ -93,23 +90,17 @@ function eic_community_preprocess_page(array &$variables): void {
     $menu_active_trail = \Drupal::service('menu.active_trail')->getActiveTrailIds($menu_name);
     $parameters->setActiveTrail($menu_active_trail);
     $tree = \Drupal::menuTree()->load($menu_name, $parameters);
-    $title_branch = array_shift($tree);
     $links = [];
 
     foreach ($tree as $branch) {
       $links[]['link'] = [
-          'label' => $branch->link->getTitle(),
-          'path' => $branch->link->getUrlObject()->toString(),
-        ];
+        'label' => $branch->link->getTitle(),
+        'path' => $branch->link->getUrlObject()->toString(),
+      ];
     }
 
     $section = [
-      'title' => [
-        'link' => [
-          'label' => $title_branch->link->getTitle(),
-          'path' => $title_branch->link->getUrlObject()->toString(),
-        ]
-      ],
+      'title' => $menu['#configuration']['label'],
       'links' => $links,
     ];
 
@@ -118,10 +109,71 @@ function eic_community_preprocess_page(array &$variables): void {
       $section['section_class_name'] = 'ecl-footer-core__section--separator';
     }
 
-    $sections[] = $section;
+    $footer_sections[] = $section;
   }
 
+  $variables['site_footer'] = ['sections' => $footer_sections];
 
-  $variables['site_footer'] = ['sections' => $sections];
+  _preprocess_node_page($variables);
+}
 
+/**
+ * Preprocess node pages.
+ */
+function _preprocess_node_page(&$variables) {
+  if (isset($variables['node'])) {
+    /** @var \Drupal\Core\Entity\EntityInterface $node */
+    $node = $variables['node'];
+    switch ($variables['node']->getType()) {
+      case 'story':
+      case 'news':
+        /** @var \Drupal\media\Entity\Media $media */
+        $media = \Drupal::service('entity.repository')->getTranslationFromContext($node->get('field_header_visual')->entity, $node->language()->getId());
+        $image_item = ImageValueObject::fromImageItem($media->get('oe_media_image')->first());
+        $author = eic_community_get_teaser_user_display($node->getOwner());
+        $author_theme = [
+          '#theme' => 'eic_community_author',
+          '#name' => $author['name'],
+          '#path' => $author['path'],
+        ];
+
+        if (isset($author['image'])) {
+          $author_theme['image'] = $author['image'];
+        }
+        /* @todo Missing follow author flag when user is logged in. */
+
+        $publish_date_format = $variables['node']->getType() === 'news' ? 'd F' : 'd F Y';
+
+        $variables['editorial_header'] = [
+          // @todo Not the correct display, has to be created in storybook.
+          'type' => [
+            'label' => $node->private->value === '0' ? t('Public') : t('Community members only'),
+          ],
+          'meta' => [
+            ['label' => $node->type->entity->label()],
+            ['label' => \Drupal::service('date.formatter')->format($node->get('published_at')->value, 'custom', $publish_date_format)],
+          ],
+          'title' => $node->label(),
+        ];
+
+        $variables['hero'] = [
+          'image' => [
+            'src' => $image_item->getSource(),
+            'alt' => $image_item->getAlt(),
+          ],
+          'items' => [
+            ['content' => $author_theme],
+            [
+              'content' => [
+                '#theme' => 'eic_community_timestamp',
+                '#label' => \Drupal::service('reading_time')->getReadingTime(),
+                '#icon_file_path' => $variables['eic_icon_path'],
+              ],
+            ],
+          ],
+        ];
+
+        break;
+    }
+  }
 }

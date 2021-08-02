@@ -1,0 +1,10 @@
+uuid: d0ce9ba5-f125-48c7-8c88-870329b0bb04
+langcode: en
+status: true
+dependencies:
+  module:
+    - group
+id: group.no_html
+label: no_html
+targetEntityType: group
+cache: true

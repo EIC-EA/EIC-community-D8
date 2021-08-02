@@ -11,7 +11,7 @@
 define('INCLUDES_FOLDER', 'includes');
 
 /**
- * Implements hook_theme()
+ * Implements hook_theme().
  */
 function eic_community_theme() {
   $theme_path = drupal_get_path('theme', 'eic_community');
@@ -19,7 +19,7 @@ function eic_community_theme() {
   return [
     'eic_community_extended_list' => [
       'template' => 'extended-list',
-      'path' =>  $theme_path . '/patterns/compositions/extended-list',
+      'path' => $theme_path . '/patterns/compositions/extended-list',
       'variables' => [
         'extra_classes' => NULL,
         'title' => NULL,
@@ -48,9 +48,35 @@ function eic_community_theme() {
         'description' => NULL,
         'items' => NULL,
       ],
-    ]
+    ],
+    'eic_community_author' => [
+      'template' => 'author',
+      'path' => $theme_path . '/patterns/components',
+      'variables' => [
+        'label_element' => NULL,
+        'name' => NULL,
+        'size' => NULL,
+        'updates' => NULL,
+        'display_avatar_only' => NULL,
+        'description' => NULL,
+        'label_classes' => NULL,
+        'path' => NULL,
+        'actions' => NULL,
+        'image' => NULL,
+      ],
+    ],
+    'eic_community_timestamp' => [
+      'template' => 'timestamp',
+      'path' => $theme_path . '/patterns/components',
+      'variables' => [
+        'extra_classes' => NULL,
+        'icon_file_path' => NULL,
+        'label' => NULL,
+      ],
+    ],
   ];
 }
+
 /**
  * Includes a theme file.
  *

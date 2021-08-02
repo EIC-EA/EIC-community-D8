@@ -3,6 +3,10 @@
 namespace Drupal\eic_search\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\group\GroupMembership;
+use Drupal\profile\Entity\Profile;
+use Drupal\taxonomy\Entity\Term;
+use Drupal\user\Entity\User;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -29,12 +33,21 @@ class SolrSearchController extends ControllerBase {
 
     $source_class = $request->query->get('source_class');
     $search_value = $request->query->get('search_value');
+    $current_group = $request->query->get('current_group');
     $facets_value = $request->query->get('facets_value');
     $sort_value = $request->query->get('sort_value');
     $facets_options = $request->query->get('facets_options');
     $facets_value = json_decode($facets_value, TRUE);
+
+    $facets_interests = [];
+
+    if (array_key_exists('interests', $facets_value)) {
+      $facets_interests = $facets_value['interests'];
+      unset($facets_value['interests']);
+    }
+
     $page = $request->query->get('page');
-    $datasource = $request->query->get('datasource');
+    $datasources = json_decode($request->query->get('datasource'), TRUE);
     $offset = $request->query->get('offset');
     $index_storage = \Drupal::entityTypeManager()
       ->getStorage('search_api_index');
@@ -60,7 +73,13 @@ class SolrSearchController extends ControllerBase {
         $query_fields[] = "$search_field_id:$search_query_value";
       }
 
-      $solariumQuery->addParam('q', implode(' OR ', $query_fields));
+      $query_fields_string = implode(' OR ', $query_fields);
+      if ($current_group) {
+        $group_id_field = $source->getPrefilteredGroupFieldId();
+        $query_fields_string .= " AND ($group_id_field:($current_group))";
+      }
+
+      $solariumQuery->addParam('q', $query_fields_string);
     }
 
     $solariumQuery->addParam('json.nl', 'arrarr');
@@ -80,12 +99,22 @@ class SolrSearchController extends ControllerBase {
       }
     }
 
-    $fq = 'ss_search_api_datasource:"entity:' . $datasource . '"';
+    $datasources_query = [];
+
+    foreach ($datasources as $datasource) {
+      $datasources_query[] = 'ss_search_api_datasource:"entity:' . $datasource . '"';
+    }
+
+    $fq = '(' . implode(' OR ', $datasources_query) . ')';
+
     $facets_query = $this->getFacetsQuery($facets_value);
 
     if ($facets_query) {
       $fq .= $facets_query;
     }
+
+    $this->generateQueryInterests($fq, $facets_interests);
+    $this->generateQueryUserGroupsAndContents($fq, $facets_interests);
 
     $solariumQuery->addParam('fq', $fq);
 
@@ -123,6 +152,85 @@ class SolrSearchController extends ControllerBase {
     }
 
     return $facets_query;
+  }
+
+  /**
+   * Generate query for user interests matching by their topics
+   *
+   * @param string $fq
+   *  The field query stringify to send to SOLR
+   * @param array $interests
+   *  Values of interests facet
+   */
+  private function generateQueryInterests(string &$fq, array $interests) {
+    if (
+      empty($interests) ||
+      !array_key_exists('my_interests', $interests) ||
+      !$interests['my_interests']
+    ) {
+      return;
+    }
+
+    $user_id = \Drupal::currentUser()->id();
+    $profiles = \Drupal::entityTypeManager()
+      ->getStorage('profile')
+      ->loadByProperties([
+        'uid' => $user_id,
+        'type' => 'member',
+      ]);
+
+    if (empty($profiles)) {
+      return;
+    }
+
+    $profile = reset($profiles);
+    $user_topics = $profile->get('field_vocab_topic_interest')
+      ->referencedEntities();
+    $user_topics_id = [0];
+
+    if ($user_topics) {
+      $user_topics_id = array_map(function (Term $topic) {
+        return $topic->id();
+      }, $user_topics);
+    }
+
+    $user_topics_string = implode(' OR ', $user_topics_id);
+    $fq .= " AND (itm_group_field_vocab_topics:($user_topics_string) OR itm_content_field_vocab_topics:($user_topics_string))";
+  }
+
+  /**
+   * Generate query for user's groups and content
+   *
+   * @param string $fq
+   *  The field query stringify to send to SOLR
+   * @param array $interests
+   *  Values of interests facet
+   */
+  private function generateQueryUserGroupsAndContents(string &$fq, array $interests) {
+    if (
+      empty($interests) ||
+      !array_key_exists('my_groups', $interests) ||
+      !$interests['my_groups']
+    ) {
+      return;
+    }
+
+    $user_id = \Drupal::currentUser()->id();
+    $user = User::load($user_id);
+
+    /** @var \Drupal\group\GroupMembershipLoader $group_membership_service */
+    $group_membership_service = \Drupal::service('group.membership_loader');
+    $groups_membership = $group_membership_service->loadByUser($user);
+
+    if ($groups_membership) {
+      $groups_membership_id = array_map(function (GroupMembership $group_membership) {
+        return $group_membership->getGroup()->id();
+      }, $groups_membership);
+    }
+
+    $groups_membership_string = implode(' OR ', $groups_membership_id);
+
+    $fq .= " AND (its_group_id_integer:($groups_membership_string) OR ss_global_group_parent_id:($groups_membership_string) OR its_content_uid:($groups_membership_string))";
   }
 
 }

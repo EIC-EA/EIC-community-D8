@@ -37,14 +37,14 @@ content:
     third_party_settings: {  }
   field_body:
     weight: 4
-    label: above
+    label: hidden
     settings: {  }
     third_party_settings: {  }
     type: text_default
     region: content
   field_comments:
-    weight: 101
-    label: above
+    weight: 19
+    label: hidden
     settings:
       view_mode: default
       pager_id: 0
@@ -53,40 +53,34 @@ content:
     region: content
   field_disclaimer:
     weight: 17
-    label: above
+    label: hidden
     settings:
       link: true
+      view_mode: default
     third_party_settings: {  }
-    type: entity_reference_label
+    type: entity_reference_entity_view
     region: content
   field_document_media:
     weight: 8
-    label: above
+    label: hidden
     settings:
       link: true
-    third_party_settings: {  }
-    type: entity_reference_label
-    region: content
-  field_header_visual:
-    type: entity_reference_entity_view
-    weight: 2
-    label: above
-    settings:
       view_mode: default
-      link: false
     third_party_settings: {  }
+    type: entity_reference_entity_view
     region: content
   field_image:
     weight: 5
-    label: above
+    label: hidden
     settings:
       link: true
+      view_mode: default
     third_party_settings: {  }
-    type: entity_reference_label
+    type: entity_reference_entity_view
     region: content
   field_image_caption:
     weight: 6
-    label: above
+    label: hidden
     settings:
       link_to_entity: false
     third_party_settings: {  }
@@ -94,14 +88,14 @@ content:
     region: content
   field_introduction:
     weight: 3
-    label: above
+    label: hidden
     settings: {  }
     third_party_settings: {  }
     type: text_default
     region: content
   field_related_stories:
     weight: 9
-    label: above
+    label: hidden
     settings:
       link: true
     third_party_settings: {  }
@@ -110,7 +104,7 @@ content:
   field_story_paragraphs:
     type: entity_reference_revisions_entity_view
     weight: 15
-    label: above
+    label: hidden
     settings:
       view_mode: default
       link: ''
@@ -119,15 +113,15 @@ content:
   field_video:
     type: entity_reference_entity_view
     weight: 7
-    label: above
+    label: hidden
     settings:
-      view_mode: default
+      view_mode: oe_theme_main_content
       link: false
     third_party_settings: {  }
     region: content
   field_vocab_geo:
     weight: 11
-    label: above
+    label: hidden
     settings:
       link: true
     third_party_settings: {  }
@@ -135,7 +129,7 @@ content:
     region: content
   field_vocab_topics:
     weight: 10
-    label: above
+    label: hidden
     settings:
       link: true
     third_party_settings: {  }
@@ -162,14 +156,14 @@ content:
     settings: {  }
     third_party_settings: {  }
   links:
-    weight: 1
+    weight: 2
     region: content
     settings: {  }
     third_party_settings: {  }
   private:
     weight: 1
     region: content
-    label: above
+    label: hidden
     settings:
       format: default
       format_custom_false: ''
@@ -180,7 +174,7 @@ content:
     type: timestamp
     weight: 16
     region: content
-    label: above
+    label: hidden
     settings:
       date_format: short
       custom_date_format: ''
@@ -193,5 +187,6 @@ content:
     third_party_settings: {  }
 hidden:
   extra_field_eic_theme_helper_short_title_with_fallback: true
+  field_header_visual: true
   langcode: true
   search_api_excerpt: true

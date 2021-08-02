@@ -5,3 +5,24 @@ eic_groups.solr_search:
     _controller: '\Drupal\eic_search\Controller\SolrSearchController::search'
   requirements:
     _permission: 'access content'
+eic_search.global_search:
+  path: '/search'
+  defaults:
+    _title: 'Search'
+    _controller: '\Drupal\eic_search\Controller\SearchController::global'
+  requirements:
+    _permission: 'access content'
+eic_search.groups:
+  path: '/groups'
+  defaults:
+    _title: 'Groups'
+    _controller: '\Drupal\eic_search\Controller\SearchController::groups'
+  requirements:
+    _permission: 'access content'
+eic_search.people:
+  path: '/people'
+  defaults:
+    _title: 'People'
+    _controller: '\Drupal\eic_search\Controller\SearchController::people'
+  requirements:
+    _permission: 'access content'

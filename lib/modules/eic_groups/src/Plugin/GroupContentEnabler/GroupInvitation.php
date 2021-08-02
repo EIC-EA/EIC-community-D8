@@ -48,7 +48,7 @@ class GroupInvitation extends GroupInvitationBase {
         // Deny access to the group invitation form if the group is NOT yet
         // published and the user is not a "site_admin" or a
         // "content_administrator".
-        if (!in_array(UserHelper::ROLE_SITE_ADMINISTRATOR, $account->getRoles(TRUE)) && !in_array(UserHelper::ROLE_CONTENT_ADMINISTRATOR, $account->getRoles(TRUE))) {
+        if (!UserHelper::isPowerUser($account)) {
           $access = GroupAccessResult::forbidden()
             ->addCacheableDependency($account)
             ->addCacheableDependency($group);

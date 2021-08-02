@@ -10,6 +10,7 @@ use Drupal\Core\Render\Markup;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\Url;
+use Drupal\eic_group_statistics\GroupStatisticsHelperInterface;
 use Drupal\eic_groups\EICGroupsHelperInterface;
 use Drupal\flag\FlagServiceInterface;
 use Drupal\group\Entity\GroupInterface;
@@ -73,6 +74,13 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
   protected $flagService;
 
   /**
+   * The group statistics helper service.
+   *
+   * @var \Drupal\eic_group_statistics\GroupStatisticsHelperInterface
+   */
+  protected $groupStatisticsHelper;
+
+  /**
    * Constructs a new EICGroupHeaderBlock instance.
    *
    * @param array $configuration
@@ -96,6 +104,8 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
    *   The current user.
    * @param \Drupal\flag\FlagServiceInterface $flag_service
    *   The flag service.
+   * @param \Drupal\eic_group_statistics\GroupStatisticsHelperInterface $group_statistics_helper
+   *   The group statistics helper service.
    */
   public function __construct(
     array $configuration,
@@ -106,7 +116,8 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
     EntityTypeManagerInterface $entity_type_manager,
     OECGroupFlexHelper $oec_group_flex_helper,
     AccountProxyInterface $current_user,
-    FlagServiceInterface $flag_service
+    FlagServiceInterface $flag_service,
+    GroupStatisticsHelperInterface $group_statistics_helper
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->routeMatch = $route_match;
@@ -115,6 +126,7 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
     $this->oecGroupFlexHelper = $oec_group_flex_helper;
     $this->currentUser = $current_user;
     $this->flagService = $flag_service;
+    $this->groupStatisticsHelper = $group_statistics_helper;
   }
 
   /**
@@ -135,7 +147,8 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
       $container->get('entity_type.manager'),
       $container->get('oec_group_flex.helper'),
       $container->get('current_user'),
-      $container->get('flag')
+      $container->get('flag'),
+      $container->get('eic_group_statistics.helper')
     );
   }
 
@@ -164,6 +177,8 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
       'user.group_permissions',
       'url.path',
     ]);
+    // We also need to add group cache tags.
+    $cacheable_metadata->addCacheTags($group->getCacheTags());
 
     // Get group operation links.
     $group_operation_links = $this->entityTypeManager->getListBuilder($group->getEntityTypeId())->getOperations($group);
@@ -238,6 +253,9 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
     // Get all group flags the user has access to.
     $membership_links = $this->getGroupFlagLinks($group);
 
+    // Load group statistics from Database.
+    $group_statistics = $this->groupStatisticsHelper->loadGroupStatistics($group);
+
     $build['content'] = [
       '#theme' => 'eic_group_header_block',
       '#group' => $group,
@@ -248,6 +266,12 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
         'description' => Markup::create($group->get('field_body')->value),
         'operation_links' => array_merge($operation_links, $node_operation_links, $visible_group_operation_links),
         'membership_links' => array_merge($membership_links, $user_operation_links),
+        'stats' => [
+          'members' => $group_statistics->getMembersCount(),
+          'comments' => $group_statistics->getCommentsCount(),
+          'files' => $group_statistics->getFilesCount(),
+          'events' => $group_statistics->getEventsCount(),
+        ],
       ],
     ];
 
@@ -274,7 +298,7 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
       if ($joining_methods = $this->oecGroupFlexHelper->getGroupJoiningMethod($group)) {
         $login_link_options = [
           'query' => [
-            'destination' => $group->toUrl()->toString(),
+            'destination' => Url::fromRoute('<current>')->toString(),
           ],
         ];
         $link['url'] = Url::fromRoute('user.login', [], $login_link_options);
@@ -314,7 +338,7 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
     // access to.
     foreach (array_keys($group->flags) as $flag_name) {
       $flag = $this->flagService->getFlagById(str_replace('flag_', '', $flag_name));
-      $user_flag = $this->flagService->getFlagging($flag, $group, $this->currentUser->getAccount());
+      $user_flag = $this->flagService->getFlagging($flag, $group);
 
       // We need to create a fake flag if the user never flagged the content,
       // otherwise we can't do an access check.

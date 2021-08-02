@@ -68,4 +68,18 @@
       margin: 0 map-get($ecl-spacing, 's') 0 0;
     }
   }
+
+  &__author {
+    display: flex;
+    align-items: center;
+    padding-right: map-get($ecl-spacing, 's');
+  }
+
+  &__author .ecl-author {
+    margin-bottom: 0;
+  }
+
+  .ecl-collapsible-options--is-ready[aria-expanded=true] &__author .ecl-icon {
+    transform: rotate(0deg);
+  }
 }
