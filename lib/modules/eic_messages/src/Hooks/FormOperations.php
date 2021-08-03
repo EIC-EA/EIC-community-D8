@@ -3,6 +3,7 @@
 namespace Drupal\eic_messages\Hooks;
 
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
@@ -17,6 +18,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class FormOperations implements ContainerInjectionInterface {
 
+  use DependencySerializationTrait;
   use StringTranslationTrait;
 
   /**
