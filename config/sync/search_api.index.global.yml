@@ -360,7 +360,7 @@ field_settings:
     label: '[Group] Title'
     datasource_id: 'entity:group'
     property_path: label
-    type: 'solr_text_custom_omit_norms:edgestring'
+    type: string
     dependencies:
       module:
         - group
@@ -806,4 +806,19 @@ processor_settings:
       content_field_vocab_geo: taxonomy_term-parent
       content_field_vocab_topics: taxonomy_term-parent
       group_field_vocab_geo: taxonomy_term-parent
-      group
+      group_field_vocab_topics: taxonomy_term-parent
+    weights:
+      preprocess_index: -45
+  language_with_fallback: {  }
+  rendered_item: {  }
+  reverse_entity_references: {  }
+  solr_date_range:
+    weights:
+      preprocess_index: 0
+tracker_settings:
+  default:
+    indexing_order: fifo
+options:
+  index_directly: true
+  cron_limit: 50
+server: global
