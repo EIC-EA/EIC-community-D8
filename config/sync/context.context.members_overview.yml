@@ -29,12 +29,12 @@ reactions:
         weight: '0'
         facets:
           sm_user_profile_topic_expertise_string: sm_user_profile_topic_expertise_string
-          sm_user_profile_job_string: sm_user_profile_job_string
           sm_user_profile_field_vocab_topic_interest_array: sm_user_profile_field_vocab_topic_interest_array
-          sm_user_profile_geo_string: sm_user_profile_geo_string
           ss_user_profile_field_location_address_country_code: ss_user_profile_field_location_address_country_code
+          sm_user_profile_field_vocab_language_array: sm_user_profile_field_vocab_language_array
+          sm_user_profile_role_array: sm_user_profile_role_array
         sort_options:
-          ss_user_first_name: ss_user_first_name
+          ds_user_access: ds_user_access
         source_type: Drupal\eic_search\Search\Sources\UserGallerySourceType
         enable_search: 1
         page_options: normal
