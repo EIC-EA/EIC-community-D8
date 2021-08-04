@@ -97,6 +97,10 @@ function eic_search_search_api_solr_documents_alter(array &$documents, \Drupal\s
     $document->addField('ss_global_created_date', $date);
     $document->addField('ss_global_fullname', $fullname);
 
+    if (!array_key_exists('bs_content_is_private', $fields)) {
+      $document->addField('bs_content_is_private', FALSE);
+    }
+
     $group_parent_label = '';
     $group_parent_url = '';
     $group_parent_id = -1;
