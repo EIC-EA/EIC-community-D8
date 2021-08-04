@@ -9,7 +9,7 @@ services:
       - ${APP_PORT}:80
     volumes:
       - ./docker/apache/vhosts:/etc/apache2/sites-enabled
-      - .:/app
+      - .:${APP_ROOT}
 
   php:
     build:
@@ -17,7 +17,7 @@ services:
     container_name: ${APP_NAME}_php
     working_dir: /app
     volumes:
-      - .:/app
+      - .:${APP_ROOT}
       - ./docker/php/dev.ini:/usr/local/etc/php/conf.d/dev.ini
       - ./docker/bin/mhsendmail:/usr/local/bin/mhsendmail
     env_file:

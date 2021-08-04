@@ -5,6 +5,11 @@ ifndef VERBOSE
 .SILENT:
 endif
 
+ifeq (run,$(firstword $(MAKECMDGOALS)))
+  RUN_ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
+  $(eval $(RUN_ARGS):;@:)
+endif
+
 setup:
 	$(call do_setup)
 
@@ -26,6 +31,9 @@ stop:
 destroy:
 	$(call do_destroy)
 
+run:
+	docker exec -it -w ${APP_ROOT}/lib/themes/eic_community ${APP_NAME}_php bash -c 'npm run $(RUN_ARGS)'
+
 import-db:
 	docker exec -i ${APP_NAME}_mysql bash -c 'exec mysql -u${DATABASE_USERNAME} ${DATABASE_NAME}' < $(FILE)
 
@@ -43,18 +51,18 @@ build-front:
 
 define do_build_front
 	echo -e 'Installing node modules and building...'
-	docker run --rm -v ${PWD}:/app -w /app/lib/themes/eic_community -it node:14 bash -c "npm install \
+	docker exec -it -w ${APP_ROOT}/lib/themes/eic_community ${APP_NAME}_php bash -c "npm install \
 		&& npm run build \
 		&& npm run react-production"
 	echo -e 'Generating storybook...'
-	docker run --rm -v ${PWD}:/app -w /app/lib/themes/eic_community -it node:14 bash -c "npm run pregenerate-storybook \
+	docker exec -it -w ${APP_ROOT}/lib/themes/eic_community ${APP_NAME}_php bash -c "npm run pregenerate-storybook \
   		&& npm run generate-storybook \
   		&& npm run postgenerate-storybook"
 endef
 
 define do_db_healthcheck
-	docker exec -it ${APP_NAME}_php bash -c 'chmod +x /app/docker/php/database-healthcheck.sh'
-	docker exec -it ${APP_NAME}_php bash -c '/app/docker/php/database-healthcheck.sh'
+	docker exec -it ${APP_NAME}_php bash -c 'chmod +x ${APP_ROOT}/docker/php/database-healthcheck.sh'
+	docker exec -it ${APP_NAME}_php bash -c '${APP_ROOT}/docker/php/database-healthcheck.sh'
 endef
 
 define do_setup
@@ -63,6 +71,8 @@ define do_setup
 	docker-compose up -d
 	docker exec -it ${APP_NAME}_php bash -c 'composer install --no-progress'
 	$(call do_db_healthcheck)
+	$(call do_build_front)
+	docker exec -it ${APP_NAME}_php bash -c 'cp -n ${APP_ROOT}/web/sites/default/default.settings.local.php ${APP_ROOT}/web/sites/default/settings.php'
 	docker exec -it ${APP_NAME}_php bash -c 'drush site-install minimal --site-name=${APP_NAME} --account-name=${DRUPAL_ADMIN_USER} --account-pass=${DRUPAL_ADMIN_PASSWORD} --existing-config -y'
 	docker exec -it ${APP_NAME}_php bash -c 'drush cr'
 	echo -e '\n'
@@ -137,6 +147,7 @@ define do_display_commands
 	echo -e '--- AVAILABLE COMMANDS ---'
 	echo -e '\n'
 	echo -e 'Setup the local development environment for ${APP_NAME}: \e[36mmake \e[0m\e[1msetup\e[0m'
+	echo -e 'You can run scripts defined in package.json this way: \e[36mmake \e[0m\e[1mrun @script_name\e[0m'
 	echo -e 'Stop the running app: \e[36mmake \e[0m\e[1mstop\e[0m'
 	echo -e 'Stop the running app and delete the data: \e[36mmake \e[0m\e[1mdestroy\e[0m'
 	echo -e 'Start an app that has already been setup: \e[36mmake \e[0m\e[1mstart\e[0m'
