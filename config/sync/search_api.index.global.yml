@@ -15,7 +15,9 @@ dependencies:
     - address
     - eic_group_statistics
     - eic_search
+    - flag_search_api
     - content_moderation
+    - flag
     - group_permissions
   config:
     - field.storage.user.field_first_name
@@ -265,6 +267,12 @@ field_settings:
     dependencies:
       module:
         - node
+  flag_recommend_group_count:
+    label: 'Group Recommend count'
+    property_path: flag_recommend_group_count
+    type: integer
+    indexed_locked: true
+    type_locked: true
   group_content_entity_id:
     label: '[Group content] Content'
     datasource_id: 'entity:group_content'
@@ -732,6 +740,10 @@ datasource_settings:
     languages:
       default: true
       selected: {  }
+  'entity:flagging':
+    bundles:
+      default: true
+      selected: {  }
   'entity:group':
     bundles:
       default: true
@@ -777,6 +789,9 @@ processor_settings:
     weights:
       preprocess_query: -30
   entity_status: {  }
+  flag_count_indexer:
+    flag_index:
+      - recommend_group
   group_content_access:
     weights:
       preprocess_query: -30
@@ -791,19 +806,4 @@ processor_settings:
       content_field_vocab_geo: taxonomy_term-parent
       content_field_vocab_topics: taxonomy_term-parent
       group_field_vocab_geo: taxonomy_term-parent
-      group_field_vocab_topics: taxonomy_term-parent
-    weights:
-      preprocess_index: -45
-  language_with_fallback: {  }
-  rendered_item: {  }
-  reverse_entity_references: {  }
-  solr_date_range:
-    weights:
-      preprocess_index: 0
-tracker_settings:
-  default:
-    indexing_order: fifo
-options:
-  index_directly: true
-  cron_limit: 50
-server: global
+      group
