@@ -29,6 +29,8 @@ reactions:
         weight: '0'
         facets:
           ss_global_content_type: ss_global_content_type
+          sm_content_field_vocab_topics_string: sm_content_field_vocab_topics_string
+          sm_content_field_vocab_geo_string: sm_content_field_vocab_geo_string
           ss_group_user_fullname: 0
         sort_options:
           ss_global_created_date: ss_global_created_date

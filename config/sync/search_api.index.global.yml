@@ -15,23 +15,21 @@ dependencies:
     - address
     - eic_group_statistics
     - eic_search
-    - flag_search_api
     - content_moderation
-    - flag
     - group_permissions
   config:
     - field.storage.user.field_first_name
     - field.storage.user.field_last_name
     - field.storage.media.oe_media_image
     - field.storage.user.field_media
+    - field.storage.group.field_vocab_geo
     - field.storage.group.field_thumbnail
     - field.storage.group.field_vocab_topics
     - field.storage.group.field_body
-    - field.storage.group.field_vocab_geo
-    - field.storage.node.field_body
     - field.storage.node.field_vocab_geo
-    - field.storage.node.field_subtitle
     - field.storage.node.field_vocab_topics
+    - field.storage.node.field_body
+    - field.storage.node.field_subtitle
     - field.storage.node.field_discussion_type
     - field.storage.profile.field_body
     - field.storage.profile.field_location_address
@@ -173,6 +171,16 @@ field_settings:
     dependencies:
       config:
         - field.storage.node.field_vocab_geo
+  content_field_vocab_geo_string:
+    label: 'Regions & Countries » Taxonomy term » Name'
+    datasource_id: 'entity:node'
+    property_path: 'field_vocab_geo:entity:name'
+    type: string
+    dependencies:
+      config:
+        - field.storage.node.field_vocab_geo
+      module:
+        - taxonomy
   content_field_vocab_topics:
     label: '[Content] Topics'
     datasource_id: 'entity:node'
@@ -181,6 +189,16 @@ field_settings:
     dependencies:
       config:
         - field.storage.node.field_vocab_topics
+  content_field_vocab_topics_string:
+    label: 'Topics » Taxonomy term » Name'
+    datasource_id: 'entity:node'
+    property_path: 'field_vocab_topics:entity:name'
+    type: string
+    dependencies:
+      config:
+        - field.storage.node.field_vocab_topics
+      module:
+        - taxonomy
   content_first_name:
     label: 'Authored by » User » First name'
     datasource_id: 'entity:node'
@@ -247,12 +265,6 @@ field_settings:
     dependencies:
       module:
         - node
-  flag_recommend_group_count:
-    label: 'Group Recommend count'
-    property_path: flag_recommend_group_count
-    type: integer
-    indexed_locked: true
-    type_locked: true
   group_content_entity_id:
     label: '[Group content] Content'
     datasource_id: 'entity:group_content'
@@ -301,6 +313,16 @@ field_settings:
     dependencies:
       config:
         - field.storage.group.field_vocab_geo
+  group_field_vocab_geo_string:
+    label: 'Regions & Countries » Taxonomy term » Name'
+    datasource_id: 'entity:group'
+    property_path: 'field_vocab_geo:entity:name'
+    type: string
+    dependencies:
+      config:
+        - field.storage.group.field_vocab_geo
+      module:
+        - taxonomy
   group_field_vocab_topics:
     label: '[Group] Topics'
     datasource_id: 'entity:group'
@@ -330,7 +352,7 @@ field_settings:
     label: '[Group] Title'
     datasource_id: 'entity:group'
     property_path: label
-    type: string
+    type: 'solr_text_custom_omit_norms:edgestring'
     dependencies:
       module:
         - group
@@ -710,10 +732,6 @@ datasource_settings:
     languages:
       default: true
       selected: {  }
-  'entity:flagging':
-    bundles:
-      default: true
-      selected: {  }
   'entity:group':
     bundles:
       default: true
@@ -759,9 +777,6 @@ processor_settings:
     weights:
       preprocess_query: -30
   entity_status: {  }
-  flag_count_indexer:
-    flag_index:
-      - recommend_group
   group_content_access:
     weights:
       preprocess_query: -30
