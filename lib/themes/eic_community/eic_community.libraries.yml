@@ -27,3 +27,10 @@ react-block-overview-search:
     dist/react/block/overview/entrypoint.js: { minified: true }
   dependencies:
     - core/drupal
+
+react-tree-field:
+  css:
+    theme:
+      dist/styles/eic_community_admin.css: { media: screen }
+  js:
+    dist/react/field/entity_tree/entrypoint.js: { minified: true }

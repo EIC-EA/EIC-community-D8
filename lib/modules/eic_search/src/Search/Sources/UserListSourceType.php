@@ -44,6 +44,8 @@ class UserListSourceType implements SourceTypeInterface {
       'sm_user_profile_field_vocab_topic_interest_array' => $this->t('Topic interest', [], ['context' => 'eic_search']),
       'sm_user_profile_geo_string' => $this->t('Geo interest', [], ['context' => 'eic_search']),
       'ss_user_profile_field_location_address_country_code' => $this->t('Country', [], ['context' => 'eic_search']),
+      'sm_user_profile_field_vocab_language_array' => $this->t('Language', [], ['context' => 'eic_search']),
+      'sm_user_profile_role_array' => $this->t('Roles', [], ['context' => 'eic_search']),
     ];
   }
 
@@ -56,7 +58,12 @@ class UserListSourceType implements SourceTypeInterface {
         'label' => $this->t('First name', [], ['context' => 'eic_search']),
         'ASC' => $this->t('First name A-Z', [], ['context' => 'eic_search']),
         'DESC' => $this->t('First name Z-A', [], ['context' => 'eic_search']),
-      ]
+      ],
+      'ds_user_access' => [
+        'label' => $this->t('Last active', [], ['context' => 'eic_search']),
+        'ASC' => $this->t('Last inactive', [], ['context' => 'eic_search']),
+        'DESC' => $this->t('Last active', [], ['context' => 'eic_search']),
+      ],
     ];
   }
 
