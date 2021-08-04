@@ -10,12 +10,12 @@ dependencies:
     - media
     - taxonomy
     - node
+    - eic_private_content
     - profile
     - search_api
     - address
     - eic_group_statistics
     - eic_search
-    - flag_search_api
     - content_moderation
     - flag
     - group_permissions
@@ -192,6 +192,14 @@ field_settings:
       module:
         - node
         - user
+  content_is_private:
+    label: 'Only visible to community members'
+    datasource_id: 'entity:node'
+    property_path: private
+    type: boolean
+    dependencies:
+      module:
+        - eic_private_content
   content_last_name:
     label: 'Authored by » User » Last name'
     datasource_id: 'entity:node'
@@ -247,12 +255,6 @@ field_settings:
     dependencies:
       module:
         - node
-  flag_recommend_group_count:
-    label: 'Group Recommend count'
-    property_path: flag_recommend_group_count
-    type: integer
-    indexed_locked: true
-    type_locked: true
   group_content_entity_id:
     label: '[Group content] Content'
     datasource_id: 'entity:group_content'
@@ -759,9 +761,6 @@ processor_settings:
     weights:
       preprocess_query: -30
   entity_status: {  }
-  flag_count_indexer:
-    flag_index:
-      - recommend_group
   group_content_access:
     weights:
       preprocess_query: -30
