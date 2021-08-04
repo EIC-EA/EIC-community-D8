@@ -11,6 +11,7 @@ dependencies:
   module:
     - comment
     - content_moderation
+    - eic_content
     - path
     - publication_date
     - scheduler
@@ -59,12 +60,12 @@ content:
   field_vocab_topics:
     weight: 4
     settings:
-      match_operator: CONTAINS
-      match_limit: 10
-      size: 60
-      placeholder: ''
+      match_top_level_limit: '0'
+      items_to_load: '25'
+      auto_select_parents: '1'
+      load_all: 0
     third_party_settings: {  }
-    type: entity_reference_autocomplete
+    type: entity_tree
     region: content
   langcode:
     type: language_select
