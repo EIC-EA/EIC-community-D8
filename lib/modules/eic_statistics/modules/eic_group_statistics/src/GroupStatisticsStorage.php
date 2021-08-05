@@ -146,6 +146,7 @@ class GroupStatisticsStorage implements GroupStatisticsStorageInterface {
 
     $fields = [];
     foreach ($groups_statistics as $group_statistics) {
+      $this->setGroupStatistics($group_statistics);
       // We make sure the array item is an instance of GroupStatistics,
       // otherwise we skip it.
       if (!($group_statistics instanceof GroupStatistics)) {
@@ -230,6 +231,9 @@ class GroupStatisticsStorage implements GroupStatisticsStorageInterface {
       ->fields('gc_fd', ['gid'])
       ->condition('gc_fd.gid', $group->id())
       ->condition('gc_fd.type', $comment_ctypes, 'IN');
+    $query_comments->join('node_field_data', 'n_fd', 'gc_fd.entity_id = n_fd.nid');
+    // We calculate statistics only for published nodes.
+    $query_comments->condition('n_fd.status', TRUE);
     $query_comments->join('comment_field_data', 'c_fd', 'gc_fd.entity_id = c_fd.entity_id');
     $query_comments->addExpression('COUNT(c_fd.entity_id)', 'count');
     return $query_comments->execute()->fetchAssoc()['count'];
@@ -281,6 +285,9 @@ class GroupStatisticsStorage implements GroupStatisticsStorageInterface {
         }
 
         $query_files->join("node__{$field_name}", 'n_field', 'gc_fd.entity_id = n_field.entity_id');
+        $query_files->join("node_field_data", 'n_fd', 'gc_fd.entity_id = n_fd.nid');
+        // We calculate statistics only for published nodes.
+        $query_files->condition('n_fd.status', TRUE);
         $query_files->groupBy("n_field.{$field_name}_target_id");
         $target_ids = $query_files->execute()->fetchAll();
 
