@@ -1,4 +1,4 @@
 services:
   eic_comments.helper:
     class: Drupal\eic_comments\CommentsHelper
-    arguments: ['@database', '@entity_type.manager']
+    arguments: ['@entity_type.manager']
