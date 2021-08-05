@@ -8,5 +8,6 @@ services:
 
   eic_content.breadcrumb:
     class: Drupal\eic_content\ContentBreadcrumbBuilder
+    arguments: ['@current_user']
     tags:
       - { name: breadcrumb_builder, priority: 999 }

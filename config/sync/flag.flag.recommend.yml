@@ -10,8 +10,6 @@ label: 'Recommend (Content)'
 bundles:
   - discussion
   - document
-  - news
-  - story
 entity_type: node
 global: false
 weight: 0
