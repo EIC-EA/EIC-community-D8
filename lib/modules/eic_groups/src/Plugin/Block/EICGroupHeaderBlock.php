@@ -253,8 +253,8 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
     // Get all group flags the user has access to.
     $membership_links = $this->getGroupFlagLinks($group);
 
-    // Load group statistics from SOLR.
-    $group_statistics = $this->groupStatisticsHelper->loadGroupStatisticsFromSearchIndex($group);
+    // Load group statistics from Database.
+    $group_statistics = $this->groupStatisticsHelper->loadGroupStatistics($group);
 
     $build['content'] = [
       '#theme' => 'eic_group_header_block',

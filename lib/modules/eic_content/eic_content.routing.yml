@@ -1,0 +1,19 @@
+eic_content.entity_tree:
+  path: '/api/terms-tree'
+  defaults:
+    _controller: '\Drupal\eic_content\Controller\EntityTreeController::tree'
+  requirements:
+    _permission: 'access content'
+eic_content.entity_tree_children:
+  path: '/api/terms-tree/children'
+  defaults:
+    _controller: '\Drupal\eic_content\Controller\EntityTreeController::loadChildren'
+  requirements:
+    _permission: 'access content'
+
+eic_content.entity_tree_search:
+  path: '/api/terms-tree/search'
+  defaults:
+    _controller: '\Drupal\eic_content\Controller\EntityTreeController::search'
+  requirements:
+    _permission: 'access content'

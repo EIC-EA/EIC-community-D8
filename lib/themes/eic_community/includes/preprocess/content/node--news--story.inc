@@ -5,7 +5,9 @@
  * Prepares variables for node News and Story templates.
  */
 
+use Drupal\Component\Utility\Xss;
 use Drupal\Core\Block\BlockPluginInterface;
+use Drupal\Core\Render\Markup;
 use Drupal\eic_community\ValueObject\ImageValueObject;
 use Drupal\file\Entity\File;
 
@@ -92,11 +94,15 @@ function _eic_community_story_image_field(&$variables) {
   if (isset($variables['content']['field_image'][0])) {
     $media = $variables['content']['field_image'][0]['#media'];
     $image_item = ImageValueObject::fromImageItem($media->get('oe_media_image')->first());
-
-    $variables['image_wrapper'] = [
+    $image_wrapper = [
       'image' => $image_item->getSource(),
-      'description' => $variables['content']['field_image_caption'][0]['#context']['value'],
     ];
+
+    if (isset($variables['content']['field_image_caption'][0])) {
+      $image_wrapper['description'] = $variables['content']['field_image_caption'][0]['#context']['value'];
+    }
+
+    $variables['image_wrapper'] = $image_wrapper;
   }
 }
 
@@ -107,7 +113,7 @@ function _eic_community_story_document_field(&$variables) {
   if (isset($variables['content']['field_document_media'][0])) {
     $media = $variables['content']['field_document_media'][0]['#media'];
     $file = File::load($media->field_media_file->target_id);
-    $file_description = isset($media->field_body) ? $media->field_body->value : $media->getName();
+    $file_description = isset($media->field_body) ? Markup::create(Xss::filter($media->get('field_body')->value)) : $media->getName();
 
     $variables['download'] = [
       'title' => $file_description,

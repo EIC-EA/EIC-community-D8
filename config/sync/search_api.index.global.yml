@@ -5,16 +5,16 @@ dependencies:
   module:
     - search_api_solr
     - group
+    - user
+    - file
+    - media
+    - taxonomy
     - node
     - profile
-    - file
-    - taxonomy
-    - user
-    - media
     - search_api
-    - eic_search
     - address
     - eic_group_statistics
+    - eic_search
     - flag_search_api
     - content_moderation
     - flag
@@ -29,13 +29,10 @@ dependencies:
     - field.storage.group.field_body
     - field.storage.group.field_vocab_geo
     - field.storage.node.field_body
-    - field.storage.node.field_discussion_type
-    - field.storage.node.field_subtitle
     - field.storage.node.field_vocab_geo
+    - field.storage.node.field_subtitle
     - field.storage.node.field_vocab_topics
-    - field.storage.group.field_body
-    - field.storage.group.field_vocab_geo
-    - field.storage.group.field_vocab_topics
+    - field.storage.node.field_discussion_type
     - field.storage.profile.field_body
     - field.storage.profile.field_location_address
     - field.storage.profile.field_vocab_job_title
@@ -602,6 +599,17 @@ field_settings:
         - field.storage.profile.field_vocab_language
       module:
         - profile
+  user_profile_field_vocab_language_array:
+    label: 'Member profiles » Profile » Languages spoken » Taxonomy term » Name'
+    datasource_id: 'entity:user'
+    property_path: 'member_profiles:entity:field_vocab_language:entity:name'
+    type: string
+    dependencies:
+      config:
+        - field.storage.profile.field_vocab_language
+      module:
+        - profile
+        - taxonomy
   user_profile_field_vocab_topic_expertise:
     label: 'Member profiles » Profile » Topics of Expertise'
     datasource_id: 'entity:user'
@@ -657,6 +665,14 @@ field_settings:
       module:
         - profile
         - taxonomy
+  user_profile_role_array:
+    label: Roles
+    datasource_id: 'entity:user'
+    property_path: roles
+    type: string
+    dependencies:
+      module:
+        - user
   user_profile_social_links:
     label: 'Member profiles » Profile » Social links'
     datasource_id: 'entity:user'

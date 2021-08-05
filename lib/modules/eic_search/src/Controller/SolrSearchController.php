@@ -228,7 +228,7 @@ class SolrSearchController extends ControllerBase {
       }, $groups_membership);
     }
 
-    $groups_membership_string = implode(' OR ', $groups_membership_id);
+    $groups_membership_string = $groups_membership_id ? implode(' OR ', $groups_membership_id) : -1;
 
     $fq .= " AND (its_group_id_integer:($groups_membership_string) OR ss_global_group_parent_id:($groups_membership_string) OR its_content_uid:($groups_membership_string))";
   }

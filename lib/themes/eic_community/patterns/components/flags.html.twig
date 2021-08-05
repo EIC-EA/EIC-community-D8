@@ -1,0 +1,22 @@
+<section class="ecl-flags">
+  <div class="ecl-flags__items">
+    {% for flag in items %}
+      <div class="ecl-flags__item">
+        {% if flag.content is defined %}
+          {{ flag.content }}
+        {% else %}
+          {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with flag|default({})|merge({
+            link: flag.link|default({})|merge({
+              icon_position: 'before',
+            }),
+            extra_classes: 'ecl-link--standalone ecl-link--flag',
+            icon: flag.icon|default({})|merge({
+              path: icon_file_path,
+              size: 's',
+            })
+          }) %}
+        {% endif %}
+      </div>
+    {% endfor %}
+  </div>
+</section>

@@ -7,6 +7,7 @@
 
 use Drupal\eic_community\ValueObject\ImageValueObject;
 use Drupal\user\Entity\User;
+use Drupal\user\UserInterface;
 
 /**
  * Implements hook_preprocess_paragraph().
@@ -46,7 +47,7 @@ function eic_community_preprocess_paragraph__contributor(array &$variables) {
 
     $mail = $paragraph->field_person_email->getString();
 
-    if (strlen($mail) > 0) {
+    if (strlen($mail) > 0 && $variables['logged_in']) {
       $contributor['actions'][] = [
         'label' => t('e-mail'),
         'path' => 'mailto:' . $mail,
@@ -56,17 +57,18 @@ function eic_community_preprocess_paragraph__contributor(array &$variables) {
         ],
       ];
     }
-
   }
   else {
     $user = User::load($paragraph->field_user_ref->getString());
-    $user_display = eic_community_get_teaser_user_display($user);
+    if ($user instanceof UserInterface) {
+      $user_display = eic_community_get_teaser_user_display($user);
 
-    if ($variables['logged_in'] === FALSE) {
-      unset($user_display['path']);
+      if ($variables['logged_in'] === FALSE) {
+        unset($user_display['path']);
+      }
+
+      $contributor = array_merge($contributor, $user_display);
     }
-
-    $contributor = array_merge($contributor, $user_display);
   }
 
   $variables['author'] = $contributor;

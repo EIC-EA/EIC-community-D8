@@ -44,6 +44,12 @@ type_settings:
         - pending
       to: pending
       weight: -2
+    keep_in_draft:
+      label: 'Keep in draft'
+      from:
+        - draft
+      to: draft
+      weight: 3
     publish:
       label: Publish
       to: published
