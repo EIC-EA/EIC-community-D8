@@ -109,6 +109,12 @@ class EntityOperations implements ContainerInjectionInterface {
         /** @var \Drupal\node\NodeInterface $node */
         $node = $entity->getEntity();
 
+        // If node is not published, we don't need to update group statistics.
+        if (!$node->isPublished()) {
+          $re_index = FALSE;
+          break;
+        }
+
         $medias = [];
 
         // @todo In the future we should consider configuring which fields to
@@ -287,6 +293,7 @@ class EntityOperations implements ContainerInjectionInterface {
       case 'gallery':
         $old_medias = [];
         $medias = [];
+        $unpublished_node_medias = [];
 
         // @todo In the future we should consider configuring which fields to
         // use via config entity and using an administration form.
@@ -298,11 +305,13 @@ class EntityOperations implements ContainerInjectionInterface {
         ];
         foreach ($media_fields as $field_name) {
           if ($entity->hasField($field_name)) {
+
             // Sets array of old medias to decrement from group file
             // statistics.
             foreach ($entity->original->get($field_name)->referencedEntities() as $media) {
               $old_medias[$media->id()] = $media;
             }
+
             // Sets array of new medias to increment to the group file
             // statistics.
             foreach ($entity->get($field_name)->referencedEntities() as $media) {
@@ -311,6 +320,18 @@ class EntityOperations implements ContainerInjectionInterface {
               }
               else {
                 unset($old_medias[$media->id()]);
+
+                // If the node has been unpublished, we add the node medias to
+                // an array so that they get decremented from file statistics.
+                if ($entity->original->isPublished() && !$entity->isPublished()) {
+                  $unpublished_node_medias[$media->id()] = $media;
+                }
+                elseif (!$entity->original->isPublished() && $entity->isPublished()) {
+                  // If the node has been published, we add the node medias to
+                  // the medias array so that they get incremented in file
+                  // statistics.
+                  $medias[$media->id()] = $media;
+                }
               }
             }
           }
@@ -318,21 +339,30 @@ class EntityOperations implements ContainerInjectionInterface {
 
         // If there are no media entities to increment or decrement, then we
         // don't need to update group file statistics.
-        if (empty($medias) && empty($old_medias)) {
+        if (empty($medias) && empty($old_medias) && empty($unpublished_node_medias)) {
           $re_index = FALSE;
           break;
         }
 
         $increment_count = 0;
-        if (!empty($medias)) {
-          // Counts the number of times we need to increment the file statistic.
+        if (!empty($medias) && $entity->isPublished()) {
+          // Counts the number of times we need to increment to the file
+          // statistics.
           $increment_count = $this->countGroupFileStatistics($group, $entity, $medias);
         }
 
         $decrement_count = 0;
-        if (!empty($old_medias)) {
-          // Counts the number of times we need to decrement the file statistic.
+        if (!empty($old_medias) && $entity->original->isPublished()) {
+          // Counts the number of times we need to decrement in the file
+          // statistics. Note that we decrement only if the previous status
+          // was published.
           $decrement_count = $this->countGroupFileStatistics($group, $entity, $old_medias);
+        }
+
+        if (!empty($unpublished_node_medias)) {
+          // Counts the number of times we need to decrement in the file
+          // statistics when the node is unpublished.
+          $decrement_count += $this->countGroupFileStatistics($group, $entity, $unpublished_node_medias);
         }
 
         // If counters are empty, we don't need to update group file
@@ -413,13 +443,21 @@ class EntityOperations implements ContainerInjectionInterface {
 
         // Because the media usage is saved per node revision, we need to make
         // sure the media is presented in the latest revision of every node.
-        // If the media is not presented in the latest revision of anode, that
+        // If the media is not presented in the latest revision of a node, that
         // node will be discarded.
         foreach ($media_usage['node'] as $nid => $media_usage_items) {
           $latest_vid = $this->entityTypeManager->getStorage('node')->getLatestRevisionId($nid);
 
           foreach ($media_usage_items as $media_usage_item) {
             if ((int) $media_usage_item['source_vid'] === $latest_vid) {
+              $node_revision = $this->entityTypeManager->getStorage('node')->loadRevision($latest_vid);
+
+              // Make sure the revision is published, otherwise we skip this
+              // node.
+              if (!$node_revision->isPublished()) {
+                continue;
+              }
+
               $source_nodes[] = $this->entityTypeManager->getStorage('node')->loadRevision($latest_vid);
               // Latest revision has been found in the usage. We don't need
               // go through the remaining items.
