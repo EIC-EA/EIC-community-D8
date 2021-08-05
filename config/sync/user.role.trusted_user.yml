@@ -29,6 +29,7 @@ permissions:
   - 'unflag recommend_group'
   - 'use groups transition create_new_draft'
   - 'use groups transition create_new_group'
+  - 'use groups transition keep_in_draft'
   - 'use groups transition publish'
   - 'use text format basic_text'
   - 'use text format filtered_html'

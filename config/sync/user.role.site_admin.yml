@@ -28,6 +28,7 @@ permissions:
   - 'use admin toolbar search'
   - 'use groups transition archive'
   - 'use groups transition create_new_group'
+  - 'use groups transition keep_in_draft'
   - 'use groups transition publish'
   - 'use groups transition unpublish'
   - 'use groups transition upgrade_to_draft'
