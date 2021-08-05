@@ -1,0 +1,31 @@
+uuid: 91d22d7b-fbd3-44fd-bc83-540bb6e1ac07
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_video_media
+    - media.type.remote_video
+    - media.type.video
+    - node.type.video
+id: node.video.field_video_media
+field_name: field_video_media
+entity_type: node
+bundle: video
+label: Video
+description: '<p>You can upload a video or link a remote video from : youtube, daylimotion, vimeo.</p>'
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:media'
+  handler_settings:
+    target_bundles:
+      remote_video: remote_video
+      video: video
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: remote_video
+field_type: entity_reference
