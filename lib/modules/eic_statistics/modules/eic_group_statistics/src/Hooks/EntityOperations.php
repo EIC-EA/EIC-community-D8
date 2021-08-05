@@ -5,6 +5,7 @@ namespace Drupal\eic_group_statistics\Hooks;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\eic_comments\CommentsHelper;
 use Drupal\eic_group_statistics\GroupStatisticsSearchApiReindex;
 use Drupal\eic_group_statistics\GroupStatisticsStorageInterface;
 use Drupal\eic_group_statistics\GroupStatisticTypes;
@@ -50,6 +51,13 @@ class EntityOperations implements ContainerInjectionInterface {
   protected $entityUsage;
 
   /**
+   * The EIC Comments helper service.
+   *
+   * @var \Drupal\eic_comments\CommentsHelper
+   */
+  protected $commentsHelper;
+
+  /**
    * Constructs a EntityOperation object.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
@@ -60,17 +68,21 @@ class EntityOperations implements ContainerInjectionInterface {
    *   The Group statistics search API Reindex service.
    * @param \Drupal\entity_usage\EntityUsageInterface $entity_usage
    *   The Entity Usage service.
+   * @param \Drupal\eic_comments\CommentsHelper $comments_helper
+   *   The EIC Comments helper service.
    */
   public function __construct(
     EntityTypeManagerInterface $entity_type_manager,
     GroupStatisticsStorageInterface $group_statistics_storage,
     GroupStatisticsSearchApiReindex $group_statistics_sear_api_reindex,
-    EntityUsageInterface $entity_usage
+    EntityUsageInterface $entity_usage,
+    CommentsHelper $comments_helper
   ) {
     $this->entityTypeManager = $entity_type_manager;
     $this->groupStatisticsStorage = $group_statistics_storage;
     $this->groupStatisticsSearchApiReindex = $group_statistics_sear_api_reindex;
     $this->entityUsage = $entity_usage;
+    $this->commentsHelper = $comments_helper;
   }
 
   /**
@@ -81,7 +93,8 @@ class EntityOperations implements ContainerInjectionInterface {
       $container->get('entity_type.manager'),
       $container->get('eic_group_statistics.storage'),
       $container->get('eic_group_statistics.search_api.reindex'),
-      $container->get('entity_usage.usage')
+      $container->get('entity_usage.usage'),
+      $container->get('eic_comments.helper')
     );
   }
 
@@ -387,6 +400,29 @@ class EntityOperations implements ContainerInjectionInterface {
         $re_index = FALSE;
         break;
 
+    }
+
+    // Increments or decrements group comments statistics.
+    if ($entity->hasField('field_comments')) {
+      $num_comments = 0;
+      // Increments all node comments to the group statistics when node status
+      // changes from unpublished to published.
+      if (!$entity->original->isPublished() && $entity->isPublished()) {
+        $num_comments = $this->commentsHelper->countNodeComments($entity);
+        $this->groupStatisticsStorage->increment($group, GroupStatisticTypes::STAT_TYPE_COMMENTS, $num_comments);
+        $re_index = TRUE;
+      }
+      elseif ($entity->original->isPublished() && !$entity->isPublished()) {
+        // Decrements all node comments in the group statistics when node status
+        // changes from unpublished to published.
+        $num_comments = $this->commentsHelper->countNodeComments($entity);
+        $this->groupStatisticsStorage->decrement($group, GroupStatisticTypes::STAT_TYPE_COMMENTS, $num_comments);
+        $re_index = TRUE;
+      }
+
+      if ($num_comments > 0) {
+        $re_index = TRUE;
+      }
     }
 
     if (!$re_index) {
