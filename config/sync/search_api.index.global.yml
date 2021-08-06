@@ -24,14 +24,14 @@ dependencies:
     - field.storage.user.field_last_name
     - field.storage.media.oe_media_image
     - field.storage.user.field_media
+    - field.storage.group.field_vocab_geo
     - field.storage.group.field_thumbnail
     - field.storage.group.field_vocab_topics
     - field.storage.group.field_body
-    - field.storage.group.field_vocab_geo
-    - field.storage.node.field_body
     - field.storage.node.field_vocab_geo
-    - field.storage.node.field_subtitle
     - field.storage.node.field_vocab_topics
+    - field.storage.node.field_body
+    - field.storage.node.field_subtitle
     - field.storage.node.field_discussion_type
     - field.storage.profile.field_body
     - field.storage.profile.field_location_address
@@ -173,6 +173,16 @@ field_settings:
     dependencies:
       config:
         - field.storage.node.field_vocab_geo
+  content_field_vocab_geo_string:
+    label: 'Regions & Countries » Taxonomy term » Name'
+    datasource_id: 'entity:node'
+    property_path: 'field_vocab_geo:entity:name'
+    type: string
+    dependencies:
+      config:
+        - field.storage.node.field_vocab_geo
+      module:
+        - taxonomy
   content_field_vocab_topics:
     label: '[Content] Topics'
     datasource_id: 'entity:node'
@@ -181,6 +191,16 @@ field_settings:
     dependencies:
       config:
         - field.storage.node.field_vocab_topics
+  content_field_vocab_topics_string:
+    label: 'Topics » Taxonomy term » Name'
+    datasource_id: 'entity:node'
+    property_path: 'field_vocab_topics:entity:name'
+    type: string
+    dependencies:
+      config:
+        - field.storage.node.field_vocab_topics
+      module:
+        - taxonomy
   content_first_name:
     label: 'Authored by » User » First name'
     datasource_id: 'entity:node'
@@ -301,6 +321,16 @@ field_settings:
     dependencies:
       config:
         - field.storage.group.field_vocab_geo
+  group_field_vocab_geo_string:
+    label: 'Regions & Countries » Taxonomy term » Name'
+    datasource_id: 'entity:group'
+    property_path: 'field_vocab_geo:entity:name'
+    type: string
+    dependencies:
+      config:
+        - field.storage.group.field_vocab_geo
+      module:
+        - taxonomy
   group_field_vocab_topics:
     label: '[Group] Topics'
     datasource_id: 'entity:group'
