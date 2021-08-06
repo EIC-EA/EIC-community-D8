@@ -1,5 +1,6 @@
 permissions:
   - 'access members overview'
+public_permissions: []
 roles:
   - 'group-member'
   - 'group-admin'

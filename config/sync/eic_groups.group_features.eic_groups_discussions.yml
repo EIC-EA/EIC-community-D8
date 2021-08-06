@@ -1,6 +1,8 @@
 permissions:
   - 'access discussions overview'
   - 'create group_node:discussion entity'
+public_permissions:
+  - 'access discussions overview'
 roles:
   - group-member
   - group-admin
