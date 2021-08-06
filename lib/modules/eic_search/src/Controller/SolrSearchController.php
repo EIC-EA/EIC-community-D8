@@ -247,10 +247,6 @@ class SolrSearchController extends ControllerBase {
    * @param $fq
    */
   private function generateQueryPrivateContent(&$fq) {
-    if (!\Drupal::currentUser()->isAnonymous()) {
-      return;
-    }
-
     $roles = \Drupal::currentUser()->getRoles();
 
     if (in_array(UserHelper::ROLE_TRUSTED_USER, $roles)) {
