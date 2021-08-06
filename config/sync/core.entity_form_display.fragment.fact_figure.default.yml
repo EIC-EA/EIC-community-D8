@@ -6,6 +6,8 @@ dependencies:
     - field.field.fragment.fact_figure.field_body
     - field.field.fragment.fact_figure.field_fact_figure_type
     - fragments.fragment_type.fact_figure
+  module:
+    - text
 _core:
   default_config_hash: xpnHNb_C-wmh-Cp3nlHfEDhcNd6yJ23NlofHaRCP0i0
 id: fragment.fact_figure.default
@@ -14,12 +16,12 @@ bundle: fact_figure
 mode: default
 content:
   field_body:
-    weight: 2
+    weight: 26
     settings:
       rows: 5
       placeholder: ''
     third_party_settings: {  }
-    type: string_textarea
+    type: text_textarea
     region: content
   field_fact_figure_type:
     weight: 1
