@@ -3,6 +3,7 @@
 namespace Drupal\eic_search\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\eic_user\UserHelper;
 use Drupal\group\GroupMembership;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\user\Entity\User;
@@ -252,7 +253,7 @@ class SolrSearchController extends ControllerBase {
 
     $roles = \Drupal::currentUser()->getRoles();
 
-    if (in_array('trusted_user', $roles)) {
+    if (in_array(UserHelper::ROLE_TRUSTED_USER, $roles)) {
       return;
     }
 
