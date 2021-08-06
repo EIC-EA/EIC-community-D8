@@ -250,6 +250,12 @@ class SolrSearchController extends ControllerBase {
       return;
     }
 
+    $roles = \Drupal::currentUser()->getRoles();
+
+    if (in_array('trusted_user', $roles)) {
+      return;
+    }
+
     $fq .= " AND bs_content_is_private:false";
   }
 
