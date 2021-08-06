@@ -1,0 +1,54 @@
+{#
+/**
+ * @file
+ * Theme override to display a single page.
+ *
+ * @see ./themes/custom/eic_community/patterns/compositions/group/group.full--wiki.html.twig
+ */
+#}
+{% set _wrap_content = true %}
+
+{% set layout = {
+  extra_classes: 'ecl-base-layout--is-fluid'
+} %}
+
+{% extends "@theme/patterns/compositions/group/group.full.html.twig"%}
+
+{%  set is_wiki_page = "wiki-no-pages-message" in page.content.system_main["#markup"]|render  %}
+
+{% if is_wiki_page %}
+  {% set sidebar = "" %}
+  {% set extra_classes = "ecl-editorial-article--has-reversed-layout ecl-editorial-article--is-ready" %}
+{% else %}
+  {% set sidebar = page.sidebar %}
+  {% set extra_classes = "ecl-editorial-article--has-reversed-layout ecl-editorial-article--is-collapsible ecl-editorial-article--is-ready" %}
+{% endif %}
+{% set page = page|merge({'sidebar': null}) %}
+
+{% block content %}
+  <section class="ecl-section-wrapper">
+      <div class="ecl-editorial-article {{ extra_classes }}">
+        <div class="ecl-container">
+          <div class="ecl-editorial-article__wrapper">
+            {{ page.content }}
+            {% if is_wiki_page is same as(false) %}
+              <aside class="ecl-editorial-article__aside">
+                <div class="ecl-editorial-article__aside-wrapper">
+                  {{ sidebar }}
+                </div>
+              </aside>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </section>
+{% endblock %}
+
+{% block breadcrumbs %}
+  {{ page.breadcrumbs }}
+{% endblock %}
+
+{% block page_header %}
+  {{ page.page_header }}
+{% endblock %}
+
