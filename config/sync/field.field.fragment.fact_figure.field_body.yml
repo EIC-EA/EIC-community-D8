@@ -1,21 +1,21 @@
-uuid: 71faadc9-b8af-4bd3-bac6-c5ae0a552923
+uuid: 96eb1f8b-bdfd-47a8-a547-87356e989c0a
 langcode: en
 status: true
 dependencies:
   config:
     - field.storage.fragment.field_body
     - fragments.fragment_type.fact_figure
-_core:
-  default_config_hash: Gxv9O9l3CMRdQ6t9tzQCYIMdliMJrYHsUue-JGy_WwY
+  module:
+    - text
 id: fragment.fact_figure.field_body
 field_name: field_body
 entity_type: fragment
 bundle: fact_figure
 label: Description
 description: ''
-required: true
+required: false
 translatable: true
 default_value: {  }
 default_value_callback: ''
 settings: {  }
-field_type: string_long
+field_type: text_long

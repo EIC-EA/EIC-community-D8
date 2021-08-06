@@ -123,19 +123,49 @@ class EicGroupsGroupFeaturePluginBase extends GroupFeaturePluginBase {
   protected function handlePermissions(GroupInterface $group, $op = 'enable') {
     if (($group_permissions = $this->getGroupPermissions($group)) && $group_permissions instanceof GroupPermissionInterface) {
       $config = $this->configFactory->get('eic_groups.group_features.' . $this->getPluginId());
-      foreach ($config->get('roles') as $role) {
-        switch ($op) {
-          case 'enable':
-            $group_permissions = $this->addRolePermissionsToGroup($group_permissions, $role, $config->get('permissions'));
-            break;
 
-          case 'disable':
-            $group_permissions = $this->removeRolePermissionsFromGroup($group_permissions, $role, $config->get('permissions'));
-            break;
+      $roles = $config->get('roles');
 
+      // Initialize array of public role IDs to update group permissions.
+      $public_role_ids = [];
+
+      // Adds array of public roles to enable/disable group permissions for the
+      // current group menu link. We check if every public role has permission
+      // to view the group, otherwise the role is not allowed to view the menu
+      // link.
+      foreach ($group->getGroupType()->getRoles(TRUE) as $role) {
+        if (in_array($role->id(), $this->getGroupPublicRoleIds($group)) && $role->hasPermission('view group')) {
+          $public_role_ids[] = $role->id();
         }
+      }
+
+      switch ($op) {
+        case 'enable':
+          // Adds group permission for the private roles.
+          foreach ($roles as $role) {
+            $group_permissions = $this->addRolePermissionsToGroup($group_permissions, $role, $config->get('permissions'));
+          }
+
+          // Adds group permission for the public roles.
+          foreach ($public_role_ids as $role) {
+            $group_permissions = $this->addRolePermissionsToGroup($group_permissions, $role, $config->get('public_permissions'));
+          }
+          break;
+
+        case 'disable':
+          // Removes permission from the private roles.
+          foreach ($roles as $role) {
+            $group_permissions = $this->removeRolePermissionsFromGroup($group_permissions, $role, $config->get('permissions'));
+          }
+
+          // Removes group permission from the public roles.
+          foreach ($public_role_ids as $role) {
+            $group_permissions = $this->removeRolePermissionsFromGroup($group_permissions, $role, $config->get('public_permissions'));
+          }
+          break;
 
       }
+
       $this->saveGroupPermissions($group_permissions);
       return TRUE;
     }
@@ -178,6 +208,22 @@ class EicGroupsGroupFeaturePluginBase extends GroupFeaturePluginBase {
     // argument.
     $url_params = ['group' => $group->id()];
     return Url::fromRoute(static::PRIMARY_OVERVIEW_ROUTE, $url_params);
+  }
+
+  /**
+   * Returns the public role IDs of a group.
+   *
+   * @param \Drupal\group\Entity\GroupInterface $group
+   *   The group entity object.
+   *
+   * @return array
+   *   An array of role IDs of the group.
+   */
+  protected function getGroupPublicRoleIds(GroupInterface $group) {
+    return [
+      $group->getGroupType()->getAnonymousRoleId(),
+      $group->getGroupType()->getOutsiderRoleId(),
+    ];
   }
 
 }

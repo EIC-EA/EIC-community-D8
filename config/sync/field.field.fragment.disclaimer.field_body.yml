@@ -1,10 +1,12 @@
-uuid: 0b8d3105-4561-4dd4-b1d7-d3bacd602d29
+uuid: c24ecc5e-a949-4ef2-9e65-6d4ce154b7c7
 langcode: en
 status: true
 dependencies:
   config:
     - field.storage.fragment.field_body
     - fragments.fragment_type.disclaimer
+  module:
+    - text
 id: fragment.disclaimer.field_body
 field_name: field_body
 entity_type: fragment
@@ -12,8 +14,8 @@ bundle: disclaimer
 label: Body
 description: ''
 required: true
-translatable: false
+translatable: true
 default_value: {  }
 default_value_callback: ''
 settings: {  }
-field_type: string_long
+field_type: text_long

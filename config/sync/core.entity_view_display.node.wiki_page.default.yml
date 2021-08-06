@@ -3,14 +3,12 @@ langcode: en
 status: true
 dependencies:
   config:
-    - core.entity_view_display.comment.node_comment.default
     - field.field.node.wiki_page.field_body
     - field.field.node.wiki_page.field_comments
     - field.field.node.wiki_page.field_related_downloads
     - field.field.node.wiki_page.field_related_media
     - node.type.wiki_page
   module:
-    - oec_group_comments
     - text
     - user
 id: node.wiki_page.default
@@ -19,24 +17,15 @@ bundle: wiki_page
 mode: default
 content:
   field_body:
-    weight: 1
+    weight: 2
     label: hidden
     settings: {  }
     third_party_settings: {  }
     type: text_default
     region: content
-  field_comments:
-    weight: 4
-    label: above
-    settings:
-      view_mode: default
-      pager_id: 0
-    third_party_settings: {  }
-    type: comment_group_content
-    region: content
   field_related_downloads:
     type: entity_reference_entity_view
-    weight: 3
+    weight: 4
     label: hidden
     settings:
       view_mode: download
@@ -45,7 +34,7 @@ content:
     region: content
   field_related_media:
     type: entity_reference_entity_view
-    weight: 2
+    weight: 3
     label: hidden
     settings:
       view_mode: oe_theme_main_content
@@ -69,6 +58,7 @@ content:
     type: boolean
 hidden:
   extra_field_eic_theme_helper_short_title_with_fallback: true
+  field_comments: true
   langcode: true
   published_at: true
   search_api_excerpt: true
