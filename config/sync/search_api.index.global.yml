@@ -10,6 +10,7 @@ dependencies:
     - media
     - taxonomy
     - node
+    - eic_private_content
     - profile
     - search_api
     - address
@@ -212,6 +213,14 @@ field_settings:
       module:
         - node
         - user
+  content_is_private:
+    label: 'Only visible to community members'
+    datasource_id: 'entity:node'
+    property_path: private
+    type: boolean
+    dependencies:
+      module:
+        - eic_private_content
   content_last_name:
     label: 'Authored by » User » Last name'
     datasource_id: 'entity:node'

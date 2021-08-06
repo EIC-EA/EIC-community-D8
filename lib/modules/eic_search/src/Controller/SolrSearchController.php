@@ -3,6 +3,7 @@
 namespace Drupal\eic_search\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\eic_user\UserHelper;
 use Drupal\group\GroupMembership;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\user\Entity\User;
@@ -123,6 +124,7 @@ class SolrSearchController extends ControllerBase {
 
     $this->generateQueryInterests($fq, $facets_interests);
     $this->generateQueryUserGroupsAndContents($fq, $facets_interests);
+    $this->generateQueryPrivateContent($fq);
 
     $solariumQuery->addParam('fq', $fq);
 
@@ -239,6 +241,19 @@ class SolrSearchController extends ControllerBase {
     $groups_membership_string = $groups_membership_id ? implode(' OR ', $groups_membership_id) : -1;
 
     $fq .= " AND (its_group_id_integer:($groups_membership_string) OR ss_global_group_parent_id:($groups_membership_string) OR its_content_uid:($groups_membership_string))";
+  }
+
+  /**
+   * @param $fq
+   */
+  private function generateQueryPrivateContent(&$fq) {
+    $roles = \Drupal::currentUser()->getRoles();
+
+    if (in_array(UserHelper::ROLE_TRUSTED_USER, $roles)) {
+      return;
+    }
+
+    $fq .= " AND bs_content_is_private:false";
   }
 
 }

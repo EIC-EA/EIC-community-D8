@@ -105,6 +105,10 @@ function eic_search_search_api_solr_documents_alter(array &$documents, \Drupal\s
     $document->addField('sm_content_field_vocab_topics_string', $topics);
     $document->addField('sm_content_field_vocab_geo_string', $geo);
 
+    if (!array_key_exists('bs_content_is_private', $fields)) {
+      $document->addField('bs_content_is_private', FALSE);
+    }
+
     $group_parent_label = '';
     $group_parent_url = '';
     $group_parent_id = -1;
