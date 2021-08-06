@@ -6,6 +6,11 @@ eic_groups.group_features.*:
       label: 'Public Permissions'
       sequence:
         type: string
+    permissions:
+      type: sequence
+      label: 'Public Permissions'
+      sequence:
+        type: string
     roles:
       type: sequence
       label: 'Roles'

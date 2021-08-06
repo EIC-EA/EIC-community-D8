@@ -10,6 +10,7 @@ dependencies:
     - fragments.fragment_type.banner
   module:
     - link
+    - text
 id: fragment.banner.default
 targetEntityType: fragment
 bundle: banner
@@ -20,7 +21,7 @@ content:
     label: hidden
     settings: {  }
     third_party_settings: {  }
-    type: basic_string
+    type: text_default
     region: content
   field_cta_link:
     weight: 2
