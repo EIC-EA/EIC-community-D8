@@ -9,3 +9,11 @@ access members overview:
   title: 'Access Members overview'
   description: 'Gives access to the Members overview.'
   restrict access: FALSE
+access wiki overview:
+  title: 'Access Wiki overview'
+  description: 'Gives access to the Wiki overview.'
+  restrict access: FALSE
+access files overview:
+  title: 'Access Files overview'
+  description: 'Gives access to the Files overview.'
+  restrict access: FALSE
