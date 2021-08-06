@@ -4,9 +4,9 @@ namespace Drupal\eic_search\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\group\GroupMembership;
-use Drupal\profile\Entity\Profile;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\user\Entity\User;
+use Solarium\Component\ComponentAwareQueryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -60,6 +60,14 @@ class SolrSearchController extends ControllerBase {
     /** @var \Drupal\search_api_solr\Plugin\SolrConnector\BasicAuthSolrConnector $connector */
     $connector = $backend->getSolrConnector();
     $solariumQuery = $connector->getSelectQuery();
+
+    $spell_check = $solariumQuery->getSpellcheck();
+    $spell_check->setDictionary('en');
+    $spell_check->setAccuracy(0.5);
+    $spell_check->setQuery($search_value);
+    $spell_check->setCollate(TRUE);
+    $spell_check->setReload(TRUE);
+    $solariumQuery->setComponent(ComponentAwareQueryInterface::COMPONENT_SPELLCHECK, $spell_check);
 
     if ($source_class) {
       /** @var \Drupal\eic_search\Search\Sources\SourceTypeInterface $source */

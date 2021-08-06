@@ -76,18 +76,24 @@ function eic_search_search_api_solr_documents_alter(array &$documents, \Drupal\s
         $type = $fields['ss_content_type'];
         $date = $fields['ds_content_created'];
         $fullname = $fields['ss_content_first_name'] . ' ' . $fields['ss_content_last_name'];
+        $topics = $fields['sm_content_field_vocab_topics_string'];
+        $geo = $fields['sm_content_field_vocab_geo_string'];
         break;
       case 'entity:group':
         $title = $fields['ss_group_label_string'];
         $type = 'group';
         $date = $fields['ds_group_created'];
         $fullname = $fields['ss_group_user_first_name'] . ' ' . $fields['ss_group_user_last_name'];
+        $topics = $fields['ss_group_topic_name'];
+        $geo = $fields['ss_group_field_vocab_geo_string'];
         break;
       default:
         $title = '';
         $type = '';
         $date = '';
         $fullname = '';
+        $topics = [];
+        $topics = [];
         break;
     }
 
@@ -96,6 +102,8 @@ function eic_search_search_api_solr_documents_alter(array &$documents, \Drupal\s
     $document->addField('ss_global_content_type', $type);
     $document->addField('ss_global_created_date', $date);
     $document->addField('ss_global_fullname', $fullname);
+    $document->addField('sm_content_field_vocab_topics_string', $topics);
+    $document->addField('sm_content_field_vocab_geo_string', $geo);
 
     if (!array_key_exists('bs_content_is_private', $fields)) {
       $document->addField('bs_content_is_private', FALSE);

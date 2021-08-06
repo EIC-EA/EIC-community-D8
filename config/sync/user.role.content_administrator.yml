@@ -26,6 +26,7 @@ permissions:
   - 'publish archived content'
   - 'unflag recommend_group'
   - 'use groups transition archive'
+  - 'use groups transition keep_in_draft'
   - 'use groups transition publish'
   - 'use groups transition upgrade_to_draft'
   - 'use text format basic_text'
