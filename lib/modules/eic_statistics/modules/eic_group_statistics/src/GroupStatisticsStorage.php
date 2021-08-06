@@ -141,36 +141,9 @@ class GroupStatisticsStorage implements GroupStatisticsStorageInterface {
    * {@inheritdoc}
    */
   public function setMultipleGroupStatistics(array $groups_statistics) {
-    $query = $this->connection->merge('eic_group_statistics')
-      ->key('gid');
-
-    $fields = [];
     foreach ($groups_statistics as $group_statistics) {
       $this->setGroupStatistics($group_statistics);
-      // We make sure the array item is an instance of GroupStatistics,
-      // otherwise we skip it.
-      if (!($group_statistics instanceof GroupStatistics)) {
-        continue;
-      }
-      $fields[] = [
-        'gid' => $group_statistics->getGroupId(),
-        'members' => $group_statistics->getMembersCount(),
-        'comments' => $group_statistics->getCommentsCount(),
-        'files' => $group_statistics->getFilesCount(),
-        'events' => $group_statistics->getEventsCount(),
-      ];
     }
-
-    // Nothing to update. We can exit.
-    if (empty($fields)) {
-      return;
-    }
-
-    $query->fields($fields)
-      ->execute();
-
-    // Invalidate group cache tags.
-    Cache::invalidateTags(['group:' . $group_statistics->getGroupId()]);
   }
 
   /**

@@ -4,6 +4,7 @@ namespace Drupal\eic_groups\Plugin\GroupContentEnabler;
 
 use Drupal\group\Entity\GroupInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\group\Access\GroupAccessResult;
 use Drupal\eic_groups\GroupsModerationHelper;
 use Drupal\eic_user\UserHelper;
@@ -52,6 +53,25 @@ class GroupInvitation extends GroupInvitationBase {
           $access = GroupAccessResult::forbidden()
             ->addCacheableDependency($account)
             ->addCacheableDependency($group);
+        }
+
+        $membership = $group->getMember($account);
+
+        // If the user is not a member of the group, we do nothing.
+        if (!$membership) {
+          break;
+        }
+
+        // We allow access if the user is the group owner or a group admin, and
+        // moderation state is set to DRAFT.
+        if ($group->get('moderation_state')->value === GroupsModerationHelper::GROUP_DRAFT_STATE) {
+          if (in_array(EICGroupsHelper::GROUP_OWNER_ROLE, array_keys($membership->getRoles())) ||
+              in_array(EICGroupsHelper::GROUP_ADMINISTRATOR_ROLE, array_keys($membership->getRoles()))
+          ) {
+            $access = GroupAccessResult::allowed()
+              ->addCacheableDependency($account)
+              ->addCacheableDependency($group);
+          }
         }
         break;
 
