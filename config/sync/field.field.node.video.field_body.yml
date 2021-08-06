@@ -1,0 +1,21 @@
+uuid: 1887a4f4-c125-4f5c-9b6a-0e6f1ed57cb4
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_body
+    - node.type.video
+  module:
+    - text
+id: node.video.field_body
+field_name: field_body
+entity_type: node
+bundle: video
+label: Body
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long
