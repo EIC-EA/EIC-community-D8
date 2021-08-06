@@ -269,6 +269,10 @@
       visibility: hidden;
     }
 
+    #{$node}--organisation &, #{$node}--filelist & {
+      margin-bottom:map-get($ecl-spacing, 'xs');
+    }
+
     #{$node}--organisation & {
       @include ecl-media-breakpoint-down('sm') {
         margin-bottom: 0;
@@ -323,6 +327,13 @@
 
     #{$node}--organisation & {
       margin-top: ecl-box-model('margin', 'controls');
+    }
+
+    #{$node}--filelist & {
+      width: 100%;
+      border-top: ecl-border();
+      margin-top: ecl-layout('gutter', 'controls');
+      padding-top: ecl-layout('gutter', 'controls');
     }
 
     // // START: Event specific Card style for mobile
@@ -563,6 +574,9 @@
         width: 50%;
       }
     }
+    #{$node}--filelist & {
+        margin-top:0;
+    }
 
     #{$node}--story#{$node}--has-compact-layout & {
       width: auto;
@@ -695,7 +709,7 @@
       @include ecl-responsive-font('label');
     }
 
-    #{$node}--story  & {
+    #{$node}--story  &, #{$node}--filelist  & {
       text-transform: uppercase;
     }
 
@@ -860,5 +874,51 @@
   &__stat-icon {
     color: ecl-typography('color', 'label');
     margin-right: ecl-box-model('padding', 'controls');
+  }
+
+  /* file list teaser */
+  &--filelist {
+    padding: map-get($ecl-spacing, 's');
+    @include ecl-media-breakpoint-up('sm') {
+      flex-wrap: wrap;
+    }
+  }
+
+  &__files {
+    margin: map-get($ecl-spacing, 's') 0;
+    color: ecl-typography('color', 'meta');
+    font-size: ecl-typography('font-size', 'meta');
+  }
+
+  &__meta-content {
+    display: flex;
+  }
+
+  &__meta-content-item {
+    color: ecl-typography('color', 'meta');
+    display: flex;
+    align-items: center;
+    margin: map-get($ecl-spacing, 's') 0;
+
+    & + & {
+      margin-left: map-get($ecl-spacing, 'm');
+    }
+
+    > a {
+      color: ecl-typography('color', 'meta');
+      text-decoration: none;
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+
+    > .ecl-icon {
+      flex-shrink: 0;
+      margin-right: ecl-layout('gutter', 'meta');
+
+      @include ecl-media-breakpoint-up('lg') {
+        margin-right: ecl-layout('gutter--lg', 'meta');
+      }
+    }
   }
 }
