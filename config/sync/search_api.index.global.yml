@@ -276,6 +276,12 @@ field_settings:
     dependencies:
       module:
         - node
+  flag_highlight_content_count:
+    label: 'Highlight (Content) count'
+    property_path: flag_highlight_content_count
+    type: integer
+    indexed_locked: true
+    type_locked: true
   flag_recommend_group_count:
     label: 'Group Recommend count'
     property_path: flag_recommend_group_count
@@ -800,6 +806,7 @@ processor_settings:
   entity_status: {  }
   flag_count_indexer:
     flag_index:
+      - highlight_content
       - recommend_group
   group_content_access:
     weights:
