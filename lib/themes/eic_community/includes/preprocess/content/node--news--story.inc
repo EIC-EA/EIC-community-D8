@@ -9,6 +9,7 @@ use Drupal\Component\Utility\Xss;
 use Drupal\Core\Block\BlockPluginInterface;
 use Drupal\Core\Render\Markup;
 use Drupal\eic_community\ValueObject\ImageValueObject;
+use Drupal\eic_private_content\PrivateContentConst;
 use Drupal\file\Entity\File;
 
 /**
@@ -48,7 +49,9 @@ function _eic_community_preprocess_node_news_story(array &$variables) {
 
   if (!$node->get('field_header_visual')->isEmpty()) {
     /** @var \Drupal\media\Entity\Media $media */
-    $media = \Drupal::service('entity.repository')->getTranslationFromContext($node->get('field_header_visual')->entity, $node->language()->getId());
+    $media = \Drupal::service('entity.repository')
+      ->getTranslationFromContext($node->get('field_header_visual')->entity,
+        $node->language()->getId());
     $image_item = ImageValueObject::fromImageItem($media->get('oe_media_image')->first());
     $item['image'] = [
       'src' => $image_item->getSource(),
@@ -73,12 +76,16 @@ function _eic_community_preprocess_node_news_story(array &$variables) {
       ];
     }
 
-    $share_block = \Drupal::service('plugin.manager.block')
-      ->createInstance('social_share', []);
-    if ($share_block instanceof BlockPluginInterface) {
-      $build = $share_block->build();
-      $build['#title'] = t('Share');
-      $variables['social_share'] = $build;
+    if ($node->hasField(PrivateContentConst::FIELD_NAME)
+      && !$node->get(PrivateContentConst::FIELD_NAME)->value
+    ) {
+      $share_block = \Drupal::service('plugin.manager.block')
+        ->createInstance('social_share', []);
+      if ($share_block instanceof BlockPluginInterface) {
+        $build = $share_block->build();
+        $build['#title'] = t('Share');
+        $variables['social_share'] = $build;
+      }
     }
 
     _eic_community_story_contributors($variables);
