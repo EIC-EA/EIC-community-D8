@@ -11,11 +11,11 @@ use Drupal\node\NodeInterface;
 use Drupal\user\Entity\User;
 
 /**
- * Class FlagGroupContentAccessCheck
+ * Class HighlightGroupContentAccessCheck
  *
  * @package Drupal\eic_groups\Access
  */
-class HighlightGroupContent implements AccessInterface {
+class HighlightGroupContentAccessCheck implements AccessInterface {
 
   const SUPPORTED_PLUGIN_IDS = [
     'group-group_node-document',
