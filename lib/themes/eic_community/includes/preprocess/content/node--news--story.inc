@@ -50,8 +50,10 @@ function _eic_community_preprocess_node_news_story(array &$variables) {
   if (!$node->get('field_header_visual')->isEmpty()) {
     /** @var \Drupal\media\Entity\Media $media */
     $media = \Drupal::service('entity.repository')
-      ->getTranslationFromContext($node->get('field_header_visual')->entity,
-        $node->language()->getId());
+      ->getTranslationFromContext(
+        $node->get('field_header_visual')->entity,
+        $node->language()->getId()
+      );
     $image_item = ImageValueObject::fromImageItem($media->get('oe_media_image')->first());
     $item['image'] = [
       'src' => $image_item->getSource(),
