@@ -32,7 +32,7 @@ RUN apt-get update -y; \
 COPY --from=composer:1.10 /usr/bin/composer /usr/local/bin/
 
 # Change the fpm user
-RUN groupadd -g ${GID} web \
+RUN groupadd -o -g ${GID} web \
   && useradd -d /var/www/ -s /usr/sbin/nologin -u ${UID} -g ${GID} -m -d /home/web web \
   && sed -i s/'user = www-data'/'user = web'/g /usr/local/etc/php-fpm.d/www.conf \
   && sed -i s/'group = www-data'/'group = web'/g /usr/local/etc/php-fpm.d/www.conf \
