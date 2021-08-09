@@ -11,14 +11,13 @@ dependencies:
     - taxonomy
     - node
     - eic_private_content
+    - paragraphs
     - profile
     - search_api
     - address
     - eic_group_statistics
     - eic_search
-    - flag_search_api
     - content_moderation
-    - flag
     - group_permissions
   config:
     - field.storage.user.field_first_name
@@ -30,6 +29,10 @@ dependencies:
     - field.storage.group.field_vocab_topics
     - field.storage.group.field_body
     - field.storage.node.field_vocab_geo
+    - field.storage.node.field_gallery_slides
+    - field.storage.paragraph.field_gallery_slide_legend
+    - field.storage.media.oe_media_file
+    - field.storage.paragraph.field_gallery_slide_media
     - field.storage.node.field_vocab_topics
     - field.storage.node.field_body
     - field.storage.node.field_subtitle
@@ -213,6 +216,55 @@ field_settings:
       module:
         - node
         - user
+  content_gallery_slide_filesize:
+    label: 'Slides » Paragraph » Media » Media » File » File » File size'
+    datasource_id: 'entity:node'
+    property_path: 'field_gallery_slides:entity:field_gallery_slide_media:entity:oe_media_file:entity:filesize'
+    type: integer
+    dependencies:
+      config:
+        - field.storage.media.oe_media_file
+        - field.storage.node.field_gallery_slides
+        - field.storage.paragraph.field_gallery_slide_media
+      module:
+        - file
+        - media
+        - paragraphs
+  content_gallery_slide_id_array:
+    label: 'Slides » Paragraph » ID'
+    datasource_id: 'entity:node'
+    property_path: 'field_gallery_slides:entity:id'
+    type: string
+    dependencies:
+      config:
+        - field.storage.node.field_gallery_slides
+      module:
+        - paragraphs
+  content_gallery_slide_legend:
+    label: 'Slides » Paragraph » Legend'
+    datasource_id: 'entity:node'
+    property_path: 'field_gallery_slides:entity:field_gallery_slide_legend'
+    type: string
+    dependencies:
+      config:
+        - field.storage.node.field_gallery_slides
+        - field.storage.paragraph.field_gallery_slide_legend
+      module:
+        - paragraphs
+  content_gallery_slide_uri:
+    label: 'Slides » Paragraph » Media » Media » File » File » URI'
+    datasource_id: 'entity:node'
+    property_path: 'field_gallery_slides:entity:field_gallery_slide_media:entity:oe_media_file:entity:uri'
+    type: string
+    dependencies:
+      config:
+        - field.storage.media.oe_media_file
+        - field.storage.node.field_gallery_slides
+        - field.storage.paragraph.field_gallery_slide_media
+      module:
+        - file
+        - media
+        - paragraphs
   content_is_private:
     label: 'Only visible to community members'
     datasource_id: 'entity:node'
@@ -276,12 +328,6 @@ field_settings:
     dependencies:
       module:
         - node
-  flag_recommend_group_count:
-    label: 'Group Recommend count'
-    property_path: flag_recommend_group_count
-    type: integer
-    indexed_locked: true
-    type_locked: true
   group_content_entity_id:
     label: '[Group content] Content'
     datasource_id: 'entity:group_content'
@@ -749,10 +795,6 @@ datasource_settings:
     languages:
       default: true
       selected: {  }
-  'entity:flagging':
-    bundles:
-      default: true
-      selected: {  }
   'entity:group':
     bundles:
       default: true
@@ -798,9 +840,6 @@ processor_settings:
     weights:
       preprocess_query: -30
   entity_status: {  }
-  flag_count_indexer:
-    flag_index:
-      - recommend_group
   group_content_access:
     weights:
       preprocess_query: -30
