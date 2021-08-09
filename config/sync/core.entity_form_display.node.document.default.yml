@@ -12,6 +12,7 @@ dependencies:
     - comment
     - content_moderation
     - eic_content
+    - media_library
     - path
     - publication_date
     - scheduler
@@ -45,12 +46,9 @@ content:
   field_document_media:
     weight: 5
     settings:
-      match_operator: CONTAINS
-      match_limit: 10
-      size: 60
-      placeholder: ''
+      media_types: {  }
     third_party_settings: {  }
-    type: entity_reference_autocomplete
+    type: media_library_widget
     region: content
   field_post_activity:
     weight: 19
