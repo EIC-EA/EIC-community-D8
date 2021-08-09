@@ -93,7 +93,6 @@ function eic_search_search_api_solr_documents_alter(array &$documents, \Drupal\s
         $date = '';
         $fullname = '';
         $topics = [];
-        $topics = [];
         $geo = [];
         break;
     }
