@@ -37,6 +37,12 @@ class EntityTreeWidget extends WidgetBase {
       '#description' => $this->t('The number of top-level choices to make. Use <em>0</em> to remove the limit.', [], ['context' => 'eic_content']),
     ];
 
+    $element['disable_top_choices'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Disable top choices selection', [], ['context' => 'eic_content']),
+      '#default_value' => $this->getSetting('disable_top_choices'),
+    ];
+
     $element['load_all'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Load all items by default', [], ['context' => 'eic_content']),
@@ -69,6 +75,7 @@ class EntityTreeWidget extends WidgetBase {
         'match_top_level_limit' => 0,
         'items_to_load' => 25,
         'auto_select_parents' => TRUE,
+        'disable_top_choices' => FALSE,
         'load_all' => FALSE,
       ] + parent::defaultSettings();
   }
@@ -121,6 +128,7 @@ class EntityTreeWidget extends WidgetBase {
             ->toString(),
           'data-match-limit' => $this->getSetting('match_top_level_limit'),
           'data-items-to-load' => $this->getSetting('items_to_load'),
+          'data-disable-top' => $this->getSetting('disable_top_choices'),
           'data-load-all' => $this->getSetting('load_all'),
           'data-target-bundle' => $target_bundle,
           'data-target-entity' => $target_entity,
