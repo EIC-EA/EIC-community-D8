@@ -142,13 +142,15 @@ function eic_groups_form_alter(&$form, FormStateInterface $form_state, $form_id)
       \Drupal::classResolver(FormOperations::class)
         ->groupWikiPageFormAlter($form, $form_state, $form_id);
       break;
-
     case 'group_content_group-group_membership_group-join_form':
       // Do custom changes in group membership join form.
       \Drupal::classResolver(FormOperations::class)
         ->groupMembershipJoinFormAlter($form, $form_state, $form_id);
       break;
-
+    case 'group_content_group-group_invitation_add_form':
+      \Drupal::classResolver(FormOperations::class)
+        ->groupInvitationFormAlter($form, $form_state, $form_id);
+      break;
   }
 }
 
