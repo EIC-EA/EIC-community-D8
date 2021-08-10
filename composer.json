@@ -15,6 +15,7 @@
         "drupal/admin_toolbar": "^3.0",
         "drupal/block_content_permissions": "^1.10",
         "drupal/components": "^2.2",
+        "drupal/config_ignore": "^2.3",
         "drupal/config_split": "^1.7",
         "drupal/context": "^4.0@beta",
         "drupal/core": "^9.1",
