@@ -1,6 +1,6 @@
 {% set title_element = title_element|default('h2') %}
 
-<div class="ecl-teaser ecl-teaser--filelist ecl-teaser--is-highlightable {{ highlight.is_active ? 'ecl-teaser--is-highlighted' }} {{ extra_classes }}">
+<div class="ecl-teaser ecl-teaser--filelist {{ highlight.show_button ? 'ecl-teaser--is-highlightable' }} {{ highlight.is_active ? 'ecl-teaser--is-highlighted' }} {{ extra_classes }}">
   <figure class="ecl-teaser__image-wrapper">
     {% if image is not empty %}
       <img class="ecl-teaser__image" src="{{ image.src }}" alt="{{ image.alt }}" />
@@ -98,9 +98,11 @@
           {% endif %}
         </div>
       {% endif %}
-      {% include "@theme/patterns/components/highlight.html.twig" with highlight|default({})|merge({
-        icon_file_path: icon_file_path
-      }) only %}
+      {% if highlight.show_button %}
+        {% include "@theme/patterns/components/highlight.html.twig" with highlight|default({})|merge({
+          icon_file_path: icon_file_path
+        }) only %}
+      {% endif %}
     </div>
   </div>
   <div class="ecl-teaser__meta-footer">
