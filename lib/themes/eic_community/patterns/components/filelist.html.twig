@@ -1,0 +1,71 @@
+{% set file_title_element = file_title_element|default('h2') %}
+
+<article class="ecl-filelist">
+  <header class="ecl-filelist__header">
+    <h1 class="ecl-filelist__title">{{ title}}</h1>
+  </header>
+  <div class="ecl-filelist__content">
+    <div class="ecl-filelist__body">
+      {{ body|raw }}
+    </div>
+
+    <div class="ecl-filelist__list">
+      {% for file in files %}
+        <article class="ecl-filelist__file">
+          <header class="ecl-filelist__file-header">
+            <{{ file_title_element }} class="ecl-filelist__file-name">{{ file.name }}</{{ file_title_element }}>
+            <div class="ecl-filelist__file-type">{{ file.type }}</div>
+            <div class="ecl-filelist__file-stats">
+              {% for stat in file.stats %}
+                <div class="ecl-filelist__file-stat {{ stat.hide_label ? 'ecl-filelist__file-stat--hide-label' }}">
+                  {% if stat.icon is not empty and icon_file_path %}
+                    {% include '@ecl-twig/ec-component-icon/ecl-icon.html.twig' with {
+                      icon: {
+                        size: 'xs',
+                        path: icon_file_path,
+                        type: 'custom',
+                        name: stat.icon.name,
+                      },
+                      extra_classes: 'ecl-filelist__file-stat-icon',
+                    } only %}
+                  {% endif %}
+                  <span class="ecl-filelist__file-stat-label">{{ stat.label }}</span>
+                  <span class="ecl-filelist__file-stat-value">{{ stat.value }}</span>
+                </div>
+              {% endfor %}
+            </div>
+          </header>
+          <figure class="ecl-filelist__file-image-wrapper">
+            {% include '@ecl-twig/ec-component-icon/ecl-icon.html.twig' with {
+              icon: {
+                size: 'xs',
+                path: icon_file_path,
+                type: 'custom',
+                name: (file.mime_type in ['jpg', 'pdf', 'doc'] ? 'document_' ~ file.mime_type : 'document'),
+              },
+              extra_classes: 'ecl-filelist__file-image',
+            } only %}
+          </figure>
+          <footer class="ecl-filelist__file-footer">
+            {% include '@ecl-twig/ec-component-link/ecl-link.html.twig' with {
+              icon: {
+                size: 'xs',
+                path: icon_file_path,
+                type: 'custom',
+                name: 'download',
+              },
+              link: {
+                type: 'standalone',
+                icon_position: 'before',
+                path: file.path,
+                label: download,
+              },
+              type: 'cta',
+              extra_classes: 'ecl-link--button ecl-link--button-primary',
+            } only %}
+          </footer>
+        </article>
+      {% endfor %}
+    </div>
+  </div>
+</article>
