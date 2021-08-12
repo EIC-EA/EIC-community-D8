@@ -23,3 +23,5 @@ services:
     class: Drupal\eic_search\Search\Sources\LibrarySourceType
     tags:
       - { name: eic_search.source }
+  eic_search.solr_document_processor:
+    class: Drupal\eic_search\Service\SolrDocumentProcessor

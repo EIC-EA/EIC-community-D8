@@ -9,3 +9,6 @@ access members overview:
   title: 'Access Members overview'
   description: 'Gives access to the Members overview.'
   restrict access: FALSE
+highlight group content:
+  title: 'Highlight group content'
+  description: 'Allow the user to highlight a group content (e.g: file/document)'
