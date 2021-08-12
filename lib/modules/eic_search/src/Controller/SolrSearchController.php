@@ -3,6 +3,7 @@
 namespace Drupal\eic_search\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\eic_search\Search\Sources\SourceTypeInterface;
 use Drupal\eic_user\UserHelper;
 use Drupal\group\GroupMembership;
 use Drupal\taxonomy\Entity\Term;
@@ -70,6 +71,8 @@ class SolrSearchController extends ControllerBase {
     $spell_check->setReload(TRUE);
     $solariumQuery->setComponent(ComponentAwareQueryInterface::COMPONENT_SPELLCHECK, $spell_check);
 
+    $content_type_query = '';
+
     if ($source_class) {
       /** @var \Drupal\eic_search\Search\Sources\SourceTypeInterface $source */
       $source = array_key_exists($source_class, $sources) ? $sources[$source_class] : NULL;
@@ -86,6 +89,11 @@ class SolrSearchController extends ControllerBase {
       if ($current_group) {
         $group_id_field = $source->getPrefilteredGroupFieldId();
         $query_fields_string .= " AND ($group_id_field:($current_group))";
+      }
+
+      if ($content_types = $source->getPrefilteredContentType()) {
+        $allowed_content_type = implode(' OR ', $content_types);
+        $content_type_query = ' AND (' . SourceTypeInterface::SOLR_FIELD_CONTENT_TYPE_ID . ':(' . $allowed_content_type . '))';
       }
 
       $solariumQuery->addParam('q', $query_fields_string);
@@ -125,6 +133,10 @@ class SolrSearchController extends ControllerBase {
     $this->generateQueryInterests($fq, $facets_interests);
     $this->generateQueryUserGroupsAndContents($fq, $facets_interests);
     $this->generateQueryPrivateContent($fq);
+
+    if ($content_type_query) {
+      $fq .= $content_type_query;
+    }
 
     $solariumQuery->addParam('fq', $fq);
 

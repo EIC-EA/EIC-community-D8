@@ -29,6 +29,9 @@ dependencies:
     - field.storage.group.field_thumbnail
     - field.storage.group.field_vocab_topics
     - field.storage.group.field_body
+    - field.storage.media.field_media_file
+    - field.storage.node.field_document_media
+    - field.storage.node.field_language
     - field.storage.node.field_vocab_geo
     - field.storage.node.field_vocab_topics
     - field.storage.node.field_body
@@ -142,6 +145,16 @@ field_settings:
     dependencies:
       module:
         - node
+  content_document_name:
+    label: 'Document » Media » Name'
+    datasource_id: 'entity:node'
+    property_path: 'field_document_media:entity:name'
+    type: string
+    dependencies:
+      config:
+        - field.storage.node.field_document_media
+      module:
+        - media
   content_field_body_fulltext:
     label: '[Content] Body - Fulltext'
     datasource_id: 'entity:node'
@@ -221,6 +234,16 @@ field_settings:
     dependencies:
       module:
         - eic_private_content
+  content_language_string:
+    label: 'Language » Taxonomy term » Name'
+    datasource_id: 'entity:node'
+    property_path: 'field_language:entity:name'
+    type: string
+    dependencies:
+      config:
+        - field.storage.node.field_language
+      module:
+        - taxonomy
   content_last_name:
     label: 'Authored by » User » Last name'
     datasource_id: 'entity:node'
@@ -282,6 +305,27 @@ field_settings:
     type: integer
     indexed_locked: true
     type_locked: true
+  content_user_uid:
+    label: 'Authored by » User » User ID'
+    datasource_id: 'entity:node'
+    property_path: 'uid:entity:uid'
+    type: integer
+    dependencies:
+      module:
+        - node
+        - user
+  filename:
+    label: 'Document » Media » File » File » Filename'
+    datasource_id: 'entity:node'
+    property_path: 'field_document_media:entity:field_media_file:entity:filename'
+    type: string
+    dependencies:
+      config:
+        - field.storage.media.field_media_file
+        - field.storage.node.field_document_media
+      module:
+        - file
+        - media
   group_content_entity_id:
     label: '[Group content] Content'
     datasource_id: 'entity:group_content'

@@ -164,6 +164,7 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
       '#url' => Url::fromRoute('eic_groups.solr_search')->toString(),
       '#isAnonymous' => \Drupal::currentUser()->isAnonymous(),
       '#currentGroup' => $current_group_route instanceof GroupInterface ? $current_group_route->id() : NULL,
+      '#currentGroupUrl' => $current_group_route instanceof GroupInterface ? $current_group_route->toUrl()->toString() : NULL,
       '#enable_facet_interests' => $this->configuration['add_facet_interests'],
       '#enable_facet_my_groups' => $this->configuration['add_facet_my_groups'],
       '#translations' => [
