@@ -49,8 +49,8 @@ content:
 hidden:
   extra_field_eic_theme_helper_short_title_with_fallback: true
   field_comments: true
-  field_language: true
   field_gallery_slides: true
+  field_language: true
   field_vocab_geo: true
   field_vocab_topics: true
   langcode: true

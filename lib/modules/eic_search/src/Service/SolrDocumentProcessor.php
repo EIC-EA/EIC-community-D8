@@ -33,9 +33,24 @@ class SolrDocumentProcessor {
         $title = $fields['ss_content_title'];
         $type = $fields['ss_content_type'];
         $date = $fields['ds_content_created'];
-        $fullname = $fields['ss_content_first_name'] . ' ' . $fields['ss_content_last_name'];
-        $topics = $fields['sm_content_field_vocab_topics_string'];
-        $geo = $fields['sm_content_field_vocab_geo_string'];
+        $fullname = array_key_exists('ss_content_first_name', $fields) && array_key_exists('ss_content_last_name', $fields) ?
+          $fields['ss_content_first_name'] . ' ' . $fields['ss_content_last_name'] :
+          t('No name', [], ['context' => 'eic_search']);
+        $topics = array_key_exists('sm_content_field_vocab_topics_string', $fields) ?
+          $fields['sm_content_field_vocab_topics_string'] :
+          [];
+        $geo = array_key_exists('sm_content_field_vocab_geo_string', $fields) ?
+          $fields['sm_content_field_vocab_geo_string'] :
+          [];
+        $language = array_key_exists('ss_content_language_string', $fields) ?
+          $fields['ss_content_language_string'] :
+          t('English', [], ['context' => 'eic_search'])->render();
+        $user_url = '';
+        if (array_key_exists('its_content_uid', $fields)) {
+          $user = \Drupal\user\Entity\User::load($fields['its_content_uid']);
+          $user_url = $user instanceof \Drupal\user\UserInterface ? $user->toUrl()
+            ->toString() : '';
+        }
         break;
       case 'entity:group':
         $title = $fields['ss_group_label_string'];
@@ -44,6 +59,8 @@ class SolrDocumentProcessor {
         $fullname = $fields['ss_group_user_first_name'] . ' ' . $fields['ss_group_user_last_name'];
         $topics = $fields['ss_group_topic_name'];
         $geo = $fields['ss_group_field_vocab_geo_string'];
+        $language = t('English', [], ['context' => 'eic_search'])->render();
+        $user_url = '';
         break;
       default:
         $title = '';
@@ -52,6 +69,8 @@ class SolrDocumentProcessor {
         $fullname = '';
         $topics = [];
         $geo = [];
+        $language = t('English', [], ['context' => 'eic_search'])->render();
+        $user_url = '';
         break;
     }
 
@@ -89,8 +108,13 @@ class SolrDocumentProcessor {
     $document->addField('ss_global_content_type', $type);
     $document->addField('ss_global_created_date', $date);
     $document->addField('ss_global_fullname', $fullname);
+    $document->addField('ss_global_user_url', $user_url);
     $document->addField('sm_content_field_vocab_topics_string', $topics);
     $document->addField('sm_content_field_vocab_geo_string', $geo);
+
+    if (!array_key_exists('ss_content_language_string', $fields)) {
+      $document->addField('ss_content_language_string', $language);
+    }
   }
 
   /**

@@ -56,18 +56,13 @@ content:
       add_mode: dropdown
       form_display_mode: default
       default_paragraph_type: ''
+    third_party_settings: {  }
+    region: content
   field_language:
     weight: 6
     settings: {  }
     third_party_settings: {  }
     type: options_select
-    region: content
-  field_photos:
-    type: media_library_widget
-    weight: 5
-    settings:
-      media_types: {  }
-    third_party_settings: {  }
     region: content
   field_post_activity:
     weight: 21
