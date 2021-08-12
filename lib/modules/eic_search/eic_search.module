@@ -6,6 +6,7 @@
  */
 
 use Drupal\eic_groups\Constants\GroupVisibilityType;
+use Drupal\group\Entity\GroupContentInterface;
 
 /**
  * Implements hook_theme().
@@ -115,6 +116,10 @@ function eic_search_search_api_solr_documents_alter(array &$documents, \Drupal\s
 
     if (array_key_exists('its_content__group_content__entity_id_gid', $fields)) {
       $group_content_entity = \Drupal\group\Entity\GroupContent::load($fields['its_content__group_content__entity_id_gid']);
+      if (!$group_content_entity instanceof GroupContentInterface) {
+        continue;
+      }
+
       $group_parent_label = $group_content_entity->getGroup() instanceof \Drupal\group\Entity\GroupInterface ?
         $group_content_entity->getGroup()->label()
         : '';

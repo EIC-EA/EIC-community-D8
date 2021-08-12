@@ -27,3 +27,14 @@ eic_groups.group.publish.confirm_form:
     parameters:
       group:
         type: entity:group
+
+eic_groups.group.highlight_content:
+  path: '/group/{group}/highlight-content/{node}'
+  methods: [ POST ]
+  defaults:
+    _controller: '\Drupal\eic_groups\Controller\GroupOperationsController::highlightContent'
+    _title: 'Highlight group content'
+  requirements:
+    _highlight_group_content: 'TRUE'
+    node: \d+
+    group: \d+
