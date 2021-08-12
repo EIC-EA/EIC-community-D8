@@ -4,6 +4,14 @@ namespace Drupal\eic_search\Service;
 
 use Drupal\eic_groups\Constants\GroupVisibilityType;
 use Drupal\eic_groups\EICGroupsHelper;
+use Drupal\file\Entity\File;
+use Drupal\group\Entity\GroupContent;
+use Drupal\group\Entity\GroupInterface;
+use Drupal\group\GroupMembership;
+use Drupal\paragraphs\Entity\Paragraph;
+use Drupal\profile\Entity\Profile;
+use Drupal\profile\Entity\ProfileInterface;
+use Drupal\user\Entity\User;
 use Solarium\QueryType\Update\Query\Document;
 
 /**
@@ -48,9 +56,9 @@ class SolrDocumentProcessor {
     }
 
     if ('gallery' === $type) {
-      $slides_id = $fields['sm_content_gallery_slide_id_array'];
+      $slides_id = $fields['sm_content_gallery_slide_id_array'] ?: [];
       $slides = array_map(function($slide_id) {
-        $slide = \Drupal\paragraphs\Entity\Paragraph::load($slide_id);
+        $slide = Paragraph::load($slide_id);
         $media = $slide->get('field_gallery_slide_media')->referencedEntities();
 
         if (empty($media)) {
@@ -59,7 +67,7 @@ class SolrDocumentProcessor {
 
         /** @var \Drupal\media\MediaInterface $media */
         $media = $media[0];
-        $file = \Drupal\file\Entity\File::load($media->get('oe_media_image')->target_id);
+        $file = File::load($media->get('oe_media_image')->target_id);
 
         return json_encode([
           'id' => $slide->id(),
@@ -97,14 +105,14 @@ class SolrDocumentProcessor {
     $group_parent_id = -1;
 
     if (array_key_exists('its_content__group_content__entity_id_gid', $fields)) {
-      $group_content_entity = \Drupal\group\Entity\GroupContent::load($fields['its_content__group_content__entity_id_gid']);
-      $group_parent_label = $group_content_entity->getGroup() instanceof \Drupal\group\Entity\GroupInterface ?
+      $group_content_entity = GroupContent::load($fields['its_content__group_content__entity_id_gid']);
+      $group_parent_label = $group_content_entity->getGroup() instanceof GroupInterface ?
         $group_content_entity->getGroup()->label()
         : '';
-      $group_parent_url = $group_content_entity->getGroup() instanceof \Drupal\group\Entity\GroupInterface ?
+      $group_parent_url = $group_content_entity->getGroup() instanceof GroupInterface ?
         $group_content_entity->getGroup()->toUrl()->toString()
         : '';
-      $group_parent_id = $group_content_entity->getGroup() instanceof \Drupal\group\Entity\GroupInterface ?
+      $group_parent_id = $group_content_entity->getGroup() instanceof GroupInterface ?
         $group_content_entity->getGroup()->id()
         : '';
     }
@@ -184,7 +192,7 @@ class SolrDocumentProcessor {
 
             $user_ids = $option[GroupVisibilityType::GROUP_VISIBILITY_OPTION_TRUSTED_USERS . '_conf'];
             $users = array_map(function ($user_id) {
-              $user = \Drupal\user\Entity\User::load(reset($user_id));
+              $user = User::load(reset($user_id));
               if (!$user) {
                 return -1;
               }
@@ -196,7 +204,12 @@ class SolrDocumentProcessor {
           }
         }
         break;
+      default:
+        $group_visibility = GroupVisibilityType::GROUP_VISIBILITY_PUBLIC;
+        break;
     }
+
+    $document->addField('ss_group_visibility', $group_visibility);
   }
 
   /**
@@ -205,8 +218,8 @@ class SolrDocumentProcessor {
    */
   public function processGroupUserData(&$document, $fields) {
     if ($fields['ss_search_api_datasource'] === 'entity:user' && array_key_exists('its_user_profile', $fields)) {
-      $profile = \Drupal\profile\Entity\Profile::load($fields['its_user_profile']);
-      if ($profile instanceof \Drupal\profile\Entity\ProfileInterface) {
+      $profile = Profile::load($fields['its_user_profile']);
+      if ($profile instanceof ProfileInterface) {
         $socials = $profile->get('field_social_links')->getValue();
         $document->addField('ss_profile_socials', json_encode($socials));
 
@@ -217,7 +230,7 @@ class SolrDocumentProcessor {
         $grp_membership_service = \Drupal::service('group.membership_loader');
         $grps = $grp_membership_service->loadByUser($user);
 
-        $grp_ids = array_map(function (\Drupal\group\GroupMembership $grp_membership) {
+        $grp_ids = array_map(function (GroupMembership $grp_membership) {
           return $grp_membership->getGroup()->id();
         }, $grps);
 
