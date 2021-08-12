@@ -171,6 +171,17 @@
       }
     }
 
+    #{$node}--filelist & {
+      color: ecl-typography('color', 'title');
+      display: flex;
+      justify-content: center;
+      flex-direction: row;
+      align-items: center;
+      @include ecl-media-breakpoint-up('sm') {
+        align-self: stretch;
+      }
+    }
+
     #{$node}--gallery &:before {
       display:none;
     }

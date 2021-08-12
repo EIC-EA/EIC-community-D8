@@ -69,6 +69,10 @@
     flex-shrink: 0;
     width: 100%;
 
+    > * + * {
+      margin-top: map-get($ecl-spacing, 'm');
+    }
+
     @include ecl-media-breakpoint-up('lg') {
       width: 21%;
       min-width: map-get($ecl-width, 'form-m');
