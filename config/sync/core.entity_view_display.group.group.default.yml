@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - field.field.group.group.field_body
+    - field.field.group.group.field_group_invite_members
     - field.field.group.group.field_hero
     - field.field.group.group.field_message_to_site_admin
     - field.field.group.group.field_related_groups
@@ -23,6 +24,16 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
+  field_group_invite_members:
+    weight: 11
+    label: above
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    type: boolean
+    region: content
   field_related_news_stories:
     weight: 0
     label: above
