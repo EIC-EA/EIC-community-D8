@@ -1,4 +1,4 @@
-uuid: 266e3870-84b3-493b-b4aa-a39abad0e63c
+uuid: 5cda60f9-9c2a-4930-956e-4078c8e47376
 langcode: en
 status: true
 dependencies:
@@ -10,7 +10,7 @@ bundles:
   - discussion
   - document
 entity_type: node
-global: false
+global: true
 weight: 0
 flag_short: 'Highlight this item'
 flag_long: ''
@@ -27,6 +27,8 @@ link_type: ajax_link
 flagTypeConfig:
   show_in_links:
     full: full
+    search_result: search_result
+    teaser: teaser
   show_as_field: true
   show_on_form: false
   show_contextual_link: false

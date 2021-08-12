@@ -75,9 +75,10 @@ content:
     weight: 4
     settings:
       match_top_level_limit: '0'
+      disable_top_choices: '1'
       items_to_load: '25'
-      auto_select_parents: '1'
       load_all: 0
+      auto_select_parents: 0
     third_party_settings: {  }
     type: entity_tree
     region: content

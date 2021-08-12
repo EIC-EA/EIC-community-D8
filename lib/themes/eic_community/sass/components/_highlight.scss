@@ -1,0 +1,46 @@
+.ecl-highlight {
+  $node: &;
+
+  > a {
+    background-color: transparent;
+    color: map-get($ecl-colors, 'blue-25');
+    line-height: 0;
+    outline:none;
+    flex-shrink: 0;
+    order: 1;
+    border: 0;
+    position: relative;
+    padding: map-get($ecl-spacing, 'xs');
+    display:inline-block;
+
+    &::before {
+      position: absolute;
+      content: " ";
+      top: 50%;
+      display: block;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 40%;
+      height: 40%;
+      border-radius: 50%;
+      background-color: map-get($ecl-colors, 'white');
+    }
+
+    &:hover {
+        color: map-get($ecl-colors, 'blue');
+    }
+  }
+
+  &--is-highlighted > a, &--is-highlighted > a:hover {
+    color: map-get($ecl-colors, 'yellow-100');
+    opacity: 1;
+
+    &::before {
+      background-color: map-get($ecl-colors, 'black');
+    }
+  }
+
+  &__label {
+    @include visually-hidden;
+  }
+}
