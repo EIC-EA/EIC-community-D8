@@ -5,7 +5,7 @@ dependencies:
   config:
     - field.field.node.gallery.field_body
     - field.field.node.gallery.field_comments
-    - field.field.node.gallery.field_photos
+    - field.field.node.gallery.field_gallery_slides
     - field.field.node.gallery.field_vocab_geo
     - field.field.node.gallery.field_vocab_topics
     - node.type.gallery
@@ -13,7 +13,7 @@ dependencies:
     - comment
     - content_moderation
     - eic_content
-    - media_library
+    - paragraphs
     - path
     - publication_date
     - scheduler
@@ -44,11 +44,16 @@ content:
     third_party_settings: {  }
     type: comment_default
     region: content
-  field_photos:
-    type: media_library_widget
-    weight: 5
+  field_gallery_slides:
+    type: entity_reference_paragraphs
+    weight: 3
     settings:
-      media_types: {  }
+      title: Paragraph
+      title_plural: Paragraphs
+      edit_mode: open
+      add_mode: dropdown
+      form_display_mode: default
+      default_paragraph_type: ''
     third_party_settings: {  }
     region: content
   field_post_activity:
@@ -57,7 +62,7 @@ content:
     settings: {  }
     third_party_settings: {  }
   field_vocab_geo:
-    weight: 4
+    weight: 5
     settings:
       match_operator: CONTAINS
       match_limit: 10
@@ -67,7 +72,7 @@ content:
     type: entity_reference_autocomplete
     region: content
   field_vocab_topics:
-    weight: 3
+    weight: 4
     settings:
       match_top_level_limit: '0'
       disable_top_choices: '1'

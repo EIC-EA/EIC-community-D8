@@ -1,0 +1,19 @@
+uuid: 42334523-b4a0-4ab6-925c-96a1031451a8
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_gallery_slide_legend
+    - paragraphs.paragraphs_type.gallery_slide
+id: paragraph.gallery_slide.field_gallery_slide_legend
+field_name: field_gallery_slide_legend
+entity_type: paragraph
+bundle: gallery_slide
+label: Legend
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string
