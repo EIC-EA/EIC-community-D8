@@ -135,3 +135,4 @@ $databases['default']['default'] = [
 
 $settings['config_sync_directory'] = $app_root . '/../config/sync';
 $config['config_split.config_split.development']['status'] = TRUE;
+$settings['file_private_path'] = '/app/private_files';

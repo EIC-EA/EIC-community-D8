@@ -32,6 +32,7 @@ permissions:
   - 'edit all comments'
   - 'edit group'
   - 'edit own comments'
+  - 'highlight group content'
   - 'invite users to group'
   - 'post comments'
   - 'update any group_node:discussion entity'

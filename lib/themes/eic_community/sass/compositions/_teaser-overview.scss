@@ -93,9 +93,9 @@
       margin-bottom: ecl-box-model('padding');
     }
 
-    #{$node}--has-blocks & {
+    /* #{$node}--has-blocks & {
       padding-top: ecl-box-model('padding');
-    }
+    } */
 
     #{$node}--has-columns & {
       @include ecl-media-breakpoint-up('md') {

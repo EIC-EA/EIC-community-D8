@@ -9,6 +9,7 @@ use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
 use Drupal\eic_content_wiki_page\WikiPageBookManager;
+use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_groups\EICGroupsHelperInterface;
 use Drupal\group\Entity\Group;
 use Drupal\node\Entity\Node;
@@ -185,6 +186,15 @@ class FormOperations implements ContainerInjectionInterface {
         'formRedirectToGroupHomepage',
       ];
     }
+  }
+
+  /**
+   * Implements hook_form_alter() for group invitation form
+   *
+   * Remove the group-owner option
+   */
+  public function groupInvitationFormAlter(&$form, FormStateInterface $form_state, $form_id) {
+    unset($form['group_roles']['widget']['#options'][EICGroupsHelper::GROUP_OWNER_ROLE]);
   }
 
   /**
