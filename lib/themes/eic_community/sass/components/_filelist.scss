@@ -39,13 +39,14 @@
       display: flex;
       justify-content: center;
       align-items: center;
+      color: ecl-typography('color', 'title');
     }
 
-    &-name {
+    & &-name {
       margin-top:0;
       margin-bottom: map-get($ecl-spacing, 's');
       color: ecl-typography('color', 'title');
-      font-size: ecl-typography('size')
+      font-size: map-get($ecl-font-size, 'm') !important;
     }
 
     &-type {
@@ -58,7 +59,7 @@
       flex-basis: 100%;
       margin-top: map-get($ecl-spacing, 's');
       display: flex;
-      align-items: center;
+      justify-content: center;
       @include ecl-media-breakpoint-up('md') {
         flex-basis: auto;
         margin-top: 0;

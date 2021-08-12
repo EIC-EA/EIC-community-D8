@@ -2,7 +2,7 @@
 
 <article class="ecl-filelist">
   <header class="ecl-filelist__header">
-    <h1 class="ecl-filelist__title">{{ title}}</h1>
+    <h1 class="ecl-filelist__title">{{ title }}</h1>
   </header>
   <div class="ecl-filelist__content">
     <div class="ecl-filelist__body">
@@ -38,10 +38,10 @@
           <figure class="ecl-filelist__file-image-wrapper">
             {% include '@ecl-twig/ec-component-icon/ecl-icon.html.twig' with {
               icon: {
-                size: 'xs',
+                size: 'm',
                 path: icon_file_path,
                 type: 'custom',
-                name: (file.mime_type in ['jpg', 'pdf', 'doc'] ? 'document_' ~ file.mime_type : 'document'),
+                name: (file.mime_type in ['doc', 'dwg', 'html', 'ppt', 'xls', 'zip', 'txt'] ? 'document_' ~ file.mime_type : 'document'),
               },
               extra_classes: 'ecl-filelist__file-image',
             } only %}
