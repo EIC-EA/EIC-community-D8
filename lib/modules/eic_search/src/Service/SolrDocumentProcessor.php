@@ -78,10 +78,6 @@ class SolrDocumentProcessor {
       }, $slides_id);
 
       $document->setField('sm_content_gallery_slide_id_array', $slides);
-
-      if (!array_key_exists('bs_content_is_private', $fields)) {
-        $document->addField('bs_content_is_private', FALSE);
-      }
     }
 
     //We need to use only one field key for the global search on the FE side
@@ -91,6 +87,10 @@ class SolrDocumentProcessor {
     $document->addField('ss_global_fullname', $fullname);
     $document->addField('sm_content_field_vocab_topics_string', $topics);
     $document->addField('sm_content_field_vocab_geo_string', $geo);
+
+    if (!array_key_exists('bs_content_is_private', $fields)) {
+      $document->addField('bs_content_is_private', FALSE);
+    }
   }
 
   /**
