@@ -16,7 +16,6 @@ setup:
   ifeq ($(UNAME),Darwin)
 		$(call do_macos_setup)
   endif
-
 	$(call do_setup)
 
 start:
@@ -92,7 +91,7 @@ define do_macos_setup
 	echo -e 'You have been identified as running on macOS'
 	echo -e 'Please be sure you read \e[36m"Running on macOS"\e[0m within the README file'
 	echo -e 'Copying macos volume configs as docker-compose.override.yml'
-	cp -n ./docker/macos.volumes.yml docker-compose.override.yml
+	$(shell cp -n ./docker/macos.volumes.yml docker-compose.override.yml)
 endef
 
 define do_start
