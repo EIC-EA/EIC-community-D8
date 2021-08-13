@@ -8,6 +8,7 @@ use Drupal\file\Entity\File;
 use Drupal\group\Entity\GroupContent;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\group\GroupMembership;
+use Drupal\image\Entity\ImageStyle;
 use Drupal\paragraphs\Entity\Paragraph;
 use Drupal\profile\Entity\Profile;
 use Drupal\profile\Entity\ProfileInterface;
@@ -76,7 +77,9 @@ class SolrDocumentProcessor {
 
     if ('gallery' === $type) {
       $slides_id = $fields['sm_content_gallery_slide_id_array'] ?: [];
-      $slides = array_map(function($slide_id) {
+      $image_style = ImageStyle::load('crop_50x50');
+      $image_style_160 = ImageStyle::load('gallery_teaser_crop_160x160');
+      $slides = array_map(function($slide_id) use ($image_style, $image_style_160) {
         $slide = Paragraph::load($slide_id);
         $media = $slide->get('field_gallery_slide_media')->referencedEntities();
 
@@ -87,11 +90,19 @@ class SolrDocumentProcessor {
         /** @var \Drupal\media\MediaInterface $media */
         $media = $media[0];
         $file = File::load($media->get('oe_media_image')->target_id);
+        $image_uri = $file->getFileUri();
+
+        $destination_uri = $image_style->buildUri($image_uri);
+        $destination_uri_160 = $image_style_160->buildUri($image_uri);
+
+        $image_style->createDerivative($image_uri, $destination_uri);
+        $image_style_160->createDerivative($image_uri, $destination_uri_160);
 
         return json_encode([
           'id' => $slide->id(),
           'size' => $file->getSize(),
-          'uri' => file_url_transform_relative(file_create_url($file->getFileUri())),
+          'uri' => file_url_transform_relative(file_create_url($destination_uri)),
+          'uri_160' => file_url_transform_relative(file_create_url($destination_uri_160)),
           'legend' => $slide->get('field_gallery_slide_legend')->value,
         ]);
       }, $slides_id);
@@ -107,6 +118,7 @@ class SolrDocumentProcessor {
     $document->addField('ss_global_title', $title);
     $document->addField('ss_global_content_type', $type);
     $document->addField('ss_global_created_date', $date);
+    $document->addField('ss_drupal_timestamp', strtotime($date));
     $document->addField('ss_global_fullname', $fullname);
     $document->addField('ss_global_user_url', $user_url);
     $document->addField('sm_content_field_vocab_topics_string', $topics);

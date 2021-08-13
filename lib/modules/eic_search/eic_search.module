@@ -26,6 +26,7 @@ function eic_search_theme($existing, $type, $theme, $path) {
         'page_options' => '',
         'currentGroup' => '',
         'currentGroupUrl' => '',
+        'isGroupOwner' => FALSE,
         'enable_search' => TRUE,
         'source_class' => '',
         'search_string' => '',

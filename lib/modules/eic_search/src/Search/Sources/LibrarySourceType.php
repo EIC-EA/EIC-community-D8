@@ -52,6 +52,11 @@ class LibrarySourceType extends SourceType {
    */
   public function getAvailableSortOptions(): array {
     return [
+      'its_flag_highlight_content' => [
+        'label' => $this->t('Highlight', [], ['context' => 'eic_search']),
+        'DESC' => $this->t('Highlighted first', [], ['context' => 'eic_search']),
+        'ASC' => $this->t('Highlighted last', [], ['context' => 'eic_search']),
+      ],
       'ss_global_created_date' => [
         'label' => $this->t('Timestamp', [], ['context' => 'eic_search']),
         'ASC' => $this->t('Recent', [], ['context' => 'eic_search']),
@@ -63,6 +68,13 @@ class LibrarySourceType extends SourceType {
         'DESC' => $this->t('Title Z-A', [], ['context' => 'eic_search']),
       ],
     ];
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function getDefaultSort(): array {
+    return ['its_flag_highlight_content', 'DESC'];
   }
 
   /**

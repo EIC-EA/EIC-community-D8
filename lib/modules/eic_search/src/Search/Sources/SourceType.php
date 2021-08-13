@@ -50,6 +50,13 @@ abstract class SourceType implements SourceTypeInterface {
   /**
    * @inheritDoc
    */
+  public function getDefaultSort(): array {
+    return [];
+  }
+
+  /**
+   * @inheritDoc
+   */
   public function getSearchFieldsId(): array {
     return [];
   }

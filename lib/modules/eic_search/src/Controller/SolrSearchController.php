@@ -40,6 +40,7 @@ class SolrSearchController extends ControllerBase {
     $sort_value = $request->query->get('sort_value');
     $facets_options = $request->query->get('facets_options');
     $facets_value = json_decode($facets_value, TRUE);
+    $source = NULL;
 
     $facets_interests = [];
 
@@ -114,6 +115,15 @@ class SolrSearchController extends ControllerBase {
       if (2 === count($sorts)) {
         $solariumQuery->addSort($sorts[0], $sorts[1]);
       }
+    }
+
+    //If there are no current sorts check if source has a default sort
+    if (
+      !$sort_value &&
+      $source instanceof SourceTypeInterface &&
+      $default_sort = $source->getDefaultSort()
+    ) {
+      $solariumQuery->addSort($default_sort[0], $default_sort[1]);
     }
 
     $datasources_query = [];

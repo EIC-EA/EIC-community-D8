@@ -14,6 +14,7 @@ use Drupal\eic_search\Collector\SourcesCollector;
 use Drupal\eic_search\Search\Sources\GroupSourceType;
 use Drupal\eic_search\Search\Sources\SourceTypeInterface;
 use Drupal\group\Entity\GroupInterface;
+use Drupal\group\GroupMembership;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -138,7 +139,7 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
     $sources = $this->sourcesCollector->getSources();
 
     $source = array_key_exists($source_type, $sources) ? $sources[$source_type] : NULL;
-    $prefilter_group = $this->configuration['prefilter_group'] ?: FALSE;
+    $prefilter_group = $this->configuration['prefilter_group'] || FALSE;
     $current_group_route = NULL;
 
     if (
@@ -147,6 +148,15 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
       $prefilter_group
     ) {
       $current_group_route = $this->groupsHelper->getGroupFromRoute();
+    }
+
+
+    $user_group_roles = [];
+
+    if ($current_group_route) {
+      $account = \Drupal::currentUser();
+      $membership = $current_group_route->getMember($account);
+      $user_group_roles = $membership instanceof GroupMembership ? $membership->getRoles() : [];
     }
 
     return [
@@ -167,6 +177,7 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
       '#currentGroupUrl' => $current_group_route instanceof GroupInterface ? $current_group_route->toUrl()->toString() : NULL,
       '#enable_facet_interests' => $this->configuration['add_facet_interests'],
       '#enable_facet_my_groups' => $this->configuration['add_facet_my_groups'],
+      '#isGroupOwner' => array_key_exists(EICGroupsHelper::GROUP_OWNER_ROLE, $user_group_roles),
       '#translations' => [
         'public' => $this->t('Public', [], ['context' => 'eic_group']),
         'private' => $this->t('Private', [], ['context' => 'eic_group']),

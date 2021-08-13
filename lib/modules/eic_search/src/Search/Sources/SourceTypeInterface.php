@@ -55,6 +55,13 @@ interface SourceTypeInterface {
   public function getAvailableSortOptions(): array;
 
   /**
+   * Get default sort for an overview
+   *
+   * @return array
+   */
+  public function getDefaultSort(): array;
+
+  /**
    * Return the fields ID on search API to search for (will be separated by OR
    * condition)
    *
