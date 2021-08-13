@@ -193,6 +193,10 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
         'sort_by' => $this->t('Sort by', [], ['context' => 'eic_group']),
         'showing' => $this->t('Showing', [], ['context' => 'eic_group']),
         'sort_any' => $this->t('- Any -', [], ['context' => 'eic_group']),
+        'label_video' => $this->t('Video', [], ['context' => 'eic_group']),
+        'label_file' => $this->t('File', [], ['context' => 'eic_group']),
+        'label_image' => $this->t('Image', [], ['context' => 'eic_group']),
+        'like' => $this->t('Like', [], ['context' => 'eic_group']),
       ],
     ];
   }
