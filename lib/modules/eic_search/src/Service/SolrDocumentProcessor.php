@@ -77,6 +77,7 @@ class SolrDocumentProcessor {
 
     if ('gallery' === $type) {
       $slides_id = $fields['sm_content_gallery_slide_id_array'] ?: [];
+      $slides_id = is_array($slides_id) ? $slides_id : [$slides_id];
       $image_style = ImageStyle::load('crop_50x50');
       $image_style_160 = ImageStyle::load('gallery_teaser_crop_160x160');
       $slides = array_map(function($slide_id) use ($image_style, $image_style_160) {
