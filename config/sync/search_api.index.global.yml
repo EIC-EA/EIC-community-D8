@@ -32,11 +32,12 @@ dependencies:
     - field.storage.group.field_thumbnail
     - field.storage.group.field_vocab_topics
     - field.storage.group.field_body
+    - field.storage.message.field_group_ref
+    - field.storage.message.field_operation_type
+    - field.storage.message.field_referenced_node
     - field.storage.media.field_media_file
     - field.storage.node.field_document_media
     - field.storage.node.field_language
-    - field.storage.message.field_operation_type
-    - field.storage.message.field_referenced_node
     - field.storage.node.field_vocab_geo
     - field.storage.node.field_gallery_slides
     - field.storage.paragraph.field_gallery_slide_legend
@@ -500,6 +501,16 @@ field_settings:
     dependencies:
       config:
         - field.storage.group.field_vocab_topics
+  group_id:
+    label: 'Group » Group » ID'
+    datasource_id: 'entity:message'
+    property_path: 'field_group_ref:entity:id'
+    type: integer
+    dependencies:
+      config:
+        - field.storage.message.field_group_ref
+      module:
+        - group
   group_id_integer:
     label: '[Group] ID'
     datasource_id: 'entity:group'

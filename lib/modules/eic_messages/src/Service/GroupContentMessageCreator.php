@@ -3,6 +3,7 @@
 namespace Drupal\eic_messages\Service;
 
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\group\Entity\GroupInterface;
 
 /**
  * Class GroupContentMessageCreator.
@@ -60,10 +61,16 @@ class GroupContentMessageCreator extends MessageCreatorBase {
    *
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity object.
+   * @param \Drupal\group\Entity\GroupInterface $group
+   *   The group having this content.
    * @param string $operation
    *   The type of the operation. See ActivityStreamOperationTypes
    */
-  public function createGroupContentActivity(EntityInterface $entity, string $operation) {
+  public function createGroupContentActivity(
+    EntityInterface $entity,
+    GroupInterface $group,
+    string $operation
+  ) {
     $messages = [];
 
     switch ($entity->getEntityTypeId()) {
@@ -75,6 +82,7 @@ class GroupContentMessageCreator extends MessageCreatorBase {
               'template' => 'stream_discussion_insert_update',
               'field_referenced_node' => $entity,
               'field_operation_type' => $operation,
+              'field_group_ref' => $group,
             ]);
             break;
         }
