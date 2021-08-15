@@ -1,0 +1,10 @@
+eic_messages.group.delete_acitivity_item:
+  path: '/group/{group}/item/{message}'
+  methods: [ DELETE ]
+  defaults:
+    _controller: '\Drupal\eic_messages\Controller\ActivityStreamController::deleteActivityItem'
+    _title: 'Delete activity item'
+  requirements:
+    _group_permission: 'delete activity item'
+    message: \d+
+    group: \d+
