@@ -89,7 +89,9 @@ class SolrSearchController extends ControllerBase {
       $query_fields_string = implode(' OR ', $query_fields);
       if ($current_group) {
         $group_id_field = $source->getPrefilteredGroupFieldId();
-        $query_fields_string .= " AND ($group_id_field:($current_group))";
+        $query_fields_string .= empty($query_fields_string) ?
+          "$group_id_field:($current_group)" :
+          " AND ($group_id_field:($current_group))";
       }
 
       if ($content_types = $source->getPrefilteredContentType()) {
@@ -154,6 +156,7 @@ class SolrSearchController extends ControllerBase {
       $index->getProcessor('group_content_access')
         ->preprocessSolrSearchQuery($solariumQuery);
     }
+
     $results = $connector->search($solariumQuery)->getBody();
 
     return new Response($results, Response::HTTP_OK, [

@@ -5,94 +5,68 @@ namespace Drupal\eic_search\Search\Sources;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
- * Class SourceType
+ * Class ActivityStreamSourceType
  *
  * @package Drupal\eic_groups\Search\Sources
  */
-abstract class SourceType implements SourceTypeInterface {
+class ActivityStreamSourceType extends SourceType {
+
   use StringTranslationTrait;
 
   /**
    * @inheritDoc
    */
   public function getSourcesId(): array {
-    return [];
+    return ['message'];
   }
 
   /**
    * @inheritDoc
    */
   public function getLabel(): string {
-    return '';
+    return $this->t('Activity stream', [], ['context' => 'eic_search']);
   }
 
   /**
    * @inheritDoc
    */
   public function getEntityBundle(): string {
-    return '';
-  }
-
-  /**
-   * @inheritDoc
-   */
-  public function getAvailableFacets(): array {
-    return [];
-  }
-
-  /**
-   * @inheritDoc
-   */
-  public function getAvailableSortOptions(): array {
-    return [];
+    return 'activity_stream';
   }
 
   /**
    * @inheritDoc
    */
   public function getDefaultSort(): array {
-    return [];
-  }
-
-  /**
-   * @inheritDoc
-   */
-  public function getSearchFieldsId(): array {
-    return [];
+    return ['timestamp', 'DESC'];
   }
 
   /**
    * @inheritDoc
    */
   public function getLayoutTheme(): string {
-    return self::LAYOUT_GLOBAL;
+    return self::LAYOUT_COLUMNS_COMPACT;
   }
 
   /**
    * @inheritDoc
    */
   public function ableToPrefilteredByGroup(): bool {
-    return FALSE;
+    return TRUE;
   }
 
   /**
    * @inheritDoc
    */
   public function getPrefilteredGroupFieldId(): string {
-    return '';
-  }
-
-  /**
-   * @inheritDoc
-   */
-  public function getPrefilteredContentType(): array {
-    return [];
+    return 'its_group_id';
   }
 
   /**
    * @inheritDoc
    */
   public function allowPagination(): bool {
-    return TRUE;
+    return FALSE;
   }
+
 }
