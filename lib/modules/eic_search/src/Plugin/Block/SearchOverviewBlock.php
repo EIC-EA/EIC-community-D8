@@ -202,6 +202,8 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
         'add_gallery' => $this->t('Add gallery', [], ['context' => 'eic_group']),
         'post_content' => $this->t('Post content', [], ['context' => 'eic_group']),
         'uploaded_by' => $this->t('Uploaded by', [], ['context' => 'eic_group']),
+        'draft' => $this->t('Draft', [], ['context' => 'eic_group']),
+        'pending' => $this->t('Pending', [], ['context' => 'eic_group']),
       ],
     ];
   }
