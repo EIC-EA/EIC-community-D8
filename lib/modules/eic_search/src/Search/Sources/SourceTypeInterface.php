@@ -17,6 +17,8 @@ interface SourceTypeInterface {
 
   const LAYOUT_GLOBAL = 'global';
 
+  const SOLR_FIELD_CONTENT_TYPE_ID = 'ss_global_content_type';
+
   /**
    * Get the label that will be shown into the admin
    *
@@ -53,6 +55,13 @@ interface SourceTypeInterface {
   public function getAvailableSortOptions(): array;
 
   /**
+   * Get default sort for an overview
+   *
+   * @return array
+   */
+  public function getDefaultSort(): array;
+
+  /**
    * Return the fields ID on search API to search for (will be separated by OR
    * condition)
    *
@@ -81,5 +90,13 @@ interface SourceTypeInterface {
    * @return string
    */
   public function getPrefilteredGroupFieldId(): string;
+
+  /**
+   * If the overview needs to be prefiltered by content type
+   * we need to get field in SOLR to search IN
+   *
+   * @return array
+   */
+  public function getPrefilteredContentType(): array;
 
 }

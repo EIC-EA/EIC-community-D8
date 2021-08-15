@@ -5,11 +5,11 @@ namespace Drupal\eic_search\Search\Sources;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
- * Class GlobalSourceType
+ * Class LibrarySourceType
  *
  * @package Drupal\eic_groups\Search\Sources
  */
-class GlobalSourceType extends SourceType {
+class LibrarySourceType extends SourceType {
 
   use StringTranslationTrait;
 
@@ -18,7 +18,6 @@ class GlobalSourceType extends SourceType {
    */
   public function getSourcesId(): array {
     return [
-      'group',
       'node',
     ];
   }
@@ -27,14 +26,14 @@ class GlobalSourceType extends SourceType {
    * @inheritDoc
    */
   public function getLabel(): string {
-    return $this->t('Global', [], ['context' => 'eic_search']);
+    return $this->t('Library', [], ['context' => 'eic_search']);
   }
 
   /**
    * @inheritDoc
    */
   public function getEntityBundle(): string {
-    return 'global';
+    return 'library';
   }
 
   /**
@@ -43,7 +42,6 @@ class GlobalSourceType extends SourceType {
   public function getAvailableFacets(): array {
     return [
       'ss_global_content_type' => $this->t('Content type', [], ['context' => 'eic_search']),
-      'ss_group_user_fullname' => $this->t('Full name', [], ['context' => 'eic_search']),
       'sm_content_field_vocab_topics_string' => $this->t('Topics', [], ['context' => 'eic_search']),
       'sm_content_field_vocab_geo_string' => $this->t('Region & country', [], ['context' => 'eic_search']),
     ];
@@ -54,6 +52,11 @@ class GlobalSourceType extends SourceType {
    */
   public function getAvailableSortOptions(): array {
     return [
+      'its_flag_highlight_content' => [
+        'label' => $this->t('Highlight', [], ['context' => 'eic_search']),
+        'DESC' => $this->t('Highlighted first', [], ['context' => 'eic_search']),
+        'ASC' => $this->t('Highlighted last', [], ['context' => 'eic_search']),
+      ],
       'ss_global_created_date' => [
         'label' => $this->t('Timestamp', [], ['context' => 'eic_search']),
         'ASC' => $this->t('Recent', [], ['context' => 'eic_search']),
@@ -64,12 +67,14 @@ class GlobalSourceType extends SourceType {
         'ASC' => $this->t('Title A-Z', [], ['context' => 'eic_search']),
         'DESC' => $this->t('Title Z-A', [], ['context' => 'eic_search']),
       ],
-      'ss_group_user_fullname' => [
-        'label' => $this->t('Fullname', [], ['context' => 'eic_search']),
-        'ASC' => $this->t('Fullname A-Z', [], ['context' => 'eic_search']),
-        'DESC' => $this->t('Fullname Z-A', [], ['context' => 'eic_search']),
-      ],
     ];
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function getDefaultSort(): array {
+    return ['its_flag_highlight_content', 'DESC'];
   }
 
   /**
@@ -77,7 +82,6 @@ class GlobalSourceType extends SourceType {
    */
   public function getSearchFieldsId(): array {
     return [
-      'tm_X3b_en_rendered_item',
       'ss_global_title'
     ];
   }
@@ -93,14 +97,25 @@ class GlobalSourceType extends SourceType {
    * @inheritDoc
    */
   public function ableToPrefilteredByGroup(): bool {
-    return FALSE;
+    return TRUE;
   }
 
   /**
    * @inheritDoc
    */
   public function getPrefilteredGroupFieldId(): string {
-    return 'its_group_id_integer';
+    return 'ss_global_group_parent_id';
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function getPrefilteredContentType(): array {
+    return [
+      'gallery',
+      'document',
+      'video',
+    ];
   }
 
 }
