@@ -9,7 +9,9 @@ dependencies:
     - file
     - media
     - taxonomy
+    - message
     - node
+    - path
     - eic_private_content
     - paragraphs
     - profile
@@ -33,6 +35,8 @@ dependencies:
     - field.storage.media.field_media_file
     - field.storage.node.field_document_media
     - field.storage.node.field_language
+    - field.storage.message.field_operation_type
+    - field.storage.message.field_referenced_node
     - field.storage.node.field_vocab_geo
     - field.storage.node.field_gallery_slides
     - field.storage.paragraph.field_gallery_slide_legend
@@ -137,6 +141,42 @@ field_settings:
         - 'entity:group/label'
         - 'entity:node/field_body'
         - 'entity:node/title'
+  author_first_name:
+    label: 'Created by » User » First name'
+    datasource_id: 'entity:message'
+    property_path: 'uid:entity:field_first_name'
+    type: string
+    dependencies:
+      config:
+        - field.storage.user.field_first_name
+      module:
+        - message
+        - user
+  author_last_name:
+    label: 'Created by » User » Last name'
+    datasource_id: 'entity:message'
+    property_path: 'uid:entity:field_last_name'
+    type: string
+    dependencies:
+      config:
+        - field.storage.user.field_last_name
+      module:
+        - message
+        - user
+  author_profile_picture:
+    label: 'Created by » User » Picture » Media » Image » File » URI » Root-relative file URL'
+    datasource_id: 'entity:message'
+    property_path: 'uid:entity:field_media:entity:oe_media_image:entity:uri:url'
+    type: string
+    dependencies:
+      config:
+        - field.storage.media.oe_media_image
+        - field.storage.user.field_media
+      module:
+        - file
+        - media
+        - message
+        - user
   content__group_content__entity_id_gid:
     label: 'Reverse reference: Group content using Content » Parent group'
     datasource_id: 'entity:node'
@@ -590,6 +630,25 @@ field_settings:
     indexed_locked: true
     type_locked: true
     hidden: true
+  operation_type:
+    label: 'Operation type'
+    datasource_id: 'entity:message'
+    property_path: field_operation_type
+    type: string
+    dependencies:
+      config:
+        - field.storage.message.field_operation_type
+  path:
+    label: 'Referenced node » Content » URL alias'
+    datasource_id: 'entity:message'
+    property_path: 'field_referenced_node:entity:path'
+    type: string
+    dependencies:
+      config:
+        - field.storage.message.field_referenced_node
+      module:
+        - node
+        - path
   rendered_item:
     label: 'Rendered HTML output'
     property_path: rendered_item
@@ -650,6 +709,26 @@ field_settings:
     dependencies:
       module:
         - user
+  title:
+    label: 'Referenced node » Content » Title'
+    datasource_id: 'entity:message'
+    property_path: 'field_referenced_node:entity:title'
+    type: string
+    dependencies:
+      config:
+        - field.storage.message.field_referenced_node
+      module:
+        - node
+  type:
+    label: 'Referenced node » Content » Content type'
+    datasource_id: 'entity:message'
+    property_path: 'field_referenced_node:entity:type'
+    type: string
+    dependencies:
+      config:
+        - field.storage.message.field_referenced_node
+      module:
+        - node
   url:
     label: URI
     property_path: search_api_url
@@ -880,6 +959,23 @@ datasource_settings:
       default: true
       selected: {  }
   'entity:group_permission': {  }
+  'entity:message':
+    bundles:
+      default: false
+      selected:
+        - stream_article_insert_update
+        - stream_comment_insert_update
+        - stream_discussion_insert_update
+        - stream_document_insert_update
+        - stream_event_insert_update
+        - stream_news_insert_update
+        - stream_photo_album_insert_update
+        - stream_photo_insert_update
+        - stream_share_insert_update
+        - stream_wiki_page_insert_update
+    languages:
+      default: true
+      selected: {  }
   'entity:node':
     bundles:
       default: true
