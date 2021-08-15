@@ -3,10 +3,10 @@
 namespace Drupal\eic_messages\Service;
 
 use Drupal\comment\CommentInterface;
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\eic_content\EICContentHelperInterface;
 use Drupal\eic_messages\MessageHelper;
+use Drupal\eic_messages\Util\ActivityStreamMessageTemplates;
 use Drupal\eic_user\UserHelper;
 
 /**
@@ -64,7 +64,7 @@ class CommentMessageCreator extends MessageCreatorBase {
     $group_content = reset($group_content);
     $group = $group_content->getGroup();
     $message = \Drupal::entityTypeManager()->getStorage('message')->create([
-      'template' => 'stream_comment_insert_update',
+      'template' => ActivityStreamMessageTemplates::getTemplate($entity),
       'field_referenced_comment' => $entity,
       'field_referenced_node' => $commented_entity,
       'field_entity_type' => $entity->getEntityTypeId(),

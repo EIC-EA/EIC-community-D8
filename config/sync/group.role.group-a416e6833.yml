@@ -19,6 +19,7 @@ permissions:
   - 'access group content menu overview'
   - 'access group search'
   - 'access members overview'
+  - 'delete activity item'
   - 'delete any invitation'
   - 'delete own invitations'
   - 'invite users to group'
