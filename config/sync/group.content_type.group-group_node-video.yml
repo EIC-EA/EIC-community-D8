@@ -1,0 +1,19 @@
+uuid: 3a33f6e4-dd40-4bc8-9fef-0321b787e7e6
+langcode: en
+status: true
+dependencies:
+  config:
+    - group.type.group
+    - node.type.video
+  module:
+    - gnode
+    - node
+id: group-group_node-video
+label: 'Group: Group node (Video)'
+description: 'Adds <em class="placeholder">Video</em> content to groups both publicly and privately.'
+group_type: group
+content_plugin: 'group_node:video'
+plugin_config:
+  group_cardinality: 0
+  entity_cardinality: 1
+  use_creation_wizard: false
