@@ -78,6 +78,7 @@ class GroupContentMessageCreator extends MessageCreatorBase {
           'template' => $this->getActivityItemTemplate($entity),
           'field_referenced_node' => $entity,
           'field_operation_type' => $operation,
+          'field_entity_type' => $entity->getEntityTypeId(),
           'field_group_ref' => $group,
         ]);
         break;
