@@ -31,6 +31,18 @@ dependencies:
     - field.storage.node.field_discussion_type
     - field.storage.node.field_subtitle
     - field.storage.node.field_language
+    - field.storage.user.field_first_name
+    - field.storage.user.field_last_name
+    - field.storage.media.oe_media_image
+    - field.storage.user.field_media
+    - field.storage.group.field_vocab_geo
+    - field.storage.group.field_thumbnail
+    - field.storage.group.field_vocab_topics
+    - field.storage.group.field_body
+    - field.storage.message.field_group_ref
+    - field.storage.message.field_operation_type
+    - field.storage.message.field_referenced_node
+    - field.storage.media.field_media_file
     - field.storage.message.field_operation_type
     - field.storage.message.field_referenced_node
     - field.storage.node.field_vocab_geo
@@ -40,15 +52,6 @@ dependencies:
     - field.storage.node.field_gallery_slides
     - field.storage.paragraph.field_gallery_slide_media
     - field.storage.paragraph.field_gallery_slide_legend
-    - field.storage.node.field_language
-    - field.storage.user.field_last_name
-    - field.storage.media.field_media_file
-    - field.storage.group.field_body
-    - field.storage.group.field_vocab_geo
-    - field.storage.group.field_vocab_topics
-    - field.storage.group.field_thumbnail
-    - field.storage.media.oe_media_image
-    - field.storage.user.field_media
     - field.storage.profile.field_location_address
     - field.storage.profile.field_body
     - field.storage.profile.field_vocab_language
@@ -499,6 +502,16 @@ field_settings:
     dependencies:
       config:
         - field.storage.group.field_vocab_topics
+  group_id:
+    label: 'Group » Group » ID'
+    datasource_id: 'entity:message'
+    property_path: 'field_group_ref:entity:id'
+    type: integer
+    dependencies:
+      config:
+        - field.storage.message.field_group_ref
+      module:
+        - group
   group_id_integer:
     label: '[Group] ID'
     datasource_id: 'entity:group'

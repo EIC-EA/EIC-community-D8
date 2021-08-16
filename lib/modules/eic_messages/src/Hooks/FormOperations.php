@@ -138,11 +138,22 @@ class FormOperations implements ContainerInjectionInterface {
     }
 
     $entity = $form_state->getFormObject()->getEntity();
+    $group_content = $this->eicContentHelper->getGroupContentByEntity($entity);
+    if (empty($group_content)) {
+      return;
+    }
+
+    /** @var \Drupal\group\Entity\GroupContentInterface $group_content */
+    $group_content = reset($group_content);
     $operation = $form_state->getFormObject()->getOperation() === 'edit'
       ? ActivityStreamOperationTypes::UPDATED_ENTITY
       : ActivityStreamOperationTypes::NEW_ENTITY;
 
-    $this->groupContentMessageCreator->createGroupContentActivity($entity, $operation);
+    $this->groupContentMessageCreator->createGroupContentActivity(
+      $entity,
+      $group_content->getGroup(),
+      $operation
+    );
   }
 
 }

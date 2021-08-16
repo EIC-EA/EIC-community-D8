@@ -32,6 +32,8 @@ function eic_search_theme($existing, $type, $theme, $path) {
         'search_string' => '',
         'enable_facet_interests' => FALSE,
         'enable_facet_my_groups' => FALSE,
+        'allow_pagination' => FALSE,
+        'load_more_number' => FALSE,
       ],
     ],
   ];
