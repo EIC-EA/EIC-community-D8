@@ -24,7 +24,9 @@ build_backend:
     untracked: true
     expire_in: '1 day'
   script:
-    - composer --no-ansi --no-interaction install --no-progress --prefer-dist --optimize-autoloader --no-dev
+    # Current version of Gitlab (require > 14.2.0) doesn't support variable overrides using the 'rules' property
+    # Dynamically define the --no-dev option once updated (e.g: added on develop and not other branches)
+    - composer --no-ansi --no-interaction install --no-progress --prefer-dist --optimize-autoloader
 
 build_front:
   stage: build
@@ -44,6 +46,8 @@ security_check:
   script:
     - local-php-security-checker
   allow_failure: true
+  only:
+    - develop
 
 code_style_test:
   stage: test
@@ -51,6 +55,8 @@ code_style_test:
   script:
     - phpcs -v --ignore=*node_modules/* --standard=./vendor/ec-europa/qa-automation/phpcs.xml.dist --colors ./lib/
   allow_failure: true
+  only:
+    - develop
 
 phpmd_test:
   stage: test
@@ -58,6 +64,8 @@ phpmd_test:
   script:
     - phpmd lib/ ansi ./vendor/openeuropa/code-review/resources/phpmd-ruleset.xml
   allow_failure: true
+  only:
+    - develop
 
 deploy_staging:
   <<: *deploy_job
@@ -67,4 +75,5 @@ deploy_staging:
     WEB_SERVER_ADDRESS: '51.83.110.204'
     WEB_SERVER_PATH: '/home/blue4you/websites/eic-d8.stg.blue4you.be/www'
     PROJECT_USER: 'blue4you'
-
+  only:
+    - develop
