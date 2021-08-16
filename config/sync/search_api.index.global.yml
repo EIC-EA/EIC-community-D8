@@ -32,6 +32,9 @@ dependencies:
     - field.storage.group.field_thumbnail
     - field.storage.group.field_vocab_topics
     - field.storage.group.field_body
+    - field.storage.media.field_media_file
+    - field.storage.node.field_document_media
+    - field.storage.node.field_language
     - field.storage.message.field_operation_type
     - field.storage.message.field_referenced_node
     - field.storage.node.field_vocab_geo
@@ -187,6 +190,16 @@ field_settings:
     dependencies:
       module:
         - node
+  content_document_name:
+    label: 'Document » Media » Name'
+    datasource_id: 'entity:node'
+    property_path: 'field_document_media:entity:name'
+    type: string
+    dependencies:
+      config:
+        - field.storage.node.field_document_media
+      module:
+        - media
   content_field_body_fulltext:
     label: '[Content] Body - Fulltext'
     datasource_id: 'entity:node'
@@ -315,6 +328,16 @@ field_settings:
     dependencies:
       module:
         - eic_private_content
+  content_language_string:
+    label: 'Language » Taxonomy term » Name'
+    datasource_id: 'entity:node'
+    property_path: 'field_language:entity:name'
+    type: string
+    dependencies:
+      config:
+        - field.storage.node.field_language
+      module:
+        - taxonomy
   content_last_name:
     label: 'Authored by » User » Last name'
     datasource_id: 'entity:node'
@@ -326,6 +349,14 @@ field_settings:
       module:
         - node
         - user
+  content_nid:
+    label: ID
+    datasource_id: 'entity:node'
+    property_path: nid
+    type: integer
+    dependencies:
+      module:
+        - node
   content_status:
     label: '[Content] Published'
     datasource_id: 'entity:node'
@@ -370,15 +401,36 @@ field_settings:
     dependencies:
       module:
         - node
-  flag_highlight_content_count:
-    label: 'Highlight (Content) count'
-    property_path: flag_highlight_content_count
+  content_user_uid:
+    label: 'Authored by » User » User ID'
+    datasource_id: 'entity:node'
+    property_path: 'uid:entity:uid'
+    type: integer
+    dependencies:
+      module:
+        - node
+        - user
+  filename:
+    label: 'Document » Media » File » File » Filename'
+    datasource_id: 'entity:node'
+    property_path: 'field_document_media:entity:field_media_file:entity:filename'
+    type: string
+    dependencies:
+      config:
+        - field.storage.media.field_media_file
+        - field.storage.node.field_document_media
+      module:
+        - file
+        - media
+  flag_highlight_content:
+    label: 'Highlight (Content)'
+    property_path: flag_highlight_content
     type: integer
     indexed_locked: true
     type_locked: true
-  flag_recommend_group_count:
-    label: 'Group Recommend count'
-    property_path: flag_recommend_group_count
+  flag_recommend_group:
+    label: 'Like (Group)'
+    property_path: flag_recommend_group
     type: integer
     indexed_locked: true
     type_locked: true
@@ -954,7 +1006,7 @@ processor_settings:
     weights:
       preprocess_query: -30
   entity_status: {  }
-  flag_count_indexer:
+  flag_indexer:
     flag_index:
       - highlight_content
       - recommend_group

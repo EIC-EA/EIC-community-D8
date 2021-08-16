@@ -20,6 +20,8 @@ class HighlightGroupContentAccessCheck implements AccessInterface {
   const SUPPORTED_PLUGIN_IDS = [
     'group-group_node-document',
     'group-group_node-discussion',
+    'group-group_node-video',
+    'group-group_node-gallery',
   ];
 
   /**

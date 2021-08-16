@@ -1,0 +1,15 @@
+uuid: 9c8e55af-4cf1-461d-91ef-302ade5b4756
+langcode: en
+status: true
+dependencies: {  }
+name: gallery_teaser_crop_160x160
+label: 'Crop 160x160'
+effects:
+  5eb6d36e-f0a5-4bbe-8bd8-8ee482cbcd74:
+    uuid: 5eb6d36e-f0a5-4bbe-8bd8-8ee482cbcd74
+    id: image_scale_and_crop
+    weight: 1
+    data:
+      width: 160
+      height: 160
+      anchor: center-center

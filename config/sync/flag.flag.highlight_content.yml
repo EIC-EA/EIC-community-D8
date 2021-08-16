@@ -9,6 +9,8 @@ label: 'Highlight (Content)'
 bundles:
   - discussion
   - document
+  - gallery
+  - video
 entity_type: node
 global: true
 weight: 0
