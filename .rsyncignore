@@ -6,9 +6,11 @@ UPDATE.txt
 .github
 .gitattributes
 .gitignore
+.git
+.gitlab-ci.yml
 web/sites/default/settings.php
-web/sites/default/files/*
-private_files/*
+web/sites/default/files
+web/sites/default/private_files
 composer.lock
 web.config
 backups
