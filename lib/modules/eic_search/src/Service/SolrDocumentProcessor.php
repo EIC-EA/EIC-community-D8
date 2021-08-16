@@ -25,8 +25,10 @@ class SolrDocumentProcessor {
   /**
    * Set global fields data, gallery slides data and set by default content to not private
    *
-   * @param Document $document
+   * @param \Solarium\QueryType\Update\Query\Document $document
    * @param array $fields
+   *
+   * @throws \Drupal\Core\Entity\EntityMalformedException
    */
   public function processGlobalData(Document &$document, array $fields) {
     switch ($fields['ss_search_api_datasource']) {
@@ -34,6 +36,7 @@ class SolrDocumentProcessor {
         $title = $fields['ss_content_title'];
         $type = $fields['ss_content_type'];
         $date = $fields['ds_content_created'];
+        $status = $fields['bs_content_status'];
         $fullname = array_key_exists('ss_content_first_name', $fields) && array_key_exists('ss_content_last_name', $fields) ?
           $fields['ss_content_first_name'] . ' ' . $fields['ss_content_last_name'] :
           t('No name', [], ['context' => 'eic_search']);
@@ -57,6 +60,7 @@ class SolrDocumentProcessor {
         $title = $fields['ss_group_label_string'];
         $type = 'group';
         $date = $fields['ds_group_created'];
+        $status = $fields['bs_group_status'];
         $fullname = $fields['ss_group_user_first_name'] . ' ' . $fields['ss_group_user_last_name'];
         $topics = $fields['ss_group_topic_name'];
         $geo = $fields['ss_group_field_vocab_geo_string'];
@@ -72,6 +76,7 @@ class SolrDocumentProcessor {
         $title = '';
         $type = '';
         $date = '';
+        $status = FALSE;
         $fullname = '';
         $topics = [];
         $geo = [];
@@ -120,6 +125,7 @@ class SolrDocumentProcessor {
     $document->addField('ss_global_title', $title);
     $document->addField('ss_global_content_type', $type);
     $document->addField('ss_global_created_date', $date);
+    $document->addField('bs_global_status', $status);
     $document->addField('ss_drupal_timestamp', strtotime($date));
     $document->addField('ss_global_fullname', $fullname);
     $document->addField('ss_global_user_url', $user_url);
@@ -156,7 +162,7 @@ class SolrDocumentProcessor {
         : '';
       $group_parent_id = $group_content_entity->getGroup() instanceof GroupInterface ?
         $group_content_entity->getGroup()->id()
-        : '';
+        : -1;
     }
 
     $document->addField('ss_global_group_parent_label', $group_parent_label);
@@ -252,6 +258,8 @@ class SolrDocumentProcessor {
     }
 
     $document->addField('ss_group_visibility', $group_visibility);
+    $document->addField('ss_group_moderation_state', $group->get('moderation_state')->value);
+    $document->addField('its_group_owner_id', $group->getOwnerId());
   }
 
   /**
