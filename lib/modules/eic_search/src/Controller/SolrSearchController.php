@@ -3,6 +3,7 @@
 namespace Drupal\eic_search\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\eic_search\Search\Sources\GroupSourceType;
 use Drupal\eic_search\Search\Sources\SourceTypeInterface;
 use Drupal\eic_user\UserHelper;
 use Drupal\group\GroupMembership;
@@ -143,6 +144,7 @@ class SolrSearchController extends ControllerBase {
     $this->generateQueryInterests($fq, $facets_interests);
     $this->generateQueryUserGroupsAndContents($fq, $facets_interests);
     $this->generateQueryPrivateContent($fq);
+    $this->generateQueryPublishedState($fq, $source);
 
     if ($content_type_query) {
       $fq .= $content_type_query;
@@ -275,6 +277,30 @@ class SolrSearchController extends ControllerBase {
     }
 
     $fq .= " AND bs_content_is_private:false";
+  }
+
+  /**
+   * Add the status query to the query but check for groups if need
+   * to show draft/pending for group owner
+   *
+   * @param $fq
+   * @param \Drupal\eic_search\Search\Sources\SourceTypeInterface $source
+   */
+  private function generateQueryPublishedState(&$fq, SourceTypeInterface $source) {
+    if (!$source instanceof SourceTypeInterface) {
+      return;
+    }
+
+    $status_query = ' AND (bs_global_status:true';
+
+    if ($source instanceof GroupSourceType) {
+      $user_id = \Drupal::currentUser()->id();
+      $status_query .= ' OR (its_group_owner_id:' . $user_id . ')';
+    }
+
+    $status_query .= ')';
+
+    $fq .= $status_query;
   }
 
 }
