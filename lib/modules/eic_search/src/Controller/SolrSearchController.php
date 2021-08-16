@@ -132,7 +132,6 @@ class SolrSearchController extends ControllerBase {
       $index->getProcessor('group_content_access')
         ->preprocessSolrSearchQuery($solariumQuery);
     }
-
     $results = $connector->search($solariumQuery)->getBody();
 
     return new Response($results, Response::HTTP_OK, [
