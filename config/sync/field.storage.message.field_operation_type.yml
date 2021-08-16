@@ -1,0 +1,21 @@
+uuid: e4c2d170-b825-4dd9-8e27-ea290a1a53ea
+langcode: en
+status: true
+dependencies:
+  module:
+    - message
+id: message.field_operation_type
+field_name: field_operation_type
+entity_type: message
+type: string
+settings:
+  max_length: 255
+  is_ascii: false
+  case_sensitive: false
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

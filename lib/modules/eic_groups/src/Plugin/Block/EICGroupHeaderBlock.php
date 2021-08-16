@@ -6,7 +6,6 @@ use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Drupal\Core\Render\Markup;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\Url;
@@ -271,7 +270,7 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
         'id' => $group->id(),
         'bundle' => $group->bundle(),
         'title' => $group->label(),
-        'description' => Markup::create($group->get('field_body')->value),
+        'description' => $group->field_body->view('full'),
         'operation_links' => array_merge($operation_links, $node_operation_links, $visible_group_operation_links),
         'membership_links' => array_merge($membership_links, $user_operation_links),
         'stats' => [
@@ -371,12 +370,17 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
   }
 
   /**
-   * If group does not allow to invite members, hide invite group link in header
+   * Removes the invite members link.
    *
-   * @param $group
-   * @param $user_operation_links
+   * If group does not allow to invite members, hide invite group link from the
+   * group header.
+   *
+   * @param \Drupal\group\Entity\GroupInterface $group
+   *   The group entity.
+   * @param array $user_operation_links
+   *   Array of user operation links.
    */
-  private function processInviteUserPermission($group, &$user_operation_links) {
+  private function processInviteUserPermission(GroupInterface $group, array &$user_operation_links) {
     $key = 'invite-user';
 
     if (!array_key_exists($key, $user_operation_links)) {
@@ -393,12 +397,17 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
   }
 
   /**
-   * Remove the "leave group" link if group in draft/pending or if the user is the group owner
+   * Removes the "leave group" link from group.
    *
-   * @param $group
-   * @param $user_operation_links
+   * It only removes the link ff the group is in draft/pending or if the user
+   * is the group owner.
+   *
+   * @param \Drupal\group\Entity\GroupInterface $group
+   *   The group entity.
+   * @param array $user_operation_links
+   *   Array of user operation links.
    */
-  private function processLeaveGroupPermission($group, &$user_operation_links) {
+  private function processLeaveGroupPermission(GroupInterface $group, array &$user_operation_links) {
     $key = 'group-leave';
 
     if (!array_key_exists($key, $user_operation_links)) {
@@ -423,4 +432,5 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
 
     unset($user_operation_links[$key]);
   }
+
 }

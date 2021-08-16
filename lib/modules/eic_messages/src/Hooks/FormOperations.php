@@ -8,6 +8,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\eic_content\EICContentHelper;
+use Drupal\eic_messages\ActivityStreamOperationTypes;
 use Drupal\eic_messages\Service\GroupContentMessageCreator;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -52,7 +53,11 @@ class FormOperations implements ContainerInjectionInterface {
    * @param \Drupal\eic_messages\Service\GroupContentMessageCreator $group_content_message_creator
    *   The GroupContent Message Creator service.
    */
-  public function __construct(RouteMatchInterface $route_match, EICContentHelper $content_helper, GroupContentMessageCreator $group_content_message_creator) {
+  public function __construct(
+    RouteMatchInterface $route_match,
+    EICContentHelper $content_helper,
+    GroupContentMessageCreator $group_content_message_creator
+  ) {
     $this->routeMatch = $route_match;
     $this->eicContentHelper = $content_helper;
     $this->groupContentMessageCreator = $group_content_message_creator;
@@ -86,7 +91,11 @@ class FormOperations implements ContainerInjectionInterface {
    * @param string $form_id
    *   The form ID.
    */
-  protected function handleFieldPostActivity(array &$form, FormStateInterface $form_state, string $form_id) {
+  protected function handleFieldPostActivity(
+    array &$form,
+    FormStateInterface $form_state,
+    string $form_id
+  ) {
     $is_group_content = FALSE;
     $is_new_content = FALSE;
 
@@ -103,7 +112,8 @@ class FormOperations implements ContainerInjectionInterface {
     }
 
     // Test if we are creating or editing a group content.
-    if ($is_group_content && $form_state->get('form_display')->getComponent('field_post_activity')) {
+    if ($is_group_content && $form_state->get('form_display')
+        ->getComponent('field_post_activity')) {
       $form['field_post_activity'] = [
         '#title' => $this->t('Post message in the activity stream'),
         '#type' => 'checkbox',
@@ -128,7 +138,11 @@ class FormOperations implements ContainerInjectionInterface {
     }
 
     $entity = $form_state->getFormObject()->getEntity();
-    $this->groupContentMessageCreator->createGroupContentActivity($entity);
+    $operation = $form_state->getFormObject()->getOperation() === 'edit'
+      ? ActivityStreamOperationTypes::UPDATED_ENTITY
+      : ActivityStreamOperationTypes::NEW_ENTITY;
+
+    $this->groupContentMessageCreator->createGroupContentActivity($entity, $operation);
   }
 
 }
