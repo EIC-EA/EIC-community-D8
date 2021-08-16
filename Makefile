@@ -10,7 +10,12 @@ ifeq (run,$(firstword $(MAKECMDGOALS)))
   $(eval $(RUN_ARGS):;@:)
 endif
 
+UNAME := $(shell uname)
+
 setup:
+  ifeq ($(UNAME),Darwin)
+		$(call do_macos_setup)
+  endif
 	$(call do_setup)
 
 start:
@@ -79,6 +84,14 @@ define do_setup
 	echo -e '\e[42m${APP_NAME} setup completed\e[0m'
 	$(call do_display_app_info)
 	$(call do_display_commands)
+endef
+
+define do_macos_setup
+	echo -e 'Setting up ${APP_NAME}...'
+	echo -e 'You have been identified as running on macOS'
+	echo -e 'Please be sure you read \e[36m"Running on macOS"\e[0m within the README file'
+	echo -e 'Copying macos volume configs as docker-compose.override.yml'
+	$(shell cp -n ./docker/macos.volumes.yml docker-compose.override.yml)
 endef
 
 define do_start
