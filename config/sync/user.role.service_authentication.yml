@@ -10,3 +10,4 @@ permissions:
   - 'administer comments'
   - 'administer users'
   - 'restful post eic_webservices_user_update'
+  - 'use news_stories transition archived'

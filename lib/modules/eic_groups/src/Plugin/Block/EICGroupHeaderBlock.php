@@ -11,9 +11,12 @@ use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\Url;
 use Drupal\eic_group_statistics\GroupStatisticsHelperInterface;
+use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_groups\EICGroupsHelperInterface;
+use Drupal\eic_groups\GroupsModerationHelper;
 use Drupal\flag\FlagServiceInterface;
 use Drupal\group\Entity\GroupInterface;
+use Drupal\group\GroupMembership;
 use Drupal\oec_group_flex\OECGroupFlexHelper;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -181,7 +184,8 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
     $cacheable_metadata->addCacheTags($group->getCacheTags());
 
     // Get group operation links.
-    $group_operation_links = $this->entityTypeManager->getListBuilder($group->getEntityTypeId())->getOperations($group);
+    $group_operation_links = $this->entityTypeManager->getListBuilder($group->getEntityTypeId())
+      ->getOperations($group);
 
     // Get group content operation links.
     $node_operation_links = $this->eicGroupsHelper->getGroupContentOperationLinks($group, ['node'], $cacheable_metadata);
@@ -192,6 +196,9 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
     if ($login_link = $this->getAnonymousLoginLink($group)) {
       $operation_links['anonymous_user_link'] = $login_link;
     }
+
+    $this->processInviteUserPermission($group, $user_operation_links);
+    $this->processLeaveGroupPermission($group, $user_operation_links);
 
     // Moves group joining methods operations to the operation_links array.
     foreach ($user_operation_links as $key => $action) {
@@ -208,7 +215,8 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
           // be redirected back to the current page after joining the group.
           $action['url']->setOption('query',
             [
-              'destination' => Url::fromRouteMatch($this->routeMatch)->toString(),
+              'destination' => Url::fromRouteMatch($this->routeMatch)
+                ->toString(),
             ]
           );
           $operation_links[$key] = $action;
@@ -362,4 +370,57 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
     return $group_flags;
   }
 
+  /**
+   * If group does not allow to invite members, hide invite group link in header
+   *
+   * @param $group
+   * @param $user_operation_links
+   */
+  private function processInviteUserPermission($group, &$user_operation_links) {
+    $key = 'invite-user';
+
+    if (!array_key_exists($key, $user_operation_links)) {
+      return;
+    }
+
+    $user_can_invite = (int) $group->get('field_group_invite_members')->value;
+
+    if ($user_can_invite) {
+      return;
+    }
+
+    unset($user_operation_links[$key]);
+  }
+
+  /**
+   * Remove the "leave group" link if group in draft/pending or if the user is the group owner
+   *
+   * @param $group
+   * @param $user_operation_links
+   */
+  private function processLeaveGroupPermission($group, &$user_operation_links) {
+    $key = 'group-leave';
+
+    if (!array_key_exists($key, $user_operation_links)) {
+      return;
+    }
+
+    $moderation_state = $group->get('moderation_state')->value;
+
+    if ($moderation_state === GroupsModerationHelper::GROUP_DRAFT_STATE || $moderation_state === GroupsModerationHelper::GROUP_PENDING_STATE) {
+      unset($user_operation_links[$key]);
+      return;
+    }
+
+    $group_membership = $group->getMember($this->currentUser);
+    $user_group_roles = $group_membership instanceof GroupMembership
+      ? array_keys($group_membership->getRoles())
+      : [];
+
+    if (!in_array(EICGroupsHelper::GROUP_OWNER_ROLE, $user_group_roles)) {
+      return;
+    }
+
+    unset($user_operation_links[$key]);
+  }
 }

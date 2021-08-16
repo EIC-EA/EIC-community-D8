@@ -1,0 +1,14 @@
+<div class="ecl-highlight {{ is_active ? 'ecl-highlight--is-highlighted'}}">
+  <a href="{{ path }}">
+    {% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with {
+      icon: {
+        path: icon_file_path,
+        name: 'star_circle',
+        size: 'm',
+        type: 'custom'
+      },
+      extra_classes: 'ecl-highlight__icon'
+    } %}
+    <span class="ecl-highlight__label">{{ label }}</span>
+  </a>
+</div>

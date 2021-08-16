@@ -2,10 +2,13 @@ uuid: d7f2bfb0-3bbf-4fbd-9eb8-02a8e7816d00
 langcode: en
 status: true
 dependencies:
+  config:
+    - system.menu.admin
   module:
     - node
     - scheduler
     - user
+    - views_autocomplete_filters
 _core:
   default_config_hash: 72DaOXTPi--s-2ge-SRzJzYnqnoD2SAKPkUKXOvpxlU
 id: scheduler_scheduled_content
@@ -996,9 +999,9 @@ display:
     display_options:
       path: admin/content/scheduled
       menu:
-        type: tab
+        type: normal
         title: Scheduled
-        description: ''
+        description: 'Content scheduled for publishing and unpublishing'
         expanded: false
         parent: system.admin_content
         weight: -10

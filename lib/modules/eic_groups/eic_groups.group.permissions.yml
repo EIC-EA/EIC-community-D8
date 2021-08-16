@@ -9,6 +9,7 @@ access members overview:
   title: 'Access Members overview'
   description: 'Gives access to the Members overview.'
   restrict access: FALSE
+<<<<<<< HEAD
 access wiki overview:
   title: 'Access Wiki overview'
   description: 'Gives access to the Wiki overview.'
@@ -17,3 +18,8 @@ access files overview:
   title: 'Access Files overview'
   description: 'Gives access to the Files overview.'
   restrict access: FALSE
+=======
+highlight group content:
+  title: 'Highlight group content'
+  description: 'Allow the user to highlight a group content (e.g: file/document)'
+>>>>>>> bdb6817c25d5340d498c3c103c6d94e8f4f941be

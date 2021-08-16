@@ -16,14 +16,14 @@ source:
   track_changes: true
 process:
   # Ignore Term ID. A new one will be generated.
-  #tid:
-  #  - plugin: get
-  #    source: tid
+#  tid:
+#    - plugin: get
+#      source: tid
   # Ignore Vocabulary ID. It will be automatically filled by the default_bundle on the destination.
-  #vid:
-  #  - plugin: migration_lookup
-  #    migration: upgrade_d7_taxonomy_vocabulary
-  #    source: vid
+#  vid:
+#    - plugin: migration_lookup
+#      migration: upgrade_d7_taxonomy_vocabulary
+#      source: vid
   name:
     - plugin: get
       source: name

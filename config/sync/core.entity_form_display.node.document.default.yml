@@ -12,6 +12,7 @@ dependencies:
     - comment
     - content_moderation
     - eic_content
+    - media_library
     - path
     - publication_date
     - scheduler
@@ -45,12 +46,9 @@ content:
   field_document_media:
     weight: 5
     settings:
-      match_operator: CONTAINS
-      match_limit: 10
-      size: 60
-      placeholder: ''
+      media_types: {  }
     third_party_settings: {  }
-    type: entity_reference_autocomplete
+    type: media_library_widget
     region: content
   field_post_activity:
     weight: 19
@@ -61,9 +59,10 @@ content:
     weight: 4
     settings:
       match_top_level_limit: '0'
+      disable_top_choices: '1'
       items_to_load: '25'
-      auto_select_parents: '1'
       load_all: 0
+      auto_select_parents: 0
     third_party_settings: {  }
     type: entity_tree
     region: content
