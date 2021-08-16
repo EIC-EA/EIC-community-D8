@@ -1,0 +1,70 @@
+stages:
+  - build
+  - test
+  - deploy
+
+.deploy_job: &deploy_job
+  image: intractosre/deploy:1
+  stage: deploy
+  before_script:
+    - eval $(ssh-agent -s)
+    - echo "$DEPLOYMENT_SSH_KEY" | tr -d '\r' | ssh-add - > /dev/null
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+  script:
+    - rsync -avuz --no-perms --omit-dir-times --exclude-from=.rsyncignore --delete --delete-after $CI_PROJECT_DIR/ $PROJECT_USER@$WEB_SERVER_ADDRESS:$WEB_SERVER_PATH
+    - >
+      ssh $PROJECT_USER@$WEB_SERVER_ADDRESS "cd $WEB_SERVER_PATH &&
+      bash $WEB_SERVER_PATH/../deploy.sh
+
+build_backend:
+  stage: build
+  image: intractosre/php:7.3
+  artifacts:
+    untracked: true
+    expire_in: '1 day'
+  script:
+    - composer --no-ansi --no-interaction install --no-progress --prefer-dist --optimize-autoloader --no-dev
+
+build_front:
+  stage: build
+  image: node:14
+  artifacts:
+    untracked: true
+    expire_in: '1 day'
+  script:
+    - cd lib/themes/eic_community
+    - npm install && npm run build && npm run react-production
+    - npm run pregenerate-storybook && npm run generate-storybook && npm run postgenerate-storybook
+    - rm -rf node_modules
+
+security_check:
+  stage: test
+  image: jakzal/phpqa
+  script:
+    - local-php-security-checker
+  allow_failure: true
+
+code_style_test:
+  stage: test
+  image: jakzal/phpqa
+  script:
+    - phpcs -v --ignore=*node_modules/* --standard=./vendor/ec-europa/qa-automation/phpcs.xml.dist --colors ./lib/
+  allow_failure: true
+
+phpmd_test:
+  stage: test
+  image: jakzal/phpqa
+  script:
+    - phpmd lib/ ansi ./vendor/openeuropa/code-review/resources/phpmd-ruleset.xml
+  allow_failure: true
+
+deploy_staging:
+  <<: *deploy_job
+  stage: deploy
+  when: manual
+  variables:
+    WEB_SERVER_ADDRESS: '51.83.110.204'
+    WEB_SERVER_PATH: '/home/blue4you/websites/eic-d8.stg.blue4you.be/www'
+    PROJECT_USER: 'blue4you'
+
