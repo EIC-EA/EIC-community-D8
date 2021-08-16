@@ -9,7 +9,7 @@ use Drupal\Core\Url;
  *
  * @GroupFeature(
  *   id = "eic_groups_latest_activity_stream",
- *   label = @Translation("Latest activity stream"),
+ *   label = @Translation("Latest activity"),
  *   description = @Translation("Group latest activity stream feature.")
  * )
  */

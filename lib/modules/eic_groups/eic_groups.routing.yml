@@ -49,10 +49,10 @@ eic_overviews.groups.overview_page.files:
     _group_permission: 'access files overview'
 
 eic_overviews.groups.overview_page.latest_activity_stream:
-  path: '/group/{group}/activity-stream'
+  path: '/group/{group}/latest-activity'
   defaults:
     # @todo: update controller namespace once we have the class.
     _controller: '\Drupal\eic_groups\Controller\AboutPageController::build'
-    _title: 'Latest activity stream'
+    _title: 'Latest activity'
   requirements:
     _group_permission: 'access latest activity stream'
