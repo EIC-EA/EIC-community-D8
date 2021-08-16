@@ -178,6 +178,8 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
       '#enable_facet_interests' => $this->configuration['add_facet_interests'],
       '#enable_facet_my_groups' => $this->configuration['add_facet_my_groups'],
       '#isGroupOwner' => array_key_exists(EICGroupsHelper::GROUP_OWNER_ROLE, $user_group_roles),
+      '#allow_pagination' => $source instanceof SourceTypeInterface ? (int) $source->allowPagination() : 1,
+      '#load_more_number' => SourceTypeInterface::READ_MORE_NUMBER_TO_LOAD,
       '#translations' => [
         'public' => $this->t('Public', [], ['context' => 'eic_group']),
         'private' => $this->t('Private', [], ['context' => 'eic_group']),
