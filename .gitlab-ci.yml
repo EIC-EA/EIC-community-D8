@@ -14,8 +14,8 @@ stages:
   script:
     - rsync -avuz --no-perms --omit-dir-times --exclude-from=.rsyncignore --delete --delete-after $CI_PROJECT_DIR/ $PROJECT_USER@$WEB_SERVER_ADDRESS:$WEB_SERVER_PATH
     - >
-      ssh $PROJECT_USER@$WEB_SERVER_ADDRESS "cd $WEB_SERVER_PATH &&
-      bash $WEB_SERVER_PATH/../deploy.sh
+      ssh -tt $PROJECT_USER@$WEB_SERVER_ADDRESS "cd $WEB_SERVER_PATH &&
+      bash $WEB_SERVER_PATH/../deploy.sh"
 
 build_backend:
   stage: build
@@ -27,6 +27,11 @@ build_backend:
     # Current version of Gitlab (require > 14.2.0) doesn't support variable overrides using the 'rules' property
     # Dynamically define the --no-dev option once updated (e.g: added on develop and not other branches)
     - composer --no-ansi --no-interaction install --no-progress --prefer-dist --optimize-autoloader
+    # We don't have our php-qa image for the moment providing coding style standards
+    # Gitlab CI will exclude any directory containing a .git folder from artifacts, remove it temporarily
+    - rm -rf $CI_PROJECT_DIR/vendor/drupal/coder/.git
+  only:
+    - develop
 
 build_front:
   stage: build
@@ -39,10 +44,12 @@ build_front:
     - npm install && npm run build && npm run react-production
     - npm run pregenerate-storybook && npm run generate-storybook && npm run postgenerate-storybook
     - rm -rf node_modules
+  only:
+    - develop
 
 security_check:
   stage: test
-  image: jakzal/phpqa
+  image: jakzal/phpqa:php7.3
   script:
     - local-php-security-checker
   allow_failure: true
@@ -51,18 +58,18 @@ security_check:
 
 code_style_test:
   stage: test
-  image: jakzal/phpqa
+  image: jakzal/phpqa:php7.3
   script:
-    - phpcs -v --ignore=*node_modules/* --standard=./vendor/ec-europa/qa-automation/phpcs.xml.dist --colors ./lib/
+    - ./vendor/bin/grumphp run --tasks=phpcs
   allow_failure: true
   only:
     - develop
 
 phpmd_test:
   stage: test
-  image: jakzal/phpqa
+  image: jakzal/phpqa:php7.3
   script:
-    - phpmd lib/ ansi ./vendor/openeuropa/code-review/resources/phpmd-ruleset.xml
+    - ./vendor/bin/grumphp run --tasks=phpmd
   allow_failure: true
   only:
     - develop
