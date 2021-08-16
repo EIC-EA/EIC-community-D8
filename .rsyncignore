@@ -1,0 +1,15 @@
+CHANGELOG.txt
+LICENSE.txt
+README.txt
+UPDATE.txt
+.gitkeep
+.github
+.gitattributes
+.gitignore
+web/sites/default/settings.php
+web/sites/default/files/*
+private_files/*
+composer.lock
+web.config
+backups
+.env
