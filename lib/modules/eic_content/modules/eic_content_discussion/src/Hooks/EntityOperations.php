@@ -150,8 +150,9 @@ class EntityOperations implements ContainerInjectionInterface {
   private function getRelatedContributorIds() {
     $contributorUserIds = [];
     foreach ($this->contributors as $contributorParagraph) {
-      $userRef = $contributorParagraph->get('field_user_ref');
-      $user = reset($userRef->referencedEntities());
+      $target_entities = $contributorParagraph->get('field_user_ref')
+        ->referencedEntities();
+      $user = reset($target_entities);
       // If Contributor is not a Platform Member, continue.
       if ($user === FALSE) {
         continue;
