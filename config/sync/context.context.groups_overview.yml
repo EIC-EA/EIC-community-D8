@@ -29,7 +29,6 @@ reactions:
         weight: '0'
         facets:
           ss_group_topic_name: ss_group_topic_name
-          ss_group_label_string: ss_group_label_string
           ss_group_user_fullname: 0
         sort_options:
           timestamp: timestamp

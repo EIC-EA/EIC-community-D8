@@ -3,16 +3,35 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.message.stream_discussion_insert_update.field_operation_type
+    - field.field.message.stream_discussion_insert_update.field_referenced_node
     - message.template.stream_discussion_insert_update
 id: message.stream_discussion_insert_update.default
 targetEntityType: message
 bundle: stream_discussion_insert_update
 mode: default
 content:
+  field_operation_type:
+    weight: 2
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+  field_referenced_node:
+    weight: 1
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
   partial_0:
     weight: 0
     region: content
     settings: {  }
     third_party_settings: {  }
 hidden:
+  field_group_ref: true
   search_api_excerpt: true

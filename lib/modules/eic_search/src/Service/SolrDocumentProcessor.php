@@ -8,10 +8,12 @@ use Drupal\file\Entity\File;
 use Drupal\group\Entity\GroupContent;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\group\GroupMembership;
+use Drupal\image\Entity\ImageStyle;
 use Drupal\paragraphs\Entity\Paragraph;
 use Drupal\profile\Entity\Profile;
 use Drupal\profile\Entity\ProfileInterface;
 use Drupal\user\Entity\User;
+use Drupal\user\UserInterface;
 use Solarium\QueryType\Update\Query\Document;
 
 /**
@@ -24,8 +26,10 @@ class SolrDocumentProcessor {
   /**
    * Set global fields data, gallery slides data and set by default content to not private
    *
-   * @param Document $document
+   * @param \Solarium\QueryType\Update\Query\Document $document
    * @param array $fields
+   *
+   * @throws \Drupal\Core\Entity\EntityMalformedException
    */
   public function processGlobalData(Document &$document, array $fields) {
     switch ($fields['ss_search_api_datasource']) {
@@ -33,31 +37,61 @@ class SolrDocumentProcessor {
         $title = $fields['ss_content_title'];
         $type = $fields['ss_content_type'];
         $date = $fields['ds_content_created'];
-        $fullname = $fields['ss_content_first_name'] . ' ' . $fields['ss_content_last_name'];
-        $topics = $fields['sm_content_field_vocab_topics_string'];
-        $geo = $fields['sm_content_field_vocab_geo_string'];
+        $status = $fields['bs_content_status'];
+        $fullname = array_key_exists('ss_content_first_name', $fields) && array_key_exists('ss_content_last_name', $fields) ?
+          $fields['ss_content_first_name'] . ' ' . $fields['ss_content_last_name'] :
+          t('No name', [], ['context' => 'eic_search']);
+        $topics = array_key_exists('sm_content_field_vocab_topics_string', $fields) ?
+          $fields['sm_content_field_vocab_topics_string'] :
+          [];
+        $geo = array_key_exists('sm_content_field_vocab_geo_string', $fields) ?
+          $fields['sm_content_field_vocab_geo_string'] :
+          [];
+        $language = array_key_exists('ss_content_language_string', $fields) ?
+          $fields['ss_content_language_string'] :
+          t('English', [], ['context' => 'eic_search'])->render();
+        $user_url = '';
+        if (array_key_exists('its_content_uid', $fields)) {
+          $user = User::load($fields['its_content_uid']);
+          $user_url = $user instanceof UserInterface ? $user->toUrl()
+            ->toString() : '';
+        }
         break;
       case 'entity:group':
         $title = $fields['ss_group_label_string'];
         $type = 'group';
         $date = $fields['ds_group_created'];
+        $status = $fields['bs_group_status'];
         $fullname = $fields['ss_group_user_first_name'] . ' ' . $fields['ss_group_user_last_name'];
         $topics = $fields['ss_group_topic_name'];
         $geo = $fields['ss_group_field_vocab_geo_string'];
+        $language = t('English', [], ['context' => 'eic_search'])->render();
+        $user_url = '';
+        if (array_key_exists('its_group_owner_id', $fields)) {
+          $user = User::load($fields['its_group_owner_id']);
+          $user_url = $user instanceof UserInterface ? $user->toUrl()
+            ->toString() : '';
+        }
         break;
       default:
         $title = '';
         $type = '';
         $date = '';
+        $status = FALSE;
         $fullname = '';
         $topics = [];
         $geo = [];
+        $language = t('English', [], ['context' => 'eic_search'])->render();
+        $user_url = '';
         break;
     }
 
     if ('gallery' === $type) {
       $slides_id = $fields['sm_content_gallery_slide_id_array'] ?: [];
-      $slides = array_map(function($slide_id) {
+      $slides_id = is_array($slides_id) ? $slides_id : [$slides_id];
+      $image_style = ImageStyle::load('crop_50x50');
+      $image_style_160 = ImageStyle::load('gallery_teaser_crop_160x160');
+      $slides = array_map(function($slide_id) use ($image_style, $image_style_160) {
         $slide = Paragraph::load($slide_id);
         $media = $slide->get('field_gallery_slide_media')->referencedEntities();
 
@@ -68,11 +102,19 @@ class SolrDocumentProcessor {
         /** @var \Drupal\media\MediaInterface $media */
         $media = $media[0];
         $file = File::load($media->get('oe_media_image')->target_id);
+        $image_uri = $file->getFileUri();
+
+        $destination_uri = $image_style->buildUri($image_uri);
+        $destination_uri_160 = $image_style_160->buildUri($image_uri);
+
+        $image_style->createDerivative($image_uri, $destination_uri);
+        $image_style_160->createDerivative($image_uri, $destination_uri_160);
 
         return json_encode([
           'id' => $slide->id(),
           'size' => $file->getSize(),
-          'uri' => file_url_transform_relative(file_create_url($file->getFileUri())),
+          'uri' => file_url_transform_relative(file_create_url($destination_uri)),
+          'uri_160' => file_url_transform_relative(file_create_url($destination_uri_160)),
           'legend' => $slide->get('field_gallery_slide_legend')->value,
         ]);
       }, $slides_id);
@@ -84,12 +126,19 @@ class SolrDocumentProcessor {
     $document->addField('ss_global_title', $title);
     $document->addField('ss_global_content_type', $type);
     $document->addField('ss_global_created_date', $date);
+    $document->addField('bs_global_status', $status);
+    $document->addField('ss_drupal_timestamp', strtotime($date));
     $document->addField('ss_global_fullname', $fullname);
+    $document->addField('ss_global_user_url', $user_url);
     $document->addField('sm_content_field_vocab_topics_string', $topics);
     $document->addField('sm_content_field_vocab_geo_string', $geo);
 
     if (!array_key_exists('bs_content_is_private', $fields)) {
       $document->addField('bs_content_is_private', FALSE);
+    }
+
+    if (!array_key_exists('ss_content_language_string', $fields)) {
+      $document->addField('ss_content_language_string', $language);
     }
   }
 
@@ -114,7 +163,7 @@ class SolrDocumentProcessor {
         : '';
       $group_parent_id = $group_content_entity->getGroup() instanceof GroupInterface ?
         $group_content_entity->getGroup()->id()
-        : '';
+        : -1;
     }
 
     $document->addField('ss_global_group_parent_label', $group_parent_label);
@@ -210,6 +259,8 @@ class SolrDocumentProcessor {
     }
 
     $document->addField('ss_group_visibility', $group_visibility);
+    $document->addField('ss_group_moderation_state', $group->get('moderation_state')->value);
+    $document->addField('its_group_owner_id', $group->getOwnerId());
   }
 
   /**

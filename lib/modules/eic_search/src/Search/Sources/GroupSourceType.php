@@ -9,7 +9,7 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
  *
  * @package Drupal\eic_groups\Search\Sources
  */
-class GroupSourceType implements SourceTypeInterface {
+class GroupSourceType extends SourceType {
 
   use StringTranslationTrait;
 

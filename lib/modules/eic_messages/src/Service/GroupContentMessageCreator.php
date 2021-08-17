@@ -3,6 +3,7 @@
 namespace Drupal\eic_messages\Service;
 
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\group\Entity\GroupInterface;
 
 /**
  * Class GroupContentMessageCreator.
@@ -60,8 +61,16 @@ class GroupContentMessageCreator extends MessageCreatorBase {
    *
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity object.
+   * @param \Drupal\group\Entity\GroupInterface $group
+   *   The group having this content.
+   * @param string $operation
+   *   The type of the operation. See ActivityStreamOperationTypes
    */
-  public function createGroupContentActivity(EntityInterface $entity) {
+  public function createGroupContentActivity(
+    EntityInterface $entity,
+    GroupInterface $group,
+    string $operation
+  ) {
     $messages = [];
 
     switch ($entity->getEntityTypeId()) {
@@ -71,6 +80,9 @@ class GroupContentMessageCreator extends MessageCreatorBase {
             // @todo Handle all activity messages with correct values.
             $messages[] = \Drupal::entityTypeManager()->getStorage('message')->create([
               'template' => 'stream_discussion_insert_update',
+              'field_referenced_node' => $entity,
+              'field_operation_type' => $operation,
+              'field_group_ref' => $group,
             ]);
             break;
         }
@@ -81,13 +93,11 @@ class GroupContentMessageCreator extends MessageCreatorBase {
     foreach ($messages as $message) {
       try {
         $message->save();
-      }
-      catch (\Exception $e) {
+      } catch (\Exception $e) {
         $logger = $this->getLogger('eic_messages');
         $logger->error($e->getMessage());
       }
     }
-
   }
 
 }
