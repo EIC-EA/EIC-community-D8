@@ -73,6 +73,9 @@ class SolrDocumentProcessor {
             ->toString() : '';
         }
         break;
+      case 'entity:user':
+        $status = TRUE;
+        break;
       default:
         $title = '';
         $type = '';
