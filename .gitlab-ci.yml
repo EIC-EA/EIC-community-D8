@@ -52,7 +52,6 @@ security_check:
   image: jakzal/phpqa:php7.3
   script:
     - local-php-security-checker
-  allow_failure: true
   only:
     - develop
 
