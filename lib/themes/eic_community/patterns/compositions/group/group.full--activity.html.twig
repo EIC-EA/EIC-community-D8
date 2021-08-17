@@ -1,0 +1,9 @@
+{% extends "@theme/patterns/compositions/group/group.full.html.twig" %}
+
+{% block content %}
+    <p>hi there</p>
+{% endblock %}
+
+{% block sidebar %}
+    {% include "@theme/patterns/compositions/featured-contributors.html.twig" with latest_members|default({}) only %}
+{% endblock %}
