@@ -10,6 +10,7 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\eic_content\EICContentHelper;
 use Drupal\eic_messages\ActivityStreamOperationTypes;
 use Drupal\eic_messages\Service\GroupContentMessageCreator;
+use Drupal\group\Entity\GroupInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -138,20 +139,24 @@ class FormOperations implements ContainerInjectionInterface {
     }
 
     $entity = $form_state->getFormObject()->getEntity();
-    $group_content = $this->eicContentHelper->getGroupContentByEntity($entity);
-    if (empty($group_content)) {
-      return;
+    $group = $this->routeMatch->getParameter('group');
+    if (!$group instanceof GroupInterface) {
+      $group_content = $this->eicContentHelper->getGroupContentByEntity($entity);
+      if (empty($group_content)) {
+        return;
+      }
+
+      $group_content = reset($group_content);
+      $group = $group_content->getGroup();
     }
 
-    /** @var \Drupal\group\Entity\GroupContentInterface $group_content */
-    $group_content = reset($group_content);
     $operation = $form_state->getFormObject()->getOperation() === 'edit'
       ? ActivityStreamOperationTypes::UPDATED_ENTITY
       : ActivityStreamOperationTypes::NEW_ENTITY;
 
     $this->groupContentMessageCreator->createGroupContentActivity(
       $entity,
-      $group_content->getGroup(),
+      $group,
       $operation
     );
   }

@@ -4,6 +4,7 @@ namespace Drupal\eic_messages\Service;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\group\Entity\GroupInterface;
+use InvalidArgumentException;
 
 /**
  * Class GroupContentMessageCreator.
@@ -71,33 +72,44 @@ class GroupContentMessageCreator extends MessageCreatorBase {
     GroupInterface $group,
     string $operation
   ) {
-    $messages = [];
-
     switch ($entity->getEntityTypeId()) {
       case 'node':
-        switch ($entity->bundle()) {
-          case 'discussion':
-            // @todo Handle all activity messages with correct values.
-            $messages[] = \Drupal::entityTypeManager()->getStorage('message')->create([
-              'template' => 'stream_discussion_insert_update',
-              'field_referenced_node' => $entity,
-              'field_operation_type' => $operation,
-              'field_group_ref' => $group,
-            ]);
-            break;
-        }
+        $message = \Drupal::entityTypeManager()->getStorage('message')->create([
+          'template' => $this->getActivityItemTemplate($entity),
+          'field_referenced_node' => $entity,
+          'field_operation_type' => $operation,
+          'field_group_ref' => $group,
+        ]);
         break;
     }
 
-    // Save all messages.
-    foreach ($messages as $message) {
-      try {
-        $message->save();
-      } catch (\Exception $e) {
-        $logger = $this->getLogger('eic_messages');
-        $logger->error($e->getMessage());
-      }
+    try {
+      $message->save();
+    } catch (\Exception $e) {
+      $logger = $this->getLogger('eic_messages');
+      $logger->error($e->getMessage());
     }
+  }
+
+  /**
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *
+   * @return string
+   */
+  private function getActivityItemTemplate(EntityInterface $entity): string {
+    static $templates = [
+      'node' => [
+        'discussion' => 'stream_discussion_insert_update',
+        'wiki_page' => 'stream_wiki_page_insert_update',
+        'document' => 'stream_document_insert_update',
+      ],
+    ];
+
+    if (!isset($templates[$entity->getEntityTypeId()][$entity->bundle()])) {
+      throw new InvalidArgumentException('Invalid entity / bundle provided');
+    }
+
+    return $templates[$entity->getEntityTypeId()][$entity->bundle()];
   }
 
 }

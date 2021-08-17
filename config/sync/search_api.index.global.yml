@@ -635,6 +635,14 @@ field_settings:
       module:
         - group
         - user
+  operation_type:
+    label: 'Operation type'
+    datasource_id: 'entity:message'
+    property_path: field_operation_type
+    type: string
+    dependencies:
+      config:
+        - field.storage.message.field_operation_type
   path:
     label: 'Referenced node » Content » URL alias'
     datasource_id: 'entity:message'
@@ -646,14 +654,6 @@ field_settings:
       module:
         - node
         - path
-  operation_type:
-    label: 'Operation type'
-    datasource_id: 'entity:message'
-    property_path: field_operation_type
-    type: string
-    dependencies:
-      config:
-        - field.storage.message.field_operation_type
   rendered_item:
     label: 'Rendered HTML output'
     property_path: rendered_item

@@ -1,4 +1,4 @@
-uuid: 2073df2a-f114-47ea-8885-d4b589936e1c
+uuid: ad2084f6-820d-445d-b562-c03693222aa0
 langcode: en
 status: true
 dependencies:
@@ -13,33 +13,31 @@ bundle: stream_wiki_page_insert_update
 mode: default
 content:
   field_group_ref:
-    weight: 1
-    label: above
+    weight: 0
     settings:
-      link: true
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
     third_party_settings: {  }
-    type: entity_reference_label
+    type: entity_reference_autocomplete
     region: content
   field_operation_type:
-    weight: 3
-    label: above
+    weight: 2
     settings:
-      link_to_entity: false
+      size: 60
+      placeholder: ''
     third_party_settings: {  }
-    type: string
+    type: string_textfield
     region: content
   field_referenced_node:
-    weight: 2
-    label: above
+    weight: 1
     settings:
-      link: true
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
     third_party_settings: {  }
-    type: entity_reference_label
+    type: entity_reference_autocomplete
     region: content
-  partial_0:
-    weight: 0
-    region: content
-    settings: {  }
-    third_party_settings: {  }
-hidden:
-  search_api_excerpt: true
+hidden: {  }
