@@ -19,6 +19,7 @@ permissions:
   - 'access files overview'
   - 'access group content menu overview'
   - 'access group search'
+  - 'access latest activity stream'
   - 'access members overview'
   - 'access wiki overview'
   - 'delete any invitation'
