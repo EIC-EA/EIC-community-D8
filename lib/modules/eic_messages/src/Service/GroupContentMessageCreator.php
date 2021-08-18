@@ -126,6 +126,7 @@ class GroupContentMessageCreator extends MessageCreatorBase {
         'discussion' => 'stream_discussion_insert_update',
         'wiki_page' => 'stream_wiki_page_insert_update',
         'document' => 'stream_document_insert_update',
+        'gallery' => 'stream_photo_album_insert_update',
       ],
     ];
 
