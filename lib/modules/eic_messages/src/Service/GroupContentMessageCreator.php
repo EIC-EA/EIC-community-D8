@@ -4,10 +4,9 @@ namespace Drupal\eic_messages\Service;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\group\Entity\GroupInterface;
-use InvalidArgumentException;
 
 /**
- * Class GroupContentMessageCreator.
+ * Provides a message creator class for group content.
  */
 class GroupContentMessageCreator extends MessageCreatorBase {
 
@@ -65,7 +64,7 @@ class GroupContentMessageCreator extends MessageCreatorBase {
    * @param \Drupal\group\Entity\GroupInterface $group
    *   The group having this content.
    * @param string $operation
-   *   The type of the operation. See ActivityStreamOperationTypes
+   *   The type of the operation. See ActivityStreamOperationTypes.
    */
   public function createGroupContentActivity(
     EntityInterface $entity,
@@ -85,16 +84,41 @@ class GroupContentMessageCreator extends MessageCreatorBase {
 
     try {
       $message->save();
-    } catch (\Exception $e) {
+    }
+    catch (\Exception $e) {
       $logger = $this->getLogger('eic_messages');
       $logger->error($e->getMessage());
     }
   }
 
   /**
+   * Checks if an entity has activity message template.
+   *
    * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The entity object.
+   *
+   * @return bool
+   *   TRUE if the entity has activity message template.
+   */
+  public function hasActivityMessageTemplate(EntityInterface $entity): bool {
+    try {
+      $this->getActivityItemTemplate($entity);
+    }
+    catch (\InvalidArgumentException $e) {
+      return FALSE;
+    }
+
+    return TRUE;
+  }
+
+  /**
+   * Gets activity message template for a given entity.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The entity object.
    *
    * @return string
+   *   The message template name.
    */
   private function getActivityItemTemplate(EntityInterface $entity): string {
     static $templates = [
@@ -106,7 +130,7 @@ class GroupContentMessageCreator extends MessageCreatorBase {
     ];
 
     if (!isset($templates[$entity->getEntityTypeId()][$entity->bundle()])) {
-      throw new InvalidArgumentException('Invalid entity / bundle provided');
+      throw new \InvalidArgumentException('Invalid entity / bundle provided');
     }
 
     return $templates[$entity->getEntityTypeId()][$entity->bundle()];
