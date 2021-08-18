@@ -16,7 +16,7 @@ default:
       value: main
   link:
     -
-      uri: 'internal:/groups'
+      uri: 'internal:/overview_page/1'
       title: ''
       options: {  }
   external:

@@ -16,7 +16,7 @@ default:
       value: main
   link:
     -
-      uri: 'internal:/people'
+      uri: 'internal:/overview_page/2'
       title: ''
       options: {  }
   external:
