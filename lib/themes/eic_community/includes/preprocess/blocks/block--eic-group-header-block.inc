@@ -5,8 +5,8 @@
  * Contains implementation for hook_preprocess_block() for eic_group_header.
  */
 
-use Drupal\Core\Url;
 use Drupal\eic_community\ValueObject\ImageValueObject;
+use Drupal\eic_overviews\GlobalOverviewPages;
 
 /**
  * Implements hook_preprocess_eic_group_header_block() for eic_group_header block.
@@ -180,7 +180,7 @@ function eic_community_preprocess_eic_group_header_block(array &$variables) {
   ];
 
   // Adds url to navigate back to the list of groups.
-  $back_url = Url::fromRoute('view.global_overviews.page_1');
+  $back_url = GlobalOverviewPages::getGlobalOverviewPageUrl('groups');
   $variables['group_values']['back_url'] = $back_url->toString();
 
 }

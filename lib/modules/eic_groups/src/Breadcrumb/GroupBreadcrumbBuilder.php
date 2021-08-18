@@ -9,6 +9,8 @@ use Drupal\Core\Link;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\eic_overviews\GlobalOverviewPages;
+use Drupal\eic_overviews\GroupOverviewPages;
 use Drupal\group\Entity\GroupContent;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\node\NodeInterface;
@@ -80,7 +82,7 @@ class GroupBreadcrumbBuilder implements BreadcrumbBuilderInterface {
     // Adds homepage link.
     $links[] = Link::createFromRoute($this->t('Home'), '<front>');
     // Adds link to navigate back to the list of groups.
-    $links[] = Link::createFromRoute($this->t('Groups'), 'view.global_overviews.page_1');
+    $links[] = Link::fromTextAndUrl($this->t('Groups'), GlobalOverviewPages::getGlobalOverviewPageUrl('groups'));
 
     switch ($route_match->getRouteName()) {
       case 'entity.node.canonical':
@@ -108,7 +110,7 @@ class GroupBreadcrumbBuilder implements BreadcrumbBuilderInterface {
                 // Places the group link right after the "Home" link.
                 array_splice($links, 1, 0, [$group->toLink()]);
                 // Places the groups overview link right after the "Home" link.
-                array_splice($links, 1, 0, [Link::createFromRoute($this->t('Groups'), 'view.global_overviews.page_1')]);
+                array_splice($links, 1, 0, [Link::fromTextAndUrl($this->t('Groups'), GlobalOverviewPages::getGlobalOverviewPageUrl('groups'))]);
                 // Replaces book link text with "Wiki".
                 if ($node->bundle() === 'wiki_page') {
                   $links[3]->setText($this->t('Wiki'));
@@ -120,7 +122,7 @@ class GroupBreadcrumbBuilder implements BreadcrumbBuilderInterface {
                 break;
 
               case 'discussion':
-                $links[] = Link::createFromRoute($this->t('Discussions'), 'view.group_overviews.page_1', ['group' => $group->id()]);
+                $links[] = Link::fromTextAndUrl($this->t('Discussions'), GroupOverviewPages::getGroupOverviewPageUrl('discussions', $group));
                 break;
 
               case 'document':
