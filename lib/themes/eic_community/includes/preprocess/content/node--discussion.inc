@@ -18,29 +18,20 @@ function eic_community_preprocess_node__discussion(array &$variables) {
 
   switch ($variables['view_mode']) {
     case 'full':
-      // @todo Show the list of contributors.
-      if (!empty($variables['elements']['contributor_ids'])) {
-        $users = \Drupal::entityTypeManager()->getStorage('user')->loadMultiple($variables['elements']['contributor_ids']);
-        $contributors= ['items' => []];
-
-        foreach ($users as $user) {
-          $contributors['items'][] = eic_community_get_teaser_user_display($user);
-        }
-
-        $variables['contributors'] =$contributors;
-      }
+      _eic_community_display_contributors($variables);
 
       $variables['author'] = eic_community_get_teaser_user_display($node->getOwner());
       $variables['timestamp']['label'] = eic_community_get_teaser_time_display($node->get('changed')->value);
 
-      foreach($variables['elements']['field_vocab_topics'] as $key => $value) {
-        if(is_int($key)) {
+      foreach ($variables['elements']['field_vocab_topics'] as $key => $value) {
+        if (is_int($key)) {
           $value['#options']['attributes']['class'][] = 'ecl-tag';
           $value['#options']['attributes']['class'][] = 'ecl-featured-list__item-tag';
           $variables['elements']['field_vocab_topics'][$key] = $value;
         }
       }
       break;
+
     case 'teaser':
       // @todo get comment count from backend.
       $comment_count = 0;
