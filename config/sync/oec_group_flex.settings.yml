@@ -13,3 +13,6 @@ oec_group_visibility_setings:
     internal_roles:
       - content_administrator
       - site_admin
+oec_group_flex_admin_roles:
+  - content_administrator
+  - site_admin

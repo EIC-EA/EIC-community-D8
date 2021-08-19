@@ -202,6 +202,15 @@ class CustomRestrictedVisibility extends RestrictedGroupVisibilityBase implement
 
     $group_visibility_record = $this->groupVisibilityStorage->load($entity->id());
 
+    $is_admin = $this->userIsAdmin($account);
+    // Check if user has access to view the group. The access should should be
+    // allowed if the user is a super.
+    if ($is_admin) {
+      return GroupAccessResult::allowed()
+        ->addCacheableDependency($account)
+        ->addCacheableDependency($entity);
+    }
+
     // Loop through all of the options, they are keyed by pluginId.
     // If we have a match and the plugin returns not neutral we
     // return the access result as well.
