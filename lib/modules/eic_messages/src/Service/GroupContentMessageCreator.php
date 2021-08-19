@@ -3,6 +3,7 @@
 namespace Drupal\eic_messages\Service;
 
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\eic_messages\Util\ActivityStreamMessageTemplates;
 use Drupal\group\Entity\GroupInterface;
 
 /**
@@ -74,9 +75,10 @@ class GroupContentMessageCreator extends MessageCreatorBase {
     switch ($entity->getEntityTypeId()) {
       case 'node':
         $message = \Drupal::entityTypeManager()->getStorage('message')->create([
-          'template' => $this->getActivityItemTemplate($entity),
+          'template' => ActivityStreamMessageTemplates::getTemplate($entity),
           'field_referenced_node' => $entity,
           'field_operation_type' => $operation,
+          'field_entity_type' => $entity->getEntityTypeId(),
           'field_group_ref' => $group,
         ]);
         break;
@@ -89,52 +91,6 @@ class GroupContentMessageCreator extends MessageCreatorBase {
       $logger = $this->getLogger('eic_messages');
       $logger->error($e->getMessage());
     }
-  }
-
-  /**
-   * Checks if an entity has activity message template.
-   *
-   * @param \Drupal\Core\Entity\EntityInterface $entity
-   *   The entity object.
-   *
-   * @return bool
-   *   TRUE if the entity has activity message template.
-   */
-  public function hasActivityMessageTemplate(EntityInterface $entity): bool {
-    try {
-      $this->getActivityItemTemplate($entity);
-    }
-    catch (\InvalidArgumentException $e) {
-      return FALSE;
-    }
-
-    return TRUE;
-  }
-
-  /**
-   * Gets activity message template for a given entity.
-   *
-   * @param \Drupal\Core\Entity\EntityInterface $entity
-   *   The entity object.
-   *
-   * @return string
-   *   The message template name.
-   */
-  private function getActivityItemTemplate(EntityInterface $entity): string {
-    static $templates = [
-      'node' => [
-        'discussion' => 'stream_discussion_insert_update',
-        'wiki_page' => 'stream_wiki_page_insert_update',
-        'document' => 'stream_document_insert_update',
-        'gallery' => 'stream_photo_album_insert_update',
-      ],
-    ];
-
-    if (!isset($templates[$entity->getEntityTypeId()][$entity->bundle()])) {
-      throw new \InvalidArgumentException('Invalid entity / bundle provided');
-    }
-
-    return $templates[$entity->getEntityTypeId()][$entity->bundle()];
   }
 
 }

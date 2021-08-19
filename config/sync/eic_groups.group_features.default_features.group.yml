@@ -1,2 +1,3 @@
 default_features:
   - eic_groups_discussions
+  - eic_groups_files

@@ -10,6 +10,7 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\eic_content\EICContentHelper;
 use Drupal\eic_messages\ActivityStreamOperationTypes;
 use Drupal\eic_messages\Service\GroupContentMessageCreator;
+use Drupal\eic_messages\Util\ActivityStreamMessageTemplates;
 use Drupal\group\Entity\GroupInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -118,7 +119,7 @@ class FormOperations implements ContainerInjectionInterface {
 
       // We show the field_post_activity if the node has an Activity message
       // template.
-      if ($this->groupContentMessageCreator->hasActivityMessageTemplate($node)) {
+      if (ActivityStreamMessageTemplates::hasTemplate($node)) {
         $form['field_post_activity'] = [
           '#title' => $this->t('Post message in the activity stream'),
           '#type' => 'checkbox',

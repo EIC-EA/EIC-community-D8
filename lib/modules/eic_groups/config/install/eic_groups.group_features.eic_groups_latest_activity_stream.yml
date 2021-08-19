@@ -1,8 +1,7 @@
 permissions:
-  - 'access wiki overview'
-  - 'create group_node:wiki_page entity'
+  - 'access latest activity stream'
 public_permissions:
-  - 'access wiki overview'
+  - 'access latest activity stream'
 roles:
   - 'group-member'
   - 'group-admin'
