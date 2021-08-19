@@ -1,4 +1,4 @@
-uuid: 87b72b3f-0794-419e-ab17-2985241860e0
+uuid: 6b5dc392-806e-4cf3-bd97-5bdefddfc28b
 langcode: en
 status: true
 dependencies:
@@ -9,8 +9,8 @@ dependencies:
 third_party_settings:
   eic_messages:
     message_template_type: stream
-template: stream_gallery_insert_update
-label: 'STREAM :: MT :: Gallery insert/update'
+template: stream_video_insert_update
+label: 'STREAM :: MT :: Video insert/update'
 description: ''
 text:
   -

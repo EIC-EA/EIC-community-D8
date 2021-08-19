@@ -1,0 +1,19 @@
+uuid: a19d29bf-097e-4289-a48f-49176ac0070a
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.message.field_operation_type
+    - message.template.stream_video_insert_update
+id: message.stream_video_insert_update.field_operation_type
+field_name: field_operation_type
+entity_type: message
+bundle: stream_video_insert_update
+label: 'Operation type'
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

@@ -20,6 +20,7 @@ final class ActivityStreamMessageTemplates {
       'wiki_page' => 'stream_wiki_page_insert_update',
       'document' => 'stream_document_insert_update',
       'gallery' => 'stream_gallery_insert_update',
+      'video' => 'stream_video_insert_update',
     ],
     'comment' => [
       'node_comment' => 'stream_comment_insert_update',
