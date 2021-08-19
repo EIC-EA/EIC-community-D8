@@ -5,7 +5,6 @@ namespace Drupal\oec_group_flex\Plugin;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Drupal\Core\Session\AccountInterface;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\group\Entity\GroupTypeInterface;
 use Drupal\group\GroupRoleSynchronizer;
@@ -224,32 +223,6 @@ abstract class RestrictedGroupVisibilityBase extends GroupVisibilityBase impleme
       }
     }
     return $roles_permissions;
-  }
-
-  /**
-   * Whether a given user is considered an admin.
-   *
-   * @param \Drupal\Core\Session\AccountInterface $account
-   *   The user account.
-   *
-   * @return bool
-   *   TRUE if the user is an administrator based on oec_group_flex_admin_roles
-   *   configuration.
-   */
-  public function userIsAdmin(AccountInterface $account) {
-    if ((int) $account->id() === 1) {
-      return TRUE;
-    }
-
-    $admin_roles = $this->oecGroupFlexConfigSettings->get('oec_group_flex_admin_roles');
-
-    foreach ($account->getRoles(TRUE) as $role) {
-      if (in_array($role, $admin_roles)) {
-        return TRUE;
-      }
-    }
-
-    return FALSE;
   }
 
 }
