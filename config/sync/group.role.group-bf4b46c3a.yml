@@ -22,6 +22,7 @@ permissions:
   - 'access latest activity stream'
   - 'access members overview'
   - 'access wiki overview'
+  - 'delete activity item'
   - 'delete any invitation'
   - 'delete group'
   - 'delete own invitations'
