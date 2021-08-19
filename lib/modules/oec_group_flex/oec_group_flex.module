@@ -106,4 +106,9 @@ function oec_group_flex_group_flex_group_visibility_info_alter(array &$definitio
   if (isset($definitions['public'])) {
     $definitions['public']['class'] = '\Drupal\oec_group_flex\Plugin\GroupVisibility\PublicVisibility';
   }
+  // Overrides the standard private group visibility plugin class provided by
+  // group flex.
+  if (isset($definitions['private'])) {
+    $definitions['private']['class'] = '\Drupal\oec_group_flex\Plugin\GroupVisibility\PrivateVisibility';
+  }
 }
