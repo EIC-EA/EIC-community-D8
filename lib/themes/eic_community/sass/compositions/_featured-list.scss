@@ -155,6 +155,7 @@
         'line1 status1'
         'line2 status2'
         'line3 status3';
+      flex-grow: 0;
       
       .ecl-author__description {grid-area: line1;}
       .ecl-author__label {grid-area: line2;}
@@ -162,7 +163,7 @@
       .ecl-author__actions {
         grid-area: status2;
 
-        .ecl-author__action {height: 18px;}
+        .ecl-author__action {width: 18px; height: 18px; margin-left: map-get($ecl-spacing, 'm');}
       }
     }
   }

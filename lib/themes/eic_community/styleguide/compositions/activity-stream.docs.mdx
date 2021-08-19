@@ -1,0 +1,26 @@
+# Activity stream
+
+Displays the stream of latest activities
+
+## Example:
+
+```
+{% include "@theme/patterns/compositions/activity-stream.html.twig" %}
+```
+
+## Twig parameters:
+
+| Key                      | Type     | Description                                                                                                                                                                             | Mandatory |
+| -------------------------| -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- |
+| title                    | string   | Displays the title of the section.                                                                                                                                                      | yes       |
+| no_items_available       | string   | Informative text that will be displayed when defined if no items are defined.                                                                                                           | no        |
+| icon_file_path           | string   | Enables the usage of the ECL icons within the component.                                                                                                                                | no        |
+| items                    | object[] | Displays the defined items in the activity stream                                                                                                                                       | no        |
+| items[].description      | string   | Should contain HTML output.                                                                                                                                                             | no        |
+| items[].author           | object   | The actual author of the activity.                                                                                                                                                      | no        |
+| items[].timestamp        | string   | Displays the timestamp of the activity.                                                                                                                                                 | no        |
+| items[].stats            | object[] | Displays statistics of the activity, for example: likes.                                                                                                                                | no        |
+| items[].stats[].icon     | object   | The icon that will be displayed for the current stat. Should contain the parameters inherited from the [ECL Icon component](https://www.npmjs.com/package/@ecl-twig/ec-component-icon). | no        |
+| items[].stats[].label    | string   | The semantic label of the current stat.                                                                                                                                                 | no        |
+| items[].stats[].value    | string   | The displayed amount of the current stat.                                                                                                                                               | no        |
+| items[].type             | object   | The type of the activity.                                                                                                                                                               | no        |

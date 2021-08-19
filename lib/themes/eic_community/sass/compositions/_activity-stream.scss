@@ -1,0 +1,48 @@
+.ecl-activity-stream {
+    &__title {}
+
+    &__items-wrapper {}
+
+    &__item {
+        padding: ecl-box-model('padding', 'default');
+        margin-bottom: ecl-box-model('padding');
+
+        &:nth-child(odd) {
+            background-color: map-get($ecl-colors, 'grey-5');
+        }
+
+        &__main {
+            display: flex; 
+            align-items: center; 
+            border-bottom: ecl-border();
+            padding-bottom: ecl-box-model('padding');
+            margin-bottom: ecl-box-model('padding');
+        }
+
+        &__image-wrapper {
+            padding-right: ecl-box-model('padding');
+        }
+
+        &__content {}
+
+        &__type {}
+
+        &__icon {
+            color: #004494; 
+            vertical-align: text-bottom;
+        }
+
+        &__description {
+            @include ecl-responsive-font('label');
+        }
+
+        &__footer {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        &__timestamp {}
+
+        &__stats {}
+    }
+}
