@@ -1,0 +1,23 @@
+{{ attach_library('eic_community/react-block-overview-search') }}
+<div
+  id="group-overview"
+  data-facets="{{ facets | json_encode }}"
+  data-sorts="{{ sorts | json_encode }}"
+  data-page-options="{{ page_options }}"
+  data-datasource="{{ datasource | json_encode }}"
+  data-search-string="{{ search_string }}"
+  data-enable-search="{{ enable_search }}"
+  data-solr-url="{{ url }}"
+  data-solr-is-anonymous="{{ isAnonymous }}"
+  data-solr-translations="{{ translations | json_encode }}"
+  data-source-class="{{ source_class }}"
+  data-source-bundle="{{ bundle }}"
+  data-source-layout="{{ layout }}"
+  data-current-group="{{ currentGroup }}"
+  data-current-group-url="{{ currentGroupUrl }}"
+  data-is-group-owner="{{ isGroupOwner }}"
+  data-enable-facet-my-groups="{{ enable_facet_my_groups }}"
+  data-enable-facet-interests="{{ enable_facet_interests }}"
+  data-allow-pagination="{{ allow_pagination }}"
+  data-load-more-number="{{ load_more_number }}"
+></div>

@@ -1,0 +1,15 @@
+uuid: d8415b3b-8b87-4a5b-9fc5-93b8736d4942
+langcode: en
+status: true
+dependencies: {  }
+name: crop_50x50
+label: 'Crop 50x50'
+effects:
+  9a61405c-5cbd-4774-adbc-cff6a61ff8ac:
+    uuid: 9a61405c-5cbd-4774-adbc-cff6a61ff8ac
+    id: image_scale_and_crop
+    weight: 1
+    data:
+      width: 50
+      height: 50
+      anchor: center-center

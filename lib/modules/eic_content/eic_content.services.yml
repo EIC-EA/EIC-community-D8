@@ -3,7 +3,11 @@ services:
     class: Drupal\eic_content\EICContentHelper
     arguments: ['@entity_type.manager', '@module_handler']
 
+  eic_content.entity_tree_manager:
+    class: Drupal\eic_content\Services\EntityTreeManager
+
   eic_content.breadcrumb:
     class: Drupal\eic_content\ContentBreadcrumbBuilder
+    arguments: ['@current_user']
     tags:
       - { name: breadcrumb_builder, priority: 999 }

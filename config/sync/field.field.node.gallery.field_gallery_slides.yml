@@ -1,0 +1,55 @@
+uuid: 7e925383-93fc-402a-b526-3dc69989fb0b
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_gallery_slides
+    - node.type.gallery
+    - paragraphs.paragraphs_type.gallery_slide
+  module:
+    - entity_reference_revisions
+id: node.gallery.field_gallery_slides
+field_name: field_gallery_slides
+entity_type: node
+bundle: gallery
+label: Slides
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    negate: 0
+    target_bundles:
+      gallery_slide: gallery_slide
+    target_bundles_drag_drop:
+      banner:
+        weight: 11
+        enabled: false
+      contributor:
+        weight: 12
+        enabled: false
+      cta_tile:
+        weight: 13
+        enabled: false
+      full_media_content:
+        weight: 14
+        enabled: false
+      full_text_content:
+        weight: 15
+        enabled: false
+      gallery_slide:
+        enabled: true
+        weight: 10
+      quote:
+        weight: 16
+        enabled: false
+      text_and_media_content:
+        weight: 17
+        enabled: false
+      tiles_content:
+        weight: 18
+        enabled: false
+field_type: entity_reference_revisions

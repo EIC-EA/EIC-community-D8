@@ -6,15 +6,15 @@ dependencies:
     - eic_flags
     - group
 id: recommend_group
-label: 'Recommend (Group)'
+label: 'Like (Group)'
 bundles: {  }
 entity_type: group
 global: false
 weight: 0
-flag_short: 'Recommend this item'
+flag_short: Like
 flag_long: ''
 flag_message: ''
-unflag_short: 'Unrecommend this item'
+unflag_short: Unlike
 unflag_long: ''
 unflag_message: ''
 unflag_denied_text: ''

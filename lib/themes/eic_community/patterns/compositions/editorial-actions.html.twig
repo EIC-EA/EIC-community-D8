@@ -2,9 +2,11 @@
   <div class="ecl-featured-list">
     <div class="ecl-featured-list__items">
       {% for item in items %}
-        {% if item.link %}
-          <div class="ecl-featured-list__item">
-            {% set _icon = {} %}
+      <div class="ecl-featured-list__item">
+        {% if item.content %}
+            {{ item.content }}
+        {% elseif item.link %}
+          {% set _icon = {} %}
 
             {% if icon_file_path and item.icon %}
               {% set _icon = item.icon|default({})|merge({
@@ -21,8 +23,8 @@
               }),
             }) only %}
           {% endif %}
-        {% endfor %}
         </div>
+        {% endfor %}
     </div>
   </div>
 {% endif %}

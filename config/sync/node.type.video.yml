@@ -1,0 +1,34 @@
+uuid: 78724623-cd32-49b9-a84d-4855dae8fe6d
+langcode: en
+status: true
+dependencies:
+  module:
+    - eic_private_content
+    - menu_ui
+    - scheduler
+third_party_settings:
+  eic_private_content:
+    private: 0
+  menu_ui:
+    available_menus: {  }
+    parent: ''
+  scheduler:
+    expand_fieldset: when_required
+    fields_display_mode: vertical_tab
+    publish_enable: false
+    publish_past_date: error
+    publish_past_date_created: false
+    publish_required: false
+    publish_revision: false
+    publish_touch: false
+    show_message_after_update: true
+    unpublish_enable: false
+    unpublish_required: false
+    unpublish_revision: false
+name: Video
+type: video
+description: ''
+help: ''
+new_revision: true
+preview_mode: 0
+display_submitted: false

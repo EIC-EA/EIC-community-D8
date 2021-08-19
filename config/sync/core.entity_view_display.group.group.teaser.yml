@@ -5,6 +5,7 @@ dependencies:
   config:
     - core.entity_view_mode.group.teaser
     - field.field.group.group.field_body
+    - field.field.group.group.field_group_invite_members
     - field.field.group.group.field_hero
     - field.field.group.group.field_message_to_site_admin
     - field.field.group.group.field_related_groups
@@ -61,6 +62,7 @@ hidden:
   changed: true
   created: true
   field_body: true
+  field_group_invite_members: true
   field_hero: true
   field_message_to_site_admin: true
   field_related_groups: true

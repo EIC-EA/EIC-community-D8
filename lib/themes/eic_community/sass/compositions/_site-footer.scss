@@ -58,6 +58,7 @@
     &__title {
       margin-bottom: map-get($ecl-spacing, 'm');
       width: 100%;
+      border-bottom: none;
 
       @include ecl-media-breakpoint-up('md') {
         width: calc(100% / 3);

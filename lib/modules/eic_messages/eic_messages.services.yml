@@ -2,3 +2,17 @@ services:
   eic_messages.helper:
     class: Drupal\eic_messages\MessageHelper
     arguments: ['@queue']
+
+  # Message creator services
+  eic_messages.message_creator.group:
+    class: Drupal\eic_messages\Service\GroupMessageCreator
+    arguments: ['@entity_type.manager', '@eic_messages.helper', '@eic_user.helper']
+  eic_messages.message_creator.group_content:
+    class: Drupal\eic_messages\Service\GroupContentMessageCreator
+    arguments: ['@entity_type.manager', '@eic_messages.helper', '@eic_user.helper']
+  eic_messages.message_creator.request:
+    class: Drupal\eic_messages\Service\RequestMessageCreator
+    arguments: ['@entity_type.manager', '@eic_messages.helper', '@eic_user.helper', '@eic_flags.handler_collector', '@renderer']
+  eic_messages.message_creator.comment:
+    class: Drupal\eic_messages\Service\CommentMessageCreator
+    arguments: ['@entity_type.manager', '@eic_messages.helper', '@eic_user.helper', '@eic_content.helper']

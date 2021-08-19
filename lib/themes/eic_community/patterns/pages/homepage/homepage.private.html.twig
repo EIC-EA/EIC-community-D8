@@ -7,7 +7,9 @@
 {% block page_header %}{% endblock %}
 
 {% block content %}
-  {% include "@theme/patterns/compositions/editorial-header.html.twig" with editorial_header|default({}) only %}
+  {% include "@theme/patterns/compositions/editorial-header.html.twig" with editorial_header|default({})|merge({
+    extra_classes: "ecl-home"
+  }) only %}
 
   {% include "@theme/patterns/compositions/featured-content-grid.html.twig" with featured_news|default({})|merge({
     extra_classes: 'ecl-section-wrapper ecl-featured-content-grid--has-compact-layout'

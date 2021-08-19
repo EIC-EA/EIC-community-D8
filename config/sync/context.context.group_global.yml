@@ -22,7 +22,7 @@ conditions:
       group: '@group.group_route_context:group'
   route:
     id: route
-    routes: entity.user.canonical
+    routes: "entity.user.*\r\nprofile.user_page.*"
     negate: true
     uuid: df5ac6fd-1e86-44f6-9ff6-e46b4cfc36f1
     context_mapping: {  }

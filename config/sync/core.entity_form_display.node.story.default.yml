@@ -21,6 +21,7 @@ dependencies:
   module:
     - comment
     - content_moderation
+    - eic_content
     - media_library
     - paragraphs
     - path
@@ -121,7 +122,7 @@ content:
       edit_mode: open
       add_mode: dropdown
       form_display_mode: default
-      default_paragraph_type: ''
+      default_paragraph_type: _none
     third_party_settings: {  }
     region: content
   field_video:
@@ -144,12 +145,13 @@ content:
   field_vocab_topics:
     weight: 11
     settings:
-      match_operator: CONTAINS
-      match_limit: 10
-      size: 60
-      placeholder: ''
+      match_top_level_limit: '0'
+      disable_top_choices: '1'
+      items_to_load: '25'
+      load_all: 0
+      auto_select_parents: 0
     third_party_settings: {  }
-    type: entity_reference_autocomplete
+    type: entity_tree
     region: content
   langcode:
     type: language_select

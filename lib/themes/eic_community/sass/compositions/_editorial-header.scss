@@ -98,9 +98,6 @@
     }
   }
 
-  &__main-header {
-  }
-
   &__main-content {
     @include ecl-media-breakpoint-up('md') {
       display: flex;
@@ -224,5 +221,28 @@
     &:last-child {
       margin-bottom:  0;
     }
+  }
+
+  &.ecl-home {
+    #{$node}__main {
+      @include ecl-media-breakpoint-up('lg') {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+      }
+    }
+
+    #{$node}__main-header {
+      @include ecl-media-breakpoint-up('lg') {
+        order: 2;
+        margin: 0;
+      }
+    }
+  }
+
+  // fixes spacing issue when hero is not present
+  & + .ecl-base-layout > .ecl-base-layout__content > .ecl-base-layout__main > main > .ecl-section-wrapper:first-child {
+    padding-top: 0;
   }
 }

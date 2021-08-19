@@ -11,10 +11,10 @@ bundles: {  }
 entity_type: group
 global: false
 weight: 0
-flag_short: 'Follow this item'
+flag_short: Follow
 flag_long: ''
 flag_message: ''
-unflag_short: 'Unfollow this item'
+unflag_short: Unfollow
 unflag_long: ''
 unflag_message: ''
 unflag_denied_text: ''

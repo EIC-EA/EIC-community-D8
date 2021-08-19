@@ -1,13 +1,19 @@
 <?php
 
 /**
+ * @file
+ * Prepares variables for eic content actions.
+ */
+
+/**
  * Implements hook_preprocess_eic_content_actions().
  */
 function eic_community_preprocess_eic_content_actions(array &$variables) {
-  //TODO change content actions on group header block and GO message boxes and use this.
+  // @todo change content actions on group header block and GO message boxes and use this.
   $actions = [];
   foreach ($variables['actions'] as $link) {
     if (isset($link['links'])) {
+
       $items = [];
 
       foreach ($link['links'] as $item) {

@@ -1,0 +1,9 @@
+ignored_config_entities:
+  - 'search_api.server.global:backend_config.connector_config.scheme'
+  - 'search_api.server.global:backend_config.connector_config.host'
+  - 'search_api.server.global:backend_config.connector_config.port'
+  - 'search_api.server.global:backend_config.connector_config.path'
+  - 'search_api.server.global:backend_config.connector_config.core'
+  - system.site
+_core:
+  default_config_hash: UVH1aJ4b44UM-VdPVN7hNNuuVqfReJxwfVeDQH1Hvsk

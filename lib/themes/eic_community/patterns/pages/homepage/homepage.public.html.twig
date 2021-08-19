@@ -40,6 +40,10 @@
     extra_classes: "ecl-section-wrapper ecl-featured-content-collection--has-compact-layout"
   }) only %}
 
+  {% include "@theme/patterns/compositions/featured-content-collection.html.twig" with featured_groups|default({})|merge({
+    extra_classes: "ecl-featured-content-collection--has-compact-layout ecl-section-wrapper"
+  }) only %}
+
   {% embed "@theme/patterns/compositions/layout-block.html.twig" with {
     extra_classes: 'ecl-section-wrapper--is-white',
   } %}

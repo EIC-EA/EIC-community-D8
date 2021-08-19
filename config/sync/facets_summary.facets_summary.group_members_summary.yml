@@ -14,25 +14,19 @@ facets:
     checked: true
     label: 'Topics of expertise'
     separator: ', '
-    weight: -10
+    weight: 0
     show_count: false
   members_topics_of_interest:
     checked: true
     label: 'Topics of interest'
     separator: ', '
-    weight: -9
-    show_count: false
-  members_job_title:
-    checked: true
-    label: 'Job title'
-    separator: ', '
-    weight: -8
+    weight: 0
     show_count: false
   members_languages:
     checked: true
     label: Languages
     separator: ', '
-    weight: -7
+    weight: 0
     show_count: false
 facet_source_id: 'search_api:views_page__group_overviews__members'
 processor_configs:
