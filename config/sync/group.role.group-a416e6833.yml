@@ -16,9 +16,12 @@ group_type: group
 permissions_ui: false
 permissions:
   - 'access discussions overview'
+  - 'access files overview'
   - 'access group content menu overview'
   - 'access group search'
+  - 'access latest activity stream'
   - 'access members overview'
+  - 'access wiki overview'
   - 'delete any invitation'
   - 'delete own invitations'
   - 'invite users to group'
