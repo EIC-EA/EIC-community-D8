@@ -3,6 +3,7 @@
 namespace Drupal\eic_messages\Service;
 
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\eic_messages\Util\ActivityStreamMessageTemplates;
 use Drupal\group\Entity\GroupInterface;
 use InvalidArgumentException;
 
@@ -75,9 +76,10 @@ class GroupContentMessageCreator extends MessageCreatorBase {
     switch ($entity->getEntityTypeId()) {
       case 'node':
         $message = \Drupal::entityTypeManager()->getStorage('message')->create([
-          'template' => $this->getActivityItemTemplate($entity),
+          'template' => ActivityStreamMessageTemplates::getTemplate($entity),
           'field_referenced_node' => $entity,
           'field_operation_type' => $operation,
+          'field_entity_type' => $entity->getEntityTypeId(),
           'field_group_ref' => $group,
         ]);
         break;
@@ -89,27 +91,6 @@ class GroupContentMessageCreator extends MessageCreatorBase {
       $logger = $this->getLogger('eic_messages');
       $logger->error($e->getMessage());
     }
-  }
-
-  /**
-   * @param \Drupal\Core\Entity\EntityInterface $entity
-   *
-   * @return string
-   */
-  private function getActivityItemTemplate(EntityInterface $entity): string {
-    static $templates = [
-      'node' => [
-        'discussion' => 'stream_discussion_insert_update',
-        'wiki_page' => 'stream_wiki_page_insert_update',
-        'document' => 'stream_document_insert_update',
-      ],
-    ];
-
-    if (!isset($templates[$entity->getEntityTypeId()][$entity->bundle()])) {
-      throw new InvalidArgumentException('Invalid entity / bundle provided');
-    }
-
-    return $templates[$entity->getEntityTypeId()][$entity->bundle()];
   }
 
 }

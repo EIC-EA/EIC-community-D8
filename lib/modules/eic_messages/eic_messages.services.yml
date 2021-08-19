@@ -13,3 +13,6 @@ services:
   eic_messages.message_creator.request:
     class: Drupal\eic_messages\Service\RequestMessageCreator
     arguments: ['@entity_type.manager', '@eic_messages.helper', '@eic_user.helper', '@eic_flags.handler_collector', '@renderer']
+  eic_messages.message_creator.comment:
+    class: Drupal\eic_messages\Service\CommentMessageCreator
+    arguments: ['@entity_type.manager', '@eic_messages.helper', '@eic_user.helper', '@eic_content.helper']
