@@ -3,10 +3,13 @@
 namespace Drupal\eic_search\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\eic_search\Search\Sources\GroupSourceType;
+use Drupal\eic_search\Search\Sources\SourceTypeInterface;
+use Drupal\eic_user\UserHelper;
 use Drupal\group\GroupMembership;
-use Drupal\profile\Entity\Profile;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\user\Entity\User;
+use Solarium\Component\ComponentAwareQueryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -38,6 +41,7 @@ class SolrSearchController extends ControllerBase {
     $sort_value = $request->query->get('sort_value');
     $facets_options = $request->query->get('facets_options');
     $facets_value = json_decode($facets_value, TRUE);
+    $source = NULL;
 
     $facets_interests = [];
 
@@ -61,6 +65,16 @@ class SolrSearchController extends ControllerBase {
     $connector = $backend->getSolrConnector();
     $solariumQuery = $connector->getSelectQuery();
 
+    $spell_check = $solariumQuery->getSpellcheck();
+    $spell_check->setDictionary('en');
+    $spell_check->setAccuracy(0.5);
+    $spell_check->setQuery($search_value);
+    $spell_check->setCollate(TRUE);
+    $spell_check->setReload(TRUE);
+    $solariumQuery->setComponent(ComponentAwareQueryInterface::COMPONENT_SPELLCHECK, $spell_check);
+
+    $content_type_query = '';
+
     if ($source_class) {
       /** @var \Drupal\eic_search\Search\Sources\SourceTypeInterface $source */
       $source = array_key_exists($source_class, $sources) ? $sources[$source_class] : NULL;
@@ -76,7 +90,14 @@ class SolrSearchController extends ControllerBase {
       $query_fields_string = implode(' OR ', $query_fields);
       if ($current_group) {
         $group_id_field = $source->getPrefilteredGroupFieldId();
-        $query_fields_string .= " AND ($group_id_field:($current_group))";
+        $query_fields_string .= empty($query_fields_string) ?
+          "$group_id_field:($current_group)" :
+          " AND ($group_id_field:($current_group))";
+      }
+
+      if ($content_types = $source->getPrefilteredContentType()) {
+        $allowed_content_type = implode(' OR ', $content_types);
+        $content_type_query = ' AND (' . SourceTypeInterface::SOLR_FIELD_CONTENT_TYPE_ID . ':(' . $allowed_content_type . '))';
       }
 
       $solariumQuery->addParam('q', $query_fields_string);
@@ -99,6 +120,15 @@ class SolrSearchController extends ControllerBase {
       }
     }
 
+    //If there are no current sorts check if source has a default sort
+    if (
+      !$sort_value &&
+      $source instanceof SourceTypeInterface &&
+      $default_sort = $source->getDefaultSort()
+    ) {
+      $solariumQuery->addSort($default_sort[0], $default_sort[1]);
+    }
+
     $datasources_query = [];
 
     foreach ($datasources as $datasource) {
@@ -115,6 +145,12 @@ class SolrSearchController extends ControllerBase {
 
     $this->generateQueryInterests($fq, $facets_interests);
     $this->generateQueryUserGroupsAndContents($fq, $facets_interests);
+    $this->generateQueryPrivateContent($fq);
+    $this->generateQueryPublishedState($fq, $source);
+
+    if ($content_type_query) {
+      $fq .= $content_type_query;
+    }
 
     $solariumQuery->addParam('fq', $fq);
 
@@ -228,9 +264,46 @@ class SolrSearchController extends ControllerBase {
       }, $groups_membership);
     }
 
-    $groups_membership_string = implode(' OR ', $groups_membership_id);
+    $groups_membership_string = $groups_membership_id ? implode(' OR ', $groups_membership_id) : -1;
 
     $fq .= " AND (its_group_id_integer:($groups_membership_string) OR ss_global_group_parent_id:($groups_membership_string) OR its_content_uid:($groups_membership_string))";
+  }
+
+  /**
+   * @param $fq
+   */
+  private function generateQueryPrivateContent(&$fq) {
+    $roles = \Drupal::currentUser()->getRoles();
+
+    if (in_array(UserHelper::ROLE_TRUSTED_USER, $roles)) {
+      return;
+    }
+
+    $fq .= " AND bs_content_is_private:false";
+  }
+
+  /**
+   * Add the status query to the query but check for groups if need
+   * to show draft/pending for group owner
+   *
+   * @param $fq
+   * @param \Drupal\eic_search\Search\Sources\SourceTypeInterface $source
+   */
+  private function generateQueryPublishedState(&$fq, SourceTypeInterface $source) {
+    if (!$source instanceof SourceTypeInterface) {
+      return;
+    }
+
+    $status_query = ' AND (bs_global_status:true';
+
+    if ($source instanceof GroupSourceType) {
+      $user_id = \Drupal::currentUser()->id();
+      $status_query .= ' OR (its_group_owner_id:' . $user_id . ')';
+    }
+
+    $status_query .= ')';
+
+    $fq .= $status_query;
   }
 
 }

@@ -9,7 +9,7 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
  *
  * @package Drupal\eic_groups\Search\Sources
  */
-class GlobalSourceType implements SourceTypeInterface {
+class GlobalSourceType extends SourceType {
 
   use StringTranslationTrait;
 
@@ -44,6 +44,8 @@ class GlobalSourceType implements SourceTypeInterface {
     return [
       'ss_global_content_type' => $this->t('Content type', [], ['context' => 'eic_search']),
       'ss_group_user_fullname' => $this->t('Full name', [], ['context' => 'eic_search']),
+      'sm_content_field_vocab_topics_string' => $this->t('Topics', [], ['context' => 'eic_search']),
+      'sm_content_field_vocab_geo_string' => $this->t('Region & country', [], ['context' => 'eic_search']),
     ];
   }
 

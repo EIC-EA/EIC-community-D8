@@ -1,0 +1,23 @@
+uuid: 9f04d206-f284-4098-bbf9-8f5564e2e033
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.group.field_group_invite_members
+    - group.type.group
+id: group.group.field_group_invite_members
+field_name: field_group_invite_members
+entity_type: group
+bundle: group
+label: 'Invite members'
+description: 'Member can add other members'
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

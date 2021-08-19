@@ -1,7 +1,9 @@
 uuid: 912c4b98-f366-44db-922a-f9361c349c21
 langcode: en
 status: true
-dependencies: {  }
+dependencies:
+  module:
+    - route_condition
 name: members_overview
 label: 'Members - Overview'
 group: 'Global overviews'
@@ -9,143 +11,43 @@ description: 'This context is used for the Members overview'
 requireAllConditions: false
 disabled: false
 conditions:
-  view_inclusion:
-    id: view_inclusion
+  route:
+    id: route
+    routes: eic_search.people
     negate: false
-    uuid: 4a6ec31c-af26-4d0a-9279-80ba5a4221d0
-    view_inclusion:
-      view-global_overviews-members: view-global_overviews-members
+    uuid: 2ad6f71f-a7b7-4751-988e-60be0a3c00bc
     context_mapping: {  }
 reactions:
   blocks:
     blocks:
-      2bdaf363-b983-4094-8b13-e3549984347b:
-        id: system_main_block
-        label: 'Main page content'
-        provider: system
-        label_display: '0'
+      93270f47-6866-48ec-9e25-fd06d01cf15e:
+        id: eic_search_overview
+        label: null
+        provider: null
+        label_display: null
         region: content
-        weight: '-2'
-        context_mapping: {  }
-        custom_id: system_main_block
-        theme: eic_community
-        css_class: ''
-        unique: 0
-        context_id: members_overview
-        uuid: 2bdaf363-b983-4094-8b13-e3549984347b
-      9ad8b74c-8343-4d1b-b882-fa6afa7857bd:
-        id: 'views_exposed_filter_block:global_overviews-members'
-        label: ''
-        provider: views
-        label_display: '0'
-        views_label: ''
-        region: sidebar
-        weight: '-4'
-        context_mapping: {  }
-        custom_id: views_exposed_filter_block_global_overviews_members
-        theme: eic_community
-        css_class: ''
-        unique: 0
-        context_id: members_overview
-        uuid: 9ad8b74c-8343-4d1b-b882-fa6afa7857bd
-      d9d57b7a-f3f6-4652-8883-fe512a9a805d:
-        id: 'facet_block:global_members_topics_of_expertise'
-        label: 'Topics of Expertise'
-        provider: facets
-        label_display: '0'
-        region: sidebar
-        weight: '-3'
-        context_mapping: {  }
-        custom_id: facet_block_global_members_topics_of_expertise
-        theme: eic_community
-        css_class: ''
-        unique: 0
-        context_id: members_overview
-        uuid: d9d57b7a-f3f6-4652-8883-fe512a9a805d
-      34e5c596-54a5-403c-879f-845ccc9bc081:
-        id: 'facet_block:global_members_topics_of_interest'
-        label: 'Topics of Interest'
-        provider: facets
-        label_display: '0'
-        region: sidebar
-        weight: '-2'
-        context_mapping: {  }
-        custom_id: facet_block_global_members_topics_of_interest
-        theme: eic_community
-        css_class: ''
-        unique: 0
-        context_id: members_overview
-        uuid: 34e5c596-54a5-403c-879f-845ccc9bc081
-      4b738ab1-1739-42f8-9983-0cb01ad3a52e:
-        id: 'facet_block:global_members_job_title'
-        label: 'Job title'
-        provider: facets
-        label_display: '0'
-        region: sidebar
-        weight: '-1'
-        context_mapping: {  }
-        custom_id: facet_block_global_members_job_title
-        theme: eic_community
-        css_class: ''
-        unique: 0
-        context_id: members_overview
-        uuid: 4b738ab1-1739-42f8-9983-0cb01ad3a52e
-      b3b11796-b8c1-4944-a225-3e0c61889111:
-        id: 'facet_block:global_members_languages'
-        label: Languages
-        provider: facets
-        label_display: '0'
-        region: sidebar
         weight: '0'
+        facets:
+          sm_user_profile_topic_expertise_string: sm_user_profile_topic_expertise_string
+          sm_user_profile_field_vocab_topic_interest_array: sm_user_profile_field_vocab_topic_interest_array
+          ss_user_profile_field_location_address_country_code: ss_user_profile_field_location_address_country_code
+          sm_user_profile_field_vocab_language_array: sm_user_profile_field_vocab_language_array
+          sm_user_profile_role_array: sm_user_profile_role_array
+        sort_options:
+          ds_user_access: ds_user_access
+        source_type: Drupal\eic_search\Search\Sources\UserGallerySourceType
+        enable_search: 1
+        page_options: normal
+        prefilter_group: 0
+        add_facet_interests: 0
+        add_facet_my_groups: 0
         context_mapping: {  }
-        custom_id: facet_block_global_members_languages
+        custom_id: eic_search_overview
         theme: eic_community
         css_class: ''
         unique: 0
         context_id: members_overview
-        uuid: b3b11796-b8c1-4944-a225-3e0c61889111
-      93fc8760-8b94-4f2b-b96e-d4176daeaab4:
-        id: 'facets_summary_block:global_members_summary'
-        label: 'Members summary'
-        provider: facets_summary
-        label_display: '0'
-        region: content
-        weight: '-3'
-        context_mapping: {  }
-        custom_id: facets_summary_block_global_members_summary
-        theme: eic_community
-        css_class: ''
-        unique: 0
-        context_id: members_overview
-        uuid: 93fc8760-8b94-4f2b-b96e-d4176daeaab4
-      1620cbc6-8beb-4624-a2d6-4d82941df19a:
-        id: 'search_api_sorts_block:views_page:global_overviews__members'
-        label: 'Sort by (View Global Overviews, display People)'
-        provider: search_api_sorts
-        label_display: '0'
-        region: content
-        weight: '-4'
-        context_mapping: {  }
-        custom_id: search_api_sorts_block_views_page_global_overviews__members
-        theme: eic_community
-        css_class: ''
-        unique: 0
-        context_id: members_overview
-        uuid: 1620cbc6-8beb-4624-a2d6-4d82941df19a
-      0a2659f0-a6dd-40d7-af87-455dbce1317d:
-        id: 'facet_block:global_members_location_country_code'
-        label: Location
-        provider: facets
-        label_display: '0'
-        region: sidebar
-        weight: '0'
-        context_mapping: {  }
-        custom_id: facet_block_global_members_location_country_code
-        theme: eic_community
-        css_class: ''
-        unique: 0
-        context_id: members_overview
-        uuid: 0a2659f0-a6dd-40d7-af87-455dbce1317d
+        uuid: 93270f47-6866-48ec-9e25-fd06d01cf15e
     id: blocks
     saved: false
     uuid: deeaf135-b781-47ec-b086-7d9fec72c007

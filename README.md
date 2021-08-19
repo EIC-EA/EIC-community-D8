@@ -18,15 +18,46 @@ In order to build the functionality of the website you are free to use any of th
 
 You need to have the following software installed on your local development environment:
 
-* [Docker Compose](https://docs.docker.com/compose/install/)
+* [Docker Compose](https://docs.docker.com/compose/install)
+* Make
 * PHP 7.2 or greater (needed to run [GrumPHP](https://github.com/phpro/grumphp) Git hooks)
 
-Having the following installed locally is also recommended, but not mandatory:
+## Running locally
 
-* [Composer](https://getcomposer.org/doc/00-intro.md#installation-linux-unix-osx).
+This application doesn't use Open Europa's default docker-compose configuration.
+To run to project please follow these steps:
+- (macOS users) Please read [Using Docker on macOS](#using-docker-on-macos) before
+- Copy and rename `.env.docker` to `.env`
+- (First time only) Setup the dev environment wih the following command:
+````bash
+make setup
+# If you want to run frontend install and builds
+make build-front
+````
 
-**Please be aware:** the OpenEuropa team will only address support requests if you use the provided `docker-compose.yml`
-.
+### Update your existing local environment
+- Run `make update`
+
+### Using Docker on macOS
+In order to maximise the performance of using Docker on macOS, we strongly advise using at least version 18.03.1 of Docker which supports native NFS integration. You can find a very comprehensive article about this topic under following link [Set Up Docker For Mac with Native NFS](https://medium.com/@sean.handley/how-to-set-up-docker-for-mac-with-native-nfs-145151458adc).
+
+Before running the `make setup` command, be sure that NFS is configured correctly. If not, run the bash script in order to configure Docker native NFS support.
+You can find the source of a script in the article or by using this link [setup_native_nfs_docker_osx.sh](https://gist.githubusercontent.com/seanhandley/7dad300420e5f8f02e7243b7651c6657/raw/fdd77fe66cf9ce893fa0175d735cbede2bb065e4/setup_native_nfs_docker_osx.sh).
+
+Please note that this script will use /Users by default, in some cases this might not fit. You can change it (Line 53) to use a sub-directory where applications using docker are or this project's path ($PWD).
+## Running the tests
+
+To run the coding standards and other static checks:
+
+```bash
+docker-compose exec php ./vendor/bin/grumphp run
+```
+
+To run Behat tests:
+
+```bash
+docker-compose exec php ./vendor/bin/behat
+```
 
 ## Troubleshooting
 
@@ -40,114 +71,6 @@ If you get such error messages reinitialize GrumPHP paths on your host machine
 ./vendor/bin/grumphp git:deinit
 ./vendor/bin/grumphp git:init
 ```
-
-## Configuration
-
-The project ships with default setup configuration that is intended to run the website on the Docker containers we
-provide.
-
-To customize the default configuration values copy `runner.yml.dist` to `runner.yml`:
-
-```bash
-cp runner.yml.dist runner.yml
-```
-
-Now edit `runner.yml` with your most beloved text editor and change setup configuration as needed.
-
-## Site build and installation
-
-The shipped `docker-compose.yml` file provides the necessary services and tools to install, run and test an OpenEuropa
-Drupal 8 site.
-
-By default, Docker Compose reads two files, a `docker-compose.yml` and an optional `docker-compose.override.yml` file.
-By convention, the `docker-compose.yml`
-contains your base configuration. The override file, as its name implies, can contain configuration overrides for
-existing services or entirely new services.
-
-If a service is defined in both files, Docker Compose merges the configurations.
-
-Find more information on Docker Compose extension mechanism on
-[the official Docker Compose documentation](https://docs.docker.com/compose/extends/).
-
-To start, run:
-
-```bash
-docker-compose up -d
-```
-
-This will run the Docker containers in the background, i.e. it will "daemonize" them.
-
-Then:
-
-```bash
-docker-compose exec web composer install
-docker-compose exec web ./vendor/bin/run toolkit:install-clean
-```
-
-The site build will be available in the `web` directory and the site itself will be reachable
-at: [http://localhost:8080/web](http://localhost:8080/web).
-
-Before to commit your project on your repository, export the configuration on `config/sync`
-using the following command:
-
-```bash
-docker-compose exec web ./vendor/bin/drush cex
-```
-
-## Commit and push
-
-The final step is to have a new git repository and commit all the files. A
-`.gitignore` file is provided to ensure you only commit your own project files.
-
-If you have not been already provided with one please contact your management and/or the Quality Assurance team.
-
-```bash
-git init
-git add .
-git commit -m "Initial commit."
-```
-
-Now you are ready to push your project to your chosen code hosting service.
-
-## Running the tests
-
-To run the coding standards and other static checks:
-
-```bash
-docker-compose exec web ./vendor/bin/grumphp run
-```
-
-To run Behat tests:
-
-```bash
-docker-compose exec web ./vendor/bin/behat
-```
-
-## Continuous integration and deployment
-
-To check the status of the continuous integration of your project, go to [Drone](https://drone.fpfis.eu/).
-
-A pipeline - created and maintained by DevOps - is applied by default. It manages the code review of the code, it runs
-all tests on the repository and builds the site artifact for the deployment.
-
-You can control which commands will be ran during deployment by creating and pushing a `.opts.yml` file.
-
-If none is found the following one will be ran:
-
-```yml
-upgrade_commands:
-  - './vendor/bin/drush state:set system.maintenance_mode 1 --input-format=integer -y'
-  - './vendor/bin/drush updatedb -y'
-  - './vendor/bin/drush cache:rebuild'
-  - './vendor/bin/drush state:set system.maintenance_mode 0 --input-format=integer -y'
-  - './vendor/bin/drush cache:rebuild'
-```
-
-The following conventions apply:
-
-- Every push on the site's deployment branch (usually `master`) will trigger a deployment on the acceptance environment
-- Every new tag on the site's deployment branch (usually `master`) will trigger a deployment on production
-
 ## Deploy STAG site on Blue4you hosting (https://eic-d8.stg.blue4you.be)
 
 TLDR; Command:

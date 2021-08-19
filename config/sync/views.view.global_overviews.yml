@@ -479,6 +479,7 @@ display:
           tokenize: false
           content: 'No results found.'
           plugin_id: text_custom
+      enabled: false
     cache_metadata:
       max-age: -1
       contexts:
@@ -654,6 +655,7 @@ display:
         weight: 0
         context: '0'
         menu_name: main
+      enabled: false
     cache_metadata:
       max-age: -1
       contexts:
@@ -874,6 +876,7 @@ display:
           search_api_spellcheck_hide_on_result: 0
           search_api_spellcheck_collate: true
           plugin_id: search_api_spellcheck_did_you_mean
+      enabled: false
     cache_metadata:
       max-age: -1
       contexts:

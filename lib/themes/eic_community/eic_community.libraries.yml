@@ -11,6 +11,7 @@ theme:
     dist/scripts/components/drupal.expandable-definitions.js: { minified: true }
     dist/scripts/components/drupal.emoji-picker.js: { minified: true }
     dist/scripts/components/drupal.harmonica.js: { minified: true }
+    dist/scripts/components/drupal.navigation-list.js: { minified: true }
     dist/scripts/compositions/drupal.collapsible-options.js: { minified: true }
     dist/scripts/compositions/drupal.comment-attachments.js: { minified: true }
     dist/scripts/compositions/drupal.featured-list.js: { minified: true }
@@ -27,3 +28,10 @@ react-block-overview-search:
     dist/react/block/overview/entrypoint.js: { minified: true }
   dependencies:
     - core/drupal
+
+react-tree-field:
+  css:
+    theme:
+      dist/styles/eic_community_admin.css: { media: screen }
+  js:
+    dist/react/field/entity_tree/entrypoint.js: { minified: true }

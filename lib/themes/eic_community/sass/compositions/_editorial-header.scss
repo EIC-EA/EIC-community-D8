@@ -236,8 +236,13 @@
     #{$node}__main-header {
       @include ecl-media-breakpoint-up('lg') {
         order: 2;
-        margin: 0;   
+        margin: 0;
       }
     }
+  }
+
+  // fixes spacing issue when hero is not present
+  & + .ecl-base-layout > .ecl-base-layout__content > .ecl-base-layout__main > main > .ecl-section-wrapper:first-child {
+    padding-top: 0;
   }
 }

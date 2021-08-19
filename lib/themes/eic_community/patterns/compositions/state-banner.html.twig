@@ -1,4 +1,9 @@
 {% set title_element = title_element|default('h3') %}
+{% if description is not empty %}
+  {% set output_description = description %}
+{% elseif block('description') is defined %}
+  {% set output_description = block('description') %}
+{% endif %}
 
 <div class="ecl-state-banner {{ extra_classes }}">
   {% if icon and icon_file_path %}
@@ -15,8 +20,8 @@
       {{ title }}
     </{{ title_element }}>
   {% endif %}
-  {% if description %}
-    <div class="ecl-state-banner__description ecl-editable-wrapper">{{ description}}</div>
+  {% if output_description %}
+    <div class="ecl-state-banner__description ecl-editable-wrapper">{{ output_description|raw }}</div>
   {% endif %}
   {% if dismiss %}
     {% if dismiss.link %}

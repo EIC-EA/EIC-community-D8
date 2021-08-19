@@ -6,6 +6,7 @@ use Drupal\Core\Breadcrumb\Breadcrumb;
 use Drupal\Core\Breadcrumb\BreadcrumbBuilderInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\node\NodeInterface;
 
@@ -15,6 +16,23 @@ use Drupal\node\NodeInterface;
 class ContentBreadcrumbBuilder implements BreadcrumbBuilderInterface {
 
   use StringTranslationTrait;
+
+  /**
+   * The current user service.
+   *
+   * @var \Drupal\Core\Session\AccountProxyInterface
+   */
+  protected $currentUser;
+
+  /**
+   * Constructs a new ContentBreadcrumbBuilder object.
+   *
+   * @param \Drupal\Core\Session\AccountProxyInterface $current_user
+   *   The current user service.
+   */
+  public function __construct(AccountProxyInterface $current_user) {
+    $this->currentUser = $current_user;
+  }
 
   /**
    * {@inheritdoc}
@@ -45,7 +63,7 @@ class ContentBreadcrumbBuilder implements BreadcrumbBuilderInterface {
 
     if ($node instanceof NodeInterface) {
       // Adds the user access as cacheable dependency.
-      if ($access = $node->access('view', $this->account, TRUE)) {
+      if ($access = $node->access('view', $this->currentUser->getAccount(), TRUE)) {
         $breadcrumb->addCacheableDependency($access);
       }
 

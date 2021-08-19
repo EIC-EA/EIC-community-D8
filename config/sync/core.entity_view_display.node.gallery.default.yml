@@ -6,11 +6,13 @@ dependencies:
     - core.entity_view_display.comment.node_comment.default
     - field.field.node.gallery.field_body
     - field.field.node.gallery.field_comments
-    - field.field.node.gallery.field_photos
+    - field.field.node.gallery.field_gallery_slides
+    - field.field.node.gallery.field_language
     - field.field.node.gallery.field_vocab_geo
     - field.field.node.gallery.field_vocab_topics
     - node.type.gallery
   module:
+    - entity_reference_revisions
     - oec_group_comments
     - text
     - user
@@ -35,15 +37,23 @@ content:
       view_mode: default
       pager_id: 0
     third_party_settings: {  }
-  field_photos:
-    type: entity_reference_entity_view
-    weight: 4
+  field_gallery_slides:
+    type: entity_reference_revisions_entity_view
+    weight: 8
+    label: above
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
     region: content
+  field_language:
+    weight: 8
     label: above
     settings:
       link: true
-      view_mode: default
     third_party_settings: {  }
+    type: entity_reference_label
+    region: content
   field_vocab_geo:
     type: entity_reference_label
     weight: 1
