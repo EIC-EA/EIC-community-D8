@@ -21,8 +21,25 @@ function eic_community_preprocess_node__document(array &$variables) {
       return;
     }
 
+    $document_media = $node->get('field_document_media')->entity;
+    $language = $node->language()->getName();
+
+    // Gets the document language based on the field_language of the Media
+    // type.
+    if (!$document_media->get('field_language')->isEmpty()) {
+      $lang_term = $document_media->get('field_language')->entity;
+
+      if ($lang_term->hasTranslation($node->language()->getId())) {
+        $translated_lang_term = \Drupal::service('entity.repository')->getTranslationFromContext($lang_term, $language);
+        $language = $translated_lang_term->getName();
+      }
+      else {
+        $language = $lang_term->getName();
+      }
+    }
+
     $document = [
-      'language' => $node->language()->getName(),
+      'language' => $language,
       'timestamp' => eic_community_get_teaser_time_display($node->get('changed')->getString()),
       'filesize' => format_size($file->get('filesize')->getString()),
       'highlight' => FALSE,
