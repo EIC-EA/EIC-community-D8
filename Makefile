@@ -121,6 +121,7 @@ endef
 define do_update
 	echo -e 'Updating ${APP_NAME}...'
 	docker exec -it ${APP_NAME}_php bash -c 'composer install --no-progress'
+	$(call do_build_front)
 	docker exec -it ${APP_NAME}_php bash -c 'drush cr'
 	docker exec -it ${APP_NAME}_php bash -c 'drush cim -y'
 	docker exec -it ${APP_NAME}_php bash -c 'drush updb -y'
@@ -160,6 +161,7 @@ define do_display_commands
 	echo -e '--- AVAILABLE COMMANDS ---'
 	echo -e '\n'
 	echo -e 'Setup the local development environment for ${APP_NAME}: \e[36mmake \e[0m\e[1msetup\e[0m'
+	echo -e 'Build the front assets: \e[36mmake \e[0m\e[1mbuild-front\e[0m'
 	echo -e 'You can run scripts defined in package.json this way: \e[36mmake \e[0m\e[1mrun @script_name\e[0m'
 	echo -e 'Stop the running app: \e[36mmake \e[0m\e[1mstop\e[0m'
 	echo -e 'Stop the running app and delete the data: \e[36mmake \e[0m\e[1mdestroy\e[0m'
