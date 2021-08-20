@@ -3,7 +3,6 @@
 namespace Drupal\eic_group_statistics\Hooks;
 
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
-use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\eic_comments\CommentsHelper;
@@ -435,33 +434,6 @@ class EntityOperations implements ContainerInjectionInterface {
   }
 
   /**
-   * Acts on hook_node_view() for node entities that belong to a group.
-   *
-   * @param array $build
-   *   The renderable array representing the entity content.
-   * @param \Drupal\Core\Entity\EntityInterface $entity
-   *   The node entity object.
-   * @param \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display
-   *   The entity view display holding the display options.
-   * @param string $view_mode
-   *   The view mode the entity is rendered in.
-   * @param \Drupal\group\Entity\GroupContentInterface $group_content
-   *   The group content entity object that relates to the node.
-   */
-  public function groupContentNodeView(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode, GroupContentInterface $group_content) {
-    switch ($entity->bundle()) {
-      case 'document':
-      case 'gallery':
-        if ($view_mode === 'teaser') {
-          $build['stat_downloads'] = $this->countFileDownloads($entity, $group_content);
-        }
-        break;
-
-    }
-
-  }
-
-  /**
    * Counts group file statistics for a given node with medias.
    *
    * @param \Drupal\group\Entity\GroupInterface $group
@@ -561,64 +533,6 @@ class EntityOperations implements ContainerInjectionInterface {
     }
 
     return $count_updates;
-  }
-
-  /**
-   * Counts the number of file downloads of a given node.
-   *
-   * @param \Drupal\node\NodeInterface $node
-   *   The node entity that belongs to the group.
-   * @param \Drupal\group\Entity\GroupContentInterface $group_content
-   *   The group content entity object that relates to the node.
-   */
-  private function countFileDownloads(NodeInterface $node, GroupContentInterface $group_content) {
-    $file_statistics_storage = \Drupal::service('eic_media_statistics.storage.file');
-
-    $file_ids = [];
-    $medias = [];
-    $downloads_count = 0;
-
-    switch ($node->bundle()) {
-      case 'document':
-        $medias = $node->get('field_document_media')->referencedEntities();
-        break;
-
-      case 'gallery':
-        $paragraphs = $node->get('field_gallery_slides')->referencedEntities();
-
-        foreach ($paragraphs as $paragraph) {
-          $medias[] = $paragraph->get('field_gallery_slide_media')->entity;
-        }
-        break;
-
-    }
-
-    foreach ($medias as $media) {
-      if ($media->hasField('field_media_video_file')) {
-        $file_id = $media->get('field_media_video_file')->target_id;
-      }
-      if ($media->hasField('field_media_file')) {
-        $file_id = $media->get('field_media_file')->target_id;
-      }
-      if ($media->hasField('oe_media_image')) {
-        $file_id = $media->get('oe_media_image')->target_id;
-      }
-
-      if (isset($file_id)) {
-        $file_ids[] = $file_id;
-      }
-    }
-
-    if (empty($file_ids)) {
-      $build['stat_downloads'] = $downloads_count;
-      return;
-    }
-
-    $stats = $file_statistics_storage->fetchViews($file_ids);
-
-    foreach ($stats as $stat) {
-      $downloads_count += $stat->getTotalCount();
-    }
   }
 
 }
