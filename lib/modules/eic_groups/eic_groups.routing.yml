@@ -38,3 +38,21 @@ eic_groups.group.highlight_content:
     _highlight_group_content: 'TRUE'
     node: \d+
     group: \d+
+
+eic_overviews.groups.overview_page.files:
+  path: '/group/{group}/library'
+  defaults:
+    # @todo: update controller namespace once we have the class.
+    _controller: '\Drupal\eic_groups\Controller\AboutPageController::build'
+    _title: 'Files'
+  requirements:
+    _group_permission: 'access files overview'
+
+eic_overviews.groups.overview_page.latest_activity_stream:
+  path: '/group/{group}/latest-activity'
+  defaults:
+    # @todo: update controller namespace once we have the class.
+    _controller: '\Drupal\eic_groups\Controller\AboutPageController::build'
+    _title: 'Latest activity'
+  requirements:
+    _group_permission: 'access latest activity stream'

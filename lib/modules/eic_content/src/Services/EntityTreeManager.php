@@ -69,10 +69,11 @@ class EntityTreeManager {
    * @param $target_bundle
    * @param $text
    * @param $ignored_values
+   * @param bool $disable_top_selection
    *
    * @return array|array[]
    */
-  public function search($target_entity, $target_bundle, $text, $ignored_values) {
+  public function search($target_entity, $target_bundle, $text, $ignored_values, bool $disable_top_selection = FALSE) {
     //We need to ignore values in suggestions that are already selected by the user
     $ignored_tids = array_map(function($selected_value) {
       $selected_value = json_decode($selected_value, TRUE);
@@ -84,6 +85,10 @@ class EntityTreeManager {
       ->condition('vid', $target_bundle)
       ->condition('name', $text, 'CONTAINS')
       ->range(0, 20);
+
+    if ($disable_top_selection) {
+      $query->condition('parent', 0, '<>');
+    }
 
     if (!empty($ignored_tids)) {
       $query->condition('tid', $ignored_tids, 'NOT IN');

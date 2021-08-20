@@ -1,0 +1,19 @@
+uuid: a33fd66c-0845-4546-960a-c8d0479844de
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.message.field_operation_type
+    - message.template.stream_wiki_page_insert_update
+id: message.stream_wiki_page_insert_update.field_operation_type
+field_name: field_operation_type
+entity_type: message
+bundle: stream_wiki_page_insert_update
+label: 'Operation type'
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

@@ -1,0 +1,3 @@
+delete activity item:
+  title: 'Delete activity stream item'
+  description: 'Allow the user to delete items displayed in the group activity stream'
