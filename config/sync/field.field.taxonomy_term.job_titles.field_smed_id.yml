@@ -1,0 +1,19 @@
+uuid: b5bdfa60-4dd2-418a-9602-6215e293e5e1
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.taxonomy_term.field_smed_id
+    - taxonomy.vocabulary.job_titles
+id: taxonomy_term.job_titles.field_smed_id
+field_name: field_smed_id
+entity_type: taxonomy_term
+bundle: job_titles
+label: 'SME Dashboard ID'
+description: 'ID/key coming from the SME Dashboard.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

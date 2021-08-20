@@ -71,6 +71,7 @@
         "openeuropa/oe_media": "dev-ISSUE-160-Drupal-9-support-without-media_avportal as 1.11.0",
         "openeuropa/oe_time_caching": "dev-ISSUE-6-Drupal-9-support as 1.0.0",
         "openeuropa/oe_webtools": "dev-ISSUE-153-Drupal-9-support as 1.11.0",
+        "softcreatr/jsonpath": "^0.7.5",
         "twig/twig": "2.14.3 as 1.44.2",
         "webflo/drupal-finder": "^1.2",
         "webmozart/path-util": "^2.3"

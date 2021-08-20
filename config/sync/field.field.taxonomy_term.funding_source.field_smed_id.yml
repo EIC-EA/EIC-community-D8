@@ -1,0 +1,19 @@
+uuid: 025fa180-e862-446b-9158-91e318ed4ee0
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.taxonomy_term.field_smed_id
+    - taxonomy.vocabulary.funding_source
+id: taxonomy_term.funding_source.field_smed_id
+field_name: field_smed_id
+entity_type: taxonomy_term
+bundle: funding_source
+label: 'SME Dashboard ID'
+description: 'ID/key coming from the SME Dashboard.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

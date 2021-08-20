@@ -1,0 +1,99 @@
+.ecl-filelist {
+  &__title {
+    @include ecl-responsive-font('h3');
+    margin-top: 0;
+  }
+
+  &__content {
+    margin: ecl-layout('gutter') 0;
+    font-size: ecl-typography('font-size--md');
+    line-height: ecl-typography('line-height');
+  }
+
+  &__list {
+    margin: ecl-layout('gutter') 0;
+  }
+
+  &__file {
+    display:flex;
+    flex-wrap: wrap;
+
+    & + & {
+        border-top: 1px solid map-get($ecl-colors, 'grey-25');
+        margin-top: map-get($ecl-spacing, 's');
+        padding-top: map-get($ecl-spacing, 's');
+    }
+
+    &-header {
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    &-image-wrapper {
+      order: -1;
+      margin: 0;
+      margin-right: ecl-box-model('padding');
+      width: 70px;
+      background: map-get($ecl-colors, 'grey-5');
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: ecl-typography('color', 'title');
+    }
+
+    & &-name {
+      margin-top:0;
+      margin-bottom: map-get($ecl-spacing, 's');
+      color: ecl-typography('color', 'title');
+      font-size: map-get($ecl-font-size, 'm') !important;
+    }
+
+    &-type {
+      order: -1;
+      text-transform: uppercase;
+      color: ecl-typography('color', 'meta');
+    }
+
+    &-footer {
+      flex-basis: 100%;
+      margin-top: map-get($ecl-spacing, 's');
+      display: flex;
+      justify-content: center;
+      @include ecl-media-breakpoint-up('md') {
+        flex-basis: auto;
+        margin-top: 0;
+        margin-left: ecl-box-model('padding');
+        display: flex;
+        align-items: flex-end;
+      }
+    }
+
+    &-stats {
+      display: flex;
+      justify-content: space-between;
+      color: ecl-typography('color', 'meta');
+    }
+
+    &-stat {
+        display: flex;
+        align-items: center;
+    }
+
+    &-stat-value {
+      margin: 0 5px;
+    }
+
+    &-stat-label {
+        order: 3;
+    }
+
+    &-stat--hide-label &-stat-label {
+      @include visually-hidden;
+    }
+
+    @include ecl-media-breakpoint-up('md') {
+      flex-wrap: nowrap;
+    }
+  }
+}

@@ -1,0 +1,60 @@
+uuid: db3d19b9-162a-4384-815c-7062a1524c6e
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.taxonomy_term.user_types.field_smed_id
+    - taxonomy.vocabulary.user_types
+  module:
+    - path
+    - text
+id: taxonomy_term.user_types.default
+targetEntityType: taxonomy_term
+bundle: user_types
+mode: default
+content:
+  description:
+    type: text_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_smed_id:
+    weight: 101
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  langcode:
+    type: language_select
+    weight: 2
+    region: content
+    settings:
+      include_locked: true
+    third_party_settings: {  }
+  name:
+    type: string_textfield
+    weight: -5
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  path:
+    type: path
+    weight: 30
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  status:
+    type: boolean_checkbox
+    settings:
+      display_label: true
+    weight: 100
+    region: content
+    third_party_settings: {  }
+hidden: {  }

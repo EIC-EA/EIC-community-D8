@@ -9,7 +9,7 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
  *
  * @package Drupal\eic_groups\Search\Sources
  */
-class UserGallerySourceType implements SourceTypeInterface {
+class UserGallerySourceType extends SourceType {
 
   use StringTranslationTrait;
 
