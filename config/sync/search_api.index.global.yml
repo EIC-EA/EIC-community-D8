@@ -4,14 +4,12 @@ status: true
 dependencies:
   module:
     - search_api_solr
-    - node
+    - group
+    - user
+    - file
     - media
     - taxonomy
     - message
-    - user
-    - file
-    - paragraphs
-    - group
     - node
     - path
     - eic_private_content
@@ -26,11 +24,6 @@ dependencies:
     - flag
     - group_permissions
   config:
-    - field.storage.node.field_document_media
-    - field.storage.node.field_body
-    - field.storage.node.field_discussion_type
-    - field.storage.node.field_subtitle
-    - field.storage.node.field_language
     - field.storage.user.field_first_name
     - field.storage.user.field_last_name
     - field.storage.media.oe_media_image
@@ -39,27 +32,30 @@ dependencies:
     - field.storage.group.field_thumbnail
     - field.storage.group.field_vocab_topics
     - field.storage.group.field_body
+    - field.storage.message.field_entity_type
     - field.storage.message.field_group_ref
     - field.storage.message.field_operation_type
     - field.storage.message.field_referenced_node
     - field.storage.media.field_media_file
-    - field.storage.message.field_operation_type
-    - field.storage.message.field_referenced_node
+    - field.storage.node.field_document_media
+    - field.storage.node.field_language
     - field.storage.node.field_vocab_geo
-    - field.storage.node.field_vocab_topics
-    - field.storage.user.field_first_name
-    - field.storage.media.oe_media_file
     - field.storage.node.field_gallery_slides
-    - field.storage.paragraph.field_gallery_slide_media
     - field.storage.paragraph.field_gallery_slide_legend
-    - field.storage.profile.field_location_address
+    - field.storage.media.oe_media_file
+    - field.storage.paragraph.field_gallery_slide_media
+    - field.storage.node.field_vocab_topics
+    - field.storage.node.field_body
+    - field.storage.node.field_subtitle
+    - field.storage.node.field_discussion_type
     - field.storage.profile.field_body
+    - field.storage.profile.field_location_address
+    - field.storage.profile.field_vocab_job_title
     - field.storage.profile.field_vocab_language
+    - field.storage.profile.field_social_links
+    - field.storage.profile.field_vocab_geo
     - field.storage.profile.field_vocab_topic_expertise
     - field.storage.profile.field_vocab_topic_interest
-    - field.storage.profile.field_vocab_geo
-    - field.storage.profile.field_vocab_job_title
-    - field.storage.profile.field_social_links
     - search_api.server.global
     - core.entity_view_mode.group.no_html
     - core.entity_view_mode.node.no_html
@@ -635,6 +631,22 @@ field_settings:
       module:
         - group
         - user
+  message_id:
+    label: 'Message ID'
+    datasource_id: 'entity:message'
+    property_path: mid
+    type: integer
+    dependencies:
+      module:
+        - message
+  operation_type:
+    label: 'Operation type'
+    datasource_id: 'entity:message'
+    property_path: field_operation_type
+    type: string
+    dependencies:
+      config:
+        - field.storage.message.field_operation_type
   path:
     label: 'Referenced node » Content » URL alias'
     datasource_id: 'entity:message'
@@ -646,14 +658,6 @@ field_settings:
       module:
         - node
         - path
-  operation_type:
-    label: 'Operation type'
-    datasource_id: 'entity:message'
-    property_path: field_operation_type
-    type: string
-    dependencies:
-      config:
-        - field.storage.message.field_operation_type
   rendered_item:
     label: 'Rendered HTML output'
     property_path: rendered_item
@@ -725,15 +729,13 @@ field_settings:
       module:
         - node
   type:
-    label: 'Referenced node » Content » Content type'
+    label: 'Entity type'
     datasource_id: 'entity:message'
-    property_path: 'field_referenced_node:entity:type'
+    property_path: field_entity_type
     type: string
     dependencies:
       config:
-        - field.storage.message.field_referenced_node
-      module:
-        - node
+        - field.storage.message.field_entity_type
   url:
     label: URI
     property_path: search_api_url

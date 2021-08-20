@@ -73,6 +73,10 @@ class SolrDocumentProcessor {
             ->toString() : '';
         }
         break;
+      case 'entity:message':
+      case 'entity:user':
+        $status = TRUE;
+        break;
       default:
         $title = '';
         $type = '';
@@ -154,16 +158,17 @@ class SolrDocumentProcessor {
     $group_parent_id = -1;
 
     if (array_key_exists('its_content__group_content__entity_id_gid', $fields)) {
-      $group_content_entity = GroupContent::load($fields['its_content__group_content__entity_id_gid']);
-      $group_parent_label = $group_content_entity->getGroup() instanceof GroupInterface ?
-        $group_content_entity->getGroup()->label()
-        : '';
-      $group_parent_url = $group_content_entity->getGroup() instanceof GroupInterface ?
-        $group_content_entity->getGroup()->toUrl()->toString()
-        : '';
-      $group_parent_id = $group_content_entity->getGroup() instanceof GroupInterface ?
-        $group_content_entity->getGroup()->id()
-        : -1;
+      if ($group_content_entity = GroupContent::load($fields['its_content__group_content__entity_id_gid'])) {
+        $group_parent_label = $group_content_entity->getGroup() instanceof GroupInterface ?
+          $group_content_entity->getGroup()->label()
+          : '';
+        $group_parent_url = $group_content_entity->getGroup() instanceof GroupInterface ?
+          $group_content_entity->getGroup()->toUrl()->toString()
+          : '';
+        $group_parent_id = $group_content_entity->getGroup() instanceof GroupInterface ?
+          $group_content_entity->getGroup()->id()
+          : -1;
+      }
     }
 
     $document->addField('ss_global_group_parent_label', $group_parent_label);

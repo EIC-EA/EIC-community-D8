@@ -18,6 +18,7 @@ permissions:
   - 'create group_node:document entity'
   - 'create group_node:gallery entity'
   - 'create group_node:wiki_page entity'
+  - 'delete activity item'
   - 'delete any group_node:discussion entity'
   - 'delete any group_node:document entity'
   - 'delete any group_node:gallery entity'

@@ -1,0 +1,8 @@
+permissions:
+  - 'access latest activity stream'
+public_permissions:
+  - 'access latest activity stream'
+roles:
+  - 'group-member'
+  - 'group-admin'
+  - 'group-owner'

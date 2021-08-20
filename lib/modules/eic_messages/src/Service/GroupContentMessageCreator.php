@@ -3,7 +3,9 @@
 namespace Drupal\eic_messages\Service;
 
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\eic_messages\Util\ActivityStreamMessageTemplates;
 use Drupal\group\Entity\GroupInterface;
+use InvalidArgumentException;
 
 /**
  * Class GroupContentMessageCreator.
@@ -71,32 +73,23 @@ class GroupContentMessageCreator extends MessageCreatorBase {
     GroupInterface $group,
     string $operation
   ) {
-    $messages = [];
-
     switch ($entity->getEntityTypeId()) {
       case 'node':
-        switch ($entity->bundle()) {
-          case 'discussion':
-            // @todo Handle all activity messages with correct values.
-            $messages[] = \Drupal::entityTypeManager()->getStorage('message')->create([
-              'template' => 'stream_discussion_insert_update',
-              'field_referenced_node' => $entity,
-              'field_operation_type' => $operation,
-              'field_group_ref' => $group,
-            ]);
-            break;
-        }
+        $message = \Drupal::entityTypeManager()->getStorage('message')->create([
+          'template' => ActivityStreamMessageTemplates::getTemplate($entity),
+          'field_referenced_node' => $entity,
+          'field_operation_type' => $operation,
+          'field_entity_type' => $entity->getEntityTypeId(),
+          'field_group_ref' => $group,
+        ]);
         break;
     }
 
-    // Save all messages.
-    foreach ($messages as $message) {
-      try {
-        $message->save();
-      } catch (\Exception $e) {
-        $logger = $this->getLogger('eic_messages');
-        $logger->error($e->getMessage());
-      }
+    try {
+      $message->save();
+    } catch (\Exception $e) {
+      $logger = $this->getLogger('eic_messages');
+      $logger->error($e->getMessage());
     }
   }
 

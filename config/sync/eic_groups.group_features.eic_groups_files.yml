@@ -1,0 +1,10 @@
+permissions:
+  - 'access files overview'
+  - 'create group_node:document entity'
+  - 'create group_node:gallery entity'
+public_permissions:
+  - 'access files overview'
+roles:
+  - group-member
+  - group-admin
+  - group-owner
