@@ -4,3 +4,6 @@ services:
     arguments: ['@database', '@state', '@request_stack']
     tags:
       - { name: backend_overridable }
+  eic_media_statistics.entity_file_download_count:
+    class: Drupal\eic_media_statistics\EntityFileDownloadCount
+    arguments: ['@entity_type.manager', '@entity_field.manager', '@eic_media_statistics.storage.file']
