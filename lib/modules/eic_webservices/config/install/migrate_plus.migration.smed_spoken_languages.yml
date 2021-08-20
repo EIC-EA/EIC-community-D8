@@ -21,13 +21,9 @@ source:
   track_changes: true
   item_selector: 'Taxonomy/Option'
   ids:
-    id:
-      type: integer
+    value:
+      type: string
   fields:
-    -
-      name: id
-      label: 'ID'
-      selector: Id
     -
       name: name
       label: 'Name'
