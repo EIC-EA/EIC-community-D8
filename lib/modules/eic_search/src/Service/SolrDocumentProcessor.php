@@ -73,6 +73,7 @@ class SolrDocumentProcessor {
             ->toString() : '';
         }
         break;
+      case 'entity:message':
       case 'entity:user':
         $status = TRUE;
         break;
