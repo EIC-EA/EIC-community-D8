@@ -8,6 +8,7 @@
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\eic_media_statistics\Hooks\EntityOperations;
 
 /**
  * Implements hook_file_download().
@@ -53,20 +54,6 @@ function eic_media_statistics_file_predelete(EntityInterface $entity) {
  * Implements hook_ENTITY_TYPE_view().
  */
 function eic_media_statistics_node_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
-  switch ($entity->bundle()) {
-    case 'document':
-    case 'gallery':
-      // We need to make sure the node belongs to a group content.
-      $group_contents = GroupContent::loadByEntity($entity);
-      if (!$group_contents) {
-        return;
-      }
-
-      $group_content = reset($group_contents);
-
-      \Drupal::classResolver(EntityOperations::class)
-        ->groupContentNodeView($build, $entity, $display, $view_mode, $group_content);
-      break;
-
-  }
+  \Drupal::classResolver(EntityOperations::class)
+    ->nodeView($build, $entity, $display, $view_mode);
 }
