@@ -142,3 +142,4 @@ $settings['file_private_path'] = '/app/private_files';
  */
 $settings['smed_api_taxonomy_username'] = '';
 $settings['smed_api_taxonomy_password'] = '';
+$settings['smed_api_taxonomy_endpoint'] = '';
