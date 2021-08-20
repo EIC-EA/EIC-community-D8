@@ -8,6 +8,7 @@
 use Drupal\taxonomy\Entity\Term;
 use Drupal\comment\Entity\Comment;
 use Drupal\Component\Utility\Xss;
+use Drupal\Core\Render\Markup;
 
 /**
  * Implements hook_preprocess_node() for discussion node.
@@ -21,26 +22,27 @@ function eic_community_preprocess_node__discussion(array &$variables) {
       // @todo Show the list of contributors.
       if (!empty($variables['elements']['contributor_ids'])) {
         $users = \Drupal::entityTypeManager()->getStorage('user')->loadMultiple($variables['elements']['contributor_ids']);
-        $contributors= ['items' => []];
+        $contributors = ['items' => []];
 
         foreach ($users as $user) {
           $contributors['items'][] = eic_community_get_teaser_user_display($user);
         }
 
-        $variables['contributors'] =$contributors;
+        $variables['contributors'] = $contributors;
       }
 
       $variables['author'] = eic_community_get_teaser_user_display($node->getOwner());
       $variables['timestamp']['label'] = eic_community_get_teaser_time_display($node->get('changed')->value);
 
-      foreach($variables['elements']['field_vocab_topics'] as $key => $value) {
-        if(is_int($key)) {
+      foreach ($variables['elements']['field_vocab_topics'] as $key => $value) {
+        if (is_int($key)) {
           $value['#options']['attributes']['class'][] = 'ecl-tag';
           $value['#options']['attributes']['class'][] = 'ecl-featured-list__item-tag';
           $variables['elements']['field_vocab_topics'][$key] = $value;
         }
       }
       break;
+
     case 'teaser':
       // @todo get comment count from backend.
       $comment_count = 0;
@@ -71,7 +73,7 @@ function eic_community_preprocess_node__discussion(array &$variables) {
           ],
         ],
         'author' => eic_community_get_teaser_user_display($node->getOwner()),
-        'description' => Xss::filter($node->get('field_body')->value),
+        'description' => Markup::create(Xss::filter($node->get('field_body')->value)),
         'tags' => $tags,
         'highlight' => FALSE,
         'timestamp' => [
@@ -109,5 +111,6 @@ function eic_community_preprocess_node__discussion(array &$variables) {
 
       $variables['discussion_item'] = $discussion_item;
       break;
+
   }
 }
