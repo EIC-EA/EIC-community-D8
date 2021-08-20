@@ -40,6 +40,10 @@ process:
     -
       plugin: get
       source: name
+  field_smed_id:
+    -
+      plugin: get
+      source: id
 destination:
   plugin: 'entity:taxonomy_term'
   default_bundle: topics

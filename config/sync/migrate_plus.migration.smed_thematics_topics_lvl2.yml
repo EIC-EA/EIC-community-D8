@@ -40,6 +40,10 @@ process:
     -
       plugin: get
       source: name
+  field_smed_id:
+    -
+      plugin: get
+      source: id
   parent:
     -
       plugin: callback

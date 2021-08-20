@@ -24,22 +24,26 @@ source:
   track_changes: true
   item_selector: Taxonomy/Option
   ids:
-    id:
-      type: integer
+    value:
+      type: string
   fields:
-    -
-      name: id
-      label: ID
-      selector: Id
     -
       name: name
       label: Name
       selector: Name
+    -
+      name: value
+      label: Value
+      selector: Value
 process:
   name:
     -
       plugin: get
       source: name
+  field_smed_id:
+    -
+      plugin: get
+      source: value
 destination:
   plugin: 'entity:taxonomy_term'
   default_bundle: languages
