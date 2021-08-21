@@ -74,6 +74,14 @@ class SolrDocumentProcessor {
         }
         break;
       case 'entity:message':
+        $user_url = '';
+        if (array_key_exists('its_uid', $fields)) {
+          $user = User::load($fields['its_uid']);
+          $user_url = $user instanceof UserInterface ? $user->toUrl()
+            ->toString() : '';
+        }
+        $status = TRUE;
+        break;
       case 'entity:user':
         $status = TRUE;
         break;
