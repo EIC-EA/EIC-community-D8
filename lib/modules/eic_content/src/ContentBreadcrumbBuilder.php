@@ -75,7 +75,7 @@ class ContentBreadcrumbBuilder implements BreadcrumbBuilderInterface {
 
         case 'story':
           // @todo Replace link route with overview page route when available.
-          $links[] = Link::createFromRoute($this->t('Story'), '<front>');
+          $links[] = Link::createFromRoute($this->t('Stories'), '<front>');
           break;
 
       }

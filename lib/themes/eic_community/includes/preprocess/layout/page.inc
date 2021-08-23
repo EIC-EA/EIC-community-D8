@@ -39,7 +39,12 @@ function eic_community_preprocess_page(array &$variables): void {
   if ($variables['user']->isAnonymous()) {
     $variables['site_header']['login']['link'] = [
       'label' => t('Log in'),
-      'path' => Url::fromRoute('user.login'),
+      'path' => Url::fromRoute(
+        'user.login',
+        [
+          'destination' => \Drupal::request()->getRequestUri(),
+        ]
+      ),
     ];
   }
   else {
@@ -71,7 +76,8 @@ function eic_community_preprocess_page(array &$variables): void {
     return strpos($key, 'content') !== FALSE;
   }, ARRAY_FILTER_USE_BOTH);
   $first_section = array_shift($first_section);
-  $block_content = \Drupal::service('entity.repository')->loadEntityByUuid('block_content', $first_section['#derivative_plugin_id']);
+  $block_content = \Drupal::service('entity.repository')
+    ->loadEntityByUuid('block_content', $first_section['#derivative_plugin_id']);
 
   $footer_sections[] = [
     'title' => $block_content->field_title->value,
@@ -128,7 +134,9 @@ function _preprocess_node_page(&$variables) {
       case 'story':
       case 'news':
         /** @var \Drupal\media\Entity\Media $media */
-        $media = \Drupal::service('entity.repository')->getTranslationFromContext($node->get('field_header_visual')->entity, $node->language()->getId());
+        $media = \Drupal::service('entity.repository')
+          ->getTranslationFromContext($node->get('field_header_visual')->entity,
+            $node->language()->getId());
         $image_item = ImageValueObject::fromImageItem($media->get('oe_media_image')->first());
         $author = eic_community_get_teaser_user_display($node->getOwner());
         $author_theme = [
@@ -151,7 +159,10 @@ function _preprocess_node_page(&$variables) {
           ],
           'meta' => [
             ['label' => $node->type->entity->label()],
-            ['label' => \Drupal::service('date.formatter')->format($node->get('published_at')->value, 'custom', $publish_date_format)],
+            [
+              'label' => \Drupal::service('date.formatter')
+                ->format($node->get('published_at')->value, 'custom', $publish_date_format),
+            ],
           ],
           'title' => $node->label(),
         ];

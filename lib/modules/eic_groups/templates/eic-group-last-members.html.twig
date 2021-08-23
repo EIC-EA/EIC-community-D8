@@ -1,0 +1,8 @@
+{% for member in members %}
+  {% if member %}
+    <p>{{ member.joined_date|date('U')|format_date('eu_format') }}</p>
+    <a href="{{ member.url }}">{{ member.full_name }}</a>
+    <p>{{ member.email }}</p>
+    <img src="{{ member.picture }}" alt="{{ member.full_name }}" width="50px" height="50px" />
+  {% endif %}
+{% endfor %}
