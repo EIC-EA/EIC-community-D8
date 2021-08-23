@@ -5,7 +5,7 @@ namespace Drupal\eic_search\Service;
 use Drupal\eic_groups\Constants\GroupVisibilityType;
 use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\file\Entity\File;
-use Drupal\group\Entity\GroupContent;
+use Drupal\group\Entity\Group;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\group\GroupMembership;
 use Drupal\image\Entity\ImageStyle;
@@ -73,6 +73,7 @@ class SolrDocumentProcessor {
             ->toString() : '';
         }
         break;
+      case 'entity:message':
       case 'entity:user':
         $status = TRUE;
         break;
@@ -157,15 +158,15 @@ class SolrDocumentProcessor {
     $group_parent_id = -1;
 
     if (array_key_exists('its_content__group_content__entity_id_gid', $fields)) {
-      if ($group_content_entity = GroupContent::load($fields['its_content__group_content__entity_id_gid'])) {
-        $group_parent_label = $group_content_entity->getGroup() instanceof GroupInterface ?
-          $group_content_entity->getGroup()->label()
+      if ($group_entity = Group::load($fields['its_content__group_content__entity_id_gid'])) {
+        $group_parent_label = $group_entity instanceof GroupInterface ?
+          $group_entity->label()
           : '';
-        $group_parent_url = $group_content_entity->getGroup() instanceof GroupInterface ?
-          $group_content_entity->getGroup()->toUrl()->toString()
+        $group_parent_url = $group_entity instanceof GroupInterface ?
+          $group_entity->toUrl()->toString()
           : '';
-        $group_parent_id = $group_content_entity->getGroup() instanceof GroupInterface ?
-          $group_content_entity->getGroup()->id()
+        $group_parent_id = $group_entity instanceof GroupInterface ?
+          $group_entity->id()
           : -1;
       }
     }

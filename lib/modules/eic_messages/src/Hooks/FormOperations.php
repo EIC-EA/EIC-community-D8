@@ -10,6 +10,7 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\eic_content\EICContentHelper;
 use Drupal\eic_messages\ActivityStreamOperationTypes;
 use Drupal\eic_messages\Service\GroupContentMessageCreator;
+use Drupal\eic_messages\Util\ActivityStreamMessageTemplates;
 use Drupal\group\Entity\GroupInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -106,7 +107,7 @@ class FormOperations implements ContainerInjectionInterface {
       $is_new_content = TRUE;
     }
     // Check we are updating a node which has an associated GroupContent entity.
-    elseif ($node = $form_state->getFormObject()->getEntity()) {
+    if ($node = $form_state->getFormObject()->getEntity()) {
       if (!$node->isNew() && $this->eicContentHelper->getGroupContentByEntity($node)) {
         $is_group_content = TRUE;
       }
@@ -114,13 +115,18 @@ class FormOperations implements ContainerInjectionInterface {
 
     // Test if we are creating or editing a group content.
     if ($is_group_content && $form_state->get('form_display')
-        ->getComponent('field_post_activity')) {
-      $form['field_post_activity'] = [
-        '#title' => $this->t('Post message in the activity stream'),
-        '#type' => 'checkbox',
-        '#default_value' => $is_new_content,
-      ];
-      $form['actions']['submit']['#submit'][] = [$this, 'postActivitySubmit'];
+      ->getComponent('field_post_activity')) {
+
+      // We show the field_post_activity if the node has an Activity message
+      // template.
+      if (ActivityStreamMessageTemplates::hasTemplate($node)) {
+        $form['field_post_activity'] = [
+          '#title' => $this->t('Post message in the activity stream'),
+          '#type' => 'checkbox',
+          '#default_value' => $is_new_content,
+        ];
+        $form['actions']['submit']['#submit'][] = [$this, 'postActivitySubmit'];
+      }
     }
   }
 
