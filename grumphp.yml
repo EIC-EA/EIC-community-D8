@@ -4,6 +4,11 @@ parameters:
   tasks.phpcs.ignore_patterns:
     - vendor/
     - web/
+    - node_modules/
+    - config/
+  tasks.phpcs.whitelist_patterns:
+    - modules/
+    - themes/
   tasks.phpcs.triggered_by:
     - php
     - module
