@@ -1,0 +1,13 @@
+{% extends "@theme/patterns/compositions/group/group.full.html.twig" %}
+
+{% block content %}
+    {% embed "@theme/patterns/compositions/editorial-article.html.twig" with editorial_article|default({}) %}
+        {% block content %}
+            {% include "@theme/patterns/compositions/activity-stream.html.twig" with activity_stream|default({}) only %}
+        {% endblock %}
+
+        {% block sidebar %}
+            {% include "@theme/patterns/compositions/featured-contributors.html.twig" with latest_members|default({}) only %}
+        {% endblock %}
+    {% endembed %}
+{% endblock %}

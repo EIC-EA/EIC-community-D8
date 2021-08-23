@@ -1,0 +1,109 @@
+{% if items is not empty %}
+    <div class="ecl-activity-stream">
+        {% if title is not empty %}
+            <h3 class="ecl-activity-stream__title">{{ title }}</h3>
+        {% endif %}
+
+        <div class="ecl-activity_stream__items-wrapper">
+            {% for item in items %}
+                <div class="ecl-activity-stream__item">
+                    {% if can_delete_activity %}
+                        <a href="#" class="ecl-activity-stream__item__action-delete">
+                            {% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with {
+                                icon: {
+                                    path: icon_file_path,
+                                    name: 'clear',
+                                    type: 'custom',
+                                    size: '2xs',
+                                },
+                                extra_classes: 'ecl-activity-stream__item__action-delete__icon',
+                            } only %}
+                        </a>
+                    {% endif %}
+                    <div class="ecl-activity-stream__item__main">
+                        {% if item.author is not empty %}
+                            <div class="ecl-activity-stream__item__image-wrapper">
+                                {% include "@theme/patterns/components/author.html.twig" with {
+                                    image: item.author.image,
+                                    name: item.author.name,
+                                    size: 'medium',
+                                    extra_classes: 'ecl-author--is-minimal',
+                                } only %}
+                            </div>
+                        {% endif %}
+                        {% if item.description is not empty %}    
+                            <div class="ecl-activity-stream__item__content">
+                                <div class="ecl-activity-stream__item__type">
+                                    {% if item.type.icon and icon_file_path %}
+                                        {% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with {
+                                            icon: item.type.icon|merge({
+                                                path: icon_file_path,
+                                                size: 's'
+                                            }),
+                                            extra_classes: 'ecl-activity-stream__item__icon',
+                                        } only %}
+                                    {% endif %}
+                                    <span class="ecl-activity-stream__item__description">{{ item.description|raw }}</span>
+                                </div>
+                            </div>
+                        {% endif %}  
+                    </div>
+                    <div class="ecl-activity-stream__item__footer">
+                        <div class="ecl-activity-stream__item__timestamp">
+                            {% if item.timestamp %}
+                                {% include "@theme/patterns/components/timestamp.html.twig" with item.timestamp|default({})|merge({
+                                    icon_file_path: icon_file_path,
+                                }) only %}
+                            {% endif %}
+                        </div>
+                        <div class="ecl-activity-stream__item__stats">
+                            {% if item.stats is not empty %}
+                                <div class="ecl-teaser__stats">
+                                    {% for stat in item.stats %}
+                                        <div class="ecl-teaser__stat">
+                                            {% if stat.icon is not empty and icon_file_path %}
+                                                {% include '@ecl-twig/ec-component-icon/ecl-icon.html.twig' with {
+                                                    icon: {
+                                                        size: 'xs',
+                                                        path: icon_file_path,
+                                                        type: stat.icon.type,
+                                                        name: stat.icon.name,
+                                                    },
+                                                    extra_classes: 'ecl-teaser__stat-icon',
+                                                } only %}
+                                            {% endif %}
+                                            <span class="ecl-teaser__stat-label">{{ stat.label }}</span>
+                                            <span class="ecl-teaser__stat-value">{{ stat.value }}</span>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    {% if call_to_action %}
+        <footer class="ecl-activity-stream__footer">
+            {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with {
+                link: call_to_action.link|default({})|merge({
+                    type: 'standalone',
+                    icon_position: 'after',
+                }),
+                icon: icon_file_path ? {
+                    path: icon_file_path,
+                    name: call_to_action.icon.name|default('rounded-arrow'),
+                    type: call_to_action.icon.type|default('ui'),
+                    size: call_to_action.icon.size|default('xs'),
+                    transform: call_to_action.icon.transform|default('rotate-90')
+                } : {},
+                extra_classes: 'ecl-activity-stream__call-to-action ecl-link--button ecl-link--button-ghost',
+            } only %}
+        </footer>
+    {% endif %}
+
+{% elseif no_items_available %}
+    <p class="ecl-activity-stream__no-content-message">{{ no_items_available }}</p>
+{% endif %}
