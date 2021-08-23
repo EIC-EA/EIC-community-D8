@@ -1,0 +1,43 @@
+uuid: 714137fc-93e5-48ec-b847-5993fba1d134
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.message.stream_video_insert_update.field_group_ref
+    - field.field.message.stream_video_insert_update.field_operation_type
+    - field.field.message.stream_video_insert_update.field_referenced_node
+    - message.template.stream_video_insert_update
+id: message.stream_video_insert_update.default
+targetEntityType: message
+bundle: stream_video_insert_update
+mode: default
+content:
+  field_group_ref:
+    type: entity_reference_autocomplete
+    weight: 0
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_operation_type:
+    type: string_textfield
+    weight: 1
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_referenced_node:
+    type: entity_reference_autocomplete
+    weight: 2
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+hidden: {  }

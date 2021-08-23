@@ -37,9 +37,8 @@
     }
   }
 
-  &__description {
+  &__description, &__meta {
     display: block;
-    color: ecl-typography('color', 'meta');
     line-height: ecl-typography('line-height', 'meta');
     font-size: ecl-typography('font-size', 'meta');
 
@@ -50,6 +49,14 @@
     #{$node}--is-minimal & {
       display: none;
     }
+  }
+
+  &__description {
+    color: ecl-typography('color', 'label');
+  }
+  
+  &__meta {
+    color: ecl-typography('color', 'meta');
   }
 
   &__link {

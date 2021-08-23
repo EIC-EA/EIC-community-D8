@@ -8,6 +8,7 @@
 use Drupal\taxonomy\Entity\Term;
 use Drupal\comment\Entity\Comment;
 use Drupal\Component\Utility\Xss;
+use Drupal\Core\Render\Markup;
 
 /**
  * Implements hook_preprocess_node() for discussion node.
@@ -99,7 +100,7 @@ function _preprocess_discussion_teaser(&$variables, $discussion_type, $node) {
   $discussion_item = [
     'type' => $discussion_type,
     'author' => eic_community_get_teaser_user_display($node->getOwner()),
-    'description' => Xss::filter($node->get('field_body')->value),
+    'description' => Markup::create(Xss::filter($node->get('field_body')->value)),
     'tags' => $tags,
     'highlight' => FALSE,
     'timestamp' => [
