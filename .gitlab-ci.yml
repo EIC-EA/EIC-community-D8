@@ -30,7 +30,8 @@ build_backend:
     - composer --no-ansi --no-interaction install --no-progress --prefer-dist --optimize-autoloader
     # We don't have our php-qa image for the moment providing coding style standards
     # Gitlab CI will exclude any directory containing a .git folder from artifacts, remove it temporarily
-    - rm -rf $CI_PROJECT_DIR/vendor/drupal/coder/.git
+    - find $CI_PROJECT_DIR/web/modules/contrib -type d -name ".git" -exec rm -rf {} +
+    - find $CI_PROJECT_DIR/vendor -type d -name ".git" -exec rm -rf {} +
   only:
     - develop
 
@@ -44,7 +45,6 @@ build_front:
     - cd lib/themes/eic_community
     - npm install && npm run build && npm run react-production
     - npm run pregenerate-storybook && npm run generate-storybook && npm run postgenerate-storybook
-    - rm -rf node_modules
   only:
     - develop
 
