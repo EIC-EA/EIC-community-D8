@@ -77,7 +77,6 @@ phpmd_test:
 deploy_staging:
   <<: *deploy_job
   stage: deploy
-  when: manual
   variables:
     WEB_SERVER_ADDRESS: '51.83.110.204'
     WEB_SERVER_PATH: '/home/blue4you/websites/eic-d8.stg.blue4you.be/www'
