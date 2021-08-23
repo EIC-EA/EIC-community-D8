@@ -45,6 +45,7 @@ build_front:
     - cd lib/themes/eic_community
     - npm install && npm run build && npm run react-production
     - npm run pregenerate-storybook && npm run generate-storybook && npm run postgenerate-storybook
+    - cd node_modules && find . -mindepth 1 -maxdepth 1 -type d ! -name "@ecl*" -exec rm -rf {} +
   only:
     - develop
 
