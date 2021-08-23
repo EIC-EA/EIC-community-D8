@@ -26,11 +26,11 @@ function eic_community_preprocess_node__discussion(array &$variables) {
 
   switch ($variables['view_mode']) {
     case 'full':
-      _preprocess_discussion_full($variables, $discussion_type);
+      _preprocess_discussion_full($variables, $discussion_type, $node);
       break;
 
     case 'teaser':
-      _preprocess_discussion_teaser($variables, $discussion_type);
+      _preprocess_discussion_teaser($variables, $discussion_type, $node);
       break;
   }
 }
@@ -38,7 +38,7 @@ function eic_community_preprocess_node__discussion(array &$variables) {
 /**
  * Preprocesses full display.
  */
-function _preprocess_discussion_full(&$variables, $discussion_type) {
+function _preprocess_discussion_full(&$variables, $discussion_type, $node) {
   $variables['type'] = $discussion_type;
   if (!empty($variables['elements']['contributor_ids'])) {
     $users = \Drupal::entityTypeManager()->getStorage('user')->loadMultiple($variables['elements']['contributor_ids']);
@@ -76,7 +76,7 @@ function _preprocess_discussion_full(&$variables, $discussion_type) {
 /**
  * Preprocesses teaser display.
  */
-function _preprocess_discussion_teaser(&$variables, $discussion_type) {
+function _preprocess_discussion_teaser(&$variables, $discussion_type, $node) {
   // @todo get comment count from backend.
   $comment_count = 0;
 
