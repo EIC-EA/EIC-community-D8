@@ -2,6 +2,8 @@
 
 namespace Drupal\eic_media_statistics;
 
+use Drupal\Core\Cache\Cache;
+use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Entity\EntityFieldManager;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
@@ -10,6 +12,13 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
  * Service that counts file downloads for an entity.
  */
 class EntityFileDownloadCount {
+
+  /**
+   * Cache backend.
+   *
+   * @var \Drupal\Core\Cache\CacheBackendInterface
+   */
+  protected $cacheBackend;
 
   /**
    * The Entity type manager.
@@ -35,6 +44,8 @@ class EntityFileDownloadCount {
   /**
    * Constructs a EntityOperation object.
    *
+   * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
+   *   The cache backend.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
    * @param \Drupal\Core\Entity\EntityFieldManager $entity_field_manager
@@ -43,10 +54,12 @@ class EntityFileDownloadCount {
    *   The File statistics database storage service.
    */
   public function __construct(
+    CacheBackendInterface $cache_backend,
     EntityTypeManagerInterface $entity_type_manager,
     EntityFieldManager $entity_field_manager,
     FileStatisticsDatabaseStorage $file_statistics_db_storage
   ) {
+    $this->cacheBackend = $cache_backend;
     $this->entityTypeManager = $entity_type_manager;
     $this->entityFieldManager = $entity_field_manager;
     $this->fileStatisticsDbStorage = $file_statistics_db_storage;
@@ -55,11 +68,28 @@ class EntityFileDownloadCount {
   /**
    * Counts the number of file downloads for a given entity.
    *
+   * This is a recursive function that will look into fields that may contain
+   * files. It mainly looks for media entity references and file fields.
+   *
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity object.
+   *
+   * @return array|int
+   *   An array containing the download count and the cache tags in recursive
+   *   mode or the final download count for the original entity.
    */
   public function countFileDownloads(EntityInterface $entity) {
-    $downloads_count = 0;
+    $cid = 'file_download_stats:' . $entity->getEntityTypeId() . ':' . $entity->id();
+
+    // Look for the item in cache.
+    if ($item = $this->cacheBackend->get($cid)) {
+      return $item->data;
+    }
+
+    $result = [
+      'download_count' => 0,
+      'cache_tags' => $entity->getCacheTags(),
+    ];
 
     $entity_fields = $this->entityFieldManager->getFieldDefinitions($entity->getEntityTypeId(), $entity->bundle());
     foreach ($entity_fields as $field) {
@@ -71,7 +101,11 @@ class EntityFileDownloadCount {
           if ($target_entity_type == 'media') {
             // Load the entities.
             foreach ($entity->get($field->getName())->referencedEntities() as $referenced_entity) {
-              $downloads_count += self::countFileDownloads($referenced_entity);
+              $sub_entity_result = self::countFileDownloads($referenced_entity);
+              // Combine the download count and cache tags with the one from the
+              // sub entity.
+              $result['download_count'] += $sub_entity_result['download_count'];
+              $result['cache_tags'] = array_unique(array_merge($result['cache_tags'], $sub_entity_result['cache_tags']));
             }
           }
           break;
@@ -88,12 +122,24 @@ class EntityFileDownloadCount {
             /** @var \Drupal\statistics\StatisticsViewsResult $stat_result */
             $file_downloads_count += $stat_result->getTotalCount();
           }
-          return $file_downloads_count;
+          $result = [
+            'download_count' => $file_downloads_count,
+            'cache_tags' => $entity->getCacheTags(),
+          ];
+          // Cache the result.
+          $this->cacheBackend->set($cid, $result['download_count'], Cache::PERMANENT, $result['cache_tags']);
+
+          // Return the download count for these files and cache tags for this
+          // entity.
+          return $result;
 
       }
     }
 
-    return $downloads_count;
+    // Cache the result.
+    $this->cacheBackend->set($cid, $result['download_count'], Cache::PERMANENT, $result['cache_tags']);
+
+    return $result['download_count'];
   }
 
 }
