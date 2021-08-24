@@ -7,7 +7,7 @@
     "prefer-stable": true,
     "require": {
         "php": ">=7.2",
-        "composer/composer": "1.10.21 as 2.0.12",
+        "composer/composer": "1.10.22 as 2.0.12",
         "composer/installers": "^1.9",
         "composer/semver": "1.7.2 as 3.2.4",
         "cweagans/composer-patches": "^1.7",
@@ -71,6 +71,7 @@
         "openeuropa/oe_media": "dev-ISSUE-160-Drupal-9-support-without-media_avportal as 1.11.0",
         "openeuropa/oe_time_caching": "dev-ISSUE-6-Drupal-9-support as 1.0.0",
         "openeuropa/oe_webtools": "dev-ISSUE-153-Drupal-9-support as 1.11.0",
+        "softcreatr/jsonpath": "^0.7.5",
         "twig/twig": "2.14.3 as 1.44.2",
         "webflo/drupal-finder": "^1.2",
         "webmozart/path-util": "^2.3"
