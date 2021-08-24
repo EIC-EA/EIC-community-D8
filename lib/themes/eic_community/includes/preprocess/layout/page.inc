@@ -16,7 +16,6 @@ use Drupal\user\Entity\User;
  */
 function eic_community_preprocess_page(array &$variables): void {
   $variables['main_attributes'] = new Attribute([
-    'class' => ['ecl-u-pb-xl'],
     'id' => ['main-content'],
   ]);
 
