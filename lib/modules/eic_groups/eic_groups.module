@@ -56,9 +56,14 @@ function eic_groups_theme($existing, $type, $theme, $path) {
     'eic_group_search_menu_field_search_submit' => [
       'render element' => 'element',
     ],
-    'eic_group_last_members' => [
+    'eic_group_last_activities_members' => [
       'variables' => [
         'members' => [],
+        'url' => '',
+        'translations' => [],
+        'datasource' => '',
+        'source_class' => '',
+        'group_id' => '',
       ],
     ],
   ];
