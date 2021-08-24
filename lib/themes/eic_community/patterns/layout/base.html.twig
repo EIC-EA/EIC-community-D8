@@ -24,6 +24,10 @@
   {% set output_content_after = block('content_after') %}
 {% endif %}
 
+{% if block('modal') is defined %}
+  {% set modal_content = block('modal') %}
+{% endif %}
+
 <div class="ecl-viewport">
   <div class="ecl-viewport__top">
     {% block site_top_bar %}
@@ -100,4 +104,12 @@
       {% endif %}
     {% endblock %}
   </div>
+
+  {% if modal_content %}
+    <div class="ecl-viewport__modal">
+      <div class="ecl-viewport__modal__content">
+        {{ modal_content }}
+      </div>
+    </div>
+  {% endif %}
 </div>
