@@ -25,7 +25,7 @@
 {% endif %}
 
 {% if block('modal') is defined %}
-  {% set modal_content = block('modal') %}
+  {% set modal_content = block('modal')|trim %}
 {% endif %}
 
 <div class="ecl-viewport">
@@ -105,7 +105,7 @@
     {% endblock %}
   </div>
 
-  {% if modal_content %}
+  {% if modal_content is not empty %}
     <div class="ecl-viewport__modal">
       <div class="ecl-viewport__modal__content">
         {{ modal_content }}
