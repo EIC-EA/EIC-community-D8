@@ -51,6 +51,22 @@ function eic_media_statistics_file_predelete(EntityInterface $entity) {
 }
 
 /**
+ * Implements hook_entity_update().
+ */
+function eic_media_statistics_entity_update(EntityInterface $entity) {
+  \Drupal::classResolver(EntityOperations::class)
+    ->entityUpdate($entity);
+}
+
+/**
+ * Implements hook_entity_delete().
+ */
+function eic_media_statistics_entity_delete(EntityInterface $entity) {
+  \Drupal::classResolver(EntityOperations::class)
+    ->entityDelete($entity);
+}
+
+/**
  * Implements hook_ENTITY_TYPE_view().
  */
 function eic_media_statistics_node_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {

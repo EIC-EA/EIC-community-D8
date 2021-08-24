@@ -66,6 +66,19 @@ class EntityFileDownloadCount {
   }
 
   /**
+   * Returns the entity types that are tracked for file download counts.
+   *
+   * @return string[]
+   *   An array containing the entity types.
+   */
+  public static function getTrackedEntityTypes() {
+    return [
+      'media',
+      'node',
+    ];
+  }
+
+  /**
    * Returns the number of file downloads for the given entity.
    *
    * @param \Drupal\Core\Entity\EntityInterface $entity
@@ -87,8 +100,10 @@ class EntityFileDownloadCount {
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity object.
    *
-   * @return array|int
-   *   An array containing the download count and the cache tags.
+   * @return array
+   *   An array containing the download count and the cache tags as follows:
+   *   - download_count: an integer representing the number of downloads.
+   *   - cache_tags: the cache tags for the given entity.
    */
   protected function countFileDownloads(EntityInterface $entity) {
     $cid = 'file_download_stats:' . $entity->getEntityTypeId() . ':' . $entity->id();
