@@ -7,6 +7,8 @@ use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Entity\EntityFieldManager;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\eic_media_statistics\Event\DownloadCountUpdate;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Service that counts file downloads for an entity.
@@ -19,6 +21,13 @@ class EntityFileDownloadCount {
    * @var \Drupal\Core\Cache\CacheBackendInterface
    */
   protected $cacheBackend;
+
+  /**
+   * The event dispatcher.
+   *
+   * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
+   */
+  protected $eventDispatcher;
 
   /**
    * The Entity type manager.
@@ -46,6 +55,8 @@ class EntityFileDownloadCount {
    *
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
    *   The cache backend.
+   * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $event_dispatcher
+   *   The event dispatcher.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
    * @param \Drupal\Core\Entity\EntityFieldManager $entity_field_manager
@@ -55,11 +66,13 @@ class EntityFileDownloadCount {
    */
   public function __construct(
     CacheBackendInterface $cache_backend,
+    EventDispatcherInterface $event_dispatcher,
     EntityTypeManagerInterface $entity_type_manager,
     EntityFieldManager $entity_field_manager,
     FileStatisticsDatabaseStorage $file_statistics_db_storage
   ) {
     $this->cacheBackend = $cache_backend;
+    $this->eventDispatcher = $event_dispatcher;
     $this->entityTypeManager = $entity_type_manager;
     $this->entityFieldManager = $entity_field_manager;
     $this->fileStatisticsDbStorage = $file_statistics_db_storage;
@@ -115,6 +128,8 @@ class EntityFileDownloadCount {
         'cache_tags' => $entity->getCacheTags(),
       ];
     }
+
+    // Initialise the result array.
     $result = [
       'download_count' => 0,
       'cache_tags' => $entity->getCacheTags(),
@@ -158,6 +173,10 @@ class EntityFileDownloadCount {
           // Cache the result.
           $this->cacheBackend->set($cid, $result['download_count'], Cache::PERMANENT, $result['cache_tags']);
 
+          // Dispatch an event.
+          $event = new DownloadCountUpdate($entity, $result['download_count']);
+          $this->eventDispatcher->dispatch($event, DownloadCountUpdate::EVENT_NAME);
+
           // Return the download count for these files and cache tags for this
           // entity.
           return $result;
@@ -167,6 +186,10 @@ class EntityFileDownloadCount {
 
     // Cache the result.
     $this->cacheBackend->set($cid, $result['download_count'], Cache::PERMANENT, $result['cache_tags']);
+
+    // Dispatch an event.
+    $event = new DownloadCountUpdate($entity, $result['download_count']);
+    $this->eventDispatcher->dispatch($event, DownloadCountUpdate::EVENT_NAME);
 
     return $result;
   }
