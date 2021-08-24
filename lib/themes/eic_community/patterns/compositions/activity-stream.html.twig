@@ -7,6 +7,19 @@
         <div class="ecl-activity_stream__items-wrapper">
             {% for item in items %}
                 <div class="ecl-activity-stream__item">
+                    {% if can_delete_activity %}
+                        <a href="#" class="ecl-activity-stream__item__action-delete">
+                            {% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with {
+                                icon: {
+                                    path: icon_file_path,
+                                    name: 'clear',
+                                    type: 'custom',
+                                    size: '2xs',
+                                },
+                                extra_classes: 'ecl-activity-stream__item__action-delete__icon',
+                            } only %}
+                        </a>
+                    {% endif %}
                     <div class="ecl-activity-stream__item__main">
                         {% if item.author is not empty %}
                             <div class="ecl-activity-stream__item__image-wrapper">
