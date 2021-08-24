@@ -19,7 +19,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @Block(
  *   id = "eic_groups_last_activities_members",
- *   admin_label = @Translation("EIC Last Group Members"),
+ *   admin_label = @Translation("EIC activity stream & last group members"),
  *   category = @Translation("European Innovation Council"),
  *   context_definitions = {
  *     "group" = @ContextDefinition("entity:group", required = FALSE)
