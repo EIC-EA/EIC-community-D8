@@ -6,4 +6,4 @@ services:
       - { name: backend_overridable }
   eic_media_statistics.entity_file_download_count:
     class: Drupal\eic_media_statistics\EntityFileDownloadCount
-    arguments: ['@cache.discovery', '@entity_type.manager', '@entity_field.manager', '@eic_media_statistics.storage.file']
+    arguments: ['@cache.default', '@entity_type.manager', '@entity_field.manager', '@eic_media_statistics.storage.file']
