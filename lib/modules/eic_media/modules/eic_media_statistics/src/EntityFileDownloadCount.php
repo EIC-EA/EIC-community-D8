@@ -66,6 +66,19 @@ class EntityFileDownloadCount {
   }
 
   /**
+   * Returns the number of file downloads for the given entity.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The entity object.
+   *
+   * @return int
+   *   The number of downloads for this entity.
+   */
+  public function getFileDownloads(EntityInterface $entity) {
+    return $this->countFileDownloads($entity)['download_count'];
+  }
+
+  /**
    * Counts the number of file downloads for a given entity.
    *
    * This is a recursive function that will look into fields that may contain
@@ -75,17 +88,18 @@ class EntityFileDownloadCount {
    *   The entity object.
    *
    * @return array|int
-   *   An array containing the download count and the cache tags in recursive
-   *   mode or the final download count for the original entity.
+   *   An array containing the download count and the cache tags.
    */
-  public function countFileDownloads(EntityInterface $entity) {
+  protected function countFileDownloads(EntityInterface $entity) {
     $cid = 'file_download_stats:' . $entity->getEntityTypeId() . ':' . $entity->id();
 
     // Look for the item in cache.
     if ($item = $this->cacheBackend->get($cid)) {
-      return $item->data;
+      return [
+        'download_count' => $item->data,
+        'cache_tags' => $entity->getCacheTags(),
+      ];
     }
-
     $result = [
       'download_count' => 0,
       'cache_tags' => $entity->getCacheTags(),
@@ -139,7 +153,7 @@ class EntityFileDownloadCount {
     // Cache the result.
     $this->cacheBackend->set($cid, $result['download_count'], Cache::PERMANENT, $result['cache_tags']);
 
-    return $result['download_count'];
+    return $result;
   }
 
 }
