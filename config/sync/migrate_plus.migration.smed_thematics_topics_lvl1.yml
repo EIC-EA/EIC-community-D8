@@ -1,0 +1,52 @@
+uuid: 9f2d4cc3-84f0-4959-93e4-f93f693c67cd
+langcode: en
+status: true
+dependencies: {  }
+id: smed_thematics_topics_lvl1
+class: null
+field_plugin_method: null
+cck_plugin_method: null
+migration_tags:
+  - eic_smed_api_authentication
+migration_group: eic_smed_taxonomy
+label: 'SMED - Thematics and Topics'
+source:
+  plugin: eic_smed_url
+  taxonomy_vocabulary_smed_id: ThematicsTopics
+  authentication:
+    plugin: basic
+    username: xxx
+    password: xxx
+  data_fetcher_plugin: eic_http_smed_taxonomy_post
+  data_parser_plugin: jsonpath
+  include_raw_data: true
+  track_changes: true
+  urls: {  }
+  item_selector: '$.Taxonomy.Group[*]'
+  ids:
+    id:
+      type: string
+  fields:
+    -
+      name: id
+      label: ID
+      selector: Value
+    -
+      name: name
+      label: Name
+      selector: Name
+process:
+  name:
+    -
+      plugin: get
+      source: name
+  field_smed_id:
+    -
+      plugin: get
+      source: id
+destination:
+  plugin: 'entity:taxonomy_term'
+  default_bundle: topics
+migration_dependencies:
+  required: {  }
+  optional: {  }

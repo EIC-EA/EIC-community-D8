@@ -121,6 +121,10 @@ function eic_community_preprocess_page(array &$variables): void {
   $variables['site_footer'] = ['sections' => $footer_sections];
 
   _preprocess_node_page($variables);
+
+  if ($variables['is_front']) {
+    _preprocess_front_page($variables);
+  }
 }
 
 /**
@@ -187,4 +191,49 @@ function _preprocess_node_page(&$variables) {
         break;
     }
   }
+}
+
+/**
+ * Preprocess front page.
+ */
+function _preprocess_front_page(&$variables) {
+  $front = [
+    'top' => [],
+    'middle_left' => [],
+    'middle_right' => [],
+    'bottom' => [],
+  ];
+
+  $content_sections = array_filter($variables['page']['content'], function ($key) {
+    return strpos($key, '#') === FALSE;
+  }, ARRAY_FILTER_USE_KEY);
+
+  foreach ($content_sections as $section) {
+    if (isset($section['#id'])) {
+      switch ($section['#id']) {
+        case 'homepage_stay_up_to_date':
+          $front['middle_left'][] = $section;
+          break;
+
+        case 'homepage_follow_us':
+        case 'eic_social_feed':
+          $front['middle_right'][] = $section;
+          break;
+
+        case 'homepage_facts_figures':
+          if ($variables['logged_in'] === FALSE) {
+            $front['bottom'][] = $section;
+          }
+          break;
+
+        default:
+          $front['top'][] = $section;
+      }
+    }
+    else {
+      $front['top'][] = $section;
+    }
+  }
+
+  $variables['front'] = $front;
 }

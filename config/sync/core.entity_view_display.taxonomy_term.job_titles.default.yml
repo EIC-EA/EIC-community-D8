@@ -1,0 +1,32 @@
+uuid: cf7d56e8-5c93-4bd2-a225-0d544a16cd1e
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.taxonomy_term.job_titles.field_smed_id
+    - taxonomy.vocabulary.job_titles
+  module:
+    - text
+id: taxonomy_term.job_titles.default
+targetEntityType: taxonomy_term
+bundle: job_titles
+mode: default
+content:
+  description:
+    label: hidden
+    type: text_default
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_smed_id:
+    type: string
+    weight: 1
+    region: content
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+hidden:
+  langcode: true
+  search_api_excerpt: true

@@ -6,27 +6,27 @@ use Drupal\Core\Block\Annotation\Block;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Url;
 use Drupal\eic_groups\EICGroupsHelper;
+use Drupal\eic_search\Search\Sources\ActivityStreamSourceType;
 use Drupal\file\Entity\File;
 use Drupal\group\Entity\GroupContent;
 use Drupal\group\Entity\GroupInterface;
-use Drupal\profile\Entity\Profile;
-use Drupal\user\Entity\User;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Provides a LastGroupMembersBlock block.
+ * Provides a LastActivitiesGroupMembersBlock block.
  *
  * @Block(
- *   id = "eic_groups_last_members",
- *   admin_label = @Translation("EIC Last Group Members"),
+ *   id = "eic_groups_last_activities_members",
+ *   admin_label = @Translation("EIC activity stream & last group members"),
  *   category = @Translation("European Innovation Council"),
  *   context_definitions = {
  *     "group" = @ContextDefinition("entity:group", required = FALSE)
  *   }
  * )
  */
-class LastGroupMembersBlock extends BlockBase implements ContainerFactoryPluginInterface {
+class LastActivitiesGroupMembersBlock extends BlockBase implements ContainerFactoryPluginInterface {
 
   /**
    * The EIC groups helper
@@ -41,6 +41,11 @@ class LastGroupMembersBlock extends BlockBase implements ContainerFactoryPluginI
   private $entityTypeManager;
 
   /**
+   * @var ActivityStreamSourceType $activityStreamSourceType
+   */
+  private $activityStreamSourceType;
+
+  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
@@ -49,7 +54,8 @@ class LastGroupMembersBlock extends BlockBase implements ContainerFactoryPluginI
       $plugin_id,
       $plugin_definition,
       $container->get('eic_groups.helper'),
-      $container->get('entity_type.manager')
+      $container->get('entity_type.manager'),
+      $container->get('eic_search.activity_stream_library')
     );
   }
 
@@ -75,11 +81,13 @@ class LastGroupMembersBlock extends BlockBase implements ContainerFactoryPluginI
     $plugin_id,
     $plugin_definition,
     EICGroupsHelper $groups_helper,
-    EntityTypeManagerInterface $entity_type_manager
+    EntityTypeManagerInterface $entity_type_manager,
+    ActivityStreamSourceType $activityStreamSourceType
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->groupsHelper = $groups_helper;
     $this->entityTypeManager = $entity_type_manager;
+    $this->activityStreamSourceType = $activityStreamSourceType;
   }
 
   /**
@@ -136,8 +144,18 @@ class LastGroupMembersBlock extends BlockBase implements ContainerFactoryPluginI
     }, $members);
 
     return [
-      '#theme' => 'eic_group_last_members',
+      '#theme' => 'eic_group_last_activities_members',
       '#members' => $members_data,
+      '#url' => Url::fromRoute('eic_groups.solr_search')->toString(),
+      '#translations' => [
+        'no_results' => $this->t('No results', [], ['context' => 'eic_group']),
+        'load_more' => $this->t('Load more', [], ['context' => 'eic_group']),
+        'block_title' => $this->t('Latest member activity', [], ['context' => 'eic_group']),
+        'commented_on' => $this->t('commented on', [], ['context' => 'eic_group']),
+      ],
+      '#datasource' => $this->activityStreamSourceType->getSourcesId(),
+      '#source_class' => ActivityStreamSourceType::class,
+      '#group_id' => $group->id(),
     ];
   }
 
