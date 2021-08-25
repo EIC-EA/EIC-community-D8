@@ -125,7 +125,7 @@ class EntityFileDownloadCount {
     if ($item = $this->cacheBackend->get($cid)) {
       return [
         'download_count' => $item->data,
-        'cache_tags' => $entity->getCacheTags(),
+        'cache_tags' => $item->tags,
       ];
     }
 
@@ -157,8 +157,14 @@ class EntityFileDownloadCount {
         case 'file':
           $file_downloads_count = 0;
           $file_ids = [];
+          $result = [
+            'download_count' => 0,
+            'cache_tags' => [],
+          ];
           foreach ($entity->get($field->getName())->getValue() as $file_item) {
             $file_ids[] = $file_item['target_id'];
+            $file = $this->entityTypeManager->getStorage('file')->load($file_item['target_id']);
+            $result['cache_tags'] = array_unique(array_merge($result['cache_tags'], $file->getCacheTags()));
           }
           // Get statistics results for all files.
           $stat_results = $this->fileStatisticsDbStorage->fetchViews($file_ids);
@@ -168,7 +174,7 @@ class EntityFileDownloadCount {
           }
           $result = [
             'download_count' => $file_downloads_count,
-            'cache_tags' => $entity->getCacheTags(),
+            'cache_tags' => array_unique(array_merge($result['cache_tags'], $entity->getCacheTags())),
           ];
           // Cache the result.
           $this->cacheBackend->set($cid, $result['download_count'], Cache::PERMANENT, $result['cache_tags']);
