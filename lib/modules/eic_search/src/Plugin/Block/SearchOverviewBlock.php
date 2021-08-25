@@ -150,7 +150,6 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
       $current_group_route = $this->groupsHelper->getGroupFromRoute();
     }
 
-
     $user_group_roles = [];
 
     if ($current_group_route) {
@@ -206,6 +205,7 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
         'uploaded_by' => $this->t('Uploaded by', [], ['context' => 'eic_group']),
         'draft' => $this->t('Draft', [], ['context' => 'eic_group']),
         'pending' => $this->t('Pending', [], ['context' => 'eic_group']),
+        'load_more' => $this->t('Load more', [], ['context' => 'eic_group']),
       ],
     ];
   }

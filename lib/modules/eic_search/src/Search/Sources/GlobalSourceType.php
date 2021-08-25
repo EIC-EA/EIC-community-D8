@@ -56,8 +56,8 @@ class GlobalSourceType extends SourceType {
     return [
       'ss_global_created_date' => [
         'label' => $this->t('Timestamp', [], ['context' => 'eic_search']),
-        'ASC' => $this->t('Recent', [], ['context' => 'eic_search']),
-        'DESC' => $this->t('Old', [], ['context' => 'eic_search']),
+        'ASC' => $this->t('Old', [], ['context' => 'eic_search']),
+        'DESC' => $this->t('Recent', [], ['context' => 'eic_search']),
       ],
       'ss_global_title' => [
         'label' => $this->t('Title', [], ['context' => 'eic_search']),
@@ -78,7 +78,10 @@ class GlobalSourceType extends SourceType {
   public function getSearchFieldsId(): array {
     return [
       'tm_X3b_en_rendered_item',
-      'ss_global_title'
+      'ss_global_title',
+      'ss_global_group_parent_label',
+      'sm_filename',
+      'ss_global_fullname',
     ];
   }
 
@@ -101,6 +104,13 @@ class GlobalSourceType extends SourceType {
    */
   public function getPrefilteredGroupFieldId(): string {
     return 'its_group_id_integer';
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function getDefaultSort(): array {
+    return ['ss_global_created_date', 'DESC'];
   }
 
 }

@@ -82,8 +82,8 @@ function _eic_community_preprocess_node_news_story(array &$variables) {
       }
     }
 
-    _eic_community_display_contributors($variables);
-    _eic_community_story_topics($variables);
+    _eic_community_story_contributors($variables);
+    _eic_community_display_topics($variables);
     _eic_community_story_related_stories($variables);
   }
 }
@@ -174,15 +174,22 @@ function _eic_community_display_contributors(&$variables) {
 /**
  * Preproccess topics for full news/story.
  */
-function _eic_community_story_topics(&$variables) {
+function _eic_community_display_topics(&$variables) {
   $topics = [];
 
   foreach ($variables['elements']['field_vocab_topics'] as $key => $value) {
     if (is_int($key)) {
-      $topics[] = [
-        'path' => $value['#url'],
-        'label' => $value['#title'],
-      ];
+      if (isset($value['#plain_text'])) {
+        $topics[] = [
+          'label' => $value['#plain_text'],
+        ];
+      }
+      else {
+        $topics[] = [
+          'path' => $value['#url'],
+          'label' => $value['#title'],
+        ];
+      }
     }
   }
 

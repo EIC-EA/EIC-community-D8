@@ -59,8 +59,8 @@ class LibrarySourceType extends SourceType {
       ],
       'ss_global_created_date' => [
         'label' => $this->t('Timestamp', [], ['context' => 'eic_search']),
-        'ASC' => $this->t('Recent', [], ['context' => 'eic_search']),
-        'DESC' => $this->t('Old', [], ['context' => 'eic_search']),
+        'ASC' => $this->t('Old', [], ['context' => 'eic_search']),
+        'DESC' => $this->t('Recent', [], ['context' => 'eic_search']),
       ],
       'ss_global_title' => [
         'label' => $this->t('Title', [], ['context' => 'eic_search']),

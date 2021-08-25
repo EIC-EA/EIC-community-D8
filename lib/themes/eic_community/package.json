@@ -10,7 +10,7 @@
     "compile:styles": "ecl-builder styles",
     "compile:svg": "node ./scripts/svg-sprites.js",
     "watch": "npm-run-all --parallel watch:* -ln",
-    "watch:scripts": "chokidar \"./js/**/*.js\" -i \"/node_modules/\" -c \"npm run compile:scripts\"",
+    "watch:scripts": "chokidar \"./js/**/*.js\" \"./react/**/*.js\" -i \"/node_modules/\" -c \"npm-run-all compile:scripts react-production\"",
     "watch:styles": "chokidar \"./sass/**/*.scss\" -i \"/node_modules/\" -c \"npm run compile:styles\"",
     "watch:svg": "chokidar \"./images/**/*.svg\" -i \"/node_modules/\" -c \"npm run compile:svg\"",
     "prestorybook": "npm-run-all compile:*",
