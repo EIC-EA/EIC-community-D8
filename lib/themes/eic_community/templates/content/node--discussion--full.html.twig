@@ -9,90 +9,63 @@
 {% extends "@eic_community/content/node.html.twig" %}
 
 {% block content %}
-  <div {{ attributes }}>
-    {{ title_prefix }}
-    {{ title_suffix }}
-    <div class="ecl-container">
-      <div class="ecl-editorial-header__wrapper">
-        <div class="ecl-editorial-header__main">
-          <div class="ecl-content-type-indicator ecl-editorial-header__type">
-            {{ elements.field_discussion_type }}
-          </div>
-          <div class="ecl-editorial-header__actions">
-            {% for key, element in elements %}
-              {% if key starts with 'flag' %}
-                {{ element }}
-              {% endif %}
-            {% endfor %}
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="ecl-base-layout ">
-      <div class="ecl-base-layout__content">
-        <div class="ecl-base-layout__main">
-          <main>
-            <section class="ecl-section-wrapper">
-              <div class="ecl-editorial-article">
-                <div class="ecl-container">
-                  <div class="ecl-editorial-article__wrapper">
-                    <section class="ecl-editorial-article__content">
-                      <h1>{{ elements['#title'] }}</h1>
 
-                      {{ elements.field_body }}
-
-                      <div class="ecl-editorial-article__meta">
-                        <div class="ecl-editorial-article__meta-item">
-                          {% include "@theme/patterns/components/author.html.twig" with author only %}
-                        </div>
-
-                        <div class="ecl-editorial-article__meta-item">
-                          {% include "@theme/patterns/components/timestamp.html.twig" with timestamp|default({})|merge({
-                            icon_file_path: icon_file_path,
-                            extra_classes: 'ecl-discussion-thread__timestamp ecl-timestamp--meta' ~ timestamp.extra_classes|default(''),
-                          }) only %}
-                        </div>
-                      </div>
-
-                    </section>
-                    <aside class="ecl-editorial-article__aside">
-                      <div class="ecl-editorial-article__aside-wrapper">
-                        {{ elements.field_vocab_topics }}
-                      </div>
-                    </aside>
-                  </div>
-                </div>
+  {% embed "@theme/patterns/compositions/editorial-article.html.twig" with editorial_article|default({}) %}
+      {% block content %}
+        {% include "@theme/patterns/components/content-type-indicator.html.twig" with type|default({})|merge({
+          extra_classes: 'ecl-editorial-header__type',
+          icon_file_path: eic_icon_path,
+        }) only %}
+        <h1>{{ elements['#title'] }}</h1>
+        {{ elements.field_body }}
+        {% if author or timestamp %}
+          <div class="ecl-editorial-article__meta">
+            {% if author %}
+              <div class="ecl-editorial-article__meta-item">
+                {% include "@theme/patterns/components/author.html.twig" with {
+                  author: author.name,
+                  path: author.path,
+                  image: author.image,
+                  extra_classes: 'ecl-editorial-article__author',
+                } %}
               </div>
-            </section>
+            {% endif %}
 
-            <section class="ecl-section-wrapper ecl-section-wrapper--is-grey ecl-comment-overview ">
-              <div class="ecl-container">
-                <section class="ecl-section-wrapper">
-                  <div class="ecl-editorial-article ecl-editorial-article--has-static-layout">
-                    <div class="ecl-container">
-                      <div class="ecl-editorial-article__wrapper">
-                        <section class="ecl-editorial-article__content">
-                          {{ elements.field_comments }}
-                        </section>
-                        <aside class="ecl-editorial-article__aside">
-                          <div class="ecl-editorial-article__aside-wrapper">
-                            {% if contributors is defined %}
-                              {% include "@theme/patterns/compositions/featured-contributors.html.twig" with contributors|default({})|merge({
-                                grid: true,
-                                title: "Contributors"|t
-                              }) only %}
-                            {% endif %}
-                          </div>
-                        </aside>
-                      </div>
-                    </div>
-                  </div>
-                </section>
+            {% if timestamp %}
+              <div class="ecl-editorial-article__meta-item">
+                {% include "@theme/patterns/components/timestamp.html.twig" with timestamp|default({})|merge({
+                  icon_file_path: eic_icon_path,
+                  extra_classes: 'ecl-editorial-article__timestamp',
+                }) %}
               </div>
-            </section>
-          </main>
-        </div>
+            {% endif %}
+          </div>
+        {% endif %}
+      {% endblock %}
+      {% block sidebar %}
+        {% if flags %}
+          {% include "@theme/patterns/components/flags.html.twig" with flags|default({}) %}
+        {% endif %}
+        {{ elements.field_vocab_topics }}
+      {% endblock %}
+    {% endembed %}
+    {% if logged_in %}
+    <section class="ecl-section-wrapper ecl-section-wrapper--is-grey ecl-comment-overview">
+      <div class="ecl-container">
+        {% embed "@theme/patterns/compositions/editorial-article.html.twig" with {
+          extra_classes: 'ecl-editorial-article--has-static-layout'
+        } %}
+          {% block content %}
+            {{ elements.field_comments }}
+          {% endblock %}
+          {% block sidebar %}
+              {% include "@theme/patterns/compositions/featured-contributors.html.twig" with contributors|default({})|merge({
+                grid: true,
+                title: "Contributors"|t
+              }) only %}
+          {% endblock %}
+        {% endembed %}
       </div>
-    </div>
-  </div>
+    </section>
+    {% endif %}
 {% endblock %}

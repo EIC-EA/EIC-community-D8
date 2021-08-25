@@ -5,10 +5,9 @@ namespace Drupal\eic_messages\Service;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\eic_messages\Util\ActivityStreamMessageTemplates;
 use Drupal\group\Entity\GroupInterface;
-use InvalidArgumentException;
 
 /**
- * Class GroupContentMessageCreator.
+ * Provides a message creator class for group content.
  */
 class GroupContentMessageCreator extends MessageCreatorBase {
 
@@ -66,7 +65,7 @@ class GroupContentMessageCreator extends MessageCreatorBase {
    * @param \Drupal\group\Entity\GroupInterface $group
    *   The group having this content.
    * @param string $operation
-   *   The type of the operation. See ActivityStreamOperationTypes
+   *   The type of the operation. See ActivityStreamOperationTypes.
    */
   public function createGroupContentActivity(
     EntityInterface $entity,
@@ -79,7 +78,7 @@ class GroupContentMessageCreator extends MessageCreatorBase {
           'template' => ActivityStreamMessageTemplates::getTemplate($entity),
           'field_referenced_node' => $entity,
           'field_operation_type' => $operation,
-          'field_entity_type' => $entity->getEntityTypeId(),
+          'field_entity_type' => $entity->bundle(),
           'field_group_ref' => $group,
         ]);
         break;
@@ -87,7 +86,8 @@ class GroupContentMessageCreator extends MessageCreatorBase {
 
     try {
       $message->save();
-    } catch (\Exception $e) {
+    }
+    catch (\Exception $e) {
       $logger = $this->getLogger('eic_messages');
       $logger->error($e->getMessage());
     }

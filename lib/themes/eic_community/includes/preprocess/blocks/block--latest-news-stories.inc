@@ -7,7 +7,7 @@
 
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Cache\Cache;
-use Drupal\eic_community\ValueObject\ImageValueObject;
+use Drupal\image\Entity\ImageStyle;
 use Drupal\node\NodeInterface;
 
 /**
@@ -41,8 +41,39 @@ function eic_community_preprocess_block__latest_news_stories(&$variables, &$cach
     }
 
     $node_translation = \Drupal::service('entity.repository')->getTranslationFromContext($node, $block_content->language()->getId());
-    $node_author = $node_translation->getOwner();
+    $node_author = eic_community_get_teaser_user_display($node_translation->getOwner());
     $time_ago = \Drupal::service('date.formatter')->formatTimeDiffSince($node_translation->get('published_at')->value, ['granularity' => 1]);
+
+    if ($variables['logged_in'] === FALSE) {
+      unset($node_author['path']);
+    }
+    // @todo Add real statistics.
+    $stats = [
+      [
+        'icon' => [
+          'type' => 'custom',
+          'name' => 'comment',
+        ],
+        'label' => t('Comments'),
+        'value' => 0,
+      ],
+      [
+        'icon' => [
+          'type' => 'custom',
+          'name' => 'views',
+        ],
+        'label' => t('Views'),
+        'value' => 0,
+      ],
+      [
+        'icon' => [
+          'type' => 'custom',
+          'name' => 'like',
+        ],
+        'label' => t('Likes'),
+        'value' => 0,
+      ],
+    ];
 
     $item = [
       'title' => $node_translation->label(),
@@ -58,18 +89,16 @@ function eic_community_preprocess_block__latest_news_stories(&$variables, &$cach
       'timestamp' => [
         'label' => t('@time ago', ['@time' => $time_ago]),
       ],
-      'author' => [
-        'author' => $node_author->getDisplayName(),
-        'path' => $node_author->toUrl()->toString(),
-      ],
+      'author' => $node_author,
+      'stats' => $stats,
     ];
 
     if (!$node_translation->get('field_header_visual')->isEmpty()) {
       /** @var \Drupal\media\Entity\Media $media */
       $media = \Drupal::service('entity.repository')->getTranslationFromContext($node_translation->get('field_header_visual')->entity, $block_content->language()->getId());
-      $image_item = ImageValueObject::fromImageItem($media->get('oe_media_image')->first());
+      $file_uri = $media->get('oe_media_image')->first()->entity->getFileUri();
       $item['media'] = [
-        'image' => $image_item->getSource(),
+        'image' => ImageStyle::load('oe_theme_ratio_3_2_medium')->buildUrl($file_uri),
       ];
     }
 

@@ -16,7 +16,6 @@ use Drupal\user\Entity\User;
  */
 function eic_community_preprocess_page(array &$variables): void {
   $variables['main_attributes'] = new Attribute([
-    'class' => ['ecl-u-pb-xl'],
     'id' => ['main-content'],
   ]);
 
@@ -121,6 +120,10 @@ function eic_community_preprocess_page(array &$variables): void {
   $variables['site_footer'] = ['sections' => $footer_sections];
 
   _preprocess_node_page($variables);
+
+  if ($variables['is_front']) {
+    _preprocess_front_page($variables);
+  }
 }
 
 /**
@@ -167,6 +170,15 @@ function _preprocess_node_page(&$variables) {
           'title' => $node->label(),
         ];
 
+      $words_per_minute = \Drupal::config('node_read_time.settings')
+        ->get('reading_time')['words_per_minute'] ?: 225;
+      $reading_time_service = \Drupal::service('reading_time');
+      $reading_time = $reading_time_service
+        ->setWordsPerMinute($words_per_minute)
+        ->collectWords($node)
+        ->calculateReadingTime()
+        ->getReadingTime();
+
         $variables['hero'] = [
           'image' => [
             'src' => $image_item->getSource(),
@@ -177,7 +189,7 @@ function _preprocess_node_page(&$variables) {
             [
               'content' => [
                 '#theme' => 'eic_community_timestamp',
-                '#label' => \Drupal::service('reading_time')->getReadingTime(),
+                '#label' => $reading_time,
                 '#icon_file_path' => $variables['eic_icon_path'],
               ],
             ],
@@ -187,4 +199,49 @@ function _preprocess_node_page(&$variables) {
         break;
     }
   }
+}
+
+/**
+ * Preprocess front page.
+ */
+function _preprocess_front_page(&$variables) {
+  $front = [
+    'top' => [],
+    'middle_left' => [],
+    'middle_right' => [],
+    'bottom' => [],
+  ];
+
+  $content_sections = array_filter($variables['page']['content'], function ($key) {
+    return strpos($key, '#') === FALSE;
+  }, ARRAY_FILTER_USE_KEY);
+
+  foreach ($content_sections as $section) {
+    if (isset($section['#id'])) {
+      switch ($section['#id']) {
+        case 'homepage_stay_up_to_date':
+          $front['middle_left'][] = $section;
+          break;
+
+        case 'homepage_follow_us':
+        case 'eic_social_feed':
+          $front['middle_right'][] = $section;
+          break;
+
+        case 'homepage_facts_figures':
+          if ($variables['logged_in'] === FALSE) {
+            $front['bottom'][] = $section;
+          }
+          break;
+
+        default:
+          $front['top'][] = $section;
+      }
+    }
+    else {
+      $front['top'][] = $section;
+    }
+  }
+
+  $variables['front'] = $front;
 }
