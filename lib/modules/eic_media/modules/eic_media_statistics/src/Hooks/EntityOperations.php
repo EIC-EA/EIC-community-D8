@@ -67,7 +67,10 @@ class EntityOperations implements ContainerInjectionInterface {
    *   The view mode the entity is rendered in.
    */
   public function nodeView(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
-    $build['stat_downloads'] = $this->entityFileDownloadCount->getFileDownloads($entity);
+    $build['file_download_count'] = [
+      '#markup' => '',
+      '#value' => $this->entityFileDownloadCount->getFileDownloads($entity),
+    ];
   }
 
   /**
