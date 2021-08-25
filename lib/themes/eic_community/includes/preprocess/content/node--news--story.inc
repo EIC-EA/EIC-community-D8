@@ -82,7 +82,7 @@ function _eic_community_preprocess_node_news_story(array &$variables) {
       }
     }
 
-    _eic_community_story_contributors($variables);
+    _eic_community_display_contributors($variables);
     _eic_community_display_topics($variables);
     _eic_community_story_related_stories($variables);
   }
