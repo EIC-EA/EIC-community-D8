@@ -1,0 +1,31 @@
+# General routes.
+entity.overview_page.settings:
+  path: 'admin/structure/overview-page'
+  defaults:
+    _form: '\Drupal\eic_overviews\Form\OverviewPageSettingsForm'
+    _title: 'Overview page'
+  requirements:
+    _permission: 'administer overview pages'
+
+# Group overview routes.
+eic_overviews.groups.overview_page.discussions:
+  path: '/group/{group}/discussions'
+  defaults:
+    _controller: '\Drupal\eic_overviews\Controller\GroupOverviewsController::buildGenericPage'
+    _title: 'Discussions'
+  requirements:
+    _group_permission: 'access discussions overview'
+eic_overviews.groups.overview_page.members:
+  path: '/group/{group}/people'
+  defaults:
+    _controller: '\Drupal\eic_overviews\Controller\GroupOverviewsController::buildGenericPage'
+    _title: 'Members'
+  requirements:
+    _group_permission: 'access members overview'
+eic_overviews.groups.overview_page.search:
+  path: '/group/{group}/search'
+  defaults:
+    _controller: '\Drupal\eic_overviews\Controller\GroupOverviewsController::buildGenericPage'
+    _title: 'Search group'
+  requirements:
+    _group_permission: 'access group search overview'

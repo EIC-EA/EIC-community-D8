@@ -12,7 +12,7 @@ audience: member
 group_type: group
 permissions_ui: true
 permissions:
-  - 'access group search'
+  - 'access group search overview'
   - 'create group_node:discussion entity'
   - 'create group_node:document entity'
   - 'create group_node:gallery entity'
