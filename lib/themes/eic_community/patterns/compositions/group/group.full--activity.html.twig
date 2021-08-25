@@ -11,3 +11,26 @@
         {% endblock %}
     {% endembed %}
 {% endblock %}
+
+{% block modal %}
+  {% if activity_stream.modal %}
+    {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with {
+        link: activity_stream.modal.call_to_action.link|default({})|merge({
+            type: 'standalone',
+            icon_position: 'after',
+        }),
+        icon: activity_stream.icon_file_path ? {
+            path: activity_stream.icon_file_path,
+            name: 'clear',
+            type: 'custom',
+            size: '2xs',
+        } : {},
+        extra_classes: 'ecl-activity-stream__modal__call-to-action ecl-link--button ecl-link--button-ghost',
+    } only %}
+    <h3 class="ecl-activity-stream__modal__title">{{ activity_stream.modal.title }}</h3>
+    <p class="ecl-activity-stream__modal__description">{{ activity_stream.modal.description }}</p>
+    {% include "@theme/patterns/components/inline-actions.html.twig" with {
+        items: activity_stream.modal.actions,
+    } only %}
+  {% endif %}
+{% endblock %}

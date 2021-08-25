@@ -78,7 +78,7 @@ class GroupContentMessageCreator extends MessageCreatorBase {
           'template' => ActivityStreamMessageTemplates::getTemplate($entity),
           'field_referenced_node' => $entity,
           'field_operation_type' => $operation,
-          'field_entity_type' => $entity->getEntityTypeId(),
+          'field_entity_type' => $entity->bundle(),
           'field_group_ref' => $group,
         ]);
         break;
