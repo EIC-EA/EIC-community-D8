@@ -50,7 +50,20 @@ function eic_community_preprocess_group(array &$variables) {
  */
 function _preprocess_about_page(&$variables) {
   $sections = [];
-  // About group tab.
+
+  _group_about_group_tab($variables, $sections);
+  _group_about_permissions_tab($variables, $sections);
+
+  $variables['sections'] = [
+    'as_tabs' => TRUE,
+    'items' => $sections,
+  ];
+}
+
+/**
+ * About group tab.
+ */
+function _group_about_group_tab($variables, &$sections) {
   $owners = array_map(function ($owner) {
     if ($owner instanceof Markup) {
       return [
@@ -134,7 +147,12 @@ function _preprocess_about_page(&$variables) {
       '#items' => $about_items,
     ],
   ];
-  // Permissions and visibility tab.
+}
+
+/**
+ * About permissions tab.
+ */
+function _group_about_permissions_tab($variables, &$sections) {
   if (isset($variables['elements']['visibility'])) {
     $admin_items = [];
     $visibility = $variables['elements']['visibility'];
@@ -143,14 +161,12 @@ function _preprocess_about_page(&$variables) {
 
     switch ($visibility_id) {
       case 'custom_restricted':
-        $restrictions = [];
-
-        foreach ($visibility['settings'] as $restriction) {
-          $restrictions[] = [
+        $restrictions = array_map(function ($restriction) {
+          return [
             'title' => $restriction['label'],
             'content' => $restriction['options'],
           ];
-        }
+        }, $visibility['settings']);
 
         $access_items = $restrictions;
         break;
@@ -203,9 +219,4 @@ function _preprocess_about_page(&$variables) {
       ],
     ];
   }
-  // Output.
-  $variables['sections'] = [
-    'as_tabs' => TRUE,
-    'items' => $sections,
-  ];
 }

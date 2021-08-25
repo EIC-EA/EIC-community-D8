@@ -1,0 +1,5 @@
+overview_page.add_form:
+  route_name: entity.overview_page.add_form
+  title: 'Add overview page'
+  appears_on:
+    - entity.overview_page.collection

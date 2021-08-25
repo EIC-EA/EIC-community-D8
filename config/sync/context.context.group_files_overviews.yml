@@ -1,0 +1,57 @@
+uuid: 65094f08-6149-43cb-89a5-f66212b534dc
+langcode: en
+status: true
+dependencies:
+  module:
+    - eic_search
+    - route_condition
+name: group_files_overviews
+label: 'Group - Files - Overviews'
+group: Groups
+description: ''
+requireAllConditions: false
+disabled: false
+conditions:
+  route:
+    id: route
+    routes: eic_overviews.groups.overview_page.files
+    negate: false
+    uuid: 10a20f3f-97b2-45b4-80a3-d9641b9bfa3f
+    context_mapping: {  }
+reactions:
+  blocks:
+    blocks:
+      1f828322-eac8-4da7-af8f-7677a008a12d:
+        id: eic_search_overview
+        label: null
+        provider: null
+        label_display: null
+        region: content
+        weight: '0'
+        facets:
+          ss_global_content_type: ss_global_content_type
+          sm_content_field_vocab_topics_string: sm_content_field_vocab_topics_string
+          sm_content_field_vocab_geo_string: sm_content_field_vocab_geo_string
+        sort_options:
+          its_flag_highlight_content: its_flag_highlight_content
+          ss_global_created_date: ss_global_created_date
+          ss_global_title: ss_global_title
+        source_type: Drupal\eic_search\Search\Sources\LibrarySourceType
+        enable_search: 1
+        page_options: normal
+        prefilter_group: 1
+        add_facet_interests: 0
+        add_facet_my_groups: 0
+        context_mapping: {  }
+        custom_id: eic_search_overview
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: group_files_overviews
+        third_party_settings: {  }
+        uuid: 1f828322-eac8-4da7-af8f-7677a008a12d
+    id: blocks
+    saved: false
+    uuid: b8b6f9f3-68cc-4066-b69f-04528693c7d9
+    include_default_blocks: 0
+weight: 0

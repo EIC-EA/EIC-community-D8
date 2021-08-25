@@ -20,7 +20,7 @@ class GroupDiscussions extends EicGroupsGroupFeaturePluginBase {
    *
    * @var string
    */
-  const PRIMARY_OVERVIEW_ROUTE = 'view.group_overviews.page_1';
+  const PRIMARY_OVERVIEW_ROUTE = 'eic_overviews.groups.overview_page.discussions';
 
   /**
    * {@inheritdoc}
