@@ -10,7 +10,12 @@ ifeq (run,$(firstword $(MAKECMDGOALS)))
   $(eval $(RUN_ARGS):;@:)
 endif
 
+UNAME := $(shell uname)
+
 setup:
+  ifeq ($(UNAME),Darwin)
+		$(call do_macos_setup)
+  endif
 	$(call do_setup)
 
 start:
@@ -71,6 +76,7 @@ define do_setup
 	docker-compose up -d
 	docker exec -it ${APP_NAME}_php bash -c 'composer install --no-progress'
 	$(call do_db_healthcheck)
+	$(call do_create_symlinks)
 	$(call do_build_front)
 	docker exec -it ${APP_NAME}_php bash -c 'cp -n ${APP_ROOT}/web/sites/default/default.settings.local.php ${APP_ROOT}/web/sites/default/settings.php'
 	docker exec -it ${APP_NAME}_php bash -c 'drush site-install minimal --site-name=${APP_NAME} --account-name=${DRUPAL_ADMIN_USER} --account-pass=${DRUPAL_ADMIN_PASSWORD} --existing-config -y'
@@ -79,6 +85,14 @@ define do_setup
 	echo -e '\e[42m${APP_NAME} setup completed\e[0m'
 	$(call do_display_app_info)
 	$(call do_display_commands)
+endef
+
+define do_macos_setup
+	echo -e 'Setting up ${APP_NAME}...'
+	echo -e 'You have been identified as running on macOS'
+	echo -e 'Please be sure you read \e[36m"Running on macOS"\e[0m within the README file'
+	echo -e 'Copying macos volume configs as docker-compose.override.yml'
+	$(shell cp -n ./docker/macos.volumes.yml docker-compose.override.yml)
 endef
 
 define do_start
@@ -108,6 +122,7 @@ endef
 define do_update
 	echo -e 'Updating ${APP_NAME}...'
 	docker exec -it ${APP_NAME}_php bash -c 'composer install --no-progress'
+	$(call do_build_front)
 	docker exec -it ${APP_NAME}_php bash -c 'drush cr'
 	docker exec -it ${APP_NAME}_php bash -c 'drush cim -y'
 	docker exec -it ${APP_NAME}_php bash -c 'drush updb -y'
@@ -119,6 +134,16 @@ endef
 define do_cc
 	echo -e 'Clearing ${APP_NAME} caches...'
 	docker exec -it ${APP_NAME}_php bash -c 'drush cr'
+endef
+
+define do_create_symlinks
+	echo -e 'Creating symlinks'
+	docker exec -it ${APP_NAME}_php bash -c 'rm -rf /app/web/modules/custom'
+	docker exec -it ${APP_NAME}_php bash -c 'ln -sf ../../lib/modules /app/web/modules/custom'
+	docker exec -it ${APP_NAME}_php bash -c 'rm -rf /app/web/themes/custom'
+	docker exec -it ${APP_NAME}_php bash -c 'ln -sf ../../lib/themes /app/web/themes/custom'
+	docker exec -it ${APP_NAME}_php bash -c 'rm -rf /app/web/profiles/custom'
+	docker exec -it ${APP_NAME}_php bash -c 'ln -sf ../../lib/profiles /app/web/profiles/custom'
 endef
 
 define do_stop
@@ -147,6 +172,7 @@ define do_display_commands
 	echo -e '--- AVAILABLE COMMANDS ---'
 	echo -e '\n'
 	echo -e 'Setup the local development environment for ${APP_NAME}: \e[36mmake \e[0m\e[1msetup\e[0m'
+	echo -e 'Build the front assets: \e[36mmake \e[0m\e[1mbuild-front\e[0m'
 	echo -e 'You can run scripts defined in package.json this way: \e[36mmake \e[0m\e[1mrun @script_name\e[0m'
 	echo -e 'Stop the running app: \e[36mmake \e[0m\e[1mstop\e[0m'
 	echo -e 'Stop the running app and delete the data: \e[36mmake \e[0m\e[1mdestroy\e[0m'

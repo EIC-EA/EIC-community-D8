@@ -1,0 +1,21 @@
+imports:
+  - { resource: vendor/ec-europa/qa-automation/dist/qa-conventions.yml }
+parameters:
+  tasks.phpcs.ignore_patterns:
+    - vendor/
+    - web/
+    - node_modules/
+    - config/
+  tasks.phpcs.whitelist_patterns:
+    - modules/
+    - themes/
+  tasks.phpcs.triggered_by:
+    - php
+    - module
+    - inc
+    - theme
+    - install
+    - yml
+
+  extensions:
+    - OpenEuropa\CodeReview\ExtraTasksExtension

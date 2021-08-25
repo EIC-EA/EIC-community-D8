@@ -1,0 +1,25 @@
+uuid: dd9c2296-4809-4068-b04e-eae5105aa992
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.taxonomy_term.funding_source.field_smed_id
+    - taxonomy.vocabulary.funding_source
+  module:
+    - text
+id: taxonomy_term.funding_source.default
+targetEntityType: taxonomy_term
+bundle: funding_source
+mode: default
+content:
+  description:
+    label: hidden
+    type: text_default
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  field_smed_id: true
+  langcode: true
+  search_api_excerpt: true

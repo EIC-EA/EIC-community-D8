@@ -1,0 +1,26 @@
+access group search overview:
+  title: 'Access group search overview'
+  description: 'Allow users to search the group content'
+access discussions overview:
+  title: 'Access Discussions overview'
+  description: 'Gives access to the Discussions overview.'
+  restrict access: FALSE
+access members overview:
+  title: 'Access Members overview'
+  description: 'Gives access to the Members overview.'
+  restrict access: FALSE
+access wiki overview:
+  title: 'Access Wiki overview'
+  description: 'Gives access to the Wiki overview.'
+  restrict access: FALSE
+access files overview:
+  title: 'Access Files overview'
+  description: 'Gives access to the Files overview.'
+  restrict access: FALSE
+access latest activity stream:
+  title: 'Access Latest Activity Stream'
+  description: 'Gives access to the Latest Activity Stream.'
+  restrict access: FALSE
+highlight group content:
+  title: 'Highlight group content'
+  description: 'Allow the user to highlight a group content (e.g: file/document)'

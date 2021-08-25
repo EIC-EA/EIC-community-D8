@@ -89,9 +89,10 @@ class EntityTreeController extends ControllerBase {
     $selected_values = $request->query->get('values', []);
     $target_entity = $request->query->get('targetEntity');
     $target_bundle = $request->query->get('targetBundle');
+    $disable_top = (bool) $request->query->get('disableTop', FALSE);
 
     return new JsonResponse(
-      $this->tree_manager->search($target_entity, $target_bundle, $text, $selected_values),
+      $this->tree_manager->search($target_entity, $target_bundle, $text, $selected_values, $disable_top),
     );
   }
 
