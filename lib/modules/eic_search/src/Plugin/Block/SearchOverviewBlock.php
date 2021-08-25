@@ -14,6 +14,7 @@ use Drupal\eic_search\Collector\SourcesCollector;
 use Drupal\eic_search\Search\Sources\GroupSourceType;
 use Drupal\eic_search\Search\Sources\SourceTypeInterface;
 use Drupal\group\Entity\GroupInterface;
+use Drupal\group\GroupMembership;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -138,7 +139,7 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
     $sources = $this->sourcesCollector->getSources();
 
     $source = array_key_exists($source_type, $sources) ? $sources[$source_type] : NULL;
-    $prefilter_group = $this->configuration['prefilter_group'] ?: FALSE;
+    $prefilter_group = $this->configuration['prefilter_group'] || FALSE;
     $current_group_route = NULL;
 
     if (
@@ -147,6 +148,14 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
       $prefilter_group
     ) {
       $current_group_route = $this->groupsHelper->getGroupFromRoute();
+    }
+
+    $user_group_roles = [];
+
+    if ($current_group_route) {
+      $account = \Drupal::currentUser();
+      $membership = $current_group_route->getMember($account);
+      $user_group_roles = $membership instanceof GroupMembership ? $membership->getRoles() : [];
     }
 
     return [
@@ -164,8 +173,12 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
       '#url' => Url::fromRoute('eic_groups.solr_search')->toString(),
       '#isAnonymous' => \Drupal::currentUser()->isAnonymous(),
       '#currentGroup' => $current_group_route instanceof GroupInterface ? $current_group_route->id() : NULL,
+      '#currentGroupUrl' => $current_group_route instanceof GroupInterface ? $current_group_route->toUrl()->toString() : NULL,
       '#enable_facet_interests' => $this->configuration['add_facet_interests'],
       '#enable_facet_my_groups' => $this->configuration['add_facet_my_groups'],
+      '#isGroupOwner' => array_key_exists(EICGroupsHelper::GROUP_OWNER_ROLE, $user_group_roles),
+      '#allow_pagination' => $source instanceof SourceTypeInterface ? (int) $source->allowPagination() : 1,
+      '#load_more_number' => SourceTypeInterface::READ_MORE_NUMBER_TO_LOAD,
       '#translations' => [
         'public' => $this->t('Public', [], ['context' => 'eic_group']),
         'private' => $this->t('Private', [], ['context' => 'eic_group']),
@@ -181,6 +194,18 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
         'sort_by' => $this->t('Sort by', [], ['context' => 'eic_group']),
         'showing' => $this->t('Showing', [], ['context' => 'eic_group']),
         'sort_any' => $this->t('- Any -', [], ['context' => 'eic_group']),
+        'label_video' => $this->t('Video', [], ['context' => 'eic_group']),
+        'label_file' => $this->t('File', [], ['context' => 'eic_group']),
+        'label_image' => $this->t('Image', [], ['context' => 'eic_group']),
+        'like' => $this->t('Like', [], ['context' => 'eic_group']),
+        'add_video' => $this->t('Add video', [], ['context' => 'eic_group']),
+        'add_document' => $this->t('Add document', [], ['context' => 'eic_group']),
+        'add_gallery' => $this->t('Add gallery', [], ['context' => 'eic_group']),
+        'post_content' => $this->t('Post content', [], ['context' => 'eic_group']),
+        'uploaded_by' => $this->t('Uploaded by', [], ['context' => 'eic_group']),
+        'draft' => $this->t('Draft', [], ['context' => 'eic_group']),
+        'pending' => $this->t('Pending', [], ['context' => 'eic_group']),
+        'load_more' => $this->t('Load more', [], ['context' => 'eic_group']),
       ],
     ];
   }

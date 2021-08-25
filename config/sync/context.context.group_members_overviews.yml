@@ -1,7 +1,9 @@
 uuid: 70dbd415-98b4-4da6-a4e4-dcdd1e0b639b
 langcode: en
 status: true
-dependencies: {  }
+dependencies:
+  module:
+    - route_condition
 name: group_members_overviews
 label: 'Group - Members - Overviews'
 group: Groups
@@ -9,30 +11,15 @@ description: 'This context is used for all group members overviews'
 requireAllConditions: false
 disabled: false
 conditions:
-  view_inclusion:
-    id: view_inclusion
+  route:
+    id: route
+    routes: eic_overviews.groups.overview_page.members
     negate: false
-    uuid: 794bafbf-9553-450a-8274-d35d16f288f7
-    view_inclusion:
-      view-group_overviews-members: view-group_overviews-members
+    uuid: f43d7d69-4d35-4f45-adc7-347224f302b5
     context_mapping: {  }
 reactions:
   blocks:
     blocks:
-      10dbe1d0-a972-4728-a7d6-f5fd09b4d695:
-        id: 'facets_summary_block:group_members_summary'
-        label: 'Group members summary'
-        provider: facets_summary
-        label_display: '0'
-        region: content
-        weight: '-10'
-        context_mapping: {  }
-        custom_id: facets_summary_block_group_members_summary
-        theme: eic_community
-        css_class: ''
-        unique: 0
-        context_id: group_members_overviews
-        uuid: 10dbe1d0-a972-4728-a7d6-f5fd09b4d695
       991aca53-4a8f-4bfd-8950-ae06c317c30c:
         id: system_main_block
         label: 'Main page content'
@@ -47,63 +34,34 @@ reactions:
         unique: 0
         context_id: group_members_overviews
         uuid: 991aca53-4a8f-4bfd-8950-ae06c317c30c
-      b0fc876d-2719-4fb3-b18d-4bf7c975f5b9:
-        id: 'views_exposed_filter_block:group_overviews-members'
-        label: ''
-        provider: views
-        label_display: '0'
-        views_label: ''
-        region: sidebar
-        weight: '-3'
-        context_mapping: {  }
-        custom_id: views_exposed_filter_block_group_overviews_members
-        theme: eic_community
-        css_class: ''
-        unique: 0
-        context_id: group_members_overviews
-        uuid: b0fc876d-2719-4fb3-b18d-4bf7c975f5b9
-      3537e23c-42e9-40cc-ac53-917de1607bba:
-        id: 'facet_block:members_topics_of_expertise'
-        label: 'Topics of expertise'
-        provider: facets
-        label_display: '0'
-        region: sidebar
-        weight: '-1'
-        context_mapping: {  }
-        custom_id: facet_block_members_topics_of_expertise
-        theme: eic_community
-        css_class: ''
-        unique: 0
-        context_id: group_members_overviews
-        uuid: 3537e23c-42e9-40cc-ac53-917de1607bba
-      7366f426-97c6-4c58-95c4-b6bf008af270:
-        id: 'facet_block:members_topics_of_interest'
-        label: 'Topics of interest'
-        provider: facets
-        label_display: '0'
-        region: sidebar
-        weight: '-2'
-        context_mapping: {  }
-        custom_id: facet_block_members_topics_of_interest
-        theme: eic_community
-        css_class: ''
-        unique: 0
-        context_id: group_members_overviews
-        uuid: 7366f426-97c6-4c58-95c4-b6bf008af270
-      ca1626cb-f092-415f-ab2f-3645d6a6bb54:
-        id: 'facet_block:members_languages'
-        label: Languages
-        provider: facets
-        label_display: '0'
-        region: sidebar
+      774c34a7-440a-4de4-9aa7-dcf8a99843f6:
+        id: eic_search_overview
+        label: null
+        provider: null
+        label_display: null
+        region: content
         weight: '0'
+        facets:
+          sm_user_profile_topic_expertise_string: sm_user_profile_topic_expertise_string
+          sm_user_profile_field_vocab_topic_interest_array: sm_user_profile_field_vocab_topic_interest_array
+          sm_user_profile_geo_string: sm_user_profile_geo_string
+          ss_user_profile_field_location_address_country_code: ss_user_profile_field_location_address_country_code
+          sm_user_profile_job_string: 0
+        sort_options:
+          ss_user_first_name: ss_user_first_name
+        source_type: Drupal\eic_search\Search\Sources\UserListSourceType
+        enable_search: 1
+        page_options: normal
+        prefilter_group: 1
+        add_facet_interests: 0
+        add_facet_my_groups: 0
         context_mapping: {  }
-        custom_id: facet_block_members_languages
+        custom_id: eic_search_overview_group_members
         theme: eic_community
         css_class: ''
         unique: 0
         context_id: group_members_overviews
-        uuid: ca1626cb-f092-415f-ab2f-3645d6a6bb54
+        uuid: 774c34a7-440a-4de4-9aa7-dcf8a99843f6
     id: blocks
     saved: false
     uuid: 52968c87-7333-4284-a1e0-68f19e8ed28d

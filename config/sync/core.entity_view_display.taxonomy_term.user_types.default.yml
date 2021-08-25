@@ -1,0 +1,25 @@
+uuid: 4fa272f7-8c9b-43a5-975e-e2591b158d65
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.taxonomy_term.user_types.field_smed_id
+    - taxonomy.vocabulary.user_types
+  module:
+    - text
+id: taxonomy_term.user_types.default
+targetEntityType: taxonomy_term
+bundle: user_types
+mode: default
+content:
+  description:
+    label: hidden
+    type: text_default
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  field_smed_id: true
+  langcode: true
+  search_api_excerpt: true

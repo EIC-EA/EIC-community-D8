@@ -1,0 +1,8 @@
+uuid: c5adff55-7be4-482f-bc7e-a89abe8a7b91
+langcode: en
+status: true
+dependencies: {  }
+id: eu_format
+label: 'eu format'
+locked: false
+pattern: d/m/Y
