@@ -10,6 +10,7 @@ use Drupal\group\GroupMembership;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\user\Entity\User;
 use Solarium\Component\ComponentAwareQueryInterface;
+use Solarium\QueryType\Select\Query\Query;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -35,7 +36,7 @@ class SolrSearchController extends ControllerBase {
     $sources = $sources_collector->getSources();
 
     $source_class = $request->query->get('source_class');
-    $search_value = $request->query->get('search_value');
+    $search_value = $request->query->get('search_value', '');
     $current_group = $request->query->get('current_group');
     $facets_value = $request->query->get('facets_value');
     $sort_value = $request->query->get('sort_value');
@@ -52,7 +53,7 @@ class SolrSearchController extends ControllerBase {
 
     $page = $request->query->get('page');
     $datasources = json_decode($request->query->get('datasource'), TRUE);
-    $offset = $request->query->get('offset');
+    $offset = $request->query->get('offset', SourceTypeInterface::READ_MORE_NUMBER_TO_LOAD);
     $index_storage = \Drupal::entityTypeManager()
       ->getStorage('search_api_index');
     /** @var \Drupal\search_api\IndexInterface $index */
@@ -105,10 +106,9 @@ class SolrSearchController extends ControllerBase {
 
     $solariumQuery->addParam('json.nl', 'arrarr');
     $solariumQuery->addParam('facet.field', $facets_options);
+    $solariumQuery->addParam('facet.mincount', 1);
     $solariumQuery->addParam('facet', 'on');
     $solariumQuery->addParam('facet.sort', 'false');
-    $solariumQuery->setStart(($page * $offset) - $offset);
-    $solariumQuery->setRows($page * $offset);
     $solariumQuery->addParam('wt', 'json');
 
     if ($sort_value) {
@@ -147,6 +147,7 @@ class SolrSearchController extends ControllerBase {
     $this->generateQueryUserGroupsAndContents($fq, $facets_interests);
     $this->generateQueryPrivateContent($fq);
     $this->generateQueryPublishedState($fq, $source);
+    $this->generateQueryPager($solariumQuery, $page, $offset, $source);
 
     if ($content_type_query) {
       $fq .= $content_type_query;
@@ -304,6 +305,27 @@ class SolrSearchController extends ControllerBase {
     $status_query .= ')';
 
     $fq .= $status_query;
+  }
+
+  /**
+   * Set the current start and offset
+   *
+   * @param \Solarium\QueryType\Select\Query\Query $solariumQuery
+   * @param int $page
+   * @param int $offset
+   * @param \Drupal\eic_search\Search\Sources\SourceTypeInterface|null $source
+   */
+  private function generateQueryPager(Query &$solariumQuery, int $page, int $offset, ?SourceTypeInterface $source) {
+    $solariumQuery->setRows($page * $offset);
+
+    //Default value will be to work like pagination
+    if ($source instanceof SourceTypeInterface && $source->allowPagination()) {
+      $solariumQuery->setStart(($page * $offset) - $offset);
+      return;
+    }
+
+    //If no pagination, it's a load more so we start at 1
+    $solariumQuery->setStart(0);
   }
 
 }

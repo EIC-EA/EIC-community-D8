@@ -1,7 +1,8 @@
 permissions:
   - 'access wiki overview'
   - 'create group_node:wiki_page entity'
-public_permissions: {  }
+public_permissions:
+  - 'access wiki overview'
 roles:
   - group-member
   - group-admin

@@ -20,7 +20,7 @@ class GroupMembers extends EicGroupsGroupFeaturePluginBase {
    *
    * @var string
    */
-  const PRIMARY_OVERVIEW_ROUTE = 'view.group_overviews.members';
+  const PRIMARY_OVERVIEW_ROUTE = 'eic_overviews.groups.overview_page.members';
 
   /**
    * {@inheritdoc}
