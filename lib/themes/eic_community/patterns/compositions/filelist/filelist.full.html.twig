@@ -5,7 +5,9 @@
 {% endblock %}
 
 {% block page_header %}
-  {% include "@theme/patterns/compositions/editorial-header.html.twig" with editorial_header|default({}) %}
+  {% include "@theme/patterns/compositions/editorial-header.html.twig" with editorial_header|default({})|merge({
+    extra_classes: 'ecl-editorial-header--is-compact',
+  }) only %}
 {% endblock %}
 
 {% block content %}
@@ -25,21 +27,5 @@
 
     {% endblock %}
   {% endembed %}
-
-  {% if not user %}
-    {% embed "@theme/patterns/compositions/auth-banner.html.twig" with {
-      title: common.login_title,
-      icon_file_path: common.icon_file_path,
-      login: common.login,
-      register: common.register,
-      extra_classes: 'ecl-auth-banner--is-compact',
-    } only %}
-    {% endembed %}
-  {% else %}
-    {% include "@theme/patterns/compositions/comment/comment-overview.html.twig" with comments|default({})|merge({
-      user: user,
-      icon_file_path: common.icon_file_path,
-    }) %}
-  {% endif %}
 
 {% endblock %}
