@@ -1,0 +1,19 @@
+uuid: 0bc4699f-a967-44be-8eda-d2ca4e546c61
+langcode: en
+status: true
+dependencies:
+  module:
+    - block_field
+    - eic_overviews
+id: overview_page.field_overview_block
+field_name: field_overview_block
+entity_type: overview_page
+type: block_field
+settings: {  }
+module: block_field
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

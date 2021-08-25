@@ -50,7 +50,20 @@ function eic_community_preprocess_group(array &$variables) {
  */
 function _preprocess_about_page(&$variables) {
   $sections = [];
-  // About group tab.
+
+  _group_about_group_tab($variables, $sections);
+  _group_about_permissions_tab($variables, $sections);
+
+  $variables['sections'] = [
+    'as_tabs' => TRUE,
+    'items' => $sections,
+  ];
+}
+
+/**
+ * About group tab.
+ */
+function _group_about_group_tab($variables, &$sections) {
   $owners = array_map(function ($owner) {
     if ($owner instanceof Markup) {
       return [
@@ -134,7 +147,12 @@ function _preprocess_about_page(&$variables) {
       '#items' => $about_items,
     ],
   ];
-  // Permissions and visibility tab.
+}
+
+/**
+ * About permissions tab.
+ */
+function _group_about_permissions_tab($variables, &$sections) {
   if (isset($variables['elements']['visibility'])) {
     $admin_items = [];
     $visibility = $variables['elements']['visibility'];
@@ -146,14 +164,12 @@ function _preprocess_about_page(&$variables) {
 
     switch ($visibility_id) {
       case 'custom_restricted':
-        $restrictions = [];
-
-        foreach ($visibility['settings'] as $restriction) {
-          $restrictions[] = [
+        $restrictions = array_map(function ($restriction) {
+          return [
             'title' => $restriction['label'],
             'content' => $restriction['options'],
           ];
-        }
+        }, $visibility['settings']);
 
         $access_title = t('Restricted group');
         $access_description = t('This group is visible to every person that has joined the EIC community that also complies with the following restrictions. You can see this group because the organisation you work for is allowed to see this content or the group owners and administrators have chosen to specifically grant you access to this group. If you want to participate, please become a group member.');
@@ -198,7 +214,7 @@ function _preprocess_about_page(&$variables) {
     ];
 
     if (count($variables['elements']['joining_methods']) > 0) {
-      $is_open = $variables['elements']['joining_methods'][0]['plugin_id'] === 'open';
+      $is_open = $variables['elements']['joining_methods'][0]['plugin_id'] === 'tu_open_method';
       $request_title = $is_open ? t('Open') : t('Moderated');
       $request_content = $is_open ? t('This means that EIC Community members can join this group immediately by clicking "join group".')
         : t('This means that EIC Community members can request to join this group. This request needs to be validated by the group owner or administrator.');
@@ -225,9 +241,4 @@ function _preprocess_about_page(&$variables) {
       ],
     ];
   }
-  // Output.
-  $variables['sections'] = [
-    'as_tabs' => TRUE,
-    'items' => $sections,
-  ];
 }

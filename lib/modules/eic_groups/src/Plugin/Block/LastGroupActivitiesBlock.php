@@ -15,18 +15,18 @@ use Drupal\group\Entity\GroupInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Provides a LastActivitiesGroupMembersBlock block.
+ * Provides a LastGroupActivitiesBlock block.
  *
  * @Block(
- *   id = "eic_groups_last_activities_members",
- *   admin_label = @Translation("EIC activity stream & last group members"),
+ *   id = "eic_groups_last_group_activities",
+ *   admin_label = @Translation("EIC last group activities"),
  *   category = @Translation("European Innovation Council"),
  *   context_definitions = {
  *     "group" = @ContextDefinition("entity:group", required = FALSE)
  *   }
  * )
  */
-class LastActivitiesGroupMembersBlock extends BlockBase implements ContainerFactoryPluginInterface {
+class LastGroupActivitiesBlock extends BlockBase implements ContainerFactoryPluginInterface {
 
   /**
    * The EIC groups helper
