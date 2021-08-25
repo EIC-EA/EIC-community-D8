@@ -5,10 +5,20 @@
  * Contains preprocessor for block__eic_content_book_navigation.
  */
 
+use Drupal\node\NodeInterface;
+
 /**
  * Implements hook_preprocess_block__eic_content_book_navigation().
  */
 function eic_community_preprocess_block__eic_content_book_navigation(&$variables) {
+  $title = '';
+  $node = \Drupal::routeMatch()->getParameter('node');
+
+  if ($node instanceof NodeInterface) {
+    $title = $node->get('field_navigation_title')->getString();
+  }
+
+  $variables['title'] = $title;
   // Create hierarchical list of links maximum 3 levels deep.
   $items = [];
   $links = array_filter($variables['content'], function ($value, $key) {
