@@ -1,0 +1,19 @@
+<article class="ecl--video">
+  <header class="ecl--video_header">
+    <h1 class="ecl--video__title">{{ title }}</h1>
+  </header>
+  <div class="ecl--video__content">
+    <div class="ecl--video__body">
+      {{ body|raw }}
+    </div>
+    <div class="ecl--video__embed">
+      {% if video_type == 'iframe' %}
+        <iframe class="ecl--video__embed-iframe" src="{{ video_src }}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      {% else %}
+        <video class="ecl--video__embed-player">
+          <source src="{{ video_src }}">
+        </video>
+      {% endif %}
+    </div>
+  </div>
+</article>

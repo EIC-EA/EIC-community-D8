@@ -30,6 +30,7 @@
 @import './schema/layout';
 @import './schema/typography';
 
+@import './compositions/activity-stream.scss';
 @import './compositions/auth-banner.scss';
 @import './compositions/base-layout.scss';
 @import './compositions/bulletin-block.scss';
@@ -111,5 +112,6 @@
 @import "./components/toolbar";
 @import "./components/tooltip";
 @import "./components/update-indicator";
+@import "./components/video";
 @import "./components/well";
 @import "./components/wysiwyg";

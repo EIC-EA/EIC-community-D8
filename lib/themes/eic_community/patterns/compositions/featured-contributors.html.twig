@@ -1,7 +1,7 @@
 {% set title_element = title_element|default('h3') %}
 
 {% if items is not empty %}
-  <div class="ecl-featured-list {{ is_collapsible ? 'ecl-featured-list--is-collapsible' }} {{ grid ? 'ecl-featured-list--has-grid-layout' }} ecl-featured-list--contributors">
+<div class="ecl-featured-list {{ is_collapsible ? 'ecl-featured-list--is-collapsible' }} {{ grid ? 'ecl-featured-list--has-grid-layout' }} {{ extra_classes }} ecl-featured-list--contributors">
     {% if title is not empty %}
       {% if title is not empty %}
         <{{ title_element }} class="ecl-featured-list__title">{{ title }}</{{ title_element }}>

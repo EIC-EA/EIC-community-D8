@@ -9,7 +9,7 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
  *
  * @package Drupal\eic_groups\Search\Sources
  */
-class GroupSourceType implements SourceTypeInterface {
+class GroupSourceType extends SourceType {
 
   use StringTranslationTrait;
 
@@ -52,8 +52,8 @@ class GroupSourceType implements SourceTypeInterface {
     return [
       'timestamp' => [
         'label' => $this->t('Timestamp', [], ['context' => 'eic_search']),
-        'ASC' => $this->t('Recent', [], ['context' => 'eic_search']),
-        'DESC' => $this->t('Old', [], ['context' => 'eic_search']),
+        'ASC' => $this->t('Old', [], ['context' => 'eic_search']),
+        'DESC' => $this->t('Recent', [], ['context' => 'eic_search']),
       ],
       'ss_group_label_string' => [
         'label' => $this->t('Group label', [], ['context' => 'eic_search']),
