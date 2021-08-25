@@ -145,6 +145,7 @@ class LastGroupActivitiesBlock extends BlockBase implements ContainerFactoryPlug
 
     return [
       '#theme' => 'eic_group_last_activities_members',
+      '#cache' => ['contexts' => ['url.path', 'url.query_args']],
       '#members' => $members_data,
       '#url' => Url::fromRoute('eic_groups.solr_search')->toString(),
       '#translations' => [
@@ -152,7 +153,12 @@ class LastGroupActivitiesBlock extends BlockBase implements ContainerFactoryPlug
         'load_more' => $this->t('Load more', [], ['context' => 'eic_group']),
         'block_title' => $this->t('Latest member activity', [], ['context' => 'eic_group']),
         'commented_on' => $this->t('commented on', [], ['context' => 'eic_group']),
-      ],
+        'delete_modal_title' => $this->t('Delete activity from activity stream', [], ['context' => 'eic_group']),
+        'delete_modal_desc' => $this->t('Are you sure you want to delete this activity from the activity stream? Important: this action cannot be undone.', [], ['context' => 'eic_group']),
+        'delete_modal_confirm' => $this->t('Yes, delete activity', [], ['context' => 'eic_group']),
+        'delete_modal_cancel' => $this->t('Cancel', [], ['context' => 'eic_group']),
+        'delete_modal_close' => $this->t('Close', [], ['context' => 'eic_group']),
+        ],
       '#datasource' => $this->activityStreamSourceType->getSourcesId(),
       '#source_class' => ActivityStreamSourceType::class,
       '#group_id' => $group->id(),
