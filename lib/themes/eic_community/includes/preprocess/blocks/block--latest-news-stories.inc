@@ -7,7 +7,7 @@
 
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Cache\Cache;
-use Drupal\eic_community\ValueObject\ImageValueObject;
+use Drupal\image\Entity\ImageStyle;
 use Drupal\node\NodeInterface;
 
 /**
@@ -96,9 +96,9 @@ function eic_community_preprocess_block__latest_news_stories(&$variables, &$cach
     if (!$node_translation->get('field_header_visual')->isEmpty()) {
       /** @var \Drupal\media\Entity\Media $media */
       $media = \Drupal::service('entity.repository')->getTranslationFromContext($node_translation->get('field_header_visual')->entity, $block_content->language()->getId());
-      $image_item = ImageValueObject::fromImageItem($media->get('oe_media_image')->first());
+      $file_uri = $media->get('oe_media_image')->first()->entity->getFileUri();
       $item['media'] = [
-        'image' => $image_item->getSource(),
+        'image' => ImageStyle::load('oe_theme_ratio_3_2_medium')->buildUrl($file_uri),
       ];
     }
 
