@@ -12,7 +12,8 @@ RUN apt-get -o Acquire::Check-Valid-Until=false -o Acquire::Check-Date=false upd
   && apt-get -y install apt-transport-https apt-utils build-essential xorg libssl-dev libxrender-dev wget gdebi
 
 # Install extensions
-RUN apt-get -y install libzip-dev libpng-dev zip unzip libicu-dev g++ git \
+RUN apt-get -y install libzip-dev libpng-dev libjpeg-dev libfreetype6-dev zip unzip libicu-dev g++ git \
+  && docker-php-ext-configure gd --with-jpeg-dir=/usr/include --with-freetype-dir=/usr/include \
   && docker-php-ext-install gd \
   && docker-php-ext-install bcmath \
   && docker-php-ext-install zip \
