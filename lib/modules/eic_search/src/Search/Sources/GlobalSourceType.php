@@ -78,7 +78,10 @@ class GlobalSourceType extends SourceType {
   public function getSearchFieldsId(): array {
     return [
       'tm_X3b_en_rendered_item',
-      'ss_global_title'
+      'ss_global_title',
+      'ss_global_group_parent_label',
+      'sm_filename',
+      'ss_global_fullname',
     ];
   }
 
