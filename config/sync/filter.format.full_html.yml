@@ -4,6 +4,7 @@ status: true
 dependencies:
   module:
     - media
+    - oe_webtools_cookie_consent
 name: 'Full HTML'
 format: full_html
 weight: -10
@@ -24,6 +25,12 @@ filters:
     weight: 100
     settings:
       default_view_mode: default
-      allowed_view_modes: {  }
       allowed_media_types:
         image: image
+      allowed_view_modes: {  }
+  filter_iframe_cck:
+    id: filter_iframe_cck
+    provider: oe_webtools_cookie_consent
+    status: true
+    weight: 0
+    settings: {  }

@@ -3,6 +3,11 @@ eic_groups.group_features.*:
   mapping:
     permissions:
       type: sequence
+      label: 'Permissions'
+      sequence:
+        type: string
+    public_permissions:
+      type: sequence
       label: 'Public Permissions'
       sequence:
         type: string

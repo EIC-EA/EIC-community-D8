@@ -19,3 +19,13 @@ services:
     class: Drupal\eic_search\Search\Sources\GlobalSourceType
     tags:
       - { name: eic_search.source }
+  eic_search.source_library:
+    class: Drupal\eic_search\Search\Sources\LibrarySourceType
+    tags:
+      - { name: eic_search.source }
+  eic_search.activity_stream_library:
+    class: Drupal\eic_search\Search\Sources\ActivityStreamSourceType
+    tags:
+      - { name: eic_search.source }
+  eic_search.solr_document_processor:
+    class: Drupal\eic_search\Service\SolrDocumentProcessor

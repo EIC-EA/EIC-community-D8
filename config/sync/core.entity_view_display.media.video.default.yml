@@ -13,17 +13,11 @@ bundle: video
 mode: default
 content:
   field_media_video_file:
-    type: file_video
+    type: file_default
     label: visually_hidden
     weight: 0
     settings:
-      muted: false
-      width: 640
-      height: 480
-      controls: true
-      autoplay: false
-      loop: false
-      multiple_file_display_type: tags
+      use_description_as_link_text: true
     third_party_settings: {  }
     region: content
 hidden:

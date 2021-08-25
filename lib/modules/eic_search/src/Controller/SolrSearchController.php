@@ -3,11 +3,14 @@
 namespace Drupal\eic_search\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\eic_search\Search\Sources\GroupSourceType;
+use Drupal\eic_search\Search\Sources\SourceTypeInterface;
 use Drupal\eic_user\UserHelper;
 use Drupal\group\GroupMembership;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\user\Entity\User;
 use Solarium\Component\ComponentAwareQueryInterface;
+use Solarium\QueryType\Select\Query\Query;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -33,12 +36,13 @@ class SolrSearchController extends ControllerBase {
     $sources = $sources_collector->getSources();
 
     $source_class = $request->query->get('source_class');
-    $search_value = $request->query->get('search_value');
+    $search_value = $request->query->get('search_value', '');
     $current_group = $request->query->get('current_group');
     $facets_value = $request->query->get('facets_value');
     $sort_value = $request->query->get('sort_value');
     $facets_options = $request->query->get('facets_options');
     $facets_value = json_decode($facets_value, TRUE);
+    $source = NULL;
 
     $facets_interests = [];
 
@@ -49,7 +53,7 @@ class SolrSearchController extends ControllerBase {
 
     $page = $request->query->get('page');
     $datasources = json_decode($request->query->get('datasource'), TRUE);
-    $offset = $request->query->get('offset');
+    $offset = $request->query->get('offset', SourceTypeInterface::READ_MORE_NUMBER_TO_LOAD);
     $index_storage = \Drupal::entityTypeManager()
       ->getStorage('search_api_index');
     /** @var \Drupal\search_api\IndexInterface $index */
@@ -70,6 +74,8 @@ class SolrSearchController extends ControllerBase {
     $spell_check->setReload(TRUE);
     $solariumQuery->setComponent(ComponentAwareQueryInterface::COMPONENT_SPELLCHECK, $spell_check);
 
+    $content_type_query = '';
+
     if ($source_class) {
       /** @var \Drupal\eic_search\Search\Sources\SourceTypeInterface $source */
       $source = array_key_exists($source_class, $sources) ? $sources[$source_class] : NULL;
@@ -85,7 +91,14 @@ class SolrSearchController extends ControllerBase {
       $query_fields_string = implode(' OR ', $query_fields);
       if ($current_group) {
         $group_id_field = $source->getPrefilteredGroupFieldId();
-        $query_fields_string .= " AND ($group_id_field:($current_group))";
+        $query_fields_string .= empty($query_fields_string) ?
+          "$group_id_field:($current_group)" :
+          " AND ($group_id_field:($current_group))";
+      }
+
+      if ($content_types = $source->getPrefilteredContentType()) {
+        $allowed_content_type = implode(' OR ', $content_types);
+        $content_type_query = ' AND (' . SourceTypeInterface::SOLR_FIELD_CONTENT_TYPE_ID . ':(' . $allowed_content_type . '))';
       }
 
       $solariumQuery->addParam('q', $query_fields_string);
@@ -95,8 +108,6 @@ class SolrSearchController extends ControllerBase {
     $solariumQuery->addParam('facet.field', $facets_options);
     $solariumQuery->addParam('facet', 'on');
     $solariumQuery->addParam('facet.sort', 'false');
-    $solariumQuery->setStart(($page * $offset) - $offset);
-    $solariumQuery->setRows($page * $offset);
     $solariumQuery->addParam('wt', 'json');
 
     if ($sort_value) {
@@ -106,6 +117,15 @@ class SolrSearchController extends ControllerBase {
       if (2 === count($sorts)) {
         $solariumQuery->addSort($sorts[0], $sorts[1]);
       }
+    }
+
+    //If there are no current sorts check if source has a default sort
+    if (
+      !$sort_value &&
+      $source instanceof SourceTypeInterface &&
+      $default_sort = $source->getDefaultSort()
+    ) {
+      $solariumQuery->addSort($default_sort[0], $default_sort[1]);
     }
 
     $datasources_query = [];
@@ -125,6 +145,12 @@ class SolrSearchController extends ControllerBase {
     $this->generateQueryInterests($fq, $facets_interests);
     $this->generateQueryUserGroupsAndContents($fq, $facets_interests);
     $this->generateQueryPrivateContent($fq);
+    $this->generateQueryPublishedState($fq, $source);
+    $this->generateQueryPager($solariumQuery, $page, $offset, $source);
+
+    if ($content_type_query) {
+      $fq .= $content_type_query;
+    }
 
     $solariumQuery->addParam('fq', $fq);
 
@@ -254,6 +280,51 @@ class SolrSearchController extends ControllerBase {
     }
 
     $fq .= " AND bs_content_is_private:false";
+  }
+
+  /**
+   * Add the status query to the query but check for groups if need
+   * to show draft/pending for group owner
+   *
+   * @param $fq
+   * @param \Drupal\eic_search\Search\Sources\SourceTypeInterface $source
+   */
+  private function generateQueryPublishedState(&$fq, SourceTypeInterface $source) {
+    if (!$source instanceof SourceTypeInterface) {
+      return;
+    }
+
+    $status_query = ' AND (bs_global_status:true';
+
+    if ($source instanceof GroupSourceType) {
+      $user_id = \Drupal::currentUser()->id();
+      $status_query .= ' OR (its_group_owner_id:' . $user_id . ')';
+    }
+
+    $status_query .= ')';
+
+    $fq .= $status_query;
+  }
+
+  /**
+   * Set the current start and offset
+   *
+   * @param \Solarium\QueryType\Select\Query\Query $solariumQuery
+   * @param int $page
+   * @param int $offset
+   * @param \Drupal\eic_search\Search\Sources\SourceTypeInterface|null $source
+   */
+  private function generateQueryPager(Query &$solariumQuery, int $page, int $offset, ?SourceTypeInterface $source) {
+    $solariumQuery->setRows($page * $offset);
+
+    //Default value will be to work like pagination
+    if ($source instanceof SourceTypeInterface && $source->allowPagination()) {
+      $solariumQuery->setStart(($page * $offset) - $offset);
+      return;
+    }
+
+    //If no pagination, it's a load more so we start at 1
+    $solariumQuery->setStart(0);
   }
 
 }

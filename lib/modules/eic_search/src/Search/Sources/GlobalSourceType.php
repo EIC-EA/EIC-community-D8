@@ -9,7 +9,7 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
  *
  * @package Drupal\eic_groups\Search\Sources
  */
-class GlobalSourceType implements SourceTypeInterface {
+class GlobalSourceType extends SourceType {
 
   use StringTranslationTrait;
 
@@ -56,8 +56,8 @@ class GlobalSourceType implements SourceTypeInterface {
     return [
       'ss_global_created_date' => [
         'label' => $this->t('Timestamp', [], ['context' => 'eic_search']),
-        'ASC' => $this->t('Recent', [], ['context' => 'eic_search']),
-        'DESC' => $this->t('Old', [], ['context' => 'eic_search']),
+        'ASC' => $this->t('Old', [], ['context' => 'eic_search']),
+        'DESC' => $this->t('Recent', [], ['context' => 'eic_search']),
       ],
       'ss_global_title' => [
         'label' => $this->t('Title', [], ['context' => 'eic_search']),
@@ -101,6 +101,13 @@ class GlobalSourceType implements SourceTypeInterface {
    */
   public function getPrefilteredGroupFieldId(): string {
     return 'its_group_id_integer';
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function getDefaultSort(): array {
+    return ['ss_global_created_date', 'DESC'];
   }
 
 }

@@ -1,0 +1,26 @@
+.ecl--video {
+  &__title {
+    @include ecl-responsive-font('h3');
+    margin-top: 0;
+  }
+
+  &__content {
+      margin: ecl-layout('gutter') 0;
+      font-size: ecl-typography('font-size');
+      line-height: ecl-typography('line-height');
+  }
+
+  &__embed {
+    margin: ecl-layout('gutter') 0;
+    padding-top: calc(100% / 16 * 9);
+    position: relative;
+
+    &-iframe, &-player {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+    }
+  }
+}

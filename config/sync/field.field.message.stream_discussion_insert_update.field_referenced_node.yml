@@ -1,0 +1,29 @@
+uuid: 250d20da-a3c1-4385-89eb-a6410840bbf2
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.message.field_referenced_node
+    - message.template.stream_discussion_insert_update
+    - node.type.discussion
+id: message.stream_discussion_insert_update.field_referenced_node
+field_name: field_referenced_node
+entity_type: message
+bundle: stream_discussion_insert_update
+label: 'Referenced node'
+description: 'Discussion being created/updated'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      discussion: discussion
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference
