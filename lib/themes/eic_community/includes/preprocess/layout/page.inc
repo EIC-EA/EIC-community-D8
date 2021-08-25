@@ -170,6 +170,15 @@ function _preprocess_node_page(&$variables) {
           'title' => $node->label(),
         ];
 
+      $words_per_minute = \Drupal::config('node_read_time.settings')
+        ->get('reading_time')['words_per_minute'] ?: 225;
+      $reading_time_service = \Drupal::service('reading_time');
+      $reading_time = $reading_time_service
+        ->setWordsPerMinute($words_per_minute)
+        ->collectWords($node)
+        ->calculateReadingTime()
+        ->getReadingTime();
+
         $variables['hero'] = [
           'image' => [
             'src' => $image_item->getSource(),
@@ -180,7 +189,7 @@ function _preprocess_node_page(&$variables) {
             [
               'content' => [
                 '#theme' => 'eic_community_timestamp',
-                '#label' => \Drupal::service('reading_time')->getReadingTime(),
+                '#label' => $reading_time,
                 '#icon_file_path' => $variables['eic_icon_path'],
               ],
             ],
