@@ -119,6 +119,7 @@ class EntityTreeWidget extends WidgetBase {
             ),
             'search' => $this->t('Search', [], ['context' => 'eic_search']),
             'your_values' => $this->t('Your selected values', [], ['context' => 'eic_search']),
+            'required_field' => $this->t('This field is required', [], ['context' => 'eic_content']),
           ]),
           'data-terms-url' => Url::fromRoute('eic_content.entity_tree')
             ->toString(),
