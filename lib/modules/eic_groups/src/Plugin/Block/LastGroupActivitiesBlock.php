@@ -4,6 +4,7 @@ namespace Drupal\eic_groups\Plugin\Block;
 
 use Drupal\Core\Block\Annotation\Block;
 use Drupal\Core\Block\BlockBase;
+use Drupal\Core\Datetime\DateFormatter;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Url;
@@ -46,6 +47,11 @@ class LastGroupActivitiesBlock extends BlockBase implements ContainerFactoryPlug
   private $activityStreamSourceType;
 
   /**
+   * @var \Drupal\Core\Datetime\DateFormatter $dateFormatter
+   */
+  private $dateFormatter;
+
+  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
@@ -55,7 +61,8 @@ class LastGroupActivitiesBlock extends BlockBase implements ContainerFactoryPlug
       $plugin_definition,
       $container->get('eic_groups.helper'),
       $container->get('entity_type.manager'),
-      $container->get('eic_search.activity_stream_library')
+      $container->get('eic_search.activity_stream_library'),
+      $container->get('date.formatter')
     );
   }
 
@@ -82,12 +89,14 @@ class LastGroupActivitiesBlock extends BlockBase implements ContainerFactoryPlug
     $plugin_definition,
     EICGroupsHelper $groups_helper,
     EntityTypeManagerInterface $entity_type_manager,
-    ActivityStreamSourceType $activityStreamSourceType
+    ActivityStreamSourceType $activityStreamSourceType,
+    DateFormatter $dateFormatter
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->groupsHelper = $groups_helper;
     $this->entityTypeManager = $entity_type_manager;
     $this->activityStreamSourceType = $activityStreamSourceType;
+    $this->dateFormatter = $dateFormatter;
   }
 
   /**
@@ -135,7 +144,7 @@ class LastGroupActivitiesBlock extends BlockBase implements ContainerFactoryPlug
       $file_url = $file ? file_url_transform_relative(file_create_url($file->get('uri')->value)) : NULL;
 
       return [
-        'joined_timestamp' => $groupContent->getCreatedTime(),
+        'joined_date' => $this->dateFormatter->format( $groupContent->getCreatedTime(), 'eu_format'),
         'full_name' => $user->get('field_first_name')->value . ' ' . $user->get('field_last_name')->value,
         'email' => $user->getEmail(),
         'picture' => $file_url,
