@@ -28,5 +28,6 @@ permissions:
   - 'view like_content'
   - 'view like_media'
   - 'view media'
+  - 'view overview pages'
   - 'view recommend'
   - 'view recommend_group'

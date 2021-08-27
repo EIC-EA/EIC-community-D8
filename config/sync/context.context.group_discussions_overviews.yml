@@ -1,7 +1,9 @@
 uuid: ea37582e-d5cb-4fc1-87e4-4f01f2e93a8c
 langcode: en
 status: true
-dependencies: {  }
+dependencies:
+  module:
+    - route_condition
 name: group_discussions_overviews
 label: 'Group - Discussions - Overviews'
 group: Groups
@@ -9,52 +11,22 @@ description: 'This context is used for all group discussions overviews'
 requireAllConditions: false
 disabled: false
 conditions:
-  view_inclusion:
-    id: view_inclusion
-    negate: null
-    uuid: 294120ac-37bd-4c61-9dec-2c2cf501ee0d
-    view_inclusion:
-      view-group_overviews-page_1: view-group_overviews-page_1
+  route:
+    id: route
+    routes: eic_overviews.groups.overview_page.discussions
+    negate: false
+    uuid: 0a650dd3-d863-4ff1-b29c-809b7364b7a6
     context_mapping: {  }
 reactions:
   blocks:
     blocks:
-      32c8b7dc-cc83-4836-8533-74c224408497:
-        id: 'views_exposed_filter_block:global_overviews-page_1'
-        label: ''
-        provider: views
-        label_display: '0'
-        views_label: ''
-        region: sidebar
-        weight: '-2'
-        context_mapping: {  }
-        custom_id: views_exposed_filter_block_global_overviews_page_1
-        theme: eic_community
-        css_class: ''
-        unique: 0
-        context_id: group_discussions_overviews
-        uuid: 32c8b7dc-cc83-4836-8533-74c224408497
-      73d08314-32d3-4a6f-a112-4372ae295dab:
-        id: 'facets_summary_block:group_discussions_summary'
-        label: 'Group discussions summary'
-        provider: facets_summary
-        label_display: '0'
-        region: content
-        weight: '-2'
-        context_mapping: {  }
-        custom_id: facets_summary_block_group_discussions_summary
-        theme: eic_community
-        css_class: ''
-        unique: 0
-        context_id: group_discussions_overviews
-        uuid: 73d08314-32d3-4a6f-a112-4372ae295dab
       2909faf9-e5d4-4649-b63f-b1aca1476dd5:
         id: system_main_block
         label: 'Main page content'
         provider: system
         label_display: '0'
         region: content
-        weight: '-1'
+        weight: '0'
         context_mapping: {  }
         custom_id: system_main_block
         theme: eic_community
@@ -62,48 +34,33 @@ reactions:
         unique: 0
         context_id: group_discussions_overviews
         uuid: 2909faf9-e5d4-4649-b63f-b1aca1476dd5
-      536a0a8f-2e81-47f2-8410-fd6f2c0048b6:
-        id: 'facet_block:discussions_type'
-        label: Type
-        provider: facets
-        label_display: '0'
-        region: sidebar
-        weight: '-1'
-        context_mapping: {  }
-        custom_id: facet_block_discussions_type
-        theme: eic_community
-        css_class: ''
-        unique: 0
-        context_id: group_discussions_overviews
-        uuid: 536a0a8f-2e81-47f2-8410-fd6f2c0048b6
-      fbdd0cdf-9580-4bab-a462-c142f9b96230:
-        id: 'facet_block:discussions_topics'
-        label: Topics
-        provider: facets
-        label_display: '0'
-        region: sidebar
-        weight: '0'
-        context_mapping: {  }
-        custom_id: facet_block_discussions_topics
-        theme: eic_community
-        css_class: ''
-        unique: 0
-        context_id: group_discussions_overviews
-        uuid: fbdd0cdf-9580-4bab-a462-c142f9b96230
-      0c7f1c41-dbe3-4660-b4df-e2e4d42edaca:
-        id: 'facet_block:discussions_regions_countries'
-        label: 'Regions & Countries'
-        provider: facets
-        label_display: '0'
-        region: sidebar
+      2636c524-2703-4d28-ad6b-3c1db2936f61:
+        id: eic_search_overview
+        label: null
+        provider: null
+        label_display: null
+        region: content
         weight: '1'
+        facets:
+          ss_global_content_type: ss_global_content_type
+          ss_group_user_fullname: 0
+        sort_options:
+          ss_global_created_date: ss_global_created_date
+          ss_global_title: ss_global_title
+          ss_group_user_fullname: 0
+        source_type: Drupal\eic_search\Search\Sources\GlobalSourceType
+        enable_search: 1
+        page_options: normal
+        prefilter_group: 1
+        add_facet_interests: 1
+        add_facet_my_groups: 1
         context_mapping: {  }
-        custom_id: facet_block_discussions_regions_countries
+        custom_id: eic_search_overview_group_discussions
         theme: eic_community
         css_class: ''
         unique: 0
         context_id: group_discussions_overviews
-        uuid: 0c7f1c41-dbe3-4660-b4df-e2e4d42edaca
+        uuid: 2636c524-2703-4d28-ad6b-3c1db2936f61
     id: blocks
     saved: false
     uuid: 9c311d0e-a590-452a-ad85-a32b685d7729

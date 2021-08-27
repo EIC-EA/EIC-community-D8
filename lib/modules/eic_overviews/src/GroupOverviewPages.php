@@ -1,0 +1,64 @@
+<?php
+
+namespace Drupal\eic_overviews;
+
+use Drupal\Core\Url;
+use Drupal\group\Entity\GroupInterface;
+
+/**
+ * Provides functionality for global overview pages.
+ *
+ * @package Drupal\eic_overviews
+ */
+class GroupOverviewPages {
+
+  /**
+   * Route to the group discussions overview.
+   */
+  const DISCUSSIONS = 'eic_overviews.groups.overview_page.discussions';
+
+  /**
+   * Route to the group members overview.
+   */
+  const MEMBERS = 'eic_overviews.groups.overview_page.members';
+
+  /**
+   * Route to the group search overview.
+   */
+  const SEARCH = 'eic_overviews.groups.overview_page.search';
+
+  /**
+   * Returns the URL object for the given group overview page.
+   *
+   * @param string $page
+   *   The page identifier for which we return the URL.
+   * @param \Drupal\group\Entity\GroupInterface $group
+   *   The group for which we return the URL.
+   *
+   * @return \Drupal\Core\Url|null
+   *   The URL object or NULL if does not apply.
+   */
+  public static function getGroupOverviewPageUrl(string $page, GroupInterface $group) {
+    $page_id = NULL;
+    switch ($page) {
+      case 'discussions':
+        $page_id = self::DISCUSSIONS;
+        break;
+
+      case 'members':
+        $page_id = self::MEMBERS;
+        break;
+
+      case 'group_search':
+        $page_id = self::SEARCH;
+        break;
+    }
+
+    if (!empty($page_id) && !$group->isNew()) {
+      return Url::fromRoute($page_id, ['group' => $group->id()]);
+    }
+
+    return NULL;
+  }
+
+}

@@ -1,0 +1,25 @@
+uuid: 06ce6ab0-9e78-4d53-9bdd-91e92d434704
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.overview_page.field_overview_block
+  module:
+    - block_field
+    - eic_overviews
+id: overview_page.overview_page.field_overview_block
+field_name: field_overview_block
+entity_type: overview_page
+bundle: overview_page
+label: 'Overview block'
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  selection: blocks
+  selection_settings:
+    plugin_ids:
+      eic_search_overview: eic_search_overview
+field_type: block_field

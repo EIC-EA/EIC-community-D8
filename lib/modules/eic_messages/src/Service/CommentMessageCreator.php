@@ -67,7 +67,7 @@ class CommentMessageCreator extends MessageCreatorBase {
       'template' => ActivityStreamMessageTemplates::getTemplate($entity),
       'field_referenced_comment' => $entity,
       'field_referenced_node' => $commented_entity,
-      'field_entity_type' => $entity->getEntityTypeId(),
+      'field_entity_type' => $entity->bundle(),
       'field_operation_type' => $operation,
       'field_group_ref' => $group,
     ]);

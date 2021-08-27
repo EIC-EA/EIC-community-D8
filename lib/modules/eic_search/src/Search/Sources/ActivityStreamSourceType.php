@@ -3,6 +3,7 @@
 namespace Drupal\eic_search\Search\Sources;
 
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\eic_groups\Plugin\Block\LastGroupMembersBlock;
 
 /**
  * Class ActivityStreamSourceType
@@ -38,14 +39,14 @@ class ActivityStreamSourceType extends SourceType {
    * @inheritDoc
    */
   public function getDefaultSort(): array {
-    return ['timestamp', 'DESC'];
+    return ['ds_created', 'DESC'];
   }
 
   /**
    * @inheritDoc
    */
   public function getLayoutTheme(): string {
-    return self::LAYOUT_COLUMNS_COMPACT;
+    return self::LAYOUT_GLOBAL;
   }
 
   /**

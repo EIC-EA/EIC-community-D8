@@ -2,3 +2,9 @@ services:
   eic_statistics.storage:
     class: Drupal\eic_statistics\StatisticsStorage
     arguments: ['@entity_type.manager', '@state']
+  eic_statistics.statistics.storage.node.decorator:
+    class: Drupal\eic_statistics\NodeStatisticsDatabaseStorage
+    decorates: statistics.storage.node
+    decoration_priority: 1
+    public: true
+    arguments: ['@eic_statistics.statistics.storage.node.decorator.inner', '@database', '@state', '@request_stack', '@event_dispatcher']
