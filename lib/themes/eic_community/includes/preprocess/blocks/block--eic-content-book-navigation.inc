@@ -12,8 +12,8 @@ function eic_community_preprocess_block__eic_content_book_navigation(&$variables
   $title = '';
   $node = \Drupal::routeMatch()->getParameter('node');
 
-  if ($node instanceof Drupal\node\NodeInterface\NodeInterface) {
-    $parent = Drupal\node\Entity\Node\Node::load($node->book['bid']);
+  if ($node instanceof Drupal\node\NodeInterface) {
+    $parent = Drupal\node\Entity\Node::load($node->book['bid']);
     $title = $parent->getTitle();
   }
 
