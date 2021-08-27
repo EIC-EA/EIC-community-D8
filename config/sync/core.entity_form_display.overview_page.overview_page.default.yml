@@ -1,0 +1,77 @@
+uuid: 927f3400-6822-4582-83c5-6e341ebcf2d7
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.overview_page.overview_page.field_overview_block
+    - image.style.thumbnail
+  module:
+    - block_field
+    - eic_overviews
+    - image
+    - path
+id: overview_page.overview_page.default
+targetEntityType: overview_page
+bundle: overview_page
+mode: default
+content:
+  banner_image:
+    type: image_image
+    weight: 3
+    region: content
+    settings:
+      preview_image_style: thumbnail
+      progress_indicator: throbber
+    third_party_settings: {  }
+  description:
+    type: string_textfield
+    weight: 2
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_overview_block:
+    weight: 4
+    settings:
+      plugin_id: ''
+      settings: {  }
+      configuration_form: full
+    third_party_settings: {  }
+    type: block_field_default
+    region: content
+  langcode:
+    type: language_select
+    weight: 1
+    region: content
+    settings:
+      include_locked: true
+    third_party_settings: {  }
+  overview_block:
+    type: options_select
+    weight: 5
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  path:
+    type: path
+    weight: 5
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  status:
+    type: boolean_checkbox
+    settings:
+      display_label: false
+    weight: 6
+    region: content
+    third_party_settings: {  }
+  title:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+hidden: {  }

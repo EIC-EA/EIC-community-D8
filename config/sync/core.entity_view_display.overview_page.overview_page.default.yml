@@ -1,0 +1,54 @@
+uuid: 0db95737-5f7b-40c9-8140-c09a2da8eb1c
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.overview_page.overview_page.field_overview_block
+    - image.style.thumbnail
+  module:
+    - block_field
+    - eic_overviews
+    - image
+id: overview_page.overview_page.default
+targetEntityType: overview_page
+bundle: overview_page
+mode: default
+content:
+  banner_image:
+    type: image
+    label: hidden
+    weight: 1
+    region: content
+    settings:
+      image_style: thumbnail
+      image_link: ''
+    third_party_settings: {  }
+  field_overview_block:
+    weight: 2
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    type: block_field
+    region: content
+  overview_block:
+    label: hidden
+    type: entity_reference_entity_view
+    weight: 2
+    region: content
+    settings:
+      view_mode: default
+      link: false
+    third_party_settings: {  }
+  title:
+    label: hidden
+    type: string
+    weight: 0
+    region: content
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+hidden:
+  created: true
+  langcode: true
+  search_api_excerpt: true
+  status: true

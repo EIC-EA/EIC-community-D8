@@ -36,7 +36,7 @@ class SolrSearchController extends ControllerBase {
     $sources = $sources_collector->getSources();
 
     $source_class = $request->query->get('source_class');
-    $search_value = $request->query->get('search_value');
+    $search_value = $request->query->get('search_value', '');
     $current_group = $request->query->get('current_group');
     $facets_value = $request->query->get('facets_value');
     $sort_value = $request->query->get('sort_value');
@@ -53,7 +53,7 @@ class SolrSearchController extends ControllerBase {
 
     $page = $request->query->get('page');
     $datasources = json_decode($request->query->get('datasource'), TRUE);
-    $offset = $request->query->get('offset');
+    $offset = $request->query->get('offset', SourceTypeInterface::READ_MORE_NUMBER_TO_LOAD);
     $index_storage = \Drupal::entityTypeManager()
       ->getStorage('search_api_index');
     /** @var \Drupal\search_api\IndexInterface $index */
@@ -106,6 +106,7 @@ class SolrSearchController extends ControllerBase {
 
     $solariumQuery->addParam('json.nl', 'arrarr');
     $solariumQuery->addParam('facet.field', $facets_options);
+    $solariumQuery->addParam('facet.mincount', 1);
     $solariumQuery->addParam('facet', 'on');
     $solariumQuery->addParam('facet.sort', 'false');
     $solariumQuery->addParam('wt', 'json');
