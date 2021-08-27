@@ -7,6 +7,7 @@ use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Entity\EntityFieldManager;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\eic_media_statistics\Controller\MediaFileDownloadController;
 use Drupal\eic_media_statistics\Event\DownloadCountUpdate;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -139,10 +140,10 @@ class EntityFileDownloadCount {
     foreach ($entity_fields as $field) {
       /** @var \Drupal\Core\Field\FieldDefinitionInterface $field */
       switch ($field->getType()) {
-        // @todo Handle paragraphs.
         case 'entity_reference':
+        case 'entity_reference_revisions':
           $target_entity_type = $field->getConfig($entity->bundle())->getSetting('target_type');
-          if ($target_entity_type == 'media') {
+          if (in_array($target_entity_type, ['media', 'paragraph'])) {
             // Load the entities.
             foreach ($entity->get($field->getName())->referencedEntities() as $referenced_entity) {
               $sub_entity_result = self::countFileDownloads($referenced_entity);
@@ -155,6 +156,7 @@ class EntityFileDownloadCount {
           break;
 
         case 'file':
+        case 'image':
           $file_downloads_count = 0;
           $file_ids = [];
           $result = [
@@ -163,8 +165,7 @@ class EntityFileDownloadCount {
           ];
           foreach ($entity->get($field->getName())->getValue() as $file_item) {
             $file_ids[] = $file_item['target_id'];
-            $file = $this->entityTypeManager->getStorage('file')->load($file_item['target_id']);
-            $result['cache_tags'] = array_unique(array_merge($result['cache_tags'], $file->getCacheTags()));
+            $result['cache_tags'] = array_unique(array_merge($result['cache_tags'], MediaFileDownloadController::getMediaFileDownloadCacheTags($file_item['target_id'])));
           }
           // Get statistics results for all files.
           $stat_results = $this->fileStatisticsDbStorage->fetchViews($file_ids);
