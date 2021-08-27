@@ -54,10 +54,13 @@ class EntityOperations implements ContainerInjectionInterface {
    *   The view mode the entity is rendered in.
    */
   public function nodeView(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
-    $node_views = $this->nodeStatisticsDatabaseStorage->fetchView($entity->id());
+    $page_views = 0;
+    if ($node_views = $this->nodeStatisticsDatabaseStorage->fetchView($entity->id())) {
+      $page_views = $node_views->getTotalCount();
+    }
     $build['page_views'] = [
       '#markup' => '',
-      '#value' => $node_views->getTotalCount(),
+      '#value' => $page_views,
     ];
   }
 
