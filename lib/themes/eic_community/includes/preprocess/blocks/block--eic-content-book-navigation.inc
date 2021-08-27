@@ -5,8 +5,6 @@
  * Contains preprocessor for block__eic_content_book_navigation.
  */
 
-use Drupal\node\NodeInterface;
-
 /**
  * Implements hook_preprocess_block__eic_content_book_navigation().
  */
@@ -14,8 +12,9 @@ function eic_community_preprocess_block__eic_content_book_navigation(&$variables
   $title = '';
   $node = \Drupal::routeMatch()->getParameter('node');
 
-  if ($node instanceof NodeInterface) {
-    $title = $node->get('field_navigation_title')->getString();
+  if ($node instanceof Drupal\node\NodeInterface\NodeInterface) {
+    $parent = Drupal\node\Entity\Node\Node::load($node->book['bid']);
+    $title = $parent->getTitle();
   }
 
   $variables['title'] = $title;

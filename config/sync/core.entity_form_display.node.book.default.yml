@@ -4,7 +4,6 @@ status: true
 dependencies:
   config:
     - field.field.node.book.field_body
-    - field.field.node.book.field_navigation_title
     - node.type.book
   module:
     - content_moderation
@@ -33,14 +32,6 @@ content:
       placeholder: ''
     third_party_settings: {  }
     type: text_textarea
-    region: content
-  field_navigation_title:
-    weight: 26
-    settings:
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
-    type: string_textfield
     region: content
   field_post_activity:
     weight: 15
