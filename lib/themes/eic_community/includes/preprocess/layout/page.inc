@@ -170,14 +170,14 @@ function _preprocess_node_page(&$variables) {
           'title' => $node->label(),
         ];
 
-      $words_per_minute = \Drupal::config('node_read_time.settings')
-        ->get('reading_time')['words_per_minute'] ?: 225;
-      $reading_time_service = \Drupal::service('reading_time');
-      $reading_time = $reading_time_service
-        ->setWordsPerMinute($words_per_minute)
-        ->collectWords($node)
-        ->calculateReadingTime()
-        ->getReadingTime();
+        $words_per_minute = \Drupal::config('node_read_time.settings')
+          ->get('reading_time')['words_per_minute'] ?: 225;
+        $reading_time_service = \Drupal::service('reading_time');
+        $reading_time = $reading_time_service
+          ->setWordsPerMinute($words_per_minute)
+          ->collectWords($node)
+          ->calculateReadingTime()
+          ->getReadingTime();
 
         $variables['hero'] = [
           'image' => [
@@ -229,9 +229,7 @@ function _preprocess_front_page(&$variables) {
           break;
 
         case 'homepage_facts_figures':
-          if ($variables['logged_in'] === FALSE) {
-            $front['bottom'][] = $section;
-          }
+          $front['bottom'][] = $section;
           break;
 
         default:
