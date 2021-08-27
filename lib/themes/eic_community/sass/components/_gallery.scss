@@ -1,0 +1,40 @@
+.ecl-gallery {
+  &__title {
+    @include ecl-responsive-font('h3');
+    margin-top: 0;
+  }
+
+  &__content {
+    margin: ecl-layout('gutter') 0;
+    font-size: ecl-typography('font-size');
+    line-height: ecl-typography('line-height');
+  }
+
+  &__body {
+    margin-bottom: ecl-box-model('margin');
+  }
+
+  &__main-slides {
+    position: relative;
+    user-select: none;
+
+    &__slide {
+      &:not(:first-child) {display: none;}
+    }
+  }
+
+  &__action {
+    cursor: pointer;
+    position: absolute;
+    top: calc(50% - 12px);
+    color: white;
+
+    &__forward {
+      right: 18px;
+    }
+
+    &__back {
+      left: 18px;
+    }
+  }
+}

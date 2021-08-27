@@ -1,0 +1,41 @@
+<article class="ecl-gallery">
+  <header class="ecl-gallery__header">
+    <h1 class="ecl-gallery__title">{{ title }}</h1>
+  </header>
+  <div class="ecl-gallery__content">
+    <div class="ecl-gallery__body">
+      {{ body|raw }}
+    </div>
+    <div class="ecl-gallery__main-slides">
+      {% for slide in files %}
+        <div class="ecl-gallery__main-slides__slide">
+          <img src="{{ slide.image.src }}" alt="{{ slide.image.alt }}">
+        </div>
+      {% endfor %}
+
+      {% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with {
+        extra_classes: 'ecl-gallery__action ecl-gallery__action__back',
+        icon: {
+          path: icon_file_path,
+          name: 'rounded-arrow',
+          size: 'm',
+          type: 'ui',
+          transform: 'rotate-270'
+        },
+      } only %}
+      {% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with {
+        extra_classes: 'ecl-gallery__action ecl-gallery__action__forward',
+        icon: {
+          path: icon_file_path,
+          name: 'rounded-arrow',
+          size: 'm',
+          type: 'ui',
+          transform: 'rotate-90'
+        },
+      } only %}
+    </div>
+    <pre>
+      {{ dump(files) }}
+    </pre>
+  </div>
+</article>
