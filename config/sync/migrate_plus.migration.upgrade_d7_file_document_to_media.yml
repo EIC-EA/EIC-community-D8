@@ -1,4 +1,4 @@
-uuid: 8e88d99c-56de-4535-9a05-bd155e03b9f9
+uuid: 8a22140a-3735-480b-b2e8-bc774bde29fa
 langcode: en
 status: true
 dependencies: {  }
@@ -12,7 +12,7 @@ migration_tags:
 migration_group: migrate_drupal_7
 label: 'Public and private document files to media'
 source:
-  plugin: c4m_d7_file_complete
+  plugin: eic_d7_file_complete
   file_type: document
   scheme:
     - public

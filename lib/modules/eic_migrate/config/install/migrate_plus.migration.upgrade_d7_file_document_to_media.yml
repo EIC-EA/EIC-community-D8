@@ -11,7 +11,7 @@ migration_tags:
 migration_group: migrate_drupal_7
 label: 'Public and private document files to media'
 source:
-  plugin: c4m_d7_file_complete
+  plugin: eic_d7_file_complete
   # batch_size: 100
   file_type: document
   scheme:
