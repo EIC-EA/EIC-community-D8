@@ -9,15 +9,19 @@ ARG DRUSH_VERSION=8
 ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get -o Acquire::Check-Valid-Until=false -o Acquire::Check-Date=false update \
-  && apt-get -y install apt-transport-https apt-utils build-essential xorg libssl-dev libxrender-dev wget gdebi
+  && apt-get -y install apt-transport-https apt-utils build-essential xorg \
+    libssl-dev libxrender-dev wget gdebi \
+    libzip-dev libpng-dev libjpeg-dev libfreetype6-dev \
+    zip unzip libicu-dev g++ git
 
 # Install extensions
-RUN apt-get -y install libzip-dev libpng-dev libjpeg-dev libfreetype6-dev zip unzip libicu-dev g++ git \
-  && docker-php-ext-configure gd --with-jpeg-dir=/usr/include --with-freetype-dir=/usr/include \
+RUN docker-php-ext-configure gd --with-jpeg-dir=/usr/include --with-freetype-dir=/usr/include \
   && docker-php-ext-install gd \
   && docker-php-ext-install bcmath \
   && docker-php-ext-install zip \
   && docker-php-ext-install opcache \
+  && pecl install -o -f redis \
+  && docker-php-ext-enable redis \
   && docker-php-ext-configure intl \
   && docker-php-ext-install intl
 
