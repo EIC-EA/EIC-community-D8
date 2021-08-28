@@ -1,0 +1,29 @@
+# Filelist
+
+Displays a list of files
+
+## Example:
+
+```
+{% include "@theme/patterns/components/filelist.html.twig" %}
+```
+
+## Twig parameters:
+
+| Key                        | Type     | Description                                                | Mandatory |
+| -------------------------- | -------- | ---------------------------------------------------------- | --------- | --- |
+| title                      | string   | Title for the page                                         | yes       |     |
+| body                       | string   | Content for the page                                       | yes       |     |
+| icon_file_path             | string   | Enables the usage of the ECL icons within the component.   | yes       |     |
+| download                   | string   | The label for the download button                          | yes       |     |
+| files                      | object[] | A list of filesize                                         | yes       |     |
+| files[].name               | string   | Filename                                                   | yes       |     |
+| files[].path               | string   | Link to the file                                           | yes       |     |
+| files[].type               | string   | Fixed label shown above filename                           | yes       |     |
+| files[].mime_type          | string   | Filetype (one of doc, dwg, html, ppt, txt, xls, zip)       | yes       |     |
+| files[].stats[]            | object[] | List of stats                                              | yes       |     |
+| files[].stats[].label      | string   | Label for the stat                                         | yes       |     |
+| files[].stats[].value      | string   | Value for the stat                                         | yes       |     |
+| files[].stats[].hide_label | boolean  | Indicates that label should be hidden                      | yes       |     |
+| files[].stats[].icon.type  | string   | Indicates icon type (default "custom")                     | yes       |     |
+| files[].stats[].icon.name  | string   | Indicates the icon to be used                              | yes       |     |

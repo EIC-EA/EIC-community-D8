@@ -8,6 +8,7 @@ module:
   block: 0
   block_content: 0
   block_content_permissions: 0
+  block_field: 0
   book: 0
   breakpoint: 0
   ckeditor: 0
@@ -52,6 +53,7 @@ module:
   eic_media_video: 0
   eic_messages: 0
   eic_migrate: 0
+  eic_overviews: 0
   eic_paragraph_contributor: 0
   eic_paragraph_cta_tile: 0
   eic_private_content: 0
@@ -121,6 +123,7 @@ module:
   path_alias: 0
   profile: 0
   realname: 0
+  redis: 0
   responsive_image: 0
   rest: 0
   restui: 0

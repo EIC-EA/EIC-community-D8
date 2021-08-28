@@ -1,0 +1,22 @@
+entity.overview_page.settings:
+  title: Settings
+  route_name: entity.overview_page.settings
+  base_route: entity.overview_page.settings
+entity.overview_page.view:
+  title: View
+  route_name: entity.overview_page.canonical
+  base_route: entity.overview_page.canonical
+entity.overview_page.edit_form:
+  title: Edit
+  route_name: entity.overview_page.edit_form
+  base_route: entity.overview_page.canonical
+entity.overview_page.delete_form:
+  title: Delete
+  route_name: entity.overview_page.delete_form
+  base_route: entity.overview_page.canonical
+  weight: 10
+entity.overview_page.collection:
+  title: Overview page
+  route_name: entity.overview_page.collection
+  base_route: eic_admin.dashboard
+  weight: 10

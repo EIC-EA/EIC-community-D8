@@ -68,15 +68,7 @@ function _eic_community_preprocess_node_news_story(array &$variables) {
     _eic_community_story_image_field($variables);
     _eic_community_story_document_field($variables);
     // Sidebar elements.
-    $flags = array_filter($variables['elements'], function ($key) {
-      return strpos($key, 'flag_') !== FALSE;
-    }, ARRAY_FILTER_USE_KEY);
-
-    foreach ($flags as $flag) {
-      $variables['editorial_actions']['items'][] = [
-        'content' => $flag,
-      ];
-    }
+    _eic_community_display_flags($variables);
 
     if ($node->hasField(PrivateContentConst::FIELD_NAME)
       && !$node->get(PrivateContentConst::FIELD_NAME)->value
@@ -90,8 +82,8 @@ function _eic_community_preprocess_node_news_story(array &$variables) {
       }
     }
 
-    _eic_community_story_contributors($variables);
-    _eic_community_story_topics($variables);
+    _eic_community_display_contributors($variables);
+    _eic_community_display_topics($variables);
     _eic_community_story_related_stories($variables);
   }
 }
@@ -141,9 +133,24 @@ function _eic_community_story_document_field(&$variables) {
 }
 
 /**
- * Preproccess contributors for full story.
+ * Preprocess flags.
  */
-function _eic_community_story_contributors(&$variables) {
+function _eic_community_display_flags(&$variables) {
+  $flags = array_filter($variables['elements'], function ($key) {
+    return strpos($key, 'flag_') !== FALSE;
+  }, ARRAY_FILTER_USE_KEY);
+
+  foreach ($flags as $flag) {
+    $variables['editorial_actions']['items'][] = [
+      'content' => $flag,
+    ];
+  }
+}
+
+/**
+ * Preproccess contributors.
+ */
+function _eic_community_display_contributors(&$variables) {
   if ($variables['node']->bundle() === 'story') {
     $contributors = [];
 
@@ -167,15 +174,22 @@ function _eic_community_story_contributors(&$variables) {
 /**
  * Preproccess topics for full news/story.
  */
-function _eic_community_story_topics(&$variables) {
+function _eic_community_display_topics(&$variables) {
   $topics = [];
 
   foreach ($variables['elements']['field_vocab_topics'] as $key => $value) {
     if (is_int($key)) {
-      $topics[] = [
-        'path' => $value['#url'],
-        'label' => $value['#title'],
-      ];
+      if (isset($value['#plain_text'])) {
+        $topics[] = [
+          'label' => $value['#plain_text'],
+        ];
+      }
+      else {
+        $topics[] = [
+          'path' => $value['#url'],
+          'label' => $value['#title'],
+        ];
+      }
     }
   }
 

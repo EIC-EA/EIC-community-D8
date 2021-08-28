@@ -150,7 +150,6 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
       $current_group_route = $this->groupsHelper->getGroupFromRoute();
     }
 
-
     $user_group_roles = [];
 
     if ($current_group_route) {
