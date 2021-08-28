@@ -110,6 +110,8 @@ class ListBuilderFilters extends FormBase {
         FlaggedEntitiesListBuilder::CLOSED_REQUEST_VIEW,
         [
           'flag_id' => $views_type_option,
+          'sort' => 'desc',
+          'order' => 'field_request_closed_date',
         ]
       ),
     ];
