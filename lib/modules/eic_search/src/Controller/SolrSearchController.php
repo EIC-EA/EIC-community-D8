@@ -106,6 +106,7 @@ class SolrSearchController extends ControllerBase {
 
     $solariumQuery->addParam('json.nl', 'arrarr');
     $solariumQuery->addParam('facet.field', $facets_options);
+    $solariumQuery->addParam('facet.mincount', 1);
     $solariumQuery->addParam('facet', 'on');
     $solariumQuery->addParam('facet.sort', 'false');
     $solariumQuery->addParam('wt', 'json');
