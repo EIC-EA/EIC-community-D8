@@ -11,6 +11,8 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\eic_groups\Constants\GroupJoiningMethodType;
+use Drupal\eic_groups\Constants\GroupVisibilityType;
 use Drupal\group\Entity\Group;
 use Drupal\group\Entity\GroupContent;
 use Drupal\group\Entity\GroupInterface;
@@ -219,23 +221,63 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
     $key = "$plugin_type-$plugin_id";
 
     switch ($key) {
-      case 'visibility-public':
+      case 'visibility-' . GroupVisibilityType::GROUP_VISIBILITY_PUBLIC:
         return $this->t("This group is visible to everyone visiting the group. You're welcome to scroll through the group's content. If you want to participate, please become a group member.");
 
-      case 'visibility-restricted_community_members':
+      case 'visibility-' . GroupVisibilityType::GROUP_VISIBILITY_COMMUNITY:
         return $this->t("This group is visible to every person that is a member of the EIC Community and has joined this platform. You're welcome to scroll through the group's content. If you want to participate, please become a group member.");
 
-      case 'visibility-custom_restricted':
+      case 'visibility-' . GroupVisibilityType::GROUP_VISIBILITY_CUSTOM_RESTRICTED:
         return $this->t('This group is visible to every person that has joined the EIC community that also complies with the following restrictions. You can see this group because the organisation you work for is allowed to see this content or the group owners and administrators have chosen to specifically grant you access to this group. If you want to participate, please become a group member.');
 
-      case 'visibility-private':
+      case 'visibility-' . GroupVisibilityType::GROUP_VISIBILITY_PRIVATE:
         return $this->t('A private group is only visible to people who received an invitation via email and accepted it. No one else can see this group.');
 
-      case 'joining_method-tu_open_method':
+      case 'joining_method-' . GroupJoiningMethodType::GROUP_JOINING_METHOD_TU_OPEN:
         return $this->t('This means that EIC Community members can join this group immediately by clicking "join group".');
 
-      case 'joining_method-tu_group_membership_request':
+      case 'joining_method-' . GroupJoiningMethodType::GROUP_JOINING_METHOD_TU_MEMBERSHIP_REQUEST:
         return $this->t('This means that EIC Community members can request to join this group. This request needs to be validated by the group owner or administrator.');
+
+      default:
+        return '';
+    }
+  }
+
+  /**
+   * Returns a custom title for the given group_flex plugin.
+   *
+   * @param string $plugin_type
+   *   The plugin type can be one of the following type:
+   *   - visibility: the GroupVisibility plugin type.
+   *   - joining_method: the GroupJoiningMethod plugin type.
+   * @param string $plugin_id
+   *   The plugin ID.
+   *
+   * @return \Drupal\Core\StringTranslation\TranslatableMarkup|string
+   *   The description for the given plugin.
+   */
+  public function getGroupFlexPluginTitle(string $plugin_type, string $plugin_id) {
+    $key = "$plugin_type-$plugin_id";
+
+    switch ($key) {
+      case 'visibility-' . GroupVisibilityType::GROUP_VISIBILITY_PUBLIC:
+        return $this->t('Public group');
+
+      case 'visibility-' . GroupVisibilityType::GROUP_VISIBILITY_COMMUNITY:
+        return $this->t('Community members only');
+
+      case 'visibility-' . GroupVisibilityType::GROUP_VISIBILITY_CUSTOM_RESTRICTED:
+        return $this->t('Restricted group');
+
+      case 'visibility-' . GroupVisibilityType::GROUP_VISIBILITY_PRIVATE:
+        return $this->t('Private group');
+
+      case 'joining_method-' . GroupJoiningMethodType::GROUP_JOINING_METHOD_TU_OPEN:
+        return $this->t('Open');
+
+      case 'joining_method-' . GroupJoiningMethodType::GROUP_JOINING_METHOD_TU_MEMBERSHIP_REQUEST:
+        return $this->t('Moderated');
 
       default:
         return '';
@@ -302,13 +344,14 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
 
   /**
    * Determines if a group has content.
+   *
    * Considered as content:
    *  - Discussions
    *  - Documents
-   *  - Wiki pages
+   *  - Wiki pages.
    *
    * @param \Drupal\group\Entity\GroupInterface $group
-   *    The group for which the check is.
+   *   The group for which the check is.
    */
   public function hasContent(GroupInterface $group) {
     $query = $this->database->select('group_content_field_data', 'gp');

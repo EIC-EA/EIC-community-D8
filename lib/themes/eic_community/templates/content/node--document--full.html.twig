@@ -1,19 +1,7 @@
-{% extends "@theme/patterns/layout/base.html.twig" %}
-
-{% block breadcrumbs %}
-  {% include "@theme/patterns/compositions/breadcrumb.html.twig" with breadcrumb|default({}) %}
-{% endblock %}
-
-{% block page_header %}
-  {% include "@theme/patterns/compositions/editorial-header.html.twig" with editorial_header|default({})|merge({
-    extra_classes: 'ecl-editorial-header--is-compact',
-  }) only %}
-{% endblock %}
-
 {% block content %}
   {% embed "@theme/patterns/compositions/editorial-article.html.twig" with editorial_article|default({}) %}
     {% block content %}
-      {{ content }}
+      {% include "@theme/patterns/components/filelist.html.twig" with file_list|default({}) %}
     {% endblock %}
 
     {% block sidebar %}
@@ -27,5 +15,4 @@
 
     {% endblock %}
   {% endembed %}
-
 {% endblock %}
