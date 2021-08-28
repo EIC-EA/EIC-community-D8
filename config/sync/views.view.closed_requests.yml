@@ -1394,7 +1394,20 @@ display:
             default_group_multiple: {  }
             group_items: {  }
           plugin_id: datetime
-      sorts: {  }
+      sorts:
+        field_request_closed_date_value:
+          id: field_request_closed_date_value
+          table: flagging__field_request_closed_date
+          field: field_request_closed_date_value
+          relationship: none
+          group_type: group
+          admin_label: ''
+          order: DESC
+          exposed: false
+          expose:
+            label: 'Closed date (field_request_closed_date)'
+          granularity: minute
+          plugin_id: datetime
       title: 'Closed requests'
       header: {  }
       footer: {  }

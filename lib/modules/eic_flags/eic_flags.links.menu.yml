@@ -5,6 +5,8 @@ eic_flags.delete_requested_content:
   weight: 1
   route_parameters:
     request_type: 'delete'
+    order: 'field_request_close_date'
+    sort: 'desc'
 
 eic_flags.archive_requested_content:
   title: 'Archive requests'
@@ -13,3 +15,5 @@ eic_flags.archive_requested_content:
   weight: 2
   route_parameters:
     request_type: 'archive'
+    order: 'field_request_close_date'
+    sort: 'desc'
