@@ -9,6 +9,7 @@ use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\BubbleableMetadata;
+use Drupal\Core\Url;
 use Drupal\eic_messages\ActivityStreamOperationTypes;
 use Drupal\eic_messages\Hooks\EntityOperations;
 use Drupal\eic_messages\Hooks\FormOperations;
@@ -50,7 +51,8 @@ function eic_messages_comment_insert(EntityInterface $entity) {
 function eic_messages_comment_update(EntityInterface $entity) {
   /** @var \Drupal\eic_messages\Service\CommentMessageCreator $group_message_create */
   $group_message_create = \Drupal::service('eic_messages.message_creator.comment');
-  $group_message_create->createCommentActivity($entity, ActivityStreamOperationTypes::UPDATED_ENTITY);
+  $group_message_create->createCommentActivity($entity,
+    ActivityStreamOperationTypes::UPDATED_ENTITY);
 }
 
 /**
@@ -178,4 +180,15 @@ function eic_messages_tokens(
 ) {
   $class = \Drupal::classResolver(MessageTokens::class);
   return $class->tokens($type, $tokens, $data, $options, $bubbleable_metadata);
+}
+
+/**
+ * Implements hook_link_alter().
+ */
+function eic_messages_link_alter(&$variables) {
+  if ($variables['url']->getRouteName() !== 'message.messages') {
+    return;
+  }
+
+  $variables['url'] = Url::fromRoute('view.message.page_1');
 }
