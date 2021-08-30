@@ -11,7 +11,7 @@ use Drupal\group\Access\GroupAccessResult;
 use Drupal\group\Plugin\GroupContentAccessControlHandler;
 
 /**
- * Provides access control for GroupContent entities and grouped entities.
+ * Overrides group content access control handler for group_node plugins.
  */
 class GroupContentNodeAccessControlHandler extends GroupContentAccessControlHandler {
 
