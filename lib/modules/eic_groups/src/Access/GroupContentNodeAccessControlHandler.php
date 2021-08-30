@@ -27,6 +27,23 @@ class GroupContentNodeAccessControlHandler extends GroupContentAccessControlHand
         $storage = $this->entityTypeManager->getStorage('group_content');
         $group_contents = $storage->loadByEntity($entity);
 
+        // Always deny access to book pages.
+        if (!empty($group_contents)) {
+          if ($entity->bundle() === 'book') {
+            $access = GroupAccessResult::forbiddenIf(!$account->hasPermission('bypass node access'))
+              ->cachePerUser();
+            break;
+          }
+        }
+
+        // Allow access to power users.
+        if (UserHelper::isPowerUser($account)) {
+          $access = GroupAccessResult::allowed()
+            ->addCacheableDependency($account)
+            ->addCacheableDependency($entity);
+          break;
+        }
+
         // We check if the user is a member of a group where this node is
         // referenced and if so, we allow access to edit the node if the owner
         // allowed members to do so via "member_content_edit_access" property.
@@ -36,13 +53,6 @@ class GroupContentNodeAccessControlHandler extends GroupContentAccessControlHand
           $editable_by_members = $entity->get(NodeProperty::MEMBER_CONTENT_EDIT_ACCESS)->value;
 
           if ($editable_by_members) {
-            if (UserHelper::isPowerUser($account)) {
-              $access = GroupAccessResult::allowed()
-                ->addCacheableDependency($account)
-                ->addCacheableDependency($entity);
-              break;
-            }
-
             $membership = $group->getMember($account);
 
             $access = AccessResult::allowedIf($membership)
