@@ -24,7 +24,8 @@ use Solarium\QueryType\Update\Query\Document;
 class SolrDocumentProcessor {
 
   /**
-   * Set global fields data, gallery slides data and set by default content to not private
+   * Set global fields data, gallery slides data and set by default content to
+   * not private
    *
    * @param \Solarium\QueryType\Update\Query\Document $document
    * @param array $fields
@@ -103,7 +104,7 @@ class SolrDocumentProcessor {
       $slides_id = is_array($slides_id) ? $slides_id : [$slides_id];
       $image_style = ImageStyle::load('crop_50x50');
       $image_style_160 = ImageStyle::load('gallery_teaser_crop_160x160');
-      $slides = array_map(function($slide_id) use ($image_style, $image_style_160) {
+      $slides = array_map(function ($slide_id) use ($image_style, $image_style_160) {
         $slide = Paragraph::load($slide_id);
         $media = $slide->get('field_gallery_slide_media')->referencedEntities();
 
@@ -142,8 +143,8 @@ class SolrDocumentProcessor {
     $document->addField('ss_drupal_timestamp', strtotime($date));
     $document->addField('ss_global_fullname', $fullname);
     $document->addField('ss_global_user_url', $user_url);
-    $document->addField('sm_content_field_vocab_topics_string', $topics);
-    $document->addField('sm_content_field_vocab_geo_string', $geo);
+    $this->addOrUpdateDocumentField($document, 'sm_content_field_vocab_topics_string', $fields, $topics);
+    $this->addOrUpdateDocumentField($document, 'sm_content_field_vocab_geo_string', $fields, $geo);
 
     if (!array_key_exists('bs_content_is_private', $fields)) {
       $document->addField('bs_content_is_private', FALSE);
@@ -302,4 +303,17 @@ class SolrDocumentProcessor {
       }
     }
   }
+
+  /**
+   * @param \Solarium\QueryType\Update\Query\Document $document
+   * @param $key
+   * @param $fields
+   * @param $value
+   */
+  private function addOrUpdateDocumentField(Document &$document, $key, $fields, $value) {
+    array_key_exists($key, $fields) ?
+      $document->setField($key, $value) :
+      $document->addField($key, $value);
+  }
+
 }
