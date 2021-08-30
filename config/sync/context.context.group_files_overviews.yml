@@ -32,6 +32,8 @@ reactions:
           ss_global_content_type: ss_global_content_type
           sm_content_field_vocab_topics_string: sm_content_field_vocab_topics_string
           sm_content_field_vocab_geo_string: sm_content_field_vocab_geo_string
+          ss_content_language_string: ss_content_language_string
+          ss_content_document_type_string: ss_content_document_type_string
         sort_options:
           its_flag_highlight_content: its_flag_highlight_content
           ss_global_created_date: ss_global_created_date
