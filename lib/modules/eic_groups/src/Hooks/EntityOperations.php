@@ -2,16 +2,21 @@
 
 namespace Drupal\eic_groups\Hooks;
 
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
 use Drupal\eic_content_wiki_page\WikiPageBookManager;
+use Drupal\eic_groups\Constants\NodeProperty;
 use Drupal\eic_groups\EICGroupsHelperInterface;
 use Drupal\eic_user\UserHelper;
 use Drupal\group\Entity\GroupContent;
@@ -343,6 +348,86 @@ class EntityOperations implements ContainerInjectionInterface {
         }
       }
     }
+  }
+
+  /**
+   * Implements hook_entity_field_access().
+   */
+  public function entityFieldAccess($operation, FieldDefinitionInterface $field_definition, AccountInterface $account, FieldItemListInterface $items = NULL) {
+    $access = AccessResult::neutral();
+
+    if (!$items) {
+      return $access;
+    }
+
+    $entity = $items->getEntity();
+
+    if ($entity instanceof GroupInterface && $entity->bundle() === 'group') {
+      $group_restricted_fields = [
+        'field_related_groups',
+        'field_related_news_stories',
+      ];
+
+      // If field is non of the restricted ones, we do nothing.
+      if (!in_array($field_definition->getName(), $group_restricted_fields)) {
+        return $access;
+      }
+
+      switch ($operation) {
+        case 'edit':
+          // Deny access if it's a new group and the user doesn't have
+          // "site_admin" or "content_administrator" roles.
+          if ($entity->isNew()) {
+            $access = AccessResult::forbiddenIf(!UserHelper::isPowerUser($account))
+              ->addCacheableDependency($account);
+            break;
+          }
+          break;
+
+      }
+    }
+    elseif ($entity instanceof NodeInterface) {
+      $access = AccessResult::neutral();
+
+      if ($operation !== 'edit') {
+        return $access;
+      }
+
+      switch ($field_definition->getName()) {
+        case NodeProperty::MEMBER_CONTENT_EDIT_ACCESS:
+
+          if ($entity->isNew()) {
+            $group = $this->eicGroupsHelper->getGroupFromRoute();
+
+            if (!$group) {
+              return AccessResult::forbidden();
+            }
+
+            return $access;
+          }
+
+          /** @var \Drupal\group\Entity\Storage\GroupContentStorageInterface $storage */
+          $storage = $this->entityTypeManager->getStorage('group_content');
+          $group_contents = $storage->loadByEntity($entity);
+
+          // Wiki page is not part of a group, so we always hide the field.
+          if (empty($group_contents)) {
+            return AccessResult::forbidden();
+          }
+
+          // We return access denied if the user is not the owner of the wiki
+          // page neither administrator.
+          if ($entity->getOwnerId() !== $account->id()) {
+            if (!UserHelper::isPowerUser($account)) {
+              $access = AccessResult::forbidden();
+            }
+          }
+          break;
+
+      }
+    }
+
+    return $access;
   }
 
 }

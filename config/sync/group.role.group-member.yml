@@ -25,6 +25,7 @@ permissions:
   - 'update own group_node:discussion entity'
   - 'update own group_node:document entity'
   - 'update own group_node:gallery entity'
+  - 'update own group_node:wiki_page entity'
   - 'view comments'
   - 'view group'
   - 'view group_membership content'
