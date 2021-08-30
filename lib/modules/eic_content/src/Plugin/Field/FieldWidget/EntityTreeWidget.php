@@ -96,6 +96,7 @@ class EntityTreeWidget extends WidgetBase {
         '#default_value' => $items->referencedEntities(),
         '#tags' => TRUE,
         '#target_type' => $this->getFieldSetting('target_type'),
+        '#maxlength' => 5000,
         '#element_validate' => [
           [static::class, 'validate'],
         ],

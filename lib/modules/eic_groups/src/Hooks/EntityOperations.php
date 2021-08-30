@@ -153,23 +153,29 @@ class EntityOperations implements ContainerInjectionInterface {
         foreach ($entity->getMembers('group-owner') as $item) {
           $variables['owners'][] = $this->userHelper->getUserLink($item->getUser());
         }
+
         // Get group admins.
         foreach ($entity->getMembers('group-admin') as $item) {
           $variables['admins'][] = $this->userHelper->getUserLink($item->getUser());
         }
+
         // Get group visibility.
         $variables['visibility'] = $this->oecGroupFlexHelper->getGroupVisibilitySettings($entity);
         if (!empty($variables['visibility']['settings']) && $variables['visibility']['settings'] instanceof GroupVisibilityRecord) {
           $variables['visibility']['settings'] = $this->oecGroupFlexHelper->getGroupVisibilityRecordSettings($variables['visibility']['settings']);
         }
+
         // Get joining methods.
         $variables['joining_methods'] = $this->oecGroupFlexHelper->getGroupJoiningMethod($entity);
 
-        // Get the descriptions for each plugin.
+        // Get the title and descriptions for each plugin.
+        $variables['visibility']['title'] = $this->eicGroupsHelper->getGroupFlexPluginTitle('visibility', $variables['visibility']['plugin_id']);
         $variables['visibility']['description'] = $this->eicGroupsHelper->getGroupFlexPluginDescription('visibility', $variables['visibility']['plugin_id']);
         foreach ($variables['joining_methods'] as $index => $joining_method) {
+          $variables['joining_methods'][$index]['title'] = $this->eicGroupsHelper->getGroupFlexPluginTitle('joining_method', $joining_method['plugin_id']);
           $variables['joining_methods'][$index]['description'] = $this->eicGroupsHelper->getGroupFlexPluginDescription('joining_method', $joining_method['plugin_id']);
         }
+
         $build += $variables;
         break;
 
