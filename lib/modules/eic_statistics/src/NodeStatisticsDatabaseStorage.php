@@ -2,6 +2,7 @@
 
 namespace Drupal\eic_statistics;
 
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\State\StateInterface;
 use Drupal\eic_statistics\Event\PageViewCountUpdate;
@@ -62,6 +63,8 @@ class NodeStatisticsDatabaseStorage extends CoreNodeStatisticsDatabaseStorage {
     // Dispatch an event.
     $event = new PageViewCountUpdate($id, $page_views);
     $this->eventDispatcher->dispatch($event, PageViewCountUpdate::EVENT_NAME);
+    // On each stat update we invalidate the stat cache for the given node and all nodes (this one isn't used for the moment)
+    Cache::invalidateTags(["eic_statistics:node:$id"]);
 
     return $page_views;
   }
