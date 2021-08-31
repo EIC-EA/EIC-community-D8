@@ -101,7 +101,13 @@ class EntityFileDownloadCount {
    *   The number of downloads for this entity.
    */
   public function getFileDownloads(EntityInterface $entity) {
-    return $this->countFileDownloads($entity)['download_count'];
+    $file_download_count = $this->countFileDownloads($entity);
+
+    // Add all the returned cache tags to the entity, to be make the entity
+    // cache is invalidated when a child entity has changed.
+    $entity->addCacheTags($file_download_count['cache_tags']);
+
+    return $file_download_count['download_count'];
   }
 
   /**
