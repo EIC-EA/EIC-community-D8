@@ -44,6 +44,7 @@ destination:
   default_bundle: eic_document
 migration_dependencies:
   optional:
+    - upgrade_d7_user
     - upgrade_d7_file
     - upgrade_d7_file_private
   required: { }
