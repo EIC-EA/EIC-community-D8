@@ -103,7 +103,7 @@ class EntityFileDownloadCount {
   public function getFileDownloads(EntityInterface $entity) {
     $file_download_count = $this->countFileDownloads($entity);
 
-    // Add all the returned cache tags to the entity, to be make the entity
+    // Add all the returned cache tags to the entity, to make sure the entity
     // cache is invalidated when a child entity has changed.
     $entity->addCacheTags($file_download_count['cache_tags']);
 
