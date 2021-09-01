@@ -11,7 +11,7 @@
 function eic_community_preprocess_node__video(array &$variables) {
   if ($variables['view_mode'] === 'full') {
     _eic_community_display_flags($variables);
-    _eic_community_story_topics($variables);
+    _eic_community_display_topics($variables);
 
     _eic_community_display_contributors($variables);
   }
