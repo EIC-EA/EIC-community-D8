@@ -163,6 +163,11 @@ class EntityFileDownloadCount {
 
         case 'file':
         case 'image':
+          // We discard the thumbnail field.
+          if ($field->getName() === 'thumbnail') {
+            break;
+          }
+
           $file_downloads_count = 0;
           $file_ids = [];
           $result = [
