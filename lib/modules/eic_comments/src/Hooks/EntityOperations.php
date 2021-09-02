@@ -68,7 +68,7 @@ class EntityOperations implements ContainerInjectionInterface {
     }
     $build['comments_count'] = [
       '#markup' => '',
-      '#items' => $comment_count,
+      '#value' => $comment_count,
     ];
   }
 
