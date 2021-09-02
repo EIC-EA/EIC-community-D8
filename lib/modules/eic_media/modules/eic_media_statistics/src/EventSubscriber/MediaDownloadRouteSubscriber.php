@@ -15,12 +15,10 @@ class MediaDownloadRouteSubscriber extends RouteSubscriberBase {
    * {@inheritdoc}
    */
   protected function alterRoutes(RouteCollection $collection) {
-    foreach ($collection->all() as $route) {
-      // Set custom access check for media download route.
-      if (strpos($route->getPath(), '/media/{media}/download') === 0) {
-        $route->setRequirement('_media_file_download_access', 'TRUE');
-        $route->setDefault('_controller', '\Drupal\eic_media_statistics\Controller\MediaFileDownloadController::download');
-      }
+    // Set custom access check for media download route.
+    if ($route = $collection->get('media_entity_download.download')) {
+      $route->setRequirement('_media_file_download_access', 'TRUE');
+      $route->setDefault('_controller', '\Drupal\eic_media_statistics\Controller\MediaFileDownloadController::download');
     }
   }
 
