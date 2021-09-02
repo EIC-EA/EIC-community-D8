@@ -144,7 +144,7 @@ class LastGroupActivitiesBlock extends BlockBase implements ContainerFactoryPlug
       $file_url = $file ? file_url_transform_relative(file_create_url($file->get('uri')->value)) : NULL;
 
       return [
-        'joined_date' => $this->dateFormatter->format( $groupContent->getCreatedTime(), 'eu_format'),
+        'joined_date' => $this->dateFormatter->format($groupContent->getCreatedTime(), 'eu_short_date'),
         'full_name' => $user->get('field_first_name')->value . ' ' . $user->get('field_last_name')->value,
         'email' => $user->getEmail(),
         'picture' => $file_url,
