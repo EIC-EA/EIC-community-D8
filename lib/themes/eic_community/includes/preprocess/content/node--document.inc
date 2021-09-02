@@ -5,6 +5,8 @@
  * Prepares variables for node document templates.
  */
 
+use Drupal\file\Entity\File;
+
 /**
  * Implements hook_preprocess_node() for document node.
  */
