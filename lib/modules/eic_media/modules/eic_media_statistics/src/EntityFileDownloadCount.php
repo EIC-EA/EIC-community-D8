@@ -178,26 +178,18 @@ class EntityFileDownloadCount {
             $file_ids[] = $file_item['target_id'];
             $result['cache_tags'] = array_unique(array_merge($result['cache_tags'], MediaFileDownloadController::getMediaFileDownloadCacheTags($file_item['target_id'])));
           }
+
           // Get statistics results for all files.
           $stat_results = $this->fileStatisticsDbStorage->fetchViews($file_ids);
           foreach ($stat_results as $stat_result) {
             /** @var \Drupal\statistics\StatisticsViewsResult $stat_result */
             $file_downloads_count += $stat_result->getTotalCount();
           }
-          $result = [
-            'download_count' => $file_downloads_count,
-            'cache_tags' => array_unique(array_merge($result['cache_tags'], $entity->getCacheTags())),
-          ];
-          // Cache the result.
-          $this->cacheBackend->set($cid, $result['download_count'], Cache::PERMANENT, $result['cache_tags']);
 
-          // Dispatch an event.
-          $event = new DownloadCountUpdate($entity, $result['download_count']);
-          $this->eventDispatcher->dispatch($event, DownloadCountUpdate::EVENT_NAME);
-
-          // Return the download count for these files and cache tags for this
-          // entity.
-          return $result;
+          // Aggregate results.
+          $result['download_count'] += $file_downloads_count;
+          $result['cache_tags'] = array_unique(array_merge($result['cache_tags'], $entity->getCacheTags()));
+          break;
 
       }
     }
