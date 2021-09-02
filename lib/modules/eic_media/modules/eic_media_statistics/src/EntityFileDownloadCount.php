@@ -104,7 +104,7 @@ class EntityFileDownloadCount {
   public function getFileDownloads(EntityInterface $entity) {
     $file_download_count = $this->countFileDownloads($entity);
 
-    // Add all the returned cache tags to the entity, to be make the entity
+    // Add all the returned cache tags to the entity, to make sure the entity
     // cache is invalidated when a child entity has changed.
     $entity->addCacheTags($file_download_count['cache_tags']);
 
@@ -152,7 +152,7 @@ class EntityFileDownloadCount {
           if (in_array($target_entity_type, ['media', 'paragraph'])) {
             // Load the entities.
             foreach ($entity->get($field->getName())->referencedEntities() as $referenced_entity) {
-              $sub_entity_result = self::countFileDownloads($referenced_entity);
+              $sub_entity_result = $this->countFileDownloads($referenced_entity);
               // Combine the download count and cache tags with the one from the
               // sub entity.
               $result['download_count'] += $sub_entity_result['download_count'];

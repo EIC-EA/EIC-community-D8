@@ -150,9 +150,12 @@ class EntityOperations implements ContainerInjectionInterface {
       'destination' => \Drupal::request()->getRequestUri(),
     ]);
 
-    $is_published = $this->moderationInformation->isModeratedEntity($entity)
-      ? $this->moderationInformation->isDefaultRevisionPublished($entity)
-      : (bool) $entity->get('status')->value;
+    if ($this->moderationInformation->isModeratedEntity($entity)) {
+      $is_published = $this->moderationInformation->isDefaultRevisionPublished($entity);
+    }
+    else {
+      $is_published = $entity->hasField('status') ? (bool) $entity->get('status')->value : FALSE;
+    }
 
     if (!$is_published
       && FlaggedEntitiesListBuilder::CLOSED_REQUEST_VIEW === $route_name
