@@ -143,7 +143,7 @@ class EntityOperations implements ContainerInjectionInterface {
       }
       $build['node_stats'][$node->id()]['comments_count'] = [
         '#markup' => '',
-        '#items' => $comment_count,
+        '#value' => $comment_count,
       ];
 
       // Flags count statistic.

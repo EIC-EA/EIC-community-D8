@@ -60,7 +60,7 @@ function eic_community_preprocess_block__latest_news_stories(&$variables, &$cach
           'name' => 'comment',
         ],
         'label' => t('Comments'),
-        'value' => isset($node_stats) ? $node_stats['comments_count']['#items'] : 0,
+        'value' => isset($node_stats) ? $node_stats['comments_count']['#value'] : 0,
       ],
       [
         'icon' => [
