@@ -1,0 +1,24 @@
+uuid: 6b5dc392-806e-4cf3-bd97-5bdefddfc28b
+langcode: en
+status: true
+dependencies:
+  config:
+    - filter.format.plain_text
+  module:
+    - eic_messages
+third_party_settings:
+  eic_messages:
+    message_template_type: stream
+template: stream_video_insert_update
+label: 'STREAM :: MT :: Video insert/update'
+description: ''
+text:
+  -
+    value: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
+    format: plain_text
+settings:
+  'token options':
+    clear: false
+    'token replace': true
+  purge_override: false
+  purge_methods: {  }

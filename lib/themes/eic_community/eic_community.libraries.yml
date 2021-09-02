@@ -29,6 +29,12 @@ react-block-overview-search:
   dependencies:
     - core/drupal
 
+react-activity-stream:
+  js:
+    dist/react/block/activity_stream/entrypoint.js: { minified: true }
+  dependencies:
+    - core/drupal
+
 react-tree-field:
   css:
     theme:

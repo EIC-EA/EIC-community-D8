@@ -18,7 +18,7 @@ permissions:
   - 'access discussions overview'
   - 'access files overview'
   - 'access group content menu overview'
-  - 'access group search'
+  - 'access group search overview'
   - 'access latest activity stream'
   - 'access members overview'
   - 'delete activity item'

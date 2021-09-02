@@ -101,7 +101,13 @@ class EntityFileDownloadCount {
    *   The number of downloads for this entity.
    */
   public function getFileDownloads(EntityInterface $entity) {
-    return $this->countFileDownloads($entity)['download_count'];
+    $file_download_count = $this->countFileDownloads($entity);
+
+    // Add all the returned cache tags to the entity, to make sure the entity
+    // cache is invalidated when a child entity has changed.
+    $entity->addCacheTags($file_download_count['cache_tags']);
+
+    return $file_download_count['download_count'];
   }
 
   /**
@@ -145,7 +151,7 @@ class EntityFileDownloadCount {
           if ($target_entity_type == 'media') {
             // Load the entities.
             foreach ($entity->get($field->getName())->referencedEntities() as $referenced_entity) {
-              $sub_entity_result = self::countFileDownloads($referenced_entity);
+              $sub_entity_result = $this->countFileDownloads($referenced_entity);
               // Combine the download count and cache tags with the one from the
               // sub entity.
               $result['download_count'] += $sub_entity_result['download_count'];

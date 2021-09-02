@@ -96,6 +96,16 @@ class GroupVisibilitySettingsForm extends ConfigFormBase {
       '#multiple' => TRUE,
     ];
 
+    $defaultRoles = $config->get('oec_group_flex_admin_roles');
+    $form['admin_roles'] = [
+      '#type' => 'select',
+      '#title' => $this->t('Drupal admin roles'),
+      '#description' => $this->t('Select roles that are considered as admin.'),
+      '#options' => $userRoleOptions,
+      '#default_value' => $defaultRoles ?: [],
+      '#multiple' => TRUE,
+    ];
+
     return $form;
   }
 
@@ -106,6 +116,7 @@ class GroupVisibilitySettingsForm extends ConfigFormBase {
     $this->config('oec_group_flex.settings')
       ->set('oec_group_visibility_setings.restricted_community_members.internal_roles', $form_state->getValue('restricted_community_members_roles'))
       ->set('oec_group_visibility_setings.custom_restricted.internal_roles', $form_state->getValue('custom_restricted_roles'))
+      ->set('oec_group_flex_admin_roles', $form_state->getValue('admin_roles'))
       ->save();
 
     parent::submitForm($form, $form_state);

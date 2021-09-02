@@ -1,0 +1,10 @@
+entity.overview_page.settings:
+  title: Overview page
+  description: Configure an Overview page entity type
+  route_name:  entity.overview_page.settings
+  parent: system.admin_structure
+entity.overview_page.collection:
+  title: Overview pages
+  description: List of overview pages
+  route_name: entity.overview_page.collection
+  parent: eic_admin.dashboard

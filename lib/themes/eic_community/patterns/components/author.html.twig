@@ -20,6 +20,9 @@
             {{ name }}
           {% endif %}
         </{{ label_element}}>
+        {% if meta is not empty %}
+          <span class="ecl-author__meta">{{ meta }}</span>
+        {% endif %}
         {% if actions is not empty %}
           <div class="ecl-author__actions">
             {% for action in actions %}

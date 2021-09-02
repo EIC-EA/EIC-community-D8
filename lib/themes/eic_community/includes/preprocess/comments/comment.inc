@@ -6,8 +6,10 @@
  */
 
 use Drupal\comment\Entity\Comment;
+use Drupal\image\Entity\ImageStyle;
 use Drupal\user\Entity\User;
 use Drupal\Core\Url;
+use Drupal\file\Entity\File;
 
 /**
  * Implements hook_preprocess_HOOK().
@@ -42,6 +44,35 @@ function eic_community_preprocess_comment(&$variables) {
 
   $date_formatter = \Drupal::service('date.formatter');
   $created_at = $date_formatter->format($comment->getCreatedTime(), 'short');
+  $attachments = [];
+  $comment_attachments = $comment->get('field_comment_attachment')->referencedEntities();
+
+  foreach ($comment_attachments as $comment_attachment) {
+    if ($comment_attachment->bundle() === 'eic_document') {
+      $file = File::load($comment_attachment->field_media_file->target_id);
+
+      $attachments[] = [
+        'title' => $comment_attachment->getName(),
+        'path' => $file->createFileUrl(),
+        'icon' => [
+          'type' => 'custom',
+          'name' => substr(strrchr($file->get('filemime')->getString(), '/'), 1),
+        ],
+      ];
+    }
+    else {
+      $file = File::load($comment_attachment->oe_media_image->target_id);
+
+      $attachments[] = [
+        'title' => $comment_attachment->getName(),
+        'path' => $file->createFileUrl(),
+        'type' => $file->getMimeType(),
+        'image' => [
+          'src' => ImageStyle::load('thumbnail')->buildUrl($file->getFileUri()),
+        ],
+      ];
+    }
+  }
 
   $variables['comment'] = [
     'author' => [
@@ -56,6 +87,7 @@ function eic_community_preprocess_comment(&$variables) {
     'timestamp' => $created_at,
     'user' => $current_user,
     'icon_file_path' => $variables['eic_icon_path'],
+    'attachments' => $attachments,
   ];
 
   // If user can reply to comments we add the comment reply path to the theme

@@ -1,0 +1,13 @@
+administer overview pages:
+  title: 'administer overview page settings'
+  restrict access: true
+access overview page overview:
+  title: 'Access overview pages list'
+delete overview pages:
+  title: Delete overview pages
+create overview pages:
+  title: Create overview pages
+view overview pages:
+  title: View overview pages
+edit overview pages:
+  title: Edit overview pages
