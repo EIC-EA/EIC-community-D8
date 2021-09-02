@@ -41,6 +41,11 @@ function eic_comments_configure_comment_form($form) {
  * Implements hook_entity_view().
  */
 function eic_comments_entity_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
-  \Drupal::classResolver(EntityOperations::class)
-    ->entityView($build, $entity, $display, $view_mode);
+  switch ($entity->getEntityTypeId()) {
+    case 'node':
+      \Drupal::classResolver(EntityOperations::class)
+        ->entityView($build, $entity, $display, $view_mode);
+      break;
+
+  }
 }
