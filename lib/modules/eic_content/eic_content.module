@@ -9,6 +9,10 @@
  * @see https://www.drupal.org/node/2217931
  */
 
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\eic_content\Hooks\EntityOperations;
+
 /**
  * Implements hook_theme().
  */
@@ -20,4 +24,12 @@ function eic_content_theme() {
       ],
     ],
   ];
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_view().
+ */
+function eic_content_node_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
+  \Drupal::classResolver(EntityOperations::class)
+    ->nodeView($build, $entity, $display, $view_mode);
 }

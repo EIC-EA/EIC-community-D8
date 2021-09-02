@@ -7,11 +7,11 @@
 
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Session\AccountInterface;
-use Drupal\eic_flags\Form\ListBuilderFilters;
 use Drupal\eic_flags\Form\RequestCloseForm;
 use Drupal\eic_flags\Form\NewRequestForm;
 use Drupal\eic_flags\Hooks\EntityAccess;
@@ -223,4 +223,12 @@ function eic_flags_entity_access(
     ->getHandlerByType($type);
 
   return $handler->canRequest($account, $entity);
+}
+
+/**
+ * Implements hook_entity_view().
+ */
+function eic_flags_entity_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
+  \Drupal::classResolver(EntityOperations::class)
+    ->entityView($build, $entity, $display, $view_mode);
 }
