@@ -151,7 +151,7 @@ class EntityFileDownloadCount {
           if ($target_entity_type == 'media') {
             // Load the entities.
             foreach ($entity->get($field->getName())->referencedEntities() as $referenced_entity) {
-              $sub_entity_result = self::countFileDownloads($referenced_entity);
+              $sub_entity_result = $this->countFileDownloads($referenced_entity);
               // Combine the download count and cache tags with the one from the
               // sub entity.
               $result['download_count'] += $sub_entity_result['download_count'];
