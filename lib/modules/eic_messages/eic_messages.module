@@ -186,9 +186,10 @@ function eic_messages_tokens(
  * Implements hook_link_alter().
  */
 function eic_messages_link_alter(&$variables) {
-  if ($variables['url']->getRouteName() !== 'message.messages') {
+  if ($variables['url']->isRouted() && $variables['url']->getRouteName() !== 'message.messages') {
     return;
   }
 
+  // Replace the URL to point to the views page instead of the default list.
   $variables['url'] = Url::fromRoute('view.message.page_1');
 }
