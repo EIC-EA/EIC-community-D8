@@ -331,7 +331,7 @@ class EntityOperations implements ContainerInjectionInterface {
             'uri' => 'internal:/group/' . $group->id() . '/about',
           ],
           'menu_name' => $menu_name,
-          'weight' => 1,
+          'weight' => 7,
         ]);
 
         try {
