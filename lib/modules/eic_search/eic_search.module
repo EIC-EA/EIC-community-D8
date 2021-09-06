@@ -81,6 +81,7 @@ function eic_search_search_api_solr_documents_alter(array &$documents, \Drupal\s
 
     $solr_document_processor->processGlobalData($document, $fields);
     $solr_document_processor->processGroupData($document, $fields);
+    $solr_document_processor->processDiscussionData($document, $fields);
     $solr_document_processor->processGroupUserData($document, $fields);
     $solr_document_processor->processGroupVisibilityData($document, $fields, $items, $group_helper);
   }
