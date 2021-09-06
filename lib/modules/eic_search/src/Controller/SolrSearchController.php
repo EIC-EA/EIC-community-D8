@@ -316,7 +316,7 @@ class SolrSearchController extends ControllerBase {
    * @param \Drupal\eic_search\Search\Sources\SourceTypeInterface|null $source
    */
   private function generateQueryPager(Query &$solariumQuery, int $page, int $offset, ?SourceTypeInterface $source) {
-    $solariumQuery->setRows($page * $offset);
+    $solariumQuery->setRows($offset);
 
     //Default value will be to work like pagination
     if ($source instanceof SourceTypeInterface && $source->allowPagination()) {
