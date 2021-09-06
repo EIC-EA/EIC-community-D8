@@ -36,6 +36,15 @@ class SolrDocumentProcessor {
    * @throws \Drupal\Core\Entity\EntityMalformedException
    */
   public function processGlobalData(Document &$document, array $fields) {
+    $title = '';
+    $type = '';
+    $date = '';
+    $status = FALSE;
+    $fullname = '';
+    $topics = [];
+    $geo = [];
+    $user_url = '';
+
     switch ($fields['ss_search_api_datasource']) {
       case 'entity:node':
         $title = $fields['ss_content_title'];
@@ -90,15 +99,7 @@ class SolrDocumentProcessor {
         $status = TRUE;
         break;
       default:
-        $title = '';
-        $type = '';
-        $date = '';
-        $status = FALSE;
-        $fullname = '';
-        $topics = [];
-        $geo = [];
         $language = t('English', [], ['context' => 'eic_search'])->render();
-        $user_url = '';
         break;
     }
 
