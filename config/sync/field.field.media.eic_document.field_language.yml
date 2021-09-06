@@ -1,0 +1,29 @@
+uuid: c4153c91-d024-4e4b-afa6-7dc1cbd6c630
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.media.field_language
+    - media.type.eic_document
+    - taxonomy.vocabulary.languages
+id: media.eic_document.field_language
+field_name: field_language
+entity_type: media
+bundle: eic_document
+label: Language
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      languages: languages
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

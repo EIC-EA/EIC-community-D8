@@ -197,8 +197,10 @@ class EntityOperations implements ContainerInjectionInterface {
             ];
             // Add wiki page create form url to the build array.
             if ($add_wiki_page_urls = $this->getWikiPageAddFormUrls($entity, $group)) {
-              $build['link_add_child_wiki_page'] = $add_wiki_page_urls['add_child_wiki_page']->toString();
-              $build['link_add_child_wiki_page_renderable'] = Link::fromTextAndUrl($this->t('Add a new wiki page'), $add_wiki_page_urls['add_child_wiki_page'])->toRenderable();
+              if ($add_wiki_page_urls['add_child_wiki_page']->access()) {
+                $build['link_add_child_wiki_page'] = $add_wiki_page_urls['add_child_wiki_page']->toString();
+                $build['link_add_child_wiki_page_renderable'] = Link::fromTextAndUrl($this->t('Add a new wiki page'), $add_wiki_page_urls['add_child_wiki_page'])->toRenderable();
+              }
             }
             // Unsets book navigation since we already have that show in the
             // eic_groups_wiki_book_navigation block plugin.
@@ -208,15 +210,19 @@ class EntityOperations implements ContainerInjectionInterface {
         elseif ($entity->bundle() === 'wiki_page') {
           // Add wiki page create form url to the build array.
           if ($add_wiki_page_urls = $this->getWikiPageAddFormUrls($entity)) {
-            $build['link_add_current_level_wiki_page'] = $add_wiki_page_urls['add_current_level_wiki_page']->toString();
-            $build['link_add_current_level_wiki_page_renderable'] = Link::fromTextAndUrl($this->t('Add a new page on the current level'), $add_wiki_page_urls['add_current_level_wiki_page'])->toRenderable();
-            $build['link_add_current_level_wiki_page_renderable']['#suffix'] = '<br>';
+            if ($add_wiki_page_urls['add_current_level_wiki_page']->access()) {
+              $build['link_add_current_level_wiki_page'] = $add_wiki_page_urls['add_current_level_wiki_page']->toString();
+              $build['link_add_current_level_wiki_page_renderable'] = Link::fromTextAndUrl($this->t('Add a new page on the current level'), $add_wiki_page_urls['add_current_level_wiki_page'])->toRenderable();
+              $build['link_add_current_level_wiki_page_renderable']['#suffix'] = '<br>';
+            }
 
-            // If the wiki page depth doesn't reach the maximum limit, then we
-            // can show the button to add a new child wiki page.
-            if (!$entity->book['p' . (WikiPageBookManager::BOOK_MAX_DEPTH + 1)]) {
-              $build['link_add_child_wiki_page'] = $add_wiki_page_urls['add_child_wiki_page']->toString();
-              $build['link_add_child_wiki_page_renderable'] = Link::fromTextAndUrl($this->t('Add a new wiki page below this page'), $add_wiki_page_urls['add_child_wiki_page'])->toRenderable();
+            if ($add_wiki_page_urls['add_child_wiki_page']->access()) {
+              // If the wiki page depth doesn't reach the maximum limit, then we
+              // can show the button to add a new child wiki page.
+              if (!$entity->book['p' . (WikiPageBookManager::BOOK_MAX_DEPTH + 1)]) {
+                $build['link_add_child_wiki_page'] = $add_wiki_page_urls['add_child_wiki_page']->toString();
+                $build['link_add_child_wiki_page_renderable'] = Link::fromTextAndUrl($this->t('Add a new wiki page below this page'), $add_wiki_page_urls['add_child_wiki_page'])->toRenderable();
+              }
             }
           }
         }
@@ -331,7 +337,7 @@ class EntityOperations implements ContainerInjectionInterface {
             'uri' => 'internal:/group/' . $group->id() . '/about',
           ],
           'menu_name' => $menu_name,
-          'weight' => 1,
+          'weight' => 7,
         ]);
 
         try {

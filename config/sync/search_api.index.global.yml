@@ -56,6 +56,7 @@ dependencies:
     - field.storage.profile.field_vocab_geo
     - field.storage.profile.field_vocab_topic_expertise
     - field.storage.profile.field_vocab_topic_interest
+    - field.storage.node.field_document_type
     - search_api.server.global
     - core.entity_view_mode.group.no_html
     - core.entity_view_mode.node.no_html
@@ -216,11 +217,21 @@ field_settings:
         - field.storage.node.field_document_media
       module:
         - media
+  content_document_type_string:
+    label: 'Document type » Taxonomy term » Name'
+    datasource_id: 'entity:node'
+    property_path: 'field_document_type:entity:name'
+    type: string
+    dependencies:
+      config:
+        - field.storage.node.field_document_type
+      module:
+        - taxonomy
   content_field_body_fulltext:
     label: '[Content] Body - Fulltext'
     datasource_id: 'entity:node'
     property_path: field_body
-    type: string
+    type: text
     dependencies:
       config:
         - field.storage.node.field_body
