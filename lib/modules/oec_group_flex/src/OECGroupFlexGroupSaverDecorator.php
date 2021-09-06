@@ -121,7 +121,9 @@ class OECGroupFlexGroupSaverDecorator extends GroupFlexGroupSaver {
     $this->groupVisibilityStorage->save($item);
 
     // Invalidates group cache tags.
-    Cache::invalidateTags($group->getCacheTags());
+    Cache::invalidateTags($group->getCacheTagsToInvalidate());
+
+    return $groupPermission;
   }
 
   /**
@@ -144,7 +146,7 @@ class OECGroupFlexGroupSaverDecorator extends GroupFlexGroupSaver {
    */
   protected function getGroupPermissionObject(GroupInterface $group): ?GroupPermission {
     /** @var \Drupal\group_permissions\Entity\GroupPermission $groupPermission */
-    $groupPermission = $this->groupPermManager->getGroupPermission($group);
+    $groupPermission = $this->groupPermManager->loadByGroup($group);
 
     if ($groupPermission === NULL) {
       // Create the entity.
@@ -207,6 +209,60 @@ class OECGroupFlexGroupSaverDecorator extends GroupFlexGroupSaver {
     }
     $groupPermission->setPermissions($permissions);
     return $groupPermission;
+  }
+
+  /**
+   * Save the group joining methods.
+   *
+   * @param \Drupal\group\Entity\GroupInterface $group
+   *   The group to save.
+   * @param array $joiningMethods
+   *   The desired joining methods of the group.
+   *
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   * @throws \Drupal\Core\TypedData\Exception\MissingDataException
+   */
+  public function saveGroupJoiningMethods(GroupInterface $group, array $joiningMethods) {
+    $groupPermission = $this->getGroupPermissionObject($group);
+
+    if (!$groupPermission) {
+      return;
+    }
+
+    /** @var \Drupal\group_flex\Plugin\GroupJoiningMethodBase $pluginInstance */
+    foreach ($this->getAllJoiningMethods() as $id => $pluginInstance) {
+      // Checks if the method is enabled.
+      $isEnabled = in_array($id, $joiningMethods, TRUE) && $joiningMethods[$id] === $id;
+      // Checks if the method is allowed for the group's visibility.
+      $allowedVisibilities = $pluginInstance->getVisibilityOptions();
+      $isAllowed = in_array($this->groupFlex->getGroupVisibility($group), $allowedVisibilities, TRUE);
+      if ($isEnabled && $isAllowed) {
+        foreach ($pluginInstance->getGroupPermissions($group) as $role => $rolePermissions) {
+          $groupPermission = $this->addRolePermissionsToGroup($groupPermission, $role, $rolePermissions);
+        }
+        continue;
+      }
+
+      if (empty($pluginInstance->getDisallowedGroupPermissions($group))) {
+        continue;
+      }
+      foreach ($pluginInstance->getDisallowedGroupPermissions($group) as $role => $rolePermissions) {
+        $groupPermission = $this->removeRolePermissionsFromGroup($groupPermission, $role, $rolePermissions);
+      }
+    }
+
+    $violations = $groupPermission->validate();
+    if (count($violations) > 0) {
+      $message = '';
+      foreach ($violations as $violation) {
+        $message .= "\n" . $violation->getMessage();
+      }
+      throw new EntityStorageException('Group permissions are not saved correctly, because:' . $message);
+    }
+    $groupPermission->save();
+
+    // Invalidates group cache tags.
+    Cache::invalidateTags($group->getCacheTagsToInvalidate());
   }
 
 }
