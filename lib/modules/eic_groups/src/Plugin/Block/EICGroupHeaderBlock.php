@@ -6,6 +6,7 @@ use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Link;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Render\Markup;
 use Drupal\Core\Routing\RouteMatchInterface;
@@ -497,10 +498,13 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
       $has_read_more = TRUE;
     }
 
-    $output = Unicode::truncate($output, 350, TRUE, TRUE);
+    // Truncates the output.
+    $output = Unicode::truncate($output, $limit, TRUE, TRUE);
 
+    // Adds link to the group about page.
     if ($has_read_more) {
-      $output .= ' ' . $group->toLink($this->t('Read more'))->toString();
+      $link = Link::createFromRoute($this->t('Read more'), 'eic_groups.about_page', ['group' => $group->id()]);
+      $output .= ' ' . $link->toString();
     }
 
     return Markup::create("<p>$output</p>");
