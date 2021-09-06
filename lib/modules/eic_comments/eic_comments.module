@@ -5,7 +5,10 @@
  * Main module file for EIC Comments module.
  */
 
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\eic_comments\Hooks\EntityOperations;
 
 /**
  * Implements hook_form_FORM_ID_alter().
@@ -32,4 +35,17 @@ function eic_comments_form_comment_node_comment_form_alter(&$form, FormStateInte
 function eic_comments_configure_comment_form($form) {
   $form[0]['format']['#access'] = FALSE;
   return $form;
+}
+
+/**
+ * Implements hook_entity_view().
+ */
+function eic_comments_entity_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
+  switch ($entity->getEntityTypeId()) {
+    case 'node':
+      \Drupal::classResolver(EntityOperations::class)
+        ->entityView($build, $entity, $display, $view_mode);
+      break;
+
+  }
 }

@@ -336,15 +336,12 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
   private function getGroupFlagLinks(GroupInterface $group) {
     $group_flags = [];
 
-    // If there are no group flags, we do nothing.
-    if (empty($group->flags)) {
-      return $group_flags;
-    }
+    $group_flag_ids = self::getGroupHeaderFlagsIds();
 
-    // Loops through each group flag and add only the ones the user has
+    // Loops through each group flag ID and add only the ones the user has
     // access to.
-    foreach (array_keys($group->flags) as $flag_name) {
-      $flag = $this->flagService->getFlagById(str_replace('flag_', '', $flag_name));
+    foreach ($group_flag_ids as $flag_id) {
+      $flag = $this->flagService->getFlagById(str_replace('flag_', '', $flag_id));
 
       if (!$flag) {
         continue;
@@ -367,7 +364,17 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
       // If user has access to view the flag we add it to the results so that
       // it can be shown in the group header.
       if ($user_flag->access('view')) {
-        $group_flags[$flag_name] = $group->flags[$flag_name];
+        $group_flags[$flag_id] = [
+          '#lazy_builder' => [
+            'flag.link_builder:build',
+            [
+              $group->getEntityTypeId(),
+              $group->id(),
+              $flag_id,
+            ],
+          ],
+          '#create_placeholder' => TRUE,
+        ];
       }
     }
 
@@ -436,6 +443,19 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
     }
 
     unset($user_operation_links[$key]);
+  }
+
+  /**
+   * Gets list of flags IDs used in the group header.
+   *
+   * @return array
+   *   Array of Flag machine names.
+   */
+  public static function getGroupHeaderFlagsIds() {
+    return [
+      'follow_group',
+      'recommend_group',
+    ];
   }
 
 }

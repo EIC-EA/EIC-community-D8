@@ -4,12 +4,14 @@ namespace Drupal\eic_flags\Hooks;
 
 use Drupal\content_moderation\ModerationInformationInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\Url;
 use Drupal\eic_flags\FlaggedEntitiesListBuilder;
 use Drupal\eic_flags\Service\RequestHandlerCollector;
+use Drupal\flag\FlagCountManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -46,6 +48,13 @@ class EntityOperations implements ContainerInjectionInterface {
   private $account;
 
   /**
+   * The Flag count manager.
+   *
+   * @var \Drupal\flag\FlagCountManagerInterface
+   */
+  private $flagCountManager;
+
+  /**
    * EntityOperations constructor.
    *
    * @param \Drupal\eic_flags\Service\RequestHandlerCollector $collector
@@ -53,19 +62,23 @@ class EntityOperations implements ContainerInjectionInterface {
    * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
    * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
    * @param \Drupal\Core\Session\AccountProxyInterface $account
+   * @param \Drupal\flag\FlagCountManagerInterface $flag_count_manager
+   *   The Flag count manager.
    */
   public function __construct(
     RequestHandlerCollector $collector,
     ModerationInformationInterface $moderation_information,
     RouteMatchInterface $route_match,
     RequestStack $request_stack,
-    AccountProxyInterface $account
+    AccountProxyInterface $account,
+    FlagCountManagerInterface $flag_count_manager
   ) {
     $this->collector = $collector;
     $this->moderationInformation = $moderation_information;
     $this->routeMatch = $route_match;
     $this->currentRequest = $request_stack->getCurrentRequest();
     $this->account = $account;
+    $this->flagCountManager = $flag_count_manager;
   }
 
   /**
@@ -77,7 +90,8 @@ class EntityOperations implements ContainerInjectionInterface {
       $container->get('content_moderation.moderation_information'),
       $container->get('current_route_match'),
       $container->get('request_stack'),
-      $container->get('current_user')
+      $container->get('current_user'),
+      $container->get('flag.count')
     );
   }
 
@@ -136,9 +150,12 @@ class EntityOperations implements ContainerInjectionInterface {
       'destination' => \Drupal::request()->getRequestUri(),
     ]);
 
-    $is_published = $this->moderationInformation->isModeratedEntity($entity)
-      ? $this->moderationInformation->isDefaultRevisionPublished($entity)
-      : (bool) $entity->get('status')->value;
+    if ($this->moderationInformation->isModeratedEntity($entity)) {
+      $is_published = $this->moderationInformation->isDefaultRevisionPublished($entity);
+    }
+    else {
+      $is_published = $entity->hasField('status') ? (bool) $entity->get('status')->value : FALSE;
+    }
 
     if (!$is_published
       && FlaggedEntitiesListBuilder::CLOSED_REQUEST_VIEW === $route_name
@@ -152,6 +169,25 @@ class EntityOperations implements ContainerInjectionInterface {
         ],
       ];
     }
+  }
+
+  /**
+   * Provides flags count for the given entity.
+   *
+   * @param array $build
+   *   The renderable array representing the entity content.
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The entity object.
+   * @param \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display
+   *   The entity view display holding the display options.
+   * @param string $view_mode
+   *   The view mode the entity is rendered in.
+   */
+  public function entityView(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
+    $build['flag_counts'] = [
+      '#markup' => '',
+      '#items' => $this->flagCountManager->getEntityFlagCounts($entity),
+    ];
   }
 
 }

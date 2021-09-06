@@ -14,17 +14,17 @@ class GlobalOverviewPages {
   /**
    * ID of the Groups overview page.
    */
-  const GROUPS = 1;
+  const GROUPS = 2;
 
   /**
    * ID of the Members overview page.
    */
-  const MEMBERS = 2;
+  const MEMBERS = 3;
 
   /**
    * ID of the Global search overview page.
    */
-  const GLOBAL_SEARCH = 3;
+  const GLOBAL_SEARCH = 1;
 
   /**
    * Returns the URL object for the given global overview page.
