@@ -19,6 +19,13 @@ source:
     - c4m_vocab_language
     - c4m_vocab_topic
 process:
+  nid:
+    -
+      plugin: migration_lookup
+      migration: upgrade_d7_node_complete_news
+      source: tnid
+    -
+      plugin: node_complete_node_lookup
   langcode:
     -
       plugin: static_map
@@ -91,7 +98,7 @@ process:
         - upgrade_d7_file_image_to_media
         - upgrade_d7_file_undefined_to_media
         - upgrade_d7_file_video_to_media
-  field_related_documents:
+  field_document_media:
     -
       plugin: sub_process
       source: c4m_related_document

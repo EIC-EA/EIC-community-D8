@@ -19,12 +19,11 @@ source:
     - c4m_vocab_language
     - c4m_vocab_topic
 process:
-#  nid:
-#    - plugin: get
-#      source: tnid
-#  vid:
-#    - plugin: get
-#      source: vid
+  nid:
+    - plugin: migration_lookup
+      migration: upgrade_d7_node_complete_news
+      source: tnid
+    - plugin: node_complete_node_lookup
   langcode:
     - plugin: static_map
       source: language
@@ -41,6 +40,7 @@ process:
       source: node_uid
       migration:
         - upgrade_d7_user
+  # TODO: How to migrate correct status and content moderation state? Status seems to be overridden when importing.
   status:
     - plugin: get
       source: status
@@ -73,7 +73,6 @@ process:
   node_comment/0/status:
     - plugin: get
       source: comment
-  # TODO: Use wysiwyg plugin to convert inline media tokens
   field_body:
     - plugin: eic_media_wysiwyg_filter
       source: c4m_body
@@ -83,8 +82,7 @@ process:
         - upgrade_d7_file_image_to_media
         - upgrade_d7_file_undefined_to_media
         - upgrade_d7_file_video_to_media
-  # TODO: Validate data
-  field_related_documents:
+  field_document_media:
     - plugin: sub_process
       source: c4m_related_document
       process:
@@ -103,6 +101,7 @@ process:
 #            source: tid
 #            migration:
 #              - smed_TODO
+  # TODO: Validate implementation when field_vocab_languages is added to CT News.
   field_vocab_languages:
     - plugin: sub_process
       source: c4m_vocab_language
@@ -133,10 +132,6 @@ process:
 #  og_vocabulary:
 #    - plugin: get
 #      source: og_vocabulary
-  # TODO: Check what this is
-#  field_metatag:
-#    - plugin: d7_metatag_entities
-#      source: pseudo_metatag_entities
 destination:
   plugin: 'entity_complete:node'
   translations: true
