@@ -13,6 +13,15 @@ use Drupal\migrate\Plugin\MigrationInterface;
  * This includes the field_file_image_alt_text and field_file_image_title_text
  * fields data on top of the default d7_file data.
  *
+ * Usage:
+ *
+ * @code
+ * source:
+ *   plugin: eic_d7_file_complete
+ *   file_type: image
+ *   exclude_photos: true
+ * @endcode
+ *
  * @MigrateSource(
  *   id = "eic_d7_file_complete",
  *   source_module = "file"

@@ -14,10 +14,15 @@ use Drupal\node\Plugin\migrate\source\d7\NodeComplete;
  *
  * Also includes SMED IDs for taxonomy term references.
  *
- * Configuration keys:
- *  smed_taxonomy_fields:
- *    - taxonomy_field_x
- *    - taxonomy_field_y
+ * Usage:
+ *
+ * @code
+ * source:
+ *   plugin: eic_d7_node_complete_with_smed_ids
+ *   smed_taxonomy_fields:
+ *     - taxonomy_field_x
+ *     - taxonomy_field_y
+ * @endcode
  *
  *
  * For all available configuration keys, refer to the parent classes.
