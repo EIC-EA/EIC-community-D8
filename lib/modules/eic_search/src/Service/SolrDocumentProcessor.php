@@ -198,7 +198,7 @@ class SolrDocumentProcessor {
    */
   public function processDiscussionData(Document &$document, array $fields) {
     //Only apply logic to discussion
-    if (!array_key_exists('ss_content_type', $fields) && 'discussion' !== $fields['ss_content_type']) {
+    if (!array_key_exists('ss_content_type', $fields) || 'discussion' !== $fields['ss_content_type']) {
       return;
     }
 
