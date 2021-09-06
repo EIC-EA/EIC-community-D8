@@ -6,7 +6,9 @@
  */
 
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\eic_media_statistics\Hooks\EntityOperations;
 
 /**
  * Implements hook_file_download().
@@ -16,8 +18,8 @@ function eic_media_statistics_file_download($uri) {
   if (!$config->get('count_file_downloads')) {
     return;
   }
-  $entityTypeMananer = \Drupal::entityTypeManager()->getStorage('file');
-  $query = $entityTypeMananer->getQuery();
+  $entityTypeManager = \Drupal::entityTypeManager()->getStorage('file');
+  $query = $entityTypeManager->getQuery();
   $result = $query->condition('uri', $uri)
     ->execute();
   $success = FALSE;
@@ -26,8 +28,8 @@ function eic_media_statistics_file_download($uri) {
     $success = \Drupal::getContainer()->get('eic_media_statistics.storage.file')->recordView($fid);
   }
   if ($success) {
-    $file = $entityTypeMananer->load($fid);
-    Cache::invalidateTags($file->getCacheTags());
+    $file = $entityTypeManager->load($fid);
+    Cache::invalidateTags($file->getCacheTagsToInvalidate());
   }
 }
 
@@ -46,4 +48,28 @@ function eic_media_statistics_file_predelete(EntityInterface $entity) {
   // Clean up statistics table when file is deleted.
   $id = $entity->id();
   return \Drupal::service('eic_media_statistics.storage.file')->deleteViews($id);
+}
+
+/**
+ * Implements hook_entity_update().
+ */
+function eic_media_statistics_entity_update(EntityInterface $entity) {
+  \Drupal::classResolver(EntityOperations::class)
+    ->entityUpdate($entity);
+}
+
+/**
+ * Implements hook_entity_delete().
+ */
+function eic_media_statistics_entity_delete(EntityInterface $entity) {
+  \Drupal::classResolver(EntityOperations::class)
+    ->entityDelete($entity);
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_view().
+ */
+function eic_media_statistics_node_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
+  \Drupal::classResolver(EntityOperations::class)
+    ->nodeView($build, $entity, $display, $view_mode);
 }
