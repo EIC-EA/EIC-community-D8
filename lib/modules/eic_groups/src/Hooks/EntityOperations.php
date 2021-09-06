@@ -21,7 +21,6 @@ use Drupal\node\NodeInterface;
 use Drupal\oec_group_flex\GroupVisibilityRecord;
 use Drupal\oec_group_flex\OECGroupFlexHelper;
 use Drupal\pathauto\PathautoGeneratorInterface;
-use Drupal\redirect\Entity\Redirect;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -136,17 +135,6 @@ class EntityOperations implements ContainerInjectionInterface {
     // Publish group wiki when group is published.
     if (!$entity->original->isPublished() && $entity->isPublished()) {
       $this->publishGroupWiki($entity);
-    }
-
-    // If group URL alias has changed, we need to create a new redirect for the
-    // old alias.
-    if ($entity->original->get('path')->alias !== $entity->get('path')->alias) {
-      Redirect::create([
-        'redirect_source' => $entity->original->get('path')->alias,
-        'redirect_redirect' => 'internal:/' . $entity->toUrl()->getInternalPath(),
-        'language' => $entity->language()->getId(),
-        'status_code' => '200',
-      ])->save();
     }
   }
 

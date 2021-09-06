@@ -8,7 +8,6 @@ use Drupal\Core\Queue\QueueWorkerBase;
 use Drupal\group\Entity\GroupContent;
 use Drupal\node\NodeInterface;
 use Drupal\pathauto\PathautoGeneratorInterface;
-use Drupal\redirect\Entity\Redirect;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -72,25 +71,11 @@ class GroupContentUrlAliasUpdate extends QueueWorkerBase implements ContainerFac
     // being processed.
     if (($node = $group_content->getEntity()) && $node instanceof NodeInterface) {
       $this->pathautoGenerator->updateEntityAlias($node, 'update');
-      // Create redirection for the old node URL.
-      Redirect::create([
-        'redirect_source' => $node->get('path')->alias,
-        'redirect_redirect' => 'internal:/' . $node->toUrl()->getInternalPath(),
-        'language' => $node->language()->getId(),
-        'status_code' => '200',
-      ])->save();
       Cache::invalidateTags($node->getCacheTags());
     }
 
     // Update url alias of the group content.
     $this->pathautoGenerator->updateEntityAlias($group_content, 'update');
-    // Create redirection for the old group content URL.
-    Redirect::create([
-      'redirect_source' => $group_content->get('path')->alias,
-      'redirect_redirect' => 'internal:/' . $group_content->toUrl()->getInternalPath(),
-      'language' => $group_content->language()->getId(),
-      'status_code' => '200',
-    ])->save();
     Cache::invalidateTags($group_content->getCacheTags());
   }
 
