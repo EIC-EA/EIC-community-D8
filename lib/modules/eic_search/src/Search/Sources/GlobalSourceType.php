@@ -69,6 +69,11 @@ class GlobalSourceType extends SourceType {
         'ASC' => $this->t('Fullname A-Z', [], ['context' => 'eic_search']),
         'DESC' => $this->t('Fullname Z-A', [], ['context' => 'eic_search']),
       ],
+      'its_document_download_total' => [
+        'label' => $this->t('Download', [], ['context' => 'eic_search']),
+        'ASC' => $this->t('Min download', [], ['context' => 'eic_search']),
+        'DESC' => $this->t('Max download', [], ['context' => 'eic_search']),
+      ],
     ];
   }
 

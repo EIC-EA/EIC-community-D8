@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   module:
+    - eic_search
     - route_condition
 name: search
 label: Search
@@ -36,6 +37,7 @@ reactions:
           ss_global_created_date: ss_global_created_date
           ss_global_title: ss_global_title
           ss_group_user_fullname: ss_group_user_fullname
+          its_document_download_total: its_document_download_total
         source_type: Drupal\eic_search\Search\Sources\GlobalSourceType
         enable_search: 1
         page_options: normal
@@ -49,6 +51,7 @@ reactions:
         unique: 0
         context_id: search
         uuid: 2a43151c-ab9a-445d-9618-0a1b11731575
+        third_party_settings: {  }
     id: blocks
     saved: false
     uuid: b2e2c0ac-50de-49b1-b2e3-f957728678f0
