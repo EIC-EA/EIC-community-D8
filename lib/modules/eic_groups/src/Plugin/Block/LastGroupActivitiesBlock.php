@@ -13,6 +13,7 @@ use Drupal\eic_search\Search\Sources\ActivityStreamSourceType;
 use Drupal\file\Entity\File;
 use Drupal\group\Entity\GroupContent;
 use Drupal\group\Entity\GroupInterface;
+use Drupal\group\GroupMembership;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -152,7 +153,19 @@ class LastGroupActivitiesBlock extends BlockBase implements ContainerFactoryPlug
       ];
     }, $members);
 
-    return [
+    $current_group_route = $this->groupsHelper->getGroupFromRoute();    $user_group_roles = [];
+
+    if ($current_group_route) {
+      $account = \Drupal::currentUser();
+      $membership = $current_group_route->getMember($account);
+      $user_group_roles = $membership instanceof GroupMembership ? $membership->getRoles() : [];
+    }
+
+    $build['#attached']['drupalSettings']['overview'] = [
+      'is_group_owner' => array_key_exists(EICGroupsHelper::GROUP_OWNER_ROLE, $user_group_roles),
+    ];
+
+    return $build += [
       '#theme' => 'eic_group_last_activities_members',
       '#cache' => ['contexts' => ['url.path', 'url.query_args']],
       '#members' => $members_data,
