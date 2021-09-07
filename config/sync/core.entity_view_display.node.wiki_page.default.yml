@@ -16,6 +16,11 @@ targetEntityType: node
 bundle: wiki_page
 mode: default
 content:
+  content_moderation_control:
+    weight: -20
+    settings: {  }
+    third_party_settings: {  }
+    region: content
   field_body:
     weight: 2
     label: hidden
@@ -59,6 +64,8 @@ content:
 hidden:
   extra_field_eic_theme_helper_short_title_with_fallback: true
   field_comments: true
+  field_vocab_geo: true
+  field_vocab_topics: true
   langcode: true
   published_at: true
   search_api_excerpt: true
