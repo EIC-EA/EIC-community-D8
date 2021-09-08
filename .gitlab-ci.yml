@@ -33,6 +33,7 @@ build_backend:
     - find $CI_PROJECT_DIR/web/modules/contrib -type d -name ".git" -exec rm -rf {} +
     - find $CI_PROJECT_DIR/vendor -type d -name ".git" -exec rm -rf {} +
   only:
+    - /^release/.*$/
     - develop
 
 build_front:
@@ -47,6 +48,7 @@ build_front:
     - npm run pregenerate-storybook && npm run generate-storybook && npm run postgenerate-storybook
     - cd node_modules && find . -mindepth 1 -maxdepth 1 -type d ! -name "@ecl*" -exec rm -rf {} +
   only:
+    - /^release/.*$/
     - develop
 
 security_check:
@@ -75,8 +77,17 @@ phpmd_test:
   only:
     - develop
 
+phpstan_test:
+  stage: test
+  image: jakzal/phpqa:php7.3
+  script:
+    - phpstan
+  allow_failure: true
+  only:
+    - develop
+
 deploy_staging:
   <<: *deploy_job
   stage: deploy
   only:
-    - develop
+    - /^release/.*$/
