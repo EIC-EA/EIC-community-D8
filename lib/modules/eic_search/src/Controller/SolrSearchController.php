@@ -326,6 +326,7 @@ class SolrSearchController extends ControllerBase {
 
     //If no pagination, it's a load more so we start at 1
     $solariumQuery->setStart(0);
+    $solariumQuery->setRows($offset * $page);
   }
 
 }
