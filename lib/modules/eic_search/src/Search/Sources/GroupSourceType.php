@@ -94,8 +94,8 @@ class GroupSourceType extends SourceType {
   /**
    * @inheritDoc
    */
-  public function getPrefilteredGroupFieldId(): string {
-    return 'its_group_id_integer';
+  public function getPrefilteredGroupFieldId(): array {
+    return ['its_group_id_integer'];
   }
 
 }
