@@ -88,7 +88,7 @@ class SolrSearchController extends ControllerBase {
         $query_fields[] = "$search_field_id:$search_query_value";
       }
 
-      $query_fields_string = implode(' OR ', $query_fields);
+      $query_fields_string = '(' . implode(' OR ', $query_fields) . ')';
       if ($current_group) {
         $group_id_fields = $source->getPrefilteredGroupFieldId();
         $group_query = [];
