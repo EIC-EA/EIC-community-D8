@@ -12,6 +12,7 @@ use Drupal\group\Entity\GroupInterface;
 use Drupal\group\GroupMembership;
 use Drupal\image\Entity\ImageStyle;
 use Drupal\media\MediaInterface;
+use Drupal\node\Entity\Node;
 use Drupal\paragraphs\Entity\Paragraph;
 use Drupal\profile\Entity\Profile;
 use Drupal\profile\Entity\ProfileInterface;
@@ -349,7 +350,7 @@ class SolrDocumentProcessor {
    * @param $document
    * @param $fields
    */
-  public function processGroupUserData(&$document, $fields) {
+  public function processGroupUserData(Document &$document, $fields) {
     if ($fields['ss_search_api_datasource'] === 'entity:user' && array_key_exists('its_user_profile', $fields)) {
       $profile = Profile::load($fields['its_user_profile']);
       if ($profile instanceof ProfileInterface) {
@@ -370,6 +371,22 @@ class SolrDocumentProcessor {
         $document->setField('itm_user__group_content__uid_gid', $grp_ids);
       }
     }
+  }
+
+  /**
+   * @param \Solarium\QueryType\Update\Query\Document $document
+   * @param $fields
+   */
+  public function processDocumentData(Document &$document, $fields) {
+    if (!array_key_exists('ss_content_type', $fields) || 'document' !== $fields['ss_content_type']) {
+      return;
+    }
+
+    /** @var \Drupal\eic_media_statistics\EntityFileDownloadCount $entity_download_helper */
+    $entity_download_helper = \Drupal::service('eic_media_statistics.entity_file_download_count');
+    $node = Node::load($fields['its_content_nid']);
+
+    $document->addField('its_document_download_total', $entity_download_helper->getFileDownloads($node));
   }
 
   /**

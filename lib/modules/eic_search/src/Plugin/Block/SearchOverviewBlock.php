@@ -158,7 +158,11 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
       $user_group_roles = $membership instanceof GroupMembership ? $membership->getRoles() : [];
     }
 
-    return [
+    $build['#attached']['drupalSettings']['overview'] = [
+      'is_group_owner' => array_key_exists(EICGroupsHelper::GROUP_OWNER_ROLE, $user_group_roles),
+    ];
+
+    return $build + [
       '#theme' => 'search_overview_block',
       '#cache' => ['contexts' => ['url.path', 'url.query_args']],
       '#facets' => array_keys($facets),
