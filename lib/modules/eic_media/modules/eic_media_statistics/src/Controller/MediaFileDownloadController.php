@@ -32,8 +32,10 @@ class MediaFileDownloadController extends DownloadController {
    */
   public static function create(ContainerInterface $container) {
     $controller = parent::create($container);
-    $controller->eicMediaStatisticsSettings = $container->get('config.factory')->get('eic_media_statistics.settings');
+    $controller->eicMediaStatisticsSettings = $container->get('config.factory')
+      ->get('eic_media_statistics.settings');
     $controller->fileStatisticsStorage = $container->get('eic_media_statistics.storage.file');
+
     return $controller;
   }
 
@@ -41,12 +43,7 @@ class MediaFileDownloadController extends DownloadController {
    * {@inheritdoc}
    */
   public function download(MediaInterface $media) {
-    try {
-      $response = parent::download($media);
-    }
-    catch (\Exception $e) {
-      throw $e;
-    }
+    $response = parent::download($media);
 
     $source = $media->getSource();
     $config = $source->getConfiguration();
