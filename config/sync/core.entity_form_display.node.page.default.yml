@@ -67,6 +67,11 @@ content:
       default_paragraph_type: _none
     third_party_settings: {  }
     region: content
+  field_post_activity:
+    weight: 101
+    settings: {  }
+    third_party_settings: {  }
+    region: content
   field_subtitle:
     weight: 1
     settings:

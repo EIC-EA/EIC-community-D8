@@ -16,6 +16,11 @@ targetEntityType: node
 bundle: wiki_page
 mode: teaser
 content:
+  content_moderation_control:
+    weight: -20
+    settings: {  }
+    third_party_settings: {  }
+    region: content
   links:
     weight: 100
     settings: {  }
@@ -37,6 +42,8 @@ hidden:
   field_comments: true
   field_related_downloads: true
   field_related_media: true
+  field_vocab_geo: true
+  field_vocab_topics: true
   langcode: true
   published_at: true
   search_api_excerpt: true
