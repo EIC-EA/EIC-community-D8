@@ -55,7 +55,7 @@ class DiscussionSourceType extends SourceType {
         'DESC' => $this->t('Highlighted first', [], ['context' => 'eic_search']),
         'ASC' => $this->t('Highlighted last', [], ['context' => 'eic_search']),
       ],
-      'timestamp' => [
+      'ss_drupal_timestamp' => [
         'label' => $this->t('Timestamp', [], ['context' => 'eic_search']),
         'ASC' => $this->t('Old', [], ['context' => 'eic_search']),
         'DESC' => $this->t('Recent', [], ['context' => 'eic_search']),
