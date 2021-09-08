@@ -347,7 +347,7 @@ class GroupStatisticsStorage implements GroupStatisticsStorageInterface {
   private function calculateEntityReferenceFieldFileStatistics(GroupInterface $group, $node_type, $reference_field_name, array $fields, array $media_target_ids) {
     $group_content_type = "{$group->bundle()}-group_node-{$node_type}";
 
-    $field_definitions = $this->entityTypeFieldManager->getFieldDefinitions('node', $node_type);
+    $field_definitions = $this->entityFieldManager->getFieldDefinitions('node', $node_type);
 
     if (!isset($field_definitions[$reference_field_name])) {
       return $media_target_ids;
