@@ -36,7 +36,7 @@ class CreateFieldEditAccess extends DrushCommands {
     \Drupal::entityDefinitionUpdateManager()
       ->installFieldStorageDefinition(NodeProperty::MEMBER_CONTENT_EDIT_ACCESS, 'node', 'node', $field_storage_definition);
 
-    $this->output()->writeln("Field correctly createdss");
+    $this->output()->writeln("Field correctly created");
   }
 
 }
