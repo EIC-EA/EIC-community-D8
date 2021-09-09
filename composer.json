@@ -51,6 +51,7 @@
         "drupal/profile": "^1.2",
         "drupal/publication_date": "^2.0@beta",
         "drupal/realname": "^2.0-@beta",
+        "drupal/redirect": "^1.6",
         "drupal/redis": "^1.5",
         "drupal/restui": "^1.19",
         "drupal/route_condition": "^2.0",
