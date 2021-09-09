@@ -9,6 +9,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\eic_group_statistics\GroupStatisticTypes;
 use Drupal\eic_group_statistics\Hooks\EntityOperations;
 use Drupal\group\Entity\GroupContent;
+use Drupal\eic_group_statistics\GroupStatisticsSearchApiReindex;
 
 /**
  * Implements hook_ENTITY_TYPE_delete().
@@ -76,6 +77,7 @@ function eic_group_statistics_node_delete(EntityInterface $entity) {
  * Implements hook_ENTITY_TYPE_insert().
  */
 function eic_group_statistics_comment_insert(EntityInterface $entity) {
+  /** @var \Drupal\comment\CommentInterface $commented_entity */
   $commented_entity = $entity->getCommentedEntity();
 
   // If commented entity is unpublished, we do nothing.
@@ -95,14 +97,19 @@ function eic_group_statistics_comment_insert(EntityInterface $entity) {
   // Increments group comments statistic counter.
   \Drupal::service('eic_group_statistics.storage')->increment($group_content->getGroup(), GroupStatisticTypes::STAT_TYPE_COMMENTS);
 
+  /** @var \Drupal\eic_group_statistics\GroupStatisticsSearchApiReindex $search_api_reindex */
+  $search_api_reindex = \Drupal::service('eic_group_statistics.search_api.reindex');
+
   // Re-index group statistics.
-  \Drupal::service('eic_group_statistics.search_api.reindex')->reindexItem($group_content->getGroup());
+  $search_api_reindex->reindexItem($group_content->getGroup(), GroupStatisticsSearchApiReindex::DATASOURCE_GROUP);
+  $search_api_reindex->reindexItem($commented_entity, GroupStatisticsSearchApiReindex::DATASOURCE_NODE);
 }
 
 /**
  * Implements hook_ENTITY_TYPE_delete().
  */
 function eic_group_statistics_comment_delete(EntityInterface $entity) {
+  /** @var \Drupal\comment\CommentInterface $commented_entity */
   $commented_entity = $entity->getCommentedEntity();
 
   // If commented entity is unpublished, we do nothing.
@@ -122,8 +129,12 @@ function eic_group_statistics_comment_delete(EntityInterface $entity) {
   // Decrements group comments statistic counter.
   \Drupal::service('eic_group_statistics.storage')->decrement($group_content->getGroup(), GroupStatisticTypes::STAT_TYPE_COMMENTS);
 
+  /** @var \Drupal\eic_group_statistics\GroupStatisticsSearchApiReindex $search_api_reindex */
+  $search_api_reindex = \Drupal::service('eic_group_statistics.search_api.reindex');
+
   // Re-index group statistics.
-  \Drupal::service('eic_group_statistics.search_api.reindex')->reindexItem($group_content->getGroup());
+  $search_api_reindex->reindexItem($group_content->getGroup(), GroupStatisticsSearchApiReindex::DATASOURCE_GROUP);
+  $search_api_reindex->reindexItem($commented_entity, GroupStatisticsSearchApiReindex::DATASOURCE_NODE);
 }
 
 /**
