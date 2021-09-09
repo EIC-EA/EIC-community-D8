@@ -47,7 +47,12 @@ function eic_community_preprocess_block__latest_news_stories(&$variables, &$cach
     if ($variables['logged_in'] === FALSE) {
       unset($node_author['path']);
     }
-    // @todo Add real statistics.
+
+    if (isset($variables['content']['node_stats'][$node->id()])) {
+      $node_stats = $variables['content']['node_stats'][$node->id()];
+    }
+
+    // Add node statistics.
     $stats = [
       [
         'icon' => [
@@ -55,7 +60,7 @@ function eic_community_preprocess_block__latest_news_stories(&$variables, &$cach
           'name' => 'comment',
         ],
         'label' => t('Comments'),
-        'value' => 0,
+        'value' => isset($node_stats) ? $node_stats['comments_count']['#value'] : 0,
       ],
       [
         'icon' => [
@@ -63,7 +68,7 @@ function eic_community_preprocess_block__latest_news_stories(&$variables, &$cach
           'name' => 'views',
         ],
         'label' => t('Views'),
-        'value' => 0,
+        'value' => isset($node_stats) ? $node_stats['page_views']['#value'] : 0,
       ],
       [
         'icon' => [
@@ -71,7 +76,7 @@ function eic_community_preprocess_block__latest_news_stories(&$variables, &$cach
           'name' => 'like',
         ],
         'label' => t('Likes'),
-        'value' => 0,
+        'value' => isset($node_stats['flag_counts']['#items']['like_content']) ? $node_stats['flag_counts']['#items']['like_content'] : 0,
       ],
     ];
 
@@ -105,6 +110,10 @@ function eic_community_preprocess_block__latest_news_stories(&$variables, &$cach
     $variables['news_stories_items'][] = $item;
 
     // Add node cache tags.
-    $cache_tags = Cache::mergeTags($cache_tags, $node->getCacheTags());
+    $cache_tags = Cache::mergeTags(
+      $cache_tags,
+      $node->getCacheTags(),
+      ['eic_statistics:node:' . $node->id()]
+    );
   }
 }

@@ -12,6 +12,8 @@
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\eic_content\Hooks\EntityOperations;
+use Drupal\eic_content\Hooks\EntityOperationsContributor;
+use Drupal\node\NodeInterface;
 
 /**
  * Implements hook_theme().
@@ -32,4 +34,33 @@ function eic_content_theme() {
 function eic_content_node_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
   \Drupal::classResolver(EntityOperations::class)
     ->nodeView($build, $entity, $display, $view_mode);
+
+  switch ($entity->bundle()) {
+    case 'discussion':
+    case 'video':
+      \Drupal::classResolver(EntityOperationsContributor::class)
+        ->nodeView($build, $entity, $display, $view_mode);
+      break;
+
+  }
+
+}
+
+/**
+ * Implements hook_entity_presave().
+ */
+function eic_content_entity_presave(EntityInterface $entity) {
+  if (FALSE === $entity instanceof NodeInterface) {
+    return;
+  }
+
+  switch ($entity->bundle()) {
+    case 'discussion':
+    case 'video':
+      \Drupal::classResolver(EntityOperationsContributor::class)
+        ->nodePreSave($entity);
+      break;
+
+  }
+
 }

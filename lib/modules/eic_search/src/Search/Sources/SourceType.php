@@ -78,8 +78,8 @@ abstract class SourceType implements SourceTypeInterface {
   /**
    * @inheritDoc
    */
-  public function getPrefilteredGroupFieldId(): string {
-    return '';
+  public function getPrefilteredGroupFieldId(): array {
+    return [];
   }
 
   /**

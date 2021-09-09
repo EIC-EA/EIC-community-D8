@@ -91,6 +91,7 @@ module:
   language: 0
   link: 0
   media: 0
+  media_entity_download: 0
   media_library: 0
   menu_link_content: 0
   menu_ui: 0
@@ -123,6 +124,7 @@ module:
   path_alias: 0
   profile: 0
   realname: 0
+  redirect: 0
   redis: 0
   responsive_image: 0
   rest: 0
