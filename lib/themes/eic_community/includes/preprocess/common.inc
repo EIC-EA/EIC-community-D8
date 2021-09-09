@@ -16,10 +16,13 @@ use Drupal\Core\Block\BlockPluginInterface;
 function _eic_community_get_social_share_block() {
   $share_block = \Drupal::service('plugin.manager.block')
     ->createInstance('social_share', []);
-  if ($share_block instanceof BlockPluginInterface) {
-    $build = $share_block->build();
-    $build['#title'] = t('Share');
-    return $build;
+
+  if (!$share_block instanceof BlockPluginInterface) {
+    return FALSE;
   }
-  return FALSE;
+
+  // Return the build array.
+  $build = $share_block->build();
+  $build['#title'] = t('Share');
+  return $build;
 }
