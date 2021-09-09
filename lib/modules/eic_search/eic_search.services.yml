@@ -27,5 +27,9 @@ services:
     class: Drupal\eic_search\Search\Sources\ActivityStreamSourceType
     tags:
       - { name: eic_search.source }
+  eic_search.source_discussion:
+    class: Drupal\eic_search\Search\Sources\DiscussionSourceType
+    tags:
+      - { name: eic_search.source }
   eic_search.solr_document_processor:
     class: Drupal\eic_search\Service\SolrDocumentProcessor

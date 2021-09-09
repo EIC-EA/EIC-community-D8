@@ -33,6 +33,11 @@ content:
     third_party_settings: {  }
     type: text_textarea
     region: content
+  field_post_activity:
+    weight: 15
+    settings: {  }
+    third_party_settings: {  }
+    region: content
   langcode:
     type: language_select
     weight: 3

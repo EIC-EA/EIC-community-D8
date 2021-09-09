@@ -105,8 +105,8 @@ class LibrarySourceType extends SourceType {
   /**
    * @inheritDoc
    */
-  public function getPrefilteredGroupFieldId(): string {
-    return 'ss_global_group_parent_id';
+  public function getPrefilteredGroupFieldId(): array {
+    return ['ss_global_group_parent_id'];
   }
 
   /**

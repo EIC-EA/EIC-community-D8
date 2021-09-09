@@ -94,8 +94,8 @@ class UserListSourceType extends SourceType {
   /**
    * @inheritDoc
    */
-  public function getPrefilteredGroupFieldId(): string {
-    return 'itm_user__group_content__uid_gid';
+  public function getPrefilteredGroupFieldId(): array {
+    return ['itm_user__group_content__uid_gid'];
   }
 
 }

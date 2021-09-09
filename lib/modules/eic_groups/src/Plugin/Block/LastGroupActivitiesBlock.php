@@ -122,7 +122,7 @@ class LastGroupActivitiesBlock extends BlockBase implements ContainerFactoryPlug
 
     $members_data = array_map(function(GroupContent $groupContent) {
       $profiles = $this->entityTypeManager->getStorage('profile')->loadByProperties([
-        'uid' => $groupContent->get('uid')->getString(),
+        'uid' => $groupContent->getEntity()->id(),
         'type' => 'member',
       ]);
 
@@ -153,7 +153,8 @@ class LastGroupActivitiesBlock extends BlockBase implements ContainerFactoryPlug
       ];
     }, $members);
 
-    $current_group_route = $this->groupsHelper->getGroupFromRoute();    $user_group_roles = [];
+    $current_group_route = $this->groupsHelper->getGroupFromRoute();
+    $user_group_roles = [];
 
     if ($current_group_route) {
       $account = \Drupal::currentUser();
