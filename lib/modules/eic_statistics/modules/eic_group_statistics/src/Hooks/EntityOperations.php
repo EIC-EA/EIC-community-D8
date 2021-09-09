@@ -312,11 +312,65 @@ class EntityOperations implements ContainerInjectionInterface {
         // use via config entity and using an administration form.
         $media_fields = [
           'field_document_media',
-          'field_photos',
           'field_related_downloads',
           'field_related_documents',
         ];
-        foreach ($media_fields as $field_name) {
+        $media_fields['field_gallery_slides'] = [
+          'field_gallery_slide_media',
+        ];
+        foreach ($media_fields as $key => $field_name) {
+          if (is_array($field_name)) {
+            if ($entity->hasField($key)) {
+
+              /** @var \Drupal\Core\Field\FieldDefinitionInterface $field_definition */
+              $field_definition = $entity->get($key)->getFieldDefinition();
+
+              if (
+                $field_definition->getType() === 'entity_reference_revisions'
+              ) {
+
+                foreach ($entity->original->get($key)->referencedEntities() as $paragraph) {
+                  foreach ($field_name as $paragraph_field) {
+                    // Sets array of old medias to decrement from group file
+                    // statistics.
+                    foreach ($paragraph->get($paragraph_field)->referencedEntities() as $media) {
+                      $old_medias[$media->id()] = $media;
+                    }
+                  }
+                }
+
+                foreach ($entity->get($key)->referencedEntities() as $paragraph) {
+                  foreach ($field_name as $paragraph_field) {
+                    // Sets array of new medias to increment to the group file
+                    // statistics.
+                    foreach ($paragraph->get($paragraph_field)->referencedEntities() as $media) {
+                      if (!isset($old_medias[$media->id()])) {
+                        $medias[$media->id()] = $media;
+                      }
+                      else {
+                        unset($old_medias[$media->id()]);
+
+                        // If the node has been unpublished, we add the node
+                        // medias to an array so that they get decremented from
+                        // file statistics.
+                        if ($entity->original->isPublished() && !$entity->isPublished()) {
+                          $unpublished_node_medias[$media->id()] = $media;
+                        }
+                        elseif (!$entity->original->isPublished() && $entity->isPublished()) {
+                          // If the node has been published, we add the node
+                          // medias to the medias array so that they get
+                          // incremented in file statistics.
+                          $medias[$media->id()] = $media;
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+            continue;
+          }
+
           if ($entity->hasField($field_name)) {
 
             // Sets array of old medias to decrement from group file
@@ -460,7 +514,7 @@ class EntityOperations implements ContainerInjectionInterface {
       $media_usage = $this->entityUsage->listSources($media);
 
       // If there is no media usage, we increment the counter.
-      if (!isset($media_usage['node'])) {
+      if (!isset($media_usage['node']) && isset($media_usage['paragraph'])) {
         $count_updates++;
         continue;
       }
@@ -474,8 +528,9 @@ class EntityOperations implements ContainerInjectionInterface {
       // If media is being referenced elsewhere, then we need to make sure it
       // hasn't been referenced in this group before updating the file
       // statistics.
-      if (count($media_usage['node']) > 0) {
+      if (count($media_usage['node']) > 0 || count($media_usage['paragraph'])) {
         $source_nodes = [];
+        $source_node_ids = [];
 
         // Because the media usage is saved per node revision, we need to make
         // sure the media is presented in the latest revision of every node.
@@ -494,7 +549,42 @@ class EntityOperations implements ContainerInjectionInterface {
                 continue;
               }
 
-              $source_nodes[] = $this->entityTypeManager->getStorage('node')->loadRevision($latest_vid);
+              $source_nodes[] = $node_revision;
+              $source_node_ids[] = $node_revision->id();
+              // Latest revision has been found in the usage. We don't need to
+              // go through the remaining items.
+              break;
+            }
+          }
+        }
+
+        // Because the media usage is saved per node revision, we need to make
+        // sure the media is presented in the latest revision of every node.
+        // If the media is not presented in the latest revision of a node, that
+        // node will be discarded.
+        foreach ($media_usage['paragraph'] as $paragraph_id => $media_usage_items) {
+          $latest_vid = $this->entityTypeManager->getStorage('paragraph')->getLatestRevisionId($paragraph_id);
+
+          foreach ($media_usage_items as $media_usage_item) {
+            if ((int) $media_usage_item['source_vid'] === $latest_vid) {
+              $paragraph_revision = $this->entityTypeManager->getStorage('paragraph')->loadRevision($latest_vid);
+
+              $paragraph_node = $paragraph_revision->getParentEntity();
+
+              // Make sure the revision is published, otherwise we skip this
+              // node.
+              if (!$paragraph_node->isPublished()) {
+                continue;
+              }
+
+              if ($node->id() === $paragraph_node->id()) {
+                continue;
+              }
+
+              if (!in_array($paragraph_node->id(), $source_node_ids)) {
+                $source_nodes[] = $paragraph_node;
+                $source_node_ids[] = $paragraph_node->id();
+              }
               // Latest revision has been found in the usage. We don't need
               // go through the remaining items.
               break;
