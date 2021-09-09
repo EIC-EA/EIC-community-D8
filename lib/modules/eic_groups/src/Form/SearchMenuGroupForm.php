@@ -60,7 +60,8 @@ class SearchMenuGroupForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $form_state->setRedirect('eic_search.global_search', [
+    $form_state->setRedirect('eic_overviews.groups.overview_page.search', [
+        'group' => \Drupal::service('eic_groups.helper')->getGroupFromRoute()->id(),
         'search' => $form_state->getValue('search'),
       ]
     );

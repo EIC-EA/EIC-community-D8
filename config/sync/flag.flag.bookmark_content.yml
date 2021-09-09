@@ -9,8 +9,10 @@ label: 'Bookmark (Content)'
 bundles:
   - discussion
   - document
+  - gallery
   - news
   - story
+  - video
 entity_type: node
 global: false
 weight: 0

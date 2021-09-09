@@ -4,8 +4,8 @@ namespace Drupal\eic_search\Plugin\search_api\processor;
 
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\eic_groups\Constants\GroupVisibilityType;
+use Drupal\eic_user\UserHelper;
 use Drupal\group\GroupMembership;
-use Drupal\search_api\Annotation\SearchApiProcessor;
 use Drupal\search_api\Datasource\DatasourceInterface;
 use Drupal\search_api\Processor\ProcessorPluginBase;
 use Drupal\search_api\Processor\ProcessorProperty;
@@ -106,14 +106,21 @@ class GroupAccessContent extends ProcessorPluginBase {
   }
 
   /**
-   * Create the query string for SOLR to match with group visibility
+   * Create the query string for SOLR to match with group visibility.
    *
    * @return string
+   *   The group visibility query string to send to SOLR.
    */
   private function buildGroupVisibilityQuery(): string {
     $user_id = $this->currentUser->id();
 
     $user = User::load($user_id);
+
+    // Power user can access all groups.
+    if (UserHelper::isPowerUser($user)) {
+      return '(ss_group_visibility:*)';
+    }
+
     $email = explode('@', $user->getEmail());
     $domain = array_pop($email) ?: 0;
 
@@ -125,7 +132,7 @@ class GroupAccessContent extends ProcessorPluginBase {
       return $group_membership->getGroup()->id();
     }, $groups);
 
-    // If group is private, the user needs to be in group to view it
+    // If group is private, the user needs to be in group to view it.
     $group_ids_formatted = !empty($group_ids) ? implode(' OR ', $group_ids) : 0;
 
     $query = '
@@ -134,12 +141,12 @@ class GroupAccessContent extends ProcessorPluginBase {
     OR (ss_group_visibility:' . GroupVisibilityType::GROUP_VISIBILITY_OPTION_EMAIL_DOMAIN . ' AND ss_' . GroupVisibilityType::GROUP_VISIBILITY_OPTION_EMAIL_DOMAIN . ':*' . $domain . '*)
     ';
 
-    // Restricted community group, only trusted_user role can view
+    // Restricted community group, only trusted_user role can view.
     if (!$user->isAnonymous() && $user->hasRole('trusted_user')) {
       $query .= ' OR (ss_group_visibility:' . GroupVisibilityType::GROUP_VISIBILITY_COMMUNITY . ')';
     }
 
-    // Trusted users restriction
+    // Trusted users restriction.
     if (!$user->isAnonymous()) {
       $username = $user->getAccountName();
       $query .= ' OR (ss_group_visibility:' . GroupVisibilityType::GROUP_VISIBILITY_OPTION_TRUSTED_USERS . ' AND ss_' . GroupVisibilityType::GROUP_VISIBILITY_OPTION_TRUSTED_USERS . ':*' . "$user_id|$username" . '*)';

@@ -5,6 +5,8 @@
  * Prepares variables for node document templates.
  */
 
+use Drupal\file\Entity\File;
+
 /**
  * Implements hook_preprocess_node() for document node.
  */
@@ -19,7 +21,8 @@ function eic_community_preprocess_node__document(array &$variables) {
       return;
     }
 
-    $document_media = reset($node->get('field_document_media')->referencedEntities());
+    $document_media_items = $node->get('field_document_media')->referencedEntities();
+    $document_media = reset($document_media_items);
 
     $file = $document_media->get('field_media_file')->entity;
 
@@ -27,12 +30,13 @@ function eic_community_preprocess_node__document(array &$variables) {
       return;
     }
 
+    /** @var \Drupal\media\Entity\Media $document_media */
     $document_media = $node->get('field_document_media')->entity;
     $language = $node->language()->getName();
 
     // Gets the document language based on the field_language of the Media
     // type.
-    if (!$document_media->get('field_language')->isEmpty()) {
+    if ($document_media->hasField('field_language') && !$document_media->get('field_language')->isEmpty()) {
       $lang_term = $document_media->get('field_language')->entity;
     }
     elseif (!$node->get('field_language')->isEmpty()) {
