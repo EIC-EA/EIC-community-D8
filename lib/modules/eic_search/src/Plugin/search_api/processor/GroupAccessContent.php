@@ -118,14 +118,7 @@ class GroupAccessContent extends ProcessorPluginBase {
 
     // Power user can access all groups.
     if (UserHelper::isPowerUser($user)) {
-      return '
-        (
-          ss_group_visibility:' . GroupVisibilityType::GROUP_VISIBILITY_PUBLIC . '
-          OR ss_group_visibility:' . GroupVisibilityType::GROUP_VISIBILITY_PRIVATE . '
-          OR ss_group_visibility:' . GroupVisibilityType::GROUP_VISIBILITY_COMMUNITY . '
-          OR ss_group_visibility:' . GroupVisibilityType::GROUP_VISIBILITY_CUSTOM_RESTRICTED . '
-        )
-      ';
+      return '(ss_group_visibility:*)';
     }
 
     $email = explode('@', $user->getEmail());

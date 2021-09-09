@@ -1,0 +1,18 @@
+includes:
+	- vendor/mglaman/phpstan-drupal/extension.neon
+
+parameters:
+    level: 8
+    checkGenericClassInNonGenericObjectType: false
+    checkMissingIterableValueType: false
+    paths:
+      - lib/modules
+    fileExtensions:
+      - php
+      - module
+      - inc
+      - theme
+    excludePaths:
+      - *Test.php
+      - *TestBase.php
+      - */node_modules/*

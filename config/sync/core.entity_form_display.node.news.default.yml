@@ -115,9 +115,9 @@ content:
     region: content
   field_post_activity:
     weight: 29
-    region: content
     settings: {  }
     third_party_settings: {  }
+    region: content
   field_related_groups:
     weight: 27
     settings:

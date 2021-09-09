@@ -2,13 +2,16 @@
 
 namespace Drupal\eic_group_statistics;
 
-use Drupal\group\Entity\GroupInterface;
+use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\search_api\Plugin\search_api\datasource\ContentEntity;
 
 /**
  * Provides a service class to re-index group statistics in Search API index.
  */
 class GroupStatisticsSearchApiReindex {
+
+  public const DATASOURCE_GROUP = 'entity:group';
+  public const DATASOURCE_NODE = 'entity:node';
 
   /**
    * The Group statistics storage service.
@@ -28,21 +31,20 @@ class GroupStatisticsSearchApiReindex {
   }
 
   /**
-   * Re-index group statistics for a given group.
+   * Re-index group statistics for a given entity.
    *
-   * @param \Drupal\group\Entity\GroupInterface $group
-   *   The Group entity object.
+   * @param ContentEntityInterface $entity
+   *   The content entity object.
    */
-  public function reindexItem(GroupInterface $group) {
-    $datasource_id = 'entity:group';
-    $indexes = ContentEntity::getIndexesForEntity($group);
+  public function reindexItem(ContentEntityInterface $entity, $datasource_id = 'entity:group') {
+    $indexes = ContentEntity::getIndexesForEntity($entity);
 
-    $updated_item_ids = $group->getTranslationLanguages();
+    $updated_item_ids = $entity->getTranslationLanguages();
     foreach (array_keys($updated_item_ids) as $langcode) {
       $inserted_item_ids[] = $langcode;
     }
 
-    $entity_id = $group->id();
+    $entity_id = $entity->id();
 
     $combine_id = function ($langcode) use ($entity_id) {
       return $entity_id . ':' . $langcode;

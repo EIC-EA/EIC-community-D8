@@ -8,3 +8,21 @@
  * This file is no longer required in Drupal 8.
  * @see https://www.drupal.org/node/2217931
  */
+
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\eic_block_types\Hooks\EntityOperations;
+
+/**
+ * Implements hook_ENTITY_TYPE_view().
+ */
+function eic_content_block_content_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
+  switch ($entity->bundle()) {
+    case 'latest_news_stories':
+      \Drupal::classResolver(EntityOperations::class)
+        ->blockContentView($build, $entity, $display, $view_mode);
+      break;
+
+  }
+
+}
