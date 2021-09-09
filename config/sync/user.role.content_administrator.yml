@@ -7,6 +7,7 @@ label: 'Content administrator'
 weight: -7
 is_admin: null
 permissions:
+  - 'access comments'
   - 'access content overview'
   - 'access group overview'
   - 'access overview page overview'
@@ -31,6 +32,7 @@ permissions:
   - 'make archive request'
   - 'make delete request'
   - 'mark private content'
+  - 'post comments'
   - 'publish archived content'
   - 'unflag recommend_group'
   - 'use group_wiki transition create_new_draft'

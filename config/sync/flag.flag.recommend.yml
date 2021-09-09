@@ -10,6 +10,8 @@ label: 'Recommend (Content)'
 bundles:
   - discussion
   - document
+  - gallery
+  - video
 entity_type: node
 global: false
 weight: 0

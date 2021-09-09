@@ -3,7 +3,9 @@ langcode: en
 status: true
 dependencies:
   module:
+    - eic_search
     - route_condition
+    - system
 name: group_discussions_overviews
 label: 'Group - Discussions - Overviews'
 group: Groups
@@ -42,25 +44,27 @@ reactions:
         region: content
         weight: '1'
         facets:
-          ss_global_content_type: ss_global_content_type
-          ss_group_user_fullname: 0
+          ss_content_field_discussion_type: ss_content_field_discussion_type
+          sm_content_field_vocab_topics_string: sm_content_field_vocab_topics_string
+          sm_content_field_vocab_geo_string: sm_content_field_vocab_geo_string
         sort_options:
-          ss_global_created_date: ss_global_created_date
+          its_flag_highlight_content: its_flag_highlight_content
+          timestamp: timestamp
           ss_global_title: ss_global_title
-          ss_group_user_fullname: 0
-        source_type: Drupal\eic_search\Search\Sources\GlobalSourceType
+        source_type: Drupal\eic_search\Search\Sources\DiscussionSourceType
         enable_search: 1
         page_options: normal
         prefilter_group: 1
-        add_facet_interests: 1
-        add_facet_my_groups: 1
+        add_facet_interests: 0
+        add_facet_my_groups: 0
         context_mapping: {  }
         custom_id: eic_search_overview_group_discussions
         theme: eic_community
-        css_class: ''
+        css_class: ecl-section-wrapper--is-white
         unique: 0
         context_id: group_discussions_overviews
         uuid: 2636c524-2703-4d28-ad6b-3c1db2936f61
+        third_party_settings: {  }
     id: blocks
     saved: false
     uuid: 9c311d0e-a590-452a-ad85-a32b685d7729

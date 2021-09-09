@@ -2,10 +2,13 @@
 
 namespace Drupal\eic_groups\Plugin\Block;
 
+use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Link;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Render\Markup;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\Url;
@@ -270,7 +273,7 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
         'id' => $group->id(),
         'bundle' => $group->bundle(),
         'title' => $group->label(),
-        'description' => $group->field_body->view('full'),
+        'description' => $this->getTruncatedGroupDescription($group),
         'operation_links' => array_merge($operation_links, $node_operation_links, $visible_group_operation_links),
         'membership_links' => array_merge($membership_links, $user_operation_links),
         'stats' => [
@@ -456,6 +459,55 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
       'follow_group',
       'recommend_group',
     ];
+  }
+
+  /**
+   * Get truncated group description with a read more link.
+   *
+   * @param \Drupal\group\Entity\GroupInterface $group
+   *   The group entity.
+   *
+   * @return \Drupal\Component\Render\MarkupInterface
+   *   The group description HTML Markup.
+   */
+  private function getTruncatedGroupDescription(GroupInterface $group) {
+    $limit = 350;
+
+    if ($group->get('field_body')->isEmpty()) {
+      return '';
+    }
+
+    // Strip caption.
+    $output = preg_replace('/<figcaption[^>]*>.*?<\/figcaption>/i', ' ', $group->field_body->value);
+
+    // Strip tags.
+    $output = strip_tags($output);
+
+    // Strip out line breaks.
+    $output = preg_replace('/\n|\r|\t/m', ' ', $output);
+
+    // Strip out non-breaking spaces.
+    $output = str_replace('&nbsp;', ' ', $output);
+    $output = str_replace("\xc2\xa0", ' ', $output);
+
+    // Strip out extra spaces.
+    $output = trim(preg_replace('/\s\s+/', ' ', $output));
+
+    $has_read_more = FALSE;
+    if (strlen($output) > $limit) {
+      $has_read_more = TRUE;
+    }
+
+    // Truncates the output.
+    $output = Unicode::truncate($output, $limit, TRUE, TRUE);
+
+    // Adds link to the group about page.
+    if ($has_read_more) {
+      $link = Link::createFromRoute($this->t('Read more'), 'eic_groups.about_page', ['group' => $group->id()]);
+      $output .= ' ' . $link->toString();
+    }
+
+    return Markup::create("<p>$output</p>");
   }
 
 }

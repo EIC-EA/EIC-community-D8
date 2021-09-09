@@ -44,6 +44,8 @@ class LibrarySourceType extends SourceType {
       'ss_global_content_type' => $this->t('Content type', [], ['context' => 'eic_search']),
       'sm_content_field_vocab_topics_string' => $this->t('Topics', [], ['context' => 'eic_search']),
       'sm_content_field_vocab_geo_string' => $this->t('Region & country', [], ['context' => 'eic_search']),
+      'ss_content_language_string' => $this->t('Language', [], ['context' => 'eic_search']),
+      'ss_content_document_type_string' => $this->t('Document type', [], ['context' => 'eic_search']),
     ];
   }
 
@@ -103,8 +105,8 @@ class LibrarySourceType extends SourceType {
   /**
    * @inheritDoc
    */
-  public function getPrefilteredGroupFieldId(): string {
-    return 'ss_global_group_parent_id';
+  public function getPrefilteredGroupFieldId(): array {
+    return ['ss_global_group_parent_id'];
   }
 
   /**
