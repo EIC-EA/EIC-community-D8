@@ -26,6 +26,16 @@ content:
     settings: {  }
     third_party_settings: {  }
     region: content
+  member_content_edit_access:
+    weight: 1
+    region: content
+    label: above
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    type: boolean
   private:
     weight: 1
     region: content

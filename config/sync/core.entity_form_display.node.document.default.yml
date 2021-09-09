@@ -186,4 +186,5 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
-hidden: {  }
+hidden:
+  member_content_edit_access: true

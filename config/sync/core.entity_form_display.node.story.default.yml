@@ -252,4 +252,5 @@ content:
     settings: {  }
     third_party_settings: {  }
 hidden:
+  member_content_edit_access: true
   promote: true

@@ -10,6 +10,7 @@ dependencies:
     - field.field.node.wiki_page.field_vocab_geo
     - field.field.node.wiki_page.field_vocab_topics
     - node.type.wiki_page
+    - workflows.workflow.group_wiki
   module:
     - comment
     - content_moderation
@@ -45,7 +46,7 @@ content:
     type: comment_default
     region: content
   field_post_activity:
-    weight: 21
+    weight: 22
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -90,6 +91,13 @@ content:
     settings:
       include_locked: true
     third_party_settings: {  }
+  member_content_edit_access:
+    weight: 21
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+    type: boolean_checkbox
   moderation_state:
     type: moderation_state_default
     weight: 19
