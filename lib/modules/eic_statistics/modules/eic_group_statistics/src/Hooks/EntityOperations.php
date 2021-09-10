@@ -431,6 +431,8 @@ class EntityOperations implements ContainerInjectionInterface {
       }
     }
 
+    // Updates group file statistics depending on the node operation: "create",
+    // "update" or "delete".
     switch ($operation) {
       case self::GROUP_FILE_STATISTICS_CREATE_OPERATION:
         // This is a new node so we count the new medias.

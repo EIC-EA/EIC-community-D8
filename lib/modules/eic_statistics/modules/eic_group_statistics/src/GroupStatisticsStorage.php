@@ -353,9 +353,10 @@ class GroupStatisticsStorage implements GroupStatisticsStorageInterface {
       return $media_target_ids;
     }
 
+    // @todo We currently support only paragraph entities. We need to improve
+    // it in order to support all entity types.
     if (
-      $field_definitions[$reference_field_name]->getType() === 'entity_reference_revisions' &&
-      $field_definitions[$reference_field_name]->getTargetEntityTypeId() === 'paragraph'
+      $field_definitions[$reference_field_name]->getType() !== 'entity_reference_revisions'
     ) {
       return $media_target_ids;
     }
