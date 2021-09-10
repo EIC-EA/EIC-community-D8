@@ -94,7 +94,7 @@ if (!\Drupal\Core\Installer\InstallerKernel::installationAttempted() && extensio
 /**
  * SMED API connection information.
  */
-$settings['smed_api_taxonomy_username'] = '';
-$settings['smed_api_taxonomy_password'] = '';
-$settings['smed_api_taxonomy_endpoint'] = '';
+$settings['smed_api_taxonomy_username'] = getenv('SMED_API_USER');
+$settings['smed_api_taxonomy_password'] = getenv('SMED_API_PASSWORD');
+$settings['smed_api_taxonomy_endpoint'] = getenv('SMED_API_ENDPOINT');
 
