@@ -6,6 +6,21 @@ eic_groups.about_page:
   requirements:
     _group_permission: 'view group'
 
+eic_groups.discussion_add_comment:
+  path: '/api/discussion/{discussion_id}/comment'
+  methods: [ POST ]
+  defaults:
+    _controller: '\Drupal\eic_groups\Controller\DiscussionController::addComment'
+  requirements:
+    _permission: 'access content'
+
+eic_groups.discussion_fetch_comment:
+  path: '/api/discussion/{discussion_id}/comments'
+  defaults:
+    _controller: '\Drupal\eic_groups\Controller\DiscussionController::fetchComments'
+  requirements:
+    _permission: 'access content'
+
 eic_groups.group.publish:
   path: '/group/{group}/publish'
   defaults:
