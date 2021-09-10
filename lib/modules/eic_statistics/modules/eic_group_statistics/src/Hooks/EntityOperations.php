@@ -318,6 +318,12 @@ class EntityOperations implements ContainerInjectionInterface {
       ],
     ];
     foreach ($media_fields as $key => $field_name) {
+      // If $field_name is an array we assume we are dealing with an entity
+      // reference field.
+      // @todo Currently it supports only paragraph entities. We should improve
+      // it in order to support all entity types. This is also not bullet proof
+      // since it does not support also more than 1 level of fields and
+      // therefore, we can't check for nested entity reference fields.
       if (is_array($field_name)) {
         if ($entity->hasField($key)) {
 
