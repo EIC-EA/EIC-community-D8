@@ -350,7 +350,7 @@ class EntityOperations implements ContainerInjectionInterface {
 
                   // Node is new, so we just need to add the new medias to
                   // increment.
-                  if ($group_content_is_new || $operation === 'delete') {
+                  if ($group_content_is_new || $operation === self::GROUP_FILE_STATISTICS_DELETE_OPERATION) {
                     $medias[] = $media;
                     continue;
                   }
