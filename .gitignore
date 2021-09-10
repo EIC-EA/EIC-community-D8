@@ -6,7 +6,7 @@
 
 # Ignore web and dist folder.
 /web/
-!/web/sites/default/default.settings.local.php
+!/web/sites/default/default.settings.*.php
 /dist/
 
 /private_files
