@@ -23,7 +23,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class EntityOperations implements ContainerInjectionInterface {
 
   /**
-   * Identifies the file statistics update operation when updating a node.
+   * Identifies the file statistics create operation when creating a node.
    */
   const GROUP_FILE_STATISTICS_CREATE_OPERATION = 'create';
 
@@ -33,7 +33,7 @@ class EntityOperations implements ContainerInjectionInterface {
   const GROUP_FILE_STATISTICS_UPDATE_OPERATION = 'update';
 
   /**
-   * Identifies the file statistics update operation when deleting a node.
+   * Identifies the file statistics delete operation when deleting a node.
    */
   const GROUP_FILE_STATISTICS_DELETE_OPERATION = 'delete';
 
