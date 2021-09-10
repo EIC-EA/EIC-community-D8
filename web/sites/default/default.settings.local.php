@@ -125,7 +125,7 @@ $settings['skip_permissions_hardening'] = TRUE;
 if (!\Drupal\Core\Installer\InstallerKernel::installationAttempted() && extension_loaded('redis')) {
   // Set Redis as the default backend for any cache bin not otherwise specified.
   $settings['cache']['default'] = 'cache.backend.redis';
-  $settings['redis.connection']['host'] = 'redis';
+  $settings['redis.connection']['host'] = getenv('REDIS_HOST');
   $settings['redis.connection']['port'] = getenv('REDIS_PORT');
 
   // Apply changes to the container configuration to make better use of Redis.
@@ -199,3 +199,5 @@ $settings['file_private_path'] = '/app/private_files';
 $settings['smed_api_taxonomy_username'] = '';
 $settings['smed_api_taxonomy_password'] = '';
 $settings['smed_api_taxonomy_endpoint'] = '';
+
+$settings['hash_salt'] = getenv('DRUPAL_HASH_SALT');
