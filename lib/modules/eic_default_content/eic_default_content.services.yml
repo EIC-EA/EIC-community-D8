@@ -3,3 +3,7 @@ services:
     class: Drupal\eic_default_content\Generator\TaxonomyGenerator
     tags:
       - { name: data_fixtures, priority: 1 }
+  eic_default_content.group_generator:
+    class: Drupal\eic_default_content\Generator\GroupGenerator
+    tags:
+      - { name: data_fixtures }
