@@ -23,7 +23,6 @@ module:
   context_ui: 0
   contextual: 0
   ctools: 0
-  data_fixtures: 0
   date_popup: 0
   datetime: 0
   dblog: 0

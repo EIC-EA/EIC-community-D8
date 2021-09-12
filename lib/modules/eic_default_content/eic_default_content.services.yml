@@ -19,3 +19,7 @@ services:
     class: Drupal\eic_default_content\Generator\BlockContentGenerator
     tags:
       - { name: data_fixtures, priority: 1 }
+  eic_default_content.overview_page_generator:
+    class: Drupal\eic_default_content\Generator\OverviewPageGenerator
+    tags:
+      - { name: data_fixtures, priority: 1 }

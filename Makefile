@@ -190,6 +190,7 @@ define do_display_commands
 	echo -e 'Start an app that has already been setup: \e[36mmake \e[0m\e[1mstart\e[0m'
 	echo -e 'Restart an app that has already been setup: \e[36mmake \e[0m\e[1mrestart\e[0m'
 	echo -e 'Update the Drupal installation: \e[36mmake \e[0m\e[1mupdate\e[0m'
+	echo -e 'Reload data fixtures: \e[36mmake \e[0m\e[1mreload-fixtures\e[0m'
 	echo -e 'Clear the app caches: \e[36mmake \e[0m\e[1mcc\e[0m'
 	echo -e 'Start a shell session: \e[36mmake \e[0m\e[1mssh\e[0m'
 endef

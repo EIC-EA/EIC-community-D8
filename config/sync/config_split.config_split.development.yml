@@ -9,6 +9,7 @@ folder: ../config/development
 module:
   devel: 0
   devel_generate: 0
+  data_fixtures: 0
   eic_default_content: 0
 theme: {  }
 blacklist: {  }
