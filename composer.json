@@ -21,7 +21,6 @@
         "drupal/context": "^4.0@beta",
         "drupal/core": "^9.1",
         "drupal/core-composer-scaffold": "^9.1",
-        "drupal/data_fixtures": "^1.7",
         "drupal/date_popup": "^1.1",
         "drupal/default_content": "^2.0@alpha",
         "drupal/entity_usage": "^2.0@beta",
@@ -83,6 +82,7 @@
     },
     "require-dev": {
         "drupal/core-dev": "^9.1",
+        "drupal/data_fixtures": "^1.7",
         "drupal/devel": "^4.1",
         "drupal/drupal-extension": "~4.0",
         "ec-europa/qa-automation": "^3.0|^4.0",

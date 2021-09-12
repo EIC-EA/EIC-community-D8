@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2e2f7a58bf579e1b1ad36b86dc11afed",
+    "content-hash": "4875cad8917e01dd6baed015f2b6fdf8",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -2692,71 +2692,6 @@
             "support": {
                 "source": "https://git.drupalcode.org/project/ctools",
                 "issues": "https://www.drupal.org/project/issues/ctools"
-            }
-        },
-        {
-            "name": "drupal/data_fixtures",
-            "version": "1.7.0",
-            "source": {
-                "type": "git",
-                "url": "https://git.drupalcode.org/project/data_fixtures.git",
-                "reference": "8.x-1.7"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/data_fixtures-8.x-1.7.zip",
-                "reference": "8.x-1.7",
-                "shasum": "4d139dd4875d0be2201768944c730a26933174f0"
-            },
-            "require": {
-                "drupal/core": "^8.9.0 || ^9.0",
-                "ext-json": "*",
-                "fakerphp/faker": "^1.15",
-                "php": ">=7.2"
-            },
-            "type": "drupal-module",
-            "extra": {
-                "drupal": {
-                    "version": "8.x-1.7",
-                    "datestamp": "1628082436",
-                    "security-coverage": {
-                        "status": "not-covered",
-                        "message": "Project has not opted into security advisory coverage!"
-                    }
-                },
-                "drush": {
-                    "services": {
-                        "drush.services.yml": "^9"
-                    }
-                }
-            },
-            "notification-url": "https://packages.drupal.org/8/downloads",
-            "license": [
-                "GPL-2.0-or-later"
-            ],
-            "authors": [
-                {
-                    "name": "Emakina Agencies",
-                    "homepage": "https://www.drupal.org/user/3554673",
-                    "email": "marcom@emakina.com"
-                },
-                {
-                    "name": "Korhan Kale",
-                    "homepage": "https://www.drupal.org/user/3544045"
-                },
-                {
-                    "name": "pinoniq",
-                    "homepage": "https://www.drupal.org/user/3104693"
-                },
-                {
-                    "name": "wanjee",
-                    "homepage": "https://www.drupal.org/user/430499"
-                }
-            ],
-            "description": "The data fixtures module allows you to easily create dummy content.",
-            "homepage": "https://www.drupal.org/project/data_fixtures",
-            "support": {
-                "source": "https://git.drupalcode.org/project/data_fixtures"
             }
         },
         {
@@ -6803,67 +6738,6 @@
                 "drupal"
             ],
             "time": "2021-03-19T17:03:54+00:00"
-        },
-        {
-            "name": "fakerphp/faker",
-            "version": "v1.16.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/FakerPHP/Faker.git",
-                "reference": "271d384d216e5e5c468a6b28feedf95d49f83b35"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/FakerPHP/Faker/zipball/271d384d216e5e5c468a6b28feedf95d49f83b35",
-                "reference": "271d384d216e5e5c468a6b28feedf95d49f83b35",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^7.1 || ^8.0",
-                "psr/container": "^1.0 || ^2.0",
-                "symfony/deprecation-contracts": "^2.2"
-            },
-            "conflict": {
-                "fzaninotto/faker": "*"
-            },
-            "require-dev": {
-                "bamarni/composer-bin-plugin": "^1.4.1",
-                "ext-intl": "*",
-                "symfony/phpunit-bridge": "^4.4 || ^5.2"
-            },
-            "suggest": {
-                "ext-curl": "Required by Faker\\Provider\\Image to download images.",
-                "ext-dom": "Required by Faker\\Provider\\HtmlLorem for generating random HTML.",
-                "ext-iconv": "Required by Faker\\Provider\\ru_RU\\Text::realText() for generating real Russian text.",
-                "ext-mbstring": "Required for multibyte Unicode string functionality."
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-main": "v1.16-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Faker\\": "src/Faker/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "François Zaninotto"
-                }
-            ],
-            "description": "Faker is a PHP library that generates fake data for you.",
-            "keywords": [
-                "data",
-                "faker",
-                "fixtures"
-            ],
-            "time": "2021-09-06T14:53:37+00:00"
         },
         {
             "name": "grasmash/expander",
@@ -12941,6 +12815,71 @@
             "time": "2021-06-01T16:41:50+00:00"
         },
         {
+            "name": "drupal/data_fixtures",
+            "version": "1.7.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/data_fixtures.git",
+                "reference": "8.x-1.7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/data_fixtures-8.x-1.7.zip",
+                "reference": "8.x-1.7",
+                "shasum": "4d139dd4875d0be2201768944c730a26933174f0"
+            },
+            "require": {
+                "drupal/core": "^8.9.0 || ^9.0",
+                "ext-json": "*",
+                "fakerphp/faker": "^1.15",
+                "php": ">=7.2"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "8.x-1.7",
+                    "datestamp": "1628082436",
+                    "security-coverage": {
+                        "status": "not-covered",
+                        "message": "Project has not opted into security advisory coverage!"
+                    }
+                },
+                "drush": {
+                    "services": {
+                        "drush.services.yml": "^9"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Emakina Agencies",
+                    "homepage": "https://www.drupal.org/user/3554673",
+                    "email": "marcom@emakina.com"
+                },
+                {
+                    "name": "Korhan Kale",
+                    "homepage": "https://www.drupal.org/user/3544045"
+                },
+                {
+                    "name": "pinoniq",
+                    "homepage": "https://www.drupal.org/user/3104693"
+                },
+                {
+                    "name": "wanjee",
+                    "homepage": "https://www.drupal.org/user/430499"
+                }
+            ],
+            "description": "The data fixtures module allows you to easily create dummy content.",
+            "homepage": "https://www.drupal.org/project/data_fixtures",
+            "support": {
+                "source": "https://git.drupalcode.org/project/data_fixtures"
+            }
+        },
+        {
             "name": "drupal/devel",
             "version": "4.1.1",
             "source": {
@@ -13315,6 +13254,67 @@
                 "scraper"
             ],
             "time": "2020-11-01T09:30:18+00:00"
+        },
+        {
+            "name": "fakerphp/faker",
+            "version": "v1.16.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/FakerPHP/Faker.git",
+                "reference": "271d384d216e5e5c468a6b28feedf95d49f83b35"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/FakerPHP/Faker/zipball/271d384d216e5e5c468a6b28feedf95d49f83b35",
+                "reference": "271d384d216e5e5c468a6b28feedf95d49f83b35",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.1 || ^8.0",
+                "psr/container": "^1.0 || ^2.0",
+                "symfony/deprecation-contracts": "^2.2"
+            },
+            "conflict": {
+                "fzaninotto/faker": "*"
+            },
+            "require-dev": {
+                "bamarni/composer-bin-plugin": "^1.4.1",
+                "ext-intl": "*",
+                "symfony/phpunit-bridge": "^4.4 || ^5.2"
+            },
+            "suggest": {
+                "ext-curl": "Required by Faker\\Provider\\Image to download images.",
+                "ext-dom": "Required by Faker\\Provider\\HtmlLorem for generating random HTML.",
+                "ext-iconv": "Required by Faker\\Provider\\ru_RU\\Text::realText() for generating real Russian text.",
+                "ext-mbstring": "Required for multibyte Unicode string functionality."
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-main": "v1.16-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Faker\\": "src/Faker/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "François Zaninotto"
+                }
+            ],
+            "description": "Faker is a PHP library that generates fake data for you.",
+            "keywords": [
+                "data",
+                "faker",
+                "fixtures"
+            ],
+            "time": "2021-09-06T14:53:37+00:00"
         },
         {
             "name": "friends-of-behat/mink-browserkit-driver",
