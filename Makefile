@@ -54,6 +54,9 @@ info:
 build-front:
 	$(call do_build_front)
 
+reload-fixtures:
+	$(call do_reload_fixtures)
+
 define do_build_front
 	echo -e 'Installing node modules and building...'
 	docker exec -it -w ${APP_ROOT}/lib/themes/eic_community ${APP_NAME}_php bash -c "npm install \
@@ -63,6 +66,12 @@ define do_build_front
 	docker exec -it -w ${APP_ROOT}/lib/themes/eic_community ${APP_NAME}_php bash -c "npm run pregenerate-storybook \
   		&& npm run generate-storybook \
   		&& npm run postgenerate-storybook"
+endef
+
+define do_reload_fixtures
+	echo -e 'Reloading fixtures...'
+	docker exec -it ${APP_NAME}_php bash -c 'drush fixtures:reload all'
+	echo -e '\n'
 endef
 
 define do_db_healthcheck
@@ -80,6 +89,8 @@ define do_setup
 	$(call do_build_front)
 	docker exec -it ${APP_NAME}_php bash -c 'cp -n ${APP_ROOT}/web/sites/default/default.settings.local.php ${APP_ROOT}/web/sites/default/settings.php'
 	docker exec -it ${APP_NAME}_php bash -c 'drush site-install minimal --site-name=${APP_NAME} --account-name=${DRUPAL_ADMIN_USER} --account-pass=${DRUPAL_ADMIN_PASSWORD} --existing-config -y'
+	docker exec -it ${APP_NAME}_php bash -c 'drush cr'
+	$(call do_reload_fixtures)
 	docker exec -it ${APP_NAME}_php bash -c 'drush cr'
 	echo -e '\n'
 	echo -e '\e[42m${APP_NAME} setup completed\e[0m'

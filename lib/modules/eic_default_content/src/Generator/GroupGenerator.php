@@ -92,6 +92,7 @@ class GroupGenerator extends CoreGenerator {
    * {@inheritdoc}
    */
   public function unLoad() {
+    $this->unloadEntities('group_permission');
     $this->unloadEntities('group');
   }
 

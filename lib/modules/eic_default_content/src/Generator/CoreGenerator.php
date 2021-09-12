@@ -65,9 +65,18 @@ abstract class CoreGenerator extends AbstractGenerator implements Generator {
   /**
    * Create a file with a random image.
    *
-   * @return array|NULL
+   * @param string $wrapper
+   *
+   * @return \Drupal\file\FileInterface
    */
   protected function getRandomImage(string $wrapper = 'private://') {
+    static $images;
+    // To avoid downloading a lot of images, we only allow 3 random images
+    // Passed this, we reuse those saved previously.
+    if (is_array($images) && count($images) === 3) {
+      return $this->faker->randomElement($images);
+    }
+
     /** @var \Drupal\Core\File\FileSystemInterface $file_system */
     $file_system = \Drupal::service('file_system');
     $data = file_get_contents('https://picsum.photos/1280/964.jpg');
@@ -80,11 +89,21 @@ abstract class CoreGenerator extends AbstractGenerator implements Generator {
     $file_system->prepareDirectory($destination, FileSystemInterface::CREATE_DIRECTORY);
 
     $file = file_save_data($data, $destination . $basename, FileSystemInterface::EXISTS_REPLACE);
+    $images[] = $file;
 
-    return [
-      'target_id' => $file->id(),
-      'target_revision_id' => $file->getRevisionId(),
-    ];
+    return $file;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getLink($uri = NULL, $title = NULL, $type = NULL) {
+    $link = parent::getLink($uri, $title);
+    if ($type) {
+      $link['link_type'] = $type;
+    }
+
+    return $link;
   }
 
   /**

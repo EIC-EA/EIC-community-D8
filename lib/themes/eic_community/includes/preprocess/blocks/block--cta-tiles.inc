@@ -20,6 +20,10 @@ function eic_community_preprocess_block__cta_tiles(&$variables, &$cache_tags = [
     $paragraphs = $block_content->get('field_cta_tiles')->referencedEntities();
 
     foreach ($paragraphs as $paragraph) {
+      if (!$paragraph->hasField('field_cta_link')) {
+        continue;
+      }
+
       $paragraph_translation = \Drupal::service('entity.repository')->getTranslationFromContext($paragraph, $block_content->language()->getId());
       $link = $paragraph_translation->get('field_cta_link')->first()->getValue();
       $cache_tags = Cache::mergeTags($cache_tags, $paragraph->getCacheTags());
