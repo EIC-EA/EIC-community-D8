@@ -7,11 +7,15 @@ use Drupal\comment\Entity\Comment;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\file\Entity\File;
+use Drupal\flag\FlaggingInterface;
+use Drupal\flag\FlagService;
 use Drupal\user\Entity\User;
 use Laminas\Diactoros\Response\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Provides route for discussion
@@ -21,18 +25,29 @@ class DiscussionController extends ControllerBase {
   /**
    * The entity type manager.
    *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    */
   protected $entityTypeManager;
 
   /**
-   * Constructs a new DiscussionController object.
+   * The flag service
+   *
+   * @var \Drupal\flag\FlagService $flagService
+   */
+  private $flagService;
+
+  /**
+   * DiscussionController constructor.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
-   *   The entity type manager.
+   * @param \Drupal\flag\FlagService $flag_service
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager) {
+  public function __construct(
+    EntityTypeManagerInterface $entity_type_manager,
+    FlagService $flag_service
+  ) {
     $this->entityTypeManager = $entity_type_manager;
+    $this->flagService = $flag_service;
   }
 
   /**
@@ -40,12 +55,13 @@ class DiscussionController extends ControllerBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('entity_type.manager')
+      $container->get('entity_type.manager'),
+      $container->get('flag')
     );
   }
 
   public function addComment(Request $request, $discussion_id) {
-    $account = \Drupal::currentUser();
+    $account = $this->currentUser();
 
     if ($account->isAnonymous()) {
       return AccessResult::forbidden();
@@ -77,7 +93,9 @@ class DiscussionController extends ControllerBase {
 
   /**
    * @param \Symfony\Component\HttpFoundation\Request $request
+   * @param $discussion_id
    *
+   * @return \Laminas\Diactoros\Response\JsonResponse
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    * @throws \Drupal\Core\Entity\EntityMalformedException
@@ -90,11 +108,13 @@ class DiscussionController extends ControllerBase {
       ->sort('created', 'DESC')
       ->execute();
 
+    $account = $this->currentUser();
     $comments = Comment::loadMultiple($comments);
     $comments_data = [];
 
     foreach ($comments as $comment) {
       $user = $comment->getOwner();
+
 
       /** @var \Drupal\media\MediaInterface|null $media_picture */
       $media_picture = $user->get('field_media')->referencedEntities();
@@ -110,10 +130,68 @@ class DiscussionController extends ControllerBase {
         'text' => $comment->get('comment_body')->value,
         'comment_id' => $comment->id(),
         'children' => $this->getComments($discussion_id, $comment->id()),
+        'likes' => $this->getCommentLikesData($comment, $account),
       ];
     }
 
     return new JsonResponse($comments_data);
+  }
+
+  /**
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   * @param int $discussion_id
+   * @param int $comment_id
+   * @param string $type
+   *
+   * @return \Laminas\Diactoros\Response\JsonResponse
+   */
+  public function likeComment(Request $request, $discussion_id, $comment_id, $type) {
+    $comment = Comment::load($comment_id);
+
+    if (!$comment instanceof CommentInterface) {
+      return new JsonResponse([], Response::HTTP_BAD_REQUEST);
+    }
+
+    try {
+      $this->flagService->{$type}(
+        $this->flagService->getFlagById('like_comment'),
+        $comment
+      );
+    } catch (\LogicException $e) {
+      \Drupal::logger('eic_groups')->error($e);
+      return new JsonResponse([], Response::HTTP_BAD_REQUEST);
+    }
+
+    return new JsonResponse([]);
+  }
+
+  /**
+   * @param \Drupal\comment\CommentInterface $comment
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *
+   * @return array
+   */
+  private function getCommentLikesData(CommentInterface $comment, AccountInterface $account) {
+    $hasAccountLiked = FALSE;
+    $flags = $this->flagService->getAllEntityFlaggings($comment, $account);
+    $flags = array_filter($flags, function (FlaggingInterface $flag) {
+      return 'like_comment' === $flag->getFlagId();
+    });
+
+    foreach ($flags as $key => $flag) {
+      if ('like_comment' !== $flag->getFlagId()) {
+        unset($flags[$key]);
+      }
+
+      if (!empty($this->flagService->getFlaggingUsers($comment, $flag->getFlag()))) {
+        $hasAccountLiked = TRUE;
+      }
+    }
+
+    return [
+      'total' => count($flags),
+      'hasAccountLike' => $hasAccountLiked,
+    ];
   }
 
   /**
@@ -160,6 +238,7 @@ class DiscussionController extends ControllerBase {
         'created_timestamp' => $comment->getCreatedTime(),
         'text' => $comment->get('comment_body')->value,
         'comment_id' => $comment->id(),
+        'likes' => $this->getCommentLikesData($comment, $this->currentUser()),
       ];
     }, $comments);
   }

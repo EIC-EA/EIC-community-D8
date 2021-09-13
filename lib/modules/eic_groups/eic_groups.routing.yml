@@ -21,6 +21,14 @@ eic_groups.discussion_fetch_comment:
   requirements:
     _permission: 'access content'
 
+eic_groups.discussion_like_comment:
+  path: '/api/discussion/{discussion_id}/like/{comment_id}/{type}'
+  methods: [ POST ]
+  defaults:
+    _controller: '\Drupal\eic_groups\Controller\DiscussionController::likeComment'
+  requirements:
+    _permission: 'access content'
+
 eic_groups.group.publish:
   path: '/group/{group}/publish'
   defaults:
