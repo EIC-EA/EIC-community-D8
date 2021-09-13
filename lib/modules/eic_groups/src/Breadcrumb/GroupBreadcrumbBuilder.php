@@ -127,8 +127,8 @@ class GroupBreadcrumbBuilder implements BreadcrumbBuilderInterface {
 
               case 'document':
               case 'gallery':
-                // @todo Replace link route with overview page route when available.
-                $links[] = Link::createFromRoute($this->t('Library'), '<none>');
+              case 'video':
+                $links[] = Link::fromTextAndUrl($this->t('Files'), GroupOverviewPages::getGroupOverviewPageUrl('files', $group));
                 break;
 
             }
