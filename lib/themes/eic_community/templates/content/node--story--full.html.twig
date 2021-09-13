@@ -6,7 +6,11 @@
         {% include "@theme/patterns/compositions/media-wrapper.html.twig" with image_wrapper only %}
       {% endif %}
       {{ elements.field_news_paragraphs }}
-      {{ elements.field_video }}
+      {% if video_download %}
+        {% include "@theme/patterns/components/attachment.html.twig" with video_download only %}
+      {% else %}
+        {{ elements.field_video }}
+      {% endif %}
       {% if download %}
         {% include "@theme/patterns/components/attachment.html.twig" with download only %}
       {% endif %}

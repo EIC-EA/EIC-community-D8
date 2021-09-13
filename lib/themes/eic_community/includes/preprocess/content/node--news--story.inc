@@ -65,6 +65,7 @@ function _eic_community_preprocess_node_news_story(array &$variables) {
   if ($variables['view_mode'] === 'full') {
     // Main elements.
     _eic_community_story_image_field($variables);
+    _eic_community_story_video_field($variables);
     _eic_community_story_document_field($variables);
     // Sidebar elements.
     _eic_community_display_flags($variables);
@@ -214,5 +215,34 @@ function _eic_community_story_related_stories(&$variables) {
       'title' => $variables['elements']['field_related_stories']['#title'],
       'items' => $related_stories,
     ];
+  }
+}
+
+/**
+ * Preprocess video field full news/story.
+ */
+function _eic_community_story_video_field(&$variables) {
+  if (isset($variables['content']['field_video'][0])) {
+    $media = $variables['content']['field_video'][0]['#media'];
+
+    switch ($media->bundle()) {
+      case 'video':
+        $file = File::load($media->field_media_video_file->target_id);
+        $variables['video_download'] = [
+          'title' => $media->getName(),
+          'language' => $media->language()->getName(),
+          'timestamp' => eic_community_get_teaser_time_display($media->get('changed')->getString()),
+          'filesize' => format_size($file->get('filesize')->getString()),
+          'highlight' => FALSE,
+          'path' => file_create_url($file->getFileUri()),
+          'icon_file_path' => $variables['eic_icon_path'],
+          'icon' => [
+            'type' => 'custom',
+            'name' => substr(strrchr($file->get('filemime')->getString(), '/'), 1),
+          ],
+        ];
+        break;
+
+    }
   }
 }
