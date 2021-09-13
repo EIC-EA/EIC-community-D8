@@ -20,6 +20,7 @@ permissions:
   - 'create group group'
   - 'create new books'
   - 'create remote_video media'
+  - 'create url aliases'
   - 'create video media'
   - 'edit own eic_document media'
   - 'edit own image media'

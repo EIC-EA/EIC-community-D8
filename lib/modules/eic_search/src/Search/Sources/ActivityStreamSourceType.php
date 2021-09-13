@@ -59,8 +59,8 @@ class ActivityStreamSourceType extends SourceType {
   /**
    * @inheritDoc
    */
-  public function getPrefilteredGroupFieldId(): string {
-    return 'its_group_id';
+  public function getPrefilteredGroupFieldId(): array {
+    return ['its_group_id'];
   }
 
   /**

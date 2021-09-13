@@ -37,7 +37,7 @@ dependencies:
     - field.storage.message.field_operation_type
     - field.storage.message.field_referenced_node
     - field.storage.node.field_discussion_type
-    - field.storage.node.field_document_type
+    - field.storage.node.field_body
     - field.storage.media.field_media_file
     - field.storage.node.field_document_media
     - field.storage.node.field_language
@@ -47,7 +47,6 @@ dependencies:
     - field.storage.media.oe_media_file
     - field.storage.paragraph.field_gallery_slide_media
     - field.storage.node.field_vocab_topics
-    - field.storage.node.field_body
     - field.storage.node.field_subtitle
     - field.storage.profile.field_body
     - field.storage.profile.field_location_address
@@ -57,6 +56,7 @@ dependencies:
     - field.storage.profile.field_vocab_geo
     - field.storage.profile.field_vocab_topic_expertise
     - field.storage.profile.field_vocab_topic_interest
+    - field.storage.node.field_document_type
     - search_api.server.global
     - core.entity_view_mode.group.no_html
     - core.entity_view_mode.node.no_html
@@ -185,6 +185,20 @@ field_settings:
     datasource_id: 'entity:node'
     property_path: 'search_api_reverse_entity_references_group_content__entity_id:gid'
     type: integer
+  content_author_image:
+    label: 'Authored by » User » Picture » Media » Image » File » URI » Root-relative file URL'
+    datasource_id: 'entity:node'
+    property_path: 'uid:entity:field_media:entity:oe_media_image:entity:uri:url'
+    type: string
+    dependencies:
+      config:
+        - field.storage.media.oe_media_image
+        - field.storage.user.field_media
+      module:
+        - file
+        - media
+        - node
+        - user
   content_created:
     label: '[Content] Authored on'
     datasource_id: 'entity:node'
@@ -688,6 +702,14 @@ field_settings:
       module:
         - node
         - path
+  processed:
+    label: 'Body » Processed text'
+    datasource_id: 'entity:node'
+    property_path: 'field_body:processed'
+    type: string
+    dependencies:
+      config:
+        - field.storage.node.field_body
   rendered_item:
     label: 'Rendered HTML output'
     property_path: rendered_item

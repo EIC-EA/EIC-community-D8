@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\eic_content_discussion\Hooks;
+namespace Drupal\eic_content\Hooks;
 
 use Drupal\Core\Database\Connection;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
@@ -16,9 +16,9 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Class EntityOperations.
  *
- * Implementations for entity hooks.
+ * Implementations of entity hooks.
  */
-class EntityOperations implements ContainerInjectionInterface {
+class EntityOperationsContributor implements ContainerInjectionInterface {
 
   use StringTranslationTrait;
 
@@ -44,21 +44,21 @@ class EntityOperations implements ContainerInjectionInterface {
   protected $database;
 
   /**
-   * Related Contributors of the discussion.
+   * Related Contributors of the node.
    *
    * @var \Drupal\paragraphs\Entity\Paragraph
    */
   protected $contributors;
 
   /**
-   * Content Type Discussion.
+   * Node object.
    *
    * @var \Drupal\node\NodeInterface
    */
-  protected $discussion;
+  protected $node;
 
   /**
-   * Constructs a new EntityOperations object.
+   * Constructs a new EntityOperationsContributors object.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
@@ -89,55 +89,59 @@ class EntityOperations implements ContainerInjectionInterface {
   }
 
   /**
+   * Acts on hook_node_view() for node entities.
+   *
+   * @param array $build
+   *   The renderable array representing the entity content.
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The node entity object.
+   * @param \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display
+   *   The entity view display holding the display options.
+   * @param string $view_mode
+   *   The view mode the entity is rendered in.
+   */
+  public function nodeView(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
+    $this->node = $entity;
+
+    // Get all node contributors.
+    $contributorsFieldList = $entity->get('field_related_contributors');
+
+    // Add array of contributor IDs to include in the renderable array.
+    $contributorIds = [];
+
+    if (!$contributorsFieldList->isEmpty()) {
+      $this->contributors = $contributorsFieldList->referencedEntities();
+      $contributorIds = $this->getRelatedContributorIds();
+    }
+
+    if ($comment_contributorIds = $this->getNodeCommentContributorIds($entity)) {
+      foreach ($comment_contributorIds as $comment_contributorId) {
+        if (!in_array($comment_contributorId['uid'], $contributorIds)) {
+          $contributorIds[] = intval($comment_contributorId['uid']);
+        }
+      }
+    }
+
+    // Add contributor IDs to the renderable array.
+    $build['contributor_ids'] = $contributorIds;
+  }
+
+  /**
    * Implements hook_entity_presave().
    */
-  public function discussionPreSave(NodeInterface $discussion) {
-    $this->discussion = $discussion;
+  public function nodePreSave(NodeInterface $node) {
+    $this->node = $node;
 
-    if ($discussion->isNew()) {
+    if ($node->isNew()) {
       // Get all contributors of CT Discussion.
-      $contributorsFieldList = $this->discussion->get('field_related_contributors');
+      $contributorsFieldList = $this->node->get('field_related_contributors');
       $this->contributors = $contributorsFieldList->referencedEntities();
 
       $related_contributorIds = $this->getRelatedContributorIds();
 
-      if (!in_array($this->discussion->getOwnerId(), $related_contributorIds)) {
+      if (!in_array($this->node->getOwnerId(), $related_contributorIds)) {
         $this->addOwnerAsContributor();
       }
-    }
-  }
-
-  /**
-   * Implements hook_node_view().
-   */
-  public function nodeView(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
-    $this->discussion = $entity;
-
-    switch ($view_mode) {
-      case 'full':
-        // Get all contributors of CT Discussion.
-        $contributorsFieldList = $entity->get('field_related_contributors');
-
-        // Add array of contributor IDs to include in the renderable array.
-        $contributorIds = [];
-
-        if (!$contributorsFieldList->isEmpty()) {
-          $this->contributors = $contributorsFieldList->referencedEntities();
-          $contributorIds = $this->getRelatedContributorIds();
-        }
-
-        if ($comment_contributorIds = $this->getDiscussionCommentContributorIds($entity)) {
-          foreach ($comment_contributorIds as $comment_contributorId) {
-            if (!in_array($comment_contributorId['uid'], $contributorIds)) {
-              $contributorIds[] = intval($comment_contributorId['uid']);
-            }
-          }
-        }
-
-        // Add contributor IDs to the renderable array.
-        $build['contributor_ids'] = $contributorIds;
-        break;
-
     }
   }
 
@@ -164,7 +168,7 @@ class EntityOperations implements ContainerInjectionInterface {
   }
 
   /**
-   * Helper function to add discussion owner as contributor.
+   * Helper function to add owner as contributor.
    *
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
@@ -172,7 +176,7 @@ class EntityOperations implements ContainerInjectionInterface {
     $newContributorParagraph = Paragraph::create([
       'type' => 'contributor',
       'field_user_ref' => [
-        'target_id' => $this->discussion->getOwnerId(),
+        'target_id' => $this->node->getOwnerId(),
       ],
       'paragraph_view_mode' => 'platform_member',
     ]);
@@ -188,19 +192,19 @@ class EntityOperations implements ContainerInjectionInterface {
     }
 
     $this->contributors = $contributors;
-    $this->discussion->set('field_related_contributors', $contributors);
+    $this->node->set('field_related_contributors', $contributors);
   }
 
   /**
-   * Helper function to get contributor IDs from discussion comments.
+   * Helper function to get contributor IDs from node comments.
    *
    * @return array|bool
    *   Array of user IDs or FALSE if no contributors have been found.
    */
-  private function getDiscussionCommentContributorIds() {
+  private function getNodeCommentContributorIds() {
     $query = $this->database->select('comment_field_data', 'c')
       ->fields('c', ['uid']);
-    $query->condition('c.entity_id', $this->discussion->id());
+    $query->condition('c.entity_id', $this->node->id());
     $query->condition('c.entity_type', 'node');
     // Skip anonymous users.
     $query->condition('c.uid', 0, '<>');

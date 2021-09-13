@@ -83,17 +83,23 @@ class SolrSearchController extends ControllerBase {
       $search_query_value = $search_value ? "*$search_value*" : '*';
 
       $query_fields = [];
+      $query_fields_string = '';
 
       foreach ($search_fields_id as $search_field_id) {
         $query_fields[] = "$search_field_id:$search_query_value";
+        $query_fields_string = '(' . implode(' OR ', $query_fields) . ')';
       }
 
-      $query_fields_string = implode(' OR ', $query_fields);
       if ($current_group) {
-        $group_id_field = $source->getPrefilteredGroupFieldId();
+        $group_id_fields = $source->getPrefilteredGroupFieldId();
+        $group_query = [];
+        foreach ($group_id_fields as $group_id_field) {
+          $group_query[] = "$group_id_field:($current_group)";
+        }
+        $group_query_string = '(' . implode(' OR ', $group_query) . ')';
         $query_fields_string .= empty($query_fields_string) ?
-          "$group_id_field:($current_group)" :
-          " AND ($group_id_field:($current_group))";
+          "$group_query_string" :
+          " AND $group_query_string";
       }
 
       if ($content_types = $source->getPrefilteredContentType()) {
@@ -316,7 +322,7 @@ class SolrSearchController extends ControllerBase {
    * @param \Drupal\eic_search\Search\Sources\SourceTypeInterface|null $source
    */
   private function generateQueryPager(Query &$solariumQuery, int $page, int $offset, ?SourceTypeInterface $source) {
-    $solariumQuery->setRows($page * $offset);
+    $solariumQuery->setRows($offset);
 
     //Default value will be to work like pagination
     if ($source instanceof SourceTypeInterface && $source->allowPagination()) {
@@ -326,6 +332,7 @@ class SolrSearchController extends ControllerBase {
 
     //If no pagination, it's a load more so we start at 1
     $solariumQuery->setStart(0);
+    $solariumQuery->setRows($offset * $page);
   }
 
 }

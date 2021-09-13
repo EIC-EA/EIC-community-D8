@@ -1,0 +1,22 @@
+extraction_method: tika_server_extractor
+preserve_cache: true
+read_text_files_directly: false
+solr_extractor_configuration:
+  solr_server: ''
+pdftotext_extractor_configuration:
+  pdftotext_path: pdftotext
+tika_extractor_configuration:
+  java_path: java
+  tika_path: ''
+tika_server_extractor_configuration:
+  scheme: http
+  host: tika
+  port: '9998'
+  timeout: 30
+python_pdf2txt_extractor_configuration:
+  python_path: python
+  python_pdf2txt_script: /usr/bin/pdf2txt.py
+docconv_extractor_configuration:
+  docconv_path: /usr/bin/docd
+_core:
+  default_config_hash: iEqfsY3NCYdxBTF8YdyhDbgPo9BC6xaHaMoXOU0dQBk

@@ -5,33 +5,9 @@
  * Primary module hooks for EIC Media statistics module.
  */
 
-use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\eic_media_statistics\Hooks\EntityOperations;
-
-/**
- * Implements hook_file_download().
- */
-function eic_media_statistics_file_download($uri) {
-  $config = \Drupal::config('eic_media_statistics.settings');
-  if (!$config->get('count_file_downloads')) {
-    return;
-  }
-  $entityTypeManager = \Drupal::entityTypeManager()->getStorage('file');
-  $query = $entityTypeManager->getQuery();
-  $result = $query->condition('uri', $uri)
-    ->execute();
-  $success = FALSE;
-  if (count($result) > 0) {
-    $fid = reset($result);
-    $success = \Drupal::getContainer()->get('eic_media_statistics.storage.file')->recordView($fid);
-  }
-  if ($success) {
-    $file = $entityTypeManager->load($fid);
-    Cache::invalidateTags($file->getCacheTagsToInvalidate());
-  }
-}
 
 /**
  * Implements hook_cron().

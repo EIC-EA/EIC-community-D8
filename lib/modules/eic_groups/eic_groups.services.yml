@@ -57,3 +57,7 @@ services:
     class: Drupal\eic_groups\Routing\RouteSubscriber
     tags:
       - { name: event_subscriber }
+  eic_groups.create_field_edit_access:
+    class: Drupal\eic_groups\Commands\CreateFieldEditAccess
+    tags:
+      - { name: drush.command }

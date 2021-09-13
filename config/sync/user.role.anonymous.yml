@@ -10,6 +10,7 @@ weight: -10
 is_admin: false
 permissions:
   - 'access content'
+  - 'download media'
   - 'flag like_comment'
   - 'flag like_content'
   - 'flag like_media'

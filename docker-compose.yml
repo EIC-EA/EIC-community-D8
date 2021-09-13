@@ -55,6 +55,10 @@ services:
       - solr-precreate
       - eic
 
+  tika:
+    image: apache/tika:2.1.0
+    container_name: ${APP_NAME}_tika
+
   redis:
     image: redis:alpine
     container_name: ${APP_NAME}_redis
