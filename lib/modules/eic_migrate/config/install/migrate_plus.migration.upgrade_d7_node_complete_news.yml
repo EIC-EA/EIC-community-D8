@@ -14,11 +14,11 @@ label: 'Node complete (News)'
 source:
   plugin: eic_d7_node_complete_with_smed_ids
   node_type: news
+  track_changes: true
   smed_taxonomy_fields:
     - c4m_vocab_geo
     - c4m_vocab_language
     - c4m_vocab_topic
-  track_changes: true
 process:
   nid:
     - plugin: migration_lookup
@@ -41,10 +41,15 @@ process:
       source: node_uid
       migration:
         - upgrade_d7_user
-  # TODO: How to migrate correct status and content moderation state? Status seems to be overridden when importing.
   status:
     - plugin: get
       source: status
+  moderation_state:
+    - plugin: static_map
+      source: status
+      map:
+        0: draft
+        1: published
   created:
     - plugin: get
       source: created
@@ -99,7 +104,8 @@ process:
 #      process:
 #        target_id:
 #          - plugin: migration_lookup
-#            source: tid
+#            source: smed_id
+#            no_stub: true
 #            migration:
 #              - smed_TODO
   # TODO: Validate implementation when field_vocab_languages is added to CT News.

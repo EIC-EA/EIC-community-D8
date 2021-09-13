@@ -14,11 +14,11 @@ label: 'Node complete (News)'
 source:
   plugin: eic_d7_node_complete_with_smed_ids
   node_type: news
+  track_changes: true
   smed_taxonomy_fields:
     - c4m_vocab_geo
     - c4m_vocab_language
     - c4m_vocab_topic
-  track_changes: true
 process:
   nid:
     -
@@ -51,6 +51,13 @@ process:
     -
       plugin: get
       source: status
+  moderation_state:
+    -
+      plugin: static_map
+      source: status
+      map:
+        - draft
+        - published
   created:
     -
       plugin: get
