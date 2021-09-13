@@ -6,15 +6,7 @@ use Drupal\eic_group_statistics\GroupStatisticsHelperInterface;
 use Drush\Commands\DrushCommands;
 
 /**
- * A Drush commandfile.
- *
- * In addition to this file, you need a drush.services.yml
- * in root of your module, and a composer.json file that provides the name
- * of the services file to use.
- *
- * See these files for an example of injecting Drupal services:
- *   - http://cgit.drupalcode.org/devel/tree/src/Commands/DevelCommands.php
- *   - http://cgit.drupalcode.org/devel/tree/drush.services.yml
+ * A Drush commandfile for updating group statistics.
  */
 class GroupStatisticsCommands extends DrushCommands {
 
@@ -36,11 +28,9 @@ class GroupStatisticsCommands extends DrushCommands {
   }
 
   /**
-   * Command description here.
+   * Command to update all group statistics.
    *
    * @usage eic_group_statistics:updateGroupStatistics
-   *   Usage description
-   *
    * @command eic_group_statistics:updateGroupStatistics
    * @aliases update-group-statistics
    */
