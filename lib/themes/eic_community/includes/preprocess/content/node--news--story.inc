@@ -7,6 +7,7 @@
 
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Render\Markup;
+use Drupal\Core\Url;
 use Drupal\eic_community\ValueObject\ImageValueObject;
 use Drupal\eic_private_content\PrivateContentConst;
 use Drupal\file\Entity\File;
@@ -228,13 +229,18 @@ function _eic_community_story_video_field(&$variables) {
     switch ($media->bundle()) {
       case 'video':
         $file = File::load($media->field_media_video_file->target_id);
+        $download_url = Url::fromRoute('media_entity_download.download',
+          [
+            'media' => $media->id(),
+          ]
+        );
         $variables['video_download'] = [
           'title' => $media->getName(),
           'language' => $media->language()->getName(),
           'timestamp' => eic_community_get_teaser_time_display($media->get('changed')->getString()),
           'filesize' => format_size($file->get('filesize')->getString()),
           'highlight' => FALSE,
-          'path' => file_create_url($file->getFileUri()),
+          'path' => $download_url->toString(),
           'icon_file_path' => $variables['eic_icon_path'],
           'icon' => [
             'type' => 'custom',
