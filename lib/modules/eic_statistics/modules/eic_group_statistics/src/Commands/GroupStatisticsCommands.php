@@ -30,8 +30,8 @@ class GroupStatisticsCommands extends DrushCommands {
   /**
    * Command to update all group statistics.
    *
-   * @usage eic_group_statistics:updateGroupStatistics
-   * @command eic_group_statistics:updateGroupStatistics
+   * @usage eic:updateGroupStatistics
+   * @command eic:updateGroupStatistics
    * @aliases update-group-statistics
    */
   public function updateGroupStatistics() {
