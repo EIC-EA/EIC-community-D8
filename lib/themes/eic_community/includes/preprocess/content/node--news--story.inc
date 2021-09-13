@@ -243,8 +243,8 @@ function _eic_community_story_video_field(&$variables) {
           'path' => $download_url->toString(),
           'icon_file_path' => $variables['eic_icon_path'],
           'icon' => [
-            'type' => 'custom',
-            'name' => substr(strrchr($file->get('filemime')->getString(), '/'), 1),
+            'type' => 'general',
+            'name' => 'video',
           ],
         ];
         break;
