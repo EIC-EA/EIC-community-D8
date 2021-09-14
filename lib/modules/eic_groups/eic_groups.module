@@ -298,6 +298,9 @@ function eic_groups_group_content_info_alter(array &$definitions) {
       continue;
     }
 
+    // Overrides the standard group content node class in order to fix access
+    // to the operation links.
+    $definition['class'] = '\Drupal\eic_groups\Plugin\GroupContentEnabler\GroupNode';
     // Overrides the group content access controll handler class.
     $definition['handlers']['access'] = '\Drupal\eic_groups\Access\GroupContentNodeAccessControlHandler';
   }
