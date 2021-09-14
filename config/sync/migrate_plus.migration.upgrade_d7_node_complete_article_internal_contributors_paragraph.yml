@@ -22,10 +22,7 @@ source:
   constants:
     view_mode: platform_member
 process:
-  paragraph_view_mode:
-    -
-      plugin: get
-      source: constants/view_mode
+  paragraph_view_mode: constants/view_mode
   field_user_ref/target_id:
     -
       plugin: migration_lookup

@@ -28,12 +28,8 @@ process:
   #      source: entity_id
   #      migration:
   #        - upgrade_d7_node_complete_article_internal_contributors_paragraph
-  # TODO: Depending on external or internal contributor
-  paragraph_view_mode:
-    - plugin: get
-      source: constants/view_mode
-      # external_person
-      # platform_member
+  # TODO: Depending on external or internal contributor (values: external_person / platform_member)
+  paragraph_view_mode: constants/view_mode
   # TODO: Use the following field for the internal contributors: c4m_related_user
 #  field_user_ref/target_id:
 #    - plugin: migration_lookup

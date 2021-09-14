@@ -37,20 +37,14 @@ process:
     -
       plugin: default_value
       default_value: en
-  title:
-    -
-      plugin: get
-      source: title
+  title: title
   uid:
     -
       plugin: migration_lookup
       source: node_uid
       migration:
         - upgrade_d7_user
-  status:
-    -
-      plugin: get
-      source: status
+  status: status
   moderation_state:
     -
       plugin: static_map
@@ -58,44 +52,20 @@ process:
       map:
         - draft
         - published
-  created:
-    -
-      plugin: get
-      source: created
-  changed:
-    -
-      plugin: get
-      source: timestamp
-  promote:
-    -
-      plugin: get
-      source: promote
-  sticky:
-    -
-      plugin: get
-      source: sticky
+  created: created
+  changed: timestamp
+  promote: promote
+  sticky: sticky
   revision_uid:
     -
       plugin: migration_lookup
       source: revision_uid
       migration:
         - upgrade_d7_user
-  revision_log:
-    -
-      plugin: get
-      source: log
-  revision_timestamp:
-    -
-      plugin: get
-      source: timestamp
-  content_translation_source:
-    -
-      plugin: get
-      source: source_langcode
-  node_comment/0/status:
-    -
-      plugin: get
-      source: comment
+  revision_log: log
+  revision_timestamp: timestamp
+  content_translation_source: source_langcode
+  node_comment/0/status: comment
   field_body:
     -
       plugin: eic_media_wysiwyg_filter

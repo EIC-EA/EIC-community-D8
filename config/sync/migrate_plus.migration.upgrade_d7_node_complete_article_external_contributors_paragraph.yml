@@ -22,10 +22,7 @@ source:
   constants:
     view_mode: external_person
 process:
-  paragraph_view_mode:
-    -
-      plugin: get
-      source: constants/view_mode
+  paragraph_view_mode: constants/view_mode
   field_contributor_link/uri:
     -
       plugin: skip_on_empty

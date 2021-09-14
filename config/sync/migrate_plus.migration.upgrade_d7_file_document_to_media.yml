@@ -19,24 +19,15 @@ source:
     - private
   track_changes: true
 process:
-  name:
-    -
-      plugin: get
-      source: filename
+  name: filename
   uid:
     -
       plugin: migration_lookup
       source: uid
       migration:
         - upgrade_d7_user
-  created:
-    -
-      plugin: get
-      source: timestamp
-  changed:
-    -
-      plugin: get
-      source: timestamp
+  created: timestamp
+  changed: timestamp
   field_media_file/target_id:
     -
       plugin: migration_lookup

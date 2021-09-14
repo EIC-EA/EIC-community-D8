@@ -25,9 +25,7 @@ process:
     - plugin: migration_lookup
       source: uid
       migration: upgrade_d7_user
-  field_body:
-    - plugin: get
-      source: c4m_body
+  field_body: c4m_body
   field_cv_link:
     - plugin: field_link
       source: c4m_cv_link
