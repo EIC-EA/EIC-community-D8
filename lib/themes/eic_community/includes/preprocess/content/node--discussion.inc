@@ -9,6 +9,7 @@ use Drupal\taxonomy\Entity\Term;
 use Drupal\comment\Entity\Comment;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Render\Markup;
+use Drupal\Core\Url;
 
 /**
  * Implements hook_preprocess_node() for discussion node.
@@ -40,6 +41,8 @@ function eic_community_preprocess_node__discussion(array &$variables) {
  * Preprocesses full display.
  */
 function _preprocess_discussion_full(&$variables, $discussion_type, $node) {
+  /** @var \Drupal\node\NodeInterface $node */
+  $node = $variables['node'];
   $variables['type'] = $discussion_type;
   if (!empty($variables['elements']['contributor_ids'])) {
     $users = \Drupal::entityTypeManager()->getStorage('user')->loadMultiple($variables['elements']['contributor_ids']);
@@ -70,6 +73,35 @@ function _preprocess_discussion_full(&$variables, $discussion_type, $node) {
       $value['#options']['attributes']['class'][] = 'ecl-tag';
       $value['#options']['attributes']['class'][] = 'ecl-featured-list__item-tag';
       $variables['elements']['field_vocab_topics'][$key] = $value;
+    }
+  }
+
+  // Add video download section.
+  $media_videos = $node->get('field_video')->referencedEntities();
+  foreach ($media_videos as $media) {
+    switch ($media->bundle()) {
+      case 'video':
+        $file = $media->field_media_video_file->entity;
+        $download_url = Url::fromRoute('media_entity_download.download',
+          [
+            'media' => $media->id(),
+          ]
+        );
+        $variables['video_download'] = [
+          'title' => $media->getName(),
+          'language' => $media->language()->getName(),
+          'timestamp' => eic_community_get_teaser_time_display($media->get('changed')->getString()),
+          'filesize' => format_size($file->get('filesize')->getString()),
+          'highlight' => FALSE,
+          'path' => $download_url->toString(),
+          'icon_file_path' => $variables['eic_icon_path'],
+          'icon' => [
+            'type' => 'general',
+            'name' => 'video',
+          ],
+        ];
+        break;
+
     }
   }
 }

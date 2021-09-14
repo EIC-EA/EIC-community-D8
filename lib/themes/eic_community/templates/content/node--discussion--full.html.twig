@@ -41,6 +41,11 @@
             {% endif %}
           </div>
         {% endif %}
+        {% if video_download %}
+          {% include "@theme/patterns/components/attachment.html.twig" with video_download only %}
+        {% else %}
+          {{ elements.field_video }}
+        {% endif %}
       {% endblock %}
       {% block sidebar %}
         {% if flags %}
