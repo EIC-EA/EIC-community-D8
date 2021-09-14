@@ -142,7 +142,7 @@ class GroupAccessContent extends ProcessorPluginBase {
     ';
 
     // Restricted community group, only trusted_user role can view.
-    if (!$user->isAnonymous() && $user->hasRole('trusted_user')) {
+    if (!$user->isAnonymous() && ($user->hasRole('trusted_user') || $user->hasRole('site_admin'))) {
       $query .= ' OR (ss_group_visibility:' . GroupVisibilityType::GROUP_VISIBILITY_COMMUNITY . ')';
     }
 
