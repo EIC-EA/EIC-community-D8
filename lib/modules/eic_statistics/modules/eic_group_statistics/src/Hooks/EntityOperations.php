@@ -6,8 +6,8 @@ use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\eic_comments\CommentsHelper;
-use Drupal\eic_group_statistics\GroupStatisticsHelper;
 use Drupal\eic_group_statistics\GroupStatisticsSearchApiReindex;
+use Drupal\eic_group_statistics\GroupStatisticsStorage;
 use Drupal\eic_group_statistics\GroupStatisticsStorageInterface;
 use Drupal\eic_group_statistics\GroupStatisticTypes;
 use Drupal\entity_usage\EntityUsageInterface;
@@ -310,7 +310,7 @@ class EntityOperations implements ContainerInjectionInterface {
 
     // Gets the array of field names that will be used to count group file
     // statistics.
-    $media_fields = GroupStatisticsHelper::getGroupFileStatisticFields();
+    $media_fields = GroupStatisticsStorage::getGroupFileStatisticFields();
 
     foreach ($media_fields as $key => $field_name) {
       // If $field_name is an array we assume we are dealing with an entity

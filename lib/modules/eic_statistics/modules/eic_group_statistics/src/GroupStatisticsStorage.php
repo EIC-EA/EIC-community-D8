@@ -239,30 +239,31 @@ class GroupStatisticsStorage implements GroupStatisticsStorageInterface {
     // Initialize array of media target ids that will be used to count the
     // number of files in group.
     $media_target_ids = [];
-    // Array of media fields per group content where we want to count file
-    // statistics. Keyed by group content bundle.
+    // Array of group content to count file statistics.
     $files_group_content_types = [
-      "discussion" => [
-        'field_related_documents',
-      ],
-      "document" => [
-        'field_document_media',
-      ],
-      "gallery" => [
-        'field_gallery_slides' => [
-          'field_gallery_slide_media',
-        ],
-      ],
-      "wiki_page" => [
-        'field_related_downloads',
-      ],
+      'discussion',
+      'document',
+      'gallery',
+      'wiki_page',
     ];
+    // Get array of fields that will be used to count the group file
+    // statistics.
+    $file_statistic_fields = self::getGroupFileStatisticFields();
 
     // We want to count the number of files for each group content that
     // contains media files. Note that we take into account multiple media
     // reference fields and also paragraph fields that contain media.
-    foreach ($files_group_content_types as $node_type => $fields) {
-      foreach ($fields as $field_name_key => $field_name) {
+    foreach ($files_group_content_types as $node_type) {
+      // Get all field definitions of the node type.
+      $field_definitions = $this->entityFieldManager->getFieldDefinitions('node', $node_type);
+
+      foreach ($file_statistic_fields as $field_name_key => $field_name) {
+
+        // Field doesn't exist in this node type, so we can skip it.
+        if (!isset($field_definitions[$field_name_key])) {
+          continue;
+        }
+
         // If the current value of $field_name is an array of media fields, we
         // assume this field as an entity reference field and so we count the
         // file statistics on the entity reference level. Currently it works
@@ -412,6 +413,26 @@ class GroupStatisticsStorage implements GroupStatisticsStorageInterface {
   private function calculateGroupEventsStatistics(GroupInterface $group) {
     // @todo Implement logic once we have the group type Event available.
     return 0;
+  }
+
+  /**
+   * Gets the list of fields used to calculate group file statistics.
+   *
+   * @return array
+   *   Array of media and entity reference fields.
+   *   - key: field machine name
+   *   - value: field machine name or array of field machine names in case of
+   *   entity reference fields.
+   */
+  public static function getGroupFileStatisticFields() {
+    return [
+      'field_document_media' => 'field_document_media',
+      'field_related_downloads' => 'field_related_downloads',
+      'field_related_documents' => 'field_related_documents',
+      'field_gallery_slides' => [
+        'field_gallery_slide_media',
+      ],
+    ];
   }
 
 }
