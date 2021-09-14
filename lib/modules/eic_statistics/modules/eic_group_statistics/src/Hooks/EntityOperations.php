@@ -6,6 +6,7 @@ use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\eic_comments\CommentsHelper;
+use Drupal\eic_group_statistics\GroupStatisticsHelper;
 use Drupal\eic_group_statistics\GroupStatisticsSearchApiReindex;
 use Drupal\eic_group_statistics\GroupStatisticsStorageInterface;
 use Drupal\eic_group_statistics\GroupStatisticTypes;
@@ -307,16 +308,10 @@ class EntityOperations implements ContainerInjectionInterface {
     $medias = [];
     $unpublished_node_medias = [];
 
-    // @todo In the future we should consider configuring which fields to
-    // use via config entity and using an administration form.
-    $media_fields = [
-      'field_document_media' => 'field_document_media',
-      'field_related_downloads' => 'field_related_downloads',
-      'field_related_documents' => 'field_related_documents',
-      'field_gallery_slides' => [
-        'field_gallery_slide_media',
-      ],
-    ];
+    // Gets the array of field names that will be used to count group file
+    // statistics.
+    $media_fields = GroupStatisticsHelper::getGroupFileStatisticFields();
+
     foreach ($media_fields as $key => $field_name) {
       // If $field_name is an array we assume we are dealing with an entity
       // reference field.

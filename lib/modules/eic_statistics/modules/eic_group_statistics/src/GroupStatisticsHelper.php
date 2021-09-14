@@ -104,4 +104,21 @@ class GroupStatisticsHelper implements GroupStatisticsHelperInterface {
     $this->groupStatisticsStorage->setMultipleGroupStatistics($groups_statistics);
   }
 
+  /**
+   * Gets the list of fields used to calculate group file statistics.
+   *
+   * @return array
+   *   Array of media and entity reference fields.
+   */
+  public static function getGroupFileStatisticFields() {
+    return [
+      'field_document_media' => 'field_document_media',
+      'field_related_downloads' => 'field_related_downloads',
+      'field_related_documents' => 'field_related_documents',
+      'field_gallery_slides' => [
+        'field_gallery_slide_media',
+      ],
+    ];
+  }
+
 }
