@@ -29,6 +29,14 @@ eic_groups.discussion_like_comment:
   requirements:
     _permission: 'access content'
 
+eic_groups.discussion_update_comment:
+  path: '/api/discussion/{discussion_id}/edit/{comment_id}'
+  methods: [ PATCH ]
+  defaults:
+    _controller: '\Drupal\eic_groups\Controller\DiscussionController::editComment'
+  requirements:
+    _permission: 'access content'
+
 eic_groups.group.publish:
   path: '/group/{group}/publish'
   defaults:

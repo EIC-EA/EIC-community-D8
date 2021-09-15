@@ -4,15 +4,18 @@ namespace Drupal\eic_groups\Controller;
 
 use Drupal\comment\CommentInterface;
 use Drupal\comment\Entity\Comment;
+use Drupal\Component\Utility\Xss;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\file\Entity\File;
 use Drupal\flag\FlaggingInterface;
 use Drupal\flag\FlagService;
+use Drupal\node\Entity\Node;
 use Drupal\user\Entity\User;
-use Laminas\Diactoros\Response\JsonResponse;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -60,6 +63,13 @@ class DiscussionController extends ControllerBase {
     );
   }
 
+  /**
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   * @param $discussion_id
+   *
+   * @return \Drupal\Core\Access\AccessResultForbidden|\Symfony\Component\HttpFoundation\JsonResponse
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   */
   public function addComment(Request $request, $discussion_id) {
     $account = $this->currentUser();
 
@@ -69,7 +79,7 @@ class DiscussionController extends ControllerBase {
 
     $user = User::load($account->id());
     $content = json_decode($request->getContent(), TRUE);
-    $text = $content['text'];
+    $text = Xss::filter($content['text']);
     $parent_id = $content['parentId'];
 
     $comment = Comment::create([
@@ -80,7 +90,7 @@ class DiscussionController extends ControllerBase {
       'field_name' => 'comment',
       'comment_body' => [
         'value' => $text,
-        'format' => 'filtered_html',
+        'format' => 'plain_text',
       ],
       'comment_type' => 'node_comment',
       'pid' => $parent_id,
@@ -95,7 +105,7 @@ class DiscussionController extends ControllerBase {
    * @param \Symfony\Component\HttpFoundation\Request $request
    * @param $discussion_id
    *
-   * @return \Laminas\Diactoros\Response\JsonResponse
+   * @return \Symfony\Component\HttpFoundation\JsonResponse
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    * @throws \Drupal\Core\Entity\EntityMalformedException
@@ -105,6 +115,7 @@ class DiscussionController extends ControllerBase {
       ->getQuery()
       ->condition('entity_id', $discussion_id)
       ->condition('pid', 0, 'IS NULL')
+      ->condition('status', Node::PUBLISHED)
       ->sort('created', 'DESC')
       ->execute();
 
@@ -139,11 +150,11 @@ class DiscussionController extends ControllerBase {
 
   /**
    * @param \Symfony\Component\HttpFoundation\Request $request
-   * @param int $discussion_id
-   * @param int $comment_id
-   * @param string $type
+   * @param $discussion_id
+   * @param $comment_id
+   * @param $type
    *
-   * @return \Laminas\Diactoros\Response\JsonResponse
+   * @return \Symfony\Component\HttpFoundation\JsonResponse
    */
   public function likeComment(Request $request, $discussion_id, $comment_id, $type) {
     $comment = Comment::load($comment_id);
@@ -160,6 +171,38 @@ class DiscussionController extends ControllerBase {
     } catch (\LogicException $e) {
       \Drupal::logger('eic_groups')->error($e);
       return new JsonResponse([], Response::HTTP_BAD_REQUEST);
+    }
+
+    return new JsonResponse([]);
+  }
+
+  /**
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   * @param int $discussion_id
+   * @param $comment_id
+   *
+   * @return \Symfony\Component\HttpFoundation\JsonResponse
+   */
+  public function editComment(Request $request, int $discussion_id, $comment_id) {
+    $content = json_decode($request->getContent(), TRUE);
+    $text = Xss::filter($content['text']);
+
+    $comment = Comment::load($comment_id);
+
+    if (!$comment instanceof CommentInterface) {
+      return new JsonResponse('Cannot find comment entity', Response::HTTP_BAD_REQUEST);
+    }
+
+    try {
+      $comment->set('comment_body', [
+        'value' => $text,
+        'format' => 'plain_text',
+      ]);
+      $comment->save();
+    } catch (EntityStorageException $e) {
+      \Drupal::logger('eic_groups')->error($e->getMessage());
+
+      return new JsonResponse($e->getMessage(), Response::HTTP_BAD_REQUEST);
     }
 
     return new JsonResponse([]);
