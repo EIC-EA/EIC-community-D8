@@ -88,7 +88,7 @@ process:
 #  c4m_related_user:
 #    - plugin: get
 #      source: c4m_related_user
-  pseudo_internal_contributors:
+  _internal_contributors:
     - plugin: sub_process
       source: c4m_related_user
       include_source: true
@@ -96,7 +96,7 @@ process:
         nid: source/nid
         vid: source/vid
         value: target_id
-  pseudo_external_contributors:
+  _external_contributors:
     - plugin: sub_process
       source: c4m_link_multiple
       include_source: true
@@ -107,8 +107,8 @@ process:
   field_story_paragraphs:
     - plugin: merge
       source:
-        - '@pseudo_internal_contributors'
-        - '@pseudo_external_contributors'
+        - '@_internal_contributors'
+        - '@_external_contributors'
     - plugin: sub_process
       process:
         target_id:

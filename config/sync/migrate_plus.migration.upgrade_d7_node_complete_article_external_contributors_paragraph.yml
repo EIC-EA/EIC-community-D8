@@ -20,9 +20,9 @@ source:
       type: string
   track_changes: true
   constants:
-    view_mode: external_person
+    PARAGRAPH_VIEW_MODE: external_person
 process:
-  paragraph_view_mode: constants/view_mode
+  paragraph_view_mode: constants/PARAGRAPH_VIEW_MODE
   field_contributor_link/uri:
     -
       plugin: skip_on_empty

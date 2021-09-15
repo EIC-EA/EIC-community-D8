@@ -20,7 +20,7 @@ source:
       type: integer
   track_changes: true
   constants:
-    view_mode: 'platform_member'
+    PARAGRAPH_VIEW_MODE: 'platform_member'
 process:
   # TODO: Perhaps needed for creating the paragraphs with revisions instead of a new paragraph for each revision
 #  entity_id:
@@ -29,7 +29,7 @@ process:
 #      migration:
 #        - upgrade_d7_node_complete_article_internal_contributors_paragraph
   # TODO: Depending on external or internal contributor (values: external_person / platform_member)
-  paragraph_view_mode: constants/view_mode
+  paragraph_view_mode: constants/PARAGRAPH_VIEW_MODE
   # TODO: Use the following field for the internal contributors: c4m_related_user
   field_user_ref/target_id:
     - plugin: migration_lookup

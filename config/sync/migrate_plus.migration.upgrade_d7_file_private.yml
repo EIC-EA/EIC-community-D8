@@ -16,26 +16,26 @@ source:
   scheme: private
   track_changes: true
   constants:
-    source_base_path: ../backup_files/private
+    SOURCE_BASE_PATH: ../backup_files/private
 process:
   filename: filename
-  pseudo_source_path:
+  _source_path:
     -
       plugin: substr
       source: filepath
       start: 22
-  pseudo_source_full_path:
+  _source_full_path:
     -
       plugin: concat
       delimiter: /
       source:
-        - constants/source_base_path
-        - '@pseudo_source_path'
+        - constants/SOURCE_BASE_PATH
+        - '@_source_path'
   uri:
     -
       plugin: file_copy
       source:
-        - '@pseudo_source_full_path'
+        - '@_source_full_path'
         - uri
   filemime: filemime
   status: status

@@ -87,7 +87,7 @@ process:
         - upgrade_d7_file_undefined_to_media
         - upgrade_d7_file_video_to_media
   field_introduction: c4m_intro_text
-  pseudo_internal_contributors:
+  _internal_contributors:
     -
       plugin: sub_process
       source: c4m_related_user
@@ -96,7 +96,7 @@ process:
         nid: source/nid
         vid: source/vid
         value: target_id
-  pseudo_external_contributors:
+  _external_contributors:
     -
       plugin: sub_process
       source: c4m_link_multiple
@@ -109,8 +109,8 @@ process:
     -
       plugin: merge
       source:
-        - '@pseudo_internal_contributors'
-        - '@pseudo_external_contributors'
+        - '@_internal_contributors'
+        - '@_external_contributors'
     -
       plugin: sub_process
       process:
