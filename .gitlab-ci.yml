@@ -11,12 +11,12 @@ stages:
     - echo "$DEPLOYMENT_SSH_KEY" | tr -d '\r' | ssh-add - > /dev/null
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
-    - ssh-keyscan -t rsa $WEB_SERVER_ADDRESS >> ~/.ssh/known_hosts
+    - ssh-keyscan -t rsa $HOST >> ~/.ssh/known_hosts
   script:
-    - rsync -avuz --no-perms --omit-dir-times --exclude-from=.rsyncignore --delete --delete-after $CI_PROJECT_DIR/ $PROJECT_USER@$WEB_SERVER_ADDRESS:$WEB_SERVER_PATH
+    - rsync -avuz --no-perms --omit-dir-times --exclude-from=.rsyncignore --delete --delete-after $CI_PROJECT_DIR/ $PROJECT_USER@$HOST:$PROJECT_DIR
     - >
-      ssh -tt $PROJECT_USER@$WEB_SERVER_ADDRESS "cd $WEB_SERVER_PATH &&
-      bash $WEB_SERVER_PATH/../deploy.sh"
+      ssh -tt $PROJECT_USER@$HOST "cd $PROJECT_DIR &&
+      bash $PROJECT_DIR/../deploy.sh"
 
 build_backend:
   stage: build
@@ -86,8 +86,18 @@ phpstan_test:
   only:
     - develop
 
-deploy_staging:
+deploy_develop:
   <<: *deploy_job
   stage: deploy
+  variables:
+    HOST: $DEVELOP_HOST
+  only:
+    - develop
+
+deploy_qa:
+  <<: *deploy_job
+  stage: deploy
+  variables:
+    HOST: $QA_HOST
   only:
     - /^release/.*$/
