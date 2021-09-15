@@ -11,12 +11,20 @@ stages:
     - echo "$DEPLOYMENT_SSH_KEY" | tr -d '\r' | ssh-add - > /dev/null
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
-    - ssh-keyscan -t rsa $HOST >> ~/.ssh/known_hosts
+    - ssh-keyscan -t rsa -p $SSH_PORT $HOST >> ~/.ssh/known_hosts
   script:
-    - rsync -avuz --no-perms --omit-dir-times --exclude-from=.rsyncignore --delete --delete-after $CI_PROJECT_DIR/ $PROJECT_USER@$HOST:$PROJECT_DIR
+    - rsync -e "ssh -p $SSH_PORT" -avuz --no-perms --omit-dir-times --exclude-from=.rsyncignore --delete --delete-after $CI_PROJECT_DIR/ $PROJECT_USER@$HOST:$PROJECT_DIR
     - >
-      ssh -tt $PROJECT_USER@$HOST "cd $PROJECT_DIR &&
-      bash $PROJECT_DIR/../deploy.sh"
+      ssh -p $SSH_PORT $PROJECT_USER@$HOST "source /.victhorious/conf/shell/envvars && cd $PROJECT_DIR &&
+      ln -sf ../../lib/modules $PROJECT_DIR/web/modules/custom &&
+      ln -sf ../../lib/themes $PROJECT_DIR/web/themes/custom &&
+      ln -sf ../../lib/profiles $PROJECT_DIR/web/profiles/custom &&
+      ./vendor/bin/drush status &&
+      ./vendor/bin/drush updb -y &&
+      ./vendor/bin/drush cr &&
+      ./vendor/bin/drush cim -y &&
+      ./vendor/bin/drush pmu basic_auth -y &&
+      ./vendor/bin/drush cr"
 
 build_backend:
   stage: build
@@ -28,7 +36,6 @@ build_backend:
     # Current version of Gitlab (require > 14.2.0) doesn't support variable overrides using the 'rules' property
     # Dynamically define the --no-dev option once updated (e.g: added on develop and not other branches)
     - composer --no-ansi --no-interaction install --no-progress --prefer-dist --optimize-autoloader
-    # We don't have our php-qa image for the moment providing coding style standards
     # Gitlab CI will exclude any directory containing a .git folder from artifacts, remove it temporarily
     - find $CI_PROJECT_DIR/web/modules/contrib -type d -name ".git" -exec rm -rf {} +
     - find $CI_PROJECT_DIR/vendor -type d -name ".git" -exec rm -rf {} +
