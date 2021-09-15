@@ -1,16 +1,16 @@
-uuid: ba1d70a5-550f-4b7a-9cae-05a49d4d94ef
+uuid: 5946d267-a169-4ad3-97a3-0669760db678
 langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.node.field_video
+    - field.storage.node.field_related_downloads
     - media.type.video
     - node.type.discussion
-id: node.discussion.field_video
-field_name: field_video
+id: node.discussion.field_related_downloads
+field_name: field_related_downloads
 entity_type: node
 bundle: discussion
-label: Video
+label: Downloads
 description: ''
 required: false
 translatable: true
