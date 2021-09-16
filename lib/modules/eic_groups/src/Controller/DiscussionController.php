@@ -25,6 +25,8 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class DiscussionController extends ControllerBase {
 
+  const BATCH_PAGE = 3;
+
   /**
    * The entity type manager.
    *
@@ -86,7 +88,7 @@ class DiscussionController extends ControllerBase {
       'status' => CommentInterface::PUBLISHED,
       'uid' => $user->id(),
       'entity_type' => 'node',
-      'entity_id' => 10,
+      'entity_id' => $discussion_id,
       'field_name' => 'comment',
       'comment_body' => [
         'value' => $text,
@@ -111,12 +113,29 @@ class DiscussionController extends ControllerBase {
    * @throws \Drupal\Core\Entity\EntityMalformedException
    */
   public function fetchComments(Request $request, $discussion_id) {
-    $comments = $this->entityTypeManager->getStorage('comment')
+    $page = $request->query->get('page', 1);
+    $parent_id = $request->query->get('parentId', 0);
+    $total_to_load = $page * self::BATCH_PAGE;
+
+    $query = $this->entityTypeManager->getStorage('comment')
       ->getQuery()
-      ->condition('entity_id', $discussion_id)
-      ->condition('pid', 0, 'IS NULL')
+      ->condition('pid', $parent_id, $parent_id === 0 ? 'IS NULL' : '=')
       ->condition('status', Node::PUBLISHED)
       ->sort('created', 'DESC')
+      ->range(0, $total_to_load);
+
+    if (!$parent_id) {
+      $query->condition('entity_id', $discussion_id);
+    }
+
+    $comments = $query->execute();
+
+    $total = $this->entityTypeManager->getStorage('comment')
+      ->getQuery()
+      ->condition('entity_id', $discussion_id)
+      ->condition('pid', $parent_id, $parent_id === 0 ? 'IS NULL' : '=')
+      ->condition('status', Node::PUBLISHED)
+      ->count()
       ->execute();
 
     $account = $this->currentUser();
@@ -126,7 +145,6 @@ class DiscussionController extends ControllerBase {
     foreach ($comments as $comment) {
       $user = $comment->getOwner();
 
-
       /** @var \Drupal\media\MediaInterface|null $media_picture */
       $media_picture = $user->get('field_media')->referencedEntities();
       /** @var File|NULL $file */
@@ -135,17 +153,21 @@ class DiscussionController extends ControllerBase {
 
       $comments_data[] = [
         'user_image' => $file_url,
+        'user_id' => $user->id(),
         'user_fullname' => $user->get('field_first_name')->value . ' ' . $user->get('field_last_name')->value,
         'user_url' => $user->toUrl()->toString(),
         'created_timestamp' => $comment->getCreatedTime(),
         'text' => $comment->get('comment_body')->value,
         'comment_id' => $comment->id(),
-        'children' => $this->getComments($discussion_id, $comment->id()),
         'likes' => $this->getCommentLikesData($comment, $account),
       ];
     }
 
-    return new JsonResponse($comments_data);
+    $data['comments'] = $comments_data;
+    $data['total'] = $total;
+    $data['total_loaded'] = $total_to_load;
+
+    return new JsonResponse($data);
   }
 
   /**
@@ -235,55 +257,6 @@ class DiscussionController extends ControllerBase {
       'total' => count($flags),
       'hasAccountLike' => $hasAccountLiked,
     ];
-  }
-
-  /**
-   * @param int $discussion_id
-   * @param int $parent_id
-   *
-   * @return array|array[]
-   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
-   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
-   * @throws \Drupal\Core\Entity\EntityMalformedException
-   */
-  private function getComments(int $discussion_id, int $parent_id = 0): array {
-    $query = $this->entityTypeManager->getStorage('comment')
-      ->getQuery()
-      ->condition('entity_id', $discussion_id)
-      ->condition('pid', $parent_id)
-      ->sort('created', 'DESC');
-
-    $parent_id === 0 ?
-      $query->condition('pid', 0, 'IS NULL') :
-      $query->condition('pid', $parent_id);
-
-    $comments_id = $query->execute();
-
-    $comments = Comment::loadMultiple($comments_id);
-
-    if (empty($comments)) {
-      return [];
-    }
-
-    return array_map(function (Comment $comment) {
-      $user = $comment->getOwner();
-
-      /** @var \Drupal\media\MediaInterface|null $media_picture */
-      $media_picture = $user->get('field_media')->referencedEntities();
-      /** @var File|NULL $file */
-      $file = $media_picture ? File::load($media_picture[0]->get('oe_media_image')->target_id) : NULL;
-      $file_url = $file ? file_url_transform_relative(file_create_url($file->get('uri')->value)) : NULL;
-
-      return [
-        'user_image' => $file_url,
-        'user_fullname' => $user->get('field_first_name')->value . ' ' . $user->get('field_last_name')->value,
-        'user_url' => $user->toUrl()->toString(),
-        'created_timestamp' => $comment->getCreatedTime(),
-        'text' => $comment->get('comment_body')->value,
-        'comment_id' => $comment->id(),
-        'likes' => $this->getCommentLikesData($comment, $this->currentUser()),
-      ];
-    }, $comments);
   }
 
 }

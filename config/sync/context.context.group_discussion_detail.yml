@@ -4,6 +4,7 @@ status: true
 dependencies:
   module:
     - ctools
+    - eic_groups
 name: group_discussion_detail
 label: 'Group - Discussion detail'
 group: Groups
@@ -21,7 +22,22 @@ conditions:
       node: '@node.node_route_context:node'
 reactions:
   blocks:
-    blocks: {  }
+    blocks:
+      ad141b0c-8fec-4345-9194-0fc26cfcb4df:
+        id: eic_groups_comments_from_discussion
+        label: 'EIC comments from discussion'
+        provider: eic_groups
+        label_display: '0'
+        region: content
+        weight: '0'
+        context_mapping: {  }
+        custom_id: eic_groups_comments_from_discussion
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: group_discussion_detail
+        third_party_settings: {  }
+        uuid: ad141b0c-8fec-4345-9194-0fc26cfcb4df
     id: blocks
     saved: false
     uuid: 2638f701-9750-4f62-b60e-8cf9bb649629
