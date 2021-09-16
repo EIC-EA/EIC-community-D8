@@ -194,7 +194,7 @@ class Pathauto implements ContainerInjectionInterface {
    * @param \Drupal\group\Entity\GroupInterface $entity
    *   The group entity object.
    */
-  private function createGroupUrlAliasUpdateQueueItem(GroupInterface $entity) {
+  public function createGroupUrlAliasUpdateQueueItem(GroupInterface $entity) {
     if (is_null($this->state->get(CronOperations::GROUP_URL_ALIAS_UPDATE_STATE_CACHE . $entity->id()))) {
       $queue = $this->queueFactory->get(CronOperations::GROUP_URL_ALIAS_UPDATE_QUEUE);
       $queue->createItem([
