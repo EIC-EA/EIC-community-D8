@@ -34,7 +34,7 @@ function eic_group_statistics_schema() {
       'members' => [
         'description' => 'Number of group members.',
         'type' => 'int',
-        'unsigned' => TRUE,
+        'unsigned' => FALSE,
         'not null' => TRUE,
         'default' => 0,
         'size' => 'medium',
@@ -42,7 +42,7 @@ function eic_group_statistics_schema() {
       'comments' => [
         'description' => 'Number of comments in the group',
         'type' => 'int',
-        'unsigned' => TRUE,
+        'unsigned' => FALSE,
         'not null' => TRUE,
         'default' => 0,
         'size' => 'medium',
@@ -50,7 +50,7 @@ function eic_group_statistics_schema() {
       'files' => [
         'description' => 'Number of files added to the group.',
         'type' => 'int',
-        'unsigned' => TRUE,
+        'unsigned' => FALSE,
         'not null' => TRUE,
         'default' => 0,
         'size' => 'medium',
@@ -58,7 +58,7 @@ function eic_group_statistics_schema() {
       'events' => [
         'description' => 'Number of events.',
         'type' => 'int',
-        'unsigned' => TRUE,
+        'unsigned' => FALSE,
         'not null' => TRUE,
         'default' => 0,
         'size' => 'medium',

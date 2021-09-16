@@ -1,0 +1,6 @@
+services:
+  eic_group_statistics.commands:
+    class: \Drupal\eic_group_statistics\Commands\GroupStatisticsCommands
+    arguments: ['@eic_group_statistics.helper']
+    tags:
+      - { name: drush.command }
