@@ -81,6 +81,6 @@ process:
 destination:
   plugin: 'entity:profile'
 migration_dependencies:
-  required: {  }
-  optional:
+  required:
     - upgrade_d7_user
+  optional: {  }

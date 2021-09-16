@@ -37,8 +37,8 @@ destination:
   plugin: 'entity:media'
   default_bundle: video
 migration_dependencies:
-  optional:
+  required:
     - upgrade_d7_user
     - upgrade_d7_file
     - upgrade_d7_file_private
-  required: { }
+  optional: { }

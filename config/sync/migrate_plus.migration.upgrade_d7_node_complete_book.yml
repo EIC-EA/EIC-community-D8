@@ -70,11 +70,11 @@ destination:
   translations: true
   default_bundle: book
 migration_dependencies:
-  required: {  }
-  optional:
+  required:
     - upgrade_d7_user
     - upgrade_d7_file_audio_to_media
     - upgrade_d7_file_document_to_media
     - upgrade_d7_file_image_to_media
     - upgrade_d7_file_undefined_to_media
     - upgrade_d7_file_video_to_media
+  optional: {  }

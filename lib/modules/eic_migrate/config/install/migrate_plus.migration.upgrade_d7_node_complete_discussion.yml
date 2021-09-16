@@ -124,8 +124,7 @@ destination:
   translations: true
   default_bundle: discussion
 migration_dependencies:
-  required: { }
-  optional:
+  required:
     - upgrade_d7_user
     - upgrade_d7_file_audio_to_media
     - upgrade_d7_file_document_to_media
@@ -137,3 +136,4 @@ migration_dependencies:
     - smed_thematics_topics_lvl1
     - smed_thematics_topics_lvl2
     - smed_thematics_topics_lvl3
+  optional: { }

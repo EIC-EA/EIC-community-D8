@@ -66,8 +66,7 @@ destination:
   plugin: 'entity:media'
   default_bundle: photo
 migration_dependencies:
-  required: { }
-  optional:
+  required:
     - upgrade_d7_user
     - upgrade_d7_file
     - upgrade_d7_file_private
@@ -76,3 +75,4 @@ migration_dependencies:
 #    - upgrade_d7_file_image_to_media
 #    - upgrade_d7_file_undefined_to_media
 #    - upgrade_d7_file_video_to_media
+  optional: { }
