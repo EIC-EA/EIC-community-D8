@@ -55,6 +55,7 @@ class CommentMessageCreator extends MessageCreatorBase {
       return;
     }
 
+    /** @var \Drupal\Core\Entity\ContentEntityInterface $commented_entity */
     $commented_entity = $entity->getCommentedEntity();
     $group_content = $this->contentHelper->getGroupContentByEntity($commented_entity);
     if (empty($group_content)) {

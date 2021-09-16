@@ -153,6 +153,7 @@ class RequestMessageCreator extends MessageCreatorBase {
       return;
     }
 
+    $messages = [];
     foreach ($to as $user) {
       $message = $this->entityTypeManager->getStorage('message')->create(
         [
