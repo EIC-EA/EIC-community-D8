@@ -21,11 +21,11 @@ eic_groups.discussion_fetch_comment:
   requirements:
     _permission: 'access content'
 
-eic_groups.discussion_like_comment:
-  path: '/api/discussion/{discussion_id}/like/{comment_id}/{type}'
+eic_groups.discussion_flag_comment:
+  path: '/api/discussion/{discussion_id}/{flag}/{comment_id}/{type}'
   methods: [ POST ]
   defaults:
-    _controller: '\Drupal\eic_groups\Controller\DiscussionController::likeComment'
+    _controller: '\Drupal\eic_groups\Controller\DiscussionController::flagComment'
   requirements:
     _permission: 'access content'
 

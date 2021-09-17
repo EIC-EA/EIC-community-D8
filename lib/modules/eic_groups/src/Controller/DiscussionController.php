@@ -10,6 +10,7 @@ use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\eic_flags\RequestStatus;
 use Drupal\file\Entity\File;
 use Drupal\flag\FlaggingInterface;
 use Drupal\flag\FlagService;
@@ -89,7 +90,7 @@ class DiscussionController extends ControllerBase {
       'uid' => $user->id(),
       'entity_type' => 'node',
       'entity_id' => $discussion_id,
-      'field_name' => 'comment',
+      'field_name' => 'field_comments',
       'comment_body' => [
         'value' => $text,
         'format' => 'plain_text',
@@ -172,27 +173,57 @@ class DiscussionController extends ControllerBase {
 
   /**
    * @param \Symfony\Component\HttpFoundation\Request $request
-   * @param $discussion_id
-   * @param $comment_id
-   * @param $type
+   * @param int $discussion_id
+   * @param int $comment_id
+   * @param string $flag
+   * @param string $type
    *
    * @return \Symfony\Component\HttpFoundation\JsonResponse
    */
-  public function likeComment(Request $request, $discussion_id, $comment_id, $type) {
+  public function flagComment(
+    Request $request,
+    int $discussion_id,
+    int $comment_id,
+    string $flag,
+    string $type
+  ): JsonResponse {
     $comment = Comment::load($comment_id);
 
     if (!$comment instanceof CommentInterface) {
       return new JsonResponse([], Response::HTTP_BAD_REQUEST);
     }
 
+    $content = json_decode($request->getContent(), TRUE);
+    $text = Xss::filter($content['text']);
+
     try {
-      $this->flagService->{$type}(
-        $this->flagService->getFlagById('like_comment'),
-        $comment
-      );
-    } catch (\LogicException $e) {
+      if ('like_comment' === $flag) {
+        $this->flagService->{$type}(
+          $this->flagService->getFlagById('like_comment'),
+          $comment
+        );
+      } else {
+        $flag_entity = $this->flagService->getFlagById($flag);
+
+        $flagging = $this->entityTypeManager->getStorage('flagging')->create(
+          [
+            'uid' => $this->currentUser()->id(),
+            'session_id' => NULL,
+            'flag_id' => $flag_entity->id(),
+            'entity_id' => $comment_id,
+            'entity_type' => 'comment',
+            'global' => $flag_entity->isGlobal(),
+          ]
+        );
+
+        $flagging->set('field_request_reason', $text);
+        $flagging->set('field_request_status', RequestStatus::OPEN);
+
+        $flagging->save();
+      }
+    } catch (\Exception $e) {
       \Drupal::logger('eic_groups')->error($e);
-      return new JsonResponse([], Response::HTTP_BAD_REQUEST);
+      return new JsonResponse($e->getMessage(), Response::HTTP_BAD_REQUEST);
     }
 
     return new JsonResponse([]);
