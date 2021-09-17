@@ -7,6 +7,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\eic_comments\CommentsHelper;
 use Drupal\eic_group_statistics\GroupStatisticsSearchApiReindex;
+use Drupal\eic_group_statistics\GroupStatisticsStorage;
 use Drupal\eic_group_statistics\GroupStatisticsStorageInterface;
 use Drupal\eic_group_statistics\GroupStatisticTypes;
 use Drupal\entity_usage\EntityUsageInterface;
@@ -21,6 +22,21 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Implementations of entity hooks.
  */
 class EntityOperations implements ContainerInjectionInterface {
+
+  /**
+   * Identifies the file statistics create operation when creating a node.
+   */
+  const GROUP_FILE_STATISTICS_CREATE_OPERATION = 'create';
+
+  /**
+   * Identifies the file statistics update operation when updating a node.
+   */
+  const GROUP_FILE_STATISTICS_UPDATE_OPERATION = 'update';
+
+  /**
+   * Identifies the file statistics delete operation when deleting a node.
+   */
+  const GROUP_FILE_STATISTICS_DELETE_OPERATION = 'delete';
 
   /**
    * The Group statistics storage.
@@ -119,51 +135,7 @@ class EntityOperations implements ContainerInjectionInterface {
       case 'group-group_node-document':
       case 'group-group_node-wiki_page':
       case 'group-group_node-gallery':
-        /** @var \Drupal\node\NodeInterface $node */
-        $node = $entity->getEntity();
-
-        // If node is not published, we don't need to update group statistics.
-        if (!$node->isPublished()) {
-          $re_index = FALSE;
-          break;
-        }
-
-        $medias = [];
-
-        // @todo In the future we should consider configuring which fields to
-        // use via config entity and using an administration form.
-        $media_fields = [
-          'field_document_media',
-          'field_photos',
-          'field_related_downloads',
-          'field_related_documents',
-        ];
-        foreach ($media_fields as $field_name) {
-          if ($node->hasField($field_name)) {
-            foreach ($node->get($field_name)->referencedEntities() as $media) {
-              /** @var \Drupal\media\MediaInterface $media */
-              $medias[] = $media;
-            }
-          }
-        }
-
-        // If node has no media entities, we don't need to update group file
-        // statistics.
-        if (empty($medias)) {
-          $re_index = FALSE;
-          break;
-        }
-
-        // Counts the number of times we need to increment the file statistic.
-        $count = $this->countGroupFileStatistics($group, $node, $medias);
-
-        if (!$count) {
-          $re_index = FALSE;
-          break;
-        }
-
-        // Update group file statistics.
-        $this->groupStatisticsStorage->increment($group, GroupStatisticTypes::STAT_TYPE_FILES, $count);
+        $re_index = $this->updateGroupFileStatistics($entity->getEntity(), $entity);
         break;
 
       default:
@@ -234,42 +206,7 @@ class EntityOperations implements ContainerInjectionInterface {
       case 'document':
       case 'wiki_page':
       case 'gallery':
-        $medias = [];
-
-        // @todo In the future we should consider configuring which fields to
-        // use via config entity and using an administration form.
-        $media_fields = [
-          'field_document_media',
-          'field_photos',
-          'field_related_downloads',
-          'field_related_documents',
-        ];
-        foreach ($media_fields as $field_name) {
-          if ($entity->hasField($field_name)) {
-            foreach ($entity->get($field_name)->referencedEntities() as $media) {
-              /** @var \Drupal\media\MediaInterface $media */
-              $medias[] = $media;
-            }
-          }
-        }
-
-        // If node has no media entities, we don't need to update group file
-        // statistics.
-        if (empty($medias)) {
-          $re_index = FALSE;
-          break;
-        }
-
-        // Counts the number of times we need to decrement the file statistic.
-        $count = $this->countGroupFileStatistics($group, $entity, $medias);
-
-        if (!$count) {
-          $re_index = FALSE;
-          break;
-        }
-
-        // Update group file statistics.
-        $this->groupStatisticsStorage->decrement($group, GroupStatisticTypes::STAT_TYPE_FILES, $count);
+        $re_index = $this->updateGroupFileStatistics($entity, $group_content, self::GROUP_FILE_STATISTICS_DELETE_OPERATION);
         break;
 
       default:
@@ -304,96 +241,7 @@ class EntityOperations implements ContainerInjectionInterface {
       case 'document':
       case 'wiki_page':
       case 'gallery':
-        $old_medias = [];
-        $medias = [];
-        $unpublished_node_medias = [];
-
-        // @todo In the future we should consider configuring which fields to
-        // use via config entity and using an administration form.
-        $media_fields = [
-          'field_document_media',
-          'field_photos',
-          'field_related_downloads',
-          'field_related_documents',
-        ];
-        foreach ($media_fields as $field_name) {
-          if ($entity->hasField($field_name)) {
-
-            // Sets array of old medias to decrement from group file
-            // statistics.
-            foreach ($entity->original->get($field_name)->referencedEntities() as $media) {
-              $old_medias[$media->id()] = $media;
-            }
-
-            // Sets array of new medias to increment to the group file
-            // statistics.
-            foreach ($entity->get($field_name)->referencedEntities() as $media) {
-              if (!isset($old_medias[$media->id()])) {
-                $medias[$media->id()] = $media;
-              }
-              else {
-                unset($old_medias[$media->id()]);
-
-                // If the node has been unpublished, we add the node medias to
-                // an array so that they get decremented from file statistics.
-                if ($entity->original->isPublished() && !$entity->isPublished()) {
-                  $unpublished_node_medias[$media->id()] = $media;
-                }
-                elseif (!$entity->original->isPublished() && $entity->isPublished()) {
-                  // If the node has been published, we add the node medias to
-                  // the medias array so that they get incremented in file
-                  // statistics.
-                  $medias[$media->id()] = $media;
-                }
-              }
-            }
-          }
-        }
-
-        // If there are no media entities to increment or decrement, then we
-        // don't need to update group file statistics.
-        if (empty($medias) && empty($old_medias) && empty($unpublished_node_medias)) {
-          $re_index = FALSE;
-          break;
-        }
-
-        $increment_count = 0;
-        if (!empty($medias) && $entity->isPublished()) {
-          // Counts the number of times we need to increment to the file
-          // statistics.
-          $increment_count = $this->countGroupFileStatistics($group, $entity, $medias);
-        }
-
-        $decrement_count = 0;
-        if (!empty($old_medias) && $entity->original->isPublished()) {
-          // Counts the number of times we need to decrement in the file
-          // statistics. Note that we decrement only if the previous status
-          // was published.
-          $decrement_count = $this->countGroupFileStatistics($group, $entity, $old_medias);
-        }
-
-        if (!empty($unpublished_node_medias)) {
-          // Counts the number of times we need to decrement in the file
-          // statistics when the node is unpublished.
-          $decrement_count += $this->countGroupFileStatistics($group, $entity, $unpublished_node_medias);
-        }
-
-        // If counters are empty, we don't need to update group file
-        // statistics.
-        if (!$increment_count && !$decrement_count) {
-          $re_index = FALSE;
-          break;
-        }
-
-        // Increments group file statistics.
-        if ($increment_count) {
-          $this->groupStatisticsStorage->increment($group, GroupStatisticTypes::STAT_TYPE_FILES, $increment_count);
-        }
-
-        // Decrements group file statistics.
-        if ($decrement_count) {
-          $this->groupStatisticsStorage->decrement($group, GroupStatisticTypes::STAT_TYPE_FILES, $decrement_count);
-        }
+        $re_index = $this->updateGroupFileStatistics($entity, $group_content, self::GROUP_FILE_STATISTICS_UPDATE_OPERATION);
         break;
 
       default:
@@ -434,6 +282,243 @@ class EntityOperations implements ContainerInjectionInterface {
   }
 
   /**
+   * Updates group file statistics when a node is created/updated/deleted.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The node entity object.
+   * @param \Drupal\group\Entity\GroupContentInterface $group_content
+   *   The group content entity object that relates to the node.
+   * @param string $operation
+   *   The operation type: "create", "update" or "delete".
+   *
+   * @return bool
+   *   TRUE if the group file statistics have been updated.
+   */
+  private function updateGroupFileStatistics(
+    EntityInterface $entity,
+    GroupContentInterface $group_content,
+    $operation = self::GROUP_FILE_STATISTICS_CREATE_OPERATION
+  ) {
+    $group = $group_content->getGroup();
+
+    // If operation is "create" we assume this group content node is new.
+    $group_content_is_new = $operation === self::GROUP_FILE_STATISTICS_CREATE_OPERATION ? TRUE : FALSE;
+
+    $old_medias = [];
+    $medias = [];
+    $unpublished_node_medias = [];
+
+    // Gets the array of field names that will be used to count group file
+    // statistics.
+    $media_fields = GroupStatisticsStorage::getGroupFileStatisticFields();
+
+    foreach ($media_fields as $key => $field_name) {
+      // If $field_name is an array we assume we are dealing with an entity
+      // reference field.
+      // @todo Currently it supports only paragraph entities. We should improve
+      // it in order to support all entity types. This is also not bullet proof
+      // since it does not support also more than 1 level of fields and
+      // therefore, we can't check for nested entity reference fields.
+      if (is_array($field_name)) {
+        if ($entity->hasField($key)) {
+
+          /** @var \Drupal\Core\Field\FieldDefinitionInterface $field_definition */
+          $field_definition = $entity->get($key)->getFieldDefinition();
+
+          if (
+            $field_definition->getType() === 'entity_reference_revisions'
+          ) {
+
+            // Node is not new, so we need grab the old medias to decrement
+            // later.
+            if (!$group_content_is_new && $operation === self::GROUP_FILE_STATISTICS_UPDATE_OPERATION) {
+              foreach ($entity->original->get($key)->referencedEntities() as $paragraph) {
+                foreach ($field_name as $paragraph_field) {
+                  // Sets array of old medias to decrement from group file
+                  // statistics.
+                  foreach ($paragraph->get($paragraph_field)->referencedEntities() as $media) {
+                    $old_medias[$media->id()] = $media;
+                  }
+                }
+              }
+            }
+
+            foreach ($entity->get($key)->referencedEntities() as $paragraph) {
+              foreach ($field_name as $paragraph_field) {
+                // Sets array of new medias to increment to the group file
+                // statistics.
+                foreach ($paragraph->get($paragraph_field)->referencedEntities() as $media) {
+
+                  // Node is new, so we just need to add the new medias to
+                  // increment.
+                  if ($group_content_is_new || $operation === self::GROUP_FILE_STATISTICS_DELETE_OPERATION) {
+                    $medias[] = $media;
+                    continue;
+                  }
+
+                  // At this point it means the node alrady exists.
+                  if (!isset($old_medias[$media->id()])) {
+                    $medias[$media->id()] = $media;
+                  }
+                  else {
+                    unset($old_medias[$media->id()]);
+
+                    // If the node has been unpublished, we add the node
+                    // medias to an array so that they get decremented from
+                    // file statistics.
+                    if ($entity->original->isPublished() && !$entity->isPublished()) {
+                      $unpublished_node_medias[$media->id()] = $media;
+                    }
+                    elseif (!$entity->original->isPublished() && $entity->isPublished()) {
+                      // If the node has been published, we add the node
+                      // medias to the medias array so that they get
+                      // incremented in file statistics.
+                      $medias[$media->id()] = $media;
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+        continue;
+      }
+
+      if ($entity->hasField($field_name)) {
+
+        // Node is not new, so we need grab the old medias to decrement later.
+        if (!$group_content_is_new && $operation === self::GROUP_FILE_STATISTICS_UPDATE_OPERATION) {
+          // Sets array of old medias to decrement from group file
+          // statistics.
+          foreach ($entity->original->get($field_name)->referencedEntities() as $media) {
+            $old_medias[$media->id()] = $media;
+          }
+        }
+
+        // Sets array of new medias to increment to the group file
+        // statistics.
+        foreach ($entity->get($field_name)->referencedEntities() as $media) {
+
+          if ($group_content_is_new || $operation === self::GROUP_FILE_STATISTICS_DELETE_OPERATION) {
+            $medias[] = $media;
+            continue;
+          }
+
+          if (!isset($old_medias[$media->id()])) {
+            $medias[$media->id()] = $media;
+          }
+          else {
+            unset($old_medias[$media->id()]);
+
+            // If the node has been unpublished, we add the node medias to
+            // an array so that they get decremented from file statistics.
+            if ($entity->original->isPublished() && !$entity->isPublished()) {
+              $unpublished_node_medias[$media->id()] = $media;
+            }
+            elseif (!$entity->original->isPublished() && $entity->isPublished()) {
+              // If the node has been published, we add the node medias to
+              // the medias array so that they get incremented in file
+              // statistics.
+              $medias[$media->id()] = $media;
+            }
+          }
+        }
+      }
+    }
+
+    // Updates group file statistics depending on the node operation: "create",
+    // "update" or "delete".
+    switch ($operation) {
+      case self::GROUP_FILE_STATISTICS_CREATE_OPERATION:
+        // This is a new node so we count the new medias.
+        // If node has no media entities, we don't need to update group file
+        // statistics.
+        if (empty($medias)) {
+          return FALSE;
+        }
+
+        // Counts the number of times we need to decrement the file statistic.
+        $count = $this->countGroupFileStatistics($group, $entity, $medias);
+
+        if (!$count) {
+          return FALSE;
+        }
+
+        // Update group file statistics.
+        $this->groupStatisticsStorage->increment($group, GroupStatisticTypes::STAT_TYPE_FILES, $count);
+
+        return TRUE;
+
+      case self::GROUP_FILE_STATISTICS_DELETE_OPERATION:
+        // If node has no media entities, we don't need to update group file
+        // statistics.
+        if (empty($medias)) {
+          return FALSE;
+        }
+
+        // Counts the number of times we need to decrement the file statistic.
+        $count = $this->countGroupFileStatistics($group, $entity, $medias);
+
+        if (!$count) {
+          return FALSE;
+        }
+
+        // Update group file statistics.
+        $this->groupStatisticsStorage->decrement($group, GroupStatisticTypes::STAT_TYPE_FILES, $count);
+
+        return TRUE;
+
+      case self::GROUP_FILE_STATISTICS_UPDATE_OPERATION:
+        // At this point, it means that the node already exists and we need to
+        // count the file statistics taking into consideration new and old
+        // medias. If there are no media entities to increment or decrement,
+        // then we don't need to update group file statistics.
+        if (empty($medias) && empty($old_medias) && empty($unpublished_node_medias)) {
+          return FALSE;
+        }
+
+        $increment_count = 0;
+        if (!empty($medias) && $entity->isPublished()) {
+          // Counts the number of times we need to increment to the file
+          // statistics.
+          $increment_count = $this->countGroupFileStatistics($group, $entity, $medias);
+        }
+
+        $decrement_count = 0;
+        if (!empty($old_medias) && $entity->original->isPublished()) {
+          // Counts the number of times we need to decrement in the file
+          // statistics. Note that we decrement only if the previous status
+          // was published.
+          $decrement_count = $this->countGroupFileStatistics($group, $entity, $old_medias);
+        }
+
+        if (!empty($unpublished_node_medias)) {
+          // Counts the number of times we need to decrement in the file
+          // statistics when the node is unpublished.
+          $decrement_count += $this->countGroupFileStatistics($group, $entity, $unpublished_node_medias);
+        }
+
+        // If counters are empty, we don't need to update group file
+        // statistics.
+        if (!$increment_count && !$decrement_count) {
+          return FALSE;
+        }
+
+        // Increments group file statistics.
+        if ($increment_count) {
+          $this->groupStatisticsStorage->increment($group, GroupStatisticTypes::STAT_TYPE_FILES, $increment_count);
+        }
+
+        // Decrements group file statistics.
+        if ($decrement_count) {
+          $this->groupStatisticsStorage->decrement($group, GroupStatisticTypes::STAT_TYPE_FILES, $decrement_count);
+        }
+        return TRUE;
+
+    }
+  }
+
+  /**
    * Counts group file statistics for a given node with medias.
    *
    * @param \Drupal\group\Entity\GroupInterface $group
@@ -450,6 +535,11 @@ class EntityOperations implements ContainerInjectionInterface {
   private function countGroupFileStatistics(GroupInterface $group, NodeInterface $node, array $medias = []) {
     $count_updates = 0;
 
+    $source_entity_types = [
+      'node',
+      'paragraph',
+    ];
+
     if (!$medias) {
       return $count_updates;
     }
@@ -460,7 +550,7 @@ class EntityOperations implements ContainerInjectionInterface {
       $media_usage = $this->entityUsage->listSources($media);
 
       // If there is no media usage, we increment the counter.
-      if (!isset($media_usage['node'])) {
+      if (!isset($media_usage['node']) && !isset($media_usage['paragraph'])) {
         $count_updates++;
         continue;
       }
@@ -474,30 +564,63 @@ class EntityOperations implements ContainerInjectionInterface {
       // If media is being referenced elsewhere, then we need to make sure it
       // hasn't been referenced in this group before updating the file
       // statistics.
-      if (count($media_usage['node']) > 0) {
+      if (count($media_usage['node']) > 0 || count($media_usage['paragraph']) > 0) {
         $source_nodes = [];
+        $source_node_ids = [];
 
-        // Because the media usage is saved per node revision, we need to make
-        // sure the media is presented in the latest revision of every node.
-        // If the media is not presented in the latest revision of a node, that
-        // node will be discarded.
-        foreach ($media_usage['node'] as $nid => $media_usage_items) {
-          $latest_vid = $this->entityTypeManager->getStorage('node')->getLatestRevisionId($nid);
+        foreach ($source_entity_types as $entity_type) {
 
-          foreach ($media_usage_items as $media_usage_item) {
-            if ((int) $media_usage_item['source_vid'] === $latest_vid) {
-              $node_revision = $this->entityTypeManager->getStorage('node')->loadRevision($latest_vid);
+          // Because the media usage is saved per revision, we need to make
+          // sure the media is presented in the latest revision of every
+          // entity. If the media is not presented in the latest revision, that
+          // entity will be discarded.
+          foreach ($media_usage[$entity_type] as $entity_id => $media_usage_items) {
+            $latest_vid = $this->entityTypeManager->getStorage($entity_type)->getLatestRevisionId($entity_id);
 
-              // Make sure the revision is published, otherwise we skip this
-              // node.
-              if (!$node_revision->isPublished()) {
-                continue;
+            foreach ($media_usage_items as $media_usage_item) {
+              if ((int) $media_usage_item['source_vid'] === $latest_vid) {
+                $entity_revision = $this->entityTypeManager->getStorage($entity_type)->loadRevision($latest_vid);
+
+                // If the source entity is a paragraph.
+                if ($entity_type === 'paragraph') {
+                  $paragraph_node = $entity_revision->getParentEntity();
+
+                  // If for some reason the paragraph points to a deleted
+                  // parent entity, we skip this one.
+                  if (!$paragraph_node) {
+                    continue;
+                  }
+
+                  // Make sure the paragraph node is published, otherwise we
+                  // skip this one.
+                  if (!$paragraph_node->isPublished()) {
+                    continue;
+                  }
+
+                  if ($node->id() === $paragraph_node->id()) {
+                    continue;
+                  }
+
+                  if (!in_array($paragraph_node->id(), $source_node_ids)) {
+                    $source_nodes[] = $paragraph_node;
+                    $source_node_ids[] = $paragraph_node->id();
+                  }
+                  break;
+                }
+
+                // Make sure the revision is published, otherwise we skip this
+                // node.
+                if (!$entity_revision->isPublished()) {
+                  continue;
+                }
+
+                $source_nodes[] = $entity_revision;
+                $source_node_ids[] = $entity_revision->id();
+
+                // Latest revision has been found in the usage. We don't need
+                // go through the remaining items.
+                break;
               }
-
-              $source_nodes[] = $this->entityTypeManager->getStorage('node')->loadRevision($latest_vid);
-              // Latest revision has been found in the usage. We don't need
-              // go through the remaining items.
-              break;
             }
           }
         }
