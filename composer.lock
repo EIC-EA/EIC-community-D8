@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5c76247cc894c7cc3efddf7ef7dc42e2",
+    "content-hash": "5753f4b167aaa406d5a80238f0f8ed6c",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -3971,6 +3971,145 @@
             }
         },
         {
+            "name": "drupal/media_avportal",
+            "version": "1.0.0-beta12",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/media_avportal.git",
+                "reference": "8.x-1.0-beta12"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/media_avportal-8.x-1.0-beta12.zip",
+                "reference": "8.x-1.0-beta12",
+                "shasum": "2ba42fbba8cf969881e2a7e46f240b64bd0ed4b3"
+            },
+            "require": {
+                "drupal/core": "^8.9 || ^9",
+                "drupal/remote_stream_wrapper": "^1.5",
+                "php": ">=7.3",
+                "symfony/mime": "^4.3|^5.0"
+            },
+            "require-dev": {
+                "behat/mink-selenium2-driver": "1.4.x-dev as 1.3.x-dev",
+                "composer/installers": "~1.5",
+                "cweagans/composer-patches": "^1.6",
+                "drupal/config_devel": "~1.2",
+                "drupal/core-composer-scaffold": "^9.0",
+                "drupal/drupal-extension": "~4.0",
+                "drush/drush": "~10.3",
+                "guzzlehttp/guzzle": "^6.3",
+                "nikic/php-parser": "^3.1.5",
+                "openeuropa/code-review": "~1.6",
+                "openeuropa/drupal-core-require-dev": "^8.9 || ^9",
+                "openeuropa/task-runner-drupal-project-symlink": "^1.0",
+                "phpunit/phpunit": "^7 || ^8"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "8.x-1.0-beta12",
+                    "datestamp": "1623742757",
+                    "security-coverage": {
+                        "status": "not-covered",
+                        "message": "Beta releases are not covered by Drupal security advisories."
+                    }
+                },
+                "patches": {
+                    "drupal/remote_stream_wrapper": {
+                        "https://www.drupal.org/project/remote_stream_wrapper/issues/3050183": "https://www.drupal.org/files/issues/2020-08-21/3050183-4.patch",
+                        "https://www.drupal.org/project/remote_stream_wrapper/issues/3185015": "https://www.drupal.org/files/issues/2021-05-10/3185015-29.patch"
+                    }
+                },
+                "composer-exit-on-patch-failure": true,
+                "enable-patching": true,
+                "installer-paths": {
+                    "build/core": [
+                        "type:drupal-core"
+                    ],
+                    "build/profiles/contrib/{$name}": [
+                        "type:drupal-profile"
+                    ],
+                    "build/modules/contrib/{$name}": [
+                        "type:drupal-module"
+                    ],
+                    "build/themes/contrib/{$name}": [
+                        "type:drupal-theme"
+                    ]
+                },
+                "drupal-scaffold": {
+                    "locations": {
+                        "web-root": "./build"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Drupal\\media_avportal\\": "./src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "Drupal\\Tests\\media_avportal\\": "./tests/src"
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "scripts": {
+                "post-install-cmd": [
+                    "./vendor/bin/run drupal:site-setup"
+                ],
+                "post-update-cmd": [
+                    "./vendor/bin/run drupal:site-setup"
+                ]
+            },
+            "license": [
+                "EUPL-1.2"
+            ],
+            "authors": [
+                {
+                    "name": "Delphine Lepers",
+                    "homepage": "https://www.drupal.org/user/821730"
+                },
+                {
+                    "name": "Upchuk",
+                    "homepage": "https://www.drupal.org/user/1885838"
+                },
+                {
+                    "name": "albapb",
+                    "homepage": "https://www.drupal.org/user/3572561"
+                },
+                {
+                    "name": "hernani",
+                    "homepage": "https://www.drupal.org/user/448086"
+                },
+                {
+                    "name": "ieguskiza",
+                    "homepage": "https://www.drupal.org/user/2652665"
+                },
+                {
+                    "name": "jyraya",
+                    "homepage": "https://www.drupal.org/user/1210442"
+                },
+                {
+                    "name": "netlooker",
+                    "homepage": "https://www.drupal.org/user/141800"
+                },
+                {
+                    "name": "sardara",
+                    "homepage": "https://www.drupal.org/user/2353864"
+                },
+                {
+                    "name": "stred",
+                    "homepage": "https://www.drupal.org/user/956840"
+                }
+            ],
+            "description": "Media AV Portal adds European Audiovisual Services as a supported media provider.",
+            "homepage": "https://www.drupal.org/project/media_avportal",
+            "support": {
+                "source": "https://git.drupalcode.org/project/media_avportal"
+            }
+        },
+        {
             "name": "drupal/media_entity_download",
             "version": "2.1.0",
             "source": {
@@ -5108,6 +5247,62 @@
             "homepage": "https://www.drupal.org/project/redis",
             "support": {
                 "source": "https://git.drupalcode.org/project/redis"
+            }
+        },
+        {
+            "name": "drupal/remote_stream_wrapper",
+            "version": "1.5.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/remote_stream_wrapper.git",
+                "reference": "8.x-1.5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/remote_stream_wrapper-8.x-1.5.zip",
+                "reference": "8.x-1.5",
+                "shasum": "1fa53144d3b5d70efc5481f95b6ba36ce927036b"
+            },
+            "require": {
+                "drupal/core": "^8.8 || ^9"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "8.x-1.5",
+                    "datestamp": "1597938476",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                },
+                "patches_applied": {
+                    "https://www.drupal.org/project/remote_stream_wrapper/issues/3050183": "https://www.drupal.org/files/issues/2020-08-21/3050183-4.patch",
+                    "https://www.drupal.org/project/remote_stream_wrapper/issues/3185015": "https://www.drupal.org/files/issues/2021-05-10/3185015-29.patch"
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Dave Reid",
+                    "homepage": "https://www.drupal.org/user/53892"
+                },
+                {
+                    "name": "arthurf",
+                    "homepage": "https://www.drupal.org/user/27259"
+                },
+                {
+                    "name": "becw",
+                    "homepage": "https://www.drupal.org/user/81067"
+                }
+            ],
+            "description": "Provides the ability to use external files over HTTP",
+            "homepage": "https://www.drupal.org/project/remote_stream_wrapper",
+            "support": {
+                "source": "https://git.drupalcode.org/project/remote_stream_wrapper"
             }
         },
         {
@@ -7913,40 +8108,49 @@
         },
         {
             "name": "openeuropa/oe_media",
-            "version": "dev-ISSUE-160-Drupal-9-support-without-media_avportal",
+            "version": "1.13.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/didierdemaeyer/oe_media.git",
-                "reference": "f9563b393e44bd25b62e9e12051415db89e89017"
+                "url": "https://github.com/openeuropa/oe_media.git",
+                "reference": "487828cc8460485218c189557c03bc187e8236a8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/openeuropa/oe_media/zipball/487828cc8460485218c189557c03bc187e8236a8",
+                "reference": "487828cc8460485218c189557c03bc187e8236a8",
+                "shasum": ""
             },
             "require": {
-                "drupal/embed": "^1.0",
-                "drupal/entity_browser": "^2.2",
+                "drupal/core": "^8.9 || ^9",
+                "drupal/embed": "^1.3",
+                "drupal/entity_browser": "^2.5",
                 "drupal/file_link": "^2.0.3",
-                "drupal/inline_entity_form": "^1.0",
-                "php": ">=7.2"
+                "drupal/inline_entity_form": "~1.0-rc9",
+                "drupal/media_avportal": "^1.0-beta12",
+                "php": ">=7.3"
             },
             "require-dev": {
                 "composer/installers": "~1.5",
                 "drupal/composite_reference": "^1.0@alpha",
                 "drupal/config_devel": "^1.7",
-                "drupal/core-composer-scaffold": "^8.8",
+                "drupal/core-composer-scaffold": "^8.9 || ^9",
                 "drupal/drupal-extension": "~4.0",
-                "drupal/json_field": "1.0-rc3",
-                "drupaltest/behat-traits": "~0.1",
-                "drush/drush": "~9.0",
+                "drupal/entity_reference_revisions": "^1.7",
+                "drupal/json_field": "~1.0-rc4",
+                "drupaltest/behat-traits": "dev-GH-6",
+                "drush/drush": "~10.3",
                 "guzzlehttp/guzzle": "~6.3",
-                "instaclick/php-webdriver": "^1.4.5",
+                "instaclick/php-webdriver": "^1.4.7",
                 "nikic/php-parser": "^3.1.5",
                 "openeuropa/behat-transformation-context": "~0.1",
-                "openeuropa/code-review": "~1.5.0",
-                "openeuropa/drupal-core-require-dev": "^8.7",
-                "openeuropa/oe_link_lists": "dev-master",
-                "openeuropa/oe_webtools": "dev-master",
-                "openeuropa/task-runner": "~1.0@beta",
-                "phpunit/phpunit": "~6.0",
-                "symfony/browser-kit": "~3.0||~4.0",
-                "twig/twig": "^1.40"
+                "openeuropa/code-review": "^1.7",
+                "openeuropa/drupal-core-require-dev": "^8.9 || ^9",
+                "openeuropa/oe_link_lists": "^0.11",
+                "openeuropa/oe_webtools": "^1.13",
+                "openeuropa/task-runner-drupal-project-symlink": "^1.0",
+                "phpunit/phpunit": "^7 || ^8",
+                "symfony/browser-kit": "~3.0 || ~4.0",
+                "twig/twig": "^1.40 || ^2.12"
             },
             "type": "drupal-module",
             "extra": {
@@ -7975,27 +8179,12 @@
                     "Drupal\\oe_media\\": "./src/"
                 }
             },
-            "autoload-dev": {
-                "psr-4": {
-                    "Drupal\\Tests\\oe_media\\": "./tests/",
-                    "Drupal\\Tests\\oe_media_embed\\": "./modules/oe_media_embed/tests/",
-                    "Drupal\\Tests\\oe_link_lists\\": "./build/modules/contrib/oe_link_lists/tests/",
-                    "Drupal\\Tests\\oe_link_lists_manual_source\\": "./build/modules/contrib/oe_link_lists/modules/oe_link_lists_manual_source/tests/"
-                }
-            },
-            "scripts": {
-                "post-install-cmd": [
-                    "./vendor/bin/run drupal:site-setup"
-                ],
-                "post-update-cmd": [
-                    "./vendor/bin/run drupal:site-setup"
-                ]
-            },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "EUPL-1.2"
             ],
             "description": "Media features for the OpenEuropa project.",
-            "time": "2021-03-22T15:37:27+00:00"
+            "time": "2021-08-16T13:00:44+00:00"
         },
         {
             "name": "openeuropa/oe_time_caching",
@@ -16798,12 +16987,6 @@
             "package": "composer/semver"
         },
         {
-            "alias": "1.11.0",
-            "alias_normalized": "1.11.0.0",
-            "version": "dev-ISSUE-160-Drupal-9-support-without-media_avportal",
-            "package": "openeuropa/oe_media"
-        },
-        {
             "alias": "1.0.0",
             "alias_normalized": "1.0.0.0",
             "version": "dev-ISSUE-6-Drupal-9-support",
@@ -16835,13 +17018,12 @@
         "drupal/openapi": 5,
         "drupal/openapi_rest": 5,
         "drupal/publication_date": 10,
-        "drupal/realname": 20,
+        "drupal/realname": 10,
         "drupal/search_api_attachments": 10,
         "drupal/search_api_spellcheck": 10,
         "drupal/social_link_field": 15,
         "ethosce/group_purl": 20,
         "lramarojaona/purl": 15,
-        "openeuropa/oe_media": 20,
         "openeuropa/oe_time_caching": 20,
         "openeuropa/oe_webtools": 20
     },
