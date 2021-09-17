@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5753f4b167aaa406d5a80238f0f8ed6c",
+    "content-hash": "f30b3ce34030b93ace782dacf92486d5",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -8260,42 +8260,46 @@
         },
         {
             "name": "openeuropa/oe_webtools",
-            "version": "dev-ISSUE-153-Drupal-9-support",
+            "version": "1.13.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/didierdemaeyer/oe_webtools.git",
-                "reference": "f25c5693087c05b97b6aefec33e727a72a1c094c"
+                "url": "https://github.com/openeuropa/oe_webtools.git",
+                "reference": "4a329d63c99bd15d9eb9fc5a12df28521f1b334b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/openeuropa/oe_webtools/zipball/4a329d63c99bd15d9eb9fc5a12df28521f1b334b",
+                "reference": "4a329d63c99bd15d9eb9fc5a12df28521f1b334b",
+                "shasum": ""
             },
             "require": {
+                "drupal/core": "^8.9 || ^9",
                 "ext-json": "*",
-                "php": ">=7.2"
+                "php": ">=7.3"
             },
             "conflict": {
                 "openeuropa/oe_webtools_location": "*"
             },
             "require-dev": {
                 "composer/installers": "~1.5",
-                "consolidation/annotated-command": "^2.8.2",
-                "consolidation/robo": "~1.4",
                 "drupal/config_devel": "~1.2",
-                "drupal/core-composer-scaffold": "^8.8",
+                "drupal/core-composer-scaffold": "^8.9 || ^9",
                 "drupal/drupal-extension": "^4.0",
                 "drupal/geocoder": "^3.0",
                 "drupal/geofield": "^1.0",
-                "drupal/json_field": "^1.0@RC",
-                "drupaltest/behat-traits": "~0.1",
-                "drush/drush": "~9.0",
-                "guzzlehttp/guzzle": "~6.3",
+                "drupal/json_field": "~1.0-rc4",
+                "drupaltest/behat-traits": "dev-GH-6",
+                "drush/drush": "~10.3",
                 "nikic/php-parser": "^3.1.5",
                 "openeuropa/behat-transformation-context": "~0.1",
-                "openeuropa/code-review": "~1.5.0",
-                "openeuropa/drupal-core-require-dev": "^8.7",
-                "openeuropa/oe_media": "^1.0@beta",
-                "openeuropa/oe_multilingual": "~1.2",
-                "openeuropa/task-runner": "~1.0.0-beta5",
+                "openeuropa/code-review": "~1.6",
+                "openeuropa/drupal-core-require-dev": "^8.9 || ^9",
+                "openeuropa/oe_media": "dev-master",
+                "openeuropa/oe_multilingual": "^1.8",
+                "openeuropa/task-runner-drupal-project-symlink": "^1.0",
                 "openeuropa/webtools-geocoding-provider": "~0.1",
-                "phpunit/phpunit": "~6.0",
-                "symfony/dom-crawler": "~3.4"
+                "phpunit/phpunit": "^7 || ^8",
+                "symfony/dom-crawler": "~3.4 || 4.4"
             },
             "type": "drupal-module",
             "extra": {
@@ -8326,24 +8330,12 @@
                     "Drupal\\oe_webtools\\": "./src/"
                 }
             },
-            "autoload-dev": {
-                "psr-4": {
-                    "Drupal\\Tests\\oe_webtools\\": "./tests/"
-                }
-            },
-            "scripts": {
-                "post-install-cmd": [
-                    "./vendor/bin/run drupal:site-setup"
-                ],
-                "post-update-cmd": [
-                    "./vendor/bin/run drupal:site-setup"
-                ]
-            },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "EUPL-1.2"
             ],
             "description": "OpenEuropa Webtools integration.",
-            "time": "2021-03-19T18:01:14+00:00"
+            "time": "2021-08-16T12:08:51+00:00"
         },
         {
             "name": "pear/archive_tar",
@@ -16105,7 +16097,6 @@
                     "type": "github"
                 }
             ],
-            "abandoned": true,
             "time": "2020-09-28T06:45:17+00:00"
         },
         {
@@ -16993,12 +16984,6 @@
             "package": "openeuropa/oe_time_caching"
         },
         {
-            "alias": "1.11.0",
-            "alias_normalized": "1.11.0.0",
-            "version": "dev-ISSUE-153-Drupal-9-support",
-            "package": "openeuropa/oe_webtools"
-        },
-        {
             "alias": "1.44.2",
             "alias_normalized": "1.44.2.0",
             "version": "2.14.3.0",
@@ -17024,8 +17009,7 @@
         "drupal/social_link_field": 15,
         "ethosce/group_purl": 20,
         "lramarojaona/purl": 15,
-        "openeuropa/oe_time_caching": 20,
-        "openeuropa/oe_webtools": 20
+        "openeuropa/oe_time_caching": 20
     },
     "prefer-stable": true,
     "prefer-lowest": false,
