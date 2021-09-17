@@ -74,7 +74,7 @@
         "lramarojaona/purl": "^1.0@alpha",
         "openeuropa/ecl-twig-loader": "^2.12",
         "openeuropa/oe_media": "^1.13",
-        "openeuropa/oe_time_caching": "dev-ISSUE-6-Drupal-9-support as 1.0.0",
+        "openeuropa/oe_time_caching": "^1.1",
         "openeuropa/oe_webtools": "^1.13",
         "softcreatr/jsonpath": "^0.7.5",
         "twig/twig": "2.14.3 as 1.44.2",
@@ -102,11 +102,6 @@
         "drupal": {
             "type": "composer",
             "url": "https://packages.drupal.org/8"
-        },
-        "oe_time_caching_fork": {
-            "url": "https://github.com/didierdemaeyer/oe_time_caching.git",
-            "type": "git",
-            "reference": "origin/ISSUE-6-Drupal-9-support"
         }
     },
     "extra": {

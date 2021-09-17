@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f30b3ce34030b93ace782dacf92486d5",
+    "content-hash": "1e1fb15a8ec5544f65f2278a399a2975",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -8188,27 +8188,33 @@
         },
         {
             "name": "openeuropa/oe_time_caching",
-            "version": "dev-ISSUE-6-Drupal-9-support",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/didierdemaeyer/oe_time_caching.git",
-                "reference": "be38cdf3eb89c588b933fe3c3b306824d1101997"
+                "url": "https://github.com/openeuropa/oe_time_caching.git",
+                "reference": "91d25c4cb3fa137aa125a1a536db7f5489ff2963"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/openeuropa/oe_time_caching/zipball/91d25c4cb3fa137aa125a1a536db7f5489ff2963",
+                "reference": "91d25c4cb3fa137aa125a1a536db7f5489ff2963",
+                "shasum": ""
             },
             "require": {
+                "drupal/core": "^8.9 || ^9",
                 "nesbot/carbon": "^2.29",
-                "php": ">=7.2"
+                "php": ">=7.3"
             },
             "require-dev": {
                 "composer/installers": "~1.5",
-                "drupal/config_devel": "~1.2",
-                "drupal/core-composer-scaffold": "^8.8",
+                "drupal/config_devel": "^1.8",
+                "drupal/core-composer-scaffold": "^8.9 || ^9",
                 "drupal/drupal-extension": "~4.0",
-                "drush/drush": "~9.0@stable",
-                "guzzlehttp/guzzle": "~6.3",
-                "openeuropa/code-review": "~1.0.0-beta2",
-                "openeuropa/drupal-core-require-dev": "^8.7",
-                "openeuropa/task-runner": "~1.0.0-beta5",
-                "phpunit/phpunit": "~6.0"
+                "drush/drush": "~10.3",
+                "openeuropa/code-review": "~1.6",
+                "openeuropa/drupal-core-require-dev": "^8.9 || ^9",
+                "openeuropa/task-runner-drupal-project-symlink": "^1.0",
+                "phpunit/phpunit": "^7 || ^8"
             },
             "type": "drupal-module",
             "extra": {
@@ -8239,24 +8245,12 @@
                     "Drupal\\oe_time_caching\\": "./src/"
                 }
             },
-            "autoload-dev": {
-                "psr-4": {
-                    "Drupal\\Tests\\oe_time_caching\\": "./tests/"
-                }
-            },
-            "scripts": {
-                "post-install-cmd": [
-                    "./vendor/bin/run drupal:site-setup"
-                ],
-                "post-update-cmd": [
-                    "./vendor/bin/run drupal:site-setup"
-                ]
-            },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "EUPL-1.2"
             ],
             "description": "OpenEuropa Time Caching.",
-            "time": "2021-03-21T21:06:55+00:00"
+            "time": "2021-08-16T08:11:57+00:00"
         },
         {
             "name": "openeuropa/oe_webtools",
@@ -16978,12 +16972,6 @@
             "package": "composer/semver"
         },
         {
-            "alias": "1.0.0",
-            "alias_normalized": "1.0.0.0",
-            "version": "dev-ISSUE-6-Drupal-9-support",
-            "package": "openeuropa/oe_time_caching"
-        },
-        {
             "alias": "1.44.2",
             "alias_normalized": "1.44.2.0",
             "version": "2.14.3.0",
@@ -17008,8 +16996,7 @@
         "drupal/search_api_spellcheck": 10,
         "drupal/social_link_field": 15,
         "ethosce/group_purl": 20,
-        "lramarojaona/purl": 15,
-        "openeuropa/oe_time_caching": 20
+        "lramarojaona/purl": 15
     },
     "prefer-stable": true,
     "prefer-lowest": false,
