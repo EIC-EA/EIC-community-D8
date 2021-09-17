@@ -3,11 +3,13 @@
 namespace Drupal\eic_default_content\Generator;
 
 
+use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_groups\GroupsModerationHelper;
 use Drupal\group\Entity\Group;
 use Drupal\group\Entity\GroupContent;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\node\Entity\Node;
+use Drupal\user\Entity\User;
 
 /**
  * Class GroupGenerator
@@ -44,6 +46,7 @@ class GroupGenerator extends CoreGenerator {
         'field_vocab_topics' => $this->getRandomEntities('taxonomy_term', ['vid' => 'topics'], 1),
         'field_vocab_geo' => $this->getRandomEntities('taxonomy_term', ['vid' => 'geo'], 1),
         'features' => $available_features,
+        'uid' => 1,
       ];
 
       $group = Group::create($values);
