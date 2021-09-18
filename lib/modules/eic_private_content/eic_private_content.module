@@ -59,8 +59,7 @@ function eic_private_content_entity_field_access(
     /** @var \Drupal\node\NodeTypeInterface $type */
     $type = $entity->type->entity;
     if ($type instanceof NodeTypeInterface) {
-      $privacy_setting = $type->getThirdPartySetting('eic_private_content',
-        PrivateContentConst::FIELD_NAME, FALSE);
+      $privacy_setting = $type->getThirdPartySetting('eic_private_content', PrivateContentConst::FIELD_NAME, FALSE);
       $is_private = $items->value;
 
       switch ($operation) {
@@ -97,8 +96,7 @@ function eic_private_content_form_node_type_form_alter(&$form, FormStateInterfac
     '#type' => 'checkbox',
     '#title' => t('Enable privacy'),
     '#description' => t('Allow users to mark nodes of this content type as private. Changing this value will update all existing nodes after running cron.'),
-    '#default_value' => $type->getThirdPartySetting('eic_private_content',
-      PrivateContentConst::FIELD_NAME, FALSE),
+    '#default_value' => $type->getThirdPartySetting('eic_private_content', PrivateContentConst::FIELD_NAME, FALSE),
   ];
 
   $form['#entity_builders'][] = 'eic_private_content_form_node_type_form_builder';
@@ -141,8 +139,7 @@ function eic_private_content_entity_access(
     case 'view':
       /** @var \Drupal\node\NodeTypeInterface $type */
       $type = $entity->type->entity;
-      $privacy_setting = $type->getThirdPartySetting('eic_private_content',
-        PrivateContentConst::FIELD_NAME, FALSE);
+      $privacy_setting = $type->getThirdPartySetting('eic_private_content', PrivateContentConst::FIELD_NAME, FALSE);
       $is_private = $entity->get('private')->value;
       $access = AccessResult::forbiddenIf(($privacy_setting && $is_private && !$account->hasPermission('view private content') && $entity->getOwnerId() !== $account->id()));
       break;
