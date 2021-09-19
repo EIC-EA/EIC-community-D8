@@ -19,4 +19,3 @@ parameters:
       - */eic_theme_helper/*
     ignoreErrors:
       - '#Unsafe usage of new static\(\).#'
-      - '#\Drupal calls should be avoided in classes, use dependency injection instead#'
