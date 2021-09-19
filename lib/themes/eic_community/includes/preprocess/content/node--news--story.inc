@@ -148,23 +148,36 @@ function _eic_community_display_flags(&$variables) {
  * Preproccess contributors.
  */
 function _eic_community_display_contributors(&$variables) {
-  if ($variables['node']->bundle() === 'story') {
-    $contributors = [];
+  /** @var \Drupal\node\NodeInterface $node */
+  $node = $variables['node'];
+  $contributors = [];
 
-    foreach ($variables['elements']['field_story_paragraphs'] as $key => $value) {
-      if (is_int($key)) {
-        $contributors[] = [
-          'content' => $value,
-        ];
+  $contributors_fields = [
+    'field_story_paragraphs',
+    'field_related_contributors',
+  ];
+
+  $field_title = FALSE;
+
+  foreach ($contributors_fields as $field_name) {
+    if ($node->hasField($field_name)) {
+      $field_title = $variables['elements'][$field_name]['#title'];
+
+      foreach ($variables['elements'][$field_name] as $key => $value) {
+        if (is_int($key)) {
+          $contributors[] = [
+            'content' => $value,
+          ];
+        }
       }
     }
+  }
 
-    if (count($contributors) > 0) {
-      $variables['contributors'] = [
-        'title' => $variables['elements']['field_story_paragraphs']['#title'],
-        'items' => $contributors,
-      ];
-    }
+  if (count($contributors) > 0) {
+    $variables['contributors'] = [
+      'title' => $field_title,
+      'items' => $contributors,
+    ];
   }
 }
 
