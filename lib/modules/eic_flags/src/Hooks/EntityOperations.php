@@ -8,6 +8,7 @@ use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountProxyInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
 use Drupal\eic_flags\FlaggedEntitiesListBuilder;
 use Drupal\eic_flags\Service\RequestHandlerCollector;
@@ -25,6 +26,8 @@ use Symfony\Component\HttpFoundation\RequestStack;
  * @package Drupal\eic_flags\Hooks
  */
 class EntityOperations implements ContainerInjectionInterface {
+
+  use StringTranslationTrait;
 
   /**
    * The EIC flag request handler collector.
@@ -154,11 +157,11 @@ class EntityOperations implements ContainerInjectionInterface {
 
       $type = $handler->getType();
       $operations['request_' . $type] = [
-        'title' => t('Request ' . $type),
+        'title' => $this->t('Request @type', ['@type' => $type]),
         'url' => $entity->toUrl('new-request')
           ->setRouteParameter(
             'destination',
-            \Drupal::request()->getRequestUri()
+            $this->currentRequest->getRequestUri()
           )
           ->setRouteParameter('request_type', $type),
       ];
@@ -188,7 +191,7 @@ class EntityOperations implements ContainerInjectionInterface {
     $url = Url::fromRoute('eic_flags.publish_archived_content', [
       'entity_type_id' => $entity->getEntityTypeId(),
       'entity_id' => $entity->id(),
-      'destination' => \Drupal::request()->getRequestUri(),
+      'destination' => $this->currentRequest->getRequestUri(),
     ]);
 
     if ($this->moderationInformation->isModeratedEntity($entity)) {
@@ -205,7 +208,7 @@ class EntityOperations implements ContainerInjectionInterface {
     ) {
       return [
         'publish' => [
-          'title' => t('Publish'),
+          'title' => $this->t('Publish'),
           'url' => $url,
         ],
       ];
@@ -339,11 +342,11 @@ class EntityOperations implements ContainerInjectionInterface {
     $old_topics = $profile->original->get('field_vocab_topic_interest')->referencedEntities();
     foreach ($old_topics as $topic) {
       if (!isset($topics[$topic->id()])) {
-        // @todo Unflag topic
+        // @todo Unflag topic.
         continue;
       }
 
-      // @todo Flag topic
+      // @todo Flag topic.
     }
 
   }
