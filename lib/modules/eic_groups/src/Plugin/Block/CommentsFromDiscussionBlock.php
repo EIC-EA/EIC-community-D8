@@ -5,10 +5,11 @@ namespace Drupal\eic_groups\Plugin\Block;
 use Drupal\Core\Block\Annotation\Block;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Drupal\Core\Url;
 use Drupal\eic_groups\EICGroupsHelper;
+use Drupal\group\Entity\GroupContent;
 use Drupal\group\GroupMembership;
 use Drupal\node\NodeInterface;
+use Drupal\oec_group_comments\GroupPermissionChecker;
 use Drupal\paragraphs\ParagraphInterface;
 use Drupal\user\Entity\User;
 use Drupal\user\UserInterface;
@@ -34,6 +35,13 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
   private $groupsHelper;
 
   /**
+   * The group permission checker
+   *
+   * @var GroupPermissionChecker
+   */
+  private $groupPermissionChecker;
+
+  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
@@ -42,6 +50,7 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
       $plugin_id,
       $plugin_definition,
       $container->get('eic_groups.helper'),
+      $container->get('oec_group_comments.group_permission_checker')
     );
   }
 
@@ -61,10 +70,12 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
     array $configuration,
     $plugin_id,
     $plugin_definition,
-    EICGroupsHelper $groups_helper
+    EICGroupsHelper $groups_helper,
+    GroupPermissionChecker $group_permission_checker
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->groupsHelper = $groups_helper;
+    $this->groupPermissionChecker = $group_permission_checker;
   }
 
   /**
@@ -87,12 +98,15 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
       $user_group_roles = $membership instanceof GroupMembership ? $membership->getRoles() : [];
     }
 
-    $contributors = $node->get('field_related_contributors')->referencedEntities();
-    $contributors = array_filter($contributors, function(ParagraphInterface $paragraph) {
+    $contributors = $node->get('field_related_contributors')
+      ->referencedEntities();
+    $contributors = array_filter($contributors, function (ParagraphInterface $paragraph) {
       return !empty($paragraph->get('field_user_ref')->referencedEntities());
     });
 
-    $users = array_map(function(ParagraphInterface $paragraph) {
+    $current_user = User::load(\Drupal::currentUser()->id());
+
+    $users = array_map(function (ParagraphInterface $paragraph) {
       return $paragraph->get('field_user_ref')->referencedEntities()[0]->id();
     }, $contributors);
 
@@ -100,7 +114,8 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
 
     $contributors_data ['items'] = [];
 
-    if ($node->getOwner() instanceof UserInterface && (int) $node->getOwner()->id() !== 0) {
+    if ($node->getOwner() instanceof UserInterface && (int) $node->getOwner()
+        ->id() !== 0) {
       $contributors_data['items'][] = eic_community_get_teaser_user_display($node->getOwner());
     }
 
@@ -108,8 +123,34 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
       $contributors_data['items'][] = eic_community_get_teaser_user_display($user);
     }
 
-    $build['#attached']['drupalSettings'] = [
+    $group_contents = GroupContent::loadByEntity($node);
+
+    $build['#attached']['drupalSettings']['overview'] = [
       'is_group_owner' => array_key_exists(EICGroupsHelper::GROUP_OWNER_ROLE, $user_group_roles),
+      'group_roles' => $user_group_roles,
+      'permissions' => [
+        'post_comment' =>
+          $this->groupPermissionChecker->getPermissionInGroups(
+            'post comments',
+            $current_user,
+            $group_contents
+          )->isAllowed(),
+        'edit_all_comments' => $this->groupPermissionChecker->getPermissionInGroups(
+          'edit all comments',
+          $current_user,
+          $group_contents
+        )->isAllowed(),
+        'delete_all_comments' => $this->groupPermissionChecker->getPermissionInGroups(
+          'delete any page content',
+          $current_user,
+          $group_contents
+        )->isAllowed(),
+        'edit_own_comments' => $this->groupPermissionChecker->getPermissionInGroups(
+          'edit own comments',
+          $current_user,
+          $group_contents
+        )->isAllowed(),
+      ],
       'translations' => [
         'title' => $this->t('Comments', [], ['context' => 'eic_groups']),
         'no_results' => $this->t('There are currently no comments.', [], ['context' => 'eic_groups']),
