@@ -240,6 +240,7 @@ function eic_flags_entity_insert(EntityInterface $entity) {
     case 'comment':
     case 'group_content':
     case 'node':
+    case 'profile':
       \Drupal::classResolver(EntityOperations::class)
         ->entityInsert($entity);
       break;
@@ -248,13 +249,13 @@ function eic_flags_entity_insert(EntityInterface $entity) {
 }
 
 /**
- * Implements hook_entity_insert().
+ * Implements hook_entity_update().
  */
 function eic_flags_entity_update(EntityInterface $entity) {
   switch ($entity->getEntityTypeId()) {
     case 'profile':
       \Drupal::classResolver(EntityOperations::class)
-        ->entityInsert($entity);
+        ->entityUpdate($entity);
       break;
 
   }
