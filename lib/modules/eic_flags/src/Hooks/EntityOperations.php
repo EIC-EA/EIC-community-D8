@@ -349,7 +349,7 @@ class EntityOperations implements ContainerInjectionInterface {
       $topics[$topic->id()] = $topic;
     }
 
-    // If node is not new then we need to unfollow old topics.
+    // If profile is not new then we need to unfollow old topics.
     if ($profile->original) {
 
       $old_topics = $profile->original->get($vocab_field_name)->referencedEntities();
