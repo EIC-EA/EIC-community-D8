@@ -10,16 +10,12 @@
           </div>
           <aside class="ecl-editorial-article__aside">
             <div class="ecl-editorial-article__aside-wrapper">
-
-              <div class="ecl-featured-list  ecl-featured-list--has-grid-layout  ecl-featured-list--contributors">
-                <h3 class="ecl-featured-list__title">Contributors</h3>
-
-                <div class="ecl-featured-list__items-wrapper">
-                  <div class="ecl-featured-list__items">
-                  </div>
-                </div>
-              </div>
-
+              {% block sidebar %}
+                {% include "@theme/patterns/compositions/featured-contributors.html.twig" with contributors|default({})|merge({
+                  grid: true,
+                  title: "Contributors"|t
+                }) only %}
+              {% endblock %}
             </div>
           </aside>
         </div>

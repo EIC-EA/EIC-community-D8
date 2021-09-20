@@ -14,7 +14,9 @@ use Drupal\eic_flags\RequestStatus;
 use Drupal\file\Entity\File;
 use Drupal\flag\FlaggingInterface;
 use Drupal\flag\FlagService;
+use Drupal\group\Entity\GroupContent;
 use Drupal\node\Entity\Node;
+use Drupal\oec_group_comments\GroupPermissionChecker;
 use Drupal\user\Entity\User;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -43,17 +45,27 @@ class DiscussionController extends ControllerBase {
   private $flagService;
 
   /**
+   * The group permission checker
+   *
+   * @var GroupPermissionChecker
+   */
+  private $groupPermissionChecker;
+
+  /**
    * DiscussionController constructor.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    * @param \Drupal\flag\FlagService $flag_service
+   * @param \Drupal\oec_group_comments\GroupPermissionChecker $group_permission_checker
    */
   public function __construct(
     EntityTypeManagerInterface $entity_type_manager,
-    FlagService $flag_service
+    FlagService $flag_service,
+    GroupPermissionChecker $group_permission_checker
   ) {
     $this->entityTypeManager = $entity_type_manager;
     $this->flagService = $flag_service;
+    $this->groupPermissionChecker = $group_permission_checker;
   }
 
   /**
@@ -62,7 +74,8 @@ class DiscussionController extends ControllerBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('entity_type.manager'),
-      $container->get('flag')
+      $container->get('flag'),
+      $container->get('oec_group_comments.group_permission_checker')
     );
   }
 
@@ -74,13 +87,20 @@ class DiscussionController extends ControllerBase {
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
   public function addComment(Request $request, $discussion_id) {
-    $account = $this->currentUser();
+    /** @var \Drupal\node\NodeInterface|NULL $node */
+    $node = Node::load($discussion_id);
+    $group_contents = GroupContent::loadByEntity($node);
+    $access = $this->groupPermissionChecker->getPermissionInGroups(
+      'post comments',
+      $this->currentUser(),
+      $group_contents
+    );
 
-    if ($account->isAnonymous()) {
-      return AccessResult::forbidden();
+    if (!$access->isAllowed()) {
+      return new JsonResponse('You do not have access to post comment', Response::HTTP_FORBIDDEN);
     }
 
-    $user = User::load($account->id());
+    $user = User::load($this->currentUser()->id());
     $content = json_decode($request->getContent(), TRUE);
     $text = Xss::filter($content['text']);
     $parent_id = $content['parentId'];
@@ -202,7 +222,8 @@ class DiscussionController extends ControllerBase {
           $this->flagService->getFlagById('like_comment'),
           $comment
         );
-      } else {
+      }
+      else {
         $flag_entity = $this->flagService->getFlagById($flag);
 
         $flagging = $this->entityTypeManager->getStorage('flagging')->create(
@@ -246,12 +267,67 @@ class DiscussionController extends ControllerBase {
       return new JsonResponse('Cannot find comment entity', Response::HTTP_BAD_REQUEST);
     }
 
+    $user = User::load($this->currentUser()->id());
+    /** @var \Drupal\node\NodeInterface|NULL $node */
+    $node = Node::load($discussion_id);
+    $group_contents = GroupContent::loadByEntity($node);
+    $access = $this->groupPermissionChecker->getPermissionInGroups(
+      'edit own comments',
+      $this->currentUser(),
+      $group_contents
+    );
+
+    if ($user->id() === $comment->getOwnerId() && !$access->isAllowed()) {
+      return new JsonResponse('You do not have access to edit own comment', Response::HTTP_FORBIDDEN);
+    }
+
+    $access = $this->groupPermissionChecker->getPermissionInGroups(
+      'edit all comments',
+      $this->currentUser(),
+      $group_contents
+    );
+
+    if ($user->id() !== $comment->getOwnerId() && !$access->isAllowed()) {
+      return new JsonResponse('You do not have access to edit all comments', Response::HTTP_FORBIDDEN);
+    }
+
     try {
       $comment->set('comment_body', [
         'value' => $text,
         'format' => 'plain_text',
       ]);
       $comment->save();
+    } catch (EntityStorageException $e) {
+      \Drupal::logger('eic_groups')->error($e->getMessage());
+
+      return new JsonResponse($e->getMessage(), Response::HTTP_BAD_REQUEST);
+    }
+
+    return new JsonResponse([]);
+  }
+
+  /**
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   * @param int $discussion_id
+   * @param $comment_id
+   *
+   * @return \Symfony\Component\HttpFoundation\JsonResponse
+   */
+  public function deleteComment(Request $request, int $discussion_id, $comment_id) {
+    $comment = Comment::load($comment_id);
+
+    if (!$comment instanceof CommentInterface) {
+      return new JsonResponse('Cannot find comment entity', Response::HTTP_BAD_REQUEST);
+    }
+
+    $user = User::load($this->currentUser()->id());
+
+    if ($user->id() !== $comment->getOwnerId()) {
+      return new JsonResponse('You do not have access to delete the content', Response::HTTP_FORBIDDEN);
+    }
+
+    try {
+      $comment->delete();
     } catch (EntityStorageException $e) {
       \Drupal::logger('eic_groups')->error($e->getMessage());
 

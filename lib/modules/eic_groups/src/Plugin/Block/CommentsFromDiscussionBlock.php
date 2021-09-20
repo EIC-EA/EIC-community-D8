@@ -9,6 +9,8 @@ use Drupal\Core\Url;
 use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\group\GroupMembership;
 use Drupal\node\NodeInterface;
+use Drupal\paragraphs\ParagraphInterface;
+use Drupal\user\Entity\User;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -84,6 +86,22 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
       $user_group_roles = $membership instanceof GroupMembership ? $membership->getRoles() : [];
     }
 
+    $contributors = $node->get('field_related_contributors')->referencedEntities();
+    $contributors = array_filter($contributors, function(ParagraphInterface $paragraph) {
+      return !empty($paragraph->get('field_user_ref')->referencedEntities());
+    });
+
+    $users = array_map(function(ParagraphInterface $paragraph) {
+      return $paragraph->get('field_user_ref')->referencedEntities()[0]->id();
+    }, $contributors);
+
+    $contributors_data ['items'] = [];
+    $users = User::loadMultiple($users);
+
+    foreach ($users as $user) {
+      $contributors_data['items'][] = eic_community_get_teaser_user_display($user);
+    }
+
     $build['#attached']['drupalSettings'] = [
       'is_group_owner' => array_key_exists(EICGroupsHelper::GROUP_OWNER_ROLE, $user_group_roles),
       'translations' => [
@@ -91,11 +109,16 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
         'no_results' => $this->t('There are currently no comments.', [], ['context' => 'eic_groups']),
         'load_more' => $this->t('Load more', [], ['context' => 'eic_groups']),
         'edit' => $this->t('Edit', [], ['context' => 'eic_groups']),
+        'options' => $this->t('Options', [], ['context' => 'eic_groups']),
         'reply_to' => $this->t('Reply to', [], ['context' => 'eic_groups']),
         'in_reply_to' => $this->t('In reply to', [], ['context' => 'eic_groups']),
+        'reply' => $this->t('Reply', [], ['context' => 'eic_groups']),
+        'submit' => $this->t('Submit', [], ['context' => 'eic_groups']),
+        'reason' => $this->t('Reason', [], ['context' => 'eic_groups']),
+        'comment_placeholder' => $this->t('Type your message here...', [], ['context' => 'eic_groups']),
         'action_edit_comment' => $this->t('Edit comment', [], ['context' => 'eic_groups']),
         'action_delete_comment' => $this->t('Delete comment', [], ['context' => 'eic_groups']),
-        'action_request_delete' => $this->t('Request delete', [], ['context' => 'eic_groups']),
+        'action_request_delete' => $this->t('Request deletion', [], ['context' => 'eic_groups']),
         'action_request_archival' => $this->t('Request archival', [], ['context' => 'eic_groups']),
       ],
     ];
@@ -103,6 +126,7 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
     return $build + [
         '#theme' => 'eic_group_comments_from_discussion',
         '#discussion_id' => $node->id(),
+        '#contributors' => $contributors_data,
       ];
   }
 
