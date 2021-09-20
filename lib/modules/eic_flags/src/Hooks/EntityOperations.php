@@ -279,15 +279,6 @@ class EntityOperations implements ContainerInjectionInterface {
     switch ($entity->getEntityTypeId()) {
       case 'comment':
         $flag_entity = $entity->getCommentedEntity();
-
-        // Array of node types that don't implement follow flag.
-        $excluded_node_types = [];
-
-        // If Commented node does not implement flag, we do nothing.
-        if (in_array($flag_entity->bundle(), $excluded_node_types)) {
-          break;
-        }
-
         $flag_type = FlagType::FOLLOW_CONTENT;
         break;
 
@@ -303,14 +294,6 @@ class EntityOperations implements ContainerInjectionInterface {
         break;
 
       case 'node':
-        // Array of node types that don't implement follow flag.
-        $excluded_node_types = [];
-
-        // If node does not implement flag, we do nothing.
-        if (in_array($entity->bundle(), $excluded_node_types)) {
-          break;
-        }
-
         // Get the node entity to be flagged later.
         $flag_entity = $entity;
         $flag_type = FlagType::FOLLOW_CONTENT;
@@ -323,6 +306,18 @@ class EntityOperations implements ContainerInjectionInterface {
     }
 
     $flag = $this->flagService->getFlagById($flag_type);
+
+    // The entity type cannot be flagged with this flag, so we do nothing.
+    if ($flag->getFlaggableEntityTypeId() !== $flag_entity->getEntityTypeId()) {
+      return;
+    }
+
+    // If the entity bundle is not enabled in the flag configuration, we do
+    // nothing.
+    if (!empty($flag->getBundles()) && !in_array($flag_entity->bundle(), $flag->getBundles())) {
+      return;
+    }
+
     $this->flagService->flag($flag, $flag_entity);
   }
 
