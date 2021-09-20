@@ -164,7 +164,40 @@ function _eic_community_display_contributors(&$variables) {
       $field_title = $variables['elements'][$field_name]['#title'];
 
       foreach ($variables['elements'][$field_name] as $key => $value) {
+        $has_contributor = FALSE;
+
         if (is_int($key)) {
+          /** @var \Drupal\paragraphs\ParagraphInterface $contributor */
+          $contributor = $value['#paragraph'];
+          $variant = $contributor->get('paragraph_view_mode')->value;
+
+          switch ($variant) {
+            case 'external_person':
+              if (!$contributor->get('field_name')->isEmpty()) {
+                $has_contributor = TRUE;
+              }
+              break;
+
+            case 'platform_member':
+              if (!$contributor->get('field_user_ref')->isEmpty()) {
+                $user = $contributor->get('field_user_ref')->entity;
+
+                // User entity has probably been deleted but the reference
+                // still exists. In this case, we do nothing.
+                if (!$user) {
+                  break;
+                }
+
+                $has_contributor = TRUE;
+              }
+              break;
+
+          }
+
+          if (!$has_contributor) {
+            continue;
+          }
+
           $contributors[] = [
             'content' => $value,
           ];
