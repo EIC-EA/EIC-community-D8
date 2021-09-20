@@ -47,6 +47,7 @@ process:
         1: published
   created: created
   changed: timestamp
+  published_at: timestamp
   promote: promote
   sticky: sticky
   revision_uid:

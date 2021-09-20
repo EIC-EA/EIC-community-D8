@@ -43,6 +43,7 @@ process:
   status: status
   created: created
   changed: timestamp
+  published_at: timestamp
   promote: promote
   sticky: sticky
   revision_uid:
