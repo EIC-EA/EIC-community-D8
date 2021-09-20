@@ -209,6 +209,8 @@ class EntityOperations implements ContainerInjectionInterface {
             // Unsets book navigation since we already have that show in the
             // eic_groups_wiki_book_navigation block plugin.
             unset($build['book_navigation']);
+            // Adds user group permissions cache.
+            $build['#cache']['contexts'][] = 'user.group_permissions';
           }
         }
         elseif ($entity->bundle() === 'wiki_page') {
@@ -227,6 +229,8 @@ class EntityOperations implements ContainerInjectionInterface {
               }
             }
           }
+          // Adds user group permissions cache.
+          $build['#cache']['contexts'][] = 'user.group_permissions';
         }
         break;
 
