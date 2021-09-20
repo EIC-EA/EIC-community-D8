@@ -298,6 +298,9 @@ function eic_groups_group_content_info_alter(array &$definitions) {
       continue;
     }
 
+    // Overrides the standard group content node class in order to fix access
+    // to the operation links.
+    $definition['class'] = '\Drupal\eic_groups\Plugin\GroupContentEnabler\GroupNode';
     // Overrides the group content access controll handler class.
     $definition['handlers']['access'] = '\Drupal\eic_groups\Access\GroupContentNodeAccessControlHandler';
   }
@@ -426,4 +429,35 @@ function eic_groups_entity_base_field_info(EntityTypeInterface $entity_type) {
   }
 
   return $fields;
+}
+
+/**
+ * Implements hook_entity_predelete().
+ */
+function eic_groups_entity_predelete(EntityInterface $entity) {
+  if ($entity->getEntityTypeId() !== 'group') {
+    return;
+  }
+
+  // Delete group permissions before deleting the group. If we don't do this
+  // we will have an error because redirect module will call the method toUrl()
+  // from the group permission entity. At that point the group has already been
+  // deleted which means it cannot retrieve the canonical url of the group
+  // permissions since it requires the group ID as route parameter.
+  if ($group_permissions = \Drupal::service('group_permission.group_permissions_manager')->loadByGroup($entity)) {
+    $group_permissions->delete();
+  }
+}
+
+/**
+ * Implements hook_entity_type_alter().
+ */
+function eic_groups_entity_type_alter(array &$entity_types) {
+  if (!isset($entity_types['group']) && !isset($entity_types['group_content'])) {
+    return;
+  }
+
+  // Add custom group membership validation constraint to the group_content
+  // entity.
+  $entity_types['group_content']->addConstraint('EICGroupMembership');
 }

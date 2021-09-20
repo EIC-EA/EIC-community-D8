@@ -74,14 +74,18 @@ function eic_community_preprocess_page(array &$variables): void {
   $first_section = array_filter($variables['page']['footer'], function ($content, $key) {
     return strpos($key, 'content') !== FALSE;
   }, ARRAY_FILTER_USE_BOTH);
-  $first_section = array_shift($first_section);
-  $block_content = \Drupal::service('entity.repository')
-    ->loadEntityByUuid('block_content', $first_section['#derivative_plugin_id']);
 
-  $footer_sections[] = [
-    'title' => $block_content->field_title->value,
-    'description' => strip_tags($block_content->body->value),
-  ];
+  $first_section = array_shift($first_section);
+
+  if (!empty($block_content['#derivative_plugin_id'])) {
+    $block_content = \Drupal::service('entity.repository')
+      ->loadEntityByUuid('block_content', $first_section['#derivative_plugin_id']);
+
+    $footer_sections[] = [
+      'title' => $block_content->field_title->value,
+      'description' => strip_tags($block_content->body->value),
+    ];
+  }
 
   $menu_sections = array_filter($variables['page']['footer'], function ($content, $key) {
     return strpos($key, 'menu') !== FALSE;

@@ -5,5 +5,6 @@ ignored_config_entities:
   - 'search_api.server.global:backend_config.connector_config.path'
   - 'search_api.server.global:backend_config.connector_config.core'
   - system.site
+  - search_api_attachments.admin_config
 _core:
   default_config_hash: UVH1aJ4b44UM-VdPVN7hNNuuVqfReJxwfVeDQH1Hvsk

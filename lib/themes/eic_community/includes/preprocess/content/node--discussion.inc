@@ -40,6 +40,8 @@ function eic_community_preprocess_node__discussion(array &$variables) {
  * Preprocesses full display.
  */
 function _preprocess_discussion_full(&$variables, $discussion_type, $node) {
+  /** @var \Drupal\node\NodeInterface $node */
+  $node = $variables['node'];
   $variables['type'] = $discussion_type;
   if (!empty($variables['elements']['contributor_ids'])) {
     $users = \Drupal::entityTypeManager()->getStorage('user')->loadMultiple($variables['elements']['contributor_ids']);
