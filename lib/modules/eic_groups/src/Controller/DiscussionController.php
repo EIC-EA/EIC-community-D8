@@ -5,7 +5,6 @@ namespace Drupal\eic_groups\Controller;
 use Drupal\comment\CommentInterface;
 use Drupal\comment\Entity\Comment;
 use Drupal\Component\Utility\Xss;
-use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
@@ -25,6 +24,10 @@ use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Provides route for discussion
+ *
+ * Class DiscussionController
+ *
+ * @package Drupal\eic_groups\Controller
  */
 class DiscussionController extends ControllerBase {
 
