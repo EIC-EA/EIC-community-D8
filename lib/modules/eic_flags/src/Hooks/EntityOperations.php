@@ -11,6 +11,7 @@ use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
 use Drupal\eic_flags\FlaggedEntitiesListBuilder;
+use Drupal\eic_flags\FlagType;
 use Drupal\eic_flags\Service\RequestHandlerCollector;
 use Drupal\flag\FlagCountManagerInterface;
 use Drupal\flag\FlagServiceInterface;
@@ -238,7 +239,16 @@ class EntityOperations implements ContainerInjectionInterface {
    *   The entity object.
    */
   public function entityInsert(EntityInterface $entity) {
-    $this->followEntityOnCreation($entity);
+    switch ($entity->getEntityTypeId()) {
+      case 'profile':
+        $this->followTopicsOnUserProfileUpdate($entity);
+        break;
+
+      default:
+        $this->followEntityOnCreation($entity);
+        break;
+
+    }
   }
 
   /**
@@ -278,7 +288,7 @@ class EntityOperations implements ContainerInjectionInterface {
           break;
         }
 
-        $flag_type = 'follow_content';
+        $flag_type = FlagType::FOLLOW_CONTENT;
         break;
 
       case 'group_content':
@@ -289,7 +299,7 @@ class EntityOperations implements ContainerInjectionInterface {
 
         // Get the group entity to be flagged later.
         $flag_entity = $entity->getGroup();
-        $flag_type = 'follow_group';
+        $flag_type = FlagType::FOLLOW_GROUP;
         break;
 
       case 'node':
@@ -303,7 +313,7 @@ class EntityOperations implements ContainerInjectionInterface {
 
         // Get the node entity to be flagged later.
         $flag_entity = $entity;
-        $flag_type = 'follow_content';
+        $flag_type = FlagType::FOLLOW_CONTENT;
         break;
 
     }
@@ -319,6 +329,8 @@ class EntityOperations implements ContainerInjectionInterface {
   /**
    * Triggers "follow" flag on topic term after user profile update.
    *
+   * This method can also be called when creating a new profile.
+   *
    * @param \Drupal\profile\Entity\ProfileInterface $profile
    *   The profile object.
    */
@@ -327,23 +339,50 @@ class EntityOperations implements ContainerInjectionInterface {
       return;
     }
 
+    $vocab_field_name = 'field_vocab_topic_interest';
+
+    if (!$profile->hasField($vocab_field_name)) {
+      return;
+    }
+
+    $user = $profile->getOwner();
+    $flag = $this->flagService->getFlagById(FlagType::FOLLOW_TAXONOMY_TERM);
     $topics = [];
 
-    $new_topics = $profile->get('field_vocab_topic_interest')->referencedEntities();
+    $new_topics = $profile->get($vocab_field_name)->referencedEntities();
     foreach ($new_topics as $topic) {
       $topics[$topic->id()] = $topic;
     }
 
-    $old_topics = $profile->original->get('field_vocab_topic_interest')->referencedEntities();
-    foreach ($old_topics as $topic) {
-      if (!isset($topics[$topic->id()])) {
-        // @todo Unflag topic.
-        continue;
-      }
+    // If node is not new then we need to unfollow old topics.
+    if ($profile->original) {
 
-      // @todo Flag topic.
+      $old_topics = $profile->original->get($vocab_field_name)->referencedEntities();
+      foreach ($old_topics as $topic) {
+
+        // Unfollow old topic.
+        if (!isset($topics[$topic->id()])) {
+          $topic_flag = $this->flagService->getFlagging($flag, $topic, $user);
+
+          // If topic is not flagged, we do nothing.
+          if (!$topic_flag) {
+            continue;
+          }
+
+          $this->flagService->unflag($flag, $topic, $user);
+          continue;
+        }
+
+        // At this point it means this topic already been referenced. Therefore
+        // we unset it from the array to avoid flag it twice later.
+        unset($topics[$topic->id()]);
+      }
     }
 
+    // Follow new topics.
+    foreach ($topics as $topic) {
+      $this->flagService->flag($flag, $topic, $user);
+    }
   }
 
 }
