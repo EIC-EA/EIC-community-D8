@@ -81,11 +81,26 @@ content:
     settings:
       link: true
     third_party_settings: {  }
+  flag_bookmark_content:
+    weight: 10
+    settings: {  }
+    third_party_settings: {  }
+    region: content
   flag_highlight_content:
     weight: 0
     region: content
     settings: {  }
     third_party_settings: {  }
+  flag_like_content:
+    weight: 10
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+  flag_recommend:
+    weight: 10
+    settings: {  }
+    third_party_settings: {  }
+    region: content
   member_content_edit_access:
     weight: 1
     region: content
