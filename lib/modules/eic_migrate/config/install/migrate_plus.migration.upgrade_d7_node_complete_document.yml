@@ -1,0 +1,149 @@
+# TODO: WIP migration
+langcode: en
+status: true
+dependencies: {  }
+id: upgrade_d7_node_complete_document
+class: Drupal\node\Plugin\migrate\D7NodeTranslation
+field_plugin_method: null
+cck_plugin_method: null
+migration_tags:
+  - 'Drupal 7'
+  - Content
+migration_group: migrate_drupal_7
+label: 'Node complete (Document)'
+source:
+  plugin: eic_d7_node_complete_with_smed_ids
+  node_type: document
+  track_changes: true
+  smed_taxonomy_fields:
+    - c4m_vocab_geo
+    - c4m_vocab_language
+    - c4m_vocab_topic
+process:
+  nid:
+    - plugin: migration_lookup
+      migration: upgrade_d7_node_complete_document
+      source: tnid
+    - plugin: node_complete_node_lookup
+  langcode:
+    - plugin: static_map
+      source: language
+      bypass: true
+      map:
+        und: en
+    - plugin: default_value
+      default_value: en
+  title: title
+  uid:
+    - plugin: migration_lookup
+      source: node_uid
+      migration:
+        - upgrade_d7_user
+  status: status
+  created: created
+  changed: timestamp
+  published_at: timestamp
+  promote: promote
+  sticky: sticky
+  revision_uid:
+    - plugin: migration_lookup
+      source: revision_uid
+      migration:
+        - upgrade_d7_user
+  revision_log: log
+  revision_timestamp: timestamp
+  content_translation_source: source_langcode
+  node_comment/0/status: comment
+  field_body:
+    - plugin: eic_media_wysiwyg_filter
+      source: c4m_body
+      media_migrations:
+        - upgrade_d7_file_audio_to_media
+        - upgrade_d7_file_document_to_media
+        - upgrade_d7_file_image_to_media
+        - upgrade_d7_file_undefined_to_media
+        - upgrade_d7_file_video_to_media
+  field_document_media:
+    - plugin: sub_process
+      source: c4m_document
+      process:
+        target_id:
+          - plugin: migration_lookup
+            source: fid
+            migration:
+              - upgrade_d7_file_document_to_media
+#        display: display
+#        description: description
+  # TODO
+#  c4m_document_add_to_library:
+#    - plugin: get
+#      source: c4m_document_add_to_library
+  field_document_type:
+    - plugin: sub_process
+      source: c4m_vocab_document_type
+      process:
+        target_id:
+          - plugin: migration_lookup
+            source: tid
+            migration:
+              - upgrade_d7_taxonomy_term_c4m_vocab_document_type
+  # TODO: Implement when Regions & countries SMED migration is done.
+#  field_vocab_geo:
+#    - plugin: sub_process
+#      source: c4m_vocab_geo
+#      process:
+#        target_id:
+#          - plugin: migration_lookup
+#            source: smed_id
+#            no_stub: true
+#            migration:
+#              - smed_TODO
+  # TODO: Validate implementation when field_vocab_languages is added to CT News.
+  field_language:
+    - plugin: sub_process
+      source: c4m_vocab_language
+      process:
+        target_id:
+          - plugin: migration_lookup
+            source: smed_id
+            no_stub: true
+            migration:
+              - smed_spoken_languages
+  field_vocab_topics:
+    - plugin: sub_process
+      source: c4m_vocab_topic
+      process:
+        target_id:
+          - plugin: migration_lookup
+            source: smed_id
+            no_stub: true
+            migration:
+              - smed_thematics_topics_lvl1
+              - smed_thematics_topics_lvl2
+              - smed_thematics_topics_lvl3
+  # TODO
+#  og_group_ref:
+#    - plugin: get
+#      source: og_group_ref
+  # TODO
+#  og_vocabulary:
+#    - plugin: get
+#      source: og_vocabulary
+destination:
+  plugin: 'entity_complete:node'
+  translations: true
+  default_bundle: document
+migration_dependencies:
+  required:
+    - upgrade_d7_user
+    - upgrade_d7_file_audio_to_media
+    - upgrade_d7_file_document_to_media
+    - upgrade_d7_file_image_to_media
+    - upgrade_d7_file_undefined_to_media
+    - upgrade_d7_file_video_to_media
+    - upgrade_d7_taxonomy_term_c4m_vocab_document_type
+    - smed_spoken_languages
+    - smed_thematics_topics_lvl1
+    - smed_thematics_topics_lvl2
+    - smed_thematics_topics_lvl3
+  optional: { }

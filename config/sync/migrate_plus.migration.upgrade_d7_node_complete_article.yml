@@ -36,20 +36,14 @@ process:
     -
       plugin: default_value
       default_value: en
-  title:
-    -
-      plugin: get
-      source: title
+  title: title
   uid:
     -
       plugin: migration_lookup
       source: node_uid
       migration:
         - upgrade_d7_user
-  status:
-    -
-      plugin: get
-      source: status
+  status: status
   moderation_state:
     -
       plugin: static_map
@@ -57,44 +51,20 @@ process:
       map:
         - draft
         - published
-  created:
-    -
-      plugin: get
-      source: created
-  changed:
-    -
-      plugin: get
-      source: timestamp
-  promote:
-    -
-      plugin: get
-      source: promote
-  sticky:
-    -
-      plugin: get
-      source: sticky
+  created: created
+  changed: timestamp
+  promote: promote
+  sticky: sticky
   revision_uid:
     -
       plugin: migration_lookup
       source: revision_uid
       migration:
         - upgrade_d7_user
-  revision_log:
-    -
-      plugin: get
-      source: log
-  revision_timestamp:
-    -
-      plugin: get
-      source: timestamp
-  content_translation_source:
-    -
-      plugin: get
-      source: source_langcode
-  node_comment/0/status:
-    -
-      plugin: get
-      source: comment
+  revision_log: log
+  revision_timestamp: timestamp
+  content_translation_source: source_langcode
+  node_comment/0/status: comment
   field_header_visual:
     -
       plugin: sub_process
@@ -116,10 +86,62 @@ process:
         - upgrade_d7_file_image_to_media
         - upgrade_d7_file_undefined_to_media
         - upgrade_d7_file_video_to_media
-  field_introduction:
+  field_introduction: c4m_intro_text
+  _internal_contributors:
     -
-      plugin: get
-      source: c4m_intro_text
+      plugin: sub_process
+      source: c4m_related_user
+      include_source: true
+      process:
+        nid: source/nid
+        vid: source/vid
+        value: target_id
+  _external_contributors:
+    -
+      plugin: sub_process
+      source: c4m_link_multiple
+      include_source: true
+      process:
+        nid: source/nid
+        vid: source/vid
+        value: title
+  field_story_paragraphs:
+    -
+      plugin: merge
+      source:
+        - '@_internal_contributors'
+        - '@_external_contributors'
+    -
+      plugin: sub_process
+      process:
+        target_id:
+          -
+            plugin: migration_lookup
+            source:
+              - nid
+              - vid
+              - value
+            migration:
+              - upgrade_d7_node_complete_article_internal_contributors_paragraph
+              - upgrade_d7_node_complete_article_external_contributors_paragraph
+          -
+            plugin: extract
+            index:
+              - '0'
+        target_revision_id:
+          -
+            plugin: migration_lookup
+            source:
+              - nid
+              - vid
+              - value
+            migration:
+              - upgrade_d7_node_complete_article_internal_contributors_paragraph
+              - upgrade_d7_node_complete_article_external_contributors_paragraph
+          -
+            plugin: extract
+            index:
+              - '1'
   field_image:
     -
       plugin: sub_process
@@ -150,14 +172,16 @@ destination:
   translations: true
   default_bundle: story
 migration_dependencies:
-  required: {  }
-  optional:
+  required:
     - upgrade_d7_user
     - upgrade_d7_file_audio_to_media
     - upgrade_d7_file_document_to_media
     - upgrade_d7_file_image_to_media
     - upgrade_d7_file_undefined_to_media
     - upgrade_d7_file_video_to_media
+    - upgrade_d7_node_complete_article_external_contributors_paragraph
+    - upgrade_d7_node_complete_article_internal_contributors_paragraph
     - smed_thematics_topics_lvl1
     - smed_thematics_topics_lvl2
     - smed_thematics_topics_lvl3
+  optional: {  }

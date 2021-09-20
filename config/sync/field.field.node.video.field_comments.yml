@@ -11,7 +11,7 @@ id: node.video.field_comments
 field_name: field_comments
 entity_type: node
 bundle: video
-label: Comments
+label: Replies
 description: ''
 required: true
 translatable: true

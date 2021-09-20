@@ -16,46 +16,31 @@ source:
   scheme: public
   track_changes: true
   constants:
-    source_base_path: ../backup_files
+    SOURCE_BASE_PATH: ../backup_files
 process:
-  filename:
-    -
-      plugin: get
-      source: filename
-  pseudo_source_path:
+  filename: filename
+  _source_path:
     -
       plugin: substr
       source: filepath
       start: 20
-  pseudo_source_full_path:
+  _source_full_path:
     -
       plugin: concat
       delimiter: /
       source:
-        - constants/source_base_path
-        - '@pseudo_source_path'
+        - constants/SOURCE_BASE_PATH
+        - '@_source_path'
   uri:
     -
       plugin: file_copy
       source:
-        - '@pseudo_source_full_path'
+        - '@_source_full_path'
         - uri
-  filemime:
-    -
-      plugin: get
-      source: filemime
-  status:
-    -
-      plugin: get
-      source: status
-  created:
-    -
-      plugin: get
-      source: timestamp
-  changed:
-    -
-      plugin: get
-      source: timestamp
+  filemime: filemime
+  status: status
+  created: timestamp
+  changed: timestamp
   uid:
     -
       plugin: migration_lookup
@@ -65,5 +50,6 @@ process:
 destination:
   plugin: 'entity:file'
 migration_dependencies:
-  required: {  }
+  required:
+    - upgrade_d7_user
   optional: {  }

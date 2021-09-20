@@ -6,7 +6,6 @@
  */
 
 use Drupal\Component\Utility\Xss;
-use Drupal\Core\Block\BlockPluginInterface;
 use Drupal\Core\Render\Markup;
 use Drupal\eic_community\ValueObject\ImageValueObject;
 use Drupal\eic_private_content\PrivateContentConst;
@@ -73,12 +72,8 @@ function _eic_community_preprocess_node_news_story(array &$variables) {
     if ($node->hasField(PrivateContentConst::FIELD_NAME)
       && !$node->get(PrivateContentConst::FIELD_NAME)->value
     ) {
-      $share_block = \Drupal::service('plugin.manager.block')
-        ->createInstance('social_share', []);
-      if ($share_block instanceof BlockPluginInterface) {
-        $build = $share_block->build();
-        $build['#title'] = t('Share');
-        $variables['social_share'] = $build;
+      if ($share_block = _eic_community_get_social_share_block()) {
+        $variables['social_share'] = $share_block;
       }
     }
 

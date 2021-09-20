@@ -10,6 +10,7 @@ weight: -9
 is_admin: false
 permissions:
   - 'access content'
+  - 'download media'
   - 'flag bookmark_content'
   - 'flag bookmark_media'
   - 'flag follow_content'

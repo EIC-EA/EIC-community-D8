@@ -87,11 +87,11 @@ interface SourceTypeInterface {
 
   /**
    * If the overview needs to be prefiltered by group ID
-   * we need to get field in SOLR to search IN
+   * we need to get fields in SOLR to search IN
    *
-   * @return string
+   * @return array
    */
-  public function getPrefilteredGroupFieldId(): string;
+  public function getPrefilteredGroupFieldId(): array;
 
   /**
    * If the overview needs to be prefiltered by content type

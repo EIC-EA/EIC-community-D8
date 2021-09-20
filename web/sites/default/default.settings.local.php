@@ -121,11 +121,13 @@ $settings['rebuild_access'] = TRUE;
  */
 $settings['skip_permissions_hardening'] = TRUE;
 
+$settings['hash_salt'] = getenv('DRUPAL_HASH_SALT');
+
 // Configuration for Redis
 if (!\Drupal\Core\Installer\InstallerKernel::installationAttempted() && extension_loaded('redis')) {
   // Set Redis as the default backend for any cache bin not otherwise specified.
   $settings['cache']['default'] = 'cache.backend.redis';
-  $settings['redis.connection']['host'] = 'redis';
+  $settings['redis.connection']['host'] = getenv('REDIS_HOST');
   $settings['redis.connection']['port'] = getenv('REDIS_PORT');
 
   // Apply changes to the container configuration to make better use of Redis.
@@ -177,7 +179,6 @@ if (!\Drupal\Core\Installer\InstallerKernel::installationAttempted() && extensio
   ];
 }
 
-# $settings['config_exclude_modules'] = ['devel', 'stage_file_proxy'];
 $databases['default']['default'] = [
   'database' => getenv('DRUPAL_DATABASE_NAME'),
   'username' => getenv('DRUPAL_DATABASE_USERNAME'),
@@ -196,6 +197,7 @@ $settings['file_private_path'] = '/app/private_files';
 /**
  * SMED API connection information.
  */
-$settings['smed_api_taxonomy_username'] = '';
-$settings['smed_api_taxonomy_password'] = '';
-$settings['smed_api_taxonomy_endpoint'] = '';
+$settings['smed_api_taxonomy_username'] = getenv('SMED_API_USER');
+$settings['smed_api_taxonomy_password'] = getenv('SMED_API_PASSWORD');
+$settings['smed_api_taxonomy_endpoint'] = getenv('SMED_API_ENDPOINT');
+

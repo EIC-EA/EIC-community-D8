@@ -1,0 +1,38 @@
+uuid: d9ea6b37-62dd-4559-8428-496c6a405f2b
+langcode: en
+status: true
+dependencies: {  }
+id: upgrade_d7_node_complete_article_internal_contributors_paragraph
+class: Drupal\migrate\Plugin\Migration
+field_plugin_method: null
+cck_plugin_method: null
+migration_tags:
+  - 'Drupal 7'
+  - Content
+migration_group: migrate_drupal_7
+label: 'Node complete (Story) internal contributors paragraph (c4m_related_user)'
+source:
+  plugin: eic_d7_field_value
+  field_name: c4m_related_user
+  bundle: article
+  ids:
+    c4m_related_user_target_id:
+      type: integer
+  track_changes: true
+  constants:
+    PARAGRAPH_VIEW_MODE: platform_member
+process:
+  paragraph_view_mode: constants/PARAGRAPH_VIEW_MODE
+  field_user_ref/target_id:
+    -
+      plugin: migration_lookup
+      source: c4m_related_user_target_id
+      migration:
+        - upgrade_d7_user
+destination:
+  plugin: 'entity_reference_revisions:paragraph'
+  default_bundle: contributor
+migration_dependencies:
+  required: {  }
+  optional:
+    - upgrade_d7_user

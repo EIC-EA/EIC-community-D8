@@ -1,11 +1,18 @@
 langcode: en
 status: true
-dependencies: { }
+dependencies:
+  enforced:
+    module:
+      - eic_migrate
 id: migrate_drupal_7
 label: 'Import from Drupal 7'
 description: 'Migrations originally generated from drush migrate-upgrade --configure-only and adapted to our needs'
 source_type: 'Drupal 7'
 module: null
 shared_configuration:
+  dependencies:
+    enforced:
+      module:
+        - eic_migrate
   source:
     key: migrate

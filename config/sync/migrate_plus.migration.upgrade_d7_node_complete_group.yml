@@ -1,0 +1,85 @@
+uuid: cb7d96f4-c398-459e-8b74-2b66bd09731f
+langcode: en
+status: true
+dependencies: {  }
+id: upgrade_d7_node_complete_group
+class: Drupal\node\Plugin\migrate\D7NodeTranslation
+field_plugin_method: null
+cck_plugin_method: null
+migration_tags:
+  - 'Drupal 7'
+  - Content
+migration_group: migrate_drupal_7
+label: 'Node complete (Group) to Group (Group)'
+source:
+  plugin: eic_d7_node_complete_with_smed_ids
+  node_type: group
+  track_changes: true
+  smed_taxonomy_fields:
+    - c4m_vocab_geo
+    - c4m_vocab_topic
+process:
+  id:
+    -
+      plugin: migration_lookup
+      migration: upgrade_d7_node_complete_group
+      source: tnid
+    -
+      plugin: node_complete_node_lookup
+  langcode:
+    -
+      plugin: static_map
+      source: language
+      bypass: true
+      map:
+        und: en
+    -
+      plugin: default_value
+      default_value: en
+  label:
+    -
+      plugin: get
+      source: title
+  uid:
+    -
+      plugin: migration_lookup
+      source: node_uid
+      migration:
+        - upgrade_d7_user
+  status:
+    -
+      plugin: get
+      source: status
+  created:
+    -
+      plugin: get
+      source: created
+  changed:
+    -
+      plugin: get
+      source: timestamp
+  revision_user:
+    -
+      plugin: migration_lookup
+      source: revision_uid
+      migration:
+        - upgrade_d7_user
+  revision_log_message:
+    -
+      plugin: get
+      source: log
+  revision_created:
+    -
+      plugin: get
+      source: timestamp
+destination:
+  plugin: 'entity_revision:group'
+  default_bundle: group
+migration_dependencies:
+  required: {  }
+  optional:
+    - upgrade_d7_user
+    - upgrade_d7_file_image_to_media
+    - smed_thematics_topics_lvl1
+    - smed_thematics_topics_lvl2
+    - smed_thematics_topics_lvl3

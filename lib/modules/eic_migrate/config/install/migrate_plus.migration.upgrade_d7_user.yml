@@ -18,30 +18,14 @@ process:
 #  uid:
 #    - plugin: get
 #      source: uid
-  name:
-    - plugin: get
-      source: name
-  pass:
-    - plugin: get
-      source: pass
-  mail:
-    - plugin: get
-      source: mail
-  created:
-    - plugin: get
-      source: created
-  access:
-    - plugin: get
-      source: access
-  login:
-    - plugin: get
-      source: login
-  status:
-    - plugin: get
-      source: status
-  timezone:
-    - plugin: get
-      source: timezone
+  name: name
+  pass: pass
+  mail: mail
+  created: created
+  access: access
+  login: login
+  status: status
+  timezone: timezone
   langcode:
     - plugin: user_langcode
       source: entity_language
@@ -54,9 +38,7 @@ process:
     - plugin: user_langcode
       source: language
       fallback_to_site_default: true
-  init:
-    - plugin: get
-      source: init
+  init: init
   roles:
     - plugin: static_map
       source: roles
@@ -68,32 +50,18 @@ process:
         4: service_authentication
         5: administrator
         6: content_administrator
-  field_first_name:
-    - plugin: get
-      source: c4m_first_name
-  field_is_deleted:
-    - plugin: get
-      source: c4m_is_deleted
-  field_is_deleted_anonymous:
-    - plugin: get
-      source: c4m_is_deleted_anonymous
+  field_first_name: c4m_first_name
+  field_is_deleted: c4m_is_deleted
+  field_is_deleted_anonymous: c4m_is_deleted_anonymous
   field_is_deleted_by_uid:
     - plugin: migration_lookup
       source: c4m_is_deleted_by_uid/0/target_id
       migration:
         - upgrade_d7_user
-  field_is_invalid_email:
-    - plugin: get
-      source: c4m_is_invalid_email
-  field_is_organisation_user:
-    - plugin: get
-      source: c4m_is_organisation_user
-  field_is_spammer:
-    - plugin: get
-      source: c4m_is_spammer
-  field_last_name:
-    - plugin: get
-      source: c4m_last_name
+  field_is_invalid_email: c4m_is_invalid_email
+  field_is_organisation_user: c4m_is_organisation_user
+  field_is_spammer: c4m_is_spammer
+  field_last_name: c4m_last_name
   # TODO: Implement after files and media migrations are finished.
 #  field_media:
 #    - plugin: sub_process
@@ -104,12 +72,8 @@ process:
 #        title: title
 #        width: width
 #        height: height
-  field_smed_id:
-    - plugin: get
-      source: c4m_user_dashboard_id
-  field_message_from_service:
-    - plugin: get
-      source: c4m_message_from_service
+  field_smed_id: c4m_user_dashboard_id
+  field_message_from_service: c4m_message_from_service
   field_updated_profile_by_service:
     - plugin: sub_process
       source: c4m_updated_profile_by_service
@@ -132,9 +96,7 @@ process:
           - plugin: format_date
             from_format: U
             to_format: U
-  field_user_status:
-    - plugin: get
-      source: c4m_user_status
+  field_user_status: c4m_user_status
   # TODO: Implement after groups migration.
 #  og_user_node:
 #    - plugin: get

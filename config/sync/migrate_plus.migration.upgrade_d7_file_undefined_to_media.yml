@@ -20,24 +20,15 @@ source:
     - private
   track_changes: true
 process:
-  name:
-    -
-      plugin: get
-      source: filename
+  name: filename
   uid:
     -
       plugin: migration_lookup
       source: uid
       migration:
         - upgrade_d7_user
-  created:
-    -
-      plugin: get
-      source: timestamp
-  changed:
-    -
-      plugin: get
-      source: timestamp
+  created: timestamp
+  changed: timestamp
   field_media_file/target_id:
     -
       plugin: migration_lookup
@@ -49,8 +40,8 @@ destination:
   plugin: 'entity:media'
   default_bundle: eic_document
 migration_dependencies:
-  optional:
+  required:
     - upgrade_d7_user
     - upgrade_d7_file
     - upgrade_d7_file_private
-  required: {  }
+  optional: {  }

@@ -14,9 +14,9 @@ source:
   plugin: d7_user
   track_changes: true
   constants:
-    facebook_type: 'facebook'
-    linkedin_type: 'linkedin'
-    twitter_type: 'twitter'
+    FACEBOOK_LINK_TYPE: 'facebook'
+    LINKEDIN_LINK_TYPE: 'linkedin'
+    TWITTER_LINK_TYPE: 'twitter'
 process:
   type:
     - plugin: default_value
@@ -25,26 +25,24 @@ process:
     - plugin: migration_lookup
       source: uid
       migration: upgrade_d7_user
-  field_body:
-    - plugin: get
-      source: c4m_body
+  field_body: c4m_body
   field_cv_link:
     - plugin: field_link
       source: c4m_cv_link
   _social_link_facebook:
     - plugin: get
       source:
-        - constants/facebook_type
+        - constants/FACEBOOK_LINK_TYPE
         - c4m_facebook/0/url
   _social_link_linkedin:
     - plugin: get
       source:
-        - constants/linkedin_type
+        - constants/LINKEDIN_LINK_TYPE
         - c4m_linkedin/0/url
   _social_link_twitter:
     - plugin: get
       source:
-        - constants/twitter_type
+        - constants/TWITTER_LINK_TYPE
         - c4m_twitter/0/url
   _field_social_links:
     - plugin: get
@@ -111,6 +109,6 @@ process:
 destination:
   plugin: 'entity:profile'
 migration_dependencies:
-  required: { }
-  optional:
+  required:
     - upgrade_d7_user
+  optional: { }

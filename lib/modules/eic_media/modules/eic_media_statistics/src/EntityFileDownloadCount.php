@@ -7,6 +7,7 @@ use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Entity\EntityFieldManager;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\eic_media_statistics\Controller\MediaFileDownloadController;
 use Drupal\eic_media_statistics\Event\DownloadCountUpdate;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -145,10 +146,10 @@ class EntityFileDownloadCount {
     foreach ($entity_fields as $field) {
       /** @var \Drupal\Core\Field\FieldDefinitionInterface $field */
       switch ($field->getType()) {
-        // @todo Handle paragraphs.
         case 'entity_reference':
+        case 'entity_reference_revisions':
           $target_entity_type = $field->getConfig($entity->bundle())->getSetting('target_type');
-          if ($target_entity_type == 'media') {
+          if (in_array($target_entity_type, ['media', 'paragraph'])) {
             // Load the entities.
             foreach ($entity->get($field->getName())->referencedEntities() as $referenced_entity) {
               $sub_entity_result = $this->countFileDownloads($referenced_entity);
@@ -161,6 +162,12 @@ class EntityFileDownloadCount {
           break;
 
         case 'file':
+        case 'image':
+          // We skip thumbnail property of the media.
+          if ($field->getName() === 'thumbnail') {
+            break;
+          }
+
           $file_downloads_count = 0;
           $file_ids = [];
           $result = [
@@ -169,29 +176,20 @@ class EntityFileDownloadCount {
           ];
           foreach ($entity->get($field->getName())->getValue() as $file_item) {
             $file_ids[] = $file_item['target_id'];
-            $file = $this->entityTypeManager->getStorage('file')->load($file_item['target_id']);
-            $result['cache_tags'] = array_unique(array_merge($result['cache_tags'], $file->getCacheTags()));
+            $result['cache_tags'] = array_unique(array_merge($result['cache_tags'], MediaFileDownloadController::getMediaFileDownloadCacheTags($file_item['target_id'])));
           }
+
           // Get statistics results for all files.
           $stat_results = $this->fileStatisticsDbStorage->fetchViews($file_ids);
           foreach ($stat_results as $stat_result) {
             /** @var \Drupal\statistics\StatisticsViewsResult $stat_result */
             $file_downloads_count += $stat_result->getTotalCount();
           }
-          $result = [
-            'download_count' => $file_downloads_count,
-            'cache_tags' => array_unique(array_merge($result['cache_tags'], $entity->getCacheTags())),
-          ];
-          // Cache the result.
-          $this->cacheBackend->set($cid, $result['download_count'], Cache::PERMANENT, $result['cache_tags']);
 
-          // Dispatch an event.
-          $event = new DownloadCountUpdate($entity, $result['download_count']);
-          $this->eventDispatcher->dispatch($event, DownloadCountUpdate::EVENT_NAME);
-
-          // Return the download count for these files and cache tags for this
-          // entity.
-          return $result;
+          // Aggregate results.
+          $result['download_count'] += $file_downloads_count;
+          $result['cache_tags'] = array_unique(array_merge($result['cache_tags'], $entity->getCacheTags()));
+          break;
 
       }
     }

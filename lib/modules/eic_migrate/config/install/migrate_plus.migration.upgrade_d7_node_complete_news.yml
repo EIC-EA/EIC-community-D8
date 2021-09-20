@@ -14,11 +14,11 @@ label: 'Node complete (News)'
 source:
   plugin: eic_d7_node_complete_with_smed_ids
   node_type: news
+  track_changes: true
   smed_taxonomy_fields:
     - c4m_vocab_geo
     - c4m_vocab_language
     - c4m_vocab_topic
-  track_changes: true
 process:
   nid:
     - plugin: migration_lookup
@@ -33,47 +33,32 @@ process:
         und: en
     - plugin: default_value
       default_value: en
-  title:
-    - plugin: get
-      source: title
+  title: title
   uid:
     - plugin: migration_lookup
       source: node_uid
       migration:
         - upgrade_d7_user
-  # TODO: How to migrate correct status and content moderation state? Status seems to be overridden when importing.
-  status:
-    - plugin: get
+  status: status
+  moderation_state:
+    - plugin: static_map
       source: status
-  created:
-    - plugin: get
-      source: created
-  changed:
-    - plugin: get
-      source: timestamp
-  promote:
-    - plugin: get
-      source: promote
-  sticky:
-    - plugin: get
-      source: sticky
+      map:
+        0: draft
+        1: published
+  created: created
+  changed: timestamp
+  promote: promote
+  sticky: sticky
   revision_uid:
     - plugin: migration_lookup
       source: revision_uid
       migration:
         - upgrade_d7_user
-  revision_log:
-    - plugin: get
-      source: log
-  revision_timestamp:
-    - plugin: get
-      source: timestamp
-  content_translation_source:
-    - plugin: get
-      source: source_langcode
-  node_comment/0/status:
-    - plugin: get
-      source: comment
+  revision_log: log
+  revision_timestamp: timestamp
+  content_translation_source: source_langcode
+  node_comment/0/status: comment
   field_body:
     - plugin: eic_media_wysiwyg_filter
       source: c4m_body
@@ -99,7 +84,8 @@ process:
 #      process:
 #        target_id:
 #          - plugin: migration_lookup
-#            source: tid
+#            source: smed_id
+#            no_stub: true
 #            migration:
 #              - smed_TODO
   # TODO: Validate implementation when field_vocab_languages is added to CT News.
@@ -138,8 +124,7 @@ destination:
   translations: true
   default_bundle: news
 migration_dependencies:
-  required: { }
-  optional:
+  required:
     - upgrade_d7_user
     - upgrade_d7_file_audio_to_media
     - upgrade_d7_file_document_to_media
@@ -150,3 +135,4 @@ migration_dependencies:
     - smed_thematics_topics_lvl1
     - smed_thematics_topics_lvl2
     - smed_thematics_topics_lvl3
+  optional: { }
