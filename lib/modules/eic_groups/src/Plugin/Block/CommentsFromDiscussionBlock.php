@@ -11,6 +11,7 @@ use Drupal\group\GroupMembership;
 use Drupal\node\NodeInterface;
 use Drupal\paragraphs\ParagraphInterface;
 use Drupal\user\Entity\User;
+use Drupal\user\UserInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -95,8 +96,13 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
       return $paragraph->get('field_user_ref')->referencedEntities()[0]->id();
     }, $contributors);
 
-    $contributors_data ['items'] = [];
     $users = User::loadMultiple($users);
+
+    $contributors_data ['items'] = [];
+
+    if ($node->getOwner() instanceof UserInterface && (int) $node->getOwner()->id() !== 0) {
+      $contributors_data['items'][] = eic_community_get_teaser_user_display($node->getOwner());
+    }
 
     foreach ($users as $user) {
       $contributors_data['items'][] = eic_community_get_teaser_user_display($user);
