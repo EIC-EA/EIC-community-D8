@@ -348,7 +348,7 @@ class DiscussionController extends ControllerBase {
    */
   private function getCommentLikesData(CommentInterface $comment, AccountInterface $account) {
     $hasAccountLiked = FALSE;
-    $flags = $this->flagService->getAllEntityFlaggings($comment, $account);
+    $flags = $this->flagService->getAllEntityFlaggings($comment);
     $flags = array_filter($flags, function (FlaggingInterface $flag) {
       return 'like_comment' === $flag->getFlagId();
     });
@@ -358,7 +358,7 @@ class DiscussionController extends ControllerBase {
         unset($flags[$key]);
       }
 
-      if (!empty($this->flagService->getFlaggingUsers($comment, $flag->getFlag()))) {
+      if (in_array($account->id(), array_keys($this->flagService->getFlaggingUsers($comment, $flag->getFlag())))) {
         $hasAccountLiked = TRUE;
       }
     }
