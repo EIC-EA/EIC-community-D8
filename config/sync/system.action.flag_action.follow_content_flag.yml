@@ -1,0 +1,15 @@
+uuid: 0b6bd8fd-3e48-4263-9897-57f82ff3d2a0
+langcode: en
+status: true
+dependencies:
+  config:
+    - flag.flag.follow_content
+  module:
+    - flag
+id: flag_action.follow_content_flag
+label: Follow
+type: node
+plugin: 'flag_action:follow_content_flag'
+configuration:
+  flag_id: follow_content
+  flag_action: flag
