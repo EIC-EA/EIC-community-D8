@@ -159,10 +159,7 @@ class EntityOperations implements ContainerInjectionInterface {
       $operations['request_' . $type] = [
         'title' => $this->t('Request @type', ['@type' => $type]),
         'url' => $entity->toUrl('new-request')
-          ->setRouteParameter(
-            'destination',
-            $this->currentRequest->getRequestUri()
-          )
+          ->setRouteParameter('destination', $this->currentRequest->getRequestUri())
           ->setRouteParameter('request_type', $type),
       ];
     }
@@ -281,8 +278,7 @@ class EntityOperations implements ContainerInjectionInterface {
           break;
         }
 
-        // @todo Add missing node follow flag_type variable after implementing
-        // the flag for nodes.
+        $flag_type = 'follow_content';
         break;
 
       case 'group_content':
@@ -305,10 +301,9 @@ class EntityOperations implements ContainerInjectionInterface {
           break;
         }
 
+        // Get the node entity to be flagged later.
         $flag_entity = $entity;
-
-        // @todo Add missing node follow flag_type variable after implementing
-        // the flag for nodes.
+        $flag_type = 'follow_content';
         break;
 
     }
