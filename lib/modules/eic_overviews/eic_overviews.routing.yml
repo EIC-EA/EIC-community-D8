@@ -15,6 +15,13 @@ eic_overviews.groups.overview_page.discussions:
     _title: 'Discussions'
   requirements:
     _group_permission: 'access discussions overview'
+eic_overviews.groups.overview_page.files:
+  path: '/group/{group}/library'
+  defaults:
+    _controller: '\Drupal\eic_overviews\Controller\GroupOverviewsController::buildGenericPage'
+    _title: 'Files'
+  requirements:
+    _group_permission: 'access files overview'
 eic_overviews.groups.overview_page.members:
   path: '/group/{group}/people'
   defaults:
@@ -22,6 +29,13 @@ eic_overviews.groups.overview_page.members:
     _title: 'Members'
   requirements:
     _group_permission: 'access members overview'
+eic_overviews.groups.overview_page.latest_activity_stream:
+  path: '/group/{group}/latest-activity'
+  defaults:
+    _controller: '\Drupal\eic_overviews\Controller\GroupOverviewsController::buildGenericPage'
+    _title: 'Latest activity'
+  requirements:
+    _group_permission: 'access latest activity stream'
 eic_overviews.groups.overview_page.search:
   path: '/group/{group}/search'
   defaults:

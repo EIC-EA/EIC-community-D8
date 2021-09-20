@@ -1,0 +1,29 @@
+uuid: ba1d70a5-550f-4b7a-9cae-05a49d4d94ef
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_video
+    - media.type.video
+    - node.type.discussion
+id: node.discussion.field_video
+field_name: field_video
+entity_type: node
+bundle: discussion
+label: Video
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:media'
+  handler_settings:
+    target_bundles:
+      video: video
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

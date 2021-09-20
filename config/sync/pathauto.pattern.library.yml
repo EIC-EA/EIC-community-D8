@@ -9,15 +9,16 @@ label: Library
 type: 'canonical_entities:node'
 pattern: '[node:node_group_url]/library/[node:title]'
 selection_criteria:
-  51ec4726-84c3-4bdc-bab0-0d69ff230f1b:
+  a9ca8400-c6bc-40de-b50d-141e57b05890:
     id: node_type
     bundles:
       document: document
       gallery: gallery
+      video: video
     negate: false
     context_mapping:
       node: node
-    uuid: 51ec4726-84c3-4bdc-bab0-0d69ff230f1b
+    uuid: a9ca8400-c6bc-40de-b50d-141e57b05890
 selection_logic: and
 weight: -8
 relationships: {  }
