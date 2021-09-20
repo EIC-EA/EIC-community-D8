@@ -149,18 +149,9 @@ process:
 #        title: title
 #        width: width
 #        height: height
-  # TODO: Not working
-#  field_related_stories:
-#    - plugin: sub_process
-#      source: c4m_related_articles
-#      process:
-#        target_id:
-#          - plugin: migration_lookup
-#            source: target_id
-#            migration:
-#              - upgrade_d7_node_complete_article
-#    - plugin: get
-#      source: c4m_related_articles
+# field_related_stories is handled through a post migration so we don't
+# migrate it here.
+# @see Drupal\eic_migrate\EventSuscriber\PostMigrationSubscriber
   # TODO
 #  c4m_related_group:
 #    - plugin: get
