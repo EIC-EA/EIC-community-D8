@@ -1,0 +1,28 @@
+langcode: en
+status: true
+dependencies: {  }
+id: upgrade_d7_node_complete_photoalbum_gallery_slides_paragraph
+class: Drupal\migrate\Plugin\Migration
+field_plugin_method: null
+cck_plugin_method: null
+migration_tags:
+  - 'Drupal 7'
+  - Content
+migration_group: migrate_drupal_7
+label: 'Node complete (Photoalbum) gallery slides paragraph (node_gallery_relationship)'
+source:
+  plugin: eic_d7_photoalbum_photo_relationship
+  track_changes: true
+process:
+  field_gallery_slide_media/target_id:
+    - plugin: migration_lookup
+      source: nid
+      migration:
+        - upgrade_d7_node_photo_to_media
+destination:
+  plugin: 'entity_reference_revisions:paragraph'
+  default_bundle: gallery_slide
+migration_dependencies:
+  required:
+    - upgrade_d7_node_photo_to_media
+  optional: { }

@@ -47,12 +47,6 @@ process:
 #        title: title
 #        width: width
 #        height: height
-  # TODO
-#  c4m_vocab_language:
-#    - plugin: sub_process
-#      source: c4m_vocab_language
-#      process:
-#        target_id: tid
 #  node_gallery_ref_1:
 #    - plugin: get
 #      source: node_gallery_ref_1
