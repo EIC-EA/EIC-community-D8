@@ -461,3 +461,27 @@ function eic_groups_entity_type_alter(array &$entity_types) {
   // entity.
   $entity_types['group_content']->addConstraint('EICGroupMembership');
 }
+
+/**
+ * Implements hook_entity_presave().
+ */
+function eic_groups_entity_presave(EntityInterface $entity) {
+  if ($entity->getEntityTypeId() !== 'group') {
+    return;
+  }
+
+  if ($entity->isNew()) {
+    return;
+  }
+
+  // If group alias is set to manual and has changed, we add the group into a
+  // queue so that all group content url aliases can be updated at a later
+  // stage with cron.
+  if (!$entity->get('path')->pathauto) {
+    if ($entity->original->get('path')->alias !== $entity->get('path')->alias) {
+      /** @var \Drupal\eic_groups\Hooks\Pathauto $class */
+      $class = \Drupal::classResolver(Pathauto::class);
+      $class->createGroupUrlAliasUpdateQueueItem($entity);
+    }
+  }
+}
