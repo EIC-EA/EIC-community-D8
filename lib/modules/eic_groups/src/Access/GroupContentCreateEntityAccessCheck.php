@@ -64,26 +64,25 @@ class GroupContentCreateEntityAccessCheck extends GroupContentCreateEntityAccess
   public function access(Route $route, AccountInterface $account, GroupInterface $group, $plugin_id) {
     $access = $this->groupContentCreateEntityAccessCheck->access($route, $account, $group, $plugin_id);
 
+    // Edge case where we make sure that no user (even user 1 or a user with
+    // Drupal administrator role) can create new book pages inside groups.
+    // There should only be 1 book page per group and it's automatically
+    // created after creating the group.
+    if ($plugin_id === 'group_node:book') {
+      if ($group_book_nid = $this->eicGroupsHelper->getGroupBookPage($group)) {
+        // We need to load the group book node in order to add it as a
+        // cacheable dependency of the access result object.
+        $group_book_node = $this->entityTypeManager->getStorage('node')->load($group_book_nid);
+
+        return AccessResult::forbidden()
+          ->addCacheableDependency($group_book_node)
+          ->addCacheableDependency($group);
+      }
+    }
+
     // If access is allowed, we also need to check if the user can create group
     // content based on the current group moderation state.
     if ($access->isAllowed()) {
-
-      // Edge case where we make sure that no user (even user 1 or a user with
-      // Drupal administrator role) can create new book pages inside groups.
-      // There should only be 1 book page per group and it's automatically
-      // created after creating the group.
-      if ($plugin_id === 'group_node:book') {
-        if ($group_book_nid = $this->eicGroupsHelper->getGroupBookPage($group)) {
-          // We need to load the group book node in order to add it as a
-          // cacheable dependency of the access result object.
-          $group_book_node = $this->entityTypeManager->getStorage('node')->load($group_book_nid);
-
-          return AccessResult::forbidden()
-            ->addCacheableDependency($group_book_node)
-            ->addCacheableDependency($group);
-        }
-      }
-
       switch ($group->get('moderation_state')->value) {
         case GroupsModerationHelper::GROUP_PENDING_STATE:
           // Deny access to the group content node creation form if the group
@@ -97,6 +96,12 @@ class GroupContentCreateEntityAccessCheck extends GroupContentCreateEntityAccess
           break;
 
       }
+    }
+    else {
+      // Power user can always access.
+      $access = AccessResult::allowedIf(UserHelper::isPowerUser($account))
+        ->addCacheableDependency($account)
+        ->addCacheableDependency($group);
     }
 
     return $access;

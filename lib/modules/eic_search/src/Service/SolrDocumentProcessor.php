@@ -18,6 +18,7 @@ use Drupal\profile\Entity\Profile;
 use Drupal\profile\Entity\ProfileInterface;
 use Drupal\user\Entity\User;
 use Drupal\user\UserInterface;
+use Solarium\Core\Query\DocumentInterface;
 use Solarium\QueryType\Update\Query\Document;
 
 /**
@@ -173,15 +174,9 @@ class SolrDocumentProcessor {
 
     if (array_key_exists('its_content__group_content__entity_id_gid', $fields)) {
       if ($group_entity = Group::load($fields['its_content__group_content__entity_id_gid'])) {
-        $group_parent_label = $group_entity instanceof GroupInterface ?
-          $group_entity->label()
-          : '';
-        $group_parent_url = $group_entity instanceof GroupInterface ?
-          $group_entity->toUrl()->toString()
-          : '';
-        $group_parent_id = $group_entity instanceof GroupInterface ?
-          $group_entity->id()
-          : -1;
+        $group_parent_label = -$group_entity->label();
+        $group_parent_url = $group_entity->toUrl()->toString();
+        $group_parent_id = $group_entity->id();
       }
     }
 
@@ -241,7 +236,7 @@ class SolrDocumentProcessor {
     $author = $comment->get('uid')->referencedEntities();
     $author = reset($author);
 
-    /** @var \Drupal\media\MediaInterface $author_media */
+    /** @var \Drupal\media\MediaInterface|NULL $author_media */
     $author_media = $author->get('field_media')->entity;
     /** @var File|NULL $author_file */
     $author_file = $author_media instanceof MediaInterface ? File::load($author_media->get('oe_media_image')->target_id) : NULL;
@@ -257,12 +252,12 @@ class SolrDocumentProcessor {
   /**
    * @param \Solarium\QueryType\Update\Query\Document $document
    * @param array $fields
-   * @param $items
+   * @param array $items
    * @param \Drupal\eic_groups\EICGroupsHelper $group_helper
    *
    * @throws \Drupal\search_api\SearchApiException
    */
-  public function processGroupVisibilityData(Document &$document, array $fields, $items, EICGroupsHelper $group_helper) {
+  public function processGroupVisibilityData(Document &$document, array $fields, array $items, EICGroupsHelper $group_helper) {
     $search_id = array_key_exists('ss_search_api_id', $fields) ?
       $fields['ss_search_api_id'] :
       NULL;
@@ -277,9 +272,8 @@ class SolrDocumentProcessor {
       return;
     }
 
-    /** @var \Drupal\search_api\Item\Item $item */
+    /** @var \Drupal\search_api\Item\ItemInterface $item */
     $item = array_key_exists($search_id, $items) ? $items[$search_id] : NULL;
-
     if (!$item) {
       $document->addField('ss_group_visibility', $group_visibility);
       return;
@@ -347,10 +341,10 @@ class SolrDocumentProcessor {
   }
 
   /**
-   * @param $document
-   * @param $fields
+   * @param \Solarium\Core\Query\DocumentInterface $document
+   * @param array $fields
    */
-  public function processGroupUserData(Document &$document, $fields) {
+  public function processGroupUserData(DocumentInterface &$document, array $fields) {
     if ($fields['ss_search_api_datasource'] === 'entity:user' && array_key_exists('its_user_profile', $fields)) {
       $profile = Profile::load($fields['its_user_profile']);
       if ($profile instanceof ProfileInterface) {

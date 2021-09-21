@@ -8,41 +8,59 @@ use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountProxyInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
 use Drupal\eic_flags\FlaggedEntitiesListBuilder;
+use Drupal\eic_flags\FlagType;
 use Drupal\eic_flags\Service\RequestHandlerCollector;
 use Drupal\flag\FlagCountManagerInterface;
+use Drupal\flag\FlagServiceInterface;
+use Drupal\profile\Entity\ProfileInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
- * Class EntityOperations
+ * Class EntityOperations.
+ *
+ * Implementations of entity hooks.
  *
  * @package Drupal\eic_flags\Hooks
  */
 class EntityOperations implements ContainerInjectionInterface {
 
+  use StringTranslationTrait;
+
   /**
+   * The EIC flag request handler collector.
+   *
    * @var \Drupal\eic_flags\Service\RequestHandlerCollector
    */
   private $collector;
 
   /**
+   * The moderation information service.
+   *
    * @var \Drupal\content_moderation\ModerationInformationInterface
    */
   private $moderationInformation;
 
   /**
+   * The current route match.
+   *
    * @var \Drupal\Core\Routing\RouteMatchInterface
    */
   private $routeMatch;
 
   /**
+   * The current request.
+   *
    * @var \Symfony\Component\HttpFoundation\Request|null
    */
   private $currentRequest;
 
   /**
+   * The current user account.
+   *
    * @var \Drupal\Core\Session\AccountProxyInterface
    */
   private $account;
@@ -55,15 +73,29 @@ class EntityOperations implements ContainerInjectionInterface {
   private $flagCountManager;
 
   /**
+   * The Flag sevice.
+   *
+   * @var \Drupal\flag\FlagServiceInterface
+   */
+  private $flagService;
+
+  /**
    * EntityOperations constructor.
    *
    * @param \Drupal\eic_flags\Service\RequestHandlerCollector $collector
+   *   The EIC flag request handler collector.
    * @param \Drupal\content_moderation\ModerationInformationInterface $moderation_information
+   *   The moderation information service.
    * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
+   *   The current route match.
    * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
+   *   The current request.
    * @param \Drupal\Core\Session\AccountProxyInterface $account
+   *   The current user account.
    * @param \Drupal\flag\FlagCountManagerInterface $flag_count_manager
    *   The Flag count manager.
+   * @param \Drupal\flag\FlagServiceInterface $flag_service
+   *   The Flag sevice.
    */
   public function __construct(
     RequestHandlerCollector $collector,
@@ -71,7 +103,8 @@ class EntityOperations implements ContainerInjectionInterface {
     RouteMatchInterface $route_match,
     RequestStack $request_stack,
     AccountProxyInterface $account,
-    FlagCountManagerInterface $flag_count_manager
+    FlagCountManagerInterface $flag_count_manager,
+    FlagServiceInterface $flag_service
   ) {
     $this->collector = $collector;
     $this->moderationInformation = $moderation_information;
@@ -79,6 +112,7 @@ class EntityOperations implements ContainerInjectionInterface {
     $this->currentRequest = $request_stack->getCurrentRequest();
     $this->account = $account;
     $this->flagCountManager = $flag_count_manager;
+    $this->flagService = $flag_service;
   }
 
   /**
@@ -91,14 +125,21 @@ class EntityOperations implements ContainerInjectionInterface {
       $container->get('current_route_match'),
       $container->get('request_stack'),
       $container->get('current_user'),
-      $container->get('flag.count')
+      $container->get('flag.count'),
+      $container->get('flag'),
+      $container->get('entity_type.manager')
     );
   }
 
   /**
+   * Gets flag operation links for a given entity.
+   *
    * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The entity object.
    *
    * @return array
+   *   Array of operation links.
+   *
    * @throws \Drupal\Core\Entity\EntityMalformedException
    */
   public function getOperations(EntityInterface $entity) {
@@ -117,12 +158,9 @@ class EntityOperations implements ContainerInjectionInterface {
 
       $type = $handler->getType();
       $operations['request_' . $type] = [
-        'title' => t('Request ' . $type),
+        'title' => $this->t('Request @type', ['@type' => $type]),
         'url' => $entity->toUrl('new-request')
-          ->setRouteParameter(
-            'destination',
-            \Drupal::request()->getRequestUri()
-          )
+          ->setRouteParameter('destination', $this->currentRequest->getRequestUri())
           ->setRouteParameter('request_type', $type),
       ];
     }
@@ -131,9 +169,13 @@ class EntityOperations implements ContainerInjectionInterface {
   }
 
   /**
+   * Gets flag admin operation links.
+   *
    * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The entity object.
    *
    * @return array
+   *   Array of operation links.
    */
   public function getAdminOperations(EntityInterface $entity) {
     if ($request_type = $this->routeMatch->getParameter('request_type')) {
@@ -147,7 +189,7 @@ class EntityOperations implements ContainerInjectionInterface {
     $url = Url::fromRoute('eic_flags.publish_archived_content', [
       'entity_type_id' => $entity->getEntityTypeId(),
       'entity_id' => $entity->id(),
-      'destination' => \Drupal::request()->getRequestUri(),
+      'destination' => $this->currentRequest->getRequestUri(),
     ]);
 
     if ($this->moderationInformation->isModeratedEntity($entity)) {
@@ -164,7 +206,7 @@ class EntityOperations implements ContainerInjectionInterface {
     ) {
       return [
         'publish' => [
-          'title' => t('Publish'),
+          'title' => $this->t('Publish'),
           'url' => $url,
         ],
       ];
@@ -188,6 +230,154 @@ class EntityOperations implements ContainerInjectionInterface {
       '#markup' => '',
       '#items' => $this->flagCountManager->getEntityFlagCounts($entity),
     ];
+  }
+
+  /**
+   * Implements hook_entity_insert().
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The entity object.
+   */
+  public function entityInsert(EntityInterface $entity) {
+    switch ($entity->getEntityTypeId()) {
+      case 'profile':
+        $this->followTopicsOnUserProfileUpdate($entity);
+        break;
+
+      default:
+        $this->followEntityOnCreation($entity);
+        break;
+
+    }
+  }
+
+  /**
+   * Implements hook_entity_insert().
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The entity object.
+   */
+  public function entityUpdate(EntityInterface $entity) {
+    switch ($entity->getEntityTypeId()) {
+      case 'profile':
+        $this->followTopicsOnUserProfileUpdate($entity);
+        break;
+
+    }
+  }
+
+  /**
+   * Triggers "follow" flag on an entity after its creation.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The entity object.
+   */
+  public function followEntityOnCreation(EntityInterface $entity) {
+    $flag_entity = FALSE;
+    $flag_type = FALSE;
+
+    switch ($entity->getEntityTypeId()) {
+      case 'comment':
+        $flag_entity = $entity->getCommentedEntity();
+        $flag_type = FlagType::FOLLOW_CONTENT;
+        break;
+
+      case 'group_content':
+        // We skip group_content entities that are not group_membership.
+        if ($entity->getGroupContentType()->getContentPluginId() !== 'group_membership') {
+          break;
+        }
+
+        // Get the group entity to be flagged later.
+        $flag_entity = $entity->getGroup();
+        $flag_type = FlagType::FOLLOW_GROUP;
+        break;
+
+      case 'node':
+        // Get the node entity to be flagged later.
+        $flag_entity = $entity;
+        $flag_type = FlagType::FOLLOW_CONTENT;
+        break;
+
+    }
+
+    if (!$flag_entity || !$flag_type) {
+      return;
+    }
+
+    $flag = $this->flagService->getFlagById($flag_type);
+
+    // The entity type cannot be flagged with this flag, so we do nothing.
+    if ($flag->getFlaggableEntityTypeId() !== $flag_entity->getEntityTypeId()) {
+      return;
+    }
+
+    // If the entity bundle is not enabled in the flag configuration, we do
+    // nothing.
+    if (!empty($flag->getBundles()) && !in_array($flag_entity->bundle(), $flag->getBundles())) {
+      return;
+    }
+
+    $this->flagService->flag($flag, $flag_entity);
+  }
+
+  /**
+   * Triggers "follow" flag on topic term after user profile update.
+   *
+   * This method can also be called when creating a new profile.
+   *
+   * @param \Drupal\profile\Entity\ProfileInterface $profile
+   *   The profile object.
+   */
+  public function followTopicsOnUserProfileUpdate(ProfileInterface $profile) {
+    if ($profile->bundle() !== 'member') {
+      return;
+    }
+
+    $vocab_field_name = 'field_vocab_topic_interest';
+
+    if (!$profile->hasField($vocab_field_name)) {
+      return;
+    }
+
+    $user = $profile->getOwner();
+    $flag = $this->flagService->getFlagById(FlagType::FOLLOW_TAXONOMY_TERM);
+    $topics = [];
+
+    $new_topics = $profile->get($vocab_field_name)->referencedEntities();
+    foreach ($new_topics as $topic) {
+      $topics[$topic->id()] = $topic;
+    }
+
+    // If profile is not new then we need to unfollow old topics.
+    if ($profile->original) {
+
+      $old_topics = $profile->original->get($vocab_field_name)->referencedEntities();
+      foreach ($old_topics as $topic) {
+
+        // Unfollow old topic.
+        if (!isset($topics[$topic->id()])) {
+          $topic_flag = $this->flagService->getFlagging($flag, $topic, $user);
+
+          // If topic is not flagged, we do nothing.
+          if (!$topic_flag) {
+            continue;
+          }
+
+          $this->flagService->unflag($flag, $topic, $user);
+          continue;
+        }
+
+        // At this point it means this topic already been referenced. Therefore
+        // we unset it from the array to avoid flag it twice later.
+        unset($topics[$topic->id()]);
+      }
+    }
+
+    // Follow new topics.
+    foreach ($topics as $topic) {
+      $this->flagService->flag($flag, $topic, $user);
+    }
   }
 
 }

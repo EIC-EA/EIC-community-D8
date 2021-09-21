@@ -57,7 +57,7 @@ class MediaFileDownloadAccessCheck implements AccessInterface {
    *   The route to check against.
    * @param \Drupal\media\MediaInterface $media
    *   The media entity to test access.
-   * @param D\rupal\Core\Session\AccountInterface $account
+   * @param \Drupal\Core\Session\AccountInterface $account
    *   The current user account.
    *
    * @return \Drupal\Core\Access\AccessResultInterface

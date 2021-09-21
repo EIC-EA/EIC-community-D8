@@ -51,7 +51,7 @@ class OecGroupCommentsAccessControlHandler extends CommentAccessControlHandler i
    * {@inheritdoc}
    */
   protected function checkAccess(EntityInterface $entity, $operation, AccountInterface $account) {
-    /** @var \Drupal\comment\CommentInterface|\Drupal\user\EntityOwnerInterface $entity */
+    /** @var \Drupal\comment\CommentInterface $entity */
     $commented_entity = $entity->getCommentedEntity();
     if (!($commented_entity instanceof ContentEntityInterface)) {
       return AccessResult::neutral();
@@ -74,7 +74,7 @@ class OecGroupCommentsAccessControlHandler extends CommentAccessControlHandler i
     }
 
     // If there are replies to the comment, disable 'can_edit'.
-    $reply_count = $this->commentReplyCount($entity->id(), $commented_entity->id(), $commented_entity->getEntityTypeId());
+    $reply_count = $this->commentReplyCount($entity->id(), $commented_entity->id(), (int) $commented_entity->getEntityTypeId());
 
     // Fallback.
     $access = AccessResult::neutral();
@@ -129,6 +129,7 @@ class OecGroupCommentsAccessControlHandler extends CommentAccessControlHandler i
       ->condition('pid', $cid)
       ->count()
       ->execute();
+
     return (int) $result;
   }
 

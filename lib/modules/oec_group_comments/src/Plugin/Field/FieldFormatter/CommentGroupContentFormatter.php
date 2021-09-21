@@ -136,6 +136,7 @@ class CommentGroupContentFormatter extends CommentDefaultFormatter {
    */
   public function viewElements(FieldItemListInterface $items, $langcode) {
     $output = parent::viewElements($items, $langcode);
+    /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
     $entity = $items->getEntity();
 
     // Exclude entities without the set id.

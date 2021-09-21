@@ -12,7 +12,7 @@ entity_type: node
 bundle: video
 label: 'Document type'
 description: ''
-required: false
+required: true
 translatable: true
 default_value: {  }
 default_value_callback: ''
