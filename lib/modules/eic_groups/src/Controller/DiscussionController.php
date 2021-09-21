@@ -90,16 +90,7 @@ class DiscussionController extends ControllerBase {
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
   public function addComment(Request $request, $discussion_id) {
-    /** @var \Drupal\node\NodeInterface|NULL $node */
-    $node = Node::load($discussion_id);
-    $group_contents = GroupContent::loadByEntity($node);
-    $access = $this->groupPermissionChecker->getPermissionInGroups(
-      'post comments',
-      $this->currentUser(),
-      $group_contents
-    );
-
-    if (!$access->isAllowed()) {
+    if (!$this->hasPermission($discussion_id, 'post comments')) {
       return new JsonResponse('You do not have access to post comment', Response::HTTP_FORBIDDEN);
     }
 
@@ -229,6 +220,13 @@ class DiscussionController extends ControllerBase {
       else {
         $flag_entity = $this->flagService->getFlagById($flag);
 
+        if (!$this->hasPermission($discussion_id, 'post comment')) {
+          return new JsonResponse(
+            'You do not have access to do ' . $flag_entity->id(),
+            Response::HTTP_FORBIDDEN
+          );
+        }
+
         $flagging = $this->entityTypeManager->getStorage('flagging')->create(
           [
             'uid' => $this->currentUser()->id(),
@@ -271,26 +269,12 @@ class DiscussionController extends ControllerBase {
     }
 
     $user = User::load($this->currentUser()->id());
-    /** @var \Drupal\node\NodeInterface|NULL $node */
-    $node = Node::load($discussion_id);
-    $group_contents = GroupContent::loadByEntity($node);
-    $access = $this->groupPermissionChecker->getPermissionInGroups(
-      'edit own comments',
-      $this->currentUser(),
-      $group_contents
-    );
 
-    if ($user->id() === $comment->getOwnerId() && !$access->isAllowed()) {
+    if ($user->id() === $comment->getOwnerId() && !$this->hasPermission($discussion_id, 'edit own comments')) {
       return new JsonResponse('You do not have access to edit own comment', Response::HTTP_FORBIDDEN);
     }
 
-    $access = $this->groupPermissionChecker->getPermissionInGroups(
-      'edit all comments',
-      $this->currentUser(),
-      $group_contents
-    );
-
-    if ($user->id() !== $comment->getOwnerId() && !$access->isAllowed()) {
+    if ($user->id() !== $comment->getOwnerId() && !!$this->hasPermission($discussion_id, 'edit all comments')) {
       return new JsonResponse('You do not have access to edit all comments', Response::HTTP_FORBIDDEN);
     }
 
@@ -367,6 +351,27 @@ class DiscussionController extends ControllerBase {
       'total' => count($flags),
       'hasAccountLike' => $hasAccountLiked,
     ];
+  }
+
+  /**
+   * Check permission for a user in group
+   *
+   * @param int $node_id
+   * @param string $permission
+   *
+   * @return bool
+   */
+  private function hasPermission(int $node_id, string $permission): bool {
+    /** @var \Drupal\node\NodeInterface|NULL $node */
+    $node = Node::load($node_id);
+    $group_contents = GroupContent::loadByEntity($node);
+    $access = $this->groupPermissionChecker->getPermissionInGroups(
+      $permission,
+      $this->currentUser(),
+      $group_contents
+    );
+
+    return $access->isAllowed();
   }
 
 }
