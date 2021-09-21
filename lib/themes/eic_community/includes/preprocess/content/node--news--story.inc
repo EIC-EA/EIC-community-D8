@@ -161,7 +161,7 @@ function _eic_community_display_contributors(&$variables) {
 
   foreach ($contributors_fields as $field_name) {
     if ($node->hasField($field_name)) {
-      $field_title = $variables['elements'][$field_name]['#title'];
+      $field_title = isset($variables['elements'][$field_name]['#title']) ? $variables['elements'][$field_name]['#title'] : '';
 
       foreach ($variables['elements'][$field_name] as $key => $value) {
         if (is_int($key)) {
