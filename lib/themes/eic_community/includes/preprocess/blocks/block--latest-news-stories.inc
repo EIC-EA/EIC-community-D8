@@ -44,10 +44,6 @@ function eic_community_preprocess_block__latest_news_stories(&$variables, &$cach
     $node_author = eic_community_get_teaser_user_display($node_translation->getOwner());
     $time_ago = \Drupal::service('date.formatter')->formatTimeDiffSince($node_translation->get('published_at')->value, ['granularity' => 1]);
 
-    if ($variables['logged_in'] === FALSE) {
-      unset($node_author['path']);
-    }
-
     if (isset($variables['content']['node_stats'][$node->id()])) {
       $node_stats = $variables['content']['node_stats'][$node->id()];
     }

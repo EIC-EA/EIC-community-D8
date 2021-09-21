@@ -42,8 +42,12 @@ function _get_profile_image_array(EntityInterface $user): ?array {
 function eic_community_get_teaser_user_display(User $user) {
   $author = [
     'name' => $user->getDisplayName(),
-    'path' => $user->toUrl()->toString(),
   ];
+
+  // We add the user profile page URL if the current user has access to it.
+  if ($user->toUrl()->access()) {
+    $author['path'] = $user->toUrl()->toString();
+  }
 
   if (!$user->get('field_media')->isEmpty()) {
     /** @var \Drupal\media\Entity\Media $media */
