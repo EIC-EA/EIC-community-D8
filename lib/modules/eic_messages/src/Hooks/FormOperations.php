@@ -143,7 +143,7 @@ class FormOperations implements ContainerInjectionInterface {
     if (empty($form_state->getValue('field_post_activity'))) {
       return;
     }
-
+    /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
     $entity = $form_state->getFormObject()->getEntity();
     $group = $this->routeMatch->getParameter('group');
     if (!$group instanceof GroupInterface) {

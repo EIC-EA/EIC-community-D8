@@ -200,7 +200,7 @@ class EicGroupsGroupFeaturePluginBase extends GroupFeaturePluginBase {
    * @param \Drupal\group\Entity\GroupInterface $group
    *   The group entity.
    *
-   * @return \Drupal\Core\Url
+   * @return \Drupal\Core\Url|NULL
    *   The Url object.
    */
   protected function getPrimaryOverviewRoute(GroupInterface $group) {

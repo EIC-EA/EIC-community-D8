@@ -18,7 +18,7 @@ class SmedTaxonomyHelper {
    * @param string $child_id
    *   The ID of the child term for which we want to find the parent.
    *
-   * @return string
+   * @return string|NULL
    *   The matched parent ID or 0 if parent ID couldn't be resolved.
    */
   public static function findTermParentId(string $vocabulary_name, string $child_id) {
@@ -26,6 +26,7 @@ class SmedTaxonomyHelper {
       case 'ThematicsTopics':
         return self::resolveThematicsTopicsParentId($child_id);
     }
+
     return NULL;
   }
 
@@ -50,10 +51,10 @@ class SmedTaxonomyHelper {
    * @param string $child_id
    *   The ID of the child term for which we want to find the parent.
    *
-   * @return string
+   * @return string|NULL
    *   The matched parent ID or NULL if parent ID couldn't be resolved.
    */
-  protected function resolveThematicsTopicsParentId(string $child_id) {
+  protected static function resolveThematicsTopicsParentId(string $child_id) {
     $regex = '/^((H|T)(?:[0-9]*))(?:-[0-9]*)?$/';
     preg_match($regex, $child_id, $matches);
     // This regex always returns 3 matches, which represent the 3 levels. We
