@@ -4,7 +4,6 @@ namespace Drupal\eic_flags;
 
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Url;
 use Drupal\eic_flags\Service\RequestHandlerCollector;
 use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Entity\EntityListBuilder;
@@ -15,28 +14,36 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Class FlaggingListBuilder
+ * Class FlaggingListBuilder.
  *
  * @package Drupal\eic_flags
  */
 class FlaggingListBuilder extends EntityListBuilder {
 
   /**
+   * The date formatter service.
+   *
    * @var \Drupal\Core\Datetime\DateFormatterInterface
    */
   protected $dateFormatter;
 
   /**
+   * The entity type manager.
+   *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
   protected $entityTypeManager;
 
   /**
+   * The current request.
+   *
    * @var \Symfony\Component\HttpFoundation\Request
    */
   protected $currentRequest;
 
   /**
+   * The request handler for the current request type.
+   *
    * @var \Drupal\eic_flags\Service\HandlerInterface|null
    */
   protected $requestHandler;
@@ -45,12 +52,17 @@ class FlaggingListBuilder extends EntityListBuilder {
    * FlaggingListBuilder constructor.
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
+   *   Current entity type.
    * @param \Drupal\Core\Entity\EntityStorageInterface $storage
+   *   Current entity type's storage.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
+   *   The entity type manager.
    * @param \Drupal\Core\Datetime\DateFormatterInterface $date_formatter
+   *   The date formatter service.
    * @param \Symfony\Component\HttpFoundation\Request $request
-   * @param \Drupal\flag\FlagService $flag_service
+   *   The current request object.
    * @param \Drupal\eic_flags\Service\RequestHandlerCollector $collector
+   *   The request collector service.
    */
   public function __construct(
     EntityTypeInterface $entity_type,
@@ -147,6 +159,10 @@ class FlaggingListBuilder extends EntityListBuilder {
     return $this->getHeaderActions($target_entity) + parent::render();
   }
 
+  /**
+   * @return array|int
+   *   The result of the query.
+   */
   protected function getEntityIds() {
     $entity_type = $this->currentRequest->attributes->get('entity_type');
     $entity_id = $this->currentRequest->attributes->get('entity_id');
@@ -173,6 +189,7 @@ class FlaggingListBuilder extends EntityListBuilder {
 
   /**
    * @return array
+   *   Array with header actions.
    */
   private function getHeaderActions(ContentEntityInterface $entity) {
     $actions = $this->requestHandler->getActions($entity);

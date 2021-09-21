@@ -20,8 +20,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Defines a class to build a listing of flagged entities for the current
- * request_type.
+ * Defines a class to build a listing of flagged entities for the current request_type.
  */
 class FlaggedEntitiesListBuilder extends EntityListBuilder {
 
@@ -30,38 +29,52 @@ class FlaggedEntitiesListBuilder extends EntityListBuilder {
   const VIEW_ARCHIVE_FLAG_ID = 1;
 
   const VIEW_DELETE_FLAG_ID = 2;
-  
+
   /**
+   * The database driver.
+   *
    * @var \Drupal\Core\Database\Connection
    */
   protected $database;
 
   /**
+   * The date formatter class.
+   *
    * @var \Drupal\Core\Datetime\DateFormatterInterface
    */
   protected $dateFormatter;
 
   /**
+   * The entity type manager.
+   *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
   protected $entityTypeManager;
 
   /**
+   * Flag service provided by the flag module.
+   *
    * @var \Drupal\flag\FlagService
    */
   protected $flagService;
 
   /**
+   * Current request.
+   *
    * @var \Symfony\Component\HttpFoundation\Request
    */
   protected $currentRequest;
 
   /**
+   * The request type used for the list.
+   *
    * @var string
    */
   protected $requestType;
 
   /**
+   * The handler of the current request type.
+   *
    * @var \Drupal\eic_flags\Service\HandlerInterface|null
    */
   protected $requestHandler;
@@ -70,12 +83,19 @@ class FlaggedEntitiesListBuilder extends EntityListBuilder {
    * FlaggedEntitiesListBuilder constructor.
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
+   *   The entity type
    * @param \Drupal\Core\Entity\EntityStorageInterface $storage
+   *   The entity storage service.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
+   *    The entity type manager.
    * @param \Drupal\Core\Database\Connection $database
+   *    The database driver.
    * @param \Drupal\Core\Datetime\DateFormatterInterface $date_formatter
+   *    The date formatted class.
    * @param \Symfony\Component\HttpFoundation\Request $request
+   *    Current request object.
    * @param \Drupal\flag\FlagService $flag_service
+   *    Flag service provided by the flag module.
    * @param \Drupal\eic_flags\Service\RequestHandlerCollector $collector
    */
   public function __construct(
@@ -155,8 +175,11 @@ class FlaggedEntitiesListBuilder extends EntityListBuilder {
 
   /**
    * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The entity for which we need operations.
    *
    * @return array
+   *   List of operations.
+   *
    * @throws \Drupal\Core\Entity\EntityMalformedException
    */
   protected function getDefaultOperations(EntityInterface $entity) {
@@ -205,7 +228,8 @@ class FlaggedEntitiesListBuilder extends EntityListBuilder {
     foreach ($this->load() as $result) {
       $entity = $result['entity'];
       if ($row = $this->buildRow($result)) {
-        $build['table']['#rows'][$entity->getEntityTypeId() . '_' . $entity->id()] = $row;
+        $build['table']['#rows'][$entity->getEntityTypeId() . '_' . $entity->id(
+        )] = $row;
       }
     }
 
@@ -220,8 +244,10 @@ class FlaggedEntitiesListBuilder extends EntityListBuilder {
 
   /**
    * @param array $result
+   *   The row.
    *
    * @return array
+   *   The final row.
    */
   public function buildRow($result) {
     static $flags;
@@ -283,6 +309,7 @@ class FlaggedEntitiesListBuilder extends EntityListBuilder {
 
   /**
    * @return array
+   *   The table as an array
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
@@ -403,6 +430,7 @@ class FlaggedEntitiesListBuilder extends EntityListBuilder {
 
   /**
    * @return array
+   *   Available filters.
    * @throws \Drupal\Core\Form\EnforcedResponseException
    * @throws \Drupal\Core\Form\FormAjaxException
    */
