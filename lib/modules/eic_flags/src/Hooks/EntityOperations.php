@@ -318,6 +318,10 @@ class EntityOperations implements ContainerInjectionInterface {
       return;
     }
 
+    if ($this->flagService->getFlagging($flag, $flag_entity)) {
+      return;
+    }
+
     $this->flagService->flag($flag, $flag_entity);
   }
 
