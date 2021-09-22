@@ -3,9 +3,6 @@
   <div class="ecl-author ecl-author--is-{{ size|default('default') }} {{ updates.value ? ' ecl-author--has-updates ' }} {{ extra_classes }}">
     {% if not display_avatar_only %}
       <div class="ecl-author__information">
-        {% if description is not empty %}
-          <span class="ecl-author__description">{{ description }}</span>
-        {% endif %}
         <{{ label_element}} class="ecl-author__label {{ label_classes }}">
           {% if path is not empty %}
             {% include '@ecl-twig/ec-component-link/ecl-link.html.twig' with {
@@ -20,6 +17,9 @@
             {{ name }}
           {% endif %}
         </{{ label_element}}>
+        {% if description is not empty %}
+          <span class="ecl-author__description">{{ description }}</span>
+        {% endif %}
         {% if meta is not empty %}
           <span class="ecl-author__meta">{{ meta }}</span>
         {% endif %}
