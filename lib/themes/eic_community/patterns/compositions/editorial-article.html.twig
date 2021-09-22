@@ -3,7 +3,31 @@
 {% elseif block('sidebar') is defined %}
   {% set output_sidebar = block('sidebar') %}
 {% endif %}
+{% if parent is not empty %}
+  {% set _parent_icon = {} %}
 
+  {% if icon_file_path %}
+    {% set _parent_icon = {
+      path: icon_file_path,
+      type: 'ui',
+      name: 'rounded-arrow',
+      transform: 'rotate-270',
+      size: 'xs',
+    } %}
+  {% endif %}
+<div class="ecl-container">
+  <section class="ecl-editorial-article__header">
+    {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with parent|default({})|merge({
+      link: parent.link|default({})|merge({
+        type: 'standalone',
+        icon_position: 'before',
+      }),
+      extra_classes: 'ecl-editorial-header__parent-link ecl-link--call-to-action ' ~ parent.extra_classes|default(''),
+      icon: _parent_icon,
+    }) only %}
+  </section>
+</div>
+{% endif %}
 <section class="ecl-section-wrapper">
   <div class="ecl-editorial-article {{ extra_classes }}">
     <div class="ecl-container">

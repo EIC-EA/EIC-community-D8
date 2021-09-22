@@ -11,6 +11,14 @@
 function eic_community_preprocess_node__video(array &$variables) {
   switch ($variables['view_mode']) {
     case 'full':
+      $request = Drupal::request();
+
+      $variables['parent']['link'] = [
+        'label' => t('Previous page'),
+        'path' => $request->request->get('referer', 'javascript:history.go(-1)'),
+      ];
+      $variables['icon_file_path'] = $variables['eic_icon_path'];
+
       _eic_community_display_flags($variables);
       _eic_community_display_topics($variables);
       _eic_community_preprocess_video_contributors($variables);

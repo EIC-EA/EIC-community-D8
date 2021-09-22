@@ -2,8 +2,13 @@ uuid: 092acf4e-0ac9-4e24-bad6-5ade6eab25d5
 langcode: en
 status: true
 dependencies:
+  config:
+    - group_content_menu.group_content_menu_type.group_main_menu
   module:
+    - ctools
+    - eic_groups
     - group
+    - group_content_menu
     - route_condition
 name: group_global
 label: 'Group - Global'
@@ -26,6 +31,14 @@ conditions:
     negate: true
     uuid: df5ac6fd-1e86-44f6-9ff6-e46b4cfc36f1
     context_mapping: {  }
+  'entity_bundle:node':
+    id: 'entity_bundle:node'
+    bundles:
+      video: video
+    negate: true
+    uuid: fb88abfe-c637-4074-96d6-1409991810af
+    context_mapping:
+      node: '@node.node_route_context:node'
 reactions:
   blocks:
     blocks:
