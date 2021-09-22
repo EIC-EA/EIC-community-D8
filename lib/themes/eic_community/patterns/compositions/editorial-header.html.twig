@@ -111,7 +111,7 @@
                             {% include "@ecl-twig/ec-component-button/ecl-button.html.twig" with action|default({})|merge({
                               icon_position: 'before',
                               extra_classes: action.is_compact ? 'ecl-button--has-icon-layout',
-                              variant: (actions[0].items and not loop.first) or loop.first ? 'primary' : 'secondary',
+                              variant: (actions[0].items and not loop.first) or loop.first or (action.variant and action.variant == 'primary')  ? 'primary' : 'secondary',
                               icon: icon_file_path ? action.icon|default({})|merge({
                                 path: icon_file_path,
                                 size: 's',
