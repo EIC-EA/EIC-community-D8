@@ -6,7 +6,6 @@ use Drupal\eic_flags\FlagType;
 use Drupal\eic_search\Service\SolrDocumentProcessor;
 use Drupal\flag\Event\FlagEvents;
 use Drupal\flag\Event\FlaggingEvent;
-use Drupal\flag\Event\UnflaggingEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -36,7 +35,6 @@ class FlagEventSubscriber implements EventSubscriberInterface {
    */
   public static function getSubscribedEvents() {
     $events[FlagEvents::ENTITY_FLAGGED] = ['onFlag', 50];
-    $events[FlagEvents::ENTITY_UNFLAGGED] = ['onUnflag', 50];
     return $events;
   }
 
@@ -50,27 +48,30 @@ class FlagEventSubscriber implements EventSubscriberInterface {
     /** @var \Drupal\flag\FlaggingInterface $flagging */
     $flagging = $event->getFlagging();
 
-    $reindex_triggers = [
-      FlagType::LIKE_CONTENT,
-    ];
-
     // Some custom variables need to be updated in Solr, so we trigger the
     // re-index of the parent entity.
-    if (in_array($flagging->getFlagId(), $reindex_triggers)) {
+    if ($this->isReindexTargetedFlag($flagging)) {
       // Get the flagged entity to be updated.
       $parent_entity = $flagging->getFlaggable();
       $this->solrDocumentProcessor->reIndexEntities([$parent_entity]);
     }
+
   }
 
   /**
-   * React to unflagging event.
+   * Checks if event relates to flag requiring a re-index of the host entity.
    *
-   * @param \Drupal\flag\Event\UnflaggingEvent $event
-   *   The unflagging event.
+   * @param Drupal\flag\FlaggingInterface $flagging
+   *   The flagging object.
+   *
+   * @return bool
+   *   Whether this flagging should re-index the host entity.
    */
-  public function onUnflag(UnflaggingEvent $event) {
-
+  protected function isReindexTargetedFlag(FlaggingInterface $flagging) {
+    $reindex_triggers = [
+      FlagType::LIKE_CONTENT,
+    ];
+    return in_array($flagging->getFlagId(), $reindex_triggers);
   }
 
 }
