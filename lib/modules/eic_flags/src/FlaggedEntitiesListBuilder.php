@@ -223,8 +223,7 @@ class FlaggedEntitiesListBuilder extends EntityListBuilder {
     foreach ($this->load() as $result) {
       $entity = $result['entity'];
       if ($row = $this->buildRow($result)) {
-        $build['table']['#rows'][$entity->getEntityTypeId() . '_' . $entity->id(
-        )] = $row;
+        $build['table']['#rows'][$entity->getEntityTypeId() . '_' . $entity->id()] = $row;
       }
     }
 

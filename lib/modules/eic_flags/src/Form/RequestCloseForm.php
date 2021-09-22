@@ -95,8 +95,9 @@ class RequestCloseForm extends ContentEntityConfirmFormBase {
     return $this->t(
       'Are you sure you want to apply response "@response" to the @entity-type %label?',
       [
-        '@entity-type' => $this->getEntity()->getEntityType()->getSingularLabel(
-        ),
+        '@entity-type' => $this->getEntity()
+          ->getEntityType()
+          ->getSingularLabel(),
         '@response' => $this->getRequest()->get('response'),
         '%label' => $this->getEntity()->label(),
       ]
