@@ -56,6 +56,11 @@
                   extra_classes: 'ecl-timestamp--inherits-color ecl-teaser__timestamp',
                 }) only %}
               {% endif %}
+              {% if detail.parent_group %}
+                <div class="ecl-teaser__detail-parentgroup">
+                  {{ detail.parent_group|raw }}
+                </div>
+              {% endif %}
             </div>
           {% endfor %}
         </div>
