@@ -6,6 +6,7 @@ use Drupal\eic_flags\FlagType;
 use Drupal\eic_search\Service\SolrDocumentProcessor;
 use Drupal\flag\Event\FlagEvents;
 use Drupal\flag\Event\FlaggingEvent;
+use Drupal\flag\FlaggingInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
