@@ -113,8 +113,13 @@ function eic_community_preprocess_node__document(array &$variables) {
       'download' => t('Download'),
     ];
     // Sidebar elements.
-    $flags = array_filter($variables['elements'], function ($key) {
-      return strpos($key, 'flag_') !== FALSE;
+    $flags = array_filter($variables['elements'], function ($key) use ($node) {
+      // If element is not a flag we skip it.
+      if (strpos($key, 'flag') === FALSE) {
+        return FALSE;
+      }
+
+      return _eic_community_get_flag_access(str_replace('flag_', '', $key), $node);
     }, ARRAY_FILTER_USE_KEY);
 
     foreach ($flags as $flag) {
