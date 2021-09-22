@@ -19,7 +19,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   cron = {"time" = 60}
  * )
  */
-class EICFlagNotifyQueueWorker extends QueueWorkerBase implements ContainerFactoryPluginInterface {
+class EICFlagNotifyQueueWorker extends QueueWorkerBase implements
+  ContainerFactoryPluginInterface {
 
   use LoggerChannelTrait;
 
@@ -69,8 +70,7 @@ class EICFlagNotifyQueueWorker extends QueueWorkerBase implements ContainerFacto
         // Save the message and create the message notify queue item.
         $message->save();
         $this->notifyQueue->createItem(['mid' => $message->id()]);
-      }
-      catch (\Exception $e) {
+      } catch (\Exception $e) {
         $logger = $this->getLogger('eic_flags');
         $logger->error($e->getMessage());
       }
@@ -90,12 +90,10 @@ class EICFlagNotifyQueueWorker extends QueueWorkerBase implements ContainerFacto
     $node = $this->entityTypeManager->getStorage('node')->load(
       $data['entity_id']
     );
-    $message = Message::create(
-      [
-        'template' => 'like_content',
-        'uid' => $node->getOwnerId(),
-      ]
-    );
+    $message = Message::create([
+      'template' => 'like_content',
+      'uid' => $node->getOwnerId(),
+    ]);
     $message->set('field_referenced_node', $node);
 
     return $message;
@@ -114,12 +112,10 @@ class EICFlagNotifyQueueWorker extends QueueWorkerBase implements ContainerFacto
     $media = $this->entityTypeManager->getStorage('media')->load(
       $data['entity_id']
     );
-    $message = Message::create(
-      [
-        'template' => 'like_media',
-        'uid' => $media->getOwnerId(),
-      ]
-    );
+    $message = Message::create([
+      'template' => 'like_media',
+      'uid' => $media->getOwnerId(),
+    ]);
     $message->set('field_referenced_media', $media);
 
     return $message;
@@ -141,12 +137,10 @@ class EICFlagNotifyQueueWorker extends QueueWorkerBase implements ContainerFacto
     $node = $this->entityTypeManager->getStorage('node')->load(
       $comment->getCommentedEntityId()
     );
-    $message = Message::create(
-      [
-        'template' => 'like_comment',
-        'uid' => $node->getOwnerId(),
-      ]
-    );
+    $message = Message::create([
+      'template' => 'like_comment',
+      'uid' => $node->getOwnerId(),
+    ]);
     $message->set('field_referenced_node', $node);
 
     return $message;

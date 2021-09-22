@@ -153,13 +153,11 @@ abstract class AbstractRequestHandler implements HandlerInterface {
     // For accepted requests we create a log entry.
     if ($response === RequestStatus::ACCEPTED) {
       $log = $this->entityTypeManager->getStorage('message')
-        ->create(
-          [
-            'template' => 'log_request_accepted',
-            'field_referenced_flag' => $flagging,
-            'uid' => $flagging->getOwnerId(),
-          ]
-        );
+        ->create([
+          'template' => 'log_request_accepted',
+          'field_referenced_flag' => $flagging,
+          'uid' => $flagging->getOwnerId(),
+        ]);
 
       $log->save();
     }
@@ -203,16 +201,14 @@ abstract class AbstractRequestHandler implements HandlerInterface {
       return NULL;
     }
 
-    $flag = $this->entityTypeManager->getStorage('flagging')->create(
-      [
-        'uid' => $current_user->id(),
-        'session_id' => NULL,
-        'flag_id' => $flag->id(),
-        'entity_id' => $entity->id(),
-        'entity_type' => $entity->getEntityTypeId(),
-        'global' => $flag->isGlobal(),
-      ]
-    );
+    $flag = $this->entityTypeManager->getStorage('flagging')->create([
+      'uid' => $current_user->id(),
+      'session_id' => NULL,
+      'flag_id' => $flag->id(),
+      'entity_id' => $entity->id(),
+      'entity_type' => $entity->getEntityTypeId(),
+      'global' => $flag->isGlobal(),
+    ]);
 
     $flag->set('field_request_reason', $reason);
     $flag->set('field_request_status', RequestStatus::OPEN);

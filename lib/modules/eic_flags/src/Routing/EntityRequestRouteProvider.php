@@ -16,7 +16,8 @@ use Symfony\Component\Routing\RouteCollection;
  *
  * @package Drupal\eic_flags\Routing
  */
-class EntityRequestRouteProvider implements EntityRouteProviderInterface, EntityHandlerInterface {
+class EntityRequestRouteProvider implements EntityRouteProviderInterface,
+                                            EntityHandlerInterface {
 
   /**
    * The request collector service.
@@ -118,12 +119,10 @@ class EntityRequestRouteProvider implements EntityRouteProviderInterface, Entity
     }
 
     $route = (new Route($entity_type->getLinkTemplate($template)))
-      ->addDefaults(
-        [
-          '_entity_form' => $entity_type->id() . '.' . $template,
-          '_title' => ucfirst($handler->getType()),
-        ]
-      )
+      ->addDefaults([
+        '_entity_form' => $entity_type->id() . '.' . $template,
+        '_title' => ucfirst($handler->getType()),
+      ])
       ->setRequirement($entity_type->id(), '\d+')
       ->setOption('entity_type_id', $entity_type->id());
 

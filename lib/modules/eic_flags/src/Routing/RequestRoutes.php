@@ -35,12 +35,10 @@ class RequestRoutes {
     $route_collection = new RouteCollection();
     // Define the route displaying flagged entities.
     $route = (new Route('/admin/community/request/{request_type}'))
-      ->addDefaults(
-        [
-          '_controller' => 'Drupal\eic_flags\Controller\FlagRequestController::listing',
-          '_title_callback' => 'Drupal\eic_flags\Controller\FlagRequestController::getTitle',
-        ]
-      )
+      ->addDefaults([
+        '_controller' => 'Drupal\eic_flags\Controller\FlagRequestController::listing',
+        '_title_callback' => 'Drupal\eic_flags\Controller\FlagRequestController::getTitle',
+      ])
       ->setRequirement('_permission', 'manage archival deletion requests')
       ->setRequirement('request_type', $flag_type_list)
       ->setOption('_admin_route', TRUE);
@@ -51,11 +49,9 @@ class RequestRoutes {
     $route = (new Route(
       '/admin/community/{entity_type}/{entity_id}/{request_type}/detail'
     ))
-      ->addDefaults(
-        [
-          '_controller' => 'Drupal\eic_flags\Controller\FlagRequestController::detail',
-        ]
-      )
+      ->addDefaults([
+        '_controller' => 'Drupal\eic_flags\Controller\FlagRequestController::detail',
+      ])
       ->setRequirement('_permission', 'manage archival deletion requests')
       ->setRequirement('request_type', $flag_type_list)
       ->setOption('_admin_route', TRUE);
@@ -63,11 +59,9 @@ class RequestRoutes {
     $route_collection->add('eic_flags.flagged_entity.detail', $route);
 
     $route = (new Route('/admin/publish/{entity_type_id}/{entity_id}'))
-      ->addDefaults(
-        [
-          '_controller' => 'Drupal\eic_flags\Controller\FlagRequestController::publish',
-        ]
-      )
+      ->addDefaults([
+        '_controller' => 'Drupal\eic_flags\Controller\FlagRequestController::publish',
+      ])
       ->setRequirement('_permission', 'manage archival deletion requests')
       ->setOption('_admin_route', TRUE);
 
