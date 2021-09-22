@@ -16,6 +16,7 @@ use Drupal\node\Entity\Node;
 use Drupal\paragraphs\Entity\Paragraph;
 use Drupal\profile\Entity\Profile;
 use Drupal\profile\Entity\ProfileInterface;
+use Drupal\statistics\NodeStatisticsDatabaseStorage;
 use Drupal\user\Entity\User;
 use Drupal\user\UserInterface;
 use Solarium\QueryType\Update\Query\Document;
@@ -26,6 +27,23 @@ use Solarium\QueryType\Update\Query\Document;
  * @package Drupal\eic_search\Service
  */
 class SolrDocumentProcessor {
+
+  /**
+   * The Entity file download count service.
+   *
+   * @var \Drupal\statistics\NodeStatisticsDatabaseStorage
+   */
+  protected $nodeStatisticsDatabaseStorage;
+
+  /**
+   * Constructs a EntityOperation object.
+   *
+   * @param \Drupal\statistics\NodeStatisticsDatabaseStorage $node_statistics_db_storage
+   *   The Entity file download count service.
+   */
+  public function __construct(NodeStatisticsDatabaseStorage $node_statistics_db_storage) {
+    $this->nodeStatisticsDatabaseStorage = $node_statistics_db_storage;
+  }
 
   /**
    * Set global fields data, gallery slides data and set by default content to
@@ -51,6 +69,7 @@ class SolrDocumentProcessor {
         $title = $fields['ss_content_title'];
         $type = $fields['ss_content_type'];
         $date = $fields['ds_content_created'];
+        $changed = $fields['ds_changed'];
         $status = $fields['bs_content_status'];
         $fullname = array_key_exists('ss_content_first_name', $fields) && array_key_exists('ss_content_last_name', $fields) ?
           $fields['ss_content_first_name'] . ' ' . $fields['ss_content_last_name'] :
@@ -146,6 +165,7 @@ class SolrDocumentProcessor {
     $document->addField('ss_global_created_date', $date);
     $document->addField('bs_global_status', $status);
     $document->addField('ss_drupal_timestamp', strtotime($date));
+    $document->addField('ss_drupal_changed_timestamp', strtotime($changed));
     $document->addField('ss_global_fullname', $fullname);
     $document->addField('ss_global_user_url', $user_url);
     $this->addOrUpdateDocumentField($document, 'sm_content_field_vocab_topics_string', $fields, $topics);
@@ -158,6 +178,23 @@ class SolrDocumentProcessor {
     if (!array_key_exists('ss_content_language_string', $fields)) {
       $document->addField('ss_content_language_string', $language);
     }
+
+    if (array_key_exists('tm_X3b_en_rendered_item', $fields)) {
+      $text = html_entity_decode($fields['tm_X3b_en_rendered_item'], ENT_QUOTES);
+      if (strlen($text) > 300) {
+        $text = substr($text, 0, 300);
+        $text .= '...';
+      }
+      $document->setField('tm_X3b_en_rendered_item', $text);
+    }
+
+    $nid = $fields['its_content_nid'];
+    $views = $this->nodeStatisticsDatabaseStorage->fetchView($nid);
+
+    $document->addField(
+      'its_statistics_view',
+      $views ? $views->getTotalCount() : 0
+    );
   }
 
   /**

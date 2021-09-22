@@ -31,5 +31,10 @@ services:
     class: Drupal\eic_search\Search\Sources\DiscussionSourceType
     tags:
       - { name: eic_search.source }
+  eic_search.source_story:
+    class: Drupal\eic_search\Search\Sources\StorySourceType
+    tags:
+      - { name: eic_search.source }
   eic_search.solr_document_processor:
     class: Drupal\eic_search\Service\SolrDocumentProcessor
+    arguments: ['@eic_statistics.statistics.storage.node.decorator']
