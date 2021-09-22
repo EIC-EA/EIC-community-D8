@@ -7,6 +7,7 @@ use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\file\Entity\File;
+use Drupal\flag\FlagService;
 use Drupal\group\Entity\GroupContent;
 use Drupal\group\GroupMembership;
 use Drupal\node\NodeInterface;
@@ -43,6 +44,13 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
   private $groupPermissionChecker;
 
   /**
+   * The flag service
+   *
+   * @var \Drupal\flag\FlagService $flagService
+   */
+  private $flagService;
+
+  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
@@ -51,7 +59,8 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
       $plugin_id,
       $plugin_definition,
       $container->get('eic_groups.helper'),
-      $container->get('oec_group_comments.group_permission_checker')
+      $container->get('oec_group_comments.group_permission_checker'),
+      $container->get('flag')
     );
   }
 
@@ -72,11 +81,13 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
     $plugin_id,
     $plugin_definition,
     EICGroupsHelper $groups_helper,
-    GroupPermissionChecker $group_permission_checker
+    GroupPermissionChecker $group_permission_checker,
+    FlagService $flag_service
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->groupsHelper = $groups_helper;
     $this->groupPermissionChecker = $group_permission_checker;
+    $this->flagService = $flag_service;
   }
 
   /**
@@ -171,6 +182,15 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
           $current_user,
           $group_contents
         )->isAllowed(),
+        'can_request_delete' => $this->flagService
+          ->getFlagById('request_delete_comment')
+          ->access('flag'),
+        'can_request_archive' => $this->flagService
+          ->getFlagById('request_archive_comment')
+          ->access('flag'),
+        'can_like' => $this->flagService
+          ->getFlagById('like_comment')
+          ->access('flag'),
       ],
       'translations' => [
         'title' => $this->t('Comments', [], ['context' => 'eic_groups']),

@@ -212,8 +212,17 @@ class DiscussionController extends ControllerBase {
 
     try {
       if ('like_comment' === $flag) {
+        $flag_entity = $this->flagService->getFlagById('like_comment');
+
+        if (!$flag_entity->access($type)) {
+          return new JsonResponse(
+            'You do not have access to ' . $type . ' like comment',
+            Response::HTTP_FORBIDDEN
+          );
+        }
+
         $this->flagService->{$type}(
-          $this->flagService->getFlagById('like_comment'),
+          $flag_entity,
           $comment
         );
       }
@@ -222,7 +231,7 @@ class DiscussionController extends ControllerBase {
 
         if (!$this->hasPermission($discussion_id, 'post comment')) {
           return new JsonResponse(
-            'You do not have access to do ' . $flag_entity->id(),
+            'You do not have access to ' . $flag_entity->id(),
             Response::HTTP_FORBIDDEN
           );
         }
@@ -237,6 +246,13 @@ class DiscussionController extends ControllerBase {
             'global' => $flag_entity->isGlobal(),
           ]
         );
+
+        if (!$flag_entity->access('flag')) {
+          return new JsonResponse(
+            'You do not have access to ' . $flag_entity->id(),
+            Response::HTTP_FORBIDDEN
+          );
+        }
 
         $flagging->set('field_request_reason', $text);
         $flagging->set('field_request_status', RequestStatus::OPEN);
