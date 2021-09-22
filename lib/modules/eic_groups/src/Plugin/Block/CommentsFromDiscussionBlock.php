@@ -182,9 +182,6 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
           $current_user,
           $group_contents
         )->isAllowed(),
-        'can_like' => $this->flagService
-          ->getFlagById('like_comment')
-          ->access('flag'),
       ],
       'translations' => [
         'title' => $this->t('Comments', [], ['context' => 'eic_groups']),
