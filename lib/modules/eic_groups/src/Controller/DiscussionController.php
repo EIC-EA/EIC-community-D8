@@ -230,13 +230,6 @@ class DiscussionController extends ControllerBase {
       else {
         $flag_entity = $this->flagService->getFlagById($flag);
 
-        if (!$this->hasPermission($discussion_id, 'post comment')) {
-          return new JsonResponse(
-            'You do not have access to ' . $flag_entity->id(),
-            Response::HTTP_FORBIDDEN
-          );
-        }
-
         $flagging = $this->entityTypeManager->getStorage('flagging')->create(
           [
             'uid' => $this->currentUser()->id(),
@@ -248,7 +241,7 @@ class DiscussionController extends ControllerBase {
           ]
         );
 
-        if (!$flag_entity->access('flag')) {
+        if (!$flagging->access('flag')) {
           return new JsonResponse(
             'You do not have access to ' . $flag_entity->id(),
             Response::HTTP_FORBIDDEN
