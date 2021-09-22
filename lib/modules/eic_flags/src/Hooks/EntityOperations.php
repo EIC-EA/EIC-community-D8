@@ -318,6 +318,11 @@ class EntityOperations implements ContainerInjectionInterface {
       return;
     }
 
+    // If entity is already flagged, we do nothing.
+    if ($this->flagService->getFlagging($flag, $flag_entity)) {
+      return;
+    }
+
     $this->flagService->flag($flag, $flag_entity);
   }
 

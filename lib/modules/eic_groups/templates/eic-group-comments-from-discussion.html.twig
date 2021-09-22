@@ -1,0 +1,40 @@
+{{ attach_library('eic_community/react-comments-discussion') }}
+
+{% if not user %}
+  {% embed "@theme/patterns/compositions/auth-banner.html.twig" with {
+    title: "Please log in to see comments and contribute",
+    icon_file_path: common.icon_file_path,
+    invert: true,
+    login: {
+      label: "Login"
+    },
+    register: {
+      label: "Register",
+    },
+  } only %}
+  {% endembed %}
+{% else %}
+  <div class="ecl-section-wrapper ecl-section-wrapper--is-grey ecl-comment-overview">
+    <div class="ecl-container">
+      <div class="ecl-editorial-article ecl-editorial-article--has-static-layout">
+        <div class="ecl-container">
+          <div class="ecl-editorial-article__wrapper">
+            <div class="ecl-editorial-article__content">
+              <div id="comments-discussion" data-discussion-id="{{ discussion_id }}"></div>
+            </div>
+            <aside class="ecl-editorial-article__aside">
+              <div class="ecl-editorial-article__aside-wrapper">
+                {% block sidebar %}
+                  {% include "@theme/patterns/compositions/featured-contributors.html.twig" with contributors|default({})|merge({
+                    grid: true,
+                    title: "Contributors"|t
+                  }) only %}
+                {% endblock %}
+              </div>
+            </aside>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endif %}

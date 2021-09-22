@@ -35,6 +35,12 @@ react-activity-stream:
   dependencies:
     - core/drupal
 
+react-comments-discussion:
+  js:
+    dist/react/block/comments_discussion/entrypoint.js: { minified: true }
+  dependencies:
+    - core/drupal
+
 react-tree-field:
   css:
     theme:
