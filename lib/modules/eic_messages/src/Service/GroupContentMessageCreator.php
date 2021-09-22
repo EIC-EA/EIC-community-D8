@@ -2,6 +2,7 @@
 
 namespace Drupal\eic_messages\Service;
 
+use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\eic_messages\Util\ActivityStreamMessageTemplates;
 use Drupal\group\Entity\GroupInterface;
@@ -60,7 +61,7 @@ class GroupContentMessageCreator extends MessageCreatorBase {
   /**
    * Creates an activity stream message for an entity inside a group.
    *
-   * @param \Drupal\Core\Entity\EntityInterface $entity
+   * @param \Drupal\Core\Entity\ContentEntityInterface $entity
    *   The entity object.
    * @param \Drupal\group\Entity\GroupInterface $group
    *   The group having this content.
@@ -68,10 +69,11 @@ class GroupContentMessageCreator extends MessageCreatorBase {
    *   The type of the operation. See ActivityStreamOperationTypes.
    */
   public function createGroupContentActivity(
-    EntityInterface $entity,
+    ContentEntityInterface $entity,
     GroupInterface $group,
     string $operation
   ) {
+    $message = NULL;
     switch ($entity->getEntityTypeId()) {
       case 'node':
         $message = \Drupal::entityTypeManager()->getStorage('message')->create([

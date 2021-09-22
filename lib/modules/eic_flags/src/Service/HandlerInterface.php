@@ -7,7 +7,7 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\flag\FlaggingInterface;
 
 /**
- * Interface HandlerInterface
+ * Interface HandlerInterface.
  *
  * @package Drupal\eic_flags\Service\Handler
  */
@@ -22,14 +22,15 @@ interface HandlerInterface {
 
   /**
    * Method called before the action is executed.
-   * Can be used for sending notifications, triggering hooks, events, etc.
    *
    * @param \Drupal\flag\FlaggingInterface $flagging
+   *   The flag object representing the request.
    * @param \Drupal\Core\Entity\ContentEntityInterface $content_entity
+   *   The concerned entity.
    * @param string $response
+   *   The response given when closing the request.
    * @param string $reason
-   *
-   * @return void
+   *   The reason given when opening the request.
    */
   public function closeRequest(
     FlaggingInterface $flagging,
@@ -42,9 +43,12 @@ interface HandlerInterface {
    * Starts the 'deny' workflow for a request.
    *
    * @param \Drupal\flag\FlaggingInterface $flagging
+   *   The flag object representing the request.
    * @param \Drupal\Core\Entity\ContentEntityInterface $content_entity
+   *   The concerned entity.
    *
    * @return bool
+   *   Result of the deny operation.
    */
   public function deny(
     FlaggingInterface $flagging,
@@ -55,9 +59,12 @@ interface HandlerInterface {
    * Starts the 'accept' workflow for a request.
    *
    * @param \Drupal\flag\FlaggingInterface $flagging
+   *   Flag object representing the request.
    * @param \Drupal\Core\Entity\ContentEntityInterface $content_entity
+   *   The concerned entity.
    *
    * @return bool
+   *   Result of the accept operation.
    */
   public function accept(
     FlaggingInterface $flagging,
@@ -68,9 +75,12 @@ interface HandlerInterface {
    * Applies the given the corresponding flag to the given entity.
    *
    * @param \Drupal\Core\Entity\ContentEntityInterface $entity
+   *   The concerned entity.
    * @param string $reason
+   *   Reason given when opening the request.
    *
-   * @return bool|NULL
+   * @return bool|null
+   *   Result of the operation.
    */
   public function applyFlag(ContentEntityInterface $entity, string $reason);
 
@@ -78,6 +88,7 @@ interface HandlerInterface {
    * Returns an array of supported entity types.
    *
    * @return array
+   *   Array of supported entity types for the request type.
    */
   public function getSupportedEntityTypes();
 
@@ -85,8 +96,10 @@ interface HandlerInterface {
    * Returns the flag id for the given entity type.
    *
    * @param string $entity_id
+   *   The entity id.
    *
    * @return string
+   *   The id of the flag.
    */
   public function getFlagId(string $entity_id);
 
@@ -94,16 +107,23 @@ interface HandlerInterface {
    * Define if the given entity type is supported by the handler.
    *
    * @param \Drupal\Core\Entity\ContentEntityInterface $contentEntity
+   *   The concerned entity.
    *
    * @return bool
+   *   Whether or not this entity is supported.
    */
   public function supports(ContentEntityInterface $contentEntity);
 
   /**
+   * Returns the list of open requests for the given entity and account.
+   *
    * @param \Drupal\Core\Entity\ContentEntityInterface $content_entity
+   *   The concerned entity.
    * @param \Drupal\Core\Session\AccountInterface|null $account
+   *   Current account object.
    *
    * @return array
+   *   List of open requests for the given account and entity.
    */
   public function getOpenRequests(
     ContentEntityInterface $content_entity,
@@ -111,10 +131,15 @@ interface HandlerInterface {
   );
 
   /**
+   * Whether or not we have open requests.
+   *
    * @param \Drupal\Core\Entity\ContentEntityInterface $content_entity
+   *   The concerned entity.
    * @param \Drupal\Core\Session\AccountInterface $account
+   *   Current account object.
    *
    * @return bool
+   *   Whether or not we have open requests.
    */
   public function hasOpenRequest(
     ContentEntityInterface $content_entity,
@@ -125,8 +150,10 @@ interface HandlerInterface {
    * Return an array of supported actions which are basically responses.
    *
    * @param \Drupal\Core\Entity\ContentEntityInterface $entity
+   *   The concerned entity.
    *
    * @return array
+   *   Available actions for the entity.
    */
   public function getActions(ContentEntityInterface $entity);
 
@@ -134,26 +161,35 @@ interface HandlerInterface {
    * Returns the list of matching message templates for the request type.
    *
    * @return array
+   *   List of supported messages.
    */
   public function getMessages();
 
   /**
-   * Returns the name of the message template to use for the given action
+   * Returns the name of the message template to use for the given action.
    *
    * @param string $action
+   *   The action type (accept, create, etc.).
    *
-   * @return string|NULL
+   * @return string|null
+   *   The message template id.
    */
   public function getMessageByAction(string $action);
 
   /**
+   * Whether or not the requests can be made by the given account.
+   *
    * @param \Drupal\Core\Session\AccountInterface $account
-   *   Currently logged in account, anonymous users are not allowed
+   *   Currently logged in account, anonymous users are not allowed.
    * @param \Drupal\Core\Entity\ContentEntityInterface $entity
-   *   The content entity against the access check is made
+   *   The content entity against the access check is made.
    *
    * @return \Drupal\Core\Access\AccessResultInterface
+   *   The access result object.
    */
-  public function canRequest(AccountInterface $account, ContentEntityInterface $entity);
+  public function canRequest(
+    AccountInterface $account,
+    ContentEntityInterface $entity
+  );
 
 }

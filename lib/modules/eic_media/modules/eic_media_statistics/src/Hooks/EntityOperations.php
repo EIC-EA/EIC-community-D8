@@ -71,6 +71,11 @@ class EntityOperations implements ContainerInjectionInterface {
       '#markup' => '',
       '#value' => $this->entityFileDownloadCount->getFileDownloads($entity),
     ];
+
+    // Add updated entity cache tags so the counters will get updated.
+    $cache_tags = isset($build['#cache']['tags']) ? $build['#cache']['tags'] : [];
+    $cache_tags = array_unique(array_merge($cache_tags, $entity->getCacheTags()));
+    $build['#cache']['tags'] = $cache_tags;
   }
 
   /**

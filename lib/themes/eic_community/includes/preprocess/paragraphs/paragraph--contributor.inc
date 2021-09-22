@@ -63,10 +63,6 @@ function eic_community_preprocess_paragraph__contributor(array &$variables) {
     if ($user instanceof UserInterface) {
       $user_display = eic_community_get_teaser_user_display($user);
 
-      if ($variables['logged_in'] === FALSE) {
-        unset($user_display['path']);
-      }
-
       $contributor = array_merge($contributor, $user_display);
     }
   }

@@ -55,7 +55,12 @@ class LastGroupActivitiesBlock extends BlockBase implements ContainerFactoryPlug
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+  public static function create(
+    ContainerInterface $container,
+    array $configuration,
+    $plugin_id,
+    $plugin_definition
+  ) {
     return new static(
       $configuration,
       $plugin_id,
@@ -120,18 +125,18 @@ class LastGroupActivitiesBlock extends BlockBase implements ContainerFactoryPlug
 
     $members = GroupContent::loadMultiple($members_id);
 
-    $members_data = array_map(function(GroupContent $groupContent) {
+    $members_data = array_map(function (GroupContent $groupContent) {
       $profiles = $this->entityTypeManager->getStorage('profile')->loadByProperties([
         'uid' => $groupContent->getEntity()->id(),
         'type' => 'member',
       ]);
 
-      /** @var \Drupal\profile\Entity\ProfileInterface $profile */
-      $profile = reset($profiles);
-      if (!$profile) {
+      if (empty($profiles)) {
         return [];
       }
 
+      /** @var \Drupal\profile\Entity\ProfileInterface $profile */
+      $profile = reset($profiles);
       $user = $profile->getOwner();
 
       if (!$user) {
@@ -181,7 +186,7 @@ class LastGroupActivitiesBlock extends BlockBase implements ContainerFactoryPlug
         'delete_modal_confirm' => $this->t('Yes, delete activity', [], ['context' => 'eic_group']),
         'delete_modal_cancel' => $this->t('Cancel', [], ['context' => 'eic_group']),
         'delete_modal_close' => $this->t('Close', [], ['context' => 'eic_group']),
-        ],
+      ],
       '#datasource' => $this->activityStreamSourceType->getSourcesId(),
       '#source_class' => ActivityStreamSourceType::class,
       '#group_id' => $group->id(),

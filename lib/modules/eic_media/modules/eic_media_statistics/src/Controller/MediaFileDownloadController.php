@@ -28,6 +28,13 @@ class MediaFileDownloadController extends DownloadController {
   protected $fileStatisticsStorage;
 
   /**
+   * Cache backend.
+   *
+   * @var \Drupal\Core\Cache\CacheBackendInterface
+   */
+  protected $cacheBackend;
+
+  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
@@ -35,7 +42,7 @@ class MediaFileDownloadController extends DownloadController {
     $controller->eicMediaStatisticsSettings = $container->get('config.factory')
       ->get('eic_media_statistics.settings');
     $controller->fileStatisticsStorage = $container->get('eic_media_statistics.storage.file');
-
+    $controller->cacheBackend = $container->get('cache.default');
     return $controller;
   }
 
@@ -75,7 +82,10 @@ class MediaFileDownloadController extends DownloadController {
     $success = $this->fileStatisticsStorage->recordView($fid);
 
     if ($success) {
+      // Invalidate custom media file download cache tags.
       Cache::invalidateTags(self::getMediaFileDownloadCacheTags($fid));
+      // Invalidate file_download_stats cache.
+      $this->cacheBackend->invalidate('file_download_stats:' . $media->getEntityTypeId() . ':' . $media->id());
     }
 
     return $response;

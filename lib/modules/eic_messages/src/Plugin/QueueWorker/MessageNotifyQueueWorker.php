@@ -70,7 +70,7 @@ class MessageNotifyQueueWorker extends QueueWorkerBase implements ContainerFacto
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     /** @var \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager */
     $entityTypeManager = $container->get('entity_type.manager');
-    /** @var \Drupal\Core\Logger\LoggerChannelInterface $logger */
+    /** @var \Drupal\message_notify\MessageNotifier $notifier */
     $notifier = $container->get('message_notify.sender');
 
     return new static(
