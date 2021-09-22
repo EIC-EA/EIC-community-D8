@@ -19,8 +19,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   cron = {"time" = 60}
  * )
  */
-class EICFlagNotifyQueueWorker extends QueueWorkerBase implements
-  ContainerFactoryPluginInterface {
+class EICFlagNotifyQueueWorker extends QueueWorkerBase implements ContainerFactoryPluginInterface {
 
   use LoggerChannelTrait;
 
