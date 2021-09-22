@@ -215,7 +215,7 @@ class DiscussionController extends ControllerBase {
       if ('like_comment' === $flag) {
         $flag_entity = $this->flagService->getFlagById('like_comment');
 
-        if (!$flag_entity->access($type)) {
+        if (!$flag_entity->actionAccess($type, $this->currentUser(), $comment)) {
           return new JsonResponse(
             'You do not have access to ' . $type . ' like comment',
             Response::HTTP_FORBIDDEN
@@ -241,7 +241,7 @@ class DiscussionController extends ControllerBase {
           ]
         );
 
-        if (!$flagging->access('flag')) {
+        if (!$flag_entity->actionAccess('flag', $this->currentUser(), $comment)) {
           return new JsonResponse(
             'You do not have access to ' . $flag_entity->id(),
             Response::HTTP_FORBIDDEN
@@ -334,6 +334,14 @@ class DiscussionController extends ControllerBase {
     return new JsonResponse([]);
   }
 
+  /**
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   * @param int $discussion_id
+   * @param int $comment_id
+   * @param string $flag
+   *
+   * @return \Symfony\Component\HttpFoundation\JsonResponse
+   */
   public function hasFlagPermission(
     Request $request,
     int $discussion_id,
@@ -350,19 +358,15 @@ class DiscussionController extends ControllerBase {
       );
     }
 
-    $flagging = $this->entityTypeManager->getStorage('flagging')->create(
-      [
-        'uid' => $this->currentUser()->id(),
-        'session_id' => NULL,
-        'flag_id' => $flag_entity->id(),
-        'entity_id' => $comment_id,
-        'entity_type' => 'comment',
-        'global' => $flag_entity->isGlobal(),
-      ]
-    );
+    if (!$flag_entity->actionAccess('flag', $this->currentUser(), $comment)) {
+      return new JsonResponse(
+        ['allowed' => FALSE],
+        Response::HTTP_OK
+      );
+    }
 
     return new JsonResponse(
-      ['allowed' => $flagging->access('flag')],
+      ['allowed' => TRUE],
       Response::HTTP_OK
     );
   }
