@@ -19,6 +19,7 @@ stages:
       ln -sf ../../lib/modules $PROJECT_DIR/web/modules/custom &&
       ln -sf ../../lib/themes $PROJECT_DIR/web/themes/custom &&
       ln -sf ../../lib/profiles $PROJECT_DIR/web/profiles/custom &&
+      chown -R root:www-data $PROJECT_DIR &&
       ./vendor/bin/drush updb -y &&
       ./vendor/bin/drush cr &&
       ./vendor/bin/drush cim -y &&
