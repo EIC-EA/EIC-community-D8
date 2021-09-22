@@ -133,8 +133,20 @@ function _eic_community_story_document_field(&$variables) {
  * Preprocess flags.
  */
 function _eic_community_display_flags(&$variables) {
-  $flags = array_filter($variables['elements'], function ($key) {
-    return strpos($key, 'flag_') !== FALSE;
+  if (!isset($variables['elements']['#entity_type'])) {
+    return;
+  }
+
+  $entity_type = $variables['elements']['#entity_type'];
+  $entity = $variables[$entity_type];
+
+  $flags = array_filter($variables['elements'], function ($key) use ($entity) {
+    // If element is not a flag we skip it.
+    if (strpos($key, 'flag') === FALSE) {
+      return FALSE;
+    }
+
+    return _eic_community_get_flag_access(str_replace('flag_', '', $key), $entity);
   }, ARRAY_FILTER_USE_KEY);
 
   foreach ($flags as $flag) {
