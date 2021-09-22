@@ -182,12 +182,6 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
           $current_user,
           $group_contents
         )->isAllowed(),
-        'can_request_delete' => $this->flagService
-          ->getFlagById('request_delete_comment')
-          ->access('flag'),
-        'can_request_archive' => $this->flagService
-          ->getFlagById('request_archive_comment')
-          ->access('flag'),
         'can_like' => $this->flagService
           ->getFlagById('like_comment')
           ->access('flag'),
