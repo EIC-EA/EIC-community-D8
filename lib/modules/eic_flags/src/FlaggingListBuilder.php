@@ -152,7 +152,7 @@ class FlaggingListBuilder extends EntityListBuilder {
   public function render() {
     $entity_type = $this->currentRequest->attributes->get('entity_type');
     $entity_id = $this->currentRequest->attributes->get('entity_id');
-
+    /** @var \Drupal\Core\Entity\ContentEntityInterface $target_entity */
     $target_entity = $this->entityTypeManager->getStorage($entity_type)
       ->load($entity_id);
 
@@ -160,6 +160,8 @@ class FlaggingListBuilder extends EntityListBuilder {
   }
 
   /**
+   * Returns the entity ids to display.
+   *
    * @return array|int
    *   The result of the query.
    */
@@ -188,6 +190,8 @@ class FlaggingListBuilder extends EntityListBuilder {
   }
 
   /**
+   * Returns an array of header actions.
+   *
    * @return array
    *   Array with header actions.
    */
@@ -217,7 +221,6 @@ class FlaggingListBuilder extends EntityListBuilder {
         'class' => ['action-links'],
       ],
     ];
-
 
     return $build;
   }

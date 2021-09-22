@@ -36,6 +36,8 @@ class FlagRequestController extends ControllerBase {
   /**
    * FlagRequestController constructor.
    *
+   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
+   *   The request stack object.
    * @param \Drupal\content_moderation\ModerationInformationInterface $moderation_information
    *   The content moderation information service.
    */
@@ -58,6 +60,8 @@ class FlagRequestController extends ControllerBase {
   }
 
   /**
+   * Responds to the route to list flagged entities for delete & archival requests.
+   *
    * @return \Symfony\Component\HttpFoundation\Response
    *   The response object.
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
@@ -71,6 +75,8 @@ class FlagRequestController extends ControllerBase {
   }
 
   /**
+   * Responds to the flag detail route.
+   *
    * @return \Symfony\Component\HttpFoundation\Response
    *   The response object.
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
@@ -84,12 +90,13 @@ class FlagRequestController extends ControllerBase {
   }
 
   /**
-   * Returns the title for the eic_flags.flagged_entities.list route
+   * Returns the title for the eic_flags.flagged_entities.list route.
    *
    * @param string $request_type
-   *   Type of the request (see RequestTypes.php)
+   *   Type of the request (see RequestTypes.php).
    *
    * @return \Drupal\Core\StringTranslation\TranslatableMarkup
+   *   The title to display.
    */
   public function getTitle(string $request_type) {
     $operation = $request_type === RequestTypes::DELETE ? 'delete' : 'archival';
@@ -100,6 +107,8 @@ class FlagRequestController extends ControllerBase {
   }
 
   /**
+   * Publishes the given entity.
+   *
    * @param string $entity_type_id
    *   The entity type id.
    * @param string $entity_id
@@ -133,7 +142,7 @@ class FlagRequestController extends ControllerBase {
       return $this->redirect($destination->getRouteName());
     }
     else {
-      $this->redirect(
+      return $this->redirect(
         'eic_flags.flagged_entities.list',
         [
           'request_type' => RequestTypes::ARCHIVE,

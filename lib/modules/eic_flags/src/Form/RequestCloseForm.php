@@ -6,7 +6,6 @@ use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Entity\ContentEntityConfirmFormBase;
 use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Drupal\eic_flags\RequestStatus;
@@ -19,19 +18,23 @@ use http\Exception\InvalidArgumentException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Class RequestCloseForm
+ * Class RequestCloseForm.
  *
  * @package Drupal\eic_flags\Form
  */
 class RequestCloseForm extends ContentEntityConfirmFormBase {
 
   /**
-   * @var RequestHandlerCollector
+   * The handler collector service.
+   *
+   * @var \Drupal\eic_flags\Service\RequestHandlerCollector
    */
   protected $collector;
 
   /**
-   * @var FlagService
+   * The flag service provided by the flag module.
+   *
+   * @var \Drupal\flag\FlagService
    */
   protected $flagService;
 
@@ -39,10 +42,15 @@ class RequestCloseForm extends ContentEntityConfirmFormBase {
    * RequestCloseForm constructor.
    *
    * @param \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository
+   *   The entity repository.
    * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface $entity_type_bundle_info
+   *   The entity type bundle service.
    * @param \Drupal\Component\Datetime\TimeInterface $time
+   *   The time service.
    * @param \Drupal\eic_flags\Service\RequestHandlerCollector $collector
+   *   The handler collector service.
    * @param \Drupal\flag\FlagService $flagService
+   *   The flag service provided by the flag module.
    */
   public function __construct(
     EntityRepositoryInterface $entity_repository,
@@ -87,7 +95,8 @@ class RequestCloseForm extends ContentEntityConfirmFormBase {
     return $this->t(
       'Are you sure you want to apply response "@response" to the @entity-type %label?',
       [
-        '@entity-type' => $this->getEntity()->getEntityType()->getSingularLabel(),
+        '@entity-type' => $this->getEntity()->getEntityType()->getSingularLabel(
+        ),
         '@response' => $this->getRequest()->get('response'),
         '%label' => $this->getEntity()->label(),
       ]
@@ -107,6 +116,9 @@ class RequestCloseForm extends ContentEntityConfirmFormBase {
       : '';
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $form = parent::buildForm($form, $form_state);
 
@@ -132,11 +144,7 @@ class RequestCloseForm extends ContentEntityConfirmFormBase {
   }
 
   /**
-   * @param array $form
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *
-   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
-   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $response = $this->getRequest()->query->get('response');
@@ -174,12 +182,15 @@ class RequestCloseForm extends ContentEntityConfirmFormBase {
       case RequestStatus::DENIED:
         $action = 'deny';
         break;
+
       case RequestStatus::ACCEPTED:
         $action = 'accept';
         break;
+
       case RequestStatus::ARCHIVED:
         $action = 'archive';
         break;
+
       default:
         throw new InvalidArgumentException('Action isnt\'t supported');
     }
@@ -194,7 +205,7 @@ class RequestCloseForm extends ContentEntityConfirmFormBase {
       );
     }
 
-    // Execute the response
+    // Execute the response.
     call_user_func(
       [$handler, $action],
       $flag,
@@ -204,6 +215,7 @@ class RequestCloseForm extends ContentEntityConfirmFormBase {
 
   /**
    * @return \Drupal\Core\StringTranslation\TranslatableMarkup
+   *   The title to display.
    */
   protected function getResponseTitle() {
     $request_type = $this->getRequest()->get('request_type');

@@ -16,8 +16,7 @@ use Symfony\Component\Routing\RouteCollection;
  *
  * @package Drupal\eic_flags\Routing
  */
-class EntityRequestRouteProvider implements EntityRouteProviderInterface,
-                                            EntityHandlerInterface {
+class EntityRequestRouteProvider implements EntityRouteProviderInterface, EntityHandlerInterface {
 
   /**
    * The request collector service.

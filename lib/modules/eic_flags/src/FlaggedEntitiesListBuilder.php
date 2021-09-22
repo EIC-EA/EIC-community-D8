@@ -20,7 +20,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Defines a class to build a listing of flagged entities for the current request_type.
+ * Defines a class to build a listing of flagged entities for the current
+ * request_type.
  */
 class FlaggedEntitiesListBuilder extends EntityListBuilder {
 
@@ -83,19 +84,19 @@ class FlaggedEntitiesListBuilder extends EntityListBuilder {
    * FlaggedEntitiesListBuilder constructor.
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
-   *   The entity type
+   *   The entity type.
    * @param \Drupal\Core\Entity\EntityStorageInterface $storage
    *   The entity storage service.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
-   *    The entity type manager.
+   *   The entity type manager.
    * @param \Drupal\Core\Database\Connection $database
-   *    The database driver.
+   *   The database driver.
    * @param \Drupal\Core\Datetime\DateFormatterInterface $date_formatter
-   *    The date formatted class.
+   *   The date formatted class.
    * @param \Symfony\Component\HttpFoundation\Request $request
-   *    Current request object.
+   *   Current request object.
    * @param \Drupal\flag\FlagService $flag_service
-   *    Flag service provided by the flag module.
+   *   Flag service provided by the flag module.
    * @param \Drupal\eic_flags\Service\RequestHandlerCollector $collector
    */
   public function __construct(
@@ -174,13 +175,7 @@ class FlaggedEntitiesListBuilder extends EntityListBuilder {
   }
 
   /**
-   * @param \Drupal\Core\Entity\EntityInterface $entity
-   *   The entity for which we need operations.
-   *
-   * @return array
-   *   List of operations.
-   *
-   * @throws \Drupal\Core\Entity\EntityMalformedException
+   * {@inheritdoc}
    */
   protected function getDefaultOperations(EntityInterface $entity) {
     $operations = [];
@@ -243,11 +238,7 @@ class FlaggedEntitiesListBuilder extends EntityListBuilder {
   }
 
   /**
-   * @param array $result
-   *   The row.
-   *
-   * @return array
-   *   The final row.
+   * {@inheritdoc}
    */
   public function buildRow($result) {
     static $flags;
@@ -308,10 +299,7 @@ class FlaggedEntitiesListBuilder extends EntityListBuilder {
   }
 
   /**
-   * @return array
-   *   The table as an array
-   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
-   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   * {@inheritdoc}
    */
   public function load() {
     $results = $this->getEntityIds();
@@ -429,6 +417,8 @@ class FlaggedEntitiesListBuilder extends EntityListBuilder {
   }
 
   /**
+   * Returns a built form to use for filtering purposes.
+   *
    * @return array
    *   Available filters.
    * @throws \Drupal\Core\Form\EnforcedResponseException

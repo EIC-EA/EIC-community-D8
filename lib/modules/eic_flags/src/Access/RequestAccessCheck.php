@@ -33,6 +33,8 @@ class RequestAccessCheck implements AccessInterface {
   }
 
   /**
+   * Checks if the entity is supported and the user can do a request.
+   *
    * @param \Symfony\Component\Routing\Route $route
    *   The route object.
    * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
@@ -41,7 +43,7 @@ class RequestAccessCheck implements AccessInterface {
    *   The current account object.
    *
    * @return \Drupal\Core\Access\AccessResultInterface
-   *    The access result.
+   *   The access result.
    */
   public function access(
     Route $route,

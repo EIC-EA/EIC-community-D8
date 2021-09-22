@@ -172,6 +172,8 @@ class DeleteRequestHandler extends AbstractRequestHandler {
   }
 
   /**
+   * Handles the batch finish.
+   *
    * @param bool $success
    *   Result of the operation.
    * @param array $results
@@ -213,8 +215,7 @@ class DeleteRequestHandler extends AbstractRequestHandler {
       return;
     }
 
-    if (isset($results['group'])
-      && $results['group'] instanceof GroupInterface) {
+    if (isset($results['group']) && $results['group'] instanceof GroupInterface) {
       $results['group']->delete();
     }
   }

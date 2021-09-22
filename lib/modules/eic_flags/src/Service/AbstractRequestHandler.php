@@ -307,7 +307,7 @@ abstract class AbstractRequestHandler implements HandlerInterface {
           ),
       ],
       'accept_request' => [
-        'title' => $this->tt('Accept'),
+        'title' => $this->t('Accept'),
         'url' => $entity->toUrl('close-request')
           ->setRouteParameter('request_type', $this->getType())
           ->setRouteParameter('response', RequestStatus::ACCEPTED)

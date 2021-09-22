@@ -3,7 +3,7 @@
 namespace Drupal\eic_flags;
 
 /**
- * Class RequestStatus
+ * Class RequestStatus.
  *
  * @package Drupal\eic_flags
  */
