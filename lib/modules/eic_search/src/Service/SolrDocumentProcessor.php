@@ -2,10 +2,12 @@
 
 namespace Drupal\eic_search\Service;
 
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\comment\CommentInterface;
 use Drupal\comment\Entity\Comment;
 use Drupal\eic_groups\Constants\GroupVisibilityType;
 use Drupal\eic_groups\EICGroupsHelper;
+use Drupal\eic_search\SolrIndexes;
 use Drupal\file\Entity\File;
 use Drupal\group\Entity\Group;
 use Drupal\group\Entity\GroupInterface;
@@ -16,8 +18,11 @@ use Drupal\node\Entity\Node;
 use Drupal\paragraphs\Entity\Paragraph;
 use Drupal\profile\Entity\Profile;
 use Drupal\profile\Entity\ProfileInterface;
+use Drupal\search_api\Utility\Utility;
 use Drupal\user\Entity\User;
 use Drupal\user\UserInterface;
+use Drupal\search_api\Entity\Index;
+use Drupal\search_api\Utility\PostRequestIndexing;
 use Solarium\Core\Query\DocumentInterface;
 use Solarium\QueryType\Update\Query\Document;
 
@@ -27,6 +32,23 @@ use Solarium\QueryType\Update\Query\Document;
  * @package Drupal\eic_search\Service
  */
 class SolrDocumentProcessor {
+
+  /**
+   * The Search API Post request indexing service.
+   *
+   * @var \Drupal\search_api\Utility\PostRequestIndexing
+   */
+  private $postRequestIndexing;
+
+  /**
+   * SolrDocumentProcessor constructor.
+   *
+   * @param \Drupal\search_api\Utility\PostRequestIndexing $post_request_indexing
+   *   The Search API Post request indexing service.
+   */
+  public function __construct(PostRequestIndexing $post_request_indexing) {
+    $this->postRequestIndexing = $post_request_indexing;
+  }
 
   /**
    * Set global fields data, gallery slides data and set by default content to
@@ -393,6 +415,29 @@ class SolrDocumentProcessor {
     array_key_exists($key, $fields) ?
       $document->setField($key, $value) :
       $document->addField($key, $value);
+  }
+
+  /**
+   * Requests reindexing of the given entities.
+   *
+   * @param Drupal\Core\Entity\EntityInterface[] $items
+   */
+  public function reIndexEntities(array $items) {
+    $global_index = Index::load(SolrIndexes::GLOBAL);
+    $item_ids = [];
+    /** @var \Drupal\Core\Entity\EntityInterface $entity */
+    foreach ($items as $entity) {
+      if (!$entity instanceof EntityInterface) {
+        continue;
+      }
+      $datasource_id = 'entity:' . $entity->getEntityTypeId();
+      $datasource = $global_index->getDatasource($datasource_id);
+      $item_id = $datasource->getItemId($entity->getTypedData());
+      $item_ids[] = Utility::createCombinedId($datasource_id, $item_id);
+    }
+
+    // Request reindexing for the given items.
+    $this->postRequestIndexing->registerIndexingOperation(SolrIndexes::GLOBAL, $item_ids);
   }
 
 }
