@@ -33,4 +33,4 @@ services:
       - { name: eic_search.source }
   eic_search.solr_document_processor:
     class: Drupal\eic_search\Service\SolrDocumentProcessor
-    arguments: ['@search_api.post_request_indexing']
+    arguments: ['@database', '@flag.count', '@search_api.post_request_indexing']

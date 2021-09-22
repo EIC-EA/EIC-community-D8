@@ -2,13 +2,16 @@
 
 namespace Drupal\eic_search\Service;
 
+use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\comment\CommentInterface;
 use Drupal\comment\Entity\Comment;
+use Drupal\eic_flags\FlagType;
 use Drupal\eic_groups\Constants\GroupVisibilityType;
 use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_search\SolrIndexes;
 use Drupal\file\Entity\File;
+use Drupal\flag\FlagCountManager;
 use Drupal\group\Entity\Group;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\group\GroupMembership;
@@ -34,6 +37,20 @@ use Solarium\QueryType\Update\Query\Document;
 class SolrDocumentProcessor {
 
   /**
+   * Database connection.
+   *
+   * @var \Drupal\Core\Database\Connection
+   */
+  protected $connection;
+
+  /**
+   * The flag count manager.
+   *
+   * @var \Drupal\flag\FlagCountManager
+   */
+  protected $flagCountManager;
+
+  /**
    * The Search API Post request indexing service.
    *
    * @var \Drupal\search_api\Utility\PostRequestIndexing
@@ -41,12 +58,25 @@ class SolrDocumentProcessor {
   private $postRequestIndexing;
 
   /**
+   * The key used to identify solr document fields for last flagged.
+   *
+   * @var string
+   */
+  const LAST_FLAGGED_KEY = 'last_flagged';
+
+  /**
    * SolrDocumentProcessor constructor.
    *
+   * @param \Drupal\Core\Database\Connection $connection
+   *   The current active database's master connection.
+   * @param \Drupal\flag\FlagCountManager $flag_count_manager
+   *   The flag count manager.
    * @param \Drupal\search_api\Utility\PostRequestIndexing $post_request_indexing
    *   The Search API Post request indexing service.
    */
-  public function __construct(PostRequestIndexing $post_request_indexing) {
+  public function __construct(Connection $connection, FlagCountManager $flag_count_manager, PostRequestIndexing $post_request_indexing) {
+    $this->connection = $connection;
+    $this->flagCountManager = $flag_count_manager;
     $this->postRequestIndexing = $post_request_indexing;
   }
 
@@ -403,6 +433,51 @@ class SolrDocumentProcessor {
     $node = Node::load($fields['its_content_nid']);
 
     $document->addField('its_document_download_total', $entity_download_helper->getFileDownloads($node));
+  }
+
+  /**
+   * Updates flagging data for a document.
+   *
+   * @param \Solarium\QueryType\Update\Query\Document $document
+   *   The Solr document.
+   * @param $fields
+   *   Document fields.
+   */
+  public function processFlaggingData(Document &$document, $fields) {
+    $entity_id = NULL;
+    $entity_type = NULL;
+    $last_flagging_flag_types = [];
+
+    switch ($fields['ss_search_api_datasource']) {
+      case 'entity:node':
+        $entity_id = $fields['its_content_nid'];
+        $entity_type = 'node';
+        $last_flagging_flag_types = [
+          FlagType::LIKE_CONTENT,
+        ];
+        break;
+
+    }
+
+    // If we don't have a proper entity ID and type, skip this document.
+    if (empty($entity_id) || empty($entity_type)) {
+      return;
+    }
+
+    // Get the last flagging timestamp for each of the targeted flag types.
+    foreach ($last_flagging_flag_types as $flag_type) {
+      // Unfortunately flaggings don't have timestamps, so we grab the
+      // last_updated from the flag_counts table.
+      $result = $this->connection->select('flag_counts', 'fc')
+        ->fields('fc', ['count', 'last_updated'])
+        ->condition('flag_id', $flag_type)
+        ->condition('entity_type', $entity_type)
+        ->condition('entity_id', $entity_id)
+        ->execute()->fetchAssoc();
+      if (!empty($result['last_updated'])) {
+        $document->addField('its_' . self::LAST_FLAGGED_KEY . '_' . $flag_type, $result['last_updated']);
+      }
+    }
   }
 
   /**
