@@ -45,6 +45,14 @@ eic_groups.discussion_delete_comment:
   requirements:
     _permission: 'access content'
 
+eic_groups.discussion_comment_has_permission:
+  path: '/api/discussion/{discussion_id}/has-flag-permission/{comment_id}/{flag}'
+  methods: [ GET ]
+  defaults:
+    _controller: '\Drupal\eic_groups\Controller\DiscussionController::hasFlagPermission'
+  requirements:
+    _permission: 'access content'
+
 eic_groups.group.publish:
   path: '/group/{group}/publish'
   defaults:

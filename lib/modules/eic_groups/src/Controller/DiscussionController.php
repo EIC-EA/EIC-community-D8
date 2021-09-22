@@ -12,6 +12,7 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\eic_flags\RequestStatus;
 use Drupal\file\Entity\File;
 use Drupal\flag\FlaggingInterface;
+use Drupal\flag\FlagInterface;
 use Drupal\flag\FlagService;
 use Drupal\group\Entity\GroupContent;
 use Drupal\node\Entity\Node;
@@ -338,6 +339,39 @@ class DiscussionController extends ControllerBase {
     }
 
     return new JsonResponse([]);
+  }
+
+  public function hasFlagPermission(
+    Request $request,
+    int $discussion_id,
+    int $comment_id,
+    string $flag
+  ): JsonResponse {
+    $comment = Comment::load($comment_id);
+    $flag_entity = $this->flagService->getFlagById($flag);
+
+    if (!$comment instanceof CommentInterface || !$flag_entity instanceof FlagInterface) {
+      return new JsonResponse(
+        'No comment or flag found',
+        Response::HTTP_BAD_REQUEST
+      );
+    }
+
+    $flagging = $this->entityTypeManager->getStorage('flagging')->create(
+      [
+        'uid' => $this->currentUser()->id(),
+        'session_id' => NULL,
+        'flag_id' => $flag_entity->id(),
+        'entity_id' => $comment_id,
+        'entity_type' => 'comment',
+        'global' => $flag_entity->isGlobal(),
+      ]
+    );
+
+    return new JsonResponse(
+      ['allowed' => $flagging->access('flag')],
+      Response::HTTP_OK
+    );
   }
 
   /**
