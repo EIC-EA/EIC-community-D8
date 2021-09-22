@@ -23,10 +23,10 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Base class for group_feature plugins.
  */
-abstract class GroupFeaturePluginBase extends PluginBase implements GroupFeatureInterface,
-                                                                    ContainerFactoryPluginInterface {
+abstract class GroupFeaturePluginBase extends PluginBase implements GroupFeatureInterface, ContainerFactoryPluginInterface {
 
   use LoggerChannelTrait;
+
   use MessengerTrait;
 
   /**
@@ -165,7 +165,7 @@ abstract class GroupFeaturePluginBase extends PluginBase implements GroupFeature
    */
   protected function disableMenuItem(MenuLinkContentInterface $menu_item) {
     if ($existing_menu_item = $this->getExistingMenuItem($menu_item)) {
-      $existing_menu_item->set('enable', TRUE);
+      $existing_menu_item->set('enabled', FALSE);
       if (!$this->saveMenuItem($existing_menu_item)) {
         return FALSE;
       }
@@ -319,7 +319,7 @@ abstract class GroupFeaturePluginBase extends PluginBase implements GroupFeature
    *   The existing menu item of FALSE if it doesn't exist yet.
    */
   protected function getExistingMenuItem(MenuLinkContentInterface $menu_item) {
-    /** @var MenuLinkContentInterface[] $items */
+    /** @var Drupal\menu_link_content\MenuLinkContentInterface[] $items */
     $items = $this->menuLinkContentStorage->loadByProperties([
       'menu_name' => $menu_item->getMenuName(),
       'link__uri' => 'internal:/' . $menu_item->getUrlObject()->getInternalPath(),
@@ -345,7 +345,8 @@ abstract class GroupFeaturePluginBase extends PluginBase implements GroupFeature
     try {
       $menu_item->save();
       return $menu_item;
-    } catch (EntityStorageException $e) {
+    }
+    catch (EntityStorageException $e) {
       $logger = $this->getLogger('oec_group_features');
       $logger->error($e->getMessage());
       $this->messenger()
