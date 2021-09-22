@@ -17,6 +17,7 @@
   }
 
   &__form-wrapper,
+  &__items,
   &__item {
     padding: map-get($ecl-spacing, 'xl');
     background-color: map-get($ecl-colors, 'white');
