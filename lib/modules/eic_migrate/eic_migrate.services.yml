@@ -1,0 +1,6 @@
+services:
+  eic_post_migration_subscriber:
+    class: '\Drupal\eic_migrate\EventSubscriber\PostMigrationSubscriber'
+    arguments: ['@migrate.lookup', '@entity_type.manager']
+    tags:
+      - { name: 'event_subscriber' }
