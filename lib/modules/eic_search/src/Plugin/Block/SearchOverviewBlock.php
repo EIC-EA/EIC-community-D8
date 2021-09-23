@@ -224,7 +224,12 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
    * @return \Drupal\Core\Ajax\AjaxResponse
    */
   public function updateSourceConfig(array &$form, FormStateInterface $form_state) {
-    $current_source_value = $form_state->getValue('settings')['search']['source_type'] ?: GroupSourceType::class;
+    if ($form_state->hasValue('field_overview_block')) {
+      $current_source_value = $form_state->getValue('field_overview_block')[0]['settings']['search']['source_type'] ?: NULL;
+    } else {
+      $current_source_value = $form_state->getValue('settings')['search']['source_type'] ?: GroupSourceType::class;
+    }
+
     $response = new AjaxResponse();
 
     /** @var SourceTypeInterface $current_source */
