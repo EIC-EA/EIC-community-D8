@@ -69,6 +69,7 @@ class TuGroupMembershipRequest extends GroupJoiningMethodBase implements Contain
     // Only enable plugin when it doesn't exist yet.
     $contentEnablers = $this->groupContentEnabler->getInstalledIds($groupType);
     if (!in_array('group_membership_request', $contentEnablers)) {
+      /** @var \Drupal\group\Entity\Storage\GroupContentTypeStorageInterface $storage */
       $storage = $this->entityTypeManager->getStorage('group_content_type');
       $config = [
         'group_cardinality' => 0,

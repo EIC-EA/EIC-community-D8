@@ -2,12 +2,17 @@
 
 namespace Drupal\eic_search\Service;
 
+use Drupal\Core\Database\Connection;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\comment\CommentInterface;
 use Drupal\comment\Entity\Comment;
 use Drupal\Component\Utility\Unicode;
+use Drupal\eic_flags\FlagType;
 use Drupal\eic_groups\Constants\GroupVisibilityType;
 use Drupal\eic_groups\EICGroupsHelper;
+use Drupal\eic_search\SolrIndexes;
 use Drupal\file\Entity\File;
+use Drupal\flag\FlagCountManager;
 use Drupal\group\Entity\Group;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\group\GroupMembership;
@@ -20,6 +25,9 @@ use Drupal\profile\Entity\ProfileInterface;
 use Drupal\statistics\NodeStatisticsDatabaseStorage;
 use Drupal\user\Entity\User;
 use Drupal\user\UserInterface;
+use Drupal\search_api\Entity\Index;
+use Drupal\search_api\Utility\PostRequestIndexing;
+use Solarium\Core\Query\DocumentInterface;
 use Solarium\QueryType\Update\Query\Document;
 
 /**
@@ -28,6 +36,26 @@ use Solarium\QueryType\Update\Query\Document;
  * @package Drupal\eic_search\Service
  */
 class SolrDocumentProcessor {
+  /**
+   * Database connection.
+   *
+   * @var \Drupal\Core\Database\Connection
+   */
+  protected $connection;
+
+  /**
+   * The flag count manager.
+   *
+   * @var \Drupal\flag\FlagCountManager
+   */
+  protected $flagCountManager;
+
+  /**
+   * The Search API Post request indexing service.
+   *
+   * @var \Drupal\search_api\Utility\PostRequestIndexing
+   */
+  private $postRequestIndexing;
 
   /**
    * The Entity file download count service.
@@ -36,13 +64,28 @@ class SolrDocumentProcessor {
    */
   protected $nodeStatisticsDatabaseStorage;
 
+
   /**
-   * Constructs a EntityOperation object.
+   * The key used to identify solr document fields for last flagged.
    *
-   * @param \Drupal\statistics\NodeStatisticsDatabaseStorage $node_statistics_db_storage
-   *   The Entity file download count service.
+   * @var string
    */
-  public function __construct(NodeStatisticsDatabaseStorage $node_statistics_db_storage) {
+  const LAST_FLAGGED_KEY = 'last_flagged';
+
+  /**
+   * SolrDocumentProcessor constructor.
+   *
+   * @param \Drupal\Core\Database\Connection $connection
+   *   The current active database's master connection.
+   * @param \Drupal\flag\FlagCountManager $flag_count_manager
+   *   The flag count manager.
+   * @param \Drupal\search_api\Utility\PostRequestIndexing $post_request_indexing
+   *   The Search API Post request indexing service.
+   */
+  public function __construct(Connection $connection, FlagCountManager $flag_count_manager, PostRequestIndexing $post_request_indexing, NodeStatisticsDatabaseStorage $node_statistics_db_storage) {
+    $this->connection = $connection;
+    $this->flagCountManager = $flag_count_manager;
+    $this->postRequestIndexing = $post_request_indexing;
     $this->nodeStatisticsDatabaseStorage = $node_statistics_db_storage;
   }
 
@@ -210,15 +253,9 @@ class SolrDocumentProcessor {
 
     if (array_key_exists('its_content__group_content__entity_id_gid', $fields)) {
       if ($group_entity = Group::load($fields['its_content__group_content__entity_id_gid'])) {
-        $group_parent_label = $group_entity instanceof GroupInterface ?
-          $group_entity->label()
-          : '';
-        $group_parent_url = $group_entity instanceof GroupInterface ?
-          $group_entity->toUrl()->toString()
-          : '';
-        $group_parent_id = $group_entity instanceof GroupInterface ?
-          $group_entity->id()
-          : -1;
+        $group_parent_label = -$group_entity->label();
+        $group_parent_url = $group_entity->toUrl()->toString();
+        $group_parent_id = $group_entity->id();
       }
     }
 
@@ -278,7 +315,7 @@ class SolrDocumentProcessor {
     $author = $comment->get('uid')->referencedEntities();
     $author = reset($author);
 
-    /** @var \Drupal\media\MediaInterface $author_media */
+    /** @var \Drupal\media\MediaInterface|NULL $author_media */
     $author_media = $author->get('field_media')->entity;
     /** @var File|NULL $author_file */
     $author_file = $author_media instanceof MediaInterface ? File::load($author_media->get('oe_media_image')->target_id) : NULL;
@@ -294,12 +331,12 @@ class SolrDocumentProcessor {
   /**
    * @param \Solarium\QueryType\Update\Query\Document $document
    * @param array $fields
-   * @param $items
+   * @param array $items
    * @param \Drupal\eic_groups\EICGroupsHelper $group_helper
    *
    * @throws \Drupal\search_api\SearchApiException
    */
-  public function processGroupVisibilityData(Document &$document, array $fields, $items, EICGroupsHelper $group_helper) {
+  public function processGroupVisibilityData(Document &$document, array $fields, array $items, EICGroupsHelper $group_helper) {
     $search_id = array_key_exists('ss_search_api_id', $fields) ?
       $fields['ss_search_api_id'] :
       NULL;
@@ -314,9 +351,8 @@ class SolrDocumentProcessor {
       return;
     }
 
-    /** @var \Drupal\search_api\Item\Item $item */
+    /** @var \Drupal\search_api\Item\ItemInterface $item */
     $item = array_key_exists($search_id, $items) ? $items[$search_id] : NULL;
-
     if (!$item) {
       $document->addField('ss_group_visibility', $group_visibility);
       return;
@@ -384,10 +420,10 @@ class SolrDocumentProcessor {
   }
 
   /**
-   * @param $document
-   * @param $fields
+   * @param \Solarium\Core\Query\DocumentInterface $document
+   * @param array $fields
    */
-  public function processGroupUserData(Document &$document, $fields) {
+  public function processGroupUserData(DocumentInterface &$document, array $fields) {
     if ($fields['ss_search_api_datasource'] === 'entity:user' && array_key_exists('its_user_profile', $fields)) {
       $profile = Profile::load($fields['its_user_profile']);
       if ($profile instanceof ProfileInterface) {
@@ -427,6 +463,51 @@ class SolrDocumentProcessor {
   }
 
   /**
+   * Updates flagging data for a document.
+   *
+   * @param \Solarium\QueryType\Update\Query\Document $document
+   *   The Solr document.
+   * @param $fields
+   *   Document fields.
+   */
+  public function processFlaggingData(Document &$document, $fields) {
+    $entity_id = NULL;
+    $entity_type = NULL;
+    $last_flagging_flag_types = [];
+
+    switch ($fields['ss_search_api_datasource']) {
+      case 'entity:node':
+        $entity_id = $fields['its_content_nid'];
+        $entity_type = 'node';
+        $last_flagging_flag_types = [
+          FlagType::LIKE_CONTENT,
+        ];
+        break;
+
+    }
+
+    // If we don't have a proper entity ID and type, skip this document.
+    if (empty($entity_id) || empty($entity_type)) {
+      return;
+    }
+
+    // Get the last flagging timestamp for each of the targeted flag types.
+    foreach ($last_flagging_flag_types as $flag_type) {
+      // Unfortunately flaggings don't have timestamps, so we grab the
+      // last_updated from the flag_counts table.
+      $result = $this->connection->select('flag_counts', 'fc')
+        ->fields('fc', ['count', 'last_updated'])
+        ->condition('flag_id', $flag_type)
+        ->condition('entity_type', $entity_type)
+        ->condition('entity_id', $entity_id)
+        ->execute()->fetchAssoc();
+      if (!empty($result['last_updated'])) {
+        $document->addField('its_' . self::LAST_FLAGGED_KEY . '_' . $flag_type, $result['last_updated']);
+      }
+    }
+  }
+
+  /**
    * @param \Solarium\QueryType\Update\Query\Document $document
    * @param $key
    * @param $fields
@@ -436,6 +517,29 @@ class SolrDocumentProcessor {
     array_key_exists($key, $fields) ?
       $document->setField($key, $value) :
       $document->addField($key, $value);
+  }
+
+  /**
+   * Requests reindexing of the given entities.
+   *
+   * @param Drupal\Core\Entity\EntityInterface[] $items
+   */
+  public function reIndexEntities(array $items) {
+    $global_index = Index::load(SolrIndexes::GLOBAL);
+    $item_ids = [];
+    /** @var \Drupal\Core\Entity\EntityInterface $entity */
+    foreach ($items as $entity) {
+      if (!$entity instanceof EntityInterface) {
+        continue;
+      }
+      $datasource_id = 'entity:' . $entity->getEntityTypeId();
+      $datasource = $global_index->getDatasource($datasource_id);
+      $item_id = $datasource->getItemId($entity->getTypedData());
+      $item_ids[] = Utility::createCombinedId($datasource_id, $item_id);
+    }
+
+    // Request reindexing for the given items.
+    $this->postRequestIndexing->registerIndexingOperation(SolrIndexes::GLOBAL, $item_ids);
   }
 
 }

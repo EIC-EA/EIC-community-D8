@@ -303,7 +303,7 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
    *   - url: An instance of \Drupal\Core\Url for the login URL.
    */
   private function getAnonymousLoginLink(GroupInterface $group) {
-    $link = FALSE;
+    $link = [];
     if ($this->currentUser->isAnonymous()) {
       if ($joining_methods = $this->oecGroupFlexHelper->getGroupJoiningMethod($group)) {
         $login_link_options = [
@@ -467,7 +467,7 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
    * @param \Drupal\group\Entity\GroupInterface $group
    *   The group entity.
    *
-   * @return \Drupal\Component\Render\MarkupInterface
+   * @return \Drupal\Component\Render\MarkupInterface|string
    *   The group description HTML Markup.
    */
   private function getTruncatedGroupDescription(GroupInterface $group) {

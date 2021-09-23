@@ -19,6 +19,8 @@ use Drupal\node\Entity\NodeType;
 
 /**
  * Implements hook_ENTITY_TYPE_insert().
+ *
+ * @param \Drupal\Core\Entity\ContentEntityInterface $entity
  */
 function eic_messages_group_insert(EntityInterface $entity) {
   /** @var Drupal\eic_messages\Service\GroupMessageCreator $class */
@@ -28,6 +30,8 @@ function eic_messages_group_insert(EntityInterface $entity) {
 
 /**
  * Implements hook_ENTITY_TYPE_update().
+ *
+ * @param \Drupal\Core\Entity\ContentEntityInterface $entity
  */
 function eic_messages_group_update(EntityInterface $entity) {
   /** @var Drupal\eic_messages\Service\GroupMessageCreator $class */
@@ -37,6 +41,8 @@ function eic_messages_group_update(EntityInterface $entity) {
 
 /**
  * Implements hook_ENTITY_TYPE_update().
+ *
+ * @param \Drupal\comment\CommentInterface $entity
  */
 function eic_messages_comment_insert(EntityInterface $entity) {
   /** @var \Drupal\eic_messages\Service\CommentMessageCreator $group_message_create */
@@ -46,15 +52,20 @@ function eic_messages_comment_insert(EntityInterface $entity) {
 
 /**
  * Implements hook_ENTITY_TYPE_update().
+ *
+ * @param \Drupal\comment\CommentInterface $entity
  */
 function eic_messages_comment_update(EntityInterface $entity) {
   /** @var \Drupal\eic_messages\Service\CommentMessageCreator $group_message_create */
   $group_message_create = \Drupal::service('eic_messages.message_creator.comment');
-  $group_message_create->createCommentActivity($entity, ActivityStreamOperationTypes::UPDATED_ENTITY);
+  $group_message_create->createCommentActivity($entity,
+    ActivityStreamOperationTypes::UPDATED_ENTITY);
 }
 
 /**
  * Implements hook_ENTITY_TYPE_insert().
+ *
+ * @param \Drupal\Core\Entity\ContentEntityInterface $entity
  */
 function eic_messages_group_content_insert(EntityInterface $entity) {
   /** @var Drupal\eic_messages\Service\GroupContentMessageCreator $class */
@@ -64,6 +75,8 @@ function eic_messages_group_content_insert(EntityInterface $entity) {
 
 /**
  * Implements hook_ENTITY_TYPE_insert().
+ *
+ * @param \Drupal\Core\Entity\ContentEntityInterface $entity
  */
 function eic_messages_message_insert(EntityInterface $entity) {
   $class = \Drupal::classResolver(LogMessageRenderer::class);
@@ -72,6 +85,8 @@ function eic_messages_message_insert(EntityInterface $entity) {
 
 /**
  * Implements hook_entity_update().
+ *
+ * @param \Drupal\Core\Entity\ContentEntityInterface $entity
  */
 function eic_messages_entity_update(EntityInterface $entity) {
   /** @var Drupal\eic_messages\Hooks\EntityOperations $class */

@@ -139,7 +139,7 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
     $sources = $this->sourcesCollector->getSources();
 
     $source = array_key_exists($source_type, $sources) ? $sources[$source_type] : NULL;
-    $prefilter_group = $this->configuration['prefilter_group'] || FALSE;
+    $prefilter_group = $this->configuration['prefilter_group'] ?? FALSE;
     $current_group_route = NULL;
 
     if (
@@ -284,7 +284,6 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
   private function getCurrentSource(string $source_value): ?SourceTypeInterface {
     $sources_collected = $this->sourcesCollector->getSources();
 
-    /** @var SourceTypeInterface $current_source */
     return array_key_exists($source_value, $sources_collected) ?
       $sources_collected[$source_value] :
       NULL;

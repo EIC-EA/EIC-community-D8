@@ -2,6 +2,7 @@
 
 namespace Drupal\eic_messages\Service;
 
+use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\eic_groups\GroupsModerationHelper;
 
@@ -15,7 +16,7 @@ class GroupMessageCreator extends MessageCreatorBase {
    *
    * Sends out message notifications upon group creation.
    */
-  public function groupInsert(EntityInterface $entity) {
+  public function groupInsert(ContentEntityInterface $entity) {
     $messages = [];
     $author_id = $entity->get('uid')->getValue()[0]['target_id'];
 
@@ -46,7 +47,7 @@ class GroupMessageCreator extends MessageCreatorBase {
    *
    * Sends out message notifications upon group state changes.
    */
-  public function groupUpdate(EntityInterface $entity) {
+  public function groupUpdate(ContentEntityInterface $entity) {
     // Check if state has changed.
     if ($entity->get('moderation_state')->getValue() == $entity->original->get('moderation_state')->getValue()) {
       return;

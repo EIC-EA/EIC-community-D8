@@ -366,4 +366,24 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
     return !empty($query->execute()->fetchAll(\PDO::FETCH_OBJ));
   }
 
+  /**
+   * Check if a group can be flagged depending on the moderation state.
+   *
+   * @param \Drupal\group\Entity\GroupInterface $group
+   *   The group entity.
+   *
+   * @return bool
+   *   TRUE if the group is not in Pending or Draft state.
+   */
+  public static function groupIsFlaggable(GroupInterface $group) {
+    $moderation_state = $group->get('moderation_state')->value;
+    return !in_array(
+      $moderation_state,
+      [
+        GroupsModerationHelper::GROUP_PENDING_STATE,
+        GroupsModerationHelper::GROUP_DRAFT_STATE,
+      ]
+    );
+  }
+
 }

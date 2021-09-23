@@ -866,11 +866,18 @@
   &__detail-icon {
     vertical-align: middle;
     color: ecl-typography('color', 'title');
+    #{$node}--search & {
+      vertical-align: bottom;
+    }
   }
 
   &__detail-contributor {
     font-weight: $ecl-font-weight-bold;
     color: ecl-typography('color', 'title');
+  }
+
+  &__detail-parentgroup {
+    margin-top: map-get($ecl-spacing, 'xs');
   }
 
   &__stats {

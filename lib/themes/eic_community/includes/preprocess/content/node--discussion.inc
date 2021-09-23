@@ -57,8 +57,14 @@ function _preprocess_discussion_full(&$variables, $discussion_type, $node) {
   $variables['author'] = eic_community_get_teaser_user_display($node->getOwner());
   $variables['timestamp']['label'] = eic_community_get_teaser_time_display($node->get('changed')->value);
 
-  $flags = array_filter($variables['elements'], function ($key) {
-    return strpos($key, 'flag') !== FALSE;
+  $flags = array_filter($variables['elements'], function ($key) use ($node) {
+
+    // If element is not a flag we skip it.
+    if (strpos($key, 'flag') === FALSE) {
+      return FALSE;
+    }
+
+    return _eic_community_get_flag_access(str_replace('flag_', '', $key), $node);
   }, ARRAY_FILTER_USE_KEY);
 
   $flags = array_map(function ($item) {

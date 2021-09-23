@@ -11,6 +11,7 @@ use Drupal\group_flex\GroupFlexGroupSaver;
 use Drupal\group_flex\Plugin\GroupJoiningMethodManager;
 use Drupal\group_flex\Plugin\GroupVisibilityManager;
 use Drupal\group_permissions\Entity\GroupPermission;
+use Drupal\group_permissions\Entity\GroupPermissionInterface;
 use Drupal\group_permissions\GroupPermissionsManager;
 
 /**
@@ -148,7 +149,7 @@ class OECGroupFlexGroupSaverDecorator extends GroupFlexGroupSaver {
     /** @var \Drupal\group_permissions\Entity\GroupPermission $groupPermission */
     $groupPermission = $this->groupPermManager->loadByGroup($group);
 
-    if ($groupPermission === NULL) {
+    if (!$groupPermission instanceof GroupPermissionInterface) {
       // Create the entity.
       $groupPermission = GroupPermission::create([
         'gid' => $group->id(),

@@ -3,6 +3,7 @@
 namespace Drupal\eic_group_statistics\Hooks;
 
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\eic_comments\CommentsHelper;
@@ -117,10 +118,10 @@ class EntityOperations implements ContainerInjectionInterface {
   /**
    * Implements hook_ENTITY_TYPE_insert() for group_content entities.
    *
-   * @param \Drupal\Core\Entity\EntityInterface $entity
+   * @param \Drupal\group\Entity\GroupContentInterface $entity
    *   The group content entity object.
    */
-  public function groupContentInsert(EntityInterface $entity) {
+  public function groupContentInsert(GroupContentInterface $entity) {
     $group = $entity->getGroup();
 
     $re_index = TRUE;
@@ -155,10 +156,10 @@ class EntityOperations implements ContainerInjectionInterface {
   /**
    * Implements hook_ENTITY_TYPE_delete() for group_content entities.
    *
-   * @param \Drupal\Core\Entity\EntityInterface $entity
+   * @param \Drupal\group\Entity\GroupContentInterface $entity
    *   The group content entity object.
    */
-  public function groupContentDelete(EntityInterface $entity) {
+  public function groupContentDelete(GroupContentInterface $entity) {
     $group = $entity->getGroup();
 
     $re_index = TRUE;
@@ -191,12 +192,12 @@ class EntityOperations implements ContainerInjectionInterface {
    * eic_group_statistics_group_content_delete phase because the related node
    * gets deleted first.
    *
-   * @param \Drupal\Core\Entity\EntityInterface $entity
+   * @param \Drupal\node\NodeInterface $entity
    *   The node entity object.
    * @param \Drupal\group\Entity\GroupContentInterface $group_content
    *   The group content entity object that relates to the node.
    */
-  public function groupContentNodeDelete(EntityInterface $entity, GroupContentInterface $group_content) {
+  public function groupContentNodeDelete(NodeInterface $entity, GroupContentInterface $group_content) {
     $group = $group_content->getGroup();
 
     $re_index = TRUE;
@@ -226,14 +227,15 @@ class EntityOperations implements ContainerInjectionInterface {
   /**
    * Acts on hook_node_update() for node entities that belong to a group.
    *
-   * @param \Drupal\Core\Entity\EntityInterface $entity
+   * @param \Drupal\node\NodeInterface $entity
    *   The node entity object.
    * @param \Drupal\group\Entity\GroupContentInterface $group_content
    *   The group content entity object that relates to the node.
    */
-  public function groupContentNodeUpdate(EntityInterface $entity, GroupContentInterface $group_content) {
+  public function groupContentNodeUpdate(NodeInterface $entity, GroupContentInterface $group_content) {
     $group = $group_content->getGroup();
-
+    /** @var \Drupal\node\NodeInterface $original_entity */
+    $original_entity = $entity->original;
     $re_index = TRUE;
 
     switch ($entity->bundle()) {
@@ -255,12 +257,12 @@ class EntityOperations implements ContainerInjectionInterface {
       $num_comments = 0;
       // Increments all node comments to the group statistics when node status
       // changes from unpublished to published.
-      if (!$entity->original->isPublished() && $entity->isPublished()) {
+      if (!$original_entity->isPublished() && $entity->isPublished()) {
         $num_comments = $this->commentsHelper->countNodeComments($entity);
         $this->groupStatisticsStorage->increment($group, GroupStatisticTypes::STAT_TYPE_COMMENTS, $num_comments);
         $re_index = TRUE;
       }
-      elseif ($entity->original->isPublished() && !$entity->isPublished()) {
+      elseif ($original_entity->isPublished() && !$entity->isPublished()) {
         // Decrements all node comments in the group statistics when node status
         // changes from unpublished to published.
         $num_comments = $this->commentsHelper->countNodeComments($entity);
@@ -523,7 +525,7 @@ class EntityOperations implements ContainerInjectionInterface {
    *
    * @param \Drupal\group\Entity\GroupInterface $group
    *   The group entity for which we want to count file statistics.
-   * @param \Drupal\node\NodeInterface $node
+   * @param \Drupal\Core\Entity\ContentEntityInterface $node
    *   The node entity that belongs to the group.
    * @param \Drupal\media\MediaInterface[] $medias
    *   Array of media entities that belong to the node.
@@ -532,7 +534,7 @@ class EntityOperations implements ContainerInjectionInterface {
    *   The number of times we need to increment/decrement in the group file
    *   statistics.
    */
-  private function countGroupFileStatistics(GroupInterface $group, NodeInterface $node, array $medias = []) {
+  private function countGroupFileStatistics(GroupInterface $group, ContentEntityInterface $node, array $medias = []) {
     $count_updates = 0;
 
     $source_entity_types = [
@@ -626,9 +628,11 @@ class EntityOperations implements ContainerInjectionInterface {
         }
 
         $duplicated_media = FALSE;
-
         foreach ($source_nodes as $source_node) {
-          $group_contents = $this->entityTypeManager->getStorage('group_content')->loadByEntity($source_node);
+          $group_contents = $this->entityTypeManager
+            ->getStorage('group_content')
+            ->loadByEntity($source_node);
+
           $group_content = reset($group_contents);
 
           // If the source node doesn't have any group content associated, we
