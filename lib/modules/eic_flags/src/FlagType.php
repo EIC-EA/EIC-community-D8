@@ -9,6 +9,8 @@ namespace Drupal\eic_flags;
  */
 final class FlagType {
 
+  const BOOKMARK_CONTENT = 'bookmark_content';
+
   const FOLLOW_GROUP = 'follow_group';
 
   const FOLLOW_CONTENT = 'follow_content';

@@ -480,8 +480,9 @@ class SolrDocumentProcessor {
         $entity_id = $fields['its_content_nid'];
         $entity_type = 'node';
         $last_flagging_flag_types = [
-          FlagType::LIKE_CONTENT,
+          FlagType::BOOKMARK_CONTENT,
           FlagType::HIGHLIGHT_CONTENT,
+          FlagType::LIKE_CONTENT,
         ];
         break;
 
