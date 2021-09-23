@@ -521,7 +521,9 @@ class SolrDocumentProcessor {
   /**
    * Requests reindexing of the given entities.
    *
-   * @param Drupal\Core\Entity\EntityInterface[] $items
+   * @param EntityInterface[] $items
+   *
+   * @throws \Drupal\search_api\SearchApiException
    */
   public function reIndexEntities(array $items) {
     $global_index = Index::load(SolrIndexes::GLOBAL);
