@@ -3,6 +3,8 @@
 namespace Drupal\eic_search\Search\Sources;
 
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\eic_flags\FlagType;
+use Drupal\eic_search\Service\SolrDocumentProcessor;
 
 /**
  * Class DiscussionSourceType
@@ -64,6 +66,10 @@ class DiscussionSourceType extends SourceType {
         'label' => $this->t('Title', [], ['context' => 'eic_search']),
         'ASC' => $this->t('Title A-Z', [], ['context' => 'eic_search']),
         'DESC' => $this->t('Title Z-A', [], ['context' => 'eic_search']),
+      ],
+      'its_' . SolrDocumentProcessor::LAST_FLAGGED_KEY . '_' . FlagType::LIKE_CONTENT => [
+        'label' => $this->t('Last liked', [], ['context' => 'eic_search']),
+        'DESC' => $this->t('Last liked', [], ['context' => 'eic_search']),
       ],
     ];
   }

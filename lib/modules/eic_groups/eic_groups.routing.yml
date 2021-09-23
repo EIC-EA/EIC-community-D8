@@ -6,6 +6,53 @@ eic_groups.about_page:
   requirements:
     _group_permission: 'view group'
 
+eic_groups.discussion_add_comment:
+  path: '/api/discussion/{discussion_id}/comment'
+  methods: [ POST ]
+  defaults:
+    _controller: '\Drupal\eic_groups\Controller\DiscussionController::addComment'
+  requirements:
+    _permission: 'access content'
+
+eic_groups.discussion_fetch_comment:
+  path: '/api/discussion/{discussion_id}/comments'
+  defaults:
+    _controller: '\Drupal\eic_groups\Controller\DiscussionController::fetchComments'
+  requirements:
+    _permission: 'access content'
+
+eic_groups.discussion_flag_comment:
+  path: '/api/discussion/{discussion_id}/{flag}/{comment_id}/{type}'
+  methods: [ POST ]
+  defaults:
+    _controller: '\Drupal\eic_groups\Controller\DiscussionController::flagComment'
+  requirements:
+    _permission: 'access content'
+
+eic_groups.discussion_update_comment:
+  path: '/api/discussion/{discussion_id}/edit/{comment_id}'
+  methods: [ PATCH ]
+  defaults:
+    _controller: '\Drupal\eic_groups\Controller\DiscussionController::editComment'
+  requirements:
+    _permission: 'access content'
+
+eic_groups.discussion_delete_comment:
+  path: '/api/discussion/{discussion_id}/delete/{comment_id}'
+  methods: [ DELETE ]
+  defaults:
+    _controller: '\Drupal\eic_groups\Controller\DiscussionController::deleteComment'
+  requirements:
+    _permission: 'access content'
+
+eic_groups.discussion_comment_has_permission:
+  path: '/api/discussion/{discussion_id}/has-flag-permission/{comment_id}/{flag}'
+  methods: [ GET ]
+  defaults:
+    _controller: '\Drupal\eic_groups\Controller\DiscussionController::hasFlagPermission'
+  requirements:
+    _permission: 'access content'
+
 eic_groups.group.publish:
   path: '/group/{group}/publish'
   defaults:
