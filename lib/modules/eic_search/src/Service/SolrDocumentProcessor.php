@@ -4,6 +4,7 @@ namespace Drupal\eic_search\Service;
 
 use Drupal\comment\CommentInterface;
 use Drupal\comment\Entity\Comment;
+use Drupal\Component\Utility\Unicode;
 use Drupal\eic_groups\Constants\GroupVisibilityType;
 use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\file\Entity\File;
@@ -180,10 +181,9 @@ class SolrDocumentProcessor {
     }
 
     if (array_key_exists('tm_X3b_en_rendered_item', $fields)) {
-      $text = html_entity_decode($fields['tm_X3b_en_rendered_item'], ENT_QUOTES);
+      $text = $fields['tm_X3b_en_rendered_item'];
       if (strlen($text) > 300) {
-        $text = substr($text, 0, 300);
-        $text .= '...';
+        $text = Unicode::truncate($text, 300, FALSE, TRUE);
       }
       $document->setField('tm_X3b_en_rendered_item', $text);
     }

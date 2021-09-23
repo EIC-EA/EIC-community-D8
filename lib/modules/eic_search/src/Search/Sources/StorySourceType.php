@@ -41,7 +41,7 @@ class StorySourceType extends SourceType {
     return [
       'ss_content_type' => $this->t('Type', [], ['context' => 'eic_search']),
       'sm_content_field_vocab_topics_string' => $this->t('Topic', [], ['context' => 'eic_search']),
-      'sm_content_field_vocab_geo_string' => $this->t('Region & country', [], ['context' => 'eic_search']),
+      'sm_content_field_vocab_geo_string' => $this->t('Regions & countries', [], ['context' => 'eic_search']),
     ];
   }
 
