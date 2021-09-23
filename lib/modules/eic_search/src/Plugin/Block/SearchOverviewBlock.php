@@ -264,14 +264,16 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
 
     $current_source = $this->getCurrentSource($values['search']['source_type']);
 
-    $this->configuration['source_type'] = $values['search']['source_type'];
-    $this->configuration['facets'] = $values['search']['configuration']['filter'][$current_source->getEntityBundle()]['facets'];
-    $this->configuration['sort_options'] = $values['search']['configuration']['sorts'][$current_source->getEntityBundle()]['sort_options'];
-    $this->configuration['enable_search'] = $values['search']['configuration']['enable_search'];
-    $this->configuration['page_options'] = $values['search']['configuration']['pagination']['page_options'];
-    $this->configuration['prefilter_group'] = $values['search']['configuration']['prefilter_group'];
-    $this->configuration['add_facet_interests'] = $values['search']['configuration']['add_facet_interests'];
-    $this->configuration['add_facet_my_groups'] = $values['search']['configuration']['add_facet_my_groups'];
+    $this->setConfiguration([
+      'source_type' => $values['search']['source_type'],
+      'facets' => $values['search']['configuration']['filter'][$current_source->getEntityBundle()]['facets'],
+      'sort_options' => $values['search']['configuration']['sorts'][$current_source->getEntityBundle()]['sort_options'],
+      'enable_search' => $values['search']['configuration']['enable_search'],
+      'page_options' => $values['search']['configuration']['pagination']['page_options'],
+      'prefilter_group' => $values['search']['configuration']['prefilter_group'],
+      'add_facet_interests' => $values['search']['configuration']['add_facet_interests'],
+      'add_facet_my_groups' => $values['search']['configuration']['add_facet_my_groups'],
+    ]);
   }
 
   /**
