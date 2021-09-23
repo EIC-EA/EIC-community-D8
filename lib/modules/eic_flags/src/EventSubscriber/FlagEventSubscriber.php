@@ -71,6 +71,7 @@ class FlagEventSubscriber implements EventSubscriberInterface {
   protected function isReindexTargetedFlag(FlaggingInterface $flagging) {
     $reindex_triggers = [
       FlagType::LIKE_CONTENT,
+      FlagType::HIGHLIGHT_CONTENT,
     ];
     return in_array($flagging->getFlagId(), $reindex_triggers);
   }

@@ -17,6 +17,8 @@ final class FlagType {
 
   const FOLLOW_USER = 'follow_user';
 
+  const HIGHLIGHT_CONTENT = 'highlight_content';
+
   const LIKE_CONTENT = 'like_content';
 
 }
