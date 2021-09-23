@@ -3,6 +3,8 @@
 namespace Drupal\eic_search\Search\Sources;
 
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\eic_flags\FlagType;
+use Drupal\eic_search\Service\SolrDocumentProcessor;
 
 /**
  * Class StorySourceType
@@ -74,6 +76,18 @@ class StorySourceType extends SourceType {
         'label' => $this->t('Total comment', [], ['context' => 'eic_search']),
         'DESC' => $this->t('Most commented', [], ['context' => 'eic_search']),
         'ASC' => $this->t('Less commented', [], ['context' => 'eic_search']),
+      ],
+      'its_' . SolrDocumentProcessor::LAST_FLAGGED_KEY . '_' . FlagType::LIKE_CONTENT => [
+        'label' => $this->t('Last liked', [], ['context' => 'eic_search']),
+        'DESC' => $this->t('Last liked', [], ['context' => 'eic_search']),
+      ],
+      'its_' . SolrDocumentProcessor::LAST_FLAGGED_KEY . '_' . FlagType::BOOKMARK_CONTENT => [
+        'label' => $this->t('Last bookmarked', [], ['context' => 'eic_search']),
+        'DESC' => $this->t('Last bookmarked', [], ['context' => 'eic_search']),
+      ],
+      'its_' . SolrDocumentProcessor::LAST_FLAGGED_KEY . '_' . FlagType::HIGHLIGHT_CONTENT => [
+        'label' => $this->t('Last highlighted', [], ['context' => 'eic_search']),
+        'DESC' => $this->t('Last highlighted', [], ['context' => 'eic_search']),
       ],
     ];
   }
