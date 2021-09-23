@@ -64,7 +64,6 @@ class SolrDocumentProcessor {
    */
   protected $nodeStatisticsDatabaseStorage;
 
-
   /**
    * The key used to identify solr document fields for last flagged.
    *
