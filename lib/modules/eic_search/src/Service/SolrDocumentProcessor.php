@@ -6,6 +6,7 @@ use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\comment\CommentInterface;
 use Drupal\comment\Entity\Comment;
+use Drupal\Component\Utility\Unicode;
 use Drupal\eic_flags\FlagType;
 use Drupal\eic_groups\Constants\GroupVisibilityType;
 use Drupal\eic_groups\EICGroupsHelper;
@@ -21,7 +22,7 @@ use Drupal\node\Entity\Node;
 use Drupal\paragraphs\Entity\Paragraph;
 use Drupal\profile\Entity\Profile;
 use Drupal\profile\Entity\ProfileInterface;
-use Drupal\search_api\Utility\Utility;
+use Drupal\statistics\NodeStatisticsDatabaseStorage;
 use Drupal\user\Entity\User;
 use Drupal\user\UserInterface;
 use Drupal\search_api\Entity\Index;
@@ -35,7 +36,6 @@ use Solarium\QueryType\Update\Query\Document;
  * @package Drupal\eic_search\Service
  */
 class SolrDocumentProcessor {
-
   /**
    * Database connection.
    *
@@ -58,6 +58,13 @@ class SolrDocumentProcessor {
   private $postRequestIndexing;
 
   /**
+   * The Entity file download count service.
+   *
+   * @var \Drupal\statistics\NodeStatisticsDatabaseStorage
+   */
+  protected $nodeStatisticsDatabaseStorage;
+
+  /**
    * The key used to identify solr document fields for last flagged.
    *
    * @var string
@@ -74,10 +81,11 @@ class SolrDocumentProcessor {
    * @param \Drupal\search_api\Utility\PostRequestIndexing $post_request_indexing
    *   The Search API Post request indexing service.
    */
-  public function __construct(Connection $connection, FlagCountManager $flag_count_manager, PostRequestIndexing $post_request_indexing) {
+  public function __construct(Connection $connection, FlagCountManager $flag_count_manager, PostRequestIndexing $post_request_indexing, NodeStatisticsDatabaseStorage $node_statistics_db_storage) {
     $this->connection = $connection;
     $this->flagCountManager = $flag_count_manager;
     $this->postRequestIndexing = $post_request_indexing;
+    $this->nodeStatisticsDatabaseStorage = $node_statistics_db_storage;
   }
 
   /**
@@ -104,6 +112,7 @@ class SolrDocumentProcessor {
         $title = $fields['ss_content_title'];
         $type = $fields['ss_content_type'];
         $date = $fields['ds_content_created'];
+        $changed = $fields['ds_changed'];
         $status = $fields['bs_content_status'];
         $fullname = array_key_exists('ss_content_first_name', $fields) && array_key_exists('ss_content_last_name', $fields) ?
           $fields['ss_content_first_name'] . ' ' . $fields['ss_content_last_name'] :
@@ -199,6 +208,7 @@ class SolrDocumentProcessor {
     $document->addField('ss_global_created_date', $date);
     $document->addField('bs_global_status', $status);
     $document->addField('ss_drupal_timestamp', strtotime($date));
+    $document->addField('ss_drupal_changed_timestamp', strtotime($changed));
     $document->addField('ss_global_fullname', $fullname);
     $document->addField('ss_global_user_url', $user_url);
     $this->addOrUpdateDocumentField($document, 'sm_content_field_vocab_topics_string', $fields, $topics);
@@ -211,6 +221,22 @@ class SolrDocumentProcessor {
     if (!array_key_exists('ss_content_language_string', $fields)) {
       $document->addField('ss_content_language_string', $language);
     }
+
+    if (array_key_exists('tm_X3b_en_rendered_item', $fields)) {
+      $text = $fields['tm_X3b_en_rendered_item'];
+      if (strlen($text) > 300) {
+        $text = Unicode::truncate($text, 300, FALSE, TRUE);
+      }
+      $document->setField('tm_X3b_en_rendered_item', $text);
+    }
+
+    $nid = $fields['its_content_nid'];
+    $views = $this->nodeStatisticsDatabaseStorage->fetchView($nid);
+
+    $document->addField(
+      'its_statistics_view',
+      $views ? $views->getTotalCount() : 0
+    );
   }
 
   /**
