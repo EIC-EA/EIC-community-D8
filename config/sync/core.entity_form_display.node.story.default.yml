@@ -103,6 +103,11 @@ content:
     third_party_settings: {  }
     type: text_textarea
     region: content
+  field_post_activity:
+    weight: 28
+    settings: {  }
+    third_party_settings: {  }
+    region: content
   field_related_stories:
     weight: 10
     settings:
@@ -247,4 +252,5 @@ content:
     settings: {  }
     third_party_settings: {  }
 hidden:
+  member_content_edit_access: true
   promote: true

@@ -40,6 +40,8 @@ function eic_community_preprocess_node__discussion(array &$variables) {
  * Preprocesses full display.
  */
 function _preprocess_discussion_full(&$variables, $discussion_type, $node) {
+  /** @var \Drupal\node\NodeInterface $node */
+  $node = $variables['node'];
   $variables['type'] = $discussion_type;
   if (!empty($variables['elements']['contributor_ids'])) {
     $users = \Drupal::entityTypeManager()->getStorage('user')->loadMultiple($variables['elements']['contributor_ids']);
@@ -55,8 +57,14 @@ function _preprocess_discussion_full(&$variables, $discussion_type, $node) {
   $variables['author'] = eic_community_get_teaser_user_display($node->getOwner());
   $variables['timestamp']['label'] = eic_community_get_teaser_time_display($node->get('changed')->value);
 
-  $flags = array_filter($variables['elements'], function ($key) {
-    return strpos($key, 'flag') !== FALSE;
+  $flags = array_filter($variables['elements'], function ($key) use ($node) {
+
+    // If element is not a flag we skip it.
+    if (strpos($key, 'flag') === FALSE) {
+      return FALSE;
+    }
+
+    return _eic_community_get_flag_access(str_replace('flag_', '', $key), $node);
   }, ARRAY_FILTER_USE_KEY);
 
   $flags = array_map(function ($item) {

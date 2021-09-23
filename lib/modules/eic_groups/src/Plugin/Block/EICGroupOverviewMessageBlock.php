@@ -46,15 +46,15 @@ class EICGroupOverviewMessageBlock extends BlockBase implements ContainerFactory
    * EICGroupOverviewMessageBlock constructor.
    *
    * @param array $configuration
-   * @param $plugin_id
-   * @param $plugin_definition
+   * @param string $plugin_id
+   * @param mixed $plugin_definition
    * @param \Drupal\content_moderation\ModerationInformationInterface $moderation_information
    * @param \Drupal\Core\Session\AccountProxyInterface $account
    * @param \Drupal\eic_groups\EICGroupsHelper $group_helper
    */
   public function __construct(
     array $configuration,
-    $plugin_id,
+    string $plugin_id,
     $plugin_definition,
     ModerationInformationInterface $moderation_information,
     AccountProxyInterface $account,

@@ -5,6 +5,7 @@
  * Prepares variables for node document templates.
  */
 
+use Drupal\Core\Url;
 use Drupal\file\Entity\File;
 
 /**
@@ -15,14 +16,48 @@ function eic_community_preprocess_node__document(array &$variables) {
   $node = $variables['node'];
 
   if ($variables['teaser']) {
-    $file = File::load($node->get('field_document_media')->getString());
+
+    // If document has no medias, we do nothing.
+    if ($node->get('field_document_media')->isEmpty()) {
+      return;
+    }
+
+    $document_media_items = $node->get('field_document_media')->referencedEntities();
+    $document_media = reset($document_media_items);
+
+    $file = $document_media->get('field_media_file')->entity;
 
     if (!$file) {
       return;
     }
 
+    /** @var \Drupal\media\Entity\Media $document_media */
+    $document_media = $node->get('field_document_media')->entity;
+    $language = $node->language()->getName();
+
+    // Gets the document language based on the field_language of the Media
+    // type.
+    if ($document_media->hasField('field_language') && !$document_media->get('field_language')->isEmpty()) {
+      $lang_term = $document_media->get('field_language')->entity;
+    }
+    elseif (!$node->get('field_language')->isEmpty()) {
+      // If the media document doesn't have a language we use the one from the
+      // node.
+      $lang_term = $node->get('field_language')->entity;
+    }
+
+    if (isset($lang_term)) {
+      if ($lang_term->hasTranslation($node->language()->getId())) {
+        $translated_lang_term = \Drupal::service('entity.repository')->getTranslationFromContext($lang_term, $language);
+        $language = $translated_lang_term->getName();
+      }
+      else {
+        $language = $lang_term->getName();
+      }
+    }
+
     $document = [
-      'language' => $node->language()->getName(),
+      'language' => $language,
       'timestamp' => eic_community_get_teaser_time_display($node->get('changed')->getString()),
       'filesize' => format_size($file->get('filesize')->getString()),
       'highlight' => FALSE,
@@ -42,6 +77,11 @@ function eic_community_preprocess_node__document(array &$variables) {
 
     foreach ($files as $file) {
       $download = File::load($file->field_media_file->getValue()[0]['target_id']);
+      $download_url = Url::fromRoute('media_entity_download.download',
+        [
+          'media' => $file->id(),
+        ]
+      );
       $files_list[] = [
         'name' => $file->getName(),
         'stats' => [
@@ -53,7 +93,7 @@ function eic_community_preprocess_node__document(array &$variables) {
             ],
             'label' => t('downloads'),
             // @todo Add statistics value
-            'value' => 0,
+            'value' => \Drupal::service('eic_media_statistics.entity_file_download_count')->getFileDownloads($file),
           ],
           [
             'hide_label' => TRUE,
@@ -61,7 +101,7 @@ function eic_community_preprocess_node__document(array &$variables) {
           ],
         ],
         'mime_type' => substr(strrchr($download->get('filemime')->getString(), '/'), 1),
-        'path' => $download->createFileUrl(FALSE),
+        'path' => $download_url->toString(),
       ];
     }
 
@@ -73,8 +113,13 @@ function eic_community_preprocess_node__document(array &$variables) {
       'download' => t('Download'),
     ];
     // Sidebar elements.
-    $flags = array_filter($variables['elements'], function ($key) {
-      return strpos($key, 'flag_') !== FALSE;
+    $flags = array_filter($variables['elements'], function ($key) use ($node) {
+      // If element is not a flag we skip it.
+      if (strpos($key, 'flag') === FALSE) {
+        return FALSE;
+      }
+
+      return _eic_community_get_flag_access(str_replace('flag_', '', $key), $node);
     }, ARRAY_FILTER_USE_KEY);
 
     foreach ($flags as $flag) {

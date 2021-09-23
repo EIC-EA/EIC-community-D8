@@ -58,6 +58,7 @@ class RestrictedEmailDomains extends CustomRestrictedVisibilityBase {
   public function validateEmailDomains(array &$element, FormStateInterface $form_state) {
     $conf_key = $this->getPluginId() . '_conf';
     if ($value = $form_state->getValue($conf_key)) {
+      $value = str_replace(' ', '', $value);
       $domain_names = explode(',', $value);
       foreach ($domain_names as $domain_name) {
         $valid = \Drupal::service('email.validator')->isvalid("placeholder@$domain_name");
@@ -75,6 +76,7 @@ class RestrictedEmailDomains extends CustomRestrictedVisibilityBase {
     $conf_key = $this->getPluginId() . '_conf';
     $options = $this->getOptionsForPlugin($group_visibility_record);
     $configurated_emails = array_key_exists($conf_key, $options) ? $options[$conf_key] : '';
+    $configurated_emails = str_replace(' ', '', $configurated_emails);
 
     $email_domains = explode(',', $configurated_emails);
     $account_email_domain = explode('@', $account->getEmail())[1];

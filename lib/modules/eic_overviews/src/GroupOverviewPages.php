@@ -18,6 +18,11 @@ class GroupOverviewPages {
   const DISCUSSIONS = 'eic_overviews.groups.overview_page.discussions';
 
   /**
+   * Route to the group files overview.
+   */
+  const FILES = 'eic_overviews.groups.overview_page.files';
+
+  /**
    * Route to the group members overview.
    */
   const MEMBERS = 'eic_overviews.groups.overview_page.members';
@@ -43,6 +48,10 @@ class GroupOverviewPages {
     switch ($page) {
       case 'discussions':
         $page_id = self::DISCUSSIONS;
+        break;
+
+      case 'files':
+        $page_id = self::FILES;
         break;
 
       case 'members':

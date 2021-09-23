@@ -16,6 +16,11 @@ targetEntityType: node
 bundle: wiki_page
 mode: default
 content:
+  content_moderation_control:
+    weight: -20
+    settings: {  }
+    third_party_settings: {  }
+    region: content
   field_body:
     weight: 2
     label: hidden
@@ -46,6 +51,16 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
+  member_content_edit_access:
+    weight: 1
+    region: content
+    label: above
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    type: boolean
   private:
     weight: 1
     region: content
@@ -59,6 +74,8 @@ content:
 hidden:
   extra_field_eic_theme_helper_short_title_with_fallback: true
   field_comments: true
+  field_vocab_geo: true
+  field_vocab_topics: true
   langcode: true
   published_at: true
   search_api_excerpt: true

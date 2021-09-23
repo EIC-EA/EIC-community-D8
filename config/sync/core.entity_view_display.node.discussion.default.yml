@@ -9,6 +9,7 @@ dependencies:
     - field.field.node.discussion.field_discussion_type
     - field.field.node.discussion.field_related_contributors
     - field.field.node.discussion.field_related_documents
+    - field.field.node.discussion.field_related_downloads
     - field.field.node.discussion.field_vocab_geo
     - field.field.node.discussion.field_vocab_topics
     - node.type.discussion
@@ -63,6 +64,14 @@ content:
     third_party_settings: {  }
     type: entity_reference_label
     region: content
+  field_related_downloads:
+    weight: 109
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
   field_vocab_geo:
     weight: 104
     label: hidden
@@ -109,6 +118,16 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
+  member_content_edit_access:
+    weight: 1
+    region: content
+    label: above
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    type: boolean
   private:
     weight: 1
     region: content

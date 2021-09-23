@@ -149,29 +149,29 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
   ) {
     $operation_links = [];
 
-    if (!is_null($cacheable_metadata)) {
+    foreach ($group->getGroupType()->getInstalledContentPlugins() as $plugin) {
+      /** @var \Drupal\group\Plugin\GroupContentEnablerInterface $plugin */
+      if (!empty($limit_entities) && !in_array($plugin->getEntityTypeId(), $limit_entities)) {
+        continue;
+      }
+
+      $plugin_operation_links = $plugin->getGroupOperations($group);
+
+      // Remove operation plugins if the user doesn't have access.
+      foreach ($plugin_operation_links as $key => $plugin_operation_link) {
+        if ($plugin_operation_link['url']->access()) {
+          continue;
+        }
+
+        unset($plugin_operation_link[$key]);
+      }
+
+      $operation_links += $plugin_operation_links;
+
       // Retrieve the operations from the installed content plugins and merges
       // cacheable metadata.
-      foreach ($group->getGroupType()->getInstalledContentPlugins() as $plugin) {
-        /** @var \Drupal\group\Plugin\GroupContentEnablerInterface $plugin */
-        if (!empty($limit_entities) && !in_array($plugin->getEntityTypeId(), $limit_entities)) {
-          continue;
-        }
-
-        $operation_links += $plugin->getGroupOperations($group);
+      if (!is_null($cacheable_metadata)) {
         $cacheable_metadata = $cacheable_metadata->merge($plugin->getGroupOperationsCacheableMetadata());
-      }
-    }
-    else {
-      // Retrieve the operations from the installed content plugins without
-      // merging cacheable metadata.
-      foreach ($group->getGroupType()->getInstalledContentPlugins() as $plugin) {
-        /** @var \Drupal\group\Plugin\GroupContentEnablerInterface $plugin */
-        if (!empty($limit_entities) && !in_array($plugin->getEntityTypeId(), $limit_entities)) {
-          continue;
-        }
-
-        $operation_links += $plugin->getGroupOperations($group);
       }
     }
 
@@ -364,6 +364,26 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
     $query->fields('gp', ['id']);
 
     return !empty($query->execute()->fetchAll(\PDO::FETCH_OBJ));
+  }
+
+  /**
+   * Check if a group can be flagged depending on the moderation state.
+   *
+   * @param \Drupal\group\Entity\GroupInterface $group
+   *   The group entity.
+   *
+   * @return bool
+   *   TRUE if the group is not in Pending or Draft state.
+   */
+  public static function groupIsFlaggable(GroupInterface $group) {
+    $moderation_state = $group->get('moderation_state')->value;
+    return !in_array(
+      $moderation_state,
+      [
+        GroupsModerationHelper::GROUP_PENDING_STATE,
+        GroupsModerationHelper::GROUP_DRAFT_STATE,
+      ]
+    );
   }
 
 }

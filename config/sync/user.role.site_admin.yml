@@ -8,6 +8,7 @@ weight: -5
 is_admin: null
 permissions:
   - 'access administration pages'
+  - 'access comments'
   - 'access content overview'
   - 'access eic_admin dashboard'
   - 'access group overview'
@@ -19,6 +20,7 @@ permissions:
   - 'create group group'
   - 'create new books'
   - 'create remote_video media'
+  - 'create url aliases'
   - 'create video media'
   - 'edit own eic_document media'
   - 'edit own image media'
@@ -27,6 +29,7 @@ permissions:
   - 'make delete request'
   - 'manage archival deletion requests'
   - 'mark private content'
+  - 'post comments'
   - 'publish archived content'
   - 'unflag recommend_group'
   - 'use admin toolbar search'

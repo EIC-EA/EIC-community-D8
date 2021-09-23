@@ -9,3 +9,4 @@ dependencies:
   - flag:flag
   - drupal:views
   - drupal:node
+  - eic_search:eic_search

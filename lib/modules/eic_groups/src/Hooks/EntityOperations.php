@@ -2,16 +2,22 @@
 
 namespace Drupal\eic_groups\Hooks;
 
+use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
 use Drupal\eic_content_wiki_page\WikiPageBookManager;
+use Drupal\eic_groups\Constants\NodeProperty;
 use Drupal\eic_groups\EICGroupsHelperInterface;
 use Drupal\eic_user\UserHelper;
 use Drupal\group\Entity\GroupContent;
@@ -132,9 +138,18 @@ class EntityOperations implements ContainerInjectionInterface {
    * Implements hook_group_update().
    */
   public function groupUpdate(GroupInterface $entity) {
-    // Publish group wiki when group is published.
+    // The group status has changed to publish.
     if (!$entity->original->isPublished() && $entity->isPublished()) {
+      // Publish group wiki when group is published.
       $this->publishGroupWiki($entity);
+      // Invalidates group contents cache when the group has been published.
+      $this->invalidateGroupContentCache($entity);
+    }
+
+    // The group status has changed to unpublish.
+    if ($entity->original->isPublished() && !$entity->isPublished()) {
+      // Invalidates group contents cache when the group has been unpublished.
+      $this->invalidateGroupContentCache($entity);
     }
   }
 
@@ -197,28 +212,35 @@ class EntityOperations implements ContainerInjectionInterface {
             ];
             // Add wiki page create form url to the build array.
             if ($add_wiki_page_urls = $this->getWikiPageAddFormUrls($entity, $group)) {
-              $build['link_add_child_wiki_page'] = $add_wiki_page_urls['add_child_wiki_page']->toString();
-              $build['link_add_child_wiki_page_renderable'] = Link::fromTextAndUrl($this->t('Add a new wiki page'), $add_wiki_page_urls['add_child_wiki_page'])->toRenderable();
+              if ($add_wiki_page_urls['add_child_wiki_page']->access()) {
+                $build['link_add_child_wiki_page_renderable'] = Link::fromTextAndUrl($this->t('Add a new wiki page'), $add_wiki_page_urls['add_child_wiki_page'])->toRenderable();
+              }
             }
             // Unsets book navigation since we already have that show in the
             // eic_groups_wiki_book_navigation block plugin.
             unset($build['book_navigation']);
+            // Adds user group permissions cache.
+            $build['#cache']['contexts'][] = 'user.group_permissions';
           }
         }
         elseif ($entity->bundle() === 'wiki_page') {
           // Add wiki page create form url to the build array.
           if ($add_wiki_page_urls = $this->getWikiPageAddFormUrls($entity)) {
-            $build['link_add_current_level_wiki_page'] = $add_wiki_page_urls['add_current_level_wiki_page']->toString();
-            $build['link_add_current_level_wiki_page_renderable'] = Link::fromTextAndUrl($this->t('Add a new page on the current level'), $add_wiki_page_urls['add_current_level_wiki_page'])->toRenderable();
-            $build['link_add_current_level_wiki_page_renderable']['#suffix'] = '<br>';
+            if ($add_wiki_page_urls['add_current_level_wiki_page']->access()) {
+              $build['link_add_current_level_wiki_page_renderable'] = Link::fromTextAndUrl($this->t('Add a new page on the current level'), $add_wiki_page_urls['add_current_level_wiki_page'])->toRenderable();
+              $build['link_add_current_level_wiki_page_renderable']['#suffix'] = '<br>';
+            }
 
-            // If the wiki page depth doesn't reach the maximum limit, then we
-            // can show the button to add a new child wiki page.
-            if (!$entity->book['p' . (WikiPageBookManager::BOOK_MAX_DEPTH + 1)]) {
-              $build['link_add_child_wiki_page'] = $add_wiki_page_urls['add_child_wiki_page']->toString();
-              $build['link_add_child_wiki_page_renderable'] = Link::fromTextAndUrl($this->t('Add a new wiki page below this page'), $add_wiki_page_urls['add_child_wiki_page'])->toRenderable();
+            if ($add_wiki_page_urls['add_child_wiki_page']->access()) {
+              // If the wiki page depth doesn't reach the maximum limit, then we
+              // can show the button to add a new child wiki page.
+              if (!$entity->book['p' . (WikiPageBookManager::BOOK_MAX_DEPTH + 1)]) {
+                $build['link_add_child_wiki_page_renderable'] = Link::fromTextAndUrl($this->t('Add a new wiki page below this page'), $add_wiki_page_urls['add_child_wiki_page'])->toRenderable();
+              }
             }
           }
+          // Adds user group permissions cache.
+          $build['#cache']['contexts'][] = 'user.group_permissions';
         }
         break;
 
@@ -331,7 +353,7 @@ class EntityOperations implements ContainerInjectionInterface {
             'uri' => 'internal:/group/' . $group->id() . '/about',
           ],
           'menu_name' => $menu_name,
-          'weight' => 1,
+          'weight' => 7,
         ]);
 
         try {
@@ -341,6 +363,120 @@ class EntityOperations implements ContainerInjectionInterface {
         catch (EntityStorageException $e) {
           return FALSE;
         }
+      }
+    }
+  }
+
+  /**
+   * Implements hook_entity_field_access().
+   */
+  public function entityFieldAccess($operation, FieldDefinitionInterface $field_definition, AccountInterface $account, FieldItemListInterface $items = NULL) {
+    $access = AccessResult::neutral();
+
+    if (!$items) {
+      return $access;
+    }
+
+    $entity = $items->getEntity();
+
+    if ($entity instanceof GroupInterface && $entity->bundle() === 'group') {
+      $group_restricted_fields = [
+        'field_related_groups',
+        'field_related_news_stories',
+      ];
+
+      // If field is non of the restricted ones, we do nothing.
+      if (!in_array($field_definition->getName(), $group_restricted_fields)) {
+        return $access;
+      }
+
+      switch ($operation) {
+        case 'edit':
+          // Deny access if it's a new group and the user doesn't have
+          // "site_admin" or "content_administrator" roles.
+          if ($entity->isNew()) {
+            $access = AccessResult::forbiddenIf(!UserHelper::isPowerUser($account))
+              ->addCacheableDependency($account);
+            break;
+          }
+          break;
+
+      }
+    }
+    elseif ($entity instanceof NodeInterface) {
+      $access = AccessResult::neutral();
+
+      if ($operation !== 'edit') {
+        return $access;
+      }
+
+      switch ($field_definition->getName()) {
+        case NodeProperty::MEMBER_CONTENT_EDIT_ACCESS:
+
+          if ($entity->isNew()) {
+            $group = $this->eicGroupsHelper->getGroupFromRoute();
+
+            if (!$group) {
+              return AccessResult::forbidden();
+            }
+
+            return $access;
+          }
+
+          /** @var \Drupal\group\Entity\Storage\GroupContentStorageInterface $storage */
+          $storage = $this->entityTypeManager->getStorage('group_content');
+          $group_contents = $storage->loadByEntity($entity);
+
+          // Wiki page is not part of a group, so we always hide the field.
+          if (empty($group_contents)) {
+            return AccessResult::forbidden();
+          }
+
+          // We return access denied if the user is not the owner of the wiki
+          // page neither administrator.
+          if ($entity->getOwnerId() !== $account->id()) {
+            if (!UserHelper::isPowerUser($account)) {
+              $access = AccessResult::forbidden();
+            }
+          }
+          break;
+
+      }
+    }
+
+    return $access;
+  }
+
+  /**
+   * Invalidates group contents cache of a given group.
+   *
+   * @param \Drupal\group\Entity\GroupInterface $entity
+   *   The group entity.
+   */
+  public function invalidateGroupContentCache(GroupInterface $entity) {
+    $installedContentPluginIds = $entity->getGroupType()->getInstalledContentPlugins()->getInstanceIds();
+
+    $node_plugins = array_filter($installedContentPluginIds, function ($key) {
+      // We skip group content plugins that are not nodes.
+      if (strpos($key, 'group_node:') === FALSE) {
+        return FALSE;
+      }
+
+      // Group book pages cannot be flagged.
+      if (strpos($key, 'group_node:book') !== FALSE) {
+        return FALSE;
+      }
+
+      return TRUE;
+    }, ARRAY_FILTER_USE_KEY);
+
+    // Loads all group contents of the group and invalidate cache.
+    foreach ($node_plugins as $plugin_id) {
+      $group_contents = $entity->getContent($plugin_id);
+
+      foreach ($group_contents as $group_content) {
+        $node = $group_content->getEntity();
+        Cache::invalidateTags($node->getCacheTagsToInvalidate());
       }
     }
   }

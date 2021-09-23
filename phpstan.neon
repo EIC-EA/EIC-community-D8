@@ -1,0 +1,21 @@
+includes:
+	- vendor/mglaman/phpstan-drupal/extension.neon
+
+parameters:
+    level: 5
+    checkGenericClassInNonGenericObjectType: false
+    checkMissingIterableValueType: false
+    paths:
+      - lib/modules
+    fileExtensions:
+      - php
+      - module
+      - inc
+      - theme
+    excludePaths:
+      - *Test.php
+      - *TestBase.php
+      - */node_modules/*
+      - */eic_theme_helper/*
+    ignoreErrors:
+      - '#Unsafe usage of new static\(\).#'

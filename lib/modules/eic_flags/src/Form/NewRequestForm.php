@@ -13,13 +13,15 @@ use Drupal\flag\Entity\Flagging;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Class NewRequestForm
+ * Class NewRequestForm.
  *
  * @package Drupal\eic_flags\Form
  */
 class NewRequestForm extends ContentEntityDeleteForm {
 
   /**
+   * The handler for the request type.
+   *
    * @var \Drupal\eic_flags\Service\HandlerInterface
    */
   private $requestHandler;
@@ -28,9 +30,13 @@ class NewRequestForm extends ContentEntityDeleteForm {
    * NewRequestForm constructor.
    *
    * @param \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository
+   *   The entity repository.
    * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface $entity_type_bundle_info
+   *   The entity type bundle service.
    * @param \Drupal\Component\Datetime\TimeInterface $time
+   *   The time service.
    * @param \Drupal\eic_flags\Service\RequestHandlerCollector $collector
+   *   The handler collector service.
    */
   public function __construct(
     EntityRepositoryInterface $entity_repository,

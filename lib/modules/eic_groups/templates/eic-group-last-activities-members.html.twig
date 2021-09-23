@@ -37,7 +37,7 @@
                     <a href="{{ member.url }}"
                        class="ecl-link ecl-link--standalone ecl-author__link">{{ member.full_name }}</a>                  </span>
                                   <span
-                                    class="ecl-author__meta">Joined {{ member.joined_date|date('U')|format_date('eu_format') }}</span>
+                                    class="ecl-author__meta">{{ 'Joined @date' | t({'@date': member.joined_date}, {'context': 'eic_groups'}) }}</span>
                                   <div class="ecl-author__actions">
                                     <div class="ecl-author__action">
                                       <a href="mailto:{{ member.email }}" class="ecl-author__action-anchor">

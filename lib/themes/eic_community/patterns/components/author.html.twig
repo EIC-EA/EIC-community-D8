@@ -54,23 +54,45 @@
     {% if image or name %}
       <div class="ecl-author__aside">
         {% if image is not empty %}
-          <a href="{{ path }}" class="ecl-author__media-wrapper">
-            {% include '@ecl-twig/ec-component-media-container/ecl-media-container.html.twig' with {
-              extra_classes: 'ecl-author__media',
-              description: false,
-              sources: [],
-              image: image.src,
-              alt: image.alt,
-            } only %}
-          </a>
+          {% if path is empty %}
+            <div class="ecl-author__media-wrapper">
+              {% include '@ecl-twig/ec-component-media-container/ecl-media-container.html.twig' with {
+                extra_classes: 'ecl-author__media',
+                description: false,
+                sources: [],
+                image: image.src,
+                alt: image.alt,
+              } only %}
+            </div>
+          {% else %}
+            <a href="{{ path }}" class="ecl-author__media-wrapper">
+              {% include '@ecl-twig/ec-component-media-container/ecl-media-container.html.twig' with {
+                extra_classes: 'ecl-author__media',
+                description: false,
+                sources: [],
+                image: image.src,
+                alt: image.alt,
+              } only %}
+            </a>
+          {% endif %}
         {% elseif name is not empty %}
-          <a href="{{ path }}" class="ecl-author__initials-wrapper">
-            <span class="ecl-author__initials">
-              {% for author in name|split(' ')|slice(0,2) %}
-                {{- author|first -}}
-              {% endfor %}
-            </span>
-          </a>
+          {% if path is empty %}
+            <div class="ecl-author__initials-wrapper">
+              <span class="ecl-author__initials">
+                {% for author in name|split(' ')|slice(0,2) %}
+                  {{- author|first -}}
+                {% endfor %}
+              </span>
+            </div>
+          {% else %}
+            <a href="{{ path }}" class="ecl-author__initials-wrapper">
+              <span class="ecl-author__initials">
+                {% for author in name|split(' ')|slice(0,2) %}
+                  {{- author|first -}}
+                {% endfor %}
+              </span>
+            </a>
+          {% endif %}
         {% endif %}
         {% if updates %}
           {% include "@theme/patterns/components/update-indicator.html.twig" with updates|default({})|merge({

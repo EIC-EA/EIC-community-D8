@@ -8,6 +8,7 @@ dependencies:
     - field.field.node.discussion.field_discussion_type
     - field.field.node.discussion.field_related_contributors
     - field.field.node.discussion.field_related_documents
+    - field.field.node.discussion.field_related_downloads
     - field.field.node.discussion.field_vocab_geo
     - field.field.node.discussion.field_vocab_topics
     - node.type.discussion
@@ -15,6 +16,7 @@ dependencies:
     - comment
     - content_moderation
     - eic_content
+    - media_library
     - paragraphs
     - path
     - publication_date
@@ -53,7 +55,7 @@ content:
     type: options_select
     region: content
   field_post_activity:
-    weight: 22
+    weight: 23
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -78,6 +80,13 @@ content:
       placeholder: ''
     third_party_settings: {  }
     type: entity_reference_autocomplete
+    region: content
+  field_related_downloads:
+    weight: 22
+    settings:
+      media_types: {  }
+    third_party_settings: {  }
+    type: media_library_widget
     region: content
   field_vocab_geo:
     weight: 7
@@ -195,4 +204,10 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
-hidden: {  }
+  url_redirects:
+    weight: 24
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  member_content_edit_access: true

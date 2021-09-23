@@ -3,6 +3,8 @@
 namespace Drupal\eic_search\Search\Sources;
 
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\eic_flags\FlagType;
+use Drupal\eic_search\Service\SolrDocumentProcessor;
 
 /**
  * Class LibrarySourceType
@@ -44,6 +46,8 @@ class LibrarySourceType extends SourceType {
       'ss_global_content_type' => $this->t('Content type', [], ['context' => 'eic_search']),
       'sm_content_field_vocab_topics_string' => $this->t('Topics', [], ['context' => 'eic_search']),
       'sm_content_field_vocab_geo_string' => $this->t('Region & country', [], ['context' => 'eic_search']),
+      'ss_content_language_string' => $this->t('Language', [], ['context' => 'eic_search']),
+      'ss_content_document_type_string' => $this->t('Document type', [], ['context' => 'eic_search']),
     ];
   }
 
@@ -66,6 +70,10 @@ class LibrarySourceType extends SourceType {
         'label' => $this->t('Title', [], ['context' => 'eic_search']),
         'ASC' => $this->t('Title A-Z', [], ['context' => 'eic_search']),
         'DESC' => $this->t('Title Z-A', [], ['context' => 'eic_search']),
+      ],
+      'its_' . SolrDocumentProcessor::LAST_FLAGGED_KEY . '_' . FlagType::LIKE_CONTENT => [
+        'label' => $this->t('Last liked', [], ['context' => 'eic_search']),
+        'DESC' => $this->t('Last liked', [], ['context' => 'eic_search']),
       ],
     ];
   }
@@ -103,8 +111,8 @@ class LibrarySourceType extends SourceType {
   /**
    * @inheritDoc
    */
-  public function getPrefilteredGroupFieldId(): string {
-    return 'ss_global_group_parent_id';
+  public function getPrefilteredGroupFieldId(): array {
+    return ['ss_global_group_parent_id'];
   }
 
   /**

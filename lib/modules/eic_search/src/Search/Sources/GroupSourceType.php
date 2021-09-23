@@ -3,6 +3,8 @@
 namespace Drupal\eic_search\Search\Sources;
 
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\eic_flags\FlagType;
+use Drupal\eic_search\Service\SolrDocumentProcessor;
 
 /**
  * Class GroupSourceType
@@ -65,6 +67,10 @@ class GroupSourceType extends SourceType {
         'ASC' => $this->t('Fullname A-Z', [], ['context' => 'eic_search']),
         'DESC' => $this->t('Fullname Z-A', [], ['context' => 'eic_search']),
       ],
+      'its_' . SolrDocumentProcessor::LAST_FLAGGED_KEY . '_' . FlagType::LIKE_CONTENT => [
+        'label' => $this->t('Last liked', [], ['context' => 'eic_search']),
+        'DESC' => $this->t('Last liked', [], ['context' => 'eic_search']),
+      ],
     ];
   }
 
@@ -94,8 +100,8 @@ class GroupSourceType extends SourceType {
   /**
    * @inheritDoc
    */
-  public function getPrefilteredGroupFieldId(): string {
-    return 'its_group_id_integer';
+  public function getPrefilteredGroupFieldId(): array {
+    return ['its_group_id_integer'];
   }
 
 }

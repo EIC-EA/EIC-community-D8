@@ -4,3 +4,15 @@ services:
     arguments: ['@database', '@state', '@request_stack']
     tags:
       - { name: backend_overridable }
+  eic_media_statistics.entity_file_download_count:
+    class: Drupal\eic_media_statistics\EntityFileDownloadCount
+    arguments: ['@cache.default', '@event_dispatcher', '@entity_type.manager', '@entity_field.manager', '@eic_media_statistics.storage.file']
+  eic_media_statistics.access_check.media_file_download:
+    class: Drupal\eic_media_statistics\Access\MediaFileDownloadAccessCheck
+    arguments: ['@entity_type.manager', '@entity_usage.usage']
+    tags:
+      - { name: access_check, applies_to: _media_file_download_access }
+  eic_media_statistics.route_subscriber:
+    class: Drupal\eic_media_statistics\EventSubscriber\MediaDownloadRouteSubscriber
+    tags:
+      - { name: event_subscriber }

@@ -2,10 +2,13 @@
 
 namespace Drupal\eic_groups\Plugin\Block;
 
+use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Link;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Render\Markup;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\Url;
@@ -228,10 +231,7 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
     $create_operations = [];
     foreach ($node_operation_links as $key => $link) {
       if (strpos($key, 'create') !== FALSE) {
-        // We discard the operation link if user doesn't have access to it.
-        if ($link['url']->access($this->currentUser)) {
-          $create_operations[$key] = $link;
-        }
+        $create_operations[$key] = $link;
         unset($node_operation_links[$key]);
       }
     }
@@ -246,10 +246,6 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
     // We extract only the group edit/delete/publish operation links into a new
     // array.
     $visible_group_operation_links = array_filter($group_operation_links, function ($item, $key) {
-      // We discard the operation link if user doesn't have access to it.
-      if (!$item['url']->access($this->currentUser)) {
-        return FALSE;
-      }
       return in_array($key, ['edit', 'delete', 'publish']);
     }, ARRAY_FILTER_USE_BOTH);
 
@@ -270,7 +266,7 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
         'id' => $group->id(),
         'bundle' => $group->bundle(),
         'title' => $group->label(),
-        'description' => $group->field_body->view('full'),
+        'description' => $this->getTruncatedGroupDescription($group),
         'operation_links' => array_merge($operation_links, $node_operation_links, $visible_group_operation_links),
         'membership_links' => array_merge($membership_links, $user_operation_links),
         'stats' => [
@@ -300,7 +296,7 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
    *   - url: An instance of \Drupal\Core\Url for the login URL.
    */
   private function getAnonymousLoginLink(GroupInterface $group) {
-    $link = FALSE;
+    $link = [];
     if ($this->currentUser->isAnonymous()) {
       if ($joining_methods = $this->oecGroupFlexHelper->getGroupJoiningMethod($group)) {
         $login_link_options = [
@@ -336,15 +332,12 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
   private function getGroupFlagLinks(GroupInterface $group) {
     $group_flags = [];
 
-    // If there are no group flags, we do nothing.
-    if (empty($group->flags)) {
-      return $group_flags;
-    }
+    $group_flag_ids = self::getGroupHeaderFlagsIds();
 
-    // Loops through each group flag and add only the ones the user has
+    // Loops through each group flag ID and add only the ones the user has
     // access to.
-    foreach (array_keys($group->flags) as $flag_name) {
-      $flag = $this->flagService->getFlagById(str_replace('flag_', '', $flag_name));
+    foreach ($group_flag_ids as $flag_id) {
+      $flag = $this->flagService->getFlagById(str_replace('flag_', '', $flag_id));
 
       if (!$flag) {
         continue;
@@ -367,7 +360,17 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
       // If user has access to view the flag we add it to the results so that
       // it can be shown in the group header.
       if ($user_flag->access('view')) {
-        $group_flags[$flag_name] = $group->flags[$flag_name];
+        $group_flags[$flag_id] = [
+          '#lazy_builder' => [
+            'flag.link_builder:build',
+            [
+              $group->getEntityTypeId(),
+              $group->id(),
+              $flag_id,
+            ],
+          ],
+          '#create_placeholder' => TRUE,
+        ];
       }
     }
 
@@ -436,6 +439,68 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
     }
 
     unset($user_operation_links[$key]);
+  }
+
+  /**
+   * Gets list of flags IDs used in the group header.
+   *
+   * @return array
+   *   Array of Flag machine names.
+   */
+  public static function getGroupHeaderFlagsIds() {
+    return [
+      'follow_group',
+      'recommend_group',
+    ];
+  }
+
+  /**
+   * Get truncated group description with a read more link.
+   *
+   * @param \Drupal\group\Entity\GroupInterface $group
+   *   The group entity.
+   *
+   * @return \Drupal\Component\Render\MarkupInterface|string
+   *   The group description HTML Markup.
+   */
+  private function getTruncatedGroupDescription(GroupInterface $group) {
+    $limit = 350;
+
+    if ($group->get('field_body')->isEmpty()) {
+      return '';
+    }
+
+    // Strip caption.
+    $output = preg_replace('/<figcaption[^>]*>.*?<\/figcaption>/i', ' ', $group->field_body->value);
+
+    // Strip tags.
+    $output = strip_tags($output);
+
+    // Strip out line breaks.
+    $output = preg_replace('/\n|\r|\t/m', ' ', $output);
+
+    // Strip out non-breaking spaces.
+    $output = str_replace('&nbsp;', ' ', $output);
+    $output = str_replace("\xc2\xa0", ' ', $output);
+
+    // Strip out extra spaces.
+    $output = trim(preg_replace('/\s\s+/', ' ', $output));
+
+    $has_read_more = FALSE;
+    if (strlen($output) > $limit) {
+      $has_read_more = TRUE;
+    }
+
+    // Truncates the output.
+    $output = Unicode::truncate($output, $limit, TRUE, TRUE);
+
+    // Adds link to the group about page.
+    if ($has_read_more) {
+      $link = Link::createFromRoute($this->t('Read more'), 'eic_groups.about_page', ['group' => $group->id()]);
+      $output .= ' ' . $link->toString();
+    }
+
+    return Markup::create("<p>$output</p>");
   }
 
 }

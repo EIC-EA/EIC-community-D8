@@ -4,6 +4,7 @@ namespace Drupal\eic_groups\Plugin\Block;
 
 use Drupal\Core\Block\Annotation\Block;
 use Drupal\Core\Block\BlockBase;
+use Drupal\Core\Datetime\DateFormatter;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Url;
@@ -12,6 +13,7 @@ use Drupal\eic_search\Search\Sources\ActivityStreamSourceType;
 use Drupal\file\Entity\File;
 use Drupal\group\Entity\GroupContent;
 use Drupal\group\Entity\GroupInterface;
+use Drupal\group\GroupMembership;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -46,16 +48,27 @@ class LastGroupActivitiesBlock extends BlockBase implements ContainerFactoryPlug
   private $activityStreamSourceType;
 
   /**
+   * @var \Drupal\Core\Datetime\DateFormatter $dateFormatter
+   */
+  private $dateFormatter;
+
+  /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+  public static function create(
+    ContainerInterface $container,
+    array $configuration,
+    $plugin_id,
+    $plugin_definition
+  ) {
     return new static(
       $configuration,
       $plugin_id,
       $plugin_definition,
       $container->get('eic_groups.helper'),
       $container->get('entity_type.manager'),
-      $container->get('eic_search.activity_stream_library')
+      $container->get('eic_search.activity_stream_library'),
+      $container->get('date.formatter')
     );
   }
 
@@ -82,12 +95,14 @@ class LastGroupActivitiesBlock extends BlockBase implements ContainerFactoryPlug
     $plugin_definition,
     EICGroupsHelper $groups_helper,
     EntityTypeManagerInterface $entity_type_manager,
-    ActivityStreamSourceType $activityStreamSourceType
+    ActivityStreamSourceType $activityStreamSourceType,
+    DateFormatter $dateFormatter
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->groupsHelper = $groups_helper;
     $this->entityTypeManager = $entity_type_manager;
     $this->activityStreamSourceType = $activityStreamSourceType;
+    $this->dateFormatter = $dateFormatter;
   }
 
   /**
@@ -110,18 +125,18 @@ class LastGroupActivitiesBlock extends BlockBase implements ContainerFactoryPlug
 
     $members = GroupContent::loadMultiple($members_id);
 
-    $members_data = array_map(function(GroupContent $groupContent) {
+    $members_data = array_map(function (GroupContent $groupContent) {
       $profiles = $this->entityTypeManager->getStorage('profile')->loadByProperties([
-        'uid' => $groupContent->get('uid')->getString(),
+        'uid' => $groupContent->getEntity()->id(),
         'type' => 'member',
       ]);
 
-      /** @var \Drupal\profile\Entity\ProfileInterface $profile */
-      $profile = reset($profiles);
-      if (!$profile) {
+      if (empty($profiles)) {
         return [];
       }
 
+      /** @var \Drupal\profile\Entity\ProfileInterface $profile */
+      $profile = reset($profiles);
       $user = $profile->getOwner();
 
       if (!$user) {
@@ -135,7 +150,7 @@ class LastGroupActivitiesBlock extends BlockBase implements ContainerFactoryPlug
       $file_url = $file ? file_url_transform_relative(file_create_url($file->get('uri')->value)) : NULL;
 
       return [
-        'joined_timestamp' => $groupContent->getCreatedTime(),
+        'joined_date' => $this->dateFormatter->format($groupContent->getCreatedTime(), 'eu_short_date'),
         'full_name' => $user->get('field_first_name')->value . ' ' . $user->get('field_last_name')->value,
         'email' => $user->getEmail(),
         'picture' => $file_url,
@@ -143,7 +158,20 @@ class LastGroupActivitiesBlock extends BlockBase implements ContainerFactoryPlug
       ];
     }, $members);
 
-    return [
+    $current_group_route = $this->groupsHelper->getGroupFromRoute();
+    $user_group_roles = [];
+
+    if ($current_group_route) {
+      $account = \Drupal::currentUser();
+      $membership = $current_group_route->getMember($account);
+      $user_group_roles = $membership instanceof GroupMembership ? $membership->getRoles() : [];
+    }
+
+    $build['#attached']['drupalSettings']['overview'] = [
+      'is_group_owner' => array_key_exists(EICGroupsHelper::GROUP_OWNER_ROLE, $user_group_roles),
+    ];
+
+    return $build += [
       '#theme' => 'eic_group_last_activities_members',
       '#cache' => ['contexts' => ['url.path', 'url.query_args']],
       '#members' => $members_data,
@@ -158,7 +186,7 @@ class LastGroupActivitiesBlock extends BlockBase implements ContainerFactoryPlug
         'delete_modal_confirm' => $this->t('Yes, delete activity', [], ['context' => 'eic_group']),
         'delete_modal_cancel' => $this->t('Cancel', [], ['context' => 'eic_group']),
         'delete_modal_close' => $this->t('Close', [], ['context' => 'eic_group']),
-        ],
+      ],
       '#datasource' => $this->activityStreamSourceType->getSourcesId(),
       '#source_class' => ActivityStreamSourceType::class,
       '#group_id' => $group->id(),
