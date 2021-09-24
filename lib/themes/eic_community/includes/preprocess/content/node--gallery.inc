@@ -58,6 +58,7 @@ function eic_community_preprocess_node__gallery(array &$variables) {
         'icon_file_path' => $variables['eic_icon_path'],
         'download' => t('Download'),
       ];
+
       break;
   }
 }
