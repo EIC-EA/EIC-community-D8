@@ -115,6 +115,7 @@ deploy_qa:
     - /^release/.*$/
 
 slack_notifier:
+  image: curlimages/curl
   stage: deploy
   script:
     - 'eval "$DEPLOY_CURL_COMMAND"'
