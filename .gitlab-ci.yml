@@ -111,11 +111,11 @@ deploy_qa:
     - /^release/.*$/
 
 slack_notifier:
-  stage: deploy
+  stage: build
   script:
     - 'eval "$DEPLOY_CURL_COMMAND"'
   variables:
     DEPLOY_CURL_COMMAND_BODY: "'{\"text\": \"New deployment running on QA (url: $QA_HOST)\"}'"
     DEPLOY_CURL_COMMAND: 'curl -X POST -H "Content-Type: application/json" -H --data $DEPLOY_CURL_COMMAND_BODY $SLACK_URL'
   only:
-    - build
+    - develop
