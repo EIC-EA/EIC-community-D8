@@ -8,10 +8,6 @@ stages:
   stage: deploy
   before_script:
     - echo "$CI_COMMIT_BRANCH"
-    - |-
-      if [[ $CI_COMMIT_BRANCH == *"develop"* ]]; then
-          echo "Test"
-      fi
     - eval $(ssh-agent -s)
     - echo "$DEPLOYMENT_SSH_KEY" | tr -d '\r' | ssh-add - > /dev/null
     - mkdir -p ~/.ssh
@@ -61,7 +57,7 @@ build_front:
     - cd node_modules && find . -mindepth 1 -maxdepth 1 -type d ! -name "@ecl*" -exec rm -rf {} +
   only:
     - /^release/.*$/
-    - develop
+#    - develop
 
 security_check:
   stage: test
@@ -112,13 +108,18 @@ deploy_develop:
 
 deploy_qa:
   <<: *deploy_job
-  after_script:
-    - 'eval "$DEPLOY_CURL_COMMAND"'
   stage: deploy
   variables:
     HOST: $QA_HOST
+  only:
+    - /^release/.*$/
+
+slack_notifier:
+  stage: deploy
+  script:
+    - 'eval "$DEPLOY_CURL_COMMAND"'
+  variables:
     DEPLOY_CURL_COMMAND_BODY: "'{\"text\": \"New deployment running on QA (url: $QA_HOST)\"}'"
     DEPLOY_CURL_COMMAND: 'curl -X POST -H "Content-Type: application/json" -H --data $DEPLOY_CURL_COMMAND_BODY $SLACK_URL'
-
   only:
     - /^release/.*$/
