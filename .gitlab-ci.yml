@@ -7,7 +7,6 @@ stages:
   image: intractosre/deploy:1
   stage: deploy
   before_script:
-    - echo "$CI_COMMIT_BRANCH"
     - eval $(ssh-agent -s)
     - echo "$DEPLOYMENT_SSH_KEY" | tr -d '\r' | ssh-add - > /dev/null
     - mkdir -p ~/.ssh
@@ -57,7 +56,7 @@ build_front:
     - cd node_modules && find . -mindepth 1 -maxdepth 1 -type d ! -name "@ecl*" -exec rm -rf {} +
   only:
     - /^release/.*$/
-#    - develop
+    - develop
 
 security_check:
   stage: test
@@ -111,13 +110,13 @@ deploy_qa:
     - /^release/.*$/
 
 slack_notifier:
-  stage: build
+  stage: deploy
   before_script:
     - apk update && apk add curl
   script:
     - 'eval "$DEPLOY_CURL_COMMAND"'
   variables:
-    DEPLOY_CURL_COMMAND_BODY: "'{\"text\": \"New deployment running on QA (url: $QA_HOST)\"}'"
+    DEPLOY_CURL_COMMAND_BODY: "'{\"text\": \"New deployment running on QA. Environment will be updated in a few minutes...\"}'"
     DEPLOY_CURL_COMMAND: 'curl -X POST $SLACK_URL -H "Content-Type: application/json" -d $DEPLOY_CURL_COMMAND_BODY'
   only:
-    - develop
+    - /^release/.*$/
