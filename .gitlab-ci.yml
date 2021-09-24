@@ -103,7 +103,6 @@ deploy_develop:
     - develop
 
 deploy_qa:
-  image: curlimages/curl
   <<: *deploy_job
   stage: deploy
   variables:
@@ -113,6 +112,8 @@ deploy_qa:
 
 slack_notifier:
   stage: build
+  before_script:
+    - apk update && apk add curl
   script:
     - 'eval "$DEPLOY_CURL_COMMAND"'
   variables:
