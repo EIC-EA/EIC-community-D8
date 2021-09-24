@@ -1,0 +1,22 @@
+<?php
+
+/**
+ * @file
+ * Primary module hooks for EIC Message Notifications module.
+ */
+
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\eic_message_subscriptions\Hooks\EntityOperations;
+
+/**
+ * Implements hook_entity_insert().
+ */
+function eic_message_subscriptions_entity_insert(EntityInterface $entity) {
+  switch ($entity->getEntityTypeId()) {
+    case 'comment':
+      \Drupal::classResolver(EntityOperations::class)
+        ->entityInsert($entity);
+      break;
+
+  }
+}
