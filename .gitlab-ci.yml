@@ -7,6 +7,11 @@ stages:
   image: intractosre/deploy:1
   stage: deploy
   before_script:
+    - echo "$CI_COMMIT_BRANCH"
+    - |-
+      if [[ $CI_COMMIT_BRANCH == *"develop"* ]]; then
+          echo "Test"
+      fi
     - eval $(ssh-agent -s)
     - echo "$DEPLOYMENT_SSH_KEY" | tr -d '\r' | ssh-add - > /dev/null
     - mkdir -p ~/.ssh
@@ -95,16 +100,25 @@ phpstan_test:
 
 deploy_develop:
   <<: *deploy_job
+  after_script:
+    - 'eval "$DEPLOY_CURL_COMMAND"'
   stage: deploy
   variables:
     HOST: $DEVELOP_HOST
+    DEPLOY_CURL_COMMAND_BODY: "'{\"text\": \"New deployment running on QA (url: $QA_HOST)\"}'"
+    DEPLOY_CURL_COMMAND: 'curl -X POST -H "Content-Type: application/json" -H --data $DEPLOY_CURL_COMMAND_BODY $SLACK_URL'
   only:
     - develop
 
 deploy_qa:
   <<: *deploy_job
+  after_script:
+    - 'eval "$DEPLOY_CURL_COMMAND"'
   stage: deploy
   variables:
     HOST: $QA_HOST
+    DEPLOY_CURL_COMMAND_BODY: "'{\"text\": \"New deployment running on QA (url: $QA_HOST)\"}'"
+    DEPLOY_CURL_COMMAND: 'curl -X POST -H "Content-Type: application/json" -H --data $DEPLOY_CURL_COMMAND_BODY $SLACK_URL'
+
   only:
     - /^release/.*$/
