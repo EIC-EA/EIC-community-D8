@@ -115,8 +115,10 @@ deploy_qa:
     - /^release/.*$/
 
 slack_notifier:
-  image: curlimages/curl
+  image: alpine
   stage: deploy
+  before_script:
+    - apk update && apk add curl
   script:
     - 'eval "$DEPLOY_CURL_COMMAND"'
   variables:
