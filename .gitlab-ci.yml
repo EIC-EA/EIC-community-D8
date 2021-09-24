@@ -103,6 +103,7 @@ deploy_develop:
     - develop
 
 deploy_qa:
+  image: curlimages/curl
   <<: *deploy_job
   stage: deploy
   variables:
