@@ -96,13 +96,9 @@ phpstan_test:
 
 deploy_develop:
   <<: *deploy_job
-  after_script:
-    - 'eval "$DEPLOY_CURL_COMMAND"'
   stage: deploy
   variables:
     HOST: $DEVELOP_HOST
-    DEPLOY_CURL_COMMAND_BODY: "'{\"text\": \"New deployment running on QA (url: $QA_HOST)\"}'"
-    DEPLOY_CURL_COMMAND: 'curl -X POST -H "Content-Type: application/json" -H --data $DEPLOY_CURL_COMMAND_BODY $SLACK_URL'
   only:
     - develop
 
@@ -115,14 +111,11 @@ deploy_qa:
     - /^release/.*$/
 
 slack_notifier:
-  image: alpine
   stage: deploy
-  before_script:
-    - apk update && apk add curl
   script:
     - 'eval "$DEPLOY_CURL_COMMAND"'
   variables:
     DEPLOY_CURL_COMMAND_BODY: "'{\"text\": \"New deployment running on QA (url: $QA_HOST)\"}'"
     DEPLOY_CURL_COMMAND: 'curl -X POST -H "Content-Type: application/json" -H --data $DEPLOY_CURL_COMMAND_BODY $SLACK_URL'
   only:
-    - /^release/.*$/
+    - build
