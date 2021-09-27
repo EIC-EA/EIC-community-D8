@@ -148,6 +148,7 @@ class GroupContentMessageCreator extends MessageCreatorBase {
         $message = Message::create([
           'template' => $message_type,
           'uid' => $user->id(),
+          'field_referenced_node' => $entity,
         ]);
 
         // Adds the reference to the user who created/updated the entity.
@@ -169,14 +170,6 @@ class GroupContentMessageCreator extends MessageCreatorBase {
         // @todo Set values for the missing fields.
         break;
 
-    }
-
-    try {
-      $message->save();
-    }
-    catch (\Exception $e) {
-      $logger = $this->getLogger('eic_messages');
-      $logger->error($e->getMessage());
     }
 
     return $message;

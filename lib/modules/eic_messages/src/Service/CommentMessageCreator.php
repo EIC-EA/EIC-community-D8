@@ -129,6 +129,7 @@ class CommentMessageCreator extends MessageCreatorBase {
     $message = Message::create([
       'template' => $message_type,
       'uid' => $user->id(),
+      'field_referenced_comment' => $entity,
     ]);
 
     // Adds the reference to the user who created/updated the entity.
@@ -145,14 +146,6 @@ class CommentMessageCreator extends MessageCreatorBase {
       }
 
       $message->set('field_event_executing_user', $executing_user_id);
-    }
-
-    try {
-      $message->save();
-    }
-    catch (\Exception $e) {
-      $logger = $this->getLogger('eic_messages');
-      $logger->error($e->getMessage());
     }
 
     return $message;
