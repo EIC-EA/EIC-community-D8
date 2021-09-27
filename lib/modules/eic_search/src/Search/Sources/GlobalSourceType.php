@@ -76,6 +76,10 @@ class GlobalSourceType extends SourceType {
         'ASC' => $this->t('Min download', [], ['context' => 'eic_search']),
         'DESC' => $this->t('Max download', [], ['context' => 'eic_search']),
       ],
+      'its_last_comment_timestamp' => [
+        'label' => $this->t('Last commented', [], ['context' => 'eic_search']),
+        'DESC' => $this->t('Last commented', [], ['context' => 'eic_search']),
+      ],
       'its_' . SolrDocumentProcessor::LAST_FLAGGED_KEY . '_' . FlagType::LIKE_CONTENT => [
         'label' => $this->t('Last liked', [], ['context' => 'eic_search']),
         'DESC' => $this->t('Last liked', [], ['context' => 'eic_search']),
