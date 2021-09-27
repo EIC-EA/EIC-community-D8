@@ -26,19 +26,15 @@ class SmedIdConverter extends EntityConverter {
   public function convert($value, $definition, $name, array $defaults) {
     // Get the field name that contains the SMED ID.
     $smed_id_field = $this->configFactory->get('eic_webservices.settings')->get('smed_id_field');
-
     $entity_type_id = $this->getEntityTypeFromDefaults($definition, $name, $defaults);
-    $entity_type_manager = isset($this->entityTypeManager)
-      ? $this->entityTypeManager
-      : $this->entityManager;
-    if ($storage = $entity_type_manager->getStorage($entity_type_id)) {
-      if (!$entities = $storage->loadByProperties([$smed_id_field => $value])) {
-        return NULL;
-      }
-      $entity = reset($entities);
-      return $entity;
+    $storage = $this->entityTypeManager->getStorage($entity_type_id);
+    if (!$entities = $storage->loadByProperties([$smed_id_field => $value])) {
+      return NULL;
     }
-    return NULL;
+
+    $entity = reset($entities);
+
+    return $entity;
   }
 
   /**
@@ -48,11 +44,13 @@ class SmedIdConverter extends EntityConverter {
     $types = [
       'entity:user',
     ];
+
     if (strpos($route->getPath(), '/smed/api/') === 0 &&
       isset($route->getOption('parameters')['user']) &&
       !empty($definition['type']) && in_array($definition['type'], $types)) {
       return TRUE;
     }
+
     return FALSE;
   }
 

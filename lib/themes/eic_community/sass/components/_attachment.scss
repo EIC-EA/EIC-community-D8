@@ -170,17 +170,15 @@
     margin-right: ecl-layout('gutter', 'controls');
     margin-bottom: ecl-layout('gutter', 'controls');
     color: ecl-typography('color', 'meta');
+    padding-right: ecl-layout('gutter', 'controls');
+    border-right: ecl-border();
     @include ecl-responsive-font('label');
 
     &--author {
+      border: none;
       #{$node}--has-compact-layout & {
         @include visually-hidden;
       }
-    }
-
-    & + & {
-      padding-right: ecl-layout('gutter', 'controls');
-      border-right: ecl-border();
     }
 
     &:nth-last-child(1),

@@ -231,10 +231,7 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
     $create_operations = [];
     foreach ($node_operation_links as $key => $link) {
       if (strpos($key, 'create') !== FALSE) {
-        // We discard the operation link if user doesn't have access to it.
-        if ($link['url']->access($this->currentUser)) {
-          $create_operations[$key] = $link;
-        }
+        $create_operations[$key] = $link;
         unset($node_operation_links[$key]);
       }
     }
@@ -249,10 +246,6 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
     // We extract only the group edit/delete/publish operation links into a new
     // array.
     $visible_group_operation_links = array_filter($group_operation_links, function ($item, $key) {
-      // We discard the operation link if user doesn't have access to it.
-      if (!$item['url']->access($this->currentUser)) {
-        return FALSE;
-      }
       return in_array($key, ['edit', 'delete', 'publish']);
     }, ARRAY_FILTER_USE_BOTH);
 
@@ -303,7 +296,7 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
    *   - url: An instance of \Drupal\Core\Url for the login URL.
    */
   private function getAnonymousLoginLink(GroupInterface $group) {
-    $link = FALSE;
+    $link = [];
     if ($this->currentUser->isAnonymous()) {
       if ($joining_methods = $this->oecGroupFlexHelper->getGroupJoiningMethod($group)) {
         $login_link_options = [
@@ -467,7 +460,7 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
    * @param \Drupal\group\Entity\GroupInterface $group
    *   The group entity.
    *
-   * @return \Drupal\Component\Render\MarkupInterface
+   * @return \Drupal\Component\Render\MarkupInterface|string
    *   The group description HTML Markup.
    */
   private function getTruncatedGroupDescription(GroupInterface $group) {

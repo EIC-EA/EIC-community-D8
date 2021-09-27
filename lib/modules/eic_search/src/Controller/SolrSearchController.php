@@ -59,6 +59,7 @@ class SolrSearchController extends ControllerBase {
     /** @var \Drupal\search_api\IndexInterface $index */
     $index = $index_storage->load('global');
 
+    /** @var \Drupal\search_api_solr\Plugin\search_api\backend\SearchApiSolrBackend $backend */
     $backend = $index->getServerInstance()->getBackend();
     $config = $backend->getConfiguration();
     $backend->setConfiguration($config);
@@ -277,9 +278,9 @@ class SolrSearchController extends ControllerBase {
   }
 
   /**
-   * @param $fq
+   * @param string $fq
    */
-  private function generateQueryPrivateContent(&$fq) {
+  private function generateQueryPrivateContent(string &$fq) {
     $roles = \Drupal::currentUser()->getRoles();
 
     if (in_array(UserHelper::ROLE_TRUSTED_USER, $roles)) {
@@ -293,10 +294,10 @@ class SolrSearchController extends ControllerBase {
    * Add the status query to the query but check for groups if need
    * to show draft/pending for group owner
    *
-   * @param $fq
+   * @param string $fq
    * @param \Drupal\eic_search\Search\Sources\SourceTypeInterface $source
    */
-  private function generateQueryPublishedState(&$fq, SourceTypeInterface $source) {
+  private function generateQueryPublishedState(string &$fq, SourceTypeInterface $source) {
     if (!$source instanceof SourceTypeInterface) {
       return;
     }

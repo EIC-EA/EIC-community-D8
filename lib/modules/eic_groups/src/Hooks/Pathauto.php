@@ -145,6 +145,12 @@ class Pathauto implements ContainerInjectionInterface {
         $group = $group_content->getGroup();
       }
 
+      // If group alias is set to manual, we use the manual alias instead.
+      if (!$group->get('path')->pathauto) {
+        $alias = "{$group->get('path')->alias}/wiki";
+        return;
+      }
+
       // If the group has an alias we use it as a prefix.
       if ($group_alias = $this->aliasStorageHelper->loadBySource($group->toUrl()->getInternalPath(), $group->language()->getId())) {
         $alias = "{$group_alias['alias']}/wiki";
@@ -194,7 +200,7 @@ class Pathauto implements ContainerInjectionInterface {
    * @param \Drupal\group\Entity\GroupInterface $entity
    *   The group entity object.
    */
-  private function createGroupUrlAliasUpdateQueueItem(GroupInterface $entity) {
+  public function createGroupUrlAliasUpdateQueueItem(GroupInterface $entity) {
     if (is_null($this->state->get(CronOperations::GROUP_URL_ALIAS_UPDATE_STATE_CACHE . $entity->id()))) {
       $queue = $this->queueFactory->get(CronOperations::GROUP_URL_ALIAS_UPDATE_QUEUE);
       $queue->createItem([

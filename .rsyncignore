@@ -14,7 +14,7 @@ docker-compose.yml
 Makefile
 web/sites/default/settings.php
 web/sites/default/files
-web/sites/default/private_files
+private_files
 web/sites/default/drush.local.yml
 composer.lock
 web.config

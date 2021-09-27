@@ -4,6 +4,7 @@ namespace Drupal\eic_flags\Service;
 
 use Drupal\Core\Batch\BatchBuilder;
 use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\eic_flags\RequestStatus;
 use Drupal\eic_flags\RequestTypes;
 use Drupal\flag\FlaggingInterface;
@@ -12,7 +13,7 @@ use Drupal\group\Entity\GroupInterface;
 use Drupal\user\UserInterface;
 
 /**
- * Class DeleteRequestHandler
+ * Class DeleteRequestHandler.
  *
  * @package Drupal\eic_flags\Service
  */
@@ -46,9 +47,10 @@ class DeleteRequestHandler extends AbstractRequestHandler {
   ) {
     switch ($content_entity->getEntityTypeId()) {
       case 'group':
-        /** @var GroupInterface $content_entity */
+        /** @var \Drupal\group\Entity\GroupInterface $content_entity */
         $this->deleteGroup($content_entity);
         break;
+
       case 'node':
       case 'comment':
         $content_entity->delete();
@@ -60,7 +62,9 @@ class DeleteRequestHandler extends AbstractRequestHandler {
    * Denies the request but un-publish the entity instead
    *
    * @param \Drupal\flag\FlaggingInterface $flagging
+   *   The flag object.
    * @param \Drupal\Core\Entity\ContentEntityInterface $content_entity
+   *   The concerned entity.
    *
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
@@ -79,7 +83,7 @@ class DeleteRequestHandler extends AbstractRequestHandler {
   }
 
   /**
-   * @return string[]
+   * {@inheritdoc}
    */
   public function getSupportedEntityTypes() {
     return [
@@ -90,10 +94,13 @@ class DeleteRequestHandler extends AbstractRequestHandler {
   }
 
   /**
+   * Deletes the given group.
+   *
    * @param \Drupal\group\Entity\GroupInterface $group
+   *   The concerned group.
    */
   private function deleteGroup(GroupInterface $group) {
-    // Retrieve group content entities linked to the group
+    // Retrieve group content entities linked to the group.
     $group_contents = $group->getContent();
     $batch_builder = (new BatchBuilder())
       ->setFinishCallback(
@@ -120,14 +127,19 @@ class DeleteRequestHandler extends AbstractRequestHandler {
   }
 
   /**
+   * Deletes the given group content.
+   *
    * @param \Drupal\group\Entity\GroupContentInterface $group_content
+   *   The concerned group content.
    * @param \Drupal\group\Entity\GroupInterface $group
-   * @param $context
+   *   The group having this content.
+   * @param array $context
+   *   The context of the batch.
    */
   public static function deleteGroupContent(
     GroupContentInterface $group_content,
     GroupInterface $group,
-    &$context
+    array &$context
   ) {
     if (!isset($context['results']['errors'])) {
       $context['results']['errors'] = [];
@@ -152,7 +164,7 @@ class DeleteRequestHandler extends AbstractRequestHandler {
         $target_entity->delete();
       }
     } catch (\Exception $exception) {
-      $context['results']['errors'][] = t(
+      $context['results']['errors'][] = new TranslatableMarkup(
         'Something went wrong during content removal @error',
         ['@error' => $exception->getMessage()]
       );
@@ -160,9 +172,14 @@ class DeleteRequestHandler extends AbstractRequestHandler {
   }
 
   /**
+   * Handles the batch finish.
+   *
    * @param bool $success
+   *   Result of the operation.
    * @param array $results
+   *   Deleted entities.
    * @param array $operations
+   *   The array of operations.
    *
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
@@ -198,8 +215,7 @@ class DeleteRequestHandler extends AbstractRequestHandler {
       return;
     }
 
-    if (isset($results['group'])
-      && $results['group'] instanceof GroupInterface) {
+    if (isset($results['group']) && $results['group'] instanceof GroupInterface) {
       $results['group']->delete();
     }
   }
@@ -210,14 +226,13 @@ class DeleteRequestHandler extends AbstractRequestHandler {
   public function getActions(ContentEntityInterface $entity) {
     return parent::getActions($entity) + [
         'archive_request' => [
-          'title' => t('Archive'),
+          'title' => $this->t('Archive'),
           'url' => $entity->toUrl('close-request')
             ->setRouteParameter('request_type', $this->getType())
             ->setRouteParameter('response', RequestStatus::ARCHIVED)
             ->setRouteParameter(
               'destination',
-              \Drupal::request()
-                ->getRequestUri()
+              $this->currentRequest->getRequestUri()
             ),
         ],
       ];

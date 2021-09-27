@@ -139,7 +139,7 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
     $sources = $this->sourcesCollector->getSources();
 
     $source = array_key_exists($source_type, $sources) ? $sources[$source_type] : NULL;
-    $prefilter_group = $this->configuration['prefilter_group'] || FALSE;
+    $prefilter_group = $this->configuration['prefilter_group'] ?? FALSE;
     $current_group_route = NULL;
 
     if (
@@ -224,7 +224,12 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
    * @return \Drupal\Core\Ajax\AjaxResponse
    */
   public function updateSourceConfig(array &$form, FormStateInterface $form_state) {
-    $current_source_value = $form_state->getValue('settings')['search']['source_type'] ?: GroupSourceType::class;
+    if ($form_state->hasValue('field_overview_block')) {
+      $current_source_value = $form_state->getValue('field_overview_block')[0]['settings']['search']['source_type'] ?: NULL;
+    } else {
+      $current_source_value = $form_state->getValue('settings')['search']['source_type'] ?: GroupSourceType::class;
+    }
+
     $response = new AjaxResponse();
 
     /** @var SourceTypeInterface $current_source */
@@ -259,14 +264,16 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
 
     $current_source = $this->getCurrentSource($values['search']['source_type']);
 
-    $this->configuration['source_type'] = $values['search']['source_type'];
-    $this->configuration['facets'] = $values['search']['configuration']['filter'][$current_source->getEntityBundle()]['facets'];
-    $this->configuration['sort_options'] = $values['search']['configuration']['sorts'][$current_source->getEntityBundle()]['sort_options'];
-    $this->configuration['enable_search'] = $values['search']['configuration']['enable_search'];
-    $this->configuration['page_options'] = $values['search']['configuration']['pagination']['page_options'];
-    $this->configuration['prefilter_group'] = $values['search']['configuration']['prefilter_group'];
-    $this->configuration['add_facet_interests'] = $values['search']['configuration']['add_facet_interests'];
-    $this->configuration['add_facet_my_groups'] = $values['search']['configuration']['add_facet_my_groups'];
+    $this->setConfiguration([
+      'source_type' => $values['search']['source_type'],
+      'facets' => $values['search']['configuration']['filter'][$current_source->getEntityBundle()]['facets'],
+      'sort_options' => $values['search']['configuration']['sorts'][$current_source->getEntityBundle()]['sort_options'],
+      'enable_search' => $values['search']['configuration']['enable_search'],
+      'page_options' => $values['search']['configuration']['pagination']['page_options'],
+      'prefilter_group' => $values['search']['configuration']['prefilter_group'],
+      'add_facet_interests' => $values['search']['configuration']['add_facet_interests'],
+      'add_facet_my_groups' => $values['search']['configuration']['add_facet_my_groups'],
+    ]);
   }
 
   /**
@@ -277,7 +284,6 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
   private function getCurrentSource(string $source_value): ?SourceTypeInterface {
     $sources_collected = $this->sourcesCollector->getSources();
 
-    /** @var SourceTypeInterface $current_source */
     return array_key_exists($source_value, $sources_collected) ?
       $sources_collected[$source_value] :
       NULL;

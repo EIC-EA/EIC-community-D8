@@ -66,6 +66,10 @@
         padding: 0;
         border: 0;
       }
+
+      &:last-child {
+        border-bottom: none;
+      }
     }
 
     @include ecl-media-breakpoint-up('lg') {

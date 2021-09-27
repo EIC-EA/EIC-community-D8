@@ -70,11 +70,14 @@ class StatisticsStorage implements StatisticsStorageInterface {
           $query->condition('status', TRUE);
           break;
       }
+
       if ($bundle != NULL) {
         $query->condition('type', $bundle);
       }
+
       return $query->count()->execute();
     }
+
     return 0;
   }
 

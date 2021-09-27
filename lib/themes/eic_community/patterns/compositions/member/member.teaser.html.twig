@@ -31,7 +31,7 @@
     {% endif %}
 
     <div class="ecl-teaser__content">
-      <{{ title_element }} class="ecl-teaser__title">
+      <{{ title_element }} class="ecl-teaser__title" title="{{ title }}">
         {% if path is not empty %}
           <a href="{{ path }}">
             {% if title_before %}

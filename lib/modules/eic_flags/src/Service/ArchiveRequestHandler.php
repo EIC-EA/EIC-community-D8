@@ -8,7 +8,7 @@ use Drupal\eic_flags\RequestTypes;
 use Drupal\flag\FlaggingInterface;
 
 /**
- * Class ArchiveRequestHandler
+ * Class ArchiveRequestHandler.
  *
  * @package Drupal\eic_flags\Service
  */
@@ -50,7 +50,7 @@ class ArchiveRequestHandler extends AbstractRequestHandler {
   }
 
   /**
-   * @return string[]
+   * {@inheritdoc}
    */
   public function getSupportedEntityTypes() {
     return [

@@ -1,6 +1,13 @@
 .ecl-link {
   $node: &;
 
+  &--icon:focus, &--icon:hover {
+    text-decoration: none;
+    #{$node}__label {
+      text-decoration: underline;
+    }
+  }
+
   &--guest {
     color: ecl-typography('color', 'meta');
   }
