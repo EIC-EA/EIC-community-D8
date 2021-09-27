@@ -14,8 +14,43 @@ use Drupal\eic_message_subscriptions\Hooks\EntityOperations;
 function eic_message_subscriptions_entity_insert(EntityInterface $entity) {
   switch ($entity->getEntityTypeId()) {
     case 'comment':
+    case 'group_content':
       \Drupal::classResolver(EntityOperations::class)
         ->entityInsert($entity);
+      break;
+
+    case 'node':
+      if (!in_array($entity->bundle(), ['news', 'story'])) {
+        return;
+      }
+
+      \Drupal::classResolver(EntityOperations::class)
+        ->entityInsert($entity);
+      break;
+
+  }
+}
+
+/**
+ * Implements hook_entity_insert().
+ */
+function eic_message_subscriptions_entity_update(EntityInterface $entity) {
+  switch ($entity->getEntityTypeId()) {
+    case 'node':
+      $old_vid = $entity->original->vid->value;
+      $new_vid = $entity->vid->value;
+
+      // A node is only added to a group content after the node already been
+      // created in the DB. This means that in the hook_entity_insert we cannot
+      // know if the node belongs to a group. Here, we are making sure that the
+      // revision didn't change which means the node is being inserted.
+      if ($old_vid === $new_vid) {
+        return;
+      }
+
+      \Drupal::classResolver(EntityOperations::class)
+        ->entityUpdate($entity);
+
       break;
 
   }
