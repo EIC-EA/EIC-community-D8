@@ -7,7 +7,7 @@ namespace Drupal\eic_message_subscriptions;
  *
  * @package Drupal\eic_message_subscriptions
  */
-final class MessageSubscriptionType {
+final class MessageSubscriptionTypes {
 
   const NEW_COMMENT_REPLY = 'sub_new_comment_reply';
 

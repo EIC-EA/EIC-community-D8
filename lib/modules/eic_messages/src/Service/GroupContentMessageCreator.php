@@ -4,8 +4,8 @@ namespace Drupal\eic_messages\Service;
 
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\eic_message_subscriptions\MessageSubscriptionType;
-use Drupal\eic_message_subscriptions\SubscriptionOperationType;
+use Drupal\eic_message_subscriptions\MessageSubscriptionTypes;
+use Drupal\eic_message_subscriptions\SubscriptionOperationTypes;
 use Drupal\eic_messages\Util\ActivityStreamMessageTemplates;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\message\Entity\Message;
@@ -129,7 +129,7 @@ class GroupContentMessageCreator extends MessageCreatorBase {
    * @param \Drupal\user\UserInterface $user
    *   The user entity that is subscribed to the content.
    * @param string $operation
-   *   The type of the operations. See SubscriptionOperationType.
+   *   The type of the operations. See SubscriptionOperationTypes.
    */
   public function createGroupContentSubscription(
     ContentEntityInterface $entity,
@@ -141,9 +141,9 @@ class GroupContentMessageCreator extends MessageCreatorBase {
 
     switch ($entity->getEntityTypeId()) {
       case 'node':
-        $message_type = $operation === SubscriptionOperationType::UPDATED_ENTITY
-          ? MessageSubscriptionType::GROUP_CONTENT_UPDATED
-          : MessageSubscriptionType::NEW_GROUP_CONTENT_PUBLISHED;
+        $message_type = $operation === SubscriptionOperationTypes::UPDATED_ENTITY
+          ? MessageSubscriptionTypes::GROUP_CONTENT_UPDATED
+          : MessageSubscriptionTypes::NEW_GROUP_CONTENT_PUBLISHED;
 
         $message = Message::create([
           'template' => $message_type,

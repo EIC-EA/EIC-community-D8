@@ -8,7 +8,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\eic_flags\FlagHelper;
 use Drupal\eic_message_subscriptions\MessageSubscriptionHelper;
-use Drupal\eic_message_subscriptions\SubscriptionOperationType;
+use Drupal\eic_message_subscriptions\SubscriptionOperationTypes;
 use Drupal\eic_messages\Service\CommentMessageCreator;
 use Drupal\message_notify\MessageNotifier;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -118,11 +118,11 @@ class EntityOperations implements ContainerInjectionInterface {
     switch ($entity->getEntityTypeId()) {
       case 'comment':
         // Default operation when new comment is added.
-        $operation = SubscriptionOperationType::NEW_ENTITY;
+        $operation = SubscriptionOperationTypes::NEW_ENTITY;
 
         // If comment is a reply we set the operation to 'comment_reply'..
         if ($entity->hasParentComment()) {
-          $operation = SubscriptionOperationType::COMMENT_REPLY;
+          $operation = SubscriptionOperationTypes::COMMENT_REPLY;
         }
 
         // Get commented entity.

@@ -9,7 +9,7 @@ use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\eic_content\EICContentHelper;
 use Drupal\eic_flags\FlagHelper;
-use Drupal\eic_message_subscriptions\SubscriptionOperationType;
+use Drupal\eic_message_subscriptions\SubscriptionOperationTypes;
 use Drupal\eic_messages\Service\GroupContentMessageCreator;
 use Drupal\message_notify\MessageNotifier;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -169,8 +169,8 @@ class FormOperations implements ContainerInjectionInterface {
     $is_group_content = FALSE;
 
     $operation = $form_state->getFormObject()->getOperation() === 'edit'
-      ? SubscriptionOperationType::UPDATED_ENTITY
-      : SubscriptionOperationType::NEW_ENTITY;
+      ? SubscriptionOperationTypes::UPDATED_ENTITY
+      : SubscriptionOperationTypes::NEW_ENTITY;
 
     $form_id = $form_state->getFormObject()->getFormId();
     $route_name = $this->routeMatch->getRouteName();

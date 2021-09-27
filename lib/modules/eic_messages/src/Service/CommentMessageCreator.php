@@ -5,8 +5,8 @@ namespace Drupal\eic_messages\Service;
 use Drupal\comment\CommentInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\eic_content\EICContentHelperInterface;
-use Drupal\eic_message_subscriptions\MessageSubscriptionType;
-use Drupal\eic_message_subscriptions\SubscriptionOperationType;
+use Drupal\eic_message_subscriptions\MessageSubscriptionTypes;
+use Drupal\eic_message_subscriptions\SubscriptionOperationTypes;
 use Drupal\eic_messages\MessageHelper;
 use Drupal\eic_messages\Util\ActivityStreamMessageTemplates;
 use Drupal\eic_user\UserHelper;
@@ -102,7 +102,7 @@ class CommentMessageCreator extends MessageCreatorBase {
    * @param \Drupal\user\UserInterface $user
    *   The user entity that is subscribed to the content.
    * @param string $operation
-   *   The type of the operation. See SubscriptionOperationType.
+   *   The type of the operation. See SubscriptionOperationTypes.
    */
   public function createCommentSubscription(
     CommentInterface $entity,
@@ -112,12 +112,12 @@ class CommentMessageCreator extends MessageCreatorBase {
     $message_type = NULL;
 
     switch ($operation) {
-      case SubscriptionOperationType::NEW_ENTITY:
-        $message_type = MessageSubscriptionType::NEW_COMMENT;
+      case SubscriptionOperationTypes::NEW_ENTITY:
+        $message_type = MessageSubscriptionTypes::NEW_COMMENT;
         break;
 
-      case SubscriptionOperationType::COMMENT_REPLY:
-        $message_type = MessageSubscriptionType::NEW_COMMENT_REPLY;
+      case SubscriptionOperationTypes::COMMENT_REPLY:
+        $message_type = MessageSubscriptionTypes::NEW_COMMENT_REPLY;
         break;
 
     }

@@ -7,7 +7,7 @@ namespace Drupal\eic_message_subscriptions;
  *
  * @package Drupal\eic_message_subscriptions
  */
-final class SubscriptionOperationType {
+final class SubscriptionOperationTypes {
 
   const NEW_ENTITY = 'created';
 
