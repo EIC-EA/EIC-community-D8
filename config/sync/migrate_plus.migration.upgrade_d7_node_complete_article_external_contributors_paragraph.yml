@@ -26,7 +26,7 @@ process:
   field_contributor_link/uri:
     -
       plugin: skip_on_empty
-      method: processs
+      method: process
       source: c4m_link_multiple_url
   field_contributor_link/title:
     -
