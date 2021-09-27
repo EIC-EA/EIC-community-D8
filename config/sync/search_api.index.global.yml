@@ -108,6 +108,15 @@ name: Global
 description: ''
 read_only: false
 field_settings:
+  aggregated_changed:
+    label: '[Aggregated] Changed on'
+    property_path: aggregated_field
+    type: date
+    configuration:
+      type: union
+      fields:
+        - 'entity:group/changed'
+        - 'entity:node/changed'
   aggregated_created:
     label: '[Aggregated] Created on'
     property_path: aggregated_field
