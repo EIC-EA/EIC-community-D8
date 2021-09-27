@@ -11,7 +11,6 @@ use Drupal\eic_messages\MessageHelper;
 use Drupal\eic_messages\Util\ActivityStreamMessageTemplates;
 use Drupal\eic_user\UserHelper;
 use Drupal\message\Entity\Message;
-use Drupal\user\UserInterface;
 
 /**
  * Provides a message creator class for comments.
@@ -99,14 +98,11 @@ class CommentMessageCreator extends MessageCreatorBase {
    *
    * @param \Drupal\comment\CommentInterface $entity
    *   The comment entity.
-   * @param \Drupal\user\UserInterface $user
-   *   The user entity that is subscribed to the content.
    * @param string $operation
    *   The type of the operation. See SubscriptionOperationTypes.
    */
   public function createCommentSubscription(
     CommentInterface $entity,
-    UserInterface $user,
     string $operation
   ) {
     $message_type = NULL;
@@ -128,7 +124,6 @@ class CommentMessageCreator extends MessageCreatorBase {
 
     $message = Message::create([
       'template' => $message_type,
-      'uid' => $user->id(),
       'field_referenced_comment' => $entity,
     ]);
 

@@ -138,24 +138,24 @@ class EntityOperations implements ContainerInjectionInterface {
       return;
     }
 
+    $message = NULL;
+
+    switch ($entity->getEntityTypeId()) {
+      case 'comment':
+        $message = $this->commentMessageCreator->createCommentSubscription(
+          $entity,
+          $operation
+        );
+        break;
+
+    }
+
+    if (!$message) {
+      return;
+    }
+
     foreach ($subscribed_users as $user) {
-      $message = NULL;
-
-      switch ($entity->getEntityTypeId()) {
-        case 'comment':
-          $message = $this->commentMessageCreator->createCommentSubscription(
-            $entity,
-            $user,
-            $operation
-          );
-          break;
-
-      }
-
-      if (!$message) {
-        continue;
-      }
-
+      $message->setOwnerId($user->id());
       // @todo Send message to a queue to be processed later by cron.
       $this->notifier->send($message);
     }

@@ -137,7 +137,7 @@ class FormOperations implements ContainerInjectionInterface {
 
     if ($show_notification_field) {
       $form['field_send_notification'] = [
-        '#title' => $this->t('Send notifiaction'),
+        '#title' => $this->t('Send notification'),
         '#type' => 'checkbox',
         '#default_value' => $entity->isNew(),
       ];
@@ -198,38 +198,37 @@ class FormOperations implements ContainerInjectionInterface {
         // Get users who are following the group.
         $subscribed_users = $this->eicFlagsHelper->getFlaggingUsersByFlagIds($group, ['follow_group']);
         $is_group_content = TRUE;
+        // @todo Send message to users subscribed to a topic(s) of discussion.
         break;
 
     }
 
+    $message = NULL;
+
+    switch ($entity->getEntityTypeId()) {
+      case 'node':
+        if ($is_group_content) {
+          $message = $this->groupContentMessageCreator->createGroupContentSubscription(
+            $entity,
+            $group,
+            $operation
+          );
+        }
+        break;
+
+    }
+
+    if (!$message) {
+      return;
+    }
+
     foreach ($subscribed_users as $user) {
-      $message = FALSE;
-
-      if (!$entity->isPublished()) {
-        continue;
-      }
-
-      switch ($entity->getEntityTypeId()) {
-        case 'node':
-          if ($is_group_content) {
-            $message = $this->groupContentMessageCreator->createGroupContentSubscription(
-              $entity,
-              $group,
-              $user,
-              $operation
-            );
-          }
-          break;
-
-      }
-
-      if (!$message) {
-        continue;
-      }
-
+      $message->setOwnerId($user->id());
       // @todo Send message to a queue to be processed later by cron.
       $this->notifier->send($message);
     }
+
+    // @todo Send message to users subscribed to a topic(s) of discussion.
   }
 
 }

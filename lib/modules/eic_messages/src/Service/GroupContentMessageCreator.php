@@ -9,7 +9,6 @@ use Drupal\eic_message_subscriptions\SubscriptionOperationTypes;
 use Drupal\eic_messages\Util\ActivityStreamMessageTemplates;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\message\Entity\Message;
-use Drupal\user\UserInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -126,15 +125,12 @@ class GroupContentMessageCreator extends MessageCreatorBase {
    *   The entity object.
    * @param \Drupal\group\Entity\GroupInterface $group
    *   The group having this content.
-   * @param \Drupal\user\UserInterface $user
-   *   The user entity that is subscribed to the content.
    * @param string $operation
    *   The type of the operations. See SubscriptionOperationTypes.
    */
   public function createGroupContentSubscription(
     ContentEntityInterface $entity,
     GroupInterface $group,
-    UserInterface $user,
     string $operation
   ) {
     $message = NULL;
@@ -147,7 +143,6 @@ class GroupContentMessageCreator extends MessageCreatorBase {
 
         $message = Message::create([
           'template' => $message_type,
-          'uid' => $user->id(),
           'field_referenced_node' => $entity,
         ]);
 
