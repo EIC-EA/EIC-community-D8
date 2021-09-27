@@ -24,6 +24,7 @@ function eic_community_preprocess_node__gallery(array &$variables) {
       $node = $variables['node'];
       $files = $node->get('field_gallery_slides')->referencedEntities();
       $files_list = [];
+      $slides = [];
 
       foreach ($files as $file) {
         $download = File::load($file->field_gallery_slide_media->getValue()[0]['target_id']);
@@ -49,7 +50,40 @@ function eic_community_preprocess_node__gallery(array &$variables) {
           'mime_type' => substr(strrchr($download->get('filemime')->getString(), '/'), 1),
           'path' => $download->createFileUrl(),
         ];
+
+        $slides[] = [
+          'name' => $download->getFileName(),
+          'stats' => [
+            [
+              'hide_label' => TRUE,
+              'icon' => [
+                'name' => 'download',
+                'type' => 'custom',
+              ],
+              'label' => t('downloads'),
+              // @todo Add statistics value
+              'value' => \Drupal::service('eic_media_statistics.entity_file_download_count')->getFileDownloads($file),
+            ],
+            [
+              'hide_label' => TRUE,
+              'value' => format_size($download->get('filesize')->getString()),
+            ],
+          ],
+          'mime_type' => substr(strrchr($download->get('filemime')->getString(), '/'), 1),
+          'path' => $download->createFileUrl(),
+          'image' => [
+            'src' => $download->createFileUrl(),
+            'alt' => $download->getFileName(),
+          ],
+        ];
       }
+
+      $variables['slides'] = [
+        'files' => $slides,
+        'title' => '',
+        'body' => '',
+        'icon_file_path' => $variables['eic_icon_path'],
+      ];
 
       $variables['file_list'] = [
         'title' => t('Files (%count)', ['%count' => count($files)]),

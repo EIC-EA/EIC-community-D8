@@ -10,7 +10,8 @@
   {% block content %}
     <h1>{{ label }}</h1>
     {{ elements.field_body }}
-    {{ elements.field_gallery_slides }}
+    {{ attach_library('eic_community/react-block-gallery') }}
+    <div id="ecl-gallery-react" data-files="{{ slides|json_encode }}"></div>
     {% include "@theme/patterns/components/filelist.html.twig" with file_list|default({}) %}
   {% endblock %}
 
