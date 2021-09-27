@@ -71,6 +71,10 @@
       }
     }
 
+    &.swiper-button-disabled{
+      display: none;
+    }
+
     &--multislider__forward {
       right: 0;
       transform: translateX(50%);

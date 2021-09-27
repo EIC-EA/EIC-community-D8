@@ -85,12 +85,28 @@ const Gallery = ({files}) => {
       </Swiper>
 
       <div className="ecl-gallery__main-slides ecl-gallery__main-slides--multislider">
+        <div className={"ecl-gallery__action ecl-gallery__action--multislider ecl-gallery__action--multislider__back"}
+             ref={multisliderPrevRef}><ArrowBackIosIcon/></div>
+        <div
+          className={"ecl-gallery__action ecl-gallery__action--multislider ecl-gallery__action--multislider__forward"}
+          ref={multisliderNextRef}><ArrowForwardIosIcon/></div>
         <Swiper
           navigation={{
             prevEl: multisliderPrevRef.current,
             nextEl: multisliderNextRef.current,
           }}
           onBeforeInit={(swiper) => {
+            console.log(multisliderPrevRef)
+            swiper.params.navigation.prevEl = multisliderPrevRef.current
+            swiper.params.navigation.nextEl = multisliderNextRef.current
+          }}
+          onInit={(swiper) => {
+            console.log('init',multisliderPrevRef)
+            swiper.params.navigation.prevEl = multisliderPrevRef.current
+            swiper.params.navigation.nextEl = multisliderNextRef.current
+          }}
+          onAfterInit={(swiper) => {
+            console.log('after',multisliderPrevRef)
             swiper.params.navigation.prevEl = multisliderPrevRef.current
             swiper.params.navigation.nextEl = multisliderNextRef.current
           }}
@@ -126,11 +142,6 @@ const Gallery = ({files}) => {
             </SwiperSlide>
           ))}
         </Swiper>
-        <div className={"ecl-gallery__action ecl-gallery__action--multislider ecl-gallery__action--multislider__back"}
-             ref={multisliderPrevRef}><ArrowBackIosIcon/></div>
-        <div
-          className={"ecl-gallery__action ecl-gallery__action--multislider ecl-gallery__action--multislider__forward"}
-          ref={multisliderNextRef}><ArrowForwardIosIcon/></div>
       </div>
 
       <FileInfo
