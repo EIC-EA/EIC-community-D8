@@ -15,4 +15,6 @@ final class MessageSubscriptionType {
 
   const NEW_GROUP_CONTENT_PUBLISHED = 'sub_new_group_content_published';
 
+  const GROUP_CONTENT_UPDATED = 'sub_group_content_updated';
+
 }

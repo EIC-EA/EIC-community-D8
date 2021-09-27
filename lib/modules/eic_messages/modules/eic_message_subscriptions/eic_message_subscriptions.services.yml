@@ -1,0 +1,3 @@
+services:
+  eic_message_subscriptions.helper:
+    class: Drupal\eic_message_subscriptions\MessageSubscriptionHelper
