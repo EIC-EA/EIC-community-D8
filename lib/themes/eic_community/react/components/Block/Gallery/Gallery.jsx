@@ -23,7 +23,6 @@ function getCorrectIndex(pos, array) {
 }
 
 const Gallery = ({files}) => {
-  console.log("hello")
 
   const [current, setCurrent] = useState(0)
   const prevRef = useRef(null);
@@ -85,53 +84,54 @@ const Gallery = ({files}) => {
              onClick={() => handleNavClick("next")}><ArrowForwardIosIcon/></div>
       </Swiper>
 
-      <Swiper
-        navigation={{
-          prevEl: multisliderPrevRef.current,
-          nextEl: multisliderNextRef.current,
-        }}
-        onBeforeInit={(swiper) => {
-          swiper.params.navigation.prevEl = multisliderPrevRef.current
-          swiper.params.navigation.nextEl = multisliderNextRef.current
-        }}
-        centeredSlides={true}
-        spaceBetween={10}
-        slidesPerView={3}
-        ref={multiSwiperRef}
-        allowTouchMove={true}
-        breakpoints={{
-          "640": {
-            "slidesPerView": 4,
-            "spaceBetween": 20
-          },
-          "768": {
-            "allowTouchMove": false
-          }
-        }}
-        className="ecl-gallery__main-slides ecl-gallery__main-slides--multislider"
-      >
+      <div className="ecl-gallery__main-slides ecl-gallery__main-slides--multislider">
+        <Swiper
+          navigation={{
+            prevEl: multisliderPrevRef.current,
+            nextEl: multisliderNextRef.current,
+          }}
+          onBeforeInit={(swiper) => {
+            swiper.params.navigation.prevEl = multisliderPrevRef.current
+            swiper.params.navigation.nextEl = multisliderNextRef.current
+          }}
+          centeredSlides={true}
+          spaceBetween={10}
+          slidesPerView={3}
+          ref={multiSwiperRef}
+          allowTouchMove={true}
+          breakpoints={{
+            "640": {
+              "slidesPerView": 4,
+              "spaceBetween": 20
+            },
+            "768": {
+              "allowTouchMove": false
+            }
+          }}
+        >
 
-        {files?.files.map((file, key) => (
-          <SwiperSlide
-            className={"ecl-gallery__main-slides__slide"}
-            onClick={() => handleSlideClick(key)}
-            key={key}
-          >
-            <img
-              style={{objectFit: "cover", cursor:"pointer"}}
-              className="swiper-lazy"
-              title={file.image.alt}
-              src={file.image.src}
-              alt={file.image.alt}
-            />
-          </SwiperSlide>
-        ))}
+          {files?.files.map((file, key) => (
+            <SwiperSlide
+              className={"ecl-gallery__main-slides__slide"}
+              onClick={() => handleSlideClick(key)}
+              key={key}
+            >
+              <img
+                style={{objectFit: "cover", cursor:"pointer"}}
+                className="swiper-lazy"
+                title={file.image.alt}
+                src={file.image.src}
+                alt={file.image.alt}
+              />
+            </SwiperSlide>
+          ))}
+        </Swiper>
         <div className={"ecl-gallery__action ecl-gallery__action--multislider ecl-gallery__action--multislider__back"}
              ref={multisliderPrevRef}><ArrowBackIosIcon/></div>
         <div
           className={"ecl-gallery__action ecl-gallery__action--multislider ecl-gallery__action--multislider__forward"}
           ref={multisliderNextRef}><ArrowForwardIosIcon/></div>
-      </Swiper>
+      </div>
 
       <FileInfo
         file={files?.files[getCorrectIndex(current, files?.files)]}
