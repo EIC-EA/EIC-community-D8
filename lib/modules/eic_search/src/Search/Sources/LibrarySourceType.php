@@ -71,6 +71,10 @@ class LibrarySourceType extends SourceType {
         'ASC' => $this->t('Title A-Z', [], ['context' => 'eic_search']),
         'DESC' => $this->t('Title Z-A', [], ['context' => 'eic_search']),
       ],
+      'dm_aggregated_changed' => [
+        'label' => $this->t('Last updated', [], ['context' => 'eic_search']),
+        'DESC' => $this->t('Last updated', [], ['context' => 'eic_search']),
+      ],
       'its_last_comment_timestamp' => [
         'label' => $this->t('Last commented', [], ['context' => 'eic_search']),
         'DESC' => $this->t('Last commented', [], ['context' => 'eic_search']),

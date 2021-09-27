@@ -70,6 +70,10 @@ class StorySourceType extends SourceType {
         'DESC' => $this->t('Most liked', [], ['context' => 'eic_search']),
         'ASC' => $this->t('Less liked', [], ['context' => 'eic_search']),
       ],
+      'dm_aggregated_changed' => [
+        'label' => $this->t('Last updated', [], ['context' => 'eic_search']),
+        'DESC' => $this->t('Last updated', [], ['context' => 'eic_search']),
+      ],
       'its_last_comment_timestamp' => [
         'label' => $this->t('Last commented', [], ['context' => 'eic_search']),
         'DESC' => $this->t('Last commented', [], ['context' => 'eic_search']),
