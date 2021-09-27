@@ -93,9 +93,9 @@
     "react-dom": "^16.14.0",
     "react-notification-system": "^0.4.0",
     "react-test-renderer": "^16.9.0",
-    "swiper": "^7.0.6",
     "reactjs-popup": "^2.0.5",
     "semantic-ui-css": "^2.4.1",
-    "semantic-ui-react": "^2.0.3"
+    "semantic-ui-react": "^2.0.3",
+    "swiper": "^7.0.6"
   }
 }
