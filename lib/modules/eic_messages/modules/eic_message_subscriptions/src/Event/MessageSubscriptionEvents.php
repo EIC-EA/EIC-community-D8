@@ -34,4 +34,22 @@ final class MessageSubscriptionEvents {
    */
   const COMMENT_INSERT = 'eic_message_subscriptions.comment_insert';
 
+  /**
+   * Event ID for when a group content is updated.
+   *
+   * @Event
+   *
+   * @var string
+   */
+  const NODE_INSERT = 'eic_message_subscriptions.node_insert';
+
+  /**
+   * Event ID for when a group content is updated.
+   *
+   * @Event
+   *
+   * @var string
+   */
+  const NODE_UPDATE = 'eic_message_subscriptions.node_update';
+
 }

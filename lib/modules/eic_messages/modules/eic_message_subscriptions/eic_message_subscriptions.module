@@ -21,6 +21,11 @@ function eic_message_subscriptions_entity_insert(EntityInterface $entity) {
         ->entityInsert($entity);
       break;
 
+    case 'group_content':
+      \Drupal::classResolver(EntityOperations::class)
+        ->entityInsert($entity);
+      break;
+
   }
 }
 

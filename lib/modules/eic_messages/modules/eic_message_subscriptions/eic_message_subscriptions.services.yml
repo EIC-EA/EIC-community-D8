@@ -1,7 +1,7 @@
 services:
   eic_message_subscriptions.event_subscriber:
     class: Drupal\eic_message_subscriptions\EventSubscriber\MessageSubscriptionEventSubscriber
-    arguments: ['@message_notify.sender', '@eic_messages.message_creator.comment', '@eic_messages.message_creator.group_content']
+    arguments: ['@message_notify.sender', '@eic_messages.message_creator.comment', '@eic_messages.message_creator.group_content', '@eic_flags.helper']
     tags:
       - { name: event_subscriber }
 

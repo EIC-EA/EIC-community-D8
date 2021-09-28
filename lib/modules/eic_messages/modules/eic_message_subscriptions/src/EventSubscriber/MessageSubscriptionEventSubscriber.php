@@ -10,6 +10,7 @@ use Drupal\eic_message_subscriptions\SubscriptionOperationTypes;
 use Drupal\eic_messages\Service\CommentMessageCreator;
 use Drupal\eic_messages\Service\GroupContentMessageCreator;
 use Drupal\group\Entity\GroupContent;
+use Drupal\message\MessageInterface;
 use Drupal\message_notify\MessageNotifier;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -78,6 +79,8 @@ class MessageSubscriptionEventSubscriber implements EventSubscriberInterface {
       MessageSubscriptionEvents::COMMENT_INSERT => ['commentCreated'],
       MessageSubscriptionEvents::GROUP_CONTENT_INSERT => ['groupContentCreated'],
       MessageSubscriptionEvents::GROUP_CONTENT_UPDATE => ['groupContentUpdated'],
+      MessageSubscriptionEvents::NODE_INSERT => ['nodeCreated'],
+      MessageSubscriptionEvents::NODE_UPDATE => ['nodeUpdated'],
     ];
   }
 
@@ -105,11 +108,7 @@ class MessageSubscriptionEventSubscriber implements EventSubscriberInterface {
       $operation
     );
 
-    foreach ($subscribed_users as $user) {
-      $message->setOwnerId($user->id());
-      // @todo Send message to a queue to be processed later by cron.
-      $this->notifier->send($message);
-    }
+    $this->notifyUsers($message, $subscribed_users);
   }
 
   /**
@@ -124,7 +123,6 @@ class MessageSubscriptionEventSubscriber implements EventSubscriberInterface {
     $group_contents = GroupContent::loadByEntity($entity);
 
     if (empty($group_contents)) {
-      // @todo Get list of users subscribed to topics of this node.
       return;
     }
 
@@ -145,15 +143,11 @@ class MessageSubscriptionEventSubscriber implements EventSubscriberInterface {
       $operation
     );
 
-    foreach ($subscribed_users as $user) {
-      $message->setOwnerId($user->id());
-      // @todo Send message to a queue to be processed later by cron.
-      $this->notifier->send($message);
-    }
+    $this->notifyUsers($message, $subscribed_users);
   }
 
   /**
-   * Group content update event handler.
+   * Node update event handler.
    *
    * @param \Drupal\eic_message_subscriptions\Event\MessageSubscriptionEvent $event
    *   The MessageSubscription event.
@@ -164,7 +158,6 @@ class MessageSubscriptionEventSubscriber implements EventSubscriberInterface {
     $group_contents = GroupContent::loadByEntity($entity);
 
     if (empty($group_contents)) {
-      // @todo Get list of users subscribed to topics of this node.
       return;
     }
 
@@ -184,11 +177,39 @@ class MessageSubscriptionEventSubscriber implements EventSubscriberInterface {
       $operation
     );
 
-    foreach ($subscribed_users as $user) {
-      $message->setOwnerId($user->id());
-      // @todo Send message to a queue to be processed later by cron.
-      $this->notifier->send($message);
-    }
+    $this->notifyUsers($message, $subscribed_users);
+  }
+
+  /**
+   * Node created event handler.
+   *
+   * @param \Drupal\eic_message_subscriptions\Event\MessageSubscriptionEvent $event
+   *   The MessageSubscription event.
+   */
+  public function nodeCreated(MessageSubscriptionEvent $event) {
+    $entity = $event->getEntity();
+
+    // @todo Get list of users subscribed to topics of this node.
+    // Get the users subscribed to the node.
+    $subscribed_users = $this->getSubscribedUsers($entity);
+
+    // @todo Send message to a queue to be processed later by cron.
+  }
+
+  /**
+   * Group content update event handler.
+   *
+   * @param \Drupal\eic_message_subscriptions\Event\MessageSubscriptionEvent $event
+   *   The MessageSubscription event.
+   */
+  public function nodeUpdated(MessageSubscriptionEvent $event) {
+    $entity = $event->getEntity();
+
+    // @todo Get list of users subscribed to topics of this node.
+    // Get the users subscribed to the node.
+    $subscribed_users = $this->getSubscribedUsers($entity);
+
+    // @todo Send message to a queue to be processed later by cron.
   }
 
   /**
@@ -224,6 +245,22 @@ class MessageSubscriptionEventSubscriber implements EventSubscriberInterface {
     }
 
     return $users;
+  }
+
+  /**
+   * Send message subscription notification to users.
+   *
+   * @param \Drupal\message\MessageInterface $message
+   *   The message entity.
+   * @param array $users
+   *   Array of user entities to notify.
+   */
+  private function notifyUsers(MessageInterface $message, array $users) {
+    foreach ($users as $user) {
+      $message->setOwnerId($user->id());
+      // @todo Send message to a queue to be processed later by cron.
+      $this->notifier->send($message);
+    }
   }
 
 }

@@ -2,6 +2,7 @@
 
 namespace Drupal\eic_message_subscriptions\Hooks;
 
+use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
@@ -37,19 +38,30 @@ class EntityOperations implements ContainerInjectionInterface {
   protected $eventDispatcher;
 
   /**
+   * Cache backend.
+   *
+   * @var \Drupal\Core\Cache\CacheBackendInterface
+   */
+  protected $cacheBackend;
+
+  /**
    * Constructs a new EntityOperations object.
    *
    * @param \Drupal\eic_message_subscriptions\MessageSubscriptionHelper $message_subscription_helper
    *   The message subscription helper service.
    * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $event_dispatcher
    *   The event dispatcher.
+   * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
+   *   The cache backend.
    */
   public function __construct(
     MessageSubscriptionHelper $message_subscription_helper,
-    EventDispatcherInterface $event_dispatcher
+    EventDispatcherInterface $event_dispatcher,
+    CacheBackendInterface $cache_backend
   ) {
     $this->messageSubscriptionHelper = $message_subscription_helper;
     $this->eventDispatcher = $event_dispatcher;
+    $this->cacheBackend = $cache_backend;
   }
 
   /**
@@ -58,7 +70,8 @@ class EntityOperations implements ContainerInjectionInterface {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('eic_message_subscriptions.helper'),
-      $container->get('event_dispatcher')
+      $container->get('event_dispatcher'),
+      $container->get('cache.default')
     );
   }
 
@@ -79,6 +92,31 @@ class EntityOperations implements ContainerInjectionInterface {
         $event = new MessageSubscriptionEvent($entity);
         // Dispatch the event.
         $this->eventDispatcher->dispatch($event, MessageSubscriptionEvents::COMMENT_INSERT);
+        break;
+
+      case 'group_content':
+        $node = $entity->getEntity();
+
+        // Cache ID that identifies if an entity needs to trigger a
+        // subscription notification.
+        $cid = "eic_message_subscriptions:entity_notify:{$node->getEntityTypeId()}:{$node->id()}";
+
+        // Grab the value from the cache.
+        $send_subscription = $this->cacheBackend->get($cid);
+
+        // If the group content node hasn't been added to the cache, it means
+        // that the notification won't be sent out.
+        if (!$send_subscription) {
+          break;
+        }
+
+        // Instantiate event.
+        $event = new MessageSubscriptionEvent($node);
+        // Dispatch the event 'eic_message_subscriptions.group_content_insert'.
+        $this->eventDispatcher->dispatch($event, MessageSubscriptionEvents::GROUP_CONTENT_INSERT);
+
+        // Deletes the cache.
+        $this->cacheBackend->delete($cid);
         break;
 
     }

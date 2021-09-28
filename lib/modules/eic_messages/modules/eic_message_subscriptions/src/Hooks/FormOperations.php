@@ -2,6 +2,7 @@
 
 namespace Drupal\eic_message_subscriptions\Hooks;
 
+use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Form\FormStateInterface;
@@ -47,6 +48,13 @@ class FormOperations implements ContainerInjectionInterface {
   protected $eventDispatcher;
 
   /**
+   * Cache backend.
+   *
+   * @var \Drupal\Core\Cache\CacheBackendInterface
+   */
+  protected $cacheBackend;
+
+  /**
    * Constructs a new EntityOperations object.
    *
    * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
@@ -55,15 +63,19 @@ class FormOperations implements ContainerInjectionInterface {
    *   The EIC content helper service.
    * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $event_dispatcher
    *   The event dispatcher.
+   * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
+   *   The cache backend.
    */
   public function __construct(
     RouteMatchInterface $route_match,
     EICContentHelper $content_helper,
-    EventDispatcherInterface $event_dispatcher
+    EventDispatcherInterface $event_dispatcher,
+    CacheBackendInterface $cache_backend
   ) {
     $this->routeMatch = $route_match;
     $this->eicContentHelper = $content_helper;
     $this->eventDispatcher = $event_dispatcher;
+    $this->cacheBackend = $cache_backend;
   }
 
   /**
@@ -73,7 +85,8 @@ class FormOperations implements ContainerInjectionInterface {
     return new static(
       $container->get('current_route_match'),
       $container->get('eic_content.helper'),
-      $container->get('event_dispatcher')
+      $container->get('event_dispatcher'),
+      $container->get('cache.default')
     );
   }
 
@@ -151,19 +164,34 @@ class FormOperations implements ContainerInjectionInterface {
           // If we are creating a new group content, we handle the notification
           // at a later stage because at this point we don't have the group
           // content ID that is associated with this node.
-          if ($form_id === "node_{$entity->bundle()}_form" && $route_name === 'entity.group_content.create_form') {
-            // @todo Add this node to a queue so that the notification can be
-            // sent out after the group_content entity has been inserted in DB.
+          if ($form_id === "node_{$entity->bundle()}_form") {
+
+            if ($route_name === 'entity.group_content.create_form') {
+              // Add new cache ID that identifies if an entity needs to trigger
+              // a subscription notification.
+              $cid = "eic_message_subscriptions:entity_notify:{$entity->getEntityTypeId()}:{$entity->id()}";
+              // Cache the result.
+              $this->cacheBackend->set($cid, TRUE);
+              break;
+            }
+
+            // Instantiate MessageSubscriptionEvent.
+            $event = new MessageSubscriptionEvent($entity);
+            // Dispatch the event 'eic_message_subscriptions.node_insert'.
+            $this->eventDispatcher->dispatch($event, MessageSubscriptionEvents::NODE_INSERT);
             break;
           }
 
-          // @todo Get list of users subscribed to topics of this node.
+          // Instantiate MessageSubscriptionEvent.
+          $event = new MessageSubscriptionEvent($entity);
+          // Dispatch the event 'eic_message_subscriptions.node_update'.
+          $this->eventDispatcher->dispatch($event, MessageSubscriptionEvents::NODE_UPDATE);
           break;
         }
 
         // Instantiate MessageSubscriptionEvent.
         $event = new MessageSubscriptionEvent($entity);
-        // Dispatch the event.
+        // Dispatch the event 'eic_message_subscriptions.group_content_update'.
         $this->eventDispatcher->dispatch($event, MessageSubscriptionEvents::GROUP_CONTENT_UPDATE);
         break;
 
