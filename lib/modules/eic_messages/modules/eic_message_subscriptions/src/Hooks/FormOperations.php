@@ -124,6 +124,9 @@ class FormOperations implements ContainerInjectionInterface {
     }
 
     if ($show_notification_field) {
+      // We set the current publish status of the entity.
+      $form_state->set('entity_is_published', $entity->isPublished());
+
       $form['field_send_notification'] = [
         '#title' => $this->t('Send notification'),
         '#type' => 'checkbox',
@@ -175,17 +178,35 @@ class FormOperations implements ContainerInjectionInterface {
               break;
             }
 
+            if (!$entity->isPublished()) {
+              break;
+            }
+
             // Instantiate MessageSubscriptionEvent.
             $event = new MessageSubscriptionEvent($entity);
             // Dispatch the event 'eic_message_subscriptions.node_insert'.
             $this->eventDispatcher->dispatch($event, MessageSubscriptionEvents::NODE_INSERT);
-            break;
+          }
+          else {
+            // Gets the previous publish status.
+            $is_published = $form_state->get('entity_is_published');
+
+            // If the entity is already published we don't need to send
+            // notification.
+            if ($is_published) {
+              break;
+            }
+
+            // If node has been published, we need to notify users about
+            // content of interest.
+            if ($entity->isPublished()) {
+              // Instantiate MessageSubscriptionEvent.
+              $event = new MessageSubscriptionEvent($entity);
+              // Dispatch the event 'eic_message_subscriptions.node_insert'.
+              $this->eventDispatcher->dispatch($event, MessageSubscriptionEvents::NODE_INSERT);
+            }
           }
 
-          // Instantiate MessageSubscriptionEvent.
-          $event = new MessageSubscriptionEvent($entity);
-          // Dispatch the event 'eic_message_subscriptions.node_update'.
-          $this->eventDispatcher->dispatch($event, MessageSubscriptionEvents::NODE_UPDATE);
           break;
         }
 

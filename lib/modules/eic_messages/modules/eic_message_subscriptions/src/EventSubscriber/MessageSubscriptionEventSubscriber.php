@@ -9,6 +9,7 @@ use Drupal\eic_message_subscriptions\Event\MessageSubscriptionEvents;
 use Drupal\eic_message_subscriptions\SubscriptionOperationTypes;
 use Drupal\eic_messages\Service\CommentMessageCreator;
 use Drupal\eic_messages\Service\GroupContentMessageCreator;
+use Drupal\eic_messages\Service\NodeMessageCreator;
 use Drupal\group\Entity\GroupContent;
 use Drupal\message\MessageInterface;
 use Drupal\message_notify\MessageNotifier;
@@ -41,6 +42,13 @@ class MessageSubscriptionEventSubscriber implements EventSubscriberInterface {
   protected $groupContentMessageCreator;
 
   /**
+   * The Node Message Creator service.
+   *
+   * @var \Drupal\eic_messages\Service\NodeMessageCreator
+   */
+  protected $nodeMessageCreator;
+
+  /**
    * The EIC Flag Helper service.
    *
    * @var \Drupal\eic_flags\FlagHelper
@@ -56,6 +64,8 @@ class MessageSubscriptionEventSubscriber implements EventSubscriberInterface {
    *   The Comment Message Creator service.
    * @param \Drupal\eic_messages\Service\GroupContentMessageCreator $group_content_message_creator
    *   The GroupContent Message Creator service.
+   * @param \Drupal\eic_messages\Service\NodeMessageCreator $node_message_creator
+   *   The Node Message Creator service.
    * @param \Drupal\eic_flags\FlagHelper $eic_flags_helper
    *   The EIC Flag Helper service.
    */
@@ -63,11 +73,13 @@ class MessageSubscriptionEventSubscriber implements EventSubscriberInterface {
     MessageNotifier $notifier,
     CommentMessageCreator $comment_message_creator,
     GroupContentMessageCreator $group_content_message_creator,
+    NodeMessageCreator $node_message_creator,
     FlagHelper $eic_flags_helper
   ) {
     $this->notifier = $notifier;
     $this->commentMessageCreator = $comment_message_creator;
     $this->groupContentMessageCreator = $group_content_message_creator;
+    $this->nodeMessageCreator = $node_message_creator;
     $this->eicFlagsHelper = $eic_flags_helper;
   }
 
@@ -80,7 +92,6 @@ class MessageSubscriptionEventSubscriber implements EventSubscriberInterface {
       MessageSubscriptionEvents::GROUP_CONTENT_INSERT => ['groupContentCreated'],
       MessageSubscriptionEvents::GROUP_CONTENT_UPDATE => ['groupContentUpdated'],
       MessageSubscriptionEvents::NODE_INSERT => ['nodeCreated'],
-      MessageSubscriptionEvents::NODE_UPDATE => ['nodeUpdated'],
     ];
   }
 
@@ -108,6 +119,7 @@ class MessageSubscriptionEventSubscriber implements EventSubscriberInterface {
       $operation
     );
 
+    // Send message notifications.
     $this->notifyUsers($message, $subscribed_users);
   }
 
@@ -143,6 +155,7 @@ class MessageSubscriptionEventSubscriber implements EventSubscriberInterface {
       $operation
     );
 
+    // Send message notifications.
     $this->notifyUsers($message, $subscribed_users);
   }
 
@@ -177,6 +190,7 @@ class MessageSubscriptionEventSubscriber implements EventSubscriberInterface {
       $operation
     );
 
+    // Send message notifications.
     $this->notifyUsers($message, $subscribed_users);
   }
 
@@ -189,27 +203,36 @@ class MessageSubscriptionEventSubscriber implements EventSubscriberInterface {
   public function nodeCreated(MessageSubscriptionEvent $event) {
     $entity = $event->getEntity();
 
-    // @todo Get list of users subscribed to topics of this node.
-    // Get the users subscribed to the node.
-    $subscribed_users = $this->getSubscribedUsers($entity);
+    $node_topics = $entity->get('field_vocab_topics')->referencedEntities();
 
-    // @todo Send message to a queue to be processed later by cron.
-  }
+    if (empty($node_topics)) {
+      return;
+    }
 
-  /**
-   * Group content update event handler.
-   *
-   * @param \Drupal\eic_message_subscriptions\Event\MessageSubscriptionEvent $event
-   *   The MessageSubscription event.
-   */
-  public function nodeUpdated(MessageSubscriptionEvent $event) {
-    $entity = $event->getEntity();
+    $subscribed_users = [];
 
-    // @todo Get list of users subscribed to topics of this node.
-    // Get the users subscribed to the node.
-    $subscribed_users = $this->getSubscribedUsers($entity);
+    foreach ($node_topics as $topic) {
+      $subscribed_users = $this->getSubscribedUsers($topic);
 
-    // @todo Send message to a queue to be processed later by cron.
+      foreach (array_keys($subscribed_users) as $uid) {
+        // If this user is already in the array of subscribed users we can skip
+        // it.
+        if (isset($subscribed_users[$uid])) {
+          continue;
+        }
+      }
+    }
+
+    // Set the subscription operation.
+    $operation = SubscriptionOperationTypes::NEW_ENTITY;
+
+    $message = $this->nodeMessageCreator->createTermsOfInterestNodeSubscription(
+      $entity,
+      $operation
+    );
+
+    // Send message notifications.
+    $this->notifyUsers($message, $subscribed_users);
   }
 
   /**
@@ -234,12 +257,16 @@ class MessageSubscriptionEventSubscriber implements EventSubscriberInterface {
       case 'node':
         // Get users who are following the node.
         $users = $this->eicFlagsHelper->getFlaggingUsersByFlagIds($entity, ['follow_content']);
-        // @todo Get users who are following topics of the node.
         break;
 
       case 'group':
         // Get users who are following the group.
         $users = $this->eicFlagsHelper->getFlaggingUsersByFlagIds($entity, ['follow_group']);
+        break;
+
+      case 'taxonomy_term':
+        // Get users who are following the group.
+        $users = $this->eicFlagsHelper->getFlaggingUsersByFlagIds($entity, ['follow_taxonomy_term']);
         break;
 
     }

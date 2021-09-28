@@ -9,7 +9,6 @@ use Drupal\eic_message_subscriptions\SubscriptionOperationTypes;
 use Drupal\eic_messages\Util\ActivityStreamMessageTemplates;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\message\Entity\Message;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a message creator class for group content.
@@ -17,23 +16,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @package Drupal\eic_messages
  */
 class GroupContentMessageCreator extends MessageCreatorBase {
-
-  /**
-   * The Flag sevice.
-   *
-   * @var \Drupal\flag\FlagServiceInterface
-   */
-  protected $flagService;
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container) {
-    /** @var static $service */
-    $service = parent::create($container);
-    $service->flagService = $container->get('flag');
-    return $service;
-  }
 
   /**
    * Implements hook_group_content_insert().
@@ -119,7 +101,7 @@ class GroupContentMessageCreator extends MessageCreatorBase {
   }
 
   /**
-   * Creates an subscription message for an entity inside a group.
+   * Creates a subscription message for an entity inside a group.
    *
    * @param \Drupal\Core\Entity\ContentEntityInterface $entity
    *   The entity object.

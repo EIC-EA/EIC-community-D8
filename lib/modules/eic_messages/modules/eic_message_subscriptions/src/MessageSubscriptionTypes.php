@@ -17,4 +17,8 @@ final class MessageSubscriptionTypes {
 
   const GROUP_CONTENT_UPDATED = 'sub_group_content_updated';
 
+  const NODE_PUBLISHED = 'sub_content_interest_published';
+
+  const NODE_UPDATED = NULL;
+
 }

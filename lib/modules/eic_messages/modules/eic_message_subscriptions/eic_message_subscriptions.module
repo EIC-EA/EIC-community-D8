@@ -55,3 +55,11 @@ function eic_message_subscriptions_form_node_form_alter(&$form, FormStateInterfa
   \Drupal::classResolver(FormOperations::class)
     ->entityFormAlter($form, $form_state, $form_id);
 }
+
+/**
+ * Implements hook_form_BASE_FORM_ID_alter().
+ */
+function eic_message_subscriptions_form_node_edit_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  \Drupal::classResolver(FormOperations::class)
+    ->entityFormAlter($form, $form_state, $form_id);
+}
