@@ -83,6 +83,14 @@ class EntityOperations implements ContainerInjectionInterface {
    */
   public function entityInsert(EntityInterface $entity) {
     if (!$this->messageSubscriptionHelper->isMessageSubscriptionApplicable($entity)) {
+      if ($entity->getEntityTypeId() === 'group_content') {
+        $group_content_entity = $entity->getEntity();
+        // Cache ID that identifies if an entity needs to trigger a
+        // subscription notification.
+        $cid = "eic_message_subscriptions:entity_notify:{$group_content_entity->getEntityTypeId()}:{$group_content_entity->id()}";
+        // Deletes the cache.
+        $this->cacheBackend->delete($cid);
+      }
       return;
     }
 
