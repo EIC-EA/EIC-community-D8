@@ -4,14 +4,12 @@ namespace Drupal\eic_message_subscriptions\Hooks;
 
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Drupal\eic_flags\FlagHelper;
+use Drupal\eic_message_subscriptions\Event\MessageSubscriptionEvent;
+use Drupal\eic_message_subscriptions\Event\MessageSubscriptionEvents;
 use Drupal\eic_message_subscriptions\MessageSubscriptionHelper;
-use Drupal\eic_message_subscriptions\SubscriptionOperationTypes;
-use Drupal\eic_messages\Service\CommentMessageCreator;
-use Drupal\message_notify\MessageNotifier;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Class EntityOperations.
@@ -25,27 +23,6 @@ class EntityOperations implements ContainerInjectionInterface {
   use StringTranslationTrait;
 
   /**
-   * The EIC Flags helper sevice.
-   *
-   * @var \Drupal\eic_flags\FlagHelper
-   */
-  protected $eicFlagsHelper;
-
-  /**
-   * The message notifier.
-   *
-   * @var \Drupal\message_notify\MessageNotifier
-   */
-  protected $notifier;
-
-  /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
    * The message subscription helper service.
    *
    * @var \Drupal\eic_message_subscriptions\MessageSubscriptionHelper
@@ -53,38 +30,26 @@ class EntityOperations implements ContainerInjectionInterface {
   protected $messageSubscriptionHelper;
 
   /**
-   * The Comment Message Creator service.
+   * The event dispatcher.
    *
-   * @var \Drupal\eic_messages\Service\CommentMessageCreator
+   * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
    */
-  protected $commentMessageCreator;
+  protected $eventDispatcher;
 
   /**
    * Constructs a new EntityOperations object.
    *
-   * @param \Drupal\eic_flags\FlagHelper $eic_flags_helper
-   *   The EIC Flags helper sevice.
-   * @param \Drupal\message_notify\MessageNotifier $notifier
-   *   The message notifier.
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
-   *   The entity type manager.
    * @param \Drupal\eic_message_subscriptions\MessageSubscriptionHelper $message_subscription_helper
    *   The message subscription helper service.
-   * @param \Drupal\eic_messages\Service\CommentMessageCreator $comment_message_creator
-   *   The Comment Message Creator service.
+   * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $event_dispatcher
+   *   The event dispatcher.
    */
   public function __construct(
-    FlagHelper $eic_flags_helper,
-    MessageNotifier $notifier,
-    EntityTypeManagerInterface $entity_type_manager,
     MessageSubscriptionHelper $message_subscription_helper,
-    CommentMessageCreator $comment_message_creator
+    EventDispatcherInterface $event_dispatcher
   ) {
-    $this->eicFlagsHelper = $eic_flags_helper;
-    $this->notifier = $notifier;
-    $this->entityTypeManager = $entity_type_manager;
     $this->messageSubscriptionHelper = $message_subscription_helper;
-    $this->commentMessageCreator = $comment_message_creator;
+    $this->eventDispatcher = $event_dispatcher;
   }
 
   /**
@@ -92,11 +57,8 @@ class EntityOperations implements ContainerInjectionInterface {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('eic_flags.helper'),
-      $container->get('message_notify.sender'),
-      $container->get('entity_type.manager'),
       $container->get('eic_message_subscriptions.helper'),
-      $container->get('eic_messages.message_creator.comment')
+      $container->get('event_dispatcher')
     );
   }
 
@@ -107,57 +69,18 @@ class EntityOperations implements ContainerInjectionInterface {
    *   The entity object.
    */
   public function entityInsert(EntityInterface $entity) {
-    $operation = FALSE;
-    /** @var \Drupal\user\Entity\User[] $subscribed_users */
-    $subscribed_users = [];
-
     if (!$this->messageSubscriptionHelper->isMessageSubscriptionApplicable($entity)) {
       return;
     }
 
     switch ($entity->getEntityTypeId()) {
       case 'comment':
-        // Default operation when new comment is added.
-        $operation = SubscriptionOperationTypes::NEW_ENTITY;
-
-        // If comment is a reply we set the operation to 'comment_reply'..
-        if ($entity->hasParentComment()) {
-          $operation = SubscriptionOperationTypes::COMMENT_REPLY;
-        }
-
-        // Get commented entity.
-        $commented_entity = $entity->getCommentedEntity();
-        // Get users who are following the commented entity.
-        $subscribed_users = $this->eicFlagsHelper->getFlaggingUsersByFlagIds($commented_entity, ['follow_content']);
+        // Instantiate event.
+        $event = new MessageSubscriptionEvent($entity);
+        // Dispatch the event.
+        $this->eventDispatcher->dispatch($event, MessageSubscriptionEvents::COMMENT_INSERT);
         break;
 
-    }
-
-    // No message type defined so we do nothing.
-    if (!$operation) {
-      return;
-    }
-
-    $message = NULL;
-
-    switch ($entity->getEntityTypeId()) {
-      case 'comment':
-        $message = $this->commentMessageCreator->createCommentSubscription(
-          $entity,
-          $operation
-        );
-        break;
-
-    }
-
-    if (!$message) {
-      return;
-    }
-
-    foreach ($subscribed_users as $user) {
-      $message->setOwnerId($user->id());
-      // @todo Send message to a queue to be processed later by cron.
-      $this->notifier->send($message);
     }
   }
 

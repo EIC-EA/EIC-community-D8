@@ -8,11 +8,10 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\eic_content\EICContentHelper;
-use Drupal\eic_flags\FlagHelper;
-use Drupal\eic_message_subscriptions\SubscriptionOperationTypes;
-use Drupal\eic_messages\Service\GroupContentMessageCreator;
-use Drupal\message_notify\MessageNotifier;
+use Drupal\eic_message_subscriptions\Event\MessageSubscriptionEvent;
+use Drupal\eic_message_subscriptions\Event\MessageSubscriptionEvents;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Class FormAlter.
@@ -41,25 +40,11 @@ class FormOperations implements ContainerInjectionInterface {
   protected $eicContentHelper;
 
   /**
-   * The GroupContent Message Creator service.
+   * The event dispatcher.
    *
-   * @var \Drupal\eic_messages\Service\GroupContentMessageCreator
+   * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
    */
-  protected $groupContentMessageCreator;
-
-  /**
-   * The EIC Flags helper sevice.
-   *
-   * @var \Drupal\eic_flags\FlagHelper
-   */
-  protected $eicFlagsHelper;
-
-  /**
-   * The message notifier.
-   *
-   * @var \Drupal\message_notify\MessageNotifier
-   */
-  protected $notifier;
+  protected $eventDispatcher;
 
   /**
    * Constructs a new EntityOperations object.
@@ -68,25 +53,17 @@ class FormOperations implements ContainerInjectionInterface {
    *   The current route match service.
    * @param \Drupal\eic_content\EICContentHelper $content_helper
    *   The EIC content helper service.
-   * @param \Drupal\eic_messages\Service\GroupContentMessageCreator $group_content_message_creator
-   *   The GroupContent Message Creator service.
-   * @param \Drupal\eic_flags\FlagHelper $eic_flags_helper
-   *   The EIC Flags helper sevice.
-   * @param \Drupal\message_notify\MessageNotifier $notifier
-   *   The message notifier.
+   * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $event_dispatcher
+   *   The event dispatcher.
    */
   public function __construct(
     RouteMatchInterface $route_match,
     EICContentHelper $content_helper,
-    GroupContentMessageCreator $group_content_message_creator,
-    FlagHelper $eic_flags_helper,
-    MessageNotifier $notifier
+    EventDispatcherInterface $event_dispatcher
   ) {
     $this->routeMatch = $route_match;
     $this->eicContentHelper = $content_helper;
-    $this->groupContentMessageCreator = $group_content_message_creator;
-    $this->eicFlagsHelper = $eic_flags_helper;
-    $this->notifier = $notifier;
+    $this->eventDispatcher = $event_dispatcher;
   }
 
   /**
@@ -96,9 +73,7 @@ class FormOperations implements ContainerInjectionInterface {
     return new static(
       $container->get('current_route_match'),
       $container->get('eic_content.helper'),
-      $container->get('eic_messages.message_creator.group_content'),
-      $container->get('eic_flags.helper'),
-      $container->get('message_notify.sender')
+      $container->get('event_dispatcher')
     );
   }
 
@@ -165,13 +140,6 @@ class FormOperations implements ContainerInjectionInterface {
       return;
     }
 
-    $subscribed_users = [];
-    $is_group_content = FALSE;
-
-    $operation = $form_state->getFormObject()->getOperation() === 'edit'
-      ? SubscriptionOperationTypes::UPDATED_ENTITY
-      : SubscriptionOperationTypes::NEW_ENTITY;
-
     $form_id = $form_state->getFormObject()->getFormId();
     $route_name = $this->routeMatch->getRouteName();
 
@@ -193,42 +161,13 @@ class FormOperations implements ContainerInjectionInterface {
           break;
         }
 
-        $group_content = reset($group_contents);
-        $group = $group_content->getGroup();
-        // Get users who are following the group.
-        $subscribed_users = $this->eicFlagsHelper->getFlaggingUsersByFlagIds($group, ['follow_group']);
-        $is_group_content = TRUE;
-        // @todo Send message to users subscribed to a topic(s) of discussion.
+        // Instantiate MessageSubscriptionEvent.
+        $event = new MessageSubscriptionEvent($entity);
+        // Dispatch the event.
+        $this->eventDispatcher->dispatch($event, MessageSubscriptionEvents::GROUP_CONTENT_UPDATE);
         break;
 
     }
-
-    $message = NULL;
-
-    switch ($entity->getEntityTypeId()) {
-      case 'node':
-        if ($is_group_content) {
-          $message = $this->groupContentMessageCreator->createGroupContentSubscription(
-            $entity,
-            $group,
-            $operation
-          );
-        }
-        break;
-
-    }
-
-    if (!$message) {
-      return;
-    }
-
-    foreach ($subscribed_users as $user) {
-      $message->setOwnerId($user->id());
-      // @todo Send message to a queue to be processed later by cron.
-      $this->notifier->send($message);
-    }
-
-    // @todo Send message to users subscribed to a topic(s) of discussion.
   }
 
 }
