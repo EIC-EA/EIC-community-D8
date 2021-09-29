@@ -2,7 +2,6 @@
 
 namespace Drupal\eic_message_subscriptions\Hooks;
 
-use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Queue\QueueFactory;
