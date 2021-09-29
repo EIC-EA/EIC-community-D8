@@ -6,7 +6,7 @@ use Drupal\Component\EventDispatcher\Event;
 use Drupal\Core\Entity\EntityInterface;
 
 /**
- * Event for when a flagging is created.
+ * Event for when an entity is created and needs to generate message.
  */
 class MessageSubscriptionEvent extends Event {
 
