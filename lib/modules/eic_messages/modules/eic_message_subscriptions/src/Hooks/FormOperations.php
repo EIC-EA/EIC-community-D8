@@ -2,15 +2,16 @@
 
 namespace Drupal\eic_message_subscriptions\Hooks;
 
-use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Queue\QueueFactory;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\State\StateInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\eic_content\EICContentHelper;
 use Drupal\eic_message_subscriptions\Event\MessageSubscriptionEvents;
+use Drupal\eic_message_subscriptions\MessageSubscriptionHelper;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -40,18 +41,18 @@ class FormOperations implements ContainerInjectionInterface {
   protected $eicContentHelper;
 
   /**
-   * Cache backend.
-   *
-   * @var \Drupal\Core\Cache\CacheBackendInterface
-   */
-  protected $cacheBackend;
-
-  /**
    * The queue factory service.
    *
    * @var \Drupal\Core\Queue\QueueFactory
    */
   protected $queueFactory;
+
+  /**
+   * The state service.
+   *
+   * @var \Drupal\Core\State\StateInterface
+   */
+  protected $state;
 
   /**
    * Constructs a new EntityOperations object.
@@ -60,21 +61,21 @@ class FormOperations implements ContainerInjectionInterface {
    *   The current route match service.
    * @param \Drupal\eic_content\EICContentHelper $content_helper
    *   The EIC content helper service.
-   * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
-   *   The cache backend.
    * @param \Drupal\Core\Queue\QueueFactory $queue_factory
    *   The queue factory service.
+   * @param \Drupal\Core\State\StateInterface $state
+   *   The state service.
    */
   public function __construct(
     RouteMatchInterface $route_match,
     EICContentHelper $content_helper,
-    CacheBackendInterface $cache_backend,
-    QueueFactory $queue_factory
+    QueueFactory $queue_factory,
+    StateInterface $state
   ) {
     $this->routeMatch = $route_match;
     $this->eicContentHelper = $content_helper;
-    $this->cacheBackend = $cache_backend;
     $this->queueFactory = $queue_factory;
+    $this->state = $state;
   }
 
   /**
@@ -84,8 +85,8 @@ class FormOperations implements ContainerInjectionInterface {
     return new static(
       $container->get('current_route_match'),
       $container->get('eic_content.helper'),
-      $container->get('cache.default'),
-      $container->get('queue')
+      $container->get('queue'),
+      $container->get('state')
     );
   }
 
@@ -176,11 +177,13 @@ class FormOperations implements ContainerInjectionInterface {
           if ($form_id === "node_{$entity->bundle()}_form") {
 
             if ($route_name === 'entity.group_content.create_form') {
-              // Add new cache ID that identifies if an entity needs to trigger
-              // a subscription notification.
-              $cid = "eic_message_subscriptions:entity_notify:{$entity->getEntityTypeId()}:{$entity->id()}";
-              // Cache the result.
-              $this->cacheBackend->set($cid, TRUE);
+              // State cache ID that represents a new group content
+              // creation.
+              $state_key = MessageSubscriptionHelper::GROUP_CONTENT_CREATED_STATE_KEY;
+              // Increments entity type and entity ID to the state cache ID.
+              $state_key .= ":{$entity->getEntityTypeId()}:{$entity->id()}";
+              // Adds the item to the state cache.
+              $this->state->set($state_key, TRUE);
               break;
             }
 

@@ -14,6 +14,11 @@ use Drupal\group\Entity\GroupContent;
 class MessageSubscriptionHelper {
 
   /**
+   * State cache ID that represents a new group content creation.
+   */
+  const GROUP_CONTENT_CREATED_STATE_KEY = 'eic_message_subscriptions:group_content_created';
+
+  /**
    * Check if an entity can trigger message subscriptions.
    *
    * @param \Drupal\Core\Entity\EntityInterface $entity
