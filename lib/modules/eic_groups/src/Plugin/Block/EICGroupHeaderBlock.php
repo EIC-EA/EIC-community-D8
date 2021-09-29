@@ -496,7 +496,16 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
 
     // Adds link to the group about page.
     if ($has_read_more) {
-      $link = Link::createFromRoute($this->t('Read more'), 'eic_groups.about_page', ['group' => $group->id()]);
+      $link = Link::createFromRoute(
+        $this->t('Read more'),
+        'eic_groups.about_page',
+        [
+          'group' => $group->id(),
+        ],
+        [
+          'fragment' => 'group-description-full',
+        ],
+      );
       $output .= ' ' . $link->toString();
     }
 

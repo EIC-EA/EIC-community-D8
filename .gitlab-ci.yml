@@ -108,3 +108,15 @@ deploy_qa:
     HOST: $QA_HOST
   only:
     - /^release/.*$/
+
+slack_notifier:
+  stage: deploy
+  before_script:
+    - apk update && apk add curl
+  script:
+    - 'eval "$DEPLOY_CURL_COMMAND"'
+  variables:
+    DEPLOY_CURL_COMMAND_BODY: "'{\"text\": \"New deployment running on QA. Environment will be updated in a few minutes...\"}'"
+    DEPLOY_CURL_COMMAND: 'curl -X POST $SLACK_URL -H "Content-Type: application/json" -d $DEPLOY_CURL_COMMAND_BODY'
+  only:
+    - /^release/.*$/

@@ -155,4 +155,34 @@
   .ecl-button {
     text-align: center;
   }
+
+  & .ecl-radio__group {
+    padding: 0;
+  }
+
+  & .form-wrapper{
+    width: 100%;
+  }
+
+  & .ecl-radio {
+    background: #F5F5F5;
+    padding: 16px;
+    display: block;
+    width: 100%;
+
+    & .ecl-radio__label {
+      display: flex;
+      align-items: flex-start;
+      gap: .75rem;
+    }
+
+    & .ecl-radio__box {
+      margin-right: 0;
+
+      & + p {
+        width: 70%;
+        margin: 0;
+      }
+    }
+  }
 }

@@ -5,6 +5,7 @@
  * Prepares variables for node gallery templates.
  */
 
+use Drupal\eic_media\MediaHelper;
 use Drupal\file\Entity\File;
 
 /**
@@ -27,7 +28,8 @@ function eic_community_preprocess_node__gallery(array &$variables) {
       $slides = [];
 
       foreach ($files as $file) {
-        $download = File::load($file->field_gallery_slide_media->getValue()[0]['target_id']);
+        $media = $file->get('field_gallery_slide_media')->referencedEntities()[0];
+        $download = File::load($media->oe_media_image->getValue()[0]['target_id']);
 
         $files_list[] = [
           'name' => $download->getFileName(),
@@ -48,7 +50,7 @@ function eic_community_preprocess_node__gallery(array &$variables) {
             ],
           ],
           'mime_type' => substr(strrchr($download->get('filemime')->getString(), '/'), 1),
-          'path' => $download->createFileUrl(),
+          'path' => MediaHelper::formatMediaDownloadLink($media)->toString(),
         ];
 
         $slides[] = [
