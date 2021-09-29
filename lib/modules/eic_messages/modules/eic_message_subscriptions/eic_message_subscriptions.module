@@ -7,6 +7,7 @@
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\eic_message_subscriptions\Hooks\CronOperations;
 use Drupal\eic_message_subscriptions\Hooks\EntityOperations;
 use Drupal\eic_message_subscriptions\Hooks\FormOperations;
 use Drupal\node\Entity\NodeType;
@@ -62,4 +63,12 @@ function eic_message_subscriptions_form_node_form_alter(&$form, FormStateInterfa
 function eic_message_subscriptions_form_node_edit_form_alter(&$form, FormStateInterface $form_state, $form_id) {
   \Drupal::classResolver(FormOperations::class)
     ->entityFormAlter($form, $form_state, $form_id);
+}
+
+/**
+ * Implements hook_cron().
+ */
+function eic_message_subscriptions_cron() {
+  \Drupal::classResolver(CronOperations::class)
+    ->cron();
 }
