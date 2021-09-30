@@ -108,6 +108,15 @@ name: Global
 description: ''
 read_only: false
 field_settings:
+  aggregated_changed:
+    label: '[Aggregated] Changed on'
+    property_path: aggregated_field
+    type: date
+    configuration:
+      type: union
+      fields:
+        - 'entity:group/changed'
+        - 'entity:node/changed'
   aggregated_created:
     label: '[Aggregated] Created on'
     property_path: aggregated_field
@@ -717,6 +726,14 @@ field_settings:
       module:
         - group
         - user
+  last_comment_timestamp:
+    label: '[Content] Comments » Last comment timestamp'
+    datasource_id: 'entity:node'
+    property_path: 'field_comments:last_comment_timestamp'
+    type: integer
+    dependencies:
+      config:
+        - field.storage.node.field_comments
   message_id:
     label: 'Message ID'
     datasource_id: 'entity:message'
