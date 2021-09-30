@@ -38,7 +38,7 @@ eic_groups.discussion_update_comment:
     _permission: 'access content'
 
 eic_groups.discussion_delete_comment:
-  path: '/api/discussion/{discussion_id}/delete/{comment_id}'
+  path: '/api/discussion/{group_id}/{discussion_id}/delete/{comment_id}'
   methods: [ DELETE ]
   defaults:
     _controller: '\Drupal\eic_groups\Controller\DiscussionController::deleteComment'

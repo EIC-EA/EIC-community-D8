@@ -6,6 +6,7 @@ use Drupal\Core\Block\Annotation\Block;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\eic_groups\EICGroupsHelper;
+use Drupal\eic_user\UserHelper;
 use Drupal\file\Entity\File;
 use Drupal\flag\FlagService;
 use Drupal\group\Entity\GroupContent;
@@ -103,12 +104,17 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
 
     $current_group_route = $this->groupsHelper->getGroupFromRoute();
     $user_group_roles = [];
+    $account = \Drupal::currentUser();
 
     if ($current_group_route) {
-      $account = \Drupal::currentUser();
       $membership = $current_group_route->getMember($account);
       $user_group_roles = $membership instanceof GroupMembership ? $membership->getRoles() : [];
     }
+
+    $user_group_roles = array_merge(
+      $user_group_roles,
+      $account->getRoles(TRUE)
+    );
 
     $contributors = $node->get('field_related_contributors')
       ->referencedEntities();
@@ -148,6 +154,8 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
     $file = $media_picture ? File::load($media_picture[0]->get('oe_media_image')->target_id) : NULL;
     $file_url = $file ? file_url_transform_relative(file_create_url($file->get('uri')->value)) : NULL;
 
+    $group_id = $current_group_route ? $current_group_route->id() : 0;
+
     $build['#attached']['drupalSettings']['overview'] = [
       'is_group_owner' => array_key_exists(EICGroupsHelper::GROUP_OWNER_ROLE, $user_group_roles),
       'user' => [
@@ -160,6 +168,7 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
           '#',
       ],
       'group_roles' => $user_group_roles,
+      'group_id' => $group_id,
       'permissions' => [
         'post_comment' =>
           $this->groupPermissionChecker->getPermissionInGroups(
@@ -172,11 +181,9 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
           $current_user,
           $group_contents
         )->isAllowed(),
-        'delete_all_comments' => $this->groupPermissionChecker->getPermissionInGroups(
-          'delete any page content',
-          $current_user,
-          $group_contents
-        )->isAllowed(),
+        'delete_all_comments' => in_array(UserHelper::ROLE_SITE_ADMINISTRATOR, $user_group_roles) ||
+          in_array(UserHelper::ROLE_CONTENT_ADMINISTRATOR, $user_group_roles) ||
+          in_array(UserHelper::ROLE_DRUPAL_ADMINISTRATOR, $user_group_roles),
         'edit_own_comments' => $this->groupPermissionChecker->getPermissionInGroups(
           'edit own comments',
           $current_user,
@@ -201,8 +208,6 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
         'action_request_archival' => $this->t('Request archival', [], ['context' => 'eic_groups']),
       ],
     ];
-
-    $group_id = $current_group_route ? $current_group_route->id() : 0;
 
     return $build + [
         '#cache' => [

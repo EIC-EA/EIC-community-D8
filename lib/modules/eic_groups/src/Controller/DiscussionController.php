@@ -10,11 +10,15 @@ use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\eic_flags\RequestStatus;
+use Drupal\eic_groups\EICGroupsHelper;
+use Drupal\eic_user\UserHelper;
 use Drupal\file\Entity\File;
 use Drupal\flag\FlaggingInterface;
 use Drupal\flag\FlagInterface;
 use Drupal\flag\FlagService;
+use Drupal\group\Entity\Group;
 use Drupal\group\Entity\GroupContent;
+use Drupal\group\GroupMembership;
 use Drupal\node\Entity\Node;
 use Drupal\oec_group_comments\GroupPermissionChecker;
 use Drupal\user\Entity\User;
@@ -56,20 +60,28 @@ class DiscussionController extends ControllerBase {
   private $groupPermissionChecker;
 
   /**
+   * @var \Drupal\eic_groups\EICGroupsHelper $groupsHelper
+   */
+  private $groupsHelper;
+
+  /**
    * DiscussionController constructor.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    * @param \Drupal\flag\FlagService $flag_service
    * @param \Drupal\oec_group_comments\GroupPermissionChecker $group_permission_checker
+   * @param EICGroupsHelper $groups_helper
    */
   public function __construct(
     EntityTypeManagerInterface $entity_type_manager,
     FlagService $flag_service,
-    GroupPermissionChecker $group_permission_checker
+    GroupPermissionChecker $group_permission_checker,
+    EICGroupsHelper $groups_helper
   ) {
     $this->entityTypeManager = $entity_type_manager;
     $this->flagService = $flag_service;
     $this->groupPermissionChecker = $group_permission_checker;
+    $this->groupsHelper = $groups_helper;
   }
 
   /**
@@ -79,7 +91,8 @@ class DiscussionController extends ControllerBase {
     return new static(
       $container->get('entity_type.manager'),
       $container->get('flag'),
-      $container->get('oec_group_comments.group_permission_checker')
+      $container->get('oec_group_comments.group_permission_checker'),
+      $container->get('eic_groups.helper')
     );
   }
 
@@ -305,21 +318,40 @@ class DiscussionController extends ControllerBase {
 
   /**
    * @param \Symfony\Component\HttpFoundation\Request $request
+   * @param int $group_id
    * @param int $discussion_id
    * @param $comment_id
    *
    * @return \Symfony\Component\HttpFoundation\JsonResponse
    */
-  public function deleteComment(Request $request, int $discussion_id, $comment_id) {
+  public function deleteComment(Request $request, int $group_id, int $discussion_id, $comment_id) {
     $comment = Comment::load($comment_id);
 
     if (!$comment instanceof CommentInterface) {
       return new JsonResponse('Cannot find comment entity', Response::HTTP_BAD_REQUEST);
     }
 
-    $user = User::load($this->currentUser()->id());
+    $group = Group::load($group_id);
 
-    if ($user->id() !== $comment->getOwnerId()) {
+    if (!$group) {
+      return new JsonResponse('Group does not exists', Response::HTTP_BAD_REQUEST);
+    }
+
+    $group_membership = $group->getMember($this->currentUser());
+    $user_group_roles = $group_membership instanceof GroupMembership
+      ? array_keys($group_membership->getRoles())
+      : [];
+
+    $user_group_roles = array_merge(
+      $user_group_roles,
+      $this->currentUser()->getRoles(TRUE)
+    );
+
+    if (
+      !in_array(UserHelper::ROLE_SITE_ADMINISTRATOR, $user_group_roles) &&
+      !in_array(UserHelper::ROLE_CONTENT_ADMINISTRATOR, $user_group_roles) &&
+      !in_array(UserHelper::ROLE_DRUPAL_ADMINISTRATOR, $user_group_roles)
+    ) {
       return new JsonResponse('You do not have access to delete the content', Response::HTTP_FORBIDDEN);
     }
 
