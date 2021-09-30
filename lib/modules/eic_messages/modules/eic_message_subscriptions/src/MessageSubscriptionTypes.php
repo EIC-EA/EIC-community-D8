@@ -21,4 +21,6 @@ final class MessageSubscriptionTypes {
 
   const NODE_UPDATED = NULL;
 
+  const CONTENT_RECOMMENDED = 'sub_new_content_recommendation';
+
 }

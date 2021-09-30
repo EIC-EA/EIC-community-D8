@@ -3,7 +3,6 @@
 namespace Drupal\eic_message_subscriptions;
 
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\eic_groups\GroupsModerationHelper;
 use Drupal\group\Entity\GroupContent;
 
 /**
@@ -35,6 +34,12 @@ class MessageSubscriptionHelper {
       case 'comment':
         // Get commented entity.
         $commented_entity = $entity->getCommentedEntity();
+
+        // If commented entity is not published, then subscription is not
+        // applicable.
+        if (!$commented_entity->isPublished()) {
+          break;
+        }
 
         // Loads group contents for the commented entity.
         $group_contents = GroupContent::loadByEntity($commented_entity);
@@ -77,15 +82,7 @@ class MessageSubscriptionHelper {
 
       $group = $entity->getGroup();
 
-      $moderation_state = $group->get('moderation_state')->value;
-
-      $is_applicable = !in_array(
-        $moderation_state,
-        [
-          GroupsModerationHelper::GROUP_PENDING_STATE,
-          GroupsModerationHelper::GROUP_DRAFT_STATE,
-        ]
-      );
+      $is_applicable = $group->isPublished();
     }
 
     return $is_applicable;
