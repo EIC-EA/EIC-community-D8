@@ -252,7 +252,7 @@ class SolrDocumentProcessor {
 
     if (array_key_exists('its_content__group_content__entity_id_gid', $fields)) {
       if ($group_entity = Group::load($fields['its_content__group_content__entity_id_gid'])) {
-        $group_parent_label = -$group_entity->label();
+        $group_parent_label = $group_entity->label();
         $group_parent_url = $group_entity->toUrl()->toString();
         $group_parent_id = $group_entity->id();
       }
