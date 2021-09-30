@@ -1,0 +1,35 @@
+uuid: 6102727b-6cf4-4b04-a8a1-36fb1d5286a5
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.message.field_referenced_node
+    - message.template.sub_new_content_recommendation
+    - node.type.discussion
+    - node.type.document
+    - node.type.gallery
+    - node.type.video
+id: message.sub_new_content_recommendation.field_referenced_node
+field_name: field_referenced_node
+entity_type: message
+bundle: sub_new_content_recommendation
+label: 'Referenced node'
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      discussion: discussion
+      document: document
+      gallery: gallery
+      video: video
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: discussion
+field_type: entity_reference
