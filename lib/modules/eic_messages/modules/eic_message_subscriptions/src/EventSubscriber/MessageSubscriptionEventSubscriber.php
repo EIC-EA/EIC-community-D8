@@ -283,7 +283,14 @@ class MessageSubscriptionEventSubscriber implements EventSubscriberInterface {
    *   Array of user entities to notify.
    */
   private function notifyUsers(MessageInterface $message, array $users) {
+    /** @var \Drupal\user\UserInterface $user */
     foreach ($users as $user) {
+      // Messages cannot be sent to anonymous owner, if user is anonymous, skip
+      // it.
+      if ($user->isAnonymous()) {
+        continue;
+      }
+
       $message->setOwnerId($user->id());
       // @todo Send message to a queue to be processed later by cron.
       $this->notifier->send($message);
