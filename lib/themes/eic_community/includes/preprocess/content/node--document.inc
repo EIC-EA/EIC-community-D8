@@ -97,7 +97,7 @@ function eic_community_preprocess_node__document(array &$variables) {
           ],
         ],
         'mime_type' => substr(strrchr($download->get('filemime')->getString(), '/'), 1),
-        'path' => $download_url->toString(),
+        'path' => $download_url,
       ];
     }
 
