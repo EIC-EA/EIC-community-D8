@@ -18,6 +18,7 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
 use Drupal\eic_content_wiki_page\WikiPageBookManager;
 use Drupal\eic_groups\Constants\NodeProperty;
+use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_groups\EICGroupsHelperInterface;
 use Drupal\eic_user\UserHelper;
 use Drupal\group\Entity\GroupContent;
@@ -432,13 +433,27 @@ class EntityOperations implements ContainerInjectionInterface {
             return AccessResult::forbidden();
           }
 
-          // We return access denied if the user is not the owner of the wiki
-          // page neither administrator.
-          if ($entity->getOwnerId() !== $account->id()) {
-            if (!UserHelper::isPowerUser($account)) {
-              $access = AccessResult::forbidden();
-            }
+          // If user is a group admin, we allow access.
+          if ($entity->getOwnerId() === $account->id()) {
+            break;
           }
+
+          // If user is a power user, we allow access.
+          if (UserHelper::isPowerUser($account)) {
+            break;
+          }
+
+          $group_content = reset($group_contents);
+          $group = $group_content->getGroup();
+
+          // If user is a group admin, we allow access.
+          if (EICGroupsHelper::userIsGroupAdmin($group, $account)) {
+            break;
+          }
+
+          // At this point it means the user is just a group member and
+          // therefore we deny access to edit the field.
+          $access = AccessResult::forbidden();
           break;
 
       }
