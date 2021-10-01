@@ -27,6 +27,7 @@ use Drupal\user\Entity\User;
 use Drupal\user\UserInterface;
 use Drupal\search_api\Entity\Index;
 use Drupal\search_api\Utility\PostRequestIndexing;
+use Drupal\search_api\Utility\Utility;
 use Solarium\Core\Query\DocumentInterface;
 use Solarium\QueryType\Update\Query\Document;
 
@@ -479,6 +480,8 @@ class SolrDocumentProcessor {
         $entity_id = $fields['its_content_nid'];
         $entity_type = 'node';
         $last_flagging_flag_types = [
+          FlagType::BOOKMARK_CONTENT,
+          FlagType::HIGHLIGHT_CONTENT,
           FlagType::LIKE_CONTENT,
         ];
         break;
