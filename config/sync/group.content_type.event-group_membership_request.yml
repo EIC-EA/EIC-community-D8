@@ -1,0 +1,18 @@
+uuid: 22c9971a-c393-48e8-a37e-cd5aefdfa4e6
+langcode: en
+status: true
+dependencies:
+  config:
+    - group.type.event
+  module:
+    - grequest
+    - user
+id: event-group_membership_request
+label: 'Event: Group membership request'
+description: 'Adds users as requesters for the group.'
+group_type: event
+content_plugin: group_membership_request
+plugin_config:
+  group_cardinality: 0
+  entity_cardinality: 1
+  use_creation_wizard: false

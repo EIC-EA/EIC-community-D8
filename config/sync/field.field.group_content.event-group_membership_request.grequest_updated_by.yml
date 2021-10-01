@@ -1,0 +1,21 @@
+uuid: 07b6a440-8b88-493c-a044-f0b313d1f091
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.group_content.grequest_updated_by
+    - group.content_type.event-group_membership_request
+id: group_content.event-group_membership_request.grequest_updated_by
+field_name: grequest_updated_by
+entity_type: group_content
+bundle: event-group_membership_request
+label: 'Approved/Rejected by'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:user'
+  handler_settings: {  }
+field_type: entity_reference

@@ -1,0 +1,29 @@
+uuid: 8d5f53e8-d7e1-47f6-9606-fb53169586cb
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.group.field_header_visual
+    - group.type.event
+    - media.type.image
+id: group.event.field_header_visual
+field_name: field_header_visual
+entity_type: group
+bundle: event
+label: 'Banner Image'
+description: 'Banner to be used on the event site landing page. Minimum image resolution: 940x300 px, Maximum upload size: 2MB.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:media'
+  handler_settings:
+    target_bundles:
+      image: image
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference
