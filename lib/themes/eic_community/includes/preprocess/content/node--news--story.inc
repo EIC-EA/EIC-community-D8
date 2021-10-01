@@ -7,8 +7,8 @@
 
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Render\Markup;
-use Drupal\Core\Url;
 use Drupal\eic_community\ValueObject\ImageValueObject;
+use Drupal\eic_media\MediaHelper;
 use Drupal\eic_private_content\PrivateContentConst;
 use Drupal\file\Entity\File;
 
@@ -287,11 +287,7 @@ function _eic_community_story_video_field(&$variables) {
     switch ($media->bundle()) {
       case 'video':
         $file = File::load($media->field_media_video_file->target_id);
-        $download_url = Url::fromRoute('media_entity_download.download',
-          [
-            'media' => $media->id(),
-          ]
-        );
+        $download_url = MediaHelper::formatMediaDownloadLink($media)->toString();
         $variables['video_download'] = [
           'title' => $media->getName(),
           'language' => $media->language()->getName(),

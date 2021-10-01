@@ -46,6 +46,10 @@
 
   body &--button-ghost {
     @extend .ecl-button--ghost;
+
+    &:focus {
+      outline: none;
+    }
   }
 
   body &--action {
