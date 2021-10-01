@@ -3,8 +3,10 @@
 namespace Drupal\eic_messages\Service;
 
 use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\eic_flags\FlagType;
 use Drupal\eic_message_subscriptions\MessageSubscriptionTypes;
 use Drupal\eic_message_subscriptions\SubscriptionOperationTypes;
+use Drupal\flag\FlaggingInterface;
 use Drupal\group\Entity\GroupContent;
 use Drupal\message\Entity\Message;
 
@@ -72,6 +74,37 @@ class NodeMessageCreator extends MessageCreatorBase {
         break;
 
     }
+
+    return $message;
+  }
+
+  /**
+   * Creates a subscription message to be sent when a user recommends a node.
+   *
+   * @param \Drupal\flag\FlaggingInterface $flagging
+   *   The flagging object.
+   */
+  public function createContentRecommendedSubscription(
+    FlaggingInterface $flagging
+  ) {
+    $flag = $flagging->getFlag();
+    $message = NULL;
+
+    if ($flag->id() !== FlagType::RECOMMEND) {
+      return $message;
+    }
+
+    // Gets the flagged entity.
+    $flagged_entity = $flagging->getFlaggable();
+
+    // Instantiates a new message entity.
+    $message = Message::create([
+      'template' => MessageSubscriptionTypes::CONTENT_RECOMMENDED,
+      'field_referenced_node' => $flagged_entity,
+    ]);
+
+    // Adds the reference to the user who recommended the content.
+    $message->set('field_event_executing_user', $flagging->getOwnerId());
 
     return $message;
   }

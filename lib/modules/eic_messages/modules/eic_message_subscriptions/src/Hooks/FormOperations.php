@@ -2,17 +2,17 @@
 
 namespace Drupal\eic_message_subscriptions\Hooks;
 
-use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Queue\QueueFactory;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\State\StateInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\eic_content\EICContentHelper;
-use Drupal\eic_message_subscriptions\Event\MessageSubscriptionEvent;
 use Drupal\eic_message_subscriptions\Event\MessageSubscriptionEvents;
+use Drupal\eic_message_subscriptions\MessageSubscriptionHelper;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Class FormAlter.
@@ -41,18 +41,18 @@ class FormOperations implements ContainerInjectionInterface {
   protected $eicContentHelper;
 
   /**
-   * The event dispatcher.
+   * The queue factory service.
    *
-   * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
+   * @var \Drupal\Core\Queue\QueueFactory
    */
-  protected $eventDispatcher;
+  protected $queueFactory;
 
   /**
-   * Cache backend.
+   * The state service.
    *
-   * @var \Drupal\Core\Cache\CacheBackendInterface
+   * @var \Drupal\Core\State\StateInterface
    */
-  protected $cacheBackend;
+  protected $state;
 
   /**
    * Constructs a new EntityOperations object.
@@ -61,21 +61,21 @@ class FormOperations implements ContainerInjectionInterface {
    *   The current route match service.
    * @param \Drupal\eic_content\EICContentHelper $content_helper
    *   The EIC content helper service.
-   * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $event_dispatcher
-   *   The event dispatcher.
-   * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
-   *   The cache backend.
+   * @param \Drupal\Core\Queue\QueueFactory $queue_factory
+   *   The queue factory service.
+   * @param \Drupal\Core\State\StateInterface $state
+   *   The state service.
    */
   public function __construct(
     RouteMatchInterface $route_match,
     EICContentHelper $content_helper,
-    EventDispatcherInterface $event_dispatcher,
-    CacheBackendInterface $cache_backend
+    QueueFactory $queue_factory,
+    StateInterface $state
   ) {
     $this->routeMatch = $route_match;
     $this->eicContentHelper = $content_helper;
-    $this->eventDispatcher = $event_dispatcher;
-    $this->cacheBackend = $cache_backend;
+    $this->queueFactory = $queue_factory;
+    $this->state = $state;
   }
 
   /**
@@ -85,8 +85,8 @@ class FormOperations implements ContainerInjectionInterface {
     return new static(
       $container->get('current_route_match'),
       $container->get('eic_content.helper'),
-      $container->get('event_dispatcher'),
-      $container->get('cache.default')
+      $container->get('queue'),
+      $container->get('state')
     );
   }
 
@@ -140,7 +140,7 @@ class FormOperations implements ContainerInjectionInterface {
   }
 
   /**
-   * Handles the node form submit for the field_post_activity.
+   * Handles the node form submit for the field_send_notification.
    *
    * @param array $form
    *   The form.
@@ -161,6 +161,13 @@ class FormOperations implements ContainerInjectionInterface {
 
     switch ($entity->getEntityTypeId()) {
       case 'node':
+        $message_subscription_queue = $this->queueFactory->get(CronOperations::MESSAGE_SUBSCRIPTIONS_QUEUE);
+        // Initialize message subscription item to be added to the message
+        // subscription queue. We need to do this otherwise the process of
+        // sending the notification might take too long since it needs to get
+        // the subscribed users before the notification is sent.
+        $item = new \stdClass();
+
         $group_contents = $this->eicContentHelper->getGroupContentByEntity($entity);
 
         if (empty($group_contents)) {
@@ -170,11 +177,13 @@ class FormOperations implements ContainerInjectionInterface {
           if ($form_id === "node_{$entity->bundle()}_form") {
 
             if ($route_name === 'entity.group_content.create_form') {
-              // Add new cache ID that identifies if an entity needs to trigger
-              // a subscription notification.
-              $cid = "eic_message_subscriptions:entity_notify:{$entity->getEntityTypeId()}:{$entity->id()}";
-              // Cache the result.
-              $this->cacheBackend->set($cid, TRUE);
+              // State cache ID that represents a new group content
+              // creation.
+              $state_key = MessageSubscriptionHelper::GROUP_CONTENT_CREATED_STATE_KEY;
+              // Increments entity type and entity ID to the state cache ID.
+              $state_key .= ":{$entity->getEntityTypeId()}:{$entity->id()}";
+              // Adds the item to the state cache.
+              $this->state->set($state_key, TRUE);
               break;
             }
 
@@ -182,10 +191,10 @@ class FormOperations implements ContainerInjectionInterface {
               break;
             }
 
-            // Instantiate MessageSubscriptionEvent.
-            $event = new MessageSubscriptionEvent($entity);
-            // Dispatch the event 'eic_message_subscriptions.node_insert'.
-            $this->eventDispatcher->dispatch($event, MessageSubscriptionEvents::NODE_INSERT);
+            // Adds message subscription event name to the queue item.
+            $item->message_subscription_event = MessageSubscriptionEvents::NODE_INSERT;
+            // Adds the entity that is triggering the message subscription.
+            $item->entity = $entity;
           }
           else {
             // Gets the previous publish status.
@@ -200,20 +209,24 @@ class FormOperations implements ContainerInjectionInterface {
             // If node has been published, we need to notify users about
             // content of interest.
             if ($entity->isPublished()) {
-              // Instantiate MessageSubscriptionEvent.
-              $event = new MessageSubscriptionEvent($entity);
-              // Dispatch the event 'eic_message_subscriptions.node_insert'.
-              $this->eventDispatcher->dispatch($event, MessageSubscriptionEvents::NODE_INSERT);
+              // Adds message subscription event name to the queue item.
+              $item->message_subscription_event = MessageSubscriptionEvents::NODE_INSERT;
+              // Adds the entity that is triggering the message subscription.
+              $item->entity = $entity;
             }
           }
 
+          // Adds message subscription item to the queue.
+          $message_subscription_queue->createItem($item);
           break;
         }
 
-        // Instantiate MessageSubscriptionEvent.
-        $event = new MessageSubscriptionEvent($entity);
-        // Dispatch the event 'eic_message_subscriptions.group_content_update'.
-        $this->eventDispatcher->dispatch($event, MessageSubscriptionEvents::GROUP_CONTENT_UPDATE);
+        // Adds message subscription event name to the queue item.
+        $item->message_subscription_event = MessageSubscriptionEvents::GROUP_CONTENT_UPDATE;
+        // Adds the entity that is triggering the message subscription.
+        $item->entity = $entity;
+        // Adds message subscription item to the queue.
+        $message_subscription_queue->createItem($item);
         break;
 
     }

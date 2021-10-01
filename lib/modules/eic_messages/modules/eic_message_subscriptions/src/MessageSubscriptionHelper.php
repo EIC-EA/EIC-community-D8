@@ -3,7 +3,6 @@
 namespace Drupal\eic_message_subscriptions;
 
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\eic_groups\GroupsModerationHelper;
 use Drupal\group\Entity\GroupContent;
 
 /**
@@ -12,6 +11,11 @@ use Drupal\group\Entity\GroupContent;
  * @package Drupal\eic_message_subscriptions
  */
 class MessageSubscriptionHelper {
+
+  /**
+   * State cache ID that represents a new group content creation.
+   */
+  const GROUP_CONTENT_CREATED_STATE_KEY = 'eic_message_subscriptions:group_content_created';
 
   /**
    * Check if an entity can trigger message subscriptions.
@@ -30,6 +34,12 @@ class MessageSubscriptionHelper {
       case 'comment':
         // Get commented entity.
         $commented_entity = $entity->getCommentedEntity();
+
+        // If commented entity is not published, then subscription is not
+        // applicable.
+        if (!$commented_entity->isPublished()) {
+          break;
+        }
 
         // Loads group contents for the commented entity.
         $group_contents = GroupContent::loadByEntity($commented_entity);
@@ -72,15 +82,7 @@ class MessageSubscriptionHelper {
 
       $group = $entity->getGroup();
 
-      $moderation_state = $group->get('moderation_state')->value;
-
-      $is_applicable = !in_array(
-        $moderation_state,
-        [
-          GroupsModerationHelper::GROUP_PENDING_STATE,
-          GroupsModerationHelper::GROUP_DRAFT_STATE,
-        ]
-      );
+      $is_applicable = $group->isPublished();
     }
 
     return $is_applicable;

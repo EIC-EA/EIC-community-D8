@@ -19,6 +19,6 @@ final class MessageSubscriptionTypes {
 
   const NODE_PUBLISHED = 'sub_content_interest_published';
 
-  const NODE_UPDATED = NULL;
+  const CONTENT_RECOMMENDED = 'sub_new_content_recommendation';
 
 }

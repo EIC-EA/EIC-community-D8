@@ -19,4 +19,6 @@ final class FlagType {
 
   const LIKE_CONTENT = 'like_content';
 
+  const RECOMMEND = 'recommend';
+
 }
