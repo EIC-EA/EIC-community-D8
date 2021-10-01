@@ -8,6 +8,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Logger\LoggerChannelTrait;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\eic_messages\MessageHelper;
+use Drupal\eic_messages\Service\MessageCreatorInterface;
 use Drupal\eic_user\UserHelper;
 use Drupal\message\MessageInterface;
 use Drupal\message\MessageTemplateInterface;
@@ -16,7 +17,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Base class for sending out messages.
  */
-class MessageCreatorBase implements ContainerInjectionInterface {
+class MessageCreatorBase implements ContainerInjectionInterface, MessageCreatorInterface {
 
   use LoggerChannelTrait;
   use StringTranslationTrait;
@@ -125,7 +126,7 @@ class MessageCreatorBase implements ContainerInjectionInterface {
     $query->condition('created', ($request_time - $threshold), '>=');
 
     // Apply conditions based on the message template's primary keys.
-    foreach ($this->messageTemplatePrimaryKeys($message->getTemplate()) as $primary_key) {
+    foreach ($this->getMessageTemplatePrimaryKeys($message->getTemplate()) as $primary_key) {
       // Avoid adding a condition if the field doesn't exist.
       if (!$message->hasField($primary_key)) {
         continue;
@@ -138,35 +139,12 @@ class MessageCreatorBase implements ContainerInjectionInterface {
   }
 
   /**
-   * Returns the fields used as primary keys for the given message template.
+   * {@inheritdoc}
    *
-   * @param \Drupal\message\MessageTemplateInterface $message_template
-   *   The message template.
-   *
-   * @return array|string[]
-   *   An array of field names.
+   * This method should be overridden in the extending classes.
    */
-  protected function messageTemplatePrimaryKeys(MessageTemplateInterface $message_template) {
-    $primary_keys = [];
-
-    switch ($message_template->id()) {
-      case 'stream_discussion_insert_update':
-        $primary_keys = [
-          'field_group_ref',
-          'field_operation_type',
-          'field_referenced_node',
-        ];
-        break;
-
-      case 'sub_group_content_updated':
-        $primary_keys = [
-          'field_event_executing_user',
-          'field_referenced_node',
-        ];
-        break;
-    }
-
-    return $primary_keys;
+  public function getMessageTemplatePrimaryKeys(MessageTemplateInterface $message_template) {
+    return [];
   }
 
 }
