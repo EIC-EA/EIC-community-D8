@@ -2,6 +2,7 @@
 
 namespace Drupal\eic_messages\Service;
 
+use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
@@ -36,6 +37,7 @@ class RequestMessageCreator extends MessageCreatorBase {
   /**
    * RequestMessageCreator constructor.
    *
+   * @param \Drupal\Component\Datetime\TimeInterface $date_time
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    * @param \Drupal\eic_messages\MessageHelper $eic_messages_helper
    * @param \Drupal\eic_user\UserHelper $eic_user_helper
@@ -43,6 +45,7 @@ class RequestMessageCreator extends MessageCreatorBase {
    * @param \Drupal\Core\Render\RendererInterface $renderer
    */
   public function __construct(
+    TimeInterface $date_time,
     EntityTypeManagerInterface $entity_type_manager,
     MessageHelper $eic_messages_helper,
     UserHelper $eic_user_helper,
@@ -50,6 +53,7 @@ class RequestMessageCreator extends MessageCreatorBase {
     RendererInterface $renderer
   ) {
     parent::__construct(
+      $date_time,
       $entity_type_manager,
       $eic_messages_helper,
       $eic_user_helper

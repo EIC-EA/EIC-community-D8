@@ -2,6 +2,7 @@
 
 namespace Drupal\eic_messages\Hooks;
 
+use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
@@ -29,18 +30,22 @@ class EntityOperations extends MessageCreatorBase implements ContainerInjectionI
   /**
    * EntityUpdate constructor.
    *
+   * @param \Drupal\Component\Datetime\TimeInterface $date_time
+   *   The datetime.time service.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    * @param \Drupal\eic_messages\MessageHelper $eic_messages_helper
    * @param \Drupal\eic_user\UserHelper $eic_user_helper
    * @param \Drupal\content_moderation\ModerationInformationInterface $moderationInformation
    */
   public function __construct(
+    TimeInterface $date_time,
     EntityTypeManagerInterface $entity_type_manager,
     MessageHelper $eic_messages_helper,
     UserHelper $eic_user_helper,
     ModerationInformationInterface $moderationInformation
   ) {
     parent::__construct(
+      $date_time,
       $entity_type_manager,
       $eic_messages_helper,
       $eic_user_helper
@@ -54,6 +59,7 @@ class EntityOperations extends MessageCreatorBase implements ContainerInjectionI
    */
   public static function create(ContainerInterface $container) {
     return new static(
+      $container->get('datetime.time'),
       $container->get('entity_type.manager'),
       $container->get('eic_messages.helper'),
       $container->get('eic_user.helper'),

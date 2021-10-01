@@ -3,6 +3,7 @@
 namespace Drupal\eic_messages\Service;
 
 use Drupal\comment\CommentInterface;
+use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\eic_content\EICContentHelperInterface;
 use Drupal\eic_message_subscriptions\MessageSubscriptionTypes;
@@ -29,6 +30,8 @@ class CommentMessageCreator extends MessageCreatorBase {
   /**
    * CommentMessageCreator constructor.
    *
+   * @param \Drupal\Component\Datetime\TimeInterface $date_time
+   *   The datetime.time service.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
    * @param \Drupal\eic_messages\MessageHelper $eic_messages_helper
@@ -39,12 +42,13 @@ class CommentMessageCreator extends MessageCreatorBase {
    *   The EIC Content helper service.
    */
   public function __construct(
+    TimeInterface $date_time,
     EntityTypeManagerInterface $entity_type_manager,
     MessageHelper $eic_messages_helper,
     UserHelper $eic_user_helper,
     EICContentHelperInterface $content_helper
   ) {
-    parent::__construct($entity_type_manager, $eic_messages_helper, $eic_user_helper);
+    parent::__construct($date_time, $entity_type_manager, $eic_messages_helper, $eic_user_helper);
 
     $this->contentHelper = $content_helper;
   }

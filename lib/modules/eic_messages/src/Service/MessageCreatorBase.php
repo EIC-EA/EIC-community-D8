@@ -2,23 +2,31 @@
 
 namespace Drupal\eic_messages\Service;
 
+use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Logger\LoggerChannelTrait;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Drupal\eic_groups\GroupsModerationHelper;
 use Drupal\eic_messages\MessageHelper;
 use Drupal\eic_user\UserHelper;
+use Drupal\message\MessageInterface;
+use Drupal\message\MessageTemplateInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Class MessageCreatorBase.
+ * Base class for sending out messages.
  */
 class MessageCreatorBase implements ContainerInjectionInterface {
 
   use LoggerChannelTrait;
   use StringTranslationTrait;
+
+  /**
+   * The datetime.time service.
+   *
+   * @var \Drupal\Component\Datetime\TimeInterface
+   */
+  protected $timeService;
 
   /**
    * The entity type manager.
@@ -44,6 +52,8 @@ class MessageCreatorBase implements ContainerInjectionInterface {
   /**
    * Constructs a new MessageCreatorBase object.
    *
+   * @param \Drupal\Component\Datetime\TimeInterface $date_time
+   *   The datetime.time service.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
    * @param \Drupal\eic_messages\MessageHelper $eic_messages_helper
@@ -51,7 +61,8 @@ class MessageCreatorBase implements ContainerInjectionInterface {
    * @param \Drupal\eic_user\UserHelper $eic_user_helper
    *   The EIC User helper service.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, MessageHelper $eic_messages_helper, UserHelper $eic_user_helper) {
+  public function __construct(TimeInterface $date_time, EntityTypeManagerInterface $entity_type_manager, MessageHelper $eic_messages_helper, UserHelper $eic_user_helper) {
+    $this->timeService = $date_time;
     $this->entityTypeManager = $entity_type_manager;
     $this->eicMessagesHelper = $eic_messages_helper;
     $this->eicUserHelper = $eic_user_helper;
@@ -62,6 +73,7 @@ class MessageCreatorBase implements ContainerInjectionInterface {
    */
   public static function create(ContainerInterface $container) {
     return new static(
+      $container->get('datetime.time'),
       $container->get('entity_type.manager'),
       $container->get('eic_messages.helper'),
       $container->get('eic_user.helper')
@@ -72,6 +84,7 @@ class MessageCreatorBase implements ContainerInjectionInterface {
    * Process an array of messages for queue notifications.
    *
    * @param array $messages
+   *   The messages to be processed.
    */
   public function processMessages(array $messages) {
     foreach ($messages as $message) {
@@ -85,6 +98,75 @@ class MessageCreatorBase implements ContainerInjectionInterface {
         $logger->error($e->getMessage());
       }
     }
+  }
+
+  /**
+   * Check for similar messages in certain timespan.
+   *
+   * @param Drupal\message\MessageInterface $message
+   *   The message to be created.
+   * @param int $threshold
+   *   The timespan to look for older similar messages, in seconds.
+   *
+   * @return array|int
+   *   And array of messages IDs.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   */
+  public function checkDuplicateMessages(MessageInterface $message, int $threshold = 3600) {
+    $request_time = $this->timeService->getRequestTime();
+
+    // Look for similar older messages.
+    // We don't filter by uid because it's not especially the author of the
+    // message, it can also the recipient of the message.
+    $query = $this->entityTypeManager->getStorage('message')->getQuery();
+    $query->condition('template', $message->getTemplate()->id());
+    $query->condition('created', ($request_time - $threshold), '>=');
+
+    // Apply conditions based on the message template's primary keys.
+    foreach ($this->messageTemplatePrimaryKeys($message->getTemplate()) as $primary_key) {
+      // Avoid adding a condition if the field doesn't exist.
+      if (!$message->hasField($primary_key)) {
+        continue;
+      }
+
+      $query->condition($primary_key, $message->get($primary_key)->getValue()[0]);
+    }
+
+    return $query->execute();
+  }
+
+  /**
+   * Returns the fields used as primary keys for the given message template.
+   *
+   * @param \Drupal\message\MessageTemplateInterface $message_template
+   *   The message template.
+   *
+   * @return array|string[]
+   *   An array of field names.
+   */
+  protected function messageTemplatePrimaryKeys(MessageTemplateInterface $message_template) {
+    $primary_keys = [];
+
+    switch ($message_template->id()) {
+      case 'stream_discussion_insert_update':
+        $primary_keys = [
+          'field_group_ref',
+          'field_operation_type',
+          'field_referenced_node',
+        ];
+        break;
+
+      case 'sub_group_content_updated':
+        $primary_keys = [
+          'field_event_executing_user',
+          'field_referenced_node',
+        ];
+        break;
+    }
+
+    return $primary_keys;
   }
 
 }
