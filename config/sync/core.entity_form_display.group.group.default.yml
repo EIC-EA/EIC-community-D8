@@ -28,11 +28,11 @@ content:
   features:
     type: options_buttons
     settings: {  }
-    weight: 12
+    weight: 13
     region: content
     third_party_settings: {  }
   field_body:
-    weight: 4
+    weight: 2
     settings:
       rows: 5
       placeholder: ''
@@ -40,7 +40,7 @@ content:
     type: text_textarea
     region: content
   field_group_invite_members:
-    weight: 9
+    weight: 12
     settings:
       display_label: true
     third_party_settings: {  }
@@ -48,13 +48,13 @@ content:
     region: content
   field_hero:
     type: media_library_widget
-    weight: 3
+    weight: 8
     settings:
       media_types: {  }
     third_party_settings: {  }
     region: content
   field_message_to_site_admin:
-    weight: 10
+    weight: 9
     settings:
       rows: 5
       placeholder: ''
@@ -62,7 +62,7 @@ content:
     type: text_textarea
     region: content
   field_related_groups:
-    weight: 5
+    weight: 10
     settings:
       match_operator: CONTAINS
       match_limit: 10
@@ -72,7 +72,7 @@ content:
     type: entity_reference_autocomplete
     region: content
   field_related_news_stories:
-    weight: 6
+    weight: 11
     settings:
       match_operator: CONTAINS
       match_limit: 10
@@ -83,13 +83,13 @@ content:
     region: content
   field_thumbnail:
     type: media_library_widget
-    weight: 2
+    weight: 7
     settings:
       media_types: {  }
     third_party_settings: {  }
     region: content
   field_vocab_geo:
-    weight: 8
+    weight: 5
     settings:
       match_operator: CONTAINS
       match_limit: 10
@@ -99,7 +99,7 @@ content:
     type: entity_reference_autocomplete
     region: content
   field_vocab_topics:
-    weight: 7
+    weight: 4
     settings:
       match_operator: CONTAINS
       match_limit: 10
@@ -109,7 +109,7 @@ content:
     type: entity_reference_autocomplete
     region: content
   field_welcome_message:
-    weight: 11
+    weight: 1
     settings:
       rows: 5
       placeholder: ''
@@ -131,14 +131,14 @@ content:
     third_party_settings: {  }
   langcode:
     type: language_select
-    weight: 1
+    weight: 6
     region: content
     settings:
       include_locked: true
     third_party_settings: {  }
   moderation_state:
     type: moderation_state_default
-    weight: 13
+    weight: 3
     settings: {  }
     region: content
     third_party_settings: {  }
