@@ -2,15 +2,14 @@
 
 namespace Drupal\eic_message_subscriptions\Hooks;
 
-use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Queue\QueueFactory;
+use Drupal\Core\State\StateInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Drupal\eic_message_subscriptions\Event\MessageSubscriptionEvent;
 use Drupal\eic_message_subscriptions\Event\MessageSubscriptionEvents;
 use Drupal\eic_message_subscriptions\MessageSubscriptionHelper;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Class EntityOperations.
@@ -31,37 +30,37 @@ class EntityOperations implements ContainerInjectionInterface {
   protected $messageSubscriptionHelper;
 
   /**
-   * The event dispatcher.
+   * The queue factory service.
    *
-   * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
+   * @var \Drupal\Core\Queue\QueueFactory
    */
-  protected $eventDispatcher;
+  protected $queueFactory;
 
   /**
-   * Cache backend.
+   * The state service.
    *
-   * @var \Drupal\Core\Cache\CacheBackendInterface
+   * @var \Drupal\Core\State\StateInterface
    */
-  protected $cacheBackend;
+  protected $state;
 
   /**
    * Constructs a new EntityOperations object.
    *
    * @param \Drupal\eic_message_subscriptions\MessageSubscriptionHelper $message_subscription_helper
    *   The message subscription helper service.
-   * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $event_dispatcher
-   *   The event dispatcher.
-   * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
-   *   The cache backend.
+   * @param \Drupal\Core\Queue\QueueFactory $queue_factory
+   *   The queue factory service.
+   * @param \Drupal\Core\State\StateInterface $state
+   *   The state service.
    */
   public function __construct(
     MessageSubscriptionHelper $message_subscription_helper,
-    EventDispatcherInterface $event_dispatcher,
-    CacheBackendInterface $cache_backend
+    QueueFactory $queue_factory,
+    StateInterface $state
   ) {
     $this->messageSubscriptionHelper = $message_subscription_helper;
-    $this->eventDispatcher = $event_dispatcher;
-    $this->cacheBackend = $cache_backend;
+    $this->queueFactory = $queue_factory;
+    $this->state = $state;
   }
 
   /**
@@ -70,8 +69,8 @@ class EntityOperations implements ContainerInjectionInterface {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('eic_message_subscriptions.helper'),
-      $container->get('event_dispatcher'),
-      $container->get('cache.default')
+      $container->get('queue'),
+      $container->get('state')
     );
   }
 
@@ -85,32 +84,44 @@ class EntityOperations implements ContainerInjectionInterface {
     if (!$this->messageSubscriptionHelper->isMessageSubscriptionApplicable($entity)) {
       if ($entity->getEntityTypeId() === 'group_content') {
         $group_content_entity = $entity->getEntity();
-        // Cache ID that identifies if an entity needs to trigger a
-        // subscription notification.
-        $cid = "eic_message_subscriptions:entity_notify:{$group_content_entity->getEntityTypeId()}:{$group_content_entity->id()}";
-        // Deletes the cache.
-        $this->cacheBackend->delete($cid);
+        // State cache ID that identifies a new group content creation.
+        $state_key = MessageSubscriptionHelper::GROUP_CONTENT_CREATED_STATE_KEY;
+        // Increments entity type and entity ID to the state cache ID.
+        $state_key .= ":{$group_content_entity->getEntityTypeId()}:{$group_content_entity->id()}";
+        // Deletes the item from the state cache.
+        $this->state->delete($state_key);
       }
       return;
     }
 
+    $message_subscription_queue = $this->queueFactory->get(CronOperations::MESSAGE_SUBSCRIPTIONS_QUEUE);
+
+    // Initialize message subscription item to be added to the message
+    // subscription queue. We need to do this otherwise the process of
+    // sending the notification might take too long since it needs to get
+    // the subscribed users before the notification is sent.
+    $item = new \stdClass();
+
     switch ($entity->getEntityTypeId()) {
       case 'comment':
-        // Instantiate event.
-        $event = new MessageSubscriptionEvent($entity);
-        // Dispatch the event.
-        $this->eventDispatcher->dispatch($event, MessageSubscriptionEvents::COMMENT_INSERT);
+        // Adds message subscription event name to the queue item.
+        $item->message_subscription_event = MessageSubscriptionEvents::COMMENT_INSERT;
+        // Adds the entity that is triggering the message subscription.
+        $item->entity = $entity;
+        // Adds message subscription item to the queue.
+        $message_subscription_queue->createItem($item);
         break;
 
       case 'group_content':
         $node = $entity->getEntity();
 
-        // Cache ID that identifies if an entity needs to trigger a
-        // subscription notification.
-        $cid = "eic_message_subscriptions:entity_notify:{$node->getEntityTypeId()}:{$node->id()}";
+        // State cache ID that represents a new group content creation.
+        $state_key = MessageSubscriptionHelper::GROUP_CONTENT_CREATED_STATE_KEY;
+        // Increments entity type and entity ID to the state cache ID.
+        $state_key .= ":{$node->getEntityTypeId()}:{$node->id()}";
 
         // Grab the value from the cache.
-        $send_subscription = $this->cacheBackend->get($cid);
+        $send_subscription = $this->state->get($state_key);
 
         // If the group content node hasn't been added to the cache, it means
         // that the notification won't be sent out.
@@ -118,13 +129,14 @@ class EntityOperations implements ContainerInjectionInterface {
           break;
         }
 
-        // Instantiate event.
-        $event = new MessageSubscriptionEvent($node);
-        // Dispatch the event 'eic_message_subscriptions.group_content_insert'.
-        $this->eventDispatcher->dispatch($event, MessageSubscriptionEvents::GROUP_CONTENT_INSERT);
-
-        // Deletes the cache.
-        $this->cacheBackend->delete($cid);
+        // Adds message subscription event name to the queue item.
+        $item->message_subscription_event = MessageSubscriptionEvents::GROUP_CONTENT_INSERT;
+        // Adds the entity that is triggering the message subscription.
+        $item->entity = $node;
+        // Adds message subscription item to the queue.
+        $message_subscription_queue->createItem($item);
+        // Deletes the item from the state cache.
+        $this->state->delete($state_key);
         break;
 
     }

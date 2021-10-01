@@ -43,4 +43,19 @@ final class MessageSubscriptionEvents {
    */
   const NODE_INSERT = 'eic_message_subscriptions.node_insert';
 
+  /**
+   * Get message subscriptions events as array.
+   *
+   * @return array
+   *   Array of message subscription events.
+   */
+  public static function getEventsArray() {
+    return [
+      self::GROUP_CONTENT_INSERT,
+      self::GROUP_CONTENT_UPDATE,
+      self::COMMENT_INSERT,
+      self::NODE_INSERT,
+    ];
+  }
+
 }
