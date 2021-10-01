@@ -21,13 +21,12 @@ use Drupal\node\Entity\Node;
 use Drupal\paragraphs\Entity\Paragraph;
 use Drupal\profile\Entity\Profile;
 use Drupal\profile\Entity\ProfileInterface;
+use Drupal\search_api\Entity\Index;
+use Drupal\search_api\Utility\PostRequestIndexing;
 use Drupal\search_api\Utility\Utility;
 use Drupal\statistics\NodeStatisticsDatabaseStorage;
 use Drupal\user\Entity\User;
 use Drupal\user\UserInterface;
-use Drupal\search_api\Entity\Index;
-use Drupal\search_api\Utility\PostRequestIndexing;
-use Drupal\search_api\Utility\Utility;
 use Solarium\Core\Query\DocumentInterface;
 use Solarium\QueryType\Update\Query\Document;
 
