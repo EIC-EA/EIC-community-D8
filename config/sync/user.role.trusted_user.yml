@@ -9,6 +9,7 @@ is_admin: null
 permissions:
   - 'access comments'
   - 'access group overview'
+  - 'access user profiles'
   - 'add content to books'
   - 'create eic_document media'
   - 'create group group'
@@ -38,7 +39,9 @@ permissions:
   - 'use groups transition publish'
   - 'use text format basic_text'
   - 'use text format filtered_html'
+  - 'view any member profile'
   - 'view any profile'
+  - 'view own member profile'
   - 'view own profile'
   - 'view own unpublished media'
   - 'view private content'
