@@ -44,6 +44,15 @@ final class MessageSubscriptionEvents {
   const NODE_INSERT = 'eic_message_subscriptions.node_insert';
 
   /**
+   * Event ID for when a group content is updated.
+   *
+   * @Event
+   *
+   * @var string
+   */
+  const CONTENT_RECOMMENDED = 'eic_message_subscriptions.content_recommended';
+
+  /**
    * Get message subscriptions events as array.
    *
    * @return array
@@ -55,6 +64,7 @@ final class MessageSubscriptionEvents {
       self::GROUP_CONTENT_UPDATE,
       self::COMMENT_INSERT,
       self::NODE_INSERT,
+      self::CONTENT_RECOMMENDED,
     ];
   }
 

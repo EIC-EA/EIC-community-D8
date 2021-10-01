@@ -7,3 +7,9 @@ services:
 
   eic_message_subscriptions.helper:
     class: Drupal\eic_message_subscriptions\MessageSubscriptionHelper
+
+  eic_message_subscriptions.flag_event_subscriber:
+    class: Drupal\eic_message_subscriptions\EventSubscriber\FlagEventSubscriber
+    arguments: ['@queue']
+    tags:
+      - { name: event_subscriber }
