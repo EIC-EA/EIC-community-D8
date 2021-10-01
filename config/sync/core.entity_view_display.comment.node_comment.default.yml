@@ -6,6 +6,7 @@ dependencies:
     - comment.type.node_comment
     - field.field.comment.node_comment.comment_body
     - field.field.comment.node_comment.field_comment_attachment
+    - field.field.comment.node_comment.field_comment_is_soft_deleted
   module:
     - text
 id: comment.node_comment.default
@@ -28,6 +29,16 @@ content:
       view_mode: default
       link: false
     third_party_settings: {  }
+    region: content
+  field_comment_is_soft_deleted:
+    weight: 102
+    label: above
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    type: boolean
     region: content
   flag_like_comment:
     weight: 10

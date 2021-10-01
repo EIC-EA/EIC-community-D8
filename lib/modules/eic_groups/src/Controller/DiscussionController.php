@@ -189,6 +189,7 @@ class DiscussionController extends ControllerBase {
         'text' => $comment->get('comment_body')->value,
         'comment_id' => $comment->id(),
         'likes' => $this->getCommentLikesData($comment, $account),
+        'is_soft_delete' => $comment->get('field_comment_is_soft_deleted')->value,
       ];
     }
 
@@ -356,7 +357,12 @@ class DiscussionController extends ControllerBase {
     }
 
     try {
-      $comment->delete();
+      $comment->set('comment_body', [
+        'value' => $this->t('This comment has been removed.'),
+        'format' => 'plain_text',
+      ]);
+      $comment->set('field_comment_is_soft_deleted', TRUE);
+      $comment->save();
     } catch (EntityStorageException $e) {
       \Drupal::logger('eic_groups')->error($e->getMessage());
 

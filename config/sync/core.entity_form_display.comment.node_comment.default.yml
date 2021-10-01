@@ -6,6 +6,7 @@ dependencies:
     - comment.type.node_comment
     - field.field.comment.node_comment.comment_body
     - field.field.comment.node_comment.field_comment_attachment
+    - field.field.comment.node_comment.field_comment_is_soft_deleted
   module:
     - media_library
     - text
@@ -33,6 +34,13 @@ content:
     settings:
       media_types: {  }
     third_party_settings: {  }
+    region: content
+  field_comment_is_soft_deleted:
+    weight: 4
+    settings:
+      display_label: true
+    third_party_settings: {  }
+    type: boolean_checkbox
     region: content
   langcode:
     type: language_select
