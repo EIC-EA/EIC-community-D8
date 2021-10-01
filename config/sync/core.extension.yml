@@ -51,6 +51,7 @@ module:
   eic_media_document: 0
   eic_media_statistics: 0
   eic_media_video: 0
+  eic_message_subscriptions: 0
   eic_messages: 0
   eic_migrate: 0
   eic_overviews: 0
@@ -141,6 +142,7 @@ module:
   search_api_spellcheck: 0
   serialization: 0
   smart_trim: 0
+  smtp: 0
   social_link_field: 0
   state_machine: 0
   statistics: 0

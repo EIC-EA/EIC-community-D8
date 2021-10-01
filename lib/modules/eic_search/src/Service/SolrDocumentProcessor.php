@@ -14,7 +14,6 @@ use Drupal\eic_search\SolrIndexes;
 use Drupal\file\Entity\File;
 use Drupal\flag\FlagCountManager;
 use Drupal\group\Entity\Group;
-use Drupal\group\Entity\GroupInterface;
 use Drupal\group\GroupMembership;
 use Drupal\image\Entity\ImageStyle;
 use Drupal\media\MediaInterface;
@@ -22,6 +21,7 @@ use Drupal\node\Entity\Node;
 use Drupal\paragraphs\Entity\Paragraph;
 use Drupal\profile\Entity\Profile;
 use Drupal\profile\Entity\ProfileInterface;
+use Drupal\search_api\Utility\Utility;
 use Drupal\statistics\NodeStatisticsDatabaseStorage;
 use Drupal\user\Entity\User;
 use Drupal\user\UserInterface;
@@ -253,7 +253,7 @@ class SolrDocumentProcessor {
 
     if (array_key_exists('its_content__group_content__entity_id_gid', $fields)) {
       if ($group_entity = Group::load($fields['its_content__group_content__entity_id_gid'])) {
-        $group_parent_label = -$group_entity->label();
+        $group_parent_label = $group_entity->label();
         $group_parent_url = $group_entity->toUrl()->toString();
         $group_parent_id = $group_entity->id();
       }
@@ -524,7 +524,9 @@ class SolrDocumentProcessor {
   /**
    * Requests reindexing of the given entities.
    *
-   * @param Drupal\Core\Entity\EntityInterface[] $items
+   * @param EntityInterface[] $items
+   *
+   * @throws \Drupal\search_api\SearchApiException
    */
   public function reIndexEntities(array $items) {
     $global_index = Index::load(SolrIndexes::GLOBAL);

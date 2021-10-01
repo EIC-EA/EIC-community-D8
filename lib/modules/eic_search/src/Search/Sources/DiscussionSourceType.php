@@ -67,6 +67,14 @@ class DiscussionSourceType extends SourceType {
         'ASC' => $this->t('Title A-Z', [], ['context' => 'eic_search']),
         'DESC' => $this->t('Title Z-A', [], ['context' => 'eic_search']),
       ],
+      'dm_aggregated_changed' => [
+        'label' => $this->t('Last updated', [], ['context' => 'eic_search']),
+        'DESC' => $this->t('Last updated', [], ['context' => 'eic_search']),
+      ],
+      'its_last_comment_timestamp' => [
+        'label' => $this->t('Last commented', [], ['context' => 'eic_search']),
+        'DESC' => $this->t('Last commented', [], ['context' => 'eic_search']),
+      ],
       'its_' . SolrDocumentProcessor::LAST_FLAGGED_KEY . '_' . FlagType::LIKE_CONTENT => [
         'label' => $this->t('Last liked', [], ['context' => 'eic_search']),
         'DESC' => $this->t('Last liked', [], ['context' => 'eic_search']),

@@ -67,6 +67,10 @@
     display: flex;
     flex-wrap: wrap;
     align-items: flex-start;
+
+    .ecl-teaser-overview__item & {
+      height: 100%;
+    }
   }
 
   &--is-highlighted,
@@ -489,6 +493,10 @@
 
     @include ecl-responsive-font('label');
 
+    a {
+      display:flex;
+    }
+
     #{$node}--as-card#{$node}--member & {
       text-align: center;
       display: block;
@@ -871,6 +879,10 @@
     }
   }
 
+  &__detail-type {
+    font-weight: $ecl-font-weight-bold;
+  }
+
   &__detail-contributor {
     font-weight: $ecl-font-weight-bold;
     color: ecl-typography('color', 'title');
@@ -878,6 +890,10 @@
 
   &__detail-parentgroup {
     margin-top: map-get($ecl-spacing, 'xs');
+    a:not([class]) {
+      color: $ecl-color-blue;
+      font-weight: $ecl-font-weight-regular;
+    }
   }
 
   &__stats {
