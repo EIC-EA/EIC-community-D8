@@ -2,13 +2,13 @@
 
 namespace Drupal\eic_message_subscriptions\EventSubscriber;
 
-use Drupal\Core\Queue\QueueFactory;
 use Drupal\eic_flags\FlagType;
+use Drupal\eic_message_subscriptions\Event\MessageSubscriptionEvent;
 use Drupal\eic_message_subscriptions\Event\MessageSubscriptionEvents;
-use Drupal\eic_message_subscriptions\Hooks\CronOperations;
 use Drupal\flag\Event\FlagEvents;
 use Drupal\flag\Event\FlaggingEvent;
 use Drupal\flag\FlagInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -17,20 +17,20 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class FlagEventSubscriber implements EventSubscriberInterface {
 
   /**
-   * The queue factory service.
+   * The event dispatcher service.
    *
-   * @var \Drupal\Core\Queue\QueueFactory
+   * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
    */
-  protected $queueFactory;
+  protected $eventDispatcher;
 
   /**
    * FlagEventSubscriber constructor.
    *
-   * @param \Drupal\Core\Queue\QueueFactory $queue_factory
-   *   The queue factory service.
+   * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $event_dispatcher
+   *   The event dispatcher service.
    */
-  public function __construct(QueueFactory $queue_factory) {
-    $this->queueFactory = $queue_factory;
+  public function __construct(EventDispatcherInterface $event_dispatcher) {
+    $this->eventDispatcher = $event_dispatcher;
   }
 
   /**
@@ -70,28 +70,24 @@ class FlagEventSubscriber implements EventSubscriberInterface {
       return;
     }
 
-    $message_subscription_queue = $this->queueFactory->get(CronOperations::MESSAGE_SUBSCRIPTIONS_QUEUE);
-
-    // Initialize message subscription item to be added to the message
-    // subscription queue.
-    $item = new \stdClass();
+    $message_subscription_event = FALSE;
 
     switch ($flag->id()) {
       case FlagType::RECOMMEND:
-        // Adds message subscription event name to the queue item.
-        $item->message_subscription_event = MessageSubscriptionEvents::CONTENT_RECOMMENDED;
-        // Adds the flagging that is associated with the message subscription.
-        $item->entity = $flagging;
+        // Sets message subscription event name.
+        $message_subscription_event = MessageSubscriptionEvents::CONTENT_RECOMMENDED;
         break;
 
     }
 
-    if (!$item->message_subscription_event) {
+    if (!$message_subscription_event) {
       return;
     }
 
-    // Adds message subscription item to the queue.
-    $message_subscription_queue->createItem($item);
+    // Instantiate MessageSubscriptionEvent.
+    $event = new MessageSubscriptionEvent($flagging);
+    // Dispatch the event to trigger message subscription notifications.
+    $this->eventDispatcher->dispatch($event, $message_subscription_event);
   }
 
   /**

@@ -2,8 +2,6 @@
 
 namespace Drupal\eic_message_subscriptions\EventSubscriber;
 
-use Drupal\Core\Entity\EntityInterface;
-use Drupal\eic_flags\FlagHelper;
 use Drupal\eic_message_subscriptions\Event\MessageSubscriptionEvent;
 use Drupal\eic_message_subscriptions\Event\MessageSubscriptionEvents;
 use Drupal\eic_message_subscriptions\SubscriptionOperationTypes;
@@ -12,21 +10,18 @@ use Drupal\eic_messages\Service\GroupContentMessageCreator;
 use Drupal\eic_messages\Service\NodeMessageCreator;
 use Drupal\flag\FlaggingInterface;
 use Drupal\group\Entity\GroupContent;
-use Drupal\message\MessageInterface;
-use Drupal\message_notify\MessageNotifier;
+use Drupal\message_subscribe\SubscribersInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
  * EIC Message Notifications event subscriber.
+ *
+ * @todo This class can be improved and instead of having a method for each
+ * event, we could probably add the event type as a property of the Event
+ * object (see MessageSubscriptionEvent) and use it to build our set of
+ * conditions.
  */
 class MessageSubscriptionEventSubscriber implements EventSubscriberInterface {
-
-  /**
-   * The message notifier.
-   *
-   * @var \Drupal\message_notify\MessageNotifier
-   */
-  protected $notifier;
 
   /**
    * The Comment Message Creator service.
@@ -50,38 +45,34 @@ class MessageSubscriptionEventSubscriber implements EventSubscriberInterface {
   protected $nodeMessageCreator;
 
   /**
-   * The EIC Flag Helper service.
+   * The message subscribers service.
    *
-   * @var \Drupal\eic_flags\FlagHelper
+   * @var \Drupal\message_subscribe\SubscribersInterface
    */
-  protected $eicFlagsHelper;
+  protected $messageSubscribersService;
 
   /**
    * Constructs a new EntityOperations object.
    *
-   * @param \Drupal\message_notify\MessageNotifier $notifier
-   *   The message notifier.
    * @param \Drupal\eic_messages\Service\CommentMessageCreator $comment_message_creator
    *   The Comment Message Creator service.
    * @param \Drupal\eic_messages\Service\GroupContentMessageCreator $group_content_message_creator
    *   The GroupContent Message Creator service.
    * @param \Drupal\eic_messages\Service\NodeMessageCreator $node_message_creator
    *   The Node Message Creator service.
-   * @param \Drupal\eic_flags\FlagHelper $eic_flags_helper
-   *   The EIC Flag Helper service.
+   * @param \Drupal\message_subscribe\SubscribersInterface $message_subscribers_service
+   *   The message subscribers service.
    */
   public function __construct(
-    MessageNotifier $notifier,
     CommentMessageCreator $comment_message_creator,
     GroupContentMessageCreator $group_content_message_creator,
     NodeMessageCreator $node_message_creator,
-    FlagHelper $eic_flags_helper
+    SubscribersInterface $message_subscribers_service
   ) {
-    $this->notifier = $notifier;
     $this->commentMessageCreator = $comment_message_creator;
     $this->groupContentMessageCreator = $group_content_message_creator;
     $this->nodeMessageCreator = $node_message_creator;
-    $this->eicFlagsHelper = $eic_flags_helper;
+    $this->messageSubscribersService = $message_subscribers_service;
   }
 
   /**
@@ -106,14 +97,6 @@ class MessageSubscriptionEventSubscriber implements EventSubscriberInterface {
   public function commentCreated(MessageSubscriptionEvent $event) {
     $entity = $event->getEntity();
 
-    $subscribed_users = $this->getSubscribedUsers($entity);
-
-    // We don't want to notify the user who triggered the subscription.
-    // Therefore, we remove it from the array of subscribed users.
-    if (isset($subscribed_users[$entity->getOwnerId()])) {
-      unset($subscribed_users[$entity->getOwnerId()]);
-    }
-
     // Set the subscription operation.
     $operation = SubscriptionOperationTypes::NEW_ENTITY;
 
@@ -128,7 +111,7 @@ class MessageSubscriptionEventSubscriber implements EventSubscriberInterface {
     );
 
     // Send message notifications.
-    $this->notifyUsers($message, $subscribed_users);
+    $this->messageSubscribersService->sendMessage($entity, $message);
   }
 
   /**
@@ -153,16 +136,6 @@ class MessageSubscriptionEventSubscriber implements EventSubscriberInterface {
 
     $group = $group_content->getGroup();
 
-    // When a group content is created we need grab the users subscribed to the
-    // group instead of the node.
-    $subscribed_users = $this->getSubscribedUsers($group);
-
-    // We don't want to notify the user who triggered the subscription.
-    // Therefore, we remove it from the array of subscribed users.
-    if (isset($subscribed_users[$entity->getOwnerId()])) {
-      unset($subscribed_users[$entity->getOwnerId()]);
-    }
-
     $message = $this->groupContentMessageCreator->createGroupContentSubscription(
       $entity,
       $group,
@@ -170,7 +143,7 @@ class MessageSubscriptionEventSubscriber implements EventSubscriberInterface {
     );
 
     // Send message notifications.
-    $this->notifyUsers($message, $subscribed_users);
+    $this->messageSubscribersService->sendMessage($entity, $message);
   }
 
   /**
@@ -191,15 +164,6 @@ class MessageSubscriptionEventSubscriber implements EventSubscriberInterface {
     // Set the subscription operation.
     $operation = SubscriptionOperationTypes::UPDATED_ENTITY;
 
-    // Get the users subscribed to the node.
-    $subscribed_users = $this->getSubscribedUsers($entity);
-
-    // We don't want to notify the user who triggered the subscription.
-    // Therefore, we remove it from the array of subscribed users.
-    if (isset($subscribed_users[$entity->getOwnerId()])) {
-      unset($subscribed_users[$entity->getOwnerId()]);
-    }
-
     $group_content = reset($group_contents);
 
     $group = $group_content->getGroup();
@@ -211,7 +175,7 @@ class MessageSubscriptionEventSubscriber implements EventSubscriberInterface {
     );
 
     // Send message notifications.
-    $this->notifyUsers($message, $subscribed_users);
+    $this->messageSubscribersService->sendMessage($entity, $message);
   }
 
   /**
@@ -223,32 +187,6 @@ class MessageSubscriptionEventSubscriber implements EventSubscriberInterface {
   public function nodeCreated(MessageSubscriptionEvent $event) {
     $entity = $event->getEntity();
 
-    $node_topics = $entity->get('field_vocab_topics')->referencedEntities();
-
-    if (empty($node_topics)) {
-      return;
-    }
-
-    $subscribed_users = [];
-
-    foreach ($node_topics as $topic) {
-      $subscribed_users = $this->getSubscribedUsers($topic);
-
-      foreach (array_keys($subscribed_users) as $uid) {
-        // If this user is already in the array of subscribed users we can skip
-        // it.
-        if (isset($subscribed_users[$uid])) {
-          continue;
-        }
-      }
-    }
-
-    // We don't want to notify the user who triggered the subscription.
-    // Therefore, we remove it from the array of subscribed users.
-    if (isset($subscribed_users[$entity->getOwnerId()])) {
-      unset($subscribed_users[$entity->getOwnerId()]);
-    }
-
     // Set the subscription operation.
     $operation = SubscriptionOperationTypes::NEW_ENTITY;
 
@@ -258,7 +196,7 @@ class MessageSubscriptionEventSubscriber implements EventSubscriberInterface {
     );
 
     // Send message notifications.
-    $this->notifyUsers($message, $subscribed_users);
+    $this->messageSubscribersService->sendMessage($entity, $message);
   }
 
   /**
@@ -274,82 +212,14 @@ class MessageSubscriptionEventSubscriber implements EventSubscriberInterface {
       return;
     }
 
-    $flagged_entity = $flagging->getFlaggable();
-
-    $subscribed_users = $this->getSubscribedUsers($flagged_entity);
-
-    // Remove user who triggered the subscription from the array of subscribed
-    // users.
-    if (isset($subscribed_users[$flagging->getOwnerId()])) {
-      unset($subscribed_users[$flagging->getOwnerId()]);
-    }
-
     $message = $this->nodeMessageCreator->createContentRecommendedSubscription(
       $flagging
     );
 
+    $flagged_entity = $flagging->getFlaggable();
+
     // Send message notifications.
-    $this->notifyUsers($message, $subscribed_users);
-  }
-
-  /**
-   * Get users who subscribed to a given entity.
-   *
-   * @param \Drupal\Core\Entity\EntityInterface $entity
-   *   The subscribed entity.
-   *
-   * @return array
-   *   An array of users who have flagged the entity.
-   */
-  private function getSubscribedUsers(EntityInterface $entity) {
-    $users = [];
-
-    switch ($entity->getEntityTypeId()) {
-      case 'comment':
-        $commented_entity = $entity->getCommentedEntity();
-        // Get users who are following the commented entity.
-        $users = $this->eicFlagsHelper->getFlaggingUsersByFlagIds($commented_entity, ['follow_content']);
-        break;
-
-      case 'node':
-        // Get users who are following the node.
-        $users = $this->eicFlagsHelper->getFlaggingUsersByFlagIds($entity, ['follow_content']);
-        break;
-
-      case 'group':
-        // Get users who are following the group.
-        $users = $this->eicFlagsHelper->getFlaggingUsersByFlagIds($entity, ['follow_group']);
-        break;
-
-      case 'taxonomy_term':
-        // Get users who are following the group.
-        $users = $this->eicFlagsHelper->getFlaggingUsersByFlagIds($entity, ['follow_taxonomy_term']);
-        break;
-
-    }
-
-    return $users;
-  }
-
-  /**
-   * Send message subscription notification to users.
-   *
-   * @param \Drupal\message\MessageInterface $message
-   *   The message entity.
-   * @param array $users
-   *   Array of user entities to notify.
-   */
-  private function notifyUsers(MessageInterface $message, array $users) {
-    foreach ($users as $user) {
-      // Don't send notification for anonymous user.
-      if ($user->isAnonymous()) {
-        continue;
-      }
-
-      $message->setOwnerId($user->id());
-      // @todo Send message to a queue to be processed later by cron.
-      $this->notifier->send($message);
-    }
+    $this->messageSubscribersService->sendMessage($flagged_entity, $message);
   }
 
 }
