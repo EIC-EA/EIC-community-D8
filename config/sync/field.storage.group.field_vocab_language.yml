@@ -1,18 +1,19 @@
-uuid: 59ccfbae-7e69-497b-a976-b1965f5e5282
+uuid: 874a2e2f-5d69-4f9f-9636-3a73d124b3f6
 langcode: en
 status: true
 dependencies:
   module:
     - group
-id: group.field_related_groups
-field_name: field_related_groups
+    - taxonomy
+id: group.field_vocab_language
+field_name: field_vocab_language
 entity_type: group
 type: entity_reference
 settings:
-  target_type: group
+  target_type: taxonomy_term
 module: core
 locked: false
-cardinality: 5
+cardinality: -1
 translatable: true
 indexes: {  }
 persist_with_no_fields: false
