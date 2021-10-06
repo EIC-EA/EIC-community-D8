@@ -87,5 +87,5 @@ function eic_message_subscriptions_message_subscribe_get_subscribers(MessageInte
   }
 
   return \Drupal::classResolver(MessageSubscribeOperations::class)
-    ->entityFormAlter($message, $subscribe_options = [], $context = []);
+    ->messageSubscribeGetSubscribers($message, $subscribe_options = [], $context = []);
 }
