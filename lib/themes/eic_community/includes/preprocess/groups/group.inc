@@ -87,10 +87,17 @@ function _group_about_group_tab($variables, &$sections) {
 
   if (count($variables['elements']['admins']) > 0) {
     $admins = array_map(function ($admin) {
-      return [
-        'title' => $admin->getText(),
-        'path' => $admin->getUrl(),
-      ];
+      if ($admin instanceof Markup) {
+        return [
+          'title' => $admin,
+        ];
+      }
+      else {
+        return [
+          'title' => $admin->getText(),
+          'path' => $admin->getUrl(),
+        ];
+      }
     }, $variables['elements']['admins']);
 
     $about_items[] = [
