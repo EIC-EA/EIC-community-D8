@@ -96,6 +96,7 @@ class MessageSubscribeOperations implements ContainerInjectionInterface {
         $subscribers = $this->getSubscribedUsers($group);
         break;
 
+      case MessageSubscriptionTypes::CONTENT_RECOMMENDED:
       case MessageSubscriptionTypes::GROUP_CONTENT_UPDATED:
         $node = $message->get('field_referenced_node')->entity;
         $subscribers = $this->getSubscribedUsers($node);
@@ -124,11 +125,6 @@ class MessageSubscribeOperations implements ContainerInjectionInterface {
         }
         break;
 
-      case MessageSubscriptionTypes::CONTENT_RECOMMENDED:
-        $node = $message->get('field_referenced_node')->entity;
-        $subscribers = $this->getSubscribedUsers($node);
-        break;
-
     }
 
     // Gets the executing user if exists.
@@ -154,7 +150,7 @@ class MessageSubscribeOperations implements ContainerInjectionInterface {
    *   Array of user IDs.
    *
    * @return \Drupal\message_subscribe\Subscribers\DeliveryCandidate[]
-   *   An array, keyed by recipeint user ID, of delivery candidate objects.
+   *   An array, keyed by recipient user ID, of delivery candidate objects.
    */
   protected function prepareDeliveryCandidates(array $uids = []) {
     $candidates = [];
