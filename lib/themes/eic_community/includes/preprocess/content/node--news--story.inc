@@ -5,8 +5,6 @@
  * Prepares variables for node News and Story templates.
  */
 
-use Drupal\Component\Utility\Xss;
-use Drupal\Core\Render\Markup;
 use Drupal\eic_community\ValueObject\ImageValueObject;
 use Drupal\eic_media\MediaHelper;
 use Drupal\eic_private_content\PrivateContentConst;
@@ -113,13 +111,12 @@ function _eic_community_story_document_field(&$variables) {
 
   foreach ($medias as $media) {
     $file = File::load($media->field_media_file->target_id);
-    $file_description = isset($media->field_body) ? Markup::create(Xss::filter($media->get('field_body')->value)) : $media->getName();
     $download_url = MediaHelper::formatMediaDownloadLink($media)->toString();
 
     $file_type = strstr($file->get('filemime')->getString(), '/', TRUE);
 
     $variables['downloads'][] = [
-      'title' => $file_description,
+      'title' => $media->getName(),
       'language' => $media->language()->getName(),
       'timestamp' => eic_community_get_teaser_time_display($media->get('changed')->getString()),
       'filesize' => format_size($file->get('filesize')->getString()),
