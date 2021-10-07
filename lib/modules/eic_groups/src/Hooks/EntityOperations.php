@@ -433,7 +433,7 @@ class EntityOperations implements ContainerInjectionInterface {
             return AccessResult::forbidden();
           }
 
-          // If user is a group admin, we allow access.
+          // If user is the group owner, we allow access.
           if ($entity->getOwnerId() === $account->id()) {
             break;
           }
