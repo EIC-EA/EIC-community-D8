@@ -79,6 +79,14 @@ class DiscussionSourceType extends SourceType {
         'label' => $this->t('Last liked', [], ['context' => 'eic_search']),
         'DESC' => $this->t('Last liked', [], ['context' => 'eic_search']),
       ],
+      'its_' . SolrDocumentProcessor::LAST_FLAGGED_KEY . '_' . FlagType::BOOKMARK_CONTENT => [
+        'label' => $this->t('Last bookmarked', [], ['context' => 'eic_search']),
+        'DESC' => $this->t('Last bookmarked', [], ['context' => 'eic_search']),
+      ],
+      'its_' . SolrDocumentProcessor::LAST_FLAGGED_KEY . '_' . FlagType::HIGHLIGHT_CONTENT => [
+        'label' => $this->t('Last highlighted', [], ['context' => 'eic_search']),
+        'DESC' => $this->t('Last highlighted', [], ['context' => 'eic_search']),
+      ],
     ];
   }
 
