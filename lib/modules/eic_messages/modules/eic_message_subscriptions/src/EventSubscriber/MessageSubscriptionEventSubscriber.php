@@ -110,8 +110,16 @@ class MessageSubscriptionEventSubscriber implements EventSubscriberInterface {
       $operation
     );
 
+    // Adds the node to the context so that message_subscribe module can grab
+    // all users that are subscribed to the node.
+    $context = [
+      'node' => [
+        $entity->getCommentedEntity()->id(),
+      ],
+    ];
+
     // Send message notifications.
-    $this->messageSubscribersService->sendMessage($entity, $message);
+    $this->messageSubscribersService->sendMessage($entity, $message, [], [], $context);
   }
 
   /**
@@ -142,8 +150,16 @@ class MessageSubscriptionEventSubscriber implements EventSubscriberInterface {
       $operation
     );
 
+    // Adds the group to the context so that message_subscribe module can grab
+    // all users that are subscribed to the group.
+    $context = [
+      'group' => [
+        $group->id(),
+      ],
+    ];
+
     // Send message notifications.
-    $this->messageSubscribersService->sendMessage($entity, $message);
+    $this->messageSubscribersService->sendMessage($entity, $message, [], [], $context);
   }
 
   /**
@@ -174,8 +190,16 @@ class MessageSubscriptionEventSubscriber implements EventSubscriberInterface {
       $operation
     );
 
+    // Adds the node to the context so that message_subscribe module can grab
+    // all users that are subscribed to node.
+    $context = [
+      'node' => [
+        $entity->id(),
+      ],
+    ];
+
     // Send message notifications.
-    $this->messageSubscribersService->sendMessage($entity, $message);
+    $this->messageSubscribersService->sendMessage($entity, $message, [], [], $context);
   }
 
   /**
@@ -195,8 +219,18 @@ class MessageSubscriptionEventSubscriber implements EventSubscriberInterface {
       $operation
     );
 
+    $context = [];
+
+    $node_topics = $entity->get('field_vocab_topics')->referencedEntities();
+
+    // Adds each topic to the context so that message_subscribe module can
+    // grab all users that are subscribed to each topic.
+    foreach ($node_topics as $topic_term) {
+      $context['taxonomy_term'][] = $topic_term->id();
+    }
+
     // Send message notifications.
-    $this->messageSubscribersService->sendMessage($entity, $message);
+    $this->messageSubscribersService->sendMessage($entity, $message, [], [], $context);
   }
 
   /**
@@ -218,8 +252,16 @@ class MessageSubscriptionEventSubscriber implements EventSubscriberInterface {
 
     $flagged_entity = $flagging->getFlaggable();
 
+    // Adds the flagged node to the context so that message_subscribe module
+    // can grab all users that are subscribed to node.
+    $context = [
+      'node' => [
+        $flagged_entity->id(),
+      ],
+    ];
+
     // Send message notifications.
-    $this->messageSubscribersService->sendMessage($flagged_entity, $message);
+    $this->messageSubscribersService->sendMessage($flagged_entity, $message, [], [], $context);
   }
 
 }
