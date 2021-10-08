@@ -294,7 +294,7 @@ function _eic_community_story_video_field(&$variables) {
           'timestamp' => eic_community_get_teaser_time_display($media->get('changed')->getString()),
           'filesize' => format_size($file->get('filesize')->getString()),
           'highlight' => FALSE,
-          'path' => $download_url->toString(),
+          'path' => $download_url,
           'icon_file_path' => $variables['eic_icon_path'],
           'icon' => [
             'type' => 'general',
