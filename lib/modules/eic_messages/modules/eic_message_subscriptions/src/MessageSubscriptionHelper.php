@@ -44,7 +44,7 @@ class MessageSubscriptionHelper {
         // Loads group contents for the commented entity.
         $group_contents = GroupContent::loadByEntity($commented_entity);
 
-        if (!empty($group_contents)) {
+        if (empty($group_contents)) {
           break;
         }
 
