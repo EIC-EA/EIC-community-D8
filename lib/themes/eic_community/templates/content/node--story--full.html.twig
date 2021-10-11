@@ -11,9 +11,9 @@
       {% else %}
         {{ elements.field_video }}
       {% endif %}
-      {% if download %}
+      {% for download in downloads %}
         {% include "@theme/patterns/components/attachment.html.twig" with download only %}
-      {% endif %}
+      {% endfor %}
       {{ elements.field_disclaimer }}
     {% endblock %}
 

@@ -5,8 +5,6 @@
  * Prepares variables for node News and Story templates.
  */
 
-use Drupal\Component\Utility\Xss;
-use Drupal\Core\Render\Markup;
 use Drupal\eic_community\ValueObject\ImageValueObject;
 use Drupal\eic_media\MediaHelper;
 use Drupal\eic_private_content\PrivateContentConst;
@@ -108,22 +106,26 @@ function _eic_community_story_image_field(&$variables) {
  * Preproccess document field for full news/story.
  */
 function _eic_community_story_document_field(&$variables) {
-  if (isset($variables['content']['field_document_media'][0])) {
-    $media = $variables['content']['field_document_media'][0]['#media'];
-    $file = File::load($media->field_media_file->target_id);
-    $file_description = isset($media->field_body) ? Markup::create(Xss::filter($media->get('field_body')->value)) : $media->getName();
+  $node = $variables['node'];
+  $medias = $node->get('field_document_media')->referencedEntities();
 
-    $variables['download'] = [
-      'title' => $file_description,
+  foreach ($medias as $media) {
+    $file = File::load($media->field_media_file->target_id);
+    $download_url = MediaHelper::formatMediaDownloadLink($media)->toString();
+
+    $file_type = strstr($file->get('filemime')->getString(), '/', TRUE);
+
+    $variables['downloads'][] = [
+      'title' => $media->getName(),
       'language' => $media->language()->getName(),
       'timestamp' => eic_community_get_teaser_time_display($media->get('changed')->getString()),
       'filesize' => format_size($file->get('filesize')->getString()),
       'highlight' => FALSE,
-      'path' => file_create_url($file->getFileUri()),
+      'path' => $download_url,
       'icon_file_path' => $variables['eic_icon_path'],
       'icon' => [
-        'type' => 'custom',
-        'name' => substr(strrchr($file->get('filemime')->getString(), '/'), 1),
+        'type' => $file_type === 'video' ? 'general' : 'custom',
+        'name' => $file_type === 'video' ? $file_type : substr(strrchr($file->get('filemime')->getString(), '/'), 1),
       ],
     ];
   }
