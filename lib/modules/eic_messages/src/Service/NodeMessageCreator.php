@@ -35,7 +35,7 @@ class NodeMessageCreator extends MessageCreatorBase {
       case 'node':
         $message_type = $operation === SubscriptionOperationTypes::NEW_ENTITY
           ? MessageSubscriptionTypes::NODE_PUBLISHED
-          : MessageSubscriptionTypes::NODE_UPDATED;
+          : NULL;
 
         // We only create subscription message if the operation is 'created'.
         if (!$message_type) {
@@ -70,6 +70,7 @@ class NodeMessageCreator extends MessageCreatorBase {
           }
 
           $message->set('field_event_executing_user', $executing_user_id);
+          $message->setOwnerId($executing_user_id);
         }
         break;
 
@@ -105,6 +106,7 @@ class NodeMessageCreator extends MessageCreatorBase {
 
     // Adds the reference to the user who recommended the content.
     $message->set('field_event_executing_user', $flagging->getOwnerId());
+    $message->setOwnerId($flagging->getOwnerId());
 
     return $message;
   }
