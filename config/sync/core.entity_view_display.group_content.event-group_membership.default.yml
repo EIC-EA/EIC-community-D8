@@ -1,0 +1,25 @@
+uuid: 1836b326-f831-4bb0-b338-fbf1d90906da
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.group_content.event-group_membership.group_roles
+    - group.content_type.event-group_membership
+id: group_content.event-group_membership.default
+targetEntityType: group_content
+bundle: event-group_membership
+mode: default
+content:
+  group_roles:
+    label: above
+    type: entity_reference_label
+    settings:
+      link: false
+    weight: -4
+    third_party_settings: {  }
+    region: content
+hidden:
+  entity_id: true
+  langcode: true
+  search_api_excerpt: true
+  uid: true
