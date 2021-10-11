@@ -5,9 +5,44 @@ namespace Drupal\eic_messages\Util;
 use Drupal\Core\Entity\ContentEntityInterface;
 
 /**
- * Class ActivityStreamMessageTemplates.
+ * Helper class for activity stream message templates.
  */
 final class ActivityStreamMessageTemplates {
+
+  /**
+   * Message template for inserted/updated articles.
+   */
+  const ARTICLE_INSERT_UPDATE = 'stream_article_insert_update';
+
+  /**
+   * Message template for inserted/updated discussions.
+   */
+  const DISCUSSION_INSERT_UPDATE = 'stream_discussion_insert_update';
+
+  /**
+   * Message template for inserted/updated documents.
+   */
+  const DOCUMENT_INSERT_UPDATE = 'stream_document_insert_update';
+
+  /**
+   * Message template for inserted/updated galleries.
+   */
+  const GALLERY_INSERT_UPDATE = 'stream_gallery_insert_update';
+
+  /**
+   * Message template for inserted/updated videos.
+   */
+  const VIDEO_INSERT_UPDATE = 'stream_video_insert_update';
+
+  /**
+   * Message template for inserted/updated wiki pages.
+   */
+  const WIKI_INSERT_UPDATE = 'stream_wiki_page_insert_update';
+
+  /**
+   * Message template for inserted/updated comments.
+   */
+  const COMMENT_INSERT_UPDATE = 'stream_wiki_page_insert_update';
 
   /**
    * Array of activity stream message templates per entity type.
@@ -16,14 +51,15 @@ final class ActivityStreamMessageTemplates {
    */
   private static $templates = [
     'node' => [
-      'discussion' => 'stream_discussion_insert_update',
-      'wiki_page' => 'stream_wiki_page_insert_update',
-      'document' => 'stream_document_insert_update',
-      'gallery' => 'stream_gallery_insert_update',
-      'video' => 'stream_video_insert_update',
+      'article' => self::ARTICLE_INSERT_UPDATE,
+      'discussion' => self::DISCUSSION_INSERT_UPDATE,
+      'document' => self::DOCUMENT_INSERT_UPDATE,
+      'gallery' => self::GALLERY_INSERT_UPDATE,
+      'video' => self::VIDEO_INSERT_UPDATE,
+      'wiki_page' => self::WIKI_INSERT_UPDATE,
     ],
     'comment' => [
-      'node_comment' => 'stream_comment_insert_update',
+      'node_comment' => self::COMMENT_INSERT_UPDATE,
     ],
   ];
 
