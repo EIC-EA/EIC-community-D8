@@ -29,7 +29,7 @@
               } only %}  {{ file.mime_type }} </li>
             <li> {{ file.stats[1].value }} </li>
           </ul>
-          <a class="ecl-link ecl-link--standalone ecl-link--button ecl-link--button-primary ecl-link--icon ecl-link--svg" href={{ file.image.src }} target="_blank" download="{{ file.name }}">{% include '@ecl-twig/ec-component-icon/ecl-icon.html.twig' with {
+          <a class="ecl-link ecl-link--standalone ecl-link--button ecl-link--button-primary ecl-link--icon ecl-link--svg" href={{ file.path }} target="_blank" download="{{ file.name }}">{% include '@ecl-twig/ec-component-icon/ecl-icon.html.twig' with {
               icon: {
                 size: 's',
                 path: icon_file_path,
