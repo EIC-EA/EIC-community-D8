@@ -53,7 +53,10 @@ class GroupMenuBlock extends GroupMenuBlockBase implements ContainerFactoryPlugi
 
     // If there is no menu link in the active trail, we try to set the active
     // trail based on the current node.
-    if (count($parameters->activeTrail) === 1 && empty($parameters->activeTrail[0])) {
+    if (count($parameters->activeTrail) === 1 &&
+      empty($parameters->activeTrail[0]) &&
+      !empty($build['#items'])
+    ) {
       $this->setMenuTreeActiveTrail($build['#items']);
     }
 
