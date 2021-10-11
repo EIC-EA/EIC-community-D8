@@ -3,13 +3,16 @@
 namespace Drupal\eic_flags\Service;
 
 use Drupal\Core\Batch\BatchBuilder;
+use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
 use Drupal\eic_flags\RequestStatus;
 use Drupal\eic_flags\RequestTypes;
 use Drupal\flag\FlaggingInterface;
 use Drupal\group\Entity\GroupContentInterface;
 use Drupal\group\Entity\GroupInterface;
+use Drupal\user\Entity\User;
 use Drupal\user\UserInterface;
 
 /**
@@ -53,7 +56,17 @@ class DeleteRequestHandler extends AbstractRequestHandler {
 
       case 'node':
       case 'comment':
-        $content_entity->delete();
+        $now = DrupalDateTime::createFromTimestamp(time());
+        $content_entity->set(
+          'field_comment_deletion_date',
+          $now->format(DateTimeItemInterface::DATETIME_STORAGE_FORMAT)
+        );
+        $content_entity->set('comment_body', [
+          'value' => $this->t('This comment has removed by a content administrator at'),
+          'format' => 'plain_text',
+        ]);
+        $content_entity->set('field_comment_is_soft_deleted', TRUE);
+        $content_entity->save();
         break;
     }
   }
