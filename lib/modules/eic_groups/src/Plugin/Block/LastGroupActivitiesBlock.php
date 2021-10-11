@@ -10,6 +10,7 @@ use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Url;
 use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_search\Search\Sources\ActivityStreamSourceType;
+use Drupal\eic_user\UserHelper;
 use Drupal\file\Entity\File;
 use Drupal\group\Entity\GroupContent;
 use Drupal\group\Entity\GroupInterface;
@@ -159,16 +160,27 @@ class LastGroupActivitiesBlock extends BlockBase implements ContainerFactoryPlug
     }, $members);
 
     $current_group_route = $this->groupsHelper->getGroupFromRoute();
+    $account = \Drupal::currentUser();
     $user_group_roles = [];
+    $user_roles = $account->getRoles(TRUE);
+    $allowed_global_roles = [
+      UserHelper::ROLE_CONTENT_ADMINISTRATOR,
+      UserHelper::ROLE_SITE_ADMINISTRATOR,
+    ];
+    $allowed_group_roles = [
+      EICGroupsHelper::GROUP_OWNER_ROLE,
+      EICGroupsHelper::GROUP_ADMINISTRATOR_ROLE,
+    ];
 
     if ($current_group_route) {
-      $account = \Drupal::currentUser();
       $membership = $current_group_route->getMember($account);
-      $user_group_roles = $membership instanceof GroupMembership ? $membership->getRoles() : [];
+      $user_group_roles = $membership instanceof GroupMembership ? array_keys($membership->getRoles()) : [];
     }
 
     $build['#attached']['drupalSettings']['overview'] = [
-      'is_group_owner' => array_key_exists(EICGroupsHelper::GROUP_OWNER_ROLE, $user_group_roles),
+      'has_permission_delete' =>
+        !empty(array_intersect($user_roles, $allowed_global_roles)) ||
+        !empty(array_intersect($user_group_roles, $allowed_group_roles))
     ];
 
     return $build += [
