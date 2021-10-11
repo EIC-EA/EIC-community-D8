@@ -145,6 +145,7 @@ class CommentMessageCreator extends MessageCreatorBase {
       }
 
       $message->set('field_event_executing_user', $executing_user_id);
+      $message->setOwnerId($executing_user_id);
     }
 
     return $message;

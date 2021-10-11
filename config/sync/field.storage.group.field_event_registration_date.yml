@@ -1,0 +1,20 @@
+uuid: be14a1d2-fb58-4f73-a045-b35e8674d1a3
+langcode: en
+status: true
+dependencies:
+  module:
+    - datetime_range
+    - group
+id: group.field_event_registration_date
+field_name: field_event_registration_date
+entity_type: group
+type: daterange
+settings:
+  datetime_type: datetime
+module: datetime_range
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

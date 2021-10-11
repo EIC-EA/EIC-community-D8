@@ -21,4 +21,21 @@ final class MessageSubscriptionTypes {
 
   const CONTENT_RECOMMENDED = 'sub_new_content_recommendation';
 
+  /**
+   * Get message subscriptions events as array.
+   *
+   * @return array
+   *   Array of message subscription events.
+   */
+  public static function getMessageSubscriptionTypesAsArray() {
+    return [
+      self::NEW_COMMENT_REPLY,
+      self::NEW_COMMENT,
+      self::NEW_GROUP_CONTENT_PUBLISHED,
+      self::GROUP_CONTENT_UPDATED,
+      self::NODE_PUBLISHED,
+      self::CONTENT_RECOMMENDED,
+    ];
+  }
+
 }
