@@ -30,6 +30,7 @@ function eic_community_preprocess_node__gallery(array &$variables) {
       foreach ($files as $file) {
         $media = $file->get('field_gallery_slide_media')->referencedEntities()[0];
         $download = File::load($media->oe_media_image->getValue()[0]['target_id']);
+        $download_url = MediaHelper::formatMediaDownloadLink($media)->toString();
 
         $files_list[] = [
           'name' => $download->getFileName(),
@@ -50,10 +51,10 @@ function eic_community_preprocess_node__gallery(array &$variables) {
             ],
           ],
           'mime_type' => substr(strrchr($download->get('filemime')->getString(), '/'), 1),
-          'path' => MediaHelper::formatMediaDownloadLink($media)->toString(),
+          'path' => $download_url,
         ];
 
-        $slides[] = [
+        $slide = [
           'name' => $download->getFileName(),
           'stats' => [
             [
@@ -72,12 +73,19 @@ function eic_community_preprocess_node__gallery(array &$variables) {
             ],
           ],
           'mime_type' => substr(strrchr($download->get('filemime')->getString(), '/'), 1),
-          'path' => $download->createFileUrl(),
+          'path' => $download_url,
           'image' => [
             'src' => $download->createFileUrl(),
             'alt' => $download->getFileName(),
           ],
         ];
+
+        // Adds slide legend.
+        if (!$file->get('field_gallery_slide_legend')->isEmpty()) {
+          $slide['description'] = $file->get('field_gallery_slide_legend')->getString();
+        }
+
+        $slides[] = $slide;
       }
 
       $variables['slides'] = [
