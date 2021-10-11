@@ -915,7 +915,8 @@
 
   &__stat-icon {
     color: ecl-typography('color', 'label');
-    margin-right: ecl-box-model('padding', 'controls');
+    margin-right: 4px;
+    display: block;
   }
 
   /* file list teaser */

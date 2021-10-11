@@ -1,3 +1,7 @@
+#activity-stream-overview {
+  flex: 1;
+}
+
 .ecl-editorial-article {
   $node: &;
 
@@ -15,6 +19,7 @@
         }
       }
     }
+
   }
 
   &__header,
