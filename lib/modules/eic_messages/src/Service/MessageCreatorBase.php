@@ -115,7 +115,7 @@ class MessageCreatorBase implements ContainerInjectionInterface, MessageCreatorI
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
-  public function checkDuplicateMessages(MessageInterface $message, int $threshold = 3600) {
+  protected function checkDuplicateMessages(MessageInterface $message, int $threshold = 3600) {
     $request_time = $this->timeService->getRequestTime();
 
     // Look for similar older messages.
@@ -136,6 +136,24 @@ class MessageCreatorBase implements ContainerInjectionInterface, MessageCreatorI
     }
 
     return $query->execute();
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * This method can be overridden in the extending classes if necessary.
+   */
+  public function shouldCreateNewMessage(MessageInterface $message) {
+    try {
+      if (!empty($this->checkDuplicateMessages($message))) {
+        return FALSE;
+      }
+    }
+    catch (\Exception $e) {
+
+    }
+
+    return TRUE;
   }
 
   /**

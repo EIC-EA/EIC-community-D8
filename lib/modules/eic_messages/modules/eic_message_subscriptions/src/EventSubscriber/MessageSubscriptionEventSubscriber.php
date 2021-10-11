@@ -150,6 +150,11 @@ class MessageSubscriptionEventSubscriber implements EventSubscriberInterface {
       $operation
     );
 
+    // Check if we should create/send the message.
+    if (!$this->groupContentMessageCreator->shouldCreateNewMessage($message)) {
+      return NULL;
+    }
+
     // Adds the group to the context so that message_subscribe module can grab
     // all users that are subscribed to the group.
     $context = [
@@ -189,6 +194,11 @@ class MessageSubscriptionEventSubscriber implements EventSubscriberInterface {
       $group,
       $operation
     );
+
+    // Check if we should create/send the message.
+    if (!$this->groupContentMessageCreator->shouldCreateNewMessage($message)) {
+      return NULL;
+    }
 
     // Adds the node to the context so that message_subscribe module can grab
     // all users that are subscribed to node.
