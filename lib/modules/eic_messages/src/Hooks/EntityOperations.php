@@ -3,6 +3,7 @@
 namespace Drupal\eic_messages\Hooks;
 
 use Drupal\Component\Datetime\TimeInterface;
+use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
@@ -32,6 +33,8 @@ class EntityOperations extends MessageCreatorBase implements ContainerInjectionI
    *
    * @param \Drupal\Component\Datetime\TimeInterface $date_time
    *   The datetime.time service.
+   * @param \Drupal\Core\Config\ConfigFactory $config_factory
+   *   The config.factory service.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    * @param \Drupal\eic_messages\MessageHelper $eic_messages_helper
    * @param \Drupal\eic_user\UserHelper $eic_user_helper
@@ -39,6 +42,7 @@ class EntityOperations extends MessageCreatorBase implements ContainerInjectionI
    */
   public function __construct(
     TimeInterface $date_time,
+    ConfigFactory $config_factory,
     EntityTypeManagerInterface $entity_type_manager,
     MessageHelper $eic_messages_helper,
     UserHelper $eic_user_helper,
@@ -46,6 +50,7 @@ class EntityOperations extends MessageCreatorBase implements ContainerInjectionI
   ) {
     parent::__construct(
       $date_time,
+      $config_factory,
       $entity_type_manager,
       $eic_messages_helper,
       $eic_user_helper
@@ -60,6 +65,7 @@ class EntityOperations extends MessageCreatorBase implements ContainerInjectionI
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('datetime.time'),
+      $container->get('config.factory'),
       $container->get('entity_type.manager'),
       $container->get('eic_messages.helper'),
       $container->get('eic_user.helper'),

@@ -3,6 +3,7 @@
 namespace Drupal\eic_messages\Service;
 
 use Drupal\Component\Datetime\TimeInterface;
+use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Logger\LoggerChannelTrait;
@@ -30,6 +31,13 @@ class MessageCreatorBase implements ContainerInjectionInterface, MessageCreatorI
   protected $timeService;
 
   /**
+   * The config.factory service.
+   *
+   * @var \Drupal\Core\Config\ConfigFactory
+   */
+  protected $configFactory;
+
+  /**
    * The entity type manager.
    *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
@@ -55,6 +63,8 @@ class MessageCreatorBase implements ContainerInjectionInterface, MessageCreatorI
    *
    * @param \Drupal\Component\Datetime\TimeInterface $date_time
    *   The datetime.time service.
+   * @param \Drupal\Core\Config\ConfigFactory $config_factory
+   *   The config.factory service.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
    * @param \Drupal\eic_messages\MessageHelper $eic_messages_helper
@@ -62,8 +72,9 @@ class MessageCreatorBase implements ContainerInjectionInterface, MessageCreatorI
    * @param \Drupal\eic_user\UserHelper $eic_user_helper
    *   The EIC User helper service.
    */
-  public function __construct(TimeInterface $date_time, EntityTypeManagerInterface $entity_type_manager, MessageHelper $eic_messages_helper, UserHelper $eic_user_helper) {
+  public function __construct(TimeInterface $date_time, ConfigFactory $config_factory, EntityTypeManagerInterface $entity_type_manager, MessageHelper $eic_messages_helper, UserHelper $eic_user_helper) {
     $this->timeService = $date_time;
+    $this->configFactory = $config_factory;
     $this->entityTypeManager = $entity_type_manager;
     $this->eicMessagesHelper = $eic_messages_helper;
     $this->eicUserHelper = $eic_user_helper;
@@ -144,8 +155,9 @@ class MessageCreatorBase implements ContainerInjectionInterface, MessageCreatorI
    * This method can be overridden in the extending classes if necessary.
    */
   public function shouldCreateNewMessage(MessageInterface $message) {
+    $threshold = $this->configFactory->get('eic_messages.settings')->get('notification_duplicate_threshold');
     try {
-      if (!empty($this->checkDuplicateMessages($message))) {
+      if (!empty($this->checkDuplicateMessages($message, $threshold))) {
         return FALSE;
       }
     }
