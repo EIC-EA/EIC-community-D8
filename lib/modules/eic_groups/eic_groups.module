@@ -72,7 +72,7 @@ function eic_groups_theme($existing, $type, $theme, $path) {
       'variables' => [
         'discussion_id' => 0,
         'contributors' => [],
-      ]
+      ],
     ],
   ];
 }
@@ -504,4 +504,39 @@ function eic_groups_entity_presave(EntityInterface $entity) {
       $class->createGroupUrlAliasUpdateQueueItem($entity);
     }
   }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_create_access().
+ */
+function eic_groups_node_create_access(AccountInterface $account, array $context, $entity_bundle) {
+  $route_name = \Drupal::routeMatch()->getRouteName();
+
+  // Because field widget media_library_widget checks entity create access, we
+  // need also check if the user is creating a group content and allow access
+  // based on the group permissions.
+  if ($route_name === 'entity.group_content.create_form') {
+
+    // If group cannot be loaded from the route, we return access neutral.
+    if (!$group = \Drupal::service('eic_groups.helper')->getGroupFromRoute()) {
+      return AccessResult::neutral();
+    }
+
+    /** @var \Drupal\group\Entity\GroupInterface $group */
+
+    $group_type = $group->getGroupType();
+
+    $group_content_plugins = $group_type->getInstalledContentPlugins()->getInstanceIds();
+
+    if (!in_array("group_node:$entity_bundle", $group_content_plugins)) {
+      return AccessResult::neutral();
+    }
+
+    if ($group->hasPermission("create group_node:$entity_bundle entity", $account)) {
+      return AccessResult::allowed();
+    }
+  }
+
+  // No opinion.
+  return AccessResult::neutral();
 }
