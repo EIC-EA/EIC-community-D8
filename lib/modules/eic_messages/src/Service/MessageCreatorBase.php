@@ -166,6 +166,15 @@ class MessageCreatorBase implements ContainerInjectionInterface, MessageCreatorI
       return TRUE;
     }
 
+    // Do not create messages for unpublished nodes.
+    if ($message->hasField('field_referenced_node')) {
+      /** @var \Drupal\node\NodeInterface $node */
+      $node = $message->get('field_referenced_node')->referencedEntities()[0];
+      if (!$node->isPublished()) {
+        return FALSE;
+      }
+    }
+
     // Check if similar messages have been created within the time threshold.
     // If yes, then a new message should not be created.
     $threshold = $this->configFactory->get('eic_messages.settings')->get('notification_duplicate_threshold');
