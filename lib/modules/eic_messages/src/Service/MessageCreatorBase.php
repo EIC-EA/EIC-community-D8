@@ -9,7 +9,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Logger\LoggerChannelTrait;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\eic_messages\MessageHelper;
-use Drupal\eic_messages\Service\MessageCreatorInterface;
+use Drupal\eic_messages\MessageTemplateTypes;
 use Drupal\eic_user\UserHelper;
 use Drupal\message\MessageInterface;
 use Drupal\message\MessageTemplateInterface;
@@ -155,6 +155,19 @@ class MessageCreatorBase implements ContainerInjectionInterface, MessageCreatorI
    * This method can be overridden in the extending classes if necessary.
    */
   public function shouldCreateNewMessage(MessageInterface $message) {
+    // Check if message is of type subscription or activity stream.
+    // If it is not, then a new message should be created.
+    $message_template_type = $message->getTemplate()->getThirdPartySetting('eic_messages', 'message_template_type');
+    $anti_spammed_types = [
+      MessageTemplateTypes::SUBSCRIPTION,
+      MessageTemplateTypes::STREAM,
+    ];
+    if (!in_array($message_template_type, $anti_spammed_types)) {
+      return TRUE;
+    }
+
+    // Check if similar messages have been created within the time threshold.
+    // If yes, then a new message should not be created.
     $threshold = $this->configFactory->get('eic_messages.settings')->get('notification_duplicate_threshold');
     try {
       if (!empty($this->checkDuplicateMessages($message, $threshold))) {
