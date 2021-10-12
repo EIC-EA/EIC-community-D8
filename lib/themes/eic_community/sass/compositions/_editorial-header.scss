@@ -167,6 +167,10 @@
 
   &__action {
     margin: 0 ecl-layout('gutter', 'controls') ecl-layout('gutter', 'controls') 0;
+
+    &--fullWidth {
+      flex: 1;
+    }
   }
 
   &__tags-wrapper {
