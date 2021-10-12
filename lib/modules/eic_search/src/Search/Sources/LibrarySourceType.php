@@ -56,24 +56,35 @@ class LibrarySourceType extends SourceType {
    */
   public function getAvailableSortOptions(): array {
     return [
+      'ss_global_title' => [
+        'label' => $this->t('Title', [], ['context' => 'eic_search']),
+        'ASC' => $this->t('Title (A-Z)', [], ['context' => 'eic_search']),
+        'DESC' => $this->t('Title (Z-A)', [], ['context' => 'eic_search']),
+      ],
+      'dm_aggregated_changed' => [
+        'label' => $this->t('Date uploaded', [], ['context' => 'eic_search']),
+        'DESC' => $this->t('Date uploaded', [], ['context' => 'eic_search']),
+      ],
       'its_flag_highlight_content' => [
-        'label' => $this->t('Highlight', [], ['context' => 'eic_search']),
-        'DESC' => $this->t('Highlighted first', [], ['context' => 'eic_search']),
-        'ASC' => $this->t('Highlighted last', [], ['context' => 'eic_search']),
+        'label' => $this->t('Highlighted files', [], ['context' => 'eic_search']),
+        'DESC' => $this->t('Highlighted files', [], ['context' => 'eic_search']),
+      ],
+      'its_document_download_total' => [
+        'label' => $this->t('Number of downloads', [], ['context' => 'eic_search']),
+        'DESC' => $this->t('Number of downloads', [], ['context' => 'eic_search']),
+      ],
+      'its_statistics_view' => [
+        'label' => $this->t('Number of views', [], ['context' => 'eic_search']),
+        'DESC' => $this->t('Number of views', [], ['context' => 'eic_search']),
+      ],
+      'its_flag_like_content' => [
+        'label' => $this->t('Number of likes', [], ['context' => 'eic_search']),
+        'DESC' => $this->t('Number of likes', [], ['context' => 'eic_search']),
       ],
       'ss_global_created_date' => [
         'label' => $this->t('Timestamp', [], ['context' => 'eic_search']),
         'ASC' => $this->t('Old', [], ['context' => 'eic_search']),
         'DESC' => $this->t('Recent', [], ['context' => 'eic_search']),
-      ],
-      'ss_global_title' => [
-        'label' => $this->t('Title', [], ['context' => 'eic_search']),
-        'ASC' => $this->t('Title A-Z', [], ['context' => 'eic_search']),
-        'DESC' => $this->t('Title Z-A', [], ['context' => 'eic_search']),
-      ],
-      'dm_aggregated_changed' => [
-        'label' => $this->t('Last updated', [], ['context' => 'eic_search']),
-        'DESC' => $this->t('Last updated', [], ['context' => 'eic_search']),
       ],
       'its_last_comment_timestamp' => [
         'label' => $this->t('Last commented', [], ['context' => 'eic_search']),

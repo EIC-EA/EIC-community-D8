@@ -23,11 +23,10 @@ reactions:
     blocks:
       1f828322-eac8-4da7-af8f-7677a008a12d:
         id: eic_search_overview
-        label: null
-        provider: null
-        label_display: null
-        region: content
-        weight: '0'
+        label: ''
+        provider: eic_search
+        label_display: visible
+        source_type: Drupal\eic_search\Search\Sources\LibrarySourceType
         facets:
           ss_global_content_type: ss_global_content_type
           sm_content_field_vocab_topics_string: sm_content_field_vocab_topics_string
@@ -35,15 +34,47 @@ reactions:
           ss_content_language_string: ss_content_language_string
           ss_content_document_type_string: ss_content_document_type_string
         sort_options:
-          its_flag_highlight_content: its_flag_highlight_content
-          ss_global_created_date: ss_global_created_date
           ss_global_title: ss_global_title
-          its_last_flagged_bookmark_content: its_last_flagged_bookmark_content
-          its_last_flagged_highlight_content: its_last_flagged_highlight_content
           dm_aggregated_changed: dm_aggregated_changed
-          its_last_comment_timestamp: its_last_comment_timestamp
-          its_last_flagged_like_content: its_last_flagged_like_content
+          its_flag_highlight_content: its_flag_highlight_content
+          its_document_download_total: its_document_download_total
+          its_statistics_view: its_statistics_view
+          its_flag_like_content: its_flag_like_content
+          ss_global_created_date: 0
+          its_last_comment_timestamp: 0
+          its_last_flagged_like_content: 0
+          its_last_flagged_bookmark_content: 0
+          its_last_flagged_highlight_content: 0
+        enable_search: 1
+        page_options: normal
+        prefilter_group: 1
+        add_facet_interests: 0
+        add_facet_my_groups: 0
+        context_mapping: {  }
+      fc54b9c1-f518-434c-b863-f59eb0363f2e:
+        id: eic_search_overview
+        label: ''
+        provider: eic_search
+        label_display: visible
         source_type: Drupal\eic_search\Search\Sources\LibrarySourceType
+        facets:
+          ss_global_content_type: ss_global_content_type
+          sm_content_field_vocab_topics_string: sm_content_field_vocab_topics_string
+          sm_content_field_vocab_geo_string: sm_content_field_vocab_geo_string
+          ss_content_language_string: ss_content_language_string
+          ss_content_document_type_string: ss_content_document_type_string
+        sort_options:
+          ss_global_title: ss_global_title
+          dm_aggregated_changed: dm_aggregated_changed
+          its_flag_highlight_content: its_flag_highlight_content
+          its_document_download_total: its_document_download_total
+          its_statistics_view: its_statistics_view
+          its_flag_like_content: its_flag_like_content
+          ss_global_created_date: 0
+          its_last_comment_timestamp: 0
+          its_last_flagged_like_content: 0
+          its_last_flagged_bookmark_content: 0
+          its_last_flagged_highlight_content: 0
         enable_search: 1
         page_options: normal
         prefilter_group: 1
@@ -51,12 +82,13 @@ reactions:
         add_facet_my_groups: 0
         context_mapping: {  }
         custom_id: eic_search_overview
+        region: content
         theme: eic_community
         css_class: ''
         unique: 0
         context_id: group_files_overviews
         third_party_settings: {  }
-        uuid: 1f828322-eac8-4da7-af8f-7677a008a12d
+        uuid: fc54b9c1-f518-434c-b863-f59eb0363f2e
     id: blocks
     saved: false
     uuid: b8b6f9f3-68cc-4066-b69f-04528693c7d9
