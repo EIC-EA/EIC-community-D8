@@ -16,12 +16,15 @@
     }
   }
 
+
+
   &__form-wrapper,
   &__items,
   &__item {
-    padding: map-get($ecl-spacing, 'xl');
+    padding: map-get($ecl-spacing, 'xl') ;
+    padding-top: 0;
     background-color: map-get($ecl-colors, 'white');
-    margin: map-get($ecl-spacing, 'xl') 0;
+    //margin: map-get($ecl-spacing, 'xl') 0;
     transition: opacity 200ms ease-in-out;
 
     &:first-child {
@@ -35,6 +38,10 @@
     #{$node}--is-pending & {
       opacity: 0.5;
     }
+  }
+
+  &__form-wrapper {
+    padding: map-get($ecl-spacing, 'xl') ;
   }
 
   &__throbber {
