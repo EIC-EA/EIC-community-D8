@@ -3,6 +3,8 @@
 namespace Drupal\eic_content\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\user\Entity\User;
+use Drupal\user\UserInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -49,6 +51,35 @@ class EntityTreeController extends ControllerBase {
     $target_bundle = $request->query->get('targetBundle');
     // This will check if we need to split result items
     $load_all = (int) $request->query->get('loadAll', 0);
+
+    if ('user' === $target_entity) {
+      $query = \Drupal::entityQuery('user')
+        ->condition('status', 1)
+        ->condition('uid', 0, '<>');
+
+      if (!$load_all) {
+        $query->range($offset, $length);
+      }
+
+      $query->sort('field_first_name', 'ASC');
+
+      $user_ids = $query->execute();
+
+      $users = User::loadMultiple($user_ids);
+      return new JsonResponse([
+        'terms' => array_map(function(UserInterface $user) {
+          return [
+            'tid' => $user->id(),
+            'level' => 0,
+            'parents' => [0],
+            'depth' => 0,
+            'name' => $user->get('field_first_name')->value . ' ' . $user->get('field_last_name')->value . ' ' . '('. $user->getEmail() .')',
+            'weight' => 0,
+          ];
+        }, $users),
+        'total' => count($user_ids),
+      ]);
+    }
 
     return new JsonResponse([
       'terms' => $this->tree_manager->generateTree($target_entity, $target_bundle, $load_all, $offset, $length),

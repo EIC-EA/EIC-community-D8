@@ -3,12 +3,14 @@
 namespace Drupal\eic_content\Plugin\Field\FieldWidget;
 
 use Drupal\Core\Entity\Element\EntityAutocomplete;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Field\Annotation\FieldWidget;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\WidgetBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
-use Drupal\taxonomy\Entity\Term;
+use Drupal\taxonomy\TermInterface;
+use Drupal\user\UserInterface;
 
 /**
  * Plugin implementation of the 'entity_tree' widget.
@@ -102,13 +104,22 @@ class EntityTreeWidget extends WidgetBase {
         ],
         '#attributes' => [
           'class' => ['hidden', 'entity-tree-reference-widget'],
-          'data-selected-terms' => json_encode(array_map(function (Term $term) {
-            $parent = $term->get('parent')->getValue();
+          'data-selected-terms' => json_encode(array_map(function (EntityInterface $entity) {
+            if ($entity instanceof TermInterface) {
+              $parents = $entity->get('parent')->getValue();
+              $parent = reset($parents)['target_id'];
+              $name = $entity->getName();
+            }
+
+            if ($entity instanceof UserInterface) {
+              $parent = 0;
+              $name = $entity->get('field_first_name')->value . ' ' . $entity->get('field_last_name')->value . ' ' . '('. $entity->getEmail() .')';
+            }
 
             return [
-              'name' => $term->getName(),
-              'tid' => $term->id(),
-              'parent' => reset($parent)['target_id'],
+              'name' => $name,
+              'tid' => $entity->id(),
+              'parent' => $parent,
             ];
           }, $items->referencedEntities())),
           'data-translations' => json_encode([
@@ -134,6 +145,7 @@ class EntityTreeWidget extends WidgetBase {
           'data-load-all' => $this->getSetting('load_all'),
           'data-target-bundle' => $target_bundle,
           'data-target-entity' => $target_entity,
+          'data-is-required' => (int) $element['#required'],
         ],
       ];
 
