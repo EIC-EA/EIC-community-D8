@@ -6,7 +6,7 @@ $social-colors: (
 );
 $transition: background-color .15s ease-in-out;
 
-.ecl--social--follow {
+.ecl-social-follow {
   margin-bottom: 8px;
 
   &__items {
@@ -38,7 +38,7 @@ $transition: background-color .15s ease-in-out;
     &__item-wrapper--#{$name} {
       transition: $transition;
       background: darken($color, 10);
-      & .ecl--social--follow__item-icon-wrapper {
+      & .ecl-social-follow__item-icon-wrapper {
         background-color:$color;
       }
 
