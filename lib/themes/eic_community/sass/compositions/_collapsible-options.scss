@@ -65,6 +65,7 @@
       box-shadow: 0px 4px 4px rgba(map-get($ecl-colors, 'black'), 0.1);
     }
 
+
     &:not(button)::after {
       display: none;
     }
@@ -125,6 +126,14 @@
       background: map-get($ecl-colors, 'yellow-100');
       border-radius: 0;
       box-shadow: 0px 4px 4px rgba(map-get($ecl-colors, 'black'), 0.1);
+
+      & #{$node}__item:hover {
+        background: lighten(map-get($ecl-colors, 'yellow-100'), 10);
+
+        & #{$node}__button:before {
+          background: darken(map-get($ecl-colors, 'yellow-100'), 10);
+        }
+      }
     }
   }
 
