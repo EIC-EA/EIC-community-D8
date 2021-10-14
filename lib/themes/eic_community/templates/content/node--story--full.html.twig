@@ -32,22 +32,4 @@
     {% endblock %}
   {% endembed %}
 
-  {% if logged_in %}
-  <section class="ecl-section-wrapper ecl-section-wrapper--is-grey ecl-comment-overview ">
-    <div class="ecl-container">
-      <section class="ecl-section-wrapper">
-        <div class="ecl-editorial-article ecl-editorial-article--has-static-layout">
-          <div class="ecl-container">
-            <div class="ecl-editorial-article__wrapper">
-              <section class="ecl-editorial-article__content">
-              {{ elements.field_comments }}
-              </section>
-            </div>
-          </div>
-        </div>
-      </section>
-    </div>
-  </section>
-  {% endif %}
-
 {% endblock %}
