@@ -236,6 +236,10 @@
     padding: map-get($ecl-spacing, '2xs') map-get($ecl-spacing, 'xs');
   }
 
+  & .ecl-comment-thread {
+    padding: 0;
+  }
+
   &__comment-thread {
     .ecl-comment {
       background-color: map-get($ecl-colors, 'white');
