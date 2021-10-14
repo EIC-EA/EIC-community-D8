@@ -1,0 +1,19 @@
+{% if items is not empty %}
+    <ul class="ecl-infos-list">
+      {% for item in items %}
+      <li class="ecl-infos-list__item">
+        {% include '@ecl-twig/ec-component-icon/ecl-icon.html.twig' with {
+          icon: {
+            size: 'l',
+            path: icon_file_path,
+            type: item.icon.type,
+            name: item.icon.name
+          }
+        } only %}
+        {% if item.content %}
+            {{ item.content }}
+        {% endif %}
+        </li>
+        {% endfor %}
+    </ul>
+{% endif %}

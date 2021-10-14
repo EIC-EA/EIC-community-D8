@@ -1,0 +1,28 @@
+.ecl-infos-list {
+  padding: 0;
+  list-style: none;
+  margin-bottom: map-get($ecl-spacing, '3xl');
+
+  &__item {
+    display: flex;
+    align-items: center;
+    margin-bottom: map-get($ecl-spacing, 'm');
+
+    &:first-child {
+      font-weight: bold;
+    }
+
+    &:last-child {
+      margin-bottom: 0;
+
+    }
+
+    & svg {
+      height: 1em;
+      width: 1em;
+      margin-right: map-get($ecl-spacing, 's');
+    }
+  }
+
+
+}
