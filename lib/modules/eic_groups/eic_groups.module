@@ -73,7 +73,7 @@ function eic_groups_theme($existing, $type, $theme, $path) {
         'discussion_id' => 0,
         'contributors' => [],
         'is_anonymous' => TRUE,
-      ]
+      ],
     ],
   ];
 }
@@ -405,6 +405,13 @@ function eic_groups_preprocess_block__group_content_menu(&$variables) {
   $block_manager = \Drupal::service('plugin.manager.block');
   $plugin_block = $block_manager->createInstance('eic_groups_search_menu_group', []);
   $variables['search_block'] = $plugin_block->build();
+}
+
+/**
+ * Implements hook_preprocess_block__HOOK().
+ */
+function eic_groups_preprocess_block__eic_group_content_menu(&$variables) {
+  eic_groups_preprocess_block__group_content_menu($variables);
 }
 
 /**
