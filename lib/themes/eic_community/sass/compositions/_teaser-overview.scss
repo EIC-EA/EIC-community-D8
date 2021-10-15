@@ -43,7 +43,6 @@
       @include ecl-media-breakpoint-up('md') {
         flex-direction: row;
         flex-wrap: wrap;
-        margin-left: #{0 - ecl-box-model('padding')};
       }
     }
   }
@@ -103,8 +102,11 @@
 
     #{$node}--has-columns & {
       @include ecl-media-breakpoint-up('md') {
-        padding-left: ecl-box-model('padding');
-        width: calc(100% / 2);
+        margin-left: ecl-box-model('padding');
+        width: calc(50% - #{ecl-box-model('padding') / 2});
+        &:nth-child(odd) {
+          margin-left: 0;
+        }
       }
 
       @include ecl-media-breakpoint-up('xl') {
@@ -114,7 +116,7 @@
 
     #{$node}--has-compact-layout#{$node}--has-columns & {
       @include ecl-media-breakpoint-up('xl') {
-        width: calc(100% / 2);
+        width: calc(50% - #{ecl-box-model('padding') / 2});
       }
     }
   }
@@ -165,6 +167,7 @@
     & .ecl-form-label {
       display: inline-block;
       font-weight: inherit;
+      white-space: nowrap;
       color: currentColor;
       margin: 0;
     }

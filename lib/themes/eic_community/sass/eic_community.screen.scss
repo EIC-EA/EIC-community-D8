@@ -24,6 +24,7 @@
 @import '@ecl/ec-component-form-help-block/ec-component-form-help-block';
 
 @import './overrides/ecl';
+@import './overrides/notifications';
 
 @import './schema/border';
 @import './schema/box-model';
@@ -107,6 +108,7 @@
 @import "./components/navigation-list";
 @import "./components/page_header";
 @import "./components/search-input";
+@import "./components/select";
 @import "./components/tag";
 @import "./components/timestamp";
 @import "./components/toolbar";

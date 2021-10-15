@@ -1,0 +1,29 @@
+uuid: cfbfc66f-cc9e-4116-a51f-6a0a2e538a29
+langcode: en
+status: true
+dependencies:
+  config:
+    - comment.type.node_comment
+    - field.storage.message.field_referenced_comment
+    - message.template.sub_new_comment_on_content
+id: message.sub_new_comment_on_content.field_referenced_comment
+field_name: field_referenced_comment
+entity_type: message
+bundle: sub_new_comment_on_content
+label: 'Referenced comment'
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:comment'
+  handler_settings:
+    target_bundles:
+      node_comment: node_comment
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

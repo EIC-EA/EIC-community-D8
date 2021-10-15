@@ -1,0 +1,10 @@
+name: EIC Message Subscriptions
+type: module
+description: Handles email notifications on EIC.
+package: European Innovation Council
+core: 8.x
+core_version_requirement: ^8 || ^9
+php: 7.3
+dependencies:
+  - eic_messages:eic_messages
+  - message_subscribe:message_subscribe
