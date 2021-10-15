@@ -86,6 +86,7 @@ class MessageCreatorBase implements ContainerInjectionInterface, MessageCreatorI
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('datetime.time'),
+      $container->get('config.factory'),
       $container->get('entity_type.manager'),
       $container->get('eic_messages.helper'),
       $container->get('eic_user.helper')
