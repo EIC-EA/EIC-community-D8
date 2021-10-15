@@ -16,3 +16,6 @@ services:
   eic_messages.message_creator.comment:
     class: Drupal\eic_messages\Service\CommentMessageCreator
     arguments: ['@entity_type.manager', '@eic_messages.helper', '@eic_user.helper', '@eic_content.helper']
+  eic_messages.message_creator.node:
+    class: Drupal\eic_messages\Service\NodeMessageCreator
+    arguments: ['@entity_type.manager', '@eic_messages.helper', '@eic_user.helper', '@eic_content.helper']

@@ -6,7 +6,7 @@
     &__items-wrapper {}
 
     &__item {
-        padding: ecl-box-model('padding', 'default');
+        padding: ecl-box-model('padding', 'banner');
         margin-bottom: ecl-box-model('padding');
         position: relative;
 
@@ -15,8 +15,8 @@
         }
 
         &__main {
-            display: flex; 
-            align-items: center; 
+            display: flex;
+            align-items: center;
             border-bottom: ecl-border();
             padding-bottom: ecl-box-model('padding');
             margin-bottom: ecl-box-model('padding');
@@ -42,6 +42,16 @@
         &__footer {
             display: flex;
             justify-content: space-between;
+            @include ecl-media-breakpoint-down('sm') {
+              flex-direction: column;
+
+              & > div {
+                margin-bottom: 8px;
+              }
+              & > div:last-child {
+                margin-bottom: 0px;
+              }
+            }
         }
 
         &__timestamp {}
@@ -59,7 +69,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            
+
             &__icon {
                 color: map-get($ecl-colors, 'white');
             }

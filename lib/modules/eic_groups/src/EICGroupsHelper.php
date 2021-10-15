@@ -9,6 +9,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\eic_groups\Constants\GroupJoiningMethodType;
@@ -384,6 +385,41 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
         GroupsModerationHelper::GROUP_DRAFT_STATE,
       ]
     );
+  }
+
+  /**
+   * Checks if a user is a group admin of a given group.
+   *
+   * @param \Drupal\group\Entity\GroupInterface $group
+   *   The group entity.
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *   The user account object.
+   *
+   * @return bool
+   *   TRUE if user is a group admin.
+   */
+  public static function userIsGroupAdmin(GroupInterface $group, AccountInterface $account) {
+    $membership = $group->getMember($account);
+    $membership_roles = $membership->getRoles();
+    $is_admin = FALSE;
+
+    foreach ($membership_roles as $role) {
+      $is_admin = in_array(
+        $role->id(),
+        [
+          self::GROUP_ADMINISTRATOR_ROLE,
+          self::GROUP_OWNER_ROLE,
+        ]
+      );
+
+      if (!$is_admin) {
+        continue;
+      }
+
+      break;
+    }
+
+    return $is_admin;
   }
 
 }

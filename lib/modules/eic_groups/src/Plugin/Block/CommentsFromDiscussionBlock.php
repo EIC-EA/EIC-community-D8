@@ -209,18 +209,26 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
       ],
     ];
 
+    $group_id = $current_group_route ? $current_group_route->id() : 0;
+
+    $cache_contexts = [
+      'url.path',
+      'url.query_args',
+      'user.group_permissions',
+    ];
+
+    if ($group_id) {
+      $cache_contexts[] = "user.is_group_member:$group_id";
+    }
+
     return $build + [
         '#cache' => [
-          'contexts' => [
-            'url.path',
-            'url.query_args',
-            "user.is_group_member:$group_id",
-            'user.group_permissions',
-          ],
+          'contexts' => $cache_contexts,
         ],
         '#theme' => 'eic_group_comments_from_discussion',
         '#discussion_id' => $node->id(),
         '#contributors' => $contributors_data,
+        '#is_anonymous' => $current_user->isAnonymous(),
       ];
   }
 

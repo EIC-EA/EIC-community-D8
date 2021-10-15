@@ -66,7 +66,7 @@ class LibrarySourceType extends SourceType {
         'ASC' => $this->t('Old', [], ['context' => 'eic_search']),
         'DESC' => $this->t('Recent', [], ['context' => 'eic_search']),
       ],
-      'ss_global_title' => [
+      'tm_global_title' => [
         'label' => $this->t('Title', [], ['context' => 'eic_search']),
         'ASC' => $this->t('Title A-Z', [], ['context' => 'eic_search']),
         'DESC' => $this->t('Title Z-A', [], ['context' => 'eic_search']),
@@ -83,6 +83,14 @@ class LibrarySourceType extends SourceType {
         'label' => $this->t('Last liked', [], ['context' => 'eic_search']),
         'DESC' => $this->t('Last liked', [], ['context' => 'eic_search']),
       ],
+      'its_' . SolrDocumentProcessor::LAST_FLAGGED_KEY . '_' . FlagType::BOOKMARK_CONTENT => [
+        'label' => $this->t('Last bookmarked', [], ['context' => 'eic_search']),
+        'DESC' => $this->t('Last bookmarked', [], ['context' => 'eic_search']),
+      ],
+      'its_' . SolrDocumentProcessor::LAST_FLAGGED_KEY . '_' . FlagType::HIGHLIGHT_CONTENT => [
+        'label' => $this->t('Last highlighted', [], ['context' => 'eic_search']),
+        'DESC' => $this->t('Last highlighted', [], ['context' => 'eic_search']),
+      ],
     ];
   }
 
@@ -98,7 +106,7 @@ class LibrarySourceType extends SourceType {
    */
   public function getSearchFieldsId(): array {
     return [
-      'ss_global_title'
+      'tm_global_title'
     ];
   }
 

@@ -31,6 +31,9 @@
     "drupal/group_flex": {
       "3207164 - fatal error when saving after adding an image to an image field in a flex group" : "patches/group_flex/3207164-fatal-error-when-saving-after-adding-an-image-to-an-image-field-in-a-flex-group-24.patch"
     },
+    "drupal/message_subscribe": {
+      "3086125 - Prevent infinite loop when sending messages with queue": "https://www.drupal.org/files/issues/2021-10-01/3086125-skip-if-we-have-last-item-14.patch"
+    },
     "drupal/migrate_plus": {
       "3007709 - Add XPath-style filtering ability in JSON data parser plugin" : "https://www.drupal.org/files/issues/2020-11-16/migrate_plus-json-xpath-filtering-3007709-24.patch"
     },

@@ -3,6 +3,8 @@
 namespace Drupal\eic_search\Search\Sources;
 
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\eic_flags\FlagType;
+use Drupal\eic_search\Service\SolrDocumentProcessor;
 
 /**
  * Class StorySourceType
@@ -55,7 +57,7 @@ class StorySourceType extends SourceType {
         'ASC' => $this->t('Old', [], ['context' => 'eic_search']),
         'DESC' => $this->t('Recent', [], ['context' => 'eic_search']),
       ],
-      'ss_global_title' => [
+      'tm_global_title' => [
         'label' => $this->t('Title', [], ['context' => 'eic_search']),
         'ASC' => $this->t('Title A-Z', [], ['context' => 'eic_search']),
         'DESC' => $this->t('Title Z-A', [], ['context' => 'eic_search']),
@@ -83,6 +85,18 @@ class StorySourceType extends SourceType {
         'DESC' => $this->t('Most commented', [], ['context' => 'eic_search']),
         'ASC' => $this->t('Less commented', [], ['context' => 'eic_search']),
       ],
+      'its_' . SolrDocumentProcessor::LAST_FLAGGED_KEY . '_' . FlagType::LIKE_CONTENT => [
+        'label' => $this->t('Last liked', [], ['context' => 'eic_search']),
+        'DESC' => $this->t('Last liked', [], ['context' => 'eic_search']),
+      ],
+      'its_' . SolrDocumentProcessor::LAST_FLAGGED_KEY . '_' . FlagType::BOOKMARK_CONTENT => [
+        'label' => $this->t('Last bookmarked', [], ['context' => 'eic_search']),
+        'DESC' => $this->t('Last bookmarked', [], ['context' => 'eic_search']),
+      ],
+      'its_' . SolrDocumentProcessor::LAST_FLAGGED_KEY . '_' . FlagType::HIGHLIGHT_CONTENT => [
+        'label' => $this->t('Last highlighted', [], ['context' => 'eic_search']),
+        'DESC' => $this->t('Last highlighted', [], ['context' => 'eic_search']),
+      ],
     ];
   }
 
@@ -91,7 +105,7 @@ class StorySourceType extends SourceType {
    */
   public function getSearchFieldsId(): array {
     return [
-      'ss_global_title',
+      'tm_global_title',
       'tm_X3b_en_rendered_item',
       'ss_content_first_name',
       'ss_content_last_name',
