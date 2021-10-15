@@ -62,7 +62,10 @@ class DeleteRequestHandler extends AbstractRequestHandler {
           $now->format(DateTimeItemInterface::DATETIME_STORAGE_FORMAT)
         );
         $content_entity->set('comment_body', [
-          'value' => $this->t('This comment has removed by a content administrator at'),
+          'value' => $this->t(
+            'This comment has been removed by a content administrator at @time',
+            ['@time' => $now->format('d m Y')]
+          ),
           'format' => 'plain_text',
         ]);
         $content_entity->set('field_comment_is_soft_deleted', TRUE);
