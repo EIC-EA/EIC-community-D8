@@ -133,10 +133,9 @@ class MessageCreatorBase implements ContainerInjectionInterface, MessageCreatorI
     $request_time = $this->timeService->getRequestTime();
 
     // Look for similar older messages.
-    // We don't filter by uid because it's not especially the author of the
-    // message, it can also the recipient of the message.
     $query = $this->entityTypeManager->getStorage('message')->getQuery();
     $query->condition('template', $message->getTemplate()->id());
+    $query->condition('uid', $message->getOwnerId());
     $query->condition('created', ($request_time - $threshold), '>=');
 
     // Apply conditions based on the message template's primary keys.
