@@ -10,6 +10,8 @@ use Drupal\Core\Logger\LoggerChannelTrait;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\eic_messages\MessageHelper;
 use Drupal\eic_messages\MessageTemplateTypes;
+use Drupal\eic_messages\Util\ActivityStreamMessageTemplates;
+use Drupal\eic_message_subscriptions\MessageSubscriptionTypes;
 use Drupal\eic_user\UserHelper;
 use Drupal\message\MessageInterface;
 use Drupal\message\MessageTemplateInterface;
@@ -193,10 +195,20 @@ class MessageCreatorBase implements ContainerInjectionInterface, MessageCreatorI
 
   /**
    * {@inheritdoc}
-   *
-   * This method should be overridden in the extending classes.
    */
   public function getMessageTemplatePrimaryKeys(MessageTemplateInterface $message_template) {
+    // Get the message template type.
+    $message_template_type = $message_template->getThirdPartySetting('eic_messages', 'message_template_type');
+
+    switch ($message_template_type) {
+      case MessageTemplateTypes::STREAM:
+        return ActivityStreamMessageTemplates::getMessageTemplatePrimaryKeys($message_template);
+
+      case MessageTemplateTypes::SUBSCRIPTION:
+        return MessageSubscriptionTypes::getMessageTemplatePrimaryKeys($message_template);
+
+    }
+
     return [];
   }
 

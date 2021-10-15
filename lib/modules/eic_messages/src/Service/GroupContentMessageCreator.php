@@ -6,11 +6,9 @@ use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\eic_message_subscriptions\MessageSubscriptionTypes;
 use Drupal\eic_message_subscriptions\SubscriptionOperationTypes;
-use Drupal\eic_messages\MessageTemplateTypes;
 use Drupal\eic_messages\Util\ActivityStreamMessageTemplates;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\message\Entity\Message;
-use Drupal\message\MessageTemplateInterface;
 
 /**
  * Provides a message creator class for group content.
@@ -158,36 +156,6 @@ class GroupContentMessageCreator extends MessageCreatorBase {
     }
 
     return $message;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getMessageTemplatePrimaryKeys(MessageTemplateInterface $message_template) {
-    $primary_keys = [];
-
-    $message_template_type = $message_template->getThirdPartySetting('eic_messages', 'message_template_type');
-
-    // We assume all stream messages reference a node.
-    // @todo Define if all stream templates should also include executing user.
-    if ($message_template_type == MessageTemplateTypes::STREAM) {
-      $primary_keys = [
-        'field_referenced_node',
-      ];
-    }
-
-    switch ($message_template->id()) {
-
-      case MessageSubscriptionTypes::GROUP_CONTENT_UPDATED:
-        $primary_keys = [
-          'field_event_executing_user',
-          'field_referenced_node',
-        ];
-        break;
-
-    }
-
-    return $primary_keys;
   }
 
 }

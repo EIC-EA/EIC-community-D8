@@ -260,6 +260,11 @@ class MessageSubscriptionEventSubscriber implements EventSubscriberInterface {
       $flagging
     );
 
+    // Check if we should create/send the message.
+    if (!$this->nodeMessageCreator->shouldCreateNewMessage($message)) {
+      return NULL;
+    }
+
     $flagged_entity = $flagging->getFlaggable();
 
     // Adds the flagged node to the context so that message_subscribe module

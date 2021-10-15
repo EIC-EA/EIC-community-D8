@@ -3,11 +3,14 @@
 namespace Drupal\eic_messages\Util;
 
 use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\eic_messages\MessageIdentifierInterface;
+use Drupal\eic_messages\MessageTemplateTypes;
+use Drupal\message\MessageTemplateInterface;
 
 /**
  * Helper class for activity stream message templates.
  */
-final class ActivityStreamMessageTemplates {
+final class ActivityStreamMessageTemplates implements MessageIdentifierInterface {
 
   /**
    * Message template for inserted/updated articles.
@@ -110,6 +113,28 @@ final class ActivityStreamMessageTemplates {
     }
 
     return TRUE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function getMessageTemplatePrimaryKeys(MessageTemplateInterface $message_template) {
+    $primary_keys = [];
+
+    // Get the message template type.
+    $message_template_type = $message_template->getThirdPartySetting('eic_messages', 'message_template_type');
+
+    if ($message_template_type != MessageTemplateTypes::STREAM) {
+      return FALSE;
+    }
+
+    // We assume all stream messages reference a node.
+    // @todo Define if all stream templates should also include executing user.
+    $primary_keys = [
+      'field_referenced_node',
+    ];
+
+    return $primary_keys;
   }
 
 }
