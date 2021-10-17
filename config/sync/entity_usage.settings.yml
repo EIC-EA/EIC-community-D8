@@ -6,6 +6,7 @@ _core:
 track_enabled_source_entity_types:
   - node
   - paragraph
+  - user
 track_enabled_target_entity_types:
   - media
 edit_warning_message_entity_types: {  }

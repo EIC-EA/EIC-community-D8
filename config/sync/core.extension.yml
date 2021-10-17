@@ -92,6 +92,7 @@ module:
   inline_entity_form: 0
   language: 0
   link: 0
+  mailsystem: 0
   media: 0
   media_entity_download: 0
   media_library: 0
@@ -108,6 +109,7 @@ module:
   migrate_plus: 0
   migrate_tools: 0
   migrate_upgrade: 0
+  mimemail: 0
   node: 0
   node_read_time: 0
   oe_media: 0
