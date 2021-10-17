@@ -53,7 +53,16 @@ class DeleteRequestHandler extends AbstractRequestHandler {
 
       case 'node':
       case 'comment':
-        $content_entity->delete();
+      $content_entity->set('comment_body', [
+        'value' => $this->t(
+          'This comment has been removed at @time.',
+          ['@time' => \Drupal::service('date.formatter')->format(time(), 'medium')],
+          ['context' => 'eic_flags']
+        ),
+        'format' => 'plain_text',
+      ]);
+      $content_entity->set('field_comment_is_soft_deleted', TRUE);
+      $content_entity->save();
         break;
     }
   }

@@ -6,6 +6,7 @@ use Drupal\comment\CommentInterface;
 use Drupal\comment\Entity\Comment;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\Datetime\DateFormatter;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -65,6 +66,11 @@ class DiscussionController extends ControllerBase {
   private $groupsHelper;
 
   /**
+   * @var \Drupal\Core\Datetime\DateFormatter $dateFormatter
+   */
+  private $dateFormatter;
+
+  /**
    * DiscussionController constructor.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
@@ -76,12 +82,14 @@ class DiscussionController extends ControllerBase {
     EntityTypeManagerInterface $entity_type_manager,
     FlagService $flag_service,
     GroupPermissionChecker $group_permission_checker,
-    EICGroupsHelper $groups_helper
+    EICGroupsHelper $groups_helper,
+    DateFormatter $dateFormatter
   ) {
     $this->entityTypeManager = $entity_type_manager;
     $this->flagService = $flag_service;
     $this->groupPermissionChecker = $group_permission_checker;
     $this->groupsHelper = $groups_helper;
+    $this->dateFormatter = $dateFormatter;
   }
 
   /**
@@ -92,7 +100,8 @@ class DiscussionController extends ControllerBase {
       $container->get('entity_type.manager'),
       $container->get('flag'),
       $container->get('oec_group_comments.group_permission_checker'),
-      $container->get('eic_groups.helper')
+      $container->get('eic_groups.helper'),
+      $container->get('date.formatter')
     );
   }
 
@@ -180,6 +189,21 @@ class DiscussionController extends ControllerBase {
       $file = $media_picture ? File::load($media_picture[0]->get('oe_media_image')->target_id) : NULL;
       $file_url = $file ? file_url_transform_relative(file_create_url($file->get('uri')->value)) : NULL;
 
+      $archive_flag = $this->flagService->getFlagging($this->flagService->getFlagById('request_archive_comment'), $comment);
+      $delete_flag = $this->flagService->getFlagging($this->flagService->getFlagById('request_delete_comment'), $comment);
+
+      $archived_flag_time = $archive_flag instanceof FlaggingInterface ?
+        $this->dateFormatter->format($archive_flag->get('created')->value, 'medium') :
+        NULL;
+
+      $deleted_flag_time = $delete_flag instanceof FlaggingInterface ?
+        $this->dateFormatter->format($delete_flag->get('created')->value, 'medium') :
+        NULL;
+
+      $edited_time = $comment->getCreatedTime() !== $comment->getChangedTime() && !$deleted_flag_time && !$archived_flag_time ?
+        $this->dateFormatter->format($comment->getChangedTime(), 'medium') :
+        NULL;
+
       $comments_data[] = [
         'user_image' => $file_url,
         'user_id' => $user->id(),
@@ -190,6 +214,20 @@ class DiscussionController extends ControllerBase {
         'comment_id' => $comment->id(),
         'likes' => $this->getCommentLikesData($comment, $account),
         'is_soft_delete' => $comment->get('field_comment_is_soft_deleted')->value,
+        'archived_flag_time' => $archived_flag_time ?
+          $this->t('Archived on @time', ['@time' => $archived_flag_time], ['context' => 'eic_groups']) :
+          NULL,
+        'deleted_flag_time' => $deleted_flag_time ?
+          $this->t('Deleted on @time', ['@time' => $deleted_flag_time], ['context' => 'eic_groups']) :
+          NULL,
+        'edited_time' => $edited_time ?
+          $this->t('Edited on @time', ['@time' => $edited_time], ['context' => 'eic_groups']) :
+          NULL,
+        'created_time' => $this->t(
+          'Created on @time',
+          ['@time' => $this->dateFormatter->format($comment->getCreatedTime(), 'medium')],
+          ['context' => 'eic_groups']
+        ),
       ];
     }
 
@@ -358,7 +396,10 @@ class DiscussionController extends ControllerBase {
 
     try {
       $comment->set('comment_body', [
-        'value' => $this->t('This comment has been removed.'),
+        'value' => $this->t('This comment has been removed at @time.',
+          ['@time' => $this->dateFormatter->format(time(), 'medium')],
+          ['context' => 'eic_groups']
+        ),
         'format' => 'plain_text',
       ]);
       $comment->set('field_comment_is_soft_deleted', TRUE);
