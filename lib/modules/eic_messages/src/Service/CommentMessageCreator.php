@@ -3,7 +3,10 @@
 namespace Drupal\eic_messages\Service;
 
 use Drupal\comment\CommentInterface;
+use Drupal\Component\Datetime\TimeInterface;
+use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\eic_content\EICContentHelperInterface;
 use Drupal\eic_message_subscriptions\MessageSubscriptionTypes;
 use Drupal\eic_message_subscriptions\SubscriptionOperationTypes;
@@ -29,6 +32,12 @@ class CommentMessageCreator extends MessageCreatorBase {
   /**
    * CommentMessageCreator constructor.
    *
+   * @param \Drupal\Component\Datetime\TimeInterface $date_time
+   *   The datetime.time service.
+   * @param \Drupal\Core\Config\ConfigFactory $config_factory
+   *   The config.factory service.
+   * @param \Drupal\Core\Session\AccountProxyInterface $current_user
+   *   The current user object.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
    * @param \Drupal\eic_messages\MessageHelper $eic_messages_helper
@@ -39,12 +48,22 @@ class CommentMessageCreator extends MessageCreatorBase {
    *   The EIC Content helper service.
    */
   public function __construct(
+    TimeInterface $date_time,
+    ConfigFactory $config_factory,
+    AccountProxyInterface $current_user,
     EntityTypeManagerInterface $entity_type_manager,
     MessageHelper $eic_messages_helper,
     UserHelper $eic_user_helper,
     EICContentHelperInterface $content_helper
   ) {
-    parent::__construct($entity_type_manager, $eic_messages_helper, $eic_user_helper);
+    parent::__construct(
+      $date_time,
+      $config_factory,
+      $current_user,
+      $entity_type_manager,
+      $eic_messages_helper,
+      $eic_user_helper
+    );
 
     $this->contentHelper = $content_helper;
   }
@@ -127,21 +146,13 @@ class CommentMessageCreator extends MessageCreatorBase {
       'field_referenced_comment' => $entity,
     ]);
 
+    // Set the owner of the message to the current user.
+    $executing_user_id = $this->currentUser->id();
+    $message->setOwnerId($executing_user_id);
+
     // Adds the reference to the user who created/updated the entity.
     if ($message->hasField('field_event_executing_user')) {
-      $executing_user_id = $entity->getOwnerId();
-
-      $vid = $this->entityTypeManager->getStorage($entity->getEntityTypeId())
-        ->getLatestRevisionId($entity->id());
-
-      if ($vid) {
-        $latest_revision = $this->entityTypeManager->getStorage($entity->getEntityTypeId())
-          ->loadRevision($vid);
-        $executing_user_id = $latest_revision->getOwnerId();
-      }
-
       $message->set('field_event_executing_user', $executing_user_id);
-      $message->setOwnerId($executing_user_id);
     }
 
     return $message;
