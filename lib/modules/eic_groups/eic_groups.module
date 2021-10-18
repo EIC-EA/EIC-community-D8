@@ -72,6 +72,7 @@ function eic_groups_theme($existing, $type, $theme, $path) {
       'variables' => [
         'discussion_id' => 0,
         'contributors' => [],
+        'is_anonymous' => TRUE,
       ],
     ],
   ];

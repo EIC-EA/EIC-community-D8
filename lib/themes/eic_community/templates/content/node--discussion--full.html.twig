@@ -54,23 +54,4 @@
         {{ elements.field_vocab_topics }}
       {% endblock %}
     {% endembed %}
-    {% if logged_in %}
-    <section class="ecl-section-wrapper ecl-section-wrapper--is-grey ecl-comment-overview">
-      <div class="ecl-container">
-        {% embed "@theme/patterns/compositions/editorial-article.html.twig" with {
-          extra_classes: 'ecl-editorial-article--has-static-layout'
-        } %}
-          {% block content %}
-            {{ elements.field_comments }}
-          {% endblock %}
-          {% block sidebar %}
-              {% include "@theme/patterns/compositions/featured-contributors.html.twig" with contributors|default({})|merge({
-                grid: true,
-                title: "Contributors"|t
-              }) only %}
-          {% endblock %}
-        {% endembed %}
-      </div>
-    </section>
-    {% endif %}
 {% endblock %}
