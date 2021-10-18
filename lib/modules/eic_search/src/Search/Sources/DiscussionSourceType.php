@@ -93,6 +93,13 @@ class DiscussionSourceType extends SourceType {
   /**
    * @inheritDoc
    */
+  public function getSecondDefaultSort(): array {
+    return ['dm_aggregated_changed', 'DESC'];
+  }
+
+  /**
+   * @inheritDoc
+   */
   public function getSearchFieldsId(): array {
     return [
       'tm_global_title',

@@ -127,6 +127,12 @@ class SolrSearchController extends ControllerBase {
       }
     }
 
+    $default_sort = $source->getSecondDefaultSort();
+
+    if (!empty($default_sort) && 2 === count($default_sort)) {
+      $solariumQuery->addSort($default_sort[0], $default_sort[1]);
+    }
+
     //If there are no current sorts check if source has a default sort
     if (
       !$sort_value &&

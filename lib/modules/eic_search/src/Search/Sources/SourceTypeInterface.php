@@ -64,6 +64,13 @@ interface SourceTypeInterface {
   public function getDefaultSort(): array;
 
   /**
+   * Get second default sort for an overview, always 2 keys, first : field id, second: direction
+   *
+   * @return array
+   */
+  public function getSecondDefaultSort(): array;
+
+  /**
    * Return the fields ID on search API to search for (will be separated by OR
    * condition)
    *
