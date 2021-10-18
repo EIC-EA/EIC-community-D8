@@ -7,6 +7,7 @@ use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Logger\LoggerChannelTrait;
+use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\eic_messages\MessageHelper;
 use Drupal\eic_messages\MessageTemplateTypes;
@@ -40,6 +41,13 @@ class MessageCreatorBase implements ContainerInjectionInterface, MessageCreatorI
   protected $configFactory;
 
   /**
+   * The current user object.
+   *
+   * @var \Drupal\Core\Session\AccountProxyInterface
+   */
+  protected $currentUser;
+
+  /**
    * The entity type manager.
    *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
@@ -67,6 +75,8 @@ class MessageCreatorBase implements ContainerInjectionInterface, MessageCreatorI
    *   The datetime.time service.
    * @param \Drupal\Core\Config\ConfigFactory $config_factory
    *   The config.factory service.
+   * @param \Drupal\Core\Session\AccountProxyInterface $current_user
+   *   The current user object.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
    * @param \Drupal\eic_messages\MessageHelper $eic_messages_helper
@@ -74,9 +84,10 @@ class MessageCreatorBase implements ContainerInjectionInterface, MessageCreatorI
    * @param \Drupal\eic_user\UserHelper $eic_user_helper
    *   The EIC User helper service.
    */
-  public function __construct(TimeInterface $date_time, ConfigFactory $config_factory, EntityTypeManagerInterface $entity_type_manager, MessageHelper $eic_messages_helper, UserHelper $eic_user_helper) {
+  public function __construct(TimeInterface $date_time, ConfigFactory $config_factory, AccountProxyInterface $current_user, EntityTypeManagerInterface $entity_type_manager, MessageHelper $eic_messages_helper, UserHelper $eic_user_helper) {
     $this->timeService = $date_time;
     $this->configFactory = $config_factory;
+    $this->currentUser = $current_user;
     $this->entityTypeManager = $entity_type_manager;
     $this->eicMessagesHelper = $eic_messages_helper;
     $this->eicUserHelper = $eic_user_helper;
@@ -89,6 +100,7 @@ class MessageCreatorBase implements ContainerInjectionInterface, MessageCreatorI
     return new static(
       $container->get('datetime.time'),
       $container->get('config.factory'),
+      $container->get('current_user'),
       $container->get('entity_type.manager'),
       $container->get('eic_messages.helper'),
       $container->get('eic_user.helper')
