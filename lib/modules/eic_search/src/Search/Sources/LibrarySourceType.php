@@ -105,7 +105,7 @@ class LibrarySourceType extends SourceType {
    * @inheritDoc
    */
   public function getSecondDefaultSort(): array {
-    return ['dm_aggregated_changed', 'DESC'];
+    return ['ss_global_created_date', 'DESC'];
   }
 
   /**
