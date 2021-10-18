@@ -5,7 +5,7 @@
  * Contains implementation for docuemnt media preprocessor.
  */
 
-use Drupal\Core\Url;
+use Drupal\eic_media\MediaHelper;
 
 /**
  * Implements hook_preprocess_HOOK().
@@ -49,11 +49,7 @@ function eic_community_preprocess_field__field_related_downloads(array &$variabl
 
     $file_type = strstr($file->get('filemime')->getString(), '/', TRUE);
 
-    $download_url = Url::fromRoute('media_entity_download.download',
-      [
-        'media' => $media->id(),
-      ]
-    );
+    $download_url = MediaHelper::formatMediaDownloadLink($media)->toString();
 
     $document = [
       'title' => $media->getName(),
@@ -61,7 +57,7 @@ function eic_community_preprocess_field__field_related_downloads(array &$variabl
       'timestamp' => eic_community_get_teaser_time_display($media->get('changed')->getString()),
       'filesize' => format_size($file->get('filesize')->getString()),
       'highlight' => FALSE,
-      'path' => $download_url->toString(),
+      'path' => $download_url,
       'icon_file_path' => $variables['eic_icon_path'],
       'icon' => [
         'type' => $file_type === 'video' ? 'general' : 'custom',

@@ -61,3 +61,19 @@ function eic_community_get_teaser_user_display(User $user) {
 
   return $author;
 }
+
+/**
+ * Preprocess contributors for the storybook template.
+ */
+function _eic_community_display_document_contributors(array &$variables) {
+  if (!empty($variables['elements']['contributor_ids'])) {
+    $users = \Drupal::entityTypeManager()->getStorage('user')->loadMultiple($variables['elements']['contributor_ids']);
+    $contributors = ['items' => []];
+
+    foreach ($users as $user) {
+      $contributors['items'][] = eic_community_get_teaser_user_display($user);
+    }
+
+    $variables['contributors'] = $contributors;
+  }
+}

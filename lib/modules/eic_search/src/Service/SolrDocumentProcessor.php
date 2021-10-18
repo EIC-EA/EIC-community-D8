@@ -21,12 +21,12 @@ use Drupal\node\Entity\Node;
 use Drupal\paragraphs\Entity\Paragraph;
 use Drupal\profile\Entity\Profile;
 use Drupal\profile\Entity\ProfileInterface;
+use Drupal\search_api\Entity\Index;
+use Drupal\search_api\Utility\PostRequestIndexing;
 use Drupal\search_api\Utility\Utility;
 use Drupal\statistics\NodeStatisticsDatabaseStorage;
 use Drupal\user\Entity\User;
 use Drupal\user\UserInterface;
-use Drupal\search_api\Entity\Index;
-use Drupal\search_api\Utility\PostRequestIndexing;
 use Solarium\Core\Query\DocumentInterface;
 use Solarium\QueryType\Update\Query\Document;
 
@@ -134,7 +134,7 @@ class SolrDocumentProcessor {
         }
         break;
       case 'entity:group':
-        $title = $fields['ss_group_label_string'];
+        $title = $fields['tm_X3b_en_group_label_fulltext'];
         $type = 'group';
         $date = $fields['ds_group_created'];
         $status = $fields['bs_group_status'];
@@ -143,11 +143,6 @@ class SolrDocumentProcessor {
         $geo = $fields['ss_group_field_vocab_geo_string'];
         $language = t('English', [], ['context' => 'eic_search'])->render();
         $user_url = '';
-        if (array_key_exists('its_group_owner_id', $fields)) {
-          $user = User::load($fields['its_group_owner_id']);
-          $user_url = $user instanceof UserInterface ? $user->toUrl()
-            ->toString() : '';
-        }
         break;
       case 'entity:message':
         $user_url = '';
@@ -203,7 +198,7 @@ class SolrDocumentProcessor {
     }
 
     //We need to use only one field key for the global search on the FE side
-    $document->addField('ss_global_title', $title);
+    $document->addField('tm_global_title', $title);
     $document->addField('ss_global_content_type', $type);
     $document->addField('ss_global_created_date', $date);
     $document->addField('bs_global_status', $status);
@@ -443,6 +438,14 @@ class SolrDocumentProcessor {
         $document->setField('itm_user__group_content__uid_gid', $grp_ids);
       }
     }
+
+    // We update the ss_global_user_url field based on the group owner.
+    if (array_key_exists('its_group_owner_id', $document->getFields())) {
+      $user = User::load($document->getFields()['its_group_owner_id']);
+      $user_url = $user instanceof UserInterface ? $user->toUrl()
+        ->toString() : '';
+      $document->setField('ss_global_user_url', $user_url);
+    }
   }
 
   /**
@@ -479,6 +482,8 @@ class SolrDocumentProcessor {
         $entity_id = $fields['its_content_nid'];
         $entity_type = 'node';
         $last_flagging_flag_types = [
+          FlagType::BOOKMARK_CONTENT,
+          FlagType::HIGHLIGHT_CONTENT,
           FlagType::LIKE_CONTENT,
         ];
         break;

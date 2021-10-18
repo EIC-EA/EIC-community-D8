@@ -1,0 +1,29 @@
+uuid: a3101055-208c-47b6-beca-bd8f6a4347f8
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.group.field_related_groups
+    - group.type.event
+    - group.type.group
+id: group.event.field_related_groups
+field_name: field_related_groups
+entity_type: group
+bundle: event
+label: 'Related Groups'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:group'
+  handler_settings:
+    target_bundles:
+      group: group
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

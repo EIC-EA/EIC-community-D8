@@ -223,6 +223,7 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
         '#theme' => 'eic_group_comments_from_discussion',
         '#discussion_id' => $node->id(),
         '#contributors' => $contributors_data,
+        '#is_anonymous' => $current_user->isAnonymous(),
       ];
   }
 

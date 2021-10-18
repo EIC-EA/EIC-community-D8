@@ -5,7 +5,7 @@
  * Prepares variables for node document templates.
  */
 
-use Drupal\Core\Url;
+use Drupal\eic_media\MediaHelper;
 use Drupal\file\Entity\File;
 
 /**
@@ -77,11 +77,7 @@ function eic_community_preprocess_node__document(array &$variables) {
 
     foreach ($files as $file) {
       $download = File::load($file->field_media_file->getValue()[0]['target_id']);
-      $download_url = Url::fromRoute('media_entity_download.download',
-        [
-          'media' => $file->id(),
-        ]
-      );
+      $download_url = MediaHelper::formatMediaDownloadLink($file)->toString();
       $files_list[] = [
         'name' => $file->getName(),
         'stats' => [
@@ -101,7 +97,7 @@ function eic_community_preprocess_node__document(array &$variables) {
           ],
         ],
         'mime_type' => substr(strrchr($download->get('filemime')->getString(), '/'), 1),
-        'path' => $download_url->toString(),
+        'path' => $download_url,
       ];
     }
 

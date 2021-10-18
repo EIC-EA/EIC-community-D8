@@ -25,14 +25,23 @@ content:
     type: text_default
     weight: 6
     region: content
-    label: above
+    label: hidden
     settings: {  }
+    third_party_settings: {  }
+  field_gallery_slides:
+    type: entity_reference_revisions_entity_view
+    weight: 8
+    region: content
+    label: hidden
+    settings:
+      view_mode: default
+      link: ''
     third_party_settings: {  }
   field_vocab_geo:
     type: entity_reference_label
     weight: 4
     region: content
-    label: above
+    label: hidden
     settings:
       link: true
     third_party_settings: {  }
@@ -40,32 +49,32 @@ content:
     type: entity_reference_label
     weight: 5
     region: content
-    label: above
+    label: hidden
     settings:
       link: true
     third_party_settings: {  }
   flag_bookmark_content:
-    weight: 7
-    region: content
-    settings: {  }
-    third_party_settings: {  }
-  flag_follow_content:
-    weight: 8
-    region: content
-    settings: {  }
-    third_party_settings: {  }
-  flag_highlight_content:
     weight: 9
     region: content
     settings: {  }
     third_party_settings: {  }
-  flag_like_content:
+  flag_follow_content:
     weight: 10
     region: content
     settings: {  }
     third_party_settings: {  }
-  flag_recommend:
+  flag_highlight_content:
     weight: 11
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  flag_like_content:
+    weight: 12
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  flag_recommend:
+    weight: 13
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -77,7 +86,7 @@ content:
   member_content_edit_access:
     weight: 1
     region: content
-    label: above
+    label: hidden
     settings:
       format: default
       format_custom_false: ''
@@ -87,7 +96,7 @@ content:
   private:
     weight: 2
     region: content
-    label: above
+    label: hidden
     settings:
       format: default
       format_custom_false: ''
@@ -98,7 +107,7 @@ content:
     type: timestamp
     region: content
     weight: 3
-    label: above
+    label: hidden
     settings:
       date_format: medium
       custom_date_format: ''
@@ -108,7 +117,6 @@ hidden:
   extra_field_eic_theme_helper_short_title_with_fallback: true
   field_comments: true
   field_document_type: true
-  field_gallery_slides: true
   field_language: true
   field_related_contributors: true
   langcode: true

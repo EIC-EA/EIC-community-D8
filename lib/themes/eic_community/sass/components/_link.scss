@@ -33,6 +33,7 @@
 
   body &--button-primary {
     @extend .ecl-button--primary;
+    border: 2px solid currentColor;
 
     &:hover,
     &:focus {
@@ -46,6 +47,10 @@
 
   body &--button-ghost {
     @extend .ecl-button--ghost;
+
+    &:focus {
+      outline: none;
+    }
   }
 
   body &--action {

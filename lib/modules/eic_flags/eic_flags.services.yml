@@ -24,3 +24,7 @@ services:
     arguments: ['@eic_search.solr_document_processor']
     tags:
       - { name: event_subscriber }
+
+  eic_flags.helper:
+    class: Drupal\eic_flags\FlagHelper
+    arguments: ['@flag', '@entity_type.manager']

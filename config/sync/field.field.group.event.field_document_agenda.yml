@@ -1,0 +1,29 @@
+uuid: 18abebd8-759e-4641-8331-d66336409e80
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.group.field_document_agenda
+    - group.type.event
+    - node.type.document
+id: group.event.field_document_agenda
+field_name: field_document_agenda
+entity_type: group
+bundle: event
+label: 'Agenda & Information'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      document: document
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

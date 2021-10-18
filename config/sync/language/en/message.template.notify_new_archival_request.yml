@@ -1,4 +1,4 @@
 text:
   -
-    value: "<p>Dear administrator</p>\r\n\r\n<p>[message:field_referenced_flag:entity:author:field_first_name:value]&nbsp;[message:field_referenced_flag:entity:author:field_last_name:value]&nbsp;requested to archive&nbsp;<u>[message:field_referenced_flag:entity:target_entity:title]</u>. Click&nbsp;<a href=\"[site:url]admin/content/request/delete\"><u>here</u></a>&nbsp;to review the request.</p>\r\n\r\n<p>Reason: [message:field_referenced_flag:entity:field_request_reason:value]</p>\r\n\r\n<p>The EIC Community team</p>\r\n"
+    value: "<p>Dear administrator</p>\r\n\r\n<p>[message:field_referenced_flag:entity:author:field_first_name:value]&nbsp;[message:field_referenced_flag:entity:author:field_last_name:value]&nbsp;requested to archive&nbsp;<a href=\"[message:field_referenced_flag:entity:target_entity:url]\">[message:field_referenced_flag:entity:target_entity:title]</a>. Click&nbsp;<a href=\"[site:url]admin/community/request/archive\"><u>here</u></a>&nbsp;to review the request.</p>\r\n\r\n<p>Reason: [message:field_referenced_flag:entity:field_request_reason:value]</p>\r\n\r\n<p>The EIC Community team</p>\r\n"
     format: full_html

@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - group.type.event
     - group.type.group
   module:
     - content_moderation
@@ -72,5 +73,6 @@ type_settings:
       weight: -1
   entity_types:
     group:
+      - event
       - group
   default_moderation_state: pending

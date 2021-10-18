@@ -51,19 +51,10 @@ function _eic_community_get_flag_access($flag_id, EntityInterface $entity) {
     return TRUE;
   }
 
+  // Check if we have a flagging for this user and entity. If we have one we
+  // check if the user can unflag, otherwise we check if the user can flag.
   $user_flag = $flag_service->getFlagging($flag, $entity);
+  $action = $user_flag ? 'unflag' : 'flag';
 
-  // We need to create a fake flag if the user never flagged the content,
-  // otherwise we can't do an access check.
-  if (!$user_flag) {
-    $user_flag = \Drupal::entityTypeManager()->getStorage('flagging')->create([
-      'uid' => \Drupal::currentUser()->id(),
-      'flag_id' => $flag->id(),
-      'entity_id' => $entity->id(),
-      'entity_type' => $entity->getEntityTypeId(),
-      'global' => $flag->isGlobal(),
-    ]);
-  }
-
-  return $user_flag->access('view');
+  return $flag->actionAccess($action);
 }
