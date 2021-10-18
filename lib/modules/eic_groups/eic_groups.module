@@ -245,15 +245,15 @@ function eic_groups_group_access(EntityInterface $entity, $operation, AccountInt
 
   $moderation_state = $entity->get('moderation_state')->value;
 
+  // Allow access if user is a poweruser.
+  if (UserHelper::isPowerUser($account)) {
+    return GroupAccessResult::allowed()
+      ->addCacheableDependency($account)
+      ->addCacheableDependency($entity);
+  }
+
   switch ($operation) {
     case 'view':
-      if (UserHelper::isPowerUser($account)) {
-        $access = GroupAccessResult::allowed()
-          ->addCacheableDependency($account)
-          ->addCacheableDependency($entity);
-        break;
-      }
-
       $membership = $entity->getMember($account);
 
       // If the user is not a member of the group, we do nothing.
@@ -274,11 +274,40 @@ function eic_groups_group_access(EntityInterface $entity, $operation, AccountInt
       }
       break;
 
+    case 'update':
+      $membership = $entity->getMember($account);
+      $is_group_admin = FALSE;
+
+      // User is a group admin, so we allow access.
+      if ($membership && EICGroupsHelper::userIsGroupAdmin($entity, $account, $membership)) {
+        $is_group_admin = TRUE;
+      }
+
+      if (!$is_group_admin) {
+        break;
+      }
+
+      // We allow access if the user is the group owner or a group admin, and
+      // moderation state is set to DRAFT or BLOCKED.
+      if (in_array(
+        $entity->get('moderation_state')->value,
+        [
+          GroupsModerationHelper::GROUP_DRAFT_STATE,
+          GroupsModerationHelper::GROUP_BLOCKED_STATE,
+        ])
+      ) {
+        $access = GroupAccessResult::allowed()
+          ->addCacheableDependency($account)
+          ->addCacheableDependency($membership)
+          ->addCacheableDependency($entity);
+      }
+      break;
+
     case 'delete':
       // Deny access to delete group if the group is NOT in pending state and
-      // the user is NOT a "site_admin" or a "content_administrator".
+      // the user is NOT a poweruser.
       if ($moderation_state !== GroupsModerationHelper::GROUP_PENDING_STATE) {
-        $access = GroupAccessResult::forbiddenIf(!UserHelper::isPowerUser($account))
+        $access = GroupAccessResult::forbidden()
           ->addCacheableDependency($account)
           ->addCacheableDependency($entity);
       }
