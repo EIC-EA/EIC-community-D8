@@ -400,6 +400,12 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
    */
   public static function userIsGroupAdmin(GroupInterface $group, AccountInterface $account) {
     $membership = $group->getMember($account);
+
+    // User is not a member of the group. We return FALSE.
+    if (!$membership) {
+      return FALSE;
+    }
+
     $membership_roles = $membership->getRoles();
     $is_admin = FALSE;
 
