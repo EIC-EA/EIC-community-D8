@@ -51,7 +51,7 @@ RUN latest_drush_version=$(curl -s https://api.github.com/repos/drush-ops/drush/
   # smoke test
   && drush version
 
-ENV YARN_VERSION=1.22.5
+ENV YARN_VERSION=1.22.15
 COPY --from=node:14 /usr/local/lib/node_modules /usr/local/lib/node_modules
 COPY --from=node:14 /usr/local/bin/node /usr/local/bin/node
 COPY --from=node:14 /opt/yarn-v$YARN_VERSION /opt/yarn-v$YARN_VERSION

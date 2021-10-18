@@ -21,19 +21,21 @@ class GroupContentNodeAccessControlHandler extends GroupContentAccessControlHand
   public function entityAccess(EntityInterface $entity, $operation, AccountInterface $account, $return_as_object = FALSE) {
     $access = parent::entityAccess($entity, $operation, $account, $return_as_object);
 
+    /** @var \Drupal\group\Entity\Storage\GroupContentStorageInterface $storage */
+    $storage = $this->entityTypeManager->getStorage('group_content');
+    $group_contents = $storage->loadByEntity($entity);
+
+    if (empty($group_contents)) {
+      return $access;
+    }
+
     switch ($operation) {
       case 'update':
-        /** @var \Drupal\group\Entity\Storage\GroupContentStorageInterface $storage */
-        $storage = $this->entityTypeManager->getStorage('group_content');
-        $group_contents = $storage->loadByEntity($entity);
-
         // Always deny access to book pages.
-        if (!empty($group_contents)) {
-          if ($entity->bundle() === 'book') {
-            $access = GroupAccessResult::forbiddenIf(!$account->hasPermission('bypass node access'))
-              ->cachePerUser();
-            break;
-          }
+        if ($entity->bundle() === 'book') {
+          $access = GroupAccessResult::forbiddenIf(!$account->hasPermission('bypass node access'))
+            ->cachePerUser();
+          break;
         }
 
         // Allow access to power users.
@@ -61,6 +63,15 @@ class GroupContentNodeAccessControlHandler extends GroupContentAccessControlHand
               ->addCacheableDependency($entity);
             break;
           }
+        }
+        break;
+
+      case 'delete':
+        // Allow access to power users.
+        if (UserHelper::isPowerUser($account)) {
+          $access = GroupAccessResult::allowed()
+            ->addCacheableDependency($account)
+            ->addCacheableDependency($entity);
         }
         break;
 

@@ -33,6 +33,7 @@
 
   body &--button-primary {
     @extend .ecl-button--primary;
+    border: 2px solid currentColor;
 
     &:hover,
     &:focus {
