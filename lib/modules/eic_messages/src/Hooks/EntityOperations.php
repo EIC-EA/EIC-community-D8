@@ -2,9 +2,12 @@
 
 namespace Drupal\eic_messages\Hooks;
 
+use Drupal\Component\Datetime\TimeInterface;
+use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\content_moderation\ModerationInformationInterface;
 use Drupal\eic_messages\MessageHelper;
@@ -29,18 +32,30 @@ class EntityOperations extends MessageCreatorBase implements ContainerInjectionI
   /**
    * EntityUpdate constructor.
    *
+   * @param \Drupal\Component\Datetime\TimeInterface $date_time
+   *   The datetime.time service.
+   * @param \Drupal\Core\Config\ConfigFactory $config_factory
+   *   The config.factory service.
+   * @param \Drupal\Core\Session\AccountProxyInterface $current_user
+   *   The current user object.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    * @param \Drupal\eic_messages\MessageHelper $eic_messages_helper
    * @param \Drupal\eic_user\UserHelper $eic_user_helper
    * @param \Drupal\content_moderation\ModerationInformationInterface $moderationInformation
    */
   public function __construct(
+    TimeInterface $date_time,
+    ConfigFactory $config_factory,
+    AccountProxyInterface $current_user,
     EntityTypeManagerInterface $entity_type_manager,
     MessageHelper $eic_messages_helper,
     UserHelper $eic_user_helper,
     ModerationInformationInterface $moderationInformation
   ) {
     parent::__construct(
+      $date_time,
+      $config_factory,
+      $current_user,
       $entity_type_manager,
       $eic_messages_helper,
       $eic_user_helper
@@ -54,6 +69,9 @@ class EntityOperations extends MessageCreatorBase implements ContainerInjectionI
    */
   public static function create(ContainerInterface $container) {
     return new static(
+      $container->get('datetime.time'),
+      $container->get('config.factory'),
+      $container->get('current_user'),
       $container->get('entity_type.manager'),
       $container->get('eic_messages.helper'),
       $container->get('eic_user.helper'),

@@ -51,11 +51,11 @@ function eic_search_preprocess_html(&$variables) {
   foreach ($sources as $source) {
     foreach ($source->getAvailableSortOptions() as $sort_key => $options) {
       foreach ($options as $direction => $label) {
-        $variables['#attached']['drupalSettings']['translations']['sources']['sort'][$sort_key . '__' . $direction] = $label;
+        $variables['#attached']['drupalSettings']['translations']['sources'][$source->getEntityBundle()]['sort'][$sort_key . '__' . $direction] = $label;
       }
     }
     foreach ($source->getAvailableFacets() as $facet_option => $label) {
-      $variables['#attached']['drupalSettings']['translations']['sources']['facet'][$facet_option] = $label;
+      $variables['#attached']['drupalSettings']['translations']['sources'][$source->getEntityBundle()]['facet'][$facet_option] = $label;
     }
   }
 }

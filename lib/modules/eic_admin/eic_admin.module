@@ -3,8 +3,19 @@
 /**
  * @file
  * Primary module hooks for EIC Administration module.
- *
- * @DCG
- * This file is no longer required in Drupal 8.
- * @see https://www.drupal.org/node/2217931
  */
+
+/**
+ * Implements template_preprocess_views_view_field().
+ */
+function eic_admin_preprocess_views_view_field(&$vars) {
+  if ($vars['view']->id() == 'closed_requests' && $vars['field']->options['id'] == 'flag_id') {
+    // Users without the 'administer flags' permissions cannot see the flag
+    // label, so we add it manually here.
+    /** @var \Drupal\flag\FlaggingInterface $flagging */
+    $flagging = $vars['row']->_entity;
+    $flag_label = $flagging->getFlag()->label();
+    $vars['output'] = $flag_label;
+    $vars['field']->last_render = $flag_label;
+  }
+}
