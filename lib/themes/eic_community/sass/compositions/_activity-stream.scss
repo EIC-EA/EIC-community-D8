@@ -6,7 +6,7 @@
     &__items-wrapper {}
 
     &__item {
-        padding: ecl-box-model('padding', 'activity');
+        padding: ecl-box-model('padding', 'default');
         margin-bottom: ecl-box-model('padding');
         position: relative;
 
@@ -19,6 +19,7 @@
             align-items: center;
             border-bottom: ecl-border();
             padding-bottom: ecl-box-model('padding');
+            padding-right: ecl-box-model('padding');
             margin-bottom: ecl-box-model('padding');
         }
 
