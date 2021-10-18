@@ -515,12 +515,13 @@ function eic_groups_field_widget_media_library_widget_form_alter(&$element, Form
 
   if ($route_match->getRouteName() === 'entity.group_content.create_form') {
 
+    /** @var \Drupal\group\Entity\GroupInterface $group */
+    $group = \Drupal::service('eic_groups.helper')->getGroupFromRoute();
+
     // If group cannot be loaded from the route, we return access neutral.
-    if (!$group = \Drupal::service('eic_groups.helper')->getGroupFromRoute()) {
+    if (!$group) {
       return;
     }
-
-    /** @var \Drupal\group\Entity\GroupInterface $group */
 
     /** @var \Drupal\media_library\MediaLibraryState $state */
     $state = $element['open_button']['#media_library_state'];
