@@ -496,4 +496,73 @@ class EntityOperations implements ContainerInjectionInterface {
     }
   }
 
+  /**
+   * Check for each node that has field member_content_edit_access if user
+   * has permission to edit it
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   * @param string $operation
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *
+   * @return \Drupal\Core\Access\AccessResultForbidden|\Drupal\Core\Access\AccessResultNeutral
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   */
+  public function entityAccess(
+    EntityInterface $entity,
+    string $operation,
+    AccountInterface $account
+  ) {
+    if (
+      'update' === $operation &&
+      $entity instanceof \Drupal\node\NodeInterface &&
+      $entity->hasField(NodeProperty::MEMBER_CONTENT_EDIT_ACCESS)
+    ) {
+      $access = AccessResult::neutral();
+
+      if ($entity->isNew()) {
+        $group = $this->eicGroupsHelper->getGroupFromRoute();
+
+        if (!$group) {
+          return AccessResult::forbidden();
+        }
+
+        return $access;
+      }
+
+      /** @var \Drupal\group\Entity\Storage\GroupContentStorageInterface $storage */
+      $storage = $this->entityTypeManager->getStorage('group_content');
+      $group_contents = $storage->loadByEntity($entity);
+
+      // Wiki page is not part of a group, so we always hide the field.
+      if (empty($group_contents)) {
+        return AccessResult::forbidden();
+      }
+
+      // If user is the group author, we allow access.
+      if ($entity->getOwnerId() === $account->id()) {
+        return $access;
+      }
+
+      // If user is a power user, we allow access.
+      if (UserHelper::isPowerUser($account)) {
+        return $access;
+      }
+
+      $group_content = reset($group_contents);
+      $group = $group_content->getGroup();
+
+      // If user is a group admin, we allow access.
+      if (EICGroupsHelper::userIsGroupAdmin($group, $account)) {
+        return $access;
+      }
+
+      // At this point it means the user is just a group member and
+      // therefore we deny access to edit the field.
+      $access = AccessResult::forbidden();
+
+      return $access;
+    }
+  }
+
 }

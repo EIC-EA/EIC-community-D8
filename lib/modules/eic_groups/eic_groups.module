@@ -238,6 +238,14 @@ function eic_groups_entity_field_access($operation, FieldDefinitionInterface $fi
 }
 
 /**
+ * Implements hook_entity_access().
+ */
+function eic_groups_entity_access(\Drupal\Core\Entity\EntityInterface $entity, $operation, \Drupal\Core\Session\AccountInterface $account) {
+  return \Drupal::classResolver(EntityOperations::class)
+    ->entityAccess($entity, $operation, $account);
+}
+
+/**
  * Implements hook_ENTITY_TYPE_access().
  */
 function eic_groups_group_access(EntityInterface $entity, $operation, AccountInterface $account) {
