@@ -17,6 +17,11 @@ type_settings:
       default_revision: true
       label: Archived
       weight: 3
+    blocked:
+      published: false
+      default_revision: false
+      label: Blocked
+      weight: 4
     draft:
       label: Draft
       published: false
@@ -39,6 +44,12 @@ type_settings:
         - published
       to: archived
       weight: 2
+    block:
+      label: Block
+      from:
+        - published
+      to: blocked
+      weight: 4
     create_new_group:
       label: 'Create new group'
       from:
