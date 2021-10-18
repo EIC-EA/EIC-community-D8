@@ -19,7 +19,7 @@ type_settings:
       weight: 3
     blocked:
       published: false
-      default_revision: false
+      default_revision: true
       label: Blocked
       weight: 4
     draft:
@@ -56,6 +56,12 @@ type_settings:
         - pending
       to: pending
       weight: -2
+    keep_blocked:
+      label: 'Keep blocked'
+      from:
+        - blocked
+      to: blocked
+      weight: 6
     keep_in_draft:
       label: 'Keep in draft'
       from:
@@ -70,6 +76,12 @@ type_settings:
         - archived
         - draft
         - published
+    unblock:
+      label: Unblock
+      from:
+        - blocked
+      to: published
+      weight: 5
     unpublish:
       label: Unpublish
       from:
