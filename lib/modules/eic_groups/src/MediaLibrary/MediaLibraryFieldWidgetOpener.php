@@ -52,6 +52,7 @@ class MediaLibraryFieldWidgetOpener extends MediaLibraryFieldWidgetOpenerBase {
         return $access;
       }
 
+      /** @var \Drupal\group\Entity\GroupInterface $group */
       $group = $this->entityTypeManager->getStorage('group')->load($state->get('group_id'));
 
       if (!$group) {
@@ -75,13 +76,9 @@ class MediaLibraryFieldWidgetOpener extends MediaLibraryFieldWidgetOpenerBase {
       }
 
       $entity_bundle = $parameters['bundle'];
-
-      /** @var \Drupal\group\Entity\GroupInterface $group */
-
       $group_type = $group->getGroupType();
 
       $group_content_plugins = $group_type->getInstalledContentPlugins()->getInstanceIds();
-
       if (!in_array("group_node:$entity_bundle", $group_content_plugins)) {
         return $access;
       }
