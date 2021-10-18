@@ -17,6 +17,7 @@ use Drupal\eic_groups\Constants\GroupVisibilityType;
 use Drupal\group\Entity\Group;
 use Drupal\group\Entity\GroupContent;
 use Drupal\group\Entity\GroupInterface;
+use Drupal\group\GroupMembership;
 use Drupal\group_permissions\Entity\GroupPermissionInterface;
 use Drupal\node\NodeInterface;
 
@@ -394,12 +395,14 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
    *   The group entity.
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The user account object.
+   * @param \Drupal\group\GroupMembership $membership
+   *   The group membership (optional).
    *
    * @return bool
    *   TRUE if user is a group admin.
    */
-  public static function userIsGroupAdmin(GroupInterface $group, AccountInterface $account) {
-    $membership = $group->getMember($account);
+  public static function userIsGroupAdmin(GroupInterface $group, AccountInterface $account, GroupMembership $membership = NULL) {
+    $membership = $membership ?: $group->getMember($account);
 
     // User is not a member of the group. We return FALSE.
     if (!$membership) {
