@@ -46,7 +46,7 @@ class GroupContentNodeAccessControlHandler extends GroupContentAccessControlHand
         $moderation_state = $group->get('moderation_state')->value;
 
         // User is a group admin, so we allow access.
-        if (EICGroupsHelper::userIsGroupAdmin($group, $account, $membership)) {
+        if ($membership && EICGroupsHelper::userIsGroupAdmin($group, $account, $membership)) {
           $access = GroupAccessResult::allowed()
             ->addCacheableDependency($account)
             ->addCacheableDependency($membership)
@@ -60,9 +60,12 @@ class GroupContentNodeAccessControlHandler extends GroupContentAccessControlHand
         if ($moderation_state !== GroupsModerationHelper::GROUP_PUBLISHED_STATE) {
           $access = AccessResult::forbidden()
             ->addCacheableDependency($account)
-            ->addCacheableDependency($membership)
             ->addCacheableDependency($group)
             ->addCacheableDependency($entity);
+        }
+
+        if ($membership) {
+          $access->addCacheableDependency($membership);
         }
         break;
 
