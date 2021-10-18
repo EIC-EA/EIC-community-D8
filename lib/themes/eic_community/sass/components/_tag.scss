@@ -12,12 +12,17 @@
   }
 
   &--is-public {
-    background-color: map-get($ecl-colors, 'blue-50');
+    background-color: map-get($ecl-colors, 'grey-15');
+    color: map-get($ecl-colors, 'white');
+  }
+
+  &--is-restricted {
+    background: #E45E33;
     color: map-get($ecl-colors, 'white');
   }
 
   &--is-private {
-    background-color: map-get($ecl-colors, 'red-100');
+    background-color: map-get($ecl-colors, 'red');
     color: map-get($ecl-colors, 'white');
   }
 }
