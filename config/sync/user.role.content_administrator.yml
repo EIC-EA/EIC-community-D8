@@ -76,3 +76,4 @@ permissions:
   - 'view own unpublished content'
   - 'view own unpublished media'
   - 'view private content'
+  - 'view user email addresses'
