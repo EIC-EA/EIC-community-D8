@@ -43,7 +43,6 @@ eic_groups.discussion_delete_comment:
   defaults:
     _controller: '\Drupal\eic_groups\Controller\DiscussionController::deleteComment'
   requirements:
-    _permission: 'access content'
     _custom_access: '\Drupal\eic_groups\Controller\DiscussionController::accessDelete'
 
 eic_groups.discussion_comment_has_permission:
