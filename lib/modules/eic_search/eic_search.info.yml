@@ -8,3 +8,4 @@ php: 7.3
 dependencies:
   - eic_statistics:eic_statistics
   - flag:flag
+  - eic_statistics:eic_statistics

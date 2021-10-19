@@ -181,9 +181,7 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
           $current_user,
           $group_contents
         )->isAllowed(),
-        'delete_all_comments' => in_array(UserHelper::ROLE_SITE_ADMINISTRATOR, $user_group_roles) ||
-          in_array(UserHelper::ROLE_CONTENT_ADMINISTRATOR, $user_group_roles) ||
-          in_array(UserHelper::ROLE_DRUPAL_ADMINISTRATOR, $user_group_roles),
+        'delete_all_comments' => UserHelper::isPowerUser($current_user),
         'edit_own_comments' => $this->groupPermissionChecker->getPermissionInGroups(
           'edit own comments',
           $current_user,

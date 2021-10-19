@@ -5,11 +5,13 @@ namespace Drupal\eic_groups\Controller;
 use Drupal\comment\CommentInterface;
 use Drupal\comment\Entity\Comment;
 use Drupal\Component\Utility\Xss;
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Controller\ControllerBase;
-use Drupal\Core\Datetime\DateFormatter;
+use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
 use Drupal\eic_flags\RequestStatus;
 use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_user\UserHelper;
@@ -77,19 +79,20 @@ class DiscussionController extends ControllerBase {
    * @param \Drupal\flag\FlagService $flag_service
    * @param \Drupal\oec_group_comments\GroupPermissionChecker $group_permission_checker
    * @param EICGroupsHelper $groups_helper
+   * @param \Drupal\Core\Datetime\DateFormatter $date_formatter
    */
   public function __construct(
     EntityTypeManagerInterface $entity_type_manager,
     FlagService $flag_service,
     GroupPermissionChecker $group_permission_checker,
     EICGroupsHelper $groups_helper,
-    DateFormatter $dateFormatter
+    DateFormatter $date_formatter
   ) {
     $this->entityTypeManager = $entity_type_manager;
     $this->flagService = $flag_service;
     $this->groupPermissionChecker = $group_permission_checker;
     $this->groupsHelper = $groups_helper;
-    $this->dateFormatter = $dateFormatter;
+    $this->dateFormatter = $date_formatter;
   }
 
   /**
@@ -213,7 +216,6 @@ class DiscussionController extends ControllerBase {
         'text' => $comment->get('comment_body')->value,
         'comment_id' => $comment->id(),
         'likes' => $this->getCommentLikesData($comment, $account),
-        'is_soft_delete' => $comment->get('field_comment_is_soft_deleted')->value,
         'archived_flag_time' => $archived_flag_time ?
           $this->t('Archived on @time', ['@time' => $archived_flag_time], ['context' => 'eic_groups']) :
           NULL,
@@ -376,29 +378,15 @@ class DiscussionController extends ControllerBase {
       return new JsonResponse('Group does not exists', Response::HTTP_BAD_REQUEST);
     }
 
-    $group_membership = $group->getMember($this->currentUser());
-    $user_group_roles = $group_membership instanceof GroupMembership
-      ? array_keys($group_membership->getRoles())
-      : [];
-
-    $user_group_roles = array_merge(
-      $user_group_roles,
-      $this->currentUser()->getRoles(TRUE)
-    );
-
-    if (
-      !in_array(UserHelper::ROLE_SITE_ADMINISTRATOR, $user_group_roles) &&
-      !in_array(UserHelper::ROLE_CONTENT_ADMINISTRATOR, $user_group_roles) &&
-      !in_array(UserHelper::ROLE_DRUPAL_ADMINISTRATOR, $user_group_roles)
-    ) {
-      return new JsonResponse('You do not have access to delete the content', Response::HTTP_FORBIDDEN);
-    }
-
     try {
+      $now = DrupalDateTime::createFromTimestamp(time());
+      $comment->set(
+        'field_comment_deletion_date',
+        $now->format(DateTimeItemInterface::DATETIME_STORAGE_FORMAT)
+      );
       $comment->set('comment_body', [
-        'value' => $this->t('This comment has been removed at @time.',
-          ['@time' => $this->dateFormatter->format(time(), 'eu_short_date_hour')],
-          ['context' => 'eic_groups']
+        'value' => $this->t('This comment has been removed by a content administrator at @time',
+          ['@time' => $now->format('d/m/Y - H:i')]
         ),
         'format' => 'plain_text',
       ]);
@@ -447,6 +435,17 @@ class DiscussionController extends ControllerBase {
     return new JsonResponse(
       ['allowed' => TRUE],
       Response::HTTP_OK
+    );
+  }
+
+  /**
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *
+   * @return \Drupal\Core\Access\AccessResult|\Drupal\Core\Access\AccessResultAllowed|\Drupal\Core\Access\AccessResultNeutral
+   */
+  public function accessDelete(AccountInterface $account) {
+    return AccessResult::allowedIf(
+      UserHelper::isPowerUser($this->currentUser())
     );
   }
 
