@@ -84,3 +84,4 @@ permissions:
   - 'view own unpublished profile'
   - 'view private content'
   - 'view the administration theme'
+  - 'view user email addresses'
