@@ -59,6 +59,7 @@ content:
     settings:
       match_top_level_limit: '0'
       items_to_load: '25'
+      ignore_current_user: '1'
       disable_top_choices: 0
       load_all: 0
       auto_select_parents: 0
