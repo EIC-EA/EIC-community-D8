@@ -6,9 +6,11 @@ use Drupal\comment\CommentInterface;
 use Drupal\comment\Entity\Comment;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
 use Drupal\eic_flags\RequestStatus;
 use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_user\UserHelper;
@@ -190,6 +192,7 @@ class DiscussionController extends ControllerBase {
         'comment_id' => $comment->id(),
         'likes' => $this->getCommentLikesData($comment, $account),
         'is_soft_delete' => $comment->get('field_comment_is_soft_deleted')->value,
+        'deletion_date' => $comment->get('field_comment_deletion_date')->value,
       ];
     }
 
@@ -357,8 +360,15 @@ class DiscussionController extends ControllerBase {
     }
 
     try {
+      $now = DrupalDateTime::createFromTimestamp(time());
+      $comment->set(
+        'field_comment_deletion_date',
+        $now->format(DateTimeItemInterface::DATETIME_STORAGE_FORMAT)
+      );
       $comment->set('comment_body', [
-        'value' => $this->t('This comment has been removed.'),
+        'value' => $this->t('This comment has removed by a content administrator at @time',
+          ['@time' => $now->format('d m Y')]
+        ),
         'format' => 'plain_text',
       ]);
       $comment->set('field_comment_is_soft_deleted', TRUE);

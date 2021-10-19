@@ -6,8 +6,10 @@ dependencies:
     - comment.type.node_comment
     - field.field.comment.node_comment.comment_body
     - field.field.comment.node_comment.field_comment_attachment
+    - field.field.comment.node_comment.field_comment_deletion_date
     - field.field.comment.node_comment.field_comment_is_soft_deleted
   module:
+    - datetime
     - media_library
     - text
 id: comment.node_comment.default
@@ -34,6 +36,12 @@ content:
     settings:
       media_types: {  }
     third_party_settings: {  }
+    region: content
+  field_comment_deletion_date:
+    weight: 5
+    settings: {  }
+    third_party_settings: {  }
+    type: datetime_default
     region: content
   field_comment_is_soft_deleted:
     weight: 4

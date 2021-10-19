@@ -6,8 +6,10 @@ dependencies:
     - comment.type.node_comment
     - field.field.comment.node_comment.comment_body
     - field.field.comment.node_comment.field_comment_attachment
+    - field.field.comment.node_comment.field_comment_deletion_date
     - field.field.comment.node_comment.field_comment_is_soft_deleted
   module:
+    - datetime
     - text
 id: comment.node_comment.default
 targetEntityType: comment
@@ -29,6 +31,15 @@ content:
       view_mode: default
       link: false
     third_party_settings: {  }
+    region: content
+  field_comment_deletion_date:
+    weight: 103
+    label: above
+    settings:
+      format_type: medium
+      timezone_override: ''
+    third_party_settings: {  }
+    type: datetime_default
     region: content
   field_comment_is_soft_deleted:
     weight: 102
