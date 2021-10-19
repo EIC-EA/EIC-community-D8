@@ -408,6 +408,13 @@ function eic_groups_preprocess_block__group_content_menu(&$variables) {
 }
 
 /**
+ * Implements hook_preprocess_block__HOOK().
+ */
+function eic_groups_preprocess_block__eic_group_content_menu(&$variables) {
+  eic_groups_preprocess_block__group_content_menu($variables);
+}
+
+/**
  * Implements hook_ENTITY_TYPE_delete().
  */
 function eic_groups_node_delete(EntityInterface $entity) {
