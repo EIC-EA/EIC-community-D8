@@ -66,6 +66,13 @@ class EntityTreeWidget extends WidgetBase {
       '#description' => $this->t('When checking an option it will auto select all parent values in the tree', [], ['context' => 'eic_content']),
     ];
 
+    $element['ignore_current_user'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Ignore the current user in the users tree'),
+      '#default_value' => $this->getSetting('ignore_current_user'),
+      '#description' => $this->t('<b>Only for "User" entity.</b> if checked, the current user will not be available.', [], ['context' => 'eic_content']),
+    ];
+
     return $element;
   }
 
@@ -79,6 +86,7 @@ class EntityTreeWidget extends WidgetBase {
         'auto_select_parents' => TRUE,
         'disable_top_choices' => FALSE,
         'load_all' => FALSE,
+        'ignore_current_user' => FALSE,
       ] + parent::defaultSettings();
   }
 
@@ -143,6 +151,7 @@ class EntityTreeWidget extends WidgetBase {
           'data-items-to-load' => $this->getSetting('items_to_load'),
           'data-disable-top' => $this->getSetting('disable_top_choices'),
           'data-load-all' => $this->getSetting('load_all'),
+          'data-ignore-current-user' => $this->getSetting('ignore_current_user'),
           'data-target-bundle' => $target_bundle,
           'data-target-entity' => $target_entity,
           'data-is-required' => (int) $element['#required'],
