@@ -2,12 +2,16 @@
 
 namespace Drupal\eic_message_subscriptions;
 
+use Drupal\eic_messages\MessageIdentifierInterface;
+use Drupal\eic_messages\MessageTemplateTypes;
+use Drupal\message\MessageTemplateInterface;
+
 /**
  * Represents Message Subscription types.
  *
  * @package Drupal\eic_message_subscriptions
  */
-final class MessageSubscriptionTypes {
+final class MessageSubscriptionTypes implements MessageIdentifierInterface {
 
   const NEW_COMMENT_REPLY = 'sub_new_comment_reply';
 
@@ -36,6 +40,33 @@ final class MessageSubscriptionTypes {
       self::NODE_PUBLISHED,
       self::CONTENT_RECOMMENDED,
     ];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function getMessageTemplatePrimaryKeys(MessageTemplateInterface $message_template) {
+    $primary_keys = [];
+
+    // Get the message template type.
+    $message_template_type = $message_template->getThirdPartySetting('eic_messages', 'message_template_type');
+
+    if ($message_template_type != MessageTemplateTypes::SUBSCRIPTION) {
+      return FALSE;
+    }
+
+    switch ($message_template->id()) {
+
+      case MessageSubscriptionTypes::GROUP_CONTENT_UPDATED:
+        $primary_keys = [
+          'field_event_executing_user',
+          'field_referenced_node',
+        ];
+        break;
+
+    }
+
+    return $primary_keys;
   }
 
 }

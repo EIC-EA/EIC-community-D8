@@ -102,7 +102,7 @@ class MediaFileDownloadController extends DownloadController {
    */
   public static function getMediaFileDownloadCacheTags($fid) {
     return [
-      "media_file_download: $fid",
+      "media_file_download:$fid",
     ];
   }
 

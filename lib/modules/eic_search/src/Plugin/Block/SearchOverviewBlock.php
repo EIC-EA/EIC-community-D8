@@ -160,6 +160,8 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
 
     $build['#attached']['drupalSettings']['overview'] = [
       'is_group_owner' => array_key_exists(EICGroupsHelper::GROUP_OWNER_ROLE, $user_group_roles),
+      'source_bundle_id' => $source->getEntityBundle(),
+      'default_sorting_option' => $source->getDefaultSort(),
     ];
 
     return $build + [
