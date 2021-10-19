@@ -45,21 +45,25 @@ class FlagHelper {
    *   The flagged entity.
    * @param array $flag_ids
    *   Array of flag machine names.
+   * @param bool $include_anonymous
+   *   Whether to include anonymous flaggings. Defaults to FALSE.
    *
    * @return array
    *   An array of users who have flagged the entity.
    */
-  public function getFlaggingUsersByFlagIds(EntityInterface $entity, array $flag_ids = []) {
+  public function getFlaggingUsersByFlagIds(EntityInterface $entity, array $flag_ids = [], $include_anonymous = FALSE) {
     if (empty($flag_ids)) {
       return $this->flagService->getFlaggingUsers($entity);
     }
-
     $query = $this->entityTypeManager->getStorage('flagging')->getQuery();
     $query->condition('entity_type', $entity->getEntityTypeId())
       ->condition('entity_id', $entity->id());
-
     if (!empty($flag_ids)) {
       $query->condition('flag_id', $flag_ids, 'IN');
+    }
+
+    if (!$include_anonymous) {
+      $query->condition('uid', 0, '<>');
     }
 
     $ids = $query->execute();

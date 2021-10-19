@@ -134,7 +134,7 @@ class SolrDocumentProcessor {
         }
         break;
       case 'entity:group':
-        $title = $fields['ss_group_label_string'];
+        $title = $fields['tm_X3b_en_group_label_fulltext'];
         $type = 'group';
         $date = $fields['ds_group_created'];
         $status = $fields['bs_group_status'];
@@ -198,7 +198,7 @@ class SolrDocumentProcessor {
     }
 
     //We need to use only one field key for the global search on the FE side
-    $document->addField('ss_global_title', $title);
+    $document->addField('tm_global_title', $title);
     $document->addField('ss_global_content_type', $type);
     $document->addField('ss_global_created_date', $date);
     $document->addField('bs_global_status', $status);

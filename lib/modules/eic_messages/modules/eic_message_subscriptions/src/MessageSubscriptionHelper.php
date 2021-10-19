@@ -44,7 +44,7 @@ class MessageSubscriptionHelper {
         // Loads group contents for the commented entity.
         $group_contents = GroupContent::loadByEntity($commented_entity);
 
-        if (!empty($group_contents)) {
+        if (empty($group_contents)) {
           break;
         }
 
@@ -56,7 +56,6 @@ class MessageSubscriptionHelper {
         $group_content = $entity;
         $in_group_context = TRUE;
         break;
-
     }
 
     // If the entity is in the context of a group we need to make sure the
@@ -80,7 +79,7 @@ class MessageSubscriptionHelper {
         return FALSE;
       }
 
-      $group = $entity->getGroup();
+      $group = $group_content->getGroup();
 
       $is_applicable = $group->isPublished();
     }

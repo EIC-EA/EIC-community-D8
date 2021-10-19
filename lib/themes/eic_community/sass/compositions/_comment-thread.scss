@@ -1,7 +1,9 @@
 .ecl-comment-thread {
   $node: &;
 
-  margin: ecl-box-model('margin') 0;
+  //margin: ecl-box-model('margin') 0;
+  padding: ecl-box-model('margin') 0;
+
   position: relative;
 
   &:first-child {
@@ -15,9 +17,24 @@
   & &:not(:first-child) {
     padding-left: ecl-box-model('padding');
     border-left: ecl-border();
+    position: relative;
+
+    &:before{
+      content: '';
+      width: 1px;
+      height: 100%;
+      background-color: lightgrey;
+      position: absolute;
+      top: ecl-box-model('margin');
+      left: 16px;
+    }
 
     &:last-child {
       border-left-color: transparent;
+
+      &:before{
+        display: none;
+      }
     }
 
     @include ecl-media-breakpoint-up('md') {

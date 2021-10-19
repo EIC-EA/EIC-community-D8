@@ -35,7 +35,7 @@ class NodeMessageCreator extends MessageCreatorBase {
       case 'node':
         $message_type = $operation === SubscriptionOperationTypes::NEW_ENTITY
           ? MessageSubscriptionTypes::NODE_PUBLISHED
-          : MessageSubscriptionTypes::NODE_UPDATED;
+          : NULL;
 
         // We only create subscription message if the operation is 'created'.
         if (!$message_type) {
@@ -56,19 +56,12 @@ class NodeMessageCreator extends MessageCreatorBase {
           $message->set('field_group_ref', $group);
         }
 
+        // Set the owner of the message to the current user.
+        $executing_user_id = $this->currentUser->id();
+        $message->setOwnerId($executing_user_id);
+
         // Adds the reference to the user who created/updated the entity.
         if ($message->hasField('field_event_executing_user')) {
-          $executing_user_id = $entity->getOwnerId();
-
-          $vid = $this->entityTypeManager->getStorage($entity->getEntityTypeId())
-            ->getLatestRevisionId($entity->id());
-
-          if ($vid) {
-            $latest_revision = $this->entityTypeManager->getStorage($entity->getEntityTypeId())
-              ->loadRevision($vid);
-            $executing_user_id = $latest_revision->getOwnerId();
-          }
-
           $message->set('field_event_executing_user', $executing_user_id);
         }
         break;
@@ -105,6 +98,7 @@ class NodeMessageCreator extends MessageCreatorBase {
 
     // Adds the reference to the user who recommended the content.
     $message->set('field_event_executing_user', $flagging->getOwnerId());
+    $message->setOwnerId($flagging->getOwnerId());
 
     return $message;
   }
