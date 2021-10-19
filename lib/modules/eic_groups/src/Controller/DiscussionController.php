@@ -5,6 +5,7 @@ namespace Drupal\eic_groups\Controller;
 use Drupal\comment\CommentInterface;
 use Drupal\comment\Entity\Comment;
 use Drupal\Component\Utility\Xss;
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Entity\EntityStorageException;
@@ -341,24 +342,6 @@ class DiscussionController extends ControllerBase {
       return new JsonResponse('Group does not exists', Response::HTTP_BAD_REQUEST);
     }
 
-    $group_membership = $group->getMember($this->currentUser());
-    $user_group_roles = $group_membership instanceof GroupMembership
-      ? array_keys($group_membership->getRoles())
-      : [];
-
-    $user_group_roles = array_merge(
-      $user_group_roles,
-      $this->currentUser()->getRoles(TRUE)
-    );
-
-    if (
-      !in_array(UserHelper::ROLE_SITE_ADMINISTRATOR, $user_group_roles) &&
-      !in_array(UserHelper::ROLE_CONTENT_ADMINISTRATOR, $user_group_roles) &&
-      !in_array(UserHelper::ROLE_DRUPAL_ADMINISTRATOR, $user_group_roles)
-    ) {
-      return new JsonResponse('You do not have access to delete the content', Response::HTTP_FORBIDDEN);
-    }
-
     try {
       $now = DrupalDateTime::createFromTimestamp(time());
       $comment->set(
@@ -366,7 +349,7 @@ class DiscussionController extends ControllerBase {
         $now->format(DateTimeItemInterface::DATETIME_STORAGE_FORMAT)
       );
       $comment->set('comment_body', [
-        'value' => $this->t('This comment has removed by a content administrator at @time',
+        'value' => $this->t('This comment has been removed by a content administrator at @time',
           ['@time' => $now->format('d m Y')]
         ),
         'format' => 'plain_text',
@@ -416,6 +399,17 @@ class DiscussionController extends ControllerBase {
     return new JsonResponse(
       ['allowed' => TRUE],
       Response::HTTP_OK
+    );
+  }
+
+  /**
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *
+   * @return \Drupal\Core\Access\AccessResult|\Drupal\Core\Access\AccessResultAllowed|\Drupal\Core\Access\AccessResultNeutral
+   */
+  public function accessDelete(AccountInterface $account) {
+    return AccessResult::allowedIf(
+      UserHelper::isPowerUser($this->currentUser())
     );
   }
 
