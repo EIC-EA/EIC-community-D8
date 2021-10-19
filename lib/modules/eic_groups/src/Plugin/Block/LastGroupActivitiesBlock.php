@@ -7,6 +7,7 @@ use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Datetime\DateFormatter;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
 use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_search\Search\Sources\ActivityStreamSourceType;
@@ -54,6 +55,11 @@ class LastGroupActivitiesBlock extends BlockBase implements ContainerFactoryPlug
   private $dateFormatter;
 
   /**
+   * @var AccountInterface $currentUser
+   */
+  private $currentUser;
+
+  /**
    * {@inheritdoc}
    */
   public static function create(
@@ -69,7 +75,8 @@ class LastGroupActivitiesBlock extends BlockBase implements ContainerFactoryPlug
       $container->get('eic_groups.helper'),
       $container->get('entity_type.manager'),
       $container->get('eic_search.activity_stream_library'),
-      $container->get('date.formatter')
+      $container->get('date.formatter'),
+      $container->get('current_user')
     );
   }
 
@@ -89,6 +96,12 @@ class LastGroupActivitiesBlock extends BlockBase implements ContainerFactoryPlug
    *   The Form builder service.
    * @param EntityTypeManagerInterface $entity_type_manager
    *   The Form builder service.
+   * @param ActivityStreamSourceType $activity_stream_source_type
+   *   The Activity Stream Source type
+   * @param DateFormatter $date_formatter
+   *   The Date formatter
+   * @param AccountInterface $current_user
+   *   The Date formatter
    */
   public function __construct(
     array $configuration,
@@ -96,14 +109,16 @@ class LastGroupActivitiesBlock extends BlockBase implements ContainerFactoryPlug
     $plugin_definition,
     EICGroupsHelper $groups_helper,
     EntityTypeManagerInterface $entity_type_manager,
-    ActivityStreamSourceType $activityStreamSourceType,
-    DateFormatter $dateFormatter
+    ActivityStreamSourceType $activity_stream_source_type,
+    DateFormatter $date_formatter,
+    AccountInterface $current_user
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->groupsHelper = $groups_helper;
     $this->entityTypeManager = $entity_type_manager;
-    $this->activityStreamSourceType = $activityStreamSourceType;
-    $this->dateFormatter = $dateFormatter;
+    $this->activityStreamSourceType = $activity_stream_source_type;
+    $this->dateFormatter = $date_formatter;
+    $this->currentUser = $current_user;
   }
 
   /**
@@ -160,7 +175,7 @@ class LastGroupActivitiesBlock extends BlockBase implements ContainerFactoryPlug
     }, $members);
 
     $current_group_route = $this->groupsHelper->getGroupFromRoute();
-    $account = \Drupal::currentUser();
+    $account = $this->currentUser;
     $user_group_roles = [];
     $user_roles = $account->getRoles(TRUE);
     $allowed_global_roles = [
