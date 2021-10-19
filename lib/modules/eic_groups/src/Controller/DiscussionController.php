@@ -350,7 +350,7 @@ class DiscussionController extends ControllerBase {
       );
       $comment->set('comment_body', [
         'value' => $this->t('This comment has been removed by a content administrator at @time',
-          ['@time' => $now->format('d m Y')]
+          ['@time' => $now->format('d/m/Y - H:i')]
         ),
         'format' => 'plain_text',
       ]);
