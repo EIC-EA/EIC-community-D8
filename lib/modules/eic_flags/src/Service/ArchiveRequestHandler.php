@@ -3,6 +3,7 @@
 namespace Drupal\eic_flags\Service;
 
 use Drupal\comment\CommentInterface;
+use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\eic_flags\RequestStatus;
 use Drupal\eic_flags\RequestTypes;
@@ -45,10 +46,14 @@ class ArchiveRequestHandler extends AbstractRequestHandler {
     }
     else {
       if ($content_entity instanceof CommentInterface) {
+        $now = DrupalDateTime::createFromTimestamp(time());
+
         $content_entity->set('comment_body', [
           'value' => $this->t(
             'This comment has been archived at @time.',
-            ['@time' => \Drupal::service('date.formatter')->format(time(), 'medium')],
+            [
+              '@time' => $now->format('d/m/Y - H:i'),
+            ],
             ['context' => 'eic_flags']
           ),
           'format' => 'plain_text',

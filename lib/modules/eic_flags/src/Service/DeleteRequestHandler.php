@@ -3,6 +3,7 @@
 namespace Drupal\eic_flags\Service;
 
 use Drupal\Core\Batch\BatchBuilder;
+use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\eic_flags\RequestStatus;
@@ -53,10 +54,11 @@ class DeleteRequestHandler extends AbstractRequestHandler {
 
       case 'node':
       case 'comment':
+      $now = DrupalDateTime::createFromTimestamp(time());
       $content_entity->set('comment_body', [
         'value' => $this->t(
           'This comment has been removed at @time.',
-          ['@time' => \Drupal::service('date.formatter')->format(time(), 'medium')],
+          ['@time' => $now->format('d/m/Y - H:i')],
           ['context' => 'eic_flags']
         ),
         'format' => 'plain_text',

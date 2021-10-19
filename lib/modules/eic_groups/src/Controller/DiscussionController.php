@@ -192,16 +192,16 @@ class DiscussionController extends ControllerBase {
       $archive_flag = $this->flagService->getFlagging($this->flagService->getFlagById('request_archive_comment'), $comment);
       $delete_flag = $this->flagService->getFlagging($this->flagService->getFlagById('request_delete_comment'), $comment);
 
-      $archived_flag_time = $archive_flag instanceof FlaggingInterface ?
-        $this->dateFormatter->format($archive_flag->get('created')->value, 'medium') :
+      $archived_flag_time = $archive_flag instanceof FlaggingInterface && RequestStatus::ACCEPTED === $archive_flag->get('field_request_status')->value ?
+        $this->dateFormatter->format($archive_flag->get('created')->value, 'eu_short_date_hour') :
         NULL;
 
-      $deleted_flag_time = $delete_flag instanceof FlaggingInterface ?
-        $this->dateFormatter->format($delete_flag->get('created')->value, 'medium') :
+      $deleted_flag_time = $delete_flag instanceof FlaggingInterface && RequestStatus::ACCEPTED === $delete_flag->get('field_request_status')->value ?
+        $this->dateFormatter->format($delete_flag->get('created')->value, 'eu_short_date_hour') :
         NULL;
 
       $edited_time = $comment->getCreatedTime() !== $comment->getChangedTime() && !$deleted_flag_time && !$archived_flag_time ?
-        $this->dateFormatter->format($comment->getChangedTime(), 'medium') :
+        $this->dateFormatter->format($comment->getChangedTime(), 'eu_short_date_hour') :
         NULL;
 
       $comments_data[] = [
@@ -225,7 +225,7 @@ class DiscussionController extends ControllerBase {
           NULL,
         'created_time' => $this->t(
           'Created on @time',
-          ['@time' => $this->dateFormatter->format($comment->getCreatedTime(), 'medium')],
+          ['@time' => $this->dateFormatter->format($comment->getCreatedTime(), 'eu_short_date_hour')],
           ['context' => 'eic_groups']
         ),
       ];
@@ -397,7 +397,7 @@ class DiscussionController extends ControllerBase {
     try {
       $comment->set('comment_body', [
         'value' => $this->t('This comment has been removed at @time.',
-          ['@time' => $this->dateFormatter->format(time(), 'medium')],
+          ['@time' => $this->dateFormatter->format(time(), 'eu_short_date_hour')],
           ['context' => 'eic_groups']
         ),
         'format' => 'plain_text',
