@@ -97,7 +97,7 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
     /** @var NodeInterface|NULL $node */
     $node = \Drupal::routeMatch()->getParameter('node');
 
-    if (!$node instanceof NodeInterface || 'discussion' !== $node->bundle()) {
+    if (!$node instanceof NodeInterface) {
       return [];
     }
 
@@ -204,19 +204,21 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
 
     $group_id = $current_group_route ? $current_group_route->id() : 0;
 
-    $cache_contexts = [
-      'url.path',
-      'url.query_args',
-      'user.group_permissions',
-    ];
+    if (!$group_id) {
+      \Drupal::logger('eic_groups')
+        ->warning('No group found for comments block');
 
-    if ($group_id) {
-      $cache_contexts[] = "user.is_group_member:$group_id";
+      return [];
     }
 
     return $build + [
         '#cache' => [
-          'contexts' => $cache_contexts
+          'contexts' => [
+            'url.path',
+            'url.query_args',
+            "user.is_group_member:$group_id",
+            'user.group_permissions',
+          ],
         ],
         '#theme' => 'eic_group_comments_from_discussion',
         '#discussion_id' => $node->id(),
