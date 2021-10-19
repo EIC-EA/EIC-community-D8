@@ -50,7 +50,7 @@ class ArchiveRequestHandler extends AbstractRequestHandler {
 
         $content_entity->set('comment_body', [
           'value' => $this->t(
-            'This comment has been archived at @time.',
+            'This comment has been archived by a content administrator at @time.',
             [
               '@time' => $now->format('d/m/Y - H:i'),
             ],
