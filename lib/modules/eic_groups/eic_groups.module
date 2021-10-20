@@ -175,9 +175,6 @@ function eic_groups_form_alter(&$form, FormStateInterface $form_state, $form_id)
       break;
 
   }
-
-  \Drupal::classResolver(FormOperations::class)
-    ->commentSettingsFormFieldAlter($form, $form_state, $form_id);
 }
 
 /**

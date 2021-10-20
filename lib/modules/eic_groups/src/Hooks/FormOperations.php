@@ -4,11 +4,8 @@ namespace Drupal\eic_groups\Hooks;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
-use Drupal\Core\Entity\EntityFieldManagerInterface;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
 use Drupal\eic_content_wiki_page\WikiPageBookManager;
@@ -16,8 +13,6 @@ use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_groups\EICGroupsHelperInterface;
 use Drupal\group\Entity\Group;
 use Drupal\node\Entity\Node;
-use Drupal\node\NodeForm;
-use Drupal\node\NodeInterface;
 use Drupal\oec_group_features\GroupFeaturePluginManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -68,27 +63,6 @@ class FormOperations implements ContainerInjectionInterface {
   protected $requestStack;
 
   /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
-   * The entity field manager.
-   *
-   * @var \Drupal\Core\Entity\EntityFieldManagerInterface
-   */
-  protected $entityFieldManager;
-
-  /**
-   * The current user.
-   *
-   * @var \Drupal\Core\Session\AccountProxyInterface
-   */
-  protected $currentUser;
-
-  /**
    * Constructs a new EntityOperations object.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
@@ -101,31 +75,19 @@ class FormOperations implements ContainerInjectionInterface {
    *   The current route match service.
    * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
    *   The request stack service.
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
-   *   The entity type manager.
-   * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager
-   *   The entity field manager.
-   * @param \Drupal\Core\Session\AccountProxyInterface $current_user
-   *   The current user.
    */
   public function __construct(
     ConfigFactoryInterface $config_factory,
     GroupFeaturePluginManager $group_feature_plugin_manager,
     EICGroupsHelperInterface $eic_groups_helper,
     RouteMatchInterface $route_match,
-    RequestStack $request_stack,
-    EntityTypeManagerInterface $entity_type_manager,
-    EntityFieldManagerInterface $entity_field_manager,
-    AccountProxyInterface $current_user
+    RequestStack $request_stack
   ) {
     $this->configFactory = $config_factory;
     $this->groupFeaturePluginManager = $group_feature_plugin_manager;
     $this->eicGroupsHelper = $eic_groups_helper;
     $this->routeMatch = $route_match;
     $this->requestStack = $request_stack;
-    $this->entityTypeManager = $entity_type_manager;
-    $this->entityFieldManager = $entity_field_manager;
-    $this->currentUser = $current_user;
   }
 
   /**
@@ -137,10 +99,7 @@ class FormOperations implements ContainerInjectionInterface {
       $container->get('plugin.manager.group_feature'),
       $container->get('eic_groups.helper'),
       $container->get('current_route_match'),
-      $container->get('request_stack'),
-      $container->get('entity_type.manager'),
-      $container->get('entity_field.manager'),
-      $container->get('current_user')
+      $container->get('request_stack')
     );
   }
 
@@ -302,78 +261,6 @@ class FormOperations implements ContainerInjectionInterface {
     }
     // Save enabled group features on field level.
     $group->save();
-  }
-
-  /**
-   * Alters comment settings field during form_alter phase.
-   *
-   * @param array $form
-   *   An associative array containing the structure of the form.
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   The current state of the form.
-   * @param string $form_id
-   *   The form id.
-   */
-  public function commentSettingsFormFieldAlter(&$form, FormStateInterface $form_state, $form_id) {
-    $form_object = $form_state->getFormObject();
-
-    // If we are not in a node form, we do nothing.
-    if (!$form_object instanceof NodeForm) {
-      return;
-    }
-
-    $entity = $form_object->getEntity();
-
-    if (!$entity instanceof NodeInterface) {
-      return;
-    }
-
-    // If entity is new, we do nothing.
-    if ($entity->isNew()) {
-      return;
-    }
-
-    $group_contents = $this->entityTypeManager->getStorage('group_content')->loadByEntity($entity);
-
-    if (!$group_contents) {
-      return;
-    }
-
-    $group_content = reset($group_contents);
-    $group = $group_content->getGroup();
-    $groupType = $group->getGroupType();
-
-    $installedContentPlugins = $groupType->getInstalledContentPlugins()->getInstanceIds();
-    if (!in_array("group_node:{$entity->bundle()}", $installedContentPlugins)) {
-      return;
-    }
-
-    $is_admin = EICGroupsHelper::userIsGroupAdmin($group, $this->currentUser->getAccount());
-
-    if (!$is_admin) {
-      return;
-    }
-
-    /** @var \Drupal\Core\Field\FieldDefinitionInterface[] $field_definitions */
-    $field_definitions = $this->entityFieldManager->getFieldDefinitions('node', $entity->bundle());
-
-    // We allow the group admin who is updating the node to be able to manage
-    // comment settings.
-    foreach ($field_definitions as $field_definition) {
-      if ($field_definition->getType() !== 'comment') {
-        continue;
-      }
-
-      if (!isset($form[$field_definition->getName()])) {
-        continue;
-      }
-
-      if (!isset($form[$field_definition->getName()]['#access'])) {
-        continue;
-      }
-
-      $form[$field_definition->getName()]['#access'] = TRUE;
-    }
   }
 
 }
