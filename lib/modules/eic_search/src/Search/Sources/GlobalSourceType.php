@@ -152,4 +152,21 @@ class GlobalSourceType extends SourceType {
     return ['ss_global_created_date', 'DESC'];
   }
 
+  /**
+   * @inheritDoc
+   */
+  public function getPrefilteredContentType(): array {
+    return [
+      'discussion',
+      'document',
+      'gallery',
+      'group',
+      'news',
+      'page',
+      'story',
+      'video',
+      'wiki_page',
+    ];
+  }
+
 }
