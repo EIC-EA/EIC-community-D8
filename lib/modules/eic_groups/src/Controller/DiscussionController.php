@@ -339,7 +339,7 @@ class DiscussionController extends ControllerBase {
       return new JsonResponse('You do not have access to edit own comment', Response::HTTP_FORBIDDEN);
     }
 
-    if ($user->id() !== $comment->getOwnerId() && !!$this->hasPermission($discussion_id, 'edit all comments')) {
+    if ($user->id() !== $comment->getOwnerId() && !$this->hasPermission($discussion_id, 'edit all comments')) {
       return new JsonResponse('You do not have access to edit all comments', Response::HTTP_FORBIDDEN);
     }
 
