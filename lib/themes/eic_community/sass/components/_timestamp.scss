@@ -39,4 +39,9 @@
       margin-right: ecl-layout('gutter', 'meta');
     }
   }
+
+  & span {
+    display: flex;
+    align-items: center;
+  }
 }
