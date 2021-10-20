@@ -5,10 +5,11 @@ namespace Drupal\eic_groups\Access;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
-use Drupal\eic_groups\GroupsModerationHelper;
+use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\flag\Access\FlagAccessCheck as FlagAccessCheckBase;
 use Drupal\flag\FlagInterface;
 use Drupal\flag\FlagServiceInterface;
+use Drupal\group\Entity\GroupContent;
 
 /**
  * Extends FlagAccessCheck class providing extra logic for group flags.
@@ -58,24 +59,43 @@ class FlagAccessCheck extends FlagAccessCheckBase {
       return $access;
     }
 
-    // If the flaggable entity is not a group, we do nothing.
-    if ($flag->getFlaggableEntityTypeId() !== 'group') {
-      return $access;
-    }
-
     $flaggable_id = $route_match->getParameter('entity_id');
     $flaggable_entity = $this->flagService->getFlaggableById($flag, $flaggable_id);
 
-    $moderation_state = $flaggable_entity->get('moderation_state')->value;
+    switch ($flag->getFlaggableEntityTypeId()) {
+      case 'group':
+        // Deny access to flag if the group IS in pending or draft state.
+        if (!EICGroupsHelper::groupIsFlaggable($flaggable_entity)) {
+          $access = AccessResult::forbidden()
+            ->addCacheableDependency($flaggable_entity)
+            ->addCacheableDependency($flag);
+        }
+        break;
 
-    // Deny access to flag if the group IS in pending or draft state.
-    if (in_array($moderation_state, [
-      GroupsModerationHelper::GROUP_PENDING_STATE,
-      GroupsModerationHelper::GROUP_DRAFT_STATE,
-    ])) {
-      $access = AccessResult::forbidden()
-        ->addCacheableDependency($flaggable_entity)
-        ->addCacheableDependency($flag);
+      case 'node':
+        // Get the group content entities related to the node.
+        $group_contents = GroupContent::loadByEntity($flaggable_entity);
+
+        // Node does not belong to any group, so we do nothing.
+        if (empty($group_contents)) {
+          break;
+        }
+
+        // Load the first group content entity found.
+        $group_content = reset($group_contents);
+
+        // Load the group.
+        $group = $group_content->getGroup();
+
+        // Deny access to flag if the group IS in pending or draft state.
+        if (!EICGroupsHelper::groupIsFlaggable($group)) {
+          $access = AccessResult::forbidden()
+            ->addCacheableDependency($group)
+            ->addCacheableDependency($flaggable_entity)
+            ->addCacheableDependency($flag);
+        }
+        break;
+
     }
 
     return $access;

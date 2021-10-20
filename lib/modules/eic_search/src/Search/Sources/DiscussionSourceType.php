@@ -3,6 +3,8 @@
 namespace Drupal\eic_search\Search\Sources;
 
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\eic_flags\FlagType;
+use Drupal\eic_search\Service\SolrDocumentProcessor;
 
 /**
  * Class DiscussionSourceType
@@ -60,10 +62,30 @@ class DiscussionSourceType extends SourceType {
         'ASC' => $this->t('Old', [], ['context' => 'eic_search']),
         'DESC' => $this->t('Recent', [], ['context' => 'eic_search']),
       ],
-      'ss_global_title' => [
+      'tm_global_title' => [
         'label' => $this->t('Title', [], ['context' => 'eic_search']),
         'ASC' => $this->t('Title A-Z', [], ['context' => 'eic_search']),
         'DESC' => $this->t('Title Z-A', [], ['context' => 'eic_search']),
+      ],
+      'dm_aggregated_changed' => [
+        'label' => $this->t('Last updated', [], ['context' => 'eic_search']),
+        'DESC' => $this->t('Last updated', [], ['context' => 'eic_search']),
+      ],
+      'its_last_comment_timestamp' => [
+        'label' => $this->t('Last commented', [], ['context' => 'eic_search']),
+        'DESC' => $this->t('Last commented', [], ['context' => 'eic_search']),
+      ],
+      'its_' . SolrDocumentProcessor::LAST_FLAGGED_KEY . '_' . FlagType::LIKE_CONTENT => [
+        'label' => $this->t('Last liked', [], ['context' => 'eic_search']),
+        'DESC' => $this->t('Last liked', [], ['context' => 'eic_search']),
+      ],
+      'its_' . SolrDocumentProcessor::LAST_FLAGGED_KEY . '_' . FlagType::BOOKMARK_CONTENT => [
+        'label' => $this->t('Last bookmarked', [], ['context' => 'eic_search']),
+        'DESC' => $this->t('Last bookmarked', [], ['context' => 'eic_search']),
+      ],
+      'its_' . SolrDocumentProcessor::LAST_FLAGGED_KEY . '_' . FlagType::HIGHLIGHT_CONTENT => [
+        'label' => $this->t('Last highlighted', [], ['context' => 'eic_search']),
+        'DESC' => $this->t('Last highlighted', [], ['context' => 'eic_search']),
       ],
     ];
   }
@@ -73,7 +95,7 @@ class DiscussionSourceType extends SourceType {
    */
   public function getSearchFieldsId(): array {
     return [
-      'ss_global_title',
+      'tm_global_title',
       'ss_discussion_last_comment_text',
       'ss_discussion_last_comment_author',
       'ss_global_body_no_html',

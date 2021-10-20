@@ -3,6 +3,8 @@
 namespace Drupal\eic_search\Search\Sources;
 
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\eic_flags\FlagType;
+use Drupal\eic_search\Service\SolrDocumentProcessor;
 
 /**
  * Class GroupSourceType
@@ -40,7 +42,7 @@ class GroupSourceType extends SourceType {
   public function getAvailableFacets(): array {
     return [
       'ss_group_topic_name' => $this->t('Topic', [], ['context' => 'eic_search']),
-      'ss_group_label_string' => $this->t('Group label', [], ['context' => 'eic_search']),
+      'tm_global_title' => $this->t('Group label', [], ['context' => 'eic_search']),
       'ss_group_user_fullname' => $this->t('Full name', [], ['context' => 'eic_search']),
     ];
   }
@@ -55,7 +57,7 @@ class GroupSourceType extends SourceType {
         'ASC' => $this->t('Old', [], ['context' => 'eic_search']),
         'DESC' => $this->t('Recent', [], ['context' => 'eic_search']),
       ],
-      'ss_group_label_string' => [
+      'tm_global_title' => [
         'label' => $this->t('Group label', [], ['context' => 'eic_search']),
         'ASC' => $this->t('Group label A-Z', [], ['context' => 'eic_search']),
         'DESC' => $this->t('Group label Z-A', [], ['context' => 'eic_search']),
@@ -65,6 +67,10 @@ class GroupSourceType extends SourceType {
         'ASC' => $this->t('Fullname A-Z', [], ['context' => 'eic_search']),
         'DESC' => $this->t('Fullname Z-A', [], ['context' => 'eic_search']),
       ],
+      'its_' . SolrDocumentProcessor::LAST_FLAGGED_KEY . '_' . FlagType::LIKE_CONTENT => [
+        'label' => $this->t('Last liked', [], ['context' => 'eic_search']),
+        'DESC' => $this->t('Last liked', [], ['context' => 'eic_search']),
+      ],
     ];
   }
 
@@ -73,7 +79,7 @@ class GroupSourceType extends SourceType {
    */
   public function getSearchFieldsId(): array {
     return [
-      'ss_group_label_string',
+      'tm_global_title',
     ];
   }
 

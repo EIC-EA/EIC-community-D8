@@ -6,12 +6,11 @@ use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Drupal\eic_flags\FlaggedEntitiesListBuilder;
-use Drupal\eic_flags\RequestStatus;
 use Drupal\eic_flags\RequestTypes;
 use Drupal\eic_flags\Service\HandlerInterface;
 
 /**
- * Class ListBuilderFilters
+ * Class ListBuilderFilters.
  *
  * @package Drupal\eic_flags\Form
  */

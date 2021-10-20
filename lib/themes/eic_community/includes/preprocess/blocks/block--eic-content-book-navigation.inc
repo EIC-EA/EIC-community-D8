@@ -9,6 +9,15 @@
  * Implements hook_preprocess_block__eic_content_book_navigation().
  */
 function eic_community_preprocess_block__eic_content_book_navigation(&$variables) {
+  $title = '';
+  $node = \Drupal::routeMatch()->getParameter('node');
+
+  if ($node instanceof Drupal\node\NodeInterface) {
+    $parent = Drupal\node\Entity\Node::load($node->book['bid']);
+    $title = $parent->getTitle();
+  }
+
+  $variables['title'] = $title;
   // Create hierarchical list of links maximum 3 levels deep.
   $items = [];
   $links = array_filter($variables['content'], function ($value, $key) {

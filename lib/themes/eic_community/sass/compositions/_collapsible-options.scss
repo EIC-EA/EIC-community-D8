@@ -4,11 +4,20 @@
   position: relative;
   display: inline-block;
 
+  &--full-width {
+    display: block;
+  }
+
   &__trigger-wrapper {
     display: none;
 
+    .ecl-button__icon + .ecl-button__label::before {
+      display: none;
+    }
+
     #{$node}--is-ready & {
       display: block;
+      text-decoration: underline;
     }
   }
 
@@ -41,14 +50,21 @@
     #{$node}--is-ready &[aria-visible="true"] {
       display: flex;
       align-items: center;
+      width: 100%;
+      justify-content: center;
     }
 
     #{$node}--is-ready[aria-expanded="true"] & {
-      &button::after {
+      &::after {
         transform: rotate(-45deg);
         margin-top: #{map-get($ecl-spacing, 'xs') / 2};
       }
     }
+
+    #{$node}--actions[aria-expanded="true"] & {
+      box-shadow: 0px 4px 4px rgba(map-get($ecl-colors, 'black'), 0.1);
+    }
+
 
     &:not(button)::after {
       display: none;
@@ -60,6 +76,8 @@
     [class*="ecl-"]:focus-within {
       outline: none;
     }
+
+
   }
 
   &__collapse-wrapper {
@@ -75,6 +93,10 @@
       z-index: 100;
       top: 100%;
       left: 0;
+    }
+
+    #{$node}--actions & {
+      padding-top: 0;
     }
 
     #{$node}--aligns-from-right & {
@@ -98,6 +120,20 @@
       box-shadow: ecl-box-model('box-shadow');
       overflow: hidden;
       border-radius: ecl-box-model('border-radius');
+    }
+
+    #{$node}--actions & {
+      background: map-get($ecl-colors, 'yellow-100');
+      border-radius: 0;
+      box-shadow: 0px 4px 4px rgba(map-get($ecl-colors, 'black'), 0.1);
+
+      & #{$node}__item:hover {
+        background: lighten(map-get($ecl-colors, 'yellow-100'), 10);
+
+        & #{$node}__button:before {
+          background: darken(map-get($ecl-colors, 'yellow-100'), 10);
+        }
+      }
     }
   }
 
@@ -124,6 +160,10 @@
         border-bottom: 0;
       }
     }
+
+    #{$node}--actions & {
+      border-bottom: none;
+    }
   }
 
   &__button {
@@ -131,7 +171,6 @@
     position: relative;
     width: 100%;
     box-sizing: border-box;
-
     &::before {
       display: block;
       position: absolute;
@@ -148,6 +187,25 @@
 
       &::before {
         background-color: map-get($ecl-colors, 'blue-100');
+      }
+    }
+
+    .ecl-button__icon + .ecl-button__label::before {
+      display: none;
+    }
+
+    #{$node}--actions & {
+      color: map-get($ecl-colors, 'black');
+      &--is-active,
+      &:hover {
+        background:none;
+        color: map-get($ecl-colors, 'black');
+        &::before {
+          background: none;
+        }
+        .ecl-button__label, .ecl-link__label {
+          text-decoration: underline;
+        }
       }
     }
   }

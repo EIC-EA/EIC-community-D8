@@ -9,7 +9,7 @@ dependencies:
     - field.field.node.discussion.field_discussion_type
     - field.field.node.discussion.field_related_contributors
     - field.field.node.discussion.field_related_documents
-    - field.field.node.discussion.field_video
+    - field.field.node.discussion.field_related_downloads
     - field.field.node.discussion.field_vocab_geo
     - field.field.node.discussion.field_vocab_topics
     - node.type.discussion
@@ -92,7 +92,7 @@ hidden:
   field_comments: true
   field_related_contributors: true
   field_related_documents: true
-  field_video: true
+  field_related_downloads: true
   field_vocab_geo: true
   field_vocab_topics: true
   langcode: true

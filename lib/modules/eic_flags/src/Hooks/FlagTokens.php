@@ -2,6 +2,7 @@
 
 namespace Drupal\eic_flags\Hooks;
 
+use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Render\BubbleableMetadata;
@@ -11,7 +12,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Utility\Token;
 
 /**
- * Class FlagTokens
+ * Class FlagTokens.
  *
  * @package Drupal\eic_flags\Hooks
  */
@@ -20,43 +21,62 @@ class FlagTokens implements ContainerInjectionInterface {
   use StringTranslationTrait;
 
   /**
+   * The token service.
+   *
    * @var \Drupal\Core\Utility\Token
    */
   private $tokenService;
 
   /**
+   * The entity type manager.
+   *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
   private $entityTypeManager;
 
   /**
+   * The date formatter service.
+   *
+   * @var \Drupal\Core\Datetime\DateFormatterInterface
+   */
+  private $dateFormatter;
+
+  /**
    * FlagTokens constructor.
    *
    * @param \Drupal\Core\Utility\Token $token_service
+   *   The token service.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
+   * @param \Drupal\Core\Datetime\DateFormatterInterface $date_formatter
+   *   The date formatter service.
    */
   public function __construct(
     Token $token_service,
-    EntityTypeManagerInterface $entity_type_manager
+    EntityTypeManagerInterface $entity_type_manager,
+    DateFormatterInterface $date_formatter
   ) {
     $this->tokenService = $token_service;
     $this->entityTypeManager = $entity_type_manager;
+    $this->dateFormatter = $date_formatter;
   }
 
   /**
-   * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
-   *
-   * @return static
+   * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('token'),
-      $container->get('entity_type.manager')
+      $container->get('entity_type.manager'),
+      $container->get('date.formatter')
     );
   }
 
   /**
    * Implements hook_token_info().
+   *
+   * @return array
+   *   List of supported tokens.
    */
   public function tokenInfo() {
     return [
@@ -86,6 +106,9 @@ class FlagTokens implements ContainerInjectionInterface {
 
   /**
    * Implements hook_tokens().
+   *
+   * @return array
+   *   Array of replacements.
    */
   public function tokens(
     $type,
@@ -109,16 +132,20 @@ class FlagTokens implements ContainerInjectionInterface {
             $bubbleable_metadata->addCacheableDependency($target_entity);
             $replacements[$original] = $target_entity->label();
             break;
+
           case 'date':
-            $replacements[$original] = \Drupal::service('date.formatter')
+            $replacements[$original] = $this->dateFormatter
               ->format($flag->get('created')->value, 'medium');
             break;
+
           case 'flag-type':
             $replacements[$original] = $flag->get('flag_id')->entity->id();
             break;
+
           case 'entity-type':
             $replacements[$original] = $flag->get('entity_type')->value;
             break;
+
           case 'author':
             $account = $flag->getOwner() ? $flag->getOwner() : NULL;
             $bubbleable_metadata->addCacheableDependency($account);
@@ -131,22 +158,29 @@ class FlagTokens implements ContainerInjectionInterface {
     $author_tokens = $this->tokenService->findWithPrefix($tokens, 'author');
     if ($flag instanceof FlaggingInterface && $author_tokens) {
       $replacements += $this->tokenService->generate(
-        'user', $author_tokens,
+        'user',
+        $author_tokens,
         ['user' => $flag->getOwner()],
         $options,
         $bubbleable_metadata
       );
     }
 
-    $target_entity_token = $this->tokenService->findWithPrefix($tokens, 'target_entity');
+    $target_entity_token = $this->tokenService->findWithPrefix(
+      $tokens,
+      'target_entity'
+    );
     if ($flag instanceof FlaggingInterface && $target_entity_token) {
       $target_entity = $this->entityTypeManager
         ->getStorage($flag->getFlaggableType())
         ->load($flag->getFlaggableId());
-      $class_name = strtolower((new \ReflectionClass($target_entity))->getShortName());
+      $class_name = strtolower(
+        (new \ReflectionClass($target_entity))->getShortName()
+      );
 
       $replacements += $this->tokenService->generate(
-        $class_name, $target_entity_token,
+        $class_name,
+        $target_entity_token,
         [$class_name => $target_entity],
         $options,
         $bubbleable_metadata

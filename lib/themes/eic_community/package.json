@@ -10,9 +10,9 @@
     "compile:styles": "ecl-builder styles",
     "compile:svg": "node ./scripts/svg-sprites.js",
     "watch": "npm-run-all --parallel watch:* -ln",
-    "watch:scripts": "chokidar \"./js/**/*.js\" \"./react/**/*.js\" -i \"/node_modules/\" -c \"npm-run-all compile:scripts react-production\"",
+    "watch:scripts": "chokidar \"./js/**/*.js\" \"./react/**/*.js\" -i \"/node_modules/\" -i \"./react/svg/svg.js\" -c \"npm-run-all compile:scripts react-production\"",
     "watch:styles": "chokidar \"./sass/**/*.scss\" -i \"/node_modules/\" -c \"npm run compile:styles\"",
-    "watch:svg": "chokidar \"./images/**/*.svg\" -i \"/node_modules/\" -c \"npm run compile:svg\"",
+    "watch:svg": "chokidar \"./images/**/*.svg\" -i \"/node_modules/\" -c \"npm-run-all compile:svg react-production\"",
     "prestorybook": "npm-run-all compile:*",
     "storybook": "start-storybook -s ./dist -p 9000",
     "pregenerate-storybook": "[ -d './storybook-static' ] && rm -r ./storybook-static || exit 0",
@@ -87,8 +87,14 @@
     "@material-ui/icons": "^4.11.2",
     "@material-ui/lab": "^4.0.0-alpha.58",
     "axios": "^0.21.1",
-    "react-dom": "^16.14.0",
+    "disqus-react": "^1.1.2",
+    "postcss": "^8.3.6",
     "react": "^16.9.0",
-    "react-test-renderer": "^16.9.0"
+    "react-dom": "^16.14.0",
+    "react-notifications-component": "^3.1.0",
+    "react-test-renderer": "^16.9.0",
+    "reactjs-popup": "^2.0.5",
+    "semantic-ui-css": "^2.4.1",
+    "semantic-ui-react": "^2.0.3"
   }
 }

@@ -21,10 +21,10 @@ use Drupal\flag\FlagService;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\group\GroupMembership;
 use Drupal\user\Entity\User;
-use InvalidArgumentException;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
- * Class AbstractRequestHandler
+ * Class AbstractRequestHandler.
  *
  * @package Drupal\eic_flags\Service\Handler
  */
@@ -33,49 +33,72 @@ abstract class AbstractRequestHandler implements HandlerInterface {
   use StringTranslationTrait;
 
   /**
+   * The module handler service.
+   *
    * @var \Drupal\Core\Extension\ModuleHandlerInterface
    */
   protected $moduleHandler;
 
   /**
+   * The entity type manager.
+   *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
   protected $entityTypeManager;
 
   /**
+   * Flag service provided by the flag module.
+   *
    * @var \Drupal\flag\FlagService
    */
   protected $flagService;
 
   /**
+   * Core's moderation information service.
+   *
    * @var \Drupal\content_moderation\ModerationInformationInterface
    */
   protected $moderationInformation;
 
   /**
+   * The current request object.
+   *
+   * @var \Symfony\Component\HttpFoundation\Request|null
+   */
+  protected $currentRequest;
+
+  /**
    * AbstractRequestHandler constructor.
    *
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   *   The module handler service.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
    * @param \Drupal\flag\FlagService $flag_service
+   *   Flag service provided by the flag module.
    * @param \Drupal\content_moderation\ModerationInformationInterface $moderation_information
+   *   Core's moderation information service.
+   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
+   *   The request stack object.
    */
   public function __construct(
     ModuleHandlerInterface $module_handler,
     EntityTypeManagerInterface $entity_type_manager,
     FlagService $flag_service,
-    ModerationInformationInterface $moderation_information
+    ModerationInformationInterface $moderation_information,
+    RequestStack $request_stack
   ) {
     $this->moduleHandler = $module_handler;
     $this->entityTypeManager = $entity_type_manager;
     $this->flagService = $flag_service;
     $this->moderationInformation = $moderation_information;
+    $this->currentRequest = $request_stack->getCurrentRequest();
   }
 
   /**
    * {@inheritdoc}
    */
-  abstract function accept(
+  abstract public function accept(
     FlaggingInterface $flagging,
     ContentEntityInterface $content_entity
   );
@@ -83,12 +106,12 @@ abstract class AbstractRequestHandler implements HandlerInterface {
   /**
    * {@inheritdoc}
    */
-  abstract function getSupportedEntityTypes();
+  abstract public function getSupportedEntityTypes();
 
   /**
    * {@inheritdoc}
    */
-  abstract function getMessages();
+  abstract public function getMessages();
 
   /**
    * {@inheritdoc}
@@ -101,7 +124,7 @@ abstract class AbstractRequestHandler implements HandlerInterface {
   ) {
     $account_proxy = \Drupal::currentUser();
     if (!$account_proxy->isAuthenticated()) {
-      throw new InvalidArgumentException(
+      throw new \InvalidArgumentException(
         'You must be authenticated to do this!'
       );
     }
@@ -147,7 +170,7 @@ abstract class AbstractRequestHandler implements HandlerInterface {
     FlaggingInterface $flagging,
     ContentEntityInterface $content_entity
   ) {
-    // Currently does nothing, this will change
+    // Currently does nothing, this will change.
     return TRUE;
   }
 
@@ -156,7 +179,7 @@ abstract class AbstractRequestHandler implements HandlerInterface {
    */
   public function applyFlag(ContentEntityInterface $entity, string $reason) {
     $support_entity_types = $this->getSupportedEntityTypes();
-    // Entity type is not supported
+    // Entity type is not supported.
     if (!array_key_exists($entity->getEntityTypeId(), $support_entity_types)) {
       return NULL;
     }
@@ -178,16 +201,14 @@ abstract class AbstractRequestHandler implements HandlerInterface {
       return NULL;
     }
 
-    $flag = $this->entityTypeManager->getStorage('flagging')->create(
-      [
-        'uid' => $current_user->id(),
-        'session_id' => NULL,
-        'flag_id' => $flag->id(),
-        'entity_id' => $entity->id(),
-        'entity_type' => $entity->getEntityTypeId(),
-        'global' => $flag->isGlobal(),
-      ]
-    );
+    $flag = $this->entityTypeManager->getStorage('flagging')->create([
+      'uid' => $current_user->id(),
+      'session_id' => NULL,
+      'flag_id' => $flag->id(),
+      'entity_id' => $entity->id(),
+      'entity_type' => $entity->getEntityTypeId(),
+      'global' => $flag->isGlobal(),
+    ]);
 
     $flag->set('field_request_reason', $reason);
     $flag->set('field_request_status', RequestStatus::OPEN);
@@ -241,7 +262,7 @@ abstract class AbstractRequestHandler implements HandlerInterface {
   ) {
     $supported_entity_types = $this->getSupportedEntityTypes();
     if (!isset($supported_entity_types[$content_entity->getEntityTypeId()])) {
-      throw new InvalidArgumentException('Invalid entity type');
+      throw new \InvalidArgumentException('Invalid entity type');
     }
 
     $query = $this->entityTypeManager->getStorage('flagging')
@@ -272,25 +293,23 @@ abstract class AbstractRequestHandler implements HandlerInterface {
   public function getActions(ContentEntityInterface $entity) {
     return [
       'deny_request' => [
-        'title' => t('Deny'),
+        'title' => $this->t('Deny'),
         'url' => $entity->toUrl('close-request')
           ->setRouteParameter('request_type', $this->getType())
           ->setRouteParameter('response', RequestStatus::DENIED)
           ->setRouteParameter(
             'destination',
-            \Drupal::request()
-              ->getRequestUri()
+            $this->currentRequest->getRequestUri()
           ),
       ],
       'accept_request' => [
-        'title' => t('Accept'),
+        'title' => $this->t('Accept'),
         'url' => $entity->toUrl('close-request')
           ->setRouteParameter('request_type', $this->getType())
           ->setRouteParameter('response', RequestStatus::ACCEPTED)
           ->setRouteParameter(
             'destination',
-            \Drupal::request()
-              ->getRequestUri()
+            $this->currentRequest->getRequestUri()
           ),
       ],
     ];
@@ -308,7 +327,10 @@ abstract class AbstractRequestHandler implements HandlerInterface {
   /**
    * {@inheritdoc}
    */
-  public function canRequest(AccountInterface $account, ContentEntityInterface $entity) {
+  public function canRequest(
+    AccountInterface $account,
+    ContentEntityInterface $entity
+  ) {
     if (!$account->isAuthenticated()) {
       return AccessResult::forbidden();
     }
@@ -323,9 +345,9 @@ abstract class AbstractRequestHandler implements HandlerInterface {
       return AccessResult::forbidden();
     }
 
-    // For groups, the user must be GM/GO/GA or SA/SCM
+    // For groups, the user must be GM/GO/GA or SA/SCM.
     if ($entity instanceof GroupInterface) {
-      /** @var GroupInterface $entity */
+      /** @var \Drupal\group\Entity\GroupInterface $entity */
       $user_roles = $account->getRoles(TRUE);
       $allowed_global_roles = [
         UserHelper::ROLE_CONTENT_ADMINISTRATOR,

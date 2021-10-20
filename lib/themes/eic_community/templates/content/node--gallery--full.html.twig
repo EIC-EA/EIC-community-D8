@@ -1,0 +1,27 @@
+{#
+/**
+ * @file
+ * Theme override to display a node page.
+ *
+ * @see ./themes/custom/eic_community/templates/content/node.html.twig
+ */
+#}
+{% embed "@theme/patterns/compositions/editorial-article.html.twig" with editorial_article|default({}) %}
+  {% block content %}
+    <h1>{{ label }}</h1>
+    {{ elements.field_body }}
+    {{ elements.field_gallery_slides }}
+    {% include "@theme/patterns/components/filelist.html.twig" with file_list|default({}) %}
+  {% endblock %}
+
+  {% block sidebar %}
+    {% include "@theme/patterns/compositions/editorial-actions.html.twig" with editorial_actions|default({}) %}
+
+    {% if social_share is not empty %}
+      {{ social_share }}
+    {% endif %}
+
+    {% include "@theme/patterns/compositions/featured-topics.html.twig" with topics|default({}) %}
+
+  {% endblock %}
+{% endembed %}

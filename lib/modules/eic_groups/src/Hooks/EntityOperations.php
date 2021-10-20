@@ -3,6 +3,7 @@
 namespace Drupal\eic_groups\Hooks;
 
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
@@ -17,6 +18,7 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
 use Drupal\eic_content_wiki_page\WikiPageBookManager;
 use Drupal\eic_groups\Constants\NodeProperty;
+use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_groups\EICGroupsHelperInterface;
 use Drupal\eic_user\UserHelper;
 use Drupal\group\Entity\GroupContent;
@@ -137,9 +139,18 @@ class EntityOperations implements ContainerInjectionInterface {
    * Implements hook_group_update().
    */
   public function groupUpdate(GroupInterface $entity) {
-    // Publish group wiki when group is published.
+    // The group status has changed to publish.
     if (!$entity->original->isPublished() && $entity->isPublished()) {
+      // Publish group wiki when group is published.
       $this->publishGroupWiki($entity);
+      // Invalidates group contents cache when the group has been published.
+      $this->invalidateGroupContentCache($entity);
+    }
+
+    // The group status has changed to unpublish.
+    if ($entity->original->isPublished() && !$entity->isPublished()) {
+      // Invalidates group contents cache when the group has been unpublished.
+      $this->invalidateGroupContentCache($entity);
     }
   }
 
@@ -209,6 +220,8 @@ class EntityOperations implements ContainerInjectionInterface {
             // Unsets book navigation since we already have that show in the
             // eic_groups_wiki_book_navigation block plugin.
             unset($build['book_navigation']);
+            // Adds user group permissions cache.
+            $build['#cache']['contexts'][] = 'user.group_permissions';
           }
         }
         elseif ($entity->bundle() === 'wiki_page') {
@@ -227,6 +240,8 @@ class EntityOperations implements ContainerInjectionInterface {
               }
             }
           }
+          // Adds user group permissions cache.
+          $build['#cache']['contexts'][] = 'user.group_permissions';
         }
         break;
 
@@ -418,19 +433,67 @@ class EntityOperations implements ContainerInjectionInterface {
             return AccessResult::forbidden();
           }
 
-          // We return access denied if the user is not the owner of the wiki
-          // page neither administrator.
-          if ($entity->getOwnerId() !== $account->id()) {
-            if (!UserHelper::isPowerUser($account)) {
-              $access = AccessResult::forbidden();
-            }
+          // If user is the group author, we allow access.
+          if ($entity->getOwnerId() === $account->id()) {
+            break;
           }
+
+          // If user is a power user, we allow access.
+          if (UserHelper::isPowerUser($account)) {
+            break;
+          }
+
+          $group_content = reset($group_contents);
+          $group = $group_content->getGroup();
+
+          // If user is a group admin, we allow access.
+          if (EICGroupsHelper::userIsGroupAdmin($group, $account)) {
+            break;
+          }
+
+          // At this point it means the user is just a group member and
+          // therefore we deny access to edit the field.
+          $access = AccessResult::forbidden();
           break;
 
       }
     }
 
     return $access;
+  }
+
+  /**
+   * Invalidates group contents cache of a given group.
+   *
+   * @param \Drupal\group\Entity\GroupInterface $entity
+   *   The group entity.
+   */
+  public function invalidateGroupContentCache(GroupInterface $entity) {
+    $installedContentPluginIds = $entity->getGroupType()->getInstalledContentPlugins()->getInstanceIds();
+
+    $node_plugins = array_filter($installedContentPluginIds, function ($key) {
+      // We skip group content plugins that are not nodes.
+      if (strpos($key, 'group_node:') === FALSE) {
+        return FALSE;
+      }
+
+      // Group book pages cannot be flagged.
+      if (strpos($key, 'group_node:book') !== FALSE) {
+        return FALSE;
+      }
+
+      return TRUE;
+    }, ARRAY_FILTER_USE_KEY);
+
+    // Loads all group contents of the group and invalidate cache.
+    foreach ($node_plugins as $plugin_id) {
+      $group_contents = $entity->getContent($plugin_id);
+
+      foreach ($group_contents as $group_content) {
+        $node = $group_content->getEntity();
+        Cache::invalidateTags($node->getCacheTagsToInvalidate());
+      }
+    }
   }
 
 }

@@ -1,6 +1,13 @@
 .ecl-link {
   $node: &;
 
+  &--icon:focus, &--icon:hover {
+    text-decoration: none;
+    #{$node}__label {
+      text-decoration: underline;
+    }
+  }
+
   &--guest {
     color: ecl-typography('color', 'meta');
   }
@@ -39,6 +46,10 @@
 
   body &--button-ghost {
     @extend .ecl-button--ghost;
+
+    &:focus {
+      outline: none;
+    }
   }
 
   body &--action {

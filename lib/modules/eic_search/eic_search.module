@@ -61,15 +61,19 @@ function eic_search_preprocess_html(&$variables) {
 }
 
 /**
- * @implements hook_search_api_solr_documents_alter
+ * Implements hook_search_api_solr_documents_alter
  *
  * Solr needs to be aware of all group permissions so we can filter it in our
- *   querybuilder depending of the user context
+ *   query builder depending of the user context
  *
  * @throws \Drupal\Core\Entity\EntityMalformedException
  * @throws \Drupal\search_api\SearchApiException
  */
-function eic_search_search_api_solr_documents_alter(array &$documents, \Drupal\search_api\IndexInterface $index, array $items) {
+function eic_search_search_api_solr_documents_alter(
+  array &$documents,
+  \Drupal\search_api\IndexInterface $index,
+  array $items
+) {
   /** @var \Drupal\eic_groups\EICGroupsHelper $group_helper */
   $group_helper = \Drupal::service('eic_groups.helper');
   /** @var \Drupal\eic_search\Service\SolrDocumentProcessor $solr_document_processor */
@@ -83,7 +87,8 @@ function eic_search_search_api_solr_documents_alter(array &$documents, \Drupal\s
     $solr_document_processor->processGroupData($document, $fields);
     $solr_document_processor->processDiscussionData($document, $fields);
     $solr_document_processor->processDocumentData($document, $fields);
-    $solr_document_processor->processGroupUserData($document, $fields);
+    $solr_document_processor->processFlaggingData($document, $fields);
     $solr_document_processor->processGroupVisibilityData($document, $fields, $items, $group_helper);
+    $solr_document_processor->processGroupUserData($document, $fields);
   }
 }

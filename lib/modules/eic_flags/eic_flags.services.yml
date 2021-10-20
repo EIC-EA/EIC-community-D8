@@ -5,12 +5,12 @@ services:
       - { name: service_collector, tag: request_handler, call: addHandler }
   eic_flags.delete_request_handler:
     class: Drupal\eic_flags\Service\DeleteRequestHandler
-    arguments: [ '@module_handler', '@entity_type.manager', '@flag', '@content_moderation.moderation_information' ]
+    arguments: [ '@module_handler', '@entity_type.manager', '@flag', '@content_moderation.moderation_information', '@request_stack' ]
     tags:
       - { name: request_handler }
   eic_flags.delete_archive_handler:
     class: Drupal\eic_flags\Service\ArchiveRequestHandler
-    arguments: [ '@module_handler', '@entity_type.manager', '@flag', '@content_moderation.moderation_information' ]
+    arguments: [ '@module_handler', '@entity_type.manager', '@flag', '@content_moderation.moderation_information', '@request_stack' ]
     tags:
       - { name: request_handler }
   eic_flags.request_access_checker:
@@ -18,3 +18,13 @@ services:
     arguments: [ '@eic_flags.handler_collector' ]
     tags:
       - { name: access_check, applies_to: _request_send_access }
+
+  eic_flags.event_subscriber:
+    class: Drupal\eic_flags\EventSubscriber\FlagEventSubscriber
+    arguments: ['@eic_search.solr_document_processor']
+    tags:
+      - { name: event_subscriber }
+
+  eic_flags.helper:
+    class: Drupal\eic_flags\FlagHelper
+    arguments: ['@flag', '@entity_type.manager']

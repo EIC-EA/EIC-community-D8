@@ -9,6 +9,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\eic_groups\Constants\GroupJoiningMethodType;
@@ -149,29 +150,29 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
   ) {
     $operation_links = [];
 
-    if (!is_null($cacheable_metadata)) {
+    foreach ($group->getGroupType()->getInstalledContentPlugins() as $plugin) {
+      /** @var \Drupal\group\Plugin\GroupContentEnablerInterface $plugin */
+      if (!empty($limit_entities) && !in_array($plugin->getEntityTypeId(), $limit_entities)) {
+        continue;
+      }
+
+      $plugin_operation_links = $plugin->getGroupOperations($group);
+
+      // Remove operation plugins if the user doesn't have access.
+      foreach ($plugin_operation_links as $key => $plugin_operation_link) {
+        if ($plugin_operation_link['url']->access()) {
+          continue;
+        }
+
+        unset($plugin_operation_link[$key]);
+      }
+
+      $operation_links += $plugin_operation_links;
+
       // Retrieve the operations from the installed content plugins and merges
       // cacheable metadata.
-      foreach ($group->getGroupType()->getInstalledContentPlugins() as $plugin) {
-        /** @var \Drupal\group\Plugin\GroupContentEnablerInterface $plugin */
-        if (!empty($limit_entities) && !in_array($plugin->getEntityTypeId(), $limit_entities)) {
-          continue;
-        }
-
-        $operation_links += $plugin->getGroupOperations($group);
+      if (!is_null($cacheable_metadata)) {
         $cacheable_metadata = $cacheable_metadata->merge($plugin->getGroupOperationsCacheableMetadata());
-      }
-    }
-    else {
-      // Retrieve the operations from the installed content plugins without
-      // merging cacheable metadata.
-      foreach ($group->getGroupType()->getInstalledContentPlugins() as $plugin) {
-        /** @var \Drupal\group\Plugin\GroupContentEnablerInterface $plugin */
-        if (!empty($limit_entities) && !in_array($plugin->getEntityTypeId(), $limit_entities)) {
-          continue;
-        }
-
-        $operation_links += $plugin->getGroupOperations($group);
       }
     }
 
@@ -364,6 +365,61 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
     $query->fields('gp', ['id']);
 
     return !empty($query->execute()->fetchAll(\PDO::FETCH_OBJ));
+  }
+
+  /**
+   * Check if a group can be flagged depending on the moderation state.
+   *
+   * @param \Drupal\group\Entity\GroupInterface $group
+   *   The group entity.
+   *
+   * @return bool
+   *   TRUE if the group is not in Pending or Draft state.
+   */
+  public static function groupIsFlaggable(GroupInterface $group) {
+    $moderation_state = $group->get('moderation_state')->value;
+    return !in_array(
+      $moderation_state,
+      [
+        GroupsModerationHelper::GROUP_PENDING_STATE,
+        GroupsModerationHelper::GROUP_DRAFT_STATE,
+      ]
+    );
+  }
+
+  /**
+   * Checks if a user is a group admin of a given group.
+   *
+   * @param \Drupal\group\Entity\GroupInterface $group
+   *   The group entity.
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *   The user account object.
+   *
+   * @return bool
+   *   TRUE if user is a group admin.
+   */
+  public static function userIsGroupAdmin(GroupInterface $group, AccountInterface $account) {
+    $membership = $group->getMember($account);
+    $membership_roles = $membership->getRoles();
+    $is_admin = FALSE;
+
+    foreach ($membership_roles as $role) {
+      $is_admin = in_array(
+        $role->id(),
+        [
+          self::GROUP_ADMINISTRATOR_ROLE,
+          self::GROUP_OWNER_ROLE,
+        ]
+      );
+
+      if (!$is_admin) {
+        continue;
+      }
+
+      break;
+    }
+
+    return $is_admin;
   }
 
 }

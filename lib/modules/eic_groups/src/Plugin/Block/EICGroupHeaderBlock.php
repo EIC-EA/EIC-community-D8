@@ -231,10 +231,7 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
     $create_operations = [];
     foreach ($node_operation_links as $key => $link) {
       if (strpos($key, 'create') !== FALSE) {
-        // We discard the operation link if user doesn't have access to it.
-        if ($link['url']->access($this->currentUser)) {
-          $create_operations[$key] = $link;
-        }
+        $create_operations[$key] = $link;
         unset($node_operation_links[$key]);
       }
     }
@@ -249,10 +246,6 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
     // We extract only the group edit/delete/publish operation links into a new
     // array.
     $visible_group_operation_links = array_filter($group_operation_links, function ($item, $key) {
-      // We discard the operation link if user doesn't have access to it.
-      if (!$item['url']->access($this->currentUser)) {
-        return FALSE;
-      }
       return in_array($key, ['edit', 'delete', 'publish']);
     }, ARRAY_FILTER_USE_BOTH);
 
@@ -303,7 +296,7 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
    *   - url: An instance of \Drupal\Core\Url for the login URL.
    */
   private function getAnonymousLoginLink(GroupInterface $group) {
-    $link = FALSE;
+    $link = [];
     if ($this->currentUser->isAnonymous()) {
       if ($joining_methods = $this->oecGroupFlexHelper->getGroupJoiningMethod($group)) {
         $login_link_options = [
@@ -350,23 +343,14 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
         continue;
       }
 
+      // Check if we have a flagging for this user and entity. If we have one we
+      // check if the user can unflag, otherwise we check if the user can flag.
       $user_flag = $this->flagService->getFlagging($flag, $group);
-
-      // We need to create a fake flag if the user never flagged the content,
-      // otherwise we can't do an access check.
-      if (!$user_flag) {
-        $user_flag = $this->entityTypeManager->getStorage('flagging')->create([
-          'uid' => $this->currentUser->id(),
-          'flag_id' => $flag->id(),
-          'entity_id' => $group->id(),
-          'entity_type' => $group->getEntityTypeId(),
-          'global' => $flag->isGlobal(),
-        ]);
-      }
+      $action = $user_flag ? 'unflag' : 'flag';
 
       // If user has access to view the flag we add it to the results so that
       // it can be shown in the group header.
-      if ($user_flag->access('view')) {
+      if ($flag->actionAccess($action)) {
         $group_flags[$flag_id] = [
           '#lazy_builder' => [
             'flag.link_builder:build',
@@ -467,7 +451,7 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
    * @param \Drupal\group\Entity\GroupInterface $group
    *   The group entity.
    *
-   * @return \Drupal\Component\Render\MarkupInterface
+   * @return \Drupal\Component\Render\MarkupInterface|string
    *   The group description HTML Markup.
    */
   private function getTruncatedGroupDescription(GroupInterface $group) {
@@ -503,7 +487,16 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
 
     // Adds link to the group about page.
     if ($has_read_more) {
-      $link = Link::createFromRoute($this->t('Read more'), 'eic_groups.about_page', ['group' => $group->id()]);
+      $link = Link::createFromRoute(
+        $this->t('Read more'),
+        'eic_groups.about_page',
+        [
+          'group' => $group->id(),
+        ],
+        [
+          'fragment' => 'group-description-full',
+        ],
+      );
       $output .= ' ' . $link->toString();
     }
 

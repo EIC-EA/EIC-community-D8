@@ -74,14 +74,18 @@ function eic_community_preprocess_page(array &$variables): void {
   $first_section = array_filter($variables['page']['footer'], function ($content, $key) {
     return strpos($key, 'content') !== FALSE;
   }, ARRAY_FILTER_USE_BOTH);
-  $first_section = array_shift($first_section);
-  $block_content = \Drupal::service('entity.repository')
-    ->loadEntityByUuid('block_content', $first_section['#derivative_plugin_id']);
 
-  $footer_sections[] = [
-    'title' => $block_content->field_title->value,
-    'description' => strip_tags($block_content->body->value),
-  ];
+  $first_section = array_shift($first_section);
+
+  if (!empty($block_content['#derivative_plugin_id'])) {
+    $block_content = \Drupal::service('entity.repository')
+      ->loadEntityByUuid('block_content', $first_section['#derivative_plugin_id']);
+
+    $footer_sections[] = [
+      'title' => $block_content->field_title->value,
+      'description' => strip_tags($block_content->body->value),
+    ];
+  }
 
   $menu_sections = array_filter($variables['page']['footer'], function ($content, $key) {
     return strpos($key, 'menu') !== FALSE;
@@ -95,14 +99,14 @@ function eic_community_preprocess_page(array &$variables): void {
     $menu_active_trail = \Drupal::service('menu.active_trail')->getActiveTrailIds($menu_name);
     $parameters->setActiveTrail($menu_active_trail);
     $tree = \Drupal::menuTree()->load($menu_name, $parameters);
-    $links = [];
-
-    foreach ($tree as $branch) {
-      $links[]['link'] = [
-        'label' => $branch->link->getTitle(),
-        'path' => $branch->link->getUrlObject()->toString(),
+    $links = array_map(function ($item) {
+      return [
+        'link' => [
+          'label' => $item->link->getTitle(),
+          'path' => $item->link->getUrlObject()->toString(),
+        ],
       ];
-    }
+    }, $tree);
 
     $section = [
       'title' => $menu['#configuration']['label'],
@@ -145,7 +149,7 @@ function _preprocess_node_page(&$variables) {
         $author_theme = [
           '#theme' => 'eic_community_author',
           '#name' => $author['name'],
-          '#path' => $author['path'],
+          '#path' => $author['path'] ?? '',
         ];
 
         if (isset($author['image'])) {
