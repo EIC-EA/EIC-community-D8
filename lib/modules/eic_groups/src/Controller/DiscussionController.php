@@ -5,16 +5,23 @@ namespace Drupal\eic_groups\Controller;
 use Drupal\comment\CommentInterface;
 use Drupal\comment\Entity\Comment;
 use Drupal\Component\Utility\Xss;
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
 use Drupal\eic_flags\RequestStatus;
+use Drupal\eic_groups\EICGroupsHelper;
+use Drupal\eic_user\UserHelper;
 use Drupal\file\Entity\File;
 use Drupal\flag\FlaggingInterface;
 use Drupal\flag\FlagInterface;
 use Drupal\flag\FlagService;
+use Drupal\group\Entity\Group;
 use Drupal\group\Entity\GroupContent;
+use Drupal\group\GroupMembership;
 use Drupal\node\Entity\Node;
 use Drupal\oec_group_comments\GroupPermissionChecker;
 use Drupal\user\Entity\User;
@@ -56,20 +63,28 @@ class DiscussionController extends ControllerBase {
   private $groupPermissionChecker;
 
   /**
+   * @var \Drupal\eic_groups\EICGroupsHelper $groupsHelper
+   */
+  private $groupsHelper;
+
+  /**
    * DiscussionController constructor.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    * @param \Drupal\flag\FlagService $flag_service
    * @param \Drupal\oec_group_comments\GroupPermissionChecker $group_permission_checker
+   * @param EICGroupsHelper $groups_helper
    */
   public function __construct(
     EntityTypeManagerInterface $entity_type_manager,
     FlagService $flag_service,
-    GroupPermissionChecker $group_permission_checker
+    GroupPermissionChecker $group_permission_checker,
+    EICGroupsHelper $groups_helper
   ) {
     $this->entityTypeManager = $entity_type_manager;
     $this->flagService = $flag_service;
     $this->groupPermissionChecker = $group_permission_checker;
+    $this->groupsHelper = $groups_helper;
   }
 
   /**
@@ -79,7 +94,8 @@ class DiscussionController extends ControllerBase {
     return new static(
       $container->get('entity_type.manager'),
       $container->get('flag'),
-      $container->get('oec_group_comments.group_permission_checker')
+      $container->get('oec_group_comments.group_permission_checker'),
+      $container->get('eic_groups.helper')
     );
   }
 
@@ -176,6 +192,8 @@ class DiscussionController extends ControllerBase {
         'text' => $comment->get('comment_body')->value,
         'comment_id' => $comment->id(),
         'likes' => $this->getCommentLikesData($comment, $account),
+        'is_soft_delete' => $comment->get('field_comment_is_soft_deleted')->value,
+        'deletion_date' => $comment->get('field_comment_deletion_date')->value,
       ];
     }
 
@@ -305,26 +323,39 @@ class DiscussionController extends ControllerBase {
 
   /**
    * @param \Symfony\Component\HttpFoundation\Request $request
+   * @param int $group_id
    * @param int $discussion_id
    * @param $comment_id
    *
    * @return \Symfony\Component\HttpFoundation\JsonResponse
    */
-  public function deleteComment(Request $request, int $discussion_id, $comment_id) {
+  public function deleteComment(Request $request, int $group_id, int $discussion_id, $comment_id) {
     $comment = Comment::load($comment_id);
 
     if (!$comment instanceof CommentInterface) {
       return new JsonResponse('Cannot find comment entity', Response::HTTP_BAD_REQUEST);
     }
 
-    $user = User::load($this->currentUser()->id());
+    $group = Group::load($group_id);
 
-    if ($user->id() !== $comment->getOwnerId()) {
-      return new JsonResponse('You do not have access to delete the content', Response::HTTP_FORBIDDEN);
+    if (!$group) {
+      return new JsonResponse('Group does not exists', Response::HTTP_BAD_REQUEST);
     }
 
     try {
-      $comment->delete();
+      $now = DrupalDateTime::createFromTimestamp(time());
+      $comment->set(
+        'field_comment_deletion_date',
+        $now->format(DateTimeItemInterface::DATETIME_STORAGE_FORMAT)
+      );
+      $comment->set('comment_body', [
+        'value' => $this->t('This comment has been removed by a content administrator at @time',
+          ['@time' => $now->format('d/m/Y - H:i')]
+        ),
+        'format' => 'plain_text',
+      ]);
+      $comment->set('field_comment_is_soft_deleted', TRUE);
+      $comment->save();
     } catch (EntityStorageException $e) {
       \Drupal::logger('eic_groups')->error($e->getMessage());
 
@@ -368,6 +399,17 @@ class DiscussionController extends ControllerBase {
     return new JsonResponse(
       ['allowed' => TRUE],
       Response::HTTP_OK
+    );
+  }
+
+  /**
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *
+   * @return \Drupal\Core\Access\AccessResult|\Drupal\Core\Access\AccessResultAllowed|\Drupal\Core\Access\AccessResultNeutral
+   */
+  public function accessDelete(AccountInterface $account) {
+    return AccessResult::allowedIf(
+      UserHelper::isPowerUser($this->currentUser())
     );
   }
 

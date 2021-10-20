@@ -1,0 +1,18 @@
+uuid: bcbe1c05-1837-4df1-bae3-7f5763639523
+langcode: en
+status: true
+dependencies:
+  module:
+    - comment
+id: comment.field_comment_is_soft_deleted
+field_name: field_comment_is_soft_deleted
+entity_type: comment
+type: boolean
+settings: {  }
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false
