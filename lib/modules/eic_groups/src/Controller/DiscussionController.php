@@ -225,6 +225,7 @@ class DiscussionController extends ControllerBase {
         'edited_time' => $edited_time ?
           $this->t('Edited on @time', ['@time' => $edited_time], ['context' => 'eic_groups']) :
           NULL,
+        'is_soft_delete' => $comment->get('field_comment_is_soft_deleted')->value,
         'created_time' => $this->t(
           'Created on @time',
           ['@time' => $this->dateFormatter->format($comment->getCreatedTime(), 'eu_short_date_hour')],
