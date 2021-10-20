@@ -7,9 +7,11 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\comment\CommentInterface;
 use Drupal\comment\Entity\Comment;
 use Drupal\Component\Utility\Unicode;
+use Drupal\eic_comments\CommentsHelper;
 use Drupal\eic_flags\FlagType;
 use Drupal\eic_groups\Constants\GroupVisibilityType;
 use Drupal\eic_groups\EICGroupsHelper;
+use Drupal\eic_media_statistics\EntityFileDownloadCount;
 use Drupal\eic_search\SolrIndexes;
 use Drupal\file\Entity\File;
 use Drupal\flag\FlagCountManager;
@@ -18,6 +20,7 @@ use Drupal\group\GroupMembership;
 use Drupal\image\Entity\ImageStyle;
 use Drupal\media\MediaInterface;
 use Drupal\node\Entity\Node;
+use Drupal\node\NodeInterface;
 use Drupal\paragraphs\Entity\Paragraph;
 use Drupal\profile\Entity\Profile;
 use Drupal\profile\Entity\ProfileInterface;
@@ -36,19 +39,20 @@ use Solarium\QueryType\Update\Query\Document;
  * @package Drupal\eic_search\Service
  */
 class SolrDocumentProcessor {
+
   /**
    * Database connection.
    *
    * @var \Drupal\Core\Database\Connection
    */
-  protected $connection;
+  private $connection;
 
   /**
    * The flag count manager.
    *
    * @var \Drupal\flag\FlagCountManager
    */
-  protected $flagCountManager;
+  private $flagCountManager;
 
   /**
    * The Search API Post request indexing service.
@@ -62,7 +66,17 @@ class SolrDocumentProcessor {
    *
    * @var \Drupal\statistics\NodeStatisticsDatabaseStorage
    */
-  protected $nodeStatisticsDatabaseStorage;
+  private $nodeStatisticsDatabaseStorage;
+
+  /**
+   * @var \Drupal\eic_comments\CommentsHelper $commentsHelper
+   */
+  private $commentsHelper;
+
+  /**
+   * @var EntityFileDownloadCount $entityDownloadHelper
+   */
+  private $entityDownloadHelper;
 
   /**
    * The key used to identify solr document fields for last flagged.
@@ -80,12 +94,25 @@ class SolrDocumentProcessor {
    *   The flag count manager.
    * @param \Drupal\search_api\Utility\PostRequestIndexing $post_request_indexing
    *   The Search API Post request indexing service.
+   * @param CommentsHelper $comments_helper
+   *   The Comments Helper service.
+   * @param EntityFileDownloadCount $entity_download_helper
+   *   The Entity File Download Count service helper.
    */
-  public function __construct(Connection $connection, FlagCountManager $flag_count_manager, PostRequestIndexing $post_request_indexing, NodeStatisticsDatabaseStorage $node_statistics_db_storage) {
+  public function __construct(
+    Connection $connection,
+    FlagCountManager $flag_count_manager,
+    PostRequestIndexing $post_request_indexing,
+    NodeStatisticsDatabaseStorage $node_statistics_db_storage,
+    CommentsHelper $comments_helper,
+    EntityFileDownloadCount $entity_download_helper
+  ) {
     $this->connection = $connection;
     $this->flagCountManager = $flag_count_manager;
     $this->postRequestIndexing = $post_request_indexing;
     $this->nodeStatisticsDatabaseStorage = $node_statistics_db_storage;
+    $this->commentsHelper = $comments_helper;
+    $this->entityDownloadHelper = $entity_download_helper;
   }
 
   /**
@@ -106,8 +133,9 @@ class SolrDocumentProcessor {
     $topics = [];
     $geo = [];
     $user_url = '';
+    $datasource = $fields['ss_search_api_datasource'];
 
-    switch ($fields['ss_search_api_datasource']) {
+    switch ($datasource) {
       case 'entity:node':
         $title = $fields['ss_content_title'];
         $type = $fields['ss_content_type'];
@@ -228,10 +256,14 @@ class SolrDocumentProcessor {
     $nid = $fields['its_content_nid'];
     $views = $this->nodeStatisticsDatabaseStorage->fetchView($nid);
 
-    $document->addField(
-      'its_statistics_view',
-      $views ? $views->getTotalCount() : 0
-    );
+    if ('entity:message' !== $datasource) {
+      $this->addOrUpdateDocumentField(
+        $document,
+        'its_statistics_view',
+        $fields,
+        $views ? $views->getTotalCount() : 0
+      );
+    }
   }
 
   /**
@@ -256,6 +288,67 @@ class SolrDocumentProcessor {
     $document->addField('ss_global_group_parent_label', $group_parent_label);
     $document->addField('ss_global_group_parent_url', $group_parent_url);
     $document->addField('ss_global_group_parent_id', $group_parent_id);
+  }
+
+  /**
+   * @param \Solarium\QueryType\Update\Query\Document $document
+   * @param array $fields
+   */
+  public function processMessageData(Document &$document, array $fields) {
+    if ($fields['ss_search_api_datasource'] !== 'entity:message') {
+      return;
+    }
+
+    $node_ref = isset($fields['its_message_node_ref_id']) ? $fields['its_message_node_ref_id'] : NULL;
+    $comment_ref = isset($fields['its_message_comment_ref_id']) ? $fields['its_message_comment_ref_id'] : NULL;
+
+    if (!$node_ref && !$comment_ref) {
+      return;
+    }
+
+    if ($comment_ref) {
+      $comment = Comment::load($comment_ref);
+
+      if (!$comment instanceof CommentInterface) {
+        return;
+      }
+
+      $node = $comment->getCommentedEntity();
+    } else {
+      $node = Node::load($node_ref);
+    }
+
+    if (!$node instanceof NodeInterface) {
+      return;
+    }
+
+    $views = $this->nodeStatisticsDatabaseStorage->fetchView($node->id());
+    $flags_count = $this->flagCountManager->getEntityFlagCounts($node);
+
+    $this->addOrUpdateDocumentField(
+      $document,
+      'its_statistics_view',
+      $fields,
+      $views ? $views->getTotalCount() : 0
+    );
+    $this->addOrUpdateDocumentField(
+      $document,
+      'its_flag_like_content',
+      $fields,
+      isset($flags_count['like_content']) ? $flags_count['like_content'] : 0
+    );
+    $this->addOrUpdateDocumentField(
+      $document,
+      'its_content_comment_count',
+      $fields,
+      $this->commentsHelper->countNodeComments($node)
+    );
+    $this->addOrUpdateDocumentField(
+      $document,
+      'its_document_download_total',
+      $fields,
+      $this->entityDownloadHelper->getFileDownloads($node)
+    );
   }
 
   /**
@@ -319,7 +412,8 @@ class SolrDocumentProcessor {
     $document->addField('ss_discussion_last_comment_timestamp', $comment->getCreatedTime());
     $document->addField('ss_discussion_last_comment_author', $author instanceof UserInterface ? $author->get('field_first_name')->value . ' ' . $author->get('field_last_name')->value : '');
     $document->addField('ss_discussion_last_comment_author_image', $author_file_url);
-    $document->addField('ss_discussion_last_comment_url', $author instanceof UserInterface ? $author->toUrl()->toString() : '');
+    $document->addField('ss_discussion_last_comment_url', $author instanceof UserInterface ? $author->toUrl()
+      ->toString() : '');
   }
 
   /**
@@ -457,11 +551,8 @@ class SolrDocumentProcessor {
       return;
     }
 
-    /** @var \Drupal\eic_media_statistics\EntityFileDownloadCount $entity_download_helper */
-    $entity_download_helper = \Drupal::service('eic_media_statistics.entity_file_download_count');
     $node = Node::load($fields['its_content_nid']);
-
-    $document->addField('its_document_download_total', $entity_download_helper->getFileDownloads($node));
+    $document->addField('its_document_download_total', $this->entityDownloadHelper->getFileDownloads($node));
   }
 
   /**
