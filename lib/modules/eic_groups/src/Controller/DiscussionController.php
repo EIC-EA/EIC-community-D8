@@ -207,6 +207,12 @@ class DiscussionController extends ControllerBase {
         $this->dateFormatter->format($comment->getChangedTime(), 'eu_short_date_hour') :
         NULL;
 
+      $created_time = $this->dateFormatter->format(
+        $comment->getCreatedTime(),
+        'eu_short_date_hour'
+      );
+      $soft_deleted = $comment->get('field_comment_is_soft_deleted')->value;
+
       $comments_data[] = [
         'user_image' => $file_url,
         'user_id' => $user->id(),
@@ -222,13 +228,16 @@ class DiscussionController extends ControllerBase {
         'deleted_flag_time' => $deleted_flag_time ?
           $this->t('Deleted on @time', ['@time' => $deleted_flag_time], ['context' => 'eic_groups']) :
           NULL,
-        'edited_time' => $edited_time ?
-          $this->t('Edited on @time', ['@time' => $edited_time], ['context' => 'eic_groups']) :
+        'soft_deleted_time' => $soft_deleted ?
+          $this->t('Deleted on @time', ['@time' => $edited_time], ['context' => 'eic_groups']) :
           NULL,
-        'is_soft_delete' => $comment->get('field_comment_is_soft_deleted')->value,
+        'edited_time' => $edited_time ?
+          $this->t('Edited on @time', ['@time' => $edited_time ?: $created_time], ['context' => 'eic_groups']) :
+          NULL,
+        'is_soft_delete' => $soft_deleted,
         'created_time' => $this->t(
           'Created on @time',
-          ['@time' => $this->dateFormatter->format($comment->getCreatedTime(), 'eu_short_date_hour')],
+          ['@time' => $created_time],
           ['context' => 'eic_groups']
         ),
       ];
