@@ -120,6 +120,10 @@
       &:last-child {
         flex-shrink: 0;
       }
+
+      &:only-child {
+        flex-shrink: initial;
+      }
     }
   }
 
