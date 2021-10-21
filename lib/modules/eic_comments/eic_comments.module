@@ -75,9 +75,9 @@ function eic_comments_form_alter(&$form, FormStateInterface $form_state, $form_i
 
   $moduleHandler = \Drupal::service('module_handler');
 
-  // If eic_group module is enabled, we need to make sure the user can manage
+  // If eic_groups module is enabled, we need to make sure the user can manage
   // comment settings.
-  if ($moduleHandler->moduleExists('eic_group')) {
+  if ($moduleHandler->moduleExists('eic_groups')) {
     $group_contents = \Drupal::entityTypeManager()->getStorage('group_content')->loadByEntity($entity);
 
     if (!$group_contents) {
