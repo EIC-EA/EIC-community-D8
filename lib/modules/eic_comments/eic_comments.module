@@ -9,6 +9,7 @@ use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\eic_comments\Hooks\EntityOperations;
+use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\node\NodeForm;
 use Drupal\node\NodeInterface;
 
@@ -71,19 +72,11 @@ function eic_comments_form_alter(&$form, FormStateInterface $form_state, $form_i
 
   $current_user = \Drupal::currentUser();
 
-  $is_admin = FALSE;
+  $can_edit_comment_settings = FALSE;
 
-  $moduleHandler = \Drupal::service('module_handler');
+  $group_contents = \Drupal::entityTypeManager()->getStorage('group_content')->loadByEntity($entity);
 
-  // If eic_groups module is enabled, we need to make sure the user can manage
-  // comment settings.
-  if ($moduleHandler->moduleExists('eic_groups')) {
-    $group_contents = \Drupal::entityTypeManager()->getStorage('group_content')->loadByEntity($entity);
-
-    if (!$group_contents) {
-      return;
-    }
-
+  if (!empty($group_contents)) {
     $group_content = reset($group_contents);
     $group = $group_content->getGroup();
     $groupType = $group->getGroupType();
@@ -93,7 +86,7 @@ function eic_comments_form_alter(&$form, FormStateInterface $form_state, $form_i
       return;
     }
 
-    $is_admin = \Drupal::service('eic_groups.helper')->userIsGroupAdmin($group, $current_user);
+    $can_edit_comment_settings = EICGroupsHelper::userIsGroupAdmin($group, $current_user);
   }
 
   /** @var \Drupal\Core\Field\FieldDefinitionInterface[] $field_definitions */
@@ -124,7 +117,7 @@ function eic_comments_form_alter(&$form, FormStateInterface $form_state, $form_i
     // If the node already exists, the owner or group admin can manage the
     // comment settings.
     if (!$entity->isNew() &&
-      ($entity->getOwnerId() === $current_user->id() || $is_admin)
+      ($entity->getOwnerId() === $current_user->id() || $can_edit_comment_settings)
     ) {
       $form[$field_definition->getName()]['#access'] = TRUE;
     }
