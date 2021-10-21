@@ -558,7 +558,7 @@ class EntityOperations implements ContainerInjectionInterface {
       }
 
       // At this point it means the user is just a group member and
-      // therefore we deny access to edit the field.
+      // therefore we deny access to edit the entity.
       $access = AccessResult::forbidden();
 
       return $access;
