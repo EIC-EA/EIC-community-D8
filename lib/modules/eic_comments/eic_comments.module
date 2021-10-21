@@ -74,8 +74,10 @@ function eic_comments_form_alter(&$form, FormStateInterface $form_state, $form_i
   $route_name = \Drupal::routeMatch()->getRouteName();
   $can_edit_comment_settings = FALSE;
 
-  if ($entity->isNew() && $route_name === 'entity.group_content.create_form') {
-    $can_edit_comment_settings = TRUE;
+  if ($entity->isNew()) {
+    if ($route_name === 'entity.group_content.create_form') {
+      $can_edit_comment_settings = TRUE;
+    }
   }
   else {
     $group_contents = \Drupal::entityTypeManager()->getStorage('group_content')->loadByEntity($entity);
