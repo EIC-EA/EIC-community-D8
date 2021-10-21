@@ -71,19 +71,24 @@ function eic_comments_form_alter(&$form, FormStateInterface $form_state, $form_i
   }
 
   $current_user = \Drupal::currentUser();
-
+  $route_name = \Drupal::routeMatch()->getRouteName();
   $can_edit_comment_settings = FALSE;
 
-  $group_contents = \Drupal::entityTypeManager()->getStorage('group_content')->loadByEntity($entity);
+  if ($entity->isNew() && $route_name === 'entity.group_content.create_form') {
+    $can_edit_comment_settings = TRUE;
+  }
+  else {
+    $group_contents = \Drupal::entityTypeManager()->getStorage('group_content')->loadByEntity($entity);
 
-  if (!empty($group_contents)) {
-    $group_content = reset($group_contents);
-    $group = $group_content->getGroup();
-    $groupType = $group->getGroupType();
+    if (!empty($group_contents)) {
+      $group_content = reset($group_contents);
+      $group = $group_content->getGroup();
+      $groupType = $group->getGroupType();
 
-    $installedContentPlugins = $groupType->getInstalledContentPlugins()->getInstanceIds();
-    if (in_array("group_node:{$entity->bundle()}", $installedContentPlugins)) {
-      $can_edit_comment_settings = EICGroupsHelper::userIsGroupAdmin($group, $current_user);
+      $installedContentPlugins = $groupType->getInstalledContentPlugins()->getInstanceIds();
+      if (in_array("group_node:{$entity->bundle()}", $installedContentPlugins)) {
+        $can_edit_comment_settings = EICGroupsHelper::userIsGroupAdmin($group, $current_user);
+      }
     }
   }
 
