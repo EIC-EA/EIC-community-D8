@@ -217,6 +217,7 @@ class LastGroupActivitiesBlock extends BlockBase implements ContainerFactoryPlug
       '#datasource' => $this->activityStreamSourceType->getSourcesId(),
       '#source_class' => ActivityStreamSourceType::class,
       '#group_id' => $group->id(),
+      '#is_anonymous' => $this->currentUser->isAnonymous(),
     ];
   }
 

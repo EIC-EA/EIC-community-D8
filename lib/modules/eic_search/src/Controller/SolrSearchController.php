@@ -41,7 +41,7 @@ class SolrSearchController extends ControllerBase {
     $facets_value = $request->query->get('facets_value');
     $sort_value = $request->query->get('sort_value');
     $facets_options = $request->query->get('facets_options');
-    $facets_value = json_decode($facets_value, TRUE);
+    $facets_value = json_decode($facets_value, TRUE) ?: [];
     $source = NULL;
 
     $facets_interests = [];
