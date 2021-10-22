@@ -4,7 +4,7 @@ status: true
 dependencies:
   config:
     - field.field.overview_page.overview_page.field_overview_block
-    - image.style.thumbnail
+    - image.style.banner_1920x1080
   module:
     - block_field
     - eic_overviews
@@ -20,7 +20,7 @@ content:
     weight: 1
     region: content
     settings:
-      image_style: thumbnail
+      image_style: banner_1920x1080
       image_link: ''
     third_party_settings: {  }
   field_overview_block:
