@@ -62,6 +62,7 @@ module:
   eic_search: 0
   eic_seo: 0
   eic_theme_helper: 0
+  eic_topics: 0
   eic_user: 0
   eic_webservices: 0
   entity: 0
