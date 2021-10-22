@@ -1,17 +1,18 @@
-uuid: 939dbc23-03fd-4b94-a7cf-e94b127b6614
+uuid: 9fa06f02-8334-475f-b1f1-fc5f1b8950f3
 langcode: en
-status: true
+status: false
 dependencies:
   config:
+    - core.entity_view_mode.taxonomy_term.full
     - field.field.taxonomy_term.topics.field_smed_id
     - field.field.taxonomy_term.topics.field_topic_banner
     - taxonomy.vocabulary.topics
   module:
     - text
-id: taxonomy_term.topics.default
+id: taxonomy_term.topics.full
 targetEntityType: taxonomy_term
 bundle: topics
-mode: default
+mode: full
 content:
   description:
     label: hidden
@@ -23,9 +24,9 @@ content:
   field_topic_banner:
     type: entity_reference_entity_view
     weight: 1
-    label: hidden
+    label: above
     settings:
-      view_mode: full
+      view_mode: default
       link: false
     third_party_settings: {  }
     region: content
