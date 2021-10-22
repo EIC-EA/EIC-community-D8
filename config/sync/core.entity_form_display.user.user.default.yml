@@ -18,7 +18,9 @@ dependencies:
     - field.field.user.user.field_updated_profile_by_user
     - field.field.user.user.field_user_status
   module:
+    - eic_content
     - media_library
+    - path
     - user
 id: user.user.default
 targetEntityType: user
@@ -55,12 +57,14 @@ content:
   field_is_deleted_by_uid:
     weight: 17
     settings:
-      match_operator: CONTAINS
-      match_limit: 10
-      size: 60
-      placeholder: ''
+      match_top_level_limit: '0'
+      items_to_load: '25'
+      ignore_current_user: '1'
+      disable_top_choices: 0
+      load_all: 0
+      auto_select_parents: 0
     third_party_settings: {  }
-    type: entity_reference_autocomplete
+    type: entity_tree
     region: content
   field_is_invalid_email:
     weight: 20

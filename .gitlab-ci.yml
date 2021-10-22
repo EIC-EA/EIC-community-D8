@@ -66,6 +66,7 @@ security_check:
     - local-php-security-checker
   only:
     - develop
+    - /^release/.*$/
 
 code_style_test:
   stage: test

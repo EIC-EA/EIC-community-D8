@@ -115,6 +115,13 @@ class LibrarySourceType extends SourceType {
   /**
    * @inheritDoc
    */
+  public function getSecondDefaultSort(): array {
+    return ['ss_global_created_date', 'DESC'];
+  }
+
+  /**
+   * @inheritDoc
+   */
   public function getSearchFieldsId(): array {
     return [
       'tm_global_title'
