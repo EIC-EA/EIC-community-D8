@@ -291,6 +291,8 @@ class SolrDocumentProcessor {
   }
 
   /**
+   * Process Message entity before sending to SOLR, add statistics data
+   *
    * @param \Solarium\QueryType\Update\Query\Document $document
    * @param array $fields
    */
