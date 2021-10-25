@@ -5,9 +5,6 @@ services:
     tags:
       - { name: service_collector, tag: message_producer, call: addHandler }
 
-  eic_messages.helper:
-    class: Drupal\eic_messages\MessageHelper
-    arguments: [ '@queue' ]
   eic_messages.stream_handler:
     class: Drupal\eic_messages\Handler\StreamHandler
     arguments: [ '@entity_type.manager' ]
