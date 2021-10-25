@@ -186,3 +186,32 @@
     }
   }
 }
+
+.ecl-radio-block {
+  & .ecl-radio__label {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0;
+  }
+
+  & .ecl-radio__box {
+    margin-right: map-get($ecl-spacing, 's');
+  }
+
+  & .ecl-radio__title {
+    margin: 0 0 map-get($ecl-spacing, 's');
+    display: flex;
+    align-items: center;
+
+    & .ecl-icon {
+      color: $ecl-color-blue;
+      margin-right: map-get($ecl-spacing, 'xs');
+    }
+  }
+
+  & .ecl-radio__content {
+    display: block;
+    padding-left: calc(1.25rem + #{map-get($ecl-spacing, 'xs')} + 4px);
+  }
+}
