@@ -66,6 +66,8 @@ function eic_search_preprocess_html(&$variables) {
  * Solr needs to be aware of all group permissions so we can filter it in our
  *   query builder depending of the user context
  *
+ * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+ * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
  * @throws \Drupal\Core\Entity\EntityMalformedException
  * @throws \Drupal\search_api\SearchApiException
  */
