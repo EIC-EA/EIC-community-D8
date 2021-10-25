@@ -19,12 +19,3 @@ services:
       - { name: message_producer }
     calls:
       - [ setQueue, [ '@queue' ] ]
-
-  # Message creator services
-  eic_messages.message_creator.request:
-    class: Drupal\eic_messages\Service\RequestMessageCreator
-    arguments: [ '@datetime.time', '@config.factory', '@current_user','@entity_type.manager', '@eic_messages.helper', '@eic_user.helper', '@eic_flags.handler_collector', '@renderer' ]
-  eic_messages.message_creator.node:
-    class: Drupal\eic_messages\Service\NodeMessageCreator
-    arguments: [ '@datetime.time', '@config.factory', '@current_user','@entity_type.manager', '@eic_messages.helper', '@eic_user.helper', '@eic_content.helper' ]
-

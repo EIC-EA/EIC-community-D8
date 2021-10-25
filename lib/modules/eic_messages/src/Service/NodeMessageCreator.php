@@ -2,20 +2,42 @@
 
 namespace Drupal\eic_messages\Service;
 
+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\eic_flags\FlagType;
 use Drupal\eic_message_subscriptions\MessageSubscriptionTypes;
 use Drupal\eic_message_subscriptions\SubscriptionOperationTypes;
 use Drupal\flag\FlaggingInterface;
 use Drupal\group\Entity\GroupContent;
 use Drupal\message\Entity\Message;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a message creator class for group content.
  *
  * @package Drupal\eic_messages
  */
-class NodeMessageCreator extends MessageCreatorBase {
+class NodeMessageCreator implements ContainerInjectionInterface {
+
+  /**
+   * @var \Drupal\Core\Session\AccountProxyInterface
+   */
+  private $currentUser;
+
+  /**
+   * @param \Drupal\Core\Session\AccountProxyInterface $account
+   */
+  public function __construct(AccountProxyInterface $account) {
+    $this->currentUser = $account;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static($container->get('current_user'));
+  }
 
   /**
    * Creates a subscription message for a node with terms of interest.
@@ -65,7 +87,6 @@ class NodeMessageCreator extends MessageCreatorBase {
           $message->set('field_event_executing_user', $executing_user_id);
         }
         break;
-
     }
 
     return $message;

@@ -2,19 +2,15 @@
 
 namespace Drupal\eic_messages\Service;
 
-use Drupal\Component\Datetime\TimeInterface;
-use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Render\RendererInterface;
-use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\eic_flags\RequestStatus;
 use Drupal\eic_flags\RequestTypes;
 use Drupal\eic_flags\Service\HandlerInterface;
 use Drupal\eic_flags\Service\RequestHandlerCollector;
-use Drupal\eic_messages\MessageHelper;
 use Drupal\eic_user\UserHelper;
 use Drupal\flag\FlaggingInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -22,53 +18,52 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Class RequestMessageCreator.
  */
-class RequestMessageCreator extends MessageCreatorBase {
+class RequestMessageCreator {
 
   use StringTranslationTrait;
 
   /**
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  private $entityTypeManager;
+
+  /**
    * @var \Drupal\eic_flags\Service\RequestHandlerCollector
    */
-  protected $collector;
+  private $collector;
 
   /**
    * @var \Drupal\Core\Render\RendererInterface
    */
-  protected $renderer;
+  private $renderer;
 
   /**
-   * RequestMessageCreator constructor.
-   *
-   * @param \Drupal\Component\Datetime\TimeInterface $date_time
-   * @param \Drupal\Core\Config\ConfigFactory $config_factory
-   *   The config.factory service.
-   * @param \Drupal\Core\Session\AccountProxyInterface $current_user
-   *   The current user object.
+   * @var \Drupal\eic_user\UserHelper
+   */
+  private $userHelper;
+
+  /**
+   * @var \Drupal\eic_messages\Service\MessageBusInterface
+   */
+  private $messageBus;
+
+  /**
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
-   * @param \Drupal\eic_messages\MessageHelper $eic_messages_helper
-   * @param \Drupal\eic_user\UserHelper $eic_user_helper
+   * @param \Drupal\eic_user\UserHelper $user_helper
+   * @param \Drupal\eic_messages\Service\MessageBusInterface $message_bus
    * @param \Drupal\eic_flags\Service\RequestHandlerCollector $collector
    * @param \Drupal\Core\Render\RendererInterface $renderer
    */
   public function __construct(
-    TimeInterface $date_time,
-    ConfigFactory $config_factory,
-    AccountProxyInterface $current_user,
     EntityTypeManagerInterface $entity_type_manager,
-    MessageHelper $eic_messages_helper,
-    UserHelper $eic_user_helper,
+    UserHelper $user_helper,
+    MessageBusInterface $message_bus,
     RequestHandlerCollector $collector,
     RendererInterface $renderer
   ) {
-    parent::__construct(
-      $date_time,
-      $config_factory,
-      $current_user,
-      $entity_type_manager,
-      $eic_messages_helper,
-      $eic_user_helper
-    );
-
+    $this->entityTypeManager = $entity_type_manager;
+    $this->userHelper = $user_helper;
+    $this->messageBus = $message_bus;
     $this->collector = $collector;
     $this->renderer = $renderer;
   }
@@ -78,12 +73,9 @@ class RequestMessageCreator extends MessageCreatorBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('datetime.time'),
-      $container->get('config.factory'),
-      $container->get('current_user'),
       $container->get('entity_type.manager'),
-      $container->get('eic_messages.helper'),
       $container->get('eic_user.helper'),
+      $container->get('eic_messages.message_bus'),
       $container->get('eic_flags.handler_collector'),
       $container->get('renderer')
     );
@@ -116,10 +108,9 @@ class RequestMessageCreator extends MessageCreatorBase {
       return;
     }
 
-    $messages = [];
     // Prepare messages to SA/CA.
-    foreach ($this->eicUserHelper->getSitePowerUsers() as $uid) {
-      $message = $this->entityTypeManager->getStorage('message')->create(
+    foreach ($this->userHelper->getSitePowerUsers() as $uid) {
+      $this->messageBus->dispatch(
         [
           'template' => $message_name,
           'field_message_subject' => $this->t(
@@ -130,13 +121,7 @@ class RequestMessageCreator extends MessageCreatorBase {
           'uid' => $uid,
         ]
       );
-
-      $message->save();
-
-      $messages[] = $message;
     }
-
-    $this->processMessages($messages);
   }
 
   /**
@@ -170,7 +155,6 @@ class RequestMessageCreator extends MessageCreatorBase {
       return;
     }
 
-    $messages = [];
     foreach ($to as $user) {
       $message = $this->entityTypeManager->getStorage('message')->create(
         [
@@ -190,15 +174,12 @@ class RequestMessageCreator extends MessageCreatorBase {
         // the entity is lost forever. This means tokens won't return a valid value anymore.
         // We have to render the content and store it before the entity is gone.
         $content = $this->getRenderedContent($message);
-        $message->set('field_rendered_content', ['value' => $content, 'format' => 'full_html']);
+        $message->set('field_rendered_content',
+          ['value' => $content, 'format' => 'full_html']);
       }
 
-      $message->save();
-
-      $messages[] = $message;
+      $this->messageBus->dispatch($message);
     }
-
-    $this->processMessages($messages);
   }
 
   /**
