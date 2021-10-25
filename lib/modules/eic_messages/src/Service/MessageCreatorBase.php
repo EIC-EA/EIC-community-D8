@@ -9,10 +9,10 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Logger\LoggerChannelTrait;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\eic_message_subscriptions\MessageSubscriptionTypes;
 use Drupal\eic_messages\MessageHelper;
 use Drupal\eic_messages\MessageTemplateTypes;
 use Drupal\eic_messages\Util\ActivityStreamMessageTemplates;
-use Drupal\eic_message_subscriptions\MessageSubscriptionTypes;
 use Drupal\eic_user\UserHelper;
 use Drupal\message\MessageInterface;
 use Drupal\message\MessageTemplateInterface;
@@ -128,42 +128,6 @@ class MessageCreatorBase implements ContainerInjectionInterface, MessageCreatorI
   }
 
   /**
-   * Check for similar messages in certain timespan.
-   *
-   * @param Drupal\message\MessageInterface $message
-   *   The message to be created.
-   * @param int $threshold
-   *   The timespan to look for older similar messages, in seconds.
-   *
-   * @return array|int
-   *   And array of messages IDs.
-   *
-   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
-   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
-   */
-  protected function checkDuplicateMessages(MessageInterface $message, int $threshold = 3600) {
-    $request_time = $this->timeService->getRequestTime();
-
-    // Look for similar older messages.
-    $query = $this->entityTypeManager->getStorage('message')->getQuery();
-    $query->condition('template', $message->getTemplate()->id());
-    $query->condition('uid', $message->getOwnerId());
-    $query->condition('created', ($request_time - $threshold), '>=');
-
-    // Apply conditions based on the message template's primary keys.
-    foreach ($this->getMessageTemplatePrimaryKeys($message->getTemplate()) as $primary_key) {
-      // Avoid adding a condition if the field doesn't exist.
-      if (!$message->hasField($primary_key)) {
-        continue;
-      }
-
-      $query->condition($primary_key, $message->get($primary_key)->getValue()[0]);
-    }
-
-    return $query->execute();
-  }
-
-  /**
    * {@inheritdoc}
    *
    * This method can be overridden in the extending classes if necessary.
@@ -202,6 +166,42 @@ class MessageCreatorBase implements ContainerInjectionInterface, MessageCreatorI
     }
 
     return TRUE;
+  }
+
+  /**
+   * Check for similar messages in certain timespan.
+   *
+   * @param Drupal\message\MessageInterface $message
+   *   The message to be created.
+   * @param int $threshold
+   *   The timespan to look for older similar messages, in seconds.
+   *
+   * @return array|int
+   *   And array of messages IDs.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   */
+  protected function checkDuplicateMessages(MessageInterface $message, int $threshold = 3600) {
+    $request_time = $this->timeService->getRequestTime();
+
+    // Look for similar older messages.
+    $query = $this->entityTypeManager->getStorage('message')->getQuery();
+    $query->condition('template', $message->getTemplate()->id());
+    $query->condition('uid', $message->getOwnerId());
+    $query->condition('created', ($request_time - $threshold), '>=');
+
+    // Apply conditions based on the message template's primary keys.
+    foreach ($this->getMessageTemplatePrimaryKeys($message->getTemplate()) as $primary_key) {
+      // Avoid adding a condition if the field doesn't exist.
+      if (!$message->hasField($primary_key)) {
+        continue;
+      }
+
+      $query->condition($primary_key, $message->get($primary_key)->getValue()[0]);
+    }
+
+    return $query->execute();
   }
 
   /**

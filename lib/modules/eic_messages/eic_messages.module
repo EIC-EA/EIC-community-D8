@@ -14,6 +14,7 @@ use Drupal\eic_messages\Hooks\EntityOperations;
 use Drupal\eic_messages\Hooks\FormOperations;
 use Drupal\eic_messages\Hooks\LogMessageRenderer;
 use Drupal\eic_messages\Hooks\MessageTokens;
+use Drupal\eic_messages\Service\GroupContentMessageCreator;
 use Drupal\flag\FlaggingInterface;
 use Drupal\node\Entity\NodeType;
 
@@ -69,7 +70,7 @@ function eic_messages_comment_update(EntityInterface $entity) {
  */
 function eic_messages_group_content_insert(EntityInterface $entity) {
   /** @var Drupal\eic_messages\Service\GroupContentMessageCreator $class */
-  $class = \Drupal::service('eic_messages.message_creator.group_content');
+  $class = \Drupal::classResolver(GroupContentMessageCreator::class);
   $class->groupContentInsert($entity);
 }
 

@@ -1,21 +1,30 @@
 services:
+  eic_messages.message_bus:
+    class: Drupal\eic_messages\Service\QueueMessageBus
+    arguments: [ '@datetime.time', '@config.factory', '@current_user', '@entity_type.manager', '@queue' ]
+    tags:
+      - { name: service_collector, tag: message_producer, call: addHandler }
+
   eic_messages.helper:
     class: Drupal\eic_messages\MessageHelper
-    arguments: ['@queue']
-
+    arguments: [ '@queue' ]
+  eic_messages.stream_handler:
+    class: Drupal\eic_messages\Handler\StreamHandler
+    tags:
+      - { name: message_producer }
+    calls:
+      - [setQueue, ['@?queue']]
   # Message creator services
   eic_messages.message_creator.group:
     class: Drupal\eic_messages\Service\GroupMessageCreator
-    arguments: ['@datetime.time', '@config.factory', '@current_user', '@entity_type.manager', '@eic_messages.helper', '@eic_user.helper']
-  eic_messages.message_creator.group_content:
-    class: Drupal\eic_messages\Service\GroupContentMessageCreator
-    arguments: ['@datetime.time', '@config.factory', '@current_user','@entity_type.manager', '@eic_messages.helper', '@eic_user.helper']
+    arguments: [ '@datetime.time', '@config.factory', '@current_user', '@entity_type.manager', '@eic_messages.helper', '@eic_user.helper' ]
   eic_messages.message_creator.request:
     class: Drupal\eic_messages\Service\RequestMessageCreator
-    arguments: ['@datetime.time', '@config.factory', '@current_user','@entity_type.manager', '@eic_messages.helper', '@eic_user.helper', '@eic_flags.handler_collector', '@renderer']
+    arguments: [ '@datetime.time', '@config.factory', '@current_user','@entity_type.manager', '@eic_messages.helper', '@eic_user.helper', '@eic_flags.handler_collector', '@renderer' ]
   eic_messages.message_creator.comment:
     class: Drupal\eic_messages\Service\CommentMessageCreator
-    arguments: ['@datetime.time', '@config.factory', '@current_user','@entity_type.manager', '@eic_messages.helper', '@eic_user.helper', '@eic_content.helper']
+    arguments: [ '@datetime.time', '@config.factory', '@current_user','@entity_type.manager', '@eic_messages.helper', '@eic_user.helper', '@eic_content.helper' ]
   eic_messages.message_creator.node:
     class: Drupal\eic_messages\Service\NodeMessageCreator
-    arguments: ['@datetime.time', '@config.factory', '@current_user','@entity_type.manager', '@eic_messages.helper', '@eic_user.helper', '@eic_content.helper']
+    arguments: [ '@datetime.time', '@config.factory', '@current_user','@entity_type.manager', '@eic_messages.helper', '@eic_user.helper', '@eic_content.helper' ]
+
