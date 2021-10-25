@@ -1,7 +1,7 @@
 services:
   eic_messages.message_bus:
     class: Drupal\eic_messages\Service\QueueMessageBus
-    arguments: [ '@datetime.time', '@config.factory', '@current_user', '@entity_type.manager', '@queue' ]
+    arguments: [ '@datetime.time', '@config.factory', '@current_user', '@entity_type.manager' ]
     tags:
       - { name: service_collector, tag: message_producer, call: addHandler }
 
@@ -10,10 +10,16 @@ services:
     arguments: [ '@queue' ]
   eic_messages.stream_handler:
     class: Drupal\eic_messages\Handler\StreamHandler
+    arguments: [ '@entity_type.manager' ]
+    tags:
+      - { name: message_producer }
+  eic_messages.notification_handler:
+    class: Drupal\eic_messages\Handler\NotificationHandler
     tags:
       - { name: message_producer }
     calls:
-      - [setQueue, ['@?queue']]
+      - [ setQueue, [ '@queue' ] ]
+
   # Message creator services
   eic_messages.message_creator.group:
     class: Drupal\eic_messages\Service\GroupMessageCreator

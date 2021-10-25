@@ -2,7 +2,6 @@
 
 namespace Drupal\eic_messages\Handler;
 
-use Drupal\Core\Queue\QueueFactory;
 use Drupal\message\MessageInterface;
 
 interface MessageHandlerInterface {
@@ -32,12 +31,5 @@ interface MessageHandlerInterface {
    * @return string
    */
   public function getType(): string;
-
-  /**
-   * Sets the queue for the handler.
-   *
-   * @param \Drupal\Core\Queue\QueueFactory $queue_factory
-   */
-  public function setQueue(QueueFactory $queue_factory): void;
 
 }

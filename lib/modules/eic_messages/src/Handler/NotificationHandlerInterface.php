@@ -6,7 +6,7 @@ use Drupal\eic_messages\MessageTemplateTypes;
 use Drupal\eic_messages\QueueItemProducerTrait;
 use Drupal\message\MessageInterface;
 
-class NotificationHandlerInterface implements MessageHandlerInterface {
+class NotificationHandler implements MessageHandlerInterface {
 
   use QueueItemProducerTrait;
 

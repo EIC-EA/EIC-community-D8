@@ -4,24 +4,20 @@ namespace Drupal\eic_messages\Service;
 
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Config\ConfigFactory;
-use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Logger\LoggerChannelTrait;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\eic_message_subscriptions\MessageSubscriptionTypes;
-use Drupal\eic_messages\MessageHelper;
+use Drupal\eic_messages\Handler\MessageHandlerInterface;
 use Drupal\eic_messages\MessageTemplateTypes;
 use Drupal\eic_messages\Util\ActivityStreamMessageTemplates;
-use Drupal\eic_user\UserHelper;
+use Drupal\message\Entity\Message;
 use Drupal\message\MessageInterface;
 use Drupal\message\MessageTemplateInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-/**
- * Base class for sending out messages.
- */
-class MessageCreatorBase implements ContainerInjectionInterface, MessageCreatorInterface {
+class QueueMessageBus implements MessageBusInterface {
 
   use LoggerChannelTrait;
   use StringTranslationTrait;
@@ -55,18 +51,18 @@ class MessageCreatorBase implements ContainerInjectionInterface, MessageCreatorI
   protected $entityTypeManager;
 
   /**
-   * The EIC Message helper service.
+   * The message notify queue worker.
    *
-   * @var \Drupal\eic_messages\MessageHelper
+   * @var \Drupal\eic_messages\Plugin\QueueWorker\MessageNotifyQueueWorker
    */
-  protected $eicMessagesHelper;
+  protected $queueFactory;
 
   /**
-   * The EIC User helper service.
+   * Array of registered message producers.
    *
-   * @var \Drupal\eic_user\UserHelper
+   * @var \Drupal\eic_messages\Handler\MessageHandlerInterface[]
    */
-  protected $eicUserHelper;
+  private $handlers;
 
   /**
    * Constructs a new MessageCreatorBase object.
@@ -79,18 +75,17 @@ class MessageCreatorBase implements ContainerInjectionInterface, MessageCreatorI
    *   The current user object.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
-   * @param \Drupal\eic_messages\MessageHelper $eic_messages_helper
-   *   The EIC Message helper service.
-   * @param \Drupal\eic_user\UserHelper $eic_user_helper
-   *   The EIC User helper service.
    */
-  public function __construct(TimeInterface $date_time, ConfigFactory $config_factory, AccountProxyInterface $current_user, EntityTypeManagerInterface $entity_type_manager, MessageHelper $eic_messages_helper, UserHelper $eic_user_helper) {
+  public function __construct(
+    TimeInterface $date_time,
+    ConfigFactory $config_factory,
+    AccountProxyInterface $current_user,
+    EntityTypeManagerInterface $entity_type_manager
+  ) {
     $this->timeService = $date_time;
     $this->configFactory = $config_factory;
     $this->currentUser = $current_user;
     $this->entityTypeManager = $entity_type_manager;
-    $this->eicMessagesHelper = $eic_messages_helper;
-    $this->eicUserHelper = $eic_user_helper;
   }
 
   /**
@@ -101,30 +96,52 @@ class MessageCreatorBase implements ContainerInjectionInterface, MessageCreatorI
       $container->get('datetime.time'),
       $container->get('config.factory'),
       $container->get('current_user'),
-      $container->get('entity_type.manager'),
-      $container->get('eic_messages.helper'),
-      $container->get('eic_user.helper')
+      $container->get('entity_type.manager')
     );
   }
 
   /**
-   * Process an array of messages for queue notifications.
-   *
-   * @param array $messages
-   *   The messages to be processed.
+   * @param \Drupal\message\MessageInterface|array $message
    */
-  public function processMessages(array $messages) {
-    foreach ($messages as $message) {
-      try {
-        // Create the message notify queue item.
-        // @todo check if this type of message should live/stay in the DB.
-        $this->eicMessagesHelper->queueMessageNotification($message);
-      }
-      catch (\Exception $e) {
-        $logger = $this->getLogger('eic_messages');
-        $logger->error($e->getMessage());
-      }
+  public function dispatch($message): void {
+    if (!$message instanceof MessageInterface) {
+      $message = Message::create($message);
     }
+
+    $logger = $this->getLogger('eic_messages');
+    $type = $message->getTemplate()
+      ->getThirdPartySetting('eic_messages', 'message_template_type');
+    $handler = $this->getHandler($type);
+    if (!$handler instanceof MessageHandlerInterface) {
+      $logger->error('Unsupported message type @type', ['@type' => $type]);
+      return;
+    }
+
+    if (!$this->shouldCreateNewMessage($message)) {
+      return;
+    }
+
+    try {
+      $message = [
+        'stamps' => $handler->getStamps($message),
+        'entity' => $message,
+      ];
+
+      $handler->handle($message);
+    } catch (\Exception $e) {
+      $logger->error($e->getMessage());
+    }
+  }
+
+  /**
+   * Returns the handler matching to the given type.
+   *
+   * @param string $type
+   *
+   * @return \Drupal\eic_messages\Handler\MessageHandlerInterface|null
+   */
+  public function getHandler(string $type): ?MessageHandlerInterface {
+    return $this->handlers[$type] ?? NULL;
   }
 
   /**
@@ -132,10 +149,11 @@ class MessageCreatorBase implements ContainerInjectionInterface, MessageCreatorI
    *
    * This method can be overridden in the extending classes if necessary.
    */
-  public function shouldCreateNewMessage(MessageInterface $message) {
+  public function shouldCreateNewMessage(MessageInterface $message): bool {
     // Check if message is of type subscription or activity stream.
     // If it is not, then a new message should be created.
-    $message_template_type = $message->getTemplate()->getThirdPartySetting('eic_messages', 'message_template_type');
+    $message_template_type = $message->getTemplate()
+      ->getThirdPartySetting('eic_messages', 'message_template_type');
     $anti_spammed_types = [
       MessageTemplateTypes::SUBSCRIPTION,
       MessageTemplateTypes::STREAM,
@@ -155,14 +173,13 @@ class MessageCreatorBase implements ContainerInjectionInterface, MessageCreatorI
 
     // Check if similar messages have been created within the time threshold.
     // If yes, then a new message should not be created.
-    $threshold = $this->configFactory->get('eic_messages.settings')->get('notification_duplicate_threshold');
+    $threshold = $this->configFactory->get('eic_messages.settings')
+      ->get('notification_duplicate_threshold');
     try {
       if (!empty($this->checkDuplicateMessages($message, $threshold))) {
         return FALSE;
       }
-    }
-    catch (\Exception $e) {
-
+    } catch (\Exception $e) {
     }
 
     return TRUE;
@@ -171,7 +188,7 @@ class MessageCreatorBase implements ContainerInjectionInterface, MessageCreatorI
   /**
    * Check for similar messages in certain timespan.
    *
-   * @param Drupal\message\MessageInterface $message
+   * @param \Drupal\message\MessageInterface $message
    *   The message to be created.
    * @param int $threshold
    *   The timespan to look for older similar messages, in seconds.
@@ -182,7 +199,10 @@ class MessageCreatorBase implements ContainerInjectionInterface, MessageCreatorI
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
-  protected function checkDuplicateMessages(MessageInterface $message, int $threshold = 3600) {
+  protected function checkDuplicateMessages(
+    MessageInterface $message,
+    int $threshold = 3600
+  ) {
     $request_time = $this->timeService->getRequestTime();
 
     // Look for similar older messages.
@@ -198,7 +218,8 @@ class MessageCreatorBase implements ContainerInjectionInterface, MessageCreatorI
         continue;
       }
 
-      $query->condition($primary_key, $message->get($primary_key)->getValue()[0]);
+      $query->condition($primary_key,
+        $message->get($primary_key)->getValue()[0]);
     }
 
     return $query->execute();
@@ -207,9 +228,12 @@ class MessageCreatorBase implements ContainerInjectionInterface, MessageCreatorI
   /**
    * {@inheritdoc}
    */
-  public function getMessageTemplatePrimaryKeys(MessageTemplateInterface $message_template) {
+  public function getMessageTemplatePrimaryKeys(
+    MessageTemplateInterface $message_template
+  ) {
     // Get the message template type.
-    $message_template_type = $message_template->getThirdPartySetting('eic_messages', 'message_template_type');
+    $message_template_type = $message_template->getThirdPartySetting('eic_messages',
+      'message_template_type');
 
     switch ($message_template_type) {
       case MessageTemplateTypes::STREAM:
@@ -217,10 +241,18 @@ class MessageCreatorBase implements ContainerInjectionInterface, MessageCreatorI
 
       case MessageTemplateTypes::SUBSCRIPTION:
         return MessageSubscriptionTypes::getMessageTemplatePrimaryKeys($message_template);
-
     }
 
     return [];
+  }
+
+  /**
+   * Registers the given handler.
+   *
+   * @param \Drupal\eic_messages\Handler\MessageHandlerInterface $handler
+   */
+  public function addHandler(MessageHandlerInterface $handler) {
+    $this->handlers[$handler->getType()] = $handler;
   }
 
 }

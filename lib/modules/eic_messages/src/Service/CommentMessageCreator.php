@@ -3,24 +3,32 @@
 namespace Drupal\eic_messages\Service;
 
 use Drupal\comment\CommentInterface;
-use Drupal\Component\Datetime\TimeInterface;
-use Drupal\Core\Config\ConfigFactory;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\eic_content\EICContentHelperInterface;
 use Drupal\eic_message_subscriptions\MessageSubscriptionTypes;
 use Drupal\eic_message_subscriptions\SubscriptionOperationTypes;
-use Drupal\eic_messages\MessageHelper;
 use Drupal\eic_messages\Util\ActivityStreamMessageTemplates;
-use Drupal\eic_user\UserHelper;
 use Drupal\message\Entity\Message;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a message creator class for comments.
  *
  * @package Drupal\eic_messages
  */
-class CommentMessageCreator extends MessageCreatorBase {
+class CommentMessageCreator implements ContainerInjectionInterface {
+
+  /**
+   * @var \Drupal\Core\Routing\RouteMatchInterface
+   */
+  private $routeMatch;
+
+  /**
+   * @var \Drupal\Core\Session\AccountProxyInterface
+   */
+  private $currentUser;
 
   /**
    * The EIC Content helper service.
@@ -30,42 +38,38 @@ class CommentMessageCreator extends MessageCreatorBase {
   private $contentHelper;
 
   /**
-   * CommentMessageCreator constructor.
-   *
-   * @param \Drupal\Component\Datetime\TimeInterface $date_time
-   *   The datetime.time service.
-   * @param \Drupal\Core\Config\ConfigFactory $config_factory
-   *   The config.factory service.
-   * @param \Drupal\Core\Session\AccountProxyInterface $current_user
-   *   The current user object.
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
-   *   The entity type manager.
-   * @param \Drupal\eic_messages\MessageHelper $eic_messages_helper
-   *   The EIC Message helper service.
-   * @param \Drupal\eic_user\UserHelper $eic_user_helper
-   *   The EIC User helper service.
+   * @var \Drupal\eic_messages\Service\MessageBusInterface
+   */
+  private $messageBus;
+
+  /**
+   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
+   * @param \Drupal\Core\Session\AccountProxyInterface $account
    * @param \Drupal\eic_content\EICContentHelperInterface $content_helper
-   *   The EIC Content helper service.
+   * @param \Drupal\eic_messages\Service\MessageBusInterface $message_bus
    */
   public function __construct(
-    TimeInterface $date_time,
-    ConfigFactory $config_factory,
-    AccountProxyInterface $current_user,
-    EntityTypeManagerInterface $entity_type_manager,
-    MessageHelper $eic_messages_helper,
-    UserHelper $eic_user_helper,
-    EICContentHelperInterface $content_helper
+    RouteMatchInterface $route_match,
+    AccountProxyInterface $account,
+    EICContentHelperInterface $content_helper,
+    MessageBusInterface $message_bus
   ) {
-    parent::__construct(
-      $date_time,
-      $config_factory,
-      $current_user,
-      $entity_type_manager,
-      $eic_messages_helper,
-      $eic_user_helper
-    );
-
+    $this->routeMatch = $route_match;
+    $this->currentUser = $account;
     $this->contentHelper = $content_helper;
+    $this->messageBus = $message_bus;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('current_route_match'),
+      $container->get('current_user'),
+      $container->get('eic_content.helper'),
+      $container->get('eic_messages.message_bus')
+    );
   }
 
   /**
@@ -80,8 +84,8 @@ class CommentMessageCreator extends MessageCreatorBase {
     CommentInterface $entity,
     string $operation
   ) {
-    $route_match = \Drupal::routeMatch();
-    if (!in_array($route_match->getRouteName(), ['comment.reply', 'entity.comment.edit_form'])) {
+    if (!in_array($this->routeMatch->getRouteName(),
+      ['comment.reply', 'entity.comment.edit_form'])) {
       return;
     }
 
@@ -93,23 +97,14 @@ class CommentMessageCreator extends MessageCreatorBase {
     }
 
     $group_content = reset($group_content);
-    $group = $group_content->getGroup();
-    $message = $this->entityTypeManager->getStorage('message')->create([
+    $this->messageBus->dispatch([
       'template' => ActivityStreamMessageTemplates::getTemplate($entity),
       'field_referenced_comment' => $entity,
       'field_referenced_node' => $commented_entity,
       'field_entity_type' => $entity->bundle(),
       'field_operation_type' => $operation,
-      'field_group_ref' => $group,
+      'field_group_ref' => $group_content->getGroup(),
     ]);
-
-    try {
-      $message->save();
-    }
-    catch (\Exception $e) {
-      $logger = $this->getLogger('eic_messages');
-      $logger->error($e->getMessage());
-    }
   }
 
   /**
@@ -134,7 +129,6 @@ class CommentMessageCreator extends MessageCreatorBase {
       case SubscriptionOperationTypes::COMMENT_REPLY:
         $message_type = MessageSubscriptionTypes::NEW_COMMENT_REPLY;
         break;
-
     }
 
     if (!$message_type) {

@@ -2,16 +2,32 @@
 
 namespace Drupal\eic_messages\Handler;
 
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\eic_messages\MessageTemplateTypes;
-use Drupal\eic_messages\QueueItemProducerTrait;
 use Drupal\eic_messages\Stamps\PersistentMessageStamp;
 use Drupal\message\MessageInterface;
 
 class StreamHandler implements MessageHandlerInterface {
 
-  use QueueItemProducerTrait;
+  /**
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
 
-  protected $queueName = 'eic_message_notify_queue';
+  /**
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   */
+  public function __construct(EntityTypeManagerInterface $entity_type_manager) {
+    $this->entityTypeManager = $entity_type_manager;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function handle(array $payload): void {
+    // For activity stream items, just save them.
+    $payload['entity']->save();
+  }
 
   /**
    * {@inheritdoc}
