@@ -31,23 +31,21 @@ Parameters:
         <div class="ecl-radio ecl-radio-block">
           <input id="{{ item.id }}" name="{{ name }}" class="ecl-radio__input" type="radio" value="{{ item.value }}">
           <label class="ecl-radio__label" for="{{ item.id }}">
-
-            <span class="ecl-radio__title">
-              <span class="ecl-radio__box"></span>
-              {% if item.icon and icon_file_path %}
-                {% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with {
-                  icon: {
-                    type: item.icon.type,
-                    name: item.icon.name,
-                    path: icon_file_path,
-                    size: 'm',
-                  },
-                } %}
-              {% endif %}
-              {{ item.label }}
-            </span>
-
+            <span class="ecl-radio__box"></span>
             <span class="ecl-radio__content">
+              <span class="ecl-radio__title">
+                {% if item.icon and icon_file_path %}
+                  {% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with {
+                    icon: {
+                      type: item.icon.type,
+                      name: item.icon.name,
+                      path: icon_file_path,
+                      size: 'm',
+                    },
+                  } %}
+                {% endif %}
+                  {{ item.label }}
+              </span>
               {{ item.text }}
             </span>
           </label>
