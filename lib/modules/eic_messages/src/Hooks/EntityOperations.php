@@ -14,7 +14,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @package Drupal\eic_messages\Hooks
  */
-class EntityOperations extends MessageCreatorBase implements ContainerInjectionInterface {
+class EntityOperations implements ContainerInjectionInterface {
 
   use StringTranslationTrait;
 
