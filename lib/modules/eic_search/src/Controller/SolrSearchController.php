@@ -3,6 +3,7 @@
 namespace Drupal\eic_search\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\eic_search\Plugin\search_api\processor\GroupAccessContent;
 use Drupal\eic_search\Search\Sources\GroupSourceType;
 use Drupal\eic_search\Search\Sources\SourceTypeInterface;
 use Drupal\eic_user\UserHelper;
@@ -168,7 +169,10 @@ class SolrSearchController extends ControllerBase {
 
     $solariumQuery->addParam('fq', $fq);
 
-    if ($index->isValidProcessor('group_content_access')) {
+    if (
+      $index->isValidProcessor('group_content_access') &&
+      GroupAccessContent::supportsIndex($index)
+    ) {
       $index->getProcessor('group_content_access')
         ->preprocessSolrSearchQuery($solariumQuery);
     }
