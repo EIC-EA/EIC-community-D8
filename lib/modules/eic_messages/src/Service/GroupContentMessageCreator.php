@@ -7,11 +7,8 @@ use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Session\AccountProxyInterface;
-use Drupal\eic_message_subscriptions\MessageSubscriptionTypes;
-use Drupal\eic_message_subscriptions\SubscriptionOperationTypes;
 use Drupal\eic_messages\Util\ActivityStreamMessageTemplates;
 use Drupal\group\Entity\GroupInterface;
-use Drupal\message\Entity\Message;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -122,48 +119,5 @@ class GroupContentMessageCreator implements ContainerInjectionInterface {
     }
   }
 
-  /**
-   * Creates a subscription message for an entity inside a group.
-   *
-   * @param \Drupal\Core\Entity\ContentEntityInterface $entity
-   *   The entity object.
-   * @param \Drupal\group\Entity\GroupInterface $group
-   *   The group having this content.
-   * @param string $operation
-   *   The type of the operations. See SubscriptionOperationTypes.
-   */
-  public function createGroupContentSubscription(
-    ContentEntityInterface $entity,
-    GroupInterface $group,
-    string $operation
-  ) {
-    $message = NULL;
-
-    switch ($entity->getEntityTypeId()) {
-      case 'node':
-        $message_type = $operation === SubscriptionOperationTypes::UPDATED_ENTITY
-          ? MessageSubscriptionTypes::GROUP_CONTENT_UPDATED
-          : MessageSubscriptionTypes::NEW_GROUP_CONTENT_PUBLISHED;
-
-        $message = Message::create([
-          'template' => $message_type,
-          'field_referenced_node' => $entity,
-        ]);
-
-        // Set the owner of the message to the current user.
-        $executing_user_id = $this->currentUser->id();
-        $message->setOwnerId($executing_user_id);
-
-        // Adds the reference to the user who created/updated the entity.
-        if ($message->hasField('field_event_executing_user')) {
-          $message->set('field_event_executing_user', $executing_user_id);
-        }
-
-        // @todo Set values for the missing fields.
-        break;
-    }
-
-    return $message;
-  }
 
 }

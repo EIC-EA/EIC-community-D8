@@ -14,8 +14,10 @@ use Drupal\eic_messages\Hooks\EntityOperations;
 use Drupal\eic_messages\Hooks\FormOperations;
 use Drupal\eic_messages\Hooks\LogMessageRenderer;
 use Drupal\eic_messages\Hooks\MessageTokens;
+use Drupal\eic_messages\Service\CommentMessageCreator;
 use Drupal\eic_messages\Service\GroupContentMessageCreator;
 use Drupal\eic_messages\Service\GroupMessageCreator;
+use Drupal\eic_messages\Service\RequestMessageCreator;
 use Drupal\flag\FlaggingInterface;
 use Drupal\node\Entity\NodeType;
 
@@ -26,7 +28,7 @@ use Drupal\node\Entity\NodeType;
  */
 function eic_messages_group_insert(EntityInterface $entity) {
   /** @var Drupal\eic_messages\Service\GroupMessageCreator $class */
-  $class = \Drupal::classResolver(GroupMessageCreator::class);
+  $class = Drupal::classResolver(GroupMessageCreator::class);
   $class->groupInsert($entity);
 }
 
@@ -37,7 +39,7 @@ function eic_messages_group_insert(EntityInterface $entity) {
  */
 function eic_messages_group_update(EntityInterface $entity) {
   /** @var Drupal\eic_messages\Service\GroupMessageCreator $class */
-  $class = \Drupal::classResolver(GroupMessageCreator::class);
+  $class = Drupal::classResolver(GroupMessageCreator::class);
   $class->groupUpdate($entity);
 }
 
@@ -48,7 +50,7 @@ function eic_messages_group_update(EntityInterface $entity) {
  */
 function eic_messages_comment_insert(EntityInterface $entity) {
   /** @var \Drupal\eic_messages\Service\CommentMessageCreator $group_message_create */
-  $group_message_create = \Drupal::service('eic_messages.message_creator.comment');
+  $group_message_create = Drupal::classResolver(CommentMessageCreator::class);
   $group_message_create->createCommentActivity($entity, ActivityStreamOperationTypes::NEW_ENTITY);
 }
 
@@ -59,9 +61,11 @@ function eic_messages_comment_insert(EntityInterface $entity) {
  */
 function eic_messages_comment_update(EntityInterface $entity) {
   /** @var \Drupal\eic_messages\Service\CommentMessageCreator $group_message_create */
-  $group_message_create = \Drupal::service('eic_messages.message_creator.comment');
-  $group_message_create->createCommentActivity($entity,
-    ActivityStreamOperationTypes::UPDATED_ENTITY);
+  $group_message_create = Drupal::classResolver(CommentMessageCreator::class);
+  $group_message_create->createCommentActivity(
+    $entity,
+    ActivityStreamOperationTypes::UPDATED_ENTITY
+  );
 }
 
 /**
@@ -71,7 +75,7 @@ function eic_messages_comment_update(EntityInterface $entity) {
  */
 function eic_messages_group_content_insert(EntityInterface $entity) {
   /** @var Drupal\eic_messages\Service\GroupContentMessageCreator $class */
-  $class = \Drupal::classResolver(GroupContentMessageCreator::class);
+  $class = Drupal::classResolver(GroupContentMessageCreator::class);
   $class->groupContentInsert($entity);
 }
 
@@ -81,7 +85,7 @@ function eic_messages_group_content_insert(EntityInterface $entity) {
  * @param \Drupal\Core\Entity\ContentEntityInterface $entity
  */
 function eic_messages_message_insert(EntityInterface $entity) {
-  $class = \Drupal::classResolver(LogMessageRenderer::class);
+  $class = Drupal::classResolver(LogMessageRenderer::class);
   $class->render($entity);
 }
 
@@ -92,7 +96,7 @@ function eic_messages_message_insert(EntityInterface $entity) {
  */
 function eic_messages_entity_update(EntityInterface $entity) {
   /** @var Drupal\eic_messages\Hooks\EntityOperations $class */
-  $class = \Drupal::classResolver(EntityOperations::class);
+  $class = Drupal::classResolver(EntityOperations::class);
   $class->entityUpdate($entity);
 }
 
@@ -105,7 +109,7 @@ function eic_messages_request_insert(
   string $type
 ) {
   /** @var Drupal\eic_messages\Service\RequestMessageCreator $class */
-  $class = \Drupal::service('eic_messages.message_creator.request');
+  $class = Drupal::classResolver(RequestMessageCreator::class);
   $class->requestInsert($flag, $entity, $type);
 }
 
@@ -118,7 +122,7 @@ function eic_messages_request_close(
   string $type
 ) {
   /** @var Drupal\eic_messages\Service\RequestMessageCreator $class */
-  $class = \Drupal::service('eic_messages.message_creator.request');
+  $class = Drupal::classResolver(RequestMessageCreator::class);
   $class->requestClose($flag, $entity, $type);
 }
 
@@ -145,7 +149,7 @@ function eic_messages_entity_extra_field_info() {
  * Implements hook_form_BASE_FORM_ID_alter().
  */
 function eic_messages_form_node_form_alter(&$form, FormStateInterface $form_state, $form_id) {
-  \Drupal::classResolver(FormOperations::class)
+  Drupal::classResolver(FormOperations::class)
     ->formNodeFormAlter($form, $form_state, $form_id);
 }
 
@@ -179,7 +183,7 @@ function eic_messages_views_data_alter(array &$data) {
  * Implements hook_token_info_alter().
  */
 function eic_messages_token_info_alter(&$info) {
-  $class = \Drupal::classResolver(MessageTokens::class);
+  $class = Drupal::classResolver(MessageTokens::class);
   return $class->tokenInfoAlter($info);
 }
 
@@ -193,6 +197,6 @@ function eic_messages_tokens(
   array $options,
   BubbleableMetadata $bubbleable_metadata
 ) {
-  $class = \Drupal::classResolver(MessageTokens::class);
+  $class = Drupal::classResolver(MessageTokens::class);
   return $class->tokens($type, $tokens, $data, $options, $bubbleable_metadata);
 }

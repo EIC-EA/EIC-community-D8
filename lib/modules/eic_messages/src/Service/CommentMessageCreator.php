@@ -7,10 +7,7 @@ use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\eic_content\EICContentHelperInterface;
-use Drupal\eic_message_subscriptions\MessageSubscriptionTypes;
-use Drupal\eic_message_subscriptions\SubscriptionOperationTypes;
 use Drupal\eic_messages\Util\ActivityStreamMessageTemplates;
-use Drupal\message\Entity\Message;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -105,51 +102,6 @@ class CommentMessageCreator implements ContainerInjectionInterface {
       'field_operation_type' => $operation,
       'field_group_ref' => $group_content->getGroup(),
     ]);
-  }
-
-  /**
-   * Creates a subscription message for a comment.
-   *
-   * @param \Drupal\comment\CommentInterface $entity
-   *   The comment entity.
-   * @param string $operation
-   *   The type of the operation. See SubscriptionOperationTypes.
-   */
-  public function createCommentSubscription(
-    CommentInterface $entity,
-    string $operation
-  ) {
-    $message_type = NULL;
-
-    switch ($operation) {
-      case SubscriptionOperationTypes::NEW_ENTITY:
-        $message_type = MessageSubscriptionTypes::NEW_COMMENT;
-        break;
-
-      case SubscriptionOperationTypes::COMMENT_REPLY:
-        $message_type = MessageSubscriptionTypes::NEW_COMMENT_REPLY;
-        break;
-    }
-
-    if (!$message_type) {
-      return NULL;
-    }
-
-    $message = Message::create([
-      'template' => $message_type,
-      'field_referenced_comment' => $entity,
-    ]);
-
-    // Set the owner of the message to the current user.
-    $executing_user_id = $this->currentUser->id();
-    $message->setOwnerId($executing_user_id);
-
-    // Adds the reference to the user who created/updated the entity.
-    if ($message->hasField('field_event_executing_user')) {
-      $message->set('field_event_executing_user', $executing_user_id);
-    }
-
-    return $message;
   }
 
 }

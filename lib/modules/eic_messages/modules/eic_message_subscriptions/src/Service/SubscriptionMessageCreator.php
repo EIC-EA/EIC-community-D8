@@ -1,8 +1,8 @@
 <?php
 
-namespace Drupal\eic_messages\Service;
+namespace Drupal\eic_message_subscriptions\Service;
 
-use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+use Drupal\comment\CommentInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\eic_flags\FlagType;
@@ -10,15 +10,15 @@ use Drupal\eic_message_subscriptions\MessageSubscriptionTypes;
 use Drupal\eic_message_subscriptions\SubscriptionOperationTypes;
 use Drupal\flag\FlaggingInterface;
 use Drupal\group\Entity\GroupContent;
+use Drupal\group\Entity\GroupInterface;
 use Drupal\message\Entity\Message;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a message creator class for group content.
  *
- * @package Drupal\eic_messages
+ * @package Drupal\eic_message_subsriptions
  */
-class NodeMessageCreator implements ContainerInjectionInterface {
+class SubscriptionMessageCreator {
 
   /**
    * @var \Drupal\Core\Session\AccountProxyInterface
@@ -30,13 +30,6 @@ class NodeMessageCreator implements ContainerInjectionInterface {
    */
   public function __construct(AccountProxyInterface $account) {
     $this->currentUser = $account;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container) {
-    return new static($container->get('current_user'));
   }
 
   /**
@@ -124,4 +117,94 @@ class NodeMessageCreator implements ContainerInjectionInterface {
     return $message;
   }
 
+
+  /**
+   * Creates a subscription message for a comment.
+   *
+   * @param \Drupal\comment\CommentInterface $entity
+   *   The comment entity.
+   * @param string $operation
+   *   The type of the operation. See SubscriptionOperationTypes.
+   */
+  public function createCommentSubscription(
+    CommentInterface $entity,
+    string $operation
+  ) {
+    $message_type = NULL;
+
+    switch ($operation) {
+      case SubscriptionOperationTypes::NEW_ENTITY:
+        $message_type = MessageSubscriptionTypes::NEW_COMMENT;
+        break;
+
+      case SubscriptionOperationTypes::COMMENT_REPLY:
+        $message_type = MessageSubscriptionTypes::NEW_COMMENT_REPLY;
+        break;
+    }
+
+    if (!$message_type) {
+      return NULL;
+    }
+
+    $message = Message::create([
+      'template' => $message_type,
+      'field_referenced_comment' => $entity,
+    ]);
+
+    // Set the owner of the message to the current user.
+    $executing_user_id = $this->currentUser->id();
+    $message->setOwnerId($executing_user_id);
+
+    // Adds the reference to the user who created/updated the entity.
+    if ($message->hasField('field_event_executing_user')) {
+      $message->set('field_event_executing_user', $executing_user_id);
+    }
+
+    return $message;
+  }
+
+
+  /**
+   * Creates a subscription message for an entity inside a group.
+   *
+   * @param \Drupal\Core\Entity\ContentEntityInterface $entity
+   *   The entity object.
+   * @param \Drupal\group\Entity\GroupInterface $group
+   *   The group having this content.
+   * @param string $operation
+   *   The type of the operations. See SubscriptionOperationTypes.
+   */
+  public function createGroupContentSubscription(
+    ContentEntityInterface $entity,
+    GroupInterface $group,
+    string $operation
+  ) {
+    $message = NULL;
+
+    switch ($entity->getEntityTypeId()) {
+      case 'node':
+        $message_type = $operation === SubscriptionOperationTypes::UPDATED_ENTITY
+          ? MessageSubscriptionTypes::GROUP_CONTENT_UPDATED
+          : MessageSubscriptionTypes::NEW_GROUP_CONTENT_PUBLISHED;
+
+        $message = Message::create([
+          'template' => $message_type,
+          'field_referenced_node' => $entity,
+        ]);
+
+        // Set the owner of the message to the current user.
+        $executing_user_id = $this->currentUser->id();
+        $message->setOwnerId($executing_user_id);
+
+        // Adds the reference to the user who created/updated the entity.
+        if ($message->hasField('field_event_executing_user')) {
+          $message->set('field_event_executing_user', $executing_user_id);
+        }
+
+        // @todo Set values for the missing fields.
+        break;
+    }
+
+    return $message;
+  }
 }
