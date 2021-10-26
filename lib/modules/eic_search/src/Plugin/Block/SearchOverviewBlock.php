@@ -169,6 +169,7 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
       '#cache' => ['contexts' => ['url.path', 'url.query_args']],
       '#facets' => array_keys($facets),
       '#sorts' => array_keys($sorts),
+      '#prefilters' => $this->extractFilterFromUrl(),
       '#search_string' => $search_value,
       '#source_class' => $source instanceof SourceTypeInterface ? get_class($source) : NULL,
       '#datasource' => $source instanceof SourceTypeInterface ? $source->getSourcesId() : NULL,
@@ -276,6 +277,40 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
       'add_facet_interests' => $values['search']['configuration']['add_facet_interests'],
       'add_facet_my_groups' => $values['search']['configuration']['add_facet_my_groups'],
     ]);
+  }
+
+  /**
+   * Extracting filters values from the URL.
+   *
+   * Example of filters url parameter: ?filter=ss_content_field_discussion_type:idea.
+   *
+   * @return array
+   */
+  private function extractFilterFromUrl(): array {
+    $filters_value = \Drupal::request()->query->get('filter', '');
+    $results = [];
+
+    if (!$filters_value) {
+      return $results;
+    }
+
+    $filters = explode('&', $filters_value);
+
+    foreach ($filters as $filter_value) {
+      $exploded_filter = explode(':', $filter_value);
+
+      if (empty($exploded_filter)) {
+        continue;
+      }
+
+      $filter_field = reset($exploded_filter);
+      unset($exploded_filter[0]);
+
+      $values = explode(',', reset($exploded_filter));
+      $results[$filter_field] = $values;
+    }
+
+    return $results;
   }
 
   /**

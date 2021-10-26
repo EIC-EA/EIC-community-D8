@@ -23,6 +23,7 @@ function eic_search_theme($existing, $type, $theme, $path) {
         'translations' => [],
         'facets' => [],
         'sorts' => [],
+        'prefilters' => [],
         'page_options' => '',
         'currentGroup' => '',
         'currentGroupUrl' => '',
