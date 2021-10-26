@@ -43,7 +43,10 @@ function eic_topics_preprocess_taxonomy_term(&$variables) {
  * Then statistics will be updated correctly on the detail term page
  */
 function eic_topics_entity_presave(\Drupal\Core\Entity\EntityInterface $entity) {
-  if (!$entity->hasField(TopicsManager::FIELD_ENTITY_TOPICS)) {
+  if (
+    !method_exists($entity, 'hasField') ||
+    !$entity->hasField(TopicsManager::FIELD_ENTITY_TOPICS)
+  ) {
     return;
   }
 
