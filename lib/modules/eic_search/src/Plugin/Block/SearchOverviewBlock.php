@@ -16,6 +16,7 @@ use Drupal\eic_search\Search\Sources\SourceTypeInterface;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\group\GroupMembership;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Provides an SearchOverviewBlock block.
@@ -39,16 +40,23 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
   protected $groupsHelper;
 
   /**
+   * @var RequestStack $requestStack
+   */
+  protected $requestStack;
+
+  /**
    * @param array $configuration
    * @param string $plugin_id
    * @param mixed $plugin_definition
    * @param SourcesCollector $sources_collector
    * @param EICGroupsHelper $groups_helper
+   * @param RequestStack $request_stack
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, SourcesCollector $sources_collector, EICGroupsHelper $groups_helper) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, SourcesCollector $sources_collector, EICGroupsHelper $groups_helper, RequestStack $request_stack) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->sourcesCollector = $sources_collector;
     $this->groupsHelper = $groups_helper;
+    $this->requestStack = $request_stack;
   }
 
   /**
@@ -66,6 +74,7 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
       $plugin_definition,
       $container->get('eic_search.sources_collector'),
       $container->get('eic_groups.helper'),
+      $container->get('request_stack'),
     );
   }
 
@@ -125,7 +134,10 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
     $facets = $this->configuration['facets'];
     $sorts = $this->configuration['sort_options'];
 
-    $search_value = \Drupal::request()->query->get('search', '');
+    $search_value = $this->requestStack
+      ->getCurrentRequest()
+      ->query
+      ->get('search', '');
 
     $facets = array_filter($facets, function ($facet) {
       return $facet;
@@ -287,7 +299,10 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
    * @return array
    */
   private function extractFilterFromUrl(): array {
-    $filters_value = \Drupal::request()->query->get('filter', '');
+    $filters_value = $this->requestStack
+      ->getCurrentRequest()
+      ->query
+      ->get('filter', '');
     $results = [];
 
     if (!$filters_value) {
