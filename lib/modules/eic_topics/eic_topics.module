@@ -2,6 +2,7 @@
 
 use Drupal\eic_topics\Constants\Topics;
 use Drupal\eic_topics\TopicsManager;
+use Drupal\Core\Cache\Cache;
 
 /**
  * Implements hook_theme
@@ -59,5 +60,5 @@ function eic_topics_entity_presave(\Drupal\Core\Entity\EntityInterface $entity) 
     $tags[] = "taxonomy_term:$tid";
   }
 
-  \Drupal\Core\Cache\Cache::invalidateTags($tags);
+  Cache::invalidateTags($tags);
 }

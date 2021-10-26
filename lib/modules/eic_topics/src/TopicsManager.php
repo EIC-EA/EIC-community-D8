@@ -2,6 +2,11 @@
 
 namespace Drupal\eic_topics;
 
+use Drupal\Core\Url;
+use Drupal\eic_topics\Constants\Topics;
+use Drupal\taxonomy\Entity\Term;
+use Drupal\taxonomy\TermInterface;
+
 /**
  * Class TopicsManager
  */
@@ -15,16 +20,48 @@ class TopicsManager {
    * @return array
    */
   public function generateTopicsStats(string $tid): array {
+    $term = Term::load($tid);
+
     return [
-      'stories' => $this->getStatByEntityType($tid, 'node', 'story', ),
-      'wiki_page' => $this->getStatByEntityType($tid, 'node', 'wiki_page'),
-      'discussion' => $this->getStatByEntityType($tid, 'node', 'discussion'),
-      'news' => $this->getStatByEntityType($tid, 'node', 'news'),
-      'group' => $this->getStatByEntityType($tid, 'group', 'group'),
-      'file' => $this->getStatByEntityType($tid, 'media', 'eic_document'),
-      'event' => $this->getStatByEntityType($tid, 'group', 'event'),
-      'expert' => 0,
-      'organization' => 0,
+      'stories' => [
+        'stat' => $this->getStatByEntityType($tid, 'node', 'story'),
+        'url' => $this->getNodeRedirectUrl($term, 'story'),
+      ],
+      'wiki_page' => [
+        'stat' => $this->getStatByEntityType($tid, 'node', 'wiki_page'),
+        'url' => $this->getNodeRedirectUrl($term, 'wiki_page'),
+      ],
+      'discussion' => [
+        'stat' => $this->getStatByEntityType($tid, 'node', 'discussion'),
+        'url' => $this->getNodeRedirectUrl($term, 'discussion'),
+      ],
+      'news' => [
+        'stat' => $this->getStatByEntityType($tid, 'node', 'news'),
+        'url' => $this->getNodeRedirectUrl($term, 'news'),
+      ],
+      'group' => [
+        'stat' => $this->getStatByEntityType($tid, 'group', 'group'),
+        'url' => $this->getGroupRedirectUrl($term, 'group'),
+      ],
+      /** @TODO To define how media will be displayed in global search */
+      'file' => [
+        'stat' => $this->getStatByEntityType($tid, 'media', 'eic_document'),
+        'url' => '',
+      ],
+      'event' => [
+        'stat' => $this->getStatByEntityType($tid, 'group', 'event'),
+        'url' => $this->getGroupRedirectUrl($term, 'event'),
+      ],
+      /** @TODO not existing yet */
+      'expert' => [
+        'stat' => 0,
+        'url' => '',
+      ],
+      /** @TODO not existing yet */
+      'organization' => [
+        'stat' => 0,
+        'url' => '',
+      ],
     ];
   }
 
@@ -46,4 +83,97 @@ class TopicsManager {
 
     return $query->count()->execute();
   }
+
+  /**
+   * @param TermInterface $term
+   * @param string $bundle
+   *
+   * @return string
+   */
+  private function getNodeRedirectUrl(
+    TermInterface $term,
+    string $bundle
+  ): string {
+    if (!$term instanceof TermInterface) {
+      return '';
+    }
+
+    $filters = [
+      Topics::CONTENT_TYPE_ID_FIELD_SOLR . ':' . $bundle,
+      Topics::TERM_TOPICS_ID_FIELD_CONTENT_SOLR . ':' . $term->label(),
+    ];
+
+    $query_options = [
+      'query' => [
+        'filter' => implode('&', $filters),
+      ],
+    ];
+
+    return Url::fromRoute(
+      'eic_search.global_search', [], $query_options
+    )->toString();
+  }
+
+  /**
+   * @param TermInterface|NULL $term
+   *
+   * @return string
+   */
+  private function getUserRedirectUrl(?TermInterface $term): string {
+    if (!$term instanceof TermInterface) {
+      return '';
+    }
+
+    $query_options = [
+      'query' => [
+        'filter' => Topics::TERM_TOPICS_ID_FIELD_USER_SOLR . ':' . $term->label(),
+      ],
+    ];
+
+    return Url::fromRoute(
+      'eic_search.people', [], $query_options
+    )->toString();
+  }
+
+  /**
+   * @param TermInterface|NULL $tid
+   * @param string $group_type
+   *
+   * @return string
+   */
+  private function getGroupRedirectUrl(?TermInterface $term, string $group_type): string {
+    if (!$term instanceof TermInterface) {
+      return '';
+    }
+
+    $route_name = '';
+    $solr_topic_field_id = '';
+
+    switch ($group_type) {
+      case 'group':
+        $route_name = 'eic_search.groups';
+        $solr_topic_field_id = Topics::TERM_TOPICS_ID_FIELD_GROUP_SOLR;
+        break;
+      case 'event':
+        /** @TODO still needs to define routes, entity,... */
+        $route_name = 'eic_search.groups';
+        $solr_topic_field_id = Topics::TERM_TOPICS_ID_FIELD_GROUP_SOLR;
+        break;
+    }
+
+    if (!$route_name || !$solr_topic_field_id) {
+      return '';
+    }
+
+    $query_options = [
+      'query' => [
+        'filter' => $solr_topic_field_id . ':' . $term->label(),
+      ],
+    ];
+
+    return Url::fromRoute(
+      $route_name, [], $query_options
+    )->toString();
+  }
+
 }
