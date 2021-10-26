@@ -193,8 +193,24 @@
     }
   }
 
+  &__radio-items--list {
+    margin-top: map-get($ecl-spacing, 's');
+    display: flex;
+    flex-direction: column;
+
+    & .ecl-radio {
+      padding: 0;
+
+      &__box,
+      &__box:before {
+        border-radius: 0 !important;
+      }
+    }
+
+  }
+
   & .ecl-radio-block {
-    & .ecl-radio__label {
+    & > .ecl-radio__label {
       display: grid;
       grid-template-columns: 1.25rem auto;
       grid-gap: map-get($ecl-spacing, 's');
