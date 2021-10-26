@@ -5,7 +5,6 @@ namespace Drupal\eic_messages\Service;
 use Drupal\comment\CommentInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\eic_content\EICContentHelperInterface;
 use Drupal\eic_messages\Util\ActivityStreamMessageTemplates;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -23,11 +22,6 @@ class CommentMessageCreator implements ContainerInjectionInterface {
   private $routeMatch;
 
   /**
-   * @var \Drupal\Core\Session\AccountProxyInterface
-   */
-  private $currentUser;
-
-  /**
    * The EIC Content helper service.
    *
    * @var \Drupal\eic_content\EICContentHelperInterface
@@ -41,18 +35,15 @@ class CommentMessageCreator implements ContainerInjectionInterface {
 
   /**
    * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
-   * @param \Drupal\Core\Session\AccountProxyInterface $account
    * @param \Drupal\eic_content\EICContentHelperInterface $content_helper
    * @param \Drupal\eic_messages\Service\MessageBusInterface $message_bus
    */
   public function __construct(
     RouteMatchInterface $route_match,
-    AccountProxyInterface $account,
     EICContentHelperInterface $content_helper,
     MessageBusInterface $message_bus
   ) {
     $this->routeMatch = $route_match;
-    $this->currentUser = $account;
     $this->contentHelper = $content_helper;
     $this->messageBus = $message_bus;
   }
@@ -63,7 +54,6 @@ class CommentMessageCreator implements ContainerInjectionInterface {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('current_route_match'),
-      $container->get('current_user'),
       $container->get('eic_content.helper'),
       $container->get('eic_messages.message_bus')
     );

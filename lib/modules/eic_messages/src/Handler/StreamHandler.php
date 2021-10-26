@@ -7,6 +7,11 @@ use Drupal\eic_messages\MessageTemplateTypes;
 use Drupal\eic_messages\Stamps\PersistentMessageStamp;
 use Drupal\message\MessageInterface;
 
+/**
+ * Class StreamHandler
+ *
+ * @package Drupal\eic_messages\Handler
+ */
 class StreamHandler implements MessageHandlerInterface {
 
   /**
