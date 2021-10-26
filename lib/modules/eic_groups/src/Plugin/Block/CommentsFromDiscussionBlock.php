@@ -190,7 +190,8 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
       ],
       'translations' => [
         'title' => $this->t('Comments', [], ['context' => 'eic_groups']),
-        'no_results' => $this->t('There are currently no comments.', [], ['context' => 'eic_groups']),
+        'no_results_title' => $this->t('We haven’t found any search results', [], ['context' => 'eic_group']),
+        'no_results_body' => $this->t('Please try again with another keyword', [], ['context' => 'eic_group']),
         'load_more' => $this->t('Load more', [], ['context' => 'eic_groups']),
         'edit' => $this->t('Edit', [], ['context' => 'eic_groups']),
         'options' => $this->t('Options', [], ['context' => 'eic_groups']),
