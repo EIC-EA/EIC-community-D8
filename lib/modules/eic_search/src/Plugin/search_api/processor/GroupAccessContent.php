@@ -21,7 +21,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   label = @Translation("Group content access"),
  *   description = @Translation("Adds content access for group restriction."),
  *   stages = {
- *     "pre_index_save" = -10,
+ *     "preprocess_query" = 0,
  *   },
  * )
  */
