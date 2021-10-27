@@ -21,6 +21,7 @@ use Drupal\image\Entity\ImageStyle;
 use Drupal\media\MediaInterface;
 use Drupal\node\Entity\Node;
 use Drupal\node\NodeInterface;
+use Drupal\oec_group_flex\OECGroupFlexHelper;
 use Drupal\paragraphs\Entity\Paragraph;
 use Drupal\profile\Entity\Profile;
 use Drupal\profile\Entity\ProfileInterface;
@@ -79,6 +80,11 @@ class SolrDocumentProcessor {
   private $entityDownloadHelper;
 
   /**
+   * @var OECGroupFlexHelper $OECGroupFlexHelper
+   */
+  private $OECGroupFlexHelper;
+
+  /**
    * The key used to identify solr document fields for last flagged.
    *
    * @var string
@@ -89,15 +95,12 @@ class SolrDocumentProcessor {
    * SolrDocumentProcessor constructor.
    *
    * @param \Drupal\Core\Database\Connection $connection
-   *   The current active database's master connection.
    * @param \Drupal\flag\FlagCountManager $flag_count_manager
-   *   The flag count manager.
    * @param \Drupal\search_api\Utility\PostRequestIndexing $post_request_indexing
-   *   The Search API Post request indexing service.
-   * @param CommentsHelper $comments_helper
-   *   The Comments Helper service.
-   * @param EntityFileDownloadCount $entity_download_helper
-   *   The Entity File Download Count service helper.
+   * @param \Drupal\statistics\NodeStatisticsDatabaseStorage $node_statistics_db_storage
+   * @param \Drupal\eic_comments\CommentsHelper $comments_helper
+   * @param \Drupal\eic_media_statistics\EntityFileDownloadCount $entity_download_helper
+   * @param \Drupal\oec_group_flex\OECGroupFlexHelper $oec_group_flex_helper
    */
   public function __construct(
     Connection $connection,
@@ -105,7 +108,8 @@ class SolrDocumentProcessor {
     PostRequestIndexing $post_request_indexing,
     NodeStatisticsDatabaseStorage $node_statistics_db_storage,
     CommentsHelper $comments_helper,
-    EntityFileDownloadCount $entity_download_helper
+    EntityFileDownloadCount $entity_download_helper,
+    OECGroupFlexHelper $oec_group_flex_helper
   ) {
     $this->connection = $connection;
     $this->flagCountManager = $flag_count_manager;
@@ -113,6 +117,7 @@ class SolrDocumentProcessor {
     $this->nodeStatisticsDatabaseStorage = $node_statistics_db_storage;
     $this->commentsHelper = $comments_helper;
     $this->entityDownloadHelper = $entity_download_helper;
+    $this->OECGroupFlexHelper = $oec_group_flex_helper;
   }
 
   /**
@@ -455,6 +460,11 @@ class SolrDocumentProcessor {
       $document->addField('ss_group_visibility', $group_visibility);
       return;
     }
+
+    $document->addField(
+      'ss_group_visibility_label',
+      $this->OECGroupFlexHelper->getGroupVisibilityTagLabel($group)
+    );
 
     /** @var \Drupal\oec_group_flex\GroupVisibilityDatabaseStorage $group_visibility_storage */
     $group_visibility_storage = \Drupal::service('oec_group_flex.group_visibility.storage');
