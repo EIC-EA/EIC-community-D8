@@ -21,6 +21,7 @@ dependencies:
     - eic_group_statistics
     - eic_search
     - flag_search_api
+    - search_api_attachments
     - content_moderation
     - flag
     - group_permissions
@@ -843,6 +844,10 @@ field_settings:
           wiki_page: no_html
         'entity:user':
           user: default
+  saa_field_document_media:
+    label: 'Search api attachments: Document'
+    property_path: saa_field_document_media
+    type: text
   status:
     label: '[User] Status'
     datasource_id: 'entity:user'
@@ -1151,6 +1156,13 @@ processor_settings:
       preprocess_index: -20
       preprocess_query: -20
   aggregated_field: {  }
+  file_attachments:
+    excluded_extensions: 'aif art avi bmp gif ico mov oga ogv png psd ra ram rgb flv'
+    number_indexed: 0
+    number_first_bytes: '1 MB'
+    max_filesize: '0'
+    excluded_private: 0
+    excluded_mimes: 'audio/x-aiff image/x-jg video/x-msvideo image/x-ms-bmp image/gif image/vnd.microsoft.icon video/quicktime audio/ogg video/ogg image/png image/x-photoshop audio/x-realaudio audio/x-pn-realaudio image/x-rgb video/x-flv'
   flag_indexer:
     flag_index:
       - highlight_content

@@ -121,6 +121,7 @@ class GlobalSourceType extends SourceType {
       'ss_global_group_parent_label',
       'sm_filename',
       'ss_global_fullname',
+      'tm_X3b_en_saa_field_document_media',
     ];
   }
 
