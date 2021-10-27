@@ -33,7 +33,7 @@ class GroupEventSourceType extends SourceType {
    * {@inheritdoc}
    */
   public function getEntityBundle(): string {
-    return 'event';
+    return 'node_event';
   }
 
   /**
