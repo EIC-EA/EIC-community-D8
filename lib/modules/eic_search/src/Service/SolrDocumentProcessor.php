@@ -20,7 +20,9 @@ use Drupal\group\GroupMembership;
 use Drupal\image\Entity\ImageStyle;
 use Drupal\media\MediaInterface;
 use Drupal\node\Entity\Node;
+use Drupal\node\Entity\NodeType;
 use Drupal\node\NodeInterface;
+use Drupal\node\NodeTypeInterface;
 use Drupal\paragraphs\Entity\Paragraph;
 use Drupal\profile\Entity\Profile;
 use Drupal\profile\Entity\ProfileInterface;
@@ -127,6 +129,7 @@ class SolrDocumentProcessor {
   public function processGlobalData(Document &$document, array $fields) {
     $title = '';
     $type = '';
+    $type_label = '';
     $date = '';
     $status = FALSE;
     $fullname = '';
@@ -139,6 +142,10 @@ class SolrDocumentProcessor {
       case 'entity:node':
         $title = $fields['ss_content_title'];
         $type = $fields['ss_content_type'];
+        $node_type = NodeType::load($type);
+        $type_label = $node_type instanceof NodeTypeInterface ?
+          $node_type->label():
+          $fields['ss_content_type'];
         $date = $fields['ds_content_created'];
         $changed = $fields['ds_changed'];
         $status = $fields['bs_content_status'];
@@ -228,6 +235,10 @@ class SolrDocumentProcessor {
     //We need to use only one field key for the global search on the FE side
     $document->addField('tm_global_title', $title);
     $document->addField('ss_global_content_type', $type);
+    $document->addField(
+      'ss_global_content_type_label',
+      !empty($type_label) ? $type_label: $type
+    );
     $document->addField('ss_global_created_date', $date);
     $document->addField('bs_global_status', $status);
     $document->addField('ss_drupal_timestamp', strtotime($date));
