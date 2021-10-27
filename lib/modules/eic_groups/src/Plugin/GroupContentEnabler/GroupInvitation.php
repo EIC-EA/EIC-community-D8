@@ -67,7 +67,8 @@ class GroupInvitation extends GroupInvitationBase {
 
         // We allow access if the user is the group owner or a group admin, and
         // moderation state is set to DRAFT.
-        if ($moderation_state === GroupsModerationHelper::GROUP_DRAFT_STATE &&
+        if (
+          $moderation_state === GroupsModerationHelper::GROUP_DRAFT_STATE &&
           EICGroupsHelper::userIsGroupAdmin($group, $account, $membership)
         ) {
           $access = GroupAccessResult::allowed()
