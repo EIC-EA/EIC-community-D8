@@ -1,0 +1,19 @@
+uuid: b3239e8e-a97c-4e2f-a3fb-5c319ff911c3
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_organised_by
+    - node.type.event
+id: node.event.field_organised_by
+field_name: field_organised_by
+entity_type: node
+bundle: event
+label: 'Organised by'
+description: 'Name of the person or organisation who organises the Event.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

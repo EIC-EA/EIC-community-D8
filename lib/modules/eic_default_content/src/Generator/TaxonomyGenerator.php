@@ -2,9 +2,8 @@
 
 namespace Drupal\eic_default_content\Generator;
 
-
 /**
- * Class TaxonomyGenerator
+ * Generates default content for taxonomy.
  *
  * @package Drupal\eic_default_content\Generator
  */
@@ -20,6 +19,7 @@ class TaxonomyGenerator extends CoreGenerator {
     $this->createJobTitles();
     $this->createTopics();
     $this->createFundingSources();
+    $this->createEventTypes();
   }
 
   /**
@@ -32,6 +32,7 @@ class TaxonomyGenerator extends CoreGenerator {
     $this->unloadEntities('taxonomy_term', ['vid' => 'document_types']);
     $this->unloadEntities('taxonomy_term', ['vid' => 'job_titles']);
     $this->unloadEntities('taxonomy_term', ['vid' => 'funding_source']);
+    $this->unloadEntities('taxonomy_term', ['vid' => 'event_type']);
   }
 
   /**
@@ -55,7 +56,10 @@ class TaxonomyGenerator extends CoreGenerator {
     foreach ($topics as $parent => $sub_topics) {
       $parent = $this->createTerm('topics', ['name' => $parent]);
       foreach ($sub_topics as $sub_topic) {
-        $this->createTerm('topics', ['name' => $sub_topic, 'parent' => $parent->id()]);
+        $this->createTerm('topics', [
+          'name' => $sub_topic,
+          'parent' => $parent->id(),
+        ]);
       }
     }
   }
@@ -63,7 +67,7 @@ class TaxonomyGenerator extends CoreGenerator {
   /**
    * Creates 'funding_source' terms.
    */
-  function createFundingSources() {
+  private function createFundingSources() {
     $terms = ['Regional', 'EC', 'National'];
     foreach ($terms as $term) {
       $this->createTerm('funding_source', ['name' => $term]);
@@ -97,7 +101,10 @@ class TaxonomyGenerator extends CoreGenerator {
       if (is_array($type)) {
         $parent = $this->createTerm('document_types', ['name' => $key]);
         foreach ($type as $sub_type) {
-          $this->createTerm('document_types', ['name' => $sub_type, 'parent' => $parent->id()]);
+          $this->createTerm('document_types', [
+            'name' => $sub_type,
+            'parent' => $parent->id(),
+          ]);
         }
       }
       else {
@@ -128,6 +135,23 @@ class TaxonomyGenerator extends CoreGenerator {
 
     foreach ($languages as $language) {
       $this->createTerm('languages', ['name' => $language]);
+    }
+  }
+
+  /**
+   * Creates 'event_type' terms.
+   */
+  private function createEventTypes() {
+    $terms = [
+      'Event',
+      'Learning / Training',
+      'Meeting',
+      'Academy',
+      'Hackaton',
+      'Investor Days',
+    ];
+    foreach ($terms as $term) {
+      $this->createTerm('event_type', ['name' => $term]);
     }
   }
 
