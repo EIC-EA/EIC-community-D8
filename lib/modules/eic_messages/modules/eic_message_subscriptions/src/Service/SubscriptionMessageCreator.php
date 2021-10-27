@@ -39,6 +39,8 @@ class SubscriptionMessageCreator {
    *   The entity object.
    * @param string $operation
    *   The type of the operations. See SubscriptionOperationTypes.
+   *
+   * @return \Drupal\message\MessageInterface
    */
   public function createTermsOfInterestNodeSubscription(
     ContentEntityInterface $entity,
@@ -90,6 +92,8 @@ class SubscriptionMessageCreator {
    *
    * @param \Drupal\flag\FlaggingInterface $flagging
    *   The flagging object.
+   *
+   * @return \Drupal\message\MessageInterface
    */
   public function createContentRecommendedSubscription(
     FlaggingInterface $flagging
@@ -116,8 +120,7 @@ class SubscriptionMessageCreator {
 
     return $message;
   }
-
-
+  
   /**
    * Creates a subscription message for a comment.
    *
@@ -125,6 +128,8 @@ class SubscriptionMessageCreator {
    *   The comment entity.
    * @param string $operation
    *   The type of the operation. See SubscriptionOperationTypes.
+   *
+   * @return \Drupal\message\MessageInterface
    */
   public function createCommentSubscription(
     CommentInterface $entity,
@@ -173,6 +178,8 @@ class SubscriptionMessageCreator {
    *   The group having this content.
    * @param string $operation
    *   The type of the operations. See SubscriptionOperationTypes.
+   *
+   * @return \Drupal\message\MessageInterface
    */
   public function createGroupContentSubscription(
     ContentEntityInterface $entity,

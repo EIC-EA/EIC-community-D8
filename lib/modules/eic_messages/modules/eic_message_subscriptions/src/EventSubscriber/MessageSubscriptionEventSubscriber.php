@@ -40,10 +40,9 @@ class MessageSubscriptionEventSubscriber implements EventSubscriberInterface {
   private $queuedMessageChecker;
 
   /**
-   * Constructs a new EntityOperations object.
-   *
+   * @param \Drupal\eic_message_subscriptions\Service\SubscriptionMessageCreator $message_creator
    * @param \Drupal\message_subscribe\SubscribersInterface $message_subscribers_service
-   *   The message subscribers service.
+   * @param \Drupal\eic_messages\Util\QueuedMessageChecker $queued_message_checker
    */
   public function __construct(
     SubscriptionMessageCreator $message_creator,
@@ -125,7 +124,7 @@ class MessageSubscriptionEventSubscriber implements EventSubscriberInterface {
 
     // Check if we should create/send the message.
     if (!$this->queuedMessageChecker->shouldCreateNewMessage($message)) {
-      return NULL;
+      return;
     }
 
     // Adds the group to the context so that message_subscribe module can grab
@@ -165,7 +164,7 @@ class MessageSubscriptionEventSubscriber implements EventSubscriberInterface {
 
     // Check if we should create/send the message.
     if (!$this->queuedMessageChecker->shouldCreateNewMessage($message)) {
-      return NULL;
+      return;
     }
 
     // Adds the node to the context so that message_subscribe module can grab
@@ -225,7 +224,7 @@ class MessageSubscriptionEventSubscriber implements EventSubscriberInterface {
 
     // Check if we should create/send the message.
     if (!$this->queuedMessageChecker->shouldCreateNewMessage($message)) {
-      return NULL;
+      return;
     }
 
     $flagged_entity = $flagging->getFlaggable();

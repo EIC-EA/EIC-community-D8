@@ -78,9 +78,7 @@ class GroupMessageCreator implements ContainerInjectionInterface {
    */
   public function groupUpdate(ContentEntityInterface $entity) {
     // Check if state has changed.
-    if ($entity->get('moderation_state')
-        ->getValue() == $entity->original->get('moderation_state')
-        ->getValue()) {
+    if ($entity->get('moderation_state')->getValue() === $entity->original->get('moderation_state')->getValue()) {
       return;
     }
 
