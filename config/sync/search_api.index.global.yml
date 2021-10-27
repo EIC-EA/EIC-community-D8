@@ -39,6 +39,7 @@ dependencies:
     - field.storage.node.field_discussion_type
     - field.storage.node.field_body
     - field.storage.node.field_comments
+    - field.storage.node.field_date_range
     - field.storage.node.field_document_type
     - field.storage.media.field_media_file
     - field.storage.node.field_document_media
@@ -273,6 +274,22 @@ field_settings:
     dependencies:
       config:
         - field.storage.node.field_body
+  content_field_date_range:
+    label: '[Content] Date'
+    datasource_id: 'entity:node'
+    property_path: field_date_range
+    type: date
+    dependencies:
+      config:
+        - field.storage.node.field_date_range
+  content_field_date_range_end_value:
+    label: '[Content] Date » End date value'
+    datasource_id: 'entity:node'
+    property_path: 'field_date_range:end_value'
+    type: date
+    dependencies:
+      config:
+        - field.storage.node.field_date_range
   content_field_discussion_type:
     label: '[Content] Type of Discussion'
     datasource_id: 'entity:node'
