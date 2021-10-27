@@ -250,7 +250,9 @@ class SolrDocumentProcessor {
       if (strlen($text) > 300) {
         $text = Unicode::truncate($text, 300, FALSE, TRUE);
       }
-      $document->setField('tm_X3b_en_rendered_item', $text);
+
+      //Trick to convert the &amp to & when nbsp
+      $document->setField('tm_X3b_en_rendered_item', str_replace('&amp;nbsp;', '&nbsp;', $text));
     }
 
     $nid = $fields['its_content_nid'];
