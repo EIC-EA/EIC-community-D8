@@ -7,6 +7,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\comment\CommentInterface;
 use Drupal\comment\Entity\Comment;
 use Drupal\Component\Utility\Unicode;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\eic_comments\CommentsHelper;
 use Drupal\eic_flags\FlagType;
 use Drupal\eic_groups\Constants\GroupVisibilityType;
@@ -16,15 +17,19 @@ use Drupal\eic_search\SolrIndexes;
 use Drupal\file\Entity\File;
 use Drupal\flag\FlagCountManager;
 use Drupal\group\Entity\Group;
+use Drupal\group\Entity\GroupContent;
+use Drupal\group\Entity\GroupInterface;
 use Drupal\group\GroupMembership;
 use Drupal\image\Entity\ImageStyle;
 use Drupal\media\MediaInterface;
 use Drupal\node\Entity\Node;
 use Drupal\node\NodeInterface;
+use Drupal\oec_group_flex\GroupVisibilityDatabaseStorageInterface;
 use Drupal\paragraphs\Entity\Paragraph;
 use Drupal\profile\Entity\Profile;
 use Drupal\profile\Entity\ProfileInterface;
 use Drupal\search_api\Entity\Index;
+use Drupal\search_api\SearchApiException;
 use Drupal\search_api\Utility\PostRequestIndexing;
 use Drupal\search_api\Utility\Utility;
 use Drupal\statistics\NodeStatisticsDatabaseStorage;
@@ -79,6 +84,13 @@ class SolrDocumentProcessor {
   private $entityDownloadHelper;
 
   /**
+   * The Entity Type Manager service.
+   *
+   * @var EntityTypeManagerInterface $entityTypeManager
+   */
+  private $entityTypeManager;
+
+  /**
    * The key used to identify solr document fields for last flagged.
    *
    * @var string
@@ -98,6 +110,8 @@ class SolrDocumentProcessor {
    *   The Comments Helper service.
    * @param EntityFileDownloadCount $entity_download_helper
    *   The Entity File Download Count service helper.
+   * @param EntityTypeManagerInterface $entity_type_manager
+   *   The Entity Type Manager..
    */
   public function __construct(
     Connection $connection,
@@ -105,7 +119,8 @@ class SolrDocumentProcessor {
     PostRequestIndexing $post_request_indexing,
     NodeStatisticsDatabaseStorage $node_statistics_db_storage,
     CommentsHelper $comments_helper,
-    EntityFileDownloadCount $entity_download_helper
+    EntityFileDownloadCount $entity_download_helper,
+    EntityTypeManagerInterface $entity_type_manager
   ) {
     $this->connection = $connection;
     $this->flagCountManager = $flag_count_manager;
@@ -113,6 +128,7 @@ class SolrDocumentProcessor {
     $this->nodeStatisticsDatabaseStorage = $node_statistics_db_storage;
     $this->commentsHelper = $comments_helper;
     $this->entityDownloadHelper = $entity_download_helper;
+    $this->entityTypeManager = $entity_type_manager;
   }
 
   /**
@@ -632,13 +648,38 @@ class SolrDocumentProcessor {
         continue;
       }
       $datasource_id = 'entity:' . $entity->getEntityTypeId();
-      $datasource = $global_index->getDatasource($datasource_id);
+
+      try {
+        $datasource = $global_index->getDatasource($datasource_id);
+      } catch (SearchApiException $api_exception) {
+        continue;
+      }
+
       $item_id = $datasource->getItemId($entity->getTypedData());
       $item_ids[] = Utility::createCombinedId($datasource_id, $item_id);
     }
 
     // Request reindexing for the given items.
     $this->postRequestIndexing->registerIndexingOperation(SolrIndexes::GLOBAL, $item_ids);
+  }
+
+  /**
+   * @param \Drupal\group\Entity\GroupInterface $group
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   * @throws \Drupal\search_api\SearchApiException
+   */
+  public function reIndexEntitiesFromGroup(GroupInterface $group) {
+    /** @var \Drupal\group\Entity\Storage\GroupContentStorageInterface $storage */
+    $storage = $this->entityTypeManager->getStorage('group_content');
+    $contents = $storage->loadByGroup($group);
+
+    $contents = array_map(function (GroupContent $group_content) {
+      return $group_content->getEntity();
+    }, $contents);
+
+    $this->reIndexEntities($contents);
   }
 
 }
