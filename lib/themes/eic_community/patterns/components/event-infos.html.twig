@@ -1,7 +1,8 @@
 {% if items is not empty %}
+     <h3 class="ecl-editorial-article__aside__title">{{ title }}</h3>
     <ul class="ecl-infos-list">
       {% for item in items %}
-      <li class="ecl-infos-list__item">
+      <li class="ecl-infos-list__item ecl-infos-list__item--align-top">
         {% include '@ecl-twig/ec-component-icon/ecl-icon.html.twig' with {
           icon: {
             size: 'l',
@@ -10,8 +11,13 @@
             name: item.icon.name
           }
         } only %}
-        {% if item.content %}
-            {{ item.content }}
+
+        {% if item.url %}
+          <a href="{{ item.url }}" target="_blank" rel="noreferrer">{{ item.content|nl2br }}</a>
+        {% elseif item.content %}
+            <p>
+              {{ item.content|nl2br }}
+            </p>
         {% endif %}
         </li>
         {% endfor %}

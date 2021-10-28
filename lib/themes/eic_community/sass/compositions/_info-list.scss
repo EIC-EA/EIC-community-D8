@@ -8,19 +8,25 @@
     align-items: center;
     margin-bottom: map-get($ecl-spacing, 'm');
 
-    &:first-child {
-      font-weight: bold;
+    &--align-top {
+      align-items: flex-start;
     }
 
     &:last-child {
       margin-bottom: 0;
-
     }
 
     & svg {
       height: 1em;
       width: 1em;
+      min-width: 16px;
       margin-right: map-get($ecl-spacing, 's');
+      color: $ecl-color-blue;
+    }
+
+    & p {
+      margin: 0;
+      line-height: 1.4;
     }
   }
 
