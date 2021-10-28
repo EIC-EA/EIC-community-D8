@@ -8,6 +8,9 @@ use Drupal\comment\CommentInterface;
 use Drupal\comment\Entity\Comment;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Queue\QueueFactory;
+use Drupal\Core\Queue\QueueWorkerManager;
+use Drupal\Core\Queue\SuspendQueueException;
 use Drupal\eic_comments\CommentsHelper;
 use Drupal\eic_flags\FlagType;
 use Drupal\eic_groups\Constants\GroupVisibilityType;
@@ -84,6 +87,20 @@ class SolrDocumentProcessor {
   private $entityDownloadHelper;
 
   /**
+   * The Queue Factory service.
+   *
+   * @var QueueFactory $queueFactory
+   */
+  private $queueFactory;
+
+  /**
+   * The Queue Worker Manager service.
+   *
+   * @var QueueWorkerManager $queueManager
+   */
+  private $queueManager;
+
+  /**
    * The Entity Type Manager service.
    *
    * @var EntityTypeManagerInterface $entityTypeManager
@@ -110,8 +127,10 @@ class SolrDocumentProcessor {
    *   The Comments Helper service.
    * @param EntityFileDownloadCount $entity_download_helper
    *   The Entity File Download Count service helper.
-   * @param EntityTypeManagerInterface $entity_type_manager
-   *   The Entity Type Manager..
+   * @param QueueFactory $queue_factory
+   *   The Queue Factory service.
+   * @param QueueWorkerManager $queue_worker_manager
+   *   The Queue Worker Manager service.
    */
   public function __construct(
     Connection $connection,
@@ -120,6 +139,8 @@ class SolrDocumentProcessor {
     NodeStatisticsDatabaseStorage $node_statistics_db_storage,
     CommentsHelper $comments_helper,
     EntityFileDownloadCount $entity_download_helper,
+    QueueFactory $queue_factory,
+    QueueWorkerManager $queue_worker_manager,
     EntityTypeManagerInterface $entity_type_manager
   ) {
     $this->connection = $connection;
@@ -128,6 +149,8 @@ class SolrDocumentProcessor {
     $this->nodeStatisticsDatabaseStorage = $node_statistics_db_storage;
     $this->commentsHelper = $comments_helper;
     $this->entityDownloadHelper = $entity_download_helper;
+    $this->queueFactory = $queue_factory;
+    $this->queueManager = $queue_worker_manager;
     $this->entityTypeManager = $entity_type_manager;
   }
 
@@ -666,20 +689,30 @@ class SolrDocumentProcessor {
   /**
    * @param \Drupal\group\Entity\GroupInterface $group
    *
-   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
-   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
-   * @throws \Drupal\search_api\SearchApiException
+   * @throws \Drupal\Component\Plugin\Exception\PluginException
    */
   public function reIndexEntitiesFromGroup(GroupInterface $group) {
+    $queue = $this->queueFactory->get('eic_groups_group_content_search_api');
+    $queue_worker = $this->queueManager->createInstance('eic_groups_group_content_search_api');
+
     /** @var \Drupal\group\Entity\Storage\GroupContentStorageInterface $storage */
     $storage = $this->entityTypeManager->getStorage('group_content');
     $contents = $storage->loadByGroup($group);
 
-    $contents = array_map(function (GroupContent $group_content) {
-      return $group_content->getEntity();
-    }, $contents);
+    foreach ($contents as $group_content) {
+      $queue->createItem($group_content);
+    }
 
-    $this->reIndexEntities($contents);
+    while ($item = $queue->claimItem()) {
+      try {
+        $queue_worker->processItem($item->data);
+        $queue->deleteItem($item);
+      }
+      catch (SuspendQueueException $e) {
+        $queue->releaseItem($item);
+        break;
+      }
+    }
   }
 
 }
