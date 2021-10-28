@@ -128,7 +128,7 @@ class OECGroupFlexGroupSaverDecorator extends GroupFlexGroupSaver {
       ]);
     }
 
-    $old_visibility_options = $item->getOptions();
+    $oldVisibilityOptions = $item->getOptions();
     $item->setType($groupVisibility);
     $item->setOptions($groupVisibilityOptions);
 
@@ -142,7 +142,7 @@ class OECGroupFlexGroupSaverDecorator extends GroupFlexGroupSaver {
     // field not instance of FieldItemInterface so we need to compare it here.
     if (
       Json::encode($groupVisibilityOptions) !==
-      Json::encode($old_visibility_options)
+      Json::encode($oldVisibilityOptions)
     ) {
       $this->solrDocumentProcessor->reIndexEntitiesFromGroup($group);
     }
