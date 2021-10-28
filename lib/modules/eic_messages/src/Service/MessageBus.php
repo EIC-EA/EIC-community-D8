@@ -9,7 +9,7 @@ use Drupal\message\Entity\Message;
 use Drupal\message\MessageInterface;
 use Exception;
 
-class QueueMessageBus implements MessageBusInterface {
+class MessageBus implements MessageBusInterface {
 
   use LoggerChannelTrait;
 
