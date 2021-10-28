@@ -11,6 +11,7 @@ use Drupal\eic_seo\AliasCleaner;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\node\NodeInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Class GroupTokens.
@@ -43,6 +44,13 @@ class GroupTokens implements ContainerInjectionInterface {
   protected $eicAliasCleaner;
 
   /**
+   * The request stack service.
+   *
+   * @var \Symfony\Component\HttpFoundation\RequestStack
+   */
+  protected $requestStack;
+
+  /**
    * Constructs a new GroupTokens object.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
@@ -51,11 +59,19 @@ class GroupTokens implements ContainerInjectionInterface {
    *   The Token service.
    * @param \Drupal\eic_seo\AliasCleaner $alias_cleaner
    *   The EIC AliasCleaner service.
+   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
+   *   The request stack service.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, Token $token_service, AliasCleaner $alias_cleaner) {
+  public function __construct(
+    EntityTypeManagerInterface $entity_type_manager,
+    Token $token_service,
+    AliasCleaner $alias_cleaner,
+    RequestStack $request_stack
+  ) {
     $this->entityTypeManager = $entity_type_manager;
     $this->tokenService = $token_service;
     $this->eicAliasCleaner = $alias_cleaner;
+    $this->requestStack = $request_stack;
   }
 
   /**
@@ -65,7 +81,8 @@ class GroupTokens implements ContainerInjectionInterface {
     return new static(
       $container->get('entity_type.manager'),
       $container->get('token'),
-      $container->get('eic_seo.alias_cleaner')
+      $container->get('eic_seo.alias_cleaner'),
+      $container->get('request_stack')
     );
   }
 
@@ -95,6 +112,7 @@ class GroupTokens implements ContainerInjectionInterface {
    */
   public function tokens($type, $tokens, array $data, array $options, BubbleableMetadata $bubbleable_metadata) {
     $replacements = [];
+    $base_url = $this->requestStack->getCurrentRequest()->getBaseUrl();
 
     // Node tokens.
     if ($type === 'node' && !empty($data['node'])) {
@@ -115,14 +133,22 @@ class GroupTokens implements ContainerInjectionInterface {
                     $group = $group_content->getGroup();
                   }
 
-                  $replacements[$original] = $group->toUrl()->toString();
+                  $group_url = $group->toUrl()->toString();
+
+                  // If base path is presented in group URL, we need to remove
+                  // it in order to avoid duplicated base paths.
+                  if (substr($group_url, 0, strlen($base_url)) === $base_url) {
+                    $replacements[$original] = substr_replace($group_url, '', 0, strlen($base_url));
+                  }
+                  else {
+                    $replacements[$original] = $group_url;
+                  }
                 }
               }
             }
             break;
 
         }
-
       }
     }
 
