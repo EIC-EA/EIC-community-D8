@@ -81,7 +81,7 @@ class TermBreadcrumbBuilder implements BreadcrumbBuilderInterface {
       // We don't show the first level term of topics taxonomies.
       if (
         empty($child_parents) &&
-        Topics::TERM_TOPICS_ID === $vid
+        Topics::TERM_VOCABULARY_TOPICS_ID === $vid
       ) {
         continue;
       }
