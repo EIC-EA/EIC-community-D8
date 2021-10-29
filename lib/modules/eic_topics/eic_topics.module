@@ -1,11 +1,19 @@
 <?php
 
+/**
+ * @file
+ * Primary module hooks for EIC Topics module.
+ */
+
+use Drupal\Core\Cache\Cache;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\eic_search\SearchHelper;
 use Drupal\eic_topics\Constants\Topics;
 use Drupal\eic_topics\TopicsManager;
-use Drupal\Core\Cache\Cache;
+use Drupal\views\ViewExecutable;
 
 /**
- * Implements hook_theme
+ * Implements hook_theme().
  */
 function eic_topics_theme() {
   return [
@@ -18,7 +26,7 @@ function eic_topics_theme() {
 }
 
 /**
- * Implements hook_preprocess_taxonomy_term
+ * Implements hook_preprocess_taxonomy_term().
  */
 function eic_topics_preprocess_taxonomy_term(&$variables) {
   /** @var \Drupal\taxonomy\TermInterface $term */
@@ -38,12 +46,12 @@ function eic_topics_preprocess_taxonomy_term(&$variables) {
 }
 
 /**
- * Implements hook_entity_presave()
+ * Implements hook_entity_presave().
  *
  * We need to invalidate the taxonomy term cache tag after an entity update.
- * Then statistics will be updated correctly on the detail term page
+ * Then statistics will be updated correctly on the detail term page.
  */
-function eic_topics_entity_presave(\Drupal\Core\Entity\EntityInterface $entity) {
+function eic_topics_entity_presave(EntityInterface $entity) {
   if (
     !method_exists($entity, 'hasField') ||
     !$entity->hasField(TopicsManager::FIELD_ENTITY_TOPICS)
@@ -61,4 +69,53 @@ function eic_topics_entity_presave(\Drupal\Core\Entity\EntityInterface $entity) 
   }
 
   Cache::invalidateTags($tags);
+}
+
+/**
+ * Implements hook_views_pre_render().
+ */
+function eic_topics_views_pre_render(ViewExecutable $view) {
+  if ($view->id() != 'taxonomy_related_content') {
+    return;
+  }
+
+  $term_id = NULL;
+  if (\Drupal::routeMatch()->getRouteName() == 'entity.taxonomy_term.canonical') {
+    $term_id = \Drupal::routeMatch()->getRawParameter('taxonomy_term');
+  }
+
+  if (empty($term_id)) {
+    return;
+  }
+
+  // The Views UI doesn't allow setting long links, so we need to replace the
+  // given link_url option with the final URL which includes facets.
+  $url = NULL;
+  $params = [];
+  switch ($view->current_display) {
+    case 'groups':
+      $url = '/groups';
+      $params = [
+        'itm_aggregated_field_vocab_topics' => $term_id,
+      ];
+      break;
+
+    case 'discussions':
+      $url = '/search';
+      $params = [
+        'itm_aggregated_field_vocab_topics' => $term_id,
+        'ss_global_content_type' => 'discussion',
+      ];
+      break;
+
+    case 'news_stories':
+      break;
+  }
+
+  if ($url) {
+    if (!empty($params)) {
+      $url .= SearchHelper::buildSolrQueryParams($params, TRUE);
+    }
+    $view->display_handler->setOption('link_url', $url);
+  }
 }
