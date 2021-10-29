@@ -481,7 +481,7 @@ display:
           not: false
           plugin_id: search_api_term
       link_display: custom_url
-      link_url: /groups
+      link_url: '/groups?f[0]=itm_content_field_vocab_topics:{{ raw_arguments.group_field_vocab_topics }}'
     cache_metadata:
       max-age: -1
       contexts:
