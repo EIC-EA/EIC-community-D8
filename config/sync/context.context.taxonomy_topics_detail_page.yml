@@ -1,0 +1,65 @@
+uuid: e1932a31-d786-46d1-8b18-84119db32afb
+langcode: en
+status: true
+dependencies:
+  config:
+    - views.view.taxonomy_related_content
+  module:
+    - ctools
+    - system
+    - views
+name: taxonomy_topics_detail_page
+label: 'Taxonomy - Topics detail page'
+group: Taxonomy
+description: 'This context is used for all Topics taxonomy term pages'
+requireAllConditions: false
+disabled: false
+conditions:
+  'entity_bundle:taxonomy_term':
+    id: 'entity_bundle:taxonomy_term'
+    bundles:
+      topics: topics
+    negate: false
+    uuid: 6aeeb0df-afb3-4eb9-add2-f8ca7ec65341
+    context_mapping:
+      taxonomy_term: '@taxonomy_term.taxonomy_term_route_context:taxonomy_term'
+reactions:
+  blocks:
+    blocks:
+      a01bf8bd-cb9c-4610-b945-19d5e6e8f1a3:
+        id: system_main_block
+        label: 'Main page content'
+        provider: system
+        label_display: '0'
+        region: content
+        weight: '0'
+        context_mapping: {  }
+        custom_id: system_main_block
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: taxonomy_topics_detail_page
+        third_party_settings: {  }
+        uuid: a01bf8bd-cb9c-4610-b945-19d5e6e8f1a3
+      6e4701a6-15c5-4fc0-8618-544b055ce4da:
+        id: 'views_block:taxonomy_related_content-news_stories'
+        label: ''
+        provider: views
+        label_display: visible
+        views_label: ''
+        items_per_page: none
+        region: content
+        weight: '1'
+        context_mapping: {  }
+        custom_id: views_block_taxonomy_related_content_news_stories
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: taxonomy_topics_detail_page
+        third_party_settings: {  }
+        uuid: 6e4701a6-15c5-4fc0-8618-544b055ce4da
+    id: blocks
+    saved: false
+    uuid: ac0fd6ab-0b0e-4d2a-896c-9dd58345db98
+    include_default_blocks: 0
+weight: 0
