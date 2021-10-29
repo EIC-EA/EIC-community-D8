@@ -171,7 +171,7 @@ function eic_community_preprocess_eic_group_header_block(array &$variables) {
   $tag = \Drupal::service('oec_group_flex.helper')->getGroupVisibilityTagLabel($group);
 
   $variables['group_values']['tags'][] = [
-    'extra_classes' => 'ecl-tag--is-' . $tag,
+    'extra_classes' => 'ecl-tag--is-' . strtolower($tag),
     'tag' => [
       'type' => 'button',
       'label' => $tag,
