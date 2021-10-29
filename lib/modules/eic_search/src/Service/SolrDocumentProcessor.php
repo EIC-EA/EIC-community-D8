@@ -7,6 +7,10 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\comment\CommentInterface;
 use Drupal\comment\Entity\Comment;
 use Drupal\Component\Utility\Unicode;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Queue\QueueFactory;
+use Drupal\Core\Queue\QueueWorkerManager;
+use Drupal\Core\Queue\SuspendQueueException;
 use Drupal\eic_comments\CommentsHelper;
 use Drupal\eic_flags\FlagType;
 use Drupal\eic_groups\Constants\GroupVisibilityType;
@@ -16,15 +20,20 @@ use Drupal\eic_search\SolrIndexes;
 use Drupal\file\Entity\File;
 use Drupal\flag\FlagCountManager;
 use Drupal\group\Entity\Group;
+use Drupal\group\Entity\GroupContent;
+use Drupal\group\Entity\GroupInterface;
 use Drupal\group\GroupMembership;
 use Drupal\image\Entity\ImageStyle;
 use Drupal\media\MediaInterface;
 use Drupal\node\Entity\Node;
+use Drupal\node\Entity\NodeType;
 use Drupal\node\NodeInterface;
+use Drupal\oec_group_flex\GroupVisibilityDatabaseStorageInterface;
 use Drupal\paragraphs\Entity\Paragraph;
 use Drupal\profile\Entity\Profile;
 use Drupal\profile\Entity\ProfileInterface;
 use Drupal\search_api\Entity\Index;
+use Drupal\search_api\SearchApiException;
 use Drupal\search_api\Utility\PostRequestIndexing;
 use Drupal\search_api\Utility\Utility;
 use Drupal\statistics\NodeStatisticsDatabaseStorage;
@@ -79,6 +88,27 @@ class SolrDocumentProcessor {
   private $entityDownloadHelper;
 
   /**
+   * The Queue Factory service.
+   *
+   * @var QueueFactory $queueFactory
+   */
+  private $queueFactory;
+
+  /**
+   * The Queue Worker Manager service.
+   *
+   * @var QueueWorkerManager $queueManager
+   */
+  private $queueManager;
+
+  /**
+   * The Entity Type Manager service.
+   *
+   * @var EntityTypeManagerInterface $entityTypeManager
+   */
+  private $entityTypeManager;
+
+  /**
    * The key used to identify solr document fields for last flagged.
    *
    * @var string
@@ -98,6 +128,10 @@ class SolrDocumentProcessor {
    *   The Comments Helper service.
    * @param EntityFileDownloadCount $entity_download_helper
    *   The Entity File Download Count service helper.
+   * @param QueueFactory $queue_factory
+   *   The Queue Factory service.
+   * @param QueueWorkerManager $queue_worker_manager
+   *   The Queue Worker Manager service.
    */
   public function __construct(
     Connection $connection,
@@ -105,7 +139,10 @@ class SolrDocumentProcessor {
     PostRequestIndexing $post_request_indexing,
     NodeStatisticsDatabaseStorage $node_statistics_db_storage,
     CommentsHelper $comments_helper,
-    EntityFileDownloadCount $entity_download_helper
+    EntityFileDownloadCount $entity_download_helper,
+    QueueFactory $queue_factory,
+    QueueWorkerManager $queue_worker_manager,
+    EntityTypeManagerInterface $entity_type_manager
   ) {
     $this->connection = $connection;
     $this->flagCountManager = $flag_count_manager;
@@ -113,6 +150,9 @@ class SolrDocumentProcessor {
     $this->nodeStatisticsDatabaseStorage = $node_statistics_db_storage;
     $this->commentsHelper = $comments_helper;
     $this->entityDownloadHelper = $entity_download_helper;
+    $this->queueFactory = $queue_factory;
+    $this->queueManager = $queue_worker_manager;
+    $this->entityTypeManager = $entity_type_manager;
   }
 
   /**
@@ -127,6 +167,7 @@ class SolrDocumentProcessor {
   public function processGlobalData(Document &$document, array $fields) {
     $title = '';
     $type = '';
+    $type_label = '';
     $date = '';
     $status = FALSE;
     $fullname = '';
@@ -139,6 +180,10 @@ class SolrDocumentProcessor {
       case 'entity:node':
         $title = $fields['ss_content_title'];
         $type = $fields['ss_content_type'];
+        $node_type = NodeType::load($type);
+        $type_label = $node_type instanceof NodeTypeInterface ?
+          $node_type->label():
+          $fields['ss_content_type'];
         $date = $fields['ds_content_created'];
         $changed = $fields['ds_changed'];
         $status = $fields['bs_content_status'];
@@ -228,6 +273,10 @@ class SolrDocumentProcessor {
     //We need to use only one field key for the global search on the FE side
     $document->addField('tm_global_title', $title);
     $document->addField('ss_global_content_type', $type);
+    $document->addField(
+      'ss_global_content_type_label',
+      !empty($type_label) ? $type_label: $type
+    );
     $document->addField('ss_global_created_date', $date);
     $document->addField('bs_global_status', $status);
     $document->addField('ss_drupal_timestamp', strtotime($date));
@@ -634,13 +683,48 @@ class SolrDocumentProcessor {
         continue;
       }
       $datasource_id = 'entity:' . $entity->getEntityTypeId();
-      $datasource = $global_index->getDatasource($datasource_id);
+
+      try {
+        $datasource = $global_index->getDatasource($datasource_id);
+      } catch (SearchApiException $api_exception) {
+        continue;
+      }
+
       $item_id = $datasource->getItemId($entity->getTypedData());
       $item_ids[] = Utility::createCombinedId($datasource_id, $item_id);
     }
 
     // Request reindexing for the given items.
     $this->postRequestIndexing->registerIndexingOperation(SolrIndexes::GLOBAL, $item_ids);
+  }
+
+  /**
+   * @param \Drupal\group\Entity\GroupInterface $group
+   *
+   * @throws \Drupal\Component\Plugin\Exception\PluginException
+   */
+  public function reIndexEntitiesFromGroup(GroupInterface $group) {
+    $queue = $this->queueFactory->get('eic_groups_group_content_search_api');
+    $queue_worker = $this->queueManager->createInstance('eic_groups_group_content_search_api');
+
+    /** @var \Drupal\group\Entity\Storage\GroupContentStorageInterface $storage */
+    $storage = $this->entityTypeManager->getStorage('group_content');
+    $contents = $storage->loadByGroup($group);
+
+    foreach ($contents as $group_content) {
+      $queue->createItem($group_content);
+    }
+
+    while ($item = $queue->claimItem()) {
+      try {
+        $queue_worker->processItem($item->data);
+        $queue->deleteItem($item);
+      }
+      catch (SuspendQueueException $e) {
+        $queue->releaseItem($item);
+        break;
+      }
+    }
   }
 
 }
