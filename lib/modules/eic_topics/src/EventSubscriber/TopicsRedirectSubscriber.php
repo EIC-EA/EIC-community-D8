@@ -71,7 +71,7 @@ class TopicsRedirectSubscriber implements EventSubscriberInterface {
       ->loadParents($term->id());
 
     // We don't show the first level term of topics taxonomies.
-    if (empty($parents) && Topics::TERM_TOPICS_ID === $vid) {
+    if (empty($parents) && Topics::TERM_VOCABULARY_TOPICS_ID === $vid) {
       throw new NotFoundHttpException();
     }
   }

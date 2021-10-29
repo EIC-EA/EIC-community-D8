@@ -27,7 +27,7 @@ function eic_topics_preprocess_taxonomy_term(&$variables) {
   $vid = $term->get('vid')->getValue();
   $vid = reset($vid)['target_id'];
 
-  if (Topics::TERM_TOPICS_ID !== $vid) {
+  if (Topics::TERM_VOCABULARY_TOPICS_ID !== $vid) {
     return;
   }
 

@@ -9,7 +9,7 @@ namespace Drupal\eic_topics\Constants;
  */
 final class Topics {
 
-  const TERM_TOPICS_ID = 'topics';
+  const TERM_VOCABULARY_TOPICS_ID = 'topics';
 
   const TERM_TOPICS_ID_FIELD_CONTENT_SOLR = 'sm_content_field_vocab_geo_string';
 
