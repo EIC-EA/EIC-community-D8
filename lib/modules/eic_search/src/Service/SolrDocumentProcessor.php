@@ -301,7 +301,7 @@ class SolrDocumentProcessor {
       }
 
       //Trick to convert the &amp to & when nbsp
-      $document->setField('tm_X3b_en_rendered_item', str_replace('&amp;nbsp;', '&nbsp;', $text));
+      $document->setField('tm_X3b_en_rendered_item', html_entity_decode($text));
     }
 
     $nid = $fields['its_content_nid'];
