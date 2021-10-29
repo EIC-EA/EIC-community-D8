@@ -368,11 +368,157 @@ display:
         - 'user.node_grants:view'
       tags:
         - 'config:search_api.index.global'
+  discussions:
+    display_plugin: block
+    id: discussions
+    display_title: Discussions
+    position: 2
+    display_options:
+      display_extenders: {  }
+      display_description: ''
+      title: 'Related discussions'
+      defaults:
+        title: false
+        filters: false
+        filter_groups: false
+      filters:
+        content_status:
+          id: content_status
+          table: search_api_index_global
+          field: content_status
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: '='
+          value: '1'
+          group: 1
+          exposed: false
+          expose:
+            operator_id: ''
+            label: ''
+            description: ''
+            use_operator: false
+            operator: ''
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: ''
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          plugin_id: search_api_boolean
+        content_type:
+          id: content_type
+          table: search_api_index_global
+          field: content_type
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: or
+          value:
+            discussion: discussion
+          group: 1
+          exposed: false
+          expose:
+            operator_id: ''
+            label: ''
+            description: ''
+            use_operator: false
+            operator: ''
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: ''
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+            reduce: false
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          reduce_duplicates: false
+          plugin_id: search_api_options
+        search_api_datasource:
+          id: search_api_datasource
+          table: search_api_index_global
+          field: search_api_datasource
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: or
+          value:
+            'entity:node': 'entity:node'
+          group: 1
+          exposed: false
+          expose:
+            operator_id: ''
+            label: ''
+            description: ''
+            use_operator: false
+            operator: ''
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: ''
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+            reduce: false
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          reduce_duplicates: false
+          plugin_id: search_api_datasource
+      filter_groups:
+        operator: AND
+        groups:
+          1: AND
+    cache_metadata:
+      max-age: -1
+      contexts:
+        - 'languages:language_interface'
+        - url
+        - 'user.node_grants:view'
+      tags:
+        - 'config:search_api.index.global'
   groups:
     display_plugin: block
     id: groups
     display_title: Groups
-    position: 2
+    position: 1
     display_options:
       display_extenders: {  }
       display_description: ''
@@ -494,7 +640,7 @@ display:
     display_plugin: block
     id: news_stories
     display_title: 'News & Stories'
-    position: 1
+    position: 3
     display_options:
       display_extenders: {  }
       display_description: ''
