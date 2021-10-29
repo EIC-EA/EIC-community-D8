@@ -536,9 +536,9 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
     if ($is_group_page) {
       $moderation_state = $group->get('moderation_state')->value;
 
-      // If group is not blocked, we return TRUE.
+      // If group is not blocked, we return FALSE.
       if ($moderation_state !== GroupsModerationHelper::GROUP_BLOCKED_STATE) {
-        return $is_group_page;
+        return FALSE;
       }
 
       // If user doesn't have permission to view the group, we return FALSE.
