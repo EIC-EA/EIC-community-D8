@@ -569,7 +569,38 @@ class SolrDocumentProcessor {
    * @throws \Drupal\Core\Entity\EntityMalformedException
    */
   public function processGroupUserData(DocumentInterface &$document, array $fields) {
-    if ($fields['ss_search_api_datasource'] === 'entity:user' && array_key_exists('its_user_profile', $fields)) {
+    $datasource = $fields['ss_search_api_datasource'];
+
+    if (!$datasource === 'entity:user') {
+      return;
+    }
+
+    $user = User::load($fields['its_user_id']);
+
+    if (!$user instanceof UserInterface) {
+      return;
+    }
+
+    $url_contact = Url::fromRoute(
+      'eic_private_message.user_private_message',
+      ['user' => $user->id()]
+    )->toString();
+
+    $this->addOrUpdateDocumentField(
+      $document,
+      'ss_user_link_contact',
+      $fields,
+      $url_contact
+    );
+
+    $this->addOrUpdateDocumentField(
+      $document,
+      'ss_user_allow_contact',
+      $fields,
+      $user->get(PrivateMessage::PRIVATE_MESSAGE_USER_ALLOW_CONTACT_ID)->value
+    );
+
+    if (array_key_exists('its_user_profile', $fields)) {
       $profile = Profile::load($fields['its_user_profile']);
       if ($profile instanceof ProfileInterface) {
         $socials = $profile->get('field_social_links')->getValue();
@@ -587,25 +618,6 @@ class SolrDocumentProcessor {
         }, $grps);
 
         $document->setField('itm_user__group_content__uid_gid', $grp_ids);
-
-        $url_contact = Url::fromRoute(
-          'eic_private_message.user_private_message',
-          ['user' => $user->id()]
-        )->toString();
-
-        $this->addOrUpdateDocumentField(
-          $document,
-          'ss_user_link_contact',
-          $fields,
-          $url_contact
-        );
-
-        $this->addOrUpdateDocumentField(
-          $document,
-          'ss_user_allow_contact',
-          $fields,
-          $user->get(PrivateMessage::PRIVATE_MESSAGE_USER_ALLOW_CONTACT_ID)->value
-        );
       }
     }
 
