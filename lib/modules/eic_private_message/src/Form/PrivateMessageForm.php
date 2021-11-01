@@ -163,12 +163,14 @@ class PrivateMessageForm extends FormBase {
       '#title' => $this->t('Subject', [], ['context' => 'eic_private_message']),
       '#required' => TRUE,
     ];
+
     $form['body'] = [
       '#type' => 'text_format',
       '#title' => $this->t('Body', [], ['context' => 'eic_private_message']),
       '#format' => 'plain_text',
       '#required' => TRUE,
     ];
+
     $form['send_copy'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Send me a copy', [], ['context' => 'eic_private_message']),
@@ -189,6 +191,8 @@ class PrivateMessageForm extends FormBase {
 
   /**
    * {@inheritdoc}
+   *
+   * Send mails to targetted users. Also send a copy if needed.
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $values = $form_state->getValues();
