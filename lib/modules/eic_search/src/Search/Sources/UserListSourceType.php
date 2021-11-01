@@ -64,6 +64,10 @@ class UserListSourceType extends SourceType {
         'ASC' => $this->t('Last inactive', [], ['context' => 'eic_search']),
         'DESC' => $this->t('Last active', [], ['context' => 'eic_search']),
       ],
+      'score' => [
+        'label' => $this->t('Relevance', [], ['context' => 'eic_search']),
+        'DESC' => $this->t('Relevance', [], ['context' => 'eic_search']),
+      ],
     ];
   }
 

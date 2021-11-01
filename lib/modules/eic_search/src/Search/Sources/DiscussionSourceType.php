@@ -87,6 +87,10 @@ class DiscussionSourceType extends SourceType {
         'label' => $this->t('Last highlighted', [], ['context' => 'eic_search']),
         'DESC' => $this->t('Last highlighted', [], ['context' => 'eic_search']),
       ],
+      'score' => [
+        'label' => $this->t('Relevance', [], ['context' => 'eic_search']),
+        'DESC' => $this->t('Relevance', [], ['context' => 'eic_search']),
+      ],
     ];
   }
 
