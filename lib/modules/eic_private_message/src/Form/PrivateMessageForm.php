@@ -24,8 +24,8 @@ class PrivateMessageForm extends FormBase {
   /** @var UserHelper $userHelper */
   private $userHelper;
 
-  /** @var string $siteMail */
-  private $siteMail;
+  /** @var array $siteMail */
+  private $systemSettings;
 
   /** @var MailManager $mailManager */
   private $mailManager;
@@ -55,9 +55,10 @@ class PrivateMessageForm extends FormBase {
    * PrivateMessageForm constructor.
    *
    * @param \Drupal\eic_user\UserHelper $user_helper
-   * @param ConfigFactory $config_factory ,
+   * @param \Drupal\Core\Config\ConfigFactory $config_factory
    * @param \Drupal\Core\Mail\MailManager $mail_manager
    * @param \Drupal\Core\Language\LanguageManager $language_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    */
   public function __construct(
     UserHelper $user_helper,
@@ -67,7 +68,7 @@ class PrivateMessageForm extends FormBase {
     EntityTypeManagerInterface $entity_type_manager
   ) {
     $this->userHelper = $user_helper;
-    $this->siteMail = $config_factory->get('system.site')->get('mail');
+    $this->systemSettings = $config_factory->get('system.site');
     $this->mailManager = $mail_manager;
     $this->languageManager = $language_manager;
     $this->entityTypeManager = $entity_type_manager;
@@ -104,25 +105,7 @@ class PrivateMessageForm extends FormBase {
         return [];
       }
 
-      $profiles = $this->entityTypeManager->getStorage('profile')->loadByProperties([
-        'uid' => $user_id,
-        'type' => 'member',
-      ]);
-
-      if (empty($profiles)) {
-        $this->messenger()->addError($this->t(
-          'Profile not found.',
-          [],
-          ['context' => 'eic_private_message']
-        ));
-
-        return [];
-      }
-
-      /** @var \Drupal\profile\Entity\ProfileInterface $profile */
-      $profile = reset($profiles);
-
-      if (!$profile->get(PrivateMessage::PRIVATE_MESSAGE_USER_ALLOW_CONTACT_ID)->value) {
+      if (!$user->get(PrivateMessage::PRIVATE_MESSAGE_USER_ALLOW_CONTACT_ID)->value) {
         $this->messenger()->addError($this->t(
           'This user does not allow contact notification.',
           [],
@@ -145,10 +128,11 @@ class PrivateMessageForm extends FormBase {
       '#type' => 'textfield',
       '#title' => $this->t('From', [], ['context' => 'eic_private_message']),
       '#value' => $this->t(
-        '"@fullname at European Innovation Council" @site_email',
+        '"@fullname at @site_name" @site_email',
         [
           '@fullname' => $this->userHelper->getFullName(),
-          '@site_email' => $this->siteMail,
+          '@site_email' => $this->systemSettings->get('mail'),
+          '@site_name' => $this->systemSettings->get('name'),
         ],
         ['context' => 'eic_private_message']
       ),

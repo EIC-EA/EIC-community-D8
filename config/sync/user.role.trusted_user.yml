@@ -8,6 +8,7 @@ weight: -8
 is_admin: null
 permissions:
   - 'access comments'
+  - 'access contact user page'
   - 'access group overview'
   - 'access user profiles'
   - 'add content to books'

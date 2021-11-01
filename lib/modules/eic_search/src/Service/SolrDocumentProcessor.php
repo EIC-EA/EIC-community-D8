@@ -604,7 +604,7 @@ class SolrDocumentProcessor {
           $document,
           'ss_user_allow_contact',
           $fields,
-          $profile->get(PrivateMessage::PRIVATE_MESSAGE_USER_ALLOW_CONTACT_ID)->value
+          $user->get(PrivateMessage::PRIVATE_MESSAGE_USER_ALLOW_CONTACT_ID)->value
         );
       }
     }

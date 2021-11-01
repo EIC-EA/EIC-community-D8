@@ -163,8 +163,7 @@ class UserHelper {
       }
     }
 
-    return $user->get('field_first_name')->value . ' ' .
-      $user->get('field_last_name')->value;
+    return realname_load($user) ?: '';
   }
 
 }

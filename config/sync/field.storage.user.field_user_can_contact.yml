@@ -1,12 +1,12 @@
-uuid: 03df25d0-7fcd-4f77-8d47-53a80b901f44
+uuid: f1b796c2-6fac-46b5-88b8-526ea4d511ae
 langcode: en
 status: true
 dependencies:
   module:
-    - profile
-id: profile.field_profile_can_contact
-field_name: field_profile_can_contact
-entity_type: profile
+    - user
+id: user.field_user_can_contact
+field_name: field_user_can_contact
+entity_type: user
 type: boolean
 settings: {  }
 module: core
