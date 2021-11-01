@@ -11,11 +11,13 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Queue\QueueFactory;
 use Drupal\Core\Queue\QueueWorkerManager;
 use Drupal\Core\Queue\SuspendQueueException;
+use Drupal\Core\Url;
 use Drupal\eic_comments\CommentsHelper;
 use Drupal\eic_flags\FlagType;
 use Drupal\eic_groups\Constants\GroupVisibilityType;
 use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_media_statistics\EntityFileDownloadCount;
+use Drupal\eic_private_message\Constants\PrivateMessage;
 use Drupal\eic_search\SolrIndexes;
 use Drupal\file\Entity\File;
 use Drupal\flag\FlagCountManager;
@@ -561,8 +563,10 @@ class SolrDocumentProcessor {
   }
 
   /**
-   * @param \Solarium\Core\Query\DocumentInterface $document
+   * @param Document $document
    * @param array $fields
+   *
+   * @throws \Drupal\Core\Entity\EntityMalformedException
    */
   public function processGroupUserData(DocumentInterface &$document, array $fields) {
     if ($fields['ss_search_api_datasource'] === 'entity:user' && array_key_exists('its_user_profile', $fields)) {
@@ -583,6 +587,25 @@ class SolrDocumentProcessor {
         }, $grps);
 
         $document->setField('itm_user__group_content__uid_gid', $grp_ids);
+
+        $url_contact = Url::fromRoute(
+          'eic_private_message.user_private_message',
+          ['user' => $user->id()]
+        )->toString();
+
+        $this->addOrUpdateDocumentField(
+          $document,
+          'ss_user_link_contact',
+          $fields,
+          $url_contact
+        );
+
+        $this->addOrUpdateDocumentField(
+          $document,
+          'ss_user_allow_contact',
+          $fields,
+          $profile->get(PrivateMessage::PRIVATE_MESSAGE_USER_ALLOW_CONTACT_ID)->value
+        );
       }
     }
 

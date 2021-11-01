@@ -1,0 +1,23 @@
+uuid: 433d44e2-f119-437a-ae09-316c2981db4d
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.profile.field_profile_can_contact
+    - profile.type.member
+id: profile.member.field_profile_can_contact
+field_name: field_profile_can_contact
+entity_type: profile
+bundle: member
+label: 'Members are allowed to contact you through your personal contact form'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 1
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

@@ -1,0 +1,7 @@
+eic_private_message.user_private_message:
+  path: '/user/{user}/contact'
+  defaults:
+    _title: 'User contact form'
+    _form: '\Drupal\eic_private_message\Form\PrivateMessageForm'
+  requirements:
+    _permission: 'access content'
