@@ -32,7 +32,7 @@ reactions:
         provider: system
         label_display: '0'
         region: content
-        weight: '-2'
+        weight: '-3'
         context_mapping: {  }
         custom_id: system_main_block
         theme: eic_community
@@ -49,7 +49,7 @@ reactions:
         views_label: ''
         items_per_page: none
         region: content
-        weight: '0'
+        weight: '-1'
         context_mapping: {  }
         custom_id: views_block_taxonomy_related_content_news_stories
         theme: eic_community
@@ -66,7 +66,7 @@ reactions:
         views_label: ''
         items_per_page: none
         region: content
-        weight: '-1'
+        weight: '-2'
         context_mapping: {  }
         custom_id: views_block_taxonomy_related_content_groups
         theme: eic_community
@@ -126,6 +126,23 @@ reactions:
         context_id: taxonomy_topics_detail_page
         third_party_settings: {  }
         uuid: 902342bc-a8aa-4d04-b10e-eef7827721c0
+      ca2d1490-fdeb-45f0-8d14-98df6305ccf2:
+        id: 'views_block:taxonomy_related_content-wiki_pages'
+        label: ''
+        provider: views
+        label_display: visible
+        views_label: ''
+        items_per_page: none
+        region: content
+        weight: '0'
+        context_mapping: {  }
+        custom_id: views_block_taxonomy_related_content_wiki_pages
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: taxonomy_topics_detail_page
+        third_party_settings: {  }
+        uuid: ca2d1490-fdeb-45f0-8d14-98df6305ccf2
     id: blocks
     saved: false
     uuid: ac0fd6ab-0b0e-4d2a-896c-9dd58345db98
