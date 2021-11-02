@@ -23,6 +23,11 @@ class GroupOverviewPages {
   const FILES = 'eic_overviews.groups.overview_page.files';
 
   /**
+   * Route to the group latest activity overview.
+   */
+  const LATEST_ACTIVITY = 'eic_overviews.groups.overview_page.latest_activity_stream';
+
+  /**
    * Route to the group members overview.
    */
   const MEMBERS = 'eic_overviews.groups.overview_page.members';
