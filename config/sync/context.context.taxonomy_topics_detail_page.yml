@@ -109,6 +109,23 @@ reactions:
         context_id: taxonomy_topics_detail_page
         third_party_settings: {  }
         uuid: 494fd4a2-6a2b-4596-adb9-bf5f15c5a1f2
+      902342bc-a8aa-4d04-b10e-eef7827721c0:
+        id: 'views_block:taxonomy_related_content-events'
+        label: ''
+        provider: views
+        label_display: visible
+        views_label: ''
+        items_per_page: none
+        region: content
+        weight: '3'
+        context_mapping: {  }
+        custom_id: views_block_taxonomy_related_content_events
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: taxonomy_topics_detail_page
+        third_party_settings: {  }
+        uuid: 902342bc-a8aa-4d04-b10e-eef7827721c0
     id: blocks
     saved: false
     uuid: ac0fd6ab-0b0e-4d2a-896c-9dd58345db98
