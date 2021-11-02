@@ -32,7 +32,7 @@ reactions:
         provider: system
         label_display: '0'
         region: content
-        weight: '-1'
+        weight: '-2'
         context_mapping: {  }
         custom_id: system_main_block
         theme: eic_community
@@ -49,7 +49,7 @@ reactions:
         views_label: ''
         items_per_page: none
         region: content
-        weight: '1'
+        weight: '0'
         context_mapping: {  }
         custom_id: views_block_taxonomy_related_content_news_stories
         theme: eic_community
@@ -66,7 +66,7 @@ reactions:
         views_label: ''
         items_per_page: none
         region: content
-        weight: '0'
+        weight: '-1'
         context_mapping: {  }
         custom_id: views_block_taxonomy_related_content_groups
         theme: eic_community
@@ -83,7 +83,7 @@ reactions:
         views_label: ''
         items_per_page: none
         region: content
-        weight: '2'
+        weight: '1'
         context_mapping: {  }
         custom_id: views_block_taxonomy_related_content_discussions
         theme: eic_community
@@ -92,6 +92,23 @@ reactions:
         context_id: taxonomy_topics_detail_page
         third_party_settings: {  }
         uuid: 7275bc6b-36fc-447b-a9d2-8d124ddaae19
+      494fd4a2-6a2b-4596-adb9-bf5f15c5a1f2:
+        id: 'views_block:taxonomy_related_content-files'
+        label: ''
+        provider: views
+        label_display: visible
+        views_label: ''
+        items_per_page: none
+        region: content
+        weight: '2'
+        context_mapping: {  }
+        custom_id: views_block_taxonomy_related_content_files
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: taxonomy_topics_detail_page
+        third_party_settings: {  }
+        uuid: 494fd4a2-6a2b-4596-adb9-bf5f15c5a1f2
     id: blocks
     saved: false
     uuid: ac0fd6ab-0b0e-4d2a-896c-9dd58345db98
