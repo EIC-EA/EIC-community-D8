@@ -61,7 +61,6 @@ class UserGallerySourceType extends SourceType {
       ],
       'ds_user_access' => [
         'label' => $this->t('Last active', [], ['context' => 'eic_search']),
-        'ASC' => $this->t('Last inactive', [], ['context' => 'eic_search']),
         'DESC' => $this->t('Last active', [], ['context' => 'eic_search']),
       ],
       'score' => [
