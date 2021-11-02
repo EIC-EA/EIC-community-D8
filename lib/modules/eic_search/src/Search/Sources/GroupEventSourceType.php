@@ -15,6 +15,9 @@ class GroupEventSourceType extends SourceType {
 
   use StringTranslationTrait;
 
+  const START_DATE_SOLR_FIELD_ID = 'its_content_field_date_range_start_value';
+  const END_DATE_SOLR_FIELD_ID = 'its_content_field_date_range_end_value';
+
   /**
    * {@inheritdoc}
    */
@@ -142,6 +145,23 @@ class GroupEventSourceType extends SourceType {
    */
   public function getDefaultSort(): array {
     return ['its_flag_highlight_content', 'DESC'];
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function supportDateFilter(): bool {
+    return TRUE;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function getDateIntervalField(): array {
+    return [
+      'from' => self::START_DATE_SOLR_FIELD_ID,
+      'to' => self::END_DATE_SOLR_FIELD_ID,
+    ];
   }
 
 }

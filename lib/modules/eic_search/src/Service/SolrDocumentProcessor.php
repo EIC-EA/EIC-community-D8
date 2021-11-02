@@ -3,6 +3,7 @@
 namespace Drupal\eic_search\Service;
 
 use Drupal\Core\Database\Connection;
+use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\comment\CommentInterface;
 use Drupal\comment\Entity\Comment;
@@ -10,6 +11,7 @@ use Drupal\Component\Utility\Unicode;
 use Drupal\eic_flags\FlagType;
 use Drupal\eic_groups\Constants\GroupVisibilityType;
 use Drupal\eic_groups\EICGroupsHelper;
+use Drupal\eic_search\Search\Sources\GroupEventSourceType;
 use Drupal\eic_search\SolrIndexes;
 use Drupal\file\Entity\File;
 use Drupal\flag\FlagCountManager;
@@ -34,8 +36,11 @@ use Solarium\QueryType\Update\Query\Document;
  * Class SolrDocumentProcessor
  *
  * @package Drupal\eic_search\Service
+ *
+ * @TODO Split this long class.
  */
 class SolrDocumentProcessor {
+
   /**
    * Database connection.
    *
@@ -319,7 +324,8 @@ class SolrDocumentProcessor {
     $document->addField('ss_discussion_last_comment_timestamp', $comment->getCreatedTime());
     $document->addField('ss_discussion_last_comment_author', $author instanceof UserInterface ? $author->get('field_first_name')->value . ' ' . $author->get('field_last_name')->value : '');
     $document->addField('ss_discussion_last_comment_author_image', $author_file_url);
-    $document->addField('ss_discussion_last_comment_url', $author instanceof UserInterface ? $author->toUrl()->toString() : '');
+    $document->addField('ss_discussion_last_comment_url', $author instanceof UserInterface ? $author->toUrl()
+      ->toString() : '');
   }
 
   /**
@@ -509,6 +515,40 @@ class SolrDocumentProcessor {
         $document->addField('its_' . self::LAST_FLAGGED_KEY . '_' . $flag_type, $result['last_updated']);
       }
     }
+  }
+
+  /**
+   * Updates event data for a document.
+   *
+   * @param \Solarium\QueryType\Update\Query\Document $document
+   *   The Solr document.
+   * @param $fields
+   *   Document fields.
+   */
+  public function processEventData(Document &$document, $fields) {
+    $datasource = $fields['ss_search_api_datasource'];
+    $content_type = $fields['ss_content_type'];
+
+    if ($datasource !== 'entity:node' || $content_type !== 'event') {
+      return;
+    }
+
+    $start_date = new DrupalDateTime($fields['ds_content_field_date_range']);
+    $end_date = new DrupalDateTime($fields['ds_content_field_date_range_end_value']);
+
+    $this->addOrUpdateDocumentField(
+      $document,
+      GroupEventSourceType::START_DATE_SOLR_FIELD_ID,
+      $fields,
+      $start_date->getTimestamp()
+    );
+
+    $this->addOrUpdateDocumentField(
+      $document,
+      GroupEventSourceType::END_DATE_SOLR_FIELD_ID,
+      $fields,
+      $end_date->getTimestamp()
+    );
   }
 
   /**

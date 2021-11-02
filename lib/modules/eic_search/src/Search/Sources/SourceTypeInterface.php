@@ -115,4 +115,18 @@ interface SourceTypeInterface {
    */
   public function allowPagination(): bool;
 
+  /**
+   * Check if Source allow to have a date filter
+   *
+   * @return bool
+   */
+  public function supportDateFilter(): bool;
+
+  /**
+   * Return the solr fields id for "from" and "to" date field.
+   *
+   * @return array
+   */
+  public function getDateIntervalField(): array;
+
 }
