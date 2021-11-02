@@ -22,8 +22,8 @@ use Drupal\eic_search\SolrIndexes;
 use Drupal\file\Entity\File;
 use Drupal\flag\FlagCountManager;
 use Drupal\group\Entity\Group;
-use Drupal\group\Entity\GroupContent;
 use Drupal\group\Entity\GroupInterface;
+use Drupal\node\NodeTypeInterface;
 use Drupal\oec_group_flex\OECGroupFlexHelper;
 use Drupal\group\GroupMembership;
 use Drupal\image\Entity\ImageStyle;
@@ -31,7 +31,6 @@ use Drupal\media\MediaInterface;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use Drupal\node\NodeInterface;
-use Drupal\oec_group_flex\GroupVisibilityDatabaseStorageInterface;
 use Drupal\paragraphs\Entity\Paragraph;
 use Drupal\profile\Entity\Profile;
 use Drupal\profile\Entity\ProfileInterface;
@@ -526,8 +525,11 @@ class SolrDocumentProcessor {
     /** @var \Drupal\oec_group_flex\GroupVisibilityDatabaseStorage $group_visibility_storage */
     $group_visibility_storage = \Drupal::service('oec_group_flex.group_visibility.storage');
     $group_visibility_entity = $group_visibility_storage->load($group->id());
+    $visibility_type = $group_visibility_entity ?
+      $group_visibility_entity->getType() :
+      NULL;
 
-    switch ($group_visibility_entity->getType()) {
+    switch ($visibility_type) {
       case GroupVisibilityType::GROUP_VISIBILITY_PRIVATE:
       case GroupVisibilityType::GROUP_VISIBILITY_COMMUNITY:
         $group_visibility = $group_visibility_entity->getType();
