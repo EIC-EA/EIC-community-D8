@@ -96,10 +96,6 @@
       margin-bottom: ecl-box-model('padding');
     }
 
-    /* #{$node}--has-blocks & {
-      padding-top: ecl-box-model('padding');
-    } */
-
     #{$node}--has-columns & {
       @include ecl-media-breakpoint-up('md') {
         margin-left: ecl-box-model('padding');
@@ -108,9 +104,17 @@
           margin-left: 0;
         }
       }
+    }
 
+    #{$node}--has-3-columns & {
       @include ecl-media-breakpoint-up('xl') {
-        width: calc(100% / 3);
+        width: calc((100% / 3) - (#{ecl-box-model('padding')} / 1.5));
+        &:nth-child(odd) {
+          margin-left: ecl-box-model('padding');
+        }
+        &:nth-child(3n+1) {
+          margin-left: 0;
+        }
       }
     }
 
