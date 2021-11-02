@@ -184,7 +184,7 @@ class SolrDocumentProcessor {
         $type = $fields['ss_content_type'];
         $node_type = NodeType::load($type);
         $type_label = $node_type instanceof NodeTypeInterface ?
-          $node_type->label():
+          $node_type->label() :
           $fields['ss_content_type'];
         $date = $fields['ds_content_created'];
         $changed = $fields['ds_changed'];
@@ -277,7 +277,7 @@ class SolrDocumentProcessor {
     $document->addField('ss_global_content_type', $type);
     $document->addField(
       'ss_global_content_type_label',
-      !empty($type_label) ? $type_label: $type
+      !empty($type_label) ? $type_label : $type
     );
     $document->addField('ss_global_created_date', $date);
     $document->addField('bs_global_status', $status);
@@ -369,7 +369,8 @@ class SolrDocumentProcessor {
       }
 
       $node = $comment->getCommentedEntity();
-    } else {
+    }
+    else {
       $node = Node::load($node_ref);
     }
 
@@ -571,7 +572,7 @@ class SolrDocumentProcessor {
   public function processGroupUserData(DocumentInterface &$document, array $fields) {
     $datasource = $fields['ss_search_api_datasource'];
 
-    if (!$datasource === 'entity:user' || !array_key_exists('its_user_id', $fields)) {
+    if ($datasource !== 'entity:user') {
       return;
     }
 
@@ -581,9 +582,11 @@ class SolrDocumentProcessor {
       return;
     }
 
+    $people_url = Url::fromRoute('eic_search.people')->toString();
     $url_contact = Url::fromRoute(
       'eic_private_message.user_private_message',
-      ['user' => $user->id()]
+      ['user' => $user->id()],
+      ['query' => ['destination' => $people_url]]
     )->toString();
 
     $this->addOrUpdateDocumentField(
@@ -754,8 +757,7 @@ class SolrDocumentProcessor {
       try {
         $queue_worker->processItem($item->data);
         $queue->deleteItem($item);
-      }
-      catch (SuspendQueueException $e) {
+      } catch (SuspendQueueException $e) {
         $queue->releaseItem($item);
         break;
       }
