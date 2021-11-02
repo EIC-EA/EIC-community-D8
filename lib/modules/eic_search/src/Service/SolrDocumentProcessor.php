@@ -571,7 +571,7 @@ class SolrDocumentProcessor {
   public function processGroupUserData(DocumentInterface &$document, array $fields) {
     $datasource = $fields['ss_search_api_datasource'];
 
-    if (!$datasource === 'entity:user') {
+    if (!$datasource === 'entity:user' || !array_key_exists('its_user_id', $fields)) {
       return;
     }
 
