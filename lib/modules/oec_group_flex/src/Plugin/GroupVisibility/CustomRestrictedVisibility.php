@@ -258,4 +258,14 @@ class CustomRestrictedVisibility extends RestrictedGroupVisibilityBase implement
     return ($operation !== 'view' || !$entity->isPublished() || $entity->getMember($account) || !$entity->hasPermission('view group', $account));
   }
 
+  /**
+   * Gets the custom restricted visibility plugins.
+   *
+   * @return \Drupal\oec_group_flex\Plugin\GroupVisibility\CustomRestrictedVisibilityInterface[]
+   *   Array of custom restricted visibility plugins.
+   */
+  public function getCustomRestrictedPlugins() {
+    return $this->plugins;
+  }
+
 }
