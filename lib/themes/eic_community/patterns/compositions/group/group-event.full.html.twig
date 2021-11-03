@@ -38,17 +38,6 @@
         {% include "@theme/patterns/components/additional_sidebar_infos.html.twig" with additional_sidebar_infos|default({}) %}
       {% endif %}
 
-      {% if action %}
-        <a href="{{ action.url }}" class="ecl-link ecl-link--standalone ecl-link--button ecl-link--button-primary ecl-link--button--big">
-          <span class="ecl-link__label">{{ action.label }}</span>
-        </a>
-      {% endif %}
-
-
-
-
-
-
     {% endblock %}
   {% endembed %}
 
