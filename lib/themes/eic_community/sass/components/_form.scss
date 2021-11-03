@@ -20,6 +20,10 @@
     &:last-child {
       margin-bottom: 0;
     }
+
+    &:only-child {
+      margin-bottom: map-get($ecl-spacing, '2xl');
+    }
   }
 
   &__section--has-toolbar-layout {
@@ -180,6 +184,10 @@
   & .form-wrapper{
     width: 100%;
     box-sizing: border-box;
+
+    & .fieldset-legend{
+      visibility: hidden;
+    }
   }
 
   & .ecl-radio {
