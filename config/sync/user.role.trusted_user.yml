@@ -8,6 +8,7 @@ weight: -8
 is_admin: null
 permissions:
   - 'access comments'
+  - 'access contact user page'
   - 'access group overview'
   - 'access user profiles'
   - 'add content to books'
@@ -37,6 +38,7 @@ permissions:
   - 'use group_wiki transition unpublish'
   - 'use groups transition create_new_draft'
   - 'use groups transition create_new_group'
+  - 'use groups transition keep_blocked'
   - 'use groups transition keep_in_draft'
   - 'use groups transition publish'
   - 'use news_stories transition create_new_draft'

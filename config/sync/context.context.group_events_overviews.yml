@@ -47,8 +47,8 @@ reactions:
           sm_content_field_vocab_topics_string: sm_content_field_vocab_topics_string
           sm_content_field_vocab_geo_string: sm_content_field_vocab_geo_string
         sort_options:
+          ss_content_title: ss_content_title
           ss_drupal_timestamp: ss_drupal_timestamp
-          tm_global_title: tm_global_title
           dm_aggregated_changed: dm_aggregated_changed
           its_last_comment_timestamp: its_last_comment_timestamp
           its_last_flagged_like_content: its_last_flagged_like_content

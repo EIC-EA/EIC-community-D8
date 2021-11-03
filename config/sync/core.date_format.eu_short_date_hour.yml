@@ -1,0 +1,8 @@
+uuid: dbe0f45a-8d71-49c8-9442-891ccf8cc467
+langcode: en
+status: true
+dependencies: {  }
+id: eu_short_date_hour
+label: 'EU short date & hour'
+locked: false
+pattern: 'd/m/Y - H:i'

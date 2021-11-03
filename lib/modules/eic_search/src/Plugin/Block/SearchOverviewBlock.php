@@ -16,6 +16,7 @@ use Drupal\eic_search\Search\Sources\SourceTypeInterface;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\group\GroupMembership;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Provides an SearchOverviewBlock block.
@@ -39,16 +40,23 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
   protected $groupsHelper;
 
   /**
+   * @var RequestStack $requestStack
+   */
+  protected $requestStack;
+
+  /**
    * @param array $configuration
    * @param string $plugin_id
    * @param mixed $plugin_definition
    * @param SourcesCollector $sources_collector
    * @param EICGroupsHelper $groups_helper
+   * @param RequestStack $request_stack
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, SourcesCollector $sources_collector, EICGroupsHelper $groups_helper) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, SourcesCollector $sources_collector, EICGroupsHelper $groups_helper, RequestStack $request_stack) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->sourcesCollector = $sources_collector;
     $this->groupsHelper = $groups_helper;
+    $this->requestStack = $request_stack;
   }
 
   /**
@@ -66,6 +74,7 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
       $plugin_definition,
       $container->get('eic_search.sources_collector'),
       $container->get('eic_groups.helper'),
+      $container->get('request_stack'),
     );
   }
 
@@ -125,7 +134,10 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
     $facets = $this->configuration['facets'];
     $sorts = $this->configuration['sort_options'];
 
-    $search_value = \Drupal::request()->query->get('search', '');
+    $search_value = $this->requestStack
+      ->getCurrentRequest()
+      ->query
+      ->get('search', '');
 
     $facets = array_filter($facets, function ($facet) {
       return $facet;
@@ -165,57 +177,58 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
     ];
 
     return $build + [
-        '#theme' => 'search_overview_block',
-        '#cache' => ['contexts' => ['url.path', 'url.query_args']],
-        '#facets' => array_keys($facets),
-        '#sorts' => array_keys($sorts),
-        '#search_string' => $search_value,
-        '#source_class' => $source instanceof SourceTypeInterface ? get_class($source) : NULL,
-        '#datasource' => $source instanceof SourceTypeInterface ? $source->getSourcesId() : NULL,
-        '#bundle' => $source instanceof SourceTypeInterface ? $source->getEntityBundle() : NULL,
-        '#layout' => $source instanceof SourceTypeInterface ? $source->getLayoutTheme() : NULL,
-        '#page_options' => $this->configuration['page_options'],
-        '#enable_search' => $this->configuration['enable_search'],
-        '#enable_date_filter' => $this->configuration['enable_date_filter'],
-        '#url' => Url::fromRoute('eic_groups.solr_search')->toString(),
-        '#isAnonymous' => \Drupal::currentUser()->isAnonymous(),
-        '#currentGroup' => $current_group_route instanceof GroupInterface ? $current_group_route->id() : NULL,
-        '#currentGroupUrl' => $current_group_route instanceof GroupInterface ? $current_group_route->toUrl()
-          ->toString() : NULL,
-        '#enable_facet_interests' => $this->configuration['add_facet_interests'],
-        '#enable_facet_my_groups' => $this->configuration['add_facet_my_groups'],
-        '#isGroupOwner' => array_key_exists(EICGroupsHelper::GROUP_OWNER_ROLE, $user_group_roles),
-        '#allow_pagination' => $source instanceof SourceTypeInterface ? (int) $source->allowPagination() : 1,
-        '#load_more_number' => SourceTypeInterface::READ_MORE_NUMBER_TO_LOAD,
-        '#translations' => [
-          'public' => $this->t('Public', [], ['context' => 'eic_group']),
-          'private' => $this->t('Private', [], ['context' => 'eic_group']),
-          'filter' => $this->t('Filter', [], ['context' => 'eic_group']),
-          'topics' => $this->t('Topics', [], ['context' => 'eic_group']),
-          'search_text' => $this->t('Search', [], ['context' => 'eic_group']),
-          'no_results' => $this->t('No results', [], ['context' => 'eic_group']),
-          'members' => $this->t('Members', [], ['context' => 'eic_group']),
-          'reactions' => $this->t('Reactions', [], ['context' => 'eic_group']),
-          'documents' => $this->t('Documents', [], ['context' => 'eic_group']),
-          'clear_all' => $this->t('Clear all', [], ['context' => 'eic_group']),
-          'active_filter' => $this->t('Active filter', [], ['context' => 'eic_group']),
-          'sort_by' => $this->t('Sort by', [], ['context' => 'eic_group']),
-          'showing' => $this->t('Showing', [], ['context' => 'eic_group']),
-          'sort_any' => $this->t('- Any -', [], ['context' => 'eic_group']),
-          'label_video' => $this->t('Video', [], ['context' => 'eic_group']),
-          'label_file' => $this->t('File', [], ['context' => 'eic_group']),
-          'label_image' => $this->t('Image', [], ['context' => 'eic_group']),
-          'like' => $this->t('Like', [], ['context' => 'eic_group']),
-          'add_video' => $this->t('Add video', [], ['context' => 'eic_group']),
-          'add_document' => $this->t('Add document', [], ['context' => 'eic_group']),
-          'add_gallery' => $this->t('Add gallery', [], ['context' => 'eic_group']),
-          'post_content' => $this->t('Post content', [], ['context' => 'eic_group']),
-          'uploaded_by' => $this->t('Uploaded by', [], ['context' => 'eic_group']),
-          'draft' => $this->t('Draft', [], ['context' => 'eic_group']),
-          'pending' => $this->t('Pending', [], ['context' => 'eic_group']),
-          'load_more' => $this->t('Load more', [], ['context' => 'eic_group']),
-        ],
-      ];
+      '#theme' => 'search_overview_block',
+      '#cache' => ['contexts' => ['url.path', 'url.query_args']],
+      '#facets' => array_keys($facets),
+      '#sorts' => array_keys($sorts),
+      '#prefilters' => $this->extractFilterFromUrl(),
+      '#search_string' => $search_value,
+      '#source_class' => $source instanceof SourceTypeInterface ? get_class($source) : NULL,
+      '#datasource' => $source instanceof SourceTypeInterface ? $source->getSourcesId() : NULL,
+      '#bundle' => $source instanceof SourceTypeInterface ? $source->getEntityBundle() : NULL,
+      '#layout' => $source instanceof SourceTypeInterface ? $source->getLayoutTheme() : NULL,
+      '#page_options' => $this->configuration['page_options'],
+      '#enable_search' => $this->configuration['enable_search'],
+      '#enable_date_filter' => $this->configuration['enable_date_filter'],
+      '#url' => Url::fromRoute('eic_groups.solr_search')->toString(),
+      '#isAnonymous' => \Drupal::currentUser()->isAnonymous(),
+      '#currentGroup' => $current_group_route instanceof GroupInterface ? $current_group_route->id() : NULL,
+      '#currentGroupUrl' => $current_group_route instanceof GroupInterface ? $current_group_route->toUrl()->toString() : NULL,
+      '#enable_facet_interests' => $this->configuration['add_facet_interests'],
+      '#enable_facet_my_groups' => $this->configuration['add_facet_my_groups'],
+      '#isGroupOwner' => array_key_exists(EICGroupsHelper::GROUP_OWNER_ROLE, $user_group_roles),
+      '#allow_pagination' => $source instanceof SourceTypeInterface ? (int) $source->allowPagination() : 1,
+      '#load_more_number' => SourceTypeInterface::READ_MORE_NUMBER_TO_LOAD,
+      '#translations' => [
+        'public' => $this->t('Public', [], ['context' => 'eic_group']),
+        'private' => $this->t('Private', [], ['context' => 'eic_group']),
+        'filter' => $this->t('Filter', [], ['context' => 'eic_group']),
+        'topics' => $this->t('Topics', [], ['context' => 'eic_group']),
+        'search_text' => $this->t('Search', [], ['context' => 'eic_group']),
+        'no_results_title' => $this->t('We haven’t found any search results', [], ['context' => 'eic_group']),
+        'no_results_body' => $this->t('Please try again with another keyword', [], ['context' => 'eic_group']),
+        'members' => $this->t('Members', [], ['context' => 'eic_group']),
+        'reactions' => $this->t('Reactions', [], ['context' => 'eic_group']),
+        'documents' => $this->t('Documents', [], ['context' => 'eic_group']),
+        'clear_all' => $this->t('Clear all', [], ['context' => 'eic_group']),
+        'active_filter' => $this->t('Active filter', [], ['context' => 'eic_group']),
+        'sort_by' => $this->t('Sort by', [], ['context' => 'eic_group']),
+        'showing' => $this->t('Showing', [], ['context' => 'eic_group']),
+        'sort_any' => $this->t('- Any -', [], ['context' => 'eic_group']),
+        'label_video' => $this->t('Video', [], ['context' => 'eic_group']),
+        'label_file' => $this->t('File', [], ['context' => 'eic_group']),
+        'label_image' => $this->t('Image', [], ['context' => 'eic_group']),
+        'like' => $this->t('Like', [], ['context' => 'eic_group']),
+        'add_video' => $this->t('Add video', [], ['context' => 'eic_group']),
+        'add_document' => $this->t('Add document', [], ['context' => 'eic_group']),
+        'add_gallery' => $this->t('Add gallery', [], ['context' => 'eic_group']),
+        'post_content' => $this->t('Post content', [], ['context' => 'eic_group']),
+        'uploaded_by' => $this->t('Uploaded by', [], ['context' => 'eic_group']),
+        'draft' => $this->t('Draft', [], ['context' => 'eic_group']),
+        'pending' => $this->t('Pending', [], ['context' => 'eic_group']),
+        'load_more' => $this->t('Load more', [], ['context' => 'eic_group']),
+      ],
+    ];
   }
 
   /**
@@ -283,6 +296,43 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
       'add_facet_interests' => $values['search']['configuration']['add_facet_interests'],
       'add_facet_my_groups' => $values['search']['configuration']['add_facet_my_groups'],
     ]);
+  }
+
+  /**
+   * Extracting filters values from the URL.
+   *
+   * Example of filters url parameter: ?filter=ss_content_field_discussion_type:idea.
+   *
+   * @return array
+   */
+  private function extractFilterFromUrl(): array {
+    $filters_value = $this->requestStack
+      ->getCurrentRequest()
+      ->query
+      ->get('filter', '');
+    $results = [];
+
+    if (!$filters_value) {
+      return $results;
+    }
+
+    $filters = explode('&', $filters_value);
+
+    foreach ($filters as $filter_value) {
+      $exploded_filter = explode(':', $filter_value);
+
+      if (empty($exploded_filter)) {
+        continue;
+      }
+
+      $filter_field = reset($exploded_filter);
+      unset($exploded_filter[0]);
+
+      $values = explode(',', reset($exploded_filter));
+      $results[$filter_field] = $values;
+    }
+
+    return $results;
   }
 
   /**
