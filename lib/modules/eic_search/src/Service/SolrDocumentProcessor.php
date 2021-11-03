@@ -22,6 +22,7 @@ use Drupal\flag\FlagCountManager;
 use Drupal\group\Entity\Group;
 use Drupal\group\Entity\GroupContent;
 use Drupal\group\Entity\GroupInterface;
+use Drupal\oec_group_flex\OECGroupFlexHelper;
 use Drupal\group\GroupMembership;
 use Drupal\image\Entity\ImageStyle;
 use Drupal\media\MediaInterface;
@@ -88,6 +89,11 @@ class SolrDocumentProcessor {
   private $entityDownloadHelper;
 
   /**
+   * @var OECGroupFlexHelper $OECGroupFlexHelper
+   */
+  private $OECGroupFlexHelper;
+
+  /**
    * The Queue Factory service.
    *
    * @var QueueFactory $queueFactory
@@ -128,6 +134,7 @@ class SolrDocumentProcessor {
    *   The Comments Helper service.
    * @param EntityFileDownloadCount $entity_download_helper
    *   The Entity File Download Count service helper.
+   * @param \Drupal\oec_group_flex\OECGroupFlexHelper $oec_group_flex_helper
    * @param QueueFactory $queue_factory
    *   The Queue Factory service.
    * @param QueueWorkerManager $queue_worker_manager
@@ -140,6 +147,7 @@ class SolrDocumentProcessor {
     NodeStatisticsDatabaseStorage $node_statistics_db_storage,
     CommentsHelper $comments_helper,
     EntityFileDownloadCount $entity_download_helper,
+    OECGroupFlexHelper $oec_group_flex_helper,
     QueueFactory $queue_factory,
     QueueWorkerManager $queue_worker_manager,
     EntityTypeManagerInterface $entity_type_manager
@@ -150,6 +158,7 @@ class SolrDocumentProcessor {
     $this->nodeStatisticsDatabaseStorage = $node_statistics_db_storage;
     $this->commentsHelper = $comments_helper;
     $this->entityDownloadHelper = $entity_download_helper;
+    $this->OECGroupFlexHelper = $oec_group_flex_helper;
     $this->queueFactory = $queue_factory;
     $this->queueManager = $queue_worker_manager;
     $this->entityTypeManager = $entity_type_manager;
@@ -506,6 +515,11 @@ class SolrDocumentProcessor {
       $document->addField('ss_group_visibility', $group_visibility);
       return;
     }
+
+    $document->addField(
+      'ss_group_visibility_label',
+      $this->OECGroupFlexHelper->getGroupVisibilityTagLabel($group)
+    );
 
     /** @var \Drupal\oec_group_flex\GroupVisibilityDatabaseStorage $group_visibility_storage */
     $group_visibility_storage = \Drupal::service('oec_group_flex.group_visibility.storage');
