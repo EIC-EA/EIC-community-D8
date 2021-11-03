@@ -75,6 +75,10 @@
 
   .ecl-form-group {
     margin: map-get($ecl-spacing, 'l') 0;
+
+    & > div {
+      width: 100%;
+    }
     &:not(fieldset) {
       display: flex;
       flex-direction: column;
