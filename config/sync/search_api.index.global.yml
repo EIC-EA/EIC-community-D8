@@ -919,6 +919,14 @@ field_settings:
       fields:
         - 'entity:user/field_first_name'
         - 'entity:user/field_last_name'
+  user_id:
+    label: 'User ID'
+    datasource_id: 'entity:user'
+    property_path: uid
+    type: integer
+    dependencies:
+      module:
+        - user
   user_last_name:
     label: '[User] Last name'
     datasource_id: 'entity:user'

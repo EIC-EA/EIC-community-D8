@@ -11,17 +11,20 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Queue\QueueFactory;
 use Drupal\Core\Queue\QueueWorkerManager;
 use Drupal\Core\Queue\SuspendQueueException;
+use Drupal\Core\Url;
 use Drupal\eic_comments\CommentsHelper;
 use Drupal\eic_flags\FlagType;
 use Drupal\eic_groups\Constants\GroupVisibilityType;
 use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_media_statistics\EntityFileDownloadCount;
+use Drupal\eic_private_message\Constants\PrivateMessage;
 use Drupal\eic_search\SolrIndexes;
 use Drupal\file\Entity\File;
 use Drupal\flag\FlagCountManager;
 use Drupal\group\Entity\Group;
 use Drupal\group\Entity\GroupContent;
 use Drupal\group\Entity\GroupInterface;
+use Drupal\oec_group_flex\OECGroupFlexHelper;
 use Drupal\group\GroupMembership;
 use Drupal\image\Entity\ImageStyle;
 use Drupal\media\MediaInterface;
@@ -88,6 +91,11 @@ class SolrDocumentProcessor {
   private $entityDownloadHelper;
 
   /**
+   * @var OECGroupFlexHelper $OECGroupFlexHelper
+   */
+  private $OECGroupFlexHelper;
+
+  /**
    * The Queue Factory service.
    *
    * @var QueueFactory $queueFactory
@@ -128,6 +136,7 @@ class SolrDocumentProcessor {
    *   The Comments Helper service.
    * @param EntityFileDownloadCount $entity_download_helper
    *   The Entity File Download Count service helper.
+   * @param \Drupal\oec_group_flex\OECGroupFlexHelper $oec_group_flex_helper
    * @param QueueFactory $queue_factory
    *   The Queue Factory service.
    * @param QueueWorkerManager $queue_worker_manager
@@ -140,6 +149,7 @@ class SolrDocumentProcessor {
     NodeStatisticsDatabaseStorage $node_statistics_db_storage,
     CommentsHelper $comments_helper,
     EntityFileDownloadCount $entity_download_helper,
+    OECGroupFlexHelper $oec_group_flex_helper,
     QueueFactory $queue_factory,
     QueueWorkerManager $queue_worker_manager,
     EntityTypeManagerInterface $entity_type_manager
@@ -150,6 +160,7 @@ class SolrDocumentProcessor {
     $this->nodeStatisticsDatabaseStorage = $node_statistics_db_storage;
     $this->commentsHelper = $comments_helper;
     $this->entityDownloadHelper = $entity_download_helper;
+    $this->OECGroupFlexHelper = $oec_group_flex_helper;
     $this->queueFactory = $queue_factory;
     $this->queueManager = $queue_worker_manager;
     $this->entityTypeManager = $entity_type_manager;
@@ -507,6 +518,11 @@ class SolrDocumentProcessor {
       return;
     }
 
+    $document->addField(
+      'ss_group_visibility_label',
+      $this->OECGroupFlexHelper->getGroupVisibilityTagLabel($group)
+    );
+
     /** @var \Drupal\oec_group_flex\GroupVisibilityDatabaseStorage $group_visibility_storage */
     $group_visibility_storage = \Drupal::service('oec_group_flex.group_visibility.storage');
     $group_visibility_entity = $group_visibility_storage->load($group->id());
@@ -561,11 +577,44 @@ class SolrDocumentProcessor {
   }
 
   /**
-   * @param \Solarium\Core\Query\DocumentInterface $document
+   * @param Document $document
    * @param array $fields
+   *
+   * @throws \Drupal\Core\Entity\EntityMalformedException
    */
   public function processGroupUserData(DocumentInterface &$document, array $fields) {
-    if ($fields['ss_search_api_datasource'] === 'entity:user' && array_key_exists('its_user_profile', $fields)) {
+    $datasource = $fields['ss_search_api_datasource'];
+
+    if ($datasource !== 'entity:user') {
+      return;
+    }
+
+    $user = User::load($fields['its_user_id']);
+
+    if (!$user instanceof UserInterface) {
+      return;
+    }
+
+    $url_contact = Url::fromRoute(
+      'eic_private_message.user_private_message',
+      ['user' => $user->id()],
+    )->toString();
+
+    $this->addOrUpdateDocumentField(
+      $document,
+      'ss_user_link_contact',
+      $fields,
+      $url_contact
+    );
+
+    $this->addOrUpdateDocumentField(
+      $document,
+      'ss_user_allow_contact',
+      $fields,
+      $user->get(PrivateMessage::PRIVATE_MESSAGE_USER_ALLOW_CONTACT_ID)->value
+    );
+
+    if (array_key_exists('its_user_profile', $fields)) {
       $profile = Profile::load($fields['its_user_profile']);
       if ($profile instanceof ProfileInterface) {
         $socials = $profile->get('field_social_links')->getValue();

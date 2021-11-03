@@ -395,7 +395,7 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
    *   The group entity.
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The user account object.
-   * @param \Drupal\group\GroupMembership $membership
+   * @param \Drupal\group\GroupMembership|NULL $membership
    *   The group membership (optional).
    *
    * @return bool
