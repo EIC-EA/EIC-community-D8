@@ -42,7 +42,9 @@
           &.open {
             align-items: flex-start;
           }
+        }
 
+        & .dropbutton-multiple {
           & .dropbutton {
             background: #ffffff;
             border: 1px solid #404040;
