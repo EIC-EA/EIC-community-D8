@@ -473,19 +473,13 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
   }
 
   /**
-   * Checks if the current page is a group under review page.
+   * Checks if the current page is a group page.
    *
-   * @return bool
-   *   TRUE if group is blocked and user can view the group.
+   * @return \Drupal\group\Entity\Group|bool
+   *   Returns the group entity object if the current page is a group page.
    */
-  public function isGroupUnderReviewPage() {
+  public function isGroupPage() {
     $is_group_page = FALSE;
-    $route_name = $this->routeMatch->getRouteName();
-
-    if (!$route_name === 'system.403') {
-      return $is_group_page;
-    }
-
     $current_path = $this->currentPath->getPath();
     $current_url = Url::fromUri("internal:" . $current_path);
     $route_name = $current_url->getRouteName();
@@ -507,7 +501,7 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
         else {
           break;
         }
-        $is_group_page = TRUE;
+        $is_group_page = $group;
         break;
 
       case 'entity.node.canonical':
@@ -529,50 +523,72 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
           break;
         }
 
-        $is_group_page = TRUE;
+        $is_group_page = $group;
         break;
     }
 
-    if ($is_group_page) {
-      $moderation_state = $group->get('moderation_state')->value;
+    return $is_group_page;
+  }
 
-      // If group is not blocked, we return FALSE.
-      if ($moderation_state !== GroupsModerationHelper::GROUP_BLOCKED_STATE) {
-        return FALSE;
+  /**
+   * Checks if the current page is a group under review page.
+   *
+   * @return \Drupal\group\Entity\Group|bool
+   *   Returns the group if is blocked and the user can view it.
+   */
+  public function isGroupUnderReviewPage(?GroupInterface $group) {
+    $route_name = $this->routeMatch->getRouteName();
+
+    if (!$route_name === 'system.403') {
+      return FALSE;
+    }
+
+    if (!$group) {
+      if (!($group = $this->isGroupPage())) {
+        return $group;
       }
+    }
 
-      // If user doesn't have permission to view the group, we return FALSE.
-      if (!$group->hasPermission('view group', $this->currentUser->getAccount())) {
-        return FALSE;
-      }
+    $is_group_page = $group;
 
-      $group_visibility_settings = $this->oecGroupFlexHelper->getGroupVisibilitySettings($group);
+    $moderation_state = $group->get('moderation_state')->value;
 
-      // If group visibility is not custom restricted, it means the user can
-      // access the group but the group is under review.
-      if ($group_visibility_settings['plugin_id'] !== GroupVisibilityType::GROUP_VISIBILITY_CUSTOM_RESTRICTED) {
-        return $is_group_page;
-      }
+    // If group is not blocked, we return FALSE.
+    if ($moderation_state !== GroupsModerationHelper::GROUP_BLOCKED_STATE) {
+      return FALSE;
+    }
 
-      $group_visibility_plugin = $this->groupVibilityManager->createInstance($group_visibility_settings['plugin_id']);
+    // If user doesn't have permission to view the group, we return FALSE.
+    if (!$group->hasPermission('view group', $this->currentUser->getAccount())) {
+      return FALSE;
+    }
 
-      if ($group_visibility_plugin instanceof CustomRestrictedVisibility) {
-        $is_group_page = FALSE;
+    $group_visibility_settings = $this->oecGroupFlexHelper->getGroupVisibilitySettings($group);
 
-        // Loop through all of the options, they are keyed by pluginId.
-        // If we have a match and the plugin returns not neutral we return the
-        // it means the user has access to the group but the group is under
-        // review.
-        foreach (array_keys($group_visibility_settings['settings']->getOptions()) as $pluginId) {
-          $group_custom_restricted_visibility_plugins = $group_visibility_plugin->getCustomRestrictedPlugins();
-          $plugin = isset($group_custom_restricted_visibility_plugins[$pluginId]) ? $group_custom_restricted_visibility_plugins[$pluginId] : NULL;
+    // If group visibility is not custom restricted, it means the user can
+    // access the group but the group is under review.
+    if ($group_visibility_settings['plugin_id'] !== GroupVisibilityType::GROUP_VISIBILITY_CUSTOM_RESTRICTED) {
+      return $is_group_page;
+    }
 
-          if ($plugin instanceof CustomRestrictedVisibilityInterface) {
-            $pluginAccess = $plugin->hasViewAccess($group, $this->currentUser->getAccount(), $group_visibility_settings['settings']);
-            if (!$pluginAccess->isNeutral()) {
-              $is_group_page = TRUE;
-              break;
-            }
+    $group_visibility_plugin = $this->groupVibilityManager->createInstance($group_visibility_settings['plugin_id']);
+
+    if ($group_visibility_plugin instanceof CustomRestrictedVisibility) {
+      $is_group_page = FALSE;
+
+      // Loop through all of the options, they are keyed by pluginId.
+      // If we have a match and the plugin returns not neutral we return the
+      // it means the user has access to the group but the group is under
+      // review.
+      foreach (array_keys($group_visibility_settings['settings']->getOptions()) as $pluginId) {
+        $group_custom_restricted_visibility_plugins = $group_visibility_plugin->getCustomRestrictedPlugins();
+        $plugin = isset($group_custom_restricted_visibility_plugins[$pluginId]) ? $group_custom_restricted_visibility_plugins[$pluginId] : NULL;
+
+        if ($plugin instanceof CustomRestrictedVisibilityInterface) {
+          $pluginAccess = $plugin->hasViewAccess($group, $this->currentUser->getAccount(), $group_visibility_settings['settings']);
+          if (!$pluginAccess->isNeutral()) {
+            $is_group_page = $group;
+            break;
           }
         }
       }

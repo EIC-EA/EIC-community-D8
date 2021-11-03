@@ -31,7 +31,7 @@ function eic_community_theme_suggestions_page_alter(array &$suggestions, array $
   if (\Drupal::routeMatch()->getRouteName() === 'system.403') {
 
     // Create a suggestion for group under review pages.
-    if (\Drupal::service('eic_groups.helper')->isGroupUnderReviewPage()) {
+    if (\Drupal::service('eic_groups.helper')->isGroupUnderReviewPage(NULL)) {
       $suggestions[] = 'page__group__review';
     }
   }
