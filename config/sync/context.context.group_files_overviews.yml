@@ -21,36 +21,6 @@ conditions:
 reactions:
   blocks:
     blocks:
-      1f828322-eac8-4da7-af8f-7677a008a12d:
-        id: eic_search_overview
-        label: ''
-        provider: eic_search
-        label_display: visible
-        source_type: Drupal\eic_search\Search\Sources\LibrarySourceType
-        facets:
-          ss_global_content_type: ss_global_content_type
-          sm_content_field_vocab_topics_string: sm_content_field_vocab_topics_string
-          sm_content_field_vocab_geo_string: sm_content_field_vocab_geo_string
-          ss_content_language_string: ss_content_language_string
-          ss_content_document_type_string: ss_content_document_type_string
-        sort_options:
-          tm_global_title: tm_global_title
-          dm_aggregated_changed: dm_aggregated_changed
-          its_flag_highlight_content: its_flag_highlight_content
-          its_document_download_total: its_document_download_total
-          its_statistics_view: its_statistics_view
-          its_flag_like_content: its_flag_like_content
-          ss_global_created_date: 0
-          its_last_comment_timestamp: 0
-          its_last_flagged_like_content: 0
-          its_last_flagged_bookmark_content: 0
-          its_last_flagged_highlight_content: 0
-        enable_search: 1
-        page_options: normal
-        prefilter_group: 1
-        add_facet_interests: 0
-        add_facet_my_groups: 0
-        context_mapping: {  }
       fc54b9c1-f518-434c-b863-f59eb0363f2e:
         id: eic_search_overview
         label: ''

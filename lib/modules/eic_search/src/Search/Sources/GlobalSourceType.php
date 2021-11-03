@@ -122,6 +122,7 @@ class GlobalSourceType extends SourceType {
       'sm_filename',
       'ss_global_fullname',
       'tm_X3b_en_saa_field_document_media',
+      'tm_X3b_en_content_gallery_slide_name',
     ];
   }
 

@@ -363,6 +363,18 @@ field_settings:
         - field.storage.paragraph.field_gallery_slide_legend
       module:
         - paragraphs
+  content_gallery_slide_name:
+    label: 'Slides » Paragraph » Media » Media » Name'
+    datasource_id: 'entity:node'
+    property_path: 'field_gallery_slides:entity:field_gallery_slide_media:entity:name'
+    type: text
+    dependencies:
+      config:
+        - field.storage.node.field_gallery_slides
+        - field.storage.paragraph.field_gallery_slide_media
+      module:
+        - media
+        - paragraphs
   content_gallery_slide_uri:
     label: 'Slides » Paragraph » Media » Media » File » File » URI'
     datasource_id: 'entity:node'
