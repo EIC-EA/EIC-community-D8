@@ -1,0 +1,8 @@
+.react-datepicker{
+  &__day--in-range {
+    background-color: $ecl-color-blue-75 !important;
+  }
+  &__day--keyboard-selected {
+    background-color: $ecl-color-blue-100 !important;
+  }
+}
