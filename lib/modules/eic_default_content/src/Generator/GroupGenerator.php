@@ -30,8 +30,9 @@ class GroupGenerator extends CoreGenerator {
 
     for ($i = 0; $i < 5; $i++) {
       $visibility = $i % 2 ? 'public' : 'private';
+      $group_number = $i + 1;
       $values = [
-        'label' => "Group #$i",
+        'label' => "Group #$group_number",
         'type' => 'group',
         'field_body' => $this->getFormattedText('full_html'),
         'field_welcome_message' => $this->getFormattedText('full_html'),
@@ -76,7 +77,7 @@ class GroupGenerator extends CoreGenerator {
     $node = Node::create([
       'field_body' => $this->getFormattedText('full_html'),
       'type' => 'discussion',
-      'title' => 'Discussion in group #' . $group->id(),
+      'title' => 'Discussion in ' . $group->label(),
       'field_discussion_type' => 'idea',
       'field_vocab_topics' => $this->getRandomEntities('taxonomy_term', ['vid' => 'topics'], 3),
       'field_vocab_geo' => $this->getRandomEntities('taxonomy_term', ['vid' => 'geo'], 2),
@@ -110,7 +111,7 @@ class GroupGenerator extends CoreGenerator {
     $node = Node::create([
       'field_body' => $this->getFormattedText('full_html'),
       'type' => 'event',
-      'title' => 'Event in group #' . $group->id(),
+      'title' => 'Event in ' . $group->label(),
       'field_link' => 'https://myevent.site',
       'field_organised_by' => 'Someone',
       'field_vocab_event_type' => $this->getRandomEntities('taxonomy_term', ['vid' => 'event_type'], 1),
