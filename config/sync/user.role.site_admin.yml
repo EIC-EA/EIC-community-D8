@@ -9,6 +9,7 @@ is_admin: null
 permissions:
   - 'access administration pages'
   - 'access comments'
+  - 'access contact group users page'
   - 'access contact user page'
   - 'access content overview'
   - 'access contextual links'
