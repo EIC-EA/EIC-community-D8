@@ -1,0 +1,9 @@
+permissions:
+  - 'access events overview'
+  - 'create group_node:event entity'
+public_permissions:
+  - 'access events overview'
+roles:
+  - 'group-member'
+  - 'group-admin'
+  - 'group-owner'
