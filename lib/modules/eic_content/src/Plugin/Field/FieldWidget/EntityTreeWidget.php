@@ -97,7 +97,10 @@ class EntityTreeWidget extends WidgetBase {
     $settings = $this->getFieldSetting('handler_settings');
     $target_entity = $this->fieldDefinition->getFieldStorageDefinition()
       ->getSetting('target_type');
-    $target_bundles = array_key_exists('target_bundles', $settings) ? $settings['target_bundles'] : [];
+    $target_bundles = array_key_exists('target_bundles', $settings) && $settings['target_bundles'] ?
+      $settings['target_bundles'] :
+      [];
+
     $target_bundle = reset($target_bundles);
 
     $element +=
