@@ -124,7 +124,7 @@ class EntityTreeWidget extends WidgetBase {
 
             if ($entity instanceof UserInterface) {
               $parent = 0;
-              $name = $entity->get('field_first_name')->value . ' ' . $entity->get('field_last_name')->value . ' ' . '('. $entity->getEmail() .')';
+              $name = realname_load($entity) . ' ' . '('. $entity->getEmail() .')';
             }
 
             return [
