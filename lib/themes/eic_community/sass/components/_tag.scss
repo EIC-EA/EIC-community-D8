@@ -13,7 +13,7 @@
 
   &--is-public {
     background-color: map-get($ecl-colors, 'grey-15');
-    color: map-get($ecl-colors, 'white');
+    color: map-get($ecl-colors, 'grey');
   }
 
   &--is-restricted {

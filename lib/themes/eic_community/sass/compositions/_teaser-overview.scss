@@ -14,9 +14,11 @@
   }
 
   &__title {
-    margin-top: 0;
 
     @extend .ecl-u-type-heading-3;
+    &--blue {
+      color: $ecl-color-blue;
+    }
   }
 
   &--has-columns {

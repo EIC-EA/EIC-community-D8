@@ -10,7 +10,7 @@
  */
 function eic_community_form_system_theme_settings_alter(
   &$form,
-  FormStateInterface &$form_state,
+  \Drupal\Core\Form\FormStateInterface &$form_state,
   $form_id = NULL
 ) {
   // Work-around for a core bug affecting admin themes.

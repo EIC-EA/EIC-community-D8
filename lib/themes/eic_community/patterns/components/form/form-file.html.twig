@@ -1,0 +1,9 @@
+{% embed "@theme/patterns/components/well.html.twig" with field|default({})|merge({
+  extra_classes: 'ecl-well--is-blue',
+}) only %}
+  {% block content %}
+    {% include '@ecl-twig/ec-component-file-upload/ecl-file-upload.html.twig' with field|default({})|without('type')|merge({
+      width: 'full',
+    }) %}
+  {% endblock %}
+{% endembed %}

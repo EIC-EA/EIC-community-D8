@@ -5,7 +5,10 @@
  * Primary module hooks for EIC Search module.
  */
 
-use Drupal\eic_groups\Constants\GroupVisibilityType;
+use \Drupal\eic_search\Plugin\search_api\processor\GroupAccessContent;
+use \Solarium\Core\Query\QueryInterface as SolrQueryInterface;
+use Solarium\QueryType\Select\Query\Query as SolrQuery;
+use Drupal\search_api\Query\QueryInterface;
 
 /**
  * Implements hook_theme().
@@ -23,6 +26,7 @@ function eic_search_theme($existing, $type, $theme, $path) {
         'translations' => [],
         'facets' => [],
         'sorts' => [],
+        'prefilters' => [],
         'page_options' => '',
         'currentGroup' => '',
         'currentGroupUrl' => '',
@@ -51,11 +55,11 @@ function eic_search_preprocess_html(&$variables) {
   foreach ($sources as $source) {
     foreach ($source->getAvailableSortOptions() as $sort_key => $options) {
       foreach ($options as $direction => $label) {
-        $variables['#attached']['drupalSettings']['translations']['sources']['sort'][$sort_key . '__' . $direction] = $label;
+        $variables['#attached']['drupalSettings']['translations']['sources'][$source->getEntityBundle()]['sort'][$sort_key . '__' . $direction] = $label;
       }
     }
     foreach ($source->getAvailableFacets() as $facet_option => $label) {
-      $variables['#attached']['drupalSettings']['translations']['sources']['facet'][$facet_option] = $label;
+      $variables['#attached']['drupalSettings']['translations']['sources'][$source->getEntityBundle()]['facet'][$facet_option] = $label;
     }
   }
 }
@@ -66,6 +70,8 @@ function eic_search_preprocess_html(&$variables) {
  * Solr needs to be aware of all group permissions so we can filter it in our
  *   query builder depending of the user context
  *
+ * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+ * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
  * @throws \Drupal\Core\Entity\EntityMalformedException
  * @throws \Drupal\search_api\SearchApiException
  */
@@ -85,10 +91,39 @@ function eic_search_search_api_solr_documents_alter(
 
     $solr_document_processor->processGlobalData($document, $fields);
     $solr_document_processor->processGroupData($document, $fields);
+    $solr_document_processor->processMessageData($document, $fields);
     $solr_document_processor->processDiscussionData($document, $fields);
     $solr_document_processor->processDocumentData($document, $fields);
     $solr_document_processor->processFlaggingData($document, $fields);
     $solr_document_processor->processGroupVisibilityData($document, $fields, $items, $group_helper);
     $solr_document_processor->processGroupUserData($document, $fields);
+  }
+}
+
+/**
+ * Implements hook_search_api_solr_query_alter.
+ *
+ * Override the select query of solr_search_api to add the custom processor.
+ * We need this hook because search_api_solr isn't adapted for Processor
+ * of search_api.
+ */
+function eic_search_search_api_solr_query_alter(SolrQueryInterface $solarium_query, QueryInterface $query) {
+  $index_storage = \Drupal::entityTypeManager()
+    ->getStorage('search_api_index');
+
+  /** @var \Drupal\search_api\IndexInterface $index */
+  $index = $index_storage->load('global');
+
+  if (!$index instanceof \Drupal\search_api\IndexInterface) {
+    return;
+  }
+
+  if (
+    $index->isValidProcessor('group_content_access') &&
+    GroupAccessContent::supportsIndex($index) &&
+    $solarium_query instanceof SolrQuery
+  ) {
+    $index->getProcessor('group_content_access')
+      ->preprocessSolrSearchQuery($solarium_query);
   }
 }

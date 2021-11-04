@@ -1,3 +1,7 @@
+#activity-stream-overview {
+  flex: 1;
+}
+
 .ecl-editorial-article {
   $node: &;
 
@@ -15,6 +19,7 @@
         }
       }
     }
+
   }
 
   &__header,
@@ -43,6 +48,10 @@
 
     @include ecl-media-breakpoint-up('md') {
       flex-grow: 1;
+
+      #{$node}--is-ready#{$node}--is-collapsible & {
+        flex-basis: 100%;
+      }
     }
 
     h1,
@@ -76,6 +85,7 @@
     h5, {
       @extend .ecl-u-type-heading-5;
     }
+
   }
 
   &__aside {

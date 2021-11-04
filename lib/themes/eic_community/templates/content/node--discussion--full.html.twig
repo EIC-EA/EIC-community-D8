@@ -41,6 +41,10 @@
             {% endif %}
           </div>
         {% endif %}
+        {% if content.field_related_documents[0] is not empty %}
+          <h2>{{ 'Documents'|t }}</h2>
+          {{ content.field_related_documents }}
+        {% endif %}
         {# {% if video_download %}
           {% include "@theme/patterns/components/attachment.html.twig" with video_download only %}
         {% else %} #}

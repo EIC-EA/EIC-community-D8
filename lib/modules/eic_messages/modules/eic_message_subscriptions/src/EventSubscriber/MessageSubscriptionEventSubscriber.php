@@ -4,10 +4,9 @@ namespace Drupal\eic_message_subscriptions\EventSubscriber;
 
 use Drupal\eic_message_subscriptions\Event\MessageSubscriptionEvent;
 use Drupal\eic_message_subscriptions\Event\MessageSubscriptionEvents;
+use Drupal\eic_message_subscriptions\Service\SubscriptionMessageCreator;
 use Drupal\eic_message_subscriptions\SubscriptionOperationTypes;
-use Drupal\eic_messages\Service\CommentMessageCreator;
-use Drupal\eic_messages\Service\GroupContentMessageCreator;
-use Drupal\eic_messages\Service\NodeMessageCreator;
+use Drupal\eic_messages\Util\QueuedMessageChecker;
 use Drupal\flag\FlaggingInterface;
 use Drupal\group\Entity\GroupContent;
 use Drupal\message_subscribe\SubscribersInterface;
@@ -24,55 +23,35 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class MessageSubscriptionEventSubscriber implements EventSubscriberInterface {
 
   /**
-   * The Comment Message Creator service.
-   *
-   * @var \Drupal\eic_messages\Service\CommentMessageCreator
+   * @var \Drupal\eic_message_subscriptions\Service\SubscriptionMessageCreator
    */
-  protected $commentMessageCreator;
-
-  /**
-   * The GroupContent Message Creator service.
-   *
-   * @var \Drupal\eic_messages\Service\GroupContentMessageCreator
-   */
-  protected $groupContentMessageCreator;
-
-  /**
-   * The Node Message Creator service.
-   *
-   * @var \Drupal\eic_messages\Service\NodeMessageCreator
-   */
-  protected $nodeMessageCreator;
+  private $messageCreator;
 
   /**
    * The message subscribers service.
    *
    * @var \Drupal\message_subscribe\SubscribersInterface
    */
-  protected $messageSubscribersService;
+  private $messageSubscribersService;
 
   /**
-   * Constructs a new EntityOperations object.
-   *
-   * @param \Drupal\eic_messages\Service\CommentMessageCreator $comment_message_creator
-   *   The Comment Message Creator service.
-   * @param \Drupal\eic_messages\Service\GroupContentMessageCreator $group_content_message_creator
-   *   The GroupContent Message Creator service.
-   * @param \Drupal\eic_messages\Service\NodeMessageCreator $node_message_creator
-   *   The Node Message Creator service.
+   * @var \Drupal\eic_messages\Util\QueuedMessageChecker
+   */
+  private $queuedMessageChecker;
+
+  /**
+   * @param \Drupal\eic_message_subscriptions\Service\SubscriptionMessageCreator $message_creator
    * @param \Drupal\message_subscribe\SubscribersInterface $message_subscribers_service
-   *   The message subscribers service.
+   * @param \Drupal\eic_messages\Util\QueuedMessageChecker $queued_message_checker
    */
   public function __construct(
-    CommentMessageCreator $comment_message_creator,
-    GroupContentMessageCreator $group_content_message_creator,
-    NodeMessageCreator $node_message_creator,
-    SubscribersInterface $message_subscribers_service
+    SubscriptionMessageCreator $message_creator,
+    SubscribersInterface $message_subscribers_service,
+    QueuedMessageChecker $queued_message_checker
   ) {
-    $this->commentMessageCreator = $comment_message_creator;
-    $this->groupContentMessageCreator = $group_content_message_creator;
-    $this->nodeMessageCreator = $node_message_creator;
+    $this->messageCreator = $message_creator;
     $this->messageSubscribersService = $message_subscribers_service;
+    $this->queuedMessageChecker = $queued_message_checker;
   }
 
   /**
@@ -96,16 +75,14 @@ class MessageSubscriptionEventSubscriber implements EventSubscriberInterface {
    */
   public function commentCreated(MessageSubscriptionEvent $event) {
     $entity = $event->getEntity();
-
     // Set the subscription operation.
     $operation = SubscriptionOperationTypes::NEW_ENTITY;
-
     // If comment is a reply we set the operation to 'comment_reply'.
     if ($entity->hasParentComment()) {
       $operation = SubscriptionOperationTypes::COMMENT_REPLY;
     }
 
-    $message = $this->commentMessageCreator->createCommentSubscription(
+    $message = $this->messageCreator->createCommentSubscription(
       $entity,
       $operation
     );
@@ -130,25 +107,25 @@ class MessageSubscriptionEventSubscriber implements EventSubscriberInterface {
    */
   public function groupContentCreated(MessageSubscriptionEvent $event) {
     $entity = $event->getEntity();
-
     $group_contents = GroupContent::loadByEntity($entity);
-
     if (empty($group_contents)) {
       return;
     }
 
     // Default operation when new entity is added.
     $operation = SubscriptionOperationTypes::NEW_ENTITY;
-
     $group_content = reset($group_contents);
-
     $group = $group_content->getGroup();
-
-    $message = $this->groupContentMessageCreator->createGroupContentSubscription(
+    $message = $this->messageCreator->createGroupContentSubscription(
       $entity,
       $group,
       $operation
     );
+
+    // Check if we should create/send the message.
+    if (!$this->queuedMessageChecker->shouldCreateNewMessage($message)) {
+      return;
+    }
 
     // Adds the group to the context so that message_subscribe module can grab
     // all users that are subscribed to the group.
@@ -170,25 +147,25 @@ class MessageSubscriptionEventSubscriber implements EventSubscriberInterface {
    */
   public function groupContentUpdated(MessageSubscriptionEvent $event) {
     $entity = $event->getEntity();
-
     $group_contents = GroupContent::loadByEntity($entity);
-
     if (empty($group_contents)) {
       return;
     }
 
     // Set the subscription operation.
     $operation = SubscriptionOperationTypes::UPDATED_ENTITY;
-
     $group_content = reset($group_contents);
-
     $group = $group_content->getGroup();
-
-    $message = $this->groupContentMessageCreator->createGroupContentSubscription(
+    $message = $this->messageCreator->createGroupContentSubscription(
       $entity,
       $group,
       $operation
     );
+
+    // Check if we should create/send the message.
+    if (!$this->queuedMessageChecker->shouldCreateNewMessage($message)) {
+      return;
+    }
 
     // Adds the node to the context so that message_subscribe module can grab
     // all users that are subscribed to node.
@@ -210,19 +187,15 @@ class MessageSubscriptionEventSubscriber implements EventSubscriberInterface {
    */
   public function nodeCreated(MessageSubscriptionEvent $event) {
     $entity = $event->getEntity();
-
     // Set the subscription operation.
     $operation = SubscriptionOperationTypes::NEW_ENTITY;
-
-    $message = $this->nodeMessageCreator->createTermsOfInterestNodeSubscription(
+    $message = $this->messageCreator->createTermsOfInterestNodeSubscription(
       $entity,
       $operation
     );
 
     $context = [];
-
     $node_topics = $entity->get('field_vocab_topics')->referencedEntities();
-
     // Adds each topic to the context so that message_subscribe module can
     // grab all users that are subscribed to each topic.
     foreach ($node_topics as $topic_term) {
@@ -241,14 +214,18 @@ class MessageSubscriptionEventSubscriber implements EventSubscriberInterface {
    */
   public function contentRecommended(MessageSubscriptionEvent $event) {
     $flagging = $event->getEntity();
-
     if (!($flagging instanceof FlaggingInterface)) {
       return;
     }
 
-    $message = $this->nodeMessageCreator->createContentRecommendedSubscription(
+    $message = $this->messageCreator->createContentRecommendedSubscription(
       $flagging
     );
+
+    // Check if we should create/send the message.
+    if (!$this->queuedMessageChecker->shouldCreateNewMessage($message)) {
+      return;
+    }
 
     $flagged_entity = $flagging->getFlaggable();
 

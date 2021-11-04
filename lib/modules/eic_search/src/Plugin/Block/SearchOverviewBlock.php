@@ -16,6 +16,7 @@ use Drupal\eic_search\Search\Sources\SourceTypeInterface;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\group\GroupMembership;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Provides an SearchOverviewBlock block.
@@ -39,16 +40,23 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
   protected $groupsHelper;
 
   /**
+   * @var RequestStack $requestStack
+   */
+  protected $requestStack;
+
+  /**
    * @param array $configuration
    * @param string $plugin_id
    * @param mixed $plugin_definition
    * @param SourcesCollector $sources_collector
    * @param EICGroupsHelper $groups_helper
+   * @param RequestStack $request_stack
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, SourcesCollector $sources_collector, EICGroupsHelper $groups_helper) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, SourcesCollector $sources_collector, EICGroupsHelper $groups_helper, RequestStack $request_stack) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->sourcesCollector = $sources_collector;
     $this->groupsHelper = $groups_helper;
+    $this->requestStack = $request_stack;
   }
 
   /**
@@ -66,6 +74,7 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
       $plugin_definition,
       $container->get('eic_search.sources_collector'),
       $container->get('eic_groups.helper'),
+      $container->get('request_stack'),
     );
   }
 
@@ -125,7 +134,10 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
     $facets = $this->configuration['facets'];
     $sorts = $this->configuration['sort_options'];
 
-    $search_value = \Drupal::request()->query->get('search', '');
+    $search_value = $this->requestStack
+      ->getCurrentRequest()
+      ->query
+      ->get('search', '');
 
     $facets = array_filter($facets, function ($facet) {
       return $facet;
@@ -160,6 +172,8 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
 
     $build['#attached']['drupalSettings']['overview'] = [
       'is_group_owner' => array_key_exists(EICGroupsHelper::GROUP_OWNER_ROLE, $user_group_roles),
+      'source_bundle_id' => $source->getEntityBundle(),
+      'default_sorting_option' => $source->getDefaultSort(),
     ];
 
     return $build + [
@@ -167,6 +181,7 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
       '#cache' => ['contexts' => ['url.path', 'url.query_args']],
       '#facets' => array_keys($facets),
       '#sorts' => array_keys($sorts),
+      '#prefilters' => $this->extractFilterFromUrl(),
       '#search_string' => $search_value,
       '#source_class' => $source instanceof SourceTypeInterface ? get_class($source) : NULL,
       '#datasource' => $source instanceof SourceTypeInterface ? $source->getSourcesId() : NULL,
@@ -189,7 +204,8 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
         'filter' => $this->t('Filter', [], ['context' => 'eic_group']),
         'topics' => $this->t('Topics', [], ['context' => 'eic_group']),
         'search_text' => $this->t('Search', [], ['context' => 'eic_group']),
-        'no_results' => $this->t('No results', [], ['context' => 'eic_group']),
+        'no_results_title' => $this->t('We haven’t found any search results', [], ['context' => 'eic_group']),
+        'no_results_body' => $this->t('Please try again with another keyword', [], ['context' => 'eic_group']),
         'members' => $this->t('Members', [], ['context' => 'eic_group']),
         'reactions' => $this->t('Reactions', [], ['context' => 'eic_group']),
         'documents' => $this->t('Documents', [], ['context' => 'eic_group']),
@@ -274,6 +290,43 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
       'add_facet_interests' => $values['search']['configuration']['add_facet_interests'],
       'add_facet_my_groups' => $values['search']['configuration']['add_facet_my_groups'],
     ]);
+  }
+
+  /**
+   * Extracting filters values from the URL.
+   *
+   * Example of filters url parameter: ?filter=ss_content_field_discussion_type:idea.
+   *
+   * @return array
+   */
+  private function extractFilterFromUrl(): array {
+    $filters_value = $this->requestStack
+      ->getCurrentRequest()
+      ->query
+      ->get('filter', '');
+    $results = [];
+
+    if (!$filters_value) {
+      return $results;
+    }
+
+    $filters = explode('&', $filters_value);
+
+    foreach ($filters as $filter_value) {
+      $exploded_filter = explode(':', $filter_value);
+
+      if (empty($exploded_filter)) {
+        continue;
+      }
+
+      $filter_field = reset($exploded_filter);
+      unset($exploded_filter[0]);
+
+      $values = explode(',', reset($exploded_filter));
+      $results[$filter_field] = $values;
+    }
+
+    return $results;
   }
 
   /**

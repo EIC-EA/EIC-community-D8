@@ -3,6 +3,7 @@
 namespace Drupal\eic_search\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\eic_search\Plugin\search_api\processor\GroupAccessContent;
 use Drupal\eic_search\Search\Sources\GroupSourceType;
 use Drupal\eic_search\Search\Sources\SourceTypeInterface;
 use Drupal\eic_user\UserHelper;
@@ -41,7 +42,7 @@ class SolrSearchController extends ControllerBase {
     $facets_value = $request->query->get('facets_value');
     $sort_value = $request->query->get('sort_value');
     $facets_options = $request->query->get('facets_options');
-    $facets_value = json_decode($facets_value, TRUE);
+    $facets_value = json_decode($facets_value, TRUE) ?: [];
     $source = NULL;
 
     $facets_interests = [];
@@ -127,6 +128,12 @@ class SolrSearchController extends ControllerBase {
       }
     }
 
+    $default_sort = $source->getSecondDefaultSort();
+
+    if (!empty($default_sort) && 2 === count($default_sort)) {
+      $solariumQuery->addSort($default_sort[0], $default_sort[1]);
+    }
+
     //If there are no current sorts check if source has a default sort
     if (
       !$sort_value &&
@@ -162,7 +169,10 @@ class SolrSearchController extends ControllerBase {
 
     $solariumQuery->addParam('fq', $fq);
 
-    if ($index->isValidProcessor('group_content_access')) {
+    if (
+      $index->isValidProcessor('group_content_access') &&
+      GroupAccessContent::supportsIndex($index)
+    ) {
       $index->getProcessor('group_content_access')
         ->preprocessSolrSearchQuery($solariumQuery);
     }

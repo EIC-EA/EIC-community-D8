@@ -62,7 +62,7 @@ class DiscussionSourceType extends SourceType {
         'ASC' => $this->t('Old', [], ['context' => 'eic_search']),
         'DESC' => $this->t('Recent', [], ['context' => 'eic_search']),
       ],
-      'tm_global_title' => [
+      'ss_content_title' => [
         'label' => $this->t('Title', [], ['context' => 'eic_search']),
         'ASC' => $this->t('Title A-Z', [], ['context' => 'eic_search']),
         'DESC' => $this->t('Title Z-A', [], ['context' => 'eic_search']),
@@ -87,7 +87,18 @@ class DiscussionSourceType extends SourceType {
         'label' => $this->t('Last highlighted', [], ['context' => 'eic_search']),
         'DESC' => $this->t('Last highlighted', [], ['context' => 'eic_search']),
       ],
+      'score' => [
+        'label' => $this->t('Relevance', [], ['context' => 'eic_search']),
+        'DESC' => $this->t('Relevance', [], ['context' => 'eic_search']),
+      ],
     ];
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function getSecondDefaultSort(): array {
+    return ['ss_global_created_date', 'DESC'];
   }
 
   /**

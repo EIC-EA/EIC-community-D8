@@ -4,7 +4,7 @@ eic_groups.about_page:
     _controller: '\Drupal\eic_groups\Controller\AboutPageController::build'
     _title_callback: '\Drupal\eic_groups\Controller\AboutPageController::title'
   requirements:
-    _group_permission: 'view group'
+    _custom_access: '\Drupal\eic_groups\Controller\AboutPageController::access'
 
 eic_groups.discussion_add_comment:
   path: '/api/discussion/{discussion_id}/comment'
@@ -38,12 +38,12 @@ eic_groups.discussion_update_comment:
     _permission: 'access content'
 
 eic_groups.discussion_delete_comment:
-  path: '/api/discussion/{discussion_id}/delete/{comment_id}'
+  path: '/api/discussion/{group_id}/{discussion_id}/delete/{comment_id}'
   methods: [ DELETE ]
   defaults:
     _controller: '\Drupal\eic_groups\Controller\DiscussionController::deleteComment'
   requirements:
-    _permission: 'access content'
+    _custom_access: '\Drupal\eic_groups\Controller\DiscussionController::accessDelete'
 
 eic_groups.discussion_comment_has_permission:
   path: '/api/discussion/{discussion_id}/has-flag-permission/{comment_id}/{flag}'

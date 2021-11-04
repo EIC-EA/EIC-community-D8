@@ -14,6 +14,7 @@
 {% endblock %}
 
 {% block sidebar %}
+  {% set sidebar_action = sidebar_action|merge({'extra_classes': " ecl-collapsible-options--actions ecl-collapsible-options--full-width"}) %}
   {% include "@theme/patterns/compositions/collapsible-options.html.twig" with sidebar_action only %}
   {% include "@theme/patterns/compositions/filter-sidebar.html.twig" with {
     icon_file_path: common.icon_file_path,
