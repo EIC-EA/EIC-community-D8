@@ -10,6 +10,9 @@
 // files.
 define('INCLUDES_FOLDER', 'includes');
 
+use CommerceGuys\Addressing\AddressFormat\AddressField;
+use Drupal\address\FieldHelper;
+
 /**
  * Implements hook_theme().
  */
@@ -117,4 +120,90 @@ function eic_community_scan_include_files($folder) {
  */
 if (is_dir(__DIR__ . '/' . INCLUDES_FOLDER)) {
   eic_community_scan_include_files(INCLUDES_FOLDER);
+}
+
+/**
+ * Implements hook_preprocess_group__TYPE.
+ */
+function eic_community_preprocess_group__event(&$variables) {
+  _eic_community_display_topics($variables);
+  _eic_community_display_flags($variables);
+
+  /** @var \Drupal\group\Entity\GroupInterface $group */
+  $group = $variables['group'];
+  $location = $group->get('field_location')->getValue();
+  $location_formatted = '';
+
+  if (!empty($location)) {
+    $location = reset($location);
+    $location_formatted = $location[FieldHelper::getPropertyName(AddressField::ADDRESS_LINE1)] . ' ' . $location[$location[FieldHelper::getPropertyName(AddressField::ADDRESS_LINE2)]] . '\n';
+    $location_formatted .= $location[FieldHelper::getPropertyName(AddressField::POSTAL_CODE)] . ' ' . $location[FieldHelper::getPropertyName(AddressField::LOCALITY)];
+  }
+
+  $variables['event_infos'] = [
+    'title' => t('Event details', [], ['eic_community']),
+    'action' => [
+      'title' => 'Sign up to this event',
+      'text' => 'Get notified of the latest changes and take part in the discussion linked to this event.',
+      'action' => [
+        'label' => 'Sign up now',
+        'url' => 'https://www.google.com',
+      ],
+    ],
+    'icon_file_path' => $variables['eic_icon_path'],
+    'items' => [
+      [
+        'content' => $location_formatted,
+        'icon' => [
+          'type' => 'custom',
+          'name' => 'map-marker',
+        ],
+      ],
+    ],
+  ];
+
+  // Provide the Social Share block.
+  if ($share_block = _eic_community_get_social_share_block()) {
+    $variables['social_share'] = $share_block;
+  }
+
+  $files = $group->get('field_documents')->referencedEntities();
+  $files_list = [];
+
+  foreach ($files as $file) {
+    $download = \Drupal\file\Entity\File::load($file->field_media_file->getValue()[0]['target_id']);
+    $download_url = \Drupal\eic_media\MediaHelper::formatMediaDownloadLink($file)
+      ->toString();
+    $files_list[] = [
+      'name' => $file->getName(),
+      'stats' => [
+        [
+          'hide_label' => TRUE,
+          'icon' => [
+            'name' => 'download',
+            'type' => 'custom',
+          ],
+          'label' => t('downloads'),
+          // @todo Add statistics value
+          'value' => \Drupal::service('eic_media_statistics.entity_file_download_count')
+            ->getFileDownloads($file),
+        ],
+        [
+          'hide_label' => TRUE,
+          'value' => format_size($download->get('filesize')->getString()),
+        ],
+      ],
+      'mime_type' => substr(strrchr($download->get('filemime')
+        ->getString(), '/'), 1),
+      'path' => $download_url,
+    ];
+  }
+
+  $variables['file_list'] = [
+    'title' => t('Event files', ['%count' => count($files)]),
+    'body' => '',
+    'files' => $files_list,
+    'icon_file_path' => $variables['eic_icon_path'],
+    'download' => t('Download'),
+  ];
 }
