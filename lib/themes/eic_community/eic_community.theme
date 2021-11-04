@@ -12,6 +12,7 @@ define('INCLUDES_FOLDER', 'includes');
 
 use CommerceGuys\Addressing\AddressFormat\AddressField;
 use Drupal\address\FieldHelper;
+use Drupal\Core\Datetime\DrupalDateTime;
 
 /**
  * Implements hook_theme().
@@ -140,7 +141,19 @@ function eic_community_preprocess_group__event(&$variables) {
     $location_formatted .= $location[FieldHelper::getPropertyName(AddressField::POSTAL_CODE)] . ' ' . $location[FieldHelper::getPropertyName(AddressField::LOCALITY)];
   }
 
-  $variables['event_infos'] = [
+  $allowed_values_location_type = eic_field_location_type_allowed_values();
+
+  $location_types = array_map(function ($item) use ($allowed_values_location_type) {
+    return array_key_exists($item['value'], $allowed_values_location_type) ?
+      strtolower($allowed_values_location_type[$item['value']]) :
+      '';
+  }, $group->get('field_location_type')->getValue());
+
+  $dates = $group->get('field_date_range')->getValue();
+  $from_date = DrupalDateTime::createFromFormat('Y-m-d\TH:i:s', $dates[0]['value']);
+  $end_date = DrupalDateTime::createFromFormat('Y-m-d\TH:i:s', $dates[0]['end_value']);
+
+  $event_infos = [
     'title' => t('Event details', [], ['eic_community']),
     'action' => [
       'title' => 'Sign up to this event',
@@ -159,9 +172,72 @@ function eic_community_preprocess_group__event(&$variables) {
           'name' => 'map-marker',
         ],
       ],
+      [
+        'content' => ucfirst(implode($location_types, ' & ')),
+        'icon' => [
+          'type' => 'custom',
+          'name' => 'tag',
+        ],
+      ],
+      [
+        'content' => 'From ' . $from_date->format('d/m/Y H\hi') . ' to ' . $end_date->format('d/m/Y H\hi'),
+        'icon' => [
+          'type' => 'custom',
+          'name' => 'calendar',
+        ],
+      ],
+      [
+        'content' => implode(', ', array_map(function (\Drupal\taxonomy\Entity\Term $term) {
+          return $term->label();
+        }, $group->get('field_vocab_language')->referencedEntities())),
+        'icon' => [
+          'type' => 'custom',
+          'name' => 'glob',
+        ],
+      ],
     ],
   ];
 
+  if ($social_links = $group->get('field_social_links')->getValue()) {
+    $socials_platform_mapping = [
+      'facebook' => [
+        'url' => 'https://www.facebook.com/',
+        'icon' => 'facebook-current',
+      ],
+      'twitter' => [
+        'url' => 'https://www.twitter.com/',
+        'icon' => 'twitter',
+      ],
+      'linkedin' => [
+        'url' => 'https://www.linkedin.com/in/',
+        'icon' => 'linkedin',
+      ],
+    ];
+
+    foreach ($social_links as $social_link) {
+      $event_infos['items'][] = [
+        'content' => ucfirst($social_link['social']),
+        'url' => $socials_platform_mapping[$social_link['social']]['url'] . $social_link['link'],
+        'icon' => [
+          'type' => 'custom',
+          'name' => $socials_platform_mapping[$social_link['social']]['icon'],
+        ],
+      ];
+    }
+  }
+
+  if ($website_url = $group->get('field_website_url')->getString()) {
+    $event_infos['items'][] = [
+      'content' => $website_url,
+      'url' => $website_url,
+      'icon' => [
+        'type' => 'custom',
+        'name' => 'link',
+      ],
+    ];
+  }
+
+  $variables['event_infos'] = $event_infos;
   // Provide the Social Share block.
   if ($share_block = _eic_community_get_social_share_block()) {
     $variables['social_share'] = $share_block;
