@@ -204,7 +204,8 @@ class LastGroupActivitiesBlock extends BlockBase implements ContainerFactoryPlug
       '#members' => $members_data,
       '#url' => Url::fromRoute('eic_groups.solr_search')->toString(),
       '#translations' => [
-        'no_results' => $this->t('No results', [], ['context' => 'eic_group']),
+        'no_results_title' => $this->t('We haven’t found any search results', [], ['context' => 'eic_group']),
+        'no_results_body' => $this->t('Please try again with another keyword', [], ['context' => 'eic_group']),
         'load_more' => $this->t('Load more', [], ['context' => 'eic_group']),
         'block_title' => $this->t('Latest member activity', [], ['context' => 'eic_group']),
         'commented_on' => $this->t('commented on', [], ['context' => 'eic_group']),
@@ -217,6 +218,7 @@ class LastGroupActivitiesBlock extends BlockBase implements ContainerFactoryPlug
       '#datasource' => $this->activityStreamSourceType->getSourcesId(),
       '#source_class' => ActivityStreamSourceType::class,
       '#group_id' => $group->id(),
+      '#is_anonymous' => $this->currentUser->isAnonymous(),
     ];
   }
 
