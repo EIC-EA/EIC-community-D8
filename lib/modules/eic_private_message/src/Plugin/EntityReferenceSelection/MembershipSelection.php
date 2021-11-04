@@ -32,8 +32,7 @@ class MembershipSelection extends DefaultSelection {
 
     $query = $connection->select('group_content_field_data', 'gc');
     $query->join('users_field_data', 'user_fd', 'gc.entity_id = user_fd.uid');
-    $query->join('user__field_first_name', 'user_fn', 'gc.entity_id = user_fn.entity_id');
-    $query->join('user__field_last_name', 'user_ln', 'gc.entity_id = user_ln.entity_id');
+    $query->join('realname', 'rn', 'gc.entity_id = rn.uid');
     $query->condition('gc.gid', $filter_settings['gid']);
     $query->condition('gc.type', 'group-group_membership');
     $query->fields('gc', ['entity_id']);
@@ -43,8 +42,7 @@ class MembershipSelection extends DefaultSelection {
 
     $orCondition = $query->orConditionGroup()
     ->condition('user_fd.mail',  $like_match, 'LIKE')
-    ->condition('user_fn.field_first_name_value', $like_match, 'LIKE')
-    ->condition('user_ln.field_last_name_value', $like_match, 'LIKE');
+    ->condition('rn.realname', $like_match, 'LIKE');
 
     $query->condition($orCondition);
 
