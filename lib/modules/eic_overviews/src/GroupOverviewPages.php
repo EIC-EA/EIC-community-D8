@@ -18,6 +18,11 @@ class GroupOverviewPages {
   const DISCUSSIONS = 'eic_overviews.groups.overview_page.discussions';
 
   /**
+   * Route to the group events overview.
+   */
+  const EVENTS = 'eic_overviews.groups.overview_page.events';
+
+  /**
    * Route to the group files overview.
    */
   const FILES = 'eic_overviews.groups.overview_page.files';
