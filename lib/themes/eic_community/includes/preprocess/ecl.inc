@@ -5,6 +5,8 @@
  * Contains ECL components preprocess functions.
  */
 
+use Drupal\taxonomy\TermInterface;
+
 /**
  * Preprocesses a timestamp into an array of values for ECL Date block template.
  *
@@ -58,9 +60,14 @@ function _eic_community_preprocess_ecl_date_block(int $timestamp, DateTimeZone $
  */
 function _eic_community_preprocess_ecl_tag(TermInterface $taxonomy_term, string $type = 'link') {
   return [
-    'type' => $type,
-    'label' => $taxonomy_term->get('name')->getString(),
-    'path' => $taxonomy_term->toUrl()->toString(),
-    'aria_label' => '',
+    'tag' => [
+      'type' => $type,
+      'label' => $taxonomy_term->get('name')->getString(),
+      'path' => $taxonomy_term->toUrl()->toString(),
+      'aria_label' => '',
+    ],
+    'default_icon_path' => '',
+    'extra_classes' => '',
+    'extra_attributes' => [],
   ];
 }
