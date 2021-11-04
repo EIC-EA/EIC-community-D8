@@ -55,7 +55,6 @@ class BookTokens implements ContainerInjectionInterface {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('entity_type.manager'),
-      $container->get('token'),
       $container->get('request_stack')
     );
   }
