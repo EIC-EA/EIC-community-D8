@@ -10,3 +10,6 @@ services:
     arguments: ['@entity_type.manager']
     tags:
       - { name: event_subscriber }
+
+  eic_topics.topics_manager:
+    class: Drupal\eic_topics\TopicsManager

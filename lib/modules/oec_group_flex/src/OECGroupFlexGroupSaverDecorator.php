@@ -2,9 +2,11 @@
 
 namespace Drupal\oec_group_flex;
 
+use Drupal\Component\Serialization\Json;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\eic_search\Service\SolrDocumentProcessor;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\group_flex\GroupFlexGroup;
 use Drupal\group_flex\GroupFlexGroupSaver;
@@ -36,6 +38,13 @@ class OECGroupFlexGroupSaverDecorator extends GroupFlexGroupSaver {
   protected $groupVisibilityStorage;
 
   /**
+   * The EIC Search Solr Document Processor.
+   *
+   * @var \Drupal\eic_search\Service\SolrDocumentProcessor
+   */
+  private $solrDocumentProcessor;
+
+  /**
    * Constructs a new GroupFlexGroupSaver object.
    *
    * @param \Drupal\group_flex\GroupFlexGroupSaver $groupFlexSaver
@@ -52,11 +61,14 @@ class OECGroupFlexGroupSaverDecorator extends GroupFlexGroupSaver {
    *   The group joining method manager.
    * @param \Drupal\group_flex\GroupFlexGroup $groupFlex
    *   The group flex.
+   * @param SolrDocumentProcessor $solrDocumentProcessor
+   *   The Solr Document Processor service.
    */
-  public function __construct(GroupFlexGroupSaver $groupFlexSaver, GroupVisibilityDatabaseStorageInterface $groupVisibilityStorage, EntityTypeManagerInterface $entityTypeManager, GroupPermissionsManager $groupPermManager, GroupVisibilityManager $visibilityManager, GroupJoiningMethodManager $joiningMethodManager, GroupFlexGroup $groupFlex) {
+  public function __construct(GroupFlexGroupSaver $groupFlexSaver, GroupVisibilityDatabaseStorageInterface $groupVisibilityStorage, EntityTypeManagerInterface $entityTypeManager, GroupPermissionsManager $groupPermManager, GroupVisibilityManager $visibilityManager, GroupJoiningMethodManager $joiningMethodManager, GroupFlexGroup $groupFlex, SolrDocumentProcessor $solrDocumentProcessor) {
     parent::__construct($entityTypeManager, $groupPermManager, $visibilityManager, $joiningMethodManager, $groupFlex);
     $this->groupFlexSaver = $groupFlexSaver;
     $this->groupVisibilityStorage = $groupVisibilityStorage;
+    $this->solrDocumentProcessor = $solrDocumentProcessor;
   }
 
   /**
@@ -116,6 +128,7 @@ class OECGroupFlexGroupSaverDecorator extends GroupFlexGroupSaver {
       ]);
     }
 
+    $oldVisibilityOptions = $item->getOptions();
     $item->setType($groupVisibility);
     $item->setOptions($groupVisibilityOptions);
 
@@ -123,6 +136,16 @@ class OECGroupFlexGroupSaverDecorator extends GroupFlexGroupSaver {
 
     // Invalidates group cache tags.
     Cache::invalidateTags($group->getCacheTagsToInvalidate());
+
+    // If group visibility changed we need to reupdate all group contents.
+    // These re-index logic is on 2 different places because of visibility
+    // field not instance of FieldItemInterface so we need to compare it here.
+    if (
+      Json::encode($groupVisibilityOptions) !==
+      Json::encode($oldVisibilityOptions)
+    ) {
+      $this->solrDocumentProcessor->reIndexEntitiesFromGroup($group);
+    }
 
     return $groupPermission;
   }

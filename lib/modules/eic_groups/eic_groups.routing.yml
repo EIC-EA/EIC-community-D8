@@ -4,7 +4,7 @@ eic_groups.about_page:
     _controller: '\Drupal\eic_groups\Controller\AboutPageController::build'
     _title_callback: '\Drupal\eic_groups\Controller\AboutPageController::title'
   requirements:
-    _group_permission: 'view group'
+    _custom_access: '\Drupal\eic_groups\Controller\AboutPageController::access'
 
 eic_groups.discussion_add_comment:
   path: '/api/discussion/{discussion_id}/comment'

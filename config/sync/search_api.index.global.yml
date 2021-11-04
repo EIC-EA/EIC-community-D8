@@ -42,9 +42,11 @@ dependencies:
     - field.storage.node.field_discussion_type
     - field.storage.node.field_body
     - field.storage.node.field_comments
+    - field.storage.node.field_date_range
     - field.storage.node.field_document_type
     - field.storage.media.field_media_file
     - field.storage.node.field_document_media
+    - field.storage.node.field_vocab_event_type
     - field.storage.node.field_image
     - field.storage.node.field_language
     - field.storage.node.field_vocab_geo
@@ -257,6 +259,16 @@ field_settings:
         - field.storage.node.field_document_type
       module:
         - taxonomy
+  content_event_type_string:
+    label: '[Content] Event type » Taxonomy term » Name'
+    datasource_id: 'entity:node'
+    property_path: 'field_vocab_event_type:entity:name'
+    type: string
+    dependencies:
+      config:
+        - field.storage.node.field_vocab_event_type
+      module:
+        - taxonomy
   content_field_body_fulltext:
     label: '[Content] Body - Fulltext'
     datasource_id: 'entity:node'
@@ -265,6 +277,22 @@ field_settings:
     dependencies:
       config:
         - field.storage.node.field_body
+  content_field_date_range:
+    label: '[Content] Date'
+    datasource_id: 'entity:node'
+    property_path: field_date_range
+    type: date
+    dependencies:
+      config:
+        - field.storage.node.field_date_range
+  content_field_date_range_end_value:
+    label: '[Content] Date » End date value'
+    datasource_id: 'entity:node'
+    property_path: 'field_date_range:end_value'
+    type: date
+    dependencies:
+      config:
+        - field.storage.node.field_date_range
   content_field_discussion_type:
     label: '[Content] Type of Discussion'
     datasource_id: 'entity:node'
@@ -362,6 +390,18 @@ field_settings:
         - field.storage.node.field_gallery_slides
         - field.storage.paragraph.field_gallery_slide_legend
       module:
+        - paragraphs
+  content_gallery_slide_name:
+    label: 'Slides » Paragraph » Media » Media » Name'
+    datasource_id: 'entity:node'
+    property_path: 'field_gallery_slides:entity:field_gallery_slide_media:entity:name'
+    type: text
+    dependencies:
+      config:
+        - field.storage.node.field_gallery_slides
+        - field.storage.paragraph.field_gallery_slide_media
+      module:
+        - media
         - paragraphs
   content_gallery_slide_uri:
     label: 'Slides » Paragraph » Media » Media » File » File » URI'
@@ -494,6 +534,14 @@ field_settings:
         - field.storage.node.field_discussion_type
       module:
         - node
+  field_vocab_event_type:
+    label: 'Event type'
+    datasource_id: 'entity:node'
+    property_path: field_vocab_event_type
+    type: integer
+    dependencies:
+      config:
+        - field.storage.node.field_vocab_event_type
   filename:
     label: 'Document » Media » File » File » Filename'
     datasource_id: 'entity:node'
@@ -919,6 +967,14 @@ field_settings:
       fields:
         - 'entity:user/field_first_name'
         - 'entity:user/field_last_name'
+  user_id:
+    label: 'User ID'
+    datasource_id: 'entity:user'
+    property_path: uid
+    type: integer
+    dependencies:
+      module:
+        - user
   user_last_name:
     label: '[User] Last name'
     datasource_id: 'entity:user'

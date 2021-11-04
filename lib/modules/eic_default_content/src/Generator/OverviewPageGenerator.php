@@ -21,7 +21,7 @@ class OverviewPageGenerator extends CoreGenerator {
     $this->createOverview([
       'enable_search' => TRUE,
       'facets' => [
-        'ss_global_content_type',
+        'ss_global_content_type_label',
         'sm_content_field_vocab_topics_string',
         'sm_content_field_vocab_geo_string',
       ],

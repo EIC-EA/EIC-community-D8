@@ -1,0 +1,64 @@
+<?php
+
+use Drupal\eic_topics\Constants\Topics;
+use Drupal\eic_topics\TopicsManager;
+use Drupal\Core\Cache\Cache;
+
+/**
+ * Implements hook_theme
+ */
+function eic_topics_theme() {
+  return [
+    'topics_statistics_block' => [
+      'variables' => [
+        'stats' => [],
+      ],
+    ],
+  ];
+}
+
+/**
+ * Implements hook_preprocess_taxonomy_term
+ */
+function eic_topics_preprocess_taxonomy_term(&$variables) {
+  /** @var \Drupal\taxonomy\TermInterface $term */
+  $term = $variables['term'];
+
+  $vid = $term->get('vid')->getValue();
+  $vid = reset($vid)['target_id'];
+
+  if (Topics::TERM_VOCABULARY_TOPICS_ID !== $vid) {
+    return;
+  }
+
+  /** @var \Drupal\Core\Block\BlockManager $block_manager */
+  $block_manager = \Drupal::service('plugin.manager.block');
+  $plugin_block = $block_manager->createInstance('eic_topics_statistics_block');
+  $variables['stats_block'] = $plugin_block->build();
+}
+
+/**
+ * Implements hook_entity_presave()
+ *
+ * We need to invalidate the taxonomy term cache tag after an entity update.
+ * Then statistics will be updated correctly on the detail term page
+ */
+function eic_topics_entity_presave(\Drupal\Core\Entity\EntityInterface $entity) {
+  if (
+    !method_exists($entity, 'hasField') ||
+    !$entity->hasField(TopicsManager::FIELD_ENTITY_TOPICS)
+  ) {
+    return;
+  }
+
+  $terms = $entity->get(TopicsManager::FIELD_ENTITY_TOPICS)->referencedEntities();
+  $tags = [];
+
+  /** @var \Drupal\taxonomy\TermInterface $term */
+  foreach ($terms as $term) {
+    $tid = $term->id();
+    $tags[] = "taxonomy_term:$tid";
+  }
+
+  Cache::invalidateTags($tags);
+}
