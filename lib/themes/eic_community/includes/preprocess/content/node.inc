@@ -5,6 +5,9 @@
  * Prepares variables for node document templates.
  */
 
+use Drupal\eic_flags\FlagType;
+use Drupal\node\NodeInterface;
+
 /**
  * Implements hook_preprocess_node() for document node.
  */
@@ -16,4 +19,65 @@ function eic_community_preprocess_node(array &$variables) {
   if (!isset($variables['#cache']['tags'])) {
     $variables['#cache']['tags'] = $node->getCacheTags();
   }
+}
+
+/**
+ * Prepares a teaser array for the given node.
+ *
+ * This function is a helper function to prepare the array.
+ * Structure and values should be tailored for your specific use case.
+ *
+ * @param \Drupal\node\NodeInterface $node
+ *   The node.
+ *
+ * @return array
+ *   An array with following structure:
+ *   - type: the node bundle label.
+ *   - author: the author image linked to the user profile.
+ *   - description: the teaser description. Defaults to empty.
+ *   - tags: tags to be displayed. Defaults to field_vocab_topics.
+ *   - language: language to be displayed. Defaults to field_language.
+ *   - highlight: defaults to FALSE.
+ *   - like: the like flag properties.
+ *   - timestamp: the date to be displayed. Defaults to changed node property.
+ *   - stats: statistics to be displayed. Defaults to an empty array.
+ */
+function _eic_community_prepare_node_teaser_array(NodeInterface $node) {
+  // Get the topics.
+  $tags = [];
+  if ($node->hasField('field_vocab_topics') && !$node->get('field_vocab_topics')->isEmpty()) {
+    foreach ($node->get('field_vocab_topics')->referencedEntities() as $term) {
+      $tags[] = _eic_community_preprocess_ecl_tag($term)['tag'];
+    }
+  }
+
+  // Get the language.
+  $language = '';
+  if ($node->hasField('field_language') && !$node->get('field_language')->isEmpty()) {
+    $language = $node->get('field_language')->entity->label();
+  }
+
+  // Get the like_content flag link.
+  $like = [];
+  $like_link = \Drupal::service('flag.link_builder')->build('node', $node->id(), FlagType::LIKE_CONTENT);
+  if (!empty($like_link) && $like_link['#access'] == TRUE) {
+    $like = [
+      'label' => $like_link['#title']['#markup'],
+      'path' => $like_link['#attributes']['href'],
+    ];
+  }
+
+  return [
+    'type' => $node->type->entity->label(),
+    'author' => eic_community_get_teaser_user_display($node->getOwner()),
+    'description' => '',
+    'tags' => $tags,
+    'language' => $language,
+    'highlight' => FALSE,
+    'like' => $like,
+    'timestamp' => [
+      'label' => eic_community_get_teaser_time_display($node->get('changed')->value),
+    ],
+    'stats' => [],
+  ];
 }

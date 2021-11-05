@@ -12,6 +12,9 @@ use Drupal\file\Entity\File;
  * Implements hook_preprocess_node__bundle() for gallery node.
  */
 function eic_community_preprocess_node__gallery(array &$variables) {
+  /** @var \Drupal\node\NodeInterface $node */
+  $node = $variables['node'];
+
   switch ($variables['view_mode']) {
     case 'full':
       _eic_community_display_flags($variables);
@@ -60,6 +63,29 @@ function eic_community_preprocess_node__gallery(array &$variables) {
         'icon_file_path' => $variables['eic_icon_path'],
         'download' => t('Download'),
       ];
+      break;
+
+    case 'teaser':
+      $teaser = _eic_community_prepare_node_teaser_array($node);
+
+      // Prepare images.
+      $images = [];
+      foreach ($node->get('field_gallery_slides')->referencedEntities() as $paragraph) {
+        $media = $paragraph->get('field_gallery_slide_media')->referencedEntities()[0];
+        /** @var \Drupal\file\FileInterface $download */
+        $file = File::load($media->oe_media_image->getValue()[0]['target_id']);
+        $images[] = [
+          'src' => $file->createFileUrl(),
+          'alt' => '',
+        ];
+      }
+
+      $teaser['images'] = $images;
+      $teaser['type'] = [
+        'label' => $node->type->entity->label(),
+      ];
+      $variables['gallery_item'] = $teaser;
+      $variables['#attached']['library'][] = 'flag/flag.link_ajax';
       break;
   }
 }

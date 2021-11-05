@@ -9,7 +9,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\media\Entity\Media;
 use Drupal\file\Entity\File;
 use Drupal\eic_community\ValueObject\ImageValueObject;
-use Drupal\user\Entity\User;
+use Drupal\user\UserInterface;
 
 /**
  * Creates image array for twig templates.
@@ -38,8 +38,20 @@ function _get_profile_image_array(EntityInterface $user): ?array {
 
 /**
  * Transform a user entity for a storybook template.
+ *
+ * @param Drupal\user\UserInterface $user
+ *   The user object.
+ *
+ * @return array
+ *   An array with following structure:
+ *   - image
+ *     - src
+ *     - alt
+ *
+ * @throws \Drupal\Core\Entity\EntityMalformedException
+ * @throws \Drupal\Core\TypedData\Exception\MissingDataException
  */
-function eic_community_get_teaser_user_display(User $user) {
+function eic_community_get_teaser_user_display(UserInterface $user) {
   $author = [
     'name' => $user->getDisplayName(),
   ];
