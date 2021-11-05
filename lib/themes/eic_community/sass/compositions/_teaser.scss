@@ -272,6 +272,15 @@
     }
   }
 
+  &__updateTime {
+    display: flex;
+    align-items: center;
+    color: $ecl-color-grey;
+    & svg {
+      margin-right: map-get($ecl-spacing, 's');
+    }
+  }
+
   &__footer {
     justify-content: space-between;
     width: 100%;

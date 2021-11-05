@@ -1,0 +1,10 @@
+.ecl-date-block {
+
+  &--is-past {
+    background: $ecl-color-grey-25;
+  }
+
+  &--is-current {
+    background: $ecl-color-yellow;
+  }
+}
