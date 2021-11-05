@@ -58,3 +58,28 @@ function _eic_community_get_flag_access($flag_id, EntityInterface $entity) {
 
   return $flag->actionAccess($action);
 }
+
+/**
+ * Returns a render array for the given flag ID and entity..
+ *
+ * @param string $flag_id
+ *   The flag ID.
+ * @param \Drupal\Core\Entity\EntityInterface $entity
+ *   The flaggable entity.
+ *
+ * @return array
+ *   TRUE if the user can flag the entity.
+ */
+function _eic_community_get_flag_render_array($flag_id, EntityInterface $entity) {
+  return [
+    '#lazy_builder' => [
+      'flag.link_builder:build',
+      [
+        $entity->getEntityTypeId(),
+        $entity->id(),
+        $flag_id,
+      ],
+    ],
+    '#create_placeholder' => TRUE,
+  ];
+}

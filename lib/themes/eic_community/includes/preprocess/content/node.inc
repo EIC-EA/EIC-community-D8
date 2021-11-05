@@ -5,7 +5,6 @@
  * Prepares variables for node document templates.
  */
 
-use Drupal\eic_flags\FlagType;
 use Drupal\node\NodeInterface;
 
 /**
@@ -38,6 +37,8 @@ function eic_community_preprocess_node(array &$variables) {
  *   - tags: tags to be displayed. Defaults to field_vocab_topics.
  *   - language: language to be displayed. Defaults to field_language.
  *   - highlight: defaults to FALSE.
+ *   - flags: array of flags available for this content and user as render
+ *     arrays.
  *   - like: the like flag properties.
  *   - timestamp: the date to be displayed. Defaults to changed node property.
  *   - stats: statistics to be displayed. Defaults to an empty array.
@@ -57,14 +58,12 @@ function _eic_community_prepare_node_teaser_array(NodeInterface $node) {
     $language = $node->get('field_language')->entity->label();
   }
 
-  // Get the like_content flag link.
-  $like = [];
-  $like_link = \Drupal::service('flag.link_builder')->build('node', $node->id(), FlagType::LIKE_CONTENT);
-  if (!empty($like_link) && $like_link['#access'] == TRUE) {
-    $like = [
-      'label' => $like_link['#title']['#markup'],
-      'path' => $like_link['#attributes']['href'],
-    ];
+  // Get the content flags.
+  $flags = [];
+  foreach (\Drupal::service('flag')->getAllFlags($node->getEntityTypeId(), $node->bundle()) as $flag) {
+    if (_eic_community_get_flag_access($flag->id(), $node)) {
+      $flags[$flag->id()]['content'] = _eic_community_get_flag_render_array($flag->id(), $node);
+    }
   }
 
   return [
@@ -74,7 +73,7 @@ function _eic_community_prepare_node_teaser_array(NodeInterface $node) {
     'tags' => $tags,
     'language' => $language,
     'highlight' => FALSE,
-    'like' => $like,
+    'flags' => $flags,
     'timestamp' => [
       'label' => eic_community_get_teaser_time_display($node->get('changed')->value),
     ],

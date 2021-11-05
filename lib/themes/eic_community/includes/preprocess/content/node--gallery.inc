@@ -85,7 +85,11 @@ function eic_community_preprocess_node__gallery(array &$variables) {
         'label' => $node->type->entity->label(),
       ];
       $variables['gallery_item'] = $teaser;
-      $variables['#attached']['library'][] = 'flag/flag.link_ajax';
+
+      // If we have flags, attach the js library.
+      if (!empty($teaser['flags'])) {
+        $variables['#attached']['library'][] = 'flag/flag.link_ajax';
+      }
       break;
   }
 }
