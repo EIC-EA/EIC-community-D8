@@ -137,8 +137,12 @@ function eic_community_preprocess_group__event(&$variables) {
 
   if (!empty($location)) {
     $location = reset($location);
+    $countries_map = \Drupal\Core\Locale\CountryManager::getStandardList();
     $location_formatted = $location[FieldHelper::getPropertyName(AddressField::ADDRESS_LINE1)] . ' ' . $location[$location[FieldHelper::getPropertyName(AddressField::ADDRESS_LINE2)]] . '<br />';
-    $location_formatted .= $location[FieldHelper::getPropertyName(AddressField::POSTAL_CODE)] . ' ' . $location[FieldHelper::getPropertyName(AddressField::LOCALITY)];
+    $location_formatted .= $location[FieldHelper::getPropertyName(AddressField::POSTAL_CODE)] . ' ' . $location[FieldHelper::getPropertyName(AddressField::LOCALITY)] . '<br />';
+    $location_formatted .= array_key_exists($location['country_code'], $countries_map) ?
+      $countries_map[$location['country_code']] :
+      '';
   }
 
   $allowed_values_location_type = eic_field_location_type_allowed_values();
@@ -285,11 +289,13 @@ function eic_community_preprocess_group__event(&$variables) {
     ];
   }
 
-  $variables['file_list'] = [
-    'title' => t('Event files', ['%count' => count($files)]),
-    'body' => '',
-    'files' => $files_list,
-    'icon_file_path' => $variables['eic_icon_path'],
-    'download' => t('Download'),
-  ];
+  if (!empty($files_list)) {
+    $variables['file_list'] = [
+      'title' => t('Event files', ['%count' => count($files)]),
+      'body' => '',
+      'files' => $files_list,
+      'icon_file_path' => $variables['eic_icon_path'],
+      'download' => t('Download'),
+    ];
+  }
 }
