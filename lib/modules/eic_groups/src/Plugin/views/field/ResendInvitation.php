@@ -17,7 +17,16 @@ class ResendInvitation extends LinkBase {
    * {@inheritdoc}
    */
   protected function getUrlInfo(ResultRow $row) {
-    return Url::fromRoute('<front>');
+    /** @var \Drupal\group\Entity\GroupContentInterface $group_content */
+    $group_content = $this->getEntity($row);
+    $url = Url::fromRoute('eic_groups.group_content.resend_invite', [
+      'group' => $group_content->getGroup()->id(),
+      'group_content' => $group_content->id(),
+    ]);
+
+    $url->access(\Drupal::currentUser());
+
+    return $url;
   }
 
   /**
