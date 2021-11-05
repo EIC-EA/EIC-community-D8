@@ -137,7 +137,7 @@ function eic_community_preprocess_group__event(&$variables) {
 
   if (!empty($location)) {
     $location = reset($location);
-    $location_formatted = $location[FieldHelper::getPropertyName(AddressField::ADDRESS_LINE1)] . ' ' . $location[$location[FieldHelper::getPropertyName(AddressField::ADDRESS_LINE2)]] . '\n';
+    $location_formatted = $location[FieldHelper::getPropertyName(AddressField::ADDRESS_LINE1)] . ' ' . $location[$location[FieldHelper::getPropertyName(AddressField::ADDRESS_LINE2)]] . '<br />';
     $location_formatted .= $location[FieldHelper::getPropertyName(AddressField::POSTAL_CODE)] . ' ' . $location[FieldHelper::getPropertyName(AddressField::LOCALITY)];
   }
 
@@ -155,14 +155,6 @@ function eic_community_preprocess_group__event(&$variables) {
 
   $event_infos = [
     'title' => t('Event details', [], ['eic_community']),
-    'action' => [
-      'title' => 'Sign up to this event',
-      'text' => 'Get notified of the latest changes and take part in the discussion linked to this event.',
-      'action' => [
-        'label' => 'Sign up now',
-        'url' => 'https://www.google.com',
-      ],
-    ],
     'icon_file_path' => $variables['eic_icon_path'],
     'items' => [
       [
@@ -197,6 +189,17 @@ function eic_community_preprocess_group__event(&$variables) {
       ],
     ],
   ];
+
+  if ($signup_link = $group->get('field_link')->getString()) {
+    $event_infos['action'] = [
+      'title' => t('Sign up to this event', [], ['context' => 'eic_community']),
+      'text' => t('Get notified of the latest changes and take part in the discussion linked to this event.', [], ['context' => 'eic_community']),
+      'action' => [
+        'label' => t('Sign up now', [], ['context' => 'eic_community']),
+        'url' => $signup_link,
+      ],
+    ];
+  }
 
   if ($social_links = $group->get('field_social_links')->getValue()) {
     $socials_platform_mapping = [
@@ -234,6 +237,13 @@ function eic_community_preprocess_group__event(&$variables) {
         'type' => 'custom',
         'name' => 'link',
       ],
+    ];
+  }
+
+  if ($organized_by = $group->get('field_organised_by')->value) {
+    $variables['additional_sidebar_infos'] = [
+      'title' => t('Organized by', [], ['context' => 'eic_community']),
+      'content' => $organized_by,
     ];
   }
 
