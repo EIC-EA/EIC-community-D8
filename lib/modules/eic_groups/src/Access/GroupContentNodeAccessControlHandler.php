@@ -33,7 +33,7 @@ class GroupContentNodeAccessControlHandler extends GroupContentAccessControlHand
 
     // Allow access to power users.
     if (UserHelper::isPowerUser($account)) {
-      $access = GroupAccessResult::allowed()
+      return GroupAccessResult::allowed()
         ->addCacheableDependency($account)
         ->addCacheableDependency($entity);
     }
