@@ -148,7 +148,7 @@ function eic_flags_entity_type_build(array &$entity_types) {
       ->setHandlerClass('route_provider', $route_providers)
       ->setLinkTemplate(
         'block-entity',
-        '/block/' . $entity_id . '/{' . $entity_id . '}'
+        "/{$entity_id}" . '/{' . $entity_id . '}/block'
       );
   }
 }

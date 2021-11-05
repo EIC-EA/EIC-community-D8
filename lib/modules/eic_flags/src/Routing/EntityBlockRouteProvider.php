@@ -38,11 +38,16 @@ class EntityBlockRouteProvider implements EntityRouteProviderInterface {
     $route = (new Route($entity_type->getLinkTemplate($entity_link_template)))
       ->addDefaults([
         '_entity_form' => $entity_type->id() . '.' . $entity_link_template,
-        '_title' => 'Block entity',
+        '_title' => "Block {$entity_type->id()}",
       ])
       ->setRequirement($entity_type->id(), '\d+')
-      ->setRequirement('_access', 'TRUE')
-      ->setOption('entity_type_id', $entity_type->id());
+      ->setRequirement('_entity_block_access', 'TRUE')
+      ->setOption('entity_type_id', $entity_type->id())
+      ->setOption('parameters', [
+        $entity_type->id() => [
+          'type' => "entity:{$entity_type->id()}",
+        ],
+      ]);
 
     $collection->add(
       'entity.' . $entity_type->id() . '.block_entity',

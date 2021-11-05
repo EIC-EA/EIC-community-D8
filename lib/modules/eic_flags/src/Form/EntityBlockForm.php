@@ -12,14 +12,14 @@ use Drupal\flag\Entity\Flagging;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Class EntityBlockForm.
+ * Provides an entity form for blocking an entity.
  *
  * @package Drupal\eic_flags\Form
  */
 class EntityBlockForm extends ContentEntityDeleteForm {
 
   /**
-   * The flag entity block handler service.
+   * The EIC Flags entity block handler service.
    *
    * @var \Drupal\eic_flags\Service\EntityBlockHandler
    */
@@ -35,7 +35,7 @@ class EntityBlockForm extends ContentEntityDeleteForm {
    * @param \Drupal\Component\Datetime\TimeInterface $time
    *   The time service.
    * @param \Drupal\eic_flags\Service\EntityBlockHandler $entity_block_handler
-   *   The flag entity block handler service.
+   *   The EIC Flags entity block handler service.
    */
   public function __construct(
     EntityRepositoryInterface $entity_repository,
@@ -70,14 +70,24 @@ class EntityBlockForm extends ContentEntityDeleteForm {
    * {@inheritdoc}
    */
   public function getDescription() {
-    return $this->t("You're about to block this entity. Are you sure?");
+    return $this->t(
+      "You're about to block this @entity_type. Are you sure?",
+      [
+        '@entity_type' => $this->entity->getEntityTypeId(),
+      ],
+    );
   }
 
   /**
    * {@inheritdoc}
    */
   public function getConfirmText() {
-    return $this->t('Block entity');
+    return $this->t(
+      'Block @entity_type',
+      [
+        '@entity_type' => $this->entity->getEntityTypeId(),
+      ],
+    );
   }
 
   /**
@@ -88,7 +98,12 @@ class EntityBlockForm extends ContentEntityDeleteForm {
 
     $form['reason'] = [
       '#type' => 'textarea',
-      '#title' => $this->t('Please explain why this entity will be blocked.'),
+      '#title' => $this->t(
+        'Please explain why this @entity_type will be blocked.',
+        [
+          '@entity_type' => $this->entity->getEntityTypeId(),
+        ],
+      ),
       '#required' => TRUE,
     ];
 
@@ -109,10 +124,15 @@ class EntityBlockForm extends ContentEntityDeleteForm {
     $entity_moderation_state = $this->entity->get('moderation_state')->value;
 
     // Group is not published, so we do nothing.
-    if ($entity_moderation_state !== 'published') {
+    if ($entity_moderation_state === EntityBlockHandler::ENTITY_BLOCKED_STATE) {
       $form_state->setError(
         $form,
-        $this->t('This entity is not publish and therefore it cannot be blocked.')
+        $this->t(
+          'This @entity_type is already blocked.',
+          [
+            '@entity_type' => $this->entity->getEntityTypeId(),
+          ],
+        )
       );
     }
   }
@@ -127,7 +147,14 @@ class EntityBlockForm extends ContentEntityDeleteForm {
     }
 
     $this->entityBlockHandler->blockEntity($this->entity);
-    $this->messenger()->addStatus($this->t('The entity has been blocked.'));
+    $this->messenger()->addStatus(
+      $this->t(
+        'The @entity_type has been blocked.',
+        [
+          '@entity_type' => $this->entity->getEntityTypeId(),
+        ],
+      )
+    );
   }
 
 }
