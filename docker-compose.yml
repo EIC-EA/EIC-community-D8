@@ -11,6 +11,14 @@ services:
       - ./docker/apache/vhosts:/etc/apache2/sites-enabled
       - .:${APP_ROOT}
 
+  nginx:
+    image: nginx:latest
+    container_name: ${APP_NAME}_reverse_proxy
+    volumes:
+      - ./docker/nginx/servers:/etc/nginx/conf.d
+    ports:
+      - ${REVERSE_PROXY_PORT}:80
+
   php:
     build:
       context: ./docker/php

@@ -66,6 +66,7 @@ function eic_groups_theme($existing, $type, $theme, $path) {
         'datasource' => '',
         'source_class' => '',
         'group_id' => '',
+        'is_anonymous' => '',
       ],
     ],
     'eic_group_comments_from_discussion' => [
@@ -245,40 +246,78 @@ function eic_groups_group_access(EntityInterface $entity, $operation, AccountInt
 
   $moderation_state = $entity->get('moderation_state')->value;
 
+  // Allow access if user is a poweruser.
+  if (UserHelper::isPowerUser($account)) {
+    return GroupAccessResult::allowed()
+      ->addCacheableDependency($account)
+      ->addCacheableDependency($entity);
+  }
+
   switch ($operation) {
     case 'view':
-      if (UserHelper::isPowerUser($account)) {
-        $access = GroupAccessResult::allowed()
-          ->addCacheableDependency($account)
-          ->addCacheableDependency($entity);
-        break;
-      }
-
       $membership = $entity->getMember($account);
+      $is_group_admin = FALSE;
 
       // If the user is not a member of the group, we do nothing.
       if (!$membership) {
         break;
       }
 
+      // User is a group admin, therefore we should allow access.
+      if ($membership && EICGroupsHelper::userIsGroupAdmin($entity, $account, $membership)) {
+        $is_group_admin = TRUE;
+      }
+
       // We allow access if the user is the group owner or a group admin, and
-      // moderation state is set to DRAFT.
-      if ($entity->get('moderation_state')->value === GroupsModerationHelper::GROUP_DRAFT_STATE) {
-        if (in_array(EICGroupsHelper::GROUP_OWNER_ROLE, array_keys($membership->getRoles())) ||
-            in_array(EICGroupsHelper::GROUP_ADMINISTRATOR_ROLE, array_keys($membership->getRoles()))
-        ) {
-          $access = GroupAccessResult::allowed()
-            ->addCacheableDependency($account)
-            ->addCacheableDependency($entity);
-        }
+      // moderation state is set to DRAFT or BLOCKED.
+      if (in_array(
+        $entity->get('moderation_state')->value,
+        [
+          GroupsModerationHelper::GROUP_DRAFT_STATE,
+          GroupsModerationHelper::GROUP_BLOCKED_STATE,
+        ]) && $is_group_admin
+      ) {
+        $access = GroupAccessResult::allowed()
+          ->addCacheableDependency($account)
+          ->addCacheableDependency($membership)
+          ->addCacheableDependency($entity);
+      }
+      break;
+
+    case 'update':
+      $membership = $entity->getMember($account);
+      $is_group_admin = FALSE;
+
+      // User is a group admin, therefore we should allow access.
+      if ($membership && EICGroupsHelper::userIsGroupAdmin($entity, $account, $membership)) {
+        $is_group_admin = TRUE;
+      }
+
+      if (!$is_group_admin) {
+        break;
+      }
+
+      // We allow access if the user is the group owner or a group admin, and
+      // moderation state is set to DRAFT or BLOCKED.
+      if (in_array(
+        $entity->get('moderation_state')->value,
+        [
+          GroupsModerationHelper::GROUP_DRAFT_STATE,
+          GroupsModerationHelper::GROUP_BLOCKED_STATE,
+        ])
+      ) {
+        $access = GroupAccessResult::allowed()
+          ->addCacheableDependency($account)
+          ->addCacheableDependency($membership)
+          ->addCacheableDependency($entity);
       }
       break;
 
     case 'delete':
       // Deny access to delete group if the group is NOT in pending state and
-      // the user is NOT a "site_admin" or a "content_administrator".
+      // the user is NOT a poweruser.
       if ($moderation_state !== GroupsModerationHelper::GROUP_PENDING_STATE) {
-        $access = GroupAccessResult::forbiddenIf(!UserHelper::isPowerUser($account))
+        $access = GroupAccessResult::forbidden()
           ->addCacheableDependency($account)
           ->addCacheableDependency($entity);
       }
@@ -515,30 +554,11 @@ function eic_groups_entity_presave(EntityInterface $entity) {
 }
 
 /**
- * Implements hook_field_widget_WIDGET_TYPE_form_alter().
+ * @return array
  */
-function eic_groups_field_widget_media_library_widget_form_alter(&$element, FormStateInterface $form_state, $context) {
-  /** @var \Drupal\Core\Routing\RouteMatchInterface $route_match */
-  $route_match = \Drupal::routeMatch();
-
-  if ($route_match->getRouteName() === 'entity.group_content.create_form') {
-
-    /** @var \Drupal\group\Entity\GroupInterface $group */
-    $group = \Drupal::service('eic_groups.helper')->getGroupFromRoute();
-
-    // If group cannot be loaded from the route, we return access neutral.
-    if (!$group) {
-      return;
-    }
-
-    /** @var \Drupal\media_library\MediaLibraryState $state */
-    $state = $element['open_button']['#media_library_state'];
-
-    // Because field widget media_library_widget checks entity create access,
-    // we need to pass some extra context so MediaLibraryFieldWidgetOpener
-    // service can check if the user is creating a group content and allow
-    // access based on the group permissions.
-    $state->set('in_group_context', TRUE);
-    $state->set('group_id', $group->id());
-  }
+function eic_field_location_type_allowed_values() {
+  return [
+    'on_site' => t('On site', [], ['eic_groups']),
+    'remove' => t('Remote', [], ['eic_groups']),
+  ];
 }
