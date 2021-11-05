@@ -435,6 +435,21 @@ function eic_groups_entity_operation_alter(array &$operations, EntityInterface $
       'url' => $publish_url,
     ];
   }
+
+  // Add block group operation.
+  $block_group_url_options = [
+    'query' => [
+      'destination' => $current_path_alias,
+    ],
+  ];
+  $block_group_url = Url::fromRoute('entity.group.block_entity', ['group' => $entity->id()], $block_group_url_options);
+  if ($block_group_url->access()) {
+    $operations['block'] = [
+      'title' => t('Block'),
+      'weight' => -50,
+      'url' => $block_group_url,
+    ];
+  }
 }
 
 /**

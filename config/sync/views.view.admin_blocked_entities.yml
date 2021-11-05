@@ -503,7 +503,7 @@ display:
           entity_field: flag_id
           plugin_id: bundle
       sorts: {  }
-      title: 'Blocked groups'
+      title: 'Blocked history'
       header: {  }
       footer: {  }
       empty: {  }
@@ -584,10 +584,10 @@ display:
         - 'config:field.storage.flagging.field_block_reason'
         - 'config:field.storage.user.field_first_name'
         - 'config:field.storage.user.field_last_name'
-  page_admin_blocked_groups:
+  page_admin_group_blocked_history:
     display_plugin: page
-    id: page_admin_blocked_groups
-    display_title: 'Page: Admin - Blocked groups'
+    id: page_admin_group_blocked_history
+    display_title: 'Page: Admin group blocked history'
     position: 1
     display_options:
       display_extenders: {  }
