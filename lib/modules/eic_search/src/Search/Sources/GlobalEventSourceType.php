@@ -11,7 +11,7 @@ use Drupal\eic_search\Service\SolrDocumentProcessor;
  *
  * @package Drupal\eic_groups\Search\Sources
  */
-class GroupSourceType extends SourceType {
+class GlobalEventSourceType extends SourceType {
 
   use StringTranslationTrait;
 
@@ -26,14 +26,14 @@ class GroupSourceType extends SourceType {
    * @inheritDoc
    */
   public function getLabel(): string {
-    return $this->t('Group', [], ['context' => 'eic_search']);
+    return $this->t('Global Event', [], ['context' => 'eic_search']);
   }
 
   /**
    * @inheritDoc
    */
   public function getEntityBundle(): string {
-    return 'group';
+    return 'global_event';
   }
 
   /**
@@ -92,22 +92,8 @@ class GroupSourceType extends SourceType {
   /**
    * @inheritDoc
    */
-  public function ableToPrefilteredByGroup(): bool {
-    return TRUE;
-  }
-
-  /**
-   * @inheritDoc
-   */
   public function getPrefilteredContentType(): array {
-    return ['group'];
-  }
-
-  /**
-   * @inheritDoc
-   */
-  public function getPrefilteredGroupFieldId(): array {
-    return ['its_group_id_integer'];
+    return ['event'];
   }
 
 }

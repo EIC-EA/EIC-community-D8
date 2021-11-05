@@ -218,7 +218,7 @@ class SolrDocumentProcessor {
         break;
       case 'entity:group':
         $title = $fields['tm_X3b_en_group_label_fulltext'];
-        $type = 'group';
+        $type = $fields['ss_group_type'];
         $date = $fields['ds_group_created'];
         $status = $fields['bs_group_status'];
         $fullname = $fields['ss_group_user_first_name'] . ' ' . $fields['ss_group_user_last_name'];
@@ -499,6 +499,11 @@ class SolrDocumentProcessor {
 
     if (!$search_id) {
       $document->addField('ss_group_visibility', $group_visibility);
+
+      $document->addField(
+        'ss_group_visibility_label',
+        GroupVisibilityType::GROUP_VISIBILITY_PUBLIC
+      );
       return;
     }
 
@@ -506,6 +511,11 @@ class SolrDocumentProcessor {
     $item = array_key_exists($search_id, $items) ? $items[$search_id] : NULL;
     if (!$item) {
       $document->addField('ss_group_visibility', $group_visibility);
+
+      $document->addField(
+        'ss_group_visibility_label',
+        GroupVisibilityType::GROUP_VISIBILITY_PUBLIC
+      );
       return;
     }
 
@@ -514,6 +524,11 @@ class SolrDocumentProcessor {
 
     if (!$group) {
       $document->addField('ss_group_visibility', $group_visibility);
+
+      $document->addField(
+        'ss_group_visibility_label',
+        GroupVisibilityType::GROUP_VISIBILITY_PUBLIC
+      );
       return;
     }
 

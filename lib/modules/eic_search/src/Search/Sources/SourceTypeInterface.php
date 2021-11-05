@@ -19,6 +19,8 @@ interface SourceTypeInterface {
 
   const SOLR_FIELD_CONTENT_TYPE_ID = 'ss_global_content_type';
 
+  const SOLR_FIELD_GROUP_TYPE_ID = 'ss_global_content_type';
+
   const READ_MORE_NUMBER_TO_LOAD = 5;
 
   /**
