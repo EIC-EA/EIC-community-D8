@@ -1,12 +1,16 @@
 <div class="ecl-collapsible-options {{ extra_classes }}">
   <div class="ecl-collapsible-options__trigger-wrapper">
     {% set _icon = {} %}
+    {% if icon is empty %}
+      {% set icon = {name: 'plus', type: 'ui'} %}
+    {% endif %}
+
 
     {% if icon_file_path is not empty %}
       {% set _icon = {
         path: icon_file_path,
-        type: 'ui',
-        name: 'plus',
+        type: icon.type,
+        name: icon.name,
         size: 's',
       } %}
     {% endif %}

@@ -552,3 +552,13 @@ function eic_groups_entity_presave(EntityInterface $entity) {
     }
   }
 }
+
+/**
+ * @return array
+ */
+function eic_field_location_type_allowed_values() {
+  return [
+    'on_site' => t('On site', [], ['eic_groups']),
+    'remove' => t('Remote', [], ['eic_groups']),
+  ];
+}
