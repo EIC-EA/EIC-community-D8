@@ -77,6 +77,6 @@ function _eic_community_prepare_node_teaser_array(NodeInterface $node) {
     'timestamp' => [
       'label' => eic_community_get_teaser_time_display($node->get('changed')->value),
     ],
-    'stats' => [],
+    'stats' => _eic_community_get_entity_stats($node),
   ];
 }

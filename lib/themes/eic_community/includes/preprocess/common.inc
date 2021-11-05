@@ -7,6 +7,7 @@
 
 use Drupal\Core\Block\BlockPluginInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\eic_flags\FlagType;
 
 /**
  * Returns the build of the social share block.
@@ -82,4 +83,42 @@ function _eic_community_get_flag_render_array($flag_id, EntityInterface $entity)
     ],
     '#create_placeholder' => TRUE,
   ];
+}
+
+/**
+ * Returns the statistics for a given entity.
+ *
+ * @param \Drupal\Core\Entity\EntityInterface $entity
+ *   The entity for which we return the statistics.
+ *
+ * @return array
+ *   An array suitable for the templates.
+ */
+function _eic_community_get_entity_stats(EntityInterface $entity) {
+  $stats = [];
+  foreach (\Drupal::service('eic_statistics.helper')->getEntityStatistics($entity) as $stat => $value) {
+    $item = [];
+    switch ($stat) {
+      case 'views':
+        $item['label'] = t('Views');
+        $item['icon']['name'] = 'views';
+        break;
+
+      case 'downloads':
+        $item['label'] = t('Downloads');
+        $item['icon']['name'] = 'download';
+        break;
+
+      case FlagType::LIKE_CONTENT:
+        $item['label'] = t('Likes');
+        $item['icon']['name'] = 'like';
+        break;
+
+    }
+
+    $item['icon']['type'] = 'custom';
+    $item['value'] = $value;
+    $stats[] = $item;
+  }
+  return $stats;
 }

@@ -7,6 +7,7 @@
 
 use Drupal\eic_media\MediaHelper;
 use Drupal\file\Entity\File;
+use Drupal\eic_community\ValueObject\ImageValueObject;
 
 /**
  * Implements hook_preprocess_node__bundle() for gallery node.
@@ -70,14 +71,11 @@ function eic_community_preprocess_node__gallery(array &$variables) {
 
       // Prepare images.
       $images = [];
-      foreach ($node->get('field_gallery_slides')->referencedEntities() as $paragraph) {
+      foreach ($node->get('field_gallery_slides')->referencedEntities() as $index => $paragraph) {
         $media = $paragraph->get('field_gallery_slide_media')->referencedEntities()[0];
-        /** @var \Drupal\file\FileInterface $download */
-        $file = File::load($media->oe_media_image->getValue()[0]['target_id']);
-        $images[] = [
-          'src' => $file->createFileUrl(),
-          'alt' => '',
-        ];
+        $style_name = $index === 0 ? 'gallery_teaser_crop_160x160' : 'crop_50x50';
+        $image_item = ImageValueObject::fromStyledImageItem($media->get('oe_media_image')->first(), $style_name);
+        $images[] = $image_item;
       }
 
       $teaser['images'] = $images;

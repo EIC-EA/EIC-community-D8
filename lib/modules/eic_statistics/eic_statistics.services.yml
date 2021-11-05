@@ -8,3 +8,7 @@ services:
     decoration_priority: 1
     public: true
     arguments: ['@eic_statistics.statistics.storage.node.decorator.inner', '@database', '@state', '@request_stack', '@event_dispatcher']
+
+  eic_statistics.helper:
+    class: Drupal\eic_statistics\StatisticsHelper
+    arguments: ['@eic_statistics.storage', '@statistics.storage.node', '@eic_media_statistics.entity_file_download_count', '@flag']
