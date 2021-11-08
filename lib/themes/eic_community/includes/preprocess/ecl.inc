@@ -5,6 +5,7 @@
  * Contains ECL components preprocess functions.
  */
 
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\taxonomy\TermInterface;
 
 /**
@@ -70,4 +71,37 @@ function _eic_community_preprocess_ecl_tag(TermInterface $taxonomy_term, string 
     'extra_classes' => '',
     'extra_attributes' => [],
   ];
+}
+
+/**
+ * Returns the status of an entity based on a date range.
+ *
+ * @param \Drupal\Core\Entity\EntityInterface $entity
+ *   The entity to check.
+ * @param string $field_name
+ *   The date_range field name.
+ *
+ * @return string
+ *   The status of the event. Can be one of the following values:
+ *   - upcoming
+ *   - ongoing
+ *   - past
+ *   - undefined
+ */
+function _eic_community_get_ecl_date_block_variant(EntityInterface $entity, string $field_name) {
+  $state = \Drupal::service('eic_helper.datetime')->getDateRangeStatus($entity, $field_name);
+
+  switch ($state) {
+    case 'upcoming':
+    case 'undefined':
+    default:
+      return 'default';
+
+    case 'ongoing':
+      return 'ongoing';
+
+    case 'past':
+      return 'past';
+
+  }
 }

@@ -24,6 +24,9 @@ function eic_community_preprocess_node__event(array &$variables) {
       $teaser['date'] = _eic_community_preprocess_ecl_date_block($start_date);
       $teaser['timestamp']['label'] = eic_community_get_teaser_time_display($node->get('published_at')->value);
 
+      // Get the event state.
+      $teaser['date']['variant'] = _eic_community_get_ecl_date_block_variant($node, 'field_date_range');
+
       // Get the event type.
       $event_type_label = '';
       if (!$node->field_vocab_event_type->isEmpty()) {
