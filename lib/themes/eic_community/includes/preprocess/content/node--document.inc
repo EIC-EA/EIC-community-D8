@@ -16,7 +16,7 @@ function eic_community_preprocess_node__document(array &$variables) {
   $node = $variables['node'];
 
   switch ($variables['view_mode']) {
-    case 'teaser':
+    case 'small_teaser':
       // If document has no medias, we do nothing.
       if ($node->get('field_document_media')->isEmpty()) {
         return;
