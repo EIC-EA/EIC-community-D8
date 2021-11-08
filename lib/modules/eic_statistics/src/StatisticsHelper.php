@@ -3,6 +3,7 @@
 namespace Drupal\eic_statistics;
 
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\eic_comments\CommentsHelper;
 use Drupal\eic_flags\FlagType;
 use Drupal\eic_media_statistics\EntityFileDownloadCount;
 use Drupal\flag\FlagService;
@@ -41,6 +42,13 @@ class StatisticsHelper {
   protected $flagService;
 
   /**
+   * The eic_comments.helper service.
+   *
+   * @var \Drupal\eic_comments\CommentsHelper
+   */
+  protected $commentsHelper;
+
+  /**
    * Constructs a StatisticsHelper object.
    *
    * @param \Drupal\eic_statistics\StatisticsStorage $statistics_storage
@@ -51,16 +59,20 @@ class StatisticsHelper {
    *   The eic_media_statistics.entity_file_download_count service.
    * @param \Drupal\flag\FlagService $flag_service
    *   The flag service.
+   * @param \Drupal\eic_comments\CommentsHelper $comments_helper
+   *   The eic_comments.helper service.
    */
   public function __construct(
     StatisticsStorage $statistics_storage,
     NodeStatisticsDatabaseStorage $node_statistics_storage,
     EntityFileDownloadCount $entity_file_download_count,
-    FlagService $flag_service) {
+    FlagService $flag_service,
+    CommentsHelper $comments_helper) {
     $this->statisticsStorage = $statistics_storage;
     $this->nodeStatisticsDatabaseStorage = $node_statistics_storage;
     $this->entityFileDownloadCount = $entity_file_download_count;
     $this->flagService = $flag_service;
+    $this->commentsHelper = $comments_helper;
   }
 
   /**
@@ -75,12 +87,15 @@ class StatisticsHelper {
   public function getEntityStatistics(EntityInterface $entity) {
     $result = [];
 
+    // Views statistics.
     switch ($entity->getEntityTypeId()) {
       case 'node':
         $result['views'] = $this->nodeStatisticsDatabaseStorage->fetchView($entity->id())->getTotalCount();
         break;
 
     }
+
+    // Flags statistics.
     $countable_flags = [
       FlagType::LIKE_CONTENT,
     ];
@@ -90,7 +105,12 @@ class StatisticsHelper {
       }
       $result[$flag->id()] = count($this->flagService->getAllEntityFlaggings($entity));
     }
+
+    // Downloads statistics.
     $result['downloads'] = $this->entityFileDownloadCount->getFileDownloads($entity);
+
+    // Comments statistics.
+    $result['comments'] = $this->commentsHelper->countEntityComments($entity);
     return $result;
   }
 
