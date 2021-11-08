@@ -78,16 +78,20 @@ function eic_community_preprocess_node__gallery(array &$variables) {
         $images[] = $image_item;
       }
 
+      // We remove the flags as we don't want them in the teaser.
+      $teaser['flags'] = [];
+
       $teaser['images'] = $images;
       $teaser['type'] = [
         'label' => $node->type->entity->label(),
       ];
-      $variables['gallery_item'] = $teaser;
 
       // If we have flags, attach the js library.
       if (!empty($teaser['flags'])) {
         $variables['#attached']['library'][] = 'flag/flag.link_ajax';
       }
+
+      $variables['gallery_item'] = $teaser;
       break;
   }
 }

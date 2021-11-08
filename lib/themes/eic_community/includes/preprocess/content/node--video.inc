@@ -45,12 +45,15 @@ function eic_community_preprocess_node__video(array &$variables) {
         ],
       ];
 
-      $variables['video_item'] = $teaser;
+      // We remove the flags as we don't want them in the teaser.
+      $teaser['flags'] = [];
 
       // If we have flags, attach the js library.
       if (!empty($teaser['flags'])) {
         $variables['#attached']['library'][] = 'flag/flag.link_ajax';
       }
+
+      $variables['video_item'] = $teaser;
       break;
   }
 }
