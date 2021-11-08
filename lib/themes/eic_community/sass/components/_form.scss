@@ -1,11 +1,17 @@
 .ecl-form {
-  max-width: map-get($ecl-width, 'form-l');
+  max-width: 700px;
   width: 100%;
   margin-left: auto;
   margin-right: auto;
 
   & .form-item {
     max-width: 100%;
+  }
+
+  & ul {
+    font-size: .85em;
+    padding-left: 1em;
+    color: $ecl-color-grey-50;
   }
 
   &,
@@ -72,6 +78,9 @@
   }
 
 
+  &__checkbox {
+    margin: map-get($ecl-spacing, 'l') 0;
+  }
 
   .ecl-form-group {
     margin: map-get($ecl-spacing, 'l') 0;
@@ -119,6 +128,7 @@
 
   .ecl-text-input,
   .ecl-text-area {
+    width: 100%;
     &--full {
       width: 100%;
     }
@@ -269,11 +279,6 @@
 
   & .ecl-table *:not(.handle) {
     box-sizing: border-box;
-  }
-
-  & .ecl-table__cell input {
-    //max-width: calc(100% - 62px);
-    max-width: 350px;
   }
 
   & .vertical-tabs {
