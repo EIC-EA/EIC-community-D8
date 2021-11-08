@@ -5,6 +5,8 @@
  * Prepares variables for node video templates.
  */
 
+use Drupal\eic_community\ValueObject\ImageValueObject;
+
 /**
  * Implements hook_preprocess_node__bundle() for vide node.
  */
@@ -25,31 +27,25 @@ function eic_community_preprocess_node__video(array &$variables) {
       break;
 
     case 'teaser':
-      // Get the topics.
-      $tags = [];
-      if (!$node->get('field_vocab_topics')->isEmpty()) {
-        foreach ($node->get('field_vocab_topics')->referencedEntities() as $term) {
-          $tags[] = _eic_community_preprocess_ecl_tag($term)['tag'];
-        }
+      $teaser = _eic_community_prepare_node_teaser_array($node);
+
+      // Get the thumbnail.
+      /** @var \Drupal\media\MediaInterface $media */
+      $media = $node->get('field_video_media')->referencedEntities()[0];
+      if ($media && !empty($media->get('thumbnail')->getValue())) {
+        $style_name = 'gallery_teaser_crop_160x160';
+        $teaser['image'] = ImageValueObject::fromStyledImageItem($media->get('thumbnail')->first(), $style_name);
       }
 
-      $item = [
-        'type' => [
-          'label' => $node->type->entity->label(),
-          'icon' => [
-            'name' => $node->bundle(),
-            'type' => 'custom',
-          ],
+      $teaser['type'] = [
+        'label' => $node->type->entity->label(),
+        'icon' => [
+          'name' => 'media',
+          'type' => 'custom',
         ],
-        'tags' => $tags,
-        'language' => $node->get('field_language')->entity->label(),
-        'timestamp' => [
-          'label' => eic_community_get_teaser_time_display($node->get('published_at')->value),
-        ],
-        'author' => eic_community_get_teaser_user_display($node->getOwner()),
       ];
 
-      $variables['video_item'] = $item;
+      $variables['video_item'] = $teaser;
       break;
   }
 }
