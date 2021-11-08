@@ -436,7 +436,8 @@
 
     @include ecl-media-breakpoint-down('md') {
       #{$node}--event & {
-        flex-direction: column;
+        flex-direction: row;
+        margin-bottom: map-get($ecl-spacing, 's');
       }
     }
 
@@ -948,7 +949,9 @@
   &__stat-icon {
     color: ecl-typography('color', 'label');
     margin-right: 4px;
-    display: block;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   /* file list teaser */
