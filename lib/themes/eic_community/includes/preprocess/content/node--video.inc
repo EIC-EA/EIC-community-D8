@@ -46,6 +46,11 @@ function eic_community_preprocess_node__video(array &$variables) {
       ];
 
       $variables['video_item'] = $teaser;
+
+      // If we have flags, attach the js library.
+      if (!empty($teaser['flags'])) {
+        $variables['#attached']['library'][] = 'flag/flag.link_ajax';
+      }
       break;
   }
 }
