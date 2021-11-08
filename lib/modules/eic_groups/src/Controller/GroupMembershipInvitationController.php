@@ -7,6 +7,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Mail\MailManagerInterface;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Routing\RedirectDestinationInterface;
+use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\group\Entity\GroupContentInterface;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\group\Plugin\GroupContentEnablerManagerInterface;
@@ -92,6 +93,17 @@ class GroupMembershipInvitationController extends ControllerBase {
       throw new \InvalidArgumentException();
     }
 
+    $invitation_counter = (int) $group_content->get('field_invitation_counter')->value;
+    if ($invitation_counter >= EICGroupsHelper::INVITEE_INVITATION_EMAIL_LIMIT) {
+      $this->messenger->addError($this->t('Maximum amount of invitation has been reached for this user.'));
+      $response = new RedirectResponse($group->toUrl()->toString());
+      if ($this->requestStack->getCurrentRequest()->query->has('destination')) {
+        $response = new RedirectResponse($this->redirectDestination->get());
+      }
+
+      return $response;
+    }
+
     $from = $group_content->getEntity();
     $langcode = $from->getPreferredLangcode();
     $mail = $group_content->get('invitee_mail')->getString();
@@ -105,14 +117,11 @@ class GroupMembershipInvitationController extends ControllerBase {
     // Load plugin configuration.
     $group_plugin_collection = $this->groupContentEnablerManager->getInstalled($group->getGroupType());
     $group_invite_config = $group_plugin_collection->getConfiguration()['group_invitation'];
-
     $users = $this->entityTypeManager->getStorage('user')
       ->loadByProperties(['mail' => $mail]);
-    if (!empty($users)) {
+    if (!empty($users) && $group_invite_config['send_email_existing_users']) {
       // Check if we should send the email to an existing user.
-      if ($group_invite_config['send_email_existing_users']) {
-        $params['existing_user'] = TRUE;
-      }
+      $params['existing_user'] = TRUE;
     }
 
     $this->mailManager->mail(
@@ -124,6 +133,9 @@ class GroupMembershipInvitationController extends ControllerBase {
       NULL,
       TRUE
     );
+
+    $group_content->set('field_invitation_counter', ++$invitation_counter);
+    $group_content->save();
 
     $this->messenger->addMessage($this->t('Invitation has been sent again'));
     // Default response when destination is not in the URL.
