@@ -4,6 +4,7 @@
   position: relative;
   display: inline-block;
   cursor: pointer;
+  border: 2px solid transparent;
 
   &__trigger-wrapper {
     display: none;
@@ -180,6 +181,29 @@
         }
         .ecl-button__label, .ecl-link__label {
           text-decoration: underline;
+        }
+      }
+    }
+  }
+
+  &--blue {
+    & #{$node}__trigger {
+      background-color: $ecl-color-blue;
+      color: $ecl-color-white;
+    }
+
+    & #{$node}__collapse-well {
+      background-color: $ecl-color-blue;
+
+      & #{$node}__item {
+        & a {
+          color: $ecl-color-white;
+        }
+        &:hover {
+          background-color: $ecl-color-blue-75;
+          & .ecl-collapsible-options__button::before {
+            background-color: $ecl-color-blue-50;
+          }
         }
       }
     }
