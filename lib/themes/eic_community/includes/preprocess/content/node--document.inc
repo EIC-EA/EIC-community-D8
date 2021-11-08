@@ -16,6 +16,28 @@ function eic_community_preprocess_node__document(array &$variables) {
   $node = $variables['node'];
 
   switch ($variables['view_mode']) {
+    case 'teaser':
+      $teaser = _eic_community_prepare_node_teaser_array($node);
+
+      $teaser['type'] = [
+        'label' => $node->type->entity->label(),
+        'icon' => [
+          'name' => 'media',
+          'type' => 'custom',
+        ],
+      ];
+
+      // We remove the flags as we don't want them in the teaser.
+      $teaser['flags'] = [];
+
+      // If we have flags, attach the js library.
+      if (!empty($teaser['flags'])) {
+        $variables['#attached']['library'][] = 'flag/flag.link_ajax';
+      }
+
+      $variables['document_item'] = $teaser;
+      break;
+
     case 'small_teaser':
       // If document has no medias, we do nothing.
       if ($node->get('field_document_media')->isEmpty()) {
