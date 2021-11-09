@@ -8,13 +8,11 @@ dependencies:
     - field.field.group.event.field_document_additional
     - field.field.group.event.field_document_agenda
     - field.field.group.event.field_document_presentations
-    - field.field.group.event.field_documents
     - field.field.group.event.field_event_registration_date
     - field.field.group.event.field_header_visual
     - field.field.group.event.field_image
     - field.field.group.event.field_link
     - field.field.group.event.field_location
-    - field.field.group.event.field_location_type
     - field.field.group.event.field_organised_by
     - field.field.group.event.field_related_groups
     - field.field.group.event.field_smed_id
@@ -24,7 +22,6 @@ dependencies:
     - field.field.group.event.field_vocab_geo
     - field.field.group.event.field_vocab_language
     - field.field.group.event.field_vocab_topics
-    - field.field.group.event.field_website_url
     - field.field.group.event.field_welcome_message
     - group.type.event
     - workflows.workflow.groups
@@ -46,7 +43,7 @@ content:
   features:
     type: options_buttons
     settings: {  }
-    weight: 23
+    weight: 20
     region: content
     third_party_settings: {  }
   field_body:
@@ -58,13 +55,13 @@ content:
     type: text_textarea
     region: content
   field_date_range:
-    weight: 9
+    weight: 8
     settings: {  }
     third_party_settings: {  }
     type: daterange_default
     region: content
   field_document_additional:
-    weight: 20
+    weight: 17
     settings:
       match_operator: CONTAINS
       match_limit: 10
@@ -74,7 +71,7 @@ content:
     type: entity_reference_autocomplete
     region: content
   field_document_agenda:
-    weight: 18
+    weight: 15
     settings:
       match_operator: CONTAINS
       match_limit: 10
@@ -84,7 +81,7 @@ content:
     type: entity_reference_autocomplete
     region: content
   field_document_presentations:
-    weight: 19
+    weight: 16
     settings:
       match_operator: CONTAINS
       match_limit: 10
@@ -92,13 +89,6 @@ content:
       placeholder: ''
     third_party_settings: {  }
     type: entity_reference_autocomplete
-    region: content
-  field_documents:
-    type: media_library_widget
-    weight: 17
-    settings:
-      media_types: {  }
-    third_party_settings: {  }
     region: content
   field_event_registration_date:
     weight: 6
@@ -108,14 +98,14 @@ content:
     region: content
   field_header_visual:
     type: media_library_widget
-    weight: 16
+    weight: 14
     settings:
       media_types: {  }
     third_party_settings: {  }
     region: content
   field_image:
     type: media_library_widget
-    weight: 15
+    weight: 13
     settings:
       media_types: {  }
     third_party_settings: {  }
@@ -129,16 +119,10 @@ content:
     type: link_default
     region: content
   field_location:
-    weight: 10
+    weight: 9
     settings: {  }
     third_party_settings: {  }
     type: address_default
-    region: content
-  field_location_type:
-    weight: 11
-    settings: {  }
-    third_party_settings: {  }
-    type: options_buttons
     region: content
   field_organised_by:
     weight: 4
@@ -149,7 +133,7 @@ content:
     type: string_textfield
     region: content
   field_related_groups:
-    weight: 21
+    weight: 18
     settings:
       match_operator: CONTAINS
       match_limit: 10
@@ -159,7 +143,7 @@ content:
     type: entity_reference_autocomplete
     region: content
   field_smed_id:
-    weight: 27
+    weight: 24
     settings:
       size: 60
       placeholder: ''
@@ -167,7 +151,7 @@ content:
     type: string_textfield
     region: content
   field_social_links:
-    weight: 8
+    weight: 7
     settings:
       select_social: false
       disable_weight: false
@@ -189,19 +173,18 @@ content:
     type: options_select
     region: content
   field_vocab_geo:
-    weight: 13
+    weight: 11
     settings:
       match_top_level_limit: '0'
       items_to_load: '25'
       auto_select_parents: '1'
       disable_top_choices: 0
       load_all: 0
-      ignore_current_user: false
     third_party_settings: {  }
     type: entity_tree
     region: content
   field_vocab_language:
-    weight: 14
+    weight: 12
     settings:
       match_operator: CONTAINS
       match_limit: 10
@@ -211,27 +194,18 @@ content:
     type: entity_reference_autocomplete
     region: content
   field_vocab_topics:
-    weight: 12
+    weight: 10
     settings:
       match_top_level_limit: '3'
       disable_top_choices: '1'
       items_to_load: '25'
       auto_select_parents: '1'
       load_all: 0
-      ignore_current_user: false
     third_party_settings: {  }
     type: entity_tree
     region: content
-  field_website_url:
-    weight: 7
-    settings:
-      placeholder_url: ''
-      placeholder_title: ''
-    third_party_settings: {  }
-    type: link_default
-    region: content
   field_welcome_message:
-    weight: 22
+    weight: 19
     settings:
       rows: 5
       placeholder: ''
@@ -248,13 +222,13 @@ content:
     third_party_settings: {  }
   moderation_state:
     type: moderation_state_default
-    weight: 26
+    weight: 23
     settings: {  }
     region: content
     third_party_settings: {  }
   path:
     type: path
-    weight: 24
+    weight: 21
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -262,7 +236,7 @@ content:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 25
+    weight: 22
     region: content
     third_party_settings: {  }
 hidden:
