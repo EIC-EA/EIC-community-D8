@@ -20,6 +20,7 @@ use Drupal\group\Entity\GroupInterface;
 use Drupal\group\GroupMembership;
 use Drupal\group_permissions\Entity\GroupPermissionInterface;
 use Drupal\node\NodeInterface;
+use Drupal\oec_group_flex\OECGroupFlexHelper;
 
 /**
  * EICGroupsHelper service that provides helper functions for groups.
@@ -70,6 +71,13 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
   protected $time;
 
   /**
+   * The oec_group_flex.helper service.
+   *
+   * @var \Drupal\oec_group_flex\OECGroupFlexHelper
+   */
+  protected $oecGroupFlexHelper;
+
+  /**
    * Constructs a new EventsHelperService object.
    *
    * @param \Drupal\Core\Database\Connection $database
@@ -82,19 +90,23 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
    *   The current user service.
    * @param \Drupal\Component\Datetime\TimeInterface $time
    *   The time service.
+   * @param \Drupal\oec_group_flex\OECGroupFlexHelper $oec_group_flex_helper
+   *   The oec_group_flex.helper service.
    */
   public function __construct(
     Connection $database,
     RouteMatchInterface $route_match,
     ModuleHandlerInterface $module_handler,
     AccountProxyInterface $current_user,
-    TimeInterface $time
+    TimeInterface $time,
+    OECGroupFlexHelper $oec_group_flex_helper
   ) {
     $this->database = $database;
     $this->routeMatch = $route_match;
     $this->moduleHandler = $module_handler;
     $this->currentUser = $current_user;
     $this->time = $time;
+    $this->oecGroupFlexHelper = $oec_group_flex_helper;
   }
 
   /**
@@ -255,35 +267,65 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
    *   - joining_method: the GroupJoiningMethod plugin type.
    * @param string $plugin_id
    *   The plugin ID.
+   * @param string $format
+   *   The format of the label. Can be 'default' or 'short'. Defaults to
+   *   'default'.
    *
    * @return \Drupal\Core\StringTranslation\TranslatableMarkup|string
    *   The description for the given plugin.
    */
-  public function getGroupFlexPluginTitle(string $plugin_type, string $plugin_id) {
+  public function getGroupFlexPluginTitle(string $plugin_type, string $plugin_id, string $format = 'default') {
     $key = "$plugin_type-$plugin_id";
 
-    switch ($key) {
-      case 'visibility-' . GroupVisibilityType::GROUP_VISIBILITY_PUBLIC:
-        return $this->t('Public group');
+    $labels = [
+      'visibility-' . GroupVisibilityType::GROUP_VISIBILITY_PUBLIC => [
+        'default' => $this->t('Public group'),
+        'short' => $this->t('Public'),
+      ],
+      'visibility-' . GroupVisibilityType::GROUP_VISIBILITY_COMMUNITY => [
+        'default' => $this->t('Community members only'),
+        'short' => $this->t('Community members'),
+      ],
+      'visibility-' . GroupVisibilityType::GROUP_VISIBILITY_CUSTOM_RESTRICTED => [
+        'default' => $this->t('Restricted group'),
+        'short' => $this->t('Restricted'),
+      ],
+      'visibility-' . GroupVisibilityType::GROUP_VISIBILITY_PRIVATE => [
+        'default' => $this->t('Private group'),
+        'short' => $this->t('Private'),
+      ],
+      'joining_method-' . GroupJoiningMethodType::GROUP_JOINING_METHOD_TU_OPEN => [
+        'default' => $this->t('Open'),
+        'short' => $this->t('Open'),
+      ],
+      'joining_method-' . GroupJoiningMethodType::GROUP_JOINING_METHOD_TU_MEMBERSHIP_REQUEST => [
+        'default' => $this->t('Moderated'),
+        'short' => $this->t('Moderated'),
+      ],
+    ];
 
-      case 'visibility-' . GroupVisibilityType::GROUP_VISIBILITY_COMMUNITY:
-        return $this->t('Community members only');
-
-      case 'visibility-' . GroupVisibilityType::GROUP_VISIBILITY_CUSTOM_RESTRICTED:
-        return $this->t('Restricted group');
-
-      case 'visibility-' . GroupVisibilityType::GROUP_VISIBILITY_PRIVATE:
-        return $this->t('Private group');
-
-      case 'joining_method-' . GroupJoiningMethodType::GROUP_JOINING_METHOD_TU_OPEN:
-        return $this->t('Open');
-
-      case 'joining_method-' . GroupJoiningMethodType::GROUP_JOINING_METHOD_TU_MEMBERSHIP_REQUEST:
-        return $this->t('Moderated');
-
-      default:
-        return '';
+    if (!empty($labels[$key][$format])) {
+      return $labels[$key][$format];
     }
+
+    return '';
+  }
+
+  /**
+   * Returns the visibility label for the given group entity.
+   *
+   * @param \Drupal\group\Entity\GroupInterface $group
+   *   The group entity to check.
+   * @param string $format
+   *   The format of the label. Can be 'default' or 'short'. Defaults to
+   *   'default'.
+   *
+   * @return string
+   *   The visibility label.
+   */
+  public function getGroupVisibilityLabel(GroupInterface $group, string $format = 'default') {
+    $group_visibility = $this->oecGroupFlexHelper->getGroupVisibilitySettings($group);
+    return $this->getGroupFlexPluginTitle('visibility', $group_visibility['plugin_id'], $format);
   }
 
   /**
@@ -395,7 +437,7 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
    *   The group entity.
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The user account object.
-   * @param \Drupal\group\GroupMembership|NULL $membership
+   * @param \Drupal\group\GroupMembership|null $membership
    *   The group membership (optional).
    *
    * @return bool

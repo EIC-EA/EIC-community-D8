@@ -90,7 +90,10 @@ class StatisticsHelper {
     // Views statistics.
     switch ($entity->getEntityTypeId()) {
       case 'node':
-        $result['views'] = $this->nodeStatisticsDatabaseStorage->fetchView($entity->id())->getTotalCount();
+        $result['views'] = 0;
+        if ($statistics_views_result = $this->nodeStatisticsDatabaseStorage->fetchView($entity->id())) {
+          $result['views'] = $statistics_views_result->getTotalCount();
+        }
         break;
 
     }
