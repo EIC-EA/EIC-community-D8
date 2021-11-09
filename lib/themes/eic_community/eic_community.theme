@@ -10,6 +10,10 @@
 // files.
 define('INCLUDES_FOLDER', 'includes');
 
+use CommerceGuys\Addressing\AddressFormat\AddressField;
+use Drupal\address\FieldHelper;
+use Drupal\Core\Datetime\DrupalDateTime;
+
 /**
  * Implements hook_theme().
  */
@@ -117,4 +121,181 @@ function eic_community_scan_include_files($folder) {
  */
 if (is_dir(__DIR__ . '/' . INCLUDES_FOLDER)) {
   eic_community_scan_include_files(INCLUDES_FOLDER);
+}
+
+/**
+ * Implements hook_preprocess_group__TYPE.
+ */
+function eic_community_preprocess_group__event(&$variables) {
+  _eic_community_display_topics($variables);
+  _eic_community_display_flags($variables);
+
+  /** @var \Drupal\group\Entity\GroupInterface $group */
+  $group = $variables['group'];
+  $location = $group->get('field_location')->getValue();
+  $location_formatted = '';
+
+  if (!empty($location)) {
+    $location = reset($location);
+    $countries_map = \Drupal\Core\Locale\CountryManager::getStandardList();
+    $location_formatted = $location[FieldHelper::getPropertyName(AddressField::ADDRESS_LINE1)] . ' ' . $location[$location[FieldHelper::getPropertyName(AddressField::ADDRESS_LINE2)]] . '<br />';
+    $location_formatted .= $location[FieldHelper::getPropertyName(AddressField::POSTAL_CODE)] . ' ' . $location[FieldHelper::getPropertyName(AddressField::LOCALITY)] . '<br />';
+    $location_formatted .= array_key_exists($location['country_code'], $countries_map) ?
+      $countries_map[$location['country_code']] :
+      '';
+  }
+
+  $allowed_values_location_type = eic_field_location_type_allowed_values();
+
+  $location_types = array_map(function ($item) use ($allowed_values_location_type) {
+    return array_key_exists($item['value'], $allowed_values_location_type) ?
+      strtolower($allowed_values_location_type[$item['value']]) :
+      '';
+  }, $group->get('field_location_type')->getValue());
+
+  $dates = $group->get('field_date_range')->getValue();
+  $from_date = DrupalDateTime::createFromFormat('Y-m-d\TH:i:s', $dates[0]['value']);
+  $end_date = DrupalDateTime::createFromFormat('Y-m-d\TH:i:s', $dates[0]['end_value']);
+
+  $event_infos = [
+    'title' => t('Event details', [], ['eic_community']),
+    'icon_file_path' => $variables['eic_icon_path'],
+    'items' => [
+      [
+        'content' => $location_formatted,
+        'icon' => [
+          'type' => 'custom',
+          'name' => 'map-marker',
+        ],
+      ],
+      [
+        'content' => ucfirst(implode($location_types, ' & ')),
+        'icon' => [
+          'type' => 'custom',
+          'name' => 'tag',
+        ],
+      ],
+      [
+        'content' => 'From ' . $from_date->format('d/m/Y H\hi') . ' to ' . $end_date->format('d/m/Y H\hi'),
+        'icon' => [
+          'type' => 'custom',
+          'name' => 'calendar',
+        ],
+      ],
+      [
+        'content' => implode(', ', array_map(function (\Drupal\taxonomy\Entity\Term $term) {
+          return $term->label();
+        }, $group->get('field_vocab_language')->referencedEntities())),
+        'icon' => [
+          'type' => 'custom',
+          'name' => 'glob',
+        ],
+      ],
+    ],
+  ];
+
+  if ($signup_link = $group->get('field_link')->getString()) {
+    $event_infos['action'] = [
+      'title' => t('Sign up to this event', [], ['context' => 'eic_community']),
+      'text' => t('Get notified of the latest changes and take part in the discussion linked to this event.', [], ['context' => 'eic_community']),
+      'action' => [
+        'label' => t('Sign up now', [], ['context' => 'eic_community']),
+        'url' => $signup_link,
+      ],
+    ];
+  }
+
+  if ($social_links = $group->get('field_social_links')->getValue()) {
+    $socials_platform_mapping = [
+      'facebook' => [
+        'url' => 'https://www.facebook.com/',
+        'icon' => 'facebook-current',
+      ],
+      'twitter' => [
+        'url' => 'https://www.twitter.com/',
+        'icon' => 'twitter',
+      ],
+      'linkedin' => [
+        'url' => 'https://www.linkedin.com/in/',
+        'icon' => 'linkedin',
+      ],
+    ];
+
+    foreach ($social_links as $social_link) {
+      $event_infos['items'][] = [
+        'content' => ucfirst($social_link['social']),
+        'url' => $socials_platform_mapping[$social_link['social']]['url'] . $social_link['link'],
+        'icon' => [
+          'type' => 'custom',
+          'name' => $socials_platform_mapping[$social_link['social']]['icon'],
+        ],
+      ];
+    }
+  }
+
+  if ($website_url = $group->get('field_website_url')->getString()) {
+    $event_infos['items'][] = [
+      'content' => $website_url,
+      'url' => $website_url,
+      'icon' => [
+        'type' => 'custom',
+        'name' => 'link',
+      ],
+    ];
+  }
+
+  if ($organized_by = $group->get('field_organised_by')->value) {
+    $variables['additional_sidebar_infos'] = [
+      'title' => t('Organized by', [], ['context' => 'eic_community']),
+      'content' => $organized_by,
+    ];
+  }
+
+  $variables['event_infos'] = $event_infos;
+  // Provide the Social Share block.
+  if ($share_block = _eic_community_get_social_share_block()) {
+    $variables['social_share'] = $share_block;
+  }
+
+  $files = $group->get('field_documents')->referencedEntities();
+  $files_list = [];
+
+  foreach ($files as $file) {
+    $download = \Drupal\file\Entity\File::load($file->field_media_file->getValue()[0]['target_id']);
+    $download_url = \Drupal\eic_media\MediaHelper::formatMediaDownloadLink($file)
+      ->toString();
+    $files_list[] = [
+      'name' => $file->getName(),
+      'stats' => [
+        [
+          'hide_label' => TRUE,
+          'icon' => [
+            'name' => 'download',
+            'type' => 'custom',
+          ],
+          'label' => t('downloads'),
+          // @todo Add statistics value
+          'value' => \Drupal::service('eic_media_statistics.entity_file_download_count')
+            ->getFileDownloads($file),
+        ],
+        [
+          'hide_label' => TRUE,
+          'value' => format_size($download->get('filesize')->getString()),
+        ],
+      ],
+      'mime_type' => substr(strrchr($download->get('filemime')
+        ->getString(), '/'), 1),
+      'path' => $download_url,
+    ];
+  }
+
+  if (!empty($files_list)) {
+    $variables['file_list'] = [
+      'title' => t('Event files', ['%count' => count($files)]),
+      'body' => '',
+      'files' => $files_list,
+      'icon_file_path' => $variables['eic_icon_path'],
+      'download' => t('Download'),
+    ];
+  }
 }
