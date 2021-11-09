@@ -123,6 +123,7 @@ function eic_community_preprocess_node__document(array &$variables) {
         'content' => $flag,
       ];
     }
+    $variables['editorial_actions']['items'][]['content'] = _eic_community_get_social_share_block();
     _eic_community_display_topics($variables);
   }
 }

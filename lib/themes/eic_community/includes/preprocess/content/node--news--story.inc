@@ -69,11 +69,12 @@ function _eic_community_preprocess_node_news_story(array &$variables) {
     // Sidebar elements.
     _eic_community_display_flags($variables);
 
-    if ($node->hasField(PrivateContentConst::FIELD_NAME)
+    if (
+      $node->hasField(PrivateContentConst::FIELD_NAME)
       && !$node->get(PrivateContentConst::FIELD_NAME)->value
     ) {
       if ($share_block = _eic_community_get_social_share_block()) {
-        $variables['social_share'] = $share_block;
+        $variables['editorial_actions']['items'][]['content'] = $share_block;
       }
     }
 

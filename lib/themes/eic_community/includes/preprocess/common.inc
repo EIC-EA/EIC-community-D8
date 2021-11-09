@@ -5,8 +5,9 @@
  * Contains common helper functions.
  */
 
-use Drupal\Core\Block\BlockPluginInterface;
+use Drupal\Component\Serialization\Json;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Render\Markup;
 
 /**
  * Returns the build of the social share block.
@@ -15,17 +16,26 @@ use Drupal\Core\Entity\EntityInterface;
  *   The build array of the block or FALSE if not found.
  */
 function _eic_community_get_social_share_block() {
-  $share_block = \Drupal::service('plugin.manager.block')
-    ->createInstance('social_share', []);
+  $social_share_json = [
+    'service' => 'share',
+    'popup' => TRUE,
+    'selection' => TRUE,
+    'to' => [
+      'more',
+      'twitter',
+      'facebook',
+      'linkedin',
+      'e-mail',
+    ],
+    'stats' => TRUE,
+  ];
 
-  if (!$share_block instanceof BlockPluginInterface) {
-    return FALSE;
-  }
-
-  // Return the build array.
-  $build = $share_block->build();
-  $build['#title'] = t('Share');
-  return $build;
+  return [
+    '#theme' => 'oe_webtools_social_share',
+    '#title' => NULL,
+    '#icons_json' => Markup::create(Json::encode($social_share_json)),
+    '#attached' => ['library' => ['oe_webtools/drupal.webtools-smartloader']],
+  ];
 }
 
 /**
