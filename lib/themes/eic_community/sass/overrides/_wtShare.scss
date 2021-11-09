@@ -1,0 +1,44 @@
+
+.wtShareButton {
+  position: relative !important;
+  display: inline-block !important;
+  line-height: initial !important;
+  border: none !important;
+  font-size: 1em !important;
+  font-weight: 400 !important;
+  color: initial !important;
+  padding: 0 !important;
+  margin-bottom: initial !important;
+  background: none !important;
+  min-width: initial !important;
+  box-sizing: content-box !important;
+  outline: none !important;
+  background-size: 41px 800px !important;
+}
+
+.wtSharePopup {
+  width: 310px!important;
+}
+
+.wtPopupCloseBtn {
+  display: flex !important;
+  align-items: center;
+  padding-right: 15px !important;
+  & b {
+    border: 0px solid #666 !important;
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    position: relative !important;
+    top: 0 !important;
+    & span {
+      position: relative !important;
+    }
+  }
+
+
+  &:hover b {
+    background-color: transparent !important;
+    color: currentColor !important;
+  }
+}
