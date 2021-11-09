@@ -48,10 +48,6 @@
 
     @include ecl-media-breakpoint-up('md') {
       flex-grow: 1;
-
-      #{$node}--is-ready#{$node}--is-collapsible & {
-        flex-basis: 100%;
-      }
     }
 
     h1,
@@ -85,7 +81,6 @@
     h5, {
       @extend .ecl-u-type-heading-5;
     }
-
   }
 
   &__aside {
@@ -124,13 +119,6 @@
 
 
       flex-shrink: 0;
-    }
-
-    &__title {
-      text-transform: uppercase;
-      color: map-get($ecl-colors, 'grey-50');
-      @include ecl-responsive-font('label');
-      font-weight: $ecl-font-weight-regular;
     }
   }
 

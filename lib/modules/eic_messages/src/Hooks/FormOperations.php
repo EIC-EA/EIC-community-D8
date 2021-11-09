@@ -72,7 +72,7 @@ class FormOperations implements ContainerInjectionInterface {
     return new static(
       $container->get('current_route_match'),
       $container->get('eic_content.helper'),
-      $container->get('class_resolver')->getInstanceFromDefinition(GroupContentMessageCreator::class)
+      $container->get('eic_messages.message_creator.group_content')
     );
   }
 

@@ -6,7 +6,6 @@ use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\eic_messages\MessageIdentifierInterface;
 use Drupal\eic_messages\MessageTemplateTypes;
 use Drupal\message\MessageTemplateInterface;
-use InvalidArgumentException;
 
 /**
  * Helper class for activity stream message templates.
@@ -80,6 +79,23 @@ final class ActivityStreamMessageTemplates implements MessageIdentifierInterface
   }
 
   /**
+   * Returns an activity stream message template for a given entity.
+   *
+   * @param \Drupal\Core\Entity\ContentEntityInterface $entity
+   *   The entity object.
+   *
+   * @return string
+   *   The template name.
+   */
+  public static function getTemplate(ContentEntityInterface $entity): string {
+    if (!isset(self::$templates[$entity->getEntityTypeId()][$entity->bundle()])) {
+      throw new \InvalidArgumentException('Invalid entity / bundle provided');
+    }
+
+    return self::$templates[$entity->getEntityTypeId()][$entity->bundle()];
+  }
+
+  /**
    * Checks if an entity has activity message template.
    *
    * @param \Drupal\Core\Entity\ContentEntityInterface $entity
@@ -92,7 +108,7 @@ final class ActivityStreamMessageTemplates implements MessageIdentifierInterface
     try {
       self::getTemplate($entity);
     }
-    catch (InvalidArgumentException $e) {
+    catch (\InvalidArgumentException $e) {
       return FALSE;
     }
 
@@ -100,26 +116,11 @@ final class ActivityStreamMessageTemplates implements MessageIdentifierInterface
   }
 
   /**
-   * Returns an activity stream message template for a given entity.
-   *
-   * @param \Drupal\Core\Entity\ContentEntityInterface $entity
-   *   The entity object.
-   *
-   * @return string
-   *   The template name.
-   */
-  public static function getTemplate(ContentEntityInterface $entity): string {
-    if (!isset(self::$templates[$entity->getEntityTypeId()][$entity->bundle()])) {
-      throw new InvalidArgumentException('Invalid entity / bundle provided');
-    }
-
-    return self::$templates[$entity->getEntityTypeId()][$entity->bundle()];
-  }
-
-  /**
    * {@inheritdoc}
    */
   public static function getMessageTemplatePrimaryKeys(MessageTemplateInterface $message_template) {
+    $primary_keys = [];
+
     // Get the message template type.
     $message_template_type = $message_template->getThirdPartySetting('eic_messages', 'message_template_type');
 
@@ -129,9 +130,11 @@ final class ActivityStreamMessageTemplates implements MessageIdentifierInterface
 
     // We assume all stream messages reference a node.
     // @todo Define if all stream templates should also include executing user.
-    return [
+    $primary_keys = [
       'field_referenced_node',
     ];
+
+    return $primary_keys;
   }
 
 }

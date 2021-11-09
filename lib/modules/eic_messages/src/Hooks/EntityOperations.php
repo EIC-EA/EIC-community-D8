@@ -2,11 +2,17 @@
 
 namespace Drupal\eic_messages\Hooks;
 
-use Drupal\content_moderation\ModerationInformationInterface;
+use Drupal\Component\Datetime\TimeInterface;
+use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Drupal\eic_messages\Service\MessageBusInterface;
+use Drupal\content_moderation\ModerationInformationInterface;
+use Drupal\eic_messages\MessageHelper;
+use Drupal\eic_messages\Service\MessageCreatorBase;
+use Drupal\eic_user\UserHelper;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -14,7 +20,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @package Drupal\eic_messages\Hooks
  */
-class EntityOperations implements ContainerInjectionInterface {
+class EntityOperations extends MessageCreatorBase implements ContainerInjectionInterface {
 
   use StringTranslationTrait;
 
@@ -24,20 +30,38 @@ class EntityOperations implements ContainerInjectionInterface {
   private $moderationInformation;
 
   /**
-   * @var \Drupal\eic_messages\Service\MessageBusInterface
-   */
-  private $messageBus;
-
-  /**
+   * EntityUpdate constructor.
+   *
+   * @param \Drupal\Component\Datetime\TimeInterface $date_time
+   *   The datetime.time service.
+   * @param \Drupal\Core\Config\ConfigFactory $config_factory
+   *   The config.factory service.
+   * @param \Drupal\Core\Session\AccountProxyInterface $current_user
+   *   The current user object.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   * @param \Drupal\eic_messages\MessageHelper $eic_messages_helper
+   * @param \Drupal\eic_user\UserHelper $eic_user_helper
    * @param \Drupal\content_moderation\ModerationInformationInterface $moderationInformation
-   * @param \Drupal\eic_messages\Service\MessageBusInterface $message_bus
    */
   public function __construct(
-    ModerationInformationInterface $moderationInformation,
-    MessageBusInterface $message_bus
+    TimeInterface $date_time,
+    ConfigFactory $config_factory,
+    AccountProxyInterface $current_user,
+    EntityTypeManagerInterface $entity_type_manager,
+    MessageHelper $eic_messages_helper,
+    UserHelper $eic_user_helper,
+    ModerationInformationInterface $moderationInformation
   ) {
+    parent::__construct(
+      $date_time,
+      $config_factory,
+      $current_user,
+      $entity_type_manager,
+      $eic_messages_helper,
+      $eic_user_helper
+    );
+
     $this->moderationInformation = $moderationInformation;
-    $this->messageBus = $message_bus;
   }
 
   /**
@@ -45,8 +69,13 @@ class EntityOperations implements ContainerInjectionInterface {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('content_moderation.moderation_information'),
-      $container->get('eic_messages.message_bus')
+      $container->get('datetime.time'),
+      $container->get('config.factory'),
+      $container->get('current_user'),
+      $container->get('entity_type.manager'),
+      $container->get('eic_messages.helper'),
+      $container->get('eic_user.helper'),
+      $container->get('content_moderation.moderation_information')
     );
   }
 
@@ -69,12 +98,16 @@ class EntityOperations implements ContainerInjectionInterface {
       return;
     }
 
-    $this->messageBus->dispatch([
-      'template' => 'notify_archived_republished',
-      'uid' => $entity->getOwnerId(),
-      'field_message_subject' => $this->t('Your content is published again'),
-      'field_referenced_entity_label' => $entity->label(),
-    ]);
+    $message = $this->entityTypeManager->getStorage('message')
+      ->create([
+        'template' => 'notify_archived_republished',
+        'uid' => $entity->getOwnerId(),
+        'field_message_subject' => $this->t('Your content is published again'),
+        'field_referenced_entity_label' => $entity->label(),
+      ]);
+
+    $message->save();
+    $this->processMessages([$message]);
   }
 
 }

@@ -32,7 +32,7 @@ build_backend:
   image: intractosre/php:7.3
   artifacts:
     untracked: true
-    expire_in: '2 hour'
+    expire_in: '1 day'
   script:
     # Current version of Gitlab (require > 14.2.0) doesn't support variable overrides using the 'rules' property
     # Dynamically define the --no-dev option once updated (e.g: added on develop and not other branches)
@@ -49,7 +49,7 @@ build_front:
   image: node:14
   artifacts:
     untracked: true
-    expire_in: '2 hour'
+    expire_in: '1 day'
   script:
     - cd lib/themes/eic_community
     - npm install && npm run build && npm run react-production

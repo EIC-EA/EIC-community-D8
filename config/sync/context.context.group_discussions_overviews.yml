@@ -22,26 +22,41 @@ conditions:
 reactions:
   blocks:
     blocks:
-      a625a334-816d-4015-a47a-196b68443e72:
+      2909faf9-e5d4-4649-b63f-b1aca1476dd5:
+        id: system_main_block
+        label: 'Main page content'
+        provider: system
+        label_display: '0'
+        region: content
+        weight: '0'
+        context_mapping: {  }
+        custom_id: system_main_block
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: group_discussions_overviews
+        uuid: 2909faf9-e5d4-4649-b63f-b1aca1476dd5
+      2636c524-2703-4d28-ad6b-3c1db2936f61:
         id: eic_search_overview
-        label: ''
-        provider: eic_search
-        label_display: visible
-        source_type: Drupal\eic_search\Search\Sources\DiscussionSourceType
+        label: null
+        provider: null
+        label_display: null
+        region: content
+        weight: '1'
         facets:
           ss_content_field_discussion_type: ss_content_field_discussion_type
           sm_content_field_vocab_topics_string: sm_content_field_vocab_topics_string
           sm_content_field_vocab_geo_string: sm_content_field_vocab_geo_string
         sort_options:
           its_flag_highlight_content: its_flag_highlight_content
+          timestamp: timestamp
+          tm_global_title: tm_global_title
+          its_last_flagged_bookmark_content: its_last_flagged_bookmark_content
+          its_last_flagged_highlight_content: its_last_flagged_highlight_content
           dm_aggregated_changed: dm_aggregated_changed
           its_last_comment_timestamp: its_last_comment_timestamp
           its_last_flagged_like_content: its_last_flagged_like_content
-          its_last_flagged_bookmark_content: its_last_flagged_bookmark_content
-          its_last_flagged_highlight_content: its_last_flagged_highlight_content
-          score: score
-          ss_drupal_timestamp: 0
-          ss_content_title: 0
+        source_type: Drupal\eic_search\Search\Sources\DiscussionSourceType
         enable_search: 1
         page_options: normal
         prefilter_group: 1
@@ -49,13 +64,12 @@ reactions:
         add_facet_my_groups: 0
         context_mapping: {  }
         custom_id: eic_search_overview_group_discussions
-        region: content
         theme: eic_community
         css_class: ecl-section-wrapper--is-white
         unique: 0
         context_id: group_discussions_overviews
+        uuid: 2636c524-2703-4d28-ad6b-3c1db2936f61
         third_party_settings: {  }
-        uuid: a625a334-816d-4015-a47a-196b68443e72
     id: blocks
     saved: false
     uuid: 9c311d0e-a590-452a-ad85-a32b685d7729

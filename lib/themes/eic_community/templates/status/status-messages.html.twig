@@ -8,15 +8,18 @@
 #}
 <div class="ecl-container">
 {% for type, messages in message_list %}
-  {% include "@theme/patterns/compositions/notification-banner.html.twig" with {
+  {% include "@theme/patterns/compositions/state-banner.html.twig" with {
     title: status_headings[type],
-    extra_classes: "ecl-notification-banner--"~type,
     icon: {
       type: "notifications",
       name: type is same as("status") ? "information" : type
     },
     icon_file_path: eic_icon_path,
-    messages: messages,
+    description: {
+      "#theme": "item_list",
+      "#list-type": "ul",
+      "#items": messages
+    }
   } only %}
 {% endfor %}
 </div>

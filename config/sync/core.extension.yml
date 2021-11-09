@@ -52,7 +52,6 @@ module:
   eic_media_document: 0
   eic_media_statistics: 0
   eic_media_video: 0
-  eic_menus: 0
   eic_message_subscriptions: 0
   eic_messages: 0
   eic_migrate: 0
@@ -60,11 +59,9 @@ module:
   eic_paragraph_contributor: 0
   eic_paragraph_cta_tile: 0
   eic_private_content: 0
-  eic_private_message: 0
   eic_search: 0
   eic_seo: 0
   eic_theme_helper: 0
-  eic_topics: 0
   eic_user: 0
   eic_webservices: 0
   entity: 0
@@ -100,7 +97,6 @@ module:
   media_entity_download: 0
   media_library: 0
   menu_link_content: 0
-  menu_trail_by_path: 0
   menu_ui: 0
   message: 0
   message_notify: 0

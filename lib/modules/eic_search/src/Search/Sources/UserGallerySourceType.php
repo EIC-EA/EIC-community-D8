@@ -61,11 +61,8 @@ class UserGallerySourceType extends SourceType {
       ],
       'ds_user_access' => [
         'label' => $this->t('Last active', [], ['context' => 'eic_search']),
+        'ASC' => $this->t('Last inactive', [], ['context' => 'eic_search']),
         'DESC' => $this->t('Last active', [], ['context' => 'eic_search']),
-      ],
-      'score' => [
-        'label' => $this->t('Relevance', [], ['context' => 'eic_search']),
-        'DESC' => $this->t('Relevance', [], ['context' => 'eic_search']),
       ],
     ];
   }
@@ -84,7 +81,7 @@ class UserGallerySourceType extends SourceType {
    * @inheritDoc
    */
   public function getLayoutTheme(): string {
-    return self::LAYOUT_COLUMNS;
+    return self::LAYOUT_3_COLUMNS;
   }
 
   /**

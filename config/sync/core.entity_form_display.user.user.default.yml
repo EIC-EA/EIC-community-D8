@@ -16,7 +16,6 @@ dependencies:
     - field.field.user.user.field_smed_id
     - field.field.user.user.field_updated_profile_by_service
     - field.field.user.user.field_updated_profile_by_user
-    - field.field.user.user.field_user_can_contact
     - field.field.user.user.field_user_status
   module:
     - eic_content
@@ -129,13 +128,6 @@ content:
     settings: {  }
     third_party_settings: {  }
     type: datetime_timestamp
-    region: content
-  field_user_can_contact:
-    weight: 31
-    settings:
-      display_label: true
-    third_party_settings: {  }
-    type: boolean_checkbox
     region: content
   field_user_status:
     weight: 24

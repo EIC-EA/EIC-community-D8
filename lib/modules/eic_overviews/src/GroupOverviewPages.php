@@ -18,19 +18,9 @@ class GroupOverviewPages {
   const DISCUSSIONS = 'eic_overviews.groups.overview_page.discussions';
 
   /**
-   * Route to the group events overview.
-   */
-  const EVENTS = 'eic_overviews.groups.overview_page.events';
-
-  /**
    * Route to the group files overview.
    */
   const FILES = 'eic_overviews.groups.overview_page.files';
-
-  /**
-   * Route to the group latest activity overview.
-   */
-  const LATEST_ACTIVITY = 'eic_overviews.groups.overview_page.latest_activity_stream';
 
   /**
    * Route to the group members overview.

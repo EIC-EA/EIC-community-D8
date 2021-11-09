@@ -224,11 +224,4 @@
     margin-right: ecl-layout('gutter', 'controls');
     color: ecl-typography('color', 'meta');
   }
-
-  &__action a,
-  &__stat {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-  }
 }

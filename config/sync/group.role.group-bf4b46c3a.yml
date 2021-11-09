@@ -16,11 +16,9 @@ group_type: group
 permissions_ui: false
 permissions:
   - 'access discussions overview'
-  - 'access events overview'
   - 'access files overview'
   - 'access group content menu overview'
   - 'access group search'
-  - 'access group search overview'
   - 'access latest activity stream'
   - 'access members overview'
   - 'access wiki overview'
@@ -29,7 +27,6 @@ permissions:
   - 'delete group'
   - 'delete own invitations'
   - 'edit group'
-  - 'highlight group content'
   - 'invite users to group'
   - 'join group'
   - 'manage group_content_menu'

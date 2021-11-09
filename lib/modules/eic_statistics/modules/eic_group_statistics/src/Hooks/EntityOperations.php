@@ -134,7 +134,6 @@ class EntityOperations implements ContainerInjectionInterface {
 
       case 'group-group_node-discussion':
       case 'group-group_node-document':
-      case 'group-group_node-event':
       case 'group-group_node-wiki_page':
       case 'group-group_node-gallery':
         $re_index = $this->updateGroupFileStatistics($entity->getEntity(), $entity);
@@ -206,9 +205,8 @@ class EntityOperations implements ContainerInjectionInterface {
     switch ($entity->bundle()) {
       case 'discussion':
       case 'document':
-      case 'event':
-      case 'gallery':
       case 'wiki_page':
+      case 'gallery':
         $re_index = $this->updateGroupFileStatistics($entity, $group_content, self::GROUP_FILE_STATISTICS_DELETE_OPERATION);
         break;
 
@@ -243,9 +241,8 @@ class EntityOperations implements ContainerInjectionInterface {
     switch ($entity->bundle()) {
       case 'discussion':
       case 'document':
-      case 'event':
-      case 'gallery':
       case 'wiki_page':
+      case 'gallery':
         $re_index = $this->updateGroupFileStatistics($entity, $group_content, self::GROUP_FILE_STATISTICS_UPDATE_OPERATION);
         break;
 

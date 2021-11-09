@@ -8,13 +8,11 @@ dependencies:
     - field.field.group.event.field_document_additional
     - field.field.group.event.field_document_agenda
     - field.field.group.event.field_document_presentations
-    - field.field.group.event.field_documents
     - field.field.group.event.field_event_registration_date
     - field.field.group.event.field_header_visual
     - field.field.group.event.field_image
     - field.field.group.event.field_link
     - field.field.group.event.field_location
-    - field.field.group.event.field_location_type
     - field.field.group.event.field_organised_by
     - field.field.group.event.field_related_groups
     - field.field.group.event.field_smed_id
@@ -24,14 +22,12 @@ dependencies:
     - field.field.group.event.field_vocab_geo
     - field.field.group.event.field_vocab_language
     - field.field.group.event.field_vocab_topics
-    - field.field.group.event.field_website_url
     - field.field.group.event.field_welcome_message
     - group.type.event
   module:
     - address
     - datetime_range
     - link
-    - options
     - social_link_field
     - text
 id: group.event.default
@@ -85,15 +81,6 @@ content:
     third_party_settings: {  }
     type: entity_reference_label
     region: content
-  field_documents:
-    type: entity_reference_entity_view
-    weight: 31
-    label: above
-    settings:
-      view_mode: default
-      link: false
-    third_party_settings: {  }
-    region: content
   field_event_registration_date:
     weight: 30
     label: above
@@ -140,13 +127,6 @@ content:
     settings: {  }
     third_party_settings: {  }
     type: address_default
-    region: content
-  field_location_type:
-    weight: 32
-    label: above
-    settings: {  }
-    third_party_settings: {  }
-    type: list_default
     region: content
   field_organised_by:
     weight: 14
@@ -221,18 +201,6 @@ content:
       link: true
     third_party_settings: {  }
     type: entity_reference_label
-    region: content
-  field_website_url:
-    weight: 33
-    label: above
-    settings:
-      trim_length: 80
-      url_only: false
-      url_plain: false
-      rel: ''
-      target: ''
-    third_party_settings: {  }
-    type: link
     region: content
   field_welcome_message:
     weight: 29

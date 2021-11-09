@@ -6,14 +6,14 @@ ignored_config_entities:
   - 'search_api.server.global:backend_config.connector_config.core'
   - system.site
   - search_api_attachments.admin_config
-  - 'smtp.settings:smtp_host'
-  - 'smtp.settings:smtp_hostbackup'
-  - 'smtp.settings:smtp_port'
-  - 'smtp.settings:smtp_protocol'
-  - 'smtp.settings:smtp_username'
-  - 'smtp.settings:smtp_password'
-  - 'smtp.settings:smtp_client_hostname'
-  - 'smtp.settings:smtp_from'
-  - 'smtp.settings:smtp_fromname'
+  - smtp.settings:smtp_host
+  - smtp.settings:smtp_hostbackup
+  - smtp.settings:smtp_port
+  - smtp.settings:smtp_protocol
+  - smtp.settings:smtp_username
+  - smtp.settings:smtp_password
+  - smtp.settings:smtp_client_hostname
+  - smtp.settings:smtp_from
+  - smtp.settings:smtp_fromname
 _core:
   default_config_hash: UVH1aJ4b44UM-VdPVN7hNNuuVqfReJxwfVeDQH1Hvsk
