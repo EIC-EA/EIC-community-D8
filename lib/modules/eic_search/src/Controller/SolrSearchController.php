@@ -201,7 +201,15 @@ class SolrSearchController extends ControllerBase {
       $values = array_keys($filtered_value);
 
       if ($filtered_value) {
-        $facets_query .= ' AND ' . $key . ':"' . implode(' OR ', $values) . '"';
+        array_walk($values, function(&$value) {
+          $value = "\"$value\"";
+        });
+
+        $query_values = count($values) > 1 ?
+          '(' . implode(' AND ', $values) . ')' :
+          implode(' AND ', $values);
+
+        $facets_query .= ' AND ' . $key . ':' . $query_values;
       }
     }
 
