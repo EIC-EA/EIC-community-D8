@@ -78,8 +78,8 @@ display:
               request_delete_content: default
               request_delete_group: default
             'entity:group':
-              event: default
-              group: default
+              event: teaser
+              group: teaser
             'entity:group_content':
               event-group_membership: default
               event-group_membership_request: default

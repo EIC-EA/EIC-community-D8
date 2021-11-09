@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - views.view.taxonomy
     - views.view.taxonomy_related_content
   module:
     - ctools
@@ -143,6 +144,24 @@ reactions:
         context_id: taxonomy_topics_detail_page
         third_party_settings: {  }
         uuid: ca2d1490-fdeb-45f0-8d14-98df6305ccf2
+      37c12774-e1ff-46c6-9d02-4d93ae02f208:
+        id: 'views_block:taxonomy-subtopics'
+        label: ''
+        provider: views
+        label_display: visible
+        views_label: ''
+        items_per_page: none
+        region: sidebar
+        weight: '0'
+        context_mapping:
+          parent_target_id: '@taxonomy_term.taxonomy_term_route_context:taxonomy_term'
+        custom_id: views_block_taxonomy_subtopics
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: taxonomy_topics_detail_page
+        third_party_settings: {  }
+        uuid: 37c12774-e1ff-46c6-9d02-4d93ae02f208
     id: blocks
     saved: false
     uuid: ac0fd6ab-0b0e-4d2a-896c-9dd58345db98

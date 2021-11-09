@@ -39,10 +39,12 @@ function eic_topics_preprocess_taxonomy_term(&$variables) {
     return;
   }
 
-  /** @var \Drupal\Core\Block\BlockManager $block_manager */
-  $block_manager = \Drupal::service('plugin.manager.block');
-  $plugin_block = $block_manager->createInstance('eic_topics_statistics_block');
-  $variables['stats_block'] = $plugin_block->build();
+  if ($variables['view_mode'] == 'full') {
+    /** @var \Drupal\Core\Block\BlockManager $block_manager */
+    $block_manager = \Drupal::service('plugin.manager.block');
+    $plugin_block = $block_manager->createInstance('eic_topics_statistics_block');
+    $variables['stats_block'] = $plugin_block->build();
+  }
 }
 
 /**
