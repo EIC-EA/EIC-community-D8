@@ -52,7 +52,7 @@ function _eic_community_preprocess_node_news_story(array &$variables) {
         $node->get('field_header_visual')->entity,
         $node->language()->getId()
       );
-    $image_item = ImageValueObject::fromImageItem($media->get('oe_media_image')->first());
+    $image_item = ImageValueObject::fromStyledImageItem($media->get('oe_media_image')->first(), 'gallery_teaser_crop_160x160');
     $item['image'] = [
       'src' => $image_item->getSource(),
       'alt' => $image_item->getAlt(),
