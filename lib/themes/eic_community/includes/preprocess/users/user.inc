@@ -12,6 +12,13 @@ use Drupal\eic_community\ValueObject\ImageValueObject;
 use Drupal\user\UserInterface;
 
 /**
+ * Implements hook_preprocess_user().
+ */
+function eic_community_preprocess_user(array &$variables) {
+
+}
+
+/**
  * Creates image array for twig templates.
  *
  * @param Drupal\Core\Entity\EntityInterface $user

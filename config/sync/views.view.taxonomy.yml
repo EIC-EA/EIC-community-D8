@@ -3,7 +3,6 @@ langcode: en
 status: true
 dependencies:
   config:
-    - core.entity_view_mode.taxonomy_term.small
     - taxonomy.vocabulary.topics
   module:
     - taxonomy
@@ -54,10 +53,12 @@ display:
       style:
         type: default
       row:
-        type: 'entity:taxonomy_term'
+        type: fields
         options:
-          relationship: none
-          view_mode: small
+          default_field_elements: true
+          inline: {  }
+          separator: ''
+          hide_empty: false
       fields:
         name:
           id: name

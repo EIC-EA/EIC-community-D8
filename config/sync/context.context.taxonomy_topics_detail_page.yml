@@ -152,7 +152,7 @@ reactions:
         views_label: ''
         items_per_page: none
         region: sidebar
-        weight: '0'
+        weight: '-4'
         context_mapping:
           parent_target_id: '@taxonomy_term.taxonomy_term_route_context:taxonomy_term'
         custom_id: views_block_taxonomy_subtopics
@@ -162,6 +162,23 @@ reactions:
         context_id: taxonomy_topics_detail_page
         third_party_settings: {  }
         uuid: 37c12774-e1ff-46c6-9d02-4d93ae02f208
+      686ec6c7-2aa8-4f08-b680-d90daa09c37f:
+        id: 'views_block:taxonomy_related_content-experts'
+        label: ''
+        provider: views
+        label_display: visible
+        views_label: ''
+        items_per_page: none
+        region: sidebar
+        weight: '-3'
+        context_mapping: {  }
+        custom_id: views_block_taxonomy_related_content_experts
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: taxonomy_topics_detail_page
+        third_party_settings: {  }
+        uuid: 686ec6c7-2aa8-4f08-b680-d90daa09c37f
     id: blocks
     saved: false
     uuid: ac0fd6ab-0b0e-4d2a-896c-9dd58345db98
