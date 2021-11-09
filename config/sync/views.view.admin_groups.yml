@@ -988,11 +988,12 @@ display:
   page_admin_groups:
     display_plugin: page
     id: page_admin_groups
-    display_title: Page
+    display_title: 'Page admin groups'
     position: 1
     display_options:
       display_extenders: {  }
       path: admin/community/groups
+      display_description: ''
     cache_metadata:
       max-age: -1
       contexts:
