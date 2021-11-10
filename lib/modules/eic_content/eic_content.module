@@ -23,6 +23,9 @@ function eic_content_theme() {
     'eic_content_actions' => [
       'variables' => [
         'actions' => [],
+        'user_activity_feed_link' => [],
+        'title' => NULL,
+        'description' => NULL,
       ],
     ],
   ];
