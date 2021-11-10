@@ -290,8 +290,8 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
       'enable_search' => $values['search']['configuration']['enable_search'],
       'page_options' => $values['search']['configuration']['pagination']['page_options'],
       'prefilter_group' => $values['search']['configuration']['prefilter_group'],
-      'enable_date_filter' => array_key_exists('enable_date_filter', $values['search']['configuration']['date'][$current_bundle]) ?
-        $values['search']['configuration']['date'][$current_bundle]['enable_date_filter'] :
+      'enable_date_filter' => array_key_exists('enable_date_filter', $values['search']['configuration']['date']) ?
+        $values['search']['configuration']['date']['enable_date_filter'] :
         FALSE,
       'add_facet_interests' => $values['search']['configuration']['add_facet_interests'],
       'add_facet_my_groups' => $values['search']['configuration']['add_facet_my_groups'],
@@ -436,28 +436,14 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
           '#description' => $this->t('It will prefiltered the overview with the current group from page', [], ['context' => 'eic_search']),
         ];
       }
-
-      if ($source->supportDateFilter()) {
-        $form['search']['configuration']['date'] = [
-          '#type' => 'details',
-          '#title' => $this->t('Date configuration', [], ['context' => 'eic_search']),
-          '#open' => TRUE,
-          '#attributes' => [
-            'class' => [
-              'source-type',
-              'source-' . $source->getEntityBundle(),
-              $source->supportDateFilter() || 'hidden',
-            ],
-          ],
-        ];
-        $form['search']['configuration']['date'][$source->getEntityBundle()]['enable_date_filter'] = [
-          '#type' => 'checkbox',
-          '#default_value' => $this->configuration['enable_date_filter'],
-          '#title' => $this->t('Enable date filter', [], ['context' => 'eic_search']),
-          '#description' => $this->t('It will show a new date filter in the overview\'s sidebar.', [], ['context' => 'eic_search']),
-        ];
-      }
     }
+
+    $form['search']['configuration']['date']['enable_date_filter'] = [
+      '#type' => 'checkbox',
+      '#default_value' => $this->configuration['enable_date_filter'],
+      '#title' => $this->t('Enable date filter', [], ['context' => 'eic_search']),
+      '#description' => $this->t('It will show a new date filter in the overview\'s sidebar.', [], ['context' => 'eic_search']),
+    ];
 
     $form['search']['configuration']['add_facet_my_groups'] = [
       '#type' => 'checkbox',
