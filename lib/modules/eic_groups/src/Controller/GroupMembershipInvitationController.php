@@ -39,11 +39,17 @@ class GroupMembershipInvitationController extends ControllerBase {
 
   /**
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
    * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
+   *   The request stack.
    * @param \Drupal\Core\Routing\RedirectDestinationInterface $redirect_destionation
+   *   If specified, the redirect direction.
    * @param \Drupal\Core\Messenger\MessengerInterface $messenger
+   *   The messenger service.
    * @param \Drupal\Core\Mail\MailManagerInterface $mail_manager
+   *   The mail manager.
    * @param \Drupal\group\Plugin\GroupContentEnablerManagerInterface $group_content_enabler_manager
+   *   The group content enabler service.
    */
   public function __construct(
     EntityTypeManagerInterface $entity_type_manager,
@@ -77,12 +83,15 @@ class GroupMembershipInvitationController extends ControllerBase {
 
   /**
    * @param \Drupal\group\Entity\GroupInterface $group
+   *   The group entity.
    * @param \Drupal\group\Entity\GroupContentInterface $group_content
-   *
+   *   The group content entity.
+   * 
    * @return \Symfony\Component\HttpFoundation\RedirectResponse
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    * @throws \Drupal\Core\Entity\EntityMalformedException
+   * @throws \Drupal\Core\Entity\EntityStorageException
    */
   public function resendInvite(
     GroupInterface $group,
