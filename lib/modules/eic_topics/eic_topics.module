@@ -110,7 +110,35 @@ function eic_topics_views_pre_render(ViewExecutable $view) {
       ];
       break;
 
+    case 'files':
+      $url = '/search';
+      $params = [
+        'itm_aggregated_field_vocab_topics' => $term_id,
+        'ss_global_content_type' => 'document,gallery,video',
+      ];
+      break;
+
     case 'news_stories':
+      // @todo Implement correct URL once available.
+      break;
+
+    case 'events':
+      // @todo Implement correct URL once available.
+      break;
+
+    case 'wiki_pages':
+      $url = '/search';
+      $params = [
+        'itm_aggregated_field_vocab_topics' => $term_id,
+        'ss_global_content_type' => 'wiki_page',
+      ];
+      break;
+
+    case 'experts':
+      $url = '/people';
+      $params = [
+        'itm_aggregated_field_vocab_topics' => $term_id,
+      ];
       break;
   }
 
