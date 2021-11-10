@@ -119,32 +119,28 @@ class GroupTokens implements ContainerInjectionInterface {
       foreach ($tokens as $name => $original) {
         switch ($name) {
           case 'node_group_url':
-            if (isset($data['node'])) {
-              if (($node = $data['node']) && $node instanceof NodeInterface) {
-                // If node belongs to a group.
-                if ($group_contents = $this->entityTypeManager->getStorage('group_content')->loadByEntity($node)) {
-                  /** @var \Drupal\group\Entity\GroupContentInterface $group_content */
-                  $group_content = reset($group_contents);
+            if (($node = $data['node']) && !$node instanceof NodeInterface) {
+              break;
+            }
 
-                  if ($group_content->hasTranslation($node->language()->getId())) {
-                    $group = $group_content->getGroup()->getTranslation($node->language()->getId());
-                  }
-                  else {
-                    $group = $group_content->getGroup();
-                  }
+            // If node belongs to a group.
+            if ($group_contents = $this->entityTypeManager->getStorage('group_content')->loadByEntity($node)) {
+              /** @var \Drupal\group\Entity\GroupContentInterface $group_content */
+              $group_content = reset($group_contents);
 
-                  $group_url = $group->toUrl()->toString();
+              $has_translation = $group_content->hasTranslation($node->language()->getId());
+              $group = $has_translation
+               ? $group_content->getGroup()->getTranslation($node->language()->getId())
+               : $group_content->getGroup();
 
-                  // If base path is presented in group URL, we need to remove
-                  // it in order to avoid duplicated base paths.
-                  if (substr($group_url, 0, strlen($base_url)) === $base_url) {
-                    $replacements[$original] = substr_replace($group_url, '', 0, strlen($base_url));
-                  }
-                  else {
-                    $replacements[$original] = $group_url;
-                  }
-                }
-              }
+              $group_url = $group->toUrl()->toString();
+
+              // If base path is presented in group URL, we need to remove
+              // it in order to avoid duplicated base paths.
+              $has_base_path = substr($group_url, 0, strlen($base_url)) === $base_url;
+              $replacements[$original] = $has_base_path
+                ? substr_replace($group_url, '', 0, strlen($base_url))
+                : $group_url;
             }
             break;
 
