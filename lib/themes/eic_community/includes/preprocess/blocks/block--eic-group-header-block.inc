@@ -168,10 +168,11 @@ function eic_community_preprocess_eic_group_header_block(array &$variables) {
 
   $variables['group_values']['stats'] = $stats;
 
-  $tag = \Drupal::service('oec_group_flex.helper')->getGroupVisibilityTagLabel($group);
+  $group_visibility = \Drupal::service('oec_group_flex.helper')->getGroupVisibilitySettings($group);
+  $tag = strpos($group_visibility['plugin_id'], '_') !== FALSE ? strstr($group_visibility['plugin_id'], '_', TRUE) : $group_visibility['plugin_id'];
 
   $variables['group_values']['tags'][] = [
-    'extra_classes' => 'ecl-tag--is-' . strtolower($tag),
+    'extra_classes' => 'ecl-tag--is-' . $tag,
     'tag' => [
       'type' => 'button',
       'label' => $tag,

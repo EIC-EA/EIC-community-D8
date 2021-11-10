@@ -43,12 +43,9 @@ class GroupInvitation extends GroupInvitationBase {
       return $access;
     }
 
-    $moderation_state = $group->get('moderation_state')->value;
-
-    switch ($moderation_state) {
+    switch ($group->get('moderation_state')->value) {
       case GroupsModerationHelper::GROUP_PENDING_STATE:
       case GroupsModerationHelper::GROUP_DRAFT_STATE:
-      case GroupsModerationHelper::GROUP_BLOCKED_STATE:
         // Deny access to the group invitation form if the group is NOT yet
         // published and the user is not a "site_admin" or a
         // "content_administrator".
@@ -67,13 +64,14 @@ class GroupInvitation extends GroupInvitationBase {
 
         // We allow access if the user is the group owner or a group admin, and
         // moderation state is set to DRAFT.
-        if (
-          $moderation_state === GroupsModerationHelper::GROUP_DRAFT_STATE &&
-          EICGroupsHelper::userIsGroupAdmin($group, $account, $membership)
-        ) {
-          $access = GroupAccessResult::allowed()
-            ->addCacheableDependency($account)
-            ->addCacheableDependency($group);
+        if ($group->get('moderation_state')->value === GroupsModerationHelper::GROUP_DRAFT_STATE) {
+          if (in_array(EICGroupsHelper::GROUP_OWNER_ROLE, array_keys($membership->getRoles())) ||
+              in_array(EICGroupsHelper::GROUP_ADMINISTRATOR_ROLE, array_keys($membership->getRoles()))
+          ) {
+            $access = GroupAccessResult::allowed()
+              ->addCacheableDependency($account)
+              ->addCacheableDependency($group);
+          }
         }
         break;
 

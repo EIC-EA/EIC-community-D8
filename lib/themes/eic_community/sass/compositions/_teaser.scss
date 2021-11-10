@@ -494,7 +494,7 @@
     @include ecl-responsive-font('label');
 
     a {
-      display:flex;
+      display: inline-flex;
     }
 
     #{$node}--as-card#{$node}--member & {

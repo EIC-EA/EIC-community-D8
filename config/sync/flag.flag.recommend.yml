@@ -10,7 +10,6 @@ label: 'Recommend (Content)'
 bundles:
   - discussion
   - document
-  - event
   - gallery
   - video
 entity_type: node

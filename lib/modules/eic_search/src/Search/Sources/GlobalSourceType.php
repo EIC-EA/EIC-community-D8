@@ -44,7 +44,7 @@ class GlobalSourceType extends SourceType {
    */
   public function getAvailableFacets(): array {
     return [
-      'ss_global_content_type_label' => $this->t('Content type', [], ['context' => 'eic_search']),
+      'ss_global_content_type' => $this->t('Content type', [], ['context' => 'eic_search']),
       'ss_group_user_fullname' => $this->t('Full name', [], ['context' => 'eic_search']),
       'sm_content_field_vocab_topics_string' => $this->t('Topics', [], ['context' => 'eic_search']),
       'sm_content_field_vocab_geo_string' => $this->t('Regions & countries', [], ['context' => 'eic_search']),
@@ -121,8 +121,6 @@ class GlobalSourceType extends SourceType {
       'ss_global_group_parent_label',
       'sm_filename',
       'ss_global_fullname',
-      'tm_X3b_en_saa_field_document_media',
-      'tm_X3b_en_content_gallery_slide_name',
     ];
   }
 

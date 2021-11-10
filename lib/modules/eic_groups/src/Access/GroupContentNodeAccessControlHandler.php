@@ -81,6 +81,11 @@ class GroupContentNodeAccessControlHandler extends GroupContentAccessControlHand
           break;
         }
 
+        // Allow access to power users.
+        if ($is_power_user) {
+          break;
+        }
+
         // We check if the user is a member of a group where this node is
         // referenced and if so, we allow access to edit the node if the owner
         // allowed members to do so via "member_content_edit_access" property.
@@ -98,6 +103,13 @@ class GroupContentNodeAccessControlHandler extends GroupContentAccessControlHand
               ->addCacheableDependency($entity);
             break;
           }
+        }
+        break;
+
+      case 'delete':
+        // Allow access to power users.
+        if ($is_power_user) {
+          break;
         }
         break;
 

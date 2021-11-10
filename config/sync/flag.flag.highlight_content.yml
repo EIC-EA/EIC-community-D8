@@ -9,7 +9,6 @@ label: 'Highlight (Content)'
 bundles:
   - discussion
   - document
-  - event
   - gallery
   - video
 entity_type: node

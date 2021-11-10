@@ -9,7 +9,6 @@ use Drupal\Core\Render\Markup;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
-use Drupal\user\Entity\User;
 use Drupal\user\UserInterface;
 
 /**
@@ -146,24 +145,6 @@ class UserHelper {
     }
 
     return FALSE;
-  }
-
-  /**
-   * @param \Drupal\user\UserInterface|NULL $user
-   *
-   * @return string
-   */
-  public function getFullName(UserInterface $user = NULL): string {
-    if (!$user instanceof UserInterface) {
-      $user_id = $this->currentUser->id();
-      $user = User::load($user_id);
-
-      if (!$user instanceof UserInterface) {
-        return $this->t('User not found', [], ['context' => 'eic_user']);
-      }
-    }
-
-    return realname_load($user) ?: '';
   }
 
 }
