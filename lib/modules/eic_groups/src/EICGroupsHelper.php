@@ -42,6 +42,8 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
 
   const GROUP_MEMBER_ROLE = 'group-member';
 
+  const INVITEE_INVITATION_EMAIL_LIMIT = 2;
+
   /**
    * The database connection service.
    *
@@ -136,6 +138,69 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
     $this->oecGroupFlexHelper = $oec_group_flex_helper;
     $this->groupVibilityManager = $group_vibility_manager;
     $this->currentPath = $current_path;
+  }
+
+  /**
+   * Check if a group can be flagged depending on the moderation state.
+   *
+   * @param \Drupal\group\Entity\GroupInterface $group
+   *   The group entity.
+   *
+   * @return bool
+   *   TRUE if the group is not in Pending or Draft state.
+   */
+  public static function groupIsFlaggable(GroupInterface $group) {
+    $moderation_state = $group->get('moderation_state')->value;
+    return !in_array(
+      $moderation_state,
+      [
+        GroupsModerationHelper::GROUP_PENDING_STATE,
+        GroupsModerationHelper::GROUP_DRAFT_STATE,
+      ]
+    );
+  }
+
+  /**
+   * Checks if a user is a group admin of a given group.
+   *
+   * @param \Drupal\group\Entity\GroupInterface $group
+   *   The group entity.
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *   The user account object.
+   * @param \Drupal\group\GroupMembership|NULL $membership
+   *   The group membership (optional).
+   *
+   * @return bool
+   *   TRUE if user is a group admin.
+   */
+  public static function userIsGroupAdmin(GroupInterface $group, AccountInterface $account, GroupMembership $membership = NULL) {
+    $membership = $membership ?: $group->getMember($account);
+
+    // User is not a member of the group. We return FALSE.
+    if (!$membership) {
+      return FALSE;
+    }
+
+    $membership_roles = $membership->getRoles();
+    $is_admin = FALSE;
+
+    foreach ($membership_roles as $role) {
+      $is_admin = in_array(
+        $role->id(),
+        [
+          self::GROUP_ADMINISTRATOR_ROLE,
+          self::GROUP_OWNER_ROLE,
+        ]
+      );
+
+      if (!$is_admin) {
+        continue;
+      }
+
+      break;
+    }
+
+    return $is_admin;
   }
 
   /**
@@ -410,127 +475,6 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
   }
 
   /**
-   * Check if a group can be flagged depending on the moderation state.
-   *
-   * @param \Drupal\group\Entity\GroupInterface $group
-   *   The group entity.
-   *
-   * @return bool
-   *   TRUE if the group is not in Pending or Draft state.
-   */
-  public static function groupIsFlaggable(GroupInterface $group) {
-    $moderation_state = $group->get('moderation_state')->value;
-    return !in_array(
-      $moderation_state,
-      [
-        GroupsModerationHelper::GROUP_PENDING_STATE,
-        GroupsModerationHelper::GROUP_DRAFT_STATE,
-      ]
-    );
-  }
-
-  /**
-   * Checks if a user is a group admin of a given group.
-   *
-   * @param \Drupal\group\Entity\GroupInterface $group
-   *   The group entity.
-   * @param \Drupal\Core\Session\AccountInterface $account
-   *   The user account object.
-   * @param \Drupal\group\GroupMembership|NULL $membership
-   *   The group membership (optional).
-   *
-   * @return bool
-   *   TRUE if user is a group admin.
-   */
-  public static function userIsGroupAdmin(GroupInterface $group, AccountInterface $account, GroupMembership $membership = NULL) {
-    $membership = $membership ?: $group->getMember($account);
-
-    // User is not a member of the group. We return FALSE.
-    if (!$membership) {
-      return FALSE;
-    }
-
-    $membership_roles = $membership->getRoles();
-    $is_admin = FALSE;
-
-    foreach ($membership_roles as $role) {
-      $is_admin = in_array(
-        $role->id(),
-        [
-          self::GROUP_ADMINISTRATOR_ROLE,
-          self::GROUP_OWNER_ROLE,
-        ]
-      );
-
-      if (!$is_admin) {
-        continue;
-      }
-
-      break;
-    }
-
-    return $is_admin;
-  }
-
-  /**
-   * Checks if the current page is a group page.
-   *
-   * @return \Drupal\group\Entity\Group|bool
-   *   Returns the group entity object if the current page is a group page.
-   */
-  public function isGroupPage() {
-    $is_group_page = FALSE;
-    $current_path = $this->currentPath->getPath();
-    $current_url = Url::fromUri("internal:" . $current_path);
-    $route_name = $current_url->getRouteName();
-    $route_parameters = $current_url->getRouteParameters();
-
-    switch ($route_name) {
-      case 'entity.group.canonical':
-      case 'eic_groups.about_page':
-      case GroupOverviewPages::DISCUSSIONS:
-      case GroupOverviewPages::FILES:
-      case GroupOverviewPages::MEMBERS:
-      case GroupOverviewPages::SEARCH:
-        if (is_numeric($route_parameters['group'])) {
-          $group = Group::load($route_parameters['group']);
-        }
-        elseif ($route_parameters['group'] instanceof GroupInterface) {
-          $group = $route_parameters['group'];
-        }
-        else {
-          break;
-        }
-        $is_group_page = $group;
-        break;
-
-      case 'entity.node.canonical':
-        if (empty($route_parameters['node'])) {
-          break;
-        }
-
-        if (is_numeric($route_parameters['node'])) {
-          $node = Node::load($route_parameters['node']);
-        }
-
-        if (!isset($node) && !$route_parameters['node'] instanceof NodeInterface) {
-          break;
-        }
-
-        $group = $this->getGroupByEntity($node);
-
-        if (!$group) {
-          break;
-        }
-
-        $is_group_page = $group;
-        break;
-    }
-
-    return $is_group_page;
-  }
-
-  /**
    * Checks if the current page is a group under review page.
    *
    * @return \Drupal\group\Entity\Group|bool
@@ -592,6 +536,64 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
           }
         }
       }
+    }
+
+    return $is_group_page;
+  }
+
+  /**
+   * Checks if the current page is a group page.
+   *
+   * @return \Drupal\group\Entity\Group|bool
+   *   Returns the group entity object if the current page is a group page.
+   */
+  public function isGroupPage() {
+    $is_group_page = FALSE;
+    $current_path = $this->currentPath->getPath();
+    $current_url = Url::fromUri("internal:" . $current_path);
+    $route_name = $current_url->getRouteName();
+    $route_parameters = $current_url->getRouteParameters();
+
+    switch ($route_name) {
+      case 'entity.group.canonical':
+      case 'eic_groups.about_page':
+      case GroupOverviewPages::DISCUSSIONS:
+      case GroupOverviewPages::FILES:
+      case GroupOverviewPages::MEMBERS:
+      case GroupOverviewPages::SEARCH:
+        if (is_numeric($route_parameters['group'])) {
+          $group = Group::load($route_parameters['group']);
+        }
+        elseif ($route_parameters['group'] instanceof GroupInterface) {
+          $group = $route_parameters['group'];
+        }
+        else {
+          break;
+        }
+        $is_group_page = $group;
+        break;
+
+      case 'entity.node.canonical':
+        if (empty($route_parameters['node'])) {
+          break;
+        }
+
+        if (is_numeric($route_parameters['node'])) {
+          $node = Node::load($route_parameters['node']);
+        }
+
+        if (!isset($node) && !$route_parameters['node'] instanceof NodeInterface) {
+          break;
+        }
+
+        $group = $this->getGroupByEntity($node);
+
+        if (!$group) {
+          break;
+        }
+
+        $is_group_page = $group;
+        break;
     }
 
     return $is_group_page;
