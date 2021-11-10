@@ -6,6 +6,7 @@ dependencies:
     - field.field.node.event.body
     - field.field.node.event.field_date_range
     - field.field.node.event.field_document_media
+    - field.field.node.event.field_image
     - field.field.node.event.field_language
     - field.field.node.event.field_link
     - field.field.node.event.field_location
@@ -49,6 +50,14 @@ content:
     region: content
   field_document_media:
     weight: 102
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+  field_image:
+    weight: 114
     label: above
     settings:
       link: true

@@ -753,6 +753,18 @@ class SolrDocumentProcessor {
       $start_date->getTimestamp()
     );
 
+    if (array_key_exists('ss_content_country_code', $fields)) {
+      $country_code = $fields['ss_content_country_code'];
+      $countries = CountryManager::getStandardList();
+
+      $this->addOrUpdateDocumentField(
+        $document,
+        'ss_content_country_code',
+        $fields,
+        array_key_exists($country_code, $countries) ? $countries[$country_code] : $country_code
+      );
+    }
+
     $this->addOrUpdateDocumentField(
       $document,
       GroupEventSourceType::END_DATE_SOLR_FIELD_ID,

@@ -46,7 +46,8 @@ class GroupEventSourceType extends SourceType {
     return [
       'ss_content_event_type_string' => $this->t('Type', [], ['context' => 'eic_search']),
       'sm_content_field_vocab_topics_string' => $this->t('Topic', [], ['context' => 'eic_search']),
-      'sm_content_field_vocab_geo_string' => $this->t('Region & country', [], ['context' => 'eic_search']),
+      'sm_group_field_location_type' => $this->t('Location', [], ['context' => 'eic_search']),
+      'ss_content_country_code' => $this->t('Country', [], ['context' => 'eic_search']),
     ];
   }
 
