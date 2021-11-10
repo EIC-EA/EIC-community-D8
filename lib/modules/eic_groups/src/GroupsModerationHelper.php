@@ -35,11 +35,4 @@ class GroupsModerationHelper {
    */
   const GROUP_BLOCKED_STATE = 'blocked';
 
-  /**
-   * The published state key for Group group type.
-   *
-   * @var string
-   */
-  const GROUP_BLOCKED_STATE = 'blocked';
-
 }
