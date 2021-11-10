@@ -1,6 +1,7 @@
 .ecl-teaser {
   $node: &;
   position: relative;
+  padding: ecl-box-model('padding');
 
   @include ecl-media-breakpoint-up('sm') {
     display: flex;
@@ -59,7 +60,6 @@
   }
 
   &--as-grey {
-    padding: ecl-box-model('padding');
     background-color: map-get($ecl-colors, 'grey-5');
   }
 
@@ -188,6 +188,10 @@
 
     #{$node}--gallery &:before {
       display:none;
+    }
+
+    &--empty {
+      padding: 80px 0;
     }
   }
 
