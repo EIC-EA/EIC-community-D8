@@ -26,11 +26,15 @@ dependencies:
     - flag
     - group_permissions
   config:
+    - field.storage.group.field_date_range
+    - field.storage.group.field_location
     - field.storage.user.field_first_name
     - field.storage.user.field_last_name
     - field.storage.media.oe_media_image
     - field.storage.user.field_media
+    - field.storage.group.field_location_type
     - field.storage.group.field_vocab_geo
+    - field.storage.group.field_image
     - field.storage.group.field_thumbnail
     - field.storage.group.field_vocab_topics
     - field.storage.group.field_body
@@ -42,7 +46,6 @@ dependencies:
     - field.storage.node.field_discussion_type
     - field.storage.node.field_body
     - field.storage.node.field_comments
-    - field.storage.node.field_date_range
     - field.storage.node.field_document_type
     - field.storage.media.field_media_file
     - field.storage.node.field_document_media
@@ -55,6 +58,7 @@ dependencies:
     - field.storage.media.oe_media_file
     - field.storage.paragraph.field_gallery_slide_media
     - field.storage.node.field_vocab_topics
+    - field.storage.node.field_date_range
     - field.storage.node.field_subtitle
     - field.storage.profile.field_body
     - field.storage.profile.field_location_address
@@ -602,6 +606,14 @@ field_settings:
     dependencies:
       module:
         - group
+  group_country_code:
+    label: 'Event location » The two-letter country code'
+    datasource_id: 'entity:group'
+    property_path: 'field_location:country_code'
+    type: string
+    dependencies:
+      config:
+        - field.storage.group.field_location
   group_created:
     label: '[Group] Created on'
     datasource_id: 'entity:group'
@@ -610,6 +622,26 @@ field_settings:
     dependencies:
       module:
         - group
+  group_event_locality:
+    label: 'Event location » The locality (i.e. city)'
+    datasource_id: 'entity:group'
+    property_path: 'field_location:locality'
+    type: string
+    dependencies:
+      config:
+        - field.storage.group.field_location
+  group_event_teaser_url_string:
+    label: 'Thumbnail image » Media » Image » File » URI » Root-relative file URL'
+    datasource_id: 'entity:group'
+    property_path: 'field_image:entity:oe_media_image:entity:uri:url'
+    type: string
+    dependencies:
+      config:
+        - field.storage.group.field_image
+        - field.storage.media.oe_media_image
+      module:
+        - file
+        - media
   group_field_body:
     label: '[Group] Body'
     datasource_id: 'entity:group'
@@ -618,6 +650,30 @@ field_settings:
     dependencies:
       config:
         - field.storage.group.field_body
+  group_field_date_range:
+    label: Date
+    datasource_id: 'entity:group'
+    property_path: field_date_range
+    type: date
+    dependencies:
+      config:
+        - field.storage.group.field_date_range
+  group_field_date_range_end_value:
+    label: 'Date » End date value'
+    datasource_id: 'entity:group'
+    property_path: 'field_date_range:end_value'
+    type: date
+    dependencies:
+      config:
+        - field.storage.group.field_date_range
+  group_field_location_type:
+    label: 'Location type'
+    datasource_id: 'entity:group'
+    property_path: field_location_type
+    type: string
+    dependencies:
+      config:
+        - field.storage.group.field_location_type
   group_field_vocab_geo:
     label: '[Group] Regions & Countries'
     datasource_id: 'entity:group'

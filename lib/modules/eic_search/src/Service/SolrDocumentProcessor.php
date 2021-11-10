@@ -9,6 +9,7 @@ use Drupal\comment\CommentInterface;
 use Drupal\comment\Entity\Comment;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Locale\CountryManager;
 use Drupal\Core\Queue\QueueFactory;
 use Drupal\Core\Queue\QueueWorkerManager;
 use Drupal\Core\Queue\SuspendQueueException;
@@ -196,7 +197,7 @@ class SolrDocumentProcessor {
         $type = $fields['ss_content_type'];
         $node_type = NodeType::load($type);
         $type_label = $node_type instanceof NodeTypeInterface ?
-          $node_type->label():
+          $node_type->label() :
           $fields['ss_content_type'];
         $date = $fields['ds_content_created'];
         $changed = $fields['ds_changed'];
@@ -289,7 +290,7 @@ class SolrDocumentProcessor {
     $document->addField('ss_global_content_type', $type);
     $document->addField(
       'ss_global_content_type_label',
-      !empty($type_label) ? $type_label: $type
+      !empty($type_label) ? $type_label : $type
     );
     $document->addField('ss_global_created_date', $date);
     $document->addField('bs_global_status', $status);
@@ -381,7 +382,8 @@ class SolrDocumentProcessor {
       }
 
       $node = $comment->getCommentedEntity();
-    } else {
+    }
+    else {
       $node = Node::load($node_ref);
     }
 
@@ -733,7 +735,7 @@ class SolrDocumentProcessor {
    * @param $fields
    *   Document fields.
    */
-  public function processEventData(Document &$document, $fields) {
+  public function processGroupEventData(Document &$document, $fields) {
     $datasource = $fields['ss_search_api_datasource'];
     $content_type = $fields['ss_content_type'];
 
@@ -750,6 +752,53 @@ class SolrDocumentProcessor {
       $fields,
       $start_date->getTimestamp()
     );
+
+    $this->addOrUpdateDocumentField(
+      $document,
+      GroupEventSourceType::END_DATE_SOLR_FIELD_ID,
+      $fields,
+      $end_date->getTimestamp()
+    );
+  }
+
+  /**
+   * Updates global event data for a document.
+   *
+   * @param \Solarium\QueryType\Update\Query\Document $document
+   *   The Solr document.
+   * @param $fields
+   *   Document fields.
+   */
+  public function processGlobalEventData(Document &$document, $fields) {
+    $group_type = array_key_exists('ss_group_type', $fields) ?
+      $fields['ss_group_type'] :
+      NULL;
+
+    if ($group_type !== 'event') {
+      return;
+    }
+
+    $start_date = new DrupalDateTime($fields['ds_group_field_date_range']);
+    $end_date = new DrupalDateTime($fields['ds_group_field_date_range_end_value']);
+
+    $this->addOrUpdateDocumentField(
+      $document,
+      GroupEventSourceType::START_DATE_SOLR_FIELD_ID,
+      $fields,
+      $start_date->getTimestamp()
+    );
+
+    if (array_key_exists('ss_group_country_code', $fields)) {
+      $country_code = $fields['ss_group_country_code'];
+      $countries = CountryManager::getStandardList();
+
+      $this->addOrUpdateDocumentField(
+        $document,
+        'ss_group_event_country',
+        $fields,
+        array_key_exists($country_code, $countries) ? $countries[$country_code] : $country_code
+      );
+    }
 
     $this->addOrUpdateDocumentField(
       $document,
@@ -823,8 +872,7 @@ class SolrDocumentProcessor {
       try {
         $queue_worker->processItem($item->data);
         $queue->deleteItem($item);
-      }
-      catch (SuspendQueueException $e) {
+      } catch (SuspendQueueException $e) {
         $queue->releaseItem($item);
         break;
       }

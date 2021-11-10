@@ -36,11 +36,13 @@ reactions:
         unique: 0
         context_id: group_events_overviews
         uuid: 2909faf9-e5d4-4649-b63f-b1aca1476dd5
-      47770a28-660d-4d7a-b41a-95dab7c24179:
+      b1866d47-c767-4e59-9817-69b6c56d9d64:
         id: eic_search_overview
         label: ''
         provider: eic_search
         label_display: visible
+        region: content
+        weight: '1'
         source_type: Drupal\eic_search\Search\Sources\GroupEventSourceType
         facets:
           ss_content_event_type_string: ss_content_event_type_string
@@ -58,18 +60,16 @@ reactions:
         enable_search: 1
         page_options: normal
         prefilter_group: 1
-        enable_date_filter: 1
         add_facet_interests: 0
         add_facet_my_groups: 0
         context_mapping: {  }
         custom_id: eic_search_overview
-        region: content
         theme: eic_community
         css_class: ''
         unique: 0
         context_id: group_events_overviews
         third_party_settings: {  }
-        uuid: 47770a28-660d-4d7a-b41a-95dab7c24179
+        uuid: b1866d47-c767-4e59-9817-69b6c56d9d64
     id: blocks
     saved: false
     uuid: 9c311d0e-a590-452a-ad85-a32b685d7729
