@@ -7,7 +7,6 @@ use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -85,7 +84,7 @@ class ContentOperationsBlock extends BlockBase implements ContainerFactoryPlugin
       '#type' => 'textfield',
       '#title' => $this->t('Title display'),
       '#default_value' => $this->configuration['title'],
-      '#description' => t('Text to be displayed as title when viewing the block.'),
+      '#description' => $this->t('Text to be displayed as title when viewing the block.'),
     ];
     $form['description'] = [
       '#type' => 'text_format',
