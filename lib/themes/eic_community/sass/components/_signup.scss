@@ -1,0 +1,13 @@
+.ecl-signup {
+  border: 1px solid $ecl-color-blue;
+  padding: map-get($ecl-spacing, 'xl');
+
+  &_title {
+    margin-top: 0;
+    color: $ecl-color-blue;
+  }
+
+  &_text {
+    line-height: 1.4;
+  }
+}

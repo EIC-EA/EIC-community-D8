@@ -1,0 +1,21 @@
+<article class="ecl--event">
+
+  {% for tag in tags %}
+    <div class="ecl--event__tags">
+      {% include '@ecl-twig/ec-component-tag/ecl-tag.html.twig' with tag|default({})|merge({
+        tag: tag.tag|merge({
+          type: 'display'
+        })
+      }) only %}
+    </div>
+  {% endfor %}
+
+  <header class="ecl--event__header">
+    <h1 class="ecl--event__title">{{ title }}</h1>
+  </header>
+  <div class="ecl--event__content">
+    <div class="ecl--event__body">
+      {{ body|raw }}
+    </div>
+  </div>
+</article>
