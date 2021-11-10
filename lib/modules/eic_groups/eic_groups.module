@@ -19,17 +19,17 @@ use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
 use Drupal\eic_groups\Constants\NodeProperty;
+use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_groups\GroupsModerationHelper;
 use Drupal\eic_groups\Hooks\CronOperations;
 use Drupal\eic_groups\Hooks\EntityOperations;
-use Drupal\eic_groups\Hooks\GroupTokens;
 use Drupal\eic_groups\Hooks\FormOperations;
+use Drupal\eic_groups\Hooks\GroupTokens;
 use Drupal\eic_groups\Hooks\Pathauto;
 use Drupal\eic_groups\Hooks\Preprocess;
 use Drupal\eic_user\UserHelper;
-use Drupal\group\Entity\GroupContent;
-use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\group\Access\GroupAccessResult;
+use Drupal\group\Entity\GroupContent;
 
 /**
  * Implements hook_theme().
@@ -78,6 +78,21 @@ function eic_groups_theme($existing, $type, $theme, $path) {
       ],
     ],
   ];
+}
+
+/**
+ * Implements hook_views_data().
+ */
+function eic_groups_views_data() {
+  $data['group_content']['resend_invitation'] = [
+    'field' => [
+      'title' => t('Resend invitation'),
+      'help' => t('Provide a link to resend an invitation.'),
+      'id' => 'resend_invitation',
+    ],
+  ];
+
+  return $data;
 }
 
 /**

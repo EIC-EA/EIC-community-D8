@@ -1,0 +1,20 @@
+uuid: d6bfc3d3-82f4-4715-b4c9-876df1ae873f
+langcode: en
+status: true
+dependencies:
+  module:
+    - group
+id: group_content.field_invitation_counter
+field_name: field_invitation_counter
+entity_type: group_content
+type: integer
+settings:
+  unsigned: false
+  size: normal
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false
