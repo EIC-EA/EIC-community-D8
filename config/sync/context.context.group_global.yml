@@ -18,6 +18,7 @@ conditions:
   group_type:
     id: group_type
     group_types:
+      event: event
       group: group
     negate: 0
     uuid: dbdc709b-c8e7-40ed-aea8-338920304ee4

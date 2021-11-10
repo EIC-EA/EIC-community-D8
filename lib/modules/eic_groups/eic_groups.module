@@ -8,6 +8,7 @@
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
@@ -18,17 +19,17 @@ use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
 use Drupal\eic_groups\Constants\NodeProperty;
+use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_groups\GroupsModerationHelper;
 use Drupal\eic_groups\Hooks\CronOperations;
 use Drupal\eic_groups\Hooks\EntityOperations;
-use Drupal\eic_groups\Hooks\GroupTokens;
 use Drupal\eic_groups\Hooks\FormOperations;
+use Drupal\eic_groups\Hooks\GroupTokens;
 use Drupal\eic_groups\Hooks\Pathauto;
 use Drupal\eic_groups\Hooks\Preprocess;
 use Drupal\eic_user\UserHelper;
-use Drupal\group\Entity\GroupContent;
-use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\group\Access\GroupAccessResult;
+use Drupal\group\Entity\GroupContent;
 
 /**
  * Implements hook_theme().
@@ -80,6 +81,21 @@ function eic_groups_theme($existing, $type, $theme, $path) {
 }
 
 /**
+ * Implements hook_views_data().
+ */
+function eic_groups_views_data() {
+  $data['group_content']['resend_invitation'] = [
+    'field' => [
+      'title' => t('Resend invitation'),
+      'help' => t('Provide a link to resend an invitation.'),
+      'id' => 'resend_invitation',
+    ],
+  ];
+
+  return $data;
+}
+
+/**
  * Implements hook_form_FORM_ID_alter().
  */
 function eic_groups_form_group_group_add_form_alter(&$form, FormStateInterface $form_state, $form_id) {
@@ -123,6 +139,24 @@ function eic_groups_form_group_form_alter(&$form, FormStateInterface $form_state
   // Only act on group creation.
   if ($form_state->getFormObject()->getOperation() == 'add') {
     $form['actions']['submit']['#submit'][] = 'eic_groups_group_form_submit';
+  }
+
+  $form_object = $form_state->getFormObject();
+  if ($form_object instanceof EntityForm) {
+    $entity = $form_object->getEntity();
+    $current_user = \Drupal::currentUser();
+
+    $moderation_state = $entity->get('moderation_state')->value;
+
+    // If the group is not yet blocked, we remove the possibility to block it
+    // from the group edit form.
+    if ($moderation_state !== GroupsModerationHelper::GROUP_BLOCKED_STATE) {
+      if (\Drupal::service('eic_flags.entity_block_handler')->canBlockEntity($entity, $current_user->getAccount())) {
+        if (isset($form['moderation_state']['widget'][0]['state']['#options'][GroupsModerationHelper::GROUP_BLOCKED_STATE])) {
+          unset($form['moderation_state']['widget'][0]['state']['#options'][GroupsModerationHelper::GROUP_BLOCKED_STATE]);
+        }
+      }
+    }
   }
 }
 
@@ -435,6 +469,21 @@ function eic_groups_entity_operation_alter(array &$operations, EntityInterface $
       'url' => $publish_url,
     ];
   }
+
+  // Add block group operation.
+  $block_group_url_options = [
+    'query' => [
+      'destination' => $current_path_alias,
+    ],
+  ];
+  $block_group_url = Url::fromRoute('entity.group.block_entity', ['group' => $entity->id()], $block_group_url_options);
+  if ($block_group_url->access()) {
+    $operations['block'] = [
+      'title' => t('Block'),
+      'weight' => -50,
+      'url' => $block_group_url,
+    ];
+  }
 }
 
 /**
@@ -551,4 +600,14 @@ function eic_groups_entity_presave(EntityInterface $entity) {
       $class->createGroupUrlAliasUpdateQueueItem($entity);
     }
   }
+}
+
+/**
+ * @return array
+ */
+function eic_field_location_type_allowed_values() {
+  return [
+    'on_site' => t('On site', [], ['eic_groups']),
+    'remove' => t('Remote', [], ['eic_groups']),
+  ];
 }
