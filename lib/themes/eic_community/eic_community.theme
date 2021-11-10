@@ -13,6 +13,7 @@ define('INCLUDES_FOLDER', 'includes');
 use CommerceGuys\Addressing\AddressFormat\AddressField;
 use Drupal\address\FieldHelper;
 use Drupal\Core\Datetime\DrupalDateTime;
+use \Drupal\Core\Entity\EntityInterface;
 
 /**
  * Implements hook_theme().
@@ -127,12 +128,40 @@ if (is_dir(__DIR__ . '/' . INCLUDES_FOLDER)) {
  * Implements hook_preprocess_group__TYPE.
  */
 function eic_community_preprocess_group__event(&$variables) {
+  _render_event_detail_page($variables, $variables['group']);
+}
+
+/**
+ * Implements hook_preprocess_node__TYPE.
+ */
+function eic_community_preprocess_node__event(&$variables) {
+  _render_event_detail_page($variables, $variables['node']);
+}
+
+/**
+ * Generate render array for the event detail page (group type and node type).
+ *
+ * @param $variables
+ * @param \Drupal\Core\Entity\EntityInterface $entity
+ */
+function _render_event_detail_page(&$variables, EntityInterface $entity) {
+  $fields_map = [
+    'node' => [
+      'languages' => 'field_language',
+      'documents' => 'field_document_media',
+    ],
+    'group' => [
+      'languages' => 'field_vocab_language',
+      'documents' => 'field_documents',
+    ],
+  ];
+
+  $entity_type = $entity->getEntityTypeId();
+
   _eic_community_display_topics($variables);
   _eic_community_display_flags($variables);
 
-  /** @var \Drupal\group\Entity\GroupInterface $group */
-  $group = $variables['group'];
-  $location = $group->get('field_location')->getValue();
+  $location = $entity->get('field_location')->getValue();
   $location_formatted = '';
 
   if (!empty($location)) {
@@ -147,23 +176,30 @@ function eic_community_preprocess_group__event(&$variables) {
     return array_key_exists($item['value'], $allowed_values_location_type) ?
       strtolower($allowed_values_location_type[$item['value']]) :
       '';
-  }, $group->get('field_location_type')->getValue());
+  }, $entity->get('field_location_type')->getValue());
 
-  $dates = $group->get('field_date_range')->getValue();
+  $dates = $entity->get('field_date_range')->getValue();
   $from_date = DrupalDateTime::createFromFormat('Y-m-d\TH:i:s', $dates[0]['value']);
   $end_date = DrupalDateTime::createFromFormat('Y-m-d\TH:i:s', $dates[0]['end_value']);
 
-  $event_infos = [
-    'title' => t('Event details', [], ['eic_community']),
-    'action' => [
+  $action = [];
+
+  // We only show signup in global event (group type: event).
+  if ('group' === $entity_type) {
+    $action = [
       'title' => 'Sign up to this event',
       'text' => 'Get notified of the latest changes and take part in the discussion linked to this event.',
       'action' => [
         'label' => 'Sign up now',
         'url' => 'https://www.google.com',
       ],
-    ],
+    ];
+  }
+
+  $event_infos = [
     'icon_file_path' => $variables['eic_icon_path'],
+    'title' => t('Event details', [], ['eic_community']),
+    'action' => $action,
     'items' => [
       [
         'content' => $location_formatted,
@@ -189,7 +225,7 @@ function eic_community_preprocess_group__event(&$variables) {
       [
         'content' => implode(', ', array_map(function (\Drupal\taxonomy\Entity\Term $term) {
           return $term->label();
-        }, $group->get('field_vocab_language')->referencedEntities())),
+        }, $entity->get($fields_map[$entity_type]['languages'])->referencedEntities())),
         'icon' => [
           'type' => 'custom',
           'name' => 'glob',
@@ -198,7 +234,7 @@ function eic_community_preprocess_group__event(&$variables) {
     ],
   ];
 
-  if ($social_links = $group->get('field_social_links')->getValue()) {
+  if ($social_links = $entity->get('field_social_links')->getValue()) {
     $socials_platform_mapping = [
       'facebook' => [
         'url' => 'https://www.facebook.com/',
@@ -226,7 +262,7 @@ function eic_community_preprocess_group__event(&$variables) {
     }
   }
 
-  if ($website_url = $group->get('field_website_url')->getString()) {
+  if ($website_url = $entity->get('field_website_url')->getString()) {
     $event_infos['items'][] = [
       'content' => $website_url,
       'url' => $website_url,
@@ -243,7 +279,7 @@ function eic_community_preprocess_group__event(&$variables) {
     $variables['social_share'] = $share_block;
   }
 
-  $files = $group->get('field_documents')->referencedEntities();
+  $files = $entity->get($fields_map[$entity_type]['documents'])->referencedEntities();
   $files_list = [];
 
   foreach ($files as $file) {
