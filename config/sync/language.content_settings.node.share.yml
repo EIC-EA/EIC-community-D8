@@ -1,0 +1,11 @@
+uuid: 3f331463-2451-425a-a327-08ce127420c8
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.share
+id: node.share
+target_entity_type_id: node
+target_bundle: share
+default_langcode: site_default
+language_alterable: false
