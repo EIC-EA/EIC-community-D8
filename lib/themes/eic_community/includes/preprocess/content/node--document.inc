@@ -27,8 +27,10 @@ function eic_community_preprocess_node__document(array &$variables) {
         ],
       ];
 
-      // We remove the flags as we don't want them in the teaser.
-      $teaser['flags'] = [];
+      // Remove unwanted items.
+      if (!empty($teaser['flags'])) {
+        $teaser['flags'] = [];
+      }
 
       // If we have flags, attach the js library.
       if (!empty($teaser['flags'])) {

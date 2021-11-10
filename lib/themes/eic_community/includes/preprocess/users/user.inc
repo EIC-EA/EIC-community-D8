@@ -5,6 +5,7 @@
  * Functions to support theming.
  */
 
+use CommerceGuys\Addressing\Country\CountryRepository;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Url;
 use Drupal\media\Entity\Media;
@@ -33,6 +34,7 @@ function eic_community_preprocess_user(array &$variables) {
           'alt' => $image_item->getAlt(),
         ];
       }
+      $teaser['location'] = _eic_community_get_user_location($user);
       // Get the user realname.
       $teaser['title'] = \Drupal::service('eic_user.helper')->getFullName($user);
       if ($user->toUrl()->access()) {
@@ -196,4 +198,38 @@ function _eic_community_get_user_social_links(UserInterface $account) {
   }
 
   return $links;
+}
+
+/**
+ * Returns the 'render' array to use in templates for the user location.
+ *
+ * @param Drupal\user\UserInterface $account
+ *   The user account for which we want to get the location.
+ *
+ * @return array
+ *   The render array for templates.
+ */
+function _eic_community_get_user_location(UserInterface $account) {
+  $member_profile = \Drupal::service('eic_user.helper')->getUserMemberProfile($account);
+
+  // If we don't have a member profile for this user, skip.
+  if (empty($member_profile)) {
+    return [];
+  }
+
+  // If the member profile doesn't have the address field, skip.
+  if ($member_profile->get('field_location_address')->isEmpty()) {
+    return [];
+  }
+
+  $address = $member_profile->get('field_location_address')->first();
+
+  /** @var \CommerceGuys\Addressing\Country\CountryRepository $country_repository */
+  $country_repository = new CountryRepository();
+  /** @var \CommerceGuys\Addressing\Country\Country $country */
+  $country = $country_repository->get($address->get('country_code')->getValue());
+
+  return [
+    'label' => $address->get('locality')->getValue() . ', ' . $country->getName(),
+  ];
 }

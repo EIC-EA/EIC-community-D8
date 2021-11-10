@@ -78,8 +78,10 @@ function eic_community_preprocess_node__gallery(array &$variables) {
         $images[] = $image_item;
       }
 
-      // We remove the flags as we don't want them in the teaser.
-      $teaser['flags'] = [];
+      // Remove unwanted items.
+      if (!empty($teaser['flags'])) {
+        $teaser['flags'] = [];
+      }
 
       $teaser['images'] = $images;
       $teaser['type'] = [
