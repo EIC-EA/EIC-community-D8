@@ -91,7 +91,7 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
    *
    * @var \Drupal\group_flex\Plugin\GroupVisibilityManager
    */
-  protected $groupVibilityManager;
+  protected $groupVisibilityManager;
 
   /**
    * The current path service.
@@ -136,7 +136,7 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
     $this->currentUser = $current_user;
     $this->time = $time;
     $this->oecGroupFlexHelper = $oec_group_flex_helper;
-    $this->groupVibilityManager = $group_visibility_manager;
+    $this->groupVisibilityManager = $group_visibility_manager;
     $this->currentPath = $current_path;
   }
 
@@ -545,7 +545,7 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
       return $is_group_page;
     }
 
-    $group_visibility_plugin = $this->groupVibilityManager->createInstance($group_visibility_settings['plugin_id']);
+    $group_visibility_plugin = $this->groupVisibilityManager->createInstance($group_visibility_settings['plugin_id']);
 
     if ($group_visibility_plugin instanceof CustomRestrictedVisibility) {
       $is_group_page = FALSE;
