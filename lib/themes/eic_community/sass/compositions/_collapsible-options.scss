@@ -3,6 +3,8 @@
 
   position: relative;
   display: inline-block;
+  cursor: pointer;
+  border: 2px solid transparent;
 
   &__trigger-wrapper {
     display: none;
@@ -20,28 +22,6 @@
   &__trigger {
     display: none;
     position: relative;
-
-    &::after {
-      display: block;
-      flex-shrink: 0;
-      margin-left: ecl-box-model('margin', 'controls');
-      width: map-get($ecl-spacing, 'xs');
-      height: map-get($ecl-spacing, 'xs');
-      border: solid 2px;
-      border-color: currentColor;
-      border-bottom: none;
-      border-left: none;
-      transform: rotate(135deg);
-      margin-top: -#{map-get($ecl-spacing, 'xs') / 2};
-
-      #{$node}--has-compact-layout & {
-        width: map-get($ecl-spacing, '2xs');
-        height: map-get($ecl-spacing, '2xs');
-        margin-top: -#{map-get($ecl-spacing, '2xs') / 2};
-      }
-
-      content: " ";
-    }
 
     #{$node}--is-ready &[aria-visible="true"] {
       display: flex;
@@ -201,6 +181,29 @@
         }
         .ecl-button__label, .ecl-link__label {
           text-decoration: underline;
+        }
+      }
+    }
+  }
+
+  &--blue {
+    & #{$node}__trigger {
+      background-color: $ecl-color-blue;
+      color: $ecl-color-white;
+    }
+
+    & #{$node}__collapse-well {
+      background-color: $ecl-color-blue;
+
+      & #{$node}__item {
+        & a {
+          color: $ecl-color-white;
+        }
+        &:hover {
+          background-color: $ecl-color-blue-75;
+          & .ecl-collapsible-options__button::before {
+            background-color: $ecl-color-blue-50;
+          }
         }
       }
     }

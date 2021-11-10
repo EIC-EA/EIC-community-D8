@@ -20,7 +20,7 @@
               <a href="{{ item.url }}" target="_blank" rel="noreferrer">{{ item.content|nl2br }}</a>
             {% elseif item.content %}
               <p>
-                {{ item.content|raw }}
+                {{ item.content|nl2br }}
               </p>
             {% endif %}
           </li>

@@ -2,9 +2,16 @@ uuid: 052929ef-8be6-47b1-8eb3-717780b4df69
 langcode: en
 status: true
 dependencies:
+  config:
+    - views.view.group_discussions
+    - views.view.group_documents
+    - views.view.group_related_groups
+    - views.view.group_related_news_stories
   module:
+    - eic_groups
     - group
     - route_condition
+    - views
 _core:
   default_config_hash: CvMPzdzpKqV5FrlT6rMu3GzdbzGoPdWXKcYNdM1SsTQ
 name: group_group_homepage
@@ -23,6 +30,7 @@ conditions:
   group_type:
     id: group_type
     group_types:
+      event: event
       group: group
     negate: 0
     uuid: efd9045b-7859-4375-b6bd-3c8ba6bf8fa0

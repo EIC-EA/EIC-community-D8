@@ -80,28 +80,35 @@ class GroupContentCreateEntityAccessCheck extends GroupContentCreateEntityAccess
       }
     }
 
-    // If access is allowed, we also need to check if the user can create group
-    // content based on the current group moderation state.
-    if ($access->isAllowed()) {
-      switch ($group->get('moderation_state')->value) {
-        case GroupsModerationHelper::GROUP_PENDING_STATE:
-          // Deny access to the group content node creation form if the group
-          // is in pending state and the user is not a "site_admin" or a
-          // "content_administrator".
-          if (!UserHelper::isPowerUser($account)) {
-            $access = AccessResult::forbidden()
-              ->addCacheableDependency($account)
-              ->addCacheableDependency($group);
-          }
-          break;
-
-      }
-    }
-    else {
-      // Power user can always access.
-      $access = AccessResult::allowedIf(UserHelper::isPowerUser($account))
+    // If access is not allowed, only powerusers can create content in the
+    // group.
+    if (!$access->isAllowed()) {
+      return AccessResult::allowedIf(UserHelper::isPowerUser($account))
         ->addCacheableDependency($account)
         ->addCacheableDependency($group);
+    }
+
+    // If access is allowed, we also need to check if the user can create group
+    // content based on the current group moderation state.
+    switch ($group->get('moderation_state')->value) {
+      case GroupsModerationHelper::GROUP_PENDING_STATE:
+        // Deny access to the group content node creation form if the group
+        // is in pending state and the user is not a "site_admin" or a
+        // "content_administrator".
+        if (!UserHelper::isPowerUser($account)) {
+          $access = AccessResult::forbidden()
+            ->addCacheableDependency($account)
+            ->addCacheableDependency($group);
+        }
+        break;
+
+      case GroupsModerationHelper::GROUP_BLOCKED_STATE:
+        // Only Powerusers can create group content in blocked group.
+        $access = AccessResult::allowedIf(UserHelper::isPowerUser($account))
+          ->addCacheableDependency($account)
+          ->addCacheableDependency($group);
+        break;
+
     }
 
     return $access;

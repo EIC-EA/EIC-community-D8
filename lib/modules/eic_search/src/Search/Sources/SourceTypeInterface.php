@@ -15,8 +15,6 @@ interface SourceTypeInterface {
 
   const LAYOUT_COLUMNS_COMPACT = 'columns_compact';
 
-  const LAYOUT_3_COLUMNS = 'three_columns';
-
   const LAYOUT_GLOBAL = 'global';
 
   const SOLR_FIELD_CONTENT_TYPE_ID = 'ss_global_content_type';
