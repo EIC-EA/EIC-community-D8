@@ -10,7 +10,6 @@ label: 'Like (Content)'
 bundles:
   - discussion
   - document
-  - event
   - gallery
   - news
   - story

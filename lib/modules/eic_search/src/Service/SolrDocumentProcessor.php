@@ -7,33 +7,21 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\comment\CommentInterface;
 use Drupal\comment\Entity\Comment;
 use Drupal\Component\Utility\Unicode;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\Queue\QueueFactory;
-use Drupal\Core\Queue\QueueWorkerManager;
-use Drupal\Core\Queue\SuspendQueueException;
-use Drupal\eic_comments\CommentsHelper;
 use Drupal\eic_flags\FlagType;
 use Drupal\eic_groups\Constants\GroupVisibilityType;
 use Drupal\eic_groups\EICGroupsHelper;
-use Drupal\eic_media_statistics\EntityFileDownloadCount;
 use Drupal\eic_search\SolrIndexes;
 use Drupal\file\Entity\File;
 use Drupal\flag\FlagCountManager;
 use Drupal\group\Entity\Group;
-use Drupal\group\Entity\GroupContent;
-use Drupal\group\Entity\GroupInterface;
 use Drupal\group\GroupMembership;
 use Drupal\image\Entity\ImageStyle;
 use Drupal\media\MediaInterface;
 use Drupal\node\Entity\Node;
-use Drupal\node\Entity\NodeType;
-use Drupal\node\NodeInterface;
-use Drupal\oec_group_flex\GroupVisibilityDatabaseStorageInterface;
 use Drupal\paragraphs\Entity\Paragraph;
 use Drupal\profile\Entity\Profile;
 use Drupal\profile\Entity\ProfileInterface;
 use Drupal\search_api\Entity\Index;
-use Drupal\search_api\SearchApiException;
 use Drupal\search_api\Utility\PostRequestIndexing;
 use Drupal\search_api\Utility\Utility;
 use Drupal\statistics\NodeStatisticsDatabaseStorage;
@@ -48,20 +36,19 @@ use Solarium\QueryType\Update\Query\Document;
  * @package Drupal\eic_search\Service
  */
 class SolrDocumentProcessor {
-
   /**
    * Database connection.
    *
    * @var \Drupal\Core\Database\Connection
    */
-  private $connection;
+  protected $connection;
 
   /**
    * The flag count manager.
    *
    * @var \Drupal\flag\FlagCountManager
    */
-  private $flagCountManager;
+  protected $flagCountManager;
 
   /**
    * The Search API Post request indexing service.
@@ -75,38 +62,7 @@ class SolrDocumentProcessor {
    *
    * @var \Drupal\statistics\NodeStatisticsDatabaseStorage
    */
-  private $nodeStatisticsDatabaseStorage;
-
-  /**
-   * @var \Drupal\eic_comments\CommentsHelper $commentsHelper
-   */
-  private $commentsHelper;
-
-  /**
-   * @var EntityFileDownloadCount $entityDownloadHelper
-   */
-  private $entityDownloadHelper;
-
-  /**
-   * The Queue Factory service.
-   *
-   * @var QueueFactory $queueFactory
-   */
-  private $queueFactory;
-
-  /**
-   * The Queue Worker Manager service.
-   *
-   * @var QueueWorkerManager $queueManager
-   */
-  private $queueManager;
-
-  /**
-   * The Entity Type Manager service.
-   *
-   * @var EntityTypeManagerInterface $entityTypeManager
-   */
-  private $entityTypeManager;
+  protected $nodeStatisticsDatabaseStorage;
 
   /**
    * The key used to identify solr document fields for last flagged.
@@ -124,35 +80,12 @@ class SolrDocumentProcessor {
    *   The flag count manager.
    * @param \Drupal\search_api\Utility\PostRequestIndexing $post_request_indexing
    *   The Search API Post request indexing service.
-   * @param CommentsHelper $comments_helper
-   *   The Comments Helper service.
-   * @param EntityFileDownloadCount $entity_download_helper
-   *   The Entity File Download Count service helper.
-   * @param QueueFactory $queue_factory
-   *   The Queue Factory service.
-   * @param QueueWorkerManager $queue_worker_manager
-   *   The Queue Worker Manager service.
    */
-  public function __construct(
-    Connection $connection,
-    FlagCountManager $flag_count_manager,
-    PostRequestIndexing $post_request_indexing,
-    NodeStatisticsDatabaseStorage $node_statistics_db_storage,
-    CommentsHelper $comments_helper,
-    EntityFileDownloadCount $entity_download_helper,
-    QueueFactory $queue_factory,
-    QueueWorkerManager $queue_worker_manager,
-    EntityTypeManagerInterface $entity_type_manager
-  ) {
+  public function __construct(Connection $connection, FlagCountManager $flag_count_manager, PostRequestIndexing $post_request_indexing, NodeStatisticsDatabaseStorage $node_statistics_db_storage) {
     $this->connection = $connection;
     $this->flagCountManager = $flag_count_manager;
     $this->postRequestIndexing = $post_request_indexing;
     $this->nodeStatisticsDatabaseStorage = $node_statistics_db_storage;
-    $this->commentsHelper = $comments_helper;
-    $this->entityDownloadHelper = $entity_download_helper;
-    $this->queueFactory = $queue_factory;
-    $this->queueManager = $queue_worker_manager;
-    $this->entityTypeManager = $entity_type_manager;
   }
 
   /**
@@ -167,23 +100,17 @@ class SolrDocumentProcessor {
   public function processGlobalData(Document &$document, array $fields) {
     $title = '';
     $type = '';
-    $type_label = '';
     $date = '';
     $status = FALSE;
     $fullname = '';
     $topics = [];
     $geo = [];
     $user_url = '';
-    $datasource = $fields['ss_search_api_datasource'];
 
-    switch ($datasource) {
+    switch ($fields['ss_search_api_datasource']) {
       case 'entity:node':
         $title = $fields['ss_content_title'];
         $type = $fields['ss_content_type'];
-        $node_type = NodeType::load($type);
-        $type_label = $node_type instanceof NodeTypeInterface ?
-          $node_type->label():
-          $fields['ss_content_type'];
         $date = $fields['ds_content_created'];
         $changed = $fields['ds_changed'];
         $status = $fields['bs_content_status'];
@@ -273,10 +200,6 @@ class SolrDocumentProcessor {
     //We need to use only one field key for the global search on the FE side
     $document->addField('tm_global_title', $title);
     $document->addField('ss_global_content_type', $type);
-    $document->addField(
-      'ss_global_content_type_label',
-      !empty($type_label) ? $type_label: $type
-    );
     $document->addField('ss_global_created_date', $date);
     $document->addField('bs_global_status', $status);
     $document->addField('ss_drupal_timestamp', strtotime($date));
@@ -299,22 +222,16 @@ class SolrDocumentProcessor {
       if (strlen($text) > 300) {
         $text = Unicode::truncate($text, 300, FALSE, TRUE);
       }
-
-      //Trick to convert the &amp to & when nbsp
-      $document->setField('tm_X3b_en_rendered_item', html_entity_decode($text));
+      $document->setField('tm_X3b_en_rendered_item', $text);
     }
 
     $nid = $fields['its_content_nid'];
     $views = $this->nodeStatisticsDatabaseStorage->fetchView($nid);
 
-    if ('entity:message' !== $datasource) {
-      $this->addOrUpdateDocumentField(
-        $document,
-        'its_statistics_view',
-        $fields,
-        $views ? $views->getTotalCount() : 0
-      );
-    }
+    $document->addField(
+      'its_statistics_view',
+      $views ? $views->getTotalCount() : 0
+    );
   }
 
   /**
@@ -339,69 +256,6 @@ class SolrDocumentProcessor {
     $document->addField('ss_global_group_parent_label', $group_parent_label);
     $document->addField('ss_global_group_parent_url', $group_parent_url);
     $document->addField('ss_global_group_parent_id', $group_parent_id);
-  }
-
-  /**
-   * Process Message entity before sending to SOLR, add statistics data
-   *
-   * @param \Solarium\QueryType\Update\Query\Document $document
-   * @param array $fields
-   */
-  public function processMessageData(Document &$document, array $fields) {
-    if ($fields['ss_search_api_datasource'] !== 'entity:message') {
-      return;
-    }
-
-    $node_ref = isset($fields['its_message_node_ref_id']) ? $fields['its_message_node_ref_id'] : NULL;
-    $comment_ref = isset($fields['its_message_comment_ref_id']) ? $fields['its_message_comment_ref_id'] : NULL;
-
-    if (!$node_ref && !$comment_ref) {
-      return;
-    }
-
-    if ($comment_ref) {
-      $comment = Comment::load($comment_ref);
-
-      if (!$comment instanceof CommentInterface) {
-        return;
-      }
-
-      $node = $comment->getCommentedEntity();
-    } else {
-      $node = Node::load($node_ref);
-    }
-
-    if (!$node instanceof NodeInterface) {
-      return;
-    }
-
-    $views = $this->nodeStatisticsDatabaseStorage->fetchView($node->id());
-    $flags_count = $this->flagCountManager->getEntityFlagCounts($node);
-
-    $this->addOrUpdateDocumentField(
-      $document,
-      'its_statistics_view',
-      $fields,
-      $views ? $views->getTotalCount() : 0
-    );
-    $this->addOrUpdateDocumentField(
-      $document,
-      'its_flag_like_content',
-      $fields,
-      isset($flags_count['like_content']) ? $flags_count['like_content'] : 0
-    );
-    $this->addOrUpdateDocumentField(
-      $document,
-      'its_content_comment_count',
-      $fields,
-      $this->commentsHelper->countNodeComments($node)
-    );
-    $this->addOrUpdateDocumentField(
-      $document,
-      'its_document_download_total',
-      $fields,
-      $this->entityDownloadHelper->getFileDownloads($node)
-    );
   }
 
   /**
@@ -465,8 +319,7 @@ class SolrDocumentProcessor {
     $document->addField('ss_discussion_last_comment_timestamp', $comment->getCreatedTime());
     $document->addField('ss_discussion_last_comment_author', $author instanceof UserInterface ? $author->get('field_first_name')->value . ' ' . $author->get('field_last_name')->value : '');
     $document->addField('ss_discussion_last_comment_author_image', $author_file_url);
-    $document->addField('ss_discussion_last_comment_url', $author instanceof UserInterface ? $author->toUrl()
-      ->toString() : '');
+    $document->addField('ss_discussion_last_comment_url', $author instanceof UserInterface ? $author->toUrl()->toString() : '');
   }
 
   /**
@@ -604,8 +457,11 @@ class SolrDocumentProcessor {
       return;
     }
 
+    /** @var \Drupal\eic_media_statistics\EntityFileDownloadCount $entity_download_helper */
+    $entity_download_helper = \Drupal::service('eic_media_statistics.entity_file_download_count');
     $node = Node::load($fields['its_content_nid']);
-    $document->addField('its_document_download_total', $this->entityDownloadHelper->getFileDownloads($node));
+
+    $document->addField('its_document_download_total', $entity_download_helper->getFileDownloads($node));
   }
 
   /**
@@ -683,48 +539,13 @@ class SolrDocumentProcessor {
         continue;
       }
       $datasource_id = 'entity:' . $entity->getEntityTypeId();
-
-      try {
-        $datasource = $global_index->getDatasource($datasource_id);
-      } catch (SearchApiException $api_exception) {
-        continue;
-      }
-
+      $datasource = $global_index->getDatasource($datasource_id);
       $item_id = $datasource->getItemId($entity->getTypedData());
       $item_ids[] = Utility::createCombinedId($datasource_id, $item_id);
     }
 
     // Request reindexing for the given items.
     $this->postRequestIndexing->registerIndexingOperation(SolrIndexes::GLOBAL, $item_ids);
-  }
-
-  /**
-   * @param \Drupal\group\Entity\GroupInterface $group
-   *
-   * @throws \Drupal\Component\Plugin\Exception\PluginException
-   */
-  public function reIndexEntitiesFromGroup(GroupInterface $group) {
-    $queue = $this->queueFactory->get('eic_groups_group_content_search_api');
-    $queue_worker = $this->queueManager->createInstance('eic_groups_group_content_search_api');
-
-    /** @var \Drupal\group\Entity\Storage\GroupContentStorageInterface $storage */
-    $storage = $this->entityTypeManager->getStorage('group_content');
-    $contents = $storage->loadByGroup($group);
-
-    foreach ($contents as $group_content) {
-      $queue->createItem($group_content);
-    }
-
-    while ($item = $queue->claimItem()) {
-      try {
-        $queue_worker->processItem($item->data);
-        $queue->deleteItem($item);
-      }
-      catch (SuspendQueueException $e) {
-        $queue->releaseItem($item);
-        break;
-      }
-    }
   }
 
 }

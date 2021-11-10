@@ -4,7 +4,6 @@ status: true
 dependencies:
   config:
     - field.field.taxonomy_term.topics.field_smed_id
-    - field.field.taxonomy_term.topics.field_topic_banner
     - taxonomy.vocabulary.topics
   module:
     - text
@@ -17,20 +16,6 @@ content:
     label: hidden
     type: text_default
     weight: 0
-    region: content
-    settings: {  }
-    third_party_settings: {  }
-  field_topic_banner:
-    type: entity_reference_entity_view
-    weight: 1
-    label: hidden
-    settings:
-      view_mode: full
-      link: false
-    third_party_settings: {  }
-    region: content
-  flag_follow_taxonomy_term:
-    weight: 2
     region: content
     settings: {  }
     third_party_settings: {  }
