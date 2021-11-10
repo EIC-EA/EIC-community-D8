@@ -7,70 +7,65 @@ use Drupal\eic_flags\FlagType;
 use Drupal\eic_search\Service\SolrDocumentProcessor;
 
 /**
- * Class StorySourceType
+ * Source type for Group events.
  *
  * @package Drupal\eic_groups\Search\Sources
  */
-class StorySourceType extends SourceType {
+class GroupEventSourceType extends SourceType {
 
   use StringTranslationTrait;
 
   /**
-   * @inheritDoc
+   * {@inheritdoc}
    */
   public function getSourcesId(): array {
     return ['node'];
   }
 
   /**
-   * @inheritDoc
+   * {@inheritdoc}
    */
   public function getLabel(): string {
-    return $this->t('Story', [], ['context' => 'eic_search']);
+    return $this->t('Group event', [], ['context' => 'eic_search']);
   }
 
   /**
-   * @inheritDoc
+   * {@inheritdoc}
    */
   public function getEntityBundle(): string {
-    return 'story';
+    return 'node_event';
   }
 
   /**
-   * @inheritDoc
+   * {@inheritdoc}
    */
   public function getAvailableFacets(): array {
     return [
-      'ss_content_type' => $this->t('Type', [], ['context' => 'eic_search']),
+      'ss_content_event_type_string' => $this->t('Type', [], ['context' => 'eic_search']),
       'sm_content_field_vocab_topics_string' => $this->t('Topic', [], ['context' => 'eic_search']),
-      'sm_content_field_vocab_geo_string' => $this->t('Regions & countries', [], ['context' => 'eic_search']),
+      'sm_content_field_vocab_geo_string' => $this->t('Region & country', [], ['context' => 'eic_search']),
     ];
   }
 
   /**
-   * @inheritDoc
+   * {@inheritdoc}
    */
   public function getAvailableSortOptions(): array {
     return [
-      'ss_drupal_changed_timestamp' => [
-        'label' => $this->t('Last updated', [], ['context' => 'eic_search']),
+      'its_flag_highlight_content' => [
+        'label' => $this->t('Highlight', [], ['context' => 'eic_search']),
+        'DESC' => $this->t('Highlighted first', [], ['context' => 'eic_search']),
+        'ASC' => $this->t('Highlighted last', [], ['context' => 'eic_search']),
+      ],
+      'ss_drupal_timestamp' => [
+        'label' => $this->t('Timestamp', [], ['context' => 'eic_search']),
         'ASC' => $this->t('Old', [], ['context' => 'eic_search']),
         'DESC' => $this->t('Recent', [], ['context' => 'eic_search']),
       ],
-      'tm_global_title' => [
+      'ss_content_title' => [
         'label' => $this->t('Title', [], ['context' => 'eic_search']),
         'ASC' => $this->t('Title A-Z', [], ['context' => 'eic_search']),
         'DESC' => $this->t('Title Z-A', [], ['context' => 'eic_search']),
-      ],
-      'its_statistics_view' => [
-        'label' => $this->t('Views', [], ['context' => 'eic_search']),
-        'DESC' => $this->t('Most viewed', [], ['context' => 'eic_search']),
-        'ASC' => $this->t('Less viewed', [], ['context' => 'eic_search']),
-      ],
-      'its_flag_like_content' => [
-        'label' => $this->t('Likes', [], ['context' => 'eic_search']),
-        'DESC' => $this->t('Most liked', [], ['context' => 'eic_search']),
-        'ASC' => $this->t('Less liked', [], ['context' => 'eic_search']),
       ],
       'dm_aggregated_changed' => [
         'label' => $this->t('Last updated', [], ['context' => 'eic_search']),
@@ -79,11 +74,6 @@ class StorySourceType extends SourceType {
       'its_last_comment_timestamp' => [
         'label' => $this->t('Last commented', [], ['context' => 'eic_search']),
         'DESC' => $this->t('Last commented', [], ['context' => 'eic_search']),
-      ],
-      'its_content_comment_count' => [
-        'label' => $this->t('Total comment', [], ['context' => 'eic_search']),
-        'DESC' => $this->t('Most commented', [], ['context' => 'eic_search']),
-        'ASC' => $this->t('Less commented', [], ['context' => 'eic_search']),
       ],
       'its_' . SolrDocumentProcessor::LAST_FLAGGED_KEY . '_' . FlagType::LIKE_CONTENT => [
         'label' => $this->t('Last liked', [], ['context' => 'eic_search']),
@@ -97,51 +87,61 @@ class StorySourceType extends SourceType {
         'label' => $this->t('Last highlighted', [], ['context' => 'eic_search']),
         'DESC' => $this->t('Last highlighted', [], ['context' => 'eic_search']),
       ],
-      'score' => [
-        'label' => $this->t('Relevance', [], ['context' => 'eic_search']),
-        'DESC' => $this->t('Relevance', [], ['context' => 'eic_search']),
-      ],
     ];
   }
 
   /**
-   * @inheritDoc
+   * {@inheritdoc}
+   */
+  public function getSecondDefaultSort(): array {
+    return ['ss_global_created_date', 'DESC'];
+  }
+
+  /**
+   * {@inheritdoc}
    */
   public function getSearchFieldsId(): array {
     return [
       'tm_global_title',
-      'tm_X3b_en_rendered_item',
+      'ss_global_body_no_html',
       'ss_content_first_name',
       'ss_content_last_name',
     ];
   }
 
   /**
-   * @inheritDoc
+   * {@inheritdoc}
    */
   public function getLayoutTheme(): string {
-    return self::LAYOUT_GLOBAL;
+    return self::LAYOUT_COMPACT;
   }
 
   /**
-   * @inheritDoc
+   * {@inheritdoc}
    */
   public function ableToPrefilteredByGroup(): bool {
     return TRUE;
   }
 
   /**
-   * @inheritDoc
+   * {@inheritdoc}
    */
   public function getPrefilteredContentType(): array {
-    return ['story', 'news'];
+    return ['event'];
   }
 
   /**
-   * @inheritDoc
+   * {@inheritdoc}
+   */
+  public function getPrefilteredGroupFieldId(): array {
+    return ['ss_global_group_parent_id'];
+  }
+
+  /**
+   * {@inheritdoc}
    */
   public function getDefaultSort(): array {
-    return ['ss_drupal_timestamp', 'DESC'];
+    return ['its_flag_highlight_content', 'DESC'];
   }
 
 }

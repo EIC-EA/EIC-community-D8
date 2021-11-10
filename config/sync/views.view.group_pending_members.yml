@@ -9,6 +9,7 @@ dependencies:
   module:
     - grequest
     - group
+    - state_machine
     - user
 _core:
   default_config_hash: vDoRmHPUPADRnIq7_sjWDMxTjBshjwP_nZ0Vxkg6q3U
@@ -81,9 +82,57 @@ display:
           summary: ''
           description: ''
           columns:
-            label: label
+            approve_membership_request: approve_membership_request
+            reject_membership_request: reject_membership_request
+            name: name
+            created: created
+            gid: gid
+            id: id
+            dropbutton: dropbutton
           info:
-            label:
+            approve_membership_request:
+              sortable: false
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            reject_membership_request:
+              sortable: false
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            name:
+              sortable: false
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            created:
+              sortable: false
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            gid:
+              sortable: false
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            id:
+              sortable: false
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            dropbutton:
               sortable: false
               default_sort_order: asc
               align: ''
@@ -91,7 +140,7 @@ display:
               empty_column: false
               responsive: ''
           default: '-1'
-          empty_table: false
+          empty_table: true
       row:
         type: fields
       fields:
