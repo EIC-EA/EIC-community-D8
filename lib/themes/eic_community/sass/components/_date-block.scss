@@ -6,16 +6,16 @@
   }
 
   &--is-past {
-    background: $ecl-color-grey-10;
+    background: $ecl-color-grey-5;
     & span {
-      color: $ecl-color-blue;
+      color: rgba($ecl-color-black, .5);
     }
   }
 
   &--is-current {
     background: $ecl-color-yellow;
     & span {
-      color: #ffffff;
+      color: $ecl-color-blue;
     }
   }
 }
