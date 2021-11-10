@@ -56,6 +56,13 @@ class UserHelper {
   protected $userStorage;
 
   /**
+   * The entity type manager service.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
    * The current user.
    *
    * @var \Drupal\Core\Session\AccountInterface
@@ -72,6 +79,7 @@ class UserHelper {
    */
   public function __construct(EntityTypeManagerInterface $entity_type_manager, AccountInterface $account) {
     $this->userStorage = $entity_type_manager->getStorage('user');
+    $this->entityTypeManager = $entity_type_manager;
     $this->currentUser = $account;
   }
 
@@ -164,6 +172,19 @@ class UserHelper {
     }
 
     return realname_load($user) ?: '';
+  }
+
+  /**
+   * Returns the active member profile for the given user account.
+   *
+   * @param \Drupal\user\UserInterface $user
+   *  The user entity.
+   *
+   * @return \Drupal\profile\Entity\ProfileInterface|null
+   *  The profile. NULL if no matching entity was found.
+   */
+  public function getUserMemberProfile(UserInterface $user) {
+    return $this->entityTypeManager->getStorage('profile')->loadByUser($user, ProfileConst::MEMBER_PROFILE_TYPE_NAME);
   }
 
 }

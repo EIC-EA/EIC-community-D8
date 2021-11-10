@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Url;
 use Drupal\media\Entity\Media;
 use Drupal\file\Entity\File;
 use Drupal\eic_community\ValueObject\ImageValueObject;
@@ -33,10 +34,12 @@ function eic_community_preprocess_user(array &$variables) {
         ];
       }
       // Get the user realname.
-      $teaser['title'] = $user->realname;
+      $teaser['title'] = \Drupal::service('eic_user.helper')->getFullName($user);
       if ($user->toUrl()->access()) {
         $teaser['path'] = $user->toUrl()->toString();
       }
+      $teaser['icon_file_path'] = $variables['eic_icon_path'];
+      $teaser['actions'] = array_merge(_eic_community_get_user_contact_link($user), _eic_community_get_user_social_links($user));
       $variables['user_item'] = $teaser;
       break;
 
@@ -120,4 +123,77 @@ function _eic_community_display_document_contributors(array &$variables) {
 
     $variables['contributors'] = $contributors;
   }
+}
+
+/**
+ * Returns the 'render' array to use in templates for the user contact.
+ *
+ * @param UserInterface $account
+ *   The user account for which we want to get the contact link.
+ *
+ * @return array
+ *   The render array for templates.
+ */
+function _eic_community_get_user_contact_link(UserInterface $account) {
+  $current_user = \Drupal::currentUser();
+
+  if (!$current_user->hasPermission('access contact user page')) {
+    return [];
+  }
+
+  $link_options = [
+    'query' => [
+      'destination' => \Drupal::request()->getRequestUri(),
+    ],
+  ];
+  $result = [
+    'label' => t('Contact @username', ['@username' => $account->realname]),
+    'path' => Url::fromRoute('eic_private_message.user_private_message', ['user' => $account->id()], $link_options),
+    'icon' => [
+      'name' => 'mail',
+      'type' => 'custom',
+    ],
+  ];
+
+  return $result;
+}
+
+/**
+ * Returns the 'render' array to use in templates for the user social links.
+ *
+ * @param UserInterface $account
+ *   The user account for which we want to get the social links.
+ *
+ * @return array
+ *   The render array for templates.
+ */
+function _eic_community_get_user_social_links(UserInterface $account) {
+  $member_profile = \Drupal::service('eic_user.helper')->getUserMemberProfile($account);
+
+  // If we don't have a member profile for this user, skip.
+  if (empty($member_profile)) {
+    return [];
+  }
+
+  // If the member profile doesn't have social links, skip.
+  if ($member_profile->get('field_social_links')->isEmpty()) {
+    return [];
+  }
+
+  // Get the list of social platforms provided by the social_link_field module.
+  $social_platforms = \Drupal::service('plugin.manager.social_link_field.platform')->getPlatforms();
+
+  $links = [];
+  foreach ($member_profile->get('field_social_links')->getValue() as $social_item) {
+    $links[$social_item['social']] = [
+      'label' => $social_platforms[$social_item['social']]['name'],
+      'path' => $social_platforms[$social_item['social']]['urlPrefix'] . $social_item['link'],
+      'icon' => [
+        'name' => $social_item['social'],
+        'type' => 'custom',
+      ],
+    ];
+  }
+
+  return $links;
 }
