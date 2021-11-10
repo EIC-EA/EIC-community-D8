@@ -30,4 +30,5 @@ permissions:
   - 'invite users to group'
   - 'manage group_content_menu'
   - 'post comments'
+  - 'share content between groups'
   - 'view group invitations'
