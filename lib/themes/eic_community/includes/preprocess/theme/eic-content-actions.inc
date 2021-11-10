@@ -52,5 +52,14 @@ function eic_community_preprocess_eic_content_actions(array &$variables) {
     }
   }
 
+  if ($variables['user_activity_feed_link']) {
+    $variables['user_activity_feed_link']['icon'] = [
+      'type' => 'custom',
+      'name' => 'user',
+      'path' => $variables['eic_icon_path'],
+    ];
+    array_unshift($actions, $variables['user_activity_feed_link']);
+  }
+
   $variables['actions'] = $actions;
 }
