@@ -39,7 +39,7 @@ function eic_community_preprocess_user(array &$variables) {
         $teaser['path'] = $user->toUrl()->toString();
       }
       $teaser['icon_file_path'] = $variables['eic_icon_path'];
-      $teaser['actions'] = array_merge(_eic_community_get_user_contact_link($user), _eic_community_get_user_social_links($user));
+      $teaser['actions'] = array_merge([_eic_community_get_user_contact_link($user)], _eic_community_get_user_social_links($user));
       $variables['user_item'] = $teaser;
       break;
 
@@ -128,7 +128,7 @@ function _eic_community_display_document_contributors(array &$variables) {
 /**
  * Returns the 'render' array to use in templates for the user contact.
  *
- * @param UserInterface $account
+ * @param Drupal\user\UserInterface $account
  *   The user account for which we want to get the contact link.
  *
  * @return array
@@ -161,7 +161,7 @@ function _eic_community_get_user_contact_link(UserInterface $account) {
 /**
  * Returns the 'render' array to use in templates for the user social links.
  *
- * @param UserInterface $account
+ * @param Drupal\user\UserInterface $account
  *   The user account for which we want to get the social links.
  *
  * @return array
