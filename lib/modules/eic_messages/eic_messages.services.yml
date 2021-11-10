@@ -1,8 +1,14 @@
 services:
-  eic_messages.helper:
-    class: Drupal\eic_messages\MessageHelper
-    arguments: ['@queue']
+  eic_messages.queued_message_checker:
+    class: Drupal\eic_messages\Util\QueuedMessageChecker
+    arguments: [ '@datetime.time', '@config.factory', '@current_user', '@entity_type.manager' ]
+  eic_messages.message_bus:
+    class: Drupal\eic_messages\Service\MessageBus
+    arguments: [ '@eic_messages.queued_message_checker' ]
+    tags:
+      - { name: service_collector, tag: message_producer, call: addHandler }
 
+<<<<<<< HEAD
   # Message creator services
   eic_messages.message_creator.group:
     class: Drupal\eic_messages\Service\GroupMessageCreator
@@ -29,3 +35,16 @@ services:
     arguments: ['@eic_messages.message_creator.entity_block']
     tags:
       - { name: event_subscriber }
+=======
+  eic_messages.stream_handler:
+    class: Drupal\eic_messages\Handler\StreamHandler
+    arguments: [ '@entity_type.manager' ]
+    tags:
+      - { name: message_producer }
+  eic_messages.notification_handler:
+    class: Drupal\eic_messages\Handler\NotificationHandler
+    tags:
+      - { name: message_producer }
+    calls:
+      - [ setQueue, [ '@queue' ] ]
+>>>>>>> 4e0722732c640fbe58d3fe7e4b881a0714c52046

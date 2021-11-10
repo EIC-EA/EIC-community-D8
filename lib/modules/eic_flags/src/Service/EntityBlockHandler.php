@@ -198,7 +198,7 @@ class EntityBlockHandler {
 
     switch ($entity->getEntityTypeId()) {
       case 'group':
-        if (!$entity->access('update', $this->account)) {
+        if (!$entity->access('update', $account)) {
           break;
         }
 
@@ -210,7 +210,7 @@ class EntityBlockHandler {
         break;
 
       case 'node':
-        if (!$entity->access('update', $this->account)) {
+        if (!$entity->access('update', $account)) {
           break;
         }
 
@@ -220,7 +220,7 @@ class EntityBlockHandler {
           $group_content = reset($group_contents);
           $group = $group_content->getGroup();
 
-          if (!$group->access('update', $this->account)) {
+          if (!$group->access('update', $account)) {
             break;
           }
         }
