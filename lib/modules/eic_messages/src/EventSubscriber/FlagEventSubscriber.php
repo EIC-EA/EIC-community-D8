@@ -2,6 +2,7 @@
 
 namespace Drupal\eic_messages\EventSubscriber;
 
+use Drupal\Core\DependencyInjection\ClassResolverInterface;
 use Drupal\eic_flags\BlockFlagTypes;
 use Drupal\eic_messages\Service\EntityBlockMessageCreator;
 use Drupal\flag\Event\FlagEvents;
@@ -23,11 +24,11 @@ class FlagEventSubscriber implements EventSubscriberInterface {
   /**
    * FlagEventSubscriber constructor.
    *
-   * @param \Drupal\eic_messages\Service\EntityBlockMessageCreator $entity_block_message_creator
-   *   The Entity Block Message Creator service.
+   * @param \Drupal\Core\DependencyInjection\ClassResolverInterface $class_resolver
+   *   The Class resolver service.
    */
-  public function __construct(EntityBlockMessageCreator $entity_block_message_creator) {
-    $this->entityBlockMessageCreator = $entity_block_message_creator;
+  public function __construct(ClassResolverInterface $class_resolver) {
+    $this->entityBlockMessageCreator = $class_resolver->getInstanceFromDefinition(EntityBlockMessageCreator::class);
   }
 
   /**

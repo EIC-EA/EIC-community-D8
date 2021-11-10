@@ -2,15 +2,58 @@
 
 namespace Drupal\eic_messages\Service;
 
+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\eic_flags\BlockFlagTypes;
 use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_messages\Util\NotificationMessageTemplates;
 use Drupal\flag\FlaggingInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Class for creating messages notifications when an entity is blocked.
  */
-class EntityBlockMessageCreator extends MessageCreatorBase {
+class EntityBlockMessageCreator implements ContainerInjectionInterface {
+
+  /**
+   * The Entity type manager service.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  private $entityTypeManager;
+
+  /**
+   * The Entity type manager service.
+   *
+   * @var \Drupal\eic_messages\Service\MessageBusInterface
+   */
+  private $messageBus;
+
+  /**
+   * EntityBlockMessageCreator constructor.
+   *
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The Entity type manager service.
+   * @param \Drupal\eic_messages\Service\MessageBusInterface $message_bus
+   *   The Message bus service.
+   */
+  public function __construct(
+    EntityTypeManagerInterface $entity_type_manager,
+    MessageBusInterface $message_bus
+  ) {
+    $this->entityTypeManager = $entity_type_manager;
+    $this->messageBus = $message_bus;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('entity_type.manager'),
+      $container->get('eic_messages.message_bus')
+    );
+  }
 
   /**
    * Creates a notification message to be sent after blocking an entity.
@@ -54,7 +97,6 @@ class EntityBlockMessageCreator extends MessageCreatorBase {
         break;
     }
 
-    $messages = [];
     foreach ($to as $user) {
       $message = $this->entityTypeManager->getStorage('message')->create(
         [
@@ -69,10 +111,8 @@ class EntityBlockMessageCreator extends MessageCreatorBase {
         $message->set('field_event_executing_user', $flagging->getOwnerId());
       }
 
-      $messages[] = $message;
+      $this->messageBus->dispatch($message);
     }
-
-    $this->processMessages($messages);
   }
 
 }

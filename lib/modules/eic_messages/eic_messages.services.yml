@@ -20,13 +20,9 @@ services:
     calls:
       - [ setQueue, [ '@queue' ] ]
 
-  eic_messages.message_creator.entity_block:
-    class: Drupal\eic_messages\Service\EntityBlockMessageCreator
-    arguments: ['@datetime.time', '@config.factory', '@current_user', '@entity_type.manager', '@eic_messages.helper', '@eic_user.helper']
-
   # Message event subscribers
   eic_messages.flag_event_subscriber:
     class: Drupal\eic_messages\EventSubscriber\FlagEventSubscriber
-    arguments: ['@eic_messages.message_creator.entity_block']
+    arguments: ['@class_resolver']
     tags:
       - { name: event_subscriber }
