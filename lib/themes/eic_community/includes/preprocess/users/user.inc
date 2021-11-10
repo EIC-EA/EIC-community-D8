@@ -15,7 +15,32 @@ use Drupal\user\UserInterface;
  * Implements hook_preprocess_user().
  */
 function eic_community_preprocess_user(array &$variables) {
+  /** @var \Drupal\user\UserInterface $user */
+  $user = $variables['elements']['#user'];
 
+  switch ($variables['elements']['#view_mode']) {
+    case 'teaser':
+      $teaser = [];
+      // Get the user profile.
+      /** @var \Drupal\media\MediaInterface $media */
+      $media = $user->get('field_media')->referencedEntities()[0];
+      if ($media && !empty($media->get('oe_media_image')->getValue())) {
+        $style_name = 'oe_theme_list_item';
+        $image_item = ImageValueObject::fromStyledImageItem($media->get('oe_media_image')->first(), $style_name);
+        $teaser['image'] = [
+          'src' => $image_item->getSource(),
+          'alt' => $image_item->getAlt(),
+        ];
+      }
+      // Get the user realname.
+      $teaser['title'] = $user->realname;
+      if ($user->toUrl()->access()) {
+        $teaser['path'] = $user->toUrl()->toString();
+      }
+      $variables['user_item'] = $teaser;
+      break;
+
+  }
 }
 
 /**

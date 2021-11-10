@@ -122,7 +122,7 @@ display:
               video: teaser
               wiki_page: teaser
             'entity:user':
-              user: compact
+              user: teaser
       fields:
         aggregated_changed:
           table: search_api_index_global
