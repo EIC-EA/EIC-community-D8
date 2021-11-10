@@ -10,6 +10,7 @@ label: 'Bookmark (Content)'
 bundles:
   - discussion
   - document
+  - event
   - gallery
   - news
   - story

@@ -1,0 +1,73 @@
+{#
+Parameters:
+- "items" (array) (default: []): array of radio_button
+- "name" (string)
+- "invalid" (boolean) (default: false)
+- "required" (boolean) (default: false)
+- "extra_classes" (optional) (string) (default: '')
+#}
+
+{% set _css_group_class = 'ecl-form-group' %}
+
+{% if extra_group_classes is defined and extra_group_classes is not empty %}
+  {% set _css_group_class = _css_group_class ~ ' ' ~ extra_group_classes %}
+{% endif %}
+
+ {% if invalid and invalid_text is not empty %}
+   <div class="ecl-feedback-message">
+     {{ invalid_text }}
+   </div>
+ {% endif %}
+
+<fieldset class="{{ _css_group_class }}" aria-describedby="radio-default-helper">
+  <legend class="ecl-form-label">{{ label }}</legend>
+
+
+  {% for item in items %}
+    {% embed "@theme/patterns/components/well.html.twig" with {
+      extra_classes: 'ecl-well--is-blue',
+    } %}
+      {% block content %}
+        <div class="ecl-radio ecl-radio-block ecl-radio-block">
+          <input id="{{ item.id }}" name="{{ name }}" class="ecl-radio__input" type="radio" value="{{ item.value }}">
+          <label class="ecl-radio__label" for="{{ item.id }}">
+            <span class="ecl-radio__box"></span>
+            <span class="ecl-radio__content">
+              <span class="ecl-radio__title">
+                {% if item.icon and icon_file_path %}
+                  {% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with {
+                    icon: {
+                      type: item.icon.type,
+                      name: item.icon.name,
+                      path: icon_file_path,
+                      size: 'm',
+                    },
+                  } %}
+                {% endif %}
+                  {{ item.label }}
+              </span>
+              {{ item.text }}
+
+              {% if item.field is not empty %}
+
+                <div class="ecl-form__radio-items-wrapper">
+                  <div class="ecl-form__radio-items ecl-form__radio-items--list">
+                      {%- for _item in item.field.items %}
+                        <div class="ecl-form__radio-item">
+                          {% include '@ecl-twig/ec-component-radio/ecl-radio-button.html.twig' with _item|merge({
+                            name: item.field.name
+                          }) only %}
+                        </div>
+                      {% endfor -%}
+                  </div>
+                </div>
+
+              {% endif %}
+            </span>
+          </label>
+        </div>
+      {% endblock %}
+    {% endembed %}
+  {% endfor %}
+
+</fieldset>

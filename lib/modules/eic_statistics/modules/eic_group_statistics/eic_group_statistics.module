@@ -26,6 +26,7 @@ function eic_group_statistics_group_content_insert(EntityInterface $entity) {
     case 'group-group_membership':
     case 'group-group_node-discussion':
     case 'group-group_node-document':
+    case 'group-group_node-event':
     case 'group-group_node-gallery':
     case 'group-group_node-wiki_page':
       \Drupal::classResolver(EntityOperations::class)
@@ -55,6 +56,7 @@ function eic_group_statistics_node_delete(EntityInterface $entity) {
   switch ($entity->bundle()) {
     case 'discussion':
     case 'document':
+    case 'event':
     case 'gallery':
     case 'wiki_page':
       // We need to make sure the node belongs to a group content, otherwise we
@@ -144,6 +146,7 @@ function eic_group_statistics_node_update(EntityInterface $entity) {
   switch ($entity->bundle()) {
     case 'discussion':
     case 'document':
+    case 'event':
     case 'gallery':
     case 'wiki_page':
       // We need to make sure the node belongs to a group content, otherwise we

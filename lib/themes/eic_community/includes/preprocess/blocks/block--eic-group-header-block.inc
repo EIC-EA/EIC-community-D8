@@ -14,10 +14,11 @@ use Drupal\eic_overviews\GlobalOverviewPages;
 function eic_community_preprocess_eic_group_header_block(array &$variables) {
   /** @var \Drupal\group\Entity\GroupInterface $group */
   $group = $variables['group'];
+  $hero_field_id = 'group' === $group->getGroupType()->id() ? 'field_hero' : 'field_header_visual';
 
   // Adds group banner image.
-  if (!$group->get('field_hero')->isEmpty()) {
-    $media = \Drupal::service('entity.repository')->getTranslationFromContext($group->get('field_hero')->entity, $group->language()->getId());
+  if (!$group->get($hero_field_id)->isEmpty()) {
+    $media = \Drupal::service('entity.repository')->getTranslationFromContext($group->get($hero_field_id)->entity, $group->language()->getId());
     $image_item = ImageValueObject::fromImageItem($media->get('oe_media_image')->first());
     $variables['group_values']['image'] = [
       'src' => $image_item->getSource(),
@@ -168,11 +169,10 @@ function eic_community_preprocess_eic_group_header_block(array &$variables) {
 
   $variables['group_values']['stats'] = $stats;
 
-  $group_visibility = \Drupal::service('oec_group_flex.helper')->getGroupVisibilitySettings($group);
-  $tag = strpos($group_visibility['plugin_id'], '_') !== FALSE ? strstr($group_visibility['plugin_id'], '_', TRUE) : $group_visibility['plugin_id'];
+  $tag = \Drupal::service('oec_group_flex.helper')->getGroupVisibilityTagLabel($group);
 
   $variables['group_values']['tags'][] = [
-    'extra_classes' => 'ecl-tag--is-' . $tag,
+    'extra_classes' => 'ecl-tag--is-' . strtolower($tag),
     'tag' => [
       'type' => 'button',
       'label' => $tag,

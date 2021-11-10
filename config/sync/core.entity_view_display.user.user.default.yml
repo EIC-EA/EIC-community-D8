@@ -16,6 +16,7 @@ dependencies:
     - field.field.user.user.field_smed_id
     - field.field.user.user.field_updated_profile_by_service
     - field.field.user.user.field_updated_profile_by_user
+    - field.field.user.user.field_user_can_contact
     - field.field.user.user.field_user_status
   module:
     - options
@@ -143,6 +144,16 @@ content:
       timezone: ''
     third_party_settings: {  }
     type: timestamp
+    region: content
+  field_user_can_contact:
+    weight: 15
+    label: above
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    type: boolean
     region: content
   field_user_status:
     weight: 13

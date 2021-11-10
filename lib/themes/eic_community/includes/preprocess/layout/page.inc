@@ -5,6 +5,7 @@
  * Contains implementation for hook_preprocess_page().
  */
 
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Menu\MenuTreeParameters;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Url;
@@ -128,6 +129,8 @@ function eic_community_preprocess_page(array &$variables): void {
   if ($variables['is_front']) {
     _preprocess_front_page($variables);
   }
+
+  _preprocess_group_page($variables);
 }
 
 /**
@@ -246,4 +249,21 @@ function _preprocess_front_page(&$variables) {
   }
 
   $variables['front'] = $front;
+}
+
+/**
+ * Preprocess front page.
+ */
+function _preprocess_group_page(&$variables) {
+  // We need to add missing cache tags related to the group otherwise
+  // theme suggestions will not be updated when the group changes status or
+  // after removing a group membership.
+  if ($group = \Drupal::service('eic_groups.helper')->isGroupPage()) {
+    if (!isset($variables['#cache']['tags'])) {
+      $variables['#cache']['tags'] = $group->getCacheTags();
+    }
+    else {
+      $variables['#cache']['tags'] = Cache::mergeTags($variables['#cache'], $group->getCacheTags());
+    }
+  }
 }
