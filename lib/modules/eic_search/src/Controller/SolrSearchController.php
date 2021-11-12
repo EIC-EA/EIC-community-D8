@@ -115,14 +115,22 @@ class SolrSearchController extends ControllerBase {
       // If source supports date filter and query has a from or to date.
       if ($source->supportDateFilter() && ($from_date || $end_date)) {
         $date_fields_id = $source->getDateIntervalField();
-        $date_query = $date_fields_id['from'] . ":[$from_date TO  *]";
+        $date_from_id = $date_fields_id['from'];
+        $date_end_id = $date_fields_id['to'];
 
         // If user only selected one day, we will only filter on the start date.
         // for eg: user select on widget 23-11-2021 - 23-11-2021 (double click)
         // we only do a query from 23-11-2021 to *.
         $end_date = $end_date === $from_date ? '*' : $end_date;
+        $dates_query = [];
 
-        $date_query .= ' AND ' . $date_fields_id['to'] . ":[* TO  $end_date]";
+        $dates_query[] = "($date_from_id:[$from_date TO $end_date] AND $date_end_id:[$from_date TO $end_date])";
+        $dates_query[] = "($date_from_id:[* TO $end_date] AND $date_end_id:[$from_date TO $end_date])";
+        $dates_query[] = "($date_from_id:[$from_date TO $end_date] AND $date_end_id:[$end_date TO *])";
+        $dates_query[] = "($date_from_id:[* TO $from_date] AND $date_end_id:[$end_date TO *])";
+
+
+        $date_query = implode(' OR ', $dates_query);
 
         $date_query = "($date_query)";
         $query_fields_string .= empty($query_fields_string) ?
