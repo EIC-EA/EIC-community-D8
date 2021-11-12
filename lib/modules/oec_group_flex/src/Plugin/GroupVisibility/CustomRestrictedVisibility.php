@@ -136,9 +136,12 @@ class CustomRestrictedVisibility extends RestrictedGroupVisibilityBase implement
     /** @var \Drupal\oec_group_flex\Plugin\CustomRestrictedVisibilityBase $pluginInstance */
     foreach ($this->plugins as $id => $pluginInstance) {
       foreach ($pluginInstance->getPluginForm() as $pluginForm) {
+
+        // In some rare cases, group_visibility_record is null.
         if (!$group_visibility_record) {
           continue;
         }
+
         $form[$form_fields_container][$id] = $pluginInstance->setDefaultFormValues($pluginForm, $group_visibility_record);
       }
     }

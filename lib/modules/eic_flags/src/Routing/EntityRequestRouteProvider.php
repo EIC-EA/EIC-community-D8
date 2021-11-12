@@ -64,7 +64,8 @@ class EntityRequestRouteProvider implements EntityRouteProviderInterface,
       $new_request_route = $this->getRouteByTemplate(
         $entity_type,
         $handler,
-        'new-request'
+        'new-request',
+        ['_entity_form' => $entity_type->id() . '.new-request']
       );
       if ($new_request_route) {
         $new_request_route->setRequirement('_request_send_access', 'TRUE');
@@ -75,11 +76,27 @@ class EntityRequestRouteProvider implements EntityRouteProviderInterface,
         );
       }
 
+      $new_request_route_api = $this->getRouteByTemplate(
+        $entity_type,
+        $handler,
+        'new-request-api',
+        ['_controller' => '\Drupal\eic_flags\Controller\RequestEndpointController::request']
+      );
+      if ($new_request_route_api) {
+        $new_request_route_api->setRequirement('_request_send_access', 'TRUE');
+
+        $collection->add(
+          'entity.' . $entity_type->id() . '.new_request_api',
+          $new_request_route_api
+        );
+      }
+
       // Define a new request and close request route for the entity type.
       $close_request_route = $this->getRouteByTemplate(
         $entity_type,
         $handler,
-        'close-request'
+        'close-request',
+        ['_entity_form' => $entity_type->id() . '.close-request']
       );
       if ($close_request_route) {
         $close_request_route
@@ -112,7 +129,8 @@ class EntityRequestRouteProvider implements EntityRouteProviderInterface,
   protected function getRouteByTemplate(
     EntityTypeInterface $entity_type,
     HandlerInterface $handler,
-    string $template
+    string $template,
+    array $defaults = []
   ) {
     if (!$entity_type->hasLinkTemplate($template)) {
       return NULL;
@@ -120,9 +138,8 @@ class EntityRequestRouteProvider implements EntityRouteProviderInterface,
 
     $route = (new Route($entity_type->getLinkTemplate($template)))
       ->addDefaults([
-        '_entity_form' => $entity_type->id() . '.' . $template,
-        '_title' => ucfirst($handler->getType()),
-      ])
+          '_title' => ucfirst($handler->getType()),
+        ] + $defaults)
       ->setRequirement($entity_type->id(), '\d+')
       ->setOption('entity_type_id', $entity_type->id());
 

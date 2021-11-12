@@ -13,8 +13,16 @@
  * @see template_preprocess_overview_page()
  */
 #}
-<div{{ attributes.addClass('overview-page') }}>
-  {% if content %}
-    {{- content -}}
-  {% endif %}
-</div>
+{% block page_header %}
+  {% include "@theme/patterns/compositions/overview-header.html.twig" with {
+    title_element: 'h1',
+    title: content.title,
+    image: {
+      src: banner_image_url
+    },
+  } only %}
+
+  {% include "@theme/patterns/compositions/breadcrumb.html.twig" with breadcrumb|default({}) only %}
+{% endblock %}
+
+{{ content }}

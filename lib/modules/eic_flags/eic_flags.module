@@ -14,8 +14,8 @@ use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\eic_flags\BlockFlagTypes;
 use Drupal\eic_flags\Form\EntityBlockForm;
-use Drupal\eic_flags\Form\RequestCloseForm;
 use Drupal\eic_flags\Form\NewRequestForm;
+use Drupal\eic_flags\Form\RequestCloseForm;
 use Drupal\eic_flags\Hooks\EntityOperations;
 use Drupal\eic_flags\Hooks\FlagTokens;
 use Drupal\eic_flags\RequestStatus;
@@ -126,6 +126,10 @@ function eic_flags_entity_type_build(array &$entity_types) {
       ->setLinkTemplate(
         'new-request',
         '/request/{request_type}/' . $entity_id . '/{' . $entity_id . '}'
+      )
+      ->setLinkTemplate(
+        'new-request-api',
+        '/api/request/{request_type}/' . $entity_id . '/{' . $entity_id . '}'
       )
       ->setLinkTemplate(
         'close-request',
