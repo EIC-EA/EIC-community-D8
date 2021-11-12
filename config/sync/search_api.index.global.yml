@@ -1032,6 +1032,22 @@ field_settings:
     dependencies:
       module:
         - user
+  user_changed:
+    label: '[User] Changed'
+    datasource_id: 'entity:user'
+    property_path: changed
+    type: date
+    dependencies:
+      module:
+        - user
+  user_created:
+    label: '[User] Created'
+    datasource_id: 'entity:user'
+    property_path: created
+    type: date
+    dependencies:
+      module:
+        - user
   user_first_name:
     label: '[User] First name'
     datasource_id: 'entity:user'
@@ -1066,7 +1082,7 @@ field_settings:
       config:
         - field.storage.user.field_last_name
   user_mail:
-    label: Email
+    label: '[User] Email'
     datasource_id: 'entity:user'
     property_path: mail
     type: string
@@ -1188,7 +1204,7 @@ field_settings:
         - profile
         - taxonomy
   user_profile_role_array:
-    label: Roles
+    label: '[User] Roles'
     datasource_id: 'entity:user'
     property_path: roles
     type: string

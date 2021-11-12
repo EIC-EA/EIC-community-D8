@@ -1,7 +1,7 @@
 {#
 /**
  * @file
- * Theme override to display a document.
+ * Theme override to display a wiki_page node.
  *
  * @see ./themes/custom/eic_community/templates/content/node.html.twig
  */
@@ -14,8 +14,9 @@
   <div {{ attributes }}>
     {{ title_prefix }}
     {{ title_suffix }}
-    {% include "@theme/patterns/compositions/document/document.teaser.html.twig" with document_item|default({})|merge({
+    {% include "@theme/patterns/compositions/story/story.teaser.html.twig" with story_item|default({})|merge({
       title: label|default(''),
+      description: story_item.description|striptags|default(''),
       path: url,
     }) %}
   </div>

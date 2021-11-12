@@ -1,7 +1,7 @@
 {#
 /**
  * @file
- * Theme override to display a document.
+ * Theme override to display a node video.
  *
  * @see ./themes/custom/eic_community/templates/content/node.html.twig
  */
@@ -14,7 +14,7 @@
   <div {{ attributes }}>
     {{ title_prefix }}
     {{ title_suffix }}
-    {% include "@theme/patterns/compositions/document/document.teaser.html.twig" with document_item|default({})|merge({
+    {% include "@theme/patterns/compositions/video/video.teaser.html.twig" with video_item|default({})|merge({
       title: label|default(''),
       path: url,
     }) %}

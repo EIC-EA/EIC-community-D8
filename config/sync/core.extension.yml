@@ -47,6 +47,7 @@ module:
   eic_fragment_fact_figure: 0
   eic_group_statistics: 0
   eic_groups: 0
+  eic_helper: 0
   eic_homepage: 0
   eic_media: 0
   eic_media_document: 0

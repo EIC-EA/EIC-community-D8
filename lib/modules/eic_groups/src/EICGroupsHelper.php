@@ -80,7 +80,7 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
   protected $time;
 
   /**
-   * The OEC Group flex helper service.
+   * The oec_group_flex.helper service.
    *
    * @var \Drupal\oec_group_flex\OECGroupFlexHelper
    */
@@ -91,7 +91,7 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
    *
    * @var \Drupal\group_flex\Plugin\GroupVisibilityManager
    */
-  protected $groupVibilityManager;
+  protected $groupVisibilityManager;
 
   /**
    * The current path service.
@@ -114,7 +114,7 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
    * @param \Drupal\Component\Datetime\TimeInterface $time
    *   The time service.
    * @param \Drupal\oec_group_flex\OECGroupFlexHelper $oec_group_flex_helper
-   *   The OEC Group flex helper service.
+   *   The oec_group_flex.helper service.
    * @param \Drupal\group_flex\Plugin\GroupVisibilityManager $group_vibility_manager
    *   The group visibility manager service.
    * @param \Drupal\Core\Path\CurrentPathStack $current_path
@@ -127,7 +127,7 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
     AccountProxyInterface $current_user,
     TimeInterface $time,
     OECGroupFlexHelper $oec_group_flex_helper,
-    GroupVisibilityManager $group_vibility_manager,
+    GroupVisibilityManager $group_visibility_manager,
     CurrentPathStack $current_path
   ) {
     $this->database = $database;
@@ -136,7 +136,7 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
     $this->currentUser = $current_user;
     $this->time = $time;
     $this->oecGroupFlexHelper = $oec_group_flex_helper;
-    $this->groupVibilityManager = $group_vibility_manager;
+    $this->groupVisibilityManager = $group_visibility_manager;
     $this->currentPath = $current_path;
   }
 
@@ -361,35 +361,65 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
    *   - joining_method: the GroupJoiningMethod plugin type.
    * @param string $plugin_id
    *   The plugin ID.
+   * @param string $format
+   *   The format of the label. Can be 'default' or 'short'. Defaults to
+   *   'default'.
    *
    * @return \Drupal\Core\StringTranslation\TranslatableMarkup|string
    *   The description for the given plugin.
    */
-  public function getGroupFlexPluginTitle(string $plugin_type, string $plugin_id) {
+  public function getGroupFlexPluginTitle(string $plugin_type, string $plugin_id, string $format = 'default') {
     $key = "$plugin_type-$plugin_id";
 
-    switch ($key) {
-      case 'visibility-' . GroupVisibilityType::GROUP_VISIBILITY_PUBLIC:
-        return $this->t('Public group');
+    $labels = [
+      'visibility-' . GroupVisibilityType::GROUP_VISIBILITY_PUBLIC => [
+        'default' => $this->t('Public group'),
+        'short' => $this->t('Public'),
+      ],
+      'visibility-' . GroupVisibilityType::GROUP_VISIBILITY_COMMUNITY => [
+        'default' => $this->t('Community members only'),
+        'short' => $this->t('Community members'),
+      ],
+      'visibility-' . GroupVisibilityType::GROUP_VISIBILITY_CUSTOM_RESTRICTED => [
+        'default' => $this->t('Restricted group'),
+        'short' => $this->t('Restricted'),
+      ],
+      'visibility-' . GroupVisibilityType::GROUP_VISIBILITY_PRIVATE => [
+        'default' => $this->t('Private group'),
+        'short' => $this->t('Private'),
+      ],
+      'joining_method-' . GroupJoiningMethodType::GROUP_JOINING_METHOD_TU_OPEN => [
+        'default' => $this->t('Open'),
+        'short' => $this->t('Open'),
+      ],
+      'joining_method-' . GroupJoiningMethodType::GROUP_JOINING_METHOD_TU_MEMBERSHIP_REQUEST => [
+        'default' => $this->t('Moderated'),
+        'short' => $this->t('Moderated'),
+      ],
+    ];
 
-      case 'visibility-' . GroupVisibilityType::GROUP_VISIBILITY_COMMUNITY:
-        return $this->t('Community members only');
-
-      case 'visibility-' . GroupVisibilityType::GROUP_VISIBILITY_CUSTOM_RESTRICTED:
-        return $this->t('Restricted group');
-
-      case 'visibility-' . GroupVisibilityType::GROUP_VISIBILITY_PRIVATE:
-        return $this->t('Private group');
-
-      case 'joining_method-' . GroupJoiningMethodType::GROUP_JOINING_METHOD_TU_OPEN:
-        return $this->t('Open');
-
-      case 'joining_method-' . GroupJoiningMethodType::GROUP_JOINING_METHOD_TU_MEMBERSHIP_REQUEST:
-        return $this->t('Moderated');
-
-      default:
-        return '';
+    if (!empty($labels[$key][$format])) {
+      return $labels[$key][$format];
     }
+
+    return '';
+  }
+
+  /**
+   * Returns the visibility label for the given group entity.
+   *
+   * @param \Drupal\group\Entity\GroupInterface $group
+   *   The group entity to check.
+   * @param string $format
+   *   The format of the label. Can be 'default' or 'short'. Defaults to
+   *   'default'.
+   *
+   * @return string
+   *   The visibility label.
+   */
+  public function getGroupVisibilityLabel(GroupInterface $group, string $format = 'default') {
+    $group_visibility = $this->oecGroupFlexHelper->getGroupVisibilitySettings($group);
+    return $this->getGroupFlexPluginTitle('visibility', $group_visibility['plugin_id'], $format);
   }
 
   /**
@@ -515,7 +545,7 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
       return $is_group_page;
     }
 
-    $group_visibility_plugin = $this->groupVibilityManager->createInstance($group_visibility_settings['plugin_id']);
+    $group_visibility_plugin = $this->groupVisibilityManager->createInstance($group_visibility_settings['plugin_id']);
 
     if ($group_visibility_plugin instanceof CustomRestrictedVisibility) {
       $is_group_page = FALSE;

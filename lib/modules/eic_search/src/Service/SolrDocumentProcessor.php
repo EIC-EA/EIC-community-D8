@@ -410,7 +410,7 @@ class SolrDocumentProcessor {
       $document,
       'its_content_comment_count',
       $fields,
-      $this->commentsHelper->countNodeComments($node)
+      $this->commentsHelper->countEntityComments($node)
     );
     $this->addOrUpdateDocumentField(
       $document,
