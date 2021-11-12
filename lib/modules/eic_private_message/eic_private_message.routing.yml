@@ -1,0 +1,20 @@
+eic_private_message.user_private_message:
+  path: '/user/{user}/contact'
+  defaults:
+    _title: 'User contact form'
+    _form: '\Drupal\eic_private_message\Form\PrivateMessageForm'
+  requirements:
+    _permission: 'access contact user page'
+
+eic_private_message.group_private_message:
+  path: '/group/{group}/contact'
+  defaults:
+    _title: 'Group users contact form'
+    _form: '\Drupal\eic_private_message\Form\PrivateMessageForm'
+  requirements:
+    _permission: 'access contact group users page'
+    group: \d+
+  options:
+    parameters:
+      group:
+        type: entity:group

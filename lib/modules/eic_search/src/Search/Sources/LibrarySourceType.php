@@ -102,6 +102,10 @@ class LibrarySourceType extends SourceType {
         'label' => $this->t('Last highlighted', [], ['context' => 'eic_search']),
         'DESC' => $this->t('Last highlighted', [], ['context' => 'eic_search']),
       ],
+      'score' => [
+        'label' => $this->t('Relevance', [], ['context' => 'eic_search']),
+        'DESC' => $this->t('Relevance', [], ['context' => 'eic_search']),
+      ],
     ];
   }
 
@@ -127,6 +131,7 @@ class LibrarySourceType extends SourceType {
       'tm_global_title',
       'tm_X3b_en_saa_field_document_media',
       'sm_filename',
+      'tm_X3b_en_content_gallery_slide_name',
     ];
   }
 

@@ -32,7 +32,7 @@ class GroupContentNodeAccessControlHandler extends GroupContentAccessControlHand
     }
 
     // Allow access to power users.
-    if (UserHelper::isPowerUser($account)) {
+    if ($is_power_user = UserHelper::isPowerUser($account)) {
       $access = GroupAccessResult::allowed()
         ->addCacheableDependency($account)
         ->addCacheableDependency($entity);
@@ -40,6 +40,10 @@ class GroupContentNodeAccessControlHandler extends GroupContentAccessControlHand
 
     switch ($operation) {
       case 'view':
+        if ($is_power_user) {
+          break;
+        }
+
         $group_content = reset($group_contents);
         $group = $group_content->getGroup();
         $membership = $group->getMember($account);
@@ -77,6 +81,11 @@ class GroupContentNodeAccessControlHandler extends GroupContentAccessControlHand
           break;
         }
 
+        // Allow access to power users.
+        if ($is_power_user) {
+          break;
+        }
+
         // We check if the user is a member of a group where this node is
         // referenced and if so, we allow access to edit the node if the owner
         // allowed members to do so via "member_content_edit_access" property.
@@ -94,6 +103,13 @@ class GroupContentNodeAccessControlHandler extends GroupContentAccessControlHand
               ->addCacheableDependency($entity);
             break;
           }
+        }
+        break;
+
+      case 'delete':
+        // Allow access to power users.
+        if ($is_power_user) {
+          break;
         }
         break;
 

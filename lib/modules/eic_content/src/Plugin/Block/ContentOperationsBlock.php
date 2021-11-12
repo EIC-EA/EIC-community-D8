@@ -5,8 +5,8 @@ namespace Drupal\eic_content\Plugin\Block;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -60,6 +60,53 @@ class ContentOperationsBlock extends BlockBase implements ContainerFactoryPlugin
       $plugin_definition,
       $container->get('entity_type.manager')
     );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function defaultConfiguration() {
+    return [
+      'title' => '',
+      'description' => [
+        'value' => NULL,
+        'format' => 'basic_text',
+      ],
+      'show_user_activity_feed_link' => TRUE,
+    ];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function blockForm($form, FormStateInterface $form_state) {
+    $form['title'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Title display'),
+      '#default_value' => $this->configuration['title'],
+      '#description' => $this->t('Text to be displayed as title when viewing the block.'),
+    ];
+    $form['description'] = [
+      '#type' => 'text_format',
+      '#title' => $this->t('Description'),
+      '#format' => $this->configuration['description']['format'],
+      '#default_value' => $this->configuration['description']['value'],
+    ];
+    $form['show_user_activity_feed_link'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Show user activity feed link'),
+      '#default_value' => $this->configuration['show_user_activity_feed_link'],
+    ];
+    return $form;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function blockSubmit($form, FormStateInterface $form_state) {
+    $this->configuration['title'] = $form_state->getValue('title');
+    $this->configuration['description'] = $form_state->getValue('description');
+    $this->configuration['show_user_activity_feed_link'] = $form_state->getValue('show_user_activity_feed_link');
   }
 
   /**
@@ -133,6 +180,30 @@ class ContentOperationsBlock extends BlockBase implements ContainerFactoryPlugin
         ],
       ],
     ];
+
+    // Add title field to the renderable array.
+    if (!empty($this->configuration['title'])) {
+      $build['#title'] = $this->configuration['title'];
+    }
+
+    // Add description field to the renderable array.
+    if (!empty($this->configuration['description']['value'])) {
+      $build['#description'] = $this->configuration['description']['value'];
+    }
+
+    // Add user's activity feed link to the renderable array.
+    if ($this->configuration['show_user_activity_feed_link']) {
+      $user_feed_link = Url::fromRoute(
+        'entity.user.canonical',
+        [
+          'user' => \Drupal::currentUser()->id(),
+        ]
+      );
+      $build['#user_activity_feed_link']['link'] = [
+        'label' => $this->t('My activity feed'),
+        'path' => $user_feed_link->toString(),
+      ];
+    }
 
     $cacheable_metadata->applyTo($build);
 

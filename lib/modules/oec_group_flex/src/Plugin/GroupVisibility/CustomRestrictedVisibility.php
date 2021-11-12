@@ -136,6 +136,12 @@ class CustomRestrictedVisibility extends RestrictedGroupVisibilityBase implement
     /** @var \Drupal\oec_group_flex\Plugin\CustomRestrictedVisibilityBase $pluginInstance */
     foreach ($this->plugins as $id => $pluginInstance) {
       foreach ($pluginInstance->getPluginForm() as $pluginForm) {
+
+        // In some rare cases, group_visibility_record is null.
+        if (!$group_visibility_record) {
+          continue;
+        }
+
         $form[$form_fields_container][$id] = $pluginInstance->setDefaultFormValues($pluginForm, $group_visibility_record);
       }
     }
@@ -256,6 +262,16 @@ class CustomRestrictedVisibility extends RestrictedGroupVisibilityBase implement
    */
   private function skipAccessCheck(GroupInterface $entity, $operation, AccountInterface $account) {
     return ($operation !== 'view' || !$entity->isPublished() || $entity->getMember($account) || !$entity->hasPermission('view group', $account));
+  }
+
+  /**
+   * Gets the custom restricted visibility plugins.
+   *
+   * @return \Drupal\oec_group_flex\Plugin\GroupVisibility\CustomRestrictedVisibilityInterface[]
+   *   Array of custom restricted visibility plugins.
+   */
+  public function getCustomRestrictedPlugins() {
+    return $this->plugins;
   }
 
 }

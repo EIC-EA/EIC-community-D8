@@ -4,7 +4,7 @@ eic_groups.about_page:
     _controller: '\Drupal\eic_groups\Controller\AboutPageController::build'
     _title_callback: '\Drupal\eic_groups\Controller\AboutPageController::title'
   requirements:
-    _group_permission: 'view group'
+    _custom_access: '\Drupal\eic_groups\Controller\AboutPageController::access'
 
 eic_groups.discussion_add_comment:
   path: '/api/discussion/{discussion_id}/comment'
@@ -85,3 +85,18 @@ eic_groups.group.highlight_content:
     _highlight_group_content: 'TRUE'
     node: \d+
     group: \d+
+
+eic_groups.group_content.resend_invite:
+  path: '/group/{group}/invite/{group_content}/resend'
+  defaults:
+    _controller: '\Drupal\eic_groups\Controller\GroupMembershipInvitationController::resendInvite'
+  requirements:
+    _group_permission: 'administer members'
+    group: \d+
+    group_content: \d+
+  options:
+    parameters:
+      group_content:
+        type: entity:group_content
+      group:
+        type: entity:group

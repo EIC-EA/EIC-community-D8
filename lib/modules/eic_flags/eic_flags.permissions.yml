@@ -16,3 +16,8 @@ manage archival deletion requests:
   title: Manage archival and deletion requests
   description: 'Allow the user to manage archival and deletion requests'
   restrict access: TRUE
+
+manage blocked entities:
+  title: Manage blocked entities
+  description: 'Allow the user to access administration pages related to blocked entities'
+  restrict access: TRUE

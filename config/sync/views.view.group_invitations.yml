@@ -4,7 +4,9 @@ status: true
 dependencies:
   config:
     - field.storage.group_content.group_roles
+    - field.storage.group_content.invitee_mail
   module:
+    - eic_groups
     - group
     - user
 _core:
@@ -529,6 +531,57 @@ display:
           absolute: false
           entity_type: group_content
           plugin_id: entity_link_delete
+        resend_invitation:
+          id: resend_invitation
+          table: group_content
+          field: resend_invitation
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: ''
+          exclude: true
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          text: 'Resend invitation'
+          entity_type: group_content
+          plugin_id: resend_invitation
         dropbutton:
           id: dropbutton
           table: views
@@ -579,6 +632,7 @@ display:
           hide_alter_empty: true
           fields:
             delete_group_content: delete_group_content
+            resend_invitation: resend_invitation
             invitee_mail: '0'
             name: '0'
             group_roles: '0'
@@ -705,9 +759,9 @@ display:
       contexts:
         - 'languages:language_content'
         - 'languages:language_interface'
+        - route.group
         - url
         - url.query_args
-        - route.group
         - user.group_permissions
       tags:
         - 'config:field.storage.group_content.group_roles'
@@ -734,9 +788,9 @@ display:
       contexts:
         - 'languages:language_content'
         - 'languages:language_interface'
+        - route.group
         - url
         - url.query_args
-        - route.group
         - user.group_permissions
       tags:
         - 'config:field.storage.group_content.group_roles'
