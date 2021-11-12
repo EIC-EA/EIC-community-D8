@@ -308,6 +308,7 @@ function eic_groups_group_access(EntityInterface $entity, $operation, AccountInt
         $entity->get('moderation_state')->value,
         [
           GroupsModerationHelper::GROUP_DRAFT_STATE,
+          GroupsModerationHelper::GROUP_PENDING_STATE,
           GroupsModerationHelper::GROUP_BLOCKED_STATE,
         ]) && $is_group_admin
       ) {
