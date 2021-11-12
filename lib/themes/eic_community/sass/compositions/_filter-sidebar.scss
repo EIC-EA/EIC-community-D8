@@ -115,6 +115,11 @@
       margin-bottom: ecl-layout('gutter', 'controls');
       padding: ecl-layout('gutter', 'controls') 0;
     }
+
+    &--facets {
+      padding: map-get($ecl-spacing, "m") 0;
+      border-bottom: 1px solid currentColor;
+    }
   }
 
   &__item-label-icon {

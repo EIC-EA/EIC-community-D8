@@ -84,7 +84,7 @@ class UserGallerySourceType extends SourceType {
    * @inheritDoc
    */
   public function getLayoutTheme(): string {
-    return self::LAYOUT_COLUMNS;
+    return self::LAYOUT_3_COLUMNS;
   }
 
   /**
