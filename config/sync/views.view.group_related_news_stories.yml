@@ -300,6 +300,20 @@ display:
     position: 1
     display_options:
       display_extenders: {  }
+      empty:
+        area_text_custom:
+          id: area_text_custom
+          table: views
+          field: area_text_custom
+          relationship: none
+          group_type: group
+          admin_label: ''
+          empty: true
+          tokenize: false
+          content: 'We haven’t found any stories related to this group.'
+          plugin_id: text_custom
+      defaults:
+        empty: false
     cache_metadata:
       max-age: -1
       contexts:

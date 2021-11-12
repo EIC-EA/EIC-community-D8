@@ -10,7 +10,6 @@ dependencies:
     - flag
     - group
     - node
-    - user
 _core:
   default_config_hash: eKWN3z9j-zM3Sn_r3-u4y7-TtiRshBKXOJLqXRtFfwc
 id: group_discussions
@@ -28,9 +27,9 @@ display:
     position: 0
     display_options:
       access:
-        type: perm
+        type: group_permission
         options:
-          perm: 'access content'
+          group_permission: 'access discussions overview'
       cache:
         type: tag
         options: {  }
@@ -199,7 +198,18 @@ display:
             format: plain_text
           plugin_id: text
       footer: {  }
-      empty: {  }
+      empty:
+        area_text_custom:
+          id: area_text_custom
+          table: views
+          field: area_text_custom
+          relationship: none
+          group_type: group
+          admin_label: ''
+          empty: true
+          tokenize: false
+          content: 'We haven’t found any discussions in the group.'
+          plugin_id: text_custom
       relationships:
         flag_relationship:
           id: flag_relationship
@@ -279,9 +289,10 @@ display:
         - 'languages:language_content'
         - 'languages:language_interface'
         - route
+        - route.group
         - url
+        - user.group_permissions
         - 'user.node_grants:view'
-        - user.permissions
       tags: {  }
   block_1:
     display_plugin: block
@@ -296,7 +307,8 @@ display:
         - 'languages:language_content'
         - 'languages:language_interface'
         - route
+        - route.group
         - url
+        - user.group_permissions
         - 'user.node_grants:view'
-        - user.permissions
       tags: {  }
