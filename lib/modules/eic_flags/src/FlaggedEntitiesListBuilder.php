@@ -386,6 +386,14 @@ class FlaggedEntitiesListBuilder extends EntityListBuilder {
         $type = $flagged_entity->bundle();
         break;
       case 'group':
+        $type = $flagged_entity->getEntityTypeId();
+        $title = Unicode::truncate(
+          $flagged_entity->get('field_body')->value,
+          100,
+          TRUE,
+          TRUE
+        );
+        break;
       case 'comment':
         $type = $flagged_entity->getEntityTypeId();
         $title = Unicode::truncate(
