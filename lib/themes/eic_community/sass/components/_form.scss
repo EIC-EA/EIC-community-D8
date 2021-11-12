@@ -77,7 +77,6 @@
     fill: ecl-typography('color', 'title');
   }
 
-
   &__checkbox {
     margin: map-get($ecl-spacing, 'l') 0;
   }
@@ -300,6 +299,15 @@
       box-sizing: border-box;
       padding: map-get($ecl-spacing, 'xs');
     }
+  }
+
+  & &-group.form-actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    //flex-direction: row;
+    margin-top: map-get($ecl-spacing, "2xl");
+    gap: map-get($ecl-spacing, "m");
   }
 }
 
