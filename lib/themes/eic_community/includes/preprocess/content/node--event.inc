@@ -13,6 +13,9 @@ function eic_community_preprocess_node__event(array &$variables) {
   $node = $variables['node'];
 
   switch ($variables['view_mode']) {
+    case 'full':
+      _eic_community_render_event_detail_page($variables, $variables['node']);
+      break;
     case 'teaser':
       $teaser = _eic_community_prepare_node_teaser_array($node);
 
