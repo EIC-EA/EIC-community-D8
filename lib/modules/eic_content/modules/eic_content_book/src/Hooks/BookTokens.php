@@ -80,37 +80,39 @@ class BookTokens implements ContainerInjectionInterface {
     $replacements = [];
     $base_url = $this->requestStack->getCurrentRequest()->getBaseUrl();
 
-    // Node tokens.
     if ($type === 'node' && !empty($data['node'])) {
-      foreach ($tokens as $name => $original) {
-        switch ($name) {
-          case 'node_book_parent_url':
-            if (($node = $data['node']) && !$node instanceof NodeInterface) {
-              break;
-            }
+      return $replacements;
+    }
 
-            if (!$node->book['nid'] || $node->book['pid'] <= 0) {
-              break;
-            }
-
-            /**
-             * Loads the parent book node.
-             *
-             * @var \Drupal\node\NodeInterface $parent_book_node
-             */
-            $parent_book_node = $this->entityTypeManager->getStorage('node')
-              ->load($node->book['pid']);
-            $parent_book_node_url = $parent_book_node->toUrl()->toString();
-
-            // If base path is presented in the URL, we need to remove it
-            // in order to avoid duplicated base paths.
-            $has_base_path = substr($parent_book_node_url, 0, strlen($base_url)) === $base_url;
-            $replacements[$original] = $has_base_path
-              ? substr_replace($parent_book_node_url, '', 0, strlen($base_url))
-              : $parent_book_node_url;
+    // Replace node tokens.
+    foreach ($tokens as $name => $original) {
+      switch ($name) {
+        case 'node_book_parent_url':
+          if (($node = $data['node']) && !$node instanceof NodeInterface) {
             break;
+          }
 
-        }
+          if (!$node->book['nid'] || $node->book['pid'] <= 0) {
+            break;
+          }
+
+          /**
+           * Loads the parent book node.
+           *
+           * @var \Drupal\node\NodeInterface $parent_book_node
+           */
+          $parent_book_node = $this->entityTypeManager->getStorage('node')
+            ->load($node->book['pid']);
+          $parent_book_node_url = $parent_book_node->toUrl()->toString();
+
+          // If base path is presented in the URL, we need to remove it
+          // in order to avoid duplicated base paths.
+          $has_base_path = substr($parent_book_node_url, 0, strlen($base_url)) === $base_url;
+          $replacements[$original] = $has_base_path
+            ? substr_replace($parent_book_node_url, '', 0, strlen($base_url))
+            : $parent_book_node_url;
+          break;
+
       }
     }
 
