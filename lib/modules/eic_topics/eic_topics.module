@@ -7,6 +7,7 @@
 
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Url;
 use Drupal\eic_search\SearchHelper;
 use Drupal\eic_topics\Constants\Topics;
 use Drupal\eic_topics\TopicsManager;
@@ -98,18 +99,18 @@ function eic_topics_views_pre_render(ViewExecutable $view) {
 
   // The Views UI doesn't allow setting long links, so we need to replace the
   // given link_url option with the final URL which includes facets.
-  $url = NULL;
+  $route = NULL;
   $params = [];
   switch ($view->current_display) {
     case 'groups':
-      $url = '/groups';
+      $route = 'eic_search.groups';
       $params = [
         'itm_aggregated_field_vocab_topics' => $term_id,
       ];
       break;
 
     case 'discussions':
-      $url = '/search';
+      $route = 'eic_search.global_search';
       $params = [
         'itm_aggregated_field_vocab_topics' => $term_id,
         'ss_global_content_type' => 'discussion',
@@ -117,7 +118,7 @@ function eic_topics_views_pre_render(ViewExecutable $view) {
       break;
 
     case 'files':
-      $url = '/search';
+      $route = 'eic_search.global_search';
       $params = [
         'itm_aggregated_field_vocab_topics' => $term_id,
         'ss_global_content_type' => 'document,gallery,video',
@@ -133,7 +134,7 @@ function eic_topics_views_pre_render(ViewExecutable $view) {
       break;
 
     case 'wiki_pages':
-      $url = '/search';
+      $route = 'eic_search.global_search';
       $params = [
         'itm_aggregated_field_vocab_topics' => $term_id,
         'ss_global_content_type' => 'wiki_page',
@@ -141,17 +142,16 @@ function eic_topics_views_pre_render(ViewExecutable $view) {
       break;
 
     case 'experts':
-      $url = '/people';
+      $route = 'eic_search.people';
       $params = [
         'itm_aggregated_field_vocab_topics' => $term_id,
       ];
       break;
   }
 
-  if ($url) {
-    if (!empty($params)) {
-      $url .= SearchHelper::buildSolrQueryParams($params, TRUE);
-    }
+  if ($route) {
+    $params = SearchHelper::buildSolrQueryParams($params);
+    $url = Url::fromRoute($route, [], ['query' => $params])->toString();
     $view->display_handler->setOption('link_url', $url);
   }
 }
