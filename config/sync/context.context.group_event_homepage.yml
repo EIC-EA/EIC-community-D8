@@ -10,7 +10,7 @@ name: group_event_homepage
 label: 'Group - Event homepage'
 group: Groups
 description: 'Group group type homepage'
-requireAllConditions: false
+requireAllConditions: true
 disabled: false
 conditions:
   route:

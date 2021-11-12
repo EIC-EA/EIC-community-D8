@@ -143,6 +143,7 @@ reactions:
         description:
           value: ''
           format: basic_text
+        show_user_activity_feed_link: true
         region: content
         weight: '-2'
         context_mapping: {  }
