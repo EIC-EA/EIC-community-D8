@@ -22,6 +22,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class ContentOperationsBlock extends BlockBase implements ContainerFactoryPluginInterface {
 
   /**
+   * The entity_type.manager service.
+   *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
   private $entityTypeManager;
@@ -30,9 +32,13 @@ class ContentOperationsBlock extends BlockBase implements ContainerFactoryPlugin
    * ContentOperationsBlock constructor.
    *
    * @param array $configuration
-   * @param $plugin_id
-   * @param $plugin_definition
+   *   A configuration array containing information about the plugin instance.
+   * @param string $plugin_id
+   *   The plugin_id for the plugin instance.
+   * @param mixed $plugin_definition
+   *   The plugin implementation definition.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity_type.manager service.
    */
   public function __construct(
     array $configuration,
@@ -115,6 +121,13 @@ class ContentOperationsBlock extends BlockBase implements ContainerFactoryPlugin
   public function build() {
     $build = [];
     $supported_entities = [
+      'group' => [
+        'add_route' => 'entity.group.add_page',
+        'bundles' => [
+          'group',
+          'event',
+        ],
+      ],
       'node' => [
         'add_route' => function ($entity, $bundle) {
           return Url::fromRoute('node.add', ['node_type' => $bundle]);
@@ -123,12 +136,6 @@ class ContentOperationsBlock extends BlockBase implements ContainerFactoryPlugin
           'story',
           'news',
           'page',
-        ],
-      ],
-      'group' => [
-        'add_route' => 'entity.group.add_page',
-        'bundles' => [
-          'group',
         ],
       ],
     ];
@@ -142,6 +149,20 @@ class ContentOperationsBlock extends BlockBase implements ContainerFactoryPlugin
     foreach ($supported_entities as $entity_id => $config) {
       $access_handler = $this->entityTypeManager->getAccessControlHandler($entity_id);
 
+      switch ($entity_id) {
+        case 'node':
+        default:
+          $storage_id = 'node_type';
+          $label_field = 'name';
+          break;
+
+        case 'group':
+          $storage_id = 'group_type';
+          $label_field = 'label';
+          break;
+      }
+      $entity_storage = $this->entityTypeManager->getStorage($storage_id);
+
       if (isset($config['bundles'])) {
         foreach ($config['bundles'] as $bundle) {
           if ($access_handler->createAccess($bundle)) {
@@ -149,8 +170,9 @@ class ContentOperationsBlock extends BlockBase implements ContainerFactoryPlugin
               ? call_user_func($config['add_route'], $entity_id, $bundle)
               : Url::fromRoute($config['add_route']);
 
+            $bundle_label = $entity_storage->load($bundle)->get($label_field);
             $items[] = [
-              'title' => $this->t("Add $bundle"),
+              'title' => $this->t("Add @bundle", ['@bundle' => $bundle_label]),
               'url' => $url->toString(),
             ];
           }
@@ -161,7 +183,7 @@ class ContentOperationsBlock extends BlockBase implements ContainerFactoryPlugin
 
       if ($access_handler->createAccess()) {
         $items[] = [
-          'title' => $this->t("Add $entity_id"),
+          'title' => $this->t("Add @entity_id", ['@entity_id' => $entity_id]),
           'url' => Url::fromRoute($config['add_route'])->toString(),
         ];
       }
