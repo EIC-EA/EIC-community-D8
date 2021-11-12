@@ -155,8 +155,7 @@ class TopicsManager {
         $solr_topic_field_id = Topics::TERM_TOPICS_ID_FIELD_GROUP_SOLR;
         break;
       case 'event':
-        /** @TODO still needs to define routes, entity,... */
-        $route_name = 'eic_search.groups';
+        $route_name = 'eic_search.events';
         $solr_topic_field_id = Topics::TERM_TOPICS_ID_FIELD_GROUP_SOLR;
         break;
     }

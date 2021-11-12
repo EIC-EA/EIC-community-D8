@@ -3,11 +3,13 @@
 namespace Drupal\eic_search\Service;
 
 use Drupal\Core\Database\Connection;
+use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\comment\CommentInterface;
 use Drupal\comment\Entity\Comment;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Locale\CountryManager;
 use Drupal\Core\Queue\QueueFactory;
 use Drupal\Core\Queue\QueueWorkerManager;
 use Drupal\Core\Queue\SuspendQueueException;
@@ -18,6 +20,7 @@ use Drupal\eic_groups\Constants\GroupVisibilityType;
 use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_media_statistics\EntityFileDownloadCount;
 use Drupal\eic_private_message\Constants\PrivateMessage;
+use Drupal\eic_search\Search\Sources\GroupEventSourceType;
 use Drupal\eic_search\SolrIndexes;
 use Drupal\file\Entity\File;
 use Drupal\flag\FlagCountManager;
@@ -48,6 +51,8 @@ use Solarium\QueryType\Update\Query\Document;
  * Class SolrDocumentProcessor
  *
  * @package Drupal\eic_search\Service
+ *
+ * @TODO Split this long class.
  */
 class SolrDocumentProcessor {
 
@@ -192,7 +197,7 @@ class SolrDocumentProcessor {
         $type = $fields['ss_content_type'];
         $node_type = NodeType::load($type);
         $type_label = $node_type instanceof NodeTypeInterface ?
-          $node_type->label():
+          $node_type->label() :
           $fields['ss_content_type'];
         $date = $fields['ds_content_created'];
         $changed = $fields['ds_changed'];
@@ -218,7 +223,7 @@ class SolrDocumentProcessor {
         break;
       case 'entity:group':
         $title = $fields['tm_X3b_en_group_label_fulltext'];
-        $type = 'group';
+        $type = $fields['ss_group_type'];
         $date = $fields['ds_group_created'];
         $status = $fields['bs_group_status'];
         $fullname = $fields['ss_group_user_first_name'] . ' ' . $fields['ss_group_user_last_name'];
@@ -285,7 +290,7 @@ class SolrDocumentProcessor {
     $document->addField('ss_global_content_type', $type);
     $document->addField(
       'ss_global_content_type_label',
-      !empty($type_label) ? $type_label: $type
+      !empty($type_label) ? $type_label : $type
     );
     $document->addField('ss_global_created_date', $date);
     $document->addField('bs_global_status', $status);
@@ -377,7 +382,8 @@ class SolrDocumentProcessor {
       }
 
       $node = $comment->getCommentedEntity();
-    } else {
+    }
+    else {
       $node = Node::load($node_ref);
     }
 
@@ -499,6 +505,11 @@ class SolrDocumentProcessor {
 
     if (!$search_id) {
       $document->addField('ss_group_visibility', $group_visibility);
+
+      $document->addField(
+        'ss_group_visibility_label',
+        GroupVisibilityType::GROUP_VISIBILITY_PUBLIC
+      );
       return;
     }
 
@@ -506,6 +517,11 @@ class SolrDocumentProcessor {
     $item = array_key_exists($search_id, $items) ? $items[$search_id] : NULL;
     if (!$item) {
       $document->addField('ss_group_visibility', $group_visibility);
+
+      $document->addField(
+        'ss_group_visibility_label',
+        GroupVisibilityType::GROUP_VISIBILITY_PUBLIC
+      );
       return;
     }
 
@@ -514,6 +530,11 @@ class SolrDocumentProcessor {
 
     if (!$group) {
       $document->addField('ss_group_visibility', $group_visibility);
+
+      $document->addField(
+        'ss_group_visibility_label',
+        GroupVisibilityType::GROUP_VISIBILITY_PUBLIC
+      );
       return;
     }
 
@@ -707,6 +728,99 @@ class SolrDocumentProcessor {
   }
 
   /**
+   * Updates event data for a document.
+   *
+   * @param \Solarium\QueryType\Update\Query\Document $document
+   *   The Solr document.
+   * @param $fields
+   *   Document fields.
+   */
+  public function processGroupEventData(Document &$document, $fields) {
+    $datasource = $fields['ss_search_api_datasource'];
+    $content_type = $fields['ss_content_type'];
+
+    if ($datasource !== 'entity:node' || $content_type !== 'event') {
+      return;
+    }
+
+    $start_date = new DrupalDateTime($fields['ds_content_field_date_range']);
+    $end_date = new DrupalDateTime($fields['ds_content_field_date_range_end_value']);
+
+    $this->addOrUpdateDocumentField(
+      $document,
+      GroupEventSourceType::START_DATE_SOLR_FIELD_ID,
+      $fields,
+      $start_date->getTimestamp()
+    );
+
+    if (array_key_exists('ss_content_country_code', $fields)) {
+      $country_code = $fields['ss_content_country_code'];
+      $countries = CountryManager::getStandardList();
+
+      $this->addOrUpdateDocumentField(
+        $document,
+        'ss_content_country_code',
+        $fields,
+        array_key_exists($country_code, $countries) ? $countries[$country_code] : $country_code
+      );
+    }
+
+    $this->addOrUpdateDocumentField(
+      $document,
+      GroupEventSourceType::END_DATE_SOLR_FIELD_ID,
+      $fields,
+      $end_date->getTimestamp()
+    );
+  }
+
+  /**
+   * Updates global event data for a document.
+   *
+   * @param \Solarium\QueryType\Update\Query\Document $document
+   *   The Solr document.
+   * @param $fields
+   *   Document fields.
+   */
+  public function processGlobalEventData(Document &$document, $fields) {
+    $group_type = array_key_exists('ss_group_type', $fields) ?
+      $fields['ss_group_type'] :
+      NULL;
+
+    if ($group_type !== 'event') {
+      return;
+    }
+
+    $start_date = new DrupalDateTime($fields['ds_group_field_date_range']);
+    $end_date = new DrupalDateTime($fields['ds_group_field_date_range_end_value']);
+
+    $this->addOrUpdateDocumentField(
+      $document,
+      GroupEventSourceType::START_DATE_SOLR_FIELD_ID,
+      $fields,
+      $start_date->getTimestamp()
+    );
+
+    if (array_key_exists('ss_group_country_code', $fields)) {
+      $country_code = $fields['ss_group_country_code'];
+      $countries = CountryManager::getStandardList();
+
+      $this->addOrUpdateDocumentField(
+        $document,
+        'ss_group_event_country',
+        $fields,
+        array_key_exists($country_code, $countries) ? $countries[$country_code] : $country_code
+      );
+    }
+
+    $this->addOrUpdateDocumentField(
+      $document,
+      GroupEventSourceType::END_DATE_SOLR_FIELD_ID,
+      $fields,
+      $end_date->getTimestamp()
+    );
+  }
+
+  /**
    * @param \Solarium\QueryType\Update\Query\Document $document
    * @param $key
    * @param $fields
@@ -770,8 +884,7 @@ class SolrDocumentProcessor {
       try {
         $queue_worker->processItem($item->data);
         $queue->deleteItem($item);
-      }
-      catch (SuspendQueueException $e) {
+      } catch (SuspendQueueException $e) {
         $queue->releaseItem($item);
         break;
       }
