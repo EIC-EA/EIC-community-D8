@@ -167,7 +167,7 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
    *   The group entity.
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The user account object.
-   * @param \Drupal\group\GroupMembership|NULL $membership
+   * @param \Drupal\group\GroupMembership|null $membership
    *   The group membership (optional).
    *
    * @return bool
@@ -551,6 +551,11 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
     $is_group_page = FALSE;
     $current_path = $this->currentPath->getPath();
     $current_url = Url::fromUri("internal:" . $current_path);
+
+    if (!$current_url->isRouted()) {
+      return $is_group_page;
+    }
+
     $route_name = $current_url->getRouteName();
     $route_parameters = $current_url->getRouteParameters();
 
