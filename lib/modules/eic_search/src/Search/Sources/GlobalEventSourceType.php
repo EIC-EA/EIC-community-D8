@@ -57,7 +57,7 @@ class GlobalEventSourceType extends SourceType {
         'ASC' => $this->t('Old', [], ['context' => 'eic_search']),
         'DESC' => $this->t('Recent', [], ['context' => 'eic_search']),
       ],
-      'tm_global_title' => [
+      'ss_group_label_string' => [
         'label' => $this->t('Group label', [], ['context' => 'eic_search']),
         'ASC' => $this->t('Group label A-Z', [], ['context' => 'eic_search']),
         'DESC' => $this->t('Group label Z-A', [], ['context' => 'eic_search']),
