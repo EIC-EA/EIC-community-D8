@@ -8,6 +8,7 @@ weight: -8
 is_admin: null
 permissions:
   - 'access comments'
+  - 'access contact group users page'
   - 'access contact user page'
   - 'access group overview'
   - 'access user profiles'
