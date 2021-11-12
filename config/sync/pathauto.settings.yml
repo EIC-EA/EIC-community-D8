@@ -50,5 +50,6 @@ safe_tokens:
   - url
   - url-brief
   - node_group_url
+  - node_book_parent_url
 _core:
   default_config_hash: SwvLp8snyPEExF41CaJJYdPUVomofLqtXvwciHc4cPg
