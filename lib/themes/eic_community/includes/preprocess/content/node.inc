@@ -54,8 +54,12 @@ function _eic_community_prepare_node_teaser_array(NodeInterface $node) {
 
   // Get the language.
   $language = '';
-  if ($node->hasField('field_language') && !$node->get('field_language')->isEmpty()) {
-    $language = $node->get('field_language')->entity->label();
+  if (
+    $node->hasField('field_language') &&
+    !$node->get('field_language')->isEmpty() &&
+    $language_entity = $node->get('field_language')->entity
+  ) {
+    $language = $language_entity->label();
   }
 
   // Get the content flags.
