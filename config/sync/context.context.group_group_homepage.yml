@@ -2,9 +2,17 @@ uuid: 052929ef-8be6-47b1-8eb3-717780b4df69
 langcode: en
 status: true
 dependencies:
+  config:
+    - views.view.group_discussions
+    - views.view.group_documents
+    - views.view.group_events
+    - views.view.group_related_groups
+    - views.view.group_related_news_stories
   module:
+    - eic_groups
     - group
     - route_condition
+    - views
 _core:
   default_config_hash: CvMPzdzpKqV5FrlT6rMu3GzdbzGoPdWXKcYNdM1SsTQ
 name: group_group_homepage
@@ -110,6 +118,23 @@ reactions:
         unique: 0
         context_id: group_group_homepage
         uuid: 133eb116-55d1-44d7-a7c0-a9ddcdd1b9f9
+      fad97ec0-8b09-4ab9-83a1-cb18b2309baa:
+        id: 'views_block:group_events-block_group_events'
+        label: ''
+        provider: views
+        label_display: '0'
+        views_label: ''
+        items_per_page: none
+        region: content
+        weight: '0'
+        context_mapping: {  }
+        custom_id: views_block_group_events_block_group_events
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: group_group_homepage
+        third_party_settings: {  }
+        uuid: fad97ec0-8b09-4ab9-83a1-cb18b2309baa
     id: blocks
     saved: false
     uuid: db598f5e-00b5-4ba6-b443-bbe6d3ca2c59

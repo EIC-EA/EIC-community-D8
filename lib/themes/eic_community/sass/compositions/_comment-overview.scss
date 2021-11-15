@@ -16,12 +16,13 @@
     }
   }
 
+
+
   &__form-wrapper,
   &__items,
   &__item {
-    padding: map-get($ecl-spacing, 'xl');
-    background-color: map-get($ecl-colors, 'white');
-    margin: map-get($ecl-spacing, 'xl') 0;
+    padding-top: 0;
+    //margin: map-get($ecl-spacing, 'xl') 0;
     transition: opacity 200ms ease-in-out;
 
     &:first-child {
@@ -34,6 +35,22 @@
 
     #{$node}--is-pending & {
       opacity: 0.5;
+    }
+  }
+
+  &__form-wrapper,
+  &__item {
+    padding: map-get($ecl-spacing, 'xl') ;
+    margin: map-get($ecl-spacing, 'xl') 0;
+    background-color: map-get($ecl-colors, 'white');
+  }
+
+  &__form-wrapper {
+    padding: map-get($ecl-spacing, 'xl') ;
+
+    &--children {
+      padding-left: 0;
+      padding-right: 0;
     }
   }
 

@@ -104,20 +104,11 @@
     </div>
   </div>
   <div class="ecl-teaser__meta-footer">
+    {% if flags.like_content.content is defined %}
     <div class="ecl-teaser__like">
-      <a href="{{ like.path }}">
-        {% include '@ecl-twig/ec-component-icon/ecl-icon.html.twig' with {
-          icon: {
-            size: 'xs',
-            path: icon_file_path,
-            type: 'custom',
-            name: 'like',
-          },
-          extra_classes: 'ecl-teaser__like-icon',
-        } only %}
-        {{ like.label }}
-      </a>
+      {{ flags.like_content.content }}
     </div>
+    {% endif %}
     {% if stats is not empty %}
       <div class="ecl-teaser__stats">
         {% for stat in stats %}

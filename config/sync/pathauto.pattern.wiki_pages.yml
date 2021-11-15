@@ -7,16 +7,16 @@ dependencies:
 id: wiki_pages
 label: 'Wiki pages'
 type: 'canonical_entities:node'
-pattern: '[node:book:parent:url:relative]/[node:title]'
+pattern: '[node:node_book_parent_url]/[node:title]'
 selection_criteria:
-  4f8b89a4-f875-42e5-bee1-141f41c42822:
+  eb15209e-5692-4bc7-8f35-dfba1e1ceb49:
     id: node_type
     bundles:
       wiki_page: wiki_page
     negate: false
     context_mapping:
       node: node
-    uuid: 4f8b89a4-f875-42e5-bee1-141f41c42822
+    uuid: eb15209e-5692-4bc7-8f35-dfba1e1ceb49
 selection_logic: and
 weight: -5
 relationships: {  }

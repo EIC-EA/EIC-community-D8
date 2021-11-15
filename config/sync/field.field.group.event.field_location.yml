@@ -1,0 +1,47 @@
+uuid: f624971a-ba8e-4641-8b23-c558a7787ac6
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.group.field_location
+    - group.type.event
+  module:
+    - address
+id: group.event.field_location
+field_name: field_location
+entity_type: group
+bundle: event
+label: 'Event location'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  available_countries: {  }
+  langcode_override: ''
+  field_overrides:
+    givenName:
+      override: optional
+    additionalName:
+      override: optional
+    familyName:
+      override: optional
+    organization:
+      override: optional
+    addressLine1:
+      override: optional
+    addressLine2:
+      override: optional
+    postalCode:
+      override: optional
+    sortingCode:
+      override: optional
+    dependentLocality:
+      override: optional
+    locality:
+      override: optional
+    administrativeArea:
+      override: optional
+  fields: {  }
+field_type: address

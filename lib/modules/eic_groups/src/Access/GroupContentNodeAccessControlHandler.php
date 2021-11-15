@@ -6,6 +6,8 @@ use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\eic_groups\Constants\NodeProperty;
+use Drupal\eic_groups\EICGroupsHelper;
+use Drupal\eic_groups\GroupsModerationHelper;
 use Drupal\eic_user\UserHelper;
 use Drupal\group\Access\GroupAccessResult;
 use Drupal\group\Plugin\GroupContentAccessControlHandler;
@@ -21,26 +23,66 @@ class GroupContentNodeAccessControlHandler extends GroupContentAccessControlHand
   public function entityAccess(EntityInterface $entity, $operation, AccountInterface $account, $return_as_object = FALSE) {
     $access = parent::entityAccess($entity, $operation, $account, $return_as_object);
 
-    switch ($operation) {
-      case 'update':
-        /** @var \Drupal\group\Entity\Storage\GroupContentStorageInterface $storage */
-        $storage = $this->entityTypeManager->getStorage('group_content');
-        $group_contents = $storage->loadByEntity($entity);
+    /** @var \Drupal\group\Entity\Storage\GroupContentStorageInterface $storage */
+    $storage = $this->entityTypeManager->getStorage('group_content');
+    $group_contents = $storage->loadByEntity($entity);
 
+    if (empty($group_contents)) {
+      return $access;
+    }
+
+    // Allow access to power users.
+    if ($is_power_user = UserHelper::isPowerUser($account)) {
+      $access = GroupAccessResult::allowed()
+        ->addCacheableDependency($account)
+        ->addCacheableDependency($entity);
+    }
+
+    switch ($operation) {
+      case 'view':
+        if ($is_power_user) {
+          break;
+        }
+
+        $group_content = reset($group_contents);
+        $group = $group_content->getGroup();
+        $membership = $group->getMember($account);
+        $moderation_state = $group->get('moderation_state')->value;
+
+        // User is a group admin, so we allow access.
+        if ($membership && EICGroupsHelper::userIsGroupAdmin($group, $account, $membership)) {
+          $access = GroupAccessResult::allowed()
+            ->addCacheableDependency($account)
+            ->addCacheableDependency($membership)
+            ->addCacheableDependency($entity);
+          break;
+        }
+
+        // At this point it means the user is not a poweruser neither a group
+        // admin. Therefore, If group is blocked no user other can view the its
+        // content besides powerusers or group admins.
+        if ($moderation_state !== GroupsModerationHelper::GROUP_PUBLISHED_STATE) {
+          $access = AccessResult::forbidden()
+            ->addCacheableDependency($account)
+            ->addCacheableDependency($group)
+            ->addCacheableDependency($entity);
+        }
+
+        if ($membership) {
+          $access->addCacheableDependency($membership);
+        }
+        break;
+
+      case 'update':
         // Always deny access to book pages.
-        if (!empty($group_contents)) {
-          if ($entity->bundle() === 'book') {
-            $access = GroupAccessResult::forbiddenIf(!$account->hasPermission('bypass node access'))
-              ->cachePerUser();
-            break;
-          }
+        if ($entity->bundle() === 'book') {
+          $access = GroupAccessResult::forbiddenIf(!$account->hasPermission('bypass node access'))
+            ->cachePerUser();
+          break;
         }
 
         // Allow access to power users.
-        if (UserHelper::isPowerUser($account)) {
-          $access = GroupAccessResult::allowed()
-            ->addCacheableDependency($account)
-            ->addCacheableDependency($entity);
+        if ($is_power_user) {
           break;
         }
 
@@ -61,6 +103,13 @@ class GroupContentNodeAccessControlHandler extends GroupContentAccessControlHand
               ->addCacheableDependency($entity);
             break;
           }
+        }
+        break;
+
+      case 'delete':
+        // Allow access to power users.
+        if ($is_power_user) {
+          break;
         }
         break;
 

@@ -51,7 +51,11 @@ function eic_community_preprocess_block(array &$variables) {
     $variables['#cache']['tags'] = $cache_tags;
   }
 
-  if ($variables['base_plugin_id'] === 'group_content_menu') {
+  // Preprocess group content menu plugin blocks.
+  if (in_array($variables['base_plugin_id'], [
+    'group_content_menu',
+    'eic_group_content_menu',
+  ])) {
     eic_community_preprocess_block__group_menu($variables);
   }
 }

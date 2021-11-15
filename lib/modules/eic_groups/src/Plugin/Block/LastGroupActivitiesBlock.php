@@ -7,9 +7,11 @@ use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Datetime\DateFormatter;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
 use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_search\Search\Sources\ActivityStreamSourceType;
+use Drupal\eic_user\UserHelper;
 use Drupal\file\Entity\File;
 use Drupal\group\Entity\GroupContent;
 use Drupal\group\Entity\GroupInterface;
@@ -53,6 +55,11 @@ class LastGroupActivitiesBlock extends BlockBase implements ContainerFactoryPlug
   private $dateFormatter;
 
   /**
+   * @var AccountInterface $currentUser
+   */
+  private $currentUser;
+
+  /**
    * {@inheritdoc}
    */
   public static function create(
@@ -68,7 +75,8 @@ class LastGroupActivitiesBlock extends BlockBase implements ContainerFactoryPlug
       $container->get('eic_groups.helper'),
       $container->get('entity_type.manager'),
       $container->get('eic_search.activity_stream_library'),
-      $container->get('date.formatter')
+      $container->get('date.formatter'),
+      $container->get('current_user')
     );
   }
 
@@ -88,6 +96,12 @@ class LastGroupActivitiesBlock extends BlockBase implements ContainerFactoryPlug
    *   The Form builder service.
    * @param EntityTypeManagerInterface $entity_type_manager
    *   The Form builder service.
+   * @param ActivityStreamSourceType $activity_stream_source_type
+   *   The Activity Stream Source type
+   * @param DateFormatter $date_formatter
+   *   The Date formatter
+   * @param AccountInterface $current_user
+   *   The Date formatter
    */
   public function __construct(
     array $configuration,
@@ -95,14 +109,16 @@ class LastGroupActivitiesBlock extends BlockBase implements ContainerFactoryPlug
     $plugin_definition,
     EICGroupsHelper $groups_helper,
     EntityTypeManagerInterface $entity_type_manager,
-    ActivityStreamSourceType $activityStreamSourceType,
-    DateFormatter $dateFormatter
+    ActivityStreamSourceType $activity_stream_source_type,
+    DateFormatter $date_formatter,
+    AccountInterface $current_user
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->groupsHelper = $groups_helper;
     $this->entityTypeManager = $entity_type_manager;
-    $this->activityStreamSourceType = $activityStreamSourceType;
-    $this->dateFormatter = $dateFormatter;
+    $this->activityStreamSourceType = $activity_stream_source_type;
+    $this->dateFormatter = $date_formatter;
+    $this->currentUser = $current_user;
   }
 
   /**
@@ -159,16 +175,27 @@ class LastGroupActivitiesBlock extends BlockBase implements ContainerFactoryPlug
     }, $members);
 
     $current_group_route = $this->groupsHelper->getGroupFromRoute();
+    $account = $this->currentUser;
     $user_group_roles = [];
+    $user_roles = $account->getRoles(TRUE);
+    $allowed_global_roles = [
+      UserHelper::ROLE_CONTENT_ADMINISTRATOR,
+      UserHelper::ROLE_SITE_ADMINISTRATOR,
+    ];
+    $allowed_group_roles = [
+      EICGroupsHelper::GROUP_OWNER_ROLE,
+      EICGroupsHelper::GROUP_ADMINISTRATOR_ROLE,
+    ];
 
     if ($current_group_route) {
-      $account = \Drupal::currentUser();
       $membership = $current_group_route->getMember($account);
-      $user_group_roles = $membership instanceof GroupMembership ? $membership->getRoles() : [];
+      $user_group_roles = $membership instanceof GroupMembership ? array_keys($membership->getRoles()) : [];
     }
 
     $build['#attached']['drupalSettings']['overview'] = [
-      'is_group_owner' => array_key_exists(EICGroupsHelper::GROUP_OWNER_ROLE, $user_group_roles),
+      'has_permission_delete' =>
+        !empty(array_intersect($user_roles, $allowed_global_roles)) ||
+        !empty(array_intersect($user_group_roles, $allowed_group_roles))
     ];
 
     return $build += [
@@ -177,7 +204,8 @@ class LastGroupActivitiesBlock extends BlockBase implements ContainerFactoryPlug
       '#members' => $members_data,
       '#url' => Url::fromRoute('eic_groups.solr_search')->toString(),
       '#translations' => [
-        'no_results' => $this->t('No results', [], ['context' => 'eic_group']),
+        'no_results_title' => $this->t('We haven’t found any search results', [], ['context' => 'eic_group']),
+        'no_results_body' => $this->t('Please try again with another keyword', [], ['context' => 'eic_group']),
         'load_more' => $this->t('Load more', [], ['context' => 'eic_group']),
         'block_title' => $this->t('Latest member activity', [], ['context' => 'eic_group']),
         'commented_on' => $this->t('commented on', [], ['context' => 'eic_group']),
@@ -190,6 +218,7 @@ class LastGroupActivitiesBlock extends BlockBase implements ContainerFactoryPlug
       '#datasource' => $this->activityStreamSourceType->getSourcesId(),
       '#source_class' => ActivityStreamSourceType::class,
       '#group_id' => $group->id(),
+      '#is_anonymous' => $this->currentUser->isAnonymous(),
     ];
   }
 

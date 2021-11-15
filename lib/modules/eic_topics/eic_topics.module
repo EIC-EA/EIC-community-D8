@@ -1,0 +1,157 @@
+<?php
+
+/**
+ * @file
+ * Primary module hooks for EIC Topics module.
+ */
+
+use Drupal\Core\Cache\Cache;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Url;
+use Drupal\eic_search\SearchHelper;
+use Drupal\eic_topics\Constants\Topics;
+use Drupal\eic_topics\TopicsManager;
+use Drupal\views\ViewExecutable;
+use Drupal\file\Entity\File;
+
+/**
+ * Implements hook_theme().
+ */
+function eic_topics_theme() {
+  return [
+    'topics_statistics_block' => [
+      'variables' => [
+        'stats' => [],
+      ],
+    ],
+  ];
+}
+
+/**
+ * Implements hook_preprocess_taxonomy_term().
+ */
+function eic_topics_preprocess_taxonomy_term(&$variables) {
+  /** @var \Drupal\taxonomy\TermInterface $term */
+  $term = $variables['term'];
+
+  $vid = $term->get('vid')->getValue();
+  $vid = reset($vid)['target_id'];
+
+  if (Topics::TERM_VOCABULARY_TOPICS_ID !== $vid) {
+    return;
+  }
+
+  if ($variables['view_mode'] == 'full') {
+    /** @var \Drupal\Core\Block\BlockManager $block_manager */
+    $block_manager = \Drupal::service('plugin.manager.block');
+    $plugin_block = $block_manager->createInstance('eic_topics_statistics_block');
+    $variables['stats_block'] = $plugin_block->build();
+
+    $banner_image = $term->get('field_topic_banner')->referencedEntities();
+    $file = $banner_image ? File::load($banner_image[0]->get('oe_media_image')->target_id) : NULL;
+    $file_url = $file ? file_url_transform_relative(file_create_url($file->get('uri')->value)) : NULL;
+    $variables['banner_image_url'] = $file_url;
+  }
+}
+
+/**
+ * Implements hook_entity_presave().
+ *
+ * We need to invalidate the taxonomy term cache tag after an entity update.
+ * Then statistics will be updated correctly on the detail term page.
+ */
+function eic_topics_entity_presave(EntityInterface $entity) {
+  if (
+    !method_exists($entity, 'hasField') ||
+    !$entity->hasField(TopicsManager::FIELD_ENTITY_TOPICS)
+  ) {
+    return;
+  }
+
+  $terms = $entity->get(TopicsManager::FIELD_ENTITY_TOPICS)->referencedEntities();
+  $tags = [];
+
+  /** @var \Drupal\taxonomy\TermInterface $term */
+  foreach ($terms as $term) {
+    $tid = $term->id();
+    $tags[] = "taxonomy_term:$tid";
+  }
+
+  Cache::invalidateTags($tags);
+}
+
+/**
+ * Implements hook_views_pre_render().
+ */
+function eic_topics_views_pre_render(ViewExecutable $view) {
+  if ($view->id() != 'taxonomy_related_content') {
+    return;
+  }
+
+  $term_id = NULL;
+  if (\Drupal::routeMatch()->getRouteName() == 'entity.taxonomy_term.canonical') {
+    $term_id = \Drupal::routeMatch()->getRawParameter('taxonomy_term');
+  }
+
+  if (empty($term_id)) {
+    return;
+  }
+
+  // The Views UI doesn't allow setting long links, so we need to replace the
+  // given link_url option with the final URL which includes facets.
+  $route = NULL;
+  $params = [];
+  switch ($view->current_display) {
+    case 'groups':
+      $route = 'eic_search.groups';
+      $params = [
+        'itm_aggregated_field_vocab_topics' => $term_id,
+      ];
+      break;
+
+    case 'discussions':
+      $route = 'eic_search.global_search';
+      $params = [
+        'itm_aggregated_field_vocab_topics' => $term_id,
+        'ss_global_content_type' => 'discussion',
+      ];
+      break;
+
+    case 'files':
+      $route = 'eic_search.global_search';
+      $params = [
+        'itm_aggregated_field_vocab_topics' => $term_id,
+        'ss_global_content_type' => 'document,gallery,video',
+      ];
+      break;
+
+    case 'news_stories':
+      // @todo Implement correct URL once available.
+      break;
+
+    case 'events':
+      // @todo Implement correct URL once available.
+      break;
+
+    case 'wiki_pages':
+      $route = 'eic_search.global_search';
+      $params = [
+        'itm_aggregated_field_vocab_topics' => $term_id,
+        'ss_global_content_type' => 'wiki_page',
+      ];
+      break;
+
+    case 'experts':
+      $route = 'eic_search.people';
+      $params = [
+        'itm_aggregated_field_vocab_topics' => $term_id,
+      ];
+      break;
+  }
+
+  if ($route) {
+    $params = SearchHelper::buildSolrQueryParams($params);
+    $url = Url::fromRoute($route, [], ['query' => $params])->toString();
+    $view->display_handler->setOption('link_url', $url);
+  }
+}

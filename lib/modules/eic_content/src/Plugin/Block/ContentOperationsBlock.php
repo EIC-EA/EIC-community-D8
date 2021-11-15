@@ -5,8 +5,8 @@ namespace Drupal\eic_content\Plugin\Block;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -22,6 +22,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class ContentOperationsBlock extends BlockBase implements ContainerFactoryPluginInterface {
 
   /**
+   * The entity_type.manager service.
+   *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
   private $entityTypeManager;
@@ -30,9 +32,13 @@ class ContentOperationsBlock extends BlockBase implements ContainerFactoryPlugin
    * ContentOperationsBlock constructor.
    *
    * @param array $configuration
-   * @param $plugin_id
-   * @param $plugin_definition
+   *   A configuration array containing information about the plugin instance.
+   * @param string $plugin_id
+   *   The plugin_id for the plugin instance.
+   * @param mixed $plugin_definition
+   *   The plugin implementation definition.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity_type.manager service.
    */
   public function __construct(
     array $configuration,
@@ -65,9 +71,63 @@ class ContentOperationsBlock extends BlockBase implements ContainerFactoryPlugin
   /**
    * {@inheritdoc}
    */
+  public function defaultConfiguration() {
+    return [
+      'title' => '',
+      'description' => [
+        'value' => NULL,
+        'format' => 'basic_text',
+      ],
+      'show_user_activity_feed_link' => TRUE,
+    ];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function blockForm($form, FormStateInterface $form_state) {
+    $form['title'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Title display'),
+      '#default_value' => $this->configuration['title'],
+      '#description' => $this->t('Text to be displayed as title when viewing the block.'),
+    ];
+    $form['description'] = [
+      '#type' => 'text_format',
+      '#title' => $this->t('Description'),
+      '#format' => $this->configuration['description']['format'],
+      '#default_value' => $this->configuration['description']['value'],
+    ];
+    $form['show_user_activity_feed_link'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Show user activity feed link'),
+      '#default_value' => $this->configuration['show_user_activity_feed_link'],
+    ];
+    return $form;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function blockSubmit($form, FormStateInterface $form_state) {
+    $this->configuration['title'] = $form_state->getValue('title');
+    $this->configuration['description'] = $form_state->getValue('description');
+    $this->configuration['show_user_activity_feed_link'] = $form_state->getValue('show_user_activity_feed_link');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function build() {
     $build = [];
     $supported_entities = [
+      'group' => [
+        'add_route' => 'entity.group.add_page',
+        'bundles' => [
+          'group',
+          'event',
+        ],
+      ],
       'node' => [
         'add_route' => function ($entity, $bundle) {
           return Url::fromRoute('node.add', ['node_type' => $bundle]);
@@ -76,12 +136,6 @@ class ContentOperationsBlock extends BlockBase implements ContainerFactoryPlugin
           'story',
           'news',
           'page',
-        ],
-      ],
-      'group' => [
-        'add_route' => 'entity.group.add_page',
-        'bundles' => [
-          'group',
         ],
       ],
     ];
@@ -95,6 +149,20 @@ class ContentOperationsBlock extends BlockBase implements ContainerFactoryPlugin
     foreach ($supported_entities as $entity_id => $config) {
       $access_handler = $this->entityTypeManager->getAccessControlHandler($entity_id);
 
+      switch ($entity_id) {
+        case 'node':
+        default:
+          $storage_id = 'node_type';
+          $label_field = 'name';
+          break;
+
+        case 'group':
+          $storage_id = 'group_type';
+          $label_field = 'label';
+          break;
+      }
+      $entity_storage = $this->entityTypeManager->getStorage($storage_id);
+
       if (isset($config['bundles'])) {
         foreach ($config['bundles'] as $bundle) {
           if ($access_handler->createAccess($bundle)) {
@@ -102,8 +170,9 @@ class ContentOperationsBlock extends BlockBase implements ContainerFactoryPlugin
               ? call_user_func($config['add_route'], $entity_id, $bundle)
               : Url::fromRoute($config['add_route']);
 
+            $bundle_label = $entity_storage->load($bundle)->get($label_field);
             $items[] = [
-              'title' => $this->t("Add $bundle"),
+              'title' => $this->t("Add @bundle", ['@bundle' => $bundle_label]),
               'url' => $url->toString(),
             ];
           }
@@ -114,7 +183,7 @@ class ContentOperationsBlock extends BlockBase implements ContainerFactoryPlugin
 
       if ($access_handler->createAccess()) {
         $items[] = [
-          'title' => $this->t("Add $entity_id"),
+          'title' => $this->t("Add @entity_id", ['@entity_id' => $entity_id]),
           'url' => Url::fromRoute($config['add_route'])->toString(),
         ];
       }
@@ -133,6 +202,30 @@ class ContentOperationsBlock extends BlockBase implements ContainerFactoryPlugin
         ],
       ],
     ];
+
+    // Add title field to the renderable array.
+    if (!empty($this->configuration['title'])) {
+      $build['#title'] = $this->configuration['title'];
+    }
+
+    // Add description field to the renderable array.
+    if (!empty($this->configuration['description']['value'])) {
+      $build['#description'] = $this->configuration['description']['value'];
+    }
+
+    // Add user's activity feed link to the renderable array.
+    if ($this->configuration['show_user_activity_feed_link']) {
+      $user_feed_link = Url::fromRoute(
+        'entity.user.canonical',
+        [
+          'user' => \Drupal::currentUser()->id(),
+        ]
+      );
+      $build['#user_activity_feed_link']['link'] = [
+        'label' => $this->t('My activity feed'),
+        'path' => $user_feed_link->toString(),
+      ];
+    }
 
     $cacheable_metadata->applyTo($build);
 

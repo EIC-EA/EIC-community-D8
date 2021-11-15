@@ -1,0 +1,19 @@
+uuid: 03604d11-deab-4b14-b04c-c24ebcf0809b
+langcode: en
+status: true
+dependencies:
+  module:
+    - group
+    - link
+id: group.field_website_url
+field_name: field_website_url
+entity_type: group
+type: link
+settings: {  }
+module: link
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

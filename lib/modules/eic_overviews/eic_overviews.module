@@ -1,0 +1,42 @@
+<?php
+
+/**
+ * @file
+ * Provides an overview page entity type.
+ */
+
+use Drupal\Core\Render\Element;
+
+/**
+ * Implements hook_theme().
+ */
+function eic_overviews_theme() {
+  return [
+    'overview_page' => [
+      'render element' => 'elements',
+    ],
+  ];
+}
+
+/**
+ * Prepares variables for overview page templates.
+ *
+ * Default template: overview-page.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - elements: An associative array containing the overview page information
+ *     and any fields attached to the entity.
+ *   - attributes: HTML attributes for the containing element.
+ */
+function template_preprocess_overview_page(array &$variables) {
+  /** @var \Drupal\eic_overviews\Entity\OverviewPage $entity */
+  $entity = $variables['elements']['#overview_page'];
+  $file = $entity->get('banner_image')->referencedEntities();
+  $file_url = $file ? file_url_transform_relative(file_create_url(reset($file)->get('uri')->value)) : NULL;
+  $variables['banner_image_url'] = $file_url;
+
+  foreach (Element::children($variables['elements']) as $key) {
+    $variables['content'][$key] = $variables['elements'][$key];
+  }
+}

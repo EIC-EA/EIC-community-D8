@@ -25,6 +25,11 @@
 
     display: inline-flex;
     text-decoration: none;
+
+    &--big {
+      padding-left:map-get($ecl-spacing, '2xl') ;
+      padding-right:map-get($ecl-spacing, '2xl') ;
+    }
   }
 
   body #{$node}--button#{$node}--icon:not(#{$node}--standalone) &__label {
@@ -33,6 +38,7 @@
 
   body &--button-primary {
     @extend .ecl-button--primary;
+    border: 2px solid currentColor;
 
     &:hover,
     &:focus {
@@ -46,6 +52,10 @@
 
   body &--button-ghost {
     @extend .ecl-button--ghost;
+
+    &:focus {
+      outline: none;
+    }
   }
 
   body &--action {

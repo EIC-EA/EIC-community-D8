@@ -165,7 +165,8 @@ class GroupForm extends GroupFormBase {
         ];
         try {
           $defaultOptions = $this->groupFlex->getDefaultJoiningMethods($group);
-        } catch (MissingDataException $e) {
+        }
+        catch (MissingDataException $e) {
           $defaultOptions = [];
         }
         $form['footer']['group_joining_methods']['#default_value'] = !empty($defaultOptions) ? reset($defaultOptions) : array_key_first($methodOptions);
@@ -243,8 +244,18 @@ class GroupForm extends GroupFormBase {
             break;
           }
 
-          // Extract array into variables.
-          $this->groupFlexSaver->saveGroupVisibility($group, $value['plugin_id']);
+          $visibility_options = [];
+
+          // Gets group visibility options.
+          if (isset($value['visibility_options'])) {
+            $visibility_options = $value['visibility_options'];
+          }
+
+          // Saves the group visibility. Note that Group flex service is being
+          // decorated by OECGroupFlexGroupSaverDecorator and the method
+          // saveGroupVisibility can receive a 3rd argument in case we need to
+          // save extra visibility options.
+          $this->groupFlexSaver->saveGroupVisibility($group, $value['plugin_id'], $visibility_options);
           break;
 
         case 'joining_methods':
@@ -268,6 +279,7 @@ class GroupForm extends GroupFormBase {
     // visibility and joining methods are saved previously after the group is
     // saved in the Database.
     if ($is_new &&
+      $group->hasField('field_group_invite_members') &&
       ($groupFlexSettings['settings']['visibility']['plugin_id'] === 'private' || $groupFlexSettings['settings']['joining_methods'] === 'tu_group_membership_request')
     ) {
       $group->set('field_group_invite_members', TRUE);
@@ -390,7 +402,8 @@ class GroupForm extends GroupFormBase {
       if ($value !== NULL) {
         try {
           $store->delete("$storeId:$key");
-        } catch (TempStoreException $exception) {
+        }
+        catch (TempStoreException $exception) {
           return;
         }
       }
@@ -409,7 +422,8 @@ class GroupForm extends GroupFormBase {
       if ($value !== NULL) {
         try {
           $store->set("$storeId:$key", $value);
-        } catch (TempStoreException $exception) {
+        }
+        catch (TempStoreException $exception) {
           return;
         }
       }

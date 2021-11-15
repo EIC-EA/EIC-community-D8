@@ -53,4 +53,11 @@
     items: _items,
     extra_classes: 'ecl-featured-content-collection--has-overview-layout ecl-featured-content-collection--is-ready',
   } only %}
+{% else %}
+  {% include "@theme/patterns/compositions/featured-content-collection.html.twig" with {
+    title: view.title|default(''),
+    description: empty,
+    items: [],
+    extra_classes: 'ecl-featured-content-collection--has-overview-layout ecl-featured-content-collection--is-ready',
+  } only %}
 {% endif %}

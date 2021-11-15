@@ -41,6 +41,13 @@ function eic_media_media_access(EntityInterface $entity, $operation, AccountInte
   foreach (array_keys($media_usage) as $entity_type) {
     foreach (array_keys($media_usage[$entity_type]) as $entity_id) {
       $entity = \Drupal::entityTypeManager()->getStorage($entity_type)->load($entity_id);
+
+      // Allow access to user pictures if user has permission.
+      if ($entity_type === 'user' && $account->hasPermission('access user profiles')) {
+        return AccessResult::allowed()
+          ->cachePerUser();
+      }
+
       $access = $entity->access('view', $account, TRUE);
 
       if ($access->isAllowed()) {

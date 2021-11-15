@@ -246,7 +246,7 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
     // We extract only the group edit/delete/publish operation links into a new
     // array.
     $visible_group_operation_links = array_filter($group_operation_links, function ($item, $key) {
-      return in_array($key, ['edit', 'delete', 'publish']);
+      return in_array($key, ['edit', 'delete', 'publish', 'block']);
     }, ARRAY_FILTER_USE_BOTH);
 
     // Sorts group operation links by key. "Delete" operation needs to show
@@ -343,23 +343,14 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
         continue;
       }
 
+      // Check if we have a flagging for this user and entity. If we have one we
+      // check if the user can unflag, otherwise we check if the user can flag.
       $user_flag = $this->flagService->getFlagging($flag, $group);
-
-      // We need to create a fake flag if the user never flagged the content,
-      // otherwise we can't do an access check.
-      if (!$user_flag) {
-        $user_flag = $this->entityTypeManager->getStorage('flagging')->create([
-          'uid' => $this->currentUser->id(),
-          'flag_id' => $flag->id(),
-          'entity_id' => $group->id(),
-          'entity_type' => $group->getEntityTypeId(),
-          'global' => $flag->isGlobal(),
-        ]);
-      }
+      $action = $user_flag ? 'unflag' : 'flag';
 
       // If user has access to view the flag we add it to the results so that
       // it can be shown in the group header.
-      if ($user_flag->access('view')) {
+      if ($flag->actionAccess($action)) {
         $group_flags[$flag_id] = [
           '#lazy_builder' => [
             'flag.link_builder:build',

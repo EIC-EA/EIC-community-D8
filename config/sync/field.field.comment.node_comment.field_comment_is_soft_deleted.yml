@@ -1,0 +1,23 @@
+uuid: ea74729c-3766-4db0-af56-c254c96d699f
+langcode: en
+status: true
+dependencies:
+  config:
+    - comment.type.node_comment
+    - field.storage.comment.field_comment_is_soft_deleted
+id: comment.node_comment.field_comment_is_soft_deleted
+field_name: field_comment_is_soft_deleted
+entity_type: comment
+bundle: node_comment
+label: 'Is soft deleted'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

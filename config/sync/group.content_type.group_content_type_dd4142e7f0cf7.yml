@@ -1,0 +1,21 @@
+uuid: ee3ae6ae-1b68-4e96-9f6d-c5b7697283f9
+langcode: en
+status: true
+dependencies:
+  config:
+    - group.type.event
+    - group_content_menu.group_content_menu_type.group_main_menu
+  module:
+    - group_content_menu
+id: group_content_type_dd4142e7f0cf7
+label: 'Event: Group menu (Group - Main menu)'
+description: 'Adds <em class="placeholder">Group - Main menu</em> menu items to groups.'
+group_type: event
+content_plugin: 'group_content_menu:group_main_menu'
+plugin_config:
+  group_cardinality: 1
+  entity_cardinality: 1
+  use_creation_wizard: false
+  auto_create_group_menu: true
+  auto_create_home_link: true
+  auto_create_home_link_title: Overview

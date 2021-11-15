@@ -8,16 +8,26 @@ use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Path\CurrentPathStack;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\Core\Url;
 use Drupal\eic_groups\Constants\GroupJoiningMethodType;
 use Drupal\eic_groups\Constants\GroupVisibilityType;
+use Drupal\eic_overviews\GroupOverviewPages;
 use Drupal\group\Entity\Group;
 use Drupal\group\Entity\GroupContent;
 use Drupal\group\Entity\GroupInterface;
+use Drupal\group\GroupMembership;
+use Drupal\group_flex\Plugin\GroupVisibilityManager;
 use Drupal\group_permissions\Entity\GroupPermissionInterface;
+use Drupal\node\Entity\Node;
 use Drupal\node\NodeInterface;
+use Drupal\oec_group_flex\OECGroupFlexHelper;
+use Drupal\oec_group_flex\Plugin\CustomRestrictedVisibilityInterface;
+use Drupal\oec_group_flex\Plugin\GroupVisibility\CustomRestrictedVisibility;
 
 /**
  * EICGroupsHelper service that provides helper functions for groups.
@@ -31,6 +41,8 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
   const GROUP_ADMINISTRATOR_ROLE = 'group-admin';
 
   const GROUP_MEMBER_ROLE = 'group-member';
+
+  const INVITEE_INVITATION_EMAIL_LIMIT = 2;
 
   /**
    * The database connection service.
@@ -68,6 +80,27 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
   protected $time;
 
   /**
+   * The oec_group_flex.helper service.
+   *
+   * @var \Drupal\oec_group_flex\OECGroupFlexHelper
+   */
+  protected $oecGroupFlexHelper;
+
+  /**
+   * The group visibility manager service.
+   *
+   * @var \Drupal\group_flex\Plugin\GroupVisibilityManager
+   */
+  protected $groupVisibilityManager;
+
+  /**
+   * The current path service.
+   *
+   * @var \Drupal\Core\Path\CurrentPathStack
+   */
+  protected $currentPath;
+
+  /**
    * Constructs a new EventsHelperService object.
    *
    * @param \Drupal\Core\Database\Connection $database
@@ -80,19 +113,94 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
    *   The current user service.
    * @param \Drupal\Component\Datetime\TimeInterface $time
    *   The time service.
+   * @param \Drupal\oec_group_flex\OECGroupFlexHelper $oec_group_flex_helper
+   *   The oec_group_flex.helper service.
+   * @param \Drupal\group_flex\Plugin\GroupVisibilityManager $group_vibility_manager
+   *   The group visibility manager service.
+   * @param \Drupal\Core\Path\CurrentPathStack $current_path
+   *   The current path service.
    */
   public function __construct(
     Connection $database,
     RouteMatchInterface $route_match,
     ModuleHandlerInterface $module_handler,
     AccountProxyInterface $current_user,
-    TimeInterface $time
+    TimeInterface $time,
+    OECGroupFlexHelper $oec_group_flex_helper,
+    GroupVisibilityManager $group_visibility_manager,
+    CurrentPathStack $current_path
   ) {
     $this->database = $database;
     $this->routeMatch = $route_match;
     $this->moduleHandler = $module_handler;
     $this->currentUser = $current_user;
     $this->time = $time;
+    $this->oecGroupFlexHelper = $oec_group_flex_helper;
+    $this->groupVisibilityManager = $group_visibility_manager;
+    $this->currentPath = $current_path;
+  }
+
+  /**
+   * Check if a group can be flagged depending on the moderation state.
+   *
+   * @param \Drupal\group\Entity\GroupInterface $group
+   *   The group entity.
+   *
+   * @return bool
+   *   TRUE if the group is not in Pending or Draft state.
+   */
+  public static function groupIsFlaggable(GroupInterface $group) {
+    $moderation_state = $group->get('moderation_state')->value;
+    return !in_array(
+      $moderation_state,
+      [
+        GroupsModerationHelper::GROUP_PENDING_STATE,
+        GroupsModerationHelper::GROUP_DRAFT_STATE,
+      ]
+    );
+  }
+
+  /**
+   * Checks if a user is a group admin of a given group.
+   *
+   * @param \Drupal\group\Entity\GroupInterface $group
+   *   The group entity.
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *   The user account object.
+   * @param \Drupal\group\GroupMembership|null $membership
+   *   The group membership (optional).
+   *
+   * @return bool
+   *   TRUE if user is a group admin.
+   */
+  public static function userIsGroupAdmin(GroupInterface $group, AccountInterface $account, GroupMembership $membership = NULL) {
+    $membership = $membership ?: $group->getMember($account);
+
+    // User is not a member of the group. We return FALSE.
+    if (!$membership) {
+      return FALSE;
+    }
+
+    $membership_roles = $membership->getRoles();
+    $is_admin = FALSE;
+
+    foreach ($membership_roles as $role) {
+      $is_admin = in_array(
+        $role->id(),
+        [
+          self::GROUP_ADMINISTRATOR_ROLE,
+          self::GROUP_OWNER_ROLE,
+        ]
+      );
+
+      if (!$is_admin) {
+        continue;
+      }
+
+      break;
+    }
+
+    return $is_admin;
   }
 
   /**
@@ -253,35 +361,65 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
    *   - joining_method: the GroupJoiningMethod plugin type.
    * @param string $plugin_id
    *   The plugin ID.
+   * @param string $format
+   *   The format of the label. Can be 'default' or 'short'. Defaults to
+   *   'default'.
    *
    * @return \Drupal\Core\StringTranslation\TranslatableMarkup|string
    *   The description for the given plugin.
    */
-  public function getGroupFlexPluginTitle(string $plugin_type, string $plugin_id) {
+  public function getGroupFlexPluginTitle(string $plugin_type, string $plugin_id, string $format = 'default') {
     $key = "$plugin_type-$plugin_id";
 
-    switch ($key) {
-      case 'visibility-' . GroupVisibilityType::GROUP_VISIBILITY_PUBLIC:
-        return $this->t('Public group');
+    $labels = [
+      'visibility-' . GroupVisibilityType::GROUP_VISIBILITY_PUBLIC => [
+        'default' => $this->t('Public group'),
+        'short' => $this->t('Public'),
+      ],
+      'visibility-' . GroupVisibilityType::GROUP_VISIBILITY_COMMUNITY => [
+        'default' => $this->t('Community members only'),
+        'short' => $this->t('Community members'),
+      ],
+      'visibility-' . GroupVisibilityType::GROUP_VISIBILITY_CUSTOM_RESTRICTED => [
+        'default' => $this->t('Restricted group'),
+        'short' => $this->t('Restricted'),
+      ],
+      'visibility-' . GroupVisibilityType::GROUP_VISIBILITY_PRIVATE => [
+        'default' => $this->t('Private group'),
+        'short' => $this->t('Private'),
+      ],
+      'joining_method-' . GroupJoiningMethodType::GROUP_JOINING_METHOD_TU_OPEN => [
+        'default' => $this->t('Open'),
+        'short' => $this->t('Open'),
+      ],
+      'joining_method-' . GroupJoiningMethodType::GROUP_JOINING_METHOD_TU_MEMBERSHIP_REQUEST => [
+        'default' => $this->t('Moderated'),
+        'short' => $this->t('Moderated'),
+      ],
+    ];
 
-      case 'visibility-' . GroupVisibilityType::GROUP_VISIBILITY_COMMUNITY:
-        return $this->t('Community members only');
-
-      case 'visibility-' . GroupVisibilityType::GROUP_VISIBILITY_CUSTOM_RESTRICTED:
-        return $this->t('Restricted group');
-
-      case 'visibility-' . GroupVisibilityType::GROUP_VISIBILITY_PRIVATE:
-        return $this->t('Private group');
-
-      case 'joining_method-' . GroupJoiningMethodType::GROUP_JOINING_METHOD_TU_OPEN:
-        return $this->t('Open');
-
-      case 'joining_method-' . GroupJoiningMethodType::GROUP_JOINING_METHOD_TU_MEMBERSHIP_REQUEST:
-        return $this->t('Moderated');
-
-      default:
-        return '';
+    if (!empty($labels[$key][$format])) {
+      return $labels[$key][$format];
     }
+
+    return '';
+  }
+
+  /**
+   * Returns the visibility label for the given group entity.
+   *
+   * @param \Drupal\group\Entity\GroupInterface $group
+   *   The group entity to check.
+   * @param string $format
+   *   The format of the label. Can be 'default' or 'short'. Defaults to
+   *   'default'.
+   *
+   * @return string
+   *   The visibility label.
+   */
+  public function getGroupVisibilityLabel(GroupInterface $group, string $format = 'default') {
+    $group_visibility = $this->oecGroupFlexHelper->getGroupVisibilitySettings($group);
+    return $this->getGroupFlexPluginTitle('visibility', $group_visibility['plugin_id'], $format);
   }
 
   /**
@@ -367,23 +505,133 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
   }
 
   /**
-   * Check if a group can be flagged depending on the moderation state.
+   * Checks if the current page is a group under review page.
    *
-   * @param \Drupal\group\Entity\GroupInterface $group
-   *   The group entity.
-   *
-   * @return bool
-   *   TRUE if the group is not in Pending or Draft state.
+   * @return \Drupal\group\Entity\Group|bool
+   *   Returns the group if is blocked and the user can view it.
    */
-  public static function groupIsFlaggable(GroupInterface $group) {
+  public function isGroupUnderReviewPage(?GroupInterface $group) {
+    $route_name = $this->routeMatch->getRouteName();
+
+    if (!$route_name === 'system.403') {
+      return FALSE;
+    }
+
+    if (!$group) {
+      if (!($group = $this->isGroupPage())) {
+        return $group;
+      }
+    }
+
+    $is_group_page = $group;
+
     $moderation_state = $group->get('moderation_state')->value;
-    return !in_array(
-      $moderation_state,
-      [
-        GroupsModerationHelper::GROUP_PENDING_STATE,
-        GroupsModerationHelper::GROUP_DRAFT_STATE,
-      ]
-    );
+
+    // If group is not blocked, we return FALSE.
+    if ($moderation_state !== GroupsModerationHelper::GROUP_BLOCKED_STATE) {
+      return FALSE;
+    }
+
+    // If user doesn't have permission to view the group, we return FALSE.
+    if (!$group->hasPermission('view group', $this->currentUser->getAccount())) {
+      return FALSE;
+    }
+
+    $group_visibility_settings = $this->oecGroupFlexHelper->getGroupVisibilitySettings($group);
+
+    // If group visibility is not custom restricted, it means the user can
+    // access the group but the group is under review.
+    if ($group_visibility_settings['plugin_id'] !== GroupVisibilityType::GROUP_VISIBILITY_CUSTOM_RESTRICTED) {
+      return $is_group_page;
+    }
+
+    $group_visibility_plugin = $this->groupVisibilityManager->createInstance($group_visibility_settings['plugin_id']);
+
+    if ($group_visibility_plugin instanceof CustomRestrictedVisibility) {
+      $is_group_page = FALSE;
+
+      // Loop through all of the options, they are keyed by pluginId.
+      // If we have a match and the plugin returns not neutral we return the
+      // it means the user has access to the group but the group is under
+      // review.
+      foreach (array_keys($group_visibility_settings['settings']->getOptions()) as $pluginId) {
+        $group_custom_restricted_visibility_plugins = $group_visibility_plugin->getCustomRestrictedPlugins();
+        $plugin = isset($group_custom_restricted_visibility_plugins[$pluginId]) ? $group_custom_restricted_visibility_plugins[$pluginId] : NULL;
+
+        if ($plugin instanceof CustomRestrictedVisibilityInterface) {
+          $pluginAccess = $plugin->hasViewAccess($group, $this->currentUser->getAccount(), $group_visibility_settings['settings']);
+          if (!$pluginAccess->isNeutral()) {
+            $is_group_page = $group;
+            break;
+          }
+        }
+      }
+    }
+
+    return $is_group_page;
+  }
+
+  /**
+   * Checks if the current page is a group page.
+   *
+   * @return \Drupal\group\Entity\Group|bool
+   *   Returns the group entity object if the current page is a group page.
+   */
+  public function isGroupPage() {
+    $is_group_page = FALSE;
+    $current_path = $this->currentPath->getPath();
+    $current_url = Url::fromUri("internal:" . $current_path);
+
+    if (!$current_url->isRouted()) {
+      return $is_group_page;
+    }
+
+    $route_name = $current_url->getRouteName();
+    $route_parameters = $current_url->getRouteParameters();
+
+    switch ($route_name) {
+      case 'entity.group.canonical':
+      case 'eic_groups.about_page':
+      case GroupOverviewPages::DISCUSSIONS:
+      case GroupOverviewPages::FILES:
+      case GroupOverviewPages::MEMBERS:
+      case GroupOverviewPages::SEARCH:
+        if (is_numeric($route_parameters['group'])) {
+          $group = Group::load($route_parameters['group']);
+        }
+        elseif ($route_parameters['group'] instanceof GroupInterface) {
+          $group = $route_parameters['group'];
+        }
+        else {
+          break;
+        }
+        $is_group_page = $group;
+        break;
+
+      case 'entity.node.canonical':
+        if (empty($route_parameters['node'])) {
+          break;
+        }
+
+        if (is_numeric($route_parameters['node'])) {
+          $node = Node::load($route_parameters['node']);
+        }
+
+        if (!isset($node) && !$route_parameters['node'] instanceof NodeInterface) {
+          break;
+        }
+
+        $group = $this->getGroupByEntity($node);
+
+        if (!$group) {
+          break;
+        }
+
+        $is_group_page = $group;
+        break;
+    }
+
+    return $is_group_page;
   }
 
 }

@@ -6,6 +6,7 @@ use Drupal\Core\Block\Annotation\Block;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\eic_groups\EICGroupsHelper;
+use Drupal\eic_user\UserHelper;
 use Drupal\file\Entity\File;
 use Drupal\flag\FlagService;
 use Drupal\group\Entity\GroupContent;
@@ -97,18 +98,23 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
     /** @var NodeInterface|NULL $node */
     $node = \Drupal::routeMatch()->getParameter('node');
 
-    if (!$node instanceof NodeInterface || 'discussion' !== $node->bundle()) {
+    if (!$node instanceof NodeInterface) {
       return [];
     }
 
     $current_group_route = $this->groupsHelper->getGroupFromRoute();
     $user_group_roles = [];
+    $account = \Drupal::currentUser();
 
     if ($current_group_route) {
-      $account = \Drupal::currentUser();
       $membership = $current_group_route->getMember($account);
       $user_group_roles = $membership instanceof GroupMembership ? $membership->getRoles() : [];
     }
+
+    $user_group_roles = array_merge(
+      $user_group_roles,
+      $account->getRoles(TRUE)
+    );
 
     $contributors = $node->get('field_related_contributors')
       ->referencedEntities();
@@ -148,6 +154,8 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
     $file = $media_picture ? File::load($media_picture[0]->get('oe_media_image')->target_id) : NULL;
     $file_url = $file ? file_url_transform_relative(file_create_url($file->get('uri')->value)) : NULL;
 
+    $group_id = $current_group_route ? $current_group_route->id() : 0;
+
     $build['#attached']['drupalSettings']['overview'] = [
       'is_group_owner' => array_key_exists(EICGroupsHelper::GROUP_OWNER_ROLE, $user_group_roles),
       'user' => [
@@ -160,6 +168,7 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
           '#',
       ],
       'group_roles' => $user_group_roles,
+      'group_id' => $group_id,
       'permissions' => [
         'post_comment' =>
           $this->groupPermissionChecker->getPermissionInGroups(
@@ -172,11 +181,7 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
           $current_user,
           $group_contents
         )->isAllowed(),
-        'delete_all_comments' => $this->groupPermissionChecker->getPermissionInGroups(
-          'delete any page content',
-          $current_user,
-          $group_contents
-        )->isAllowed(),
+        'delete_all_comments' => UserHelper::isPowerUser($current_user),
         'edit_own_comments' => $this->groupPermissionChecker->getPermissionInGroups(
           'edit own comments',
           $current_user,
@@ -185,7 +190,8 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
       ],
       'translations' => [
         'title' => $this->t('Comments', [], ['context' => 'eic_groups']),
-        'no_results' => $this->t('There are currently no comments.', [], ['context' => 'eic_groups']),
+        'no_results_title' => $this->t('We haven’t found any search results', [], ['context' => 'eic_group']),
+        'no_results_body' => $this->t('Please try again with another keyword', [], ['context' => 'eic_group']),
         'load_more' => $this->t('Load more', [], ['context' => 'eic_groups']),
         'edit' => $this->t('Edit', [], ['context' => 'eic_groups']),
         'options' => $this->t('Options', [], ['context' => 'eic_groups']),
@@ -204,6 +210,13 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
 
     $group_id = $current_group_route ? $current_group_route->id() : 0;
 
+    if (!$group_id) {
+      \Drupal::logger('eic_groups')
+        ->warning('No group found for comments block');
+
+      return [];
+    }
+
     return $build + [
         '#cache' => [
           'contexts' => [
@@ -216,6 +229,7 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
         '#theme' => 'eic_group_comments_from_discussion',
         '#discussion_id' => $node->id(),
         '#contributors' => $contributors_data,
+        '#is_anonymous' => $current_user->isAnonymous(),
       ];
   }
 

@@ -5,8 +5,10 @@
  */
 #}
 <div class="ecl-social-media-share">
-  <p class="ecl-social-media-share__description">
-    {{ title }}
-  </p>
-  <script type="application/json">{{ icons_json }}</script>
+    {% if title is not empty %}
+        <p class="ecl-social-media-share__description">
+            {{ title }}
+        </p>
+    {% endif %}
+    <script type="application/json">{{ icons_json }}</script>
 </div>

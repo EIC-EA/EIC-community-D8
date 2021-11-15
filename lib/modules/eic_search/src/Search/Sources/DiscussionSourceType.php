@@ -62,7 +62,7 @@ class DiscussionSourceType extends SourceType {
         'ASC' => $this->t('Old', [], ['context' => 'eic_search']),
         'DESC' => $this->t('Recent', [], ['context' => 'eic_search']),
       ],
-      'ss_global_title' => [
+      'ss_content_title' => [
         'label' => $this->t('Title', [], ['context' => 'eic_search']),
         'ASC' => $this->t('Title A-Z', [], ['context' => 'eic_search']),
         'DESC' => $this->t('Title Z-A', [], ['context' => 'eic_search']),
@@ -79,7 +79,26 @@ class DiscussionSourceType extends SourceType {
         'label' => $this->t('Last liked', [], ['context' => 'eic_search']),
         'DESC' => $this->t('Last liked', [], ['context' => 'eic_search']),
       ],
+      'its_' . SolrDocumentProcessor::LAST_FLAGGED_KEY . '_' . FlagType::BOOKMARK_CONTENT => [
+        'label' => $this->t('Last bookmarked', [], ['context' => 'eic_search']),
+        'DESC' => $this->t('Last bookmarked', [], ['context' => 'eic_search']),
+      ],
+      'its_' . SolrDocumentProcessor::LAST_FLAGGED_KEY . '_' . FlagType::HIGHLIGHT_CONTENT => [
+        'label' => $this->t('Last highlighted', [], ['context' => 'eic_search']),
+        'DESC' => $this->t('Last highlighted', [], ['context' => 'eic_search']),
+      ],
+      'score' => [
+        'label' => $this->t('Relevance', [], ['context' => 'eic_search']),
+        'DESC' => $this->t('Relevance', [], ['context' => 'eic_search']),
+      ],
     ];
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function getSecondDefaultSort(): array {
+    return ['ss_global_created_date', 'DESC'];
   }
 
   /**
@@ -87,7 +106,7 @@ class DiscussionSourceType extends SourceType {
    */
   public function getSearchFieldsId(): array {
     return [
-      'ss_global_title',
+      'tm_global_title',
       'ss_discussion_last_comment_text',
       'ss_discussion_last_comment_author',
       'ss_global_body_no_html',

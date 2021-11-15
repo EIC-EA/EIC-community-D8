@@ -57,6 +57,13 @@ abstract class SourceType implements SourceTypeInterface {
   /**
    * @inheritDoc
    */
+  public function getSecondDefaultSort(): array {
+    return [];
+  }
+
+  /**
+   * @inheritDoc
+   */
   public function getSearchFieldsId(): array {
     return [];
   }
@@ -95,4 +102,19 @@ abstract class SourceType implements SourceTypeInterface {
   public function allowPagination(): bool {
     return TRUE;
   }
+
+  /**
+   * @inheritDoc
+   */
+  public function supportDateFilter(): bool {
+    return FALSE;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function getDateIntervalField(): array {
+    return [];
+  }
+
 }

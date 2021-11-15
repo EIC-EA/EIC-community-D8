@@ -1,0 +1,64 @@
+@use "sass:map";
+$social-colors: (
+  "twitter": #1da1f2,
+  "linkedin": #1385c8,
+  "facebook": #537bbd,
+);
+$transition: background-color .15s ease-in-out;
+
+.ecl-social-follow {
+  margin-bottom: 8px;
+
+  &__items {
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+  }
+
+  &__item {
+    width: 173px;
+  }
+
+  &__item-wrapper {
+    display: inline-flex;
+    align-items: center;
+    flex-direction: row;
+    height: 50px;
+    width: 100%;
+    color: #ffffff;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: none;
+      color: #ffffff;
+    }
+  }
+
+  @each $name, $color in $social-colors {
+    &__item-wrapper--#{$name} {
+      transition: $transition;
+      background: darken($color, 10);
+      & .ecl-social-follow__item-icon-wrapper {
+        background-color:$color;
+      }
+
+      &:hover {
+        background-color:$color;
+      }
+    }
+  }
+
+  &__item-icon-wrapper {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 100%;
+  }
+
+  &__item-label {
+    display: inline-block;
+    padding: 0 8px;
+  }
+
+}
