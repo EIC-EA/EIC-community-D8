@@ -26,10 +26,12 @@ function eic_community_preprocess_node__gallery(array &$variables) {
       $node = $variables['node'];
       $files = $node->get('field_gallery_slides')->referencedEntities();
       $files_list = [];
+      $slides = [];
 
       foreach ($files as $file) {
         $media = $file->get('field_gallery_slide_media')->referencedEntities()[0];
         $download = File::load($media->oe_media_image->getValue()[0]['target_id']);
+        $download_url = MediaHelper::formatMediaDownloadLink($media)->toString();
 
         $files_list[] = [
           'name' => $download->getFileName(),
@@ -50,9 +52,49 @@ function eic_community_preprocess_node__gallery(array &$variables) {
             ],
           ],
           'mime_type' => substr(strrchr($download->get('filemime')->getString(), '/'), 1),
-          'path' => MediaHelper::formatMediaDownloadLink($media)->toString(),
+          'path' => $download_url,
         ];
+
+        $slide = [
+          'name' => $download->getFileName(),
+          'stats' => [
+            [
+              'hide_label' => TRUE,
+              'icon' => [
+                'name' => 'download',
+                'type' => 'custom',
+              ],
+              'label' => t('downloads'),
+              // @todo Add statistics value
+              'value' => \Drupal::service('eic_media_statistics.entity_file_download_count')->getFileDownloads($file),
+            ],
+            [
+              'hide_label' => TRUE,
+              'value' => format_size($download->get('filesize')->getString()),
+            ],
+          ],
+          'mime_type' => substr(strrchr($download->get('filemime')->getString(), '/'), 1),
+          'path' => $download_url,
+          'image' => [
+            'src' => $download->createFileUrl(),
+            'alt' => $download->getFileName(),
+          ],
+        ];
+
+        // Adds slide legend.
+        if (!$file->get('field_gallery_slide_legend')->isEmpty()) {
+          $slide['description'] = $file->get('field_gallery_slide_legend')->getString();
+        }
+
+        $slides[] = $slide;
       }
+
+      $variables['slides'] = [
+        'files' => $slides,
+        'title' => '',
+        'body' => '',
+        'icon_file_path' => $variables['eic_icon_path'],
+      ];
 
       $variables['file_list'] = [
         'title' => t('Files (%count)', ['%count' => count($files)]),

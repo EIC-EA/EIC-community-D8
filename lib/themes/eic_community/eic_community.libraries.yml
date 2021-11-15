@@ -24,6 +24,12 @@ theme:
   dependencies:
     - core/drupal
 
+react-block-gallery:
+  js:
+    dist/react/block/gallery/entrypoint.js: { minified: true }
+  dependencies:
+    - core/drupal
+
 react-block-overview-search:
   js:
     dist/react/block/overview/entrypoint.js: { minified: true }
