@@ -457,7 +457,7 @@ function eic_groups_entity_operation_alter(array &$operations, EntityInterface $
     ],
   ];
 
-  // Add block group operation.
+  // Add publish group operation.
   $publish_url = Url::fromRoute('eic_groups.group.publish.confirm_form', ['group' => $entity->id()], $url_options);
   if ($publish_url->access()) {
     $operations['publish'] = [
