@@ -267,11 +267,8 @@ class SolrDocumentProcessor {
         $file = File::load($media->get('oe_media_image')->target_id);
         $image_uri = $file->getFileUri();
 
-        $destination_uri = $image_style->buildUri($image_uri);
-        $destination_uri_160 = $image_style_160->buildUri($image_uri);
-
-        $image_style->createDerivative($image_uri, $destination_uri);
-        $image_style_160->createDerivative($image_uri, $destination_uri_160);
+        $destination_uri = $image_style->buildUrl($image_uri);
+        $destination_uri_160 = $image_style_160->buildUrl($image_uri);
 
         return json_encode([
           'id' => $slide->id(),
