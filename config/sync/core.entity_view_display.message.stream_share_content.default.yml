@@ -7,6 +7,7 @@ dependencies:
     - field.field.message.stream_share_content.field_group_ref
     - field.field.message.stream_share_content.field_operation_type
     - field.field.message.stream_share_content.field_referenced_node
+    - field.field.message.stream_share_content.field_share_message
     - field.field.message.stream_share_content.field_source_group
     - message.template.stream_share_content
 id: message.stream_share_content.default
@@ -45,6 +46,13 @@ content:
       link: true
     third_party_settings: {  }
     type: entity_reference_label
+    region: content
+  field_share_message:
+    weight: 6
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: basic_string
     region: content
   field_source_group:
     weight: 2

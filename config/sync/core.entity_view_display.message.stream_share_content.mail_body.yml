@@ -8,6 +8,7 @@ dependencies:
     - field.field.message.stream_share_content.field_group_ref
     - field.field.message.stream_share_content.field_operation_type
     - field.field.message.stream_share_content.field_referenced_node
+    - field.field.message.stream_share_content.field_share_message
     - field.field.message.stream_share_content.field_source_group
     - message.template.stream_share_content
 id: message.stream_share_content.mail_body
@@ -23,6 +24,7 @@ hidden:
   field_group_ref: true
   field_operation_type: true
   field_referenced_node: true
+  field_share_message: true
   field_source_group: true
   partial_0: true
   search_api_excerpt: true

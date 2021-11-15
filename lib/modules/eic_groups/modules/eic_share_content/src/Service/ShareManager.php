@@ -82,7 +82,10 @@ class ShareManager {
 
     /** @var \Drupal\group\Entity\GroupContentInterface $group_content */
     $group_content = reset($group_content);
-    if ($group_content->getGroup()->id() !== $source_group->id()) {
+    if (
+      $target_group->id() === $source_group->id() ||
+      $group_content->getGroup()->id() !== $source_group->id()
+    ) {
       throw new \InvalidArgumentException($this->t('This content can\'t be shared'));
     }
 
@@ -106,7 +109,7 @@ class ShareManager {
       'template' => 'stream_share_content',
       'uid' => $node->getOwnerId(),
       'field_operation_type' => ActivityStreamOperationTypes::SHARED_ENTITY,
-      'field_referenced_node' => $node,
+      'field_referenced_node' => $node->id(),
       'field_entity_type' => $node->bundle(),
       'field_source_group' => $source_group,
       'field_group_ref' => $target_group,
@@ -138,11 +141,11 @@ class ShareManager {
     NodeInterface $node,
     GroupInterface $group
   ): array {
-    return $this->entityTypeManager->getStorage('node')
+    return $this->entityTypeManager->getStorage('message')
       ->loadByProperties([
-        'type' => 'share',
-        'field_share_source_group' => $group->id(),
-        'field_share_target_content' => $node->id(),
+        'template' => 'stream_share_content',
+        'field_group_ref' => $group->id(),
+        'field_referenced_node' => $node->id(),
       ]);
   }
 
