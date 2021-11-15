@@ -1,0 +1,173 @@
+<?php
+
+namespace Drupal\eic_share_content\Service;
+
+use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\eic_content\EICContentHelperInterface;
+use Drupal\group\Entity\GroupContent;
+use Drupal\group\Entity\GroupInterface;
+use Drupal\group\Plugin\GroupContentEnablerManagerInterface;
+use Drupal\node\Entity\Node;
+use Drupal\node\NodeInterface;
+
+/**
+ * Class ShareManager
+ *
+ * @package Drupal\eic_share_content\Service
+ */
+class ShareManager {
+
+  use StringTranslationTrait;
+
+  /**
+   * @var \Drupal\eic_content\EICContentHelperInterface
+   */
+  private $contentHelper;
+
+  /**
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  private $entityTypeManager;
+
+  /**
+   * @var \Drupal\group\Plugin\GroupContentEnablerManagerInterface
+   */
+  private $groupContentPluginManager;
+
+  /**
+   * @param \Drupal\eic_content\EICContentHelperInterface $content_helper
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   * @param \Drupal\group\Plugin\GroupContentEnablerManagerInterface $plugin_manager
+   */
+  public function __construct(
+    EICContentHelperInterface $content_helper,
+    EntityTypeManagerInterface $entity_type_manager,
+    GroupContentEnablerManagerInterface $plugin_manager
+  ) {
+    $this->contentHelper = $content_helper;
+    $this->entityTypeManager = $entity_type_manager;
+    $this->groupContentPluginManager = $plugin_manager;
+  }
+
+  /**
+   * @param \Drupal\group\Entity\GroupInterface $source_group
+   * @param \Drupal\group\Entity\GroupInterface $target_group
+   * @param \Drupal\node\NodeInterface $node
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   */
+  public function share(
+    GroupInterface $source_group,
+    GroupInterface $target_group,
+    NodeInterface $node
+  ) {
+    $group_content = $this->contentHelper->getGroupContentByEntity($node);
+    if (empty($group_content)) {
+      throw new \InvalidArgumentException($this->t('This content can\'t be shared'));
+    }
+
+    /** @var \Drupal\group\Entity\GroupContentInterface $group_content */
+    $group_content = reset($group_content);
+    if ($group_content->getGroup()->id() !== $source_group->id()) {
+      throw new \InvalidArgumentException($this->t('This content can\'t be shared'));
+    }
+
+    if ($this->isShared($node, $target_group)) {
+      throw new \InvalidArgumentException($this->t('This content is already shared with this group'));
+    }
+
+    $plugin_id = $this->getGroupContentId($target_group, $node);
+    if (!$plugin_id) {
+      throw new \InvalidArgumentException($this->t('This content can\'t be shared'));
+    }
+
+    $share_node = Node::create([
+      'type' => 'share',
+      'title' => sprintf(
+        'Share for node id %s type %s to group id %d',
+        $node->id(),
+        $node->bundle(),
+        $target_group->id()
+      ),
+      'field_share_source_group' => $source_group,
+      'field_share_target_group' => $target_group,
+      'field_share_target_content' => $node,
+    ]);
+    $share_node->save();
+
+    $shared_group_content = GroupContent::create([
+      'type' => $plugin_id,
+      'gid' => $target_group->id(),
+      'entity_id' => $node->id(),
+    ]);
+    $shared_group_content->save();
+  }
+
+  /**
+   * @param \Drupal\node\NodeInterface $node
+   * @param \Drupal\group\Entity\GroupInterface $group
+   *
+   * @return bool
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   */
+  public function isShared(NodeInterface $node, GroupInterface $group): bool {
+    return !empty($this->getShareEntity($node, $group));
+  }
+
+  /**
+   * @param \Drupal\node\NodeInterface $node
+   * @param \Drupal\group\Entity\GroupInterface $group
+   *
+   * @return \Drupal\Core\Entity\EntityInterface[]
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   */
+  public function getShareEntity(
+    NodeInterface $node,
+    GroupInterface $group
+  ): array {
+    return $this->entityTypeManager->getStorage('node')
+      ->loadByProperties([
+        'type' => 'share',
+        'field_share_source_group' => $group->id(),
+        'field_share_target_content' => $node->id(),
+      ]);
+  }
+
+  /**
+   * Return the group content plugin id for the given node.
+   *
+   * @param \Drupal\group\Entity\GroupInterface $group
+   * @param \Drupal\node\NodeInterface $node
+   *
+   * @return mixed|string|null
+   */
+  public function getGroupContentId(
+    GroupInterface $group,
+    NodeInterface $node
+  ) {
+    static $enabled_ids;
+    if (empty($enabled_ids)) {
+      $plugin_ids = $this->groupContentPluginManager
+        ->getInstalledIds($group->getGroupType());
+
+      foreach ($plugin_ids as $plugin_id) {
+        if (strpos($plugin_id, 'group_node:') !== 0) {
+          continue;
+        }
+
+        [, $content_type] = explode(':', $plugin_id);
+        $enabled_ids[$content_type] = $group->getGroupType()
+          ->getContentPlugin('group_node:discussion')
+          ->getContentTypeConfigId();;
+      }
+    }
+
+    return $enabled_ids[$node->bundle()] ?? NULL;
+  }
+
+}
