@@ -1,0 +1,19 @@
+.ecl-topic__stats {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  border-top: 1px solid $ecl-color-grey-25;
+  border-bottom: 1px solid $ecl-color-grey-25;
+  &__item {
+    display: flex;
+    align-items: center;
+    padding: map-get($ecl-spacing, "m");
+    color: $ecl-color-blue;
+  }
+
+  &__data {
+    margin: 0 map-get($ecl-spacing, "xs");
+    font-weight: bold;
+    font-size: 1.25em;
+  }
+}

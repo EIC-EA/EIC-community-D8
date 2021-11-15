@@ -98,13 +98,6 @@
 
       #{$node}--has-list-layout & {
         width: 100%;
-        & > * {
-          border-bottom: 1px solid $ecl-color-grey-25;
-        }
-        &:last-child > * {
-          padding-bottom: 0;
-          border-bottom: none;
-        }
       }
     }
 
