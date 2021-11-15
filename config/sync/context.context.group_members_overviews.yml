@@ -41,7 +41,7 @@ reactions:
         label: ''
         provider: eic_search
         label_display: visible
-        source_type: Drupal\eic_search\Search\Sources\UserListSourceType
+        source_type: Drupal\eic_search\Search\Sources\UserGallerySourceType
         facets:
           sm_user_profile_topic_expertise_string: sm_user_profile_topic_expertise_string
           sm_user_profile_field_vocab_topic_interest_array: sm_user_profile_field_vocab_topic_interest_array

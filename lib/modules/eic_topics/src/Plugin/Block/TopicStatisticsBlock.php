@@ -65,7 +65,9 @@ class TopicStatisticsBlock extends BlockBase implements ContainerFactoryPluginIn
    */
   public function build() {
     /** @var \Drupal\taxonomy\TermInterface $term */
-    $term = $this->routeMatch->getParameter('taxonomy_term');
+    if (!$term = $this->routeMatch->getParameter('taxonomy_term')) {
+      return [];
+    }
 
     return [
       '#theme' => 'topics_statistics_block',

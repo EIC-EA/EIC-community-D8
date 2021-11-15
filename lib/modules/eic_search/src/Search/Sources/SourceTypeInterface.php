@@ -15,9 +15,13 @@ interface SourceTypeInterface {
 
   const LAYOUT_COLUMNS_COMPACT = 'columns_compact';
 
+  const LAYOUT_3_COLUMNS = 'three_columns';
+
   const LAYOUT_GLOBAL = 'global';
 
   const SOLR_FIELD_CONTENT_TYPE_ID = 'ss_global_content_type';
+
+  const SOLR_FIELD_GROUP_TYPE_ID = 'ss_global_content_type';
 
   const READ_MORE_NUMBER_TO_LOAD = 5;
 
@@ -114,5 +118,19 @@ interface SourceTypeInterface {
    * @return bool
    */
   public function allowPagination(): bool;
+
+  /**
+   * Check if Source allow to have a date filter
+   *
+   * @return bool
+   */
+  public function supportDateFilter(): bool;
+
+  /**
+   * Return the solr fields id for "from" and "to" date field.
+   *
+   * @return array
+   */
+  public function getDateIntervalField(): array;
 
 }

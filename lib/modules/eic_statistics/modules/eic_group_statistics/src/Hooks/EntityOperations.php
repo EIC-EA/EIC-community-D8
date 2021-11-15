@@ -261,14 +261,14 @@ class EntityOperations implements ContainerInjectionInterface {
       // Increments all node comments to the group statistics when node status
       // changes from unpublished to published.
       if (!$original_entity->isPublished() && $entity->isPublished()) {
-        $num_comments = $this->commentsHelper->countNodeComments($entity);
+        $num_comments = $this->commentsHelper->countEntityComments($entity);
         $this->groupStatisticsStorage->increment($group, GroupStatisticTypes::STAT_TYPE_COMMENTS, $num_comments);
         $re_index = TRUE;
       }
       elseif ($original_entity->isPublished() && !$entity->isPublished()) {
         // Decrements all node comments in the group statistics when node status
         // changes from unpublished to published.
-        $num_comments = $this->commentsHelper->countNodeComments($entity);
+        $num_comments = $this->commentsHelper->countEntityComments($entity);
         $this->groupStatisticsStorage->decrement($group, GroupStatisticTypes::STAT_TYPE_COMMENTS, $num_comments);
         $re_index = TRUE;
       }

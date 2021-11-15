@@ -19,6 +19,13 @@ eic_search.groups:
     _controller: '\Drupal\eic_search\Controller\SearchController::groups'
   requirements:
     _permission: 'access content'
+eic_search.events:
+  path: '/events'
+  defaults:
+    _title: 'Events'
+    _controller: '\Drupal\eic_search\Controller\SearchController::events'
+  requirements:
+    _permission: 'access content'
 eic_search.people:
   path: '/people'
   defaults:

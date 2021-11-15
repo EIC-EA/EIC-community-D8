@@ -143,7 +143,18 @@ display:
       sorts: {  }
       header: {  }
       footer: {  }
-      empty: {  }
+      empty:
+        area_text_custom:
+          id: area_text_custom
+          table: views
+          field: area_text_custom
+          relationship: none
+          group_type: group
+          admin_label: ''
+          empty: true
+          tokenize: false
+          content: 'We haven’t found any related groups.'
+          plugin_id: text_custom
       relationships: {  }
       arguments: {  }
       display_extenders: {  }
@@ -313,5 +324,7 @@ display:
         - route
         - url
       tags:
+        - 'config:core.entity_view_display.group.event.default'
+        - 'config:core.entity_view_display.group.group.about_page'
         - 'config:core.entity_view_display.group.group.default'
         - 'config:core.entity_view_display.group.group.teaser'

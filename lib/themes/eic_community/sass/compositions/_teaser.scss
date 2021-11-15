@@ -1,6 +1,7 @@
 .ecl-teaser {
   $node: &;
   position: relative;
+  padding: ecl-box-model('padding');
 
   @include ecl-media-breakpoint-up('sm') {
     display: flex;
@@ -59,7 +60,6 @@
   }
 
   &--as-grey {
-    padding: ecl-box-model('padding');
     background-color: map-get($ecl-colors, 'grey-5');
   }
 
@@ -189,6 +189,10 @@
     #{$node}--gallery &:before {
       display:none;
     }
+
+    &--empty {
+      padding: 60px 0;
+    }
   }
 
   &__image {
@@ -269,6 +273,15 @@
 
     @include ecl-media-breakpoint-up('sm') {
       flex-basis: calc(100% - #{map-get($ecl-media, 'l')} - #{ecl-box-model('padding')});
+    }
+  }
+
+  &__updateTime {
+    display: flex;
+    align-items: center;
+    color: $ecl-color-grey;
+    & svg {
+      margin-right: map-get($ecl-spacing, 's');
     }
   }
 
@@ -427,7 +440,8 @@
 
     @include ecl-media-breakpoint-down('md') {
       #{$node}--event & {
-        flex-direction: column;
+        flex-direction: row;
+        margin-bottom: map-get($ecl-spacing, 's');
       }
     }
 
@@ -494,7 +508,7 @@
     @include ecl-responsive-font('label');
 
     a {
-      display:flex;
+      display: inline-flex;
     }
 
     #{$node}--as-card#{$node}--member & {
@@ -939,7 +953,9 @@
   &__stat-icon {
     color: ecl-typography('color', 'label');
     margin-right: 4px;
-    display: block;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   /* file list teaser */

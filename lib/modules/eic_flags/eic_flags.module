@@ -12,12 +12,15 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Session\AccountInterface;
-use Drupal\eic_flags\Form\RequestCloseForm;
+use Drupal\eic_flags\BlockFlagTypes;
+use Drupal\eic_flags\Form\EntityBlockForm;
 use Drupal\eic_flags\Form\NewRequestForm;
+use Drupal\eic_flags\Form\RequestCloseForm;
 use Drupal\eic_flags\Hooks\EntityOperations;
 use Drupal\eic_flags\Hooks\FlagTokens;
 use Drupal\eic_flags\RequestStatus;
 use Drupal\eic_flags\RequestTypes;
+use Drupal\eic_flags\Routing\EntityBlockRouteProvider;
 use Drupal\eic_flags\Routing\EntityRequestRouteProvider;
 use Drupal\eic_flags\Service\HandlerInterface;
 
@@ -125,8 +128,31 @@ function eic_flags_entity_type_build(array &$entity_types) {
         '/request/{request_type}/' . $entity_id . '/{' . $entity_id . '}'
       )
       ->setLinkTemplate(
+        'new-request-api',
+        '/api/request/{request_type}/' . $entity_id . '/{' . $entity_id . '}'
+      )
+      ->setLinkTemplate(
         'close-request',
         '/admin/community/' . $entity_id . '/{' . $entity_id . '}/request/{request_type}/close'
+      );
+  }
+
+  $supported_entities = array_keys(BlockFlagTypes::getSupportedEntityTypes());
+  foreach ($supported_entities as $entity_id) {
+    if (!isset($entity_types[$entity_id])) {
+      continue;
+    }
+
+    $entity_type = $entity_types[$entity_id];
+    $handler_classes = $entity_type->getHandlerClasses();
+    $route_providers = $handler_classes['route_provider'] ?? [];
+    $route_providers['block-entity'] = EntityBlockRouteProvider::class;
+
+    $entity_type->setFormClass('block-entity', EntityBlockForm::class)
+      ->setHandlerClass('route_provider', $route_providers)
+      ->setLinkTemplate(
+        'block-entity',
+        "/{$entity_id}" . '/{' . $entity_id . '}/block'
       );
   }
 }

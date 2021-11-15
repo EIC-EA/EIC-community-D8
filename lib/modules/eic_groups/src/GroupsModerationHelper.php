@@ -29,7 +29,7 @@ class GroupsModerationHelper {
   const GROUP_PUBLISHED_STATE = 'published';
 
   /**
-   * The published state key for Group group type.
+   * The blocked state key for Group group type.
    *
    * @var string
    */

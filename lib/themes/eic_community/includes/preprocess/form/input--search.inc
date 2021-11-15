@@ -28,7 +28,7 @@ function _eic_community_preprocess_search_input_text(array $element): array {
   // Process element attributes into an ECL input array.
   $ecl_array = [
     'id' => $element['#attributes']['id'],
-    'name' => $element['#attributes']['name'],
+    'name' => $element['#attributes']['name'] ?? '',
     'disabled' => isset($element['#attributes']['disabled']) ? $element['#attributes']['disabled'] : FALSE,
     'type' => $element['#attributes']['type'],
     'class' => $element['#attributes']['class'],
