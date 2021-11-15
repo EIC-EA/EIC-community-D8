@@ -7,6 +7,7 @@ dependencies:
     - views.view.taxonomy_related_content
   module:
     - ctools
+    - eic_search
     - system
     - views
 name: taxonomy_topics_detail_page
@@ -33,7 +34,7 @@ reactions:
         provider: system
         label_display: '0'
         region: content
-        weight: '-3'
+        weight: '-4'
         context_mapping: {  }
         custom_id: system_main_block
         theme: eic_community
@@ -179,6 +180,23 @@ reactions:
         context_id: taxonomy_topics_detail_page
         third_party_settings: {  }
         uuid: 686ec6c7-2aa8-4f08-b680-d90daa09c37f
+      61aff375-e25f-43b0-9518-daa4b4a9239a:
+        id: eic_search_activity_stream
+        label: 'EIC activity stream'
+        provider: eic_search
+        label_display: '0'
+        region: content
+        weight: '-3'
+        context_mapping:
+          taxonomy_term: '@taxonomy_term.taxonomy_term_route_context:taxonomy_term'
+        custom_id: eic_search_activity_stream
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: taxonomy_topics_detail_page
+        third_party_settings: {  }
+        uuid: 61aff375-e25f-43b0-9518-daa4b4a9239a
+        show_members: 0
     id: blocks
     saved: false
     uuid: ac0fd6ab-0b0e-4d2a-896c-9dd58345db98

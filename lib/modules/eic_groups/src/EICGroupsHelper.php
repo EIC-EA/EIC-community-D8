@@ -17,6 +17,7 @@ use Drupal\Core\Url;
 use Drupal\eic_groups\Constants\GroupJoiningMethodType;
 use Drupal\eic_groups\Constants\GroupVisibilityType;
 use Drupal\eic_overviews\GroupOverviewPages;
+use Drupal\eic_user\UserHelper;
 use Drupal\group\Entity\Group;
 use Drupal\group\Entity\GroupContent;
 use Drupal\group\Entity\GroupInterface;
@@ -28,6 +29,7 @@ use Drupal\node\NodeInterface;
 use Drupal\oec_group_flex\OECGroupFlexHelper;
 use Drupal\oec_group_flex\Plugin\CustomRestrictedVisibilityInterface;
 use Drupal\oec_group_flex\Plugin\GroupVisibility\CustomRestrictedVisibility;
+use Drupal\user\Entity\User;
 
 /**
  * EICGroupsHelper service that provides helper functions for groups.
@@ -174,6 +176,11 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
    *   TRUE if user is a group admin.
    */
   public static function userIsGroupAdmin(GroupInterface $group, AccountInterface $account, GroupMembership $membership = NULL) {
+    // If user is power user, return TRUE.
+    if (UserHelper::isPowerUser($account)) {
+      return TRUE;
+    }
+
     $membership = $membership ?: $group->getMember($account);
 
     // User is not a member of the group. We return FALSE.

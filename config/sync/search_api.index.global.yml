@@ -12,8 +12,8 @@ dependencies:
     - message
     - comment
     - node
-    - path
     - eic_private_content
+    - path
     - paragraphs
     - profile
     - search_api
@@ -43,6 +43,7 @@ dependencies:
     - field.storage.message.field_operation_type
     - field.storage.message.field_referenced_comment
     - field.storage.message.field_referenced_node
+    - field.storage.node.field_vocab_topics
     - field.storage.node.field_discussion_type
     - field.storage.node.field_body
     - field.storage.node.field_comments
@@ -59,7 +60,6 @@ dependencies:
     - field.storage.paragraph.field_gallery_slide_legend
     - field.storage.media.oe_media_file
     - field.storage.paragraph.field_gallery_slide_media
-    - field.storage.node.field_vocab_topics
     - field.storage.node.field_date_range
     - field.storage.node.field_subtitle
     - field.storage.profile.field_body
@@ -885,6 +885,17 @@ field_settings:
     dependencies:
       module:
         - message
+  message_node_ref_field_vocab_topics:
+    label: 'Referenced node » Content » Topics'
+    datasource_id: 'entity:message'
+    property_path: 'field_referenced_node:entity:field_vocab_topics'
+    type: integer
+    dependencies:
+      config:
+        - field.storage.message.field_referenced_node
+        - field.storage.node.field_vocab_topics
+      module:
+        - node
   message_node_ref_id:
     label: 'Referenced node » Content » ID'
     datasource_id: 'entity:message'
@@ -914,6 +925,17 @@ field_settings:
       module:
         - node
         - path
+  private:
+    label: 'Referenced node » Content » Only visible to community members'
+    datasource_id: 'entity:message'
+    property_path: 'field_referenced_node:entity:private'
+    type: boolean
+    dependencies:
+      config:
+        - field.storage.message.field_referenced_node
+      module:
+        - eic_private_content
+        - node
   processed:
     label: 'Body » Processed text'
     datasource_id: 'entity:node'

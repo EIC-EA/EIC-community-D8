@@ -190,7 +190,7 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
       '#page_options' => $this->configuration['page_options'],
       '#enable_search' => $this->configuration['enable_search'],
       '#enable_date_filter' => $this->configuration['enable_date_filter'],
-      '#url' => Url::fromRoute('eic_groups.solr_search')->toString(),
+      '#url' => Url::fromRoute('eic_search.solr_search')->toString(),
       '#isAnonymous' => \Drupal::currentUser()->isAnonymous(),
       '#currentGroup' => $current_group_route instanceof GroupInterface ? $current_group_route->id() : NULL,
       '#currentGroupUrl' => $current_group_route instanceof GroupInterface ? $current_group_route->toUrl()->toString() : NULL,

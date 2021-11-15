@@ -105,6 +105,14 @@ interface SourceTypeInterface {
   public function getPrefilteredGroupFieldId(): array;
 
   /**
+   * If the overview needs to be prefiltered by topic we need to get fields in
+   * SOLR to search IN.
+   *
+   * @return array
+   */
+  public function getPrefilteredTopicsFieldId(): array;
+
+  /**
    * If the overview needs to be prefiltered by content type
    * we need to get field in SOLR to search IN
    *
