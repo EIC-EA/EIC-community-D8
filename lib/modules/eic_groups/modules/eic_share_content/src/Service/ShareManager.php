@@ -10,7 +10,6 @@ use Drupal\eic_messages\Service\MessageBusInterface;
 use Drupal\group\Entity\GroupContent;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\group\Plugin\GroupContentEnablerManagerInterface;
-use Drupal\node\Entity\Node;
 use Drupal\node\NodeInterface;
 
 /**
@@ -64,6 +63,7 @@ class ShareManager {
    * @param \Drupal\group\Entity\GroupInterface $source_group
    * @param \Drupal\group\Entity\GroupInterface $target_group
    * @param \Drupal\node\NodeInterface $node
+   * @param string $message
    *
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
@@ -72,7 +72,8 @@ class ShareManager {
   public function share(
     GroupInterface $source_group,
     GroupInterface $target_group,
-    NodeInterface $node
+    NodeInterface $node,
+    ?string $message
   ) {
     $group_content = $this->contentHelper->getGroupContentByEntity($node);
     if (empty($group_content)) {
@@ -94,20 +95,6 @@ class ShareManager {
       throw new \InvalidArgumentException($this->t('This content can\'t be shared'));
     }
 
-    $share_node = Node::create([
-      'type' => 'share',
-      'title' => sprintf(
-        'Share for node id %s type %s to group id %d',
-        $node->id(),
-        $node->bundle(),
-        $target_group->id()
-      ),
-      'field_share_source_group' => $source_group,
-      'field_share_target_group' => $target_group,
-      'field_share_target_content' => $node,
-    ]);
-    $share_node->save();
-
     $shared_group_content = GroupContent::create([
       'type' => $plugin_id,
       'gid' => $target_group->id(),
@@ -122,7 +109,8 @@ class ShareManager {
       'field_referenced_node' => $node,
       'field_entity_type' => $node->bundle(),
       'field_source_group' => $source_group,
-      'field_group_ref' => $target_group
+      'field_group_ref' => $target_group,
+      'field_share_message' => $message
     ]);
   }
 

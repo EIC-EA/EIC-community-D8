@@ -66,19 +66,24 @@ class ShareContentController extends ControllerBase {
     NodeInterface $node
   ) {
     $content = json_decode($this->currentRequest->getContent(), TRUE);
-    if (!isset($content['target_group'])) {
+    if (!isset($content['group']) || !isset($content['message'])) {
       throw new \InvalidArgumentException();
     }
 
     $target_group = $this->entityTypeManager
       ->getStorage('group')
-      ->load($content['target_group']);
+      ->load($content['group']);
     if (!$target_group instanceof GroupInterface) {
       throw new \InvalidArgumentException();
     }
 
     try {
-      $this->shareManager->share($group, $target_group, $node);
+      $this->shareManager->share(
+        $group,
+        $target_group,
+        $node,
+        $content['message']
+      );
     } catch (\Exception $exception) {
       return new JsonResponse([
         'status' => FALSE,
