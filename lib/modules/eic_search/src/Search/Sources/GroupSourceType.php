@@ -42,7 +42,6 @@ class GroupSourceType extends SourceType {
   public function getAvailableFacets(): array {
     return [
       'ss_group_topic_name' => $this->t('Topic', [], ['context' => 'eic_search']),
-      'tm_global_title' => $this->t('Group label', [], ['context' => 'eic_search']),
       'ss_group_user_fullname' => $this->t('Full name', [], ['context' => 'eic_search']),
     ];
   }
@@ -99,6 +98,13 @@ class GroupSourceType extends SourceType {
    */
   public function ableToPrefilteredByGroup(): bool {
     return TRUE;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function getPrefilteredContentType(): array {
+    return ['group'];
   }
 
   /**

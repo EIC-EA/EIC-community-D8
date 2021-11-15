@@ -2,6 +2,8 @@
 
 namespace Drupal\eic_flags\Access;
 
+use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Routing\Access\AccessInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -23,13 +25,29 @@ class RequestAccessCheck implements AccessInterface {
   protected $collector;
 
   /**
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
    * RequestAccessCheck constructor.
    *
    * @param \Drupal\eic_flags\Service\RequestHandlerCollector $collector
    *   The collect for request type handlers.
    */
-  public function __construct(RequestHandlerCollector $collector) {
+  public function __construct(
+    RequestHandlerCollector $collector
+  ) {
     $this->collector = $collector;
+  }
+
+  /**
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface|null $entity_type_manager
+   */
+  public function setEntityTypeManager(
+    ?EntityTypeManagerInterface $entity_type_manager
+  ) {
+    $this->entityTypeManager = $entity_type_manager;
   }
 
   /**
@@ -52,7 +70,13 @@ class RequestAccessCheck implements AccessInterface {
   ) {
     $type = $route_match->getParameter('request_type');
     $entity_type_id = $route->getOption('entity_type_id');
-    $entity = $route_match->getParameter($entity_type_id);
+    $entity = $this->entityTypeManager
+      ->getStorage($entity_type_id)
+      ->load($route_match->getRawParameter($entity_type_id));
+    if (!$entity instanceof ContentEntityInterface) {
+      throw new \InvalidArgumentException();
+    }
+
     $handler = $this->collector->getHandlerByType($type);
 
     return $handler->canRequest($account, $entity);

@@ -308,6 +308,7 @@ function eic_groups_group_access(EntityInterface $entity, $operation, AccountInt
         $entity->get('moderation_state')->value,
         [
           GroupsModerationHelper::GROUP_DRAFT_STATE,
+          GroupsModerationHelper::GROUP_PENDING_STATE,
           GroupsModerationHelper::GROUP_BLOCKED_STATE,
         ]) && $is_group_admin
       ) {
@@ -608,6 +609,6 @@ function eic_groups_entity_presave(EntityInterface $entity) {
 function eic_field_location_type_allowed_values() {
   return [
     'on_site' => t('On site', [], ['eic_groups']),
-    'remove' => t('Remote', [], ['eic_groups']),
+    'remote' => t('Remote', [], ['eic_groups']),
   ];
 }

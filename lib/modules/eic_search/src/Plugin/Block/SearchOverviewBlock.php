@@ -189,6 +189,7 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
       '#layout' => $source instanceof SourceTypeInterface ? $source->getLayoutTheme() : NULL,
       '#page_options' => $this->configuration['page_options'],
       '#enable_search' => $this->configuration['enable_search'],
+      '#enable_date_filter' => $this->configuration['enable_date_filter'],
       '#url' => Url::fromRoute('eic_groups.solr_search')->toString(),
       '#isAnonymous' => \Drupal::currentUser()->isAnonymous(),
       '#currentGroup' => $current_group_route instanceof GroupInterface ? $current_group_route->id() : NULL,
@@ -242,7 +243,8 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
   public function updateSourceConfig(array &$form, FormStateInterface $form_state) {
     if ($form_state->hasValue('field_overview_block')) {
       $current_source_value = $form_state->getValue('field_overview_block')[0]['settings']['search']['source_type'] ?: NULL;
-    } else {
+    }
+    else {
       $current_source_value = $form_state->getValue('settings')['search']['source_type'] ?: GroupSourceType::class;
     }
 
@@ -279,14 +281,18 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
     $this->configuration['sort_options'] = [];
 
     $current_source = $this->getCurrentSource($values['search']['source_type']);
+    $current_bundle = $current_source->getEntityBundle();
 
     $this->setConfiguration([
       'source_type' => $values['search']['source_type'],
-      'facets' => $values['search']['configuration']['filter'][$current_source->getEntityBundle()]['facets'],
-      'sort_options' => $values['search']['configuration']['sorts'][$current_source->getEntityBundle()]['sort_options'],
+      'facets' => $values['search']['configuration']['filter'][$current_bundle]['facets'],
+      'sort_options' => $values['search']['configuration']['sorts'][$current_bundle]['sort_options'],
       'enable_search' => $values['search']['configuration']['enable_search'],
       'page_options' => $values['search']['configuration']['pagination']['page_options'],
       'prefilter_group' => $values['search']['configuration']['prefilter_group'],
+      'enable_date_filter' => array_key_exists('enable_date_filter', $values['search']['configuration']['date']) ?
+        $values['search']['configuration']['date']['enable_date_filter'] :
+        FALSE,
       'add_facet_interests' => $values['search']['configuration']['add_facet_interests'],
       'add_facet_my_groups' => $values['search']['configuration']['add_facet_my_groups'],
     ]);
@@ -431,6 +437,13 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
         ];
       }
     }
+
+    $form['search']['configuration']['date']['enable_date_filter'] = [
+      '#type' => 'checkbox',
+      '#default_value' => $this->configuration['enable_date_filter'],
+      '#title' => $this->t('Enable date filter', [], ['context' => 'eic_search']),
+      '#description' => $this->t('It will show a new date filter in the overview\'s sidebar.', [], ['context' => 'eic_search']),
+    ];
 
     $form['search']['configuration']['add_facet_my_groups'] = [
       '#type' => 'checkbox',

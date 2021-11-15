@@ -52,7 +52,7 @@ function _eic_community_preprocess_node_news_story(array &$variables) {
         $node->get('field_header_visual')->entity,
         $node->language()->getId()
       );
-    $image_item = ImageValueObject::fromImageItem($media->get('oe_media_image')->first());
+    $image_item = ImageValueObject::fromStyledImageItem($media->get('oe_media_image')->first(), 'gallery_teaser_crop_160x160');
     $item['image'] = [
       'src' => $image_item->getSource(),
       'alt' => $image_item->getAlt(),
@@ -69,11 +69,12 @@ function _eic_community_preprocess_node_news_story(array &$variables) {
     // Sidebar elements.
     _eic_community_display_flags($variables);
 
-    if ($node->hasField(PrivateContentConst::FIELD_NAME)
+    if (
+      $node->hasField(PrivateContentConst::FIELD_NAME)
       && !$node->get(PrivateContentConst::FIELD_NAME)->value
     ) {
       if ($share_block = _eic_community_get_social_share_block()) {
-        $variables['social_share'] = $share_block;
+        $variables['editorial_actions']['items'][]['content'] = $share_block;
       }
     }
 

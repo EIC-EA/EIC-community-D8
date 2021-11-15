@@ -80,7 +80,7 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
   protected $time;
 
   /**
-   * The OEC Group flex helper service.
+   * The oec_group_flex.helper service.
    *
    * @var \Drupal\oec_group_flex\OECGroupFlexHelper
    */
@@ -91,7 +91,7 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
    *
    * @var \Drupal\group_flex\Plugin\GroupVisibilityManager
    */
-  protected $groupVibilityManager;
+  protected $groupVisibilityManager;
 
   /**
    * The current path service.
@@ -114,7 +114,7 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
    * @param \Drupal\Component\Datetime\TimeInterface $time
    *   The time service.
    * @param \Drupal\oec_group_flex\OECGroupFlexHelper $oec_group_flex_helper
-   *   The OEC Group flex helper service.
+   *   The oec_group_flex.helper service.
    * @param \Drupal\group_flex\Plugin\GroupVisibilityManager $group_vibility_manager
    *   The group visibility manager service.
    * @param \Drupal\Core\Path\CurrentPathStack $current_path
@@ -127,7 +127,7 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
     AccountProxyInterface $current_user,
     TimeInterface $time,
     OECGroupFlexHelper $oec_group_flex_helper,
-    GroupVisibilityManager $group_vibility_manager,
+    GroupVisibilityManager $group_visibility_manager,
     CurrentPathStack $current_path
   ) {
     $this->database = $database;
@@ -136,7 +136,7 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
     $this->currentUser = $current_user;
     $this->time = $time;
     $this->oecGroupFlexHelper = $oec_group_flex_helper;
-    $this->groupVibilityManager = $group_vibility_manager;
+    $this->groupVisibilityManager = $group_visibility_manager;
     $this->currentPath = $current_path;
   }
 
@@ -167,17 +167,13 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
    *   The group entity.
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The user account object.
-   * @param \Drupal\group\GroupMembership|NULL $membership
+   * @param \Drupal\group\GroupMembership|null $membership
    *   The group membership (optional).
    *
    * @return bool
    *   TRUE if user is a group admin.
    */
-  public static function userIsGroupAdmin(
-    GroupInterface $group,
-    AccountInterface $account,
-    GroupMembership $membership = NULL
-  ) {
+  public static function userIsGroupAdmin(GroupInterface $group, AccountInterface $account, GroupMembership $membership = NULL) {
     $membership = $membership ?: $group->getMember($account);
 
     // User is not a member of the group. We return FALSE.
@@ -263,8 +259,7 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
 
     foreach ($group->getGroupType()->getInstalledContentPlugins() as $plugin) {
       /** @var \Drupal\group\Plugin\GroupContentEnablerInterface $plugin */
-      if (!empty($limit_entities) && !in_array($plugin->getEntityTypeId(),
-          $limit_entities)) {
+      if (!empty($limit_entities) && !in_array($plugin->getEntityTypeId(), $limit_entities)) {
         continue;
       }
 
@@ -293,8 +288,7 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
       $this->moduleHandler->alter('group_operations', $operation_links, $group);
 
       // Sort the operations by weight.
-      uasort($operation_links,
-        '\Drupal\Component\Utility\SortArray::sortByWeightElement');
+      uasort($operation_links, '\Drupal\Component\Utility\SortArray::sortByWeightElement');
     }
 
     return $operation_links;
@@ -331,10 +325,7 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
    * @return \Drupal\Core\StringTranslation\TranslatableMarkup|string
    *   The description for the given plugin.
    */
-  public function getGroupFlexPluginDescription(
-    string $plugin_type,
-    string $plugin_id
-  ) {
+  public function getGroupFlexPluginDescription(string $plugin_type, string $plugin_id) {
     $key = "$plugin_type-$plugin_id";
 
     switch ($key) {
@@ -388,38 +379,65 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
    *   - joining_method: the GroupJoiningMethod plugin type.
    * @param string $plugin_id
    *   The plugin ID.
+   * @param string $format
+   *   The format of the label. Can be 'default' or 'short'. Defaults to
+   *   'default'.
    *
    * @return \Drupal\Core\StringTranslation\TranslatableMarkup|string
    *   The description for the given plugin.
    */
-  public function getGroupFlexPluginTitle(
-    string $plugin_type,
-    string $plugin_id
-  ) {
+  public function getGroupFlexPluginTitle(string $plugin_type, string $plugin_id, string $format = 'default') {
     $key = "$plugin_type-$plugin_id";
 
-    switch ($key) {
-      case 'visibility-' . GroupVisibilityType::GROUP_VISIBILITY_PUBLIC:
-        return $this->t('Public group');
+    $labels = [
+      'visibility-' . GroupVisibilityType::GROUP_VISIBILITY_PUBLIC => [
+        'default' => $this->t('Public group'),
+        'short' => $this->t('Public'),
+      ],
+      'visibility-' . GroupVisibilityType::GROUP_VISIBILITY_COMMUNITY => [
+        'default' => $this->t('Community members only'),
+        'short' => $this->t('Community members'),
+      ],
+      'visibility-' . GroupVisibilityType::GROUP_VISIBILITY_CUSTOM_RESTRICTED => [
+        'default' => $this->t('Restricted group'),
+        'short' => $this->t('Restricted'),
+      ],
+      'visibility-' . GroupVisibilityType::GROUP_VISIBILITY_PRIVATE => [
+        'default' => $this->t('Private group'),
+        'short' => $this->t('Private'),
+      ],
+      'joining_method-' . GroupJoiningMethodType::GROUP_JOINING_METHOD_TU_OPEN => [
+        'default' => $this->t('Open'),
+        'short' => $this->t('Open'),
+      ],
+      'joining_method-' . GroupJoiningMethodType::GROUP_JOINING_METHOD_TU_MEMBERSHIP_REQUEST => [
+        'default' => $this->t('Moderated'),
+        'short' => $this->t('Moderated'),
+      ],
+    ];
 
-      case 'visibility-' . GroupVisibilityType::GROUP_VISIBILITY_COMMUNITY:
-        return $this->t('Community members only');
-
-      case 'visibility-' . GroupVisibilityType::GROUP_VISIBILITY_CUSTOM_RESTRICTED:
-        return $this->t('Restricted group');
-
-      case 'visibility-' . GroupVisibilityType::GROUP_VISIBILITY_PRIVATE:
-        return $this->t('Private group');
-
-      case 'joining_method-' . GroupJoiningMethodType::GROUP_JOINING_METHOD_TU_OPEN:
-        return $this->t('Open');
-
-      case 'joining_method-' . GroupJoiningMethodType::GROUP_JOINING_METHOD_TU_MEMBERSHIP_REQUEST:
-        return $this->t('Moderated');
-
-      default:
-        return '';
+    if (!empty($labels[$key][$format])) {
+      return $labels[$key][$format];
     }
+
+    return '';
+  }
+
+  /**
+   * Returns the visibility label for the given group entity.
+   *
+   * @param \Drupal\group\Entity\GroupInterface $group
+   *   The group entity to check.
+   * @param string $format
+   *   The format of the label. Can be 'default' or 'short'. Defaults to
+   *   'default'.
+   *
+   * @return string
+   *   The visibility label.
+   */
+  public function getGroupVisibilityLabel(GroupInterface $group, string $format = 'default') {
+    $group_visibility = $this->oecGroupFlexHelper->getGroupVisibilitySettings($group);
+    return $this->getGroupFlexPluginTitle('visibility', $group_visibility['plugin_id'], $format);
   }
 
   /**
@@ -432,8 +450,7 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
   ) {
     $permissions = $group_permissions->getPermissions();
     foreach ($role_permissions as $permission) {
-      if (!array_key_exists($role, $permissions) || !in_array($permission,
-          $permissions[$role], TRUE)) {
+      if (!array_key_exists($role, $permissions) || !in_array($permission, $permissions[$role], TRUE)) {
         $permissions[$role][] = $permission;
       }
     }
@@ -451,8 +468,7 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
   ) {
     $permissions = $group_permissions->getPermissions();
     foreach ($role_permissions as $permission) {
-      if (array_key_exists($role, $permissions) || in_array($permission,
-          $permissions[$role], TRUE)) {
+      if (array_key_exists($role, $permissions) || in_array($permission, $permissions[$role], TRUE)) {
         $permissions[$role] = array_diff($permissions[$role], [$permission]);
       }
     }
@@ -463,9 +479,7 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
   /**
    * {@inheritdoc}
    */
-  public function saveGroupPermissions(
-    GroupPermissionInterface $group_permissions
-  ) {
+  public function saveGroupPermissions(GroupPermissionInterface $group_permissions) {
     $violations = $group_permissions->validate();
 
     if (count($violations) > 0) {
@@ -537,8 +551,7 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
     }
 
     // If user doesn't have permission to view the group, we return FALSE.
-    if (!$group->hasPermission('view group',
-      $this->currentUser->getAccount())) {
+    if (!$group->hasPermission('view group', $this->currentUser->getAccount())) {
       return FALSE;
     }
 
@@ -550,7 +563,7 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
       return $is_group_page;
     }
 
-    $group_visibility_plugin = $this->groupVibilityManager->createInstance($group_visibility_settings['plugin_id']);
+    $group_visibility_plugin = $this->groupVisibilityManager->createInstance($group_visibility_settings['plugin_id']);
 
     if ($group_visibility_plugin instanceof CustomRestrictedVisibility) {
       $is_group_page = FALSE;
@@ -564,9 +577,7 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
         $plugin = isset($group_custom_restricted_visibility_plugins[$pluginId]) ? $group_custom_restricted_visibility_plugins[$pluginId] : NULL;
 
         if ($plugin instanceof CustomRestrictedVisibilityInterface) {
-          $pluginAccess = $plugin->hasViewAccess($group,
-            $this->currentUser->getAccount(),
-            $group_visibility_settings['settings']);
+          $pluginAccess = $plugin->hasViewAccess($group, $this->currentUser->getAccount(), $group_visibility_settings['settings']);
           if (!$pluginAccess->isNeutral()) {
             $is_group_page = $group;
             break;
@@ -588,6 +599,11 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
     $is_group_page = FALSE;
     $current_path = $this->currentPath->getPath();
     $current_url = Url::fromUri("internal:" . $current_path);
+
+    if (!$current_url->isRouted()) {
+      return $is_group_page;
+    }
+
     $route_name = $current_url->getRouteName();
     $route_parameters = $current_url->getRouteParameters();
 

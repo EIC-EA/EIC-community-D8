@@ -125,7 +125,7 @@ function eic_community_preprocess_eic_group_header_block(array &$variables) {
   }
 
   $variables['group_values']['flags'] = $flags;
-
+  $variables['group_values']['social_share'] = _eic_community_get_social_share_block();
   // Prepare group statistics values to send to the template.
   $stats = [];
   foreach ($variables['group_values']['stats'] as $stat_type => $statistic) {

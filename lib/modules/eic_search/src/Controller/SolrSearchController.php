@@ -43,6 +43,9 @@ class SolrSearchController extends ControllerBase {
     $sort_value = $request->query->get('sort_value');
     $facets_options = $request->query->get('facets_options');
     $facets_value = json_decode($facets_value, TRUE) ?: [];
+    // timestamp value, if nothing set "*" (the default value on solr).
+    $from_date = $request->query->get('from_date', '*');
+    $end_date = $request->query->get('end_date', '*');
     $source = NULL;
 
     $facets_interests = [];
@@ -107,6 +110,32 @@ class SolrSearchController extends ControllerBase {
       if ($content_types = $source->getPrefilteredContentType()) {
         $allowed_content_type = implode(' OR ', $content_types);
         $content_type_query = ' AND (' . SourceTypeInterface::SOLR_FIELD_CONTENT_TYPE_ID . ':(' . $allowed_content_type . '))';
+      }
+
+      // If source supports date filter and query has a from or to date.
+      if ($source->supportDateFilter() && ($from_date || $end_date)) {
+        $date_fields_id = $source->getDateIntervalField();
+        $date_from_id = $date_fields_id['from'];
+        $date_end_id = $date_fields_id['to'];
+
+        // If user only selected one day, we will only filter on the start date.
+        // for eg: user select on widget 23-11-2021 - 23-11-2021 (double click)
+        // we only do a query from 23-11-2021 to *.
+        $end_date = $end_date === $from_date ? '*' : $end_date;
+        $dates_query = [];
+
+        $dates_query[] = "($date_from_id:[$from_date TO $end_date] AND $date_end_id:[$from_date TO $end_date])";
+        $dates_query[] = "($date_from_id:[* TO $end_date] AND $date_end_id:[$from_date TO $end_date])";
+        $dates_query[] = "($date_from_id:[$from_date TO $end_date] AND $date_end_id:[$end_date TO *])";
+        $dates_query[] = "($date_from_id:[* TO $from_date] AND $date_end_id:[$end_date TO *])";
+
+
+        $date_query = implode(' OR ', $dates_query);
+
+        $date_query = "($date_query)";
+        $query_fields_string .= empty($query_fields_string) ?
+          "$date_query" :
+          " AND $date_query";
       }
 
       $solariumQuery->addParam('q', $query_fields_string);
@@ -201,7 +230,15 @@ class SolrSearchController extends ControllerBase {
       $values = array_keys($filtered_value);
 
       if ($filtered_value) {
-        $facets_query .= ' AND ' . $key . ':"' . implode(' OR ', $values) . '"';
+        array_walk($values, function(&$value) {
+          $value = "\"$value\"";
+        });
+
+        $query_values = count($values) > 1 ?
+          '(' . implode(' AND ', $values) . ')' :
+          implode(' AND ', $values);
+
+        $facets_query .= ' AND ' . $key . ':' . $query_values;
       }
     }
 

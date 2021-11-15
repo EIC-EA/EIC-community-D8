@@ -75,7 +75,7 @@ class GroupOverviewsController extends ControllerBase {
 
     $access = $group->access($overview_perm, $account, TRUE);
 
-    if (!$access->isAllowed()) {
+    if ($access->isForbidden()) {
       return $access;
     }
 

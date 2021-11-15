@@ -5,7 +5,6 @@ dependencies:
   module:
     - eic_search
     - route_condition
-    - system
 name: group_events_overviews
 label: 'Group - Events - Overviews'
 group: Groups
@@ -22,44 +21,32 @@ conditions:
 reactions:
   blocks:
     blocks:
-      2909faf9-e5d4-4649-b63f-b1aca1476dd5:
-        id: system_main_block
-        label: 'Main page content'
-        provider: system
-        label_display: '0'
-        region: content
-        weight: '0'
-        context_mapping: {  }
-        custom_id: system_main_block
-        theme: eic_community
-        css_class: ''
-        unique: 0
-        context_id: group_events_overviews
-        uuid: 2909faf9-e5d4-4649-b63f-b1aca1476dd5
-      b1866d47-c767-4e59-9817-69b6c56d9d64:
+      724d2707-5805-4919-8fc3-bc56f316a2e6:
         id: eic_search_overview
         label: ''
         provider: eic_search
         label_display: visible
         region: content
-        weight: '1'
+        weight: '0'
         source_type: Drupal\eic_search\Search\Sources\GroupEventSourceType
         facets:
           ss_content_event_type_string: ss_content_event_type_string
           sm_content_field_vocab_topics_string: sm_content_field_vocab_topics_string
-          sm_content_field_vocab_geo_string: sm_content_field_vocab_geo_string
+          sm_content_field_location_type: sm_content_field_location_type
+          ss_content_country_code: ss_content_country_code
         sort_options:
-          ss_content_title: ss_content_title
           ss_drupal_timestamp: ss_drupal_timestamp
+          ss_content_title: ss_content_title
           dm_aggregated_changed: dm_aggregated_changed
-          its_last_comment_timestamp: its_last_comment_timestamp
-          its_last_flagged_like_content: its_last_flagged_like_content
           its_last_flagged_bookmark_content: its_last_flagged_bookmark_content
-          its_last_flagged_highlight_content: its_last_flagged_highlight_content
           its_flag_highlight_content: 0
+          its_last_comment_timestamp: 0
+          its_last_flagged_like_content: 0
+          its_last_flagged_highlight_content: 0
         enable_search: 1
         page_options: normal
         prefilter_group: 1
+        enable_date_filter: 1
         add_facet_interests: 0
         add_facet_my_groups: 0
         context_mapping: {  }
@@ -69,7 +56,7 @@ reactions:
         unique: 0
         context_id: group_events_overviews
         third_party_settings: {  }
-        uuid: b1866d47-c767-4e59-9817-69b6c56d9d64
+        uuid: 724d2707-5805-4919-8fc3-bc56f316a2e6
     id: blocks
     saved: false
     uuid: 9c311d0e-a590-452a-ad85-a32b685d7729

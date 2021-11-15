@@ -1,0 +1,10 @@
+uuid: 580211d2-da70-4eb5-b929-420fe5684e6e
+langcode: en
+status: true
+dependencies:
+  module:
+    - taxonomy
+id: taxonomy_term.small
+label: 'Small teaser'
+targetEntityType: taxonomy_term
+cache: true

@@ -32,6 +32,7 @@ function eic_search_theme($existing, $type, $theme, $path) {
         'currentGroupUrl' => '',
         'isGroupOwner' => FALSE,
         'enable_search' => TRUE,
+        'enable_date_filter' => FALSE,
         'source_class' => '',
         'search_string' => '',
         'enable_facet_interests' => FALSE,
@@ -97,6 +98,8 @@ function eic_search_search_api_solr_documents_alter(
     $solr_document_processor->processFlaggingData($document, $fields);
     $solr_document_processor->processGroupVisibilityData($document, $fields, $items, $group_helper);
     $solr_document_processor->processGroupUserData($document, $fields);
+    $solr_document_processor->processGroupEventData($document, $fields);
+    $solr_document_processor->processGlobalEventData($document, $fields);
   }
 }
 

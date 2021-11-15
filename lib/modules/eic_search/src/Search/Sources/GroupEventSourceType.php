@@ -15,6 +15,9 @@ class GroupEventSourceType extends SourceType {
 
   use StringTranslationTrait;
 
+  const START_DATE_SOLR_FIELD_ID = 'its_content_field_date_range_start_value';
+  const END_DATE_SOLR_FIELD_ID = 'its_content_field_date_range_end_value';
+
   /**
    * {@inheritdoc}
    */
@@ -43,7 +46,8 @@ class GroupEventSourceType extends SourceType {
     return [
       'ss_content_event_type_string' => $this->t('Type', [], ['context' => 'eic_search']),
       'sm_content_field_vocab_topics_string' => $this->t('Topic', [], ['context' => 'eic_search']),
-      'sm_content_field_vocab_geo_string' => $this->t('Region & country', [], ['context' => 'eic_search']),
+      'sm_content_field_location_type' => $this->t('Location', [], ['context' => 'eic_search']),
+      'ss_content_country_code' => $this->t('Country', [], ['context' => 'eic_search']),
     ];
   }
 
@@ -142,6 +146,23 @@ class GroupEventSourceType extends SourceType {
    */
   public function getDefaultSort(): array {
     return ['its_flag_highlight_content', 'DESC'];
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function supportDateFilter(): bool {
+    return TRUE;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function getDateIntervalField(): array {
+    return [
+      'from' => self::START_DATE_SOLR_FIELD_ID,
+      'to' => self::END_DATE_SOLR_FIELD_ID,
+    ];
   }
 
 }
