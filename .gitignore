@@ -22,4 +22,3 @@
 /.gitattributes
 .env
 **/.DS_Store
-/lib/themes/eic_community/package-lock.json
