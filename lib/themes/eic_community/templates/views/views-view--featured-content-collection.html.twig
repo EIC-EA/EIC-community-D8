@@ -36,6 +36,12 @@
   ]
 %}
 
+{% if is_compact %}
+  {% set extra_classes = 'ecl-featured-content-collection--has-compact-layout ecl-section-wrapper ecl-featured-content-collection--is-ready' %}
+{% else %}
+  {% set extra_classes = 'ecl-featured-content-collection--has-overview-layout ecl-section-wrapper ecl-featured-content-collection--is-ready' %}
+{% endif %}
+
 {% if rows -%}
   {% set _rows_length = rows[0]['#rows']|length %}
   {% set _items = [] %}
@@ -50,14 +56,15 @@
 
   {% include "@theme/patterns/compositions/featured-content-collection.html.twig" with {
     title: view.title|default(''),
+    description: header,
     items: _items,
-    extra_classes: 'ecl-featured-content-collection--has-overview-layout ecl-featured-content-collection--is-ready',
+    extra_classes: extra_classes,
   } only %}
 {% else %}
   {% include "@theme/patterns/compositions/featured-content-collection.html.twig" with {
     title: view.title|default(''),
     description: empty,
     items: [],
-    extra_classes: 'ecl-featured-content-collection--has-overview-layout ecl-featured-content-collection--is-ready',
+    extra_classes: extra_classes,
   } only %}
 {% endif %}
