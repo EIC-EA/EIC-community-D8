@@ -5,6 +5,8 @@ namespace Drupal\eic_share_content\Service;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\eic_content\EICContentHelperInterface;
+use Drupal\eic_messages\ActivityStreamOperationTypes;
+use Drupal\eic_messages\Service\MessageBusInterface;
 use Drupal\group\Entity\GroupContent;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\group\Plugin\GroupContentEnablerManagerInterface;
@@ -36,18 +38,26 @@ class ShareManager {
   private $groupContentPluginManager;
 
   /**
+   * @var \Drupal\eic_messages\Service\MessageBusInterface
+   */
+  private $messageBus;
+
+  /**
    * @param \Drupal\eic_content\EICContentHelperInterface $content_helper
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    * @param \Drupal\group\Plugin\GroupContentEnablerManagerInterface $plugin_manager
+   * @param \Drupal\eic_messages\Service\MessageBusInterface $message_bus
    */
   public function __construct(
     EICContentHelperInterface $content_helper,
     EntityTypeManagerInterface $entity_type_manager,
-    GroupContentEnablerManagerInterface $plugin_manager
+    GroupContentEnablerManagerInterface $plugin_manager,
+    MessageBusInterface $message_bus
   ) {
     $this->contentHelper = $content_helper;
     $this->entityTypeManager = $entity_type_manager;
     $this->groupContentPluginManager = $plugin_manager;
+    $this->messageBus = $message_bus;
   }
 
   /**
@@ -104,6 +114,16 @@ class ShareManager {
       'entity_id' => $node->id(),
     ]);
     $shared_group_content->save();
+
+    $this->messageBus->dispatch([
+      'template' => 'stream_share_content',
+      'uid' => $node->getOwnerId(),
+      'field_operation_type' => ActivityStreamOperationTypes::SHARED_ENTITY,
+      'field_referenced_node' => $node,
+      'field_entity_type' => $node->bundle(),
+      'field_source_group' => $source_group,
+      'field_group_ref' => $target_group
+    ]);
   }
 
   /**

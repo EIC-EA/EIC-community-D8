@@ -52,6 +52,9 @@
         {# {% endif %} #}
       {% endblock %}
       {% block sidebar %}
+        {% if share_group_content is not empty %}
+            {{ share_group_content }}
+        {% endif %}
         {% if flags %}
           {% include "@theme/patterns/components/flags.html.twig" with flags|default({}) %}
         {% endif %}

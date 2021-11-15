@@ -5,10 +5,11 @@
  * Prepares variables for node discussion templates.
  */
 
-use Drupal\taxonomy\Entity\Term;
 use Drupal\comment\Entity\Comment;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Render\Markup;
+use Drupal\group\Entity\GroupInterface;
+use Drupal\taxonomy\Entity\Term;
 
 /**
  * Implements hook_preprocess_node() for discussion node.
@@ -44,7 +45,9 @@ function _preprocess_discussion_full(&$variables, $discussion_type, $node) {
   $node = $variables['node'];
   $variables['type'] = $discussion_type;
   if (!empty($variables['elements']['contributor_ids'])) {
-    $users = \Drupal::entityTypeManager()->getStorage('user')->loadMultiple($variables['elements']['contributor_ids']);
+    $users = \Drupal::entityTypeManager()
+      ->getStorage('user')
+      ->loadMultiple($variables['elements']['contributor_ids']);
     $contributors = ['items' => []];
 
     foreach ($users as $user) {
@@ -58,19 +61,27 @@ function _preprocess_discussion_full(&$variables, $discussion_type, $node) {
   $variables['timestamp']['label'] = eic_community_get_teaser_time_display($node->get('changed')->value);
 
   $flags = array_filter($variables['elements'], function ($key) use ($node) {
-
     // If element is not a flag we skip it.
     if (strpos($key, 'flag') === FALSE) {
       return FALSE;
     }
 
-    return _eic_community_get_flag_access(str_replace('flag_', '', $key), $node);
+    return _eic_community_get_flag_access(str_replace('flag_', '', $key),
+      $node);
   }, ARRAY_FILTER_USE_KEY);
 
   $flags = array_map(function ($item) {
     return ['content' => $item];
   }, $flags);
 
+  $group = \Drupal::service('eic_groups.helper')->getGroupFromRoute();
+  if ($group instanceof GroupInterface) {
+    $variables['share_group_content'] = _eic_community_get_share_group_content_link(
+      $group,
+      $node
+    );
+  }
+  
   $variables['flags']['items'] = $flags;
 
   foreach ($variables['elements']['field_vocab_topics'] as $key => $value) {

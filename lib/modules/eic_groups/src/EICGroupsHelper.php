@@ -173,7 +173,11 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
    * @return bool
    *   TRUE if user is a group admin.
    */
-  public static function userIsGroupAdmin(GroupInterface $group, AccountInterface $account, GroupMembership $membership = NULL) {
+  public static function userIsGroupAdmin(
+    GroupInterface $group,
+    AccountInterface $account,
+    GroupMembership $membership = NULL
+  ) {
     $membership = $membership ?: $group->getMember($account);
 
     // User is not a member of the group. We return FALSE.
@@ -259,7 +263,8 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
 
     foreach ($group->getGroupType()->getInstalledContentPlugins() as $plugin) {
       /** @var \Drupal\group\Plugin\GroupContentEnablerInterface $plugin */
-      if (!empty($limit_entities) && !in_array($plugin->getEntityTypeId(), $limit_entities)) {
+      if (!empty($limit_entities) && !in_array($plugin->getEntityTypeId(),
+          $limit_entities)) {
         continue;
       }
 
@@ -288,7 +293,8 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
       $this->moduleHandler->alter('group_operations', $operation_links, $group);
 
       // Sort the operations by weight.
-      uasort($operation_links, '\Drupal\Component\Utility\SortArray::sortByWeightElement');
+      uasort($operation_links,
+        '\Drupal\Component\Utility\SortArray::sortByWeightElement');
     }
 
     return $operation_links;
@@ -325,7 +331,10 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
    * @return \Drupal\Core\StringTranslation\TranslatableMarkup|string
    *   The description for the given plugin.
    */
-  public function getGroupFlexPluginDescription(string $plugin_type, string $plugin_id) {
+  public function getGroupFlexPluginDescription(
+    string $plugin_type,
+    string $plugin_id
+  ) {
     $key = "$plugin_type-$plugin_id";
 
     switch ($key) {
@@ -353,6 +362,24 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
   }
 
   /**
+   * @param string $visibility
+   *
+   * @return array
+   */
+  public function getGroupsByVisibility(string $visibility) {
+    $gids = $this->database->select('oec_group_visibility')
+      ->fields('oec_group_visibility', ['gid'])
+      ->condition('type', $visibility)
+      ->execute()->fetchAllAssoc('gid', \PDO::FETCH_ASSOC);
+
+    if (empty($gids)) {
+      return [];
+    }
+
+    return Group::loadMultiple(array_keys($gids));
+  }
+
+  /**
    * Returns a custom title for the given group_flex plugin.
    *
    * @param string $plugin_type
@@ -365,7 +392,10 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
    * @return \Drupal\Core\StringTranslation\TranslatableMarkup|string
    *   The description for the given plugin.
    */
-  public function getGroupFlexPluginTitle(string $plugin_type, string $plugin_id) {
+  public function getGroupFlexPluginTitle(
+    string $plugin_type,
+    string $plugin_id
+  ) {
     $key = "$plugin_type-$plugin_id";
 
     switch ($key) {
@@ -402,7 +432,8 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
   ) {
     $permissions = $group_permissions->getPermissions();
     foreach ($role_permissions as $permission) {
-      if (!array_key_exists($role, $permissions) || !in_array($permission, $permissions[$role], TRUE)) {
+      if (!array_key_exists($role, $permissions) || !in_array($permission,
+          $permissions[$role], TRUE)) {
         $permissions[$role][] = $permission;
       }
     }
@@ -420,7 +451,8 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
   ) {
     $permissions = $group_permissions->getPermissions();
     foreach ($role_permissions as $permission) {
-      if (array_key_exists($role, $permissions) || in_array($permission, $permissions[$role], TRUE)) {
+      if (array_key_exists($role, $permissions) || in_array($permission,
+          $permissions[$role], TRUE)) {
         $permissions[$role] = array_diff($permissions[$role], [$permission]);
       }
     }
@@ -431,7 +463,9 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
   /**
    * {@inheritdoc}
    */
-  public function saveGroupPermissions(GroupPermissionInterface $group_permissions) {
+  public function saveGroupPermissions(
+    GroupPermissionInterface $group_permissions
+  ) {
     $violations = $group_permissions->validate();
 
     if (count($violations) > 0) {
@@ -503,7 +537,8 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
     }
 
     // If user doesn't have permission to view the group, we return FALSE.
-    if (!$group->hasPermission('view group', $this->currentUser->getAccount())) {
+    if (!$group->hasPermission('view group',
+      $this->currentUser->getAccount())) {
       return FALSE;
     }
 
@@ -529,7 +564,9 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
         $plugin = isset($group_custom_restricted_visibility_plugins[$pluginId]) ? $group_custom_restricted_visibility_plugins[$pluginId] : NULL;
 
         if ($plugin instanceof CustomRestrictedVisibilityInterface) {
-          $pluginAccess = $plugin->hasViewAccess($group, $this->currentUser->getAccount(), $group_visibility_settings['settings']);
+          $pluginAccess = $plugin->hasViewAccess($group,
+            $this->currentUser->getAccount(),
+            $group_visibility_settings['settings']);
           if (!$pluginAccess->isNeutral()) {
             $is_group_page = $group;
             break;
