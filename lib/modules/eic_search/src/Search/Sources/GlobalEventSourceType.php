@@ -66,6 +66,10 @@ class GlobalEventSourceType extends SourceType {
         'label' => $this->t('Last liked', [], ['context' => 'eic_search']),
         'DESC' => $this->t('Last liked', [], ['context' => 'eic_search']),
       ],
+      'score' => [
+        'label' => $this->t('Relevance', [], ['context' => 'eic_search']),
+        'DESC' => $this->t('Relevance', [], ['context' => 'eic_search']),
+      ],
     ];
   }
 
