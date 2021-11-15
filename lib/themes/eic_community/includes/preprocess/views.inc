@@ -5,6 +5,8 @@
  * Contains Views preprocess functions.
  */
 
+use Drupal\eic_overviews\GlobalOverviewPages;
+
 /**
  * Implements template_preprocess_views_view_field().
  */
@@ -32,6 +34,27 @@ function eic_community_preprocess_views_view(&$variables) {
 
   switch ($view->id()) {
     case 'groups_homepage':
+      // Adds call to actions.
+      if ($view->current_display === 'block_groups_homepage') {
+        if ($call_to_action_url = GlobalOverviewPages::getGlobalOverviewPageUrl('groups')) {
+          $variables['call_to_action'] = [
+            'link' => [
+              'label' => 'View all groups',
+              'path' => $call_to_action_url,
+            ],
+          ];
+        }
+      }
+      elseif ($view->current_display === 'block_events_homepage') {
+        if ($call_to_action_url = GlobalOverviewPages::getGlobalOverviewPageUrl('events')) {
+          $variables['call_to_action'] = [
+            'link' => [
+              'label' => 'View all events',
+              'path' => $call_to_action_url,
+            ],
+          ];
+        }
+      }
       $variables['is_compact'] = TRUE;
       break;
 

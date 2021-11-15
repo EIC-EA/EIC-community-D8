@@ -57,14 +57,18 @@
   {% include "@theme/patterns/compositions/featured-content-collection.html.twig" with {
     title: view.title|default(''),
     description: header,
+    call_to_action: call_to_action|default(''),
     items: _items,
     extra_classes: extra_classes,
+    icon_file_path: eic_icon_path,
   } only %}
 {% else %}
   {% include "@theme/patterns/compositions/featured-content-collection.html.twig" with {
     title: view.title|default(''),
     description: empty,
+    call_to_action: call_to_action|default(''),
     items: [],
     extra_classes: extra_classes,
+    icon_file_path: eic_icon_path,
   } only %}
 {% endif %}
