@@ -143,12 +143,12 @@ function eic_community_preprocess_node__document(array &$variables) {
         return _eic_community_get_flag_access(str_replace('flag_', '', $key), $node);
       }, ARRAY_FILTER_USE_KEY);
 
-      foreach ($flags as $flag) {
-        $variables['editorial_actions']['items'][] = [
-          'content' => $flag,
-        ];
-      }
-      _eic_community_display_topics($variables);
-      break;
+    foreach ($flags as $flag) {
+      $variables['editorial_actions']['items'][] = [
+        'content' => $flag,
+      ];
+    }
+    $variables['editorial_actions']['items'][]['content'] = _eic_community_get_social_share_block();
+    _eic_community_display_topics($variables);
   }
 }
