@@ -95,7 +95,7 @@ class GroupAccessContent extends ProcessorPluginBase {
    */
   public function preprocessSolrSearchQuery(Query $query) {
     $visibility_condition = $this->buildGroupVisibilityQuery();
-    $field_query = $query->getParams()['fq'] ?: '';
+    $field_query = $query->getParams()['fq'] ?? '';
 
     $visibility_query = empty($field_query) ?
       $visibility_condition :
