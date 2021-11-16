@@ -85,10 +85,6 @@
 
     #{$node}--has-compact-layout & {
       margin-bottom: ecl-box-model('padding');
-
-      &:last-child {
-        margin-bottom: 0;
-      }
     }
 
     #{$node}--has-columns &,
