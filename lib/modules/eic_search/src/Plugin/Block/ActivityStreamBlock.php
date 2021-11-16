@@ -165,7 +165,6 @@ class ActivityStreamBlock extends BlockBase implements ContainerFactoryPluginInt
       $url_options['query']['topics'] = $term->id();
     }
 
-    // @todo Get this value from block config.
     $show_members = $config['show_members'];
 
     $has_delete_permission = FALSE;
@@ -176,7 +175,6 @@ class ActivityStreamBlock extends BlockBase implements ContainerFactoryPluginInt
     $build['#attached']['drupalSettings']['overview'] = [
       'has_permission_delete' => $has_delete_permission,
     ];
-
 
     return $build += [
       '#theme' => 'eic_group_last_activities_members',
