@@ -1,5 +1,7 @@
 <?php
 
+use Drupal\eic_share_content\Hooks\SolrDocumentDecorator;
+
 /**
  * Implements hook_theme().
  */
@@ -8,8 +10,38 @@ function eic_share_content_theme() {
     'eic_share_content_link' => [
       'variables' => [
         'groups' => [],
-        'endpoint' => NULL
+        'endpoint' => NULL,
       ],
     ],
   ];
+}
+
+/**
+ * Implements hook_search_api_solr_documents_alter.
+ * 
+ * @param array $documents
+ * @param \Drupal\search_api\IndexInterface $index
+ * @param array $items
+ *
+ * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+ * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+ */
+function eic_share_Content_search_api_solr_documents_alter(
+  array &$documents,
+  \Drupal\search_api\IndexInterface $index,
+  array $items
+) {
+  /** @var SolrDocumentDecorator $decorator */
+  $decorator = \Drupal::classResolver(SolrDocumentDecorator::class);
+  foreach ($documents as &$document) {
+    $fields = $document->getFields();
+    if (
+      !isset($fields['ss_search_api_datasource'])
+      || $fields['ss_search_api_datasource'] !== 'entity:node'
+    ) {
+      continue;
+    }
+
+    $document = $decorator->decorate($document);
+  }
 }

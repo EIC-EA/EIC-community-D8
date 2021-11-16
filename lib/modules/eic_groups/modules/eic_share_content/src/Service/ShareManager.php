@@ -11,6 +11,7 @@ use Drupal\group\Entity\GroupContent;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\group\Plugin\GroupContentEnablerManagerInterface;
 use Drupal\node\NodeInterface;
+use Drupal\search_api\Plugin\search_api\datasource\ContentEntity;
 
 /**
  * Class ShareManager
@@ -60,10 +61,28 @@ class ShareManager {
   }
 
   /**
+   * @param string $node_bundle
+   *
+   * @return bool
+   */
+  public function isSupported(string $node_bundle): bool {
+    static $shareableNodeBundles = [
+      'video',
+      'wiki_page',
+      'document',
+      'discussion',
+      'gallery',
+      'event',
+    ];
+
+    return in_array($node_bundle, $shareableNodeBundles) ?? FALSE;
+  }
+
+  /**
    * @param \Drupal\group\Entity\GroupInterface $source_group
    * @param \Drupal\group\Entity\GroupInterface $target_group
    * @param \Drupal\node\NodeInterface $node
-   * @param string $message
+   * @param string|null $message
    *
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
@@ -113,8 +132,19 @@ class ShareManager {
       'field_entity_type' => $node->bundle(),
       'field_source_group' => $source_group,
       'field_group_ref' => $target_group,
-      'field_share_message' => $message
+      'field_share_message' => $message,
     ]);
+
+    // Reindex the node immediately.
+    // There seem to be multiple implementation of reindexing logics.
+    // @TODO Write a single service for this.
+    $indexes = ContentEntity::getIndexesForEntity($node);
+    foreach ($indexes as $index) {
+      $index->trackItemsUpdated(
+        'entity:node',
+        [$node->id() . ':' . $node->language()->getId()]
+      );
+    }
   }
 
   /**
@@ -155,12 +185,12 @@ class ShareManager {
    * @param \Drupal\group\Entity\GroupInterface $group
    * @param \Drupal\node\NodeInterface $node
    *
-   * @return mixed|string|null
+   * @return string|null
    */
   public function getGroupContentId(
     GroupInterface $group,
     NodeInterface $node
-  ) {
+  ): ?string {
     static $enabled_ids;
     if (empty($enabled_ids)) {
       $plugin_ids = $this->groupContentPluginManager
@@ -173,12 +203,27 @@ class ShareManager {
 
         [, $content_type] = explode(':', $plugin_id);
         $enabled_ids[$content_type] = $group->getGroupType()
-          ->getContentPlugin('group_node:discussion')
+          ->getContentPlugin("group_node:$content_type")
           ->getContentTypeConfigId();;
       }
     }
 
     return $enabled_ids[$node->bundle()] ?? NULL;
+  }
+
+  /**
+   * @param \Drupal\node\NodeInterface $node
+   *
+   * @return \Drupal\Core\Entity\EntityInterface[]
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   */
+  public function getShares(NodeInterface $node): array {
+    return $this->entityTypeManager->getStorage('message')
+      ->loadByProperties([
+        'template' => 'stream_share_content',
+        'field_referenced_node' => $node->id(),
+      ]);
   }
 
 }
