@@ -26,6 +26,7 @@ use Drupal\file\Entity\File;
 use Drupal\flag\FlagCountManager;
 use Drupal\group\Entity\Group;
 use Drupal\group\Entity\GroupInterface;
+use Drupal\message\MessageInterface;
 use Drupal\node\NodeTypeInterface;
 use Drupal\oec_group_flex\OECGroupFlexHelper;
 use Drupal\group\GroupMembership;
@@ -525,8 +526,16 @@ class SolrDocumentProcessor {
       return;
     }
 
-    $group = $group_helper->getGroupByEntity($item->getOriginalObject()
-      ->getEntity());
+    $original_object = $item->getOriginalObject()->getEntity();
+
+    if ($original_object instanceof MessageInterface) {
+      $group_ref_id = $original_object->hasField('field_group_ref') ?
+        $original_object->get('field_group_ref')->entity->id() :
+        NULL;
+      $group = $group_ref_id ? Group::load($group_ref_id) : NULL;
+    } else {
+      $group = $group_helper->getGroupByEntity($original_object);
+    }
 
     if (!$group) {
       $document->addField('ss_group_visibility', $group_visibility);
