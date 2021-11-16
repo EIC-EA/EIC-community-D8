@@ -49,6 +49,10 @@ class GroupMenuBlock extends GroupMenuBlockBase implements ContainerFactoryPlugi
     $build = parent::build();
 
     $menu_name = $this->getMenuName();
+    if (!$menu_name) {
+      return [];
+    }
+
     $parameters = $this->menuTree->getCurrentRouteMenuTreeParameters($menu_name);
 
     // If there is no menu link in the active trail, we try to set the active
