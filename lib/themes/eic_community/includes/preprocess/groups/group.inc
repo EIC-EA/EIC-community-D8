@@ -7,12 +7,92 @@
 
 use Drupal\Core\Render\Markup;
 use Drupal\eic_community\ValueObject\ImageValueObject;
+use Drupal\eic_helper\DateTimeHelper;
 
 /**
  * Implements hook_preprocess_group__TYPE.
  */
 function eic_community_preprocess_group__event(&$variables) {
-  _eic_community_render_event_detail_page($variables, $variables['group']);
+  $current_time = \Drupal::time()->getCurrentTime();
+  /** @var \Drupal\group\Entity\GroupInterface $group */
+  $group = $variables['group'];
+
+  switch ($variables['view_mode']) {
+    case 'full':
+      _eic_community_render_event_detail_page($variables, $group);
+      break;
+
+    case 'teaser':
+      $teaser = [
+        'owner' => eic_community_get_teaser_user_display($group->getOwner()),
+        'stats' => [],
+        'icon_file_path' => $variables['eic_icon_path'],
+      ];
+
+      // Get the thumbnail.
+      /** @var \Drupal\media\MediaInterface $media */
+      $media = $group->get('field_image')->referencedEntities()[0];
+      if ($media && !empty($media->get('oe_media_image')->getValue())) {
+        $style_name = 'oe_theme_ratio_3_2_medium';
+        $image_item = ImageValueObject::fromStyledImageItem($media->get('oe_media_image')->first(), $style_name);
+        $teaser['image'] = [
+          'src' => $image_item->getSource(),
+          'alt' => $image_item->getAlt(),
+        ];
+      }
+
+      $signup_link = NULL;
+      // Get the registration date.
+      if (!$group->get('field_date_range')->isEmpty()) {
+        $registration_start_date = strtotime($group->get('field_event_registration_date')->value);
+        $registration_end_date = strtotime($group->get('field_event_registration_date')->end_value);
+        $registration_status = \Drupal::service('eic_helper.datetime')->getDateRangeStatus($group, 'field_event_registration_date');
+
+        switch ($registration_status) {
+          case DateTimeHelper::DATE_RANGE_UPCOMING:
+            $arguments = [
+              '@date' => \Drupal::service('date.formatter')->format($registration_start_date, 'eu_short_date_hour'),
+            ];
+            $registration_message = t('Registrations will start on @date', $arguments);
+            break;
+
+          case DateTimeHelper::DATE_RANGE_ONGOING:
+            $arguments = [
+              '@time' => \Drupal::service('date.formatter')->formatInterval($current_time - $registration_end_date),
+            ];
+            $registration_message = t('@time left to signup', $arguments);
+            if (!$group->get('field_link')->isEmpty()) {
+              $signup_link = $group->get('field_link')->uri;
+            }
+            break;
+
+          case DateTimeHelper::DATE_RANGE_PAST:
+            $registration_message = t('Registrations are now closed');
+            break;
+        }
+
+        if (!empty($registration_message)) {
+          $teaser['timestamp']['label'] = $registration_message;
+        }
+      }
+      elseif (!$group->get('field_link')->isEmpty()) {
+        $signup_link = $group->get('field_link')->uri;
+      }
+
+      // Get the start date of the event.
+      $start_date = 0;
+      if (!$group->field_date_range->isEmpty()) {
+        $start_date = strtotime($group->get('field_date_range')->value);
+      }
+      $teaser['date'] = _eic_community_preprocess_ecl_date_block($start_date);
+      //$teaser['timestamp']['label'] = eic_community_get_teaser_time_display($group->get('created')->value);
+
+      // Get the event state.
+      $teaser['date']['variant'] = _eic_community_get_ecl_date_block_variant($group, 'field_date_range');
+      $variables['event_item'] = $teaser;
+      break;
+
+  }
 }
 
 /**

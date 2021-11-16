@@ -11,6 +11,34 @@ use Drupal\Core\Entity\EntityInterface;
 class DateTimeHelper {
 
   /**
+   * Define upcoming dates, that have not started yet.
+   *
+   * @var string
+   */
+  const DATE_RANGE_UPCOMING = 'upcoming';
+
+  /**
+   * Define ongoing dates, that have started but not finished yet.
+   *
+   * @var string
+   */
+  const DATE_RANGE_ONGOING = 'ongoing';
+
+  /**
+   * Define past dates, that have started and are finished.
+   *
+   * @var string
+   */
+  const DATE_RANGE_PAST = 'past';
+
+  /**
+   * Undefined state.
+   *
+   * @var string
+   */
+  const DATE_RANGE_UNDEFINED = 'undefined';
+
+  /**
    * The datetime.time service.
    *
    * @var \Drupal\Component\Datetime\Time
@@ -43,15 +71,15 @@ class DateTimeHelper {
    */
   public function getDateRangeStatus(EntityInterface $entity, string $field_name) {
     if (!$entity->hasField($field_name)) {
-      return 'undefined';
+      return self::DATE_RANGE_UNDEFINED;
     }
 
     if ($entity->get($field_name)->getFieldDefinition()->getType() != 'daterange') {
-      return 'undefined';
+      return self::DATE_RANGE_UNDEFINED;
     }
 
     if ($entity->get($field_name)->isEmpty()) {
-      return 'undefined';
+      return self::DATE_RANGE_UNDEFINED;
     }
 
     $current_time = $this->dateTime->getCurrentTime();
@@ -59,16 +87,13 @@ class DateTimeHelper {
     $end_date = strtotime($entity->get($field_name)->end_value);
 
     if ($start_date > $current_time) {
-      $status = 'upcoming';
+      return self::DATE_RANGE_UPCOMING;
     }
     elseif ($start_date <= $current_time && $end_date >= $current_time) {
-      $status = 'ongoing';
-    }
-    else {
-      $status = 'past';
+      return self::DATE_RANGE_ONGOING;
     }
 
-    return $status;
+    return self::DATE_RANGE_PAST;
   }
 
 }
