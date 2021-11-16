@@ -5,11 +5,9 @@
  * Prepares variables for node discussion templates.
  */
 
-use Drupal\comment\Entity\Comment;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Render\Markup;
 use Drupal\group\Entity\GroupInterface;
-use Drupal\taxonomy\Entity\Term;
 
 /**
  * Implements hook_preprocess_node() for discussion node.
@@ -73,7 +71,7 @@ function _preprocess_discussion_full(&$variables, $discussion_type, $node) {
 
   $group = \Drupal::service('eic_groups.helper')->getGroupFromRoute();
   if ($group instanceof GroupInterface) {
-    $variables['share_group_content'] = _eic_community_get_share_group_content_link(
+    $flags['share_group_content']['content'] = _eic_community_get_share_group_content_link(
       $group,
       $node
     );

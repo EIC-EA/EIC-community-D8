@@ -7,6 +7,7 @@
 
 use Drupal\eic_media\MediaHelper;
 use Drupal\file\Entity\File;
+use Drupal\group\Entity\GroupInterface;
 
 /**
  * Implements hook_preprocess_node() for document node.
@@ -149,6 +150,13 @@ function eic_community_preprocess_node__document(array &$variables) {
       ];
     }
     $variables['editorial_actions']['items'][]['content'] = _eic_community_get_social_share_block();
+    $group = \Drupal::service('eic_groups.helper')->getGroupFromRoute();
+    if ($group instanceof GroupInterface) {
+      $variables['editorial_actions']['items'][]['content'] = _eic_community_get_share_group_content_link(
+        $group,
+        $node
+      );
+    }
     _eic_community_display_topics($variables);
   }
 }
