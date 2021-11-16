@@ -165,14 +165,14 @@ class EntityOperations implements ContainerInjectionInterface {
       ];
     }
 
-    if ($entity->hasLinkTemplate('block-entity')) {
-      if ($entity->toUrl('block-entity')->access()) {
-        $operations['block'] = [
-          'title' => $this->t('Block'),
-          'url' => $entity->toUrl('block-entity')
-            ->setRouteParameter('destination', $this->currentRequest->getRequestUri()),
-        ];
-      }
+    if ($entity->hasLinkTemplate('block-entity')
+      && $entity->toUrl('block-entity')->access()
+    ) {
+      $operations['block'] = [
+        'title' => $this->t('Block'),
+        'url' => $entity->toUrl('block-entity')
+          ->setRouteParameter('destination', $this->currentRequest->getRequestUri()),
+      ];
     }
 
     return $operations;
@@ -195,14 +195,14 @@ class EntityOperations implements ContainerInjectionInterface {
     }
 
     $operations = [];
-    if ($entity->hasLinkTemplate('block-entity')) {
-      if ($entity->toUrl('block-entity')->access()) {
-        $operations['block'] = [
-          'title' => $this->t('Block'),
-          'url' => $entity->toUrl('block-entity')
-            ->setRouteParameter('destination', $this->currentRequest->getRequestUri()),
-        ];
-      }
+    if ($entity->hasLinkTemplate('block-entity')
+      && $entity->toUrl('block-entity')->access()
+    ) {
+      $operations['block'] = [
+        'title' => $this->t('Block'),
+        'url' => $entity->toUrl('block-entity')
+          ->setRouteParameter('destination', $this->currentRequest->getRequestUri()),
+      ];
     }
 
     $route_name = $this->routeMatch->getRouteName();
