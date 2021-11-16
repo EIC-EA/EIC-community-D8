@@ -21,6 +21,10 @@ function eic_community_theme_suggestions_views_view_alter(array &$suggestions, a
       $suggestions[] = "views_view__featured_content_collection";
       break;
 
+    case 'groups_homepage':
+      $suggestions[] = "views_view__featured_content_collection__compact";
+      break;
+
     case 'global_overviews':
       if ($variables['view']->getDisplay()->display['id'] === 'search') {
         return;

@@ -2,6 +2,8 @@ uuid: 2819d020-759e-4683-931a-505c4308460e
 langcode: en
 status: true
 dependencies:
+  config:
+    - views.view.groups_homepage
   content:
     - 'block_content:cta_tiles:880aff79-c4fa-416e-9703-0a3119bff5d0'
     - 'block_content:facts_figures:e1aefa16-ad60-4d15-ac07-4a9a2d8b6044'
@@ -13,6 +15,7 @@ dependencies:
     - eic_content
     - system
     - user
+    - views
 _core:
   default_config_hash: siPC_lZnochrg7RD6hD2fQm8ty0NM3dNVpdxDpcV1WM
 name: homepage
@@ -154,6 +157,40 @@ reactions:
         context_id: homepage
         third_party_settings: {  }
         uuid: 6bf6fa4d-c4f9-402d-a307-debfaea61492
+      9b82ec61-351f-4f25-8499-623d71e5e275:
+        id: 'views_block:groups_homepage-block_groups_homepage'
+        label: ''
+        provider: views
+        label_display: '0'
+        views_label: ''
+        items_per_page: none
+        region: content
+        weight: '0'
+        context_mapping: {  }
+        custom_id: views_block_groups_homepage_block_groups_homepage
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: homepage
+        third_party_settings: {  }
+        uuid: 9b82ec61-351f-4f25-8499-623d71e5e275
+      5b1db3e0-b927-403a-876a-eb102eac694a:
+        id: 'views_block:groups_homepage-block_events_homepage'
+        label: ''
+        provider: views
+        label_display: '0'
+        views_label: ''
+        items_per_page: none
+        region: content
+        weight: '0'
+        context_mapping: {  }
+        custom_id: views_block_groups_homepage_block_events_homepage
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: homepage
+        third_party_settings: {  }
+        uuid: 5b1db3e0-b927-403a-876a-eb102eac694a
     id: blocks
     saved: false
     uuid: 1172ee8b-57fe-4611-b929-3d99b1b469d8

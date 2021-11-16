@@ -9,6 +9,7 @@ dependencies:
     - file
     - media
     - taxonomy
+    - content_moderation
     - message
     - comment
     - node
@@ -22,7 +23,6 @@ dependencies:
     - eic_search
     - flag_search_api
     - search_api_attachments
-    - content_moderation
     - flag
     - group_permissions
   config:
@@ -608,6 +608,14 @@ field_settings:
     type: integer
     indexed_locked: true
     type_locked: true
+  group_changed:
+    label: '[Group] Changed on'
+    datasource_id: 'entity:group'
+    property_path: changed
+    type: date
+    dependencies:
+      module:
+        - group
   group_content_entity_id:
     label: '[Group content] Content'
     datasource_id: 'entity:group_content'
@@ -761,6 +769,14 @@ field_settings:
     dependencies:
       module:
         - group
+  group_moderation_state:
+    label: '[Group] Moderation state'
+    datasource_id: 'entity:group'
+    property_path: moderation_state
+    type: string
+    dependencies:
+      module:
+        - content_moderation
   group_statistic_comments:
     label: 'Group statistics - Comments'
     property_path: group_statistic_comments

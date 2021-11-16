@@ -592,7 +592,6 @@ class SolrDocumentProcessor {
     }
 
     $document->addField('ss_group_visibility', $group_visibility);
-    $document->addField('ss_group_moderation_state', $group->get('moderation_state')->value);
     $document->addField('its_group_owner_id', $group->getOwnerId());
   }
 
