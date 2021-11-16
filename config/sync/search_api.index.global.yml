@@ -869,16 +869,6 @@ field_settings:
       module:
         - group
         - user
-  id:
-    label: 'Source Group » Group » ID'
-    datasource_id: 'entity:message'
-    property_path: 'field_source_group:entity:id'
-    type: integer
-    dependencies:
-      config:
-        - field.storage.message.field_source_group
-      module:
-        - group
   last_comment_timestamp:
     label: '[Content] Comments » Last comment timestamp'
     datasource_id: 'entity:node'
@@ -998,6 +988,16 @@ field_settings:
     label: 'Search api attachments: Document'
     property_path: saa_field_document_media
     type: text
+  source_group_id:
+    label: 'Source Group » Group » ID'
+    datasource_id: 'entity:message'
+    property_path: 'field_source_group:entity:id'
+    type: integer
+    dependencies:
+      config:
+        - field.storage.message.field_source_group
+      module:
+        - group
   status:
     label: '[User] Status'
     datasource_id: 'entity:user'
