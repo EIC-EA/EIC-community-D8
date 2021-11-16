@@ -52,6 +52,8 @@
         {# {% endif %} #}
       {% endblock %}
       {% block sidebar %}
+        {{ eic_local_tasks }}
+
         {% if flags %}
           {% include "@theme/patterns/components/flags.html.twig" with flags|default({}) %}
         {% endif %}

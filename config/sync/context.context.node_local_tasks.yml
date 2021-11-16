@@ -3,12 +3,13 @@ langcode: en
 status: true
 dependencies:
   module:
+    - node
     - route_condition
-name: local_tasks
-label: 'Local tasks'
-group: Global
+name: node_local_tasks
+label: 'Node - Local tasks'
+group: Nodes
 description: ''
-requireAllConditions: false
+requireAllConditions: true
 disabled: false
 conditions:
   route:
@@ -17,6 +18,16 @@ conditions:
     negate: false
     uuid: 617b7388-6f0c-4dc1-abc0-5e9751ff626c
     context_mapping: {  }
+  node_type:
+    id: node_type
+    bundles:
+      book: book
+      page: page
+      wiki_page: wiki_page
+    negate: false
+    uuid: 65c2cb9e-9f35-4f74-bbb1-440e9500ebaf
+    context_mapping:
+      node: '@node.node_route_context:node'
 reactions:
   blocks:
     blocks:
@@ -34,7 +45,7 @@ reactions:
         theme: eic_community
         css_class: ''
         unique: 0
-        context_id: local_tasks
+        context_id: node_local_tasks
         third_party_settings: {  }
         uuid: cbef2209-7805-487f-aea1-d2980b6a253d
     id: blocks
