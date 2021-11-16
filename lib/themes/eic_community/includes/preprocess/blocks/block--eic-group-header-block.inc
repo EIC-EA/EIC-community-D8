@@ -103,7 +103,9 @@ function eic_community_preprocess_eic_group_header_block(array &$variables) {
           // Invite user.
           $icon_name = 'invite';
           break;
-
+        case 'entity.group.new_request':
+          $icon_name = 'gear';
+          break;
       }
 
       $flag = [
