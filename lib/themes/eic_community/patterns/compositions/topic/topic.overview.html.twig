@@ -77,8 +77,7 @@
         {% include "@theme/patterns/compositions/featured-content-collection.html.twig" with related_documents|default({})|merge({
           icon_file_path: common.icon_file_path,
           extra_classes: "ecl-section-wrapper ecl-section-wrapper--is-white ecl-featured-content-collection--has-list-layout",
-          no_container: true,
-          items_extra_classes: "ecl-featured-content-collection__item--big"
+          no_container: true
         }) only %}
       {% endif %}
 
