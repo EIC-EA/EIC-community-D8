@@ -45,6 +45,11 @@ body {
       padding: 65px 95px;
       position: relative;
     }
+
+    & form {
+      margin-right: 0;
+      margin-left: 0;
+    }
   }
 
   .modal-hide {
