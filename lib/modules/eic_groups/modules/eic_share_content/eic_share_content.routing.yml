@@ -1,0 +1,16 @@
+eic_share_content.share:
+  path: '/share/{group}/content/{node}'
+  methods: [ POST ]
+  defaults:
+    _controller: 'Drupal\eic_share_content\Controller\ShareContentController::share'
+    _title: 'Share content'
+  requirements:
+    _group_permission: 'share content between groups'
+    group: \d+
+    node: \d+
+  options:
+    parameters:
+      node:
+        type: entity:node
+      group:
+        type: entity:group

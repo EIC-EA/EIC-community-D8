@@ -98,7 +98,7 @@ class UserGallerySourceType extends SourceType {
    * @inheritDoc
    */
   public function getPrefilteredGroupFieldId(): array {
-    return ['itm_user__group_content__uid_gid'];
+    return ['itm_user__group_content__uid_gid', 'itm_shared_groups'];
   }
 
 }

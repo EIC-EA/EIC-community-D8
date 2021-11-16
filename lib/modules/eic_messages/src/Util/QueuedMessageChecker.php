@@ -75,7 +75,10 @@ class QueuedMessageChecker {
       MessageTemplateTypes::SUBSCRIPTION,
       MessageTemplateTypes::STREAM,
     ];
-    if (!in_array($message_template_type, $anti_spammed_types)) {
+    if (
+      !in_array($message_template_type, $anti_spammed_types)
+      || $message->getTemplate()->id() === ActivityStreamMessageTemplates::SHARE_CONTENT
+    ) {
       return TRUE;
     }
 
