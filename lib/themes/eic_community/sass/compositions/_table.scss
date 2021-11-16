@@ -18,7 +18,7 @@
       background: $ecl-color-blue-5;
     }
     & td {
-      padding: 0 map-get($ecl-spacing, 'm');
+      padding: .5em map-get($ecl-spacing, 'm');
       white-space: nowrap;
     }
 

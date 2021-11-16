@@ -88,6 +88,11 @@ content:
     third_party_settings: {  }
     type: entity_reference_paragraphs
     region: content
+  field_send_notification:
+    weight: 24
+    settings: {  }
+    third_party_settings: {  }
+    region: content
   field_vocab_geo:
     weight: 6
     settings:

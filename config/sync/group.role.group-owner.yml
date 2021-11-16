@@ -42,6 +42,7 @@ permissions:
   - 'highlight group content'
   - 'invite users to group'
   - 'post comments'
+  - 'share content between groups'
   - 'update any group_node:discussion entity'
   - 'update any group_node:document entity'
   - 'update any group_node:event entity'

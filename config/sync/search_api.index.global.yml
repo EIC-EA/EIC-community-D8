@@ -9,6 +9,7 @@ dependencies:
     - file
     - media
     - taxonomy
+    - content_moderation
     - message
     - comment
     - node
@@ -22,7 +23,6 @@ dependencies:
     - eic_search
     - flag_search_api
     - search_api_attachments
-    - content_moderation
     - flag
     - group_permissions
   config:
@@ -44,6 +44,8 @@ dependencies:
     - field.storage.message.field_referenced_comment
     - field.storage.message.field_referenced_node
     - field.storage.node.field_discussion_type
+    - field.storage.message.field_share_message
+    - field.storage.message.field_source_group
     - field.storage.node.field_body
     - field.storage.node.field_comments
     - field.storage.node.field_document_type
@@ -564,6 +566,14 @@ field_settings:
         - field.storage.node.field_discussion_type
       module:
         - node
+  field_share_message:
+    label: 'Share message'
+    datasource_id: 'entity:message'
+    property_path: field_share_message
+    type: text
+    dependencies:
+      config:
+        - field.storage.message.field_share_message
   field_vocab_event_type:
     label: 'Event type'
     datasource_id: 'entity:node'
@@ -608,6 +618,14 @@ field_settings:
     type: integer
     indexed_locked: true
     type_locked: true
+  group_changed:
+    label: '[Group] Changed on'
+    datasource_id: 'entity:group'
+    property_path: changed
+    type: date
+    dependencies:
+      module:
+        - group
   group_content_entity_id:
     label: '[Group content] Content'
     datasource_id: 'entity:group_content'
@@ -761,6 +779,14 @@ field_settings:
     dependencies:
       module:
         - group
+  group_moderation_state:
+    label: '[Group] Moderation state'
+    datasource_id: 'entity:group'
+    property_path: moderation_state
+    type: string
+    dependencies:
+      module:
+        - content_moderation
   group_statistic_comments:
     label: 'Group statistics - Comments'
     property_path: group_statistic_comments
@@ -856,6 +882,15 @@ field_settings:
     dependencies:
       config:
         - field.storage.user.field_last_name
+      module:
+        - group
+        - user
+  group_user_uid:
+    label: 'Group creator » User » User ID'
+    datasource_id: 'entity:group'
+    property_path: 'uid:entity:uid'
+    type: integer
+    dependencies:
       module:
         - group
         - user
@@ -978,6 +1013,16 @@ field_settings:
     label: 'Search api attachments: Document'
     property_path: saa_field_document_media
     type: text
+  source_group_id:
+    label: 'Source Group » Group » ID'
+    datasource_id: 'entity:message'
+    property_path: 'field_source_group:entity:id'
+    type: integer
+    dependencies:
+      config:
+        - field.storage.message.field_source_group
+      module:
+        - group
   status:
     label: '[User] Status'
     datasource_id: 'entity:user'
@@ -1279,6 +1324,7 @@ datasource_settings:
         - stream_news_insert_update
         - stream_photo_album_insert_update
         - stream_photo_insert_update
+        - stream_share_content
         - stream_share_insert_update
         - stream_wiki_page_insert_update
     languages:
