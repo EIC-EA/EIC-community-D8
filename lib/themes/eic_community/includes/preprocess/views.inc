@@ -37,7 +37,7 @@ function eic_community_preprocess_views_view(&$variables) {
       if ($call_to_action_url = GlobalOverviewPages::getGlobalOverviewPageUrl('groups')) {
         $variables['call_to_action'] = [
           'link' => [
-            'label' => 'View all groups',
+            'label' => t('View all groups'),
             'path' => $call_to_action_url,
           ],
         ];
@@ -48,7 +48,7 @@ function eic_community_preprocess_views_view(&$variables) {
       if ($call_to_action_url = GlobalOverviewPages::getGlobalOverviewPageUrl('events')) {
         $variables['call_to_action'] = [
           'link' => [
-            'label' => 'View all events',
+            'label' => t('View all events'),
             'path' => $call_to_action_url,
           ],
         ];
