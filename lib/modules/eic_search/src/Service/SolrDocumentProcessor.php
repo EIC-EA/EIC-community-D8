@@ -528,14 +528,7 @@ class SolrDocumentProcessor {
 
     $original_object = $item->getOriginalObject()->getEntity();
 
-    if ($original_object instanceof MessageInterface) {
-      $group_ref_id = $original_object->hasField('field_group_ref') ?
-        $original_object->get('field_group_ref')->entity->id() :
-        NULL;
-      $group = $group_ref_id ? Group::load($group_ref_id) : NULL;
-    } else {
-      $group = $group_helper->getGroupByEntity($original_object);
-    }
+    $group = $group_helper->getGroupByEntity($original_object);
 
     if (!$group) {
       $document->addField('ss_group_visibility', $group_visibility);

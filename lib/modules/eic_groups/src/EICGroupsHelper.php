@@ -3,6 +3,7 @@
 namespace Drupal\eic_groups;
 
 use Drupal\Component\Datetime\TimeInterface;
+use \Drupal\message\MessageInterface;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityInterface;
@@ -242,7 +243,17 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
     if ($entity instanceof GroupInterface) {
       return $entity;
     }
-    elseif ($entity instanceof NodeInterface) {
+
+    if ($entity instanceof MessageInterface) {
+      $group_ref_id = $entity->hasField('field_group_ref') ?
+        $entity->get('field_group_ref')->entity->id() :
+        NULL;
+      $group = $group_ref_id ? Group::load($group_ref_id) : NULL;
+
+      return $group;
+    }
+
+    if ($entity instanceof NodeInterface) {
       // Load all the group content for this entity.
       $group_content = GroupContent::loadByEntity($entity);
       // Assuming that the content can be related only to 1 group.
