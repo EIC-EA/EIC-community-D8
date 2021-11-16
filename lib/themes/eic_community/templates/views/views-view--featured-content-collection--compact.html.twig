@@ -30,39 +30,6 @@
  * @see template_preprocess_views_view()
  */
 #}
-{%
-  set classes = [
-    dom_id ? 'js-view-dom-id-' ~ dom_id,
-  ]
-%}
+{% set extra_classes = 'ecl-featured-content-collection--has-compact-layout ecl-section-wrapper ecl-featured-content-collection--is-ready' %}
 
-{% if rows -%}
-  {% set _rows_length = rows[0]['#rows']|length %}
-  {% set _items = [] %}
-
-  {% for row in rows[0]['#rows'] %}
-    {%
-      set _items = _items|merge([{
-        content: row,
-      }])
-    %}
-  {% endfor %}
-
-  {% include "@theme/patterns/compositions/featured-content-collection.html.twig" with {
-    title: view.title|default(''),
-    description: header,
-    call_to_action: call_to_action|default(''),
-    items: _items,
-    extra_classes: extra_classes|default('ecl-featured-content-collection--has-overview-layout ecl-section-wrapper ecl-featured-content-collection--is-ready'),
-    icon_file_path: eic_icon_path,
-  } only %}
-{% else %}
-  {% include "@theme/patterns/compositions/featured-content-collection.html.twig" with {
-    title: view.title|default(''),
-    description: empty,
-    call_to_action: call_to_action|default(''),
-    items: [],
-    extra_classes: extra_classes|default('ecl-featured-content-collection--has-overview-layout ecl-section-wrapper ecl-featured-content-collection--is-ready'),
-    icon_file_path: eic_icon_path,
-  } only %}
-{% endif %}
+{% extends "@eic_community/views/views-view--featured-content-collection.html.twig" %}
