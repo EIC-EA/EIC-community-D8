@@ -875,6 +875,15 @@ field_settings:
       module:
         - group
         - user
+  group_user_uid:
+    label: 'Group creator » User » User ID'
+    datasource_id: 'entity:group'
+    property_path: 'uid:entity:uid'
+    type: integer
+    dependencies:
+      module:
+        - group
+        - user
   last_comment_timestamp:
     label: '[Content] Comments » Last comment timestamp'
     datasource_id: 'entity:node'

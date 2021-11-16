@@ -231,6 +231,11 @@ class SolrDocumentProcessor {
         $geo = $fields['ss_group_field_vocab_geo_string'];
         $language = t('English', [], ['context' => 'eic_search'])->render();
         $user_url = '';
+        if (array_key_exists('its_group_user_uid', $fields)) {
+          $user = User::load($fields['its_group_user_uid']);
+          $user_url = $user instanceof UserInterface ? $user->toUrl()
+            ->toString() : '';
+        }
         break;
       case 'entity:message':
         $user_url = '';
