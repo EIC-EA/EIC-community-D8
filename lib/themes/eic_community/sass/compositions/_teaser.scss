@@ -6,6 +6,8 @@
   @include ecl-media-breakpoint-up('sm') {
     display: flex;
     align-items: stretch;
+    height: 100%;
+    box-sizing: border-box;
   }
 
   @include ecl-media-breakpoint-up('sm') {
@@ -70,6 +72,7 @@
 
     .ecl-teaser-overview__item & {
       height: 100%;
+      box-sizing: border-box;
     }
   }
 

@@ -21,3 +21,4 @@
 /docker-compose.*.yml
 /.gitattributes
 .env
+**/.DS_Store

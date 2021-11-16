@@ -29,6 +29,12 @@ react-block-modal:
     dist/react/block/modal/entrypoint.js: { minified: true }
   dependencies:
     - core/drupal
+    -
+react-block-gallery:
+  js:
+    dist/react/block/gallery/entrypoint.js: { minified: true }
+  dependencies:
+    - core/drupal
 
 react-block-overview-search:
   js:
