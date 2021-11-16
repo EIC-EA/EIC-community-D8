@@ -480,6 +480,12 @@
     flex-shrink: 0;
     padding-left: ecl-box-model('padding');
 
+    &--left {
+      padding-left: 0;
+      padding-right: ecl-box-model('padding');
+      padding-bottom: ecl-box-model('padding');
+    }
+
     // START: Event specific Card style for mobile
     #{$node}--as-card#{$node}--event & {
       order: -1;
