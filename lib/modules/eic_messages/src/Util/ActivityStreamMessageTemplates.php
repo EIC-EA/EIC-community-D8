@@ -49,9 +49,9 @@ final class ActivityStreamMessageTemplates implements MessageIdentifierInterface
   const COMMENT_INSERT_UPDATE = 'stream_wiki_page_insert_update';
 
   /**
-   * Message template for shared contents.
+   * Used for shared content activity items
    */
-  const SHARE_INSERT = 'SHARE_INSERT';
+  const SHARE_CONTENT = 'stream_share_content';
 
   /**
    * Array of activity stream message templates per entity type.
@@ -65,12 +65,11 @@ final class ActivityStreamMessageTemplates implements MessageIdentifierInterface
       'document' => self::DOCUMENT_INSERT_UPDATE,
       'gallery' => self::GALLERY_INSERT_UPDATE,
       'video' => self::VIDEO_INSERT_UPDATE,
-      'wiki_page' => self::WIKI_INSERT_UPDATE,
-      'share' => self::SHARE_INSERT
+      'wiki_page' => self::WIKI_INSERT_UPDATE
     ],
     'comment' => [
       'node_comment' => self::COMMENT_INSERT_UPDATE,
-    ],
+    ]
   ];
 
   /**

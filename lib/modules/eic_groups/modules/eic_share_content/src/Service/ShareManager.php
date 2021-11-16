@@ -7,6 +7,7 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\eic_content\EICContentHelperInterface;
 use Drupal\eic_messages\ActivityStreamOperationTypes;
 use Drupal\eic_messages\Service\MessageBusInterface;
+use Drupal\eic_messages\Util\ActivityStreamMessageTemplates;
 use Drupal\group\Entity\GroupContent;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\group\Plugin\GroupContentEnablerManagerInterface;
@@ -94,13 +95,11 @@ class ShareManager {
     NodeInterface $node,
     ?string $message
   ) {
-    $group_content = $this->contentHelper->getGroupContentByEntity($node);
+    $group_content = $this->contentHelper->getGroupContent($source_group, $node);
     if (empty($group_content)) {
       throw new \InvalidArgumentException($this->t('This content can\'t be shared'));
     }
 
-    /** @var \Drupal\group\Entity\GroupContentInterface $group_content */
-    $group_content = reset($group_content);
     if (
       $target_group->id() === $source_group->id() ||
       $group_content->getGroup()->id() !== $source_group->id()
@@ -125,7 +124,7 @@ class ShareManager {
     $shared_group_content->save();
 
     $this->messageBus->dispatch([
-      'template' => 'stream_share_content',
+      'template' => ActivityStreamMessageTemplates::SHARE_CONTENT,
       'uid' => $node->getOwnerId(),
       'field_operation_type' => ActivityStreamOperationTypes::SHARED_ENTITY,
       'field_referenced_node' => $node->id(),
@@ -173,7 +172,7 @@ class ShareManager {
   ): array {
     return $this->entityTypeManager->getStorage('message')
       ->loadByProperties([
-        'template' => 'stream_share_content',
+        'template' => ActivityStreamMessageTemplates::SHARE_CONTENT,
         'field_group_ref' => $group->id(),
         'field_referenced_node' => $node->id(),
       ]);
@@ -221,7 +220,7 @@ class ShareManager {
   public function getShares(NodeInterface $node): array {
     return $this->entityTypeManager->getStorage('message')
       ->loadByProperties([
-        'template' => 'stream_share_content',
+        'template' => ActivityStreamMessageTemplates::SHARE_CONTENT,
         'field_referenced_node' => $node->id(),
       ]);
   }

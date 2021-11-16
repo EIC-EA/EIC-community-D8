@@ -55,10 +55,6 @@
         {% if flags %}
           {% include "@theme/patterns/components/flags.html.twig" with flags|default({}) %}
         {% endif %}
-
-      {% if share_group_content is not empty %}
-          {{ share_group_content }}
-      {% endif %}
         {{ elements.field_vocab_topics }}
       {% endblock %}
     {% endembed %}

@@ -29,6 +29,12 @@ class ShareContentController extends ControllerBase {
    */
   private $currentRequest;
 
+  /**
+   * @param \Drupal\eic_share_content\Service\ShareManager $share_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
+   * @param \Drupal\Core\Messenger\MessengerInterface $messenger
+   */
   public function __construct(
     ShareManager $share_manager,
     EntityTypeManagerInterface $entity_type_manager,

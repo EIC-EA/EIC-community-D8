@@ -5,13 +5,13 @@
  * Contains common helper functions.
  */
 
-use Drupal\Component\Serialization\Json;
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\comment\CommentInterface;
 use Drupal\comment\Entity\Comment;
-use Drupal\eic_flags\FlagType;
+use Drupal\Component\Serialization\Json;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Render\Markup;
 use Drupal\Core\Url;
+use Drupal\eic_flags\FlagType;
 use Drupal\eic_groups\Constants\GroupVisibilityType;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\node\NodeInterface;
@@ -72,7 +72,7 @@ function _eic_community_get_share_group_content_link(
     $groups = \Drupal::service('eic_groups.helper')
       ->getGroupsByVisibility(GroupVisibilityType::GROUP_VISIBILITY_PUBLIC);
     foreach ($groups as $group) {
-      if($group->id() === $current_group->id()) {
+      if ($group->id() === $current_group->id()) {
         continue;
       }
 
@@ -90,6 +90,15 @@ function _eic_community_get_share_group_content_link(
       'group' => $current_group->id(),
       'node' => $node->id(),
     ], ['absolute' => TRUE])->toString(),
+    '#attached' => [
+      'drupalSettings' => [
+        'share_modal' => [
+          'translations' => [
+            'maximum_character' => t('Your description can contain up to 300 characters.'),
+          ],
+        ],
+      ],
+    ],
   ];
 }
 

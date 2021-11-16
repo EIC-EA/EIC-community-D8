@@ -26,7 +26,7 @@ theme:
 
 react-block-modal:
   js:
-    dist/react/block/modal/entrypoint.js: { minified: true }
+    dist/react/block/share_modal/entrypoint.js: { minified: true }
   dependencies:
     - core/drupal
     -
