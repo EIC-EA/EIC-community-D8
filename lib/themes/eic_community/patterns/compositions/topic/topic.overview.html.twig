@@ -10,6 +10,10 @@
 
   {% include "@theme/patterns/compositions/breadcrumb.html.twig" with breadcrumb|default({}) only %}
 
+  {% include "@theme/patterns/compositions/editorial-header.html.twig" with editorial_header|default({})|merge({
+    extra_classes: 'ecl-editorial-header--is-compact',
+  }) only %}
+
 {% endblock %}
 
 
@@ -18,7 +22,7 @@
   {% embed "@theme/patterns/compositions/editorial-overview.html.twig" with editorial_article|default({}) %}
     {% block content %}
 
-      <h3>{{ title }}</h3>
+      <h2>{{ title }}</h2>
       <p>{{ body }}</p>
 
       {% if stats %}
@@ -28,7 +32,9 @@
       {% endif %}
 
       {% if activityStream %}
-        {% include '@theme/patterns/compositions/activity-stream.html.twig' with activityStream|default({}) %}
+        {% include '@theme/patterns/compositions/activity-stream.html.twig' with activityStream|default({})|merge({
+          title_element: "h2"
+        }) %}
       {% endif %}
 
       {% if related_groups %}
@@ -54,7 +60,7 @@
           icon_file_path: common.icon_file_path,
           extra_classes: "ecl-section-wrapper ecl-section-wrapper--is-white ecl-featured-content-collection--has-list-layout",
           no_container: true,
-          items_extra_classes: "ecl-featured-content-collection__item--big"
+
         }) only %}
       {% endif %}
 
