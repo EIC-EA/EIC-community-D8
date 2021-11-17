@@ -1,7 +1,6 @@
 .ecl-teaser {
   $node: &;
   position: relative;
-  padding: ecl-box-model('padding');
 
   @include ecl-media-breakpoint-up('sm') {
     display: flex;
@@ -32,6 +31,11 @@
     @include adjust-from-section-color() {
       background-color: map-get($ecl-colors, 'white');
     }
+  }
+
+  &--event#{$node}--as-grey {
+    padding: ecl-box-model('padding');
+    background-color: map-get($ecl-colors, 'grey-5');
   }
 
   &--as-card-white {
