@@ -41,6 +41,7 @@ permissions:
   - 'invite users to group'
   - 'leave group'
   - 'post comments'
+  - 'share content between groups'
   - 'update any group_node:discussion entity'
   - 'update any group_node:document entity'
   - 'update any group_node:event entity'

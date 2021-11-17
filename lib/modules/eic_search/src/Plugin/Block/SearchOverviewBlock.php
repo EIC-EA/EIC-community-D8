@@ -189,7 +189,7 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
       '#layout' => $source instanceof SourceTypeInterface ? $source->getLayoutTheme() : NULL,
       '#page_options' => $this->configuration['page_options'],
       '#enable_search' => $this->configuration['enable_search'],
-      '#enable_date_filter' => $this->configuration['enable_date_filter'],
+      '#enable_date_filter' => $this->configuration['enable_date_filter']  ?? FALSE,
       '#url' => Url::fromRoute('eic_groups.solr_search')->toString(),
       '#isAnonymous' => \Drupal::currentUser()->isAnonymous(),
       '#currentGroup' => $current_group_route instanceof GroupInterface ? $current_group_route->id() : NULL,
@@ -226,6 +226,7 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
         'uploaded_by' => $this->t('Uploaded by', [], ['context' => 'eic_group']),
         'draft' => $this->t('Draft', [], ['context' => 'eic_group']),
         'pending' => $this->t('Pending', [], ['context' => 'eic_group']),
+        'blocked' => $this->t('Blocked', [], ['context' => 'eic_group']),
         'load_more' => $this->t('Load more', [], ['context' => 'eic_group']),
       ],
     ];

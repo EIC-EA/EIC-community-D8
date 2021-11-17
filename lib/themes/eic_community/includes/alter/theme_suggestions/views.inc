@@ -16,15 +16,23 @@ function eic_community_theme_suggestions_views_view_alter(array &$suggestions, a
     case 'group_related_news_stories':
     case 'group_discussions':
     case 'group_documents':
+    case 'group_events':
     case 'group_related_groups':
+    case 'taxonomy_related_content':
       $suggestions[] = "views_view__featured_content_collection";
       break;
+
+    case 'groups_homepage':
+      $suggestions[] = "views_view__featured_content_collection__compact";
+      break;
+
     case 'global_overviews':
-      if($variables['view']->getDisplay()->display['id'] === 'search') {
+      if ($variables['view']->getDisplay()->display['id'] === 'search') {
         return;
       }
 
       $suggestions[] = "views_view__teaser_overview";
       break;
+
   }
 }

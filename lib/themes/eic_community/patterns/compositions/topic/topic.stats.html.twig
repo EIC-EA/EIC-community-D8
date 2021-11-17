@@ -9,8 +9,10 @@
           name: stat.icon.name
         }
       } only %}
-      <span class="ecl-topic__stats__data">{{ stat.data }}</span>
-      <span>{{ stat.title }}</span>
+      <a href="{{ stat.url }}">
+        <span class="ecl-topic__stats__data">{{ stat.data }}</span>
+        <span>{{ stat.title }}</span>
+      </a>
     </div>
   {% endfor %}
 </div>
