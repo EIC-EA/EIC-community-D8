@@ -34,7 +34,7 @@ function _eic_community_render_event_detail_page(&$variables, EntityInterface $e
   _eic_community_display_topics($variables);
   _eic_community_display_flags($variables);
   $group = \Drupal::service('eic_groups.helper')->getGroupFromRoute();
-  if ($group instanceof GroupInterface) {
+  if ($group instanceof GroupInterface && 'node' === $entity_type) {
     $variables['editorial_actions']['items'][]['content'] = _eic_community_get_share_group_content_link(
       $group,
       $entity
