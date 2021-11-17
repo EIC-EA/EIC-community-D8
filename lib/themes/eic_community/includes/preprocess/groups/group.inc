@@ -23,6 +23,7 @@ function eic_community_preprocess_group__event(&$variables) {
       break;
 
     case 'teaser':
+    case 'small_teaser':
       $teaser = [
         'owner' => eic_community_get_teaser_user_display($group->getOwner()),
         'stats' => [],

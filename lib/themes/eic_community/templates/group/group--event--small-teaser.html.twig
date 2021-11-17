@@ -1,0 +1,12 @@
+{#
+/**
+ * @file
+ * Theme override to display a group event in small teaser.
+ *
+ * @see ./themes/custom/eic_community/templates/content/group.html.twig
+ */
+#}
+{#% extends "@eic_community/group/group--event--teaser.html.twig" %#}
+{% set extra_classes = 'ecl-teaser--as-card' %}
+
+{% extends "@eic_community/group/group--event--teaser.html.twig" %}
