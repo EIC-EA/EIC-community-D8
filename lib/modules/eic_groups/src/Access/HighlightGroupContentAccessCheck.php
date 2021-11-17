@@ -22,6 +22,10 @@ class HighlightGroupContentAccessCheck implements AccessInterface {
     'group-group_node-discussion',
     'group-group_node-video',
     'group-group_node-gallery',
+    'event-group_node-document',
+    'event-group_node-discussion',
+    'event-group_node-video',
+    'event-group_node-gallery',
   ];
 
   /**
