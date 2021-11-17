@@ -25,7 +25,7 @@ function eic_community_preprocess_views_view_field(&$variables) {
 }
 
 /**
- * Implements template_preprocess_views_view_field().
+ * Implements template_preprocess_views_view().
  */
 function eic_community_preprocess_views_view(&$variables) {
   /** @var \Drupal\views\ViewExecutable $view */
@@ -50,6 +50,24 @@ function eic_community_preprocess_views_view(&$variables) {
           'link' => [
             'label' => t('View all events'),
             'path' => $call_to_action_url,
+          ],
+        ];
+      }
+      break;
+
+    case 'taxonomy_related_content-groups':
+    case 'taxonomy_related_content-discussions':
+    case 'taxonomy_related_content-news_stories':
+    case 'taxonomy_related_content-files':
+    case 'taxonomy_related_content-events':
+    case 'taxonomy_related_content-wiki_pages':
+    case 'taxonomy_related_content-experts':
+      // Add the read more link if there is one.
+      if ($view->display_handler->getOption('use_more') == TRUE) {
+        $variables['call_to_action'] = [
+          'link' => [
+            'label' => $view->display_handler->getOption('use_more_text'),
+            'path' => $view->display_handler->getOption('link_url'),
           ],
         ];
       }
