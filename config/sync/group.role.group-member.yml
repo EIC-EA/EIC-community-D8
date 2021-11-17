@@ -26,6 +26,7 @@ permissions:
   - 'edit own comments'
   - 'leave group'
   - 'post comments'
+  - 'share content between groups'
   - 'update own group_node:discussion entity'
   - 'update own group_node:document entity'
   - 'update own group_node:event entity'

@@ -72,7 +72,7 @@ class CommentMessageCreator implements ContainerInjectionInterface {
     string $operation
   ) {
     if (!in_array($this->routeMatch->getRouteName(),
-      ['comment.reply', 'entity.comment.edit_form'])) {
+      ['comment.reply', 'entity.comment.edit_form', 'eic_groups.discussion_add_comment'])) {
       return;
     }
 

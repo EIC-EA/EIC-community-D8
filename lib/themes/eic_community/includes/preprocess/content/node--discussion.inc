@@ -7,6 +7,7 @@
 
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Render\Markup;
+use Drupal\group\Entity\GroupInterface;
 
 /**
  * Implements hook_preprocess_node() for discussion node.
@@ -56,7 +57,6 @@ function _preprocess_discussion_full(&$variables, $discussion_type, $node) {
   $variables['timestamp']['label'] = eic_community_get_teaser_time_display($node->get('changed')->value);
 
   $flags = array_filter($variables['elements'], function ($key) use ($node) {
-
     // If element is not a flag we skip it.
     if (strpos($key, 'flag') === FALSE) {
       return FALSE;
@@ -68,6 +68,14 @@ function _preprocess_discussion_full(&$variables, $discussion_type, $node) {
   $flags = array_map(function ($item) {
     return ['content' => $item];
   }, $flags);
+
+  $group = \Drupal::service('eic_groups.helper')->getGroupFromRoute();
+  if ($group instanceof GroupInterface) {
+    $flags['share_group_content']['content'] = _eic_community_get_share_group_content_link(
+      $group,
+      $node
+    );
+  }
 
   $variables['flags']['items'] = $flags;
 
