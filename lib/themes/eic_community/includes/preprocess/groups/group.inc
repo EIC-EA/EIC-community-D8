@@ -42,12 +42,40 @@ function eic_community_preprocess_group__event(&$variables) {
         ];
       }
 
+      if (!$group->get('field_location_type')->isEmpty()) {
+        $event_location_types = $group->get('field_location_type')->getValue();
+
+        $teaser['type'] = [
+          'label' => NULL,
+        ];
+        foreach ($event_location_types as $location_type) {
+          $value = NULL;
+          switch ($location_type['value']) {
+            case 'on_site':
+              $value = t('On site');
+              break;
+
+            case 'remote':
+              $value = t('Remote');
+              break;
+
+          }
+          if (!$teaser['type']['label']) {
+            $teaser['type']['label'] = $value;
+            continue;
+          }
+          $value = strtolower($value);
+          $teaser['type']['label'] .= " & {$value}";
+        }
+      }
+
       $signup_link = NULL;
       // Get the registration date.
       if (!$group->get('field_date_range')->isEmpty()) {
         $registration_start_date = strtotime($group->get('field_event_registration_date')->value);
         $registration_end_date = strtotime($group->get('field_event_registration_date')->end_value);
         $registration_status = \Drupal::service('eic_helper.datetime')->getDateRangeStatus($group, 'field_event_registration_date');
+        $event_date_status = \Drupal::service('eic_helper.datetime')->getDateRangeStatus($group, 'field_date_range');
 
         switch ($registration_status) {
           case DateTimeHelper::DATE_RANGE_UPCOMING:
@@ -58,8 +86,17 @@ function eic_community_preprocess_group__event(&$variables) {
             break;
 
           case DateTimeHelper::DATE_RANGE_ONGOING:
+
+            if ($event_date_status !== DateTimeHelper::DATE_RANGE_UPCOMING) {
+              break;
+            }
+
+            if ($registration_end_date <= $current_time) {
+              break;
+            }
+
             $arguments = [
-              '@time' => \Drupal::service('date.formatter')->formatInterval($current_time - $registration_end_date),
+              '@time' => \Drupal::service('date.formatter')->formatInterval($registration_end_date - $current_time),
             ];
             $registration_message = t('@time left to signup', $arguments);
             if (!$group->get('field_link')->isEmpty()) {
@@ -72,12 +109,29 @@ function eic_community_preprocess_group__event(&$variables) {
             break;
         }
 
+        if (in_array(
+          $event_date_status,
+          [
+            DateTimeHelper::DATE_RANGE_ONGOING,
+            DateTimeHelper::DATE_RANGE_UNDEFINED,
+          ]
+        )) {
+          $registration_message = t('Registrations are now closed');
+        }
+
         if (!empty($registration_message)) {
           $teaser['timestamp']['label'] = $registration_message;
         }
       }
-      elseif (!$group->get('field_link')->isEmpty()) {
-        $signup_link = $group->get('field_link')->uri;
+
+      // Adds signup link to the teaser variables.
+      if (isset($signup_link)) {
+        $teaser['actions'] = [
+          [
+            'label' => t('Sign up'),
+            'path' => $signup_link,
+          ]
+        ];
       }
 
       // Get the start date of the event.
