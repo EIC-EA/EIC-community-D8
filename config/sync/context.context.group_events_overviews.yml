@@ -22,12 +22,11 @@ reactions:
   blocks:
     blocks:
       724d2707-5805-4919-8fc3-bc56f316a2e6:
+      5192d3d3-7de9-4cad-baa2-4195a79584f0:
         id: eic_search_overview
         label: ''
         provider: eic_search
         label_display: visible
-        region: content
-        weight: '0'
         source_type: Drupal\eic_search\Search\Sources\GroupEventSourceType
         facets:
           ss_content_event_type_string: ss_content_event_type_string
@@ -37,6 +36,7 @@ reactions:
         sort_options:
           ss_drupal_timestamp: ss_drupal_timestamp
           ss_content_title: ss_content_title
+          its_content_field_date_range_start_value: its_content_field_date_range_start_value
           dm_aggregated_changed: dm_aggregated_changed
           its_last_flagged_bookmark_content: its_last_flagged_bookmark_content
           its_flag_highlight_content: 0
@@ -51,12 +51,13 @@ reactions:
         add_facet_my_groups: 0
         context_mapping: {  }
         custom_id: eic_search_overview
+        region: content
         theme: eic_community
         css_class: ''
         unique: 0
         context_id: group_events_overviews
         third_party_settings: {  }
-        uuid: 724d2707-5805-4919-8fc3-bc56f316a2e6
+        uuid: 5192d3d3-7de9-4cad-baa2-4195a79584f0
     id: blocks
     saved: false
     uuid: 9c311d0e-a590-452a-ad85-a32b685d7729

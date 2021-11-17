@@ -67,9 +67,14 @@ class GroupEventSourceType extends SourceType {
         'DESC' => $this->t('Recent', [], ['context' => 'eic_search']),
       ],
       'ss_content_title' => [
-        'label' => $this->t('Title', [], ['context' => 'eic_search']),
-        'ASC' => $this->t('Title A-Z', [], ['context' => 'eic_search']),
-        'DESC' => $this->t('Title Z-A', [], ['context' => 'eic_search']),
+        'label' => $this->t('Event name', [], ['context' => 'eic_search']),
+        'ASC' => $this->t('Event name A-Z', [], ['context' => 'eic_search']),
+        'DESC' => $this->t('Event name Z-A', [], ['context' => 'eic_search']),
+      ],
+      'its_content_field_date_range_start_value' => [
+        'label' => $this->t('Event time', [], ['context' => 'eic_search']),
+        'ASC' => $this->t('First events in time', [], ['context' => 'eic_search']),
+        'DESC' => $this->t('Last events in time', [], ['context' => 'eic_search']),
       ],
       'dm_aggregated_changed' => [
         'label' => $this->t('Last updated', [], ['context' => 'eic_search']),
@@ -98,7 +103,7 @@ class GroupEventSourceType extends SourceType {
    * {@inheritdoc}
    */
   public function getSecondDefaultSort(): array {
-    return ['ss_global_created_date', 'DESC'];
+    return [self::START_DATE_SOLR_FIELD_ID, 'ASC'];
   }
 
   /**
