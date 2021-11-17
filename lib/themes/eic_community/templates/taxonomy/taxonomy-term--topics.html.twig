@@ -1,13 +1,5 @@
 {# @TODO adapt with storybook later #}
 {% block page_header %}
-  {% include "@theme/patterns/compositions/overview-header.html.twig" with {
-    title_element: 'h1',
-    title: name,
-    image: {
-      src: banner_image_url
-    },
-  } only %}
-
   {% include "@theme/patterns/compositions/breadcrumb.html.twig" with breadcrumb|default({}) only %}
 {% endblock %}
 
