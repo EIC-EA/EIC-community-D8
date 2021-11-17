@@ -30,44 +30,9 @@
  * @see template_preprocess_views_view()
  */
 #}
-{%
-  set classes = [
-    dom_id ? 'js-view-dom-id-' ~ dom_id,
-  ]
+{% include "@theme/patterns/compositions/featured-topics.html.twig" with {
+  title: title,
+  items: items,
+  icon_file_path: eic_icon_path,
+}
 %}
-
-{% set wrapper_classes = 'ecl-featured-content-collection--has-overview-layout ecl-section-wrapper ecl-featured-content-collection--is-ready' %}
-{% if extra_classes %}
-  {% set wrapper_classes = wrapper_classes ~ ' ' ~ extra_classes %}
-{% endif %}
-
-{% if rows -%}
-  {% set _rows_length = rows[0]['#rows']|length %}
-  {% set _items = [] %}
-
-  {% for row in rows[0]['#rows'] %}
-    {%
-      set _items = _items|merge([{
-        content: row,
-      }])
-    %}
-  {% endfor %}
-
-  {% include "@theme/patterns/compositions/featured-content-collection.html.twig" with {
-    title: view.title|default(''),
-    description: header,
-    call_to_action: call_to_action|default(''),
-    items: _items,
-    extra_classes: wrapper_classes,
-    icon_file_path: eic_icon_path,
-  } only %}
-{% else %}
-  {% include "@theme/patterns/compositions/featured-content-collection.html.twig" with {
-    title: view.title|default(''),
-    description: empty,
-    call_to_action: call_to_action|default(''),
-    items: [],
-    extra_classes: wrapper_classes,
-    icon_file_path: eic_icon_path,
-  } only %}
-{% endif %}

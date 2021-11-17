@@ -55,6 +55,22 @@ function eic_community_preprocess_views_view(&$variables) {
       }
       break;
 
+    case 'taxonomy-subtopics':
+      $items = [];
+      $rows = $variables['rows'][0]['#rows'];
+      foreach ($rows as $row) {
+        /** @var \Drupal\taxonomy\TermInterface $term */
+        $term = $row['#row']->_entity;
+
+        $items[] = [
+          'label' => $term->getName(),
+          'title' => $term->toUrl(),
+        ];
+      }
+      $variables['items'] = $items;
+      $variables['title'] = $variables['view']->getTitle();
+      break;
+
     case 'taxonomy_related_content-groups':
     case 'taxonomy_related_content-discussions':
     case 'taxonomy_related_content-news_stories':
@@ -62,6 +78,7 @@ function eic_community_preprocess_views_view(&$variables) {
     case 'taxonomy_related_content-events':
     case 'taxonomy_related_content-wiki_pages':
     case 'taxonomy_related_content-experts':
+      $variables['extra_classes'] = 'ecl-featured-content-collection--has-list-layout';
       // Add the read more link if there is one.
       if ($view->display_handler->getOption('use_more') == TRUE) {
         $variables['call_to_action'] = [
