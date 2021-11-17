@@ -388,7 +388,7 @@ class FlaggedEntitiesListBuilder extends EntityListBuilder {
       case 'group':
         $type = $flagged_entity->getEntityTypeId();
         $title = Unicode::truncate(
-          $flagged_entity->get('field_body')->value,
+          $flagged_entity->label(),
           100,
           TRUE,
           TRUE
