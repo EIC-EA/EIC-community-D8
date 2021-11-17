@@ -102,13 +102,6 @@ class GroupEventSourceType extends SourceType {
   /**
    * {@inheritdoc}
    */
-  public function getSecondDefaultSort(): array {
-    return [self::START_DATE_SOLR_FIELD_ID, 'ASC'];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function getSearchFieldsId(): array {
     return [
       'tm_global_title',
@@ -147,13 +140,6 @@ class GroupEventSourceType extends SourceType {
   }
 
   /**
-   * {@inheritdoc}
-   */
-  public function getDefaultSort(): array {
-    return ['its_flag_highlight_content', 'DESC'];
-  }
-
-  /**
    * @inheritDoc
    */
   public function supportDateFilter(): bool {
@@ -168,6 +154,13 @@ class GroupEventSourceType extends SourceType {
       'from' => self::START_DATE_SOLR_FIELD_ID,
       'to' => self::END_DATE_SOLR_FIELD_ID,
     ];
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function getDefaultSort(): array {
+    return [GroupEventSourceType::START_DATE_SOLR_FIELD_ID, 'ASC'];
   }
 
 }

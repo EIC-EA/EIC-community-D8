@@ -121,7 +121,7 @@ class GlobalEventSourceType extends SourceType {
   /**
    * @inheritDoc
    */
-  public function getSecondDefaultSort(): array {
+  public function getDefaultSort(): array {
     return [GroupEventSourceType::START_DATE_SOLR_FIELD_ID, 'ASC'];
   }
 
