@@ -6,13 +6,14 @@
  */
 
 use Drupal\eic_topics\Constants\Topics;
+use Drupal\file\Entity\File;
 
 /**
- * Implements hook_preprocess_taxonomy_term().
+ * Implements hook_preprocess_page__taxonomy__term().
  */
-function eic_community_preprocess_taxonomy_term(&$variables) {
+function eic_topics_preprocess_page__taxonomy__term(&$variables) {
   /** @var \Drupal\taxonomy\TermInterface $term */
-  $term = $variables['term'];
+  $term = \Drupal::routeMatch()->getParameter('taxonomy_term');
 
   $vid = $term->get('vid')->getValue();
   $vid = reset($vid)['target_id'];
@@ -21,10 +22,9 @@ function eic_community_preprocess_taxonomy_term(&$variables) {
     return;
   }
 
-  if ($variables['view_mode'] == 'full') {
-    $banner_image = $term->get('field_topic_banner')->referencedEntities();
-    $file = $banner_image ? File::load($banner_image[0]->get('oe_media_image')->target_id) : NULL;
-    $file_url = $file ? file_url_transform_relative(file_create_url($file->get('uri')->value)) : NULL;
-    $variables['banner_image_url'] = $file_url;
-  }
+  $banner_image = $term->get('field_topic_banner')->referencedEntities();
+  $file = $banner_image ? File::load($banner_image[0]->get('oe_media_image')->target_id) : NULL;
+  $file_url = $file ? file_url_transform_relative(file_create_url($file->get('uri')->value)) : NULL;
+  $variables['banner_image_url'] = $file_url;
+  $variables['topic_title'] = $term->label();
 }
