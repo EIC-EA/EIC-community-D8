@@ -25,9 +25,6 @@
  * @ingroup themeable
  */
 #}
-{% block page_header %}
-  {% include "@theme/patterns/compositions/breadcrumb.html.twig" with breadcrumb|default({}) only %}
-{% endblock %}
 <div{{ attributes }}>
   {{ title_prefix }}
   {% if name %}

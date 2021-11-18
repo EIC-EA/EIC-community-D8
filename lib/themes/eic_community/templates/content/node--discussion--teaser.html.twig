@@ -9,6 +9,7 @@
     {% include "@theme/patterns/compositions/discussion-thread.html.twig" with discussion_item|default({})|merge({
       title: label|default(''),
       path: url,
+      extra_classes: 'ecl-teaser--grey',
     }) %}
   </div>
 {% endblock %}
