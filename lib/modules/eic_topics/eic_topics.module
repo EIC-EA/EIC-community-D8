@@ -9,10 +9,8 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Url;
 use Drupal\eic_search\SearchHelper;
-use Drupal\eic_topics\Constants\Topics;
 use Drupal\eic_topics\TopicsManager;
 use Drupal\views\ViewExecutable;
-use Drupal\file\Entity\File;
 
 /**
  * Implements hook_theme().
@@ -22,36 +20,10 @@ function eic_topics_theme() {
     'topics_statistics_block' => [
       'variables' => [
         'stats' => [],
+        'icon_file_path' => [],
       ],
     ],
   ];
-}
-
-/**
- * Implements hook_preprocess_taxonomy_term().
- */
-function eic_topics_preprocess_taxonomy_term(&$variables) {
-  /** @var \Drupal\taxonomy\TermInterface $term */
-  $term = $variables['term'];
-
-  $vid = $term->get('vid')->getValue();
-  $vid = reset($vid)['target_id'];
-
-  if (Topics::TERM_VOCABULARY_TOPICS_ID !== $vid) {
-    return;
-  }
-
-  if ($variables['view_mode'] == 'full') {
-    /** @var \Drupal\Core\Block\BlockManager $block_manager */
-    $block_manager = \Drupal::service('plugin.manager.block');
-    $plugin_block = $block_manager->createInstance('eic_topics_statistics_block');
-    $variables['stats_block'] = $plugin_block->build();
-
-    $banner_image = $term->get('field_topic_banner')->referencedEntities();
-    $file = $banner_image ? File::load($banner_image[0]->get('oe_media_image')->target_id) : NULL;
-    $file_url = $file ? file_url_transform_relative(file_create_url($file->get('uri')->value)) : NULL;
-    $variables['banner_image_url'] = $file_url;
-  }
 }
 
 /**

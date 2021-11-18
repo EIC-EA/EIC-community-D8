@@ -50,14 +50,19 @@
 
   {% include "@theme/patterns/compositions/featured-content-collection.html.twig" with {
     title: view.title|default(''),
+    description: header,
+    call_to_action: call_to_action|default(''),
     items: _items,
-    extra_classes: 'ecl-featured-content-collection--has-overview-layout ecl-featured-content-collection--is-ready',
+    extra_classes: extra_classes|default('ecl-featured-content-collection--has-overview-layout ecl-section-wrapper ecl-featured-content-collection--is-ready'),
+    icon_file_path: eic_icon_path,
   } only %}
 {% else %}
   {% include "@theme/patterns/compositions/featured-content-collection.html.twig" with {
     title: view.title|default(''),
     description: empty,
+    call_to_action: call_to_action|default(''),
     items: [],
-    extra_classes: 'ecl-featured-content-collection--has-overview-layout ecl-featured-content-collection--is-ready',
+    extra_classes: extra_classes|default('ecl-featured-content-collection--has-overview-layout ecl-section-wrapper ecl-featured-content-collection--is-ready'),
+    icon_file_path: eic_icon_path,
   } only %}
 {% endif %}

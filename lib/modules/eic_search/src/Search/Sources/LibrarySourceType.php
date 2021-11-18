@@ -153,7 +153,7 @@ class LibrarySourceType extends SourceType {
    * @inheritDoc
    */
   public function getPrefilteredGroupFieldId(): array {
-    return ['ss_global_group_parent_id'];
+    return ['ss_global_group_parent_id', 'itm_shared_groups'];
   }
 
   /**

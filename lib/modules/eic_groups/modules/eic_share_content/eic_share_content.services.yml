@@ -1,0 +1,4 @@
+services:
+  eic_share_content.share_manager:
+    class: 'Drupal\eic_share_content\Service\ShareManager'
+    arguments: [ '@eic_content.helper', '@entity_type.manager', '@plugin.manager.group_content_enabler', '@eic_messages.message_bus', '@eic_search.solr_document_processor' ]

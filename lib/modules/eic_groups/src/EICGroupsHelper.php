@@ -371,6 +371,24 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
   }
 
   /**
+   * @param string $visibility
+   *
+   * @return array
+   */
+  public function getGroupsByVisibility(string $visibility) {
+    $gids = $this->database->select('oec_group_visibility')
+      ->fields('oec_group_visibility', ['gid'])
+      ->condition('type', $visibility)
+      ->execute()->fetchAllAssoc('gid', \PDO::FETCH_ASSOC);
+
+    if (empty($gids)) {
+      return [];
+    }
+
+    return Group::loadMultiple(array_keys($gids));
+  }
+
+  /**
    * Returns a custom title for the given group_flex plugin.
    *
    * @param string $plugin_type

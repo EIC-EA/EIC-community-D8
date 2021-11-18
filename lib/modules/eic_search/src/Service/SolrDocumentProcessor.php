@@ -191,6 +191,8 @@ class SolrDocumentProcessor {
     $geo = [];
     $user_url = '';
     $datasource = $fields['ss_search_api_datasource'];
+    $changed = 0;
+    $language = t('English', [], ['context' => 'eic_search'])->render();
 
     switch ($datasource) {
       case 'entity:node':
@@ -232,6 +234,11 @@ class SolrDocumentProcessor {
         $geo = $fields['ss_group_field_vocab_geo_string'];
         $language = t('English', [], ['context' => 'eic_search'])->render();
         $user_url = '';
+        if (array_key_exists('its_group_user_uid', $fields)) {
+          $user = User::load($fields['its_group_user_uid']);
+          $user_url = $user instanceof UserInterface ? $user->toUrl()
+            ->toString() : '';
+        }
         break;
       case 'entity:message':
         $user_url = '';
@@ -244,9 +251,6 @@ class SolrDocumentProcessor {
         break;
       case 'entity:user':
         $status = TRUE;
-        break;
-      default:
-        $language = t('English', [], ['context' => 'eic_search'])->render();
         break;
     }
 
@@ -268,11 +272,8 @@ class SolrDocumentProcessor {
         $file = File::load($media->get('oe_media_image')->target_id);
         $image_uri = $file->getFileUri();
 
-        $destination_uri = $image_style->buildUri($image_uri);
-        $destination_uri_160 = $image_style_160->buildUri($image_uri);
-
-        $image_style->createDerivative($image_uri, $destination_uri);
-        $image_style_160->createDerivative($image_uri, $destination_uri_160);
+        $destination_uri = $image_style->buildUrl($image_uri);
+        $destination_uri_160 = $image_style_160->buildUrl($image_uri);
 
         return json_encode([
           'id' => $slide->id(),
@@ -320,7 +321,7 @@ class SolrDocumentProcessor {
       $document->setField('tm_X3b_en_rendered_item', html_entity_decode($text));
     }
 
-    $nid = $fields['its_content_nid'];
+    $nid = $fields['its_content_nid'] ?? 0;
     $views = $this->nodeStatisticsDatabaseStorage->fetchView($nid);
 
     if ('entity:message' !== $datasource) {
@@ -597,7 +598,6 @@ class SolrDocumentProcessor {
     }
 
     $document->addField('ss_group_visibility', $group_visibility);
-    $document->addField('ss_group_moderation_state', $group->get('moderation_state')->value);
     $document->addField('its_group_owner_id', $group->getOwnerId());
   }
 
@@ -739,7 +739,7 @@ class SolrDocumentProcessor {
    */
   public function processGroupEventData(Document &$document, $fields) {
     $datasource = $fields['ss_search_api_datasource'];
-    $content_type = $fields['ss_content_type'];
+    $content_type = $fields['ss_content_type'] ?? NULL;
 
     if ($datasource !== 'entity:node' || $content_type !== 'event') {
       return;

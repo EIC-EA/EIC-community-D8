@@ -1293,10 +1293,12 @@ display:
       defaults:
         filters: false
         filter_groups: false
+        title: false
       filter_groups:
         operator: AND
         groups:
           1: AND
+      title: 'Admin - Events'
     cache_metadata:
       max-age: -1
       contexts:

@@ -84,6 +84,12 @@
     align-items: center;
   }
 
+  &--svg svg {
+    height: 1em;
+    width: 1em;
+    margin-right: 8px;
+  }
+
   &__icon {
     flex-shrink: 0;
 

@@ -5,12 +5,16 @@
  * Contains common helper functions.
  */
 
-use Drupal\Component\Serialization\Json;
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\comment\CommentInterface;
 use Drupal\comment\Entity\Comment;
-use Drupal\eic_flags\FlagType;
+use Drupal\Component\Serialization\Json;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Render\Markup;
+use Drupal\Core\Url;
+use Drupal\eic_flags\FlagType;
+use Drupal\eic_groups\Constants\GroupVisibilityType;
+use Drupal\group\Entity\GroupInterface;
+use Drupal\node\NodeInterface;
 
 /**
  * Returns the build of the social share block.
@@ -42,6 +46,63 @@ function _eic_community_get_social_share_block() {
 }
 
 /**
+ * @param \Drupal\group\Entity\GroupInterface $group
+ * @param \Drupal\node\NodeInterface $node
+ *
+ * @return array
+ */
+function _eic_community_get_share_group_content_link(
+  GroupInterface $current_group,
+  NodeInterface $node
+) {
+  static $formatted_groups;
+  /** @var \Drupal\oec_group_flex\GroupVisibilityDatabaseStorage $group_visibility_storage */
+  $group_visibility_storage = \Drupal::service('oec_group_flex.group_visibility.storage');
+  $group_visibility_entity = $group_visibility_storage->load($current_group->id());
+  $visibility_type = $group_visibility_entity ?
+    $group_visibility_entity->getType() :
+    NULL;
+
+  if ($visibility_type !== GroupVisibilityType::GROUP_VISIBILITY_PUBLIC) {
+    return [];
+  }
+
+  if (empty($formatted_groups)) {
+    /** @var \Drupal\group\Entity\GroupInterface[] $groups */
+    $groups = \Drupal::service('eic_groups.helper')
+      ->getGroupsByVisibility(GroupVisibilityType::GROUP_VISIBILITY_PUBLIC);
+    foreach ($groups as $group) {
+      if ($group->id() === $current_group->id()) {
+        continue;
+      }
+
+      $formatted_groups[] = [
+        'id' => $group->id(),
+        'name' => $group->label(),
+      ];
+    }
+  }
+
+  return [
+    '#theme' => 'eic_share_content_link',
+    '#groups' => $formatted_groups,
+    '#endpoint' => Url::fromRoute('eic_share_content.share', [
+      'group' => $current_group->id(),
+      'node' => $node->id(),
+    ], ['absolute' => TRUE])->toString(),
+    '#attached' => [
+      'drupalSettings' => [
+        'share_modal' => [
+          'translations' => [
+            'maximum_character' => t('Your description can contain up to 300 characters.'),
+          ],
+        ],
+      ],
+    ],
+  ];
+}
+
+/**
  * Gets the access to flag an entity.
  *
  * @param string $flag_id
@@ -49,7 +110,7 @@ function _eic_community_get_social_share_block() {
  * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The flaggable entity.
  *
- * @return bool
+ * @return bool|\Drupal\Core\Access\AccessResult
  *   TRUE if the user can flag the entity.
  */
 function _eic_community_get_flag_access($flag_id, EntityInterface $entity) {

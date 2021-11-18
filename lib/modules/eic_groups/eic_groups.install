@@ -58,8 +58,8 @@ function eic_groups_update_9001(&$sandbox) {
     }
 
     foreach ($permissions as $key => &$permission) {
-      // ID of the group role permission content management.
-      if ('group-eca6128ca' !== $key) {
+      // ID of the group role permission content manager OR site admin.
+      if ('group-eca6128ca' !== $key && 'group-bf4b46c3a' !== $key) {
         continue;
       }
 

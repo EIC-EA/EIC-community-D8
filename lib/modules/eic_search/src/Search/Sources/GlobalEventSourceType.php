@@ -58,13 +58,22 @@ class GlobalEventSourceType extends SourceType {
         'DESC' => $this->t('Recent', [], ['context' => 'eic_search']),
       ],
       'ss_group_label_string' => [
-        'label' => $this->t('Group label', [], ['context' => 'eic_search']),
-        'ASC' => $this->t('Group label A-Z', [], ['context' => 'eic_search']),
-        'DESC' => $this->t('Group label Z-A', [], ['context' => 'eic_search']),
+        'label' => $this->t('Event name', [], ['context' => 'eic_search']),
+        'ASC' => $this->t('Event name A-Z', [], ['context' => 'eic_search']),
+        'DESC' => $this->t('Event name Z-A', [], ['context' => 'eic_search']),
+      ],
+      'its_content_field_date_range_start_value' => [
+        'label' => $this->t('Event time', [], ['context' => 'eic_search']),
+        'ASC' => $this->t('First events in time', [], ['context' => 'eic_search']),
+        'DESC' => $this->t('Last events in time', [], ['context' => 'eic_search']),
       ],
       'its_' . SolrDocumentProcessor::LAST_FLAGGED_KEY . '_' . FlagType::LIKE_CONTENT => [
         'label' => $this->t('Last liked', [], ['context' => 'eic_search']),
         'DESC' => $this->t('Last liked', [], ['context' => 'eic_search']),
+      ],
+      'score' => [
+        'label' => $this->t('Relevance', [], ['context' => 'eic_search']),
+        'DESC' => $this->t('Relevance', [], ['context' => 'eic_search']),
       ],
     ];
   }
@@ -112,7 +121,7 @@ class GlobalEventSourceType extends SourceType {
   /**
    * @inheritDoc
    */
-  public function getSecondDefaultSort(): array {
+  public function getDefaultSort(): array {
     return [GroupEventSourceType::START_DATE_SOLR_FIELD_ID, 'ASC'];
   }
 

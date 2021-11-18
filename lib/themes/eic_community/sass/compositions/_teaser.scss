@@ -6,6 +6,8 @@
   @include ecl-media-breakpoint-up('sm') {
     display: flex;
     align-items: stretch;
+    height: 100%;
+    box-sizing: border-box;
   }
 
   @include ecl-media-breakpoint-up('sm') {
@@ -56,7 +58,9 @@
       padding: 0 ecl-box-model('padding') ecl-box-model('padding');
     }
 
-    background-color: map-get($ecl-colors, 'white');
+    &:not(.ecl-teaser--grey) {
+      background-color: map-get($ecl-colors, 'white');
+    }
   }
 
   &--as-grey {
@@ -70,7 +74,15 @@
 
     .ecl-teaser-overview__item & {
       height: 100%;
+      box-sizing: border-box;
     }
+  }
+
+  [class*=ecl-featured-content] &--organisation &__image-wrapper, [class*=ecl-featured-content] &--organisation &__image-wrapper &__image {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 50%;
   }
 
   &--is-highlighted,

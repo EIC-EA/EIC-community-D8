@@ -1,0 +1,4 @@
+text:
+  -
+    value: "<p>[message:author:field_first_name:value]&nbsp;[message:author:field_last_name:value] shared the content [message:field_referenced_node:entity:title] with this group [message:mid] [message:template]</p>\r\n"
+    format: full_html
