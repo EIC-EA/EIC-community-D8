@@ -15,6 +15,7 @@ use Drupal\Core\Queue\QueueWorkerManager;
 use Drupal\Core\Queue\SuspendQueueException;
 use Drupal\Core\Url;
 use Drupal\eic_comments\CommentsHelper;
+use Drupal\eic_events\Constants\Event;
 use Drupal\eic_flags\FlagType;
 use Drupal\eic_groups\Constants\GroupVisibilityType;
 use Drupal\eic_groups\EICGroupsHelper;
@@ -755,6 +756,20 @@ class SolrDocumentProcessor {
       $start_date->getTimestamp()
     );
 
+    $this->addOrUpdateDocumentField(
+      $document,
+      GroupEventSourceType::END_DATE_SOLR_FIELD_ID,
+      $fields,
+      $end_date->getTimestamp()
+    );
+
+    $this->updateEventState(
+      $document,
+      $fields,
+      $start_date->getTimestamp(),
+      $end_date->getTimestamp()
+    );
+
     if (array_key_exists('ss_content_country_code', $fields)) {
       $country_code = $fields['ss_content_country_code'];
       $countries = CountryManager::getStandardList();
@@ -766,13 +781,6 @@ class SolrDocumentProcessor {
         array_key_exists($country_code, $countries) ? $countries[$country_code] : $country_code
       );
     }
-
-    $this->addOrUpdateDocumentField(
-      $document,
-      GroupEventSourceType::END_DATE_SOLR_FIELD_ID,
-      $fields,
-      $end_date->getTimestamp()
-    );
   }
 
   /**
@@ -802,6 +810,20 @@ class SolrDocumentProcessor {
       $start_date->getTimestamp()
     );
 
+    $this->addOrUpdateDocumentField(
+      $document,
+      GroupEventSourceType::END_DATE_SOLR_FIELD_ID,
+      $fields,
+      $end_date->getTimestamp()
+    );
+
+    $this->updateEventState(
+      $document,
+      $fields,
+      $start_date->getTimestamp(),
+      $end_date->getTimestamp()
+    );
+
     if (array_key_exists('ss_group_country_code', $fields)) {
       $country_code = $fields['ss_group_country_code'];
       $countries = CountryManager::getStandardList();
@@ -813,12 +835,48 @@ class SolrDocumentProcessor {
         array_key_exists($country_code, $countries) ? $countries[$country_code] : $country_code
       );
     }
+  }
+
+  /**
+   * @param \Solarium\QueryType\Update\Query\Document $document
+   * @param array $fields
+   * @param int $start_date
+   * @param int $end_date
+   */
+  private function updateEventState(
+    Document &$document,
+    array $fields,
+    int $start_date,
+    int $end_date
+  ) {
+    $now = time();
+    // We set a weight value depending the state of the event: 1.ongoing 2.future 3.past
+    // so we can sort easily in different overviews.
+    // By default we set it as past event
+    $weight_event_state = Event::WEIGHT_STATE_PAST;
+
+    if ($now < $start_date) {
+      $weight_event_state = Event::WEIGHT_STATE_FUTURE;
+    }
+
+    if ($now >= $start_date && $now <= $end_date) {
+      $weight_event_state = Event::WEIGHT_STATE_ONGOING;
+    }
 
     $this->addOrUpdateDocumentField(
       $document,
-      GroupEventSourceType::END_DATE_SOLR_FIELD_ID,
+      Event::SOLR_FIELD_ID_WEIGHT_STATE,
       $fields,
-      $end_date->getTimestamp()
+      $weight_event_state
+    );
+
+    $labels_map = Event::getStateLabelsMapping();
+
+    $this->addOrUpdateDocumentField(
+      $document,
+      Event::SOLR_FIELD_ID_WEIGHT_STATE_LABEL,
+      $fields,
+      $labels_map[$weight_event_state]
     );
   }
 

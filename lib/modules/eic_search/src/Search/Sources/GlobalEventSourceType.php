@@ -3,6 +3,7 @@
 namespace Drupal\eic_search\Search\Sources;
 
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\eic_events\Constants\Event;
 use Drupal\eic_flags\FlagType;
 use Drupal\eic_search\Service\SolrDocumentProcessor;
 
@@ -43,6 +44,7 @@ class GlobalEventSourceType extends SourceType {
     return [
       'ss_group_topic_name' => $this->t('Topic', [], ['context' => 'eic_search']),
       'sm_group_field_location_type' => $this->t('Location', [], ['context' => 'eic_search']),
+      Event::SOLR_FIELD_ID_WEIGHT_STATE_LABEL => $this->t('Time', [], ['context' => 'eic_search']),
       'ss_group_event_country' => $this->t('Country', [], ['context' => 'eic_search']),
     ];
   }
@@ -52,6 +54,10 @@ class GlobalEventSourceType extends SourceType {
    */
   public function getAvailableSortOptions(): array {
     return [
+      Event::SOLR_FIELD_ID_WEIGHT_STATE => [
+        'label' => $this->t('State (1. ongoing, 2. future, 3. past)', [], ['context' => 'eic_search']),
+        'ASC' => $this->t('Default', [], ['context' => 'eic_search'])
+      ],
       'timestamp' => [
         'label' => $this->t('Timestamp', [], ['context' => 'eic_search']),
         'ASC' => $this->t('Old', [], ['context' => 'eic_search']),
@@ -122,7 +128,7 @@ class GlobalEventSourceType extends SourceType {
    * @inheritDoc
    */
   public function getDefaultSort(): array {
-    return [GroupEventSourceType::START_DATE_SOLR_FIELD_ID, 'ASC'];
+    return [Event::SOLR_FIELD_ID_WEIGHT_STATE, 'ASC'];
   }
 
 }
