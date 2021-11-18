@@ -39,14 +39,14 @@ class GlobalOverviewPages {
   /**
    * Returns the URL object for the given global overview page.
    *
-   * @param string $page
+   * @param int $page
    *   The page identifier for which we return the URL.
    *
    * @return \Drupal\Core\Url|null
    *   The URL object or NULL if does not apply.
    * @throws \Drupal\Core\Entity\EntityMalformedException
    */
-  public static function getGlobalOverviewPageUrl(string $page) {
+  public static function getGlobalOverviewPageUrl(int $page) {
     $overview_entities = \Drupal::entityQuery('overview_page')
       ->condition('field_overview_id', $page)
       ->execute();
