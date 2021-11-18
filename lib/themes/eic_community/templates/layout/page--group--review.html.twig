@@ -15,5 +15,9 @@
 {% endblock %}
 
 {% block content %}
-  {{ 'Group is under review'|t }}
+  {% include "themes/custom/eic_community/templates/blocks/eic-group-moderated-message-box.html.twig" %}
+
+  <div class="ecl-container ecl-page-review">
+    {{ 'Group is under review.'|t }}
+  </div>
 {% endblock %}
