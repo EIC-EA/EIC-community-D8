@@ -1,4 +1,4 @@
-eic_groups.solr_search:
+eic_search.solr_search:
   path: '/api/solr/search'
   defaults:
     _title: 'Solr search'
