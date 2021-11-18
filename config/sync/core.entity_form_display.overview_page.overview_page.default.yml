@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - field.field.overview_page.overview_page.field_overview_block
+    - field.field.overview_page.overview_page.field_overview_id
     - image.style.thumbnail
   module:
     - block_field
@@ -39,6 +40,12 @@ content:
       configuration_form: full
     third_party_settings: {  }
     type: block_field_default
+    region: content
+  field_overview_id:
+    weight: 7
+    settings: {  }
+    third_party_settings: {  }
+    type: options_select
     region: content
   langcode:
     type: language_select
