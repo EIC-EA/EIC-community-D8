@@ -6,6 +6,7 @@
  */
 
 use Drupal\eic_overviews\GlobalOverviewPages;
+use Drupal\views\ViewExecutable;
 
 /**
  * Implements template_preprocess_views_view_field().
@@ -75,11 +76,15 @@ function eic_community_preprocess_views_view(&$variables) {
       $variables['extra_classes'] = 'ecl-section-wrapper--is-white ecl-featured-content-collection--has-overview-layout';
       $variables['items_extra_classes'] = 'ecl-featured-content-collection__item--big';
       $variables['no_container'] = TRUE;
+      // Add the read more link if there is one.
+      $variables['call_to_action'] = _eic_community_get_views_call_to_action($view);
       break;
 
     case 'taxonomy_related_content-news_stories':
       $variables['extra_classes'] = 'ecl-section-wrapper--is-white ecl-featured-content-collection--has-list-layout';
       $variables['no_container'] = TRUE;
+      // Add the read more link if there is one.
+      $variables['call_to_action'] = _eic_community_get_views_call_to_action($view);
       break;
 
     case 'taxonomy_related_content-discussions':
@@ -88,22 +93,45 @@ function eic_community_preprocess_views_view(&$variables) {
       $variables['extra_classes'] = 'ecl-section-wrapper--is-white ecl-featured-content-collection--has-list-layout';
       $variables['items_extra_classes'] = 'ecl-featured-content-collection__item--big';
       $variables['no_container'] = TRUE;
+      // Add the read more link if there is one.
+      $variables['call_to_action'] = _eic_community_get_views_call_to_action($view);
       break;
 
     case 'taxonomy_related_content-wiki_pages':
       $variables['extra_classes'] = 'ecl-featured-content-collection--has-list-layout';
+      // Add the read more link if there is one.
+      $variables['call_to_action'] = _eic_community_get_views_call_to_action($view);
       break;
 
     case 'taxonomy_related_content-experts':
       // Add the read more link if there is one.
-      if ($view->display_handler->getOption('use_more') == TRUE) {
-        $variables['call_to_action'] = [
-          'link' => [
-            'label' => $view->display_handler->getOption('use_more_text'),
-            'path' => $view->display_handler->getOption('link_url'),
-          ],
-        ];
-      }
+      $variables['call_to_action'] = _eic_community_get_views_call_to_action($view);
       break;
+
   }
+}
+
+/**
+ * Returns a call to action array if the view has a more link.
+ *
+ * @param \Drupal\views\ViewExecutable $view
+ *   The view object.
+ *
+ * @return array|array[]
+ *   An array structured as follows:
+ *   - link
+ *     - label
+ *     - path
+ */
+function _eic_community_get_views_call_to_action(ViewExecutable $view) {
+  $call_to_action = [];
+  if ($view->display_handler->getOption('use_more') == TRUE) {
+    $call_to_action = [
+      'link' => [
+        'label' => $view->display_handler->getOption('use_more_text'),
+        'path' => $view->display_handler->getOption('link_url'),
+      ],
+    ];
+  }
+  return $call_to_action;
 }
