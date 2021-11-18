@@ -54,11 +54,12 @@ function eic_community_preprocess_group__event(&$variables) {
         $event_location_types = $group->get('field_location_type')->getValue();
         $location_type_allowed_values = eic_field_location_type_allowed_values();
         foreach ($event_location_types as $location_type) {
+          $value = $location_type['value'];
           if (!$teaser['type']['label']) {
-            $teaser['type']['label'] = $location_type_allowed_values[$location_type];
+            $teaser['type']['label'] = $location_type_allowed_values[$value];
             continue;
           }
-          $value = strtolower($location_type_allowed_values[$location_type]);
+          $value = strtolower($location_type_allowed_values[$value]);
           $teaser['type']['label'] .= " & {$value}";
         }
       }
