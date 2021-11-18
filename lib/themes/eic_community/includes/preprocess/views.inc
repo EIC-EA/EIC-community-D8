@@ -72,13 +72,29 @@ function eic_community_preprocess_views_view(&$variables) {
       break;
 
     case 'taxonomy_related_content-groups':
-    case 'taxonomy_related_content-discussions':
+      $variables['extra_classes'] = 'ecl-section-wrapper--is-white ecl-featured-content-collection--has-overview-layout';
+      $variables['items_extra_classes'] = 'ecl-featured-content-collection__item--big';
+      $variables['no_container'] = TRUE;
+      break;
+
     case 'taxonomy_related_content-news_stories':
+      $variables['extra_classes'] = 'ecl-section-wrapper--is-white ecl-featured-content-collection--has-list-layout';
+      $variables['no_container'] = TRUE;
+      break;
+
+    case 'taxonomy_related_content-discussions':
     case 'taxonomy_related_content-files':
     case 'taxonomy_related_content-events':
+      $variables['extra_classes'] = 'ecl-section-wrapper--is-white ecl-featured-content-collection--has-list-layout';
+      $variables['items_extra_classes'] = 'ecl-featured-content-collection__item--big';
+      $variables['no_container'] = TRUE;
+      break;
+
     case 'taxonomy_related_content-wiki_pages':
-    case 'taxonomy_related_content-experts':
       $variables['extra_classes'] = 'ecl-featured-content-collection--has-list-layout';
+      break;
+
+    case 'taxonomy_related_content-experts':
       // Add the read more link if there is one.
       if ($view->display_handler->getOption('use_more') == TRUE) {
         $variables['call_to_action'] = [
@@ -89,6 +105,5 @@ function eic_community_preprocess_views_view(&$variables) {
         ];
       }
       break;
-
   }
 }

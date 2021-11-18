@@ -15,8 +15,9 @@
     {{ title_prefix }}
     {{ title_suffix }}
     {% include "@theme/patterns/compositions/gallery/gallery.teaser.html.twig" with gallery_item|default({})|merge({
-      title: label|default(''),
+      title: node.label|default(''),
       path: url,
+      extra_classes: 'ecl-teaser--grey',
     }) %}
   </div>
 {% endblock %}
