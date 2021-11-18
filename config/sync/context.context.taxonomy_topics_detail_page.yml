@@ -135,7 +135,7 @@ reactions:
         id: 'views_block:taxonomy-subtopics'
         label: ''
         provider: views
-        label_display: visible
+        label_display: '0'
         views_label: ''
         items_per_page: none
         region: sidebar
