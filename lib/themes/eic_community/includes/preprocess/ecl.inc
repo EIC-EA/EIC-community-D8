@@ -21,13 +21,40 @@ use Drupal\taxonomy\TermInterface;
  *
  * @see ecl-date-block.html.twig
  */
-function _eic_community_preprocess_ecl_date_block(int $timestamp, DateTimeZone $timezone = NULL) {
+function _eic_community_preprocess_ecl_date_block(int $timestamp, DateTimeZone $timezone = NULL, $format = 'long') {
   $date = new DateTime();
   if (empty($timezone)) {
     $timezone = $date->getTimezone();
   }
   $date->setTimezone($timezone);
   $date->setTimestamp($timestamp);
+
+  switch ($format) {
+    case 'short':
+      return [
+        'day' => $date->format('d'),
+        'month' => $date->format('M'),
+        'year' => $date->format('Y'),
+        'date_time' => '',
+        'month_full' => $date->format('F'),
+        'extra_classes' => '',
+        'extra_attributes' => [],
+      ];
+      break;
+
+    default:
+      return [
+        'day' => $date->format('d'),
+        'month' => $date->format('m'),
+        'year' => $date->format('Y'),
+        'date_time' => '',
+        'month_full' => $date->format('F'),
+        'extra_classes' => '',
+        'extra_attributes' => [],
+      ];
+      break;
+
+  }
 
   return [
     'variant' => '',

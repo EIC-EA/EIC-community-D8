@@ -27,6 +27,11 @@ class GlobalOverviewPages {
   const GLOBAL_SEARCH = 1;
 
   /**
+   * ID of the Events search overview page.
+   */
+  const EVENTS_SEARCH = 5;
+
+  /**
    * Returns the URL object for the given global overview page.
    *
    * @param string $page
@@ -48,6 +53,10 @@ class GlobalOverviewPages {
 
       case 'global_search':
         $page_id = self::GLOBAL_SEARCH;
+        break;
+
+      case 'events':
+        $page_id = self::EVENTS_SEARCH;
         break;
     }
 

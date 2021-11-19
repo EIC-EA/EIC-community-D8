@@ -5,8 +5,11 @@
  * Prepares variables for group type event templates.
  */
 
+use Drupal\Core\Url;
 use Drupal\eic_community\ValueObject\ImageValueObject;
 use Drupal\eic_helper\DateTimeHelper;
+use Drupal\eic_overviews\GlobalOverviewPages;
+use Drupal\eic_search\SearchHelper;
 
 /**
  * Implements hook_preprocess_group__TYPE().
@@ -50,6 +53,7 @@ function eic_community_preprocess_group__event(&$variables) {
             'name' => 'mappin',
             'size' => 's',
           ],
+          'extra_classes' => 'ecl-icon--currentColor',
         ];
         $event_location_types = $group->get('field_location_type')->getValue();
         $location_type_allowed_values = eic_field_location_type_allowed_values();
@@ -70,8 +74,19 @@ function eic_community_preprocess_group__event(&$variables) {
 
         $teaser['tags'] = [];
         foreach ($event_topics as $event_topic) {
+          // Build solr query parameters for the events overview page to filter
+          // by topic.
+          $params = SearchHelper::buildSolrQueryParams(
+            [
+              'itm_aggregated_field_vocab_topics' => $event_topic->id(),
+            ]
+          );
+          $url = GlobalOverviewPages::getGlobalOverviewPageUrl('events')
+            ->setOption('query', $params)
+            ->toString();
           $teaser['tags'][] = [
             'label' => $event_topic->getName(),
+            'path' => $url,
           ];
         }
       }
@@ -81,9 +96,11 @@ function eic_community_preprocess_group__event(&$variables) {
 
       $has_registration_link = FALSE;
       $event_start_date = 0;
+      $event_end_date = 0;
       // Get the registration date.
       if (!$group->get('field_date_range')->isEmpty()) {
         $event_start_date = strtotime($group->get('field_date_range')->value);
+        $event_end_date = strtotime($group->get('field_date_range')->end_value);
         $event_date_status = \Drupal::service('eic_helper.datetime')->getDateRangeStatus($group, 'field_date_range');
         $registration_start_date = strtotime($group->get('field_event_registration_date')->value);
         $registration_end_date = strtotime($group->get('field_event_registration_date')->end_value);
@@ -142,8 +159,8 @@ function eic_community_preprocess_group__event(&$variables) {
         ];
       }
 
-      $teaser['date'] = _eic_community_preprocess_ecl_date_block($event_start_date);
-      $teaser['date']['month'] = $teaser['date']['month_full'];
+      $teaser['date']['start'] = _eic_community_preprocess_ecl_date_block($event_start_date, NULL, DateTimeHelper::DATE_FORMAT_SHORT);
+      $teaser['date']['end'] = _eic_community_preprocess_ecl_date_block($event_end_date, NULL, DateTimeHelper::DATE_FORMAT_SHORT);
 
       // Get the event state.
       $teaser['date']['variant'] = _eic_community_get_ecl_date_block_variant($group, 'field_date_range');

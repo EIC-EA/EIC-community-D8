@@ -39,6 +39,16 @@ class DateTimeHelper {
   const DATE_RANGE_UNDEFINED = 'undefined';
 
   /**
+   * Define date format name for long dates.
+   */
+  const DATE_FORMAT_LONG = 'long';
+
+  /**
+   * Define date format name for short dates.
+   */
+  const DATE_FORMAT_SHORT = 'short';
+
+  /**
    * The datetime.time service.
    *
    * @var \Drupal\Component\Datetime\Time
