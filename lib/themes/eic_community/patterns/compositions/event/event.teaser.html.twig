@@ -126,7 +126,8 @@
         </div>
         {% if date is not empty %}
           <div class="ecl-teaser__content-aside">
-            {% include '@ecl-twig/ec-component-date-block/ecl-date-block.html.twig' with date|default({}) only %}
+{#            {% include '@ecl-twig/ec-component-date-block/ecl-date-block.html.twig' with date|default({}) only %}#}
+              {% include '@theme/patterns/components/date.custom.html.twig' with date|default({}) only %}
           </div>
         {% endif %}
       </div>
