@@ -614,6 +614,8 @@
 
   &__meta-column {
     display: flex;
+    align-items: center;
+    flex-wrap: wrap;
     justify-content: space-between;
     margin-top: map-get($ecl-spacing, 's');
 

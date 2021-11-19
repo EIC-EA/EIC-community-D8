@@ -2,4 +2,8 @@
   &--3xl {
     width: $ecl-icon-2-xl * 1.5;
   }
+
+  &--currentColor svg {
+    color: currentColor;
+  }
 }
