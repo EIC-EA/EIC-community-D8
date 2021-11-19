@@ -24,13 +24,12 @@
     <h2>{{ title }}</h2>
     <p>{{ body }}</p>
 
-    <div class="ecl-topic__overview__items">
-      {% for topic in topics %}
-        {% include "@theme/patterns/compositions/topic/topic.overview.item.html.twig" with topic|merge({
-          icon_file_path: icon_file_path
-        }) %}
-      {% endfor %}
-    </div>
+    {% if topics %}
+      {% include "@theme/patterns/compositions/topic/topic.overview.list.html.twig" with topics|merge({
+        icon_file_path: icon_file_path,
+      }) %}
+    {% endif %}
+
     {{ content }}
   </div>
 

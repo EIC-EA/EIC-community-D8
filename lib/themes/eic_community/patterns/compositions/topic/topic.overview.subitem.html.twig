@@ -3,21 +3,23 @@
     <img src="{{ image.src }}" alt="">
     <div class="ecl-topic__overview__subitem__content">
       <h3>{{ title }}</h3>
-      <div class="ecl-topic__overview__subitem__stats">
-        {% for stat in stats %}
-          <div class="ecl-topic__overview__subitem__stat">
-            {% include '@ecl-twig/ec-component-icon/ecl-icon.html.twig' with {
-              icon: {
-                size: 'm',
-                path: icon_file_path,
-                type: stat.icon.type,
-                name: stat.icon.name
-              }
-            } only %}
-            <span>&nbsp;{{ stat.stat }}</span>
-          </div>
-        {% endfor %}
-      </div>
+      {% if stats is not empty %}
+        <div class="ecl-topic__overview__subitem__stats">
+          {% for stat in stats %}
+            <div class="ecl-topic__overview__subitem__stat">
+              {% include '@ecl-twig/ec-component-icon/ecl-icon.html.twig' with {
+                icon: {
+                  size: 'm',
+                  path: icon_file_path,
+                  type: stat.icon.type,
+                  name: stat.icon.name
+                }
+              } only %}
+              <span>&nbsp;{{ stat.stat }}</span>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
     </div>
   </a>
 </div>
