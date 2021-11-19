@@ -8,7 +8,7 @@
 #}
 {% if primary %}
   {% include "@theme/patterns/compositions/collapsible-options.html.twig" with {
-    extra_classes: 'ecl-collapsible-options--aligns-from-right ecl-collapsible-options--actions',
+    extra_classes: 'ecl-collapsible-options--aligns-from-right ecl-collapsible-options--actions ecl-collapsible-options--blue',
     collapse_label: 'Manage content'|t,
     icon: {
       name: 'gear',
@@ -20,7 +20,7 @@
 {% endif %}
 {% if secondary %}
   {% include "@theme/patterns/compositions/collapsible-options.html.twig" with {
-    extra_classes: 'ecl-collapsible-options--aligns-from-right ecl-collapsible-options--actions',
+    extra_classes: 'ecl-collapsible-options--aligns-from-right ecl-collapsible-options--actions ecl-collapsible-options--blue',
     collapse_label: 'Advanced'|t,
     icon: {
       name: 'gear',
