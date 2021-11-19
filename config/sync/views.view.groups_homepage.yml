@@ -578,10 +578,10 @@ display:
             default_group_multiple: {  }
             group_items: {  }
           plugin_id: search_api_string
-        group_field_date_range:
-          id: group_field_date_range
+        group_field_date_range_end_value:
+          id: group_field_date_range_end_value
           table: search_api_index_global
-          field: group_field_date_range
+          field: group_field_date_range_end_value
           relationship: none
           group_type: group
           admin_label: ''
@@ -589,7 +589,7 @@ display:
           value:
             min: ''
             max: ''
-            value: today
+            value: now
             type: offset
           group: 1
           exposed: false
@@ -628,10 +628,10 @@ display:
         groups:
           1: AND
       sorts:
-        content_field_date_range:
-          id: content_field_date_range
+        group_field_date_range:
+          id: group_field_date_range
           table: search_api_index_global
-          field: content_field_date_range
+          field: group_field_date_range
           relationship: none
           group_type: group
           admin_label: ''
