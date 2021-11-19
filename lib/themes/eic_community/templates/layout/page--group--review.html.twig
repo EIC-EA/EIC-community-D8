@@ -15,5 +15,17 @@
 {% endblock %}
 
 {% block content %}
-  {{ 'Group is under review'|t }}
+
+  <div class="ecl-container" style="padding: 5rem 1rem">
+    {% include "@theme/patterns/compositions/state-banner.html.twig" with {
+      icon_file_path: '/themes/custom/eic_community/dist/images/sprite/custom/sprites/custom.svg',
+      icon: {
+        name: 'warning',
+        type: 'notifications'
+      },
+      title: 'Group is under review'|t,
+      description: '<p>This group is under review. For more information please contact your group admin.</p>'
+      } %}
+  </div>
+
 {% endblock %}

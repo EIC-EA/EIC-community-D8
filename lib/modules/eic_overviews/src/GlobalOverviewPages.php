@@ -2,7 +2,7 @@
 
 namespace Drupal\eic_overviews;
 
-use Drupal\Core\Url;
+use Drupal\eic_overviews\Entity\OverviewPage;
 
 /**
  * Provides functionality for global overview pages.
@@ -10,6 +10,11 @@ use Drupal\Core\Url;
  * @package Drupal\eic_overviews
  */
 class GlobalOverviewPages {
+
+  /**
+   * ID of the Global search overview page.
+   */
+  const GLOBAL_SEARCH = 1;
 
   /**
    * ID of the Groups overview page.
@@ -22,49 +27,42 @@ class GlobalOverviewPages {
   const MEMBERS = 3;
 
   /**
-   * ID of the Global search overview page.
+   * ID of the Stories overview page.
    */
-  const GLOBAL_SEARCH = 1;
+  const STORIES = 4;
 
   /**
-   * ID of the Events search overview page.
+   * ID of the Events overview page.
    */
-  const EVENTS_SEARCH = 5;
+  const EVENTS = 5;
 
   /**
    * Returns the URL object for the given global overview page.
    *
-   * @param string $page
+   * @param int $page
    *   The page identifier for which we return the URL.
    *
    * @return \Drupal\Core\Url|null
    *   The URL object or NULL if does not apply.
+   * @throws \Drupal\Core\Entity\EntityMalformedException
    */
-  public static function getGlobalOverviewPageUrl(string $page) {
-    $page_id = NULL;
-    switch ($page) {
-      case 'groups':
-        $page_id = self::GROUPS;
-        break;
+  public static function getGlobalOverviewPageUrl(int $page) {
+    $overview_entities = \Drupal::entityQuery('overview_page')
+      ->condition('field_overview_id', $page)
+      ->execute();
 
-      case 'members':
-        $page_id = self::MEMBERS;
-        break;
-
-      case 'global_search':
-        $page_id = self::GLOBAL_SEARCH;
-        break;
-
-      case 'events':
-        $page_id = self::EVENTS_SEARCH;
-        break;
+    if (empty($overview_entities)) {
+      return NULL;
     }
 
-    if (!empty($page_id)) {
-      return Url::fromRoute('entity.overview_page.canonical', ['overview_page' => $page_id]);
+    /** @var OverviewPage $overview_entity */
+    $overview_entity = OverviewPage::load(reset($overview_entities));
+
+    if (!$overview_entity instanceof OverviewPage) {
+      return NULL;
     }
 
-    return NULL;
+    return $overview_entity->toUrl();
   }
 
 }
