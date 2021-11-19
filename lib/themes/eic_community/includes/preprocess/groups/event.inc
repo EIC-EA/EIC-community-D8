@@ -80,7 +80,7 @@ function eic_community_preprocess_group__event(&$variables) {
               'itm_aggregated_field_vocab_topics' => $event_topic->id(),
             ]
           );
-          $url = GlobalOverviewPages::getGlobalOverviewPageUrl('events')
+          $url = GlobalOverviewPages::getGlobalOverviewPageUrl(GlobalOverviewPages::EVENTS)
             ->setOption('query', $params)
             ->toString();
           $teaser['tags'][] = [
