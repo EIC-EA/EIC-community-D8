@@ -73,11 +73,10 @@ class TaxonomyOverviewController extends ControllerBase {
     /** @var \Drupal\taxonomy\VocabularyInterface $top_level_terms */
     $top_level_terms = $this->entityTypeManager->getStorage("taxonomy_term")->loadTree($vocabulary->id(), 0, 1, TRUE);
 
-    if ($view = Views::getView(self::TAXONOMY_VIEWS_ID)) {
-      // Get one views block for each top level parent.
-      foreach ($top_level_terms as $top_level_term) {
+    // Get one views block for each top level parent.
+    foreach ($top_level_terms as $top_level_term) {
+      if ($view = Views::getView(self::TAXONOMY_VIEWS_ID)) {
         $args = [$top_level_term->id(), $vocabulary_id];
-        $view->setTitle($top_level_term->label());
         $build['tid-' . $top_level_term->id()] = $view->preview(self::TAXONOMY_VIEWS_DISPLAY_ID, $args);
       }
     }

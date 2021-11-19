@@ -279,8 +279,8 @@ display:
             value: all
             title_enable: false
             title: All
-          title_enable: false
-          title: ''
+          title_enable: true
+          title: '{{ arguments.parent_target_id }}'
           default_argument_type: taxonomy_tid
           default_argument_options:
             term_page: '1'
