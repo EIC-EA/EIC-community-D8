@@ -18,11 +18,11 @@
   #}
 
   {# Internal properties #}
-  {% set _start_month = start.month|default('') %}
-  {% set _start_day = start.day|default('') %}
-  {% set _start_year = start.year|default('') %}
-  {% set _start_date_time = start.date_time|default('') %}
-  {% set _start_month_full = start.month_full|default('') %}
+  {% set _start_month = start.month ? start.month : month|default('') %}
+  {% set _start_day = start.day ? start.day : day|default('') %}
+  {% set _start_year = start.year ? start.year : year|default('') %}
+  {% set _start_date_time = start.date_time ? start.date_time : date_time|default('') %}
+  {% set _start_month_full = start.month_full ? start.month_full : month_full|default('') %}
 
   {% set _end_month = end.month|default('') %}
   {% set _end_day = end.day|default('') %}
