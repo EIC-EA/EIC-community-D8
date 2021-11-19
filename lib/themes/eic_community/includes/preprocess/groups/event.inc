@@ -5,7 +5,6 @@
  * Prepares variables for group type event templates.
  */
 
-use Drupal\Core\Url;
 use Drupal\eic_community\ValueObject\ImageValueObject;
 use Drupal\eic_helper\DateTimeHelper;
 use Drupal\eic_overviews\GlobalOverviewPages;
