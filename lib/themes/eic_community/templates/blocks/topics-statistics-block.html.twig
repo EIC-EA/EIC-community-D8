@@ -1,0 +1,16 @@
+{#
+/**
+ * @file
+ * Theme override for the topic statistics block.
+ *
+ * @see ./modules/custom/eic_topics/templates/block.html.twig
+ */
+#}
+<div {{ attributes }}>
+  {{ title_prefix }}
+  {{ title }}
+  {{ title_suffix }}
+  {% include '@theme/patterns/compositions/topic/topic.stats.html.twig' with stats|default({})|merge({
+    icon_file_path: icon_file_path,
+  }) %}
+</div>

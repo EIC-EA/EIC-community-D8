@@ -36,6 +36,11 @@
   ]
 %}
 
+{% set wrapper_classes = 'ecl-featured-content-collection--has-overview-layout ecl-section-wrapper ecl-featured-content-collection--is-ready' %}
+{% if extra_classes %}
+  {% set wrapper_classes = wrapper_classes ~ ' ' ~ extra_classes %}
+{% endif %}
+
 {% if rows -%}
   {% set _rows_length = rows[0]['#rows']|length %}
   {% set _items = [] %}
@@ -53,7 +58,9 @@
     description: header,
     call_to_action: call_to_action|default(''),
     items: _items,
-    extra_classes: extra_classes|default('ecl-featured-content-collection--has-overview-layout ecl-section-wrapper ecl-featured-content-collection--is-ready'),
+    extra_classes: wrapper_classes,
+    items_extra_classes: items_extra_classes,
+    no_container: no_container,
     icon_file_path: eic_icon_path,
   } only %}
 {% else %}
@@ -62,7 +69,9 @@
     description: empty,
     call_to_action: call_to_action|default(''),
     items: [],
-    extra_classes: extra_classes|default('ecl-featured-content-collection--has-overview-layout ecl-section-wrapper ecl-featured-content-collection--is-ready'),
+    extra_classes: wrapper_classes,
+    items_extra_classes: items_extra_classes,
+    no_container: no_container,
     icon_file_path: eic_icon_path,
   } only %}
 {% endif %}

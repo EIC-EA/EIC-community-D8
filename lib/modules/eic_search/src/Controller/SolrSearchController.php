@@ -39,6 +39,7 @@ class SolrSearchController extends ControllerBase {
     $source_class = $request->query->get('source_class');
     $search_value = $request->query->get('search_value', '');
     $current_group = $request->query->get('current_group');
+    $topic_term_id = $request->query->get('topics');
     $facets_value = $request->query->get('facets_value');
     $sort_value = $request->query->get('sort_value');
     $facets_options = $request->query->get('facets_options');
@@ -107,6 +108,19 @@ class SolrSearchController extends ControllerBase {
           " AND $group_query_string";
       }
 
+      // Handle current term ID sub-query.
+      if ($topic_term_id) {
+        $term_id_fields = $source->getPrefilteredTopicsFieldId();
+        $term_query = [];
+        foreach ($term_id_fields as $term_id_field) {
+          $term_query[] = "$term_id_field:($topic_term_id)";
+        }
+        $term_query_string = '(' . implode(' OR ', $term_query) . ')';
+        $query_fields_string .= empty($query_fields_string) ?
+          "$term_query_string" :
+          " AND $term_query_string";
+      }
+
       if ($content_types = $source->getPrefilteredContentType()) {
         $allowed_content_type = implode(' OR ', $content_types);
         $content_type_query = ' AND (' . SourceTypeInterface::SOLR_FIELD_CONTENT_TYPE_ID . ':(' . $allowed_content_type . '))';
@@ -138,7 +152,9 @@ class SolrSearchController extends ControllerBase {
           " AND $date_query";
       }
 
-      $solariumQuery->addParam('q', $query_fields_string);
+      if (!empty($query_fields_string)) {
+        $solariumQuery->addParam('q', $query_fields_string);
+      }
     }
 
     $solariumQuery->addParam('json.nl', 'arrarr');
