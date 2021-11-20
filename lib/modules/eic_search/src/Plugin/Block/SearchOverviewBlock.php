@@ -13,6 +13,7 @@ use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_search\Collector\SourcesCollector;
 use Drupal\eic_search\Search\Sources\GroupSourceType;
 use Drupal\eic_search\Search\Sources\SourceTypeInterface;
+use Drupal\eic_search\SearchHelper;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\group\GroupMembership;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -302,38 +303,17 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
   /**
    * Extracting filters values from the URL.
    *
-   * Example of filters url parameter: ?filter=ss_content_field_discussion_type:idea.
+   * Example of filters url parameter: ?filter[topics][0]=Financial development&filter[content_type][0]=wiki_page
    *
    * @return array
    */
   private function extractFilterFromUrl(): array {
-    $filters_value = $this->requestStack
+    $filters = $this->requestStack
       ->getCurrentRequest()
       ->query
-      ->get('filter', '');
-    $results = [];
+      ->get('filter', []);
 
-    if (!$filters_value) {
-      return $results;
-    }
-
-    $filters = explode('&', $filters_value);
-
-    foreach ($filters as $filter_value) {
-      $exploded_filter = explode(':', $filter_value);
-
-      if (empty($exploded_filter)) {
-        continue;
-      }
-
-      $filter_field = reset($exploded_filter);
-      unset($exploded_filter[0]);
-
-      $values = explode(',', reset($exploded_filter));
-      $results[$filter_field] = $values;
-    }
-
-    return $results;
+    return SearchHelper::decodeSolrQueryParams($filters);
   }
 
   /**

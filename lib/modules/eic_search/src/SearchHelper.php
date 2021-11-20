@@ -8,6 +8,40 @@ namespace Drupal\eic_search;
 class SearchHelper {
 
   /**
+   * Beautify the key build in the query params.
+   */
+  const BEAUTIFIED_QUERY_PARAMS = [
+    'itm_aggregated_field_vocab_topics' => 'topics_id',
+    'sm_content_field_vocab_topics_string' => 'topics',
+    'ss_global_content_type' => 'content_type',
+  ];
+
+  /**
+   * The name of the main filter parameter in the query url.
+   */
+  const FILTER_QUERY_ID = 'filter';
+
+  /**
+   * @param $param_id
+   *
+   * @return string
+   */
+  public static function getBeautifiedQueryParam($param_id): string {
+    return self::BEAUTIFIED_QUERY_PARAMS[$param_id] ?? $param_id;
+  }
+
+  /**
+   * @param $beautify_param_id
+   *
+   * @return string
+   */
+  public static function getOriginalQueryParam($beautify_param_id): string {
+    $flip_beautified_map = array_flip(self::BEAUTIFIED_QUERY_PARAMS);
+
+    return $flip_beautified_map[$beautify_param_id] ?? $beautify_param_id;
+  }
+
+  /**
    * Returns an array for Solr query params.
    *
    * @param array $params
@@ -16,16 +50,32 @@ class SearchHelper {
    * @return array
    *   The query params.
    */
-  public static function buildSolrQueryParams(array $params) {
-    $i = 0;
-    $query_params = [];
+  public static function buildSolrQueryParams(array $params): array {
+    $beautified_params = [];
 
-    foreach ($params as $key => $value) {
-      $query_params["f[$i]"] = "$key:$value";
-      $i++;
+    foreach ($params as $key => $param) {
+      $beautified_params[self::getBeautifiedQueryParam($key)] =
+        is_array($param) ? $param : [$param];
     }
 
-    return $query_params;
+    return [
+      self::FILTER_QUERY_ID => $beautified_params,
+    ];
+  }
+
+  /**
+   * @param array $filters
+   *
+   * @return array|null
+   */
+  public static function decodeSolrQueryParams(array $filters): array {
+    $decoded_params = [];
+
+    foreach ($filters as $key => $filter) {
+      $decoded_params[self::getOriginalQueryParam($key)] = $filter;
+    }
+
+    return $decoded_params;
   }
 
 }

@@ -11,6 +11,8 @@ use Drupal\Core\Url;
 use Drupal\eic_search\SearchHelper;
 use Drupal\eic_topics\TopicsManager;
 use Drupal\views\ViewExecutable;
+use Drupal\taxonomy\TermInterface;
+use Drupal\taxonomy\Entity\Term;
 
 /**
  * Implements hook_theme().
@@ -69,6 +71,12 @@ function eic_topics_views_pre_render(ViewExecutable $view) {
     return;
   }
 
+  $term = Term::load($term_id);
+
+  if (!$term instanceof TermInterface) {
+    return;
+  }
+
   // The Views UI doesn't allow setting long links, so we need to replace the
   // given link_url option with the final URL which includes facets.
   $route = NULL;
@@ -77,23 +85,23 @@ function eic_topics_views_pre_render(ViewExecutable $view) {
     case 'groups':
       $route = 'eic_search.groups';
       $params = [
-        'itm_aggregated_field_vocab_topics' => $term_id,
+        'ss_group_topic_name' => $term->label(),
       ];
       break;
 
     case 'discussions':
       $route = 'eic_search.global_search';
       $params = [
-        'itm_aggregated_field_vocab_topics' => $term_id,
-        'ss_global_content_type' => 'discussion',
+        'sm_content_field_vocab_topics_string' => $term->label(),
+        'ss_global_content_type' => ['discussion'],
       ];
       break;
 
     case 'files':
       $route = 'eic_search.global_search';
       $params = [
-        'itm_aggregated_field_vocab_topics' => $term_id,
-        'ss_global_content_type' => 'document,gallery,video',
+        'sm_content_field_vocab_topics_string' => $term->label(),
+        'ss_global_content_type' => ['document', 'gallery', 'video'],
       ];
       break;
 
@@ -108,15 +116,15 @@ function eic_topics_views_pre_render(ViewExecutable $view) {
     case 'wiki_pages':
       $route = 'eic_search.global_search';
       $params = [
-        'itm_aggregated_field_vocab_topics' => $term_id,
-        'ss_global_content_type' => 'wiki_page',
+        'sm_content_field_vocab_topics_string' => $term->label(),
+        'ss_global_content_type' => ['wiki_page'],
       ];
       break;
 
     case 'experts':
       $route = 'eic_search.people';
       $params = [
-        'itm_aggregated_field_vocab_topics' => $term_id,
+        'sm_user_profile_field_vocab_topic_interest_array' => $term->label(),
       ];
       break;
   }
