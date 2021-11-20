@@ -7,6 +7,7 @@ use Drupal\eic_comments\CommentsHelper;
 use Drupal\eic_flags\FlagType;
 use Drupal\eic_media_statistics\EntityFileDownloadCount;
 use Drupal\flag\FlagService;
+use Drupal\statistics\NodeStatisticsDatabaseStorage;
 
 /**
  * Helper class around statistics.
@@ -49,30 +50,30 @@ class StatisticsHelper {
   protected $commentsHelper;
 
   /**
-   * Constructs a StatisticsHelper object.
-   *
    * @param \Drupal\eic_statistics\StatisticsStorage $statistics_storage
-   *   The eic_statistics.storage service.
    * @param \Drupal\statistics\NodeStatisticsDatabaseStorage $node_statistics_storage
-   *   The statistics.storage.node service.
-   * @param \Drupal\eic_media_statistics\EntityFileDownloadCount $entity_file_download_count
-   *   The eic_media_statistics.entity_file_download_count service.
    * @param \Drupal\flag\FlagService $flag_service
-   *   The flag service.
    * @param \Drupal\eic_comments\CommentsHelper $comments_helper
-   *   The eic_comments.helper service.
    */
   public function __construct(
     StatisticsStorage $statistics_storage,
     NodeStatisticsDatabaseStorage $node_statistics_storage,
-    EntityFileDownloadCount $entity_file_download_count,
     FlagService $flag_service,
-    CommentsHelper $comments_helper) {
+    CommentsHelper $comments_helper
+  ) {
     $this->statisticsStorage = $statistics_storage;
     $this->nodeStatisticsDatabaseStorage = $node_statistics_storage;
-    $this->entityFileDownloadCount = $entity_file_download_count;
     $this->flagService = $flag_service;
     $this->commentsHelper = $comments_helper;
+  }
+
+  /**
+   * @param \Drupal\eic_media_statistics\EntityFileDownloadCount $file_download_counter
+   */
+  public function setFileDownloadCounter(
+    EntityFileDownloadCount $file_download_counter
+  ) {
+    $this->entityFileDownloadCount = $file_download_counter;
   }
 
   /**
@@ -95,7 +96,6 @@ class StatisticsHelper {
           $result['views'] = $statistics_views_result->getTotalCount();
         }
         break;
-
     }
 
     // Flags statistics.
