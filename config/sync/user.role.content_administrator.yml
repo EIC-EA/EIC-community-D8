@@ -69,6 +69,7 @@ permissions:
   - 'flag recommend_group'
   - 'make archive request'
   - 'make delete request'
+  - 'manage archival deletion requests'
   - 'manage blocked entities'
   - 'mark private content'
   - 'overview messages'
