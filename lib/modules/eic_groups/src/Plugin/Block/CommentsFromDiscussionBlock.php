@@ -2,6 +2,7 @@
 
 namespace Drupal\eic_groups\Plugin\Block;
 
+use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\Core\Block\Annotation\Block;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
@@ -100,6 +101,20 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
 
     if (!$node instanceof NodeInterface) {
       return [];
+    }
+
+    // If the comment system is closed or hidden, do not output the block.
+    if (
+      $node->hasField('field_comments') &&
+      isset($node->get('field_comments')->getValue()[0]) &&
+      CommentItemInterface::OPEN !== (int) $node->get('field_comments')
+        ->getValue()[0]['status']
+    ) {
+      return [
+        '#cache' => [
+          'tags' => $node->getCacheTags(),
+        ],
+      ];
     }
 
     $current_group_route = $this->groupsHelper->getGroupFromRoute();
@@ -225,6 +240,7 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
             "user.is_group_member:$group_id",
             'user.group_permissions',
           ],
+          'tags' => $node->getCacheTags(),
         ],
         '#theme' => 'eic_group_comments_from_discussion',
         '#discussion_id' => $node->id(),
