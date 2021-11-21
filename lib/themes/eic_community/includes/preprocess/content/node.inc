@@ -18,6 +18,14 @@ function eic_community_preprocess_node(array &$variables) {
   if (!isset($variables['#cache']['tags'])) {
     $variables['#cache']['tags'] = $node->getCacheTags();
   }
+
+  // Adds menu local tasks block to the theme variables.
+  $menu_local_tasks_block = \Drupal::entityTypeManager()
+    ->getStorage('block')
+    ->load('eic_community_tabs');
+  $variables['eic_local_tasks'] = \Drupal::entityTypeManager()
+    ->getViewBuilder('block')
+    ->view($menu_local_tasks_block);
 }
 
 /**

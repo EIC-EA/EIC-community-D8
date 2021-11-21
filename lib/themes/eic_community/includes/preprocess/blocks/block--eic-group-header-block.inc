@@ -26,19 +26,48 @@ function eic_community_preprocess_eic_group_header_block(array &$variables) {
     ];
   }
 
-  $actions = [];
-  // Manipulate operations links, for example add icons to links.
-  if (isset($variables['group_values']['operation_links']['edit'])) {
-    $variables['group_values']['operation_links']['edit']['action'] = [
-      'is_compact' => TRUE,
-      'icon' => [
-        'name' => 'gear',
-        'type' => 'custom',
-      ],
-      'icon_file_path' => $variables['eic_icon_path'],
-    ];
+  // Adds membership links to the group operation links dropdown.
+  foreach ($variables['group_values']['membership_links'] as $key => $action) {
+    if (isset($action['#lazy_builder'])) {
+      continue;
+    }
+
+    switch ($key) {
+      case 'group-request-archival':
+      case 'group-request-delete':
+      case 'group-leave':
+        $variables['group_values']['group_operation_links'][0]['links'][$key] = $action;
+        unset($variables['group_values']['membership_links'][$key]);
+        break;
+
+    }
   }
 
+  $actions = [];
+
+  // Adds group operation links to operations links array.
+  if (!empty($variables['group_values']['group_operation_links'])) {
+    // Adds dropdown label if not presented.
+    if (empty($variables['group_values']['group_operation_links'][0]['label'])) {
+      $variables['group_values']['group_operation_links'][0]['label'] = t('Group management');
+    }
+    // Adds dropdown icon.
+    $variables['group_values']['group_operation_links'][0]['icon'] = [
+      'name' => 'gear',
+      'type' => 'custom',
+    ];
+    // Adds dropdown extra classes.
+    $variables['group_values']['group_operation_links'][0]['extra_classes'] = 'ecl-collapsible-options--blue';
+    // Adds dropdown icon path.
+    $variables['group_values']['group_operation_links'][0]['icon_file_path'] = $variables['eic_icon_path'];
+    // Merge operation links.
+    $variables['group_values']['operation_links'] = array_merge(
+      $variables['group_values']['operation_links'],
+      $variables['group_values']['group_operation_links']
+    );
+  }
+
+  // Manipulate operations links, for example add icons to links.
   foreach ($variables['group_values']['operation_links'] as $link) {
     if (isset($link['links'])) {
       $items = [];
@@ -61,6 +90,9 @@ function eic_community_preprocess_eic_group_header_block(array &$variables) {
       $actions[] = [
         'label' => $link['label'],
         'items' => $items,
+        'icon' => !empty($link['icon']) ? $link['icon'] : NULL,
+        'icon_file_path' => !empty($link['icon_file_path']) ? $link['icon_file_path'] : NULL,
+        'extra_classes' => !empty($link['extra_classes']) ? $link['extra_classes'] : NULL,
       ];
     }
     else {
@@ -82,8 +114,7 @@ function eic_community_preprocess_eic_group_header_block(array &$variables) {
   $variables['group_values']['actions'] = $actions;
 
   $flags = [];
-
-  foreach ($variables['group_values']['membership_links'] as $name => $action) {
+  foreach ($variables['group_values']['membership_links'] as $action) {
     if (isset($action['#lazy_builder'])) {
       $flag = ['content' => $action];
     }
@@ -102,6 +133,10 @@ function eic_community_preprocess_eic_group_header_block(array &$variables) {
         case 'entity.group_content.add_form':
           // Invite user.
           $icon_name = 'invite';
+          break;
+
+        case 'entity.group.new_request':
+          $icon_name = 'gear';
           break;
       }
 
