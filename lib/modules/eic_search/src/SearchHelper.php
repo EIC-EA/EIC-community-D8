@@ -13,6 +13,7 @@ class SearchHelper {
   const BEAUTIFIED_QUERY_PARAMS = [
     'itm_aggregated_field_vocab_topics' => 'topics_id',
     'sm_content_field_vocab_topics_string' => 'topics',
+    'sm_user_profile_topic_expertise_string' => 'topics_expertise',
     'ss_global_content_type' => 'content_type',
   ];
 

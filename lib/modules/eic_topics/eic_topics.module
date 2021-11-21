@@ -124,7 +124,7 @@ function eic_topics_views_pre_render(ViewExecutable $view) {
     case 'experts':
       $route = 'eic_search.people';
       $params = [
-        'sm_user_profile_field_vocab_topic_interest_array' => $term->label(),
+        'sm_user_profile_topic_expertise_string' => $term->label(),
       ];
       break;
   }
