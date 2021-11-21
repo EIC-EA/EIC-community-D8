@@ -24,6 +24,7 @@
     <h2>{{ title }}</h2>
     <p>{{ body }}</p>
 
+
     {% if topics %}
       {% include "@theme/patterns/compositions/topic/topic.overview.list.html.twig" with topics|merge({
         icon_file_path: icon_file_path,

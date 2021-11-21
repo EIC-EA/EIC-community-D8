@@ -13,7 +13,6 @@ dependencies:
     - field.field.node.document.field_vocab_topics
     - node.type.document
   module:
-    - comment
     - content_moderation
     - eic_content
     - media_library
@@ -40,12 +39,6 @@ content:
       placeholder: ''
     third_party_settings: {  }
     type: text_textarea
-    region: content
-  field_comments:
-    weight: 22
-    settings: {  }
-    third_party_settings: {  }
-    type: comment_default
     region: content
   field_document_media:
     weight: 6
@@ -74,12 +67,12 @@ content:
     type: options_select
     region: content
   field_post_activity:
-    weight: 23
+    weight: 22
     region: content
     settings: {  }
     third_party_settings: {  }
   field_send_notification:
-    weight: 24
+    weight: 23
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -201,9 +194,10 @@ content:
     settings: {  }
     third_party_settings: {  }
   url_redirects:
-    weight: 25
+    weight: 24
     region: content
     settings: {  }
     third_party_settings: {  }
 hidden:
+  field_comments: true
   member_content_edit_access: true

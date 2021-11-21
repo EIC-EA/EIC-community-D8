@@ -36,7 +36,10 @@
   ]
 %}
 
-{% set wrapper_classes = 'ecl-featured-content-collection--has-overview-layout ecl-section-wrapper ecl-featured-content-collection--is-ready' %}
+{% if wrapper_classes is not defined %}
+  {% set wrapper_classes = 'ecl-featured-content-collection--has-overview-layout ecl-section-wrapper ecl-featured-content-collection--is-ready' %}
+{% endif %}
+
 {% if extra_classes %}
   {% set wrapper_classes = wrapper_classes ~ ' ' ~ extra_classes %}
 {% endif %}

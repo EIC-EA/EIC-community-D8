@@ -3,6 +3,7 @@
 namespace Drupal\eic_topics;
 
 use Drupal\Core\Url;
+use Drupal\eic_search\SearchHelper;
 use Drupal\eic_topics\Constants\Topics;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\TermInterface;
@@ -99,14 +100,12 @@ class TopicsManager {
     }
 
     $filters = [
-      Topics::CONTENT_TYPE_ID_FIELD_SOLR . ':' . $bundle,
-      Topics::TERM_TOPICS_ID_FIELD_CONTENT_SOLR . ':' . $term->label(),
+      Topics::CONTENT_TYPE_ID_FIELD_SOLR => $bundle,
+      Topics::TERM_TOPICS_ID_FIELD_CONTENT_SOLR => $term->label(),
     ];
 
     $query_options = [
-      'query' => [
-        'filter' => implode('&', $filters),
-      ],
+      'query' => SearchHelper::buildSolrQueryParams($filters)
     ];
 
     return Url::fromRoute(

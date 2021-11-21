@@ -97,12 +97,11 @@ class GroupMembershipInvitationController extends ControllerBase {
     GroupInterface $group,
     GroupContentInterface $group_content
   ) {
-    if ($group_content->getContentPlugin()
-        ->getPluginId() !== 'group_invitation') {
+    if ($group_content->getContentPlugin()->getPluginId() !== 'group_invitation') {
       throw new \InvalidArgumentException();
     }
 
-    $invitation_counter = (int) $group_content->get('field_invitation_counter')->value;
+    $invitation_counter = $group_content->get('field_invitation_counter')->value ?? 1;
     if ($invitation_counter >= EICGroupsHelper::INVITEE_INVITATION_EMAIL_LIMIT) {
       $this->messenger->addError($this->t('Maximum amount of invitation has been reached for this user.'));
       $response = new RedirectResponse($group->toUrl()->toString());

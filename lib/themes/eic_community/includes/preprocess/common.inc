@@ -76,9 +76,16 @@ function _eic_community_get_share_group_content_link(
         continue;
       }
 
-      $formatted_groups[] = [
+      if (!isset($formatted_groups[$group->bundle()])) {
+        $formatted_groups[$group->bundle()] = [
+          'label' => $group->type->entity->label(),
+          'entities' => [],
+        ];
+      }
+
+      $formatted_groups[$group->bundle()]['entities'][] = [
         'id' => $group->id(),
-        'name' => $group->label(),
+        'label' => $group->label(),
       ];
     }
   }
@@ -163,13 +170,28 @@ function _eic_community_get_flag_render_array($flag_id, EntityInterface $entity)
  *
  * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity for which we return the statistics.
+ * @param string[] $stat_types
+ *   The statistics types to return. Will return all if empty.
+ *   Can be following values:
+ *   - views
+ *   - downloads
+ *   - comments
+ *   - experts
+ *   - organisations
+ *   - FlagType::LIKE_CONTENT: see Drupal\eic_flags\FlagType.
  *
  * @return array
  *   An array suitable for the templates.
  */
-function _eic_community_get_entity_stats(EntityInterface $entity) {
+function _eic_community_get_entity_stats(EntityInterface $entity, array $stat_types = []) {
   $stats = [];
   foreach (\Drupal::service('eic_statistics.helper')->getEntityStatistics($entity) as $stat => $value) {
+
+    // Skip this stat if it is not required.
+    if (!empty($stat_types) && !in_array($stat, $stat_types)) {
+      continue;
+    }
+
     $item = [];
     switch ($stat) {
       case 'views':
@@ -187,17 +209,27 @@ function _eic_community_get_entity_stats(EntityInterface $entity) {
         $item['icon']['name'] = 'comment';
         break;
 
+      case 'experts':
+        $item['label'] = t('Experts');
+        $item['icon']['name'] = 'user_circle';
+        break;
+
+      case 'organisations':
+        $item['label'] = t('Organisations');
+        $item['icon']['name'] = 'company';
+        break;
+
       case FlagType::LIKE_CONTENT:
         $item['label'] = t('Likes');
         $item['icon']['name'] = 'like';
         break;
-
     }
 
     $item['icon']['type'] = 'custom';
     $item['value'] = $value;
     $stats[$stat] = $item;
   }
+
   return $stats;
 }
 
