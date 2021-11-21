@@ -30,7 +30,7 @@ use Drupal\node\NodeInterface;
 use Drupal\oec_group_flex\OECGroupFlexHelper;
 use Drupal\oec_group_flex\Plugin\CustomRestrictedVisibilityInterface;
 use Drupal\oec_group_flex\Plugin\GroupVisibility\CustomRestrictedVisibility;
-use Drupal\user\Entity\User;
+use Drupal\user\UserInterface;
 
 /**
  * EICGroupsHelper service that provides helper functions for groups.
@@ -209,6 +209,28 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
     }
 
     return $is_admin;
+  }
+
+  /**
+   * Get the current group owner of a group.
+   *
+   * @param \Drupal\group\Entity\GroupInterface $group
+   *   The group entity.
+   *
+   * @return UserInterface
+   *   The group owner.
+   */
+  public static function getGroupOwner(GroupInterface $group): ?UserInterface {
+    $owners = $group->getMembers(self::GROUP_OWNER_ROLE);
+
+    if (empty($owners)) {
+      return NULL;
+    }
+
+    /** @var GroupMembership $owner_membership */
+    $owner_membership = reset($owners);
+
+    return $owner_membership->getUser();
   }
 
   /**
