@@ -1,0 +1,7 @@
+<div class="ecl-topic__overview__items">
+  {% for topic in topics %}
+    {% include "@theme/patterns/compositions/topic/topic.overview.item.html.twig" with topic|merge({
+      icon_file_path: icon_file_path
+    }) %}
+  {% endfor %}
+</div>

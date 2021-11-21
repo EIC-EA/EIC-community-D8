@@ -1,0 +1,21 @@
+uuid: 5193abcb-92c9-47d4-bd49-7959b999f442
+langcode: en
+status: true
+dependencies:
+  module:
+    - eic_overviews
+    - options
+id: overview_page.field_overview_id
+field_name: field_overview_id
+entity_type: overview_page
+type: list_string
+settings:
+  allowed_values: {  }
+  allowed_values_function: _eic_overviews_allowed_values_id
+module: options
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

@@ -7,6 +7,7 @@ dependencies:
     - views.view.taxonomy_related_content
   module:
     - ctools
+    - eic_search
     - eic_topics
     - system
     - views
@@ -134,7 +135,7 @@ reactions:
         id: 'views_block:taxonomy-subtopics'
         label: ''
         provider: views
-        label_display: visible
+        label_display: '0'
         views_label: ''
         items_per_page: none
         region: sidebar
@@ -171,7 +172,7 @@ reactions:
         provider: eic_topics
         label_display: '0'
         region: content
-        weight: '-3'
+        weight: '-4'
         context_mapping: {  }
         custom_id: eic_topics_statistics_block
         theme: eic_community
@@ -186,7 +187,7 @@ reactions:
         provider: system
         label_display: '0'
         region: content
-        weight: '-4'
+        weight: '-5'
         context_mapping: {  }
         custom_id: system_main_block
         theme: eic_community
@@ -195,6 +196,23 @@ reactions:
         context_id: taxonomy_topics_detail_page
         third_party_settings: {  }
         uuid: b729dd1e-94a7-41de-b01c-38e952daf0ed
+      1685cb5f-74dd-4ebb-9084-2cf4bdcf73b4:
+        id: eic_search_activity_stream
+        label: 'EIC activity stream'
+        provider: eic_search
+        label_display: '0'
+        region: content
+        weight: '-3'
+        show_members: 0
+        context_mapping:
+          taxonomy_term: '@taxonomy_term.taxonomy_term_route_context:taxonomy_term'
+        custom_id: eic_search_activity_stream
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: taxonomy_topics_detail_page
+        third_party_settings: {  }
+        uuid: 1685cb5f-74dd-4ebb-9084-2cf4bdcf73b4
     id: blocks
     saved: false
     uuid: ac0fd6ab-0b0e-4d2a-896c-9dd58345db98

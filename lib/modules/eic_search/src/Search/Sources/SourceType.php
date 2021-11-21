@@ -92,6 +92,13 @@ abstract class SourceType implements SourceTypeInterface {
   /**
    * @inheritDoc
    */
+  public function getPrefilteredTopicsFieldId(): array {
+    return [];
+  }
+
+  /**
+   * @inheritDoc
+   */
   public function getPrefilteredContentType(): array {
     return [];
   }

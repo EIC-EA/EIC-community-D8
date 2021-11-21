@@ -3,6 +3,7 @@
 namespace Drupal\eic_default_content\Generator;
 
 use Drupal\eic_overviews\Entity\OverviewPage;
+use Drupal\eic_overviews\GlobalOverviewPages;
 use Drupal\eic_search\Search\Sources\GlobalSourceType;
 use Drupal\eic_search\Search\Sources\GroupSourceType;
 use Drupal\eic_search\Search\Sources\UserGallerySourceType;
@@ -26,7 +27,9 @@ class OverviewPageGenerator extends CoreGenerator {
         'sm_content_field_vocab_geo_string',
       ],
       'source_type' => GlobalSourceType::class,
-    ], 'Global search', '/search');
+    ], 'Global search', '/search',
+      GlobalOverviewPages::GLOBAL_SEARCH
+    );
 
     $this->createOverview([
       'enable_search' => TRUE,
@@ -34,25 +37,31 @@ class OverviewPageGenerator extends CoreGenerator {
         'ss_group_topic_name',
       ],
       'source_type' => GroupSourceType::class,
-    ], 'Groups overview', '/groups');
+    ], 'Groups overview', '/groups',
+      GlobalOverviewPages::GROUPS
+    );
 
     $this->createOverview([
       'enable_search' => TRUE,
       'source_type' => UserGallerySourceType::class,
-    ], 'Members overview', '/people');
+    ], 'Members overview', '/people',
+      GlobalOverviewPages::MEMBERS
+    );
   }
 
   /**
    * @param array $block_settings
    * @param string $title
    * @param string $path_alias
+   * @param int $page_id
    *
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
   private function createOverview(
     array $block_settings,
     string $title,
-    string $path_alias
+    string $path_alias,
+    int $page_id
   ) {
     $block_field = [
       'plugin_id' => 'eic_search_overview',
@@ -64,6 +73,7 @@ class OverviewPageGenerator extends CoreGenerator {
       'path' => $path_alias,
       'field_overview_block' => $block_field,
       'banner_image' => $this->getRandomImage(),
+      'field_overview_id' => $page_id,
     ]);
 
     $overview->save();

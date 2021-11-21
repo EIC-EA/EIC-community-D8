@@ -3,7 +3,7 @@ langcode: en
 status: true
 dependencies:
   module:
-    - eic_groups
+    - eic_search
     - route_condition
 name: group_activity_stream_overviews
 label: 'Group - Activity stream - Overviews'
@@ -21,21 +21,23 @@ conditions:
 reactions:
   blocks:
     blocks:
-      fe52d624-0834-4003-af26-85b80d7ad047:
-        id: eic_groups_last_group_activities
-        label: 'EIC last group activities'
-        provider: eic_groups
+      1afaa0b1-e6c1-41b4-a8bf-e5c9fc0f783c:
+        id: eic_search_activity_stream
+        label: 'EIC activity stream'
+        provider: eic_search
         label_display: '0'
         region: content
-        weight: '1'
-        context_mapping: {  }
-        custom_id: eic_groups_last_group_activities
+        weight: '0'
+        show_members: 1
+        context_mapping:
+          group: '@group.group_route_context:group'
+        custom_id: eic_search_activity_stream
         theme: eic_community
         css_class: ''
         unique: 0
         context_id: group_activity_stream_overviews
         third_party_settings: {  }
-        uuid: fe52d624-0834-4003-af26-85b80d7ad047
+        uuid: 1afaa0b1-e6c1-41b4-a8bf-e5c9fc0f783c
     id: blocks
     saved: false
     uuid: 604b33bf-91d0-438c-8cc0-33d0baccbe71
