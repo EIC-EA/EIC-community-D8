@@ -305,13 +305,17 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
    *
    * Example of filters url parameter: ?filter[topics][0]=Financial development&filter[content_type][0]=wiki_page
    *
-   * @return array
+   * @return array|NULL
    */
-  private function extractFilterFromUrl(): array {
+  private function extractFilterFromUrl(): ?array {
     $filters = $this->requestStack
       ->getCurrentRequest()
       ->query
       ->get('filter', []);
+
+    if (!is_array($filters)) {
+      return NULL;
+    }
 
     return SearchHelper::decodeSolrQueryParams($filters);
   }
