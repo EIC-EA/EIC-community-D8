@@ -78,7 +78,7 @@ function _eic_community_get_share_group_content_link(
 
       if (!isset($formatted_groups[$group->bundle()])) {
         $formatted_groups[$group->bundle()] = [
-          'label' => ucfirst($group->bundle()),
+          'label' => $group->type->entity->label(),
           'entities' => [],
         ];
       }
