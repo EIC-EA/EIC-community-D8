@@ -187,6 +187,16 @@ function _eic_community_get_entity_stats(EntityInterface $entity) {
         $item['icon']['name'] = 'comment';
         break;
 
+      case 'experts':
+        $item['label'] = t('Experts');
+        $item['icon']['name'] = 'user_circle';
+        break;
+
+      case 'organisations':
+        $item['label'] = t('Organisations');
+        $item['icon']['name'] = 'company';
+        break;
+
       case FlagType::LIKE_CONTENT:
         $item['label'] = t('Likes');
         $item['icon']['name'] = 'like';
