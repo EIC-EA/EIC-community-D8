@@ -96,6 +96,10 @@
       margin-bottom: 0;
     }
 
+    & + .ecl-extended-list__items {
+      padding-left: 1rem;
+    }
+
     #{$node} > #{$node}__items > #{$node}__item > & {
       border-bottom: ecl-border();
       padding-bottom: map-get($ecl-spacing, 'm');
