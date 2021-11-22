@@ -74,10 +74,7 @@ class UserListSourceType extends SourceType {
    * @inheritDoc
    */
   public function getSearchFieldsId(): array {
-    return [
-      'ss_user_first_name',
-      'ss_user_last_name',
-    ];
+    return ['ss_global_fullname'];
   }
 
   /**

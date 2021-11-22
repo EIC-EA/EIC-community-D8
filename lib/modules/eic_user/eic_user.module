@@ -10,6 +10,8 @@ use Drupal\Core\Url;
 use Drupal\eic_content\Plugin\Field\FieldWidget\EntityTreeWidget;
 use Drupal\eic_search\Search\Sources\UserGallerySourceType;
 use Drupal\eic_user\Hooks\FieldWidgetOperations;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\group\Entity\GroupContentInterface;
 use Drupal\user\Entity\User;
 use Drupal\user\UserInterface;
 
@@ -106,4 +108,51 @@ function _eic_user_submit_invite_users(array $form, FormStateInterface $form_sta
 
   $tempstore_params['emails'] = $emails;
   $tempstore->set('params', $tempstore_params);
+}
+
+/**
+ * Implements hook_entity_presave().
+ */
+function eic_user_entity_presave(EntityInterface $entity) {
+  _eic_user_entity_crud_action($entity);
+}
+
+/**
+ * Implements hook_entity_update().
+ */
+function eic_user_entity_update(EntityInterface $entity) {
+  _eic_user_entity_crud_action($entity);
+}
+
+/**
+ * Implements hook_entity_predelete().
+ */
+function eic_user_entity_predelete(EntityInterface $entity) {
+  _eic_user_entity_crud_action($entity);
+}
+
+/**
+ * On CRUD of group content entity, re-index dependencies.
+ *
+ * @param \Drupal\Core\Entity\EntityInterface $entity
+ *
+ * @throws \Drupal\search_api\SearchApiException
+ */
+function _eic_user_entity_crud_action(EntityInterface $entity) {
+  if (!$entity instanceof GroupContentInterface) {
+    return;
+  }
+
+  /** @var \Drupal\eic_search\Service\SolrDocumentProcessor $solr_helper */
+  $solr_helper = \Drupal::service('eic_search.solr_document_processor');
+  $plugin_id = $entity->getContentPlugin()->getPluginDefinition()['id'];
+  $updated_entities = [];
+
+  switch ($plugin_id) {
+    case 'group_membership':
+      $updated_entities = [$entity->getEntity(), $entity->getGroup()];
+      break;
+  }
+
+  $solr_helper->reIndexEntities($updated_entities);
 }
