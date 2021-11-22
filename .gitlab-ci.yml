@@ -3,6 +3,7 @@ stages:
   - test
   - notify
   - deploy
+  - deploy_uat
 
 .deploy_job: &deploy_job
   image: intractosre/deploy:1
@@ -114,9 +115,8 @@ deploy_qa:
 
 deploy_uat:
   <<: *deploy_job
-  stage: deploy
+  stage: deploy_uat
   when: manual
-  needs: ['deploy_qa']
   variables:
     HOST: $UAT_HOST
   only:
