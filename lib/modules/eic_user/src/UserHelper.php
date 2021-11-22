@@ -2,6 +2,7 @@
 
 namespace Drupal\eic_user;
 
+use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Logger\LoggerChannelTrait;
@@ -10,8 +11,10 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
 use Drupal\file\Entity\File;
+use Drupal\eic_topics\Constants\Topics;
 use Drupal\user\Entity\User;
 use Drupal\user\UserInterface;
+use Drupal\taxonomy\TermInterface;
 
 /**
  * UserHelper service that provides helper functions for users.
@@ -71,17 +74,30 @@ class UserHelper {
   protected $currentUser;
 
   /**
+   * The database connection.
+   *
+   * @var \Drupal\Core\Database\Connection
+   */
+  protected $connection;
+
+  /**
    * Constructs a new UserHelper.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager service.
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The current user.
+   * @param \Drupal\Core\Database\Connection $connection
+   *   The current user.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, AccountInterface $account) {
+  public function __construct(
+    EntityTypeManagerInterface $entity_type_manager,
+    AccountInterface $account,
+    Connection $connection) {
     $this->userStorage = $entity_type_manager->getStorage('user');
     $this->entityTypeManager = $entity_type_manager;
     $this->currentUser = $account;
+    $this->connection = $connection;
   }
 
   /**
@@ -200,6 +216,52 @@ class UserHelper {
    */
   public function getUserMemberProfile(UserInterface $user) {
     return $this->entityTypeManager->getStorage('profile')->loadByUser($user, ProfileConst::MEMBER_PROFILE_TYPE_NAME);
+  }
+
+  /**
+   * Returns the number of users by topic of expertise.
+   *
+   * @param \Drupal\taxonomy\TermInterface $term
+   *   The topic of expertise to look for.
+   * @param bool $active_only
+   *   Whether to return active users only.
+   *
+   * @return array|false
+   */
+  public function getUsersByExpertise(TermInterface $term, bool $active_only = TRUE) {
+    // If term is not a topic term, return FALSE.
+    if ($term->bundle() != Topics::TERM_VOCABULARY_TOPICS_ID) {
+      return FALSE;
+    }
+
+    // Get matching profiles.
+    // @todo Combine this query with the user query when reverse conditions
+    //   will be available.
+    // @see https://www.drupal.org/project/drupal/issues/2975750
+    /** @var \Drupal\Core\Entity\Query\QueryInterface $query */
+    $query = $this->entityTypeManager->getStorage('profile')->getQuery()
+      ->condition('type', ProfileConst::MEMBER_PROFILE_TYPE_NAME)
+      ->condition('status', 1)
+      ->condition('field_vocab_topic_expertise', [$term->id()], 'IN');
+    $profile_ids = $query->execute();
+
+    if (empty($profile_ids)) {
+      return [];
+    }
+
+    // Get the owner users of the profiles.
+    /** @var \Drupal\Core\Database\Query\Select $query */
+    $query = $this->connection->select('users', 'u');
+    $query->innerJoin('profile', 'p', 'u.uid = p.uid');
+    $query->condition('p.profile_id', $profile_ids, 'IN');
+    $query->fields('u', ['uid']);
+
+    if ($active_only) {
+      $query->innerJoin('users_field_data', 'ufd', 'u.uid = ufd.uid');
+      $query->condition('ufd.status', 1);
+    }
+
+    return $query->execute()->fetchAllKeyed(0, 0);
   }
 
 }

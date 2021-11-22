@@ -51,22 +51,17 @@
 {% endif %}
 
 <span class="{{classes|join(' ')}}">
-  <a {{ attributes|without('class') }} class="{{ attributes.class }}">
+  <a {{ attributes|without('class') }} class="ecl-link ecl-link--default ecl-link--icon ecl-link--icon-before ecl-link--standalone ecl-link--flag {{ attributes.class }}">
     {% if eic_icon_path %}
       {% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with {
         icon: {
           path: eic_icon_path,
           type: 'custom',
           name: icon_name,
-          size: 'xs',
+          size: 's',
         },
         extra_classes: 'ecl-link__icon',
-      } %}
-      &nbsp;
-    {% endif %}
-    {{ title }}
-      &nbsp;
-    <span>{{ count }}</span>
+      } %}{% endif %}&nbsp;<span class="ecl-link__label">{{ title }}&nbsp;<span>{{ count }}</span></span>
   </a>
 </span>
 {% endspaceless %}
