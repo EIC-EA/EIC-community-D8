@@ -32,7 +32,12 @@ function eic_community_theme_suggestions_views_view_alter(array &$suggestions, a
       break;
 
     case 'taxonomy':
-      $suggestions[] = "views_view__featured_topics";
+      switch ($variables['view']->current_display) {
+        case 'subtopics':
+          $suggestions[] = "views_view__featured_topics";
+          break;
+
+      }
       break;
 
     case 'groups_homepage':

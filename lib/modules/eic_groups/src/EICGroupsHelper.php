@@ -3,6 +3,7 @@
 namespace Drupal\eic_groups;
 
 use Drupal\Component\Datetime\TimeInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use \Drupal\message\MessageInterface;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Database\Connection;
@@ -30,7 +31,7 @@ use Drupal\node\NodeInterface;
 use Drupal\oec_group_flex\OECGroupFlexHelper;
 use Drupal\oec_group_flex\Plugin\CustomRestrictedVisibilityInterface;
 use Drupal\oec_group_flex\Plugin\GroupVisibility\CustomRestrictedVisibility;
-use Drupal\user\Entity\User;
+use Drupal\taxonomy\TermInterface;
 
 /**
  * EICGroupsHelper service that provides helper functions for groups.
@@ -53,6 +54,13 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
    * @var \Drupal\Core\Database\Connection
    */
   protected $database;
+
+  /**
+   * The entity type manager service.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
 
   /**
    * The current route match service.
@@ -122,6 +130,8 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
    *   The group visibility manager service.
    * @param \Drupal\Core\Path\CurrentPathStack $current_path
    *   The current path service.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager service.
    */
   public function __construct(
     Connection $database,
@@ -131,7 +141,8 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
     TimeInterface $time,
     OECGroupFlexHelper $oec_group_flex_helper,
     GroupVisibilityManager $group_visibility_manager,
-    CurrentPathStack $current_path
+    CurrentPathStack $current_path,
+    EntityTypeManagerInterface $entity_type_manager
   ) {
     $this->database = $database;
     $this->routeMatch = $route_match;
@@ -141,6 +152,7 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
     $this->oecGroupFlexHelper = $oec_group_flex_helper;
     $this->groupVisibilityManager = $group_visibility_manager;
     $this->currentPath = $current_path;
+    $this->entityTypeManager = $entity_type_manager;
   }
 
   /**
@@ -668,6 +680,41 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
     }
 
     return $is_group_page;
+  }
+
+  /**
+   * Returns a list of groups based on their topics.
+   *
+   * This function assumes that all groups have a field_vocab_topics.
+   *
+   * @param \Drupal\taxonomy\TermInterface $term
+   *   The term to look for.
+   * @param string[] $group_types
+   *   An array of group type machine names. If empty, the function will return
+   *   results for all types.
+   * @param bool $published_only
+   *   Whether to return published groups only.
+   *
+   * @return array|int
+   *   And array of group IDs.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   */
+  public function getGroupsByTopic(TermInterface $term, array $group_types = [], bool $published_only = TRUE) {
+    /** @var \Drupal\Core\Entity\Query\QueryInterface $query */
+    $query = $this->entityTypeManager->getStorage('group')->getQuery();
+
+    if (!empty($group_types)) {
+      $query->condition('type', $group_types, 'IN');
+    }
+
+    if ($published_only) {
+      $query->condition('status', 1);
+    }
+
+    $query->condition('field_vocab_topics', [$term->id()], 'IN');
+    return $query->execute();
   }
 
 }

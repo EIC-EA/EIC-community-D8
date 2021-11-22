@@ -50,3 +50,11 @@ eic_overviews.groups.overview_page.search:
     _title: 'Search group'
   requirements:
     _custom_access: '\Drupal\eic_overviews\Controller\GroupOverviewsController::access'
+eic_overviews.taxonomy.topics:
+  path: '/topics'
+  defaults:
+    _controller: '\Drupal\eic_overviews\Controller\TaxonomyOverviewController::buildPage'
+    _title: 'Topics'
+    vocabulary_id: 'topics'
+  requirements:
+    _permission: 'access content'
