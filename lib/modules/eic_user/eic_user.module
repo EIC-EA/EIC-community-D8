@@ -6,7 +6,12 @@
  */
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
+use Drupal\eic_content\Plugin\Field\FieldWidget\EntityTreeWidget;
+use Drupal\eic_search\Search\Sources\UserGallerySourceType;
 use Drupal\eic_user\Hooks\FieldWidgetOperations;
+use Drupal\user\Entity\User;
+use Drupal\user\UserInterface;
 
 /**
  * Implements hook_field_widget_WIDGET_TYPE_form_alter().
@@ -14,4 +19,91 @@ use Drupal\eic_user\Hooks\FieldWidgetOperations;
 function eic_user_field_widget_social_links_form_alter(&$element, FormStateInterface $form_state, $context) {
   \Drupal::classResolver(FieldWidgetOperations::class)
     ->fieldWidgetSocialLinksFormAlter($element, $form_state, $context);
+}
+
+/**
+ * @param $form
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
+ * @param $form_id
+ */
+function eic_user_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
+  if ('bulk_group_invitation' !== $form_id) {
+    return;
+  }
+  $match_limit = 50;
+
+  $form['existing_users'] =
+    [
+      '#type' => 'entity_autocomplete',
+      '#tags' => TRUE,
+      '#target_type' => 'user',
+      '#maxlength' => 5000,
+      '#weight' => -2,
+      '#attributes' => [
+        'class' => ['hidden', 'entity-tree-reference-widget'],
+        'data-selected-terms' => json_encode([]),
+        'data-translations' => json_encode([
+          'select_value' => t('Select a value', [], ['context' => 'eic_search']),
+          'match_limit' => t(
+            'You can select only <b>@match_limit</b> top-level items.',
+            [
+              '@match_limit' => $match_limit,
+              ['context' => 'eic_search'],
+            ]
+          ),
+          'search' => t('Search', [], ['context' => 'eic_search']),
+          'your_values' => t('Your selected values', [], ['context' => 'eic_search']),
+          'required_field' => t('This field is required', [], ['context' => 'eic_content']),
+        ]),
+        'data-terms-url' => Url::fromRoute('eic_search.solr_search', [
+          'datasource' => json_encode(['user']),
+          'source_class' => UserGallerySourceType::class,
+        ])->toString(),
+        'data-terms-url-search' => Url::fromRoute('eic_content.entity_tree_search')
+          ->toString(),
+        'data-terms-url-children' => Url::fromRoute('eic_content.entity_tree_children')
+          ->toString(),
+        'data-match-limit' => $match_limit,
+        'data-items-to-load' => 50,
+        'data-disable-top' => 0,
+        'data-load-all' => 1,
+        'data-ignore-current-user' => 1,
+        'data-target-bundle' => 'invite',
+        'data-target-entity' => 'user',
+        'data-is-required' => FALSE,
+      ],
+    ];
+
+  $form['existing_users']['#attached']['library'][] = 'eic_community/react-tree-field';
+
+  $form['email_address']['#required'] = FALSE;
+  $form['#submit'][] = '_eic_user_submit_invite_users';
+}
+
+/**
+ * @param array $form
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
+ */
+function _eic_user_submit_invite_users(array $form, FormStateInterface $form_state) {
+  $tempstore = \Drupal::service('tempstore.private')->get('ginvite_bulk_invitation');
+  $tempstore_params = $tempstore->get('params');
+
+  $existing_users_id = EntityTreeWidget::extractEntitiesFromWidget(
+    $form_state->getValue('existing_users')
+  );
+
+  $emails = $tempstore_params['emails'];
+
+  foreach ($existing_users_id as $existing_user_id) {
+    $user = User::load($existing_user_id['target_id']);
+
+    if (!$user instanceof UserInterface) {
+      continue;
+    }
+
+    $emails[] = $user->getEmail();
+  }
+
+  $tempstore_params['emails'] = $emails;
+  $tempstore->set('params', $tempstore_params);
 }

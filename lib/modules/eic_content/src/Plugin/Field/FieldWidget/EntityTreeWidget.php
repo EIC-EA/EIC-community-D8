@@ -166,24 +166,35 @@ class EntityTreeWidget extends WidgetBase {
     return $element;
   }
 
+  /**
+   * @param $element
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   */
   public static function validate($element, FormStateInterface $form_state) {
-    $values = $element['#value'];
+    $form_state->setValueForElement($element, self::extractEntitiesFromWidget($element['#value']));
+  }
 
-    if (!is_string($values)) {
-      return;
+  /**
+   * @param $element
+   *
+   * @return array
+   */
+  public static function extractEntitiesFromWidget($element) {
+    if (!is_string($element)) {
+      return [];
     }
 
-    $values = explode(',', $values);
-    $terms = [];
+    $values = explode(',', $element);
+    $entities = [];
 
     foreach ($values as $value) {
-      $term_id = EntityAutocomplete::extractEntityIdFromAutocompleteInput($value);
-      if ($term_id) {
-        $terms[] = ['target_id' => $term_id];
+      $entity_id = EntityAutocomplete::extractEntityIdFromAutocompleteInput($value);
+      if ($entity_id) {
+        $entities[] = ['target_id' => $entity_id];
       }
     }
 
-    $form_state->setValueForElement($element, $terms);
+    return $entities;
   }
 
   /**
