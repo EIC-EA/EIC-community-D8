@@ -1,6 +1,7 @@
 stages:
   - build
   - test
+  - notify
   - deploy
 
 .deploy_job: &deploy_job
@@ -111,8 +112,18 @@ deploy_qa:
   only:
     - /^release/.*$/
 
-slack_notifier:
+deploy_uat:
+  <<: *deploy_job
   stage: deploy
+  when: manual
+  needs: ['deploy_qa']
+  variables:
+    HOST: $UAT_HOST
+  only:
+    - /^release/.*$/
+
+slack_notifier:
+  stage: notify
   before_script:
     - apk update && apk add curl
   script:
