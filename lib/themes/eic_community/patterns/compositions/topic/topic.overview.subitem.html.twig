@@ -22,13 +22,14 @@
             <div class="ecl-topic__overview__subitem__stat">
               {% include '@ecl-twig/ec-component-icon/ecl-icon.html.twig' with {
                 icon: {
-                  size: 'm',
+                  size: 's',
                   path: icon_file_path,
                   type: stat.icon.type,
                   name: stat.icon.name
                 }
               } only %}
-              <span>&nbsp;{{ stat.stat }}</span>
+              <span class="ecl-topic__overview__subitem__stats-item-label">{{ stat.label }}</span>
+              <span class="ecl-topic__overview__subitem__stats-item-value">{{ stat.value }}</span>
             </div>
           {% endfor %}
         </div>

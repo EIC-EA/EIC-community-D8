@@ -85,6 +85,13 @@
     &__stats {
       gap: $ecl-spacing-s;
       align-self: flex-end;
+      &-item-label {
+        visibility: hidden;
+        display: none;
+      }
+      &-item-value {
+        margin-left: .2rem;
+      }
     }
   }
 }
