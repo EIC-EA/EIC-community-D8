@@ -163,13 +163,28 @@ function _eic_community_get_flag_render_array($flag_id, EntityInterface $entity)
  *
  * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity for which we return the statistics.
+ * @param string[] $stat_types
+ *   The statistics types to return. Will return all if empty.
+ *   Can be following values:
+ *   - views
+ *   - downloads
+ *   - comments
+ *   - experts
+ *   - organisations
+ *   - FlagType::LIKE_CONTENT: see Drupal\eic_flags\FlagType.
  *
  * @return array
  *   An array suitable for the templates.
  */
-function _eic_community_get_entity_stats(EntityInterface $entity) {
+function _eic_community_get_entity_stats(EntityInterface $entity, array $stat_types = []) {
   $stats = [];
   foreach (\Drupal::service('eic_statistics.helper')->getEntityStatistics($entity) as $stat => $value) {
+
+    // Skip this stat if it is not required.
+    if (!empty($stat_types) && !in_array($stat, $stat_types)) {
+      continue;
+    }
+
     $item = [];
     switch ($stat) {
       case 'views':
@@ -208,6 +223,7 @@ function _eic_community_get_entity_stats(EntityInterface $entity) {
     $item['value'] = $value;
     $stats[$stat] = $item;
   }
+
   return $stats;
 }
 

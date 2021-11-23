@@ -78,14 +78,8 @@ function eic_community_preprocess_taxonomy_term(&$variables) {
         }
       }
 
-      $stats = _eic_community_get_entity_stats($term);
-      // Remove unwanted statistics.
-      $allowed_stats = ['experts', 'organisations'];
-      foreach ($stats as $stat_id => $value) {
-        if (!in_array($stat_id, $allowed_stats)) {
-          unset($stats[$stat_id]);
-        }
-      }
+      $needed_stats = ['experts', 'organisations'];
+      $stats = _eic_community_get_entity_stats($term, $needed_stats);
       $teaser['stats'] = $stats;
 
       $variables['term_item'] = $teaser;
