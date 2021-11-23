@@ -9,10 +9,10 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Url;
 use Drupal\eic_search\SearchHelper;
-use Drupal\eic_topics\Constants\Topics;
 use Drupal\eic_topics\TopicsManager;
 use Drupal\views\ViewExecutable;
-use Drupal\file\Entity\File;
+use Drupal\taxonomy\TermInterface;
+use Drupal\taxonomy\Entity\Term;
 
 /**
  * Implements hook_theme().
@@ -22,36 +22,10 @@ function eic_topics_theme() {
     'topics_statistics_block' => [
       'variables' => [
         'stats' => [],
+        'icon_file_path' => [],
       ],
     ],
   ];
-}
-
-/**
- * Implements hook_preprocess_taxonomy_term().
- */
-function eic_topics_preprocess_taxonomy_term(&$variables) {
-  /** @var \Drupal\taxonomy\TermInterface $term */
-  $term = $variables['term'];
-
-  $vid = $term->get('vid')->getValue();
-  $vid = reset($vid)['target_id'];
-
-  if (Topics::TERM_VOCABULARY_TOPICS_ID !== $vid) {
-    return;
-  }
-
-  if ($variables['view_mode'] == 'full') {
-    /** @var \Drupal\Core\Block\BlockManager $block_manager */
-    $block_manager = \Drupal::service('plugin.manager.block');
-    $plugin_block = $block_manager->createInstance('eic_topics_statistics_block');
-    $variables['stats_block'] = $plugin_block->build();
-
-    $banner_image = $term->get('field_topic_banner')->referencedEntities();
-    $file = $banner_image ? File::load($banner_image[0]->get('oe_media_image')->target_id) : NULL;
-    $file_url = $file ? file_url_transform_relative(file_create_url($file->get('uri')->value)) : NULL;
-    $variables['banner_image_url'] = $file_url;
-  }
 }
 
 /**
@@ -97,6 +71,12 @@ function eic_topics_views_pre_render(ViewExecutable $view) {
     return;
   }
 
+  $term = Term::load($term_id);
+
+  if (!$term instanceof TermInterface) {
+    return;
+  }
+
   // The Views UI doesn't allow setting long links, so we need to replace the
   // given link_url option with the final URL which includes facets.
   $route = NULL;
@@ -105,23 +85,23 @@ function eic_topics_views_pre_render(ViewExecutable $view) {
     case 'groups':
       $route = 'eic_search.groups';
       $params = [
-        'itm_aggregated_field_vocab_topics' => $term_id,
+        'ss_group_topic_name' => $term->label(),
       ];
       break;
 
     case 'discussions':
       $route = 'eic_search.global_search';
       $params = [
-        'itm_aggregated_field_vocab_topics' => $term_id,
-        'ss_global_content_type' => 'discussion',
+        'sm_content_field_vocab_topics_string' => $term->label(),
+        'ss_global_content_type' => ['discussion'],
       ];
       break;
 
     case 'files':
       $route = 'eic_search.global_search';
       $params = [
-        'itm_aggregated_field_vocab_topics' => $term_id,
-        'ss_global_content_type' => 'document,gallery,video',
+        'sm_content_field_vocab_topics_string' => $term->label(),
+        'ss_global_content_type' => ['document', 'gallery', 'video'],
       ];
       break;
 
@@ -136,15 +116,15 @@ function eic_topics_views_pre_render(ViewExecutable $view) {
     case 'wiki_pages':
       $route = 'eic_search.global_search';
       $params = [
-        'itm_aggregated_field_vocab_topics' => $term_id,
-        'ss_global_content_type' => 'wiki_page',
+        'sm_content_field_vocab_topics_string' => $term->label(),
+        'ss_global_content_type' => ['wiki_page'],
       ];
       break;
 
     case 'experts':
       $route = 'eic_search.people';
       $params = [
-        'itm_aggregated_field_vocab_topics' => $term_id,
+        'sm_user_profile_topic_expertise_string' => $term->label(),
       ];
       break;
   }

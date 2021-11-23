@@ -6,9 +6,10 @@
  */
 
 use CommerceGuys\Addressing\AddressFormat\AddressField;
+use Drupal\address\FieldHelper;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\address\FieldHelper;
+use Drupal\group\Entity\GroupInterface;
 
 /**
  * Generate render array for the event detail page (group type and node type).
@@ -32,6 +33,13 @@ function _eic_community_render_event_detail_page(&$variables, EntityInterface $e
 
   _eic_community_display_topics($variables);
   _eic_community_display_flags($variables);
+  $group = \Drupal::service('eic_groups.helper')->getGroupFromRoute();
+  if ($group instanceof GroupInterface && 'node' === $entity_type) {
+    $variables['editorial_actions']['items'][]['content'] = _eic_community_get_share_group_content_link(
+      $group,
+      $entity
+    );
+  }
 
   $location = $entity->get('field_location')->getValue();
   $location_formatted = '';
@@ -84,37 +92,47 @@ function _eic_community_render_event_detail_page(&$variables, EntityInterface $e
     ];
   }
 
-  $event_infos = [
-    'icon_file_path' => $variables['eic_icon_path'],
-    'title' => t('Event details', [], ['eic_community']),
-    'action' => $action,
-    'items' => [
-      $location_render,
-      [
-        'content' => ucfirst(implode($location_types, ' & ')),
-        'icon' => [
-          'type' => 'custom',
-          'name' => 'tag',
-        ],
+  $items = [];
+
+  if ($location_render) {
+    $items[] = $location_render;
+  }
+
+  $items = [
+    [
+      'content' => ucfirst(implode($location_types, ' & ')),
+      'icon' => [
+        'type' => 'custom',
+        'name' => 'tag',
       ],
-      [
-        'content' => 'From ' . $from_date->format('d/m/Y H\hi') . ' to ' . $end_date->format('d/m/Y H\hi'),
-        'icon' => [
-          'type' => 'custom',
-          'name' => 'calendar',
-        ],
+    ],
+    [
+      'content' => 'From ' . $from_date->format('d/m/Y H\hi') . ' to ' . $end_date->format('d/m/Y H\hi'),
+      'icon' => [
+        'type' => 'custom',
+        'name' => 'calendar',
       ],
-      [
-        'content' => implode(', ', array_map(function (\Drupal\taxonomy\Entity\Term $term) {
-          return $term->label();
-        }, $entity->get($fields_map[$entity_type]['languages'])->referencedEntities())),
-        'icon' => [
-          'type' => 'custom',
-          'name' => 'glob',
-        ],
+    ],
+    [
+      'content' => implode(', ', array_map(function (\Drupal\taxonomy\Entity\Term $term) {
+        return $term->label();
+      }, $entity->get($fields_map[$entity_type]['languages'])->referencedEntities())),
+      'icon' => [
+        'type' => 'custom',
+        'name' => 'glob',
       ],
     ],
   ];
+
+  $event_infos = [
+    'icon_file_path' => $variables['eic_icon_path'],
+    'title' => t('Event details', [], ['eic_community']),
+    'items' => $items,
+  ];
+
+  if (!empty($action)) {
+    $event_infos['action'] = $action;
+  }
 
   if ($social_links = $entity->get('field_social_links')->getValue()) {
     $socials_platform_mapping = [

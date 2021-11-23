@@ -1,0 +1,21 @@
+uuid: e287aaa9-8728-4fb0-95e9-ee9ba8203cb8
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.overview_page.field_overview_id
+  module:
+    - eic_overviews
+    - options
+id: overview_page.overview_page.field_overview_id
+field_name: field_overview_id
+entity_type: overview_page
+bundle: overview_page
+label: 'Overview ID'
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: list_string

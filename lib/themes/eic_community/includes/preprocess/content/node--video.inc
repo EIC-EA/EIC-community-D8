@@ -6,6 +6,7 @@
  */
 
 use Drupal\eic_community\ValueObject\ImageValueObject;
+use Drupal\group\Entity\GroupInterface;
 
 /**
  * Implements hook_preprocess_node__bundle() for vide node.
@@ -20,6 +21,13 @@ function eic_community_preprocess_node__video(array &$variables) {
       _eic_community_display_topics($variables);
       _eic_community_display_document_contributors($variables);
       $variables['editorial_actions']['items'][]['content'] = _eic_community_get_social_share_block();
+      $group = \Drupal::service('eic_groups.helper')->getGroupFromRoute();
+      if ($group instanceof GroupInterface) {
+        $variables['editorial_actions']['items'][]['content'] = _eic_community_get_share_group_content_link(
+          $group,
+          $node
+        );
+      }
       break;
 
     case 'teaser':

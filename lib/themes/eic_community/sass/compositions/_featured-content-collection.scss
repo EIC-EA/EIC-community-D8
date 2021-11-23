@@ -95,10 +95,19 @@
       #{$node}--has-overview-layout & {
         width: calc(100% / 2);
       }
+
+      #{$node}--has-list-layout & {
+        width: 100%;
+      }
     }
 
     & > * {
       width: 100%;
+    }
+
+    &--big .ecl-teaser {
+      box-sizing: border-box;
+      padding: 0;
     }
   }
 

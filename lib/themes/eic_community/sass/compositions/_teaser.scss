@@ -1,7 +1,6 @@
 .ecl-teaser {
   $node: &;
   position: relative;
-  padding: ecl-box-model('padding');
 
   @include ecl-media-breakpoint-up('sm') {
     display: flex;
@@ -36,6 +35,11 @@
     }
   }
 
+  &--event#{$node}--as-grey {
+    padding: ecl-box-model('padding');
+    background-color: map-get($ecl-colors, 'grey-5');
+  }
+
   &--as-card-white {
     background-color: map-get($ecl-colors, 'white');
   }
@@ -58,7 +62,9 @@
       padding: 0 ecl-box-model('padding') ecl-box-model('padding');
     }
 
-    background-color: map-get($ecl-colors, 'white');
+    &:not(.ecl-teaser--grey) {
+      background-color: map-get($ecl-colors, 'white');
+    }
   }
 
   &--as-grey {
@@ -74,6 +80,13 @@
       height: 100%;
       box-sizing: border-box;
     }
+  }
+
+  [class*=ecl-featured-content] &--organisation &__image-wrapper, [class*=ecl-featured-content] &--organisation &__image-wrapper &__image {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 50%;
   }
 
   &--is-highlighted,

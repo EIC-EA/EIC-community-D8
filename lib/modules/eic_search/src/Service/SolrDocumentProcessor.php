@@ -26,6 +26,7 @@ use Drupal\file\Entity\File;
 use Drupal\flag\FlagCountManager;
 use Drupal\group\Entity\Group;
 use Drupal\group\Entity\GroupInterface;
+use Drupal\message\MessageInterface;
 use Drupal\node\NodeTypeInterface;
 use Drupal\oec_group_flex\OECGroupFlexHelper;
 use Drupal\group\GroupMembership;
@@ -190,6 +191,8 @@ class SolrDocumentProcessor {
     $geo = [];
     $user_url = '';
     $datasource = $fields['ss_search_api_datasource'];
+    $changed = 0;
+    $language = t('English', [], ['context' => 'eic_search'])->render();
 
     switch ($datasource) {
       case 'entity:node':
@@ -248,9 +251,6 @@ class SolrDocumentProcessor {
         break;
       case 'entity:user':
         $status = TRUE;
-        break;
-      default:
-        $language = t('English', [], ['context' => 'eic_search'])->render();
         break;
     }
 
@@ -321,7 +321,7 @@ class SolrDocumentProcessor {
       $document->setField('tm_X3b_en_rendered_item', html_entity_decode($text));
     }
 
-    $nid = $fields['its_content_nid'];
+    $nid = $fields['its_content_nid'] ?? 0;
     $views = $this->nodeStatisticsDatabaseStorage->fetchView($nid);
 
     if ('entity:message' !== $datasource) {
@@ -527,8 +527,9 @@ class SolrDocumentProcessor {
       return;
     }
 
-    $group = $group_helper->getGroupByEntity($item->getOriginalObject()
-      ->getEntity());
+    $original_object = $item->getOriginalObject()->getEntity();
+
+    $group = $group_helper->getGroupByEntity($original_object);
 
     if (!$group) {
       $document->addField('ss_group_visibility', $group_visibility);
@@ -738,7 +739,7 @@ class SolrDocumentProcessor {
    */
   public function processGroupEventData(Document &$document, $fields) {
     $datasource = $fields['ss_search_api_datasource'];
-    $content_type = $fields['ss_content_type'];
+    $content_type = $fields['ss_content_type'] ?? NULL;
 
     if ($datasource !== 'entity:node' || $content_type !== 'event') {
       return;

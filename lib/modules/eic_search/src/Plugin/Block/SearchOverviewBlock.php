@@ -13,6 +13,7 @@ use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_search\Collector\SourcesCollector;
 use Drupal\eic_search\Search\Sources\GroupSourceType;
 use Drupal\eic_search\Search\Sources\SourceTypeInterface;
+use Drupal\eic_search\SearchHelper;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\group\GroupMembership;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -189,8 +190,8 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
       '#layout' => $source instanceof SourceTypeInterface ? $source->getLayoutTheme() : NULL,
       '#page_options' => $this->configuration['page_options'],
       '#enable_search' => $this->configuration['enable_search'],
-      '#enable_date_filter' => $this->configuration['enable_date_filter'],
-      '#url' => Url::fromRoute('eic_groups.solr_search')->toString(),
+      '#enable_date_filter' => $this->configuration['enable_date_filter']  ?? FALSE,
+      '#url' => Url::fromRoute('eic_search.solr_search')->toString(),
       '#isAnonymous' => \Drupal::currentUser()->isAnonymous(),
       '#currentGroup' => $current_group_route instanceof GroupInterface ? $current_group_route->id() : NULL,
       '#currentGroupUrl' => $current_group_route instanceof GroupInterface ? $current_group_route->toUrl()->toString() : NULL,
@@ -226,6 +227,7 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
         'uploaded_by' => $this->t('Uploaded by', [], ['context' => 'eic_group']),
         'draft' => $this->t('Draft', [], ['context' => 'eic_group']),
         'pending' => $this->t('Pending', [], ['context' => 'eic_group']),
+        'blocked' => $this->t('Blocked', [], ['context' => 'eic_group']),
         'load_more' => $this->t('Load more', [], ['context' => 'eic_group']),
       ],
     ];
@@ -301,38 +303,21 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
   /**
    * Extracting filters values from the URL.
    *
-   * Example of filters url parameter: ?filter=ss_content_field_discussion_type:idea.
+   * Example of filters url parameter: ?filter[topics][0]=Financial development&filter[content_type][0]=wiki_page
    *
-   * @return array
+   * @return array|NULL
    */
-  private function extractFilterFromUrl(): array {
-    $filters_value = $this->requestStack
+  private function extractFilterFromUrl(): ?array {
+    $filters = $this->requestStack
       ->getCurrentRequest()
       ->query
-      ->get('filter', '');
-    $results = [];
+      ->get('filter', []);
 
-    if (!$filters_value) {
-      return $results;
+    if (!is_array($filters)) {
+      return NULL;
     }
 
-    $filters = explode('&', $filters_value);
-
-    foreach ($filters as $filter_value) {
-      $exploded_filter = explode(':', $filter_value);
-
-      if (empty($exploded_filter)) {
-        continue;
-      }
-
-      $filter_field = reset($exploded_filter);
-      unset($exploded_filter[0]);
-
-      $values = explode(',', reset($exploded_filter));
-      $results[$filter_field] = $values;
-    }
-
-    return $results;
+    return SearchHelper::decodeSolrQueryParams($filters);
   }
 
   /**

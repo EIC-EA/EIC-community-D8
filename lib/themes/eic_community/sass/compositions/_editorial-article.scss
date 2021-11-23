@@ -43,6 +43,10 @@
     line-height: ecl-typography('line-height');
     margin-top: ecl-layout('gutter');
 
+    &--full-width {
+      width: 100%;
+    }
+
     &:first-child {
       margin-top: 0;
     }

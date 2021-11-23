@@ -273,14 +273,14 @@ class GroupForm extends GroupFormBase {
       }
     }
 
-    // If the group is new and the selected joining method is
-    // "tu_group_membership_request", we enable member invitations by default.
+    // If the group is new and the selected joining method is "tu_open_method",
+    // we enable member invitations by default.
     // This logic needs to be triggered during this process because the group
     // visibility and joining methods are saved previously after the group is
     // saved in the Database.
     if ($is_new &&
       $group->hasField('field_group_invite_members') &&
-      ($groupFlexSettings['settings']['visibility']['plugin_id'] === 'private' || $groupFlexSettings['settings']['joining_methods'] === 'tu_group_membership_request')
+      $groupFlexSettings['settings']['joining_methods'] === 'tu_open_method'
     ) {
       $group->set('field_group_invite_members', TRUE);
       $group->save();

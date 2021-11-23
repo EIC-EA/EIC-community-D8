@@ -4,9 +4,11 @@ status: true
 dependencies:
   config:
     - field.field.overview_page.overview_page.field_overview_block
+    - field.field.overview_page.overview_page.field_overview_id
   module:
     - block_field
     - eic_overviews
+    - options
 id: overview_page.overview_page.default
 targetEntityType: overview_page
 bundle: overview_page
@@ -19,6 +21,13 @@ content:
     label: hidden
     settings: {  }
     third_party_settings: {  }
+  field_overview_id:
+    weight: 3
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: list_default
+    region: content
   overview_block:
     label: hidden
     type: entity_reference_entity_view
