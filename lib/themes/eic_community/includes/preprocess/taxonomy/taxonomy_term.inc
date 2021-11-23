@@ -15,6 +15,10 @@ function eic_topics_preprocess_page__taxonomy__term(&$variables) {
   /** @var \Drupal\taxonomy\TermInterface $term */
   $term = \Drupal::routeMatch()->getParameter('taxonomy_term');
 
+  if (!$term) {
+    return;
+  }
+
   $vid = $term->get('vid')->getValue();
   $vid = reset($vid)['target_id'];
 
