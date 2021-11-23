@@ -3,6 +3,8 @@
 namespace Drupal\eic_content\Services;
 
 use Drupal\taxonomy\Entity\Term;
+use Drupal\user\Entity\User;
+use Drupal\user\UserInterface;
 
 /**
  * Class EntityTreeManager
@@ -81,31 +83,59 @@ class EntityTreeManager {
       return $selected_value['tid'];
     }, $ignored_values);
 
-    $query = \Drupal::entityQuery($target_entity)
-      ->condition('vid', $target_bundle)
-      ->condition('name', $text, 'CONTAINS')
-      ->range(0, 20);
+    if ($target_entity === 'user') {
+      $query = \Drupal::entityQuery($target_entity)
+        ->condition('uid', 0, '<>')
+        ->range(0, 20);
+      $orCondition = $query->orConditionGroup()
+        ->condition('field_first_name', $text, 'CONTAINS')
+        ->condition('field_last_name', $text, 'CONTAINS')
+        ->condition('mail', $text, 'CONTAINS');
+      $query->condition($orCondition);
 
-    if ($disable_top_selection) {
-      $query->condition('parent', 0, '<>');
+      if (!empty($ignored_tids)) {
+        $query->condition('uid', $ignored_tids, 'NOT IN');
+      }
+
+      $query->sort('field_first_name', 'ASC');
+
+      $entities = $query->execute();
+      $entities = User::loadMultiple($entities);
+
+      return array_map(function (UserInterface $user) {
+        return [
+          'name' => $user->get('field_first_name')->value . ' ' . $user->get('field_last_name')->value . ' ' . '('. $user->getEmail() .')',
+          'tid' => $user->id(),
+          'parent' => 0,
+        ];
+      }, $entities);
+    } else {
+      $query = \Drupal::entityQuery($target_entity)
+        ->condition('vid', $target_bundle)
+        ->condition('name', $text, 'CONTAINS')
+        ->range(0, 20);
+
+      if ($disable_top_selection) {
+        $query->condition('parent', 0, '<>');
+      }
+
+      if (!empty($ignored_tids)) {
+        $query->condition('tid', $ignored_tids, 'NOT IN');
+      }
+
+      $entities = $query->execute();
+      $entities = Term::loadMultiple($entities);
+
+      return array_map(function (Term $term) {
+        $parent = $term->get('parent')->getValue();
+
+        return [
+          'name' => $term->getName(),
+          'tid' => $term->id(),
+          'parent' => (int) reset($parent)['target_id'],
+        ];
+      }, $entities);
     }
-
-    if (!empty($ignored_tids)) {
-      $query->condition('tid', $ignored_tids, 'NOT IN');
-    }
-
-    $entities = $query->execute();
-    $entities = Term::loadMultiple($entities);
-
-    return array_map(function (Term $term) {
-      $parent = $term->get('parent')->getValue();
-
-      return [
-        'name' => $term->getName(),
-        'tid' => $term->id(),
-        'parent' => (int) reset($parent)['target_id'],
-      ];
-    }, $entities);
   }
 
   /**

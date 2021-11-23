@@ -5,11 +5,48 @@
  * Functions to support theming.
  */
 
+use CommerceGuys\Addressing\Country\CountryRepository;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Url;
 use Drupal\media\Entity\Media;
 use Drupal\file\Entity\File;
 use Drupal\eic_community\ValueObject\ImageValueObject;
-use Drupal\user\Entity\User;
+use Drupal\user\UserInterface;
+
+/**
+ * Implements hook_preprocess_user().
+ */
+function eic_community_preprocess_user(array &$variables) {
+  /** @var \Drupal\user\UserInterface $user */
+  $user = $variables['elements']['#user'];
+
+  switch ($variables['elements']['#view_mode']) {
+    case 'teaser':
+      $teaser = [];
+      // Get the user profile.
+      /** @var \Drupal\media\MediaInterface $media */
+      $media = $user->get('field_media')->referencedEntities()[0];
+      if ($media && !empty($media->get('oe_media_image')->getValue())) {
+        $style_name = 'oe_theme_list_item';
+        $image_item = ImageValueObject::fromStyledImageItem($media->get('oe_media_image')->first(), $style_name);
+        $teaser['image'] = [
+          'src' => $image_item->getSource(),
+          'alt' => $image_item->getAlt(),
+        ];
+      }
+      $teaser['location'] = _eic_community_get_user_location($user);
+      // Get the user realname.
+      $teaser['title'] = \Drupal::service('eic_user.helper')->getFullName($user);
+      if ($user->toUrl()->access()) {
+        $teaser['path'] = $user->toUrl()->toString();
+      }
+      $teaser['icon_file_path'] = $variables['eic_icon_path'];
+      $teaser['actions'] = array_merge([_eic_community_get_user_contact_link($user)], _eic_community_get_user_social_links($user));
+      $variables['user_item'] = $teaser;
+      break;
+
+  }
+}
 
 /**
  * Creates image array for twig templates.
@@ -38,8 +75,20 @@ function _get_profile_image_array(EntityInterface $user): ?array {
 
 /**
  * Transform a user entity for a storybook template.
+ *
+ * @param Drupal\user\UserInterface $user
+ *   The user object.
+ *
+ * @return array
+ *   An array with following structure:
+ *   - image
+ *     - src
+ *     - alt
+ *
+ * @throws \Drupal\Core\Entity\EntityMalformedException
+ * @throws \Drupal\Core\TypedData\Exception\MissingDataException
  */
-function eic_community_get_teaser_user_display(User $user) {
+function eic_community_get_teaser_user_display(UserInterface $user) {
   $author = [
     'name' => $user->getDisplayName(),
   ];
@@ -60,4 +109,127 @@ function eic_community_get_teaser_user_display(User $user) {
   }
 
   return $author;
+}
+
+/**
+ * Preprocess contributors for the storybook template.
+ */
+function _eic_community_display_document_contributors(array &$variables) {
+  if (!empty($variables['elements']['contributor_ids'])) {
+    $users = \Drupal::entityTypeManager()->getStorage('user')->loadMultiple($variables['elements']['contributor_ids']);
+    $contributors = ['items' => []];
+
+    foreach ($users as $user) {
+      $contributors['items'][] = eic_community_get_teaser_user_display($user);
+    }
+
+    $variables['contributors'] = $contributors;
+  }
+}
+
+/**
+ * Returns the 'render' array to use in templates for the user contact.
+ *
+ * @param Drupal\user\UserInterface $account
+ *   The user account for which we want to get the contact link.
+ *
+ * @return array
+ *   The render array for templates.
+ */
+function _eic_community_get_user_contact_link(UserInterface $account) {
+  $current_user = \Drupal::currentUser();
+
+  if (!$current_user->hasPermission('access contact user page')) {
+    return [];
+  }
+
+  $link_options = [
+    'query' => [
+      'destination' => \Drupal::request()->getRequestUri(),
+    ],
+  ];
+  $result = [
+    'label' => t('Contact @username', ['@username' => $account->realname]),
+    'path' => Url::fromRoute('eic_private_message.user_private_message', ['user' => $account->id()], $link_options),
+    'icon' => [
+      'name' => 'mail',
+      'type' => 'custom',
+    ],
+  ];
+
+  return $result;
+}
+
+/**
+ * Returns the 'render' array to use in templates for the user social links.
+ *
+ * @param Drupal\user\UserInterface $account
+ *   The user account for which we want to get the social links.
+ *
+ * @return array
+ *   The render array for templates.
+ */
+function _eic_community_get_user_social_links(UserInterface $account) {
+  $member_profile = \Drupal::service('eic_user.helper')->getUserMemberProfile($account);
+
+  // If we don't have a member profile for this user, skip.
+  if (empty($member_profile)) {
+    return [];
+  }
+
+  // If the member profile doesn't have social links, skip.
+  if ($member_profile->get('field_social_links')->isEmpty()) {
+    return [];
+  }
+
+  // Get the list of social platforms provided by the social_link_field module.
+  $social_platforms = \Drupal::service('plugin.manager.social_link_field.platform')->getPlatforms();
+
+  $links = [];
+  foreach ($member_profile->get('field_social_links')->getValue() as $social_item) {
+    $links[$social_item['social']] = [
+      'label' => $social_platforms[$social_item['social']]['name'],
+      'path' => $social_platforms[$social_item['social']]['urlPrefix'] . $social_item['link'],
+      'icon' => [
+        'name' => $social_item['social'],
+        'type' => 'custom',
+      ],
+    ];
+  }
+
+  return $links;
+}
+
+/**
+ * Returns the 'render' array to use in templates for the user location.
+ *
+ * @param Drupal\user\UserInterface $account
+ *   The user account for which we want to get the location.
+ *
+ * @return array
+ *   The render array for templates.
+ */
+function _eic_community_get_user_location(UserInterface $account) {
+  $member_profile = \Drupal::service('eic_user.helper')->getUserMemberProfile($account);
+
+  // If we don't have a member profile for this user, skip.
+  if (empty($member_profile)) {
+    return [];
+  }
+
+  // If the member profile doesn't have the address field, skip.
+  if ($member_profile->get('field_location_address')->isEmpty()) {
+    return [];
+  }
+
+  $address = $member_profile->get('field_location_address')->first();
+
+  /** @var \CommerceGuys\Addressing\Country\CountryRepository $country_repository */
+  $country_repository = new CountryRepository();
+  /** @var \CommerceGuys\Addressing\Country\Country $country */
+  $country = $country_repository->get($address->get('country_code')->getValue());
+
+  return [
+    'label' => $address->get('locality')->getValue() . ', ' . $country->getName(),
+  ];
 }

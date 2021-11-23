@@ -1,0 +1,7 @@
+.ecl-select {
+  cursor: pointer;
+
+  &__container > div {
+    display: flex;
+  }
+}

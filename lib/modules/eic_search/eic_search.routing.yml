@@ -1,4 +1,4 @@
-eic_groups.solr_search:
+eic_search.solr_search:
   path: '/api/solr/search'
   defaults:
     _title: 'Solr search'
@@ -17,6 +17,13 @@ eic_search.groups:
   defaults:
     _title: 'Groups'
     _controller: '\Drupal\eic_search\Controller\SearchController::groups'
+  requirements:
+    _permission: 'access content'
+eic_search.events:
+  path: '/events'
+  defaults:
+    _title: 'Events'
+    _controller: '\Drupal\eic_search\Controller\SearchController::events'
   requirements:
     _permission: 'access content'
 eic_search.people:

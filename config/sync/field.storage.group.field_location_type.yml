@@ -1,0 +1,21 @@
+uuid: 8bc75570-78ae-46d8-8120-a13b19c634ca
+langcode: en
+status: true
+dependencies:
+  module:
+    - group
+    - options
+id: group.field_location_type
+field_name: field_location_type
+entity_type: group
+type: list_string
+settings:
+  allowed_values: {  }
+  allowed_values_function: eic_field_location_type_allowed_values
+module: options
+locked: false
+cardinality: -1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

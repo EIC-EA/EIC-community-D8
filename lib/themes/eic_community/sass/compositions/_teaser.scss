@@ -5,6 +5,8 @@
   @include ecl-media-breakpoint-up('sm') {
     display: flex;
     align-items: stretch;
+    height: 100%;
+    box-sizing: border-box;
   }
 
   @include ecl-media-breakpoint-up('sm') {
@@ -33,6 +35,11 @@
     }
   }
 
+  &--event#{$node}--as-grey {
+    padding: ecl-box-model('padding');
+    background-color: map-get($ecl-colors, 'grey-5');
+  }
+
   &--as-card-white {
     background-color: map-get($ecl-colors, 'white');
   }
@@ -55,11 +62,12 @@
       padding: 0 ecl-box-model('padding') ecl-box-model('padding');
     }
 
-    background-color: map-get($ecl-colors, 'white');
+    &:not(.ecl-teaser--grey) {
+      background-color: map-get($ecl-colors, 'white');
+    }
   }
 
   &--as-grey {
-    padding: ecl-box-model('padding');
     background-color: map-get($ecl-colors, 'grey-5');
   }
 
@@ -67,6 +75,18 @@
     display: flex;
     flex-wrap: wrap;
     align-items: flex-start;
+
+    .ecl-teaser-overview__item & {
+      height: 100%;
+      box-sizing: border-box;
+    }
+  }
+
+  [class*=ecl-featured-content] &--organisation &__image-wrapper, [class*=ecl-featured-content] &--organisation &__image-wrapper &__image {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 50%;
   }
 
   &--is-highlighted,
@@ -185,6 +205,10 @@
     #{$node}--gallery &:before {
       display:none;
     }
+
+    &--empty {
+      padding: 60px 0;
+    }
   }
 
   &__image {
@@ -265,6 +289,15 @@
 
     @include ecl-media-breakpoint-up('sm') {
       flex-basis: calc(100% - #{map-get($ecl-media, 'l')} - #{ecl-box-model('padding')});
+    }
+  }
+
+  &__updateTime {
+    display: flex;
+    align-items: center;
+    color: $ecl-color-grey;
+    & svg {
+      margin-right: map-get($ecl-spacing, 's');
     }
   }
 
@@ -423,7 +456,8 @@
 
     @include ecl-media-breakpoint-down('md') {
       #{$node}--event & {
-        flex-direction: column;
+        flex-direction: row;
+        margin-bottom: map-get($ecl-spacing, 's');
       }
     }
 
@@ -488,6 +522,10 @@
     display: flex;
 
     @include ecl-responsive-font('label');
+
+    a {
+      display: inline-flex;
+    }
 
     #{$node}--as-card#{$node}--member & {
       text-align: center;
@@ -871,6 +909,10 @@
     }
   }
 
+  &__detail-type {
+    font-weight: $ecl-font-weight-bold;
+  }
+
   &__detail-contributor {
     font-weight: $ecl-font-weight-bold;
     color: ecl-typography('color', 'title');
@@ -878,6 +920,10 @@
 
   &__detail-parentgroup {
     margin-top: map-get($ecl-spacing, 'xs');
+    a:not([class]) {
+      color: $ecl-color-blue;
+      font-weight: $ecl-font-weight-regular;
+    }
   }
 
   &__stats {
@@ -922,7 +968,10 @@
 
   &__stat-icon {
     color: ecl-typography('color', 'label');
-    margin-right: ecl-box-model('padding', 'controls');
+    margin-right: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   /* file list teaser */

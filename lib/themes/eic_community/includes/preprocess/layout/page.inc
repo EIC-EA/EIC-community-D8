@@ -5,6 +5,7 @@
  * Contains implementation for hook_preprocess_page().
  */
 
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Menu\MenuTreeParameters;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Url;
@@ -99,14 +100,14 @@ function eic_community_preprocess_page(array &$variables): void {
     $menu_active_trail = \Drupal::service('menu.active_trail')->getActiveTrailIds($menu_name);
     $parameters->setActiveTrail($menu_active_trail);
     $tree = \Drupal::menuTree()->load($menu_name, $parameters);
-    $links = [];
-
-    foreach ($tree as $branch) {
-      $links[]['link'] = [
-        'label' => $branch->link->getTitle(),
-        'path' => $branch->link->getUrlObject()->toString(),
+    $links = array_map(function ($item) {
+      return [
+        'link' => [
+          'label' => $item->link->getTitle(),
+          'path' => $item->link->getUrlObject()->toString(),
+        ],
       ];
-    }
+    }, $tree);
 
     $section = [
       'title' => $menu['#configuration']['label'],
@@ -128,6 +129,8 @@ function eic_community_preprocess_page(array &$variables): void {
   if ($variables['is_front']) {
     _preprocess_front_page($variables);
   }
+
+  _preprocess_group_page($variables);
 }
 
 /**
@@ -149,7 +152,7 @@ function _preprocess_node_page(&$variables) {
         $author_theme = [
           '#theme' => 'eic_community_author',
           '#name' => $author['name'],
-          '#path' => $author['path'],
+          '#path' => $author['path'] ?? '',
         ];
 
         if (isset($author['image'])) {
@@ -246,4 +249,21 @@ function _preprocess_front_page(&$variables) {
   }
 
   $variables['front'] = $front;
+}
+
+/**
+ * Preprocess front page.
+ */
+function _preprocess_group_page(&$variables) {
+  // We need to add missing cache tags related to the group otherwise
+  // theme suggestions will not be updated when the group changes status or
+  // after removing a group membership.
+  if ($group = \Drupal::service('eic_groups.helper')->isGroupPage()) {
+    if (!isset($variables['#cache']['tags'])) {
+      $variables['#cache']['tags'] = $group->getCacheTags();
+    }
+    else {
+      $variables['#cache']['tags'] = Cache::mergeTags($variables['#cache'], $group->getCacheTags());
+    }
+  }
 }

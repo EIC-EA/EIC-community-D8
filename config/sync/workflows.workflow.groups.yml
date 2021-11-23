@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - group.type.event
     - group.type.group
   module:
     - content_moderation
@@ -16,6 +17,11 @@ type_settings:
       default_revision: true
       label: Archived
       weight: 3
+    blocked:
+      published: false
+      default_revision: true
+      label: Blocked
+      weight: 4
     draft:
       label: Draft
       published: false
@@ -38,12 +44,24 @@ type_settings:
         - published
       to: archived
       weight: 2
+    block:
+      label: Block
+      from:
+        - published
+      to: blocked
+      weight: 4
     create_new_group:
       label: 'Create new group'
       from:
         - pending
       to: pending
       weight: -2
+    keep_blocked:
+      label: 'Keep blocked'
+      from:
+        - blocked
+      to: blocked
+      weight: 6
     keep_in_draft:
       label: 'Keep in draft'
       from:
@@ -58,6 +76,12 @@ type_settings:
         - archived
         - draft
         - published
+    unblock:
+      label: Unblock
+      from:
+        - blocked
+      to: published
+      weight: 5
     unpublish:
       label: Unpublish
       from:
@@ -72,5 +96,6 @@ type_settings:
       weight: -1
   entity_types:
     group:
+      - event
       - group
   default_moderation_state: pending

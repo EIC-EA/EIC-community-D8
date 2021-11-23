@@ -15,9 +15,13 @@ interface SourceTypeInterface {
 
   const LAYOUT_COLUMNS_COMPACT = 'columns_compact';
 
+  const LAYOUT_3_COLUMNS = 'three_columns';
+
   const LAYOUT_GLOBAL = 'global';
 
   const SOLR_FIELD_CONTENT_TYPE_ID = 'ss_global_content_type';
+
+  const SOLR_FIELD_GROUP_TYPE_ID = 'ss_global_content_type';
 
   const READ_MORE_NUMBER_TO_LOAD = 5;
 
@@ -64,6 +68,13 @@ interface SourceTypeInterface {
   public function getDefaultSort(): array;
 
   /**
+   * Get second default sort for an overview, always 2 keys, first : field id, second: direction
+   *
+   * @return array
+   */
+  public function getSecondDefaultSort(): array;
+
+  /**
    * Return the fields ID on search API to search for (will be separated by OR
    * condition)
    *
@@ -94,6 +105,14 @@ interface SourceTypeInterface {
   public function getPrefilteredGroupFieldId(): array;
 
   /**
+   * If the overview needs to be prefiltered by topic we need to get fields in
+   * SOLR to search IN.
+   *
+   * @return array
+   */
+  public function getPrefilteredTopicsFieldId(): array;
+
+  /**
    * If the overview needs to be prefiltered by content type
    * we need to get field in SOLR to search IN
    *
@@ -107,5 +126,19 @@ interface SourceTypeInterface {
    * @return bool
    */
   public function allowPagination(): bool;
+
+  /**
+   * Check if Source allow to have a date filter
+   *
+   * @return bool
+   */
+  public function supportDateFilter(): bool;
+
+  /**
+   * Return the solr fields id for "from" and "to" date field.
+   *
+   * @return array
+   */
+  public function getDateIntervalField(): array;
 
 }

@@ -11,6 +11,7 @@ use Drupal\eic_seo\AliasCleaner;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\node\NodeInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Class GroupTokens.
@@ -43,6 +44,13 @@ class GroupTokens implements ContainerInjectionInterface {
   protected $eicAliasCleaner;
 
   /**
+   * The request stack service.
+   *
+   * @var \Symfony\Component\HttpFoundation\RequestStack
+   */
+  protected $requestStack;
+
+  /**
    * Constructs a new GroupTokens object.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
@@ -51,11 +59,19 @@ class GroupTokens implements ContainerInjectionInterface {
    *   The Token service.
    * @param \Drupal\eic_seo\AliasCleaner $alias_cleaner
    *   The EIC AliasCleaner service.
+   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
+   *   The request stack service.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, Token $token_service, AliasCleaner $alias_cleaner) {
+  public function __construct(
+    EntityTypeManagerInterface $entity_type_manager,
+    Token $token_service,
+    AliasCleaner $alias_cleaner,
+    RequestStack $request_stack
+  ) {
     $this->entityTypeManager = $entity_type_manager;
     $this->tokenService = $token_service;
     $this->eicAliasCleaner = $alias_cleaner;
+    $this->requestStack = $request_stack;
   }
 
   /**
@@ -65,7 +81,8 @@ class GroupTokens implements ContainerInjectionInterface {
     return new static(
       $container->get('entity_type.manager'),
       $container->get('token'),
-      $container->get('eic_seo.alias_cleaner')
+      $container->get('eic_seo.alias_cleaner'),
+      $container->get('request_stack')
     );
   }
 
@@ -95,34 +112,39 @@ class GroupTokens implements ContainerInjectionInterface {
    */
   public function tokens($type, $tokens, array $data, array $options, BubbleableMetadata $bubbleable_metadata) {
     $replacements = [];
+    $base_url = $this->requestStack->getCurrentRequest()->getBaseUrl();
 
     // Node tokens.
     if ($type === 'node' && !empty($data['node'])) {
       foreach ($tokens as $name => $original) {
         switch ($name) {
           case 'node_group_url':
-            if (isset($data['node'])) {
-              if (($node = $data['node']) && $node instanceof NodeInterface) {
-                // If node belongs to a group.
-                if ($group_contents = $this->entityTypeManager->getStorage('group_content')->loadByEntity($node)) {
-                  /** @var \Drupal\group\Entity\GroupContentInterface $group_content */
-                  $group_content = reset($group_contents);
+            if (($node = $data['node']) && !$node instanceof NodeInterface) {
+              break;
+            }
 
-                  if ($group_content->hasTranslation($node->language()->getId())) {
-                    $group = $group_content->getGroup()->getTranslation($node->language()->getId());
-                  }
-                  else {
-                    $group = $group_content->getGroup();
-                  }
+            // If node belongs to a group.
+            if ($group_contents = $this->entityTypeManager->getStorage('group_content')->loadByEntity($node)) {
+              /** @var \Drupal\group\Entity\GroupContentInterface $group_content */
+              $group_content = reset($group_contents);
 
-                  $replacements[$original] = $group->toUrl()->toString();
-                }
-              }
+              $has_translation = $group_content->hasTranslation($node->language()->getId());
+              $group = $has_translation
+               ? $group_content->getGroup()->getTranslation($node->language()->getId())
+               : $group_content->getGroup();
+
+              $group_url = $group->toUrl()->toString();
+
+              // If base path is presented in group URL, we need to remove
+              // it in order to avoid duplicated base paths.
+              $has_base_path = substr($group_url, 0, strlen($base_url)) === $base_url;
+              $replacements[$original] = $has_base_path
+                ? substr_replace($group_url, '', 0, strlen($base_url))
+                : $group_url;
             }
             break;
 
         }
-
       }
     }
 

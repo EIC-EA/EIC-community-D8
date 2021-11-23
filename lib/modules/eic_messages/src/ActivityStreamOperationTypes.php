@@ -13,4 +13,5 @@ final class ActivityStreamOperationTypes {
 
   const UPDATED_ENTITY = 'updated';
 
+  const SHARED_ENTITY = 'shared';
 }

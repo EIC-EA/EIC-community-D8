@@ -2,14 +2,11 @@
 
 namespace Drupal\eic_messages\Hooks;
 
+use Drupal\content_moderation\ModerationInformationInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Drupal\content_moderation\ModerationInformationInterface;
-use Drupal\eic_messages\MessageHelper;
-use Drupal\eic_messages\Service\MessageCreatorBase;
-use Drupal\eic_user\UserHelper;
+use Drupal\eic_messages\Service\MessageBusInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -17,7 +14,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @package Drupal\eic_messages\Hooks
  */
-class EntityOperations extends MessageCreatorBase implements ContainerInjectionInterface {
+class EntityOperations implements ContainerInjectionInterface {
 
   use StringTranslationTrait;
 
@@ -27,26 +24,20 @@ class EntityOperations extends MessageCreatorBase implements ContainerInjectionI
   private $moderationInformation;
 
   /**
-   * EntityUpdate constructor.
-   *
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
-   * @param \Drupal\eic_messages\MessageHelper $eic_messages_helper
-   * @param \Drupal\eic_user\UserHelper $eic_user_helper
+   * @var \Drupal\eic_messages\Service\MessageBusInterface
+   */
+  private $messageBus;
+
+  /**
    * @param \Drupal\content_moderation\ModerationInformationInterface $moderationInformation
+   * @param \Drupal\eic_messages\Service\MessageBusInterface $message_bus
    */
   public function __construct(
-    EntityTypeManagerInterface $entity_type_manager,
-    MessageHelper $eic_messages_helper,
-    UserHelper $eic_user_helper,
-    ModerationInformationInterface $moderationInformation
+    ModerationInformationInterface $moderationInformation,
+    MessageBusInterface $message_bus
   ) {
-    parent::__construct(
-      $entity_type_manager,
-      $eic_messages_helper,
-      $eic_user_helper
-    );
-
     $this->moderationInformation = $moderationInformation;
+    $this->messageBus = $message_bus;
   }
 
   /**
@@ -54,10 +45,8 @@ class EntityOperations extends MessageCreatorBase implements ContainerInjectionI
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('entity_type.manager'),
-      $container->get('eic_messages.helper'),
-      $container->get('eic_user.helper'),
-      $container->get('content_moderation.moderation_information')
+      $container->get('content_moderation.moderation_information'),
+      $container->get('eic_messages.message_bus')
     );
   }
 
@@ -80,16 +69,12 @@ class EntityOperations extends MessageCreatorBase implements ContainerInjectionI
       return;
     }
 
-    $message = $this->entityTypeManager->getStorage('message')
-      ->create([
-        'template' => 'notify_archived_republished',
-        'uid' => $entity->getOwnerId(),
-        'field_message_subject' => $this->t('Your content is published again'),
-        'field_referenced_entity_label' => $entity->label(),
-      ]);
-
-    $message->save();
-    $this->processMessages([$message]);
+    $this->messageBus->dispatch([
+      'template' => 'notify_archived_republished',
+      'uid' => $entity->getOwnerId(),
+      'field_message_subject' => $this->t('Your content is published again'),
+      'field_referenced_entity_label' => $entity->label(),
+    ]);
   }
 
 }

@@ -35,9 +35,7 @@
     {% endblock %}
 
     {% block aside %}
-      {% include "@theme/patterns/compositions/social-share.html.twig" with social_share|default({})|merge({
-        extra_classes: 'ecl-featured-list',
-      }) %}
+      {% include "@theme/patterns/compositions/follow-us.html.twig" with social_share only %}
 
       {% include "@theme/patterns/compositions/twitter-timeline.html.twig" with {
         icon_file_path: common.icon_file_path,

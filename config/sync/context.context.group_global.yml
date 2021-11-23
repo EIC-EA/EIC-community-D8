@@ -2,7 +2,10 @@ uuid: 092acf4e-0ac9-4e24-bad6-5ade6eab25d5
 langcode: en
 status: true
 dependencies:
+  config:
+    - group_content_menu.group_content_menu_type.group_main_menu
   module:
+    - eic_groups
     - group
     - route_condition
 name: group_global
@@ -15,6 +18,7 @@ conditions:
   group_type:
     id: group_type
     group_types:
+      event: event
       group: group
     negate: 0
     uuid: dbdc709b-c8e7-40ed-aea8-338920304ee4
@@ -29,24 +33,6 @@ conditions:
 reactions:
   blocks:
     blocks:
-      8c64fa91-2806-4f88-a5f2-723a137c6b72:
-        id: 'group_content_menu:group_main_menu'
-        label: 'Group - Main menu'
-        provider: group_content_menu
-        label_display: '0'
-        level: '1'
-        depth: '0'
-        expand_all_items: 0
-        region: page_header
-        weight: '1'
-        context_mapping:
-          group: '@group.group_route_context:group'
-        custom_id: group_content_menu_group_main_menu
-        theme: eic_community
-        css_class: ''
-        unique: 0
-        context_id: group_global
-        uuid: 8c64fa91-2806-4f88-a5f2-723a137c6b72
       6ebffc8d-ce4c-45ab-b138-e6dd4e22db28:
         id: eic_group_header
         label: 'EIC Group header'
@@ -62,6 +48,25 @@ reactions:
         unique: 1
         context_id: group_global
         uuid: 6ebffc8d-ce4c-45ab-b138-e6dd4e22db28
+      75a8b5e9-e237-4385-877d-0a462e12e2d7:
+        id: 'eic_group_content_menu:group_main_menu'
+        label: 'Group - Main menu'
+        provider: eic_groups
+        label_display: '0'
+        level: '1'
+        depth: '0'
+        expand_all_items: 0
+        region: page_header
+        weight: '1'
+        context_mapping:
+          group: '@group.group_route_context:group'
+        custom_id: eic_group_content_menu_group_main_menu
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: group_global
+        third_party_settings: {  }
+        uuid: 75a8b5e9-e237-4385-877d-0a462e12e2d7
     id: blocks
     saved: false
     uuid: eee2af2a-bea1-4c9a-8012-20aa5543365a

@@ -21,7 +21,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   label = @Translation("Group content access"),
  *   description = @Translation("Adds content access for group restriction."),
  *   stages = {
- *     "pre_index_save" = -10,
+ *     "preprocess_query" = 0,
  *   },
  * )
  */
@@ -95,7 +95,7 @@ class GroupAccessContent extends ProcessorPluginBase {
    */
   public function preprocessSolrSearchQuery(Query $query) {
     $visibility_condition = $this->buildGroupVisibilityQuery();
-    $field_query = $query->getParams()['fq'] ?: '';
+    $field_query = $query->getParams()['fq'] ?? '';
 
     $visibility_query = empty($field_query) ?
       $visibility_condition :

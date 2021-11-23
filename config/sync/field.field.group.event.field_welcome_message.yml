@@ -1,0 +1,21 @@
+uuid: c314f663-390b-4d4a-96ee-0dcf582e7f59
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.group.field_welcome_message
+    - group.type.event
+  module:
+    - text
+id: group.event.field_welcome_message
+field_name: field_welcome_message
+entity_type: group
+bundle: event
+label: 'Message to users invited to the event'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long

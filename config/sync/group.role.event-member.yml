@@ -1,0 +1,15 @@
+uuid: fd32fa60-a577-4012-ae7d-281734978f6c
+langcode: en
+status: true
+dependencies:
+  config:
+    - group.type.event
+id: event-member
+label: Member
+weight: -100
+internal: true
+audience: member
+group_type: event
+permissions_ui: true
+permissions:
+  - 'view group'

@@ -21,7 +21,7 @@
           <div class="ecl-simple-banner__action">
             {% if action.items is not empty %}
               {% include "@theme/patterns/compositions/collapsible-options.html.twig" with {
-                extra_classes: 'ecl-collapsible-options--aligns-from-center',
+                extra_classes: 'ecl-collapsible-options--aligns-from-center ecl-collapsible-options--actions',
                 collapse_label: action.label|default(action.link.label),
                 icon_file_path: icon_file_path,
                 items: action.items,

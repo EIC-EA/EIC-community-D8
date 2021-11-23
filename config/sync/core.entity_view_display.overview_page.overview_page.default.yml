@@ -4,31 +4,29 @@ status: true
 dependencies:
   config:
     - field.field.overview_page.overview_page.field_overview_block
-    - image.style.thumbnail
+    - field.field.overview_page.overview_page.field_overview_id
   module:
     - block_field
     - eic_overviews
-    - image
+    - options
 id: overview_page.overview_page.default
 targetEntityType: overview_page
 bundle: overview_page
 mode: default
 content:
-  banner_image:
-    type: image
-    label: hidden
+  field_overview_block:
+    type: block_field
     weight: 1
     region: content
-    settings:
-      image_style: thumbnail
-      image_link: ''
-    third_party_settings: {  }
-  field_overview_block:
-    weight: 2
     label: hidden
     settings: {  }
     third_party_settings: {  }
-    type: block_field
+  field_overview_id:
+    weight: 3
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: list_default
     region: content
   overview_block:
     label: hidden
@@ -48,6 +46,7 @@ content:
       link_to_entity: false
     third_party_settings: {  }
 hidden:
+  banner_image: true
   created: true
   langcode: true
   search_api_excerpt: true

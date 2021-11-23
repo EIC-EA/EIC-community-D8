@@ -165,6 +165,16 @@ class EntityOperations implements ContainerInjectionInterface {
       ];
     }
 
+    if ($entity->hasLinkTemplate('block-entity')
+      && $entity->toUrl('block-entity')->access()
+    ) {
+      $operations['block'] = [
+        'title' => $this->t('Block'),
+        'url' => $entity->toUrl('block-entity')
+          ->setRouteParameter('destination', $this->currentRequest->getRequestUri()),
+      ];
+    }
+
     return $operations;
   }
 
@@ -182,6 +192,17 @@ class EntityOperations implements ContainerInjectionInterface {
       $handler = $this->collector->getHandlerByType($request_type);
 
       return $handler->getActions($entity);
+    }
+
+    $operations = [];
+    if ($entity->hasLinkTemplate('block-entity')
+      && $entity->toUrl('block-entity')->access()
+    ) {
+      $operations['block'] = [
+        'title' => $this->t('Block'),
+        'url' => $entity->toUrl('block-entity')
+          ->setRouteParameter('destination', $this->currentRequest->getRequestUri()),
+      ];
     }
 
     $route_name = $this->routeMatch->getRouteName();
@@ -204,13 +225,13 @@ class EntityOperations implements ContainerInjectionInterface {
       && (int) $flag_id === FlaggedEntitiesListBuilder::VIEW_ARCHIVE_FLAG_ID
       && $url->access($this->account)
     ) {
-      return [
-        'publish' => [
-          'title' => $this->t('Publish'),
-          'url' => $url,
-        ],
+      $operations['publish'] = [
+        'title' => $this->t('Publish'),
+        'url' => $url,
       ];
     }
+
+    return $operations;
   }
 
   /**
@@ -315,6 +336,11 @@ class EntityOperations implements ContainerInjectionInterface {
     // If the entity bundle is not enabled in the flag configuration, we do
     // nothing.
     if (!empty($flag->getBundles()) && !in_array($flag_entity->bundle(), $flag->getBundles())) {
+      return;
+    }
+
+    // If entity is already flagged, we do nothing.
+    if ($this->flagService->getFlagging($flag, $flag_entity)) {
       return;
     }
 

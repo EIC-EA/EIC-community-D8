@@ -18,10 +18,10 @@
 
 {% if is_wiki_page %}
   {% set sidebar = "" %}
-  {% set extra_classes = "ecl-editorial-article--has-reversed-layout ecl-editorial-article--is-ready" %}
+  {% set extra_classes = "ecl-editorial-article--has-reversed-layout" %}
 {% else %}
   {% set sidebar = page.sidebar %}
-  {% set extra_classes = "ecl-editorial-article--has-reversed-layout ecl-editorial-article--is-collapsible ecl-editorial-article--is-ready" %}
+  {% set extra_classes = "ecl-editorial-article--has-reversed-layout ecl-editorial-article--is-collapsible" %}
 {% endif %}
 {% set page = page|merge({'sidebar': null}) %}
 

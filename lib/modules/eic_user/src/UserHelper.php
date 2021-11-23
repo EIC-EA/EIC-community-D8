@@ -9,6 +9,7 @@ use Drupal\Core\Render\Markup;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
+use Drupal\user\Entity\User;
 use Drupal\user\UserInterface;
 
 /**
@@ -55,6 +56,13 @@ class UserHelper {
   protected $userStorage;
 
   /**
+   * The entity type manager service.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
    * The current user.
    *
    * @var \Drupal\Core\Session\AccountInterface
@@ -71,6 +79,7 @@ class UserHelper {
    */
   public function __construct(EntityTypeManagerInterface $entity_type_manager, AccountInterface $account) {
     $this->userStorage = $entity_type_manager->getStorage('user');
+    $this->entityTypeManager = $entity_type_manager;
     $this->currentUser = $account;
   }
 
@@ -145,6 +154,37 @@ class UserHelper {
     }
 
     return FALSE;
+  }
+
+  /**
+   * @param \Drupal\user\UserInterface|NULL $user
+   *
+   * @return string
+   */
+  public function getFullName(UserInterface $user = NULL): string {
+    if (!$user instanceof UserInterface) {
+      $user_id = $this->currentUser->id();
+      $user = User::load($user_id);
+
+      if (!$user instanceof UserInterface) {
+        return $this->t('User not found', [], ['context' => 'eic_user']);
+      }
+    }
+
+    return realname_load($user) ?: '';
+  }
+
+  /**
+   * Returns the active member profile for the given user account.
+   *
+   * @param \Drupal\user\UserInterface $user
+   *  The user entity.
+   *
+   * @return \Drupal\profile\Entity\ProfileInterface|null
+   *  The profile. NULL if no matching entity was found.
+   */
+  public function getUserMemberProfile(UserInterface $user) {
+    return $this->entityTypeManager->getStorage('profile')->loadByUser($user, ProfileConst::MEMBER_PROFILE_TYPE_NAME);
   }
 
 }

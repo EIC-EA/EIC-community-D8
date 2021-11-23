@@ -1,0 +1,29 @@
+uuid: f38ce0cf-94b3-4bac-92ab-ea8c75e3a5da
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.message.field_group_ref
+    - group.type.group
+    - message.template.stream_share_content
+id: message.stream_share_content.field_group_ref
+field_name: field_group_ref
+entity_type: message
+bundle: stream_share_content
+label: 'Target group'
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:group'
+  handler_settings:
+    target_bundles:
+      group: group
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

@@ -79,7 +79,7 @@ interface HandlerInterface {
    * @param string $reason
    *   Reason given when opening the request.
    *
-   * @return bool|null
+   * @return \Drupal\flag\FlaggingInterface|null
    *   Result of the operation.
    */
   public function applyFlag(ContentEntityInterface $entity, string $reason);

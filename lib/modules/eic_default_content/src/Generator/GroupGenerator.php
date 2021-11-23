@@ -3,13 +3,11 @@
 namespace Drupal\eic_default_content\Generator;
 
 
-use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_groups\GroupsModerationHelper;
 use Drupal\group\Entity\Group;
 use Drupal\group\Entity\GroupContent;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\node\Entity\Node;
-use Drupal\user\Entity\User;
 
 /**
  * Class GroupGenerator
@@ -30,8 +28,9 @@ class GroupGenerator extends CoreGenerator {
 
     for ($i = 0; $i < 5; $i++) {
       $visibility = $i % 2 ? 'public' : 'private';
+      $group_number = $i + 1;
       $values = [
-        'label' => "Group #$i",
+        'label' => "Group #$group_number",
         'type' => 'group',
         'field_body' => $this->getFormattedText('full_html'),
         'field_welcome_message' => $this->getFormattedText('full_html'),
@@ -54,6 +53,7 @@ class GroupGenerator extends CoreGenerator {
       $group_flex_saver->saveGroupVisibility($group, $visibility);
 
       $this->createDiscussions($group);
+      $this->createGroupEvents($group);
     }
   }
 
@@ -75,11 +75,49 @@ class GroupGenerator extends CoreGenerator {
     $node = Node::create([
       'field_body' => $this->getFormattedText('full_html'),
       'type' => 'discussion',
-      'title' => 'Discussion in group #' . $group->id(),
+      'title' => 'Discussion in ' . $group->label(),
       'field_discussion_type' => 'idea',
       'field_vocab_topics' => $this->getRandomEntities('taxonomy_term', ['vid' => 'topics'], 3),
       'field_vocab_geo' => $this->getRandomEntities('taxonomy_term', ['vid' => 'geo'], 2),
       'status' => TRUE,
+      'uid' => 1
+    ]);
+
+    $node->save();
+    $group_content = GroupContent::create([
+      'type' => $content_type_id,
+      'gid' => $group->id(),
+      'entity_id' => $node->id(),
+    ]);
+    $group_content->save();
+  }
+
+  /**
+   * Creates a single group event (node) for the given group.
+   *
+   * @param \Drupal\group\Entity\GroupInterface $group
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   */
+  private function createGroupEvents(GroupInterface $group) {
+    $content_type_id = $group
+      ->getGroupType()
+      ->getContentPlugin('group_node:event')
+      ->getContentTypeConfigId();
+
+    $node = Node::create([
+      'field_body' => $this->getFormattedText('full_html'),
+      'type' => 'event',
+      'title' => 'Event in ' . $group->label(),
+      'field_link' => 'https://myevent.site',
+      'field_organised_by' => 'Someone',
+      'field_vocab_event_type' => $this->getRandomEntities('taxonomy_term', ['vid' => 'event_type'], 1),
+      'field_vocab_topics' => $this->getRandomEntities('taxonomy_term', ['vid' => 'topics'], 3),
+      'field_vocab_geo' => $this->getRandomEntities('taxonomy_term', ['vid' => 'geo'], 2),
+      'status' => TRUE,
+      'uid' => 1
     ]);
 
     $node->save();

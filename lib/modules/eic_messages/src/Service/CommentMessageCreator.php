@@ -3,55 +3,76 @@
 namespace Drupal\eic_messages\Service;
 
 use Drupal\comment\CommentInterface;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\eic_content\EICContentHelperInterface;
-use Drupal\eic_messages\MessageHelper;
 use Drupal\eic_messages\Util\ActivityStreamMessageTemplates;
-use Drupal\eic_user\UserHelper;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Class CommentMessageCreator.
+ * Provides a message creator class for comments.
+ *
+ * @package Drupal\eic_messages
  */
-class CommentMessageCreator extends MessageCreatorBase {
+class CommentMessageCreator implements ContainerInjectionInterface {
 
   /**
+   * @var \Drupal\Core\Routing\RouteMatchInterface
+   */
+  private $routeMatch;
+
+  /**
+   * The EIC Content helper service.
+   *
    * @var \Drupal\eic_content\EICContentHelperInterface
    */
   private $contentHelper;
 
   /**
-   * CommentMessageCreator constructor.
-   *
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
-   * @param \Drupal\eic_messages\MessageHelper $eic_messages_helper
-   * @param \Drupal\eic_user\UserHelper $eic_user_helper
+   * @var \Drupal\eic_messages\Service\MessageBusInterface
+   */
+  private $messageBus;
+
+  /**
+   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
    * @param \Drupal\eic_content\EICContentHelperInterface $content_helper
+   * @param \Drupal\eic_messages\Service\MessageBusInterface $message_bus
    */
   public function __construct(
-    EntityTypeManagerInterface $entity_type_manager,
-    MessageHelper $eic_messages_helper,
-    UserHelper $eic_user_helper,
-    EICContentHelperInterface $content_helper
+    RouteMatchInterface $route_match,
+    EICContentHelperInterface $content_helper,
+    MessageBusInterface $message_bus
   ) {
-    parent::__construct($entity_type_manager, $eic_messages_helper, $eic_user_helper);
-
+    $this->routeMatch = $route_match;
     $this->contentHelper = $content_helper;
+    $this->messageBus = $message_bus;
   }
 
   /**
-   * Creates an activity stream message for a comment on a content inside a group.
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('current_route_match'),
+      $container->get('eic_content.helper'),
+      $container->get('eic_messages.message_bus')
+    );
+  }
+
+  /**
+   * Creates an activity stream message for a comment that belongs to a group.
    *
-   * @param CommentInterface $entity
+   * @param \Drupal\comment\CommentInterface $entity
    *   The group having this content.
    * @param string $operation
-   *   The type of the operation. See ActivityStreamOperationTypes
+   *   The type of the operation. See ActivityStreamOperationTypes.
    */
   public function createCommentActivity(
     CommentInterface $entity,
     string $operation
   ) {
-    $route_match = \Drupal::routeMatch();
-    if (!in_array($route_match->getRouteName(), ['comment.reply', 'entity.comment.edit_form'])) {
+    if (!in_array($this->routeMatch->getRouteName(),
+      ['comment.reply', 'entity.comment.edit_form', 'eic_groups.discussion_add_comment'])) {
       return;
     }
 
@@ -63,22 +84,14 @@ class CommentMessageCreator extends MessageCreatorBase {
     }
 
     $group_content = reset($group_content);
-    $group = $group_content->getGroup();
-    $message = \Drupal::entityTypeManager()->getStorage('message')->create([
+    $this->messageBus->dispatch([
       'template' => ActivityStreamMessageTemplates::getTemplate($entity),
       'field_referenced_comment' => $entity,
       'field_referenced_node' => $commented_entity,
       'field_entity_type' => $entity->bundle(),
       'field_operation_type' => $operation,
-      'field_group_ref' => $group,
+      'field_group_ref' => $group_content->getGroup(),
     ]);
-
-    try {
-      $message->save();
-    } catch (\Exception $e) {
-      $logger = $this->getLogger('eic_messages');
-      $logger->error($e->getMessage());
-    }
   }
 
 }
