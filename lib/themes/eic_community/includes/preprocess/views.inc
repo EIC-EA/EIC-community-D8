@@ -34,7 +34,7 @@ function eic_community_preprocess_views_view(&$variables) {
   $key = $view->id() . '-' . $view->current_display;
   switch ($key) {
     case 'groups_homepage-block_groups_homepage':
-      if ($call_to_action_url = GlobalOverviewPages::getGlobalOverviewPageUrl('groups')) {
+      if ($call_to_action_url = GlobalOverviewPages::getGlobalOverviewPageUrl(GlobalOverviewPages::GROUPS)) {
         $variables['call_to_action'] = [
           'link' => [
             'label' => t('View all groups'),
@@ -45,7 +45,7 @@ function eic_community_preprocess_views_view(&$variables) {
       break;
 
     case 'groups_homepage-block_events_homepage':
-      if ($call_to_action_url = GlobalOverviewPages::getGlobalOverviewPageUrl('events')) {
+      if ($call_to_action_url = GlobalOverviewPages::getGlobalOverviewPageUrl(GlobalOverviewPages::EVENTS)) {
         $variables['call_to_action'] = [
           'link' => [
             'label' => t('View all events'),
