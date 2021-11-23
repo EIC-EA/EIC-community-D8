@@ -54,3 +54,19 @@ function eic_community_theme_suggestions_views_view_alter(array &$suggestions, a
 
   }
 }
+
+/**
+ * Implements hook_theme_suggestions_views_view_unformatted_alter().
+ */
+function eic_community_theme_suggestions_views_view_unformatted_alter(array &$suggestions, array $variables) {
+  // Add views specific suggestions.
+  switch ($variables['view']->id()) {
+    case 'taxonomy':
+      $suggestions[] = 'views_view_unformatted__nude';
+      break;
+  }
+
+  // Add suggestions for all views.
+  $suggestions[] = "views_view_unformatted__{$variables['view']->id()}";
+  $suggestions[] = "views_view_unformatted__{$variables['view']->id()}__{$variables['view']->current_display}";
+}
