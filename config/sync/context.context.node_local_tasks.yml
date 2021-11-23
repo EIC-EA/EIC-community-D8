@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   module:
+    - group
     - node
     - route_condition
 name: node_local_tasks
@@ -28,6 +29,15 @@ conditions:
     uuid: 65c2cb9e-9f35-4f74-bbb1-440e9500ebaf
     context_mapping:
       node: '@node.node_route_context:node'
+  group_type:
+    id: group_type
+    group_types:
+      event: event
+      group: group
+    negate: 1
+    uuid: 06419a13-1abe-47ba-b1cd-c28e13d21700
+    context_mapping:
+      group: '@group.group_route_context:group'
 reactions:
   blocks:
     blocks:
