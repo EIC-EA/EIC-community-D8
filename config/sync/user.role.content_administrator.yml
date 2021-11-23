@@ -8,6 +8,7 @@ weight: -7
 is_admin: null
 permissions:
   - 'access administration pages'
+  - 'access block content overview'
   - 'access comments'
   - 'access contact group users page'
   - 'access contact user page'
@@ -77,7 +78,14 @@ permissions:
   - 'publish archived content'
   - 'schedule publishing of nodes'
   - 'unflag recommend_group'
+  - 'update any basic block content'
+  - 'update any cta_tiles block content'
+  - 'update any facts_figures block content'
+  - 'update any latest_news_stories block content'
   - 'update any member profile'
+  - 'update any page_banner block content'
+  - 'update any social_media block content'
+  - 'update any tiles_reference block content'
   - 'update own member profile'
   - 'use group_wiki transition create_new_draft'
   - 'use group_wiki transition publish'
