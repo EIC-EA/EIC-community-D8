@@ -60,7 +60,7 @@ class GroupEventSourceType extends SourceType {
     return [
       Event::SOLR_FIELD_ID_WEIGHT_STATE => [
         'label' => $this->t('State (1. ongoing, 2. future, 3. past)', [], ['context' => 'eic_search']),
-        'ASC' => $this->t('Default', [], ['context' => 'eic_search'])
+        'ASC' => $this->t('Ongoing/upcoming', [], ['context' => 'eic_search'])
       ],
       'ss_drupal_timestamp' => [
         'label' => $this->t('Timestamp', [], ['context' => 'eic_search']),
