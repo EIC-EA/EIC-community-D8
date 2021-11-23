@@ -92,37 +92,47 @@ function _eic_community_render_event_detail_page(&$variables, EntityInterface $e
     ];
   }
 
-  $event_infos = [
-    'icon_file_path' => $variables['eic_icon_path'],
-    'title' => t('Event details', [], ['eic_community']),
-    'action' => $action,
-    'items' => [
-      $location_render,
-      [
-        'content' => ucfirst(implode($location_types, ' & ')),
-        'icon' => [
-          'type' => 'custom',
-          'name' => 'tag',
-        ],
+  $items = [];
+
+  if ($location_render) {
+    $items[] = $location_render;
+  }
+
+  $items = [
+    [
+      'content' => ucfirst(implode($location_types, ' & ')),
+      'icon' => [
+        'type' => 'custom',
+        'name' => 'tag',
       ],
-      [
-        'content' => 'From ' . $from_date->format('d/m/Y H\hi') . ' to ' . $end_date->format('d/m/Y H\hi'),
-        'icon' => [
-          'type' => 'custom',
-          'name' => 'calendar',
-        ],
+    ],
+    [
+      'content' => 'From ' . $from_date->format('d/m/Y H\hi') . ' to ' . $end_date->format('d/m/Y H\hi'),
+      'icon' => [
+        'type' => 'custom',
+        'name' => 'calendar',
       ],
-      [
-        'content' => implode(', ', array_map(function (\Drupal\taxonomy\Entity\Term $term) {
-          return $term->label();
-        }, $entity->get($fields_map[$entity_type]['languages'])->referencedEntities())),
-        'icon' => [
-          'type' => 'custom',
-          'name' => 'glob',
-        ],
+    ],
+    [
+      'content' => implode(', ', array_map(function (\Drupal\taxonomy\Entity\Term $term) {
+        return $term->label();
+      }, $entity->get($fields_map[$entity_type]['languages'])->referencedEntities())),
+      'icon' => [
+        'type' => 'custom',
+        'name' => 'glob',
       ],
     ],
   ];
+
+  $event_infos = [
+    'icon_file_path' => $variables['eic_icon_path'],
+    'title' => t('Event details', [], ['eic_community']),
+    'items' => $items,
+  ];
+
+  if (!empty($action)) {
+    $event_infos['action'] = $action;
+  }
 
   if ($social_links = $entity->get('field_social_links')->getValue()) {
     $socials_platform_mapping = [
