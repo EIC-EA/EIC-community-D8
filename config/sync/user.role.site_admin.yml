@@ -27,6 +27,7 @@ permissions:
   - 'administer users'
   - 'close archive request'
   - 'close delete request'
+  - 'create book content'
   - 'create eic_document media'
   - 'create group group'
   - 'create image media'
