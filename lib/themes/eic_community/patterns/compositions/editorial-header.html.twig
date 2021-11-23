@@ -76,7 +76,7 @@
                       {% endset %}
 
                       {% include "@theme/patterns/compositions/collapsible-options.html.twig" with {
-                        extra_classes: 'ecl-collapsible-options--aligns-from-right ecl-collapsible-options--actions',
+                        extra_classes: 'ecl-collapsible-options--aligns-from-right ecl-collapsible-options--actions ' ~ action.extra_classes|default(''),
                         collapse_label: action.label|default(action.link.label),
                         icon: action.icon|default(''),
                         icon_file_path: icon_file_path,
