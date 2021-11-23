@@ -19,93 +19,19 @@
 
 
 {% block content %}
-  {% embed "@theme/patterns/compositions/editorial-overview.html.twig" with editorial_article|default({}) %}
-    {% block content %}
 
-      <h2>{{ title }}</h2>
-      <p>{{ body }}</p>
-
-      {% if stats %}
-        {% include '@theme/patterns/compositions/topic/topic.stats.html.twig' with stats|default({})|merge({
-          icon_file_path: icon_file_path
-        }) %}
-      {% endif %}
-
-      {% if activityStream %}
-        {% include '@theme/patterns/compositions/activity-stream.html.twig' with activityStream|default({})|merge({
-          title_element: "h2"
-        }) %}
-      {% endif %}
-
-      {% if related_groups %}
-        {% include "@theme/patterns/compositions/featured-content-collection.html.twig" with related_groups|default({})|merge({
-          extra_classes: "ecl-section-wrapper ecl-section-wrapper--is-white ecl-featured-content-collection--has-overview-layout",
-          icon_file_path: common.icon_file_path,
-          no_container: true,
-          items_extra_classes: "ecl-featured-content-collection__item--big"
-        }) only %}
-      {% endif %}
-
-      {% if related_companies %}
-        {% include "@theme/patterns/compositions/featured-content-collection.html.twig" with related_companies|default({})|merge({
-          icon_file_path: common.icon_file_path,
-          extra_classes: "ecl-section-wrapper ecl-section-wrapper--is-white ecl-featured-content-collection--has-overview-layout",
-          no_container: true
-        }) only %}
-      {% endif %}
+  <div class="ecl-container ecl-topic__overview">
+    <h2>{{ title }}</h2>
+    <p>{{ body }}</p>
 
 
-      {% if related_stories %}
-        {% include "@theme/patterns/compositions/featured-content-collection.html.twig" with related_stories|default({})|merge({
-          icon_file_path: common.icon_file_path,
-          extra_classes: "ecl-section-wrapper ecl-section-wrapper--is-white ecl-featured-content-collection--has-list-layout",
-          no_container: true,
+    {% if topics %}
+      {% include "@theme/patterns/compositions/topic/topic.overview.list.html.twig" with topics|merge({
+        icon_file_path: icon_file_path,
+      }) %}
+    {% endif %}
 
-        }) only %}
-      {% endif %}
-
-      {% if discussions %}
-        {% include "@theme/patterns/compositions/featured-content-collection.html.twig" with discussions|default({})|merge({
-          icon_file_path: common.icon_file_path,
-          extra_classes: "ecl-section-wrapper ecl-section-wrapper--is-white ecl-featured-content-collection--has-list-layout",
-          no_container: true,
-          items_extra_classes: "ecl-featured-content-collection__item--big"
-        }) only %}
-      {% endif %}
-
-      {% if related_documents %}
-        {% include "@theme/patterns/compositions/featured-content-collection.html.twig" with related_documents|default({})|merge({
-          icon_file_path: common.icon_file_path,
-          extra_classes: "ecl-section-wrapper ecl-section-wrapper--is-white ecl-featured-content-collection--has-list-layout",
-          no_container: true
-        }) only %}
-      {% endif %}
-
-      {% if events %}
-        {% include "@theme/patterns/compositions/featured-content-collection.html.twig" with events|default({})|merge({
-          icon_file_path: common.icon_file_path,
-          extra_classes: "ecl-section-wrapper ecl-section-wrapper--is-white ecl-featured-content-collection--has-list-layout",
-          no_container: true,
-          items_extra_classes: "ecl-featured-content-collection__item--big"
-        }) only %}
-      {% endif %}
-
-      {{ content }}
-
-    {% endblock %}
-
-    {% block sidebar %}
-
-      {% if topics %}
-        {% include "@theme/patterns/compositions/featured-topics.html.twig" with topics|default({}) %}
-      {% endif %}
-
-      {% if contributors %}
-        {% include "@theme/patterns/compositions/featured-contributors.html.twig" with contributors|default({}) %}
-      {% endif %}
-
-    {% endblock %}
-  {% endembed %}
-
+    {{ content }}
+  </div>
 
 {% endblock %}

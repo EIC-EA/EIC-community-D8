@@ -19,7 +19,20 @@ function eic_community_theme_suggestions_views_view_alter(array &$suggestions, a
     case 'group_events':
     case 'group_related_groups':
     case 'taxonomy_related_content':
-      $suggestions[] = "views_view__featured_content_collection";
+
+      switch ($variables['view']->current_display) {
+        case 'experts':
+          $suggestions[] = "views_view__featured_contributors";
+          break;
+
+        default:
+          $suggestions[] = "views_view__featured_content_collection";
+          break;
+      }
+      break;
+
+    case 'taxonomy':
+      $suggestions[] = "views_view__featured_topics";
       break;
 
     case 'groups_homepage':
