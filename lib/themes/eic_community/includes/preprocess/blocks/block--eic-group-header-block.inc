@@ -147,6 +147,18 @@ function eic_community_preprocess_eic_group_header_block(array &$variables) {
         ],
       ];
 
+      switch ($name) {
+        case 'group-request-archival':
+          $flag['icon'] = [
+            'type' => 'general',
+            'name' => '_package',
+          ];
+          break;
+        case 'group-request-delete':
+          $icon_name = 'bin';
+          break;
+      }
+
       if (strlen($icon_name) > 0) {
         $flag['icon'] = [
           'name' => $icon_name,
@@ -188,7 +200,6 @@ function eic_community_preprocess_eic_group_header_block(array &$variables) {
         $icon_name = '';
         $label = '';
         break;
-
     }
 
     $stats[] = [
@@ -203,7 +214,8 @@ function eic_community_preprocess_eic_group_header_block(array &$variables) {
 
   $variables['group_values']['stats'] = $stats;
 
-  $tag = \Drupal::service('oec_group_flex.helper')->getGroupVisibilityTagLabel($group);
+  $tag = \Drupal::service('oec_group_flex.helper')
+    ->getGroupVisibilityTagLabel($group);
 
   $variables['group_values']['tags'][] = [
     'extra_classes' => 'ecl-tag--is-' . strtolower($tag),
@@ -216,5 +228,4 @@ function eic_community_preprocess_eic_group_header_block(array &$variables) {
   // Adds url to navigate back to the list of groups.
   $back_url = GlobalOverviewPages::getGlobalOverviewPageUrl(GlobalOverviewPages::GROUPS);
   $variables['group_values']['back_url'] = $back_url->toString();
-
 }
