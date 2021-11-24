@@ -467,11 +467,11 @@
       }
     }
 
-    @include ecl-media-breakpoint-up('md') {
-      .ecl-teaser-overview--has-columns & {
-        display: block;
-      }
-    }
+    //@include ecl-media-breakpoint-up('md') {
+    //  .ecl-teaser-overview--has-columns & {
+    //    display: block;
+    //  }
+    //}
   }
 
   &__content {
@@ -576,6 +576,7 @@
       @include ecl-media-breakpoint-up('md') {
         flex: 1;
         min-width: 0;
+        max-width: 200px;
         overflow: hidden;
         text-overflow: ellipsis;
       }
