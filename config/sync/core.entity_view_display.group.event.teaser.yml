@@ -1,8 +1,9 @@
-uuid: bc73ed71-acb0-421e-92a1-c6318ad45f57
+uuid: 56a8a4a6-69d8-4032-a579-d95d94f9508b
 langcode: en
 status: true
 dependencies:
   config:
+    - core.entity_view_mode.group.teaser
     - field.field.group.event.field_body
     - field.field.group.event.field_date_range
     - field.field.group.event.field_document_additional
@@ -34,16 +35,16 @@ dependencies:
     - options
     - social_link_field
     - text
-id: group.event.default
+id: group.event.teaser
 targetEntityType: group
 bundle: event
-mode: default
+mode: teaser
 content:
   content_moderation_control:
     weight: -20
-    region: content
     settings: {  }
     third_party_settings: {  }
+    region: content
   field_body:
     weight: 12
     label: above
@@ -243,14 +244,14 @@ content:
     region: content
   flag_follow_group:
     weight: 10
-    region: content
     settings: {  }
     third_party_settings: {  }
+    region: content
   flag_recommend_group:
     weight: 10
-    region: content
     settings: {  }
     third_party_settings: {  }
+    region: content
   label:
     label: hidden
     type: string

@@ -16,6 +16,10 @@ function eic_community_preprocess_page__taxonomy__term(&$variables) {
   /** @var \Drupal\taxonomy\TermInterface $term */
   $term = \Drupal::routeMatch()->getParameter('taxonomy_term');
 
+  if (!$term) {
+    return;
+  }
+
   if ($term->bundle() !== Topics::TERM_VOCABULARY_TOPICS_ID) {
     return;
   }

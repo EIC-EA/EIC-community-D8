@@ -76,9 +76,16 @@ function _eic_community_get_share_group_content_link(
         continue;
       }
 
-      $formatted_groups[] = [
+      if (!isset($formatted_groups[$group->bundle()])) {
+        $formatted_groups[$group->bundle()] = [
+          'label' => $group->type->entity->label(),
+          'entities' => [],
+        ];
+      }
+
+      $formatted_groups[$group->bundle()]['entities'][] = [
         'id' => $group->id(),
-        'name' => $group->label(),
+        'label' => $group->label(),
       ];
     }
   }
@@ -216,7 +223,6 @@ function _eic_community_get_entity_stats(EntityInterface $entity, array $stat_ty
         $item['label'] = t('Likes');
         $item['icon']['name'] = 'like';
         break;
-
     }
 
     $item['icon']['type'] = 'custom';

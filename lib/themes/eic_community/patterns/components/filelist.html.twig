@@ -13,7 +13,7 @@
       {% for file in files %}
         <article class="ecl-filelist__file">
           <header class="ecl-filelist__file-header">
-            <{{ file_title_element }} class="ecl-filelist__file-name">{{ file.name }}</{{ file_title_element }}>
+            <a href="{{ file.path }}" class="ecl-filelist__file-name">{{ file.name }}</a>
             <div class="ecl-filelist__file-type">{{ file.type }}</div>
             <div class="ecl-filelist__file-stats">
               {% for stat in file.stats %}

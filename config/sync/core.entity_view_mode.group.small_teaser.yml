@@ -1,0 +1,10 @@
+uuid: 79c1fd40-7ae0-4798-8582-ec5521d358b5
+langcode: en
+status: true
+dependencies:
+  module:
+    - group
+id: group.small_teaser
+label: 'Small teaser'
+targetEntityType: group
+cache: true
