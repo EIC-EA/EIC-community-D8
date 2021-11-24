@@ -11,4 +11,4 @@ services:
 
   eic_statistics.helper:
     class: Drupal\eic_statistics\StatisticsHelper
-    arguments: ['@eic_statistics.storage', '@statistics.storage.node', '@eic_media_statistics.entity_file_download_count', '@flag', '@eic_comments.helper']
+    arguments: ['@eic_statistics.storage', '@statistics.storage.node', '@eic_media_statistics.entity_file_download_count', '@flag', '@eic_comments.helper', '@eic_user.helper', '@eic_groups.helper']
