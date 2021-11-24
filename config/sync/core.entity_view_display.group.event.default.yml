@@ -41,9 +41,9 @@ mode: default
 content:
   content_moderation_control:
     weight: -20
+    region: content
     settings: {  }
     third_party_settings: {  }
-    region: content
   field_body:
     weight: 12
     label: above
@@ -243,14 +243,14 @@ content:
     region: content
   flag_follow_group:
     weight: 10
+    region: content
     settings: {  }
     third_party_settings: {  }
-    region: content
   flag_recommend_group:
     weight: 10
+    region: content
     settings: {  }
     third_party_settings: {  }
-    region: content
   label:
     label: hidden
     type: string

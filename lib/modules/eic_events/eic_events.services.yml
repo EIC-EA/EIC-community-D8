@@ -1,0 +1,4 @@
+services:
+  eic_events.update_solr_events:
+    class: Drupal\eic_events\Commands\UpdateSolrEvents
+    arguments: ['@entity_type.manager', '@eic_search.solr_document_processor']

@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\eic_helper\DateTimeHelper;
 use Drupal\taxonomy\TermInterface;
 
 /**
@@ -15,30 +16,51 @@ use Drupal\taxonomy\TermInterface;
  *   The timestamp.
  * @param \DateTimeZone $timezone
  *   The timezone to use. Defaults to server timezone.
+ * @param string $format
+ *   The date format to display.
  *
  * @return array
  *   Array of key/value pairs suitable for the ECL Date block template.
  *
  * @see ecl-date-block.html.twig
  */
-function _eic_community_preprocess_ecl_date_block(int $timestamp, DateTimeZone $timezone = NULL) {
+function _eic_community_preprocess_ecl_date_block(int $timestamp, DateTimeZone $timezone = NULL, $format = DateTimeHelper::DATE_FORMAT_LONG) {
   $date = new DateTime();
   if (empty($timezone)) {
     $timezone = $date->getTimezone();
   }
   $date->setTimezone($timezone);
   $date->setTimestamp($timestamp);
+  $value = [];
 
-  return [
-    'variant' => '',
-    'day' => $date->format('d'),
-    'month' => $date->format('m'),
-    'year' => $date->format('Y'),
-    'date_time' => '',
-    'month_full' => $date->format('F'),
-    'extra_classes' => '',
-    'extra_attributes' => [],
-  ];
+  switch ($format) {
+    case DateTimeHelper::DATE_FORMAT_SHORT:
+      $value = [
+        'day' => $date->format('d'),
+        'month' => $date->format('M'),
+        'year' => $date->format('Y'),
+        'date_time' => '',
+        'month_full' => $date->format('F'),
+        'extra_classes' => '',
+        'extra_attributes' => [],
+      ];
+      break;
+
+    default:
+      $value = [
+        'day' => $date->format('d'),
+        'month' => $date->format('m'),
+        'year' => $date->format('Y'),
+        'date_time' => '',
+        'month_full' => $date->format('F'),
+        'extra_classes' => '',
+        'extra_attributes' => [],
+      ];
+      break;
+
+  }
+
+  return $value;
 }
 
 /**

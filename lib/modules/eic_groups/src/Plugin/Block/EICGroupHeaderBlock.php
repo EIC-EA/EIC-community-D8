@@ -253,6 +253,15 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
     // first.
     ksort($visible_group_operation_links);
 
+    if (!empty($visible_group_operation_links)) {
+      $visible_group_operation_links = [
+        [
+          'label' => $this->t('Group management'),
+          'links' => $visible_group_operation_links,
+        ],
+      ];
+    }
+
     // Get all group flags the user has access to.
     $membership_links = $this->getGroupFlagLinks($group);
 
@@ -267,7 +276,8 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
         'bundle' => $group->bundle(),
         'title' => $group->label(),
         'description' => $this->getTruncatedGroupDescription($group),
-        'operation_links' => array_merge($operation_links, $node_operation_links, $visible_group_operation_links),
+        'group_operation_links' => $visible_group_operation_links,
+        'operation_links' => array_merge($operation_links, $node_operation_links),
         'membership_links' => array_merge($membership_links, $user_operation_links),
         'stats' => [
           'members' => $group_statistics->getMembersCount(),

@@ -3,6 +3,7 @@
 namespace Drupal\eic_search\Search\Sources;
 
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\eic_events\Constants\Event;
 use Drupal\eic_flags\FlagType;
 use Drupal\eic_search\Service\SolrDocumentProcessor;
 
@@ -45,8 +46,9 @@ class GroupEventSourceType extends SourceType {
   public function getAvailableFacets(): array {
     return [
       'ss_content_event_type_string' => $this->t('Type', [], ['context' => 'eic_search']),
-      'sm_content_field_vocab_topics_string' => $this->t('Topic', [], ['context' => 'eic_search']),
       'sm_content_field_location_type' => $this->t('Location', [], ['context' => 'eic_search']),
+      Event::SOLR_FIELD_ID_WEIGHT_STATE_LABEL => $this->t('Time', [], ['context' => 'eic_search']),
+      'sm_content_field_vocab_topics_string' => $this->t('Topic', [], ['context' => 'eic_search']),
       'ss_content_country_code' => $this->t('Country', [], ['context' => 'eic_search']),
     ];
   }
@@ -56,10 +58,9 @@ class GroupEventSourceType extends SourceType {
    */
   public function getAvailableSortOptions(): array {
     return [
-      'its_flag_highlight_content' => [
-        'label' => $this->t('Highlight', [], ['context' => 'eic_search']),
-        'DESC' => $this->t('Highlighted first', [], ['context' => 'eic_search']),
-        'ASC' => $this->t('Highlighted last', [], ['context' => 'eic_search']),
+      Event::SOLR_FIELD_ID_WEIGHT_STATE => [
+        'label' => $this->t('State (1. ongoing, 2. future, 3. past)', [], ['context' => 'eic_search']),
+        'ASC' => $this->t('Ongoing/upcoming', [], ['context' => 'eic_search'])
       ],
       'ss_drupal_timestamp' => [
         'label' => $this->t('Timestamp', [], ['context' => 'eic_search']),
@@ -160,7 +161,7 @@ class GroupEventSourceType extends SourceType {
    * @inheritDoc
    */
   public function getDefaultSort(): array {
-    return [GroupEventSourceType::START_DATE_SOLR_FIELD_ID, 'ASC'];
+    return [Event::SOLR_FIELD_ID_WEIGHT_STATE, 'ASC'];
   }
 
 }
