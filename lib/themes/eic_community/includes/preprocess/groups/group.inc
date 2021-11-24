@@ -9,9 +9,9 @@ use Drupal\Core\Render\Markup;
 use Drupal\eic_community\ValueObject\ImageValueObject;
 
 /**
- * Implements hook_preprocess_group().
+ * Implements hook_preprocess_group__group().
  */
-function eic_community_preprocess_group(array &$variables) {
+function eic_community_preprocess_group__group(array &$variables) {
   /** @var \Drupal\group\Entity\GroupInterface $group */
   $group = $variables['group'];
 
