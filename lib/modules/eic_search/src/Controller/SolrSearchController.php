@@ -3,10 +3,12 @@
 namespace Drupal\eic_search\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\eic_groups\Constants\GroupVisibilityType;
 use Drupal\eic_search\Plugin\search_api\processor\GroupAccessContent;
 use Drupal\eic_search\Search\Sources\GroupSourceType;
 use Drupal\eic_search\Search\Sources\SourceTypeInterface;
 use Drupal\eic_user\UserHelper;
+use Drupal\group\Entity\Group;
 use Drupal\group\GroupMembership;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\user\Entity\User;
@@ -96,8 +98,7 @@ class SolrSearchController extends ControllerBase {
         $query_fields_string = '(' . implode(' OR ', $query_fields) . ')';
       }
 
-      if ($current_group) {
-        $group_id_fields = $source->getPrefilteredGroupFieldId();
+      if ($current_group && $group_id_fields = $source->getPrefilteredGroupFieldId()) {
         $group_query = [];
         foreach ($group_id_fields as $group_id_field) {
           $group_query[] = "$group_id_field:($current_group)";
@@ -200,6 +201,14 @@ class SolrSearchController extends ControllerBase {
 
     if ($facets_query) {
       $fq .= $facets_query;
+    }
+
+    if (
+      $source instanceof SourceTypeInterface &&
+      $current_group &&
+      $source->prefilterByGroupVisibility()
+    ) {
+      $this->generateQueryVisibilityGroup($fq, $current_group);
     }
 
     $this->generateQueryInterests($fq, $facets_interests);
@@ -397,6 +406,57 @@ class SolrSearchController extends ControllerBase {
     //If no pagination, it's a load more so we start at 1
     $solariumQuery->setStart(0);
     $solariumQuery->setRows($offset * $page);
+  }
+
+  private function generateQueryVisibilityGroup(&$fq, $group_id) {
+    $query = '';
+    $group = Group::load($group_id);
+
+    /** @var \Drupal\oec_group_flex\GroupVisibilityDatabaseStorage $group_visibility_storage */
+    $group_visibility_storage = \Drupal::service('oec_group_flex.group_visibility.storage');
+    $group_visibility_entity = $group_visibility_storage->load($group->id());
+    $visibility_type = $group_visibility_entity ?
+      $group_visibility_entity->getType() :
+      NULL;
+
+    switch ($visibility_type) {
+      case GroupVisibilityType::GROUP_VISIBILITY_PRIVATE:
+      case GroupVisibilityType::GROUP_VISIBILITY_COMMUNITY:
+        $query = '(sm_user_profile_role_array:*' . UserHelper::ROLE_TRUSTED_USER . '*)';
+        break;
+
+      // In this case, when we have a custom restriction, we can have multiple restriction options like email domain, trusted users, organisation, ...
+      case GroupVisibilityType::GROUP_VISIBILITY_CUSTOM_RESTRICTED:
+        $options = $group_visibility_entity->getOptions();
+        foreach ($options as $key => $option) {
+          // restricted_email_domains_status can be false so we need to check if enable
+          if (GroupVisibilityType::GROUP_VISIBILITY_OPTION_EMAIL_DOMAIN === $key && $option[GroupVisibilityType::GROUP_VISIBILITY_OPTION_EMAIL_DOMAIN . '_status']) {
+            $authorized_emails = $option[GroupVisibilityType::GROUP_VISIBILITY_OPTION_EMAIL_DOMAIN . '_conf'];
+            $authorized_emails = str_replace(' ', '', $authorized_emails);
+            $emails = explode(',', $authorized_emails);
+            $emails = implode(' OR *', $emails);
+            $query = '(ss_user_mail:(*' . $emails . '))';
+          }
+
+          if (GroupVisibilityType::GROUP_VISIBILITY_OPTION_TRUSTED_USERS === $key && $option[GroupVisibilityType::GROUP_VISIBILITY_OPTION_TRUSTED_USERS . '_status']) {
+            $user_ids = $option[GroupVisibilityType::GROUP_VISIBILITY_OPTION_TRUSTED_USERS . '_conf'];
+            $users = explode(',', $users);
+            $users = implode(' OR ', $users);
+            $query = '(its_user_id:(' . $users . '))';
+          }
+        }
+        break;
+      default:
+        $group_visibility = GroupVisibilityType::GROUP_VISIBILITY_PUBLIC;
+        break;
+    }
+
+    if (!empty($fq)) {
+      $fq .= " AND !(itm_user__group_content__uid_gid:($group_id)) AND $query";
+      return;
+    }
+
+    $fq .= "!itm_user__group_content__uid_gid:($group_id) AND $query";
   }
 
 }

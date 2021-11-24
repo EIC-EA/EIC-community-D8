@@ -124,4 +124,11 @@ abstract class SourceType implements SourceTypeInterface {
     return [];
   }
 
+  /**
+   * @inheritDoc
+   */
+  public function prefilterByGroupVisibility(): bool {
+    return FALSE;
+  }
+
 }

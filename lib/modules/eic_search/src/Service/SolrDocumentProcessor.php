@@ -845,7 +845,10 @@ class SolrDocumentProcessor {
    */
   private function setGroupOwner(Document &$document, $key, $group) {
     $group_owner = EICGroupsHelper::getGroupOwner($group);
-    $document->addField($key, $group_owner->id() ?? -1);
+    $document->addField(
+      $key,
+      $group_owner instanceof UserInterface ? $group_owner->id(): -1
+    );
   }
 
   /**
