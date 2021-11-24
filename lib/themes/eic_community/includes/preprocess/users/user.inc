@@ -101,11 +101,13 @@ function eic_community_get_teaser_user_display(UserInterface $user) {
   if (!$user->get('field_media')->isEmpty()) {
     /** @var \Drupal\media\Entity\Media $media */
     $media = \Drupal::service('entity.repository')->getTranslationFromContext($user->get('field_media')->entity);
-    $image_item = ImageValueObject::fromImageItem($media->get('oe_media_image')->first());
-    $author['image'] = [
-      'src' => $image_item->getSource(),
-      'alt' => $author['name'],
-    ];
+    if ($media->bundle() == 'image') {
+      $image_item = ImageValueObject::fromImageItem($media->get('oe_media_image')->first());
+      $author['image'] = [
+        'src' => $image_item->getSource(),
+        'alt' => $author['name'],
+      ];
+    }
   }
 
   return $author;
