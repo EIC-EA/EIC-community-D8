@@ -52,7 +52,7 @@
 
     &__icon {
       position: absolute;
-      top: #{0 - map-get($ecl-spacing, 'xs')};
+      top: #{0 + map-get($ecl-spacing, '2xs')};
       left: 0;
       width: map-get($ecl-media, '3xs');
       height: map-get($ecl-media, '3xs');
