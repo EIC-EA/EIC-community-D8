@@ -6,6 +6,7 @@ use Drupal\content_moderation\ModerationInformationInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_messages\Service\MessageBusInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -125,6 +126,21 @@ class EntityOperations implements ContainerInjectionInterface {
         'title' => $entity->label(),
       ],
     ];
+
+    if ($entity->getEntityTypeId() === 'group') {
+      /** @var \Drupal\group\Entity\GroupInterface $entity */
+
+      $group_owners = $entity->getMembers([EICGroupsHelper::GROUP_OWNER_ROLE]);
+
+      // The group doesn't have any owner and therefore we don't send any
+      // notification.
+      if (empty($group_owners)) {
+        return;
+      }
+
+      // Updates message uid with the right group owner uid.
+      $message['uid'] = reset($group_owners)->getUser()->id();
+    }
 
     switch ($previous_state) {
       case self::MODERATION_STATE_ARCHIVED:
