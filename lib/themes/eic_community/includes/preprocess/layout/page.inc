@@ -165,7 +165,7 @@ function _preprocess_node_page(&$variables) {
         $variables['editorial_header'] = [
           // @todo Not the correct display, has to be created in storybook.
           'type' => [
-            'label' => $node->private->value === '0' ? t('Public') : t('Community members only'),
+            'label' => $node->private->value === '1' ? t('Community members only') : t('Public'),
           ],
           'meta' => [
             ['label' => $node->type->entity->label()],
