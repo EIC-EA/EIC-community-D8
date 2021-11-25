@@ -2,6 +2,7 @@
 
 namespace Drupal\eic_groups\Plugin\Block;
 
+use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\Core\Block\Annotation\Block;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
@@ -102,6 +103,25 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
       return [];
     }
 
+    $is_comment_closed = FALSE;
+
+    // If the comment system is closed or hidden, do not output the block.
+    if (
+      $node->hasField('field_comments') &&
+      isset($node->get('field_comments')->getValue()[0])
+    ) {
+      $comment_status = (int) $node->get('field_comments')->getValue()[0]['status'];
+      if (CommentItemInterface::HIDDEN === $comment_status) {
+        return [
+          '#cache' => [
+            'tags' => $node->getCacheTags(),
+          ],
+        ];
+      }
+
+      $is_comment_closed = CommentItemInterface::CLOSED === $comment_status;
+    }
+
     $current_group_route = $this->groupsHelper->getGroupFromRoute();
     $user_group_roles = [];
     $account = \Drupal::currentUser();
@@ -167,6 +187,7 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
           $current_user->toUrl()->toString() :
           '#',
       ],
+      'is_comment_closed' => $is_comment_closed,
       'group_roles' => $user_group_roles,
       'group_id' => $group_id,
       'permissions' => [
@@ -225,6 +246,7 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
             "user.is_group_member:$group_id",
             'user.group_permissions',
           ],
+          'tags' => $node->getCacheTags(),
         ],
         '#theme' => 'eic_group_comments_from_discussion',
         '#discussion_id' => $node->id(),
