@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\eic_events\Commands;
+namespace Drupal\eic_events\Services;
 
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\eic_search\Service\SolrDocumentProcessor;
@@ -10,7 +10,7 @@ use Drupal\node\Entity\Node;
 /**
  * Class UpdateSolrEvents
  *
- * @package Drupal\eic_events\Commands
+ * @package Drupal\eic_events\Services
  */
 class UpdateSolrEvents {
 
