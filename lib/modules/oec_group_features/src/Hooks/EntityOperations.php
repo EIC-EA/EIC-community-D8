@@ -7,6 +7,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\group\Entity\Group;
+use Drupal\oec_group_features\GroupFeatureHelper;
 use Drupal\oec_group_features\GroupFeaturePluginManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -96,7 +97,7 @@ class EntityOperations implements ContainerInjectionInterface {
   protected function manageFeatures(Group $group) {
     // Check if feature values have been changed to avoid performing unnecessary
     // actions.
-    if (!empty($group->original) && $group->get('features')->getValue() == $group->original->get('features')->getValue()) {
+    if (!empty($group->original) && $group->get(GroupFeatureHelper::FEATURES_FIELD_NAME)->getValue() == $group->original->get(GroupFeatureHelper::FEATURES_FIELD_NAME)->getValue()) {
       return;
     }
 
@@ -108,7 +109,7 @@ class EntityOperations implements ContainerInjectionInterface {
 
     // Get group enabled features.
     $enabled_features = [];
-    foreach ($group->get('features')->getValue() as $feature) {
+    foreach ($group->get(GroupFeatureHelper::FEATURES_FIELD_NAME)->getValue() as $feature) {
       $enabled_features[$feature['value']] = $feature['value'];
     }
 
