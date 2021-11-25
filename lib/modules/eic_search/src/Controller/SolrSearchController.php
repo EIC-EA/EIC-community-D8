@@ -208,7 +208,7 @@ class SolrSearchController extends ControllerBase {
       $current_group &&
       $source->prefilterByGroupVisibility()
     ) {
-      $this->generateQueryVisibilityGroup($fq, $current_group);
+      $this->generateUsersQueryVisibilityGroup($fq, $current_group);
     }
 
     $this->generateQueryInterests($fq, $facets_interests);
@@ -408,7 +408,13 @@ class SolrSearchController extends ControllerBase {
     $solariumQuery->setRows($offset * $page);
   }
 
-  private function generateQueryVisibilityGroup(&$fq, $group_id) {
+  /**
+   * Prefilter users by the current group visibility.
+   *
+   * @param $fq
+   * @param $group_id
+   */
+  private function generateUsersQueryVisibilityGroup(&$fq, $group_id) {
     $query = '';
     $group = Group::load($group_id);
 
