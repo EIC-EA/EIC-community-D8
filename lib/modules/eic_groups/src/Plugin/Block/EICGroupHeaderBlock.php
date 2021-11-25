@@ -193,6 +193,18 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
     $node_operation_links = $this->eicGroupsHelper->getGroupContentOperationLinks($group, ['node'], $cacheable_metadata);
     $user_operation_links = $this->eicGroupsHelper->getGroupContentOperationLinks($group, ['user'], $cacheable_metadata);
 
+    $invite_bulk_url = Url::fromRoute(
+      'ginvite.invitation.bulk',
+      ['group' => $group->id()]
+    );
+
+    if ($invite_bulk_url->access()) {
+      $group_operation_links['bulk_invite'] = [
+        'title' => $this->t('Invite multiple users', [], ['context' => 'eic_groups']),
+        'url' => $invite_bulk_url,
+      ];
+    }
+
     $operation_links = [];
     // Get login link for anonymous users.
     if ($login_link = $this->getAnonymousLoginLink($group)) {
@@ -246,7 +258,7 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
     // We extract only the group edit/delete/publish operation links into a new
     // array.
     $visible_group_operation_links = array_filter($group_operation_links, function ($item, $key) {
-      return in_array($key, ['edit', 'delete', 'publish', 'block']);
+      return in_array($key, ['edit', 'delete', 'publish', 'block', 'bulk_invite']);
     }, ARRAY_FILTER_USE_BOTH);
 
     // Sorts group operation links by key. "Delete" operation needs to show
