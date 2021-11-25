@@ -6,6 +6,7 @@ use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\Core\Block\Annotation\Block;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Url;
 use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_user\UserHelper;
 use Drupal\file\Entity\File;
@@ -226,6 +227,15 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
         'action_delete_comment' => $this->t('Delete comment', [], ['context' => 'eic_groups']),
         'action_request_delete' => $this->t('Request deletion', [], ['context' => 'eic_groups']),
         'action_request_archival' => $this->t('Request archival', [], ['context' => 'eic_groups']),
+        'select_value' => $this->t('Select a value', [], ['context' => 'eic_search']),
+        'match_limit' => $this->t(
+          'You can select only <b>@match_limit</b> top-level items.',
+          ['@match_limit' => 0],
+          ['context' => 'eic_search']
+        ),
+        'search' => $this->t('Search', [], ['context' => 'eic_search']),
+        'your_values' => $this->t('Your selected values', [], ['context' => 'eic_search']),
+        'required_field' => $this->t('This field is required', [], ['context' => 'eic_content']),
       ],
     ];
 
