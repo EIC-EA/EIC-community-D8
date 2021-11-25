@@ -1,0 +1,16 @@
+.MuiPagination {
+  &-ul {
+    justify-content: center;
+  }
+}
+
+.MuiPaginationItem-textPrimary.Mui-selected {
+  font-weight: bold !important;
+  color: $ecl-color-grey !important;
+  background-color: transparent !important;
+  border: 3px solid $ecl-color-grey;
+}
+
+.MuiPaginationItem-icon {
+  color: $ecl-color-blue !important;
+}
