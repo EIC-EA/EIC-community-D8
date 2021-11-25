@@ -1,0 +1,8 @@
+oec_group_features.group_type_features.*:
+  type: config_object
+  mapping:
+    features:
+      type: sequence
+      label: 'Features'
+      sequence:
+        type: string
