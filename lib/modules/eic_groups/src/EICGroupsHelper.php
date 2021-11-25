@@ -282,7 +282,7 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
 
     if ($entity instanceof MessageInterface) {
       $group_ref_id = NULL;
-      if ($entity->hasField('field_group_ref') && !empty($entity->get('field_group_ref')->entity)) {
+      if ($entity->hasField('field_group_ref') && $entity->get('field_group_ref')->entity instanceof GroupInterface)) {
         $group_ref_id = $entity->get('field_group_ref')->entity->id();
       }
       $group = $group_ref_id ? Group::load($group_ref_id) : NULL;
