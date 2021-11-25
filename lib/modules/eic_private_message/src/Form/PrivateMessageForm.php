@@ -101,7 +101,7 @@ class PrivateMessageForm extends FormBase {
 
       if (!$user->get(PrivateMessage::PRIVATE_MESSAGE_USER_ALLOW_CONTACT_ID)->value) {
         $this->messenger()->addError($this->t(
-          'This user does not allow contact notification.',
+          'The user you are trying to contact has disabled private messages from its profile. The operation you are requesting cannot be completed.',
           [],
           ['context' => 'eic_private_message']
         ));
@@ -210,7 +210,7 @@ class PrivateMessageForm extends FormBase {
 
     if ($mail['result']) {
       $this->messenger()->addMessage($this->t(
-        'Mail sent with success.',
+        'Your message was successfully sent!',
         [],
         ['context' => 'eic_private_message']
       ));
