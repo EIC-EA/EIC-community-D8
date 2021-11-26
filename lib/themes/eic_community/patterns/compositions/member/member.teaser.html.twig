@@ -29,7 +29,7 @@
         <img class="ecl-teaser__image" src="{{ image.src }}" alt="{{ image.alt }}" />
       </figure>
     {% else %}
-      <figure class="ecl-teaser__image-wrapper">
+      <figure class="ecl-teaser__image-wrapper ecl-teaser__image-wrapper--no-image">
         {% include '@ecl-twig/ec-component-icon/ecl-icon.html.twig' with {
           icon: {
             size: 'm',
