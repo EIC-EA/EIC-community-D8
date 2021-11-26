@@ -48,4 +48,11 @@ class UserInvitesListSourceType extends SourceType {
     return TRUE;
   }
 
+  /**
+   * @inheritDoc
+   */
+  public function excludingCurrentGroup(): bool {
+    return TRUE;
+  }
+
 }

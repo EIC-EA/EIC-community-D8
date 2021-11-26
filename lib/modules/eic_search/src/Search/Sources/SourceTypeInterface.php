@@ -148,4 +148,11 @@ interface SourceTypeInterface {
    */
   public function prefilterByGroupVisibility(): bool;
 
+  /**
+   * Prefilter results by excluding the current group.
+   *
+   * @return bool
+   */
+  public function excludingCurrentGroup(): bool;
+
 }

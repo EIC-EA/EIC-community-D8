@@ -131,4 +131,11 @@ abstract class SourceType implements SourceTypeInterface {
     return FALSE;
   }
 
+  /**
+   * @inheritDoc
+   */
+  public function excludingCurrentGroup(): bool {
+    return FALSE;
+  }
+
 }

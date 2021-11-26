@@ -98,7 +98,11 @@ class SolrSearchController extends ControllerBase {
         $query_fields_string = '(' . implode(' OR ', $query_fields) . ')';
       }
 
-      if ($current_group && $group_id_fields = $source->getPrefilteredGroupFieldId()) {
+      if (
+        $current_group &&
+        !$source->excludingCurrentGroup() &&
+        $group_id_fields = $source->getPrefilteredGroupFieldId()
+      ) {
         $group_query = [];
         foreach ($group_id_fields as $group_id_field) {
           $group_query[] = "$group_id_field:($current_group)";
@@ -209,6 +213,14 @@ class SolrSearchController extends ControllerBase {
       $source->prefilterByGroupVisibility()
     ) {
       $this->generateUsersQueryVisibilityGroup($fq, $current_group);
+    }
+
+    if (
+      $source instanceof SourceTypeInterface &&
+      $current_group &&
+      $source->excludingCurrentGroup()
+    ) {
+      $this->generateExcludingUsersGroupQuery($fq, $current_group);
     }
 
     $this->generateQueryInterests($fq, $facets_interests);
@@ -446,23 +458,37 @@ class SolrSearchController extends ControllerBase {
 
           if (GroupVisibilityType::GROUP_VISIBILITY_OPTION_TRUSTED_USERS === $key && $option[GroupVisibilityType::GROUP_VISIBILITY_OPTION_TRUSTED_USERS . '_status']) {
             $user_ids = $option[GroupVisibilityType::GROUP_VISIBILITY_OPTION_TRUSTED_USERS . '_conf'];
-            $users = explode(',', $users);
+            $users = explode(',', $user_ids);
             $users = implode(' OR ', $users);
             $query = '(its_user_id:(' . $users . '))';
           }
         }
         break;
       default:
-        $group_visibility = GroupVisibilityType::GROUP_VISIBILITY_PUBLIC;
         break;
     }
 
     if (!empty($fq)) {
-      $fq .= " AND !(itm_user__group_content__uid_gid:($group_id)) AND $query";
+      $fq .= " AND $query";
       return;
     }
 
-    $fq .= "!itm_user__group_content__uid_gid:($group_id) AND $query";
+    $fq .= "$query";
+  }
+
+  /**
+   * Prefilter users by excluding the current group.
+   *
+   * @param $fq
+   * @param $group_id
+   */
+  private function generateExcludingUsersGroupQuery(&$fq, $group_id) {
+    if (!empty($fq)) {
+      $fq .= " AND !(itm_user__group_content__uid_gid:($group_id))";
+      return;
+    }
+
+    $fq .= "!itm_user__group_content__uid_gid:($group_id)";
   }
 
 }
