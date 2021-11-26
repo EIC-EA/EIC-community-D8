@@ -36,17 +36,6 @@ class EntityOperations implements ContainerInjectionInterface {
   const MODERATION_STATE_BLOCKED = 'blocked';
 
   /**
-   * The entity type labels to use in notification message.
-   *
-   * @var array
-   */
-  const ENTITY_TYPE_LABELS = [
-    'node' => 'content',
-    'group__group' => 'group',
-    'group__event' => 'event',
-  ];
-
-  /**
    * The content moderation information service.
    *
    * @var \Drupal\content_moderation\ModerationInformationInterface
