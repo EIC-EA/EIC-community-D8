@@ -104,19 +104,21 @@ class EntityOperations implements ContainerInjectionInterface {
       return;
     }
 
+    $message_uid = $this->getContentStatusChangedMessageReceiver($entity);
+    // If there is no receiver for the message, we don't send the notification.
+    if (!$message_uid) {
+      return;
+    }
+
     // Gets the entity type label to use in the message notification.
-    $entity_type_label = isset(self::ENTITY_TYPE_LABELS[$entity->getEntityTypeId()])
-      ? self::ENTITY_TYPE_LABELS[$entity->getEntityTypeId()]
-      : (isset(self::ENTITY_TYPE_LABELS["{$entity->getEntityTypeId()}__{$entity->bundle()}"])
-          ? self::ENTITY_TYPE_LABELS["{$entity->getEntityTypeId()}__{$entity->bundle()}"]
-          : $entity->getEntityTypeId());
+    $entity_type_label = strtolower($entity->type->entity->label());
 
     // By default notification is not skipped.
     $skip_notification = FALSE;
     // Default message fields.
     $message = [
       'template' => 'notify_content_status_changed',
-      'uid' => $entity->getOwnerId(),
+      'uid' => $message_uid,
       'field_message_subject' => NULL,
       'field_referenced_entity_label' => $entity->label(),
       'field_entity_prev_status_label' => $previous_state,
@@ -126,21 +128,6 @@ class EntityOperations implements ContainerInjectionInterface {
         'title' => $entity->label(),
       ],
     ];
-
-    if ($entity->getEntityTypeId() === 'group') {
-      /** @var \Drupal\group\Entity\GroupInterface $entity */
-
-      $group_owners = $entity->getMembers([EICGroupsHelper::GROUP_OWNER_ROLE]);
-
-      // The group doesn't have any owner and therefore we don't send any
-      // notification.
-      if (empty($group_owners)) {
-        return;
-      }
-
-      // Updates message uid with the right group owner uid.
-      $message['uid'] = reset($group_owners)->getUser()->id();
-    }
 
     switch ($previous_state) {
       case self::MODERATION_STATE_ARCHIVED:
@@ -183,6 +170,39 @@ class EntityOperations implements ContainerInjectionInterface {
     }
 
     $this->messageBus->dispatch($message);
+  }
+
+  /**
+   * Gets the user ID that will receive the notification about content status.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The entity that changed status.
+   *
+   * @return bool|int
+   *   Returns the user ID if found, otherwise it returns FALSE.
+   */
+  private function getContentStatusChangedMessageReceiver(EntityInterface $entity) {
+    $uid = FALSE;
+    switch ($entity->getEntityTypeId()) {
+      case 'group':
+        /** @var \Drupal\group\Entity\GroupInterface $entity */
+        $group_owners = $entity->getMembers([EICGroupsHelper::GROUP_OWNER_ROLE]);
+
+        // The group doesn't have any owner and therefore we don't send any
+        // notification.
+        if (empty($group_owners)) {
+          break;
+        }
+
+        // Updates message uid with the right group owner uid.
+        $uid = reset($group_owners)->getUser()->id();
+        break;
+
+      default:
+        $uid = $entity->getOwnerId();
+        break;
+    }
+    return $uid;
   }
 
 }
