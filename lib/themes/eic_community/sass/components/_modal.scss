@@ -1,14 +1,26 @@
 .popup-content {
   position: relative;
-  padding: $ecl-spacing-l !important;
+  padding: $ecl-spacing-2-xl !important;
+
+  & .ecl-form {
+    margin: 0;
+  }
 }
 
 .ecl-modal {
+
+  &__title{
+    color: $ecl-color-blue;
+    font-size: 1.5rem;
+  }
+
   &__title,
   &__content {
-    margin-top: 0;
-    margin-bottom: $ecl-spacing-xl;
+    margin: 0;
+    margin-bottom: $ecl-spacing-l;
   }
+
+
 
   &__close {
     position: absolute;
