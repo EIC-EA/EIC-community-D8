@@ -458,7 +458,9 @@ class SolrSearchController extends ControllerBase {
 
           if (GroupVisibilityType::GROUP_VISIBILITY_OPTION_TRUSTED_USERS === $key && $option[GroupVisibilityType::GROUP_VISIBILITY_OPTION_TRUSTED_USERS . '_status']) {
             $user_ids = $option[GroupVisibilityType::GROUP_VISIBILITY_OPTION_TRUSTED_USERS . '_conf'];
-            $users = explode(',', $user_ids);
+            $users = array_map(function ($user_id) {
+              return $user_id['target_id'];
+            }, $user_ids);
             $users = implode(' OR ', $users);
             $query = '(its_user_id:(' . $users . '))';
           }
@@ -466,6 +468,10 @@ class SolrSearchController extends ControllerBase {
         break;
       default:
         break;
+    }
+
+    if (empty($query)) {
+      return;
     }
 
     if (!empty($fq)) {
