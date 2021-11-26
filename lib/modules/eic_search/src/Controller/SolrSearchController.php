@@ -185,7 +185,7 @@ class SolrSearchController extends ControllerBase {
       $solariumQuery->addSort($default_sort[0], $default_sort[1]);
     }
 
-    //If there are no current sorts check if source has a default sort
+    // If there are no current sorts check if source has a default sort.
     if (
       !$sort_value &&
       $source instanceof SourceTypeInterface &&
@@ -411,13 +411,13 @@ class SolrSearchController extends ControllerBase {
   private function generateQueryPager(Query &$solariumQuery, int $page, int $offset, ?SourceTypeInterface $source) {
     $solariumQuery->setRows($offset);
 
-    //Default value will be to work like pagination
+    //Default value will be to work like pagination.
     if ($source instanceof SourceTypeInterface && $source->allowPagination()) {
       $solariumQuery->setStart(($page * $offset) - $offset);
       return;
     }
 
-    //If no pagination, it's a load more so we start at 1
+    //If no pagination, it's a load more so we start at 1.
     $solariumQuery->setStart(0);
     $solariumQuery->setRows($offset * $page);
   }
