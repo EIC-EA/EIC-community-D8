@@ -93,6 +93,17 @@
         <figure class="ecl-contact-information-block__image-wrapper">
           <img class="ecl-contact-information-block__image" src="{{ image.src }}" alt="{{ image.alt }}" />
         </figure>
+      {% else %}
+        <figure class="ecl-contact-information-block__image-wrapper ecl-contact-information-block__image-wrapper--empty">
+          {% include '@ecl-twig/ec-component-icon/ecl-icon.html.twig' with {
+            icon: {
+              size: 'm',
+              path: icon_file_path,
+              type: "custom",
+              name: "user"
+            }
+          } only %}
+        </figure>
       {% endif %}
     </div>
   </div>
