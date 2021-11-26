@@ -106,7 +106,7 @@ class FormOperations implements ContainerInjectionInterface {
   /**
    * Implements hook_form_FORM_ID_alter().
    */
-  public function groupGroupAddForm(&$form, FormStateInterface $form_state) {
+  public function groupAddForm(&$form, FormStateInterface $form_state) {
     // We don't want the features field to be accessible during the group
     // creation process.
     $form['features']['#access'] = FALSE;
