@@ -29,6 +29,7 @@ class SolrSearchController extends ControllerBase {
    *
    * @return \Symfony\Component\HttpFoundation\Response
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    * @throws \Drupal\search_api\SearchApiException
    * @throws \Drupal\search_api_solr\SearchApiSolrException
@@ -283,12 +284,13 @@ class SolrSearchController extends ControllerBase {
   }
 
   /**
-   * Generate query for user interests matching by their topics
+   * Generate query for user interests matching by their topics.
    *
    * @param string $fq
-   *  The field query stringify to send to SOLR
    * @param array $interests
-   *  Values of interests facet
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
   private function generateQueryInterests(string &$fq, array $interests) {
     if (
@@ -327,7 +329,7 @@ class SolrSearchController extends ControllerBase {
   }
 
   /**
-   * Generate query for user's groups and content
+   * Generate query for user's groups and content.
    *
    * @param string $fq
    *  The field query stringify to send to SOLR
@@ -376,7 +378,7 @@ class SolrSearchController extends ControllerBase {
 
   /**
    * Add the status query to the query but check for groups if need
-   * to show draft/pending for group owner
+   * to show draft/pending for group owner.
    *
    * @param string $fq
    * @param \Drupal\eic_search\Search\Sources\SourceTypeInterface $source
@@ -399,7 +401,7 @@ class SolrSearchController extends ControllerBase {
   }
 
   /**
-   * Set the current start and offset
+   * Set the current start and offset.
    *
    * @param \Solarium\QueryType\Select\Query\Query $solariumQuery
    * @param int $page
