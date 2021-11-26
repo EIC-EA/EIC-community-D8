@@ -88,7 +88,7 @@ class GroupMembershipController extends ControllerBase {
       $this->t(
         'The @group-type ownership has been successfully transfered!',
         [
-          '@group-type', $group->bundle(),
+          '@group-type' => $group->bundle(),
         ]
       )
     );
