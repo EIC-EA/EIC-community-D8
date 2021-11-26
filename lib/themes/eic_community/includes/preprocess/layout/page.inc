@@ -252,7 +252,7 @@ function _preprocess_front_page(&$variables) {
 }
 
 /**
- * Preprocess front page.
+ * Preprocess group page.
  */
 function _preprocess_group_page(&$variables) {
   // We need to add missing cache tags related to the group otherwise
@@ -265,5 +265,8 @@ function _preprocess_group_page(&$variables) {
     else {
       $variables['#cache']['tags'] = Cache::mergeTags($variables['#cache'], $group->getCacheTags());
     }
+    // Adds url.path as cache context otherwise anonymous users will always see
+    // the same message depending on which group the user visited first.
+    $variables['#cache']['contexts'][] = 'url.path';
   }
 }
