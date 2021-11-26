@@ -1,0 +1,21 @@
+.popup-content {
+  position: relative;
+  padding: $ecl-spacing-l !important;
+}
+
+.ecl-modal {
+  &__title,
+  &__content {
+    margin-top: 0;
+    margin-bottom: $ecl-spacing-xl;
+  }
+
+  &__close {
+    position: absolute;
+    right: $ecl-spacing-l;
+    top: $ecl-spacing-l;
+    padding: 0;
+    font-weight: bold;
+    cursor: pointer;
+  }
+}
