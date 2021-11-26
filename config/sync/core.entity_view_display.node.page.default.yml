@@ -64,6 +64,11 @@ content:
     third_party_settings: {  }
     type: string
     region: content
+  flag_follow_content:
+    weight: 10
+    settings: {  }
+    third_party_settings: {  }
+    region: content
   links:
     weight: 100
     region: content
