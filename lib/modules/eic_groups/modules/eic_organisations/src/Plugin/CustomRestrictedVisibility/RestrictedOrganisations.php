@@ -29,6 +29,9 @@ class RestrictedOrganisations extends CustomRestrictedVisibilityBase {
    */
   public function getPluginForm():array {
     $form = parent::getPluginForm();
+
+    // @todo Make use of the entity_tree widget once available for
+    // organisations.
     $form[$this->getPluginId()][$this->getPluginId() . '_conf'] = [
       '#title' => $this->t('Organisations'),
       '#description' => $this->t('Add multiple organisations separating them with a comma'),
