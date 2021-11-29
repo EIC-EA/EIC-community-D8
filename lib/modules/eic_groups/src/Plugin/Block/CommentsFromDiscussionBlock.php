@@ -245,6 +245,8 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
         'search' => $this->t('Search', [], ['context' => 'eic_search']),
         'your_values' => $this->t('Your selected values', [], ['context' => 'eic_search']),
         'required_field' => $this->t('This field is required', [], ['context' => 'eic_content']),
+        'select_users' => $this->t('Select users', [], ['context' => 'eic_content']),
+        'modal_invite_users_title' => $this->t('Invite user(s)', [], ['context' => 'eic_content']),
       ],
     ];
 
