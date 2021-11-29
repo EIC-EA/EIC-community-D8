@@ -1,0 +1,8 @@
+uuid: 6b42edfb-dbd6-4b94-aed2-911a1646f310
+langcode: en
+status: true
+dependencies: {  }
+name: 'Organisation types'
+vid: organisation_types
+description: ''
+weight: 0
