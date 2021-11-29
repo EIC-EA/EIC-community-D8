@@ -1,0 +1,17 @@
+.ecl-pagination__item {
+  cursor: pointer;
+  button {
+    border: none;
+    background: transparent;
+    color: #004494;
+
+    &:hover {
+      text-decoration: underline;
+    }
+
+    &[disabled] {
+      opacity: .5;
+      pointer-events: none;
+    }
+  }
+}

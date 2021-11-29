@@ -27,7 +27,6 @@
 @import './overrides/notifications';
 @import './overrides/wtShare';
 @import './overrides/datepicker';
-@import './overrides/MuiPagination';
 
 @import './schema/border';
 @import './schema/box-model';
@@ -66,6 +65,7 @@
 @import "./compositions/media-wrapper";
 @import "./compositions/notification-banner";
 @import "./compositions/overview-header";
+@import "./compositions/pagination";
 @import "./compositions/searchform";
 @import "./compositions/search-overview";
 @import "./compositions/section-wrapper";
