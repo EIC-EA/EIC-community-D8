@@ -67,10 +67,8 @@ class FormAlter {
             'select_value' => t('Select a value', [], ['context' => 'eic_search']),
             'match_limit' => t(
               'You can select only <b>@match_limit</b> top-level items.',
-              [
-                '@match_limit' => $match_limit,
-                ['context' => 'eic_search'],
-              ]
+              ['@match_limit' => $match_limit],
+              ['context' => 'eic_search']
             ),
             'search' => t('Search', [], ['context' => 'eic_search']),
             'your_values' => t('Your selected values', [], ['context' => 'eic_search']),
