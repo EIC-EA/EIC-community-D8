@@ -21,6 +21,11 @@
     color: map-get($ecl-colors, 'white');
   }
 
+  &--is-custom {
+    background: $ecl-color-orange;
+    color: map-get($ecl-colors, 'white');
+  }
+
   &--is-private {
     background-color: map-get($ecl-colors, 'red');
     color: map-get($ecl-colors, 'white');

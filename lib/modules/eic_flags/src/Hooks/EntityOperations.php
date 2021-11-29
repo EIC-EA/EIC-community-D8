@@ -402,6 +402,13 @@ class EntityOperations implements ContainerInjectionInterface {
 
     // Follow new topics.
     foreach ($topics as $topic) {
+      $topic_flag = $this->flagService->getFlagging($flag, $topic, $user);
+
+      // If topic is already flagged, we do nothing.
+      if ($topic_flag) {
+        continue;
+      }
+
       $this->flagService->flag($flag, $topic, $user);
     }
   }
