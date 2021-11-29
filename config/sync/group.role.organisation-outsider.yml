@@ -1,0 +1,15 @@
+uuid: 6c60e438-d0d0-4352-afe1-9f94bc913fb1
+langcode: en
+status: true
+dependencies:
+  config:
+    - group.type.organisation
+id: organisation-outsider
+label: Outsider
+weight: -101
+internal: true
+audience: outsider
+group_type: organisation
+permissions_ui: true
+permissions:
+  - 'view comments'

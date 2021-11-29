@@ -139,6 +139,9 @@
     {% endif %}
 
   {% elseif no_items_available %}
+    {% if no_items_available_header %}
+      <h3 class="ecl-teaser-overview__no-content-header">{{ no_items_available_header }}</h3>
+    {% endif %}
     <p clas="ecl-teaser-overview__no-content-message">{{ no_items_available }}</p>
   {% endif %}
 </div>

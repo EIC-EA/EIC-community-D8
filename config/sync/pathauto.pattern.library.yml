@@ -5,11 +5,11 @@ dependencies:
   module:
     - node
 id: library
-label: Library
+label: 'Node - Library'
 type: 'canonical_entities:node'
 pattern: '[node:node_group_url]/library/[node:title]'
 selection_criteria:
-  a9ca8400-c6bc-40de-b50d-141e57b05890:
+  ef0a2ae5-ad37-4354-a444-8e0f3d3b7ccf:
     id: node_type
     bundles:
       document: document
@@ -18,7 +18,7 @@ selection_criteria:
     negate: false
     context_mapping:
       node: node
-    uuid: a9ca8400-c6bc-40de-b50d-141e57b05890
+    uuid: ef0a2ae5-ad37-4354-a444-8e0f3d3b7ccf
 selection_logic: and
 weight: -8
 relationships: {  }

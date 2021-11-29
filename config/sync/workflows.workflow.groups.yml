@@ -5,6 +5,7 @@ dependencies:
   config:
     - group.type.event
     - group.type.group
+    - group.type.organisation
   module:
     - content_moderation
 id: groups
@@ -98,4 +99,5 @@ type_settings:
     group:
       - event
       - group
+      - organisation
   default_moderation_state: pending
