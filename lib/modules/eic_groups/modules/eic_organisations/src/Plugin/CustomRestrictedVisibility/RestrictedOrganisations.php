@@ -31,7 +31,7 @@ class RestrictedOrganisations extends CustomRestrictedVisibilityBase {
     $form = parent::getPluginForm();
     $form[$this->getPluginId()][$this->getPluginId() . '_conf'] = [
       '#title' => $this->t('Organisations'),
-      '#description' => $this->t('Add multiple email organisations separating them with a comma'),
+      '#description' => $this->t('Add multiple organisations separating them with a comma'),
       '#type' => 'entity_autocomplete',
       '#target_type' => 'group',
       '#tags' => TRUE,
