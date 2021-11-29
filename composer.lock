@@ -4391,6 +4391,9 @@
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
                     }
+                },
+                "patches_applied": {
+                    "3251270 - Error when trying to send a message to a deleted owner": "https://www.drupal.org/files/issues/2021-11-25/message_notify-check_owner_account-3251270-2.patch"
                 }
             },
             "notification-url": "https://packages.drupal.org/8/downloads",
