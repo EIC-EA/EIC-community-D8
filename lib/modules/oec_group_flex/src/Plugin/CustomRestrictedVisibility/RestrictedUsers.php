@@ -31,6 +31,8 @@ class RestrictedUsers extends CustomRestrictedVisibilityBase {
     $form = parent::getPluginForm();
 
     // Specific trusted users text box.
+    // @todo Make use of the entity_tree widget once available for
+    //   organisations.
     $form[$this->getPluginId()][$this->getPluginId() . '_conf'] = [
       '#title' => $this->t('Select trusted users'),
       '#type' => 'entity_autocomplete',
