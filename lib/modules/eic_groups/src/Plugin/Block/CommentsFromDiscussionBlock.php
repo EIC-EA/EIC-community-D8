@@ -191,6 +191,10 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
       'is_comment_closed' => $is_comment_closed,
       'group_roles' => $user_group_roles,
       'group_id' => $group_id,
+      'users_url' => Url::fromRoute('eic_content.entity_tree')
+        ->toString(),
+      'users_url_search' => Url::fromRoute('eic_content.entity_tree_search')
+        ->toString(),
       'permissions' => [
         'post_comment' =>
           $this->groupPermissionChecker->getPermissionInGroups(
