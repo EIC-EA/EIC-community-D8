@@ -10,8 +10,10 @@ use Drupal\Core\Render\Markup;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
+use Drupal\eic_flags\FlagType;
 use Drupal\file\Entity\File;
 use Drupal\eic_topics\Constants\Topics;
+use Drupal\flag\FlagCountManagerInterface;
 use Drupal\user\Entity\User;
 use Drupal\user\UserInterface;
 use Drupal\taxonomy\TermInterface;
@@ -81,6 +83,13 @@ class UserHelper {
   protected $connection;
 
   /**
+   * The flag count service.
+   *
+   * @var \Drupal\flag\FlagCountManagerInterface
+   */
+  protected $flagCount;
+
+  /**
    * Constructs a new UserHelper.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
@@ -89,15 +98,20 @@ class UserHelper {
    *   The current user.
    * @param \Drupal\Core\Database\Connection $connection
    *   The current user.
+   * @param \Drupal\flag\FlagCountManagerInterface $flag_count
+   *   The flag count service.
    */
   public function __construct(
     EntityTypeManagerInterface $entity_type_manager,
     AccountInterface $account,
-    Connection $connection) {
+    Connection $connection,
+    FlagCountManagerInterface $flag_count
+  ) {
     $this->userStorage = $entity_type_manager->getStorage('user');
     $this->entityTypeManager = $entity_type_manager;
     $this->currentUser = $account;
     $this->connection = $connection;
+    $this->flagCount = $flag_count;
   }
 
   /**
@@ -262,6 +276,26 @@ class UserHelper {
     }
 
     return $query->execute()->fetchAllKeyed(0, 0);
+  }
+
+  /**
+   * Returns the number of followers for a given user.
+   *
+   * @param \Drupal\user\UserInterface $user
+   *   The user entity.
+   *
+   * @return int
+   *   The number of followers.
+   */
+  public function getUserFollowers(UserInterface $user) {
+    $user_flag_counters = $this->flagCount->getEntityFlagCounts($user);
+
+    // No one is following the user, therefore we return 0.
+    if (!isset($user_flag_counters[FlagType::FOLLOW_USER])) {
+      return 0;
+    }
+
+    return (int) $user_flag_counters[FlagType::FOLLOW_USER];
   }
 
 }
