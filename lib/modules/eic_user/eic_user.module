@@ -6,9 +6,14 @@
  */
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
+use Drupal\eic_content\Plugin\Field\FieldWidget\EntityTreeWidget;
+use Drupal\eic_search\Search\Sources\UserInvitesListSourceType;
 use Drupal\eic_user\Hooks\FieldWidgetOperations;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\group\Entity\GroupContentInterface;
+use Drupal\user\Entity\User;
+use Drupal\user\UserInterface;
 
 /**
  * Implements hook_field_widget_WIDGET_TYPE_form_alter().
@@ -16,6 +21,18 @@ use Drupal\group\Entity\GroupContentInterface;
 function eic_user_field_widget_social_links_form_alter(&$element, FormStateInterface $form_state, $context) {
   \Drupal::classResolver(FieldWidgetOperations::class)
     ->fieldWidgetSocialLinksFormAlter($element, $form_state, $context);
+}
+
+/**
+ * @param $form
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
+ * @param $form_id
+ */
+function eic_user_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
+  if ('bulk_group_invitation' === $form_id) {
+    \Drupal::classResolver(\Drupal\eic_user\Hooks\FormAlter::class)
+      ->alterBulkGroupInvitation($form, $form_state, $form_id);
+  }
 }
 
 /**
