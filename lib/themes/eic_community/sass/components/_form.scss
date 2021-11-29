@@ -199,6 +199,9 @@
 
   & .ecl-radio__group {
     padding: 0;
+    & div.ecl-form-label {
+      display: none;
+    }
   }
 
   & .form-wrapper{
@@ -211,7 +214,8 @@
   }
 
   & .fieldgroup .fieldset-legend {
-    visibility: hidden;
+    //visibility: hidden;
+    padding: 0;
   }
 
   & .ecl-radio {
