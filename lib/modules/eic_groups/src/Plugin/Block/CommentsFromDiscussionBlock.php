@@ -8,6 +8,7 @@ use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Url;
 use Drupal\eic_groups\EICGroupsHelper;
+use Drupal\eic_search\Search\Sources\UserTaggingCommentsSourceType;
 use Drupal\eic_user\UserHelper;
 use Drupal\file\Entity\File;
 use Drupal\flag\FlagService;
@@ -176,6 +177,12 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
     $file_url = $file ? file_url_transform_relative(file_create_url($file->get('uri')->value)) : NULL;
 
     $group_id = $current_group_route ? $current_group_route->id() : 0;
+    $user_url = Url::fromRoute('eic_search.solr_search', [
+      'datasource' => json_encode(['user']),
+      'source_class' => UserTaggingCommentsSourceType::class,
+      'page' => 1,
+      'current_group' => $group_id,
+    ])->toString();
 
     $build['#attached']['drupalSettings']['overview'] = [
       'is_group_owner' => array_key_exists(EICGroupsHelper::GROUP_OWNER_ROLE, $user_group_roles),
@@ -191,10 +198,8 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
       'is_comment_closed' => $is_comment_closed,
       'group_roles' => $user_group_roles,
       'group_id' => $group_id,
-      'users_url' => Url::fromRoute('eic_content.entity_tree')
-        ->toString(),
-      'users_url_search' => Url::fromRoute('eic_content.entity_tree_search')
-        ->toString(),
+      'users_url' => $user_url,
+      'users_url_search' => $user_url,
       'permissions' => [
         'post_comment' =>
           $this->groupPermissionChecker->getPermissionInGroups(

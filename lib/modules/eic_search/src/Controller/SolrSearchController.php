@@ -472,16 +472,19 @@ class SolrSearchController extends ControllerBase {
         break;
     }
 
+    // Ignore anonymous user.
+    $condition_ignore_anon = "!(its_user_id:0)";
+
     if (empty($query)) {
-      return;
+      $query = $condition_ignore_anon;
     }
 
     if (!empty($fq)) {
-      $fq .= " AND $query";
+      $fq .= " AND $query AND $condition_ignore_anon";
       return;
     }
 
-    $fq .= "$query";
+    $fq .= "$query AND $condition_ignore_anon";
   }
 
   /**
