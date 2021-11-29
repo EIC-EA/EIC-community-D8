@@ -106,7 +106,7 @@ class FormOperations implements ContainerInjectionInterface {
   /**
    * Implements hook_form_FORM_ID_alter().
    */
-  public function groupGroupAddForm(&$form, FormStateInterface $form_state) {
+  public function groupAddForm(&$form, FormStateInterface $form_state) {
     // We don't want the features field to be accessible during the group
     // creation process.
     $form['features']['#access'] = FALSE;
@@ -189,9 +189,9 @@ class FormOperations implements ContainerInjectionInterface {
   }
 
   /**
-   * Implements hook_form_alter() for group invitation form
+   * Implements hook_form_alter() for group invitation form.
    *
-   * Remove the group-owner option
+   * Remove the group-owner option.
    */
   public function groupInvitationFormAlter(&$form, FormStateInterface $form_state, $form_id) {
     unset($form['group_roles']['widget']['#options'][EICGroupsHelper::GROUP_OWNER_ROLE]);
@@ -237,9 +237,10 @@ class FormOperations implements ContainerInjectionInterface {
   protected function enableDefaultFeatures(Group $group) {
     $group_type_id = $group->getGroupType()->id();
     $config = $this->configFactory->get("eic_groups.group_features.default_features.$group_type_id");
+    $default_features = $config->get('default_features') ?? [];
 
     foreach ($this->groupFeaturePluginManager->getDefinitions() as $definition) {
-      if (in_array($definition['id'], $config->get('default_features'))) {
+      if (in_array($definition['id'], $default_features)) {
         // Enable the feature.
         $default_feature = $this->groupFeaturePluginManager->createInstance($definition['id']);
         $default_feature->enable($group);

@@ -467,7 +467,7 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
   private function getTruncatedGroupDescription(GroupInterface $group) {
     $limit = 350;
 
-    if ($group->get('field_body')->isEmpty()) {
+    if (!$group->hasField('field_body') || $group->get('field_body')->isEmpty()) {
       return '';
     }
 
