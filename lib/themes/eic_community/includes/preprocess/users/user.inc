@@ -129,14 +129,6 @@ function eic_community_preprocess_user(array &$variables) {
             ],
           ],
         ];
-
-        [
-          '#type' => 'inline_template',
-          '#template' => '{{ description|raw }}',
-          '#context' => [
-            'description' => $member_profile->get('field_body')->value,
-          ],
-        ];
       }
 
       // Gets user statistics.
