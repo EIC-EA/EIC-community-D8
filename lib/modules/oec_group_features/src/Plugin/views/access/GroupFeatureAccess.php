@@ -59,7 +59,7 @@ class GroupFeatureAccess extends AccessPluginBase {
    * @param $plugin_id
    * @param $plugin_definition
    * @param \Drupal\oec_group_features\GroupFeatureHelper $groups_feature_helper
-   * @param \Drupal\group\Entity\GroupInterface $group
+   * @param \Drupal\Core\Plugin\Context\ContextProviderInterface $context_provider
    * @param \Drupal\group\Access\GroupPermissionHandlerInterface $group_permission_handler
    * @param \Drupal\Core\Extension\ModuleHandler $module_handler
    */
@@ -82,6 +82,14 @@ class GroupFeatureAccess extends AccessPluginBase {
     $this->moduleHandler = $module_handler;
   }
 
+  /**
+   * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
+   * @param array $configuration
+   * @param string $plugin_id
+   * @param mixed $plugin_definition
+   *
+   * @return \Drupal\oec_group_features\Plugin\views\access\GroupFeatureAccess|\Drupal\views\Plugin\views\PluginBase|static
+   */
   public static function create(
     ContainerInterface $container,
     array $configuration,
@@ -100,7 +108,9 @@ class GroupFeatureAccess extends AccessPluginBase {
   }
 
   /**
-   * @inheritDoc
+   * {@inheritdoc}
+   *
+   * Check if user has the correct permission in group AND if linked feature is enabled.
    */
   public function access(AccountInterface $account) {
     if (empty($this->group)) {
@@ -118,7 +128,7 @@ class GroupFeatureAccess extends AccessPluginBase {
   }
 
   /**
-   * @inheritDoc
+   * {@inheritdoc}
    */
   public function alterRouteDefinition(Route $route) {
     return TRUE;
