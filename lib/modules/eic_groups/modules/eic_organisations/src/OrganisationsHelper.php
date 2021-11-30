@@ -44,6 +44,36 @@ class OrganisationsHelper {
   }
 
   /**
+   * Returns the organisations a user belongs to.
+   *
+   * @param \Drupal\Core\Session\AccountInterface|null $account
+   *   The account to check. If null, defaults to the current user.
+   *
+   * @return \Drupal\group\Entity\GroupInterface[]
+   *   An array of group objects.
+   */
+  public function getUserOrganisations($account = NULL) {
+    if (empty($account)) {
+      $account = $this->currentUser;
+    }
+
+    $organisations = [];
+
+    // Get all user group memberships and check for organisations only.
+    foreach ($this->groupMembershipLoader->loadByUser($account) as $membership) {
+      /** @var \Drupal\group\Entity\GroupInterface $group */
+      $group = $membership->getGroup();
+
+      // We only check organisations, if this is another bundle, just skip it.
+      if ($group->bundle() == Organisations::GROUP_ORGANISATION_BUNDLE) {
+        $organisations[] = $group;
+      }
+    }
+
+    return $organisations;
+  }
+
+  /**
    * Returns the types of organisations a user belongs to.
    *
    * @param \Drupal\Core\Session\AccountInterface|null $account
@@ -60,13 +90,7 @@ class OrganisationsHelper {
     $user_organisation_types = [];
 
     // Search for a matching organisation the user belongs to.
-    foreach ($this->groupMembershipLoader->loadByUser($account) as $membership) {
-      $group = $membership->getGroup();
-
-      // We only check organisations, if this is another bundle, just skip it.
-      if ($group->bundle() != Organisations::GROUP_ORGANISATION_BUNDLE) {
-        continue;
-      }
+    foreach ($this->getUserOrganisations($account) as $group) {
 
       // We need to have proper values to check, otherwise skip this
       // organisation.

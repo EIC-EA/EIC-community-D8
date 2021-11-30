@@ -45,6 +45,7 @@ use Drupal\search_api\SearchApiException;
 use Drupal\search_api\Utility\PostRequestIndexing;
 use Drupal\search_api\Utility\Utility;
 use Drupal\statistics\NodeStatisticsDatabaseStorage;
+use Drupal\taxonomy\Entity\Term;
 use Drupal\user\Entity\User;
 use Drupal\user\UserInterface;
 use Solarium\Core\Query\DocumentInterface;
@@ -616,6 +617,24 @@ class SolrDocumentProcessor {
             }, $organisation_ids);
 
             $document->addField('itm_' . GroupVisibilityType::GROUP_VISIBILITY_OPTION_ORGANISATIONS, $organisations);
+          }
+
+          if (GroupVisibilityType::GROUP_VISIBILITY_OPTION_ORGANISATION_TYPES === $key && $option[GroupVisibilityType::GROUP_VISIBILITY_OPTION_ORGANISATION_TYPES . '_status']) {
+            $group_visibility = GroupVisibilityType::GROUP_VISIBILITY_OPTION_ORGANISATION_TYPES;
+
+            $term_ids = $option[GroupVisibilityType::GROUP_VISIBILITY_OPTION_ORGANISATION_TYPES . '_conf'];
+            $terms = array_map(function ($term_id) {
+              if (!empty($term_id)) {
+                $term = Term::load($term_id);
+                if (!$term) {
+                  return -1;
+                }
+
+                return $term->id();
+              }
+            }, $term_ids);
+
+            $document->addField('itm_' . GroupVisibilityType::GROUP_VISIBILITY_OPTION_ORGANISATION_TYPES, $terms);
           }
         }
         break;
