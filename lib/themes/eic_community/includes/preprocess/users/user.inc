@@ -114,13 +114,27 @@ function eic_community_preprocess_user(array &$variables) {
       }
 
       // Gets user location.
-      if ($location = _eic_community_get_user_location($user)) {
+      if ($location = _eic_community_get_user_location($user, 'multiline', $member_profile)) {
         $user_item['meta'][] = [
           'label' => t('Location'),
           'items' => [
             [
-              'content' => $location['label'],
+              'content' => [
+                '#type' => 'inline_template',
+                '#template' => '{{ description|raw }}',
+                '#context' => [
+                  'description' => $location['label'],
+                ],
+              ],
             ],
+          ],
+        ];
+
+        [
+          '#type' => 'inline_template',
+          '#template' => '{{ description|raw }}',
+          '#context' => [
+            'description' => $member_profile->get('field_body')->value,
           ],
         ];
       }
@@ -312,13 +326,15 @@ function _eic_community_get_user_social_links(UserInterface $account, ProfileInt
  *
  * @param \Drupal\user\UserInterface $account
  *   The user account for which we want to get the location.
+ * @param string $format
+ *   (optional) Either 'inline' or 'multiline'.
  * @param \Drupal\profile\Entity\ProfileInterface $member_profile
  *   (optional) The user profile entity associated with user account.
  *
  * @return array
  *   The render array for templates.
  */
-function _eic_community_get_user_location(UserInterface $account, ProfileInterface $member_profile = NULL) {
+function _eic_community_get_user_location(UserInterface $account, $format = 'inline', ProfileInterface $member_profile = NULL) {
   $member_profile = $member_profile ?? \Drupal::service('eic_user.helper')->getUserMemberProfile($account);
 
   // If we don't have a member profile for this user, skip.
@@ -338,8 +354,19 @@ function _eic_community_get_user_location(UserInterface $account, ProfileInterfa
   /** @var \CommerceGuys\Addressing\Country\Country $country */
   $country = $country_repository->get($address->get('country_code')->getValue());
 
+  $location = '';
+  switch ($format) {
+    case 'multiline':
+      $location = $address->get('locality')->getValue() . '<br>' . $country->getName();
+      break;
+
+    default:
+      $location = $address->get('locality')->getValue() . ', ' . $country->getName();
+      break;
+  }
+
   return [
-    'label' => $address->get('locality')->getValue() . ', ' . $country->getName(),
+    'label' => $location,
   ];
 }
 
