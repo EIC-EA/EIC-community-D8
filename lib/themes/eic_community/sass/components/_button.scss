@@ -1,5 +1,6 @@
 .ecl-button {
   text-align: inherit;
+  cursor: pointer;
 
   $node: &;
   &__label {
