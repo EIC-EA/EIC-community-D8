@@ -11,6 +11,7 @@ use Drupal\Core\Url;
 use Drupal\media\Entity\Media;
 use Drupal\file\Entity\File;
 use Drupal\eic_community\ValueObject\ImageValueObject;
+use Drupal\eic_flags\FlagType;
 use Drupal\eic_helper\DateTimeHelper;
 use Drupal\eic_overviews\GlobalOverviewPages;
 use Drupal\eic_private_message\Constants\PrivateMessage;
@@ -91,6 +92,11 @@ function eic_community_preprocess_user(array &$variables) {
           'path' => $user_contact_link['path'],
         ];
         $user_item['editorial_header']['actions'][] = $user_contact_link;
+      }
+
+      // Gets the follow user flag.
+      if (isset($variables['elements']['flag_' . FlagType::FOLLOW_USER])) {
+        $user_item['editorial_header']['actions'][] = ['content' => $variables['elements']['flag_' . FlagType::FOLLOW_USER]];
       }
 
       // Gets user social links.
