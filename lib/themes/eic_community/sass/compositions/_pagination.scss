@@ -1,5 +1,12 @@
 .ecl-pagination__item {
   cursor: pointer;
+
+  &--current a {
+      color: $ecl-color-black;
+    pointer-events: none;
+    cursor: default;
+  }
+
   button {
     border: none;
     background: transparent;
