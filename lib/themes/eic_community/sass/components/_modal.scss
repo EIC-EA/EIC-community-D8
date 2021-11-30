@@ -1,6 +1,7 @@
 .popup-content {
   position: relative;
   padding: $ecl-spacing-2-xl !important;
+  max-width: 737px;
 
   & .ecl-form {
     margin: 0;
@@ -20,14 +21,16 @@
     margin-bottom: $ecl-spacing-l;
   }
 
-
-
   &__close {
     position: absolute;
     right: $ecl-spacing-l;
     top: $ecl-spacing-l;
     padding: 0;
     font-weight: bold;
+  }
+
+  &__close,
+  &__wrapper .ecl-button {
     cursor: pointer;
   }
 }
