@@ -1,7 +1,9 @@
 stages:
   - build
   - test
+  - notify
   - deploy
+  - deploy_uat
 
 .deploy_job: &deploy_job
   image: intractosre/deploy:1
@@ -111,8 +113,17 @@ deploy_qa:
   only:
     - /^release/.*$/
 
+deploy_uat:
+  <<: *deploy_job
+  stage: deploy_uat
+  when: manual
+  variables:
+    HOST: $UAT_HOST
+  only:
+    - /^release/.*$/
+
 slack_notifier:
-  stage: deploy
+  stage: notify
   before_script:
     - apk update && apk add curl
   script:

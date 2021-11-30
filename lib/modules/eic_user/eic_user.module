@@ -20,6 +20,18 @@ function eic_user_field_widget_social_links_form_alter(&$element, FormStateInter
 }
 
 /**
+ * @param $form
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
+ * @param $form_id
+ */
+function eic_user_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
+  if ('bulk_group_invitation' === $form_id) {
+    \Drupal::classResolver(\Drupal\eic_user\Hooks\FormAlter::class)
+      ->alterBulkGroupInvitation($form, $form_state, $form_id);
+  }
+}
+
+/**
  * Implements hook_entity_presave().
  */
 function eic_user_entity_presave(EntityInterface $entity) {
