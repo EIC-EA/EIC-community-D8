@@ -2,7 +2,7 @@
   <div class="ecl-activity-stream__item__main">
       <div class="ecl-activity-stream__item__content">
         {% if title is not empty %}
-          <a href=""><h3>{{ title }}</h3></a>
+          <a href="{{ path }}"><h3>{{ title }}</h3></a>
         {% endif %}
         {% if description is not empty %}
         <div class="ecl-activity-stream__item__type">
