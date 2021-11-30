@@ -3,7 +3,13 @@
 <div class="ecl-teaser ecl-teaser--group {{ highlight.is_active ? 'ecl-teaser--is-highlighted' }} {{ extra_classes }}">
     <figure class="ecl-teaser__image-wrapper">
       {% if image is not empty %}
-        <img class="ecl-teaser__image" src="{{ image.src }}" alt="{{ image.alt }}" />
+        {% if path is not empty %}
+          <a href="{{ path }}">
+            <img class="ecl-teaser__image" src="{{ image.src }}" alt="{{ image.alt }}" />
+          </a>
+        {% else %}
+          <img class="ecl-teaser__image" src="{{ image.src }}" alt="{{ image.alt }}" />
+        {% endif %}
       {% else %}
         {% if icon_file_path %}
           <div class="ecl-teaser__image-fallback-wrapper">
