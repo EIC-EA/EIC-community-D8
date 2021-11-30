@@ -58,7 +58,15 @@ class GroupMembershipController extends ControllerBase {
   }
 
   /**
-   * Builds the response.
+   * Transfers the group ownership and redirect user to the previous page.
+   *
+   * @param \Drupal\group\Entity\GroupInterface $group
+   *   The group entity.
+   * @param \Drupal\group\Entity\GroupContentInterface $group_content
+   *   The group content entity related to the membership.
+   *
+   * @return \Symfony\Component\HttpFoundation\RedirectResponse
+   *   The redirect response.
    */
   public function transferGroupOwnership(GroupInterface $group, GroupContentInterface $group_content) {
     /** @var \Drupal\user\UserInterface $new_owner */
@@ -97,6 +105,14 @@ class GroupMembershipController extends ControllerBase {
 
   /**
    * Builds the transfer group ownership page title.
+   *
+   * @param \Drupal\group\Entity\GroupInterface $group
+   *   The group entity.
+   * @param \Drupal\group\Entity\GroupContentInterface $group_content
+   *   The group content entity related to the membership.
+   *
+   * @return \Drupal\Core\StringTranslation\TranslatableMarkup
+   *   The page title.
    */
   public function transferGroupOwnershipTitle(GroupInterface $group, GroupContentInterface $group_content) {
     return $this->t('Transfer @group-type ownership.',
