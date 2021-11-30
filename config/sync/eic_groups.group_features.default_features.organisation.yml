@@ -1,0 +1,3 @@
+default_features:
+  - eic_groups_members
+  - eic_groups_files

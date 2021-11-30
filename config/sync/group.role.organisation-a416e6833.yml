@@ -1,0 +1,17 @@
+uuid: b8a7c454-d267-4271-bbb3-7880e01ee0b6
+langcode: en
+status: true
+dependencies:
+  config:
+    - group.type.organisation
+  enforced:
+    config:
+      - user.role.administrator
+id: organisation-a416e6833
+label: 'Drupal admin'
+weight: -4
+internal: true
+audience: outsider
+group_type: organisation
+permissions_ui: false
+permissions: {  }

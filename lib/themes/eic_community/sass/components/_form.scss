@@ -4,6 +4,12 @@
   margin-left: auto;
   margin-right: auto;
 
+  & .hidden {
+    visibility: hidden;
+    position: absolute;
+    pointer-events: none;
+  }
+
   & .form-item {
     max-width: 100%;
   }
@@ -152,7 +158,7 @@
     }
   }
 
-  .ecl-form-label {
+  .ecl-form-label, .fieldset-legend {
     font-weight: $ecl-font-weight-regular;
     text-transform: uppercase;
     color: ecl-typography('color', 'label');
@@ -193,15 +199,23 @@
 
   & .ecl-radio__group {
     padding: 0;
+    & div.ecl-form-label {
+      display: none;
+    }
   }
 
   & .form-wrapper{
     width: 100%;
     box-sizing: border-box;
 
-    & .fieldset-legend{
-      visibility: hidden;
+    & .fieldset-legend {
+      padding: 0 $ecl-spacing-s;
     }
+  }
+
+  & .fieldgroup .fieldset-legend {
+    //visibility: hidden;
+    padding: 0;
   }
 
   & .ecl-radio {
