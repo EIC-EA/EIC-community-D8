@@ -5,6 +5,7 @@
  * Primary module hooks for EIC User module.
  */
 
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\eic_user\Hooks\FieldWidgetOperations;
 use Drupal\Core\Entity\EntityInterface;
@@ -30,6 +31,11 @@ function eic_user_entity_presave(EntityInterface $entity) {
  */
 function eic_user_entity_update(EntityInterface $entity) {
   _eic_user_entity_crud_action($entity);
+
+  // Invalidate user cache tags after updating the profile entity.
+  if ($entity->getEntityTypeId() === 'profile') {
+    Cache::invalidateTags($entity->getOwner()->getCacheTagsToInvalidate());
+  }
 }
 
 /**
@@ -43,6 +49,7 @@ function eic_user_entity_predelete(EntityInterface $entity) {
  * On CRUD of group content entity, re-index dependencies.
  *
  * @param \Drupal\Core\Entity\EntityInterface $entity
+ *   The entity object.
  *
  * @throws \Drupal\search_api\SearchApiException
  */
@@ -63,4 +70,12 @@ function _eic_user_entity_crud_action(EntityInterface $entity) {
   }
 
   $solr_helper->reIndexEntities($updated_entities);
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_insert().
+ */
+function eic_user_profile_insert(EntityInterface $entity) {
+  // Invalidate user cache tags after creating the profile entity.
+  Cache::invalidateTags($entity->getOwner()->getCacheTagsToInvalidate());
 }
