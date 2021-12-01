@@ -26,10 +26,10 @@ class FlagEventSubscriber implements EventSubscriberInterface {
   /**
    * React to flagging event.
    *
-   * @param \Drupal\flag\Event\FlaggingEvent $event
+   * @param \Drupal\flag\Event\FlaggingEvent|\Drupal\flag\Event\UnflaggingEvent $event
    *   The flagging event.
    */
-  public function invalidateFlaggedEntityCache(FlaggingEvent $event) {
+  public function invalidateFlaggedEntityCache($event) {
     /** @var \Drupal\flag\FlaggingInterface $flagging */
     $flagging = $event->getFlagging();
 
