@@ -193,6 +193,18 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
     $node_operation_links = $this->eicGroupsHelper->getGroupContentOperationLinks($group, ['node'], $cacheable_metadata);
     $user_operation_links = $this->eicGroupsHelper->getGroupContentOperationLinks($group, ['user'], $cacheable_metadata);
 
+    $invite_bulk_url = Url::fromRoute(
+      'ginvite.invitation.bulk',
+      ['group' => $group->id()]
+    );
+
+    if ($invite_bulk_url->access()) {
+      $group_operation_links['bulk_invite'] = [
+        'title' => $this->t('Invite multiple users', [], ['context' => 'eic_groups']),
+        'url' => $invite_bulk_url,
+      ];
+    }
+
     $operation_links = [];
     // Get login link for anonymous users.
     if ($login_link = $this->getAnonymousLoginLink($group)) {
@@ -246,12 +258,21 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
     // We extract only the group edit/delete/publish operation links into a new
     // array.
     $visible_group_operation_links = array_filter($group_operation_links, function ($item, $key) {
-      return in_array($key, ['edit', 'delete', 'publish', 'block']);
+      return in_array($key, ['edit', 'delete', 'publish', 'block', 'bulk_invite']);
     }, ARRAY_FILTER_USE_BOTH);
 
     // Sorts group operation links by key. "Delete" operation needs to show
     // first.
     ksort($visible_group_operation_links);
+
+    if (!empty($visible_group_operation_links)) {
+      $visible_group_operation_links = [
+        [
+          'label' => $this->t('Group management'),
+          'links' => $visible_group_operation_links,
+        ],
+      ];
+    }
 
     // Get all group flags the user has access to.
     $membership_links = $this->getGroupFlagLinks($group);
@@ -267,7 +288,8 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
         'bundle' => $group->bundle(),
         'title' => $group->label(),
         'description' => $this->getTruncatedGroupDescription($group),
-        'operation_links' => array_merge($operation_links, $node_operation_links, $visible_group_operation_links),
+        'group_operation_links' => $visible_group_operation_links,
+        'operation_links' => array_merge($operation_links, $node_operation_links),
         'membership_links' => array_merge($membership_links, $user_operation_links),
         'stats' => [
           'members' => $group_statistics->getMembersCount(),
@@ -457,7 +479,7 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
   private function getTruncatedGroupDescription(GroupInterface $group) {
     $limit = 350;
 
-    if ($group->get('field_body')->isEmpty()) {
+    if (!$group->hasField('field_body') || $group->get('field_body')->isEmpty()) {
       return '';
     }
 

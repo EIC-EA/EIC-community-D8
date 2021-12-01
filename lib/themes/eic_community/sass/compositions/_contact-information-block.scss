@@ -35,6 +35,19 @@
     overflow: hidden;
     flex-shrink: 0;
 
+    &--empty {
+      background-color: map-get($ecl-colors, 'grey-10');
+    }
+
+    & svg {
+      color: #ffffff;
+      width: 70%;
+      height: 70%;
+      position: absolute;
+      bottom: 0;
+      left: 15%;
+    }
+
     &::before {
       padding-top: 100%;
       content: " ";

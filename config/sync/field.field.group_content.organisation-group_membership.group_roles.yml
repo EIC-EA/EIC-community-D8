@@ -1,0 +1,22 @@
+uuid: 92cede6a-7db4-4bd5-a5e8-75ee6218deee
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.group_content.group_roles
+    - group.content_type.organisation-group_membership
+id: group_content.organisation-group_membership.group_roles
+field_name: group_roles
+entity_type: group_content
+bundle: organisation-group_membership
+label: Roles
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'group_type:group_role'
+  handler_settings:
+    group_type_id: organisation
+field_type: entity_reference

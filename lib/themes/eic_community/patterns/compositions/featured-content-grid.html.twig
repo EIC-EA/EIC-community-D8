@@ -14,12 +14,23 @@
               <div class="ecl-featured-content-grid__item-wrapper">
                 {% if item.media %}
                   <div class="ecl-featured-content-grid__item-media-wrapper">
-                    {% include '@ecl-twig/ec-component-media-container/ecl-media-container.html.twig' with {
-                      description: false,
-                      sources: item.media.sources,
-                      image: item.media.image,
-                      alt: item.media.alt
-                    } only %}
+                    {% if item.path %}
+                      <a href="{{ item.path }}">
+                        {% include '@ecl-twig/ec-component-media-container/ecl-media-container.html.twig' with {
+                          description: false,
+                          sources: item.media.sources,
+                          image: item.media.image,
+                          alt: item.media.alt
+                        } only %}
+                      </a>
+                    {% else %}
+                      {% include '@ecl-twig/ec-component-media-container/ecl-media-container.html.twig' with {
+                        description: false,
+                        sources: item.media.sources,
+                        image: item.media.image,
+                        alt: item.media.alt
+                      } only %}
+                    {% endif %}
                   </div>
                 {% endif %}
                 <div class="ecl-featured-content-grid__item-content-wrapper">

@@ -1,7 +1,9 @@
 uuid: ee4bd4fc-7842-41b8-a8f0-7991be0603ae
 langcode: en
-status: true
+status: false
 dependencies:
+  config:
+    - field.storage.group_content.group_roles
   module:
     - group
     - user

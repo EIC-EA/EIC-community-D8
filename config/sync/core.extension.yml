@@ -43,8 +43,10 @@ module:
   eic_content_story: 0
   eic_content_wiki_page: 0
   eic_deploy: 0
+  eic_events: 0
   eic_flags: 0
   eic_fragment_fact_figure: 0
+  eic_group_membership: 0
   eic_group_statistics: 0
   eic_groups: 0
   eic_helper: 0
@@ -60,11 +62,15 @@ module:
   eic_overviews: 0
   eic_paragraph_contributor: 0
   eic_paragraph_cta_tile: 0
+  eic_paragraph_full_media_content: 0
+  eic_paragraph_quote: 0
+  eic_paragraphs: 0
   eic_private_content: 0
   eic_private_message: 0
   eic_search: 0
   eic_seo: 0
   eic_share_content: 0
+  eic_statistics: 0
   eic_theme_helper: 0
   eic_topics: 0
   eic_user: 0
@@ -175,11 +181,7 @@ module:
   pathauto: 1
   views: 10
   paragraphs: 11
-  eic_paragraphs: 12
-  eic_paragraph_full_media_content: 13
-  eic_paragraph_quote: 13
   publication_date: 99
-  eic_statistics: 1000
   minimal: 1000
 theme:
   stable: 0

@@ -17,6 +17,11 @@ final class NotificationMessageTemplates implements MessageIdentifierInterface {
   const ENTITY_BLOCKED = 'notify_entity_blocked';
 
   /**
+   * Message template for notifying group ownership transfer.
+   */
+  const TRANSFER_GROUP_OWNERSHIP = 'notify_transfer_group_ownership';
+
+  /**
    * {@inheritdoc}
    */
   public static function getMessageTemplatePrimaryKeys(MessageTemplateInterface $message_template) {

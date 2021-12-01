@@ -1,0 +1,9 @@
+name: EIC Events
+type: module
+description: Provides funcitonnality around events.
+package: European Innovation Council
+core: 8.x
+core_version_requirement: ^8 || ^9
+php: 7.3
+dependencies:
+  - eic_search:eic_search

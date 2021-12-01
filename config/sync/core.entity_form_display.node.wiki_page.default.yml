@@ -64,6 +64,11 @@ content:
       media_types: {  }
     third_party_settings: {  }
     region: content
+  field_send_notification:
+    weight: 23
+    settings: {  }
+    third_party_settings: {  }
+    region: content
   field_vocab_geo:
     weight: 4
     settings:
@@ -186,4 +191,9 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
+  url_redirects:
+    weight: 50
+    settings: {  }
+    third_party_settings: {  }
+    region: content
 hidden: {  }

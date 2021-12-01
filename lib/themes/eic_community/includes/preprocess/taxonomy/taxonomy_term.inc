@@ -5,20 +5,22 @@
  * Contains hook_preprocess() implementation for taxonomy terms.
  */
 
+use Drupal\eic_community\ValueObject\ImageValueObject;
 use Drupal\eic_topics\Constants\Topics;
 use Drupal\file\Entity\File;
 
 /**
  * Implements hook_preprocess_page__taxonomy__term().
  */
-function eic_topics_preprocess_page__taxonomy__term(&$variables) {
+function eic_community_preprocess_page__taxonomy__term(&$variables) {
   /** @var \Drupal\taxonomy\TermInterface $term */
   $term = \Drupal::routeMatch()->getParameter('taxonomy_term');
 
-  $vid = $term->get('vid')->getValue();
-  $vid = reset($vid)['target_id'];
+  if (!$term) {
+    return;
+  }
 
-  if (Topics::TERM_VOCABULARY_TOPICS_ID !== $vid) {
+  if ($term->bundle() !== Topics::TERM_VOCABULARY_TOPICS_ID) {
     return;
   }
 
@@ -27,4 +29,45 @@ function eic_topics_preprocess_page__taxonomy__term(&$variables) {
   $file_url = $file ? file_url_transform_relative(file_create_url($file->get('uri')->value)) : NULL;
   $variables['banner_image_url'] = $file_url;
   $variables['topic_title'] = $term->label();
+
+}
+
+/**
+ * Implements hook_preprocess_page__taxonomy__term().
+ */
+function eic_community_preprocess_taxonomy_term(&$variables) {
+  /** @var \Drupal\taxonomy\TermInterface $term */
+  $term = $variables['elements']['#taxonomy_term'];
+
+  if ($term->bundle() !== Topics::TERM_VOCABULARY_TOPICS_ID) {
+    return;
+  }
+
+  switch ($variables['view_mode']) {
+
+    case 'teaser':
+      $teaser = [
+        'title' => $term->label(),
+        'url' => $term->toUrl(),
+      ];
+
+      // Get the thumbnail.
+      if (!$term->get('field_topic_banner')->isEmpty()) {
+        /** @var \Drupal\media\MediaInterface $media */
+        $media = $term->get('field_topic_banner')->referencedEntities()[0];
+        if ($media && !empty($media->get('oe_media_image')->getValue())) {
+          $style_name = 'gallery_teaser_crop_160x160';
+          $teaser['image'] = ImageValueObject::fromStyledImageItem($media->get('oe_media_image')->first(), $style_name);
+        }
+      }
+
+      $needed_stats = ['experts', 'organisations'];
+      $stats = _eic_community_get_entity_stats($term, $needed_stats);
+      $teaser['stats'] = $stats;
+
+      $variables['term_item'] = $teaser;
+      $variables['icon_file_path'] = $variables['eic_icon_path'];
+      break;
+  }
+
 }

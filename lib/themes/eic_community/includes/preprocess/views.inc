@@ -71,6 +71,10 @@ function eic_community_preprocess_views_view(&$variables) {
       $variables['title'] = $variables['view']->getTitle();
       break;
 
+    case 'taxonomy-block_taxonomy_overview':
+      $variables['title'] = $variables['view']->getTitle();
+      break;
+
     case 'taxonomy_related_content-groups':
       $variables['extra_classes'] = 'ecl-section-wrapper--is-white ecl-featured-content-collection--has-overview-layout';
       $variables['items_extra_classes'] = 'ecl-featured-content-collection__item--big';

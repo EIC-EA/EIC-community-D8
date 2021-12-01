@@ -1,0 +1,17 @@
+uuid: 305ee767-51f2-489d-939d-7e6535801da6
+langcode: en
+status: true
+dependencies:
+  config:
+    - group.type.organisation
+  enforced:
+    config:
+      - user.role.content_administrator
+id: organisation-eca6128ca
+label: 'Content administrator'
+weight: -7
+internal: true
+audience: outsider
+group_type: organisation
+permissions_ui: false
+permissions: {  }

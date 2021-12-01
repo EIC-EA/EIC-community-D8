@@ -126,7 +126,8 @@
         </div>
         {% if date is not empty %}
           <div class="ecl-teaser__content-aside">
-            {% include '@ecl-twig/ec-component-date-block/ecl-date-block.html.twig' with date|default({}) only %}
+{#            {% include '@ecl-twig/ec-component-date-block/ecl-date-block.html.twig' with date|default({}) only %}#}
+              {% include '@theme/patterns/components/date.custom.html.twig' with date|default({}) only %}
           </div>
         {% endif %}
       </div>
@@ -135,7 +136,7 @@
         <div class="ecl-teaser__meta-column">
           {% if type is not empty %}
             {% include "@theme/patterns/components/content-type-indicator.html.twig" with type|default({})|merge({
-              extra_classes: 'ecl-teaser__type',
+              extra_classes: 'ecl-teaser__type ' ~ type.extra_classes,
               icon_file_path: icon_file_path,
             }) only %}
           {% endif %}

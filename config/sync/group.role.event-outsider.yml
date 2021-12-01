@@ -11,4 +11,6 @@ internal: true
 audience: outsider
 group_type: event
 permissions_ui: true
-permissions: {  }
+permissions:
+  - 'share content between groups'
+  - 'view group'

@@ -1,0 +1,50 @@
+<?php
+
+/**
+ * @file
+ * Primary module hooks for EIC Group membership module.
+ */
+
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Url;
+
+/**
+ * Implements hook_entity_operation_alter().
+ */
+function eic_group_membership_entity_operation_alter(array &$operations, EntityInterface $entity) {
+  if ($entity->getEntityTypeId() !== 'group_content') {
+    return;
+  }
+
+  if ($entity->getContentPlugin()->getPluginId() !== 'group_membership') {
+    return;
+  }
+
+  // Changes operation titles.
+  foreach ($operations as $key => $operation) {
+    $operations[$key]['title'] = t('@operation member', ['@operation' => ucfirst($key)]);
+  }
+
+  $url_options = [
+    'query' => [
+      'destination' => \Drupal::requestStack()->getCurrentRequest()->getRequestUri(),
+    ],
+  ];
+
+  // Adds transfer ownership operation.
+  $transfer_ownership_url = Url::fromRoute(
+    'eic_group_membership.transfer_ownership.confirm_form',
+    [
+      'group' => $entity->getGroup()->id(),
+      'group_content' => $entity->id(),
+    ],
+    $url_options
+  );
+  if ($transfer_ownership_url->access()) {
+    $operations['transfer_ownership'] = [
+      'title' => t('Transfer ownership'),
+      'weight' => -50,
+      'url' => $transfer_ownership_url,
+    ];
+  }
+}

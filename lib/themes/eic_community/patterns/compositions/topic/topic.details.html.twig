@@ -64,6 +64,15 @@
         }) only %}
       {% endif %}
 
+      {% if related_wiki %}
+        {% include "@theme/patterns/compositions/featured-content-collection.html.twig" with related_wiki|default({})|merge({
+          icon_file_path: common.icon_file_path,
+          extra_classes: "ecl-section-wrapper ecl-section-wrapper--is-white ecl-featured-content-collection--has-list-layout",
+          no_container: true,
+
+        }) only %}
+      {% endif %}
+
       {% if discussions %}
         {% include "@theme/patterns/compositions/featured-content-collection.html.twig" with discussions|default({})|merge({
           icon_file_path: common.icon_file_path,
@@ -78,7 +87,6 @@
           icon_file_path: common.icon_file_path,
           extra_classes: "ecl-section-wrapper ecl-section-wrapper--is-white ecl-featured-content-collection--has-list-layout",
           no_container: true,
-          items_extra_classes: "ecl-featured-content-collection__item--big"
         }) only %}
       {% endif %}
 

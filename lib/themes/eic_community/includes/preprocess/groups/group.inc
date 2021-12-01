@@ -9,13 +9,6 @@ use Drupal\Core\Render\Markup;
 use Drupal\eic_community\ValueObject\ImageValueObject;
 
 /**
- * Implements hook_preprocess_group__TYPE.
- */
-function eic_community_preprocess_group__event(&$variables) {
-  _eic_community_render_event_detail_page($variables, $variables['group']);
-}
-
-/**
  * Implements hook_preprocess_group().
  */
 function eic_community_preprocess_group(array &$variables) {
@@ -212,7 +205,7 @@ function _group_about_group_tab($variables, &$sections) {
 
   $about_items[] = [
     'title' => t('Group description'),
-    'content' => $variables['elements']['field_body'],
+    'content' => $variables['elements']['field_body'] ?? '',
   ];
 
   $sections[] = [
