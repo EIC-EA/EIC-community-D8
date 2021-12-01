@@ -153,16 +153,22 @@ function eic_community_preprocess_user(array &$variables) {
         ],
       ];
 
+      $user_item['flagged_interests'] = [
+        'title' => t('My Interests'),
+        'items' => [],
+      ];
       // Gets user topics of interest.
-      if ($topics_of_interest = _eic_community_get_user_topics_of_interest($user, $member_profile)) {
-        $user_item['flagged_interests'] = [
-          'title' => t('My Interests'),
-          'items' => [
-            [
-              'title' => t('Topics of interests'),
-              'items' => $topics_of_interest,
-            ],
-          ],
+      if ($topics_of_interest = _eic_community_get_user_topics($user, 'field_vocab_topic_interest', $member_profile)) {
+        $user_item['flagged_interests']['items'][] = [
+          'title' => t('Topics of interests'),
+          'items' => $topics_of_interest,
+        ];
+      }
+      // Gets user topics of expertise.
+      if ($topics_of_expertise = _eic_community_get_user_topics($user, 'field_vocab_topic_expertise', $member_profile)) {
+        $user_item['flagged_interests']['items'][] = [
+          'title' => t('Topics of expertise'),
+          'items' => $topics_of_expertise,
         ];
       }
 
@@ -463,17 +469,19 @@ function _eic_community_get_user_joining_date(UserInterface $account, $format = 
 }
 
 /**
- * Returns the array of topics of interest to use in templates.
+ * Returns the array of topics terms to use in templates.
  *
  * @param \Drupal\user\UserInterface $account
- *   The user account for which we want to get the topics of interest.
+ *   The user account for which we want to get the topics.
+ * @param string $taxonomy_term_field_name
+ *   The taxonomy term field name.
  * @param \Drupal\profile\Entity\ProfileInterface $member_profile
  *   (optional) The user profile entity associated with user account.
  *
  * @return array
- *   The array of topics of interest.
+ *   The array of topic terms.
  */
-function _eic_community_get_user_topics_of_interest(UserInterface $account, ProfileInterface $member_profile = NULL) {
+function _eic_community_get_user_topics(UserInterface $account, $taxonomy_term_field_name, ProfileInterface $member_profile = NULL) {
   $member_profile = $member_profile ?? \Drupal::service('eic_user.helper')->getUserMemberProfile($account);
 
   // If we don't have a member profile for this user, skip.
@@ -481,13 +489,18 @@ function _eic_community_get_user_topics_of_interest(UserInterface $account, Prof
     return [];
   }
 
-  // If the member profile doesn't have social links, skip.
-  if ($member_profile->get('field_vocab_topic_interest')->isEmpty()) {
+  // If the member profile doesn't have the field, skip.
+  if (!$member_profile->hasField($taxonomy_term_field_name)) {
+    return [];
+  }
+
+  // If the member profile doesn't have any selected topics, skip.
+  if ($member_profile->get($taxonomy_term_field_name)->isEmpty()) {
     return [];
   }
 
   /** @var \Drupal\taxonomy\TermInterface[] $terms */
-  $terms = $member_profile->get('field_vocab_topic_interest')->referencedEntities();
+  $terms = $member_profile->get($taxonomy_term_field_name)->referencedEntities();
 
   $topics = [];
   foreach ($terms as $term) {
