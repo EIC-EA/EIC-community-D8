@@ -4,7 +4,7 @@
   position: relative;
 
   & .ecl-card {
-    padding: map-get($ecl-spacing, 's');
+    padding: 0;
 
     & > :last-child {
       margin-bottom: 0;
@@ -21,6 +21,22 @@
 
     &:nth-last-child(1n + 2) {
       border-bottom: 0;
+    }
+
+    &__image {
+      margin-top: 0;
+    }
+
+    &__title, &__body {
+      padding-left: $ecl-spacing-s;
+      padding-right: $ecl-spacing-s;
+    }
+
+    &__body {
+      padding-bottom: $ecl-spacing-s;
+      & * {
+        color: $ecl-color-blue;
+      }
     }
 
     &__footer {

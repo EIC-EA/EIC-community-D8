@@ -8,6 +8,7 @@ dependencies:
     - field.field.comment.node_comment.field_comment_attachment
     - field.field.comment.node_comment.field_comment_deletion_date
     - field.field.comment.node_comment.field_comment_is_soft_deleted
+    - field.field.comment.node_comment.field_tagged_users
   module:
     - datetime
     - text
@@ -50,6 +51,14 @@ content:
       format_custom_true: ''
     third_party_settings: {  }
     type: boolean
+    region: content
+  field_tagged_users:
+    weight: 104
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
     region: content
   flag_like_comment:
     weight: 10
