@@ -17,6 +17,45 @@ use Drupal\taxonomy\Entity\Term;
 abstract class CoreGenerator extends AbstractGenerator implements Generator {
 
   /**
+   * @param array $fields
+   * @param string $bundle
+   *
+   * @return \Drupal\media\MediaInterface
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   */
+  public function createMedia(array $fields, string $bundle) {
+    $media = Media::create([
+        'bundle' => $bundle,
+      ] + $fields);
+
+    $media->save();
+
+    return $media;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getLink($uri = NULL, $title = NULL, $type = NULL) {
+    $link = parent::getLink($uri, $title);
+    if ($type) {
+      $link['link_type'] = $type;
+    }
+
+    return $link;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  abstract public function load();
+
+  /**
+   * {@inheritdoc}
+   */
+  abstract public function unLoad();
+
+  /**
    * @param $definition
    *
    * @return \Drupal\paragraphs\ParagraphInterface
@@ -46,23 +85,6 @@ abstract class CoreGenerator extends AbstractGenerator implements Generator {
   }
 
   /**
-   * @param array $fields
-   * @param string $bundle
-   *
-   * @return \Drupal\media\MediaInterface
-   * @throws \Drupal\Core\Entity\EntityStorageException
-   */
-  public function createMedia(array $fields, string $bundle) {
-    $media = Media::create([
-        'bundle' => $bundle,
-      ] + $fields);
-
-    $media->save();
-
-    return $media;
-  }
-
-  /**
    * Create a file with a random image.
    *
    * @param string $wrapper
@@ -71,49 +93,46 @@ abstract class CoreGenerator extends AbstractGenerator implements Generator {
    */
   protected function getRandomImage(string $wrapper = 'private://') {
     static $images;
-    // To avoid downloading a lot of images, we only allow 3 random images
-    // Passed this, we reuse those saved previously.
+    /** @var \Drupal\Core\File\FileSystemInterface $file_system */
+    $file_system = \Drupal::service('file_system');
+    $file_system->prepareDirectory($destination,
+      FileSystemInterface::CREATE_DIRECTORY);
+    $destination = $wrapper . "fixtures/";
+
+    $scan = $file_system->scanDirectory($destination, '/.*\.(jpg)$/');
+    if (!empty($scan)) {
+      $found_images = array_splice($scan, 0, 3);
+      array_map([$file_system, 'unlink'], array_keys($scan));
+
+      foreach ($found_images as $uri => $image) {
+        $basename = pathinfo($file_system->tempnam($destination, 'eic_'),PATHINFO_BASENAME) . '.jpg';
+        $images[] = file_save_data(
+          file_get_contents($file_system->realpath($uri)),
+          $destination . $basename,
+          FileSystemInterface::EXISTS_REPLACE
+        );
+      }
+    }
+
     if (is_array($images) && count($images) === 3) {
       return $this->faker->randomElement($images);
     }
 
-    /** @var \Drupal\Core\File\FileSystemInterface $file_system */
-    $file_system = \Drupal::service('file_system');
     $data = file_get_contents('https://picsum.photos/1280/964.jpg');
     if (!$data) {
       return NULL;
     }
 
-    $destination = "$wrapper://fixtures/";
-    $basename = pathinfo($file_system->tempnam($destination, 'eic_'), PATHINFO_BASENAME) . '.jpg';
-    $file_system->prepareDirectory($destination, FileSystemInterface::CREATE_DIRECTORY);
+    $basename = pathinfo($file_system->tempnam($destination, 'eic_'),PATHINFO_BASENAME) . '.jpg';
+    $file = file_save_data(
+      $data,
+      $destination . $basename,
+      FileSystemInterface::EXISTS_REPLACE
+    );
 
-    $file = file_save_data($data, $destination . $basename, FileSystemInterface::EXISTS_REPLACE);
     $images[] = $file;
 
     return $file;
   }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getLink($uri = NULL, $title = NULL, $type = NULL) {
-    $link = parent::getLink($uri, $title);
-    if ($type) {
-      $link['link_type'] = $type;
-    }
-
-    return $link;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  abstract public function load();
-
-  /**
-   * {@inheritdoc}
-   */
-  abstract public function unLoad();
 
 }
