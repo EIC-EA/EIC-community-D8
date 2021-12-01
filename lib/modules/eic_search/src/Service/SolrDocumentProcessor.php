@@ -236,6 +236,7 @@ class SolrDocumentProcessor {
         $language = t('English', [], ['context' => 'eic_search'])->render();
         $user_url = '';
         $group_id = $fields['its_group_id_integer'] ?? -1;
+        $document->addField('ss_global_group_parent_id', $group_id);
         $group = Group::load($group_id);
         if ($group && $owner = EICGroupsHelper::getGroupOwner($group)) {
           $fullname = realname_load($owner);
