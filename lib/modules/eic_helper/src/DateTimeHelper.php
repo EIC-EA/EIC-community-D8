@@ -49,6 +49,11 @@ class DateTimeHelper {
   const DATE_FORMAT_SHORT = 'short';
 
   /**
+   * Define date format name for month (full) + year.
+   */
+  const DATE_FORMAT_MONTH_FULL_YEAR = 'month_full_year';
+
+  /**
    * The datetime.time service.
    *
    * @var \Drupal\Component\Datetime\Time
