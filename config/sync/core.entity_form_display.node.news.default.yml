@@ -138,6 +138,11 @@ content:
     third_party_settings: {  }
     type: entity_reference_autocomplete
     region: content
+  field_send_notification:
+    weight: 30
+    settings: {  }
+    third_party_settings: {  }
+    region: content
   field_video:
     type: media_library_widget
     weight: 8
@@ -259,6 +264,11 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
+  url_redirects:
+    weight: 50
+    settings: {  }
+    third_party_settings: {  }
+    region: content
 hidden:
   member_content_edit_access: true
   promote: true

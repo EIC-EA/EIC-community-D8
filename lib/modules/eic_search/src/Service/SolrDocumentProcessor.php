@@ -23,6 +23,7 @@ use Drupal\eic_media_statistics\EntityFileDownloadCount;
 use Drupal\eic_private_message\Constants\PrivateMessage;
 use Drupal\eic_search\Search\Sources\GroupEventSourceType;
 use Drupal\eic_search\SolrIndexes;
+use Drupal\eic_user\UserHelper;
 use Drupal\file\Entity\File;
 use Drupal\flag\FlagCountManager;
 use Drupal\group\Entity\Group;
@@ -230,15 +231,21 @@ class SolrDocumentProcessor {
         $type = $fields['ss_group_type'];
         $date = $fields['ds_group_created'];
         $status = $fields['bs_group_status'];
-        $fullname = $fields['ss_group_user_first_name'] . ' ' . $fields['ss_group_user_last_name'];
         $topics = $fields['ss_group_topic_name'];
         $geo = $fields['ss_group_field_vocab_geo_string'];
         $language = t('English', [], ['context' => 'eic_search'])->render();
         $user_url = '';
-        if (array_key_exists('its_group_user_uid', $fields)) {
-          $user = User::load($fields['its_group_user_uid']);
-          $user_url = $user instanceof UserInterface ? $user->toUrl()
-            ->toString() : '';
+        $group_id = $fields['its_group_id_integer'] ?? -1;
+        $group = Group::load($group_id);
+        if ($group && $owner = EICGroupsHelper::getGroupOwner($group)) {
+          $fullname = realname_load($owner);
+
+          $this->addOrUpdateDocumentField(
+            $document,
+            'ss_group_user_image',
+            $fields,
+            UserHelper::getUserAvatar($owner)
+          );
         }
         break;
       case 'entity:message':
@@ -251,6 +258,8 @@ class SolrDocumentProcessor {
         $status = TRUE;
         break;
       case 'entity:user':
+        $user = User::load($fields['its_user_id']);
+        $fullname = realname_load($user);
         $status = TRUE;
         break;
     }
@@ -599,7 +608,7 @@ class SolrDocumentProcessor {
     }
 
     $document->addField('ss_group_visibility', $group_visibility);
-    $document->addField('its_group_owner_id', $group->getOwnerId());
+    $this->setGroupOwner($document, 'its_group_owner_id', $group);
   }
 
   /**
@@ -659,14 +668,6 @@ class SolrDocumentProcessor {
 
         $document->setField('itm_user__group_content__uid_gid', $grp_ids);
       }
-    }
-
-    // We update the ss_global_user_url field based on the group owner.
-    if (array_key_exists('its_group_owner_id', $document->getFields())) {
-      $user = User::load($document->getFields()['its_group_owner_id']);
-      $user_url = $user instanceof UserInterface ? $user->toUrl()
-        ->toString() : '';
-      $document->setField('ss_global_user_url', $user_url);
     }
   }
 
@@ -835,6 +836,19 @@ class SolrDocumentProcessor {
         array_key_exists($country_code, $countries) ? $countries[$country_code] : $country_code
       );
     }
+  }
+
+  /**
+   * @param \Solarium\QueryType\Update\Query\Document $document
+   * @param $key
+   * @param $group
+   */
+  private function setGroupOwner(Document &$document, $key, $group) {
+    $group_owner = EICGroupsHelper::getGroupOwner($group);
+    $document->addField(
+      $key,
+      $group_owner instanceof UserInterface ? $group_owner->id(): -1
+    );
   }
 
   /**

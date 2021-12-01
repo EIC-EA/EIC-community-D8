@@ -31,7 +31,9 @@ use Drupal\node\NodeInterface;
 use Drupal\oec_group_flex\OECGroupFlexHelper;
 use Drupal\oec_group_flex\Plugin\CustomRestrictedVisibilityInterface;
 use Drupal\oec_group_flex\Plugin\GroupVisibility\CustomRestrictedVisibility;
+use Drupal\user\Entity\User;
 use Drupal\taxonomy\TermInterface;
+use Drupal\user\UserInterface;
 
 /**
  * EICGroupsHelper service that provides helper functions for groups.
@@ -224,6 +226,28 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
   }
 
   /**
+   * Get the current group owner of a group.
+   *
+   * @param \Drupal\group\Entity\GroupInterface $group
+   *   The group entity.
+   *
+   * @return UserInterface
+   *   The group owner.
+   */
+  public static function getGroupOwner(GroupInterface $group): ?UserInterface {
+    $owners = $group->getMembers(self::GROUP_OWNER_ROLE);
+
+    if (empty($owners)) {
+      return NULL;
+    }
+
+    /** @var GroupMembership $owner_membership */
+    $owner_membership = reset($owners);
+
+    return $owner_membership->getUser();
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function getGroupFromRoute() {
@@ -257,9 +281,10 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
     }
 
     if ($entity instanceof MessageInterface) {
-      $group_ref_id = $entity->hasField('field_group_ref') ?
-        $entity->get('field_group_ref')->entity->id() :
-        NULL;
+      $group_ref_id = NULL;
+      if ($entity->hasField('field_group_ref') && $entity->get('field_group_ref')->entity instanceof GroupInterface) {
+        $group_ref_id = $entity->get('field_group_ref')->entity->id();
+      }
       $group = $group_ref_id ? Group::load($group_ref_id) : NULL;
 
       return $group;

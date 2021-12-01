@@ -1,0 +1,17 @@
+uuid: bf59df29-add3-4338-ab61-cb9db988603f
+langcode: en
+status: true
+dependencies:
+  config:
+    - group.type.organisation
+  enforced:
+    config:
+      - user.role.site_admin
+id: organisation-bf4b46c3a
+label: 'Site Admin'
+weight: -5
+internal: true
+audience: outsider
+group_type: organisation
+permissions_ui: false
+permissions: {  }

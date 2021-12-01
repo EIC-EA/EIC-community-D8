@@ -7,6 +7,8 @@
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\eic_user\Hooks\FieldWidgetOperations;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\group\Entity\GroupContentInterface;
 
 /**
  * Implements hook_field_widget_WIDGET_TYPE_form_alter().
@@ -14,4 +16,63 @@ use Drupal\eic_user\Hooks\FieldWidgetOperations;
 function eic_user_field_widget_social_links_form_alter(&$element, FormStateInterface $form_state, $context) {
   \Drupal::classResolver(FieldWidgetOperations::class)
     ->fieldWidgetSocialLinksFormAlter($element, $form_state, $context);
+}
+
+/**
+ * @param $form
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
+ * @param $form_id
+ */
+function eic_user_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
+  if ('bulk_group_invitation' === $form_id) {
+    \Drupal::classResolver(\Drupal\eic_user\Hooks\FormAlter::class)
+      ->alterBulkGroupInvitation($form, $form_state, $form_id);
+  }
+}
+
+/**
+ * Implements hook_entity_presave().
+ */
+function eic_user_entity_presave(EntityInterface $entity) {
+  _eic_user_entity_crud_action($entity);
+}
+
+/**
+ * Implements hook_entity_update().
+ */
+function eic_user_entity_update(EntityInterface $entity) {
+  _eic_user_entity_crud_action($entity);
+}
+
+/**
+ * Implements hook_entity_predelete().
+ */
+function eic_user_entity_predelete(EntityInterface $entity) {
+  _eic_user_entity_crud_action($entity);
+}
+
+/**
+ * On CRUD of group content entity, re-index dependencies.
+ *
+ * @param \Drupal\Core\Entity\EntityInterface $entity
+ *
+ * @throws \Drupal\search_api\SearchApiException
+ */
+function _eic_user_entity_crud_action(EntityInterface $entity) {
+  if (!$entity instanceof GroupContentInterface) {
+    return;
+  }
+
+  /** @var \Drupal\eic_search\Service\SolrDocumentProcessor $solr_helper */
+  $solr_helper = \Drupal::service('eic_search.solr_document_processor');
+  $plugin_id = $entity->getContentPlugin()->getPluginDefinition()['id'];
+  $updated_entities = [];
+
+  switch ($plugin_id) {
+    case 'group_membership':
+      $updated_entities = [$entity->getEntity(), $entity->getGroup()];
+      break;
+  }
+
+  $solr_helper->reIndexEntities($updated_entities);
 }

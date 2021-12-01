@@ -36,6 +36,9 @@
     "drupal/menu_trail_by_path": {
       "2914746 - Fatal error after installing the module": "https://www.drupal.org/files/issues/2020-01-10/menu_trail_by_path-fatal_error_on_menu_active_trail_service_override-2914746-18.patch"
     },
+    "drupal/message_notify": {
+      "3251270 - Error when trying to send a message to a deleted owner": "https://www.drupal.org/files/issues/2021-11-25/message_notify-check_owner_account-3251270-2.patch"
+    },
     "drupal/message_subscribe": {
       "3086125 - Prevent infinite loop when sending messages with queue": "https://www.drupal.org/files/issues/2021-10-01/3086125-skip-if-we-have-last-item-14.patch"
     },
@@ -52,8 +55,7 @@
       "#3155628 - Limited values are randomised": "https://www.drupal.org/files/issues/2020-09-02/3155628-10.patch"
     },
     "drupal/subpathauto": {
-      "3130139 - Group Content Add/Create Paths do not work": "https://www.drupal.org/files/issues/2020-04-23/subpathauto-group-content-create-urls-3130139-2.patch",
-      "3188768 - Install from configuration fails due to missing dependencies": "./patches/subpathauto/3188768-subpathauto-add-dependencies.patch"
+      "3130139 - Group Content Add/Create Paths do not work": "https://www.drupal.org/files/issues/2020-04-23/subpathauto-group-content-create-urls-3130139-2.patch"
     },
     "openeuropa/ecl-twig-loader": {
       "7f697ba - Add OpenEuropa\\Twig\\Loader\\EuropaComponentLibraryLoader::parseName() function (protected parseName() function from twig function is private since D9)": "patches/ecl-twig-loader/7f697ba-add-parsename-function-to-ecl-loader.patch",

@@ -16,10 +16,14 @@
 {% block content %}
   {% include "@theme/patterns/compositions/teaser-overview.html.twig" with {
     items: items,
+    no_items_available: no_items_available,
+    no_items_available_header: no_items_available_header,
     icon_file_path: common.icon_file_path,
   } only %}
 
-  {% include "@theme/patterns/compositions/pagination.html.twig" with pagination|default({}) only %}
+  {% if items and items is not empty %}
+    {% include "@theme/patterns/compositions/pagination.html.twig" with pagination|default({}) only %}
+  {% endif %}
 {% endblock %}
 
 {% block sidebar %}
