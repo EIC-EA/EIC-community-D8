@@ -28,26 +28,30 @@ use Symfony\Component\Routing\Route;
 class GroupFeatureAccess extends AccessPluginBase {
 
   /**
+   * The GroupFeatureHelper service.
+   *
    * @var \Drupal\oec_group_features\GroupFeatureHelper
-   *   The GroupFeatureHelper service.
    */
   private $groupsFeatureHelper;
 
   /**
+   * The group entity.
+   *
    * @var GroupInterface
-   *   The group entity.
    */
   private $group;
 
   /**
+   * The GroupPermissionHandlerInterface service.
+   *
    * @var GroupPermissionHandlerInterface
-   *   The GroupPermissionHandlerInterface service.
    */
   private $permissionHandler;
 
   /**
+   * The ModuleHandler service.
+   *
    * @var \Drupal\Core\Extension\ModuleHandlerInterface
-   *   The ModuleHandler service.
    */
   protected $moduleHandler;
 
