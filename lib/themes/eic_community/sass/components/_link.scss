@@ -77,6 +77,7 @@
 
   body &--button-secondary {
     @extend .ecl-button--secondary;
+    padding: calc(0.75rem - 2px) 1rem;
   }
 
   &--icon {
