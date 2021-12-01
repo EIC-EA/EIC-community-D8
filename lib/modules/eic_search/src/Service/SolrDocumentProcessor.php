@@ -236,6 +236,12 @@ class SolrDocumentProcessor {
         $language = t('English', [], ['context' => 'eic_search'])->render();
         $user_url = '';
         $group_id = $fields['its_group_id_integer'] ?? -1;
+        $this->addOrUpdateDocumentField(
+          $document,
+          'its_group_id_integer',
+          $fields,
+          $group_id
+        );
         $document->addField('ss_global_group_parent_id', $group_id);
         $group = Group::load($group_id);
         if ($group && $owner = EICGroupsHelper::getGroupOwner($group)) {
@@ -351,7 +357,11 @@ class SolrDocumentProcessor {
    *
    * @throws \Drupal\Core\Entity\EntityMalformedException
    */
-  public function processGroupData(Document &$document, array $fields) {
+  public function processGroupContentData(Document &$document, array $fields) {
+    if ($fields['ss_search_api_datasource'] === 'entity:group') {
+      return;
+    }
+
     $group_parent_label = '';
     $group_parent_url = '';
     $group_parent_id = -1;
