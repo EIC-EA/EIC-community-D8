@@ -153,6 +153,19 @@ function eic_community_preprocess_user(array &$variables) {
         ],
       ];
 
+      // Gets user topics of interest.
+      if ($topics_of_interest = _eic_community_get_user_topics_of_interest($user, $member_profile)) {
+        $user_item['flagged_interests'] = [
+          'title' => t('My Interests'),
+          'items' => [
+            [
+              'title' => t('Topics of interests'),
+              'items' => $topics_of_interest,
+            ],
+          ],
+        ];
+      }
+
       $variables['user_item'] = $user_item;
       break;
 
@@ -447,4 +460,43 @@ function _eic_community_get_user_job_titles(UserInterface $account, ProfileInter
 function _eic_community_get_user_joining_date(UserInterface $account, $format = DateTimeHelper::DATE_FORMAT_MONTH_FULL_YEAR) {
   $date_formatter = \Drupal::service('date.formatter');
   return $date_formatter->format($account->getCreatedTime(), $format);
+}
+
+/**
+ * Returns the array of topics of interest to use in templates.
+ *
+ * @param \Drupal\user\UserInterface $account
+ *   The user account for which we want to get the topics of interest.
+ * @param \Drupal\profile\Entity\ProfileInterface $member_profile
+ *   (optional) The user profile entity associated with user account.
+ *
+ * @return array
+ *   The array of topics of interest.
+ */
+function _eic_community_get_user_topics_of_interest(UserInterface $account, ProfileInterface $member_profile = NULL) {
+  $member_profile = $member_profile ?? \Drupal::service('eic_user.helper')->getUserMemberProfile($account);
+
+  // If we don't have a member profile for this user, skip.
+  if (empty($member_profile)) {
+    return [];
+  }
+
+  // If the member profile doesn't have social links, skip.
+  if ($member_profile->get('field_vocab_topic_interest')->isEmpty()) {
+    return [];
+  }
+
+  /** @var \Drupal\taxonomy\TermInterface[] $terms */
+  $terms = $member_profile->get('field_vocab_topic_interest')->referencedEntities();
+
+  $topics = [];
+  foreach ($terms as $term) {
+    $loaded_parents = [];
+    /** @var \Drupal\taxonomy\TermInterface[] $loaded_parents */
+    $loaded_parents = _eic_community_get_term_parents($term, $loaded_parents);
+    $loaded_parents = array_reverse($loaded_parents, TRUE);
+    $topics = _eic_community_process_term_parents_tree($term, $topics, $loaded_parents);
+  }
+
+  return $topics;
 }
