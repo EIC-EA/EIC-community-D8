@@ -13,6 +13,7 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
 use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_search\Search\Sources\ActivityStreamSourceType;
+use Drupal\eic_topics\TopicsManager;
 use Drupal\file\Entity\File;
 use Drupal\group\Entity\GroupContent;
 use Drupal\group\Entity\GroupInterface;
@@ -204,7 +205,7 @@ class ActivityStreamBlock extends BlockBase implements ContainerFactoryPluginInt
         'delete_modal_cancel' => $this->t('Cancel', [], ['context' => 'eic_group']),
         'delete_modal_close' => $this->t('Close', [], ['context' => 'eic_group']),
       ],
-      '#is_taxonomy_term_page' => 'entity.taxonomy_term.canonical' === $this->routeMatch->getRouteName(),
+      '#is_taxonomy_term_page' => TopicsManager::isTopicPage(),
       '#datasource' => $this->activityStreamSourceType->getSourcesId(),
       '#source_class' => ActivityStreamSourceType::class,
       '#group_id' => $group ? $group->id() : NULL,

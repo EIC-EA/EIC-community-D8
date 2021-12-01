@@ -105,11 +105,13 @@ class TopicsManager {
     ];
 
     $query_options = [
-      'query' => SearchHelper::buildSolrQueryParams($filters)
+      'query' => SearchHelper::buildSolrQueryParams($filters),
     ];
 
     return Url::fromRoute(
-      'eic_search.global_search', [], $query_options
+      'eic_search.global_search',
+      [],
+      $query_options
     )->toString();
   }
 
@@ -125,12 +127,15 @@ class TopicsManager {
 
     $query_options = [
       'query' => [
-        'filter' => Topics::TERM_TOPICS_ID_FIELD_USER_SOLR . ':' . $term->label(),
+        'filter' => Topics::TERM_TOPICS_ID_FIELD_USER_SOLR . ':' . $term->label(
+          ),
       ],
     ];
 
     return Url::fromRoute(
-      'eic_search.people', [], $query_options
+      'eic_search.people',
+      [],
+      $query_options
     )->toString();
   }
 
@@ -140,7 +145,10 @@ class TopicsManager {
    *
    * @return string
    */
-  private function getGroupRedirectUrl(?TermInterface $term, string $group_type): string {
+  private function getGroupRedirectUrl(
+    ?TermInterface $term,
+    string $group_type
+  ): string {
     if (!$term instanceof TermInterface) {
       return '';
     }
@@ -170,8 +178,20 @@ class TopicsManager {
     ];
 
     return Url::fromRoute(
-      $route_name, [], $query_options
+      $route_name,
+      [],
+      $query_options
     )->toString();
+  }
+
+  /**
+   * Return TRUE if the current page is a taxonomy term.
+   *
+   * @return bool
+   */
+  public static function isTopicPage(): bool {
+    return 'entity.taxonomy_term.canonical' === \Drupal::routeMatch()
+        ->getRouteName();
   }
 
 }
