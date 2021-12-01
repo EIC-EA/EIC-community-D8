@@ -11,13 +11,13 @@
             <img class="ecl-attachment__image" src="{{ image.src }}" alt="{{ image.alt }}" />
           </div>
         {% elseif icon_file_path and icon is not empty %}
-          <div class="ecl-attachment__icon-wrapper">
+          <div class="ecl-attachment__icon-wrapper {{ is_clickable ? 'ecl-attachment__icon-wrapper--s' }}">
             {% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with {
               extra_classes: 'ecl-attachment__icon',
               icon: icon_file_path ? {
                 path: icon_file_path,
                 name: icon.name,
-                size: is_clickable ? 's' : 'm',
+                size: is_clickable ? 's' : 'l',
                 type: icon.type,
               } : {},
             } only %}
@@ -63,22 +63,6 @@
     {% if not is_clickable %}
       <div class="ecl-attachment__footer">
         <div class="ecl-attachment__actions">
-          {% if author %}
-            <div class="ecl-attachment__action ecl-attachment__action--author">
-                {% if author.path %}
-                  {% include '@ecl-twig/ec-component-link/ecl-link.html.twig' with {
-                    link: {
-                      type: 'standalone',
-                      label: author.name,
-                      path: author.path,
-                    },
-                    extra_classes: "ecl-attachment__author",
-                  } only %}
-                {% else %}
-                  <span class="ecl-attachment__author">{{ author.name }}</span>
-                {% endif %}
-            </div>
-          {% endif %}
           {% if timestamp %}
             <div class="ecl-attachment__action">
               {% include "@theme/patterns/components/timestamp.html.twig" with {
@@ -90,6 +74,22 @@
           {% endif %}
           {% if language %}
             <div class="ecl-attachment__action">{{ language }}</div>
+          {% endif %}
+          {% if author %}
+            <div class="ecl-attachment__action">
+              {% if author.path %}
+                Uploaded by&nbsp;{% include '@ecl-twig/ec-component-link/ecl-link.html.twig' with {
+                  link: {
+                    type: 'standalone',
+                    label: author.name,
+                    path: author.path,
+                  },
+                  extra_classes: "ecl-attachment__author",
+                } only %}
+              {% else %}
+                <span class="ecl-attachment__author">{{ author.name }}</span>
+              {% endif %}
+            </div>
           {% endif %}
           {% if filesize %}
             <div class="ecl-attachment__action">{{ filesize }}</div>
@@ -110,7 +110,7 @@
                   path: path,
                   icon_position: 'before',
                 },
-                extra_classes: "ecl-attachment__link",
+                extra_classes: "ecl-attachment__link ecl-link ecl-link--standalone",
                 extra_attributes: {
                   download: true
                 },

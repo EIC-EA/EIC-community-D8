@@ -46,6 +46,7 @@ module:
   eic_events: 0
   eic_flags: 0
   eic_fragment_fact_figure: 0
+  eic_group_membership: 0
   eic_group_statistics: 0
   eic_groups: 0
   eic_helper: 0

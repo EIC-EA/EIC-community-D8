@@ -72,22 +72,19 @@ class StatisticsHelper {
    * @param \Drupal\flag\FlagService $flag_service
    * @param \Drupal\eic_comments\CommentsHelper $comments_helper
    * @param \Drupal\eic_user\UserHelper $user_helper
-   * @param \Drupal\eic_groups\EICGroupsHelper $groups_helper
    */
   public function __construct(
     StatisticsStorage $statistics_storage,
     NodeStatisticsDatabaseStorage $node_statistics_storage,
     FlagService $flag_service,
     CommentsHelper $comments_helper,
-    UserHelper $user_helper,
-    EICGroupsHelper $groups_helper
+    UserHelper $user_helper
   ) {
     $this->statisticsStorage = $statistics_storage;
     $this->nodeStatisticsDatabaseStorage = $node_statistics_storage;
     $this->flagService = $flag_service;
     $this->commentsHelper = $comments_helper;
     $this->userHelper = $user_helper;
-    $this->groupsHelper = $groups_helper;
   }
 
   /**
@@ -97,6 +94,15 @@ class StatisticsHelper {
     EntityFileDownloadCount $file_download_counter
   ) {
     $this->entityFileDownloadCount = $file_download_counter;
+  }
+
+  /**
+   * @param \Drupal\eic_groups\EICGroupsHelper $eic_groups_helper
+   */
+  public function setGroupsHelper(
+    EICGroupsHelper $eic_groups_helper
+  ) {
+    $this->groupsHelper = $eic_groups_helper;
   }
 
   /**
