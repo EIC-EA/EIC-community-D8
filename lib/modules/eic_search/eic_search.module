@@ -91,7 +91,7 @@ function eic_search_search_api_solr_documents_alter(
     $fields = $document->getFields();
 
     $solr_document_processor->processGlobalData($document, $fields);
-    $solr_document_processor->processGroupData($document, $fields);
+    $solr_document_processor->processGroupContentData($document, $fields);
     $solr_document_processor->processMessageData($document, $fields);
     $solr_document_processor->processDiscussionData($document, $fields);
     $solr_document_processor->processDocumentData($document, $fields);
