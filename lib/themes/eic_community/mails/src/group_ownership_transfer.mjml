@@ -67,70 +67,39 @@
           </mj-text>
         </mj-column>
       </mj-section>
-
       <mj-section padding="0">
         <mj-column>
           <mj-divider border-width="1px" border-style="solid"  />
         </mj-column>
       </mj-section>
-
+      <mj-section padding="0">
+        <mj-column width="100%">
+          <mj-image src="images/header.png" />
+        </mj-column>
+      </mj-section>
       <mj-section padding="10px 0px 0px">
         <mj-column>
           <mj-text mj-class="text">
-            Dear John Smith,
+            Dear <strong>[new_GO_full_name]</strong>,
             <br><br>
-            Jane Doe invited you to join the following group at European Innovation Council:
+            <strong>[old_GO_full_name]</strong> transferred you the ownership of the following group at European Innovation Council:
+            <strong>[group_name]</strong>
             <br><br>
-            <span style="font-weight: bold; text-decoration: none; color:#004494">Public group - open membership requests</span>
-          </mj-text>
-        </mj-column>
-      </mj-section>
-
-      <mj-section padding="0">
-        <mj-column width="85%">
-          <mj-divider border-width="1px" border-style="solid"  />
-          <mj-text>
-            <span style="font-weight: bold; text-decoration: none; color:#404040">
-              See their message below:
-            </span>
-            <br><br>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris condimentum commodo nunc in lacinia. Aliquam at hendrerit mauris. Nunc nec scelerisque nisi. Nullam vitae commodo dolor. Nullam id nisi fringilla, varius metus nec, porta libero. Integer id auctor lacus. Nunc id lacinia eros. Curabitur vulputate iaculis faucibus. Nulla finibus velit turpis, vitae imperdiet mi egestas vitae. Duis ut velit euismod, sodales mi at, fermentum tellus.
-          </mj-text>
-          <mj-divider border-width="1px" border-style="solid" />
-        </mj-column>
-      </mj-section>
-
-      <mj-section padding="0" css-class="pre-footer">
-        <mj-column>
-          <mj-text css-class="pre-footer">
-            To accept this invitation, click <a class="link" href="#" target="_blank">Join&nbsp;this&nbsp;group</a>.
-            <br><br>
-            To decline this invitation, <a class="link" href="#" target="_blank">click&nbsp;here</a>.
           </mj-text>
         </mj-column>
       </mj-section>
       <mj-section padding="0" text-align="left" css-class="pre-footer">
         <mj-column width="230px">
           <mj-button width="200px" font-size="14px" mj-class="btn" inner-padding="12px 15px" text-decoration="underline" background-color="#FFD617" color="#000000" border-radius="0" font-weight="bold" href="#" target="_blank">
-            Accept invitation
+            Go to group
           </mj-button>
         </mj-column>
         <mj-column width="230px">
           <mj-button width="200px" font-size="14px" mj-class="btn" inner-padding="12px 15px" background-color="#004494" color="#ffffff" border-radius="0" font-weight="bold" href="#" target="_blank">
-            Decline invitation
+            Edit group
           </mj-button>
         </mj-column>
       </mj-section>
-      <mj-section padding="0 0 30px" css-class="pre-footer">
-        <mj-column>
-          <mj-text css-class="pre-footer">
-            <em>Jane Doe, member of public group - open membership requests.</em>
-            <br>
-          </mj-text>
-        </mj-column>
-      </mj-section>
-
-
       <mj-hero>
         <mj-divider border-width="5px" border-style="solid" border-color="#004494" />
       </mj-hero>
