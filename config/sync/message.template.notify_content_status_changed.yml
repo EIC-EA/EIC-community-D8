@@ -1,0 +1,24 @@
+uuid: 628495cf-bea4-4641-8835-9b7a09de1f5d
+langcode: en
+status: true
+dependencies:
+  config:
+    - filter.format.full_html
+  module:
+    - eic_messages
+third_party_settings:
+  eic_messages:
+    message_template_type: notification
+template: notify_content_status_changed
+label: 'NOTIFY :: MT :: Content status changed'
+description: 'Notifies an author that a content has changed its status.'
+text:
+  -
+    value: "<p>Dear [message:author:field_first_name:value]&nbsp;[message:author:field_last_name:value],</p>\r\n\r\n<p><a href=\"[message:field_entity_url:uri]\">[message:field_referenced_entity_label:value]</a>&nbsp;has changed status from [message:field_entity_prev_status_label:value] to [message:field_entity_status_label:value].</p>\r\n\r\n<p>The EIC Community team</p>\r\n"
+    format: full_html
+settings:
+  'token options':
+    clear: false
+    'token replace': true
+  purge_override: false
+  purge_methods: {  }

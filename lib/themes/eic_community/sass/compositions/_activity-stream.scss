@@ -5,6 +5,10 @@
 
     &__items-wrapper {}
 
+    &__no-content-header {
+      color: $ecl-color-blue;
+    }
+
     &__item {
         padding: ecl-box-model('padding', 'default');
         margin-bottom: ecl-box-model('padding');
