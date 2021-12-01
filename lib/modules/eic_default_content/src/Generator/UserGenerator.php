@@ -25,6 +25,13 @@ class UserGenerator extends CoreGenerator {
    * {@inheritdoc}
    */
   public function load() {
+    $trusted_user_data = [
+      'pass' => 'secret',
+      'roles' => [
+        'trusted_user',
+      ],
+    ];
+
     $users = [
       [
         'name' => 'trusted_user',
@@ -63,6 +70,22 @@ class UserGenerator extends CoreGenerator {
           'field_last_name' => 'Role ' . reset($user['roles']),
           'field_media' => $this->getRandomImage('public://'),
           'mail' => $user['name'] . '@eic.local',
+          'langcode' => 'en',
+          'preferred_langcode' => 'en',
+        ]);
+
+      $user->activate();
+      $user->save();
+    }
+
+    for ($i = 0; $i <= 50; $i++) {
+      $user = User::create($trusted_user_data + [
+          'name' => 'trusted_user' . $i,
+          'init' => 'email',
+          'field_first_name' => 'User #' . $i,
+          'field_last_name' => 'Trusted User #' . $i,
+          'field_media' => $this->getRandomImage('public://'),
+          'mail' =>  'trusted_user' . $i . '@eic.local',
           'langcode' => 'en',
           'preferred_langcode' => 'en',
         ]);

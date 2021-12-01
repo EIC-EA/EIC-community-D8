@@ -4,7 +4,7 @@ namespace Drupal\eic_groups;
 
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use \Drupal\message\MessageInterface;
+use Drupal\message\MessageInterface;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityInterface;
@@ -45,6 +45,12 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
   const GROUP_ADMINISTRATOR_ROLE = 'group-admin';
 
   const GROUP_MEMBER_ROLE = 'group-member';
+
+  const GROUP_TYPE_OWNER_ROLE = 'owner';
+
+  const GROUP_TYPE_ADMINISTRATOR_ROLE = 'admin';
+
+  const GROUP_TYPE_MEMBER_ROLE = 'member';
 
   const INVITEE_INVITATION_EMAIL_LIMIT = 2;
 
@@ -224,6 +230,35 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
   }
 
   /**
+   * Get the current group owner of a group.
+   *
+   * @param \Drupal\group\Entity\GroupInterface $group
+   *   The group entity.
+   * @param bool $return_as_membership_object
+   *   (optional) Defaults to FALSE.
+   *
+   * @return \Drupal\user\UserInterface|\Drupal\group\GroupMembership|null
+   *   Returns a user entity if $return_as_membership_object is FALSE (this is
+   *   the default) and otherwise an GroupMembership object.
+   */
+  public static function getGroupOwner(GroupInterface $group, $return_as_membership_object = FALSE) {
+    $owners = $group->getMembers($group->bundle() . '-' . self::GROUP_TYPE_OWNER_ROLE);
+
+    if (empty($owners)) {
+      return NULL;
+    }
+
+    /** @var \Drupal\group\GroupMembership $owner_membership */
+    $owner_membership = reset($owners);
+
+    if ($return_as_membership_object) {
+      return $owner_membership;
+    }
+
+    return $owner_membership->getUser();
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function getGroupFromRoute() {
@@ -257,9 +292,10 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
     }
 
     if ($entity instanceof MessageInterface) {
-      $group_ref_id = $entity->hasField('field_group_ref') ?
-        $entity->get('field_group_ref')->entity->id() :
-        NULL;
+      $group_ref_id = NULL;
+      if ($entity->hasField('field_group_ref') && $entity->get('field_group_ref')->entity instanceof GroupInterface) {
+        $group_ref_id = $entity->get('field_group_ref')->entity->id();
+      }
       $group = $group_ref_id ? Group::load($group_ref_id) : NULL;
 
       return $group;

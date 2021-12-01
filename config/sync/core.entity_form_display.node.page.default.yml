@@ -72,6 +72,11 @@ content:
     settings: {  }
     third_party_settings: {  }
     region: content
+  field_send_notification:
+    weight: 102
+    settings: {  }
+    third_party_settings: {  }
+    region: content
   field_subtitle:
     weight: 1
     settings:
@@ -175,5 +180,10 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
+  url_redirects:
+    weight: 50
+    settings: {  }
+    third_party_settings: {  }
+    region: content
 hidden:
   member_content_edit_access: true

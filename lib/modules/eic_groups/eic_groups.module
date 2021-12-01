@@ -169,6 +169,12 @@ function eic_groups_node_view(array &$build, EntityInterface $entity, EntityView
  * Implements hook_form_BASE_FORM_ID_alter().
  */
 function eic_groups_form_group_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  // Act on group add forms.
+  if ($form_state->getFormObject()->getOperation() == 'add') {
+    \Drupal::classResolver(FormOperations::class)
+      ->groupAddForm($form, $form_state);
+  }
+
   // Since the group permissions do not exist when hook_group_insert() is
   // invoked, we use a submit handler that will be called after it is created.
   // @todo This might not be sufficient when creating groups programmatically,
