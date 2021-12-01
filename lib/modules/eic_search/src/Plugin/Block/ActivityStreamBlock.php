@@ -8,6 +8,7 @@ use Drupal\Core\Datetime\DateFormatter;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
 use Drupal\eic_groups\EICGroupsHelper;
@@ -60,6 +61,11 @@ class ActivityStreamBlock extends BlockBase implements ContainerFactoryPluginInt
   private $currentUser;
 
   /**
+   * @var \Drupal\Core\Routing\RouteMatchInterface $routeMatch
+   */
+  private $routeMatch;
+
+  /**
    * {@inheritdoc}
    */
   public static function create(
@@ -76,7 +82,8 @@ class ActivityStreamBlock extends BlockBase implements ContainerFactoryPluginInt
       $container->get('entity_type.manager'),
       $container->get('eic_search.activity_stream_library'),
       $container->get('date.formatter'),
-      $container->get('current_user')
+      $container->get('current_user'),
+      $container->get('current_route_match')
     );
   }
 
@@ -102,6 +109,8 @@ class ActivityStreamBlock extends BlockBase implements ContainerFactoryPluginInt
    *   The Date formatter
    * @param AccountInterface $current_user
    *   The Date formatter
+   * @param \Drupal\Core\Routing\RouteMatch $route_match
+   *   The route match service
    */
   public function __construct(
     array $configuration,
@@ -111,7 +120,8 @@ class ActivityStreamBlock extends BlockBase implements ContainerFactoryPluginInt
     EntityTypeManagerInterface $entity_type_manager,
     ActivityStreamSourceType $activity_stream_source_type,
     DateFormatter $date_formatter,
-    AccountInterface $current_user
+    AccountInterface $current_user,
+    RouteMatchInterface $route_match
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->groupsHelper = $groups_helper;
@@ -119,6 +129,7 @@ class ActivityStreamBlock extends BlockBase implements ContainerFactoryPluginInt
     $this->activityStreamSourceType = $activity_stream_source_type;
     $this->dateFormatter = $date_formatter;
     $this->currentUser = $current_user;
+    $this->routeMatch = $route_match;
   }
 
   /**
@@ -193,6 +204,7 @@ class ActivityStreamBlock extends BlockBase implements ContainerFactoryPluginInt
         'delete_modal_cancel' => $this->t('Cancel', [], ['context' => 'eic_group']),
         'delete_modal_close' => $this->t('Close', [], ['context' => 'eic_group']),
       ],
+      '#is_taxonomy_term_page' => 'entity.taxonomy_term.canonical' === $this->routeMatch->getRouteName(),
       '#datasource' => $this->activityStreamSourceType->getSourcesId(),
       '#source_class' => ActivityStreamSourceType::class,
       '#group_id' => $group ? $group->id() : NULL,
