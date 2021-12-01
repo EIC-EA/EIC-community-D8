@@ -126,6 +126,16 @@
       margin: 0 ecl-box-model('padding') 0 0;
     }
 
+    &--is-empty svg {
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translate(-50%);
+      width: 3rem;
+      height: 3rem;
+      color: #ffffff;
+    }
+
     #{$node}--as-card & {
       width: 100%;
       box-sizing: border-box;
@@ -472,11 +482,11 @@
       }
     }
 
-    @include ecl-media-breakpoint-up('md') {
-      .ecl-teaser-overview--has-columns & {
-        display: block;
-      }
-    }
+    //@include ecl-media-breakpoint-up('md') {
+    //  .ecl-teaser-overview--has-columns & {
+    //    display: block;
+    //  }
+    //}
   }
 
   &__content {
@@ -581,6 +591,7 @@
       @include ecl-media-breakpoint-up('md') {
         flex: 1;
         min-width: 0;
+        max-width: 200px;
         overflow: hidden;
         text-overflow: ellipsis;
       }
