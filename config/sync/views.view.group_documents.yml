@@ -10,6 +10,7 @@ dependencies:
     - flag
     - group
     - node
+    - oec_group_features
 _core:
   default_config_hash: eKWN3z9j-zM3Sn_r3-u4y7-TtiRshBKXOJLqXRtFfwc
 id: group_documents
@@ -27,9 +28,10 @@ display:
     position: 0
     display_options:
       access:
-        type: group_permission
+        type: group_features_permission
         options:
           group_permission: 'access files overview'
+          linked_feature: eic_groups_files
       cache:
         type: tag
         options: {  }
@@ -319,9 +321,7 @@ display:
         - 'languages:language_content'
         - 'languages:language_interface'
         - route
-        - route.group
         - url
-        - user.group_permissions
         - 'user.node_grants:view'
       tags: {  }
   block_1:
@@ -337,8 +337,6 @@ display:
         - 'languages:language_content'
         - 'languages:language_interface'
         - route
-        - route.group
         - url
-        - user.group_permissions
         - 'user.node_grants:view'
       tags: {  }
