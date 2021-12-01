@@ -5,6 +5,8 @@ namespace Drupal\eic_group_membership\Controller;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Routing\RedirectDestinationInterface;
 use Drupal\eic_groups\EICGroupsHelper;
+use Drupal\eic_messages\Service\MessageBusInterface;
+use Drupal\eic_messages\Util\NotificationMessageTemplates;
 use Drupal\group\Entity\GroupContentInterface;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\group\GroupMembership;
@@ -32,19 +34,30 @@ class GroupMembershipController extends ControllerBase {
   protected $requestStack;
 
   /**
+   * The Message bus service.
+   *
+   * @var \Drupal\eic_messages\Service\MessageBusInterface
+   */
+  protected $messageBus;
+
+  /**
    * Constructs a new GroupMembershipController object.
    *
    * @param \Drupal\Core\Routing\RedirectDestinationInterface $redirect_destination
    *   The redirect destination helper.
    * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
    *   The request stack.
+   * @param \Drupal\eic_messages\Service\MessageBusInterface $message_bus
+   *   The Message bus service.
    */
   public function __construct(
     RedirectDestinationInterface $redirect_destination,
-    RequestStack $request_stack
+    RequestStack $request_stack,
+    MessageBusInterface $message_bus
   ) {
     $this->redirectDestination = $redirect_destination;
     $this->requestStack = $request_stack;
+    $this->messageBus = $message_bus;
   }
 
   /**
@@ -53,7 +66,8 @@ class GroupMembershipController extends ControllerBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('redirect.destination'),
-      $container->get('request_stack')
+      $container->get('request_stack'),
+      $container->get('eic_messages.message_bus')
     );
   }
 
@@ -82,6 +96,14 @@ class GroupMembershipController extends ControllerBase {
     $group_owner_role = $group->bundle() . '-' . EICGroupsHelper::GROUP_TYPE_OWNER_ROLE;
     // Transfer old group owner role to the new owner.
     $new_owner_membership->addRole($group_owner_role);
+
+    // Send notification to the new owner.
+    $this->messageBus->dispatch([
+      'template' => NotificationMessageTemplates::TRANSFER_GROUP_OWNERSHIP,
+      'uid' => $new_owner->id(),
+      'field_group_ref' => $group,
+      'field_related_user' => $old_owner_membership->getUser(),
+    ]);
 
     // Default response when destination is not in the URL.
     $response = new RedirectResponse($group->toUrl()->toString());
