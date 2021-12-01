@@ -29,21 +29,25 @@ class GroupFeatureAccess extends AccessPluginBase {
 
   /**
    * @var \Drupal\oec_group_features\GroupFeatureHelper
+   *   The GroupFeatureHelper service.
    */
   private $groupsFeatureHelper;
 
   /**
    * @var GroupInterface
+   *   The group entity.
    */
   private $group;
 
   /**
    * @var GroupPermissionHandlerInterface
+   *   The GroupPermissionHandlerInterface service.
    */
   private $permissionHandler;
 
   /**
    * @var \Drupal\Core\Extension\ModuleHandlerInterface
+   *   The ModuleHandler service.
    */
   protected $moduleHandler;
 
@@ -56,12 +60,19 @@ class GroupFeatureAccess extends AccessPluginBase {
    * GroupFeatureAccess constructor.
    *
    * @param array $configuration
-   * @param $plugin_id
-   * @param $plugin_definition
+   *   A configuration array containing information about the plugin instance.
+   * @param string $plugin_id
+   *   The plugin_id for the plugin instance.
+   * @param mixed $plugin_definition
+   *   The plugin implementation definition.
    * @param \Drupal\oec_group_features\GroupFeatureHelper $groups_feature_helper
+   *   The GroupFeatureHelper service.
    * @param \Drupal\Core\Plugin\Context\ContextProviderInterface $context_provider
+   *   The ContextProviderInterface service.
    * @param \Drupal\group\Access\GroupPermissionHandlerInterface $group_permission_handler
+   *   The GroupPermissionHandlerInterface service.
    * @param \Drupal\Core\Extension\ModuleHandler $module_handler
+   *   The ModuleHandler service.
    */
   public function __construct(
     array $configuration,
@@ -84,9 +95,13 @@ class GroupFeatureAccess extends AccessPluginBase {
 
   /**
    * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
+   *   The container to pull out services used in the plugin.
    * @param array $configuration
+   *   A configuration array containing information about the plugin instance.
    * @param string $plugin_id
+   *   The plugin_id for the plugin instance.
    * @param mixed $plugin_definition
+   *   The plugin implementation definition.
    *
    * @return \Drupal\oec_group_features\Plugin\views\access\GroupFeatureAccess|\Drupal\views\Plugin\views\PluginBase|static
    */
