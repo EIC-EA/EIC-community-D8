@@ -87,6 +87,8 @@ class EntityTreeWidget extends WidgetBase {
         'disable_top_choices' => FALSE,
         'load_all' => FALSE,
         'ignore_current_user' => FALSE,
+        'target_bundles' => [],
+        'is_required' => FALSE,
       ] + parent::defaultSettings();
   }
 
@@ -95,13 +97,7 @@ class EntityTreeWidget extends WidgetBase {
    */
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
     $settings = $this->getFieldSetting('handler_settings');
-    $target_entity = $this->fieldDefinition->getFieldStorageDefinition()
-      ->getSetting('target_type');
-    $target_bundles = array_key_exists('target_bundles', $settings) && $settings['target_bundles'] ?
-      $settings['target_bundles'] :
-      [];
 
-    $target_bundle = reset($target_bundles);
     $preselected_items = json_encode(array_map(function (EntityInterface $entity) {
       if ($entity instanceof TermInterface) {
         $parents = $entity->get('parent')->getValue();
@@ -121,6 +117,17 @@ class EntityTreeWidget extends WidgetBase {
       ];
     }, $items->referencedEntities()));
 
+    $options = [
+      'match_top_level_limit' => $this->getSetting('items_to_load'),
+      'items_to_load' => $this->getSetting('items_to_load'),
+      'auto_select_parents' => $this->getSetting('auto_select_parents'),
+      'disable_top_choices' => $this->getSetting('disable_top_choices'),
+      'load_all' => $this->getSetting('load_all'),
+      'ignore_current_user' => $this->getSetting('ignore_current_user'),
+      'target_bundles' => $settings['target_bundles'] ?? [],
+      'is_required' => $this->fieldDefinition->isRequired(),
+    ];
+
     $element += self::getEntityTreeFieldStructure(
       $items->referencedEntities(),
       $this->getFieldSetting('target_type'),
@@ -128,7 +135,8 @@ class EntityTreeWidget extends WidgetBase {
       Url::fromRoute('eic_content.entity_tree')->toString(),
       Url::fromRoute('eic_content.entity_tree_children')->toString(),
       Url::fromRoute('eic_content.entity_tree_search')->toString(),
-      $this->getSetting('items_to_load')
+      $this->getSetting('items_to_load'),
+      $options
     );
 
     $element['#attached']['library'][] = 'eic_community/react-tree-field';
@@ -183,37 +191,51 @@ class EntityTreeWidget extends WidgetBase {
   }
 
   /**
-   * @param $default_values
-   * @param $target_type
-   * @param $preselected_terms
-   * @param $terms_url
-   * @param $terms_url_children
-   * @param $terms_url_search
-   * @param $number_to_load
-   * @param bool $ignore_current_user
-   * @param bool $load_all
-   * @param false $disable_top_selection
-   * @param int $match_limit
-   * @param false $is_required
+   * Returns an array for the entity_tree widget.
+   *
+   * This array can be used for widget form elements (Field API) or in custom
+   * forms.
+   *
+   * @param array $default_values
+   * @param string $target_type
+   * @param string $preselected_terms
+   * @param string $entities_url
+   * @param string $entities_url_children
+   * @param string $entities_url_search
+   * @param int $number_to_load
+   * @param array $options
+   *   A config array with following optional keys:
+   *   - match_top_level_limit: (int) Maximum number of top-level selection.
+   *   - items_to_load: (int) Number of items to load with load more.
+   *   - auto_select_parents: (bool) Whether to auto-select parents when
+   *     selecting a child.
+   *   - disable_top_choices: (bool) Whether to disable the top-level selection.
+   *   - load_all: (bool) Whether to load all items.
+   *   - ignore_current_user: (bool) Whether to ignore the current user in the
+   *     user tree.
+   *   - target_bundles: (array) The selectable bundles. Defaults to all.
+   *   - is_required: (bool) Indicates if field is required.
    *
    * @return array
    */
-  public static function getEntityTreeFieldStructure(
-    $default_values,
-    $target_type,
-    $preselected_terms,
-    $entities_url,
-    $entities_url_children,
-    $entities_url_search,
-    $number_to_load,
-    $ignore_current_user = TRUE,
-    $load_all = TRUE,
-    $disable_top_selection = FALSE,
-    $match_limit = 0,
-    $is_required = false,
+  public static function getEntityTreeFieldStructure (
+    array $default_values,
+    string $target_type,
+    string $preselected_terms,
+    string $entities_url,
+    string $entities_url_children,
+    string $entities_url_search,
+    int $number_to_load,
+    array $options = []
   ): array {
     /** @var \Drupal\Core\StringTranslation\TranslationManager $translation_manager */
     $translation_manager = \Drupal::service('string_translation');
+
+    $options += self::defaultSettings();
+
+    // @todo We should be able to work with multiple bundles.
+    $target_bundle = empty($options['target_bundles']) ? '' : reset($options['target_bundles']);
+
     return [
       '#type' => 'entity_autocomplete',
       '#default_value' => $default_values,
@@ -230,7 +252,7 @@ class EntityTreeWidget extends WidgetBase {
           'select_value' => $translation_manager->translate('Select a value', [], ['context' => 'eic_search']),
           'match_limit' => $translation_manager->translate(
             'You can select only <b>@match_limit</b> top-level items.',
-            ['@match_limit' => $this->getSetting('match_top_level_limit')],
+            ['@match_limit' => $options['match_top_level_limit']],
             ['context' => 'eic_search']
           ),
           'search' => $translation_manager->translate('Search', [], ['context' => 'eic_search']),
@@ -240,14 +262,14 @@ class EntityTreeWidget extends WidgetBase {
         'data-terms-url' => $entities_url,
         'data-terms-url-search' => $entities_url_search,
         'data-terms-url-children' => $entities_url_children,
-        'data-match-limit' => $this->getSetting('match_top_level_limit'),
+        'data-match-limit' => $options['match_top_level_limit'],
         'data-items-to-load' => $number_to_load,
-        'data-disable-top' => $this->getSetting('disable_top_choices'),
-        'data-load-all' => $this->getSetting('load_all'),
-        'data-ignore-current-user' => $this->getSetting('ignore_current_user'),
+        'data-disable-top' => (int) $options['disable_top_choices'],
+        'data-load-all' => (int) $options['load_all'],
+        'data-ignore-current-user' => (int) $options['ignore_current_user'],
         'data-target-bundle' => $target_bundle,
-        'data-target-entity' => $target_entity,
-        'data-is-required' => (int) $element['#required'],
+        'data-target-entity' => $target_type,
+        'data-is-required' => (int) $options['is_required'],
       ],
     ];
   }
