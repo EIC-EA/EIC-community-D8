@@ -102,64 +102,34 @@ class EntityTreeWidget extends WidgetBase {
       [];
 
     $target_bundle = reset($target_bundles);
+    $preselected_items = json_encode(array_map(function (EntityInterface $entity) {
+      if ($entity instanceof TermInterface) {
+        $parents = $entity->get('parent')->getValue();
+        $parent = reset($parents)['target_id'];
+        $name = $entity->getName();
+      }
 
-    $element +=
-      [
-        '#type' => 'entity_autocomplete',
-        '#default_value' => $items->referencedEntities(),
-        '#tags' => TRUE,
-        '#target_type' => $this->getFieldSetting('target_type'),
-        '#maxlength' => 5000,
-        '#element_validate' => [
-          [static::class, 'validate'],
-        ],
-        '#attributes' => [
-          'class' => ['hidden', 'entity-tree-reference-widget'],
-          'data-selected-terms' => json_encode(array_map(function (EntityInterface $entity) {
-            if ($entity instanceof TermInterface) {
-              $parents = $entity->get('parent')->getValue();
-              $parent = reset($parents)['target_id'];
-              $name = $entity->getName();
-            }
+      if ($entity instanceof UserInterface) {
+        $parent = 0;
+        $name = realname_load($entity) . ' ' . '('. $entity->getEmail() .')';
+      }
 
-            if ($entity instanceof UserInterface) {
-              $parent = 0;
-              $name = realname_load($entity) . ' ' . '('. $entity->getEmail() .')';
-            }
-
-            return [
-              'name' => $name,
-              'tid' => $entity->id(),
-              'parent' => $parent,
-            ];
-          }, $items->referencedEntities())),
-          'data-translations' => json_encode([
-            'select_value' => $this->t('Select a value', [], ['context' => 'eic_search']),
-            'match_limit' => $this->t(
-              'You can select only <b>@match_limit</b> top-level items.',
-              ['@match_limit' => $this->getSetting('match_top_level_limit')],
-              ['context' => 'eic_search']
-            ),
-            'search' => $this->t('Search', [], ['context' => 'eic_search']),
-            'your_values' => $this->t('Your selected values', [], ['context' => 'eic_search']),
-            'required_field' => $this->t('This field is required', [], ['context' => 'eic_content']),
-          ]),
-          'data-terms-url' => Url::fromRoute('eic_content.entity_tree')
-            ->toString(),
-          'data-terms-url-search' => Url::fromRoute('eic_content.entity_tree_search')
-            ->toString(),
-          'data-terms-url-children' => Url::fromRoute('eic_content.entity_tree_children')
-            ->toString(),
-          'data-match-limit' => $this->getSetting('match_top_level_limit'),
-          'data-items-to-load' => $this->getSetting('items_to_load'),
-          'data-disable-top' => $this->getSetting('disable_top_choices'),
-          'data-load-all' => $this->getSetting('load_all'),
-          'data-ignore-current-user' => $this->getSetting('ignore_current_user'),
-          'data-target-bundle' => $target_bundle,
-          'data-target-entity' => $target_entity,
-          'data-is-required' => (int) $element['#required'],
-        ],
+      return [
+        'name' => $name,
+        'tid' => $entity->id(),
+        'parent' => $parent,
       ];
+    }, $items->referencedEntities()));
+
+    $element += self::getEntityTreeFieldStructure(
+      $items->referencedEntities(),
+      $this->getFieldSetting('target_type'),
+      $preselected_items,
+      Url::fromRoute('eic_content.entity_tree')->toString(),
+      Url::fromRoute('eic_content.entity_tree_children')->toString(),
+      Url::fromRoute('eic_content.entity_tree_search')->toString(),
+      $this->getSetting('items_to_load')
+    );
 
     $element['#attached']['library'][] = 'eic_community/react-tree-field';
 
@@ -210,6 +180,74 @@ class EntityTreeWidget extends WidgetBase {
     }
 
     return $summary;
+  }
+
+  /**
+   * @param $default_values
+   * @param $target_type
+   * @param $preselected_terms
+   * @param $terms_url
+   * @param $terms_url_children
+   * @param $terms_url_search
+   * @param $number_to_load
+   * @param bool $ignore_current_user
+   * @param bool $load_all
+   * @param false $disable_top_selection
+   * @param int $match_limit
+   * @param false $is_required
+   *
+   * @return array
+   */
+  public static function getEntityTreeFieldStructure(
+    $default_values,
+    $target_type,
+    $preselected_terms,
+    $entities_url,
+    $entities_url_children,
+    $entities_url_search,
+    $number_to_load,
+    $ignore_current_user = TRUE,
+    $load_all = TRUE,
+    $disable_top_selection = FALSE,
+    $match_limit = 0,
+    $is_required = false,
+  ): array {
+    return [
+      '#type' => 'entity_autocomplete',
+      '#default_value' => $default_values,
+      '#tags' => TRUE,
+      '#target_type' => $target_type,
+      '#maxlength' => 5000,
+      '#element_validate' => [
+        [static::class, 'validate'],
+      ],
+      '#attributes' => [
+        'class' => ['hidden', 'entity-tree-reference-widget'],
+        'data-selected-terms' => $preselected_terms,
+        'data-translations' => json_encode([
+          'select_value' => $this->t('Select a value', [], ['context' => 'eic_search']),
+          'match_limit' => $this->t(
+            'You can select only <b>@match_limit</b> top-level items.',
+            ['@match_limit' => $this->getSetting('match_top_level_limit')],
+            ['context' => 'eic_search']
+          ),
+          'search' => $this->t('Search', [], ['context' => 'eic_search']),
+          'your_values' => $this->t('Your selected values', [], ['context' => 'eic_search']),
+          'required_field' => $this->t('This field is required', [], ['context' => 'eic_content']),
+        ]),
+        'data-terms-url' => $entities_url,
+        'data-terms-url-search' => $entities_url_search,
+        'data-terms-url-children' => $entities_url_children,
+        'data-match-limit' => $this->getSetting('match_top_level_limit'),
+        'data-items-to-load' => $number_to_load,
+        'data-disable-top' => $this->getSetting('disable_top_choices'),
+        'data-load-all' => $this->getSetting('load_all'),
+        'data-ignore-current-user' => $this->getSetting('ignore_current_user'),
+        'data-target-bundle' => $target_bundle,
+        'data-target-entity' => $target_entity,
+        'data-is-required' => (int) $element['#required'],
+      ],
+    ];
   }
 
 }
