@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.group.organisation.field_organisation_type
     - group.type.organisation
     - workflows.workflow.groups
   module:
@@ -19,6 +20,12 @@ content:
     weight: 2
     region: content
     third_party_settings: {  }
+  field_organisation_type:
+    weight: 26
+    settings: {  }
+    third_party_settings: {  }
+    type: options_buttons
+    region: content
   label:
     type: string_textfield
     weight: 0
