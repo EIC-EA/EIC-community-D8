@@ -4,6 +4,7 @@ namespace Drupal\eic_user\EventSubscriber;
 
 use Drupal\Core\Cache\Cache;
 use Drupal\eic_flags\FlagType;
+use Drupal\eic_user\UserHelper;
 use Drupal\flag\Event\FlagEvents;
 use Drupal\flag\Event\FlaggingEvent;
 use Drupal\flag\Event\UnflaggingEvent;
@@ -16,6 +17,23 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  * EIC User Flags subscriber.
  */
 class FlagEventSubscriber implements EventSubscriberInterface {
+
+  /**
+   * The EIC User Helper service.
+   *
+   * @var \Drupal\eic_user\UserHelper
+   */
+  private $eicUserHelper;
+
+  /**
+   * FlagEventSubscriber constructor.
+   *
+   * @param \Drupal\eic_user\UserHelper $eic_user_helper
+   *   The EIC User Helper service.
+   */
+  public function __construct(UserHelper $eic_user_helper) {
+    $this->eicUserHelper = $eic_user_helper;
+  }
 
   /**
    * {@inheritdoc}
@@ -73,8 +91,7 @@ class FlagEventSubscriber implements EventSubscriberInterface {
           break;
         }
 
-        // @todo Implement proper dependency injection.
-        $user_profile = \Drupal::service('eic_user.helper')->getUserMemberProfile($flagging->getOwner());
+        $user_profile = $this->eicUserHelper->getUserMemberProfile($flagging->getOwner());
 
         if (!$user_profile) {
           break;
