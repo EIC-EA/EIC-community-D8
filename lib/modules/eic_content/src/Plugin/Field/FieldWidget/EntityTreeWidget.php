@@ -212,6 +212,8 @@ class EntityTreeWidget extends WidgetBase {
     $match_limit = 0,
     $is_required = false,
   ): array {
+    /** @var \Drupal\Core\StringTranslation\TranslationManager $translation_manager */
+    $translation_manager = \Drupal::service('string_translation');
     return [
       '#type' => 'entity_autocomplete',
       '#default_value' => $default_values,
@@ -225,15 +227,15 @@ class EntityTreeWidget extends WidgetBase {
         'class' => ['hidden', 'entity-tree-reference-widget'],
         'data-selected-terms' => $preselected_terms,
         'data-translations' => json_encode([
-          'select_value' => $this->t('Select a value', [], ['context' => 'eic_search']),
-          'match_limit' => $this->t(
+          'select_value' => $translation_manager->translate('Select a value', [], ['context' => 'eic_search']),
+          'match_limit' => $translation_manager->translate(
             'You can select only <b>@match_limit</b> top-level items.',
             ['@match_limit' => $this->getSetting('match_top_level_limit')],
             ['context' => 'eic_search']
           ),
-          'search' => $this->t('Search', [], ['context' => 'eic_search']),
-          'your_values' => $this->t('Your selected values', [], ['context' => 'eic_search']),
-          'required_field' => $this->t('This field is required', [], ['context' => 'eic_content']),
+          'search' => $translation_manager->translate('Search', [], ['context' => 'eic_search']),
+          'your_values' => $translation_manager->translate('Your selected values', [], ['context' => 'eic_search']),
+          'required_field' => $translation_manager->translate('This field is required', [], ['context' => 'eic_content']),
         ]),
         'data-terms-url' => $entities_url,
         'data-terms-url-search' => $entities_url_search,
