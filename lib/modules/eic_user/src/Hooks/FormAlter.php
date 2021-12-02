@@ -82,7 +82,7 @@ class FormAlter {
           'data-disable-top' => 0,
           'data-load-all' => 1,
           'data-ignore-current-user' => 1,
-          'data-target-bundle' => 'invite',
+          'data-search-specific-users' => 1,
           'data-target-entity' => 'user',
           'data-is-required' => FALSE,
           'data-group-id' => $group->id(),

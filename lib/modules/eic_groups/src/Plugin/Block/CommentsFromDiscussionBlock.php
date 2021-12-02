@@ -6,7 +6,9 @@ use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\Core\Block\Annotation\Block;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Url;
 use Drupal\eic_groups\EICGroupsHelper;
+use Drupal\eic_search\Search\Sources\UserTaggingCommentsSourceType;
 use Drupal\eic_user\UserHelper;
 use Drupal\file\Entity\File;
 use Drupal\flag\FlagService;
@@ -175,6 +177,12 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
     $file_url = $file ? file_url_transform_relative(file_create_url($file->get('uri')->value)) : NULL;
 
     $group_id = $current_group_route ? $current_group_route->id() : 0;
+    $user_url = Url::fromRoute('eic_search.solr_search', [
+      'datasource' => json_encode(['user']),
+      'source_class' => UserTaggingCommentsSourceType::class,
+      'page' => 1,
+      'current_group' => $group_id,
+    ])->toString();
 
     $build['#attached']['drupalSettings']['overview'] = [
       'is_group_owner' => array_key_exists(EICGroupsHelper::GROUP_OWNER_ROLE, $user_group_roles),
@@ -190,6 +198,8 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
       'is_comment_closed' => $is_comment_closed,
       'group_roles' => $user_group_roles,
       'group_id' => $group_id,
+      'users_url' => $user_url,
+      'users_url_search' => $user_url,
       'permissions' => [
         'post_comment' =>
           $this->groupPermissionChecker->getPermissionInGroups(
@@ -226,6 +236,17 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
         'action_delete_comment' => $this->t('Delete comment', [], ['context' => 'eic_groups']),
         'action_request_delete' => $this->t('Request deletion', [], ['context' => 'eic_groups']),
         'action_request_archival' => $this->t('Request archival', [], ['context' => 'eic_groups']),
+        'select_value' => $this->t('Select a value', [], ['context' => 'eic_search']),
+        'match_limit' => $this->t(
+          'You can select only <b>@match_limit</b> top-level items.',
+          ['@match_limit' => 0],
+          ['context' => 'eic_search']
+        ),
+        'search' => $this->t('Search', [], ['context' => 'eic_search']),
+        'your_values' => $this->t('Your selected values', [], ['context' => 'eic_search']),
+        'required_field' => $this->t('This field is required', [], ['context' => 'eic_content']),
+        'select_users' => $this->t('Select users', [], ['context' => 'eic_content']),
+        'modal_invite_users_title' => $this->t('Invite user(s)', [], ['context' => 'eic_content']),
       ],
     ];
 

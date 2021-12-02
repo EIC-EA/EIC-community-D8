@@ -33,6 +33,7 @@ dependencies:
     - field.storage.media.oe_media_image
     - field.storage.user.field_media
     - field.storage.group.field_location_type
+    - field.storage.group.field_organisation_type
     - field.storage.group.field_vocab_geo
     - field.storage.group.field_thumbnail
     - field.storage.group.field_image
@@ -718,6 +719,14 @@ field_settings:
     dependencies:
       config:
         - field.storage.group.field_location_type
+  group_field_organisation_type:
+    label: '[Group] Organisation type'
+    datasource_id: 'entity:group'
+    property_path: field_organisation_type
+    type: integer
+    dependencies:
+      config:
+        - field.storage.group.field_organisation_type
   group_field_vocab_geo:
     label: '[Group] Regions & Countries'
     datasource_id: 'entity:group'
@@ -1420,4 +1429,5 @@ tracker_settings:
 options:
   index_directly: true
   cron_limit: 50
+  track_changes_in_references: true
 server: global

@@ -83,6 +83,8 @@
                         items: action.items,
                         trigger: action.is_compact and icon_file_path ? trigger : NULL,
                       } only %}
+                    {% elseif action.content is defined %}
+                      {{ action.content }}
                     {% else %}
                       {% if action is not empty %}
                         {% if action.link %}

@@ -28,13 +28,41 @@ function eic_community_preprocess_views_view_field(&$variables) {
  * Implements template_preprocess_views_view().
  */
 function eic_community_preprocess_views_view(&$variables) {
+  $map_view_action = [
+    'taxonomy_related_content-groups' => [
+      'link' => [
+        'label' => t('View all groups'),
+        'path' => GlobalOverviewPages::getGlobalOverviewPageUrl(
+          GlobalOverviewPages::GROUPS
+        ),
+      ],
+    ],
+    'taxonomy_related_content-news_stories' => [
+      'link' => [
+        'label' => t('View all stories'),
+        'path' => GlobalOverviewPages::getGlobalOverviewPageUrl(
+          GlobalOverviewPages::STORIES
+        ),
+      ],
+    ],
+    'taxonomy_related_content-events' => [
+      'link' => [
+        'label' => t('View all events'),
+        'path' => GlobalOverviewPages::getGlobalOverviewPageUrl(
+          GlobalOverviewPages::EVENTS
+        ),
+      ],
+    ],
+  ];
   /** @var \Drupal\views\ViewExecutable $view */
   $view = $variables['view'];
 
   $key = $view->id() . '-' . $view->current_display;
   switch ($key) {
     case 'groups_homepage-block_groups_homepage':
-      if ($call_to_action_url = GlobalOverviewPages::getGlobalOverviewPageUrl(GlobalOverviewPages::GROUPS)) {
+      if ($call_to_action_url = GlobalOverviewPages::getGlobalOverviewPageUrl(
+        GlobalOverviewPages::GROUPS
+      )) {
         $variables['call_to_action'] = [
           'link' => [
             'label' => t('View all groups'),
@@ -45,7 +73,9 @@ function eic_community_preprocess_views_view(&$variables) {
       break;
 
     case 'groups_homepage-block_events_homepage':
-      if ($call_to_action_url = GlobalOverviewPages::getGlobalOverviewPageUrl(GlobalOverviewPages::EVENTS)) {
+      if ($call_to_action_url = GlobalOverviewPages::getGlobalOverviewPageUrl(
+        GlobalOverviewPages::EVENTS
+      )) {
         $variables['call_to_action'] = [
           'link' => [
             'label' => t('View all events'),
@@ -81,13 +111,13 @@ function eic_community_preprocess_views_view(&$variables) {
       $variables['no_container'] = TRUE;
       break;
 
+    case 'taxonomy_related_content-files':
     case 'taxonomy_related_content-news_stories':
       $variables['extra_classes'] = 'ecl-section-wrapper--is-white ecl-featured-content-collection--has-list-layout';
       $variables['no_container'] = TRUE;
       break;
 
     case 'taxonomy_related_content-discussions':
-    case 'taxonomy_related_content-files':
     case 'taxonomy_related_content-events':
       $variables['extra_classes'] = 'ecl-section-wrapper--is-white ecl-featured-content-collection--has-list-layout';
       $variables['items_extra_classes'] = 'ecl-featured-content-collection__item--big';
@@ -95,7 +125,8 @@ function eic_community_preprocess_views_view(&$variables) {
       break;
 
     case 'taxonomy_related_content-wiki_pages':
-      $variables['extra_classes'] = 'ecl-featured-content-collection--has-list-layout';
+      $variables['extra_classes'] = 'ecl-section-wrapper ecl-section-wrapper--is-white ecl-featured-content-collection--has-list-layout';
+      $variables['no_container'] = TRUE;
       break;
 
     case 'taxonomy_related_content-experts':
@@ -109,5 +140,14 @@ function eic_community_preprocess_views_view(&$variables) {
         ];
       }
       break;
+  }
+
+  $call_to_action = array_key_exists(
+    $key,
+    $map_view_action
+  ) ? $map_view_action[$key] : [];
+
+  if (!empty($call_to_action) && !empty($call_to_action['link']['path'])) {
+    $variables['call_to_action'] = $call_to_action;
   }
 }

@@ -12,6 +12,10 @@ services:
     class: Drupal\eic_default_content\Generator\GroupGenerator
     tags:
       - { name: data_fixtures }
+  eic_default_content.organisation_generator:
+    class: Drupal\eic_default_content\Generator\OrganisationGenerator
+    tags:
+      - { name: data_fixtures }
   eic_default_content.story_generator:
     class: Drupal\eic_default_content\Generator\StoryGenerator
     tags:

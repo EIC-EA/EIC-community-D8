@@ -20,6 +20,7 @@ class TaxonomyGenerator extends CoreGenerator {
     $this->createTopics();
     $this->createFundingSources();
     $this->createEventTypes();
+    $this->createOrganisationTypes();
   }
 
   /**
@@ -33,6 +34,7 @@ class TaxonomyGenerator extends CoreGenerator {
     $this->unloadEntities('taxonomy_term', ['vid' => 'job_titles']);
     $this->unloadEntities('taxonomy_term', ['vid' => 'funding_source']);
     $this->unloadEntities('taxonomy_term', ['vid' => 'event_type']);
+    $this->unloadEntities('taxonomy_term', ['vid' => 'organisation_types']);
   }
 
   /**
@@ -152,6 +154,38 @@ class TaxonomyGenerator extends CoreGenerator {
     ];
     foreach ($terms as $term) {
       $this->createTerm('event_type', ['name' => $term]);
+    }
+  }
+
+  /**
+   * Creates 'organisation_types' terms.
+   */
+  private function createOrganisationTypes() {
+    $types = [
+      'EIC Beneficiaries',
+      'EIC Summit',
+      'EIC Seal of Excellence',
+      'EIC Accelerator' => [
+        'EIC SMEi',
+        'EIC FTI',
+      ],
+      'EIC Pathfinder',
+      'Other',
+    ];
+
+    foreach ($types as $key => $type) {
+      if (is_array($type)) {
+        $parent = $this->createTerm('organisation_types', ['name' => $key]);
+        foreach ($type as $sub_type) {
+          $this->createTerm('organisation_types', [
+            'name' => $sub_type,
+            'parent' => $parent->id(),
+          ]);
+        }
+      }
+      else {
+        $this->createTerm('organisation_types', ['name' => $type]);
+      }
     }
   }
 
