@@ -1,0 +1,47 @@
+<div class="ecl-activity-stream__item">
+  <div class="ecl-activity-stream__item__main">
+      <div class="ecl-activity-stream__item__content">
+        {% if title is not empty %}
+          <a href="{{ path }}"><h3>{{ title }}</h3></a>
+        {% endif %}
+        {% if description is not empty %}
+        <div class="ecl-activity-stream__item__type">
+          <span class="ecl-activity-stream__item__description">{{ description|raw }}</span>
+        </div>
+        {% endif %}
+      </div>
+  </div>
+
+  <div class="ecl-activity-stream__item__footer">
+    <div class="ecl-activity-stream__item__timestamp">
+      {% if timestamp %}
+        {% include "@theme/patterns/components/timestamp.html.twig" with timestamp|default({})|merge({
+          icon_file_path: icon_file_path,
+        }) only %}
+      {% endif %}
+    </div>
+    <div class="ecl-activity-stream__item__stats">
+      {% if stats is not empty %}
+        <div class="ecl-teaser__stats">
+          {% for stat in stats %}
+            <div class="ecl-teaser__stat">
+              {% if stat.icon is not empty and icon_file_path %}
+                {% include '@ecl-twig/ec-component-icon/ecl-icon.html.twig' with {
+                  icon: {
+                    size: 'xs',
+                    path: icon_file_path,
+                    type: stat.icon.type,
+                    name: stat.icon.name,
+                  },
+                  extra_classes: 'ecl-teaser__stat-icon',
+                } only %}
+              {% endif %}
+              <span class="ecl-teaser__stat-label">{{ stat.label }}</span>
+              <span class="ecl-teaser__stat-value">{{ stat.value }}</span>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>

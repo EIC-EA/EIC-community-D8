@@ -158,6 +158,9 @@ class EntityTreeWidget extends WidgetBase {
           'data-target-bundle' => $target_bundle,
           'data-target-entity' => $target_entity,
           'data-is-required' => (int) $element['#required'],
+          // This allow to search users depending specific conditions
+          // in link SourceType.
+          'data-search-specific-users' => 0,
         ],
       ];
 

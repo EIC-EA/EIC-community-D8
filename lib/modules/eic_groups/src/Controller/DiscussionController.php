@@ -25,6 +25,7 @@ use Drupal\group\Entity\GroupContent;
 use Drupal\node\Entity\Node;
 use Drupal\oec_group_comments\GroupPermissionChecker;
 use Drupal\user\Entity\User;
+use Drupal\user\UserInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -123,6 +124,7 @@ class DiscussionController extends ControllerBase {
     $user = User::load($this->currentUser()->id());
     $content = json_decode($request->getContent(), TRUE);
     $text = Xss::filter($content['text']);
+    $tagged_users = $content['taggedUsers'] ?? NULL;
     $parent_id = $content['parentId'];
 
     $comment = Comment::create([
@@ -135,6 +137,11 @@ class DiscussionController extends ControllerBase {
         'value' => $text,
         'format' => 'plain_text',
       ],
+      'field_tagged_users' => array_map(function($tagged_user) {
+        return [
+          'target_id' => $tagged_user['tid'],
+        ];
+      }, $tagged_users),
       'comment_type' => 'node_comment',
       'pid' => $parent_id,
     ]);
@@ -213,6 +220,8 @@ class DiscussionController extends ControllerBase {
       );
       $soft_deleted = $comment->get('field_comment_is_soft_deleted')->value;
 
+      $tagged_users = $comment->get('field_tagged_users')->referencedEntities();
+
       $comments_data[] = [
         'user_image' => $file_url,
         'user_id' => $user->id(),
@@ -221,6 +230,13 @@ class DiscussionController extends ControllerBase {
         'created_timestamp' => $comment->getCreatedTime(),
         'text' => $comment->get('comment_body')->value,
         'comment_id' => $comment->id(),
+        'tagged_users' => array_map(function(UserInterface $user) {
+          return [
+            'uid' => $user->id(),
+            'name' => realname_load($user),
+            'url' => $user->toUrl()->toString(),
+          ];
+        }, $tagged_users),
         'likes' => $this->getCommentLikesData($comment, $account),
         'archived_flag_time' => $archived_flag_time ?
           $this->t('Archived on @time', ['@time' => $archived_flag_time], ['context' => 'eic_groups']) :
