@@ -132,9 +132,6 @@ class EntityTreeWidget extends WidgetBase {
       $items->referencedEntities(),
       $this->getFieldSetting('target_type'),
       $preselected_items,
-      Url::fromRoute('eic_content.entity_tree')->toString(),
-      Url::fromRoute('eic_content.entity_tree_children')->toString(),
-      Url::fromRoute('eic_content.entity_tree_search')->toString(),
       $this->getSetting('items_to_load'),
       $options
     );
@@ -199,9 +196,6 @@ class EntityTreeWidget extends WidgetBase {
    * @param array $default_values
    * @param string $target_type
    * @param string $preselected_terms
-   * @param string $entities_url
-   * @param string $entities_url_children
-   * @param string $entities_url_search
    * @param int $number_to_load
    * @param array $options
    *   A config array with following optional keys:
@@ -222,9 +216,6 @@ class EntityTreeWidget extends WidgetBase {
     array $default_values,
     string $target_type,
     string $preselected_terms,
-    string $entities_url,
-    string $entities_url_children,
-    string $entities_url_search,
     int $number_to_load,
     array $options = []
   ): array {
@@ -259,9 +250,9 @@ class EntityTreeWidget extends WidgetBase {
           'your_values' => $translation_manager->translate('Your selected values', [], ['context' => 'eic_search']),
           'required_field' => $translation_manager->translate('This field is required', [], ['context' => 'eic_content']),
         ]),
-        'data-terms-url' => $entities_url,
-        'data-terms-url-search' => $entities_url_search,
-        'data-terms-url-children' => $entities_url_children,
+        'data-terms-url' => Url::fromRoute('eic_content.entity_tree')->toString(),
+        'data-terms-url-search' => Url::fromRoute('eic_content.entity_tree_search')->toString(),
+        'data-terms-url-children' => Url::fromRoute('eic_content.entity_tree_children')->toString(),
         'data-match-limit' => $options['match_top_level_limit'],
         'data-items-to-load' => $number_to_load,
         'data-disable-top' => (int) $options['disable_top_choices'],
