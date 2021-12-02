@@ -606,16 +606,35 @@ class SolrDocumentProcessor {
                 return -1;
               }
 
+              // @todo Make use of user ID only.
               return $user->id() . '|' . $user->getAccountName();
             }, $user_ids);
 
             $document->addField('ss_' . GroupVisibilityType::GROUP_VISIBILITY_OPTION_TRUSTED_USERS, implode(',', $users));
           }
+
+          if (GroupVisibilityType::GROUP_VISIBILITY_OPTION_ORGANISATIONS === $key && $option[GroupVisibilityType::GROUP_VISIBILITY_OPTION_ORGANISATIONS . '_status']) {
+            $group_visibility = GroupVisibilityType::GROUP_VISIBILITY_OPTION_ORGANISATIONS;
+
+            $organisation_ids = $option[GroupVisibilityType::GROUP_VISIBILITY_OPTION_ORGANISATIONS . '_conf'];
+            $organisations = array_map(function ($organisation_id) {
+              $organisation = Group::load(reset($organisation_id));
+              if (!$organisation) {
+                return -1;
+              }
+
+              return $organisation->id();
+            }, $organisation_ids);
+
+            $document->addField('itm_' . GroupVisibilityType::GROUP_VISIBILITY_OPTION_ORGANISATIONS, $organisations);
+          }
         }
         break;
+
       default:
         $group_visibility = GroupVisibilityType::GROUP_VISIBILITY_PUBLIC;
         break;
+
     }
 
     $document->addField('ss_group_visibility', $group_visibility);

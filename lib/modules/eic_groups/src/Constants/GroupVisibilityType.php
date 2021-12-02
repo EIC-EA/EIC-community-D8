@@ -19,6 +19,8 @@ final class GroupVisibilityType {
 
   const GROUP_VISIBILITY_OPTION_EMAIL_DOMAIN = 'restricted_email_domains';
 
+  const GROUP_VISIBILITY_OPTION_ORGANISATIONS = 'restricted_organisations';
+
   const GROUP_VISIBILITY_OPTION_TRUSTED_USERS = 'restricted_users';
 
 }

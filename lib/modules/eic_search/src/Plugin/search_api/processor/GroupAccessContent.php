@@ -139,6 +139,7 @@ class GroupAccessContent extends ProcessorPluginBase {
     ss_group_visibility:' . GroupVisibilityType::GROUP_VISIBILITY_PUBLIC . '
     OR (ss_group_visibility:' . GroupVisibilityType::GROUP_VISIBILITY_PRIVATE . ' AND ss_global_group_parent_id:(' . $group_ids_formatted . '))
     OR (ss_group_visibility:' . GroupVisibilityType::GROUP_VISIBILITY_OPTION_EMAIL_DOMAIN . ' AND ss_' . GroupVisibilityType::GROUP_VISIBILITY_OPTION_EMAIL_DOMAIN . ':*' . $domain . '*)
+    OR (ss_group_visibility:' . GroupVisibilityType::GROUP_VISIBILITY_OPTION_ORGANISATIONS . ' AND itm_' . GroupVisibilityType::GROUP_VISIBILITY_OPTION_ORGANISATIONS . ':(' . $group_ids_formatted . '))
     ';
 
     // Restricted community group, only trusted_user role can view.
