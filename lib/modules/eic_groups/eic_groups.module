@@ -15,7 +15,9 @@ use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Link;
 use Drupal\Core\Render\BubbleableMetadata;
+use Drupal\Core\Render\Markup;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
 use Drupal\eic_groups\Constants\NodeProperty;
@@ -94,6 +96,42 @@ function eic_groups_views_data() {
   ];
 
   return $data;
+}
+
+/**
+ * Implements template_preprocess_views_view_field().
+ *
+ * Users that don't have access to the given group cannot see the group name
+ * where they are invited.
+ * So we force the display here.
+ */
+function eic_groups_preprocess_views_view_field(&$vars) {
+  if ($vars['view']->id() == 'my_invitations' && $vars['field']->options['id'] == 'gid') {
+    /** @var \Drupal\group\Entity\GroupContentInterface $group_content */
+    $group_content = $vars['row']->_entity;
+
+    /** @var \Drupal\group\Entity\GroupInterface $group */
+    $group = $group_content->getGroup();
+
+    // Get the group visibility.
+    $group_visibility = \Drupal::service('eic_groups.helper')->getGroupVisibilityLabel($group);
+
+    // Check if user has access to the group.
+    if ($group->access('view')) {
+      $group_url = $group->toUrl('canonical', ['language' => $group->language()]);
+      $group_link = Link::fromTextAndUrl($group->label(), $group_url)->toRenderable();
+      $group_label = render($group_link);
+    }
+    else {
+      $group_label = $group->label();
+    }
+
+    // Add the visibility to the label.
+    $group_label .= ' (' . $group_visibility . ')';
+
+    $vars['output'] = Markup::create($group_label);
+    $vars['field']->last_render = $group_label;
+  }
 }
 
 /**
