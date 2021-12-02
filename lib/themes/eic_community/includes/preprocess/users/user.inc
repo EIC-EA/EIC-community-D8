@@ -153,6 +153,25 @@ function eic_community_preprocess_user(array &$variables) {
         ],
       ];
 
+      $user_item['flagged_interests'] = [
+        'title' => t('My Interests'),
+        'items' => [],
+      ];
+      // Gets user topics of interest.
+      if ($topics_of_interest = _eic_community_get_user_topics($user, 'field_vocab_topic_interest', $member_profile)) {
+        $user_item['flagged_interests']['items'][] = [
+          'title' => t('Topics of interests'),
+          'items' => $topics_of_interest,
+        ];
+      }
+      // Gets user topics of expertise.
+      if ($topics_of_expertise = _eic_community_get_user_topics($user, 'field_vocab_topic_expertise', $member_profile)) {
+        $user_item['flagged_interests']['items'][] = [
+          'title' => t('Topics of expertise'),
+          'items' => $topics_of_expertise,
+        ];
+      }
+
       $variables['user_item'] = $user_item;
       break;
 
@@ -212,11 +231,13 @@ function eic_community_get_teaser_user_display(UserInterface $user) {
   if (!$user->get('field_media')->isEmpty()) {
     /** @var \Drupal\media\Entity\Media $media */
     $media = \Drupal::service('entity.repository')->getTranslationFromContext($user->get('field_media')->entity);
-    $image_item = ImageValueObject::fromImageItem($media->get('oe_media_image')->first());
-    $author['image'] = [
-      'src' => $image_item->getSource(),
-      'alt' => $author['name'],
-    ];
+    if ($media->bundle() == 'image') {
+      $image_item = ImageValueObject::fromImageItem($media->get('oe_media_image')->first());
+      $author['image'] = [
+        'src' => $image_item->getSource(),
+        'alt' => $author['name'],
+      ];
+    }
   }
 
   return $author;
@@ -447,4 +468,50 @@ function _eic_community_get_user_job_titles(UserInterface $account, ProfileInter
 function _eic_community_get_user_joining_date(UserInterface $account, $format = DateTimeHelper::DATE_FORMAT_MONTH_FULL_YEAR) {
   $date_formatter = \Drupal::service('date.formatter');
   return $date_formatter->format($account->getCreatedTime(), $format);
+}
+
+/**
+ * Returns the array of topics terms to use in templates.
+ *
+ * @param \Drupal\user\UserInterface $account
+ *   The user account for which we want to get the topics.
+ * @param string $taxonomy_term_field_name
+ *   The taxonomy term field name.
+ * @param \Drupal\profile\Entity\ProfileInterface $member_profile
+ *   (optional) The user profile entity associated with user account.
+ *
+ * @return array
+ *   The array of topic terms.
+ */
+function _eic_community_get_user_topics(UserInterface $account, $taxonomy_term_field_name, ProfileInterface $member_profile = NULL) {
+  $member_profile = $member_profile ?? \Drupal::service('eic_user.helper')->getUserMemberProfile($account);
+
+  // If we don't have a member profile for this user, skip.
+  if (empty($member_profile)) {
+    return [];
+  }
+
+  // If the member profile doesn't have the field, skip.
+  if (!$member_profile->hasField($taxonomy_term_field_name)) {
+    return [];
+  }
+
+  // If the member profile doesn't have any selected topics, skip.
+  if ($member_profile->get($taxonomy_term_field_name)->isEmpty()) {
+    return [];
+  }
+
+  /** @var \Drupal\taxonomy\TermInterface[] $terms */
+  $terms = $member_profile->get($taxonomy_term_field_name)->referencedEntities();
+
+  $topics = [];
+  foreach ($terms as $term) {
+    $loaded_parents = [];
+    /** @var \Drupal\taxonomy\TermInterface[] $loaded_parents */
+    $loaded_parents = _eic_community_get_term_parents($term, $loaded_parents);
+    $loaded_parents = array_reverse($loaded_parents, TRUE);
+    $topics = _eic_community_process_term_parents_tree($term, $topics, $loaded_parents);
+  }
+
+  return $topics;
 }

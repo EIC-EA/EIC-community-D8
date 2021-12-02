@@ -24,7 +24,7 @@
 {% endblock %}
 
 {% block content %}
-  {% embed "@theme/patterns/compositions/editorial-article.html.twig" with editorial_article|default({}) %}
+  {% embed "@theme/patterns/compositions/editorial-overview.html.twig" with editorial_article|default({}) %}
     {% block content %}
       {{ page.content }}
     {% endblock %}

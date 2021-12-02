@@ -114,7 +114,7 @@ function eic_community_preprocess_eic_group_header_block(array &$variables) {
   $variables['group_values']['actions'] = $actions;
 
   $flags = [];
-  foreach ($variables['group_values']['membership_links'] as $action) {
+  foreach ($variables['group_values']['membership_links'] as $name => $action) {
     if (isset($action['#lazy_builder'])) {
       $flag = ['content' => $action];
     }

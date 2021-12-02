@@ -45,6 +45,7 @@ use Drupal\search_api\SearchApiException;
 use Drupal\search_api\Utility\PostRequestIndexing;
 use Drupal\search_api\Utility\Utility;
 use Drupal\statistics\NodeStatisticsDatabaseStorage;
+use Drupal\taxonomy\Entity\Term;
 use Drupal\user\Entity\User;
 use Drupal\user\UserInterface;
 use Solarium\Core\Query\DocumentInterface;
@@ -236,6 +237,13 @@ class SolrDocumentProcessor {
         $language = t('English', [], ['context' => 'eic_search'])->render();
         $user_url = '';
         $group_id = $fields['its_group_id_integer'] ?? -1;
+        $this->addOrUpdateDocumentField(
+          $document,
+          'its_group_id_integer',
+          $fields,
+          $group_id
+        );
+        $document->addField('ss_global_group_parent_id', $group_id);
         $group = Group::load($group_id);
         if ($group && $owner = EICGroupsHelper::getGroupOwner($group)) {
           $fullname = realname_load($owner);
@@ -350,7 +358,11 @@ class SolrDocumentProcessor {
    *
    * @throws \Drupal\Core\Entity\EntityMalformedException
    */
-  public function processGroupData(Document &$document, array $fields) {
+  public function processGroupContentData(Document &$document, array $fields) {
+    if ($fields['ss_search_api_datasource'] === 'entity:group') {
+      return;
+    }
+
     $group_parent_label = '';
     $group_parent_url = '';
     $group_parent_id = -1;
@@ -595,16 +607,53 @@ class SolrDocumentProcessor {
                 return -1;
               }
 
+              // @todo Make use of user ID only.
               return $user->id() . '|' . $user->getAccountName();
             }, $user_ids);
 
             $document->addField('ss_' . GroupVisibilityType::GROUP_VISIBILITY_OPTION_TRUSTED_USERS, implode(',', $users));
           }
+
+          if (GroupVisibilityType::GROUP_VISIBILITY_OPTION_ORGANISATIONS === $key && $option[GroupVisibilityType::GROUP_VISIBILITY_OPTION_ORGANISATIONS . '_status']) {
+            $group_visibility = GroupVisibilityType::GROUP_VISIBILITY_OPTION_ORGANISATIONS;
+
+            $organisation_ids = $option[GroupVisibilityType::GROUP_VISIBILITY_OPTION_ORGANISATIONS . '_conf'];
+            $organisations = array_map(function ($organisation_id) {
+              $organisation = Group::load(reset($organisation_id));
+              if (!$organisation) {
+                return -1;
+              }
+
+              return $organisation->id();
+            }, $organisation_ids);
+
+            $document->addField('itm_' . GroupVisibilityType::GROUP_VISIBILITY_OPTION_ORGANISATIONS, $organisations);
+          }
+
+          if (GroupVisibilityType::GROUP_VISIBILITY_OPTION_ORGANISATION_TYPES === $key && $option[GroupVisibilityType::GROUP_VISIBILITY_OPTION_ORGANISATION_TYPES . '_status']) {
+            $group_visibility = GroupVisibilityType::GROUP_VISIBILITY_OPTION_ORGANISATION_TYPES;
+
+            $term_ids = $option[GroupVisibilityType::GROUP_VISIBILITY_OPTION_ORGANISATION_TYPES . '_conf'];
+            $terms = array_map(function ($term_id) {
+              if (!empty($term_id)) {
+                $term = Term::load($term_id);
+                if (!$term) {
+                  return -1;
+                }
+
+                return $term->id();
+              }
+            }, $term_ids);
+
+            $document->addField('itm_' . GroupVisibilityType::GROUP_VISIBILITY_OPTION_ORGANISATION_TYPES, $terms);
+          }
         }
         break;
+
       default:
         $group_visibility = GroupVisibilityType::GROUP_VISIBILITY_PUBLIC;
         break;
+
     }
 
     $document->addField('ss_group_visibility', $group_visibility);

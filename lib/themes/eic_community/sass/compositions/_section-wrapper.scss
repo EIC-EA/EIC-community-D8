@@ -1,6 +1,10 @@
 .ecl-section-wrapper {
   padding: ecl-box-model('padding', 'banner') 0;
 
+  &.ecl-section-wrapper--no-padding {
+    padding-top: 0;
+  }
+
   @include ecl-media-breakpoint-up('md') {
     padding: ecl-box-model('padding--md', 'banner') 0;
 

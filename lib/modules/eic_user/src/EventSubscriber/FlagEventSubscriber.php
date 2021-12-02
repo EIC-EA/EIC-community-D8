@@ -117,7 +117,6 @@ class FlagEventSubscriber implements EventSubscriberInterface {
    *   The flagging entity.
    */
   private function invalidateFlaggedEntityCacheTags(FlaggingInterface $flagging) {
-    // Invalidate flagged entity cache tags.
     Cache::invalidateTags($flagging->getFlaggable()->getCacheTagsToInvalidate());
   }
 

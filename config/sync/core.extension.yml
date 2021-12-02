@@ -46,6 +46,7 @@ module:
   eic_events: 0
   eic_flags: 0
   eic_fragment_fact_figure: 0
+  eic_group_membership: 0
   eic_group_statistics: 0
   eic_groups: 0
   eic_helper: 0
@@ -58,6 +59,7 @@ module:
   eic_message_subscriptions: 0
   eic_messages: 0
   eic_migrate: 0
+  eic_organisations: 0
   eic_overviews: 0
   eic_paragraph_contributor: 0
   eic_paragraph_cta_tile: 0

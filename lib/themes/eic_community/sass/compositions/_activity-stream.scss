@@ -31,7 +31,11 @@
             padding-right: ecl-box-model('padding');
         }
 
-        &__content {}
+        &__content {
+          & h3 {
+            margin-top: 0;
+          }
+        }
 
         &__type {}
 

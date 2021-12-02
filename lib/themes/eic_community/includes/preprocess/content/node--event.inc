@@ -5,6 +5,8 @@
  * Prepares variables for node Event templates.
  */
 
+use Drupal\eic_helper\DateTimeHelper;
+
 /**
  * Implements hook_preprocess_node__event() for event node.
  */
@@ -21,10 +23,15 @@ function eic_community_preprocess_node__event(array &$variables) {
 
       // Get the start date of the event.
       $start_date = 0;
+      $end_date = 0;
       if (!$node->field_date_range->isEmpty()) {
         $start_date = strtotime($node->get('field_date_range')->value);
+        $end_date = strtotime($node->get('field_date_range')->end_value);
       }
-      $teaser['date'] = _eic_community_preprocess_ecl_date_block($start_date);
+      $start_date_formatted = _eic_community_preprocess_ecl_date_block($start_date, NULL, DateTimeHelper::DATE_FORMAT_SHORT);
+      $teaser['date'] = $start_date_formatted;
+      $teaser['date']['start'] = $start_date_formatted;
+      $teaser['date']['end'] = _eic_community_preprocess_ecl_date_block($end_date, NULL, DateTimeHelper::DATE_FORMAT_SHORT);
       $teaser['timestamp']['label'] = eic_community_get_teaser_time_display($node->get('published_at')->value);
 
       // Get the event state.
