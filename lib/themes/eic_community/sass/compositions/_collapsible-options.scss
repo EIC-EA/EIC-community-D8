@@ -188,6 +188,7 @@
   &--blue {
     & #{$node}__trigger {
       background-color: $ecl-color-blue;
+      border-color: $ecl-color-blue;
       color: $ecl-color-white;
     }
 

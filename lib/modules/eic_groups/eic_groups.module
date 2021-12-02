@@ -67,6 +67,7 @@ function eic_groups_theme($existing, $type, $theme, $path) {
         'datasource' => '',
         'source_class' => '',
         'group_id' => '',
+        'is_taxonomy_term_page' => FALSE,
         'is_anonymous' => '',
       ],
     ],

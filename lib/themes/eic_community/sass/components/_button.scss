@@ -1,6 +1,7 @@
 .ecl-button {
   text-align: inherit;
   border-width: 2px;
+  border-color: $ecl-color-blue;
 
   $node: &;
   &__label {

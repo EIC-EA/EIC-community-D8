@@ -93,6 +93,20 @@ function eic_community_preprocess_page(array &$variables): void {
   }, ARRAY_FILTER_USE_BOTH);
   $menu_sections = array_values($menu_sections);
 
+  $footer_sections[] = [
+    'title' => t(
+      '@site_name Community',
+      ['@site_name' => \Drupal::config('system.site')->get('name')],
+      ['context' => 'eic_community']
+    ),
+    'description' => t(
+      'This site is managed by the Directorate-General for Communication',
+      [],
+      ['context' => 'eic_community']
+    ),
+    'list_class_name' => 'ecl-footer-core__section ecl-footer-core__section1',
+  ];
+
   foreach ($menu_sections as $key => $menu) {
     $menu_name = $menu['#derivative_plugin_id'];
     $parameters = new MenuTreeParameters();
