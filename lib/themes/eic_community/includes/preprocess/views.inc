@@ -125,7 +125,8 @@ function eic_community_preprocess_views_view(&$variables) {
       break;
 
     case 'taxonomy_related_content-wiki_pages':
-      $variables['extra_classes'] = 'ecl-featured-content-collection--has-list-layout';
+      $variables['extra_classes'] = 'ecl-section-wrapper ecl-section-wrapper--is-white ecl-featured-content-collection--has-list-layout';
+      $variables['no_container'] = TRUE;
       break;
 
     case 'taxonomy_related_content-experts':
