@@ -59,6 +59,10 @@ function eic_community_preprocess_views_view(&$variables) {
 
   $key = $view->id() . '-' . $view->current_display;
   switch ($key) {
+    case 'groups-block_user_profile_groups':
+      $variables['extra_classes'] = 'ecl-teaser-overview--has-columns ecl-teaser-overview--has-compact-layout';
+      break;
+
     case 'groups_homepage-block_groups_homepage':
       if ($call_to_action_url = GlobalOverviewPages::getGlobalOverviewPageUrl(
         GlobalOverviewPages::GROUPS
