@@ -240,7 +240,8 @@ class UserHelper {
    * @param bool $active_only
    *   Whether to return active users only.
    *
-   * @return array|false
+   * @return int[]|false
+   *   An array of user IDs.
    */
   public function getUsersByExpertise(TermInterface $term, bool $active_only = TRUE) {
     // If term is not a topic term, return FALSE.

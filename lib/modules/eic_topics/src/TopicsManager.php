@@ -5,6 +5,7 @@ namespace Drupal\eic_topics;
 use Drupal\Core\Url;
 use Drupal\eic_search\SearchHelper;
 use Drupal\eic_topics\Constants\Topics;
+use Drupal\eic_user\UserHelper;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\TermInterface;
 
@@ -14,6 +15,25 @@ use Drupal\taxonomy\TermInterface;
 class TopicsManager {
 
   const FIELD_ENTITY_TOPICS = 'field_vocab_topics';
+
+  const FIELD_PROFILE_TOPIC_EXPERTISE = 'field_vocab_topic_expertise';
+
+  /**
+   * The EIC user helper service.
+   *
+   * @var \Drupal\eic_user\UserHelper
+   */
+  protected $userHelper;
+
+  /**
+   * Constructs a new UserHelper.
+   *
+   * @param \Drupal\eic_user\UserHelper $user_helper
+   *   The EIC user helper service.
+   */
+  public function __construct(UserHelper $user_helper) {
+    $this->userHelper = $user_helper;
+  }
 
   /**
    * @param string $tid
@@ -53,15 +73,13 @@ class TopicsManager {
         'stat' => $this->getStatByEntityType($tid, 'group', 'event'),
         'url' => $this->getGroupRedirectUrl($term, 'event'),
       ],
-      /** @TODO not existing yet */
       'expert' => [
-        'stat' => 0,
-        'url' => '',
+        'stat' => count($this->userHelper->getUsersByExpertise($term)),
+        'url' => $this->getUserRedirectUrl($term),
       ],
-      /** @TODO not existing yet */
-      'organization' => [
-        'stat' => 0,
-        'url' => '',
+      'organisation' => [
+        'stat' => $this->getStatByEntityType($tid, 'group', 'organisation'),
+        'url' => $this->getGroupRedirectUrl($term, 'organisation'),
       ],
     ];
   }
@@ -78,9 +96,11 @@ class TopicsManager {
     string $entity_type,
     string $bundle
   ): int {
+    /** @var \Drupal\Core\Entity\Query\QueryInterface $query */
     $query = \Drupal::entityQuery($entity_type)
       ->condition('media' !== $entity_type ? 'type' : 'bundle', $bundle)
-      ->condition(self::FIELD_ENTITY_TOPICS, $tid, 'IN');
+      ->condition(self::FIELD_ENTITY_TOPICS, $tid, 'IN')
+      ->condition('status', 1);
 
     return $query->count()->execute();
   }
@@ -125,11 +145,12 @@ class TopicsManager {
       return '';
     }
 
+    $filters = [
+      Topics::TERM_TOPICS_ID_FIELD_USER_SOLR => $term->label(),
+    ];
+
     $query_options = [
-      'query' => [
-        'filter' => Topics::TERM_TOPICS_ID_FIELD_USER_SOLR . ':' . $term->label(
-          ),
-      ],
+      'query' => SearchHelper::buildSolrQueryParams($filters),
     ];
 
     return Url::fromRoute(
@@ -161,8 +182,15 @@ class TopicsManager {
         $route_name = 'eic_search.groups';
         $solr_topic_field_id = Topics::TERM_TOPICS_ID_FIELD_GROUP_SOLR;
         break;
+
       case 'event':
         $route_name = 'eic_search.events';
+        $solr_topic_field_id = Topics::TERM_TOPICS_ID_FIELD_GROUP_SOLR;
+        break;
+
+      case 'organisation':
+        // @todo Set the correct route name once available.
+        $route_name = '';
         $solr_topic_field_id = Topics::TERM_TOPICS_ID_FIELD_GROUP_SOLR;
         break;
     }
@@ -171,10 +199,12 @@ class TopicsManager {
       return '';
     }
 
+    $filters = [
+      $solr_topic_field_id => $term->label(),
+    ];
+
     $query_options = [
-      'query' => [
-        'filter' => $solr_topic_field_id . ':' . $term->label(),
-      ],
+      'query' => SearchHelper::buildSolrQueryParams($filters),
     ];
 
     return Url::fromRoute(
@@ -190,6 +220,7 @@ class TopicsManager {
    * @return bool
    */
   public static function isTopicPage(): bool {
+    // @todo Refactor this to check the bundle of the term (should be Topics).
     return 'entity.taxonomy_term.canonical' === \Drupal::routeMatch()
         ->getRouteName();
   }
