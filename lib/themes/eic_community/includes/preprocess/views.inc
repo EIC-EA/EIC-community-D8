@@ -129,17 +129,16 @@ function eic_community_preprocess_views_view(&$variables) {
       $variables['no_container'] = TRUE;
       break;
 
-    case 'taxonomy_related_content-experts':
-      // Add the read more link if there is one.
-      if ($view->display_handler->getOption('use_more') == TRUE) {
-        $variables['call_to_action'] = [
-          'link' => [
-            'label' => $view->display_handler->getOption('use_more_text'),
-            'path' => $view->display_handler->getOption('link_url'),
-          ],
-        ];
-      }
-      break;
+  }
+
+  // Add the read more link if there is one.
+  if ($view->display_handler->getOption('use_more') == TRUE) {
+    $variables['call_to_action'] = [
+      'link' => [
+        'label' => $view->display_handler->getOption('use_more_text'),
+        'path' => $view->display_handler->getOption('link_url'),
+      ],
+    ];
   }
 
   $call_to_action = array_key_exists(
