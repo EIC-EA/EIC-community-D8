@@ -62,7 +62,7 @@
   }
 
   &__login-link-icon {
-    margin-bottom: map-get($ecl-spacing, 's');
+    margin-bottom: map-get($ecl-spacing, '2xs');
 
     @include ecl-media-breakpoint-up('md') {
       margin: 0 map-get($ecl-spacing, 's') 0 0;
