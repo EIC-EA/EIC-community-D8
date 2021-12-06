@@ -37,7 +37,6 @@
             {{ output_searchform }}
           </div>
         {% endif %}
-
         {% embed "@theme/patterns/compositions/collapsible-options.html.twig" with {
           items: items|merge([{
             content: output_searchform
@@ -51,13 +50,12 @@
               label: active_item_label,
               variant: 'ghost',
               icon_position: 'before',
-              icon: icon_file_path ? {
-                path: icon_file_path,
-                name: 'ellipsis',
-                type: 'custom',
-                transform: 'rotate-90',
+              icon: {
+                path: '/themes/custom/eic_community/dist/images/sprite/custom/sprites/custom.svg',
+                name: 'hamburger',
+                type: 'general',
                 size: 's',
-              } : {},
+              },
             } %}
           {% endblock %}
         {% endembed %}
