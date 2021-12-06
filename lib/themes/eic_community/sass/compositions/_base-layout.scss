@@ -9,9 +9,9 @@
 
     & #{$node}__main,
     & #{$node}__aside {
-      padding-bottom: map-get($ecl-spacing, 'xl');
+      padding-bottom: 0;
 
-      @include ecl-media-breakpoint-up('md') {
+      @include ecl-media-breakpoint-up('lg') {
         padding-bottom: map-get($ecl-spacing, '3xl');
       }
     }
