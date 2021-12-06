@@ -11,7 +11,7 @@
   }
 
   &__logo {
-    width: map-get($ecl-media, 's');
+    width: map-get($ecl-media, 'm');
     margin-right: auto;
     flex-shrink: 0;
     padding-right: ecl-box-model('padding');
