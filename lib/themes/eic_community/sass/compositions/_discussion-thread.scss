@@ -142,7 +142,6 @@
   &__meta,
   &__featured-items {
     @include ecl-media-breakpoint-up('md') {
-      padding-left: calc(#{map-get($ecl-media, '2xs')} + #{ecl-box-model('padding')});
 
       #{$node}--has-compact-layout & {
         padding-left: calc(#{map-get($ecl-media, '2xs')} + #{ecl-box-model('padding', 'controls')});
@@ -164,7 +163,13 @@
   &__meta {
     display: flex;
     position: relative;
-    align-items: center;
+    flex-wrap: wrap;
+    gap: ecl-box-model('margin', 'controls');
+    flex-direction: column;
+    @include ecl-media-breakpoint-up('md') {
+      align-items: center;
+      flex-direction: row;
+    }
   }
 
   &__highlight-label,
