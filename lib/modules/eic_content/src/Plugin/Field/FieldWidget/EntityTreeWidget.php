@@ -98,24 +98,7 @@ class EntityTreeWidget extends WidgetBase {
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
     $settings = $this->getFieldSetting('handler_settings');
 
-    $preselected_items = json_encode(array_map(function (EntityInterface $entity) {
-      if ($entity instanceof TermInterface) {
-        $parents = $entity->get('parent')->getValue();
-        $parent = reset($parents)['target_id'];
-        $name = $entity->getName();
-      }
-
-      if ($entity instanceof UserInterface) {
-        $parent = 0;
-        $name = realname_load($entity) . ' ' . '('. $entity->getEmail() .')';
-      }
-
-      return [
-        'name' => $name,
-        'tid' => $entity->id(),
-        'parent' => $parent,
-      ];
-    }, $items->referencedEntities()));
+    $preselected_items = self::formatPreselection($items->referencedEntities());
 
     $options = [
       'match_top_level_limit' => $this->getSetting('items_to_load'),
@@ -139,6 +122,36 @@ class EntityTreeWidget extends WidgetBase {
     $element['#attached']['library'][] = 'eic_community/react-tree-field';
 
     return $element;
+  }
+
+  /**
+   * Formats the preselection for the widget.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface[] $entities
+   *   Array of entities.
+   *
+   * @return string
+   *   A JSON encoded string.
+   */
+  public static function formatPreselection(array $entities) {
+    return json_encode(array_map(function (EntityInterface $entity) {
+      if ($entity instanceof TermInterface) {
+        $parents = $entity->get('parent')->getValue();
+        $parent = reset($parents)['target_id'];
+        $name = $entity->getName();
+      }
+
+      if ($entity instanceof UserInterface) {
+        $parent = 0;
+        $name = realname_load($entity) . ' ' . '('. $entity->getEmail() .')';
+      }
+
+      return [
+        'name' => $name,
+        'tid' => $entity->id(),
+        'parent' => $parent,
+      ];
+    }, $entities));
   }
 
   /**
