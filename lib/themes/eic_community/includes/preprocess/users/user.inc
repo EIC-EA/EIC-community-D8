@@ -51,6 +51,7 @@ function eic_community_preprocess_user(array &$variables) {
       break;
 
     case 'full':
+      $current_user = \Drupal::currentUser();
       $member_profile = \Drupal::service('eic_user.helper')->getUserMemberProfile($user);
       $user_item = [
         'editorial_header' => [
@@ -66,6 +67,7 @@ function eic_community_preprocess_user(array &$variables) {
         'icon_file_path' => $variables['eic_icon_path'],
         'title' => \Drupal::service('eic_user.helper')->getFullName($user),
         'description' => _eic_community_get_user_profile_body($user, $member_profile),
+        'type' => _eic_community_get_user_type($user, $member_profile),
         'job_titles' => _eic_community_get_user_job_titles($user, $member_profile),
         'image' => _get_profile_image_array($user),
         'meta' => [
@@ -81,22 +83,26 @@ function eic_community_preprocess_user(array &$variables) {
         ],
       ];
 
-      // Gets user contact link.
-      if (
-        ($user_contact_link = _eic_community_get_user_contact_link($user)) &&
-        $user->get(PrivateMessage::PRIVATE_MESSAGE_USER_ALLOW_CONTACT_ID)->value
-      ) {
-        $user_contact_link['icon']['name'] = 'send';
-        $user_contact_link['link'] = [
-          'label' => t('Direct message'),
-          'path' => $user_contact_link['path'],
-        ];
-        $user_item['editorial_header']['actions'][] = $user_contact_link;
-      }
+      // We show the contact link and follow flag if current user is not
+      // viewing its own profile page.
+      if ($current_user->id() !== $user->id()) {
+        // Gets user contact link.
+        if (
+          ($user_contact_link = _eic_community_get_user_contact_link($user)) &&
+          $user->get(PrivateMessage::PRIVATE_MESSAGE_USER_ALLOW_CONTACT_ID)->value
+        ) {
+          $user_contact_link['icon']['name'] = 'send';
+          $user_contact_link['link'] = [
+            'label' => t('Direct message'),
+            'path' => $user_contact_link['path'],
+          ];
+          $user_item['editorial_header']['actions'][] = $user_contact_link;
+        }
 
-      // Gets the follow user flag.
-      if (isset($variables['elements']['flag_' . FlagType::FOLLOW_USER])) {
-        $user_item['editorial_header']['actions'][] = ['content' => $variables['elements']['flag_' . FlagType::FOLLOW_USER]];
+        // Gets the follow user flag.
+        if (isset($variables['elements']['flag_' . FlagType::FOLLOW_USER])) {
+          $user_item['editorial_header']['actions'][] = ['content' => $variables['elements']['flag_' . FlagType::FOLLOW_USER]];
+        }
       }
 
       // Gets user social links.
@@ -514,4 +520,39 @@ function _eic_community_get_user_topics(UserInterface $account, $taxonomy_term_f
   }
 
   return $topics;
+}
+
+/**
+ * Returns the 'render' array to use in templates for the user type.
+ *
+ * @param \Drupal\user\UserInterface $account
+ *   The user account for which we want to get the user type.
+ * @param \Drupal\profile\Entity\ProfileInterface $member_profile
+ *   (optional) The user profile entity associated with user account.
+ *
+ * @return array
+ *   The render array for templates.
+ */
+function _eic_community_get_user_type(UserInterface $account, ProfileInterface $member_profile = NULL) {
+  $member_profile = $member_profile ?? \Drupal::service('eic_user.helper')->getUserMemberProfile($account);
+
+  // If we don't have a member profile for this user, skip.
+  if (empty($member_profile)) {
+    return [];
+  }
+
+  // If the member profile doesn't have job titles, skip.
+  if ($member_profile->get('field_vocab_user_type')->isEmpty()) {
+    return [];
+  }
+
+  /** @var \Drupal\taxonomy\Entity\Term $user_type */
+  $user_type = reset($member_profile->get('field_vocab_user_type')->referencedEntities());
+  return [
+    'label' => $user_type->getName(),
+    'icon' => [
+      'name' => 'star_circle',
+      'type' => 'custom',
+    ],
+  ];
 }
