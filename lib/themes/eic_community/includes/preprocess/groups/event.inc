@@ -80,13 +80,20 @@ function eic_community_preprocess_group__event(&$variables) {
               'itm_aggregated_field_vocab_topics' => $event_topic->id(),
             ]
           );
-          $url = GlobalOverviewPages::getGlobalOverviewPageUrl(GlobalOverviewPages::EVENTS)
-            ->setOption('query', $params)
-            ->toString();
-          $teaser['tags'][] = [
+
+          $tag = [
             'label' => $event_topic->getName(),
-            'path' => $url,
           ];
+
+          $url = GlobalOverviewPages::getGlobalOverviewPageUrl(GlobalOverviewPages::EVENTS);
+
+          if ($url) {
+            $url->setOption('query', $params)
+              ->toString();
+            $tag['path'] = $url;
+          }
+
+          $teaser['tags'][] = $tag;
         }
       }
 

@@ -413,6 +413,7 @@ display:
         link_url: false
         header: false
         empty: false
+        cache: false
       filters:
         search_api_datasource:
           id: search_api_datasource
@@ -655,6 +656,9 @@ display:
           tokenize: false
           content: 'Currently there are no upcoming events.'
           plugin_id: text_custom
+      cache:
+        type: search_api_tag
+        options: {  }
     cache_metadata:
       max-age: -1
       contexts:
@@ -670,6 +674,15 @@ display:
     display_options:
       display_extenders: {  }
       display_description: ''
+      cache:
+        type: search_api_time
+        options:
+          results_lifespan: 3600
+          results_lifespan_custom: 0
+          output_lifespan: 3600
+          output_lifespan_custom: 0
+      defaults:
+        cache: false
     cache_metadata:
       max-age: -1
       contexts:
