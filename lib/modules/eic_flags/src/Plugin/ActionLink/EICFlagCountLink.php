@@ -30,7 +30,7 @@ class EICFlagCountLink extends AJAXactionLink {
    *
    * @var \Drupal\flag\FlagCountManagerInterface
    */
-  protected $flagCountManager;
+  private $flagCountManager;
 
   /**
    * Build a new link type instance and sets the configuration.
