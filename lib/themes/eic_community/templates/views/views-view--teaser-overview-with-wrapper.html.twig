@@ -59,12 +59,12 @@
     icon_file_path: eic_icon_path,
   } only %}
 {% else %}
-  {% include "@theme/patterns/compositions/featured-content-collection.html.twig" with {
+  {% include "@theme/patterns/compositions/teaser-overview.html.twig" with {
     title: view.title|default(''),
     description: empty,
     call_to_action: call_to_action|default(''),
     items: [],
-    extra_classes: wrapper_classes,
+    extra_classes: 'ecl-teaser-overview--has-columns ecl-teaser-overview--has-compact-layout',
     items_extra_classes: items_extra_classes,
     no_container: no_container,
     icon_file_path: eic_icon_path,
