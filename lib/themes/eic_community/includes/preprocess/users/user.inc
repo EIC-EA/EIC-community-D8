@@ -83,6 +83,17 @@ function eic_community_preprocess_user(array &$variables) {
         ],
       ];
 
+      // Gets user operation links.
+      if ($user_operation_links = _eic_community_get_user_operation_links($user)) {
+        $user_operation_links['icon'] = [
+          'name' => 'gear',
+          'type' => 'custom',
+        ];
+        $user_operation_links['icon_file_path'] = $variables['eic_icon_path'];
+        $user_operation_links['extra_classes'] = 'ecl-collapsible-options--blue';
+        $user_item['editorial_header']['actions'][] = $user_operation_links;
+      }
+
       // We show the contact link and follow flag if current user is not
       // viewing its own profile page.
       if ($current_user->id() !== $user->id()) {
@@ -554,5 +565,77 @@ function _eic_community_get_user_type(UserInterface $account, ProfileInterface $
       'name' => 'star_circle',
       'type' => 'custom',
     ],
+  ];
+}
+
+/**
+ * Returns the 'render' array to use in templates for the operation links.
+ *
+ * @param \Drupal\user\UserInterface $account
+ *   The user account for which we want to get the user operation links.
+ *
+ * @return array
+ *   The render array for templates.
+ */
+function _eic_community_get_user_operation_links(UserInterface $account, ProfileInterface $member_profile = NULL) {
+  // Get user operation links.
+  $user_operation_links = \Drupal::entityTypeManager()->getListBuilder($account->getEntityTypeId())
+    ->getOperations($account);
+
+  $processed_user_operation_links = [];
+  foreach ($user_operation_links as $key => $user_operation_link) {
+    switch ($key) {
+      // Override operation link titles.
+      case 'edit':
+        $user_operation_link['title'] = t('Edit account information');
+        break;
+
+      case 'delete':
+        $user_operation_link['title'] = t('Delete account');
+        break;
+
+    }
+    $processed_user_operation_links[] = [
+      'link' => [
+        'label' => $user_operation_link['title'],
+        'path' => $user_operation_link['url']->toString(),
+      ],
+    ];
+  }
+
+  // Loads user member profile.
+  $member_profile = $member_profile ?? \Drupal::service('eic_user.helper')->getUserMemberProfile($account);
+  // Get user member profile operation links.
+  if ($member_profile) {
+    $member_profile_operation_links = \Drupal::entityTypeManager()->getListBuilder($member_profile->getEntityTypeId())
+      ->getOperations($member_profile);
+    foreach ($member_profile_operation_links as $key => $member_profile_operation_link) {
+      // Override operation link titles.
+      switch ($key) {
+        case 'edit':
+          $member_profile_operation_link['title'] = t('Edit profile details');
+          break;
+
+        case 'delete':
+          $member_profile_operation_link['title'] = t('Delete profile');
+          break;
+
+      }
+      $processed_user_operation_links[] = [
+        'link' => [
+          'label' => $member_profile_operation_link['title'],
+          'path' => $member_profile_operation_link['url']->toString(),
+        ],
+      ];
+    }
+  }
+
+  if (empty($processed_user_operation_links)) {
+    return [];
+  }
+
+  return [
+    'label' => 'Manage profile',
+    'items' => $processed_user_operation_links,
   ];
 }
