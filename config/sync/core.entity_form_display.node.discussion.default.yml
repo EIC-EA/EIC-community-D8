@@ -88,6 +88,11 @@ content:
     third_party_settings: {  }
     type: media_library_widget
     region: content
+  field_send_notification:
+    weight: 25
+    settings: {  }
+    third_party_settings: {  }
+    region: content
   field_vocab_geo:
     weight: 7
     settings:

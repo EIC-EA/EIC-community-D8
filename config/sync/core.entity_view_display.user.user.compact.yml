@@ -48,6 +48,7 @@ hidden:
   field_smed_id: true
   field_updated_profile_by_service: true
   field_updated_profile_by_user: true
+  field_user_can_contact: true
   field_user_status: true
   flag_follow_user: true
   langcode: true

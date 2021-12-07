@@ -15,7 +15,9 @@ use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Link;
 use Drupal\Core\Render\BubbleableMetadata;
+use Drupal\Core\Render\Markup;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
 use Drupal\eic_groups\Constants\NodeProperty;
@@ -67,6 +69,7 @@ function eic_groups_theme($existing, $type, $theme, $path) {
         'datasource' => '',
         'source_class' => '',
         'group_id' => '',
+        'is_taxonomy_term_page' => FALSE,
         'is_anonymous' => '',
       ],
     ],
@@ -96,11 +99,39 @@ function eic_groups_views_data() {
 }
 
 /**
- * Implements hook_form_FORM_ID_alter().
+ * Implements template_preprocess_views_view_field().
+ *
+ * Users that don't have access to the given group cannot see the group name
+ * where they are invited.
+ * So we force the display here.
  */
-function eic_groups_form_group_group_add_form_alter(&$form, FormStateInterface $form_state, $form_id) {
-  \Drupal::classResolver(FormOperations::class)
-    ->groupGroupAddForm($form, $form_state);
+function eic_groups_preprocess_views_view_field(&$vars) {
+  if ($vars['view']->id() == 'my_invitations' && $vars['field']->options['id'] == 'gid') {
+    /** @var \Drupal\group\Entity\GroupContentInterface $group_content */
+    $group_content = $vars['row']->_entity;
+
+    /** @var \Drupal\group\Entity\GroupInterface $group */
+    $group = $group_content->getGroup();
+
+    // Get the group visibility.
+    $group_visibility = \Drupal::service('eic_groups.helper')->getGroupVisibilityLabel($group);
+
+    // Check if user has access to the group.
+    if ($group->access('view')) {
+      $group_url = $group->toUrl('canonical', ['language' => $group->language()]);
+      $group_link = Link::fromTextAndUrl($group->label(), $group_url)->toRenderable();
+      $group_label = render($group_link);
+    }
+    else {
+      $group_label = $group->label();
+    }
+
+    // Add the visibility to the label.
+    $group_label .= ' (' . $group_visibility . ')';
+
+    $vars['output'] = Markup::create($group_label);
+    $vars['field']->last_render = $group_label;
+  }
 }
 
 /**
@@ -131,6 +162,12 @@ function eic_groups_node_view(array &$build, EntityInterface $entity, EntityView
  * Implements hook_form_BASE_FORM_ID_alter().
  */
 function eic_groups_form_group_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  // Act on group add forms.
+  if ($form_state->getFormObject()->getOperation() == 'add') {
+    \Drupal::classResolver(FormOperations::class)
+      ->groupAddForm($form, $form_state);
+  }
+
   // Since the group permissions do not exist when hook_group_insert() is
   // invoked, we use a submit handler that will be called after it is created.
   // @todo This might not be sufficient when creating groups programmatically,

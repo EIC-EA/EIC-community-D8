@@ -8,12 +8,14 @@ use Drupal\Core\Block\Annotation\Block;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
 use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_search\Collector\SourcesCollector;
 use Drupal\eic_search\Search\Sources\GroupSourceType;
 use Drupal\eic_search\Search\Sources\SourceTypeInterface;
 use Drupal\eic_search\SearchHelper;
+use Drupal\eic_user\UserHelper;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\group\GroupMembership;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -164,6 +166,7 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
     }
 
     $user_group_roles = [];
+    $account = NULL;
 
     if ($current_group_route) {
       $account = \Drupal::currentUser();
@@ -173,6 +176,8 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
 
     $build['#attached']['drupalSettings']['overview'] = [
       'is_group_owner' => array_key_exists(EICGroupsHelper::GROUP_OWNER_ROLE, $user_group_roles),
+      'is_group_admin' => array_key_exists(EICGroupsHelper::GROUP_ADMINISTRATOR_ROLE, $user_group_roles),
+      'is_power_user' => $account instanceof AccountInterface && UserHelper::isPowerUser($account),
       'source_bundle_id' => $source->getEntityBundle(),
       'default_sorting_option' => $source->getDefaultSort(),
     ];

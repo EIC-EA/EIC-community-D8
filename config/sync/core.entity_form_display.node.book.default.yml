@@ -38,6 +38,11 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
+  field_send_notification:
+    weight: 17
+    settings: {  }
+    third_party_settings: {  }
+    region: content
   langcode:
     type: language_select
     weight: 4
@@ -133,5 +138,10 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
+  url_redirects:
+    weight: 50
+    settings: {  }
+    third_party_settings: {  }
+    region: content
 hidden:
   member_content_edit_access: true

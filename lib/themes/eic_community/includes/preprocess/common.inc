@@ -15,6 +15,7 @@ use Drupal\eic_flags\FlagType;
 use Drupal\eic_groups\Constants\GroupVisibilityType;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\node\NodeInterface;
+use Drupal\taxonomy\TermInterface;
 
 /**
  * Returns the build of the social share block.
@@ -268,4 +269,55 @@ function _eic_community_get_entity_last_comment(EntityInterface $entity, $first_
   }
 
   return NULL;
+}
+
+/**
+ * Loads taxonomy term parents from a term.
+ *
+ * @param \Drupal\taxonomy\TermInterface $term
+ *   The taxonomy term from which we want to load the parents.
+ * @param array $loaded_parents
+ *   The array of loaded parents.
+ *
+ * @return array
+ *   Array of all loaded parents of the term.
+ */
+function _eic_community_get_term_parents(TermInterface $term, array $loaded_parents) {
+  if ($term->parent->entity) {
+    $loaded_parents[$term->parent->entity->id()] = $term->parent->entity;
+    $loaded_parents = _eic_community_get_term_parents($term->parent->entity, $loaded_parents);
+  }
+  return $loaded_parents;
+}
+
+/**
+ * Processes all term parents hierarchically.
+ *
+ * @param \Drupal\taxonomy\TermInterface $term
+ *   The taxonomy term from which we want load the hierarchy.
+ * @param array $terms
+ *   The hierarchical tree of terms.
+ * @param array $loaded_parents
+ *   The array of loaded parents.
+ *
+ * @return array
+ *   Nested array of all loaded parents of the term.
+ */
+function _eic_community_process_term_parents_tree(TermInterface $term, array $terms, array $loaded_parents) {
+  $parent = array_shift($loaded_parents);
+  if (!isset($terms[$parent->id()])) {
+    $terms[$parent->id()]['term'] = $parent;
+    $terms[$parent->id()]['title'] = $parent->getName();
+    $terms[$parent->id()]['items'] = [];
+  }
+
+  if (!empty($loaded_parents)) {
+    $terms[$parent->id()]['items'] = _eic_community_process_term_parents_tree($term, $terms[$parent->id()]['items'], $loaded_parents);
+  }
+  else {
+    $terms[$parent->id()]['items'][$term->id()]['term'] = $term;
+    $terms[$parent->id()]['items'][$term->id()]['title'] = $term->getName();
+  }
+
+  return $terms;
 }

@@ -93,6 +93,20 @@ function eic_community_preprocess_page(array &$variables): void {
   }, ARRAY_FILTER_USE_BOTH);
   $menu_sections = array_values($menu_sections);
 
+  $footer_sections[] = [
+    'title' => t(
+      '@site_name Community',
+      ['@site_name' => \Drupal::config('system.site')->get('name')],
+      ['context' => 'eic_community']
+    ),
+    'description' => t(
+      'This site is managed by the Directorate-General for Communication',
+      [],
+      ['context' => 'eic_community']
+    ),
+    'list_class_name' => 'ecl-footer-core__section ecl-footer-core__section1',
+  ];
+
   foreach ($menu_sections as $key => $menu) {
     $menu_name = $menu['#derivative_plugin_id'];
     $parameters = new MenuTreeParameters();
@@ -165,7 +179,7 @@ function _preprocess_node_page(&$variables) {
         $variables['editorial_header'] = [
           // @todo Not the correct display, has to be created in storybook.
           'type' => [
-            'label' => $node->private->value === '0' ? t('Public') : t('Community members only'),
+            'label' => $node->private->value === '1' ? t('Community members only') : t('Public'),
           ],
           'meta' => [
             ['label' => $node->type->entity->label()],
@@ -252,7 +266,7 @@ function _preprocess_front_page(&$variables) {
 }
 
 /**
- * Preprocess front page.
+ * Preprocess group page.
  */
 function _preprocess_group_page(&$variables) {
   // We need to add missing cache tags related to the group otherwise
@@ -265,5 +279,8 @@ function _preprocess_group_page(&$variables) {
     else {
       $variables['#cache']['tags'] = Cache::mergeTags($variables['#cache'], $group->getCacheTags());
     }
+    // Adds url.path as cache context otherwise anonymous users will always see
+    // the same message depending on which group the user visited first.
+    $variables['#cache']['contexts'][] = 'url.path';
   }
 }

@@ -28,7 +28,7 @@ class TaxonomyOverviewController extends ControllerBase {
   const TAXONOMY_VIEWS_DISPLAY_ID = 'block_taxonomy_overview';
 
   /**
-   * The entity_type.manager service.
+   * The entity type manager.
    *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */

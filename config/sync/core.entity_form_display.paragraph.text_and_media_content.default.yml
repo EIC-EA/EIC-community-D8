@@ -64,7 +64,7 @@ content:
       view_modes:
         media_left: media_left
         media_right: media_right
-        default: 0
+        default: '0'
       default_view_mode: media_left
     third_party_settings: {  }
     region: content

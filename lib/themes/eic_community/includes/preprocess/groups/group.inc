@@ -205,7 +205,7 @@ function _group_about_group_tab($variables, &$sections) {
 
   $about_items[] = [
     'title' => t('Group description'),
-    'content' => $variables['elements']['field_body'],
+    'content' => $variables['elements']['field_body'] ?? '',
   ];
 
   $sections[] = [

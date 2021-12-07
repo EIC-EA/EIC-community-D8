@@ -1,0 +1,59 @@
+uuid: a460c917-18f1-4bf2-b265-128c38cd6a07
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.message.notify_content_status_changed.field_entity_prev_status_label
+    - field.field.message.notify_content_status_changed.field_entity_status_label
+    - field.field.message.notify_content_status_changed.field_entity_url
+    - field.field.message.notify_content_status_changed.field_message_subject
+    - field.field.message.notify_content_status_changed.field_referenced_entity_label
+    - message.template.notify_content_status_changed
+  module:
+    - link
+id: message.notify_content_status_changed.default
+targetEntityType: message
+bundle: notify_content_status_changed
+mode: default
+content:
+  field_entity_prev_status_label:
+    weight: 5
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_entity_status_label:
+    weight: 1
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_entity_url:
+    weight: 3
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: {  }
+    type: link_default
+    region: content
+  field_message_subject:
+    weight: 2
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_referenced_entity_label:
+    weight: 0
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+hidden: {  }

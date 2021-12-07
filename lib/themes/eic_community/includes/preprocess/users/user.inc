@@ -11,6 +11,11 @@ use Drupal\Core\Url;
 use Drupal\media\Entity\Media;
 use Drupal\file\Entity\File;
 use Drupal\eic_community\ValueObject\ImageValueObject;
+use Drupal\eic_flags\FlagType;
+use Drupal\eic_helper\DateTimeHelper;
+use Drupal\eic_overviews\GlobalOverviewPages;
+use Drupal\eic_private_message\Constants\PrivateMessage;
+use Drupal\profile\Entity\ProfileInterface;
 use Drupal\user\UserInterface;
 
 /**
@@ -43,6 +48,131 @@ function eic_community_preprocess_user(array &$variables) {
       $teaser['icon_file_path'] = $variables['eic_icon_path'];
       $teaser['actions'] = array_merge([_eic_community_get_user_contact_link($user)], _eic_community_get_user_social_links($user));
       $variables['user_item'] = $teaser;
+      break;
+
+    case 'full':
+      $member_profile = \Drupal::service('eic_user.helper')->getUserMemberProfile($user);
+      $user_item = [
+        'editorial_header' => [
+          'actions' => [],
+          'icon_file_path' => $variables['eic_icon_path'],
+          'parent' => [
+            'link' => [
+              'label' => t('All members'),
+              'path' => GlobalOverviewPages::getGlobalOverviewPageUrl(GlobalOverviewPages::MEMBERS),
+            ],
+          ],
+        ],
+        'icon_file_path' => $variables['eic_icon_path'],
+        'title' => \Drupal::service('eic_user.helper')->getFullName($user),
+        'description' => _eic_community_get_user_profile_body($user, $member_profile),
+        'job_titles' => _eic_community_get_user_job_titles($user, $member_profile),
+        'image' => _get_profile_image_array($user),
+        'meta' => [
+          [
+            'label' => t('Email'),
+            'items' => [
+              [
+                'label' => $user->getEmail(),
+                'path' => "mailto:{$user->getEmail()}",
+              ],
+            ],
+          ],
+        ],
+      ];
+
+      // Gets user contact link.
+      if (
+        ($user_contact_link = _eic_community_get_user_contact_link($user)) &&
+        $user->get(PrivateMessage::PRIVATE_MESSAGE_USER_ALLOW_CONTACT_ID)->value
+      ) {
+        $user_contact_link['icon']['name'] = 'send';
+        $user_contact_link['link'] = [
+          'label' => t('Direct message'),
+          'path' => $user_contact_link['path'],
+        ];
+        $user_item['editorial_header']['actions'][] = $user_contact_link;
+      }
+
+      // Gets the follow user flag.
+      if (isset($variables['elements']['flag_' . FlagType::FOLLOW_USER])) {
+        $user_item['editorial_header']['actions'][] = ['content' => $variables['elements']['flag_' . FlagType::FOLLOW_USER]];
+      }
+
+      // Gets user social links.
+      if ($social_links = _eic_community_get_user_social_links($user, $member_profile)) {
+        // Fix social link icons.
+        $social_links = array_map(function ($key, $value) {
+          $value['name'] = $key;
+          return $value;
+        }, array_keys($social_links), array_values($social_links));
+        // Adds social links.
+        $user_item['social_share'] = [
+          'title' => t('Social media'),
+          'items' => $social_links,
+        ];
+      }
+
+      // Gets user location.
+      if ($location = _eic_community_get_user_location($user, 'multiline', $member_profile)) {
+        $user_item['meta'][] = [
+          'label' => t('Location'),
+          'items' => [
+            [
+              'content' => [
+                '#type' => 'inline_template',
+                '#template' => '{{ description|raw }}',
+                '#context' => [
+                  'description' => $location['label'],
+                ],
+              ],
+            ],
+          ],
+        ];
+      }
+
+      // Gets user statistics.
+      $user_item['stats'] = [
+        [
+          'label' => t('Joined @date', [
+            '@date' => _eic_community_get_user_joining_date($user),
+          ]),
+          'icon' => [
+            'name' => 'time',
+            'type' => 'custom',
+          ],
+        ],
+        [
+          'label' => t('@user-followers followers', [
+            '@user-followers' => \Drupal::service('eic_user.helper')->getUserFollowers($user),
+          ]),
+          'icon' => [
+            'name' => 'group',
+            'type' => 'custom',
+          ],
+        ],
+      ];
+
+      $user_item['flagged_interests'] = [
+        'title' => t('My Interests'),
+        'items' => [],
+      ];
+      // Gets user topics of interest.
+      if ($topics_of_interest = _eic_community_get_user_topics($user, 'field_vocab_topic_interest', $member_profile)) {
+        $user_item['flagged_interests']['items'][] = [
+          'title' => t('Topics of interests'),
+          'items' => $topics_of_interest,
+        ];
+      }
+      // Gets user topics of expertise.
+      if ($topics_of_expertise = _eic_community_get_user_topics($user, 'field_vocab_topic_expertise', $member_profile)) {
+        $user_item['flagged_interests']['items'][] = [
+          'title' => t('Topics of expertise'),
+          'items' => $topics_of_expertise,
+        ];
+      }
+
+      $variables['user_item'] = $user_item;
       break;
 
   }
@@ -101,11 +231,13 @@ function eic_community_get_teaser_user_display(UserInterface $user) {
   if (!$user->get('field_media')->isEmpty()) {
     /** @var \Drupal\media\Entity\Media $media */
     $media = \Drupal::service('entity.repository')->getTranslationFromContext($user->get('field_media')->entity);
-    $image_item = ImageValueObject::fromImageItem($media->get('oe_media_image')->first());
-    $author['image'] = [
-      'src' => $image_item->getSource(),
-      'alt' => $author['name'],
-    ];
+    if ($media->bundle() == 'image') {
+      $image_item = ImageValueObject::fromImageItem($media->get('oe_media_image')->first());
+      $author['image'] = [
+        'src' => $image_item->getSource(),
+        'alt' => $author['name'],
+      ];
+    }
   }
 
   return $author;
@@ -130,7 +262,7 @@ function _eic_community_display_document_contributors(array &$variables) {
 /**
  * Returns the 'render' array to use in templates for the user contact.
  *
- * @param Drupal\user\UserInterface $account
+ * @param \Drupal\user\UserInterface $account
  *   The user account for which we want to get the contact link.
  *
  * @return array
@@ -163,14 +295,16 @@ function _eic_community_get_user_contact_link(UserInterface $account) {
 /**
  * Returns the 'render' array to use in templates for the user social links.
  *
- * @param Drupal\user\UserInterface $account
+ * @param \Drupal\user\UserInterface $account
  *   The user account for which we want to get the social links.
+ * @param \Drupal\profile\Entity\ProfileInterface $member_profile
+ *   (optional) The user profile entity associated with user account.
  *
  * @return array
  *   The render array for templates.
  */
-function _eic_community_get_user_social_links(UserInterface $account) {
-  $member_profile = \Drupal::service('eic_user.helper')->getUserMemberProfile($account);
+function _eic_community_get_user_social_links(UserInterface $account, ProfileInterface $member_profile = NULL) {
+  $member_profile = $member_profile ?? \Drupal::service('eic_user.helper')->getUserMemberProfile($account);
 
   // If we don't have a member profile for this user, skip.
   if (empty($member_profile)) {
@@ -203,14 +337,18 @@ function _eic_community_get_user_social_links(UserInterface $account) {
 /**
  * Returns the 'render' array to use in templates for the user location.
  *
- * @param Drupal\user\UserInterface $account
+ * @param \Drupal\user\UserInterface $account
  *   The user account for which we want to get the location.
+ * @param string $format
+ *   (optional) Either 'inline' or 'multiline'.
+ * @param \Drupal\profile\Entity\ProfileInterface $member_profile
+ *   (optional) The user profile entity associated with user account.
  *
  * @return array
  *   The render array for templates.
  */
-function _eic_community_get_user_location(UserInterface $account) {
-  $member_profile = \Drupal::service('eic_user.helper')->getUserMemberProfile($account);
+function _eic_community_get_user_location(UserInterface $account, $format = 'inline', ProfileInterface $member_profile = NULL) {
+  $member_profile = $member_profile ?? \Drupal::service('eic_user.helper')->getUserMemberProfile($account);
 
   // If we don't have a member profile for this user, skip.
   if (empty($member_profile)) {
@@ -229,7 +367,151 @@ function _eic_community_get_user_location(UserInterface $account) {
   /** @var \CommerceGuys\Addressing\Country\Country $country */
   $country = $country_repository->get($address->get('country_code')->getValue());
 
+  $location = '';
+  switch ($format) {
+    case 'multiline':
+      $location = $address->get('locality')->getValue() . '<br>' . $country->getName();
+      break;
+
+    default:
+      $location = $address->get('locality')->getValue() . ', ' . $country->getName();
+      break;
+  }
+
   return [
-    'label' => $address->get('locality')->getValue() . ', ' . $country->getName(),
+    'label' => $location,
   ];
+}
+
+/**
+ * Returns the 'render' array to use in templates for the user profile body.
+ *
+ * @param \Drupal\user\UserInterface $account
+ *   The user account for which we want to get the profile body.
+ * @param \Drupal\profile\Entity\ProfileInterface $member_profile
+ *   (optional) The user profile entity associated with user account.
+ *
+ * @return array
+ *   The render array for templates.
+ */
+function _eic_community_get_user_profile_body(UserInterface $account, ProfileInterface $member_profile = NULL) {
+  $member_profile = $member_profile ?? \Drupal::service('eic_user.helper')->getUserMemberProfile($account);
+
+  // If we don't have a member profile for this user, skip.
+  if (empty($member_profile)) {
+    return [];
+  }
+
+  // If the member profile doesn't have the body field, skip.
+  if ($member_profile->get('field_body')->isEmpty()) {
+    return [];
+  }
+
+  return [
+    '#type' => 'inline_template',
+    '#template' => '{{ description|raw }}',
+    '#context' => [
+      'description' => $member_profile->get('field_body')->value,
+    ],
+  ];
+}
+
+/**
+ * Returns the 'render' array to use in templates for the user job titles.
+ *
+ * @param \Drupal\user\UserInterface $account
+ *   The user account for which we want to get the job titles.
+ * @param \Drupal\profile\Entity\ProfileInterface $member_profile
+ *   (optional) The user profile entity associated with user account.
+ *
+ * @return array
+ *   The render array for templates.
+ */
+function _eic_community_get_user_job_titles(UserInterface $account, ProfileInterface $member_profile = NULL) {
+  $member_profile = $member_profile ?? \Drupal::service('eic_user.helper')->getUserMemberProfile($account);
+
+  // If we don't have a member profile for this user, skip.
+  if (empty($member_profile)) {
+    return [];
+  }
+
+  // If the member profile doesn't have job titles, skip.
+  if ($member_profile->get('field_vocab_job_title')->isEmpty()) {
+    return [];
+  }
+
+  $job_titles = [];
+  /** @var \Drupal\taxonomy\Entity\Term[] $job_titles */
+  $job_titles_terms = $member_profile->get('field_vocab_job_title')->referencedEntities();
+  // Adds each fact and figure to the theme variables.
+  foreach ($job_titles_terms as $job_title) {
+    $job_title_translation = \Drupal::service('entity.repository')->getTranslationFromContext($job_title, $account->language()->getId());
+    // @todo Add missing organisations.
+    $job_titles[] = [
+      'label' => $job_title_translation->getName(),
+      'items' => [],
+    ];
+  }
+
+  return $job_titles;
+}
+
+/**
+ * Returns the formatted date when the user joined the platform.
+ *
+ * @param Drupal\user\UserInterface $account
+ *   The user account for which we want to get joining date.
+ *
+ * @return string
+ *   The formatted date when the user joined the platform.
+ */
+function _eic_community_get_user_joining_date(UserInterface $account, $format = DateTimeHelper::DATE_FORMAT_MONTH_FULL_YEAR) {
+  $date_formatter = \Drupal::service('date.formatter');
+  return $date_formatter->format($account->getCreatedTime(), $format);
+}
+
+/**
+ * Returns the array of topics terms to use in templates.
+ *
+ * @param \Drupal\user\UserInterface $account
+ *   The user account for which we want to get the topics.
+ * @param string $taxonomy_term_field_name
+ *   The taxonomy term field name.
+ * @param \Drupal\profile\Entity\ProfileInterface $member_profile
+ *   (optional) The user profile entity associated with user account.
+ *
+ * @return array
+ *   The array of topic terms.
+ */
+function _eic_community_get_user_topics(UserInterface $account, $taxonomy_term_field_name, ProfileInterface $member_profile = NULL) {
+  $member_profile = $member_profile ?? \Drupal::service('eic_user.helper')->getUserMemberProfile($account);
+
+  // If we don't have a member profile for this user, skip.
+  if (empty($member_profile)) {
+    return [];
+  }
+
+  // If the member profile doesn't have the field, skip.
+  if (!$member_profile->hasField($taxonomy_term_field_name)) {
+    return [];
+  }
+
+  // If the member profile doesn't have any selected topics, skip.
+  if ($member_profile->get($taxonomy_term_field_name)->isEmpty()) {
+    return [];
+  }
+
+  /** @var \Drupal\taxonomy\TermInterface[] $terms */
+  $terms = $member_profile->get($taxonomy_term_field_name)->referencedEntities();
+
+  $topics = [];
+  foreach ($terms as $term) {
+    $loaded_parents = [];
+    /** @var \Drupal\taxonomy\TermInterface[] $loaded_parents */
+    $loaded_parents = _eic_community_get_term_parents($term, $loaded_parents);
+    $loaded_parents = array_reverse($loaded_parents, TRUE);
+    $topics = _eic_community_process_term_parents_tree($term, $topics, $loaded_parents);
+  }
+
+  return $topics;
 }

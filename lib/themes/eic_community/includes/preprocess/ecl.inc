@@ -31,7 +31,6 @@ function _eic_community_preprocess_ecl_date_block(int $timestamp, DateTimeZone $
   }
   $date->setTimezone($timezone);
   $date->setTimestamp($timestamp);
-  $value = [];
 
   switch ($format) {
     case DateTimeHelper::DATE_FORMAT_SHORT:
