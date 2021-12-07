@@ -7,11 +7,11 @@ use Drupal\eic_flags\FlagType;
 use Drupal\eic_search\Service\SolrDocumentProcessor;
 
 /**
- * Class StorySourceType
+ * Class NewsStorySourceType
  *
  * @package Drupal\eic_groups\Search\Sources
  */
-class StorySourceType extends SourceType {
+class NewsStorySourceType extends SourceType {
 
   use StringTranslationTrait;
 
@@ -26,7 +26,7 @@ class StorySourceType extends SourceType {
    * @inheritDoc
    */
   public function getLabel(): string {
-    return $this->t('Story', [], ['context' => 'eic_search']);
+    return $this->t('News & Stories', [], ['context' => 'eic_search']);
   }
 
   /**

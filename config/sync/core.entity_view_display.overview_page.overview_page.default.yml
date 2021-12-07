@@ -8,7 +8,6 @@ dependencies:
   module:
     - block_field
     - eic_overviews
-    - options
 id: overview_page.overview_page.default
 targetEntityType: overview_page
 bundle: overview_page
@@ -21,13 +20,6 @@ content:
     label: hidden
     settings: {  }
     third_party_settings: {  }
-  field_overview_id:
-    weight: 3
-    label: above
-    settings: {  }
-    third_party_settings: {  }
-    type: list_default
-    region: content
   overview_block:
     label: hidden
     type: entity_reference_entity_view
@@ -48,6 +40,7 @@ content:
 hidden:
   banner_image: true
   created: true
+  field_overview_id: true
   langcode: true
   search_api_excerpt: true
   status: true

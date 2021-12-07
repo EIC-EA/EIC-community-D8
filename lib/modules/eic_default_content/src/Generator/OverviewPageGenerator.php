@@ -2,10 +2,12 @@
 
 namespace Drupal\eic_default_content\Generator;
 
+use Drupal\eic_events\Constants\Event;
 use Drupal\eic_overviews\Entity\OverviewPage;
 use Drupal\eic_overviews\GlobalOverviewPages;
 use Drupal\eic_search\Search\Sources\GlobalSourceType;
 use Drupal\eic_search\Search\Sources\GroupSourceType;
+use Drupal\eic_search\Search\Sources\NewsStorySourceType;
 use Drupal\eic_search\Search\Sources\UserGallerySourceType;
 
 /**
@@ -37,15 +39,40 @@ class OverviewPageGenerator extends CoreGenerator {
         'ss_group_topic_name',
       ],
       'source_type' => GroupSourceType::class,
-    ], 'Groups overview', '/groups',
+    ], 'Groups', '/groups',
       GlobalOverviewPages::GROUPS
     );
 
     $this->createOverview([
       'enable_search' => TRUE,
       'source_type' => UserGallerySourceType::class,
-    ], 'Members overview', '/people',
+    ], 'Members', '/people',
       GlobalOverviewPages::MEMBERS
+    );
+
+    $this->createOverview([
+      'enable_search' => TRUE,
+      'facets' => [
+        'ss_content_type',
+        'sm_content_field_vocab_topics_string',
+        'sm_content_field_vocab_geo_string',
+      ],
+      'source_type' => NewsStorySourceType::class,
+    ], 'News & Stories', '/articles',
+      GlobalOverviewPages::NEWS_STORIES
+    );
+
+    $this->createOverview([
+      'enable_search' => TRUE,
+      'facets' => [
+        'ss_group_topic_name',
+        'sm_group_field_location_type',
+        Event::SOLR_FIELD_ID_WEIGHT_STATE_LABEL,
+        'ss_group_event_country',
+      ],
+      'source_type' => GlobalEventSourceType::class,
+    ], 'Events', '/events',
+      GlobalOverviewPages::EVENTS
     );
   }
 
