@@ -1,0 +1,76 @@
+uuid: 6601d8a4-1551-47f1-b14d-36530edec9bf
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:basic:a0f231d8-9e5a-476c-9667-25a2f4e05f6c'
+    - 'block_content:page_banner:f6dd41d4-acee-4700-82d5-132bc402feb2'
+  module:
+    - block_content
+    - route_condition
+    - user
+name: contact_page
+label: 'Contact page - Authenticated'
+group: Global
+description: ''
+requireAllConditions: true
+disabled: false
+conditions:
+  route:
+    id: route
+    routes: contact.site_page
+    negate: false
+    uuid: a036c1cd-1b6a-418f-8d5d-c7d84b0f1f57
+    context_mapping: {  }
+  user_role:
+    id: user_role
+    roles:
+      authenticated: authenticated
+    negate: false
+    uuid: 6a2e34a8-ffe8-49ab-a0b4-7a7a761f60ed
+    context_mapping:
+      user: '@user.current_user_context:current_user'
+reactions:
+  blocks:
+    blocks:
+      c48940a4-37a0-47c8-b8c4-d71070a5f585:
+        id: 'block_content:f6dd41d4-acee-4700-82d5-132bc402feb2'
+        label: 'Contact page - banner'
+        provider: block_content
+        label_display: '0'
+        status: true
+        info: ''
+        view_mode: full
+        region: page_header
+        weight: '0'
+        context_mapping: {  }
+        custom_id: contact_banner
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: contact_page
+        third_party_settings: {  }
+        uuid: c48940a4-37a0-47c8-b8c4-d71070a5f585
+      5a60ed20-7370-49b8-bf82-ffff84b47822:
+        id: 'block_content:a0f231d8-9e5a-476c-9667-25a2f4e05f6c'
+        label: 'Contact page - Authenticated intro'
+        provider: block_content
+        label_display: '0'
+        status: true
+        info: ''
+        view_mode: full
+        region: content_before
+        weight: '0'
+        context_mapping: {  }
+        custom_id: contact_intro_authenticated
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: contact_page
+        third_party_settings: {  }
+        uuid: 5a60ed20-7370-49b8-bf82-ffff84b47822
+    id: blocks
+    saved: false
+    uuid: d3b7d95a-674e-4580-96e0-1166e56f1a1a
+    include_default_blocks: 0
+weight: 0

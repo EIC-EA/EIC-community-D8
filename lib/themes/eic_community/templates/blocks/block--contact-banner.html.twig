@@ -1,0 +1,67 @@
+{#
+/**
+ * @file
+ * Theme override to display a block.
+ *
+ * Available variables:
+ * - plugin_id: The ID of the block implementation.
+ * - label: The configured label of the block if visible.
+ * - configuration: A list of the block's configuration values.
+ *   - label: The configured label for the block.
+ *   - label_display: The display settings for the label.
+ *   - provider: The module or other provider that provided this block plugin.
+ *   - Block plugin specific settings will also be stored here.
+ * - content: The content of this block.
+ * - attributes: array of HTML attributes populated by modules, intended to
+ *   be added to the main container tag of this template.
+ *   - id: A valid HTML ID and guaranteed unique.
+ * - title_attributes: Same as attributes, except applied to the main title
+ *   tag that appears in the template.
+ * - title_prefix: Additional output populated by modules, intended to be
+ *   displayed in front of the main title tag that appears in the template.
+ * - title_suffix: Additional output populated by modules, intended to be
+ *   displayed after the main title tag that appears in the template.
+ *
+ * @see template_preprocess_block()
+ */
+#}
+<div class="ecl-overview-header{{ hero is not empty ? ' ecl-overview-header--has-image' }} {{ extra_classes }}">
+    {% if hero is not empty %}
+        <figure class="ecl-overview-header__image-wrapper">
+            <img class="ecl-overview-header__image" src="{{ hero.image }}" alt=""/>
+        </figure>
+    {% endif %}
+
+    <div class="ecl-container">
+        <div class="ecl-overview-header__content">
+            {% if content.field_title is not empty %}
+                <div class="ecl-overview-header__main">
+                    <h1 class="ecl-overview-header__title">
+                        {{ content.field_title }}
+                    </h1>
+                </div>
+            {% endif %}
+
+            {% if content.field_cta_links is not empty %}
+            <div class="ecl-overview-header__aside">
+                <div class="ecl-overview-header__actions">
+                    {% set _items = [] %}
+                    {% for item in content['#block_content'].field_cta_links %}
+                        {% set  _items = _items|merge([{
+                            link: {
+                                label: item.title,
+                                path: item.url,
+                                type: item.link_type == 'default' ? 'standalone' : item.link_type,
+                            },
+                        }]) %}
+                    {% endfor %}
+
+                    {% include "@theme/patterns/components/inline-actions.html.twig" with {
+                        items: _items
+                    } only %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
