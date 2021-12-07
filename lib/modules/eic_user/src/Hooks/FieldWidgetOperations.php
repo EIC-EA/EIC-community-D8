@@ -51,7 +51,7 @@ class FieldWidgetOperations {
         $new_url = $form_state_values[$key]['link'];
 
         // Exception for LinkedIn since we need to prepend "in/" if missing.
-        if ($social_network_name === 'linkedin') {
+        if ($social_network_name === 'linkedin' && !empty($value['link'])) {
           // Remove backslash from the beginning if exists.
           if (substr($form_state_values[$key]['link'], 0, 1) === '/') {
             $new_url = substr($form_state_values[$key]['link'], 1);
@@ -59,6 +59,12 @@ class FieldWidgetOperations {
 
           if (substr($new_url, 0, 3) !== 'in/') {
             $form_state_values[$key]['link'] = 'in/' . $new_url;
+          }
+
+          // If the link value only contains the base LinkedIn path, we clean
+          // up the value.
+          if ($form_state_values[$key]['link'] === 'in/') {
+            $form_state_values[$key]['link'] = '';
           }
         }
         break;
