@@ -36,6 +36,7 @@ function eic_flags_theme() {
         'action' => 'flag',
         'flag' => NULL,
         'flaggable' => NULL,
+        'showAsButton' => FALSE,
       ],
     ],
     'eic_flag_count_text' => [
