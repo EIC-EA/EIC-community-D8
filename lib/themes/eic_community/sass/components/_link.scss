@@ -46,6 +46,17 @@
     }
   }
 
+  body &--button-secondary {
+    @extend .ecl-button--secondary;
+
+    &:hover,
+    &:focus {
+      border: 2px solid $ecl-color-blue;
+      background-color: map-get($ecl-colors, 'blue');
+      color: map-get($ecl-colors, 'white');
+    }
+  }
+
   body &--button-call {
     @extend .ecl-button--call;
   }
