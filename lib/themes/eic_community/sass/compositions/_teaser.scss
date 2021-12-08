@@ -80,6 +80,10 @@
       height: 100%;
       box-sizing: border-box;
     }
+
+    & .ecl-teaser__link{
+      margin-right: 0;
+    }
   }
 
   [class*=ecl-featured-content] &--organisation &__image-wrapper, [class*=ecl-featured-content] &--organisation &__image-wrapper &__image {
