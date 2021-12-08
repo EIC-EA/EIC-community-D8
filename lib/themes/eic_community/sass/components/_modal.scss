@@ -2,6 +2,11 @@
   position: relative;
   padding: $ecl-spacing-2-xl !important;
   max-width: 737px;
+  @include ecl-media-breakpoint-down('md') {
+    width: 90% !important;
+    padding: $ecl-spacing-l !important;
+    box-sizing: border-box;
+  }
 
   & .ecl-form {
     margin: 0;
