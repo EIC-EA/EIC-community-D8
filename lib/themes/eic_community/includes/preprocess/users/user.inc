@@ -557,8 +557,9 @@ function _eic_community_get_user_type(UserInterface $account, ProfileInterface $
     return [];
   }
 
-  /** @var \Drupal\taxonomy\Entity\Term $user_type */
-  $user_type = reset($member_profile->get('field_vocab_user_type')->referencedEntities());
+  /** @var \Drupal\taxonomy\Entity\TermInterface[] $user_type */
+  $user_types = $member_profile->get('field_vocab_user_type')->referencedEntities();
+  $user_type = reset($user_types);
   return [
     'label' => $user_type->getName(),
     'icon' => [
