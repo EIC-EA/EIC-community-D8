@@ -43,6 +43,10 @@
     line-height: ecl-typography('line-height');
     margin-top: ecl-layout('gutter');
 
+    @include ecl-media-breakpoint-down('sm') {
+      width: 100%;
+    }
+
     &--full-width {
       width: 100%;
     }
