@@ -2,6 +2,7 @@
 
 <div class="ecl-teaser ecl-teaser--project {{ highlight.is_active ? 'ecl-teaser--is-highlighted' }} {{ extra_classes }}">
   {% if image is not empty %}
+  <a href="{{ path }}">
     <figure class="ecl-teaser__image-wrapper">
       {% if path is not empty %}
         <a href="{{ path }}">
@@ -10,8 +11,8 @@
       {% else %}
         <img class="ecl-teaser__image" src="{{ image.src }}" alt="{{ image.alt }}" />
       {% endif %}
-
     </figure>
+  </a>
   {% endif %}
   <div class="ecl-teaser__main-wrapper">
     {% if type or status is not empty %}
