@@ -184,14 +184,14 @@ display:
           entity_type: node
           entity_field: type
           plugin_id: bundle
-        field_date_range_value:
-          id: field_date_range_value
+        field_date_range_end_value:
+          id: field_date_range_end_value
           table: node__field_date_range
-          field: field_date_range_value
+          field: field_date_range_end_value
           relationship: none
           group_type: group
           admin_label: ''
-          operator: '>='
+          operator: '>'
           value:
             min: ''
             max: ''
@@ -351,6 +351,10 @@ display:
       use_more_text: 'View all'
       link_url: '<front>'
       link_display: custom_url
+      filter_groups:
+        operator: AND
+        groups:
+          1: AND
     cache_metadata:
       max-age: -1
       contexts:
