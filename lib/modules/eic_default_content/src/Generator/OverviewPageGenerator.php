@@ -6,6 +6,7 @@ use Drupal\eic_events\Constants\Event;
 use Drupal\eic_overviews\Entity\OverviewPage;
 use Drupal\eic_overviews\GlobalOverviewPages;
 use Drupal\eic_search\Search\Sources\GlobalSourceType;
+use Drupal\eic_search\Search\Sources\GlobalEventSourceType;
 use Drupal\eic_search\Search\Sources\GroupSourceType;
 use Drupal\eic_search\Search\Sources\NewsStorySourceType;
 use Drupal\eic_search\Search\Sources\UserGallerySourceType;
