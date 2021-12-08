@@ -41,7 +41,7 @@ function eic_community_preprocess_views_view(&$variables) {
       'link' => [
         'label' => t('View all stories'),
         'path' => GlobalOverviewPages::getGlobalOverviewPageUrl(
-          GlobalOverviewPages::STORIES
+          GlobalOverviewPages::NEWS_STORIES
         ),
       ],
     ],

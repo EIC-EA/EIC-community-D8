@@ -36,7 +36,7 @@ services:
     tags:
       - { name: eic_search.source }
   eic_search.source_story:
-    class: Drupal\eic_search\Search\Sources\StorySourceType
+    class: Drupal\eic_search\Search\Sources\NewsStorySourceType
     tags:
       - { name: eic_search.source }
   eic_search.source_global_event:
