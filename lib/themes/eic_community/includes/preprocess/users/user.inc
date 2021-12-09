@@ -17,7 +17,6 @@ use Drupal\eic_overviews\GlobalOverviewPages;
 use Drupal\eic_private_message\Constants\PrivateMessage;
 use Drupal\profile\Entity\ProfileInterface;
 use Drupal\user\UserInterface;
-use Drupal\views\Views;
 
 /**
  * Implements hook_preprocess_user().
@@ -175,7 +174,7 @@ function eic_community_preprocess_user(array &$variables) {
 
       $user_item['flagged_groups'] = [
         'title' => t('My groups'),
-        'content' => _eic_community_get_user_rendered_groups($user),
+        'content' => _eic_community_get_rendered_view('groups', 'block_user_profile_groups', [$user->id()]),
       ];
 
       $variables['user_item'] = $user_item;
@@ -520,19 +519,4 @@ function _eic_community_get_user_topics(UserInterface $account, $taxonomy_term_f
   }
 
   return $topics;
-}
-
-/**
- * Returns view output of user profile groups.
- *
- * @param \Drupal\user\UserInterface $account
- *   The user account for which we want to get list of groups.
- *
- * @return array|null
- *   A renderable array containing the view output or NULL if the display ID
- *   of the view to be executed doesn't exist.
- */
-function _eic_community_get_user_rendered_groups(UserInterface $account) {
-  $view = Views::getView('groups');
-  return $view->preview('block_user_profile_groups', [$account->id()]);
 }
