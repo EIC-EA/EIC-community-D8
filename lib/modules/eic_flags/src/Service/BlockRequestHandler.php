@@ -205,7 +205,7 @@ class BlockRequestHandler extends AbstractRequestHandler {
 
     $access->addCacheableDependency($workflow);
 
-    if (!$workflow->getTypePlugin()->getState(EntityBlockHandler::ENTITY_BLOCKED_STATE)) {
+    if (!$workflow->getTypePlugin()->getState(self::ENTITY_BLOCKED_STATE)) {
       return $access;
     }
 
@@ -213,17 +213,17 @@ class BlockRequestHandler extends AbstractRequestHandler {
 
     // If entity is already blocked, we can't block it again and therefore we
     // return access denied.
-    if ($moderation_state === EntityBlockHandler::ENTITY_BLOCKED_STATE) {
+    if ($moderation_state === self::ENTITY_BLOCKED_STATE) {
       return $access;
     }
 
     // Make sure entity can transition to blocked state, otherwise we return
     // access denied.
-    if (!$workflow->getTypePlugin()->hasTransitionFromStateToState($moderation_state, EntityBlockHandler::ENTITY_BLOCKED_STATE)) {
+    if (!$workflow->getTypePlugin()->hasTransitionFromStateToState($moderation_state, self::ENTITY_BLOCKED_STATE)) {
       return $access;
     }
 
-    $transition = $workflow->getTypePlugin()->getTransitionFromStateToState($moderation_state, EntityBlockHandler::ENTITY_BLOCKED_STATE);
+    $transition = $workflow->getTypePlugin()->getTransitionFromStateToState($moderation_state, self::ENTITY_BLOCKED_STATE);
 
     // Make sure the user can use the blocked transition, otherwise we return
     // access denied.
