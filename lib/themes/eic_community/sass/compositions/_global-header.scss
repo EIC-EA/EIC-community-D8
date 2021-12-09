@@ -11,7 +11,7 @@
   }
 
   &__logo {
-    width: map-get($ecl-media, 'm');
+    width: map-get($ecl-media, 'l');
     margin-right: auto;
     flex-shrink: 0;
     padding-right: ecl-box-model('padding');
@@ -42,6 +42,9 @@
   &__language-selector-wrapper,
   &__auth-wrapper {
     flex-shrink: 0;
+    @include ecl-media-breakpoint-down('md') {
+      font-size: .85em;
+    }
   }
 
   &__login-link {
