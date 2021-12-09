@@ -83,7 +83,7 @@ class NewRequestForm extends ContentEntityDeleteForm {
         $description = $this->t(
           "You're about to block this @entity_type. Are you sure?",
           [
-            '@entity_type' => $this->entity->getEntityTypeId(),
+            '@entity_type' => $this->entity->getEntityType()->getLabel(),
           ],
         );
         break;
@@ -113,7 +113,7 @@ class NewRequestForm extends ContentEntityDeleteForm {
         $description = $this->t(
           'Block @entity_type',
           [
-            '@entity_type' => $this->entity->getEntityTypeId(),
+            '@entity_type' => $this->entity->getEntityType()->getLabel(),
           ],
         );
         break;
@@ -148,7 +148,7 @@ class NewRequestForm extends ContentEntityDeleteForm {
       '#title' => $this->t(
         'Please explain why this @entity_type should be @action',
         [
-          '@entity_type' => $this->entity->getEntityTypeId(),
+          '@entity_type' => $this->entity->getEntityType()->getLabel(),
           '@action' => $action,
         ]
       ),
@@ -196,7 +196,7 @@ class NewRequestForm extends ContentEntityDeleteForm {
         $this->t(
           'This @entity_type is already blocked.',
           [
-            '@entity_type' => $this->entity->getEntityTypeId(),
+            '@entity_type' => $this->entity->getEntityType()->getLabel(),
           ],
         )
       );
@@ -223,7 +223,7 @@ class NewRequestForm extends ContentEntityDeleteForm {
       $status_message = $this->t(
         'The @entity_type has been blocked.',
         [
-          '@entity_type' => $this->entity->getEntityTypeId(),
+          '@entity_type' => $this->entity->getEntityType()->getLabel(),
         ],
       );
     }
