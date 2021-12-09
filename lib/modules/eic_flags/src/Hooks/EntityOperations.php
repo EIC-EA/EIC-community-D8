@@ -194,6 +194,7 @@ class EntityOperations implements ContainerInjectionInterface {
       return $handler->getActions($entity);
     }
 
+    $operations = [];
     $block_request_handler = $this->collector->getHandlerByType(RequestTypes::BLOCK);
     $handler_actions = $block_request_handler->getActions($entity);
 
