@@ -1,7 +1,6 @@
 {% set title_element = title_element|default('h2') %}
 
 <div class="ecl-teaser ecl-teaser--group {{ highlight.is_active ? 'ecl-teaser--is-highlighted' }} {{ extra_classes }}">
-  {{ dump(path) }}
   {% if path is not empty %}
     <a href="{{ path }}">
   {% endif %}
