@@ -6,6 +6,7 @@ use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Logger\LoggerChannelTrait;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\eic_flags\RequestStatus;
@@ -24,6 +25,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class RequestMessageCreator implements ContainerInjectionInterface {
 
   use StringTranslationTrait;
+  use LoggerChannelTrait;
 
   /**
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
@@ -94,7 +96,7 @@ class RequestMessageCreator implements ContainerInjectionInterface {
   ) {
     $handler = $this->collector->getHandlerByType($type);
     if (!$handler instanceof HandlerInterface) {
-      \Drupal::logger('eic_messages')->warning(
+      $this->getLogger('eic_messages')->warning(
         'Invalid type @type provided on request insert',
         ['@type' => $type]
       );
@@ -104,7 +106,7 @@ class RequestMessageCreator implements ContainerInjectionInterface {
 
     $message_name = $handler->getMessageByAction(RequestStatus::OPEN);
     if (!$message_name) {
-      \Drupal::logger('eic_messages')->warning(
+      $this->getLogger('eic_messages')->warning(
         'Message does not exists for action insert'
       );
 
@@ -137,7 +139,7 @@ class RequestMessageCreator implements ContainerInjectionInterface {
   ) {
     $handler = $this->collector->getHandlerByType($type);
     if (!$handler instanceof HandlerInterface) {
-      \Drupal::logger('eic_messages')->warning(
+      $this->getLogger('eic_messages')->warning(
         'Invalid type @type provided on request close',
         ['@type' => $type]
       );
@@ -156,7 +158,7 @@ class RequestMessageCreator implements ContainerInjectionInterface {
     $response = $flagging->get('field_request_status')->value;
     $message_name = $handler->getMessageByAction($response);
     if (!$message_name) {
-      \Drupal::logger('eic_messages')->warning(
+      $this->getLogger('eic_messages')->warning(
         'Message does not exists for response type @response',
         ['@response' => $response]
       );
