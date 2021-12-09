@@ -7,6 +7,7 @@ use Drupal\eic_groups\Constants\GroupVisibilityType;
 use Drupal\eic_search\Plugin\search_api\processor\GroupAccessContent;
 use Drupal\eic_search\Search\Sources\GroupSourceType;
 use Drupal\eic_search\Search\Sources\SourceTypeInterface;
+use Drupal\eic_topics\Constants\Topics;
 use Drupal\eic_user\UserHelper;
 use Drupal\group\Entity\Group;
 use Drupal\group\GroupMembership;
@@ -314,7 +315,7 @@ class SolrSearchController extends ControllerBase {
     }
 
     $profile = reset($profiles);
-    $user_topics = $profile->get('field_vocab_topic_interest')
+    $user_topics = $profile->get(Topics::TERM_TOPICS_ID_FIELD)
       ->referencedEntities();
     $user_topics_id = [0];
 

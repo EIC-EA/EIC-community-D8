@@ -4,6 +4,7 @@ namespace Drupal\eic_user\EventSubscriber;
 
 use Drupal\Core\Cache\Cache;
 use Drupal\eic_flags\FlagType;
+use Drupal\eic_topics\Constants\Topics;
 use Drupal\eic_user\UserHelper;
 use Drupal\flag\Event\FlagEvents;
 use Drupal\flag\Event\FlaggingEvent;
@@ -87,7 +88,7 @@ class FlagEventSubscriber implements EventSubscriberInterface {
         /** @var \Drupal\taxonomy\TermInterface $taxonomy_term */
         $taxonomy_term = $flagging->getFlaggable();
 
-        if ($taxonomy_term->bundle() !== 'topics') {
+        if ($taxonomy_term->bundle() !== Topics::TERM_VOCABULARY_TOPICS_ID) {
           break;
         }
 
@@ -103,11 +104,9 @@ class FlagEventSubscriber implements EventSubscriberInterface {
 
     }
 
-    if (!$invalidate_cache) {
-      return;
+    if ($invalidate_cache) {
+      $this->invalidateFlaggedEntityCacheTags($flagging);
     }
-
-    $this->invalidateFlaggedEntityCacheTags($flagging);
   }
 
   /**
@@ -132,7 +131,7 @@ class FlagEventSubscriber implements EventSubscriberInterface {
    *   FlagEvents::ENTITY_UNFLAGGED.
    */
   private function updateUserProfileTopics(ProfileInterface $profile, TermInterface $taxonomy_term, $flag_event) {
-    $vocab_field_name = 'field_vocab_topic_interest';
+    $vocab_field_name = Topics::TERM_TOPICS_ID_FIELD;
 
     if (!$profile->hasField($vocab_field_name)) {
       return;
@@ -164,12 +163,10 @@ class FlagEventSubscriber implements EventSubscriberInterface {
 
     }
 
-    if (!$needs_update) {
-      return;
+    if ($needs_update) {
+      $profile->$vocab_field_name = $topics;
+      $profile->save();
     }
-
-    $profile->$vocab_field_name = $topics;
-    $profile->save();
   }
 
 }
