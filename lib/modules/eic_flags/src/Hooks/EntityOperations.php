@@ -13,6 +13,7 @@ use Drupal\Core\Url;
 use Drupal\eic_flags\FlaggedEntitiesListBuilder;
 use Drupal\eic_flags\FlagType;
 use Drupal\eic_flags\Service\RequestHandlerCollector;
+use Drupal\eic_topics\Constants\Topics;
 use Drupal\flag\FlagCountManagerInterface;
 use Drupal\flag\FlagServiceInterface;
 use Drupal\profile\Entity\ProfileInterface;
@@ -360,7 +361,7 @@ class EntityOperations implements ContainerInjectionInterface {
       return;
     }
 
-    $vocab_field_name = 'field_vocab_topic_interest';
+    $vocab_field_name = Topics::TERM_TOPICS_ID_FIELD;
 
     if (!$profile->hasField($vocab_field_name)) {
       return;
