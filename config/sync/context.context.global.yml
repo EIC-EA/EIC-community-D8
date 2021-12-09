@@ -1,7 +1,16 @@
 uuid: 44d144c1-950b-4ce1-b861-08c50e272eea
 langcode: en
 status: true
-dependencies: {  }
+dependencies:
+  config:
+    - system.menu.footer---european-commision
+    - system.menu.footer---european-union
+    - system.menu.main
+  content:
+    - 'block_content:basic:34a810c9-d608-4979-ac40-00657bce344b'
+  module:
+    - block_content
+    - system
 name: global
 label: Global
 group: Global
@@ -80,20 +89,6 @@ reactions:
         unique: 0
         context_id: global
         uuid: 116105ac-257d-4a9f-9495-133d1ad12d7c
-      292ff26d-ebfd-4a3b-9b7e-394be1e2a1f8:
-        id: system_breadcrumb_block
-        label: Breadcrumbs
-        provider: system
-        label_display: '0'
-        region: breadcrumbs
-        weight: '0'
-        context_mapping: {  }
-        custom_id: system_breadcrumb_block
-        theme: eic_community
-        css_class: ''
-        unique: 0
-        context_id: global
-        uuid: 292ff26d-ebfd-4a3b-9b7e-394be1e2a1f8
       7462f059-07c4-4599-b4c9-2b59abf042a2:
         id: system_messages_block
         label: Messages
