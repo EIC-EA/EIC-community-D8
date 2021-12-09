@@ -34,6 +34,7 @@ permissions:
   - 'post comments'
   - 'skip comment approval'
   - 'unflag recommend_group'
+  - 'update own member profile'
   - 'use group_wiki transition create_new_draft'
   - 'use group_wiki transition publish'
   - 'use group_wiki transition unpublish'
