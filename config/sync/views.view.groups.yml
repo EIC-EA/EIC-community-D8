@@ -153,7 +153,18 @@ display:
       title: Groups
       header: {  }
       footer: {  }
-      empty: {  }
+      empty:
+        area_text_custom:
+          id: area_text_custom
+          table: views
+          field: area_text_custom
+          relationship: none
+          group_type: group
+          admin_label: ''
+          empty: true
+          tokenize: false
+          content: 'You currently aren''t member of any group. Start browsing groups <a href="[site:url]groups">here</a>.'
+          plugin_id: text_custom
       relationships:
         group_content_id:
           id: group_content_id
