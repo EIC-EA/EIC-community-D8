@@ -89,6 +89,8 @@ class NewRequestForm extends ContentEntityDeleteForm {
         break;
 
       default:
+        // @todo In the future we should consider creating a helper function if
+        // we need to use this line of code elsewhere.
         $action = $this->requestHandler instanceof ArchiveRequestHandler ? 'archival' : 'deletion';
         $description = $this->t(
           "You're about to request @action for this entity. Are you sure?",
@@ -119,6 +121,8 @@ class NewRequestForm extends ContentEntityDeleteForm {
         break;
 
       default:
+        // @todo In the future we should consider creating a helper function if
+        // we need to use this line of code elsewhere.
         $action = $this->requestHandler instanceof ArchiveRequestHandler ? 'archival' : 'deletion';
         $description = $this->t('Request @action', ['@action' => $action]);
         break;
@@ -139,6 +143,8 @@ class NewRequestForm extends ContentEntityDeleteForm {
         break;
 
       default:
+        // @todo In the future we should consider creating a helper function if
+        // we need to use this line of code elsewhere.
         $action = $this->requestHandler instanceof ArchiveRequestHandler ? 'archived' : 'deleted';
         break;
     }
