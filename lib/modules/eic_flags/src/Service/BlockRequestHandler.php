@@ -128,7 +128,7 @@ class BlockRequestHandler extends AbstractRequestHandler {
     }
 
     // Checks if entity can be blocked by the current user.
-    if ($this->canBlockEntity($entity, $this->currentUser->getAccount())->isForbidden()) {
+    if ($this->canRequest($this->currentUser->getAccount(), $entity)->isForbidden()) {
       return NULL;
     }
 
@@ -190,47 +190,6 @@ class BlockRequestHandler extends AbstractRequestHandler {
   public function canRequest(
     AccountInterface $account,
     ContentEntityInterface $entity
-  ) {
-    return $this->canBlockEntity($entity, $account);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getActions(ContentEntityInterface $entity) {
-    $support_entity_types = $this->getSupportedEntityTypes();
-
-    // Entity type is not supported.
-    if (!array_key_exists($entity->getEntityTypeId(), $support_entity_types)) {
-      return [];
-    }
-
-    return [
-      'request_block' => [
-        'title' => $this->t('Block'),
-        'url' => $entity->toUrl('new-request')
-          ->setRouteParameter(
-            'destination',
-            $this->currentRequest->getRequestUri())
-          ->setRouteParameter('request_type', RequestTypes::BLOCK),
-      ],
-    ];
-  }
-
-  /**
-   * Checks if an entity can be blocked by the current user.
-   *
-   * @param \Drupal\Core\Entity\ContentEntityInterface $entity
-   *   The entity object.
-   * @param \Drupal\Core\Session\AccountInterface $account
-   *   The user account entity.
-   *
-   * @return \Drupal\Core\Access\AccessResult
-   *   The access result object.
-   */
-  public function canBlockEntity(
-    ContentEntityInterface $entity,
-    AccountInterface $account
   ) {
     // Default access.
     $access = AccessResult::forbidden();
@@ -315,6 +274,29 @@ class BlockRequestHandler extends AbstractRequestHandler {
     }
 
     return $access;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getActions(ContentEntityInterface $entity) {
+    $support_entity_types = $this->getSupportedEntityTypes();
+
+    // Entity type is not supported.
+    if (!array_key_exists($entity->getEntityTypeId(), $support_entity_types)) {
+      return [];
+    }
+
+    return [
+      'request_block' => [
+        'title' => $this->t('Block'),
+        'url' => $entity->toUrl('new-request')
+          ->setRouteParameter(
+            'destination',
+            $this->currentRequest->getRequestUri())
+          ->setRouteParameter('request_type', RequestTypes::BLOCK),
+      ],
+    ];
   }
 
 }

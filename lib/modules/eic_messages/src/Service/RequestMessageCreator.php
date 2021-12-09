@@ -2,7 +2,6 @@
 
 namespace Drupal\eic_messages\Service;
 
-use Drupal;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
@@ -95,7 +94,7 @@ class RequestMessageCreator implements ContainerInjectionInterface {
   ) {
     $handler = $this->collector->getHandlerByType($type);
     if (!$handler instanceof HandlerInterface) {
-      Drupal::logger('eic_messages')->warning(
+      \Drupal::logger('eic_messages')->warning(
         'Invalid type @type provided on request insert',
         ['@type' => $type]
       );
@@ -105,7 +104,7 @@ class RequestMessageCreator implements ContainerInjectionInterface {
 
     $message_name = $handler->getMessageByAction(RequestStatus::OPEN);
     if (!$message_name) {
-      Drupal::logger('eic_messages')->warning(
+      \Drupal::logger('eic_messages')->warning(
         'Message does not exists for action insert'
       );
 
@@ -138,7 +137,7 @@ class RequestMessageCreator implements ContainerInjectionInterface {
   ) {
     $handler = $this->collector->getHandlerByType($type);
     if (!$handler instanceof HandlerInterface) {
-      Drupal::logger('eic_messages')->warning(
+      \Drupal::logger('eic_messages')->warning(
         'Invalid type @type provided on request close',
         ['@type' => $type]
       );
@@ -157,7 +156,7 @@ class RequestMessageCreator implements ContainerInjectionInterface {
     $response = $flagging->get('field_request_status')->value;
     $message_name = $handler->getMessageByAction($response);
     if (!$message_name) {
-      Drupal::logger('eic_messages')->warning(
+      \Drupal::logger('eic_messages')->warning(
         'Message does not exists for response type @response',
         ['@response' => $response]
       );

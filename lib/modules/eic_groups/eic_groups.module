@@ -188,7 +188,7 @@ function eic_groups_form_group_form_alter(&$form, FormStateInterface $form_state
     // If the group is not yet blocked, we remove the possibility to block it
     // from the group edit form.
     if ($moderation_state !== GroupsModerationHelper::GROUP_BLOCKED_STATE) {
-      if (\Drupal::service('eic_flags.block_request_handler')->canBlockEntity($entity, $current_user->getAccount())) {
+      if (\Drupal::service('eic_flags.block_request_handler')->canRequest($current_user->getAccount(), $entity)) {
         if (isset($form['moderation_state']['widget'][0]['state']['#options'][GroupsModerationHelper::GROUP_BLOCKED_STATE])) {
           unset($form['moderation_state']['widget'][0]['state']['#options'][GroupsModerationHelper::GROUP_BLOCKED_STATE]);
         }
