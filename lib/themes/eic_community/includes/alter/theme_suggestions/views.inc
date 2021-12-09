@@ -40,6 +40,10 @@ function eic_community_theme_suggestions_views_view_alter(array &$suggestions, a
       }
       break;
 
+    case 'groups':
+      $suggestions[] = "views_view__teaser_overview_with_wrapper";
+      break;
+
     case 'groups_homepage':
       $suggestions[] = "views_view__featured_content_collection__compact";
       break;

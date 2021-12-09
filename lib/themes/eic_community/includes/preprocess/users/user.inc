@@ -189,6 +189,11 @@ function eic_community_preprocess_user(array &$variables) {
         ];
       }
 
+      $user_item['flagged_groups'] = [
+        'title' => t('My groups'),
+        'content' => _eic_community_get_rendered_view('groups', 'block_user_profile_groups', [$user->id()]),
+      ];
+
       $variables['user_item'] = $user_item;
       break;
 
