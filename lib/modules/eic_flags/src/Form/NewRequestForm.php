@@ -7,13 +7,15 @@ use Drupal\Core\Entity\ContentEntityDeleteForm;
 use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\eic_flags\RequestTypes;
 use Drupal\eic_flags\Service\ArchiveRequestHandler;
+use Drupal\eic_flags\Service\BlockRequestHandler;
 use Drupal\eic_flags\Service\RequestHandlerCollector;
 use Drupal\flag\Entity\Flagging;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Class NewRequestForm.
+ * Provides an entity form for creating new archive/block/delete requests.
  *
  * @package Drupal\eic_flags\Form
  */
@@ -74,19 +76,55 @@ class NewRequestForm extends ContentEntityDeleteForm {
    * {@inheritdoc}
    */
   public function getDescription() {
-    $action = $this->requestHandler instanceof ArchiveRequestHandler ? 'archival' : 'deletion';
-    return $this->t(
-      "You're about to request @action for this entity. Are you sure?",
-      ['@action' => $action]
-    );
+    $description = NULL;
+
+    switch ($this->requestHandler->getType()) {
+      case RequestTypes::BLOCK:
+        $description = $this->t(
+          "You're about to block this @entity_type. Are you sure?",
+          [
+            '@entity_type' => $this->entity->getEntityTypeId(),
+          ],
+        );
+        break;
+
+      default:
+        $action = $this->requestHandler instanceof ArchiveRequestHandler ? 'archival' : 'deletion';
+        $description = $this->t(
+          "You're about to request @action for this entity. Are you sure?",
+          [
+            '@action' => $action,
+          ]
+        );
+        break;
+    }
+
+    return $description;
   }
 
   /**
    * {@inheritdoc}
    */
   public function getConfirmText() {
-    $action = $this->requestHandler instanceof ArchiveRequestHandler ? 'archival' : 'deletion';
-    return $this->t('Request @action', ['@action' => $action]);
+    $description = NULL;
+
+    switch ($this->requestHandler->getType()) {
+      case RequestTypes::BLOCK:
+        $description = $this->t(
+          'Block @entity_type',
+          [
+            '@entity_type' => $this->entity->getEntityTypeId(),
+          ],
+        );
+        break;
+
+      default:
+        $action = $this->requestHandler instanceof ArchiveRequestHandler ? 'archival' : 'deletion';
+        $description = $this->t('Request @action', ['@action' => $action]);
+        break;
+    }
+
+    return $description;
   }
 
   /**
@@ -95,12 +133,24 @@ class NewRequestForm extends ContentEntityDeleteForm {
   public function buildForm(array $form, FormStateInterface $form_state) {
     $form = parent::buildForm($form, $form_state);
 
-    $action = $this->requestHandler instanceof ArchiveRequestHandler ? 'archived' : 'deleted';
+    switch ($this->requestHandler->getType()) {
+      case RequestTypes::BLOCK:
+        $action = $this->t('blocked');
+        break;
+
+      default:
+        $action = $this->requestHandler instanceof ArchiveRequestHandler ? 'archived' : 'deleted';
+        break;
+    }
+
     $form['reason'] = [
       '#type' => 'textarea',
       '#title' => $this->t(
-        'Please explain why this content should be @action',
-        ['@action' => $action]
+        'Please explain why this @entity_type should be @action',
+        [
+          '@entity_type' => $this->entity->getEntityTypeId(),
+          '@action' => $action,
+        ]
       ),
       '#required' => TRUE,
     ];
@@ -128,6 +178,29 @@ class NewRequestForm extends ContentEntityDeleteForm {
         $this->t('An open request already exists for this entity.')
       );
     }
+
+    // If the entity is not a group and request type is not block, we exit.
+    if (
+      $this->entity->getEntityTypeId() !== 'group' &&
+      $this->requestHandler !== RequestTypes::BLOCK
+    ) {
+      return;
+    }
+
+    $entity_moderation_state = $this->entity->get('moderation_state')->value;
+
+    // Group is not published, so we do nothing.
+    if ($entity_moderation_state === BlockRequestHandler::ENTITY_BLOCKED_STATE) {
+      $form_state->setError(
+        $form,
+        $this->t(
+          'This @entity_type is already blocked.',
+          [
+            '@entity_type' => $this->entity->getEntityTypeId(),
+          ],
+        )
+      );
+    }
   }
 
   /**
@@ -140,7 +213,22 @@ class NewRequestForm extends ContentEntityDeleteForm {
       $this->messenger()->addError($this->t('You are not allowed to do this'));
     }
 
-    $this->messenger()->addStatus($this->t('The request has been made'));
+    $status_message = $this->t('The request has been made');
+
+    // If the request was to block a group, we show a different message status.
+    if (
+      $this->entity->getEntityTypeId() === 'group' &&
+      $this->requestHandler->getType() === RequestTypes::BLOCK
+    ) {
+      $status_message = $this->t(
+        'The @entity_type has been blocked.',
+        [
+          '@entity_type' => $this->entity->getEntityTypeId(),
+        ],
+      );
+    }
+
+    $this->messenger()->addStatus($status_message);
   }
 
 }
