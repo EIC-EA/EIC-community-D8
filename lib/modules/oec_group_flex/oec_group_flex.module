@@ -132,3 +132,18 @@ function oec_group_flex_group_flex_group_visibility_info_alter(array &$definitio
     $definitions['private']['class'] = '\Drupal\oec_group_flex\Plugin\GroupVisibility\PrivateVisibility';
   }
 }
+
+/**
+ * Implements hook_views_data().
+ */
+function oec_group_flex_views_data() {
+  $data['groups_field_data']['table']['group'] = t('Group');
+  $data['groups_field_data']['group_visibility'] = [
+    'title' => t('Visibility'),
+    'help' => t('The visibility of the group.'),
+    'field' => [
+      'id' => 'group_visibility',
+    ],
+  ];
+  return $data;
+}
