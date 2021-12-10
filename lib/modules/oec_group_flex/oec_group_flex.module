@@ -155,7 +155,7 @@ function oec_group_flex_views_data() {
   ];
   $data['groups_field_data']['group_visibility_custom_restricted_users'] = [
     'title' => t('Visibility Custom: Restricted users'),
-    'help' => t('The chosen email domains for group Custom - Restricted users visibility.'),
+    'help' => t('The chosen users for group Custom - Restricted users visibility.'),
     'field' => [
       'id' => 'group_visibility_custom_restricted_users',
     ],

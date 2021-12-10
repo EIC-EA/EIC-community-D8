@@ -94,6 +94,13 @@ function eic_groups_views_data() {
       'id' => 'resend_invitation',
     ],
   ];
+  $data['groups_field_data']['group_visibility_custom_restricted_organisations'] = [
+    'title' => t('Visibility Custom: Restricted organisations'),
+    'help' => t('The chosen email domains for group Custom - Restricted email organisations.'),
+    'field' => [
+      'id' => 'group_visibility_custom_restricted_organisations',
+    ],
+  ];
 
   return $data;
 }

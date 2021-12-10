@@ -1,19 +1,20 @@
 <?php
 
-namespace Drupal\oec_group_flex\Plugin\views\field;
+namespace Drupal\eic_groups\Plugin\views\field;
 
 use Drupal\group\Entity\GroupInterface;
-use Drupal\user\Entity\User;
+use Drupal\group\Entity\Group;
+use Drupal\oec_group_flex\Plugin\views\field\GroupFlexFieldPluginBase;
 use Drupal\views\ResultRow;
 
 /**
- * A handler to provide a field for custom restricted users.
+ * A handler to provide a field for custom restricted organisations.
  *
  * @ingroup views_field_handlers
  *
- * @ViewsField("group_visibility_custom_restricted_users")
+ * @ViewsField("group_visibility_custom_restricted_organisations")
  */
-class RestrictedUsers extends GroupFlexFieldPluginBase {
+class RestrictedOrganisations extends GroupFlexFieldPluginBase {
 
   /**
    * {@inheritdoc}
@@ -37,20 +38,21 @@ class RestrictedUsers extends GroupFlexFieldPluginBase {
     }
 
     $visibility_record_settings = $this->oecGroupFlexHelper->getGroupVisibilityRecordSettings($visibility_settings['settings']);
-    if (empty($visibility_record_settings['restricted_users'])) {
+    if (empty($visibility_record_settings['restricted_organisations'])) {
       return '';
     }
 
-    if (empty($visibility_record_settings['restricted_users']['options'])) {
+    if (empty($visibility_record_settings['restricted_organisations']['options'])) {
       return '';
     }
 
     // @todo Create formatting options for the field.
-    $users = [];
-    foreach (array_column($visibility_record_settings['restricted_users']['options'], 'target_id') as $user_id) {
-      $users[] = User::load($user_id)->label();
+    $groups = [];
+    foreach (array_column($visibility_record_settings['restricted_organisations']['options'], 'target_id') as $group_id) {
+      $groups[] = Group::load($group_id)->label();
     }
-    return implode(', ', $users);
+    return implode(', ', $groups);
+
   }
 
 }
