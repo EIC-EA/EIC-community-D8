@@ -282,7 +282,7 @@
       border: none;
 
       &[aria-expanded="true"] {
-        background: $ecl-color-grey-5;
+        background: $ecl-color-blue-5;
         border: none;
         padding-bottom: 0;
         svg {
@@ -295,6 +295,11 @@
         align-items: center;
         justify-content: space-between;
       }
+    }
+
+    &__toggle,
+    &__content {
+      background: $ecl-color-blue-5;
     }
   }
 }

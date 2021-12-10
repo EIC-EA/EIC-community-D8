@@ -89,6 +89,22 @@
     border-radius: 50%;
   }
 
+  &--organisation#{$node}--as-card-white &__main-wrapper{
+    padding-top: 0;
+    padding-bottom: 0;
+    padding-right: 0;
+  }
+
+  &--organisation &__meta-footer{
+    position: absolute;
+    justify-content: flex-start;
+    left: ecl-box-model('padding');
+    bottom: ecl-box-model('padding');
+    &__stats {
+      margin: 0;
+    }
+  }
+
   &--is-highlighted,
   &--event#{$node}--is-highlighted#{$node}--event {
     padding: ecl-box-model('padding');
