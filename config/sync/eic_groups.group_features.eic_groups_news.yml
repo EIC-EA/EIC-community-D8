@@ -1,8 +1,8 @@
 permissions:
-  - 'access events overview'
-  - 'create group_node:event entity'
+  - 'access news overview'
+  - 'create group_node:news entity'
 public_permissions:
-  - 'access events overview'
+  - 'access news overview'
 roles:
   - event-member
   - event-admin

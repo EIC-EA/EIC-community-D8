@@ -5,22 +5,22 @@ namespace Drupal\eic_groups\Plugin\GroupFeature;
 use Drupal\Core\Url;
 
 /**
- * Group feature plugin implementation for Discussions.
+ * Group feature plugin implementation for News.
  *
  * @GroupFeature(
- *   id = "eic_groups_group_events",
- *   label = @Translation("Events"),
- *   description = @Translation("Group events features.")
+ *   id = "eic_groups_news",
+ *   label = @Translation("News"),
+ *   description = @Translation("Group news features.")
  * )
  */
-class GroupGroupEvents extends EicGroupsGroupFeaturePluginBase {
+class GroupNews extends EicGroupsGroupFeaturePluginBase {
 
   /**
-   * Route of the events overview.
+   * Route of the news overview.
    *
    * @var string
    */
-  const PRIMARY_OVERVIEW_ROUTE = 'eic_overviews.groups.overview_page.events';
+  const PRIMARY_OVERVIEW_ROUTE = 'eic_overviews.groups.overview_page.news';
 
   /**
    * {@inheritdoc}
@@ -29,7 +29,7 @@ class GroupGroupEvents extends EicGroupsGroupFeaturePluginBase {
     /** @var \Drupal\Core\Entity\ContentEntityInterface $menu_item */
     $menu_item = parent::getMenuItem($url, $menu_name);
     // Set a specific weight for the menu item.
-    $menu_item->set('weight', 5);
+    $menu_item->set('weight', 4);
     return $menu_item;
   }
 
