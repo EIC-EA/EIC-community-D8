@@ -7,7 +7,7 @@
 
       {% include "@ecl-twig/ec-component-menu/ecl-menu.html.twig" with mainmenu|default({})|merge({
         extra_classes: mainmenu.extra_classes|default('') ~ ' ecl-mainmenu__main',
-        icon_path: icon_file_path,
+        icon_path: icon_path,
       }) %}
 
       {% if searchform %}
