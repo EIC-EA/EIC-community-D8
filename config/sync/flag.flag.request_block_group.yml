@@ -1,14 +1,12 @@
-uuid: 2682bfd0-0c33-4187-a807-8a5473a8cac0
+uuid: 4b136dd2-3416-490a-8d95-7ac755df10b8
 langcode: en
 status: true
 dependencies:
   module:
     - group
-id: block_group
-label: 'Block group'
-bundles:
-  - event
-  - group
+id: request_block_group
+label: 'Block request (Group)'
+bundles: {  }
 entity_type: group
 global: false
 weight: 0

@@ -1,0 +1,19 @@
+uuid: 8c30bcab-d3c0-447f-9cae-c6d71ce3f554
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.flagging.field_request_reason
+    - flag.flag.request_block_group
+id: flagging.request_block_group.field_request_reason
+field_name: field_request_reason
+entity_type: flagging
+bundle: request_block_group
+label: 'Block reason'
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string_long

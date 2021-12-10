@@ -1,0 +1,21 @@
+uuid: b45d26e1-ef6e-422e-b1e0-be02b71caa4e
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.flagging.field_request_closed_date
+    - flag.flag.request_block_group
+  module:
+    - datetime
+id: flagging.request_block_group.field_request_closed_date
+field_name: field_request_closed_date
+entity_type: flagging
+bundle: request_block_group
+label: 'Closed date'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: datetime

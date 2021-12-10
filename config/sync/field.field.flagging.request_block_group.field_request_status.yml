@@ -1,0 +1,21 @@
+uuid: 174ce845-4df2-4764-8947-36e9bc2e159e
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.flagging.field_request_status
+    - flag.flag.request_block_group
+  module:
+    - options
+id: flagging.request_block_group.field_request_status
+field_name: field_request_status
+entity_type: flagging
+bundle: request_block_group
+label: Status
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: list_string
