@@ -96,9 +96,16 @@ function eic_groups_views_data() {
   ];
   $data['groups_field_data']['group_visibility_custom_restricted_organisations'] = [
     'title' => t('Visibility Custom: Restricted organisations'),
-    'help' => t('The chosen email domains for group Custom - Restricted email organisations.'),
+    'help' => t('The chosen organisations for group Custom - Restricted email organisations.'),
     'field' => [
       'id' => 'group_visibility_custom_restricted_organisations',
+    ],
+  ];
+  $data['groups_field_data']['group_visibility_custom_restricted_organisation_types'] = [
+    'title' => t('Visibility Custom: Restricted organisations types'),
+    'help' => t('The chosen organisation types for group Custom - Restricted email organisations types.'),
+    'field' => [
+      'id' => 'group_visibility_custom_restricted_organisation_types',
     ],
   ];
 
