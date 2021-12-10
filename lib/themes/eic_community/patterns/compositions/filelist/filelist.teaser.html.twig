@@ -1,7 +1,9 @@
 {% set title_element = title_element|default('h2') %}
 
 <div class="ecl-teaser ecl-teaser--filelist {{ highlight.show_button ? 'ecl-teaser--is-highlightable' }} {{ highlight.is_active ? 'ecl-teaser--is-highlighted' }} {{ extra_classes }}">
-  <figure class="ecl-teaser__image-wrapper">
+
+    <figure class="ecl-teaser__image-wrapper">
+      <a href="">
       {% include '@ecl-twig/ec-component-icon/ecl-icon.html.twig' with {
         icon: {
           size: 'l',
@@ -11,7 +13,8 @@
         },
         extra_classes: 'ecl-teaser__image-icon'
       } only %}
-  </figure>
+      </a>
+    </figure>
   <div class="ecl-teaser__main-wrapper">
     {% if type is not empty %}
       <div class="ecl-teaser__meta-header">
