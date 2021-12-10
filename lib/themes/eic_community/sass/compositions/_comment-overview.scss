@@ -46,7 +46,17 @@
   }
 
   &__form-wrapper {
-    padding: map-get($ecl-spacing, 'xl') ;
+    padding: map-get($ecl-spacing, 'xl');
+    @include ecl-media-breakpoint-down('md') {
+      padding: map-get($ecl-spacing, 'l');
+      & .ecl-comment__author {
+        display: none;
+      }
+    }
+
+    .ecl-modal__wrapper & {
+      padding: 0;
+    }
 
     &--children {
       padding-left: 0;
@@ -133,5 +143,8 @@
     @extend .ecl-u-type-heading-3;
 
     margin-top: 0;
+    @include ecl-media-breakpoint-down('md') {
+      padding-left: 1rem;
+    }
   }
 }
