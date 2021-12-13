@@ -3,6 +3,7 @@
 namespace Drupal\eic_flags\Service;
 
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\eic_flags\RequestTypes;
@@ -10,6 +11,8 @@ use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_user\UserHelper;
 use Drupal\flag\FlaggingInterface;
 use Drupal\group\Entity\GroupContentInterface;
+use Drupal\group\Entity\GroupInterface;
+use Drupal\group\GroupMembership;
 
 /**
  * Service that provides logic for transfer ownership requests.
@@ -46,10 +49,19 @@ class TransferOwnershipRequestHandler extends AbstractRequestHandler {
   ) {
     switch ($content_entity->getEntityTypeId()) {
       case 'group_content':
-        /** @var \Drupal\group\Entity\GroupInterface $content_entity */
-        // $this->deleteGroup($content_entity);
+        /** @var \Drupal\group\Entity\GroupContentInterface $content_entity */
+        $this->transferGroupOwnership($content_entity->getGroup(), $content_entity);
         break;
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function applyFlagPostSave(FlaggingInterface $flag) {
+    // Invalidate flagged entity cache.
+    Cache::invalidateTags($flag->getFlaggable()->getCacheTagsToInvalidate());
+    return $flag;
   }
 
   /**
@@ -100,6 +112,11 @@ class TransferOwnershipRequestHandler extends AbstractRequestHandler {
       return $access;
     }
 
+    // We return access denied if there are open requests for this entity.
+    if ($this->hasOpenRequest($entity, $account)) {
+      return $access;
+    }
+
     // If current user is not a group owner or a power user, we return
     // access forbidden.
     if (!(
@@ -122,7 +139,6 @@ class TransferOwnershipRequestHandler extends AbstractRequestHandler {
     // Allow access to transfer group ownership if the member is a group admin
     // but not the owner and if there are no open requests for the member.
     return AccessResult::allowedIf(
-      !$this->getOpenRequests($entity) &&
       !in_array($group_owner_role, array_keys($membership->getRoles())) &&
       in_array($group_admin_role, array_keys($membership->getRoles())))
       ->addCacheableDependency($entity)
@@ -177,6 +193,11 @@ class TransferOwnershipRequestHandler extends AbstractRequestHandler {
       return $access;
     }
 
+    // We return access denied if there are no requests for this entity.
+    if (!$this->hasOpenRequest($entity, $account)) {
+      return $access;
+    }
+
     // If current user is not a group owner or a power user, we return
     // access forbidden.
     if (!(
@@ -222,6 +243,82 @@ class TransferOwnershipRequestHandler extends AbstractRequestHandler {
     return [
       'group_content' => 'transfer_owner_request_group',
     ];
+  }
+
+  /**
+   * Transfers the group ownership and redirect user to the previous page.
+   *
+   * @param \Drupal\group\Entity\GroupInterface $group
+   *   The group entity.
+   * @param \Drupal\group\Entity\GroupContentInterface $group_content
+   *   The group content entity related to the new owner.
+   *
+   * @return \Symfony\Component\HttpFoundation\RedirectResponse
+   *   The redirect response.
+   */
+  private function transferGroupOwnership(GroupInterface $group, GroupContentInterface $group_content) {
+    /** @var \Drupal\user\UserInterface $new_owner */
+    $new_owner = $group_content->getEntity();
+    $new_owner_membership = $group->getMember($new_owner);
+
+    /** @var \Drupal\group\GroupMembership $old_owner_membership */
+    $old_owner_membership = EICGroupsHelper::getGroupOwner($group, TRUE);
+
+    // Removes group owner role from the old owner and add group admin role.
+    $this->updateOldOwnerRoles($old_owner_membership);
+
+    $group_owner_role = $group->bundle() . '-' . EICGroupsHelper::GROUP_TYPE_OWNER_ROLE;
+    // Transfer old group owner role to the new owner.
+    $new_owner_membership->addRole($group_owner_role);
+  }
+
+  /**
+   * Adds/removes roles from the old owner when transfering group ownership.
+   *
+   * @param \Drupal\group\GroupMembership $old_owner_membership
+   *   The old group owner membership.
+   */
+  private function updateOldOwnerRoles(GroupMembership $old_owner_membership) {
+    $group = $old_owner_membership->getGroup();
+
+    $add_roles = [
+      $group->bundle() . '-' . EICGroupsHelper::GROUP_TYPE_ADMINISTRATOR_ROLE,
+    ];
+
+    $group_content = $old_owner_membership->getGroupContent();
+
+    // Add roles.
+    foreach ($add_roles as $new_role) {
+      $has_role = FALSE;
+      // Check if a member already has the role.
+      foreach ($group_content->group_roles as $key => $role_item) {
+        if ($role_item->target_id === $new_role) {
+          $has_role = TRUE;
+          break;
+        }
+      }
+
+      if ($has_role) {
+        continue;
+      }
+
+      $group_content->group_roles[] = $new_role;
+    }
+
+    $remove_roles = [
+      $group->bundle() . '-' . EICGroupsHelper::GROUP_TYPE_OWNER_ROLE,
+    ];
+
+    // Remove roles.
+    foreach ($remove_roles as $old_role) {
+      foreach ($group_content->group_roles as $key => $role_item) {
+        if ($role_item->target_id == $old_role) {
+          $group_content->group_roles->removeItem($key);
+        }
+      }
+    }
+
+    $group_content->save();
   }
 
 }

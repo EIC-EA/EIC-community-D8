@@ -14,9 +14,11 @@ use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\eic_flags\Form\NewRequestForm;
 use Drupal\eic_flags\Form\RequestCloseForm;
+use Drupal\eic_flags\Form\TransferOwnershipRequestCloseForm;
 use Drupal\eic_flags\Hooks\EntityOperations;
 use Drupal\eic_flags\Hooks\FlagTokens;
 use Drupal\eic_flags\RequestStatus;
+use Drupal\eic_flags\RequestTypes;
 use Drupal\eic_flags\Routing\EntityRequestRouteProvider;
 use Drupal\eic_flags\Service\HandlerInterface;
 
@@ -146,6 +148,14 @@ function eic_flags_entity_type_build(array &$entity_types) {
         'user-close-request',
         '/request/{request_type}/' . $entity_id . '/{' . $entity_id . '}/close'
       );
+
+    switch ($request_handler->getType()) {
+      case RequestTypes::TRANSFER_OWNERSHIP:
+        $entity_type->setFormClass('close-request', TransferOwnershipRequestCloseForm::class);
+        $entity_type->setFormClass('user-close-request', TransferOwnershipRequestCloseForm::class);
+        break;
+
+    }
   }
 }
 
@@ -236,17 +246,27 @@ function eic_flags_entity_access(
       'request-delete',
       'request-archive',
       'request-transfer_ownership',
+      'close_request-transfer_ownership',
     ])
   ) {
     return AccessResult::neutral();
   }
 
-  $type = explode('-', $operation)[1];
+  $operation_type = explode('-', $operation);
+  $request_status = $operation_type[0];
+  $type = $operation_type[1];
   /** @var \Drupal\eic_flags\Service\HandlerInterface $handler */
   $handler = \Drupal::service('eic_flags.handler_collector')
     ->getHandlerByType($type);
 
-  return $handler->canRequest($account, $entity);
+  switch ($request_status) {
+    case 'close_request':
+      return $handler->canCloseRequest($account, $entity);
+
+    default:
+      return $handler->canRequest($account, $entity);
+
+  }
 }
 
 /**

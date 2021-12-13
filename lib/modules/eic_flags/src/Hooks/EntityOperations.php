@@ -154,42 +154,58 @@ class EntityOperations implements ContainerInjectionInterface {
     $operations = [];
     $handlers = $this->collector->getHandlers();
     foreach ($handlers as $handler) {
-      if (!$entity->access('request-' . $handler->getType())
-        || !$handler->supports($entity)) {
-        continue;
+      $type = $handler->getType();
+
+      if ($entity->access('request-' . $type)
+        && $handler->supports($entity)) {
+        // Create request operation.
+        $operations['request_' . $type] = [
+          'title' => $this->t('Request @type', ['@type' => $type]),
+          'url' => $entity->toUrl('new-request')
+            ->setRouteParameter('destination', $this->currentRequest->getRequestUri())
+            ->setRouteParameter('request_type', $type),
+        ];
       }
 
-      $type = $handler->getType();
-      $operations['request_' . $type] = [
-        'title' => $this->t('Request @type', ['@type' => $type]),
-        'url' => $entity->toUrl('new-request')
-          ->setRouteParameter('destination', $this->currentRequest->getRequestUri())
-          ->setRouteParameter('request_type', $type),
-      ];
-      $operations['accept_request_' . $type] = [
-        'title' => $this->t('Accept request @type', ['@type' => $type]),
-        'url' => $entity->toUrl('user-close-request')
-          ->setRouteParameter('destination', $this->currentRequest->getRequestUri())
-          ->setRouteParameter('request_type', $type)
-          ->setRouteParameter('response', RequestStatus::ACCEPTED),
-      ];
-      $operations['deny_request_' . $type] = [
-        'title' => $this->t('Deny request @type', ['@type' => $type]),
-        'url' => $entity->toUrl('user-close-request')
-          ->setRouteParameter('destination', $this->currentRequest->getRequestUri())
-          ->setRouteParameter('request_type', $type)
-          ->setRouteParameter('response', RequestStatus::DENIED),
-      ];
+      if ($entity->access('close_request-' . $type)
+        && $handler->supports($entity)) {
+        // Create close request operations.
+        $operations['accept_request_' . $type] = [
+          'title' => $this->t('Accept request @type', ['@type' => $type]),
+          'url' => $entity->toUrl('user-close-request')
+            ->setRouteParameter('destination', $this->currentRequest->getRequestUri())
+            ->setRouteParameter('request_type', $type)
+            ->setRouteParameter('response', RequestStatus::ACCEPTED),
+        ];
+        $operations['deny_request_' . $type] = [
+          'title' => $this->t('Deny request @type', ['@type' => $type]),
+          'url' => $entity->toUrl('user-close-request')
+            ->setRouteParameter('destination', $this->currentRequest->getRequestUri())
+            ->setRouteParameter('request_type', $type)
+            ->setRouteParameter('response', RequestStatus::DENIED),
+        ];
+      }
 
+      // Alter operation titles for specific request types.
       switch ($type) {
         case RequestTypes::BLOCK:
-          $operations['request_' . $type]['title'] = $this->t('Block');
+          if (isset($operations['request_' . $type])) {
+            $operations['request_' . $type]['title'] = $this->t('Block');
+          }
           break;
 
         case RequestTypes::TRANSFER_OWNERSHIP:
-          $operations['request_' . $type]['title'] = $this->t('Request transfer ownership');
-          $operations['accept_request_' . $type]['title'] = $this->t('Accept transfer ownership');
-          $operations['deny_request_' . $type]['title'] = $this->t('Deny transfer ownership');
+          $operation_keys = [
+            'request_' . $type => $this->t('Request transfer ownership'),
+            'accept_request_' . $type => $this->t('Accept transfer ownership'),
+            'deny_request_' . $type => $this->t('Deny transfer ownership'),
+          ];
+          foreach ($operation_keys as $key => $value) {
+            if (!isset($operations[$key])) {
+              continue;
+            }
+            $operations[$key]['title'] = $value;
+          }
           break;
 
       }
