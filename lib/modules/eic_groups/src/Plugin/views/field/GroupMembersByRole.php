@@ -2,8 +2,8 @@
 
 namespace Drupal\eic_groups\Plugin\views\field;
 
-use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\views\ResultRow;
@@ -21,14 +21,14 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class GroupMembersByRole extends FieldPluginBase {
 
   /**
-   * The entity type manager.
+   * The EIC groups helper service.
    *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   * @var \Drupal\eic_groups\EICGroupsHelper
    */
-  protected $entityTypeManager;
+  protected $groupsHelper;
 
   /**
-   * Constructs a PluginBase object.
+   * Constructs a GroupMembersByRole object.
    *
    * @param array $configuration
    *   A configuration array containing information about the plugin instance.
@@ -36,12 +36,12 @@ class GroupMembersByRole extends FieldPluginBase {
    *   The plugin_id for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   * @param \Drupal\eic_groups\EICGroupsHelper $eic_groups_helper
    *   The entity type manager.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EICGroupsHelper $eic_groups_helper) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->entityTypeManager = $entity_type_manager;
+    $this->groupsHelper = $eic_groups_helper;
   }
 
   /**
@@ -52,7 +52,7 @@ class GroupMembersByRole extends FieldPluginBase {
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('entity_type.manager')
+      $container->get('eic_groups.helper')
     );
   }
 
@@ -118,12 +118,12 @@ class GroupMembersByRole extends FieldPluginBase {
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
   protected function getGroupRoleOptions() {
+    // @todo Cache the results to avoid running this code on each row.
     $roles = [];
-    $group_types = $this->entityTypeManager->getStorage('group_type')->loadMultiple();
-    foreach ($group_types as $group_type) {
-      $group_roles = $group_type->getRoles(FALSE);
-      foreach ($group_roles as $group_role) {
-        $roles[$group_role->id()] = $group_type->label() . ' - ' . $group_role->label();
+
+    foreach ($this->groupsHelper->getGroupRoles() as $info) {
+      foreach ($info['roles'] as $role_id => $role_label) {
+        $roles[$role_id] = $info['label'] . ' - ' . $role_label;
       }
     }
 
