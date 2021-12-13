@@ -97,6 +97,17 @@ interface HandlerInterface {
   public function applyFlagAlter(FlaggingInterface $flag);
 
   /**
+   * Post save method to apply logic after saving flag in the database.
+   *
+   * @param \Drupal\flag\FlaggingInterface $flag
+   *   The flagging entity to alter.
+   *
+   * @return \Drupal\flag\FlaggingInterface|null
+   *   The altered flagging entity.
+   */
+  public function applyFlagPostSave(FlaggingInterface $flag);
+
+  /**
    * Returns an array of supported entity types.
    *
    * @return array

@@ -222,6 +222,9 @@ abstract class AbstractRequestHandler implements HandlerInterface {
 
     $flag->save();
 
+    // Calls post save method to apply logic after saving flag in the database.
+    $flag = $this->applyFlagPostSave($flag);
+
     $this->moduleHandler->invokeAll(
       'request_insert',
       [
@@ -238,6 +241,13 @@ abstract class AbstractRequestHandler implements HandlerInterface {
    * {@inheritdoc}
    */
   public function applyFlagAlter(FlaggingInterface $flag) {
+    return $flag;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function applyFlagPostSave(FlaggingInterface $flag) {
     return $flag;
   }
 
