@@ -12,6 +12,7 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
 use Drupal\eic_flags\FlaggedEntitiesListBuilder;
 use Drupal\eic_flags\FlagType;
+use Drupal\eic_flags\RequestStatus;
 use Drupal\eic_flags\RequestTypes;
 use Drupal\eic_flags\Service\RequestHandlerCollector;
 use Drupal\eic_topics\Constants\Topics;
@@ -165,14 +166,39 @@ class EntityOperations implements ContainerInjectionInterface {
           ->setRouteParameter('destination', $this->currentRequest->getRequestUri())
           ->setRouteParameter('request_type', $type),
       ];
+      $operations['accept_request_' . $type] = [
+        'title' => $this->t('Accept request @type', ['@type' => $type]),
+        'url' => $entity->toUrl('user-close-request')
+          ->setRouteParameter('destination', $this->currentRequest->getRequestUri())
+          ->setRouteParameter('request_type', $type)
+          ->setRouteParameter('response', RequestStatus::ACCEPTED),
+      ];
+      $operations['deny_request_' . $type] = [
+        'title' => $this->t('Deny request @type', ['@type' => $type]),
+        'url' => $entity->toUrl('user-close-request')
+          ->setRouteParameter('destination', $this->currentRequest->getRequestUri())
+          ->setRouteParameter('request_type', $type)
+          ->setRouteParameter('response', RequestStatus::DENIED),
+      ];
 
-      if ($type === RequestTypes::BLOCK) {
-        $operations['request_' . $type]['title'] = $this->t('Block');
+      switch ($type) {
+        case RequestTypes::BLOCK:
+          $operations['request_' . $type]['title'] = $this->t('Block');
+          break;
+
+        case RequestTypes::TRANSFER_OWNERSHIP:
+          $operations['request_' . $type]['title'] = $this->t('Request transfer ownership');
+          $operations['accept_request_' . $type]['title'] = $this->t('Accept transfer ownership');
+          $operations['deny_request_' . $type]['title'] = $this->t('Deny transfer ownership');
+          break;
+
       }
+    }
 
-      // Removes operation link if user doesn't have access to it.
-      if (!$operations['request_' . $type]['url']->access()) {
-        unset($operations['request_' . $type]);
+    // Removes operation links if user doesn't have access to it.
+    foreach ($operations as $key => $operation) {
+      if (!isset($operation['url']) || !$operation['url']->access()) {
+        unset($operations[$key]);
       }
     }
 

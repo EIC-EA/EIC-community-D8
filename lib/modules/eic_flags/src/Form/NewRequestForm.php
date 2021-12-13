@@ -11,6 +11,8 @@ use Drupal\eic_flags\RequestTypes;
 use Drupal\eic_flags\Service\ArchiveRequestHandler;
 use Drupal\eic_flags\Service\BlockRequestHandler;
 use Drupal\eic_flags\Service\RequestHandlerCollector;
+use Drupal\eic_groups\EICGroupsHelper;
+use Drupal\eic_user\UserHelper;
 use Drupal\flag\Entity\Flagging;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -29,6 +31,13 @@ class NewRequestForm extends ContentEntityDeleteForm {
   private $requestHandler;
 
   /**
+   * The EIC User helper service.
+   *
+   * @var \Drupal\eic_user\UserHelper
+   */
+  protected $eicUserHelper;
+
+  /**
    * NewRequestForm constructor.
    *
    * @param \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository
@@ -39,18 +48,22 @@ class NewRequestForm extends ContentEntityDeleteForm {
    *   The time service.
    * @param \Drupal\eic_flags\Service\RequestHandlerCollector $collector
    *   The handler collector service.
+   * @param \Drupal\eic_user\UserHelper $eic_user_helper
+   *   The EIC User helper service.
    */
   public function __construct(
     EntityRepositoryInterface $entity_repository,
     EntityTypeBundleInfoInterface $entity_type_bundle_info,
     TimeInterface $time,
-    RequestHandlerCollector $collector
+    RequestHandlerCollector $collector,
+    UserHelper $eic_user_helper
   ) {
     parent::__construct($entity_repository, $entity_type_bundle_info, $time);
 
     $this->requestHandler = $collector->getHandlerByType(
       $this->getRequest()->get('request_type')
     );
+    $this->eicUserHelper = $eic_user_helper;
   }
 
   /**
@@ -61,7 +74,8 @@ class NewRequestForm extends ContentEntityDeleteForm {
       $container->get('entity.repository'),
       $container->get('entity_type.bundle.info'),
       $container->get('datetime.time'),
-      $container->get('eic_flags.handler_collector')
+      $container->get('eic_flags.handler_collector'),
+      $container->get('eic_user.helper')
     );
   }
 
@@ -86,6 +100,20 @@ class NewRequestForm extends ContentEntityDeleteForm {
             '@entity_type' => $this->entity->getEntityType()->getLabel(),
           ],
         );
+        break;
+
+      case RequestTypes::TRANSFER_OWNERSHIP:
+        if ($this->entity->getEntityTypeId() === 'group_content') {
+          $new_owner = $this->entity->getEntity();
+          $previous_owner = EICGroupsHelper::getGroupOwner($this->entity->getGroup());
+          $description = $this->t("<p>You're about to request transfer ownership to %new_owner?</p>
+            <p>If the user accepts, the previous owner %previous_owner will turn into a group admin.</p>",
+            [
+              '%new_owner' => $this->eicUserHelper->getFullName($new_owner),
+              '%previous_owner' => $this->eicUserHelper->getFullName($previous_owner),
+            ]
+          );
+        }
         break;
 
       default:
@@ -120,6 +148,10 @@ class NewRequestForm extends ContentEntityDeleteForm {
         );
         break;
 
+      case RequestTypes::TRANSFER_OWNERSHIP:
+        $description = $this->t('Request transfer ownership');
+        break;
+
       default:
         // @todo In the future we should consider creating a helper function if
         // we need to use this line of code elsewhere.
@@ -136,27 +168,39 @@ class NewRequestForm extends ContentEntityDeleteForm {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $form = parent::buildForm($form, $form_state);
+    $form_field_description = [
+      'text' => 'Please explain why this @entity_type should be @action',
+      'args' => [
+        '@entity_type' => $this->entity->getEntityType()->getLabel(),
+      ],
+    ];
 
     switch ($this->requestHandler->getType()) {
       case RequestTypes::BLOCK:
-        $action = $this->t('blocked');
+        $form_field_description['args']['@action'] = $this->t('blocked');
+        break;
+
+      case RequestTypes::TRANSFER_OWNERSHIP:
+        $form_field_description = [
+          'text' => 'Please explain why you want to @action',
+          'args' => [
+            '@action' => $this->t('transfer ownership'),
+          ],
+        ];
         break;
 
       default:
         // @todo In the future we should consider creating a helper function if
         // we need to use this line of code elsewhere.
-        $action = $this->requestHandler instanceof ArchiveRequestHandler ? 'archived' : 'deleted';
+        $form_field_description['args']['@action'] = $this->requestHandler instanceof ArchiveRequestHandler ? 'archived' : 'deleted';
         break;
     }
 
     $form['reason'] = [
       '#type' => 'textarea',
       '#title' => $this->t(
-        'Please explain why this @entity_type should be @action',
-        [
-          '@entity_type' => $this->entity->getEntityType()->getLabel(),
-          '@action' => $action,
-        ]
+        $form_field_description['text'],
+        $form_field_description['args']
       ),
       '#required' => TRUE,
     ];

@@ -1,0 +1,15 @@
+uuid: 8cf350c3-c39e-4c1b-874f-6e25e726fc14
+langcode: en
+status: true
+dependencies:
+  config:
+    - flag.flag.request_transfer_ownership_group
+  module:
+    - flag
+id: flag_action.request_transfer_ownership_group_flag
+label: 'Flag this item'
+type: group
+plugin: 'flag_action:request_transfer_ownership_group_flag'
+configuration:
+  flag_id: request_transfer_ownership_group
+  flag_action: flag

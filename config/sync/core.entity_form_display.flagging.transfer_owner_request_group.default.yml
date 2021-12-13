@@ -1,0 +1,48 @@
+uuid: 782fb6e1-1281-40db-8c86-fdd7bfdd78fe
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.flagging.transfer_owner_request_group.field_request_closed_date
+    - field.field.flagging.transfer_owner_request_group.field_request_moderator
+    - field.field.flagging.transfer_owner_request_group.field_request_reason
+    - field.field.flagging.transfer_owner_request_group.field_request_status
+    - flag.flag.transfer_owner_request_group
+  module:
+    - datetime
+id: flagging.transfer_owner_request_group.default
+targetEntityType: flagging
+bundle: transfer_owner_request_group
+mode: default
+content:
+  field_request_closed_date:
+    weight: 0
+    settings: {  }
+    third_party_settings: {  }
+    type: datetime_default
+    region: content
+  field_request_moderator:
+    weight: 2
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: entity_reference_autocomplete
+    region: content
+  field_request_reason:
+    weight: 3
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textarea
+    region: content
+  field_request_status:
+    weight: 1
+    settings: {  }
+    third_party_settings: {  }
+    type: options_select
+    region: content
+hidden: {  }

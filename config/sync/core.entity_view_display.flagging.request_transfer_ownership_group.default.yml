@@ -1,0 +1,51 @@
+uuid: d16048c5-729f-4251-96cb-984084e531b4
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.flagging.request_transfer_ownership_group.field_request_closed_date
+    - field.field.flagging.request_transfer_ownership_group.field_request_moderator
+    - field.field.flagging.request_transfer_ownership_group.field_request_reason
+    - field.field.flagging.request_transfer_ownership_group.field_request_status
+    - flag.flag.request_transfer_ownership_group
+  module:
+    - datetime
+    - options
+id: flagging.request_transfer_ownership_group.default
+targetEntityType: flagging
+bundle: request_transfer_ownership_group
+mode: default
+content:
+  field_request_closed_date:
+    weight: 3
+    label: above
+    settings:
+      format_type: medium
+      timezone_override: ''
+    third_party_settings: {  }
+    type: datetime_default
+    region: content
+  field_request_moderator:
+    weight: 1
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+  field_request_reason:
+    weight: 0
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: basic_string
+    region: content
+  field_request_status:
+    weight: 2
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: list_default
+    region: content
+hidden:
+  search_api_excerpt: true

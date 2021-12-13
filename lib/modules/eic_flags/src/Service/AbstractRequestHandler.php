@@ -216,6 +216,10 @@ abstract class AbstractRequestHandler implements HandlerInterface {
 
     $flag->set('field_request_reason', $reason);
     $flag->set('field_request_status', RequestStatus::OPEN);
+
+    // Alters flag before saving it.
+    $flag = $this->applyFlagAlter($flag);
+
     $flag->save();
 
     $this->moduleHandler->invokeAll(
@@ -227,6 +231,13 @@ abstract class AbstractRequestHandler implements HandlerInterface {
       ]
     );
 
+    return $flag;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function applyFlagAlter(FlaggingInterface $flag) {
     return $flag;
   }
 
@@ -373,6 +384,23 @@ abstract class AbstractRequestHandler implements HandlerInterface {
     }
 
     return AccessResult::allowed();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function canCloseRequest(
+    AccountInterface $account,
+    ContentEntityInterface $entity
+  ) {
+    // Default access.
+    $access = AccessResult::forbidden();
+
+    if ($account->hasPermission('manage archival deletion requests')) {
+      $access = AccessResult::allowed();
+    }
+
+    return $access;
   }
 
 }
