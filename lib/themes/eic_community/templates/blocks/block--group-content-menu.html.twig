@@ -11,5 +11,6 @@
   {{ title_suffix }}
   {% include '@theme/patterns/compositions/subnavigation.html.twig' with group_menu|default({})|merge({
     search_block: search_block,
+    icon_file_path: icon_file_path,
   }) %}
 </div>
