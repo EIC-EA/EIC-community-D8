@@ -82,10 +82,6 @@
     }
   }
 
-  &--filelist__thumbnail-link {
-    display: flex;
-  }
-
   [class*=ecl-featured-content] &--organisation &__image-wrapper, [class*=ecl-featured-content] &--organisation &__image-wrapper &__image {
     width: 80px;
     height: 80px;
