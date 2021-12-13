@@ -6,6 +6,7 @@ use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\eic_flags\RequestStatus;
 use Drupal\eic_flags\RequestTypes;
 use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_user\UserHelper;
@@ -319,6 +320,16 @@ class TransferOwnershipRequestHandler extends AbstractRequestHandler {
     }
 
     $group_content->save();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getSupportedResponsesForClosedRequests() {
+    return [
+      RequestStatus::DENIED,
+      RequestStatus::ACCEPTED,
+    ];
   }
 
 }

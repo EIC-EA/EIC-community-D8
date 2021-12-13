@@ -14,11 +14,9 @@ use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\eic_flags\Form\NewRequestForm;
 use Drupal\eic_flags\Form\RequestCloseForm;
-use Drupal\eic_flags\Form\TransferOwnershipRequestCloseForm;
 use Drupal\eic_flags\Hooks\EntityOperations;
 use Drupal\eic_flags\Hooks\FlagTokens;
 use Drupal\eic_flags\RequestStatus;
-use Drupal\eic_flags\RequestTypes;
 use Drupal\eic_flags\Routing\EntityRequestRouteProvider;
 use Drupal\eic_flags\Service\HandlerInterface;
 
@@ -148,14 +146,6 @@ function eic_flags_entity_type_build(array &$entity_types) {
         'user-close-request',
         '/request/{request_type}/' . $entity_id . '/{' . $entity_id . '}/close'
       );
-
-    switch ($request_handler->getType()) {
-      case RequestTypes::TRANSFER_OWNERSHIP:
-        $entity_type->setFormClass('close-request', TransferOwnershipRequestCloseForm::class);
-        $entity_type->setFormClass('user-close-request', TransferOwnershipRequestCloseForm::class);
-        break;
-
-    }
   }
 }
 

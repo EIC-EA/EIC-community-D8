@@ -413,4 +413,15 @@ abstract class AbstractRequestHandler implements HandlerInterface {
     return $access;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getSupportedResponsesForClosedRequests() {
+    return [
+      RequestStatus::DENIED,
+      RequestStatus::ACCEPTED,
+      RequestStatus::ARCHIVED,
+    ];
+  }
+
 }

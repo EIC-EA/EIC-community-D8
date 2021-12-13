@@ -231,4 +231,12 @@ interface HandlerInterface {
     ContentEntityInterface $entity
   );
 
+  /**
+   * Get supported response types for closed requests.
+   *
+   * @return array
+   *   Array of supported response types.
+   */
+  public function getSupportedResponsesForClosedRequests();
+
 }
