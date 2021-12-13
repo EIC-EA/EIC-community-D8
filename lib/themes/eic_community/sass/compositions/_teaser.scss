@@ -1058,6 +1058,12 @@
 
   &__like {
     flex-grow: 1;
+
+    & a,
+    & span {
+      display: flex;
+      align-items: center;
+    }
   }
 
   &__gallery {
