@@ -139,6 +139,7 @@ const Gallery = ({files}) => {
         file={files?.files[getCorrectIndex(current, files?.files)]}
         position={getCorrectIndex(current, files?.files) + 1}
         length={files?.files.length}
+        isMultiple
       />
     </>
   )
