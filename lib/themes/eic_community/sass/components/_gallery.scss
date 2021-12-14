@@ -41,20 +41,16 @@
         max-width: 170px;
         border: 3px solid transparent;
 
+        &.ecl-gallery__main-slides__slide--current{
+          border: 3px solid ecl-typography('color', 'title');
+        }
       }
-
-      & .swiper-slide-active{
-        border: 3px solid ecl-typography('color', 'title');
-      }
-
 
       & img {
         object-fit: contain;
       }
     }
   }
-
-
 
   &__action {
     cursor: pointer;
