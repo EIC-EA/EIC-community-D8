@@ -7,6 +7,7 @@ dependencies:
     - field.field.flagging.transfer_owner_request_group.field_request_closed_date
     - field.field.flagging.transfer_owner_request_group.field_request_moderator
     - field.field.flagging.transfer_owner_request_group.field_request_reason
+    - field.field.flagging.transfer_owner_request_group.field_request_response
     - field.field.flagging.transfer_owner_request_group.field_request_status
     - flag.flag.transfer_owner_request_group
   module:
@@ -44,6 +45,13 @@ content:
     region: content
   field_request_reason:
     weight: 3
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: basic_string
+    region: content
+  field_request_response:
+    weight: 5
     label: above
     settings: {  }
     third_party_settings: {  }
