@@ -132,7 +132,7 @@ function eic_flags_entity_type_build(array &$entity_types) {
       ->setHandlerClass('route_provider', $route_providers)
       ->setLinkTemplate(
         'new-request',
-        '/request/{request_type}/' . $entity_id . '/{' . $entity_id . '}'
+        "/$entity_id" . '/{' . $entity_id . '}' . '/request/{request_type}'
       )
       ->setLinkTemplate(
         'new-request-api',
@@ -144,8 +144,20 @@ function eic_flags_entity_type_build(array &$entity_types) {
       )
       ->setLinkTemplate(
         'user-close-request',
-        '/request/{request_type}/' . $entity_id . '/{' . $entity_id . '}/close'
+        "/$entity_id" . '/{' . $entity_id . '}' . '/request/{request_type}/close'
       );
+
+    // Support for group content entities. We add the group url as a prefix.
+    if ($entity_id === 'group_content') {
+      $entity_type->setLinkTemplate(
+        'new-request',
+        "/group/{group}/content" . '/{' . $entity_id . '}' . '/request/{request_type}'
+      );
+      $entity_type->setLinkTemplate(
+        'user-close-request',
+        "/group/{group}/content" . '/{' . $entity_id . '}' . '/request/{request_type}/close'
+      );
+    }
   }
 }
 
