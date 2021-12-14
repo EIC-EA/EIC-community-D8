@@ -315,6 +315,24 @@ function eic_groups_eic_groups_metrics_info() {
 }
 
 /**
+ * Custom callback to provide configuration for the 'group_metrics' plugin.
+ */
+function eic_groups_eic_groups_metrics_configuration($metric_id, $configuration) {
+  /** @var \Drupal\eic_groups\Hooks\GroupMetrics $class */
+  $class = \Drupal::classResolver(GroupMetrics::class);
+  return $class->groupMetricsConf($metric_id, $configuration);
+}
+
+/**
+ * Custom callback to provide value for the 'group_metrics' plugin.
+ */
+function eic_groups_eic_groups_metrics_value($metric_id, $group, $configuration) {
+  /** @var \Drupal\eic_groups\Hooks\GroupMetrics $class */
+  $class = \Drupal::classResolver(GroupMetrics::class);
+  return $class->groupMetricsValue($metric_id, $group, $configuration);
+}
+
+/**
  * Implements hook_group_update().
  */
 function eic_groups_group_update(EntityInterface $entity) {

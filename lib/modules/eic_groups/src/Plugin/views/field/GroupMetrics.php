@@ -4,10 +4,8 @@ namespace Drupal\eic_groups\Plugin\views\field;
 
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Plugin\views\field\NumericField;
 use Drupal\views\ResultRow;
-use Drupal\views\ViewExecutable;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -31,7 +29,7 @@ class GroupMetrics extends NumericField {
    *
    * @var array
    */
-  protected $metricsInfo;
+  protected $metricsInfo = [];
 
   /**
    * Constructs a GroupMetrics object.
@@ -48,6 +46,9 @@ class GroupMetrics extends NumericField {
   public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->entityTypeManager = $entity_type_manager;
+
+    // Store the metrics info for later use.
+    $this->metricsInfo = \Drupal::moduleHandler()->invokeAll('eic_groups_metrics_info');
   }
 
   /**
@@ -65,16 +66,6 @@ class GroupMetrics extends NumericField {
   /**
    * {@inheritdoc}
    */
-  public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
-    parent::init($view, $display, $options);
-
-    // Store the metrics info for later use.
-    $this->metricsInfo = \Drupal::moduleHandler()->invokeAll('eic_groups_metrics_info');
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function summaryTitle() {
     // @todo Append selected metric?
     return $this->t('Group metrics');
@@ -86,6 +77,22 @@ class GroupMetrics extends NumericField {
   protected function defineOptions() {
     $options = parent::defineOptions();
     $options['metric'] = ['default' => ''];
+
+    // Define options for all metrics.
+    foreach ($this->metricsInfo as $metric_id => $info) {
+      if (empty($info['options'])) {
+        continue;
+      }
+
+      foreach ($info['options'] as $form_element_name => $info) {
+        // Unfortunately we need to set a default value for the container.
+        // Metrics providers should not use this reserved name.
+        $options[$metric_id . '_conf']['default'] = NULL;
+
+        $options[$metric_id . '_conf'][$form_element_name] = ['default' => $info['default_value']];
+      }
+    }
+
     return $options;
   }
 
@@ -104,6 +111,44 @@ class GroupMetrics extends NumericField {
       '#default_value' => $this->options['metric'],
       '#required' => TRUE,
     ];
+
+    // Add potential configuration fo each metric.
+    // @todo Use ajax to load the metric config form elements to avoid loading
+    //   them all.
+    foreach ($this->metricsInfo as $metric_id => $info) {
+      if (empty($info['options'])) {
+        continue;
+      }
+
+      // Skip this metric if it doesn't have any configuration.
+      if (empty($info['conf_callback']) || !is_callable($info['conf_callback'])) {
+        continue;
+      }
+
+      // Get the configuration.
+      $configuration = call_user_func($info['conf_callback'], $metric_id, $this->options);
+
+      // Create a container for this metric.
+      $form[$metric_id . '_conf'] = [
+        '#type' => 'fieldset',
+        '#title' => $info['label'],
+        '#tree' => TRUE,
+      ];
+
+      // Add the form elements to the container.
+      foreach ($configuration as $form_element_name => $form_element) {
+        $form[$metric_id . '_conf'][$form_element_name] = $form_element;
+      }
+
+      // Add a condition to show the configuration.
+      $form[$metric_id . '_conf']['#states'] = [
+        'visible' => [
+          ':input[name="options[metric]"]' => [
+            ['value' => $metric_id],
+          ],
+        ],
+      ];
+    }
 
     parent::buildOptionsForm($form, $form_state);
   }
