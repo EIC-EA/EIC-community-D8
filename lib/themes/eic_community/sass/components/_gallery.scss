@@ -111,7 +111,9 @@
 
     &__title {
       color: ecl-typography('color', 'title');
-      margin-bottom: 0;
+      font-size: $ecl-font-size-l;
+      font-weight: bold;
+      margin: 0;
     }
 
     &__actions,
