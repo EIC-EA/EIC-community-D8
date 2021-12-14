@@ -8,6 +8,8 @@ dependencies:
     - field.field.message.notify_new_transfer_owner_req.field_entity_url
     - field.field.message.notify_new_transfer_owner_req.field_referenced_entity_label
     - field.field.message.notify_new_transfer_owner_req.field_referenced_flag
+    - field.field.message.notify_new_transfer_owner_req.field_request_accept_url
+    - field.field.message.notify_new_transfer_owner_req.field_request_deny_url
     - message.template.notify_new_transfer_owner_req
 id: message.notify_new_transfer_owner_req.mail_body
 targetEntityType: message
@@ -22,5 +24,7 @@ hidden:
   field_entity_url: true
   field_referenced_entity_label: true
   field_referenced_flag: true
+  field_request_accept_url: true
+  field_request_deny_url: true
   partial_0: true
   search_api_excerpt: true

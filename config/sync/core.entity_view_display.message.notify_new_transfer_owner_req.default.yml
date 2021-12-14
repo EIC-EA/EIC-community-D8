@@ -7,6 +7,8 @@ dependencies:
     - field.field.message.notify_new_transfer_owner_req.field_entity_url
     - field.field.message.notify_new_transfer_owner_req.field_referenced_entity_label
     - field.field.message.notify_new_transfer_owner_req.field_referenced_flag
+    - field.field.message.notify_new_transfer_owner_req.field_request_accept_url
+    - field.field.message.notify_new_transfer_owner_req.field_request_deny_url
     - message.template.notify_new_transfer_owner_req
   module:
     - link
@@ -50,6 +52,30 @@ content:
       link: true
     third_party_settings: {  }
     type: entity_reference_label
+    region: content
+  field_request_accept_url:
+    weight: 4
+    label: above
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+    type: link
+    region: content
+  field_request_deny_url:
+    weight: 5
+    label: above
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+    type: link
     region: content
   partial_0:
     weight: 0
