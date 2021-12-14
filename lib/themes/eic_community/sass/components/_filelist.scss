@@ -39,7 +39,8 @@
       order: -1;
       margin: 0;
       margin-right: ecl-box-model('padding');
-      width: 70px;
+      width: 140px;
+      height: 80px;
       background: map-get($ecl-colors, 'grey-5');
       display: flex;
       justify-content: center;
