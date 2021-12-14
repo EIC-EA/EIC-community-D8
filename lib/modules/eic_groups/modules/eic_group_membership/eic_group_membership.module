@@ -6,7 +6,6 @@
  */
 
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Url;
 
 /**
  * Implements hook_entity_operation_alter().
@@ -34,29 +33,4 @@ function eic_group_membership_entity_operation_alter(array &$operations, EntityI
 
     }
   }
-
-  // @todo Remove code bellow
-
-  // $url_options = [
-  //   'query' => [
-  //     'destination' => \Drupal::requestStack()->getCurrentRequest()->getRequestUri(),
-  //   ],
-  // ];
-
-  // Adds transfer ownership operation.
-  // $transfer_ownership_url = Url::fromRoute(
-  //   'eic_group_membership.transfer_ownership.confirm_form',
-  //   [
-  //     'group' => $entity->getGroup()->id(),
-  //     'group_content' => $entity->id(),
-  //   ],
-  //   $url_options
-  // );
-  // if ($transfer_ownership_url->access()) {
-  //   $operations['transfer_ownership'] = [
-  //     'title' => t('Transfer ownership'),
-  //     'weight' => -50,
-  //     'url' => $transfer_ownership_url,
-  //   ];
-  // }
 }
