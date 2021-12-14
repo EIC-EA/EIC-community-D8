@@ -33,11 +33,10 @@ class TransferOwnershipRequestHandler extends AbstractRequestHandler {
    * {@inheritdoc}
    */
   public function getMessages() {
-    // @todo Define message templates per request status.
     return [
       RequestStatus::OPEN => 'notify_new_transfer_owner_req',
-      // RequestStatus::DENIED => 'notify_transfer_owner_request_denied',
-      // RequestStatus::ACCEPTED => 'notify_transfer_owner_request_accepted',
+      RequestStatus::DENIED => 'notify_transfer_owner_req_denied',
+      RequestStatus::ACCEPTED => 'notify_transfer_owner_req_accept',
     ];
   }
 
