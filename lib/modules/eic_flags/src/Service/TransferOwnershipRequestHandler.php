@@ -50,8 +50,16 @@ class TransferOwnershipRequestHandler extends AbstractRequestHandler {
     switch ($content_entity->getEntityTypeId()) {
       case 'group_content':
         /** @var \Drupal\group\Entity\GroupContentInterface $content_entity */
+        if ($content_entity->getContentPlugin()->getPluginId() !== 'group_membership') {
+          break;
+        }
+
         $this->transferGroupOwnership($content_entity->getGroup(), $content_entity);
+        // Invalidate flagged entity cache.
+        Cache::invalidateTags($content_entity->getCacheTagsToInvalidate());
+        $this->invalidateGroupMembershipAdminCaches($content_entity->getGroup());
         break;
+
     }
   }
 
@@ -63,7 +71,19 @@ class TransferOwnershipRequestHandler extends AbstractRequestHandler {
     ContentEntityInterface $content_entity
   ) {
     // Invalidate flagged entity cache.
-    Cache::invalidateTags($flagging->getFlaggable()->getCacheTagsToInvalidate());
+    Cache::invalidateTags($content_entity->getCacheTagsToInvalidate());
+
+    switch ($content_entity->getEntityTypeId()) {
+      case 'group_content':
+        /** @var \Drupal\group\Entity\GroupContentInterface $content_entity */
+        if ($content_entity->getContentPlugin()->getPluginId() !== 'group_membership') {
+          break;
+        }
+
+        $this->invalidateGroupMembershipAdminCaches($content_entity->getGroup());
+        break;
+
+    }
     return TRUE;
   }
 
@@ -88,8 +108,22 @@ class TransferOwnershipRequestHandler extends AbstractRequestHandler {
    * {@inheritdoc}
    */
   public function applyFlagPostSave(FlaggingInterface $flag) {
+    $entity = $flag->getFlaggable();
     // Invalidate flagged entity cache.
     Cache::invalidateTags($flag->getFlaggable()->getCacheTagsToInvalidate());
+
+    switch ($entity->getEntityTypeId()) {
+      case 'group_content':
+        /** @var \Drupal\group\Entity\GroupContentInterface $entity */
+        if ($entity->getContentPlugin()->getPluginId() !== 'group_membership') {
+          break;
+        }
+
+        $this->invalidateGroupMembershipAdminCaches($entity->getGroup());
+        break;
+
+    }
+
     return $flag;
   }
 
@@ -144,6 +178,24 @@ class TransferOwnershipRequestHandler extends AbstractRequestHandler {
     // We return access denied if there are open requests for this entity.
     if ($this->hasOpenRequest($entity, $account)) {
       return $access;
+    }
+
+    /** @var \Drupal\group\GroupMembership[] $group_memberships */
+    $group_memberships = EICGroupsHelper::getGroupAdmins($group);
+
+    if (!$group_memberships) {
+      return $access;
+    }
+
+    // We return access denied if there are open requests for at least one
+    // group admin.
+    foreach ($group_memberships as $group_membership) {
+      if ($group_membership->getGroupContent()->id() === $entity->id()) {
+        continue;
+      }
+      if ($this->hasOpenRequest($group_membership->getGroupContent(), $account)) {
+        return $access;
+      }
     }
 
     // If current user is not a group owner or a power user, we return
@@ -355,6 +407,26 @@ class TransferOwnershipRequestHandler extends AbstractRequestHandler {
       RequestStatus::DENIED,
       RequestStatus::ACCEPTED,
     ];
+  }
+
+  /**
+   * Invalidates cache tags for group administrators.
+   *
+   * @param \Drupal\group\Entity\GroupInterface $group
+   *   The group entity.
+   */
+  private function invalidateGroupMembershipAdminCaches(GroupInterface $group) {
+    /** @var \Drupal\group\GroupMembership[] $group_memberships */
+    $group_memberships = EICGroupsHelper::getGroupAdmins($group);
+
+    if (!$group_memberships) {
+      return;
+    }
+
+    foreach ($group_memberships as $group_membership) {
+      // Invalidate flagged entity cache.
+      Cache::invalidateTags($group_membership->getGroupContent()->getCacheTagsToInvalidate());
+    }
   }
 
 }

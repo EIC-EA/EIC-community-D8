@@ -753,4 +753,19 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
     return $query->execute();
   }
 
+  /**
+   * Get group administrators.
+   *
+   * @param \Drupal\group\Entity\GroupInterface $group
+   *   The group for which we want to grab the list of administrators.
+   *
+   * @return \Drupal\group\GroupMembership[]
+   *   Array of group admin memberships.
+   */
+  public static function getGroupAdmins(GroupInterface $group) {
+    return $group->getMembers([
+      $group->bundle() . '-' . self::GROUP_TYPE_ADMINISTRATOR_ROLE,
+    ]);
+  }
+
 }
