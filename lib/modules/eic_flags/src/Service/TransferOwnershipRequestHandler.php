@@ -35,7 +35,7 @@ class TransferOwnershipRequestHandler extends AbstractRequestHandler {
   public function getMessages() {
     // @todo Define message templates per request status.
     return [
-      // RequestStatus::OPEN => 'notify_new_transfer_owner_request',
+      RequestStatus::OPEN => 'notify_new_transfer_owner_req',
       // RequestStatus::DENIED => 'notify_transfer_owner_request_denied',
       // RequestStatus::ACCEPTED => 'notify_transfer_owner_request_accepted',
     ];
@@ -54,6 +54,35 @@ class TransferOwnershipRequestHandler extends AbstractRequestHandler {
         $this->transferGroupOwnership($content_entity->getGroup(), $content_entity);
         break;
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function deny(
+    FlaggingInterface $flagging,
+    ContentEntityInterface $content_entity
+  ) {
+    // Invalidate flagged entity cache.
+    Cache::invalidateTags($flagging->getFlaggable()->getCacheTagsToInvalidate());
+    return TRUE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function applyFlagAlter(FlaggingInterface $flag) {
+    switch ($flag->getFlaggable()->getEntityTypeId()) {
+      case 'group_content':
+        $flag->set('field_new_owner_ref', $flag->getFlaggable()->getEntity()->id());
+        break;
+
+      default:
+        $flag->set('field_new_owner_ref', $flag->getFlaggable()->getOwnerId());
+        break;
+    }
+
+    return $flag;
   }
 
   /**
@@ -253,9 +282,6 @@ class TransferOwnershipRequestHandler extends AbstractRequestHandler {
    *   The group entity.
    * @param \Drupal\group\Entity\GroupContentInterface $group_content
    *   The group content entity related to the new owner.
-   *
-   * @return \Symfony\Component\HttpFoundation\RedirectResponse
-   *   The redirect response.
    */
   private function transferGroupOwnership(GroupInterface $group, GroupContentInterface $group_content) {
     /** @var \Drupal\user\UserInterface $new_owner */

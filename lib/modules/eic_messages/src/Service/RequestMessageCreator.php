@@ -14,6 +14,7 @@ use Drupal\eic_flags\RequestTypes;
 use Drupal\eic_flags\Service\BlockRequestHandler;
 use Drupal\eic_flags\Service\HandlerInterface;
 use Drupal\eic_flags\Service\RequestHandlerCollector;
+use Drupal\eic_flags\Service\TransferOwnershipRequestHandler;
 use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_user\UserHelper;
 use Drupal\flag\FlaggingInterface;
@@ -110,6 +111,12 @@ class RequestMessageCreator implements ContainerInjectionInterface {
         'Message does not exists for action insert'
       );
 
+      return;
+    }
+
+    // Transfer ownership request messages are handled separately.
+    if ($type === RequestTypes::TRANSFER_OWNERSHIP) {
+      $this->transferOwnershipRequestInsert($flag, $entity, $handler);
       return;
     }
 
@@ -299,6 +306,65 @@ class RequestMessageCreator implements ContainerInjectionInterface {
 
       $this->messageBus->dispatch($message);
     }
+  }
+
+  /**
+   * Handles message notification for open transfer ownership requests.
+   *
+   * @param \Drupal\flag\FlaggingInterface $flagging
+   *   The request flag.
+   * @param \Drupal\Core\Entity\ContentEntityInterface $entity
+   *   The entity object.
+   * @param \Drupal\eic_flags\Service\BlockRequestHandler $handler
+   *   The transfer ownership request handler service.
+   */
+  private function transferOwnershipRequestInsert(
+    FlaggingInterface $flagging,
+    ContentEntityInterface $entity,
+    TransferOwnershipRequestHandler $handler
+  ) {
+    $response = $flagging->get('field_request_status')->value;
+    $message_name = $handler->getMessageByAction($response);
+    $new_owner = $flagging->get('field_new_owner_ref')->entity;
+    $accept_url = $entity->toUrl('user-close-request')
+      ->setRouteParameter('request_type', $handler->getType())
+      ->setRouteParameter('response', RequestStatus::ACCEPTED);
+    $deny_url = $entity->toUrl('user-close-request')
+      ->setRouteParameter('request_type', $handler->getType())
+      ->setRouteParameter('response', RequestStatus::DENIED);
+
+    $message = [
+      'template' => $message_name,
+      'field_referenced_flag' => $flagging,
+      'field_request_accept_url' => [
+        'uri' => $accept_url->toString(),
+      ],
+      'field_request_deny_url' => [
+        'uri' => $deny_url->toString(),
+      ],
+      'uid' => $new_owner->id(),
+    ];
+
+    switch ($entity->getEntityTypeId()) {
+      case 'group_content':
+        $group = $entity->getGroup();
+        $message['field_entity_type'] = $group->getEntityType()->getSingularLabel();
+        $message['field_referenced_entity_label'] = $group->label();
+        $message['field_entity_url'] = [
+          'uri' => $group->toUrl()->toString(),
+        ];
+        break;
+
+      default:
+        $message['field_entity_type'] = $entity->getEntityType()->getSingularLabel();
+        $message['field_referenced_entity_label'] = $entity->label();
+        $message['field_entity_url'] = [
+          'uri' => $entity->toUrl()->toString(),
+        ];
+        break;
+    }
+
+    $this->messageBus->dispatch($message);
   }
 
 }
