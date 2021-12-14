@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.flagging.transfer_owner_request_group.field_new_owner_ref
     - field.field.flagging.transfer_owner_request_group.field_request_closed_date
     - field.field.flagging.transfer_owner_request_group.field_request_moderator
     - field.field.flagging.transfer_owner_request_group.field_request_reason
@@ -15,6 +16,16 @@ targetEntityType: flagging
 bundle: transfer_owner_request_group
 mode: default
 content:
+  field_new_owner_ref:
+    weight: 4
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: entity_reference_autocomplete
+    region: content
   field_request_closed_date:
     weight: 0
     settings: {  }
