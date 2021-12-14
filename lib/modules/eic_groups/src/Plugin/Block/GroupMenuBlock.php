@@ -161,9 +161,21 @@ class GroupMenuBlock extends GroupMenuBlockBase implements ContainerFactoryPlugi
    */
   public function getMenuInstance() {
     $entity = $this->getContext('group')->getContextData()->getValue();
+    $has_context = $entity ? TRUE : FALSE;
+
+    if (!$entity) {
+      if (!$entity = $this->eicGroupsHelper->getGroupFromRoute()) {
+        return NULL;
+      }
+    }
+
     // Don't load menu for group entities that are new/unsaved.
-    if (!$entity || $entity->isNew()) {
+    if ($entity->isNew()) {
       return NULL;
+    }
+
+    if (!$has_context) {
+      $this->setContextValue('group', $entity);
     }
 
     // Group menu plugin ID that will be used to load the group content entity.
