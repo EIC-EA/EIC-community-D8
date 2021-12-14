@@ -114,6 +114,9 @@
       font-size: $ecl-font-size-l;
       font-weight: bold;
       margin: 0;
+      max-width: 300px;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     &__actions,
