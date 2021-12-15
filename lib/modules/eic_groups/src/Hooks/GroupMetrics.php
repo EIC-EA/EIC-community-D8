@@ -24,6 +24,13 @@ class GroupMetrics implements ContainerInjectionInterface {
   protected $groupsHelper;
 
   /**
+   * The EIC group statistics helper service.
+   *
+   * @var \Drupal\eic_group_statistics\GroupStatisticsHelperInterface
+   */
+  protected $groupStatisticsHelper;
+
+  /**
    * The entity type manager service.
    *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
@@ -34,15 +41,19 @@ class GroupMetrics implements ContainerInjectionInterface {
    * Constructs a new GroupTokens object.
    *
    * @param \Drupal\eic_groups\EICGroupsHelper $eic_groups_helper
-   *   The entity type manager.
+   *   The EIC Groups helper service.
+   * @param \Drupal\eic_group_statistics\GroupStatisticsHelperInterface $group_statistics_helper
+   *   The EIC group statistics helper service.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager service.
    */
   public function __construct(
     EICGroupsHelper $eic_groups_helper,
+    GroupStatisticsHelperInterface $group_statistics_helper,
     EntityTypeManagerInterface $entity_type_manager
   ) {
     $this->groupsHelper = $eic_groups_helper;
+    $this->groupStatisticsHelper = $group_statistics_helper;
     $this->entityTypeManager = $entity_type_manager;
   }
 
@@ -52,6 +63,7 @@ class GroupMetrics implements ContainerInjectionInterface {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('eic_groups.helper'),
+      $container->get('eic_group_statistics.helper'),
       $container->get('entity_type.manager')
     );
   }
@@ -80,6 +92,10 @@ class GroupMetrics implements ContainerInjectionInterface {
             'default_value' => [],
           ],
         ],
+      ],
+      'eic_groups_comments' => [
+        'label' => $this->t('Group comments'),
+        'value_callback' => 'eic_groups_eic_groups_metrics_value',
       ],
     ];
   }
@@ -116,6 +132,9 @@ class GroupMetrics implements ContainerInjectionInterface {
           }
         }
         return $count;
+
+      case 'eic_groups_comments':
+        return $this->groupStatisticsHelper->loadGroupStatistics($group)->getCommentsCount();
 
     }
 
