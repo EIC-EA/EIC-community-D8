@@ -94,6 +94,10 @@
     padding-bottom: 0;
     padding-right: 0;
   }
+  &--organisation#{$node}--as-card-white &__main-wrapper,
+  &--organisation &__main-wrapper{
+    padding-bottom: $ecl-spacing-xl;
+  }
 
   &--organisation &__meta-footer{
     position: absolute;
