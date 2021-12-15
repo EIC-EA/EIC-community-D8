@@ -3,8 +3,8 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.flagging.field_block_reason
-    - flag.flag.block_group
+    - field.storage.flagging.field_request_reason
+    - flag.flag.request_block_group
   module:
     - flag
     - group
@@ -136,14 +136,14 @@ display:
           entity_type: flagging
           entity_field: id
           plugin_id: field
-        field_block_reason:
-          id: field_block_reason
-          table: flagging__field_block_reason
-          field: field_block_reason
+        field_request_reason:
+          id: field_request_reason
+          table: flagging__field_request_reason
+          field: field_request_reason
           relationship: none
           group_type: group
           admin_label: ''
-          label: Reason
+          label: 'Block reason'
           exclude: false
           alter:
             alter_text: false
@@ -340,7 +340,7 @@ display:
           admin_label: ''
           operator: in
           value:
-            block_group: block_group
+            request_block_group: request_block_group
           group: 1
           exposed: false
           expose:
@@ -442,7 +442,7 @@ display:
         - url.query_args
         - user.group_permissions
       tags:
-        - 'config:field.storage.flagging.field_block_reason'
+        - 'config:field.storage.flagging.field_request_reason'
   page_admin_group_blocked_history:
     display_plugin: page
     id: page_admin_group_blocked_history
@@ -463,4 +463,4 @@ display:
         - url.query_args
         - user.group_permissions
       tags:
-        - 'config:field.storage.flagging.field_block_reason'
+        - 'config:field.storage.flagging.field_request_reason'

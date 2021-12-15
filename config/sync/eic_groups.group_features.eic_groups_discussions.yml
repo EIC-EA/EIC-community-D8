@@ -4,8 +4,12 @@ permissions:
 public_permissions:
   - 'access discussions overview'
 roles:
+  - event-member
+  - event-admin
+  - event-owner
   - group-member
   - group-admin
   - group-owner
-_core:
-  default_config_hash: eCIajfnLSQ_3leyc94dJXpgBJfFUwo6hWKYakS08XUo
+  - organisation-member
+  - organisation-admin
+  - organisation-owner

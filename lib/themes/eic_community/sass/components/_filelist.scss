@@ -22,6 +22,11 @@
         border-top: 1px solid map-get($ecl-colors, 'grey-25');
         margin-top: map-get($ecl-spacing, 's');
         padding-top: map-get($ecl-spacing, 's');
+
+      @include ecl-media-breakpoint-down('sm') {
+        margin-top: map-get($ecl-spacing, 'l');
+        padding-top: map-get($ecl-spacing, 'l');
+      }
     }
 
     &-header {
@@ -67,6 +72,14 @@
         margin-left: ecl-box-model('padding');
         display: flex;
         align-items: flex-end;
+      }
+
+      @include ecl-media-breakpoint-down('sm') {
+        & .ecl-link--button-primary {
+          width: 100%;
+          align-items: center;
+          justify-content: center;
+        }
       }
     }
 

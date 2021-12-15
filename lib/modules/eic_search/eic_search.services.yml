@@ -31,12 +31,16 @@ services:
     class: Drupal\eic_search\Search\Sources\DiscussionSourceType
     tags:
       - { name: eic_search.source }
+  eic_search.source_news:
+    class: Drupal\eic_search\Search\Sources\NewsSourceType
+    tags:
+      - { name: eic_search.source }
   eic_search.source_group_event:
     class: Drupal\eic_search\Search\Sources\GroupEventSourceType
     tags:
       - { name: eic_search.source }
   eic_search.source_story:
-    class: Drupal\eic_search\Search\Sources\StorySourceType
+    class: Drupal\eic_search\Search\Sources\NewsStorySourceType
     tags:
       - { name: eic_search.source }
   eic_search.source_global_event:

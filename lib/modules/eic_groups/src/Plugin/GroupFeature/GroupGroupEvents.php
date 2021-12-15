@@ -29,7 +29,7 @@ class GroupGroupEvents extends EicGroupsGroupFeaturePluginBase {
     /** @var \Drupal\Core\Entity\ContentEntityInterface $menu_item */
     $menu_item = parent::getMenuItem($url, $menu_name);
     // Set a specific weight for the menu item.
-    $menu_item->set('weight', 2);
+    $menu_item->set('weight', 5);
     return $menu_item;
   }
 

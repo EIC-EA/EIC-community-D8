@@ -132,3 +132,33 @@ function oec_group_flex_group_flex_group_visibility_info_alter(array &$definitio
     $definitions['private']['class'] = '\Drupal\oec_group_flex\Plugin\GroupVisibility\PrivateVisibility';
   }
 }
+
+/**
+ * Implements hook_views_data().
+ */
+function oec_group_flex_views_data() {
+  // @todo Check if possible to group all those fields into a specific section.
+  $data['groups_field_data']['table']['group'] = t('Group');
+  $data['groups_field_data']['group_visibility'] = [
+    'title' => t('Visibility'),
+    'help' => t('The visibility of the group.'),
+    'field' => [
+      'id' => 'group_visibility',
+    ],
+  ];
+  $data['groups_field_data']['group_visibility_custom_restricted_email_domains'] = [
+    'title' => t('Visibility Custom: Restricted email domains'),
+    'help' => t('The chosen email domains for group Custom - Restricted email domains visibility.'),
+    'field' => [
+      'id' => 'group_visibility_custom_restricted_email_domains',
+    ],
+  ];
+  $data['groups_field_data']['group_visibility_custom_restricted_users'] = [
+    'title' => t('Visibility Custom: Restricted users'),
+    'help' => t('The chosen users for group Custom - Restricted users visibility.'),
+    'field' => [
+      'id' => 'group_visibility_custom_restricted_users',
+    ],
+  ];
+  return $data;
+}

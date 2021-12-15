@@ -51,6 +51,7 @@ function eic_community_preprocess_user(array &$variables) {
       break;
 
     case 'full':
+      $current_user = \Drupal::currentUser();
       $member_profile = \Drupal::service('eic_user.helper')->getUserMemberProfile($user);
       $user_item = [
         'editorial_header' => [
@@ -66,6 +67,7 @@ function eic_community_preprocess_user(array &$variables) {
         'icon_file_path' => $variables['eic_icon_path'],
         'title' => \Drupal::service('eic_user.helper')->getFullName($user),
         'description' => _eic_community_get_user_profile_body($user, $member_profile),
+        'type' => _eic_community_get_user_type($user, $member_profile),
         'job_titles' => _eic_community_get_user_job_titles($user, $member_profile),
         'image' => _get_profile_image_array($user),
         'meta' => [
@@ -81,22 +83,37 @@ function eic_community_preprocess_user(array &$variables) {
         ],
       ];
 
-      // Gets user contact link.
-      if (
-        ($user_contact_link = _eic_community_get_user_contact_link($user)) &&
-        $user->get(PrivateMessage::PRIVATE_MESSAGE_USER_ALLOW_CONTACT_ID)->value
-      ) {
-        $user_contact_link['icon']['name'] = 'send';
-        $user_contact_link['link'] = [
-          'label' => t('Direct message'),
-          'path' => $user_contact_link['path'],
+      // Gets user operation links.
+      if ($user_operation_links = _eic_community_get_user_operation_links($user)) {
+        $user_operation_links['icon'] = [
+          'name' => 'gear',
+          'type' => 'custom',
         ];
-        $user_item['editorial_header']['actions'][] = $user_contact_link;
+        $user_operation_links['icon_file_path'] = $variables['eic_icon_path'];
+        $user_operation_links['extra_classes'] = 'ecl-collapsible-options--blue';
+        $user_item['editorial_header']['actions'][] = $user_operation_links;
       }
 
-      // Gets the follow user flag.
-      if (isset($variables['elements']['flag_' . FlagType::FOLLOW_USER])) {
-        $user_item['editorial_header']['actions'][] = ['content' => $variables['elements']['flag_' . FlagType::FOLLOW_USER]];
+      // We show the contact link and follow flag if current user is not
+      // viewing its own profile page.
+      if ($current_user->id() !== $user->id()) {
+        // Gets user contact link.
+        if (
+          ($user_contact_link = _eic_community_get_user_contact_link($user)) &&
+          $user->get(PrivateMessage::PRIVATE_MESSAGE_USER_ALLOW_CONTACT_ID)->value
+        ) {
+          $user_contact_link['icon']['name'] = 'send';
+          $user_contact_link['link'] = [
+            'label' => t('Direct message'),
+            'path' => $user_contact_link['path'],
+          ];
+          $user_item['editorial_header']['actions'][] = $user_contact_link;
+        }
+
+        // Gets the follow user flag.
+        if (isset($variables['elements']['flag_' . FlagType::FOLLOW_USER])) {
+          $user_item['editorial_header']['actions'][] = ['content' => $variables['elements']['flag_' . FlagType::FOLLOW_USER]];
+        }
       }
 
       // Gets user social links.
@@ -171,6 +188,11 @@ function eic_community_preprocess_user(array &$variables) {
           'items' => $topics_of_expertise,
         ];
       }
+
+      $user_item['flagged_groups'] = [
+        'title' => t('My groups'),
+        'content' => _eic_community_get_rendered_view('groups', 'block_user_profile_groups', [$user->id()]),
+      ];
 
       $variables['user_item'] = $user_item;
       break;
@@ -514,4 +536,112 @@ function _eic_community_get_user_topics(UserInterface $account, $taxonomy_term_f
   }
 
   return $topics;
+}
+
+/**
+ * Returns the 'render' array to use in templates for the user type.
+ *
+ * @param \Drupal\user\UserInterface $account
+ *   The user account for which we want to get the user type.
+ * @param \Drupal\profile\Entity\ProfileInterface $member_profile
+ *   (optional) The user profile entity associated with user account.
+ *
+ * @return array
+ *   The render array for templates.
+ */
+function _eic_community_get_user_type(UserInterface $account, ProfileInterface $member_profile = NULL) {
+  $member_profile = $member_profile ?? \Drupal::service('eic_user.helper')->getUserMemberProfile($account);
+
+  // If we don't have a member profile for this user, skip.
+  if (empty($member_profile)) {
+    return [];
+  }
+
+  // If the member profile doesn't have job titles, skip.
+  if ($member_profile->get('field_vocab_user_type')->isEmpty()) {
+    return [];
+  }
+
+  /** @var \Drupal\taxonomy\Entity\TermInterface[] $user_type */
+  $user_types = $member_profile->get('field_vocab_user_type')->referencedEntities();
+  $user_type = reset($user_types);
+  return [
+    'label' => $user_type->getName(),
+    'icon' => [
+      'name' => 'star_circle',
+      'type' => 'custom',
+    ],
+  ];
+}
+
+/**
+ * Returns the 'render' array to use in templates for the operation links.
+ *
+ * @param \Drupal\user\UserInterface $account
+ *   The user account for which we want to get the user operation links.
+ *
+ * @return array
+ *   The render array for templates.
+ */
+function _eic_community_get_user_operation_links(UserInterface $account, ProfileInterface $member_profile = NULL) {
+  // Get user operation links.
+  $user_operation_links = \Drupal::entityTypeManager()->getListBuilder($account->getEntityTypeId())
+    ->getOperations($account);
+
+  $processed_user_operation_links = [];
+  foreach ($user_operation_links as $key => $user_operation_link) {
+    switch ($key) {
+      // Override operation link titles.
+      case 'edit':
+        $user_operation_link['title'] = t('Edit account information');
+        break;
+
+      case 'delete':
+        $user_operation_link['title'] = t('Delete account');
+        break;
+
+    }
+    $processed_user_operation_links[] = [
+      'link' => [
+        'label' => $user_operation_link['title'],
+        'path' => $user_operation_link['url']->toString(),
+      ],
+    ];
+  }
+
+  // Loads user member profile.
+  $member_profile = $member_profile ?? \Drupal::service('eic_user.helper')->getUserMemberProfile($account);
+  // Get user member profile operation links.
+  if ($member_profile) {
+    $member_profile_operation_links = \Drupal::entityTypeManager()->getListBuilder($member_profile->getEntityTypeId())
+      ->getOperations($member_profile);
+    foreach ($member_profile_operation_links as $key => $member_profile_operation_link) {
+      // Override operation link titles.
+      switch ($key) {
+        case 'edit':
+          $member_profile_operation_link['title'] = t('Edit profile details');
+          break;
+
+        case 'delete':
+          $member_profile_operation_link['title'] = t('Delete profile');
+          break;
+
+      }
+      $processed_user_operation_links[] = [
+        'link' => [
+          'label' => $member_profile_operation_link['title'],
+          'path' => $member_profile_operation_link['url']->toString(),
+        ],
+      ];
+    }
+  }
+
+  if (empty($processed_user_operation_links)) {
+    return [];
+  }
+
+  return [
+    'label' => 'Manage profile',
+    'items' => $processed_user_operation_links,
+  ];
 }

@@ -24,6 +24,10 @@ services:
     class: Drupal\eic_default_content\Generator\NewsGenerator
     tags:
       - { name: data_fixtures }
+  eic_default_content.menu_generator:
+    class: Drupal\eic_default_content\Generator\MenuGenerator
+    tags:
+      - { name: data_fixtures, priority: 2 }
   eic_default_content.block_content_generator:
     class: Drupal\eic_default_content\Generator\BlockContentGenerator
     tags:
