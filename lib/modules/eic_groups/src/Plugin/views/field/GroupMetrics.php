@@ -172,7 +172,7 @@ class GroupMetrics extends NumericField {
       return 0;
     }
 
-    return call_user_func($this->metricsInfo[$metric_id]['value_callback'], $metric_id, $group, $this->options);
+    return call_user_func($this->metricsInfo[$metric_id]['value_callback'], $metric_id, $group, $this->options[$metric_id . '_conf']);
   }
 
 }

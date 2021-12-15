@@ -103,12 +103,12 @@ class GroupMetrics implements ContainerInjectionInterface {
   public function groupMetricsValue(string $metric_id, GroupInterface $group, array $configuration = []) {
     switch ($metric_id) {
       case 'eic_groups_group_members':
-        $selected_roles = $this->getSelectedOptions($configuration[$metric_id . '_conf']['roles']);
+        $selected_roles = $this->getSelectedOptions($configuration['roles']);
         $selected_roles = empty($selected_roles) ? NULL : $selected_roles;
         return count($group->getMembers($selected_roles));
 
       case 'eic_groups_content':
-        $selected_node_types = $this->getSelectedOptions($configuration[$metric_id . '_conf']['node_types']);
+        $selected_node_types = $this->getSelectedOptions($configuration['node_types']);
         $count = 0;
         foreach ($selected_node_types as $node_type) {
           if ($this->groupsHelper->isGroupTypePluginEnabled($group->getGroupType(), 'group_node', $node_type)) {
