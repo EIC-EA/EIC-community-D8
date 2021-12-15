@@ -2,9 +2,11 @@
 
 <div class="ecl-teaser ecl-teaser--organisation {{ highlight.is_active ? 'ecl-teaser--is-highlighted' }} {{ extra_classes }}">
   {% if image is not empty %}
+  <a href="{{ path }}">
     <figure class="ecl-teaser__image-wrapper">
       <img class="ecl-teaser__image" src="{{ image.src }}" alt="{{ image.alt }}" />
     </figure>
+  </a>
   {% endif %}
   <div class="ecl-teaser__main-wrapper">
     {% if tags is not empty %}

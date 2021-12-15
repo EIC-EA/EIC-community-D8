@@ -9,6 +9,7 @@ dependencies:
     - datetime
     - group
     - node
+    - oec_group_features
 _core:
   default_config_hash: eKWN3z9j-zM3Sn_r3-u4y7-TtiRshBKXOJLqXRtFfwc
 id: group_events
@@ -26,9 +27,10 @@ display:
     position: 0
     display_options:
       access:
-        type: group_permission
+        type: group_features_permission
         options:
           group_permission: 'access events overview'
+          linked_feature: eic_groups_group_events
       cache:
         type: tag
         options: {  }
@@ -182,14 +184,14 @@ display:
           entity_type: node
           entity_field: type
           plugin_id: bundle
-        field_date_range_value:
-          id: field_date_range_value
+        field_date_range_end_value:
+          id: field_date_range_end_value
           table: node__field_date_range
-          field: field_date_range_value
+          field: field_date_range_end_value
           relationship: none
           group_type: group
           admin_label: ''
-          operator: '>='
+          operator: '>'
           value:
             min: ''
             max: ''
@@ -349,15 +351,17 @@ display:
       use_more_text: 'View all'
       link_url: '<front>'
       link_display: custom_url
+      filter_groups:
+        operator: AND
+        groups:
+          1: AND
     cache_metadata:
       max-age: -1
       contexts:
         - 'languages:language_content'
         - 'languages:language_interface'
         - route
-        - route.group
         - url
-        - user.group_permissions
         - 'user.node_grants:view'
       tags: {  }
   block_group_events:
@@ -373,8 +377,6 @@ display:
         - 'languages:language_content'
         - 'languages:language_interface'
         - route
-        - route.group
         - url
-        - user.group_permissions
         - 'user.node_grants:view'
       tags: {  }

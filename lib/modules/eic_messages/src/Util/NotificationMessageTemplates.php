@@ -12,11 +12,6 @@ use Drupal\message\MessageTemplateInterface;
 final class NotificationMessageTemplates implements MessageIdentifierInterface {
 
   /**
-   * Message template for blocked entities.
-   */
-  const ENTITY_BLOCKED = 'notify_entity_blocked';
-
-  /**
    * Message template for notifying group ownership transfer.
    */
   const TRANSFER_GROUP_OWNERSHIP = 'notify_transfer_group_ownership';
@@ -32,16 +27,6 @@ final class NotificationMessageTemplates implements MessageIdentifierInterface {
 
     if ($message_template_type != MessageTemplateTypes::NOTIFICATION) {
       return FALSE;
-    }
-
-    switch ($message_template->id()) {
-
-      case self::ENTITY_BLOCKED:
-        $primary_keys = [
-          'field_event_executing_user',
-        ];
-        break;
-
     }
 
     return $primary_keys;

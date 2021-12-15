@@ -52,7 +52,7 @@ function _eic_overviews_allowed_values_id() {
     GlobalOverviewPages::GLOBAL_SEARCH => t('Global overview', [], ['context' => 'eic_overviews']),
     GlobalOverviewPages::GROUPS => t('Groups', [], ['context' => 'eic_overviews']),
     GlobalOverviewPages::MEMBERS => t('Members', [], ['context' => 'eic_overviews']),
-    GlobalOverviewPages::STORIES => t('Stories', [], ['context' => 'eic_overviews']),
+    GlobalOverviewPages::NEWS_STORIES => t('News & Stories', [], ['context' => 'eic_overviews']),
     GlobalOverviewPages::EVENTS => t('Events', [], ['context' => 'eic_overviews']),
   ];
 }

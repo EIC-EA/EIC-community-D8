@@ -15,6 +15,7 @@ use Drupal\eic_flags\FlagType;
 use Drupal\eic_groups\Constants\GroupVisibilityType;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\node\NodeInterface;
+use Drupal\taxonomy\TermInterface;
 
 /**
  * Returns the build of the social share block.
@@ -268,4 +269,82 @@ function _eic_community_get_entity_last_comment(EntityInterface $entity, $first_
   }
 
   return NULL;
+}
+
+/**
+ * Loads taxonomy term parents from a term.
+ *
+ * @param \Drupal\taxonomy\TermInterface $term
+ *   The taxonomy term from which we want to load the parents.
+ * @param array $loaded_parents
+ *   The array of loaded parents.
+ *
+ * @return array
+ *   Array of all loaded parents of the term.
+ */
+function _eic_community_get_term_parents(TermInterface $term, array $loaded_parents) {
+  if ($term->parent->entity) {
+    $loaded_parents[$term->parent->entity->id()] = $term->parent->entity;
+    $loaded_parents = _eic_community_get_term_parents($term->parent->entity, $loaded_parents);
+  }
+  return $loaded_parents;
+}
+
+/**
+ * Processes all term parents hierarchically.
+ *
+ * @param \Drupal\taxonomy\TermInterface $term
+ *   The taxonomy term from which we want load the hierarchy.
+ * @param array $terms
+ *   The hierarchical tree of terms.
+ * @param array $loaded_parents
+ *   The array of loaded parents.
+ *
+ * @return array
+ *   Nested array of all loaded parents of the term.
+ */
+function _eic_community_process_term_parents_tree(TermInterface $term, array $terms, array $loaded_parents) {
+  $parent = array_shift($loaded_parents);
+  if (!isset($terms[$parent->id()])) {
+    $terms[$parent->id()]['term'] = $parent;
+    $terms[$parent->id()]['title'] = $parent->getName();
+    $terms[$parent->id()]['items'] = [];
+  }
+
+  if (!empty($loaded_parents)) {
+    $terms[$parent->id()]['items'] = _eic_community_process_term_parents_tree($term, $terms[$parent->id()]['items'], $loaded_parents);
+  }
+  else {
+    $terms[$parent->id()]['items'][$term->id()]['term'] = $term;
+    $terms[$parent->id()]['items'][$term->id()]['title'] = $term->getName();
+  }
+
+  return $terms;
+}
+
+/**
+ * Loads breadcrumb block to use it in twig templates.
+ *
+ * @return array
+ *   The renderable array of the block.
+ */
+function _eic_community_load_breadcrumb_block() {
+  $block_manager = \Drupal::service('plugin.manager.block');
+  // You can hard code configuration or you load from settings.
+  $config = [];
+  $plugin_block = $block_manager->createInstance('system_breadcrumb_block', $config);
+  // Some blocks might implement access check.
+  $access_result = $plugin_block->access(\Drupal::currentUser());
+  // Return empty render array if user doesn't have access.
+  // $access_result can be boolean or an AccessResult class.
+  if (is_object($access_result) && $access_result->isForbidden() || is_bool($access_result) && !$access_result) {
+    // You might need to add some cache tags/contexts.
+    return [];
+  }
+  $render = $plugin_block->build();
+  // In some cases, you need to add the cache tags/context depending on
+  // the block implemention. As it's possible to add the cache tags and
+  // contexts in the render method and in ::getCacheTags and
+  // ::getCacheContexts methods.
+  return $render;
 }

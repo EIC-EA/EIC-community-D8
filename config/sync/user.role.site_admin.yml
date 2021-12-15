@@ -73,6 +73,7 @@ permissions:
   - 'edit own news content'
   - 'edit own story content'
   - 'flag recommend_group'
+  - 'link to any page'
   - 'make archive request'
   - 'make delete request'
   - 'manage archival deletion requests'

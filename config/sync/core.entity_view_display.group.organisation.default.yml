@@ -1,0 +1,49 @@
+uuid: d215901f-b0c0-449b-817f-3854b8d4b88f
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.group.organisation.field_organisation_type
+    - group.type.organisation
+id: group.organisation.default
+targetEntityType: group
+bundle: organisation
+mode: default
+content:
+  content_moderation_control:
+    weight: -20
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+  field_organisation_type:
+    weight: 11
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+  flag_follow_group:
+    weight: 10
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+  flag_recommend_group:
+    weight: 10
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+  label:
+    label: hidden
+    type: string
+    weight: -5
+    region: content
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+hidden:
+  changed: true
+  created: true
+  langcode: true
+  search_api_excerpt: true
+  uid: true

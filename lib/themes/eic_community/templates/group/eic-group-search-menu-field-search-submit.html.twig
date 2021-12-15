@@ -8,6 +8,16 @@
 #}
 <button{{ attributes }}>
 <span class="ecl-button__container">
-  <span class="ecl-button__label" data-ecl-label="true">{{ 'Search for' | t({}, {'context': 'eic_group'}) }}</span>
+  <span class="ecl-button__label" data-ecl-label="true">
+    {{ 'Search for' | t({}, {'context': 'eic_group'}) }}
+  </span>
+  {% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with {
+    icon: {
+      path: '/themes/custom/eic_community/dist/images/sprite/custom/sprites/custom.svg',
+      type: 'general',
+      name: 'search',
+      size: 'xs',
+    }
+  } %}
 </span>
 </button>

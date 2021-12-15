@@ -1,4 +1,5 @@
 .ecl-gallery {
+  max-width: 720px;
   &__title {
     @include ecl-responsive-font('h3');
     margin-top: 0;

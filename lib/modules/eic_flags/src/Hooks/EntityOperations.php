@@ -12,7 +12,9 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
 use Drupal\eic_flags\FlaggedEntitiesListBuilder;
 use Drupal\eic_flags\FlagType;
+use Drupal\eic_flags\RequestTypes;
 use Drupal\eic_flags\Service\RequestHandlerCollector;
+use Drupal\eic_topics\Constants\Topics;
 use Drupal\flag\FlagCountManagerInterface;
 use Drupal\flag\FlagServiceInterface;
 use Drupal\profile\Entity\ProfileInterface;
@@ -163,16 +165,15 @@ class EntityOperations implements ContainerInjectionInterface {
           ->setRouteParameter('destination', $this->currentRequest->getRequestUri())
           ->setRouteParameter('request_type', $type),
       ];
-    }
 
-    if ($entity->hasLinkTemplate('block-entity')
-      && $entity->toUrl('block-entity')->access()
-    ) {
-      $operations['block'] = [
-        'title' => $this->t('Block'),
-        'url' => $entity->toUrl('block-entity')
-          ->setRouteParameter('destination', $this->currentRequest->getRequestUri()),
-      ];
+      if ($type === RequestTypes::BLOCK) {
+        $operations['request_' . $type]['title'] = $this->t('Block');
+      }
+
+      // Removes operation link if user doesn't have access to it.
+      if (!$operations['request_' . $type]['url']->access()) {
+        unset($operations['request_' . $type]);
+      }
     }
 
     return $operations;
@@ -195,14 +196,14 @@ class EntityOperations implements ContainerInjectionInterface {
     }
 
     $operations = [];
-    if ($entity->hasLinkTemplate('block-entity')
-      && $entity->toUrl('block-entity')->access()
+    $block_request_handler = $this->collector->getHandlerByType(RequestTypes::BLOCK);
+    $handler_actions = $block_request_handler->getActions($entity);
+
+    if (
+      isset($handler_actions['request_block']) &&
+      $handler_actions['request_block']['url']->access()
     ) {
-      $operations['block'] = [
-        'title' => $this->t('Block'),
-        'url' => $entity->toUrl('block-entity')
-          ->setRouteParameter('destination', $this->currentRequest->getRequestUri()),
-      ];
+      $operations['request_block'] = $handler_actions['request_block'];
     }
 
     $route_name = $this->routeMatch->getRouteName();
@@ -360,7 +361,7 @@ class EntityOperations implements ContainerInjectionInterface {
       return;
     }
 
-    $vocab_field_name = 'field_vocab_topic_interest';
+    $vocab_field_name = Topics::TERM_TOPICS_ID_FIELD;
 
     if (!$profile->hasField($vocab_field_name)) {
       return;

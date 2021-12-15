@@ -13,6 +13,9 @@
     "drupal/default_content": {
       "2698425 - Do not reimport existing entities": "https://www.drupal.org/files/issues/2021-01-20/default_content-integrity_constrait_violation-3162987-137-2.0.x.patch"
     },
+    "drupal/entity_usage": {
+      "3168418 - Batch update error when there are no entities to load": "https://www.drupal.org/files/issues/2021-12-07/batch-update-error-3168418-16.patch"
+    },
     "drupal/group": {
       "2881769 - group/{group}/node/create uses the permissions of group/{group}/node/add": "https://www.drupal.org/files/issues/2020-10-01/2881769-22.patch",
       "2746839 - Add Devel plugin for generating groups": "patches/group/2746839-add-devel-plugin-for-generating-groups-12.patch",
@@ -56,7 +59,8 @@
       "#3155628 - Limited values are randomised": "https://www.drupal.org/files/issues/2020-09-02/3155628-10.patch"
     },
     "drupal/subpathauto": {
-      "3130139 - Group Content Add/Create Paths do not work": "https://www.drupal.org/files/issues/2020-04-23/subpathauto-group-content-create-urls-3130139-2.patch"
+      "3130139 - Group Content Add/Create Paths do not work": "https://www.drupal.org/files/issues/2020-04-23/subpathauto-group-content-create-urls-3130139-2.patch",
+      "3188768 - Install from configuration fails due to missing dependencies": "./patches/subpathauto/3188768-subpathauto-add-dependencies.patch"
     },
     "openeuropa/ecl-twig-loader": {
       "7f697ba - Add OpenEuropa\\Twig\\Loader\\EuropaComponentLibraryLoader::parseName() function (protected parseName() function from twig function is private since D9)": "patches/ecl-twig-loader/7f697ba-add-parsename-function-to-ecl-loader.patch",

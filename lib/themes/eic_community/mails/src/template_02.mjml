@@ -144,7 +144,7 @@
       </mj-section>
       <mj-section padding="0" text-align="left" css-class="pre-footer">
         <mj-column width="230px">
-          <mj-button width="200px" font-size="14px" mj-class="btn" inner-padding="12px 15px" text-decoration="underline" background-color="#FFD617" color="#004494" border-radius="0" font-weight="bold" href="#" target="_blank">
+          <mj-button width="200px" font-size="14px" mj-class="btn" inner-padding="12px 15px" text-decoration="underline" background-color="#FFD617" color="#000000" border-radius="0" font-weight="bold" href="#" target="_blank">
             Accept invitation
           </mj-button>
         </mj-column>

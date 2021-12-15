@@ -15,7 +15,9 @@ use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Link;
 use Drupal\Core\Render\BubbleableMetadata;
+use Drupal\Core\Render\Markup;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
 use Drupal\eic_groups\Constants\NodeProperty;
@@ -97,6 +99,42 @@ function eic_groups_views_data() {
 }
 
 /**
+ * Implements template_preprocess_views_view_field().
+ *
+ * Users that don't have access to the given group cannot see the group name
+ * where they are invited.
+ * So we force the display here.
+ */
+function eic_groups_preprocess_views_view_field(&$vars) {
+  if ($vars['view']->id() == 'my_invitations' && $vars['field']->options['id'] == 'gid') {
+    /** @var \Drupal\group\Entity\GroupContentInterface $group_content */
+    $group_content = $vars['row']->_entity;
+
+    /** @var \Drupal\group\Entity\GroupInterface $group */
+    $group = $group_content->getGroup();
+
+    // Get the group visibility.
+    $group_visibility = \Drupal::service('eic_groups.helper')->getGroupVisibilityLabel($group);
+
+    // Check if user has access to the group.
+    if ($group->access('view')) {
+      $group_url = $group->toUrl('canonical', ['language' => $group->language()]);
+      $group_link = Link::fromTextAndUrl($group->label(), $group_url)->toRenderable();
+      $group_label = render($group_link);
+    }
+    else {
+      $group_label = $group->label();
+    }
+
+    // Add the visibility to the label.
+    $group_label .= ' (' . $group_visibility . ')';
+
+    $vars['output'] = Markup::create($group_label);
+    $vars['field']->last_render = $group_label;
+  }
+}
+
+/**
  * Implements hook_ENTITY_TYPE_insert().
  */
 function eic_groups_group_insert(EntityInterface $entity) {
@@ -150,7 +188,7 @@ function eic_groups_form_group_form_alter(&$form, FormStateInterface $form_state
     // If the group is not yet blocked, we remove the possibility to block it
     // from the group edit form.
     if ($moderation_state !== GroupsModerationHelper::GROUP_BLOCKED_STATE) {
-      if (\Drupal::service('eic_flags.entity_block_handler')->canBlockEntity($entity, $current_user->getAccount())) {
+      if (\Drupal::service('eic_flags.block_request_handler')->canRequest($current_user->getAccount(), $entity)) {
         if (isset($form['moderation_state']['widget'][0]['state']['#options'][GroupsModerationHelper::GROUP_BLOCKED_STATE])) {
           unset($form['moderation_state']['widget'][0]['state']['#options'][GroupsModerationHelper::GROUP_BLOCKED_STATE]);
         }
@@ -584,7 +622,10 @@ function eic_groups_entity_presave(EntityInterface $entity) {
 }
 
 /**
+ * Returns array of allowed to use in 'field_location_type'.
+ *
  * @return array
+ *   Array of allowed location types.
  */
 function eic_field_location_type_allowed_values() {
   return [

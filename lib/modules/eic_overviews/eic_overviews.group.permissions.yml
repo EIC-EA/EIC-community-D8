@@ -9,6 +9,10 @@ access events overview:
   title: 'Access Events overview'
   description: 'Gives access to the Events overview.'
   restrict access: FALSE
+access news overview:
+  title: 'Access News overview'
+  description: 'Gives access to the News overview.'
+  restrict access: FALSE
 access members overview:
   title: 'Access Members overview'
   description: 'Gives access to the Members overview.'

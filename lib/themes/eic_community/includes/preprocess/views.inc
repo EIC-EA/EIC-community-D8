@@ -6,6 +6,7 @@
  */
 
 use Drupal\eic_overviews\GlobalOverviewPages;
+use Drupal\views\Views;
 
 /**
  * Implements template_preprocess_views_view_field().
@@ -41,7 +42,7 @@ function eic_community_preprocess_views_view(&$variables) {
       'link' => [
         'label' => t('View all stories'),
         'path' => GlobalOverviewPages::getGlobalOverviewPageUrl(
-          GlobalOverviewPages::STORIES
+          GlobalOverviewPages::NEWS_STORIES
         ),
       ],
     ],
@@ -59,6 +60,10 @@ function eic_community_preprocess_views_view(&$variables) {
 
   $key = $view->id() . '-' . $view->current_display;
   switch ($key) {
+    case 'groups-block_user_profile_groups':
+      $variables['extra_classes'] = 'ecl-teaser-overview--has-columns ecl-teaser-overview--has-compact-layout';
+      break;
+
     case 'groups_homepage-block_groups_homepage':
       if ($call_to_action_url = GlobalOverviewPages::getGlobalOverviewPageUrl(
         GlobalOverviewPages::GROUPS
@@ -149,4 +154,28 @@ function eic_community_preprocess_views_view(&$variables) {
   if (!empty($call_to_action) && !empty($call_to_action['link']['path'])) {
     $variables['call_to_action'] = $call_to_action;
   }
+}
+
+/**
+ * Executes a view and gets output as renderable array.
+ *
+ * @param string $view_id
+ *   The view machine name.
+ * @param string $display_id
+ *   The view display ID.
+ * @param array $args
+ *   (optional) Array of arguments to send to the view.
+ *
+ * @return array|null
+ *   A renderable array containing the view output or NULL if the display ID
+ *   of the view to be executed doesn't exist.
+ */
+function _eic_community_get_rendered_view($view_id, $display_id, array $args = []) {
+  $view = Views::getView($view_id);
+
+  if (!$view) {
+    return NULL;
+  }
+
+  return $view->preview($display_id, $args);
 }

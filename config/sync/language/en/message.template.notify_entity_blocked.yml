@@ -1,7 +1,0 @@
-text:
-  -
-    value: "<p>Your [message:field_referenced_flag:entity:target_entity:type] \"[message:field_referenced_flag:entity:target_entity:title]\" has been blocked.</p>\r\n"
-    format: full_html
-  -
-    value: "<p>Dear <a href=\"[message:author:url]\">[message:author:field_first_name:value]&nbsp;[message:author:field_last_name:value]</a>,</p>\r\n\r\n<p><a href=\"[message:field_event_executing_user:entity:url]\">[message:field_event_executing_user:entity:field_first_name:value] [message:field_event_executing_user:entity:field_last_name:value]</a> has blocked your&nbsp;[message:field_referenced_flag:entity:target_entity:type] <a href=\"[message:field_referenced_flag:entity:target_entity:url]\">[message:field_referenced_flag:entity:target_entity:title]</a>.</p>\r\n\r\n<p>Reason:&nbsp;[message:field_referenced_flag:entity:field_block_reason:value]</p>\r\n\r\n<p>The EIC Community team</p>\r\n"
-    format: full_html
