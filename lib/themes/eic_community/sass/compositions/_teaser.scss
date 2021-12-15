@@ -194,7 +194,8 @@
 
     #{$node}--as-card#{$node}--member & {
       position: relative;
-      max-width: map-get($ecl-media, 'm');
+      max-width: map-get($ecl-media, 'l');
+      min-width: 118px;
       margin: 0 auto ecl-box-model('padding');
     }
 
@@ -555,6 +556,11 @@
     #{$node}--as-card#{$node}--member & {
       text-align: center;
       display: block;
+      margin-bottom: $ecl-spacing-2-xs;
+      & a {
+        color: $ecl-color-grey;
+        text-transform: capitalize;
+      }
     }
 
     #{$node}--as-card#{$node}--event & {

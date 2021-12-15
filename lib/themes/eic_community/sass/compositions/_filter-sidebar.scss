@@ -85,6 +85,11 @@
 
   &__item {
     margin-bottom: ecl-layout('gutter', 'controls');
+
+    & .ecl-link {
+      width: 100%;
+      justify-content: center;
+    }
   }
 
   &__item-label {
