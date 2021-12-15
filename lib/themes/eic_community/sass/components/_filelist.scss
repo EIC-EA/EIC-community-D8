@@ -38,14 +38,20 @@
     &-image-wrapper {
       order: -1;
       margin: 0;
-      margin-right: ecl-box-model('padding');
-      width: 140px;
-      height: 80px;
+      margin-bottom: ecl-box-model('padding');
+      width: 100%;
+      min-height: 160px;
       background: map-get($ecl-colors, 'grey-5');
       display: flex;
       justify-content: center;
       align-items: center;
       color: ecl-typography('color', 'title');
+      @include ecl-media-breakpoint-up('sm') {
+        margin-right: ecl-box-model('padding');
+        margin-bottom: 0;
+        width: 140px;
+        min-height: 80px;
+      }
     }
 
     & &-name {
@@ -86,8 +92,13 @@
 
     &-stats {
       display: flex;
+      flex-direction: row;
       justify-content: space-between;
       color: ecl-typography('color', 'meta');
+      @include ecl-media-breakpoint-between('sm', 'lg') {
+        flex-direction: column-reverse;
+        justify-content: center;
+      }
     }
 
     &-stat {
@@ -97,6 +108,9 @@
 
     &-stat-value {
       margin: 0 5px;
+      @include ecl-media-breakpoint-down('lg') {
+        margin: 0;
+      }
     }
 
     &-stat-label {
