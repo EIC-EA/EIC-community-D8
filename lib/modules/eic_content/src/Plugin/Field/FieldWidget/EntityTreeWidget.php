@@ -116,6 +116,9 @@ class EntityTreeWidget extends WidgetBase {
       $this->getFieldSetting('target_type'),
       $preselected_items,
       $this->getSetting('items_to_load'),
+      Url::fromRoute('eic_content.entity_tree')->toString(),
+      Url::fromRoute('eic_content.entity_tree_search')->toString(),
+      Url::fromRoute('eic_content.entity_tree_children')->toString(),
       $options
     );
 
@@ -230,6 +233,9 @@ class EntityTreeWidget extends WidgetBase {
     string $target_type,
     string $preselected_terms,
     int $number_to_load,
+    string $base_url,
+    string $base_url_search,
+    string $base_url_search_children,
     array $options = []
   ): array {
     /** @var \Drupal\Core\StringTranslation\TranslationManager $translation_manager */
