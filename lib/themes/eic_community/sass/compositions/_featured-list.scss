@@ -59,6 +59,9 @@
     #{$node}--has-grid-layout & {
       margin-right: #{0 - map-get($ecl-spacing, 'xs')};
       margin-bottom: #{0 - map-get($ecl-spacing, 'xs')};
+      @include ecl-media-breakpoint-down('md') {
+        margin-right: 0;
+      }
     }
   }
 

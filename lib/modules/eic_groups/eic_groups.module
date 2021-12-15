@@ -94,6 +94,27 @@ function eic_groups_views_data() {
       'id' => 'resend_invitation',
     ],
   ];
+  $data['groups_field_data']['group_visibility_custom_restricted_organisations'] = [
+    'title' => t('Visibility Custom: Restricted organisations'),
+    'help' => t('The chosen organisations for group Custom - Restricted email organisations.'),
+    'field' => [
+      'id' => 'group_visibility_custom_restricted_organisations',
+    ],
+  ];
+  $data['groups_field_data']['group_visibility_custom_restricted_organisation_types'] = [
+    'title' => t('Visibility Custom: Restricted organisations types'),
+    'help' => t('The chosen organisation types for group Custom - Restricted email organisations types.'),
+    'field' => [
+      'id' => 'group_visibility_custom_restricted_organisation_types',
+    ],
+  ];
+  $data['groups_field_data']['group_members_by_role'] = [
+    'title' => t('Group members'),
+    'help' => t('Displays the group members, optionally filtered by role.'),
+    'field' => [
+      'id' => 'group_members_by_role',
+    ],
+  ];
 
   return $data;
 }
