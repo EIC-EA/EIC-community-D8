@@ -37,7 +37,6 @@
             {{ output_searchform }}
           </div>
         {% endif %}
-
         {% embed "@theme/patterns/compositions/collapsible-options.html.twig" with {
           items: items|merge([{
             content: output_searchform
@@ -47,17 +46,19 @@
           active_item_label: active_item_label,
         } only %}
           {% block trigger %}
+
+{# For now the var 'icon_file_path' is null I need the path to the file please #}
+
             {% include "@ecl-twig/ec-component-button/ecl-button.html.twig" with {
               label: active_item_label,
               variant: 'ghost',
               icon_position: 'before',
-              icon: icon_file_path ? {
-                path: icon_file_path,
-                name: 'ellipsis',
-                type: 'custom',
-                transform: 'rotate-90',
-                size: 's',
-              } : {},
+              icon: {
+              path: icon_file_path,
+                name: 'hamburger',
+                type: 'general',
+                size: 'xs',
+              },
             } %}
           {% endblock %}
         {% endembed %}
