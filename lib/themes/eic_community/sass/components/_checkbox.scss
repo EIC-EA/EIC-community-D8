@@ -1,0 +1,19 @@
+.ecl-checkbox {
+  &__input:checked+.ecl-checkbox__label .ecl-checkbox__box {
+    background: $ecl-color-white;
+    position: relative;
+
+    &:before {
+      content: '';
+      height: 65%;
+      width: 65%;
+      background: $ecl-color-blue;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+  }
+}
+
+
