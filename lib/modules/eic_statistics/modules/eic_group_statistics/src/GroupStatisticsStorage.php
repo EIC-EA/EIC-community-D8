@@ -121,7 +121,7 @@ class GroupStatisticsStorage implements GroupStatisticsStorageInterface {
       ->execute()->fetchAssoc();
 
     if (empty($result)) {
-      return new GroupStatistics($result['gid']);
+      return new GroupStatistics($group->id());
     }
 
     return new GroupStatistics(
