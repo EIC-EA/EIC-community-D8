@@ -38,14 +38,9 @@
   }
 
   &__content {
-    //width: 66.66%;
     font-size: ecl-typography('font-size');
     line-height: ecl-typography('line-height');
     margin-top: ecl-layout('gutter');
-
-    //@include ecl-media-breakpoint-down('sm') {
-    //  width: 100%;
-    //}
 
     &--full-width {
       width: 100%;
@@ -100,6 +95,13 @@
   &__aside {
     position: relative;
     margin-top: ecl-layout('gutter');
+
+    @include ecl-media-breakpoint-down('md') {
+      width: 100%;
+      padding-left: 1rem;
+      padding-right: 1rem;
+      box-sizing: border-box;
+    }
 
     #{$node}--is-collapsible & {
       margin-top: 0;
