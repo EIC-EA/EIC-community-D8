@@ -1,0 +1,15 @@
+uuid: 8f504f85-0da6-4561-b66c-475cd6ba7e43
+langcode: en
+status: true
+dependencies:
+  config:
+    - flag.flag.request_block_group
+  module:
+    - flag
+id: flag_action.request_block_group_unflag
+label: 'Unflag this item'
+type: group
+plugin: 'flag_action:request_block_group_unflag'
+configuration:
+  flag_id: request_block_group
+  flag_action: unflag

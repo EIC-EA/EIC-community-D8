@@ -80,6 +80,10 @@
       height: 100%;
       box-sizing: border-box;
     }
+
+    & .ecl-teaser__link{
+      margin-right: 0;
+    }
   }
 
   [class*=ecl-featured-content] &--organisation &__image-wrapper, [class*=ecl-featured-content] &--organisation &__image-wrapper &__image {
@@ -608,8 +612,11 @@
     color: ecl-typography('color', 'meta');
     font-style: inherit;
     line-height: ecl-typography('line-height');
-
-
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 5;
+    -webkit-box-orient: vertical;
 
     #{$node}--search & {
       color: ecl-typography('color');

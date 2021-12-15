@@ -2,17 +2,19 @@
 
 namespace Drupal\eic_messages\Service;
 
-use Drupal;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Logger\LoggerChannelTrait;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\eic_flags\RequestStatus;
 use Drupal\eic_flags\RequestTypes;
+use Drupal\eic_flags\Service\BlockRequestHandler;
 use Drupal\eic_flags\Service\HandlerInterface;
 use Drupal\eic_flags\Service\RequestHandlerCollector;
+use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_user\UserHelper;
 use Drupal\flag\FlaggingInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -23,6 +25,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class RequestMessageCreator implements ContainerInjectionInterface {
 
   use StringTranslationTrait;
+  use LoggerChannelTrait;
 
   /**
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
@@ -93,7 +96,7 @@ class RequestMessageCreator implements ContainerInjectionInterface {
   ) {
     $handler = $this->collector->getHandlerByType($type);
     if (!$handler instanceof HandlerInterface) {
-      Drupal::logger('eic_messages')->warning(
+      $this->getLogger('eic_messages')->warning(
         'Invalid type @type provided on request insert',
         ['@type' => $type]
       );
@@ -103,7 +106,7 @@ class RequestMessageCreator implements ContainerInjectionInterface {
 
     $message_name = $handler->getMessageByAction(RequestStatus::OPEN);
     if (!$message_name) {
-      Drupal::logger('eic_messages')->warning(
+      $this->getLogger('eic_messages')->warning(
         'Message does not exists for action insert'
       );
 
@@ -136,11 +139,17 @@ class RequestMessageCreator implements ContainerInjectionInterface {
   ) {
     $handler = $this->collector->getHandlerByType($type);
     if (!$handler instanceof HandlerInterface) {
-      Drupal::logger('eic_messages')->warning(
+      $this->getLogger('eic_messages')->warning(
         'Invalid type @type provided on request close',
         ['@type' => $type]
       );
 
+      return;
+    }
+
+    // Block request messages are handled separately.
+    if ($type === RequestTypes::BLOCK) {
+      $this->blockRequestClose($flagging, $entity, $handler);
       return;
     }
 
@@ -149,7 +158,7 @@ class RequestMessageCreator implements ContainerInjectionInterface {
     $response = $flagging->get('field_request_status')->value;
     $message_name = $handler->getMessageByAction($response);
     if (!$message_name) {
-      Drupal::logger('eic_messages')->warning(
+      $this->getLogger('eic_messages')->warning(
         'Message does not exists for response type @response',
         ['@response' => $response]
       );
@@ -234,6 +243,62 @@ class RequestMessageCreator implements ContainerInjectionInterface {
     $build = $view_builder->view($message, 'pre_render');
 
     return $build['partial_0']['#markup'];
+  }
+
+  /**
+   * Handles message notification for closed block requests.
+   *
+   * @param \Drupal\flag\FlaggingInterface $flagging
+   *   The request flag.
+   * @param \Drupal\Core\Entity\ContentEntityInterface $entity
+   *   The entity object.
+   * @param \Drupal\eic_flags\Service\BlockRequestHandler $handler
+   *   The block request handler service.
+   */
+  private function blockRequestClose(
+    FlaggingInterface $flagging,
+    ContentEntityInterface $entity,
+    BlockRequestHandler $handler
+  ) {
+    $response = $flagging->get('field_request_status')->value;
+    $message_name = $handler->getMessageByAction($response);
+    $to = [];
+
+    switch ($entity->getEntityTypeId()) {
+      case 'group':
+        $owners = $entity->getMembers(EICGroupsHelper::GROUP_OWNER_ROLE);
+
+        // If group has no owner, we don't send out any notification.
+        if (empty($owners)) {
+          return;
+        }
+
+        // We need to map the membership into an array of user entities.
+        $to = array_map(
+          function ($owner) {
+            return $owner->getUser();
+          },
+          $owners
+        );
+
+        break;
+
+      default:
+        $to[] = $entity->getOwner();
+        break;
+    }
+
+    foreach ($to as $user) {
+      $message = $this->entityTypeManager->getStorage('message')->create(
+        [
+          'template' => $message_name,
+          'field_referenced_flag' => $flagging,
+          'uid' => $user->id(),
+        ]
+      );
+
+      $this->messageBus->dispatch($message);
+    }
   }
 
 }

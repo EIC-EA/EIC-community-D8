@@ -40,6 +40,11 @@ function eic_community_preprocess_eic_group_header_block(array &$variables) {
         unset($variables['group_values']['membership_links'][$key]);
         break;
 
+      case 'group-request-block':
+        unset($variables['group_values']['group_operation_links'][0]['links'][$key]);
+        unset($variables['group_values']['membership_links'][$key]);
+        break;
+
     }
   }
 

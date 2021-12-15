@@ -11,7 +11,7 @@
   }
 
   &__logo {
-    width: map-get($ecl-media, 's');
+    width: map-get($ecl-media, 'l');
     margin-right: auto;
     flex-shrink: 0;
     padding-right: ecl-box-model('padding');
@@ -42,6 +42,9 @@
   &__language-selector-wrapper,
   &__auth-wrapper {
     flex-shrink: 0;
+    @include ecl-media-breakpoint-down('md') {
+      font-size: .85em;
+    }
   }
 
   &__login-link {
@@ -62,7 +65,7 @@
   }
 
   &__login-link-icon {
-    margin-bottom: map-get($ecl-spacing, 's');
+    margin-bottom: map-get($ecl-spacing, '2xs');
 
     @include ecl-media-breakpoint-up('md') {
       margin: 0 map-get($ecl-spacing, 's') 0 0;

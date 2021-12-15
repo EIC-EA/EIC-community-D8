@@ -6,47 +6,27 @@ use Drupal\content_moderation\ModerationInformationInterface;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Session\AccountProxyInterface;
-use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Drupal\eic_flags\BlockFlagTypes;
+use Drupal\eic_flags\RequestStatus;
+use Drupal\eic_flags\RequestTypes;
 use Drupal\flag\Entity\Flag;
+use Drupal\flag\FlaggingInterface;
 use Drupal\flag\FlagService;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Service that provides logic to flag a blocked entity.
  *
- * @package Drupal\eic_flags\Service\Handler
+ * @package Drupal\eic_flags\Service
  */
-class EntityBlockHandler {
-
-  use StringTranslationTrait;
+class BlockRequestHandler extends AbstractRequestHandler {
 
   /**
    * The content moderation blocked state key.
    */
   const ENTITY_BLOCKED_STATE = 'blocked';
-
-  /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
-   * Flag service provided by the flag module.
-   *
-   * @var \Drupal\flag\FlagService
-   */
-  protected $flagService;
-
-  /**
-   * Core's moderation information service.
-   *
-   * @var \Drupal\content_moderation\ModerationInformationInterface
-   */
-  protected $moderationInformation;
 
   /**
    * The current active user.
@@ -56,27 +36,60 @@ class EntityBlockHandler {
   protected $currentUser;
 
   /**
-   * EntityBlockHandler constructor.
+   * AbstractRequestHandler constructor.
    *
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   *   The module handler service.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
    * @param \Drupal\flag\FlagService $flag_service
    *   Flag service provided by the flag module.
    * @param \Drupal\content_moderation\ModerationInformationInterface $moderation_information
    *   Core's moderation information service.
+   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
+   *   The request stack object.
    * @param \Drupal\Core\Session\AccountProxyInterface $current_user
    *   The current active user.
    */
   public function __construct(
+    ModuleHandlerInterface $module_handler,
     EntityTypeManagerInterface $entity_type_manager,
     FlagService $flag_service,
     ModerationInformationInterface $moderation_information,
+    RequestStack $request_stack,
     AccountProxyInterface $current_user
   ) {
+    $this->moduleHandler = $module_handler;
     $this->entityTypeManager = $entity_type_manager;
     $this->flagService = $flag_service;
     $this->moderationInformation = $moderation_information;
+    $this->currentRequest = $request_stack->getCurrentRequest();
     $this->currentUser = $current_user;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getType() {
+    return RequestTypes::BLOCK;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getMessages() {
+    return [
+      RequestStatus::ACCEPTED => 'notify_block_request_accepted',
+    ];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getSupportedEntityTypes() {
+    return [
+      'group' => 'request_block_group',
+    ];
   }
 
   /**
@@ -108,14 +121,14 @@ class EntityBlockHandler {
    *   Result of the operation.
    */
   public function applyFlag(ContentEntityInterface $entity, string $reason) {
-    $support_entity_types = BlockFlagTypes::getSupportedEntityTypes();
+    $support_entity_types = $this->getSupportedEntityTypes();
     // Entity type is not supported.
     if (!array_key_exists($entity->getEntityTypeId(), $support_entity_types)) {
       return NULL;
     }
 
     // Checks if entity can be blocked by the current user.
-    if ($this->canBlockEntity($entity, $this->currentUser->getAccount())->isForbidden()) {
+    if ($this->canRequest($this->currentUser->getAccount(), $entity)->isForbidden()) {
       return NULL;
     }
 
@@ -136,25 +149,47 @@ class EntityBlockHandler {
       'global' => $flag->isGlobal(),
     ]);
 
-    $flag->set('field_block_reason', $reason);
+    $flag->set('field_request_reason', $reason);
+    $flag->set('field_request_status', RequestStatus::ACCEPTED);
     $flag->save();
+
+    $this->moduleHandler->invokeAll(
+      'request_insert',
+      [
+        $flag,
+        $entity,
+        $this->getType(),
+      ]
+    );
+
+    // Automatically accepts the request.
+    $this->accept($flag, $entity);
+
     return $flag;
   }
 
   /**
-   * Checks if an entity can be blocked by the current user.
-   *
-   * @param \Drupal\Core\Entity\ContentEntityInterface $entity
-   *   The entity object.
-   * @param \Drupal\Core\Session\AccountInterface $account
-   *   The user account entity.
-   *
-   * @return \Drupal\Core\Access\AccessResult
-   *   The access result object.
+   * {@inheritdoc}
    */
-  public function canBlockEntity(
-    ContentEntityInterface $entity,
-    AccountInterface $account
+  public function accept(
+    FlaggingInterface $flagging,
+    ContentEntityInterface $content_entity
+  ) {
+    $this->blockEntity($content_entity);
+    $this->closeRequest(
+      $flagging,
+      $content_entity,
+      RequestStatus::ACCEPTED,
+      $flagging->get('field_request_reason')->value
+    );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function canRequest(
+    AccountInterface $account,
+    ContentEntityInterface $entity
   ) {
     // Default access.
     $access = AccessResult::forbidden();
@@ -170,7 +205,7 @@ class EntityBlockHandler {
 
     $access->addCacheableDependency($workflow);
 
-    if (!$workflow->getTypePlugin()->getState(EntityBlockHandler::ENTITY_BLOCKED_STATE)) {
+    if (!$workflow->getTypePlugin()->getState(self::ENTITY_BLOCKED_STATE)) {
       return $access;
     }
 
@@ -178,17 +213,17 @@ class EntityBlockHandler {
 
     // If entity is already blocked, we can't block it again and therefore we
     // return access denied.
-    if ($moderation_state === EntityBlockHandler::ENTITY_BLOCKED_STATE) {
+    if ($moderation_state === self::ENTITY_BLOCKED_STATE) {
       return $access;
     }
 
     // Make sure entity can transition to blocked state, otherwise we return
     // access denied.
-    if (!$workflow->getTypePlugin()->hasTransitionFromStateToState($moderation_state, EntityBlockHandler::ENTITY_BLOCKED_STATE)) {
+    if (!$workflow->getTypePlugin()->hasTransitionFromStateToState($moderation_state, self::ENTITY_BLOCKED_STATE)) {
       return $access;
     }
 
-    $transition = $workflow->getTypePlugin()->getTransitionFromStateToState($moderation_state, EntityBlockHandler::ENTITY_BLOCKED_STATE);
+    $transition = $workflow->getTypePlugin()->getTransitionFromStateToState($moderation_state, self::ENTITY_BLOCKED_STATE);
 
     // Make sure the user can use the blocked transition, otherwise we return
     // access denied.
@@ -239,6 +274,29 @@ class EntityBlockHandler {
     }
 
     return $access;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getActions(ContentEntityInterface $entity) {
+    $support_entity_types = $this->getSupportedEntityTypes();
+
+    // Entity type is not supported.
+    if (!array_key_exists($entity->getEntityTypeId(), $support_entity_types)) {
+      return [];
+    }
+
+    return [
+      'request_block' => [
+        'title' => $this->t('Block'),
+        'url' => $entity->toUrl('new-request')
+          ->setRouteParameter(
+            'destination',
+            $this->currentRequest->getRequestUri())
+          ->setRouteParameter('request_type', RequestTypes::BLOCK),
+      ],
+    ];
   }
 
 }

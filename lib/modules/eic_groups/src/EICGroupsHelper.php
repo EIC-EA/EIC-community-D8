@@ -259,6 +259,41 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
   }
 
   /**
+   * Provides the list of roles for the given group types.
+   *
+   * @param string[]|null $group_types
+   *   An array of group types to filter on. Default to all.
+   * @param bool $include_internal_roles
+   *   Whether to include group internal roles. Default to FALSE.
+   *
+   * @return array
+   *   An array keyed as follows:
+   *   - group_type: the group type machine name
+   *     - label: the group type's label.
+   *     - roles: array of roles.
+   *       - role_id: the role machine name.
+   *         => label of the role.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   */
+  public function getGroupRoles($group_types = NULL, $include_internal_roles = FALSE) {
+    $roles = [];
+
+    /** @var \Drupal\group\Entity\GroupTypeInterface[] $group_types */
+    $group_types = $this->entityTypeManager->getStorage('group_type')->loadMultiple($group_types);
+    foreach ($group_types as $group_type) {
+      $roles[$group_type->id()]['label'] = $group_type->label();
+      $group_roles = $group_type->getRoles($include_internal_roles);
+      foreach ($group_roles as $group_role) {
+        $roles[$group_type->id()]['roles'][$group_role->id()] = $group_role->label();
+      }
+    }
+
+    return $roles;
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function getGroupFromRoute() {

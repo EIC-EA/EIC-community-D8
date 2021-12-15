@@ -24,7 +24,7 @@ use Drupal\user\Entity\User;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
- * Class AbstractRequestHandler.
+ * Service handler wrapper that provides logic for entity request flags.
  *
  * @package Drupal\eic_flags\Service\Handler
  */
@@ -132,7 +132,12 @@ abstract class AbstractRequestHandler implements HandlerInterface {
     $now = DrupalDateTime::createFromTimestamp(time());
     $current_user = User::load($account_proxy->id());
     $flagging->set('field_request_moderator', $current_user);
-    $flagging->set('field_request_response', $reason);
+
+    // For some requests, field request response is not presented.
+    if ($flagging->hasField('field_request_response')) {
+      $flagging->set('field_request_response', $reason);
+    }
+
     $flagging->set('field_request_status', $response);
     $flagging->set(
       'field_request_closed_date',
@@ -146,7 +151,6 @@ abstract class AbstractRequestHandler implements HandlerInterface {
         $flagging,
         $content_entity,
         $this->getType(),
-
       ]
     );
 
@@ -299,8 +303,7 @@ abstract class AbstractRequestHandler implements HandlerInterface {
           ->setRouteParameter('response', RequestStatus::DENIED)
           ->setRouteParameter(
             'destination',
-            $this->currentRequest->getRequestUri()
-          ),
+            $this->currentRequest->getRequestUri()),
       ],
       'accept_request' => [
         'title' => $this->t('Accept'),
@@ -309,8 +312,7 @@ abstract class AbstractRequestHandler implements HandlerInterface {
           ->setRouteParameter('response', RequestStatus::ACCEPTED)
           ->setRouteParameter(
             'destination',
-            $this->currentRequest->getRequestUri()
-          ),
+            $this->currentRequest->getRequestUri()),
       ],
     ];
   }

@@ -61,6 +61,10 @@ class GroupOverviewsController extends ControllerBase {
         $overview_perm = 'access members overview';
         break;
 
+      case GroupOverviewPages::NEWS:
+        $overview_perm = 'access news overview';
+        break;
+
       case GroupOverviewPages::SEARCH:
         $overview_perm = 'access group search overview';
         break;
