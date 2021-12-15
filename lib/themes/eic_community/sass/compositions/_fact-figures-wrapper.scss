@@ -10,7 +10,6 @@
     &__items {
       padding: 0;
       margin-top: #{0 - ecl-layout('gutter--lg', 'description') * 2};
-      margin-right: #{0 - ecl-layout('gutter')};
 
       @include ecl-media-breakpoint-up('md') {
         display: flex;
