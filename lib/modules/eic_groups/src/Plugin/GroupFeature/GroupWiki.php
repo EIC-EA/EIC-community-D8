@@ -29,7 +29,7 @@ class GroupWiki extends EicGroupsGroupFeaturePluginBase {
   protected function getMenuItem(Url $url, string $menu_name) {
     $menu_item = parent::getMenuItem($url, $menu_name);
     // Set a specific weight for the menu item.
-    $menu_item->set('weight', 5);
+    $menu_item->set('weight', 6);
     return $menu_item;
   }
 

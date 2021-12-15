@@ -27,9 +27,9 @@ class GlobalOverviewPages {
   const MEMBERS = 3;
 
   /**
-   * ID of the Stories overview page.
+   * ID of the News & Stories overview page.
    */
-  const STORIES = 4;
+  const NEWS_STORIES = 4;
 
   /**
    * ID of the Events overview page.

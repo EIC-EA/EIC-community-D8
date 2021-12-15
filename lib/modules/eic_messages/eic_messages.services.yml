@@ -19,10 +19,3 @@ services:
       - { name: message_producer }
     calls:
       - [ setQueue, [ '@queue' ] ]
-
-  # Message event subscribers
-  eic_messages.flag_event_subscriber:
-    class: Drupal\eic_messages\EventSubscriber\FlagEventSubscriber
-    arguments: ['@class_resolver']
-    tags:
-      - { name: event_subscriber }
