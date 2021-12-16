@@ -29,6 +29,8 @@ function eic_community_preprocess_page__taxonomy__term(&$variables) {
   $file_url = $file ? file_url_transform_relative(file_create_url($file->get('uri')->value)) : NULL;
   $variables['banner_image_url'] = $file_url;
   $variables['topic_title'] = $term->label();
+  // Adds breadcrumbs block to the theme variables.
+  $variables['eic_community_breadcrumbs'] = _eic_community_load_breadcrumb_block();
 }
 
 /**
