@@ -43,6 +43,13 @@ class GroupBreadcrumbBuilder implements BreadcrumbBuilderInterface {
   protected $account;
 
   /**
+   * The EIC User helper service.
+   *
+   * @var \Drupal\eic_user\UserHelper
+   */
+  protected $eicUserHelper;
+
+  /**
    * The EIC Flags request handler collector service.
    *
    * @var \Drupal\eic_flags\Service\RequestHandlerCollector
@@ -57,32 +64,25 @@ class GroupBreadcrumbBuilder implements BreadcrumbBuilderInterface {
   protected $requestStack;
 
   /**
-   * The EIC User helper service.
-   *
-   * @var \Drupal\eic_user\UserHelper
-   */
-  protected $eicUserHelper;
-
-  /**
    * Constructs the GroupBreadcrumbBuilder.
    *
    * @param \Drupal\book\BookBreadcrumbBuilder $book_breadcrumb_builder
    *   The book breadcrumb builder service.
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The current user account.
+   * @param \Drupal\eic_user\UserHelper $eic_user_helper
+   *   The EIC User helper service.
    * @param \Drupal\eic_flags\Service\RequestHandlerCollector $request_handler_collector
    *   The EIC Flags request handler collector service.
    * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
    *   The request stack service.
-   * @param \Drupal\eic_user\UserHelper $eic_user_helper
-   *   The EIC User helper service.
    */
   public function __construct(
     BookBreadcrumbBuilder $book_breadcrumb_builder,
     AccountInterface $account,
+    UserHelper $eic_user_helper,
     RequestHandlerCollector $request_handler_collector,
-    RequestStack $request_stack,
-    UserHelper $eic_user_helper
+    RequestStack $request_stack
   ) {
     $this->bookBreadcrumbBuilder = $book_breadcrumb_builder;
     $this->account = $account;
