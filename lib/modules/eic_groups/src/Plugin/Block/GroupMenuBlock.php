@@ -163,10 +163,10 @@ class GroupMenuBlock extends GroupMenuBlockBase implements ContainerFactoryPlugi
     $entity = $this->getContext('group')->getContextData()->getValue();
     $has_context = $entity ? TRUE : FALSE;
 
-    if (!$entity) {
-      if (!$entity = $this->eicGroupsHelper->getGroupFromRoute()) {
-        return NULL;
-      }
+    // If entity is not in the context or cannot be grabbed from the current
+    // route, we don't load the menu.
+    if ((!$entity) && !$entity = $this->eicGroupsHelper->getGroupFromRoute()) {
+      return NULL;
     }
 
     // Don't load menu for group entities that are new/unsaved.
