@@ -14,13 +14,14 @@ use Drupal\eic_flags\RequestTypes;
 use Drupal\eic_flags\Service\BlockRequestHandler;
 use Drupal\eic_flags\Service\HandlerInterface;
 use Drupal\eic_flags\Service\RequestHandlerCollector;
+use Drupal\eic_flags\Service\TransferOwnershipRequestHandler;
 use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_user\UserHelper;
 use Drupal\flag\FlaggingInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Class RequestMessageCreator.
+ * Provides a message creator service for request flags.
  */
 class RequestMessageCreator implements ContainerInjectionInterface {
 
@@ -28,36 +29,53 @@ class RequestMessageCreator implements ContainerInjectionInterface {
   use LoggerChannelTrait;
 
   /**
+   * The entity type manager.
+   *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
   private $entityTypeManager;
 
   /**
+   * The request handler collector service.
+   *
    * @var \Drupal\eic_flags\Service\RequestHandlerCollector
    */
   private $collector;
 
   /**
+   * The renderer service.
+   *
    * @var \Drupal\Core\Render\RendererInterface
    */
   private $renderer;
 
   /**
+   * The EIC user helper service.
+   *
    * @var \Drupal\eic_user\UserHelper
    */
   private $userHelper;
 
   /**
+   * The message bus service.
+   *
    * @var \Drupal\eic_messages\Service\MessageBusInterface
    */
   private $messageBus;
 
   /**
+   * RequestMessageCreator constructor.
+   *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
    * @param \Drupal\eic_user\UserHelper $user_helper
+   *   The EIC user helper service.
    * @param \Drupal\eic_messages\Service\MessageBusInterface $message_bus
+   *   The message bus service.
    * @param \Drupal\eic_flags\Service\RequestHandlerCollector $collector
+   *   The request handler collector service.
    * @param \Drupal\Core\Render\RendererInterface $renderer
+   *   The renderer service.
    */
   public function __construct(
     EntityTypeManagerInterface $entity_type_manager,
@@ -113,6 +131,12 @@ class RequestMessageCreator implements ContainerInjectionInterface {
       return;
     }
 
+    // Transfer ownership request messages are handled separately.
+    if ($type === RequestTypes::TRANSFER_OWNERSHIP) {
+      $this->transferOwnershipRequestInsertClose($flag, $entity, $handler);
+      return;
+    }
+
     // Prepare messages to SA/CA.
     foreach ($this->userHelper->getSitePowerUsers() as $uid) {
       $this->messageBus->dispatch(
@@ -147,10 +171,17 @@ class RequestMessageCreator implements ContainerInjectionInterface {
       return;
     }
 
-    // Block request messages are handled separately.
-    if ($type === RequestTypes::BLOCK) {
-      $this->blockRequestClose($flagging, $entity, $handler);
-      return;
+    switch ($type) {
+      case RequestTypes::BLOCK:
+        // Block request messages are handled separately.
+        $this->blockRequestClose($flagging, $entity, $handler);
+        return;
+
+      case RequestTypes::TRANSFER_OWNERSHIP:
+        // Transfer ownership request messages are handled separately.
+        $this->transferOwnershipRequestInsertClose($flagging, $entity, $handler);
+        return;
+
     }
 
     /** @var \Drupal\user\UserInterface[] $to */
@@ -194,11 +225,17 @@ class RequestMessageCreator implements ContainerInjectionInterface {
   }
 
   /**
+   * Gets the request response subject depending on response type.
+   *
    * @param \Drupal\Core\Entity\ContentEntityInterface $entity
+   *   The entity object.
    * @param \Drupal\eic_flags\Service\HandlerInterface $handler
+   *   The request service handler.
    * @param string $response
+   *   The response type.
    *
    * @return \Drupal\Core\StringTranslation\TranslatableMarkup|null
+   *   The translated subject.
    */
   private function getResponseSubject(
     ContentEntityInterface $entity,
@@ -213,6 +250,7 @@ class RequestMessageCreator implements ContainerInjectionInterface {
           '@operation request for @label denied',
           ['@label' => $entity->label(), '@operation' => ucfirst($operation)]
         );
+
       case RequestStatus::ACCEPTED:
         return $this->t(
           '@operation request for @type accepted',
@@ -222,21 +260,27 @@ class RequestMessageCreator implements ContainerInjectionInterface {
             '@type' => $entity->getEntityTypeId(),
           ]
         );
+
       case RequestStatus::ARCHIVED:
         return $this->t(
           '@operation request for @label denied and the content has been archived instead',
           ['@label' => $entity->label(), '@operation' => ucfirst($operation)]
         );
+
       default:
         return NULL;
+
     }
   }
 
   /**
+   * Gets the rendered entity to save in the message.
+   *
    * @param \Drupal\Core\Entity\EntityInterface $message
-   *    The message being created.
+   *   The message being created.
    *
    * @return string
+   *   The rendered markup.
    */
   private function getRenderedContent(EntityInterface $message) {
     $view_builder = $this->entityTypeManager->getViewBuilder('message');
@@ -299,6 +343,81 @@ class RequestMessageCreator implements ContainerInjectionInterface {
 
       $this->messageBus->dispatch($message);
     }
+  }
+
+  /**
+   * Handles message notification for open/closed transfer ownership requests.
+   *
+   * @param \Drupal\flag\FlaggingInterface $flagging
+   *   The request flag.
+   * @param \Drupal\Core\Entity\ContentEntityInterface $entity
+   *   The entity object.
+   * @param \Drupal\eic_flags\Service\TransferOwnershipRequestHandler $handler
+   *   The transfer ownership request handler service.
+   */
+  private function transferOwnershipRequestInsertClose(
+    FlaggingInterface $flagging,
+    ContentEntityInterface $entity,
+    TransferOwnershipRequestHandler $handler
+  ) {
+    $response = $flagging->get('field_request_status')->value;
+    $message_name = $handler->getMessageByAction($response);
+    if (!$message_name) {
+      $this->getLogger('eic_messages')->warning(
+        'Message does not exists for response type @response',
+        ['@response' => $response]
+      );
+
+      return;
+    }
+
+    $new_owner = $flagging->get('field_new_owner_ref')->entity;
+
+    $message = [
+      'template' => $message_name,
+      'field_referenced_flag' => $flagging,
+      'uid' => $new_owner->id(),
+    ];
+
+    // For open requests, we show accept and deny links in the notification.
+    if ($response === RequestStatus::OPEN) {
+      $accept_url = $entity->toUrl('user-close-request')
+        ->setRouteParameter('request_type', $handler->getType())
+        ->setRouteParameter('response', RequestStatus::ACCEPTED);
+      $deny_url = $entity->toUrl('user-close-request')
+        ->setRouteParameter('request_type', $handler->getType())
+        ->setRouteParameter('response', RequestStatus::DENIED);
+      $message['field_request_accept_url'] = [
+        'uri' => $accept_url->toString(),
+      ];
+      $message['field_request_deny_url'] = [
+        'uri' => $deny_url->toString(),
+      ];
+    }
+    else {
+      $message['uid'] = $flagging->getOwner()->id();
+    }
+
+    switch ($entity->getEntityTypeId()) {
+      case 'group_content':
+        $group = $entity->getGroup();
+        $message['field_entity_type'] = $group->getEntityType()->getSingularLabel();
+        $message['field_referenced_entity_label'] = $group->label();
+        $message['field_entity_url'] = [
+          'uri' => $group->toUrl()->toString(),
+        ];
+        break;
+
+      default:
+        $message['field_entity_type'] = $entity->getEntityType()->getSingularLabel();
+        $message['field_referenced_entity_label'] = $entity->label();
+        $message['field_entity_url'] = [
+          'uri' => $entity->toUrl()->toString(),
+        ];
+        break;
+    }
+
+    $this->messageBus->dispatch($message);
   }
 
 }

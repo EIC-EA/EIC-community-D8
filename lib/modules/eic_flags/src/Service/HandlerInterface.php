@@ -7,7 +7,7 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\flag\FlaggingInterface;
 
 /**
- * Interface HandlerInterface.
+ * Provides an interface for request handlers.
  *
  * @package Drupal\eic_flags\Service\Handler
  */
@@ -17,6 +17,7 @@ interface HandlerInterface {
    * Returns the type of request the handler is for.
    *
    * @return string
+   *   The handler type.
    */
   public function getType();
 
@@ -83,6 +84,28 @@ interface HandlerInterface {
    *   Result of the operation.
    */
   public function applyFlag(ContentEntityInterface $entity, string $reason);
+
+  /**
+   * Alters the given the corresponding flag before saving it.
+   *
+   * @param \Drupal\flag\FlaggingInterface $flag
+   *   The flagging entity to alter.
+   *
+   * @return \Drupal\flag\FlaggingInterface|null
+   *   The altered flagging entity.
+   */
+  public function applyFlagAlter(FlaggingInterface $flag);
+
+  /**
+   * Post save method to apply logic after saving flag in the database.
+   *
+   * @param \Drupal\flag\FlaggingInterface $flag
+   *   The flagging entity to alter.
+   *
+   * @return \Drupal\flag\FlaggingInterface|null
+   *   The altered flagging entity.
+   */
+  public function applyFlagPostSave(FlaggingInterface $flag);
 
   /**
    * Returns an array of supported entity types.
@@ -191,5 +214,29 @@ interface HandlerInterface {
     AccountInterface $account,
     ContentEntityInterface $entity
   );
+
+  /**
+   * Whether or not the requests can be closed by the given account.
+   *
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *   Currently logged in account, anonymous users are not allowed.
+   * @param \Drupal\Core\Entity\ContentEntityInterface $entity
+   *   The content entity against the access check is made.
+   *
+   * @return \Drupal\Core\Access\AccessResultInterface
+   *   The access result object.
+   */
+  public function canCloseRequest(
+    AccountInterface $account,
+    ContentEntityInterface $entity
+  );
+
+  /**
+   * Get supported response types for closed requests.
+   *
+   * @return array
+   *   Array of supported response types.
+   */
+  public function getSupportedResponsesForClosedRequests();
 
 }

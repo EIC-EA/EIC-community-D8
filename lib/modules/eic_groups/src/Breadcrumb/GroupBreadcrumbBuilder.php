@@ -9,11 +9,17 @@ use Drupal\Core\Link;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\Core\Url;
+use Drupal\eic_flags\RequestTypes;
+use Drupal\eic_flags\Service\RequestHandlerCollector;
 use Drupal\eic_overviews\GlobalOverviewPages;
 use Drupal\eic_overviews\GroupOverviewPages;
+use Drupal\eic_user\UserHelper;
 use Drupal\group\Entity\GroupContent;
+use Drupal\group\Entity\GroupContentInterface;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\node\NodeInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Provides a breadcrumb builder for groups and nodes that belong to groups.
@@ -37,16 +43,52 @@ class GroupBreadcrumbBuilder implements BreadcrumbBuilderInterface {
   protected $account;
 
   /**
+   * The EIC User helper service.
+   *
+   * @var \Drupal\eic_user\UserHelper
+   */
+  protected $eicUserHelper;
+
+  /**
+   * The EIC Flags request handler collector service.
+   *
+   * @var \Drupal\eic_flags\Service\RequestHandlerCollector
+   */
+  protected $requestHandlerCollector;
+
+  /**
+   * The request stack service.
+   *
+   * @var \Symfony\Component\HttpFoundation\RequestStack
+   */
+  protected $requestStack;
+
+  /**
    * Constructs the GroupBreadcrumbBuilder.
    *
    * @param \Drupal\book\BookBreadcrumbBuilder $book_breadcrumb_builder
    *   The book breadcrumb builder service.
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The current user account.
+   * @param \Drupal\eic_user\UserHelper $eic_user_helper
+   *   The EIC User helper service.
+   * @param \Drupal\eic_flags\Service\RequestHandlerCollector $request_handler_collector
+   *   The EIC Flags request handler collector service.
+   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
+   *   The request stack service.
    */
-  public function __construct(BookBreadcrumbBuilder $book_breadcrumb_builder, AccountInterface $account) {
+  public function __construct(
+    BookBreadcrumbBuilder $book_breadcrumb_builder,
+    AccountInterface $account,
+    UserHelper $eic_user_helper,
+    RequestHandlerCollector $request_handler_collector,
+    RequestStack $request_stack
+  ) {
     $this->bookBreadcrumbBuilder = $book_breadcrumb_builder;
     $this->account = $account;
+    $this->requestHandlerCollector = $request_handler_collector;
+    $this->requestStack = $request_stack;
+    $this->eicUserHelper = $eic_user_helper;
   }
 
   /**
@@ -66,6 +108,29 @@ class GroupBreadcrumbBuilder implements BreadcrumbBuilderInterface {
 
       case 'entity.group.canonical':
         $applies = TRUE;
+        break;
+
+      case 'entity.group_content.new_request':
+      case 'entity.group_content.user_close_request':
+        $group_content = $route_match->getParameter('group_content');
+
+        if (!$group_content instanceof GroupContentInterface) {
+          break;
+        }
+
+        $request_handler = $this->requestHandlerCollector->getHandlerByType(
+          $this->requestStack->getCurrentRequest()->get('request_type')
+        );
+
+        if (!$request_handler) {
+          break;
+        }
+
+        if ($request_handler->getType() !== RequestTypes::TRANSFER_OWNERSHIP) {
+          break;
+        }
+
+        $applies = $group_content->getContentPlugin()->getPluginId() === 'group_membership' ? TRUE : FALSE;
         break;
 
     }
@@ -150,10 +215,43 @@ class GroupBreadcrumbBuilder implements BreadcrumbBuilderInterface {
         }
         break;
 
+      case 'entity.group_content.new_request':
+      case 'entity.group_content.user_close_request':
+        /** @var \Drupal\group\Entity\GroupContentInterface $group_content */
+        $group_content = $route_match->getParameter('group_content');
+
+        if (!$group_content instanceof GroupContentInterface) {
+          break;
+        }
+
+        // We add the group content object as cacheable dependency.
+        $breadcrumb->addCacheableDependency($group_content);
+
+        $group = $group_content->getGroup();
+        $links[] = $group->toLink();
+
+        $request_handler = $this->requestHandlerCollector->getHandlerByType(
+          $this->requestStack->getCurrentRequest()->get('request_type')
+        );
+
+        if (!$request_handler) {
+          break;
+        }
+
+        if ($request_handler->getType() === RequestTypes::TRANSFER_OWNERSHIP) {
+          $group_members_url = Url::fromRoute('view.eic_group_members.page_group_members', ['group' => $group->id()]);
+          $links[] = Link::fromTextAndUrl($this->t('Members'), $group_members_url);
+          $user_full_name = $this->eicUserHelper->getFullName($group_content->getEntity());
+          $links[] = $group_content->getEntity()->toLink($user_full_name);
+        }
+        break;
+
     }
 
-    // We add the group as cacheable dependency.
-    $breadcrumb->addCacheableDependency($group);
+    if ($group) {
+      // We add the group as cacheable dependency.
+      $breadcrumb->addCacheableDependency($group);
+    }
 
     $breadcrumb->setLinks($links);
     $breadcrumb->addCacheContexts(['url.path']);
