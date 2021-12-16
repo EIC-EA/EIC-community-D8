@@ -155,7 +155,7 @@ class EntityRequestRouteProvider implements EntityRouteProviderInterface, Entity
     $route = (new Route($entity_type->getLinkTemplate($template)))
       ->addDefaults(
         [
-          '_title' => ucfirst($handler->getType()),
+          '_title' => str_replace('_', ' ', ucfirst($handler->getType())),
         ] + $defaults)
       ->setRequirement($entity_type->id(), '\d+')
       ->setOption('entity_type_id', $entity_type->id());
