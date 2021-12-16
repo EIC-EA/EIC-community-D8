@@ -168,40 +168,42 @@ class NewRequestForm extends ContentEntityDeleteForm {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $form = parent::buildForm($form, $form_state);
-    $form_field_description = [
-      'text' => 'Please explain why this @entity_type should be @action',
-      'args' => [
-        '@entity_type' => $this->entity->getEntityType()->getLabel(),
-      ],
-    ];
+    $form_field_description = NULL;
 
     switch ($this->requestHandler->getType()) {
       case RequestTypes::BLOCK:
-        $form_field_description['args']['@action'] = $this->t('blocked');
+        $form_field_description = $this->t(
+          'Please explain why this @entity_type should be @action',
+          [
+            '@entity_type' => $this->entity->getEntityType()->getLabel(),
+            '@action' => $this->t('blocked'),
+          ],
+        );
         break;
 
       case RequestTypes::TRANSFER_OWNERSHIP:
-        $form_field_description = [
-          'text' => 'Please explain why you want to @action',
-          'args' => [
+        $form_field_description = $this->t(
+          'Please explain why you want to @action',
+          [
             '@action' => $this->t('transfer ownership'),
           ],
-        ];
+        );
         break;
 
       default:
-        // @todo In the future we should consider creating a helper function if
-        // we need to use this line of code elsewhere.
-        $form_field_description['args']['@action'] = $this->requestHandler instanceof ArchiveRequestHandler ? 'archived' : 'deleted';
+        $form_field_description = $this->t(
+          'Please explain why this @entity_type should be @action',
+          [
+            '@entity_type' => $this->entity->getEntityType()->getLabel(),
+            '@action' => $this->requestHandler instanceof ArchiveRequestHandler ? 'archived' : 'deleted',
+          ],
+        );
         break;
     }
 
     $form['reason'] = [
       '#type' => 'textarea',
-      '#title' => $this->t(
-        $form_field_description['text'],
-        $form_field_description['args']
-      ),
+      '#title' => $form_field_description,
       '#required' => TRUE,
     ];
 

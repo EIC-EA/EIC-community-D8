@@ -97,6 +97,7 @@ class RequestCloseForm extends ContentEntityConfirmFormBase {
         if ($this->getEntity()->getEntityTypeId() !== 'group_content') {
           break;
         }
+        // Returns the group URL.
         return $this->getEntity()
           ->getGroup()
           ->toUrl();
