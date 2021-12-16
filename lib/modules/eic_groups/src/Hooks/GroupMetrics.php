@@ -5,6 +5,8 @@ namespace Drupal\eic_groups\Hooks;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\eic_flags\FlagHelper;
+use Drupal\eic_group_statistics\GroupStatisticsHelperInterface;
 use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\group\Entity\GroupInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -22,6 +24,13 @@ class GroupMetrics implements ContainerInjectionInterface {
    * @var \Drupal\eic_groups\EICGroupsHelper
    */
   protected $groupsHelper;
+
+  /**
+   * The EIC Flags helper service.
+   *
+   * @var \Drupal\eic_flags\FlagHelper
+   */
+  protected $flagHelper;
 
   /**
    * The EIC group statistics helper service.
@@ -42,6 +51,8 @@ class GroupMetrics implements ContainerInjectionInterface {
    *
    * @param \Drupal\eic_groups\EICGroupsHelper $eic_groups_helper
    *   The EIC Groups helper service.
+   * @param \Drupal\eic_flags\FlagHelper $eic_flag_helper
+   *   The EIC Flags helper service.
    * @param \Drupal\eic_group_statistics\GroupStatisticsHelperInterface $group_statistics_helper
    *   The EIC group statistics helper service.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
@@ -49,10 +60,12 @@ class GroupMetrics implements ContainerInjectionInterface {
    */
   public function __construct(
     EICGroupsHelper $eic_groups_helper,
+    FlagHelper $eic_flag_helper,
     GroupStatisticsHelperInterface $group_statistics_helper,
     EntityTypeManagerInterface $entity_type_manager
   ) {
     $this->groupsHelper = $eic_groups_helper;
+    $this->flagHelper = $eic_flag_helper;
     $this->groupStatisticsHelper = $group_statistics_helper;
     $this->entityTypeManager = $entity_type_manager;
   }
@@ -63,6 +76,7 @@ class GroupMetrics implements ContainerInjectionInterface {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('eic_groups.helper'),
+      $container->get('eic_flags.helper'),
       $container->get('eic_group_statistics.helper'),
       $container->get('entity_type.manager')
     );
@@ -96,6 +110,16 @@ class GroupMetrics implements ContainerInjectionInterface {
       'eic_groups_comments' => [
         'label' => $this->t('Group comments'),
         'value_callback' => 'eic_groups_eic_groups_metrics_value',
+      ],
+      'eic_groups_flags' => [
+        'label' => $this->t('Group flags'),
+        'value_callback' => 'eic_groups_eic_groups_metrics_value',
+        'conf_callback' => 'eic_groups_eic_groups_metrics_configuration',
+        'options' => [
+          'flag_ids' => [
+            'default_value' => [],
+          ],
+        ],
       ],
     ];
   }
@@ -135,6 +159,19 @@ class GroupMetrics implements ContainerInjectionInterface {
 
       case 'eic_groups_comments':
         return $this->groupStatisticsHelper->loadGroupStatistics($group)->getCommentsCount();
+
+      case 'eic_groups_flags':
+        $count = 0;
+        $selected_flags = $this->getSelectedOptions($configuration['flags']);
+        $group_flag_counts = $this->flagHelper->getFlaggingsCountPerGroup($group, TRUE);
+        foreach ($selected_flags as $flag_id) {
+          foreach ($group_flag_counts as $results) {
+            if (!empty($results[$flag_id])) {
+              $count += $results[$flag_id];
+            }
+          }
+        }
+        return $count;
 
     }
 
@@ -188,6 +225,24 @@ class GroupMetrics implements ContainerInjectionInterface {
             '#type' => 'checkboxes',
             '#options' => $node_types,
             '#default_value' => $configuration[$metric_id . '_conf']['node_types'] ?? [],
+          ],
+        ];
+        break;
+
+      case 'eic_groups_flags':
+        // Get the existing flags.
+        $flags = [];
+        /** @var \Drupal\flag\Entity\Flag $flag */
+        foreach ($this->entityTypeManager->getStorage('flag')->loadMultiple() as $flag) {
+          $flags[$flag->id()] = $flag->label();
+        }
+        $conf = [
+          'flags' => [
+            '#title' => $this->t('Select the flag(s) to filter on'),
+            '#description' => $this->t('If none selected, all flags will be returned.'),
+            '#type' => 'checkboxes',
+            '#options' => $flags,
+            '#default_value' => $configuration[$metric_id . '_conf']['flags'] ?? [],
           ],
         ];
         break;

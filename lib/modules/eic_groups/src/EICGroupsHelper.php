@@ -467,9 +467,13 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
   }
 
   /**
+   * Returns a list of groups based on the given visibility type.
+   *
    * @param string $visibility
+   *   The visibility type.
    *
    * @return array
+   *   An array of Group entities.
    */
   public function getGroupsByVisibility(string $visibility) {
     $gids = $this->database->select('oec_group_visibility')
@@ -588,6 +592,31 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
       $plugin_id .= ":$bundle";
     }
     return in_array($plugin_id, $enabled_plugins);
+  }
+
+  /**
+   * Returns nodes that belong to a group.
+   *
+   * @param \Drupal\group\Entity\GroupInterface $group
+   *   The group object.
+   * @param array $filters
+   *   Filters to apply to the query. See GroupInterface::getContent().
+   *
+   * @return array
+   *   An array of node entities.
+   */
+  public function getGroupNodes(GroupInterface $group, array $filters = []) {
+    $content = [];
+    foreach ($this->getGroupTypeEnabledPlugins($group->getGroupType()) as $plugin_id) {
+      if (strpos($plugin_id, 'group_node') !== 0) {
+        continue;
+      }
+      /** @var \Drupal\group\Entity\GroupContentInterface $group_content */
+      foreach ($group->getContent($plugin_id, $filters) as $group_content) {
+        $content[] = $group_content->getEntity();
+      }
+    }
+    return $content;
   }
 
   /**
