@@ -8,6 +8,7 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\eic_flags\FlagHelper;
 use Drupal\eic_group_statistics\GroupStatisticsHelperInterface;
 use Drupal\eic_groups\EICGroupsHelper;
+use Drupal\eic_media_statistics\EntityFileDownloadCount;
 use Drupal\group\Entity\GroupInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -47,6 +48,13 @@ class GroupMetrics implements ContainerInjectionInterface {
   protected $entityTypeManager;
 
   /**
+   * The EIC entity file download count service.
+   *
+   * @var \Drupal\eic_media_statistics\EntityFileDownloadCount
+   */
+  protected $entityFileDownloadCount;
+
+  /**
    * Constructs a new GroupTokens object.
    *
    * @param \Drupal\eic_groups\EICGroupsHelper $eic_groups_helper
@@ -57,17 +65,21 @@ class GroupMetrics implements ContainerInjectionInterface {
    *   The EIC group statistics helper service.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager service.
+   * @param \Drupal\eic_media_statistics\EntityFileDownloadCount $entity_file_download_count
+   *   The EIC entity file download count service.
    */
   public function __construct(
     EICGroupsHelper $eic_groups_helper,
     FlagHelper $eic_flag_helper,
     GroupStatisticsHelperInterface $group_statistics_helper,
-    EntityTypeManagerInterface $entity_type_manager
+    EntityTypeManagerInterface $entity_type_manager,
+    EntityFileDownloadCount $entity_file_download_count
   ) {
     $this->groupsHelper = $eic_groups_helper;
     $this->flagHelper = $eic_flag_helper;
     $this->groupStatisticsHelper = $group_statistics_helper;
     $this->entityTypeManager = $entity_type_manager;
+    $this->entityFileDownloadCount = $entity_file_download_count;
   }
 
   /**
@@ -78,7 +90,8 @@ class GroupMetrics implements ContainerInjectionInterface {
       $container->get('eic_groups.helper'),
       $container->get('eic_flags.helper'),
       $container->get('eic_group_statistics.helper'),
-      $container->get('entity_type.manager')
+      $container->get('entity_type.manager'),
+      $container->get('eic_media_statistics.entity_file_download_count')
     );
   }
 
@@ -120,6 +133,10 @@ class GroupMetrics implements ContainerInjectionInterface {
             'default_value' => [],
           ],
         ],
+      ],
+      'eic_groups_downloads' => [
+        'label' => $this->t('Group downloads'),
+        'value_callback' => 'eic_groups_eic_groups_metrics_value',
       ],
     ];
   }
@@ -170,6 +187,13 @@ class GroupMetrics implements ContainerInjectionInterface {
               $count += $results[$flag_id];
             }
           }
+        }
+        return $count;
+
+      case 'eic_groups_downloads':
+        $count = 0;
+        foreach ($this->groupsHelper->getGroupNodes($group) as $node) {
+          $count += $this->entityFileDownloadCount->getFileDownloads($node);
         }
         return $count;
 
