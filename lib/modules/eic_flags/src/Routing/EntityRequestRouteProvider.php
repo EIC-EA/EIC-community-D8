@@ -5,6 +5,7 @@ namespace Drupal\eic_flags\Routing;
 use Drupal\Core\Entity\EntityHandlerInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\Routing\EntityRouteProviderInterface;
+use Drupal\eic_flags\Controller\FlagRequestController;
 use Drupal\eic_flags\Service\HandlerInterface;
 use Drupal\eic_flags\Service\RequestHandlerCollector;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -155,7 +156,7 @@ class EntityRequestRouteProvider implements EntityRouteProviderInterface, Entity
     $route = (new Route($entity_type->getLinkTemplate($template)))
       ->addDefaults(
         [
-          '_title' => str_replace('_', ' ', ucfirst($handler->getType())),
+          '_title_callback' => FlagRequestController::class . '::getRequestTitle',
         ] + $defaults)
       ->setRequirement($entity_type->id(), '\d+')
       ->setOption('entity_type_id', $entity_type->id());
