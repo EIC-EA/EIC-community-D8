@@ -12,10 +12,14 @@ use Drupal\eic_flags\RequestTypes;
  */
 function eic_community_preprocess_menu_local_tasks(array &$variables): void {
   // Sort local tasks by weight.
-  uasort($variables['primary'],
-    ['\Drupal\Component\Utility\SortArray', 'sortByWeightProperty']);
-  uasort($variables['secondary'],
-    ['\Drupal\Component\Utility\SortArray', 'sortByWeightProperty']);
+  uasort(
+    $variables['primary'],
+    ['\Drupal\Component\Utility\SortArray', 'sortByWeightProperty']
+  );
+  uasort(
+    $variables['secondary'],
+    ['\Drupal\Component\Utility\SortArray', 'sortByWeightProperty']
+  );
 
   $current_node = \Drupal::routeMatch()->getParameter('node');
 
@@ -35,23 +39,34 @@ function eic_community_preprocess_menu_local_tasks(array &$variables): void {
   }
 
   if ($current_node instanceof \Drupal\node\NodeInterface) {
-    $url = $current_node->toUrl('new-request')
-      ->setRouteParameter(
-        'destination',
-        \Drupal::request()->getRequestUri()
-      )
-      ->setRouteParameter('request_type', RequestTypes::ARCHIVE);
-  }
+    $request_uri = \Drupal::request()->getRequestUri();
+    $current_user = \Drupal::currentUser();
 
-  if ($url->access(\Drupal::currentUser())) {
-    $variables['primary_links'][] = [
-      'link' => [
-        'path' => $url,
+    $requests_url = [
+      [
+        'url' => $current_node->toUrl('new-request')->setRouteParameter('destination', $request_uri)->setRouteParameter('request_type', RequestTypes::ARCHIVE),
         'label' => t('Request archival'),
-        'type' => 'standalone',
       ],
-      'is_active' => 0,
+      [
+        'url' => $current_node->toUrl('new-request')->setRouteParameter('destination', $request_uri)->setRouteParameter('request_type', RequestTypes::DELETE),
+        'label' => t('Request deletion'),
+      ],
     ];
+
+    foreach ($requests_url as $request_url) {
+      if (!$request_url['url']->access($current_user)) {
+        continue;
+      }
+
+      $variables['primary_links'][] = [
+        'link' => [
+          'path' => $request_url['url'],
+          'label' => $request_url['label'],
+          'type' => 'standalone',
+        ],
+        'is_active' => 0,
+      ];
+    }
   }
 
   foreach ($variables['secondary'] as $link) {
