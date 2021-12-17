@@ -39,6 +39,7 @@
 
   &__header--wiki {
     display: flex;
+    flex-wrap: wrap;
     & .contextual-region {
       margin-bottom: 0 !important;
       & .ecl-button__label {
@@ -47,7 +48,12 @@
     }
     & .ecl-inline-actions {
       order: -1;
-      margin: 0;
+      @include ecl-media-breakpoint-down('md') {
+        margin-bottom: $ecl-spacing-s;
+      }
+      @include ecl-media-breakpoint-up('md') {
+        margin: 0;
+      }
     }
   }
 
@@ -110,12 +116,15 @@
     position: relative;
     margin-top: ecl-layout('gutter');
 
-    @include ecl-media-breakpoint-down('md') {
-      width: 100%;
-      padding-left: 1rem;
-      padding-right: 1rem;
-      box-sizing: border-box;
+    &:not(&--wiki) {
+      @include ecl-media-breakpoint-down('md') {
+        width: 100%;
+        padding-left: 1rem;
+        padding-right: 1rem;
+        box-sizing: border-box;
+      }
     }
+
 
     #{$node}--is-collapsible & {
       margin-top: 0;
