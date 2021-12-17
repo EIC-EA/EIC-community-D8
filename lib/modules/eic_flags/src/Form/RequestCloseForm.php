@@ -7,6 +7,7 @@ use Drupal\Core\Entity\ContentEntityConfirmFormBase;
 use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Routing\TrustedRedirectResponse;
 use Drupal\Core\Url;
 use Drupal\eic_flags\RequestStatus;
 use Drupal\eic_flags\RequestTypes;
@@ -275,6 +276,42 @@ class RequestCloseForm extends ContentEntityConfirmFormBase {
       $flag,
       $this->entity
     );
+
+    $redirect_response = FALSE;
+    switch ($this->requestType) {
+      case RequestTypes::TRANSFER_OWNERSHIP:
+
+        if ($response === RequestStatus::DENIED) {
+          $this->messenger()->addStatus($this->t('Ownership transfer has been denied'));
+        }
+        else {
+          $this->messenger()->addStatus($this->t('Ownership transfer has been accepted'));
+        }
+
+        if ($this->getEntity()->getEntityTypeId() === 'group_content') {
+          // Builds response to redirect user to the group detail page.
+          $redirect_response = new TrustedRedirectResponse(
+            $this->getEntity()
+              ->getGroup()
+              ->toUrl()
+              ->toString()
+          );
+          break;
+        }
+
+        // Builds response to redirect user to the entity detail page.
+        $redirect_response = new TrustedRedirectResponse(
+          $this->getEntity()
+            ->toUrl()
+            ->toString()
+        );
+        break;
+
+    }
+
+    if ($redirect_response instanceof TrustedRedirectResponse) {
+      $form_state->setResponse($redirect_response);
+    }
   }
 
   /**

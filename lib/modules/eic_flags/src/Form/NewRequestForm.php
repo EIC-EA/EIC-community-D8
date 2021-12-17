@@ -89,6 +89,28 @@ class NewRequestForm extends ContentEntityDeleteForm {
   /**
    * {@inheritdoc}
    */
+  public function getCancelUrl() {
+    $request_type = $this->getRequest()
+      ->get('request_type');
+
+    switch ($request_type) {
+      case RequestTypes::TRANSFER_OWNERSHIP:
+        if ($this->getEntity()->getEntityTypeId() !== 'group_content') {
+          break;
+        }
+        // Returns the group URL.
+        return $this->getEntity()
+          ->getGroup()
+          ->toUrl();
+
+    }
+
+    return parent::getCancelUrl();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getDescription() {
     $description = NULL;
 
