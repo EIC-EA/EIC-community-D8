@@ -39,6 +39,10 @@ function eic_search_theme($existing, $type, $theme, $path) {
         'enable_facet_my_groups' => FALSE,
         'allow_pagination' => FALSE,
         'load_more_number' => FALSE,
+        'is_route_group_search_results' => FALSE,
+        'enable_invite_user_action' => FALSE,
+        'invite_user_url' => '',
+        'manager_roles' => [],
       ],
     ],
   ];
