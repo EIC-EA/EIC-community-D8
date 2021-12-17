@@ -151,12 +151,28 @@ class RequestCloseForm extends ContentEntityConfirmFormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $form = parent::buildForm($form, $form_state);
+    $response = $this->getRequest()->get('response');
+    $show_response_field = TRUE;
 
-    $form['response_text'] = [
-      '#type' => 'textarea',
-      '#title' => $this->getResponseTitle(),
-      '#required' => TRUE,
-    ];
+    switch ($this->requestType) {
+      case RequestTypes::TRANSFER_OWNERSHIP:
+        if ($response === RequestStatus::ACCEPTED) {
+          $show_response_field = FALSE;
+          $form['response_title'] = [
+            '#markup' => $this->getResponseTitle(),
+          ];
+        }
+        break;
+
+    }
+
+    if ($show_response_field) {
+      $form['response_text'] = [
+        '#type' => 'textarea',
+        '#title' => $this->getResponseTitle(),
+        '#required' => TRUE,
+      ];
+    }
 
     return $form;
   }
@@ -165,6 +181,22 @@ class RequestCloseForm extends ContentEntityConfirmFormBase {
    * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
+    $response = $this->getRequest()->get('response');
+    $has_response_field = TRUE;
+
+    switch ($this->requestType) {
+      case RequestTypes::TRANSFER_OWNERSHIP:
+        if ($response === RequestStatus::ACCEPTED) {
+          $has_response_field = FALSE;
+        }
+        break;
+
+    }
+
+    if (!$has_response_field) {
+      return;
+    }
+
     if (!$form_state->getValue('response_text')) {
       $form_state->setErrorByName(
         'response_text',
@@ -233,7 +265,7 @@ class RequestCloseForm extends ContentEntityConfirmFormBase {
         $flag,
         $this->entity,
         $response,
-        $form_state->getValue('response_text')
+        $form_state->getValue('response_text') ?? ''
       );
     }
 
@@ -336,7 +368,7 @@ class RequestCloseForm extends ContentEntityConfirmFormBase {
       case RequestStatus::ACCEPTED:
         if ($this->getEntity()->getEntityTypeId() === 'group_content') {
           return $this->t(
-            'Are you sure you want to become the owner of @entity-type %group-label? Please provide a mandatory reason for accepting this request.',
+            'Are you sure you want to become the owner of @entity-type %group-label?',
             [
               '@entity-type' => $this->getEntity()
                 ->getGroup()
@@ -349,7 +381,7 @@ class RequestCloseForm extends ContentEntityConfirmFormBase {
           );
         }
         return $this->t(
-          'Are you sure you want to become the owner of @entity-type %group-label? Please provide a mandatory reason for accepting this request.',
+          'Are you sure you want to become the owner of @entity-type %group-label?',
           [
             '@entity-type' => $this->getEntity()
               ->getEntityType()
