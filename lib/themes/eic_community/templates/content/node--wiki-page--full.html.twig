@@ -9,7 +9,7 @@
 
 {% block content %}
   {% if actions is not empty %}
-    <section class="ecl-editorial-article__header">
+    <section class="ecl-editorial-article__header ecl-editorial-article__header--wiki">
       {{ eic_local_tasks }}
 
       {% include "@theme/patterns/components/inline-actions.html.twig" with actions|default({})|merge({
