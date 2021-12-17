@@ -34,3 +34,20 @@ function eic_group_membership_entity_operation_alter(array &$operations, EntityI
     }
   }
 }
+
+/**
+ * Implements hook_views_data_alter().
+ */
+function eic_group_membership_views_data_alter(&$data) {
+  // Create a new views field for showing the group transfer ownership status
+  // for each group member.
+  $data['group_content']['transfer_ownership_status'] = [
+    'title' => t('Member: show group transfer ownership status'),
+    'group' => t('Group content'),
+    'field' => [
+      'id' => 'eic_group_membership_transfer_ownership_status',
+      'title' => t('Group transfer ownership status'),
+      'help' => t('Shows group transfer ownership status for the group member'),
+    ],
+  ];
+}
