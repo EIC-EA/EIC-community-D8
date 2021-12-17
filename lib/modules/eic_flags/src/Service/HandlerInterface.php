@@ -13,6 +13,8 @@ use Drupal\flag\FlaggingInterface;
  */
 interface HandlerInterface {
 
+  const REQUEST_TIMEOUT_FIELD = 'field_request_timeout';
+
   /**
    * Returns the type of request the handler is for.
    *
@@ -79,11 +81,17 @@ interface HandlerInterface {
    *   The concerned entity.
    * @param string $reason
    *   Reason given when opening the request.
+   * @param int $request_timeout
+   *   (optional) Number of days the request will remain open.
    *
    * @return \Drupal\flag\FlaggingInterface|null
    *   Result of the operation.
    */
-  public function applyFlag(ContentEntityInterface $entity, string $reason);
+  public function applyFlag(
+    ContentEntityInterface $entity,
+    string $reason,
+    int $request_timeout = 0
+  );
 
   /**
    * Alters the given the corresponding flag before saving it.

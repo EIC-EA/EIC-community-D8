@@ -9,6 +9,7 @@ dependencies:
     - field.field.flagging.transfer_owner_request_group.field_request_reason
     - field.field.flagging.transfer_owner_request_group.field_request_response
     - field.field.flagging.transfer_owner_request_group.field_request_status
+    - field.field.flagging.transfer_owner_request_group.field_request_timeout
     - flag.flag.transfer_owner_request_group
   module:
     - datetime
@@ -64,5 +65,12 @@ content:
     settings: {  }
     third_party_settings: {  }
     type: options_select
+    region: content
+  field_request_timeout:
+    weight: 6
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+    type: number
     region: content
 hidden: {  }

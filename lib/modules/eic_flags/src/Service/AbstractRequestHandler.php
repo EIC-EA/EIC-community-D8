@@ -181,7 +181,7 @@ abstract class AbstractRequestHandler implements HandlerInterface {
   /**
    * {@inheritdoc}
    */
-  public function applyFlag(ContentEntityInterface $entity, string $reason) {
+  public function applyFlag(ContentEntityInterface $entity, string $reason, int $request_timeout = 0) {
     $support_entity_types = $this->getSupportedEntityTypes();
     // Entity type is not supported.
     if (!array_key_exists($entity->getEntityTypeId(), $support_entity_types)) {
@@ -216,6 +216,10 @@ abstract class AbstractRequestHandler implements HandlerInterface {
 
     $flag->set('field_request_reason', $reason);
     $flag->set('field_request_status', RequestStatus::OPEN);
+
+    if ($flag->hasField(HandlerInterface::REQUEST_TIMEOUT_FIELD)) {
+      $flag->set(HandlerInterface::REQUEST_TIMEOUT_FIELD, $request_timeout);
+    }
 
     // Alters flag before saving it.
     $flag = $this->applyFlagAlter($flag);

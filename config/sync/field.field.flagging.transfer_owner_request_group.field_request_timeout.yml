@@ -1,0 +1,25 @@
+uuid: 915a5e83-9272-4d42-8587-fe9350f7ca18
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.flagging.field_request_timeout
+    - flag.flag.transfer_owner_request_group
+id: flagging.transfer_owner_request_group.field_request_timeout
+field_name: field_request_timeout
+entity_type: flagging
+bundle: transfer_owner_request_group
+label: 'Request timeout (days)'
+description: ''
+required: true
+translatable: false
+default_value:
+  -
+    value: 5
+default_value_callback: ''
+settings:
+  min: 0
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: integer
