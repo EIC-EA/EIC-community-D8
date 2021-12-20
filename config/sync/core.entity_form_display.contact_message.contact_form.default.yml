@@ -4,19 +4,26 @@ status: true
 dependencies:
   config:
     - contact.form.contact_form
+    - field.field.contact_message.contact_form.field_contact_category
 id: contact_message.contact_form.default
 targetEntityType: contact_message
 bundle: contact_form
 mode: default
 content:
   copy:
-    weight: 5
+    weight: 6
     region: content
     settings: {  }
     third_party_settings: {  }
+  field_contact_category:
+    weight: 3
+    settings: {  }
+    third_party_settings: {  }
+    type: options_select
+    region: content
   langcode:
     type: language_select
-    weight: 4
+    weight: 5
     region: content
     settings:
       include_locked: true
@@ -28,7 +35,7 @@ content:
     third_party_settings: {  }
   message:
     type: string_textarea
-    weight: 3
+    weight: 4
     settings:
       rows: 12
       placeholder: ''

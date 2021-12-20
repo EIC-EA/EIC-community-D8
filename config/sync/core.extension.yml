@@ -39,6 +39,7 @@ module:
   eic_block_types: 0
   eic_blocks: 0
   eic_comments: 0
+  eic_contact: 0
   eic_content: 0
   eic_content_book: 0
   eic_content_discussion: 0

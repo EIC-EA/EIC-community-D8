@@ -1,0 +1,21 @@
+uuid: bd89076e-5073-4fbc-98ef-b856ff4f39f2
+langcode: en
+status: true
+dependencies:
+  module:
+    - contact
+    - options
+id: contact_message.field_contact_category
+field_name: field_contact_category
+entity_type: contact_message
+type: list_string
+settings:
+  allowed_values: {  }
+  allowed_values_function: _eic_contact_category_allowed_values
+module: options
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

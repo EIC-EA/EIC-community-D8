@@ -1,0 +1,23 @@
+uuid: ca36f407-542e-482b-8102-9c07545cbbef
+langcode: en
+status: true
+dependencies:
+  config:
+    - contact.form.contact_form
+    - field.storage.contact_message.field_contact_category
+  module:
+    - options
+id: contact_message.contact_form.field_contact_category
+field_name: field_contact_category
+entity_type: contact_message
+bundle: contact_form
+label: Category
+description: ''
+required: true
+translatable: false
+default_value:
+  -
+    value: any
+default_value_callback: ''
+settings: {  }
+field_type: list_string

@@ -4,7 +4,8 @@ status: true
 dependencies: {  }
 id: contact_form
 label: 'Contact Form'
-recipients: []
+recipients:
+  - info@example.org
 reply: ''
 weight: 0
 message: ''

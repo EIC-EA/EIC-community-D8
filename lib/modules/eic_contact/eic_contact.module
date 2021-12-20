@@ -1,0 +1,111 @@
+<?php
+
+use Drupal\eic_contact\Constant\CategoryEmail;
+use Drupal\Core\Form\FormStateInterface;
+
+/**
+ * Implements hook_install.
+ *
+ * @param $is_syncing
+ *
+ * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+ * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+ * @throws \Drupal\Core\Entity\EntityStorageException
+ */
+function eic_contact_install($is_syncing) {
+  $contact_forms = Drupal::entityTypeManager()
+    ->getStorage('contact_form')
+    ->loadByProperties();
+
+  /** @var \Drupal\contact\Entity\ContactForm $contact_form */
+  foreach ($contact_forms as $contact_form) {
+    if (!empty($contact_form->getRecipients())) {
+      continue;
+    }
+
+    $contact_form->setRecipients([Drupal::config('system.site')->get('mail')]);
+    $contact_form->save();
+  }
+}
+
+/**
+ * Implements hook_form_alter.
+ *
+ * @param $form
+ * @param $form_state
+ */
+function eic_contact_form_alter(&$form, &$form_state) {
+  if ('contact-message-contact-form-form' !== $form['#id']) {
+    return;
+  }
+
+  $form['actions']['submit']['#submit'][] = '_eic_contact_alter_submit';
+}
+
+/**
+ * Set values for the category's Contact form field.
+ *
+ * @return array
+ */
+function _eic_contact_category_allowed_values() {
+  $map_categories = CategoryEmail::mapCategoryEmails();
+  $values = [];
+
+  foreach ($map_categories as $key => $map_category) {
+    $values[$key] = $map_category['label'];
+  }
+
+  return $values;
+}
+
+/**
+ * @param array $form
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
+ */
+function _eic_contact_alter_submit(
+  array $form,
+  FormStateInterface $form_state
+) {
+  $categories = $form_state->getValue('field_contact_category');
+
+  if (empty($categories)) {
+    return;
+  }
+
+  $category = reset($categories)['value'];
+  $map_categories = CategoryEmail::mapCategoryEmails();
+
+  if (!array_key_exists($category, $map_categories)) {
+    \Drupal::logger('eic_contact')->error(
+      t(
+        'No target mail link to the category: @category has been found',
+        ['@category' => $category],
+        ['context' => 'eic_contact']
+      )
+    );
+
+    return;
+  }
+
+  /** @var \Drupal\contact\MessageForm $message_form */
+  $message_form = $form_state->getFormObject();
+  $current_user = clone \Drupal\user\Entity\User::load(
+    \Drupal::currentUser()->id()
+  );
+  $params = [
+    'contact_message' => $message_form->getEntity(),
+    'sender' => $current_user,
+    'recipients' => $map_categories[$category]['mail'],
+    'contact_form' => $message_form->getEntity()->getContactForm(),
+  ];
+  /** @var \Drupal\Core\Mail\MailManagerInterface $mail_manager */
+  $mail_manager = Drupal::service('plugin.manager.mail');
+  $mail_manager->mail(
+    'contact',
+    'page' . '_mail',
+    $map_categories[$category]['mail'],
+    Drupal::languageManager()->getDefaultLanguage()->getId(),
+    $params,
+    $current_user->getEmail()
+  );
+}
