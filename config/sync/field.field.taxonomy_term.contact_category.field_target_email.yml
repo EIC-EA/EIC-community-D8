@@ -1,0 +1,19 @@
+uuid: 1a084a1a-af42-4c1d-aa79-f50d7ad6c883
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.taxonomy_term.field_target_email
+    - taxonomy.vocabulary.contact_category
+id: taxonomy_term.contact_category.field_target_email
+field_name: field_target_email
+entity_type: taxonomy_term
+bundle: contact_category
+label: 'Target email'
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: email

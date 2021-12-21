@@ -1,0 +1,60 @@
+uuid: 82794854-980b-4658-aa95-f476a152a97e
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.taxonomy_term.contact_category.field_target_email
+    - taxonomy.vocabulary.contact_category
+  module:
+    - path
+    - text
+id: taxonomy_term.contact_category.default
+targetEntityType: taxonomy_term
+bundle: contact_category
+mode: default
+content:
+  description:
+    type: text_textarea
+    weight: 2
+    region: content
+    settings:
+      placeholder: ''
+      rows: 5
+    third_party_settings: {  }
+  field_target_email:
+    weight: 1
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: email_default
+    region: content
+  langcode:
+    type: language_select
+    weight: 3
+    region: content
+    settings:
+      include_locked: true
+    third_party_settings: {  }
+  name:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  path:
+    type: path
+    weight: 4
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  status:
+    type: boolean_checkbox
+    settings:
+      display_label: true
+    weight: 5
+    region: content
+    third_party_settings: {  }
+hidden: {  }
