@@ -398,12 +398,6 @@ class DiscussionController extends ControllerBase {
       return new JsonResponse('Cannot find comment entity', Response::HTTP_BAD_REQUEST);
     }
 
-    $group = Group::load($group_id);
-
-    if (!$group) {
-      return new JsonResponse('Group does not exists', Response::HTTP_BAD_REQUEST);
-    }
-
     try {
       $now = DrupalDateTime::createFromTimestamp(time());
       $comment->set(
@@ -516,13 +510,24 @@ class DiscussionController extends ControllerBase {
     /** @var \Drupal\node\NodeInterface|NULL $node */
     $node = Node::load($node_id);
     $group_contents = GroupContent::loadByEntity($node);
-    $access = $this->groupPermissionChecker->getPermissionInGroups(
-      $permission,
-      $this->currentUser(),
-      $group_contents
-    );
 
-    return $access->isAllowed();
+    // If we are in group.
+    if ($group_contents) {
+      $access = $this->groupPermissionChecker->getPermissionInGroups(
+        $permission,
+        $this->currentUser(),
+        $group_contents
+      );
+
+      $has_access = $access->isAllowed();
+    } else {
+      $user_id = \Drupal::currentUser()->id();
+      $user = User::load($user_id);
+
+      $has_access = $user->hasPermission($permission);
+    }
+
+    return $has_access;
   }
 
 }
