@@ -33,7 +33,7 @@ function eic_contact_install($is_syncing) {
  * @param $form
  * @param $form_state
  */
-function eic_contact_form_alter(&$form, &$form_state) {
+function eic_contact_form_alter(&$form, FormStateInterface &$form_state) {
   if ('contact-message-contact-form-form' !== $form['#id']) {
     return;
   }
@@ -116,5 +116,9 @@ function _eic_contact_alter_submit(
     Drupal::languageManager()->getDefaultLanguage()->getId(),
     $params,
     $current_user->getEmail()
+  );
+
+  Drupal::messenger()->addMessage(
+    t('Message sent with success.', [], ['context' => 'eic_contact'])
   );
 }
