@@ -16,6 +16,11 @@ content:
   description:
     label: hidden
     type: text_default
+    weight: 1
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  flag_follow_taxonomy_term:
     weight: 0
     region: content
     settings: {  }
@@ -23,6 +28,5 @@ content:
 hidden:
   field_smed_id: true
   field_topic_banner: true
-  flag_follow_taxonomy_term: true
   langcode: true
   search_api_excerpt: true
