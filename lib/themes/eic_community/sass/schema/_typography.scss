@@ -7,7 +7,7 @@ $ecl-typography: (
     'line-height': $ecl-line-height-l,
   ),
   'meta': (
-    'color': map-get($ecl-colors, 'grey-50'),
+    'color': map-get($ecl-colors, 'grey-75'),
     'font-size': $ecl-font-size-xs,
     'font-size--md': $ecl-font-size-xs,
     'font-size--lg': $ecl-font-size-xs,

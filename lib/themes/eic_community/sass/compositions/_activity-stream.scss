@@ -42,6 +42,7 @@
         &__icon {
             color: map-get($ecl-colors, 'blue-100');
             vertical-align: text-bottom;
+            margin-right: map-get($ecl-spacing, '2xs');
         }
 
         &__description {
