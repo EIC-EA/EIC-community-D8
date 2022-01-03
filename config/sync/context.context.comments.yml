@@ -15,6 +15,7 @@ conditions:
   'entity_bundle:node':
     id: 'entity_bundle:node'
     bundles:
+      news: news
       story: story
     negate: false
     uuid: 13c43827-6a20-4326-8566-fc3dc9f0f852
