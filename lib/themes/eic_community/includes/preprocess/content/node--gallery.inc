@@ -43,9 +43,10 @@ function eic_community_preprocess_node__gallery(array &$variables) {
 
         $files_list[] = [
           'name' => $download->getFileName(),
+          'type' => t('Image', [], ['context' => 'eic_community']),
           'stats' => [
             [
-              'hide_label' => TRUE,
+              'hide_label' => FALSE,
               'icon' => [
                 'name' => 'download',
                 'type' => 'custom',
@@ -61,6 +62,10 @@ function eic_community_preprocess_node__gallery(array &$variables) {
           ],
           'mime_type' => substr(strrchr($download->get('filemime')->getString(), '/'), 1),
           'path' => $download_url,
+          'image' => [
+            'src' => $download->createFileUrl(),
+            'alt' => $download->getFileName(),
+          ],
         ];
 
         $slide = [

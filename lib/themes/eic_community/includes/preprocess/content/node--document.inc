@@ -106,9 +106,10 @@ function eic_community_preprocess_node__document(array &$variables) {
         $download_url = MediaHelper::formatMediaDownloadLink($file)->toString();
         $files_list[] = [
           'name' => $file->getName(),
+          'type' => t('File', [], ['context' => 'eic_community']),
           'stats' => [
             [
-              'hide_label' => TRUE,
+              'hide_label' => FALSE,
               'icon' => [
                 'name' => 'download',
                 'type' => 'custom',
