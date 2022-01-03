@@ -4,6 +4,11 @@
   outline: ecl-border();
   outline-offset: -1px;
 
+  @include ecl-media-breakpoint-down('sm') {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
   &__title {
     @extend .ecl-u-type-heading-2;
   }
@@ -122,11 +127,17 @@
 
   &__toggle {
     .ecl-icon {
-      transform: rotate(90deg);
       transition: none;
+      transform: rotate(180deg);
+      @include ecl-media-breakpoint-up('sm') {
+        transform: rotate(90deg);
+      }
 
       #{$node}--is-ready[aria-collapsed="true"] & {
-        transform: rotate(270deg);
+        transform: rotate(0deg);
+        @include ecl-media-breakpoint-up('sm') {
+          transform: rotate(270deg);
+        }
       }
     }
   }
