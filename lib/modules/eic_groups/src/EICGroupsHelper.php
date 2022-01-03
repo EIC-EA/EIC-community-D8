@@ -561,13 +561,13 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
   /**
    * Returns the list of installed plugins for a group type.
    *
-   * @param \Drupal\group\Entity\GroupTypeInterface $group_type
-   *   The group type object.
+   * @param \Drupal\group\Entity\GroupTypeInterface|null $group_type
+   *   The group type object. If none provided, will return for all group types.
    *
    * @return string[]
    *   An array of plugin IDs.
    */
-  public function getGroupTypeEnabledPlugins(GroupTypeInterface $group_type) {
+  public function getGroupTypeEnabledPlugins(GroupTypeInterface $group_type = NULL) {
     return $this->groupContentPluginManager->getInstalledIds($group_type);
   }
 

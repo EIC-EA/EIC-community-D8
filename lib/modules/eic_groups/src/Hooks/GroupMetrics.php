@@ -9,7 +9,10 @@ use Drupal\eic_flags\FlagHelper;
 use Drupal\eic_group_statistics\GroupStatisticsHelperInterface;
 use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_media_statistics\EntityFileDownloadCount;
+use Drupal\ginvite\Plugin\GroupContentEnabler\GroupInvitation;
 use Drupal\group\Entity\GroupInterface;
+use Drupal\group\Plugin\GroupContentEnablerManager;
+use Drupal\grequest\Plugin\GroupContentEnabler\GroupMembershipRequest;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -55,6 +58,13 @@ class GroupMetrics implements ContainerInjectionInterface {
   protected $entityFileDownloadCount;
 
   /**
+   * The group content enabler manager service.
+   *
+   * @var \Drupal\group\Plugin\GroupContentEnablerManager
+   */
+  protected $groupContentEnablerManager;
+
+  /**
    * Constructs a new GroupTokens object.
    *
    * @param \Drupal\eic_groups\EICGroupsHelper $eic_groups_helper
@@ -67,19 +77,23 @@ class GroupMetrics implements ContainerInjectionInterface {
    *   The entity type manager service.
    * @param \Drupal\eic_media_statistics\EntityFileDownloadCount $entity_file_download_count
    *   The EIC entity file download count service.
+   * @param \Drupal\group\Plugin\GroupContentEnablerManager $group_content_enabler_manager
+   *   The group content enabler manager service.
    */
   public function __construct(
     EICGroupsHelper $eic_groups_helper,
     FlagHelper $eic_flag_helper,
     GroupStatisticsHelperInterface $group_statistics_helper,
     EntityTypeManagerInterface $entity_type_manager,
-    EntityFileDownloadCount $entity_file_download_count
+    EntityFileDownloadCount $entity_file_download_count,
+    GroupContentEnablerManager $group_content_enabler_manager
   ) {
     $this->groupsHelper = $eic_groups_helper;
     $this->flagHelper = $eic_flag_helper;
     $this->groupStatisticsHelper = $group_statistics_helper;
     $this->entityTypeManager = $entity_type_manager;
     $this->entityFileDownloadCount = $entity_file_download_count;
+    $this->groupContentEnablerManager = $group_content_enabler_manager;
   }
 
   /**
@@ -91,7 +105,8 @@ class GroupMetrics implements ContainerInjectionInterface {
       $container->get('eic_flags.helper'),
       $container->get('eic_group_statistics.helper'),
       $container->get('entity_type.manager'),
-      $container->get('eic_media_statistics.entity_file_download_count')
+      $container->get('eic_media_statistics.entity_file_download_count'),
+      $container->get('plugin.manager.group_content_enabler')
     );
   }
 
@@ -137,6 +152,26 @@ class GroupMetrics implements ContainerInjectionInterface {
       'eic_groups_downloads' => [
         'label' => $this->t('Group downloads'),
         'value_callback' => 'eic_groups_eic_groups_metrics_value',
+      ],
+      'eic_groups_membership_requests' => [
+        'label' => $this->t('Group membership requests'),
+        'value_callback' => 'eic_groups_eic_groups_metrics_value',
+        'conf_callback' => 'eic_groups_eic_groups_metrics_configuration',
+        'options' => [
+          'status' => [
+            'default_value' => [],
+          ],
+        ],
+      ],
+      'eic_groups_invitations' => [
+        'label' => $this->t('Group invitations'),
+        'value_callback' => 'eic_groups_eic_groups_metrics_value',
+        'conf_callback' => 'eic_groups_eic_groups_metrics_configuration',
+        'options' => [
+          'status' => [
+            'default_value' => [],
+          ],
+        ],
       ],
     ];
   }
@@ -196,6 +231,36 @@ class GroupMetrics implements ContainerInjectionInterface {
           $count += $this->entityFileDownloadCount->getFileDownloads($node);
         }
         return $count;
+
+      case 'eic_groups_membership_requests':
+        // Check first if membership requests are enabled for this group type.
+        if (!$this->groupsHelper->isGroupTypePluginEnabled($group->getGroupType(), 'group_membership_request')) {
+          return $this->t('N/A');
+        }
+
+        $selected_statuses = $this->getSelectedOptions($configuration['status']);
+        $filters = [];
+        if (!empty($selected_statuses)) {
+          $filters['grequest_status'] = $selected_statuses;
+        }
+        return count($group->getContentEntities("group_membership_request", $filters));
+
+      case 'eic_groups_invitations':
+        // Check first if invitations are enabled for this group type.
+        // @todo Should we check against the group itself instead of group type?
+        if (!$this->groupsHelper->isGroupTypePluginEnabled($group->getGroupType(), 'group_invitation')) {
+          return $this->t('N/A');
+        }
+
+        $selected_statuses = $this->getSelectedOptions($configuration['status']);
+        $filters = [];
+        if (!empty($selected_statuses)) {
+          foreach ($selected_statuses as $selected_status) {
+            $filters['invitation_status'][] = $this->mapAlphabeticalInvitationStatus($selected_status, FALSE);
+          }
+        }
+
+        return count($group->getContentEntities("group_invitation", $filters));
 
     }
 
@@ -271,6 +336,43 @@ class GroupMetrics implements ContainerInjectionInterface {
         ];
         break;
 
+      case 'eic_groups_membership_requests':
+        $statuses = [
+          GroupMembershipRequest::REQUEST_NEW => $this->t('New'),
+          GroupMembershipRequest::REQUEST_PENDING => $this->t('Pending'),
+          GroupMembershipRequest::REQUEST_APPROVED => $this->t('Approved'),
+          GroupMembershipRequest::REQUEST_REJECTED => $this->t('Rejected'),
+        ];
+
+        $conf = [
+          'status' => [
+            '#title' => $this->t('Request status'),
+            '#description' => $this->t('If none selected, all statuses will be returned.'),
+            '#type' => 'checkboxes',
+            '#options' => $statuses,
+            '#default_value' => $configuration[$metric_id . '_conf']['status'] ?? [],
+          ],
+        ];
+        break;
+
+      case 'eic_groups_invitations':
+        $statuses = [
+          $this->mapAlphabeticalInvitationStatus(GroupInvitation::INVITATION_PENDING) => $this->t('Pending'),
+          $this->mapAlphabeticalInvitationStatus(GroupInvitation::INVITATION_ACCEPTED) => $this->t('Accepted'),
+          $this->mapAlphabeticalInvitationStatus(GroupInvitation::INVITATION_REJECTED) => $this->t('Rejected'),
+        ];
+
+        $conf = [
+          'status' => [
+            '#title' => $this->t('Invitation status'),
+            '#description' => $this->t('If none selected, all statuses will be returned.'),
+            '#type' => 'checkboxes',
+            '#options' => $statuses,
+            '#default_value' => $configuration[$metric_id . '_conf']['status'] ?? [],
+          ],
+        ];
+        break;
+
     }
 
     return $conf;
@@ -293,6 +395,36 @@ class GroupMetrics implements ContainerInjectionInterface {
       }
     }
     return $selected_options;
+  }
+
+  /**
+   * Map the given invitation status between numeric key and alphabetical key.
+   *
+   * This is to avoid conflict with the 'pending' status which has 0 as a value.
+   * It doesn't play well with select boxes which defines 0 as non-selected.
+   *
+   * @param string $status
+   *   The status to checked.
+   * @param bool $is_original_value
+   *   Whether the status to check is the original value.
+   *
+   * @return false|int|string
+   *   The mapped status of FALSE if not found.
+   */
+  protected function mapAlphabeticalInvitationStatus($status, $is_original_value = TRUE) {
+    $mapping = [
+      GroupInvitation::INVITATION_PENDING => 'pending',
+      GroupInvitation::INVITATION_ACCEPTED => 'accepted',
+      GroupInvitation::INVITATION_REJECTED => 'rejected',
+    ];
+
+    // If we are looking for the original value.
+    if ($is_original_value) {
+      return ($mapping[$status] ?? FALSE);
+    }
+
+    // Otherwise we return the alphabetical value.
+    return array_search($status, $mapping);
   }
 
 }
