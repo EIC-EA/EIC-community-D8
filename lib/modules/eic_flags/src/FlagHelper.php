@@ -4,6 +4,8 @@ namespace Drupal\eic_flags;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\eic_flags\Service\HandlerInterface;
+use Drupal\flag\FlaggingInterface;
 use Drupal\flag\FlagServiceInterface;
 
 /**
@@ -78,6 +80,36 @@ class FlagHelper {
     }
 
     return $users;
+  }
+
+  /**
+   * Timeout is stored as days (int) value, we need to always get the seconds
+   * value for comparison.
+   *
+   * @param \Drupal\flag\FlaggingInterface $flagging
+   *
+   * @return int
+   */
+  public function getRawTimedOutValue(FlaggingInterface $flagging): int {
+    $timeout = $flagging->get(
+      HandlerInterface::REQUEST_TIMEOUT_FIELD
+    )->value ?: 0;
+
+    return $timeout * 86400;
+  }
+
+  /**
+   * Returns true if the request has timed out.
+   *
+   * @param \Drupal\flag\FlaggingInterface $flagging
+   *
+   * @return bool
+   */
+  public function isRequestTimedOut(FlaggingInterface $flagging): bool {
+    $timeout = $this->getRawTimedOutValue($flagging);
+    $created = $flagging->get('created')->value;
+
+    return time() - ($created + $timeout) >= 0;
   }
 
 }
