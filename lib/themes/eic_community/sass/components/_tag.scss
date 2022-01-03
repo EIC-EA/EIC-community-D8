@@ -33,8 +33,9 @@
 
   &--removable {
     font-weight: bold;
+    pointer-events: auto;
+    cursor: pointer;
     & .ecl-tag__icon {
-      cursor: pointer;
       color: $ecl-color-grey;
     }
     &:hover {
