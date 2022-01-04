@@ -19,20 +19,6 @@ class GroupDownloads extends GroupMetricPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function getConfigDefinition(): array {
-    return [];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getConfig(array $values = []): array {
-    return [];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function getValue(GroupInterface $group, array $configuration = []): int {
     $count = 0;
     foreach ($this->groupsHelper->getGroupNodes($group) as $node) {

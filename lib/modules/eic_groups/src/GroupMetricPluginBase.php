@@ -148,6 +148,20 @@ abstract class GroupMetricPluginBase extends PluginBase implements GroupMetricIn
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function getConfigDefinition(): array {
+    return [];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getConfig(array $values = []): array {
+    return [];
+  }
+
+  /**
    * Returns the selected options based on the form element submitted values.
    *
    * @param array $selection

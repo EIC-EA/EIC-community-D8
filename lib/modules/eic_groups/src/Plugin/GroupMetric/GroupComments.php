@@ -19,20 +19,6 @@ class GroupComments extends GroupMetricPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function getConfigDefinition(): array {
-    return [];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getConfig(array $values = []): array {
-    return [];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function getValue(GroupInterface $group, array $configuration = []): int {
     return $this->groupStatisticsHelper->loadGroupStatistics($group)->getCommentsCount();
   }
