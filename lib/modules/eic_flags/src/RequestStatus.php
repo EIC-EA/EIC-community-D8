@@ -17,4 +17,6 @@ final class RequestStatus {
 
   const OPEN = 'open';
 
+  const TIMEOUT = 'timeout';
+
 }

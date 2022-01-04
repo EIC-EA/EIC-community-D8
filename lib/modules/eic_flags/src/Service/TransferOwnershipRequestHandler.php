@@ -37,6 +37,7 @@ class TransferOwnershipRequestHandler extends AbstractRequestHandler {
       RequestStatus::OPEN => 'notify_new_transfer_owner_req',
       RequestStatus::DENIED => 'notify_transfer_owner_req_denied',
       RequestStatus::ACCEPTED => 'notify_transfer_owner_req_accept',
+      RequestStatus::TIMEOUT => 'notify_transf_owner_expire',
     ];
   }
 
@@ -279,6 +280,21 @@ class TransferOwnershipRequestHandler extends AbstractRequestHandler {
       return $access;
     }
 
+    $requests = $this->getOpenRequests($entity);
+    $request = reset($requests);
+    $expiration_date = 0;
+
+    // If request has expiration, we set a max-age.
+    if ($this->hasExpiration($request)) {
+      $expiration_date = $request->get(HandlerInterface::REQUEST_TIMEOUT_FIELD)->value * 86400;
+      $expiration_date += $request->get('created')->value;
+      $access->setCacheMaxAge($expiration_date);
+    }
+
+    if ($this->hasExpired($request)) {
+      return $access;
+    }
+
     // If current user is not a group owner or a power user, we return
     // access forbidden.
     if (!(
@@ -300,11 +316,18 @@ class TransferOwnershipRequestHandler extends AbstractRequestHandler {
 
     // Allow access to transfer group ownership if the member is a group admin
     // but not the owner.
-    return AccessResult::allowedIf(
+    $access = AccessResult::allowedIf(
       !in_array($group_owner_role, array_keys($membership->getRoles())) &&
       in_array($group_admin_role, array_keys($membership->getRoles())))
       ->addCacheableDependency($entity)
       ->addCacheableDependency($group);
+
+    // Set max-age based on expiration date.
+    if ($expiration_date > 0) {
+      $access->setCacheMaxAge($expiration_date);
+    }
+
+    return $access;
   }
 
   /**

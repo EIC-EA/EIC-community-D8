@@ -18,6 +18,8 @@ use Drupal\eic_flags\Service\TransferOwnershipRequestHandler;
 use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_user\UserHelper;
 use Drupal\flag\FlaggingInterface;
+use Drupal\message\Entity\Message;
+use Drupal\message_notify\MessageNotifier;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -64,6 +66,13 @@ class RequestMessageCreator implements ContainerInjectionInterface {
   private $messageBus;
 
   /**
+   * The message notifier.
+   *
+   * @var \Drupal\message_notify\MessageNotifier
+   */
+  protected $notifier;
+
+  /**
    * RequestMessageCreator constructor.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
@@ -76,19 +85,23 @@ class RequestMessageCreator implements ContainerInjectionInterface {
    *   The request handler collector service.
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer service.
+   * @param \Drupal\message_notify\MessageNotifier $notifier
+   *   The message notifier.
    */
   public function __construct(
     EntityTypeManagerInterface $entity_type_manager,
     UserHelper $user_helper,
     MessageBusInterface $message_bus,
     RequestHandlerCollector $collector,
-    RendererInterface $renderer
+    RendererInterface $renderer,
+    MessageNotifier $notifier
   ) {
     $this->entityTypeManager = $entity_type_manager;
     $this->userHelper = $user_helper;
     $this->messageBus = $message_bus;
     $this->collector = $collector;
     $this->renderer = $renderer;
+    $this->notifier = $notifier;
   }
 
   /**
@@ -100,7 +113,8 @@ class RequestMessageCreator implements ContainerInjectionInterface {
       $container->get('eic_user.helper'),
       $container->get('eic_messages.message_bus'),
       $container->get('eic_flags.handler_collector'),
-      $container->get('renderer')
+      $container->get('renderer'),
+      $container->get('message_notify.sender')
     );
   }
 
@@ -221,6 +235,33 @@ class RequestMessageCreator implements ContainerInjectionInterface {
       }
 
       $this->messageBus->dispatch($message);
+    }
+  }
+
+  /**
+   * Implements hook_request_close().
+   */
+  public function requestTimeout(
+    FlaggingInterface $flagging,
+    ContentEntityInterface $entity,
+    string $type
+  ) {
+    $handler = $this->collector->getHandlerByType($type);
+    if (!$handler instanceof HandlerInterface) {
+      $this->getLogger('eic_messages')->warning(
+        'Invalid type @type provided on request timeout',
+        ['@type' => $type]
+      );
+
+      return;
+    }
+
+    switch ($type) {
+      case RequestTypes::TRANSFER_OWNERSHIP:
+        // Transfer ownership request timeout messages are handled separately.
+        $this->transferOwnershipRequestTimeout($flagging, $entity, $handler);
+        return;
+
     }
   }
 
@@ -418,6 +459,67 @@ class RequestMessageCreator implements ContainerInjectionInterface {
     }
 
     $this->messageBus->dispatch($message);
+  }
+
+  /**
+   * Handles message notification for expired transfer ownership requests.
+   *
+   * @param \Drupal\flag\FlaggingInterface $flagging
+   *   The request flag.
+   * @param \Drupal\Core\Entity\ContentEntityInterface $entity
+   *   The entity object.
+   * @param \Drupal\eic_flags\Service\TransferOwnershipRequestHandler $handler
+   *   The transfer ownership request handler service.
+   */
+  private function transferOwnershipRequestTimeout(
+    FlaggingInterface $flagging,
+    ContentEntityInterface $entity,
+    TransferOwnershipRequestHandler $handler
+  ) {
+    $message_name = $handler->getMessageByAction(RequestStatus::TIMEOUT);
+    if (!$message_name) {
+      $this->getLogger('eic_messages')->warning(
+        'Message does not exists for response type @response',
+        ['@response' => RequestStatus::TIMEOUT]
+      );
+
+      return;
+    }
+
+    $new_owner = $flagging->get('field_new_owner_ref')->entity;
+    $message = [
+      'template' => "{$message_name}_admin",
+      'field_referenced_flag' => $flagging,
+      'uid' => $new_owner->id(),
+    ];
+
+    switch ($entity->getEntityTypeId()) {
+      case 'group_content':
+        $group = $entity->getGroup();
+        $message['field_entity_type'] = $group->getEntityType()->getSingularLabel();
+        $message['field_referenced_entity_label'] = $group->label();
+        $message['field_entity_url'] = [
+          'uri' => $group->toUrl()->toString(),
+        ];
+        break;
+
+      default:
+        $message['field_entity_type'] = $entity->getEntityType()->getSingularLabel();
+        $message['field_referenced_entity_label'] = $entity->label();
+        $message['field_entity_url'] = [
+          'uri' => $entity->toUrl()->toString(),
+        ];
+        break;
+    }
+
+    // Send instant message to the requester.
+    $message_entity = Message::create($message);
+    $this->notifier->send($message_entity);
+    // Send instant message to the entity owner.
+    $message['uid'] = $flagging->getOwner()->id();
+    $message['template'] = "{$message_name}_owner";
+    $message_entity = Message::create($message);
+    $this->notifier->send($message_entity);
   }
 
 }

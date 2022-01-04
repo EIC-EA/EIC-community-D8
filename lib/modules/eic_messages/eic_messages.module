@@ -127,6 +127,19 @@ function eic_messages_request_close(
 }
 
 /**
+ * Implements hook_request_timeout().
+ */
+function eic_messages_request_timeout(
+  FlaggingInterface $flag,
+  ContentEntityInterface $entity,
+  string $type
+) {
+  /** @var Drupal\eic_messages\Service\RequestMessageCreator $class */
+  $class = \Drupal::classResolver(RequestMessageCreator::class);
+  $class->requestTimeout($flag, $entity, $type);
+}
+
+/**
  * Implements hook_entity_extra_field_info().
  */
 function eic_messages_entity_extra_field_info() {

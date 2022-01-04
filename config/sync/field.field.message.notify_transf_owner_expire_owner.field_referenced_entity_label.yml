@@ -1,0 +1,19 @@
+uuid: 6faa4da0-719d-4a62-b310-f45b9ee7dda1
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.message.field_referenced_entity_label
+    - message.template.notify_transf_owner_expire_owner
+id: message.notify_transf_owner_expire_owner.field_referenced_entity_label
+field_name: field_referenced_entity_label
+entity_type: message
+bundle: notify_transf_owner_expire_owner
+label: 'Entity Label'
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

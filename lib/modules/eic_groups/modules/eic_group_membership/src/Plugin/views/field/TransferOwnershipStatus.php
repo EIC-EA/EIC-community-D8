@@ -84,9 +84,21 @@ class TransferOwnershipStatus extends FieldPluginBase {
     }
 
     if ($handler->hasOpenRequest($group_content, $group_content->getEntity())) {
-      $output = [
-        '#markup' => $this->t('pending ownership transfer'),
-      ];
+
+      $open_requests = $handler->getOpenRequests($group_content);
+      $request = reset($open_requests);
+
+      // If request has expiration, we show a different message.
+      if ($handler->hasExpiration($request) && $handler->hasExpired($request)) {
+        $output = [
+          '#markup' => $this->t('ownership transfer expired'),
+        ];
+      }
+      else {
+        $output = [
+          '#markup' => $this->t('pending ownership transfer'),
+        ];
+      }
     }
 
     return $output;

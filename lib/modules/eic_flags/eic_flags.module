@@ -14,6 +14,7 @@ use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\eic_flags\Form\NewRequestForm;
 use Drupal\eic_flags\Form\RequestCloseForm;
+use Drupal\eic_flags\Hooks\CronOperations;
 use Drupal\eic_flags\Hooks\EntityOperations;
 use Drupal\eic_flags\Hooks\FlagTokens;
 use Drupal\eic_flags\RequestStatus;
@@ -82,6 +83,9 @@ function eic_flags_cron() {
     $row = (array) $row;
     $queue->createItem($row);
   }
+
+  $class = \Drupal::classResolver(CronOperations::class);
+  $class->processRequestTimeouts();
 }
 
 /**
