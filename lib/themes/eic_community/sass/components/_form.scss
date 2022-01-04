@@ -99,6 +99,9 @@
       flex-direction: column;
       width: 100%;
       max-width: 100%;
+      .ecl-viewport__modal &{
+        flex-direction: row;
+      }
     }
 
     &:first-child {

@@ -89,6 +89,19 @@
                       {% if action is not empty %}
                         {% if action.link %}
                           {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with action|default({})|merge({
+                            extra_attributes: action.extra_attributes|default({})|merge([
+                              {
+                                name: 'isAjaxRequest'
+                              },
+                              {
+                                name: 'data-action',
+                                value: action.link.path
+                              },
+                              {
+                                name: 'data-element',
+                                value: '.group-content-form'
+                              }
+                            ]),
                             link: action.link|default({})|merge({
                               icon_position: 'before',
                             }),
@@ -101,6 +114,19 @@
                         {% elseif action is not empty %}
                           {% if action.link %}
                             {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with action|default({})|merge({
+                              extra_attributes: action.extra_attributes|default({})|merge([
+                                {
+                                  name: 'isAjaxRequest'
+                                },
+                                {
+                                  name: 'data-action',
+                                  value: action.link.path
+                                },
+                                {
+                                  name: 'data-element',
+                                  value: '.group-content-form'
+                                }
+                              ]),
                               link: action.link|merge({
                                 icon_position: 'before',
                               }),
