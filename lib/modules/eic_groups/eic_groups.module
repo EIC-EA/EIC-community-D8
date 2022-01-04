@@ -26,7 +26,6 @@ use Drupal\eic_groups\GroupsModerationHelper;
 use Drupal\eic_groups\Hooks\CronOperations;
 use Drupal\eic_groups\Hooks\EntityOperations;
 use Drupal\eic_groups\Hooks\FormOperations;
-use Drupal\eic_groups\Hooks\GroupMetrics;
 use Drupal\eic_groups\Hooks\GroupTokens;
 use Drupal\eic_groups\Hooks\Pathauto;
 use Drupal\eic_groups\Hooks\Preprocess;
@@ -303,36 +302,6 @@ function eic_groups_tokens($type, $tokens, array $data, array $options, Bubbleab
   /** @var \Drupal\eic_groups\Hooks\GroupTokens $class */
   $class = \Drupal::classResolver(GroupTokens::class);
   return $class->tokens($type, $tokens, $data, $options, $bubbleable_metadata);
-}
-
-/**
- * Implements hook_eic_groups_metrics_info().
- */
-function eic_groups_eic_groups_metrics_info() {
-  // @todo Turn this into plugins.
-  /** @var \Drupal\eic_groups\Hooks\GroupMetrics $class */
-  $class = \Drupal::classResolver(GroupMetrics::class);
-  return $class->groupMetricsInfo();
-}
-
-/**
- * Custom callback to provide configuration for the 'group_metrics' plugin.
- */
-function eic_groups_eic_groups_metrics_configuration($metric_id, $configuration) {
-  // @todo Turn this into plugins.
-  /** @var \Drupal\eic_groups\Hooks\GroupMetrics $class */
-  $class = \Drupal::classResolver(GroupMetrics::class);
-  return $class->groupMetricsConf($metric_id, $configuration);
-}
-
-/**
- * Custom callback to provide value for the 'group_metrics' plugin.
- */
-function eic_groups_eic_groups_metrics_value($metric_id, $group, $configuration) {
-  // @todo Turn this into plugins.
-  /** @var \Drupal\eic_groups\Hooks\GroupMetrics $class */
-  $class = \Drupal::classResolver(GroupMetrics::class);
-  return $class->groupMetricsValue($metric_id, $group, $configuration);
 }
 
 /**
