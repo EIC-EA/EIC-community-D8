@@ -16,6 +16,7 @@ dependencies:
     - profile.type.member
   module:
     - address
+    - eic_content
     - link
     - social_link_field
     - text
@@ -87,22 +88,26 @@ content:
   field_vocab_topic_expertise:
     weight: 5
     settings:
-      match_operator: CONTAINS
-      match_limit: 10
-      size: 60
-      placeholder: ''
+      match_top_level_limit: '0'
+      disable_top_choices: '1'
+      items_to_load: '25'
+      auto_select_parents: '1'
+      load_all: 0
+      ignore_current_user: 0
     third_party_settings: {  }
-    type: entity_reference_autocomplete
+    type: entity_tree
     region: content
   field_vocab_topic_interest:
     weight: 6
     settings:
-      match_operator: CONTAINS
-      match_limit: 10
-      size: 60
-      placeholder: ''
+      match_top_level_limit: '0'
+      disable_top_choices: '1'
+      items_to_load: '25'
+      auto_select_parents: '1'
+      load_all: 0
+      ignore_current_user: 0
     third_party_settings: {  }
-    type: entity_reference_autocomplete
+    type: entity_tree
     region: content
   field_vocab_user_type:
     weight: 3
