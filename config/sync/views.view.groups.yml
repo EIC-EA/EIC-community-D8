@@ -270,3 +270,21 @@ display:
         - 'languages:language_interface'
         - url
       tags: {  }
+  block_user_profile_my_groups:
+    display_plugin: block
+    id: block_user_profile_my_groups
+    display_title: 'Block - User profile my groups'
+    position: 1
+    display_options:
+      display_extenders: {  }
+      display_description: ''
+      title: 'My groups'
+      defaults:
+        title: false
+    cache_metadata:
+      max-age: -1
+      contexts:
+        - 'languages:language_content'
+        - 'languages:language_interface'
+        - url
+      tags: {  }
