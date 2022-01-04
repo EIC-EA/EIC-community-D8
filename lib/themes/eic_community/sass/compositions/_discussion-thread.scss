@@ -143,6 +143,8 @@
   &__featured-items {
     @include ecl-media-breakpoint-up('md') {
 
+      padding-left: calc(#{map-get($ecl-media, 'xs')} + #{ecl-box-model('padding')});
+
       #{$node}--has-compact-layout & {
         padding-left: calc(#{map-get($ecl-media, '2xs')} + #{ecl-box-model('padding', 'controls')});
       }
