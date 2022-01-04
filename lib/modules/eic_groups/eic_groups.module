@@ -309,6 +309,7 @@ function eic_groups_tokens($type, $tokens, array $data, array $options, Bubbleab
  * Implements hook_eic_groups_metrics_info().
  */
 function eic_groups_eic_groups_metrics_info() {
+  // @todo Turn this into plugins.
   /** @var \Drupal\eic_groups\Hooks\GroupMetrics $class */
   $class = \Drupal::classResolver(GroupMetrics::class);
   return $class->groupMetricsInfo();
@@ -318,6 +319,7 @@ function eic_groups_eic_groups_metrics_info() {
  * Custom callback to provide configuration for the 'group_metrics' plugin.
  */
 function eic_groups_eic_groups_metrics_configuration($metric_id, $configuration) {
+  // @todo Turn this into plugins.
   /** @var \Drupal\eic_groups\Hooks\GroupMetrics $class */
   $class = \Drupal::classResolver(GroupMetrics::class);
   return $class->groupMetricsConf($metric_id, $configuration);
@@ -327,6 +329,7 @@ function eic_groups_eic_groups_metrics_configuration($metric_id, $configuration)
  * Custom callback to provide value for the 'group_metrics' plugin.
  */
 function eic_groups_eic_groups_metrics_value($metric_id, $group, $configuration) {
+  // @todo Turn this into plugins.
   /** @var \Drupal\eic_groups\Hooks\GroupMetrics $class */
   $class = \Drupal::classResolver(GroupMetrics::class);
   return $class->groupMetricsValue($metric_id, $group, $configuration);

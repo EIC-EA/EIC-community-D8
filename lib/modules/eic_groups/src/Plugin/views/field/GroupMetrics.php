@@ -4,6 +4,7 @@ namespace Drupal\eic_groups\Plugin\views\field;
 
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\eic_groups\GroupMetricPluginManager;
 use Drupal\views\Plugin\views\field\NumericField;
 use Drupal\views\ResultRow;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -16,6 +17,13 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @ViewsField("group_metrics")
  */
 class GroupMetrics extends NumericField {
+
+  /**
+   * The EIC Group metric plugin manager.
+   *
+   * @var \Drupal\eic_groups\GroupMetricPluginManager
+   */
+  protected $groupMetricPluginManager;
 
   /**
    * The entity type manager.
@@ -40,15 +48,20 @@ class GroupMetrics extends NumericField {
    *   The plugin_id for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
+   * @param \Drupal\eic_groups\GroupMetricPluginManager $group_metric_plugin_manager
+   *   The EIC Group metric plugin manager.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, GroupMetricPluginManager $group_metric_plugin_manager, EntityTypeManagerInterface $entity_type_manager) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
+    $this->groupMetricPluginManager = $group_metric_plugin_manager;
     $this->entityTypeManager = $entity_type_manager;
 
     // Store the metrics info for later use.
-    $this->metricsInfo = \Drupal::moduleHandler()->invokeAll('eic_groups_metrics_info');
+    foreach ($this->groupMetricPluginManager->getDefinitions() as $definition) {
+      $this->metricsInfo[$definition['id']] = $this->groupMetricPluginManager->createInstance($definition['id']);
+    }
   }
 
   /**
@@ -59,6 +72,7 @@ class GroupMetrics extends NumericField {
       $configuration,
       $plugin_id,
       $plugin_definition,
+      $container->get('plugin.manager.group_metric'),
       $container->get('entity_type.manager')
     );
   }
@@ -79,20 +93,20 @@ class GroupMetrics extends NumericField {
     $options['metric'] = ['default' => ''];
 
     // Define options for all metrics.
-    foreach ($this->metricsInfo as $metric_id => $info) {
-      if (empty($info['options'])) {
+    /** @var \Drupal\eic_groups\GroupMetricInterface $plugin */
+    foreach ($this->metricsInfo as $plugin) {
+      if (empty($plugin->getConfigDefinition())) {
         continue;
       }
 
-      foreach ($info['options'] as $form_element_name => $info) {
-        // Unfortunately we need to set a default value for the container.
-        // Metrics providers should not use this reserved name.
-        $options[$metric_id . '_conf']['default'] = NULL;
+      // Unfortunately we need to set a default value for the container.
+      // Metrics providers should not use this reserved name.
+      $options[$plugin->id() . '_conf']['default'] = NULL;
+      foreach ($plugin->getConfigDefinition() as $form_element_name => $info) {
 
-        $options[$metric_id . '_conf'][$form_element_name] = ['default' => $info['default_value']];
+        $options[$plugin->id() . '_conf'][$form_element_name] = ['default' => $info['default_value']];
       }
     }
-
     return $options;
   }
 
@@ -101,8 +115,9 @@ class GroupMetrics extends NumericField {
    */
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     $options = [];
-    foreach ($this->metricsInfo as $metric_id => $info) {
-      $options[$metric_id] = $info['label'];
+    /** @var \Drupal\eic_groups\GroupMetricInterface $plugin */
+    foreach ($this->metricsInfo as $plugin) {
+      $options[$plugin->id()] = $plugin->label();
     }
     $form['metric'] = [
       '#title' => $this->t('Select the metric to be displayed'),
@@ -115,36 +130,29 @@ class GroupMetrics extends NumericField {
     // Add potential configuration fo each metric.
     // @todo Use ajax to load the metric config form elements to avoid loading
     //   them all.
-    foreach ($this->metricsInfo as $metric_id => $info) {
-      if (empty($info['options'])) {
-        continue;
-      }
-
-      // Skip this metric if it doesn't have any configuration.
-      if (empty($info['conf_callback']) || !is_callable($info['conf_callback'])) {
-        continue;
-      }
+    /** @var \Drupal\eic_groups\GroupMetricInterface $plugin */
+    foreach ($this->metricsInfo as $plugin) {
 
       // Get the configuration.
-      $configuration = call_user_func($info['conf_callback'], $metric_id, $this->options);
+      $configuration = $plugin->getConfig($this->options[$plugin->id() . '_conf']);
 
       // Create a container for this metric.
-      $form[$metric_id . '_conf'] = [
+      $form[$plugin->id() . '_conf'] = [
         '#type' => 'fieldset',
-        '#title' => $info['label'],
+        '#title' => $plugin->label(),
         '#tree' => TRUE,
       ];
 
       // Add the form elements to the container.
       foreach ($configuration as $form_element_name => $form_element) {
-        $form[$metric_id . '_conf'][$form_element_name] = $form_element;
+        $form[$plugin->id() . '_conf'][$form_element_name] = $form_element;
       }
 
       // Add a condition to show the configuration.
-      $form[$metric_id . '_conf']['#states'] = [
+      $form[$plugin->id() . '_conf']['#states'] = [
         'visible' => [
           ':input[name="options[metric]"]' => [
-            ['value' => $metric_id],
+            ['value' => $plugin->id()],
           ],
         ],
       ];
@@ -167,13 +175,14 @@ class GroupMetrics extends NumericField {
     $group = $values->_entity;
     $metric_id = $this->options['metric'];
 
-    // Check if we have a proper value_callback.
-    if (empty($this->metricsInfo[$metric_id]['value_callback']) || !is_callable($this->metricsInfo[$metric_id]['value_callback'])) {
+    if (empty($this->metricsInfo[$metric_id])) {
       return 0;
     }
 
+    $plugin = $this->metricsInfo[$metric_id];
+
     $conf = $this->options[$metric_id . '_conf'] ?? [];
-    return call_user_func($this->metricsInfo[$metric_id]['value_callback'], $metric_id, $group, $conf);
+    return $plugin->getValue($group, $conf);
   }
 
 }
