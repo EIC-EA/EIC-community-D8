@@ -2,9 +2,8 @@
 
 namespace Drupal\eic_content\Services;
 
+use Drupal\Core\Database\Database;
 use Drupal\taxonomy\Entity\Term;
-use Drupal\user\Entity\User;
-use Drupal\user\UserInterface;
 
 /**
  * Class EntityTreeManager
@@ -84,28 +83,32 @@ class EntityTreeManager {
     }, $ignored_values);
 
     if ($target_entity === 'user') {
-      $query = \Drupal::entityQuery($target_entity)
-        ->condition('uid', 0, '<>')
-        ->range(0, 20);
-      $orCondition = $query->orConditionGroup()
-        ->condition('field_first_name', $text, 'CONTAINS')
-        ->condition('field_last_name', $text, 'CONTAINS')
-        ->condition('mail', $text, 'CONTAINS');
-      $query->condition($orCondition);
+      $connection = Database::getConnection();
+
+      $query = $connection->select('users_field_data', 'fd');
+      $query->join('realname', 'rn', 'fd.uid = rn.uid');
+      $query->fields('rn', ['realname']);
+      $query->fields('fd', ['uid', 'mail']);
 
       if (!empty($ignored_tids)) {
-        $query->condition('uid', $ignored_tids, 'NOT IN');
+        $query->condition('fd.uid', $ignored_tids, 'NOT IN');
       }
 
-      $query->sort('field_first_name', 'ASC');
+      $query->distinct(TRUE);
 
-      $entities = $query->execute();
-      $entities = User::loadMultiple($entities);
+      $like_match = '%' . $query->escapeLike($text) . '%';
 
-      return array_map(function (UserInterface $user) {
+      $orCondition = $query->orConditionGroup()
+        ->condition('fd.mail',  $like_match, 'LIKE')
+        ->condition('rn.realname', $like_match, 'LIKE');
+
+      $query->condition($orCondition);
+      $entities = $query->execute()->fetchAll(\PDO::FETCH_ASSOC);
+
+      return array_map(function ($user) {
         return [
-          'name' => $user->get('field_first_name')->value . ' ' . $user->get('field_last_name')->value . ' ' . '('. $user->getEmail() .')',
-          'tid' => $user->id(),
+          'name' => $user['realname'] . ' ' . '('. $user['mail'] .')',
+          'tid' => $user['uid'],
           'parent' => 0,
         ];
       }, $entities);
