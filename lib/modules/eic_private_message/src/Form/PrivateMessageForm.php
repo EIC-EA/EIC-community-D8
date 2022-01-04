@@ -134,6 +134,7 @@ class PrivateMessageForm extends FormBase {
         '#title' => $this->t('Select users in group', [], ['context' => 'eic_private_message']),
         '#description' => $this->t('Seperate users by ",".', [], ['context' => 'eic_private_message']),
         '#tags' => TRUE,
+        '#maxlength' => NULL,
         '#target_type' => 'group_content',
         '#selection_handler' => 'default:group_membership',
         '#selection_settings' => [
