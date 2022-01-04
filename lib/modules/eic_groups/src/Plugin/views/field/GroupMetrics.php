@@ -149,6 +149,13 @@ class GroupMetrics extends NumericField {
         $form[$plugin->id() . '_conf'][$form_element_name] = $form_element;
       }
 
+      if (empty($configuration)) {
+        $form[$plugin->id() . '_conf']['empty_configuration'] = [
+          '#type' => 'markup',
+          '#markup' => $this->t('This metric does not provide configuration.'),
+        ];
+      }
+
       // Add a condition to show the configuration.
       $form[$plugin->id() . '_conf']['#states'] = [
         'visible' => [
