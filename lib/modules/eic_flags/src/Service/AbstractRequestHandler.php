@@ -445,32 +445,23 @@ abstract class AbstractRequestHandler implements HandlerInterface {
    */
   public function hasExpiration(FlaggingInterface $flag) {
     $fields = $this->entityFieldManager->getFieldDefinitions('flagging', $flag->getFlagId());
-    if (
-      isset($fields[HandlerInterface::REQUEST_TIMEOUT_FIELD]) &&
-      $flag->get(HandlerInterface::REQUEST_TIMEOUT_FIELD)->value > 0
-    ) {
-      return TRUE;
-    }
-    return FALSE;
+
+    return isset($fields[HandlerInterface::REQUEST_TIMEOUT_FIELD]) &&
+      $flag->get(HandlerInterface::REQUEST_TIMEOUT_FIELD)->value > 0;
   }
 
   /**
    * {@inheritdoc}
    */
   public function hasExpired(FlaggingInterface $flag) {
-    $fields = $this->entityFieldManager->getFieldDefinitions('flagging', $flag->getFlagId());
-    if (
-      isset($fields[HandlerInterface::REQUEST_TIMEOUT_FIELD]) &&
-      $flag->get(HandlerInterface::REQUEST_TIMEOUT_FIELD)->value > 0
-    ) {
-      $now = DrupalDateTime::createFromTimestamp(time());
-      $limit = ($flag->get(HandlerInterface::REQUEST_TIMEOUT_FIELD)->value * 86400) + $flag->get('created')->value;
-
-      if ($now->getTimestamp() >= $limit) {
-        return TRUE;
-      }
+    if (!$this->hasExpiration($flag)) {
+      return FALSE;
     }
-    return FALSE;
+
+    $now = DrupalDateTime::createFromTimestamp(time());
+    $limit = ($flag->get(HandlerInterface::REQUEST_TIMEOUT_FIELD)->value * 86400) + $flag->get('created')->value;
+
+    return $now->getTimestamp() >= $limit;
   }
 
   /**

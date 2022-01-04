@@ -82,13 +82,12 @@ class CronOperations implements ContainerInjectionInterface {
       $container->get('entity_type.manager'),
       $container->get('entity_field.manager'),
       $container->get('eic_flags.handler_collector'),
-      $container->get('database'),
-      $container->get('module_handler')
+      $container->get('database')
     );
   }
 
   /**
-   * Process message subscriptions queue.
+   * Process request timeouts.
    *
    * @todo In the future this method should be called by ultimate cron module.
    */
@@ -118,8 +117,10 @@ class CronOperations implements ContainerInjectionInterface {
           $query->fields('f', ['id', 'flag_id', 'entity_type', 'entity_id']);
           $result = $query->execute()->fetchAll();
           foreach ($result as $row) {
+            /** @var \Drupal\flag\FlaggingInterface $flag */
             $flag = $this->entityTypeManager->getStorage('flagging')
               ->load($row->id);
+            /** @var \Drupal\Core\Entity\ContentEntityInterface $flagged_entity */
             $flagged_entity = $this->entityTypeManager->getStorage($row->entity_type)
               ->load($row->entity_id);
             if (!$flag || !$flagged_entity) {
