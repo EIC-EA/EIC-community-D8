@@ -33,9 +33,9 @@ function eic_group_membership_entity_operation_alter(
         break;
 
       default:
-        $operations[$key]['title'] = t('@operation member',
-          ['@operation' => ucfirst($key)]);
+        $operations[$key]['title'] = t('@operation member', ['@operation' => ucfirst($key)]);
         break;
+
     }
   }
 }
