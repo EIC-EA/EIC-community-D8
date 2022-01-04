@@ -55,9 +55,9 @@ interface GroupMetricInterface {
    * @param array $configuration
    *   The current configuration.
    *
-   * @return int
+   * @return int|null
    *   The counter for the given group and configuration.
    */
-  public function getValue(GroupInterface $group, array $configuration = []): int;
+  public function getValue(GroupInterface $group, array $configuration = []);
 
 }
