@@ -16,7 +16,6 @@
               {{ item.content }}
             {% else %}
               {% include "@theme/patterns/components/author.html.twig" with item|default({})|merge({
-                icon_file_path: icon_file_path,
                 size: 'medium',
                 display_avatar_only: grid|default(false),
               }) only %}
