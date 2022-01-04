@@ -61,9 +61,9 @@ class LibrarySourceType extends SourceType {
         'ASC' => $this->t('Title (A-Z)', [], ['context' => 'eic_search']),
         'DESC' => $this->t('Title (Z-A)', [], ['context' => 'eic_search']),
       ],
-      'dm_aggregated_changed' => [
-        'label' => $this->t('Date uploaded', [], ['context' => 'eic_search']),
-        'DESC' => $this->t('Date uploaded', [], ['context' => 'eic_search']),
+      'ss_drupal_changed_timestamp' => [
+        'label' => $this->t('Last updated', [], ['context' => 'eic_search']),
+        'DESC' => $this->t('Last updated', [], ['context' => 'eic_search']),
       ],
       'its_flag_highlight_content' => [
         'label' => $this->t('Highlighted files', [], ['context' => 'eic_search']),
@@ -82,9 +82,9 @@ class LibrarySourceType extends SourceType {
         'DESC' => $this->t('Number of likes', [], ['context' => 'eic_search']),
       ],
       'ss_global_created_date' => [
-        'label' => $this->t('Timestamp', [], ['context' => 'eic_search']),
-        'ASC' => $this->t('Old', [], ['context' => 'eic_search']),
-        'DESC' => $this->t('Recent', [], ['context' => 'eic_search']),
+        'label' => $this->t('Created date', [], ['context' => 'eic_search']),
+        'ASC' => $this->t('First created', [], ['context' => 'eic_search']),
+        'DESC' => $this->t('Last created', [], ['context' => 'eic_search']),
       ],
       'its_last_comment_timestamp' => [
         'label' => $this->t('Last commented', [], ['context' => 'eic_search']),
@@ -120,7 +120,7 @@ class LibrarySourceType extends SourceType {
    * @inheritDoc
    */
   public function getSecondDefaultSort(): array {
-    return ['ss_global_created_date', 'DESC'];
+    return ['ss_drupal_changed_timestamp', 'DESC'];
   }
 
   /**
