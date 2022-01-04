@@ -68,14 +68,6 @@ function eic_flags_form_list_builder_filters_alter(
  * Implements hook_cron().
  */
 function eic_flags_cron() {
-  _cron_notify_new_flags();
-  _cron_notify_timed_out_requests();
-}
-
-/**
- * Notify flags that have been created for 5-10minutes.
- */
-function _cron_notify_new_flags() {
   $queue = \Drupal::service('queue')->get('eic_flags_notify_queue');
   $five_minutes_ago = strtotime('-5 minutes');
   $ten_minutes_ago = strtotime('-10 minutes');
@@ -89,39 +81,6 @@ function _cron_notify_new_flags() {
   foreach ($result as $row) {
     $row = (array) $row;
     $queue->createItem($row);
-  }
-}
-
-/**
- * Notify transfer ownership flags that have expired.
- */
-function _cron_notify_timed_out_requests() {
-  /** @var \Drupal\eic_flags\Service\TransferOwnershipRequestHandler $handler */
-  $handler = \Drupal::service('eic_flags.transfer_ownership_request_handler');
-  /** @var \Drupal\eic_flags\FlagHelper $flags_helper */
-  $flags_helper = \Drupal::service('eic_flags.helper');
-  $results = \Drupal::entityQuery('flagging')
-    ->condition('flag_id', 'transfer_owner_request_group')
-    ->condition('field_request_status', RequestStatus::OPEN)
-    ->execute();
-
-  $results = \Drupal\flag\Entity\Flagging::loadMultiple($results);
-  $results = array_filter(
-    $results,
-    function (\Drupal\flag\FlaggingInterface $flagging) use ($flags_helper) {
-      return $flags_helper->isRequestTimedOut($flagging);
-    }
-  );
-
-  /** @var \Drupal\flag\FlaggingInterface $result */
-  foreach ($results as $result) {
-    $handler->closeRequest(
-      $result,
-      $result->get('flagged_entity')->entity,
-      RequestStatus::DENIED,
-      t('The invitation has expired.'),
-      FALSE
-    );
   }
 }
 
@@ -290,8 +249,7 @@ function eic_flags_entity_access(
       'request-archive',
       'request-transfer_ownership',
       'close_request-transfer_ownership',
-    ]
-  )
+    ])
   ) {
     return AccessResult::neutral();
   }
@@ -316,12 +274,7 @@ function eic_flags_entity_access(
 /**
  * Implements hook_entity_view().
  */
-function eic_flags_entity_view(
-  array &$build,
-  EntityInterface $entity,
-  EntityViewDisplayInterface $display,
-  $view_mode
-) {
+function eic_flags_entity_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
   \Drupal::classResolver(EntityOperations::class)
     ->entityView($build, $entity, $display, $view_mode);
 }

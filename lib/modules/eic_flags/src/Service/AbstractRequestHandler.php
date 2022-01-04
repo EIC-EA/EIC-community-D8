@@ -120,22 +120,18 @@ abstract class AbstractRequestHandler implements HandlerInterface {
     FlaggingInterface $flagging,
     ContentEntityInterface $content_entity,
     string $response,
-    string $reason,
-    bool $validate_user = true
+    string $reason
   ) {
     $account_proxy = \Drupal::currentUser();
-    if ($validate_user && !$account_proxy->isAuthenticated()) {
+    if (!$account_proxy->isAuthenticated()) {
       throw new \InvalidArgumentException(
         'You must be authenticated to do this!'
       );
     }
 
     $now = DrupalDateTime::createFromTimestamp(time());
-
-    if ($validate_user) {
-      $current_user = User::load($account_proxy->id());
-      $flagging->set('field_request_moderator', $current_user);
-    }
+    $current_user = User::load($account_proxy->id());
+    $flagging->set('field_request_moderator', $current_user);
 
     // For some requests, field request response is not presented.
     if ($flagging->hasField('field_request_response')) {
