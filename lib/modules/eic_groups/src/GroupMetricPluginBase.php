@@ -101,6 +101,7 @@ abstract class GroupMetricPluginBase extends PluginBase implements GroupMetricIn
     GroupContentEnablerManager $group_content_enabler_manager
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
+    // @todo Move those services to the child classes where needed.
     $this->groupsHelper = $eic_groups_helper;
     $this->flagHelper = $eic_flag_helper;
     $this->groupStatisticsHelper = $group_statistics_helper;

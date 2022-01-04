@@ -39,13 +39,13 @@ interface GroupMetricInterface {
   /**
    * Returns the configuration form elements.
    *
-   * @param array $configuration
-   *   The current selected configuration to use as default values.
+   * @param array $values
+   *   The current selected values.
    *
    * @return array
    *   An array of form elements to be used.
    */
-  public function getConfig(array $configuration = []): array;
+  public function getConfig(array $values = []): array;
 
   /**
    * Returns the metric counter.

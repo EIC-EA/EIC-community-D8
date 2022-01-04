@@ -30,7 +30,7 @@ class GroupContent extends GroupMetricPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function getConfig(array $configuration = []): array {
+  public function getConfig(array $values = []): array {
     // Get the existing node types.
     $node_types = [];
     /** @var \Drupal\node\Entity\NodeType $node_type */
@@ -43,7 +43,7 @@ class GroupContent extends GroupMetricPluginBase {
         '#description' => $this->t('If none selected, all content types will be returned.'),
         '#type' => 'checkboxes',
         '#options' => $node_types,
-        '#default_value' => $configuration['node_types'] ?? [],
+        '#default_value' => $values['node_types'] ?? [],
       ],
     ];
   }

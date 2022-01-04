@@ -11,7 +11,7 @@ use Drupal\group\Entity\GroupInterface;
  * @GroupMetric(
  *   id = "eic_groups_group_members",
  *   label = @Translation("Group members"),
- *   description = @Translation("Provides a counter for all group members.")
+ *   description = @Translation("Provides a counter for group members.")
  * )
  */
 class GroupMembers extends GroupMetricPluginBase {
@@ -30,7 +30,7 @@ class GroupMembers extends GroupMetricPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function getConfig(array $configuration = []): array {
+  public function getConfig(array $values = []): array {
     // Get roles.
     $roles = [];
     foreach ($this->groupsHelper->getGroupRoles() as $info) {
@@ -44,7 +44,7 @@ class GroupMembers extends GroupMetricPluginBase {
         '#description' => $this->t('If none selected, all roles will be returned.'),
         '#type' => 'checkboxes',
         '#options' => $roles,
-        '#default_value' => $configuration['roles'] ?? [],
+        '#default_value' => $values['roles'] ?? [],
       ],
     ];
   }

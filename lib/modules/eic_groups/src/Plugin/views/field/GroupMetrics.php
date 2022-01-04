@@ -134,7 +134,8 @@ class GroupMetrics extends NumericField {
     foreach ($this->metricsInfo as $plugin) {
 
       // Get the configuration.
-      $configuration = $plugin->getConfig($this->options[$plugin->id() . '_conf']);
+      $values = $this->options[$plugin->id() . '_conf'] ?? [];
+      $configuration = $plugin->getConfig($values);
 
       // Create a container for this metric.
       $form[$plugin->id() . '_conf'] = [
