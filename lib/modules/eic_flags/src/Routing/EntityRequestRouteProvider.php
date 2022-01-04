@@ -90,21 +90,36 @@ class EntityRequestRouteProvider implements EntityRouteProviderInterface, Entity
         );
       }
 
-      // Define a new request and close request route for the entity type.
-      $close_request_route = $this->getRouteByTemplate(
+      // Define a close request route for the entity type (route for
+      // administrators).
+      $admin_close_request_route = $this->getRouteByTemplate(
         $entity_type,
         $handler,
         'close-request',
         ['_entity_form' => $entity_type->id() . '.close-request']
       );
-      if ($close_request_route) {
-        $close_request_route
-          ->setRequirement('_permission', 'manage archival deletion requests')
+      if ($admin_close_request_route) {
+        $admin_close_request_route->setRequirement('_close_request_access', 'TRUE')
           ->setOption('_admin_route', TRUE);
-
         $collection->add(
           'entity.' . $entity_type->id() . '.close_request',
-          $close_request_route
+          $admin_close_request_route
+        );
+      }
+
+      // Define a close request route for the entity type (route for
+      // non-administrators).
+      $user_close_request_route = $this->getRouteByTemplate(
+        $entity_type,
+        $handler,
+        'user-close-request',
+        ['_entity_form' => $entity_type->id() . '.close-request']
+      );
+      if ($user_close_request_route) {
+        $user_close_request_route->setRequirement('_close_request_access', 'TRUE');
+        $collection->add(
+          'entity.' . $entity_type->id() . '.user_close_request',
+          $user_close_request_route
         );
       }
     }
@@ -140,7 +155,7 @@ class EntityRequestRouteProvider implements EntityRouteProviderInterface, Entity
     $route = (new Route($entity_type->getLinkTemplate($template)))
       ->addDefaults(
         [
-          '_title' => ucfirst($handler->getType()),
+          '_title' => str_replace('_', ' ', ucfirst($handler->getType())),
         ] + $defaults)
       ->setRequirement($entity_type->id(), '\d+')
       ->setOption('entity_type_id', $entity_type->id());

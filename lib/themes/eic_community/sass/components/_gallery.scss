@@ -1,5 +1,8 @@
 .ecl-gallery {
   max-width: 720px;
+  @include ecl-media-breakpoint-down('md') {
+    max-width: 490px;
+  }
   &__title {
     @include ecl-responsive-font('h3');
     margin-top: 0;
@@ -41,20 +44,16 @@
         max-width: 170px;
         border: 3px solid transparent;
 
+        &.ecl-gallery__main-slides__slide--current{
+          border: 3px solid ecl-typography('color', 'title');
+        }
       }
-
-      & .swiper-slide-active{
-        border: 3px solid ecl-typography('color', 'title');
-      }
-
 
       & img {
         object-fit: contain;
       }
     }
   }
-
-
 
   &__action {
     cursor: pointer;
@@ -115,7 +114,12 @@
 
     &__title {
       color: ecl-typography('color', 'title');
-      margin-bottom: 0;
+      font-size: $ecl-font-size-l;
+      font-weight: bold;
+      margin: 0;
+      max-width: 260px;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     &__actions,

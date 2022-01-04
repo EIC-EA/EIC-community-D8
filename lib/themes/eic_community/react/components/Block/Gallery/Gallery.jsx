@@ -33,8 +33,8 @@ const Gallery = ({files}) => {
   const multiSwiperRef = useRef(null)
 
   const handleSlideClick = useCallback((key) => {
+    multiSwiperRef.current.swiper.slideToClickedSlide()
     swiperRef.current.swiper.slideTo(key);
-    multiSwiperRef.current.swiper.slideTo(key);
     setCurrent(key)
   }, [])
 
@@ -96,23 +96,12 @@ const Gallery = ({files}) => {
             nextEl: multisliderNextRef.current,
           }}
           onBeforeInit={(swiper) => {
-            console.log(multisliderPrevRef)
             swiper.params.navigation.prevEl = multisliderPrevRef.current
             swiper.params.navigation.nextEl = multisliderNextRef.current
           }}
-          onInit={(swiper) => {
-            console.log('init',multisliderPrevRef)
-            swiper.params.navigation.prevEl = multisliderPrevRef.current
-            swiper.params.navigation.nextEl = multisliderNextRef.current
-          }}
-          onAfterInit={(swiper) => {
-            console.log('after',multisliderPrevRef)
-            swiper.params.navigation.prevEl = multisliderPrevRef.current
-            swiper.params.navigation.nextEl = multisliderNextRef.current
-          }}
-          centeredSlides={true}
-          spaceBetween={10}
-          slidesPerView={3}
+          centeredSlides={false}
+          spaceBetween={2}
+          slidesPerView={2}
           ref={multiSwiperRef}
           allowTouchMove={true}
           breakpoints={{
@@ -121,6 +110,8 @@ const Gallery = ({files}) => {
               "spaceBetween": 20
             },
             "768": {
+              "slidesPerView": 4,
+              "spaceBetween": 20,
               "allowTouchMove": false
             }
           }}
@@ -128,8 +119,8 @@ const Gallery = ({files}) => {
 
           {files?.files.map((file, key) => (
             <SwiperSlide
-              className={"ecl-gallery__main-slides__slide"}
-              onClick={() => handleSlideClick(key)}
+              className={`ecl-gallery__main-slides__slide ${key === current && 'ecl-gallery__main-slides__slide--current'}`}
+              onClick={(e) => handleSlideClick(key)}
               key={key}
             >
               <img
@@ -148,6 +139,7 @@ const Gallery = ({files}) => {
         file={files?.files[getCorrectIndex(current, files?.files)]}
         position={getCorrectIndex(current, files?.files) + 1}
         length={files?.files.length}
+        isMultiple
       />
     </>
   )

@@ -1,45 +1,49 @@
 {% set title_element = title_element|default('h2') %}
-
-<ul class=" ecl-gallery__filelist {{ extra_classes }}">
-  {% if files is not empty and files|length > 1 %}
-    {% for file in files %}
-      <li class="ecl-gallery__data">
-        <h3 class="ecl-gallery__data__title">{{ file.name }}</h3>
-        <div class="ecl-gallery__data__actions">
-          <ul>
-            <li>
-              {% include '@ecl-twig/ec-component-icon/ecl-icon.html.twig' with {
+<article>
+  <header class="ecl-filelist__header">
+    <h1 class="ecl-filelist__title">{{ title }}</h1>
+  </header>
+  <ul class=" ecl-gallery__filelist {{ extra_classes }}">
+    {% if files is not empty and files|length > 1 %}
+      {% for file in files %}
+        <li class="ecl-gallery__data">
+          <a title="{{ file.name }}" href="{{ file.path }}" class="ecl-gallery__data__title">{{ file.name }}</a>
+          <div class="ecl-gallery__data__actions">
+            <ul>
+              <li>
+                {% include '@ecl-twig/ec-component-icon/ecl-icon.html.twig' with {
+                  icon: {
+                    size: 'l',
+                    path: icon_file_path,
+                    type: 'custom',
+                    name: 'download',
+                  },
+                  extra_classes: 'ecl-teaser__image-icon'
+                } only %}
+                {{ file.stats[0].value }} {{ file.stats[0].label }}</li>
+              <li> {% include '@ecl-twig/ec-component-icon/ecl-icon.html.twig' with {
+                  icon: {
+                    size: 'l',
+                    path: icon_file_path,
+                    type: 'custom',
+                    name: 'media',
+                  },
+                  extra_classes: 'ecl-teaser__image-icon'
+                } only %}  .{{ file.mime_type }} </li>
+              <li> {{ file.stats[1].value }} </li>
+            </ul>
+            <a class="ecl-link ecl-link--standalone ecl-link--button ecl-link--button-primary ecl-link--icon ecl-link--svg" href={{ file.path }} target="_blank" download="{{ file.name }}">{% include '@ecl-twig/ec-component-icon/ecl-icon.html.twig' with {
                 icon: {
-                  size: 'l',
+                  size: 's',
                   path: icon_file_path,
                   type: 'custom',
                   name: 'download',
                 },
                 extra_classes: 'ecl-teaser__image-icon'
-              } only %}
-              {{ file.stats[0].value }} {{ file.stats[0].label }}</li>
-            <li> {% include '@ecl-twig/ec-component-icon/ecl-icon.html.twig' with {
-                icon: {
-                  size: 'l',
-                  path: icon_file_path,
-                  type: 'custom',
-                  name: 'media',
-                },
-                extra_classes: 'ecl-teaser__image-icon'
-              } only %}  {{ file.mime_type }} </li>
-            <li> {{ file.stats[1].value }} </li>
-          </ul>
-          <a class="ecl-link ecl-link--standalone ecl-link--button ecl-link--button-primary ecl-link--icon ecl-link--svg" href={{ file.path }} target="_blank" download="{{ file.name }}">{% include '@ecl-twig/ec-component-icon/ecl-icon.html.twig' with {
-              icon: {
-                size: 's',
-                path: icon_file_path,
-                type: 'custom',
-                name: 'download',
-              },
-              extra_classes: 'ecl-teaser__image-icon'
-            } only %} Download </a>
-        </div>
-      </li>
-    {% endfor %}
-  {% endif %}
-</ul>
+              } only %} Download </a>
+          </div>
+        </li>
+      {% endfor %}
+    {% endif %}
+  </ul>
+</article>

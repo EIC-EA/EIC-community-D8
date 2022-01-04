@@ -197,6 +197,9 @@
 
     &:last-child {
       margin-left: auto;
+      @include ecl-media-breakpoint-down('md') {
+        margin-top: $ecl-spacing-m;
+      }
     }
   }
 

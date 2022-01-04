@@ -1,5 +1,0 @@
-services:
-  eic_group_membership.transfer_ownership.access_checker:
-    class: Drupal\eic_group_membership\Access\TransferGroupOwnershipAccessChecker
-    tags:
-      - { name: access_check, applies_to: _transfer_ownership_access_checker }

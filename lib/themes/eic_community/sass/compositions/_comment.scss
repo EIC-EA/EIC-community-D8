@@ -123,7 +123,14 @@
 
   &__author {
     margin-right: map-get($ecl-spacing, 'l');
-    display: none;
+
+    @include ecl-media-breakpoint-down('md') {
+      position: absolute;
+      left: -9px;
+      & .ecl-author__aside {
+        width: 20px;
+      }
+    }
 
     @include ecl-media-breakpoint-up('sm') {
       display: block;

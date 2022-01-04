@@ -14,8 +14,16 @@
     padding: ecl-box-model('padding', 'controls') 0;
     justify-content: space-between;
 
+    @include ecl-media-breakpoint-down('md') {
+      flex-direction: row-reverse;
+    }
+
+    @include ecl-media-breakpoint-down('sm') {
+      flex-direction: column-reverse;
+      gap: ecl-box-model('padding', 'controls');
+    }
+
     @include ecl-media-breakpoint-up('lg') {
-      justify-content: start;
       padding: 0;
     }
   }
@@ -31,6 +39,14 @@
   }
 
   &__collapsible-options {
+    border: 2px solid $ecl-color-blue;
+
+    @include ecl-media-breakpoint-down('sm') {
+      width: 100%;
+      & .ecl-button__container {
+        justify-content: center;
+      }
+    }
    @include ecl-media-breakpoint-up('lg') {
       display: none;
     }
@@ -70,9 +86,11 @@
   }
 
   &__searchform-wrapper {
-    display: none;
-
-    @include ecl-media-breakpoint-up('lg') {
+    @include ecl-media-breakpoint-down('sm') {
+      width: 100%;
+      margin-bottom: ecl-box-model('padding', 'controls');
+    }
+    @include ecl-media-breakpoint-up('sm') {
       display: block;
     }
   }

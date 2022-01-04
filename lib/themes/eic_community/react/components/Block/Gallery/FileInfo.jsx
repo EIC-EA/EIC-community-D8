@@ -2,11 +2,11 @@ import React from "react";
 import GetAppIcon from '@material-ui/icons/GetApp';
 import ImageIcon from '@material-ui/icons/Image';
 
-const FileInfo = ({file, position, length}) => {
+const FileInfo = ({file, position, length, isMultiple}) => {
   return (
     <>
       <div className={"ecl-gallery__data"}>
-        <h3 className={"ecl-gallery__data__title"}>{file.name} ({position}/{length})</h3>
+        <p className={"ecl-gallery__data__title"}>{file.name} {isMultiple && `(${position}/${length})`}</p>
         <div className={"ecl-gallery__data__actions"}>
           <ul>
             <li> <GetAppIcon /> {file.stats[0].value} {file.stats[0].label}</li>
