@@ -32,7 +32,7 @@ function eic_community_preprocess_views_view(&$variables) {
   $map_view_action = [
     'taxonomy_related_content-groups' => [
       'link' => [
-        'label' => t('View all groups'),
+        'label' => t('Show more'),
         'path' => GlobalOverviewPages::getGlobalOverviewPageUrl(
           GlobalOverviewPages::GROUPS
         ),
