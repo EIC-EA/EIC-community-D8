@@ -1,0 +1,19 @@
+uuid: fe0b34c8-19e4-4bdc-a65f-6c8eb498c909
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.flagging.field_request_reason
+    - flag.flag.transfer_owner_request_group
+id: flagging.transfer_owner_request_group.field_request_reason
+field_name: field_request_reason
+entity_type: flagging
+bundle: transfer_owner_request_group
+label: 'Request reason'
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string_long

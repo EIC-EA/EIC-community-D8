@@ -41,7 +41,7 @@
   }
 
   .ecl-menu__link {
-    @include ecl-responsive-font('introduction');
+    @include ecl-responsive-font('label');
     text-transform: capitalize;
   }
 

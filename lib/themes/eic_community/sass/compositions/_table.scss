@@ -17,7 +17,7 @@
     }
     display: none;
     @include ecl-media-breakpoint-up('md') {
-      display: block;
+      display: table-header-group;
     }
   }
 

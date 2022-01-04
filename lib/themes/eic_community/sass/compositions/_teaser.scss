@@ -1052,6 +1052,11 @@
     margin-top: map-get($ecl-spacing, 's');
     margin-right: map-get($ecl-spacing, 'm');
 
+    > span {
+      display: flex;
+      align-items: center;
+    }
+
     > a {
       color: ecl-typography('color', 'meta');
       text-decoration: none;
@@ -1076,6 +1081,12 @@
 
   &__like {
     flex-grow: 1;
+
+    & a,
+    & span {
+      display: flex;
+      align-items: center;
+    }
   }
 
   &__gallery {
@@ -1094,6 +1105,8 @@
       img {
         display: block;
         width: 100%;
+        height: 100%;
+        object-fit: cover;
       }
 
       @include ecl-media-breakpoint-down('xs') {
@@ -1146,5 +1159,9 @@
       flex-direction: column;
       z-index: 2;
     }
+  }
+
+  &-overview__item--library {
+    border-bottom: none;
   }
 }

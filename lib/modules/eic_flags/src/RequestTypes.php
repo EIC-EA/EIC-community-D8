@@ -15,4 +15,6 @@ final class RequestTypes {
 
   const BLOCK = 'block';
 
+  const TRANSFER_OWNERSHIP = 'transfer_ownership';
+
 }

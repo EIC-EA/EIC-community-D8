@@ -1,0 +1,15 @@
+uuid: 3700fe26-cbcd-4710-93ee-682954c633fd
+langcode: en
+status: true
+dependencies:
+  config:
+    - flag.flag.transfer_owner_request_group
+  module:
+    - flag
+id: flag_action.transfer_owner_request_group_flag
+label: 'Flag this item'
+type: group_content
+plugin: 'flag_action:transfer_owner_request_group_flag'
+configuration:
+  flag_id: transfer_owner_request_group
+  flag_action: flag
