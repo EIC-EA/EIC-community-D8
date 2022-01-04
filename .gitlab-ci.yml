@@ -122,6 +122,15 @@ deploy_uat:
   only:
     - /^release/.*$/
 
+deploy_migration_env:
+  <<: *deploy_job
+  stage: deploy_uat
+  when: manual
+  variables:
+    HOST: $MIGRATION_HOST
+  only:
+    - /^release/.*$/
+
 slack_notifier:
   stage: notify
   image: curlimages/curl:latest
