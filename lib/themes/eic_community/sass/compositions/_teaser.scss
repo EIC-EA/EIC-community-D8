@@ -1025,6 +1025,10 @@
     justify-content: center;
   }
 
+  &--search h2 {
+    font-size: 1rem;
+  }
+
   /* file list teaser */
   &--filelist, &--video, &--gallery {
     padding: map-get($ecl-spacing, 's');
