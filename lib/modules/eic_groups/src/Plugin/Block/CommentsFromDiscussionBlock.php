@@ -153,8 +153,9 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
       );
     }
     else {
-      $contributors = $node->get('field_related_contributors')
-        ->referencedEntities();
+      $contributors = $node->hasField('field_related_contributors') ?
+        $node->get('field_related_contributors')->referencedEntities() :
+        [];
     }
 
     $contributors = array_filter(

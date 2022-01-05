@@ -33,25 +33,25 @@ function eic_community_preprocess_views_view(&$variables) {
     'taxonomy_related_content-groups' => [
       'link' => [
         'label' => t('View all groups'),
-        'path' => GlobalOverviewPages::getGlobalOverviewPageUrl(
+        'path' => GlobalOverviewPages::getGlobalOverviewPageLink(
           GlobalOverviewPages::GROUPS
-        ),
+        )->getUrl(),
       ],
     ],
     'taxonomy_related_content-news_stories' => [
       'link' => [
         'label' => t('View all stories'),
-        'path' => GlobalOverviewPages::getGlobalOverviewPageUrl(
+        'path' => GlobalOverviewPages::getGlobalOverviewPageLink(
           GlobalOverviewPages::NEWS_STORIES
-        ),
+        )->getUrl(),
       ],
     ],
     'taxonomy_related_content-events' => [
       'link' => [
         'label' => t('View all events'),
-        'path' => GlobalOverviewPages::getGlobalOverviewPageUrl(
+        'path' => GlobalOverviewPages::getGlobalOverviewPageLink(
           GlobalOverviewPages::EVENTS
-        ),
+        )->getUrl(),
       ],
     ],
   ];
@@ -65,9 +65,9 @@ function eic_community_preprocess_views_view(&$variables) {
       break;
 
     case 'groups_homepage-block_groups_homepage':
-      if ($call_to_action_url = GlobalOverviewPages::getGlobalOverviewPageUrl(
+      if ($call_to_action_url = GlobalOverviewPages::getGlobalOverviewPageLink(
         GlobalOverviewPages::GROUPS
-      )) {
+      )->getUrl()) {
         $variables['call_to_action'] = [
           'link' => [
             'label' => t('View all groups'),
@@ -78,9 +78,9 @@ function eic_community_preprocess_views_view(&$variables) {
       break;
 
     case 'groups_homepage-block_events_homepage':
-      if ($call_to_action_url = GlobalOverviewPages::getGlobalOverviewPageUrl(
+      if ($call_to_action_url = GlobalOverviewPages::getGlobalOverviewPageLink(
         GlobalOverviewPages::EVENTS
-      )) {
+      )->getUrl()) {
         $variables['call_to_action'] = [
           'link' => [
             'label' => t('View all events'),

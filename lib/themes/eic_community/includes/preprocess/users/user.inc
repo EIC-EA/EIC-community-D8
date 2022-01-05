@@ -60,7 +60,7 @@ function eic_community_preprocess_user(array &$variables) {
           'parent' => [
             'link' => [
               'label' => t('All members'),
-              'path' => GlobalOverviewPages::getGlobalOverviewPageUrl(GlobalOverviewPages::MEMBERS),
+              'path' => GlobalOverviewPages::getGlobalOverviewPageLink(GlobalOverviewPages::MEMBERS)->getUrl(),
             ],
           ],
         ],
