@@ -1,10 +1,10 @@
 <?php
 
-namespace Drupal\eic_groups\Plugin\views\field;
+namespace Drupal\eic_group_statistics\Plugin\views\field;
 
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\eic_groups\GroupMetricPluginManager;
+use Drupal\eic_group_statistics\GroupMetricPluginManager;
 use Drupal\views\Plugin\views\field\NumericField;
 use Drupal\views\ResultRow;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -21,7 +21,7 @@ class GroupMetrics extends NumericField {
   /**
    * The EIC Group metric plugin manager.
    *
-   * @var \Drupal\eic_groups\GroupMetricPluginManager
+   * @var \Drupal\eic_group_statistics\GroupMetricPluginManager
    */
   protected $groupMetricPluginManager;
 
@@ -48,7 +48,7 @@ class GroupMetrics extends NumericField {
    *   The plugin_id for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\eic_groups\GroupMetricPluginManager $group_metric_plugin_manager
+   * @param \Drupal\eic_group_statistics\GroupMetricPluginManager $group_metric_plugin_manager
    *   The EIC Group metric plugin manager.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
@@ -93,7 +93,7 @@ class GroupMetrics extends NumericField {
     $options['metric'] = ['default' => ''];
 
     // Define options for all metrics.
-    /** @var \Drupal\eic_groups\GroupMetricInterface $plugin */
+    /** @var \Drupal\eic_group_statistics\GroupMetricInterface $plugin */
     foreach ($this->metricsInfo as $plugin) {
       if (empty($plugin->getConfigDefinition())) {
         continue;
@@ -115,7 +115,7 @@ class GroupMetrics extends NumericField {
    */
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     $options = [];
-    /** @var \Drupal\eic_groups\GroupMetricInterface $plugin */
+    /** @var \Drupal\eic_group_statistics\GroupMetricInterface $plugin */
     foreach ($this->metricsInfo as $plugin) {
       $options[$plugin->id()] = $plugin->label();
     }
@@ -130,7 +130,7 @@ class GroupMetrics extends NumericField {
     // Add potential configuration fo each metric.
     // @todo Use ajax to load the metric config form elements to avoid loading
     //   them all.
-    /** @var \Drupal\eic_groups\GroupMetricInterface $plugin */
+    /** @var \Drupal\eic_group_statistics\GroupMetricInterface $plugin */
     foreach ($this->metricsInfo as $plugin) {
 
       // Get the configuration.

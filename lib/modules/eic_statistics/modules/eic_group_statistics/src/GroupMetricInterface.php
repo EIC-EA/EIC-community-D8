@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\eic_groups;
+namespace Drupal\eic_group_statistics;
 
 use Drupal\group\Entity\GroupInterface;
 

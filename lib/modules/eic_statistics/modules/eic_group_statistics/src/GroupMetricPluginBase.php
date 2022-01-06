@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\eic_groups;
+namespace Drupal\eic_group_statistics;
 
 use Drupal\Component\Plugin\PluginBase;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
@@ -9,7 +9,7 @@ use Drupal\Core\Logger\LoggerChannelTrait;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\eic_flags\FlagHelper;
-use Drupal\eic_group_statistics\GroupStatisticsHelperInterface;
+use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_media_statistics\EntityFileDownloadCount;
 use Drupal\group\Plugin\GroupContentEnablerManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;

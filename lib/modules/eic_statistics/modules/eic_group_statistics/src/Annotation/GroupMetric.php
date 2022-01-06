@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\eic_groups\Annotation;
+namespace Drupal\eic_group_statistics\Annotation;
 
 use Drupal\Component\Annotation\Plugin;
 

@@ -8,3 +8,6 @@ services:
   eic_group_statistics.helper:
     class: Drupal\eic_group_statistics\GroupStatisticsHelper
     arguments: ['@entity_type.manager', '@eic_group_statistics.storage']
+  plugin.manager.group_metric:
+    class: Drupal\eic_group_statistics\GroupMetricPluginManager
+    parent: default_plugin_manager

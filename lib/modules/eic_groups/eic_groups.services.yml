@@ -61,6 +61,3 @@ services:
     class: Drupal\eic_groups\Commands\CreateFieldEditAccess
     tags:
       - { name: drush.command }
-  plugin.manager.group_metric:
-    class: Drupal\eic_groups\GroupMetricPluginManager
-    parent: default_plugin_manager
