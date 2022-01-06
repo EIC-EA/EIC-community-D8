@@ -155,8 +155,8 @@ class NewRequestForm extends ContentEntityDeleteForm {
         if ($this->entity->getEntityTypeId() === 'group_content') {
           $new_owner = $this->entity->getEntity();
           $previous_owner = EICGroupsHelper::getGroupOwner($this->entity->getGroup());
-          $description = $this->t("<p>You're about to request transfer ownership to %new_owner?</p>
-            <p>If the user accepts, the previous owner %previous_owner will turn into a group admin.</p>",
+          $description = $this->t("<p>Do you want to request the ownership transfer to %new_owner?</p>
+            <p>If the user accepts, the current owner %previous_owner will become a group admin.</p>",
             [
               '%new_owner' => $this->eicUserHelper->getFullName($new_owner),
               '%previous_owner' => $this->eicUserHelper->getFullName($previous_owner),
@@ -198,7 +198,7 @@ class NewRequestForm extends ContentEntityDeleteForm {
         break;
 
       case RequestTypes::TRANSFER_OWNERSHIP:
-        $description = $this->t('Request transfer ownership');
+        $description = $this->t('Request ownership transfer');
         break;
 
       default:
