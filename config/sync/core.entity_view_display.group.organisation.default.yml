@@ -3,17 +3,24 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.group.organisation.field_address
     - field.field.group.organisation.field_body
     - field.field.group.organisation.field_date_establishement
     - field.field.group.organisation.field_header_visual
+    - field.field.group.organisation.field_locations
     - field.field.group.organisation.field_organisation_employees
+    - field.field.group.organisation.field_organisation_link
     - field.field.group.organisation.field_organisation_turnover
     - field.field.group.organisation.field_organisation_type
+    - field.field.group.organisation.field_social_links
     - field.field.group.organisation.field_vocab_services_products
     - field.field.group.organisation.field_vocab_target_markets
     - field.field.group.organisation.field_vocab_topics
     - group.type.organisation
   module:
+    - address
+    - link
+    - social_link_field
     - text
 id: group.organisation.default
 targetEntityType: group
@@ -24,6 +31,13 @@ content:
     weight: -20
     settings: {  }
     third_party_settings: {  }
+    region: content
+  field_address:
+    weight: 22
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: address_default
     region: content
   field_body:
     weight: 13
@@ -49,6 +63,14 @@ content:
     third_party_settings: {  }
     type: entity_reference_label
     region: content
+  field_locations:
+    weight: 23
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
   field_organisation_employees:
     weight: 17
     label: above
@@ -57,6 +79,18 @@ content:
       prefix_suffix: true
     third_party_settings: {  }
     type: number_integer
+    region: content
+  field_organisation_link:
+    weight: 20
+    label: above
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+    type: link
     region: content
   field_organisation_turnover:
     weight: 18
@@ -73,6 +107,16 @@ content:
       link: true
     third_party_settings: {  }
     type: entity_reference_label
+    region: content
+  field_social_links:
+    weight: 21
+    label: above
+    settings:
+      icon_type: common
+      orientation: vertical
+      new_tab: true
+    third_party_settings: {  }
+    type: font_awesome
     region: content
   field_vocab_services_products:
     weight: 15
