@@ -1,0 +1,68 @@
+{% extends "@theme/patterns/layout/base.html.twig" %}
+
+{% block breadcrumbs %}
+  {% include "@theme/patterns/compositions/breadcrumb.html.twig" with breadcrumb|default({}) %}
+{% endblock %}
+
+{% block page_header %}
+  {% include "@theme/patterns/compositions/editorial-header.html.twig" with editorial_header|default({}) %}
+  {% if subnavigation %}
+    {% include "@theme/patterns/compositions/subnavigation.html.twig" with subnavigation|default({})|merge({
+      icon_file_path: common.icon_file_path
+    }) only %}
+  {% endif %}
+{% endblock %}
+
+
+
+{% block content %}
+  {% embed "@theme/patterns/compositions/editorial-article.html.twig" with editorial_article|default({}) %}
+    {% block content %}
+      {{ content }}
+
+      {% if details is not empty %}
+        <section class="ecl-organisation__details">
+          <h2>{{ details.title }}</h2>
+          {% for detailsItem in details.items %}
+            {% if detailsItem.type == 'stats' %}
+              <div class="ecl-organisation__details__item">
+                <h4>{{ detailsItem.title }}</h4>
+                <ul>
+                  {% for stat in detailsItem.items  %}
+                    <li>
+                      {{ stat.name }}: {{ stat.value }}
+                    </li>
+                  {% endfor %}
+                </ul>
+              </div>
+            {% else %}
+              {% include "@theme/patterns/compositions/list-tags.html.twig" with detailsItem|merge({
+                extra_classes: 'ecl-organisation__details__item'
+              }) %}
+            {% endif %}
+          {% endfor %}
+        </section>
+      {% endif %}
+    {% endblock %}
+
+   {% block sidebar %}
+      {% include "@theme/patterns/compositions/editorial-actions.html.twig" with editorial_actions|default({}) %}
+
+      {% include "@theme/patterns/compositions/social-share.html.twig" with social_share|default({})|merge({
+        extra_classes: 'ecl-featured-list',
+      }) %}
+
+      {% include "@theme/patterns/compositions/featured-topics.html.twig" with topics|default({}) %}
+
+      {% if event_infos %}
+        {% include "@theme/patterns/components/event-infos.html.twig" with event_infos|default({}) %}
+      {% endif %}
+
+      {% if additional_sidebar_infos %}
+        {% include "@theme/patterns/components/additional_sidebar_infos.html.twig" with additional_sidebar_infos|default({}) %}
+      {% endif %}
+
+    {% endblock %}
+  {% endembed %}
+
+{% endblock %}

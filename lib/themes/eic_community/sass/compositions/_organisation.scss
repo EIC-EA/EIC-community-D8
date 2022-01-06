@@ -1,0 +1,18 @@
+.ecl-organisation {
+  &__details {
+    margin-bottom: $ecl-spacing-m;
+    &__item {
+      margin: 0;
+      margin-bottom: $ecl-spacing-s;
+      & h4 {
+        margin-bottom: $ecl-spacing-2-xs;
+      }
+
+      & > ul {
+        padding: 0;
+        list-style: none;
+      }
+    }
+  }
+
+}
