@@ -96,6 +96,9 @@ function eic_group_statistics_comment_insert(EntityInterface $entity) {
 
   $group_content = reset($group_contents);
 
+  // Invalidate cache for group latest activity.
+  \Drupal::service('eic_group_statistics.helper')->invalidateGroupLatestActivity($group_content->getGroup());
+
   // Increments group comments statistic counter.
   \Drupal::service('eic_group_statistics.storage')->increment($group_content->getGroup(), GroupStatisticTypes::STAT_TYPE_COMMENTS);
 
@@ -127,6 +130,9 @@ function eic_group_statistics_comment_delete(EntityInterface $entity) {
   }
 
   $group_content = reset($group_contents);
+
+  // Invalidate cache for group latest activity.
+  \Drupal::service('eic_group_statistics.helper')->invalidateGroupLatestActivity($group_content->getGroup());
 
   // Decrements group comments statistic counter.
   \Drupal::service('eic_group_statistics.storage')->decrement($group_content->getGroup(), GroupStatisticTypes::STAT_TYPE_COMMENTS);
@@ -163,4 +169,19 @@ function eic_group_statistics_node_update(EntityInterface $entity) {
       break;
 
   }
+}
+
+/**
+ * Implements hook_views_data().
+ */
+function eic_group_statistics_views_data() {
+  $data['groups_field_data']['group_latest_activity'] = [
+    'title' => t('Group latest activity'),
+    'help' => t('Displays the group latest activity.'),
+    'field' => [
+      'id' => 'group_latest_activity',
+    ],
+  ];
+
+  return $data;
 }
