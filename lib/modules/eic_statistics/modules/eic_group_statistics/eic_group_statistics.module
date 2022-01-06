@@ -175,6 +175,13 @@ function eic_group_statistics_node_update(EntityInterface $entity) {
  * Implements hook_views_data().
  */
 function eic_group_statistics_views_data() {
+  $data['groups_field_data']['group_metrics'] = [
+    'title' => t('Group metrics'),
+    'help' => t('Displays the group metrics.'),
+    'field' => [
+      'id' => 'group_metrics',
+    ],
+  ];
   $data['groups_field_data']['group_latest_activity'] = [
     'title' => t('Group latest activity'),
     'help' => t('Displays the group latest activity.'),

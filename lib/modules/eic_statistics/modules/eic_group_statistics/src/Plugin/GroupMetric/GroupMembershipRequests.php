@@ -1,8 +1,8 @@
 <?php
 
-namespace Drupal\eic_groups\Plugin\GroupMetric;
+namespace Drupal\eic_group_statistics\Plugin\GroupMetric;
 
-use Drupal\eic_groups\GroupMetricPluginBase;
+use Drupal\eic_group_statistics\GroupMetricPluginBase;
 use Drupal\grequest\Plugin\GroupContentEnabler\GroupMembershipRequest;
 use Drupal\group\Entity\GroupInterface;
 

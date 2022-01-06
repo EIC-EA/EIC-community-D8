@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\eic_groups;
+namespace Drupal\eic_group_statistics;
 
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
@@ -27,8 +27,8 @@ class GroupMetricPluginManager extends DefaultPluginManager {
       'Plugin/GroupMetric',
       $namespaces,
       $module_handler,
-      'Drupal\eic_groups\GroupMetricInterface',
-      'Drupal\eic_groups\Annotation\GroupMetric'
+      'Drupal\eic_group_statistics\GroupMetricInterface',
+      'Drupal\eic_group_statistics\Annotation\GroupMetric'
     );
     $this->alterInfo('group_metric_info');
     $this->setCacheBackend($cache_backend, 'group_metric_plugins');
