@@ -247,4 +247,39 @@ interface HandlerInterface {
    */
   public function getSupportedResponsesForClosedRequests();
 
+  /**
+   * Whether or not the request flag has been expired.
+   *
+   * @param \Drupal\flag\FlaggingInterface $flag
+   *   The flagging entity to alter.
+   *
+   * @return bool
+   *   TRUE if has expiration.
+   */
+  public function hasExpiration(FlaggingInterface $flag);
+
+  /**
+   * Whether or not the request flag has been expired.
+   *
+   * @param \Drupal\flag\FlaggingInterface $flag
+   *   The flagging entity to alter.
+   *
+   * @return bool
+   *   TRUE if request has expired.
+   */
+  public function hasExpired(FlaggingInterface $flag);
+
+  /**
+   * Triggers request timeout.
+   *
+   * @param \Drupal\flag\FlaggingInterface $flagging
+   *   The flag object representing the request.
+   * @param \Drupal\Core\Entity\ContentEntityInterface $content_entity
+   *   The concerned entity.
+   */
+  public function requestTimeout(
+    FlaggingInterface $flagging,
+    ContentEntityInterface $content_entity
+  );
+
 }
