@@ -181,6 +181,39 @@ class GroupStatisticsHelper implements GroupStatisticsHelperInterface {
   }
 
   /**
+   * Returns the count of contents for the given group.
+   *
+   * @param \Drupal\group\Entity\GroupInterface $group
+   *   The group object.
+   * @param array $conditions
+   *   An array of conditions to apply to the group_content query, with field as
+   *   key and value as the value.
+   *   E.g. entity_id.entity:node.status => 1
+   *   Or entity_id.entity:node.uid => 123
+   *   Check \Drupal\Core\Entity\Query\QueryInterface.
+   *
+   * @return int|null
+   *   A timestamp or null if there are no results.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   */
+  public function getGroupContentCount(GroupInterface $group, array $conditions = []) {
+    $content_plugins = $this->groupsHelper->getGroupTypeEnabledContentPlugins($group->getGroupType());
+    $group_content_storage = $this->entityTypeManager->getStorage('group_content');
+
+    // We need to query on group_content entities.
+    $query = $group_content_storage->getQuery();
+    $query->condition('type', $content_plugins, 'IN');
+    $query->condition('gid', $group->id());
+    foreach ($conditions as $field => $value) {
+      $query->condition($field, $value);
+    }
+    $query->count();
+    return $query->execute();
+  }
+
+  /**
    * Returns the date of the latest comment activity for the given group.
    *
    * @param \Drupal\group\Entity\GroupInterface $group
