@@ -4,12 +4,19 @@ status: true
 dependencies:
   config:
     - field.field.group.organisation.field_body
+    - field.field.group.organisation.field_date_establishement
     - field.field.group.organisation.field_header_visual
+    - field.field.group.organisation.field_organisation_employees
+    - field.field.group.organisation.field_organisation_turnover
     - field.field.group.organisation.field_organisation_type
+    - field.field.group.organisation.field_vocab_services_products
+    - field.field.group.organisation.field_vocab_target_markets
+    - field.field.group.organisation.field_vocab_topics
     - group.type.organisation
     - workflows.workflow.groups
   module:
     - content_moderation
+    - eic_content
     - media_library
     - path
     - text
@@ -21,7 +28,7 @@ content:
   features:
     type: options_buttons
     settings: {  }
-    weight: 4
+    weight: 11
     region: content
     third_party_settings: {  }
   field_body:
@@ -32,6 +39,13 @@ content:
     third_party_settings: {  }
     type: text_textarea
     region: content
+  field_date_establishement:
+    weight: 9
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+    type: number
+    region: content
   field_header_visual:
     weight: 1
     settings:
@@ -39,11 +53,62 @@ content:
     third_party_settings: {  }
     type: media_library_widget
     region: content
-  field_organisation_type:
+  field_organisation_employees:
+    weight: 7
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+    type: number
+    region: content
+  field_organisation_turnover:
     weight: 8
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_organisation_type:
+    weight: 6
     settings: {  }
     third_party_settings: {  }
     type: options_buttons
+    region: content
+  field_vocab_services_products:
+    weight: 3
+    settings:
+      match_top_level_limit: '0'
+      items_to_load: '25'
+      disable_top_choices: 0
+      load_all: 0
+      auto_select_parents: 0
+      ignore_current_user: 0
+    third_party_settings: {  }
+    type: entity_tree
+    region: content
+  field_vocab_target_markets:
+    weight: 4
+    settings:
+      match_top_level_limit: '0'
+      items_to_load: '25'
+      disable_top_choices: 0
+      load_all: 0
+      auto_select_parents: 0
+      ignore_current_user: 0
+    third_party_settings: {  }
+    type: entity_tree
+    region: content
+  field_vocab_topics:
+    weight: 5
+    settings:
+      match_top_level_limit: '0'
+      disable_top_choices: '1'
+      items_to_load: '25'
+      load_all: 0
+      auto_select_parents: 0
+      ignore_current_user: 0
+    third_party_settings: {  }
+    type: entity_tree
     region: content
   label:
     type: string_textfield
@@ -55,20 +120,20 @@ content:
     third_party_settings: {  }
   langcode:
     type: language_select
-    weight: 3
+    weight: 10
     region: content
     settings:
       include_locked: true
     third_party_settings: {  }
   moderation_state:
     type: moderation_state_default
-    weight: 6
+    weight: 13
     settings: {  }
     region: content
     third_party_settings: {  }
   path:
     type: path
-    weight: 5
+    weight: 12
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -76,7 +141,7 @@ content:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 7
+    weight: 14
     region: content
     third_party_settings: {  }
 hidden:

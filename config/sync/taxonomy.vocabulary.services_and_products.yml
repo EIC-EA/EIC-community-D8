@@ -1,0 +1,8 @@
+uuid: 8ce20fa7-ff28-4cb6-903b-578e9a89cbb9
+langcode: en
+status: true
+dependencies: {  }
+name: 'Services and products'
+vid: services_and_products
+description: ''
+weight: 0
