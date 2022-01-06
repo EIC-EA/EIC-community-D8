@@ -2,13 +2,15 @@
 
 namespace Drupal\eic_group_statistics;
 
-use Drupal\comment\CommentInterface;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\comment\CommentInterface;
 use Drupal\eic_comments\Constants\Comments;
 use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\group\Entity\GroupInterface;
+use Drupal\node\NodeInterface;
+use Drupal\user\UserInterface;
 
 /**
  * Service that provides helper functions for groups statistics.
@@ -184,7 +186,7 @@ class GroupStatisticsHelper implements GroupStatisticsHelperInterface {
    * @param \Drupal\group\Entity\GroupInterface $group
    *   The group object.
    * @param array $conditions
-   *   An array of conditions to apply to the group_content query, with field as
+   *   An array of conditions to apply to the comment query, with field as
    *   key and value as the value.
    *   E.g. entity_id.entity:node.status => 1
    *   Or entity_id.entity:node.uid => 123
@@ -206,9 +208,6 @@ class GroupStatisticsHelper implements GroupStatisticsHelperInterface {
     $query = $group_content_storage->getQuery();
     $query->condition('type', $content_plugins, 'IN');
     $query->condition('gid', $group->id());
-    foreach ($conditions as $field => $value) {
-      $query->condition($field, $value);
-    }
     $query->exists('entity_id.entity:node.' . Comments::DEFAULT_NODE_COMMENTS_FIELD);
     $results = $query->execute();
 
@@ -227,6 +226,9 @@ class GroupStatisticsHelper implements GroupStatisticsHelperInterface {
       $query->condition('comment_type', Comments::DEFAULT_NODE_COMMENTS_TYPE);
       $query->condition('field_name', Comments::DEFAULT_NODE_COMMENTS_FIELD);
       $query->condition('status', CommentInterface::PUBLISHED);
+      foreach ($conditions as $field => $value) {
+        $query->condition($field, $value);
+      }
       $query->sort('created', 'DESC');
       $query->range(0, 1);
       $results = $query->execute();
@@ -265,13 +267,56 @@ class GroupStatisticsHelper implements GroupStatisticsHelperInterface {
     }
 
     // Get the highest value for activity.
-    $activity = [];
+    $activities = [];
     $conditions = [
-      'entity_id.entity:node.status' => 1,
+      'entity_id.entity:node.status' => NodeInterface::PUBLISHED,
     ];
-    $activity[] = $this->queryGroupLatestContentActivity($group, $conditions);
-    $activity[] = $this->queryGroupLatestCommentActivity($group);
-    $latest_activity = max($activity);
+    $activities[] = $this->queryGroupLatestContentActivity($group, $conditions);
+    $activities[] = $this->queryGroupLatestCommentActivity($group);
+    $latest_activity = max($activities);
+
+    // Cache the result.
+    $this->cacheBackend->set($cid, $latest_activity, Cache::PERMANENT);
+
+    return $latest_activity;
+  }
+
+  /**
+   * Returns the latest activity timestamp for the given group.
+   *
+   * Latest activity is calculated based on published nodes/comments.
+   *
+   * @param \Drupal\group\Entity\GroupInterface $group
+   *   The group object.
+   * @param \Drupal\user\UserInterface $user
+   *   The user object.
+   *
+   * @return int|null
+   *   The timestamp of the latest activity.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   */
+  public function getGroupMemberLatestActivity(GroupInterface $group, UserInterface $user) {
+    $cid = 'group_member_latest_activity:' . $group->id() . ':' . $user->id();
+
+    // Look for the item in cache.
+    if ($item = $this->cacheBackend->get($cid)) {
+      return $item->data;
+    }
+
+    // Get the highest value for activity.
+    $activities = [];
+    $content_conditions = [
+      'entity_id.entity:node.status' => NodeInterface::PUBLISHED,
+      'entity_id.entity:node.uid' => $user->id(),
+    ];
+    $comment_conditions = [
+      'uid' => $user->id(),
+    ];
+    $activities[] = $this->queryGroupLatestContentActivity($group, $content_conditions);
+    $activities[] = $this->queryGroupLatestCommentActivity($group, $comment_conditions);
+    $latest_activity = max($activities);
 
     // Cache the result.
     $this->cacheBackend->set($cid, $latest_activity, Cache::PERMANENT);
@@ -284,11 +329,19 @@ class GroupStatisticsHelper implements GroupStatisticsHelperInterface {
    *
    * @param \Drupal\group\Entity\GroupInterface $group
    *   The group entity.
+   * @param \Drupal\user\UserInterface[] $users
+   *   An array of user objects for which we want to invalidate their group
+   *   activity cache.
    */
-  public function invalidateGroupLatestActivity(GroupInterface $group) {
+  public function invalidateGroupLatestActivity(GroupInterface $group, array $users = []) {
     // Invalidate cache for group latest activity.
     $cid = 'group_latest_activity:' . $group->id();
     $this->cacheBackend->invalidate($cid);
+
+    foreach ($users as $user) {
+      $cid = 'group_member_latest_activity:' . $group->id() . ':' . $user->id();
+      $this->cacheBackend->invalidate($cid);
+    }
   }
 
 }
