@@ -41,7 +41,13 @@ function _eic_community_render_event_detail_page(&$variables, EntityInterface $e
     );
   }
 
-  $location = $entity->get('field_location')->getValue();
+  if ($entity_type !== 'event') {
+    return;
+  }
+
+  $location = $entity->hasField('field_location') ?
+    $entity->get('field_location')->getValue() :
+    NULL;
   $location_formatted = '';
 
   if (!empty($location)) {
@@ -55,12 +61,15 @@ function _eic_community_render_event_detail_page(&$variables, EntityInterface $e
   }
 
   $allowed_values_location_type = eic_field_location_type_allowed_values();
+  $location_types = [];
 
-  $location_types = array_map(function ($item) use ($allowed_values_location_type) {
-    return array_key_exists($item['value'], $allowed_values_location_type) ?
-      strtolower($allowed_values_location_type[$item['value']]) :
-      '';
-  }, $entity->get('field_location_type')->getValue());
+  if ($entity->hasField('field_location_type')) {
+    $location_types = array_map(function ($item) use ($allowed_values_location_type) {
+      return array_key_exists($item['value'], $allowed_values_location_type) ?
+        strtolower($allowed_values_location_type[$item['value']]) :
+        '';
+    }, $entity->get('field_location_type')->getValue());
+  }
 
   $dates = $entity->get('field_date_range')->getValue();
   $from_date = DrupalDateTime::createFromFormat('Y-m-d\TH:i:s', $dates[0]['value']);
