@@ -1,6 +1,9 @@
 .ecl-organisation {
+  &__item {
+    margin-bottom: $ecl-spacing-2-xl;
+  }
+
   &__details {
-    margin-bottom: $ecl-spacing-m;
     &__item {
       margin: 0;
       margin-bottom: $ecl-spacing-s;
@@ -15,4 +18,14 @@
     }
   }
 
+  &__announcements__item {
+    background: $ecl-color-blue-5;
+    padding: ecl-box-model('padding', 'default');
+    margin-bottom: $ecl-spacing-l;
+
+    & .ecl-editorial-article__aside__title {
+      color: $ecl-color-grey;
+      text-transform: none;
+    }
+  }
 }

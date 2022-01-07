@@ -21,11 +21,11 @@
       {{ content }}
 
       {% if details is not empty %}
-        <section class="ecl-organisation__details">
+        <section class="ecl-organisation__item  ecl-organisation__details">
           <h2>{{ details.title }}</h2>
           {% for detailsItem in details.items %}
             {% if detailsItem.type == 'stats' %}
-              <div class="ecl-organisation__details__item">
+              <div class="ecl-organisation__item ecl-organisation__details__item">
                 <h4>{{ detailsItem.title }}</h4>
                 <ul>
                   {% for stat in detailsItem.items  %}
@@ -43,24 +43,35 @@
           {% endfor %}
         </section>
       {% endif %}
+
+      {% if announcements is not empty %}
+        <section class="ecl-organisation__item ecl-organisation__announcements">
+          <h2>{{ announcements.title }}</h2>
+          {% for announcementsItem in announcements.items %}
+            <div class="ecl-organisation__announcements__item">
+              {% include "@theme/patterns/compositions/featured-contributors.html.twig" with announcementsItem %}
+            </div>
+          {% endfor %}
+        </section>
+      {% endif %}
     {% endblock %}
 
    {% block sidebar %}
-      {% include "@theme/patterns/compositions/editorial-actions.html.twig" with editorial_actions|default({}) %}
+{#      {% include "@theme/patterns/compositions/editorial-actions.html.twig" with editorial_actions|default({}) %}#}
 
-      {% include "@theme/patterns/compositions/social-share.html.twig" with social_share|default({})|merge({
-        extra_classes: 'ecl-featured-list',
-      }) %}
+{#      {% include "@theme/patterns/compositions/social-share.html.twig" with social_share|default({})|merge({#}
+{#        extra_classes: 'ecl-featured-list',#}
+{#      }) %}#}
 
-      {% include "@theme/patterns/compositions/featured-topics.html.twig" with topics|default({}) %}
+{#      {% include "@theme/patterns/compositions/featured-topics.html.twig" with topics|default({}) %}#}
 
-      {% if event_infos %}
-        {% include "@theme/patterns/components/event-infos.html.twig" with event_infos|default({}) %}
-      {% endif %}
+{#      {% if event_infos %}#}
+{#        {% include "@theme/patterns/components/event-infos.html.twig" with event_infos|default({}) %}#}
+{#      {% endif %}#}
 
-      {% if additional_sidebar_infos %}
-        {% include "@theme/patterns/components/additional_sidebar_infos.html.twig" with additional_sidebar_infos|default({}) %}
-      {% endif %}
+{#      {% if additional_sidebar_infos %}#}
+{#        {% include "@theme/patterns/components/additional_sidebar_infos.html.twig" with additional_sidebar_infos|default({}) %}#}
+{#      {% endif %}#}
 
     {% endblock %}
   {% endembed %}

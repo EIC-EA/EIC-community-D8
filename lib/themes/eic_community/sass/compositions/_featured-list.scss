@@ -125,6 +125,25 @@
       }
     }
 
+    #{$node}--is-collapsible#{$node}--is-organisation-announcements#{$node}--is-ready:not([aria-collapsed="false"]) &{
+      & ~ #{$node}__item--expand button {
+        padding: 0;
+      }
+      &:nth-child(1n+3) {
+        &:not(#{$node}__item--expand) {
+          @include visually-hidden();
+        }
+
+        & ~ #{$node}__item--expand {
+          display: block;
+        }
+
+        & ~ #{$node}__item--collapse {
+          display: none;
+        }
+      }
+    }
+
     #{$node}--has-grid-layout#{$node}--is-collapsible#{$node}--is-ready & {
 
       margin: 0;
