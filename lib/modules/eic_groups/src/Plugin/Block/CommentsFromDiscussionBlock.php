@@ -284,7 +284,7 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
         ),
       ],
       'translations' => [
-        'title' => $this->t('Comments', [], ['context' => 'eic_groups']),
+        'title' => $this->t('Replies', [], ['context' => 'eic_groups']),
         'no_results_title' => $this->t(
           "We haven't found any comments",
           [],
