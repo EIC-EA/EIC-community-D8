@@ -5,6 +5,7 @@ dependencies:
   config:
     - field.storage.group.field_vocab_geo
     - field.storage.group.field_vocab_topics
+    - group.type.event
     - group.type.group
   module:
     - content_moderation
@@ -20,7 +21,7 @@ dependencies:
 id: eic_admin_groups_data_export
 label: 'Admin - Groups - data export'
 module: views
-description: 'Data export for groups'
+description: 'Data export for group entities'
 tag: ''
 base_table: groups_field_data
 base_field: id
@@ -2601,6 +2602,110 @@ display:
         - 'languages:language_content'
         - 'languages:language_interface'
         - url.query_args
+        - user.permissions
+      tags:
+        - 'config:field.storage.group.field_vocab_geo'
+        - 'config:field.storage.group.field_vocab_topics'
+  events_export:
+    display_plugin: data_export
+    id: events_export
+    display_title: 'Events export'
+    position: 2
+    display_options:
+      display_extenders: {  }
+      display_description: ''
+      path: admin/community/groups/events/export
+      filename: 'eic-admin-events-export-[date:html_datetime]'
+      automatic_download: true
+      store_in_public_file_directory: false
+      redirect_path: /admin/community/groups/events
+      redirect_to_display: none
+      custom_redirect_path: true
+      include_query_params: false
+      filters:
+        type:
+          id: type
+          table: groups_field_data
+          field: type
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: in
+          value:
+            event: event
+          group: 1
+          exposed: false
+          expose:
+            operator_id: ''
+            label: ''
+            description: ''
+            use_operator: false
+            operator: ''
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: ''
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+            reduce: false
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          entity_type: group
+          entity_field: type
+          plugin_id: bundle
+      defaults:
+        filters: false
+        filter_groups: false
+      filter_groups:
+        operator: AND
+        groups:
+          1: AND
+      export_method: batch
+      export_batch_size: 10
+      style:
+        type: data_export
+        options:
+          formats:
+            xls: xls
+          csv_settings:
+            delimiter: ','
+            enclosure: '"'
+            escape_char: \
+            strip_tags: true
+            trim: true
+            encoding: utf8
+            utf8_bom: '0'
+            use_serializer_encode_only: false
+          xls_settings:
+            xls_format: Excel5
+            metadata:
+              creator: ''
+              last_modified_by: ''
+              title: ''
+              description: ''
+              subject: ''
+              keywords: ''
+              category: ''
+              manager: ''
+              company: ''
+    cache_metadata:
+      max-age: -1
+      contexts:
+        - 'languages:language_content'
+        - 'languages:language_interface'
+        - request_format
         - user.permissions
       tags:
         - 'config:field.storage.group.field_vocab_geo'
