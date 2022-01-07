@@ -4,6 +4,7 @@ namespace Drupal\eic_group_statistics;
 
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\comment\CommentInterface;
 use Drupal\eic_comments\Constants\Comments;
@@ -16,6 +17,13 @@ use Drupal\user\UserInterface;
  * Service that provides helper functions for groups statistics.
  */
 class GroupStatisticsHelper implements GroupStatisticsHelperInterface {
+
+  /**
+   * The database connection used.
+   *
+   * @var \Drupal\Core\Database\Connection
+   */
+  protected $connection;
 
   /**
    * Cache backend.
@@ -48,6 +56,8 @@ class GroupStatisticsHelper implements GroupStatisticsHelperInterface {
   /**
    * Constructs a GroupStatisticsHelper object.
    *
+   * @param \Drupal\Core\Database\Connection $connection
+   *   The database connection.
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
    *   The cache backend.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
@@ -58,11 +68,13 @@ class GroupStatisticsHelper implements GroupStatisticsHelperInterface {
    *   The EIC group statistics helper service.
    */
   public function __construct(
+    Connection $connection,
     CacheBackendInterface $cache_backend,
     EntityTypeManagerInterface $entity_type_manager,
     GroupStatisticsStorageInterface $group_statistics_storage,
     EICGroupsHelper $groups_helper
   ) {
+    $this->connection = $connection;
     $this->cacheBackend = $cache_backend;
     $this->entityTypeManager = $entity_type_manager;
     $this->groupStatisticsStorage = $group_statistics_storage;
@@ -211,6 +223,41 @@ class GroupStatisticsHelper implements GroupStatisticsHelperInterface {
     }
     $query->count();
     return $query->execute();
+  }
+
+  /**
+   * Returns the count of comments for the given group.
+   *
+   * @param \Drupal\group\Entity\GroupInterface $group
+   *   The group object.
+   * @param array $conditions
+   *   An array of conditions to apply to the query, with field as key and value
+   *   as the value.
+   *   E.g. cfd.uid => 1
+   *   Check \Drupal\Core\Database\Query\SelectInterface.
+   *
+   * @return int
+   *   The number of results.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   */
+  public function getGroupCommentCount(GroupInterface $group, array $conditions = []) {
+    $content_plugins = $this->groupsHelper->getGroupTypeEnabledContentPlugins($group->getGroupType());
+
+    // We need to query on group_content entities.
+    /** @var \Drupal\Core\Database\Query\SelectInterface $query */
+    $query = $this->connection->select('comment_field_data', 'cfd');
+    $query->join('group_content_field_data', 'gcfd', 'cfd.entity_id = gcfd.entity_id');
+    $query->condition('gcfd.gid', $group->id())
+      ->condition('gcfd.type', $content_plugins, 'IN')
+      ->condition('cfd.entity_type', 'node')
+      ->condition('cfd.status', CommentInterface::PUBLISHED);
+    foreach ($conditions as $field => $value) {
+      $query->condition($field, $value);
+    }
+    $query->addExpression('COUNT(cfd.cid)', 'count');
+    return $query->execute()->fetchAssoc()['count'];
   }
 
   /**

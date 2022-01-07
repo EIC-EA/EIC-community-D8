@@ -205,6 +205,13 @@ function eic_group_statistics_views_data() {
       'id' => 'group_member_content_count',
     ],
   ];
+  $data['group_content_field_data']['group_member_comment_count'] = [
+    'title' => t('Member comment count'),
+    'help' => t('Displays the total amount of comments of a member in a group.'),
+    'field' => [
+      'id' => 'group_member_comment_count',
+    ],
+  ];
 
   return $data;
 }

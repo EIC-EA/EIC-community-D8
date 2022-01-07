@@ -7,13 +7,13 @@ use Drupal\views\ResultRow;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * A handler to provide a field for group member content count.
+ * A handler to provide a field for group member comment count.
  *
  * @ingroup views_field_handlers
  *
- * @ViewsField("group_member_content_count")
+ * @ViewsField("group_member_comment_count")
  */
-class GroupMemberContentCount extends NumericField {
+class GroupMemberCommentCount extends NumericField {
 
   /**
    * The EIC Groups statistics helper service.
@@ -47,10 +47,10 @@ class GroupMemberContentCount extends NumericField {
     }
 
     $conditions = [
-      'entity_id.entity:node.uid' => $membership->getEntity()->id(),
+      'cfd.uid' => $membership->getEntity()->id(),
     ];
     /** @var \Drupal\group\Entity\GroupContentInterface $membership */
-    return $this->groupsStatisticsHelper->getGroupContentCount($membership->getGroup(), $conditions);
+    return $this->groupsStatisticsHelper->getGroupCommentCount($membership->getGroup(), $conditions);
   }
 
 }
