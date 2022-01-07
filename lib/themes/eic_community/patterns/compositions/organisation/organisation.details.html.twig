@@ -21,11 +21,11 @@
       {{ content }}
 
       {% if details is not empty %}
-        <section class="ecl-organisation__details">
+        <section class="ecl-organisation__item  ecl-organisation__details">
           <h2>{{ details.title }}</h2>
           {% for detailsItem in details.items %}
             {% if detailsItem.type == 'stats' %}
-              <div class="ecl-organisation__details__item">
+              <div class="ecl-organisation__item ecl-organisation__details__item">
                 <h4>{{ detailsItem.title }}</h4>
                 <ul>
                   {% for stat in detailsItem.items  %}
@@ -40,6 +40,17 @@
                 extra_classes: 'ecl-organisation__details__item'
               }) %}
             {% endif %}
+          {% endfor %}
+        </section>
+      {% endif %}
+
+      {% if announcements is not empty %}
+        <section class="ecl-organisation__item ecl-organisation__announcements">
+          <h2>{{ announcements.title }}</h2>
+          {% for announcementsItem in announcements.items %}
+            <div class="ecl-organisation__announcements__item">
+              {% include "@theme/patterns/compositions/featured-contributors.html.twig" with announcementsItem %}
+            </div>
           {% endfor %}
         </section>
       {% endif %}
