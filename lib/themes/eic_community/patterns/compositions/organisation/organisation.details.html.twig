@@ -56,6 +56,31 @@
           {% endfor %}
         </section>
       {% endif %}
+
+      {% if news is not empty %}
+        <section class="ecl-organisation__item">
+          {% include "@theme/patterns/compositions/featured-content-collection.html.twig" with news|default({})|merge({
+            icon_file_path: common.icon_file_path,
+            extra_classes: "ecl-section-wrapper ecl-section-wrapper--is-white ecl-featured-content-collection--has-list-layout",
+            no_container: true,
+          }) only %}
+        </section>
+      {% endif %}
+
+      {% if teams is not empty %}
+        <section class="ecl-organisation__item">
+          <h2>{{ teams.title }}</h2>
+
+        </section>
+      {% endif %}
+
+      {% if events is not empty %}
+        <section class="ecl-organisation__item">
+          <h2>{{ events.title }}</h2>
+
+        </section>
+      {% endif %}
+
     {% endblock %}
 
    {% block sidebar %}

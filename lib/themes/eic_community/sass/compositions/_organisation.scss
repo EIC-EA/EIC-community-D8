@@ -1,6 +1,18 @@
 .ecl-organisation {
+
   &__item {
     margin-bottom: $ecl-spacing-2-xl;
+
+    & .ecl-teaser.ecl-teaser--story    {
+      border-bottom: 1px solid $ecl-color-grey-5;
+      padding-bottom: $ecl-spacing-m;
+    }
+
+    & .ecl-teaser__title:first-child {
+      font-size: 1rem!important;
+      line-height: 1.4!important;
+      margin-bottom: 0;
+    }
   }
 
   &__details {
