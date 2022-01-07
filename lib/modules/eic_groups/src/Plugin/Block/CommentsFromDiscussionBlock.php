@@ -3,8 +3,8 @@
 namespace Drupal\eic_groups\Plugin\Block;
 
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
-use Drupal\Core\Block\Annotation\Block;
 use Drupal\Core\Block\BlockBase;
+use Drupal\Core\Database\Connection;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Url;
 use Drupal\eic_groups\EICGroupsHelper;
@@ -36,23 +36,32 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryPluginInterface {
 
   /**
-   * @var \Drupal\eic_groups\EICGroupsHelper $groupsHelper
+   * The EIC groups helper service.
+   *
+   * @var \Drupal\eic_groups\EICGroupsHelper
    */
-  private $groupsHelper;
+  protected $groupsHelper;
 
   /**
-   * The group permission checker
+   * The group permission checker.
    *
-   * @var GroupPermissionChecker
+   * @var \Drupal\oec_group_comments\GroupPermissionChecker
    */
-  private $groupPermissionChecker;
+  protected $groupPermissionChecker;
 
   /**
-   * The flag service
+   * The flag service.
    *
-   * @var \Drupal\flag\FlagService $flagService
+   * @var \Drupal\flag\FlagService
    */
-  private $flagService;
+  protected $flagService;
+
+  /**
+   * The database connection service.
+   *
+   * @var \Drupal\Core\Database\Connection
+   */
+  protected $database;
 
   /**
    * {@inheritdoc}
@@ -69,7 +78,8 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
       $plugin_definition,
       $container->get('eic_groups.helper'),
       $container->get('oec_group_comments.group_permission_checker'),
-      $container->get('flag')
+      $container->get('flag'),
+      $container->get('database')
     );
   }
 
@@ -84,6 +94,15 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
    * @param string $plugin_id
    *   The plugin_id for the plugin instance.
    * @param mixed $plugin_definition
+   *   The plugin definition.
+   * @param \Drupal\eic_groups\EICGroupsHelper $groups_helper
+   *   The EIC groups helper service.
+   * @param \Drupal\oec_group_comments\GroupPermissionChecker $group_permission_checker
+   *   The group permission checker.
+   * @param \Drupal\flag\FlagService $flag_service
+   *   The flag service.
+   * @param \Drupal\Core\Database\Connection $database
+   *   The database connection service.
    */
   public function __construct(
     array $configuration,
@@ -91,19 +110,21 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
     $plugin_definition,
     EICGroupsHelper $groups_helper,
     GroupPermissionChecker $group_permission_checker,
-    FlagService $flag_service
+    FlagService $flag_service,
+    Connection $database
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->groupsHelper = $groups_helper;
     $this->groupPermissionChecker = $group_permission_checker;
     $this->flagService = $flag_service;
+    $this->database = $database;
   }
 
   /**
    * {@inheritdoc}
    */
   public function build() {
-    /** @var NodeInterface|NULL $node */
+    /** @var \Drupal\node\NodeInterface|NULL $node */
     $node = \Drupal::routeMatch()->getParameter('node');
 
     if (!$node instanceof NodeInterface) {
@@ -168,6 +189,15 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
       return $paragraph->get('field_user_ref')->referencedEntities()[0]->id();
     }, $contributors);
 
+    // Grab users who commented the node to the list of contributors.
+    if ($comment_contributorIds = $this->getNodeCommentContributorIds($node)) {
+      foreach ($comment_contributorIds as $comment_contributorId) {
+        if (!in_array($comment_contributorId['uid'], $users)) {
+          $users[] = intval($comment_contributorId['uid']);
+        }
+      }
+    }
+
     $users = array_unique(array_values($users), SORT_NUMERIC);
 
     $contributors_data['items'] = [];
@@ -194,7 +224,7 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
 
     /** @var \Drupal\media\MediaInterface|null $media_picture */
     $media_picture = $current_user->get('field_media')->referencedEntities();
-    /** @var File|NULL $file */
+    /** @var \Drupal\file\Entity\File|NULL $file */
     $file = $media_picture ? File::load(
       $media_picture[0]->get('oe_media_image')->target_id
     ) : NULL;
@@ -217,14 +247,18 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
       ),
       'user' => [
         'avatar' => $file_url,
-        'fullname' => $current_user instanceof UserInterface ?
+        'fullname' => (
+          $current_user instanceof UserInterface ?
           $current_user->get(
             'field_first_name'
           )->value . ' ' . $current_user->get('field_last_name')->value :
-          '',
-        'url' => $current_user instanceof UserInterface ?
+          ''
+        ),
+        'url' => (
+          $current_user instanceof UserInterface ?
           $current_user->toUrl()->toString() :
-          '#',
+          '#'
+        ),
       ],
       'is_comment_closed' => $is_comment_closed,
       'group_roles' => $user_group_roles,
@@ -252,7 +286,7 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
       'translations' => [
         'title' => $this->t('Comments', [], ['context' => 'eic_groups']),
         'no_results_title' => $this->t(
-          'We haven’t found any comments',
+          "We haven't found any comments",
           [],
           ['context' => 'eic_group']
         ),
@@ -335,6 +369,7 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
       'url.path',
       'url.query_args',
       'user.group_permissions',
+      'session',
     ];
 
     if ($group_id) {
@@ -342,26 +377,29 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
     }
 
     return $build + [
-        '#cache' => [
-          'contexts' => $cache_context,
-          'tags' => $node->getCacheTags(),
-        ],
-        '#theme' => 'eic_group_comments_from_discussion',
-        '#discussion_id' => $node->id(),
-        '#contributors' => $contributors_data,
-        '#is_anonymous' => $current_user->isAnonymous(),
-      ];
+      '#cache' => [
+        'contexts' => $cache_context,
+        'tags' => $node->getCacheTags(),
+      ],
+      '#theme' => 'eic_group_comments_from_discussion',
+      '#discussion_id' => $node->id(),
+      '#contributors' => $contributors_data,
+      '#is_anonymous' => $current_user->isAnonymous(),
+    ];
   }
 
   /**
-   * Check if we are in "group" context, otherwise check global permissions of
-   * user.
+   * Check if we are in "group" context, otherwise check global permissions.
    *
    * @param array|null $group_contents
+   *   The group content entities.
    * @param \Drupal\user\UserInterface|null $user
+   *   The user entity.
    * @param string $permission
+   *   The user permission.
    *
    * @return bool
+   *   TRUE if the user has permission.
    */
   private function hasGroupOrGlobalPermission(
     ?array $group_contents,
@@ -371,8 +409,8 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
     // If empty groups, that means we are not in group context.
     if (empty($group_contents)) {
       return $user instanceof UserInterface && $user->hasPermission(
-          $permission
-        );
+        $permission
+      );
     }
 
     return $this->groupPermissionChecker->getPermissionInGroups(
@@ -380,6 +418,32 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
       $user,
       $group_contents
     )->isAllowed();
+  }
+
+  /**
+   * Helper function to get contributor IDs from node comments.
+   *
+   * @param \Drupal\node\NodeInterface $node
+   *   The node object in which we want to retrieve the contributors
+   *   that left a comment.
+   *
+   * @return array|bool
+   *   Array of user IDs or FALSE if no contributors have been found.
+   */
+  private function getNodeCommentContributorIds(NodeInterface $node) {
+    $query = $this->database->select('comment_field_data', 'c')
+      ->fields('c', ['uid']);
+    $query->condition('c.entity_id', $node->id());
+    $query->condition('c.entity_type', 'node');
+    // Skip anonymous users.
+    $query->condition('c.uid', 0, '<>');
+    // Skip contributors with deleted comments.
+    $query->join('comment__field_comment_is_soft_deleted', 'csf', 'c.cid = csf.entity_id');
+    $query->condition('csf.field_comment_is_soft_deleted_value', FALSE);
+    // We group by uid to avoid duplicated results.
+    $query->groupBy('c.uid');
+    $results = $query->execute()->fetchAll(\PDO::FETCH_ASSOC);
+    return $results ?: FALSE;
   }
 
 }
