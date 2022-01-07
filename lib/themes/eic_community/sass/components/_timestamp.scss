@@ -24,7 +24,7 @@
   }
 
   &__label {
-    @include ecl-responsive-font('label');
+    font-size: .875rem;
 
     #{$node}--meta & {
       font-size: inherit;
