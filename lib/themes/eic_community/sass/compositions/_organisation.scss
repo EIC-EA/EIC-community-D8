@@ -28,4 +28,30 @@
       text-transform: none;
     }
   }
+
+  &__contact {
+    padding: ecl-box-model('padding');
+    background-color: map-get($ecl-colors, 'grey-10');
+    &__item .ecl-social-share__title {
+      text-transform: inherit;
+    }
+
+    &__adresses__item {
+      margin-bottom: $ecl-spacing-m;
+
+      & p {
+        margin: 0;
+        line-height: 1.5;
+      }
+
+      &__name {
+        font-weight: bold;
+      }
+    }
+
+    & .ecl-featured-list--is-organisation-locations {
+      margin-top: 0;
+    }
+
+  }
 }
