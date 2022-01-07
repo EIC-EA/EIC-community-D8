@@ -3,11 +3,6 @@
   width: 100%;
   margin-left: auto;
   margin-right: auto;
-  @include ecl-media-breakpoint-down('md') {
-    padding-left: 1rem;
-    padding-right: 1rem;
-    max-width: calc(100% - 2rem);
-  }
 
   & .hidden {
     visibility: hidden;
