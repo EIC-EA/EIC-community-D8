@@ -2,3 +2,4 @@ features:
   - eic_groups_members
   - eic_groups_group_events
   - eic_groups_news
+  - eic_groups_announcements
