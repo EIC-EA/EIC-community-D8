@@ -25,6 +25,13 @@ class EicGroupsGroupFeaturePluginBase extends GroupFeaturePluginBase {
   const PRIMARY_OVERVIEW_ROUTE = '';
 
   /**
+   * Define an anchor.
+   *
+   * @var string
+   */
+  const ANCHOR_ID = '';
+
+  /**
    * The EIC Group Helper class.
    *
    * @var \Drupal\eic_groups\EICGroupsHelper
@@ -45,7 +52,7 @@ class EicGroupsGroupFeaturePluginBase extends GroupFeaturePluginBase {
    */
   public function enable(GroupInterface $group) {
     // Menu: enable the menu item.
-    if ($url = $this->getPrimaryOverviewRoute($group)) {
+    if ($url = $this->generateFeatureUrl($group)) {
       $this->handleMenuItem($group, $url, 'enable');
     }
 
@@ -58,7 +65,7 @@ class EicGroupsGroupFeaturePluginBase extends GroupFeaturePluginBase {
    */
   public function disable(GroupInterface $group) {
     // Menu: disable the menu item.
-    if ($url = $this->getPrimaryOverviewRoute($group)) {
+    if ($url = $this->generateFeatureUrl($group)) {
       $this->handleMenuItem($group, $url, 'disable');
     }
 
@@ -184,10 +191,14 @@ class EicGroupsGroupFeaturePluginBase extends GroupFeaturePluginBase {
    *   A MenuLinkContent object (unsaved).
    */
   protected function getMenuItem(Url $url, string $menu_name) {
+    $uri = empty(static::ANCHOR_ID) ?
+      'internal:/' . $url->getInternalPath() :
+      $url->toUriString();
+
     return $this->menuLinkContentStorage->create([
       'title' => $this->label(),
       'link' => [
-        'uri' => 'internal:/' . $url->getInternalPath(),
+        'uri' => $uri,
       ],
       'menu_name' => $menu_name,
       'weight' => 2,
@@ -195,19 +206,21 @@ class EicGroupsGroupFeaturePluginBase extends GroupFeaturePluginBase {
   }
 
   /**
-   * Returns an Url object for the PRIMARY_OVERVIEW_ROUTE.
+   * Returns an Url object for the PRIMARY_OVERVIEW_ROUTE
+   * or from canonical with anchor.
    *
    * @param \Drupal\group\Entity\GroupInterface $group
-   *   The group entity.
    *
-   * @return \Drupal\Core\Url|NULL
-   *   The Url object.
+   * @return \Drupal\Core\Url
    */
-  protected function getPrimaryOverviewRoute(GroupInterface $group) {
-    // We assume here that the overview route takes the group ID as unique
-    // argument.
+  protected function generateFeatureUrl(GroupInterface $group) {
     $url_params = ['group' => $group->id()];
-    return Url::fromRoute(static::PRIMARY_OVERVIEW_ROUTE, $url_params);
+    $options = ['fragment' => static::ANCHOR_ID];
+    $route_name = empty(static::PRIMARY_OVERVIEW_ROUTE) ?
+      'entity.group.canonical' :
+      static::PRIMARY_OVERVIEW_ROUTE;
+
+    return Url::fromRoute($route_name, $url_params, $options);
   }
 
   /**
