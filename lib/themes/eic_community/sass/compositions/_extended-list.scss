@@ -110,8 +110,6 @@
     }
 
     #{$node} > #{$node}__items>#{$node}__item>#{$node}__items>#{$node}__item>#{$node}__items>#{$node}__item & {
-      //display: flex;
-      //align-items: center;
       font-weight: inherit;
       padding-left: map-get($ecl-spacing, 'xs') + map-get($ecl-spacing, 's');
       position: relative;
