@@ -1,10 +1,48 @@
+{% extends "@theme/patterns/layout/base.html.twig" %}
+
+{% block breadcrumbs %}
+  {% include "@theme/patterns/compositions/breadcrumb.html.twig" with breadcrumb|default({}) %}
+{% endblock %}
+
+{% block page_header %}
+  {% include "@theme/patterns/compositions/editorial-header.html.twig" with editorial_header|default({}) %}
+  {% if subnavigation %}
+    {% include "@theme/patterns/compositions/subnavigation.html.twig" with subnavigation|default({})|merge({
+      icon_file_path: common.icon_file_path
+    }) only %}
+  {% endif %}
+{% endblock %}
+
+
+
 {% block content %}
   {% embed "@theme/patterns/compositions/editorial-article.html.twig" with editorial_article|default({}) %}
     {% block content %}
-      {% include "@theme/patterns/components/event.html.twig" with {
-        body: group.field_body.value|raw
-      } %}
-      {% include "@theme/patterns/components/filelist.html.twig" with file_list|default({}) %}
+      {{ content }}
+
+      {% if details is not empty %}
+        <section class="ecl-organisation__details">
+          <h2>{{ details.title }}</h2>
+          {% for detailsItem in details.items %}
+            {% if detailsItem.type == 'stats' %}
+              <div class="ecl-organisation__details__item">
+                <h4>{{ detailsItem.title }}</h4>
+                <ul>
+                  {% for stat in detailsItem.items  %}
+                    <li>
+                      {{ stat.name }}: {{ stat.value }}
+                    </li>
+                  {% endfor %}
+                </ul>
+              </div>
+            {% else %}
+              {% include "@theme/patterns/compositions/list-tags.html.twig" with detailsItem|merge({
+                extra_classes: 'ecl-organisation__details__item'
+              }) %}
+            {% endif %}
+          {% endfor %}
+        </section>
+      {% endif %}
     {% endblock %}
 
     {% block sidebar %}
@@ -26,17 +64,5 @@
 
     {% endblock %}
   {% endembed %}
-
-  {% if not user %}
-    {% embed "@theme/patterns/compositions/auth-banner.html.twig" with {
-      title: common.login_title,
-      icon_file_path: common.icon_file_path,
-      login: common.login,
-      register: common.register,
-      extra_classes: 'ecl-auth-banner--is-compact',
-    } only %}
-    {% endembed %}
-  {% else %}
-  {% endif %}
 
 {% endblock %}
