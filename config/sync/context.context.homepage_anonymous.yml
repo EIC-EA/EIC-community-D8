@@ -142,11 +142,11 @@ reactions:
         label: 'Homepage - USP Tiles'
         provider: block_content
         label_display: '0'
-        region: content
-        weight: '-3'
         status: true
         info: ''
         view_mode: full
+        region: content
+        weight: '-3'
         context_mapping: {  }
         custom_id: homepage_usp_tiles
         theme: eic_community

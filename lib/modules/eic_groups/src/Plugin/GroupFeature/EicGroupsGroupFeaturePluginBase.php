@@ -7,6 +7,7 @@ use Drupal\Core\Url;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\group_content_menu\GroupContentMenuInterface;
 use Drupal\group_permissions\Entity\GroupPermissionInterface;
+use Drupal\oec_group_features\GroupFeatureInterface;
 use Drupal\oec_group_features\GroupFeaturePluginBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -41,8 +42,18 @@ class EicGroupsGroupFeaturePluginBase extends GroupFeaturePluginBase {
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    $instance = parent::create($container, $configuration, $plugin_id, $plugin_definition);
+  public static function create(
+    ContainerInterface $container,
+    array $configuration,
+    $plugin_id,
+    $plugin_definition
+  ) {
+    $instance = parent::create(
+      $container,
+      $configuration,
+      $plugin_id,
+      $plugin_definition
+    );
     $instance->eicGroupHelper = $container->get('eic_groups.helper');
     return $instance;
   }
@@ -90,12 +101,22 @@ class EicGroupsGroupFeaturePluginBase extends GroupFeaturePluginBase {
    * @return bool
    *   TRUE if the action was performed successfully, FALSE otherwise.
    */
-  protected function handleMenuItem(GroupInterface $group, Url $url, $op = 'enable', $menu_name = 'group_main_menu') {
+  protected function handleMenuItem(
+    GroupInterface $group,
+    Url $url,
+    $op = 'enable',
+    $menu_name = 'group_main_menu'
+  ) {
     // Check if we have the target menu for this group.
     foreach (group_content_menu_get_menus_per_group($group) as $group_menu) {
-      if ($group_menu->getGroupContentType()->getContentPlugin()->getPluginId() == "group_content_menu:$menu_name") {
+      if (
+        $group_menu->getGroupContentType()->getContentPlugin()->getPluginId() ==
+        "group_content_menu:$menu_name"
+      ) {
         // Disable menu item.
-        $menu_name = GroupContentMenuInterface::MENU_PREFIX . $group_menu->getEntity()->id();
+        $menu_name = GroupContentMenuInterface::MENU_PREFIX . $group_menu
+            ->getEntity()
+            ->id();
         switch ($op) {
           case 'enable':
             $this->enableMenuItem($this->getMenuItem($url, $menu_name));
@@ -128,8 +149,13 @@ class EicGroupsGroupFeaturePluginBase extends GroupFeaturePluginBase {
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
   protected function handlePermissions(GroupInterface $group, $op = 'enable') {
-    if (($group_permissions = $this->getGroupPermissions($group)) && $group_permissions instanceof GroupPermissionInterface) {
-      $config = $this->configFactory->get('eic_groups.group_features.' . $this->getPluginId());
+    if (
+      ($group_permissions = $this->getGroupPermissions($group)) &&
+      $group_permissions instanceof GroupPermissionInterface
+    ) {
+      $config = $this->configFactory->get(
+        'eic_groups.group_features.' . $this->getPluginId()
+      );
 
       $roles = $config->get('roles');
 
@@ -141,7 +167,10 @@ class EicGroupsGroupFeaturePluginBase extends GroupFeaturePluginBase {
       // to view the group, otherwise the role is not allowed to view the menu
       // link.
       foreach ($group->getGroupType()->getRoles(TRUE) as $role) {
-        if (in_array($role->id(), $this->getGroupPublicRoleIds($group)) && $role->hasPermission('view group')) {
+        if (in_array(
+            $role->id(),
+            $this->getGroupPublicRoleIds($group)
+          ) && $role->hasPermission('view group')) {
           $public_role_ids[] = $role->id();
         }
       }
@@ -150,24 +179,40 @@ class EicGroupsGroupFeaturePluginBase extends GroupFeaturePluginBase {
         case 'enable':
           // Adds group permission for the private roles.
           foreach ($roles as $role) {
-            $group_permissions = $this->addRolePermissionsToGroup($group_permissions, $role, $config->get('permissions'));
+            $group_permissions = $this->addRolePermissionsToGroup(
+              $group_permissions,
+              $role,
+              $config->get('permissions')
+            );
           }
 
           // Adds group permission for the public roles.
           foreach ($public_role_ids as $role) {
-            $group_permissions = $this->addRolePermissionsToGroup($group_permissions, $role, $config->get('public_permissions'));
+            $group_permissions = $this->addRolePermissionsToGroup(
+              $group_permissions,
+              $role,
+              $config->get('public_permissions')
+            );
           }
           break;
 
         case 'disable':
           // Removes permission from the private roles.
           foreach ($roles as $role) {
-            $group_permissions = $this->removeRolePermissionsFromGroup($group_permissions, $role, $config->get('permissions'));
+            $group_permissions = $this->removeRolePermissionsFromGroup(
+              $group_permissions,
+              $role,
+              $config->get('permissions')
+            );
           }
 
           // Removes group permission from the public roles.
           foreach ($public_role_ids as $role) {
-            $group_permissions = $this->removeRolePermissionsFromGroup($group_permissions, $role, $config->get('public_permissions'));
+            $group_permissions = $this->removeRolePermissionsFromGroup(
+              $group_permissions,
+              $role,
+              $config->get('public_permissions')
+            );
           }
           break;
 
@@ -215,8 +260,20 @@ class EicGroupsGroupFeaturePluginBase extends GroupFeaturePluginBase {
    */
   protected function generateFeatureUrl(GroupInterface $group) {
     $url_params = ['group' => $group->id()];
-    $options = ['fragment' => static::ANCHOR_ID];
-    $route_name = empty(static::PRIMARY_OVERVIEW_ROUTE) ?
+    $options = [
+      'fragment' => static::ANCHOR_ID,
+    ];
+
+    // If we have an overview route and it's an anchor item, generate
+    // a query parameter.
+    if (!empty(static::PRIMARY_OVERVIEW_ROUTE) && !empty(static::ANCHOR_ID)) {
+      $options['query'][GroupFeatureInterface::QUERY_PARAMETER_OVERVIEW_URL] = Url::fromRoute(
+        static::PRIMARY_OVERVIEW_ROUTE,
+        $url_params
+      )->toString();
+    }
+
+    $route_name = !empty(static::ANCHOR_ID) ?
       'entity.group.canonical' :
       static::PRIMARY_OVERVIEW_ROUTE;
 

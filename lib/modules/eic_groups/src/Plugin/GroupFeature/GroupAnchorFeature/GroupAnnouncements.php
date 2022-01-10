@@ -1,8 +1,9 @@
 <?php
 
-namespace Drupal\eic_groups\Plugin\GroupFeature;
+namespace Drupal\eic_groups\Plugin\GroupFeature\GroupAnchorFeature;
 
 use Drupal\Core\Url;
+use Drupal\eic_groups\Plugin\GroupFeature\EicGroupsGroupFeaturePluginBase;
 
 /**
  * Group feature plugin implementation for Announcements.
@@ -16,9 +17,7 @@ use Drupal\Core\Url;
 class GroupAnnouncements extends EicGroupsGroupFeaturePluginBase {
 
   /**
-   * Anchor of current group route canonical.
-   *
-   * @var string
+   * {@inheritdoc}
    */
   const ANCHOR_ID = 'announcements';
 
