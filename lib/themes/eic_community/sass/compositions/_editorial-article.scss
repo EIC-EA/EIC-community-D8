@@ -162,7 +162,7 @@
 
     &__title {
       text-transform: uppercase;
-      color: map-get($ecl-colors, 'grey-50');
+      color: map-get($ecl-colors, 'grey');
       @include ecl-responsive-font('label');
       font-weight: $ecl-font-weight-regular;
     }
