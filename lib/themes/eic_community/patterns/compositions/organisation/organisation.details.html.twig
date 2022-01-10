@@ -56,6 +56,32 @@
           {% endfor %}
         </section>
       {% endif %}
+
+      {% if news is not empty %}
+        {% include "@theme/patterns/compositions/featured-content-collection.html.twig" with news|default({})|merge({
+          icon_file_path: common.icon_file_path,
+          extra_classes: "ecl-section-wrapper ecl-section-wrapper--is-white ecl-featured-content-collection--has-list-layout ecl-organisation__item",
+          no_container: true,
+        }) only %}
+      {% endif %}
+
+      {% if teams is not empty %}
+        {% include "@theme/patterns/compositions/featured-content-collection.html.twig" with teams|default({})|merge({
+          icon_file_path: common.icon_file_path,
+          extra_classes: "ecl-section-wrapper ecl-section-wrapper--is-white ecl-featured-content-collection--has-overview-layout ecl-organisation__item",
+          no_container: true,
+        }) only %}
+      {% endif %}
+
+      {% if events is not empty %}
+        {% include "@theme/patterns/compositions/featured-content-collection.html.twig" with events|default({})|merge({
+          icon_file_path: common.icon_file_path,
+          extra_classes: "ecl-section-wrapper ecl-section-wrapper--is-white ecl-featured-content-collection--has-list-layout ecl-organisation__item",
+          no_container: true,
+          items_extra_classes: "ecl-featured-content-collection__item--big"
+        }) only %}
+      {% endif %}
+
     {% endblock %}
 
    {% block sidebar %}
