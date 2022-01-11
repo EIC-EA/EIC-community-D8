@@ -170,12 +170,9 @@
       padding-right: map-get($ecl-spacing, 'xs');
       margin-bottom: map-get($ecl-spacing, 'xs');
 
+      & ~ #{$node}__item--collapse,
       & ~ #{$node}__item--expand {
         display: none;
-      }
-
-      & ~ #{$node}__item--collapse {
-        display: block;
       }
     }
 
@@ -207,6 +204,9 @@
 
     &--expand {
       display: none;
+      & button {
+        cursor: pointer;
+      }
     }
   }
 
