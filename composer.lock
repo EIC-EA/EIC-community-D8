@@ -3703,7 +3703,7 @@
                     "2881769 - group/{group}/node/create uses the permissions of group/{group}/node/add": "https://www.drupal.org/files/issues/2020-10-01/2881769-22.patch",
                     "2746839 - Add Devel plugin for generating groups": "patches/group/2746839-add-devel-plugin-for-generating-groups-12.patch",
                     "2815971 - More contexts needed": "https://www.drupal.org/files/issues/2021-02-19/2815971-28.patch",
-                    "3071489 - Incorrect Access Check on Media Library": "https://www.drupal.org/files/issues/2020-02-27/incorrect-access-check-on-media-library-3071489-9.patch",
+                    "3071489 - Incorrect Access Check on Media Library": "https://www.drupal.org/files/issues/2022-01-11/incorrect-access-check-on-media-library-3071489-24.patch",
                     "3132084 - Add/Remove group role for a user programmatically": "https://www.drupal.org/files/issues/2021-08-23/3132084-10.patch"
                 }
             },
