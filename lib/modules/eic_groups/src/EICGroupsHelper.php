@@ -572,6 +572,31 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
   }
 
   /**
+   * Returns the list of enabled group_node plugins for the given group type.
+   *
+   * @param \Drupal\group\Entity\GroupTypeInterface $group_type
+   *   The group type object.
+   *
+   * @return array
+   *   An array of plugin type IDs.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   */
+  public function getGroupTypeEnabledContentPlugins(GroupTypeInterface $group_type) {
+    $plugins = [];
+    /** @var \Drupal\node\NodeTypeInterface $node_type */
+    foreach ($this->entityTypeManager->getStorage('node_type')->loadMultiple() as $node_type) {
+      if ($this->isGroupTypePluginEnabled($group_type, 'group_node', $node_type->id())) {
+        // @todo Get real content type config id?
+        // @see \Drupal\group\Plugin\GroupContentEnablerBase::getContentTypeConfigId().
+        $plugins[] = $group_type->id() . '-group_node-' . $node_type->id();
+      }
+    }
+    return $plugins;
+  }
+
+  /**
    * Checks if a plugin is enabled for the given group type.
    *
    * @param \Drupal\group\Entity\GroupTypeInterface $group_type
