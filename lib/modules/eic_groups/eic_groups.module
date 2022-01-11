@@ -115,13 +115,6 @@ function eic_groups_views_data() {
       'id' => 'group_members_by_role',
     ],
   ];
-  $data['groups_field_data']['group_metrics'] = [
-    'title' => t('Group metrics'),
-    'help' => t('Displays the group metrics.'),
-    'field' => [
-      'id' => 'group_metrics',
-    ],
-  ];
 
   return $data;
 }
