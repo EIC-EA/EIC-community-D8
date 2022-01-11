@@ -22,6 +22,7 @@ module:
   context: 0
   context_ui: 0
   contextual: 0
+  csv_serialization: 0
   ctools: 0
   date_popup: 0
   datetime: 0
@@ -177,6 +178,8 @@ module:
   user: 0
   variationcache: 0
   views_autocomplete_filters: 0
+  views_data_export: 0
+  views_data_export_phpspreadsheet: 0
   views_ui: 0
   workflows: 0
   pathauto: 1

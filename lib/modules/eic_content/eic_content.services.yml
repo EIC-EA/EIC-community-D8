@@ -11,3 +11,6 @@ services:
     arguments: ['@current_user']
     tags:
       - { name: breadcrumb_builder, priority: 999 }
+  plugin.manager.content_metric:
+    class: Drupal\eic_content\ContentMetricPluginManager
+    parent: default_plugin_manager
