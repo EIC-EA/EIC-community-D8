@@ -69,11 +69,14 @@ function _eic_community_render_organisation_detail_page(&$variables, $group) {
     ] :
     NULL;
 
+  $mailto = $group->get('field_email')->value;
+  $mail_label = $group->get('field_contact_label')->value;
+
   $contact_data = [
     'title' => t('Contact', [], ['context' => 'eic_community']),
     'items' => [
       [
-        'name' => 'test',
+        'name' => $mail_label,
         'link' => [
           'icon' => [
             'name' => 'mail',
@@ -81,15 +84,36 @@ function _eic_community_render_organisation_detail_page(&$variables, $group) {
           ],
           'link' => [
             'label' => t('Send email', [], ['context' => 'eic_community']),
-            'path' => 'mailto:test@example.com',
+            'path' => "mailto:$mailto",
           ],
         ],
       ],
     ],
   ];
 
+  $locations = $group->get('field_locations')->referencedEntities();
+  $locations_data = [];
+
+  if (!empty($locations)) {
+    $locations_data = [
+      'title' => t('Locations', [], ['context' => 'eic_community']),
+      'collapse_label' => t(
+        '@count locations',
+        ['@count' => count($locations)],
+        ['context' => 'eic_community']
+      ),
+      'items' => array_map(function (\Drupal\taxonomy\Entity\Term $location) {
+        return [
+          'title' => $location->label(),
+        ];
+      }, $locations),
+    ];
+  }
+
   $addresses = $group->get('field_address')->getValue();
-  $addresses_data = array_map(function($address) {
+  $address_index = 0;
+  $addresses_data = array_map(function ($address) use ($address_index) {
+    $address_index++;
     $countries_map = \Drupal\Core\Locale\CountryManager::getStandardList();
     $location_formatted = $address[FieldHelper::getPropertyName(AddressField::ADDRESS_LINE1)] . ' ' . $address[$address[FieldHelper::getPropertyName(AddressField::ADDRESS_LINE2)]] . '<br />';
     $location_formatted .= $address[FieldHelper::getPropertyName(AddressField::POSTAL_CODE)] . ' ' . $address[FieldHelper::getPropertyName(AddressField::LOCALITY)] . '<br />';
@@ -98,7 +122,11 @@ function _eic_community_render_organisation_detail_page(&$variables, $group) {
       '';
 
     return [
-      'title' => 'test',
+      'title' => t(
+        'Address @index',
+        ['@index' => $address_index],
+        ['context' => 'eic_community']
+      ),
       'description' => $location_formatted,
     ];
   }, $addresses);
@@ -111,19 +139,26 @@ function _eic_community_render_organisation_detail_page(&$variables, $group) {
       'title' => t('Adresses', [], ['context' => 'eic_community']),
       'items' => $addresses_data,
     ],
-    'locations' => [],
+    'locations' => $locations_data,
   ];
+
+  $needs = $group->get('field_needs')->referencedEntities();
+  $offers = $group->get('field_offers')->referencedEntities();
 
   $variables['announcements'] = [
     'title' => t('Announcements', [], ['context' => 'eic_community']),
     'items' => [
       [
-        'title' => 'We are looking for',
+        'title' => t('We are looking for', [], ['context' => 'eic_community']),
         'extra_classes' => 'ecl-featured-list--is-organisation-announcements',
         'title_element' => 'h4',
         'icon_file_path' => $variables['eic_icon_path'],
         'is_collapsible' => TRUE,
-        'collapse_label' => 'Show 2 more',
+        'collapse_label' => t(
+          'Show @count more',
+          ['@count' => count($needs)],
+          ['context' => 'eic_community']
+        ),
         'items' => [
           [
             'content' => $variables['content']['field_needs'],
@@ -131,18 +166,38 @@ function _eic_community_render_organisation_detail_page(&$variables, $group) {
         ],
       ],
       [
-        'title' => 'What we offer',
+        'title' => t('What we offer', [], ['context' => 'eic_community']),
         'extra_classes' => 'ecl-featured-list--is-organisation-announcements',
         'title_element' => 'h4',
         'icon_file_path' => $variables['eic_icon_path'],
         'is_collapsible' => TRUE,
-        'collapse_label' => 'Show 2 more',
+        'collapse_label' => t(
+          'Show @count more',
+          ['@count' => count($offers)],
+          ['context' => 'eic_community']
+        ),
         'items' => [
           [
             'content' => $variables['content']['field_offers'],
           ],
         ],
       ],
+    ],
+  ];
+
+  $variables['news'] = _eic_community_get_rendered_view('organisation_content', 'organisation_news');
+  $variables['events'] = _eic_community_get_rendered_view('organisation_content', 'organisation_events');
+
+  $variables['teams'] = [
+    'title' => t('Teams', [], ['context' => 'eic_community']),
+    'call_to_action' => [
+      'link' => [
+        'label' => t('See all members', [], ['context' => 'eic_community']),
+        'path' => '/test',
+      ],
+    ],
+    'items' => [
+
     ],
   ];
 

@@ -5,7 +5,6 @@ dependencies:
   module:
     - eic_search
     - route_condition
-    - system
 name: group_discussions_overviews
 label: 'Group - Discussions - Overviews'
 group: Groups

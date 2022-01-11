@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   module:
+    - eic_search
     - route_condition
 name: groups_overview
 label: 'Groups - Overview'

@@ -16,42 +16,54 @@
 {% block content %}
     {% embed "@theme/patterns/compositions/editorial-article.html.twig" with editorial_article|default({}) %}
         {% block content %}
-            {% if details is not empty %}
-                <section class="ecl-organisation__details">
-                    <h2>{{ details.title }}</h2>
-                    {% for detailsItem in details.items %}
-                        {% if detailsItem.type == 'stats' %}
-                            <div class="ecl-organisation__details__item">
-                                <h4>{{ detailsItem.title }}</h4>
-                                <ul>
-                                    {% for stat in detailsItem.items %}
-                                        <li>
-                                            {{ stat.name }}: {{ stat.value }}
-                                        </li>
-                                    {% endfor %}
-                                </ul>
-                            </div>
-                        {% else %}
-                            {% include "@theme/patterns/compositions/list-tags.html.twig" with detailsItem|merge({
-                                extra_classes: 'ecl-organisation__details__item'
-                            }) %}
-                        {% endif %}
-                    {% endfor %}
-                </section>
-            {% endif %}
+          {% if details is not empty %}
+              <section class="ecl-organisation__details">
+                  <h2>{{ details.title }}</h2>
+                  {% for detailsItem in details.items %}
+                      {% if detailsItem.type == 'stats' %}
+                          <div class="ecl-organisation__details__item">
+                              <h4>{{ detailsItem.title }}</h4>
+                              <ul>
+                                  {% for stat in detailsItem.items %}
+                                      <li>
+                                          {{ stat.name }}: {{ stat.value }}
+                                      </li>
+                                  {% endfor %}
+                              </ul>
+                          </div>
+                      {% else %}
+                          {% include "@theme/patterns/compositions/list-tags.html.twig" with detailsItem|merge({
+                              extra_classes: 'ecl-organisation__details__item'
+                          }) %}
+                      {% endif %}
+                  {% endfor %}
+              </section>
+          {% endif %}
 
-            {% if announcements is not empty %}
-                <section class="ecl-organisation__item ecl-organisation__announcements">
-                    <h2>{{ announcements.title }}</h2>
-                    {% for announcementsItem in announcements.items %}
-                        <div class="ecl-organisation__announcements__item">
-                            {% include "@theme/patterns/compositions/featured-contributors.html.twig" with announcementsItem|merge({
-                                collapse_icon_transform: 'rotate-180',
-                            }) %}
-                        </div>
-                    {% endfor %}
-                </section>
-            {% endif %}
+          {% if announcements is not empty %}
+              <section id="announcements" class="ecl-organisation__item ecl-organisation__announcements">
+                  <h2>{{ announcements.title }}</h2>
+                  {% for announcementsItem in announcements.items %}
+                      <div class="ecl-organisation__announcements__item">
+                          {% include "@theme/patterns/compositions/featured-contributors.html.twig" with announcementsItem|merge({
+                              collapse_icon_transform: 'rotate-180',
+                          }) %}
+                      </div>
+                  {% endfor %}
+              </section>
+          {% endif %}
+
+          {{ news }}
+
+          {% if teams is not empty %}
+            {% include "@theme/patterns/compositions/featured-content-collection.html.twig" with teams|default({})|merge({
+              icon_file_path: common.icon_file_path,
+              extra_classes: "ecl-section-wrapper ecl-section-wrapper--is-white ecl-featured-content-collection--has-overview-layout ecl-organisation__item",
+              no_container: true,
+            }) only %}
+          {% endif %}
+
+          {{ events }}
         {% endblock %}
 
         {% block sidebar %}

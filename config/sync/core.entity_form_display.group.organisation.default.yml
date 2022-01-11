@@ -5,7 +5,9 @@ dependencies:
   config:
     - field.field.group.organisation.field_address
     - field.field.group.organisation.field_body
+    - field.field.group.organisation.field_contact_label
     - field.field.group.organisation.field_date_establishement
+    - field.field.group.organisation.field_email
     - field.field.group.organisation.field_header_visual
     - field.field.group.organisation.field_locations
     - field.field.group.organisation.field_needs
@@ -24,11 +26,119 @@ dependencies:
     - address
     - content_moderation
     - eic_content
+    - field_group
     - link
     - media_library
     - paragraphs
     - path
     - text
+third_party_settings:
+  field_group:
+    group_organisation:
+      children:
+        - group_main
+        - group_announcements
+        - group_taxonomies
+        - group_contact
+        - group_features
+      parent_name: ''
+      weight: 1
+      format_type: tabs
+      region: content
+      format_settings:
+        show_empty_fields: false
+        id: ''
+        classes: ''
+        direction: horizontal
+        width_breakpoint: 640
+      label: Organisation
+    group_main:
+      children:
+        - field_header_visual
+        - field_body
+        - field_organisation_employees
+        - field_organisation_turnover
+        - field_date_establishement
+        - field_organisation_type
+      parent_name: group_organisation
+      weight: 2
+      format_type: tab
+      region: content
+      format_settings:
+        show_empty_fields: false
+        id: ''
+        classes: ''
+        description: ''
+        formatter: closed
+        required_fields: true
+      label: Main
+    group_announcements:
+      children:
+        - field_needs
+        - field_offers
+      parent_name: group_organisation
+      weight: 3
+      format_type: tab
+      region: content
+      format_settings:
+        show_empty_fields: false
+        id: ''
+        classes: ''
+        description: ''
+        formatter: closed
+        required_fields: true
+      label: Announcements
+    group_taxonomies:
+      children:
+        - field_vocab_services_products
+        - field_vocab_target_markets
+        - field_vocab_topics
+      parent_name: group_organisation
+      weight: 4
+      format_type: tab
+      region: content
+      format_settings:
+        show_empty_fields: false
+        id: ''
+        classes: ''
+        description: ''
+        formatter: closed
+        required_fields: true
+      label: Taxonomies
+    group_contact:
+      children:
+        - field_contact_label
+        - field_email
+        - field_organisation_link
+        - field_address
+        - field_locations
+      parent_name: group_organisation
+      weight: 5
+      format_type: tab
+      region: content
+      format_settings:
+        show_empty_fields: false
+        id: ''
+        classes: ''
+        description: ''
+        formatter: closed
+        required_fields: true
+      label: Contact
+    group_features:
+      children:
+        - features
+      parent_name: group_organisation
+      weight: 6
+      format_type: tab
+      region: content
+      format_settings:
+        show_empty_fields: false
+        id: ''
+        classes: ''
+        description: ''
+        formatter: closed
+        required_fields: true
+      label: Features
 id: group.organisation.default
 targetEntityType: group
 bundle: organisation
@@ -37,39 +147,55 @@ content:
   features:
     type: options_buttons
     settings: {  }
-    weight: 14
+    weight: 16
     region: content
     third_party_settings: {  }
   field_address:
-    weight: 11
+    weight: 25
     settings: {  }
     third_party_settings: {  }
     type: address_default
     region: content
   field_body:
-    weight: 2
+    weight: 4
     settings:
       rows: 5
       placeholder: ''
     third_party_settings: {  }
     type: text_textarea
     region: content
+  field_contact_label:
+    weight: 22
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
   field_date_establishement:
-    weight: 9
+    weight: 7
     settings:
       placeholder: ''
     third_party_settings: {  }
     type: number
     region: content
+  field_email:
+    weight: 23
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: email_default
+    region: content
   field_header_visual:
-    weight: 1
+    weight: 3
     settings:
       media_types: {  }
     third_party_settings: {  }
     type: media_library_widget
     region: content
   field_locations:
-    weight: 12
+    weight: 26
     settings:
       match_operator: CONTAINS
       match_limit: 10
@@ -80,7 +206,7 @@ content:
     region: content
   field_needs:
     type: entity_reference_paragraphs
-    weight: 18
+    weight: 20
     settings:
       title: Paragraph
       title_plural: Paragraphs
@@ -92,7 +218,7 @@ content:
     region: content
   field_offers:
     type: entity_reference_paragraphs
-    weight: 19
+    weight: 21
     settings:
       title: Paragraph
       title_plural: Paragraphs
@@ -103,14 +229,14 @@ content:
     third_party_settings: {  }
     region: content
   field_organisation_employees:
-    weight: 7
+    weight: 5
     settings:
       placeholder: ''
     third_party_settings: {  }
     type: number
     region: content
   field_organisation_link:
-    weight: 10
+    weight: 24
     settings:
       placeholder_url: ''
       placeholder_title: ''
@@ -118,7 +244,7 @@ content:
     type: link_default
     region: content
   field_organisation_turnover:
-    weight: 8
+    weight: 6
     settings:
       size: 60
       placeholder: ''
@@ -126,13 +252,13 @@ content:
     type: string_textfield
     region: content
   field_organisation_type:
-    weight: 6
+    weight: 8
     settings: {  }
     third_party_settings: {  }
     type: options_buttons
     region: content
   field_vocab_services_products:
-    weight: 3
+    weight: 5
     settings:
       match_top_level_limit: '0'
       items_to_load: '25'
@@ -144,7 +270,7 @@ content:
     type: entity_tree
     region: content
   field_vocab_target_markets:
-    weight: 4
+    weight: 6
     settings:
       match_top_level_limit: '0'
       items_to_load: '25'
@@ -156,7 +282,7 @@ content:
     type: entity_tree
     region: content
   field_vocab_topics:
-    weight: 5
+    weight: 7
     settings:
       match_top_level_limit: '0'
       disable_top_choices: '1'
@@ -177,20 +303,20 @@ content:
     third_party_settings: {  }
   langcode:
     type: language_select
-    weight: 13
+    weight: 15
     region: content
     settings:
       include_locked: true
     third_party_settings: {  }
   moderation_state:
     type: moderation_state_default
-    weight: 16
+    weight: 18
     settings: {  }
     region: content
     third_party_settings: {  }
   path:
     type: path
-    weight: 15
+    weight: 17
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -198,7 +324,7 @@ content:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 17
+    weight: 19
     region: content
     third_party_settings: {  }
 hidden:

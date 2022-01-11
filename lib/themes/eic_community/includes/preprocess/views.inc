@@ -7,6 +7,8 @@
 
 use Drupal\eic_overviews\GlobalOverviewPages;
 use Drupal\views\Views;
+use Drupal\eic_overviews\GroupOverviewPages;
+use Drupal\Core\Url;
 
 /**
  * Implements template_preprocess_views_view_field().
@@ -114,6 +116,38 @@ function eic_community_preprocess_views_view(&$variables) {
       $variables['extra_classes'] = 'ecl-section-wrapper--is-white ecl-featured-content-collection--has-overview-layout';
       $variables['items_extra_classes'] = 'ecl-featured-content-collection__item--big';
       $variables['no_container'] = TRUE;
+      break;
+
+    case 'organisation_content-organisation_news':
+      $variables['title'] = t('Latest news', [], ['context' => 'eic_community']);
+      $variables['extra_classes'] = 'ecl-section-wrapper--is-white ecl-featured-content-collection--has-list-layout';
+
+      /** @var \Drupal\group\Entity\GroupInterface $group */
+      $group = \Drupal::service('eic_groups.helper')->getGroupFromRoute();
+      if ($group instanceof \Drupal\group\Entity\GroupInterface) {
+        $variables['call_to_action'] = [
+          'link' => [
+            'label' => t('View all news'),
+            'path' => Url::fromRoute(GroupOverviewPages::NEWS, ['group' => $group->id()]),
+          ],
+        ];
+      }
+      break;
+
+    case 'organisation_content-organisation_events':
+      $variables['title'] = t('Events attending', [], ['context' => 'eic_community']);
+      $variables['extra_classes'] = 'ecl-section-wrapper--is-white ecl-featured-content-collection--has-list-layout';
+
+      /** @var \Drupal\group\Entity\GroupInterface $group */
+      $group = \Drupal::service('eic_groups.helper')->getGroupFromRoute();
+      if ($group instanceof \Drupal\group\Entity\GroupInterface) {
+        $variables['call_to_action'] = [
+          'link' => [
+            'label' => t('View all events'),
+            'path' => Url::fromRoute(GroupOverviewPages::EVENTS, ['group' => $group->id()]),
+          ],
+        ];
+      }
       break;
 
     case 'taxonomy_related_content-files':
