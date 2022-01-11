@@ -1,0 +1,45 @@
+uuid: 036788b9-f762-462f-81c4-f718342015c3
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.announcement.field_cta_link
+    - field.field.paragraph.announcement.field_description
+    - field.field.paragraph.announcement.field_title
+    - paragraphs.paragraphs_type.announcement
+  module:
+    - typed_link
+id: paragraph.announcement.default
+targetEntityType: paragraph
+bundle: announcement
+mode: default
+content:
+  field_cta_link:
+    weight: 2
+    label: hidden
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+    type: typed_link
+    region: content
+  field_description:
+    weight: 1
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    type: basic_string
+    region: content
+  field_title:
+    weight: 0
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+hidden:
+  search_api_excerpt: true
