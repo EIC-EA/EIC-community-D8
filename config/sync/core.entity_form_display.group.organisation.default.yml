@@ -8,6 +8,8 @@ dependencies:
     - field.field.group.organisation.field_date_establishement
     - field.field.group.organisation.field_header_visual
     - field.field.group.organisation.field_locations
+    - field.field.group.organisation.field_needs
+    - field.field.group.organisation.field_offers
     - field.field.group.organisation.field_organisation_employees
     - field.field.group.organisation.field_organisation_link
     - field.field.group.organisation.field_organisation_turnover
@@ -24,8 +26,8 @@ dependencies:
     - eic_content
     - link
     - media_library
+    - paragraphs
     - path
-    - social_link_field
     - text
 id: group.organisation.default
 targetEntityType: group
@@ -76,6 +78,30 @@ content:
     third_party_settings: {  }
     type: entity_reference_autocomplete
     region: content
+  field_needs:
+    type: entity_reference_paragraphs
+    weight: 18
+    settings:
+      title: Paragraph
+      title_plural: Paragraphs
+      edit_mode: open
+      add_mode: dropdown
+      form_display_mode: default
+      default_paragraph_type: ''
+    third_party_settings: {  }
+    region: content
+  field_offers:
+    type: entity_reference_paragraphs
+    weight: 19
+    settings:
+      title: Paragraph
+      title_plural: Paragraphs
+      edit_mode: open
+      add_mode: dropdown
+      form_display_mode: default
+      default_paragraph_type: ''
+    third_party_settings: {  }
+    region: content
   field_organisation_employees:
     weight: 7
     settings:
@@ -104,14 +130,6 @@ content:
     settings: {  }
     third_party_settings: {  }
     type: options_buttons
-    region: content
-  field_social_links:
-    weight: 18
-    settings:
-      select_social: false
-      disable_weight: false
-    third_party_settings: {  }
-    type: social_links
     region: content
   field_vocab_services_products:
     weight: 3
@@ -184,4 +202,5 @@ content:
     region: content
     third_party_settings: {  }
 hidden:
+  field_social_links: true
   uid: true

@@ -6,6 +6,9 @@
  */
 
 use Drupal\taxonomy\TermInterface;
+use Drupal\Core\Url;
+use Drupal\address\FieldHelper;
+use CommerceGuys\Addressing\AddressFormat\AddressField;
 
 /**
  * Implements hook_preprocess_group__TYPE().
@@ -43,8 +46,105 @@ function _eic_community_render_organisation_detail_page(&$variables, $group) {
 
   $topics = $group->get('field_vocab_topics')->referencedEntities();
   $markets = $group->get('field_vocab_target_markets')->referencedEntities();
-  $products = $group->get('field_vocab_services_products')->referencedEntities(
-  );
+  $products = $group
+    ->get('field_vocab_services_products')
+    ->referencedEntities();
+
+  $link = reset($group->get('field_organisation_link')->getValue());
+  $link_data = $link ?
+    [
+      'title' => 'Link',
+      'items' => [
+        [
+          'icon' => [
+            'name' => 'link',
+            'type' => 'custom',
+          ],
+          'link' => [
+            'label' => $link['title'],
+            'path' => $link ? Url::fromUri($link['uri'])->toString() : '',
+          ],
+        ],
+      ],
+    ] :
+    NULL;
+
+  $contact_data = [
+    'title' => t('Contact', [], ['context' => 'eic_community']),
+    'items' => [
+      [
+        'name' => 'test',
+        'link' => [
+          'icon' => [
+            'name' => 'mail',
+            'type' => 'custom',
+          ],
+          'link' => [
+            'label' => t('Send email', [], ['context' => 'eic_community']),
+            'path' => 'mailto:test@example.com',
+          ],
+        ],
+      ],
+    ],
+  ];
+
+  $addresses = $group->get('field_address')->getValue();
+  $addresses_data = array_map(function($address) {
+    $countries_map = \Drupal\Core\Locale\CountryManager::getStandardList();
+    $location_formatted = $address[FieldHelper::getPropertyName(AddressField::ADDRESS_LINE1)] . ' ' . $address[$address[FieldHelper::getPropertyName(AddressField::ADDRESS_LINE2)]] . '<br />';
+    $location_formatted .= $address[FieldHelper::getPropertyName(AddressField::POSTAL_CODE)] . ' ' . $address[FieldHelper::getPropertyName(AddressField::LOCALITY)] . '<br />';
+    $location_formatted .= array_key_exists($address['country_code'], $countries_map) ?
+      $countries_map[$address['country_code']] :
+      '';
+
+    return [
+      'title' => 'test',
+      'description' => $location_formatted,
+    ];
+  }, $addresses);
+
+  $variables['contact'] = [
+    'link' => $link_data,
+    'social' => [],
+    'data' => $contact_data,
+    'adresses' => [
+      'title' => t('Adresses', [], ['context' => 'eic_community']),
+      'items' => $addresses_data,
+    ],
+    'locations' => [],
+  ];
+
+  $variables['announcements'] = [
+    'title' => t('Announcements', [], ['context' => 'eic_community']),
+    'items' => [
+      [
+        'title' => 'We are looking for',
+        'extra_classes' => 'ecl-featured-list--is-organisation-announcements',
+        'title_element' => 'h4',
+        'icon_file_path' => $variables['eic_icon_path'],
+        'is_collapsible' => TRUE,
+        'collapse_label' => 'Show 2 more',
+        'items' => [
+          [
+            'content' => $variables['content']['field_needs'],
+          ],
+        ],
+      ],
+      [
+        'title' => 'What we offer',
+        'extra_classes' => 'ecl-featured-list--is-organisation-announcements',
+        'title_element' => 'h4',
+        'icon_file_path' => $variables['eic_icon_path'],
+        'is_collapsible' => TRUE,
+        'collapse_label' => 'Show 2 more',
+        'items' => [
+          [
+            'content' => $variables['content']['field_offers'],
+          ],
+        ],
+      ],
+    ],
+  ];
 
   $variables['details'] = [
     'title' => t('Organisation details', [], ['context' => 'eic_community']),
