@@ -180,7 +180,7 @@ class ContentMetrics extends NumericField {
    * {@inheritdoc}
    */
   public function getValue(ResultRow $values, $field = NULL) {
-    $group = $values->_entity;
+    $node = $values->_entity;
     $metric_id = $this->options['metric'];
 
     if (empty($this->metricsInfo[$metric_id])) {
@@ -190,7 +190,7 @@ class ContentMetrics extends NumericField {
     $plugin = $this->metricsInfo[$metric_id];
 
     $conf = $this->options[$metric_id . '_conf'] ?? [];
-    return $plugin->getValue($group, $conf);
+    return $plugin->getValue($node, $conf);
   }
 
 }
