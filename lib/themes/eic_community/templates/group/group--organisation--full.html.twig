@@ -15,6 +15,7 @@
 
 {% block content %}
     {% embed "@theme/patterns/compositions/editorial-article.html.twig" with editorial_article|default({}) %}
+
         {% block content %}
             {% if details is not empty %}
                 <section class="ecl-organisation__details">
@@ -41,8 +42,13 @@
             {% endif %}
 
             {% if announcements is not empty %}
+                {{ attach_library('eic_community/react-block-announcements') }}
                 <section class="ecl-organisation__item ecl-organisation__announcements">
                     <h2>{{ announcements.title }}</h2>
+                    <div
+                      id="react-announcements"
+                    >
+                    </div>
                     {% for announcementsItem in announcements.items %}
                         <div class="ecl-organisation__announcements__item">
                             {% include "@theme/patterns/compositions/featured-contributors.html.twig" with announcementsItem|merge({
