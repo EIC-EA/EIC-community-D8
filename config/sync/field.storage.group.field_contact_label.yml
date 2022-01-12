@@ -1,0 +1,21 @@
+uuid: 5131e3f0-2e97-4bc2-ab30-9152529bb014
+langcode: en
+status: true
+dependencies:
+  module:
+    - group
+id: group.field_contact_label
+field_name: field_contact_label
+entity_type: group
+type: string
+settings:
+  max_length: 510
+  is_ascii: false
+  case_sensitive: false
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

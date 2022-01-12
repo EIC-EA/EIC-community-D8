@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   module:
+    - eic_groups
     - group
     - node
 name: group_wiki_page
