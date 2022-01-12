@@ -38,6 +38,10 @@
     &::before {
       background-color: map-get($ecl-colors, 'black');
     }
+
+    &:hover {
+      color: map-get($ecl-colors, 'yellow-110');
+    }
   }
 
   &__label {

@@ -7,6 +7,7 @@ use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\eic_overviews\GroupOverviewPages;
+use Drupal\group\Access\GroupAccessResult;
 use Drupal\group\Entity\GroupInterface;
 
 /**
@@ -77,13 +78,9 @@ class GroupOverviewsController extends ControllerBase {
         ->addCacheableDependency($account);
     }
 
-    $access = $group->access($overview_perm, $account, TRUE);
-
-    if ($access->isForbidden()) {
-      return $access;
-    }
-
-    return $group->access('view', $account, TRUE);
+    return GroupAccessResult::allowedIfHasGroupPermission($group, $account, $overview_perm)
+      ->addCacheableDependency($group)
+      ->addCacheableDependency($account);
   }
 
 }

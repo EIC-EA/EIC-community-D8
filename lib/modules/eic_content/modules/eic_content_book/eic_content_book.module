@@ -11,6 +11,7 @@
 
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\eic_content_book\Hooks\BookTokens;
 use Drupal\eic_content_book\Hooks\EntityOperations;
@@ -48,4 +49,14 @@ function eic_content_book_tokens($type, $tokens, array $data, array $options, Bu
   /** @var \Drupal\eic_content_book\Hooks\BookTokens $class */
   $class = \Drupal::classResolver(BookTokens::class);
   return $class->tokens($type, $tokens, $data, $options, $bubbleable_metadata);
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function eic_content_book_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  if (strpos($form_id, '_book_outline_form') !== FALSE) {
+    // We don't allow users to select the book.
+    $form['book']['bid']['#access'] = FALSE;
+  }
 }

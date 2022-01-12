@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   module:
+    - route_condition
     - system
 name: global_breadcrumbs
 label: 'Global - Breadcrumbs'
@@ -11,11 +12,11 @@ description: ''
 requireAllConditions: false
 disabled: false
 conditions:
-  request_path_exclusion:
-    id: request_path_exclusion
+  route:
+    id: route
+    routes: "entity.overview_page.canonical\r\nentity.taxonomy_term.canonical"
     negate: true
-    pages: "/articles\r\n/events\r\n/groups\r\n/people\r\n/search"
-    uuid: 67b08cb2-557c-41fa-b404-4bfcb6aed9df
+    uuid: d8a54054-50a9-4f1a-a581-af9ee18b86af
     context_mapping: {  }
 reactions:
   blocks:
