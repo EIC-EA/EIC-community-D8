@@ -44,7 +44,7 @@
                 {{ attach_library('eic_community/react-block-announcements') }}
                 <section id="announcements" class="ecl-organisation__item ecl-organisation__announcements">
                     <h2>{{ announcements.title }}</h2>
-                    <div id="react-announcements" data-items={{ announcements.items | json_encode }}></div>
+                    <div id="react-announcements" data-items="{{ announcements.items | json_encode }}"></div>
                 </section>
             {% endif %}
 

@@ -174,23 +174,23 @@ function _eic_community_render_organisation_detail_page(&$variables, $group) {
           ['@count' => count($needs)],
           ['context' => 'eic_community']
         ),
-        'items' => [
-          array_map(function (ParagraphInterface $paragraph) {
-            $link = $paragraph->get('field_cta_link')->getValue();
+        'items' => array_map(function (ParagraphInterface $paragraph) {
+          $link = $paragraph->get('field_cta_link')->getValue();
+          $link = reset($link);
 
-            return [
-              'title' => $paragraph->get('field_title')->value,
-              'description' => $paragraph->get('field_description')->value,
-              'cta' => [
-                'label' => $link['title'],
-                'link' => $link ? Url::fromUri($link['uri'])->toString() : '',
-              ],
-            ];
-          }, $offers),
-        ],
+          return [
+            'title' => $paragraph->get('field_title')->value,
+            'description' => $paragraph->get('field_description')->value,
+            'cta' => [
+              'label' => $link['title'],
+              'link' => $link ? Url::fromUri($link['uri'])->toString() : '',
+            ],
+          ];
+        }, $offers),
       ],
       [
-        'title' => t('What we offer', [], ['context' => 'eic_community']),
+        'title' => t('What we offer', [], ['context' => 'eic_community']
+        )->render(),
         'extra_classes' => 'ecl-featured-list--is-organisation-announcements',
         'title_element' => 'h4',
         'icon_file_path' => $variables['eic_icon_path'],
@@ -200,20 +200,19 @@ function _eic_community_render_organisation_detail_page(&$variables, $group) {
           ['@count' => count($offers)],
           ['context' => 'eic_community']
         ),
-        'items' =>  [
-          array_map(function (ParagraphInterface $paragraph) {
-            $link = $paragraph->get('field_cta_link')->getValue();
+        'items' => array_map(function (ParagraphInterface $paragraph) {
+          $link = $paragraph->get('field_cta_link')->getValue();
+          $link = reset($link);
 
-            return [
-              'title' => $paragraph->get('field_title')->value,
-              'description' => $paragraph->get('field_description')->value,
-              'cta' => [
-                'label' => $link['title'],
-                'link' => $link ? Url::fromUri($link['uri'])->toString() : '',
-              ],
-            ];
-          }, $needs),
-        ],
+          return [
+            'title' => $paragraph->get('field_title')->value,
+            'description' => $paragraph->get('field_description')->value,
+            'cta' => [
+              'label' => $link['title'],
+              'link' => $link ? Url::fromUri($link['uri'])->toString() : '',
+            ],
+          ];
+        }, $needs),
       ],
     ],
   ];
@@ -287,8 +286,8 @@ function _eic_community_render_organisation_detail_page(&$variables, $group) {
         'icon_file_path' => $variables['eic_icon_path'],
         'is_collapsible' => TRUE,
         'grid' => TRUE,
-        'collapse_label' => 'Less',
-        'expand_label' => 'More',
+        'collapse_label' => t('Less'),
+        'expand_label' => t('More'),
         'items' => array_map(function (TermInterface $term) {
           return
             [
@@ -353,6 +352,7 @@ function eic_community_preprocess_paragraph__organisation_member(&$variables) {
   /** @var GroupInterface $group */
   $group = \Drupal::service('eic_groups.helper')->getGroupFromRoute();
   $user_ref = $paragraph->get('field_user_ref')->referencedEntities();
+  /** @var \Drupal\user\UserInterface $user */
   $user = reset($user_ref);
   /** @var \Drupal\media\MediaInterface|null $media_picture */
   $media_picture = $user->get('field_media')->referencedEntities();
@@ -383,6 +383,7 @@ function eic_community_preprocess_paragraph__organisation_member(&$variables) {
     'image' => [
       'src' => $file_url,
     ],
+    'path' => $user->toUrl(),
     'status' => [
       'label' => $paragraph->get('field_role')->value,
       'icon' => [
