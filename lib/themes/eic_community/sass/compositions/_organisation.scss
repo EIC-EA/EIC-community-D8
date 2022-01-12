@@ -43,6 +43,14 @@
       color: $ecl-color-grey;
       text-transform: none;
     }
+
+    & .announcements{
+      margin-bottom: ecl-box-model('padding', 'default');
+    }
+
+    & .ecl-button {
+      padding: 0;
+    }
   }
 
   &__contact {

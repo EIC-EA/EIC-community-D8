@@ -45,13 +45,13 @@
                 <section id="announcements" class="ecl-organisation__item ecl-organisation__announcements">
                     <h2>{{ announcements.title }}</h2>
                     <div id="react-announcements"></div>
-                    {% for announcementsItem in announcements.items %}
-                        <div class="ecl-organisation__announcements__item">
-                            {% include "@theme/patterns/compositions/featured-contributors.html.twig" with announcementsItem|merge({
-                                collapse_icon_transform: 'rotate-180',
-                            }) %}
-                        </div>
-                    {% endfor %}
+{#                    {% for announcementsItem in announcements.items %}#}
+{#                        <div class="ecl-organisation__announcements__item">#}
+{#                            {% include "@theme/patterns/compositions/featured-contributors.html.twig" with announcementsItem|merge({#}
+{#                                collapse_icon_transform: 'rotate-180',#}
+{#                            }) %}#}
+{#                        </div>#}
+{#                    {% endfor %}#}
                 </section>
             {% endif %}
 
