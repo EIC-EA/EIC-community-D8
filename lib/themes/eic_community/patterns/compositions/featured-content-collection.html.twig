@@ -1,6 +1,6 @@
 {% set title_element = title_element|default('h2') %}
 
-<section class="ecl-featured-content-collection {{ is_collapsible ? 'ecl-featured-content-collection--is-collapsible' }} {{ extra_classes }}">
+<section id="{{ extra_id }}" class="ecl-featured-content-collection {{ is_collapsible ? 'ecl-featured-content-collection--is-collapsible' }} {{ extra_classes }}">
   {% if no_container is empty %}
   <div class="ecl-container">
   {% endif %}

@@ -121,6 +121,7 @@ function eic_community_preprocess_views_view(&$variables) {
     case 'organisation_content-organisation_news':
       $variables['title'] = t('Latest news', [], ['context' => 'eic_community']);
       $variables['extra_classes'] = 'ecl-section-wrapper--is-white ecl-featured-content-collection--has-list-layout';
+      $variables['extra_id'] = 'news';
 
       /** @var \Drupal\group\Entity\GroupInterface $group */
       $group = \Drupal::service('eic_groups.helper')->getGroupFromRoute();
@@ -136,6 +137,7 @@ function eic_community_preprocess_views_view(&$variables) {
 
     case 'organisation_content-organisation_events':
       $variables['title'] = t('Events attending', [], ['context' => 'eic_community']);
+      $variables['extra_id'] = 'events';
       $variables['extra_classes'] = 'ecl-section-wrapper--is-white ecl-featured-content-collection--has-list-layout';
 
       /** @var \Drupal\group\Entity\GroupInterface $group */

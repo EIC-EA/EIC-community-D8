@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - field.field.paragraph.organisation_member.field_job_title
+    - field.field.paragraph.organisation_member.field_role
     - field.field.paragraph.organisation_member.field_user_ref
     - paragraphs.paragraphs_type.organisation_member
 id: paragraph.organisation_member.default
@@ -19,8 +20,16 @@ content:
     third_party_settings: {  }
     type: string_textfield
     region: content
-  field_user_ref:
+  field_role:
     weight: 1
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_user_ref:
+    weight: 2
     settings:
       match_operator: CONTAINS
       match_limit: 10

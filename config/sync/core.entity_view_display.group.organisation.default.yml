@@ -17,6 +17,7 @@ dependencies:
     - field.field.group.organisation.field_organisation_turnover
     - field.field.group.organisation.field_organisation_type
     - field.field.group.organisation.field_social_links
+    - field.field.group.organisation.field_team_members
     - field.field.group.organisation.field_vocab_services_products
     - field.field.group.organisation.field_vocab_target_markets
     - field.field.group.organisation.field_vocab_topics
@@ -60,6 +61,15 @@ content:
   field_offers:
     type: entity_reference_revisions_entity_view
     weight: 3
+    label: above
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    region: content
+  field_team_members:
+    type: entity_reference_revisions_entity_view
+    weight: 7
     label: above
     settings:
       view_mode: default

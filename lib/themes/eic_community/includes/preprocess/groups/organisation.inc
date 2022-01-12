@@ -11,6 +11,8 @@ use Drupal\Core\Url;
 use Drupal\address\FieldHelper;
 use CommerceGuys\Addressing\AddressFormat\AddressField;
 use Drupal\paragraphs\ParagraphInterface;
+use Drupal\group\Entity\GroupInterface;
+use Drupal\eic_overviews\GroupOverviewPages;
 
 /**
  * Implements hook_preprocess_group__TYPE().
@@ -173,9 +175,18 @@ function _eic_community_render_organisation_detail_page(&$variables, $group) {
           ['context' => 'eic_community']
         ),
         'items' => [
-          [
-            'content' => $variables['content']['field_needs'],
-          ],
+          array_map(function (ParagraphInterface $paragraph) {
+            $link = $paragraph->get('field_cta_link')->getValue();
+
+            return [
+              'title' => $paragraph->get('field_title')->value,
+              'description' => $paragraph->get('field_description')->value,
+              'cta' => [
+                'label' => $link['title'],
+                'link' => $link ? Url::fromUri($link['uri'])->toString() : '',
+              ],
+            ];
+          }, $offers),
         ],
       ],
       [
@@ -189,10 +200,19 @@ function _eic_community_render_organisation_detail_page(&$variables, $group) {
           ['@count' => count($offers)],
           ['context' => 'eic_community']
         ),
-        'items' => [
-          [
-            'content' => $variables['content']['field_offers'],
-          ],
+        'items' =>  [
+          array_map(function (ParagraphInterface $paragraph) {
+            $link = $paragraph->get('field_cta_link')->getValue();
+
+            return [
+              'title' => $paragraph->get('field_title')->value,
+              'description' => $paragraph->get('field_description')->value,
+              'cta' => [
+                'label' => $link['title'],
+                'link' => $link ? Url::fromUri($link['uri'])->toString() : '',
+              ],
+            ];
+          }, $needs),
         ],
       ],
     ],
@@ -207,19 +227,24 @@ function _eic_community_render_organisation_detail_page(&$variables, $group) {
     'organisation_events'
   );
 
+  $view_builder = Drupal::entityTypeManager()->getViewBuilder('paragraph');
   $variables['teams'] = [
     'title' => t('Our team', [], ['context' => 'eic_community']),
     'call_to_action' => [
       'link' => [
         'label' => t('See all members', [], ['context' => 'eic_community']),
-        'path' => '/test',
+        'path' => Url::fromRoute(
+          GroupOverviewPages::MEMBERS,
+          ['group' => $group instanceof GroupInterface ? $group->id() : 0]
+        ),
       ],
     ],
-    'items' => [
-      [
-        'content' => $variables['content']['field_team_members'],
-      ],
-    ],
+    'items' => array_map(
+      function (ParagraphInterface $paragraph) use ($view_builder) {
+        return ['content' => $view_builder->view($paragraph)];
+      },
+      $group->get('field_team_members')->referencedEntities()
+    ),
   ];
 
   $variables['details'] = [
@@ -325,6 +350,8 @@ function _eic_community_render_organisation_detail_page(&$variables, $group) {
 function eic_community_preprocess_paragraph__organisation_member(&$variables) {
   /** @var ParagraphInterface $paragraph */
   $paragraph = $variables['paragraph'];
+  /** @var GroupInterface $group */
+  $group = \Drupal::service('eic_groups.helper')->getGroupFromRoute();
   $user_ref = $paragraph->get('field_user_ref')->referencedEntities();
   $user = reset($user_ref);
   /** @var \Drupal\media\MediaInterface|null $media_picture */
@@ -340,13 +367,24 @@ function eic_community_preprocess_paragraph__organisation_member(&$variables) {
     $user->get('changed')->value
   );
 
+  /** @var \Drupal\eic_organisations\OrganisationsHelper $organisations_helper */
+  $organisations_helper = \Drupal::service('eic_organisations.helper');
+  $organisations = $organisations_helper->getUserOrganisations($user);
+  $organisations = array_filter(
+    $organisations,
+    function ($organisation) use ($group) {
+      return $group instanceof GroupInterface && $organisation->id(
+        ) !== $group->id();
+    }
+  );
+
   $variables['member_data'] = [
     'icon_file_path' => $variables['eic_icon_path'],
     'image' => [
       'src' => $file_url,
     ],
     'status' => [
-      'label' => $paragraph->get('field_job_title')->value,
+      'label' => $paragraph->get('field_role')->value,
       'icon' => [
         'type' => 'custom',
         'name' => 'trophy_circle',
@@ -354,10 +392,15 @@ function eic_community_preprocess_paragraph__organisation_member(&$variables) {
     ],
     'title' => realname_load($user),
     'job_titles' => $paragraph->get('field_job_title')->value,
-    'organisations' => [
-      'label' => 'Entreprise test',
-      'path' => '/test',
-    ],
+    'organisations' => array_map(
+      function (GroupInterface $group) use ($organisations_helper) {
+        return [
+          'label' => $group->label(),
+          'path' => $group->toUrl()->toString(),
+        ];
+      },
+      $organisations
+    ),
     'location' => _eic_community_get_user_location($user),
     'stats' => [
       [
