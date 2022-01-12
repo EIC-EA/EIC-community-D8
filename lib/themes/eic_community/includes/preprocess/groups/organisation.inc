@@ -5,10 +5,12 @@
  * Prepares variables for group type organisation templates.
  */
 
+use Drupal\file\Entity\File;
 use Drupal\taxonomy\TermInterface;
 use Drupal\Core\Url;
 use Drupal\address\FieldHelper;
 use CommerceGuys\Addressing\AddressFormat\AddressField;
+use Drupal\paragraphs\ParagraphInterface;
 
 /**
  * Implements hook_preprocess_group__TYPE().
@@ -115,9 +117,20 @@ function _eic_community_render_organisation_detail_page(&$variables, $group) {
   $addresses_data = array_map(function ($address) use ($address_index) {
     $address_index++;
     $countries_map = \Drupal\Core\Locale\CountryManager::getStandardList();
-    $location_formatted = $address[FieldHelper::getPropertyName(AddressField::ADDRESS_LINE1)] . ' ' . $address[$address[FieldHelper::getPropertyName(AddressField::ADDRESS_LINE2)]] . '<br />';
-    $location_formatted .= $address[FieldHelper::getPropertyName(AddressField::POSTAL_CODE)] . ' ' . $address[FieldHelper::getPropertyName(AddressField::LOCALITY)] . '<br />';
-    $location_formatted .= array_key_exists($address['country_code'], $countries_map) ?
+    $location_formatted = $address[FieldHelper::getPropertyName(
+        AddressField::ADDRESS_LINE1
+      )] . ' ' . $address[$address[FieldHelper::getPropertyName(
+        AddressField::ADDRESS_LINE2
+      )]] . '<br />';
+    $location_formatted .= $address[FieldHelper::getPropertyName(
+        AddressField::POSTAL_CODE
+      )] . ' ' . $address[FieldHelper::getPropertyName(
+        AddressField::LOCALITY
+      )] . '<br />';
+    $location_formatted .= array_key_exists(
+      $address['country_code'],
+      $countries_map
+    ) ?
       $countries_map[$address['country_code']] :
       '';
 
@@ -185,11 +198,17 @@ function _eic_community_render_organisation_detail_page(&$variables, $group) {
     ],
   ];
 
-  $variables['news'] = _eic_community_get_rendered_view('organisation_content', 'organisation_news');
-  $variables['events'] = _eic_community_get_rendered_view('organisation_content', 'organisation_events');
+  $variables['news'] = _eic_community_get_rendered_view(
+    'organisation_content',
+    'organisation_news'
+  );
+  $variables['events'] = _eic_community_get_rendered_view(
+    'organisation_content',
+    'organisation_events'
+  );
 
   $variables['teams'] = [
-    'title' => t('Teams', [], ['context' => 'eic_community']),
+    'title' => t('Our team', [], ['context' => 'eic_community']),
     'call_to_action' => [
       'link' => [
         'label' => t('See all members', [], ['context' => 'eic_community']),
@@ -197,7 +216,9 @@ function _eic_community_render_organisation_detail_page(&$variables, $group) {
       ],
     ],
     'items' => [
-
+      [
+        'content' => $variables['content']['field_team_members'],
+      ],
     ],
   ];
 
@@ -293,6 +314,67 @@ function _eic_community_render_organisation_detail_page(&$variables, $group) {
               ],
             ];
         }, $topics),
+      ],
+    ],
+  ];
+}
+
+/**
+ * Implement hook_preprocess_paragraph__PARAGRAPH_TYPE.
+ */
+function eic_community_preprocess_paragraph__organisation_member(&$variables) {
+  /** @var ParagraphInterface $paragraph */
+  $paragraph = $variables['paragraph'];
+  $user_ref = $paragraph->get('field_user_ref')->referencedEntities();
+  $user = reset($user_ref);
+  /** @var \Drupal\media\MediaInterface|null $media_picture */
+  $media_picture = $user->get('field_media')->referencedEntities();
+  /** @var File|NULL $file */
+  $file = $media_picture ? File::load(
+    $media_picture[0]->get('oe_media_image')->target_id
+  ) : NULL;
+  $file_url = $file ? file_url_transform_relative(
+    file_create_url($file->get('uri')->value)
+  ) : NULL;
+  $last_activity_ago = eic_community_get_teaser_time_display(
+    $user->get('changed')->value
+  );
+
+  $variables['member_data'] = [
+    'icon_file_path' => $variables['eic_icon_path'],
+    'image' => [
+      'src' => $file_url,
+    ],
+    'status' => [
+      'label' => $paragraph->get('field_job_title')->value,
+      'icon' => [
+        'type' => 'custom',
+        'name' => 'trophy_circle',
+      ],
+    ],
+    'title' => realname_load($user),
+    'job_titles' => $paragraph->get('field_job_title')->value,
+    'organisations' => [
+      'label' => 'Entreprise test',
+      'path' => '/test',
+    ],
+    'location' => _eic_community_get_user_location($user),
+    'stats' => [
+      [
+        'label' => t(
+          'Last activity',
+          [],
+          ['context' => 'eic_community']
+        ),
+        'value' => t(
+          'Last activity @time',
+          ['@time' => $last_activity_ago],
+          ['context' => 'eic_community']
+        ),
+        'icon' => [
+          'name' => 'time',
+          'type' => 'custom',
+        ],
       ],
     ],
   ];

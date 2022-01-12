@@ -1,0 +1,61 @@
+uuid: a8252a0b-668a-4425-a6cd-011ff78f6b8a
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.group.field_team_members
+    - group.type.organisation
+    - paragraphs.paragraphs_type.organisation_member
+  module:
+    - entity_reference_revisions
+id: group.organisation.field_team_members
+field_name: field_team_members
+entity_type: group
+bundle: organisation
+label: 'Team members'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    negate: 0
+    target_bundles:
+      organisation_member: organisation_member
+    target_bundles_drag_drop:
+      announcement:
+        weight: 12
+        enabled: false
+      banner:
+        weight: 13
+        enabled: false
+      contributor:
+        weight: 14
+        enabled: false
+      cta_tile:
+        weight: 15
+        enabled: false
+      full_media_content:
+        weight: 16
+        enabled: false
+      full_text_content:
+        weight: 17
+        enabled: false
+      gallery_slide:
+        weight: 18
+        enabled: false
+      organisation_member:
+        enabled: true
+        weight: 19
+      quote:
+        weight: 20
+        enabled: false
+      text_and_media_content:
+        weight: 21
+        enabled: false
+      tiles_content:
+        weight: 22
+        enabled: false
+field_type: entity_reference_revisions

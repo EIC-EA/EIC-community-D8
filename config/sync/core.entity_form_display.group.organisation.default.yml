@@ -17,6 +17,7 @@ dependencies:
     - field.field.group.organisation.field_organisation_turnover
     - field.field.group.organisation.field_organisation_type
     - field.field.group.organisation.field_social_links
+    - field.field.group.organisation.field_team_members
     - field.field.group.organisation.field_vocab_services_products
     - field.field.group.organisation.field_vocab_target_markets
     - field.field.group.organisation.field_vocab_topics
@@ -39,6 +40,7 @@ third_party_settings:
         - group_main
         - group_announcements
         - group_taxonomies
+        - group_team
         - group_contact
         - group_features
       parent_name: ''
@@ -113,7 +115,7 @@ third_party_settings:
         - field_address
         - field_locations
       parent_name: group_organisation
-      weight: 5
+      weight: 6
       format_type: tab
       region: content
       format_settings:
@@ -128,7 +130,7 @@ third_party_settings:
       children:
         - features
       parent_name: group_organisation
-      weight: 6
+      weight: 7
       format_type: tab
       region: content
       format_settings:
@@ -139,6 +141,21 @@ third_party_settings:
         formatter: closed
         required_fields: true
       label: Features
+    group_team:
+      children:
+        - field_team_members
+      parent_name: group_organisation
+      weight: 5
+      format_type: tab
+      region: hidden
+      format_settings:
+        show_empty_fields: false
+        id: ''
+        classes: ''
+        description: ''
+        formatter: closed
+        required_fields: true
+      label: Team
 id: group.organisation.default
 targetEntityType: group
 bundle: organisation
@@ -256,6 +273,18 @@ content:
     settings: {  }
     third_party_settings: {  }
     type: options_buttons
+    region: content
+  field_team_members:
+    type: entity_reference_paragraphs
+    weight: 27
+    settings:
+      title: Paragraph
+      title_plural: Paragraphs
+      edit_mode: open
+      add_mode: dropdown
+      form_display_mode: default
+      default_paragraph_type: ''
+    third_party_settings: {  }
     region: content
   field_vocab_services_products:
     weight: 5
