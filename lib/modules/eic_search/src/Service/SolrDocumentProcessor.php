@@ -673,7 +673,7 @@ class SolrDocumentProcessor {
 
     $url_contact = Url::fromRoute(
       'eic_private_message.user_private_message',
-      ['user' => $user->id()],
+      ['user' => $user->id()]
     )->toString();
 
     $this->addOrUpdateDocumentField(
