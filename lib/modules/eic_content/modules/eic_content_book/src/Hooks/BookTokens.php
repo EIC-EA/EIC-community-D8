@@ -88,7 +88,15 @@ class BookTokens implements ContainerInjectionInterface {
     foreach ($tokens as $name => $original) {
       switch ($name) {
         case 'node_book_parent_url':
-          if (($node = $data['node']) && !$node instanceof NodeInterface) {
+          // Grabs the node object from the data.
+          if (!empty($data['entity'])) {
+            $node = $data['entity'];
+          }
+          elseif (!empty($data['node'])) {
+            $node = $data['node'];
+          }
+
+          if (!$node instanceof NodeInterface) {
             break;
           }
 
