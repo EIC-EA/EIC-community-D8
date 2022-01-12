@@ -103,12 +103,24 @@
       font-size: .875em;
     }
   }
-  &--organisation &__status{
+  &--organisation-member &__status{
     width: 100%;
     margin-bottom: $ecl-spacing-s;
   }
 
-  &--organisation &__image-wrapper, &--organisation &__image-wrapper &__image {
+  &--organisation-member &__meta-footer{
+    position: relative;
+    width: 100%;
+    margin-top: $ecl-spacing-s;
+
+    #{$node}__stats {
+      margin-left: 0;
+    }
+  }
+  &--organisation &__image-wrapper,
+  &--organisation &__image-wrapper &__image,
+  &--organisation-member &__image-wrapper,
+  &--organisation-member &__image-wrapper &__image {
     width: 80px;
     height: 80px;
     object-fit: cover;
