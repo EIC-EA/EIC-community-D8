@@ -164,14 +164,14 @@ function _eic_community_render_organisation_detail_page(&$variables, $group) {
     'title' => t('Announcements', [], ['context' => 'eic_community']),
     'items' => [
       [
-        'title' => t('We are looking for', [], ['context' => 'eic_community']),
+        'title' => t('What we offer ', [], ['context' => 'eic_community']),
         'extra_classes' => 'ecl-featured-list--is-organisation-announcements',
         'title_element' => 'h4',
         'icon_file_path' => $variables['eic_icon_path'],
         'is_collapsible' => TRUE,
         'collapse_label' => t(
-          'Show @count more',
-          ['@count' => count($needs)],
+          'Show 2 more',
+          [],
           ['context' => 'eic_community']
         ),
         'items' => array_map(function (ParagraphInterface $paragraph) {
@@ -189,15 +189,15 @@ function _eic_community_render_organisation_detail_page(&$variables, $group) {
         }, $offers),
       ],
       [
-        'title' => t('What we offer', [], ['context' => 'eic_community']
+        'title' => t('We are looking for', [], ['context' => 'eic_community']
         )->render(),
         'extra_classes' => 'ecl-featured-list--is-organisation-announcements',
         'title_element' => 'h4',
         'icon_file_path' => $variables['eic_icon_path'],
         'is_collapsible' => TRUE,
         'collapse_label' => t(
-          'Show @count more',
-          ['@count' => count($offers)],
+          'Show 2 more',
+          [],
           ['context' => 'eic_community']
         ),
         'items' => array_map(function (ParagraphInterface $paragraph) {
