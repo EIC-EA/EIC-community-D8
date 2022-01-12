@@ -56,7 +56,7 @@ class LibrarySourceType extends SourceType {
    */
   public function getAvailableSortOptions(): array {
     return [
-      'tm_global_title' => [
+      'ss_content_title' => [
         'label' => $this->t('Title', [], ['context' => 'eic_search']),
         'ASC' => $this->t('Title (A-Z)', [], ['context' => 'eic_search']),
         'DESC' => $this->t('Title (Z-A)', [], ['context' => 'eic_search']),
