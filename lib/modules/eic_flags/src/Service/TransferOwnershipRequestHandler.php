@@ -37,6 +37,7 @@ class TransferOwnershipRequestHandler extends AbstractRequestHandler {
       RequestStatus::OPEN => 'notify_new_transfer_owner_req',
       RequestStatus::DENIED => 'notify_transfer_owner_req_denied',
       RequestStatus::ACCEPTED => 'notify_transfer_owner_req_accept',
+      RequestStatus::TIMEOUT => 'notify_transf_owner_expire',
     ];
   }
 
@@ -279,6 +280,21 @@ class TransferOwnershipRequestHandler extends AbstractRequestHandler {
       return $access;
     }
 
+    $requests = $this->getOpenRequests($entity);
+    $request = reset($requests);
+    $expiration_date = 0;
+
+    // If request has expiration, we set a max-age.
+    if ($this->hasExpiration($request)) {
+      $expiration_date = $request->get(HandlerInterface::REQUEST_TIMEOUT_FIELD)->value * 86400;
+      $expiration_date += $request->get('created')->value;
+      $access->setCacheMaxAge($expiration_date);
+    }
+
+    if ($this->hasExpired($request)) {
+      return $access;
+    }
+
     // If current user is not a group owner or a power user, we return
     // access forbidden.
     if (!(
@@ -300,11 +316,18 @@ class TransferOwnershipRequestHandler extends AbstractRequestHandler {
 
     // Allow access to transfer group ownership if the member is a group admin
     // but not the owner.
-    return AccessResult::allowedIf(
+    $access = AccessResult::allowedIf(
       !in_array($group_owner_role, array_keys($membership->getRoles())) &&
       in_array($group_admin_role, array_keys($membership->getRoles())))
       ->addCacheableDependency($entity)
       ->addCacheableDependency($group);
+
+    // Set max-age based on expiration date.
+    if ($expiration_date > 0) {
+      $access->setCacheMaxAge($expiration_date);
+    }
+
+    return $access;
   }
 
   /**
@@ -335,35 +358,48 @@ class TransferOwnershipRequestHandler extends AbstractRequestHandler {
    *   The group content entity related to the new owner.
    */
   private function transferGroupOwnership(GroupInterface $group, GroupContentInterface $group_content) {
+    /** @var \Drupal\group\GroupMembership $old_owner_membership */
+    $old_owner_membership = EICGroupsHelper::getGroupOwner($group, TRUE);
+
+    // Removes group owner role from the old owner and adds group admin role.
+    $this->updateMembershipRoles(
+      $old_owner_membership,
+      [
+        $group->bundle() . '-' . EICGroupsHelper::GROUP_TYPE_ADMINISTRATOR_ROLE,
+      ],
+      [
+        $group->bundle() . '-' . EICGroupsHelper::GROUP_TYPE_OWNER_ROLE,
+      ]
+    );
+
     /** @var \Drupal\user\UserInterface $new_owner */
     $new_owner = $group_content->getEntity();
     $new_owner_membership = $group->getMember($new_owner);
 
-    /** @var \Drupal\group\GroupMembership $old_owner_membership */
-    $old_owner_membership = EICGroupsHelper::getGroupOwner($group, TRUE);
-
-    // Removes group owner role from the old owner and add group admin role.
-    $this->updateOldOwnerRoles($old_owner_membership);
-
-    $group_owner_role = $group->bundle() . '-' . EICGroupsHelper::GROUP_TYPE_OWNER_ROLE;
-    // Transfer old group owner role to the new owner.
-    $new_owner_membership->addRole($group_owner_role);
+    // Transfer group owner role to the new owner and deletes group admin role.
+    $this->updateMembershipRoles(
+      $new_owner_membership,
+      [
+        $group->bundle() . '-' . EICGroupsHelper::GROUP_TYPE_OWNER_ROLE,
+      ],
+      [
+        $group->bundle() . '-' . EICGroupsHelper::GROUP_TYPE_ADMINISTRATOR_ROLE,
+      ]
+    );
   }
 
   /**
-   * Adds/removes roles from the old owner when transfering group ownership.
+   * Adds/removes roles from the group membership.
    *
-   * @param \Drupal\group\GroupMembership $old_owner_membership
+   * @param \Drupal\group\GroupMembership $membership
    *   The old group owner membership.
+   * @param array $add_roles
+   *   Roles to add to the membership.
+   * @param array $delete_roles
+   *   Roles to delete from the membership.
    */
-  private function updateOldOwnerRoles(GroupMembership $old_owner_membership) {
-    $group = $old_owner_membership->getGroup();
-
-    $add_roles = [
-      $group->bundle() . '-' . EICGroupsHelper::GROUP_TYPE_ADMINISTRATOR_ROLE,
-    ];
-
-    $group_content = $old_owner_membership->getGroupContent();
+  public function updateMembershipRoles(GroupMembership $membership, array $add_roles = [], array $delete_roles = []) {
+    $group_content = $membership->getGroupContent();
 
     // Add roles.
     foreach ($add_roles as $new_role) {
@@ -383,12 +419,8 @@ class TransferOwnershipRequestHandler extends AbstractRequestHandler {
       $group_content->group_roles[] = $new_role;
     }
 
-    $remove_roles = [
-      $group->bundle() . '-' . EICGroupsHelper::GROUP_TYPE_OWNER_ROLE,
-    ];
-
     // Remove roles.
-    foreach ($remove_roles as $old_role) {
+    foreach ($delete_roles as $old_role) {
       foreach ($group_content->group_roles as $key => $role_item) {
         if ($role_item->target_id == $old_role) {
           $group_content->group_roles->removeItem($key);
