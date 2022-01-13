@@ -1,6 +1,6 @@
 {% set title_element = title_element|default('h2') %}
 
-<div class="ecl-teaser ecl-teaser--organisation ecl-teaser--organisation-member {{ highlight.is_active ? 'ecl-teaser--is-highlighted' }} {{ extra_classes }}">
+<div class="ecl-teaser ecl-teaser--organisation-member {{ highlight.is_active ? 'ecl-teaser--is-highlighted' }} {{ extra_classes }}">
   {% if status is not empty %}
     <div class="ecl-teaser__status">
       {% include "@theme/patterns/components/content-type-indicator.html.twig" with status|default({})|merge({
@@ -63,28 +63,28 @@
         {% endif %}
       </div>
     </div>
-    {% if stats is not empty %}
-      <div class="ecl-teaser__meta-footer">
-        <div class="ecl-teaser__stats">
-          {% for stat in stats %}
-            <div class="ecl-teaser__stat">
-              {% if stat.icon is not empty and icon_file_path %}
-                {% include '@ecl-twig/ec-component-icon/ecl-icon.html.twig' with {
-                  icon: {
-                    size: 'xs',
-                    path: icon_file_path,
-                    type: stat.icon.type|default('branded'),
-                    name: stat.icon.name,
-                  },
-                  extra_classes: 'ecl-teaser__stat-icon',
-                } only %}
-              {% endif %}
-              <span class="ecl-teaser__stat-label">{{ stat.label }}</span>
-              <span class="ecl-teaser__stat-value">{{ stat.value }}</span>
-            </div>
-          {% endfor %}
-        </div>
-      </div>
-    {% endif %}
   </div>
+{% if stats is not empty %}
+  <div class="ecl-teaser__meta-footer">
+    <div class="ecl-teaser__stats">
+      {% for stat in stats %}
+        <div class="ecl-teaser__stat">
+          {% if stat.icon is not empty and icon_file_path %}
+            {% include '@ecl-twig/ec-component-icon/ecl-icon.html.twig' with {
+              icon: {
+                size: 'xs',
+                path: icon_file_path,
+                type: stat.icon.type|default('branded'),
+                name: stat.icon.name,
+              },
+              extra_classes: 'ecl-teaser__stat-icon',
+            } only %}
+          {% endif %}
+          <span class="ecl-teaser__stat-label">{{ stat.label }}</span>
+          <span class="ecl-teaser__stat-value">{{ stat.value }}</span>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+{% endif %}
 </div>
