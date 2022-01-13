@@ -110,6 +110,10 @@
       @extend .ecl-u-type-heading-5;
     }
 
+    &--wiki img{
+      max-width: 100%;
+    }
+
   }
 
   &__aside {
