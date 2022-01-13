@@ -28,6 +28,7 @@ function eic_community_preprocess_block__group_menu(
 
     // If we have an overview-url in parameter, do a special check for the active.
     if (
+      $link_url->getOption('query') &&
       array_key_exists($overview_parameter, $link_url->getOption('query')) &&
       $overview_url_link = $link_url->getOption('query')[$overview_parameter]
     ) {

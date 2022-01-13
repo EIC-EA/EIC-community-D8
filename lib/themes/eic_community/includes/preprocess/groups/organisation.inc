@@ -20,19 +20,7 @@ use Drupal\eic_overviews\GroupOverviewPages;
 function eic_community_preprocess_group__organisation(&$variables) {
   /** @var \Drupal\group\Entity\GroupInterface $group */
   $group = $variables['group'];
-
-  switch ($variables['view_mode']) {
-    case 'full':
-      _eic_community_render_organisation_detail_page($variables, $group);
-      break;
-
-    case 'teaser':
-    case 'small_teaser':
-      // Add event topics to the theme variables.
-      if (!$group->get('field_vocab_topics')->isEmpty()) {
-        $topics = $group->get('field_vocab_topics')->referencedEntities();
-      }
-  }
+  _eic_community_render_organisation_detail_page($variables, $group);
 }
 
 /**
@@ -54,7 +42,8 @@ function _eic_community_render_organisation_detail_page(&$variables, $group) {
     ->get('field_vocab_services_products')
     ->referencedEntities();
 
-  $link = reset($group->get('field_organisation_link')->getValue());
+  $organisation_link = $group->get('field_organisation_link')->getValue();
+  $link = reset($organisation_link);
   $link_data = $link ?
     [
       'title' => 'Link',

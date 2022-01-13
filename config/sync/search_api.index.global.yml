@@ -32,13 +32,14 @@ dependencies:
     - field.storage.user.field_last_name
     - field.storage.media.oe_media_image
     - field.storage.user.field_media
+    - field.storage.group.field_locations
     - field.storage.group.field_location_type
+    - field.storage.group.field_organisation_type
     - field.storage.group.field_vocab_geo
     - field.storage.group.field_thumbnail
     - field.storage.group.field_image
     - field.storage.group.field_vocab_topics
     - field.storage.group.field_body
-    - field.storage.group.field_organisation_type
     - field.storage.message.field_entity_type
     - field.storage.message.field_group_ref
     - field.storage.message.field_operation_type
@@ -735,6 +736,16 @@ field_settings:
     dependencies:
       config:
         - field.storage.group.field_location_type
+  group_field_locations_string:
+    label: 'Locations » Taxonomy term » Name'
+    datasource_id: 'entity:group'
+    property_path: 'field_locations:entity:name'
+    type: string
+    dependencies:
+      config:
+        - field.storage.group.field_locations
+      module:
+        - taxonomy
   group_field_organisation_type:
     label: '[Group] Organisation type'
     datasource_id: 'entity:group'
@@ -812,6 +823,16 @@ field_settings:
     dependencies:
       module:
         - content_moderation
+  group_organisation_type_string:
+    label: 'Organisation type » Taxonomy term » Name'
+    datasource_id: 'entity:group'
+    property_path: 'field_organisation_type:entity:name'
+    type: string
+    dependencies:
+      config:
+        - field.storage.group.field_organisation_type
+      module:
+        - taxonomy
   group_statistic_comments:
     label: 'Group statistics - Comments'
     property_path: group_statistic_comments
