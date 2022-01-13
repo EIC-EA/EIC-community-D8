@@ -3,7 +3,7 @@
     {% for item in items %}
       <li class="ecl-navigation-list__item {{ item.extra_classes }}" aria-active="{{ item.is_active ? 'true' : 'false' }}">
         <div class="ecl-link ecl-navigation-list__link">
-          <a  href="{{ item.link.path }}">
+          <a  href="{{ item.link.path }}{{ anchor }}">
             {{ item.link.label }}
           </a>
           <span class="ecl-navigation-list__link-controls">

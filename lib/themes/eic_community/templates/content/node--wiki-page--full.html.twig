@@ -8,7 +8,7 @@
 #}
 {% block content %}
   {% if actions is not empty %}
-    <section class="ecl-editorial-article__header ecl-editorial-article__header--wiki">
+    <section id="wiki_content" class="ecl-editorial-article__header ecl-editorial-article__header--wiki">
       {% include "@theme/patterns/components/inline-actions.html.twig" with actions|default({})|merge({
         items: actions.items ? actions.items|map(i => i|merge({
           extra_classes: i.extra_classes|default('') ~ ' ecl-link--button ecl-link--button-primary'
@@ -17,7 +17,7 @@
       {{ eic_local_tasks }}
     </section>
   {% endif %}
-<section class="ecl-editorial-article__content ecl-editorial-article__content--wiki">
+<section  class="ecl-editorial-article__content ecl-editorial-article__content--wiki">
     {{ content }}
 </section>
 {% endblock %}

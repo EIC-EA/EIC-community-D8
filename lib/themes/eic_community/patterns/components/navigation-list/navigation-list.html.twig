@@ -29,7 +29,9 @@
       <{{ title_element }} class="ecl-navigation-list__title">{{ title }}</{{ title_element }}>
     {% endif %}
 
-    {% include "@theme/patterns/components/navigation-list/navigation-list-items.html.twig" %}
+    {% include "@theme/patterns/components/navigation-list/navigation-list-items.html.twig" with {
+      anchor: anchor
+    } %}
 
     {% if block('after') is not empty %}
       <div class="ecl-navigation-list__main-after">
