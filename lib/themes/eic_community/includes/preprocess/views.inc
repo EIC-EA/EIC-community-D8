@@ -142,7 +142,7 @@ function eic_community_preprocess_views_view(&$variables) {
 
       /** @var \Drupal\group\Entity\GroupInterface $group */
       $group = \Drupal::service('eic_groups.helper')->getGroupFromRoute();
-      if ($group instanceof \Drupal\group\Entity\GroupInterface) {
+      if ($group instanceof \Drupal\group\Entity\GroupInterface && !empty($variables['rows'])) {
         $variables['call_to_action'] = [
           'link' => [
             'label' => t('View all events'),
