@@ -21,9 +21,9 @@ default_value_callback: ''
 settings:
   handler: 'default:paragraph'
   handler_settings:
-    negate: 0
     target_bundles:
       quote: quote
+    negate: 0
     target_bundles_drag_drop:
       full_media_content:
         weight: 6
@@ -32,8 +32,8 @@ settings:
         weight: 7
         enabled: false
       quote:
-        enabled: true
         weight: 8
+        enabled: true
       text_and_media_content:
         weight: 9
         enabled: false

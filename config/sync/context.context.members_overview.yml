@@ -4,8 +4,8 @@ status: true
 dependencies:
   module:
     - route_condition
-name: members_overview
 label: 'Members - Overview'
+name: members_overview
 group: 'Global overviews'
 description: 'This context is used for the Members overview'
 requireAllConditions: false
@@ -13,20 +13,29 @@ disabled: false
 conditions:
   route:
     id: route
-    routes: eic_search.people
     negate: false
     uuid: 2ad6f71f-a7b7-4751-988e-60be0a3c00bc
     context_mapping: {  }
+    routes: eic_search.people
 reactions:
   blocks:
+    id: blocks
+    uuid: deeaf135-b781-47ec-b086-7d9fec72c007
     blocks:
       93270f47-6866-48ec-9e25-fd06d01cf15e:
+        uuid: 93270f47-6866-48ec-9e25-fd06d01cf15e
         id: eic_search_overview
         label: null
         provider: null
         label_display: null
         region: content
         weight: '0'
+        custom_id: eic_search_overview
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: members_overview
+        context_mapping: {  }
         facets:
           sm_user_profile_topic_expertise_string: sm_user_profile_topic_expertise_string
           sm_user_profile_field_vocab_topic_interest_array: sm_user_profile_field_vocab_topic_interest_array
@@ -41,15 +50,6 @@ reactions:
         prefilter_group: 0
         add_facet_interests: 0
         add_facet_my_groups: 0
-        context_mapping: {  }
-        custom_id: eic_search_overview
-        theme: eic_community
-        css_class: ''
-        unique: 0
-        context_id: members_overview
-        uuid: 93270f47-6866-48ec-9e25-fd06d01cf15e
-    id: blocks
-    saved: false
-    uuid: deeaf135-b781-47ec-b086-7d9fec72c007
     include_default_blocks: 0
+    saved: false
 weight: 0

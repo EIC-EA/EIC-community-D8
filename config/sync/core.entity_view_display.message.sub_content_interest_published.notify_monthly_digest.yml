@@ -15,10 +15,10 @@ bundle: sub_content_interest_published
 mode: notify_monthly_digest
 content:
   partial_2:
-    weight: 0
-    region: content
     settings: {  }
     third_party_settings: {  }
+    weight: 0
+    region: content
 hidden:
   field_event_executing_user: true
   field_group_ref: true

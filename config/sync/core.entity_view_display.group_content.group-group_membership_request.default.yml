@@ -14,24 +14,24 @@ bundle: group-group_membership_request
 mode: default
 content:
   flag_bookmark_group_content:
-    weight: 10
     settings: {  }
     third_party_settings: {  }
+    weight: 10
     region: content
   grequest_status:
     type: list_default
-    weight: -4
     label: above
     settings: {  }
     third_party_settings: {  }
+    weight: -4
     region: content
   grequest_updated_by:
-    label: above
     type: entity_reference_label
+    label: above
     settings:
       link: true
-    weight: -3
     third_party_settings: {  }
+    weight: -3
     region: content
 hidden:
   entity_id: true

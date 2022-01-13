@@ -21,111 +21,111 @@ bundle: document
 mode: default
 content:
   field_body:
-    weight: 5
+    type: text_default
     label: hidden
     settings: {  }
     third_party_settings: {  }
-    type: text_default
+    weight: 5
     region: content
   field_document_media:
     type: entity_reference_entity_view
-    weight: 4
     label: hidden
     settings:
       view_mode: default
       link: false
     third_party_settings: {  }
+    weight: 4
     region: content
   field_document_type:
-    weight: 12
+    type: entity_reference_label
     label: above
     settings:
       link: true
     third_party_settings: {  }
-    type: entity_reference_label
+    weight: 12
     region: content
   field_image:
-    weight: 14
+    type: entity_reference_label
     label: above
     settings:
       link: true
     third_party_settings: {  }
-    type: entity_reference_label
+    weight: 14
     region: content
   field_language:
-    weight: 11
+    type: entity_reference_label
     label: above
     settings:
       link: true
     third_party_settings: {  }
-    type: entity_reference_label
+    weight: 11
     region: content
   field_vocab_geo:
-    weight: 13
+    type: entity_reference_label
     label: above
     settings:
       link: true
     third_party_settings: {  }
-    type: entity_reference_label
+    weight: 13
     region: content
   field_vocab_topics:
     type: entity_reference_label
-    weight: 3
-    region: content
     label: hidden
     settings:
       link: false
     third_party_settings: {  }
+    weight: 3
+    region: content
   flag_bookmark_content:
+    settings: {  }
+    third_party_settings: {  }
     weight: 6
     region: content
+  flag_follow_content:
     settings: {  }
     third_party_settings: {  }
-  flag_follow_content:
     weight: 7
     region: content
+  flag_highlight_content:
     settings: {  }
     third_party_settings: {  }
-  flag_highlight_content:
     weight: 8
     region: content
+  flag_like_content:
     settings: {  }
     third_party_settings: {  }
-  flag_like_content:
     weight: 9
     region: content
+  flag_recommend:
     settings: {  }
     third_party_settings: {  }
-  flag_recommend:
     weight: 10
     region: content
+  links:
     settings: {  }
     third_party_settings: {  }
-  links:
     weight: 0
     region: content
-    settings: {  }
-    third_party_settings: {  }
   member_content_edit_access:
+    type: boolean
+    label: above
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
     weight: 1
     region: content
+  private:
+    type: boolean
     label: above
     settings:
       format: default
       format_custom_false: ''
       format_custom_true: ''
     third_party_settings: {  }
-    type: boolean
-  private:
     weight: 2
     region: content
-    label: above
-    settings:
-      format: default
-      format_custom_false: ''
-      format_custom_true: ''
-    third_party_settings: {  }
-    type: boolean
 hidden:
   extra_field_eic_theme_helper_short_title_with_fallback: true
   field_comments: true

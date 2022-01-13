@@ -1,4 +1,4 @@
-admin: seven
-default: eic_community
 _core:
   default_config_hash: 37StisSoQizUHx7VrpD5uHL4lPZThgPZoRSJ2LGh1hg
+admin: seven
+default: eic_community

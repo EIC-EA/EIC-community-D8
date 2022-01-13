@@ -19,105 +19,11 @@ base_table: search_api_index_global
 base_field: search_api_id
 display:
   default:
-    display_plugin: default
     id: default
     display_title: Master
+    display_plugin: default
     position: 0
     display_options:
-      access:
-        type: none
-        options: {  }
-      cache:
-        type: tag
-        options: {  }
-      query:
-        type: views_query
-        options:
-          bypass_access: false
-          skip_access: false
-          preserve_facet_query_args: false
-      exposed_form:
-        type: basic
-        options:
-          submit_button: Apply
-          reset_button: false
-          reset_button_label: Reset
-          exposed_sorts_label: 'Sort by'
-          expose_sort_order: true
-          sort_asc_label: Asc
-          sort_desc_label: Desc
-      pager:
-        type: full
-        options:
-          items_per_page: 10
-          offset: 0
-          id: 0
-          total_pages: null
-          tags:
-            previous: ‹‹
-            next: ››
-            first: '« First'
-            last: 'Last »'
-          expose:
-            items_per_page: true
-            items_per_page_label: 'Items per page'
-            items_per_page_options: '10,20,50,100'
-            items_per_page_options_all: false
-            items_per_page_options_all_label: '- All -'
-            offset: false
-            offset_label: Offset
-          quantity: 9
-      style:
-        type: default
-        options:
-          grouping: {  }
-          row_class: ''
-          default_row_class: true
-          uses_fields: false
-      row:
-        type: search_api
-        options:
-          view_modes:
-            'entity:content_moderation_state':
-              content_moderation_state: default
-            'entity:flagging':
-              bookmark_content: default
-              bookmark_media: default
-              follow_content: default
-              follow_group: default
-              follow_group_content: default
-              follow_taxonomy: default
-              follow_user: default
-              highlight_content: default
-              highlight_group_content: default
-              like_comment: default
-              like_content: default
-              like_media: default
-              recommend: default
-              recommend_group: default
-            'entity:group':
-              group: teaser
-            'entity:group_content':
-              group-group_invitation: default
-              group-group_membership: default
-              group-group_membership_request: default
-              group-group_node-book: default
-              group-group_node-discussion: default
-              group-group_node-document: default
-              group-group_node-gallery: default
-              group-group_node-wiki_page: default
-              group_content_type_ddd92dce39526: default
-            'entity:node':
-              book: teaser
-              discussion: teaser
-              document: teaser
-              gallery: teaser
-              news: teaser
-              page: teaser
-              story: teaser
-              wiki_page: teaser
-            'entity:user':
-              user: teaser
       fields:
         label:
           id: label
@@ -126,6 +32,8 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          entity_type: group
+          plugin_id: search_api_field
           label: ''
           exclude: false
           alter:
@@ -188,8 +96,46 @@ display:
             use_highlighting: false
             multi_type: separator
             multi_separator: ', '
-          entity_type: group
-          plugin_id: search_api_field
+      pager:
+        type: full
+        options:
+          offset: 0
+          items_per_page: 10
+          total_pages: null
+          id: 0
+          tags:
+            next: ››
+            previous: ‹‹
+            first: '« First'
+            last: 'Last »'
+          expose:
+            items_per_page: true
+            items_per_page_label: 'Items per page'
+            items_per_page_options: '10,20,50,100'
+            items_per_page_options_all: false
+            items_per_page_options_all_label: '- All -'
+            offset: false
+            offset_label: Offset
+          quantity: 9
+      exposed_form:
+        type: basic
+        options:
+          submit_button: Apply
+          reset_button: false
+          reset_button_label: Reset
+          exposed_sorts_label: 'Sort by'
+          expose_sort_order: true
+          sort_asc_label: Asc
+          sort_desc_label: Desc
+      access:
+        type: none
+        options: {  }
+      cache:
+        type: tag
+        options: {  }
+      empty: {  }
+      sorts: {  }
+      arguments: {  }
       filters:
         search_api_datasource:
           id: search_api_datasource
@@ -198,6 +144,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: search_api_datasource
           operator: or
           value:
             'entity:group': 'entity:group'
@@ -231,7 +178,6 @@ display:
             default_group_multiple: {  }
             group_items: {  }
           reduce_duplicates: false
-          plugin_id: search_api_datasource
         search_api_fulltext:
           id: search_api_fulltext
           table: search_api_index_global
@@ -239,6 +185,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: search_api_fulltext
           operator: and
           value: ''
           group: 1
@@ -263,8 +210,8 @@ display:
               service_authentication: '0'
               site_admin: '0'
               administrator: '0'
-            placeholder: ''
             expose_fields: false
+            placeholder: ''
             searched_fields_id: search_api_fulltext_searched_fields
           is_grouped: false
           group_info:
@@ -281,13 +228,66 @@ display:
           parse_mode: terms
           min_length: 2
           fields: {  }
-          plugin_id: search_api_fulltext
-      sorts: {  }
+      style:
+        type: default
+        options:
+          grouping: {  }
+          row_class: ''
+          default_row_class: true
+          uses_fields: false
+      row:
+        type: search_api
+        options:
+          view_modes:
+            'entity:content_moderation_state':
+              content_moderation_state: default
+            'entity:flagging':
+              bookmark_content: default
+              bookmark_media: default
+              follow_content: default
+              follow_group: default
+              follow_group_content: default
+              follow_taxonomy: default
+              follow_user: default
+              highlight_content: default
+              highlight_group_content: default
+              like_comment: default
+              like_content: default
+              like_media: default
+              recommend: default
+              recommend_group: default
+            'entity:group':
+              group: teaser
+            'entity:group_content':
+              group-group_invitation: default
+              group-group_membership: default
+              group-group_membership_request: default
+              group-group_node-book: default
+              group-group_node-discussion: default
+              group-group_node-document: default
+              group-group_node-gallery: default
+              group-group_node-wiki_page: default
+              group_content_type_ddd92dce39526: default
+            'entity:node':
+              book: teaser
+              discussion: teaser
+              document: teaser
+              gallery: teaser
+              news: teaser
+              page: teaser
+              story: teaser
+              wiki_page: teaser
+            'entity:user':
+              user: teaser
+      query:
+        type: views_query
+        options:
+          bypass_access: false
+          skip_access: false
+          preserve_facet_query_args: false
+      relationships: {  }
       header: {  }
       footer: {  }
-      empty: {  }
-      relationships: {  }
-      arguments: {  }
       display_extenders: {  }
     cache_metadata:
       max-age: -1
@@ -300,12 +300,31 @@ display:
       tags:
         - 'config:search_api.index.global'
   members:
-    display_plugin: page
     id: members
     display_title: People
+    display_plugin: page
     position: 3
     display_options:
-      display_extenders: {  }
+      enabled: false
+      title: People
+      access:
+        type: perm
+        options:
+          perm: 'view any member profile'
+      cache:
+        type: none
+      empty:
+        area_text_custom:
+          id: area_text_custom
+          table: views
+          field: area_text_custom
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: text_custom
+          empty: true
+          content: 'No results found.'
+          tokenize: false
       filters:
         search_api_datasource:
           id: search_api_datasource
@@ -314,6 +333,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: search_api_datasource
           operator: or
           value:
             'entity:user': 'entity:user'
@@ -347,7 +367,6 @@ display:
             default_group_multiple: {  }
             group_items: {  }
           reduce_duplicates: false
-          plugin_id: search_api_datasource
         search_api_fulltext:
           id: search_api_fulltext
           table: search_api_index_global
@@ -355,6 +374,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: search_api_fulltext
           operator: and
           value: ''
           group: 1
@@ -379,8 +399,8 @@ display:
               service_authentication: '0'
               site_admin: '0'
               administrator: '0'
-            placeholder: 'Search for a platform member'
             expose_fields: false
+            placeholder: 'Search for a platform member'
             searched_fields_id: search_api_fulltext_searched_fields
           is_grouped: false
           group_info:
@@ -397,7 +417,6 @@ display:
           parse_mode: terms
           min_length: 2
           fields: {  }
-          plugin_id: search_api_fulltext
         status:
           id: status
           table: search_api_index_global
@@ -405,6 +424,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: search_api_boolean
           operator: '='
           value: '1'
           group: 1
@@ -435,51 +455,31 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
-          plugin_id: search_api_boolean
-      defaults:
-        filters: false
-        filter_groups: false
-        access: false
-        title: false
-        cache: false
-        empty: false
       filter_groups:
         operator: AND
         groups:
           1: AND
+      defaults:
+        empty: false
+        access: false
+        cache: false
+        title: false
+        filters: false
+        filter_groups: false
+      display_description: ''
+      exposed_block: true
+      display_extenders: {  }
       path: people
       menu:
         type: normal
         title: People
         description: ''
-        expanded: false
-        parent: ''
         weight: 0
-        context: '0'
-        menu_name: main
         enabled: true
-      access:
-        type: perm
-        options:
-          perm: 'view any member profile'
-      display_description: ''
-      title: People
-      exposed_block: true
-      cache:
-        type: none
-      empty:
-        area_text_custom:
-          id: area_text_custom
-          table: views
-          field: area_text_custom
-          relationship: none
-          group_type: group
-          admin_label: ''
-          empty: true
-          tokenize: false
-          content: 'No results found.'
-          plugin_id: text_custom
-      enabled: false
+        expanded: false
+        menu_name: main
+        parent: ''
+        context: '0'
     cache_metadata:
       max-age: -1
       contexts:
@@ -492,20 +492,15 @@ display:
       tags:
         - 'config:search_api.index.global'
   page_1:
-    display_plugin: page
     id: page_1
     display_title: Groups
+    display_plugin: page
     position: 1
     display_options:
-      display_extenders: {  }
-      display_description: ''
-      path: groups
+      enabled: false
       title: Groups
-      defaults:
-        title: false
-        filters: false
-        filter_groups: false
-        cache: false
+      cache:
+        type: none
       filters:
         search_api_datasource:
           id: search_api_datasource
@@ -514,6 +509,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: search_api_datasource
           operator: or
           value:
             'entity:group': 'entity:group'
@@ -547,7 +543,6 @@ display:
             default_group_multiple: {  }
             group_items: {  }
           reduce_duplicates: false
-          plugin_id: search_api_datasource
         search_api_fulltext:
           id: search_api_fulltext
           table: search_api_index_global
@@ -555,6 +550,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: search_api_fulltext
           operator: and
           value: ''
           group: 1
@@ -579,8 +575,8 @@ display:
               service_authentication: '0'
               site_admin: '0'
               administrator: '0'
-            placeholder: 'Search for a group'
             expose_fields: false
+            placeholder: 'Search for a group'
             searched_fields_id: search_api_fulltext_searched_fields
           is_grouped: false
           group_info:
@@ -597,7 +593,6 @@ display:
           parse_mode: terms
           min_length: 2
           fields: {  }
-          plugin_id: search_api_fulltext
         group_type:
           id: group_type
           table: search_api_index_global
@@ -605,6 +600,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: search_api_options
           operator: or
           value:
             group: group
@@ -638,24 +634,28 @@ display:
             default_group_multiple: {  }
             group_items: {  }
           reduce_duplicates: false
-          plugin_id: search_api_options
       filter_groups:
         operator: AND
         groups:
           1: AND
-      cache:
-        type: none
+      defaults:
+        cache: false
+        title: false
+        filters: false
+        filter_groups: false
+      display_description: ''
       exposed_block: true
+      display_extenders: {  }
+      path: groups
       menu:
         type: normal
         title: Groups
         description: ''
-        expanded: false
-        parent: ''
         weight: 0
-        context: '0'
+        expanded: false
         menu_name: main
-      enabled: false
+        parent: ''
+        context: '0'
     cache_metadata:
       max-age: -1
       contexts:
@@ -667,23 +667,16 @@ display:
       tags:
         - 'config:search_api.index.global'
   search:
-    display_plugin: page
     id: search
     display_title: Search
+    display_plugin: page
     position: 2
     display_options:
-      display_extenders: {  }
-      display_description: ''
+      enabled: false
       title: Search
-      defaults:
-        title: false
-        filters: false
-        filter_groups: false
-        cache: false
-        arguments: false
-        footer: false
-        header: false
-      path: search
+      cache:
+        type: none
+      arguments: {  }
       filters:
         search_api_datasource:
           id: search_api_datasource
@@ -692,6 +685,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: search_api_datasource
           operator: or
           value:
             'entity:group': 'entity:group'
@@ -726,7 +720,6 @@ display:
             default_group_multiple: {  }
             group_items: {  }
           reduce_duplicates: false
-          plugin_id: search_api_datasource
         search_api_fulltext:
           id: search_api_fulltext
           table: search_api_index_global
@@ -734,6 +727,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: search_api_fulltext
           operator: and
           value: ''
           group: 1
@@ -758,8 +752,8 @@ display:
               service_authentication: '0'
               site_admin: '0'
               administrator: '0'
-            placeholder: ''
             expose_fields: false
+            placeholder: ''
             searched_fields_id: search_api_fulltext_searched_fields
           is_grouped: false
           group_info:
@@ -776,7 +770,6 @@ display:
           parse_mode: terms
           min_length: 2
           fields: {  }
-          plugin_id: search_api_fulltext
         content_status:
           id: content_status
           table: search_api_index_global
@@ -784,6 +777,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: search_api_boolean
           operator: '='
           value: '1'
           group: 2
@@ -814,7 +808,6 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
-          plugin_id: search_api_boolean
         group_status:
           id: group_status
           table: search_api_index_global
@@ -822,6 +815,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: search_api_boolean
           operator: '='
           value: '1'
           group: 2
@@ -852,17 +846,20 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
-          plugin_id: search_api_boolean
       filter_groups:
         operator: AND
         groups:
           1: AND
           2: OR
-      cache:
-        type: none
-      exposed_block: true
-      arguments: {  }
-      footer: {  }
+      defaults:
+        cache: false
+        title: false
+        arguments: false
+        filters: false
+        filter_groups: false
+        header: false
+        footer: false
+      display_description: ''
       header:
         search_api_spellcheck_did_you_mean:
           id: search_api_spellcheck_did_you_mean
@@ -871,12 +868,15 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: search_api_spellcheck_did_you_mean
           empty: true
           search_api_spellcheck_count: 1
           search_api_spellcheck_hide_on_result: 0
           search_api_spellcheck_collate: true
-          plugin_id: search_api_spellcheck_did_you_mean
-      enabled: false
+      footer: {  }
+      exposed_block: true
+      display_extenders: {  }
+      path: search
     cache_metadata:
       max-age: -1
       contexts:
