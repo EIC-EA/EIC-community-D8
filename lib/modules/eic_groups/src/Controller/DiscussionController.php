@@ -405,9 +405,7 @@ class DiscussionController extends ControllerBase {
         $now->format(DateTimeItemInterface::DATETIME_STORAGE_FORMAT)
       );
       $comment->set('comment_body', [
-        'value' => $this->t('This comment has been removed by a content administrator at @time',
-          ['@time' => $now->format('d/m/Y - H:i')]
-        ),
+        'value' => $this->t('This comment has been removed by a content administrator.',[]),
         'format' => 'plain_text',
       ]);
       $comment->set('field_comment_is_soft_deleted', TRUE);

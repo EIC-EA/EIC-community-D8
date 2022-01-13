@@ -54,11 +54,10 @@ class DeleteRequestHandler extends AbstractRequestHandler {
 
       case 'node':
       case 'comment':
-      $now = DrupalDateTime::createFromTimestamp(time());
       $content_entity->set('comment_body', [
         'value' => $this->t(
-          'This comment has been removed by a content administrator at @time.',
-          ['@time' => $now->format('d/m/Y - H:i')],
+          'This comment has been removed by a content administrator.',
+          [],
           ['context' => 'eic_flags']
         ),
         'format' => 'plain_text',
