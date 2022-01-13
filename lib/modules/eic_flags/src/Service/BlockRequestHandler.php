@@ -99,7 +99,7 @@ class BlockRequestHandler extends AbstractRequestHandler {
   /**
    * {@inheritdoc}
    */
-  public function applyFlag(ContentEntityInterface $entity, string $reason) {
+  public function applyFlag(ContentEntityInterface $entity, string $reason, int $request_timeout = 0) {
     $flag = parent::applyFlag($entity, $reason);
 
     // Automatically accepts the request.

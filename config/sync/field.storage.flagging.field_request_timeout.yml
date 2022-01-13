@@ -1,0 +1,20 @@
+uuid: a141be72-678e-416e-9e51-c5f7c738629a
+langcode: en
+status: true
+dependencies:
+  module:
+    - flag
+id: flagging.field_request_timeout
+field_name: field_request_timeout
+entity_type: flagging
+type: integer
+settings:
+  unsigned: false
+  size: normal
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false
