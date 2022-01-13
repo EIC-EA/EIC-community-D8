@@ -102,6 +102,7 @@
     flex-direction: row-reverse;
     margin-bottom: ecl-box-model('padding');
 
+
     #{$node}--is-ready[aria-collapsed="true"] & {
       margin-bottom: 0;
       margin-left: ecl-box-model('padding');
@@ -112,6 +113,7 @@
     display: flex;
     flex-shrink: 0;
     align-items: center;
+    cursor: pointer;
   }
 
   & &__update-indicator {
