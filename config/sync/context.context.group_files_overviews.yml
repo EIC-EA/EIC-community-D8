@@ -21,12 +21,11 @@ conditions:
 reactions:
   blocks:
     blocks:
-      7f296ab3-57f6-4766-966c-03a2321e97b1:
+      fc54b9c1-f518-434c-b863-f59eb0363f2e:
         id: eic_search_overview
         label: ''
         provider: eic_search
         label_display: visible
-        region: content
         weight: '0'
         source_type: Drupal\eic_search\Search\Sources\LibrarySourceType
         facets:
@@ -36,32 +35,31 @@ reactions:
           ss_content_language_string: ss_content_language_string
           ss_content_document_type_string: ss_content_document_type_string
         sort_options:
+          ss_drupal_changed_timestamp: ss_drupal_changed_timestamp
           ss_content_title: ss_content_title
-          dm_aggregated_changed: dm_aggregated_changed
           its_flag_highlight_content: its_flag_highlight_content
           its_document_download_total: its_document_download_total
           its_statistics_view: its_statistics_view
           its_flag_like_content: its_flag_like_content
-          ss_global_created_date: 0
+          ss_global_created_date: ss_global_created_date
           its_last_comment_timestamp: 0
           its_last_flagged_like_content: 0
           its_last_flagged_bookmark_content: 0
           its_last_flagged_highlight_content: 0
-          score: 0
         enable_search: 1
         page_options: normal
         prefilter_group: 1
-        enable_date_filter: 0
         add_facet_interests: 0
         add_facet_my_groups: 0
         context_mapping: {  }
         custom_id: eic_search_overview
+        region: content
         theme: eic_community
         css_class: ''
         unique: 0
         context_id: group_files_overviews
         third_party_settings: {  }
-        uuid: 7f296ab3-57f6-4766-966c-03a2321e97b1
+        uuid: fc54b9c1-f518-434c-b863-f59eb0363f2e
     id: blocks
     saved: false
     uuid: b8b6f9f3-68cc-4066-b69f-04528693c7d9

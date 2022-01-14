@@ -22,6 +22,7 @@ permissions:
   - 'access toolbar'
   - 'access user profiles'
   - 'add content to books'
+  - 'administer book outlines'
   - 'administer comments'
   - 'administer menu'
   - 'administer message templates'

@@ -133,6 +133,11 @@ function eic_community_preprocess_page(array &$variables): void {
       $section['section_class_name'] = 'ecl-footer-core__section--separator';
     }
 
+    // If there are more than 3 links, we need to split the menu in 2 columns.
+    if (count($links) > 3) {
+      $section['list_class_name'] = 'ecl-footer-core__list--columns';
+    }
+
     $footer_sections[] = $section;
   }
 

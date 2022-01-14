@@ -220,8 +220,6 @@ class GroupForm extends GroupFormBase {
    */
   public function save(array $form, FormStateInterface $form_state): int {
     $group = $this->entity;
-    $is_new = $group->isNew();
-
     $return = parent::save($form, $form_state);
 
     if (!$groupFlexSettings = $this->getGroupFlexSettingsFormValues($form, $form_state)) {
@@ -273,21 +271,7 @@ class GroupForm extends GroupFormBase {
       }
     }
 
-    // If the group is new and the selected joining method is "tu_open_method",
-    // we enable member invitations by default.
-    // This logic needs to be triggered during this process because the group
-    // visibility and joining methods are saved previously after the group is
-    // saved in the Database.
-    if ($is_new &&
-      $group->hasField('field_group_invite_members') &&
-      $groupFlexSettings['settings']['joining_methods'] === 'tu_open_method'
-    ) {
-      $group->set('field_group_invite_members', TRUE);
-      $group->save();
-    }
-
     $this->clearTempStore($form, $form_state);
-
     return $return;
   }
 
