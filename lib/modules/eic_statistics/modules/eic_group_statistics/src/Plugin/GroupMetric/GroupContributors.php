@@ -29,7 +29,7 @@ class GroupContributors extends GroupMetricPluginBase {
       }
 
       // Ignore if author is not active.
-      if ($node->getOwner()->isActive()) {
+      if (!$node->getOwner()->isActive()) {
         continue;
       }
 
