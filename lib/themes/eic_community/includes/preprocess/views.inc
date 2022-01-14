@@ -99,7 +99,7 @@ function eic_community_preprocess_views_view(&$variables) {
 
         $items[] = [
           'label' => $term->getName(),
-          'title' => $term->toUrl(),
+          'path' => $term->toUrl()->toString(),
         ];
       }
       $variables['items'] = $items;
