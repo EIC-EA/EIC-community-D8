@@ -276,6 +276,13 @@ function eic_flags_entity_access(
 }
 
 /**
+ * Implements hook_flag_type_info_alter().
+ */
+function eic_flags_flag_type_info_alter(array &$definitions) {
+  $definitions['entity:node']['class'] = 'Drupal\eic_flags\Plugin\Flag\EntityFlagType';
+}
+
+/**
  * Implements hook_entity_view().
  */
 function eic_flags_entity_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
