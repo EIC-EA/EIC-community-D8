@@ -14,32 +14,32 @@ mode: default
 content:
   field_group_ref:
     type: entity_reference_label
-    weight: 1
-    region: content
     label: above
     settings:
       link: true
     third_party_settings: {  }
+    weight: 1
+    region: content
   field_operation_type:
     type: string
-    weight: 2
-    region: content
     label: above
     settings:
       link_to_entity: false
     third_party_settings: {  }
+    weight: 2
+    region: content
   field_referenced_node:
     type: entity_reference_label
-    weight: 3
-    region: content
     label: above
     settings:
       link: true
     third_party_settings: {  }
-  partial_0:
-    weight: 0
+    weight: 3
     region: content
+  partial_0:
     settings: {  }
     third_party_settings: {  }
+    weight: 0
+    region: content
 hidden:
   search_api_excerpt: true

@@ -9,25 +9,6 @@ dependencies:
     - search_api
 id: group_discussions_summary
 name: 'Group discussions summary'
-facets:
-  discussions_regions_countries:
-    checked: true
-    label: 'Regions & Countries'
-    separator: ', '
-    weight: 0
-    show_count: false
-  discussions_topics:
-    checked: true
-    label: Topics
-    separator: ', '
-    weight: 0
-    show_count: false
-  discussions_type:
-    checked: true
-    label: Type
-    separator: ', '
-    weight: 0
-    show_count: false
 facet_source_id: 'search_api:views_page__group_overviews__page_1'
 processor_configs:
   hide_when_not_rendered:
@@ -49,3 +30,22 @@ processor_configs:
       text:
         value: 'No results found.'
         format: plain_text
+facets:
+  discussions_regions_countries:
+    checked: true
+    label: 'Regions & Countries'
+    separator: ', '
+    show_count: false
+    weight: 0
+  discussions_topics:
+    checked: true
+    label: Topics
+    separator: ', '
+    show_count: false
+    weight: 0
+  discussions_type:
+    checked: true
+    label: Type
+    separator: ', '
+    show_count: false
+    weight: 0

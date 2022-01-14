@@ -19,12 +19,12 @@ plugin: 'eic_theme_helper_site_navigation:main'
 settings:
   id: 'eic_theme_helper_site_navigation:main'
   label: 'Main navigation'
-  provider: eic_theme_helper
   label_display: '0'
+  provider: eic_theme_helper
   level: 1
 visibility:
   eic_theme_helper_current_branding:
     id: eic_theme_helper_current_branding
-    branding: standardised
     negate: false
     context_mapping: {  }
+    branding: standardised

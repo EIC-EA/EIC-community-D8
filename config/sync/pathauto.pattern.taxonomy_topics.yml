@@ -12,12 +12,12 @@ pattern: 'topics/[term:name]'
 selection_criteria:
   4363587e-dd3f-4019-a675-007a7e2b888c:
     id: 'entity_bundle:taxonomy_term'
-    bundles:
-      topics: topics
     negate: false
+    uuid: 4363587e-dd3f-4019-a675-007a7e2b888c
     context_mapping:
       taxonomy_term: taxonomy_term
-    uuid: 4363587e-dd3f-4019-a675-007a7e2b888c
+    bundles:
+      topics: topics
 selection_logic: and
 weight: -5
 relationships: {  }

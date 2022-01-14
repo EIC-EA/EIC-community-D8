@@ -18,68 +18,11 @@ base_table: users_field_data
 base_field: uid
 display:
   default:
-    display_plugin: default
     id: default
     display_title: Master
+    display_plugin: default
     position: 0
     display_options:
-      access:
-        type: perm
-        options:
-          perm: 'access user profiles'
-      cache:
-        type: tag
-        options: {  }
-      query:
-        type: views_query
-        options:
-          disable_sql_rewrite: false
-          distinct: false
-          replica: false
-          query_comment: ''
-          query_tags: {  }
-      exposed_form:
-        type: basic
-        options:
-          submit_button: Apply
-          reset_button: false
-          reset_button_label: Reset
-          exposed_sorts_label: 'Sort by'
-          expose_sort_order: true
-          sort_asc_label: Asc
-          sort_desc_label: Desc
-      pager:
-        type: mini
-        options:
-          items_per_page: 10
-          offset: 0
-          id: 0
-          total_pages: null
-          expose:
-            items_per_page: false
-            items_per_page_label: 'Items per page'
-            items_per_page_options: '5, 10, 25, 50'
-            items_per_page_options_all: false
-            items_per_page_options_all_label: '- All -'
-            offset: false
-            offset_label: Offset
-          tags:
-            previous: ‹‹
-            next: ››
-      style:
-        type: default
-        options:
-          grouping: {  }
-          row_class: ''
-          default_row_class: true
-          uses_fields: false
-      row:
-        type: fields
-        options:
-          inline: {  }
-          separator: ''
-          hide_empty: false
-          default_field_elements: true
       fields:
         name:
           id: name
@@ -88,6 +31,9 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          entity_type: user
+          entity_field: name
+          plugin_id: field
           label: ''
           exclude: false
           alter:
@@ -143,9 +89,6 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-          entity_type: user
-          entity_field: name
-          plugin_id: field
         mail:
           id: mail
           table: users_field_data
@@ -153,6 +96,9 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          entity_type: user
+          entity_field: mail
+          plugin_id: field
           label: ''
           exclude: false
           alter:
@@ -207,9 +153,6 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-          entity_type: user
-          entity_field: mail
-          plugin_id: field
         field_first_name:
           id: field_first_name
           table: user__field_first_name
@@ -217,6 +160,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: field
           label: ''
           exclude: true
           alter:
@@ -272,7 +216,6 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-          plugin_id: field
         field_last_name:
           id: field_last_name
           table: user__field_last_name
@@ -280,6 +223,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: field
           label: ''
           exclude: true
           alter:
@@ -335,21 +279,71 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-          plugin_id: field
+      pager:
+        type: mini
+        options:
+          offset: 0
+          items_per_page: 10
+          total_pages: null
+          id: 0
+          tags:
+            next: ››
+            previous: ‹‹
+          expose:
+            items_per_page: false
+            items_per_page_label: 'Items per page'
+            items_per_page_options: '5, 10, 25, 50'
+            items_per_page_options_all: false
+            items_per_page_options_all_label: '- All -'
+            offset: false
+            offset_label: Offset
+      exposed_form:
+        type: basic
+        options:
+          submit_button: Apply
+          reset_button: false
+          reset_button_label: Reset
+          exposed_sorts_label: 'Sort by'
+          expose_sort_order: true
+          sort_asc_label: Asc
+          sort_desc_label: Desc
+      access:
+        type: perm
+        options:
+          perm: 'access user profiles'
+      cache:
+        type: tag
+        options: {  }
+      empty: {  }
+      sorts:
+        field_last_name_value:
+          id: field_last_name_value
+          table: user__field_last_name
+          field: field_last_name_value
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: standard
+          order: ASC
+          expose:
+            label: ''
+            field_identifier: field_last_name_value
+          exposed: false
+      arguments: {  }
       filters:
         status:
-          value: '1'
+          id: status
           table: users_field_data
           field: status
-          plugin_id: boolean
           entity_type: user
           entity_field: status
-          id: status
+          plugin_id: boolean
+          value: '1'
+          group: 1
           expose:
             operator: ''
             operator_limit_selection: false
             operator_list: {  }
-          group: 1
         uid_raw:
           id: uid_raw
           table: users_field_data
@@ -357,6 +351,8 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          entity_type: user
+          plugin_id: numeric
           operator: '!='
           value:
             min: ''
@@ -378,9 +374,9 @@ display:
             multiple: false
             remember_roles:
               authenticated: authenticated
-            placeholder: ''
             min_placeholder: ''
             max_placeholder: ''
+            placeholder: ''
           is_grouped: false
           group_info:
             label: ''
@@ -393,26 +389,31 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
-          entity_type: user
-          plugin_id: numeric
-      sorts:
-        field_last_name_value:
-          id: field_last_name_value
-          table: user__field_last_name
-          field: field_last_name_value
-          relationship: none
-          group_type: group
-          admin_label: ''
-          order: ASC
-          exposed: false
-          expose:
-            label: ''
-          plugin_id: standard
+      style:
+        type: default
+        options:
+          grouping: {  }
+          row_class: ''
+          default_row_class: true
+          uses_fields: false
+      row:
+        type: fields
+        options:
+          default_field_elements: true
+          inline: {  }
+          separator: ''
+          hide_empty: false
+      query:
+        type: views_query
+        options:
+          query_comment: ''
+          disable_sql_rewrite: false
+          distinct: false
+          replica: false
+          query_tags: {  }
+      relationships: {  }
       header: {  }
       footer: {  }
-      empty: {  }
-      relationships: {  }
-      arguments: {  }
       display_extenders: {  }
     cache_metadata:
       max-age: -1
@@ -425,12 +426,74 @@ display:
         - 'config:field.storage.user.field_first_name'
         - 'config:field.storage.user.field_last_name'
   full_name_all:
-    display_plugin: entity_reference
     id: full_name_all
     display_title: 'Full name all users'
+    display_plugin: entity_reference
     position: 1
     display_options:
-      display_extenders: {  }
+      filters:
+        status:
+          id: status
+          table: users_field_data
+          field: status
+          entity_type: user
+          entity_field: status
+          plugin_id: boolean
+          value: '1'
+          group: 1
+          expose:
+            operator: ''
+            operator_limit_selection: false
+            operator_list: {  }
+        uid_raw:
+          id: uid_raw
+          table: users_field_data
+          field: uid_raw
+          relationship: none
+          group_type: group
+          admin_label: ''
+          entity_type: user
+          plugin_id: numeric
+          operator: '!='
+          value:
+            min: ''
+            max: ''
+            value: '0'
+          group: 1
+          exposed: false
+          expose:
+            operator_id: ''
+            label: ''
+            description: ''
+            use_operator: false
+            operator: ''
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: ''
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+            min_placeholder: ''
+            max_placeholder: ''
+            placeholder: ''
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+      filter_groups:
+        operator: AND
+        groups:
+          1: AND
       style:
         type: entity_reference
         options:
@@ -448,73 +511,11 @@ display:
             mail: mail
           separator: ' | '
           hide_empty: true
-      display_description: ''
-      filters:
-        status:
-          value: '1'
-          table: users_field_data
-          field: status
-          plugin_id: boolean
-          entity_type: user
-          entity_field: status
-          id: status
-          expose:
-            operator: ''
-            operator_limit_selection: false
-            operator_list: {  }
-          group: 1
-        uid_raw:
-          id: uid_raw
-          table: users_field_data
-          field: uid_raw
-          relationship: none
-          group_type: group
-          admin_label: ''
-          operator: '!='
-          value:
-            min: ''
-            max: ''
-            value: '0'
-          group: 1
-          exposed: false
-          expose:
-            operator_id: ''
-            label: ''
-            description: ''
-            use_operator: false
-            operator: ''
-            operator_limit_selection: false
-            operator_list: {  }
-            identifier: ''
-            required: false
-            remember: false
-            multiple: false
-            remember_roles:
-              authenticated: authenticated
-            placeholder: ''
-            min_placeholder: ''
-            max_placeholder: ''
-          is_grouped: false
-          group_info:
-            label: ''
-            description: ''
-            identifier: ''
-            optional: true
-            widget: select
-            multiple: false
-            remember: false
-            default_group: All
-            default_group_multiple: {  }
-            group_items: {  }
-          entity_type: user
-          plugin_id: numeric
       defaults:
         filters: false
         filter_groups: false
-      filter_groups:
-        operator: AND
-        groups:
-          1: AND
+      display_description: ''
+      display_extenders: {  }
     cache_metadata:
       max-age: -1
       contexts:
@@ -525,43 +526,25 @@ display:
         - 'config:field.storage.user.field_first_name'
         - 'config:field.storage.user.field_last_name'
   full_name_trusted:
-    display_plugin: entity_reference
     id: full_name_trusted
     display_title: 'Full name trusted users'
+    display_plugin: entity_reference
     position: 2
     display_options:
-      display_extenders: {  }
-      style:
-        type: entity_reference
-        options:
-          search_fields:
-            field_first_name: field_first_name
-            field_last_name: field_last_name
-            mail: mail
-            name: name
-      row:
-        type: entity_reference
-        options:
-          default_field_elements: true
-          inline:
-            name: name
-            mail: mail
-          separator: ' | '
-          hide_empty: true
       filters:
         status:
-          value: '1'
+          id: status
           table: users_field_data
           field: status
-          plugin_id: boolean
           entity_type: user
           entity_field: status
-          id: status
+          plugin_id: boolean
+          value: '1'
+          group: 1
           expose:
             operator: ''
             operator_limit_selection: false
             operator_list: {  }
-          group: 1
         uid_raw:
           id: uid_raw
           table: users_field_data
@@ -569,6 +552,8 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          entity_type: user
+          plugin_id: numeric
           operator: '!='
           value:
             min: ''
@@ -590,9 +575,9 @@ display:
             multiple: false
             remember_roles:
               authenticated: authenticated
-            placeholder: ''
             min_placeholder: ''
             max_placeholder: ''
+            placeholder: ''
           is_grouped: false
           group_info:
             label: ''
@@ -605,8 +590,6 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
-          entity_type: user
-          plugin_id: numeric
         roles_target_id:
           id: roles_target_id
           table: user__roles
@@ -614,6 +597,9 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          entity_type: user
+          entity_field: roles
+          plugin_id: user_roles
           operator: or
           value:
             trusted_user: trusted_user
@@ -647,33 +633,10 @@ display:
             default_group_multiple: {  }
             group_items: {  }
           reduce_duplicates: false
-          entity_type: user
-          entity_field: roles
-          plugin_id: user_roles
-      defaults:
-        filters: false
-        filter_groups: false
       filter_groups:
         operator: AND
         groups:
           1: AND
-      display_description: ''
-    cache_metadata:
-      max-age: -1
-      contexts:
-        - 'languages:language_content'
-        - 'languages:language_interface'
-        - user.permissions
-      tags:
-        - 'config:field.storage.user.field_first_name'
-        - 'config:field.storage.user.field_last_name'
-  full_name_tu_ca:
-    display_plugin: entity_reference
-    id: full_name_tu_ca
-    display_title: 'Full name trusted users/content admins'
-    position: 2
-    display_options:
-      display_extenders: {  }
       style:
         type: entity_reference
         options:
@@ -691,20 +654,40 @@ display:
             mail: mail
           separator: ' | '
           hide_empty: true
+      defaults:
+        filters: false
+        filter_groups: false
+      display_description: ''
+      display_extenders: {  }
+    cache_metadata:
+      max-age: -1
+      contexts:
+        - 'languages:language_content'
+        - 'languages:language_interface'
+        - user.permissions
+      tags:
+        - 'config:field.storage.user.field_first_name'
+        - 'config:field.storage.user.field_last_name'
+  full_name_tu_ca:
+    id: full_name_tu_ca
+    display_title: 'Full name trusted users/content admins'
+    display_plugin: entity_reference
+    position: 2
+    display_options:
       filters:
         status:
-          value: '1'
+          id: status
           table: users_field_data
           field: status
-          plugin_id: boolean
           entity_type: user
           entity_field: status
-          id: status
+          plugin_id: boolean
+          value: '1'
+          group: 1
           expose:
             operator: ''
             operator_limit_selection: false
             operator_list: {  }
-          group: 1
         uid_raw:
           id: uid_raw
           table: users_field_data
@@ -712,6 +695,8 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          entity_type: user
+          plugin_id: numeric
           operator: '!='
           value:
             min: ''
@@ -733,9 +718,9 @@ display:
             multiple: false
             remember_roles:
               authenticated: authenticated
-            placeholder: ''
             min_placeholder: ''
             max_placeholder: ''
+            placeholder: ''
           is_grouped: false
           group_info:
             label: ''
@@ -748,8 +733,6 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
-          entity_type: user
-          plugin_id: numeric
         roles_target_id:
           id: roles_target_id
           table: user__roles
@@ -757,6 +740,9 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          entity_type: user
+          entity_field: roles
+          plugin_id: user_roles
           operator: or
           value:
             trusted_user: trusted_user
@@ -791,17 +777,32 @@ display:
             default_group_multiple: {  }
             group_items: {  }
           reduce_duplicates: false
-          entity_type: user
-          entity_field: roles
-          plugin_id: user_roles
-      defaults:
-        filters: false
-        filter_groups: false
       filter_groups:
         operator: AND
         groups:
           1: AND
+      style:
+        type: entity_reference
+        options:
+          search_fields:
+            field_first_name: field_first_name
+            field_last_name: field_last_name
+            mail: mail
+            name: name
+      row:
+        type: entity_reference
+        options:
+          default_field_elements: true
+          inline:
+            name: name
+            mail: mail
+          separator: ' | '
+          hide_empty: true
+      defaults:
+        filters: false
+        filter_groups: false
       display_description: ''
+      display_extenders: {  }
     cache_metadata:
       max-age: -1
       contexts:

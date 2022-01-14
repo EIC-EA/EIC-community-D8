@@ -18,10 +18,10 @@ translatable: true
 default_value: {  }
 default_value_callback: ''
 settings:
+  handler: 'default:file'
+  handler_settings: {  }
   file_directory: '[date:custom:Y]-[date:custom:m]'
   file_extensions: '3gpp dl dv fli gl mp4 mpeg ogg quicktime mpegurl webm flv asf m4v matroska mng wm wmv wmx wvx msvideo sgi movie mv'
   max_filesize: ''
   description_field: false
-  handler: 'default:file'
-  handler_settings: {  }
 field_type: file

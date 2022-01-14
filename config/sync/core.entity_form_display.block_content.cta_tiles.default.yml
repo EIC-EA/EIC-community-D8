@@ -18,16 +18,17 @@ bundle: cta_tiles
 mode: default
 content:
   field_body:
+    type: text_textarea
     weight: 28
+    region: content
     settings:
       rows: 5
       placeholder: ''
     third_party_settings: {  }
-    type: text_textarea
-    region: content
   field_cta_tiles:
     type: entity_reference_paragraphs
     weight: 29
+    region: content
     settings:
       title: 'CTA Tile'
       title_plural: 'CTA Tiles'
@@ -36,15 +37,14 @@ content:
       form_display_mode: default
       default_paragraph_type: _none
     third_party_settings: {  }
-    region: content
   field_title:
+    type: string_textfield
     weight: 27
+    region: content
     settings:
       size: 60
       placeholder: ''
     third_party_settings: {  }
-    type: string_textfield
-    region: content
   info:
     type: string_textfield
     weight: -5

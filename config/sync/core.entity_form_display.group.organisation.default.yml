@@ -16,16 +16,16 @@ mode: default
 content:
   features:
     type: options_buttons
-    settings: {  }
     weight: 2
     region: content
-    third_party_settings: {  }
-  field_organisation_type:
-    weight: 26
     settings: {  }
     third_party_settings: {  }
+  field_organisation_type:
     type: options_buttons
+    weight: 26
     region: content
+    settings: {  }
+    third_party_settings: {  }
   label:
     type: string_textfield
     weight: 0
@@ -44,8 +44,8 @@ content:
   moderation_state:
     type: moderation_state_default
     weight: 4
-    settings: {  }
     region: content
+    settings: {  }
     third_party_settings: {  }
   path:
     type: path
@@ -55,10 +55,10 @@ content:
     third_party_settings: {  }
   status:
     type: boolean_checkbox
-    settings:
-      display_label: true
     weight: 5
     region: content
+    settings:
+      display_label: true
     third_party_settings: {  }
 hidden:
   uid: true

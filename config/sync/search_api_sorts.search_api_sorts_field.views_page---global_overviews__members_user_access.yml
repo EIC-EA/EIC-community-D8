@@ -3,9 +3,9 @@ langcode: en
 status: true
 dependencies: {  }
 id: views_page---global_overviews__members_user_access
+label: 'Last active'
+weight: 0
 display_id: views_page---global_overviews__members
 field_identifier: user_access
 default_sort: true
 default_order: desc
-label: 'Last active'
-weight: 0

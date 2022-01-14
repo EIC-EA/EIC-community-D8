@@ -14,17 +14,17 @@ bundle: topics
 mode: default
 content:
   description:
-    label: hidden
     type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
     weight: 1
     region: content
+  flag_follow_taxonomy_term:
     settings: {  }
     third_party_settings: {  }
-  flag_follow_taxonomy_term:
     weight: 0
     region: content
-    settings: {  }
-    third_party_settings: {  }
 hidden:
   field_smed_id: true
   field_topic_banner: true

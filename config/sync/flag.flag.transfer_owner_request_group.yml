@@ -12,7 +12,6 @@ bundles:
   - organisation-group_membership
 entity_type: group_content
 global: false
-weight: 0
 flag_short: 'Flag this item'
 flag_long: ''
 flag_message: ''
@@ -23,6 +22,7 @@ unflag_denied_text: ''
 flood_control_active: false
 flood_control_limit: 0
 flood_control_window: 0
+weight: 0
 flag_type: 'entity:group_content'
 link_type: ajax_link
 flagTypeConfig:

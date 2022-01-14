@@ -2,12 +2,12 @@ uuid: 34c225d3-384b-4ac2-b832-015e859a3cf6
 langcode: en
 status: true
 dependencies:
-  enforced:
-    module:
-      - book
   module:
     - menu_ui
     - scheduler
+  enforced:
+    module:
+      - book
 third_party_settings:
   menu_ui:
     available_menus:

@@ -16,10 +16,10 @@ bundle: notify_content_status_changed
 mode: mail_body
 content:
   partial_0:
-    weight: 0
-    region: content
     settings: {  }
     third_party_settings: {  }
+    weight: 0
+    region: content
   partial_1:
     weight: 0
     region: content
