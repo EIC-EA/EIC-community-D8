@@ -69,5 +69,32 @@ function hook_request_close(
 }
 
 /**
+ * Respond to a request being expired.
+ *
+ * @param \Drupal\flag\FlaggingInterface $flagging
+ *   The flag that has been created and applied to the content.
+ * @param \Drupal\Core\Entity\ContentEntityInterface $entity
+ *   The content entity the flag has been applied to.
+ * @param string $type
+ *   The type of the flag (delete, archive, etc.).
+ */
+function hook_request_timeout(
+  FlaggingInterface $flagging,
+  ContentEntityInterface $entity,
+  string $type
+) {
+  // Create a log entry with some info.
+  \Drupal::logger('eic_flags')
+    ->notice(
+      'Request @flag_id with type @type has been handled. Response @response given',
+      [
+        '@flag_id' => $flagging->id(),
+        '@type' => $type,
+        '@response' => 'request timeout',
+      ]
+    );
+}
+
+/**
  * @} End of "addtogroup hooks".
  */

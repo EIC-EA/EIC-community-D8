@@ -1070,6 +1070,21 @@
     justify-content: center;
   }
 
+  &--search {
+
+    & .ecl-teaser__title {
+      font-size: 1.25rem;
+    }
+
+    & .ecl-teaser__detail-contributor {
+      font-weight: normal;
+    }
+
+    h2 {
+      font-size: 1rem;
+    }
+  }
+
   /* file list teaser */
   &--filelist, &--video, &--gallery {
     padding: map-get($ecl-spacing, 's');

@@ -299,7 +299,7 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
         'load_more' => $this->t('Load more', [], ['context' => 'eic_groups']),
         'edit' => $this->t('Edit', [], ['context' => 'eic_groups']),
         'options' => $this->t('Options', [], ['context' => 'eic_groups']),
-        'reply_to' => $this->t('Reply to', [], ['context' => 'eic_groups']),
+        'reply_to' => $this->t('Reply', [], ['context' => 'eic_groups']),
         'in_reply_to' => $this->t('in reply to', [], ['context' => 'eic_groups']
         ),
         'reply' => $this->t('Reply', [], ['context' => 'eic_groups']),
