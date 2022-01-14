@@ -7,6 +7,7 @@
 
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Menu\MenuTreeParameters;
+use Drupal\Core\Render\Markup;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Url;
 use Drupal\eic_community\ValueObject\ImageValueObject;
@@ -84,7 +85,7 @@ function eic_community_preprocess_page(array &$variables): void {
 
     $footer_sections[] = [
       'title' => $block_content->field_title->value,
-      'description' => $block_content->body->value,
+      'description' => Markup::create($block_content->body->value),
     ];
   }
 
