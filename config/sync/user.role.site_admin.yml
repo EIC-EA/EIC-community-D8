@@ -1,7 +1,52 @@
 uuid: 3b4416de-a307-4c88-9201-a807568c696e
 langcode: en
 status: true
-dependencies: {  }
+dependencies:
+  config:
+    - filter.format.basic_text
+    - filter.format.filtered_html
+    - filter.format.full_html
+    - media.type.eic_document
+    - media.type.image
+    - media.type.photo
+    - media.type.remote_video
+    - media.type.video
+    - node.type.book
+    - node.type.discussion
+    - node.type.document
+    - node.type.gallery
+    - node.type.news
+    - node.type.page
+    - node.type.story
+    - node.type.video
+    - node.type.wiki_page
+    - workflows.workflow.group_wiki
+    - workflows.workflow.groups
+    - workflows.workflow.news_stories
+  module:
+    - admin_toolbar_search
+    - block_content_permissions
+    - book
+    - comment
+    - content_moderation
+    - contextual
+    - eic_admin
+    - eic_flags
+    - eic_overviews
+    - eic_private_content
+    - eic_private_message
+    - file
+    - filter
+    - flag
+    - group
+    - media
+    - message
+    - node
+    - path
+    - profile
+    - scheduler
+    - system
+    - toolbar
 id: site_admin
 label: 'Site Admin'
 weight: -5
@@ -73,6 +118,7 @@ permissions:
   - 'edit own image media'
   - 'edit own news content'
   - 'edit own story content'
+  - 'flag highlight_content'
   - 'flag recommend_group'
   - 'link to any page'
   - 'make archive request'
