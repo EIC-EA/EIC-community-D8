@@ -8,8 +8,8 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\TranslationInterface;
+use Drupal\eic_flags\FlagHelper;
 use Drupal\eic_flags\FlagType;
-use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\flag\Plugin\Flag\EntityFlagType as EntityFlagTypeBase;
 use Drupal\flag\FlagInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -20,11 +20,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class EntityFlagType extends EntityFlagTypeBase {
 
   /**
-   * The EIC Groups helper service.
+   * The EIC Flags helper service.
    *
-   * @var \Drupal\eic_groups\EICGroupsHelper
+   * @var \Drupal\eic_flags\FlagHelper
    */
-  protected $groupsHelper;
+  protected $flagHelper;
 
   /**
    * {@inheritdoc}
@@ -36,11 +36,11 @@ class EntityFlagType extends EntityFlagTypeBase {
     ModuleHandlerInterface $module_handler,
     EntityTypeManagerInterface $entity_type_manager,
     TranslationInterface $string_translation,
-    EICGroupsHelper $eic_groups_helper
+    FlagHelper $eic_flag_helper
   ) {
     $this->entityType = $plugin_definition['entity_type'];
     $this->entityTypeManager = $entity_type_manager;
-    $this->groupsHelper = $eic_groups_helper;
+    $this->flagHelper = $eic_flag_helper;
     parent::__construct($configuration, $plugin_id, $plugin_definition, $module_handler, $entity_type_manager, $string_translation);
   }
 
@@ -55,7 +55,7 @@ class EntityFlagType extends EntityFlagTypeBase {
       $container->get('module_handler'),
       $container->get('entity_type.manager'),
       $container->get('string_translation'),
-      $container->get('eic_groups.helper')
+      $container->get('eic_flags.helper')
     );
   }
 
@@ -65,8 +65,8 @@ class EntityFlagType extends EntityFlagTypeBase {
   public function actionAccess($action, FlagInterface $flag, AccountInterface $account, EntityInterface $flaggable = NULL) {
     // Highlight flags should be accessible by GO/GAs only, so we need to apply
     // custom logic here.
-    if ($flag->id() == FlagType::HIGHLIGHT_CONTENT && $group = $this->groupsHelper->isGroupPage()) {
-      if ($this->groupsHelper::userIsGroupAdmin($group, $account)) {
+    if ($flag->id() == FlagType::HIGHLIGHT_CONTENT) {
+      if ($this->flagHelper->canUserHighlight($account)) {
         return AccessResult::allowed();
       }
     }

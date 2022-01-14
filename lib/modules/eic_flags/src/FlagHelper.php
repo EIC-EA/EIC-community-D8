@@ -4,7 +4,11 @@ namespace Drupal\eic_flags;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Session\AccountProxyInterface;
+use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\flag\FlagServiceInterface;
+use Drupal\group\Entity\GroupInterface;
 
 /**
  * Provides helper methods for flags.
@@ -26,16 +30,38 @@ class FlagHelper {
   protected $entityTypeManager;
 
   /**
+   * The current user account.
+   *
+   * @var Drupal\Core\Session\AccountProxyInterface
+   */
+  protected $currentUser;
+
+
+  /**
+   * The EIC Groups helper service.
+   *
+   * @var \Drupal\eic_groups\EICGroupsHelper
+   */
+  protected $groupsHelper;
+
+  /**
    * Constructs a FlagHelper object.
    *
    * @param \Drupal\flag\FlagServiceInterface $flag_service
    *   The flag service.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
+   * @param \Drupal\Core\Session\AccountProxyInterface $currentUser
+   *   The entity type manager.
    */
-  public function __construct(FlagServiceInterface $flag_service, EntityTypeManagerInterface $entity_type_manager) {
+  public function __construct(
+    FlagServiceInterface $flag_service,
+    EntityTypeManagerInterface $entity_type_manager,
+    AccountProxyInterface $currentUser
+  ) {
     $this->flagService = $flag_service;
     $this->entityTypeManager = $entity_type_manager;
+    $this->currentUser = $currentUser;
   }
 
   /**
@@ -78,6 +104,47 @@ class FlagHelper {
     }
 
     return $users;
+  }
+
+  /**
+   * Checks if the user can use the highlight flag.
+   *
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *   The user account. If none provided, defaults to current user.
+   * @param Drupal\group\Entity\GroupInterface $group
+   *   The entity.
+   *
+   * @return bool
+   *   TRUE if user can use the highlight flag.
+   */
+  public function canUserHighlight(AccountInterface $account = NULL, GroupInterface $group = NULL) {
+    if (empty($account)) {
+      $account = $this->currentUser;
+    }
+
+    if (empty($group)) {
+      $group = $this->groupsHelper->isGroupPage();
+    }
+
+    // Content can only be highlighted in a group context, and only group admins
+    // can do so.
+    if ($group) {
+      if ($this->groupsHelper::userIsGroupAdmin($group, $account)) {
+        return TRUE;
+      }
+    }
+
+    return FALSE;
+  }
+
+  /**
+   * Sets the EIC Groups helper service.
+   *
+   * @param \Drupal\eic_groups\EICGroupsHelper $eic_groups_helper
+   *   The EIC Groups helper service.
+   */
+  public function setGroupsHelper(EICGroupsHelper $eic_groups_helper) {
+    $this->groupsHelper = $eic_groups_helper;
   }
 
 }
