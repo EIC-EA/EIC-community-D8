@@ -35,8 +35,7 @@ function eic_group_membership_entity_operation_alter(
         break;
 
       default:
-        $operations[$key]['title'] = t('@operation member',
-          ['@operation' => ucfirst($key)]);
+        $operations[$key]['title'] = t('@operation member', ['@operation' => ucfirst($key)]);
         break;
     }
   }
@@ -71,7 +70,7 @@ function eic_group_membership_form_alter(
     $form['actions']['submit']['#submit'][] = 'eic_group_membership_leave_form_submit';
     return;
   }
-  
+
   /** @var \Drupal\Core\Entity\EntityForm $form_object */
   $form_object = $form_state->getFormObject();
   if (!$form_object instanceof GroupContentForm) {
@@ -98,8 +97,7 @@ function eic_group_membership_form_alter(
     case "group_content_{$group_type}-group_membership_edit_form":
       if (isset($form['group_roles']['widget']['#options'][$owner_role])) {
         unset($form['group_roles']['widget']['#options'][$owner_role]);
-        array_unshift($form['actions']['submit']['#submit'],
-          'eic_group_membership_update_membership_role_form_submit');
+        array_unshift($form['actions']['submit']['#submit'], 'eic_group_membership_update_membership_role_form_submit');
       }
       break;
   }
@@ -123,8 +121,7 @@ function eic_group_membership_update_membership_role_form_submit(
 
   // Keep the group owner role if we are editing the owner membership.
   if ($entity->getEntity()->id() === $current_group_owner->id()) {
-    $owner_role = $entity->getContentPlugin()
-        ->getGroupTypeId() . '-' . EICGroupsHelper::GROUP_TYPE_OWNER_ROLE;
+    $owner_role = $entity->getContentPlugin()->getGroupTypeId() . '-' . EICGroupsHelper::GROUP_TYPE_OWNER_ROLE;
     $group_roles = $form_state->getValue('group_roles');
     $group_roles[] = [
       'target_id' => $owner_role,
