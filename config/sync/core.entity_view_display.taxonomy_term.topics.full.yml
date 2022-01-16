@@ -15,26 +15,26 @@ bundle: topics
 mode: full
 content:
   description:
-    label: hidden
     type: text_default
-    weight: 0
-    region: content
+    label: hidden
     settings: {  }
     third_party_settings: {  }
+    weight: 0
+    region: content
   field_topic_banner:
     type: entity_reference_entity_view
-    weight: 1
     label: above
     settings:
       view_mode: default
       link: false
     third_party_settings: {  }
+    weight: 1
     region: content
   flag_follow_taxonomy_term:
-    weight: 2
-    region: content
     settings: {  }
     third_party_settings: {  }
+    weight: 2
+    region: content
 hidden:
   field_smed_id: true
   langcode: true

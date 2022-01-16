@@ -1,77 +1,84 @@
 {% set title_element = title_element|default('h2') %}
+{% set empty_result_text = empty_result_text|default('No results found.') %}
 
-<section class="ecl-featured-content-collection {{ is_collapsible ? 'ecl-featured-content-collection--is-collapsible' }} {{ extra_classes }}">
-  {% if no_container is empty %}
-  <div class="ecl-container">
-  {% endif %}
-    <div class="ecl-featured-content-collection__header">
-      {% if block('header_before') is defined %}
-        <div class="ecl-featured-content-collection__header-before">{{ block('header_before') }}</div>
-      {% endif %}
-      <div class="ecl-featured-content-collection__header-main">
-        {% if title is not empty %}
-          <{{ title_element }} class="ecl-featured-content-collection__title">{{ title | raw }}</{{ title_element }}>
+<section id="{{ extra_id }}"
+         class="ecl-featured-content-collection {{ is_collapsible ? 'ecl-featured-content-collection--is-collapsible' }} {{ extra_classes }}">
+    {% if no_container is empty %}
+    <div class="ecl-container">
         {% endif %}
+        <div class="ecl-featured-content-collection__header">
+            {% if block('header_before') is defined %}
+                <div class="ecl-featured-content-collection__header-before">{{ block('header_before') }}</div>
+            {% endif %}
+            <div class="ecl-featured-content-collection__header-main">
+                {% if title is not empty %}
+                <{{ title_element }}
+                class="ecl-featured-content-collection__title">{{ title | raw }}</{{ title_element }}>
+            {% endif %}
 
-        {% if description is not empty %}
-          <div class="ecl-featured-content-collection__description">
-            {{ description }}
-          </div>
+            {% if description is not empty %}
+                <div class="ecl-featured-content-collection__description">
+                    {{ description }}
+                </div>
+            {% endif %}
+        </div>
+        {% if block('header_after') is defined %}
+            <div class="ecl-featured-content-collection__header-after">{{ block('header_after') }}</div>
         {% endif %}
-      </div>
-      {% if block('header_after') is defined %}
-        <div class="ecl-featured-content-collection__header-after">{{ block('header_after') }}</div>
-      {% endif %}
     </div>
 
 
     <div class="ecl-featured-content-collection__main">
-      <div class="ecl-featured-content-collection__items">
-        {% for item in items %}
-          <div class="ecl-featured-content-collection__item {{ items_extra_classes }}">
-            {{ item.content }}
-          </div>
-        {% endfor %}
-      </div>
+        {% if items is not empty %}
+            <div class="ecl-featured-content-collection__items">
+                {% for item in items %}
+                    <div class="ecl-featured-content-collection__item {{ items_extra_classes }}">
+                        {{ item.content }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p>{{ empty_result_text }}</p>
+        {% endif %}
     </div>
     {% if call_to_action or (is_collapsible and items|length > 2) %}
-      <footer class="ecl-featured-content-collection__footer">
-        {% if items|length > 2 and is_collapsible %}
-          {% include "@ecl-twig/ec-component-button/ecl-button.html.twig" with {
-            label: collapsible_label|default('Show all'),
-            variant: 'ghost',
-            icon: icon_file_path ? {
-              path: icon_file_path,
-              type: 'ui',
-              name: 'rounded-arrow',
-              transform: 'rotate-180',
-              size: 'xs',
-            } : {},
-            extra_classes: 'ecl-featured-content-collection__expand',
-          } only %}
-        {% endif %}
+        <footer class="ecl-featured-content-collection__footer">
+            {% if items|length > 2 and is_collapsible %}
+                {% include "@ecl-twig/ec-component-button/ecl-button.html.twig" with {
+                    label: collapsible_label|default('Show all'),
+                    variant: 'ghost',
+                    icon: icon_file_path ? {
+                        path: icon_file_path,
+                        type: 'ui',
+                        name: 'rounded-arrow',
+                        transform: 'rotate-180',
+                        size: 'xs',
+                    } : {},
+                    extra_classes: 'ecl-featured-content-collection__expand',
+                } only %}
+            {% endif %}
 
-        {% if call_to_action %}
-          {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with {
-            link: call_to_action.link|default({})|merge({
-              type: 'standalone',
-              icon_position: 'after',
-            }),
-            icon: icon_file_path ? {
-              path: icon_file_path,
-              name: call_to_action.icon.name|default('rounded-arrow'),
-              type: call_to_action.icon.type|default('ui'),
-              size: call_to_action.icon.size|default('xs'),
-              transform: call_to_action.icon.transform|default('rotate-90')
-            } : {},
-            extra_classes: 'ecl-featured-content-collection__call-to-action ecl-link--button ecl-link--button-ghost',
-          } only %}
-        {% endif %}
-      </footer>
+            {% if call_to_action %}
+                {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with {
+                    link: call_to_action.link|default({})|merge({
+                        type: 'standalone',
+                        icon_position: 'after',
+                    }),
+                    icon: icon_file_path ? {
+                        path: icon_file_path,
+                        name: call_to_action.icon.name|default('rounded-arrow'),
+                        type: call_to_action.icon.type|default('ui'),
+                        size: call_to_action.icon.size|default('xs'),
+                        transform: call_to_action.icon.transform|default('rotate-90')
+                    } : {},
+                    extra_classes: 'ecl-featured-content-collection__call-to-action ecl-link--button ecl-link--button-ghost',
+                } only %}
+            {% endif %}
+        </footer>
     {% endif %}
 
-  {% if no_container is empty %}
-  </div>
-  {% endif %}
+    {% if no_container is empty %}
+        </div>
+    {% endif %}
 
 </section>

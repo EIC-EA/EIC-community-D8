@@ -1,0 +1,19 @@
+uuid: 3955c86c-18b6-4c89-a4b9-c5d6fb9a6e15
+langcode: en
+status: true
+dependencies:
+  module:
+    - address
+    - group
+id: group.field_address
+field_name: field_address
+entity_type: group
+type: address
+settings: {  }
+module: address
+locked: false
+cardinality: -1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

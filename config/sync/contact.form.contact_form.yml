@@ -1,0 +1,12 @@
+uuid: da969717-c666-42d2-85de-e18c7ae6c514
+langcode: en
+status: true
+dependencies: {  }
+id: contact_form
+label: 'Contact Form'
+recipients:
+  - info@example.org
+reply: ''
+weight: 0
+message: ''
+redirect: '/contact'

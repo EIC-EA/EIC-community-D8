@@ -14,37 +14,37 @@ bundle: group-group_invitation
 mode: default
 content:
   field_invitation_counter:
-    weight: -1
+    type: number_integer
     label: above
     settings:
       thousand_separator: ''
       prefix_suffix: true
     third_party_settings: {  }
-    type: number_integer
+    weight: -1
     region: content
   group_roles:
-    label: above
     type: entity_reference_label
+    label: above
     settings:
       link: false
-    weight: -4
     third_party_settings: {  }
+    weight: -4
     region: content
   invitation_status:
     type: number_integer
-    weight: -2
     label: above
     settings:
       thousand_separator: ''
       prefix_suffix: true
     third_party_settings: {  }
+    weight: -2
     region: content
   invitee_mail:
     type: email_mailto
-    weight: -3
     label: above
     settings: {  }
     third_party_settings: {  }
+    weight: -3
     region: content
 hidden:
   entity_id: true

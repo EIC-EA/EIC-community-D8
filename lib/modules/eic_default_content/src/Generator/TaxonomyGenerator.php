@@ -2,6 +2,8 @@
 
 namespace Drupal\eic_default_content\Generator;
 
+use Drupal\taxonomy\Entity\Term;
+
 /**
  * Generates default content for taxonomy.
  *
@@ -21,6 +23,9 @@ class TaxonomyGenerator extends CoreGenerator {
     $this->createFundingSources();
     $this->createEventTypes();
     $this->createOrganisationTypes();
+    $this->createContactCategories();
+    $this->createTargetMarket();
+    $this->createServiceProduct();
   }
 
   /**
@@ -35,6 +40,7 @@ class TaxonomyGenerator extends CoreGenerator {
     $this->unloadEntities('taxonomy_term', ['vid' => 'funding_source']);
     $this->unloadEntities('taxonomy_term', ['vid' => 'event_type']);
     $this->unloadEntities('taxonomy_term', ['vid' => 'organisation_types']);
+    $this->unloadEntities('taxonomy_term', ['vid' => 'contact_category']);
   }
 
   /**
@@ -185,6 +191,101 @@ class TaxonomyGenerator extends CoreGenerator {
       }
       else {
         $this->createTerm('organisation_types', ['name' => $type]);
+      }
+    }
+  }
+
+  /**
+   * Generate terms for contact categories.
+   *
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   */
+  private function createContactCategories() {
+    $datas = [
+      [
+        'label' => '- Any -',
+        'email' => 'any@eic.com',
+      ],
+      [
+        'label' => 'Business',
+        'email' => 'business@eic.com',
+      ],
+      [
+        'label' => 'Organisation',
+        'email' => 'organisation@eic.com',
+      ],
+      [
+        'label' => 'Group',
+        'email' => 'group@eic.com',
+      ],
+    ];
+
+    foreach ($datas as $data) {
+      $term = Term::create([
+        'vid' => 'contact_category',
+        'name' => $data['label'],
+        'field_target_email' => $data['email'],
+      ]);
+
+      $term->save();
+    }
+  }
+
+  /**
+   * Creates 'target_markets' terms.
+   */
+  private function createTargetMarket() {
+    $types = [
+      'Economy',
+      'Digital',
+      'Business',
+      'Entertainment',
+    ];
+
+    foreach ($types as $key => $type) {
+      if (is_array($type)) {
+        $parent = $this->createTerm('target_markets', ['name' => $key]);
+        foreach ($type as $sub_type) {
+          $this->createTerm('target_markets', [
+            'name' => $sub_type,
+            'parent' => $parent->id(),
+          ]);
+        }
+      }
+      else {
+        $this->createTerm('target_markets', ['name' => $type]);
+      }
+    }
+  }
+
+  /**
+   * Creates 'services_products' terms.
+   */
+  private function createServiceProduct() {
+    $types = [
+      'Product A' => [
+        'Product A.1',
+        'Product A.2',
+      ],
+      'Product B',
+      'Product C',
+      'Product D',
+      'Product E',
+      'Product F',
+    ];
+
+    foreach ($types as $key => $type) {
+      if (is_array($type)) {
+        $parent = $this->createTerm('services_and_products', ['name' => $key]);
+        foreach ($type as $sub_type) {
+          $this->createTerm('services_and_products', [
+            'name' => $sub_type,
+            'parent' => $parent->id(),
+          ]);
+        }
+      }
+      else {
+        $this->createTerm('services_and_products', ['name' => $type]);
       }
     }
   }

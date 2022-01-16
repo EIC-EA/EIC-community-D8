@@ -1,0 +1,20 @@
+.announcements {
+  background: $ecl-color-white;
+  padding: ecl-box-model('padding', 'default');
+  &__title {
+    font-weight: bold;
+    font-size: 1.0625rem;
+    color: $ecl-color-grey;
+    margin-bottom: 0;
+  }
+
+  &__link {
+    font-weight: bold;
+    color: $ecl-color-blue;
+    text-decoration: none;
+
+    &:hover {
+      color: $ecl-color-blue-50;
+    }
+  }
+}

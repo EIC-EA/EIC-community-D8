@@ -25,9 +25,9 @@ filters:
     weight: 100
     settings:
       default_view_mode: default
+      allowed_view_modes: {  }
       allowed_media_types:
         image: image
-      allowed_view_modes: {  }
   filter_iframe_cck:
     id: filter_iframe_cck
     provider: oe_webtools_cookie_consent

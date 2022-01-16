@@ -5,8 +5,8 @@ dependencies:
   module:
     - eic_search
     - route_condition
-name: search
 label: Search
+name: search
 group: 'Global overviews'
 description: 'Context used when viewing global search results.'
 requireAllConditions: false
@@ -14,18 +14,28 @@ disabled: false
 conditions:
   route:
     id: route
-    routes: eic_search.global_search
     negate: false
     uuid: 1724d7b2-12df-489c-a926-0df2f2dec4c1
     context_mapping: {  }
+    routes: eic_search.global_search
 reactions:
   blocks:
+    id: blocks
+    uuid: b2e2c0ac-50de-49b1-b2e3-f957728678f0
     blocks:
       b0a9afb2-d608-4a5f-b2f2-d99259d611d0:
+        uuid: b0a9afb2-d608-4a5f-b2f2-d99259d611d0
         id: eic_search_overview
         label: ''
         provider: eic_search
         label_display: visible
+        region: content
+        custom_id: eic_search_overview
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: search
+        context_mapping: {  }
         source_type: Drupal\eic_search\Search\Sources\GlobalSourceType
         facets:
           ss_global_content_type: ss_global_content_type
@@ -47,17 +57,7 @@ reactions:
         prefilter_group: 0
         add_facet_interests: 1
         add_facet_my_groups: 1
-        context_mapping: {  }
-        custom_id: eic_search_overview
-        region: content
-        theme: eic_community
-        css_class: ''
-        unique: 0
-        context_id: search
         third_party_settings: {  }
-        uuid: b0a9afb2-d608-4a5f-b2f2-d99259d611d0
-    id: blocks
-    saved: false
-    uuid: b2e2c0ac-50de-49b1-b2e3-f957728678f0
     include_default_blocks: 0
+    saved: false
 weight: -7

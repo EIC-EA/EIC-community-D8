@@ -17,18 +17,18 @@ bundle: fact_figure
 mode: default
 content:
   field_body:
-    weight: 1
+    type: text_default
     label: hidden
     settings: {  }
     third_party_settings: {  }
-    type: text_default
+    weight: 1
     region: content
   field_fact_figure_type:
-    weight: 0
+    type: list_default
     label: hidden
     settings: {  }
     third_party_settings: {  }
-    type: list_default
+    weight: 0
     region: content
 hidden:
   langcode: true

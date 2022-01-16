@@ -1,0 +1,31 @@
+uuid: 593e7677-7e7f-4118-9ddb-abe63fbebd39
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.taxonomy_term.contact_category.field_target_email
+    - taxonomy.vocabulary.contact_category
+  module:
+    - text
+id: taxonomy_term.contact_category.default
+targetEntityType: taxonomy_term
+bundle: contact_category
+mode: default
+content:
+  description:
+    label: hidden
+    type: text_default
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_target_email:
+    weight: 1
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: basic_string
+    region: content
+hidden:
+  langcode: true
+  search_api_excerpt: true
