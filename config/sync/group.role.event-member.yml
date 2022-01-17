@@ -52,3 +52,4 @@ permissions:
   - 'view group_node:video entity'
   - 'view group_node:wiki_page entity'
   - 'view latest version'
+  - 'view own unpublished group_node:book entity'

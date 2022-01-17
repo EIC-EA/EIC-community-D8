@@ -72,6 +72,7 @@ permissions:
   - 'view group_node:wiki_page entity'
   - 'view latest version'
   - 'view own unpublished group'
+  - 'view own unpublished group_node:book entity'
   - 'view unpublished group_node:book entity'
   - 'view unpublished group_node:discussion entity'
   - 'view unpublished group_node:gallery entity'
