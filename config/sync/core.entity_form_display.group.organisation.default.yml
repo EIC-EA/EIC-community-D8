@@ -18,6 +18,7 @@ dependencies:
     - field.field.group.organisation.field_organisation_type
     - field.field.group.organisation.field_social_links
     - field.field.group.organisation.field_team_members
+    - field.field.group.organisation.field_thumbnail
     - field.field.group.organisation.field_vocab_services_products
     - field.field.group.organisation.field_vocab_target_markets
     - field.field.group.organisation.field_vocab_topics
@@ -32,6 +33,7 @@ dependencies:
     - media_library
     - paragraphs
     - path
+    - social_link_field
     - text
 third_party_settings:
   field_group:
@@ -40,8 +42,8 @@ third_party_settings:
         - group_main
         - group_announcements
         - group_taxonomies
-        - group_team
         - group_contact
+        - group_team
         - group_features
       label: Organisation
       region: content
@@ -57,6 +59,7 @@ third_party_settings:
     group_main:
       children:
         - field_header_visual
+        - field_thumbnail
         - field_body
         - field_organisation_employees
         - field_organisation_turnover
@@ -114,10 +117,11 @@ third_party_settings:
         - field_organisation_link
         - field_address
         - field_locations
+        - field_social_links
       label: Contact
       region: content
       parent_name: group_organisation
-      weight: 6
+      weight: 5
       format_type: tab
       format_settings:
         classes: ''
@@ -145,9 +149,9 @@ third_party_settings:
       children:
         - field_team_members
       label: Team
-      region: hidden
+      region: content
       parent_name: group_organisation
-      weight: 5
+      weight: 6
       format_type: tab
       format_settings:
         classes: ''
@@ -175,7 +179,7 @@ content:
     third_party_settings: {  }
   field_body:
     type: text_textarea
-    weight: 4
+    weight: 5
     region: content
     settings:
       rows: 5
@@ -191,7 +195,7 @@ content:
     third_party_settings: {  }
   field_date_establishement:
     type: number
-    weight: 7
+    weight: 8
     region: content
     settings:
       placeholder: ''
@@ -247,7 +251,7 @@ content:
     third_party_settings: {  }
   field_organisation_employees:
     type: number
-    weight: 5
+    weight: 6
     region: content
     settings:
       placeholder: ''
@@ -262,7 +266,7 @@ content:
     third_party_settings: {  }
   field_organisation_turnover:
     type: string_textfield
-    weight: 6
+    weight: 7
     region: content
     settings:
       size: 60
@@ -270,9 +274,17 @@ content:
     third_party_settings: {  }
   field_organisation_type:
     type: options_buttons
-    weight: 8
+    weight: 9
     region: content
     settings: {  }
+    third_party_settings: {  }
+  field_social_links:
+    type: social_links
+    weight: 27
+    region: content
+    settings:
+      select_social: false
+      disable_weight: false
     third_party_settings: {  }
   field_team_members:
     type: entity_reference_paragraphs
@@ -285,6 +297,13 @@ content:
       add_mode: dropdown
       form_display_mode: default
       default_paragraph_type: ''
+    third_party_settings: {  }
+  field_thumbnail:
+    type: media_library_widget
+    weight: 4
+    region: content
+    settings:
+      media_types: {  }
     third_party_settings: {  }
   field_vocab_services_products:
     type: entity_tree
@@ -357,5 +376,4 @@ content:
       display_label: true
     third_party_settings: {  }
 hidden:
-  field_social_links: true
   uid: true

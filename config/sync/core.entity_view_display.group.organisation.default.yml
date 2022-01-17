@@ -18,6 +18,7 @@ dependencies:
     - field.field.group.organisation.field_organisation_type
     - field.field.group.organisation.field_social_links
     - field.field.group.organisation.field_team_members
+    - field.field.group.organisation.field_thumbnail
     - field.field.group.organisation.field_vocab_services_products
     - field.field.group.organisation.field_vocab_target_markets
     - field.field.group.organisation.field_vocab_topics
@@ -75,6 +76,14 @@ content:
       link: ''
     third_party_settings: {  }
     weight: 7
+    region: content
+  field_thumbnail:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 8
     region: content
   flag_follow_group:
     settings: {  }

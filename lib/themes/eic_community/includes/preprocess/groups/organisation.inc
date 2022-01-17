@@ -62,12 +62,13 @@ function _eic_community_render_organisation_detail_page(&$variables, $group) {
     ] :
     NULL;
 
+
+  $mail_data = [];
   $mailto = $group->get('field_email')->value;
   $mail_label = $group->get('field_contact_label')->value;
 
-  $contact_data = [
-    'title' => t('Contact', [], ['context' => 'eic_community']),
-    'items' => [
+  if ($mailto && $mail_label) {
+    $mail_data = [
       [
         'name' => $mail_label,
         'link' => [
@@ -81,8 +82,15 @@ function _eic_community_render_organisation_detail_page(&$variables, $group) {
           ],
         ],
       ],
-    ],
-  ];
+    ];
+  }
+
+  if ($mail_data) {
+    $contact_data = [
+      'title' => t('Contact', [], ['context' => 'eic_community']),
+      'items' => $mail_data,
+    ];
+  }
 
   $locations = $group->get('field_locations')->referencedEntities();
   $locations_data = [];
@@ -119,76 +127,112 @@ function _eic_community_render_organisation_detail_page(&$variables, $group) {
     ];
   }, $addresses);
 
+  $social_data = [];
+
+  if ($social_links = $group->get('field_social_links')->getValue()) {
+    $socials_platform_mapping = [
+      'facebook' => [
+        'url' => 'https://www.facebook.com/',
+        'icon' => 'facebook',
+      ],
+      'twitter' => [
+        'url' => 'https://www.twitter.com/',
+        'icon' => 'twitter',
+      ],
+      'linkedin' => [
+        'url' => 'https://www.linkedin.com/in/',
+        'icon' => 'linkedin',
+      ],
+    ];
+
+    $social_data = [
+      'title' => '',
+      'icon_file_path' => $variables['eic_icon_path'],
+      'size' => 's',
+    ];
+
+    foreach ($social_links as $social_link) {
+      $social_data['items'][] = [
+        'label' => ucfirst($social_link['social']),
+        'path' => $socials_platform_mapping[$social_link['social']]['url'] . $social_link['link'],
+        'name' => $socials_platform_mapping[$social_link['social']]['icon'],
+      ];
+    }
+  }
+
   $variables['contact'] = [
     'link' => $link_data,
-    'social' => [],
+    'social' => $social_data,
     'data' => $contact_data,
     'adresses' => [
       'title' => t('Adresses', [], ['context' => 'eic_community']),
       'items' => $addresses_data,
     ],
     'locations' => $locations_data,
+    'icon_file_path' => $variables['eic_icon_path'],
   ];
 
   $needs = $group->get('field_needs')->referencedEntities();
   $offers = $group->get('field_offers')->referencedEntities();
 
-  $variables['announcements'] = [
-    'title' => t('Announcements', [], ['context' => 'eic_community']),
-    'items' => [
-      [
-        'title' => t('What we offer ', [], ['context' => 'eic_community']),
-        'extra_classes' => 'ecl-featured-list--is-organisation-announcements',
-        'title_element' => 'h4',
-        'icon_file_path' => $variables['eic_icon_path'],
-        'is_collapsible' => TRUE,
-        'collapse_label' => t(
-          'Show 2 more',
-          [],
-          ['context' => 'eic_community']
-        ),
-        'items' => array_map(function (ParagraphInterface $paragraph) {
-          $link = $paragraph->get('field_cta_link')->getValue();
-          $link = reset($link);
+  if (!empty($needs) || !empty($offers)) {
+    $variables['announcements'] = [
+      'title' => t('Announcements', [], ['context' => 'eic_community']),
+      'items' => [
+        [
+          'title' => t('What we offer ', [], ['context' => 'eic_community']),
+          'extra_classes' => 'ecl-featured-list--is-organisation-announcements',
+          'title_element' => 'h4',
+          'icon_file_path' => $variables['eic_icon_path'],
+          'is_collapsible' => TRUE,
+          'collapse_label' => t(
+            'Show 2 more',
+            [],
+            ['context' => 'eic_community']
+          ),
+          'items' => array_map(function (ParagraphInterface $paragraph) {
+            $link = $paragraph->get('field_cta_link')->getValue();
+            $link = reset($link);
 
-          return [
-            'title' => $paragraph->get('field_title')->value,
-            'description' => $paragraph->get('field_description')->value,
-            'cta' => [
-              'label' => $link['title'],
-              'link' => $link ? Url::fromUri($link['uri'])->toString() : '',
-            ],
-          ];
-        }, $offers),
-      ],
-      [
-        'title' => t('We are looking for', [], ['context' => 'eic_community']
-        )->render(),
-        'extra_classes' => 'ecl-featured-list--is-organisation-announcements',
-        'title_element' => 'h4',
-        'icon_file_path' => $variables['eic_icon_path'],
-        'is_collapsible' => TRUE,
-        'collapse_label' => t(
-          'Show 2 more',
-          [],
-          ['context' => 'eic_community']
-        ),
-        'items' => array_map(function (ParagraphInterface $paragraph) {
-          $link = $paragraph->get('field_cta_link')->getValue();
-          $link = reset($link);
+            return [
+              'title' => $paragraph->get('field_title')->value,
+              'description' => $paragraph->get('field_description')->value,
+              'cta' => [
+                'label' => $link['title'],
+                'link' => $link ? Url::fromUri($link['uri'])->toString() : '',
+              ],
+            ];
+          }, $offers),
+        ],
+        [
+          'title' => t('We are looking for', [], ['context' => 'eic_community']
+          )->render(),
+          'extra_classes' => 'ecl-featured-list--is-organisation-announcements',
+          'title_element' => 'h4',
+          'icon_file_path' => $variables['eic_icon_path'],
+          'is_collapsible' => TRUE,
+          'collapse_label' => t(
+            'Show 2 more',
+            [],
+            ['context' => 'eic_community']
+          ),
+          'items' => array_map(function (ParagraphInterface $paragraph) {
+            $link = $paragraph->get('field_cta_link')->getValue();
+            $link = reset($link);
 
-          return [
-            'title' => $paragraph->get('field_title')->value,
-            'description' => $paragraph->get('field_description')->value,
-            'cta' => [
-              'label' => $link['title'],
-              'link' => $link ? Url::fromUri($link['uri'])->toString() : '',
-            ],
-          ];
-        }, $needs),
+            return [
+              'title' => $paragraph->get('field_title')->value,
+              'description' => $paragraph->get('field_description')->value,
+              'cta' => [
+                'label' => $link['title'],
+                'link' => $link ? Url::fromUri($link['uri'])->toString() : '',
+              ],
+            ];
+          }, $needs),
+        ],
       ],
-    ],
-  ];
+    ];
+  }
 
   $variables['news'] = _eic_community_get_rendered_view(
     'organisation_content',
@@ -314,6 +358,8 @@ function _eic_community_render_organisation_detail_page(&$variables, $group) {
       ],
     ],
   ];
+
+  $variables['icon_file_path'] = $variables['eic_icon_path'];
 }
 
 /**
