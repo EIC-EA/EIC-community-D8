@@ -1,0 +1,20 @@
+uuid: f602a421-ed02-421b-bf66-bc4325f478e9
+langcode: en
+status: true
+dependencies:
+  module:
+    - group
+id: group.field_date_establishement
+field_name: field_date_establishement
+entity_type: group
+type: integer
+settings:
+  unsigned: false
+  size: normal
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

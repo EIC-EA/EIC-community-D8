@@ -14,7 +14,7 @@ services:
       - { name: event_subscriber }
   eic_groups.breadcrumb:
     class: Drupal\eic_groups\Breadcrumb\GroupBreadcrumbBuilder
-    arguments: ['@book.breadcrumb', '@current_user', '@eic_user.helper', '@eic_flags.handler_collector', '@request_stack']
+    arguments: ['@book.breadcrumb', '@current_user', '@eic_user.helper', '@eic_flags.handler_collector', '@request_stack', '@eic_groups.helper']
     tags:
       - { name: breadcrumb_builder, priority: 1000 }
   eic_groups.access_check.flag.action.decorator:

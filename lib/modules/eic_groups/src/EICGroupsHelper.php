@@ -2,8 +2,11 @@
 
 namespace Drupal\eic_groups;
 
+use CommerceGuys\Addressing\AddressFormat\AddressField;
+use Drupal\address\FieldHelper;
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Locale\CountryManager;
 use Drupal\message\MessageInterface;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Database\Connection;
@@ -904,6 +907,31 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
     return $group->getMembers([
       $group->bundle() . '-' . self::GROUP_TYPE_ADMINISTRATOR_ROLE,
     ]);
+  }
+
+  /**
+   * Format array of a field address to string.
+   *
+   * @param $address
+   *
+   * @return string
+   */
+  public static function formatAddress($address) {
+    $countries_map = CountryManager::getStandardList();
+    $location_formatted = $address[FieldHelper::getPropertyName(AddressField::ADDRESS_LINE1)]
+      . ' ' .
+      $address[$address[FieldHelper::getPropertyName(AddressField::ADDRESS_LINE2)]] . '<br />';
+    $location_formatted .= $address[FieldHelper::getPropertyName(AddressField::POSTAL_CODE)]
+      . ' ' .
+      $address[FieldHelper::getPropertyName(AddressField::LOCALITY)] . '<br />';
+    $location_formatted .= array_key_exists(
+      $address['country_code'],
+      $countries_map
+    ) ?
+      $countries_map[$address['country_code']] :
+      '';
+
+    return $location_formatted;
   }
 
 }

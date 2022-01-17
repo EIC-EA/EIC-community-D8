@@ -21,6 +21,8 @@ class TaxonomyGenerator extends CoreGenerator {
     $this->createFundingSources();
     $this->createEventTypes();
     $this->createOrganisationTypes();
+    $this->createTargetMarket();
+    $this->createServiceProduct();
   }
 
   /**
@@ -185,6 +187,65 @@ class TaxonomyGenerator extends CoreGenerator {
       }
       else {
         $this->createTerm('organisation_types', ['name' => $type]);
+      }
+    }
+  }
+
+  /**
+   * Creates 'target_markets' terms.
+   */
+  private function createTargetMarket() {
+    $types = [
+      'Economy',
+      'Digital',
+      'Business',
+      'Entertainment',
+    ];
+
+    foreach ($types as $key => $type) {
+      if (is_array($type)) {
+        $parent = $this->createTerm('target_markets', ['name' => $key]);
+        foreach ($type as $sub_type) {
+          $this->createTerm('target_markets', [
+            'name' => $sub_type,
+            'parent' => $parent->id(),
+          ]);
+        }
+      }
+      else {
+        $this->createTerm('target_markets', ['name' => $type]);
+      }
+    }
+  }
+
+  /**
+   * Creates 'services_products' terms.
+   */
+  private function createServiceProduct() {
+    $types = [
+      'Product A' => [
+        'Product A.1',
+        'Product A.2',
+      ],
+      'Product B',
+      'Product C',
+      'Product D',
+      'Product E',
+      'Product F',
+    ];
+
+    foreach ($types as $key => $type) {
+      if (is_array($type)) {
+        $parent = $this->createTerm('services_and_products', ['name' => $key]);
+        foreach ($type as $sub_type) {
+          $this->createTerm('services_and_products', [
+            'name' => $sub_type,
+            'parent' => $parent->id(),
+          ]);
+        }
+      }
+      else {
+        $this->createTerm('services_and_products', ['name' => $type]);
       }
     }
   }
