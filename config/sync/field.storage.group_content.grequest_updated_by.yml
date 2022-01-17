@@ -2,13 +2,13 @@ uuid: 578d7e16-185a-4c61-82a3-5314eb9a6ada
 langcode: en
 status: true
 dependencies:
+  module:
+    - group
+    - user
   enforced:
     module:
       - group
       - grequest
-  module:
-    - group
-    - user
 _core:
   default_config_hash: YxjnN0DlwW1fjlUbX-8e9M-J23J6wBqdhgm1gbrbHcE
 id: group_content.grequest_updated_by

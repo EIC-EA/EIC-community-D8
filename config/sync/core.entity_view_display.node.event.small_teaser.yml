@@ -33,48 +33,48 @@ bundle: event
 mode: small_teaser
 content:
   body:
-    label: hidden
     type: text_default
-    weight: 101
+    label: hidden
     settings: {  }
     third_party_settings: {  }
+    weight: 101
     region: content
   field_date_range:
-    weight: 109
+    type: daterange_default
     label: above
     settings:
-      separator: '-'
-      format_type: medium
       timezone_override: ''
+      format_type: medium
+      separator: '-'
     third_party_settings: {  }
-    type: daterange_default
+    weight: 109
     region: content
   field_document_media:
-    weight: 102
+    type: entity_reference_label
     label: above
     settings:
       link: true
     third_party_settings: {  }
-    type: entity_reference_label
+    weight: 102
     region: content
   field_image:
-    weight: 114
+    type: entity_reference_label
     label: above
     settings:
       link: true
     third_party_settings: {  }
-    type: entity_reference_label
+    weight: 114
     region: content
   field_language:
-    weight: 112
+    type: entity_reference_label
     label: above
     settings:
       link: true
     third_party_settings: {  }
-    type: entity_reference_label
+    weight: 112
     region: content
   field_link:
-    weight: 107
+    type: link
     label: above
     settings:
       trim_length: 80
@@ -83,66 +83,66 @@ content:
       rel: ''
       target: ''
     third_party_settings: {  }
-    type: link
+    weight: 107
     region: content
   field_location:
-    weight: 110
+    type: address_default
     label: above
     settings: {  }
     third_party_settings: {  }
-    type: address_default
+    weight: 110
     region: content
   field_location_type:
-    weight: 111
+    type: list_default
     label: above
     settings: {  }
     third_party_settings: {  }
-    type: list_default
+    weight: 111
     region: content
   field_organised_by:
-    weight: 106
+    type: string
     label: above
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    type: string
+    weight: 106
     region: content
   field_social_links:
-    weight: 108
+    type: font_awesome
     label: above
     settings:
       icon_type: common
       orientation: vertical
       new_tab: true
     third_party_settings: {  }
-    type: font_awesome
+    weight: 108
     region: content
   field_vocab_event_type:
-    weight: 105
+    type: entity_reference_label
     label: above
     settings:
       link: true
     third_party_settings: {  }
-    type: entity_reference_label
+    weight: 105
     region: content
   field_vocab_geo:
-    weight: 104
+    type: entity_reference_label
     label: above
     settings:
       link: true
     third_party_settings: {  }
-    type: entity_reference_label
+    weight: 104
     region: content
   field_vocab_topics:
-    weight: 103
+    type: entity_reference_label
     label: above
     settings:
       link: true
     third_party_settings: {  }
-    type: entity_reference_label
+    weight: 103
     region: content
   field_website_url:
-    weight: 113
+    type: link
     label: above
     settings:
       trim_length: 80
@@ -151,58 +151,58 @@ content:
       rel: ''
       target: ''
     third_party_settings: {  }
-    type: link
+    weight: 113
     region: content
   flag_bookmark_content:
-    weight: 10
     settings: {  }
     third_party_settings: {  }
+    weight: 10
     region: content
   flag_follow_content:
-    weight: 10
     settings: {  }
     third_party_settings: {  }
+    weight: 10
     region: content
   flag_highlight_content:
-    weight: 10
     settings: {  }
     third_party_settings: {  }
+    weight: 10
     region: content
   flag_like_content:
-    weight: 10
     settings: {  }
     third_party_settings: {  }
+    weight: 10
     region: content
   flag_recommend:
-    weight: 10
     settings: {  }
     third_party_settings: {  }
+    weight: 10
     region: content
   links:
-    weight: 100
     settings: {  }
     third_party_settings: {  }
+    weight: 100
     region: content
   member_content_edit_access:
-    weight: 1
-    region: content
+    type: boolean
     label: above
     settings:
       format: default
       format_custom_false: ''
       format_custom_true: ''
     third_party_settings: {  }
-    type: boolean
+    weight: 1
+    region: content
   private:
-    weight: 1
-    region: content
+    type: boolean
     label: above
     settings:
       format: default
       format_custom_false: ''
       format_custom_true: ''
     third_party_settings: {  }
-    type: boolean
+    weight: 1
+    region: content
 hidden:
   extra_field_eic_theme_helper_short_title_with_fallback: true
   langcode: true

@@ -28,7 +28,6 @@ use Drupal\file\Entity\File;
 use Drupal\flag\FlagCountManager;
 use Drupal\group\Entity\Group;
 use Drupal\group\Entity\GroupInterface;
-use Drupal\message\MessageInterface;
 use Drupal\node\NodeTypeInterface;
 use Drupal\oec_group_flex\OECGroupFlexHelper;
 use Drupal\group\GroupMembership;
@@ -416,19 +415,12 @@ class SolrDocumentProcessor {
     }
 
     $views = $this->nodeStatisticsDatabaseStorage->fetchView($node->id());
-    $flags_count = $this->flagCountManager->getEntityFlagCounts($node);
 
     $this->addOrUpdateDocumentField(
       $document,
       'its_statistics_view',
       $fields,
       $views ? $views->getTotalCount() : 0
-    );
-    $this->addOrUpdateDocumentField(
-      $document,
-      'its_flag_like_content',
-      $fields,
-      isset($flags_count['like_content']) ? $flags_count['like_content'] : 0
     );
     $this->addOrUpdateDocumentField(
       $document,
@@ -681,7 +673,7 @@ class SolrDocumentProcessor {
 
     $url_contact = Url::fromRoute(
       'eic_private_message.user_private_message',
-      ['user' => $user->id()],
+      ['user' => $user->id()]
     )->toString();
 
     $this->addOrUpdateDocumentField(
@@ -755,8 +747,17 @@ class SolrDocumentProcessor {
           FlagType::HIGHLIGHT_CONTENT,
           FlagType::LIKE_CONTENT,
         ];
-        break;
 
+        $node = Node::load($entity_id);
+        $flags_count = $this->flagCountManager->getEntityFlagCounts($node);
+
+        $this->addOrUpdateDocumentField(
+          $document,
+          'its_flag_like_content',
+          $fields,
+          isset($flags_count['like_content']) ? $flags_count['like_content'] : 0
+        );
+        break;
     }
 
     // If we don't have a proper entity ID and type, skip this document.

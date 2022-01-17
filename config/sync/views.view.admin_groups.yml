@@ -19,128 +19,12 @@ base_table: groups_field_data
 base_field: id
 display:
   default:
-    display_plugin: default
     id: default
     display_title: Default
+    display_plugin: default
     position: 0
     display_options:
-      access:
-        type: perm
-        options:
-          perm: 'access eic_admin dashboard'
-      cache:
-        type: tag
-        options: {  }
-      query:
-        type: views_query
-        options:
-          disable_sql_rewrite: false
-          distinct: false
-          replica: false
-          query_comment: ''
-          query_tags: {  }
-      exposed_form:
-        type: basic
-        options:
-          submit_button: Apply
-          reset_button: false
-          reset_button_label: Reset
-          exposed_sorts_label: 'Sort by'
-          expose_sort_order: true
-          sort_asc_label: Asc
-          sort_desc_label: Desc
-      pager:
-        type: full
-        options:
-          items_per_page: 50
-          offset: 0
-          id: 0
-          total_pages: null
-          tags:
-            previous: ‹‹
-            next: ››
-            first: '« First'
-            last: 'Last »'
-          expose:
-            items_per_page: false
-            items_per_page_label: 'Items per page'
-            items_per_page_options: '5, 10, 25, 50'
-            items_per_page_options_all: false
-            items_per_page_options_all_label: '- All -'
-            offset: false
-            offset_label: Offset
-          quantity: 9
-      style:
-        type: table
-        options:
-          grouping: {  }
-          row_class: ''
-          default_row_class: true
-          override: true
-          sticky: false
-          caption: ''
-          summary: ''
-          description: ''
-          columns:
-            id: id
-            label: label
-            moderation_state: moderation_state
-            name: name
-            created: created
-            changed: changed
-            operations: operations
-          info:
-            id:
-              sortable: true
-              default_sort_order: asc
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
-            label:
-              sortable: true
-              default_sort_order: asc
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
-            moderation_state:
-              sortable: true
-              default_sort_order: asc
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
-            name:
-              sortable: true
-              default_sort_order: asc
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
-            created:
-              sortable: true
-              default_sort_order: asc
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
-            changed:
-              sortable: true
-              default_sort_order: desc
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
-            operations:
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
-          default: changed
-          empty_table: false
-      row:
-        type: 'entity:group'
+      title: 'Admin - Groups'
       fields:
         id:
           id: id
@@ -149,6 +33,9 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          entity_type: group
+          entity_field: id
+          plugin_id: field
           label: ID
           exclude: false
           alter:
@@ -205,9 +92,6 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-          entity_type: group
-          entity_field: id
-          plugin_id: field
         label:
           id: label
           table: groups_field_data
@@ -215,6 +99,9 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          entity_type: null
+          entity_field: label
+          plugin_id: field
           label: Name
           exclude: false
           alter:
@@ -270,9 +157,6 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-          entity_type: null
-          entity_field: label
-          plugin_id: field
         moderation_state:
           id: moderation_state
           table: groups_field_data
@@ -280,6 +164,8 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          entity_type: group
+          plugin_id: moderation_state_field
           label: Status
           exclude: false
           alter:
@@ -334,8 +220,6 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-          entity_type: group
-          plugin_id: moderation_state_field
         name:
           id: name
           table: users_field_data
@@ -343,6 +227,9 @@ display:
           relationship: gc__user
           group_type: group
           admin_label: ''
+          entity_type: user
+          entity_field: name
+          plugin_id: field
           label: Name
           exclude: false
           alter:
@@ -398,9 +285,6 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-          entity_type: user
-          entity_field: name
-          plugin_id: field
         created:
           id: created
           table: groups_field_data
@@ -408,6 +292,9 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          entity_type: group
+          entity_field: created
+          plugin_id: field
           label: 'Created on'
           exclude: false
           alter:
@@ -465,9 +352,6 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-          entity_type: group
-          entity_field: created
-          plugin_id: field
         changed:
           id: changed
           table: groups_field_data
@@ -475,6 +359,9 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          entity_type: group
+          entity_field: changed
+          plugin_id: field
           label: 'Updated on'
           exclude: false
           alter:
@@ -532,9 +419,6 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-          entity_type: group
-          entity_field: changed
-          plugin_id: field
         operations:
           id: operations
           table: groups
@@ -542,6 +426,8 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          entity_type: group
+          plugin_id: entity_operations
           label: Operations
           exclude: false
           alter:
@@ -584,22 +470,61 @@ display:
           empty_zero: false
           hide_alter_empty: true
           destination: true
-          entity_type: group
-          plugin_id: entity_operations
+      pager:
+        type: full
+        options:
+          offset: 0
+          items_per_page: 50
+          total_pages: null
+          id: 0
+          tags:
+            next: ››
+            previous: ‹‹
+            first: '« First'
+            last: 'Last »'
+          expose:
+            items_per_page: false
+            items_per_page_label: 'Items per page'
+            items_per_page_options: '5, 10, 25, 50'
+            items_per_page_options_all: false
+            items_per_page_options_all_label: '- All -'
+            offset: false
+            offset_label: Offset
+          quantity: 9
+      exposed_form:
+        type: basic
+        options:
+          submit_button: Apply
+          reset_button: false
+          reset_button_label: Reset
+          exposed_sorts_label: 'Sort by'
+          expose_sort_order: true
+          sort_asc_label: Asc
+          sort_desc_label: Desc
+      access:
+        type: perm
+        options:
+          perm: 'access eic_admin dashboard'
+      cache:
+        type: tag
+        options: {  }
+      empty: {  }
+      sorts: {  }
+      arguments: {  }
       filters:
         type:
           id: type
           table: groups_field_data
           field: type
-          value:
-            group: group
           entity_type: group
           entity_field: type
           plugin_id: bundle
+          value:
+            group: group
+          group: 1
           expose:
             operator_limit_selection: false
             operator_list: {  }
-          group: 1
         id:
           id: id
           table: groups_field_data
@@ -607,6 +532,9 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          entity_type: group
+          entity_field: id
+          plugin_id: numeric
           operator: '='
           value:
             min: ''
@@ -634,9 +562,9 @@ display:
               service_authentication: '0'
               site_admin: '0'
               administrator: '0'
-            placeholder: ''
             min_placeholder: ''
             max_placeholder: ''
+            placeholder: ''
           is_grouped: false
           group_info:
             label: ''
@@ -649,9 +577,6 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
-          entity_type: group
-          entity_field: id
-          plugin_id: numeric
         label:
           id: label
           table: groups_field_data
@@ -659,6 +584,9 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          entity_type: group
+          entity_field: label
+          plugin_id: views_autocomplete_filters_string
           operator: contains
           value: ''
           group: 1
@@ -703,9 +631,6 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
-          entity_type: group
-          entity_field: label
-          plugin_id: views_autocomplete_filters_string
         uid:
           id: uid
           table: users_field_data
@@ -713,6 +638,9 @@ display:
           relationship: gc__user
           group_type: group
           admin_label: ''
+          entity_type: user
+          entity_field: uid
+          plugin_id: user_name
           operator: in
           value: {  }
           group: 1
@@ -750,9 +678,6 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
-          entity_type: user
-          entity_field: uid
-          plugin_id: user_name
         moderation_state:
           id: moderation_state
           table: groups_field_data
@@ -760,6 +685,8 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          entity_type: group
+          plugin_id: moderation_state_filter
           operator: in
           value: {  }
           group: 1
@@ -797,8 +724,6 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
-          entity_type: group
-          plugin_id: moderation_state_filter
         group_roles_target_id:
           id: group_roles_target_id
           table: group_content__group_roles
@@ -806,6 +731,7 @@ display:
           relationship: group_content_id
           group_type: group
           admin_label: ''
+          plugin_id: views_autocomplete_filters_string
           operator: '='
           value: group-owner
           group: 1
@@ -844,12 +770,89 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
-          plugin_id: views_autocomplete_filters_string
-      sorts: {  }
-      title: 'Admin - Groups'
-      header: {  }
-      footer: {  }
-      empty: {  }
+      filter_groups:
+        operator: AND
+        groups:
+          1: AND
+      style:
+        type: table
+        options:
+          grouping: {  }
+          row_class: ''
+          default_row_class: true
+          columns:
+            id: id
+            label: label
+            moderation_state: moderation_state
+            name: name
+            created: created
+            changed: changed
+            operations: operations
+          default: changed
+          info:
+            id:
+              sortable: true
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            label:
+              sortable: true
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            moderation_state:
+              sortable: true
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            name:
+              sortable: true
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            created:
+              sortable: true
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            changed:
+              sortable: true
+              default_sort_order: desc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            operations:
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+          override: true
+          sticky: false
+          summary: ''
+          empty_table: false
+          caption: ''
+          description: ''
+      row:
+        type: 'entity:group'
+      query:
+        type: views_query
+        options:
+          query_comment: ''
+          disable_sql_rewrite: false
+          distinct: false
+          replica: false
+          query_tags: {  }
       relationships:
         group_content_id:
           id: group_content_id
@@ -858,6 +861,8 @@ display:
           relationship: none
           group_type: group
           admin_label: 'Group content'
+          entity_type: group
+          plugin_id: group_to_group_content
           required: true
           group_content_plugins:
             group_membership: group_membership
@@ -876,8 +881,6 @@ display:
             'group_node:wiki_page': '0'
             group_membership_request: '0'
             'group_content_menu:group_main_menu': '0'
-          entity_type: group
-          plugin_id: group_to_group_content
         gc__user:
           id: gc__user
           table: group_content_field_data
@@ -885,6 +888,8 @@ display:
           relationship: group_content_id
           group_type: group
           admin_label: 'Group content User'
+          entity_type: group_content
+          plugin_id: group_content_to_entity
           required: true
           group_content_plugins:
             group_membership: group_membership
@@ -892,15 +897,10 @@ display:
             group_request_delete: '0'
             group_invitation: '0'
             group_membership_request: '0'
-          entity_type: group_content
-          plugin_id: group_content_to_entity
-      arguments: {  }
-      display_extenders: {  }
-      filter_groups:
-        operator: AND
-        groups:
-          1: AND
       group_by: false
+      header: {  }
+      footer: {  }
+      display_extenders: {  }
     cache_metadata:
       max-age: -1
       contexts:
@@ -912,14 +912,12 @@ display:
       tags:
         - 'config:workflow_list'
   page_admin_events:
-    display_plugin: page
     id: page_admin_events
     display_title: 'Page admin events'
+    display_plugin: page
     position: 1
     display_options:
-      display_extenders: {  }
-      path: admin/community/groups/events
-      display_description: ''
+      title: 'Admin - Events'
       filters:
         type:
           id: type
@@ -928,6 +926,9 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          entity_type: group
+          entity_field: type
+          plugin_id: bundle
           operator: in
           value:
             event: event
@@ -960,9 +961,6 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
-          entity_type: group
-          entity_field: type
-          plugin_id: bundle
         id:
           id: id
           table: groups_field_data
@@ -970,6 +968,9 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          entity_type: group
+          entity_field: id
+          plugin_id: numeric
           operator: '='
           value:
             min: ''
@@ -997,9 +998,9 @@ display:
               service_authentication: '0'
               site_admin: '0'
               administrator: '0'
-            placeholder: ''
             min_placeholder: ''
             max_placeholder: ''
+            placeholder: ''
           is_grouped: false
           group_info:
             label: ''
@@ -1012,9 +1013,6 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
-          entity_type: group
-          entity_field: id
-          plugin_id: numeric
         label:
           id: label
           table: groups_field_data
@@ -1022,6 +1020,9 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          entity_type: group
+          entity_field: label
+          plugin_id: views_autocomplete_filters_string
           operator: contains
           value: ''
           group: 1
@@ -1066,9 +1067,6 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
-          entity_type: group
-          entity_field: label
-          plugin_id: views_autocomplete_filters_string
         uid:
           id: uid
           table: users_field_data
@@ -1076,6 +1074,9 @@ display:
           relationship: gc__user
           group_type: group
           admin_label: ''
+          entity_type: user
+          entity_field: uid
+          plugin_id: user_name
           operator: in
           value: {  }
           group: 1
@@ -1113,9 +1114,6 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
-          entity_type: user
-          entity_field: uid
-          plugin_id: user_name
         moderation_state:
           id: moderation_state
           table: groups_field_data
@@ -1123,6 +1121,8 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          entity_type: group
+          plugin_id: moderation_state_filter
           operator: in
           value: {  }
           group: 1
@@ -1160,8 +1160,6 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
-          entity_type: group
-          plugin_id: moderation_state_filter
         group_roles_target_id:
           id: group_roles_target_id
           table: group_content__group_roles
@@ -1169,6 +1167,7 @@ display:
           relationship: group_content_id
           group_type: group
           admin_label: ''
+          plugin_id: views_autocomplete_filters_string
           operator: '='
           value: event-owner
           group: 1
@@ -1207,16 +1206,17 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
-          plugin_id: views_autocomplete_filters_string
-      defaults:
-        filters: false
-        filter_groups: false
-        title: false
       filter_groups:
         operator: AND
         groups:
           1: AND
-      title: 'Admin - Events'
+      defaults:
+        title: false
+        filters: false
+        filter_groups: false
+      display_description: ''
+      display_extenders: {  }
+      path: admin/community/groups/events
     cache_metadata:
       max-age: -1
       contexts:
@@ -1228,14 +1228,14 @@ display:
       tags:
         - 'config:workflow_list'
   page_admin_groups:
-    display_plugin: page
     id: page_admin_groups
     display_title: 'Page admin groups'
+    display_plugin: page
     position: 1
     display_options:
+      display_description: ''
       display_extenders: {  }
       path: admin/community/groups/groups
-      display_description: ''
     cache_metadata:
       max-age: -1
       contexts:

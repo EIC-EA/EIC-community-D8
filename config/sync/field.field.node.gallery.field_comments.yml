@@ -27,7 +27,7 @@ default_value_callback: ''
 settings:
   default_mode: 1
   per_page: 50
-  form_location: true
   anonymous: 0
+  form_location: true
   preview: 1
 field_type: comment

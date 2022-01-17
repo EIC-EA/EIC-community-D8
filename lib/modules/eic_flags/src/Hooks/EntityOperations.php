@@ -196,9 +196,9 @@ class EntityOperations implements ContainerInjectionInterface {
 
         case RequestTypes::TRANSFER_OWNERSHIP:
           $operation_keys = [
-            'request_' . $type => $this->t('Request transfer ownership'),
-            'accept_request_' . $type => $this->t('Accept transfer ownership'),
-            'deny_request_' . $type => $this->t('Deny transfer ownership'),
+            'request_' . $type => $this->t('Request ownership transfer'),
+            'accept_request_' . $type => $this->t('Accept ownership transfer'),
+            'deny_request_' . $type => $this->t('Deny ownership transfer'),
           ];
           foreach ($operation_keys as $key => $value) {
             if (!isset($operations[$key])) {
