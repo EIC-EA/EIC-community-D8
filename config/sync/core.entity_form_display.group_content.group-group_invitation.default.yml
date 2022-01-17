@@ -16,17 +16,17 @@ content:
   group_roles:
     type: options_buttons
     weight: 2
+    region: content
     settings: {  }
     third_party_settings: {  }
-    region: content
   invitee_mail:
     type: email_default
     weight: 0
+    region: content
     settings:
       placeholder: example@example.com
       size: 60
     third_party_settings: {  }
-    region: content
   langcode:
     type: language_select
     weight: 1

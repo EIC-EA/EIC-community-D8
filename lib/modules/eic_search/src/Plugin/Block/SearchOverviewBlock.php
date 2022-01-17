@@ -252,6 +252,11 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
         ),
       'source_bundle_id' => $source->getEntityBundle(),
       'default_sorting_option' => $source->getDefaultSort(),
+      'filter_label' => [
+        'ss_global_content_type' => [
+          'news' => t('News article', [], ['context' => 'eic_search']),
+        ],
+      ],
     ];
 
     $route_name = $this->routeMatch->getRouteName();

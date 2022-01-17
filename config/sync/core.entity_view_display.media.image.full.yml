@@ -18,13 +18,13 @@ mode: full
 content:
   oe_media_image:
     type: image
-    weight: 0
-    region: content
     label: hidden
     settings:
-      image_style: banner_1920x1080
       image_link: ''
+      image_style: banner_1920x1080
     third_party_settings: {  }
+    weight: 0
+    region: content
 hidden:
   created: true
   langcode: true

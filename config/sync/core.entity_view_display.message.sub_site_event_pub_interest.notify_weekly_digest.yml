@@ -13,10 +13,10 @@ bundle: sub_site_event_pub_interest
 mode: notify_weekly_digest
 content:
   partial_2:
-    weight: 0
-    region: content
     settings: {  }
     third_party_settings: {  }
+    weight: 0
+    region: content
 hidden:
   field_event_executing_user: true
   field_topic_term: true

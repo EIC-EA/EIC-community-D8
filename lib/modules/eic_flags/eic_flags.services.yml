@@ -46,4 +46,4 @@ services:
 
   eic_flags.helper:
     class: Drupal\eic_flags\FlagHelper
-    arguments: [ '@flag', '@entity_type.manager' ]
+    arguments: [ '@flag', '@flag.count', '@entity_type.manager', '@?eic_groups.helper' ]

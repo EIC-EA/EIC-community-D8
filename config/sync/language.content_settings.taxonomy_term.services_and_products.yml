@@ -1,0 +1,11 @@
+uuid: 4a96b7ac-f9b9-4f44-a9fb-3168ca9fd03d
+langcode: en
+status: true
+dependencies:
+  config:
+    - taxonomy.vocabulary.services_and_products
+id: taxonomy_term.services_and_products
+target_entity_type_id: taxonomy_term
+target_bundle: services_and_products
+default_langcode: site_default
+language_alterable: false

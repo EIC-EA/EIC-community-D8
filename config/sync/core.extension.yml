@@ -1,3 +1,5 @@
+_core:
+  default_config_hash: R4IF-ClDHXxblLcG0L7MgsLvfBIMAvi_skumNFQwkDc
 module:
   address: 0
   admin_toolbar: 0
@@ -22,6 +24,7 @@ module:
   context: 0
   context_ui: 0
   contextual: 0
+  csv_serialization: 0
   ctools: 0
   date_popup: 0
   datetime: 0
@@ -85,6 +88,7 @@ module:
   facets: 0
   facets_summary: 0
   field: 0
+  field_group: 0
   field_ui: 0
   file: 0
   file_link: 0
@@ -177,6 +181,8 @@ module:
   user: 0
   variationcache: 0
   views_autocomplete_filters: 0
+  views_data_export: 0
+  views_data_export_phpspreadsheet: 0
   views_ui: 0
   workflows: 0
   pathauto: 1
@@ -190,5 +196,3 @@ theme:
   seven: 0
   eic_community: 0
 profile: minimal
-_core:
-  default_config_hash: R4IF-ClDHXxblLcG0L7MgsLvfBIMAvi_skumNFQwkDc

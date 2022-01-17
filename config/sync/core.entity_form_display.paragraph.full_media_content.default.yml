@@ -14,22 +14,22 @@ bundle: full_media_content
 mode: default
 content:
   field_media:
+    type: media_library_widget
     weight: 0
+    region: content
     settings:
       media_types:
         - image
         - remote_video
     third_party_settings: {  }
-    type: media_library_widget
-    region: content
   field_media_caption:
+    type: string_textfield
     weight: 1
+    region: content
     settings:
       size: 60
       placeholder: ''
     third_party_settings: {  }
-    type: string_textfield
-    region: content
 hidden:
   created: true
   status: true

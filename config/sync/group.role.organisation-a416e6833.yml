@@ -14,4 +14,22 @@ internal: true
 audience: outsider
 group_type: organisation
 permissions_ui: false
-permissions: {  }
+permissions:
+  - 'access content overview'
+  - 'access discussions overview'
+  - 'access events overview'
+  - 'access files overview'
+  - 'access group content menu overview'
+  - 'access group_node overview'
+  - 'access latest activity stream'
+  - 'access members overview'
+  - 'access news overview'
+  - 'access wiki overview'
+  - 'join group'
+  - 'view comments'
+  - 'view group'
+  - 'view group_node:event content'
+  - 'view group_node:event entity'
+  - 'view group_node:news content'
+  - 'view group_node:news entity'
+  - 'view latest group version'

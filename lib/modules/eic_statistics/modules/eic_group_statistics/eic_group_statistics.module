@@ -96,6 +96,9 @@ function eic_group_statistics_comment_insert(EntityInterface $entity) {
 
   $group_content = reset($group_contents);
 
+  // Invalidate cache for group latest activity.
+  \Drupal::service('eic_group_statistics.helper')->invalidateGroupLatestActivity($group_content->getGroup());
+
   // Increments group comments statistic counter.
   \Drupal::service('eic_group_statistics.storage')->increment($group_content->getGroup(), GroupStatisticTypes::STAT_TYPE_COMMENTS);
 
@@ -128,6 +131,9 @@ function eic_group_statistics_comment_delete(EntityInterface $entity) {
 
   $group_content = reset($group_contents);
 
+  // Invalidate cache for group latest activity.
+  \Drupal::service('eic_group_statistics.helper')->invalidateGroupLatestActivity($group_content->getGroup());
+
   // Decrements group comments statistic counter.
   \Drupal::service('eic_group_statistics.storage')->decrement($group_content->getGroup(), GroupStatisticTypes::STAT_TYPE_COMMENTS);
 
@@ -151,6 +157,8 @@ function eic_group_statistics_node_update(EntityInterface $entity) {
     case 'wiki_page':
       // We need to make sure the node belongs to a group content, otherwise we
       // don't need to update any group statistics.
+      // @todo Make sure the group_content entity is the right one.
+      // See eic_share_content module which also creates group_content entities.
       $group_contents = GroupContent::loadByEntity($entity);
       if (!$group_contents) {
         return;
@@ -163,4 +171,47 @@ function eic_group_statistics_node_update(EntityInterface $entity) {
       break;
 
   }
+}
+
+/**
+ * Implements hook_views_data().
+ */
+function eic_group_statistics_views_data() {
+  $data['groups_field_data']['group_metrics'] = [
+    'title' => t('Group metrics'),
+    'help' => t('Displays the group metrics.'),
+    'field' => [
+      'id' => 'group_metrics',
+    ],
+  ];
+  $data['groups_field_data']['group_latest_activity'] = [
+    'title' => t('Group latest activity'),
+    'help' => t('Displays the group latest activity.'),
+    'field' => [
+      'id' => 'group_latest_activity',
+    ],
+  ];
+  $data['group_content_field_data']['group_member_latest_activity'] = [
+    'title' => t('Member latest activity'),
+    'help' => t('Displays the member latest activity in a group.'),
+    'field' => [
+      'id' => 'group_member_latest_activity',
+    ],
+  ];
+  $data['group_content_field_data']['group_member_content_count'] = [
+    'title' => t('Member content count'),
+    'help' => t('Displays the total amount of contents of a member in a group.'),
+    'field' => [
+      'id' => 'group_member_content_count',
+    ],
+  ];
+  $data['group_content_field_data']['group_member_comment_count'] = [
+    'title' => t('Member comment count'),
+    'help' => t('Displays the total amount of comments of a member in a group.'),
+    'field' => [
+      'id' => 'group_member_comment_count',
+    ],
+  ];
+
+  return $data;
 }

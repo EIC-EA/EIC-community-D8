@@ -1,0 +1,10 @@
+view.eic_admin_groups_data_export.groups_export:
+  title: 'Export'
+  route_name: view.eic_admin_groups_data_export.groups_export
+  appears_on:
+    - view.admin_groups.page_admin_groups
+view.eic_admin_groups_data_export.events_export:
+  title: 'Export'
+  route_name: view.eic_admin_groups_data_export.events_export
+  appears_on:
+    - view.admin_groups.page_admin_events

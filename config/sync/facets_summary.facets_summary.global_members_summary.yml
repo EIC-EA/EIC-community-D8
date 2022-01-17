@@ -9,37 +9,6 @@ dependencies:
     - search_api
 id: global_members_summary
 name: 'Members summary'
-facets:
-  global_members_topics_of_expertise:
-    checked: true
-    label: 'Topics of Expertise'
-    separator: ', '
-    weight: 0
-    show_count: false
-  global_members_topics_of_interest:
-    checked: true
-    label: 'Topics of Interest'
-    separator: ', '
-    weight: 0
-    show_count: false
-  global_members_job_title:
-    checked: true
-    label: 'Job title'
-    separator: ', '
-    weight: 0
-    show_count: false
-  global_members_languages:
-    checked: true
-    label: Languages
-    separator: ', '
-    weight: 0
-    show_count: false
-  global_members_location_country_code:
-    checked: true
-    label: Location
-    separator: ', '
-    weight: 0
-    show_count: false
 facet_source_id: 'search_api:views_page__global_overviews__members'
 processor_configs:
   hide_when_not_rendered:
@@ -53,3 +22,34 @@ processor_configs:
       build: '30'
     settings:
       link_text: 'Clear all'
+facets:
+  global_members_topics_of_expertise:
+    checked: true
+    label: 'Topics of Expertise'
+    separator: ', '
+    show_count: false
+    weight: 0
+  global_members_topics_of_interest:
+    checked: true
+    label: 'Topics of Interest'
+    separator: ', '
+    show_count: false
+    weight: 0
+  global_members_job_title:
+    checked: true
+    label: 'Job title'
+    separator: ', '
+    show_count: false
+    weight: 0
+  global_members_languages:
+    checked: true
+    label: Languages
+    separator: ', '
+    show_count: false
+    weight: 0
+  global_members_location_country_code:
+    checked: true
+    label: Location
+    separator: ', '
+    show_count: false
+    weight: 0

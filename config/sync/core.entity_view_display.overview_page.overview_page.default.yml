@@ -15,28 +15,28 @@ mode: default
 content:
   field_overview_block:
     type: block_field
-    weight: 1
-    region: content
     label: hidden
     settings: {  }
     third_party_settings: {  }
-  overview_block:
-    label: hidden
-    type: entity_reference_entity_view
-    weight: 2
+    weight: 1
     region: content
+  overview_block:
+    type: entity_reference_entity_view
+    label: hidden
     settings:
       view_mode: default
       link: false
     third_party_settings: {  }
-  title:
-    label: hidden
-    type: string
-    weight: 0
+    weight: 2
     region: content
+  title:
+    type: string
+    label: hidden
     settings:
       link_to_entity: false
     third_party_settings: {  }
+    weight: 0
+    region: content
 hidden:
   banner_image: true
   created: true

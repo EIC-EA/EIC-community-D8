@@ -18,40 +18,40 @@ bundle: remote_video
 mode: default
 content:
   created:
-    label: hidden
     type: timestamp
-    weight: 0
-    region: content
+    label: hidden
     settings:
       date_format: medium
       custom_date_format: ''
       timezone: ''
     third_party_settings: {  }
+    weight: 0
+    region: content
   oe_media_oembed_video:
     type: oembed
-    weight: 6
     label: above
     settings:
       max_width: 0
       max_height: 0
     third_party_settings: {  }
+    weight: 6
     region: content
   thumbnail:
     type: image
-    weight: 5
     label: hidden
     settings:
-      image_style: thumbnail
       image_link: ''
-    region: content
+      image_style: thumbnail
     third_party_settings: {  }
-  uid:
-    label: hidden
-    type: author
-    weight: 0
+    weight: 5
     region: content
+  uid:
+    type: author
+    label: hidden
     settings: {  }
     third_party_settings: {  }
+    weight: 0
+    region: content
 hidden:
   langcode: true
   name: true
