@@ -136,6 +136,7 @@ permissions:
   - 'make delete request'
   - 'manage archival deletion requests'
   - 'manage blocked entities'
+  - 'manage contact form emails'
   - 'mark private content'
   - 'overview messages'
   - 'post comments'

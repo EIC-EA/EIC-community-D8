@@ -33,6 +33,11 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
+  contact:
+    weight: 5
+    settings: {  }
+    third_party_settings: {  }
+    region: content
   field_first_name:
     type: string_textfield
     weight: 3

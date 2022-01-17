@@ -6,6 +6,7 @@ module:
   admin_toolbar_links_access_filter: 0
   admin_toolbar_search: 0
   admin_toolbar_tools: 0
+  antibot: 0
   big_pipe: 0
   block: 0
   block_content: 0
@@ -20,6 +21,7 @@ module:
   config_filter: 0
   config_ignore: 0
   config_split: 0
+  contact: 0
   content_moderation: 0
   context: 0
   context_ui: 0
@@ -40,6 +42,7 @@ module:
   eic_block_types: 0
   eic_blocks: 0
   eic_comments: 0
+  eic_contact: 0
   eic_content: 0
   eic_content_book: 0
   eic_content_discussion: 0
