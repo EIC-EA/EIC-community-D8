@@ -3,6 +3,7 @@
 namespace Drupal\eic_topics;
 
 use Drupal\Core\Url;
+use Drupal\eic_overviews\GlobalOverviewPages;
 use Drupal\eic_search\SearchHelper;
 use Drupal\eic_topics\Constants\Topics;
 use Drupal\taxonomy\Entity\Term;
@@ -78,6 +79,8 @@ class TopicsManager {
     string $entity_type,
     string $bundle
   ): int {
+    // @todo This should be ideally based on the same source (eic_search) as the
+    //   overview pages to avoid discrepancies in amount of results.
     $query = \Drupal::entityQuery($entity_type)
       ->condition('media' !== $entity_type ? 'type' : 'bundle', $bundle)
       ->condition(self::FIELD_ENTITY_TOPICS, $tid, 'IN');
@@ -108,11 +111,21 @@ class TopicsManager {
       'query' => SearchHelper::buildSolrQueryParams($filters),
     ];
 
-    return Url::fromRoute(
-      'eic_search.global_search',
-      [],
-      $query_options
-    )->toString();
+    // Depending on the bundle, we might have different URLs.
+    switch ($bundle) {
+      case 'news':
+      case 'story':
+        $url = GlobalOverviewPages::getGlobalOverviewPageUrl(GlobalOverviewPages::NEWS_STORIES);
+        break;
+
+      default:
+        $url = Url::fromRoute('eic_search.global_search');
+        break;
+    }
+
+    $url->setOptions($query_options);
+
+    return $url->toString();
   }
 
   /**
