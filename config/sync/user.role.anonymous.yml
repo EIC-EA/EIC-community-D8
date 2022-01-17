@@ -1,7 +1,14 @@
 uuid: 630db977-ce97-4326-acce-055be7048748
 langcode: en
 status: true
-dependencies: {  }
+dependencies:
+  module:
+    - eic_overviews
+    - flag
+    - fragments
+    - media
+    - media_entity_download
+    - system
 _core:
   default_config_hash: j5zLMOdJBqC0bMvSdth5UebkprJB8g_2FXHqhfpJzow
 id: anonymous

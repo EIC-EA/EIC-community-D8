@@ -1,7 +1,53 @@
 uuid: 3b4416de-a307-4c88-9201-a807568c696e
 langcode: en
 status: true
-dependencies: {  }
+dependencies:
+  config:
+    - filter.format.basic_text
+    - filter.format.filtered_html
+    - filter.format.full_html
+    - media.type.eic_document
+    - media.type.image
+    - media.type.photo
+    - media.type.remote_video
+    - media.type.video
+    - node.type.book
+    - node.type.discussion
+    - node.type.document
+    - node.type.event
+    - node.type.gallery
+    - node.type.news
+    - node.type.page
+    - node.type.story
+    - node.type.video
+    - node.type.wiki_page
+    - workflows.workflow.group_wiki
+    - workflows.workflow.groups
+    - workflows.workflow.news_stories
+  module:
+    - admin_toolbar_search
+    - block_content_permissions
+    - book
+    - comment
+    - content_moderation
+    - contextual
+    - eic_admin
+    - eic_flags
+    - eic_overviews
+    - eic_private_content
+    - eic_private_message
+    - file
+    - filter
+    - flag
+    - group
+    - media
+    - message
+    - node
+    - path
+    - profile
+    - scheduler
+    - system
+    - toolbar
 id: site_admin
 label: 'Site Admin'
 weight: -5
@@ -31,6 +77,7 @@ permissions:
   - 'close delete request'
   - 'create book content'
   - 'create eic_document media'
+  - 'create event group'
   - 'create group group'
   - 'create image media'
   - 'create member profile'
@@ -52,6 +99,7 @@ permissions:
   - 'delete any wiki_page content'
   - 'delete discussion revisions'
   - 'delete document revisions'
+  - 'delete event revisions'
   - 'delete gallery revisions'
   - 'delete news revisions'
   - 'delete own member profile'
@@ -61,18 +109,31 @@ permissions:
   - 'delete story revisions'
   - 'delete video revisions'
   - 'delete wiki_page revisions'
+  - 'edit any discussion content'
+  - 'edit any document content'
   - 'edit any eic_document media'
+  - 'edit any event content'
+  - 'edit any gallery content'
   - 'edit any image media'
   - 'edit any news content'
+  - 'edit any page content'
   - 'edit any photo media'
   - 'edit any remote_video media'
   - 'edit any story content'
+  - 'edit any video content'
   - 'edit any video media'
   - 'edit overview pages'
+  - 'edit own discussion content'
+  - 'edit own document content'
   - 'edit own eic_document media'
+  - 'edit own event content'
+  - 'edit own gallery content'
   - 'edit own image media'
   - 'edit own news content'
+  - 'edit own page content'
   - 'edit own story content'
+  - 'edit own video content'
+  - 'edit own wiki_page content'
   - 'flag recommend_group'
   - 'link to any page'
   - 'make archive request'
@@ -83,8 +144,17 @@ permissions:
   - 'overview messages'
   - 'post comments'
   - 'publish archived content'
+  - 'revert all revisions'
+  - 'revert book revisions'
+  - 'revert discussion revisions'
+  - 'revert document revisions'
+  - 'revert event revisions'
+  - 'revert gallery revisions'
   - 'revert news revisions'
+  - 'revert page revisions'
   - 'revert story revisions'
+  - 'revert video revisions'
+  - 'revert wiki_page revisions'
   - 'schedule publishing of nodes'
   - 'unflag recommend_group'
   - 'update any basic block content'
@@ -120,6 +190,11 @@ permissions:
   - 'view any member profile'
   - 'view any profile'
   - 'view any unpublished content'
+  - 'view book revisions'
+  - 'view discussion revisions'
+  - 'view document revisions'
+  - 'view event revisions'
+  - 'view gallery revisions'
   - 'view latest version'
   - 'view news revisions'
   - 'view own member profile'
@@ -127,7 +202,10 @@ permissions:
   - 'view own unpublished content'
   - 'view own unpublished media'
   - 'view own unpublished profile'
+  - 'view page revisions'
   - 'view private content'
   - 'view story revisions'
   - 'view the administration theme'
   - 'view user email addresses'
+  - 'view video revisions'
+  - 'view wiki_page revisions'

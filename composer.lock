@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a76dad243d26acecf32044aec3e24407",
+    "content-hash": "281a2c85da8c489310caa45c6e8e019e",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -3676,6 +3676,65 @@
             }
         },
         {
+            "name": "drupal/gcontent_moderation",
+            "version": "1.0.0-beta2",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/gcontent_moderation.git",
+                "reference": "1.0.0-beta2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/gcontent_moderation-1.0.0-beta2.zip",
+                "reference": "1.0.0-beta2",
+                "shasum": "91dff6587cce11818c9fef0fceee71455fed7a37"
+            },
+            "require": {
+                "drupal/core": "^8.8 || ^9",
+                "drupal/group": "^1.0"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "1.0.0-beta2",
+                    "datestamp": "1620140037",
+                    "security-coverage": {
+                        "status": "not-covered",
+                        "message": "Beta releases are not covered by Drupal security advisories."
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Jaap Jan Koster",
+                    "homepage": "https://www.drupal.org/u/jaapjan",
+                    "role": "Maintainer"
+                },
+                {
+                    "name": "bramtenhove",
+                    "homepage": "https://www.drupal.org/user/1549848"
+                },
+                {
+                    "name": "jaapjan",
+                    "homepage": "https://www.drupal.org/user/555428"
+                },
+                {
+                    "name": "ronaldtebrake",
+                    "homepage": "https://www.drupal.org/user/2314038"
+                }
+            ],
+            "description": "Gcontent moderation",
+            "homepage": "https://www.drupal.org/project/gcontent_moderation",
+            "support": {
+                "source": "https://git.drupalcode.org/project/gcontent_moderation",
+                "issues": "https://www.drupal.org/project/issues/gcontent_moderation"
+            }
+        },
+        {
             "name": "drupal/ginvite",
             "version": "2.0.1",
             "source": {
@@ -3819,7 +3878,8 @@
                     "2746839 - Add Devel plugin for generating groups": "patches/group/2746839-add-devel-plugin-for-generating-groups-12.patch",
                     "2815971 - More contexts needed": "https://www.drupal.org/files/issues/2021-02-19/2815971-28.patch",
                     "3071489 - Incorrect Access Check on Media Library": "https://www.drupal.org/files/issues/2022-01-11/incorrect-access-check-on-media-library-3071489-25.patch",
-                    "3132084 - Add/Remove group role for a user programmatically": "https://www.drupal.org/files/issues/2021-08-23/3132084-10.patch"
+                    "3132084 - Add/Remove group role for a user programmatically": "https://www.drupal.org/files/issues/2021-08-23/3132084-10.patch",
+                    "2876696 - Add support for 'view own unpublished entity' permission": "https://git.drupalcode.org/project/group/-/merge_requests/9.patch"
                 }
             },
             "notification-url": "https://packages.drupal.org/8/downloads",
@@ -8804,16 +8864,6 @@
             "homepage": "http://github.com/myclabs/php-enum",
             "keywords": [
                 "enum"
-            ],
-            "funding": [
-                {
-                    "url": "https://github.com/mnapoli",
-                    "type": "github"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/myclabs/php-enum",
-                    "type": "tidelift"
-                }
             ],
             "time": "2021-07-05T08:18:36+00:00"
         },
@@ -18253,6 +18303,7 @@
         "drupal/entity_usage": 10,
         "drupal/flag": 10,
         "drupal/flag_search_api": 20,
+        "drupal/gcontent_moderation": 10,
         "drupal/group_flex": 10,
         "drupal/group_permissions": 15,
         "drupal/mimemail": 15,
