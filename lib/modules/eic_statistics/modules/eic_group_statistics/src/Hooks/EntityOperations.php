@@ -7,6 +7,7 @@ use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\eic_comments\CommentsHelper;
+use Drupal\eic_group_statistics\GroupStatisticsHelper;
 use Drupal\eic_group_statistics\GroupStatisticsSearchApiReindex;
 use Drupal\eic_group_statistics\GroupStatisticsStorage;
 use Drupal\eic_group_statistics\GroupStatisticsStorageInterface;
@@ -47,6 +48,13 @@ class EntityOperations implements ContainerInjectionInterface {
   protected $entityTypeManager;
 
   /**
+   * The Group statistics helper service.
+   *
+   * @var \Drupal\eic_group_statistics\GroupStatisticsHelper
+   */
+  protected $groupStatisticsHelper;
+
+  /**
    * The Group statistics storage.
    *
    * @var \Drupal\eic_group_statistics\GroupStatisticsStorageInterface
@@ -79,6 +87,8 @@ class EntityOperations implements ContainerInjectionInterface {
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
+   * @param \Drupal\eic_group_statistics\GroupStatisticsHelper $group_statistics_helper
+   *   The Group statistics helper service.
    * @param \Drupal\eic_group_statistics\GroupStatisticsStorageInterface $group_statistics_storage
    *   The Group statistics storage service.
    * @param \Drupal\eic_group_statistics\GroupStatisticsSearchApiReindex $group_statistics_sear_api_reindex
@@ -90,12 +100,14 @@ class EntityOperations implements ContainerInjectionInterface {
    */
   public function __construct(
     EntityTypeManagerInterface $entity_type_manager,
+    GroupStatisticsHelper $group_statistics_helper,
     GroupStatisticsStorageInterface $group_statistics_storage,
     GroupStatisticsSearchApiReindex $group_statistics_sear_api_reindex,
     EntityUsageInterface $entity_usage,
     CommentsHelper $comments_helper
   ) {
     $this->entityTypeManager = $entity_type_manager;
+    $this->groupStatisticsHelper = $group_statistics_helper;
     $this->groupStatisticsStorage = $group_statistics_storage;
     $this->groupStatisticsSearchApiReindex = $group_statistics_sear_api_reindex;
     $this->entityUsage = $entity_usage;
@@ -108,6 +120,7 @@ class EntityOperations implements ContainerInjectionInterface {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('entity_type.manager'),
+      $container->get('eic_group_statistics.helper'),
       $container->get('eic_group_statistics.storage'),
       $container->get('eic_group_statistics.search_api.reindex'),
       $container->get('entity_usage.usage'),
@@ -138,6 +151,8 @@ class EntityOperations implements ContainerInjectionInterface {
       case 'group-group_node-wiki_page':
       case 'group-group_node-gallery':
         $re_index = $this->updateGroupFileStatistics($entity->getEntity(), $entity);
+        // Invalidate cache for group latest activity.
+        $this->groupStatisticsHelper->invalidateGroupLatestActivity($group);
         break;
 
       default:
@@ -201,6 +216,9 @@ class EntityOperations implements ContainerInjectionInterface {
   public function groupContentNodeDelete(NodeInterface $entity, GroupContentInterface $group_content) {
     $group = $group_content->getGroup();
 
+    // Invalidate cache for group latest activity.
+    $this->groupStatisticsHelper->invalidateGroupLatestActivity($group);
+
     $re_index = TRUE;
 
     switch ($entity->bundle()) {
@@ -239,6 +257,12 @@ class EntityOperations implements ContainerInjectionInterface {
     /** @var \Drupal\node\NodeInterface $original_entity */
     $original_entity = $entity->original;
     $re_index = TRUE;
+
+    // Invalidate cache for group latest activity only if node status has
+    // changed.
+    if ($entity->isPublished() != $original_entity->isPublished()) {
+      $this->groupStatisticsHelper->invalidateGroupLatestActivity($group);
+    }
 
     switch ($entity->bundle()) {
       case 'discussion':

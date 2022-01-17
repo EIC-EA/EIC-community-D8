@@ -7,6 +7,10 @@ services:
     class: Drupal\eic_search\Search\Sources\GroupSourceType
     tags:
       - { name: eic_search.source }
+  eic_search.source_organisation:
+    class: Drupal\eic_search\Search\Sources\OrganisationSourceType
+    tags:
+      - { name: eic_search.source }
   eic_search.source_user_list:
     class: Drupal\eic_search\Search\Sources\UserListSourceType
     tags:

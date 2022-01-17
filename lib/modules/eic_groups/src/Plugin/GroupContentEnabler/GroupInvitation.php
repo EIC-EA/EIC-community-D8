@@ -27,6 +27,13 @@ class GroupInvitation extends GroupInvitationBase {
       if (!$operation['url']->access($account)) {
         unset($operations[$key]);
       }
+
+      // Always add an anchor for mobile, so we scroll directly on the form.
+      if ('invite-user' === $key) {
+        /** @var \Drupal\Core\Url $url */
+        $url = $operation['url'];
+        $url->setOption('fragment', 'group-content-group-group-invitation-add-form');
+      }
     }
 
     return $operations;

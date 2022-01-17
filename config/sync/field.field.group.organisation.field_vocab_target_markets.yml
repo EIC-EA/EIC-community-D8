@@ -1,0 +1,29 @@
+uuid: 1073960a-c50c-4a26-900a-4187a19fbbcb
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.group.field_vocab_target_markets
+    - group.type.organisation
+    - taxonomy.vocabulary.target_markets
+id: group.organisation.field_vocab_target_markets
+field_name: field_vocab_target_markets
+entity_type: group
+bundle: organisation
+label: 'Target markets'
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      target_markets: target_markets
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference
