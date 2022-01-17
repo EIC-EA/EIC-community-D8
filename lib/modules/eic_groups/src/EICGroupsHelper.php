@@ -26,7 +26,9 @@ use Drupal\eic_user\UserHelper;
 use Drupal\group\Entity\Group;
 use Drupal\group\Entity\GroupContent;
 use Drupal\group\Entity\GroupInterface;
+use Drupal\group\Entity\GroupTypeInterface;
 use Drupal\group\GroupMembership;
+use Drupal\group\Plugin\GroupContentEnablerManagerInterface;
 use Drupal\group_flex\Plugin\GroupVisibilityManager;
 use Drupal\group_permissions\Entity\GroupPermissionInterface;
 use Drupal\node\Entity\Node;
@@ -121,6 +123,13 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
   protected $currentPath;
 
   /**
+   * The group content enabler manager service.
+   *
+   * @var \Drupal\group\Plugin\GroupContentEnablerManagerInterface
+   */
+  protected $groupContentPluginManager;
+
+  /**
    * Constructs a new EventsHelperService object.
    *
    * @param \Drupal\Core\Database\Connection $database
@@ -135,12 +144,14 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
    *   The time service.
    * @param \Drupal\oec_group_flex\OECGroupFlexHelper $oec_group_flex_helper
    *   The oec_group_flex.helper service.
-   * @param \Drupal\group_flex\Plugin\GroupVisibilityManager $group_vibility_manager
+   * @param \Drupal\group_flex\Plugin\GroupVisibilityManager $group_visibility_manager
    *   The group visibility manager service.
    * @param \Drupal\Core\Path\CurrentPathStack $current_path
    *   The current path service.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager service.
+   * @param \Drupal\group\Plugin\GroupContentEnablerManagerInterface $group_content_enabler_manager
+   *   The group content enabler manager service.
    */
   public function __construct(
     Connection $database,
@@ -151,7 +162,8 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
     OECGroupFlexHelper $oec_group_flex_helper,
     GroupVisibilityManager $group_visibility_manager,
     CurrentPathStack $current_path,
-    EntityTypeManagerInterface $entity_type_manager
+    EntityTypeManagerInterface $entity_type_manager,
+    GroupContentEnablerManagerInterface $group_content_enabler_manager
   ) {
     $this->database = $database;
     $this->routeMatch = $route_match;
@@ -162,6 +174,7 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
     $this->groupVisibilityManager = $group_visibility_manager;
     $this->currentPath = $current_path;
     $this->entityTypeManager = $entity_type_manager;
+    $this->groupContentPluginManager = $group_content_enabler_manager;
   }
 
   /**
@@ -457,9 +470,13 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
   }
 
   /**
+   * Returns a list of groups based on the given visibility type.
+   *
    * @param string $visibility
+   *   The visibility type.
    *
    * @return array
+   *   An array of Group entities.
    */
   public function getGroupsByVisibility(string $visibility) {
     $gids = $this->database->select('oec_group_visibility')
@@ -542,6 +559,92 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
   public function getGroupVisibilityLabel(GroupInterface $group, string $format = 'default') {
     $group_visibility = $this->oecGroupFlexHelper->getGroupVisibilitySettings($group);
     return $this->getGroupFlexPluginTitle('visibility', $group_visibility['plugin_id'], $format);
+  }
+
+  /**
+   * Returns the list of installed plugins for a group type.
+   *
+   * @param \Drupal\group\Entity\GroupTypeInterface|null $group_type
+   *   The group type object. If none provided, will return for all group types.
+   *
+   * @return string[]
+   *   An array of plugin IDs.
+   */
+  public function getGroupTypeEnabledPlugins(GroupTypeInterface $group_type = NULL) {
+    return $this->groupContentPluginManager->getInstalledIds($group_type);
+  }
+
+  /**
+   * Returns the list of enabled group_node plugins for the given group type.
+   *
+   * @param \Drupal\group\Entity\GroupTypeInterface $group_type
+   *   The group type object.
+   *
+   * @return array
+   *   An array of plugin type IDs.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   */
+  public function getGroupTypeEnabledContentPlugins(GroupTypeInterface $group_type) {
+    $plugins = [];
+    /** @var \Drupal\node\NodeTypeInterface $node_type */
+    foreach ($this->entityTypeManager->getStorage('node_type')->loadMultiple() as $node_type) {
+      if ($this->isGroupTypePluginEnabled($group_type, 'group_node', $node_type->id())) {
+        // @todo Get real content type config id?
+        // @see \Drupal\group\Plugin\GroupContentEnablerBase::getContentTypeConfigId().
+        $plugins[] = $group_type->id() . '-group_node-' . $node_type->id();
+      }
+    }
+    return $plugins;
+  }
+
+  /**
+   * Checks if a plugin is enabled for the given group type.
+   *
+   * @param \Drupal\group\Entity\GroupTypeInterface $group_type
+   *   The group type object.
+   * @param string $plugin_type
+   *   The plugin type.
+   * @param string $bundle
+   *   The bundle to append to the plugin type.
+   *   E.g. 'group_node:news'.
+   *
+   * @return bool
+   *   TRUE if plugin is enabled, FALSE otherwise.
+   */
+  public function isGroupTypePluginEnabled(GroupTypeInterface $group_type, string $plugin_type, string $bundle = ''):bool {
+    $enabled_plugins = $this->getGroupTypeEnabledPlugins($group_type);
+    $plugin_id = $plugin_type;
+    if (!empty($bundle)) {
+      $plugin_id .= ":$bundle";
+    }
+    return in_array($plugin_id, $enabled_plugins);
+  }
+
+  /**
+   * Returns nodes that belong to a group.
+   *
+   * @param \Drupal\group\Entity\GroupInterface $group
+   *   The group object.
+   * @param array $filters
+   *   Filters to apply to the query. See GroupInterface::getContent().
+   *
+   * @return array
+   *   An array of node entities.
+   */
+  public function getGroupNodes(GroupInterface $group, array $filters = []) {
+    $content = [];
+    foreach ($this->getGroupTypeEnabledPlugins($group->getGroupType()) as $plugin_id) {
+      if (strpos($plugin_id, 'group_node') !== 0) {
+        continue;
+      }
+      /** @var \Drupal\group\Entity\GroupContentInterface $group_content */
+      foreach ($group->getContent($plugin_id, $filters) as $group_content) {
+        $content[] = $group_content->getEntity();
+      }
+    }
+    return $content;
   }
 
   /**
