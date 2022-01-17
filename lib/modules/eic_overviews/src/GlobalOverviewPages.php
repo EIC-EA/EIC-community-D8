@@ -43,7 +43,6 @@ class GlobalOverviewPages {
   const EVENTS = 5;
 
   /**
-   * Returns the URL object for the given global overview page.
    * ID of the Organisations overview page.
    */
   const ORGANISATIONS = 6;
