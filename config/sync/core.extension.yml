@@ -96,6 +96,7 @@ module:
   flag: 0
   flag_search_api: 0
   fragments: 0
+  gcontent_moderation: 0
   ginvite: 0
   gnode: 0
   grequest: 0
