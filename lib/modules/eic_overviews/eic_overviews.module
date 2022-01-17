@@ -54,5 +54,6 @@ function _eic_overviews_allowed_values_id() {
     GlobalOverviewPages::MEMBERS => t('Members', [], ['context' => 'eic_overviews']),
     GlobalOverviewPages::NEWS_STORIES => t('News & Stories', [], ['context' => 'eic_overviews']),
     GlobalOverviewPages::EVENTS => t('Events', [], ['context' => 'eic_overviews']),
+    GlobalOverviewPages::ORGANISATIONS => t('Organisations', [], ['context' => 'eic_overviews']),
   ];
 }

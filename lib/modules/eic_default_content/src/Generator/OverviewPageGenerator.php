@@ -9,6 +9,7 @@ use Drupal\eic_search\Search\Sources\GlobalSourceType;
 use Drupal\eic_search\Search\Sources\GlobalEventSourceType;
 use Drupal\eic_search\Search\Sources\GroupSourceType;
 use Drupal\eic_search\Search\Sources\NewsStorySourceType;
+use Drupal\eic_search\Search\Sources\OrganisationSourceType;
 use Drupal\eic_search\Search\Sources\UserGallerySourceType;
 
 /**
@@ -74,6 +75,18 @@ class OverviewPageGenerator extends CoreGenerator {
       'source_type' => GlobalEventSourceType::class,
     ], 'Events', '/events',
       GlobalOverviewPages::EVENTS
+    );
+
+    $this->createOverview([
+      'enable_search' => TRUE,
+      'facets' => [
+        'sm_group_organisation_type_string',
+        'ss_group_topic_name',
+        'sm_group_field_locations_string',
+      ],
+      'source_type' => OrganisationSourceType::class,
+    ], 'Organisations', '/organisations',
+      GlobalOverviewPages::ORGANISATIONS
     );
   }
 

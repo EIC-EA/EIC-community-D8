@@ -86,7 +86,41 @@
       margin-right: 0;
     }
   }
-  &--organisation &__image-wrapper, &--organisation &__image-wrapper &__image {
+  &--organisation-member{
+    flex-wrap: wrap;
+
+    & #{$node}__title {
+      color: $ecl-color-grey;
+      margin-bottom: $ecl-spacing-2-xs;
+    }
+
+    & #{$node}__link {
+      line-height: 1;
+      font-size: 1rem;
+    }
+
+    & .ecl-teaser__stat-value {
+      font-size: .875em;
+    }
+  }
+  &--organisation-member &__status{
+    width: 100%;
+    margin-bottom: $ecl-spacing-s;
+  }
+
+  &--organisation-member &__meta-footer{
+    position: relative;
+    width: 100%;
+    margin-top: $ecl-spacing-s;
+
+    #{$node}__stats {
+      margin-left: 0;
+    }
+  }
+  &--organisation &__image-wrapper,
+  &--organisation &__image-wrapper &__image,
+  &--organisation-member &__image-wrapper,
+  &--organisation-member &__image-wrapper &__image {
     width: 80px;
     height: 80px;
     object-fit: cover;
@@ -107,7 +141,7 @@
     position: absolute;
     justify-content: flex-start;
     left: ecl-box-model('padding');
-    bottom: ecl-box-model('padding');
+    bottom: 1rem;
     &__stats {
       margin: 0;
     }

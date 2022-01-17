@@ -1,0 +1,21 @@
+uuid: 81b67e4b-512d-4f7c-9af4-f40d6d168f97
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.group.field_social_links
+    - group.type.organisation
+  module:
+    - social_link_field
+id: group.organisation.field_social_links
+field_name: field_social_links
+entity_type: group
+bundle: organisation
+label: 'Social links'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: social_links
