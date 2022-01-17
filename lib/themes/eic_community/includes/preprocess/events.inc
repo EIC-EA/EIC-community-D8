@@ -52,12 +52,7 @@ function _eic_community_render_event_detail_page(&$variables, EntityInterface $e
 
   if (!empty($location)) {
     $location = reset($location);
-    $countries_map = \Drupal\Core\Locale\CountryManager::getStandardList();
-    $location_formatted = $location[FieldHelper::getPropertyName(AddressField::ADDRESS_LINE1)] . ' ' . $location[$location[FieldHelper::getPropertyName(AddressField::ADDRESS_LINE2)]] . '<br />';
-    $location_formatted .= $location[FieldHelper::getPropertyName(AddressField::POSTAL_CODE)] . ' ' . $location[FieldHelper::getPropertyName(AddressField::LOCALITY)] . '<br />';
-    $location_formatted .= array_key_exists($location['country_code'], $countries_map) ?
-      $countries_map[$location['country_code']] :
-      '';
+    $location_formatted = \Drupal\eic_groups\EICGroupsHelper::formatAddress($location);
   }
 
   $allowed_values_location_type = eic_field_location_type_allowed_values();

@@ -21,9 +21,9 @@ default_value_callback: ''
 settings:
   handler: 'default:paragraph'
   handler_settings:
-    negate: 0
     target_bundles:
       organisation_member: organisation_member
+    negate: 0
     target_bundles_drag_drop:
       announcement:
         weight: 12
@@ -47,8 +47,8 @@ settings:
         weight: 18
         enabled: false
       organisation_member:
-        enabled: true
         weight: 19
+        enabled: true
       quote:
         weight: 20
         enabled: false

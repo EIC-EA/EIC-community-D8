@@ -15,19 +15,15 @@ use Drupal\eic_overviews\GlobalOverviewPages;
 function eic_community_preprocess_eic_group_header_block(array &$variables) {
   /** @var \Drupal\group\Entity\GroupInterface $group */
   $group = $variables['group'];
-  $hero_field_id = 'group' === $group->getGroupType()->id(
-  ) ? 'field_hero' : 'field_header_visual';
+  $hero_field_id = 'group' === $group->getGroupType()->id() ? 'field_hero' : 'field_header_visual';
 
   // Adds group banner image.
-  if ($group->hasField($hero_field_id) && !$group->get($hero_field_id)->isEmpty(
-    )) {
+  if ($group->hasField($hero_field_id) && !$group->get($hero_field_id)->isEmpty()) {
     $media = \Drupal::service('entity.repository')->getTranslationFromContext(
       $group->get($hero_field_id)->entity,
       $group->language()->getId()
     );
-    $image_item = ImageValueObject::fromImageItem(
-      $media->get('oe_media_image')->first()
-    );
+    $image_item = ImageValueObject::fromImageItem($media->get('oe_media_image')->first());
     $variables['group_values']['image'] = [
       'src' => $image_item->getSource(),
       'alt' => $image_item->getAlt(),

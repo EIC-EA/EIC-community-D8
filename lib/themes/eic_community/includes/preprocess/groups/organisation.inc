@@ -107,23 +107,7 @@ function _eic_community_render_organisation_detail_page(&$variables, $group) {
   $address_index = 0;
   $addresses_data = array_map(function ($address) use ($address_index) {
     $address_index++;
-    $countries_map = \Drupal\Core\Locale\CountryManager::getStandardList();
-    $location_formatted = $address[FieldHelper::getPropertyName(
-        AddressField::ADDRESS_LINE1
-      )] . ' ' . $address[$address[FieldHelper::getPropertyName(
-        AddressField::ADDRESS_LINE2
-      )]] . '<br />';
-    $location_formatted .= $address[FieldHelper::getPropertyName(
-        AddressField::POSTAL_CODE
-      )] . ' ' . $address[FieldHelper::getPropertyName(
-        AddressField::LOCALITY
-      )] . '<br />';
-    $location_formatted .= array_key_exists(
-      $address['country_code'],
-      $countries_map
-    ) ?
-      $countries_map[$address['country_code']] :
-      '';
+    $location_formatted = \Drupal\eic_groups\EICGroupsHelper::formatAddress($address);
 
     return [
       'title' => t(
@@ -362,8 +346,7 @@ function eic_community_preprocess_paragraph__organisation_member(&$variables) {
   $organisations = array_filter(
     $organisations,
     function ($organisation) use ($group) {
-      return $group instanceof GroupInterface && $organisation->id(
-        ) !== $group->id();
+      return $group instanceof GroupInterface && $organisation->id() !== $group->id();
     }
   );
 
