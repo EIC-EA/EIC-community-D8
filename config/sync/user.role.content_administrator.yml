@@ -112,6 +112,7 @@ permissions:
   - 'view all revisions'
   - 'view any member profile'
   - 'view any profile'
+  - 'view latest version'
   - 'view news revisions'
   - 'view own member profile'
   - 'view own profile'
