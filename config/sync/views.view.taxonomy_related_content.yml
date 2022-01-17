@@ -101,10 +101,10 @@ display:
         options: {  }
       empty: {  }
       sorts:
-        group_created:
-          id: group_created
+        content_created:
+          id: content_created
           table: search_api_index_global
-          field: group_created
+          field: content_created
           relationship: none
           group_type: group
           admin_label: ''
@@ -112,7 +112,7 @@ display:
           order: DESC
           expose:
             label: ''
-            field_identifier: group_created
+            field_identifier: ''
           exposed: false
       arguments:
         content_field_vocab_topics:
