@@ -126,6 +126,11 @@ class FormAlter {
       $emails[] = $user->getEmail();
     }
 
+    // Remove empty string.
+    $emails = array_filter($emails, function ($email) {
+      return !empty($email);
+    });
+
     $tempstore_params['emails'] = $emails;
     $tempstore->set('params', $tempstore_params);
   }

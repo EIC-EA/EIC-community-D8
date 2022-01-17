@@ -273,4 +273,33 @@
   &__no-content-message {
     @include ecl-responsive-font('label');
   }
+
+  & .ecl-accordion {
+     margin: ecl-box-model('padding') 0;
+
+    &__toggle{
+      padding: $ecl-spacing-l;
+      border: none;
+
+      &[aria-expanded="true"] {
+        background: $ecl-color-blue-5;
+        border: none;
+        padding-bottom: 0;
+        svg {
+          transform: rotate(-180deg);
+        }
+      }
+
+      &-flex {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+    }
+
+    &__toggle,
+    &__content {
+      background: $ecl-color-blue-5;
+    }
+  }
 }

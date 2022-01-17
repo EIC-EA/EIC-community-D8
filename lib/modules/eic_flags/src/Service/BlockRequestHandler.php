@@ -8,10 +8,8 @@ use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Session\AccountInterface;
-use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\eic_flags\RequestStatus;
 use Drupal\eic_flags\RequestTypes;
-use Drupal\flag\Entity\Flag;
 use Drupal\flag\FlaggingInterface;
 use Drupal\flag\FlagService;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -29,13 +27,6 @@ class BlockRequestHandler extends AbstractRequestHandler {
   const ENTITY_BLOCKED_STATE = 'blocked';
 
   /**
-   * The current active user.
-   *
-   * @var \Drupal\Core\Session\AccountProxyInterface
-   */
-  protected $currentUser;
-
-  /**
    * AbstractRequestHandler constructor.
    *
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
@@ -48,23 +39,19 @@ class BlockRequestHandler extends AbstractRequestHandler {
    *   Core's moderation information service.
    * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
    *   The request stack object.
-   * @param \Drupal\Core\Session\AccountProxyInterface $current_user
-   *   The current active user.
    */
   public function __construct(
     ModuleHandlerInterface $module_handler,
     EntityTypeManagerInterface $entity_type_manager,
     FlagService $flag_service,
     ModerationInformationInterface $moderation_information,
-    RequestStack $request_stack,
-    AccountProxyInterface $current_user
+    RequestStack $request_stack
   ) {
     $this->moduleHandler = $module_handler;
     $this->entityTypeManager = $entity_type_manager;
     $this->flagService = $flag_service;
     $this->moderationInformation = $moderation_information;
     $this->currentRequest = $request_stack->getCurrentRequest();
-    $this->currentUser = $current_user;
   }
 
   /**
@@ -110,62 +97,23 @@ class BlockRequestHandler extends AbstractRequestHandler {
   }
 
   /**
-   * Applies the given the block flag to the given entity.
-   *
-   * @param \Drupal\Core\Entity\ContentEntityInterface $entity
-   *   The concerned entity.
-   * @param string $reason
-   *   Reason given when blocking the group.
-   *
-   * @return \Drupal\Core\Entity\EntityInterface|null
-   *   Result of the operation.
+   * {@inheritdoc}
    */
-  public function applyFlag(ContentEntityInterface $entity, string $reason) {
-    $support_entity_types = $this->getSupportedEntityTypes();
-    // Entity type is not supported.
-    if (!array_key_exists($entity->getEntityTypeId(), $support_entity_types)) {
-      return NULL;
-    }
-
-    // Checks if entity can be blocked by the current user.
-    if ($this->canRequest($this->currentUser->getAccount(), $entity)->isForbidden()) {
-      return NULL;
-    }
-
-    $flag = $this->flagService->getFlagById(
-      $support_entity_types[$entity->getEntityTypeId()]
-    );
-
-    if (!$flag instanceof Flag) {
-      return NULL;
-    }
-
-    $flag = $this->entityTypeManager->getStorage('flagging')->create([
-      'uid' => $this->currentUser->id(),
-      'session_id' => NULL,
-      'flag_id' => $flag->id(),
-      'entity_id' => $entity->id(),
-      'entity_type' => $entity->getEntityTypeId(),
-      'global' => $flag->isGlobal(),
-    ]);
-
-    $flag->set('field_request_reason', $reason);
-    $flag->set('field_request_status', RequestStatus::ACCEPTED);
-    $flag->save();
-
-    $this->moduleHandler->invokeAll(
-      'request_insert',
-      [
-        $flag,
-        $entity,
-        $this->getType(),
-      ]
-    );
+  public function applyFlag(ContentEntityInterface $entity, string $reason, int $request_timeout = 0) {
+    $flag = parent::applyFlag($entity, $reason);
 
     // Automatically accepts the request.
     $this->accept($flag, $entity);
 
     return $flag;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function applyFlagAlter(FlaggingInterface $flag) {
+    $flag->set('field_request_status', RequestStatus::ACCEPTED);
+    return parent::applyFlagAlter($flag);
   }
 
   /**

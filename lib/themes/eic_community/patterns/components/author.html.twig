@@ -1,4 +1,5 @@
 {% set label_element = label_element|default('span') %}
+{% set icon_file_path = icon_file_path ? icon_file_path : '/themes/custom/eic_community/dist/images/sprite/custom/sprites/custom.svg' %}
 {% if name is not empty %}
   <div class="ecl-author ecl-author--is-{{ size|default('default') }} {{ updates.value ? ' ecl-author--has-updates ' }} {{ extra_classes }}">
     {% if not display_avatar_only %}
@@ -75,22 +76,32 @@
               } only %}
             </a>
           {% endif %}
-        {% elseif name is not empty %}
+        {% else %}
           {% if path is empty %}
-            <div class="ecl-author__initials-wrapper">
-              <span class="ecl-author__initials">
-                {% for author in name|split(' ')|slice(0,2) %}
-                  {{- author|first -}}
-                {% endfor %}
-              </span>
+            <div class="ecl-author__media-wrapper">
+              <figure class="ecl-author__media ecl-author__media--empty">
+                {% include '@ecl-twig/ec-component-icon/ecl-icon.html.twig' with {
+                  icon: {
+                    size: 'm',
+                    path: icon_file_path,
+                    type: "custom",
+                    name: "user"
+                  }
+                } only %}
+              </figure>
             </div>
           {% else %}
-            <a href="{{ path }}" class="ecl-author__initials-wrapper">
-              <span class="ecl-author__initials">
-                {% for author in name|split(' ')|slice(0,2) %}
-                  {{- author|first -}}
-                {% endfor %}
-              </span>
+            <a href="{{ path }}" class="ecl-author__media-wrapper">
+              <figure class="ecl-author__media ecl-author__media--empty">
+                {% include '@ecl-twig/ec-component-icon/ecl-icon.html.twig' with {
+                  icon: {
+                    size: 'm',
+                    path: icon_file_path,
+                    type: "custom",
+                    name: "user"
+                  }
+                } only %}
+              </figure>
             </a>
           {% endif %}
         {% endif %}

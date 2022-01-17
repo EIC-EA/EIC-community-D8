@@ -1,0 +1,29 @@
+uuid: e7f8f7e1-bd33-4a8e-bd87-bab054411066
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_user_ref
+    - paragraphs.paragraphs_type.organisation_member
+id: paragraph.organisation_member.field_user_ref
+field_name: field_user_ref
+entity_type: paragraph
+bundle: organisation_member
+label: 'User reference'
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:user'
+  handler_settings:
+    target_bundles: null
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    filter:
+      type: _none
+    include_anonymous: false
+field_type: entity_reference

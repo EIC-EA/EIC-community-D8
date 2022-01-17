@@ -247,7 +247,7 @@ class EntityOperations implements ContainerInjectionInterface {
           // Add wiki page create form url to the build array.
           if ($add_wiki_page_urls = $this->getWikiPageAddFormUrls($entity)) {
             if ($add_wiki_page_urls['add_current_level_wiki_page']->access()) {
-              $build['link_add_current_level_wiki_page_renderable'] = Link::fromTextAndUrl($this->t('Add a new page on the current level'), $add_wiki_page_urls['add_current_level_wiki_page'])
+              $build['link_add_current_level_wiki_page_renderable'] = Link::fromTextAndUrl($this->t('Add page on same level'), $add_wiki_page_urls['add_current_level_wiki_page'])
                 ->toRenderable();
               $build['link_add_current_level_wiki_page_renderable']['#suffix'] = '<br>';
             }
@@ -256,7 +256,7 @@ class EntityOperations implements ContainerInjectionInterface {
               // If the wiki page depth doesn't reach the maximum limit, then we
               // can show the button to add a new child wiki page.
               if (!$entity->book['p' . (WikiPageBookManager::BOOK_MAX_DEPTH + 1)]) {
-                $build['link_add_child_wiki_page_renderable'] = Link::fromTextAndUrl($this->t('Add a new wiki page below this page'), $add_wiki_page_urls['add_child_wiki_page'])
+                $build['link_add_child_wiki_page_renderable'] = Link::fromTextAndUrl($this->t('Add a child page'), $add_wiki_page_urls['add_child_wiki_page'])
                   ->toRenderable();
               }
             }

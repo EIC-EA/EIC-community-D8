@@ -5,8 +5,8 @@ dependencies:
   module:
     - eic_search
     - route_condition
-name: group_files_overviews
 label: 'Group - Files - Overviews'
+name: group_files_overviews
 group: Groups
 description: 'This context is used for all group files overviews'
 requireAllConditions: false
@@ -14,18 +14,29 @@ disabled: false
 conditions:
   route:
     id: route
-    routes: eic_overviews.groups.overview_page.files
     negate: false
     uuid: 10a20f3f-97b2-45b4-80a3-d9641b9bfa3f
     context_mapping: {  }
+    routes: eic_overviews.groups.overview_page.files
 reactions:
   blocks:
+    id: blocks
+    uuid: b8b6f9f3-68cc-4066-b69f-04528693c7d9
     blocks:
       fc54b9c1-f518-434c-b863-f59eb0363f2e:
+        uuid: fc54b9c1-f518-434c-b863-f59eb0363f2e
         id: eic_search_overview
         label: ''
         provider: eic_search
         label_display: visible
+        region: content
+        weight: '0'
+        custom_id: eic_search_overview
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: group_files_overviews
+        context_mapping: {  }
         source_type: Drupal\eic_search\Search\Sources\LibrarySourceType
         facets:
           ss_global_content_type: ss_global_content_type
@@ -34,13 +45,13 @@ reactions:
           ss_content_language_string: ss_content_language_string
           ss_content_document_type_string: ss_content_document_type_string
         sort_options:
-          ss_global_title: ss_global_title
-          dm_aggregated_changed: dm_aggregated_changed
+          ss_drupal_changed_timestamp: ss_drupal_changed_timestamp
+          ss_content_title: ss_content_title
           its_flag_highlight_content: its_flag_highlight_content
           its_document_download_total: its_document_download_total
           its_statistics_view: its_statistics_view
           its_flag_like_content: its_flag_like_content
-          ss_global_created_date: 0
+          ss_global_created_date: ss_global_created_date
           its_last_comment_timestamp: 0
           its_last_flagged_like_content: 0
           its_last_flagged_bookmark_content: 0
@@ -50,17 +61,7 @@ reactions:
         prefilter_group: 1
         add_facet_interests: 0
         add_facet_my_groups: 0
-        context_mapping: {  }
-        custom_id: eic_search_overview
-        region: content
-        theme: eic_community
-        css_class: ''
-        unique: 0
-        context_id: group_files_overviews
         third_party_settings: {  }
-        uuid: fc54b9c1-f518-434c-b863-f59eb0363f2e
-    id: blocks
-    saved: false
-    uuid: b8b6f9f3-68cc-4066-b69f-04528693c7d9
     include_default_blocks: 0
+    saved: false
 weight: 0

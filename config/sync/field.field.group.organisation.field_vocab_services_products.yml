@@ -1,0 +1,29 @@
+uuid: 7c2b0c41-f55a-466d-9085-3a6fca88d1c8
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.group.field_vocab_services_products
+    - group.type.organisation
+    - taxonomy.vocabulary.services_and_products
+id: group.organisation.field_vocab_services_products
+field_name: field_vocab_services_products
+entity_type: group
+bundle: organisation
+label: 'Services and products'
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      services_and_products: services_and_products
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

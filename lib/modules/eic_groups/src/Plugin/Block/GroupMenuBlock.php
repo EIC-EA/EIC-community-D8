@@ -128,6 +128,13 @@ class GroupMenuBlock extends GroupMenuBlockBase implements ContainerFactoryPlugi
         );
         break;
 
+      case 'event':
+        $url = GroupOverviewPages::getGroupOverviewPageUrl(
+          'events',
+          $group
+        );
+        break;
+
       case 'wiki_page':
         // Gets group wiki url.
         $group_book_page_nid = $this->eicGroupsHelper->getGroupBookPage($group);
@@ -161,9 +168,21 @@ class GroupMenuBlock extends GroupMenuBlockBase implements ContainerFactoryPlugi
    */
   public function getMenuInstance() {
     $entity = $this->getContext('group')->getContextData()->getValue();
-    // Don't load menu for group entities that are new/unsaved.
-    if (!$entity || $entity->isNew()) {
+    $has_context = $entity ? TRUE : FALSE;
+
+    // If entity is not in the context or cannot be grabbed from the current
+    // route, we don't load the menu.
+    if ((!$entity) && !$entity = $this->eicGroupsHelper->getGroupFromRoute()) {
       return NULL;
+    }
+
+    // Don't load menu for group entities that are new/unsaved.
+    if ($entity->isNew()) {
+      return NULL;
+    }
+
+    if (!$has_context) {
+      $this->setContextValue('group', $entity);
     }
 
     // Group menu plugin ID that will be used to load the group content entity.

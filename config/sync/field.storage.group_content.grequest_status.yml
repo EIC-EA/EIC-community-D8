@@ -2,14 +2,14 @@ uuid: 78ee6462-8cb7-422b-9ecf-d1a929843101
 langcode: en
 status: true
 dependencies:
+  module:
+    - group
+    - state_machine
   enforced:
     module:
       - group
       - state_machine
       - grequest
-  module:
-    - group
-    - state_machine
 _core:
   default_config_hash: _jUH1PyNTCinGYkAGqy_jBTXOjS_GiMrE80MDZuKxbI
 id: group_content.grequest_status

@@ -5,8 +5,8 @@ dependencies:
   module:
     - eic_search
     - route_condition
-name: group_activity_stream_overviews
 label: 'Group - Activity stream - Overviews'
+name: group_activity_stream_overviews
 group: Groups
 description: ''
 requireAllConditions: false
@@ -14,32 +14,32 @@ disabled: false
 conditions:
   route:
     id: route
-    routes: eic_overviews.groups.overview_page.latest_activity_stream
     negate: false
     uuid: d3e0358f-7f8d-4ddb-90c8-2925248a6e75
     context_mapping: {  }
+    routes: eic_overviews.groups.overview_page.latest_activity_stream
 reactions:
   blocks:
+    id: blocks
+    uuid: 604b33bf-91d0-438c-8cc0-33d0baccbe71
     blocks:
       1afaa0b1-e6c1-41b4-a8bf-e5c9fc0f783c:
+        uuid: 1afaa0b1-e6c1-41b4-a8bf-e5c9fc0f783c
         id: eic_search_activity_stream
         label: 'EIC activity stream'
         provider: eic_search
         label_display: '0'
         region: content
         weight: '0'
-        show_members: 1
-        context_mapping:
-          group: '@group.group_route_context:group'
         custom_id: eic_search_activity_stream
         theme: eic_community
         css_class: ''
         unique: 0
         context_id: group_activity_stream_overviews
+        context_mapping:
+          group: '@group.group_route_context:group'
+        show_members: 1
         third_party_settings: {  }
-        uuid: 1afaa0b1-e6c1-41b4-a8bf-e5c9fc0f783c
-    id: blocks
-    saved: false
-    uuid: 604b33bf-91d0-438c-8cc0-33d0baccbe71
     include_default_blocks: 0
+    saved: false
 weight: 0

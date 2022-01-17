@@ -9,7 +9,7 @@
     display: flex;
     flex-direction: column;
 
-    @include ecl-media-breakpoint-up('md') {
+    @include ecl-media-breakpoint-up('lg') {
       align-items: stretch;
       flex-direction: row;
 
@@ -33,6 +33,26 @@
     #{$node}--is-ready#{$node}--is-collapsible[aria-collapsed="true"] & {
       @include ecl-media-breakpoint-up('md') {
         margin-left: 0;
+      }
+    }
+  }
+
+  &__header--wiki {
+    display: flex;
+    flex-wrap: wrap;
+    & .contextual-region {
+      margin-bottom: 0 !important;
+      & .ecl-button__label {
+        white-space: nowrap;
+      }
+    }
+    & .ecl-inline-actions {
+      order: -1;
+      @include ecl-media-breakpoint-down('md') {
+        margin-bottom: $ecl-spacing-s;
+      }
+      @include ecl-media-breakpoint-up('md') {
+        margin: 0;
       }
     }
   }
@@ -96,12 +116,15 @@
     position: relative;
     margin-top: ecl-layout('gutter');
 
-    @include ecl-media-breakpoint-down('md') {
-      width: 100%;
-      padding-left: 1rem;
-      padding-right: 1rem;
-      box-sizing: border-box;
+    &:not(&--wiki) {
+      @include ecl-media-breakpoint-down('md') {
+        width: 100%;
+        padding-left: 1rem;
+        padding-right: 1rem;
+        box-sizing: border-box;
+      }
     }
+
 
     #{$node}--is-collapsible & {
       margin-top: 0;

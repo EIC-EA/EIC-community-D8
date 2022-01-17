@@ -7,6 +7,7 @@
 
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityInterface;
@@ -32,6 +33,7 @@ use Drupal\eic_groups\Hooks\Preprocess;
 use Drupal\eic_user\UserHelper;
 use Drupal\group\Access\GroupAccessResult;
 use Drupal\group\Entity\GroupContent;
+use Drupal\pathauto\PathautoGeneratorInterface;
 
 /**
  * Implements hook_theme().
@@ -161,6 +163,29 @@ function eic_groups_preprocess_views_view_field(&$vars) {
 function eic_groups_group_insert(EntityInterface $entity) {
   \Drupal::classResolver(EntityOperations::class)
     ->groupInsert($entity);
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_insert().
+ */
+function eic_groups_group_content_insert(EntityInterface $entity) {
+  $pathauto_config = \Drupal::config('pathauto.settings');
+  $related_entity = $entity->getEntity();
+  // Re-creates URL alias of the group content related entity if pathauto
+  // settings "update_action" setting is set to 0 (UPDATE_ACTION_NO_NEW).
+  if (
+    $pathauto_config->get('update_action') === PathautoGeneratorInterface::UPDATE_ACTION_NO_NEW &&
+    $related_entity->hasLinkTemplate('canonical') &&
+    $related_entity instanceof ContentEntityInterface &&
+    $related_entity->hasField('path') &&
+    $related_entity->getFieldDefinition('path')->getType() == 'path'
+  ) {
+    // Deletes old alias.
+    \Drupal::service('pathauto.alias_storage_helper')->deleteEntityPathAll($related_entity);
+    $related_entity->get('path')->first()->get('pathauto')->purge();
+    // Re-create entity alias.
+    \Drupal::service('pathauto.generator')->createEntityAlias($related_entity, 'insert');
+  }
 }
 
 /**

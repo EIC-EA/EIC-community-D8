@@ -1,15 +1,23 @@
 .ecl-table {
+  $node: &;
   margin-bottom: map-get($ecl-spacing, '2xl');
   margin-top: map-get($ecl-spacing, '2xl');
 
-  & ul {
-    list-style: none;
-    padding: 0;
+  @include ecl-media-breakpoint-up('lg') {
+    & ul {
+      list-style: none;
+      padding: 0;
+    }
   }
+
 
   &_header {
     & th {
       padding: map-get($ecl-spacing, 'm') 0;
+    }
+    display: none;
+    @include ecl-media-breakpoint-up('md') {
+      display: table-header-group;
     }
   }
 
@@ -17,12 +25,45 @@
     & tr:nth-child(odd) {
       background: $ecl-color-blue-5;
     }
-    & td {
-      padding: .5em map-get($ecl-spacing, 'm');
-      white-space: nowrap;
+
+
+      & td {
+        padding: .2em 0;
+        @include ecl-media-breakpoint-up('md') {
+          padding: .5em map-get($ecl-spacing, 'm');
+          white-space: nowrap;
+        }
+      }
+
+
+    & #{$node}__row {
+      @include ecl-media-breakpoint-down('md') {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        padding: map-get($ecl-spacing, 'm');
+      }
     }
 
     & .views-field {
+      @include ecl-media-breakpoint-down('md') {
+        white-space: normal;
+      }
+
+      &:not(.views-field-dropbutton){
+        max-width: 150px;
+        overflow: hidden;
+
+        @include ecl-media-breakpoint-down('md') {
+          max-width: inherit;
+          overflow: visible;
+          &:before {
+            content: attr(data-col);
+            font-weight: bold;
+            text-transform: capitalize;
+          }
+        }
+      }
 
       &-changed,
       &-created,
@@ -44,6 +85,12 @@
           }
         }
 
+        @include ecl-media-breakpoint-down('md') {
+          .dropbutton-widget {
+            position: relative;
+          }
+        }
+
         & .dropbutton-multiple {
           & .dropbutton {
             background: #ffffff;
@@ -58,6 +105,10 @@
 
             &-action {
               width: 200px;
+              @include ecl-media-breakpoint-down('md') {
+                font-size: 1em;
+                line-height: 2;
+              }
             }
 
 

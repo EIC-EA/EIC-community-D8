@@ -25,48 +25,48 @@ mode: external_person
 content:
   field_contributor_link:
     type: link
-    weight: 4
-    region: content
     label: hidden
     settings:
       trim_length: 80
-      target: _blank
       url_only: false
       url_plain: false
       rel: '0'
+      target: _blank
     third_party_settings: {  }
+    weight: 4
+    region: content
   field_media:
-    weight: 1
+    type: media_thumbnail
     label: hidden
     settings:
-      image_style: thumbnail
       image_link: ''
+      image_style: thumbnail
     third_party_settings: {  }
-    type: media_thumbnail
+    weight: 1
     region: content
   field_name:
-    weight: 0
+    type: string
     label: hidden
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    type: string
+    weight: 0
     region: content
   field_organisation:
     type: string
-    weight: 2
-    region: content
     label: hidden
     settings:
       link_to_entity: false
     third_party_settings: {  }
+    weight: 2
+    region: content
   field_person_email:
     type: basic_string
-    weight: 3
-    region: content
     label: hidden
     settings: {  }
     third_party_settings: {  }
+    weight: 3
+    region: content
 hidden:
   field_user_ref: true
   paragraph_view_mode: true
