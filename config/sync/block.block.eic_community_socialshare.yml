@@ -16,15 +16,15 @@ plugin: social_share
 settings:
   id: social_share
   label: 'Social Share'
-  provider: oe_webtools_social_share
   label_display: '0'
+  provider: oe_webtools_social_share
 visibility:
   node_type:
     id: node_type
+    negate: false
+    context_mapping:
+      node: '@node.node_route_context:node'
     bundles:
       document: document
       news: news
       story: story
-    negate: false
-    context_mapping:
-      node: '@node.node_route_context:node'

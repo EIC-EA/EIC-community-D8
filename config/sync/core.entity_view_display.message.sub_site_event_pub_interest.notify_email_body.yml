@@ -13,10 +13,10 @@ bundle: sub_site_event_pub_interest
 mode: notify_email_body
 content:
   partial_1:
-    weight: 0
-    region: content
     settings: {  }
     third_party_settings: {  }
+    weight: 0
+    region: content
 hidden:
   field_event_executing_user: true
   field_topic_term: true

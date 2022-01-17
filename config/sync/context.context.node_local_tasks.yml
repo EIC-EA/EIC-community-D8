@@ -6,8 +6,8 @@ dependencies:
     - group
     - node
     - route_condition
-name: node_local_tasks
 label: 'Node - Local tasks'
+name: node_local_tasks
 group: Nodes
 description: ''
 requireAllConditions: true
@@ -15,20 +15,20 @@ disabled: false
 conditions:
   route:
     id: route
-    routes: entity.node.canonical
     negate: false
     uuid: 617b7388-6f0c-4dc1-abc0-5e9751ff626c
     context_mapping: {  }
+    routes: entity.node.canonical
   node_type:
     id: node_type
-    bundles:
-      book: book
-      page: page
-      wiki_page: wiki_page
     negate: false
     uuid: 65c2cb9e-9f35-4f74-bbb1-440e9500ebaf
     context_mapping:
       node: '@node.node_route_context:node'
+    bundles:
+      book: book
+      page: page
+      wiki_page: wiki_page
   group_type:
     id: group_type
     group_types:
@@ -40,26 +40,26 @@ conditions:
       group: '@group.group_route_context:group'
 reactions:
   blocks:
+    id: blocks
+    uuid: 62e8b73b-088c-4bde-b719-f0f34bb7c10a
     blocks:
       cbef2209-7805-487f-aea1-d2980b6a253d:
+        uuid: cbef2209-7805-487f-aea1-d2980b6a253d
         id: local_tasks_block
         label: Tabs
         provider: core
         label_display: '0'
-        primary: 1
-        secondary: 1
         region: content_before
         weight: '0'
-        context_mapping: {  }
         custom_id: local_tasks_block
         theme: eic_community
         css_class: ''
         unique: 0
         context_id: node_local_tasks
+        context_mapping: {  }
+        primary: 1
+        secondary: 1
         third_party_settings: {  }
-        uuid: cbef2209-7805-487f-aea1-d2980b6a253d
-    id: blocks
-    saved: false
-    uuid: 62e8b73b-088c-4bde-b719-f0f34bb7c10a
     include_default_blocks: 0
+    saved: false
 weight: 0

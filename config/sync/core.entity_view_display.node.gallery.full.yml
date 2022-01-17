@@ -23,96 +23,96 @@ mode: full
 content:
   field_body:
     type: text_default
-    weight: 6
-    region: content
     label: hidden
     settings: {  }
     third_party_settings: {  }
+    weight: 6
+    region: content
   field_gallery_slides:
     type: entity_reference_revisions_entity_view
-    weight: 8
-    region: content
     label: hidden
     settings:
       view_mode: default
       link: ''
     third_party_settings: {  }
+    weight: 8
+    region: content
   field_vocab_geo:
     type: entity_reference_label
+    label: hidden
+    settings:
+      link: true
+    third_party_settings: {  }
     weight: 4
     region: content
-    label: hidden
-    settings:
-      link: true
-    third_party_settings: {  }
   field_vocab_topics:
     type: entity_reference_label
-    weight: 5
-    region: content
     label: hidden
     settings:
       link: true
     third_party_settings: {  }
+    weight: 5
+    region: content
   flag_bookmark_content:
+    settings: {  }
+    third_party_settings: {  }
     weight: 9
     region: content
+  flag_follow_content:
     settings: {  }
     third_party_settings: {  }
-  flag_follow_content:
     weight: 10
     region: content
+  flag_highlight_content:
     settings: {  }
     third_party_settings: {  }
-  flag_highlight_content:
     weight: 11
     region: content
+  flag_like_content:
     settings: {  }
     third_party_settings: {  }
-  flag_like_content:
     weight: 12
     region: content
+  flag_recommend:
     settings: {  }
     third_party_settings: {  }
-  flag_recommend:
     weight: 13
     region: content
+  links:
     settings: {  }
     third_party_settings: {  }
-  links:
     weight: 0
     region: content
-    settings: {  }
-    third_party_settings: {  }
   member_content_edit_access:
+    type: boolean
+    label: hidden
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
     weight: 1
     region: content
+  private:
+    type: boolean
     label: hidden
     settings:
       format: default
       format_custom_false: ''
       format_custom_true: ''
     third_party_settings: {  }
-    type: boolean
-  private:
     weight: 2
     region: content
-    label: hidden
-    settings:
-      format: default
-      format_custom_false: ''
-      format_custom_true: ''
-    third_party_settings: {  }
-    type: boolean
   published_at:
     type: timestamp
-    region: content
-    weight: 3
     label: hidden
     settings:
       date_format: medium
       custom_date_format: ''
       timezone: ''
     third_party_settings: {  }
+    weight: 3
+    region: content
 hidden:
   extra_field_eic_theme_helper_short_title_with_fallback: true
   field_comments: true

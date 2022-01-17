@@ -19,41 +19,42 @@ bundle: quote
 mode: default
 content:
   field_media:
+    type: media_library_widget
     weight: 7
+    region: content
     settings:
       media_types: {  }
     third_party_settings: {  }
-    type: media_library_widget
-    region: content
   field_name:
+    type: string_textfield
     weight: 5
+    region: content
     settings:
       size: 60
       placeholder: ''
     third_party_settings: {  }
-    type: string_textfield
-    region: content
   field_quote_description:
+    type: text_textarea
     weight: 1
+    region: content
     settings:
       rows: 5
       placeholder: ''
     third_party_settings: {  }
-    type: text_textarea
-    region: content
   field_user_ref:
+    type: entity_reference_autocomplete
     weight: 6
+    region: content
     settings:
       match_operator: CONTAINS
       match_limit: 10
       size: 60
       placeholder: ''
     third_party_settings: {  }
-    type: entity_reference_autocomplete
-    region: content
   paragraph_view_mode:
     type: paragraph_view_mode
     weight: -100
+    region: content
     settings:
       view_modes:
         external_person: external_person
@@ -61,7 +62,6 @@ content:
         default: '0'
       default_view_mode: external_person
     third_party_settings: {  }
-    region: content
 hidden:
   created: true
   status: true

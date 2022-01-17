@@ -2,29 +2,6 @@ uuid: 590b9406-6314-4246-a658-8e5ff93d713d
 langcode: en
 status: true
 dependencies:
-  module:
-    - search_api_solr
-    - flag
-    - group
-    - user
-    - file
-    - media
-    - taxonomy
-    - content_moderation
-    - message
-    - comment
-    - node
-    - eic_private_content
-    - path
-    - paragraphs
-    - profile
-    - search_api
-    - address
-    - eic_group_statistics
-    - eic_search
-    - flag_search_api
-    - search_api_attachments
-    - group_permissions
   config:
     - field.storage.group.field_date_range
     - field.storage.group.field_location
@@ -77,24 +54,44 @@ dependencies:
     - search_api.server.global
     - core.entity_view_mode.group.no_html
     - core.entity_view_mode.node.no_html
+  module:
+    - search_api_solr
+    - flag
+    - group
+    - user
+    - file
+    - media
+    - taxonomy
+    - content_moderation
+    - message
+    - comment
+    - node
+    - eic_private_content
+    - path
+    - paragraphs
+    - profile
+    - search_api
+    - address
+    - eic_group_statistics
+    - eic_search
+    - flag_search_api
+    - search_api_attachments
+    - group_permissions
 third_party_settings:
   search_api_solr:
     finalize: false
     commit_before_finalize: false
     commit_after_finalize: false
-    multilingual:
-      limit_to_content_language: false
-      include_language_independent: true
     highlighter:
       maxAnalyzedChars: 51200
       fragmenter: gap
+      usePhraseHighlighter: true
+      highlightMultiTerm: true
+      preserveMulti: false
       regex:
         slop: 0.5
         pattern: blank
         maxAnalyzedChars: 10000
-      usePhraseHighlighter: true
-      highlightMultiTerm: true
-      preserveMulti: false
       highlight:
         mergeContiguous: false
         requireFieldMatch: false
@@ -118,6 +115,9 @@ third_party_settings:
       index_prefix: ''
       collection: ''
       timezone: ''
+    multilingual:
+      limit_to_content_language: false
+      include_language_independent: true
 id: global
 name: Global
 description: ''
@@ -1412,6 +1412,9 @@ datasource_settings:
 processor_settings:
   add_url: {  }
   address_abbreviations_to_full_form:
+    weights:
+      preprocess_index: -20
+      preprocess_query: -20
     user_profile_city_string:
       enable: 0
       concat: 0
@@ -1420,9 +1423,6 @@ processor_settings:
       concat: 0
     fields: {  }
     all_fields: false
-    weights:
-      preprocess_index: -20
-      preprocess_query: -20
   aggregated_field: {  }
   file_attachments:
     excluded_extensions: 'aif art avi bmp gif ico mov oga ogv png psd ra ram rgb flv'
@@ -1447,13 +1447,13 @@ processor_settings:
       - files
       - events
   hierarchy:
+    weights:
+      preprocess_index: -45
     fields:
       content_field_vocab_geo: taxonomy_term-parent
       content_field_vocab_topics: taxonomy_term-parent
       group_field_vocab_geo: taxonomy_term-parent
       group_field_vocab_topics: taxonomy_term-parent
-    weights:
-      preprocess_index: -45
   language_with_fallback: {  }
   rendered_item: {  }
   reverse_entity_references: {  }
@@ -1464,7 +1464,7 @@ tracker_settings:
   default:
     indexing_order: fifo
 options:
-  index_directly: true
   cron_limit: 50
+  index_directly: true
   track_changes_in_references: true
 server: global

@@ -6,8 +6,8 @@ dependencies:
     - eic_groups
     - group
     - node
-name: group_wiki_page
 label: 'Group - Wiki page'
+name: group_wiki_page
 group: Groups
 description: 'Context used when viewing group wiki pages'
 requireAllConditions: true
@@ -15,12 +15,12 @@ disabled: false
 conditions:
   node_type:
     id: node_type
-    bundles:
-      wiki_page: wiki_page
     negate: false
     uuid: 118a3ee8-d75a-43fa-8dc7-13e7c95a283f
     context_mapping:
       node: '@node.node_route_context:node'
+    bundles:
+      wiki_page: wiki_page
   group_type:
     id: group_type
     group_types:
@@ -31,24 +31,24 @@ conditions:
       group: '@group.group_route_context:group'
 reactions:
   blocks:
+    id: blocks
+    uuid: 4d77c57f-3626-4134-8271-8983fa46b50e
     blocks:
       2089ac99-521b-4bba-b1e0-030d675b287f:
+        uuid: 2089ac99-521b-4bba-b1e0-030d675b287f
         id: eic_groups_wiki_book_navigation
         label: 'EIC Group Wiki Book navigation'
         provider: eic_groups
         label_display: '0'
         region: sidebar
         weight: '0'
-        block_mode: null
-        context_mapping: {  }
         custom_id: eic_groups_wiki_book_navigation
         theme: eic_community
         css_class: ''
         unique: 0
         context_id: group_wiki_page
-        uuid: 2089ac99-521b-4bba-b1e0-030d675b287f
-    id: blocks
-    saved: false
-    uuid: 4d77c57f-3626-4134-8271-8983fa46b50e
+        context_mapping: {  }
+        block_mode: null
     include_default_blocks: 0
+    saved: false
 weight: 0
