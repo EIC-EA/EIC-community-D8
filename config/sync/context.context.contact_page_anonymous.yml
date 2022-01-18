@@ -1,0 +1,76 @@
+uuid: ca1ffd8a-c3ee-4f40-94cc-2c26822a2388
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:basic:cfddfc59-77ac-41fe-8d26-66a3bfb9061a'
+    - 'block_content:page_banner:f6dd41d4-acee-4700-82d5-132bc402feb2'
+  module:
+    - block_content
+    - route_condition
+    - user
+label: 'Contact page - Anonymous'
+name: contact_page_anonymous
+group: Global
+description: ''
+requireAllConditions: true
+disabled: false
+conditions:
+  route:
+    id: route
+    negate: false
+    uuid: a036c1cd-1b6a-418f-8d5d-c7d84b0f1f57
+    context_mapping: {  }
+    routes: contact.site_page
+  user_role:
+    id: user_role
+    negate: false
+    uuid: 6a2e34a8-ffe8-49ab-a0b4-7a7a761f60ed
+    context_mapping:
+      user: '@user.current_user_context:current_user'
+    roles:
+      anonymous: anonymous
+reactions:
+  blocks:
+    id: blocks
+    uuid: d3b7d95a-674e-4580-96e0-1166e56f1a1a
+    blocks:
+      c48940a4-37a0-47c8-b8c4-d71070a5f585:
+        uuid: c48940a4-37a0-47c8-b8c4-d71070a5f585
+        id: 'block_content:f6dd41d4-acee-4700-82d5-132bc402feb2'
+        label: 'Contact page - banner'
+        provider: block_content
+        label_display: '0'
+        region: page_header
+        weight: '0'
+        custom_id: contact_banner
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: contact_page_anonymous
+        context_mapping: {  }
+        status: true
+        info: ''
+        view_mode: full
+        third_party_settings: {  }
+      23337ad1-50b0-436b-9f53-ec7797d4be2f:
+        uuid: 23337ad1-50b0-436b-9f53-ec7797d4be2f
+        id: 'block_content:cfddfc59-77ac-41fe-8d26-66a3bfb9061a'
+        label: 'Contact page - Anonymous intro'
+        provider: block_content
+        label_display: '0'
+        region: content_before
+        weight: '0'
+        custom_id: contact_intro_anonymous
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: contact_page_anonymous
+        context_mapping: {  }
+        status: true
+        info: ''
+        view_mode: full
+        third_party_settings: {  }
+    include_default_blocks: 0
+    saved: false
+weight: 0

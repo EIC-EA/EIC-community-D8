@@ -161,4 +161,15 @@ class GlobalOverviewPages {
     return $operations;
   }
 
+  /**
+   * Return the current overview page ID.
+   *
+   * @return int|null
+   */
+  public function getCurrentOverviewPageId(): ?int {
+    $current_overview = \Drupal::routeMatch()->getParameter('overview_page');
+
+    return $current_overview instanceof OverviewPage ? $current_overview->get('field_overview_id')->value : NULL;
+  }
+
 }

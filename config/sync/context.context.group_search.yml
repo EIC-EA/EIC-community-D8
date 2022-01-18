@@ -5,7 +5,6 @@ dependencies:
   module:
     - eic_search
     - route_condition
-    - system
 label: 'Group - Search'
 name: group_search
 group: Groups
@@ -24,20 +23,6 @@ reactions:
     id: blocks
     uuid: 8505c4ba-7948-4741-9628-279e035d4c6e
     blocks:
-      e601068d-bbfa-4f2e-ae56-9645fc0ee40e:
-        uuid: e601068d-bbfa-4f2e-ae56-9645fc0ee40e
-        id: system_main_block
-        label: 'Main page content'
-        provider: system
-        label_display: '0'
-        region: content
-        weight: '-1'
-        custom_id: system_main_block
-        theme: eic_community
-        css_class: ''
-        unique: 0
-        context_id: group_search
-        context_mapping: {  }
       6de0c3cc-d8a8-4612-b969-491da786a15c:
         uuid: 6de0c3cc-d8a8-4612-b969-491da786a15c
         id: eic_search_overview
@@ -45,6 +30,7 @@ reactions:
         provider: eic_search
         label_display: visible
         region: content
+        weight: '0'
         custom_id: eic_search_overview_group_search
         theme: eic_community
         css_class: ''

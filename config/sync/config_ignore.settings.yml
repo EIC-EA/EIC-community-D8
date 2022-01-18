@@ -4,6 +4,10 @@ ignored_config_entities:
   - 'search_api.server.global:backend_config.connector_config.port'
   - 'search_api.server.global:backend_config.connector_config.path'
   - 'search_api.server.global:backend_config.connector_config.core'
+  - 'contact.form.contact_form:message'
+  - 'contact.form.contact_form:recipients'
+  - 'contact.form.contact_form:reply'
+  - 'contact.form.contact_form:redirect'
   - system.site
   - search_api_attachments.admin_config
   - 'smtp.settings:smtp_host'

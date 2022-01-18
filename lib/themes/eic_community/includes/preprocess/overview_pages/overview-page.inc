@@ -13,8 +13,16 @@ use Drupal\eic_overviews\GlobalOverviewPages;
 function eic_community_preprocess_overview_page(array &$variables) {
   // Adds breadcrumbs block to the theme variables.
   $variables['eic_community_breadcrumbs'] = _eic_community_load_breadcrumb_block();
+  /** @var GlobalOverviewPages $overview_helper */
+  $overview_helper = \Drupal::service('eic_overviews.global_overview_pages');
   // Adds overview page operations.
-  $operations = \Drupal::service('eic_overviews.global_overview_pages')->getGlobalOverviewPageOperations(GlobalOverviewPages::GROUPS);
+  $overview_id = $overview_helper->getCurrentOverviewPageId();
+
+  if (!$overview_id) {
+    return;
+  }
+
+  $operations = $overview_helper->getGlobalOverviewPageOperations($overview_id);
   if (!empty($operations)) {
     foreach ($operations as $operation) {
       $variables['overview_page_actions'][] = [

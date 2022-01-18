@@ -111,6 +111,11 @@ class BookTokens implements ContainerInjectionInterface {
            */
           $parent_book_node = $this->entityTypeManager->getStorage('node')
             ->load($node->book['pid']);
+
+          if (!$parent_book_node) {
+            break;
+          }
+
           $parent_book_node_url = $parent_book_node->toUrl()->toString();
 
           // If base path is presented in the URL, we need to remove it

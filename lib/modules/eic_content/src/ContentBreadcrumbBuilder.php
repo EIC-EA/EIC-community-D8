@@ -8,6 +8,7 @@ use Drupal\Core\Link;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\eic_overviews\GlobalOverviewPages;
 use Drupal\node\NodeInterface;
 
 /**
@@ -69,13 +70,8 @@ class ContentBreadcrumbBuilder implements BreadcrumbBuilderInterface {
 
       switch ($node->bundle()) {
         case 'news':
-          // @todo Replace link route with overview page route when available.
-          $links[] = Link::createFromRoute($this->t('News'), '<front>');
-          break;
-
         case 'story':
-          // @todo Replace link route with overview page route when available.
-          $links[] = Link::createFromRoute($this->t('Stories'), '<front>');
+          $links[] = GlobalOverviewPages::getGlobalOverviewPageLink(GlobalOverviewPages::NEWS_STORIES);
           break;
 
       }
