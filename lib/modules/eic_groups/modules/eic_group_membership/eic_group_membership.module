@@ -8,12 +8,16 @@
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\eic_groups\EICGroupsHelper;
+use Drupal\eic_overviews\GlobalOverviewPages;
 use Drupal\group\Entity\Form\GroupContentForm;
 
 /**
  * Implements hook_entity_operation_alter().
  */
-function eic_group_membership_entity_operation_alter(array &$operations, EntityInterface $entity) {
+function eic_group_membership_entity_operation_alter(
+  array &$operations,
+  EntityInterface $entity
+) {
   if ($entity->getEntityTypeId() !== 'group_content') {
     return;
   }
@@ -33,7 +37,6 @@ function eic_group_membership_entity_operation_alter(array &$operations, EntityI
       default:
         $operations[$key]['title'] = t('@operation member', ['@operation' => ucfirst($key)]);
         break;
-
     }
   }
 }
@@ -58,7 +61,16 @@ function eic_group_membership_views_data_alter(&$data) {
 /**
  * Implements hook_form_alter().
  */
-function eic_group_membership_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+function eic_group_membership_form_alter(
+  &$form,
+  FormStateInterface $form_state,
+  $form_id
+) {
+  if ($form_id === 'group_content_group-group_membership_group-leave_form') {
+    $form['actions']['submit']['#submit'][] = 'eic_group_membership_leave_form_submit';
+    return;
+  }
+
   /** @var \Drupal\Core\Entity\EntityForm $form_object */
   $form_object = $form_state->getFormObject();
   if (!$form_object instanceof GroupContentForm) {
@@ -88,7 +100,6 @@ function eic_group_membership_form_alter(&$form, FormStateInterface $form_state,
         array_unshift($form['actions']['submit']['#submit'], 'eic_group_membership_update_membership_role_form_submit');
       }
       break;
-
   }
 }
 
@@ -100,7 +111,10 @@ function eic_group_membership_form_alter(&$form, FormStateInterface $form_state,
  * @param \Drupal\Core\Form\FormStateInterface $form_state
  *   The current state of the form.
  */
-function eic_group_membership_update_membership_role_form_submit(array $form, FormStateInterface $form_state) {
+function eic_group_membership_update_membership_role_form_submit(
+  array $form,
+  FormStateInterface $form_state
+) {
   /** @var \Drupal\group\Entity\GroupContentInterface $entity */
   $entity = $form_state->getFormObject()->getEntity();
   $current_group_owner = EICGroupsHelper::getGroupOwner($entity->getGroup());
@@ -114,4 +128,22 @@ function eic_group_membership_update_membership_role_form_submit(array $form, Fo
     ];
     $form_state->setValue('group_roles', $group_roles);
   }
+}
+
+/**
+ * Submit handler to set another redirect URL.
+ *
+ * @param array $form
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
+ *
+ * @throws \Drupal\Core\Entity\EntityMalformedException
+ */
+function eic_group_membership_leave_form_submit(
+  array $form,
+  FormStateInterface $form_state
+) {
+  $group_overview = GlobalOverviewPages::getGlobalOverviewPageLink(GlobalOverviewPages::GROUPS);
+  $form_state->setRedirectUrl($group_overview->getUrl());
+
+  \Drupal::messenger()->addStatus(t('You successfully left the group'));
 }
