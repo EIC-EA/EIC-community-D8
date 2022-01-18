@@ -6,8 +6,9 @@
  */
 
 use Drupal\eic_overviews\GlobalOverviewPages;
-use Drupal\views\Views;
 use Drupal\eic_overviews\GroupOverviewPages;
+use Drupal\group\Entity\GroupInterface;
+use Drupal\views\Views;
 use Drupal\Core\Url;
 
 /**
@@ -31,32 +32,6 @@ function eic_community_preprocess_views_view_field(&$variables) {
  * Implements template_preprocess_views_view().
  */
 function eic_community_preprocess_views_view(&$variables) {
-  $map_view_action = [
-    'taxonomy_related_content-groups' => [
-      'link' => [
-        'label' => t('View all groups'),
-        'path' => GlobalOverviewPages::getGlobalOverviewPageLink(
-          GlobalOverviewPages::GROUPS
-        )->getUrl(),
-      ],
-    ],
-    'taxonomy_related_content-news_stories' => [
-      'link' => [
-        'label' => t('View all stories'),
-        'path' => GlobalOverviewPages::getGlobalOverviewPageLink(
-          GlobalOverviewPages::NEWS_STORIES
-        )->getUrl(),
-      ],
-    ],
-    'taxonomy_related_content-events' => [
-      'link' => [
-        'label' => t('View all events'),
-        'path' => GlobalOverviewPages::getGlobalOverviewPageLink(
-          GlobalOverviewPages::EVENTS
-        )->getUrl(),
-      ],
-    ],
-  ];
   /** @var \Drupal\views\ViewExecutable $view */
   $view = $variables['view'];
 
@@ -125,7 +100,7 @@ function eic_community_preprocess_views_view(&$variables) {
 
       /** @var \Drupal\group\Entity\GroupInterface $group */
       $group = \Drupal::service('eic_groups.helper')->getGroupFromRoute();
-      if ($group instanceof \Drupal\group\Entity\GroupInterface) {
+      if ($group instanceof GroupInterface) {
         $variables['call_to_action'] = [
           'link' => [
             'label' => t('View all news'),
@@ -142,7 +117,7 @@ function eic_community_preprocess_views_view(&$variables) {
 
       /** @var \Drupal\group\Entity\GroupInterface $group */
       $group = \Drupal::service('eic_groups.helper')->getGroupFromRoute();
-      if ($group instanceof \Drupal\group\Entity\GroupInterface && !empty($variables['rows'])) {
+      if ($group instanceof GroupInterface && !empty($variables['rows'])) {
         $variables['call_to_action'] = [
           'link' => [
             'label' => t('View all events'),
@@ -180,15 +155,6 @@ function eic_community_preprocess_views_view(&$variables) {
         'path' => $view->display_handler->getOption('link_url'),
       ],
     ];
-  }
-
-  $call_to_action = array_key_exists(
-    $key,
-    $map_view_action
-  ) ? $map_view_action[$key] : [];
-
-  if (!empty($call_to_action) && !empty($call_to_action['link']['path'])) {
-    $variables['call_to_action'] = $call_to_action;
   }
 }
 

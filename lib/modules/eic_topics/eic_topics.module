@@ -108,11 +108,17 @@ function eic_topics_views_pre_render(ViewExecutable $view) {
       break;
 
     case 'news_stories':
-      $url = GlobalOverviewPages::getGlobalOverviewPageUrl(GlobalOverviewPages::EVENTS);
+      $url = GlobalOverviewPages::getGlobalOverviewPageLink(GlobalOverviewPages::NEWS_STORIES)->getUrl();
+      $params = [
+        'sm_content_field_vocab_topics_string' => $term->label(),
+      ];
       break;
 
     case 'events':
-      // @todo Implement correct URL once available.
+      $url = GlobalOverviewPages::getGlobalOverviewPageLink(GlobalOverviewPages::EVENTS)->getUrl();
+      $params = [
+        'sm_content_field_vocab_topics_string' => $term->label(),
+      ];
       break;
 
     case 'wiki_pages':
@@ -131,12 +137,14 @@ function eic_topics_views_pre_render(ViewExecutable $view) {
       break;
   }
 
+  $params = SearchHelper::buildSolrQueryParams($params);
+
   if ($route) {
-    $params = SearchHelper::buildSolrQueryParams($params);
     $url = Url::fromRoute($route, [], ['query' => $params])->toString();
     $view->display_handler->setOption('link_url', $url);
   }
   elseif ($url) {
-    $view->display_handler->setOption('link_url', $url);
+    $url->setOption('query', $params);
+    $view->display_handler->setOption('link_url', $url->toString());
   }
 }
