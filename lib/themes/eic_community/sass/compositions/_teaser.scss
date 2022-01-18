@@ -30,6 +30,10 @@
     padding: ecl-box-model('padding');
     background-color: map-get($ecl-colors, 'grey-5');
 
+    & .ecl-teaser__action a {
+      white-space: nowrap;
+    }
+
     @include adjust-from-section-color() {
       background-color: map-get($ecl-colors, 'white');
     }
