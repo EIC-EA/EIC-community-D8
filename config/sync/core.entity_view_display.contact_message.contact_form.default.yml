@@ -14,17 +14,15 @@ bundle: contact_form
 mode: default
 content:
   field_contact_category:
-    weight: 0
+    type: list_default
     label: above
     settings: {  }
     third_party_settings: {  }
-    type: list_default
+    weight: 0
     region: content
   message:
     type: smart_trim
-    weight: 1
     label: above
-    region: content
     settings:
       trim_length: 600
       trim_type: chars
@@ -37,6 +35,8 @@ content:
       summary_handler: full
       trim_options: {  }
     third_party_settings: {  }
+    weight: 1
+    region: content
 hidden:
   langcode: true
   search_api_excerpt: true

@@ -9,4 +9,4 @@ recipients:
 reply: ''
 weight: 0
 message: ''
-redirect: '/contact'
+redirect: /contact

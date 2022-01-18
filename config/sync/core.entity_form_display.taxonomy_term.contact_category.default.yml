@@ -18,17 +18,17 @@ content:
     weight: 2
     region: content
     settings:
-      placeholder: ''
       rows: 5
+      placeholder: ''
     third_party_settings: {  }
   field_target_email:
-    weight: 1
-    settings:
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
     type: email_default
+    weight: 1
     region: content
+    settings:
+      placeholder: ''
+      size: 60
+    third_party_settings: {  }
   langcode:
     type: language_select
     weight: 3
@@ -52,9 +52,9 @@ content:
     third_party_settings: {  }
   status:
     type: boolean_checkbox
-    settings:
-      display_label: true
     weight: 5
     region: content
+    settings:
+      display_label: true
     third_party_settings: {  }
 hidden: {  }
