@@ -30,4 +30,18 @@
     background-color: map-get($ecl-colors, 'red');
     color: map-get($ecl-colors, 'white');
   }
+
+  &--removable {
+    font-weight: bold;
+    pointer-events: auto;
+    cursor: pointer;
+    & .ecl-tag__icon {
+      color: $ecl-color-grey;
+    }
+    &:hover {
+      & .ecl-tag__icon {
+        color: $ecl-color-white;
+      }
+    }
+  }
 }

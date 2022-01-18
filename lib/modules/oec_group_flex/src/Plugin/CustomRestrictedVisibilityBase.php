@@ -4,6 +4,7 @@ namespace Drupal\oec_group_flex\Plugin;
 
 use Drupal\Component\Plugin\PluginBase;
 use Drupal\Core\Access\AccessResultNeutral;
+use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
@@ -16,6 +17,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Base class for Custom restricted visibility plugins.
  */
 abstract class CustomRestrictedVisibilityBase extends PluginBase implements CustomRestrictedVisibilityInterface, ContainerFactoryPluginInterface {
+
+  use DependencySerializationTrait;
 
   /**
    * The entity type manager.
@@ -75,6 +78,27 @@ abstract class CustomRestrictedVisibilityBase extends PluginBase implements Cust
   /**
    * {@inheritdoc}
    */
+  public function getStatusKey(): string {
+    return $this->getPluginId() . '_status';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getLabel(): string {
+    return $this->pluginDefinition['label'];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getWeight(): int {
+    return $this->pluginDefinition['weight'];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function validatePluginForm(array &$element, FormStateInterface $form_state) {
     $status_key = $this->getPluginId() . '_status';
     // If plugin status is disabled, we don't need any validation and therefore
@@ -103,6 +127,20 @@ abstract class CustomRestrictedVisibilityBase extends PluginBase implements Cust
   }
 
   /**
+   * Get the stored options for a given plugin.
+   *
+   * @param \Drupal\oec_group_flex\GroupVisibilityRecordInterface $group_visibility_record
+   *   The group visibility record to retrieve the options from.
+   *
+   * @return array|mixed
+   *   The options for the given plugin.
+   */
+  protected function getOptionsForPlugin(GroupVisibilityRecordInterface $group_visibility_record) {
+    $allOptions = $group_visibility_record->getOptions();
+    return isset($allOptions[$this->getPluginId()]) ? $allOptions[$this->getPluginId()] : [];
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function getFormFieldNames(): array {
@@ -117,43 +155,8 @@ abstract class CustomRestrictedVisibilityBase extends PluginBase implements Cust
   /**
    * {@inheritdoc}
    */
-  public function getLabel(): string {
-    return $this->pluginDefinition['label'];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getWeight(): int {
-    return $this->pluginDefinition['weight'];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getStatusKey(): string {
-    return $this->getPluginId() . '_status';
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function hasViewAccess(GroupInterface $entity, AccountInterface $account, GroupVisibilityRecordInterface $group_visibility_record) {
     return AccessResultNeutral::neutral();
-  }
-
-  /**
-   * Get the stored options for a given plugin.
-   *
-   * @param \Drupal\oec_group_flex\GroupVisibilityRecordInterface $group_visibility_record
-   *   The group visibility record to retrieve the options from.
-   *
-   * @return array|mixed
-   *   The options for the given plugin.
-   */
-  protected function getOptionsForPlugin(GroupVisibilityRecordInterface $group_visibility_record) {
-    $allOptions = $group_visibility_record->getOptions();
-    return isset($allOptions[$this->getPluginId()]) ? $allOptions[$this->getPluginId()] : [];
   }
 
 }

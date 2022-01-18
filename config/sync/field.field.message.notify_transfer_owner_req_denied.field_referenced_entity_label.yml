@@ -1,0 +1,19 @@
+uuid: c9f7b347-4fd8-4813-bb78-c02a3363a8e2
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.message.field_referenced_entity_label
+    - message.template.notify_transfer_owner_req_denied
+id: message.notify_transfer_owner_req_denied.field_referenced_entity_label
+field_name: field_referenced_entity_label
+entity_type: message
+bundle: notify_transfer_owner_req_denied
+label: 'Entity Label'
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

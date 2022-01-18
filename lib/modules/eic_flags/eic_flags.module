@@ -14,10 +14,10 @@ use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\eic_flags\Form\NewRequestForm;
 use Drupal\eic_flags\Form\RequestCloseForm;
+use Drupal\eic_flags\Hooks\CronOperations;
 use Drupal\eic_flags\Hooks\EntityOperations;
 use Drupal\eic_flags\Hooks\FlagTokens;
 use Drupal\eic_flags\RequestStatus;
-use Drupal\eic_flags\RequestTypes;
 use Drupal\eic_flags\Routing\EntityRequestRouteProvider;
 use Drupal\eic_flags\Service\HandlerInterface;
 
@@ -83,6 +83,9 @@ function eic_flags_cron() {
     $row = (array) $row;
     $queue->createItem($row);
   }
+
+  $class = \Drupal::classResolver(CronOperations::class);
+  $class->processRequestTimeouts();
 }
 
 /**
@@ -103,11 +106,21 @@ function eic_flags_field_request_status_allowed_values() {
  * @var \Drupal\Core\Entity\EntityTypeInterface[] $entity_types
  */
 function eic_flags_entity_type_build(array &$entity_types) {
-  /** @var \Drupal\eic_flags\Service\HandlerInterface $delete_request_handler */
-  $delete_request_handler = \Drupal::service('eic_flags.handler_collector')
-    ->getHandlerByType(RequestTypes::DELETE);
+  /** @var \Drupal\eic_flags\Service\HandlerInterface[] $request_handlers */
+  $request_handlers = \Drupal::service('eic_flags.handler_collector')
+    ->getHandlers();
 
-  $supported_entities = array_keys($delete_request_handler->getSupportedEntityTypes());
+  $supported_entities = [];
+  // Gets all supported entities from all request handlers.
+  foreach ($request_handlers as $request_handler) {
+    $supported_entities = array_unique(
+      array_merge(
+        $supported_entities,
+        array_keys($request_handler->getSupportedEntityTypes())
+      )
+    );
+  }
+
   foreach ($supported_entities as $entity_id) {
     if (!isset($entity_types[$entity_id])) {
       continue;
@@ -123,7 +136,7 @@ function eic_flags_entity_type_build(array &$entity_types) {
       ->setHandlerClass('route_provider', $route_providers)
       ->setLinkTemplate(
         'new-request',
-        '/request/{request_type}/' . $entity_id . '/{' . $entity_id . '}'
+        "/$entity_id" . '/{' . $entity_id . '}' . '/request/{request_type}'
       )
       ->setLinkTemplate(
         'new-request-api',
@@ -132,7 +145,23 @@ function eic_flags_entity_type_build(array &$entity_types) {
       ->setLinkTemplate(
         'close-request',
         '/admin/community/' . $entity_id . '/{' . $entity_id . '}/request/{request_type}/close'
+      )
+      ->setLinkTemplate(
+        'user-close-request',
+        "/$entity_id" . '/{' . $entity_id . '}' . '/request/{request_type}/close'
       );
+
+    // Support for group content entities. We add the group url as a prefix.
+    if ($entity_id === 'group_content') {
+      $entity_type->setLinkTemplate(
+        'new-request',
+        "/group/{group}/content" . '/{' . $entity_id . '}' . '/request/{request_type}'
+      );
+      $entity_type->setLinkTemplate(
+        'user-close-request',
+        "/group/{group}/content" . '/{' . $entity_id . '}' . '/request/{request_type}/close'
+      );
+    }
   }
 }
 
@@ -217,16 +246,33 @@ function eic_flags_entity_access(
   $operation,
   AccountInterface $account
 ) {
-  if (!in_array($operation, ['request-delete', 'request-archive'])) {
+  if (!in_array(
+    $operation,
+    [
+      'request-delete',
+      'request-archive',
+      'request-transfer_ownership',
+      'close_request-transfer_ownership',
+    ])
+  ) {
     return AccessResult::neutral();
   }
 
-  $type = explode('-', $operation)[1];
+  $operation_type = explode('-', $operation);
+  $request_status = $operation_type[0];
+  $type = $operation_type[1];
   /** @var \Drupal\eic_flags\Service\HandlerInterface $handler */
   $handler = \Drupal::service('eic_flags.handler_collector')
     ->getHandlerByType($type);
 
-  return $handler->canRequest($account, $entity);
+  switch ($request_status) {
+    case 'close_request':
+      return $handler->canCloseRequest($account, $entity);
+
+    default:
+      return $handler->canRequest($account, $entity);
+
+  }
 }
 
 /**

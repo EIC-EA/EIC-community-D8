@@ -12,10 +12,10 @@ bundle: notify_block_request_accepted
 mode: mail_subject
 content:
   partial_0:
-    weight: 0
-    region: content
     settings: {  }
     third_party_settings: {  }
+    weight: 0
+    region: content
 hidden:
   field_referenced_flag: true
   partial_1: true

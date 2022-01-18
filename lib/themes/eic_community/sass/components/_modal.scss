@@ -24,6 +24,12 @@
   &__content {
     margin: 0;
     margin-bottom: $ecl-spacing-l;
+
+    @include ecl-media-breakpoint-down('md') {
+      & .ecl-comment__author {
+        display: none;
+      }
+    }
   }
 
   &__close {

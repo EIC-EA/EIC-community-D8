@@ -14,10 +14,10 @@ bundle: notify_delete_request_accepted
 mode: pre_render
 content:
   partial_0:
-    weight: 0
-    region: content
     settings: {  }
     third_party_settings: {  }
+    weight: 0
+    region: content
 hidden:
   field_message_subject: true
   field_referenced_flag: true

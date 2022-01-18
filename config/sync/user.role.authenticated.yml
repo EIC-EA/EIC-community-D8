@@ -1,7 +1,15 @@
 uuid: ea50bc89-134d-49b5-96a0-8480a347f7e2
 langcode: en
 status: true
-dependencies: {  }
+dependencies:
+  module:
+    - eic_overviews
+    - flag
+    - fragments
+    - media
+    - media_entity_download
+    - profile
+    - system
 _core:
   default_config_hash: dJ0L2DNSj5q6XVZAGsuVDpJTh5UeYkIPwKrUOOpr8YI
 id: authenticated
@@ -10,6 +18,7 @@ weight: -9
 is_admin: false
 permissions:
   - 'access content'
+  - 'access site-wide contact form'
   - 'download media'
   - 'flag bookmark_content'
   - 'flag bookmark_media'

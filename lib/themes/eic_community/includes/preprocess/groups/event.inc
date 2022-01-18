@@ -86,7 +86,7 @@ function eic_community_preprocess_group__event(&$variables) {
             'label' => $event_topic->getName(),
           ];
 
-          $url = GlobalOverviewPages::getGlobalOverviewPageUrl(GlobalOverviewPages::EVENTS);
+          $url = GlobalOverviewPages::getGlobalOverviewPageLink(GlobalOverviewPages::EVENTS)->getUrl();
 
           if ($url) {
             $url->setOption('query', $params)

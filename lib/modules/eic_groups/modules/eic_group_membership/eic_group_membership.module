@@ -6,12 +6,18 @@
  */
 
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Url;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\eic_groups\EICGroupsHelper;
+use Drupal\eic_overviews\GlobalOverviewPages;
+use Drupal\group\Entity\Form\GroupContentForm;
 
 /**
  * Implements hook_entity_operation_alter().
  */
-function eic_group_membership_entity_operation_alter(array &$operations, EntityInterface $entity) {
+function eic_group_membership_entity_operation_alter(
+  array &$operations,
+  EntityInterface $entity
+) {
   if ($entity->getEntityTypeId() !== 'group_content') {
     return;
   }
@@ -21,30 +27,123 @@ function eic_group_membership_entity_operation_alter(array &$operations, EntityI
   }
 
   // Changes operation titles.
-  foreach ($operations as $key => $operation) {
-    $operations[$key]['title'] = t('@operation member', ['@operation' => ucfirst($key)]);
-  }
+  foreach (array_keys($operations) as $key) {
+    switch ($key) {
+      case 'request_transfer_ownership':
+      case 'accept_request_transfer_ownership':
+      case 'deny_request_transfer_ownership':
+        break;
 
-  $url_options = [
-    'query' => [
-      'destination' => \Drupal::requestStack()->getCurrentRequest()->getRequestUri(),
+      default:
+        $operations[$key]['title'] = t('@operation member', ['@operation' => ucfirst($key)]);
+        break;
+    }
+  }
+}
+
+/**
+ * Implements hook_views_data_alter().
+ */
+function eic_group_membership_views_data_alter(&$data) {
+  // Create a new views field for showing the group transfer ownership status
+  // for each group member.
+  $data['group_content']['transfer_ownership_status'] = [
+    'title' => t('Member: show group transfer ownership status'),
+    'group' => t('Group content'),
+    'field' => [
+      'id' => 'eic_group_membership_transfer_ownership_status',
+      'title' => t('Group transfer ownership status'),
+      'help' => t('Shows group transfer ownership status for the group member'),
     ],
   ];
+}
 
-  // Adds transfer ownership operation.
-  $transfer_ownership_url = Url::fromRoute(
-    'eic_group_membership.transfer_ownership.confirm_form',
-    [
-      'group' => $entity->getGroup()->id(),
-      'group_content' => $entity->id(),
-    ],
-    $url_options
-  );
-  if ($transfer_ownership_url->access()) {
-    $operations['transfer_ownership'] = [
-      'title' => t('Transfer ownership'),
-      'weight' => -50,
-      'url' => $transfer_ownership_url,
-    ];
+/**
+ * Implements hook_form_alter().
+ */
+function eic_group_membership_form_alter(
+  &$form,
+  FormStateInterface $form_state,
+  $form_id
+) {
+  if ($form_id === 'group_content_group-group_membership_group-leave_form') {
+    $form['actions']['submit']['#submit'][] = 'eic_group_membership_leave_form_submit';
+    return;
   }
+
+  /** @var \Drupal\Core\Entity\EntityForm $form_object */
+  $form_object = $form_state->getFormObject();
+  if (!$form_object instanceof GroupContentForm) {
+    return;
+  }
+
+  /** @var \Drupal\group\Entity\GroupContentInterface $entity */
+  $entity = $form_object->getEntity();
+
+  if ($entity->getContentPlugin()->getPluginId() !== 'group_membership') {
+    return;
+  }
+
+  $group_type = $entity->getContentPlugin()->getGroupTypeId();
+  $owner_role = $group_type . '-' . EICGroupsHelper::GROUP_TYPE_OWNER_ROLE;
+
+  switch ($form_id) {
+    case "group_content_{$group_type}-group_membership_add_form":
+      if (isset($form['group_roles']['widget']['#options'][$owner_role])) {
+        unset($form['group_roles']['widget']['#options'][$owner_role]);
+      }
+      break;
+
+    case "group_content_{$group_type}-group_membership_edit_form":
+      if (isset($form['group_roles']['widget']['#options'][$owner_role])) {
+        unset($form['group_roles']['widget']['#options'][$owner_role]);
+        array_unshift($form['actions']['submit']['#submit'], 'eic_group_membership_update_membership_role_form_submit');
+      }
+      break;
+  }
+}
+
+/**
+ * Custom submit handler to keep the group owner role when editing membership.
+ *
+ * @param array $form
+ *   An associative array containing the structure of the form.
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
+ *   The current state of the form.
+ */
+function eic_group_membership_update_membership_role_form_submit(
+  array $form,
+  FormStateInterface $form_state
+) {
+  /** @var \Drupal\group\Entity\GroupContentInterface $entity */
+  $entity = $form_state->getFormObject()->getEntity();
+  $current_group_owner = EICGroupsHelper::getGroupOwner($entity->getGroup());
+
+  // Keep the group owner role if we are editing the owner membership.
+  if ($entity->getEntity()->id() === $current_group_owner->id()) {
+    $owner_role = $entity->getContentPlugin()->getGroupTypeId() . '-' . EICGroupsHelper::GROUP_TYPE_OWNER_ROLE;
+    $group_roles = $form_state->getValue('group_roles');
+    $group_roles[] = [
+      'target_id' => $owner_role,
+    ];
+    $form_state->setValue('group_roles', $group_roles);
+  }
+}
+
+/**
+ * Submit handler to set another redirect URL.
+ *
+ * @param array $form
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
+ *
+ * @throws \Drupal\Core\Entity\EntityMalformedException
+ */
+function eic_group_membership_leave_form_submit(
+  array $form,
+  FormStateInterface $form_state
+) {
+  $group_overview = GlobalOverviewPages::getGlobalOverviewPageLink(GlobalOverviewPages::GROUPS);
+  $form_state->setRedirectUrl($group_overview->getUrl());
+
+  \Drupal::messenger()->addStatus(t('You successfully left the group'));
 }

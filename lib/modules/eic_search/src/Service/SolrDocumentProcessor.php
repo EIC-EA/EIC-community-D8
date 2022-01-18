@@ -28,7 +28,6 @@ use Drupal\file\Entity\File;
 use Drupal\flag\FlagCountManager;
 use Drupal\group\Entity\Group;
 use Drupal\group\Entity\GroupInterface;
-use Drupal\message\MessageInterface;
 use Drupal\node\NodeTypeInterface;
 use Drupal\oec_group_flex\OECGroupFlexHelper;
 use Drupal\group\GroupMembership;
@@ -228,12 +227,17 @@ class SolrDocumentProcessor {
         }
         break;
       case 'entity:group':
+        if (array_key_exists('ss_group_topic_name', $fields)) {
+          $topics = $fields['ss_group_topic_name'];
+        } else if (array_key_exists('sm_group_topic_name', $fields)) {
+          $topics = $fields['sm_group_topic_name'];
+        }
+
         $title = $fields['tm_X3b_en_group_label_fulltext'];
         $type = $fields['ss_group_type'];
         $date = $fields['ds_group_created'];
         $status = $fields['bs_group_status'];
-        $topics = $fields['ss_group_topic_name'];
-        $geo = $fields['ss_group_field_vocab_geo_string'];
+        $geo = $fields['ss_group_field_vocab_geo_string'] ?? '';
         $language = t('English', [], ['context' => 'eic_search'])->render();
         $user_url = '';
         $group_id = $fields['its_group_id_integer'] ?? -1;
@@ -416,19 +420,12 @@ class SolrDocumentProcessor {
     }
 
     $views = $this->nodeStatisticsDatabaseStorage->fetchView($node->id());
-    $flags_count = $this->flagCountManager->getEntityFlagCounts($node);
 
     $this->addOrUpdateDocumentField(
       $document,
       'its_statistics_view',
       $fields,
       $views ? $views->getTotalCount() : 0
-    );
-    $this->addOrUpdateDocumentField(
-      $document,
-      'its_flag_like_content',
-      $fields,
-      isset($flags_count['like_content']) ? $flags_count['like_content'] : 0
     );
     $this->addOrUpdateDocumentField(
       $document,
@@ -681,7 +678,7 @@ class SolrDocumentProcessor {
 
     $url_contact = Url::fromRoute(
       'eic_private_message.user_private_message',
-      ['user' => $user->id()],
+      ['user' => $user->id()]
     )->toString();
 
     $this->addOrUpdateDocumentField(
@@ -755,8 +752,17 @@ class SolrDocumentProcessor {
           FlagType::HIGHLIGHT_CONTENT,
           FlagType::LIKE_CONTENT,
         ];
-        break;
 
+        $node = Node::load($entity_id);
+        $flags_count = $this->flagCountManager->getEntityFlagCounts($node);
+
+        $this->addOrUpdateDocumentField(
+          $document,
+          'its_flag_like_content',
+          $fields,
+          isset($flags_count['like_content']) ? $flags_count['like_content'] : 0
+        );
+        break;
     }
 
     // If we don't have a proper entity ID and type, skip this document.

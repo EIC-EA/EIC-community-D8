@@ -90,7 +90,7 @@
     {% endif %}
     <tbody class="ecl-table_body">
     {% for row in rows %}
-      <tr{{ row.attributes }}>
+      <tr{{ row.attributes }} class="ecl-table__row">
         {% for key, column in row.columns %}
           {% if column.default_classes %}
             {%
@@ -102,7 +102,7 @@
               {% set column_classes = column_classes|merge(['views-field-' ~ field]) %}
             {% endfor %}
           {% endif %}
-        <td{{ column.attributes.addClass(column_classes) }}>
+        <td{{ column.attributes.addClass(column_classes) }} data-col="{{key}}:">
           {%- if column.wrapper_element -%}
             <{{ column.wrapper_element }}>
             {% for content in column.content %}

@@ -7,6 +7,8 @@
 
 use Drupal\eic_overviews\GlobalOverviewPages;
 use Drupal\views\Views;
+use Drupal\eic_overviews\GroupOverviewPages;
+use Drupal\Core\Url;
 
 /**
  * Implements template_preprocess_views_view_field().
@@ -33,25 +35,25 @@ function eic_community_preprocess_views_view(&$variables) {
     'taxonomy_related_content-groups' => [
       'link' => [
         'label' => t('View all groups'),
-        'path' => GlobalOverviewPages::getGlobalOverviewPageUrl(
+        'path' => GlobalOverviewPages::getGlobalOverviewPageLink(
           GlobalOverviewPages::GROUPS
-        ),
+        )->getUrl(),
       ],
     ],
     'taxonomy_related_content-news_stories' => [
       'link' => [
         'label' => t('View all stories'),
-        'path' => GlobalOverviewPages::getGlobalOverviewPageUrl(
+        'path' => GlobalOverviewPages::getGlobalOverviewPageLink(
           GlobalOverviewPages::NEWS_STORIES
-        ),
+        )->getUrl(),
       ],
     ],
     'taxonomy_related_content-events' => [
       'link' => [
         'label' => t('View all events'),
-        'path' => GlobalOverviewPages::getGlobalOverviewPageUrl(
+        'path' => GlobalOverviewPages::getGlobalOverviewPageLink(
           GlobalOverviewPages::EVENTS
-        ),
+        )->getUrl(),
       ],
     ],
   ];
@@ -65,9 +67,9 @@ function eic_community_preprocess_views_view(&$variables) {
       break;
 
     case 'groups_homepage-block_groups_homepage':
-      if ($call_to_action_url = GlobalOverviewPages::getGlobalOverviewPageUrl(
+      if ($call_to_action_url = GlobalOverviewPages::getGlobalOverviewPageLink(
         GlobalOverviewPages::GROUPS
-      )) {
+      )->getUrl()) {
         $variables['call_to_action'] = [
           'link' => [
             'label' => t('View all groups'),
@@ -78,9 +80,9 @@ function eic_community_preprocess_views_view(&$variables) {
       break;
 
     case 'groups_homepage-block_events_homepage':
-      if ($call_to_action_url = GlobalOverviewPages::getGlobalOverviewPageUrl(
+      if ($call_to_action_url = GlobalOverviewPages::getGlobalOverviewPageLink(
         GlobalOverviewPages::EVENTS
-      )) {
+      )->getUrl()) {
         $variables['call_to_action'] = [
           'link' => [
             'label' => t('View all events'),
@@ -114,6 +116,40 @@ function eic_community_preprocess_views_view(&$variables) {
       $variables['extra_classes'] = 'ecl-section-wrapper--is-white ecl-featured-content-collection--has-overview-layout';
       $variables['items_extra_classes'] = 'ecl-featured-content-collection__item--big';
       $variables['no_container'] = TRUE;
+      break;
+
+    case 'organisation_content-organisation_news':
+      $variables['title'] = t('Latest news', [], ['context' => 'eic_community']);
+      $variables['extra_classes'] = 'ecl-section-wrapper--is-white ecl-featured-content-collection--has-list-layout';
+      $variables['extra_id'] = 'news';
+
+      /** @var \Drupal\group\Entity\GroupInterface $group */
+      $group = \Drupal::service('eic_groups.helper')->getGroupFromRoute();
+      if ($group instanceof \Drupal\group\Entity\GroupInterface) {
+        $variables['call_to_action'] = [
+          'link' => [
+            'label' => t('View all news'),
+            'path' => Url::fromRoute(GroupOverviewPages::NEWS, ['group' => $group->id()]),
+          ],
+        ];
+      }
+      break;
+
+    case 'organisation_content-organisation_events':
+      $variables['title'] = t('Events attending', [], ['context' => 'eic_community']);
+      $variables['extra_id'] = 'events';
+      $variables['extra_classes'] = 'ecl-section-wrapper--is-white ecl-featured-content-collection--has-list-layout';
+
+      /** @var \Drupal\group\Entity\GroupInterface $group */
+      $group = \Drupal::service('eic_groups.helper')->getGroupFromRoute();
+      if ($group instanceof \Drupal\group\Entity\GroupInterface && !empty($variables['rows'])) {
+        $variables['call_to_action'] = [
+          'link' => [
+            'label' => t('View all events'),
+            'path' => Url::fromRoute(GroupOverviewPages::EVENTS, ['group' => $group->id()]),
+          ],
+        ];
+      }
       break;
 
     case 'taxonomy_related_content-files':

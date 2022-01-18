@@ -12,6 +12,7 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
 use Drupal\eic_flags\FlaggedEntitiesListBuilder;
 use Drupal\eic_flags\FlagType;
+use Drupal\eic_flags\RequestStatus;
 use Drupal\eic_flags\RequestTypes;
 use Drupal\eic_flags\Service\RequestHandlerCollector;
 use Drupal\eic_topics\Constants\Topics;
@@ -153,26 +154,67 @@ class EntityOperations implements ContainerInjectionInterface {
     $operations = [];
     $handlers = $this->collector->getHandlers();
     foreach ($handlers as $handler) {
-      if (!$entity->access('request-' . $handler->getType())
-        || !$handler->supports($entity)) {
-        continue;
-      }
-
       $type = $handler->getType();
-      $operations['request_' . $type] = [
-        'title' => $this->t('Request @type', ['@type' => $type]),
-        'url' => $entity->toUrl('new-request')
-          ->setRouteParameter('destination', $this->currentRequest->getRequestUri())
-          ->setRouteParameter('request_type', $type),
-      ];
 
-      if ($type === RequestTypes::BLOCK) {
-        $operations['request_' . $type]['title'] = $this->t('Block');
+      if ($entity->access('request-' . $type)
+        && $handler->supports($entity)) {
+        // Create request operation.
+        $operations['request_' . $type] = [
+          'title' => $this->t('Request @type', ['@type' => $type]),
+          'url' => $entity->toUrl('new-request')
+            ->setRouteParameter('destination', $this->currentRequest->getRequestUri())
+            ->setRouteParameter('request_type', $type),
+        ];
       }
 
-      // Removes operation link if user doesn't have access to it.
-      if (!$operations['request_' . $type]['url']->access()) {
-        unset($operations['request_' . $type]);
+      if ($entity->access('close_request-' . $type)
+        && $handler->supports($entity)) {
+        // Create close request operations.
+        $operations['accept_request_' . $type] = [
+          'title' => $this->t('Accept request @type', ['@type' => $type]),
+          'url' => $entity->toUrl('user-close-request')
+            ->setRouteParameter('destination', $this->currentRequest->getRequestUri())
+            ->setRouteParameter('request_type', $type)
+            ->setRouteParameter('response', RequestStatus::ACCEPTED),
+        ];
+        $operations['deny_request_' . $type] = [
+          'title' => $this->t('Deny request @type', ['@type' => $type]),
+          'url' => $entity->toUrl('user-close-request')
+            ->setRouteParameter('destination', $this->currentRequest->getRequestUri())
+            ->setRouteParameter('request_type', $type)
+            ->setRouteParameter('response', RequestStatus::DENIED),
+        ];
+      }
+
+      // Alter operation titles for specific request types.
+      switch ($type) {
+        case RequestTypes::BLOCK:
+          if (isset($operations['request_' . $type])) {
+            $operations['request_' . $type]['title'] = $this->t('Block');
+          }
+          break;
+
+        case RequestTypes::TRANSFER_OWNERSHIP:
+          $operation_keys = [
+            'request_' . $type => $this->t('Request ownership transfer'),
+            'accept_request_' . $type => $this->t('Accept ownership transfer'),
+            'deny_request_' . $type => $this->t('Deny ownership transfer'),
+          ];
+          foreach ($operation_keys as $key => $value) {
+            if (!isset($operations[$key])) {
+              continue;
+            }
+            $operations[$key]['title'] = $value;
+          }
+          break;
+
+      }
+    }
+
+    // Removes operation links if user doesn't have access to it.
+    foreach ($operations as $key => $operation) {
+      if (!isset($operation['url']) || !$operation['url']->access()) {
+        unset($operations[$key]);
       }
     }
 

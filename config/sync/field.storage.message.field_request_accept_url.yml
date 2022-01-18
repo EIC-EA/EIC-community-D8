@@ -1,0 +1,19 @@
+uuid: 1165f2a8-13d1-47bc-9f3d-8dfa2eaa77b6
+langcode: en
+status: true
+dependencies:
+  module:
+    - link
+    - message
+id: message.field_request_accept_url
+field_name: field_request_accept_url
+entity_type: message
+type: link
+settings: {  }
+module: link
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

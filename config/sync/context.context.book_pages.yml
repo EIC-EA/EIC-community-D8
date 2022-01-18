@@ -3,9 +3,10 @@ langcode: en
 status: true
 dependencies:
   module:
+    - eic_content_book
     - node
-name: book_pages
 label: 'Book pages'
+name: book_pages
 group: Nodes
 description: ''
 requireAllConditions: false
@@ -13,32 +14,32 @@ disabled: false
 conditions:
   node_type:
     id: node_type
-    bundles:
-      book: book
     negate: false
     uuid: 6ece8dd6-40fc-4f4a-b4cc-87351d4cb228
     context_mapping:
       node: '@node.node_route_context:node'
+    bundles:
+      book: book
 reactions:
   blocks:
+    id: blocks
+    uuid: 66f27c63-843e-4141-8d84-2e722b3b4555
     blocks:
       f1f33438-3b3b-4c3e-bbeb-92b3ebe5f74b:
+        uuid: f1f33438-3b3b-4c3e-bbeb-92b3ebe5f74b
         id: eic_content_book_navigation
         label: 'EIC Content Book navigation'
         provider: eic_content_book
         label_display: '0'
         region: sidebar
         weight: '0'
-        block_mode: null
-        context_mapping: {  }
         custom_id: eic_content_book_navigation
         theme: eic_community
         css_class: ''
         unique: 0
         context_id: book_pages
-        uuid: f1f33438-3b3b-4c3e-bbeb-92b3ebe5f74b
-    id: blocks
-    saved: false
-    uuid: 66f27c63-843e-4141-8d84-2e722b3b4555
+        context_mapping: {  }
+        block_mode: null
     include_default_blocks: 0
+    saved: false
 weight: 0

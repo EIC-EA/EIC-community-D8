@@ -5,8 +5,8 @@ dependencies:
   module:
     - eic_search
     - route_condition
-name: group_events_overviews
 label: 'Group - Events - Overviews'
+name: group_events_overviews
 group: Groups
 description: 'This context is used for all group events overviews'
 requireAllConditions: false
@@ -14,81 +14,52 @@ disabled: false
 conditions:
   route:
     id: route
-    routes: eic_overviews.groups.overview_page.events
     negate: false
     uuid: 0a650dd3-d863-4ff1-b29c-809b7364b7a6
     context_mapping: {  }
+    routes: eic_overviews.groups.overview_page.events
 reactions:
   blocks:
+    id: blocks
+    uuid: 9c311d0e-a590-452a-ad85-a32b685d7729
     blocks:
-      5b2d7e48-2503-4cfc-bf97-ea9585c5cc86:
-        id: eic_search_overview
-        label: ''
-        provider: eic_search
-        label_display: visible
-        source_type: Drupal\eic_search\Search\Sources\GroupEventSourceType
-        facets:
-          ss_content_event_type_string: ss_content_event_type_string
-          sm_content_field_location_type: sm_content_field_location_type
-          ss_event_weight_state_label: ss_event_weight_state_label
-          sm_content_field_vocab_topics_string: sm_content_field_vocab_topics_string
-          ss_content_country_code: ss_content_country_code
-        sort_options:
-          its_event_weight_state: its_event_weight_state
-          ss_drupal_timestamp: ss_drupal_timestamp
-          ss_content_title: ss_content_title
-          its_content_field_date_range_start_value: its_content_field_date_range_start_value
-          dm_aggregated_changed: dm_aggregated_changed
-          its_last_flagged_bookmark_content: its_last_flagged_bookmark_content
-          its_last_comment_timestamp: 0
-          its_last_flagged_like_content: 0
-          its_last_flagged_highlight_content: 0
-        enable_search: 1
-        page_options: normal
-        prefilter_group: 1
-        enable_date_filter: 1
-        add_facet_interests: 0
-        add_facet_my_groups: 0
-        context_mapping: {  }
       d17b6d27-762b-41da-88ba-5675ea385fc5:
+        uuid: d17b6d27-762b-41da-88ba-5675ea385fc5
         id: eic_search_overview
         label: ''
         provider: eic_search
         label_display: visible
-        source_type: Drupal\eic_search\Search\Sources\GroupEventSourceType
-        facets:
-          ss_content_event_type_string: ss_content_event_type_string
-          sm_content_field_location_type: sm_content_field_location_type
-          ss_event_weight_state_label: ss_event_weight_state_label
-          sm_content_field_vocab_topics_string: sm_content_field_vocab_topics_string
-          ss_content_country_code: ss_content_country_code
-        sort_options:
-          its_event_weight_state: its_event_weight_state
-          ss_drupal_timestamp: ss_drupal_timestamp
-          ss_content_title: ss_content_title
-          its_content_field_date_range_start_value: its_content_field_date_range_start_value
-          dm_aggregated_changed: dm_aggregated_changed
-          its_last_flagged_bookmark_content: its_last_flagged_bookmark_content
-          its_last_comment_timestamp: 0
-          its_last_flagged_like_content: 0
-          its_last_flagged_highlight_content: 0
-        enable_search: 1
-        page_options: normal
-        prefilter_group: 1
-        enable_date_filter: 1
-        add_facet_interests: 0
-        add_facet_my_groups: 0
-        context_mapping: {  }
-        custom_id: eic_search_overview
         region: content
+        custom_id: eic_search_overview
         theme: eic_community
         css_class: ''
         unique: 0
         context_id: group_events_overviews
+        context_mapping: {  }
+        source_type: Drupal\eic_search\Search\Sources\GroupEventSourceType
+        facets:
+          ss_content_event_type_string: ss_content_event_type_string
+          sm_content_field_location_type: sm_content_field_location_type
+          ss_event_weight_state_label: ss_event_weight_state_label
+          sm_content_field_vocab_topics_string: sm_content_field_vocab_topics_string
+          ss_content_country_code: ss_content_country_code
+        sort_options:
+          its_event_weight_state: its_event_weight_state
+          ss_drupal_timestamp: ss_drupal_timestamp
+          ss_content_title: ss_content_title
+          its_content_field_date_range_start_value: its_content_field_date_range_start_value
+          dm_aggregated_changed: dm_aggregated_changed
+          its_last_flagged_bookmark_content: its_last_flagged_bookmark_content
+          its_last_comment_timestamp: 0
+          its_last_flagged_like_content: 0
+          its_last_flagged_highlight_content: 0
+        enable_search: 1
+        page_options: normal
+        prefilter_group: 1
+        enable_date_filter: 1
+        add_facet_interests: 0
+        add_facet_my_groups: 0
         third_party_settings: {  }
-        uuid: d17b6d27-762b-41da-88ba-5675ea385fc5
-    id: blocks
-    saved: false
-    uuid: 9c311d0e-a590-452a-ad85-a32b685d7729
     include_default_blocks: 0
+    saved: false
 weight: 0

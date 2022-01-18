@@ -11,8 +11,8 @@ dependencies:
   module:
     - block_content
     - system
-name: global
 label: Global
+name: global
 group: Global
 description: ''
 requireAllConditions: false
@@ -20,91 +20,91 @@ disabled: false
 conditions: {  }
 reactions:
   blocks:
+    id: blocks
+    uuid: c1979d39-89a3-4939-97f7-0af5a52467f1
     blocks:
       6e7a0bbc-0152-4e8d-91b4-be66ea3bd664:
+        uuid: 6e7a0bbc-0152-4e8d-91b4-be66ea3bd664
         id: 'system_menu_block:footer---european-commision'
         label: 'European Commision'
         provider: system
         label_display: visible
-        level: '1'
-        depth: '0'
-        expand_all_items: 0
         region: footer
         weight: '0'
-        context_mapping: {  }
         custom_id: system_menu_block_footer_european_commision
         theme: eic_community
         css_class: ''
         unique: 0
         context_id: global
-        uuid: 6e7a0bbc-0152-4e8d-91b4-be66ea3bd664
+        context_mapping: {  }
+        level: '1'
+        depth: '0'
+        expand_all_items: 0
       4c79c45d-9cbe-4c6a-9e40-f3f8647544bb:
+        uuid: 4c79c45d-9cbe-4c6a-9e40-f3f8647544bb
         id: 'system_menu_block:footer---european-union'
         label: 'European Union'
         provider: system
         label_display: visible
-        level: '1'
-        depth: '0'
-        expand_all_items: 0
         region: footer
         weight: '1'
-        context_mapping: {  }
         custom_id: system_menu_block_footer_european_union
         theme: eic_community
         css_class: ''
         unique: 0
         context_id: global
-        uuid: 4c79c45d-9cbe-4c6a-9e40-f3f8647544bb
+        context_mapping: {  }
+        level: '1'
+        depth: '0'
+        expand_all_items: 0
       88c19636-8f74-41ec-801c-6829bfe3a44d:
+        uuid: 88c19636-8f74-41ec-801c-6829bfe3a44d
         id: 'block_content:34a810c9-d608-4979-ac40-00657bce344b'
         label: 'Footer - Site info'
         provider: block_content
         label_display: '0'
-        status: true
-        info: ''
-        view_mode: full
         region: footer
         weight: '-1'
-        context_mapping: {  }
         custom_id: block_content_34a810c9_d608_4979_ac40_00657bce344b
         theme: eic_community
         css_class: ''
         unique: 0
         context_id: global
-        uuid: 88c19636-8f74-41ec-801c-6829bfe3a44d
+        context_mapping: {  }
+        status: true
+        info: ''
+        view_mode: full
       116105ac-257d-4a9f-9495-133d1ad12d7c:
+        uuid: 116105ac-257d-4a9f-9495-133d1ad12d7c
         id: 'system_menu_block:main'
         label: 'Main navigation'
         provider: system
         label_display: '0'
-        level: '1'
-        depth: '0'
-        expand_all_items: 0
         region: navigation
         weight: '0'
-        context_mapping: {  }
         custom_id: system_menu_block_main
         theme: eic_community
         css_class: ''
         unique: 0
         context_id: global
-        uuid: 116105ac-257d-4a9f-9495-133d1ad12d7c
+        context_mapping: {  }
+        level: '1'
+        depth: '0'
+        expand_all_items: 0
       7462f059-07c4-4599-b4c9-2b59abf042a2:
+        uuid: 7462f059-07c4-4599-b4c9-2b59abf042a2
         id: system_messages_block
         label: Messages
         provider: system
         label_display: '0'
         region: page_header
         weight: '-10'
-        context_mapping: {  }
         custom_id: system_messages_block
         theme: eic_community
         css_class: ''
         unique: 0
         context_id: global
-        uuid: 7462f059-07c4-4599-b4c9-2b59abf042a2
-    id: blocks
-    saved: false
-    uuid: c1979d39-89a3-4939-97f7-0af5a52467f1
+        context_mapping: {  }
     include_default_blocks: 0
+    saved: false
 weight: 0

@@ -1,0 +1,20 @@
+uuid: 617a137a-b6e7-4df6-8299-d7d6c7e0ce61
+langcode: en
+status: true
+dependencies:
+  module:
+    - flag
+    - user
+id: flagging.field_new_owner_ref
+field_name: field_new_owner_ref
+entity_type: flagging
+type: entity_reference
+settings:
+  target_type: user
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

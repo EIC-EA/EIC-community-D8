@@ -13,15 +13,15 @@ bundle: notify_new_membership_request
 mode: default
 content:
   partial_0:
+    settings: {  }
+    third_party_settings: {  }
     weight: 0
     region: content
+  partial_1:
     settings: {  }
     third_party_settings: {  }
-  partial_1:
     weight: 1
     region: content
-    settings: {  }
-    third_party_settings: {  }
 hidden:
   field_group_membership: true
   field_group_ref: true

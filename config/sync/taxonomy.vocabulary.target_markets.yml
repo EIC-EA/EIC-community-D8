@@ -1,0 +1,8 @@
+uuid: bd1715a7-9656-4106-9887-20647888af9c
+langcode: en
+status: true
+dependencies: {  }
+name: 'Target markets'
+vid: target_markets
+description: ''
+weight: 0
