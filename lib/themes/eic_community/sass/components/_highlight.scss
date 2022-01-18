@@ -47,4 +47,13 @@
   &__label {
     @include visually-hidden;
   }
+
+  &__tooltip {
+    text-align: center;
+    background: $ecl-color-blue !important;
+
+    &:after {
+      border-top-color: $ecl-color-blue !important;
+    }
+  }
 }
