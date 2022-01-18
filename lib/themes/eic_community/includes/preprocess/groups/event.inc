@@ -33,14 +33,16 @@ function eic_community_preprocess_group__event(&$variables) {
 
       // Get the thumbnail.
       /** @var \Drupal\media\MediaInterface $media */
-      $media = $group->get('field_image')->referencedEntities()[0];
-      if ($media && !empty($media->get('oe_media_image')->getValue())) {
-        $style_name = 'oe_theme_ratio_3_2_medium';
-        $image_item = ImageValueObject::fromStyledImageItem($media->get('oe_media_image')->first(), $style_name);
-        $teaser['image'] = [
-          'src' => $image_item->getSource(),
-          'alt' => $image_item->getAlt(),
-        ];
+      if (!empty($medias = $group->get('field_image')->referencedEntities())) {
+        $media = $medias[0];
+        if ($media && !empty($media->get('oe_media_image')->getValue())) {
+          $style_name = 'oe_theme_ratio_3_2_medium';
+          $image_item = ImageValueObject::fromStyledImageItem($media->get('oe_media_image')->first(), $style_name);
+          $teaser['image'] = [
+            'src' => $image_item->getSource(),
+            'alt' => $image_item->getAlt(),
+          ];
+        }
       }
 
       // Add event location types to the theme variables.
@@ -80,7 +82,6 @@ function eic_community_preprocess_group__event(&$variables) {
               'itm_aggregated_field_vocab_topics' => $event_topic->id(),
             ]
           );
-
           $tag = [
             'label' => $event_topic->getName(),
           ];
