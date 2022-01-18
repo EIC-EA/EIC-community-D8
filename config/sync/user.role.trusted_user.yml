@@ -52,6 +52,7 @@ permissions:
   - 'edit own image media'
   - 'edit own news content'
   - 'edit own story content'
+  - 'flag highlight_content'
   - 'flag recommend_group'
   - 'make archive request'
   - 'make delete request'
