@@ -6,6 +6,7 @@ module:
   admin_toolbar_links_access_filter: 0
   admin_toolbar_search: 0
   admin_toolbar_tools: 0
+  antibot: 0
   big_pipe: 0
   block: 0
   block_content: 0
@@ -20,10 +21,12 @@ module:
   config_filter: 0
   config_ignore: 0
   config_split: 0
+  contact: 0
   content_moderation: 0
   context: 0
   context_ui: 0
   contextual: 0
+  csv_serialization: 0
   ctools: 0
   date_popup: 0
   datetime: 0
@@ -39,6 +42,7 @@ module:
   eic_block_types: 0
   eic_blocks: 0
   eic_comments: 0
+  eic_contact: 0
   eic_content: 0
   eic_content_book: 0
   eic_content_discussion: 0
@@ -87,6 +91,7 @@ module:
   facets: 0
   facets_summary: 0
   field: 0
+  field_group: 0
   field_ui: 0
   file: 0
   file_link: 0
@@ -94,6 +99,7 @@ module:
   flag: 0
   flag_search_api: 0
   fragments: 0
+  gcontent_moderation: 0
   ginvite: 0
   gnode: 0
   grequest: 0
@@ -179,6 +185,8 @@ module:
   user: 0
   variationcache: 0
   views_autocomplete_filters: 0
+  views_data_export: 0
+  views_data_export_phpspreadsheet: 0
   views_ui: 0
   workflows: 0
   pathauto: 1

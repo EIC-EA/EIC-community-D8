@@ -17,6 +17,7 @@ weight: -10
 is_admin: false
 permissions:
   - 'access content'
+  - 'access site-wide contact form'
   - 'download media'
   - 'flag like_comment'
   - 'flag like_content'

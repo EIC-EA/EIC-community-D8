@@ -9,7 +9,8 @@ use Drupal\eic_community\ValueObject\ImageValueObject;
 use Drupal\eic_overviews\GlobalOverviewPages;
 
 /**
- * Implements hook_preprocess_eic_group_header_block() for eic_group_header block.
+ * Implements hook_preprocess_eic_group_header_block() for eic_group_header
+ * block.
  */
 function eic_community_preprocess_eic_group_header_block(array &$variables) {
   /** @var \Drupal\group\Entity\GroupInterface $group */
@@ -18,7 +19,10 @@ function eic_community_preprocess_eic_group_header_block(array &$variables) {
 
   // Adds group banner image.
   if ($group->hasField($hero_field_id) && !$group->get($hero_field_id)->isEmpty()) {
-    $media = \Drupal::service('entity.repository')->getTranslationFromContext($group->get($hero_field_id)->entity, $group->language()->getId());
+    $media = \Drupal::service('entity.repository')->getTranslationFromContext(
+      $group->get($hero_field_id)->entity,
+      $group->language()->getId()
+    );
     $image_item = ImageValueObject::fromImageItem($media->get('oe_media_image')->first());
     $variables['group_values']['image'] = [
       'src' => $image_item->getSource(),
@@ -54,7 +58,9 @@ function eic_community_preprocess_eic_group_header_block(array &$variables) {
   if (!empty($variables['group_values']['group_operation_links'])) {
     // Adds dropdown label if not presented.
     if (empty($variables['group_values']['group_operation_links'][0]['label'])) {
-      $variables['group_values']['group_operation_links'][0]['label'] = t('Group management');
+      $variables['group_values']['group_operation_links'][0]['label'] = t(
+        'Group management'
+      );
     }
     // Adds dropdown icon.
     $variables['group_values']['group_operation_links'][0]['icon'] = [
@@ -178,7 +184,8 @@ function eic_community_preprocess_eic_group_header_block(array &$variables) {
   }
 
   $variables['group_values']['flags'] = $flags;
-  $variables['group_values']['social_share'] = _eic_community_get_social_share_block();
+  $variables['group_values']['social_share'] = _eic_community_get_social_share_block(
+  );
   // Prepare group statistics values to send to the template.
   $stats = [];
   foreach ($variables['group_values']['stats'] as $stat_type => $statistic) {
@@ -232,7 +239,24 @@ function eic_community_preprocess_eic_group_header_block(array &$variables) {
     ],
   ];
 
+  switch ($group->getGroupType()->id()) {
+    case 'event':
+      $overview_id = GlobalOverviewPages::EVENTS;
+      $overview_label = t('All events', [], ['context' => 'eic_community']);
+      break;
+    case 'organisation':
+      $overview_id = GlobalOverviewPages::ORGANISATIONS;
+      $overview_label = t('All organisations', [], ['context' => 'eic_community']);
+      break;
+    default:
+      $overview_id = GlobalOverviewPages::GROUPS;
+      $overview_label = t('All groups', [], ['context' => 'eic_community']);
+      break;
+  }
   // Adds url to navigate back to the list of groups.
-  $back_url = GlobalOverviewPages::getGlobalOverviewPageUrl(GlobalOverviewPages::GROUPS);
-  $variables['group_values']['back_url'] = $back_url->toString();
+  $back_url = GlobalOverviewPages::getGlobalOverviewPageLink(
+    $overview_id
+  )->getUrl();
+  $variables['group_values']['back_url'] = $back_url ? $back_url->toString() : '';
+  $variables['group_values']['back_label'] = $overview_label;
 }

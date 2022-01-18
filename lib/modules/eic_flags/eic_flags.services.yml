@@ -48,4 +48,4 @@ services:
     class: Drupal\eic_flags\FlagHelper
     calls:
       - [ setGroupsHelper, [ '@?eic_groups.helper' ] ]
-    arguments: [ '@flag', '@entity_type.manager', '@current_user' ]
+    arguments: [ '@flag', '@flag.count', '@entity_type.manager', '@current_user', '@?eic_groups.helper' ]

@@ -1216,7 +1216,7 @@ display:
         filter_groups: false
       display_description: ''
       display_extenders: {  }
-      path: admin/community/events
+      path: admin/community/groups/events
     cache_metadata:
       max-age: -1
       contexts:
@@ -1235,7 +1235,7 @@ display:
     display_options:
       display_description: ''
       display_extenders: {  }
-      path: admin/community/groups
+      path: admin/community/groups/groups
     cache_metadata:
       max-age: -1
       contexts:

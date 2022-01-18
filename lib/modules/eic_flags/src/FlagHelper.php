@@ -7,6 +7,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\eic_groups\EICGroupsHelper;
+use Drupal\flag\FlagCountManager;
 use Drupal\flag\FlagServiceInterface;
 use Drupal\group\Entity\GroupInterface;
 
@@ -21,6 +22,13 @@ class FlagHelper {
    * @var \Drupal\flag\FlagServiceInterface
    */
   protected $flagService;
+
+  /**
+   * The flag count manager service.
+   *
+   * @var \Drupal\flag\FlagCountManager
+   */
+  protected $flagCountManager;
 
   /**
    * The entity type manager.
@@ -49,19 +57,27 @@ class FlagHelper {
    *
    * @param \Drupal\flag\FlagServiceInterface $flag_service
    *   The flag service.
+   * @param \Drupal\flag\FlagCountManager $flag_count_manager
+   *   The flag count manager service.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
    * @param \Drupal\Core\Session\AccountProxyInterface $currentUser
    *   The entity type manager.
+   * @param \Drupal\eic_groups\EICGroupsHelper $eic_groups_helper
+   *   The EIC Groups helper service.
    */
   public function __construct(
     FlagServiceInterface $flag_service,
+    FlagCountManager $flag_count_manager,
     EntityTypeManagerInterface $entity_type_manager,
-    AccountProxyInterface $currentUser
+    AccountProxyInterface $currentUser,
+    EICGroupsHelper $eic_groups_helper
   ) {
     $this->flagService = $flag_service;
+    $this->flagCountManager = $flag_count_manager;
     $this->entityTypeManager = $entity_type_manager;
     $this->currentUser = $currentUser;
+    $this->groupsHelper = $eic_groups_helper;
   }
 
   /**
@@ -135,6 +151,45 @@ class FlagHelper {
     }
 
     return FALSE;
+  }
+
+  /**
+   * Returns the number of flaggings for the given group.
+   *
+   * @param \Drupal\group\Entity\GroupInterface $group
+   *   The group object.
+   * @param bool $include_group_content
+   *   Whether to search also into group content.
+   * @param array $node_filters
+   *   Filters when querying nodes. See GroupInterface::getContent().
+   *
+   * @return array
+   *   An array with the following structure:
+   *   - group: array of flag_id => value. Only flags that have at least 1 value
+   *   will be present in the result.
+   *   - content: array of flag_id => value. Only flags that have at least 1
+   *   value will be present in the result.
+   */
+  public function getFlaggingsCountPerGroup(GroupInterface $group, $include_group_content = FALSE, array $node_filters = []) {
+    $count = [
+      'group' => [],
+      'node' => [],
+    ];
+
+    // Count the group flags.
+    $count['group'] = $this->flagCountManager->getEntityFlagCounts($group);
+
+    // Count group content flags if enabled.
+    if ($include_group_content) {
+      foreach ($this->groupsHelper->getGroupNodes($group, $node_filters) as $node) {
+        foreach ($this->flagCountManager->getEntityFlagCounts($node) as $flag_id => $flag_count) {
+          !isset($count['node'][$flag_id]) ?
+            $count['node'][$flag_id] = $flag_count : $count['node'][$flag_id] += $flag_count;
+        }
+      }
+
+    }
+    return $count;
   }
 
   /**

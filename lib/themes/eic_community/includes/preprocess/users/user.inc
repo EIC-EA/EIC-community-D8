@@ -60,7 +60,7 @@ function eic_community_preprocess_user(array &$variables) {
           'parent' => [
             'link' => [
               'label' => t('All members'),
-              'path' => GlobalOverviewPages::getGlobalOverviewPageUrl(GlobalOverviewPages::MEMBERS),
+              'path' => GlobalOverviewPages::getGlobalOverviewPageLink(GlobalOverviewPages::MEMBERS)->getUrl(),
             ],
           ],
         ],
@@ -171,7 +171,7 @@ function eic_community_preprocess_user(array &$variables) {
       ];
 
       $user_item['flagged_interests'] = [
-        'title' => $current_user->id() === $user->id() ? t('My Interests') : t('Interests'),
+        'title' => $current_user->id() === $user->id() ? t('My interests') : t('Interests'),
         'items' => [],
       ];
       // Gets user topics of interest.
@@ -191,9 +191,10 @@ function eic_community_preprocess_user(array &$variables) {
 
       $user_item['flagged_groups'] = [
         'title' => $current_user->id() === $user->id() ? t('My groups') : t('Groups'),
-        'content' => $current_user->id() === $user->id()
+        'content' => ($current_user->id() === $user->id()
           ? _eic_community_get_rendered_view('groups', 'block_user_profile_my_groups', [$user->id()])
-          : _eic_community_get_rendered_view('groups', 'block_user_profile_groups', [$user->id()]),
+          : _eic_community_get_rendered_view('groups', 'block_user_profile_groups', [$user->id()])
+        ),
       ];
 
       $variables['user_item'] = $user_item;

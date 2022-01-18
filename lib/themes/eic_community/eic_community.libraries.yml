@@ -29,7 +29,13 @@ react-block-modal:
     dist/react/block/share_modal/entrypoint.js: { minified: true }
   dependencies:
     - core/drupal
-    -
+
+react-block-announcements:
+  js:
+    dist/react/block/announcements/entrypoint.js: { minified: true }
+  dependencies:
+    - core/drupal
+
 react-block-gallery:
   js:
     dist/react/block/gallery/entrypoint.js: { minified: true }

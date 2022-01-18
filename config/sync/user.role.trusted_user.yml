@@ -11,6 +11,8 @@ dependencies:
     - media.type.video
     - node.type.news
     - node.type.story
+    - node.type.video
+    - node.type.wiki_page
     - workflows.workflow.group_wiki
     - workflows.workflow.groups
     - workflows.workflow.news_stories
@@ -39,6 +41,7 @@ permissions:
   - 'access user profiles'
   - 'add content to books'
   - 'create eic_document media'
+  - 'create event group'
   - 'create group group'
   - 'create image media'
   - 'create news content'
@@ -53,6 +56,8 @@ permissions:
   - 'edit own news content'
   - 'edit own story content'
   - 'flag highlight_content'
+  - 'edit own video content'
+  - 'edit own wiki_page content'
   - 'flag recommend_group'
   - 'make archive request'
   - 'make delete request'
@@ -74,6 +79,7 @@ permissions:
   - 'use text format filtered_html'
   - 'view any member profile'
   - 'view any profile'
+  - 'view latest version'
   - 'view own member profile'
   - 'view own profile'
   - 'view own unpublished content'
