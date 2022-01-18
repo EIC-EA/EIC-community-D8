@@ -186,7 +186,7 @@ function _eic_community_render_organisation_detail_page(&$variables, $group) {
           'icon_file_path' => $variables['eic_icon_path'],
           'is_collapsible' => TRUE,
           'collapse_label' => t(
-            'Show 2 more',
+            'Show more',
             [],
             ['context' => 'eic_community']
           ),
@@ -212,7 +212,7 @@ function _eic_community_render_organisation_detail_page(&$variables, $group) {
           'icon_file_path' => $variables['eic_icon_path'],
           'is_collapsible' => TRUE,
           'collapse_label' => t(
-            'Show 2 more',
+            'Show more',
             [],
             ['context' => 'eic_community']
           ),
