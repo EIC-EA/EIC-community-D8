@@ -11,6 +11,10 @@
 
   &__wrapper {
     display: flex;
+    @include ecl-media-breakpoint-down('lg') {
+      flex-direction: row-reverse;
+      justify-content: space-between;
+    }
   }
 
   &__label {
@@ -31,7 +35,6 @@
   }
 
   &__aside {
-    display: none;
     flex-shrink: 0;
     margin: auto 0;
 
