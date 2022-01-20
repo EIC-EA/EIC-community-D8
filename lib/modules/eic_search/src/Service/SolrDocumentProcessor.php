@@ -763,6 +763,20 @@ class SolrDocumentProcessor {
           isset($flags_count['like_content']) ? $flags_count['like_content'] : 0
         );
         break;
+      case 'entity:group':
+        $entity_id = $fields['its_group_id_integer'];
+        $entity_type = 'group';
+
+        $node = Group::load($entity_id);
+        $flags_count = $this->flagCountManager->getEntityFlagCounts($node);
+
+        $this->addOrUpdateDocumentField(
+          $document,
+          'its_flag_recommend_group',
+          $fields,
+          isset($flags_count['recommend_group']) ? $flags_count['recommend_group'] : 0
+        );
+        break;
     }
 
     // If we don't have a proper entity ID and type, skip this document.
