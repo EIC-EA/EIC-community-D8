@@ -115,8 +115,8 @@ class EicGroupsGroupFeaturePluginBase extends GroupFeaturePluginBase {
       ) {
         // Disable menu item.
         $menu_name = GroupContentMenuInterface::MENU_PREFIX . $group_menu
-            ->getEntity()
-            ->id();
+          ->getEntity()
+          ->id();
         switch ($op) {
           case 'enable':
             $this->enableMenuItem($this->getMenuItem($url, $menu_name));
@@ -157,7 +157,14 @@ class EicGroupsGroupFeaturePluginBase extends GroupFeaturePluginBase {
         'eic_groups.group_features.' . $this->getPluginId()
       );
 
-      $roles = $config->get('roles');
+      // Filter out roles that don't belong to the group type.
+      $group_type_roles = [];
+      foreach ($config->get('roles') as $role) {
+        if (strpos($role, $group->getGroupType()->id() . '-') !== 0) {
+          continue;
+        }
+        $group_type_roles[] = $role;
+      }
 
       // Initialize array of public role IDs to update group permissions.
       $public_role_ids = [];
@@ -178,7 +185,7 @@ class EicGroupsGroupFeaturePluginBase extends GroupFeaturePluginBase {
       switch ($op) {
         case 'enable':
           // Adds group permission for the private roles.
-          foreach ($roles as $role) {
+          foreach ($group_type_roles as $role) {
             $group_permissions = $this->addRolePermissionsToGroup(
               $group_permissions,
               $role,
@@ -198,7 +205,7 @@ class EicGroupsGroupFeaturePluginBase extends GroupFeaturePluginBase {
 
         case 'disable':
           // Removes permission from the private roles.
-          foreach ($roles as $role) {
+          foreach ($group_type_roles as $role) {
             $group_permissions = $this->removeRolePermissionsFromGroup(
               $group_permissions,
               $role,
@@ -255,8 +262,10 @@ class EicGroupsGroupFeaturePluginBase extends GroupFeaturePluginBase {
    * or from canonical with anchor.
    *
    * @param \Drupal\group\Entity\GroupInterface $group
+   *   The group entity.
    *
    * @return \Drupal\Core\Url
+   *   The URL object.
    */
   protected function generateFeatureUrl(GroupInterface $group) {
     $url_params = ['group' => $group->id()];
