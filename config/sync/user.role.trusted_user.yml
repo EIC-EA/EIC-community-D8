@@ -55,7 +55,6 @@ permissions:
   - 'edit own image media'
   - 'edit own news content'
   - 'edit own story content'
-  - 'flag highlight_content'
   - 'edit own video content'
   - 'edit own wiki_page content'
   - 'flag recommend_group'
