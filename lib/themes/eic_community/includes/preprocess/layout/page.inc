@@ -7,6 +7,7 @@
 
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Menu\MenuTreeParameters;
+use Drupal\Core\Render\Markup;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Url;
 use Drupal\eic_community\ValueObject\ImageValueObject;
@@ -78,13 +79,13 @@ function eic_community_preprocess_page(array &$variables): void {
 
   $first_section = array_shift($first_section);
 
-  if (!empty($block_content['#derivative_plugin_id'])) {
+  if (!empty($first_section['#derivative_plugin_id'])) {
     $block_content = \Drupal::service('entity.repository')
       ->loadEntityByUuid('block_content', $first_section['#derivative_plugin_id']);
 
     $footer_sections[] = [
       'title' => $block_content->field_title->value,
-      'description' => strip_tags($block_content->body->value),
+      'description' => Markup::create($block_content->body->value),
     ];
   }
 
@@ -92,20 +93,6 @@ function eic_community_preprocess_page(array &$variables): void {
     return strpos($key, 'menu') !== FALSE;
   }, ARRAY_FILTER_USE_BOTH);
   $menu_sections = array_values($menu_sections);
-
-  $footer_sections[] = [
-    'title' => t(
-      '@site_name Community',
-      ['@site_name' => \Drupal::config('system.site')->get('name')],
-      ['context' => 'eic_community']
-    ),
-    'description' => t(
-      'This site is managed by the Directorate-General for Communication',
-      [],
-      ['context' => 'eic_community']
-    ),
-    'list_class_name' => 'ecl-footer-core__section ecl-footer-core__section1',
-  ];
 
   foreach ($menu_sections as $key => $menu) {
     $menu_name = $menu['#derivative_plugin_id'];

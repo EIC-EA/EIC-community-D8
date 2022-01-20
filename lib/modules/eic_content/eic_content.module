@@ -67,3 +67,18 @@ function eic_content_entity_presave(EntityInterface $entity) {
   }
 
 }
+
+/**
+ * Implements hook_views_data().
+ */
+function eic_content_views_data() {
+  $data['node_field_data']['content_metrics'] = [
+    'title' => t('Content metrics'),
+    'help' => t('Displays the content metrics.'),
+    'field' => [
+      'id' => 'content_metrics',
+    ],
+  ];
+
+  return $data;
+}

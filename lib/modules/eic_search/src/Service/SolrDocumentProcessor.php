@@ -227,12 +227,17 @@ class SolrDocumentProcessor {
         }
         break;
       case 'entity:group':
+        if (array_key_exists('ss_group_topic_name', $fields)) {
+          $topics = $fields['ss_group_topic_name'];
+        } else if (array_key_exists('sm_group_topic_name', $fields)) {
+          $topics = $fields['sm_group_topic_name'];
+        }
+
         $title = $fields['tm_X3b_en_group_label_fulltext'];
         $type = $fields['ss_group_type'];
         $date = $fields['ds_group_created'];
         $status = $fields['bs_group_status'];
-        $topics = $fields['ss_group_topic_name'];
-        $geo = $fields['ss_group_field_vocab_geo_string'];
+        $geo = $fields['ss_group_field_vocab_geo_string'] ?? '';
         $language = t('English', [], ['context' => 'eic_search'])->render();
         $user_url = '';
         $group_id = $fields['its_group_id_integer'] ?? -1;
@@ -756,6 +761,20 @@ class SolrDocumentProcessor {
           'its_flag_like_content',
           $fields,
           isset($flags_count['like_content']) ? $flags_count['like_content'] : 0
+        );
+        break;
+      case 'entity:group':
+        $entity_id = $fields['its_group_id_integer'];
+        $entity_type = 'group';
+
+        $node = Group::load($entity_id);
+        $flags_count = $this->flagCountManager->getEntityFlagCounts($node);
+
+        $this->addOrUpdateDocumentField(
+          $document,
+          'its_flag_recommend_group',
+          $fields,
+          isset($flags_count['recommend_group']) ? $flags_count['recommend_group'] : 0
         );
         break;
     }

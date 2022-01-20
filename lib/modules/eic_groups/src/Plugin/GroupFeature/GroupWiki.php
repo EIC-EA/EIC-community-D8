@@ -36,7 +36,7 @@ class GroupWiki extends EicGroupsGroupFeaturePluginBase {
   /**
    * {@inheritdoc}
    */
-  protected function getPrimaryOverviewRoute(GroupInterface $group) {
+  protected function generateFeatureUrl(GroupInterface $group) {
     if ($book_page_nid = $this->eicGroupHelper->getGroupBookPage($group)) {
       $url_params = ['node' => $book_page_nid];
       return Url::fromRoute(static::PRIMARY_OVERVIEW_ROUTE, $url_params);

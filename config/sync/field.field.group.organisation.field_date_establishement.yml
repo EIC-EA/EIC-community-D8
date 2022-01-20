@@ -1,0 +1,23 @@
+uuid: 07505651-e858-4577-918d-57a5abc20c28
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.group.field_date_establishement
+    - group.type.organisation
+id: group.organisation.field_date_establishement
+field_name: field_date_establishement
+entity_type: group
+bundle: organisation
+label: 'Date of establishement'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: 1500
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: integer

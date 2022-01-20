@@ -1,0 +1,86 @@
+.ecl-organisation {
+
+  &__item {
+    margin-bottom: $ecl-spacing-2-xl;
+
+    &.ecl-section-wrapper{
+      padding: 0;
+    }
+
+    & .ecl-teaser.ecl-teaser--story    {
+      border-bottom: 1px solid $ecl-color-grey-5;
+      padding-bottom: $ecl-spacing-m;
+    }
+
+    & .ecl-teaser__title {
+      font-size: 1rem!important;
+      line-height: 1.4!important;
+      margin-bottom: 0;
+    }
+  }
+
+  &__details {
+    &__item {
+      margin: 0;
+      margin-bottom: $ecl-spacing-s;
+      & h4 {
+        margin-bottom: $ecl-spacing-2-xs;
+      }
+
+      & > ul {
+        padding: 0;
+        list-style: none;
+      }
+    }
+  }
+
+  &__announcements__item {
+    background: $ecl-color-blue-5;
+    padding: ecl-box-model('padding', 'default');
+    margin-bottom: $ecl-spacing-l;
+
+    & .ecl-editorial-article__aside__title {
+      color: $ecl-color-grey;
+      text-transform: none;
+    }
+
+    & .announcements{
+      margin-bottom: ecl-box-model('padding', 'default');
+    }
+
+    & .ecl-button {
+      padding: 0;
+      display: flex;
+      align-items: center;
+      & svg {
+        margin-left: $ecl-spacing-2-xs;
+      }
+    }
+  }
+
+  &__contact {
+    padding: ecl-box-model('padding');
+    background-color: map-get($ecl-colors, 'grey-10');
+    &__item .ecl-social-share__title {
+      text-transform: inherit;
+    }
+
+    &__adresses__item {
+      margin-bottom: $ecl-spacing-m;
+
+      & p {
+        margin: 0;
+        line-height: 1.5;
+      }
+
+      &__name {
+        font-weight: bold;
+      }
+    }
+
+    & .ecl-featured-list--is-organisation-locations {
+      margin-top: 0;
+    }
+
+  }
+}
