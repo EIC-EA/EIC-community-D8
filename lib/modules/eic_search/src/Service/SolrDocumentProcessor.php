@@ -321,6 +321,7 @@ class SolrDocumentProcessor {
     $document->addField('ss_drupal_timestamp', strtotime($date));
     $document->addField('ss_drupal_changed_timestamp', strtotime($changed));
     $document->addField('ss_global_fullname', $fullname);
+    $document->addField('tm_global_fullname', $fullname);
     $document->addField('ss_global_user_url', $user_url);
     $this->addOrUpdateDocumentField($document, 'sm_content_field_vocab_topics_string', $fields, $topics);
     $this->addOrUpdateDocumentField($document, 'sm_content_field_vocab_geo_string', $fields, $geo);
