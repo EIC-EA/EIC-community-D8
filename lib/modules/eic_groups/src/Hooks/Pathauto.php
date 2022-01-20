@@ -188,8 +188,9 @@ class Pathauto implements ContainerInjectionInterface {
   protected function groupAliasAlter(&$alias, array &$context, GroupInterface $group) {
     // If group alias has changed we add the group id into a queue so that
     // all group content url aliases can be updated at a later stage with
-    // cron.
-    if ($group->get('path')->alias !== $alias) {
+    // cron. If pathauto generator is being used to return path alias
+    // (op = return), then we do nothing.
+    if ($group->get('path')->alias !== $alias && $context['op'] !== 'return') {
       $this->createGroupUrlAliasUpdateQueueItem($group);
     }
   }
