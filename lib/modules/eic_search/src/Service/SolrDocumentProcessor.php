@@ -421,26 +421,44 @@ class SolrDocumentProcessor {
       return;
     }
 
+    $index_views = TRUE;
+    $index_comments = TRUE;
+    $index_downloads = TRUE;
+
+    // Discard some counters from being indexed depending on the node type.
+    switch ($node->bundle()) {
+      case 'wiki_page':
+        $index_comments = FALSE;
+        break;
+
+    }
+
     $views = $this->nodeStatisticsDatabaseStorage->fetchView($node->id());
 
-    $this->addOrUpdateDocumentField(
-      $document,
-      'its_statistics_view',
-      $fields,
-      $views ? $views->getTotalCount() : 0
-    );
-    $this->addOrUpdateDocumentField(
-      $document,
-      'its_content_comment_count',
-      $fields,
-      $this->commentsHelper->countEntityComments($node)
-    );
-    $this->addOrUpdateDocumentField(
-      $document,
-      'its_document_download_total',
-      $fields,
-      $this->entityDownloadHelper->getFileDownloads($node)
-    );
+    if ($index_views) {
+      $this->addOrUpdateDocumentField(
+        $document,
+        'its_statistics_view',
+        $fields,
+        $views ? $views->getTotalCount() : 0
+      );
+    }
+    if ($index_comments) {
+      $this->addOrUpdateDocumentField(
+        $document,
+        'its_content_comment_count',
+        $fields,
+        $this->commentsHelper->countEntityComments($node)
+      );
+    }
+    if ($index_downloads) {
+      $this->addOrUpdateDocumentField(
+        $document,
+        'its_document_download_total',
+        $fields,
+        $this->entityDownloadHelper->getFileDownloads($node)
+      );
+    }
   }
 
   /**
