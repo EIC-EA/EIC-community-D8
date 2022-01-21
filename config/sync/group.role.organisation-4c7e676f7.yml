@@ -27,7 +27,6 @@ permissions:
   - 'access news overview'
   - 'access wiki overview'
   - 'join group'
-  - 'view comments'
   - 'view group'
   - 'view group_node:event content'
   - 'view group_node:event entity'
