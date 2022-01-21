@@ -79,7 +79,7 @@ class EntityFlagType extends EntityFlagTypeBase {
     if ($flag->id() == FlagType::HIGHLIGHT_CONTENT) {
       // Get the group from the flaggable, if any.
       $parent_group = NULL;
-      if ($flaggable) {
+      if ($flaggable && !$flaggable->isNew()) {
         $parent_group = $this->groupsHelper->getGroupByEntity($flaggable);
       }
       if ($this->flagHelper->canUserHighlight($account, $parent_group)) {
