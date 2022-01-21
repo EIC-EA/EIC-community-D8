@@ -4,10 +4,11 @@ status: true
 dependencies:
   config:
     - rest.resource.eic_webservices_user_update
-    - workflows.workflow.news_stories
+    - workflows.workflow.groups
   module:
     - comment
     - content_moderation
+    - group
     - node
     - rest
 id: service_authentication
@@ -18,7 +19,15 @@ permissions:
   - 'access user profiles'
   - 'administer comments'
   - 'administer users'
+  - 'bypass group access'
+  - 'restful get eic_webservices_organisation'
+  - 'restful post eic_webservices_organisation'
   - 'restful post eic_webservices_user_update'
-  - 'use news_stories transition archived'
+  - 'use groups transition block'
+  - 'use groups transition create_new_group'
+  - 'use groups transition publish'
+  - 'use groups transition unblock'
+  - 'use groups transition unpublish'
+  - 'use groups transition upgrade_to_draft'
   - 'view own unpublished content'
   - 'view user email addresses'
