@@ -196,6 +196,9 @@ class SolrDocumentProcessor {
     $changed = 0;
     $language = t('English', [], ['context' => 'eic_search'])->render();
 
+    // Set by default parent group to TRUE and method processGroupContentData will update it.
+    $this->addOrUpdateDocumentField($document, 'its_global_group_parent_published', $fields, 1);
+
     switch ($datasource) {
       case 'entity:node':
         $title = $fields['ss_content_title'];
@@ -370,18 +373,21 @@ class SolrDocumentProcessor {
     $group_parent_label = '';
     $group_parent_url = '';
     $group_parent_id = -1;
+    $group_is_published = TRUE;
 
     if (array_key_exists('its_content__group_content__entity_id_gid', $fields)) {
       if ($group_entity = Group::load($fields['its_content__group_content__entity_id_gid'])) {
         $group_parent_label = $group_entity->label();
         $group_parent_url = $group_entity->toUrl()->toString();
         $group_parent_id = $group_entity->id();
+        $group_is_published = $group_entity->isPublished();
       }
     }
 
     $document->addField('ss_global_group_parent_label', $group_parent_label);
     $document->addField('ss_global_group_parent_url', $group_parent_url);
     $document->addField('ss_global_group_parent_id', $group_parent_id);
+    $this->addOrUpdateDocumentField($document, 'its_global_group_parent_published', $fields, (int) $group_is_published);
   }
 
   /**
@@ -970,7 +976,7 @@ class SolrDocumentProcessor {
    * @param $value
    */
   private function addOrUpdateDocumentField(Document &$document, $key, $fields, $value) {
-    array_key_exists($key, $fields) ?
+    array_key_exists($key, $document->getFields()) ?
       $document->setField($key, $value) :
       $document->addField($key, $value);
   }
@@ -1033,5 +1039,4 @@ class SolrDocumentProcessor {
       }
     }
   }
-
 }

@@ -164,6 +164,7 @@ class EntityOperations implements ContainerInjectionInterface {
     if ($entity->original->isPublished() && !$entity->isPublished()) {
       // Invalidates group contents cache when the group has been unpublished.
       $this->invalidateGroupContentCache($entity);
+      $this->solrDocumentProcessor->reIndexEntitiesFromGroup($entity);
     }
 
     // If title changed from original we need to reupdate group contents.
