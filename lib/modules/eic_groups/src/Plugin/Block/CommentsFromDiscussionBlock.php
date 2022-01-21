@@ -377,6 +377,17 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
       $cache_context[] = "user.is_group_member:$group_id";
     }
 
+    // We get the user access to view comments in the group. Note that power
+    // users can always view comments.
+    $can_view_comments = UserHelper::isPowerUser($account);
+    if (!$can_view_comments) {
+      $can_view_comments = $this->hasGroupOrGlobalPermission(
+        $group_contents,
+        $current_user,
+        'view comments'
+      );
+    }
+
     return $build + [
       '#cache' => [
         'contexts' => $cache_context,
@@ -386,6 +397,7 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
       '#discussion_id' => $node->id(),
       '#contributors' => $contributors_data,
       '#is_anonymous' => $current_user->isAnonymous(),
+      '#can_view_comments' => $can_view_comments,
     ];
   }
 
