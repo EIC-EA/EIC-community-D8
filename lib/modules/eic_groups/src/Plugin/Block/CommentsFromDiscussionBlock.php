@@ -384,7 +384,7 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
       $can_view_comments = $this->hasGroupOrGlobalPermission(
         $group_contents,
         $current_user,
-        'view comments'
+        $group_id ? 'view comments' : 'access comments'
       );
     }
 
