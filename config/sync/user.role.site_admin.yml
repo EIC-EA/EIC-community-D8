@@ -135,6 +135,7 @@ permissions:
   - 'edit own story content'
   - 'edit own video content'
   - 'edit own wiki_page content'
+  - 'flag highlight_content'
   - 'flag recommend_group'
   - 'link to any page'
   - 'make archive request'
