@@ -161,7 +161,7 @@
     "config": {
         "sort-packages": true,
         "platform": {
-            "php": "7.3.21"
+            "php": "7.4"
         }
     }
 }
