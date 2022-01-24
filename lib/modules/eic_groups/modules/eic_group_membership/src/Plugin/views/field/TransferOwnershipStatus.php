@@ -88,16 +88,34 @@ class TransferOwnershipStatus extends FieldPluginBase {
       $open_requests = $handler->getOpenRequests($group_content);
       $request = reset($open_requests);
 
-      // If request has expiration, we show a different message.
-      if ($handler->hasExpiration($request) && $handler->hasExpired($request)) {
-        $output = [
-          '#markup' => $this->t('ownership transfer expired'),
-        ];
-      }
-      else {
-        $output = [
-          '#markup' => $this->t('pending ownership transfer'),
-        ];
+      if ($handler->hasExpiration($request)) {
+        $timeout = $request->get('field_request_timeout')->value * 86400;
+        $timeout += $request->get('created')->value;
+
+        // If request has expired, we show when it expired.
+        if ($handler->hasExpired($request)) {
+          $timeout_formatted = \Drupal::service('date.formatter')->format($timeout, 'eu_short_date_hour');
+          $output = [
+            '#markup' => $this->t('ownership transfer expired <br>on @expiration_date', ['@expiration_date' => $timeout_formatted]),
+          ];
+        }
+        else {
+          $request_time = \Drupal::time()->getRequestTime();
+
+          if ($timeout > $request_time) {
+            $timeout_formatted = \Drupal::service('date.formatter')->formatDiff($request_time, $timeout, [
+              'granularity' => 2,
+            ]);
+          }
+          else {
+            $timeout_formatted = \Drupal::service('date.formatter')->formatDiff($timeout, $request_time, [
+              'granularity' => 2,
+            ]);
+          }
+          $output = [
+            '#markup' => $this->t('pending ownership transfer <br>expires in @expiration_date', ['@expiration_date' => $timeout_formatted]),
+          ];
+        }
       }
     }
 
