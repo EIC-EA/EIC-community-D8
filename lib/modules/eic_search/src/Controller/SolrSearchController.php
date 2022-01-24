@@ -389,10 +389,18 @@ class SolrSearchController extends ControllerBase {
       return;
     }
 
+    $current_user = \Drupal::currentUser();
+
+    // We need to show all groups on the groups overview for power users,
+    // disregarding the published status.
+    if ($source instanceof GroupSourceType && UserHelper::isPowerUser($current_user)) {
+      return;
+    }
+
     $status_query = ' AND (bs_global_status:true';
 
     if ($source instanceof GroupSourceType) {
-      $user_id = \Drupal::currentUser()->id();
+      $user_id = $current_user->id();
       $status_query .= ' OR (its_group_owner_id:' . $user_id . ')';
     }
 

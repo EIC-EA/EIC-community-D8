@@ -42,7 +42,7 @@ content:
     settings:
       link: true
     third_party_settings: {  }
-    weight: 12
+    weight: 11
     region: content
   field_image:
     type: entity_reference_label
@@ -50,7 +50,7 @@ content:
     settings:
       link: true
     third_party_settings: {  }
-    weight: 14
+    weight: 13
     region: content
   field_language:
     type: entity_reference_label
@@ -58,7 +58,7 @@ content:
     settings:
       link: true
     third_party_settings: {  }
-    weight: 11
+    weight: 10
     region: content
   field_vocab_geo:
     type: entity_reference_label
@@ -66,7 +66,7 @@ content:
     settings:
       link: true
     third_party_settings: {  }
-    weight: 13
+    weight: 12
     region: content
   field_vocab_topics:
     type: entity_reference_label
@@ -96,11 +96,6 @@ content:
     third_party_settings: {  }
     weight: 9
     region: content
-  flag_recommend:
-    settings: {  }
-    third_party_settings: {  }
-    weight: 10
-    region: content
   links:
     settings: {  }
     third_party_settings: {  }
@@ -129,6 +124,7 @@ content:
 hidden:
   extra_field_eic_theme_helper_short_title_with_fallback: true
   field_comments: true
+  flag_recommend: true
   langcode: true
   published_at: true
   search_api_excerpt: true

@@ -28,7 +28,6 @@ permissions:
   - 'flag follow_taxonomy'
   - 'flag follow_taxonomy_term'
   - 'flag follow_user'
-  - 'flag highlight_content'
   - 'flag highlight_group_content'
   - 'flag like_comment'
   - 'flag like_content'

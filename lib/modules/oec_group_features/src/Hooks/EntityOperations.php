@@ -2,8 +2,10 @@
 
 namespace Drupal\oec_group_features\Hooks;
 
+use Drupal\Component\Plugin\Exception\PluginException;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Logger\LoggerChannelTrait;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\group\Entity\Group;
@@ -18,7 +20,16 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class EntityOperations implements ContainerInjectionInterface {
 
+  use LoggerChannelTrait;
   use StringTranslationTrait;
+
+
+  /**
+   * The OEC group feature helper service.
+   *
+   * @var \Drupal\oec_group_features\GroupFeatureHelper
+   */
+  protected $groupFeatureHelper;
 
   /**
    * The entity type manager.
@@ -44,6 +55,8 @@ class EntityOperations implements ContainerInjectionInterface {
   /**
    * Constructs a new GroupFeatures object.
    *
+   * @param \Drupal\oec_group_features\GroupFeatureHelper $oec_group_features_helper
+   *   The OEC group feature helper service.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
    * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
@@ -51,7 +64,13 @@ class EntityOperations implements ContainerInjectionInterface {
    * @param \Drupal\oec_group_features\GroupFeaturePluginManager $group_feature_plugin_manager
    *   The current route match service.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, RouteMatchInterface $route_match, GroupFeaturePluginManager $group_feature_plugin_manager) {
+  public function __construct(
+    GroupFeatureHelper $oec_group_features_helper,
+    EntityTypeManagerInterface $entity_type_manager,
+    RouteMatchInterface $route_match,
+    GroupFeaturePluginManager $group_feature_plugin_manager
+  ) {
+    $this->groupFeatureHelper = $oec_group_features_helper;
     $this->entityTypeManager = $entity_type_manager;
     $this->routeMatch = $route_match;
     $this->groupFeaturePluginManager = $group_feature_plugin_manager;
@@ -62,6 +81,7 @@ class EntityOperations implements ContainerInjectionInterface {
    */
   public static function create(ContainerInterface $container) {
     return new static(
+      $container->get('oec_group_features.helper'),
       $container->get('entity_type.manager'),
       $container->get('current_route_match'),
       $container->get('plugin.manager.group_feature')
@@ -101,10 +121,16 @@ class EntityOperations implements ContainerInjectionInterface {
       return;
     }
 
-    // Get all available global features.
+    // Get all available features for this group type.
     $available_features = [];
-    foreach ($this->groupFeaturePluginManager->getDefinitions() as $definition) {
-      $available_features[$definition['id']] = $this->groupFeaturePluginManager->createInstance($definition['id']);
+    foreach ($this->groupFeatureHelper->getGroupTypeAvailableFeatures($group->getGroupType()->id()) as $plugin_id => $label) {
+      try {
+        $available_features[$plugin_id] = $this->groupFeaturePluginManager->createInstance($plugin_id);
+      }
+      catch (PluginException $e) {
+        $logger = $this->getLogger('oec_group_features');
+        $logger->error($e->getMessage());
+      }
     }
 
     // Get group enabled features.
