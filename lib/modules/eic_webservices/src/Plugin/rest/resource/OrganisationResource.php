@@ -8,6 +8,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\eic_organisations\OrganisationsHelper;
 use Drupal\eic_webservices\Utility\EicWsHelper;
+use Drupal\eic_webservices\Utility\SmedTaxonomyHelper;
 use Drupal\rest\Plugin\rest\resource\EntityResource;
 use Drupal\rest\ResourceResponse;
 use Psr\Log\LoggerInterface;
@@ -37,6 +38,13 @@ class OrganisationResource extends EntityResource {
   protected $wsHelper;
 
   /**
+   * The SMED taxonomy helper class.
+   *
+   * @var \Drupal\eic_webservices\Utility\SmedTaxonomyHelper
+   */
+  protected $smedTaxonomyHelper;
+
+  /**
    * Constructs a EicUserResource object.
    *
    * @param array $configuration
@@ -57,10 +65,24 @@ class OrganisationResource extends EntityResource {
    *   The link relation type manager.
    * @param \Drupal\eic_webservices\Utility\EicWsHelper $eic_ws_helper
    *   The EIC Webservices helper class.
+   * @param \Drupal\eic_webservices\Utility\SmedTaxonomyHelper $eic_smec_taxonomy_helper
+   *   The SMED taxonomy helper class.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, array $serializer_formats, LoggerInterface $logger, ConfigFactoryInterface $config_factory, PluginManagerInterface $link_relation_type_manager, EicWsHelper $eic_ws_helper) {
+  public function __construct(
+    array $configuration,
+    $plugin_id,
+    $plugin_definition,
+    EntityTypeManagerInterface $entity_type_manager,
+    array $serializer_formats,
+    LoggerInterface $logger,
+    ConfigFactoryInterface $config_factory,
+    PluginManagerInterface $link_relation_type_manager,
+    EicWsHelper $eic_ws_helper,
+    SmedTaxonomyHelper $eic_smec_taxonomy_helper
+  ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $entity_type_manager, $serializer_formats, $logger, $config_factory, $link_relation_type_manager);
     $this->wsHelper = $eic_ws_helper;
+    $this->smedTaxonomyHelper = $eic_smec_taxonomy_helper;
   }
 
   /**
@@ -76,7 +98,8 @@ class OrganisationResource extends EntityResource {
       $container->get('logger.factory')->get('rest'),
       $container->get('config.factory'),
       $container->get('plugin.manager.link_relation_type'),
-      $container->get('eic_webservices.ws_helper')
+      $container->get('eic_webservices.ws_helper'),
+      $container->get('eic_webservices.taxonomy_helper')
     );
   }
 
@@ -107,6 +130,7 @@ class OrganisationResource extends EntityResource {
     }
 
     // Process SMED taxonomy fields to convert the SMED ID to Term ID.
+    $this->smedTaxonomyHelper->convertEntitySmedTaxonomyIds($entity);
 
     // Initialise required fields if not provided.
     OrganisationsHelper::setRequiredFieldsDefaultValues($entity);

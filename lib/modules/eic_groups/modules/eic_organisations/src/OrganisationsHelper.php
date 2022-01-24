@@ -106,11 +106,17 @@ class OrganisationsHelper {
     return array_unique($user_organisation_types);
   }
 
-  public static function setRequiredFieldsDefaultValues(GroupInterface &$group) {
+  /**
+   * Sets default values for defined fields that don't have a value yet.
+   *
+   * @param \Drupal\group\Entity\GroupInterface $group
+   *   The group entity.
+   */
+  public static function setRequiredFieldsDefaultValues(GroupInterface &$group): void {
     $fields = [
       'field_body' => [
         'value' => ' ',
-        //'format' => 'filtered_html',  // @todo Check if mandatory and why it doesn't work.
+        'format' => 'filtered_html',
       ],
     ];
 
