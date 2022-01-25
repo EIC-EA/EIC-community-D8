@@ -91,6 +91,16 @@ class TransferOwnershipRequestHandler extends AbstractRequestHandler {
   /**
    * {@inheritdoc}
    */
+  public function cancel(
+    FlaggingInterface $flagging,
+    ContentEntityInterface $content_entity
+  ) {
+    return $this->deny($flagging, $content_entity);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function applyFlagAlter(FlaggingInterface $flag) {
     switch ($flag->getFlaggable()->getEntityTypeId()) {
       case 'group_content':
@@ -295,19 +305,19 @@ class TransferOwnershipRequestHandler extends AbstractRequestHandler {
       return $access;
     }
 
-    // If current user is not a group owner or a power user, we return
-    // access forbidden.
-    if (!(
-      $entity->getEntity()->id() === $account->id() ||
+    // If current user is a group owner or a power user, we return access
+    // forbidden.
+    if (
+      $account->id() === EICGroupsHelper::getGroupOwner($group)->id() ||
       UserHelper::isPowerUser($account)
-    )) {
+    ) {
       return $access;
     }
 
     /** @var \Drupal\user\UserInterface $new_owner */
     $new_owner = $entity->getEntity();
     $membership = $group->getMember($new_owner);
-    if (!$membership) {
+    if (!$membership || $new_owner->id() !== $account->id()) {
       return $access;
     }
 
@@ -319,6 +329,108 @@ class TransferOwnershipRequestHandler extends AbstractRequestHandler {
     $access = AccessResult::allowedIf(
       !in_array($group_owner_role, array_keys($membership->getRoles())) &&
       in_array($group_admin_role, array_keys($membership->getRoles())))
+      ->addCacheableDependency($account)
+      ->addCacheableDependency($entity)
+      ->addCacheableDependency($group);
+
+    // Set max-age based on expiration date.
+    if ($expiration_date > 0) {
+      $access->setCacheMaxAge($expiration_date);
+    }
+
+    return $access;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function canCancelRequest(
+    AccountInterface $account,
+    ContentEntityInterface $entity
+  ) {
+    // Default access.
+    $access = AccessResult::forbidden();
+
+    switch ($entity->getEntityTypeId()) {
+      case 'group_content':
+        $access = $this->canCancelRequestGroupTransferOwnership($account, $entity);
+        break;
+
+    }
+
+    return $access;
+  }
+
+  /**
+   * Check if request ownership transfer can be cancelled by the given account.
+   *
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *   Currently logged in account, anonymous users are not allowed.
+   * @param \Drupal\group\Entity\GroupContentInterface $entity
+   *   The group content entity against the access check is made.
+   *
+   * @return \Drupal\Core\Access\AccessResultInterface
+   *   The access result object.
+   */
+  private function canCancelRequestGroupTransferOwnership(
+    AccountInterface $account,
+    GroupContentInterface $entity
+  ) {
+    $group = $entity->getGroup();
+
+    // Default access.
+    $access = AccessResult::forbidden()
+      ->addCacheableDependency($account)
+      ->addCacheableDependency($group);
+
+    // We return access denied if the group content entity is not a group
+    // membership.
+    if ($entity->getContentPlugin()->getPluginId() !== 'group_membership') {
+      return $access;
+    }
+
+    // We return access denied if there are no requests for this entity.
+    if (!$this->hasOpenRequest($entity, $account)) {
+      return $access;
+    }
+
+    $requests = $this->getOpenRequests($entity);
+    $request = reset($requests);
+    $expiration_date = 0;
+
+    // If request has expiration, we set a max-age.
+    if ($this->hasExpiration($request)) {
+      $expiration_date = $request->get(HandlerInterface::REQUEST_TIMEOUT_FIELD)->value * 86400;
+      $expiration_date += $request->get('created')->value;
+      $access->setCacheMaxAge($expiration_date);
+    }
+
+    if ($this->hasExpired($request)) {
+      return $access;
+    }
+
+    // Allow access to cancel the request if user is a power user.
+    if (UserHelper::isPowerUser($account)) {
+      return AccessResult::allowed()
+        ->addCacheableDependency($account)
+        ->addCacheableDependency($group);
+    }
+
+    /** @var \Drupal\user\UserInterface $membership */
+    $membership = $group->getMember($account);
+    if (!$membership) {
+      return $access;
+    }
+
+    $group_owner_role = $group->bundle() . '-' . EICGroupsHelper::GROUP_TYPE_OWNER_ROLE;
+
+    // Allow access to cancel group ownership if current user is a group owner.
+    $access = AccessResult::allowedIf(
+      in_array(
+        $group_owner_role,
+        array_keys($membership->getRoles())
+      ))
+      ->addCacheableDependency($account)
       ->addCacheableDependency($entity)
       ->addCacheableDependency($group);
 
@@ -438,7 +550,23 @@ class TransferOwnershipRequestHandler extends AbstractRequestHandler {
     return [
       RequestStatus::DENIED,
       RequestStatus::ACCEPTED,
+      RequestStatus::CANCELLED,
     ];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getActions(ContentEntityInterface $entity) {
+    $actions = parent::getActions($entity);
+    $actions['cancel_request'] = [
+      'title' => $this->t('Cancel request to transfer ownership'),
+      'url' => $entity->toUrl('close-request')
+        ->setRouteParameter('request_type', $this->getType())
+        ->setRouteParameter('response', RequestStatus::CANCELLED)
+        ->setRouteParameter('destination', $this->currentRequest->getRequestUri()),
+    ];
+    return $actions;
   }
 
   /**

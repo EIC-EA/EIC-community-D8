@@ -37,6 +37,13 @@ services:
       - [setEntityTypeManager, ['@?entity_type.manager']]
     tags:
       - { name: access_check, applies_to: _close_request_access }
+  eic_flags.cancel_request_access_checker:
+    class: Drupal\eic_flags\Access\CancelRequestAccessCheck
+    arguments: [ '@eic_flags.handler_collector' ]
+    calls:
+      - [setEntityTypeManager, ['@?entity_type.manager']]
+    tags:
+      - { name: access_check, applies_to: _cancel_request_access }
 
   eic_flags.event_subscriber:
     class: Drupal\eic_flags\EventSubscriber\FlagEventSubscriber

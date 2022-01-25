@@ -123,6 +123,22 @@ class EntityRequestRouteProvider implements EntityRouteProviderInterface, Entity
           $user_close_request_route
         );
       }
+
+      // Define a cancel request route for the entity type (route for
+      // non-administrators).
+      $user_cancel_request_route = $this->getRouteByTemplate(
+        $entity_type,
+        $handler,
+        'user-cancel-request',
+        ['_entity_form' => $entity_type->id() . '.cancel-request']
+      );
+      if ($user_cancel_request_route) {
+        $user_cancel_request_route->setRequirement('_cancel_request_access', 'TRUE');
+        $collection->add(
+          'entity.' . $entity_type->id() . '.user_cancel_request',
+          $user_cancel_request_route
+        );
+      }
     }
 
     return $collection;
