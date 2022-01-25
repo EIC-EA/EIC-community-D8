@@ -9,6 +9,8 @@ namespace Drupal\eic_search\Search\Sources;
  */
 interface SourceTypeInterface {
 
+  const DEFAULT = 'default';
+
   const LAYOUT_COMPACT = 'compact';
 
   const LAYOUT_COLUMNS = 'columns';
