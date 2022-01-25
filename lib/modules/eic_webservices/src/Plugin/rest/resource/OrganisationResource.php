@@ -104,13 +104,7 @@ class OrganisationResource extends EntityResource {
   }
 
   /**
-   * Responds to POST requests.
-   *
-   * @param \Drupal\Core\Entity\EntityInterface|null $entity
-   *   The entity.
-   *
-   * @return \Drupal\rest\ResourceResponseInterface
-   *   The response.
+   * {@inheritdoc}
    */
   public function post(EntityInterface $entity = NULL) {
     // Get the field name that contains the SMED ID.
@@ -136,6 +130,15 @@ class OrganisationResource extends EntityResource {
     OrganisationsHelper::setRequiredFieldsDefaultValues($entity);
 
     return parent::post($entity);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function patch(EntityInterface $original_entity, EntityInterface $entity = NULL) {
+    // Process SMED taxonomy fields to convert the SMED ID to Term ID.
+    $this->smedTaxonomyHelper->convertEntitySmedTaxonomyIds($entity);
+    return parent::patch($original_entity, $entity);
   }
 
 }
