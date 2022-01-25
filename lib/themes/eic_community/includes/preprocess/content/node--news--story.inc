@@ -54,7 +54,7 @@ function _eic_community_preprocess_node_news_story(array &$variables) {
       );
     $image_item = ImageValueObject::fromStyledImageItem(
       $media->get('oe_media_image')->first(),
-      'gallery_teaser_crop_160x160'
+      'large'
     );
     $item['image'] = [
       'src' => $image_item->getSource(),
@@ -71,7 +71,7 @@ function _eic_community_preprocess_node_news_story(array &$variables) {
       );
     $image_item = ImageValueObject::fromStyledImageItem(
       $media->get('oe_media_image')->first(),
-      'gallery_teaser_crop_160x160'
+      'large'
     );
     $item['image'] = [
       'src' => $image_item->getSource(),
