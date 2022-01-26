@@ -14,6 +14,7 @@ use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\eic_flags\Form\NewRequestForm;
 use Drupal\eic_flags\Form\RequestCloseForm;
+use Drupal\eic_flags\Hooks\CronOperations;
 use Drupal\eic_flags\Hooks\EntityOperations;
 use Drupal\eic_flags\Hooks\FlagTokens;
 use Drupal\eic_flags\RequestStatus;
@@ -82,6 +83,9 @@ function eic_flags_cron() {
     $row = (array) $row;
     $queue->createItem($row);
   }
+
+  $class = \Drupal::classResolver(CronOperations::class);
+  $class->processRequestTimeouts();
 }
 
 /**
@@ -272,11 +276,26 @@ function eic_flags_entity_access(
 }
 
 /**
+ * Implements hook_flag_type_info_alter().
+ */
+function eic_flags_flag_type_info_alter(array &$definitions) {
+  $definitions['entity:node']['class'] = 'Drupal\eic_flags\Plugin\Flag\EntityFlagType';
+}
+
+/**
  * Implements hook_entity_view().
  */
 function eic_flags_entity_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
   \Drupal::classResolver(EntityOperations::class)
     ->entityView($build, $entity, $display, $view_mode);
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_view_alter().
+ */
+function eic_flags_node_view_alter(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display) {
+  \Drupal::classResolver(EntityOperations::class)
+    ->nodeViewAlter($build, $entity, $display);
 }
 
 /**

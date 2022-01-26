@@ -208,6 +208,9 @@ class EntityOperationsContributor implements ContainerInjectionInterface {
     $query->condition('c.entity_type', 'node');
     // Skip anonymous users.
     $query->condition('c.uid', 0, '<>');
+    // Skip contributors with deleted comments.
+    $query->join('comment__field_comment_is_soft_deleted', 'csf', 'c.cid = csf.entity_id');
+    $query->condition('csf.field_comment_is_soft_deleted_value', FALSE);
     // We group by uid to avoid duplicated results.
     $query->groupBy('c.uid');
     $results = $query->execute()->fetchAll(\PDO::FETCH_ASSOC);

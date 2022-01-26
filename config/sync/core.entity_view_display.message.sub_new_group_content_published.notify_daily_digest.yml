@@ -13,10 +13,10 @@ bundle: sub_new_group_content_published
 mode: notify_daily_digest
 content:
   partial_2:
-    weight: 0
-    region: content
     settings: {  }
     third_party_settings: {  }
+    weight: 0
+    region: content
 hidden:
   field_event_executing_user: true
   field_referenced_node: true

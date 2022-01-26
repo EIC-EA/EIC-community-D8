@@ -7,3 +7,12 @@ eic_admin.dashboard:
     _permission: 'access eic_admin dashboard'
   options:
     _admin_route: TRUE
+eic_admin.groups:
+  path: '/admin/community/groups'
+  defaults:
+    _title: 'Groups'
+    _controller: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+  requirements:
+    _permission: 'access eic_admin dashboard'
+  options:
+    _admin_route: TRUE

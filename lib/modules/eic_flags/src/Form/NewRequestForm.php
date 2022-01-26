@@ -4,16 +4,19 @@ namespace Drupal\eic_flags\Form;
 
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Entity\ContentEntityDeleteForm;
+use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\eic_flags\RequestTypes;
 use Drupal\eic_flags\Service\ArchiveRequestHandler;
 use Drupal\eic_flags\Service\BlockRequestHandler;
+use Drupal\eic_flags\Service\HandlerInterface;
 use Drupal\eic_flags\Service\RequestHandlerCollector;
 use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_user\UserHelper;
 use Drupal\flag\Entity\Flagging;
+use Drupal\flag\FlagServiceInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -38,6 +41,20 @@ class NewRequestForm extends ContentEntityDeleteForm {
   protected $eicUserHelper;
 
   /**
+   * The Flag service.
+   *
+   * @var \Drupal\flag\FlagServiceInterface
+   */
+  protected $flagService;
+
+  /**
+   * The Entity field manager.
+   *
+   * @var \Drupal\Core\Entity\EntityFieldManagerInterface
+   */
+  protected $entityFieldManager;
+
+  /**
    * NewRequestForm constructor.
    *
    * @param \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository
@@ -50,13 +67,19 @@ class NewRequestForm extends ContentEntityDeleteForm {
    *   The handler collector service.
    * @param \Drupal\eic_user\UserHelper $eic_user_helper
    *   The EIC User helper service.
+   * @param \Drupal\flag\FlagServiceInterface $flag_service
+   *   The Flag service.
+   * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager
+   *   The Entity field manager.
    */
   public function __construct(
     EntityRepositoryInterface $entity_repository,
     EntityTypeBundleInfoInterface $entity_type_bundle_info,
     TimeInterface $time,
     RequestHandlerCollector $collector,
-    UserHelper $eic_user_helper
+    UserHelper $eic_user_helper,
+    FlagServiceInterface $flag_service,
+    EntityFieldManagerInterface $entity_field_manager
   ) {
     parent::__construct($entity_repository, $entity_type_bundle_info, $time);
 
@@ -64,6 +87,8 @@ class NewRequestForm extends ContentEntityDeleteForm {
       $this->getRequest()->get('request_type')
     );
     $this->eicUserHelper = $eic_user_helper;
+    $this->flagService = $flag_service;
+    $this->entityFieldManager = $entity_field_manager;
   }
 
   /**
@@ -75,7 +100,9 @@ class NewRequestForm extends ContentEntityDeleteForm {
       $container->get('entity_type.bundle.info'),
       $container->get('datetime.time'),
       $container->get('eic_flags.handler_collector'),
-      $container->get('eic_user.helper')
+      $container->get('eic_user.helper'),
+      $container->get('flag'),
+      $container->get('entity_field.manager')
     );
   }
 
@@ -84,6 +111,28 @@ class NewRequestForm extends ContentEntityDeleteForm {
    */
   public function getFormId() {
     return 'entity_new_request_form';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCancelUrl() {
+    $request_type = $this->getRequest()
+      ->get('request_type');
+
+    switch ($request_type) {
+      case RequestTypes::TRANSFER_OWNERSHIP:
+        if ($this->getEntity()->getEntityTypeId() !== 'group_content') {
+          break;
+        }
+        // Returns the group URL.
+        return $this->getEntity()
+          ->getGroup()
+          ->toUrl();
+
+    }
+
+    return parent::getCancelUrl();
   }
 
   /**
@@ -106,8 +155,8 @@ class NewRequestForm extends ContentEntityDeleteForm {
         if ($this->entity->getEntityTypeId() === 'group_content') {
           $new_owner = $this->entity->getEntity();
           $previous_owner = EICGroupsHelper::getGroupOwner($this->entity->getGroup());
-          $description = $this->t("<p>You're about to request transfer ownership to %new_owner?</p>
-            <p>If the user accepts, the previous owner %previous_owner will turn into a group admin.</p>",
+          $description = $this->t("<p>Do you want to request the ownership transfer to %new_owner?</p>
+            <p>If the user accepts, the current owner %previous_owner will become a group admin.</p>",
             [
               '%new_owner' => $this->eicUserHelper->getFullName($new_owner),
               '%previous_owner' => $this->eicUserHelper->getFullName($previous_owner),
@@ -149,7 +198,7 @@ class NewRequestForm extends ContentEntityDeleteForm {
         break;
 
       case RequestTypes::TRANSFER_OWNERSHIP:
-        $description = $this->t('Request transfer ownership');
+        $description = $this->t('Request ownership transfer');
         break;
 
       default:
@@ -169,6 +218,15 @@ class NewRequestForm extends ContentEntityDeleteForm {
   public function buildForm(array $form, FormStateInterface $form_state) {
     $form = parent::buildForm($form, $form_state);
     $form_field_description = NULL;
+    $has_timeout_field = FALSE;
+    $flag = $this->flagService->getFlagById(
+      $this->requestHandler->getSupportedEntityTypes()[$this->entity->getEntityTypeId()]
+    );
+
+    $fields = $this->entityFieldManager->getFieldDefinitions('flagging', $flag->id());
+    if (isset($fields[HandlerInterface::REQUEST_TIMEOUT_FIELD])) {
+      $has_timeout_field = TRUE;
+    }
 
     switch ($this->requestHandler->getType()) {
       case RequestTypes::BLOCK:
@@ -206,6 +264,18 @@ class NewRequestForm extends ContentEntityDeleteForm {
       '#title' => $form_field_description,
       '#required' => TRUE,
     ];
+
+    if ($has_timeout_field) {
+      $form['timeout'] = [
+        '#type' => 'number',
+        '#title' => $this->t('How many days should this request remain open? Leave it as 0 for no timeout.'),
+        '#min' => $fields[HandlerInterface::REQUEST_TIMEOUT_FIELD]->getSetting('min'),
+        '#max' => $fields[HandlerInterface::REQUEST_TIMEOUT_FIELD]->getSetting('max'),
+        '#step' => 1,
+        '#default_value' => $fields[HandlerInterface::REQUEST_TIMEOUT_FIELD]->getDefaultValueLiteral()[0]['value'],
+        '#required' => TRUE,
+      ];
+    }
 
     return $form;
   }
@@ -260,7 +330,7 @@ class NewRequestForm extends ContentEntityDeleteForm {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $flag = $this->requestHandler
-      ->applyFlag($this->entity, $form_state->getValue('reason'));
+      ->applyFlag($this->entity, $form_state->getValue('reason'), $form_state->getValue('timeout') ?? 0);
     if (!$flag instanceof Flagging) {
       $this->messenger()->addError($this->t('You are not allowed to do this'));
     }

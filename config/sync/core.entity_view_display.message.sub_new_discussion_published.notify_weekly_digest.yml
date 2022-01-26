@@ -12,10 +12,10 @@ bundle: sub_new_discussion_published
 mode: notify_weekly_digest
 content:
   partial_2:
-    weight: 0
-    region: content
     settings: {  }
     third_party_settings: {  }
+    weight: 0
+    region: content
 hidden:
   field_event_executing_user: true
   partial_0: true

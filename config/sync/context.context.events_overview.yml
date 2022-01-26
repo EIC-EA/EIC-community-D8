@@ -5,8 +5,8 @@ dependencies:
   module:
     - eic_search
     - route_condition
-name: events_overview
 label: 'Events - Overview'
+name: events_overview
 group: 'Global overviews'
 description: 'This context is used for the Events overview'
 requireAllConditions: false
@@ -14,20 +14,29 @@ disabled: false
 conditions:
   route:
     id: route
-    routes: eic_search.events
     negate: false
     uuid: 13119e50-0f1e-46e3-804f-3a2c4a26ab1b
     context_mapping: {  }
+    routes: eic_search.events
 reactions:
   blocks:
+    id: blocks
+    uuid: 621fd7cc-ba87-475b-807e-2c45b781f29b
     blocks:
       eb5cb01b-81c6-4110-9826-0171b3b5632f:
+        uuid: eb5cb01b-81c6-4110-9826-0171b3b5632f
         id: eic_search_overview
         label: ''
         provider: eic_search
         label_display: visible
         region: content
         weight: '0'
+        custom_id: eic_search_overview
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: events_overview
+        context_mapping: {  }
         source_type: Drupal\eic_search\Search\Sources\GlobalEventSourceType
         facets:
           ss_group_topic_name: ss_group_topic_name
@@ -42,16 +51,7 @@ reactions:
         prefilter_group: 0
         add_facet_interests: 0
         add_facet_my_groups: 0
-        context_mapping: {  }
-        custom_id: eic_search_overview
-        theme: eic_community
-        css_class: ''
-        unique: 0
-        context_id: events_overview
         third_party_settings: {  }
-        uuid: eb5cb01b-81c6-4110-9826-0171b3b5632f
-    id: blocks
-    saved: false
-    uuid: 621fd7cc-ba87-475b-807e-2c45b781f29b
     include_default_blocks: 0
+    saved: false
 weight: 0

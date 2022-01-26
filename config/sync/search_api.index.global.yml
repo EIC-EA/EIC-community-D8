@@ -2,43 +2,19 @@ uuid: 590b9406-6314-4246-a658-8e5ff93d713d
 langcode: en
 status: true
 dependencies:
-  module:
-    - search_api_solr
-    - flag
-    - group
-    - user
-    - file
-    - media
-    - taxonomy
-    - content_moderation
-    - message
-    - comment
-    - node
-    - eic_private_content
-    - path
-    - paragraphs
-    - profile
-    - search_api
-    - address
-    - eic_group_statistics
-    - eic_search
-    - flag_search_api
-    - search_api_attachments
-    - group_permissions
   config:
-    - field.storage.group.field_date_range
-    - field.storage.group.field_location
     - field.storage.user.field_first_name
     - field.storage.user.field_last_name
     - field.storage.media.oe_media_image
     - field.storage.user.field_media
+    - field.storage.group.field_locations
     - field.storage.group.field_location_type
+    - field.storage.group.field_organisation_type
     - field.storage.group.field_vocab_geo
     - field.storage.group.field_thumbnail
     - field.storage.group.field_image
     - field.storage.group.field_vocab_topics
     - field.storage.group.field_body
-    - field.storage.group.field_organisation_type
     - field.storage.message.field_entity_type
     - field.storage.message.field_group_ref
     - field.storage.message.field_operation_type
@@ -50,50 +26,89 @@ dependencies:
     - field.storage.message.field_source_group
     - field.storage.node.field_body
     - field.storage.node.field_comments
-    - field.storage.node.field_document_type
-    - field.storage.media.field_media_file
-    - field.storage.node.field_document_media
     - field.storage.node.field_location
+    - field.storage.node.field_document_media
+    - field.storage.node.field_document_type
     - field.storage.node.field_vocab_event_type
+    - field.storage.node.field_body
+    - field.storage.node.field_date_range
+    - field.storage.node.field_discussion_type
+    - field.storage.node.field_location_type
+    - field.storage.node.field_subtitle
+    - field.storage.node.field_vocab_geo
+    - field.storage.node.field_vocab_topics
+    - field.storage.media.oe_media_file
+    - field.storage.node.field_gallery_slides
+    - field.storage.paragraph.field_gallery_slide_media
+    - field.storage.paragraph.field_gallery_slide_legend
     - field.storage.node.field_image
     - field.storage.node.field_language
-    - field.storage.node.field_location_type
-    - field.storage.node.field_vocab_geo
-    - field.storage.node.field_gallery_slides
-    - field.storage.paragraph.field_gallery_slide_legend
-    - field.storage.media.oe_media_file
-    - field.storage.paragraph.field_gallery_slide_media
-    - field.storage.node.field_date_range
-    - field.storage.node.field_subtitle
-    - field.storage.profile.field_body
+    - field.storage.message.field_referenced_node
+    - field.storage.message.field_share_message
+    - field.storage.media.field_media_file
+    - field.storage.group.field_location
+    - field.storage.group.field_image
+    - field.storage.group.field_body
+    - field.storage.group.field_date_range
+    - field.storage.group.field_location_type
+    - field.storage.group.field_organisation_type
+    - field.storage.group.field_vocab_geo
+    - field.storage.group.field_vocab_topics
+    - field.storage.message.field_group_ref
+    - field.storage.group.field_thumbnail
+    - field.storage.message.field_referenced_comment
+    - field.storage.message.field_operation_type
+    - field.storage.message.field_source_group
+    - field.storage.message.field_entity_type
     - field.storage.profile.field_location_address
-    - field.storage.profile.field_vocab_job_title
+    - field.storage.profile.field_body
     - field.storage.profile.field_vocab_language
-    - field.storage.profile.field_social_links
-    - field.storage.profile.field_vocab_geo
     - field.storage.profile.field_vocab_topic_expertise
     - field.storage.profile.field_vocab_topic_interest
+    - field.storage.profile.field_vocab_geo
+    - field.storage.profile.field_vocab_job_title
+    - field.storage.profile.field_social_links
     - search_api.server.global
     - core.entity_view_mode.group.no_html
     - core.entity_view_mode.node.no_html
+  module:
+    - search_api_solr
+    - message
+    - user
+    - file
+    - media
+    - node
+    - taxonomy
+    - paragraphs
+    - eic_private_content
+    - flag
+    - group
+    - content_moderation
+    - comment
+    - path
+    - profile
+    - search_api
+    - address
+    - eic_group_statistics
+    - eic_search
+    - flag_search_api
+    - search_api_attachments
+    - group_permissions
 third_party_settings:
   search_api_solr:
     finalize: false
     commit_before_finalize: false
     commit_after_finalize: false
-    multilingual:
-      limit_to_content_language: false
-      include_language_independent: true
     highlighter:
       maxAnalyzedChars: 51200
       fragmenter: gap
+      usePhraseHighlighter: true
+      highlightMultiTerm: true
+      preserveMulti: false
       regex:
         slop: 0.5
         pattern: blank
         maxAnalyzedChars: 10000
-      usePhraseHighlighter: true
-      highlightMultiTerm: true
-      preserveMulti: false
       highlight:
         mergeContiguous: false
         requireFieldMatch: false
@@ -117,6 +132,9 @@ third_party_settings:
       index_prefix: ''
       collection: ''
       timezone: ''
+    multilingual:
+      limit_to_content_language: false
+      include_language_independent: true
 id: global
 name: Global
 description: ''
@@ -735,6 +753,16 @@ field_settings:
     dependencies:
       config:
         - field.storage.group.field_location_type
+  group_field_locations_string:
+    label: 'Locations » Taxonomy term » Name'
+    datasource_id: 'entity:group'
+    property_path: 'field_locations:entity:name'
+    type: string
+    dependencies:
+      config:
+        - field.storage.group.field_locations
+      module:
+        - taxonomy
   group_field_organisation_type:
     label: '[Group] Organisation type'
     datasource_id: 'entity:group'
@@ -812,6 +840,16 @@ field_settings:
     dependencies:
       module:
         - content_moderation
+  group_organisation_type_string:
+    label: 'Organisation type » Taxonomy term » Name'
+    datasource_id: 'entity:group'
+    property_path: 'field_organisation_type:entity:name'
+    type: string
+    dependencies:
+      config:
+        - field.storage.group.field_organisation_type
+      module:
+        - taxonomy
   group_statistic_comments:
     label: 'Group statistics - Comments'
     property_path: group_statistic_comments
@@ -1368,11 +1406,13 @@ datasource_settings:
         - stream_discussion_insert_update
         - stream_document_insert_update
         - stream_event_insert_update
+        - stream_gallery_insert_update
         - stream_news_insert_update
         - stream_photo_album_insert_update
         - stream_photo_insert_update
         - stream_share_content
         - stream_share_insert_update
+        - stream_video_insert_update
         - stream_wiki_page_insert_update
     languages:
       default: true
@@ -1391,6 +1431,9 @@ datasource_settings:
 processor_settings:
   add_url: {  }
   address_abbreviations_to_full_form:
+    weights:
+      preprocess_index: -20
+      preprocess_query: -20
     user_profile_city_string:
       enable: 0
       concat: 0
@@ -1399,9 +1442,6 @@ processor_settings:
       concat: 0
     fields: {  }
     all_fields: false
-    weights:
-      preprocess_index: -20
-      preprocess_query: -20
   aggregated_field: {  }
   file_attachments:
     excluded_extensions: 'aif art avi bmp gif ico mov oga ogv png psd ra ram rgb flv'
@@ -1426,13 +1466,13 @@ processor_settings:
       - files
       - events
   hierarchy:
+    weights:
+      preprocess_index: -45
     fields:
       content_field_vocab_geo: taxonomy_term-parent
       content_field_vocab_topics: taxonomy_term-parent
       group_field_vocab_geo: taxonomy_term-parent
       group_field_vocab_topics: taxonomy_term-parent
-    weights:
-      preprocess_index: -45
   language_with_fallback: {  }
   rendered_item: {  }
   reverse_entity_references: {  }
@@ -1443,7 +1483,7 @@ tracker_settings:
   default:
     indexing_order: fifo
 options:
-  index_directly: true
   cron_limit: 50
+  index_directly: true
   track_changes_in_references: true
 server: global

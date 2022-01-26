@@ -13,6 +13,8 @@ use Drupal\flag\FlaggingInterface;
  */
 interface HandlerInterface {
 
+  const REQUEST_TIMEOUT_FIELD = 'field_request_timeout';
+
   /**
    * Returns the type of request the handler is for.
    *
@@ -79,11 +81,17 @@ interface HandlerInterface {
    *   The concerned entity.
    * @param string $reason
    *   Reason given when opening the request.
+   * @param int $request_timeout
+   *   (optional) Number of days the request will remain open.
    *
    * @return \Drupal\flag\FlaggingInterface|null
    *   Result of the operation.
    */
-  public function applyFlag(ContentEntityInterface $entity, string $reason);
+  public function applyFlag(
+    ContentEntityInterface $entity,
+    string $reason,
+    int $request_timeout = 0
+  );
 
   /**
    * Alters the given the corresponding flag before saving it.
@@ -238,5 +246,40 @@ interface HandlerInterface {
    *   Array of supported response types.
    */
   public function getSupportedResponsesForClosedRequests();
+
+  /**
+   * Whether or not the request flag has been expired.
+   *
+   * @param \Drupal\flag\FlaggingInterface $flag
+   *   The flagging entity to alter.
+   *
+   * @return bool
+   *   TRUE if has expiration.
+   */
+  public function hasExpiration(FlaggingInterface $flag);
+
+  /**
+   * Whether or not the request flag has been expired.
+   *
+   * @param \Drupal\flag\FlaggingInterface $flag
+   *   The flagging entity to alter.
+   *
+   * @return bool
+   *   TRUE if request has expired.
+   */
+  public function hasExpired(FlaggingInterface $flag);
+
+  /**
+   * Triggers request timeout.
+   *
+   * @param \Drupal\flag\FlaggingInterface $flagging
+   *   The flag object representing the request.
+   * @param \Drupal\Core\Entity\ContentEntityInterface $content_entity
+   *   The concerned entity.
+   */
+  public function requestTimeout(
+    FlaggingInterface $flagging,
+    ContentEntityInterface $content_entity
+  );
 
 }

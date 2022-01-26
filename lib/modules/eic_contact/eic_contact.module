@@ -1,0 +1,124 @@
+<?php
+
+use Drupal\Core\Form\FormStateInterface;
+
+/**
+ * Implements hook_install.
+ *
+ * @param $is_syncing
+ *
+ * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+ * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+ * @throws \Drupal\Core\Entity\EntityStorageException
+ */
+function eic_contact_install($is_syncing) {
+  $contact_forms = Drupal::entityTypeManager()
+    ->getStorage('contact_form')
+    ->loadByProperties();
+
+  /** @var \Drupal\contact\Entity\ContactForm $contact_form */
+  foreach ($contact_forms as $contact_form) {
+    if (!empty($contact_form->getRecipients())) {
+      continue;
+    }
+
+    $contact_form->setRecipients([Drupal::config('system.site')->get('mail')]);
+    $contact_form->save();
+  }
+}
+
+/**
+ * Implements hook_form_alter.
+ *
+ * @param $form
+ * @param $form_state
+ */
+function eic_contact_form_alter(&$form, FormStateInterface &$form_state) {
+  if ('contact-message-contact-form-form' !== $form['#id']) {
+    return;
+  }
+
+  $form['actions']['submit']['#submit'][] = '_eic_contact_alter_submit';
+}
+
+/**
+ * Set values for the category's Contact form field.
+ *
+ * @return array
+ * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+ * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+ */
+function _eic_contact_category_allowed_values() {
+  $categories = Drupal::entityTypeManager()
+    ->getStorage('taxonomy_term')
+    ->loadByProperties([
+      'vid' => 'contact_category'
+    ]);
+
+  $values = [];
+
+  foreach ($categories as $category) {
+    $values[$category->id()] = $category->label();
+  }
+
+  return $values;
+}
+
+/**
+ * @param array $form
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
+ */
+function _eic_contact_alter_submit(
+  array $form,
+  FormStateInterface $form_state
+) {
+  $categories = $form_state->getValue('field_contact_category');
+
+  if (empty($categories)) {
+    return;
+  }
+
+  $category_id = reset($categories)['value'];
+  $category = \Drupal\taxonomy\Entity\Term::load($category_id);
+
+  if (!$category instanceof \Drupal\taxonomy\TermInterface) {
+    \Drupal::logger('eic_contact')->error(
+      t(
+        'No term found with this id: @id',
+        ['@id' => $category_id],
+        ['context' => 'eic_contact']
+      )
+    );
+
+    return;
+  }
+
+  /** @var \Drupal\contact\MessageForm $message_form */
+  $message_form = $form_state->getFormObject();
+  $current_user = clone \Drupal\user\Entity\User::load(
+    \Drupal::currentUser()->id()
+  );
+
+  $email = $category->get('field_target_email')->value;
+
+  $params = [
+    'contact_message' => $message_form->getEntity(),
+    'sender' => $current_user,
+    'recipients' => $email,
+    'contact_form' => $message_form->getEntity()->getContactForm(),
+  ];
+  /** @var \Drupal\Core\Mail\MailManagerInterface $mail_manager */
+  $mail_manager = Drupal::service('plugin.manager.mail');
+  $mail_manager->mail(
+    'contact',
+    'page' . '_mail',
+    $email,
+    Drupal::languageManager()->getDefaultLanguage()->getId(),
+    $params,
+    $current_user->getEmail()
+  );
+
+  Drupal::messenger()->addMessage(
+    t('Message sent with success.', [], ['context' => 'eic_contact'])
+  );
+}

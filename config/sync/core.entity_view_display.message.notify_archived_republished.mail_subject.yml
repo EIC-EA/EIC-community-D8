@@ -14,12 +14,12 @@ mode: mail_subject
 content:
   field_message_subject:
     type: string
-    weight: 0
-    region: content
     label: above
     settings:
       link_to_entity: false
     third_party_settings: {  }
+    weight: 0
+    region: content
 hidden:
   field_referenced_entity_label: true
   partial_0: true

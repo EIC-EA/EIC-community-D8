@@ -3,40 +3,41 @@ langcode: en
 status: true
 dependencies:
   module:
+    - route_condition
     - system
-name: global_breadcrumbs
 label: 'Global - Breadcrumbs'
+name: global_breadcrumbs
 group: Global
 description: ''
 requireAllConditions: false
 disabled: false
 conditions:
-  request_path_exclusion:
-    id: request_path_exclusion
+  route:
+    id: route
     negate: true
-    pages: "/articles\r\n/events\r\n/groups\r\n/people\r\n/search"
-    uuid: 67b08cb2-557c-41fa-b404-4bfcb6aed9df
+    uuid: d8a54054-50a9-4f1a-a581-af9ee18b86af
     context_mapping: {  }
+    routes: "entity.overview_page.canonical\r\nentity.taxonomy_term.canonical"
 reactions:
   blocks:
+    id: blocks
+    uuid: 7a3c6805-2f56-4f46-bd7c-61b858c8e0b6
     blocks:
       d7192b0b-2613-4801-873f-00445b5a69b4:
+        uuid: d7192b0b-2613-4801-873f-00445b5a69b4
         id: system_breadcrumb_block
         label: Breadcrumbs
         provider: system
         label_display: '0'
         region: breadcrumbs
         weight: '0'
-        context_mapping: {  }
         custom_id: system_breadcrumb_block
         theme: eic_community
         css_class: ''
         unique: 0
         context_id: global_breadcrumbs
+        context_mapping: {  }
         third_party_settings: {  }
-        uuid: d7192b0b-2613-4801-873f-00445b5a69b4
-    id: blocks
-    saved: false
-    uuid: 7a3c6805-2f56-4f46-bd7c-61b858c8e0b6
     include_default_blocks: 0
+    saved: false
 weight: 0

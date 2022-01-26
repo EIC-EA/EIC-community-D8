@@ -1,0 +1,13 @@
+<div class="ecl-container">
+    <div class="ecl-form">
+        <div class="ecl-form__description ecl-editable-wrapper">
+            {% if user_entity is defined %}
+                {% set first_name = user_entity.field_first_name.value ?: '' %}
+                {% set last_name = user_entity.field_last_name.value ?: '' %}
+                {{ entity.body.value|replace({'@first_name': first_name, '@last_name': last_name})|raw }}
+            {% else %}
+                {{ content }}
+            {% endif %}
+        </div>
+    </div>
+</div>

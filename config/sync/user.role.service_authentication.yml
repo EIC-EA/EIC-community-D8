@@ -1,7 +1,15 @@
 uuid: a9225216-2e03-4874-a1f1-3ed8da1d128a
 langcode: en
 status: true
-dependencies: {  }
+dependencies:
+  config:
+    - rest.resource.eic_webservices_user_update
+    - workflows.workflow.news_stories
+  module:
+    - comment
+    - content_moderation
+    - node
+    - rest
 id: service_authentication
 label: 'Service authentication'
 weight: -6

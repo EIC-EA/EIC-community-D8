@@ -117,7 +117,7 @@ class PrivateMessageForm extends FormBase {
         '"@fullname at @site_name" @site_email',
         [
           '@fullname' => $this->userHelper->getFullName(),
-          '@site_email' => $this->systemSettings->get('mail'),
+          '@site_email' => '<' . $this->systemSettings->get('mail') . '>',
           '@site_name' => $this->systemSettings->get('name'),
         ],
         ['context' => 'eic_private_message']

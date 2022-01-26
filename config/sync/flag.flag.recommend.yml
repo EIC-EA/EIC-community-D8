@@ -15,7 +15,6 @@ bundles:
   - video
 entity_type: node
 global: false
-weight: 0
 flag_short: 'Recommend this item'
 flag_long: ''
 flag_message: ''
@@ -26,6 +25,7 @@ unflag_denied_text: ''
 flood_control_active: false
 flood_control_limit: 0
 flood_control_window: 0
+weight: 0
 flag_type: 'entity:node'
 link_type: eic_count_link
 flagTypeConfig:
