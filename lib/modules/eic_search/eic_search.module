@@ -99,7 +99,7 @@ function eic_search_search_api_solr_documents_alter(
     /** @var \Drupal\eic_search\Search\DocumentProcessor\DocumentProcessorInterface $processor */
     foreach ($processors as $processor) {
       if ($processor->supports($fields)) {
-        $processor->process($document, $fields);
+        $processor->process($document, $fields, $items);
       }
     }
   }
