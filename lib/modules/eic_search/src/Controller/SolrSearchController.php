@@ -269,7 +269,7 @@ class SolrSearchController extends ControllerBase {
       $values = array_keys($filtered_value);
 
       if ($filtered_value) {
-        array_walk($values, function(&$value) {
+        array_walk($values, function (&$value) {
           $value = "\"$value\"";
         });
 
@@ -390,6 +390,7 @@ class SolrSearchController extends ControllerBase {
     }
 
     $current_user = \Drupal::currentUser();
+    $user_id = $current_user->id();
     $is_power_user = UserHelper::isPowerUser($current_user);
 
     // We need to show all groups on the groups overview for power users,
@@ -401,7 +402,6 @@ class SolrSearchController extends ControllerBase {
     $status_query = ' AND (bs_global_status:true';
 
     if ($source instanceof GroupSourceType) {
-      $user_id = $current_user->id();
       $status_query .= ' OR (its_group_owner_id:' . $user_id . ')';
     }
 
@@ -409,8 +409,9 @@ class SolrSearchController extends ControllerBase {
 
     $fq .= $status_query;
 
+    // If it's not a power user or a group owner, add the filter query for published group parent.
     if (!$is_power_user) {
-      $fq .= ' AND (its_global_group_parent_published:1)';
+      $fq .= " AND (its_global_group_parent_published:1 OR its_group_owner_id:$user_id)";
     }
   }
 
