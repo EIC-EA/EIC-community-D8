@@ -86,6 +86,28 @@ eic_groups.group.highlight_content:
     node: \d+
     group: \d+
 
+eic_groups.group.like_content:
+  path: '/group/{group}/like-content/{action}/{node}'
+  methods: [ POST ]
+  defaults:
+    _controller: '\Drupal\eic_groups\Controller\GroupOperationsController::likeContent'
+    _title: 'Like group content'
+  requirements:
+    _like_group_content: 'TRUE'
+    node: \d+
+    group: \d+
+
+eic_groups.group.like_content_status:
+  path: '/group/{group}/like-status/{node}'
+  methods: [ GET ]
+  defaults:
+    _controller: '\Drupal\eic_groups\Controller\GroupOperationsController::likeContentStatus'
+    _title: 'Like group content status'
+  requirements:
+    _like_group_content: 'TRUE'
+    node: \d+
+    group: \d+
+
 eic_groups.group_content.resend_invite:
   path: '/group/{group}/invite/{group_content}/resend'
   defaults:
