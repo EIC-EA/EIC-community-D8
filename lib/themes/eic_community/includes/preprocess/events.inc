@@ -9,15 +9,21 @@ use CommerceGuys\Addressing\AddressFormat\AddressField;
 use Drupal\address\FieldHelper;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Locale\CountryManager;
+use Drupal\eic_media\MediaHelper;
+use Drupal\file\Entity\File;
 use Drupal\group\Entity\GroupInterface;
+use Drupal\taxonomy\Entity\Term;
 
 /**
  * Generate render array for the event detail page (group type and node type).
  *
- * @param $variables
+ * @param array $variables
+ *   The variables array.
  * @param \Drupal\Core\Entity\EntityInterface $entity
+ *   The event entity.
  */
-function _eic_community_render_event_detail_page(&$variables, EntityInterface $entity) {
+function _eic_community_render_event_detail_page(array &$variables, EntityInterface $entity) {
   $fields_map = [
     'node' => [
       'languages' => 'field_language',
@@ -46,7 +52,7 @@ function _eic_community_render_event_detail_page(&$variables, EntityInterface $e
 
   if (!empty($location)) {
     $location = reset($location);
-    $countries_map = \Drupal\Core\Locale\CountryManager::getStandardList();
+    $countries_map = CountryManager::getStandardList();
     $location_formatted = $location[FieldHelper::getPropertyName(AddressField::ADDRESS_LINE1)] . ' ' . $location[$location[FieldHelper::getPropertyName(AddressField::ADDRESS_LINE2)]] . '<br />';
     $location_formatted .= $location[FieldHelper::getPropertyName(AddressField::POSTAL_CODE)] . ' ' . $location[FieldHelper::getPropertyName(AddressField::LOCALITY)] . '<br />';
     $location_formatted .= array_key_exists($location['country_code'], $countries_map) ?
@@ -80,24 +86,7 @@ function _eic_community_render_event_detail_page(&$variables, EntityInterface $e
     ];
   }
 
-  $location_render = [];
-
-  if ($location_formatted) {
-    $location_render = [
-      'content' => $location_formatted,
-      'icon' => [
-        'type' => 'custom',
-        'name' => 'map-marker',
-      ],
-    ];
-  }
-
-  $items = [];
-
-  if ($location_render) {
-    $items[] = $location_render;
-  }
-
+  // Event detail items.
   $items = [
     [
       'content' => ucfirst(implode($location_types, ' & ')),
@@ -114,7 +103,7 @@ function _eic_community_render_event_detail_page(&$variables, EntityInterface $e
       ],
     ],
     [
-      'content' => implode(', ', array_map(function (\Drupal\taxonomy\Entity\Term $term) {
+      'content' => implode(', ', array_map(function (Term $term) {
         return $term->label();
       }, $entity->get($fields_map[$entity_type]['languages'])->referencedEntities())),
       'icon' => [
@@ -123,6 +112,20 @@ function _eic_community_render_event_detail_page(&$variables, EntityInterface $e
       ],
     ],
   ];
+
+  // Adds location address in the beginning of events detail items.
+  if ($location_formatted) {
+    array_unshift(
+      $items,
+      [
+        'content' => $location_formatted,
+        'icon' => [
+          'type' => 'custom',
+          'name' => 'map-marker',
+        ],
+      ]
+    );
+  }
 
   $event_infos = [
     'icon_file_path' => $variables['eic_icon_path'],
@@ -190,8 +193,8 @@ function _eic_community_render_event_detail_page(&$variables, EntityInterface $e
   $files_list = [];
 
   foreach ($files as $file) {
-    $download = \Drupal\file\Entity\File::load($file->field_media_file->getValue()[0]['target_id']);
-    $download_url = \Drupal\eic_media\MediaHelper::formatMediaDownloadLink($file)
+    $download = File::load($file->field_media_file->getValue()[0]['target_id']);
+    $download_url = MediaHelper::formatMediaDownloadLink($file)
       ->toString();
     $files_list[] = [
       'name' => $file->getName(),
@@ -227,4 +230,16 @@ function _eic_community_render_event_detail_page(&$variables, EntityInterface $e
       'download' => t('Download'),
     ];
   }
+
+  /** @var \Drupal\taxonomy\TermInterface $event_type_term */
+  $event_type_term = $entity->get('field_vocab_event_type')->entity;
+  // Try to load translation if exists.
+  if (
+    $event_type_term->language()->getId() !== $entity->language()->getId() &&
+    $event_type_term->hasTranslation($entity->language()->getId())
+  ) {
+    $event_type_term = $event_type_term->getTranslation($entity->language()->getId());
+  }
+  // Send event type to the theme variables.
+  $variables['event_type'] = $event_type_term->getName();
 }

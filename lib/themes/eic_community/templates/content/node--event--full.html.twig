@@ -3,7 +3,14 @@
     {% block content %}
       {% include "@theme/patterns/components/event.html.twig" with {
         title: node.title.value,
-        body: node.body.value|raw
+        body: node.body.value|raw,
+        tags: [
+          {
+            tag: {
+              label: event_type,
+            }
+          },
+        ],
       } %}
       {% include "@theme/patterns/components/filelist.html.twig" with file_list|default({}) %}
     {% endblock %}
