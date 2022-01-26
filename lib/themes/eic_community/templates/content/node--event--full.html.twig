@@ -20,10 +20,6 @@
 
       {% include "@theme/patterns/compositions/editorial-actions.html.twig" with editorial_actions|default({}) %}
 
-      {% include "@theme/patterns/compositions/social-share.html.twig" with social_share|default({})|merge({
-        extra_classes: 'ecl-featured-list',
-      }) %}
-
       {% include "@theme/patterns/compositions/featured-topics.html.twig" with topics|default({}) %}
 
       {% if event_infos %}

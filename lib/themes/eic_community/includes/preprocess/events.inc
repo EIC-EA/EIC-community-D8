@@ -184,9 +184,10 @@ function _eic_community_render_event_detail_page(array &$variables, EntityInterf
   }
 
   $variables['event_infos'] = $event_infos;
+
   // Provide the Social Share block.
   if ($share_block = _eic_community_get_social_share_block()) {
-    $variables['social_share'] = $share_block;
+    $variables['editorial_actions']['items'][]['content'] = $share_block;
   }
 
   $files = $entity->get($fields_map[$entity_type]['documents'])->referencedEntities();
