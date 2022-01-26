@@ -8,17 +8,19 @@
 #}
 {% block content %}
   {% if actions is not empty %}
-    <section id="wiki_content" class="ecl-editorial-article__header ecl-editorial-article__header--wiki">
-      {% include "@theme/patterns/components/inline-actions.html.twig" with actions|default({})|merge({
-        items: actions.items ? actions.items|map(i => i|merge({
-          extra_classes: i.extra_classes|default('') ~ ' ecl-link--button ecl-link--button-primary'
-        }))
-      }) %}
-      {{ eic_local_tasks }}
+    <div id="wiki_content" class="ecl-editorial-article__container--wiki">
+      <section class="ecl-editorial-article__header ecl-editorial-article__header--wiki">
+        {% include "@theme/patterns/components/inline-actions.html.twig" with actions|default({})|merge({
+          items: actions.items ? actions.items|map(i => i|merge({
+            extra_classes: i.extra_classes|default('') ~ ' ecl-link--button ecl-link--button-primary'
+          }))
+        }) %}
+        {{ eic_local_tasks }}
+      </section>
+    {% endif %}
+    <section  class="ecl-editorial-article__content ecl-editorial-article__content--wiki">
+      <h2>{{ label }}</h2>
+      {{ content }}
     </section>
-  {% endif %}
-<section  class="ecl-editorial-article__content ecl-editorial-article__content--wiki">
-    <h2>{{ label }}</h2>
-    {{ content }}
-</section>
+    </div>
 {% endblock %}
