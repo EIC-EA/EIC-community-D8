@@ -76,6 +76,11 @@ class GroupOverviewPages {
       case 'group_search':
         $page_id = self::SEARCH;
         break;
+
+      case 'events':
+        $page_id = self::EVENTS;
+        break;
+
     }
 
     if (!empty($page_id) && !$group->isNew()) {
