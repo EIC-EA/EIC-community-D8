@@ -54,7 +54,7 @@ function _eic_community_preprocess_node_news_story(array &$variables) {
       );
     $image_item = ImageValueObject::fromStyledImageItem(
       $media->get('oe_media_image')->first(),
-      'gallery_teaser_crop_160x160'
+      'large'
     );
     $item['image'] = [
       'src' => $image_item->getSource(),
@@ -71,12 +71,22 @@ function _eic_community_preprocess_node_news_story(array &$variables) {
       );
     $image_item = ImageValueObject::fromStyledImageItem(
       $media->get('oe_media_image')->first(),
-      'gallery_teaser_crop_160x160'
+      'large'
     );
     $item['image'] = [
       'src' => $image_item->getSource(),
       'alt' => $image_item->getAlt(),
     ];
+  }
+
+  if ('teaser' === $variables['view_mode']) {
+    $stats = _eic_community_get_entity_stats($node);
+    // We do not need downloads for news/story stats.
+    if (array_key_exists('downloads', $stats)) {
+      unset($stats['downloads']);
+    }
+
+    $variables['stats'] = $stats;
   }
 
   $variables['story_item'] = $item;
