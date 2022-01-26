@@ -368,9 +368,13 @@ class SolrSearchController extends ControllerBase {
    * @param string $fq
    */
   private function generateQueryPrivateContent(string &$fq) {
-    $roles = \Drupal::currentUser()->getRoles();
+    $current_user = \Drupal::currentUser();
+    $roles = $current_user->getRoles();
 
-    if (in_array(UserHelper::ROLE_TRUSTED_USER, $roles)) {
+    if (
+      in_array(UserHelper::ROLE_TRUSTED_USER, $roles) ||
+      UserHelper::isPowerUser($current_user)
+    ) {
       return;
     }
 
