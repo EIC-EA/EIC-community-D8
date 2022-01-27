@@ -256,6 +256,10 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
         'ss_global_content_type' => [
           'news' => t('News article', [], ['context' => 'eic_search']),
         ],
+        'bs_content_is_private' => [
+          'false' => t('Public', [], ['context' => 'eic_search']),
+          'true' => t('Private', [], ['context' => 'eic_search']),
+        ],
       ],
     ];
 
