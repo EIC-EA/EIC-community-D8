@@ -58,7 +58,7 @@ class EicWsHelper {
     $entity_query->condition($smed_id_field, $smed_id);
     $entity_query->range(NULL, 1);
     $uids = $entity_query->execute();
-    return empty($uids) ? NULL : $this->entityTypeManager->getStorage('user')->load(array_pop($uids));
+    return empty($uids) ? NULL : $this->entityTypeManager->getStorage('user')->load(reset($uids));
   }
 
   /**
@@ -88,7 +88,7 @@ class EicWsHelper {
     $entity_query->condition($smed_id_field, $smed_id);
     $entity_query->range(NULL, 1);
     $ids = $entity_query->execute();
-    return empty($ids) ? NULL : $this->entityTypeManager->getStorage('group')->load(array_pop($ids));
+    return empty($ids) ? NULL : $this->entityTypeManager->getStorage('group')->load(reset($ids));
   }
 
 }

@@ -65,7 +65,7 @@ class OrganisationResource extends EntityResource {
    *   The link relation type manager.
    * @param \Drupal\eic_webservices\Utility\EicWsHelper $eic_ws_helper
    *   The EIC Webservices helper class.
-   * @param \Drupal\eic_webservices\Utility\SmedTaxonomyHelper $eic_smec_taxonomy_helper
+   * @param \Drupal\eic_webservices\Utility\SmedTaxonomyHelper $eic_smed_taxonomy_helper
    *   The SMED taxonomy helper class.
    */
   public function __construct(
@@ -78,11 +78,11 @@ class OrganisationResource extends EntityResource {
     ConfigFactoryInterface $config_factory,
     PluginManagerInterface $link_relation_type_manager,
     EicWsHelper $eic_ws_helper,
-    SmedTaxonomyHelper $eic_smec_taxonomy_helper
+    SmedTaxonomyHelper $eic_smed_taxonomy_helper
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $entity_type_manager, $serializer_formats, $logger, $config_factory, $link_relation_type_manager);
     $this->wsHelper = $eic_ws_helper;
-    $this->smedTaxonomyHelper = $eic_smec_taxonomy_helper;
+    $this->smedTaxonomyHelper = $eic_smed_taxonomy_helper;
   }
 
   /**
