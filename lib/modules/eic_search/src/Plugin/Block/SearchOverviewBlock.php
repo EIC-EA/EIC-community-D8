@@ -217,8 +217,7 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
     if ($current_group_route) {
       $account = \Drupal::currentUser();
       $membership = $current_group_route->getMember($account);
-      $user_group_roles = $membership instanceof GroupMembership ? $membership->getRoles(
-      ) : [];
+      $user_group_roles = $membership instanceof GroupMembership ? $membership->getRoles() : [];
 
       // Send as props group admin/owners.
       $owners = $current_group_route->getMembers(
@@ -230,8 +229,7 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
       $owner = reset($owners);
 
       $group_admins = [
-        'owner' => $owner instanceof GroupMembership ? $owner->getUser()->id(
-        ) : -1,
+        'owner' => $owner instanceof GroupMembership ? $owner->getUser()->id() : -1,
         'admin' => array_map(function (GroupMembership $admin) {
           return $admin->getUser()->id();
         }, $admins),
@@ -276,29 +274,24 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
         '#source_class' => $source instanceof SourceTypeInterface ? get_class(
           $source
         ) : NULL,
-        '#datasource' => $source instanceof SourceTypeInterface ? $source->getSourcesId(
-        ) : NULL,
-        '#bundle' => $source instanceof SourceTypeInterface ? $source->getEntityBundle(
-        ) : NULL,
-        '#layout' => $source instanceof SourceTypeInterface ? $source->getLayoutTheme(
-        ) : NULL,
+        '#datasource' => $source instanceof SourceTypeInterface ? $source->getSourcesId() : NULL,
+        '#bundle' => $source instanceof SourceTypeInterface ? $source->getEntityBundle() : NULL,
+        '#layout' => $source instanceof SourceTypeInterface ? $source->getLayoutTheme() : NULL,
         '#page_options' => $this->configuration['page_options'],
         '#enable_search' => $this->configuration['enable_search'],
         '#enable_date_filter' => $this->configuration['enable_date_filter'] ?? FALSE,
         '#url' => Url::fromRoute('eic_search.solr_search')->toString(),
         '#isAnonymous' => \Drupal::currentUser()->isAnonymous(),
-        '#currentGroup' => $current_group_route instanceof GroupInterface ? $current_group_route->id(
+        '#currentGroup' => $current_group_route instanceof GroupInterface ? $current_group_route->id() : NULL,
+        '#currentGroupUrl' => $current_group_route instanceof GroupInterface ? $current_group_route->toUrl()->toString(
         ) : NULL,
-        '#currentGroupUrl' => $current_group_route instanceof GroupInterface ? $current_group_route->toUrl(
-        )->toString() : NULL,
         '#enable_facet_interests' => $this->configuration['add_facet_interests'],
         '#enable_facet_my_groups' => $this->configuration['add_facet_my_groups'],
         '#isGroupOwner' => array_key_exists(
           EICGroupsHelper::GROUP_OWNER_ROLE,
           $user_group_roles
         ),
-        '#allow_pagination' => $source instanceof SourceTypeInterface ? (int) $source->allowPagination(
-        ) : 1,
+        '#allow_pagination' => $source instanceof SourceTypeInterface ? (int) $source->allowPagination() : 1,
         '#load_more_number' => SourceTypeInterface::READ_MORE_NUMBER_TO_LOAD,
         '#is_route_group_search_results' =>
           (int) ('eic_overviews.groups.overview_page.search' === $route_name),
@@ -317,6 +310,9 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
           'refine' => $this->t('Refine your search', [], ['context' => 'eic_group']),
           'topics' => $this->t('Topics', [], ['context' => 'eic_group']),
           'search_text' => $this->t('Search', [], ['context' => 'eic_group']),
+          'custom_search_text' => [
+            'user_gallery' => $this->t('Search for a member', [], ['context' => 'eic_group']),
+          ],
           'no_results_title' => $this->t(
             'We haven’t found any search results',
             [],
@@ -374,8 +370,10 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
             [],
             ['context' => 'eic_group']
           ),
+          'show_more' => $this->t('Show more', [], ['context' => 'eic_group']),
+          'collapse' => $this->t('Collapse', [], ['context' => 'eic_group']),
           'highlight' => $this->t('Highlight this content', [], ['context' => 'eic_group']),
-          'unHighlight' => $this->t('Disable highlighting of this content', [], ['context' => 'eic_group']),
+          'unHighlight' => $this->t('Disable highlighting of this content', [], ['context' => 'eic_group'])
         ],
       ];
   }
@@ -559,8 +557,7 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
 
     /** @var SourceTypeInterface $source */
     foreach ($this->sourcesCollector->getSources() as $source) {
-      $form['search']['configuration']['filter'][$source->getEntityBundle(
-      )]['facets'] = [
+      $form['search']['configuration']['filter'][$source->getEntityBundle()]['facets'] = [
         '#type' => 'checkboxes',
         '#title' => $this->t(
           'Facets for @label',
@@ -582,8 +579,7 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
         ],
       ];
 
-      $form['search']['configuration']['sorts'][$source->getEntityBundle(
-      )]['sort_options'] = [
+      $form['search']['configuration']['sorts'][$source->getEntityBundle()]['sort_options'] = [
         '#type' => 'checkboxes',
         '#default_value' => $this->configuration['sort_options'],
         '#title' => $this->t(
@@ -690,8 +686,7 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
   ): array {
     $available_sorts = [];
 
-    foreach ($current_source->getAvailableSortOptions(
-    ) as $sort_option => $options) {
+    foreach ($current_source->getAvailableSortOptions() as $sort_option => $options) {
       $available_sorts[$sort_option] = $options['label'];
     }
 
