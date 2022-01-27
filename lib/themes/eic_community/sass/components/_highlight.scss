@@ -47,4 +47,8 @@
   &__label {
     @include visually-hidden;
   }
+
+  &__tooltip {
+    text-align: center;
+  }
 }

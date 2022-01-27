@@ -74,7 +74,7 @@ class UserGallerySourceType extends SourceType {
    * @inheritDoc
    */
   public function getSearchFieldsId(): array {
-    return ['ss_global_fullname'];
+    return ['tm_global_fullname'];
   }
 
   /**

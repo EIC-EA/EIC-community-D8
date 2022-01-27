@@ -2,18 +2,25 @@
 
 namespace Drupal\eic_flags\Service;
 
+use Drupal\content_moderation\ModerationInformationInterface;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Entity\EntityFieldManagerInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\eic_flags\RequestStatus;
 use Drupal\eic_flags\RequestTypes;
 use Drupal\eic_groups\EICGroupsHelper;
+use Drupal\eic_search\Service\SolrDocumentProcessor;
 use Drupal\eic_user\UserHelper;
 use Drupal\flag\FlaggingInterface;
+use Drupal\flag\FlagService;
 use Drupal\group\Entity\GroupContentInterface;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\group\GroupMembership;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Service that provides logic for transfer ownership requests.
@@ -21,6 +28,32 @@ use Drupal\group\GroupMembership;
  * @package Drupal\eic_flags\Service
  */
 class TransferOwnershipRequestHandler extends AbstractRequestHandler {
+
+  /**
+   * @var SolrDocumentProcessor $solrDocumentProcessor
+   */
+  private $solrDocumentProcessor;
+
+  public function __construct(
+    ModuleHandlerInterface $module_handler,
+    EntityTypeManagerInterface $entity_type_manager,
+    FlagService $flag_service,
+    ModerationInformationInterface $moderation_information,
+    RequestStack $request_stack,
+    EntityFieldManagerInterface $entity_field_manager,
+    SolrDocumentProcessor $solr_document_processor
+  ) {
+    parent::__construct(
+      $module_handler,
+      $entity_type_manager,
+      $flag_service,
+      $moderation_information,
+      $request_stack,
+      $entity_field_manager
+    );
+
+    $this->solrDocumentProcessor = $solr_document_processor;
+  }
 
   /**
    * {@inheritdoc}
@@ -55,10 +88,14 @@ class TransferOwnershipRequestHandler extends AbstractRequestHandler {
           break;
         }
 
-        $this->transferGroupOwnership($content_entity->getGroup(), $content_entity);
+        $group = $content_entity->getGroup();
+
+        // If new owner id, we need to reindex entities from group.
+        $this->solrDocumentProcessor->reIndexEntitiesFromGroup($group);
+        $this->transferGroupOwnership($group, $content_entity);
         // Invalidate flagged entity cache.
         Cache::invalidateTags($content_entity->getCacheTagsToInvalidate());
-        $this->invalidateGroupMembershipAdminCaches($content_entity->getGroup());
+        $this->invalidateGroupMembershipAdminCaches($group);
         break;
 
     }
