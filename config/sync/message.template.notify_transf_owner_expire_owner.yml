@@ -11,7 +11,7 @@ third_party_settings:
     message_template_type: notification
 template: notify_transf_owner_expire_owner
 label: 'NOTIFY :: MT:: Transfer ownership request - request timeout (owner)'
-description: ''
+description: 'Notifies the entity owner when the request ownership transfer has expired'
 text:
   -
     value: "<p>Your request to transfer ownership to [message:field_referenced_flag:entity:field_new_owner_ref:entity:field_first_name:value] [message:field_referenced_flag:entity:field_new_owner_ref:entity:field_last_name:value] has been expired</p>\r\n"
