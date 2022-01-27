@@ -254,6 +254,10 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
         'ss_global_content_type' => [
           'news' => t('News article', [], ['context' => 'eic_search']),
         ],
+        'bs_content_is_private' => [
+          'false' => t('Public', [], ['context' => 'eic_search']),
+          'true' => t('Private', [], ['context' => 'eic_search']),
+        ],
       ],
     ];
 
@@ -335,6 +339,7 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
           'label_file' => $this->t('File', [], ['context' => 'eic_group']),
           'label_image' => $this->t('Image', [], ['context' => 'eic_group']),
           'like' => $this->t('Like', [], ['context' => 'eic_group']),
+          'unlike' => $this->t('Unlike', [], ['context' => 'eic_group']),
           'add_video' => $this->t('Add video', [], ['context' => 'eic_group']),
           'add_document' => $this->t(
             'Add document',
@@ -367,6 +372,8 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
           ),
           'show_more' => $this->t('Show more', [], ['context' => 'eic_group']),
           'collapse' => $this->t('Collapse', [], ['context' => 'eic_group']),
+          'highlight' => $this->t('Highlight this content', [], ['context' => 'eic_group']),
+          'unHighlight' => $this->t('Disable highlighting of this content', [], ['context' => 'eic_group'])
         ],
       ];
   }

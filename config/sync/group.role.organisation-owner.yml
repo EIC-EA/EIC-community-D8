@@ -38,5 +38,7 @@ permissions:
   - 'view group_node:news entity'
   - 'view latest group version'
   - 'view latest version'
+  - 'view own unpublished group'
   - 'view own unpublished group_node:event entity'
+  - 'view own unpublished group_node:news entity'
   - 'view unpublished group_node:news entity'

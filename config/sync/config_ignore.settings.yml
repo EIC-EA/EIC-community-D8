@@ -1,3 +1,5 @@
+_core:
+  default_config_hash: UVH1aJ4b44UM-VdPVN7hNNuuVqfReJxwfVeDQH1Hvsk
 ignored_config_entities:
   - 'search_api.server.global:backend_config.connector_config.scheme'
   - 'search_api.server.global:backend_config.connector_config.host'
@@ -19,5 +21,3 @@ ignored_config_entities:
   - 'smtp.settings:smtp_client_hostname'
   - 'smtp.settings:smtp_from'
   - 'smtp.settings:smtp_fromname'
-_core:
-  default_config_hash: UVH1aJ4b44UM-VdPVN7hNNuuVqfReJxwfVeDQH1Hvsk

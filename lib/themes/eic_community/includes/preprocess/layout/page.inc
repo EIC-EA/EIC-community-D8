@@ -22,7 +22,7 @@ function eic_community_preprocess_page(array &$variables): void {
   ]);
 
   foreach ($variables['page']['content'] as $key => $content_section) {
-    if (isset($content_section['#theme']) && $content_section['#theme'] === 'block') {
+    if (is_array($content_section) && isset($content_section['#theme']) && $content_section['#theme'] === 'block') {
       $variables['page']['content'][$key]['#attributes']['class'][] = 'ecl-section-wrapper';
     }
   }
@@ -69,6 +69,10 @@ function eic_community_preprocess_page(array &$variables): void {
     ];
 
     $variables['site_header']['user'] = $user;
+    // We need to add the session cache context otherwise the header doesn't
+    // update when log in with another account with the same permissions.
+    // @todo In the future we should consider creating a block a load it here.
+    $variables['#cache']['contexts'][] = 'session';
   }
 
   $footer_sections = [];

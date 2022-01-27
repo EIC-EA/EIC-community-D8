@@ -20,7 +20,7 @@ services:
       - { name: request_handler }
   eic_flags.transfer_ownership_request_handler:
     class: Drupal\eic_flags\Service\TransferOwnershipRequestHandler
-    arguments: [ '@module_handler', '@entity_type.manager', '@flag', '@content_moderation.moderation_information', '@request_stack', '@entity_field.manager' ]
+    arguments: [ '@module_handler', '@entity_type.manager', '@flag', '@content_moderation.moderation_information', '@request_stack', '@entity_field.manager', '@eic_search.solr_document_processor' ]
     tags:
       - { name: request_handler }
   eic_flags.request_access_checker:
@@ -46,4 +46,6 @@ services:
 
   eic_flags.helper:
     class: Drupal\eic_flags\FlagHelper
-    arguments: [ '@flag', '@flag.count', '@entity_type.manager', '@?eic_groups.helper' ]
+    calls:
+      - [ setGroupsHelper, [ '@?eic_groups.helper' ] ]
+    arguments: [ '@flag', '@flag.count', '@entity_type.manager', '@current_user', '@?eic_groups.helper' ]

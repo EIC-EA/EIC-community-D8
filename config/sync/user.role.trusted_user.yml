@@ -23,6 +23,7 @@ dependencies:
     - eic_flags
     - eic_private_content
     - eic_private_message
+    - eic_topics
     - filter
     - flag
     - group
@@ -38,6 +39,7 @@ permissions:
   - 'access contact group users page'
   - 'access contact user page'
   - 'access group overview'
+  - 'access topics activity stream'
   - 'access user profiles'
   - 'add content to books'
   - 'create eic_document media'
