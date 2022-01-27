@@ -20,6 +20,7 @@ use Drupal\eic_flags\FlagType;
 use Drupal\eic_groups\Constants\GroupVisibilityType;
 use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_media_statistics\EntityFileDownloadCount;
+use Drupal\eic_messages\MessageTemplateTypes;
 use Drupal\eic_private_message\Constants\PrivateMessage;
 use Drupal\eic_search\Search\Sources\GroupEventSourceType;
 use Drupal\eic_search\SolrIndexes;
@@ -33,6 +34,7 @@ use Drupal\oec_group_flex\OECGroupFlexHelper;
 use Drupal\group\GroupMembership;
 use Drupal\image\Entity\ImageStyle;
 use Drupal\media\MediaInterface;
+use Drupal\message\Entity\Message;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use Drupal\node\NodeInterface;
@@ -419,26 +421,44 @@ class SolrDocumentProcessor {
       return;
     }
 
+    $index_views = TRUE;
+    $index_comments = TRUE;
+    $index_downloads = TRUE;
+
+    // Discard some counters from being indexed depending on the node type.
+    switch ($node->bundle()) {
+      case 'wiki_page':
+        $index_comments = FALSE;
+        break;
+
+    }
+
     $views = $this->nodeStatisticsDatabaseStorage->fetchView($node->id());
 
-    $this->addOrUpdateDocumentField(
-      $document,
-      'its_statistics_view',
-      $fields,
-      $views ? $views->getTotalCount() : 0
-    );
-    $this->addOrUpdateDocumentField(
-      $document,
-      'its_content_comment_count',
-      $fields,
-      $this->commentsHelper->countEntityComments($node)
-    );
-    $this->addOrUpdateDocumentField(
-      $document,
-      'its_document_download_total',
-      $fields,
-      $this->entityDownloadHelper->getFileDownloads($node)
-    );
+    if ($index_views) {
+      $this->addOrUpdateDocumentField(
+        $document,
+        'its_statistics_view',
+        $fields,
+        $views ? $views->getTotalCount() : 0
+      );
+    }
+    if ($index_comments) {
+      $this->addOrUpdateDocumentField(
+        $document,
+        'its_content_comment_count',
+        $fields,
+        $this->commentsHelper->countEntityComments($node)
+      );
+    }
+    if ($index_downloads) {
+      $this->addOrUpdateDocumentField(
+        $document,
+        'its_document_download_total',
+        $fields,
+        $this->entityDownloadHelper->getFileDownloads($node)
+      );
+    }
   }
 
   /**
@@ -742,8 +762,35 @@ class SolrDocumentProcessor {
     $entity_id = NULL;
     $entity_type = NULL;
     $last_flagging_flag_types = [];
+    $datasource = $fields['ss_search_api_datasource'];
 
-    switch ($fields['ss_search_api_datasource']) {
+    // We want to include the node flags in the document when datasource is
+    // entity message. This way we avoid duplicated logic.
+    if ($datasource === 'entity:message') {
+      $mid = $fields['its_message_id'];
+      $message = Message::load($mid);
+      $message_type = $message->getTemplate()->getThirdPartySetting('eic_messages', 'message_template_type');
+
+      if (
+        $message_type === MessageTemplateTypes::STREAM &&
+        $message->hasField('field_referenced_node') &&
+        $message->hasField('field_entity_type')
+      ) {
+        switch ($message->get('field_entity_type')->value) {
+          case 'wiki_page':
+            // For wiki pages we don't show flag counts.
+            break;
+
+          default:
+            $fields['its_content_nid'] = $message->get('field_referenced_node')->target_id;
+            $datasource = 'entity:node';
+            break;
+
+        }
+      }
+    }
+
+    switch ($datasource) {
       case 'entity:node':
         $entity_id = $fields['its_content_nid'];
         $entity_type = 'node';
@@ -763,6 +810,7 @@ class SolrDocumentProcessor {
           isset($flags_count['like_content']) ? $flags_count['like_content'] : 0
         );
         break;
+
       case 'entity:group':
         $entity_id = $fields['its_group_id_integer'];
         $entity_type = 'group';
@@ -777,6 +825,7 @@ class SolrDocumentProcessor {
           isset($flags_count['recommend_group']) ? $flags_count['recommend_group'] : 0
         );
         break;
+
     }
 
     // If we don't have a proper entity ID and type, skip this document.

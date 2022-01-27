@@ -1,0 +1,22 @@
+uuid: c144a5e2-2140-4d27-99a3-5ce8465a6af7
+langcode: en
+status: true
+dependencies:
+  module:
+    - group
+id: group_event
+label: 'Group - Event'
+type: 'canonical_entities:group'
+pattern: 'events/[group:group_truncated_title:40]'
+selection_criteria:
+  1bd5d02e-6e8c-4fbe-8aa5-317c54fe2b84:
+    id: 'entity_bundle:group'
+    negate: false
+    uuid: 1bd5d02e-6e8c-4fbe-8aa5-317c54fe2b84
+    context_mapping:
+      group: group
+    bundles:
+      event: event
+selection_logic: and
+weight: -5
+relationships: {  }

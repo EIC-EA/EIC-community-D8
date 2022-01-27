@@ -26,7 +26,7 @@ content:
     label: hidden
     settings: {  }
     third_party_settings: {  }
-    weight: 3
+    weight: 5
     region: content
   field_document_type:
     type: entity_reference_label
@@ -34,7 +34,7 @@ content:
     settings:
       link: true
     third_party_settings: {  }
-    weight: 11
+    weight: 14
     region: content
   field_gallery_slides:
     type: entity_reference_revisions_entity_view
@@ -43,7 +43,7 @@ content:
       view_mode: default
       link: ''
     third_party_settings: {  }
-    weight: 8
+    weight: 9
     region: content
   field_language:
     type: entity_reference_label
@@ -60,7 +60,7 @@ content:
       view_mode: default
       link: ''
     third_party_settings: {  }
-    weight: 16
+    weight: 15
     region: content
   field_vocab_geo:
     type: entity_reference_label
@@ -68,7 +68,7 @@ content:
     settings:
       link: true
     third_party_settings: {  }
-    weight: 1
+    weight: 2
     region: content
   field_vocab_topics:
     type: entity_reference_label
@@ -76,7 +76,7 @@ content:
     settings:
       link: true
     third_party_settings: {  }
-    weight: 2
+    weight: 4
     region: content
   flag_bookmark_content:
     settings: {  }
@@ -86,22 +86,17 @@ content:
   flag_follow_content:
     settings: {  }
     third_party_settings: {  }
-    weight: 10
+    weight: 11
     region: content
   flag_highlight_content:
     settings: {  }
     third_party_settings: {  }
-    weight: 10
+    weight: 12
     region: content
   flag_like_content:
     settings: {  }
     third_party_settings: {  }
-    weight: 10
-    region: content
-  flag_recommend:
-    settings: {  }
-    third_party_settings: {  }
-    weight: 10
+    weight: 13
     region: content
   langcode:
     type: language
@@ -135,7 +130,7 @@ content:
       format_custom_false: ''
       format_custom_true: ''
     third_party_settings: {  }
-    weight: 2
+    weight: 3
     region: content
   published_at:
     type: timestamp
@@ -150,4 +145,5 @@ content:
 hidden:
   extra_field_eic_theme_helper_short_title_with_fallback: true
   field_comments: true
+  flag_recommend: true
   search_api_excerpt: true

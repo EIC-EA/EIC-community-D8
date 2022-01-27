@@ -1,7 +1,7 @@
 .ecl-highlight {
   $node: &;
 
-  > a {
+  &__item{
     background-color: transparent;
     color: map-get($ecl-colors, 'blue-25');
     line-height: 0;
@@ -26,12 +26,12 @@
       background-color: map-get($ecl-colors, 'white');
     }
 
-    &:hover {
+    &:not(div):hover {
         color: map-get($ecl-colors, 'blue');
     }
   }
 
-  &--is-highlighted > a, &--is-highlighted > a:hover {
+  &--is-highlighted > &__item, &--is-highlighted > &__item:not(div):hover {
     color: map-get($ecl-colors, 'yellow-100');
     opacity: 1;
 
@@ -39,12 +39,16 @@
       background-color: map-get($ecl-colors, 'black');
     }
 
-    &:hover {
+    &:not(div):hover {
       color: map-get($ecl-colors, 'yellow-110');
     }
   }
 
   &__label {
     @include visually-hidden;
+  }
+
+  &__tooltip {
+    text-align: center;
   }
 }

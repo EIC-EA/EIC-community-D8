@@ -36,7 +36,7 @@ content:
     label: hidden
     settings: {  }
     third_party_settings: {  }
-    weight: 101
+    weight: 7
     region: content
   field_date_range:
     type: daterange_default
@@ -46,7 +46,7 @@ content:
       format_type: medium
       separator: '-'
     third_party_settings: {  }
-    weight: 109
+    weight: 15
     region: content
   field_document_media:
     type: entity_reference_label
@@ -54,7 +54,7 @@ content:
     settings:
       link: true
     third_party_settings: {  }
-    weight: 102
+    weight: 8
     region: content
   field_image:
     type: entity_reference_label
@@ -62,7 +62,7 @@ content:
     settings:
       link: true
     third_party_settings: {  }
-    weight: 114
+    weight: 20
     region: content
   field_language:
     type: entity_reference_label
@@ -70,7 +70,7 @@ content:
     settings:
       link: true
     third_party_settings: {  }
-    weight: 112
+    weight: 18
     region: content
   field_link:
     type: link
@@ -82,21 +82,21 @@ content:
       rel: ''
       target: ''
     third_party_settings: {  }
-    weight: 107
+    weight: 13
     region: content
   field_location:
     type: address_default
     label: above
     settings: {  }
     third_party_settings: {  }
-    weight: 110
+    weight: 16
     region: content
   field_location_type:
     type: list_default
     label: above
     settings: {  }
     third_party_settings: {  }
-    weight: 111
+    weight: 17
     region: content
   field_organised_by:
     type: string
@@ -104,7 +104,7 @@ content:
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    weight: 106
+    weight: 12
     region: content
   field_social_links:
     type: font_awesome
@@ -114,7 +114,7 @@ content:
       orientation: vertical
       new_tab: true
     third_party_settings: {  }
-    weight: 108
+    weight: 14
     region: content
   field_vocab_event_type:
     type: entity_reference_label
@@ -122,7 +122,7 @@ content:
     settings:
       link: true
     third_party_settings: {  }
-    weight: 105
+    weight: 11
     region: content
   field_vocab_geo:
     type: entity_reference_label
@@ -130,7 +130,7 @@ content:
     settings:
       link: true
     third_party_settings: {  }
-    weight: 104
+    weight: 10
     region: content
   field_vocab_topics:
     type: entity_reference_label
@@ -138,7 +138,7 @@ content:
     settings:
       link: true
     third_party_settings: {  }
-    weight: 103
+    weight: 9
     region: content
   field_website_url:
     type: link
@@ -150,37 +150,32 @@ content:
       rel: ''
       target: ''
     third_party_settings: {  }
-    weight: 113
+    weight: 19
     region: content
   flag_bookmark_content:
     settings: {  }
     third_party_settings: {  }
-    weight: 10
+    weight: 5
     region: content
   flag_follow_content:
     settings: {  }
     third_party_settings: {  }
-    weight: 10
+    weight: 4
     region: content
   flag_highlight_content:
     settings: {  }
     third_party_settings: {  }
-    weight: 10
+    weight: 3
     region: content
   flag_like_content:
     settings: {  }
     third_party_settings: {  }
-    weight: 10
-    region: content
-  flag_recommend:
-    settings: {  }
-    third_party_settings: {  }
-    weight: 10
+    weight: 2
     region: content
   links:
     settings: {  }
     third_party_settings: {  }
-    weight: 100
+    weight: 6
     region: content
   member_content_edit_access:
     type: boolean
@@ -190,7 +185,7 @@ content:
       format_custom_false: ''
       format_custom_true: ''
     third_party_settings: {  }
-    weight: 1
+    weight: 0
     region: content
   private:
     type: boolean
@@ -204,6 +199,7 @@ content:
     region: content
 hidden:
   extra_field_eic_theme_helper_short_title_with_fallback: true
+  flag_recommend: true
   langcode: true
   published_at: true
   search_api_excerpt: true

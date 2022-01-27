@@ -29,8 +29,4 @@ permissions:
   - 'join group'
   - 'share content between groups'
   - 'view group'
-  - 'view group_node:event content'
-  - 'view group_node:event entity'
-  - 'view group_node:news content'
-  - 'view group_node:news entity'
   - 'view latest group version'
