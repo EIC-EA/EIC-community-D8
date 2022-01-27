@@ -22,6 +22,8 @@ class SmedIdConverter extends EntityConverter {
 
   /**
    * {@inheritdoc}
+   *
+   * @todo Handle different sets of SMED IDs depending on the group type.
    */
   public function convert($value, $definition, $name, array $defaults) {
     // Get the field name that contains the SMED ID.
