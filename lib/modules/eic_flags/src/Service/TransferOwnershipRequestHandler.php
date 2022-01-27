@@ -91,6 +91,7 @@ class TransferOwnershipRequestHandler extends AbstractRequestHandler {
       RequestStatus::DENIED => 'notify_transfer_owner_req_denied',
       RequestStatus::ACCEPTED => 'notify_transfer_owner_req_accept',
       RequestStatus::TIMEOUT => 'notify_transf_owner_expire',
+      RequestStatus::CANCELLED => 'notify_transfer_owner_req_cancel',
     ];
   }
 

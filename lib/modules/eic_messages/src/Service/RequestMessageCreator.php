@@ -226,9 +226,10 @@ class RequestMessageCreator implements ContainerInjectionInterface {
       );
 
       if ($handler->getType() === RequestTypes::DELETE && RequestStatus::ACCEPTED === $response) {
-        // For accepted delete requests things are a bit more different. Since it is a hard delete
-        // the entity is lost forever. This means tokens won't return a valid value anymore.
-        // We have to render the content and store it before the entity is gone.
+        // For accepted delete requests things are a bit more different. Since
+        // it is a hard delete the entity is lost forever. This means tokens
+        // won't return a valid value anymore. We have to render the content
+        // and store it before the entity is gone.
         $content = $this->getRenderedContent($message);
         $message->set('field_rendered_content',
           ['value' => $content, 'format' => 'full_html']);
@@ -434,6 +435,11 @@ class RequestMessageCreator implements ContainerInjectionInterface {
       $message['field_request_deny_url'] = [
         'uri' => $deny_url->toString(),
       ];
+    }
+    elseif ($response === RequestStatus::CANCELLED) {
+      // We send the notification to the requested user when owner cancels a
+      // request.
+      $message['uid'] = $new_owner->id();
     }
     else {
       $message['uid'] = $flagging->getOwner()->id();
