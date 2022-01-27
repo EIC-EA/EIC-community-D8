@@ -30,10 +30,30 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class TransferOwnershipRequestHandler extends AbstractRequestHandler {
 
   /**
-   * @var SolrDocumentProcessor $solrDocumentProcessor
+   * The Solr document processor service.
+   *
+   * @var \Drupal\eic_search\Service\SolrDocumentProcessor
    */
   private $solrDocumentProcessor;
 
+  /**
+   * TransferOwnershipRequestHandler constructor.
+   *
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   *   The module handler service.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
+   * @param \Drupal\flag\FlagService $flag_service
+   *   Flag service provided by the flag module.
+   * @param \Drupal\content_moderation\ModerationInformationInterface $moderation_information
+   *   Core's moderation information service.
+   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
+   *   The request stack object.
+   * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager
+   *   The entity field manager.
+   * @param \Drupal\eic_search\Service\SolrDocumentProcessor $solr_document_processor
+   *   The Solr document processor service.
+   */
   public function __construct(
     ModuleHandlerInterface $module_handler,
     EntityTypeManagerInterface $entity_type_manager,
@@ -267,11 +287,17 @@ class TransferOwnershipRequestHandler extends AbstractRequestHandler {
 
     // Allow access to transfer group ownership if the member is a group admin
     // but not the owner and if there are no open requests for the member.
-    return AccessResult::allowedIf(
+    if (
       !in_array($group_owner_role, array_keys($membership->getRoles())) &&
-      in_array($group_admin_role, array_keys($membership->getRoles())))
-      ->addCacheableDependency($entity)
-      ->addCacheableDependency($group);
+      in_array($group_admin_role, array_keys($membership->getRoles()))
+    ) {
+      $access = AccessResult::allowed()
+        ->addCacheableDependency($account)
+        ->addCacheableDependency($entity)
+        ->addCacheableDependency($group);
+    }
+
+    return $access;
   }
 
   /**
@@ -314,6 +340,7 @@ class TransferOwnershipRequestHandler extends AbstractRequestHandler {
     // Default access.
     $access = AccessResult::forbidden()
       ->addCacheableDependency($account)
+      ->addCacheableDependency($entity)
       ->addCacheableDependency($group);
 
     // We return access denied if the group content entity is not a group
@@ -342,11 +369,9 @@ class TransferOwnershipRequestHandler extends AbstractRequestHandler {
       return $access;
     }
 
-    // If current user is a group owner or a power user, we return access
-    // forbidden.
+    // If current user is a group owner, we return access forbidden.
     if (
-      $account->id() === EICGroupsHelper::getGroupOwner($group)->id() ||
-      UserHelper::isPowerUser($account)
+      $account->id() === EICGroupsHelper::getGroupOwner($group)->id()
     ) {
       return $access;
     }
@@ -363,12 +388,15 @@ class TransferOwnershipRequestHandler extends AbstractRequestHandler {
 
     // Allow access to transfer group ownership if the member is a group admin
     // but not the owner.
-    $access = AccessResult::allowedIf(
+    if (
       !in_array($group_owner_role, array_keys($membership->getRoles())) &&
-      in_array($group_admin_role, array_keys($membership->getRoles())))
-      ->addCacheableDependency($account)
-      ->addCacheableDependency($entity)
-      ->addCacheableDependency($group);
+      in_array($group_admin_role, array_keys($membership->getRoles()))
+    ) {
+      $access = AccessResult::allowed()
+        ->addCacheableDependency($account)
+        ->addCacheableDependency($entity)
+        ->addCacheableDependency($group);
+    }
 
     // Set max-age based on expiration date.
     if ($expiration_date > 0) {
@@ -418,6 +446,7 @@ class TransferOwnershipRequestHandler extends AbstractRequestHandler {
     // Default access.
     $access = AccessResult::forbidden()
       ->addCacheableDependency($account)
+      ->addCacheableDependency($entity)
       ->addCacheableDependency($group);
 
     // We return access denied if the group content entity is not a group
@@ -446,10 +475,15 @@ class TransferOwnershipRequestHandler extends AbstractRequestHandler {
       return $access;
     }
 
-    // Allow access to cancel the request if user is a power user.
-    if (UserHelper::isPowerUser($account)) {
+    // Allow access to cancel the request if the current account is a power
+    // user and the requested user corresponds to a different account.
+    if (
+      UserHelper::isPowerUser($account) &&
+      $entity->getEntity()->id() !== $account->id()
+    ) {
       return AccessResult::allowed()
         ->addCacheableDependency($account)
+        ->addCacheableDependency($entity)
         ->addCacheableDependency($group);
     }
 
@@ -462,14 +496,17 @@ class TransferOwnershipRequestHandler extends AbstractRequestHandler {
     $group_owner_role = $group->bundle() . '-' . EICGroupsHelper::GROUP_TYPE_OWNER_ROLE;
 
     // Allow access to cancel group ownership if current user is a group owner.
-    $access = AccessResult::allowedIf(
+    if (
       in_array(
         $group_owner_role,
         array_keys($membership->getRoles())
-      ))
-      ->addCacheableDependency($account)
-      ->addCacheableDependency($entity)
-      ->addCacheableDependency($group);
+      )
+    ) {
+      $access = AccessResult::allowed()
+        ->addCacheableDependency($account)
+        ->addCacheableDependency($entity)
+        ->addCacheableDependency($group);
+    }
 
     // Set max-age based on expiration date.
     if ($expiration_date > 0) {
