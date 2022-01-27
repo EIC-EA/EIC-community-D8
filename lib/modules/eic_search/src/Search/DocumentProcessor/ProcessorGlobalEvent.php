@@ -18,14 +18,6 @@ class ProcessorGlobalEvent extends DocumentProcessor {
    * @inheritDoc
    */
   public function process(Document &$document, array $fields, array $items = []): void {
-    $group_type = array_key_exists('ss_group_type', $fields) ?
-      $fields['ss_group_type'] :
-      NULL;
-
-    if ($group_type !== 'event') {
-      return;
-    }
-
     $start_date = new DrupalDateTime($fields['ds_group_field_date_range']);
     $end_date = new DrupalDateTime($fields['ds_group_field_date_range_end_value']);
 
