@@ -807,6 +807,11 @@ class SolrDocumentProcessor {
         ];
 
         $node = Node::load($entity_id);
+
+        if (!$node instanceof NodeInterface) {
+          break;
+        }
+
         $flags_count = $this->flagCountManager->getEntityFlagCounts($node);
 
         $this->addOrUpdateDocumentField(
@@ -821,8 +826,13 @@ class SolrDocumentProcessor {
         $entity_id = $fields['its_group_id_integer'];
         $entity_type = 'group';
 
-        $node = Group::load($entity_id);
-        $flags_count = $this->flagCountManager->getEntityFlagCounts($node);
+        $group = Group::load($entity_id);
+
+        if (!$group instanceof GroupInterface) {
+          break;
+        }
+
+        $flags_count = $this->flagCountManager->getEntityFlagCounts($group);
 
         $this->addOrUpdateDocumentField(
           $document,
