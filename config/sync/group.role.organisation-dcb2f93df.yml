@@ -28,6 +28,5 @@ permissions:
   - 'access wiki overview'
   - 'join group'
   - 'share content between groups'
-  - 'view comments'
   - 'view group'
   - 'view latest group version'
