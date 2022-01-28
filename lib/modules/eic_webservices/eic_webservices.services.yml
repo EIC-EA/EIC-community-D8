@@ -2,6 +2,9 @@ services:
   eic_webservices.ws_helper:
     class: Drupal\eic_webservices\Utility\EicWsHelper
     arguments: ['@config.factory', '@entity_type.manager']
+  eic_webservices.taxonomy_helper:
+    class: Drupal\eic_webservices\Utility\SmedTaxonomyHelper
+    arguments: ['@config.factory', '@entity_type.manager', '@entity_field.manager']
   paramconverter.eic_webservices.entity_smed_id:
     parent: paramconverter.entity
     class: Drupal\eic_webservices\ParamConverter\SmedIdConverter
