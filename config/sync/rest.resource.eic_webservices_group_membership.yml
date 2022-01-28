@@ -12,7 +12,6 @@ granularity: resource
 configuration:
   methods:
     - POST
-    - DELETE
   formats:
     - json
   authentication:
