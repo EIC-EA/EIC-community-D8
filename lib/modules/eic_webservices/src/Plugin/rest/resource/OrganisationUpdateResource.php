@@ -4,15 +4,11 @@ namespace Drupal\eic_webservices\Plugin\rest\resource;
 
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Logger\LoggerChannelInterface;
 use Drupal\eic_webservices\Controller\SubRequestController;
 use Drupal\rest\Plugin\ResourceBase;
-use Drupal\rest\Plugin\Type\ResourcePluginManager;
 use Drupal\rest\ResourceResponse;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpKernel\HttpKernel;
 
 /**
  * Provides a resource to update organisations through a POST method.
@@ -52,43 +48,6 @@ class OrganisationUpdateResource extends ResourceBase {
   protected $resourcePluginManager;
 
   /**
-   * Constructs a Drupal\rest\Plugin\ResourceBase object.
-   *
-   * @param array $configuration
-   *   A configuration array containing information about the plugin instance.
-   * @param string $plugin_id
-   *   The plugin_id for the plugin instance.
-   * @param mixed $plugin_definition
-   *   The plugin implementation definition.
-   * @param array $serializer_formats
-   *   The available serialization formats.
-   * @param \Drupal\Core\Logger\LoggerChannelInterface $logger
-   *   A logger instance.
-   * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
-   *   The request stack.
-   * @param \Symfony\Component\HttpKernel\HttpKernel $httpKernel
-   *   The HTTP kernel.
-   * @param \Drupal\rest\Plugin\Type\ResourcePluginManager $resourcePluginManager
-   *   The REST resource plugin manager.
-   */
-  public function __construct(
-    array $configuration,
-    $plugin_id,
-    $plugin_definition,
-    array $serializer_formats,
-    LoggerChannelInterface $logger,
-    RequestStack $requestStack,
-    HttpKernel $httpKernel,
-    ResourcePluginManager $resourcePluginManager
-  ) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition, $serializer_formats,
-      $logger);
-    $this->requestStack = $requestStack;
-    $this->httpKernel = $httpKernel;
-    $this->resourcePluginManager = $resourcePluginManager;
-  }
-
-  /**
    * {@inheritdoc}
    */
   public static function create(
@@ -97,16 +56,11 @@ class OrganisationUpdateResource extends ResourceBase {
     $plugin_id,
     $plugin_definition
   ) {
-    return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->getParameter('serializer.formats'),
-      $container->get('logger.factory')->get('rest'),
-      $container->get('request_stack'),
-      $container->get('http_kernel.basic'),
-      $container->get('plugin.manager.rest')
-    );
+    $instance = parent::create($container, $configuration, $plugin_id, $plugin_definition);
+    $instance->requestStack = $container->get('request_stack');
+    $instance->httpKernel = $container->get('http_kernel.basic');
+    $instance->resourcePluginManager = $container->get('plugin.manager.rest');
+    return $instance;
   }
 
   /**
