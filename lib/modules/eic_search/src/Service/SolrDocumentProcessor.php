@@ -20,6 +20,7 @@ use Drupal\eic_flags\FlagType;
 use Drupal\eic_groups\Constants\GroupVisibilityType;
 use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_media_statistics\EntityFileDownloadCount;
+use Drupal\eic_messages\MessageTemplateTypes;
 use Drupal\eic_private_message\Constants\PrivateMessage;
 use Drupal\eic_search\Search\Sources\GroupEventSourceType;
 use Drupal\eic_search\SolrIndexes;
@@ -33,6 +34,7 @@ use Drupal\oec_group_flex\OECGroupFlexHelper;
 use Drupal\group\GroupMembership;
 use Drupal\image\Entity\ImageStyle;
 use Drupal\media\MediaInterface;
+use Drupal\message\Entity\Message;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use Drupal\node\NodeInterface;
@@ -196,6 +198,9 @@ class SolrDocumentProcessor {
     $changed = 0;
     $language = t('English', [], ['context' => 'eic_search'])->render();
 
+    // Set by default parent group to TRUE and method processGroupContentData will update it.
+    $this->addOrUpdateDocumentField($document, 'its_global_group_parent_published', $fields, 1);
+
     switch ($datasource) {
       case 'entity:node':
         $title = $fields['ss_content_title'];
@@ -321,6 +326,7 @@ class SolrDocumentProcessor {
     $document->addField('ss_drupal_timestamp', strtotime($date));
     $document->addField('ss_drupal_changed_timestamp', strtotime($changed));
     $document->addField('ss_global_fullname', $fullname);
+    $document->addField('tm_global_fullname', $fullname);
     $document->addField('ss_global_user_url', $user_url);
     $this->addOrUpdateDocumentField($document, 'sm_content_field_vocab_topics_string', $fields, $topics);
     $this->addOrUpdateDocumentField($document, 'sm_content_field_vocab_geo_string', $fields, $geo);
@@ -370,18 +376,21 @@ class SolrDocumentProcessor {
     $group_parent_label = '';
     $group_parent_url = '';
     $group_parent_id = -1;
+    $group_is_published = TRUE;
 
     if (array_key_exists('its_content__group_content__entity_id_gid', $fields)) {
       if ($group_entity = Group::load($fields['its_content__group_content__entity_id_gid'])) {
         $group_parent_label = $group_entity->label();
         $group_parent_url = $group_entity->toUrl()->toString();
         $group_parent_id = $group_entity->id();
+        $group_is_published = $group_entity->isPublished();
       }
     }
 
     $document->addField('ss_global_group_parent_label', $group_parent_label);
     $document->addField('ss_global_group_parent_url', $group_parent_url);
     $document->addField('ss_global_group_parent_id', $group_parent_id);
+    $this->addOrUpdateDocumentField($document, 'its_global_group_parent_published', $fields, (int) $group_is_published);
   }
 
   /**
@@ -419,26 +428,44 @@ class SolrDocumentProcessor {
       return;
     }
 
+    $index_views = TRUE;
+    $index_comments = TRUE;
+    $index_downloads = TRUE;
+
+    // Discard some counters from being indexed depending on the node type.
+    switch ($node->bundle()) {
+      case 'wiki_page':
+        $index_comments = FALSE;
+        break;
+
+    }
+
     $views = $this->nodeStatisticsDatabaseStorage->fetchView($node->id());
 
-    $this->addOrUpdateDocumentField(
-      $document,
-      'its_statistics_view',
-      $fields,
-      $views ? $views->getTotalCount() : 0
-    );
-    $this->addOrUpdateDocumentField(
-      $document,
-      'its_content_comment_count',
-      $fields,
-      $this->commentsHelper->countEntityComments($node)
-    );
-    $this->addOrUpdateDocumentField(
-      $document,
-      'its_document_download_total',
-      $fields,
-      $this->entityDownloadHelper->getFileDownloads($node)
-    );
+    if ($index_views) {
+      $this->addOrUpdateDocumentField(
+        $document,
+        'its_statistics_view',
+        $fields,
+        $views ? $views->getTotalCount() : 0
+      );
+    }
+    if ($index_comments) {
+      $this->addOrUpdateDocumentField(
+        $document,
+        'its_content_comment_count',
+        $fields,
+        $this->commentsHelper->countEntityComments($node)
+      );
+    }
+    if ($index_downloads) {
+      $this->addOrUpdateDocumentField(
+        $document,
+        'its_document_download_total',
+        $fields,
+        $this->entityDownloadHelper->getFileDownloads($node)
+      );
+    }
   }
 
   /**
@@ -742,8 +769,35 @@ class SolrDocumentProcessor {
     $entity_id = NULL;
     $entity_type = NULL;
     $last_flagging_flag_types = [];
+    $datasource = $fields['ss_search_api_datasource'];
 
-    switch ($fields['ss_search_api_datasource']) {
+    // We want to include the node flags in the document when datasource is
+    // entity message. This way we avoid duplicated logic.
+    if ($datasource === 'entity:message') {
+      $mid = $fields['its_message_id'];
+      $message = Message::load($mid);
+      $message_type = $message->getTemplate()->getThirdPartySetting('eic_messages', 'message_template_type');
+
+      if (
+        $message_type === MessageTemplateTypes::STREAM &&
+        $message->hasField('field_referenced_node') &&
+        $message->hasField('field_entity_type')
+      ) {
+        switch ($message->get('field_entity_type')->value) {
+          case 'wiki_page':
+            // For wiki pages we don't show flag counts.
+            break;
+
+          default:
+            $fields['its_content_nid'] = $message->get('field_referenced_node')->target_id;
+            $datasource = 'entity:node';
+            break;
+
+        }
+      }
+    }
+
+    switch ($datasource) {
       case 'entity:node':
         $entity_id = $fields['its_content_nid'];
         $entity_type = 'node';
@@ -754,6 +808,11 @@ class SolrDocumentProcessor {
         ];
 
         $node = Node::load($entity_id);
+
+        if (!$node instanceof NodeInterface) {
+          break;
+        }
+
         $flags_count = $this->flagCountManager->getEntityFlagCounts($node);
 
         $this->addOrUpdateDocumentField(
@@ -763,12 +822,18 @@ class SolrDocumentProcessor {
           isset($flags_count['like_content']) ? $flags_count['like_content'] : 0
         );
         break;
+
       case 'entity:group':
         $entity_id = $fields['its_group_id_integer'];
         $entity_type = 'group';
 
-        $node = Group::load($entity_id);
-        $flags_count = $this->flagCountManager->getEntityFlagCounts($node);
+        $group = Group::load($entity_id);
+
+        if (!$group instanceof GroupInterface) {
+          break;
+        }
+
+        $flags_count = $this->flagCountManager->getEntityFlagCounts($group);
 
         $this->addOrUpdateDocumentField(
           $document,
@@ -777,6 +842,7 @@ class SolrDocumentProcessor {
           isset($flags_count['recommend_group']) ? $flags_count['recommend_group'] : 0
         );
         break;
+
     }
 
     // If we don't have a proper entity ID and type, skip this document.
@@ -970,7 +1036,7 @@ class SolrDocumentProcessor {
    * @param $value
    */
   private function addOrUpdateDocumentField(Document &$document, $key, $fields, $value) {
-    array_key_exists($key, $fields) ?
+    array_key_exists($key, $document->getFields()) ?
       $document->setField($key, $value) :
       $document->addField($key, $value);
   }
@@ -1033,5 +1099,4 @@ class SolrDocumentProcessor {
       }
     }
   }
-
 }

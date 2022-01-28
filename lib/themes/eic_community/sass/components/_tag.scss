@@ -4,12 +4,10 @@
   hyphens: auto;
   word-wrap: break-word;
   text-decoration: none;
+  background-color: map-get($ecl-colors, 'grey-15');
+
   .ecl-teaser--is-highlighted & {
     background-color: map-get($ecl-colors, 'white');
-  }
-
-  @include adjust-from-section-color() {
-    background-color: map-get($ecl-colors, 'grey-15');
   }
 
   &--is-public {

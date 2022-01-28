@@ -158,12 +158,14 @@ class EntityOperations implements ContainerInjectionInterface {
       $this->publishGroupWiki($entity);
       // Invalidates group contents cache when the group has been published.
       $this->invalidateGroupContentCache($entity);
+      $this->solrDocumentProcessor->reIndexEntitiesFromGroup($entity);
     }
 
     // The group status has changed to unpublish.
     if ($entity->original->isPublished() && !$entity->isPublished()) {
       // Invalidates group contents cache when the group has been unpublished.
       $this->invalidateGroupContentCache($entity);
+      $this->solrDocumentProcessor->reIndexEntitiesFromGroup($entity);
     }
 
     // If title changed from original we need to reupdate group contents.
