@@ -4,7 +4,6 @@ namespace Drupal\eic_webservices\Plugin\rest\resource;
 
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Logger\LoggerChannel;
 use Drupal\Core\Logger\LoggerChannelInterface;
 use Drupal\eic_webservices\Controller\SubRequestController;
 use Drupal\rest\Plugin\ResourceBase;
@@ -25,7 +24,7 @@ use Symfony\Component\HttpKernel\HttpKernel;
  *   serialization_class = "Drupal\user\Entity\User",
  *   uri_paths = {
  *     "canonical" = "/smed/api/user/update/{user}",
- *     "https://www.drupal.org/link-relations/create" = "/smed/api/user/update/{user}"
+ *     "create" = "/smed/api/user/update/{user}"
  *   }
  * )
  */

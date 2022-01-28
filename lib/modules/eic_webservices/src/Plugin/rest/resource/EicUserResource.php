@@ -22,7 +22,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   serialization_class = "Drupal\user\Entity\User",
  *   uri_paths = {
  *     "canonical" = "/smed/api/user/{user}",
- *     "https://www.drupal.org/link-relations/create" = "/smed/api/user"
+ *     "create" = "/smed/api/user"
  *   }
  * )
  */
@@ -86,6 +86,7 @@ class EicUserResource extends EntityResource {
    *   The entity.
    *
    * @return \Drupal\rest\ResourceResponseInterface
+   *   The response.
    */
   public function post(EntityInterface $entity = NULL) {
     // Get the field name that contains the SMED ID.
@@ -129,6 +130,7 @@ class EicUserResource extends EntityResource {
    *   The current entity.
    *
    * @return \Drupal\rest\ResourceResponseInterface
+   *   The response.
    */
   public function patch(EntityInterface $original_entity, EntityInterface $entity = NULL) {
     parent::patch($original_entity, $entity);
