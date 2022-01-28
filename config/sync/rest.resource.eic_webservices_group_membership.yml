@@ -3,7 +3,6 @@ langcode: en
 status: true
 dependencies:
   module:
-    - basic_auth
     - eic_webservices
     - serialization
 id: eic_webservices_group_membership
@@ -15,4 +14,4 @@ configuration:
   formats:
     - json
   authentication:
-    - basic_auth
+    - eic_webservices_token_auth
