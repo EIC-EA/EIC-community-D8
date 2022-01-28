@@ -11,7 +11,7 @@
 
   &__wrapper {
     display: flex;
-    @include ecl-media-breakpoint-down('lg') {
+    @include ecl-media-breakpoint-down('md') {
       flex-direction: row-reverse;
       justify-content: space-between;
     }
