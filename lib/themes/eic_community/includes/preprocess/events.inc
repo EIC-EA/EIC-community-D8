@@ -218,8 +218,9 @@ function _eic_community_render_event_detail_page(array &$variables, EntityInterf
           'value' => format_size($download->get('filesize')->getString()),
         ],
       ],
-      'mime_type' => substr(strrchr($download->get('filemime')
-        ->getString(), '/'), 1),
+      'mime_type' => _eic_community_get_file_type_icon_name(
+        pathinfo($download->getFilename(), PATHINFO_EXTENSION)
+      ),
       'path' => $download_url,
     ];
   }
