@@ -1,0 +1,19 @@
+uuid: 49dc0bd6-cb78-4e92-bce6-9e2797078c3b
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_full_name
+    - paragraphs.paragraphs_type.organisation_member_external
+id: paragraph.organisation_member_external.field_full_name
+field_name: field_full_name
+entity_type: paragraph
+bundle: organisation_member_external
+label: 'Full name'
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

@@ -456,3 +456,32 @@ function eic_community_preprocess_paragraph__organisation_member(&$variables) {
     ],
   ];
 }
+
+/**
+ * Implement hook_preprocess_paragraph__PARAGRAPH_TYPE.
+ */
+function eic_community_preprocess_paragraph__organisation_member_external(&$variables) {
+  /** @var ParagraphInterface $paragraph */
+  $paragraph = $variables['paragraph'];
+
+  $media_picture = $paragraph->get('field_media')->referencedEntities();
+  $file = $media_picture ? File::load(
+    $media_picture[0]->get('oe_media_image')->target_id
+  ) : NULL;
+  $file_url = $file ? file_url_transform_relative(
+    file_create_url($file->get('uri')->value)
+  ) : NULL;
+
+  $location = $paragraph->get('field_location')->referencedEntities();
+
+  $variables['member_data'] = [
+    'icon_file_path' => $variables['eic_icon_path'],
+    'image' => [
+      'src' => $file_url,
+    ],
+    'title' => $paragraph->get('field_full_name')->value,
+    'job_titles' => $paragraph->get('field_job_title')->value,
+    'organisations' => $paragraph->get('field_organisation')->value,
+    'location' => $location ? ['label' => reset($location)->label()] : '',
+  ];
+}
