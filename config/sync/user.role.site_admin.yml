@@ -29,6 +29,7 @@ dependencies:
     - block_content_permissions
     - book
     - comment
+    - contact
     - content_moderation
     - contextual
     - eic_admin
@@ -41,6 +42,7 @@ dependencies:
     - filter
     - flag
     - group
+    - masquerade
     - media
     - message
     - node
@@ -146,6 +148,9 @@ permissions:
   - 'manage blocked entities'
   - 'manage contact form emails'
   - 'mark private content'
+  - 'masquerade as authenticated'
+  - 'masquerade as service_authentication'
+  - 'masquerade as trusted_user'
   - 'overview messages'
   - 'post comments'
   - 'publish archived content'
