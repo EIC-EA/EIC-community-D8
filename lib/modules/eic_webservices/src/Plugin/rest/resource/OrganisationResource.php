@@ -47,6 +47,11 @@ class OrganisationResource extends GroupResourceBase {
     // Process SMED taxonomy fields to convert the SMED ID to Term ID.
     $this->smedTaxonomyHelper->convertEntitySmedTaxonomyIds($entity);
 
+    // Set the author of the group.
+    if ($author_uid = $this->configFactory->get('eic_webservices.settings')->get('group_author')) {
+      $entity->setOwnerId($author_uid);
+    }
+
     // Initialise required fields if not provided.
     OrganisationsHelper::setRequiredFieldsDefaultValues($entity);
 

@@ -10,3 +10,6 @@ eic_webservices.settings:
     webservice_user_account:
       type: string
       label: 'Webservice user account'
+    group_author:
+      type: string
+      label: 'Group author'
