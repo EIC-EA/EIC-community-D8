@@ -1,0 +1,18 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - eic_webservices
+    - group
+    - hal
+id: eic_webservices_organisation
+plugin_id: eic_webservices_organisation
+granularity: resource
+configuration:
+  methods:
+    - GET
+    - POST
+  formats:
+    - hal_json
+  authentication:
+    - eic_webservices_token_auth
