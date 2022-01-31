@@ -10,6 +10,7 @@ use Drupal\eic_webservices\Utility\EicWsHelper;
 use Drupal\eic_webservices\Utility\SmedTaxonomyHelper;
 use Drupal\rest\Plugin\rest\resource\EntityResource;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Represents EIC Organisation Resource records as resources.
@@ -69,6 +70,24 @@ abstract class GroupResourceBase extends EntityResource {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $entity_type_manager, $serializer_formats, $logger, $config_factory, $link_relation_type_manager);
     $this->wsHelper = $eic_ws_helper;
     $this->smedTaxonomyHelper = $eic_smed_taxonomy_helper;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->get('entity_type.manager'),
+      $container->getParameter('serializer.formats'),
+      $container->get('logger.factory')->get('rest'),
+      $container->get('config.factory'),
+      $container->get('plugin.manager.link_relation_type'),
+      $container->get('eic_webservices.ws_helper'),
+      $container->get('eic_webservices.taxonomy_helper')
+    );
   }
 
   /**
