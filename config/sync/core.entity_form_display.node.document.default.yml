@@ -194,7 +194,7 @@ content:
     settings: {  }
     third_party_settings: {  }
   url_redirects:
-    weight: 50
+    weight: 24
     region: content
     settings: {  }
     third_party_settings: {  }

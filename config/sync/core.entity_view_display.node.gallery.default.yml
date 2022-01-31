@@ -98,11 +98,6 @@ content:
     third_party_settings: {  }
     weight: 13
     region: content
-  flag_recommend:
-    weight: 10
-    settings: {  }
-    third_party_settings: {  }
-    region: content
   langcode:
     type: language
     label: hidden
