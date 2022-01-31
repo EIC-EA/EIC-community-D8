@@ -95,6 +95,22 @@ class SettingsForm extends ConfigFormBase {
       '#description' => $this->t('Select the user account which will be used to perform all operations. The account must have the %role_name role.', ['%role_name' => 'service_authentication']),
     ];
 
+    // Group author.
+    $author_id = $this->config('eic_webservices.settings')->get('group_author');
+    $form['group_author'] = [
+      '#type' => 'entity_autocomplete',
+      '#title' => $this->t('Group author'),
+      '#target_type' => 'user',
+      '#default_value' => $author_id ? $this->entityTypeManager->getStorage('user')->load(($author_id)) : NULL,
+      '#selection_settings' => [
+        'include_anonymous' => FALSE,
+        'filter' => [
+          'status' => 1,
+        ],
+      ],
+      '#description' => $this->t('Select the user account which will be the author for new group entities created through the webservice.'),
+    ];
+
     return parent::buildForm($form, $form_state);
   }
 
@@ -106,6 +122,7 @@ class SettingsForm extends ConfigFormBase {
       ->set('api_key', $form_state->getValue('api_key'))
       ->set('smed_id_field', $form_state->getValue('smed_id_field'))
       ->set('webservice_user_account', $form_state->getValue('webservice_user_account'))
+      ->set('group_author', $form_state->getValue('group_author'))
       ->save();
     parent::submitForm($form, $form_state);
   }
