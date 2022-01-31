@@ -1,0 +1,23 @@
+uuid: a14e8465-0dd0-4fae-80d7-c0dda910bad9
+langcode: en
+status: true
+dependencies:
+  module:
+    - group_flex
+third_party_settings:
+  group_flex:
+    group_flex_enabler: true
+    group_type_visibility: flex
+    group_type_joining_method:
+      tu_open_method: tu_open_method
+      tu_group_membership_request: tu_group_membership_request
+      group_invitation: '0'
+    group_type_joining_method_override: true
+id: event
+label: Event
+description: ''
+new_revision: true
+creator_membership: true
+creator_wizard: false
+creator_roles:
+  - event-owner

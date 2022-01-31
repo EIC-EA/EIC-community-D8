@@ -4,15 +4,57 @@ namespace Drupal\oec_group_flex\Plugin;
 
 use Drupal\Component\Plugin\PluginBase;
 use Drupal\Core\Access\AccessResultNeutral;
+use Drupal\Core\DependencyInjection\DependencySerializationTrait;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\oec_group_flex\GroupVisibilityRecordInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Base class for Custom restricted visibility plugins.
  */
-abstract class CustomRestrictedVisibilityBase extends PluginBase implements CustomRestrictedVisibilityInterface {
+abstract class CustomRestrictedVisibilityBase extends PluginBase implements CustomRestrictedVisibilityInterface, ContainerFactoryPluginInterface {
+
+  use DependencySerializationTrait;
+
+  /**
+   * The entity type manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
+   * Constructs a \Drupal\Component\Plugin\PluginBase object.
+   *
+   * @param array $configuration
+   *   A configuration array containing information about the plugin instance.
+   * @param string $plugin_id
+   *   The plugin_id for the plugin instance.
+   * @param mixed $plugin_definition
+   *   The plugin implementation definition.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
+   */
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+    $this->entityTypeManager = $entity_type_manager;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->get('entity_type.manager')
+    );
+  }
 
   /**
    * {@inheritdoc}
@@ -31,6 +73,27 @@ abstract class CustomRestrictedVisibilityBase extends PluginBase implements Cust
       '#default_value' => 0,
     ];
     return $form;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getStatusKey(): string {
+    return $this->getPluginId() . '_status';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getLabel(): string {
+    return $this->pluginDefinition['label'];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getWeight(): int {
+    return $this->pluginDefinition['weight'];
   }
 
   /**
@@ -64,6 +127,20 @@ abstract class CustomRestrictedVisibilityBase extends PluginBase implements Cust
   }
 
   /**
+   * Get the stored options for a given plugin.
+   *
+   * @param \Drupal\oec_group_flex\GroupVisibilityRecordInterface $group_visibility_record
+   *   The group visibility record to retrieve the options from.
+   *
+   * @return array|mixed
+   *   The options for the given plugin.
+   */
+  protected function getOptionsForPlugin(GroupVisibilityRecordInterface $group_visibility_record) {
+    $allOptions = $group_visibility_record->getOptions();
+    return isset($allOptions[$this->getPluginId()]) ? $allOptions[$this->getPluginId()] : [];
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function getFormFieldNames(): array {
@@ -78,43 +155,8 @@ abstract class CustomRestrictedVisibilityBase extends PluginBase implements Cust
   /**
    * {@inheritdoc}
    */
-  public function getLabel(): string {
-    return $this->pluginDefinition['label'];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getWeight(): int {
-    return $this->pluginDefinition['weight'];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getStatusKey(): string {
-    return $this->getPluginId() . '_status';
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function hasViewAccess(GroupInterface $entity, AccountInterface $account, GroupVisibilityRecordInterface $group_visibility_record) {
     return AccessResultNeutral::neutral();
-  }
-
-  /**
-   * Get the stored options for a given plugin.
-   *
-   * @param \Drupal\oec_group_flex\GroupVisibilityRecordInterface $group_visibility_record
-   *   The group visibility record to retrieve the options from.
-   *
-   * @return array|mixed
-   *   The options for the given plugin.
-   */
-  protected function getOptionsForPlugin(GroupVisibilityRecordInterface $group_visibility_record) {
-    $allOptions = $group_visibility_record->getOptions();
-    return isset($allOptions[$this->getPluginId()]) ? $allOptions[$this->getPluginId()] : [];
   }
 
 }

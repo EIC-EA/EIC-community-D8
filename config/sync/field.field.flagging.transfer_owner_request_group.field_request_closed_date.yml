@@ -1,0 +1,21 @@
+uuid: c121a4e7-3f73-4567-98ad-d6d6e20ab7d4
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.flagging.field_request_closed_date
+    - flag.flag.transfer_owner_request_group
+  module:
+    - datetime
+id: flagging.transfer_owner_request_group.field_request_closed_date
+field_name: field_request_closed_date
+entity_type: flagging
+bundle: transfer_owner_request_group
+label: 'Closed date'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: datetime

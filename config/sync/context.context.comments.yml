@@ -1,0 +1,46 @@
+uuid: bd0cc088-09c7-4166-910b-5af67799c5c5
+langcode: en
+status: true
+dependencies:
+  module:
+    - ctools
+    - eic_groups
+label: Comments
+name: comments
+group: Global
+description: ''
+requireAllConditions: false
+disabled: false
+conditions:
+  'entity_bundle:node':
+    id: 'entity_bundle:node'
+    negate: false
+    uuid: 13c43827-6a20-4326-8566-fc3dc9f0f852
+    context_mapping:
+      node: '@node.node_route_context:node'
+    bundles:
+      news: news
+      story: story
+reactions:
+  blocks:
+    id: blocks
+    uuid: a1e3f51c-e8f6-4ede-abd2-99082b984ff1
+    blocks:
+      08bc3b04-7555-4cae-b71f-487a30cafb01:
+        uuid: 08bc3b04-7555-4cae-b71f-487a30cafb01
+        id: eic_groups_comments_from_discussion
+        label: 'EIC comments from discussion'
+        provider: eic_groups
+        label_display: '0'
+        region: content_after
+        weight: '0'
+        custom_id: eic_groups_comments_from_discussion
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: comments
+        context_mapping: {  }
+        third_party_settings: {  }
+    include_default_blocks: 0
+    saved: false
+weight: 0

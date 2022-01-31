@@ -1,0 +1,21 @@
+uuid: ccc15875-29c8-4a14-8d9d-afecc56e0f02
+langcode: en
+status: true
+dependencies:
+  config:
+    - comment.type.node_comment
+    - field.storage.comment.field_comment_deletion_date
+  module:
+    - datetime
+id: comment.node_comment.field_comment_deletion_date
+field_name: field_comment_deletion_date
+entity_type: comment
+bundle: node_comment
+label: 'Deletion date'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: datetime

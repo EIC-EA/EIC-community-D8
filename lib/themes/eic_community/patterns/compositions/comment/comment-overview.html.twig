@@ -5,7 +5,7 @@
     } %}
       {% block content %}
         <div class="ecl-comment-overview__wrapper">
-          <span class="ecl-comment-overview__title">{{ title|default('Replies') }}</span>
+          <h3 class="ecl-comment-overview__title">{{ title|default('Replies') }}</h3>
           {% if is_disabled %}
             <p class="ecl-comment-overview__disabled-label">{{ disabled_label|default('Placing comments has been disabled.') }}</p>
           {% else %}

@@ -1,0 +1,220 @@
+uuid: e1932a31-d786-46d1-8b18-84119db32afb
+langcode: en
+status: true
+dependencies:
+  config:
+    - views.view.taxonomy
+    - views.view.taxonomy_related_content
+  module:
+    - ctools
+    - eic_search
+    - eic_topics
+    - system
+    - views
+label: 'Taxonomy - Topics detail page'
+name: taxonomy_topics_detail_page
+group: Taxonomy
+description: 'This context is used for all Topics taxonomy term pages'
+requireAllConditions: false
+disabled: false
+conditions:
+  'entity_bundle:taxonomy_term':
+    id: 'entity_bundle:taxonomy_term'
+    negate: false
+    uuid: 6aeeb0df-afb3-4eb9-add2-f8ca7ec65341
+    context_mapping:
+      taxonomy_term: '@taxonomy_term.taxonomy_term_route_context:taxonomy_term'
+    bundles:
+      topics: topics
+reactions:
+  blocks:
+    id: blocks
+    uuid: ac0fd6ab-0b0e-4d2a-896c-9dd58345db98
+    blocks:
+      6e4701a6-15c5-4fc0-8618-544b055ce4da:
+        uuid: 6e4701a6-15c5-4fc0-8618-544b055ce4da
+        id: 'views_block:taxonomy_related_content-news_stories'
+        label: ''
+        provider: views
+        label_display: '0'
+        region: content
+        weight: '-1'
+        custom_id: views_block_taxonomy_related_content_news_stories
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: taxonomy_topics_detail_page
+        context_mapping: {  }
+        views_label: ''
+        items_per_page: none
+        third_party_settings: {  }
+      468dd58a-de7f-432e-92d9-9e475d28bf84:
+        uuid: 468dd58a-de7f-432e-92d9-9e475d28bf84
+        id: 'views_block:taxonomy_related_content-groups'
+        label: ''
+        provider: views
+        label_display: '0'
+        region: content
+        weight: '-2'
+        custom_id: views_block_taxonomy_related_content_groups
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: taxonomy_topics_detail_page
+        context_mapping: {  }
+        views_label: ''
+        items_per_page: none
+        third_party_settings: {  }
+      7275bc6b-36fc-447b-a9d2-8d124ddaae19:
+        uuid: 7275bc6b-36fc-447b-a9d2-8d124ddaae19
+        id: 'views_block:taxonomy_related_content-discussions'
+        label: ''
+        provider: views
+        label_display: '0'
+        region: content
+        weight: '1'
+        custom_id: views_block_taxonomy_related_content_discussions
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: taxonomy_topics_detail_page
+        context_mapping: {  }
+        views_label: ''
+        items_per_page: none
+        third_party_settings: {  }
+      494fd4a2-6a2b-4596-adb9-bf5f15c5a1f2:
+        uuid: 494fd4a2-6a2b-4596-adb9-bf5f15c5a1f2
+        id: 'views_block:taxonomy_related_content-files'
+        label: ''
+        provider: views
+        label_display: '0'
+        region: content
+        weight: '2'
+        custom_id: views_block_taxonomy_related_content_files
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: taxonomy_topics_detail_page
+        context_mapping: {  }
+        views_label: ''
+        items_per_page: none
+        third_party_settings: {  }
+      902342bc-a8aa-4d04-b10e-eef7827721c0:
+        uuid: 902342bc-a8aa-4d04-b10e-eef7827721c0
+        id: 'views_block:taxonomy_related_content-events'
+        label: ''
+        provider: views
+        label_display: '0'
+        region: content
+        weight: '3'
+        custom_id: views_block_taxonomy_related_content_events
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: taxonomy_topics_detail_page
+        context_mapping: {  }
+        views_label: ''
+        items_per_page: none
+        third_party_settings: {  }
+      ca2d1490-fdeb-45f0-8d14-98df6305ccf2:
+        uuid: ca2d1490-fdeb-45f0-8d14-98df6305ccf2
+        id: 'views_block:taxonomy_related_content-wiki_pages'
+        label: ''
+        provider: views
+        label_display: '0'
+        region: content
+        weight: '0'
+        custom_id: views_block_taxonomy_related_content_wiki_pages
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: taxonomy_topics_detail_page
+        context_mapping: {  }
+        views_label: ''
+        items_per_page: none
+        third_party_settings: {  }
+      37c12774-e1ff-46c6-9d02-4d93ae02f208:
+        uuid: 37c12774-e1ff-46c6-9d02-4d93ae02f208
+        id: 'views_block:taxonomy-subtopics'
+        label: ''
+        provider: views
+        label_display: '0'
+        region: sidebar
+        weight: '-4'
+        custom_id: views_block_taxonomy_subtopics
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: taxonomy_topics_detail_page
+        context_mapping:
+          parent_target_id: '@taxonomy_term.taxonomy_term_route_context:taxonomy_term'
+        views_label: ''
+        items_per_page: none
+        third_party_settings: {  }
+      686ec6c7-2aa8-4f08-b680-d90daa09c37f:
+        uuid: 686ec6c7-2aa8-4f08-b680-d90daa09c37f
+        id: 'views_block:taxonomy_related_content-experts'
+        label: ''
+        provider: views
+        label_display: '0'
+        region: sidebar
+        weight: '-3'
+        custom_id: views_block_taxonomy_related_content_experts
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: taxonomy_topics_detail_page
+        context_mapping: {  }
+        views_label: ''
+        items_per_page: none
+        third_party_settings: {  }
+      a490b142-0db9-42ba-88e3-76801e380945:
+        uuid: a490b142-0db9-42ba-88e3-76801e380945
+        id: eic_topics_statistics_block
+        label: 'EIC Topics Statistics'
+        provider: eic_topics
+        label_display: '0'
+        region: content
+        weight: '-4'
+        custom_id: eic_topics_statistics_block
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: taxonomy_topics_detail_page
+        context_mapping: {  }
+        third_party_settings: {  }
+      b729dd1e-94a7-41de-b01c-38e952daf0ed:
+        uuid: b729dd1e-94a7-41de-b01c-38e952daf0ed
+        id: system_main_block
+        label: 'Main page content'
+        provider: system
+        label_display: '0'
+        region: content
+        weight: '-5'
+        custom_id: system_main_block
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: taxonomy_topics_detail_page
+        context_mapping: {  }
+        third_party_settings: {  }
+      1685cb5f-74dd-4ebb-9084-2cf4bdcf73b4:
+        uuid: 1685cb5f-74dd-4ebb-9084-2cf4bdcf73b4
+        id: eic_search_activity_stream
+        label: 'EIC activity stream'
+        provider: eic_search
+        label_display: '0'
+        region: content
+        weight: '-3'
+        custom_id: eic_search_activity_stream
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: taxonomy_topics_detail_page
+        context_mapping:
+          taxonomy_term: '@taxonomy_term.taxonomy_term_route_context:taxonomy_term'
+        show_members: 0
+        third_party_settings: {  }
+    include_default_blocks: 0
+    saved: false
+weight: 0

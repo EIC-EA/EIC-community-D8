@@ -3,18 +3,17 @@ langcode: en
 status: true
 dependencies:
   config:
-    - core.entity_view_display.comment.node_comment.default
     - core.entity_view_mode.node.full
     - field.field.node.gallery.field_body
     - field.field.node.gallery.field_comments
     - field.field.node.gallery.field_document_type
     - field.field.node.gallery.field_gallery_slides
     - field.field.node.gallery.field_language
+    - field.field.node.gallery.field_related_contributors
     - field.field.node.gallery.field_vocab_geo
     - field.field.node.gallery.field_vocab_topics
     - node.type.gallery
   module:
-    - comment
     - text
     - user
 id: node.gallery.full
@@ -24,95 +23,101 @@ mode: full
 content:
   field_body:
     type: text_default
-    weight: 4
-    region: content
-    label: above
+    label: hidden
     settings: {  }
     third_party_settings: {  }
-  field_comments:
-    type: comment_default
     weight: 6
     region: content
-    label: above
+  field_gallery_slides:
+    type: entity_reference_revisions_entity_view
+    label: hidden
     settings:
       view_mode: default
-      pager_id: 0
+      link: ''
     third_party_settings: {  }
+    weight: 8
+    region: content
   field_vocab_geo:
     type: entity_reference_label
-    weight: 2
-    region: content
-    label: above
+    label: hidden
     settings:
       link: true
     third_party_settings: {  }
+    weight: 4
+    region: content
   field_vocab_topics:
     type: entity_reference_label
-    weight: 3
-    region: content
-    label: above
+    label: hidden
     settings:
       link: true
     third_party_settings: {  }
+    weight: 5
+    region: content
   flag_bookmark_content:
-    weight: 10
     settings: {  }
     third_party_settings: {  }
+    weight: 9
+    region: content
+  flag_follow_content:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 10
     region: content
   flag_highlight_content:
-    weight: 10
     settings: {  }
     third_party_settings: {  }
+    weight: 11
     region: content
   flag_like_content:
-    weight: 10
     settings: {  }
     third_party_settings: {  }
+    weight: 12
     region: content
   flag_recommend:
-    weight: 10
     settings: {  }
     third_party_settings: {  }
+    weight: 13
     region: content
   links:
-    weight: 0
-    region: content
     settings: {  }
     third_party_settings: {  }
+    weight: 0
+    region: content
   member_content_edit_access:
-    weight: 1
-    region: content
-    label: above
+    type: boolean
+    label: hidden
     settings:
       format: default
       format_custom_false: ''
       format_custom_true: ''
     third_party_settings: {  }
-    type: boolean
+    weight: 1
+    region: content
   private:
-    weight: 1
-    region: content
-    label: above
+    type: boolean
+    label: hidden
     settings:
       format: default
       format_custom_false: ''
       format_custom_true: ''
     third_party_settings: {  }
-    type: boolean
+    weight: 2
+    region: content
   published_at:
     type: timestamp
-    region: content
-    weight: 1
-    label: above
+    label: hidden
     settings:
       date_format: medium
       custom_date_format: ''
       timezone: ''
     third_party_settings: {  }
+    weight: 3
+    region: content
 hidden:
   extra_field_eic_theme_helper_short_title_with_fallback: true
+  field_comments: true
   field_document_type: true
-  field_gallery_slides: true
   field_language: true
+  field_related_contributors: true
   langcode: true
   search_api_excerpt: true

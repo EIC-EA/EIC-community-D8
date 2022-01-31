@@ -133,6 +133,9 @@ class LoginBlock extends BlockBase implements ContainerFactoryPluginInterface {
     $build['registration_link'] = $registration_link->toRenderable();
     $build['registration_link']['label'] = $registration_link->getText();
     $build['registration_link']['url'] = $registration_link->getUrl();
+    $build['#cache'] = [
+      'contexts' => ['user'],
+    ];
 
     return $build;
   }
@@ -156,7 +159,7 @@ class LoginBlock extends BlockBase implements ContainerFactoryPluginInterface {
    *
    * @throws \Drupal\Core\TypedData\Exception\MissingDataException
    */
-  private function nodeHasCommentsEnabled() : bool {
+  private function nodeHasCommentsEnabled(): bool {
     $node = $this->routeMatch->getParameter('node');
 
     if (FALSE === $node instanceof NodeInterface) {

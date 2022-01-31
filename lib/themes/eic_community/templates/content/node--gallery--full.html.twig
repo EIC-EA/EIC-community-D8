@@ -1,0 +1,30 @@
+{#
+/**
+ * @file
+ * Theme override to display a node page.
+ *
+ * @see ./themes/custom/eic_community/templates/content/node.html.twig
+ */
+#}
+{% embed "@theme/patterns/compositions/editorial-article.html.twig" with editorial_article|default({}) %}
+  {% block content %}
+    <h1>{{ label }}</h1>
+    {{ elements.field_body }}
+    {{ attach_library('eic_community/react-block-gallery') }}
+    <div id="ecl-gallery-react" class="ecl-gallery" data-files="{{ slides|json_encode }}"></div>
+    {% if file_list.files|length > 1 %}
+      {% include "@theme/patterns/components/filelist.html.twig" with file_list|default({})|merge({
+        file_title_element: 'h4'
+      }) %}
+    {% endif %}
+  {% endblock %}
+
+  {% block sidebar %}
+    {{ eic_local_tasks }}
+
+    {% include "@theme/patterns/compositions/editorial-actions.html.twig" with editorial_actions|default({}) %}
+
+    {% include "@theme/patterns/compositions/featured-topics.html.twig" with topics|default({}) %}
+
+  {% endblock %}
+{% endembed %}

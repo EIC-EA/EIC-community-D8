@@ -9,10 +9,10 @@ use Drupal\Core\Render\Markup;
 use Drupal\eic_community\ValueObject\ImageValueObject;
 
 /**
- * Implements hook_preprocess_group().
+ * Implements hook_preprocess_group__group().
  */
-function eic_community_preprocess_group(array &$variables) {
-  /** @var \Drupal\group\Entity\Group $group */
+function eic_community_preprocess_group__group(array &$variables) {
+  /** @var \Drupal\group\Entity\GroupInterface $group */
   $group = $variables['group'];
 
   $item = [
@@ -21,21 +21,85 @@ function eic_community_preprocess_group(array &$variables) {
     'icon_file_path' => $variables['eic_icon_path'],
   ];
 
-  if ($group->hasField('field_hero') && !$group->get('field_hero')->isEmpty()) {
-    /** @var \Drupal\media\Entity\Media $media */
-    $media = \Drupal::service('entity.repository')->getTranslationFromContext($group->get('field_hero')->entity, $group->language()->getId());
-    $image_item = ImageValueObject::fromImageItem($media->get('oe_media_image')->first());
-    $item['image'] = [
-      'src' => $image_item->getSource(),
-      'alt' => $image_item->getAlt(),
-    ];
-  }
-
   // Move flags to group to pick them up in the group header.
   foreach ($variables['elements'] as $key => $element) {
     if (strpos($key, 'flag_') !== FALSE) {
       $variables['elements']['#group']->flags[$key] = $element;
     }
+  }
+
+  switch ($variables['view_mode']) {
+    case 'full':
+      if ($group->hasField('field_hero') && !$group->get('field_hero')->isEmpty()) {
+        /** @var \Drupal\media\Entity\Media $media */
+        $media = \Drupal::service('entity.repository')->getTranslationFromContext($group->get('field_hero')->entity, $group->language()->getId());
+        $image_item = ImageValueObject::fromImageItem($media->get('oe_media_image')->first());
+        $item['image'] = [
+          'src' => $image_item->getSource(),
+          'alt' => $image_item->getAlt(),
+        ];
+      }
+      break;
+
+    case 'teaser':
+      // Get group thumbnail.
+      if ($group->hasField('field_thumbnail') && !$group->get('field_thumbnail')->isEmpty()) {
+        /** @var \Drupal\media\Entity\Media $media */
+        $media = \Drupal::service('entity.repository')->getTranslationFromContext($group->get('field_thumbnail')->entity, $group->language()->getId());
+        $image_item = ImageValueObject::fromStyledImageItem($media->get('oe_media_image')->first(), 'oe_theme_list_item_2x');
+        $item['image'] = [
+          'src' => $image_item->getSource(),
+          'alt' => $image_item->getAlt(),
+        ];
+      }
+
+      // Get group visibility.
+      if (!empty($group_visibility_label = \Drupal::service('eic_groups.helper')->getGroupVisibilityLabel($group, 'short'))) {
+        $item['type']['label'] = $group_visibility_label;
+        $item['type']['extra_classes'] = 'ecl-tag--is-' . strtolower($group_visibility_label);
+      }
+
+      // Get group last activity.
+      // @todo Get the real last activity.
+      $item['timestamp']['label'] = eic_community_get_teaser_time_display($group->get('changed')->value);
+
+      // Get group statistics.
+      $group_statistics = \Drupal::service('eic_group_statistics.helper')->loadGroupStatistics($group);
+      $item['stats'] = [
+        'members' => [
+          'label' => t('Members'),
+          'value' => $group_statistics->getMembersCount(),
+          'icon' => [
+            'type' => 'custom',
+            'name' => 'user',
+          ],
+        ],
+        'comments' => [
+          'label' => t('Comments'),
+          'value' => $group_statistics->getCommentsCount(),
+          'icon' => [
+            'type' => 'custom',
+            'name' => 'comment',
+          ],
+        ],
+        'files' => [
+          'label' => t('Files'),
+          'value' => $group_statistics->getFilesCount(),
+          'icon' => [
+            'type' => 'custom',
+            'name' => 'documents',
+          ],
+        ],
+        'events' => [
+          'label' => t('Events'),
+          'value' => $group_statistics->getEventsCount(),
+          'icon' => [
+            'type' => 'custom',
+            'name' => 'calendar',
+          ],
+        ],
+      ];
+      break;
   }
 
   $variables['group_item'] = $item;
@@ -87,10 +151,17 @@ function _group_about_group_tab($variables, &$sections) {
 
   if (count($variables['elements']['admins']) > 0) {
     $admins = array_map(function ($admin) {
-      return [
-        'title' => $admin->getText(),
-        'path' => $admin->getUrl(),
-      ];
+      if ($admin instanceof Markup) {
+        return [
+          'title' => $admin,
+        ];
+      }
+      else {
+        return [
+          'title' => $admin->getText(),
+          'path' => $admin->getUrl(),
+        ];
+      }
     }, $variables['elements']['admins']);
 
     $about_items[] = [
@@ -135,7 +206,7 @@ function _group_about_group_tab($variables, &$sections) {
 
   $about_items[] = [
     'title' => t('Group description'),
-    'content' => $variables['elements']['field_body'],
+    'content' => $variables['elements']['field_body'] ?? '',
   ];
 
   $sections[] = [

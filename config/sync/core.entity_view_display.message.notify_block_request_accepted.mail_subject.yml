@@ -1,0 +1,22 @@
+uuid: 0584ccc5-dba5-4b66-8f97-9305ee2a2883
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.message.mail_subject
+    - field.field.message.notify_block_request_accepted.field_referenced_flag
+    - message.template.notify_block_request_accepted
+id: message.notify_block_request_accepted.mail_subject
+targetEntityType: message
+bundle: notify_block_request_accepted
+mode: mail_subject
+content:
+  partial_0:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  field_referenced_flag: true
+  partial_1: true
+  search_api_excerpt: true

@@ -2,9 +2,11 @@
 
 namespace Drupal\oec_group_flex;
 
+use Drupal\Component\Serialization\Json;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\eic_search\Service\SolrDocumentProcessor;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\group_flex\GroupFlexGroup;
 use Drupal\group_flex\GroupFlexGroupSaver;
@@ -36,6 +38,13 @@ class OECGroupFlexGroupSaverDecorator extends GroupFlexGroupSaver {
   protected $groupVisibilityStorage;
 
   /**
+   * The EIC Search Solr Document Processor.
+   *
+   * @var \Drupal\eic_search\Service\SolrDocumentProcessor
+   */
+  private $solrDocumentProcessor;
+
+  /**
    * Constructs a new GroupFlexGroupSaver object.
    *
    * @param \Drupal\group_flex\GroupFlexGroupSaver $groupFlexSaver
@@ -53,10 +62,26 @@ class OECGroupFlexGroupSaverDecorator extends GroupFlexGroupSaver {
    * @param \Drupal\group_flex\GroupFlexGroup $groupFlex
    *   The group flex.
    */
-  public function __construct(GroupFlexGroupSaver $groupFlexSaver, GroupVisibilityDatabaseStorageInterface $groupVisibilityStorage, EntityTypeManagerInterface $entityTypeManager, GroupPermissionsManager $groupPermManager, GroupVisibilityManager $visibilityManager, GroupJoiningMethodManager $joiningMethodManager, GroupFlexGroup $groupFlex) {
-    parent::__construct($entityTypeManager, $groupPermManager, $visibilityManager, $joiningMethodManager, $groupFlex);
+  public function __construct(
+    GroupFlexGroupSaver $groupFlexSaver,
+    GroupVisibilityDatabaseStorageInterface $groupVisibilityStorage,
+    EntityTypeManagerInterface $entityTypeManager,
+    GroupPermissionsManager $groupPermManager,
+    GroupVisibilityManager $visibilityManager,
+    GroupJoiningMethodManager $joiningMethodManager,
+    GroupFlexGroup $groupFlex
+  ) {
+    parent::__construct($entityTypeManager, $groupPermManager,
+      $visibilityManager, $joiningMethodManager, $groupFlex);
     $this->groupFlexSaver = $groupFlexSaver;
     $this->groupVisibilityStorage = $groupVisibilityStorage;
+  }
+
+  /**
+   * @param \Drupal\eic_search\Service\SolrDocumentProcessor|null $document_processor
+   */
+  public function setDocumentProcessor(?SolrDocumentProcessor $document_processor) {
+    $this->solrDocumentProcessor = $document_processor;
   }
 
   /**
@@ -71,7 +96,11 @@ class OECGroupFlexGroupSaverDecorator extends GroupFlexGroupSaver {
    *
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
-  public function saveGroupVisibility(GroupInterface $group, string $groupVisibility, array $groupVisibilityOptions = []) {
+  public function saveGroupVisibility(
+    GroupInterface $group,
+    string $groupVisibility,
+    array $groupVisibilityOptions = []
+  ) {
     $groupPermission = $this->getGroupPermissionObject($group);
 
     if (!$groupPermission) {
@@ -85,7 +114,10 @@ class OECGroupFlexGroupSaverDecorator extends GroupFlexGroupSaver {
       /** @var \Drupal\group_flex\Plugin\GroupVisibilityBase $pluginInstance */
       if ($groupVisibility !== $id) {
         foreach ($pluginInstance->getDisallowedGroupPermissions($group) as $role => $rolePermissions) {
-          $groupPermission = $this->removeRolePermissionsFromGroup($groupPermission, $role, $rolePermissions);
+          $groupPermission = $this->removeRolePermissionsFromGroup(
+            $groupPermission,
+            $role, $rolePermissions
+          );
         }
       }
     }
@@ -94,7 +126,11 @@ class OECGroupFlexGroupSaverDecorator extends GroupFlexGroupSaver {
     // plugin.
     if (isset($visibilityPlugins[$groupVisibility])) {
       foreach ($visibilityPlugins[$groupVisibility]->getGroupPermissions($group) as $role => $rolePermissions) {
-        $groupPermission = $this->addRolePermissionsToGroup($groupPermission, $role, $rolePermissions);
+        $groupPermission = $this->addRolePermissionsToGroup(
+          $groupPermission,
+          $role,
+          $rolePermissions
+        );
       }
     }
 
@@ -116,6 +152,7 @@ class OECGroupFlexGroupSaverDecorator extends GroupFlexGroupSaver {
       ]);
     }
 
+    $oldVisibilityOptions = $item->getOptions();
     $item->setType($groupVisibility);
     $item->setOptions($groupVisibilityOptions);
 
@@ -124,14 +161,17 @@ class OECGroupFlexGroupSaverDecorator extends GroupFlexGroupSaver {
     // Invalidates group cache tags.
     Cache::invalidateTags($group->getCacheTagsToInvalidate());
 
-    return $groupPermission;
-  }
+    // If group visibility changed we need to reupdate all group contents.
+    // These re-index logic is on 2 different places because of visibility
+    // field not instance of FieldItemInterface so we need to compare it here.
+    if (
+      Json::encode($groupVisibilityOptions) !==
+      Json::encode($oldVisibilityOptions)
+    ) {
+      $this->solrDocumentProcessor->reIndexEntitiesFromGroup($group);
+    }
 
-  /**
-   * Magic method to return any method call inside the inner service.
-   */
-  public function __call($method, $args) {
-    return call_user_func_array([$this->groupFlexSaver, $method], $args);
+    return $groupPermission;
   }
 
   /**
@@ -165,30 +205,6 @@ class OECGroupFlexGroupSaverDecorator extends GroupFlexGroupSaver {
   }
 
   /**
-   * Add role permissions to the group.
-   *
-   * @param \Drupal\group_permissions\Entity\GroupPermission $groupPermission
-   *   The group permission object to add the permissions to.
-   * @param string $role
-   *   The role to add the permissions to.
-   * @param array $rolePermissions
-   *   The permissions to add to the role.
-   *
-   * @return \Drupal\group_permissions\Entity\GroupPermission
-   *   The group permission object with the updated permissions.
-   */
-  protected function addRolePermissionsToGroup(GroupPermission $groupPermission, string $role, array $rolePermissions): GroupPermission {
-    $permissions = $groupPermission->getPermissions();
-    foreach ($rolePermissions as $permission) {
-      if (!array_key_exists($role, $permissions) || !in_array($permission, $permissions[$role], TRUE)) {
-        $permissions[$role][] = $permission;
-      }
-    }
-    $groupPermission->setPermissions($permissions);
-    return $groupPermission;
-  }
-
-  /**
    * Remove role permissions from the group.
    *
    * @param \Drupal\group_permissions\Entity\GroupPermission $groupPermission
@@ -213,6 +229,37 @@ class OECGroupFlexGroupSaverDecorator extends GroupFlexGroupSaver {
   }
 
   /**
+   * Add role permissions to the group.
+   *
+   * @param \Drupal\group_permissions\Entity\GroupPermission $groupPermission
+   *   The group permission object to add the permissions to.
+   * @param string $role
+   *   The role to add the permissions to.
+   * @param array $rolePermissions
+   *   The permissions to add to the role.
+   *
+   * @return \Drupal\group_permissions\Entity\GroupPermission
+   *   The group permission object with the updated permissions.
+   */
+  protected function addRolePermissionsToGroup(GroupPermission $groupPermission, string $role, array $rolePermissions): GroupPermission {
+    $permissions = $groupPermission->getPermissions();
+    foreach ($rolePermissions as $permission) {
+      if (!array_key_exists($role, $permissions) || !in_array($permission, $permissions[$role], TRUE)) {
+        $permissions[$role][] = $permission;
+      }
+    }
+    $groupPermission->setPermissions($permissions);
+    return $groupPermission;
+  }
+
+  /**
+   * Magic method to return any method call inside the inner service.
+   */
+  public function __call($method, $args) {
+    return call_user_func_array([$this->groupFlexSaver, $method], $args);
+  }
+
+  /**
    * Save the group joining methods.
    *
    * @param \Drupal\group\Entity\GroupInterface $group
@@ -223,7 +270,10 @@ class OECGroupFlexGroupSaverDecorator extends GroupFlexGroupSaver {
    * @throws \Drupal\Core\Entity\EntityStorageException
    * @throws \Drupal\Core\TypedData\Exception\MissingDataException
    */
-  public function saveGroupJoiningMethods(GroupInterface $group, array $joiningMethods) {
+  public function saveGroupJoiningMethods(
+    GroupInterface $group,
+    array $joiningMethods
+  ) {
     $groupPermission = $this->getGroupPermissionObject($group);
 
     if (!$groupPermission) {

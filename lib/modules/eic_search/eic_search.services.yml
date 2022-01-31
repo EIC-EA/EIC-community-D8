@@ -7,6 +7,10 @@ services:
     class: Drupal\eic_search\Search\Sources\GroupSourceType
     tags:
       - { name: eic_search.source }
+  eic_search.source_organisation:
+    class: Drupal\eic_search\Search\Sources\OrganisationSourceType
+    tags:
+      - { name: eic_search.source }
   eic_search.source_user_list:
     class: Drupal\eic_search\Search\Sources\UserListSourceType
     tags:
@@ -31,10 +35,30 @@ services:
     class: Drupal\eic_search\Search\Sources\DiscussionSourceType
     tags:
       - { name: eic_search.source }
+  eic_search.source_news:
+    class: Drupal\eic_search\Search\Sources\NewsSourceType
+    tags:
+      - { name: eic_search.source }
+  eic_search.source_group_event:
+    class: Drupal\eic_search\Search\Sources\GroupEventSourceType
+    tags:
+      - { name: eic_search.source }
   eic_search.source_story:
-    class: Drupal\eic_search\Search\Sources\StorySourceType
+    class: Drupal\eic_search\Search\Sources\NewsStorySourceType
+    tags:
+      - { name: eic_search.source }
+  eic_search.source_global_event:
+    class: Drupal\eic_search\Search\Sources\GlobalEventSourceType
+    tags:
+      - { name: eic_search.source }
+  eic_search.source_user_invites_list:
+    class: Drupal\eic_search\Search\Sources\UserInvitesListSourceType
+    tags:
+      - { name: eic_search.source }
+  eic_search.source_user_tagging_comments:
+    class: Drupal\eic_search\Search\Sources\UserTaggingCommentsSourceType
     tags:
       - { name: eic_search.source }
   eic_search.solr_document_processor:
     class: Drupal\eic_search\Service\SolrDocumentProcessor
-    arguments: ['@database', '@flag.count', '@search_api.post_request_indexing', '@eic_statistics.statistics.storage.node.decorator']
+    arguments: ['@database', '@flag.count', '@search_api.post_request_indexing', '@eic_statistics.statistics.storage.node.decorator', '@eic_comments.helper', '@eic_media_statistics.entity_file_download_count', '@oec_group_flex.helper', '@queue', '@plugin.manager.queue_worker', '@entity_type.manager']

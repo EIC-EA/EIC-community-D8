@@ -1,7 +1,9 @@
 stages:
   - build
   - test
+  - notify
   - deploy
+  - deploy_uat
 
 .deploy_job: &deploy_job
   image: intractosre/deploy:1
@@ -19,7 +21,8 @@ stages:
       ln -sf ../../lib/modules $PROJECT_DIR/web/modules/custom &&
       ln -sf ../../lib/themes $PROJECT_DIR/web/themes/custom &&
       ln -sf ../../lib/profiles $PROJECT_DIR/web/profiles/custom &&
-      chown -R root:www-data $PROJECT_DIR &&
+      ln -sf $PROJECT_DIR/web $PROJECT_DIR/web/community &&
+      chown -R $PROJECT_USER:$PROJECT_GROUP $PROJECT_DIR &&
       ./vendor/bin/drush updb -y &&
       ./vendor/bin/drush cr &&
       ./vendor/bin/drush cim -y &&
@@ -31,7 +34,7 @@ build_backend:
   image: intractosre/php:7.3
   artifacts:
     untracked: true
-    expire_in: '1 day'
+    expire_in: '2 hour'
   script:
     # Current version of Gitlab (require > 14.2.0) doesn't support variable overrides using the 'rules' property
     # Dynamically define the --no-dev option once updated (e.g: added on develop and not other branches)
@@ -48,7 +51,7 @@ build_front:
   image: node:14
   artifacts:
     untracked: true
-    expire_in: '1 day'
+    expire_in: '2 hour'
   script:
     - cd lib/themes/eic_community
     - npm install && npm run build && npm run react-production
@@ -65,6 +68,7 @@ security_check:
     - local-php-security-checker
   only:
     - develop
+    - /^release/.*$/
 
 code_style_test:
   stage: test
@@ -109,14 +113,29 @@ deploy_qa:
   only:
     - /^release/.*$/
 
-slack_notifier:
-  stage: deploy
-  before_script:
-    - apk update && apk add curl
-  script:
-    - 'eval "$DEPLOY_CURL_COMMAND"'
+deploy_uat:
+  <<: *deploy_job
+  stage: deploy_uat
+  when: manual
   variables:
-    DEPLOY_CURL_COMMAND_BODY: "'{\"text\": \"New deployment running on QA. Environment will be updated in a few minutes...\"}'"
-    DEPLOY_CURL_COMMAND: 'curl -X POST $SLACK_URL -H "Content-Type: application/json" -d $DEPLOY_CURL_COMMAND_BODY'
+    HOST: $UAT_HOST
+  only:
+    - /^release/.*$/
+
+deploy_migration_env:
+  <<: *deploy_job
+  stage: deploy_uat
+  when: manual
+  variables:
+    HOST: $MIGRATION_HOST
+  only:
+    - /^release/.*$/
+
+slack_notifier:
+  stage: notify
+  image: curlimages/curl:latest
+  script:
+    - |
+      curl -X POST $SLACK_URL -H 'Content-Type: application/json' -d '{"text": "New deployment running on QA. Environment will be updated in a few minutes..."}'
   only:
     - /^release/.*$/

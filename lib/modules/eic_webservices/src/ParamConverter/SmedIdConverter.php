@@ -22,6 +22,8 @@ class SmedIdConverter extends EntityConverter {
 
   /**
    * {@inheritdoc}
+   *
+   * @todo Handle different sets of SMED IDs depending on the group type.
    */
   public function convert($value, $definition, $name, array $defaults) {
     // Get the field name that contains the SMED ID.
@@ -41,14 +43,22 @@ class SmedIdConverter extends EntityConverter {
    * {@inheritdoc}
    */
   public function applies($definition, $name, Route $route) {
+    // Check the endpoint path prefix first.
+    if (strpos($route->getPath(), '/smed/api/') !== 0) {
+      return FALSE;
+    }
+
+    // Define an array of applicable entity types and parameter names.
     $types = [
-      'entity:user',
+      'entity:group' => 'group',
+      'entity:user' => 'user',
     ];
 
-    if (strpos($route->getPath(), '/smed/api/') === 0 &&
-      isset($route->getOption('parameters')['user']) &&
-      !empty($definition['type']) && in_array($definition['type'], $types)) {
-      return TRUE;
+    foreach ($types as $entity_type => $parameter_name) {
+      if (isset($route->getOption('parameters')[$parameter_name]) &&
+        !empty($definition['type']) && $definition['type'] == $entity_type) {
+        return TRUE;
+      }
     }
 
     return FALSE;

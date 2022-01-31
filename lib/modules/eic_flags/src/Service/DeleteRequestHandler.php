@@ -3,6 +3,7 @@
 namespace Drupal\eic_flags\Service;
 
 use Drupal\Core\Batch\BatchBuilder;
+use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\eic_flags\RequestStatus;
@@ -53,7 +54,17 @@ class DeleteRequestHandler extends AbstractRequestHandler {
 
       case 'node':
       case 'comment':
-        $content_entity->delete();
+      $now = DrupalDateTime::createFromTimestamp(time());
+      $content_entity->set('comment_body', [
+        'value' => $this->t(
+          'This comment has been removed by a content administrator at @time.',
+          ['@time' => $now->format('d/m/Y - H:i')],
+          ['context' => 'eic_flags']
+        ),
+        'format' => 'plain_text',
+      ]);
+      $content_entity->set('field_comment_is_soft_deleted', TRUE);
+      $content_entity->save();
         break;
     }
   }

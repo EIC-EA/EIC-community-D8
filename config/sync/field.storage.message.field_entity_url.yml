@@ -1,0 +1,19 @@
+uuid: b9ad0e4a-5caf-46a8-aa60-2fee9a98b54d
+langcode: en
+status: true
+dependencies:
+  module:
+    - link
+    - message
+id: message.field_entity_url
+field_name: field_entity_url
+entity_type: message
+type: link
+settings: {  }
+module: link
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

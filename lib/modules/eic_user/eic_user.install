@@ -1,0 +1,17 @@
+<?php
+
+/**
+ * Set default values on field_user_can_contact value for all users.
+ */
+function eic_user_update_9001(&$sandbox) {
+  $users = \Drupal::entityQuery('user')
+    ->execute();
+
+  $users = \Drupal\user\Entity\User::loadMultiple($users);
+
+  /** @var \Drupal\user\UserInterface $user */
+  foreach ($users as $user) {
+    $user->set('field_user_can_contact', 1);
+    $user->save();
+  }
+}

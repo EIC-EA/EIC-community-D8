@@ -1,0 +1,19 @@
+uuid: 228e1e75-7001-4d11-8578-1e6e8dab65e2
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.message.field_entity_type
+    - message.template.stream_share_content
+id: message.stream_share_content.field_entity_type
+field_name: field_entity_type
+entity_type: message
+bundle: stream_share_content
+label: 'Entity type'
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

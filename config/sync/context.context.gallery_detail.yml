@@ -1,0 +1,46 @@
+uuid: 76de2dfb-c772-4874-8d62-ece8314c6cb4
+langcode: en
+status: true
+dependencies:
+  module:
+    - ctools
+    - eic_groups
+label: 'Gallery and Video - detail'
+name: gallery_detail
+group: Groups
+description: ''
+requireAllConditions: false
+disabled: false
+conditions:
+  'entity_bundle:node':
+    id: 'entity_bundle:node'
+    negate: false
+    uuid: e0f5039f-de6c-4a51-9728-75dfbdfae65e
+    context_mapping:
+      node: '@node.node_route_context:node'
+    bundles:
+      gallery: gallery
+      video: video
+reactions:
+  blocks:
+    id: blocks
+    uuid: 0151cc72-9047-4d11-bfe6-f5335c62dc8c
+    blocks:
+      913c0732-bea1-4215-8bbe-88a34e38f0d8:
+        uuid: 913c0732-bea1-4215-8bbe-88a34e38f0d8
+        id: eic_groups_comments_from_discussion
+        label: 'EIC comments from discussion'
+        provider: eic_groups
+        label_display: '0'
+        region: content_after
+        weight: '0'
+        custom_id: eic_groups_comments_from_discussion
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: gallery_detail
+        context_mapping: {  }
+        third_party_settings: {  }
+    include_default_blocks: 0
+    saved: false
+weight: 0

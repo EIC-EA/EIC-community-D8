@@ -14,12 +14,31 @@ theme:
     dist/scripts/components/drupal.navigation-list.js: { minified: true }
     dist/scripts/compositions/drupal.collapsible-options.js: { minified: true }
     dist/scripts/compositions/drupal.comment-attachments.js: { minified: true }
+    dist/scripts/compositions/drupal.editorial-article.js: { minified: true }
     dist/scripts/compositions/drupal.featured-list.js: { minified: true }
     dist/scripts/compositions/drupal.featured-content-collection.js: { minified: true }
     dist/scripts/compositions/drupal.featured-content-sections.js: { minified: true }
     dist/scripts/compositions/drupal.filter-sidebar.js: { minified: true }
     dist/scripts/compositions/drupal.language-selector.js: { minified: true }
     dist/scripts/compositions/drupal.media-wrapper.js: { minified: true }
+  dependencies:
+    - core/drupal
+
+react-block-modal:
+  js:
+    dist/react/block/share_modal/entrypoint.js: { minified: true }
+  dependencies:
+    - core/drupal
+
+react-block-announcements:
+  js:
+    dist/react/block/announcements/entrypoint.js: { minified: true }
+  dependencies:
+    - core/drupal
+
+react-block-gallery:
+  js:
+    dist/react/block/gallery/entrypoint.js: { minified: true }
   dependencies:
     - core/drupal
 

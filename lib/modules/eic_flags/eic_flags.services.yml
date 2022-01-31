@@ -5,22 +5,47 @@ services:
       - { name: service_collector, tag: request_handler, call: addHandler }
   eic_flags.delete_request_handler:
     class: Drupal\eic_flags\Service\DeleteRequestHandler
-    arguments: [ '@module_handler', '@entity_type.manager', '@flag', '@content_moderation.moderation_information', '@request_stack' ]
+    arguments: [ '@module_handler', '@entity_type.manager', '@flag', '@content_moderation.moderation_information', '@request_stack', '@entity_field.manager' ]
     tags:
       - { name: request_handler }
   eic_flags.delete_archive_handler:
     class: Drupal\eic_flags\Service\ArchiveRequestHandler
-    arguments: [ '@module_handler', '@entity_type.manager', '@flag', '@content_moderation.moderation_information', '@request_stack' ]
+    arguments: [ '@module_handler', '@entity_type.manager', '@flag', '@content_moderation.moderation_information', '@request_stack', '@entity_field.manager' ]
+    tags:
+      - { name: request_handler }
+  eic_flags.block_request_handler:
+    class: Drupal\eic_flags\Service\BlockRequestHandler
+    arguments: [ '@module_handler', '@entity_type.manager', '@flag', '@content_moderation.moderation_information', '@request_stack', '@entity_field.manager' ]
+    tags:
+      - { name: request_handler }
+  eic_flags.transfer_ownership_request_handler:
+    class: Drupal\eic_flags\Service\TransferOwnershipRequestHandler
+    arguments: [ '@module_handler', '@entity_type.manager', '@flag', '@content_moderation.moderation_information', '@request_stack', '@entity_field.manager', '@eic_search.solr_document_processor' ]
     tags:
       - { name: request_handler }
   eic_flags.request_access_checker:
     class: Drupal\eic_flags\Access\RequestAccessCheck
     arguments: [ '@eic_flags.handler_collector' ]
+    calls:
+      - [setEntityTypeManager, ['@?entity_type.manager']]
     tags:
       - { name: access_check, applies_to: _request_send_access }
+  eic_flags.close_request_access_checker:
+    class: Drupal\eic_flags\Access\CloseRequestAccessCheck
+    arguments: [ '@eic_flags.handler_collector' ]
+    calls:
+      - [setEntityTypeManager, ['@?entity_type.manager']]
+    tags:
+      - { name: access_check, applies_to: _close_request_access }
 
   eic_flags.event_subscriber:
     class: Drupal\eic_flags\EventSubscriber\FlagEventSubscriber
-    arguments: ['@eic_search.solr_document_processor']
+    arguments: [ '@eic_search.solr_document_processor' ]
     tags:
       - { name: event_subscriber }
+
+  eic_flags.helper:
+    class: Drupal\eic_flags\FlagHelper
+    calls:
+      - [ setGroupsHelper, [ '@?eic_groups.helper' ] ]
+    arguments: [ '@flag', '@flag.count', '@entity_type.manager', '@current_user', '@?eic_groups.helper' ]

@@ -1,0 +1,23 @@
+uuid: 5b3fb52e-e860-4dcf-9d75-444a6a49ac93
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.group_content.grequest_status
+    - group.content_type.event-group_membership_request
+  module:
+    - state_machine
+id: group_content.event-group_membership_request.grequest_status
+field_name: grequest_status
+entity_type: group_content
+bundle: event-group_membership_request
+label: 'Request status'
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  workflow: request
+  workflow_callback: ''
+field_type: state

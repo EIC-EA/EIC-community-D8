@@ -1,0 +1,17 @@
+uuid: e466186e-d97b-47e4-81ce-35d8dd4d400d
+langcode: en
+status: true
+dependencies:
+  config:
+    - group.type.event
+  enforced:
+    config:
+      - user.role.service_authentication
+id: event-4c7e676f7
+label: 'Service authentication'
+weight: -6
+internal: true
+audience: outsider
+group_type: event
+permissions_ui: false
+permissions: {  }

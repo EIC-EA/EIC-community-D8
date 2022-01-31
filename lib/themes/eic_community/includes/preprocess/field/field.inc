@@ -15,6 +15,18 @@ function eic_community_preprocess_field(&$variables, $hook): void {
     $variables['attributes']['class'][] = 'ecl-editor';
   }
 
+  if ($variables['field_name'] === 'field_body') {
+    switch ($variables['element']['#entity_type']) {
+      case 'group':
+        // Add attributes on field_body for the group about page.
+        if ($variables['element']['#view_mode'] === 'about_page') {
+          $variables['attributes']['id'] = 'group-description-full';
+        }
+        break;
+
+    }
+  }
+
   // Add the ECL image class to the image fields.
   $field_name = $variables['field_name'];
   if (in_array($field_name, ['oe_media_avportal_photo'])) {

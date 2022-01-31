@@ -1,0 +1,8 @@
+use_queue: true
+notify_own_actions: false
+flag_prefix: follow
+debug_mode: false
+default_notifiers:
+  - email
+_core:
+  default_config_hash: O8wr7pbAthwHawL1un_SvviJ5fyTHsvchz-0JW6Myh4

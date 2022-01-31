@@ -1,0 +1,23 @@
+uuid: 38f35aa8-4700-4e01-a95e-f07e6c41cd0c
+langcode: en
+status: true
+dependencies:
+  module:
+    - ctools
+    - group
+id: group_organisation
+label: 'Group - Organisation'
+type: 'canonical_entities:group'
+pattern: 'organisations/[group:group_truncated_title:40]'
+selection_criteria:
+  21aee7f7-c341-4b80-aa41-096c930edb39:
+    id: 'entity_bundle:group'
+    negate: false
+    uuid: 21aee7f7-c341-4b80-aa41-096c930edb39
+    context_mapping:
+      group: group
+    bundles:
+      organisation: organisation
+selection_logic: and
+weight: -5
+relationships: {  }

@@ -1,0 +1,4 @@
+services:
+  eic_overviews.global_overview_pages:
+    class: Drupal\eic_overviews\GlobalOverviewPages
+    arguments: ['@entity_type.manager']

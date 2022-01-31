@@ -1,5 +1,8 @@
 .ecl-button {
   text-align: inherit;
+  cursor: pointer;
+  border-width: 2px;
+  border-color: $ecl-color-blue;
 
   $node: &;
   &__label {
@@ -8,6 +11,25 @@
       display: inline;
       content: "\00a0";
     }
+  }
+
+  &--primary {
+    border-color: $ecl-color-blue;
+  }
+
+  &--call {
+    border: 2px solid $ecl-color-yellow;
+    &:hover {
+      padding: .75rem 1rem;
+    }
+  }
+
+  &--ghost {
+    border-color: transparent;
+  }
+
+  &--secondary{
+    padding: .75rem 1rem;
   }
 
   &--has-compact-layout,

@@ -5,6 +5,36 @@
     <{{ title_element }} class="ecl-teaser-overview__title">{{ title }}</{{ title_element }}>
   {% endif %}
 
+  {% if my_items is not empty %}
+
+    <div class="ecl-accordion" data-ecl-auto-init="Accordion" data-ecl-accordion="">
+      <div class="ecl-accordion__item">
+        <h3 class="ecl-accordion__title">
+          <button type="button" class="ecl-accordion__toggle" data-ecl-accordion-toggle="" data-ecl-label-expanded="Close" data-ecl-label-collapsed="Open" aria-controls="accordion-example-content">
+            <span class="ecl-accordion__toggle-flex">
+              <span class="ecl-accordion__toggle-title">
+                Your company
+              </span>
+              <svg class="ecl-icon ecl-icon--m ecl-accordion__toggle-icon" focusable="false" aria-hidden="true" data-ecl-accordion-icon="">
+                <use xlink:href="images/sprite/custom/sprites/custom.svg#custom--arrow"></use>
+              </svg>
+            </span>
+          </button>
+        </h3>
+        <div class="ecl-accordion__content" hidden="" id="accordion-example-content" role="region">
+          <div class="ecl-teaser-overview__items">
+            {% for item in my_items %}
+              <div class="ecl-teaser-overview__item {{ item.extra_classes }}">
+                {{ item.content }}
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+
+  {% endif %}
+
   {% if items is not empty %}
     <div class="ecl-teaser-overview__items">
       {% for item in items %}
@@ -139,6 +169,9 @@
     {% endif %}
 
   {% elseif no_items_available %}
+    {% if no_items_available_header %}
+      <h3 class="ecl-teaser-overview__no-content-header">{{ no_items_available_header }}</h3>
+    {% endif %}
     <p clas="ecl-teaser-overview__no-content-message">{{ no_items_available }}</p>
   {% endif %}
 </div>

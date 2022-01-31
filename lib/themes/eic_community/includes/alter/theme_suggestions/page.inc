@@ -26,6 +26,15 @@ function eic_community_theme_suggestions_page_alter(array &$suggestions, array $
     $suggestions[] = 'page__node__preview__' .
       $route->getParameter('node_preview')->bundle();
   }
+
+  // If the current page is access denied page.
+  if (\Drupal::routeMatch()->getRouteName() === 'system.403') {
+
+    // Create a suggestion for group under review pages.
+    if (\Drupal::service('eic_groups.helper')->isGroupUnderReviewPage(NULL)) {
+      $suggestions[] = 'page__group__review';
+    }
+  }
 }
 
 /**
@@ -34,6 +43,9 @@ function eic_community_theme_suggestions_page_alter(array &$suggestions, array $
 function eic_community_theme_suggestions_alter(array &$suggestions, array $variables, $hook) {
   if (isset($variables['elements']['#view_mode'])) {
     $sanitized_view_mode = strtr($variables['elements']['#view_mode'], '.', '_');
-    $suggestions[] = $hook . '__' . $sanitized_view_mode;
+    $suggestion = $hook . '__' . $sanitized_view_mode;
+    if (!in_array($suggestion, $suggestions)) {
+      $suggestions[] = $suggestion;
+    }
   }
 }

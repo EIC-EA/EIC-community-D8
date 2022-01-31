@@ -5,7 +5,7 @@
     <main>
       <section class="ecl-section-wrapper">
         <div class="ecl-editorial-article">
-          <div class="ecl-container">
+          <div class="{{ is_taxonomy_term_page ? '' : 'ecl-container' }}">
             <div class="ecl-editorial-article__wrapper">
 
               <!-- React injection -->
@@ -16,9 +16,11 @@
                 data-source-class="{{ source_class }}"
                 data-datasource="{{ datasource | json_encode }}"
                 data-current-group="{{ group_id }}"
+                data-is-anonymous="{{ is_anonymous }}"
               ></div>
 
-              <aside class="ecl-editorial-article__aside">
+              {% if members %}
+                <aside class="ecl-editorial-article__aside">
                 <div class="ecl-editorial-article__aside-wrapper">
                   <div
                     class="ecl-featured-list ecl-featured-list--is-collapsible wide-view ecl-featured-list--contributors ecl-featured-list--is-ready"
@@ -66,6 +68,7 @@
                   </div>
                 </div>
               </aside>
+              {% endif %}
             </div>
           </div>
         </div>

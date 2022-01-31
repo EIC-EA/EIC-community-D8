@@ -3,9 +3,13 @@
 namespace Drupal\eic_search\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\eic_groups\Constants\GroupVisibilityType;
+use Drupal\eic_search\Plugin\search_api\processor\GroupAccessContent;
 use Drupal\eic_search\Search\Sources\GroupSourceType;
 use Drupal\eic_search\Search\Sources\SourceTypeInterface;
+use Drupal\eic_topics\Constants\Topics;
 use Drupal\eic_user\UserHelper;
+use Drupal\group\Entity\Group;
 use Drupal\group\GroupMembership;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\user\Entity\User;
@@ -26,6 +30,7 @@ class SolrSearchController extends ControllerBase {
    *
    * @return \Symfony\Component\HttpFoundation\Response
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    * @throws \Drupal\search_api\SearchApiException
    * @throws \Drupal\search_api_solr\SearchApiSolrException
@@ -38,10 +43,14 @@ class SolrSearchController extends ControllerBase {
     $source_class = $request->query->get('source_class');
     $search_value = $request->query->get('search_value', '');
     $current_group = $request->query->get('current_group');
+    $topic_term_id = $request->query->get('topics');
     $facets_value = $request->query->get('facets_value');
     $sort_value = $request->query->get('sort_value');
     $facets_options = $request->query->get('facets_options');
-    $facets_value = json_decode($facets_value, TRUE);
+    $facets_value = json_decode($facets_value, TRUE) ?: [];
+    // timestamp value, if nothing set "*" (the default value on solr).
+    $from_date = $request->query->get('from_date', '*');
+    $end_date = $request->query->get('end_date', '*');
     $source = NULL;
 
     $facets_interests = [];
@@ -91,8 +100,11 @@ class SolrSearchController extends ControllerBase {
         $query_fields_string = '(' . implode(' OR ', $query_fields) . ')';
       }
 
-      if ($current_group) {
-        $group_id_fields = $source->getPrefilteredGroupFieldId();
+      if (
+        $current_group &&
+        !$source->excludingCurrentGroup() &&
+        $group_id_fields = $source->getPrefilteredGroupFieldId()
+      ) {
         $group_query = [];
         foreach ($group_id_fields as $group_id_field) {
           $group_query[] = "$group_id_field:($current_group)";
@@ -103,12 +115,53 @@ class SolrSearchController extends ControllerBase {
           " AND $group_query_string";
       }
 
+      // Handle current term ID sub-query.
+      if ($topic_term_id) {
+        $term_id_fields = $source->getPrefilteredTopicsFieldId();
+        $term_query = [];
+        foreach ($term_id_fields as $term_id_field) {
+          $term_query[] = "$term_id_field:($topic_term_id)";
+        }
+        $term_query_string = '(' . implode(' OR ', $term_query) . ')';
+        $query_fields_string .= empty($query_fields_string) ?
+          "$term_query_string" :
+          " AND $term_query_string";
+      }
+
       if ($content_types = $source->getPrefilteredContentType()) {
         $allowed_content_type = implode(' OR ', $content_types);
         $content_type_query = ' AND (' . SourceTypeInterface::SOLR_FIELD_CONTENT_TYPE_ID . ':(' . $allowed_content_type . '))';
       }
 
-      $solariumQuery->addParam('q', $query_fields_string);
+      // If source supports date filter and query has a from or to date.
+      if ($source->supportDateFilter() && ($from_date || $end_date)) {
+        $date_fields_id = $source->getDateIntervalField();
+        $date_from_id = $date_fields_id['from'];
+        $date_end_id = $date_fields_id['to'];
+
+        // If user only selected one day, we will only filter on the start date.
+        // for eg: user select on widget 23-11-2021 - 23-11-2021 (double click)
+        // we only do a query from 23-11-2021 to *.
+        $end_date = $end_date === $from_date ? '*' : $end_date;
+        $dates_query = [];
+
+        $dates_query[] = "($date_from_id:[$from_date TO $end_date] AND $date_end_id:[$from_date TO $end_date])";
+        $dates_query[] = "($date_from_id:[* TO $end_date] AND $date_end_id:[$from_date TO $end_date])";
+        $dates_query[] = "($date_from_id:[$from_date TO $end_date] AND $date_end_id:[$end_date TO *])";
+        $dates_query[] = "($date_from_id:[* TO $from_date] AND $date_end_id:[$end_date TO *])";
+
+
+        $date_query = implode(' OR ', $dates_query);
+
+        $date_query = "($date_query)";
+        $query_fields_string .= empty($query_fields_string) ?
+          "$date_query" :
+          " AND $date_query";
+      }
+
+      if (!empty($query_fields_string)) {
+        $solariumQuery->addParam('q', $query_fields_string);
+      }
     }
 
     $solariumQuery->addParam('json.nl', 'arrarr');
@@ -127,7 +180,13 @@ class SolrSearchController extends ControllerBase {
       }
     }
 
-    //If there are no current sorts check if source has a default sort
+    $default_sort = $source->getSecondDefaultSort();
+
+    if (!empty($default_sort) && 2 === count($default_sort)) {
+      $solariumQuery->addSort($default_sort[0], $default_sort[1]);
+    }
+
+    // If there are no current sorts check if source has a default sort.
     if (
       !$sort_value &&
       $source instanceof SourceTypeInterface &&
@@ -150,6 +209,22 @@ class SolrSearchController extends ControllerBase {
       $fq .= $facets_query;
     }
 
+    if (
+      $source instanceof SourceTypeInterface &&
+      $current_group &&
+      $source->prefilterByGroupVisibility()
+    ) {
+      $this->generateUsersQueryVisibilityGroup($fq, $current_group);
+    }
+
+    if (
+      $source instanceof SourceTypeInterface &&
+      $current_group &&
+      $source->excludingCurrentGroup()
+    ) {
+      $this->generateExcludingUsersGroupQuery($fq, $current_group);
+    }
+
     $this->generateQueryInterests($fq, $facets_interests);
     $this->generateQueryUserGroupsAndContents($fq, $facets_interests);
     $this->generateQueryPrivateContent($fq);
@@ -162,7 +237,10 @@ class SolrSearchController extends ControllerBase {
 
     $solariumQuery->addParam('fq', $fq);
 
-    if ($index->isValidProcessor('group_content_access')) {
+    if (
+      $index->isValidProcessor('group_content_access') &&
+      GroupAccessContent::supportsIndex($index)
+    ) {
       $index->getProcessor('group_content_access')
         ->preprocessSolrSearchQuery($solariumQuery);
     }
@@ -191,7 +269,15 @@ class SolrSearchController extends ControllerBase {
       $values = array_keys($filtered_value);
 
       if ($filtered_value) {
-        $facets_query .= ' AND ' . $key . ':"' . implode(' OR ', $values) . '"';
+        array_walk($values, function (&$value) {
+          $value = "\"$value\"";
+        });
+
+        $query_values = count($values) > 1 ?
+          '(' . implode(' AND ', $values) . ')' :
+          implode(' AND ', $values);
+
+        $facets_query .= ' AND ' . $key . ':' . $query_values;
       }
     }
 
@@ -199,12 +285,13 @@ class SolrSearchController extends ControllerBase {
   }
 
   /**
-   * Generate query for user interests matching by their topics
+   * Generate query for user interests matching by their topics.
    *
    * @param string $fq
-   *  The field query stringify to send to SOLR
    * @param array $interests
-   *  Values of interests facet
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
   private function generateQueryInterests(string &$fq, array $interests) {
     if (
@@ -228,7 +315,7 @@ class SolrSearchController extends ControllerBase {
     }
 
     $profile = reset($profiles);
-    $user_topics = $profile->get('field_vocab_topic_interest')
+    $user_topics = $profile->get(Topics::TERM_TOPICS_ID_FIELD)
       ->referencedEntities();
     $user_topics_id = [0];
 
@@ -243,7 +330,7 @@ class SolrSearchController extends ControllerBase {
   }
 
   /**
-   * Generate query for user's groups and content
+   * Generate query for user's groups and content.
    *
    * @param string $fq
    *  The field query stringify to send to SOLR
@@ -281,9 +368,13 @@ class SolrSearchController extends ControllerBase {
    * @param string $fq
    */
   private function generateQueryPrivateContent(string &$fq) {
-    $roles = \Drupal::currentUser()->getRoles();
+    $current_user = \Drupal::currentUser();
+    $roles = $current_user->getRoles();
 
-    if (in_array(UserHelper::ROLE_TRUSTED_USER, $roles)) {
+    if (
+      in_array(UserHelper::ROLE_TRUSTED_USER, $roles) ||
+      UserHelper::isPowerUser($current_user)
+    ) {
       return;
     }
 
@@ -292,7 +383,7 @@ class SolrSearchController extends ControllerBase {
 
   /**
    * Add the status query to the query but check for groups if need
-   * to show draft/pending for group owner
+   * to show draft/pending for group owner.
    *
    * @param string $fq
    * @param \Drupal\eic_search\Search\Sources\SourceTypeInterface $source
@@ -302,20 +393,34 @@ class SolrSearchController extends ControllerBase {
       return;
     }
 
+    $current_user = \Drupal::currentUser();
+    $user_id = $current_user->id();
+    $is_power_user = UserHelper::isPowerUser($current_user);
+
+    // We need to show all groups on the groups overview for power users,
+    // disregarding the published status.
+    if ($source instanceof GroupSourceType && $is_power_user) {
+      return;
+    }
+
     $status_query = ' AND (bs_global_status:true';
 
     if ($source instanceof GroupSourceType) {
-      $user_id = \Drupal::currentUser()->id();
       $status_query .= ' OR (its_group_owner_id:' . $user_id . ')';
     }
 
     $status_query .= ')';
 
     $fq .= $status_query;
+
+    // If it's not a power user or a group owner, add the filter query for published group parent.
+    if (!$is_power_user) {
+      $fq .= " AND (its_global_group_parent_published:1 OR its_group_owner_id:$user_id)";
+    }
   }
 
   /**
-   * Set the current start and offset
+   * Set the current start and offset.
    *
    * @param \Solarium\QueryType\Select\Query\Query $solariumQuery
    * @param int $page
@@ -325,15 +430,95 @@ class SolrSearchController extends ControllerBase {
   private function generateQueryPager(Query &$solariumQuery, int $page, int $offset, ?SourceTypeInterface $source) {
     $solariumQuery->setRows($offset);
 
-    //Default value will be to work like pagination
+    //Default value will be to work like pagination.
     if ($source instanceof SourceTypeInterface && $source->allowPagination()) {
       $solariumQuery->setStart(($page * $offset) - $offset);
       return;
     }
 
-    //If no pagination, it's a load more so we start at 1
+    //If no pagination, it's a load more so we start at 1.
     $solariumQuery->setStart(0);
     $solariumQuery->setRows($offset * $page);
+  }
+
+  /**
+   * Prefilter users by the current group visibility.
+   *
+   * @param $fq
+   * @param $group_id
+   */
+  private function generateUsersQueryVisibilityGroup(&$fq, $group_id) {
+    $query = '';
+    $group = Group::load($group_id);
+
+    /** @var \Drupal\oec_group_flex\GroupVisibilityDatabaseStorage $group_visibility_storage */
+    $group_visibility_storage = \Drupal::service('oec_group_flex.group_visibility.storage');
+    $group_visibility_entity = $group_visibility_storage->load($group->id());
+    $visibility_type = $group_visibility_entity ?
+      $group_visibility_entity->getType() :
+      NULL;
+
+    switch ($visibility_type) {
+      case GroupVisibilityType::GROUP_VISIBILITY_PRIVATE:
+      case GroupVisibilityType::GROUP_VISIBILITY_COMMUNITY:
+        $query = '(sm_user_profile_role_array:*' . UserHelper::ROLE_TRUSTED_USER . '*)';
+        break;
+
+      // In this case, when we have a custom restriction, we can have multiple restriction options like email domain, trusted users, organisation, ...
+      case GroupVisibilityType::GROUP_VISIBILITY_CUSTOM_RESTRICTED:
+        $options = $group_visibility_entity->getOptions();
+        foreach ($options as $key => $option) {
+          // restricted_email_domains_status can be false so we need to check if enable
+          if (GroupVisibilityType::GROUP_VISIBILITY_OPTION_EMAIL_DOMAIN === $key && $option[GroupVisibilityType::GROUP_VISIBILITY_OPTION_EMAIL_DOMAIN . '_status']) {
+            $authorized_emails = $option[GroupVisibilityType::GROUP_VISIBILITY_OPTION_EMAIL_DOMAIN . '_conf'];
+            $authorized_emails = str_replace(' ', '', $authorized_emails);
+            $emails = explode(',', $authorized_emails);
+            $emails = implode(' OR *', $emails);
+            $query = '(ss_user_mail:(*' . $emails . '))';
+          }
+
+          if (GroupVisibilityType::GROUP_VISIBILITY_OPTION_TRUSTED_USERS === $key && $option[GroupVisibilityType::GROUP_VISIBILITY_OPTION_TRUSTED_USERS . '_status']) {
+            $user_ids = $option[GroupVisibilityType::GROUP_VISIBILITY_OPTION_TRUSTED_USERS . '_conf'];
+            $users = array_map(function ($user_id) {
+              return $user_id['target_id'];
+            }, $user_ids);
+            $users = implode(' OR ', $users);
+            $query = '(its_user_id:(' . $users . '))';
+          }
+        }
+        break;
+      default:
+        break;
+    }
+
+    // Ignore anonymous user.
+    $condition_ignore_anon = "!(its_user_id:0)";
+
+    if (empty($query)) {
+      $query = $condition_ignore_anon;
+    }
+
+    if (!empty($fq)) {
+      $fq .= " AND $query AND $condition_ignore_anon";
+      return;
+    }
+
+    $fq .= "$query AND $condition_ignore_anon";
+  }
+
+  /**
+   * Prefilter users by excluding the current group.
+   *
+   * @param $fq
+   * @param $group_id
+   */
+  private function generateExcludingUsersGroupQuery(&$fq, $group_id) {
+    if (!empty($fq)) {
+      $fq .= " AND !(itm_user__group_content__uid_gid:($group_id))";
+      return;
+    }
+
+    $fq .= "!itm_user__group_content__uid_gid:($group_id)";
   }
 
 }

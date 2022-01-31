@@ -12,10 +12,10 @@ bundle: notify_group_requested
 mode: notify_email_subject
 content:
   partial_0:
-    weight: 0
-    region: content
     settings: {  }
     third_party_settings: {  }
+    weight: 0
+    region: content
 hidden:
   field_group_ref: true
   partial_1: true

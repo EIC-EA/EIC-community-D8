@@ -1,0 +1,9 @@
+{% if documents is empty %}
+  {% for item in items %}
+    {{ item.content }}
+  {% endfor %}
+{% else %}
+  {% for document in documents %}
+    {% include "@theme/patterns/components/attachment.html.twig" with document only %}
+  {% endfor %}
+{% endif %}

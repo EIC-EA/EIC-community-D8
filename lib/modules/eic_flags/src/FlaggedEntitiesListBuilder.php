@@ -2,20 +2,21 @@
 
 namespace Drupal\eic_flags;
 
+use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\Query\PagerSelectExtender;
-use Drupal\Core\Entity\Element\EntityAutocomplete;
-use Drupal\Core\Form\FormState;
-use Drupal\Core\Url;
-use Drupal\eic_flags\Form\ListBuilderFilters;
-use Drupal\eic_flags\Service\RequestHandlerCollector;
-use Drupal\flag\FlagService;
 use Drupal\Core\Datetime\DateFormatterInterface;
+use Drupal\Core\Entity\Element\EntityAutocomplete;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityListBuilder;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Form\FormState;
+use Drupal\Core\Url;
+use Drupal\eic_flags\Form\ListBuilderFilters;
+use Drupal\eic_flags\Service\RequestHandlerCollector;
+use Drupal\flag\FlagService;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -142,6 +143,63 @@ class FlaggedEntitiesListBuilder extends EntityListBuilder {
   /**
    * {@inheritdoc}
    */
+  public function render() {
+    $build['filters'] = $this->getFilters();
+    $build['table'] = [
+      '#type' => 'table',
+      '#header' => $this->buildHeader(),
+      '#title' => $this->getTitle(),
+      '#rows' => [],
+      '#empty' => $this->t(
+        'There are no @label yet.',
+        ['@label' => $this->entityType->getPluralLabel()]
+      ),
+      '#cache' => [
+        'contexts' => $this->entityType->getListCacheContexts(),
+        'tags' => $this->entityType->getListCacheTags(),
+      ],
+    ];
+
+    foreach ($this->load() as $result) {
+      $entity = $result['entity'];
+      if ($row = $this->buildRow($result)) {
+        $build['table']['#rows'][$entity->getEntityTypeId() . '_' . $entity->id()] = $row;
+      }
+    }
+
+    // Only add the pager if a limit is specified.
+    if ($this->limit) {
+      $build['pager'] = [
+        '#type' => 'pager',
+      ];
+    }
+    return $build;
+  }
+
+  /**
+   * Returns a built form to use for filtering purposes.
+   *
+   * @return array
+   *   Available filters.
+   * @throws \Drupal\Core\Form\EnforcedResponseException
+   * @throws \Drupal\Core\Form\FormAjaxException
+   */
+  private function getFilters() {
+    $form_state = (new FormState())
+      ->setMethod('get')
+      ->addBuildInfo('args', [$this->requestHandler])
+      ->setAlwaysProcess()
+      ->disableRedirect();
+
+    return \Drupal::formBuilder()->buildForm(
+      ListBuilderFilters::class,
+      $form_state
+    );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function buildHeader() {
     // Enable language column and filter if multiple languages are added.
     $header = [
@@ -177,124 +235,11 @@ class FlaggedEntitiesListBuilder extends EntityListBuilder {
   /**
    * {@inheritdoc}
    */
-  protected function getDefaultOperations(EntityInterface $entity) {
-    $operations = [];
-    if ($entity->access('update') && $entity->hasLinkTemplate('edit-form')) {
-      $operations['edit'] = [
-        'title' => $this->t('Edit'),
-        'weight' => 10,
-        'url' => $this->ensureDestination($entity->toUrl('edit-form')),
-      ];
-    }
-
-    return $operations;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   protected function getTitle() {
     return $this->t(
       'Content requested for @request-type',
       ['@request-type' => $this->requestType]
     );
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function render() {
-    $build['filters'] = $this->getFilters();
-    $build['table'] = [
-      '#type' => 'table',
-      '#header' => $this->buildHeader(),
-      '#title' => $this->getTitle(),
-      '#rows' => [],
-      '#empty' => $this->t(
-        'There are no @label yet.',
-        ['@label' => $this->entityType->getPluralLabel()]
-      ),
-      '#cache' => [
-        'contexts' => $this->entityType->getListCacheContexts(),
-        'tags' => $this->entityType->getListCacheTags(),
-      ],
-    ];
-
-    foreach ($this->load() as $result) {
-      $entity = $result['entity'];
-      if ($row = $this->buildRow($result)) {
-        $build['table']['#rows'][$entity->getEntityTypeId() . '_' . $entity->id()] = $row;
-      }
-    }
-
-    // Only add the pager if a limit is specified.
-    if ($this->limit) {
-      $build['pager'] = [
-        '#type' => 'pager',
-      ];
-    }
-    return $build;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function buildRow($result) {
-    static $flags;
-    /** @var \Drupal\Core\Entity\ContentEntityInterface $flagged_entity */
-    $flagged_entity = $result['entity'];
-    $supported_entity_types = $this->requestHandler->getSupportedEntityTypes();
-    $entity_type_id = $flagged_entity->getEntityTypeId();
-
-    if (!isset($flags[$flagged_entity->getEntityTypeId()])) {
-      $flags[$entity_type_id] = $this->flagService
-        ->getFlagById($supported_entity_types[$entity_type_id]);
-    }
-
-    $request_count = count(
-      $this->requestHandler->getOpenRequests($flagged_entity)
-    );
-
-    $type = '';
-    switch ($flagged_entity->getEntityTypeId()) {
-      case 'node':
-        $type = $flagged_entity->bundle();
-        break;
-      case 'group':
-      case 'comment':
-        $type = $flagged_entity->getEntityTypeId();
-        break;
-    }
-
-    $row['title']['data'] = [
-      '#type' => 'link',
-      '#title' => $flagged_entity->label(),
-      '#url' => Url::fromRoute(
-        'eic_flags.flagged_entity.detail',
-        [
-          'request_type' => $this->requestHandler->getType(),
-          'entity_type' => $entity_type_id,
-          'entity_id' => $flagged_entity->id(),
-        ]
-      ),
-    ];
-    $row['type'] = $type;
-    $row['author']['data'] = [
-      '#theme' => 'username',
-      '#account' => $flagged_entity->getOwner(),
-    ];
-    $row['request_number'] = $request_count;
-    $row['changed'] = $this->dateFormatter->format(
-      $flagged_entity->getChangedTime(),
-      'short'
-    );
-    $row['created'] = $this->dateFormatter->format(
-      $flagged_entity->get('created')->value,
-      'short'
-    );
-    $row['operations']['data'] = $this->buildOperations($flagged_entity);
-
-    return $row;
   }
 
   /**
@@ -416,24 +361,95 @@ class FlaggedEntitiesListBuilder extends EntityListBuilder {
   }
 
   /**
-   * Returns a built form to use for filtering purposes.
-   *
-   * @return array
-   *   Available filters.
-   * @throws \Drupal\Core\Form\EnforcedResponseException
-   * @throws \Drupal\Core\Form\FormAjaxException
+   * {@inheritdoc}
    */
-  private function getFilters() {
-    $form_state = (new FormState())
-      ->setMethod('get')
-      ->addBuildInfo('args', [$this->requestHandler])
-      ->setAlwaysProcess()
-      ->disableRedirect();
+  public function buildRow($result) {
+    static $flags;
+    /** @var \Drupal\Core\Entity\ContentEntityInterface $flagged_entity */
+    $flagged_entity = $result['entity'];
+    $supported_entity_types = $this->requestHandler->getSupportedEntityTypes();
+    $entity_type_id = $flagged_entity->getEntityTypeId();
 
-    return \Drupal::formBuilder()->buildForm(
-      ListBuilderFilters::class,
-      $form_state
+    if (!isset($flags[$flagged_entity->getEntityTypeId()])) {
+      $flags[$entity_type_id] = $this->flagService
+        ->getFlagById($supported_entity_types[$entity_type_id]);
+    }
+
+    $request_count = count(
+      $this->requestHandler->getOpenRequests($flagged_entity)
     );
+
+    $type = '';
+    $title = $flagged_entity->label();
+    switch ($flagged_entity->getEntityTypeId()) {
+      case 'node':
+        $type = $flagged_entity->bundle();
+        break;
+      case 'group':
+        $type = $flagged_entity->getEntityTypeId();
+        $title = Unicode::truncate(
+          $flagged_entity->label(),
+          100,
+          TRUE,
+          TRUE
+        );
+        break;
+      case 'comment':
+        $type = $flagged_entity->getEntityTypeId();
+        $title = Unicode::truncate(
+          $flagged_entity->get('comment_body')->value,
+          100,
+          TRUE,
+          TRUE
+        );
+        break;
+    }
+
+    $row['title']['data'] = [
+      '#type' => 'link',
+      '#title' => $title,
+      '#url' => Url::fromRoute(
+        'eic_flags.flagged_entity.detail',
+        [
+          'request_type' => $this->requestHandler->getType(),
+          'entity_type' => $entity_type_id,
+          'entity_id' => $flagged_entity->id(),
+        ]
+      ),
+    ];
+    $row['type'] = $type;
+    $row['author']['data'] = [
+      '#theme' => 'username',
+      '#account' => $flagged_entity->getOwner(),
+    ];
+    $row['request_number'] = $request_count;
+    $row['changed'] = $this->dateFormatter->format(
+      $flagged_entity->getChangedTime(),
+      'short'
+    );
+    $row['created'] = $this->dateFormatter->format(
+      $flagged_entity->get('created')->value,
+      'short'
+    );
+    $row['operations']['data'] = $this->buildOperations($flagged_entity);
+
+    return $row;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getDefaultOperations(EntityInterface $entity) {
+    $operations = [];
+    if ($entity->access('update') && $entity->hasLinkTemplate('edit-form')) {
+      $operations['edit'] = [
+        'title' => $this->t('Edit'),
+        'weight' => 10,
+        'url' => $this->ensureDestination($entity->toUrl('edit-form')),
+      ];
+    }
+
+    return $operations;
   }
 
 }

@@ -1,7 +1,8 @@
 .ecl-filelist {
+  $node: &;
   &__title {
-    @include ecl-responsive-font('h3');
-    margin-top: 0;
+    //@include ecl-responsive-font('title');
+    color: $ecl-color-blue;
   }
 
   &__content {
@@ -22,6 +23,11 @@
         border-top: 1px solid map-get($ecl-colors, 'grey-25');
         margin-top: map-get($ecl-spacing, 's');
         padding-top: map-get($ecl-spacing, 's');
+
+      @include ecl-media-breakpoint-down('sm') {
+        margin-top: map-get($ecl-spacing, 'l');
+        padding-top: map-get($ecl-spacing, 'l');
+      }
     }
 
     &-header {
@@ -33,16 +39,32 @@
     &-image-wrapper {
       order: -1;
       margin: 0;
-      margin-right: ecl-box-model('padding');
-      width: 70px;
+      margin-bottom: ecl-box-model('padding');
+      width: 100%;
+      height: 140px;
       background: map-get($ecl-colors, 'grey-5');
       display: flex;
       justify-content: center;
       align-items: center;
       color: ecl-typography('color', 'title');
+
+      @include ecl-media-breakpoint-up('sm') {
+        margin-right: ecl-box-model('padding');
+        margin-bottom: 0;
+        width: 140px;
+        min-height: 80px;
+        max-height: 140px;
+      }
+
+      & #{$node}__file-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
     }
 
     & &-name {
+      font-weight: bold;
       margin-top:0;
       margin-bottom: map-get($ecl-spacing, 's');
       color: ecl-typography('color', 'title');
@@ -67,12 +89,28 @@
         display: flex;
         align-items: flex-end;
       }
+
+      @include ecl-media-breakpoint-down('sm') {
+        & .ecl-link--button-primary {
+          width: 100%;
+          align-items: center;
+          justify-content: center;
+        }
+      }
     }
 
     &-stats {
       display: flex;
+      flex-direction: row;
       justify-content: space-between;
       color: ecl-typography('color', 'meta');
+      margin-bottom: 0;
+      margin-top: auto;
+
+      @include ecl-media-breakpoint-between('sm', 'lg') {
+        flex-direction: column-reverse;
+        justify-content: center;
+      }
     }
 
     &-stat {
@@ -82,6 +120,9 @@
 
     &-stat-value {
       margin: 0 5px;
+      @include ecl-media-breakpoint-down('lg') {
+        margin: 0;
+      }
     }
 
     &-stat-label {

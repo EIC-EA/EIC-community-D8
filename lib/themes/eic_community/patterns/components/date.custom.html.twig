@@ -1,0 +1,124 @@
+{% spaceless %}
+
+  {#
+  Parameters:
+    - "variant" (string) (default: '')
+    - "day" (integer) (default: '')
+    - "month" (string) (default: '')
+    - "year" (integer) (default: '')
+    - "date_time" (date/time) (default: '')
+    - "month_full" (string) (default: '')
+    - "extra_classes" (string) (default: '')
+    - "extra_attributes" (array) (default: []): format: [
+        {
+          "name" (string) (default: ''),
+          "value" (optional) (string)
+        ...
+      ]
+  #}
+
+  {# Internal properties #}
+  {% set _start_month = start.month ? start.month : month|default('') %}
+  {% set _start_day = start.day ? start.day : day|default('') %}
+  {% set _start_year = start.year ? start.year : year|default('') %}
+  {% set _start_date_time = start.date_time ? start.date_time : date_time|default('') %}
+  {% set _start_month_full = start.month_full ? start.month_full : month_full|default('') %}
+
+  {% set _end_month = end.month|default('') %}
+  {% set _end_day = end.day|default('') %}
+  {% set _end_year = end.year|default('') %}
+  {% set _end_date_time = end.date_time|default('') %}
+  {% set _end_month_full = end.month_full|default('') %}
+
+  {% set _variant = variant|default('') %}
+  {% set _css_class = 'ecl-date-block' %}
+  {% set _extra_attributes = '' %}
+  {% set _compliance = _compliance_|default(false) %}
+
+  {# Internal logic - Process properties #}
+
+  {% if extra_classes is defined and extra_classes is not empty %}
+    {% set _css_class = _css_class ~ ' ' ~ extra_classes %}
+  {% endif %}
+
+  {% if _variant is not empty %}
+    {% set _css_class = _css_class ~ ' ' ~ _css_class ~ '--' ~ _variant %}
+  {% endif %}
+
+  {% if extra_attributes is defined and extra_attributes is not empty and extra_attributes is iterable %}
+    {% for attr in extra_attributes %}
+      {% if attr.value is defined %}
+        {% set _extra_attributes = _extra_attributes ~ ' ' ~ attr.name|e('html_attr') ~ '="' ~ attr.value|e('html_attr') ~ '"' %}
+      {% else %}
+        {% set _extra_attributes = _extra_attributes ~ ' ' ~ attr.name|e('html_attr') %}
+      {% endif %}
+    {% endfor %}
+  {% endif %}
+
+  {% if _start_date_time is not empty %}
+    {% set _extra_attributes = _extra_attributes ~ 'dateTime="' ~ _start_date_time|e('html_attr') ~ '"' %}
+  {% endif %}
+
+  <time class="{{ _css_class }}"{{ _extra_attributes|raw }}>
+    {% if _start_date_time is not empty %}
+      <span class="ecl-u-sr-only">{{ _start_date_time }}</span>
+    {% endif %}
+    <span class="ecl-date-block__day" aria-hidden="true">
+      {% if _end_day is not empty and (_end_day != _start_day or _end_month != _start_month) %}
+        {{_start_day}}&nbsp;-&nbsp;{{ _end_day }}
+      {% else %}
+        {{_start_day}}
+      {% endif %}
+    </span>
+
+    {% if (_start_month is not empty or _start_month_full is not empty) %}
+      {% if _start_month_full is not empty and _start_month_full != _start_month %}
+        {% if _end_month is not empty and _end_month != _start_month  %}
+          <abbr
+            title="{{ _start_month_full }} - {{ _end_month_full }}"
+            class="ecl-date-block__month"
+            aria-hidden="true">
+            {{- _start_month -}}&nbsp;-&nbsp;{{- _end_month -}}
+          </abbr>
+        {% else %}
+          <abbr
+            title="{{ _start_month_full }}"
+            class="ecl-date-block__month"
+            aria-hidden="true">
+            {{- _start_month -}}
+          </abbr>
+        {% endif %}
+      {% else %}
+        <span class="ecl-date-block__month">
+          {% if _end_month is not empty and _end_month != _start_month  %}
+            {{- _start_month -}}&nbsp;-&nbsp;{{- _end_month -}}
+          {% else %}
+          {{ _start_month }}
+          {% endif %}
+        </span>
+      {% endif %}
+    {% endif %}
+    {% if _start_year is not empty %}
+      <span class="ecl-date-block__year" aria-hidden="true">
+        {% if _end_year is not empty and _end_year != _start_year  %}
+          {{- _start_year -}}&nbsp;-&nbsp;{{- _end_year -}}
+        {% else %}
+          {{ _start_year }}
+        {% endif %}
+      </span>
+    {% endif %}
+  </time>
+
+  {# Validation #}
+
+  {% if _compliance %}
+    {% include '@ecl-twig/ec-component-ecl-compliance/components/ecl-compliance-date-block.html.twig' with {
+      variant: _variant,
+      day: _start_day,
+      month: _start_month,
+      year: _year,
+      month_full: _start_month_full
+    } only %}
+  {% endif %}
+
+{% endspaceless %}

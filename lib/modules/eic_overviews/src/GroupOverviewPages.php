@@ -18,14 +18,29 @@ class GroupOverviewPages {
   const DISCUSSIONS = 'eic_overviews.groups.overview_page.discussions';
 
   /**
+   * Route to the group events overview.
+   */
+  const EVENTS = 'eic_overviews.groups.overview_page.events';
+
+  /**
    * Route to the group files overview.
    */
   const FILES = 'eic_overviews.groups.overview_page.files';
 
   /**
+   * Route to the group latest activity overview.
+   */
+  const LATEST_ACTIVITY = 'eic_overviews.groups.overview_page.latest_activity_stream';
+
+  /**
    * Route to the group members overview.
    */
   const MEMBERS = 'eic_overviews.groups.overview_page.members';
+
+  /**
+   * Route to the group news overview.
+   */
+  const NEWS = 'eic_overviews.groups.overview_page.news';
 
   /**
    * Route to the group search overview.
@@ -52,6 +67,10 @@ class GroupOverviewPages {
 
       case 'files':
         $page_id = self::FILES;
+        break;
+
+      case 'events':
+        $page_id = self::EVENTS;
         break;
 
       case 'members':

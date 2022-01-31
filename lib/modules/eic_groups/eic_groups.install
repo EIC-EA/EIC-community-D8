@@ -7,6 +7,7 @@
 
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\eic_groups\Constants\NodeProperty;
+use Drupal\group_permissions\Entity\GroupPermission;
 
 /**
  * Implements hook_install().
@@ -25,4 +26,119 @@ function eic_groups_install() {
 
   \Drupal::entityDefinitionUpdateManager()
     ->installFieldStorageDefinition(NodeProperty::MEMBER_CONTENT_EDIT_ACCESS, 'node', 'node', $field_storage_definition);
+}
+
+/**
+ * Set default permissions to existing group roles.
+ */
+function eic_groups_update_9001(&$sandbox) {
+
+  $group_permissions = \Drupal::entityQuery('group_permission')
+    ->execute();
+
+  $group_permissions = GroupPermission::loadMultiple($group_permissions);
+
+  $members_management_permissions = [
+    'access group_node overview',
+    'administer members',
+    'administer membership requests',
+    'view group_membership content',
+  ];
+
+  /** @var \Drupal\group_permissions\Entity\GroupPermission $group_permission */
+  foreach ($group_permissions as &$group_permission) {
+    $permissions = $group_permission->getPermissions();
+
+    /** @var \Drupal\group\Entity\GroupInterface $group */
+    $group = $group_permission->getGroup();
+
+    if ('group' !== $group->getGroupType()->id() || empty($permissions)) {
+      continue;
+    }
+
+    foreach ($permissions as $key => &$permission) {
+      // ID of the group role permission content manager OR site admin.
+      if ('group-eca6128ca' !== $key && 'group-bf4b46c3a' !== $key) {
+        continue;
+      }
+
+      foreach ($members_management_permissions as &$members_management_permission) {
+        if (in_array($members_management_permission, $permission)) {
+          continue;
+        }
+
+        $permission[] = $members_management_permission;
+      }
+
+    }
+
+    $group_permission->setPermissions($permissions);
+    $group_permission->setNewRevision();
+    $group_permission->setRevisionUserId(1);
+    $group_permission->setRevisionCreationTime(time());
+    $group_permission->setRevisionLogMessage(t('Set default permissions for content admin.'));
+
+    if (count($group_permission->validate()) > 0) {
+      continue;
+    }
+
+    $group_permission->save();
+
+    // Save the group entity to reset the cache tags.
+    $group->save();
+  }
+}
+
+/**
+ * Remove "view comments" permission from group outsider roles.
+ */
+function eic_groups_update_9002(&$sandbox) {
+
+  $group_permissions = \Drupal::entityQuery('group_permission')
+    ->execute();
+
+  $group_permissions = GroupPermission::loadMultiple();
+
+  foreach ($group_permissions as &$group_permission) {
+    $permissions = $group_permission->getPermissions();
+
+    /** @var \Drupal\group\Entity\GroupInterface $group */
+    $group = $group_permission->getGroup();
+    $group_type = $group->getGroupType()->id();
+    $roles = [
+      "$group_type-outsider",
+    ];
+    $outsider_roles = [
+      'trusted_user',
+      'service_authentication',
+    ];
+    $groupRoleSynchronizer = \Drupal::service('group_role.synchronizer');
+
+    foreach ($outsider_roles as $outsider_role) {
+      $role = $groupRoleSynchronizer->getGroupRoleId($group_type, $outsider_role);
+      $roles[] = $role;
+    }
+
+    if (empty($permissions)) {
+      continue;
+    }
+
+    foreach ($roles as $role) {
+      \Drupal::service('eic_groups.helper')->removeRolePermissionsFromGroup($group_permission, $role, ['view comments']);
+    }
+
+    $group_permission->setNewRevision();
+    $group_permission->setRevisionUserId(1);
+    $group_permission->setRevisionCreationTime(time());
+    $group_permission->setRevisionLogMessage(t('Remove "view comments" permission from group outsider role.'));
+
+    if (count($group_permission->validate()) > 0) {
+      continue;
+    }
+
+    $group_permission->save();
+
+    // Save the group entity to reset the cache tags.
+    $group->save();
+  }
 }

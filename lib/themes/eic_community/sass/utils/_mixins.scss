@@ -55,7 +55,6 @@
 }
 
 @mixin adjust-from-section-color() {
-  [class*="ecl-section-wrapper--is-"] [class*="ecl-featured-content"] &,
   .ecl-section-wrapper:not([class*="ecl-section-wrapper--is-"])~.ecl-section-wrapper:not([class*="ecl-section-wrapper--is-"]):nth-child(2n) & {
     @content;
   }

@@ -1,0 +1,18 @@
+uuid: dab5084e-1cd6-467e-a1f4-860e25f253c0
+langcode: en
+status: true
+dependencies:
+  config:
+    - group.type.event
+  enforced:
+    config:
+      - user.role.administrator
+id: event-a416e6833
+label: 'Drupal admin'
+weight: -4
+internal: true
+audience: outsider
+group_type: event
+permissions_ui: false
+permissions:
+  - 'highlight group content'

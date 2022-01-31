@@ -1,0 +1,22 @@
+<div class="ecl-social-follow__item">
+  {% if path %}
+    <a class="ecl-link ecl-social-follow__item-wrapper {{ name ? ' ecl-social-follow__item-wrapper--' ~ name }}" href="{{ path }}">
+      {% if icon_file_path %}
+        <span class="ecl-social-follow__item-icon-wrapper">
+                  {% include '@ecl-twig/ec-component-icon/ecl-icon.html.twig' with {
+                    icon: {
+                      size: compact ? "xs" : "m",
+                      path: icon_file_path,
+                      type: type|default('branded'),
+                      name: name,
+                    },
+                    extra_classes: 'ecl--social--follow__item-icon',
+                  } %}
+                </span>
+      {% endif %}
+      {% if label is not empty %}
+        <span class="ecl-social-follow__item-label">{{ label }}</span>
+      {% endif %}
+    </a>
+  {% endif %}
+</div>

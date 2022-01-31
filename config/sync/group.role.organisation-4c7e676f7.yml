@@ -1,0 +1,35 @@
+uuid: deca9f06-7784-4212-bb92-0456bb1034c4
+langcode: en
+status: true
+dependencies:
+  config:
+    - group.type.organisation
+  enforced:
+    config:
+      - user.role.service_authentication
+id: organisation-4c7e676f7
+label: 'Service authentication'
+weight: -6
+internal: true
+audience: outsider
+group_type: organisation
+permissions_ui: false
+permissions:
+  - 'access content overview'
+  - 'access discussions overview'
+  - 'access events overview'
+  - 'access files overview'
+  - 'access group content menu overview'
+  - 'access group search overview'
+  - 'access group_node overview'
+  - 'access latest activity stream'
+  - 'access members overview'
+  - 'access news overview'
+  - 'access wiki overview'
+  - 'join group'
+  - 'view group'
+  - 'view group_node:event content'
+  - 'view group_node:event entity'
+  - 'view group_node:news content'
+  - 'view group_node:news entity'
+  - 'view latest group version'

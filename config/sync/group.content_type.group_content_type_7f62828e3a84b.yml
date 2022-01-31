@@ -1,0 +1,21 @@
+uuid: 1dd89c51-4f4d-4449-9159-b07aa189c60a
+langcode: en
+status: true
+dependencies:
+  config:
+    - group.type.organisation
+    - group_content_menu.group_content_menu_type.group_main_menu
+  module:
+    - group_content_menu
+id: group_content_type_7f62828e3a84b
+label: 'Organisation: Group menu (Group - Main menu)'
+description: 'Adds <em class="placeholder">Group - Main menu</em> menu items to groups.'
+group_type: organisation
+content_plugin: 'group_content_menu:group_main_menu'
+plugin_config:
+  group_cardinality: 1
+  entity_cardinality: 1
+  use_creation_wizard: false
+  auto_create_group_menu: true
+  auto_create_home_link: true
+  auto_create_home_link_title: Overview

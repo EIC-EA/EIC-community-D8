@@ -1,0 +1,4 @@
+services:
+  eic_organisations.helper:
+    class: Drupal\eic_organisations\OrganisationsHelper
+    arguments: ['@group.membership_loader', '@current_user']

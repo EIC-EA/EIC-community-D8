@@ -5,6 +5,10 @@
 
     &__items-wrapper {}
 
+    &__no-content-header {
+      color: $ecl-color-blue;
+    }
+
     &__item {
         padding: ecl-box-model('padding', 'default');
         margin-bottom: ecl-box-model('padding');
@@ -15,10 +19,11 @@
         }
 
         &__main {
-            display: flex; 
-            align-items: center; 
+            display: flex;
+            align-items: center;
             border-bottom: ecl-border();
             padding-bottom: ecl-box-model('padding');
+            padding-right: ecl-box-model('padding');
             margin-bottom: ecl-box-model('padding');
         }
 
@@ -26,7 +31,11 @@
             padding-right: ecl-box-model('padding');
         }
 
-        &__content {}
+        &__content {
+          & h3 {
+            margin-top: 0;
+          }
+        }
 
         &__type {}
 
@@ -42,6 +51,16 @@
         &__footer {
             display: flex;
             justify-content: space-between;
+            @include ecl-media-breakpoint-down('sm') {
+              flex-direction: column;
+
+              & > div {
+                margin-bottom: 8px;
+              }
+              & > div:last-child {
+                margin-bottom: 0px;
+              }
+            }
         }
 
         &__timestamp {}
@@ -59,7 +78,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            
+
             &__icon {
                 color: map-get($ecl-colors, 'white');
             }

@@ -2,6 +2,7 @@
 
 namespace Drupal\eic_user;
 
+use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Logger\LoggerChannelTrait;
@@ -9,7 +10,13 @@ use Drupal\Core\Render\Markup;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
+use Drupal\eic_flags\FlagType;
+use Drupal\file\Entity\File;
+use Drupal\eic_topics\Constants\Topics;
+use Drupal\flag\FlagCountManagerInterface;
+use Drupal\user\Entity\User;
 use Drupal\user\UserInterface;
+use Drupal\taxonomy\TermInterface;
 
 /**
  * UserHelper service that provides helper functions for users.
@@ -55,11 +62,32 @@ class UserHelper {
   protected $userStorage;
 
   /**
+   * The entity type manager service.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
    * The current user.
    *
    * @var \Drupal\Core\Session\AccountInterface
    */
   protected $currentUser;
+
+  /**
+   * The database connection.
+   *
+   * @var \Drupal\Core\Database\Connection
+   */
+  protected $connection;
+
+  /**
+   * The flag count service.
+   *
+   * @var \Drupal\flag\FlagCountManagerInterface
+   */
+  protected $flagCount;
 
   /**
    * Constructs a new UserHelper.
@@ -68,10 +96,22 @@ class UserHelper {
    *   The entity type manager service.
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The current user.
+   * @param \Drupal\Core\Database\Connection $connection
+   *   The current user.
+   * @param \Drupal\flag\FlagCountManagerInterface $flag_count
+   *   The flag count service.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, AccountInterface $account) {
+  public function __construct(
+    EntityTypeManagerInterface $entity_type_manager,
+    AccountInterface $account,
+    Connection $connection,
+    FlagCountManagerInterface $flag_count
+  ) {
     $this->userStorage = $entity_type_manager->getStorage('user');
+    $this->entityTypeManager = $entity_type_manager;
     $this->currentUser = $account;
+    $this->connection = $connection;
+    $this->flagCount = $flag_count;
   }
 
   /**
@@ -145,6 +185,118 @@ class UserHelper {
     }
 
     return FALSE;
+  }
+
+  /**
+   * @param \Drupal\user\UserInterface $user
+   *
+   * @return string
+   */
+  public static function getUserAvatar(UserInterface $user): string {
+    $media_picture = $user->get('field_media')->referencedEntities();
+    /** @var File|NULL $file */
+    $file = $media_picture ? File::load($media_picture[0]->get('oe_media_image')->target_id) : '';
+    $file_url = $file ? file_url_transform_relative(file_create_url($file->get('uri')->value)) : '';
+
+    return $file_url;
+  }
+
+  /**
+   * @param \Drupal\user\UserInterface|NULL $user
+   *
+   * @return string
+   */
+  public function getFullName(UserInterface $user = NULL): string {
+    if (!$user instanceof UserInterface) {
+      $user_id = $this->currentUser->id();
+      $user = User::load($user_id);
+
+      if (!$user instanceof UserInterface) {
+        return $this->t('User not found', [], ['context' => 'eic_user']);
+      }
+    }
+
+    return realname_load($user) ?: '';
+  }
+
+  /**
+   * Returns the active member profile for the given user account.
+   *
+   * @param \Drupal\user\UserInterface $user
+   *  The user entity.
+   *
+   * @return \Drupal\profile\Entity\ProfileInterface|null
+   *  The profile. NULL if no matching entity was found.
+   */
+  public function getUserMemberProfile(UserInterface $user) {
+    return $this->entityTypeManager->getStorage('profile')->loadByUser($user, ProfileConst::MEMBER_PROFILE_TYPE_NAME);
+  }
+
+  /**
+   * Returns the number of users by topic of expertise.
+   *
+   * @param \Drupal\taxonomy\TermInterface $term
+   *   The topic of expertise to look for.
+   * @param bool $active_only
+   *   Whether to return active users only.
+   *
+   * @return int[]|false
+   *   An array of user IDs.
+   */
+  public function getUsersByExpertise(TermInterface $term, bool $active_only = TRUE) {
+    // If term is not a topic term, return FALSE.
+    if ($term->bundle() != Topics::TERM_VOCABULARY_TOPICS_ID) {
+      return FALSE;
+    }
+
+    // Get matching profiles.
+    // @todo Combine this query with the user query when reverse conditions
+    //   will be available.
+    // @see https://www.drupal.org/project/drupal/issues/2975750
+    /** @var \Drupal\Core\Entity\Query\QueryInterface $query */
+    $query = $this->entityTypeManager->getStorage('profile')->getQuery()
+      ->condition('type', ProfileConst::MEMBER_PROFILE_TYPE_NAME)
+      ->condition('status', 1)
+      ->condition('field_vocab_topic_expertise', [$term->id()], 'IN');
+    $profile_ids = $query->execute();
+
+    if (empty($profile_ids)) {
+      return [];
+    }
+
+    // Get the owner users of the profiles.
+    /** @var \Drupal\Core\Database\Query\Select $query */
+    $query = $this->connection->select('users', 'u');
+    $query->innerJoin('profile', 'p', 'u.uid = p.uid');
+    $query->condition('p.profile_id', $profile_ids, 'IN');
+    $query->fields('u', ['uid']);
+
+    if ($active_only) {
+      $query->innerJoin('users_field_data', 'ufd', 'u.uid = ufd.uid');
+      $query->condition('ufd.status', 1);
+    }
+
+    return $query->execute()->fetchAllKeyed(0, 0);
+  }
+
+  /**
+   * Returns the number of followers for a given user.
+   *
+   * @param \Drupal\user\UserInterface $user
+   *   The user entity.
+   *
+   * @return int
+   *   The number of followers.
+   */
+  public function getUserFollowers(UserInterface $user) {
+    $user_flag_counters = $this->flagCount->getEntityFlagCounts($user);
+
+    // No one is following the user, therefore we return 0.
+    if (!isset($user_flag_counters[FlagType::FOLLOW_USER])) {
+      return 0;
+    }
+
+    return (int) $user_flag_counters[FlagType::FOLLOW_USER];
   }
 
 }

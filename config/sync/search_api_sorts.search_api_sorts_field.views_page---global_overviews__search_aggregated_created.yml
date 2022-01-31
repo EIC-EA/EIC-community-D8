@@ -3,9 +3,9 @@ langcode: en
 status: true
 dependencies: {  }
 id: views_page---global_overviews__search_aggregated_created
+label: 'Date created'
+weight: 0
 display_id: views_page---global_overviews__search
 field_identifier: aggregated_created
 default_sort: false
 default_order: desc
-label: 'Date created'
-weight: 0

@@ -1,19 +1,6 @@
 {{ attach_library('eic_community/react-comments-discussion') }}
 
-{% if not user %}
-  {% embed "@theme/patterns/compositions/auth-banner.html.twig" with {
-    title: "Please log in to see comments and contribute",
-    icon_file_path: common.icon_file_path,
-    invert: true,
-    login: {
-      label: "Login"
-    },
-    register: {
-      label: "Register",
-    },
-  } only %}
-  {% endembed %}
-{% else %}
+{% if not is_anonymous and can_view_comments %}
   <div class="ecl-section-wrapper ecl-section-wrapper--is-grey ecl-comment-overview">
     <div class="ecl-container">
       <div class="ecl-editorial-article ecl-editorial-article--has-static-layout">

@@ -1,0 +1,23 @@
+uuid: 7070f112-4d6d-49ce-bf4f-8689ae1289f0
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.group.field_organisation_employees
+    - group.type.organisation
+id: group.organisation.field_organisation_employees
+field_name: field_organisation_employees
+entity_type: group
+bundle: organisation
+label: 'Organisation employees'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: 0
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: integer

@@ -88,7 +88,7 @@ class TuOpenMethod extends GroupJoiningMethodBase implements ContainerFactoryPlu
   public function getGroupPermissions(GroupInterface $group): array {
     $tuGroupRoleId = $this->getTrustedUserRoleId($group->getGroupType());
     return [
-      $tuGroupRoleId => ['join group'],
+      $tuGroupRoleId => ['join group', 'invite users to group'],
     ];
   }
 
@@ -98,7 +98,7 @@ class TuOpenMethod extends GroupJoiningMethodBase implements ContainerFactoryPlu
   public function getDisallowedGroupPermissions(GroupInterface $group): array {
     $tuGroupRoleId = $this->getTrustedUserRoleId($group->getGroupType());
     return [
-      $tuGroupRoleId => ['join group'],
+      $tuGroupRoleId => ['join group', 'invite users to group'],
     ];
   }
 

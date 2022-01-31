@@ -4,6 +4,8 @@ namespace Drupal\eic_groups\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\group\Entity\GroupInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -54,6 +56,23 @@ class AboutPageController extends ControllerBase {
   public function build(GroupInterface $group) {
     $view_builder = $this->entityTypeManager->getViewBuilder('group');
     return $view_builder->view($group, 'about_page');
+  }
+
+  /**
+   * Checks access to the group about page.
+   *
+   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
+   *   The parametrized route.
+   * @param \Drupal\group\Entity\GroupInterface $group
+   *   The group entity.
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *   The user account.
+   *
+   * @return \Drupal\Core\Access\AccessResultInterface
+   *   An AccessResult object.
+   */
+  public function access(RouteMatchInterface $route_match, GroupInterface $group, AccountInterface $account) {
+    return $group->access('view', $account, TRUE);
   }
 
 }

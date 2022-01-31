@@ -10,6 +10,11 @@ use Drupal\group\Entity\GroupInterface;
 interface GroupFeatureInterface {
 
   /**
+   * Defines the overview url behind an anchor feature item.
+   */
+  const QUERY_PARAMETER_OVERVIEW_URL = 'overview-url';
+
+  /**
    * Returns the translated plugin label.
    *
    * @return string

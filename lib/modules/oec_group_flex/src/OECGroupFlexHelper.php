@@ -111,6 +111,19 @@ class OECGroupFlexHelper {
   }
 
   /**
+   * @param \Drupal\group\Entity\GroupInterface $group
+   *
+   * @return string
+   * @throws \Drupal\Core\TypedData\Exception\MissingDataException
+   */
+  public function getGroupVisibilityTagLabel(GroupInterface $group): string {
+    $group_visibility = $this->getGroupVisibilitySettings($group);
+    $tag = strpos($group_visibility['plugin_id'], '_') !== FALSE ? strstr($group_visibility['plugin_id'], '_', TRUE) : $group_visibility['plugin_id'];
+
+    return ucfirst($tag);
+  }
+
+  /**
    * Returns a human-readable array for the given group visibility record.
    *
    * @param \Drupal\oec_group_flex\GroupVisibilityRecord $visibility_record

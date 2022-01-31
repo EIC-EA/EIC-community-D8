@@ -1,0 +1,32 @@
+uuid: a1c1dd3f-f4c3-4765-b954-6c8e50173ee5
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.message.notify_block_request_accepted.field_referenced_flag
+    - message.template.notify_block_request_accepted
+id: message.notify_block_request_accepted.default
+targetEntityType: message
+bundle: notify_block_request_accepted
+mode: default
+content:
+  field_referenced_flag:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  partial_0:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  partial_1:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  search_api_excerpt: true

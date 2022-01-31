@@ -1,0 +1,19 @@
+uuid: 9fc21744-de38-4d12-b539-8f6e196334bc
+langcode: en
+status: true
+dependencies:
+  config:
+    - group.type.organisation
+    - node.type.event
+  module:
+    - gnode
+    - node
+id: organisation-group_node-event
+label: 'Organisation: Group node (Event)'
+description: 'Adds <em class="placeholder">Event</em> content to groups both publicly and privately.'
+group_type: organisation
+content_plugin: 'group_node:event'
+plugin_config:
+  group_cardinality: 0
+  entity_cardinality: 1
+  use_creation_wizard: false

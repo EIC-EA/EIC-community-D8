@@ -1,0 +1,29 @@
+uuid: c5029a36-895f-47bc-8761-46337211b7d9
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.group.field_thumbnail
+    - group.type.organisation
+    - media.type.image
+id: group.organisation.field_thumbnail
+field_name: field_thumbnail
+entity_type: group
+bundle: organisation
+label: 'Thumbnail image'
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:media'
+  handler_settings:
+    target_bundles:
+      image: image
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

@@ -11,6 +11,9 @@
 
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\BubbleableMetadata;
+use Drupal\eic_content_book\Hooks\BookTokens;
 use Drupal\eic_content_book\Hooks\EntityOperations;
 use Drupal\eic_content_book\Hooks\Preprocess;
 
@@ -28,4 +31,32 @@ function eic_content_book_node_view(array &$build, EntityInterface $entity, Enti
 function eic_content_book_preprocess_links__node(&$variables) {
   \Drupal::classResolver(Preprocess::class)
     ->preprocessLinksNode($variables);
+}
+
+/**
+ * Implements hook_token_info().
+ */
+function eic_content_book_token_info() {
+  /** @var \Drupal\eic_content_book\Hooks\BookTokens $class */
+  $class = \Drupal::classResolver(BookTokens::class);
+  return $class->tokenInfo();
+}
+
+/**
+ * Implements hook_tokens().
+ */
+function eic_content_book_tokens($type, $tokens, array $data, array $options, BubbleableMetadata $bubbleable_metadata) {
+  /** @var \Drupal\eic_content_book\Hooks\BookTokens $class */
+  $class = \Drupal::classResolver(BookTokens::class);
+  return $class->tokens($type, $tokens, $data, $options, $bubbleable_metadata);
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function eic_content_book_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  if (strpos($form_id, '_book_outline_form') !== FALSE) {
+    // We don't allow users to select the book.
+    $form['book']['bid']['#access'] = FALSE;
+  }
 }

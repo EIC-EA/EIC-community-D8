@@ -1,0 +1,37 @@
+
+ {% extends "@theme/patterns/layout/base.html.twig" %}
+
+{% block page_header %}
+  {% include "@theme/patterns/compositions/overview-header.html.twig" with {
+    title_element: 'h1',
+    title: title,
+    image: image,
+  } only %}
+
+  {% include "@theme/patterns/compositions/breadcrumb.html.twig" with breadcrumb|default({}) only %}
+
+  {% include "@theme/patterns/compositions/editorial-header.html.twig" with editorial_header|default({})|merge({
+    extra_classes: 'ecl-editorial-header--is-compact',
+  }) only %}
+
+{% endblock %}
+
+
+
+{% block content %}
+
+  <div class="ecl-container ecl-topic__overview">
+    <h2>{{ title }}</h2>
+    <p>{{ body }}</p>
+
+
+    {% if topics %}
+      {% include "@theme/patterns/compositions/topic/topic.overview.list.html.twig" with topics|merge({
+        icon_file_path: icon_file_path,
+      }) %}
+    {% endif %}
+
+    {{ content }}
+  </div>
+
+{% endblock %}

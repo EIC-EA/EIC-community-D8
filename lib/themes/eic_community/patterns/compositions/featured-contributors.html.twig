@@ -4,7 +4,7 @@
 <div class="ecl-featured-list {{ is_collapsible ? 'ecl-featured-list--is-collapsible' }} {{ grid ? 'ecl-featured-list--has-grid-layout' }} {{ extra_classes }} ecl-featured-list--contributors">
     {% if title is not empty %}
       {% if title is not empty %}
-        <{{ title_element }} class="ecl-featured-list__title">{{ title }}</{{ title_element }}>
+        <{{ title_element }} class="ecl-editorial-article__aside__title">{{ title }}</{{ title_element }}>
       {% endif %}
     {% endif %}
 
@@ -16,7 +16,6 @@
               {{ item.content }}
             {% else %}
               {% include "@theme/patterns/components/author.html.twig" with item|default({})|merge({
-                icon_file_path: icon_file_path,
                 size: 'medium',
                 display_avatar_only: grid|default(false),
               }) only %}
@@ -31,7 +30,7 @@
                 path: icon_file_path,
                 type: 'ui',
                 name: 'rounded-arrow',
-                transform: 'rotate-90',
+                transform: collapse_icon_transform|default('rotate-90'),
                 size: '2xs',
               } : {},
               label: collapse_label|default('Show all'),

@@ -1,8 +1,24 @@
 .ecl-form {
-  max-width: map-get($ecl-width, 'form-l');
+  max-width: 700px;
   width: 100%;
   margin-left: auto;
   margin-right: auto;
+
+  & .hidden {
+    visibility: hidden;
+    position: absolute;
+    pointer-events: none;
+  }
+
+  & .form-item {
+    max-width: 100%;
+  }
+
+  & ul {
+    font-size: .85em;
+    padding-left: 1em;
+    color: $ecl-color-grey-50;
+  }
 
   &,
   &__section {
@@ -15,6 +31,11 @@
 
     &:last-child {
       margin-bottom: 0;
+    }
+
+    &:only-child {
+      margin-top: map-get($ecl-spacing, '2xl');
+      margin-bottom: map-get($ecl-spacing, '2xl');
     }
   }
 
@@ -63,13 +84,21 @@
     fill: ecl-typography('color', 'title');
   }
 
-
+  &__checkbox {
+    margin: map-get($ecl-spacing, 'l') 0;
+  }
 
   .ecl-form-group {
     margin: map-get($ecl-spacing, 'l') 0;
+
+    & > div {
+      width: 100%;
+    }
     &:not(fieldset) {
       display: flex;
       flex-direction: column;
+      width: 100%;
+      max-width: 100%;
     }
 
     &:first-child {
@@ -86,14 +115,26 @@
         margin: 0;
       }
     }
+
+    &--text-area > div {
+      max-width: 100%;
+    }
+  }
+
+  &-group--info {
+    border-top: 1px solid $ecl-color-grey-25;
+    margin-top: map-get($ecl-spacing, 'l');
+    padding: map-get($ecl-spacing, 'l') 0;
+    color: ecl-typography('color', 'label');
   }
 
   .ecl-feedback-message {
     order: 1;
   }
 
-  .ecl-text-input,
+  .ecl-text-input:not(.hidden),
   .ecl-text-area {
+    width: 100%;
     &--full {
       width: 100%;
     }
@@ -117,10 +158,15 @@
     }
   }
 
-  .ecl-form-label {
+  .ecl-form-label, .fieldset-legend {
     font-weight: $ecl-font-weight-regular;
     text-transform: uppercase;
     color: ecl-typography('color', 'label');
+
+    &.form-required::after {
+      content: "*";
+      color: $ecl-color-red;
+    }
 
     &__required {
       font-weight: $ecl-font-weight-regular;
@@ -155,4 +201,134 @@
   .ecl-button {
     text-align: center;
   }
+
+  & .ecl-radio__group {
+    padding: 0;
+    & div.ecl-form-label {
+      display: none;
+    }
+  }
+
+  & .form-wrapper{
+    width: 100%;
+    box-sizing: border-box;
+
+    & .fieldset-legend {
+      padding: 0 $ecl-spacing-s;
+    }
+  }
+
+  & .fieldgroup .fieldset-legend {
+    //visibility: hidden;
+    padding: 0;
+  }
+
+  & .ecl-radio {
+    background: #F5F5F5;
+    padding: 16px;
+    display: block;
+    width: 100%;
+
+    & .ecl-radio__label {
+      display: flex;
+      align-items: flex-start;
+      gap: .75rem;
+    }
+
+    & .ecl-radio__box {
+      margin-right: 0;
+
+      & + p {
+        width: 70%;
+        margin: 0;
+      }
+    }
+  }
+
+  &__radio-items--list {
+    margin-top: map-get($ecl-spacing, 's');
+    display: flex;
+    flex-direction: column;
+
+    & .ecl-radio {
+      padding: 0;
+
+      &__box,
+      &__box:before {
+        border-radius: 0 !important;
+      }
+    }
+
+  }
+
+  & .ecl-radio-block {
+    & > .ecl-radio__label {
+      display: grid;
+      grid-template-columns: 1.25rem auto;
+      grid-gap: map-get($ecl-spacing, 's');
+      grid-template-areas:
+      "box content"
+      ". content"
+    }
+
+    & .ecl-radio__box {
+      grid-area: box;
+    }
+
+    & .ecl-radio__content {
+      grid-area: content;
+    }
+
+    & .ecl-radio__title {
+      margin: 0 0 map-get($ecl-spacing, 's');
+      display: flex;
+      align-items: center;
+      font-weight: bold;
+
+      & .ecl-icon {
+        color: $ecl-color-blue;
+        margin-right: map-get($ecl-spacing, 'xs');
+      }
+    }
+  }
+
+  & .ecl-table {
+    margin: map-get($ecl-spacing, 'm') 0;
+  }
+
+  & .ecl-table *:not(.handle) {
+    box-sizing: border-box;
+  }
+
+  & .vertical-tabs {
+    margin: 0;
+    max-width: 100%;
+
+    &__menu {
+      float: none;
+      width: auto;
+      margin: 0;
+      display: flex;
+    }
+
+    & .is-selected {
+      border-width: 1px;
+    }
+
+    &__pane {
+      box-sizing: border-box;
+      padding: map-get($ecl-spacing, 'xs');
+    }
+  }
+
+  & &-group.form-actions {
+    //display: flex;
+    //align-items: center;
+    //justify-content: center;
+    //flex-direction: row;
+    margin-top: map-get($ecl-spacing, "2xl");
+    gap: map-get($ecl-spacing, "m");
+  }
 }
+
+

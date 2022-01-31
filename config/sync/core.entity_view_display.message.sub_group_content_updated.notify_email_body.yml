@@ -5,6 +5,7 @@ dependencies:
   config:
     - core.entity_view_mode.message.notify_email_body
     - field.field.message.sub_group_content_updated.field_event_executing_user
+    - field.field.message.sub_group_content_updated.field_referenced_node
     - message.template.sub_group_content_updated
 id: message.sub_group_content_updated.notify_email_body
 targetEntityType: message
@@ -12,12 +13,13 @@ bundle: sub_group_content_updated
 mode: notify_email_body
 content:
   partial_1:
-    weight: 0
-    region: content
     settings: {  }
     third_party_settings: {  }
+    weight: 0
+    region: content
 hidden:
   field_event_executing_user: true
+  field_referenced_node: true
   partial_0: true
   partial_2: true
   search_api_excerpt: true

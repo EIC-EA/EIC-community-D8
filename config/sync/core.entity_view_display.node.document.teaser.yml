@@ -8,6 +8,7 @@ dependencies:
     - field.field.node.document.field_comments
     - field.field.node.document.field_document_media
     - field.field.node.document.field_document_type
+    - field.field.node.document.field_image
     - field.field.node.document.field_language
     - field.field.node.document.field_vocab_geo
     - field.field.node.document.field_vocab_topics
@@ -22,73 +23,79 @@ mode: teaser
 content:
   field_body:
     type: text_trimmed
-    weight: 1
-    region: content
     label: hidden
     settings:
       trim_length: 100
     third_party_settings: {  }
+    weight: 1
+    region: content
   field_document_media:
     type: entity_reference_entity_view
-    weight: 2
-    region: content
     label: hidden
     settings:
       view_mode: oe_theme_main_content
       link: false
     third_party_settings: {  }
+    weight: 2
+    region: content
   field_vocab_topics:
     type: entity_reference_label
-    weight: 0
-    region: content
     label: hidden
     settings:
       link: false
     third_party_settings: {  }
+    weight: 0
+    region: content
   flag_bookmark_content:
-    weight: 10
     settings: {  }
     third_party_settings: {  }
+    weight: 10
+    region: content
+  flag_follow_content:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 10
     region: content
   flag_highlight_content:
-    weight: 10
     settings: {  }
     third_party_settings: {  }
+    weight: 10
     region: content
   flag_like_content:
-    weight: 10
     settings: {  }
     third_party_settings: {  }
+    weight: 10
     region: content
   flag_recommend:
-    weight: 10
     settings: {  }
     third_party_settings: {  }
+    weight: 10
     region: content
   member_content_edit_access:
-    weight: 1
-    region: content
+    type: boolean
     label: above
     settings:
       format: default
       format_custom_false: ''
       format_custom_true: ''
     third_party_settings: {  }
-    type: boolean
+    weight: 1
+    region: content
   private:
-    weight: 1
-    region: content
+    type: boolean
     label: above
     settings:
       format: default
       format_custom_false: ''
       format_custom_true: ''
     third_party_settings: {  }
-    type: boolean
+    weight: 1
+    region: content
 hidden:
   extra_field_eic_theme_helper_short_title_with_fallback: true
   field_comments: true
   field_document_type: true
+  field_image: true
   field_language: true
   field_vocab_geo: true
   langcode: true

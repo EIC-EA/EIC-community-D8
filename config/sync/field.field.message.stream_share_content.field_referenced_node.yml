@@ -1,0 +1,39 @@
+uuid: f58d741b-225e-4477-a077-0bbff1231577
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.message.field_referenced_node
+    - message.template.stream_share_content
+    - node.type.discussion
+    - node.type.document
+    - node.type.event
+    - node.type.gallery
+    - node.type.video
+    - node.type.wiki_page
+id: message.stream_share_content.field_referenced_node
+field_name: field_referenced_node
+entity_type: message
+bundle: stream_share_content
+label: 'Referenced node'
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      discussion: discussion
+      document: document
+      event: event
+      gallery: gallery
+      video: video
+      wiki_page: wiki_page
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: discussion
+field_type: entity_reference

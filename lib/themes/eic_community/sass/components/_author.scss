@@ -54,7 +54,7 @@
   &__description {
     color: ecl-typography('color', 'label');
   }
-  
+
   &__meta {
     color: ecl-typography('color', 'meta');
   }
@@ -72,6 +72,7 @@
   &__label {
     line-height: ecl-typography('line-height', 'label');
     @include ecl-responsive-font('label');
+    font-weight: $ecl-font-weight-bold;
 
     #{$node}--is-minimal & {
       @include visually-hidden();
@@ -116,8 +117,6 @@
         height: 0;
         display: block;
         content: " ";
-        width: 0;
-        height: 0;
         border-style: solid;
         border-width: map-get($ecl-spacing, 'xs') map-get($ecl-spacing, 'xs') 0 map-get($ecl-spacing, 'xs');
         border-color: ecl-typography('color', 'title') transparent transparent transparent;
@@ -167,7 +166,7 @@
     }
 
     #{$node}--is-medium & {
-      width: map-get($ecl-media, '2xs');
+      width: map-get($ecl-media, 'xs');
     }
 
     #{$node}--is-large & {
@@ -181,7 +180,6 @@
     overflow: hidden;
     border-radius: 50%;
     position: relative;
-    overflow: hidden;
     background-color: map-get($ecl-colors, 'grey-10');
     display: block;
 
@@ -205,6 +203,19 @@
       width: 100%;
       height: 100%;
       box-sizing: border-box;
+      margin: 0;
+    }
+
+    & svg {
+      position: absolute;
+      bottom: 0;
+      left: calc(0 + 15%/2);
+      width: 85%;
+      height: 85%;
+    }
+
+    &--empty svg {
+      color: #ffffff;
     }
   }
 
@@ -269,8 +280,10 @@
   &__action {
     display: flex;
     align-items: center;
-    width: map-get($ecl-spacing, 'xl');
-    height: map-get($ecl-spacing, 'xl');
+
+    &-anchor {
+      line-height: ecl-typography('font-size--md', 'default');
+    }
   }
 
   &__action-label  {

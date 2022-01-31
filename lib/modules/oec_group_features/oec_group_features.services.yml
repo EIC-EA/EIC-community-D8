@@ -2,3 +2,6 @@ services:
   plugin.manager.group_feature:
     class: Drupal\oec_group_features\GroupFeaturePluginManager
     parent: default_plugin_manager
+  oec_group_features.helper:
+    class: Drupal\oec_group_features\GroupFeatureHelper
+    arguments: ['@config.factory', '@plugin.manager.group_feature']

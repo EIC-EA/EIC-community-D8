@@ -1,0 +1,20 @@
+uuid: e43b4fee-005e-4343-bd32-1b9b2129b116
+langcode: en
+status: true
+dependencies:
+  module:
+    - group
+id: group.field_organisation_employees
+field_name: field_organisation_employees
+entity_type: group
+type: integer
+settings:
+  unsigned: false
+  size: normal
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

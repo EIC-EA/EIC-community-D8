@@ -1,0 +1,55 @@
+uuid: ea07cde3-2c9c-4d7a-a3ac-a96bc2ee6840
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_related_contributors
+    - node.type.gallery
+    - paragraphs.paragraphs_type.contributor
+  module:
+    - entity_reference_revisions
+id: node.gallery.field_related_contributors
+field_name: field_related_contributors
+entity_type: node
+bundle: gallery
+label: 'Related Contributors'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    target_bundles:
+      contributor: contributor
+    negate: 0
+    target_bundles_drag_drop:
+      banner:
+        weight: 10
+        enabled: false
+      contributor:
+        weight: 11
+        enabled: true
+      cta_tile:
+        weight: 12
+        enabled: false
+      full_media_content:
+        weight: 13
+        enabled: false
+      full_text_content:
+        weight: 14
+        enabled: false
+      gallery_slide:
+        weight: 15
+        enabled: false
+      quote:
+        weight: 16
+        enabled: false
+      text_and_media_content:
+        weight: 17
+        enabled: false
+      tiles_content:
+        weight: 18
+        enabled: false
+field_type: entity_reference_revisions

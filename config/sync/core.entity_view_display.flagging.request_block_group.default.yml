@@ -1,0 +1,51 @@
+uuid: 7143deae-cfe5-4773-a8b3-3709145ec63c
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.flagging.request_block_group.field_request_closed_date
+    - field.field.flagging.request_block_group.field_request_moderator
+    - field.field.flagging.request_block_group.field_request_reason
+    - field.field.flagging.request_block_group.field_request_status
+    - flag.flag.request_block_group
+  module:
+    - datetime
+    - options
+id: flagging.request_block_group.default
+targetEntityType: flagging
+bundle: request_block_group
+mode: default
+content:
+  field_request_closed_date:
+    type: datetime_default
+    label: above
+    settings:
+      timezone_override: ''
+      format_type: medium
+    third_party_settings: {  }
+    weight: 3
+    region: content
+  field_request_moderator:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_request_reason:
+    type: basic_string
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  field_request_status:
+    type: list_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 2
+    region: content
+hidden:
+  search_api_excerpt: true

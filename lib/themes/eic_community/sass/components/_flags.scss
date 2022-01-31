@@ -9,6 +9,11 @@
     margin-bottom: map-get($ecl-spacing, 'xs');
     @include ecl-responsive-font('meta');
 
+    & a {
+      display: flex;
+      align-items: center;
+    }
+
     &:last-child {
       margin-bottom:  0;
     }

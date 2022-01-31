@@ -11,8 +11,12 @@ use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
 use Drupal\eic_flags\FlaggedEntitiesListBuilder;
+use Drupal\eic_flags\FlagHelper;
 use Drupal\eic_flags\FlagType;
+use Drupal\eic_flags\RequestStatus;
+use Drupal\eic_flags\RequestTypes;
 use Drupal\eic_flags\Service\RequestHandlerCollector;
+use Drupal\eic_topics\Constants\Topics;
 use Drupal\flag\FlagCountManagerInterface;
 use Drupal\flag\FlagServiceInterface;
 use Drupal\profile\Entity\ProfileInterface;
@@ -73,11 +77,18 @@ class EntityOperations implements ContainerInjectionInterface {
   private $flagCountManager;
 
   /**
-   * The Flag sevice.
+   * The Flag service.
    *
    * @var \Drupal\flag\FlagServiceInterface
    */
   private $flagService;
+
+  /**
+   * The EIC Flag helper service.
+   *
+   * @var \Drupal\eic_flags\FlagHelper
+   */
+  private $flagHelper;
 
   /**
    * EntityOperations constructor.
@@ -95,7 +106,9 @@ class EntityOperations implements ContainerInjectionInterface {
    * @param \Drupal\flag\FlagCountManagerInterface $flag_count_manager
    *   The Flag count manager.
    * @param \Drupal\flag\FlagServiceInterface $flag_service
-   *   The Flag sevice.
+   *   The Flag service.
+   * @param \Drupal\eic_flags\FlagHelper $eic_flag_helper
+   *   The EIC Flag helper service.
    */
   public function __construct(
     RequestHandlerCollector $collector,
@@ -104,7 +117,8 @@ class EntityOperations implements ContainerInjectionInterface {
     RequestStack $request_stack,
     AccountProxyInterface $account,
     FlagCountManagerInterface $flag_count_manager,
-    FlagServiceInterface $flag_service
+    FlagServiceInterface $flag_service,
+    FlagHelper $eic_flag_helper
   ) {
     $this->collector = $collector;
     $this->moderationInformation = $moderation_information;
@@ -113,6 +127,7 @@ class EntityOperations implements ContainerInjectionInterface {
     $this->account = $account;
     $this->flagCountManager = $flag_count_manager;
     $this->flagService = $flag_service;
+    $this->flagHelper = $eic_flag_helper;
   }
 
   /**
@@ -127,7 +142,7 @@ class EntityOperations implements ContainerInjectionInterface {
       $container->get('current_user'),
       $container->get('flag.count'),
       $container->get('flag'),
-      $container->get('entity_type.manager')
+      $container->get('eic_flags.helper')
     );
   }
 
@@ -151,18 +166,68 @@ class EntityOperations implements ContainerInjectionInterface {
     $operations = [];
     $handlers = $this->collector->getHandlers();
     foreach ($handlers as $handler) {
-      if (!$entity->access('request-' . $handler->getType())
-        || !$handler->supports($entity)) {
-        continue;
+      $type = $handler->getType();
+
+      if ($entity->access('request-' . $type)
+        && $handler->supports($entity)) {
+        // Create request operation.
+        $operations['request_' . $type] = [
+          'title' => $this->t('Request @type', ['@type' => $type]),
+          'url' => $entity->toUrl('new-request')
+            ->setRouteParameter('destination', $this->currentRequest->getRequestUri())
+            ->setRouteParameter('request_type', $type),
+        ];
       }
 
-      $type = $handler->getType();
-      $operations['request_' . $type] = [
-        'title' => $this->t('Request @type', ['@type' => $type]),
-        'url' => $entity->toUrl('new-request')
-          ->setRouteParameter('destination', $this->currentRequest->getRequestUri())
-          ->setRouteParameter('request_type', $type),
-      ];
+      if ($entity->access('close_request-' . $type)
+        && $handler->supports($entity)) {
+        // Create close request operations.
+        $operations['accept_request_' . $type] = [
+          'title' => $this->t('Accept request @type', ['@type' => $type]),
+          'url' => $entity->toUrl('user-close-request')
+            ->setRouteParameter('destination', $this->currentRequest->getRequestUri())
+            ->setRouteParameter('request_type', $type)
+            ->setRouteParameter('response', RequestStatus::ACCEPTED),
+        ];
+        $operations['deny_request_' . $type] = [
+          'title' => $this->t('Deny request @type', ['@type' => $type]),
+          'url' => $entity->toUrl('user-close-request')
+            ->setRouteParameter('destination', $this->currentRequest->getRequestUri())
+            ->setRouteParameter('request_type', $type)
+            ->setRouteParameter('response', RequestStatus::DENIED),
+        ];
+      }
+
+      // Alter operation titles for specific request types.
+      switch ($type) {
+        case RequestTypes::BLOCK:
+          if (isset($operations['request_' . $type])) {
+            $operations['request_' . $type]['title'] = $this->t('Block');
+          }
+          break;
+
+        case RequestTypes::TRANSFER_OWNERSHIP:
+          $operation_keys = [
+            'request_' . $type => $this->t('Request ownership transfer'),
+            'accept_request_' . $type => $this->t('Accept ownership transfer'),
+            'deny_request_' . $type => $this->t('Deny ownership transfer'),
+          ];
+          foreach ($operation_keys as $key => $value) {
+            if (!isset($operations[$key])) {
+              continue;
+            }
+            $operations[$key]['title'] = $value;
+          }
+          break;
+
+      }
+    }
+
+    // Removes operation links if user doesn't have access to it.
+    foreach ($operations as $key => $operation) {
+      if (!isset($operation['url']) || !$operation['url']->access()) {
+        unset($operations[$key]);
+      }
     }
 
     return $operations;
@@ -182,6 +247,17 @@ class EntityOperations implements ContainerInjectionInterface {
       $handler = $this->collector->getHandlerByType($request_type);
 
       return $handler->getActions($entity);
+    }
+
+    $operations = [];
+    $block_request_handler = $this->collector->getHandlerByType(RequestTypes::BLOCK);
+    $handler_actions = $block_request_handler->getActions($entity);
+
+    if (
+      isset($handler_actions['request_block']) &&
+      $handler_actions['request_block']['url']->access()
+    ) {
+      $operations['request_block'] = $handler_actions['request_block'];
     }
 
     $route_name = $this->routeMatch->getRouteName();
@@ -204,13 +280,13 @@ class EntityOperations implements ContainerInjectionInterface {
       && (int) $flag_id === FlaggedEntitiesListBuilder::VIEW_ARCHIVE_FLAG_ID
       && $url->access($this->account)
     ) {
-      return [
-        'publish' => [
-          'title' => $this->t('Publish'),
-          'url' => $url,
-        ],
+      $operations['publish'] = [
+        'title' => $this->t('Publish'),
+        'url' => $url,
       ];
     }
+
+    return $operations;
   }
 
   /**
@@ -230,6 +306,23 @@ class EntityOperations implements ContainerInjectionInterface {
       '#markup' => '',
       '#items' => $this->flagCountManager->getEntityFlagCounts($entity),
     ];
+  }
+
+  /**
+   * Implementation of eic_flags_node_view_alter().
+   *
+   * @param array $build
+   *   The renderable array representing the entity content.
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The entity object.
+   * @param \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display
+   *   The entity view display holding the display options.
+   */
+  public function nodeViewAlter(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display) {
+    // Make sure we don't display the highlight flag if user cannot use it.
+    if (!$this->flagHelper->canUserHighlight()) {
+      unset($build['flag_highlight_content']);
+    }
   }
 
   /**
@@ -339,7 +432,7 @@ class EntityOperations implements ContainerInjectionInterface {
       return;
     }
 
-    $vocab_field_name = 'field_vocab_topic_interest';
+    $vocab_field_name = Topics::TERM_TOPICS_ID_FIELD;
 
     if (!$profile->hasField($vocab_field_name)) {
       return;
@@ -381,6 +474,13 @@ class EntityOperations implements ContainerInjectionInterface {
 
     // Follow new topics.
     foreach ($topics as $topic) {
+      $topic_flag = $this->flagService->getFlagging($flag, $topic, $user);
+
+      // If topic is already flagged, we do nothing.
+      if ($topic_flag) {
+        continue;
+      }
+
       $this->flagService->flag($flag, $topic, $user);
     }
   }

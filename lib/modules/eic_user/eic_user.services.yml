@@ -1,4 +1,10 @@
 services:
   eic_user.helper:
     class: Drupal\eic_user\UserHelper
-    arguments: ['@entity_type.manager', '@current_user']
+    arguments: ['@entity_type.manager', '@current_user', '@database', '@flag.count']
+
+  eic_user.flag_event_subscriber:
+    class: Drupal\eic_user\EventSubscriber\FlagEventSubscriber
+    arguments: [ '@eic_user.helper' ]
+    tags:
+      - { name: event_subscriber }

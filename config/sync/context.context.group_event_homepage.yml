@@ -1,0 +1,53 @@
+uuid: 05ec61f2-bf80-4a78-941f-382cdb3c3a75
+langcode: en
+status: true
+dependencies:
+  module:
+    - eic_groups
+    - group
+    - route_condition
+label: 'Group - Event homepage'
+name: group_event_homepage
+group: Groups
+description: 'Group group type homepage'
+requireAllConditions: true
+disabled: false
+conditions:
+  route:
+    id: route
+    negate: false
+    uuid: ce7f29b7-4a03-4644-a893-3d77e6ad0e80
+    context_mapping: {  }
+    routes: entity.group.canonical
+  group_type:
+    id: group_type
+    group_types:
+      event: event
+    negate: 0
+    uuid: 8d928da6-df28-43be-970b-ed8cc5ce7453
+    context_mapping:
+      group: '@group.group_route_context:group'
+reactions:
+  blocks:
+    id: blocks
+    uuid: 99430275-df21-4586-8f3d-fa68c43990dd
+    blocks:
+      d52391f9-379a-44a6-85e3-d06830a32ddc:
+        uuid: d52391f9-379a-44a6-85e3-d06830a32ddc
+        id: eic_group_overview_message
+        label: 'EIC Group Overview Messages'
+        provider: eic_groups
+        label_display: '0'
+        region: content
+        weight: '0'
+        custom_id: eic_group_overview_message
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: group_event_homepage
+        context_mapping:
+          group: '@group.group_route_context:group'
+        third_party_settings: {  }
+    include_default_blocks: 0
+    saved: false
+weight: 0

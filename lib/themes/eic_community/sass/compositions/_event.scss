@@ -1,0 +1,5 @@
+.ecl--event {
+  &__tags {
+    margin-bottom: map-get($ecl-spacing, 'xl');
+  }
+}

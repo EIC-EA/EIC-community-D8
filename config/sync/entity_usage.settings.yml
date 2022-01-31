@@ -5,7 +5,10 @@ _core:
   default_config_hash: AXUBMTvVtpcNp0jKjDaWjSHqMy6HjuUf7j4yVbXgazI
 track_enabled_source_entity_types:
   - node
+  - block_content
+  - group
   - paragraph
+  - user
 track_enabled_target_entity_types:
   - media
 edit_warning_message_entity_types: {  }

@@ -1,1 +1,1 @@
-{% include "@theme/patterns/compositions/member/member.teaser.html.twig" with {title: content.realname} %}
+{% include "@theme/patterns/compositions/member/member.teaser.html.twig" with user_item|default({}) %}

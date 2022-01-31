@@ -1,0 +1,7 @@
+features:
+  - eic_groups_members
+  - eic_groups_wiki
+  - eic_groups_files
+  - eic_groups_latest_activity_stream
+  - eic_groups_discussions
+  - eic_groups_news

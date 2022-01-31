@@ -1,0 +1,19 @@
+uuid: 668e4be8-2bfc-45b7-b68c-9a50b653ec36
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.group.field_contact_label
+    - group.type.organisation
+id: group.organisation.field_contact_label
+field_name: field_contact_label
+entity_type: group
+bundle: organisation
+label: 'Contact label'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

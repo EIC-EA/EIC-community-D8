@@ -1,0 +1,119 @@
+.ecl-topic__overview {
+
+  &__image-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 160px;
+    height: 160px;
+    margin: 0;
+    background-color: $ecl-color-grey-25;
+    @include ecl-media-breakpoint-down('sm') {
+      min-width: 100px;
+      height: 100px;
+    }
+
+    & svg {
+      color: #ffffff;
+      width: 50px;
+      height: 50px;
+    }
+  }
+
+  &__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  & > p {
+    max-width: 66%;
+    @include ecl-media-breakpoint-down('md') {
+      max-width: 100%;
+    }
+  }
+
+  &__subitems {
+    display: flex;
+    flex-wrap: wrap;
+    gap: $ecl-spacing-s;
+    margin-bottom: $ecl-spacing-m;
+  }
+
+  &__subitem {
+    background-color: $ecl-color-grey-15;
+    width: calc(33% - #{$ecl-spacing-s / 2});
+    @include ecl-media-breakpoint-down('lg') {
+      width: calc(50% - #{$ecl-spacing-s});
+    }
+    @include ecl-media-breakpoint-down('sm') {
+      width: 100%;
+    }
+    & a {
+      display: flex;
+      &:hover {
+        text-decoration: none;
+        h3 {
+          text-decoration: underline;
+        }
+      }
+    }
+    &__content {
+      flex-grow: 1;
+      padding: $ecl-spacing-s;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+
+      & h3 {
+        color: $ecl-color-blue;
+        font-weight: bold;
+        margin-top: 0;
+        @include ecl-media-breakpoint-down('sm') {
+          font-size: .85em;
+        }
+      }
+    }
+    &__stats, &__stats > div {
+      display: flex;
+      align-items: center;
+      color: $ecl-color-grey-50;
+      font-size: .85em;
+    }
+
+    &__stats {
+      gap: $ecl-spacing-s;
+      align-self: flex-end;
+      &-item-label {
+        visibility: hidden;
+        display: none;
+      }
+      &-item-value {
+        margin-left: .2rem;
+      }
+    }
+  }
+}
+
+.ecl-topic__stats {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  border-top: 1px solid $ecl-color-grey-25;
+  border-bottom: 1px solid $ecl-color-grey-25;
+  margin-bottom: map-get($ecl-spacing, "2xl");
+
+  &__item {
+    display: flex;
+    align-items: center;
+    padding: map-get($ecl-spacing, "m");
+    color: $ecl-color-blue;
+  }
+
+  &__data {
+    margin: 0 map-get($ecl-spacing, "xs");
+    font-weight: bold;
+    font-size: 1.25em;
+  }
+}
