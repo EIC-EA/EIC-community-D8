@@ -129,6 +129,7 @@
     height: 80px;
     object-fit: cover;
     border-radius: 50%;
+    overflow: hidden;
   }
 
   &--organisation#{$node}--as-card-white &__main-wrapper{

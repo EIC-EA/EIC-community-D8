@@ -12,12 +12,23 @@
       }) only %}
     </div>
   {% endif %}
-  {% if image is not empty %}
+  {% if image is not empty and image.src is not null %}
     <a href="{{ path }}">
       <figure class="ecl-teaser__image-wrapper">
         <img class="ecl-teaser__image" src="{{ image.src }}" alt="{{ image.alt }}" />
       </figure>
     </a>
+  {% else %}
+    <figure class="ecl-teaser__image-wrapper ecl-teaser__image-wrapper--no-image">
+      {% include '@ecl-twig/ec-component-icon/ecl-icon.html.twig' with {
+        icon: {
+          size: 'm',
+          path: icon_file_path,
+          type: "custom",
+          name: "user"
+        }
+      } only %}
+    </figure>
   {% endif %}
   <div class="ecl-teaser__main-wrapper">
     <div class="ecl-teaser__content-wrapper">
