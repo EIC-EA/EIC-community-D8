@@ -48,10 +48,16 @@
 
             {% if teams is not empty %}
                 {% include "@theme/patterns/compositions/featured-content-collection.html.twig" with teams|default({})|merge({
-                    icon_file_path: common.icon_file_path,
+                    icon_file_path: icon_file_path,
                     extra_classes: "ecl-section-wrapper ecl-section-wrapper--is-white ecl-featured-content-collection--has-overview-layout ecl-organisation__item",
                     no_container: true,
-                    extra_id: 'members'
+                    extra_id: 'members',
+                    call_to_action: {
+                      link: {
+                        label: 'See more',
+                        path: '#'
+                      }
+                  }
                 }) only %}
             {% endif %}
 
