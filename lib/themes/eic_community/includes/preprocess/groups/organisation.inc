@@ -6,10 +6,9 @@
  */
 
 use Drupal\file\Entity\File;
+use Drupal\oec_group_features\GroupFeatureHelper;
 use Drupal\taxonomy\TermInterface;
 use Drupal\Core\Url;
-use Drupal\address\FieldHelper;
-use CommerceGuys\Addressing\AddressFormat\AddressField;
 use Drupal\paragraphs\ParagraphInterface;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\eic_overviews\GroupOverviewPages;
@@ -41,6 +40,18 @@ function _eic_community_render_organisation_detail_page(&$variables, $group) {
   $products = $group
     ->get('field_vocab_services_products')
     ->referencedEntities();
+
+  $features = $group->get(GroupFeatureHelper::FEATURES_FIELD_NAME)->getValue();
+  $features = array_map(function($item) {
+    return $item['value'];
+  }, $features);
+
+  $variables['block_enabled'] = [
+    'news' => in_array('eic_groups_anchor_news', $features),
+    'events' => in_array('eic_groups_anchor_group_events', $features),
+    'members' => in_array('eic_groups_anchor_members', $features),
+    'announcements' => in_array('eic_groups_announcements', $features),
+  ];
 
   $organisation_link = $group->get('field_organisation_link')->getValue();
   $link = reset($organisation_link);
