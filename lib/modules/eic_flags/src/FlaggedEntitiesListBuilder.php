@@ -208,6 +208,7 @@ class FlaggedEntitiesListBuilder extends EntityListBuilder {
       'title' => [
         'data' => $this->t('Title'),
         'class' => [RESPONSIVE_PRIORITY_MEDIUM],
+        'field' => 'title',
       ],
       'type' => [
         'data' => $this->t('Type'),
@@ -225,13 +226,12 @@ class FlaggedEntitiesListBuilder extends EntityListBuilder {
         'data' => $this->t('Last updated'),
         'class' => [RESPONSIVE_PRIORITY_LOW],
         'field' => 'changed',
-        'specifier' => 'changed',
       ],
       'created' => [
         'data' => $this->t('Created'),
         'class' => [RESPONSIVE_PRIORITY_LOW],
         'field' => 'created',
-        'specifier' => 'created',
+        'sort' => 'asc',
       ],
     ];
 
