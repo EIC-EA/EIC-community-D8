@@ -1,8 +1,8 @@
 .ecl-filelist {
   $node: &;
   &__title {
-    @include ecl-responsive-font('h3');
-    margin-top: 0;
+    //@include ecl-responsive-font('title');
+    color: $ecl-color-blue;
   }
 
   &__content {
@@ -41,7 +41,7 @@
       margin: 0;
       margin-bottom: ecl-box-model('padding');
       width: 100%;
-      min-height: 160px;
+      height: 140px;
       background: map-get($ecl-colors, 'grey-5');
       display: flex;
       justify-content: center;
