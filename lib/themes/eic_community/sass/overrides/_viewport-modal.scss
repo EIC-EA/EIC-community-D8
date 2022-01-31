@@ -1,14 +1,13 @@
 .ecl-viewport__modal {
 
   &__content {
+    & textarea {
+      width: 100%;
+    }
     @include ecl-media-breakpoint-down('md') {
       padding: $ecl-spacing-l $ecl-spacing-m;
       width: 95%;
       box-sizing: border-box;
-
-      & textarea {
-        width: 100%;
-      }
     }
   }
 }
