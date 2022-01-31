@@ -44,6 +44,7 @@ class NewsStorySourceType extends SourceType {
       'ss_content_type' => $this->t('Type', [], ['context' => 'eic_search']),
       'sm_content_field_vocab_topics_string' => $this->t('Topic', [], ['context' => 'eic_search']),
       'sm_content_field_vocab_geo_string' => $this->t('Regions & countries', [], ['context' => 'eic_search']),
+      'bs_content_is_private' => $this->t('Visibility', [], ['context' => 'eic_search']),
     ];
   }
 
@@ -54,8 +55,11 @@ class NewsStorySourceType extends SourceType {
     return [
       'ss_drupal_changed_timestamp' => [
         'label' => $this->t('Last updated', [], ['context' => 'eic_search']),
-        'ASC' => $this->t('Old', [], ['context' => 'eic_search']),
-        'DESC' => $this->t('Recent', [], ['context' => 'eic_search']),
+        'DESC' => $this->t('Recently updated', [], ['context' => 'eic_search']),
+      ],
+      'ss_drupal_timestamp' => [
+        'label' => $this->t('Created date', [], ['context' => 'eic_search']),
+        'DESC' => $this->t('Most recent', [], ['context' => 'eic_search']),
       ],
       'tm_global_title' => [
         'label' => $this->t('Title', [], ['context' => 'eic_search']),
@@ -71,10 +75,6 @@ class NewsStorySourceType extends SourceType {
         'label' => $this->t('Likes', [], ['context' => 'eic_search']),
         'DESC' => $this->t('Most liked', [], ['context' => 'eic_search']),
         'ASC' => $this->t('Less liked', [], ['context' => 'eic_search']),
-      ],
-      'dm_aggregated_changed' => [
-        'label' => $this->t('Last updated', [], ['context' => 'eic_search']),
-        'DESC' => $this->t('Last updated', [], ['context' => 'eic_search']),
       ],
       'its_last_comment_timestamp' => [
         'label' => $this->t('Last commented', [], ['context' => 'eic_search']),

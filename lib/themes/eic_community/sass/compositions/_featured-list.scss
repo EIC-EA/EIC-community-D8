@@ -208,6 +208,10 @@
         cursor: pointer;
       }
     }
+
+    & .ecl-flags__item {
+      font-size: 1rem;
+    }
   }
 
   &__item-tag {

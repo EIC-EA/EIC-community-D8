@@ -16,6 +16,7 @@ dependencies:
     - field.field.group.organisation.field_organisation_link
     - field.field.group.organisation.field_organisation_turnover
     - field.field.group.organisation.field_organisation_type
+    - field.field.group.organisation.field_smed_id
     - field.field.group.organisation.field_social_links
     - field.field.group.organisation.field_team_members
     - field.field.group.organisation.field_thumbnail
@@ -67,6 +68,14 @@ content:
       link: ''
     third_party_settings: {  }
     weight: 3
+    region: content
+  field_smed_id:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 9
     region: content
   field_team_members:
     type: entity_reference_revisions_entity_view
