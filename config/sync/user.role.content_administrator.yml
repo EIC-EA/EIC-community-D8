@@ -6,6 +6,7 @@ dependencies:
     - filter.format.basic_text
     - filter.format.filtered_html
     - filter.format.full_html
+    - filter.format.user_contact_form
     - media.type.eic_document
     - media.type.image
     - media.type.photo
@@ -185,6 +186,7 @@ permissions:
   - 'use text format basic_text'
   - 'use text format filtered_html'
   - 'use text format full_html'
+  - 'use text format user_contact_form'
   - 'view all revisions'
   - 'view any member profile'
   - 'view any profile'

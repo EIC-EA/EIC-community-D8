@@ -5,6 +5,7 @@ dependencies:
   config:
     - filter.format.basic_text
     - filter.format.filtered_html
+    - filter.format.user_contact_form
     - media.type.eic_document
     - media.type.image
     - media.type.remote_video
@@ -78,6 +79,7 @@ permissions:
   - 'use news_stories transition create_new_draft'
   - 'use text format basic_text'
   - 'use text format filtered_html'
+  - 'use text format user_contact_form'
   - 'view any member profile'
   - 'view any profile'
   - 'view latest version'

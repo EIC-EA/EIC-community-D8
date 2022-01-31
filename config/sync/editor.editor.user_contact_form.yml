@@ -1,0 +1,38 @@
+uuid: 712986fb-b853-4ade-906a-5d23dc7c16a3
+langcode: en
+status: true
+dependencies:
+  config:
+    - filter.format.user_contact_form
+  module:
+    - ckeditor
+format: user_contact_form
+editor: ckeditor
+settings:
+  toolbar:
+    rows:
+      -
+        -
+          name: Formatting
+          items:
+            - Bold
+            - Italic
+            - Underline
+        -
+          name: Links
+          items:
+            - DrupalLink
+            - DrupalUnlink
+  plugins:
+    stylescombo:
+      styles: ''
+    language:
+      language_list: un
+image_upload:
+  status: false
+  scheme: private
+  directory: inline-images
+  max_size: ''
+  max_dimensions:
+    width: null
+    height: null
