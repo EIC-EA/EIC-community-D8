@@ -16,4 +16,9 @@ final class ProfileConst {
     'facebook',
   ];
 
+  /**
+   * Defines the member profile type name.
+   */
+  const MEMBER_PROFILE_TYPE_NAME = 'member';
+
 }

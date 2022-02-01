@@ -1,0 +1,29 @@
+uuid: ee6c3271-b9e7-4861-8d13-cd9c0bad5ac3
+langcode: en
+status: true
+dependencies:
+  config:
+    - comment.type.node_comment
+    - field.storage.comment.field_tagged_users
+id: comment.node_comment.field_tagged_users
+field_name: field_tagged_users
+entity_type: comment
+bundle: node_comment
+label: 'Tagged users'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:user'
+  handler_settings:
+    target_bundles: null
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    filter:
+      type: _none
+    include_anonymous: false
+field_type: entity_reference

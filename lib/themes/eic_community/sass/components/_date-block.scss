@@ -1,0 +1,21 @@
+.ecl-date-block {
+  @include ecl-media-breakpoint-down('md') {
+    &__month {
+      font-size: .75rem;
+    }
+  }
+
+  &--is-past {
+    background: $ecl-color-grey-5;
+    & span {
+      color: rgba($ecl-color-black, .5);
+    }
+  }
+
+  &--is-current {
+    background: $ecl-color-yellow;
+    & span {
+      color: $ecl-color-blue;
+    }
+  }
+}

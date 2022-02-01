@@ -1,0 +1,11 @@
+name: EIC Groups - Share content
+type: module
+description: Provides funcitonnality arround content sharing between groups.
+package: European Innovation Council
+core: 8.x
+core_version_requirement: ^8 || ^9
+php: 7.3
+dependencies:
+  - eic_groups
+  - eic_search
+  - eic_messages

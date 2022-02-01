@@ -11,3 +11,20 @@ eic_admin.logs:
   description: 'View logs of actions from the Community.'
   route_name: view.admin_messages.logs
   parent: eic_admin.dashboard
+eic_admin.groups:
+  title: 'Groups'
+  description: 'Manage all Community Groups.'
+  route_name: eic_admin.groups
+  parent: eic_admin.dashboard
+eic_admin.groups.groups:
+  title: 'Groups'
+  description: 'Manage all Community Groups.'
+  route_name: view.admin_groups.page_admin_groups
+  parent: eic_admin.groups
+  weight: 1
+eic_admin.groups.events:
+  title: 'Events'
+  description: 'Manage all Community Events.'
+  route_name: view.admin_groups.page_admin_events
+  parent: eic_admin.groups
+  weight: 2

@@ -1,0 +1,18 @@
+uuid: c930f94f-d6da-416f-9f32-e1dd868e8fa3
+langcode: en
+status: true
+dependencies:
+  config:
+    - group.type.event
+  enforced:
+    config:
+      - user.role.site_admin
+id: event-bf4b46c3a
+label: 'Site Admin'
+weight: -5
+internal: true
+audience: outsider
+group_type: event
+permissions_ui: false
+permissions:
+  - 'highlight group content'

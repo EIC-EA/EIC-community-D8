@@ -29,14 +29,14 @@ class GroupWiki extends EicGroupsGroupFeaturePluginBase {
   protected function getMenuItem(Url $url, string $menu_name) {
     $menu_item = parent::getMenuItem($url, $menu_name);
     // Set a specific weight for the menu item.
-    $menu_item->set('weight', 5);
+    $menu_item->set('weight', 6);
     return $menu_item;
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function getPrimaryOverviewRoute(GroupInterface $group) {
+  protected function generateFeatureUrl(GroupInterface $group) {
     if ($book_page_nid = $this->eicGroupHelper->getGroupBookPage($group)) {
       $url_params = ['node' => $book_page_nid];
       return Url::fromRoute(static::PRIMARY_OVERVIEW_ROUTE, $url_params);

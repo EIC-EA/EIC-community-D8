@@ -1,0 +1,47 @@
+.ecl-notification-banner {
+  border-top: 2px solid $ecl-color-orange-100;
+  border-bottom: 2px solid $ecl-color-orange-100;
+  padding: ecl-box-model('padding', 'default');
+  margin: map-get($ecl-spacing, 'xl') 0;
+  display: grid;
+  grid-template-columns: 30px auto;
+  grid-template-areas:
+    "icon title"
+    ". messages";
+  gap: map-get($ecl-spacing, 'm');
+
+  &--status {
+    border-color: $ecl-color-green-100;
+  }
+
+  &--error {
+    border-color: $ecl-color-red-100;
+  }
+
+  &__icon {
+    grid-area: icon;
+  }
+
+  & h3 {
+    margin: 0;
+    grid-area: title;
+    align-self: center;
+  }
+
+  &__messages {
+    grid-area: messages;
+  }
+
+
+  &__message {
+    margin-bottom: map-get($ecl-spacing, 's');
+    grid-area: title;
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    & pre {
+      font-size: .85em;
+    }
+  }
+}

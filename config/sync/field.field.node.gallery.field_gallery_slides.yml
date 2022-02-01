@@ -21,9 +21,9 @@ default_value_callback: ''
 settings:
   handler: 'default:paragraph'
   handler_settings:
-    negate: 0
     target_bundles:
       gallery_slide: gallery_slide
+    negate: 0
     target_bundles_drag_drop:
       banner:
         weight: 11
@@ -41,8 +41,8 @@ settings:
         weight: 15
         enabled: false
       gallery_slide:
-        enabled: true
         weight: 10
+        enabled: true
       quote:
         weight: 16
         enabled: false

@@ -3,10 +3,7 @@
 
   position: relative;
   display: inline-block;
-
-  &--full-width {
-    display: block;
-  }
+  cursor: pointer;
 
   &__trigger-wrapper {
     display: none;
@@ -25,28 +22,6 @@
     display: none;
     position: relative;
 
-    &::after {
-      display: block;
-      flex-shrink: 0;
-      margin-left: ecl-box-model('margin', 'controls');
-      width: map-get($ecl-spacing, 'xs');
-      height: map-get($ecl-spacing, 'xs');
-      border: solid 2px;
-      border-color: currentColor;
-      border-bottom: none;
-      border-left: none;
-      transform: rotate(135deg);
-      margin-top: -#{map-get($ecl-spacing, 'xs') / 2};
-
-      #{$node}--has-compact-layout & {
-        width: map-get($ecl-spacing, '2xs');
-        height: map-get($ecl-spacing, '2xs');
-        margin-top: -#{map-get($ecl-spacing, '2xs') / 2};
-      }
-
-      content: " ";
-    }
-
     #{$node}--is-ready &[aria-visible="true"] {
       display: flex;
       align-items: center;
@@ -64,6 +39,7 @@
     #{$node}--actions[aria-expanded="true"] & {
       box-shadow: 0px 4px 4px rgba(map-get($ecl-colors, 'black'), 0.1);
     }
+
 
     &:not(button)::after {
       display: none;
@@ -125,6 +101,14 @@
       background: map-get($ecl-colors, 'yellow-100');
       border-radius: 0;
       box-shadow: 0px 4px 4px rgba(map-get($ecl-colors, 'black'), 0.1);
+
+      & #{$node}__item:hover {
+        background: lighten(map-get($ecl-colors, 'yellow-100'), 10);
+
+        & #{$node}__button:before {
+          background: darken(map-get($ecl-colors, 'yellow-100'), 10);
+        }
+      }
     }
   }
 
@@ -196,6 +180,30 @@
         }
         .ecl-button__label, .ecl-link__label {
           text-decoration: underline;
+        }
+      }
+    }
+  }
+
+  &--blue {
+    & #{$node}__trigger {
+      background-color: $ecl-color-blue;
+      border-color: $ecl-color-blue;
+      color: $ecl-color-white;
+    }
+
+    & #{$node}__collapse-well {
+      background-color: $ecl-color-blue;
+
+      & #{$node}__item {
+        & a {
+          color: $ecl-color-white;
+        }
+        &:hover {
+          background-color: $ecl-color-blue-75;
+          & .ecl-collapsible-options__button::before {
+            background-color: $ecl-color-blue-50;
+          }
         }
       }
     }

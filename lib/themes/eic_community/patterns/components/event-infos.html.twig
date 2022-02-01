@@ -1,0 +1,30 @@
+{% if items is not empty %}
+    <div class="ecl-infos">
+      <h3 class="ecl-editorial-article__aside__title">{{ title }}</h3>
+      {% if action is not empty %}
+        {% include "@theme/patterns/components/signup.html.twig" with action only %}
+      {% endif %}
+      <ul class="ecl-infos-list">
+        {% for item in items %}
+          <li class="ecl-infos-list__item ecl-infos-list__item--align-top">
+            {% include '@ecl-twig/ec-component-icon/ecl-icon.html.twig' with {
+              icon: {
+                size: 'l',
+                path: icon_file_path,
+                type: item.icon.type,
+                name: item.icon.name
+              }
+            } only %}
+
+            {% if item.url %}
+              <a href="{{ item.url }}" target="_blank" rel="noreferrer">{{ item.content|nl2br }}</a>
+            {% elseif item.content %}
+              <p>
+                {{ item.content|raw }}
+              </p>
+            {% endif %}
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+{% endif %}

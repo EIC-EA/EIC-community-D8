@@ -1,0 +1,29 @@
+{% if sidebar is not empty %}
+  {% set output_sidebar = sidebar %}
+{% elseif block('sidebar') is defined %}
+  {% set output_sidebar = block('sidebar') %}
+{% endif %}
+
+<section class="ecl-section-wrapper">
+  <div class="ecl-editorial-article {{ extra_classes }}">
+    <div class="ecl-container">
+      <div class="ecl-editorial-article__wrapper">
+
+        <section>
+          {% block content %}
+            {{ content }}
+          {% endblock %}
+        </section>
+
+        {% if output_sidebar is not empty %}
+          <aside class="ecl-editorial-article__aside">
+            <div class="ecl-editorial-article__aside-wrapper">
+              {{ output_sidebar|raw }}
+            </div>
+          </aside>
+        {% endif %}
+
+      </div>
+    </div>
+  </div>
+</section>

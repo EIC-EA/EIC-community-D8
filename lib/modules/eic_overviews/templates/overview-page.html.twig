@@ -1,0 +1,28 @@
+{#
+/**
+ * @file
+ * Default theme implementation to present an overview page entity.
+ *
+ * This template is used when viewing a registered overview page,
+ *
+ * Available variables:
+ * - content: A list of content items. Use 'content' to print all content, or
+ *   print a subset such as 'content.title'.
+ * - attributes: HTML attributes for the container element.
+ *
+ * @see template_preprocess_overview_page()
+ */
+#}
+{% block page_header %}
+  {% include "@theme/patterns/compositions/overview-header.html.twig" with {
+    title_element: 'h1',
+    title: content.title,
+    image: {
+      src: banner_image_url
+    },
+  } only %}
+
+  {% include "@theme/patterns/compositions/breadcrumb.html.twig" with breadcrumb|default({}) only %}
+{% endblock %}
+
+{{ content }}

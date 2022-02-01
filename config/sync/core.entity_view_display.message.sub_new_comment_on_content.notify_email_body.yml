@@ -5,6 +5,7 @@ dependencies:
   config:
     - core.entity_view_mode.message.notify_email_body
     - field.field.message.sub_new_comment_on_content.field_event_executing_user
+    - field.field.message.sub_new_comment_on_content.field_referenced_comment
     - message.template.sub_new_comment_on_content
 id: message.sub_new_comment_on_content.notify_email_body
 targetEntityType: message
@@ -12,12 +13,13 @@ bundle: sub_new_comment_on_content
 mode: notify_email_body
 content:
   partial_1:
-    weight: 0
-    region: content
     settings: {  }
     third_party_settings: {  }
+    weight: 0
+    region: content
 hidden:
   field_event_executing_user: true
+  field_referenced_comment: true
   partial_0: true
   partial_2: true
   search_api_excerpt: true

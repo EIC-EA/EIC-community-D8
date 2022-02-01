@@ -69,10 +69,9 @@ class FlagRequestAccessCheck extends RequestAccessCheck {
 
     $moderation_state = $entity->get('moderation_state')->value;
 
-    // Deny access to flag if the group IS in pending or draft state.
+    // Deny access to flag if the group IS in pending state.
     if (in_array($moderation_state, [
       GroupsModerationHelper::GROUP_PENDING_STATE,
-      GroupsModerationHelper::GROUP_DRAFT_STATE,
     ])) {
       $access = AccessResult::forbidden()
         ->addCacheableDependency($entity);

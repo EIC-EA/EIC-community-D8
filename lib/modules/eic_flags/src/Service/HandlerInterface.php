@@ -7,16 +7,19 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\flag\FlaggingInterface;
 
 /**
- * Interface HandlerInterface.
+ * Provides an interface for request handlers.
  *
  * @package Drupal\eic_flags\Service\Handler
  */
 interface HandlerInterface {
 
+  const REQUEST_TIMEOUT_FIELD = 'field_request_timeout';
+
   /**
    * Returns the type of request the handler is for.
    *
    * @return string
+   *   The handler type.
    */
   public function getType();
 
@@ -78,11 +81,39 @@ interface HandlerInterface {
    *   The concerned entity.
    * @param string $reason
    *   Reason given when opening the request.
+   * @param int $request_timeout
+   *   (optional) Number of days the request will remain open.
    *
-   * @return bool|null
+   * @return \Drupal\flag\FlaggingInterface|null
    *   Result of the operation.
    */
-  public function applyFlag(ContentEntityInterface $entity, string $reason);
+  public function applyFlag(
+    ContentEntityInterface $entity,
+    string $reason,
+    int $request_timeout = 0
+  );
+
+  /**
+   * Alters the given the corresponding flag before saving it.
+   *
+   * @param \Drupal\flag\FlaggingInterface $flag
+   *   The flagging entity to alter.
+   *
+   * @return \Drupal\flag\FlaggingInterface|null
+   *   The altered flagging entity.
+   */
+  public function applyFlagAlter(FlaggingInterface $flag);
+
+  /**
+   * Post save method to apply logic after saving flag in the database.
+   *
+   * @param \Drupal\flag\FlaggingInterface $flag
+   *   The flagging entity to alter.
+   *
+   * @return \Drupal\flag\FlaggingInterface|null
+   *   The altered flagging entity.
+   */
+  public function applyFlagPostSave(FlaggingInterface $flag);
 
   /**
    * Returns an array of supported entity types.
@@ -190,6 +221,65 @@ interface HandlerInterface {
   public function canRequest(
     AccountInterface $account,
     ContentEntityInterface $entity
+  );
+
+  /**
+   * Whether or not the requests can be closed by the given account.
+   *
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *   Currently logged in account, anonymous users are not allowed.
+   * @param \Drupal\Core\Entity\ContentEntityInterface $entity
+   *   The content entity against the access check is made.
+   *
+   * @return \Drupal\Core\Access\AccessResultInterface
+   *   The access result object.
+   */
+  public function canCloseRequest(
+    AccountInterface $account,
+    ContentEntityInterface $entity
+  );
+
+  /**
+   * Get supported response types for closed requests.
+   *
+   * @return array
+   *   Array of supported response types.
+   */
+  public function getSupportedResponsesForClosedRequests();
+
+  /**
+   * Whether or not the request flag has been expired.
+   *
+   * @param \Drupal\flag\FlaggingInterface $flag
+   *   The flagging entity to alter.
+   *
+   * @return bool
+   *   TRUE if has expiration.
+   */
+  public function hasExpiration(FlaggingInterface $flag);
+
+  /**
+   * Whether or not the request flag has been expired.
+   *
+   * @param \Drupal\flag\FlaggingInterface $flag
+   *   The flagging entity to alter.
+   *
+   * @return bool
+   *   TRUE if request has expired.
+   */
+  public function hasExpired(FlaggingInterface $flag);
+
+  /**
+   * Triggers request timeout.
+   *
+   * @param \Drupal\flag\FlaggingInterface $flagging
+   *   The flag object representing the request.
+   * @param \Drupal\Core\Entity\ContentEntityInterface $content_entity
+   *   The concerned entity.
+   */
+  public function requestTimeout(
+    FlaggingInterface $flagging,
+    ContentEntityInterface $content_entity
   );
 
 }

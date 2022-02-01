@@ -4,7 +4,7 @@ eic_groups.about_page:
     _controller: '\Drupal\eic_groups\Controller\AboutPageController::build'
     _title_callback: '\Drupal\eic_groups\Controller\AboutPageController::title'
   requirements:
-    _group_permission: 'view group'
+    _custom_access: '\Drupal\eic_groups\Controller\AboutPageController::access'
 
 eic_groups.discussion_add_comment:
   path: '/api/discussion/{discussion_id}/comment'
@@ -38,12 +38,12 @@ eic_groups.discussion_update_comment:
     _permission: 'access content'
 
 eic_groups.discussion_delete_comment:
-  path: '/api/discussion/{discussion_id}/delete/{comment_id}'
+  path: '/api/discussion/{group_id}/{discussion_id}/delete/{comment_id}'
   methods: [ DELETE ]
   defaults:
     _controller: '\Drupal\eic_groups\Controller\DiscussionController::deleteComment'
   requirements:
-    _permission: 'access content'
+    _custom_access: '\Drupal\eic_groups\Controller\DiscussionController::accessDelete'
 
 eic_groups.discussion_comment_has_permission:
   path: '/api/discussion/{discussion_id}/has-flag-permission/{comment_id}/{flag}'
@@ -85,3 +85,40 @@ eic_groups.group.highlight_content:
     _highlight_group_content: 'TRUE'
     node: \d+
     group: \d+
+
+eic_groups.group.like_content:
+  path: '/group/{group}/like-content/{action}/{node}'
+  methods: [ POST ]
+  defaults:
+    _controller: '\Drupal\eic_groups\Controller\GroupOperationsController::likeContent'
+    _title: 'Like group content'
+  requirements:
+    _like_group_content: 'TRUE'
+    node: \d+
+    group: \d+
+
+eic_groups.group.like_content_status:
+  path: '/group/{group}/like-status/{node}'
+  methods: [ GET ]
+  defaults:
+    _controller: '\Drupal\eic_groups\Controller\GroupOperationsController::likeContentStatus'
+    _title: 'Like group content status'
+  requirements:
+    _like_group_content: 'TRUE'
+    node: \d+
+    group: \d+
+
+eic_groups.group_content.resend_invite:
+  path: '/group/{group}/invite/{group_content}/resend'
+  defaults:
+    _controller: '\Drupal\eic_groups\Controller\GroupMembershipInvitationController::resendInvite'
+  requirements:
+    _group_permission: 'administer members'
+    group: \d+
+    group_content: \d+
+  options:
+    parameters:
+      group_content:
+        type: entity:group_content
+      group:
+        type: entity:group

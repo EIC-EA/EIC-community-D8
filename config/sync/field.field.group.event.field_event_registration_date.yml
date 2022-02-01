@@ -1,0 +1,21 @@
+uuid: 9acc2c06-7bbf-48d0-ab2a-1b7226b7eaa8
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.group.field_event_registration_date
+    - group.type.event
+  module:
+    - datetime_range
+id: group.event.field_event_registration_date
+field_name: field_event_registration_date
+entity_type: group
+bundle: event
+label: 'Event registration date'
+description: 'Define a start and end date for user registration.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: daterange

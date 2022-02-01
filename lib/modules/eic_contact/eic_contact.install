@@ -1,0 +1,46 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the EIC contact module.
+ */
+
+use Drupal\block_content\Entity\BlockContent;
+
+/**
+ * Add default blocks for contact page.
+ */
+function eic_contact_update_9001(&$sandbox) {
+  $values = [
+    'status' => TRUE,
+    'type' => 'page_banner',
+    // For BC reasons we keep the same UUIDs since they are referenced in configs.
+    'uuid' => 'f6dd41d4-acee-4700-82d5-132bc402feb2',
+    'field_title' => 'Contact us',
+    'info' => 'Contact page - banner',
+  ];
+
+  $block = BlockContent::create($values);
+  $block->save();
+
+  $anonymous_intro = BlockContent::create([
+    'status' => TRUE,
+    'type' => 'basic',
+    'uuid' => 'cfddfc59-77ac-41fe-8d26-66a3bfb9061a',
+    'info' => 'Contact page - Anonymous intro',
+    'body' => '<p>Text here</p>',
+  ]);
+  $anonymous_intro->save();
+
+  $authenticated_intro = BlockContent::create([
+    'status' => TRUE,
+    'type' => 'basic',
+    'uuid' => 'a0f231d8-9e5a-476c-9667-25a2f4e05f6c',
+    'info' => 'Contact page - Authenticated intro',
+    'body' => [
+      'value' => '@first_name @last_name',
+      'format' => 'full_html',
+    ]
+  ]);
+  $authenticated_intro->save();
+}

@@ -6,8 +6,8 @@ dependencies:
     - eic_search
     - route_condition
     - system
-name: group_discussions_overviews
 label: 'Group - Discussions - Overviews'
+name: group_discussions_overviews
 group: Groups
 description: 'This context is used for all group discussions overviews'
 requireAllConditions: false
@@ -15,59 +15,49 @@ disabled: false
 conditions:
   route:
     id: route
-    routes: eic_overviews.groups.overview_page.discussions
     negate: false
     uuid: 0a650dd3-d863-4ff1-b29c-809b7364b7a6
     context_mapping: {  }
+    routes: eic_overviews.groups.overview_page.discussions
 reactions:
   blocks:
+    id: blocks
+    uuid: 9c311d0e-a590-452a-ad85-a32b685d7729
     blocks:
-      2909faf9-e5d4-4649-b63f-b1aca1476dd5:
-        id: system_main_block
-        label: 'Main page content'
-        provider: system
-        label_display: '0'
+      a625a334-816d-4015-a47a-196b68443e72:
+        uuid: a625a334-816d-4015-a47a-196b68443e72
+        id: eic_search_overview
+        label: ''
+        provider: eic_search
+        label_display: visible
         region: content
-        weight: '0'
-        context_mapping: {  }
-        custom_id: system_main_block
+        custom_id: eic_search_overview_group_discussions
         theme: eic_community
-        css_class: ''
+        css_class: ecl-section-wrapper--is-white
         unique: 0
         context_id: group_discussions_overviews
-        uuid: 2909faf9-e5d4-4649-b63f-b1aca1476dd5
-      2636c524-2703-4d28-ad6b-3c1db2936f61:
-        id: eic_search_overview
-        label: null
-        provider: null
-        label_display: null
-        region: content
-        weight: '1'
+        context_mapping: {  }
+        source_type: Drupal\eic_search\Search\Sources\DiscussionSourceType
         facets:
           ss_content_field_discussion_type: ss_content_field_discussion_type
           sm_content_field_vocab_topics_string: sm_content_field_vocab_topics_string
           sm_content_field_vocab_geo_string: sm_content_field_vocab_geo_string
         sort_options:
           its_flag_highlight_content: its_flag_highlight_content
-          timestamp: timestamp
-          ss_global_title: ss_global_title
+          dm_aggregated_changed: dm_aggregated_changed
+          its_last_comment_timestamp: its_last_comment_timestamp
           its_last_flagged_like_content: its_last_flagged_like_content
-        source_type: Drupal\eic_search\Search\Sources\DiscussionSourceType
+          its_last_flagged_bookmark_content: its_last_flagged_bookmark_content
+          its_last_flagged_highlight_content: its_last_flagged_highlight_content
+          score: score
+          ss_drupal_timestamp: 0
+          ss_content_title: 0
         enable_search: 1
         page_options: normal
         prefilter_group: 1
         add_facet_interests: 0
         add_facet_my_groups: 0
-        context_mapping: {  }
-        custom_id: eic_search_overview_group_discussions
-        theme: eic_community
-        css_class: ecl-section-wrapper--is-white
-        unique: 0
-        context_id: group_discussions_overviews
-        uuid: 2636c524-2703-4d28-ad6b-3c1db2936f61
         third_party_settings: {  }
-    id: blocks
-    saved: false
-    uuid: 9c311d0e-a590-452a-ad85-a32b685d7729
     include_default_blocks: 0
+    saved: false
 weight: 0

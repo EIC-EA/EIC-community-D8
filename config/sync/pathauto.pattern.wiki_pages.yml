@@ -5,18 +5,18 @@ dependencies:
   module:
     - node
 id: wiki_pages
-label: 'Wiki pages'
+label: 'Node - Wiki pages'
 type: 'canonical_entities:node'
-pattern: '[node:book:parent:url:relative]/[node:title]'
+pattern: '[node:node_book_parent_url]/[node:title]'
 selection_criteria:
-  4f8b89a4-f875-42e5-bee1-141f41c42822:
+  b5306925-5f84-4c9f-9acf-caf877f214b1:
     id: node_type
-    bundles:
-      wiki_page: wiki_page
     negate: false
+    uuid: b5306925-5f84-4c9f-9acf-caf877f214b1
     context_mapping:
       node: node
-    uuid: 4f8b89a4-f875-42e5-bee1-141f41c42822
+    bundles:
+      wiki_page: wiki_page
 selection_logic: and
 weight: -5
 relationships: {  }

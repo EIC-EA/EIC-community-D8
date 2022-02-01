@@ -1,0 +1,23 @@
+{#
+/**
+ * @file
+ * Theme override to display a node video.
+ *
+ * @see ./themes/custom/eic_community/templates/content/node.html.twig
+ */
+#}
+{% extends "@eic_community/content/node.html.twig" %}
+{% set display_submitted = false %}
+{% set has_wrapper = false %}
+
+{% block content %}
+  <div {{ attributes }}>
+    {{ title_prefix }}
+    {{ title_suffix }}
+    {% include "@theme/patterns/compositions/video/video.teaser.html.twig" with video_item|default({})|merge({
+      title: node.label|default(''),
+      path: url,
+      extra_classes: 'ecl-teaser--grey',
+    }) %}
+  </div>
+{% endblock %}

@@ -5,6 +5,7 @@ namespace Drupal\eic_flags\Routing;
 use Drupal\Core\Entity\EntityHandlerInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\Routing\EntityRouteProviderInterface;
+use Drupal\eic_flags\Controller\FlagRequestController;
 use Drupal\eic_flags\Service\HandlerInterface;
 use Drupal\eic_flags\Service\RequestHandlerCollector;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -12,12 +13,11 @@ use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
 /**
- * Class EntityRequestRouteProvider.
+ * Provides entity request routes.
  *
  * @package Drupal\eic_flags\Routing
  */
-class EntityRequestRouteProvider implements EntityRouteProviderInterface,
-                                            EntityHandlerInterface {
+class EntityRequestRouteProvider implements EntityRouteProviderInterface, EntityHandlerInterface {
 
   /**
    * The request collector service.
@@ -64,7 +64,8 @@ class EntityRequestRouteProvider implements EntityRouteProviderInterface,
       $new_request_route = $this->getRouteByTemplate(
         $entity_type,
         $handler,
-        'new-request'
+        'new-request',
+        ['_entity_form' => $entity_type->id() . '.new-request']
       );
       if ($new_request_route) {
         $new_request_route->setRequirement('_request_send_access', 'TRUE');
@@ -75,20 +76,51 @@ class EntityRequestRouteProvider implements EntityRouteProviderInterface,
         );
       }
 
-      // Define a new request and close request route for the entity type.
-      $close_request_route = $this->getRouteByTemplate(
+      $new_request_route_api = $this->getRouteByTemplate(
         $entity_type,
         $handler,
-        'close-request'
+        'new-request-api',
+        ['_controller' => '\Drupal\eic_flags\Controller\RequestEndpointController::request']
       );
-      if ($close_request_route) {
-        $close_request_route
-          ->setRequirement('_permission', 'manage archival deletion requests')
-          ->setOption('_admin_route', TRUE);
+      if ($new_request_route_api) {
+        $new_request_route_api->setRequirement('_request_send_access', 'TRUE');
 
         $collection->add(
+          'entity.' . $entity_type->id() . '.new_request_api',
+          $new_request_route_api
+        );
+      }
+
+      // Define a close request route for the entity type (route for
+      // administrators).
+      $admin_close_request_route = $this->getRouteByTemplate(
+        $entity_type,
+        $handler,
+        'close-request',
+        ['_entity_form' => $entity_type->id() . '.close-request']
+      );
+      if ($admin_close_request_route) {
+        $admin_close_request_route->setRequirement('_close_request_access', 'TRUE')
+          ->setOption('_admin_route', TRUE);
+        $collection->add(
           'entity.' . $entity_type->id() . '.close_request',
-          $close_request_route
+          $admin_close_request_route
+        );
+      }
+
+      // Define a close request route for the entity type (route for
+      // non-administrators).
+      $user_close_request_route = $this->getRouteByTemplate(
+        $entity_type,
+        $handler,
+        'user-close-request',
+        ['_entity_form' => $entity_type->id() . '.close-request']
+      );
+      if ($user_close_request_route) {
+        $user_close_request_route->setRequirement('_close_request_access', 'TRUE');
+        $collection->add(
+          'entity.' . $entity_type->id() . '.user_close_request',
+          $user_close_request_route
         );
       }
     }
@@ -105,6 +137,8 @@ class EntityRequestRouteProvider implements EntityRouteProviderInterface,
    *   Handler of the current request type.
    * @param string $template
    *   The concerned template.
+   * @param array $defaults
+   *   (optional) An array of default parameter values.
    *
    * @return \Symfony\Component\Routing\Route|null
    *   Matching route or null.
@@ -112,17 +146,18 @@ class EntityRequestRouteProvider implements EntityRouteProviderInterface,
   protected function getRouteByTemplate(
     EntityTypeInterface $entity_type,
     HandlerInterface $handler,
-    string $template
+    string $template,
+    array $defaults = []
   ) {
     if (!$entity_type->hasLinkTemplate($template)) {
       return NULL;
     }
 
     $route = (new Route($entity_type->getLinkTemplate($template)))
-      ->addDefaults([
-        '_entity_form' => $entity_type->id() . '.' . $template,
-        '_title' => ucfirst($handler->getType()),
-      ])
+      ->addDefaults(
+        [
+          '_title_callback' => FlagRequestController::class . '::getRequestTitle',
+        ] + $defaults)
       ->setRequirement($entity_type->id(), '\d+')
       ->setOption('entity_type_id', $entity_type->id());
 

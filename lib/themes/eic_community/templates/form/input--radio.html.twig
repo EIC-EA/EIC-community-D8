@@ -11,12 +11,16 @@
  * @see ./core/themes/stable/templates/form/input.html.twig
  */
 #}
-{% include '@ecl-twig/radio/radio-button' with {
+{% embed '@ecl-twig/radio/radio-button' with {
   id: attributes.id,
   name: attributes.name,
   value: attributes.value,
   checked: attributes.checked == 'checked',
   disabled: attributes.disabled is defined,
-  label: title,
   extra_attributes: input_attributes
-} %}{{ children }}
+} %}
+  {% block label %}
+    <p>{{ title }}</p>
+  {% endblock %}
+{% endembed %}
+{{ children }}

@@ -14,10 +14,10 @@ bundle: notify_new_membership_request
 mode: notify_email_subject
 content:
   partial_0:
-    weight: 0
-    region: content
     settings: {  }
     third_party_settings: {  }
+    weight: 0
+    region: content
 hidden:
   field_group_membership: true
   field_group_ref: true

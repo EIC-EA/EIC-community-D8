@@ -1,0 +1,19 @@
+uuid: 0ebd5270-7d23-469b-b8e9-2d8599b97b63
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.message.field_entity_prev_status_label
+    - message.template.notify_content_status_changed
+id: message.notify_content_status_changed.field_entity_prev_status_label
+field_name: field_entity_prev_status_label
+entity_type: message
+bundle: notify_content_status_changed
+label: 'Entity previous status label'
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

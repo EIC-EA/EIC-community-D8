@@ -1,0 +1,19 @@
+uuid: fa8d2e19-2c81-4bcd-8606-04687b9c916d
+langcode: en
+status: true
+dependencies:
+  module:
+    - message
+id: message.field_share_message
+field_name: field_share_message
+entity_type: message
+type: string_long
+settings:
+  case_sensitive: false
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

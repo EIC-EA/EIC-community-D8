@@ -4,8 +4,12 @@ permissions:
 public_permissions:
   - 'access wiki overview'
 roles:
+  - event-member
+  - event-admin
+  - event-owner
   - group-member
   - group-admin
   - group-owner
-_core:
-  default_config_hash: ELCXUwzvaj4uAvyjzGGCclbiYm1AmUMcBkpP_67wus4
+  - organisation-member
+  - organisation-admin
+  - organisation-owner

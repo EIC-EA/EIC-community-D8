@@ -1,0 +1,62 @@
+uuid: fd32fa60-a577-4012-ae7d-281734978f6c
+langcode: en
+status: true
+dependencies:
+  config:
+    - group.type.event
+id: event-member
+label: Member
+weight: -100
+internal: true
+audience: member
+group_type: event
+permissions_ui: true
+permissions:
+  - 'access group search overview'
+  - 'create group_node:discussion entity'
+  - 'create group_node:document entity'
+  - 'create group_node:gallery entity'
+  - 'create group_node:news entity'
+  - 'create group_node:story entity'
+  - 'create group_node:video entity'
+  - 'create group_node:wiki_page entity'
+  - 'delete own group_node:discussion entity'
+  - 'delete own group_node:document entity'
+  - 'delete own group_node:gallery entity'
+  - 'delete own group_node:news entity'
+  - 'delete own group_node:story entity'
+  - 'delete own group_node:video entity'
+  - 'edit own comments'
+  - 'leave group'
+  - 'post comments'
+  - 'share content between groups'
+  - 'update own group_node:discussion entity'
+  - 'update own group_node:document entity'
+  - 'update own group_node:gallery entity'
+  - 'update own group_node:news entity'
+  - 'update own group_node:story entity'
+  - 'update own group_node:video entity'
+  - 'update own group_node:wiki_page entity'
+  - 'use news_stories transition create_new_draft'
+  - 'use news_stories transition publish'
+  - 'use news_stories transition unpublish'
+  - 'view comments'
+  - 'view group'
+  - 'view group_membership content'
+  - 'view group_node:book entity'
+  - 'view group_node:discussion entity'
+  - 'view group_node:document entity'
+  - 'view group_node:gallery entity'
+  - 'view group_node:news entity'
+  - 'view group_node:story entity'
+  - 'view group_node:video entity'
+  - 'view group_node:wiki_page entity'
+  - 'view latest version'
+  - 'view own unpublished group_node:book entity'
+  - 'view own unpublished group_node:discussion entity'
+  - 'view own unpublished group_node:document entity'
+  - 'view own unpublished group_node:gallery entity'
+  - 'view own unpublished group_node:news entity'
+  - 'view own unpublished group_node:story entity'
+  - 'view own unpublished group_node:video entity'
+  - 'view own unpublished group_node:wiki_page entity'

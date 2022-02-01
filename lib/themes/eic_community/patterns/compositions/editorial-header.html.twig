@@ -76,12 +76,15 @@
                       {% endset %}
 
                       {% include "@theme/patterns/compositions/collapsible-options.html.twig" with {
-                        extra_classes: 'ecl-collapsible-options--aligns-from-right ecl-collapsible-options--actions',
+                        extra_classes: 'ecl-collapsible-options--aligns-from-right ecl-collapsible-options--actions ' ~ action.extra_classes|default(''),
                         collapse_label: action.label|default(action.link.label),
+                        icon: action.icon|default(''),
                         icon_file_path: icon_file_path,
                         items: action.items,
                         trigger: action.is_compact and icon_file_path ? trigger : NULL,
                       } only %}
+                    {% elseif action.content is defined %}
+                      {{ action.content }}
                     {% else %}
                       {% if action is not empty %}
                         {% if action.link %}
@@ -154,30 +157,36 @@
               </div>
             {% endif %}
           </div>
-          {% if flags is not empty or stats is not empty %}
+          {% if flags is not empty or stats is not empty or social_share is not empty%}
             <div class="ecl-editorial-header__main-content-wrapper">
               {% embed "@theme/patterns/components/well.html.twig" %}
                 {% block content %}
-                  {% if flags is not empty %}
+                  {% if flags is not empty or social_share is not empty%}
                     <div class="ecl-editorial-header__flags">
-                      {% for flag in flags %}
-                        <div class="ecl-editorial-header__flag">
-                          {% if flag.content is defined %}
-                            {{ flag.content }}
-                          {% else %}
-                            {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with flag|default({})|merge({
-                              link: flag.link|default({})|merge({
-                                icon_position: 'before',
-                              }),
-                              extra_classes: 'ecl-link--standalone ecl-link--flag',
-                              icon: flag.icon|default({})|merge({
-                                path: icon_file_path,
-                                size: 's',
-                              })
-                            }) %}
-                          {% endif %}
-                        </div>
-                      {% endfor %}
+                        {% if flags is not empty %}
+                            {% for flag in flags %}
+                            <div class="ecl-editorial-header__flag">
+                              {% if flag.content is defined %}
+                                {{ flag.content }}
+                              {% else %}
+                                {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with flag|default({})|merge({
+                                  link: flag.link|default({})|merge({
+                                    icon_position: 'before',
+                                  }),
+                                  extra_classes: 'ecl-link--standalone ecl-link--flag',
+                                  icon: flag.icon|default({})|merge({
+                                    path: icon_file_path,
+                                    size: 's',
+                                  })
+                                }) %}
+                              {% endif %}
+                            </div>
+                            {% endfor %}
+
+                            <div class="ecl-editorial-header__flag">
+                                {{ social_share }}
+                            </div>
+                        {% endif %}
                     </div>
                   {% endif %}
 

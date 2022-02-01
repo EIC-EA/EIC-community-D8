@@ -35,6 +35,15 @@ class SearchController extends ControllerBase {
    *
    * @return array
    */
+  public function events(Request $request) {
+    return [];
+  }
+
+  /**
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *
+   * @return array
+   */
   public function people(Request $request) {
     return [];
   }

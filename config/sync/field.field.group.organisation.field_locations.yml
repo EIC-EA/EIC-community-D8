@@ -1,0 +1,29 @@
+uuid: 3ac956f6-4ed2-48a2-844b-fefd560eb812
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.group.field_locations
+    - group.type.organisation
+    - taxonomy.vocabulary.geo
+id: group.organisation.field_locations
+field_name: field_locations
+entity_type: group
+bundle: organisation
+label: Locations
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      geo: geo
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

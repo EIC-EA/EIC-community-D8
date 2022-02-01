@@ -42,7 +42,7 @@
 
   &__main {
     display: flex;
-    align-items: center;
+    //align-items: center;
     padding-bottom: ecl-box-model('padding');
     margin-bottom: ecl-box-model('padding');
     border-bottom: ecl-border();
@@ -61,7 +61,7 @@
 
   &__footer {
     @include ecl-media-breakpoint-up('md') {
-      padding-left: calc(#{map-get($ecl-media, '2xs')} + #{ecl-box-model('padding')});
+
 
       #{$node}--has-compact-layout & {
         padding-left: calc(#{map-get($ecl-media, '2xs')} + #{ecl-box-model('padding', 'controls')});
@@ -88,8 +88,12 @@
   &__image-wrapper,
   &__icon-wrapper {
     position: relative;
-    width: map-get($ecl-media, '2xs');
-    height: map-get($ecl-media, '2xs');
+    width: map-get($ecl-media, 'xs');
+    height: map-get($ecl-media, 'xs');
+    &--s {
+      width: map-get($ecl-media, '2xs');
+      height: map-get($ecl-media, '2xs');
+    }
   }
 
   &__image {
@@ -103,7 +107,7 @@
   }
 
   &__icon-wrapper {
-    background-color: map-get($ecl-colors, 'blue-25');
+    background-color: map-get($ecl-colors, 'white');
     flex-shrink: 0;
     display: flex;
     align-items: center;
@@ -119,6 +123,10 @@
 
   &__content-header {
     display: flex;
+    &:only-child {
+      height: 100%;
+      align-items: center;
+    }
   }
 
   &__title {
@@ -189,6 +197,9 @@
 
     &:last-child {
       margin-left: auto;
+      @include ecl-media-breakpoint-down('md') {
+        margin-top: $ecl-spacing-m;
+      }
     }
   }
 
@@ -207,7 +218,6 @@
 
   &__highlight {
     margin-left: auto;
-    padding-left: map-get($ecl-spacing, 'm');
     background-color: transparent;
     color: map-get($ecl-colors, 'blue-25');
     line-height: 0;
@@ -216,7 +226,8 @@
     order: 1;
     border: 0;
     position: relative;
-    padding: map-get($ecl-spacing, 'xs');
+    //padding: map-get($ecl-spacing, 'xs');
+    align-self: flex-start;
 
     &::before {
       position: absolute;

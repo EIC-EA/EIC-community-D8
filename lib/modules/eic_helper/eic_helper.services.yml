@@ -1,0 +1,9 @@
+services:
+  eic_helper.datetime:
+    class: Drupal\eic_helper\DateTimeHelper
+    arguments: [ '@datetime.time' ]
+  eic_helper.reverse_proxy_header_mapper:
+    class: Drupal\eic_helper\StackMiddleware\HeaderMapper
+    arguments: [ '@settings' ]
+    tags:
+      - { name: http_middleware, priority: 301 }

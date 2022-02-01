@@ -19,23 +19,23 @@ plugin: eic_theme_helper_page_header
 settings:
   id: eic_theme_helper_page_header
   label: 'Page header'
-  provider: eic_theme_helper
   label_display: '0'
+  provider: eic_theme_helper
   context_mapping:
     page_header: '@eic_theme_helper.page_header_context:page_header'
 visibility:
   view_inclusion:
     id: view_inclusion
     negate: null
-    view_inclusion: {  }
     context_mapping: {  }
+    view_inclusion: {  }
   request_path_exclusion:
     id: request_path_exclusion
-    pages: ''
     negate: null
     context_mapping: {  }
+    pages: ''
   request_path:
     id: request_path
-    pages: '<front>'
     negate: true
     context_mapping: {  }
+    pages: '<front>'

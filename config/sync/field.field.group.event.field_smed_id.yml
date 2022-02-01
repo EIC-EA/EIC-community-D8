@@ -1,0 +1,19 @@
+uuid: 8de9b829-ce2b-4d60-bf40-33e5795d2b54
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.group.field_smed_id
+    - group.type.event
+id: group.event.field_smed_id
+field_name: field_smed_id
+entity_type: group
+bundle: event
+label: 'Event(Site) Dashboard ID'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

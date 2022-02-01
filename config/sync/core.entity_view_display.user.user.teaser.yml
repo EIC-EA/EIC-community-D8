@@ -17,6 +17,7 @@ dependencies:
     - field.field.user.user.field_smed_id
     - field.field.user.user.field_updated_profile_by_service
     - field.field.user.user.field_updated_profile_by_user
+    - field.field.user.user.field_user_can_contact
     - field.field.user.user.field_user_status
   module:
     - user
@@ -27,31 +28,31 @@ mode: teaser
 content:
   field_media:
     type: entity_reference_entity_view
-    weight: 0
     label: hidden
     settings:
       view_mode: default
       link: false
     third_party_settings: {  }
+    weight: 0
     region: content
   flag_follow_user:
-    weight: 10
     settings: {  }
     third_party_settings: {  }
+    weight: 10
     region: content
   member_profiles:
     type: entity_reference_label
-    weight: 2
-    region: content
     label: above
     settings:
       link: false
     third_party_settings: {  }
-  realname:
-    weight: 1
+    weight: 2
     region: content
+  realname:
     settings: {  }
     third_party_settings: {  }
+    weight: 1
+    region: content
 hidden:
   field_first_name: true
   field_full_name: true
@@ -66,6 +67,7 @@ hidden:
   field_smed_id: true
   field_updated_profile_by_service: true
   field_updated_profile_by_user: true
+  field_user_can_contact: true
   field_user_status: true
   langcode: true
   member_for: true

@@ -1,0 +1,23 @@
+uuid: 43fd156c-4dfc-41d0-b7e2-e7aa4025bf14
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.message.field_entity_url
+    - message.template.notify_transf_owner_expire_owner
+  module:
+    - link
+id: message.notify_transf_owner_expire_owner.field_entity_url
+field_name: field_entity_url
+entity_type: message
+bundle: notify_transf_owner_expire_owner
+label: 'Entity URL'
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  title: 0
+  link_type: 1
+field_type: link

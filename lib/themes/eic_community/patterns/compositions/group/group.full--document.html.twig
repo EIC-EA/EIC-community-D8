@@ -6,14 +6,19 @@
     active_filters: active_filters,
     sort_options: sort_options,
     items: items,
+    no_items_available: no_items_available,
+    no_items_available_header: no_items_available_header,
     extra_classes: 'ecl-teaser-overview--has-blocks',
     icon_file_path: common.icon_file_path,
   } only %}
 
-  {% include "@theme/patterns/compositions/pagination.html.twig" with pagination|default({}) only %}
+  {% if items and items is not empty %}
+    {% include "@theme/patterns/compositions/pagination.html.twig" with pagination|default({}) only %}
+  {% endif %}
 {% endblock %}
 
 {% block sidebar %}
+  {% set sidebar_action = sidebar_action|merge({'extra_classes': " ecl-collapsible-options--actions ecl-collapsible-options--full-width"}) %}
   {% include "@theme/patterns/compositions/collapsible-options.html.twig" with sidebar_action only %}
   {% include "@theme/patterns/compositions/filter-sidebar.html.twig" with {
     icon_file_path: common.icon_file_path,

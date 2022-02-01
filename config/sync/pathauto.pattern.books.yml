@@ -5,18 +5,18 @@ dependencies:
   module:
     - node
 id: books
-label: Books
+label: 'Node - Books'
 type: 'canonical_entities:node'
 pattern: '[node:title]'
 selection_criteria:
-  fdab11e7-299e-415c-aa79-a01432230c59:
+  8884be28-c3f4-45e4-b523-2133eb766027:
     id: node_type
-    bundles:
-      book: book
     negate: false
+    uuid: 8884be28-c3f4-45e4-b523-2133eb766027
     context_mapping:
       node: node
-    uuid: fdab11e7-299e-415c-aa79-a01432230c59
+    bundles:
+      book: book
 selection_logic: and
 weight: -10
 relationships: {  }

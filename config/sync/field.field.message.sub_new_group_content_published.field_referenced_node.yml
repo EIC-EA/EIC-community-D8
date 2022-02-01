@@ -1,0 +1,41 @@
+uuid: 1ac99022-e96b-4991-a86c-6bbd16e661ac
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.message.field_referenced_node
+    - message.template.sub_new_group_content_published
+    - node.type.discussion
+    - node.type.document
+    - node.type.gallery
+    - node.type.news
+    - node.type.story
+    - node.type.video
+    - node.type.wiki_page
+id: message.sub_new_group_content_published.field_referenced_node
+field_name: field_referenced_node
+entity_type: message
+bundle: sub_new_group_content_published
+label: 'Referenced node'
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      discussion: discussion
+      document: document
+      gallery: gallery
+      news: news
+      story: story
+      video: video
+      wiki_page: wiki_page
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: discussion
+field_type: entity_reference

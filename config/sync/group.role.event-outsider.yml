@@ -1,0 +1,16 @@
+uuid: c6b2f2e5-34d5-4e80-81e8-2a0c28f244c7
+langcode: en
+status: true
+dependencies:
+  config:
+    - group.type.event
+id: event-outsider
+label: Outsider
+weight: -101
+internal: true
+audience: outsider
+group_type: event
+permissions_ui: true
+permissions:
+  - 'share content between groups'
+  - 'view group'

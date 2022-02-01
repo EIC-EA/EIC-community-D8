@@ -3,17 +3,18 @@ langcode: en
 status: true
 dependencies:
   module:
+    - eic_flags
     - node
 id: highlight_content
 label: 'Highlight (Content)'
 bundles:
   - discussion
   - document
+  - event
   - gallery
   - video
 entity_type: node
 global: true
-weight: 0
 flag_short: 'Highlight this item'
 flag_long: ''
 flag_message: ''
@@ -24,8 +25,9 @@ unflag_denied_text: ''
 flood_control_active: false
 flood_control_limit: 0
 flood_control_window: 0
+weight: 0
 flag_type: 'entity:node'
-link_type: ajax_link
+link_type: eic_count_link
 flagTypeConfig:
   show_in_links:
     full: full

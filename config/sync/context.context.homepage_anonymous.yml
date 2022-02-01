@@ -2,13 +2,24 @@ uuid: 33e2644b-c0fb-4304-b6b1-e1082003965c
 langcode: en
 status: true
 dependencies:
+  config:
+    - views.view.groups_homepage
+  content:
+    - 'block_content:cta_tiles:880aff79-c4fa-416e-9703-0a3119bff5d0'
+    - 'block_content:facts_figures:e1aefa16-ad60-4d15-ac07-4a9a2d8b6044'
+    - 'block_content:latest_news_stories:844a381c-6076-4279-834e-a75de967cf65'
+    - 'block_content:page_banner:5b0c5199-f4b0-4b8a-90fa-68d424e8315b'
+    - 'block_content:social_media:4b678ea5-f56e-45af-8399-7adde0abab77'
   module:
+    - block_content
+    - eic_blocks
     - system
     - user
+    - views
 _core:
   default_config_hash: 3MabB3skNsvvRzMXLpt2tNEtZc376b-KA3Q0Lewbhgg
-name: homepage_anonymous
 label: 'Homepage anonymous'
+name: homepage_anonymous
 group: Homepage
 description: 'Homepage context for anonymous users.'
 requireAllConditions: true
@@ -16,43 +27,54 @@ disabled: false
 conditions:
   request_path:
     id: request_path
-    pages: '<front>'
     negate: false
     uuid: 2f226b88-171f-4906-8c9b-3a55164a9a8c
     context_mapping: {  }
+    pages: '<front>'
   user_role:
     id: user_role
-    roles:
-      anonymous: anonymous
     negate: false
     uuid: 81bfb169-cd2b-4a50-871f-6c3261be5276
     context_mapping:
       user: '@user.current_user_context:current_user'
+    roles:
+      anonymous: anonymous
 reactions:
   blocks:
+    id: blocks
+    uuid: 5a010c1a-216a-427c-8d7e-43702d8b57ec
     blocks:
       33935a7f-fefb-4352-809f-c74242273d62:
+        uuid: 33935a7f-fefb-4352-809f-c74242273d62
         id: 'block_content:e1aefa16-ad60-4d15-ac07-4a9a2d8b6044'
         label: 'Homepage - Facts & Figures block'
         provider: block_content
         label_display: '0'
-        status: true
-        info: ''
-        view_mode: full
         region: content
         weight: '-2'
-        context_mapping: {  }
         custom_id: homepage_facts_figures
         theme: eic_community
         css_class: ''
         unique: 0
         context_id: homepage_anonymous
-        uuid: 33935a7f-fefb-4352-809f-c74242273d62
+        context_mapping: {  }
+        status: true
+        info: ''
+        view_mode: full
       596d7f88-c45b-4b06-8ba8-925d8f21fbbe:
+        uuid: 596d7f88-c45b-4b06-8ba8-925d8f21fbbe
         id: eic_social_feed
         label: 'EIC Twitter feed'
         provider: eic_blocks
         label_display: '0'
+        region: content
+        weight: '2'
+        custom_id: eic_social_feed
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: homepage_anonymous
+        context_mapping: {  }
         service: smk
         type: user
         display_user: true
@@ -66,102 +88,125 @@ reactions:
         rts_display_original: false
         exclude_replies: true
         tweet_more_btn: true
-        region: content
-        weight: '2'
-        context_mapping: {  }
-        custom_id: eic_social_feed
-        theme: eic_community
-        css_class: ''
-        unique: 0
-        context_id: homepage_anonymous
-        uuid: 596d7f88-c45b-4b06-8ba8-925d8f21fbbe
       20103bdb-6cc0-4481-a3c1-b311abca2f40:
+        uuid: 20103bdb-6cc0-4481-a3c1-b311abca2f40
         id: 'block_content:880aff79-c4fa-416e-9703-0a3119bff5d0'
         label: 'Homepage - Stay up to date block'
         provider: block_content
         label_display: '0'
-        status: true
-        info: ''
-        view_mode: full
         region: content
         weight: '0'
-        context_mapping: {  }
         custom_id: homepage_stay_up_to_date
         theme: eic_community
         css_class: ''
         unique: 0
         context_id: homepage_anonymous
-        uuid: 20103bdb-6cc0-4481-a3c1-b311abca2f40
+        context_mapping: {  }
+        status: true
+        info: ''
+        view_mode: full
       649919c3-9c20-41dc-b941-5b1de1519758:
+        uuid: 649919c3-9c20-41dc-b941-5b1de1519758
         id: 'block_content:5b0c5199-f4b0-4b8a-90fa-68d424e8315b'
         label: 'Homepage - Banner block'
         provider: block_content
         label_display: '0'
-        status: true
-        info: ''
-        view_mode: full
         region: page_header
         weight: '0'
-        context_mapping: {  }
         custom_id: homepage_banner_anonymous
         theme: eic_community
         css_class: ''
         unique: 0
         context_id: homepage_anonymous
-        uuid: 649919c3-9c20-41dc-b941-5b1de1519758
+        context_mapping: {  }
+        status: true
+        info: ''
+        view_mode: full
       9bd8af0d-9728-4728-9055-2e51ae9cd21b:
+        uuid: 9bd8af0d-9728-4728-9055-2e51ae9cd21b
         id: 'block_content:4b678ea5-f56e-45af-8399-7adde0abab77'
         label: 'Homepage - Follow us block'
         provider: block_content
         label_display: '0'
-        status: true
-        info: ''
-        view_mode: full
         region: content
         weight: '1'
-        context_mapping: {  }
         custom_id: homepage_follow_us
         theme: eic_community
         css_class: ''
         unique: 0
         context_id: homepage_anonymous
-        uuid: 9bd8af0d-9728-4728-9055-2e51ae9cd21b
+        context_mapping: {  }
+        status: true
+        info: ''
+        view_mode: full
       9c111e17-643d-4fdd-b1f7-d6c144f86c3a:
+        uuid: 9c111e17-643d-4fdd-b1f7-d6c144f86c3a
         id: 'block_content:8271c779-92e1-43f2-beb5-3addbfd84c70'
         label: 'Homepage - USP Tiles'
         provider: block_content
         label_display: '0'
-        status: true
-        info: ''
-        view_mode: full
         region: content
         weight: '-3'
-        context_mapping: {  }
         custom_id: homepage_usp_tiles
         theme: eic_community
         css_class: ''
         unique: 0
         context_id: homepage_anonymous
-        uuid: 9c111e17-643d-4fdd-b1f7-d6c144f86c3a
+        context_mapping: {  }
+        status: true
+        info: ''
+        view_mode: full
       e3aeb9c9-c60e-4f17-91e8-17f04e3f7fa3:
+        uuid: e3aeb9c9-c60e-4f17-91e8-17f04e3f7fa3
         id: 'block_content:844a381c-6076-4279-834e-a75de967cf65'
         label: 'Homepage - Latest News & Stories'
         provider: block_content
         label_display: '0'
-        status: true
-        info: ''
-        view_mode: full
         region: content
         weight: '-1'
-        context_mapping: {  }
         custom_id: homepage_latest_news_stories
         theme: eic_community
         css_class: ''
         unique: 0
         context_id: homepage_anonymous
-        uuid: e3aeb9c9-c60e-4f17-91e8-17f04e3f7fa3
-    id: blocks
-    saved: false
-    uuid: 5a010c1a-216a-427c-8d7e-43702d8b57ec
+        context_mapping: {  }
+        status: true
+        info: ''
+        view_mode: full
+      f6123d9c-a3d9-475e-a540-456f306f2c49:
+        uuid: f6123d9c-a3d9-475e-a540-456f306f2c49
+        id: 'views_block:groups_homepage-block_groups_homepage'
+        label: ''
+        provider: views
+        label_display: '0'
+        region: content
+        weight: '0'
+        custom_id: views_block_groups_homepage_block_groups_homepage
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: homepage_anonymous
+        context_mapping: {  }
+        views_label: ''
+        items_per_page: none
+        third_party_settings: {  }
+      917eb892-e851-4753-9c9a-0f4de2188bb0:
+        uuid: 917eb892-e851-4753-9c9a-0f4de2188bb0
+        id: 'views_block:groups_homepage-block_events_homepage'
+        label: ''
+        provider: views
+        label_display: '0'
+        region: content
+        weight: '0'
+        custom_id: views_block_groups_homepage_block_events_homepage
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: homepage_anonymous
+        context_mapping: {  }
+        views_label: ''
+        items_per_page: none
+        third_party_settings: {  }
     include_default_blocks: 1
+    saved: false
 weight: 0

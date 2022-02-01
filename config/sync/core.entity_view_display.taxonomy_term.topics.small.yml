@@ -1,0 +1,21 @@
+uuid: 5ee905df-5505-4e97-b638-cb4c3da5a7f2
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.taxonomy_term.small
+    - field.field.taxonomy_term.topics.field_smed_id
+    - field.field.taxonomy_term.topics.field_topic_banner
+    - taxonomy.vocabulary.topics
+id: taxonomy_term.topics.small
+targetEntityType: taxonomy_term
+bundle: topics
+mode: small
+content: {  }
+hidden:
+  description: true
+  field_smed_id: true
+  field_topic_banner: true
+  flag_follow_taxonomy_term: true
+  langcode: true
+  search_api_excerpt: true

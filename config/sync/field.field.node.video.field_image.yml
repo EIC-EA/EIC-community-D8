@@ -1,0 +1,29 @@
+uuid: 9504e7f1-91b3-4846-801b-43bb0757803e
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_image
+    - media.type.image
+    - node.type.video
+id: node.video.field_image
+field_name: field_image
+entity_type: node
+bundle: video
+label: 'Image teaser'
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:media'
+  handler_settings:
+    target_bundles:
+      image: image
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

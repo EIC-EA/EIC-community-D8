@@ -1,0 +1,41 @@
+uuid: 907ffd17-366e-4561-a015-6123662ece7f
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.taxonomy_term.teaser
+    - field.field.taxonomy_term.topics.field_smed_id
+    - field.field.taxonomy_term.topics.field_topic_banner
+    - taxonomy.vocabulary.topics
+  module:
+    - text
+id: taxonomy_term.topics.teaser
+targetEntityType: taxonomy_term
+bundle: topics
+mode: teaser
+content:
+  description:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  field_topic_banner:
+    type: entity_reference_entity_view
+    label: hidden
+    settings:
+      view_mode: full
+      link: false
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  flag_follow_taxonomy_term:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 2
+    region: content
+hidden:
+  field_smed_id: true
+  langcode: true
+  search_api_excerpt: true

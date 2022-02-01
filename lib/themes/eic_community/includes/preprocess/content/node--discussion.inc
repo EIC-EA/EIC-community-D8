@@ -5,10 +5,9 @@
  * Prepares variables for node discussion templates.
  */
 
-use Drupal\taxonomy\Entity\Term;
-use Drupal\comment\Entity\Comment;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Render\Markup;
+use Drupal\group\Entity\GroupInterface;
 
 /**
  * Implements hook_preprocess_node() for discussion node.
@@ -58,7 +57,6 @@ function _preprocess_discussion_full(&$variables, $discussion_type, $node) {
   $variables['timestamp']['label'] = eic_community_get_teaser_time_display($node->get('changed')->value);
 
   $flags = array_filter($variables['elements'], function ($key) use ($node) {
-
     // If element is not a flag we skip it.
     if (strpos($key, 'flag') === FALSE) {
       return FALSE;
@@ -70,6 +68,14 @@ function _preprocess_discussion_full(&$variables, $discussion_type, $node) {
   $flags = array_map(function ($item) {
     return ['content' => $item];
   }, $flags);
+
+  $group = \Drupal::service('eic_groups.helper')->getGroupFromRoute();
+  if ($group instanceof GroupInterface) {
+    $flags['share_group_content']['content'] = _eic_community_get_share_group_content_link(
+      $group,
+      $node
+    );
+  }
 
   $variables['flags']['items'] = $flags;
 
@@ -86,63 +92,27 @@ function _preprocess_discussion_full(&$variables, $discussion_type, $node) {
  * Preprocesses teaser display.
  */
 function _preprocess_discussion_teaser(&$variables, $discussion_type, $node) {
-  // @todo get comment count from backend.
-  $comment_count = 0;
+  $teaser = _eic_community_prepare_node_teaser_array($node);
+  $teaser['description'] = Markup::create(Xss::filter($node->get('field_body')->value));
+  $teaser['type'] = $discussion_type;
 
-  $tags = [];
-
-  if (!$node->get('field_vocab_topics')->isEmpty()) {
-    $topic_term_ids = array_map(function ($term) {
-      return $term['target_id'];
-    }, $node->get('field_vocab_topics')->getValue());
-    $topic_terms = Term::loadMultiple($topic_term_ids);
-
-    foreach ($topic_terms as $topic_term) {
-      $tags[] = [
-        'label' => $topic_term->get('name')->getString(),
-        'path' => $topic_term->toUrl(),
-      ];
-    }
+  // Remove unwanted items.
+  if (!empty($teaser['stats']['views'])) {
+    unset($teaser['stats']['views']);
+  }
+  if (!empty($teaser['stats']['downloads'])) {
+    unset($teaser['stats']['downloads']);
   }
 
-  $discussion_item = [
-    'type' => $discussion_type,
-    'author' => eic_community_get_teaser_user_display($node->getOwner()),
-    'description' => Markup::create(Xss::filter($node->get('field_body')->value)),
-    'tags' => $tags,
-    'highlight' => FALSE,
-    'timestamp' => [
-      'label' => eic_community_get_teaser_time_display($node->get('changed')->value),
-    ],
-    'stats' => [
-      [
-        'value' => $comment_count,
-        'icon' => [
-          'type' => 'custom',
-          'name' => 'comment',
-        ],
-      ],
-    ],
-  ];
-
-  if ((int) $comment_count > 0) {
-    $last_comment_id = \Drupal::entityQuery('comment')
-      ->condition('entity_id', $node->id())
-      ->condition('entity_type', 'node')
-      ->sort('created', 'DESC')
-      ->range(0, 1)
-      ->execute();
-    $last_comment_id = array_shift($last_comment_id);
-
-    $comment = Comment::load($last_comment_id);
-
-    $discussion_item['featured'] = [
-      'comment' => $comment->get('comment_body')->value,
-      'comment_id' => $last_comment_id,
-      'author' => eic_community_get_teaser_user_display($comment->getOwner()),
-      'timestamp' => eic_community_get_teaser_time_display($comment->getCreatedTime()),
+  // Add last comment if there is one.
+  if ($last_comment = _eic_community_get_entity_last_comment($node)) {
+    $teaser['featured'] = [
+      'comment' => $last_comment->get('comment_body')->value,
+      'comment_id' => $last_comment->id(),
+      'author' => eic_community_get_teaser_user_display($last_comment->getOwner()),
+      'timestamp' => eic_community_get_teaser_time_display($last_comment->getCreatedTime()),
     ];
   }
 
-  $variables['discussion_item'] = $discussion_item;
+  $variables['discussion_item'] = $teaser;
 }

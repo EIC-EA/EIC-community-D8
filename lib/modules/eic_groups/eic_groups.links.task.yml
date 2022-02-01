@@ -1,0 +1,5 @@
+entity.group.blocked_history:
+  route_name: view.admin_blocked_entities.page_admin_group_blocked_history
+  base_route: entity.group.canonical
+  title: 'Blocked history'
+  weight: 20

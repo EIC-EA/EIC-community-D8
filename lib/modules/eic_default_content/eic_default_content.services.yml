@@ -1,10 +1,19 @@
 services:
+  eic_default_content.user_generator:
+    class: Drupal\eic_default_content\Generator\UserGenerator
+    arguments: [ '@entity_type.manager' ]
+    tags:
+      - { name: data_fixtures, priority: -1 }
   eic_default_content.term_generator:
     class: Drupal\eic_default_content\Generator\TaxonomyGenerator
     tags:
       - { name: data_fixtures, priority: 0 }
   eic_default_content.group_generator:
     class: Drupal\eic_default_content\Generator\GroupGenerator
+    tags:
+      - { name: data_fixtures }
+  eic_default_content.organisation_generator:
+    class: Drupal\eic_default_content\Generator\OrganisationGenerator
     tags:
       - { name: data_fixtures }
   eic_default_content.story_generator:
@@ -15,6 +24,10 @@ services:
     class: Drupal\eic_default_content\Generator\NewsGenerator
     tags:
       - { name: data_fixtures }
+  eic_default_content.menu_generator:
+    class: Drupal\eic_default_content\Generator\MenuGenerator
+    tags:
+      - { name: data_fixtures, priority: 2 }
   eic_default_content.block_content_generator:
     class: Drupal\eic_default_content\Generator\BlockContentGenerator
     tags:

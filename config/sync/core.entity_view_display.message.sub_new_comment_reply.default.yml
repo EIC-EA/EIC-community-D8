@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - field.field.message.sub_new_comment_reply.field_event_executing_user
+    - field.field.message.sub_new_comment_reply.field_referenced_comment
     - message.template.sub_new_comment_reply
 id: message.sub_new_comment_reply.default
 targetEntityType: message
@@ -11,27 +12,35 @@ bundle: sub_new_comment_reply
 mode: default
 content:
   field_event_executing_user:
-    weight: 1
+    type: entity_reference_label
     label: above
     settings:
       link: true
     third_party_settings: {  }
+    weight: 1
+    region: content
+  field_referenced_comment:
     type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 2
     region: content
   partial_0:
-    weight: 0
-    region: content
     settings: {  }
     third_party_settings: {  }
+    weight: 0
+    region: content
   partial_1:
-    weight: 0
-    region: content
     settings: {  }
     third_party_settings: {  }
+    weight: 0
+    region: content
   partial_2:
-    weight: 0
-    region: content
     settings: {  }
     third_party_settings: {  }
+    weight: 0
+    region: content
 hidden:
   search_api_excerpt: true

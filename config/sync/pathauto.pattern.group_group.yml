@@ -12,12 +12,12 @@ pattern: 'groups/[group:group_truncated_title:40]'
 selection_criteria:
   80dac3a4-1524-41f7-a9e4-b9187a06d109:
     id: 'entity_bundle:group'
-    bundles:
-      group: group
     negate: false
+    uuid: 80dac3a4-1524-41f7-a9e4-b9187a06d109
     context_mapping:
       group: group
-    uuid: 80dac3a4-1524-41f7-a9e4-b9187a06d109
+    bundles:
+      group: group
 selection_logic: and
 weight: -4
 relationships: {  }

@@ -3,12 +3,14 @@
 namespace Drupal\eic_content\Plugin\Field\FieldWidget;
 
 use Drupal\Core\Entity\Element\EntityAutocomplete;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Field\Annotation\FieldWidget;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\WidgetBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
-use Drupal\taxonomy\Entity\Term;
+use Drupal\taxonomy\TermInterface;
+use Drupal\user\UserInterface;
 
 /**
  * Plugin implementation of the 'entity_tree' widget.
@@ -64,6 +66,13 @@ class EntityTreeWidget extends WidgetBase {
       '#description' => $this->t('When checking an option it will auto select all parent values in the tree', [], ['context' => 'eic_content']),
     ];
 
+    $element['ignore_current_user'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Ignore the current user in the users tree'),
+      '#default_value' => $this->getSetting('ignore_current_user'),
+      '#description' => $this->t('<b>Only for "User" entity.</b> if checked, the current user will not be available.', [], ['context' => 'eic_content']),
+    ];
+
     return $element;
   }
 
@@ -77,6 +86,7 @@ class EntityTreeWidget extends WidgetBase {
         'auto_select_parents' => TRUE,
         'disable_top_choices' => FALSE,
         'load_all' => FALSE,
+        'ignore_current_user' => FALSE,
       ] + parent::defaultSettings();
   }
 
@@ -87,7 +97,10 @@ class EntityTreeWidget extends WidgetBase {
     $settings = $this->getFieldSetting('handler_settings');
     $target_entity = $this->fieldDefinition->getFieldStorageDefinition()
       ->getSetting('target_type');
-    $target_bundles = array_key_exists('target_bundles', $settings) ? $settings['target_bundles'] : [];
+    $target_bundles = array_key_exists('target_bundles', $settings) && $settings['target_bundles'] ?
+      $settings['target_bundles'] :
+      [];
+
     $target_bundle = reset($target_bundles);
 
     $element +=
@@ -102,13 +115,22 @@ class EntityTreeWidget extends WidgetBase {
         ],
         '#attributes' => [
           'class' => ['hidden', 'entity-tree-reference-widget'],
-          'data-selected-terms' => json_encode(array_map(function (Term $term) {
-            $parent = $term->get('parent')->getValue();
+          'data-selected-terms' => json_encode(array_map(function (EntityInterface $entity) {
+            if ($entity instanceof TermInterface) {
+              $parents = $entity->get('parent')->getValue();
+              $parent = reset($parents)['target_id'];
+              $name = $entity->getName();
+            }
+
+            if ($entity instanceof UserInterface) {
+              $parent = 0;
+              $name = realname_load($entity) . ' ' . '('. $entity->getEmail() .')';
+            }
 
             return [
-              'name' => $term->getName(),
-              'tid' => $term->id(),
-              'parent' => reset($parent)['target_id'],
+              'name' => $name,
+              'tid' => $entity->id(),
+              'parent' => $parent,
             ];
           }, $items->referencedEntities())),
           'data-translations' => json_encode([
@@ -132,8 +154,13 @@ class EntityTreeWidget extends WidgetBase {
           'data-items-to-load' => $this->getSetting('items_to_load'),
           'data-disable-top' => $this->getSetting('disable_top_choices'),
           'data-load-all' => $this->getSetting('load_all'),
+          'data-ignore-current-user' => $this->getSetting('ignore_current_user'),
           'data-target-bundle' => $target_bundle,
           'data-target-entity' => $target_entity,
+          'data-is-required' => (int) $element['#required'],
+          // This allow to search users depending specific conditions
+          // in link SourceType.
+          'data-search-specific-users' => 0,
         ],
       ];
 
@@ -142,24 +169,35 @@ class EntityTreeWidget extends WidgetBase {
     return $element;
   }
 
+  /**
+   * @param $element
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   */
   public static function validate($element, FormStateInterface $form_state) {
-    $values = $element['#value'];
+    $form_state->setValueForElement($element, self::extractEntitiesFromWidget($element['#value']));
+  }
 
-    if (!is_string($values)) {
-      return;
+  /**
+   * @param $element
+   *
+   * @return array
+   */
+  public static function extractEntitiesFromWidget($element) {
+    if (!is_string($element)) {
+      return [];
     }
 
-    $values = explode(',', $values);
-    $terms = [];
+    $values = explode(',', $element);
+    $entities = [];
 
     foreach ($values as $value) {
-      $term_id = EntityAutocomplete::extractEntityIdFromAutocompleteInput($value);
-      if ($term_id) {
-        $terms[] = ['target_id' => $term_id];
+      $entity_id = EntityAutocomplete::extractEntityIdFromAutocompleteInput($value);
+      if ($entity_id) {
+        $entities[] = ['target_id' => $entity_id];
       }
     }
 
-    $form_state->setValueForElement($element, $terms);
+    return $entities;
   }
 
   /**

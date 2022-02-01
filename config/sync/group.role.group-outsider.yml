@@ -12,5 +12,5 @@ audience: outsider
 group_type: group
 permissions_ui: true
 permissions:
-  - 'view comments'
+  - 'share content between groups'
   - 'view group'

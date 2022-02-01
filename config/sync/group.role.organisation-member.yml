@@ -1,0 +1,24 @@
+uuid: 4bffef20-9d67-4b33-a881-37e90d52b369
+langcode: en
+status: true
+dependencies:
+  config:
+    - group.type.organisation
+id: organisation-member
+label: Member
+weight: -100
+internal: true
+audience: member
+group_type: organisation
+permissions_ui: true
+permissions:
+  - 'access group search overview'
+  - 'edit own comments'
+  - 'post comments'
+  - 'share content between groups'
+  - 'view comments'
+  - 'view group_membership content'
+  - 'view group_node:event entity'
+  - 'view group_node:news entity'
+  - 'view latest version'
+  - 'view own unpublished group_node:event entity'

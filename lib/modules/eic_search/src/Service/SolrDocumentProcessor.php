@@ -3,30 +3,52 @@
 namespace Drupal\eic_search\Service;
 
 use Drupal\Core\Database\Connection;
+use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\comment\CommentInterface;
 use Drupal\comment\Entity\Comment;
 use Drupal\Component\Utility\Unicode;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Locale\CountryManager;
+use Drupal\Core\Queue\QueueFactory;
+use Drupal\Core\Queue\QueueWorkerManager;
+use Drupal\Core\Queue\SuspendQueueException;
+use Drupal\Core\Url;
+use Drupal\eic_comments\CommentsHelper;
+use Drupal\eic_events\Constants\Event;
 use Drupal\eic_flags\FlagType;
 use Drupal\eic_groups\Constants\GroupVisibilityType;
 use Drupal\eic_groups\EICGroupsHelper;
+use Drupal\eic_media_statistics\EntityFileDownloadCount;
+use Drupal\eic_messages\MessageTemplateTypes;
+use Drupal\eic_private_message\Constants\PrivateMessage;
+use Drupal\eic_search\Search\Sources\GroupEventSourceType;
 use Drupal\eic_search\SolrIndexes;
+use Drupal\eic_user\UserHelper;
 use Drupal\file\Entity\File;
 use Drupal\flag\FlagCountManager;
 use Drupal\group\Entity\Group;
+use Drupal\group\Entity\GroupInterface;
+use Drupal\node\NodeTypeInterface;
+use Drupal\oec_group_flex\OECGroupFlexHelper;
 use Drupal\group\GroupMembership;
 use Drupal\image\Entity\ImageStyle;
 use Drupal\media\MediaInterface;
+use Drupal\message\Entity\Message;
 use Drupal\node\Entity\Node;
+use Drupal\node\Entity\NodeType;
+use Drupal\node\NodeInterface;
 use Drupal\paragraphs\Entity\Paragraph;
 use Drupal\profile\Entity\Profile;
 use Drupal\profile\Entity\ProfileInterface;
+use Drupal\search_api\Entity\Index;
+use Drupal\search_api\SearchApiException;
+use Drupal\search_api\Utility\PostRequestIndexing;
 use Drupal\search_api\Utility\Utility;
 use Drupal\statistics\NodeStatisticsDatabaseStorage;
+use Drupal\taxonomy\Entity\Term;
 use Drupal\user\Entity\User;
 use Drupal\user\UserInterface;
-use Drupal\search_api\Entity\Index;
-use Drupal\search_api\Utility\PostRequestIndexing;
 use Solarium\Core\Query\DocumentInterface;
 use Solarium\QueryType\Update\Query\Document;
 
@@ -34,21 +56,24 @@ use Solarium\QueryType\Update\Query\Document;
  * Class SolrDocumentProcessor
  *
  * @package Drupal\eic_search\Service
+ *
+ * @TODO Split this long class.
  */
 class SolrDocumentProcessor {
+
   /**
    * Database connection.
    *
    * @var \Drupal\Core\Database\Connection
    */
-  protected $connection;
+  private $connection;
 
   /**
    * The flag count manager.
    *
    * @var \Drupal\flag\FlagCountManager
    */
-  protected $flagCountManager;
+  private $flagCountManager;
 
   /**
    * The Search API Post request indexing service.
@@ -62,7 +87,43 @@ class SolrDocumentProcessor {
    *
    * @var \Drupal\statistics\NodeStatisticsDatabaseStorage
    */
-  protected $nodeStatisticsDatabaseStorage;
+  private $nodeStatisticsDatabaseStorage;
+
+  /**
+   * @var \Drupal\eic_comments\CommentsHelper $commentsHelper
+   */
+  private $commentsHelper;
+
+  /**
+   * @var EntityFileDownloadCount $entityDownloadHelper
+   */
+  private $entityDownloadHelper;
+
+  /**
+   * @var OECGroupFlexHelper $OECGroupFlexHelper
+   */
+  private $OECGroupFlexHelper;
+
+  /**
+   * The Queue Factory service.
+   *
+   * @var QueueFactory $queueFactory
+   */
+  private $queueFactory;
+
+  /**
+   * The Queue Worker Manager service.
+   *
+   * @var QueueWorkerManager $queueManager
+   */
+  private $queueManager;
+
+  /**
+   * The Entity Type Manager service.
+   *
+   * @var EntityTypeManagerInterface $entityTypeManager
+   */
+  private $entityTypeManager;
 
   /**
    * The key used to identify solr document fields for last flagged.
@@ -80,12 +141,38 @@ class SolrDocumentProcessor {
    *   The flag count manager.
    * @param \Drupal\search_api\Utility\PostRequestIndexing $post_request_indexing
    *   The Search API Post request indexing service.
+   * @param CommentsHelper $comments_helper
+   *   The Comments Helper service.
+   * @param EntityFileDownloadCount $entity_download_helper
+   *   The Entity File Download Count service helper.
+   * @param \Drupal\oec_group_flex\OECGroupFlexHelper $oec_group_flex_helper
+   * @param QueueFactory $queue_factory
+   *   The Queue Factory service.
+   * @param QueueWorkerManager $queue_worker_manager
+   *   The Queue Worker Manager service.
    */
-  public function __construct(Connection $connection, FlagCountManager $flag_count_manager, PostRequestIndexing $post_request_indexing, NodeStatisticsDatabaseStorage $node_statistics_db_storage) {
+  public function __construct(
+    Connection $connection,
+    FlagCountManager $flag_count_manager,
+    PostRequestIndexing $post_request_indexing,
+    NodeStatisticsDatabaseStorage $node_statistics_db_storage,
+    CommentsHelper $comments_helper,
+    EntityFileDownloadCount $entity_download_helper,
+    OECGroupFlexHelper $oec_group_flex_helper,
+    QueueFactory $queue_factory,
+    QueueWorkerManager $queue_worker_manager,
+    EntityTypeManagerInterface $entity_type_manager
+  ) {
     $this->connection = $connection;
     $this->flagCountManager = $flag_count_manager;
     $this->postRequestIndexing = $post_request_indexing;
     $this->nodeStatisticsDatabaseStorage = $node_statistics_db_storage;
+    $this->commentsHelper = $comments_helper;
+    $this->entityDownloadHelper = $entity_download_helper;
+    $this->OECGroupFlexHelper = $oec_group_flex_helper;
+    $this->queueFactory = $queue_factory;
+    $this->queueManager = $queue_worker_manager;
+    $this->entityTypeManager = $entity_type_manager;
   }
 
   /**
@@ -100,17 +187,28 @@ class SolrDocumentProcessor {
   public function processGlobalData(Document &$document, array $fields) {
     $title = '';
     $type = '';
+    $type_label = '';
     $date = '';
     $status = FALSE;
     $fullname = '';
     $topics = [];
     $geo = [];
     $user_url = '';
+    $datasource = $fields['ss_search_api_datasource'];
+    $changed = 0;
+    $language = t('English', [], ['context' => 'eic_search'])->render();
 
-    switch ($fields['ss_search_api_datasource']) {
+    // Set by default parent group to TRUE and method processGroupContentData will update it.
+    $this->addOrUpdateDocumentField($document, 'its_global_group_parent_published', $fields, 1);
+
+    switch ($datasource) {
       case 'entity:node':
         $title = $fields['ss_content_title'];
         $type = $fields['ss_content_type'];
+        $node_type = NodeType::load($type);
+        $type_label = $node_type instanceof NodeTypeInterface ?
+          $node_type->label() :
+          $fields['ss_content_type'];
         $date = $fields['ds_content_created'];
         $changed = $fields['ds_changed'];
         $status = $fields['bs_content_status'];
@@ -134,19 +232,37 @@ class SolrDocumentProcessor {
         }
         break;
       case 'entity:group':
-        $title = $fields['ss_group_label_string'];
-        $type = 'group';
+        if (array_key_exists('ss_group_topic_name', $fields)) {
+          $topics = $fields['ss_group_topic_name'];
+        } else if (array_key_exists('sm_group_topic_name', $fields)) {
+          $topics = $fields['sm_group_topic_name'];
+        }
+
+        $title = $fields['tm_X3b_en_group_label_fulltext'];
+        $type = $fields['ss_group_type'];
         $date = $fields['ds_group_created'];
         $status = $fields['bs_group_status'];
-        $fullname = $fields['ss_group_user_first_name'] . ' ' . $fields['ss_group_user_last_name'];
-        $topics = $fields['ss_group_topic_name'];
-        $geo = $fields['ss_group_field_vocab_geo_string'];
+        $geo = $fields['ss_group_field_vocab_geo_string'] ?? '';
         $language = t('English', [], ['context' => 'eic_search'])->render();
         $user_url = '';
-        if (array_key_exists('its_group_owner_id', $fields)) {
-          $user = User::load($fields['its_group_owner_id']);
-          $user_url = $user instanceof UserInterface ? $user->toUrl()
-            ->toString() : '';
+        $group_id = $fields['its_group_id_integer'] ?? -1;
+        $this->addOrUpdateDocumentField(
+          $document,
+          'its_group_id_integer',
+          $fields,
+          $group_id
+        );
+        $document->addField('ss_global_group_parent_id', $group_id);
+        $group = Group::load($group_id);
+        if ($group && $owner = EICGroupsHelper::getGroupOwner($group)) {
+          $fullname = realname_load($owner);
+
+          $this->addOrUpdateDocumentField(
+            $document,
+            'ss_group_user_image',
+            $fields,
+            UserHelper::getUserAvatar($owner)
+          );
         }
         break;
       case 'entity:message':
@@ -159,10 +275,9 @@ class SolrDocumentProcessor {
         $status = TRUE;
         break;
       case 'entity:user':
+        $user = User::load($fields['its_user_id']);
+        $fullname = realname_load($user);
         $status = TRUE;
-        break;
-      default:
-        $language = t('English', [], ['context' => 'eic_search'])->render();
         break;
     }
 
@@ -184,11 +299,8 @@ class SolrDocumentProcessor {
         $file = File::load($media->get('oe_media_image')->target_id);
         $image_uri = $file->getFileUri();
 
-        $destination_uri = $image_style->buildUri($image_uri);
-        $destination_uri_160 = $image_style_160->buildUri($image_uri);
-
-        $image_style->createDerivative($image_uri, $destination_uri);
-        $image_style_160->createDerivative($image_uri, $destination_uri_160);
+        $destination_uri = $image_style->buildUrl($image_uri);
+        $destination_uri_160 = $image_style_160->buildUrl($image_uri);
 
         return json_encode([
           'id' => $slide->id(),
@@ -203,13 +315,18 @@ class SolrDocumentProcessor {
     }
 
     //We need to use only one field key for the global search on the FE side
-    $document->addField('ss_global_title', $title);
+    $document->addField('tm_global_title', $title);
     $document->addField('ss_global_content_type', $type);
+    $document->addField(
+      'ss_global_content_type_label',
+      !empty($type_label) ? $type_label : $type
+    );
     $document->addField('ss_global_created_date', $date);
     $document->addField('bs_global_status', $status);
     $document->addField('ss_drupal_timestamp', strtotime($date));
     $document->addField('ss_drupal_changed_timestamp', strtotime($changed));
     $document->addField('ss_global_fullname', $fullname);
+    $document->addField('tm_global_fullname', $fullname);
     $document->addField('ss_global_user_url', $user_url);
     $this->addOrUpdateDocumentField($document, 'sm_content_field_vocab_topics_string', $fields, $topics);
     $this->addOrUpdateDocumentField($document, 'sm_content_field_vocab_geo_string', $fields, $geo);
@@ -227,16 +344,22 @@ class SolrDocumentProcessor {
       if (strlen($text) > 300) {
         $text = Unicode::truncate($text, 300, FALSE, TRUE);
       }
-      $document->setField('tm_X3b_en_rendered_item', $text);
+
+      //Trick to convert the &amp to & when nbsp
+      $document->setField('tm_X3b_en_rendered_item', html_entity_decode($text));
     }
 
-    $nid = $fields['its_content_nid'];
+    $nid = $fields['its_content_nid'] ?? 0;
     $views = $this->nodeStatisticsDatabaseStorage->fetchView($nid);
 
-    $document->addField(
-      'its_statistics_view',
-      $views ? $views->getTotalCount() : 0
-    );
+    if ('entity:message' !== $datasource) {
+      $this->addOrUpdateDocumentField(
+        $document,
+        'its_statistics_view',
+        $fields,
+        $views ? $views->getTotalCount() : 0
+      );
+    }
   }
 
   /**
@@ -245,22 +368,104 @@ class SolrDocumentProcessor {
    *
    * @throws \Drupal\Core\Entity\EntityMalformedException
    */
-  public function processGroupData(Document &$document, array $fields) {
+  public function processGroupContentData(Document &$document, array $fields) {
+    if ($fields['ss_search_api_datasource'] === 'entity:group') {
+      return;
+    }
+
     $group_parent_label = '';
     $group_parent_url = '';
     $group_parent_id = -1;
+    $group_is_published = TRUE;
 
     if (array_key_exists('its_content__group_content__entity_id_gid', $fields)) {
       if ($group_entity = Group::load($fields['its_content__group_content__entity_id_gid'])) {
-        $group_parent_label = -$group_entity->label();
+        $group_parent_label = $group_entity->label();
         $group_parent_url = $group_entity->toUrl()->toString();
         $group_parent_id = $group_entity->id();
+        $group_is_published = $group_entity->isPublished();
       }
     }
 
     $document->addField('ss_global_group_parent_label', $group_parent_label);
     $document->addField('ss_global_group_parent_url', $group_parent_url);
     $document->addField('ss_global_group_parent_id', $group_parent_id);
+    $this->addOrUpdateDocumentField($document, 'its_global_group_parent_published', $fields, (int) $group_is_published);
+  }
+
+  /**
+   * Process Message entity before sending to SOLR, add statistics data
+   *
+   * @param \Solarium\QueryType\Update\Query\Document $document
+   * @param array $fields
+   */
+  public function processMessageData(Document &$document, array $fields) {
+    if ($fields['ss_search_api_datasource'] !== 'entity:message') {
+      return;
+    }
+
+    $node_ref = isset($fields['its_message_node_ref_id']) ? $fields['its_message_node_ref_id'] : NULL;
+    $comment_ref = isset($fields['its_message_comment_ref_id']) ? $fields['its_message_comment_ref_id'] : NULL;
+
+    if (!$node_ref && !$comment_ref) {
+      return;
+    }
+
+    if ($comment_ref) {
+      $comment = Comment::load($comment_ref);
+
+      if (!$comment instanceof CommentInterface) {
+        return;
+      }
+
+      $node = $comment->getCommentedEntity();
+    }
+    else {
+      $node = Node::load($node_ref);
+    }
+
+    if (!$node instanceof NodeInterface) {
+      return;
+    }
+
+    $index_views = TRUE;
+    $index_comments = TRUE;
+    $index_downloads = TRUE;
+
+    // Discard some counters from being indexed depending on the node type.
+    switch ($node->bundle()) {
+      case 'wiki_page':
+        $index_comments = FALSE;
+        break;
+
+    }
+
+    $views = $this->nodeStatisticsDatabaseStorage->fetchView($node->id());
+
+    if ($index_views) {
+      $this->addOrUpdateDocumentField(
+        $document,
+        'its_statistics_view',
+        $fields,
+        $views ? $views->getTotalCount() : 0
+      );
+    }
+    if ($index_comments) {
+      $this->addOrUpdateDocumentField(
+        $document,
+        'its_content_comment_count',
+        $fields,
+        $this->commentsHelper->countEntityComments($node)
+      );
+    }
+    if ($index_downloads) {
+      $this->addOrUpdateDocumentField(
+        $document,
+        'its_document_download_total',
+        $fields,
+        $this->entityDownloadHelper->getFileDownloads($node)
+      );
+    }
   }
 
   /**
@@ -324,7 +529,8 @@ class SolrDocumentProcessor {
     $document->addField('ss_discussion_last_comment_timestamp', $comment->getCreatedTime());
     $document->addField('ss_discussion_last_comment_author', $author instanceof UserInterface ? $author->get('field_first_name')->value . ' ' . $author->get('field_last_name')->value : '');
     $document->addField('ss_discussion_last_comment_author_image', $author_file_url);
-    $document->addField('ss_discussion_last_comment_url', $author instanceof UserInterface ? $author->toUrl()->toString() : '');
+    $document->addField('ss_discussion_last_comment_url', $author instanceof UserInterface ? $author->toUrl()
+      ->toString() : '');
   }
 
   /**
@@ -347,6 +553,11 @@ class SolrDocumentProcessor {
 
     if (!$search_id) {
       $document->addField('ss_group_visibility', $group_visibility);
+
+      $document->addField(
+        'ss_group_visibility_label',
+        GroupVisibilityType::GROUP_VISIBILITY_PUBLIC
+      );
       return;
     }
 
@@ -354,22 +565,41 @@ class SolrDocumentProcessor {
     $item = array_key_exists($search_id, $items) ? $items[$search_id] : NULL;
     if (!$item) {
       $document->addField('ss_group_visibility', $group_visibility);
+
+      $document->addField(
+        'ss_group_visibility_label',
+        GroupVisibilityType::GROUP_VISIBILITY_PUBLIC
+      );
       return;
     }
 
-    $group = $group_helper->getGroupByEntity($item->getOriginalObject()
-      ->getEntity());
+    $original_object = $item->getOriginalObject()->getEntity();
+
+    $group = $group_helper->getGroupByEntity($original_object);
 
     if (!$group) {
       $document->addField('ss_group_visibility', $group_visibility);
+
+      $document->addField(
+        'ss_group_visibility_label',
+        GroupVisibilityType::GROUP_VISIBILITY_PUBLIC
+      );
       return;
     }
+
+    $document->addField(
+      'ss_group_visibility_label',
+      $this->OECGroupFlexHelper->getGroupVisibilityTagLabel($group)
+    );
 
     /** @var \Drupal\oec_group_flex\GroupVisibilityDatabaseStorage $group_visibility_storage */
     $group_visibility_storage = \Drupal::service('oec_group_flex.group_visibility.storage');
     $group_visibility_entity = $group_visibility_storage->load($group->id());
+    $visibility_type = $group_visibility_entity ?
+      $group_visibility_entity->getType() :
+      NULL;
 
-    switch ($group_visibility_entity->getType()) {
+    switch ($visibility_type) {
       case GroupVisibilityType::GROUP_VISIBILITY_PRIVATE:
       case GroupVisibilityType::GROUP_VISIBILITY_COMMUNITY:
         $group_visibility = $group_visibility_entity->getType();
@@ -401,29 +631,98 @@ class SolrDocumentProcessor {
                 return -1;
               }
 
+              // @todo Make use of user ID only.
               return $user->id() . '|' . $user->getAccountName();
             }, $user_ids);
 
             $document->addField('ss_' . GroupVisibilityType::GROUP_VISIBILITY_OPTION_TRUSTED_USERS, implode(',', $users));
           }
+
+          if (GroupVisibilityType::GROUP_VISIBILITY_OPTION_ORGANISATIONS === $key && $option[GroupVisibilityType::GROUP_VISIBILITY_OPTION_ORGANISATIONS . '_status']) {
+            $group_visibility = GroupVisibilityType::GROUP_VISIBILITY_OPTION_ORGANISATIONS;
+
+            $organisation_ids = $option[GroupVisibilityType::GROUP_VISIBILITY_OPTION_ORGANISATIONS . '_conf'];
+            $organisations = array_map(function ($organisation_id) {
+              $organisation = Group::load(reset($organisation_id));
+              if (!$organisation) {
+                return -1;
+              }
+
+              return $organisation->id();
+            }, $organisation_ids);
+
+            $document->addField('itm_' . GroupVisibilityType::GROUP_VISIBILITY_OPTION_ORGANISATIONS, $organisations);
+          }
+
+          if (GroupVisibilityType::GROUP_VISIBILITY_OPTION_ORGANISATION_TYPES === $key && $option[GroupVisibilityType::GROUP_VISIBILITY_OPTION_ORGANISATION_TYPES . '_status']) {
+            $group_visibility = GroupVisibilityType::GROUP_VISIBILITY_OPTION_ORGANISATION_TYPES;
+
+            $term_ids = $option[GroupVisibilityType::GROUP_VISIBILITY_OPTION_ORGANISATION_TYPES . '_conf'];
+            $terms = array_map(function ($term_id) {
+              if (!empty($term_id)) {
+                $term = Term::load($term_id);
+                if (!$term) {
+                  return -1;
+                }
+
+                return $term->id();
+              }
+            }, $term_ids);
+
+            $document->addField('itm_' . GroupVisibilityType::GROUP_VISIBILITY_OPTION_ORGANISATION_TYPES, $terms);
+          }
         }
         break;
+
       default:
         $group_visibility = GroupVisibilityType::GROUP_VISIBILITY_PUBLIC;
         break;
+
     }
 
     $document->addField('ss_group_visibility', $group_visibility);
-    $document->addField('ss_group_moderation_state', $group->get('moderation_state')->value);
-    $document->addField('its_group_owner_id', $group->getOwnerId());
+    $this->setGroupOwner($document, 'its_group_owner_id', $group);
   }
 
   /**
-   * @param \Solarium\Core\Query\DocumentInterface $document
+   * @param Document $document
    * @param array $fields
+   *
+   * @throws \Drupal\Core\Entity\EntityMalformedException
    */
   public function processGroupUserData(DocumentInterface &$document, array $fields) {
-    if ($fields['ss_search_api_datasource'] === 'entity:user' && array_key_exists('its_user_profile', $fields)) {
+    $datasource = $fields['ss_search_api_datasource'];
+
+    if ($datasource !== 'entity:user') {
+      return;
+    }
+
+    $user = User::load($fields['its_user_id']);
+
+    if (!$user instanceof UserInterface) {
+      return;
+    }
+
+    $url_contact = Url::fromRoute(
+      'eic_private_message.user_private_message',
+      ['user' => $user->id()]
+    )->toString();
+
+    $this->addOrUpdateDocumentField(
+      $document,
+      'ss_user_link_contact',
+      $fields,
+      $url_contact
+    );
+
+    $this->addOrUpdateDocumentField(
+      $document,
+      'ss_user_allow_contact',
+      $fields,
+      $user->get(PrivateMessage::PRIVATE_MESSAGE_USER_ALLOW_CONTACT_ID)->value
+    );
+
+    if (array_key_exists('its_user_profile', $fields)) {
       $profile = Profile::load($fields['its_user_profile']);
       if ($profile instanceof ProfileInterface) {
         $socials = $profile->get('field_social_links')->getValue();
@@ -454,11 +753,8 @@ class SolrDocumentProcessor {
       return;
     }
 
-    /** @var \Drupal\eic_media_statistics\EntityFileDownloadCount $entity_download_helper */
-    $entity_download_helper = \Drupal::service('eic_media_statistics.entity_file_download_count');
     $node = Node::load($fields['its_content_nid']);
-
-    $document->addField('its_document_download_total', $entity_download_helper->getFileDownloads($node));
+    $document->addField('its_document_download_total', $this->entityDownloadHelper->getFileDownloads($node));
   }
 
   /**
@@ -473,14 +769,78 @@ class SolrDocumentProcessor {
     $entity_id = NULL;
     $entity_type = NULL;
     $last_flagging_flag_types = [];
+    $datasource = $fields['ss_search_api_datasource'];
 
-    switch ($fields['ss_search_api_datasource']) {
+    // We want to include the node flags in the document when datasource is
+    // entity message. This way we avoid duplicated logic.
+    if ($datasource === 'entity:message') {
+      $mid = $fields['its_message_id'];
+      $message = Message::load($mid);
+      $message_type = $message->getTemplate()->getThirdPartySetting('eic_messages', 'message_template_type');
+
+      if (
+        $message_type === MessageTemplateTypes::STREAM &&
+        $message->hasField('field_referenced_node') &&
+        $message->hasField('field_entity_type')
+      ) {
+        switch ($message->get('field_entity_type')->value) {
+          case 'wiki_page':
+            // For wiki pages we don't show flag counts.
+            break;
+
+          default:
+            $fields['its_content_nid'] = $message->get('field_referenced_node')->target_id;
+            $datasource = 'entity:node';
+            break;
+
+        }
+      }
+    }
+
+    switch ($datasource) {
       case 'entity:node':
         $entity_id = $fields['its_content_nid'];
         $entity_type = 'node';
         $last_flagging_flag_types = [
+          FlagType::BOOKMARK_CONTENT,
+          FlagType::HIGHLIGHT_CONTENT,
           FlagType::LIKE_CONTENT,
         ];
+
+        $node = Node::load($entity_id);
+
+        if (!$node instanceof NodeInterface) {
+          break;
+        }
+
+        $flags_count = $this->flagCountManager->getEntityFlagCounts($node);
+
+        $this->addOrUpdateDocumentField(
+          $document,
+          'its_flag_like_content',
+          $fields,
+          isset($flags_count['like_content']) ? $flags_count['like_content'] : 0
+        );
+        break;
+
+      case 'entity:group':
+        $entity_id = $fields['its_group_id_integer'];
+        $entity_type = 'group';
+
+        $group = Group::load($entity_id);
+
+        if (!$group instanceof GroupInterface) {
+          break;
+        }
+
+        $flags_count = $this->flagCountManager->getEntityFlagCounts($group);
+
+        $this->addOrUpdateDocumentField(
+          $document,
+          'its_flag_recommend_group',
+          $fields,
+          isset($flags_count['recommend_group']) ? $flags_count['recommend_group'] : 0
+        );
         break;
 
     }
@@ -507,13 +867,176 @@ class SolrDocumentProcessor {
   }
 
   /**
+   * Updates event data for a document.
+   *
+   * @param \Solarium\QueryType\Update\Query\Document $document
+   *   The Solr document.
+   * @param $fields
+   *   Document fields.
+   */
+  public function processGroupEventData(Document &$document, $fields) {
+    $datasource = $fields['ss_search_api_datasource'];
+    $content_type = $fields['ss_content_type'] ?? NULL;
+
+    if ($datasource !== 'entity:node' || $content_type !== 'event') {
+      return;
+    }
+
+    $start_date = new DrupalDateTime($fields['ds_content_field_date_range']);
+    $end_date = new DrupalDateTime($fields['ds_content_field_date_range_end_value']);
+
+    $this->addOrUpdateDocumentField(
+      $document,
+      GroupEventSourceType::START_DATE_SOLR_FIELD_ID,
+      $fields,
+      $start_date->getTimestamp()
+    );
+
+    $this->addOrUpdateDocumentField(
+      $document,
+      GroupEventSourceType::END_DATE_SOLR_FIELD_ID,
+      $fields,
+      $end_date->getTimestamp()
+    );
+
+    $this->updateEventState(
+      $document,
+      $fields,
+      $start_date->getTimestamp(),
+      $end_date->getTimestamp()
+    );
+
+    if (array_key_exists('ss_content_country_code', $fields)) {
+      $country_code = $fields['ss_content_country_code'];
+      $countries = CountryManager::getStandardList();
+
+      $this->addOrUpdateDocumentField(
+        $document,
+        'ss_content_country_code',
+        $fields,
+        array_key_exists($country_code, $countries) ? $countries[$country_code] : $country_code
+      );
+    }
+  }
+
+  /**
+   * Updates global event data for a document.
+   *
+   * @param \Solarium\QueryType\Update\Query\Document $document
+   *   The Solr document.
+   * @param $fields
+   *   Document fields.
+   */
+  public function processGlobalEventData(Document &$document, $fields) {
+    $group_type = array_key_exists('ss_group_type', $fields) ?
+      $fields['ss_group_type'] :
+      NULL;
+
+    if ($group_type !== 'event') {
+      return;
+    }
+
+    $start_date = new DrupalDateTime($fields['ds_group_field_date_range']);
+    $end_date = new DrupalDateTime($fields['ds_group_field_date_range_end_value']);
+
+    $this->addOrUpdateDocumentField(
+      $document,
+      GroupEventSourceType::START_DATE_SOLR_FIELD_ID,
+      $fields,
+      $start_date->getTimestamp()
+    );
+
+    $this->addOrUpdateDocumentField(
+      $document,
+      GroupEventSourceType::END_DATE_SOLR_FIELD_ID,
+      $fields,
+      $end_date->getTimestamp()
+    );
+
+    $this->updateEventState(
+      $document,
+      $fields,
+      $start_date->getTimestamp(),
+      $end_date->getTimestamp()
+    );
+
+    if (array_key_exists('ss_group_country_code', $fields)) {
+      $country_code = $fields['ss_group_country_code'];
+      $countries = CountryManager::getStandardList();
+
+      $this->addOrUpdateDocumentField(
+        $document,
+        'ss_group_event_country',
+        $fields,
+        array_key_exists($country_code, $countries) ? $countries[$country_code] : $country_code
+      );
+    }
+  }
+
+  /**
+   * @param \Solarium\QueryType\Update\Query\Document $document
+   * @param $key
+   * @param $group
+   */
+  private function setGroupOwner(Document &$document, $key, $group) {
+    $group_owner = EICGroupsHelper::getGroupOwner($group);
+    $document->addField(
+      $key,
+      $group_owner instanceof UserInterface ? $group_owner->id(): -1
+    );
+  }
+
+  /**
+   * @param \Solarium\QueryType\Update\Query\Document $document
+   * @param array $fields
+   * @param int $start_date
+   * @param int $end_date
+   */
+  private function updateEventState(
+    Document &$document,
+    array $fields,
+    int $start_date,
+    int $end_date
+  ) {
+    $now = time();
+    // We set a weight value depending the state of the event: 1.ongoing 2.future 3.past
+    // so we can sort easily in different overviews.
+    // By default we set it as past event
+    $weight_event_state = Event::WEIGHT_STATE_PAST;
+
+    if ($now < $start_date) {
+      $weight_event_state = Event::WEIGHT_STATE_FUTURE;
+    }
+
+    if ($now >= $start_date && $now <= $end_date) {
+      $weight_event_state = Event::WEIGHT_STATE_ONGOING;
+    }
+
+    $this->addOrUpdateDocumentField(
+      $document,
+      Event::SOLR_FIELD_ID_WEIGHT_STATE,
+      $fields,
+      $weight_event_state
+    );
+
+    $labels_map = Event::getStateLabelsMapping();
+
+    $this->addOrUpdateDocumentField(
+      $document,
+      Event::SOLR_FIELD_ID_WEIGHT_STATE_LABEL,
+      $fields,
+      $labels_map[$weight_event_state]
+    );
+  }
+
+  /**
    * @param \Solarium\QueryType\Update\Query\Document $document
    * @param $key
    * @param $fields
    * @param $value
    */
   private function addOrUpdateDocumentField(Document &$document, $key, $fields, $value) {
-    array_key_exists($key, $fields) ?
+    array_key_exists($key, $document->getFields()) ?
       $document->setField($key, $value) :
       $document->addField($key, $value);
   }
@@ -534,7 +1057,13 @@ class SolrDocumentProcessor {
         continue;
       }
       $datasource_id = 'entity:' . $entity->getEntityTypeId();
-      $datasource = $global_index->getDatasource($datasource_id);
+
+      try {
+        $datasource = $global_index->getDatasource($datasource_id);
+      } catch (SearchApiException $api_exception) {
+        continue;
+      }
+
       $item_id = $datasource->getItemId($entity->getTypedData());
       $item_ids[] = Utility::createCombinedId($datasource_id, $item_id);
     }
@@ -543,4 +1072,31 @@ class SolrDocumentProcessor {
     $this->postRequestIndexing->registerIndexingOperation(SolrIndexes::GLOBAL, $item_ids);
   }
 
+  /**
+   * @param \Drupal\group\Entity\GroupInterface $group
+   *
+   * @throws \Drupal\Component\Plugin\Exception\PluginException
+   */
+  public function reIndexEntitiesFromGroup(GroupInterface $group) {
+    $queue = $this->queueFactory->get('eic_groups_group_content_search_api');
+    $queue_worker = $this->queueManager->createInstance('eic_groups_group_content_search_api');
+
+    /** @var \Drupal\group\Entity\Storage\GroupContentStorageInterface $storage */
+    $storage = $this->entityTypeManager->getStorage('group_content');
+    $contents = $storage->loadByGroup($group);
+
+    foreach ($contents as $group_content) {
+      $queue->createItem($group_content);
+    }
+
+    while ($item = $queue->claimItem()) {
+      try {
+        $queue_worker->processItem($item->data);
+        $queue->deleteItem($item);
+      } catch (SuspendQueueException $e) {
+        $queue->releaseItem($item);
+        break;
+      }
+    }
+  }
 }

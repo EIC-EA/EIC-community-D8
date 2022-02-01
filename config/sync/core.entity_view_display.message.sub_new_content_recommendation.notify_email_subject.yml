@@ -5,6 +5,7 @@ dependencies:
   config:
     - core.entity_view_mode.message.notify_email_subject
     - field.field.message.sub_new_content_recommendation.field_event_executing_user
+    - field.field.message.sub_new_content_recommendation.field_referenced_node
     - message.template.sub_new_content_recommendation
 id: message.sub_new_content_recommendation.notify_email_subject
 targetEntityType: message
@@ -12,12 +13,13 @@ bundle: sub_new_content_recommendation
 mode: notify_email_subject
 content:
   partial_0:
-    weight: 0
-    region: content
     settings: {  }
     third_party_settings: {  }
+    weight: 0
+    region: content
 hidden:
   field_event_executing_user: true
+  field_referenced_node: true
   partial_1: true
   partial_2: true
   search_api_excerpt: true

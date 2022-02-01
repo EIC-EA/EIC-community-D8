@@ -1,3 +1,7 @@
+#activity-stream-overview {
+  flex: 1;
+}
+
 .ecl-editorial-article {
   $node: &;
 
@@ -5,7 +9,7 @@
     display: flex;
     flex-direction: column;
 
-    @include ecl-media-breakpoint-up('md') {
+    @include ecl-media-breakpoint-up('lg') {
       align-items: stretch;
       flex-direction: row;
 
@@ -15,6 +19,7 @@
         }
       }
     }
+
   }
 
   &__header,
@@ -32,10 +37,34 @@
     }
   }
 
+  &__header--wiki {
+    display: flex;
+    flex-wrap: wrap;
+    & .contextual-region {
+      margin-bottom: 0 !important;
+      & .ecl-button__label {
+        white-space: nowrap;
+      }
+    }
+    & .ecl-inline-actions {
+      order: -1;
+      @include ecl-media-breakpoint-down('md') {
+        margin-bottom: $ecl-spacing-s;
+      }
+      @include ecl-media-breakpoint-up('md') {
+        margin: 0;
+      }
+    }
+  }
+
   &__content {
     font-size: ecl-typography('font-size');
     line-height: ecl-typography('line-height');
     margin-top: ecl-layout('gutter');
+
+    &--full-width {
+      width: 100%;
+    }
 
     &:first-child {
       margin-top: 0;
@@ -43,6 +72,10 @@
 
     @include ecl-media-breakpoint-up('md') {
       flex-grow: 1;
+
+      #{$node}--is-ready#{$node}--is-collapsible & {
+        flex-basis: 100%;
+      }
     }
 
     h1,
@@ -76,11 +109,22 @@
     h5, {
       @extend .ecl-u-type-heading-5;
     }
+
   }
 
   &__aside {
     position: relative;
     margin-top: ecl-layout('gutter');
+
+    &:not(&--wiki) {
+      @include ecl-media-breakpoint-down('md') {
+        width: 100%;
+        padding-left: 1rem;
+        padding-right: 1rem;
+        box-sizing: border-box;
+      }
+    }
+
 
     #{$node}--is-collapsible & {
       margin-top: 0;
@@ -114,6 +158,13 @@
 
 
       flex-shrink: 0;
+    }
+
+    &__title {
+      text-transform: uppercase;
+      color: map-get($ecl-colors, 'grey-50');
+      @include ecl-responsive-font('label');
+      font-weight: $ecl-font-weight-regular;
     }
   }
 

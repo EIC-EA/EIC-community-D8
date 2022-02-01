@@ -5,6 +5,7 @@ dependencies:
   config:
     - field.storage.node.field_video_media
     - media.type.remote_video
+    - media.type.video
     - node.type.video
 id: node.video.field_video_media
 field_name: field_video_media
@@ -21,6 +22,7 @@ settings:
   handler_settings:
     target_bundles:
       remote_video: remote_video
+      video: video
     sort:
       field: _none
       direction: ASC

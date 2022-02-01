@@ -1,68 +1,7 @@
-{% if actions is not empty %}
-  <div class="ecl-editorial-header__actions">
-    {% for action in actions %}
-      <div class="ecl-editorial-header__action">
-        {% set trigger = '' %}
-
-        {% if action.items %}
-          {% set trigger %}
-            {% include "@ecl-twig/ec-component-button/ecl-button.html.twig" with {
-              extra_classes: action.extra_classes|default('') ~ 'ecl-button--has-icon-layout',
-              icon: icon_file_path ? action.icon|default({})|merge({
-                path: icon_file_path,
-                size: 's',
-              }),
-              label: action.label|default(action.link.label),
-            } %}
-          {% endset %}
-
-          {% include "@theme/patterns/compositions/collapsible-options.html.twig" with {
-            extra_classes: 'ecl-collapsible-options--aligns-from-right ecl-collapsible-options--actions',
-            collapse_label: action.label|default(action.link.label),
-            icon_file_path: icon_file_path,
-            items: action.items,
-            trigger: action.is_compact and icon_file_path ? trigger : NULL,
-          } only %}
-        {% else %}
-          {% if action is not empty %}
-            {% if action.link %}
-              {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with action|default({})|merge({
-                link: action.link|default({})|merge({
-                  icon_position: 'before',
-                }),
-                icon: icon_file_path ? action.icon|default({})|merge({
-                  path: icon_file_path,
-                  size: 's',
-                }) : {},
-                extra_classes: 'ecl-link--button ecl-link--button-primary' ~ (action.is_compact ? ' ecl-link--button-has-icon-layout ecl-link--action'),
-              }) only %}
-            {% elseif action is not empty %}
-              {% if action.link %}
-                {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with action|default({})|merge({
-                  link: action.link|merge({
-                    icon_position: 'before',
-                  }),
-                  icon: icon_file_path ? action.icon|default({})|merge({
-                    path: icon_file_path,
-                    size: 's',
-                  }) : {},
-                  extra_classes: (actions[0].items and not loop.first) or loop.first ? 'ecl-link--button ecl-link--button-primary' : 'ecl-link--button ecl-link--button-secondary' ~ (action.is_compact ? 'ecl-link--button-has-icon-layout'),
-                }) only %}
-              {% else %}
-                {% include "@ecl-twig/ec-component-button/ecl-button.html.twig" with action|default({})|merge({
-                  icon_position: 'before',
-                  extra_classes: action.is_compact ? 'ecl-button--has-icon-layout',
-                  variant: (actions[0].items and not loop.first) or loop.first ? 'primary' : 'secondary',
-                  icon: icon_file_path ? action.icon|default({})|merge({
-                    path: icon_file_path,
-                    size: 's',
-                  }) : {},
-                }) only %}
-              {% endif %}
-            {% endif %}
-          {% endif %}
-        {% endif %}
-      </div>
-    {% endfor %}
-  </div>
-{% endif %}
+{% include "@theme/patterns/compositions/editorial-header.html.twig" with {
+  icon_file_path: eic_icon_path,
+  title: title,
+  description: description,
+  actions: actions,
+  extra_classes: 'ecl-home'
+} only %}

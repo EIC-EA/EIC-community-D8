@@ -23,16 +23,16 @@ default_value_callback: ''
 settings:
   handler: 'default:paragraph'
   handler_settings:
-    negate: 0
     target_bundles:
       cta_tile: cta_tile
+    negate: 0
     target_bundles_drag_drop:
       banner:
         weight: 8
         enabled: false
       cta_tile:
-        enabled: true
         weight: 9
+        enabled: true
       full_media_content:
         weight: 10
         enabled: false

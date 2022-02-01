@@ -1,0 +1,57 @@
+uuid: 959954e0-3e7e-4b11-9dfc-10654b858844
+langcode: en
+status: true
+dependencies:
+  module:
+    - eic_search
+    - route_condition
+label: 'Events - Overview'
+name: events_overview
+group: 'Global overviews'
+description: 'This context is used for the Events overview'
+requireAllConditions: false
+disabled: false
+conditions:
+  route:
+    id: route
+    negate: false
+    uuid: 13119e50-0f1e-46e3-804f-3a2c4a26ab1b
+    context_mapping: {  }
+    routes: eic_search.events
+reactions:
+  blocks:
+    id: blocks
+    uuid: 621fd7cc-ba87-475b-807e-2c45b781f29b
+    blocks:
+      eb5cb01b-81c6-4110-9826-0171b3b5632f:
+        uuid: eb5cb01b-81c6-4110-9826-0171b3b5632f
+        id: eic_search_overview
+        label: ''
+        provider: eic_search
+        label_display: visible
+        region: content
+        weight: '0'
+        custom_id: eic_search_overview
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: events_overview
+        context_mapping: {  }
+        source_type: Drupal\eic_search\Search\Sources\GlobalEventSourceType
+        facets:
+          ss_group_topic_name: ss_group_topic_name
+          ss_group_user_fullname: 0
+        sort_options:
+          timestamp: timestamp
+          tm_global_title: tm_global_title
+          its_last_flagged_like_content: its_last_flagged_like_content
+          ss_group_user_fullname: 0
+        enable_search: 1
+        page_options: normal
+        prefilter_group: 0
+        add_facet_interests: 0
+        add_facet_my_groups: 0
+        third_party_settings: {  }
+    include_default_blocks: 0
+    saved: false
+weight: 0

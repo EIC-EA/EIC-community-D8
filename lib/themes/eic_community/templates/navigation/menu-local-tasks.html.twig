@@ -6,20 +6,27 @@
  * @see ./core/themes/stable/templates/navigation/menu-local-tasks.html.twig
  */
 #}
-<div class="ecl-section-wrapper ecl-section-wrapper--has-compact-layout">
-  <div class="ecl-container">
-    {% if primary %}
-      {% include '@eic_community/compositions/ec-component-navigation/local-tasks.html.twig' with {
-        title: 'Primary tabs'|t,
-        links: primary_links
-      } %}
-    {% endif %}
-    {% if secondary %}
-      {% include '@eic_community/compositions/ec-component-navigation/local-tasks.html.twig' with {
-        title: 'Secondary tabs'|t,
-        links: secondary_links,
-        variant: 'secondary'
-      } %}
-    {% endif %}
-  </div>
-</div>
+{% if primary %}
+  {% include "@theme/patterns/compositions/collapsible-options.html.twig" with {
+    extra_classes: 'ecl-collapsible-options--aligns-from-right ecl-collapsible-options--actions ecl-collapsible-options--blue',
+    collapse_label: 'Manage content'|t,
+    icon: {
+      name: 'gear',
+      type: 'custom',
+    },
+    icon_file_path: eic_icon_path,
+    items: primary_links
+  } only %}
+{% endif %}
+{% if secondary %}
+  {% include "@theme/patterns/compositions/collapsible-options.html.twig" with {
+    extra_classes: 'ecl-collapsible-options--aligns-from-right ecl-collapsible-options--actions ecl-collapsible-options--blue',
+    collapse_label: 'Advanced'|t,
+    icon: {
+      name: 'gear',
+      type: 'custom',
+    },
+    icon_file_path: eic_icon_path,
+    items: secondary_links
+  } only %}
+{% endif %}

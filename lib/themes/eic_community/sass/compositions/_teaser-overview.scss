@@ -14,9 +14,11 @@
   }
 
   &__title {
-    margin-top: 0;
 
     @extend .ecl-u-type-heading-3;
+    &--blue {
+      color: $ecl-color-blue;
+    }
   }
 
   &--has-columns {
@@ -43,7 +45,6 @@
       @include ecl-media-breakpoint-up('md') {
         flex-direction: row;
         flex-wrap: wrap;
-        margin-left: #{0 - ecl-box-model('padding')};
       }
     }
   }
@@ -84,10 +85,6 @@
 
     #{$node}--has-compact-layout & {
       margin-bottom: ecl-box-model('padding');
-
-      &:last-child {
-        margin-bottom: 0;
-      }
     }
 
     #{$node}--has-columns &,
@@ -97,24 +94,31 @@
       margin-bottom: ecl-box-model('padding');
     }
 
-    /* #{$node}--has-blocks & {
-      padding-top: ecl-box-model('padding');
-    } */
-
     #{$node}--has-columns & {
       @include ecl-media-breakpoint-up('md') {
-        padding-left: ecl-box-model('padding');
-        width: calc(100% / 2);
+        margin-left: ecl-box-model('padding');
+        width: calc(50% - #{ecl-box-model('padding') / 2});
+        &:nth-child(odd) {
+          margin-left: 0;
+        }
       }
+    }
 
+    #{$node}--has-3-columns & {
       @include ecl-media-breakpoint-up('xl') {
-        width: calc(100% / 3);
+        width: calc((100% / 3) - (#{ecl-box-model('padding')} / 1.5));
+        &:nth-child(odd) {
+          margin-left: ecl-box-model('padding');
+        }
+        &:nth-child(3n+1) {
+          margin-left: 0;
+        }
       }
     }
 
     #{$node}--has-compact-layout#{$node}--has-columns & {
       @include ecl-media-breakpoint-up('xl') {
-        width: calc(100% / 2);
+        width: calc(50% - #{ecl-box-model('padding') / 2});
       }
     }
   }
@@ -165,6 +169,7 @@
     & .ecl-form-label {
       display: inline-block;
       font-weight: inherit;
+      white-space: nowrap;
       color: currentColor;
       margin: 0;
     }
@@ -258,5 +263,43 @@
 
   &__interface-options-item-label {
     @include visually-hidden();
+  }
+
+  &__no-content-header {
+    color: ecl-typography('color', 'title');
+    font-size: ecl-typography('font-size', 'h3');
+    margin-bottom: ecl-box-model('margin', 'controls');;
+  }
+  &__no-content-message {
+    @include ecl-responsive-font('label');
+  }
+
+  & .ecl-accordion {
+     margin: ecl-box-model('padding') 0;
+
+    &__toggle{
+      padding: $ecl-spacing-l;
+      border: none;
+
+      &[aria-expanded="true"] {
+        background: $ecl-color-blue-5;
+        border: none;
+        padding-bottom: 0;
+        svg {
+          transform: rotate(-180deg);
+        }
+      }
+
+      &-flex {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+    }
+
+    &__toggle,
+    &__content {
+      background: $ecl-color-blue-5;
+    }
   }
 }

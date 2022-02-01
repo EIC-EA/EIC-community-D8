@@ -1,0 +1,11 @@
+uuid: c181c051-9304-4362-84a4-6eb8c1173c2d
+langcode: en
+status: true
+dependencies:
+  config:
+    - taxonomy.vocabulary.target_markets
+id: taxonomy_term.target_markets
+target_entity_type_id: taxonomy_term
+target_bundle: target_markets
+default_langcode: site_default
+language_alterable: false

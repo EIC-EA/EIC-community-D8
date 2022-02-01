@@ -1,0 +1,59 @@
+<?php
+
+/**
+ * @file
+ * Provides an overview page entity type.
+ */
+
+use Drupal\Core\Render\Element;
+use Drupal\eic_overviews\GlobalOverviewPages;
+
+/**
+ * Implements hook_theme().
+ */
+function eic_overviews_theme() {
+  return [
+    'overview_page' => [
+      'render element' => 'elements',
+    ],
+  ];
+}
+
+/**
+ * Prepares variables for overview page templates.
+ *
+ * Default template: overview-page.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - elements: An associative array containing the overview page information
+ *     and any fields attached to the entity.
+ *   - attributes: HTML attributes for the containing element.
+ */
+function template_preprocess_overview_page(array &$variables) {
+  /** @var \Drupal\eic_overviews\Entity\OverviewPage $entity */
+  $entity = $variables['elements']['#overview_page'];
+  $file = $entity->get('banner_image')->referencedEntities();
+  $file_url = $file ? file_url_transform_relative(file_create_url(reset($file)->get('uri')->value)) : NULL;
+  $variables['banner_image_url'] = $file_url;
+
+  foreach (Element::children($variables['elements']) as $key) {
+    $variables['content'][$key] = $variables['elements'][$key];
+  }
+}
+
+/**
+ * Allowed values function for the overview page field ID.
+ *
+ * @return array
+ */
+function _eic_overviews_allowed_values_id() {
+  return [
+    GlobalOverviewPages::GLOBAL_SEARCH => t('Global overview', [], ['context' => 'eic_overviews']),
+    GlobalOverviewPages::GROUPS => t('Groups', [], ['context' => 'eic_overviews']),
+    GlobalOverviewPages::MEMBERS => t('Members', [], ['context' => 'eic_overviews']),
+    GlobalOverviewPages::NEWS_STORIES => t('News & Stories', [], ['context' => 'eic_overviews']),
+    GlobalOverviewPages::EVENTS => t('Events', [], ['context' => 'eic_overviews']),
+    GlobalOverviewPages::ORGANISATIONS => t('Organisations', [], ['context' => 'eic_overviews']),
+  ];
+}

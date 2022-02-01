@@ -3,21 +3,43 @@
   white-space: normal;
   hyphens: auto;
   word-wrap: break-word;
+  background-color: map-get($ecl-colors, 'grey-15');
+
   .ecl-teaser--is-highlighted & {
     background-color: map-get($ecl-colors, 'white');
   }
 
-  @include adjust-from-section-color() {
+  &--is-public {
     background-color: map-get($ecl-colors, 'grey-15');
+    color: map-get($ecl-colors, 'grey');
   }
 
-  &--is-public {
-    background-color: map-get($ecl-colors, 'blue-50');
+  &--is-restricted {
+    background: #E45E33;
+    color: map-get($ecl-colors, 'white');
+  }
+
+  &--is-custom {
+    background: $ecl-color-orange;
     color: map-get($ecl-colors, 'white');
   }
 
   &--is-private {
-    background-color: map-get($ecl-colors, 'red-100');
+    background-color: map-get($ecl-colors, 'red');
     color: map-get($ecl-colors, 'white');
+  }
+
+  &--removable {
+    font-weight: bold;
+    pointer-events: auto;
+    cursor: pointer;
+    & .ecl-tag__icon {
+      color: $ecl-color-grey;
+    }
+    &:hover {
+      & .ecl-tag__icon {
+        color: $ecl-color-white;
+      }
+    }
   }
 }

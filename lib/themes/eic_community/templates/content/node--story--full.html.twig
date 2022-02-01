@@ -11,18 +11,16 @@
       {% else %}
         {{ elements.field_video }}
       {% endif %}
-      {% if download %}
+      {% for download in downloads %}
         {% include "@theme/patterns/components/attachment.html.twig" with download only %}
-      {% endif %}
+      {% endfor %}
       {{ elements.field_disclaimer }}
     {% endblock %}
 
     {% block sidebar %}
-      {% include "@theme/patterns/compositions/editorial-actions.html.twig" with editorial_actions|default({}) %}
+      {{ eic_local_tasks }}
 
-      {% if social_share is not empty %}
-        {{ social_share }}
-      {% endif %}
+      {% include "@theme/patterns/compositions/editorial-actions.html.twig" with editorial_actions|default({}) %}
 
       {% include "@theme/patterns/compositions/featured-contributors.html.twig" with contributors|default({}) %}
 
@@ -31,23 +29,5 @@
       {% include "@theme/patterns/compositions/featured-stories.html.twig" with stories|default({}) %}
     {% endblock %}
   {% endembed %}
-
-  {% if logged_in %}
-  <section class="ecl-section-wrapper ecl-section-wrapper--is-grey ecl-comment-overview ">
-    <div class="ecl-container">
-      <section class="ecl-section-wrapper">
-        <div class="ecl-editorial-article ecl-editorial-article--has-static-layout">
-          <div class="ecl-container">
-            <div class="ecl-editorial-article__wrapper">
-              <section class="ecl-editorial-article__content">
-              {{ elements.field_comments }}
-              </section>
-            </div>
-          </div>
-        </div>
-      </section>
-    </div>
-  </section>
-  {% endif %}
 
 {% endblock %}

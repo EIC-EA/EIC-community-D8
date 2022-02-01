@@ -5,6 +5,7 @@ dependencies:
   config:
     - field.storage.node.field_related_documents
     - node.type.discussion
+    - node.type.document
 id: node.discussion.field_related_documents
 field_name: field_related_documents
 entity_type: node
@@ -17,5 +18,12 @@ default_value: {  }
 default_value_callback: ''
 settings:
   handler: 'default:node'
-  handler_settings: {  }
+  handler_settings:
+    target_bundles:
+      document: document
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: ''
 field_type: entity_reference

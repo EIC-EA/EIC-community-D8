@@ -5,7 +5,9 @@
  * Contains implementation for hook_preprocess_page().
  */
 
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Menu\MenuTreeParameters;
+use Drupal\Core\Render\Markup;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Url;
 use Drupal\eic_community\ValueObject\ImageValueObject;
@@ -20,7 +22,7 @@ function eic_community_preprocess_page(array &$variables): void {
   ]);
 
   foreach ($variables['page']['content'] as $key => $content_section) {
-    if (isset($content_section['#theme']) && $content_section['#theme'] === 'block') {
+    if (is_array($content_section) && isset($content_section['#theme']) && $content_section['#theme'] === 'block') {
       $variables['page']['content'][$key]['#attributes']['class'][] = 'ecl-section-wrapper';
     }
   }
@@ -67,6 +69,10 @@ function eic_community_preprocess_page(array &$variables): void {
     ];
 
     $variables['site_header']['user'] = $user;
+    // We need to add the session cache context otherwise the header doesn't
+    // update when log in with another account with the same permissions.
+    // @todo In the future we should consider creating a block a load it here.
+    $variables['#cache']['contexts'][] = 'session';
   }
 
   $footer_sections = [];
@@ -77,13 +83,13 @@ function eic_community_preprocess_page(array &$variables): void {
 
   $first_section = array_shift($first_section);
 
-  if (!empty($block_content['#derivative_plugin_id'])) {
+  if (!empty($first_section['#derivative_plugin_id'])) {
     $block_content = \Drupal::service('entity.repository')
       ->loadEntityByUuid('block_content', $first_section['#derivative_plugin_id']);
 
     $footer_sections[] = [
       'title' => $block_content->field_title->value,
-      'description' => strip_tags($block_content->body->value),
+      'description' => Markup::create($block_content->body->value),
     ];
   }
 
@@ -118,6 +124,11 @@ function eic_community_preprocess_page(array &$variables): void {
       $section['section_class_name'] = 'ecl-footer-core__section--separator';
     }
 
+    // If there are more than 3 links, we need to split the menu in 2 columns.
+    if (count($links) > 3) {
+      $section['list_class_name'] = 'ecl-footer-core__list--columns';
+    }
+
     $footer_sections[] = $section;
   }
 
@@ -128,6 +139,8 @@ function eic_community_preprocess_page(array &$variables): void {
   if ($variables['is_front']) {
     _preprocess_front_page($variables);
   }
+
+  _preprocess_group_page($variables);
 }
 
 /**
@@ -162,7 +175,7 @@ function _preprocess_node_page(&$variables) {
         $variables['editorial_header'] = [
           // @todo Not the correct display, has to be created in storybook.
           'type' => [
-            'label' => $node->private->value === '0' ? t('Public') : t('Community members only'),
+            'label' => $node->private->value === '1' ? t('Community members only') : t('Public'),
           ],
           'meta' => [
             ['label' => $node->type->entity->label()],
@@ -246,4 +259,24 @@ function _preprocess_front_page(&$variables) {
   }
 
   $variables['front'] = $front;
+}
+
+/**
+ * Preprocess group page.
+ */
+function _preprocess_group_page(&$variables) {
+  // We need to add missing cache tags related to the group otherwise
+  // theme suggestions will not be updated when the group changes status or
+  // after removing a group membership.
+  if ($group = \Drupal::service('eic_groups.helper')->isGroupPage()) {
+    if (!isset($variables['#cache']['tags'])) {
+      $variables['#cache']['tags'] = $group->getCacheTags();
+    }
+    else {
+      $variables['#cache']['tags'] = Cache::mergeTags($variables['#cache'], $group->getCacheTags());
+    }
+    // Adds url.path as cache context otherwise anonymous users will always see
+    // the same message depending on which group the user visited first.
+    $variables['#cache']['contexts'][] = 'url.path';
+  }
 }

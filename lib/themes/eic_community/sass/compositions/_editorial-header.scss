@@ -120,6 +120,10 @@
       &:last-child {
         flex-shrink: 0;
       }
+
+      &:only-child {
+        flex-shrink: initial;
+      }
     }
   }
 
@@ -167,6 +171,10 @@
 
   &__action {
     margin: 0 ecl-layout('gutter', 'controls') ecl-layout('gutter', 'controls') 0;
+
+    &--full-width {
+      flex: 1;
+    }
   }
 
   &__tags-wrapper {

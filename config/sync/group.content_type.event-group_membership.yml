@@ -1,0 +1,17 @@
+uuid: 01262c4c-cc04-4029-8992-b88619a21d74
+langcode: en
+status: true
+dependencies:
+  config:
+    - group.type.event
+  module:
+    - user
+id: event-group_membership
+label: 'Event: Group membership'
+description: 'Adds users to groups as members.'
+group_type: event
+content_plugin: group_membership
+plugin_config:
+  group_cardinality: 0
+  entity_cardinality: 1
+  use_creation_wizard: false

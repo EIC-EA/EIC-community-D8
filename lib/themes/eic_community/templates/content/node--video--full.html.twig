@@ -14,39 +14,11 @@
   {% endblock %}
 
   {% block sidebar %}
-    {% include "@theme/patterns/compositions/editorial-actions.html.twig" with editorial_actions|default({}) %}
+    {{ eic_local_tasks }}
 
-    {% if social_share is not empty %}
-      {{ social_share }}
-    {% endif %}
+    {% include "@theme/patterns/compositions/editorial-actions.html.twig" with editorial_actions|default({}) %}
 
     {% include "@theme/patterns/compositions/featured-topics.html.twig" with topics|default({}) %}
 
   {% endblock %}
 {% endembed %}
-
-<section class="ecl-section-wrapper ecl-section-wrapper--is-grey ecl-comment-overview ">
-  <div class="ecl-container">
-    <section class="ecl-section-wrapper">
-      <div class="ecl-editorial-article ecl-editorial-article--has-static-layout">
-        <div class="ecl-container">
-          <div class="ecl-editorial-article__wrapper">
-            <section class="ecl-editorial-article__content">
-              {{ elements.field_comments }}
-            </section>
-            <aside class="ecl-editorial-article__aside">
-              <div class="ecl-editorial-article__aside-wrapper">
-                {% if contributors is defined %}
-                  {% include "@theme/patterns/compositions/featured-contributors.html.twig" with contributors|default({})|merge({
-                    grid: true,
-                    title: "Contributors"|t
-                  }) only %}
-                {% endif %}
-              </div>
-            </aside>
-          </div>
-        </div>
-      </div>
-    </section>
-  </div>
-</section>

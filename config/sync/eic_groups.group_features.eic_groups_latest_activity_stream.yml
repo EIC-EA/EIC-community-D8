@@ -3,6 +3,12 @@ permissions:
 public_permissions:
   - 'access latest activity stream'
 roles:
+  - event-member
+  - event-admin
+  - event-owner
   - group-member
   - group-admin
   - group-owner
+  - organisation-member
+  - organisation-admin
+  - organisation-owner

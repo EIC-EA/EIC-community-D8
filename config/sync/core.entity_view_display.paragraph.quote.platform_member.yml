@@ -19,19 +19,19 @@ mode: platform_member
 content:
   field_quote_description:
     type: text_default
-    weight: 0
-    region: content
     label: hidden
     settings: {  }
     third_party_settings: {  }
+    weight: 0
+    region: content
   field_user_ref:
     type: entity_reference_label
-    weight: 1
-    region: content
     label: hidden
     settings:
       link: true
     third_party_settings: {  }
+    weight: 1
+    region: content
 hidden:
   field_body: true
   field_media: true

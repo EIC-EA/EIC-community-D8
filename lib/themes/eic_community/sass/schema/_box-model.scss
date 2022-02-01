@@ -28,4 +28,7 @@ $ecl-box-model: (
     'margin': map-get($ecl-spacing, 'xl'),
     'padding': map-get($ecl-spacing, 'l'),
   ),
+  'activity': (
+    'padding': map-get($ecl-spacing, '2xl'),
+  ),
 );

@@ -1,0 +1,39 @@
+<div class="ecl-topic__overview__subitem">
+  <a href="{{ url }}">
+    <figure class="ecl-topic__overview__image-wrapper">
+      {% if image.src is not empty %}
+        <img class="ecl-topic__overview__image" src="{{ image.src }}" alt="{{ image.alt }}">
+      {% else %}
+        {% include '@ecl-twig/ec-component-icon/ecl-icon.html.twig' with {
+          icon: {
+            size: 'm',
+            path: icon_file_path,
+            type: "custom",
+            name: "group"
+          }
+        } only %}
+      {% endif %}
+    </figure>
+    <div class="ecl-topic__overview__subitem__content">
+      <h3>{{ title }}</h3>
+      {% if stats is not empty %}
+        <div class="ecl-topic__overview__subitem__stats">
+          {% for stat in stats %}
+            <div class="ecl-topic__overview__subitem__stat">
+              {% include '@ecl-twig/ec-component-icon/ecl-icon.html.twig' with {
+                icon: {
+                  size: 's',
+                  path: icon_file_path,
+                  type: stat.icon.type,
+                  name: stat.icon.name
+                }
+              } only %}
+              <span class="ecl-topic__overview__subitem__stats-item-label">{{ stat.label }}</span>
+              <span class="ecl-topic__overview__subitem__stats-item-value">{{ stat.value }}</span>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+  </a>
+</div>

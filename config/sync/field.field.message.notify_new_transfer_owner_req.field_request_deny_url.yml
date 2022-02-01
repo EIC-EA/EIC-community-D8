@@ -1,0 +1,23 @@
+uuid: afaa1acb-ee0b-4c98-aa6b-c974f0cf4758
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.message.field_request_deny_url
+    - message.template.notify_new_transfer_owner_req
+  module:
+    - link
+id: message.notify_new_transfer_owner_req.field_request_deny_url
+field_name: field_request_deny_url
+entity_type: message
+bundle: notify_new_transfer_owner_req
+label: 'Request deny url'
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  title: 0
+  link_type: 17
+field_type: link

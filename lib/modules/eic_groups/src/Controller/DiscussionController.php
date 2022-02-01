@@ -5,19 +5,27 @@ namespace Drupal\eic_groups\Controller;
 use Drupal\comment\CommentInterface;
 use Drupal\comment\Entity\Comment;
 use Drupal\Component\Utility\Xss;
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\Datetime\DateFormatter;
+use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
 use Drupal\eic_flags\RequestStatus;
+use Drupal\eic_groups\EICGroupsHelper;
+use Drupal\eic_user\UserHelper;
 use Drupal\file\Entity\File;
 use Drupal\flag\FlaggingInterface;
 use Drupal\flag\FlagInterface;
 use Drupal\flag\FlagService;
+use Drupal\group\Entity\Group;
 use Drupal\group\Entity\GroupContent;
 use Drupal\node\Entity\Node;
 use Drupal\oec_group_comments\GroupPermissionChecker;
 use Drupal\user\Entity\User;
+use Drupal\user\UserInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -56,20 +64,36 @@ class DiscussionController extends ControllerBase {
   private $groupPermissionChecker;
 
   /**
+   * @var \Drupal\eic_groups\EICGroupsHelper $groupsHelper
+   */
+  private $groupsHelper;
+
+  /**
+   * @var \Drupal\Core\Datetime\DateFormatter $dateFormatter
+   */
+  private $dateFormatter;
+
+  /**
    * DiscussionController constructor.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    * @param \Drupal\flag\FlagService $flag_service
    * @param \Drupal\oec_group_comments\GroupPermissionChecker $group_permission_checker
+   * @param EICGroupsHelper $groups_helper
+   * @param \Drupal\Core\Datetime\DateFormatter $date_formatter
    */
   public function __construct(
     EntityTypeManagerInterface $entity_type_manager,
     FlagService $flag_service,
-    GroupPermissionChecker $group_permission_checker
+    GroupPermissionChecker $group_permission_checker,
+    EICGroupsHelper $groups_helper,
+    DateFormatter $date_formatter
   ) {
     $this->entityTypeManager = $entity_type_manager;
     $this->flagService = $flag_service;
     $this->groupPermissionChecker = $group_permission_checker;
+    $this->groupsHelper = $groups_helper;
+    $this->dateFormatter = $date_formatter;
   }
 
   /**
@@ -79,7 +103,9 @@ class DiscussionController extends ControllerBase {
     return new static(
       $container->get('entity_type.manager'),
       $container->get('flag'),
-      $container->get('oec_group_comments.group_permission_checker')
+      $container->get('oec_group_comments.group_permission_checker'),
+      $container->get('eic_groups.helper'),
+      $container->get('date.formatter')
     );
   }
 
@@ -98,6 +124,7 @@ class DiscussionController extends ControllerBase {
     $user = User::load($this->currentUser()->id());
     $content = json_decode($request->getContent(), TRUE);
     $text = Xss::filter($content['text']);
+    $tagged_users = $content['taggedUsers'] ?? NULL;
     $parent_id = $content['parentId'];
 
     $comment = Comment::create([
@@ -110,6 +137,11 @@ class DiscussionController extends ControllerBase {
         'value' => $text,
         'format' => 'plain_text',
       ],
+      'field_tagged_users' => array_map(function($tagged_user) {
+        return [
+          'target_id' => $tagged_user['tid'],
+        ];
+      }, $tagged_users),
       'comment_type' => 'node_comment',
       'pid' => $parent_id,
     ]);
@@ -167,6 +199,29 @@ class DiscussionController extends ControllerBase {
       $file = $media_picture ? File::load($media_picture[0]->get('oe_media_image')->target_id) : NULL;
       $file_url = $file ? file_url_transform_relative(file_create_url($file->get('uri')->value)) : NULL;
 
+      $archive_flag = $this->flagService->getFlagging($this->flagService->getFlagById('request_archive_comment'), $comment);
+      $delete_flag = $this->flagService->getFlagging($this->flagService->getFlagById('request_delete_comment'), $comment);
+
+      $archived_flag_time = $archive_flag instanceof FlaggingInterface && RequestStatus::ACCEPTED === $archive_flag->get('field_request_status')->value ?
+        $this->dateFormatter->format($archive_flag->get('created')->value, 'eu_short_date_hour') :
+        NULL;
+
+      $deleted_flag_time = $delete_flag instanceof FlaggingInterface && RequestStatus::ACCEPTED === $delete_flag->get('field_request_status')->value ?
+        $this->dateFormatter->format($delete_flag->get('created')->value, 'eu_short_date_hour') :
+        NULL;
+
+      $edited_time = $comment->getCreatedTime() !== $comment->getChangedTime() && !$deleted_flag_time && !$archived_flag_time ?
+        $this->dateFormatter->format($comment->getChangedTime(), 'eu_short_date_hour') :
+        NULL;
+
+      $created_time = $this->dateFormatter->format(
+        $comment->getCreatedTime(),
+        'eu_short_date_hour'
+      );
+      $soft_deleted = $comment->get('field_comment_is_soft_deleted')->value;
+
+      $tagged_users = $comment->get('field_tagged_users')->referencedEntities();
+
       $comments_data[] = [
         'user_image' => $file_url,
         'user_id' => $user->id(),
@@ -175,7 +230,32 @@ class DiscussionController extends ControllerBase {
         'created_timestamp' => $comment->getCreatedTime(),
         'text' => $comment->get('comment_body')->value,
         'comment_id' => $comment->id(),
+        'tagged_users' => array_map(function(UserInterface $user) {
+          return [
+            'uid' => $user->id(),
+            'name' => realname_load($user),
+            'url' => $user->toUrl()->toString(),
+          ];
+        }, $tagged_users),
         'likes' => $this->getCommentLikesData($comment, $account),
+        'archived_flag_time' => $archived_flag_time ?
+          $this->t('Archived on @time', ['@time' => $archived_flag_time], ['context' => 'eic_groups']) :
+          NULL,
+        'deleted_flag_time' => $deleted_flag_time ?
+          $this->t('Deleted on @time', ['@time' => $deleted_flag_time], ['context' => 'eic_groups']) :
+          NULL,
+        'soft_deleted_time' => $soft_deleted ?
+          $this->t('Deleted on @time', ['@time' => $edited_time], ['context' => 'eic_groups']) :
+          NULL,
+        'edited_time' => $edited_time ?
+          $this->t('Edited on @time', ['@time' => $edited_time ?: $created_time], ['context' => 'eic_groups']) :
+          NULL,
+        'is_soft_delete' => $soft_deleted,
+        'created_time' => $this->t(
+          'Created on @time',
+          ['@time' => $created_time],
+          ['context' => 'eic_groups']
+        ),
       ];
     }
 
@@ -284,7 +364,7 @@ class DiscussionController extends ControllerBase {
       return new JsonResponse('You do not have access to edit own comment', Response::HTTP_FORBIDDEN);
     }
 
-    if ($user->id() !== $comment->getOwnerId() && !!$this->hasPermission($discussion_id, 'edit all comments')) {
+    if ($user->id() !== $comment->getOwnerId() && !$this->hasPermission($discussion_id, 'edit all comments')) {
       return new JsonResponse('You do not have access to edit all comments', Response::HTTP_FORBIDDEN);
     }
 
@@ -305,26 +385,33 @@ class DiscussionController extends ControllerBase {
 
   /**
    * @param \Symfony\Component\HttpFoundation\Request $request
+   * @param int $group_id
    * @param int $discussion_id
    * @param $comment_id
    *
    * @return \Symfony\Component\HttpFoundation\JsonResponse
    */
-  public function deleteComment(Request $request, int $discussion_id, $comment_id) {
+  public function deleteComment(Request $request, int $group_id, int $discussion_id, $comment_id) {
     $comment = Comment::load($comment_id);
 
     if (!$comment instanceof CommentInterface) {
       return new JsonResponse('Cannot find comment entity', Response::HTTP_BAD_REQUEST);
     }
 
-    $user = User::load($this->currentUser()->id());
-
-    if ($user->id() !== $comment->getOwnerId()) {
-      return new JsonResponse('You do not have access to delete the content', Response::HTTP_FORBIDDEN);
-    }
-
     try {
-      $comment->delete();
+      $now = DrupalDateTime::createFromTimestamp(time());
+      $comment->set(
+        'field_comment_deletion_date',
+        $now->format(DateTimeItemInterface::DATETIME_STORAGE_FORMAT)
+      );
+      $comment->set('comment_body', [
+        'value' => $this->t('This comment has been removed by a content administrator at @time',
+          ['@time' => $now->format('d/m/Y - H:i')]
+        ),
+        'format' => 'plain_text',
+      ]);
+      $comment->set('field_comment_is_soft_deleted', TRUE);
+      $comment->save();
     } catch (EntityStorageException $e) {
       \Drupal::logger('eic_groups')->error($e->getMessage());
 
@@ -372,6 +459,17 @@ class DiscussionController extends ControllerBase {
   }
 
   /**
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *
+   * @return \Drupal\Core\Access\AccessResult|\Drupal\Core\Access\AccessResultAllowed|\Drupal\Core\Access\AccessResultNeutral
+   */
+  public function accessDelete(AccountInterface $account) {
+    return AccessResult::allowedIf(
+      UserHelper::isPowerUser($this->currentUser())
+    );
+  }
+
+  /**
    * @param \Drupal\comment\CommentInterface $comment
    * @param \Drupal\Core\Session\AccountInterface $account
    *
@@ -412,13 +510,24 @@ class DiscussionController extends ControllerBase {
     /** @var \Drupal\node\NodeInterface|NULL $node */
     $node = Node::load($node_id);
     $group_contents = GroupContent::loadByEntity($node);
-    $access = $this->groupPermissionChecker->getPermissionInGroups(
-      $permission,
-      $this->currentUser(),
-      $group_contents
-    );
 
-    return $access->isAllowed();
+    // If we are in group.
+    if ($group_contents) {
+      $access = $this->groupPermissionChecker->getPermissionInGroups(
+        $permission,
+        $this->currentUser(),
+        $group_contents
+      );
+
+      $has_access = $access->isAllowed();
+    } else {
+      $user_id = \Drupal::currentUser()->id();
+      $user = User::load($user_id);
+
+      $has_access = $user->hasPermission($permission);
+    }
+
+    return $has_access;
   }
 
 }

@@ -1,0 +1,129 @@
+{% set title_element = title_element|default('h2') %}
+
+<div class="ecl-teaser ecl-teaser--filelist {{ highlight.show_button ? 'ecl-teaser--is-highlightable' }} {{ highlight.is_active ? 'ecl-teaser--is-highlighted' }} {{ extra_classes }}">
+  <figure class="ecl-teaser__image-wrapper">
+      {% include '@ecl-twig/ec-component-icon/ecl-icon.html.twig' with {
+        icon: {
+          size: 'l',
+          path: icon_file_path,
+          type: 'custom',
+          name: (mime_type in ['doc', 'dwg', 'html', 'ppt', 'xls', 'zip', 'txt'] ? 'document_' ~ mime_type : (mime_type == 'multiple' ? 'documents' : 'document')),
+        },
+        extra_classes: 'ecl-teaser__image-icon'
+      } only %}
+  </figure>
+  <div class="ecl-teaser__main-wrapper">
+    {% if type is not empty %}
+      <div class="ecl-teaser__meta-header">
+        <div class="ecl-teaser__meta-column">
+          {% include "@theme/patterns/components/content-type-indicator.html.twig" with type|default({})|merge({
+            extra_classes: 'ecl-teaser__type',
+          }) only %}
+        </div>
+      </div>
+    {% endif %}
+    <div class="ecl-teaser__content">
+      <{{ title_element }} class="ecl-teaser__title">
+        <a href="{{ path }}">
+          {% if title_before %}
+            <span class="ecl-teaser__title-before">{{ title_before }}</span>
+          {% endif %}
+
+          <span class="ecl-teaser__title-overflow"><span>{{ title }}</span></span>
+
+          {% if title_after %}
+            <span class="ecl-teaser__title-after">{{ title_after }}</span>
+          {% endif %}
+        </a>
+      </{{ title_element }}>
+      {% if tags is not empty %}
+        <div class="ecl-teaser__tags">
+          {% for tag in tags %}
+            <div class="ecl-teaser__tag">
+              {% include "@ecl-twig/ec-component-tag/ecl-tag.html.twig" with {
+                tag: tag|merge({
+                  type: tag.path ? "link" : "display"
+                })
+              } only %}
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+      {% if files is not empty and files|length > 1 %}
+        <div class="ecl-teaser__files">
+          {{ files|join(', ') }}
+        </div>
+      {% endif %}
+      {% if timestamp is not empty or language is not empty or author is not empty %}
+        <div class="ecl-teaser__meta-content">
+          {% if timestamp is not empty %}
+            <div class="ecl-teaser__meta-content-item">
+              {% include "@theme/patterns/components/timestamp.html.twig" with timestamp|default({})|merge({
+                icon_file_path: icon_file_path
+              }) only %}
+            </div>
+          {% endif %}
+          {% if language is not empty %}
+            <div class="ecl-teaser__meta-content-item">
+              {% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with {
+                icon: {
+                  path: icon_file_path,
+                  type: 'custom',
+                  name: 'document',
+                  size: 's',
+                },
+              } only %}
+              {{ language }}
+            </div>
+          {% endif %}
+          {% if author is not empty %}
+            <div class="ecl-teaser__meta-content-item">
+              {% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with {
+                icon: {
+                  path: icon_file_path,
+                  type: 'custom',
+                  name: 'remote',
+                  size: 's',
+                },
+              } only %}
+              {% if author.path %}<a href="{{ author.path }}">{% endif %}{{ author.prefix }} {{ author.name }}{% if author.path %}</a>{% endif %}
+            </div>
+          {% endif %}
+        </div>
+      {% endif %}
+      {% if highlight.show_button %}
+        {% include "@theme/patterns/components/highlight.html.twig" with highlight|default({})|merge({
+          icon_file_path: icon_file_path
+        }) only %}
+      {% endif %}
+    </div>
+  </div>
+  <div class="ecl-teaser__meta-footer">
+    {% if flags.like_content.content is defined %}
+      <div class="ecl-teaser__like">
+        {{ flags.like_content.content }}
+      </div>
+    {% endif %}
+    {% if stats is not empty %}
+      <div class="ecl-teaser__stats">
+        {% for stat in stats %}
+          <div class="ecl-teaser__stat">
+            {% if stat.icon is not empty and icon_file_path %}
+              {% include '@ecl-twig/ec-component-icon/ecl-icon.html.twig' with {
+                icon: {
+                  size: 'xs',
+                  path: icon_file_path,
+                  type: stat.icon.type|default('branded'),
+                  name: stat.icon.name,
+                },
+                extra_classes: 'ecl-teaser__stat-icon',
+              } only %}
+            {% endif %}
+            <span class="ecl-teaser__stat-label">{{ stat.label }}</span>
+            <span class="ecl-teaser__stat-value">{{ stat.value }}</span>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+</div>

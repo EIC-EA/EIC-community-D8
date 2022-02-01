@@ -3,18 +3,17 @@ langcode: en
 status: true
 dependencies:
   config:
-    - core.entity_view_display.comment.node_comment.default
     - field.field.node.gallery.field_body
     - field.field.node.gallery.field_comments
     - field.field.node.gallery.field_document_type
     - field.field.node.gallery.field_gallery_slides
     - field.field.node.gallery.field_language
+    - field.field.node.gallery.field_related_contributors
     - field.field.node.gallery.field_vocab_geo
     - field.field.node.gallery.field_vocab_topics
     - node.type.gallery
   module:
     - entity_reference_revisions
-    - oec_group_comments
     - text
     - user
 id: node.gallery.default
@@ -23,126 +22,133 @@ bundle: gallery
 mode: default
 content:
   field_body:
-    weight: 3
-    label: above
+    type: text_default
+    label: hidden
     settings: {  }
     third_party_settings: {  }
-    type: text_default
-    region: content
-  field_comments:
-    type: comment_group_content
     weight: 5
     region: content
-    label: above
-    settings:
-      view_mode: default
-      pager_id: 0
-    third_party_settings: {  }
   field_document_type:
-    weight: 11
-    label: above
+    type: entity_reference_label
+    label: hidden
     settings:
       link: true
     third_party_settings: {  }
-    type: entity_reference_label
+    weight: 14
     region: content
   field_gallery_slides:
     type: entity_reference_revisions_entity_view
+    label: hidden
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    weight: 9
+    region: content
+  field_language:
+    type: entity_reference_label
+    label: hidden
+    settings:
+      link: true
+    third_party_settings: {  }
     weight: 8
+    region: content
+  field_related_contributors:
+    type: entity_reference_revisions_entity_view
     label: above
     settings:
       view_mode: default
       link: ''
     third_party_settings: {  }
-    region: content
-  field_language:
-    weight: 8
-    label: above
-    settings:
-      link: true
-    third_party_settings: {  }
-    type: entity_reference_label
+    weight: 15
     region: content
   field_vocab_geo:
     type: entity_reference_label
-    weight: 1
-    region: content
-    label: above
+    label: hidden
     settings:
       link: true
     third_party_settings: {  }
-  field_vocab_topics:
-    type: entity_reference_label
     weight: 2
     region: content
-    label: above
+  field_vocab_topics:
+    type: entity_reference_label
+    label: hidden
     settings:
       link: true
     third_party_settings: {  }
+    weight: 4
+    region: content
   flag_bookmark_content:
-    weight: 10
     settings: {  }
     third_party_settings: {  }
+    weight: 10
+    region: content
+  flag_follow_content:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 11
     region: content
   flag_highlight_content:
-    weight: 10
     settings: {  }
     third_party_settings: {  }
+    weight: 12
     region: content
   flag_like_content:
-    weight: 10
     settings: {  }
     third_party_settings: {  }
+    weight: 13
     region: content
   flag_recommend:
-    weight: 10
     settings: {  }
     third_party_settings: {  }
+    weight: 10
     region: content
   langcode:
     type: language
-    weight: 7
-    region: content
-    label: above
+    label: hidden
     settings:
       link_to_entity: false
       native_language: false
     third_party_settings: {  }
-  links:
-    weight: 0
+    weight: 7
     region: content
+  links:
     settings: {  }
     third_party_settings: {  }
+    weight: 0
+    region: content
   member_content_edit_access:
-    weight: 1
-    region: content
-    label: above
+    type: boolean
+    label: hidden
     settings:
       format: default
       format_custom_false: ''
       format_custom_true: ''
     third_party_settings: {  }
-    type: boolean
+    weight: 1
+    region: content
   private:
-    weight: 1
-    region: content
-    label: above
+    type: boolean
+    label: hidden
     settings:
       format: default
       format_custom_false: ''
       format_custom_true: ''
     third_party_settings: {  }
-    type: boolean
+    weight: 3
+    region: content
   published_at:
     type: timestamp
-    region: content
-    weight: 6
-    label: above
+    label: hidden
     settings:
       date_format: medium
       custom_date_format: ''
       timezone: ''
     third_party_settings: {  }
+    weight: 6
+    region: content
 hidden:
   extra_field_eic_theme_helper_short_title_with_fallback: true
+  field_comments: true
+  flag_recommend: true
   search_api_excerpt: true

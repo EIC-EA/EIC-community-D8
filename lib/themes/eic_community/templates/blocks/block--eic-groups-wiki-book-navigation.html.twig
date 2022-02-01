@@ -8,17 +8,4 @@
   icon_file_path: eic_icon_path
 } %}
 
-  {% block after %}
-    <div class="ecl-teaser-overview ecl-teaser-overview--has-compact-layout">
-      <h4 class="ecl-teaser-overview__title">{{ "Contributors"|t }}</h4>
-      <div class="ecl-teaser-overview__items">
-        <div class="ecl-teaser-overview__item">
-          {% include "@theme/patterns/compositions/member/member.teaser.html.twig" with author|default({})|merge({
-            extra_classes: 'ecl-teaser--as-card ecl-teaser--as-card-grey',
-          }) only %}
-        </div>
-      </div>
-    </div>
-  {% endblock %}
-
 {% endembed %}

@@ -155,6 +155,8 @@ define do_create_symlinks
 	docker exec -it ${APP_NAME}_php bash -c 'ln -sf ../../lib/themes /app/web/themes/custom'
 	docker exec -it ${APP_NAME}_php bash -c 'rm -rf /app/web/profiles/custom'
 	docker exec -it ${APP_NAME}_php bash -c 'ln -sf ../../lib/profiles /app/web/profiles/custom'
+	docker exec -it ${APP_NAME}_php bash -c 'rm -rf /app/web/community'
+	docker exec -it ${APP_NAME}_php bash -c 'ln -sf /app/web /app/web/community'
 endef
 
 define do_stop

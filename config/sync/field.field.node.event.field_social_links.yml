@@ -1,0 +1,27 @@
+uuid: f641576b-009a-47e4-be2f-7945ab9ae6b1
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_social_links
+    - node.type.event
+  module:
+    - social_link_field
+id: node.event.field_social_links
+field_name: field_social_links
+entity_type: node
+bundle: event
+label: 'Social links'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    link: ''
+    social: facebook
+  -
+    link: ''
+    social: twitter
+default_value_callback: ''
+settings: {  }
+field_type: social_links

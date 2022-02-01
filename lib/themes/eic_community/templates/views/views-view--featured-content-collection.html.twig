@@ -36,6 +36,14 @@
   ]
 %}
 
+{% if wrapper_classes is not defined %}
+  {% set wrapper_classes = 'ecl-featured-content-collection--has-overview-layout ecl-section-wrapper ecl-featured-content-collection--is-ready' %}
+{% endif %}
+
+{% if extra_classes %}
+  {% set wrapper_classes = wrapper_classes ~ ' ' ~ extra_classes %}
+{% endif %}
+
 {% if rows -%}
   {% set _rows_length = rows[0]['#rows']|length %}
   {% set _items = [] %}
@@ -50,7 +58,23 @@
 
   {% include "@theme/patterns/compositions/featured-content-collection.html.twig" with {
     title: view.title|default(''),
+    description: header,
+    call_to_action: call_to_action|default(''),
     items: _items,
-    extra_classes: 'ecl-featured-content-collection--has-overview-layout ecl-featured-content-collection--is-ready',
+    extra_classes: wrapper_classes,
+    items_extra_classes: items_extra_classes,
+    no_container: no_container,
+    icon_file_path: eic_icon_path,
+  } only %}
+{% else %}
+  {% include "@theme/patterns/compositions/featured-content-collection.html.twig" with {
+    title: view.title|default(''),
+    description: empty,
+    call_to_action: call_to_action|default(''),
+    items: [],
+    extra_classes: wrapper_classes,
+    items_extra_classes: items_extra_classes,
+    no_container: no_container,
+    icon_file_path: eic_icon_path,
   } only %}
 {% endif %}

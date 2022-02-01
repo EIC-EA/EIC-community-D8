@@ -1,0 +1,150 @@
+<?php
+
+/**
+ * @file
+ * Primary module hooks for EIC Topics module.
+ */
+
+use Drupal\Core\Cache\Cache;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Url;
+use Drupal\eic_overviews\GlobalOverviewPages;
+use Drupal\eic_search\SearchHelper;
+use Drupal\eic_topics\TopicsManager;
+use Drupal\views\ViewExecutable;
+use Drupal\taxonomy\TermInterface;
+use Drupal\taxonomy\Entity\Term;
+
+/**
+ * Implements hook_theme().
+ */
+function eic_topics_theme() {
+  return [
+    'topics_statistics_block' => [
+      'variables' => [
+        'stats' => [],
+        'icon_file_path' => [],
+      ],
+    ],
+  ];
+}
+
+/**
+ * Implements hook_entity_presave().
+ *
+ * We need to invalidate the taxonomy term cache tag after an entity update.
+ * Then statistics will be updated correctly on the detail term page.
+ */
+function eic_topics_entity_presave(EntityInterface $entity) {
+  if (
+    !method_exists($entity, 'hasField') ||
+    !$entity->hasField(TopicsManager::FIELD_ENTITY_TOPICS)
+  ) {
+    return;
+  }
+
+  $terms = $entity->get(TopicsManager::FIELD_ENTITY_TOPICS)->referencedEntities();
+  $tags = [];
+
+  /** @var \Drupal\taxonomy\TermInterface $term */
+  foreach ($terms as $term) {
+    $tid = $term->id();
+    $tags[] = "taxonomy_term:$tid";
+  }
+
+  Cache::invalidateTags($tags);
+}
+
+/**
+ * Implements hook_views_pre_render().
+ */
+function eic_topics_views_pre_render(ViewExecutable $view) {
+  if ($view->id() != 'taxonomy_related_content') {
+    return;
+  }
+
+  $term_id = NULL;
+  if (\Drupal::routeMatch()->getRouteName() == 'entity.taxonomy_term.canonical') {
+    $term_id = \Drupal::routeMatch()->getRawParameter('taxonomy_term');
+  }
+
+  if (empty($term_id)) {
+    return;
+  }
+
+  $term = Term::load($term_id);
+
+  if (!$term instanceof TermInterface) {
+    return;
+  }
+
+  // The Views UI doesn't allow setting long links, so we need to replace the
+  // given link_url option with the final URL which includes facets.
+  $route = NULL;
+  $url = NULL;
+  $params = [];
+  switch ($view->current_display) {
+    case 'groups':
+      $route = 'eic_search.groups';
+      $params = [
+        'ss_group_topic_name' => $term->label(),
+      ];
+      break;
+
+    case 'discussions':
+      $route = 'eic_search.global_search';
+      $params = [
+        'sm_content_field_vocab_topics_string' => $term->label(),
+        'ss_global_content_type' => ['discussion'],
+      ];
+      break;
+
+    case 'files':
+      $route = 'eic_search.global_search';
+      $params = [
+        'sm_content_field_vocab_topics_string' => $term->label(),
+        'ss_global_content_type' => ['document', 'gallery', 'video'],
+      ];
+      break;
+
+    case 'news_stories':
+      $url = GlobalOverviewPages::getGlobalOverviewPageLink(GlobalOverviewPages::NEWS_STORIES)->getUrl();
+      $params = [
+        'sm_content_field_vocab_topics_string' => $term->label(),
+      ];
+      break;
+
+    case 'events':
+      $url = GlobalOverviewPages::getGlobalOverviewPageLink(GlobalOverviewPages::EVENTS)->getUrl();
+      $params = [
+        'sm_content_field_vocab_topics_string' => $term->label(),
+      ];
+      break;
+
+    case 'wiki_pages':
+      $route = 'eic_search.global_search';
+      $params = [
+        'sm_content_field_vocab_topics_string' => $term->label(),
+        'ss_global_content_type' => ['wiki_page'],
+      ];
+      break;
+
+    case 'experts':
+      $route = 'eic_search.people';
+      $params = [
+        'sm_user_profile_topic_expertise_string' => $term->label(),
+      ];
+      break;
+  }
+
+  $params = SearchHelper::buildSolrQueryParams($params);
+
+  if ($route) {
+    $url = Url::fromRoute($route, [], ['query' => $params])->toString();
+    $view->display_handler->setOption('link_url', $url);
+  }
+  elseif ($url) {
+    $url->setOption('query', $params);
+    $view->display_handler->setOption('link_url', $url->toString());
+  }
+}
