@@ -12,12 +12,6 @@
     @include ecl-media-breakpoint-up('md') {
       align-items: stretch;
       flex-direction: row;
-
-      #{$node}--is-collapsible & {
-        @include ecl-media-breakpoint-up('md') {
-          flex-wrap: wrap;
-        }
-      }
     }
 
   }
@@ -200,7 +194,7 @@
   &__meta-item {
     margin-right: ecl-layout('gutter');
 
-    &:last-chid {
+    &:last-child {
       margin-right: 0;
     }
   }
