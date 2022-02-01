@@ -54,7 +54,7 @@
     list-style: none;
 
     & & {
-      margin-left: ecl-layout('box-model') 0;
+      margin-left: ecl-layout('box-model');
     }
 
     #{$node}--is-ready #{$node}__item:not([aria-active="true"]) >  & {
@@ -65,7 +65,7 @@
   &__item {
     &[aria-active="true"] {
       & > #{$node}__link {
-       background-color: map-get($ecl-colors, 'grey-15');
+       background-color: map-get($ecl-colors, 'grey-5');
        border-color: ecl-typography('color', 'title');
        color: ecl-typography('color');
 
@@ -73,6 +73,10 @@
           transform: none;
           color: ecl-typography('color', 'title');
         }
+      }
+
+      #{$node}__item[aria-active="true"] > #{$node}__link {
+        border-color: transparent;
       }
     }
   }
@@ -93,6 +97,7 @@
     border-left: solid 4px transparent;
     color: ecl-typography('color', 'title');
     justify-content: space-between;
+    margin: $ecl-spacing-2-xs 0;
     @include ecl-responsive-font('label');
 
     #{$node}__items #{$node}__items & {
