@@ -21,8 +21,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   entity_type = "user",
  *   serialization_class = "Drupal\user\Entity\User",
  *   uri_paths = {
- *     "canonical" = "/smed/api/user/{user}",
- *     "create" = "/smed/api/user"
+ *     "canonical" = "/smed/api/v1/user/{user}",
+ *     "create" = "/smed/api/v1/user"
  *   }
  * )
  */
