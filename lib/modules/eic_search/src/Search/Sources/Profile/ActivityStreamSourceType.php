@@ -1,8 +1,9 @@
 <?php
 
-namespace Drupal\eic_search\Search\Sources;
+namespace Drupal\eic_search\Search\Sources\User;
 
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\eic_search\Search\Sources\SourceType;
 
 /**
  * Class ActivityStreamSourceType
@@ -74,6 +75,20 @@ class ActivityStreamSourceType extends SourceType {
    */
   public function allowPagination(): bool {
     return FALSE;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function prefilterByCurrentUser(): bool {
+    return TRUE;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function getUserFieldId(): string {
+    return '';
   }
 
 }

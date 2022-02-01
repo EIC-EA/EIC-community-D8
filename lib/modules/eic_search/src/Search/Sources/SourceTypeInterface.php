@@ -149,6 +149,20 @@ interface SourceTypeInterface {
   public function prefilterByGroupVisibility(): bool;
 
   /**
+   * Content will be prefiltered by user_id.
+   *
+   * @return bool
+   */
+  public function prefilterByCurrentUser(): bool;
+
+  /**
+   * Get the SOLR field for the user_id.
+   *
+   * @return string
+   */
+  public function getUserFieldId(): string;
+
+  /**
    * Prefilter results by excluding the current group.
    *
    * @return bool
