@@ -1,0 +1,18 @@
+uuid: 70f9dd36-f5bf-4d7e-8f51-0b16abadc9fc
+langcode: en
+status: true
+dependencies:
+  module:
+    - basic_auth
+    - eic_webservices
+    - serialization
+id: eic_webservices_group_membership
+plugin_id: eic_webservices_group_membership
+granularity: resource
+configuration:
+  methods:
+    - POST
+  formats:
+    - json
+  authentication:
+    - basic_auth
