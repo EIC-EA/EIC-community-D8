@@ -2,19 +2,14 @@
 
 namespace Drupal\eic_flags\Form;
 
-use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Entity\ContentEntityConfirmFormBase;
-use Drupal\Core\Entity\EntityRepositoryInterface;
-use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\TrustedRedirectResponse;
 use Drupal\Core\Url;
 use Drupal\eic_flags\RequestStatus;
 use Drupal\eic_flags\RequestTypes;
 use Drupal\eic_flags\Service\HandlerInterface;
-use Drupal\eic_flags\Service\RequestHandlerCollector;
 use Drupal\flag\FlagInterface;
-use Drupal\flag\FlagService;
 use http\Exception\InvalidArgumentException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -47,46 +42,17 @@ class RequestCancelForm extends ContentEntityConfirmFormBase {
   private $requestType;
 
   /**
-   * RequestCancelForm constructor.
-   *
-   * @param \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository
-   *   The entity repository.
-   * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface $entity_type_bundle_info
-   *   The entity type bundle service.
-   * @param \Drupal\Component\Datetime\TimeInterface $time
-   *   The time service.
-   * @param \Drupal\eic_flags\Service\RequestHandlerCollector $collector
-   *   The handler collector service.
-   * @param \Drupal\flag\FlagService $flagService
-   *   The flag service provided by the flag module.
-   */
-  public function __construct(
-    EntityRepositoryInterface $entity_repository,
-    EntityTypeBundleInfoInterface $entity_type_bundle_info,
-    TimeInterface $time,
-    RequestHandlerCollector $collector,
-    FlagService $flagService
-  ) {
-    parent::__construct($entity_repository, $entity_type_bundle_info, $time);
-
-    $this->collector = $collector;
-    $this->flagService = $flagService;
-
-    $this->requestType = $this->getRequest()
-      ->get('request_type');
-  }
-
-  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
-    return new static(
-      $container->get('entity.repository'),
-      $container->get('entity_type.bundle.info'),
-      $container->get('datetime.time'),
-      $container->get('eic_flags.handler_collector'),
-      $container->get('flag')
-    );
+    $instance = parent::create($container);
+
+    $instance->collector = $container->get('eic_flags.handler_collector');
+    $instance->flagService = $container->get('flag');
+
+    $instance->requestType = $instance->getRequest()
+      ->get('request_type');
+    return $instance;
   }
 
   /**
