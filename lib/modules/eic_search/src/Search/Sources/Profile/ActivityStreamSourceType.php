@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\eic_search\Search\Sources\User;
+namespace Drupal\eic_search\Search\Sources\Profile;
 
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\eic_search\Search\Sources\SourceType;
@@ -25,7 +25,7 @@ class ActivityStreamSourceType extends SourceType {
    * @inheritDoc
    */
   public function getLabel(): string {
-    return $this->t('Activity stream', [], ['context' => 'eic_search']);
+    return $this->t('Profile - Activity stream', [], ['context' => 'eic_search']);
   }
 
   /**
@@ -66,13 +66,6 @@ class ActivityStreamSourceType extends SourceType {
   /**
    * @inheritDoc
    */
-  public function getPrefilteredTopicsFieldId(): array {
-    return ['itm_message_node_ref_field_vocab_topics'];
-  }
-
-  /**
-   * @inheritDoc
-   */
   public function allowPagination(): bool {
     return FALSE;
   }
@@ -82,6 +75,13 @@ class ActivityStreamSourceType extends SourceType {
    */
   public function prefilterByCurrentUser(): bool {
     return TRUE;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function getPrefilteredContentType(): array {
+    return ['comment', 'node', 'node_comment', 'gallery', 'video', 'wiki_page', 'discussion', 'document'];
   }
 
   /**

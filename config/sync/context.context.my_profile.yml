@@ -1,0 +1,68 @@
+uuid: 5853e1dd-f20a-43a9-b85a-fc94b6628666
+langcode: en
+status: true
+dependencies:
+  module:
+    - eic_search
+    - eic_user
+    - route_condition
+label: 'My profile'
+name: my_profile
+group: 'My profile'
+description: ''
+requireAllConditions: false
+disabled: false
+conditions:
+  route:
+    id: route
+    negate: false
+    uuid: fdf0386a-7ba0-4fe6-ab65-a834868de23b
+    context_mapping: {  }
+    routes: eic_user.my_profile_activity
+reactions:
+  blocks:
+    id: blocks
+    uuid: 76d3c136-5881-43f9-8ec7-14cf619fae69
+    blocks:
+      e3691609-5b36-4830-ade4-d352dab2daf9:
+        uuid: e3691609-5b36-4830-ade4-d352dab2daf9
+        id: eic_user_my_profile_header
+        label: 'EIC my profile header'
+        provider: eic_user
+        label_display: '0'
+        region: content_before
+        weight: '0'
+        custom_id: eic_user_my_profile_header
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: my_profile
+        context_mapping: {  }
+        third_party_settings: {  }
+      479d57b7-9e73-4c6d-89fa-aeee79d496e9:
+        uuid: 479d57b7-9e73-4c6d-89fa-aeee79d496e9
+        id: eic_search_overview
+        label: ''
+        provider: eic_search
+        label_display: visible
+        region: content
+        weight: '0'
+        custom_id: eic_search_overview
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: my_profile
+        context_mapping: {  }
+        source_type: Drupal\eic_search\Search\Sources\Profile\ActivityStreamSourceType
+        facets: {  }
+        sort_options: {  }
+        enable_search: 1
+        page_options: normal
+        prefilter_group: 0
+        enable_date_filter: 0
+        add_facet_interests: 0
+        add_facet_my_groups: 0
+        third_party_settings: {  }
+    include_default_blocks: 0
+    saved: false
+weight: 0
