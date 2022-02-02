@@ -11,20 +11,20 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Provides a resource to update organisations through a POST method.
+ * Provides a resource to update event through a POST method.
  *
  * @RestResource(
- *   id = "eic_webservices_organisation_update",
- *   label = @Translation("EIC Organisation Update Resource"),
+ *   id = "eic_webservices_event_update",
+ *   label = @Translation("EIC Event Update Resource"),
  *   entity_type = "group",
  *   serialization_class = "Drupal\group\Entity\Group",
  *   uri_paths = {
- *     "canonical" = "/smed/api/v1/organisation/{group}",
- *     "create" = "/smed/api/v1/organisation/update/{group}"
+ *     "canonical" = "/smed/api/v1/event/{group}",
+ *     "create" = "/smed/api/v1/event/update/{group}"
  *   }
  * )
  */
-class OrganisationUpdateResource extends ResourceBase {
+class EventUpdateResource extends ResourceBase {
 
   /**
    * Request stack.
@@ -76,7 +76,7 @@ class OrganisationUpdateResource extends ResourceBase {
     $smed_id = $current_request->attributes->get('group');
 
     // Get the parent resource endpoint URI.
-    $parent_resource = $this->resourcePluginManager->getDefinition('eic_webservices_organisation');
+    $parent_resource = $this->resourcePluginManager->getDefinition('eic_webservices_event');
     $uri = str_replace('{group}', $smed_id, $parent_resource['uri_paths']['canonical']);
     $uri .= '?_format=hal_json';
 

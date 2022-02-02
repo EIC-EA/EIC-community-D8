@@ -1,11 +1,13 @@
+uuid: 24919316-6d51-42d8-8921-6104d4173a74
 langcode: en
 status: true
 dependencies:
   module:
     - eic_webservices
+    - group
     - hal
-id: eic_webservices_user_update
-plugin_id: eic_webservices_user_update
+id: eic_webservices_event
+plugin_id: eic_webservices_event
 granularity: resource
 configuration:
   methods:

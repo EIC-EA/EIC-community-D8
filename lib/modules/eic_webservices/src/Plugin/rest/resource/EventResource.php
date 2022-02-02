@@ -3,24 +3,24 @@
 namespace Drupal\eic_webservices\Plugin\rest\resource;
 
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\eic_organisations\OrganisationsHelper;
+use Drupal\eic_events\EventsHelper;
 use Drupal\rest\ResourceResponse;
 
 /**
- * Represents EIC Organisation Resource records as resources.
+ * Represents EIC Event Resource records as resources.
  *
  * @RestResource (
- *   id = "eic_webservices_organisation",
- *   label = @Translation("EIC Organisation Resource"),
+ *   id = "eic_webservices_event",
+ *   label = @Translation("EIC Event Resource"),
  *   entity_type = "group",
  *   serialization_class = "Drupal\group\Entity\Group",
  *   uri_paths = {
- *     "canonical" = "/smed/api/v1/organisation/{group}",
- *     "create" = "/smed/api/v1/organisation"
+ *     "canonical" = "/smed/api/v1/event/{group}",
+ *     "create" = "/smed/api/v1/event"
  *   }
  * )
  */
-class OrganisationResource extends GroupResourceBase {
+class EventResource extends GroupResourceBase {
 
   /**
    * {@inheritdoc}
@@ -31,13 +31,13 @@ class OrganisationResource extends GroupResourceBase {
     // Get the field name that contains the SMED ID.
     $smed_id_field = $this->configFactory->get('eic_webservices.settings')->get('smed_id_field');
 
-    // Check if organisation already exists.
+    // Check if event already exists.
     if (!empty($entity->{$smed_id_field}->value) &&
-      $organisation = $this->wsHelper->getGroupBySmedId($entity->{$smed_id_field}->value, 'organisation')) {
+      $organisation = $this->wsHelper->getGroupBySmedId($entity->{$smed_id_field}->value, 'event')) {
 
       // Send custom response.
       $data = [
-        'message' => 'Unprocessable Entity: validation failed. Organisation already exists.',
+        'message' => 'Unprocessable Entity: validation failed. Event already exists.',
         $smed_id_field => $organisation->{$smed_id_field}->value,
       ];
 
@@ -53,7 +53,7 @@ class OrganisationResource extends GroupResourceBase {
     }
 
     // Initialise required fields if not provided.
-    OrganisationsHelper::setRequiredFieldsDefaultValues($entity);
+    EventsHelper::setRequiredFieldsDefaultValues($entity);
 
     return parent::post($entity);
   }

@@ -165,6 +165,9 @@ class MembershipResource extends ResourceBase {
       return new ResourceResponse($data, 422);
     }
 
+    // Get group type label for later use.
+    $group_type_label = $group->getGroupType()->label();
+
     switch ($data['action']) {
       case 'add':
       case 'update':
@@ -178,7 +181,10 @@ class MembershipResource extends ResourceBase {
           // Check if the user is already a member of the group.
           if ($membership = $group->getMember($user)) {
             $group_content = $membership->getGroupContent();
-            $group_content->group_roles->target_id = $role;
+
+            // We merge the provided role with the existing ones to preserve any
+            // change that has been made directly on the platform.
+            $group_content->group_roles->target_id = array_unique(array_merge($group_content->group_roles->target_id, [$role]));
             $group_content->save();
           }
           else {
@@ -186,7 +192,7 @@ class MembershipResource extends ResourceBase {
             $group->save();
           }
 
-          $message = 'User has been added to group successfully.';
+          $message = "User has been added to $group_type_label successfully.";
           return new ModifiedResourceResponse(['message' => $message]);
         }
         catch (\Exception $exception) {
@@ -200,7 +206,7 @@ class MembershipResource extends ResourceBase {
         catch (\Exception $exception) {
           return new ResourceResponse(['message' => $exception->getMessage()], $exception->getCode());
         }
-        $message = 'User has been removed to group successfully.';
+        $message = "User has been removed to $group_type_label successfully.";
         return new ModifiedResourceResponse(['message' => $message]);
 
     }

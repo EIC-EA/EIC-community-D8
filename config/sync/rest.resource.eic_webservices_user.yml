@@ -16,4 +16,4 @@ configuration:
   formats:
     - hal_json
   authentication:
-    1: cookie
+    - eic_webservices_token_auth

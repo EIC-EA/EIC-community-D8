@@ -4,8 +4,8 @@ dependencies:
   module:
     - eic_webservices
     - hal
-id: eic_webservices_user_update
-plugin_id: eic_webservices_user_update
+id: eic_webservices_organisation_update
+plugin_id: eic_webservices_organisation_update
 granularity: resource
 configuration:
   methods:
