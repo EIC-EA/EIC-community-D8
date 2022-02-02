@@ -45,8 +45,12 @@
     padding: 0;
     margin: 0;
 
-    & #{$node}__item {
-      padding-left: map-get($ecl-spacing, 'm');
+    #{$node}--child #{$node}__link {
+      padding-left: map-get($ecl-spacing, 'm') * 2;
+    }
+
+    #{$node}--child #{$node}--child #{$node}__link {
+      padding-left: map-get($ecl-spacing, 'm') * 3;
     }
   }
 
@@ -63,21 +67,21 @@
   }
 
   &__item {
-    &[aria-active="true"] {
+    &--current {
       & > #{$node}__link {
-       background-color: map-get($ecl-colors, 'grey-5');
-       border-color: ecl-typography('color', 'title');
-       color: ecl-typography('color');
-
-        #{$node}__item-icon {
-          transform: none;
-          color: ecl-typography('color', 'title');
-        }
+        background-color: map-get($ecl-colors, 'grey-5');
+        border-color: ecl-typography('color', 'title');
+        color: ecl-typography('color');
       }
 
-      #{$node}__item[aria-active="true"] > #{$node}__link {
+      #{$node}__item--current > #{$node}__link {
         border-color: transparent;
       }
+    }
+
+    &[aria-active="true"] > #{$node}__link #{$node}__link-controls #{$node}__item-icon {
+      transform: none;
+      color: ecl-typography('color', 'title');
     }
   }
 
