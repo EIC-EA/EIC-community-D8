@@ -204,6 +204,11 @@ $settings['smed_api_taxonomy_username'] = getenv('SMED_API_USER');
 $settings['smed_api_taxonomy_password'] = getenv('SMED_API_PASSWORD');
 $settings['smed_api_taxonomy_endpoint'] = getenv('SMED_API_ENDPOINT');
 
+/**
+ * Webservices settings (REST endpoints).
+ */
+$config['eic_webservices.settings']['api_key'] = getenv('DRUPAL_WS_API_KEY');
+
 $settings['reverse_proxy'] = TRUE;
 $settings['reverse_proxy_addresses'] = [gethostbyname('nginx')];
 $settings['reverse_proxy_trusted_headers'] = \Symfony\Component\HttpFoundation\Request::HEADER_X_FORWARDED_FOR | \Symfony\Component\HttpFoundation\Request::HEADER_X_FORWARDED_HOST | \Symfony\Component\HttpFoundation\Request::HEADER_X_FORWARDED_PORT | \Symfony\Component\HttpFoundation\Request::HEADER_X_FORWARDED_PROTO | \Symfony\Component\HttpFoundation\Request::HEADER_FORWARDED;

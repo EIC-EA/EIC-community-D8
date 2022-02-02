@@ -67,7 +67,7 @@ class AuthToken implements AuthenticationProviderInterface {
 
     // Validate the token.
     $token = $request->headers->get('X-EIC-Auth-Token');
-    if ($token == $api_key) {
+    if ($token === $api_key) {
       return $account;
     }
 
