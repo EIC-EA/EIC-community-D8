@@ -25,6 +25,8 @@ permissions:
   - 'access members overview'
   - 'access news overview'
   - 'access wiki overview'
+  - 'create group_node:event entity'
+  - 'create group_node:news entity'
   - 'join group'
   - 'view comments'
   - 'view group'

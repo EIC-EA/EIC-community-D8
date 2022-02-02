@@ -23,8 +23,8 @@ reactions:
     id: blocks
     uuid: b8b6f9f3-68cc-4066-b69f-04528693c7d9
     blocks:
-      fc54b9c1-f518-434c-b863-f59eb0363f2e:
-        uuid: fc54b9c1-f518-434c-b863-f59eb0363f2e
+      d84262ea-c6d8-45e9-87f2-1b2e08302841:
+        uuid: d84262ea-c6d8-45e9-87f2-1b2e08302841
         id: eic_search_overview
         label: ''
         provider: eic_search
@@ -45,20 +45,22 @@ reactions:
           ss_content_language_string: ss_content_language_string
           ss_content_document_type_string: ss_content_document_type_string
         sort_options:
-          ss_drupal_changed_timestamp: ss_drupal_changed_timestamp
           ss_content_title: ss_content_title
           its_flag_highlight_content: its_flag_highlight_content
           its_document_download_total: its_document_download_total
           its_statistics_view: its_statistics_view
           its_flag_like_content: its_flag_like_content
           ss_global_created_date: ss_global_created_date
+          ss_drupal_changed_timestamp: 0
           its_last_comment_timestamp: 0
           its_last_flagged_like_content: 0
           its_last_flagged_bookmark_content: 0
           its_last_flagged_highlight_content: 0
+          score: 0
         enable_search: 1
         page_options: normal
         prefilter_group: 1
+        enable_date_filter: 0
         add_facet_interests: 0
         add_facet_my_groups: 0
         third_party_settings: {  }

@@ -269,7 +269,7 @@ class SolrSearchController extends ControllerBase {
       $values = array_keys($filtered_value);
 
       if ($filtered_value) {
-        array_walk($values, function(&$value) {
+        array_walk($values, function (&$value) {
           $value = "\"$value\"";
         });
 
@@ -368,9 +368,13 @@ class SolrSearchController extends ControllerBase {
    * @param string $fq
    */
   private function generateQueryPrivateContent(string &$fq) {
-    $roles = \Drupal::currentUser()->getRoles();
+    $current_user = \Drupal::currentUser();
+    $roles = $current_user->getRoles();
 
-    if (in_array(UserHelper::ROLE_TRUSTED_USER, $roles)) {
+    if (
+      in_array(UserHelper::ROLE_TRUSTED_USER, $roles) ||
+      UserHelper::isPowerUser($current_user)
+    ) {
       return;
     }
 
@@ -390,23 +394,29 @@ class SolrSearchController extends ControllerBase {
     }
 
     $current_user = \Drupal::currentUser();
+    $user_id = $current_user->id();
+    $is_power_user = UserHelper::isPowerUser($current_user);
 
     // We need to show all groups on the groups overview for power users,
     // disregarding the published status.
-    if ($source instanceof GroupSourceType && UserHelper::isPowerUser($current_user)) {
+    if ($source instanceof GroupSourceType && $is_power_user) {
       return;
     }
 
     $status_query = ' AND (bs_global_status:true';
 
     if ($source instanceof GroupSourceType) {
-      $user_id = $current_user->id();
       $status_query .= ' OR (its_group_owner_id:' . $user_id . ')';
     }
 
     $status_query .= ')';
 
     $fq .= $status_query;
+
+    // If it's not a power user or a group owner, add the filter query for published group parent.
+    if (!$is_power_user) {
+      $fq .= " AND (its_global_group_parent_published:1 OR its_group_owner_id:$user_id)";
+    }
   }
 
   /**

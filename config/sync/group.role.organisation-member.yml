@@ -13,15 +13,9 @@ group_type: organisation
 permissions_ui: true
 permissions:
   - 'access group search overview'
-  - 'create group_node:event entity'
-  - 'create group_node:news entity'
-  - 'delete own group_node:event entity'
-  - 'delete own group_node:news entity'
   - 'edit own comments'
   - 'post comments'
   - 'share content between groups'
-  - 'update own group_node:event entity'
-  - 'update own group_node:news entity'
   - 'view comments'
   - 'view group_membership content'
   - 'view group_node:event entity'

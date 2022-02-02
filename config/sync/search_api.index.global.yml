@@ -13,8 +13,10 @@ dependencies:
     - field.storage.group.field_location_type
     - field.storage.group.field_organisation_type
     - field.storage.group.field_vocab_geo
-    - field.storage.group.field_thumbnail
+    - field.storage.group.field_vocab_services_products
+    - field.storage.group.field_vocab_target_markets
     - field.storage.group.field_image
+    - field.storage.group.field_thumbnail
     - field.storage.group.field_vocab_topics
     - field.storage.group.field_body
     - field.storage.message.field_entity_type
@@ -995,6 +997,26 @@ field_settings:
     dependencies:
       config:
         - field.storage.message.field_operation_type
+  organisation_services_products:
+    label: 'Services and products » Taxonomy term » Name'
+    datasource_id: 'entity:group'
+    property_path: 'field_vocab_services_products:entity:name'
+    type: string
+    dependencies:
+      config:
+        - field.storage.group.field_vocab_services_products
+      module:
+        - taxonomy
+  organisation_target_market_name:
+    label: 'Target markets » Taxonomy term » Name'
+    datasource_id: 'entity:group'
+    property_path: 'field_vocab_target_markets:entity:name'
+    type: string
+    dependencies:
+      config:
+        - field.storage.group.field_vocab_target_markets
+      module:
+        - taxonomy
   path:
     label: 'Referenced node » Content » URL alias'
     datasource_id: 'entity:message'
@@ -1389,11 +1411,13 @@ datasource_settings:
         - stream_discussion_insert_update
         - stream_document_insert_update
         - stream_event_insert_update
+        - stream_gallery_insert_update
         - stream_news_insert_update
         - stream_photo_album_insert_update
         - stream_photo_insert_update
         - stream_share_content
         - stream_share_insert_update
+        - stream_video_insert_update
         - stream_wiki_page_insert_update
     languages:
       default: true
@@ -1424,6 +1448,7 @@ processor_settings:
     fields: {  }
     all_fields: false
   aggregated_field: {  }
+  entity_type: {  }
   file_attachments:
     excluded_extensions: 'aif art avi bmp gif ico mov oga ogv png psd ra ram rgb flv'
     number_indexed: 0

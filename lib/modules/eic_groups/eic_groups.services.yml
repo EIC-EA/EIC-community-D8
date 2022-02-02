@@ -53,6 +53,11 @@ services:
     class: Drupal\eic_groups\Access\HighlightGroupContentAccessCheck
     tags:
       - { name: access_check, applies_to: _highlight_group_content }
+  eic_groups.access_check.like_group_content:
+    class: Drupal\eic_groups\Access\LikeGroupContentAccessCheck
+    arguments: ['@flag']
+    tags:
+      - { name: access_check, applies_to: _like_group_content }
   eic_groups.route_subscriber:
     class: Drupal\eic_groups\Routing\RouteSubscriber
     tags:

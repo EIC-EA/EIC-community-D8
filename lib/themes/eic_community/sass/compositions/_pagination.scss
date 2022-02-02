@@ -7,9 +7,6 @@
 
   &__item {
     cursor: pointer;
-    &[disabled] {
-      cursor: text;
-    }
 
     &--current a {
       color: $ecl-color-black;
@@ -26,9 +23,16 @@
         text-decoration: underline;
       }
 
+      & svg:only-child {
+        margin: 0 $ecl-spacing-2-xs;
+      }
+
       &[disabled] {
         opacity: .5;
-        pointer-events: none;
+        cursor: text;
+        &:hover {
+          text-decoration: none;
+        }
       }
     }
   }

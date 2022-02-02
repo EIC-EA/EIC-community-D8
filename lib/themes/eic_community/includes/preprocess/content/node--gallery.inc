@@ -51,7 +51,7 @@ function eic_community_preprocess_node__gallery(array &$variables) {
                 'name' => 'download',
                 'type' => 'custom',
               ],
-              'label' => t('downloads'),
+              'label' => t('download(s)'),
               // @todo Add statistics value
               'value' => \Drupal::service('eic_media_statistics.entity_file_download_count')->getFileDownloads($file),
             ],
@@ -110,7 +110,7 @@ function eic_community_preprocess_node__gallery(array &$variables) {
       ];
 
       $variables['file_list'] = [
-        'title' => t('Files (%count)', ['%count' => count($files)]),
+        'title' => t('File list (%count)', ['%count' => count($files)]),
         'body' => '',
         'files' => $files_list,
         'icon_file_path' => $variables['eic_icon_path'],

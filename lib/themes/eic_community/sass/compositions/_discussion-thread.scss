@@ -260,8 +260,12 @@
         display: flex;
       }
 
-      &__author-info {
-        flex-grow: 1;
+      &__author {
+        left: 1rem;
+        &-info {
+          padding-left: 1.5rem !important;
+          flex-grow: 1;
+        }
       }
 
       &__footer {

@@ -215,6 +215,10 @@ abstract class GroupFeaturePluginBase extends PluginBase implements GroupFeature
   /**
    * Add role permissions to the group.
    *
+   * This method is a verbatim from
+   * \Drupal\group_flex\GroupFlexGroupSaver::addRolePermissionsToGroup() as it
+   * is currently private.
+   *
    * @param \Drupal\group_permissions\Entity\GroupPermissionInterface $groupPermission
    *   The group permission object to add the permissions to.
    * @param string $role
@@ -244,6 +248,10 @@ abstract class GroupFeaturePluginBase extends PluginBase implements GroupFeature
 
   /**
    * Remove role permissions from the group.
+   *
+   * This method is a verbatim from
+   * \Drupal\group_flex\GroupFlexGroupSaver::removeRolePermissionsFromGroup() as
+   * it is currently private.
    *
    * @param \Drupal\group_permissions\Entity\GroupPermissionInterface $groupPermission
    *   The group permission object to set the permissions to.

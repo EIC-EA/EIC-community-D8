@@ -98,6 +98,15 @@ class FormOperations implements ContainerInjectionInterface {
     FormStateInterface $form_state,
     string $form_id
   ) {
+    // All types that is by default unchecked.
+    $field_disable_by_default_types = [
+      'document',
+      'video',
+      'gallery',
+    ];
+
+    /** @var \Drupal\Core\Entity\EntityInterface $entity */
+    $entity = $form_state->getFormObject()->getEntity();
     $is_group_content = FALSE;
     $is_new_content = FALSE;
 
@@ -123,7 +132,7 @@ class FormOperations implements ContainerInjectionInterface {
         $form['field_post_activity'] = [
           '#title' => $this->t('Post message in the activity stream'),
           '#type' => 'checkbox',
-          '#default_value' => $is_new_content,
+          '#default_value' => $is_new_content && !in_array($entity->bundle(), $field_disable_by_default_types),
         ];
         $form['actions']['submit']['#submit'][] = [$this, 'postActivitySubmit'];
       }
