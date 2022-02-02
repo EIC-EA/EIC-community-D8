@@ -21,6 +21,7 @@ dependencies:
     - node.type.story
     - node.type.video
     - node.type.wiki_page
+    - workflows.workflow.default
     - workflows.workflow.group_wiki
     - workflows.workflow.groups
     - workflows.workflow.news_stories
@@ -173,6 +174,9 @@ permissions:
   - 'update any tiles_reference block content'
   - 'update own member profile'
   - 'use admin toolbar search'
+  - 'use default transition archive'
+  - 'use default transition create_new_draft'
+  - 'use default transition publish'
   - 'use group_wiki transition create_new_draft'
   - 'use group_wiki transition publish'
   - 'use group_wiki transition unpublish'
