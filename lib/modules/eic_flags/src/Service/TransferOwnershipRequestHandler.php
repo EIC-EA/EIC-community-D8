@@ -462,6 +462,8 @@ class TransferOwnershipRequestHandler extends AbstractRequestHandler {
     }
 
     $requests = $this->getOpenRequests($entity);
+    // Only one request is open at a time, therefore we grab the first one we
+    // found.
     $request = reset($requests);
     $expiration_date = 0;
 

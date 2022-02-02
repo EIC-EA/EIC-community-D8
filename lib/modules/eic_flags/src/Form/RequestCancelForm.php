@@ -196,7 +196,7 @@ class RequestCancelForm extends ContentEntityConfirmFormBase {
     /** @var \Drupal\flag\FlaggingInterface $flag */
     $flag = $this->flagService->getFlagById($flag_id);
     if (!$flag instanceof FlagInterface) {
-      throw new InvalidArgumentException('Flag doesn\'t exists');
+      throw new InvalidArgumentException("Flag doesn't exists");
     }
 
     $flagging_storage = $this->entityTypeManager->getStorage('flagging');
