@@ -175,17 +175,18 @@ class MembershipResource extends ResourceBase {
           // Check if we have a role.
           $role = NULL;
           if (!empty($data['role'])) {
-            $role = EICGroupsHelper::getGroupTypeRole($group->getEntityType()->id(), $data['role']);
+            $role = EICGroupsHelper::getGroupTypeRole($group->bundle(), $data['role']);
           }
 
           // Check if the user is already a member of the group.
+          /** @var \Drupal\group\GroupMembership $membership */
           if ($membership = $group->getMember($user)) {
-            $group_content = $membership->getGroupContent();
 
-            // We merge the provided role with the existing ones to preserve any
-            // change that has been made directly on the platform.
-            $group_content->group_roles->target_id = array_unique(array_merge($group_content->group_roles->target_id, [$role]));
-            $group_content->save();
+            // We add the required role to the membership and keep the existing
+            // ones.
+            if (!empty($role)) {
+              $membership->addRole($role);
+            }
           }
           else {
             $group->addMember($user, ['group_roles' => [$role]]);

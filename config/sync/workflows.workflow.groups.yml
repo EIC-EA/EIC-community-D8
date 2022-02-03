@@ -7,7 +7,7 @@ dependencies:
     - group.type.group
     - group.type.organisation
   module:
-    - content_moderation
+    - content_moderation_bypass
 id: groups
 label: Groups
 type: content_moderation
@@ -57,12 +57,6 @@ type_settings:
         - pending
       to: pending
       weight: -2
-    force_pending_to_published:
-      label: 'Force Pending to Published'
-      from:
-        - pending
-      to: published
-      weight: 7
     keep_blocked:
       label: 'Keep blocked'
       from:
