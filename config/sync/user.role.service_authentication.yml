@@ -6,6 +6,8 @@ dependencies:
     - filter.format.basic_text
     - filter.format.filtered_html
     - filter.format.full_html
+    - rest.resource.eic_webservices_event_update
+    - rest.resource.eic_webservices_group_membership
     - rest.resource.eic_webservices_organisation_update
     - rest.resource.eic_webservices_user_update
     - workflows.workflow.groups
@@ -25,12 +27,16 @@ permissions:
   - 'administer comments'
   - 'administer users'
   - 'bypass group access'
+  - 'restful delete eic_webservices_group_membership'
   - 'restful get eic_webservices_organisation'
+  - 'restful post eic_webservices_event_update'
+  - 'restful post eic_webservices_group_membership'
   - 'restful post eic_webservices_organisation'
   - 'restful post eic_webservices_organisation_update'
   - 'restful post eic_webservices_user_update'
   - 'use groups transition block'
   - 'use groups transition create_new_group'
+  - 'use groups transition force_pending_to_published'
   - 'use groups transition publish'
   - 'use groups transition unblock'
   - 'use groups transition unpublish'

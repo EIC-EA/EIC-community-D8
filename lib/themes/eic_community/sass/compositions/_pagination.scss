@@ -1,7 +1,7 @@
 .ecl-pagination {
 
   &__list {
-    padding-top: ecl-layout('gutter');
+    padding: ecl-layout('gutter') 0;
     border-top: 2px solid $ecl-color-grey;
   }
 

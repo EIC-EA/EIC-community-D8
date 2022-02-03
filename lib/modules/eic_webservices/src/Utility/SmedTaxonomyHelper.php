@@ -136,7 +136,7 @@ class SmedTaxonomyHelper {
       $field_name = $field_definition->getName();
 
       // Check if we need to handle this field.
-      if (!empty($field_names) && in_array($field_name, $field_names)) {
+      if (!empty($field_names) && !in_array($field_name, $field_names)) {
         continue;
       }
 

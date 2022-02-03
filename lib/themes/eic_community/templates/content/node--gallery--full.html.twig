@@ -12,7 +12,11 @@
     {{ elements.field_body }}
     {{ attach_library('eic_community/react-block-gallery') }}
     <div id="ecl-gallery-react" class="ecl-gallery" data-files="{{ slides|json_encode }}"></div>
-    {% include "@theme/patterns/components/filelist.html.twig" with file_list|default({}) %}
+    {% if file_list.files|length > 1 %}
+      {% include "@theme/patterns/components/filelist.html.twig" with file_list|default({})|merge({
+        file_title_element: 'h4'
+      }) %}
+    {% endif %}
   {% endblock %}
 
   {% block sidebar %}

@@ -3,7 +3,6 @@ langcode: en
 status: true
 dependencies:
   module:
-    - basic_auth
     - eic_webservices
     - hal
 id: eic_webservices_organisation_update
@@ -15,4 +14,4 @@ configuration:
   formats:
     - hal_json
   authentication:
-    - basic_auth
+    - eic_webservices_token_auth

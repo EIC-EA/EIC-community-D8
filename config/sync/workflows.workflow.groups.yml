@@ -57,6 +57,12 @@ type_settings:
         - pending
       to: pending
       weight: -2
+    force_pending_to_published:
+      label: 'Force Pending to Published'
+      from:
+        - pending
+      to: published
+      weight: 7
     keep_blocked:
       label: 'Keep blocked'
       from:
