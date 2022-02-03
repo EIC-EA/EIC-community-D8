@@ -10,6 +10,13 @@
     ". messages";
   gap: map-get($ecl-spacing, 'm');
 
+  @include ecl-media-breakpoint-down('md') {
+    grid-template-areas:
+    "icon title"
+    "messages messages";
+    overflow-x: auto;
+  }
+
   &--status {
     border-color: $ecl-color-green-100;
   }
@@ -38,6 +45,11 @@
     grid-area: title;
     &:last-child {
       margin-bottom: 0;
+    }
+
+    & * {
+      white-space: normal;
+      word-wrap:break-word;
     }
 
     & pre {

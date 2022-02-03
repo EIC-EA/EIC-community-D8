@@ -1,0 +1,7 @@
+text:
+  -
+    value: "<p>Your request to become owner of [message:field_entity_type:value] [message:field_referenced_entity_label:value]&nbsp;has been cancelled</p>\r\n"
+    format: full_html
+  -
+    value: "<p>Dear <a href=\"[message:author:url]\">[message:author:field_first_name:value]&nbsp;[message:author:field_last_name:value]</a>,</p>\r\n\r\n<p>Your request to become the owner of [message:field_entity_type:value] [message:field_referenced_entity_label:value]&nbsp;has been cancelled by&nbsp;<a href=\"[message:field_referenced_flag:entity:author:url]\">[message:field_referenced_flag:entity:author:field_first_name:value] [message:field_referenced_flag:entity:author:field_last_name:value]</a>.</p>\r\n\r\n<p>Reason:&nbsp;[message:field_referenced_flag:entity:field_request_response:value]</p>\r\n\r\n<p>The EIC Community team</p>\r\n"
+    format: full_html
