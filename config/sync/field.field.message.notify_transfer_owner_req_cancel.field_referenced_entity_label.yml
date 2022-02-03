@@ -1,0 +1,19 @@
+uuid: 98b4a377-7108-4b66-a812-0be0fab9b073
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.message.field_referenced_entity_label
+    - message.template.notify_transfer_owner_req_cancel
+id: message.notify_transfer_owner_req_cancel.field_referenced_entity_label
+field_name: field_referenced_entity_label
+entity_type: message
+bundle: notify_transfer_owner_req_cancel
+label: 'Entity Label'
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string
