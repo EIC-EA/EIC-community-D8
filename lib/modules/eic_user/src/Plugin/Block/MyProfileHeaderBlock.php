@@ -23,11 +23,11 @@ class MyProfileHeaderBlock extends BlockBase {
   public function build() {
     return [
       '#theme' => 'my_profile_header_block',
-      '#title' => 'My activity feed',
+      '#title' => $this->t('My activity feed', [], ['context' => 'eic_user']),
       '#actions' => [
         [
           'link' => [
-            'label' => 'Manage profile',
+            'label' => $this->t('Manage profile', [], ['context' => 'eic_user']),
             'path' => '/test',
           ],
           'icon' => [
@@ -40,13 +40,13 @@ class MyProfileHeaderBlock extends BlockBase {
           'items' => [
             [
               'link' => [
-                'label' => 'New story',
+                'label' => $this->t('New story', [], ['context' => 'eic_user']),
                 'path' => '/test',
               ],
             ],
             [
               'link' => [
-                'label' => 'New wiki',
+                'label' => $this->t('New wiki', [], ['context' => 'eic_user']),
                 'path' => '/test',
               ],
             ],

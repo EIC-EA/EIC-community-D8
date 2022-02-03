@@ -85,6 +85,7 @@ class SolrSearchController extends ControllerBase {
     $solariumQuery->setComponent(ComponentAwareQueryInterface::COMPONENT_SPELLCHECK, $spell_check);
 
     $content_type_query = '';
+    $author_ignore_content_query = '';
 
     if ($source_class) {
       /** @var \Drupal\eic_search\Search\Sources\SourceTypeInterface $source */
@@ -131,6 +132,10 @@ class SolrSearchController extends ControllerBase {
       if ($content_types = $source->getPrefilteredContentType()) {
         $allowed_content_type = implode(' OR ', $content_types);
         $content_type_query = ' AND (' . SourceTypeInterface::SOLR_FIELD_CONTENT_TYPE_ID . ':(' . $allowed_content_type . '))';
+      }
+
+      if ($source->ignoreContentFromCurrentUser()) {
+        $author_ignore_content_query = ' AND (!' . $source->getAuthorFieldId() . ':' . $this->currentUser()->id() . ')';
       }
 
       // If source supports date filter and query has a from or to date.
@@ -234,6 +239,22 @@ class SolrSearchController extends ControllerBase {
     if ($content_type_query) {
       $fq .= $content_type_query;
     }
+
+    if ($author_ignore_content_query) {
+      $fq .= $author_ignore_content_query;
+    }
+
+    /** @var \Drupal\group\GroupMembershipLoader $grp_membership_service */
+    $grp_membership_service = \Drupal::service('group.membership_loader');
+    $grps = $grp_membership_service->loadByUser($this->currentUser());
+
+    $grp_ids = array_map(function (GroupMembership $grp_membership) {
+      return $grp_membership->getGroup()->id();
+    }, $grps);
+
+    $group_filters_id = $source->getPrefilteredGroupFieldId();
+
+    $fq .= ' AND (' . reset($group_filters_id) . ':(' . implode(' OR ', $grp_ids) . '))';
 
     $solariumQuery->addParam('fq', $fq);
 

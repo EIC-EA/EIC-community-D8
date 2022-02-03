@@ -18,7 +18,9 @@ class ActivityStreamSourceType extends SourceType {
    * @inheritDoc
    */
   public function getSourcesId(): array {
-    return ['message'];
+    return [
+      'node',
+    ];
   }
 
   /**
@@ -33,6 +35,16 @@ class ActivityStreamSourceType extends SourceType {
    */
   public function getEntityBundle(): string {
     return 'activity_stream';
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function getAvailableFacets(): array {
+    return [
+      'ss_global_content_type' => $this->t('Content type', [], ['context' => 'eic_search']),
+      'sm_content_field_vocab_topics_string' => $this->t('Topics', [], ['context' => 'eic_search']),
+    ];
   }
 
   /**
@@ -60,35 +72,40 @@ class ActivityStreamSourceType extends SourceType {
    * @inheritDoc
    */
   public function getPrefilteredGroupFieldId(): array {
-    return ['its_group_id'];
+    return ['ss_global_group_parent_id'];
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function getSearchFieldsId(): array {
+    return [
+      'tm_X3b_en_rendered_item',
+      'tm_global_title',
+      'ss_global_group_parent_label',
+      'ss_global_fullname'
+    ];
   }
 
   /**
    * @inheritDoc
    */
   public function allowPagination(): bool {
-    return FALSE;
-  }
-
-  /**
-   * @inheritDoc
-   */
-  public function prefilterByCurrentUser(): bool {
     return TRUE;
   }
 
   /**
    * @inheritDoc
    */
-  public function getPrefilteredContentType(): array {
-    return ['comment', 'node', 'node_comment', 'gallery', 'video', 'wiki_page', 'discussion', 'document'];
+  public function ignoreContentFromCurrentUser(): bool {
+    return TRUE;
   }
 
   /**
    * @inheritDoc
    */
-  public function getUserFieldId(): string {
-    return '';
+  public function getAuthorFieldId(): string {
+    return 'its_content_uid';
   }
 
 }
