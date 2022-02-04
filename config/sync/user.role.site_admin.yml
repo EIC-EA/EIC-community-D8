@@ -148,8 +148,6 @@ permissions:
   - 'manage blocked entities'
   - 'manage contact form emails'
   - 'mark private content'
-  - 'masquerade as authenticated'
-  - 'masquerade as service_authentication'
   - 'masquerade as trusted_user'
   - 'overview messages'
   - 'post comments'
