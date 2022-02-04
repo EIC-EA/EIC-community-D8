@@ -31,7 +31,7 @@ class PrivateMessageForm extends FormBase {
   /**
    * The system site configurations.
    *
-   * @var array
+   * @var \Drupal\Core\Config\Config
    */
   private $systemSettings;
 
@@ -170,9 +170,9 @@ class PrivateMessageForm extends FormBase {
     $form['body'] = [
       '#type' => 'text_format',
       '#title' => $this->t('Body', [], ['context' => 'eic_private_message']),
-      '#format' => 'user_contact_form',
+      '#format' => 'basic_text',
       '#required' => TRUE,
-      '#allowed_formats' => ['user_contact_form'],
+      '#allowed_formats' => ['basic_text'],
     ];
 
     $form['send_copy'] = [
