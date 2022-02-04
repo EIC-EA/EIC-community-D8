@@ -1,0 +1,200 @@
+langcode: en
+status: true
+dependencies: {  }
+id: upgrade_d7_node_complete_article
+class: Drupal\node\Plugin\migrate\D7NodeTranslation
+field_plugin_method: null
+cck_plugin_method: null
+migration_tags:
+  - 'Drupal 7'
+  - Content
+migration_group: migrate_drupal_7
+label: 'Node complete (Story)'
+source:
+  plugin: eic_d7_node_complete_with_smed_ids
+  node_type: article
+  track_changes: true
+  smed_taxonomy_fields:
+    - c4m_vocab_geo
+    - c4m_vocab_topic
+process:
+  nid:
+    - plugin: migration_lookup
+      migration: upgrade_d7_node_complete_article
+      source: tnid
+    - plugin: node_complete_node_lookup
+  langcode:
+    - plugin: static_map
+      source: language
+      bypass: true
+      map:
+        und: en
+    - plugin: default_value
+      default_value: en
+  title: title
+  uid:
+    - plugin: migration_lookup
+      source: node_uid
+      migration:
+        - upgrade_d7_user
+  status: status
+  moderation_state:
+    - plugin: static_map
+      source: status
+      map:
+        0: draft
+        1: published
+  created: created
+  changed: timestamp
+  published_at: timestamp
+  promote: promote
+  sticky: sticky
+  revision_uid:
+    - plugin: migration_lookup
+      source: revision_uid
+      migration:
+        - upgrade_d7_user
+  revision_log: log
+  revision_timestamp: timestamp
+  content_translation_source: source_langcode
+  node_comment/0/status: comment
+  field_header_visual:
+    - plugin: sub_process
+      source: c4m_banner
+      process:
+        target_id:
+          - plugin: migration_lookup
+            source: fid
+            migration:
+              - upgrade_d7_file_image_to_media
+#        target_id: fid
+#        alt: alt
+#        title: title
+#        width: width
+#        height: height
+  field_body:
+    - plugin: eic_media_wysiwyg_filter
+      source: c4m_body
+      media_migrations:
+        - upgrade_d7_file_audio_to_media
+        - upgrade_d7_file_document_to_media
+        - upgrade_d7_file_image_to_media
+        - upgrade_d7_file_undefined_to_media
+        - upgrade_d7_file_video_to_media
+  field_introduction: c4m_intro_text
+  # TODO: Migrate to contributors paragraphs
+#  c4m_link_multiple:
+#    - plugin: field_link
+#      source: c4m_link_multiple
+#  c4m_related_user:
+#    - plugin: get
+#      source: c4m_related_user
+  _internal_contributors:
+    - plugin: sub_process
+      source: c4m_related_user
+      include_source: true
+      process:
+        nid: source/nid
+        vid: source/vid
+        value: target_id
+  _external_contributors:
+    - plugin: sub_process
+      source: c4m_link_multiple
+      include_source: true
+      process:
+        nid: source/nid
+        vid: source/vid
+        value: title
+  field_story_paragraphs:
+    - plugin: merge
+      source:
+        - '@_internal_contributors'
+        - '@_external_contributors'
+    - plugin: sub_process
+      process:
+        target_id:
+          - plugin: migration_lookup
+            source:
+              - nid
+              - vid
+              - value
+            migration:
+              - upgrade_d7_node_complete_article_internal_contributors_paragraph
+              - upgrade_d7_node_complete_article_external_contributors_paragraph
+          - plugin: extract
+            index:
+              - '0'
+        target_revision_id:
+          - plugin: migration_lookup
+            source:
+              - nid
+              - vid
+              - value
+            migration:
+              - upgrade_d7_node_complete_article_internal_contributors_paragraph
+              - upgrade_d7_node_complete_article_external_contributors_paragraph
+          - plugin: extract
+            index:
+              - '1'
+  field_image:
+    - plugin: sub_process
+      source: c4m_media
+      process:
+        target_id:
+          - plugin: migration_lookup
+            source: fid
+            migration:
+              - upgrade_d7_file_image_to_media
+#        target_id: fid
+#        alt: alt
+#        title: title
+#        width: width
+#        height: height
+# field_related_stories is handled through a post migration so we don't
+# migrate it here.
+# @see Drupal\eic_migrate\EventSuscriber\PostMigrationSubscriber
+  # TODO
+#  c4m_related_group:
+#    - plugin: get
+#      source: c4m_related_group
+  # TODO: Implement when Regions & countries SMED migration is done.
+#  field_vocab_geo:
+#    - plugin: sub_process
+#      source: c4m_vocab_geo
+#      process:
+#        target_id:
+#          - plugin: migration_lookup
+#            source: smed_id
+#            no_stub: true
+#            migration:
+#              - smed_TODO
+  field_vocab_topics:
+    - plugin: sub_process
+      source: c4m_vocab_topic
+      process:
+        target_id:
+          - plugin: migration_lookup
+            source: smed_id
+            no_stub: true
+            migration:
+              - smed_thematics_topics_lvl1
+              - smed_thematics_topics_lvl2
+              - smed_thematics_topics_lvl3
+destination:
+  plugin: 'entity_complete:node'
+  translations: true
+  default_bundle: story
+migration_dependencies:
+  required:
+    - upgrade_d7_user
+    - upgrade_d7_file_audio_to_media
+    - upgrade_d7_file_document_to_media
+    - upgrade_d7_file_image_to_media
+    - upgrade_d7_file_undefined_to_media
+    - upgrade_d7_file_video_to_media
+    - upgrade_d7_node_complete_article_external_contributors_paragraph
+    - upgrade_d7_node_complete_article_internal_contributors_paragraph
+    - smed_thematics_topics_lvl1
+    - smed_thematics_topics_lvl2
+    - smed_thematics_topics_lvl3
+  optional: { }

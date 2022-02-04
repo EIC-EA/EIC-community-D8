@@ -82,9 +82,8 @@ class LibrarySourceType extends SourceType {
         'DESC' => $this->t('Number of likes', [], ['context' => 'eic_search']),
       ],
       'ss_global_created_date' => [
-        'label' => $this->t('Created date', [], ['context' => 'eic_search']),
-        'ASC' => $this->t('First created', [], ['context' => 'eic_search']),
-        'DESC' => $this->t('Last created', [], ['context' => 'eic_search']),
+        'label' => $this->t('Date uploaded', [], ['context' => 'eic_search']),
+        'DESC' => $this->t('Date uploaded', [], ['context' => 'eic_search']),
       ],
       'its_last_comment_timestamp' => [
         'label' => $this->t('Last commented', [], ['context' => 'eic_search']),

@@ -16,22 +16,10 @@ source:
   bundle: c4m_vocab_document_type
   track_changes: true
 process:
-  name:
-    -
-      plugin: get
-      source: name
-  description/value:
-    -
-      plugin: get
-      source: description
-  description/format:
-    -
-      plugin: get
-      source: format
-  weight:
-    -
-      plugin: get
-      source: weight
+  name: name
+  description/value: description
+  description/format: format
+  weight: weight
   parent_id:
     -
       plugin: skip_on_empty
@@ -46,18 +34,9 @@ process:
       plugin: default_value
       default_value: 0
       source: '@parent_id'
-  forum_container:
-    -
-      plugin: get
-      source: is_container
-  changed:
-    -
-      plugin: get
-      source: timestamp
-  langcode:
-    -
-      plugin: get
-      source: language
+  forum_container: is_container
+  changed: timestamp
+  langcode: language
 destination:
   plugin: 'entity:taxonomy_term'
   default_bundle: document_types

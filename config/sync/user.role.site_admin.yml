@@ -181,6 +181,7 @@ permissions:
   - 'use groups transition archive'
   - 'use groups transition block'
   - 'use groups transition create_new_group'
+  - 'use groups transition force_pending_to_published'
   - 'use groups transition keep_blocked'
   - 'use groups transition keep_in_draft'
   - 'use groups transition publish'

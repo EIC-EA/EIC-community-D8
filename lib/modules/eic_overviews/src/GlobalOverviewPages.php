@@ -75,14 +75,14 @@ class GlobalOverviewPages {
    *
    * @throws \Drupal\Core\Entity\EntityMalformedException
    */
-  public static function getGlobalOverviewPageLink(int $page): Link {
+  public static function getGlobalOverviewPageLink(int $page, $params = []): Link {
     $overview_entities = \Drupal::entityQuery('overview_page')
       ->condition('field_overview_id', $page)
       ->execute();
 
     $default_link = Link::fromTextAndUrl(
       t('Overview', [], ['context' => 'eic_overviews']),
-      Url::fromRoute('<current>')
+      Url::fromRoute('<current>', [], $params)
     );
 
     if (empty($overview_entities)) {
@@ -98,7 +98,7 @@ class GlobalOverviewPages {
 
     return Link::fromTextAndUrl(
       $overview_entity->label(),
-      $overview_entity->toUrl()
+      $overview_entity->toUrl()->setOptions($params)
     );
   }
 

@@ -193,6 +193,17 @@ abstract class AbstractRequestHandler implements HandlerInterface {
   /**
    * {@inheritdoc}
    */
+  public function cancel(
+    FlaggingInterface $flagging,
+    ContentEntityInterface $content_entity
+  ) {
+    // Currently does nothing, this will change.
+    return TRUE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function applyFlag(ContentEntityInterface $entity, string $reason, int $request_timeout = 0) {
     $support_entity_types = $this->getSupportedEntityTypes();
     // Entity type is not supported.
@@ -426,6 +437,18 @@ abstract class AbstractRequestHandler implements HandlerInterface {
       $access = AccessResult::allowed();
     }
 
+    return $access;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function canCancelRequest(
+    AccountInterface $account,
+    ContentEntityInterface $entity
+  ) {
+    // Default access.
+    $access = AccessResult::forbidden();
     return $access;
   }
 

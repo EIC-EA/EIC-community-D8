@@ -20,6 +20,7 @@
         "drupal/components": "^2.2",
         "drupal/config_ignore": "^2.3",
         "drupal/config_split": "^1.7",
+        "drupal/content_moderation_bypass": "^1.0@alpha",
         "drupal/context": "^4.0@beta",
         "drupal/core": "^9.1",
         "drupal/core-composer-scaffold": "^9.1",

@@ -154,6 +154,20 @@ class RequestCloseForm extends ContentEntityConfirmFormBase {
     $form = parent::buildForm($form, $form_state);
     $response = $this->getRequest()->get('response');
     $show_response_field = TRUE;
+    $handler = $this->collector->getHandlerByType($this->requestType);
+
+    // Action is not supported. We show a message and remove the cancel link.
+    if (
+      !in_array($response, $handler->getSupportedResponsesForClosedRequests()) ||
+      $response === RequestStatus::CANCELLED
+    ) {
+      $form['response_title'] = [
+        '#markup' => $this->t('You are trying to execute an action which is not supported'),
+      ];
+      $form['actions']['submit']['#value'] = $this->t('Back');
+      unset($form['actions']['cancel']);
+      return $form;
+    }
 
     switch ($this->requestType) {
       case RequestTypes::TRANSFER_OWNERSHIP:
@@ -184,6 +198,15 @@ class RequestCloseForm extends ContentEntityConfirmFormBase {
   public function validateForm(array &$form, FormStateInterface $form_state) {
     $response = $this->getRequest()->get('response');
     $has_response_field = TRUE;
+    $handler = $this->collector->getHandlerByType($this->requestType);
+
+    // Action is not supported, we do nothing.
+    if (
+      !in_array($response, $handler->getSupportedResponsesForClosedRequests()) ||
+      $response === RequestStatus::CANCELLED
+    ) {
+      return;
+    }
 
     switch ($this->requestType) {
       case RequestTypes::TRANSFER_OWNERSHIP:
@@ -255,9 +278,12 @@ class RequestCloseForm extends ContentEntityConfirmFormBase {
 
     }
 
-    // Action is not supported for the response type.
-    if (!in_array($response, $handler->getSupportedResponsesForClosedRequests())) {
-      throw new InvalidArgumentException('Action isnt\'t supported');
+    // Action is not supported for the response type, we do nothing.
+    if (
+      !in_array($response, $handler->getSupportedResponsesForClosedRequests()) ||
+      $response === RequestStatus::CANCELLED
+    ) {
+      return;
     }
 
     foreach ($entity_flags as $flag) {

@@ -1,3 +1,12 @@
+eic_admin.settings:
+  path: '/admin/config/eic'
+  defaults:
+    _title: 'Community settings'
+    _controller: '\Drupal\eic_admin\Controller\EicAdminController::settings'
+  requirements:
+    _permission: 'administer site configuration'
+  options:
+    _admin_route: TRUE
 eic_admin.dashboard:
   path: '/admin/community'
   defaults:

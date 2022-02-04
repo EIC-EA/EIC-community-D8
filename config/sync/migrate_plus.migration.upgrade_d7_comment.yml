@@ -1,0 +1,98 @@
+uuid: b67d1093-8588-408a-9819-11d63683893a
+langcode: en
+status: true
+dependencies: {  }
+id: upgrade_d7_comment
+class: Drupal\comment\Plugin\migrate\D7Comment
+field_plugin_method: null
+cck_plugin_method: null
+migration_tags:
+  - 'Drupal 7'
+  - Content
+migration_group: migrate_drupal_7
+label: Comments
+source:
+  plugin: d7_comment
+  track_changes: true
+  constants:
+    entity_type: node
+    comment_type: node_comment
+    field_name: field_comments
+process:
+  pid:
+    -
+      plugin: skip_on_empty
+      method: process
+      source: pid
+    -
+      plugin: migration_lookup
+      migration: upgrade_d7_comment
+  entity_id:
+    -
+      plugin: migration_lookup
+      source: nid
+      migration:
+        - upgrade_d7_node_complete_article
+        - upgrade_d7_node_complete_discussion
+        - upgrade_d7_node_complete_document
+        - upgrade_d7_node_complete_news
+        - upgrade_d7_node_complete_wiki_page
+    -
+      plugin: node_complete_node_lookup
+    -
+      plugin: skip_on_empty
+      method: row
+  entity_type: constants/entity_type
+  comment_type: constants/comment_type
+  langcode:
+    -
+      plugin: static_map
+      source: language
+      bypass: true
+      map:
+        und: en
+    -
+      plugin: default_value
+      default_value: en
+  field_name: constants/field_name
+  subject: subject
+  uid:
+    -
+      plugin: migration_lookup
+      source: uid
+      migration:
+        - upgrade_d7_user
+  name: name
+  mail: mail
+  homepage: homepage
+  hostname: hostname
+  created: created
+  changed: changed
+  status: status
+  thread: thread
+  comment_body:
+    -
+      plugin: eic_media_wysiwyg_filter
+      source: comment_body
+      media_migrations:
+        - upgrade_d7_file_audio_to_media
+        - upgrade_d7_file_document_to_media
+        - upgrade_d7_file_image_to_media
+        - upgrade_d7_file_undefined_to_media
+        - upgrade_d7_file_video_to_media
+destination:
+  plugin: 'entity:comment'
+migration_dependencies:
+  required:
+    - upgrade_d7_user
+    - upgrade_d7_file_audio_to_media
+    - upgrade_d7_file_document_to_media
+    - upgrade_d7_file_image_to_media
+    - upgrade_d7_file_undefined_to_media
+    - upgrade_d7_file_video_to_media
+    - upgrade_d7_node_complete_article
+    - upgrade_d7_node_complete_discussion
+    - upgrade_d7_node_complete_document
+    - upgrade_d7_node_complete_news
+    - upgrade_d7_node_complete_wiki_page
+  optional: {  }
