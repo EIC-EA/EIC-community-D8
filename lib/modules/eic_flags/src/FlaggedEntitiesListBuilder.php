@@ -99,6 +99,7 @@ class FlaggedEntitiesListBuilder extends EntityListBuilder {
    * @param \Drupal\flag\FlagService $flag_service
    *   Flag service provided by the flag module.
    * @param \Drupal\eic_flags\Service\RequestHandlerCollector $collector
+   *   The request handler collector.
    */
   public function __construct(
     EntityTypeInterface $entity_type,
@@ -181,6 +182,7 @@ class FlaggedEntitiesListBuilder extends EntityListBuilder {
    *
    * @return array
    *   Available filters.
+   *
    * @throws \Drupal\Core\Form\EnforcedResponseException
    * @throws \Drupal\Core\Form\FormAjaxException
    */
@@ -206,6 +208,7 @@ class FlaggedEntitiesListBuilder extends EntityListBuilder {
       'title' => [
         'data' => $this->t('Title'),
         'class' => [RESPONSIVE_PRIORITY_MEDIUM],
+        'field' => 'title',
       ],
       'type' => [
         'data' => $this->t('Type'),
@@ -222,10 +225,13 @@ class FlaggedEntitiesListBuilder extends EntityListBuilder {
       'changed' => [
         'data' => $this->t('Last updated'),
         'class' => [RESPONSIVE_PRIORITY_LOW],
+        'field' => 'changed',
       ],
       'created' => [
         'data' => $this->t('Created'),
         'class' => [RESPONSIVE_PRIORITY_LOW],
+        'field' => 'created',
+        'sort' => 'asc',
       ],
     ];
 
@@ -299,7 +305,6 @@ class FlaggedEntitiesListBuilder extends EntityListBuilder {
       $query = $this->database->select('flagging', 'f');
 
       $query->fields('f', ['id', 'entity_id', 'entity_type', 'flag_id'])
-        ->distinct(TRUE)
         ->condition('fs.field_request_status_value', RequestStatus::OPEN)
         ->condition('f.flag_id', $flag);
 
@@ -314,6 +319,28 @@ class FlaggedEntitiesListBuilder extends EntityListBuilder {
         $type,
         "$type.$id_field = f.entity_id"
       );
+
+      // Add fields for the sorting options.
+      $query->addField($type, 'created', 'entity_created');
+      $query->addField($type, 'changed', 'entity_changed');
+      switch ($type) {
+        case 'comment':
+          $query->leftJoin(
+            $type . '__comment_body',
+            $type . '_body',
+            "$type.$id_field = {$type}_body.entity_id"
+          );
+          $query->addField($type . '_body', 'comment_body_value', 'title');
+          break;
+
+        case 'group':
+          $query->addField($type, 'label', 'title');
+          break;
+
+        default:
+          $query->addField($type, 'title', 'title');
+          break;
+      }
 
       if (!empty($query_strings['title'])) {
         $query->condition(
@@ -357,6 +384,36 @@ class FlaggedEntitiesListBuilder extends EntityListBuilder {
     $query = $query->extend(PagerSelectExtender::class);
     $query->limit($this->limit);
 
+    // Apply sorting.
+    if (!empty($query_strings['sort']) && !empty($query_strings['order'])) {
+      $sort_dirrection = strtoupper($query_strings['sort']);
+      if (in_array($sort_dirrection, ['ASC', 'DESC'])) {
+        $sort_field = strtolower(str_replace(' ', '_', $query_strings['order']));
+        switch ($sort_field) {
+          case 'created':
+            $query->orderBy('entity_created', $sort_dirrection);
+            break;
+
+          case 'changed':
+          case 'last_updated':
+            $query->orderBy('entity_changed', $sort_dirrection);
+            break;
+
+          case 'title':
+            $query->orderBy('title', $sort_dirrection);
+            break;
+
+          default:
+            $query->orderBy('entity_created', $sort_dirrection);
+            break;
+
+        }
+      }
+    }
+    else {
+      $query->orderBy('entity_created');
+    }
+
     return $query->execute()->fetchAll(\PDO::FETCH_ASSOC);
   }
 
@@ -385,6 +442,7 @@ class FlaggedEntitiesListBuilder extends EntityListBuilder {
       case 'node':
         $type = $flagged_entity->bundle();
         break;
+
       case 'group':
         $type = $flagged_entity->getEntityTypeId();
         $title = Unicode::truncate(
@@ -394,6 +452,7 @@ class FlaggedEntitiesListBuilder extends EntityListBuilder {
           TRUE
         );
         break;
+
       case 'comment':
         $type = $flagged_entity->getEntityTypeId();
         $title = Unicode::truncate(
@@ -403,6 +462,7 @@ class FlaggedEntitiesListBuilder extends EntityListBuilder {
           TRUE
         );
         break;
+
     }
 
     $row['title']['data'] = [
