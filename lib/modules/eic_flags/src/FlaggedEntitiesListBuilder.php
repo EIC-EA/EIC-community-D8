@@ -385,7 +385,7 @@ class FlaggedEntitiesListBuilder extends EntityListBuilder {
     $query->limit($this->limit);
 
     // Apply sorting.
-    if (!empty($query_strings['sort']) && !empty($query_strings['sort'])) {
+    if (!empty($query_strings['sort']) && !empty($query_strings['order'])) {
       $sort_dirrection = strtoupper($query_strings['sort']);
       if (in_array($sort_dirrection, ['ASC', 'DESC'])) {
         $sort_field = strtolower(str_replace(' ', '_', $query_strings['order']));
