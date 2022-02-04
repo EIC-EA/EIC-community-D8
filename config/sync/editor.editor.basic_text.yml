@@ -25,6 +25,11 @@ settings:
             - RemoveFormat
             - Undo
             - Redo
+        -
+          name: Links
+          items:
+            - DrupalLink
+            - DrupalUnlink
   plugins:
     stylescombo:
       styles: ''
