@@ -115,6 +115,7 @@ module:
   language: 0
   link: 0
   mailsystem: 0
+  masquerade: 0
   media: 0
   media_entity_download: 0
   media_library: 0

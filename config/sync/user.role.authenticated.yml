@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   module:
+    - contact
     - eic_overviews
     - flag
     - fragments
