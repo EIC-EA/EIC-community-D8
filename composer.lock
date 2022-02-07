@@ -4342,6 +4342,9 @@
                         "status": "not-covered",
                         "message": "Project has not opted into security advisory coverage!"
                     }
+                },
+                "patches_applied": {
+                    "3181882 - \"Masquerade as ROLE\" permission not granting access": "https://www.drupal.org/files/issues/2020-11-11/masquerade_permission_per_role-3181882-2.patch"
                 }
             },
             "notification-url": "https://packages.drupal.org/8/downloads",
