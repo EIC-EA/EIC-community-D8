@@ -40,6 +40,9 @@
     "drupal/group_flex": {
       "3207164 - fatal error when saving after adding an image to an image field in a flex group" : "patches/group_flex/3207164-fatal-error-when-saving-after-adding-an-image-to-an-image-field-in-a-flex-group-24.patch"
     },
+    "drupal/masquerade": {
+      "3181882 - \"Masquerade as ROLE\" permission not granting access": "https://www.drupal.org/files/issues/2020-11-11/masquerade_permission_per_role-3181882-2.patch"
+    },
     "drupal/menu_trail_by_path": {
       "2914746 - Fatal error after installing the module": "https://www.drupal.org/files/issues/2020-01-10/menu_trail_by_path-fatal_error_on_menu_active_trail_service_override-2914746-18.patch"
     },
