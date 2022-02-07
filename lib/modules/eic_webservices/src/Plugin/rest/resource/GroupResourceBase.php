@@ -2,14 +2,10 @@
 
 namespace Drupal\eic_webservices\Plugin\rest\resource;
 
-use Drupal\Component\Plugin\PluginManagerInterface;
-use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Component\Serialization\Json;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\eic_webservices\Utility\EicWsHelper;
-use Drupal\eic_webservices\Utility\SmedTaxonomyHelper;
+use Drupal\group\Entity\GroupInterface;
 use Drupal\rest\Plugin\rest\resource\EntityResource;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -32,62 +28,21 @@ abstract class GroupResourceBase extends EntityResource {
   protected $smedTaxonomyHelper;
 
   /**
-   * Constructs a EicUserResource object.
+   * The request stack.
    *
-   * @param array $configuration
-   *   A configuration array containing information about the plugin instance.
-   * @param string $plugin_id
-   *   The plugin_id for the plugin instance.
-   * @param mixed $plugin_definition
-   *   The plugin implementation definition.
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
-   *   The entity type manager.
-   * @param array $serializer_formats
-   *   The available serialization formats.
-   * @param \Psr\Log\LoggerInterface $logger
-   *   A logger instance.
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
-   *   The config factory.
-   * @param \Drupal\Component\Plugin\PluginManagerInterface $link_relation_type_manager
-   *   The link relation type manager.
-   * @param \Drupal\eic_webservices\Utility\EicWsHelper $eic_ws_helper
-   *   The EIC Webservices helper class.
-   * @param \Drupal\eic_webservices\Utility\SmedTaxonomyHelper $eic_smed_taxonomy_helper
-   *   The SMED taxonomy helper class.
+   * @var \Symfony\Component\HttpFoundation\RequestStack
    */
-  public function __construct(
-    array $configuration,
-    $plugin_id,
-    $plugin_definition,
-    EntityTypeManagerInterface $entity_type_manager,
-    array $serializer_formats,
-    LoggerInterface $logger,
-    ConfigFactoryInterface $config_factory,
-    PluginManagerInterface $link_relation_type_manager,
-    EicWsHelper $eic_ws_helper,
-    SmedTaxonomyHelper $eic_smed_taxonomy_helper
-  ) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition, $entity_type_manager, $serializer_formats, $logger, $config_factory, $link_relation_type_manager);
-    $this->wsHelper = $eic_ws_helper;
-    $this->smedTaxonomyHelper = $eic_smed_taxonomy_helper;
-  }
+  protected $requestStack;
 
   /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get('entity_type.manager'),
-      $container->getParameter('serializer.formats'),
-      $container->get('logger.factory')->get('rest'),
-      $container->get('config.factory'),
-      $container->get('plugin.manager.link_relation_type'),
-      $container->get('eic_webservices.ws_helper'),
-      $container->get('eic_webservices.taxonomy_helper')
-    );
+    $instance = parent::create($container, $configuration, $plugin_id, $plugin_definition);
+    $instance->wsHelper = $container->get('eic_webservices.ws_helper');
+    $instance->smedTaxonomyHelper = $container->get('eic_webservices.taxonomy_helper');
+    $instance->requestStack = $container->get('request_stack');
+    return $instance;
   }
 
   /**
@@ -97,6 +52,38 @@ abstract class GroupResourceBase extends EntityResource {
     // Process SMED taxonomy fields to convert the SMED ID to Term ID.
     $this->smedTaxonomyHelper->convertEntitySmedTaxonomyIds($entity);
     return parent::patch($original_entity, $entity);
+  }
+
+  /**
+   * Sets a valid group owner.
+   *
+   * @param \Drupal\group\Entity\GroupInterface $group
+   *   The group entity.
+   */
+  protected function handleGroupOwner(GroupInterface &$group) {
+    $request_body = Json::decode($this->requestStack->getCurrentRequest()->getContent());
+    $author_uid = NULL;
+
+    // If the request is providing a specific user ID we need to convert it to
+    // the Drupal user ID.
+    if (!empty($request_body['uid'][0]['target_id'])) {
+      if ($author = $this->wsHelper->getUserBySmedId($request_body['uid'][0]['target_id'])) {
+        $author_uid = $author->id();
+      }
+    }
+
+    // If we don't have a proper author UID, we check if we have a default one
+    // defined.
+    if (empty($author_uid)) {
+      $author_uid = $this->configFactory->get('eic_webservices.settings')->get('group_author');
+    }
+
+    // If we have a proper author UID, we set it as the author of the group,
+    // otherwise we do nothing.
+    if (!empty($author_uid)) {
+      $group->setOwnerId($author_uid);
+    }
+
   }
 
 }

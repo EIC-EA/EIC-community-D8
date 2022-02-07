@@ -20,6 +20,9 @@ settings:
     -
       value: discussion
       label: Discussion
+    -
+      value: information
+      label: Information
   allowed_values_function: ''
 module: options
 locked: false

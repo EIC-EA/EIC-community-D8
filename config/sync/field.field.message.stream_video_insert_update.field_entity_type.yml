@@ -1,0 +1,19 @@
+uuid: 8f7e1c7e-1ea1-423b-b359-0268abae72e7
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.message.field_entity_type
+    - message.template.stream_video_insert_update
+id: message.stream_video_insert_update.field_entity_type
+field_name: field_entity_type
+entity_type: message
+bundle: stream_video_insert_update
+label: 'Entity type'
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

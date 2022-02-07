@@ -121,20 +121,4 @@ class EicUserResource extends EntityResource {
     return new ResourceResponse($entity);
   }
 
-  /**
-   * Responds to PATCH requests.
-   *
-   * @param \Drupal\Core\Entity\EntityInterface $original_entity
-   *   The original entity.
-   * @param \Drupal\Core\Entity\EntityInterface|null $entity
-   *   The current entity.
-   *
-   * @return \Drupal\rest\ResourceResponseInterface
-   *   The response.
-   */
-  public function patch(EntityInterface $original_entity, EntityInterface $entity = NULL) {
-    parent::patch($original_entity, $entity);
-    return new ResourceResponse($entity, 200);
-  }
-
 }
