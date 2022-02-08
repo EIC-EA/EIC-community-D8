@@ -187,6 +187,42 @@ function eic_groups_group_content_insert(EntityInterface $entity) {
     // Re-create entity alias.
     \Drupal::service('pathauto.generator')->createEntityAlias($related_entity, 'insert');
   }
+
+  switch ($entity->bundle()) {
+    case 'wiki_page':
+      // We need to clear the wiki parent book cache in order to redirect the
+      // user to the right wiki page when accessing the book page. Otherwise
+      // the redirect response might point to the wrong wiki page.
+      \Drupal::classResolver(EntityOperations::class)
+        ->clearWikiPageBookCache($entity);
+      break;
+
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_update().
+ */
+function eic_groups_node_update(EntityInterface $entity) {
+  /** @var \Drupal\group\Entity\GroupContentInterface[] $group_contents */
+  $group_contents = \Drupal::entityTypeManager()->getStorage('group_content')
+    ->loadByEntity($entity);
+
+  if (empty($group_contents)) {
+    return;
+  }
+
+  switch ($entity->bundle()) {
+    case 'wiki_page':
+      // We need to clear the wiki parent book cache in order to redirect the
+      // user to the right wiki page when accessing the book page. Otherwise
+      // the redirect response might point to the wrong wiki page.
+      \Drupal::classResolver(EntityOperations::class)
+        ->clearWikiPageBookCache($entity);
+      break;
+
+  }
+
 }
 
 /**
