@@ -67,48 +67,44 @@
           </mj-text>
         </mj-column>
       </mj-section>
+
       <mj-section padding="0">
         <mj-column>
           <mj-divider border-width="1px" border-style="solid"  />
         </mj-column>
       </mj-section>
-      <mj-section padding="0">
-        <mj-column width="100%">
-          <mj-image src="images/header.png" />
-        </mj-column>
-      </mj-section>
+
       <mj-section padding="10px 0px 0px">
         <mj-column>
           <mj-text mj-class="text">
-            Dear [new_GO_full_name],
+            Dear %go_full_name%,
             <br><br>
-            [old_GO_full_name] transferred you the ownership of the following group at European Innovation Council:
+            Thank you for requesting the creation of the following %group_type%:
+            <a style=" color: #004494" href="#" target="_blank">%group_type title%</a>
+            at European Innovation Council.
             <br><br>
-            <a class="link" href="#" target="_blank"><strong>[group_name]</strong></a>
+            Your request is currently pending review by one of the site's administrators and should be treated shortly.
+            <br><br>
+            If you have any questions, please feel free to
+            <a style=" color: #004494" href="#" target="_blank">contact us.</a>
             <br><br>
           </mj-text>
         </mj-column>
       </mj-section>
-      <mj-section padding="0" text-align="left" css-class="pre-footer">
-        <mj-column width="230px">
-          <mj-button width="200px" font-size="14px" mj-class="btn" inner-padding="12px 15px" text-decoration="underline" background-color="#FFD617" color="#000000" border-radius="0" font-weight="bold" href="#" target="_blank">
-            Go to group
-          </mj-button>
-        </mj-column>
-        <mj-column width="230px">
-          <mj-button width="200px" font-size="14px" mj-class="btn" inner-padding="12px 15px" background-color="#004494" color="#ffffff" border-radius="0" font-weight="bold" href="#" target="_blank">
-            Edit group
-          </mj-button>
-        </mj-column>
-      </mj-section>
+
+
+
+
       <mj-section padding="0 0 30px" css-class="pre-footer">
         <mj-column>
           <mj-text css-class="pre-footer">
-            <em>Jane Doe, member of [group_name].</em>
+            <em>The European Innovation Council team</em>
             <br>
           </mj-text>
         </mj-column>
       </mj-section>
+
+
       <mj-hero>
         <mj-divider border-width="5px" border-style="solid" border-color="#004494" />
       </mj-hero>
