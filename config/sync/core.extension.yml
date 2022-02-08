@@ -15,6 +15,8 @@ module:
   block_field: 0
   book: 0
   breakpoint: 0
+  cas: 0
+  cas_mock_server: 0
   ckeditor: 0
   comment: 0
   components: 0
@@ -193,6 +195,7 @@ module:
   views_ui: 0
   workflows: 0
   pathauto: 1
+  externalauth: 10
   views: 10
   paragraphs: 11
   publication_date: 99
