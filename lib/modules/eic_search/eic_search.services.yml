@@ -59,6 +59,10 @@ services:
     class: Drupal\eic_search\Search\Sources\UserTaggingCommentsSourceType
     tags:
       - { name: eic_search.source }
+  eic_search.source_my_profile_activity_stream:
+    class: Drupal\eic_search\Search\Sources\Profile\ActivityStreamSourceType
+    tags:
+      - { name: eic_search.source }
   eic_search.solr_document_processor:
     class: Drupal\eic_search\Service\SolrDocumentProcessor
     arguments: ['@database', '@flag.count', '@search_api.post_request_indexing', '@eic_statistics.statistics.storage.node.decorator', '@eic_comments.helper', '@eic_media_statistics.entity_file_download_count', '@oec_group_flex.helper', '@queue', '@plugin.manager.queue_worker', '@entity_type.manager']

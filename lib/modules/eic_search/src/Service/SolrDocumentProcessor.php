@@ -273,6 +273,7 @@ class SolrDocumentProcessor {
             ->toString() : '';
         }
         $status = TRUE;
+        $type = $fields['ss_type'];
         break;
       case 'entity:user':
         $user = User::load($fields['its_user_id']);
