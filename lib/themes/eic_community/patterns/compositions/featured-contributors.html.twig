@@ -24,7 +24,7 @@
         {% endfor %}
 
         {% if  is_collapsible %}
-          <div class="ecl-featured-list__item">
+          <div class="ecl-featured-list__item ecl-featured-list__item--expand">
             {% include "@ecl-twig/ec-component-button/ecl-button.html.twig" with {
               icon_position: 'after',
               icon: icon_file_path ? {
@@ -42,7 +42,7 @@
         {% endif %}
 
         {% if call_to_action.link is not empty %}
-          <div class="ecl-featured-list__item">
+          <div>
             {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with {
               link: call_to_action.link|default({})|merge({
                 type: 'standalone',
