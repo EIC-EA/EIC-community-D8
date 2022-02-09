@@ -42,7 +42,6 @@
         {% endif %}
 
         {% if call_to_action.link is not empty %}
-          <div>
             {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with {
               link: call_to_action.link|default({})|merge({
                 type: 'standalone',
@@ -57,8 +56,6 @@
               } : {},
               extra_classes: 'ecl-featured-content-collection__call-to-action ecl-link--button ecl-link--button-ghost',
             } only %}
-
-          </div>
         {% endif %}
 
       </div>
