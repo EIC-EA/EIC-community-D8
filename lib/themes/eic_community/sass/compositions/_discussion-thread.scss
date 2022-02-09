@@ -141,7 +141,7 @@
   &__meta,
   &__featured-items {
     @include ecl-media-breakpoint-up('md') {
-      padding-left: calc(#{map-get($ecl-media, 'xs')} + #{ecl-box-model('padding', 'controls')});
+      padding-left: calc(#{map-get($ecl-media, 'xs')} + 1.25rem);
     }
   }
 
@@ -161,7 +161,6 @@
     position: relative;
     flex-wrap: wrap;
     gap: ecl-box-model('margin', 'controls');
-    flex-direction: column;
     @include ecl-media-breakpoint-up('md') {
       align-items: center;
       flex-direction: row;
