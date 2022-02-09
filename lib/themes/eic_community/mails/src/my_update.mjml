@@ -41,20 +41,34 @@
             .btn{
               margin: 0 0 10px !important;
             }
-            .meta {
-              text-align: left !important;
+            .content-message {
+              width: 100% !important;
+              max-width: 100% !important;
             }
+
             .meta-image {
               width: 20px !important;
             }
             .meta__data {
               text-align: left !important;
             }
+            .meta__data--image {
+              width: 18px !important;
+            }
             .message-image {
               width: 60px !important;
+              padding-bottom: 20px;
             }
-            .message-content {
-              width: 240px !important;
+            .message-text {
+              width: 100% !important;
+              max-width: 100% !important;
+            }
+          }
+          @media screen and (max-device-width: 479px),
+          screen and (max-width: 479px) {
+            .meta {
+              text-align: left !important;
+              width: 200px !important;
             }
           }
         </style>
@@ -106,20 +120,18 @@
             <mj-section padding-top="10px" padding="0">
 
               <!--CONTENT-->
-              <mj-group width="462px">
-                <mj-column width="60px" css-class="message-image" padding="0" padding-right="12px" vertical-align="middle">
-                  <mj-image src="images/Joannes.jpg" border-radius="70px" padding="0"  />
-                </mj-column>
-                <mj-column width="400px" css-class="message-content" vertical-align="middle">
-                  <mj-text  padding="0" font-size="14px">
-                    <a style="font-weight: normal; text-decoration: none; color: #004494" href="#" target="_blank">John Delaware</a>
-                    started a <strong>discussion</strong>
-                    <a style="font-weight: normal; text-decoration: none; color: #004494" href="#" target="_blank">Lorem ipsum dolor sit amet, consectetuer adipiscing elit</a>
-                    in
-                    <a style="font-weight: normal; text-decoration: none; color: #004494" href="#" target="_blank">Group name nam pretium turpis et arcu</a>
-                  </mj-text>
-                </mj-column>
-              </mj-group>
+              <mj-column width="60px" css-class="message-image" padding="0" padding-right="12px" vertical-align="middle">
+                <mj-image src="images/Joannes.jpg" border-radius="70px" padding="0"  />
+              </mj-column>
+              <mj-column width="400px" css-class="message-content" vertical-align="middle">
+                <mj-text color="#707070"  padding="0" font-size="14px">
+                  <a style="font-weight: normal; text-decoration: none; color: #004494" href="#" target="_blank">John Delaware</a>
+                  started a <strong>discussion</strong>
+                  <a style="font-weight: normal; text-decoration: none; color: #004494" href="#" target="_blank">Lorem ipsum dolor sit amet, consectetuer adipiscing elit</a>
+                  in
+                  <a style="font-weight: normal; text-decoration: none; color: #004494" href="#" target="_blank">Group name nam pretium turpis et arcu</a>
+                </mj-text>
+              </mj-column>
               <!--END-CONTENT-->
             </mj-section>
 
@@ -144,7 +156,7 @@
 
               <mj-column>
                 <mj-group css-class="meta" width="200px" align="right">
-                  <mj-column padding="0" vertical-align="middle">
+                  <mj-column css-class="meta__data--image" padding="0" vertical-align="middle">
                     <mj-image css-class="meta__data" align="right" src="images/comment.png" width="18px" height="18px" padding="0" padding-right="2px"/>
                   </mj-column>
                   <mj-column vertical-align="middle" padding="0">
@@ -153,7 +165,7 @@
                     </mj-text>
                   </mj-column>
 
-                  <mj-column padding="0" vertical-align="middle">
+                  <mj-column css-class="meta__data--image" padding="0" vertical-align="middle">
                     <mj-image css-class="meta__data" align="right" src="images/display.png" width="18px" padding="0" padding-right="2px"/>
                   </mj-column>
                   <mj-column vertical-align="middle" padding="0">
@@ -162,7 +174,7 @@
                     </mj-text>
                   </mj-column>
 
-                  <mj-column padding="0" vertical-align="middle">
+                  <mj-column css-class="meta__data--image" padding="0" vertical-align="middle">
                     <mj-image css-class="meta__data" align="right" src="images/like.png" width="18px" height="18px" padding="0" padding-right="2px"/>
                   </mj-column>
                   <mj-column vertical-align="middle" padding="0">
@@ -171,7 +183,7 @@
                     </mj-text>
                   </mj-column>
 
-                  <mj-column padding="0" vertical-align="middle">
+                  <mj-column css-class="meta__data--image"  padding="0" vertical-align="middle">
                     <mj-image css-class="meta__data" align="right" src="images/download.png" width="18px" height="18px" padding="0" padding-right="2px"/>
                   </mj-column>
                   <mj-column vertical-align="middle" padding="0">
@@ -203,6 +215,15 @@
           <mj-button width="200px" font-size="14px" mj-class="btn" inner-padding="12px 15px" background-color="#004494" color="#ffffff" border-radius="0" font-weight="bold" href="#" target="_blank">
             Add comment
           </mj-button>
+        </mj-column>
+      </mj-section>
+
+      <mj-section padding="0 0 30px" css-class="pre-footer">
+        <mj-column>
+          <mj-text css-class="pre-footer">
+            <em>Jane Doe, member of public group - open membership requests.</em>
+            <br>
+          </mj-text>
         </mj-column>
       </mj-section>
 

@@ -80,11 +80,6 @@
         max-width: 85%;
       }
 
-      .mj-column-px-462 {
-        width: 462px !important;
-        max-width: 462px;
-      }
-
       .mj-column-px-60 {
         width: 60px !important;
         max-width: 60px;
@@ -136,11 +131,6 @@
     .moz-text-html .mj-column-per-85 {
       width: 85% !important;
       max-width: 85%;
-    }
-
-    .moz-text-html .mj-column-px-462 {
-      width: 462px !important;
-      max-width: 462px;
     }
 
     .moz-text-html .mj-column-px-60 {
@@ -199,8 +189,9 @@
         margin: 0 0 10px !important;
       }
 
-      .meta {
-        text-align: left !important;
+      .content-message {
+        width: 100% !important;
+        max-width: 100% !important;
       }
 
       .meta-image {
@@ -211,12 +202,26 @@
         text-align: left !important;
       }
 
-      .message-image {
-        width: 60px !important;
+      .meta__data--image {
+        width: 18px !important;
       }
 
-      .message-content {
-        width: 240px !important;
+      .message-image {
+        width: 60px !important;
+        padding-bottom: 20px;
+      }
+
+      .message-text {
+        width: 100% !important;
+        max-width: 100% !important;
+      }
+    }
+
+    @media screen and (max-device-width: 479px),
+    screen and (max-width: 479px) {
+      .meta {
+        text-align: left !important;
+        width: 200px !important;
       }
     }
 
@@ -358,51 +363,47 @@
                                           <td style="direction:ltr;font-size:0px;padding:0;padding-top:10px;text-align:center;">
                                             <!--[if mso | IE]><table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><![endif]-->
                                             <!-- CONTENT -->
-                                            <!--[if mso | IE]><td class="" style="width:462px;" ><![endif]-->
-                                            <div class="mj-column-px-462 mj-outlook-group-fix" style="font-size:0;line-height:0;text-align:left;display:inline-block;width:100%;direction:ltr;">
-                                              <!--[if mso | IE]><table border="0" cellpadding="0" cellspacing="0" role="presentation" ><tr><td style="vertical-align:middle;width:60px;" ><![endif]-->
-                                              <div class="mj-column-px-60 mj-outlook-group-fix message-image" style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:middle;width:0.12987012987012986%;">
-                                                <table border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%">
-                                                  <tbody>
-                                                    <tr>
-                                                      <td style="vertical-align:middle;padding:0;padding-right:12px;">
-                                                        <table border="0" cellpadding="0" cellspacing="0" role="presentation" style width="100%">
-                                                          <tbody>
-                                                            <tr>
-                                                              <td align="center" style="font-size:0px;padding:0;word-break:break-word;">
-                                                                <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="border-collapse:collapse;border-spacing:0px;">
-                                                                  <tbody>
-                                                                    <tr>
-                                                                      <td style="width:48px;">
-                                                                        <img height="auto" src="images/Joannes.jpg" style="border:0;border-radius:70px;display:block;outline:none;text-decoration:none;height:auto;width:100%;font-size:13px;" width="48">
-                                                                      </td>
-                                                                    </tr>
-                                                                  </tbody>
-                                                                </table>
-                                                              </td>
-                                                            </tr>
-                                                          </tbody>
-                                                        </table>
-                                                      </td>
-                                                    </tr>
-                                                  </tbody>
-                                                </table>
-                                              </div>
-                                              <!--[if mso | IE]></td><td style="vertical-align:middle;width:400px;" ><![endif]-->
-                                              <div class="mj-column-px-400 mj-outlook-group-fix message-content" style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:middle;width:0.8658008658008658%;">
-                                                <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="vertical-align:middle;" width="100%">
-                                                  <tbody>
-                                                    <tr>
-                                                      <td align="left" style="font-size:0px;padding:0;word-break:break-word;">
-                                                        <div style="font-family:Arial;font-size:14px;line-height:1.4;text-align:left;color:#404040;"><a style="font-weight: normal; text-decoration: none; color: #004494" href="#" target="_blank">John Delaware</a> started a <strong>discussion</strong>
-                                                          <a style="font-weight: normal; text-decoration: none; color: #004494" href="#" target="_blank">Lorem ipsum dolor sit amet, consectetuer adipiscing elit</a> in <a style="font-weight: normal; text-decoration: none; color: #004494" href="#" target="_blank">Group name nam pretium turpis et arcu</a>
-                                                        </div>
-                                                      </td>
-                                                    </tr>
-                                                  </tbody>
-                                                </table>
-                                              </div>
-                                              <!--[if mso | IE]></td></tr></table><![endif]-->
+                                            <!--[if mso | IE]><td class="message-image-outlook" style="vertical-align:middle;width:60px;" ><![endif]-->
+                                            <div class="mj-column-px-60 mj-outlook-group-fix message-image" style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:middle;width:100%;">
+                                              <table border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%">
+                                                <tbody>
+                                                  <tr>
+                                                    <td style="vertical-align:middle;padding:0;padding-right:12px;">
+                                                      <table border="0" cellpadding="0" cellspacing="0" role="presentation" style width="100%">
+                                                        <tbody>
+                                                          <tr>
+                                                            <td align="center" style="font-size:0px;padding:0;word-break:break-word;">
+                                                              <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="border-collapse:collapse;border-spacing:0px;">
+                                                                <tbody>
+                                                                  <tr>
+                                                                    <td style="width:48px;">
+                                                                      <img height="auto" src="images/Joannes.jpg" style="border:0;border-radius:70px;display:block;outline:none;text-decoration:none;height:auto;width:100%;font-size:13px;" width="48">
+                                                                    </td>
+                                                                  </tr>
+                                                                </tbody>
+                                                              </table>
+                                                            </td>
+                                                          </tr>
+                                                        </tbody>
+                                                      </table>
+                                                    </td>
+                                                  </tr>
+                                                </tbody>
+                                              </table>
+                                            </div>
+                                            <!--[if mso | IE]></td><td class="message-content-outlook" style="vertical-align:middle;width:400px;" ><![endif]-->
+                                            <div class="mj-column-px-400 mj-outlook-group-fix message-content" style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:middle;width:100%;">
+                                              <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="vertical-align:middle;" width="100%">
+                                                <tbody>
+                                                  <tr>
+                                                    <td align="left" style="font-size:0px;padding:0;word-break:break-word;">
+                                                      <div style="font-family:Arial;font-size:14px;line-height:1.4;text-align:left;color:#707070;"><a style="font-weight: normal; text-decoration: none; color: #004494" href="#" target="_blank">John Delaware</a> started a <strong>discussion</strong>
+                                                        <a style="font-weight: normal; text-decoration: none; color: #004494" href="#" target="_blank">Lorem ipsum dolor sit amet, consectetuer adipiscing elit</a> in <a style="font-weight: normal; text-decoration: none; color: #004494" href="#" target="_blank">Group name nam pretium turpis et arcu</a>
+                                                      </div>
+                                                    </td>
+                                                  </tr>
+                                                </tbody>
+                                              </table>
                                             </div>
                                             <!--[if mso | IE]></td><![endif]-->
                                             <!-- END-CONTENT -->
@@ -498,7 +499,7 @@
                                                     <td align="right" class="meta" style="max-width: 200px; font-size: 0px; word-break: break-word;">
                                                       <div class="mj-column-px-200 mj-outlook-group-fix meta" style="max-width: 200px; font-size: 0; line-height: 0; text-align: left; display: inline-block; width: 100%; direction: ltr;">
                                                         <!--[if mso | IE]><table border="0" cellpadding="0" cellspacing="0" role="presentation" ><tr><td style="vertical-align:middle;width:25px;" ><![endif]-->
-                                                        <div class="mj-column-per-12-5 mj-outlook-group-fix" style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:middle;width:12%;">
+                                                        <div class="mj-column-per-12-5 mj-outlook-group-fix meta__data--image" style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:middle;width:12%;">
                                                           <table border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%">
                                                             <tbody>
                                                               <tr>
@@ -546,7 +547,7 @@
                                                           </table>
                                                         </div>
                                                         <!--[if mso | IE]></td><td style="vertical-align:middle;width:25px;" ><![endif]-->
-                                                        <div class="mj-column-per-12-5 mj-outlook-group-fix" style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:middle;width:12%;">
+                                                        <div class="mj-column-per-12-5 mj-outlook-group-fix meta__data--image" style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:middle;width:12%;">
                                                           <table border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%">
                                                             <tbody>
                                                               <tr>
@@ -594,7 +595,7 @@
                                                           </table>
                                                         </div>
                                                         <!--[if mso | IE]></td><td style="vertical-align:middle;width:25px;" ><![endif]-->
-                                                        <div class="mj-column-per-12-5 mj-outlook-group-fix" style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:middle;width:12%;">
+                                                        <div class="mj-column-per-12-5 mj-outlook-group-fix meta__data--image" style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:middle;width:12%;">
                                                           <table border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%">
                                                             <tbody>
                                                               <tr>
@@ -642,7 +643,7 @@
                                                           </table>
                                                         </div>
                                                         <!--[if mso | IE]></td><td style="vertical-align:middle;width:25px;" ><![endif]-->
-                                                        <div class="mj-column-per-12-5 mj-outlook-group-fix" style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:middle;width:12%;">
+                                                        <div class="mj-column-per-12-5 mj-outlook-group-fix meta__data--image" style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:middle;width:12%;">
                                                           <table border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%">
                                                             <tbody>
                                                               <tr>
@@ -783,6 +784,32 @@
                             </tr>
                           </tbody>
                         </table>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!--[if mso | IE]></td></tr></table><![endif]-->
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!--[if mso | IE]></td></tr></table><table align="center" border="0" cellpadding="0" cellspacing="0" class="pre-footer-outlook" role="presentation" style="width:600px;" width="600" ><tr><td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;"><![endif]-->
+    <div class="pre-footer" style="margin: 0px auto; max-width: 600px; text-align: left;">
+      <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="width:100%;">
+        <tbody>
+          <tr>
+            <td style="direction:ltr;font-size:0px;padding:0 0 30px;text-align:center;">
+              <!--[if mso | IE]><table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><td class="" style="vertical-align:top;width:600px;" ><![endif]-->
+              <div class="mj-column-per-100 mj-outlook-group-fix" style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;">
+                <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="vertical-align:top;" width="100%">
+                  <tbody>
+                    <tr>
+                      <td align="left" class="pre-footer" style="font-size: 0px; padding: 10px 25px; word-break: break-word; text-align: left;">
+                        <div style="font-family: Arial; font-size: 16px; line-height: 1.4; color: #404040; text-align: left;"><em>Jane Doe, member of public group - open membership requests.</em>
+                          <br>
+                        </div>
                       </td>
                     </tr>
                   </tbody>
