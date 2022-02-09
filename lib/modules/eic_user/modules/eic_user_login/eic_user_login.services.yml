@@ -1,0 +1,12 @@
+services:
+  eic_user_login.smed_user_connection:
+    class: Drupal\eic_user_login\SmedUserConnection
+    arguments: ['@config.factory']
+  eic_user_login.smed_user_manager:
+    class: Drupal\eic_user_login\Service\SmedUserManager
+    arguments: ['@config.factory']
+  eic_user_login.cas_event_subscriber:
+    class: Drupal\eic_user_login\EventSubscriber\CasEventSubscriber
+    arguments: ['@config.factory', '@eic_user_login.smed_user_manager']
+    tags:
+      - { name: event_subscriber }
