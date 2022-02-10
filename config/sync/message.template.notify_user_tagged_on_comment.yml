@@ -1,0 +1,27 @@
+uuid: d2cbf7c2-772a-4a2c-9c42-f36f1842991a
+langcode: en
+status: true
+dependencies:
+  config:
+    - filter.format.full_html
+  module:
+    - eic_messages
+third_party_settings:
+  eic_messages:
+    message_template_type: notification
+template: notify_user_tagged_on_comment
+label: 'NOTIFY :: MT:: User tagged on comment'
+description: 'Notifies a user when tagged on a comment by another user'
+text:
+  -
+    value: "<p>[message:field_event_executing_user:entity:field_first_name]&nbsp;[message:field_event_executing_user:entity:field_last_name]&nbsp;tagged you in a comment</p>\r\n"
+    format: full_html
+  -
+    value: "<p><a href=\"[message:field_event_executing_user:entity:url]\">[message:field_event_executing_user:entity:field_first_name]&nbsp;[message:field_event_executing_user:entity:field_last_name]</a> tagged you in a comment:</p>\r\n\r\n<div>[message:raw-value:field_rendered_content]</div>\r\n\r\n<p><a href=\"[message:field_referenced_comment:entity:url]\">View comment</a></p>\r\n"
+    format: full_html
+settings:
+  'token options':
+    clear: false
+    'token replace': true
+  purge_override: false
+  purge_methods: {  }

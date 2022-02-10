@@ -1,0 +1,7 @@
+text:
+  -
+    value: "<p>[message:field_event_executing_user:entity:field_first_name]&nbsp;[message:field_event_executing_user:entity:field_last_name]&nbsp;tagged you in a comment</p>\r\n"
+    format: full_html
+  -
+    value: "<p><a href=\"[message:field_event_executing_user:entity:url]\">[message:field_event_executing_user:entity:field_first_name]&nbsp;[message:field_event_executing_user:entity:field_last_name]</a> tagged you in a comment:</p>\r\n\r\n<div>[message:raw-value:field_rendered_content]</div>\r\n\r\n<p><a href=\"[message:field_referenced_comment:entity:url]\">View comment</a></p>\r\n"
+    format: full_html

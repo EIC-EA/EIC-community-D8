@@ -107,6 +107,18 @@ function eic_community_preprocess_comment(&$variables) {
   $link = $flag_link_builder->build('comment', $comment->id(), 'like_comment');
 
   $variables['comment']['flag_link'] = $link;
+
+  $view_mode = $variables['elements']['#view_mode'];
+
+  switch ($view_mode) {
+    case 'notification_teaser':
+      // Removes unneeded variables from notification teaser.
+      unset($variables['comment']['is_owner']);
+      unset($variables['comment']['user']);
+      break;
+
+  }
+
 }
 
 /**
