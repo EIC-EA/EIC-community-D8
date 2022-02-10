@@ -1,0 +1,35 @@
+{% set title_element = title_element|default('h2') %}
+
+<section class="ecl-my-notifications">
+  <div class="ecl-my-notifications__header">
+    <div>
+      {% if title is not empty %}
+        <{{ title_element }} class="ecl-teaser-overview__title">{{ title }}</{{ title_element }}>
+      {% endif %}
+      {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with {
+        link: action.link|default({})|merge({
+          type: 'standalone',
+          icon_position: 'before',
+        }),
+        icon: icon_file_path ? {
+          path: icon_file_path,
+          name: action.icon.name|default('gear'),
+          type: action.icon.type|default('custom'),
+          size: action.icon.size|default('s'),
+        } : {},
+        extra_classes: 'ecl-link ecl-link--default ecl-link--icon ecl-link--icon-before ecl-link--button ecl-link--button-secondary',
+      } only %}
+    </div>
+  </div>
+
+  <div class="ecl-my-notifications__body">
+    <p>
+      {{ body }}
+    </p>
+
+    {#
+    REACT COMPONENT
+    #}
+  </div>
+
+</section>

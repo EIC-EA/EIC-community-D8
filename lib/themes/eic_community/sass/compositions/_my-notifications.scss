@@ -1,0 +1,26 @@
+.ecl-my-notifications {
+
+  &__header {
+    & > div:first-child {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+
+      & h2 {
+        margin-right: $ecl-spacing-xs;
+      }
+    }
+
+    & .ecl-link--button {
+      white-space: nowrap;
+    }
+  }
+
+  &__body {
+    line-height: 1.5;
+    @include ecl-media-breakpoint-up('md') {
+      max-width: calc(100% - 150px);
+    }
+  }
+}
