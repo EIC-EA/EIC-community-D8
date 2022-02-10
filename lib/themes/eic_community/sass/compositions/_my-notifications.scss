@@ -23,4 +23,27 @@
       max-width: calc(100% - 150px);
     }
   }
+
+  &__section {
+    margin-bottom: $ecl-spacing-3-xl;
+  }
+
+  &__tags-list .ecl-featured-list__item,
+  &__tags-list .ecl-featured-list__item:first-child {
+    padding-left: 0;
+    padding-right: $ecl-spacing-xs;
+    & a {
+      color: $ecl-color-grey-50;
+      text-decoration: none;
+    }
+  }
+}
+
+.ecl-my-notifications-management {
+  &__header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+  }
 }
