@@ -1,0 +1,16 @@
+{#
+  Switch toogle
+
+  Data exemple:
+  {
+    name: String,
+    state: Boolean
+  }
+
+#}
+
+<label class="ecl-toogle">
+  <input type="checkbox" {{ state ? 'checked' : ''}} name="{{ name }}"/>
+  <div class="ecl-toogle__button"></div>
+  <span class="ecl-toogle__label"><span>Off</span> <span>On</span></span>
+</label>

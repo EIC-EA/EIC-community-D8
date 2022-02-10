@@ -1,0 +1,65 @@
+.ecl-toogle{
+
+  $node: &;
+  display: inline-flex;
+
+  & input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+
+    &:checked {
+      & ~ #{$node}__button {
+        background: $ecl-color-green;
+        &:after {
+          left: 18px;
+        }
+      }
+
+      & ~ #{$node}__button + #{$node}__label {
+        & span:first-child {
+          display: none;
+        }
+        & span:last-child {
+          display: block;
+        }
+      }
+    }
+  }
+
+  &__label {
+    color: $ecl-color-grey;
+    & span:first-child {
+      display: block;
+    }
+    & span:last-child {
+      display: none;
+    }
+  }
+
+  &__button {
+    display: block;
+    width: 40px;
+    height: 22px;
+    background: $ecl-color-red;
+    border: 2px solid #C4C4C4;
+    box-sizing: border-box;
+    border-radius: 11px;
+    position: relative;
+    cursor: pointer;
+    margin-right: $ecl-spacing-2-xs;
+
+    &:after {
+      content: '';
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      display: block;
+      background: #ffffff;
+      position: absolute;
+      left: 0;
+      top: 0;
+      transition: left 300ms ease-in-out;
+    }
+  }
+}
