@@ -141,10 +141,7 @@
   &__meta,
   &__featured-items {
     @include ecl-media-breakpoint-up('md') {
-
-      #{$node}--has-compact-layout & {
-        padding-left: calc(#{map-get($ecl-media, '2xs')} + #{ecl-box-model('padding', 'controls')});
-      }
+      padding-left: calc(#{map-get($ecl-media, 'xs')} + 1.25rem);
     }
   }
 
@@ -164,7 +161,6 @@
     position: relative;
     flex-wrap: wrap;
     gap: ecl-box-model('margin', 'controls');
-    flex-direction: column;
     @include ecl-media-breakpoint-up('md') {
       align-items: center;
       flex-direction: row;
@@ -182,8 +178,7 @@
   }
 
   &__timestamp {
-    @include ecl-responsive-font('meta');
-    @include ecl-responsive-font('meta');
+    @include ecl-responsive-font('label');
   }
 
   &__author {
@@ -227,7 +222,7 @@
   &__stats-item {
     align-items: center;
     color: ecl-typography('color', 'meta');
-    @include ecl-responsive-font('meta');
+    @include ecl-responsive-font('label');
   }
 
   &__stats-item-label {
@@ -235,12 +230,12 @@
   }
 
   &__stats-item-icon {
-    margin-right: ecl-box-model('padding', 'controls');
+    margin-right: $ecl-spacing-2-xs;
   }
 
-  &__tag {
+  & &__tag {
     @include ecl-responsive-font('meta');
-    background-color: map-get($ecl-colors, 'white');
+    background: map-get($ecl-colors, 'white');
     text-decoration: none;
     color: ecl-typography('color', 'title');
     padding: map-get($ecl-spacing, '2xs') map-get($ecl-spacing, 'xs');
