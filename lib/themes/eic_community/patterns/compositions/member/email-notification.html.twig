@@ -4,8 +4,9 @@
   <div class="ecl-my-notifications__header">
     <div>
       {% if title is not empty %}
-        <{{ title_element }} class="ecl-teaser-overview__title">{{ title }}</{{ title_element }}>
-      {% endif %}
+      <{{ title_element }} class="ecl-teaser-overview__title">{{ title }}</{{ title_element }}>
+    {% endif %}
+    {% if action %}
       {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with {
         link: action.link|default({})|merge({
           type: 'standalone',
@@ -19,13 +20,38 @@
         } : {},
         extra_classes: 'ecl-link ecl-link--default ecl-link--icon ecl-link--icon-before ecl-link--button ecl-link--button-secondary',
       } only %}
-    </div>
+    {% endif %}
+  </div>
   </div>
 
   <div class="ecl-my-notifications__body">
     <p>
       {{ body }}
     </p>
+
+
+    {% if interests is not empty %}
+      <section class="ecl-my-notifications__section ecl-my-notifications__tags-list">
+        {% for item in interests %}
+          {% include "@theme/patterns/compositions/list-tags.html.twig" with item %}
+        {% endfor %}
+      </section>
+    {% endif %}
+
+    {% if global_action %}
+      <section class="ecl-my-notifications__section ecl-my-notifications__tags-list">
+        <h4>{{ global_action.title }}</h4>
+        {% include "@theme/patterns/components/toogle-switch.html.twig" with {
+          name: global_action.title,
+          state: global_action.state
+        } %}
+      </section>
+    {% endif %}
+
+    {% if table %}
+      {{ table }}
+    {% endif %}
+
 
     {#
     REACT COMPONENT
