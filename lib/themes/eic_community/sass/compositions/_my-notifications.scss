@@ -17,7 +17,7 @@
     }
   }
 
-  &__body {
+  &__body p {
     line-height: 1.5;
     @include ecl-media-breakpoint-up('md') {
       max-width: calc(100% - 150px);
@@ -46,4 +46,47 @@
     align-items: center;
     justify-content: space-between;
   }
+
+  &__table {
+    width: 100%;
+
+    & th {
+      text-align: left;
+      font-weight: normal;
+      padding: $ecl-spacing-xs $ecl-spacing-xs ;
+    }
+
+    &__item {
+      td {
+        padding: $ecl-spacing-xs $ecl-spacing-xs ;
+        border: none;
+        border-top: 1px solid $ecl-color-grey-15;
+        border-bottom: 1px solid $ecl-color-grey-15;
+        & > div {
+          display: flex;
+          align-items: center;
+        }
+      }
+      & + & td {
+        border-top: none;
+      }
+      &--parent {
+        background: $ecl-color-grey-5;
+      }
+    }
+
+    &__label {
+      font-weight: bold;
+      color: $ecl-color-blue;
+      & svg {
+        margin-right: $ecl-spacing-2-xs;
+      }
+    }
+
+    &__status {
+      width: 1%;
+      white-space: nowrap;
+    }
+  }
+
 }
