@@ -24,6 +24,12 @@ theme:
   dependencies:
     - core/drupal
 
+react-notif-management:
+  js:
+    dist/react/block/notifmanagement/entrypoint.js: { minified: true }
+  dependencies:
+    - core/drupal
+    -
 react-block-modal:
   js:
     dist/react/block/share_modal/entrypoint.js: { minified: true }
