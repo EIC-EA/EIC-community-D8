@@ -72,6 +72,13 @@
       }
       &--parent {
         background: $ecl-color-grey-5;
+        cursor: pointer;
+      }
+      &--as-no-child {
+        cursor: auto;
+        td:first-child {
+          padding-left: 1.75rem;
+        }
       }
     }
 
