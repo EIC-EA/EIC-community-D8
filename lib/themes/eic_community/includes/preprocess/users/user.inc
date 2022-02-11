@@ -208,11 +208,13 @@ function eic_community_preprocess_user(array &$variables) {
  *
  * @param Drupal\Core\Entity\EntityInterface $user
  *   User entity of which you want the image array.
+ * @param bool $relative_url
+ *   Whether the image url is relative or absolute.
  *
  * @return mixed
  *   Returns array or NULL.
  */
-function _get_profile_image_array(EntityInterface $user): ?array {
+function _get_profile_image_array(EntityInterface $user, $relative_url = TRUE): ?array {
   if ($user->field_media->target_id == NULL) {
     return NULL;
   }
@@ -223,7 +225,7 @@ function _get_profile_image_array(EntityInterface $user): ?array {
   $user_image_file = File::load($user_image_media_fid);
 
   return [
-    'src' => $user_image_file->createFileUrl(),
+    'src' => $user_image_file->createFileUrl($relative_url),
     'alt' => $user_image_media->oe_media_image->alt,
   ];
 }
@@ -253,17 +255,17 @@ function eic_community_get_teaser_user_display(UserInterface $user) {
     $author['path'] = $user->toUrl()->toString();
   }
 
-  if (!$user->get('field_media')->isEmpty()) {
-    /** @var \Drupal\media\Entity\Media $media */
-    $media = \Drupal::service('entity.repository')->getTranslationFromContext($user->get('field_media')->entity);
-    if ($media->bundle() == 'image') {
-      $image_item = ImageValueObject::fromImageItem($media->get('oe_media_image')->first());
-      $author['image'] = [
-        'src' => $image_item->getSource(),
-        'alt' => $author['name'],
-      ];
-    }
-  }
+  // if (!$user->get('field_media')->isEmpty()) {
+  //   /** @var \Drupal\media\Entity\Media $media */
+  //   $media = \Drupal::service('entity.repository')->getTranslationFromContext($user->get('field_media')->entity);
+  //   if ($media->bundle() == 'image') {
+  //     $image_item = ImageValueObject::fromImageItem($media->get('oe_media_image')->first());
+  //     $author['image'] = [
+  //       'src' => $image_item->getSource(),
+  //       'alt' => $author['name'],
+  //     ];
+  //   }
+  // }
 
   return $author;
 }

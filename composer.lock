@@ -4677,6 +4677,9 @@
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
                     }
+                },
+                "patches_applied": {
+                    "3183734 - Unable to use inline styles when tokens are used in a message (patch provided)": "https://www.drupal.org/files/issues/2020-11-20/update-process-token-function-to-avoid-issue-with-html-filtering-3183734-2.patch"
                 }
             },
             "notification-url": "https://packages.drupal.org/8/downloads",
