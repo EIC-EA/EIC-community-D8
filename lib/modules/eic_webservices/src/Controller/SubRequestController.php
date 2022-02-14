@@ -56,7 +56,7 @@ class SubRequestController extends ControllerBase implements ContainerInjectionI
    *   Additional headers to use in the request.
    *
    * @return \Symfony\Component\HttpFoundation\Response
-   *   The response String.
+   *   The response object.
    *
    * @throws \Exception
    */
@@ -88,9 +88,7 @@ class SubRequestController extends ControllerBase implements ContainerInjectionI
 
     $sub_request->setSession($this->requestStack->getCurrentRequest()->getSession());
 
-    $response = $this->httpKernel->handle($sub_request, HttpKernelInterface::SUB_REQUEST, FALSE);
-
-    return $response;
+    return $this->httpKernel->handle($sub_request, HttpKernelInterface::SUB_REQUEST, FALSE);
   }
 
 }

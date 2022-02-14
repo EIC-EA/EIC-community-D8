@@ -2,6 +2,7 @@
 
 namespace Drupal\eic_groups\Hooks;
 
+use Drupal\book\BookManagerInterface;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
@@ -90,6 +91,13 @@ class EntityOperations implements ContainerInjectionInterface {
   private $solrDocumentProcessor;
 
   /**
+   * The book manager.
+   *
+   * @var \Drupal\book\BookManagerInterface
+   */
+  protected $bookManager;
+
+  /**
    * Constructs a new EntityOperations object.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
@@ -104,8 +112,10 @@ class EntityOperations implements ContainerInjectionInterface {
    *   The EIC User helper service.
    * @param \Drupal\oec_group_flex\OECGroupFlexHelper $oec_group_flex_helper
    *   The OEC Group Flex helper service.
-   * @param SolrDocumentProcessor $solr_document_processor
+   * @param \Drupal\eic_search\Service\SolrDocumentProcessor $solr_document_processor
    *   The Solr Document Processor service.
+   * @param \Drupal\book\BookManagerInterface $book_manager
+   *   The book manager.
    */
   public function __construct(
     EntityTypeManagerInterface $entity_type_manager,
@@ -114,7 +124,8 @@ class EntityOperations implements ContainerInjectionInterface {
     PathautoGeneratorInterface $pathauto_generator,
     UserHelper $user_helper,
     OECGroupFlexHelper $oec_group_flex_helper,
-    SolrDocumentProcessor $solr_document_processor
+    SolrDocumentProcessor $solr_document_processor,
+    BookManagerInterface $book_manager
   ) {
     $this->entityTypeManager = $entity_type_manager;
     $this->routeMatch = $route_match;
@@ -123,6 +134,7 @@ class EntityOperations implements ContainerInjectionInterface {
     $this->userHelper = $user_helper;
     $this->oecGroupFlexHelper = $oec_group_flex_helper;
     $this->solrDocumentProcessor = $solr_document_processor;
+    $this->bookManager = $book_manager;
   }
 
   /**
@@ -136,7 +148,8 @@ class EntityOperations implements ContainerInjectionInterface {
       $container->get('pathauto.generator'),
       $container->get('eic_user.helper'),
       $container->get('oec_group_flex.helper'),
-      $container->get('eic_search.solr_document_processor')
+      $container->get('eic_search.solr_document_processor'),
+      $container->get('book.manager')
     );
   }
 
@@ -214,6 +227,38 @@ class EntityOperations implements ContainerInjectionInterface {
 
         $build += $variables;
         break;
+
+    }
+  }
+
+  /**
+   * Clears cache of wiki parent book node.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The wiki page node.
+   */
+  public function clearWikiPageBookCache(EntityInterface $entity) {
+    if ($entity->bundle() !== 'wiki_page') {
+      return;
+    }
+
+    // If the wiki page is part of the first level, then we clear the book
+    // cache.
+    if (
+      !empty($entity->book['bid']) &&
+      $entity->book['bid'] === $entity->book['pid']
+    ) {
+      $book = $this->entityTypeManager->getStorage('node')
+        ->load($entity->book['bid']);
+
+      $data = $this->bookManager->bookTreeAllData($entity->book['bid'], $book->book, 2);
+      $book_data = reset($data);
+      if (!empty($book_data['below'])) {
+        $wiki_page_nid = reset($book_data['below'])['link']['nid'];
+        if ($entity->id() === $wiki_page_nid) {
+          Cache::invalidateTags($book->getCacheTagsToInvalidate());
+        }
+      }
 
     }
   }
@@ -370,12 +415,14 @@ class EntityOperations implements ContainerInjectionInterface {
    */
   protected function createGroupAboutPageMenuLink(EntityInterface $group) {
     foreach (group_content_menu_get_menus_per_group($group) as $group_menu) {
-      if ($group_menu->getGroupContentType()
+      if (
+        $group_menu->getGroupContentType()
           ->getContentPlugin()
-          ->getPluginId() == 'group_content_menu:group_main_menu') {
+          ->getPluginId() == 'group_content_menu:group_main_menu'
+      ) {
         // Create menu item.
         $menu_name = GroupContentMenuInterface::MENU_PREFIX . $group_menu->getEntity()
-            ->id();
+          ->id();
         $menu_item = $this->entityTypeManager->getStorage('menu_link_content')
           ->create([
             'title' => $this->t('About'),
@@ -389,7 +436,8 @@ class EntityOperations implements ContainerInjectionInterface {
         try {
           $menu_item->save();
           return $menu_item;
-        } catch (EntityStorageException $e) {
+        }
+        catch (EntityStorageException $e) {
           return FALSE;
         }
       }

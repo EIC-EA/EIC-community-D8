@@ -1,8 +1,12 @@
 <?php
 
 /**
- * Implements hook_preprocess_eic_group_overview_message_block() for eic_group_overview_message
- * block.
+ * @file
+ * Contains implementation of hook_preprocess_eic_group_moderated_message_box().
+ */
+
+/**
+ * Implements hook_preprocess_eic_group_overview_message_block().
  */
 function eic_community_preprocess_eic_group_moderated_message_box(array &$variables) {
   $actions = [];
@@ -28,6 +32,10 @@ function eic_community_preprocess_eic_group_moderated_message_box(array &$variab
       $actions[] = [
         'label' => $link['label'],
         'items' => $items,
+        'icon' => [
+          'name' => 'plus',
+          'type' => 'ui',
+        ],
       ];
     }
     else {

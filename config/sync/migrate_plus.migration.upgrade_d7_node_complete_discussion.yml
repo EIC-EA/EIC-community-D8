@@ -1,0 +1,125 @@
+uuid: d99358fe-80e5-4444-b39f-397120031a75
+langcode: en
+status: true
+dependencies: {  }
+id: upgrade_d7_node_complete_discussion
+class: Drupal\node\Plugin\migrate\D7NodeTranslation
+field_plugin_method: null
+cck_plugin_method: null
+migration_tags:
+  - 'Drupal 7'
+  - Content
+migration_group: migrate_drupal_7
+label: 'Node complete (Discussion)'
+source:
+  plugin: eic_d7_node_complete_with_smed_ids
+  node_type: discussion
+  track_changes: true
+  smed_taxonomy_fields:
+    - c4m_vocab_geo
+    - c4m_vocab_language
+    - c4m_vocab_topic
+process:
+  nid:
+    -
+      plugin: migration_lookup
+      migration: upgrade_d7_node_complete_discussion
+      source: tnid
+    -
+      plugin: node_complete_node_lookup
+  langcode:
+    -
+      plugin: static_map
+      source: language
+      bypass: true
+      map:
+        und: en
+    -
+      plugin: default_value
+      default_value: en
+  title: title
+  uid:
+    -
+      plugin: migration_lookup
+      source: node_uid
+      migration:
+        - upgrade_d7_user
+  status: status
+  created: created
+  changed: timestamp
+  published_at: timestamp
+  promote: promote
+  sticky: sticky
+  revision_uid:
+    -
+      plugin: migration_lookup
+      source: revision_uid
+      migration:
+        - upgrade_d7_user
+  revision_log: log
+  revision_timestamp: timestamp
+  content_translation_source: source_langcode
+  node_comment/0/status: comment
+  field_body:
+    -
+      plugin: eic_media_wysiwyg_filter
+      source: c4m_body
+      media_migrations:
+        - upgrade_d7_file_audio_to_media
+        - upgrade_d7_file_document_to_media
+        - upgrade_d7_file_image_to_media
+        - upgrade_d7_file_undefined_to_media
+        - upgrade_d7_file_video_to_media
+  field_discussion_type:
+    -
+      plugin: static_map
+      source: c4m_discussion_type
+      map:
+        debate: discussion
+        idea: idea
+        question: question
+        info: information
+  field_vocab_languages:
+    -
+      plugin: sub_process
+      source: c4m_vocab_language
+      process:
+        target_id:
+          -
+            plugin: migration_lookup
+            source: smed_id
+            no_stub: true
+            migration:
+              - smed_spoken_languages
+  field_vocab_topics:
+    -
+      plugin: sub_process
+      source: c4m_vocab_topic
+      process:
+        target_id:
+          -
+            plugin: migration_lookup
+            source: smed_id
+            no_stub: true
+            migration:
+              - smed_thematics_topics_lvl1
+              - smed_thematics_topics_lvl2
+              - smed_thematics_topics_lvl3
+destination:
+  plugin: 'entity_complete:node'
+  translations: true
+  default_bundle: discussion
+migration_dependencies:
+  required:
+    - upgrade_d7_user
+    - upgrade_d7_file_audio_to_media
+    - upgrade_d7_file_document_to_media
+    - upgrade_d7_file_image_to_media
+    - upgrade_d7_file_undefined_to_media
+    - upgrade_d7_file_video_to_media
+    - upgrade_d7_node_complete_document
+    - smed_spoken_languages
+    - smed_thematics_topics_lvl1
+    - smed_thematics_topics_lvl2
+    - smed_thematics_topics_lvl3
+  optional: {  }

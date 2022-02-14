@@ -60,11 +60,23 @@ function eic_community_preprocess_page(array &$variables): void {
           'path' => $account->toUrl()->toString(),
         ],
       ],
-      [
+    ];
+
+    // Adds unmasquerade link if the user is masquerading.
+    if (\Drupal::service('masquerade')->isMasquerading()) {
+      $user['actions'][] = [
         'link' => [
-          'label' => t('Log out'),
-          'path' => Url::fromRoute('user.logout'),
+          'label' => t('Unmasquerade'),
+          'path' => Url::fromRoute('masquerade.unmasquerade')->toString(),
         ],
+      ];
+    }
+
+    // Adds logout link to the end of the dropdown.
+    $user['actions'][] = [
+      'link' => [
+        'label' => t('Log out'),
+        'path' => Url::fromRoute('user.logout'),
       ],
     ];
 

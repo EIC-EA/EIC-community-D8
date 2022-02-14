@@ -61,6 +61,13 @@ class UserGenerator extends CoreGenerator {
           'site_admin',
         ],
       ],
+      [
+        'name' => 'web_service',
+        'pass' => 'secret',
+        'roles' => [
+          'service_authentication',
+        ],
+      ],
     ];
 
     foreach ($users as $key => $user) {

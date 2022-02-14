@@ -19,8 +19,10 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
+use Drupal\eic_events\Constants\Event;
 use Drupal\eic_groups\Constants\GroupJoiningMethodType;
 use Drupal\eic_groups\Constants\GroupVisibilityType;
+use Drupal\eic_organisations\Constants\Organisations;
 use Drupal\eic_overviews\GroupOverviewPages;
 use Drupal\eic_user\UserHelper;
 use Drupal\group\Entity\Group;
@@ -307,6 +309,39 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
     }
 
     return $roles;
+  }
+
+  /**
+   * Returns the correct role machine name for the given group type and role.
+   *
+   * @param string $group_type
+   *   The group type ID.
+   * @param string $role
+   *   The role to check. Can be either "admin", "owner" or "member".
+   *
+   * @return string|null
+   *   The group role machine name or NULL if not found.
+   */
+  public static function getGroupTypeRole(string $group_type, string $role) {
+    $roles = [
+      'group' => [
+        self::GROUP_TYPE_ADMINISTRATOR_ROLE => self::GROUP_ADMINISTRATOR_ROLE,
+        self::GROUP_TYPE_OWNER_ROLE => self::GROUP_OWNER_ROLE,
+        self::GROUP_TYPE_MEMBER_ROLE => self::GROUP_MEMBER_ROLE,
+      ],
+      'event' => [
+        self::GROUP_TYPE_ADMINISTRATOR_ROLE => Event::GROUP_ADMINISTRATOR_ROLE,
+        self::GROUP_TYPE_OWNER_ROLE => Event::GROUP_OWNER_ROLE,
+        self::GROUP_TYPE_MEMBER_ROLE => Event::GROUP_MEMBER_ROLE,
+      ],
+      'organisation' => [
+        self::GROUP_TYPE_ADMINISTRATOR_ROLE => Organisations::GROUP_ADMINISTRATOR_ROLE,
+        self::GROUP_TYPE_OWNER_ROLE => Organisations::GROUP_OWNER_ROLE,
+        self::GROUP_TYPE_MEMBER_ROLE => Organisations::GROUP_MEMBER_ROLE,
+      ],
+    ];
+
+    return $roles[$group_type][$role] ?? NULL;
   }
 
   /**
