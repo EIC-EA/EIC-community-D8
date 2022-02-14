@@ -1,0 +1,19 @@
+uuid: c0fc9cef-05d8-442f-a687-161e15e698c5
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.message.field_entity_type
+    - message.template.notify_transfer_owner_req_cancel
+id: message.notify_transfer_owner_req_cancel.field_entity_type
+field_name: field_entity_type
+entity_type: message
+bundle: notify_transfer_owner_req_cancel
+label: 'Entity type'
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

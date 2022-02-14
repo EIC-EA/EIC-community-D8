@@ -10,10 +10,9 @@ dependencies:
     - rest.resource.eic_webservices_group_membership
     - rest.resource.eic_webservices_organisation_update
     - rest.resource.eic_webservices_user_update
-    - workflows.workflow.groups
   module:
     - comment
-    - content_moderation
+    - content_moderation_bypass
     - filter
     - group
     - node
@@ -27,6 +26,7 @@ permissions:
   - 'administer comments'
   - 'administer users'
   - 'bypass group access'
+  - 'bypass groups transition restrictions'
   - 'restful delete eic_webservices_group_membership'
   - 'restful get eic_webservices_organisation'
   - 'restful post eic_webservices_event_update'
@@ -34,13 +34,7 @@ permissions:
   - 'restful post eic_webservices_organisation'
   - 'restful post eic_webservices_organisation_update'
   - 'restful post eic_webservices_user_update'
-  - 'use groups transition block'
-  - 'use groups transition create_new_group'
   - 'use groups transition force_pending_to_published'
-  - 'use groups transition publish'
-  - 'use groups transition unblock'
-  - 'use groups transition unpublish'
-  - 'use groups transition upgrade_to_draft'
   - 'use text format basic_text'
   - 'use text format filtered_html'
   - 'use text format full_html'

@@ -32,6 +32,7 @@ function eic_group_membership_entity_operation_alter(
       case 'request_transfer_ownership':
       case 'accept_request_transfer_ownership':
       case 'deny_request_transfer_ownership':
+      case 'cancel_request_transfer_ownership':
         break;
 
       default:
@@ -134,7 +135,9 @@ function eic_group_membership_update_membership_role_form_submit(
  * Submit handler to set another redirect URL.
  *
  * @param array $form
+ *   An associative array containing the structure of the form.
  * @param \Drupal\Core\Form\FormStateInterface $form_state
+ *   The current state of the form.
  *
  * @throws \Drupal\Core\Entity\EntityMalformedException
  */

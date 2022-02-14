@@ -19,7 +19,7 @@ conditions:
     negate: false
     uuid: df5ac6fd-1e86-44f6-9ff6-e46b4cfc36f1
     context_mapping: {  }
-    routes: "entity.group_content.new_request\r\nentity.group_content.user_close_request"
+    routes: "entity.group_content.new_request\r\nentity.group_content.user_close_request\r\nentity.group_content.user_cancel_request"
 reactions:
   blocks:
     id: blocks

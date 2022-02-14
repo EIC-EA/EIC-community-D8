@@ -40,6 +40,7 @@ dependencies:
     - filter
     - flag
     - group
+    - masquerade
     - media
     - message
     - node
@@ -141,6 +142,7 @@ permissions:
   - 'manage blocked entities'
   - 'manage contact form emails'
   - 'mark private content'
+  - 'masquerade as trusted_user'
   - 'overview messages'
   - 'post comments'
   - 'publish archived content'
