@@ -90,9 +90,10 @@ class BookPageRedirectSubscriber implements EventSubscriberInterface {
     if (!empty($book_data['below'])) {
       $wiki_page_nid = reset($book_data['below'])['link']['nid'];
       $wiki_page = $this->entityTypeManager->getStorage('node')->load($wiki_page_nid);
-      $redirect_response = new CacheableRedirectResponse($wiki_page->toUrl()->toString());
+      $redirect_response = new CacheableRedirectResponse($wiki_page->toUrl()->toString(), 301);
       $redirect_response->addCacheableDependency($wiki_page);
-      $redirect_response->send();
+      $redirect_response->addCacheableDependency($node);
+      $event->setResponse($redirect_response);
     }
   }
 

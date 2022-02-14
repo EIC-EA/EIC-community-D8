@@ -267,11 +267,9 @@ class NewRequestForm extends ContentEntityDeleteForm {
 
     if ($has_timeout_field) {
       $form['timeout'] = [
-        '#type' => 'number',
-        '#title' => $this->t('How many days should this request remain open? Leave it as 0 for no timeout.'),
-        '#min' => $fields[HandlerInterface::REQUEST_TIMEOUT_FIELD]->getSetting('min'),
-        '#max' => $fields[HandlerInterface::REQUEST_TIMEOUT_FIELD]->getSetting('max'),
-        '#step' => 1,
+        '#type' => 'select',
+        '#title' => $this->t('How many days should this request remain open?'),
+        '#options' => RequestTypes::getRequestTimeoutExpirationOptions(),
         '#default_value' => $fields[HandlerInterface::REQUEST_TIMEOUT_FIELD]->getDefaultValueLiteral()[0]['value'],
         '#required' => TRUE,
       ];

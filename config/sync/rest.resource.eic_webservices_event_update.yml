@@ -1,0 +1,17 @@
+uuid: a406a9f1-0ec5-440a-b1de-208a338c663b
+langcode: en
+status: true
+dependencies:
+  module:
+    - eic_webservices
+    - hal
+id: eic_webservices_event_update
+plugin_id: eic_webservices_event_update
+granularity: resource
+configuration:
+  methods:
+    - POST
+  formats:
+    - hal_json
+  authentication:
+    - eic_webservices_token_auth

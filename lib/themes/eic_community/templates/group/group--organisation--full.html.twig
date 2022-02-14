@@ -13,7 +13,7 @@
     {% embed "@theme/patterns/compositions/editorial-article.html.twig" with editorial_article|default({}) %}
         {% block content %}
             {% if details is not empty %}
-                <section class="ecl-organisation__details">
+                <section class="ecl-organisation__details ecl-organisation__item">
                     <h2>{{ details.title }}</h2>
                     {% for detailsItem in details.items %}
                         {% if detailsItem.type == 'stats' %}

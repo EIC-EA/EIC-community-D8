@@ -3,7 +3,7 @@
 namespace Drupal\eic_flags;
 
 /**
- * Class RequestStatus.
+ * Provides flag request status.
  *
  * @package Drupal\eic_flags
  */
@@ -16,6 +16,8 @@ final class RequestStatus {
   const ACCEPTED = 'accepted';
 
   const OPEN = 'open';
+
+  const CANCELLED = 'cancelled';
 
   const TIMEOUT = 'timeout';
 

@@ -1187,6 +1187,10 @@
         width: map-get($ecl-media, 'l');
         height: map-get($ecl-media, 'l');
         object-fit: cover ;
+        @include ecl-media-breakpoint-down('md') {
+          width: 100%;
+          height: 100%;
+        }
       }
 
       @include ecl-media-breakpoint-down('xs') {

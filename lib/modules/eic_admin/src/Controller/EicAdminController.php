@@ -40,6 +40,13 @@ class EicAdminController extends ControllerBase {
   /**
    * Builds the response.
    */
+  public function settings() {
+    return $this->systemManager->getBlockContents();
+  }
+
+  /**
+   * Builds the response.
+   */
   public function dashboard() {
     return $this->systemManager->getBlockContents();
   }

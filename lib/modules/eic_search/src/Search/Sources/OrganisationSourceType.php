@@ -44,6 +44,8 @@ class OrganisationSourceType extends SourceType {
       'sm_group_organisation_type_string' => $this->t('Organisation type', [], ['context' => 'eic_search']),
       'sm_content_field_vocab_topics_string' => $this->t('Topic', [], ['context' => 'eic_search']),
       'sm_group_field_locations_string' => $this->t('Locations', [], ['context' => 'eic_search']),
+      'sm_organisation_services_products' => $this->t('Activity sectors', [], ['context' => 'eic_search']),
+      'sm_organisation_target_market_name' => $this->t('Target sectors', [], ['context' => 'eic_search']),
     ];
   }
 
