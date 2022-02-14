@@ -45,7 +45,7 @@ function _eic_community_render_organisation_detail_page(&$variables, $group) {
     ->referencedEntities();
 
   $features = $group->get(GroupFeatureHelper::FEATURES_FIELD_NAME)->getValue();
-  $features = array_map(function($item) {
+  $features = array_map(function ($item) {
     return $item['value'];
   }, $features);
 
@@ -188,6 +188,23 @@ function _eic_community_render_organisation_detail_page(&$variables, $group) {
 
   $needs = $group->get('field_needs')->referencedEntities();
   $offers = $group->get('field_offers')->referencedEntities();
+
+  $url_add_announcement = Url::fromRoute(
+    'entity.group.edit_form',
+    ['group' => $group->id()],
+    ['fragment' => 'edit-group-announcements']
+  );
+
+  $variables['empty_announcements'] = [
+    'link' => [
+      'label' => t('Add announcement', [], ['context' => 'eic_community']),
+      'path' => $url_add_announcement->toString(),
+      'extra_classes' => 'ecl-link--button ecl-link--button-primary',
+      'type' => 'cta',
+    ],
+  ];
+
+  $variables['can_add_announcement'] = $url_add_announcement->access();
 
   if (!empty($needs) || !empty($offers)) {
     $variables['announcements'] = [
