@@ -58,6 +58,10 @@ services:
     arguments: ['@flag']
     tags:
       - { name: access_check, applies_to: _like_group_content }
+  eic_groups.access_check.group_invitation_bulk:
+    class: Drupal\eic_groups\Access\GroupInvitationBulkAccessChecker
+    tags:
+      - { name: access_check, applies_to: _group_invitation_bulk }
   eic_groups.route_subscriber:
     class: Drupal\eic_groups\Routing\RouteSubscriber
     tags:
