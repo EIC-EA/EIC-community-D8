@@ -7,7 +7,7 @@ dependencies:
     - field.field.paragraph.organisation_member_external.field_job_title
     - field.field.paragraph.organisation_member_external.field_location
     - field.field.paragraph.organisation_member_external.field_media
-    - field.field.paragraph.organisation_member_external.field_organisation
+    - field.field.paragraph.organisation_member_external.field_organisations
     - paragraphs.paragraphs_type.organisation_member_external
   module:
     - media_library
@@ -49,7 +49,7 @@ content:
     settings:
       media_types: {  }
     third_party_settings: {  }
-  field_organisation:
+  field_organisations:
     type: string_textfield
     weight: 3
     region: content

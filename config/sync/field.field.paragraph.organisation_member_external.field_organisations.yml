@@ -1,18 +1,18 @@
-uuid: b0e097d4-ef68-4600-ad6d-1e15284f2fa0
+uuid: 36b9a83d-6579-43f6-96d6-6018b20e3620
 langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.paragraph.field_organisation
+    - field.storage.paragraph.field_organisations
     - paragraphs.paragraphs_type.organisation_member_external
-id: paragraph.organisation_member_external.field_organisation
-field_name: field_organisation
+id: paragraph.organisation_member_external.field_organisations
+field_name: field_organisations
 entity_type: paragraph
 bundle: organisation_member_external
-label: Organisation
+label: Organisations
 description: ''
 required: false
-translatable: true
+translatable: false
 default_value: {  }
 default_value_callback: ''
 settings: {  }
