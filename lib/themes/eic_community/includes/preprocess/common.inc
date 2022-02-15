@@ -138,7 +138,7 @@ function _eic_community_get_flag_access($flag_id, EntityInterface $entity) {
   $user_flag = $flag_service->getFlagging($flag, $entity);
   $action = $user_flag ? 'unflag' : 'flag';
 
-  return $flag->actionAccess($action);
+  return $flag->actionAccess($action, NULL, $entity);
 }
 
 /**
