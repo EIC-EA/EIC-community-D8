@@ -146,6 +146,9 @@ function eic_comments_flag_action_access($action, FlagInterface $flag, AccountIn
     case 'comment':
       // Deny access to flag/unflag the comment if the comment has been soft
       // deleted.
+      // @todo Currently we cannot now if a comment has been archived without
+      // looping through all request archivals. We should create a property or
+      // a field to identify if a comment is archived.
       if (
         !$flaggable->get('field_comment_is_soft_deleted')->isEmpty() &&
         $flaggable->get('field_comment_is_soft_deleted')->value
