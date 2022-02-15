@@ -15,8 +15,8 @@ content:
   field_referenced_media:
     type: media_library_widget
     weight: 0
+    region: content
     settings:
       media_types: {  }
     third_party_settings: {  }
-    region: content
 hidden: {  }

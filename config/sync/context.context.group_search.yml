@@ -5,9 +5,8 @@ dependencies:
   module:
     - eic_search
     - route_condition
-    - system
-name: group_search
 label: 'Group - Search'
+name: group_search
 group: Groups
 description: 'This context is used for all group search pages'
 requireAllConditions: false
@@ -15,32 +14,29 @@ disabled: false
 conditions:
   route:
     id: route
-    routes: eic_overviews.groups.overview_page.search
     negate: false
     uuid: f51a001e-5f83-4813-92e8-bfd418a78180
     context_mapping: {  }
+    routes: eic_overviews.groups.overview_page.search
 reactions:
   blocks:
+    id: blocks
+    uuid: 8505c4ba-7948-4741-9628-279e035d4c6e
     blocks:
-      e601068d-bbfa-4f2e-ae56-9645fc0ee40e:
-        id: system_main_block
-        label: 'Main page content'
-        provider: system
-        label_display: '0'
-        region: content
-        weight: '-1'
-        context_mapping: {  }
-        custom_id: system_main_block
-        theme: eic_community
-        css_class: ''
-        unique: 0
-        context_id: group_search
-        uuid: e601068d-bbfa-4f2e-ae56-9645fc0ee40e
       6de0c3cc-d8a8-4612-b969-491da786a15c:
+        uuid: 6de0c3cc-d8a8-4612-b969-491da786a15c
         id: eic_search_overview
         label: ''
         provider: eic_search
         label_display: visible
+        region: content
+        weight: '0'
+        custom_id: eic_search_overview_group_search
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: group_search
+        context_mapping: {  }
         source_type: Drupal\eic_search\Search\Sources\GlobalSourceType
         facets:
           ss_global_content_type: ss_global_content_type
@@ -68,17 +64,7 @@ reactions:
         enable_date_filter: 0
         add_facet_interests: 0
         add_facet_my_groups: 0
-        context_mapping: {  }
-        custom_id: eic_search_overview_group_search
-        region: content
-        theme: eic_community
-        css_class: ''
-        unique: 0
-        context_id: group_search
         third_party_settings: {  }
-        uuid: 6de0c3cc-d8a8-4612-b969-491da786a15c
-    id: blocks
-    saved: false
-    uuid: 8505c4ba-7948-4741-9628-279e035d4c6e
     include_default_blocks: 0
+    saved: false
 weight: 0

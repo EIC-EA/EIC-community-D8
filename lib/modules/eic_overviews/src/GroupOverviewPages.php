@@ -69,6 +69,10 @@ class GroupOverviewPages {
         $page_id = self::FILES;
         break;
 
+      case 'events':
+        $page_id = self::EVENTS;
+        break;
+
       case 'members':
         $page_id = self::MEMBERS;
         break;

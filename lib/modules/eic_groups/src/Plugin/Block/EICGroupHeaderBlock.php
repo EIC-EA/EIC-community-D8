@@ -211,7 +211,6 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
       $operation_links['anonymous_user_link'] = $login_link;
     }
 
-    $this->processInviteUserPermission($group, $user_operation_links);
     $this->processLeaveGroupPermission($group, $user_operation_links);
 
     // Moves group joining methods operations to the operation_links array.
@@ -261,7 +260,7 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
       return in_array(
         $key,
         ['edit', 'delete', 'publish', 'request_block', 'bulk_invite']
-      );
+      ) && $item['url']->access();
     }, ARRAY_FILTER_USE_BOTH);
 
     // Sorts group operation links by key. "Delete" operation needs to show
@@ -375,7 +374,7 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
 
       // If user has access to view the flag we add it to the results so that
       // it can be shown in the group header.
-      if ($flag->actionAccess($action)) {
+      if ($flag->actionAccess($action, NULL, $group)) {
         $group_flags[$flag_id] = [
           '#lazy_builder' => [
             'flag.link_builder:build',
@@ -391,33 +390,6 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
     }
 
     return $group_flags;
-  }
-
-  /**
-   * Removes the invite members link.
-   *
-   * If group does not allow to invite members, hide invite group link from the
-   * group header.
-   *
-   * @param \Drupal\group\Entity\GroupInterface $group
-   *   The group entity.
-   * @param array $user_operation_links
-   *   Array of user operation links.
-   */
-  private function processInviteUserPermission(GroupInterface $group, array &$user_operation_links) {
-    $key = 'invite-user';
-
-    if (!array_key_exists($key, $user_operation_links)) {
-      return;
-    }
-
-    $user_can_invite = (int) $group->get('field_group_invite_members')->value;
-
-    if ($user_can_invite) {
-      return;
-    }
-
-    unset($user_operation_links[$key]);
   }
 
   /**

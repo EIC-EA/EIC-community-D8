@@ -13,7 +13,10 @@
 } %}
 
 {% set sidebar = page.sidebar %}
+
+{% set loginBlock = page.content['login_block'] %}
 {% set page = page|merge({'sidebar': null}) %}
+{% set content = page.content|merge({'login_block': null}) %}
 
 {% extends "@theme/patterns/compositions/group/group.full.html.twig" %}
 
@@ -22,14 +25,15 @@
   <div class="ecl-editorial-article ecl-editorial-article--has-reversed-layout ecl-editorial-article--is-collapsible">
     <div class="ecl-container">
       <div class="ecl-editorial-article__wrapper">
-        {{ page.content }}
-        <aside class="ecl-editorial-article__aside">
+        {{ content }}
+        <aside class="ecl-editorial-article__aside ecl-editorial-article__aside--wiki">
           <div class="ecl-editorial-article__aside-wrapper">
             {{ sidebar }}
           </div>
         </aside>
       </div>
     </div>
+    {{ loginBlock }}
   </div>
 </section>
 {% endblock %}

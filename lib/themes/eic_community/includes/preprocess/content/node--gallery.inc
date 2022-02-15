@@ -43,14 +43,15 @@ function eic_community_preprocess_node__gallery(array &$variables) {
 
         $files_list[] = [
           'name' => $download->getFileName(),
+          'type' => t('Image', [], ['context' => 'eic_community']),
           'stats' => [
             [
-              'hide_label' => TRUE,
+              'hide_label' => FALSE,
               'icon' => [
                 'name' => 'download',
                 'type' => 'custom',
               ],
-              'label' => t('downloads'),
+              'label' => t('download(s)'),
               // @todo Add statistics value
               'value' => \Drupal::service('eic_media_statistics.entity_file_download_count')->getFileDownloads($file),
             ],
@@ -61,6 +62,10 @@ function eic_community_preprocess_node__gallery(array &$variables) {
           ],
           'mime_type' => substr(strrchr($download->get('filemime')->getString(), '/'), 1),
           'path' => $download_url,
+          'image' => [
+            'src' => $download->createFileUrl(),
+            'alt' => $download->getFileName(),
+          ],
         ];
 
         $slide = [
@@ -105,7 +110,7 @@ function eic_community_preprocess_node__gallery(array &$variables) {
       ];
 
       $variables['file_list'] = [
-        'title' => t('Files (%count)', ['%count' => count($files)]),
+        'title' => t('File list (%count)', ['%count' => count($files)]),
         'body' => '',
         'files' => $files_list,
         'icon_file_path' => $variables['eic_icon_path'],

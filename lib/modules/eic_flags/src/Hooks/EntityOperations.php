@@ -11,6 +11,7 @@ use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
 use Drupal\eic_flags\FlaggedEntitiesListBuilder;
+use Drupal\eic_flags\FlagHelper;
 use Drupal\eic_flags\FlagType;
 use Drupal\eic_flags\RequestStatus;
 use Drupal\eic_flags\RequestTypes;
@@ -76,11 +77,18 @@ class EntityOperations implements ContainerInjectionInterface {
   private $flagCountManager;
 
   /**
-   * The Flag sevice.
+   * The Flag service.
    *
    * @var \Drupal\flag\FlagServiceInterface
    */
   private $flagService;
+
+  /**
+   * The EIC Flag helper service.
+   *
+   * @var \Drupal\eic_flags\FlagHelper
+   */
+  private $flagHelper;
 
   /**
    * EntityOperations constructor.
@@ -98,7 +106,9 @@ class EntityOperations implements ContainerInjectionInterface {
    * @param \Drupal\flag\FlagCountManagerInterface $flag_count_manager
    *   The Flag count manager.
    * @param \Drupal\flag\FlagServiceInterface $flag_service
-   *   The Flag sevice.
+   *   The Flag service.
+   * @param \Drupal\eic_flags\FlagHelper $eic_flag_helper
+   *   The EIC Flag helper service.
    */
   public function __construct(
     RequestHandlerCollector $collector,
@@ -107,7 +117,8 @@ class EntityOperations implements ContainerInjectionInterface {
     RequestStack $request_stack,
     AccountProxyInterface $account,
     FlagCountManagerInterface $flag_count_manager,
-    FlagServiceInterface $flag_service
+    FlagServiceInterface $flag_service,
+    FlagHelper $eic_flag_helper
   ) {
     $this->collector = $collector;
     $this->moderationInformation = $moderation_information;
@@ -116,6 +127,7 @@ class EntityOperations implements ContainerInjectionInterface {
     $this->account = $account;
     $this->flagCountManager = $flag_count_manager;
     $this->flagService = $flag_service;
+    $this->flagHelper = $eic_flag_helper;
   }
 
   /**
@@ -130,7 +142,7 @@ class EntityOperations implements ContainerInjectionInterface {
       $container->get('current_user'),
       $container->get('flag.count'),
       $container->get('flag'),
-      $container->get('entity_type.manager')
+      $container->get('eic_flags.helper')
     );
   }
 
@@ -169,21 +181,42 @@ class EntityOperations implements ContainerInjectionInterface {
 
       if ($entity->access('close_request-' . $type)
         && $handler->supports($entity)) {
+
         // Create close request operations.
-        $operations['accept_request_' . $type] = [
-          'title' => $this->t('Accept request @type', ['@type' => $type]),
-          'url' => $entity->toUrl('user-close-request')
-            ->setRouteParameter('destination', $this->currentRequest->getRequestUri())
-            ->setRouteParameter('request_type', $type)
-            ->setRouteParameter('response', RequestStatus::ACCEPTED),
-        ];
-        $operations['deny_request_' . $type] = [
-          'title' => $this->t('Deny request @type', ['@type' => $type]),
-          'url' => $entity->toUrl('user-close-request')
-            ->setRouteParameter('destination', $this->currentRequest->getRequestUri())
-            ->setRouteParameter('request_type', $type)
-            ->setRouteParameter('response', RequestStatus::DENIED),
-        ];
+        $close_request_types = $handler->getSupportedResponsesForClosedRequests();
+        if (in_array(RequestStatus::ACCEPTED, $close_request_types)) {
+          $operations['accept_request_' . $type] = [
+            'title' => $this->t('Accept request @type', ['@type' => $type]),
+            'url' => $entity->toUrl('user-close-request')
+              ->setRouteParameter('destination', $this->currentRequest->getRequestUri())
+              ->setRouteParameter('request_type', $type)
+              ->setRouteParameter('response', RequestStatus::ACCEPTED),
+          ];
+        }
+        if (in_array(RequestStatus::DENIED, $close_request_types)) {
+          $operations['deny_request_' . $type] = [
+            'title' => $this->t('Deny request @type', ['@type' => $type]),
+            'url' => $entity->toUrl('user-close-request')
+              ->setRouteParameter('destination', $this->currentRequest->getRequestUri())
+              ->setRouteParameter('request_type', $type)
+              ->setRouteParameter('response', RequestStatus::DENIED),
+          ];
+        }
+      }
+
+      if ($entity->access('cancel_request-' . $type)
+        && $handler->supports($entity)) {
+
+        // Create cancel request operations.
+        $close_request_types = $handler->getSupportedResponsesForClosedRequests();
+        if (in_array(RequestStatus::CANCELLED, $close_request_types)) {
+          $operations['cancel_request_' . $type] = [
+            'title' => $this->t('Cancel request @type', ['@type' => $type]),
+            'url' => $entity->toUrl('user-cancel-request')
+              ->setRouteParameter('destination', $this->currentRequest->getRequestUri())
+              ->setRouteParameter('request_type', $type),
+          ];
+        }
       }
 
       // Alter operation titles for specific request types.
@@ -196,9 +229,10 @@ class EntityOperations implements ContainerInjectionInterface {
 
         case RequestTypes::TRANSFER_OWNERSHIP:
           $operation_keys = [
-            'request_' . $type => $this->t('Request transfer ownership'),
-            'accept_request_' . $type => $this->t('Accept transfer ownership'),
-            'deny_request_' . $type => $this->t('Deny transfer ownership'),
+            'request_' . $type => $this->t('Request ownership transfer'),
+            'accept_request_' . $type => $this->t('Accept ownership transfer'),
+            'deny_request_' . $type => $this->t('Deny ownership transfer'),
+            'cancel_request_' . $type => $this->t('Cancel ownership transfer'),
           ];
           foreach ($operation_keys as $key => $value) {
             if (!isset($operations[$key])) {
@@ -212,10 +246,8 @@ class EntityOperations implements ContainerInjectionInterface {
     }
 
     // Removes operation links if user doesn't have access to it.
-    foreach ($operations as $key => $operation) {
-      if (!isset($operation['url']) || !$operation['url']->access()) {
-        unset($operations[$key]);
-      }
+    foreach ($operations as $key => &$operation) {
+      $operation['access'] = $operation['url']->access();
     }
 
     return $operations;
@@ -294,6 +326,23 @@ class EntityOperations implements ContainerInjectionInterface {
       '#markup' => '',
       '#items' => $this->flagCountManager->getEntityFlagCounts($entity),
     ];
+  }
+
+  /**
+   * Implementation of eic_flags_node_view_alter().
+   *
+   * @param array $build
+   *   The renderable array representing the entity content.
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The entity object.
+   * @param \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display
+   *   The entity view display holding the display options.
+   */
+  public function nodeViewAlter(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display) {
+    // Make sure we don't display the highlight flag if user cannot use it.
+    if (!$this->flagHelper->canUserHighlight()) {
+      unset($build['flag_highlight_content']);
+    }
   }
 
   /**

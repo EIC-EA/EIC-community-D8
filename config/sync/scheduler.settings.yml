@@ -1,3 +1,5 @@
+_core:
+  default_config_hash: r4UxhkKGliupcWiUEXcB_1LFQjOC415qJnxjGLVBU1Y
 allow_date_only: false
 date_format: 'Y-m-d H:i:s'
 date_letters: djmnFMyY
@@ -19,5 +21,3 @@ lightweight_cron_access_key: 3e09462ac7fb8a613df6
 log: true
 time_letters: hHgGisaA
 time_only_format: 'H:i:s'
-_core:
-  default_config_hash: r4UxhkKGliupcWiUEXcB_1LFQjOC415qJnxjGLVBU1Y

@@ -11,12 +11,12 @@ pattern: '[node:node_book_parent_url]/[node:title]'
 selection_criteria:
   b5306925-5f84-4c9f-9acf-caf877f214b1:
     id: node_type
-    bundles:
-      wiki_page: wiki_page
     negate: false
+    uuid: b5306925-5f84-4c9f-9acf-caf877f214b1
     context_mapping:
       node: node
-    uuid: b5306925-5f84-4c9f-9acf-caf877f214b1
+    bundles:
+      wiki_page: wiki_page
 selection_logic: and
 weight: -5
 relationships: {  }

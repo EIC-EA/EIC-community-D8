@@ -13,10 +13,10 @@ bundle: notify_membership_request_rej
 mode: notify_email_subject
 content:
   partial_0:
-    weight: 0
-    region: content
     settings: {  }
     third_party_settings: {  }
+    weight: 0
+    region: content
 hidden:
   field_event_executing_user: true
   field_group_ref: true

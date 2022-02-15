@@ -23,8 +23,6 @@ mode: teaser
 content:
   field_body:
     type: smart_trim
-    weight: 0
-    region: content
     label: above
     settings:
       trim_length: 600
@@ -38,51 +36,53 @@ content:
       summary_handler: full
       trim_options: {  }
     third_party_settings: {  }
+    weight: 0
+    region: content
   flag_bookmark_content:
-    weight: 10
     settings: {  }
     third_party_settings: {  }
+    weight: 10
     region: content
   flag_follow_content:
-    weight: 10
     settings: {  }
     third_party_settings: {  }
+    weight: 10
     region: content
   flag_highlight_content:
-    weight: 10
     settings: {  }
     third_party_settings: {  }
+    weight: 10
     region: content
   flag_like_content:
-    weight: 10
     settings: {  }
     third_party_settings: {  }
+    weight: 10
     region: content
   flag_recommend:
-    weight: 10
     settings: {  }
     third_party_settings: {  }
+    weight: 10
     region: content
   member_content_edit_access:
+    type: boolean
+    label: above
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
     weight: 2
     region: content
+  private:
+    type: boolean
     label: above
     settings:
       format: default
       format_custom_false: ''
       format_custom_true: ''
     third_party_settings: {  }
-    type: boolean
-  private:
     weight: 1
     region: content
-    label: above
-    settings:
-      format: default
-      format_custom_false: ''
-      format_custom_true: ''
-    third_party_settings: {  }
-    type: boolean
 hidden:
   extra_field_eic_theme_helper_short_title_with_fallback: true
   field_comments: true

@@ -25,12 +25,12 @@ widget_selector: single
 widget_selector_configuration: {  }
 widgets:
   dfad9e89-d0eb-4faf-b46b-fd258f84a8c9:
+    id: view
+    uuid: dfad9e89-d0eb-4faf-b46b-fd258f84a8c9
+    label: view
+    weight: 1
     settings:
-      view: latest_news_and_stories
-      view_display: entity_browser_news_stories
       submit_text: 'Select Articles'
       auto_select: true
-    uuid: dfad9e89-d0eb-4faf-b46b-fd258f84a8c9
-    weight: 1
-    label: view
-    id: view
+      view: latest_news_and_stories
+      view_display: entity_browser_news_stories

@@ -85,6 +85,7 @@ class SolrSearchController extends ControllerBase {
     $solariumQuery->setComponent(ComponentAwareQueryInterface::COMPONENT_SPELLCHECK, $spell_check);
 
     $content_type_query = '';
+    $author_ignore_content_query = '';
 
     if ($source_class) {
       /** @var \Drupal\eic_search\Search\Sources\SourceTypeInterface $source */
@@ -131,6 +132,10 @@ class SolrSearchController extends ControllerBase {
       if ($content_types = $source->getPrefilteredContentType()) {
         $allowed_content_type = implode(' OR ', $content_types);
         $content_type_query = ' AND (' . SourceTypeInterface::SOLR_FIELD_CONTENT_TYPE_ID . ':(' . $allowed_content_type . '))';
+      }
+
+      if ($source->ignoreContentFromCurrentUser()) {
+        $author_ignore_content_query = ' AND (!' . $source->getAuthorFieldId() . ':' . $this->currentUser()->id() . ')';
       }
 
       // If source supports date filter and query has a from or to date.
@@ -235,6 +240,22 @@ class SolrSearchController extends ControllerBase {
       $fq .= $content_type_query;
     }
 
+    if ($author_ignore_content_query) {
+      $fq .= $author_ignore_content_query;
+    }
+
+    /** @var \Drupal\group\GroupMembershipLoader $grp_membership_service */
+    $grp_membership_service = \Drupal::service('group.membership_loader');
+    $grps = $grp_membership_service->loadByUser($this->currentUser());
+
+    $grp_ids = array_map(function (GroupMembership $grp_membership) {
+      return $grp_membership->getGroup()->id();
+    }, $grps);
+
+    $group_filters_id = $source->getPrefilteredGroupFieldId();
+
+    $fq .= ' AND (' . reset($group_filters_id) . ':(' . implode(' OR ', $grp_ids) . '))';
+
     $solariumQuery->addParam('fq', $fq);
 
     if (
@@ -269,7 +290,7 @@ class SolrSearchController extends ControllerBase {
       $values = array_keys($filtered_value);
 
       if ($filtered_value) {
-        array_walk($values, function(&$value) {
+        array_walk($values, function (&$value) {
           $value = "\"$value\"";
         });
 
@@ -368,9 +389,13 @@ class SolrSearchController extends ControllerBase {
    * @param string $fq
    */
   private function generateQueryPrivateContent(string &$fq) {
-    $roles = \Drupal::currentUser()->getRoles();
+    $current_user = \Drupal::currentUser();
+    $roles = $current_user->getRoles();
 
-    if (in_array(UserHelper::ROLE_TRUSTED_USER, $roles)) {
+    if (
+      in_array(UserHelper::ROLE_TRUSTED_USER, $roles) ||
+      UserHelper::isPowerUser($current_user)
+    ) {
       return;
     }
 
@@ -389,16 +414,30 @@ class SolrSearchController extends ControllerBase {
       return;
     }
 
+    $current_user = \Drupal::currentUser();
+    $user_id = $current_user->id();
+    $is_power_user = UserHelper::isPowerUser($current_user);
+
+    // We need to show all groups on the groups overview for power users,
+    // disregarding the published status.
+    if ($source instanceof GroupSourceType && $is_power_user) {
+      return;
+    }
+
     $status_query = ' AND (bs_global_status:true';
 
     if ($source instanceof GroupSourceType) {
-      $user_id = \Drupal::currentUser()->id();
       $status_query .= ' OR (its_group_owner_id:' . $user_id . ')';
     }
 
     $status_query .= ')';
 
     $fq .= $status_query;
+
+    // If it's not a power user or a group owner, add the filter query for published group parent.
+    if (!$is_power_user) {
+      $fq .= " AND (its_global_group_parent_published:1 OR its_group_owner_id:$user_id)";
+    }
   }
 
   /**

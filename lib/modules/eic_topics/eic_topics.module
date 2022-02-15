@@ -8,6 +8,7 @@
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Url;
+use Drupal\eic_overviews\GlobalOverviewPages;
 use Drupal\eic_search\SearchHelper;
 use Drupal\eic_topics\TopicsManager;
 use Drupal\views\ViewExecutable;
@@ -80,6 +81,7 @@ function eic_topics_views_pre_render(ViewExecutable $view) {
   // The Views UI doesn't allow setting long links, so we need to replace the
   // given link_url option with the final URL which includes facets.
   $route = NULL;
+  $url = NULL;
   $params = [];
   switch ($view->current_display) {
     case 'groups':
@@ -106,11 +108,17 @@ function eic_topics_views_pre_render(ViewExecutable $view) {
       break;
 
     case 'news_stories':
-      // @todo Implement correct URL once available.
+      $url = GlobalOverviewPages::getGlobalOverviewPageLink(GlobalOverviewPages::NEWS_STORIES)->getUrl();
+      $params = [
+        'sm_content_field_vocab_topics_string' => $term->label(),
+      ];
       break;
 
     case 'events':
-      // @todo Implement correct URL once available.
+      $url = GlobalOverviewPages::getGlobalOverviewPageLink(GlobalOverviewPages::EVENTS)->getUrl();
+      $params = [
+        'sm_content_field_vocab_topics_string' => $term->label(),
+      ];
       break;
 
     case 'wiki_pages':
@@ -129,9 +137,14 @@ function eic_topics_views_pre_render(ViewExecutable $view) {
       break;
   }
 
+  $params = SearchHelper::buildSolrQueryParams($params);
+
   if ($route) {
-    $params = SearchHelper::buildSolrQueryParams($params);
     $url = Url::fromRoute($route, [], ['query' => $params])->toString();
     $view->display_handler->setOption('link_url', $url);
+  }
+  elseif ($url) {
+    $url->setOption('query', $params);
+    $view->display_handler->setOption('link_url', $url->toString());
   }
 }

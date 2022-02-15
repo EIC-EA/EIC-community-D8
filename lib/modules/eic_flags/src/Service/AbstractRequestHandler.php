@@ -6,6 +6,7 @@ use Drupal\content_moderation\ModerationInformationInterface;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -68,6 +69,13 @@ abstract class AbstractRequestHandler implements HandlerInterface {
   protected $currentRequest;
 
   /**
+   * The entity field manager.
+   *
+   * @var \Drupal\Core\Entity\EntityFieldManagerInterface
+   */
+  protected $entityFieldManager;
+
+  /**
    * AbstractRequestHandler constructor.
    *
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
@@ -80,19 +88,23 @@ abstract class AbstractRequestHandler implements HandlerInterface {
    *   Core's moderation information service.
    * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
    *   The request stack object.
+   * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager
+   *   The entity field manager.
    */
   public function __construct(
     ModuleHandlerInterface $module_handler,
     EntityTypeManagerInterface $entity_type_manager,
     FlagService $flag_service,
     ModerationInformationInterface $moderation_information,
-    RequestStack $request_stack
+    RequestStack $request_stack,
+    EntityFieldManagerInterface $entity_field_manager
   ) {
     $this->moduleHandler = $module_handler;
     $this->entityTypeManager = $entity_type_manager;
     $this->flagService = $flag_service;
     $this->moderationInformation = $moderation_information;
     $this->currentRequest = $request_stack->getCurrentRequest();
+    $this->entityFieldManager = $entity_field_manager;
   }
 
   /**
@@ -181,7 +193,18 @@ abstract class AbstractRequestHandler implements HandlerInterface {
   /**
    * {@inheritdoc}
    */
-  public function applyFlag(ContentEntityInterface $entity, string $reason) {
+  public function cancel(
+    FlaggingInterface $flagging,
+    ContentEntityInterface $content_entity
+  ) {
+    // Currently does nothing, this will change.
+    return TRUE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function applyFlag(ContentEntityInterface $entity, string $reason, int $request_timeout = 0) {
     $support_entity_types = $this->getSupportedEntityTypes();
     // Entity type is not supported.
     if (!array_key_exists($entity->getEntityTypeId(), $support_entity_types)) {
@@ -216,6 +239,10 @@ abstract class AbstractRequestHandler implements HandlerInterface {
 
     $flag->set('field_request_reason', $reason);
     $flag->set('field_request_status', RequestStatus::OPEN);
+
+    if ($flag->hasField(HandlerInterface::REQUEST_TIMEOUT_FIELD)) {
+      $flag->set(HandlerInterface::REQUEST_TIMEOUT_FIELD, $request_timeout);
+    }
 
     // Alters flag before saving it.
     $flag = $this->applyFlagAlter($flag);
@@ -416,12 +443,82 @@ abstract class AbstractRequestHandler implements HandlerInterface {
   /**
    * {@inheritdoc}
    */
+  public function canCancelRequest(
+    AccountInterface $account,
+    ContentEntityInterface $entity
+  ) {
+    // Default access.
+    $access = AccessResult::forbidden();
+    return $access;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getSupportedResponsesForClosedRequests() {
     return [
       RequestStatus::DENIED,
       RequestStatus::ACCEPTED,
       RequestStatus::ARCHIVED,
     ];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function hasExpiration(FlaggingInterface $flag) {
+    $fields = $this->entityFieldManager->getFieldDefinitions('flagging', $flag->getFlagId());
+
+    return isset($fields[HandlerInterface::REQUEST_TIMEOUT_FIELD]) &&
+      $flag->get(HandlerInterface::REQUEST_TIMEOUT_FIELD)->value > 0;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function hasExpired(FlaggingInterface $flag) {
+    if (!$this->hasExpiration($flag)) {
+      return FALSE;
+    }
+
+    $now = DrupalDateTime::createFromTimestamp(time());
+    $limit = ($flag->get(HandlerInterface::REQUEST_TIMEOUT_FIELD)->value * 86400) + $flag->get('created')->value;
+
+    return $now->getTimestamp() >= $limit;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function requestTimeout(
+    FlaggingInterface $flagging,
+    ContentEntityInterface $content_entity
+  ) {
+    $now = DrupalDateTime::createFromTimestamp(time());
+
+    // For some requests, field request response is not presented.
+    if ($flagging->hasField('field_request_response')) {
+      $flagging->set('field_request_response', $this->t('Request timeout'));
+    }
+
+    $flagging->set('field_request_status', RequestStatus::DENIED);
+    $flagging->set(
+      'field_request_closed_date',
+      $now->format(DateTimeItemInterface::DATETIME_STORAGE_FORMAT)
+    );
+    $flagging->save();
+
+    $this->moduleHandler->invokeAll(
+      'request_timeout',
+      [
+        $flagging,
+        $content_entity,
+        $this->getType(),
+      ]
+    );
+
+    // We trigger the deny method to clear all related caches.
+    $this->deny($flagging, $content_entity);
   }
 
 }

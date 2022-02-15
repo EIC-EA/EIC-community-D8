@@ -54,8 +54,16 @@ function eic_community_preprocess_group__group(array &$variables) {
       }
 
       // Get group visibility.
-      if (!empty($group_visibility_label = \Drupal::service('eic_groups.helper')->getGroupVisibilityLabel($group, 'short'))) {
+      if ($group_visibility_label = \Drupal::service('oec_group_flex.helper')->getGroupVisibilityTagLabel($group)) {
+
+        // Exception for the custom visibility. We need to show the label
+        // "Restricted" instead.
+        if (strtolower($group_visibility_label) === 'custom') {
+          $group_visibility_label = t('Restricted');
+        }
+
         $item['type']['label'] = $group_visibility_label;
+        $item['type']['extra_classes'] = 'ecl-tag--is-' . strtolower($group_visibility_label);
       }
 
       // Get group last activity.

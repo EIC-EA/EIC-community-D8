@@ -13,7 +13,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
- * Class FlagRequestController.
+ * Controller class for request flags.
  *
  * @package Drupal\eic_flags\Controller
  */
@@ -64,6 +64,7 @@ class FlagRequestController extends ControllerBase {
    *
    * @return \Symfony\Component\HttpFoundation\Response
    *   The response object.
+   *
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
   public function listing() {
@@ -79,6 +80,7 @@ class FlagRequestController extends ControllerBase {
    *
    * @return \Symfony\Component\HttpFoundation\Response
    *   The response object.
+   *
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
   public function detail() {
@@ -149,6 +151,48 @@ class FlagRequestController extends ControllerBase {
         ]
       );
     }
+  }
+
+  /**
+   * Returns the title for the various request routes.
+   *
+   * @param string $request_type
+   *   Type of the request (see RequestTypes.php).
+   *
+   * @return \Drupal\Core\StringTranslation\TranslatableMarkup
+   *   The title to display.
+   */
+  public function getRequestTitle(string $request_type) {
+    switch ($request_type) {
+      case RequestTypes::ARCHIVE:
+        $operation = $this->t('archival');
+        break;
+
+      case RequestTypes::DELETE:
+        $operation = $this->t('deletion');
+        break;
+
+      default:
+        $operation = $request_type;
+        break;
+
+    }
+
+    $operation = str_replace('_', ' ', $operation);
+
+    if ($request_type === RequestTypes::BLOCK) {
+      return ucfirst($operation);
+    }
+
+    return $this->t(
+      'Request @operation',
+      [
+        '@operation' => $operation,
+      ],
+      [
+        'context' => $request_type,
+      ],
+    );
   }
 
 }

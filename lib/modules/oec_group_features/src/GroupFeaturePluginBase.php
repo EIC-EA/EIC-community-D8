@@ -215,6 +215,10 @@ abstract class GroupFeaturePluginBase extends PluginBase implements GroupFeature
   /**
    * Add role permissions to the group.
    *
+   * This method is a verbatim from
+   * \Drupal\group_flex\GroupFlexGroupSaver::addRolePermissionsToGroup() as it
+   * is currently private.
+   *
    * @param \Drupal\group_permissions\Entity\GroupPermissionInterface $groupPermission
    *   The group permission object to add the permissions to.
    * @param string $role
@@ -244,6 +248,10 @@ abstract class GroupFeaturePluginBase extends PluginBase implements GroupFeature
 
   /**
    * Remove role permissions from the group.
+   *
+   * This method is a verbatim from
+   * \Drupal\group_flex\GroupFlexGroupSaver::removeRolePermissionsFromGroup() as
+   * it is currently private.
    *
    * @param \Drupal\group_permissions\Entity\GroupPermissionInterface $groupPermission
    *   The group permission object to set the permissions to.
@@ -319,10 +327,15 @@ abstract class GroupFeaturePluginBase extends PluginBase implements GroupFeature
    *   The existing menu item of FALSE if it doesn't exist yet.
    */
   protected function getExistingMenuItem(MenuLinkContentInterface $menu_item) {
+    $url = $menu_item->getUrlObject();
+    $uri = empty(static::ANCHOR_ID) ?
+      'internal:/' . $url->getInternalPath() :
+      $url->toUriString();
+
     /** @var Drupal\menu_link_content\MenuLinkContentInterface[] $items */
     $items = $this->menuLinkContentStorage->loadByProperties([
       'menu_name' => $menu_item->getMenuName(),
-      'link__uri' => 'internal:/' . $menu_item->getUrlObject()->getInternalPath(),
+      'link__uri' => $uri,
     ]);
 
     if (!empty($items)) {

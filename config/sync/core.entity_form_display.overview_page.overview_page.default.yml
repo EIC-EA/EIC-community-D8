@@ -21,8 +21,8 @@ content:
     weight: 3
     region: content
     settings:
-      preview_image_style: thumbnail
       progress_indicator: throbber
+      preview_image_style: thumbnail
     third_party_settings: {  }
   description:
     type: string_textfield
@@ -33,20 +33,20 @@ content:
       placeholder: ''
     third_party_settings: {  }
   field_overview_block:
+    type: block_field_default
     weight: 4
+    region: content
     settings:
       plugin_id: ''
       settings: {  }
       configuration_form: full
     third_party_settings: {  }
-    type: block_field_default
-    region: content
   field_overview_id:
+    type: options_select
     weight: 7
+    region: content
     settings: {  }
     third_party_settings: {  }
-    type: options_select
-    region: content
   langcode:
     type: language_select
     weight: 1
@@ -68,10 +68,10 @@ content:
     third_party_settings: {  }
   status:
     type: boolean_checkbox
-    settings:
-      display_label: false
     weight: 6
     region: content
+    settings:
+      display_label: false
     third_party_settings: {  }
   title:
     type: string_textfield

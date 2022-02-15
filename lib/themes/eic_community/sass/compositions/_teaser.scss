@@ -30,6 +30,10 @@
     padding: ecl-box-model('padding');
     background-color: map-get($ecl-colors, 'grey-5');
 
+    & .ecl-teaser__action a {
+      white-space: nowrap;
+    }
+
     @include adjust-from-section-color() {
       background-color: map-get($ecl-colors, 'white');
     }
@@ -85,8 +89,48 @@
     & .ecl-teaser__link{
       margin-right: 0;
     }
+
+    #{$node} &__main-wrapper {
+      display: flex;
+      align-items: flex-start;
+      flex-direction: row;
+    }
   }
-  &--organisation &__image-wrapper, &--organisation &__image-wrapper &__image {
+  &--organisation-member{
+    flex-wrap: wrap;
+
+    & #{$node}__title {
+      color: $ecl-color-grey;
+      margin-bottom: $ecl-spacing-2-xs;
+    }
+
+    & #{$node}__link {
+      line-height: 1;
+      font-size: 1rem;
+    }
+
+    & .ecl-teaser__stat-value {
+      font-size: .875em;
+    }
+  }
+  &--organisation-member &__status{
+    width: 100%;
+    margin-bottom: $ecl-spacing-s;
+  }
+
+  &--organisation-member &__meta-footer{
+    position: relative;
+    width: 100%;
+    margin-top: $ecl-spacing-s;
+
+    #{$node}__stats {
+      margin-left: 0;
+    }
+  }
+  &--organisation &__image-wrapper,
+  &--organisation &__image-wrapper &__image,
+  &--organisation-member &__image-wrapper,
+  &--organisation-member &__image-wrapper &__image {
     width: 80px;
     height: 80px;
     object-fit: cover;
@@ -107,7 +151,7 @@
     position: absolute;
     justify-content: flex-start;
     left: ecl-box-model('padding');
-    bottom: ecl-box-model('padding');
+    bottom: 1rem;
     &__stats {
       margin: 0;
     }
@@ -117,6 +161,9 @@
   &--event#{$node}--is-highlighted#{$node}--event {
     padding: ecl-box-model('padding');
     background-color: map-get($ecl-colors, 'blue-5');
+    & + #{$node}--is-highlighted {
+      margin-top: ecl-box-model('padding');
+    }
 
     &::before {
       position: absolute;
@@ -147,6 +194,7 @@
 
     @include ecl-media-breakpoint-up('sm') {
       width: map-get($ecl-media, 'l');
+      height: map-get($ecl-media, 'm');
       margin: 0 ecl-box-model('padding') 0 0;
     }
 
@@ -192,14 +240,7 @@
       overflow: hidden;
       position: relative;
       width: map-get($ecl-media, 'xs');
-      margin: ecl-box-model('padding') auto;
-
-      @include ecl-media-breakpoint-up('sm') {
-        margin: 0;
-        position: absolute;
-        left: 0;
-        top: 0;
-      }
+      margin-right: ecl-box-model('padding');
 
       @include ecl-media-breakpoint-up('lg') {
         width: map-get($ecl-media, 's');
@@ -214,7 +255,8 @@
 
     #{$node}--as-card#{$node}--member & {
       position: relative;
-      max-width: map-get($ecl-media, 'm');
+      max-width: map-get($ecl-media, 'l');
+      min-width: 118px;
       margin: 0 auto ecl-box-model('padding');
     }
 
@@ -259,8 +301,9 @@
   &__image {
     display: block;
     width: 100%;
-    height: auto;
+    height: 100%;
     box-sizing: border-box;
+    object-fit: cover;
 
     @include ecl-media-breakpoint-down('xs') {
       position: absolute;
@@ -268,7 +311,6 @@
       left: 0;
       width: 100%;
       height: 100%;
-      object-fit: cover;
     }
 
     #{$node}--as-card &,
@@ -314,16 +356,6 @@
       padding: ecl-box-model('padding');
     }
 
-    #{$node}--member & {
-      @include ecl-media-breakpoint-up('sm') {
-        padding-left: calc(#{map-get($ecl-media, 'xs')} + #{ecl-box-model('padding')});
-      }
-
-      @include ecl-media-breakpoint-up('lg') {
-        padding-left: calc(#{map-get($ecl-media, 's')} + #{ecl-box-model('padding')});
-      }
-    }
-
     #{$node}--as-card[class*="ecl-teaser--as-card-"] & {
       padding: ecl-box-model('padding');
     }
@@ -341,6 +373,11 @@
     display: flex;
     align-items: center;
     color: $ecl-color-grey;
+    &--members {
+      justify-content: center;
+      font-size: .85em;
+      color: $ecl-color-grey-75;
+    }
     & svg {
       margin-right: map-get($ecl-spacing, 's');
     }
@@ -395,7 +432,7 @@
 
     #{$node}--member & {
       width: 100%;
-      margin-bottom: 0;
+      margin-bottom: $ecl-spacing-m;
     }
 
     #{$node}--story & {
@@ -575,6 +612,11 @@
     #{$node}--as-card#{$node}--member & {
       text-align: center;
       display: block;
+      margin-bottom: $ecl-spacing-2-xs;
+      & a {
+        color: $ecl-color-grey;
+        text-transform: capitalize;
+      }
     }
 
     #{$node}--as-card#{$node}--event & {
@@ -703,6 +745,10 @@
 
       @include ecl-media-breakpoint-up('sm') {
         width: 50%;
+
+        &--right {
+          justify-content: flex-end;
+        }
       }
     }
     #{$node}--filelist &, #{$node}--video &, #{$node}--gallery & {
@@ -823,7 +869,7 @@
     margin: 0 map-get($ecl-spacing, 'xs') ecl-box-model('margin', 'controls') 0;
 
     &::after {
-      display: 'inline';
+      display: inline;
       content: ',';
     }
   }
@@ -905,7 +951,6 @@
   &__tags {
     display: flex;
     flex-wrap: wrap;
-    margin-right: auto;
     margin-bottom: #{0 - ecl-box-model('margin', 'controls')};
     margin-right: #{0 - ecl-box-model('margin', 'controls')};
 
@@ -1025,6 +1070,21 @@
     justify-content: center;
   }
 
+  &--search {
+
+    & .ecl-teaser__title {
+      font-size: 1.25rem;
+    }
+
+    & .ecl-teaser__detail-contributor {
+      font-weight: normal;
+    }
+
+    h2 {
+      font-size: 1rem;
+    }
+  }
+
   /* file list teaser */
   &--filelist, &--video, &--gallery {
     padding: map-get($ecl-spacing, 's');
@@ -1052,11 +1112,21 @@
     margin-top: map-get($ecl-spacing, 's');
     margin-right: map-get($ecl-spacing, 'm');
 
+    > span {
+      display: flex;
+      align-items: center;
+    }
+
     > a {
       color: ecl-typography('color', 'meta');
       text-decoration: none;
       &:hover {
         text-decoration: underline;
+      }
+
+      &.ecl-teaser__detail-contributor {
+        color: $ecl-color-blue;
+        font-weight: normal;
       }
     }
 
@@ -1071,11 +1141,17 @@
   }
 
   .ecl-highlight {
-    position:absolute; right:0px; top:0px;
+    position:absolute; right:0; top:0;
   }
 
   &__like {
     flex-grow: 1;
+
+    & a,
+    & span {
+      display: flex;
+      align-items: center;
+    }
   }
 
   &__gallery {
@@ -1093,7 +1169,13 @@
       position: relative;
       img {
         display: block;
-        width: 100%;
+        width: map-get($ecl-media, 'l');
+        height: map-get($ecl-media, 'l');
+        object-fit: cover ;
+        @include ecl-media-breakpoint-down('md') {
+          width: 100%;
+          height: 100%;
+        }
       }
 
       @include ecl-media-breakpoint-down('xs') {
@@ -1145,6 +1227,22 @@
       justify-content: center;
       flex-direction: column;
       z-index: 2;
+    }
+  }
+
+  &-overview__item--library {
+    border-bottom: none;
+  }
+
+  &--story {
+    @include ecl-media-breakpoint-down('md') {
+      display: flex;
+      flex-direction: column;
+
+      & .ecl-teaser__image-wrapper {
+        width: 100%;
+        margin-bottom: $ecl-spacing-l;
+      }
     }
   }
 }

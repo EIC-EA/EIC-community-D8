@@ -7,6 +7,10 @@ services:
     class: Drupal\eic_search\Search\Sources\GroupSourceType
     tags:
       - { name: eic_search.source }
+  eic_search.source_organisation:
+    class: Drupal\eic_search\Search\Sources\OrganisationSourceType
+    tags:
+      - { name: eic_search.source }
   eic_search.source_user_list:
     class: Drupal\eic_search\Search\Sources\UserListSourceType
     tags:
@@ -55,6 +59,65 @@ services:
     class: Drupal\eic_search\Search\Sources\UserTaggingCommentsSourceType
     tags:
       - { name: eic_search.source }
+  eic_search.source_my_profile_activity_stream:
+    class: Drupal\eic_search\Search\Sources\Profile\ActivityStreamSourceType
+    tags:
+      - { name: eic_search.source }
   eic_search.solr_document_processor:
     class: Drupal\eic_search\Service\SolrDocumentProcessor
-    arguments: ['@database', '@flag.count', '@search_api.post_request_indexing', '@eic_statistics.statistics.storage.node.decorator', '@eic_comments.helper', '@eic_media_statistics.entity_file_download_count', '@oec_group_flex.helper', '@queue', '@plugin.manager.queue_worker', '@entity_type.manager']
+    arguments: ['@search_api.post_request_indexing', '@queue', '@plugin.manager.queue_worker', '@entity_type.manager']
+  eic_search.document_processor_collector:
+    class: Drupal\eic_search\Collector\DocumentProcessorCollector
+    tags:
+      - { name: service_collector, tag: eic_search.document_processor, call: addProcessor }
+  eic_search.document_processor_global:
+    class: Drupal\eic_search\Search\DocumentProcessor\ProcessorGlobal
+    arguments: ['@eic_statistics.statistics.storage.node.decorator', '@file_url_generator']
+    tags:
+      - { name: eic_search.document_processor }
+  eic_search.document_processor_group_content:
+    class: Drupal\eic_search\Search\DocumentProcessor\ProcessorGroupContent
+    tags:
+      - { name: eic_search.document_processor, priority: 12 }
+  eic_search.document_processor_message:
+    class: Drupal\eic_search\Search\DocumentProcessor\ProcessorMessage
+    arguments: ['@eic_media_statistics.entity_file_download_count', '@eic_statistics.statistics.storage.node.decorator', '@eic_comments.helper']
+    tags:
+      - { name: eic_search.document_processor, priority: 14 }
+  eic_search.document_processor_news_story:
+    class: Drupal\eic_search\Search\DocumentProcessor\ProcessorNewsStory
+    arguments: ['@file_url_generator']
+    tags:
+      - { name: eic_search.document_processor, priority: 16 }
+  eic_search.document_processor_discussion:
+    class: Drupal\eic_search\Search\DocumentProcessor\ProcessorDiscussion
+    tags:
+      - { name: eic_search.document_processor, priority: 18 }
+  eic_search.document_processor_visibility:
+    class: Drupal\eic_search\Search\DocumentProcessor\ProcessorVisibility
+    arguments: ['@oec_group_flex.helper', '@eic_groups.helper']
+    tags:
+      - { name: eic_search.document_processor, priority: 24 }
+  eic_search.document_processor_user:
+    class: Drupal\eic_search\Search\DocumentProcessor\ProcessorUser
+    arguments: ['@group.membership_loader', priority: 26]
+    tags:
+      - { name: eic_search.document_processor }
+  eic_search.document_processor_document:
+    class: Drupal\eic_search\Search\DocumentProcessor\ProcessorDocument
+    arguments: ['@eic_media_statistics.entity_file_download_count']
+    tags:
+      - { name: eic_search.document_processor, priority: 20 }
+  eic_search.document_processor_flags:
+    class: Drupal\eic_search\Search\DocumentProcessor\ProcessorFlags
+    arguments: ['@database', '@flag.count']
+    tags:
+      - { name: eic_search.document_processor, priority: 22 }
+  eic_search.document_processor_group_event:
+    class: Drupal\eic_search\Search\DocumentProcessor\ProcessorGroupEvent
+    tags:
+      - { name: eic_search.document_processor, priority: 28 }
+  eic_search.document_processor_global_event:
+    class: Drupal\eic_search\Search\DocumentProcessor\ProcessorGlobalEvent
+    tags:
+      - { name: eic_search.document_processor, priority: 30 }

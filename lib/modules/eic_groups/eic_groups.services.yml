@@ -6,7 +6,7 @@ services:
       - { name: event_subscriber }
   eic_groups.helper:
     class: Drupal\eic_groups\EICGroupsHelper
-    arguments: ['@database', '@current_route_match', '@module_handler', '@current_user', '@datetime.time', '@oec_group_flex.helper', '@plugin.manager.group_visibility', '@path.current', '@entity_type.manager']
+    arguments: ['@database', '@current_route_match', '@module_handler', '@current_user', '@datetime.time', '@oec_group_flex.helper', '@plugin.manager.group_visibility', '@path.current', '@entity_type.manager', '@plugin.manager.group_content_enabler']
   eic_groups.book_page_redirect_subscriber:
     class: Drupal\eic_groups\EventSubscriber\BookPageRedirectSubscriber
     arguments: ['@book.manager', '@entity_type.manager']
@@ -14,7 +14,7 @@ services:
       - { name: event_subscriber }
   eic_groups.breadcrumb:
     class: Drupal\eic_groups\Breadcrumb\GroupBreadcrumbBuilder
-    arguments: ['@book.breadcrumb', '@current_user', '@eic_user.helper', '@eic_flags.handler_collector', '@request_stack']
+    arguments: ['@book.breadcrumb', '@current_user', '@eic_user.helper', '@eic_flags.handler_collector', '@request_stack', '@eic_groups.helper']
     tags:
       - { name: breadcrumb_builder, priority: 1000 }
   eic_groups.access_check.flag.action.decorator:
@@ -53,6 +53,11 @@ services:
     class: Drupal\eic_groups\Access\HighlightGroupContentAccessCheck
     tags:
       - { name: access_check, applies_to: _highlight_group_content }
+  eic_groups.access_check.like_group_content:
+    class: Drupal\eic_groups\Access\LikeGroupContentAccessCheck
+    arguments: ['@flag']
+    tags:
+      - { name: access_check, applies_to: _like_group_content }
   eic_groups.route_subscriber:
     class: Drupal\eic_groups\Routing\RouteSubscriber
     tags:

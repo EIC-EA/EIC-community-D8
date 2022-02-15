@@ -203,6 +203,7 @@
       width: 100%;
       height: 100%;
       box-sizing: border-box;
+      margin: 0;
     }
 
     & svg {
@@ -211,6 +212,11 @@
       left: calc(0 + 15%/2);
       width: 85%;
       height: 85%;
+      color: #fff;
+    }
+
+    &--empty svg {
+      color: #ffffff;
     }
   }
 

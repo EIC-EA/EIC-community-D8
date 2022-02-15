@@ -1,0 +1,9 @@
+{% import "@theme/patterns/core/snippets.twig" as snippets %}
+
+<div class="ecl-contact-box {{ extra_classes }}" {{ snippets.attr(extra_attributes)}}>
+  <div class="ecl-contact-box__content">
+    <h4 class="ecl-contact-box__title">{{ title }}</h4>
+    <p class="ecl-contact-box__body">{{ body }}</p>
+  </div>
+  <a class="ecl-link ecl-link--standalone ecl-link--button ecl-link--button-primary" href="{{ cta.link }}">{{ cta.label }}</a>
+</div>

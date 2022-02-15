@@ -85,6 +85,20 @@
 
   &__item {
     margin-bottom: ecl-layout('gutter', 'controls');
+
+    & .ecl-link {
+      width: 100%;
+      justify-content: center;
+
+      &--showmore {
+        width: auto;
+        justify-content: flex-end;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
   }
 
   &__item-label {
@@ -165,6 +179,10 @@
       position: relative;
     }
 
+    &#{$node}__item--full-width input {
+      width: 100%;
+    }
+
     & .ecl-search__icon{
       background-color: #404040;
       display: flex;
@@ -182,6 +200,8 @@
       border: none;
     }
   }
+
+
 
   &__item-collapse,
   &__item-expand {

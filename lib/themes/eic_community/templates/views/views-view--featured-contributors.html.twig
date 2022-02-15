@@ -42,6 +42,7 @@
 {% include "@theme/patterns/compositions/featured-contributors.html.twig" with {
   title: view.title|default(''),
   items: _items,
+  call_to_action: call_to_action|default(''),
   icon_file_path: eic_icon_path,
 }
 %}

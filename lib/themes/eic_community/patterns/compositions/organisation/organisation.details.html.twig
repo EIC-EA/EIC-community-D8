@@ -1,0 +1,191 @@
+{% extends "@theme/patterns/layout/base.html.twig" %}
+
+{% block page_header %}
+  {% include "@theme/patterns/compositions/editorial-header.html.twig" with editorial_header|default({}) %}
+  {% if subnavigation %}
+    {% include "@theme/patterns/compositions/subnavigation.html.twig" with subnavigation|default({})|merge({
+      icon_file_path: common.icon_file_path
+    }) only %}
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+  {% embed "@theme/patterns/compositions/editorial-article.html.twig" with editorial_article|default({}) %}
+    {% block content %}
+      {{ content }}
+
+      {% if details is not empty %}
+        <section class="ecl-organisation__item  ecl-organisation__details">
+          <h2>{{ details.title }}</h2>
+          {% for detailsItem in details.items %}
+            {% if detailsItem.type == 'stats' %}
+              <div class="ecl-organisation__item ecl-organisation__details__item">
+                <h4>{{ detailsItem.title }}</h4>
+                <ul>
+                  {% for stat in detailsItem.items  %}
+                    <li>
+                      {{ stat.name }}: {{ stat.value }}
+                    </li>
+                  {% endfor %}
+                </ul>
+              </div>
+            {% else %}
+              {% include "@theme/patterns/compositions/list-tags.html.twig" with detailsItem|merge({
+                extra_classes: 'ecl-organisation__details__item'
+              }) %}
+            {% endif %}
+          {% endfor %}
+        </section>
+      {% endif %}
+
+      {% if announcements is not empty %}
+        <section class="ecl-organisation__item ecl-organisation__announcements">
+          <h2>{{ announcements.title }}</h2>
+          {% for announcementsItem in announcements.items %}
+            <div class="ecl-organisation__announcements__item">
+              {% include "@theme/patterns/compositions/featured-contributors.html.twig" with announcementsItem|merge({
+                collapse_icon_transform: 'rotate-180',
+              }) %}
+            </div>
+          {% endfor %}
+        </section>
+      {% endif %}
+
+      {% if news is not empty %}
+        {% include "@theme/patterns/compositions/featured-content-collection.html.twig" with news|default({})|merge({
+          icon_file_path: common.icon_file_path,
+          extra_classes: "ecl-section-wrapper ecl-section-wrapper--is-white ecl-featured-content-collection--has-list-layout ecl-organisation__item",
+          no_container: true,
+        }) only %}
+      {% endif %}
+
+      {% if teams is not empty %}
+        {% include "@theme/patterns/compositions/featured-content-collection.html.twig" with teams|default({})|merge({
+          icon_file_path: common.icon_file_path,
+          extra_classes: "ecl-section-wrapper ecl-section-wrapper--is-white ecl-featured-content-collection--has-overview-layout ecl-organisation__item",
+          no_container: true,
+        }) only %}
+      {% endif %}
+
+      {% if events is not empty %}
+        {% include "@theme/patterns/compositions/featured-content-collection.html.twig" with events|default({})|merge({
+          icon_file_path: common.icon_file_path,
+          extra_classes: "ecl-section-wrapper ecl-section-wrapper--is-white ecl-featured-content-collection--has-list-layout ecl-organisation__item",
+          no_container: true,
+          items_extra_classes: "ecl-featured-content-collection__item--big"
+        }) only %}
+      {% endif %}
+
+    {% endblock %}
+
+   {% block sidebar %}
+    <div class="ecl-organisation__contact">
+      <h3>Contact information</h3>
+
+      {% if contact.link %}
+        <div class="ecl-organisation__contact__item">
+          <h3 class="ecl-social-share__title">{{ contact.link.title }}</h3>
+          {% for link in contact.link.items %}
+            <div class="ecl-editorial-header__flag">
+              {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with link|default({})|merge({
+                link: link.link|default({})|merge({
+                  icon_position: 'before',
+                }),
+                extra_classes: 'ecl-link--standalone ecl-link--flag',
+                icon: link.icon|default({})|merge({
+                  path: icon_file_path,
+                  size: 's',
+                })
+              }) %}
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      {% if contact.social %}
+        {% include '@theme/patterns/compositions/social-share.html.twig' with contact.social|merge({
+          compact: true,
+        }) %}
+      {% endif %}
+
+      {% if contact.data %}
+        <div class="ecl-organisation__contact__item">
+          <h3 class="ecl-social-share__title">{{ contact.data.title }}</h3>
+          {% for dataItem in contact.data.items %}
+            <p>{{ dataItem.name }}</p>
+            <div class="ecl-editorial-header__flag">
+              {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with dataItem.link|default({})|merge({
+                link: dataItem.link.link|default({})|merge({
+                  icon_position: 'before',
+                }),
+                extra_classes: 'ecl-link--standalone ecl-link--flag',
+                icon: dataItem.link.icon|default({})|merge({
+                  path: icon_file_path,
+                  size: 's',
+                })
+              }) %}
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      {% block contactAdresse %}
+        <div class="ecl-organisation__contact__adresses__item">
+          <p class="ecl-organisation__contact__adresses__item__name">{{ title }}</p>
+          <p>{{ description|raw }}</p>
+        </div>
+      {% endblock %}
+
+      {% if contact.adresses %}
+        <div class="ecl-organisation__contact__item">
+          <h3 class="ecl-social-share__title">{{ contact.adresses.title }}</h3>
+          {% for adresse in contact.adresses.items %}
+            {% with adresse %}
+              {{ block('contactAdresse') }}
+            {% endwith %}
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      {% if contact.locations %}
+        <div class="ecl-organisation__contact__item">
+          <h3 class="ecl-social-share__title">{{ contact.locations.title }}</h3>
+        {% if contact.locations.items is not empty %}
+        <div class="ecl-featured-list ecl-featured-list--is-collapsible ecl-featured-list--is-organisation-locations">
+          <div class="ecl-featured-list__items-wrapper">
+            <div class="ecl-featured-list__items">
+              {% for item in contact.locations.items %}
+                <div class="ecl-featured-list__item">
+                  {% with item %}
+                    {{ block('contactAdresse') }}
+                  {% endwith %}
+                </div>
+              {% endfor %}
+              <div class="ecl-featured-list__item ecl-featured-list__item--expand">
+                {% include "@ecl-twig/ec-component-button/ecl-button.html.twig" with {
+                  icon_position: 'after',
+                  icon: icon_file_path ? {
+                    path: icon_file_path,
+                    type: 'ui',
+                    name: 'rounded-arrow',
+                    transform: 'rotate-180',
+                    size: '2xs',
+                  } : {},
+                  label: contact.locations.collapse_label|default('Show all'),
+                  variant: 'ghost',
+                  extra_classes: 'ecl-featured-list__expand'
+                } %}
+              </div>
+            </div>
+          </div>
+          </div>
+        {% endif %}
+        </div>
+      {% endif %}
+    </div>
+    {% endblock %}
+  {% endembed %}
+
+{% endblock %}
+
+

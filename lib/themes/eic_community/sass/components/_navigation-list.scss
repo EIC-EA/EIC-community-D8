@@ -4,6 +4,11 @@
   outline: ecl-border();
   outline-offset: -1px;
 
+  @include ecl-media-breakpoint-down('sm') {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
   &__title {
     @extend .ecl-u-type-heading-2;
   }
@@ -39,13 +44,21 @@
   &__item {
     padding: 0;
     margin: 0;
+
+    #{$node}--child #{$node}__link {
+      padding-left: map-get($ecl-spacing, 'm') * 2;
+    }
+
+    #{$node}--child #{$node}--child #{$node}__link {
+      padding-left: map-get($ecl-spacing, 'm') * 3;
+    }
   }
 
   &__items {
     list-style: none;
 
     & & {
-      margin-left: ecl-layout('box-model') 0;
+      margin-left: ecl-layout('box-model');
     }
 
     #{$node}--is-ready #{$node}__item:not([aria-active="true"]) >  & {
@@ -54,17 +67,21 @@
   }
 
   &__item {
-    &[aria-active="true"] {
+    &--current {
       & > #{$node}__link {
-       background-color: map-get($ecl-colors, 'grey-15');
-       border-color: ecl-typography('color', 'title');
-       color: ecl-typography('color');
-
-        #{$node}__item-icon {
-          transform: none;
-          color: ecl-typography('color', 'title');
-        }
+        background-color: map-get($ecl-colors, 'grey-5');
+        border-color: ecl-typography('color', 'title');
+        color: ecl-typography('color');
       }
+
+      #{$node}__item--current > #{$node}__link {
+        border-color: transparent;
+      }
+    }
+
+    &[aria-active="true"] > #{$node}__link #{$node}__link-controls #{$node}__item-icon {
+      transform: none;
+      color: ecl-typography('color', 'title');
     }
   }
 
@@ -84,6 +101,7 @@
     border-left: solid 4px transparent;
     color: ecl-typography('color', 'title');
     justify-content: space-between;
+    margin: $ecl-spacing-2-xs 0;
     @include ecl-responsive-font('label');
 
     #{$node}__items #{$node}__items & {
@@ -97,6 +115,7 @@
     flex-direction: row-reverse;
     margin-bottom: ecl-box-model('padding');
 
+
     #{$node}--is-ready[aria-collapsed="true"] & {
       margin-bottom: 0;
       margin-left: ecl-box-model('padding');
@@ -107,6 +126,7 @@
     display: flex;
     flex-shrink: 0;
     align-items: center;
+    cursor: pointer;
   }
 
   & &__update-indicator {
@@ -122,12 +142,22 @@
 
   &__toggle {
     .ecl-icon {
-      transform: rotate(90deg);
       transition: none;
+      transform: rotate(180deg);
+      @include ecl-media-breakpoint-up('sm') {
+        transform: rotate(90deg);
+      }
 
       #{$node}--is-ready[aria-collapsed="true"] & {
-        transform: rotate(270deg);
+        transform: rotate(0deg);
+        @include ecl-media-breakpoint-up('sm') {
+          transform: rotate(270deg);
+        }
       }
+    }
+
+    &--wiki:focus {
+      outline: none;
     }
   }
 }
