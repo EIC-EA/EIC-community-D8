@@ -8,6 +8,7 @@
 use Drupal\eic_search\SearchHelper;
 use Drupal\eic_topics\Constants\Topics;
 use Drupal\file\Entity\File;
+use Drupal\oec_group_features\GroupFeatureHelper;
 use Drupal\taxonomy\TermInterface;
 use Drupal\Core\Url;
 use \Drupal\eic_overviews\GlobalOverviewPages;
@@ -42,6 +43,18 @@ function _eic_community_render_organisation_detail_page(&$variables, $group) {
   $products = $group
     ->get('field_vocab_services_products')
     ->referencedEntities();
+
+  $features = $group->get(GroupFeatureHelper::FEATURES_FIELD_NAME)->getValue();
+  $features = array_map(function ($item) {
+    return $item['value'];
+  }, $features);
+
+  $variables['block_enabled'] = [
+    'news' => in_array('eic_groups_anchor_news', $features),
+    'events' => in_array('eic_groups_anchor_group_events', $features),
+    'members' => in_array('eic_groups_anchor_members', $features),
+    'announcements' => in_array('eic_groups_announcements', $features),
+  ];
 
   $organisation_link = $group->get('field_organisation_link')->getValue();
   $link = reset($organisation_link);
@@ -175,6 +188,23 @@ function _eic_community_render_organisation_detail_page(&$variables, $group) {
 
   $needs = $group->get('field_needs')->referencedEntities();
   $offers = $group->get('field_offers')->referencedEntities();
+
+  $url_add_announcement = Url::fromRoute(
+    'entity.group.edit_form',
+    ['group' => $group->id()],
+    ['fragment' => 'edit-group-announcements']
+  );
+
+  $variables['empty_announcements'] = [
+    'link' => [
+      'label' => t('Add announcement', [], ['context' => 'eic_community']),
+      'path' => $url_add_announcement->toString(),
+      'extra_classes' => 'ecl-link--button ecl-link--button-primary',
+      'type' => 'cta',
+    ],
+  ];
+
+  $variables['can_add_announcement'] = $url_add_announcement->access();
 
   if (!empty($needs) || !empty($offers)) {
     $variables['announcements'] = [

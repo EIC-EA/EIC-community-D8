@@ -993,11 +993,33 @@ field_settings:
         - field.storage.node.field_vocab_topics
       module:
         - node
+  message_node_ref_field_vocab_topics_name:
+    label: 'Referenced node » Content » Topics » Taxonomy term » Name'
+    datasource_id: 'entity:message'
+    property_path: 'field_referenced_node:entity:field_vocab_topics:entity:name'
+    type: string
+    dependencies:
+      config:
+        - field.storage.message.field_referenced_node
+        - field.storage.node.field_vocab_topics
+      module:
+        - node
+        - taxonomy
   message_node_ref_id:
     label: 'Referenced node » Content » ID'
     datasource_id: 'entity:message'
     property_path: 'field_referenced_node:entity:nid'
     type: integer
+    dependencies:
+      config:
+        - field.storage.message.field_referenced_node
+      module:
+        - node
+  node_type:
+    label: 'Referenced node » Content » Content type'
+    datasource_id: 'entity:message'
+    property_path: 'field_referenced_node:entity:type'
+    type: string
     dependencies:
       config:
         - field.storage.message.field_referenced_node
