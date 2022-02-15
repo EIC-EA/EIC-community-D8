@@ -49,12 +49,11 @@ class GroupInvitationBulkAccessChecker implements AccessInterface {
 
     $moderation_state = $group->get('moderation_state')->value;
 
-    // @todo In the future we should include the archived state after
-    // creating the workflow state.
     switch ($group->get('moderation_state')->value) {
       case GroupsModerationHelper::GROUP_PENDING_STATE:
       case GroupsModerationHelper::GROUP_DRAFT_STATE:
       case GroupsModerationHelper::GROUP_BLOCKED_STATE:
+      case GroupsModerationHelper::GROUP_ARCHIVED_STATE:
         // If the user is not a member of the group, access will be denied.
         if (!$membership) {
           break;
