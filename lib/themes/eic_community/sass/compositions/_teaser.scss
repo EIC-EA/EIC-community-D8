@@ -89,6 +89,12 @@
     & .ecl-teaser__link{
       margin-right: 0;
     }
+
+    #{$node} &__main-wrapper {
+      display: flex;
+      align-items: flex-start;
+      flex-direction: row;
+    }
   }
   &--organisation-member{
     flex-wrap: wrap;
@@ -234,14 +240,7 @@
       overflow: hidden;
       position: relative;
       width: map-get($ecl-media, 'xs');
-      margin: ecl-box-model('padding') auto;
-
-      @include ecl-media-breakpoint-up('sm') {
-        margin: 0;
-        position: absolute;
-        left: 0;
-        top: 0;
-      }
+      margin-right: ecl-box-model('padding');
 
       @include ecl-media-breakpoint-up('lg') {
         width: map-get($ecl-media, 's');
@@ -355,16 +354,6 @@
     // Enables layout adjustments for cards with a color.
     [class*="ecl-teaser--as-card-"] & {
       padding: ecl-box-model('padding');
-    }
-
-    #{$node}--member & {
-      @include ecl-media-breakpoint-up('sm') {
-        padding-left: calc(#{map-get($ecl-media, 'xs')} + #{ecl-box-model('padding')});
-      }
-
-      @include ecl-media-breakpoint-up('lg') {
-        padding-left: calc(#{map-get($ecl-media, 's')} + #{ecl-box-model('padding')});
-      }
     }
 
     #{$node}--as-card[class*="ecl-teaser--as-card-"] & {
