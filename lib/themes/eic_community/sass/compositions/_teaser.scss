@@ -89,6 +89,12 @@
     & .ecl-teaser__link{
       margin-right: 0;
     }
+
+    #{$node} &__main-wrapper {
+      display: flex;
+      align-items: flex-start;
+      flex-direction: row;
+    }
   }
   &--organisation-member{
     flex-wrap: wrap;
@@ -188,6 +194,7 @@
 
     @include ecl-media-breakpoint-up('sm') {
       width: map-get($ecl-media, 'l');
+      height: map-get($ecl-media, 'm');
       margin: 0 ecl-box-model('padding') 0 0;
     }
 
@@ -233,14 +240,7 @@
       overflow: hidden;
       position: relative;
       width: map-get($ecl-media, 'xs');
-      margin: ecl-box-model('padding') auto;
-
-      @include ecl-media-breakpoint-up('sm') {
-        margin: 0;
-        position: absolute;
-        left: 0;
-        top: 0;
-      }
+      margin-right: ecl-box-model('padding');
 
       @include ecl-media-breakpoint-up('lg') {
         width: map-get($ecl-media, 's');
@@ -301,8 +301,9 @@
   &__image {
     display: block;
     width: 100%;
-    height: auto;
+    height: 100%;
     box-sizing: border-box;
+    object-fit: cover;
 
     @include ecl-media-breakpoint-down('xs') {
       position: absolute;
@@ -310,7 +311,6 @@
       left: 0;
       width: 100%;
       height: 100%;
-      object-fit: cover;
     }
 
     #{$node}--as-card &,
@@ -354,16 +354,6 @@
     // Enables layout adjustments for cards with a color.
     [class*="ecl-teaser--as-card-"] & {
       padding: ecl-box-model('padding');
-    }
-
-    #{$node}--member & {
-      @include ecl-media-breakpoint-up('sm') {
-        padding-left: calc(#{map-get($ecl-media, 'xs')} + #{ecl-box-model('padding')});
-      }
-
-      @include ecl-media-breakpoint-up('lg') {
-        padding-left: calc(#{map-get($ecl-media, 's')} + #{ecl-box-model('padding')});
-      }
     }
 
     #{$node}--as-card[class*="ecl-teaser--as-card-"] & {
@@ -755,6 +745,10 @@
 
       @include ecl-media-breakpoint-up('sm') {
         width: 50%;
+
+        &--right {
+          justify-content: flex-end;
+        }
       }
     }
     #{$node}--filelist &, #{$node}--video &, #{$node}--gallery & {
@@ -1238,5 +1232,17 @@
 
   &-overview__item--library {
     border-bottom: none;
+  }
+
+  &--story {
+    @include ecl-media-breakpoint-down('md') {
+      display: flex;
+      flex-direction: column;
+
+      & .ecl-teaser__image-wrapper {
+        width: 100%;
+        margin-bottom: $ecl-spacing-l;
+      }
+    }
   }
 }

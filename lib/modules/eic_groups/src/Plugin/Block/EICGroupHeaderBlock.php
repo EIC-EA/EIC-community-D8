@@ -260,7 +260,7 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
       return in_array(
         $key,
         ['edit', 'delete', 'publish', 'request_block', 'bulk_invite']
-      );
+      ) && $item['url']->access();
     }, ARRAY_FILTER_USE_BOTH);
 
     // Sorts group operation links by key. "Delete" operation needs to show
@@ -374,7 +374,7 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
 
       // If user has access to view the flag we add it to the results so that
       // it can be shown in the group header.
-      if ($flag->actionAccess($action)) {
+      if ($flag->actionAccess($action, NULL, $group)) {
         $group_flags[$flag_id] = [
           '#lazy_builder' => [
             'flag.link_builder:build',

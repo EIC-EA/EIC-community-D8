@@ -1,7 +1,7 @@
 {% import "@theme/patterns/core/snippets.twig" as snippets %}
 {% set title_element = title_element|default('h2') %}
 
-<div class="ecl-navigation-list" {{ snippets.attr(extra_attributes) }}>
+<div class="ecl-navigation-list {{ extra_classes }}" {{ snippets.attr(extra_attributes) }}>
   {% if collapse is not empty %}
     <div class="ecl-navigation-list__controls">
         {% include "@ecl-twig/ec-component-button/ecl-button.html.twig" with {
@@ -14,7 +14,7 @@
           },
           type: 'button',
           variant: 'secondary',
-          extra_classes: 'ecl-navigation-list__toggle ecl-button--has-compact-layout',
+          extra_classes: 'ecl-navigation-list__toggle ecl-button--has-compact-layout ' ~ toogle_extra_classes,
         } %}
     </div>
   {% endif %}
@@ -29,7 +29,9 @@
       <{{ title_element }} class="ecl-navigation-list__title">{{ title }}</{{ title_element }}>
     {% endif %}
 
-    {% include "@theme/patterns/components/navigation-list/navigation-list-items.html.twig" %}
+    {% include "@theme/patterns/components/navigation-list/navigation-list-items.html.twig" with {
+      anchor: anchor
+    } %}
 
     {% if contact_box is not empty %}
       {% include "@theme/patterns/components/contact-box.html.twig" with contact_box %}
