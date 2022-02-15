@@ -1,7 +1,7 @@
 services:
   eic_user_login.smed_user_connection:
-    class: Drupal\eic_user_login\SmedUserConnection
-    arguments: ['@config.factory']
+    class: Drupal\eic_user_login\Service\SmedUserConnection
+    arguments: [ '@http_client_factory', '@config.factory']
   eic_user_login.smed_user_manager:
     class: Drupal\eic_user_login\Service\SmedUserManager
     arguments: ['@config.factory']

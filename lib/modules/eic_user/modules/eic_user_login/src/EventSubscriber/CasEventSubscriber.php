@@ -4,10 +4,12 @@ namespace Drupal\eic_user_login\EventSubscriber;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\cas\Event\CasPreLoginEvent;
+use Drupal\cas\Event\CasPreRegisterEvent;
 use Drupal\cas\Service\CasHelper;
 use Drupal\Core\Messenger\MessengerTrait;
 use Drupal\eic_user_login\Exception\SmedUserLoginException;
 use Drupal\eic_user_login\Service\SmedUserManager;
+use Drupal\eic_user_login\Service\SmedUserConnection;
 use Drupal\user\UserInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -52,8 +54,32 @@ class CasEventSubscriber implements EventSubscriberInterface {
    */
   public static function getSubscribedEvents() {
     return [
+      CasHelper::EVENT_PRE_REGISTER => ['userPreRegister'],
       CasHelper::EVENT_PRE_LOGIN => ['userPreLogin'],
     ];
+  }
+
+  /**
+   * React to a user logging in with cas when user account does not yet exist.
+   *
+   * @param \Drupal\cas\Event\CasPreRegisterEvent $event
+   *   Cas pre register event.
+   */
+  public function userPreRegister(CasPreRegisterEvent $event) {
+    // Check if user should checked/synced against SMED.
+    if ($this->configFactory->get('eic_user_login.settings')->get('check_sync_user') !== TRUE) {
+      return;
+    }
+
+    // Check from SMED if user can be created.
+    $smed_connection = new SmedUserConnection();
+    dpm($event->getPropertyValues());
+    dpm($event->getCasPropertyBag());
+    dpm($event->getDrupalUsername());
+
+    // Prevent the creation of the user account.
+    $event->cancelAutomaticRegistration();
+
   }
 
   /**
@@ -66,19 +92,14 @@ class CasEventSubscriber implements EventSubscriberInterface {
     /** @var \Drupal\user\UserInterface $account */
     $account = $event->getAccount();
 
-    // We don't check/sync user against SMED if account is active.
+    // We only check/sync user against SMED if account is not active.
     // This is to avoid too much load on the SMED.
-    try {
-      $this->smedUserManager->isUserLoginAuthorised($account);
-      $this->messenger()->addStatus($this->smedUserManager->getLoginMessage($account));
-    }
-    catch (Exception $e) {
+    if (!$account->isActive() && $this->configFactory->get('eic_user_login.settings')->get('check_sync_user')) {
+      // Update user status from SMED to see if user status will be updated.
+      // @todo Implement code.
 
     }
 
-    // Update user status from SMED to see if user status will be updated.
-    // @todo Implement code.
-    // Check again if user is authorised.
     try {
       $this->smedUserManager->isUserLoginAuthorised($account);
       $this->messenger()->addStatus($this->smedUserManager->getLoginMessage($account));

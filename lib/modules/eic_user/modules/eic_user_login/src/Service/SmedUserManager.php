@@ -2,6 +2,7 @@
 
 namespace Drupal\eic_user_login\Service;
 
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\eic_user_login\Exception\SmedUserLoginException;
 use Drupal\user\UserInterface;
@@ -84,7 +85,7 @@ class SmedUserManager {
   protected $config;
 
   /**
-   * SmedUserConnection constructor.
+   * SmedUserManager constructor.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory.

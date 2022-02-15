@@ -1,0 +1,5 @@
+check_sync_user: 0
+endpoint_url: ""
+basic_auth_username: ""
+basic_auth_password: ""
+api_key: ""
