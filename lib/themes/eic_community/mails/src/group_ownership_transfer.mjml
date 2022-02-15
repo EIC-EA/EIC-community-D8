@@ -80,10 +80,11 @@
       <mj-section padding="10px 0px 0px">
         <mj-column>
           <mj-text mj-class="text">
-            Dear <strong>[new_GO_full_name]</strong>,
+            Dear [new_GO_full_name],
             <br><br>
-            <strong>[old_GO_full_name]</strong> transferred you the ownership of the following group at European Innovation Council:
-            <strong>[group_name]</strong>
+            [old_GO_full_name] transferred you the ownership of the following group at European Innovation Council:
+            <br><br>
+            <a class="link" href="#" target="_blank"><strong>[group_name]</strong></a>
             <br><br>
           </mj-text>
         </mj-column>
@@ -98,6 +99,14 @@
           <mj-button width="200px" font-size="14px" mj-class="btn" inner-padding="12px 15px" background-color="#004494" color="#ffffff" border-radius="0" font-weight="bold" href="#" target="_blank">
             Edit group
           </mj-button>
+        </mj-column>
+      </mj-section>
+      <mj-section padding="0 0 30px" css-class="pre-footer">
+        <mj-column>
+          <mj-text css-class="pre-footer">
+            <em>Jane Doe, member of [group_name].</em>
+            <br>
+          </mj-text>
         </mj-column>
       </mj-section>
       <mj-hero>

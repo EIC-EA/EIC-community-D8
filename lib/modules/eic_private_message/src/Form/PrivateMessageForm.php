@@ -15,28 +15,42 @@ use Drupal\user\UserInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Class PrivateMessageForm
+ * Provides a private message form.
  *
  * @package Drupal\eic_private_message\Form
  */
 class PrivateMessageForm extends FormBase {
 
-  /** @var UserHelper $userHelper */
+  /**
+   * The EIC User herlper service.
+   *
+   * @var \Drupal\eic_user\UserHelper
+   */
   private $userHelper;
 
-  /** @var array $siteMail */
+  /**
+   * The system site configurations.
+   *
+   * @var \Drupal\Core\Config\Config
+   */
   private $systemSettings;
 
-  /** @var MailManager $mailManager */
+  /**
+   * The mail manager.
+   *
+   * @var \Drupal\Core\Mail\MailManager
+   */
   private $mailManager;
 
-  /** @var \Drupal\Core\Language\LanguageManager $languageManager */
+  /**
+   * The language manager.
+   *
+   * @var \Drupal\Core\Language\LanguageManager
+   */
   private $languageManager;
 
   /**
-   * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
-   *
-   * @return \Drupal\eic_private_message\Form\PrivateMessageForm|static
+   * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
     return new static(
@@ -51,9 +65,13 @@ class PrivateMessageForm extends FormBase {
    * PrivateMessageForm constructor.
    *
    * @param \Drupal\eic_user\UserHelper $user_helper
+   *   The EIC User herlper service.
    * @param \Drupal\Core\Config\ConfigFactory $config_factory
+   *   The config factory.
    * @param \Drupal\Core\Mail\MailManager $mail_manager
+   *   The mail manager.
    * @param \Drupal\Core\Language\LanguageManager $language_manager
+   *   The language manager.
    */
   public function __construct(
     UserHelper $user_helper,
@@ -75,10 +93,8 @@ class PrivateMessageForm extends FormBase {
   }
 
   /**
-   * @param array $form
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   * {@inheritdoc}
    *
-   * @return array
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
@@ -154,8 +170,9 @@ class PrivateMessageForm extends FormBase {
     $form['body'] = [
       '#type' => 'text_format',
       '#title' => $this->t('Body', [], ['context' => 'eic_private_message']),
-      '#format' => 'plain_text',
+      '#format' => 'basic_text',
       '#required' => TRUE,
+      '#allowed_formats' => ['basic_text'],
     ];
 
     $form['send_copy'] = [

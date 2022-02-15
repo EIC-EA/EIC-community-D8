@@ -14,7 +14,10 @@ dependencies:
     - field.storage.group.field_organisation_type
     - field.storage.group.field_vocab_geo
     - field.storage.group.field_image
+    - field.storage.group.field_vocab_services_products
+    - field.storage.group.field_vocab_target_markets
     - field.storage.group.field_thumbnail
+    - field.storage.group.field_image
     - field.storage.group.field_vocab_topics
     - field.storage.group.field_body
     - field.storage.message.field_entity_type
@@ -36,6 +39,7 @@ dependencies:
     - field.storage.node.field_image
     - field.storage.node.field_language
     - field.storage.node.field_location_type
+    - field.storage.node.field_subtitle
     - field.storage.node.field_vocab_geo
     - field.storage.node.field_gallery_slides
     - field.storage.paragraph.field_gallery_slide_legend
@@ -1007,6 +1011,26 @@ field_settings:
     dependencies:
       config:
         - field.storage.message.field_operation_type
+  organisation_services_products:
+    label: 'Services and products » Taxonomy term » Name'
+    datasource_id: 'entity:group'
+    property_path: 'field_vocab_services_products:entity:name'
+    type: string
+    dependencies:
+      config:
+        - field.storage.group.field_vocab_services_products
+      module:
+        - taxonomy
+  organisation_target_market_name:
+    label: 'Target markets » Taxonomy term » Name'
+    datasource_id: 'entity:group'
+    property_path: 'field_vocab_target_markets:entity:name'
+    type: string
+    dependencies:
+      config:
+        - field.storage.group.field_vocab_target_markets
+      module:
+        - taxonomy
   path:
     label: 'Referenced node » Content » URL alias'
     datasource_id: 'entity:message'

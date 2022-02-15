@@ -4,12 +4,11 @@ namespace Drupal\eic_webservices\Plugin\rest\resource;
 
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Logger\LoggerChannel;
 use Drupal\Core\Logger\LoggerChannelInterface;
 use Drupal\eic_webservices\Controller\SubRequestController;
+use Drupal\rest\ModifiedResourceResponse;
 use Drupal\rest\Plugin\ResourceBase;
 use Drupal\rest\Plugin\Type\ResourcePluginManager;
-use Drupal\rest\ResourceResponse;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -24,8 +23,8 @@ use Symfony\Component\HttpKernel\HttpKernel;
  *   entity_type = "user",
  *   serialization_class = "Drupal\user\Entity\User",
  *   uri_paths = {
- *     "canonical" = "/smed/api/user/update/{user}",
- *     "https://www.drupal.org/link-relations/create" = "/smed/api/user/update/{user}"
+ *     "canonical" = "/smed/api/v1/user/update/{user}",
+ *     "create" = "/smed/api/v1/user/update/{user}"
  *   }
  * )
  */
@@ -138,7 +137,7 @@ class EicUserUpdateResource extends ResourceBase {
       $current_request->headers->all()
     );
 
-    return new ResourceResponse(Json::decode($response->getContent()), $response->getStatusCode());
+    return new ModifiedResourceResponse(Json::decode($response->getContent()), $response->getStatusCode());
   }
 
 }

@@ -1,0 +1,16 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - eic_webservices
+    - serialization
+id: eic_webservices_group_membership
+plugin_id: eic_webservices_group_membership
+granularity: resource
+configuration:
+  methods:
+    - POST
+  formats:
+    - json
+  authentication:
+    - eic_webservices_token_auth

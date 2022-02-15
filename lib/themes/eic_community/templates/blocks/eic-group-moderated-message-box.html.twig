@@ -59,7 +59,8 @@
 
 {% if actions is not empty and (moderation_state == 'draft' or moderation_state == 'published') and has_content == false %}
   {% embed "@theme/patterns/compositions/simple-banner.html.twig" with {
-    "title": "Get the conversation started"|t
+    "title": "Get the conversation started"|t,
+    "icon_file_path": eic_icon_path
   } %}
     {% block description %}
       <p>{{ 'Start discussions with other members.'|t }}</p>

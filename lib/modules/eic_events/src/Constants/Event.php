@@ -2,10 +2,8 @@
 
 namespace Drupal\eic_events\Constants;
 
-use Drupal\Core\StringTranslation\StringTranslationTrait;
-
 /**
- * Class Event
+ * Defines constants for the Events.
  *
  * @package Drupal\eic_events\Constants
  */
@@ -22,6 +20,23 @@ final class Event {
   const SOLR_FIELD_ID_WEIGHT_STATE_LABEL = 'ss_event_weight_state_label';
 
   const CRON_STATE_ID_LAST_REQUEST_TIME = 'eic_events_last_update_events';
+
+  /**
+   * Group owner role machine name for Events.
+   */
+  const GROUP_OWNER_ROLE = 'event-owner';
+
+  /**
+   * Group admin role machine name for Events.
+   */
+  const GROUP_ADMINISTRATOR_ROLE = 'event-admin';
+
+  /**
+   * Group member role machine name for Events.
+   *
+   * @todo Should we keep this?
+   */
+  const GROUP_MEMBER_ROLE = 'event-member';
 
   /**
    * @return array

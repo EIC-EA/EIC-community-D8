@@ -92,13 +92,16 @@
     &--multislider__forward {
       right: 0;
       transform: translateX(50%);
+      & svg {
+        transform: translateX(15%);
+      }
     }
 
     &--multislider__back {
       left: 0;
       transform: translateX(-50%);
       & svg {
-        transform: translateX(10%);
+        transform: translateX(20%);
       }
     }
   }

@@ -5,11 +5,12 @@
  * Prepares variables for group type organisation templates.
  */
 
+use Drupal\eic_search\SearchHelper;
+use Drupal\eic_topics\Constants\Topics;
 use Drupal\file\Entity\File;
 use Drupal\taxonomy\TermInterface;
 use Drupal\Core\Url;
-use Drupal\address\FieldHelper;
-use CommerceGuys\Addressing\AddressFormat\AddressField;
+use \Drupal\eic_overviews\GlobalOverviewPages;
 use Drupal\paragraphs\ParagraphInterface;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\eic_overviews\GroupOverviewPages;
@@ -234,14 +235,29 @@ function _eic_community_render_organisation_detail_page(&$variables, $group) {
     ];
   }
 
-  $variables['news'] = _eic_community_get_rendered_view(
+  $url_add_news = Url::fromRoute(
+    'entity.group_content.create_form',
+    ['group' => $group->id(), 'plugin_id' => 'group_node:news']
+  );
+
+  $url_add_event = Url::fromRoute(
+    'entity.group_content.create_form',
+    ['group' => $group->id(), 'plugin_id' => 'group_node:event']
+  );
+
+  $render_news = _eic_community_get_rendered_view(
     'organisation_content',
     'organisation_news'
   );
-  $variables['events'] = _eic_community_get_rendered_view(
+
+  $render_events = _eic_community_get_rendered_view(
     'organisation_content',
     'organisation_events'
   );
+
+  // Display the render view for some roles even if there are 0 results (so CTA to add content is shown)
+  $variables['news'] = !$url_add_news->access() && empty($render_news['#rows']) ? [] : $render_news;
+  $variables['events'] = !$url_add_event->access() && empty($render_events['#rows']) ? [] : $render_events;
 
   $view_builder = Drupal::entityTypeManager()->getViewBuilder('paragraph');
   $variables['teams'] = [
@@ -310,7 +326,10 @@ function _eic_community_render_organisation_detail_page(&$variables, $group) {
             [
               'tag' => [
                 'type' => 'link',
-                'path' => $term->toUrl()->toString(),
+                'path' => _generate_overview_prefilter_url(
+                  'sm_organisation_services_products',
+                  $term->label()
+                ),
                 'label' => $term->getName(),
               ],
             ];
@@ -330,7 +349,10 @@ function _eic_community_render_organisation_detail_page(&$variables, $group) {
             [
               'tag' => [
                 'type' => 'link',
-                'path' => $term->toUrl()->toString(),
+                'path' => _generate_overview_prefilter_url(
+                  'sm_organisation_target_market_name',
+                  $term->label()
+                ),
                 'label' => $term->getName(),
               ],
             ];
@@ -350,7 +372,10 @@ function _eic_community_render_organisation_detail_page(&$variables, $group) {
             [
               'tag' => [
                 'type' => 'link',
-                'path' => $term->toUrl()->toString(),
+                'path' => _generate_overview_prefilter_url(
+                  Topics::TERM_TOPICS_ID_FIELD_CONTENT_SOLR,
+                  $term->label()
+                ),
                 'label' => $term->getName(),
               ],
             ];
@@ -440,4 +465,26 @@ function eic_community_preprocess_paragraph__organisation_member(&$variables) {
       ],
     ],
   ];
+}
+
+/**
+ * @param string $filter
+ * @param string $value
+ *
+ * @return string
+ * @throws \Drupal\Core\Entity\EntityMalformedException
+ */
+function _generate_overview_prefilter_url(string $filter, string $value): string {
+  $filters = [
+    $filter => $value,
+  ];
+
+  $query_options = [
+    'query' => SearchHelper::buildSolrQueryParams($filters),
+  ];
+
+  return GlobalOverviewPages::getGlobalOverviewPageLink(
+    GlobalOverviewPages::ORGANISATIONS,
+    $query_options
+  )->getUrl()->toString();
 }

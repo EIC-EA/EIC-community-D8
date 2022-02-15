@@ -89,6 +89,15 @@
     & .ecl-link {
       width: 100%;
       justify-content: center;
+
+      &--showmore {
+        width: auto;
+        justify-content: flex-end;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
     }
   }
 

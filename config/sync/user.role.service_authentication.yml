@@ -3,11 +3,18 @@ langcode: en
 status: true
 dependencies:
   config:
+    - filter.format.basic_text
+    - filter.format.filtered_html
+    - filter.format.full_html
+    - rest.resource.eic_webservices_event_update
+    - rest.resource.eic_webservices_group_membership
+    - rest.resource.eic_webservices_organisation_update
     - rest.resource.eic_webservices_user_update
-    - workflows.workflow.news_stories
   module:
     - comment
-    - content_moderation
+    - content_moderation_bypass
+    - filter
+    - group
     - node
     - rest
 id: service_authentication
@@ -18,7 +25,18 @@ permissions:
   - 'access user profiles'
   - 'administer comments'
   - 'administer users'
+  - 'bypass group access'
+  - 'bypass groups transition restrictions'
+  - 'restful delete eic_webservices_group_membership'
+  - 'restful get eic_webservices_organisation'
+  - 'restful post eic_webservices_event_update'
+  - 'restful post eic_webservices_group_membership'
+  - 'restful post eic_webservices_organisation'
+  - 'restful post eic_webservices_organisation_update'
   - 'restful post eic_webservices_user_update'
-  - 'use news_stories transition archived'
+  - 'use groups transition force_pending_to_published'
+  - 'use text format basic_text'
+  - 'use text format filtered_html'
+  - 'use text format full_html'
   - 'view own unpublished content'
   - 'view user email addresses'

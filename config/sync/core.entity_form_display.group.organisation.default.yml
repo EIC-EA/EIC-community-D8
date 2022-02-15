@@ -16,6 +16,7 @@ dependencies:
     - field.field.group.organisation.field_organisation_link
     - field.field.group.organisation.field_organisation_turnover
     - field.field.group.organisation.field_organisation_type
+    - field.field.group.organisation.field_smed_id
     - field.field.group.organisation.field_social_links
     - field.field.group.organisation.field_team_members
     - field.field.group.organisation.field_thumbnail
@@ -79,8 +80,8 @@ third_party_settings:
         required_fields: true
     group_announcements:
       children:
-        - field_needs
         - field_offers
+        - field_needs
       label: Announcements
       region: content
       parent_name: group_organisation
@@ -227,7 +228,7 @@ content:
     third_party_settings: {  }
   field_needs:
     type: entity_reference_paragraphs
-    weight: 20
+    weight: 22
     region: content
     settings:
       title: Paragraph
@@ -277,6 +278,14 @@ content:
     weight: 9
     region: content
     settings: {  }
+    third_party_settings: {  }
+  field_smed_id:
+    type: string_textfield
+    weight: 28
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
     third_party_settings: {  }
   field_social_links:
     type: social_links

@@ -41,7 +41,7 @@ class GroupSourceType extends SourceType {
    */
   public function getAvailableFacets(): array {
     return [
-      'ss_group_topic_name' => $this->t('Topic', [], ['context' => 'eic_search']),
+      'sm_group_topic_name' => $this->t('Topic', [], ['context' => 'eic_search']),
       'ss_group_user_fullname' => $this->t('Full name', [], ['context' => 'eic_search']),
     ];
   }

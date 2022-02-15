@@ -2,13 +2,20 @@
   border-top: 2px solid $ecl-color-orange-100;
   border-bottom: 2px solid $ecl-color-orange-100;
   padding: ecl-box-model('padding', 'default');
-  margin-bottom: map-get($ecl-spacing, 'xl');
+  margin: map-get($ecl-spacing, 'xl') 0;
   display: grid;
   grid-template-columns: 30px auto;
   grid-template-areas:
     "icon title"
     ". messages";
   gap: map-get($ecl-spacing, 'm');
+
+  @include ecl-media-breakpoint-down('md') {
+    grid-template-areas:
+    "icon title"
+    "messages messages";
+    overflow-x: auto;
+  }
 
   &--status {
     border-color: $ecl-color-green-100;
@@ -38,6 +45,11 @@
     grid-area: title;
     &:last-child {
       margin-bottom: 0;
+    }
+
+    & * {
+      white-space: normal;
+      word-wrap:break-word;
     }
 
     & pre {
