@@ -120,6 +120,12 @@ class OECGroupFlexHelper {
     $group_visibility = $this->getGroupVisibilitySettings($group);
     $tag = strpos($group_visibility['plugin_id'], '_') !== FALSE ? strstr($group_visibility['plugin_id'], '_', TRUE) : $group_visibility['plugin_id'];
 
+    // Exception for the custom visibility. We need to show the label
+    // "Restricted" instead.
+    if ($group_visibility['plugin_id'] === 'custom_restricted') {
+      $tag = 'restricted';
+    }
+
     return ucfirst($tag);
   }
 
