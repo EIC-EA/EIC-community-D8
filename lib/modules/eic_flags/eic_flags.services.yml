@@ -20,7 +20,9 @@ services:
       - { name: request_handler }
   eic_flags.transfer_ownership_request_handler:
     class: Drupal\eic_flags\Service\TransferOwnershipRequestHandler
-    arguments: [ '@module_handler', '@entity_type.manager', '@flag', '@content_moderation.moderation_information', '@request_stack', '@entity_field.manager', '@eic_search.solr_document_processor' ]
+    arguments: [ '@module_handler', '@entity_type.manager', '@flag', '@content_moderation.moderation_information', '@request_stack', '@entity_field.manager' ]
+    calls:
+      - [setDocumentProcessor, ['@?eic_search.solr_document_processor']]
     tags:
       - { name: request_handler }
   eic_flags.request_access_checker:

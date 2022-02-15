@@ -23,7 +23,9 @@ abstract class DocumentProcessor implements DocumentProcessorInterface {
    * @param $value
    */
   protected function addOrUpdateDocumentField(Document &$document, $key, $fields, $value) {
-    array_key_exists($key, $fields) ?
+    $current_fields = $document->getFields();
+
+    array_key_exists($key, $current_fields) ?
       $document->setField($key, $value) :
       $document->addField($key, $value);
   }

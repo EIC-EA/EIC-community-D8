@@ -37,41 +37,10 @@ class TransferOwnershipRequestHandler extends AbstractRequestHandler {
   private $solrDocumentProcessor;
 
   /**
-   * TransferOwnershipRequestHandler constructor.
-   *
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
-   *   The module handler service.
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
-   *   The entity type manager.
-   * @param \Drupal\flag\FlagService $flag_service
-   *   Flag service provided by the flag module.
-   * @param \Drupal\content_moderation\ModerationInformationInterface $moderation_information
-   *   Core's moderation information service.
-   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
-   *   The request stack object.
-   * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager
-   *   The entity field manager.
-   * @param \Drupal\eic_search\Service\SolrDocumentProcessor $solr_document_processor
-   *   The Solr document processor service.
+   * @param \Drupal\eic_search\Service\SolrDocumentProcessor|NULL $solr_document_processor
+   *   The EIC Search Solr Document Processor.
    */
-  public function __construct(
-    ModuleHandlerInterface $module_handler,
-    EntityTypeManagerInterface $entity_type_manager,
-    FlagService $flag_service,
-    ModerationInformationInterface $moderation_information,
-    RequestStack $request_stack,
-    EntityFieldManagerInterface $entity_field_manager,
-    SolrDocumentProcessor $solr_document_processor
-  ) {
-    parent::__construct(
-      $module_handler,
-      $entity_type_manager,
-      $flag_service,
-      $moderation_information,
-      $request_stack,
-      $entity_field_manager
-    );
-
+  public function setDocumentProcessor(?SolrDocumentProcessor $solr_document_processor) {
     $this->solrDocumentProcessor = $solr_document_processor;
   }
 
