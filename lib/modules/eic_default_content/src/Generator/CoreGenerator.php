@@ -17,6 +17,45 @@ use Drupal\taxonomy\Entity\Term;
 abstract class CoreGenerator extends AbstractGenerator implements Generator {
 
   /**
+   * @param array $fields
+   * @param string $bundle
+   *
+   * @return \Drupal\media\MediaInterface
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   */
+  public function createMedia(array $fields, string $bundle) {
+    $media = Media::create([
+        'bundle' => $bundle,
+      ] + $fields);
+
+    $media->save();
+
+    return $media;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getLink($uri = NULL, $title = NULL, $type = NULL) {
+    $link = parent::getLink($uri, $title);
+    if ($type) {
+      $link['link_type'] = $type;
+    }
+
+    return $link;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  abstract public function load();
+
+  /**
+   * {@inheritdoc}
+   */
+  abstract public function unLoad();
+
+  /**
    * @param $definition
    *
    * @return \Drupal\paragraphs\ParagraphInterface
@@ -46,23 +85,6 @@ abstract class CoreGenerator extends AbstractGenerator implements Generator {
   }
 
   /**
-   * @param array $fields
-   * @param string $bundle
-   *
-   * @return \Drupal\media\MediaInterface
-   * @throws \Drupal\Core\Entity\EntityStorageException
-   */
-  public function createMedia(array $fields, string $bundle) {
-    $media = Media::create([
-        'bundle' => $bundle,
-      ] + $fields);
-
-    $media->save();
-
-    return $media;
-  }
-
-  /**
    * Create a file with a random image.
    *
    * @param string $wrapper
@@ -84,7 +106,7 @@ abstract class CoreGenerator extends AbstractGenerator implements Generator {
       return NULL;
     }
 
-    $destination = "$wrapper://fixtures/";
+    $destination = $wrapper . 'fixtures/';
     $basename = pathinfo($file_system->tempnam($destination, 'eic_'), PATHINFO_BASENAME) . '.jpg';
     $file_system->prepareDirectory($destination, FileSystemInterface::CREATE_DIRECTORY);
 
@@ -93,27 +115,5 @@ abstract class CoreGenerator extends AbstractGenerator implements Generator {
 
     return $file;
   }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getLink($uri = NULL, $title = NULL, $type = NULL) {
-    $link = parent::getLink($uri, $title);
-    if ($type) {
-      $link['link_type'] = $type;
-    }
-
-    return $link;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  abstract public function load();
-
-  /**
-   * {@inheritdoc}
-   */
-  abstract public function unLoad();
 
 }
