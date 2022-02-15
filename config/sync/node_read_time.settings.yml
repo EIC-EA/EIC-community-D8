@@ -1,3 +1,5 @@
+_core:
+  default_config_hash: HZwlfaTpnIGoxxZuV_dlyAe9HgcyzOmSr8Bcr_n3RbU
 reading_time:
   submit: 'Save configuration'
   container:
@@ -19,5 +21,3 @@ reading_time:
   form_token: fCi0kYJrwv8kawD2m-PibS6JsfM4iG9fFI_kS64gGdE
   form_id: reading_time
   op: 'Save configuration'
-_core:
-  default_config_hash: HZwlfaTpnIGoxxZuV_dlyAe9HgcyzOmSr8Bcr_n3RbU

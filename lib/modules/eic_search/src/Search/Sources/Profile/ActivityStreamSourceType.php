@@ -1,8 +1,9 @@
 <?php
 
-namespace Drupal\eic_search\Search\Sources;
+namespace Drupal\eic_search\Search\Sources\Profile;
 
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\eic_search\Search\Sources\SourceType;
 
 /**
  * Class ActivityStreamSourceType
@@ -17,14 +18,16 @@ class ActivityStreamSourceType extends SourceType {
    * @inheritDoc
    */
   public function getSourcesId(): array {
-    return ['message'];
+    return [
+      'node',
+    ];
   }
 
   /**
    * @inheritDoc
    */
   public function getLabel(): string {
-    return $this->t('Activity stream', [], ['context' => 'eic_search']);
+    return $this->t('Profile - Activity stream', [], ['context' => 'eic_search']);
   }
 
   /**
@@ -32,6 +35,16 @@ class ActivityStreamSourceType extends SourceType {
    */
   public function getEntityBundle(): string {
     return 'activity_stream';
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function getAvailableFacets(): array {
+    return [
+      'ss_global_content_type' => $this->t('Content type', [], ['context' => 'eic_search']),
+      'sm_content_field_vocab_topics_string' => $this->t('Topics', [], ['context' => 'eic_search']),
+    ];
   }
 
   /**
@@ -59,21 +72,40 @@ class ActivityStreamSourceType extends SourceType {
    * @inheritDoc
    */
   public function getPrefilteredGroupFieldId(): array {
-    return ['its_group_id'];
+    return ['ss_global_group_parent_id'];
   }
 
   /**
    * @inheritDoc
    */
-  public function getPrefilteredTopicsFieldId(): array {
-    return ['itm_message_node_ref_field_vocab_topics'];
+  public function getSearchFieldsId(): array {
+    return [
+      'tm_X3b_en_rendered_item',
+      'tm_global_title',
+      'ss_global_group_parent_label',
+      'ss_global_fullname'
+    ];
   }
 
   /**
    * @inheritDoc
    */
   public function allowPagination(): bool {
-    return FALSE;
+    return TRUE;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function ignoreContentFromCurrentUser(): bool {
+    return TRUE;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function getAuthorFieldId(): string {
+    return 'its_content_uid';
   }
 
 }
