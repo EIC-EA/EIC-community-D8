@@ -166,15 +166,6 @@ class LoginBlock extends BlockBase implements ContainerFactoryPluginInterface {
       return FALSE;
     }
 
-    switch ($node->bundle()) {
-      case 'wiki_page':
-        // Currently wiki pages don't have comments.
-        // @todo We need to check if the comments should work for wiki pages or
-        // not.
-        return FALSE;
-
-    }
-
     if (!$node->hasField('field_comments')) {
       return FALSE;
     }

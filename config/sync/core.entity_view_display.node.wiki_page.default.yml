@@ -4,9 +4,10 @@ status: true
 dependencies:
   config:
     - field.field.node.wiki_page.field_body
-    - field.field.node.wiki_page.field_comments
     - field.field.node.wiki_page.field_related_downloads
     - field.field.node.wiki_page.field_related_media
+    - field.field.node.wiki_page.field_vocab_geo
+    - field.field.node.wiki_page.field_vocab_topics
     - node.type.wiki_page
   module:
     - text
@@ -78,7 +79,6 @@ content:
     region: content
 hidden:
   extra_field_eic_theme_helper_short_title_with_fallback: true
-  field_comments: true
   field_vocab_geo: true
   field_vocab_topics: true
   langcode: true
