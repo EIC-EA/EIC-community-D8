@@ -141,6 +141,26 @@ class SmedUserManager {
   }
 
   /**
+   * Returns a list of possible statuses with thir labels.
+   *
+   * @return array
+   *   And array composed of key => label.
+   */
+  public function getUserStatuses() {
+    return [
+      self::USER_VALID => $this->t('User valid', [], ['context' => 'eic_user_login']),
+      self::USER_APPROVED_COMPLETE => $this->t('User approved complete', [], ['context' => 'eic_user_login']),
+      self::USER_APPROVED_INCOMPLETE => $this->t('User approved incomplete', [], ['context' => 'eic_user_login']),
+      self::USER_PENDING => $this->t('User pending', [], ['context' => 'eic_user_login']),
+      self::USER_INVITED => $this->t('User invited', [], ['context' => 'eic_user_login']),
+      self::USER_NOT_BOOTSTRAPPED => $this->t('User not boostrapped', [], ['context' => 'eic_user_login']),
+      self::USER_BLOCKED => $this->t('User blocked', [], ['context' => 'eic_user_login']),
+      self::USER_UNSUBSCRIBED => $this->t('User unsubscribed', [], ['context' => 'eic_user_login']),
+      self::USER_UNKNOWN => $this->t('User unknown', [], ['context' => 'eic_user_login']),
+    ];
+  }
+
+  /**
    * Returns a message for the user based on their account status.
    *
    * @param \Drupal\user\UserInterface $account
