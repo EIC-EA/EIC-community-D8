@@ -244,17 +244,19 @@ class SolrSearchController extends ControllerBase {
       $fq .= $author_ignore_content_query;
     }
 
-    /** @var \Drupal\group\GroupMembershipLoader $grp_membership_service */
-    $grp_membership_service = \Drupal::service('group.membership_loader');
-    $grps = $grp_membership_service->loadByUser($this->currentUser());
+    if ($source->prefilterByGroupsMembership()) {
+      /** @var \Drupal\group\GroupMembershipLoader $grp_membership_service */
+      $grp_membership_service = \Drupal::service('group.membership_loader');
+      $grps = $grp_membership_service->loadByUser($this->currentUser());
 
-    $grp_ids = array_map(function (GroupMembership $grp_membership) {
-      return $grp_membership->getGroup()->id();
-    }, $grps);
+      $grp_ids = array_map(function (GroupMembership $grp_membership) {
+        return $grp_membership->getGroup()->id();
+      }, $grps);
 
-    $group_filters_id = $source->getPrefilteredGroupFieldId();
+      $group_filters_id = $source->getPrefilteredGroupFieldId();
 
-    $fq .= ' AND (' . reset($group_filters_id) . ':(' . implode(' OR ', $grp_ids) . '))';
+      $fq .= ' AND (' . reset($group_filters_id) . ':(' . implode(' OR ', $grp_ids) . '))';
+    }
 
     $solariumQuery->addParam('fq', $fq);
 

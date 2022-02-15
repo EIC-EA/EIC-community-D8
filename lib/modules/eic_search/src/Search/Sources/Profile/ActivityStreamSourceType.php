@@ -108,4 +108,11 @@ class ActivityStreamSourceType extends SourceType {
     return 'its_content_uid';
   }
 
+  /**
+   * @inheritDoc
+   */
+  public function prefilterByGroupsMembership(): bool {
+    return TRUE;
+  }
+
 }

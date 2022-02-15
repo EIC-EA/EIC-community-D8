@@ -152,4 +152,11 @@ abstract class SourceType implements SourceTypeInterface {
     return FALSE;
   }
 
+  /**
+   * @inheritDoc
+   */
+  public function prefilterByGroupsMembership(): bool {
+    return FALSE;
+  }
+
 }

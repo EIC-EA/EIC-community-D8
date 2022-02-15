@@ -171,4 +171,11 @@ interface SourceTypeInterface {
    */
   public function excludingCurrentGroup(): bool;
 
+  /**
+   * Prefilter by groups where current user is a member.
+   *
+   * @return bool
+   */
+  public function prefilterByGroupsMembership(): bool;
+
 }
