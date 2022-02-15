@@ -184,11 +184,6 @@ class ProcessorVisibility extends DocumentProcessor {
     }
 
     $document->addField('ss_group_visibility', $group_visibility);
-    $group_owner = EICGroupsHelper::getGroupOwner($group);
-
-    $document->addField(
-      'its_group_owner_id',
-      $group_owner instanceof UserInterface ? $group_owner->id() : -1
-    );
+    $this->setGroupOwner($document, 'its_group_owner_id', $group);
   }
 }

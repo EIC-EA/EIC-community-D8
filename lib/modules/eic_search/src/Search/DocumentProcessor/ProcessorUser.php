@@ -65,7 +65,6 @@ class ProcessorUser extends DocumentProcessor {
       if ($profile instanceof ProfileInterface) {
         $socials = $profile->get('field_social_links')->getValue();
         $document->addField('ss_profile_socials', json_encode($socials));
-
         $user = $profile->getOwner();
 
         /** @var \Drupal\group\GroupMembershipLoader $grp_membership_service */

@@ -3,6 +3,8 @@
 namespace Drupal\eic_search\Search\DocumentProcessor;
 
 use Drupal\eic_events\Constants\Event;
+use Drupal\eic_groups\EICGroupsHelper;
+use Drupal\user\UserInterface;
 use Solarium\QueryType\Update\Query\Document;
 
 abstract class DocumentProcessor implements DocumentProcessorInterface {
@@ -66,6 +68,19 @@ abstract class DocumentProcessor implements DocumentProcessorInterface {
       Event::SOLR_FIELD_ID_WEIGHT_STATE_LABEL,
       $fields,
       $labels_map[$weight_event_state]
+    );
+  }
+
+  /**
+   * @param \Solarium\QueryType\Update\Query\Document $document
+   * @param $key
+   * @param $group
+   */
+  protected function setGroupOwner(Document &$document, $key, $group) {
+    $group_owner = EICGroupsHelper::getGroupOwner($group);
+    $document->addField(
+      $key,
+      $group_owner instanceof UserInterface ? $group_owner->id() : -1
     );
   }
 

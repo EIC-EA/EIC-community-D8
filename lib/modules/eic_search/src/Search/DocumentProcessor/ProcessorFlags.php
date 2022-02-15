@@ -4,10 +4,14 @@ namespace Drupal\eic_search\Search\DocumentProcessor;
 
 use Drupal\Core\Database\Connection;
 use Drupal\eic_flags\FlagType;
+use Drupal\eic_messages\MessageTemplateTypes;
 use Drupal\eic_search\Service\SolrDocumentProcessor;
 use Drupal\flag\FlagCountManager;
 use Drupal\group\Entity\Group;
+use Drupal\group\Entity\GroupInterface;
+use Drupal\message\Entity\Message;
 use Drupal\node\Entity\Node;
+use Drupal\node\NodeInterface;
 use Solarium\QueryType\Update\Query\Document;
 
 /**
@@ -52,8 +56,35 @@ class ProcessorFlags extends DocumentProcessor {
     $entity_id = NULL;
     $entity_type = NULL;
     $last_flagging_flag_types = [];
+    $datasource = $fields['ss_search_api_datasource'];
 
-    switch ($fields['ss_search_api_datasource']) {
+    // We want to include the node flags in the document when datasource is
+    // entity message. This way we avoid duplicated logic.
+    if ($datasource === 'entity:message') {
+      $mid = $fields['its_message_id'];
+      $message = Message::load($mid);
+      $message_type = $message->getTemplate()->getThirdPartySetting('eic_messages', 'message_template_type');
+
+      if (
+        $message_type === MessageTemplateTypes::STREAM &&
+        $message->hasField('field_referenced_node') &&
+        $message->hasField('field_entity_type')
+      ) {
+        switch ($message->get('field_entity_type')->value) {
+          case 'wiki_page':
+            // For wiki pages we don't show flag counts.
+            break;
+
+          default:
+            $fields['its_content_nid'] = $message->get('field_referenced_node')->target_id;
+            $datasource = 'entity:node';
+            break;
+
+        }
+      }
+    }
+
+    switch ($datasource) {
       case 'entity:node':
         $entity_id = $fields['its_content_nid'];
         $entity_type = 'node';
@@ -64,6 +95,11 @@ class ProcessorFlags extends DocumentProcessor {
         ];
 
         $node = Node::load($entity_id);
+
+        if (!$node instanceof NodeInterface) {
+          break;
+        }
+
         $flags_count = $this->flagCountManager->getEntityFlagCounts($node);
 
         $this->addOrUpdateDocumentField(
@@ -73,12 +109,18 @@ class ProcessorFlags extends DocumentProcessor {
           isset($flags_count['like_content']) ? $flags_count['like_content'] : 0
         );
         break;
+
       case 'entity:group':
         $entity_id = $fields['its_group_id_integer'];
         $entity_type = 'group';
 
-        $node = Group::load($entity_id);
-        $flags_count = $this->flagCountManager->getEntityFlagCounts($node);
+        $group = Group::load($entity_id);
+
+        if (!$group instanceof GroupInterface) {
+          break;
+        }
+
+        $flags_count = $this->flagCountManager->getEntityFlagCounts($group);
 
         $this->addOrUpdateDocumentField(
           $document,

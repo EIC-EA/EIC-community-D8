@@ -63,6 +63,9 @@ class ProcessorGlobal extends DocumentProcessor {
     $changed = 0;
     $language = t('English', [], ['context' => 'eic_search'])->render();
 
+    // Set by default parent group to TRUE and method processGroupContentData will update it.
+    $this->addOrUpdateDocumentField($document, 'its_global_group_parent_published', $fields, 1);
+
     switch ($datasource) {
       case 'entity:node':
         $title = $fields['ss_content_title'];
@@ -74,10 +77,7 @@ class ProcessorGlobal extends DocumentProcessor {
         $date = $fields['ds_content_created'];
         $changed = $fields['ds_changed'];
         $status = $fields['bs_content_status'];
-        $fullname = array_key_exists('ss_content_first_name', $fields) && array_key_exists(
-          'ss_content_last_name',
-          $fields
-        ) ?
+        $fullname = array_key_exists('ss_content_first_name', $fields) && array_key_exists('ss_content_last_name', $fields) ?
           $fields['ss_content_first_name'] . ' ' . $fields['ss_content_last_name'] :
           t('No name', [], ['context' => 'eic_search']);
         $topics = array_key_exists('sm_content_field_vocab_topics_string', $fields) ?
@@ -99,11 +99,8 @@ class ProcessorGlobal extends DocumentProcessor {
       case 'entity:group':
         if (array_key_exists('ss_group_topic_name', $fields)) {
           $topics = $fields['ss_group_topic_name'];
-        }
-        else {
-          if (array_key_exists('sm_group_topic_name', $fields)) {
-            $topics = $fields['sm_group_topic_name'];
-          }
+        } else if (array_key_exists('sm_group_topic_name', $fields)) {
+          $topics = $fields['sm_group_topic_name'];
         }
 
         $title = $fields['tm_X3b_en_group_label_fulltext'];
@@ -167,11 +164,14 @@ class ProcessorGlobal extends DocumentProcessor {
         $file = File::load($media->get('oe_media_image')->target_id);
         $image_uri = $file->getFileUri();
 
+        $destination_uri = $image_style->buildUrl($image_uri);
+        $destination_uri_160 = $image_style_160->buildUrl($image_uri);
+
         return json_encode([
           'id' => $slide->id(),
           'size' => $file->getSize(),
-          'uri' => $this->urlGenerator->transformRelative($image_style->buildUrl($image_uri)),
-          'uri_160' => $this->urlGenerator->transformRelative($image_style_160->buildUrl($image_uri)),
+          'uri' => file_url_transform_relative(file_create_url($destination_uri)),
+          'uri_160' => file_url_transform_relative(file_create_url($destination_uri_160)),
           'legend' => $slide->get('field_gallery_slide_legend')->value,
         ]);
       }, $slides_id);
@@ -191,6 +191,7 @@ class ProcessorGlobal extends DocumentProcessor {
     $document->addField('ss_drupal_timestamp', strtotime($date));
     $document->addField('ss_drupal_changed_timestamp', strtotime($changed));
     $document->addField('ss_global_fullname', $fullname);
+    $document->addField('tm_global_fullname', $fullname);
     $document->addField('ss_global_user_url', $user_url);
     $this->addOrUpdateDocumentField($document, 'sm_content_field_vocab_topics_string', $fields, $topics);
     $this->addOrUpdateDocumentField($document, 'sm_content_field_vocab_geo_string', $fields, $geo);
