@@ -49,6 +49,7 @@ class RouteSubscriber extends RouteSubscriberBase {
         $group_invite_route->setRequirement('_group_invitation_bulk', 'TRUE');
       }
 
+      // Overrides bulk group members invitation confirm form.
       if ($route_name === 'ginvite.invitation.bulk.confirm') {
         $group_invite_route->setDefault('_form', '\Drupal\eic_groups\Form\BulkGroupInvitationConfirm');
       }
