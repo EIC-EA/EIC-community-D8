@@ -48,6 +48,10 @@ class RouteSubscriber extends RouteSubscriberBase {
         $group_invite_route->setRequirement('_group_permission', 'invite users to group');
         $group_invite_route->setRequirement('_group_invitation_bulk', 'TRUE');
       }
+
+      if ($route_name === 'ginvite.invitation.bulk.confirm') {
+        $group_invite_route->setDefault('_form', '\Drupal\eic_groups\Form\BulkGroupInvitationConfirm');
+      }
     }
   }
 
