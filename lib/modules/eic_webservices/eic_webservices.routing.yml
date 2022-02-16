@@ -1,0 +1,7 @@
+eic_webservices.settings:
+  path: '/admin/config/eic/webservices'
+  defaults:
+    _title: 'EIC Webservices settings'
+    _form: 'Drupal\eic_webservices\Form\SettingsForm'
+  requirements:
+    _permission: 'administer site configuration'

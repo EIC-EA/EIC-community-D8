@@ -113,6 +113,13 @@ class FormOperations implements ContainerInjectionInterface {
     FormStateInterface $form_state,
     string $form_id
   ) {
+    // All types that is by default unchecked.
+    $field_disable_by_default_types = [
+      'document',
+      'video',
+      'gallery',
+    ];
+
     /** @var \Drupal\Core\Entity\EntityInterface $entity */
     $entity = $form_state->getFormObject()->getEntity();
     $show_notification_field = FALSE;
@@ -131,7 +138,7 @@ class FormOperations implements ContainerInjectionInterface {
       $form['field_send_notification'] = [
         '#title' => $this->t('Send notification'),
         '#type' => 'checkbox',
-        '#default_value' => $entity->isNew(),
+        '#default_value' => $entity->isNew() && !in_array($entity->bundle(), $field_disable_by_default_types),
       ];
       $form['actions']['submit']['#submit'][] = [
         $this,

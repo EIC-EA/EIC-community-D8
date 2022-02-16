@@ -11,7 +11,7 @@
 
   &__wrapper {
     display: flex;
-    @include ecl-media-breakpoint-down('lg') {
+    @include ecl-media-breakpoint-down('md') {
       flex-direction: row-reverse;
       justify-content: space-between;
     }
@@ -80,6 +80,7 @@
       border-bottom-left-radius: map-get($ecl-spacing, '2xs');
       @include ecl-responsive-font('label');
       padding: map-get($ecl-spacing, 'xs');
+      min-width: 185px;
 
       @include placeholder-color(map-get($ecl-colors, 'blue-25'));
     }

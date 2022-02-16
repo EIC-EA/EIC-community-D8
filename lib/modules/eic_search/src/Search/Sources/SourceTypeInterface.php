@@ -9,6 +9,8 @@ namespace Drupal\eic_search\Search\Sources;
  */
 interface SourceTypeInterface {
 
+  const DEFAULT = 'default';
+
   const LAYOUT_COMPACT = 'compact';
 
   const LAYOUT_COLUMNS = 'columns';
@@ -149,10 +151,31 @@ interface SourceTypeInterface {
   public function prefilterByGroupVisibility(): bool;
 
   /**
+   * Content will be ignored by user_id.
+   *
+   * @return bool
+   */
+  public function ignoreContentFromCurrentUser(): bool;
+
+  /**
+   * Get the SOLR field for the user_id (author).
+   *
+   * @return string
+   */
+  public function getAuthorFieldId(): string;
+
+  /**
    * Prefilter results by excluding the current group.
    *
    * @return bool
    */
   public function excludingCurrentGroup(): bool;
+
+  /**
+   * Prefilter by groups where current user is a member.
+   *
+   * @return bool
+   */
+  public function prefilterByGroupsMembership(): bool;
 
 }

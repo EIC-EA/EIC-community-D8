@@ -75,6 +75,22 @@ interface HandlerInterface {
   );
 
   /**
+   * Starts the 'cancel' workflow for a request.
+   *
+   * @param \Drupal\flag\FlaggingInterface $flagging
+   *   Flag object representing the request.
+   * @param \Drupal\Core\Entity\ContentEntityInterface $content_entity
+   *   The concerned entity.
+   *
+   * @return bool
+   *   Result of the accept operation.
+   */
+  public function cancel(
+    FlaggingInterface $flagging,
+    ContentEntityInterface $content_entity
+  );
+
+  /**
    * Applies the given the corresponding flag to the given entity.
    *
    * @param \Drupal\Core\Entity\ContentEntityInterface $entity
@@ -235,6 +251,22 @@ interface HandlerInterface {
    *   The access result object.
    */
   public function canCloseRequest(
+    AccountInterface $account,
+    ContentEntityInterface $entity
+  );
+
+  /**
+   * Whether or not the requests can be cancelled by the given account.
+   *
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *   Currently logged in account, anonymous users are not allowed.
+   * @param \Drupal\Core\Entity\ContentEntityInterface $entity
+   *   The content entity against the access check is made.
+   *
+   * @return \Drupal\Core\Access\AccessResultInterface
+   *   The access result object.
+   */
+  public function canCancelRequest(
     AccountInterface $account,
     ContentEntityInterface $entity
   );

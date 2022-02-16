@@ -22,16 +22,24 @@ settings:
   langcode_override: ''
   field_overrides:
     givenName:
-      override: required
+      override: hidden
     additionalName:
       override: hidden
     familyName:
-      override: required
+      override: hidden
+    organization:
+      override: optional
     addressLine1:
-      override: required
+      override: optional
+    addressLine2:
+      override: optional
     postalCode:
-      override: required
+      override: optional
+    dependentLocality:
+      override: optional
     locality:
-      override: required
+      override: optional
+    administrativeArea:
+      override: optional
   fields: {  }
 field_type: address

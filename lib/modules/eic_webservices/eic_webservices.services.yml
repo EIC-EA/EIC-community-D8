@@ -2,6 +2,9 @@ services:
   eic_webservices.ws_helper:
     class: Drupal\eic_webservices\Utility\EicWsHelper
     arguments: ['@config.factory', '@entity_type.manager']
+  eic_webservices.taxonomy_helper:
+    class: Drupal\eic_webservices\Utility\SmedTaxonomyHelper
+    arguments: ['@config.factory', '@entity_type.manager', '@entity_field.manager']
   paramconverter.eic_webservices.entity_smed_id:
     parent: paramconverter.entity
     class: Drupal\eic_webservices\ParamConverter\SmedIdConverter
@@ -10,3 +13,8 @@ services:
     tags:
       # Priority 10, to ensure it runs before @paramconverter.entity.
       - { name: paramconverter, priority: 10 }
+  eic_webservices.authentication.auth_token:
+    class: Drupal\eic_webservices\Authentication\AuthToken
+    arguments: ['@config.factory', '@entity_type.manager']
+    tags:
+      - { name: authentication_provider, provider_id: 'eic_webservices_token_auth', priority: 10 }

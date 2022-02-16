@@ -16,14 +16,14 @@
             extra_classes: 'ecl-teaser__type',
             icon_file_path: icon_file_path,
             icon: type.icon|merge({
-              'size': 'm'
+              'size': 's'
             })
           }) only %}
         </div>
       {% endif %}
 
       {% if timestamp %}
-        <div class="ecl-teaser__meta-column">
+        <div class="ecl-teaser__meta-column ecl-teaser__meta-column--right">
           {% include "@theme/patterns/components/timestamp.html.twig" with timestamp|default({})|merge({
             icon_file_path: icon_file_path,
           }) only %}

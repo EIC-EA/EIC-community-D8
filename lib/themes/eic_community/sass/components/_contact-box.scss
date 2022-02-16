@@ -1,0 +1,20 @@
+.ecl-contact-box {
+  &__content {
+    padding: $ecl-spacing-xl $ecl-spacing-l;
+    background: $ecl-color-grey-5;
+    margin: $ecl-spacing-m 0;
+    text-align: center;
+    font-size: 1.25rem;
+  }
+
+  &__body {
+    color: $ecl-color-grey-75;
+    line-height: 1.5;
+    font-size: 0.875rem;
+  }
+
+  & .ecl-link--button {
+    width: 100%;
+    justify-content: center;
+  }
+}

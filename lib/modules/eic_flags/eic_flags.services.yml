@@ -21,6 +21,8 @@ services:
   eic_flags.transfer_ownership_request_handler:
     class: Drupal\eic_flags\Service\TransferOwnershipRequestHandler
     arguments: [ '@module_handler', '@entity_type.manager', '@flag', '@content_moderation.moderation_information', '@request_stack', '@entity_field.manager' ]
+    calls:
+      - [setDocumentProcessor, ['@?eic_search.solr_document_processor']]
     tags:
       - { name: request_handler }
   eic_flags.request_access_checker:
@@ -37,10 +39,18 @@ services:
       - [setEntityTypeManager, ['@?entity_type.manager']]
     tags:
       - { name: access_check, applies_to: _close_request_access }
+  eic_flags.cancel_request_access_checker:
+    class: Drupal\eic_flags\Access\CancelRequestAccessCheck
+    arguments: [ '@eic_flags.handler_collector' ]
+    calls:
+      - [setEntityTypeManager, ['@?entity_type.manager']]
+    tags:
+      - { name: access_check, applies_to: _cancel_request_access }
 
   eic_flags.event_subscriber:
     class: Drupal\eic_flags\EventSubscriber\FlagEventSubscriber
-    arguments: [ '@eic_search.solr_document_processor' ]
+    calls:
+      - [setDocumentProcessor, ['@?eic_search.solr_document_processor']]
     tags:
       - { name: event_subscriber }
 

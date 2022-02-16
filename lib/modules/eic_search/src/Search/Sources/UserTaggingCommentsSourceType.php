@@ -24,7 +24,7 @@ class UserTaggingCommentsSourceType extends SourceType {
    * @inheritDoc
    */
   public function getLabel(): string {
-    return $this->t('User invites', [], ['context' => 'eic_search']);
+    return $this->t('User tagging comments', [], ['context' => 'eic_search']);
   }
 
   /**

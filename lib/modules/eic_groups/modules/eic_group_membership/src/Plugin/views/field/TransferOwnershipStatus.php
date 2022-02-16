@@ -2,6 +2,8 @@
 
 namespace Drupal\eic_group_membership\Plugin\views\field;
 
+use Drupal\Component\Datetime\TimeInterface;
+use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\eic_flags\RequestTypes;
 use Drupal\eic_flags\Service\RequestHandlerCollector;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
@@ -25,6 +27,20 @@ class TransferOwnershipStatus extends FieldPluginBase {
   protected $requestHandlerCollector;
 
   /**
+   * The date formatter service.
+   *
+   * @var \Drupal\Core\Datetime\DateFormatterInterface
+   */
+  protected $dateFormatter;
+
+  /**
+   * The date formatter service.
+   *
+   * @var \Drupal\Component\Datetime\TimeInterface
+   */
+  protected $time;
+
+  /**
    * Constructs a new TransferOwnershipStatus instance.
    *
    * @param array $configuration
@@ -38,15 +54,23 @@ class TransferOwnershipStatus extends FieldPluginBase {
    *   The plugin implementation definition.
    * @param \Drupal\eic_flags\Service\RequestHandlerCollector $request_handler_collector
    *   The request collection service.
+   * @param \Drupal\Core\Datetime\DateFormatterInterface $date_formatter
+   *   The date formatter service.
+   * @param \Drupal\Component\Datetime\TimeInterface $time
+   *   The time service.
    */
   public function __construct(
     array $configuration,
     $plugin_id,
     $plugin_definition,
-    RequestHandlerCollector $request_handler_collector
+    RequestHandlerCollector $request_handler_collector,
+    DateFormatterInterface $date_formatter,
+    TimeInterface $time
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->requestHandlerCollector = $request_handler_collector;
+    $this->dateFormatter = $date_formatter;
+    $this->time = $time;
   }
 
   /**
@@ -57,7 +81,9 @@ class TransferOwnershipStatus extends FieldPluginBase {
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('eic_flags.handler_collector')
+      $container->get('eic_flags.handler_collector'),
+      $container->get('date.formatter'),
+      $container->get('datetime.time')
     );
   }
 
@@ -88,16 +114,34 @@ class TransferOwnershipStatus extends FieldPluginBase {
       $open_requests = $handler->getOpenRequests($group_content);
       $request = reset($open_requests);
 
-      // If request has expiration, we show a different message.
-      if ($handler->hasExpiration($request) && $handler->hasExpired($request)) {
-        $output = [
-          '#markup' => $this->t('ownership transfer expired'),
-        ];
-      }
-      else {
-        $output = [
-          '#markup' => $this->t('pending ownership transfer'),
-        ];
+      if ($handler->hasExpiration($request)) {
+        $timeout = $request->get('field_request_timeout')->value * 86400;
+        $timeout += $request->get('created')->value;
+
+        // If request has expired, we show when it expired.
+        if ($handler->hasExpired($request)) {
+          $timeout_formatted = $this->dateFormatter->format($timeout, 'eu_short_date_hour');
+          $output = [
+            '#markup' => $this->t('ownership transfer expired <br>on @expiration_date', ['@expiration_date' => $timeout_formatted]),
+          ];
+        }
+        else {
+          $request_time = $this->time->getRequestTime();
+
+          if ($timeout > $request_time) {
+            $timeout_formatted = $this->dateFormatter->formatDiff($request_time, $timeout, [
+              'granularity' => 2,
+            ]);
+          }
+          else {
+            $timeout_formatted = $this->dateFormatter->formatDiff($timeout, $request_time, [
+              'granularity' => 2,
+            ]);
+          }
+          $output = [
+            '#markup' => $this->t('pending ownership transfer <br>expires in @expiration_date', ['@expiration_date' => $timeout_formatted]),
+          ];
+        }
       }
     }
 

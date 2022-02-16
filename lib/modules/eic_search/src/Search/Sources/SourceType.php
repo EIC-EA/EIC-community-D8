@@ -134,7 +134,28 @@ abstract class SourceType implements SourceTypeInterface {
   /**
    * @inheritDoc
    */
+  public function ignoreContentFromCurrentUser(): bool {
+    return FALSE;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function getAuthorFieldId(): string {
+    return '';
+  }
+
+  /**
+   * @inheritDoc
+   */
   public function excludingCurrentGroup(): bool {
+    return FALSE;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function prefilterByGroupsMembership(): bool {
     return FALSE;
   }
 

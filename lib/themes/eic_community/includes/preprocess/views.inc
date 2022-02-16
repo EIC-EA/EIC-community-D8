@@ -100,11 +100,25 @@ function eic_community_preprocess_views_view(&$variables) {
 
       /** @var \Drupal\group\Entity\GroupInterface $group */
       $group = \Drupal::service('eic_groups.helper')->getGroupFromRoute();
-      if ($group instanceof GroupInterface) {
+      if ($group instanceof GroupInterface && !empty($variables['rows'])) {
         $variables['call_to_action'] = [
           'link' => [
             'label' => t('View all news'),
             'path' => Url::fromRoute(GroupOverviewPages::NEWS, ['group' => $group->id()]),
+          ],
+        ];
+      }
+
+      $url_add_news = Url::fromRoute(
+        'entity.group_content.create_form',
+        ['group' => $group->id(), 'plugin_id' => 'group_node:news']
+      );
+
+      if ($group instanceof GroupInterface && $url_add_news->access() && empty($variables['rows'])) {
+        $variables['call_to_action'] = [
+          'link' => [
+            'label' => t('Add news'),
+            'path' => $url_add_news->toString(),
           ],
         ];
       }
@@ -122,6 +136,20 @@ function eic_community_preprocess_views_view(&$variables) {
           'link' => [
             'label' => t('View all events'),
             'path' => Url::fromRoute(GroupOverviewPages::EVENTS, ['group' => $group->id()]),
+          ],
+        ];
+      }
+
+      $url_add_event = Url::fromRoute(
+        'entity.group_content.create_form',
+        ['group' => $group->id(), 'plugin_id' => 'group_node:event']
+      );
+
+      if ($group instanceof GroupInterface && $url_add_event->access() && empty($variables['rows'])) {
+        $variables['call_to_action'] = [
+          'link' => [
+            'label' => t('Add event'),
+            'path' => $url_add_event->toString(),
           ],
         ];
       }

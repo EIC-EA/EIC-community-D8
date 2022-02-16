@@ -7,7 +7,7 @@ dependencies:
     - group.type.group
     - group.type.organisation
   module:
-    - content_moderation
+    - content_moderation_bypass
 id: groups
 label: Groups
 type: content_moderation

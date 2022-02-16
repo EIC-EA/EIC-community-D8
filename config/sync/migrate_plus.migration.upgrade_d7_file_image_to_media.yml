@@ -1,0 +1,55 @@
+uuid: 48ae3f8b-b8a2-4592-ae32-74222f46c129
+langcode: en
+status: true
+dependencies: {  }
+id: upgrade_d7_file_image_to_media
+class: Drupal\migrate\Plugin\Migration
+field_plugin_method: null
+cck_plugin_method: null
+migration_tags:
+  - 'Drupal 7'
+  - Content
+migration_group: migrate_drupal_7
+label: 'Public and private image files to media'
+source:
+  plugin: eic_d7_file_complete
+  file_type: image
+  exclude_photos: true
+  scheme:
+    - public
+    - private
+  track_changes: true
+process:
+  name: filename
+  uid:
+    -
+      plugin: migration_lookup
+      source: uid
+      migration:
+        - upgrade_d7_user
+  created: timestamp
+  changed: timestamp
+  oe_media_image/target_id:
+    -
+      plugin: migration_lookup
+      source: fid
+      migration:
+        - upgrade_d7_file
+        - upgrade_d7_file_private
+  oe_media_image/alt:
+    -
+      plugin: get
+      source: field_file_image_alt_text_value
+  oe_media_image/title:
+    -
+      plugin: get
+      source: field_file_image_title_text_value
+destination:
+  plugin: 'entity:media'
+  default_bundle: image
+migration_dependencies:
+  required:
+    - upgrade_d7_user
+    - upgrade_d7_file
+    - upgrade_d7_file_private
+  optional: {  }

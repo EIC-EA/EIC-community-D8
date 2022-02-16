@@ -24,4 +24,21 @@ final class Organisations {
    */
   const FIELD_ORGANISATION_TYPE = 'field_organisation_type';
 
+  /**
+   * Group owner role machine name for Organisations.
+   */
+  const GROUP_OWNER_ROLE = 'organisation-owner';
+
+  /**
+   * Group admin role machine name for Organisations.
+   */
+  const GROUP_ADMINISTRATOR_ROLE = 'organisation-admin';
+
+  /**
+   * Group member role machine name for Organisations.
+   *
+   * @todo Should we keep this?
+   */
+  const GROUP_MEMBER_ROLE = 'organisation-member';
+
 }
