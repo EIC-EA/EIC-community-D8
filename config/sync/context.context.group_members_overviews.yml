@@ -17,7 +17,7 @@ conditions:
     negate: false
     uuid: f43d7d69-4d35-4f45-adc7-347224f302b5
     context_mapping: {  }
-    routes: eic_overviews.groups.overview_page.members
+    routes: "eic_overviews.groups.overview_page.members\r\neic_overviews.groups.overview_page.team"
 reactions:
   blocks:
     id: blocks
