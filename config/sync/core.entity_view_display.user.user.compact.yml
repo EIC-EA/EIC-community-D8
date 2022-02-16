@@ -34,6 +34,11 @@ content:
     third_party_settings: {  }
     weight: 0
     region: content
+  masquerade:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 50
+    region: content
 hidden:
   field_first_name: true
   field_full_name: true

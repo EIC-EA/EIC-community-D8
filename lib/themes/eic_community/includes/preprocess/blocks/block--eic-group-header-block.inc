@@ -5,8 +5,10 @@
  * Contains implementation for hook_preprocess_block() for eic_group_header.
  */
 
+use Drupal\Core\Url;
 use Drupal\eic_community\ValueObject\ImageValueObject;
 use Drupal\eic_overviews\GlobalOverviewPages;
+use Drupal\eic_search\SearchHelper;
 
 /**
  * Implements hook_preprocess_eic_group_header_block() for eic_group_header
@@ -184,8 +186,7 @@ function eic_community_preprocess_eic_group_header_block(array &$variables) {
   }
 
   $variables['group_values']['flags'] = $flags;
-  $variables['group_values']['social_share'] = _eic_community_get_social_share_block(
-  );
+  $variables['group_values']['social_share'] = _eic_community_get_social_share_block();
   // Prepare group statistics values to send to the template.
   $stats = [];
   foreach ($variables['group_values']['stats'] as $stat_type => $statistic) {
@@ -228,16 +229,47 @@ function eic_community_preprocess_eic_group_header_block(array &$variables) {
 
   $variables['group_values']['stats'] = $stats;
 
-  $tag = \Drupal::service('oec_group_flex.helper')
-    ->getGroupVisibilityTagLabel($group);
+  switch ($group->getGroupType()->id()) {
+    case 'group':
+      $tags[] = [
+        'type' => 'display',
+        'label' => \Drupal::service('oec_group_flex.helper')->getGroupVisibilityTagLabel($group),
+      ];
+      break;
+    case 'organisation':
+      $types = $group->get('field_organisation_type')->referencedEntities();
+      $tags = array_map(function (\Drupal\taxonomy\Entity\Term $type) {
+        $filters = [
+          'sm_group_organisation_type_string' => $type->label(),
+        ];
 
-  $variables['group_values']['tags'][] = [
-    'extra_classes' => 'ecl-tag--is-' . strtolower($tag),
-    'tag' => [
-      'type' => 'button',
-      'label' => $tag,
-    ],
-  ];
+        $query_options = [
+          'query' => SearchHelper::buildSolrQueryParams($filters),
+        ];
+
+        $overview_page = GlobalOverviewPages::getGlobalOverviewPageLink(GlobalOverviewPages::ORGANISATIONS);
+        $url = $overview_page instanceof \Drupal\Core\Link ? $overview_page->getUrl() : NULL;
+        $url = $url instanceof Url ? $url->setOptions($query_options) : NULL;
+
+        return [
+          'type' => 'link',
+          'label' => $type->label(),
+          'path' => $url->toString(),
+        ];
+      }, $types);
+      break;
+    default:
+      $tags = [];
+  }
+
+  if (!empty($tags)) {
+    foreach ($tags as $tag) {
+      $variables['group_values']['tags'][] = [
+        'extra_classes' => 'ecl-tag--is-' . strtolower($tag['label']),
+        'tag' => $tag
+      ];
+    }
+  }
 
   switch ($group->getGroupType()->id()) {
     case 'event':
