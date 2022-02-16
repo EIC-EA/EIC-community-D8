@@ -6,12 +6,13 @@
  */
 
 use Drupal\Core\Entity\ContentEntityInterface;
-use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Field\BaseFieldDefinition;
 
 /**
  * Set dynamic allowed values for the user status field.
  *
- * @param \Drupal\field\Entity\FieldStorageConfig $definition
+ * @param \Drupal\Core\Field\BaseFieldDefinition $definition
  *   The field definition.
  * @param \Drupal\Core\Entity\ContentEntityInterface|null $entity
  *   The entity being created if applicable.
@@ -23,6 +24,72 @@ use Drupal\field\Entity\FieldStorageConfig;
  *
  * @see options_allowed_values()
  */
-function eic_user_login_user_status_allowed_values(FieldStorageConfig $definition, ContentEntityInterface $entity = NULL, $cacheable) {
+function eic_user_login_user_status_allowed_values(BaseFieldDefinition $definition, ContentEntityInterface $entity = NULL, $cacheable) {
   return \Drupal::service('eic_user_login.smed_user_manager')->getUserStatuses();
+}
+
+/**
+ * Implements hook_entity_base_field_info().
+ */
+function eic_user_login_entity_base_field_info(EntityTypeInterface $entity_type) {
+  if ($entity_type->id() !== 'user') {
+    return [];
+  }
+
+  $fields['field_user_status'] = BaseFieldDefinition::create('list_string')
+    ->setLabel(t('User status'))
+    ->setDescription(t('The status as defined by SMED.'))
+    ->setSetting('allowed_values_function', 'eic_user_login_user_status_allowed_values')
+    ->setCardinality(1)
+    ->setTranslatable(FALSE)
+    ->setRequired(FALSE)
+    ->setComputed(FALSE)
+    ->setDisplayConfigurable('form', TRUE)
+    ->setDisplayConfigurable('view', TRUE);
+
+  $fields['field_updated_profile_by_service'] = BaseFieldDefinition::create('timestamp')
+    ->setLabel(t('Updated profile by service'))
+    ->setDescription(t('Last time profile was updated by SMED service.'))
+    ->setCardinality(1)
+    ->setRequired(FALSE)
+    ->setTranslatable(FALSE)
+    ->setComputed(FALSE)
+    ->setDisplayConfigurable('form', TRUE)
+    ->setDisplayConfigurable('view', TRUE);
+
+  $fields['field_updated_profile_by_user'] = BaseFieldDefinition::create('timestamp')
+    ->setLabel(t('Updated profile by user'))
+    ->setDescription(t('Last time profile was updated by SMED user.'))
+    ->setCardinality(1)
+    ->setRequired(FALSE)
+    ->setTranslatable(FALSE)
+    ->setComputed(FALSE)
+    ->setDisplayConfigurable('form', TRUE)
+    ->setDisplayConfigurable('view', TRUE);
+
+  $fields['field_message_from_service'] = BaseFieldDefinition::create('text_long')
+    ->setLabel(t('Message from service'))
+    ->setDescription(t('Last message from SMED service update.'))
+    ->setCardinality(1)
+    ->setRequired(FALSE)
+    ->setTranslatable(FALSE)
+    ->setComputed(FALSE)
+    ->setDisplayConfigurable('form', TRUE)
+    ->setDisplayConfigurable('view', TRUE);
+
+  return $fields;
+}
+
+/**
+ * Implements hook_entity_bundle_field_info().
+ */
+function eic_user_login_entity_bundle_field_info(EntityTypeInterface $entity_type, $bundle, array $base_field_definitions) {
+  if ($entity_type->id() === 'user') {
+    return [
+      'field_user_status' => $base_field_definitions['field_user_status']->setTargetBundle('user'),
+      'field_updated_profile_by_service' => $base_field_definitions['field_updated_profile_by_service']->setTargetBundle('user'),
+      'field_updated_profile_by_user' => $base_field_definitions['field_updated_profile_by_user']->setTargetBundle('user'),
+      'field_message_from_service' => $base_field_definitions['field_message_from_service']->setTargetBundle('user'),
+    ];
+  }
 }

@@ -12,16 +12,13 @@ dependencies:
     - field.field.user.user.field_is_spammer
     - field.field.user.user.field_last_name
     - field.field.user.user.field_media
-    - field.field.user.user.field_message_from_service
     - field.field.user.user.field_smed_id
-    - field.field.user.user.field_updated_profile_by_service
-    - field.field.user.user.field_updated_profile_by_user
     - field.field.user.user.field_user_can_contact
-    - field.field.user.user.field_user_status
   module:
     - eic_content
     - media_library
     - path
+    - text
     - user
 id: user.user.default
 targetEntityType: user
@@ -29,7 +26,7 @@ bundle: user
 mode: default
 content:
   account:
-    weight: 0
+    weight: 2
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -48,21 +45,21 @@ content:
     third_party_settings: {  }
   field_is_deleted:
     type: boolean_checkbox
-    weight: 15
+    weight: 7
     region: content
     settings:
       display_label: true
     third_party_settings: {  }
   field_is_deleted_anonymous:
     type: boolean_checkbox
-    weight: 16
+    weight: 8
     region: content
     settings:
       display_label: true
     third_party_settings: {  }
   field_is_deleted_by_uid:
     type: entity_tree
-    weight: 17
+    weight: 9
     region: content
     settings:
       match_top_level_limit: '0'
@@ -74,21 +71,21 @@ content:
     third_party_settings: {  }
   field_is_invalid_email:
     type: boolean_checkbox
-    weight: 20
+    weight: 12
     region: content
     settings:
       display_label: true
     third_party_settings: {  }
   field_is_organisation_user:
     type: boolean_checkbox
-    weight: 19
+    weight: 11
     region: content
     settings:
       display_label: true
     third_party_settings: {  }
   field_is_spammer:
     type: boolean_checkbox
-    weight: 18
+    weight: 10
     region: content
     settings:
       display_label: true
@@ -103,14 +100,14 @@ content:
     third_party_settings: {  }
   field_media:
     type: media_library_widget
-    weight: 12
+    weight: 6
     region: content
     settings:
       media_types: {  }
     third_party_settings: {  }
   field_message_from_service:
-    type: string_textarea
-    weight: 23
+    type: text_textarea
+    weight: 19
     region: content
     settings:
       rows: 5
@@ -118,49 +115,48 @@ content:
     third_party_settings: {  }
   field_smed_id:
     type: number
-    weight: 30
+    weight: 13
     region: content
     settings:
       placeholder: ''
     third_party_settings: {  }
   field_updated_profile_by_service:
     type: datetime_timestamp
-    weight: 22
+    weight: 18
     region: content
     settings: {  }
     third_party_settings: {  }
   field_updated_profile_by_user:
     type: datetime_timestamp
-    weight: 21
+    weight: 17
     region: content
     settings: {  }
     third_party_settings: {  }
   field_user_can_contact:
-    type: boolean_checkbox
-    weight: 31
+    type: options_buttons
+    weight: 15
     region: content
-    settings:
-      display_label: true
+    settings: {  }
     third_party_settings: {  }
   field_user_status:
     type: options_select
-    weight: 24
+    weight: 16
     region: content
     settings: {  }
     third_party_settings: {  }
   language:
-    weight: 0
+    weight: 1
     region: content
     settings: {  }
     third_party_settings: {  }
   path:
     type: path
-    weight: 30
+    weight: 14
     region: content
     settings: {  }
     third_party_settings: {  }
   timezone:
-    weight: null
+    weight: 0
     region: content
     settings: {  }
     third_party_settings: {  }
