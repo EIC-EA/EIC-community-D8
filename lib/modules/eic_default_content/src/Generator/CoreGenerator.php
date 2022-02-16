@@ -101,7 +101,7 @@ abstract class CoreGenerator extends AbstractGenerator implements Generator {
 
     /** @var \Drupal\Core\File\FileSystemInterface $file_system */
     $file_system = \Drupal::service('file_system');
-    $data = file_get_contents('https://picsum.photos/1280/964.jpg');
+    $data = file_get_contents('https://picsum.photos/1200/900.jpg');
     if (!$data) {
       return NULL;
     }
