@@ -70,8 +70,17 @@ class GroupInvitationBulkAccessChecker implements AccessInterface {
         break;
 
       default:
-        // Only group admins can invite multiple users.
+        // Group admins can always invite users.
         if ($is_group_admin) {
+          $can_invite = TRUE;
+          break;
+        }
+
+        // Group members can invite users if invitations are enabled.
+        if (
+          $membership &&
+          $group->get('field_group_invite_members')->value
+        ) {
           $can_invite = TRUE;
         }
         break;
