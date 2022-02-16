@@ -193,18 +193,6 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
     $node_operation_links = $this->eicGroupsHelper->getGroupContentOperationLinks($group, ['node'], $cacheable_metadata);
     $user_operation_links = $this->eicGroupsHelper->getGroupContentOperationLinks($group, ['user'], $cacheable_metadata);
 
-    $invite_bulk_url = Url::fromRoute(
-      'ginvite.invitation.bulk',
-      ['group' => $group->id()]
-    );
-
-    if ($invite_bulk_url->access()) {
-      $group_operation_links['bulk_invite'] = [
-        'title' => $this->t('Invite multiple users', [], ['context' => 'eic_groups']),
-        'url' => $invite_bulk_url,
-      ];
-    }
-
     $operation_links = [];
     // Get login link for anonymous users.
     if ($login_link = $this->getAnonymousLoginLink($group)) {
@@ -212,6 +200,20 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
     }
 
     $this->processLeaveGroupPermission($group, $user_operation_links);
+
+    $invite_bulk_url = Url::fromRoute(
+      'ginvite.invitation.bulk',
+      ['group' => $group->id()]
+    );
+
+    // Replaces invite user operation with bulk invite.
+    if ($invite_bulk_url->access()) {
+      $user_operation_links['invite-user'] = [
+        'title' => $this->t('Invite users', [], ['context' => 'eic_groups']),
+        'url' => $invite_bulk_url,
+        'weight' => 0,
+      ];
+    }
 
     // Moves group joining methods operations to the operation_links array.
     foreach ($user_operation_links as $key => $action) {
@@ -259,7 +261,7 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
     $visible_group_operation_links = array_filter($group_operation_links, function ($item, $key) {
       return in_array(
         $key,
-        ['edit', 'delete', 'publish', 'request_block', 'bulk_invite']
+        ['edit', 'delete', 'publish', 'request_block']
       ) && $item['url']->access();
     }, ARRAY_FILTER_USE_BOTH);
 

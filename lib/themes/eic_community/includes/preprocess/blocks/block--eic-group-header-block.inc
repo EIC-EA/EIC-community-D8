@@ -9,8 +9,7 @@ use Drupal\eic_community\ValueObject\ImageValueObject;
 use Drupal\eic_overviews\GlobalOverviewPages;
 
 /**
- * Implements hook_preprocess_eic_group_header_block() for eic_group_header
- * block.
+ * Implements hook_preprocess_eic_group_header_block().
  */
 function eic_community_preprocess_eic_group_header_block(array &$variables) {
   /** @var \Drupal\group\Entity\GroupInterface $group */
@@ -142,6 +141,7 @@ function eic_community_preprocess_eic_group_header_block(array &$variables) {
           break;
 
         case 'entity.group_content.add_form':
+        case 'ginvite.invitation.bulk':
           // Invite user.
           $icon_name = 'invite';
           break;
@@ -244,14 +244,17 @@ function eic_community_preprocess_eic_group_header_block(array &$variables) {
       $overview_id = GlobalOverviewPages::EVENTS;
       $overview_label = t('All events', [], ['context' => 'eic_community']);
       break;
+
     case 'organisation':
       $overview_id = GlobalOverviewPages::ORGANISATIONS;
       $overview_label = t('All organisations', [], ['context' => 'eic_community']);
       break;
+
     default:
       $overview_id = GlobalOverviewPages::GROUPS;
       $overview_label = t('All groups', [], ['context' => 'eic_community']);
       break;
+
   }
   // Adds url to navigate back to the list of groups.
   $back_url = GlobalOverviewPages::getGlobalOverviewPageLink(
