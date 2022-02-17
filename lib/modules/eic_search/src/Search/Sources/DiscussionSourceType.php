@@ -140,7 +140,7 @@ class DiscussionSourceType extends SourceType {
    * @inheritDoc
    */
   public function getPrefilteredGroupFieldId(): array {
-    return ['ss_global_group_parent_id', 'itm_shared_groups'];
+    return ['its_global_group_parent_id', 'itm_shared_groups'];
   }
 
   /**

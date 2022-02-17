@@ -32,7 +32,7 @@ class ProcessorGroupContent extends DocumentProcessor {
 
     $document->addField('ss_global_group_parent_label', $group_parent_label);
     $document->addField('ss_global_group_parent_url', $group_parent_url);
-    $document->addField('ss_global_group_parent_id', $group_parent_id);
+    $document->addField('its_global_group_parent_id', $group_parent_id);
     $this->addOrUpdateDocumentField($document, 'its_global_group_parent_published', $fields, (int) $group_is_published);
   }
 
