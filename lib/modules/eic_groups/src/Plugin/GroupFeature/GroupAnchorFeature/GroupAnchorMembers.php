@@ -16,6 +16,13 @@ use Drupal\eic_groups\Plugin\GroupFeature\GroupMembers;
 class GroupAnchorMembers extends GroupMembers {
 
   /**
+   * Route of the members overview.
+   *
+   * @var string
+   */
+  const PRIMARY_OVERVIEW_ROUTE = 'eic_overviews.groups.overview_page.team';
+
+  /**
    * {@inheritdoc}
    */
   const ANCHOR_ID = 'members';

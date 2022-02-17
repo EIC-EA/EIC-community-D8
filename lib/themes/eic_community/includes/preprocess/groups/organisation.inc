@@ -296,7 +296,7 @@ function _eic_community_render_organisation_detail_page(&$variables, $group) {
       'link' => [
         'label' => t('See all members', [], ['context' => 'eic_community']),
         'path' => Url::fromRoute(
-          GroupOverviewPages::MEMBERS,
+          GroupOverviewPages::ORGANISATIONS_TEAM,
           ['group' => $group instanceof GroupInterface ? $group->id() : 0]
         ),
       ],

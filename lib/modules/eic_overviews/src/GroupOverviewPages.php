@@ -38,6 +38,11 @@ class GroupOverviewPages {
   const MEMBERS = 'eic_overviews.groups.overview_page.members';
 
   /**
+   * Route to the group team from organisation overview.
+   */
+  const ORGANISATIONS_TEAM = 'eic_overviews.groups.overview_page.team';
+
+  /**
    * Route to the group news overview.
    */
   const NEWS = 'eic_overviews.groups.overview_page.news';
