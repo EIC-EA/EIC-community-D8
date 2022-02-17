@@ -17,6 +17,11 @@ final class NotificationMessageTemplates implements MessageIdentifierInterface {
   const TRANSFER_GROUP_OWNERSHIP = 'notify_transfer_group_ownership';
 
   /**
+   * Message template for notifying user when tagged on a comment.
+   */
+  const USER_TAGGED_ON_COMMENT = 'notify_user_tagged_on_comment';
+
+  /**
    * {@inheritdoc}
    */
   public static function getMessageTemplatePrimaryKeys(MessageTemplateInterface $message_template) {

@@ -1,0 +1,29 @@
+uuid: f8d0dab9-a609-4a86-b538-b2c301e24b87
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.message.field_event_executing_user
+    - message.template.notify_user_tagged_on_comment
+id: message.notify_user_tagged_on_comment.field_event_executing_user
+field_name: field_event_executing_user
+entity_type: message
+bundle: notify_user_tagged_on_comment
+label: 'Event executing user'
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:user'
+  handler_settings:
+    target_bundles: null
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    filter:
+      type: _none
+    include_anonymous: false
+field_type: entity_reference
