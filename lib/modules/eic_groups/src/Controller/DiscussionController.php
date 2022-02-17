@@ -445,7 +445,10 @@ class DiscussionController extends ControllerBase {
       );
     }
 
-    if (!$flag_entity->actionAccess('flag', $this->currentUser(), $comment)) {
+    $access = $flag_entity->actionAccess('flag', $this->currentUser(), $comment);
+
+    // Access to flag/unflag is not allowed.
+    if (!$access->isAllowed()) {
       return new JsonResponse(
         ['allowed' => FALSE],
         Response::HTTP_OK

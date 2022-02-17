@@ -24,3 +24,4 @@ ignored_config_entities:
   - 's3fs.settings:credentials_file'
   - 's3fs.settings:bucket'
   - 's3fs.settings:region'
+  - 's3fs.settings:root_folder'
