@@ -12,14 +12,9 @@ dependencies:
     - field.field.user.user.field_is_spammer
     - field.field.user.user.field_last_name
     - field.field.user.user.field_media
-    - field.field.user.user.field_message_from_service
     - field.field.user.user.field_smed_id
-    - field.field.user.user.field_updated_profile_by_service
-    - field.field.user.user.field_updated_profile_by_user
     - field.field.user.user.field_user_can_contact
-    - field.field.user.user.field_user_status
   module:
-    - options
     - user
 id: user.user.default
 targetEntityType: user
@@ -109,13 +104,6 @@ content:
     third_party_settings: {  }
     weight: 3
     region: content
-  field_message_from_service:
-    type: basic_string
-    label: above
-    settings: {  }
-    third_party_settings: {  }
-    weight: 12
-    region: content
   field_smed_id:
     type: number_integer
     label: above
@@ -124,26 +112,6 @@ content:
       prefix_suffix: true
     third_party_settings: {  }
     weight: 14
-    region: content
-  field_updated_profile_by_service:
-    type: timestamp
-    label: above
-    settings:
-      date_format: medium
-      custom_date_format: ''
-      timezone: ''
-    third_party_settings: {  }
-    weight: 11
-    region: content
-  field_updated_profile_by_user:
-    type: timestamp
-    label: above
-    settings:
-      date_format: medium
-      custom_date_format: ''
-      timezone: ''
-    third_party_settings: {  }
-    weight: 10
     region: content
   field_user_can_contact:
     type: boolean
@@ -155,17 +123,15 @@ content:
     third_party_settings: {  }
     weight: 15
     region: content
-  field_user_status:
-    type: list_default
-    label: above
-    settings: {  }
-    third_party_settings: {  }
-    weight: 13
-    region: content
   flag_follow_user:
     settings: {  }
     third_party_settings: {  }
     weight: 10
+    region: content
+  masquerade:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 50
     region: content
   member_for:
     settings: {  }
