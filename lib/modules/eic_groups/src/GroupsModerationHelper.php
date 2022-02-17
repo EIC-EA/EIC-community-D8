@@ -35,4 +35,11 @@ class GroupsModerationHelper {
    */
   const GROUP_BLOCKED_STATE = 'blocked';
 
+  /**
+   * The archived state key for Group group type.
+   *
+   * @var string
+   */
+  const GROUP_ARCHIVED_STATE = 'archived';
+
 }
