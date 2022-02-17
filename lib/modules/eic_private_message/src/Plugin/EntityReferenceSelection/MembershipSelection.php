@@ -3,7 +3,6 @@
 namespace Drupal\eic_private_message\Plugin\EntityReferenceSelection;
 
 use Drupal\Core\Database\Database;
-use Drupal\Core\Entity\Annotation\EntityReferenceSelection;
 use Drupal\Core\Entity\Plugin\EntityReferenceSelection\DefaultSelection;
 use Drupal\user\Entity\User;
 
@@ -13,7 +12,7 @@ use Drupal\user\Entity\User;
  * @EntityReferenceSelection(
  *   id = "default:group_membership",
  *   label = @Translation("Node by field selection"),
- *   entity_types = {"node"},
+ *   entity_types = {"user"},
  *   group = "default",
  *   weight = 3
  * )
@@ -27,6 +26,36 @@ class MembershipSelection extends DefaultSelection {
    */
   protected function buildEntityQuery($match = NULL, $match_operator = 'CONTAINS') {
     $filter_settings = $this->configuration['filter'] ?? [];
+
+    // If no gid in filter settings, it's the default user selection.
+    if (!array_key_exists('gid', $filter_settings)) {
+      $query = parent::buildEntityQuery($match, $match_operator);
+      $configuration = $this->getConfiguration();
+
+      // Filter out the Anonymous user if the selection handler is configured to
+      // exclude it.
+      if (!$configuration['include_anonymous']) {
+        $query->condition('uid', 0, '<>');
+      }
+
+      // The user entity doesn't have a label column.
+      if (isset($match)) {
+        $query->condition('name', $match, $match_operator);
+      }
+
+      // Filter by role.
+      if (!empty($configuration['filter']['role'])) {
+        $query->condition('roles', $configuration['filter']['role'], 'IN');
+      }
+
+      // Adding the permission check is sadly insufficient for users: core
+      // requires us to also know about the concept of 'blocked' and 'active'.
+      if (!$this->currentUser->hasPermission('administer users')) {
+        $query->condition('status', 1);
+      }
+
+      return $query;
+    }
 
     $connection = Database::getConnection();
 
