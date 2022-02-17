@@ -20,7 +20,6 @@ use Drupal\file\Entity\File;
 use Drupal\flag\FlaggingInterface;
 use Drupal\flag\FlagInterface;
 use Drupal\flag\FlagService;
-use Drupal\group\Entity\Group;
 use Drupal\group\Entity\GroupContent;
 use Drupal\node\Entity\Node;
 use Drupal\oec_group_comments\GroupPermissionChecker;
@@ -199,16 +198,27 @@ class DiscussionController extends ControllerBase {
       $file = $media_picture ? File::load($media_picture[0]->get('oe_media_image')->target_id) : NULL;
       $file_url = $file ? file_url_transform_relative(file_create_url($file->get('uri')->value)) : NULL;
 
-      $archive_flag = $this->flagService->getFlagging($this->flagService->getFlagById('request_archive_comment'), $comment);
-      $delete_flag = $this->flagService->getFlagging($this->flagService->getFlagById('request_delete_comment'), $comment);
+      $archive_flags = $this->flagService->getEntityFlaggings($this->flagService->getFlagById('request_archive_comment'), $comment);
+      $archived_flag_time = NULL;
+      if (!empty($archive_flags)) {
+        foreach ($archive_flags as $archive_flag) {
+          if ($archive_flag->get('field_request_status')->value === RequestStatus::ACCEPTED) {
+            $archived_flag_time = $this->dateFormatter->format($archive_flag->get('created')->value, 'eu_short_date_hour');
+            break;
+          }
+        }
+      }
 
-      $archived_flag_time = $archive_flag instanceof FlaggingInterface && RequestStatus::ACCEPTED === $archive_flag->get('field_request_status')->value ?
-        $this->dateFormatter->format($archive_flag->get('created')->value, 'eu_short_date_hour') :
-        NULL;
-
-      $deleted_flag_time = $delete_flag instanceof FlaggingInterface && RequestStatus::ACCEPTED === $delete_flag->get('field_request_status')->value ?
-        $this->dateFormatter->format($delete_flag->get('created')->value, 'eu_short_date_hour') :
-        NULL;
+      $delete_flags = $this->flagService->getEntityFlaggings($this->flagService->getFlagById('request_delete_comment'), $comment);
+      $deleted_flag_time = NULL;
+      if (!empty($delete_flags)) {
+        foreach ($delete_flags as $delete_flag) {
+          if ($delete_flag->get('field_request_status')->value === RequestStatus::ACCEPTED) {
+            $deleted_flag_time = $this->dateFormatter->format($delete_flag->get('created')->value, 'eu_short_date_hour');
+            break;
+          }
+        }
+      }
 
       $edited_time = $comment->getCreatedTime() !== $comment->getChangedTime() && !$deleted_flag_time && !$archived_flag_time ?
         $this->dateFormatter->format($comment->getChangedTime(), 'eu_short_date_hour') :
@@ -219,6 +229,7 @@ class DiscussionController extends ControllerBase {
         'eu_short_date_hour'
       );
       $soft_deleted = $comment->get('field_comment_is_soft_deleted')->value;
+      $archived = $comment->get('field_comment_is_archived')->value;
 
       $tagged_users = $comment->get('field_tagged_users')->referencedEntities();
 
@@ -251,6 +262,7 @@ class DiscussionController extends ControllerBase {
           $this->t('Edited on @time', ['@time' => $edited_time ?: $created_time], ['context' => 'eic_groups']) :
           NULL,
         'is_soft_delete' => $soft_deleted,
+        'is_archived' => $archived,
         'created_time' => $this->t(
           'Created on @time',
           ['@time' => $created_time],

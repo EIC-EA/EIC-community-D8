@@ -745,8 +745,12 @@ function eic_groups_flag_action_access($action, FlagInterface $flag, AccountInte
       // Load the group.
       $group = $group_content->getGroup();
 
-      // Deny access to flag if the group is not flaggable.
-      if (!EICGroupsHelper::groupIsFlaggable($group)) {
+      // Deny access to flag if the group is not flaggable or the user doesn't
+      // have permission to view comments in the group.
+      if (
+        !EICGroupsHelper::groupIsFlaggable($group) ||
+        !$group->hasPermission('view comments', $account)
+      ) {
         $access = AccessResult::forbidden()
           ->addCacheableDependency($group)
           ->addCacheableDependency($flaggable);
