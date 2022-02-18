@@ -28,7 +28,7 @@
         "drupal/default_content": "^2.0@alpha",
         "drupal/entity_usage": "^2.0@beta",
         "drupal/extra_field": "^2.0",
-        "drupal/facets": "^1.7",
+        "drupal/facets": "^2.0",
         "drupal/field_group": "^3.2",
         "drupal/flag": "^4.0@beta",
         "drupal/flag_search_api": "1.x-dev#3ffb747090f79e32943ebcc6a1b5fa01976e29c2",
