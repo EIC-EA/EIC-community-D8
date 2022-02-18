@@ -62,6 +62,7 @@ class MyProfileHeaderBlock extends BlockBase {
     $member_profile = \Drupal::service('eic_user.helper')->getUserMemberProfile($user);
     $current_route = \Drupal::routeMatch()->getRouteName();
 
+    /** @TODO Wait for other pages/overviews and replace default eic_search.global_search */
     $menu_data = [
       [
         'label' => $this->t('Interesting for you', [], ['context' => 'eic_user']),
