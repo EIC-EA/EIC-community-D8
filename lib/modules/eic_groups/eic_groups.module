@@ -766,6 +766,10 @@ function eic_groups_flag_action_access($action, FlagInterface $flag, AccountInte
       break;
 
     case 'node':
+      if ($flaggable->isNew()) {
+        break;
+      }
+
       // Get the group content entities related to the node.
       $group_contents = GroupContent::loadByEntity($flaggable);
 
