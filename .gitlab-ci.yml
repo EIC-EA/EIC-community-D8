@@ -33,7 +33,7 @@ stages:
 
 build_backend:
   stage: build
-  image: intractosre/php:7.3
+  image: public.ecr.aws/h5g0v9w1/php-fpm:7.4
   artifacts:
     untracked: true
     expire_in: '2 hour'
@@ -65,7 +65,7 @@ build_front:
 
 security_check:
   stage: test
-  image: jakzal/phpqa:php7.3
+  image: jakzal/phpqa:php7.4
   script:
     - local-php-security-checker
   only:
@@ -74,7 +74,7 @@ security_check:
 
 code_style_test:
   stage: test
-  image: jakzal/phpqa:php7.3
+  image: jakzal/phpqa:php7.4
   script:
     - ./vendor/bin/grumphp run --tasks=phpcs
   allow_failure: true
@@ -83,7 +83,7 @@ code_style_test:
 
 phpmd_test:
   stage: test
-  image: jakzal/phpqa:php7.3
+  image: jakzal/phpqa:php7.4
   script:
     - ./vendor/bin/grumphp run --tasks=phpmd
   allow_failure: true
@@ -92,7 +92,7 @@ phpmd_test:
 
 phpstan_test:
   stage: test
-  image: jakzal/phpqa:php7.3
+  image: jakzal/phpqa:php7.4
   script:
     - phpstan
   allow_failure: true
