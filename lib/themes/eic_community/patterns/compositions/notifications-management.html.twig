@@ -23,6 +23,9 @@
       <tr>
         <th>Name</th>
         <th>Status</th>
+        {% if unsubscribe %}
+          <th>Unsubscribe</th>
+        {% endif %}
       </tr>
     </thead>
     <tbody>
@@ -30,9 +33,9 @@
       {% include "@theme/patterns/compositions/notifications-management-line.html.twig" with {
         name: item.name,
         icon_file_path: icon_file_path,
-        icon: 'arrow',
+        icon: item.items ? 'arrow' : '',
         state: item.state,
-        extra_classes: 'ecl-my-notifications-management__table__item--parent'
+        extra_classes: item.items ? 'ecl-my-notifications-management__table__item--parent' : ''
       } %}
       {% for child in item.items  %}
         {% include "@theme/patterns/compositions/notifications-management-line.html.twig" with {
@@ -45,6 +48,6 @@
     {% endfor %}
     </tbody>
   </table>
-  {% include "@theme/patterns/compositions/pagination.html.twig" with pagination|default({}) only %}
+  {% include "@theme/patterns/compositions/pagination.html.twig" with pagination|default({})|merge({unsubscribe: unsubscribe}) only %}
 
 </section>

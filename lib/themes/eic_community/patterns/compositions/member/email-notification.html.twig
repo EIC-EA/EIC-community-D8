@@ -41,7 +41,7 @@
     {% if global_action %}
       <section class="ecl-my-notifications__section ecl-my-notifications__tags-list">
         <h4>{{ global_action.title }}</h4>
-        {% include "@theme/patterns/components/toogle-switch.html.twig" with {
+        {% include "@theme/patterns/components/toggle-switch.html.twig" with {
           name: global_action.title,
           state: global_action.state
         } %}
