@@ -46,11 +46,7 @@
                 <div class="ecl-editorial-header__tags">
                   {% for tag in tags %}
                     <div class="ecl-editorial-header__tag">
-                      {% include '@ecl-twig/ec-component-tag/ecl-tag.html.twig' with tag|default({})|merge({
-                        tag: tag.tag|merge({
-                          type: 'display'
-                        })
-                      }) only %}
+                      {% include '@ecl-twig/ec-component-tag/ecl-tag.html.twig' with tag|default({}) only %}
                     </div>
                   {% endfor %}
                 </div>
