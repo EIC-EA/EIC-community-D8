@@ -59,6 +59,7 @@ class GroupOverviewsController extends ControllerBase {
         break;
 
       case GroupOverviewPages::MEMBERS:
+      case GroupOverviewPages::ORGANISATIONS_TEAM:
         $overview_perm = 'access members overview';
         break;
 

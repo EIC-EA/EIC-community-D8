@@ -117,8 +117,8 @@ third_party_settings:
         - field_email
         - field_organisation_link
         - field_address
-        - field_locations
         - field_social_links
+        - field_locations
       label: Contact
       region: content
       parent_name: group_organisation
@@ -217,14 +217,16 @@ content:
       media_types: {  }
     third_party_settings: {  }
   field_locations:
-    type: entity_reference_autocomplete
-    weight: 26
+    type: entity_reference_paragraphs
+    weight: 29
     region: content
     settings:
-      match_operator: CONTAINS
-      match_limit: 10
-      size: 60
-      placeholder: ''
+      title: Paragraph
+      title_plural: Paragraphs
+      edit_mode: open
+      add_mode: dropdown
+      form_display_mode: default
+      default_paragraph_type: ''
     third_party_settings: {  }
   field_needs:
     type: entity_reference_paragraphs

@@ -1,15 +1,17 @@
-uuid: 45b35bb4-c6ff-4d23-94e3-4b3e90858071
+uuid: 34bf44bf-3b02-489c-b441-9ff1b485912d
 langcode: en
 status: true
 dependencies:
   module:
-    - user
-id: user.field_message_from_service
-field_name: field_message_from_service
-entity_type: user
-type: string_long
+    - paragraphs
+id: paragraph.field_city
+field_name: field_city
+entity_type: paragraph
+type: string
 settings:
+  max_length: 255
   case_sensitive: false
+  is_ascii: false
 module: core
 locked: false
 cardinality: 1

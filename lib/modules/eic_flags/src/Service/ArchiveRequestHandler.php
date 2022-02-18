@@ -10,7 +10,7 @@ use Drupal\eic_flags\RequestTypes;
 use Drupal\flag\FlaggingInterface;
 
 /**
- * Class ArchiveRequestHandler.
+ * Service that provides logic to request entity archival.
  *
  * @package Drupal\eic_flags\Service
  */
@@ -58,6 +58,7 @@ class ArchiveRequestHandler extends AbstractRequestHandler {
           ),
           'format' => 'plain_text',
         ]);
+        $content_entity->set('field_comment_is_archived', TRUE);
         $content_entity->save();
       }
       else {

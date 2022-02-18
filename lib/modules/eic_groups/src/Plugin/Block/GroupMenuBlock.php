@@ -142,6 +142,14 @@ class GroupMenuBlock extends GroupMenuBlockBase implements ContainerFactoryPlugi
         $url = $group_book_page_node->toUrl();
         break;
 
+      case 'event':
+        // Gets group files overview page url.
+        $url = GroupOverviewPages::getGroupOverviewPageUrl(
+          'events',
+          $group
+        );
+        break;
+
       default:
         return;
     }

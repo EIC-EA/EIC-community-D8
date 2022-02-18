@@ -1,17 +1,18 @@
-uuid: 1dc6ad8f-a3ef-4422-96a6-d43e45493be6
+uuid: 92812422-8ed7-4635-ab7e-d5c889f30ac9
 langcode: en
 status: true
 dependencies:
   module:
+    - entity_reference_revisions
     - group
-    - taxonomy
+    - paragraphs
 id: group.field_locations
 field_name: field_locations
 entity_type: group
-type: entity_reference
+type: entity_reference_revisions
 settings:
-  target_type: taxonomy_term
-module: core
+  target_type: paragraph
+module: entity_reference_revisions
 locked: false
 cardinality: -1
 translatable: true
