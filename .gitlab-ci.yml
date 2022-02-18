@@ -28,7 +28,6 @@ stages:
       ./vendor/bin/drush updb -y &&
       ./vendor/bin/drush cr &&
       ./vendor/bin/drush cim -y &&
-      ./vendor/bin/drush pmu basic_auth -y &&
       ./vendor/bin/drush cr"
 
 build_backend:
