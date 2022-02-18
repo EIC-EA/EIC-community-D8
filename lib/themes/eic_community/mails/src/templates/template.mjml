@@ -32,17 +32,16 @@
       </mj-style>
 
       <mj-raw>
+        <!-- generic styling start (do not copy) -->
         <style type="text/css">
           @media screen and (max-device-width: 599px),
           screen and (max-width: 599px) {
-            .pre-footer, .pre-footer > div {
-              text-align: center !important;
-            }
             .btn{
               margin: 0 0 10px !important;
             }
           }
         </style>
+        <!-- generic styling end -->
       </mj-raw>
 
       <mj-attributes>
@@ -55,25 +54,6 @@
 
     </mj-head>
     <mj-body>
-      <mj-section text-align="left" padding="0">
-        <mj-column width="220px" vertical-align="bottom" css-class="align-left">
-          <mj-image align="left" src="images/EC-logo.png"/>
-        </mj-column>
-        <mj-column vertical-align="middle">
-          <mj-text font-size="12px" padding="0 25px 5px 25px" css-class="header-title" color="#265D9E">
-            European Innovation Council
-            <br>
-            <span class="light">Community</span>
-          </mj-text>
-        </mj-column>
-      </mj-section>
-
-      <mj-section padding="0">
-        <mj-column>
-          <mj-divider border-width="1px" border-style="solid"  />
-        </mj-column>
-      </mj-section>
-
       <mj-section padding="10px 0px 0px">
         <mj-column>
           <mj-text mj-class="text">
@@ -119,30 +99,6 @@
           <mj-button width="200px" font-size="14px" mj-class="btn" inner-padding="12px 15px" background-color="#004494" color="#ffffff" border-radius="0" font-weight="bold" href="#" target="_blank">
             Decline invitation
           </mj-button>
-        </mj-column>
-      </mj-section>
-      <mj-section padding="0 0 30px" css-class="pre-footer">
-        <mj-column>
-          <mj-text css-class="pre-footer">
-            <em>Jane Doe, member of public group - open membership requests.</em>
-            <br>
-          </mj-text>
-        </mj-column>
-      </mj-section>
-
-
-      <mj-hero>
-        <mj-divider border-width="5px" border-style="solid" border-color="#004494" />
-      </mj-hero>
-      <mj-section>
-        <mj-column>
-          <mj-text align="center">
-            <a href="#" target="_blank" style="color:#404040; font-size: 14px">Manage notifications</a>
-            &nbsp;
-            |
-            &nbsp;
-            <a href="#" target="_blank" style="color:#404040; font-size: 14px">Unsubscribe</a>
-          </mj-text>
         </mj-column>
       </mj-section>
     </mj-body>

@@ -32,15 +32,22 @@
       </mj-style>
 
       <mj-raw>
+        <!-- generic styling start (do not copy) -->
         <style type="text/css">
           @media screen and (max-device-width: 599px),
           screen and (max-width: 599px) {
-            .pre-footer, .pre-footer > div {
-              text-align: center !important;
-            }
             .btn{
               margin: 0 0 10px !important;
             }
+          }
+        </style>
+        <!-- generic styling end -->
+      </mj-raw>
+      <mj-raw>
+        <!-- template styling start -->
+        <style type="text/css">
+          @media screen and (max-device-width: 599px),
+          screen and (max-width: 599px) {
             .content-message {
               width: 100% !important;
               max-width: 100% !important;
@@ -68,10 +75,11 @@
           screen and (max-width: 479px) {
             .meta {
               text-align: left !important;
-              width: 200px !important;
+              width: 100px !important;
             }
           }
         </style>
+        <!-- template styling end -->
       </mj-raw>
 
       <mj-attributes>
@@ -84,37 +92,16 @@
 
     </mj-head>
     <mj-body>
-      <mj-section text-align="left" padding="0">
-        <mj-column width="220px" vertical-align="bottom" css-class="align-left">
-          <mj-image align="left" src="images/EC-logo.png"/>
-        </mj-column>
-        <mj-column vertical-align="middle">
-          <mj-text font-size="12px" padding="0 25px 5px 25px" css-class="header-title" color="#265D9E">
-            European Innovation Council
-            <br>
-            <span class="light">Community</span>
-          </mj-text>
-        </mj-column>
-      </mj-section>
-
-      <mj-section padding="0">
-        <mj-column>
-          <mj-divider border-width="1px" border-style="solid"  />
-        </mj-column>
-      </mj-section>
-
       <mj-section padding="10px 0px 0px">
         <mj-column>
           <mj-text mj-class="text">
-            You have an update.
-            <br><br>
-            <span style="font-weight: bold; text-decoration: none; color:#004494">Public group - open membership requests</span>
+            <a style="font-weight: normal; text-decoration: none; color: #004494" href="#" target="_blank">John Delaware</a> tagged you in a comment:
           </mj-text>
         </mj-column>
       </mj-section>
 
       <mj-section padding="0">
-        <mj-column width="85%">
+        <mj-column width="85%" css-class="content-message">
           <mj-divider padding="10px 12px 10px" border-width="1px" border-style="solid"  />
           <mj-wrapper padding="10px 12px 10px" background-color="#f5f5f5" >
             <mj-section padding-top="10px" padding="0">
@@ -124,12 +111,14 @@
                 <mj-image src="images/Joannes.jpg" border-radius="70px" padding="0"  />
               </mj-column>
               <mj-column width="400px" css-class="message-content" vertical-align="middle">
-                <mj-text color="#707070"  padding="0" font-size="14px">
-                  <a style="font-weight: normal; text-decoration: none; color: #004494" href="#" target="_blank">John Delaware</a>
-                  started a <strong>discussion</strong>
-                  <a style="font-weight: normal; text-decoration: none; color: #004494" href="#" target="_blank">Lorem ipsum dolor sit amet, consectetuer adipiscing elit</a>
-                  in
-                  <a style="font-weight: normal; text-decoration: none; color: #004494" href="#" target="_blank">Group name nam pretium turpis et arcu</a>
+                <mj-text color="#707070" padding="0" font-size="14px">
+                  I’m definitely optimistic about the event, it’s a great action in a remarkable spot.
+                  My assumption is that these seeds may be removed by the local authorities right after the event.
+                  How are we going to tackle this?
+                  <br><br>
+                  With: <a style="font-weight: bold; text-decoration: none; color: #004494" href="#" target="_blank">John Doe</a>,
+                  <a style="font-weight: bold; text-decoration: none; color: #004494" href="#" target="_blank">Alexander The Great</a>,
+                  <a style="font-weight: bold; text-decoration: none; color: #004494" href="#" target="_blank">Albert Einstein</a>,
                 </mj-text>
               </mj-column>
               <!--END-CONTENT-->
@@ -155,22 +144,13 @@
               </mj-column>
 
               <mj-column>
-                <mj-group css-class="meta" width="200px" align="right">
+                <mj-group css-class="meta" width="100px" align="right">
                   <mj-column css-class="meta__data--image" padding="0" vertical-align="middle">
                     <mj-image css-class="meta__data" align="right" src="images/comment.png" width="18px" height="18px" padding="0" padding-right="2px"/>
                   </mj-column>
                   <mj-column vertical-align="middle" padding="0">
-                    <mj-text css-class="meta__data"  padding="0" color="#707070" font-size="12px" align="center">
+                    <mj-text css-class="meta__data"  padding="0" color="#707070" font-size="12px" align="left">
                       123
-                    </mj-text>
-                  </mj-column>
-
-                  <mj-column css-class="meta__data--image" padding="0" vertical-align="middle">
-                    <mj-image css-class="meta__data" align="right" src="images/display.png" width="18px" padding="0" padding-right="2px"/>
-                  </mj-column>
-                  <mj-column vertical-align="middle" padding="0">
-                    <mj-text css-class="meta__data"  padding="0" color="#707070" font-size="12px" align="center">
-                      27
                     </mj-text>
                   </mj-column>
 
@@ -178,17 +158,8 @@
                     <mj-image css-class="meta__data" align="right" src="images/like.png" width="18px" height="18px" padding="0" padding-right="2px"/>
                   </mj-column>
                   <mj-column vertical-align="middle" padding="0">
-                    <mj-text css-class="meta__data"  padding="0" color="#707070" font-size="12px" align="center">
+                    <mj-text css-class="meta__data"  padding="0" color="#707070" font-size="12px" align="left">
                       13
-                    </mj-text>
-                  </mj-column>
-
-                  <mj-column css-class="meta__data--image"  padding="0" vertical-align="middle">
-                    <mj-image css-class="meta__data" align="right" src="images/download.png" width="18px" height="18px" padding="0" padding-right="2px"/>
-                  </mj-column>
-                  <mj-column vertical-align="middle" padding="0">
-                    <mj-text css-class="meta__data"  padding="0" color="#707070" font-size="12px" align="center">
-                      5
                     </mj-text>
                   </mj-column>
                 </mj-group>
@@ -215,31 +186,6 @@
           <mj-button width="200px" font-size="14px" mj-class="btn" inner-padding="12px 15px" background-color="#004494" color="#ffffff" border-radius="0" font-weight="bold" href="#" target="_blank">
             Add comment
           </mj-button>
-        </mj-column>
-      </mj-section>
-
-      <mj-section padding="0 0 30px" css-class="pre-footer">
-        <mj-column>
-          <mj-text css-class="pre-footer">
-            <em>Jane Doe, member of public group - open membership requests.</em>
-            <br>
-          </mj-text>
-        </mj-column>
-      </mj-section>
-
-
-      <mj-hero>
-        <mj-divider border-width="5px" border-style="solid" border-color="#004494" />
-      </mj-hero>
-      <mj-section>
-        <mj-column>
-          <mj-text align="center">
-            <a href="#" target="_blank" style="color:#404040; font-size: 14px">Manage notifications</a>
-            &nbsp;
-            |
-            &nbsp;
-            <a href="#" target="_blank" style="color:#404040; font-size: 14px">Unsubscribe</a>
-          </mj-text>
         </mj-column>
       </mj-section>
     </mj-body>
