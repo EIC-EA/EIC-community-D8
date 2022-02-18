@@ -5,6 +5,9 @@ namespace Drupal\eic_default_content\Generator;
 use Drupal\Core\Url;
 use Drupal\eic_groups\GroupsModerationHelper;
 use Drupal\group\Entity\Group;
+use Drupal\group\Entity\GroupContent;
+use Drupal\group\Entity\GroupInterface;
+use Drupal\node\Entity\Node;
 
 /**
  * Class to generate organisations using fixtures.
@@ -24,6 +27,8 @@ class OrganisationGenerator extends CoreGenerator {
     ];
     /** @var \Drupal\oec_group_features\GroupFeaturePluginManager $group_feature_manager */
     $group_feature_manager = \Drupal::service('plugin.manager.group_feature');
+
+    $available_features = array_keys($group_feature_manager->getDefinitions());
 
     foreach ($organisations_sample as $organisation_sample) {
       $values = [
@@ -114,11 +119,88 @@ class OrganisationGenerator extends CoreGenerator {
             'field_user_ref' => $this->getRandomEntities('user', [], 2)[1],
           ]),
         ],
+        'features' => $available_features,
       ];
 
       $group = Group::create($values);
       $group->save();
+
+      $this->createOrganisationEvents($group);
+      $this->createOrganisationNews($group);
     }
+  }
+
+  /**
+   * Creates a single group news (node) for the given organisation.
+   *
+   * @param \Drupal\group\Entity\GroupInterface $group
+   *   The group entity.
+   */
+  private function createOrganisationEvents(GroupInterface $group) {
+    $content_type_id = $group
+      ->getGroupType()
+      ->getContentPlugin('group_node:event')
+      ->getContentTypeConfigId();
+
+    $node = Node::create([
+      'field_body' => $this->getFormattedText('full_html'),
+      'type' => 'event',
+      'title' => 'Event in ' . $group->label(),
+      'field_link' => 'https://myevent.site',
+      'field_organised_by' => 'European Innovation Council',
+      'field_vocab_event_type' => $this->getRandomEntities('taxonomy_term', ['vid' => 'event_type'], 1),
+      'field_vocab_topics' => $this->getRandomEntities('taxonomy_term', ['vid' => 'topics'], 3),
+      'field_vocab_geo' => $this->getRandomEntities('taxonomy_term', ['vid' => 'geo'], 2),
+      'status' => TRUE,
+      'uid' => 1,
+    ]);
+
+    $node->save();
+    $group_content = GroupContent::create([
+      'type' => $content_type_id,
+      'gid' => $group->id(),
+      'entity_id' => $node->id(),
+    ]);
+    $group_content->save();
+  }
+
+  /**
+   * Creates a single group news (node) for the given organisation.
+   *
+   * @param \Drupal\group\Entity\GroupInterface $group
+   *   The group entity.
+   */
+  private function createOrganisationNews(GroupInterface $group) {
+    $content_type_id = $group
+      ->getGroupType()
+      ->getContentPlugin('group_node:news')
+      ->getContentTypeConfigId();
+
+    $node = Node::create([
+      'type' => 'news',
+      'title' => 'News in ' . $group->label(),
+      'field_body' => $this->getFormattedText('full_html'),
+      'field_introduction' => $this->getFormattedText('full_html'),
+      'field_header_visual' => $this->createMedia([
+        'oe_media_image' => $this->getRandomImage(),
+      ], 'image'),
+      'field_image' => $this->createMedia([
+        'oe_media_image' => $this->getRandomImage(),
+      ], 'image'),
+      'field_image_caption' => $this->faker->sentence(10),
+      'field_vocab_topics' => $this->getRandomEntities('taxonomy_term', ['vid' => 'topics'], 1),
+      'field_vocab_geo' => $this->getRandomEntities('taxonomy_term', ['vid' => 'geo'], 1),
+      'moderation_state' => 'published',
+      'uid' => 1,
+    ]);
+
+    $node->save();
+    $group_content = GroupContent::create([
+      'type' => $content_type_id,
+      'gid' => $group->id(),
+      'entity_id' => $node->id(),
+    ]);
+    $group_content->save();
   }
 
   /**
