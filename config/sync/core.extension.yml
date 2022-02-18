@@ -7,7 +7,6 @@ module:
   admin_toolbar_search: 0
   admin_toolbar_tools: 0
   antibot: 0
-  basic_auth: 0
   big_pipe: 0
   block: 0
   block_content: 0
