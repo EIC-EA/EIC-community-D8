@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "55236effad8e29f6535854664a6689e1",
+    "content-hash": "9e159a2eeb5794e45e8d3f0180e41e2c",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -6807,30 +6807,30 @@
         },
         {
             "name": "drupal/search_api_spellcheck",
-            "version": "3.0.0-beta1",
+            "version": "4.0.0",
             "source": {
                 "type": "git",
                 "url": "https://git.drupalcode.org/project/search_api_spellcheck.git",
-                "reference": "8.x-3.0-beta1"
+                "reference": "4.0.0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://ftp.drupal.org/files/projects/search_api_spellcheck-8.x-3.0-beta1.zip",
-                "reference": "8.x-3.0-beta1",
-                "shasum": "b5bd31765918170c55370a16defc0e6ec8374feb"
+                "url": "https://ftp.drupal.org/files/projects/search_api_spellcheck-4.0.0.zip",
+                "reference": "4.0.0",
+                "shasum": "a1dfd60994f9bbee407e3ca68f4ff9b797b103a7"
             },
             "require": {
-                "drupal/core": "^8 || ^9",
-                "drupal/search_api": "~1.17"
+                "drupal/core": "^9.2 || ^10.0",
+                "drupal/search_api": "~1.21"
             },
             "type": "drupal-module",
             "extra": {
                 "drupal": {
-                    "version": "8.x-3.0-beta1",
-                    "datestamp": "1605436873",
+                    "version": "4.0.0",
+                    "datestamp": "1640512135",
                     "security-coverage": {
-                        "status": "not-covered",
-                        "message": "Beta releases are not covered by Drupal security advisories."
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
                     }
                 }
             },
@@ -18757,7 +18757,6 @@
         "drupal/realname": 10,
         "drupal/s3fs": 10,
         "drupal/search_api_attachments": 10,
-        "drupal/search_api_spellcheck": 10,
         "drupal/social_link_field": 15,
         "ethosce/group_purl": 20,
         "lramarojaona/purl": 15
