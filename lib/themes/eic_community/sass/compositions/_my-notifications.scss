@@ -1,5 +1,4 @@
 .ecl-my-notifications {
-
   &__header {
     & > div:first-child {
       display: flex;
@@ -33,7 +32,7 @@
     padding-left: 0;
     padding-right: $ecl-spacing-xs;
     & a {
-      color: $ecl-color-grey-50;
+      color: $ecl-color-grey-75;
       text-decoration: none;
     }
   }
@@ -54,6 +53,10 @@
       text-align: left;
       font-weight: normal;
       padding: $ecl-spacing-xs $ecl-spacing-xs ;
+    }
+    & th:nth-child(3) {
+      width:1px;
+      text-indent: -9999px;
     }
 
     &__item {
@@ -93,6 +96,19 @@
     &__status {
       width: 1%;
       white-space: nowrap;
+    }
+    &__unsubscribe {
+      width: 1%;
+      white-space: nowrap;
+      button {
+        color: $ecl-color-red-100;
+        background: none;
+        border: none;
+        cursor: pointer;
+        &:hover {
+          color: #004494;
+        }
+      }
     }
   }
 
