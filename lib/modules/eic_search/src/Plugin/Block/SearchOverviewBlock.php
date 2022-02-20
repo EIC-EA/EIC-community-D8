@@ -241,6 +241,7 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
         EICGroupsHelper::GROUP_OWNER_ROLE,
         $user_group_roles
       ),
+      'label_my_groups' => $source->getLabelFilterMyGroups(),
       'is_group_admin' => array_key_exists(
         EICGroupsHelper::GROUP_ADMINISTRATOR_ROLE,
         $user_group_roles

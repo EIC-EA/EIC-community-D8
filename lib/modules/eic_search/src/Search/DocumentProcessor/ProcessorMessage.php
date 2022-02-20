@@ -6,6 +6,8 @@ use Drupal\comment\CommentInterface;
 use Drupal\comment\Entity\Comment;
 use Drupal\eic_comments\CommentsHelper;
 use Drupal\eic_media_statistics\EntityFileDownloadCount;
+use Drupal\group\Entity\GroupContent;
+use Drupal\group\Entity\GroupInterface;
 use Drupal\node\Entity\Node;
 use Drupal\node\NodeInterface;
 use Drupal\statistics\NodeStatisticsDatabaseStorage;
@@ -76,6 +78,18 @@ class ProcessorMessage extends DocumentProcessor {
       return;
     }
 
+    $group_contents = GroupContent::loadByEntity($node);
+
+    if (!empty($group_contents)) {
+      /** @var GroupContent $group_content */
+      $group_content = reset($group_contents);
+      $group_id = $group_content->getGroup() instanceof GroupInterface ?
+        $group_content->getGroup()->id() :
+        -1;
+
+      $this->addOrUpdateDocumentField($document, 'its_global_group_parent_id', $fields, $group_id);
+    }
+
     $index_views = TRUE;
     $index_comments = TRUE;
     $index_downloads = TRUE;
@@ -122,4 +136,5 @@ class ProcessorMessage extends DocumentProcessor {
   public function supports(array $fields): bool {
     return $fields['ss_search_api_datasource'] === 'entity:message';
   }
+
 }
