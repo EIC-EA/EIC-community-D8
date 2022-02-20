@@ -38,40 +38,6 @@ reactions:
         unique: 0
         context_id: my_profile
         context_mapping: {  }
-      6c509f98-b687-4e8d-a7f9-8d8f81c5bc9d:
-        id: eic_search_overview
-        label: ''
-        provider: eic_search
-        label_display: visible
-        context_mapping: {  }
-        source_type: Drupal\eic_search\Search\Sources\Profile\ActivityStreamSourceType
-        facets:
-          ss_global_content_type: ss_global_content_type
-          sm_content_field_vocab_topics_string: sm_content_field_vocab_topics_string
-        sort_options: {  }
-        enable_search: 1
-        page_options: normal
-        prefilter_group: 0
-        enable_date_filter: 0
-        add_facet_interests: 0
-        add_facet_my_groups: 1
-      ab8be712-2c43-46bb-b233-bbaf0ce733f6:
-        id: eic_search_overview
-        label: ''
-        provider: eic_search
-        label_display: visible
-        context_mapping: {  }
-        source_type: Drupal\eic_search\Search\Sources\Profile\ActivityStreamSourceType
-        facets:
-          ss_type: ss_type
-          sm_content_field_vocab_topics_string: sm_content_field_vocab_topics_string
-        sort_options: {  }
-        enable_search: 1
-        page_options: normal
-        prefilter_group: 0
-        enable_date_filter: 0
-        add_facet_interests: 0
-        add_facet_my_groups: 1
       d86d8cb2-65eb-4708-9334-4312fc5bf37b:
         uuid: d86d8cb2-65eb-4708-9334-4312fc5bf37b
         id: eic_search_overview
