@@ -117,7 +117,7 @@ class ActivityStreamSourceType extends SourceType {
    * @inheritDoc
    */
   public function getLabelFilterMyGroups(): string {
-    return $this->t('My groups only', [], ['context' => 'eic_search']);
+    return $this->t('Only my groups', [], ['context' => 'eic_search']);
   }
 
 }
