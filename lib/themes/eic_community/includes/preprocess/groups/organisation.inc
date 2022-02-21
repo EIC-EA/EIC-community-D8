@@ -509,6 +509,13 @@ function eic_community_preprocess_paragraph__organisation_member_external(&$vari
     ],
     'title' => $paragraph->get('field_full_name')->value,
     'job_titles' => $paragraph->get('field_job_title')->value,
+    'status' => [
+      'label' => $paragraph->get('field_role')->value,
+      'icon' => [
+        'type' => 'custom',
+        'name' => 'trophy_circle',
+      ],
+    ],
     'organisations' => array_map(function($value) {
       return [
         'label' => $value,
