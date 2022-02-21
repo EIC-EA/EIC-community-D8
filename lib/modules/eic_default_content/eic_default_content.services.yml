@@ -10,7 +10,6 @@ services:
       - { name: data_fixtures, priority: 0 }
   eic_default_content.group_generator:
     class: Drupal\eic_default_content\Generator\GroupGenerator
-    arguments: [ '@group_flex.group_saver', '@plugin.manager.group_feature', '@eic_groups.helper', '@book.manager' ]
     tags:
       - { name: data_fixtures }
   eic_default_content.organisation_generator:

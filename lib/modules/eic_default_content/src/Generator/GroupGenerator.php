@@ -2,15 +2,11 @@
 
 namespace Drupal\eic_default_content\Generator;
 
-use Drupal\book\BookManagerInterface;
-use Drupal\eic_groups\EICGroupsHelperInterface;
 use Drupal\eic_groups\GroupsModerationHelper;
 use Drupal\group\Entity\Group;
 use Drupal\group\Entity\GroupContent;
 use Drupal\group\Entity\GroupInterface;
-use Drupal\group_flex\GroupFlexGroupSaver;
 use Drupal\node\Entity\Node;
-use Drupal\oec_group_features\GroupFeaturePluginManager;
 
 /**
  * Class to generate groups using fixtures.
@@ -50,17 +46,12 @@ class GroupGenerator extends CoreGenerator {
   /**
    * {@inheritdoc}
    */
-  public function __construct(
-    GroupFlexGroupSaver $group_flex_saver,
-    GroupFeaturePluginManager $group_feature_manager,
-    EICGroupsHelperInterface $eic_groups_helper,
-    BookManagerInterface $book_manager
-  ) {
+  public function __construct() {
     parent::__construct();
-    $this->groupFlexSaver = $group_flex_saver;
-    $this->groupFeatureManager = $group_feature_manager;
-    $this->eicGroupsHelper = $eic_groups_helper;
-    $this->bookManager = $book_manager;
+    $this->groupFlexSaver = \Drupal::service('group_flex.group_saver');
+    $this->groupFeatureManager = \Drupal::service('plugin.manager.group_feature');
+    $this->eicGroupsHelper = \Drupal::service('eic_groups.helper');
+    $this->bookManager = \Drupal::service('book.manager');
   }
 
   /**
