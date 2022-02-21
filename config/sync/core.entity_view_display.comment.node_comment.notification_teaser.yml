@@ -35,7 +35,6 @@ content:
 hidden:
   field_comment_attachment: true
   field_comment_deletion_date: true
-  field_comment_is_archived: true
   field_comment_is_soft_deleted: true
   flag_like_comment: true
   langcode: true
