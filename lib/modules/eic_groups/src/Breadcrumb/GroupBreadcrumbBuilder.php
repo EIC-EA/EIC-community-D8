@@ -67,7 +67,7 @@ class GroupBreadcrumbBuilder implements BreadcrumbBuilderInterface {
   /**
    * The EIC groups helper service.
    *
-   * @var EICGroupsHelper
+   * @var \Drupal\eic_groups\EICGroupsHelper
    */
   protected $eicGroupsHelper;
 
@@ -84,7 +84,7 @@ class GroupBreadcrumbBuilder implements BreadcrumbBuilderInterface {
    *   The EIC Flags request handler collector service.
    * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
    *   The request stack service.
-   * @param EICGroupsHelper $eic_groups_helper
+   * @param \Drupal\eic_groups\EICGroupsHelper $eic_groups_helper
    *   The groups helper service.
    */
   public function __construct(
@@ -211,7 +211,10 @@ class GroupBreadcrumbBuilder implements BreadcrumbBuilderInterface {
                   ]
                 );
                 // Replaces book link text with "Wiki".
-                if ($node->bundle() === 'wiki_page') {
+                if (
+                  $node->bundle() === 'wiki_page'
+                  && isset($links[3])
+                ) {
                   $links[3]->setText($this->t('Wiki'));
                 }
                 // We want to keep cache contexts and cache tags from book
