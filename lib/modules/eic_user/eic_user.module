@@ -20,6 +20,7 @@ function eic_user_theme() {
     'my_profile_header_block' => [
       'variables' => [
         'title' => '',
+        'menu_items' => [],
         'actions' => [],
       ],
     ]
