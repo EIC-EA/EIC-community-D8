@@ -389,9 +389,16 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
 
     if ($entity instanceof NodeInterface) {
       // Load all the group content for this entity.
-      $group_content = GroupContent::loadByEntity($entity);
-      // Assuming that the content can be related only to 1 group.
-      $group_content = reset($group_content);
+      $group_contents = GroupContent::loadByEntity($entity);
+
+      // We look for the first group_node group_content entity.
+      foreach ($group_contents as $group_content_item) {
+        if (strpos($group_content_item->getGroupContentType()->getContentPluginId(), 'group_node:') === 0) {
+          $group = $group_content_item->getGroup();
+          break;
+        }
+      }
+
       if (!empty($group_content)) {
         $group = $group_content->getGroup();
       }

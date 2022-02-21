@@ -10,21 +10,32 @@ use Drupal\node\NodeInterface;
 use Solarium\Core\Query\DocumentInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
+/**
+ * Class that decorates Solr documents for sharing feature.
+ */
 class SolrDocumentDecorator implements ContainerInjectionInterface {
 
   /**
+   * The share manager.
+   *
    * @var \Drupal\eic_share_content\Service\ShareManager
    */
   private $shareManager;
 
   /**
+   * The entity type manager.
+   *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
   private $entityTypeManager;
 
   /**
+   * Constructs a new SolrDocumentDecorator object.
+   *
    * @param \Drupal\eic_share_content\Service\ShareManager $manager
+   *   The share manager.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
    */
   public function __construct(
     ShareManager $manager,
@@ -38,14 +49,21 @@ class SolrDocumentDecorator implements ContainerInjectionInterface {
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
-    return new static($container->get('eic_share_content.share_manager'),
-      $container->get('entity_type.manager'));
+    return new static(
+      $container->get('eic_share_content.share_manager'),
+      $container->get('entity_type.manager')
+    );
   }
 
   /**
+   * Alters the search api documents to include sharing information.
+   *
    * @param \Solarium\Core\Query\DocumentInterface $document
+   *   The Search API document.
    *
    * @return \Solarium\Core\Query\DocumentInterface
+   *   The altered Search API document.
+   *
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
@@ -61,13 +79,13 @@ class SolrDocumentDecorator implements ContainerInjectionInterface {
       return $document;
     }
 
-    if (!$shares = $this->shareManager->getShares($entity)) {
+    if (!$shares = $this->shareManager->getSharedEntities($entity)) {
       return $document;
     }
 
     $shared_groups = [];
     foreach ($shares as $share) {
-      $group = $share->get('field_group_ref')->entity;
+      $group = $share->get('gid')->entity;
       if (!$group instanceof GroupInterface) {
         continue;
       }
