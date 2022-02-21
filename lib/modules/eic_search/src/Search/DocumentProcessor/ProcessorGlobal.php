@@ -77,7 +77,10 @@ class ProcessorGlobal extends DocumentProcessor {
         $date = $fields['ds_content_created'];
         $changed = $fields['ds_changed'];
         $status = $fields['bs_content_status'];
-        $fullname = array_key_exists('ss_content_first_name', $fields) && array_key_exists('ss_content_last_name', $fields) ?
+        $fullname = array_key_exists('ss_content_first_name', $fields) && array_key_exists(
+          'ss_content_last_name',
+          $fields
+        ) ?
           $fields['ss_content_first_name'] . ' ' . $fields['ss_content_last_name'] :
           t('No name', [], ['context' => 'eic_search']);
         $topics = array_key_exists('sm_content_field_vocab_topics_string', $fields) ?
@@ -99,8 +102,11 @@ class ProcessorGlobal extends DocumentProcessor {
       case 'entity:group':
         if (array_key_exists('ss_group_topic_name', $fields)) {
           $topics = $fields['ss_group_topic_name'];
-        } else if (array_key_exists('sm_group_topic_name', $fields)) {
-          $topics = $fields['sm_group_topic_name'];
+        }
+        else {
+          if (array_key_exists('sm_group_topic_name', $fields)) {
+            $topics = $fields['sm_group_topic_name'];
+          }
         }
 
         $title = $fields['tm_X3b_en_group_label_fulltext'];
@@ -143,6 +149,14 @@ class ProcessorGlobal extends DocumentProcessor {
       case 'entity:user':
         $user = User::load($fields['its_user_id']);
         $fullname = realname_load($user);
+
+        $this->addOrUpdateDocumentField(
+          $document,
+          'tm_user_mail',
+          $fields,
+          $fields['ss_user_mail']
+        );
+
         $status = TRUE;
         break;
     }
