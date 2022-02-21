@@ -672,7 +672,7 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
    * @param array $filters
    *   Filters to apply to the query. See GroupInterface::getContent().
    *
-   * @return array
+   * @return \Drupal\node\NodeInterface[]
    *   An array of node entities.
    */
   public function getGroupNodes(GroupInterface $group, array $filters = []) {
