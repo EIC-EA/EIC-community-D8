@@ -79,7 +79,13 @@ class GroupInvitationBulkAccessChecker implements AccessInterface {
         // Group members can invite users if invitations are enabled.
         if (
           $membership &&
-          $group->get('field_group_invite_members')->value
+          (
+            !$group->hasField('field_group_invite_members') ||
+            (
+              $group->hasField('field_group_invite_members') &&
+              $group->get('field_group_invite_members')->value
+            )
+          )
         ) {
           $can_invite = TRUE;
         }

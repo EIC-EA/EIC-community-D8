@@ -1,0 +1,25 @@
+uuid: e604ae23-d23e-4111-8a7f-0f32cc43ca11
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.group_content.field_invitation_counter
+    - group.content_type.organisation-group_invitation
+id: group_content.organisation-group_invitation.field_invitation_counter
+field_name: field_invitation_counter
+entity_type: group_content
+bundle: organisation-group_invitation
+label: 'Invitation Counter'
+description: ''
+required: true
+translatable: true
+default_value:
+  -
+    value: 1
+default_value_callback: ''
+settings:
+  min: 1
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: integer

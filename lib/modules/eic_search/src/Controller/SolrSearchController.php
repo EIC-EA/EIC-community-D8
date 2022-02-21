@@ -135,7 +135,7 @@ class SolrSearchController extends ControllerBase {
       }
 
       if ($source->ignoreContentFromCurrentUser()) {
-        $author_ignore_content_query = ' AND (!' . $source->getAuthorFieldId() . ':' . $this->currentUser()->id() . ')';
+        $author_ignore_content_query = ' AND !(' . $source->getAuthorFieldId() . ':' . $this->currentUser()->id() . ')';
       }
 
       // If source supports date filter and query has a from or to date.
@@ -255,7 +255,7 @@ class SolrSearchController extends ControllerBase {
 
       $group_filters_id = $source->getPrefilteredGroupFieldId();
 
-      $fq .= ' AND (' . reset($group_filters_id) . ':(' . implode(' OR ', $grp_ids) . '))';
+      $fq .= ' AND (' . reset($group_filters_id) . ':(' . implode(' OR ', $grp_ids) . ' OR "-1"))';
     }
 
     $solariumQuery->addParam('fq', $fq);
@@ -384,7 +384,7 @@ class SolrSearchController extends ControllerBase {
 
     $groups_membership_string = $groups_membership_id ? implode(' OR ', $groups_membership_id) : -1;
 
-    $fq .= " AND (its_group_id_integer:($groups_membership_string) OR ss_global_group_parent_id:($groups_membership_string) OR its_content_uid:($groups_membership_string))";
+    $fq .= " AND (its_group_id_integer:($groups_membership_string) OR its_global_group_parent_id:($groups_membership_string) OR its_content_uid:($groups_membership_string))";
   }
 
   /**

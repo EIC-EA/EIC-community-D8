@@ -148,7 +148,7 @@ class GlobalSourceType extends SourceType {
    * @inheritDoc
    */
   public function getPrefilteredGroupFieldId(): array {
-    return ['ss_global_group_parent_id', 'its_group_id_integer'];
+    return ['its_global_group_parent_id', 'its_group_id_integer'];
   }
 
   /**

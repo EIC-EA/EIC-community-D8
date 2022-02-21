@@ -39,6 +39,9 @@ destroy:
 run:
 	docker exec -it -w ${APP_ROOT}/lib/themes/eic_community ${APP_NAME}_php bash -c 'npm run $(RUN_ARGS)'
 
+cex:
+	docker exec -it ${APP_NAME}_php bash -c '/app/vendor/bin/drush cex -y'
+
 import-db:
 	docker exec -i ${APP_NAME}_mysql bash -c 'exec mysql -u${DATABASE_USERNAME} ${DATABASE_NAME}' < $(FILE)
 
