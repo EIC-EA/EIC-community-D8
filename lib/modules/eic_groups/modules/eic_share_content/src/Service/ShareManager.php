@@ -15,7 +15,7 @@ use Drupal\node\NodeInterface;
 use Drupal\search_api\Plugin\search_api\datasource\ContentEntity;
 
 /**
- * Class ShareManager
+ * Class that manages functions for the sharing feature.
  *
  * @package Drupal\eic_share_content\Service
  */
@@ -31,30 +31,44 @@ class ShareManager {
   const GROUP_CONTENT_SHARED_PLUGIN_ID = 'group_shared_content';
 
   /**
+   * The EIC Groups helper.
+   *
    * @var \Drupal\eic_groups\EICGroupsHelperInterface
    */
   private $groupsHelper;
 
   /**
+   * The entity type manager.
+   *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
   private $entityTypeManager;
 
   /**
+   * The group content enabler manager.
+   *
    * @var \Drupal\group\Plugin\GroupContentEnablerManagerInterface
    */
   private $groupContentPluginManager;
 
   /**
+   * The EIC message bus.
+   *
    * @var \Drupal\eic_messages\Service\MessageBusInterface
    */
   private $messageBus;
 
   /**
+   * Constructs a new ShareManager object.
+   *
    * @param \Drupal\eic_groups\EICGroupsHelperInterface $groups_helper
+   *   The EIC Groups helper.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
    * @param \Drupal\group\Plugin\GroupContentEnablerManagerInterface $plugin_manager
+   *   The group content enabler manager.
    * @param \Drupal\eic_messages\Service\MessageBusInterface $message_bus
+   *   The EIC message bus.
    */
   public function __construct(
     EICGroupsHelperInterface $groups_helper,
@@ -69,9 +83,13 @@ class ShareManager {
   }
 
   /**
+   * Checks if a node bundle is eligible for group sharing.
+   *
    * @param string $node_bundle
+   *   The node bundle machine name.
    *
    * @return bool
+   *   TRUE if node bundle is supported.
    */
   public function isSupported(string $node_bundle): bool {
     static $shareableNodeBundles = [
@@ -88,10 +106,16 @@ class ShareManager {
   }
 
   /**
+   * Shares a content from one group to another.
+   *
    * @param \Drupal\group\Entity\GroupInterface $source_group
+   *   The group entity from which we want to share.
    * @param \Drupal\group\Entity\GroupInterface $target_group
+   *   The group entity to which we want to share.
    * @param \Drupal\node\NodeInterface $node
+   *   The node entity we want to share.
    * @param string|null $message
+   *   The message that accompanies the share action.
    *
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
@@ -105,17 +129,17 @@ class ShareManager {
   ) {
     // First we check if this node belongs to a group.
     if (!$this->groupsHelper->getGroupByEntity($node)) {
-      throw new \InvalidArgumentException($this->t("This content can't be shared"));
+      throw new \InvalidArgumentException("This content can't be shared");
     }
 
     // If source and target groups are the same, we can't share.
     if ($target_group->id() === $source_group->id()) {
-      throw new \InvalidArgumentException($this->t("This content can't be shared"));
+      throw new \InvalidArgumentException("This content can't be shared");
     }
 
     // If the content is already shared to the target group, we can't share.
     if ($this->isShared($node, $target_group)) {
-      throw new \InvalidArgumentException($this->t('This content is already shared with this group'));
+      throw new \InvalidArgumentException('This content is already shared with this group');
     }
 
     // Create the group content entity.
@@ -140,7 +164,7 @@ class ShareManager {
 
     // Reindex the node immediately.
     // There seem to be multiple implementation of reindexing logics.
-    // @TODO Write a single service for this.
+    // @todo Write a single service for this.
     $indexes = ContentEntity::getIndexesForEntity($node);
     foreach ($indexes as $index) {
       $index->trackItemsUpdated(
