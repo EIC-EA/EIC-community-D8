@@ -5,3 +5,10 @@ eic_user.my_profile_activity:
     _title: 'My activity feed'
   requirements:
     _custom_access: '\Drupal\eic_user\Controller\MyProfileController::access'
+eic_user.my_settings:
+  path: '/my-settings'
+  defaults:
+    _controller: '\Drupal\eic_user\Controller\MySettingsController::settings'
+    _title: 'My settings'
+  requirements:
+    _custom_access: '\Drupal\eic_user\Controller\MySettingsController::access'

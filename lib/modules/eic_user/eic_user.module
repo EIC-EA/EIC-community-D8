@@ -22,6 +22,9 @@ function eic_user_theme() {
         'title' => '',
         'actions' => [],
       ],
+    ],
+    'my_settings' => [
+      'variables' => []
     ]
   ];
 }
