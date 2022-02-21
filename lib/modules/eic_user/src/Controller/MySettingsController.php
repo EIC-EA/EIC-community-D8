@@ -23,9 +23,7 @@ class MySettingsController extends ControllerBase
    */
   public function settings(Request $request): array
   {
-    return [
-      '#theme' => 'my_settings'
-    ];
+    return [];
   }
 
   /**

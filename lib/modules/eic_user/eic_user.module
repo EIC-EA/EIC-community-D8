@@ -17,14 +17,24 @@ use Drupal\group\Entity\GroupContentInterface;
  */
 function eic_user_theme() {
   return [
-    'my_profile_header_block' => [
+    'user_header_block' => [
       'variables' => [
         'title' => '',
         'actions' => [],
       ],
     ],
-    'my_settings' => [
-      'variables' => []
+    'user_notifications_settings' => [
+      'variables' => [
+        'items' => NULL
+      ]
+    ],
+    'notification_settings' => [
+      'variables' => [
+        'title' => NULL,
+        'body' => NULL,
+        'action' => [],
+        'interests' => [],
+      ]
     ]
   ];
 }

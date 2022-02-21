@@ -8,7 +8,7 @@ dependencies:
     - route_condition
 label: 'My profile'
 name: my_profile
-group: 'My profile'
+group: User
 description: ''
 requireAllConditions: false
 disabled: false
@@ -24,20 +24,6 @@ reactions:
     id: blocks
     uuid: 76d3c136-5881-43f9-8ec7-14cf619fae69
     blocks:
-      e3691609-5b36-4830-ade4-d352dab2daf9:
-        uuid: e3691609-5b36-4830-ade4-d352dab2daf9
-        id: eic_user_my_profile_header
-        label: 'EIC my profile header'
-        provider: eic_user
-        label_display: '0'
-        region: content_before
-        weight: '0'
-        custom_id: eic_user_my_profile_header
-        theme: eic_community
-        css_class: ''
-        unique: 0
-        context_id: my_profile
-        context_mapping: {  }
       6c509f98-b687-4e8d-a7f9-8d8f81c5bc9d:
         uuid: 6c509f98-b687-4e8d-a7f9-8d8f81c5bc9d
         id: eic_search_overview
@@ -45,6 +31,7 @@ reactions:
         provider: eic_search
         label_display: visible
         region: content
+        weight: '0'
         custom_id: eic_search_overview
         theme: eic_community
         css_class: ''
@@ -62,6 +49,22 @@ reactions:
         enable_date_filter: 0
         add_facet_interests: 0
         add_facet_my_groups: 0
+        third_party_settings: {  }
+      1497de88-1932-495e-9b7c-3ab99d7fa334:
+        uuid: 1497de88-1932-495e-9b7c-3ab99d7fa334
+        id: eic_user_header
+        label: 'EIC User Header'
+        provider: eic_user
+        label_display: '0'
+        region: content_before
+        weight: '0'
+        custom_id: eic_user_header
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: my_profile
+        context_mapping: {  }
+        title: 'My activity feed'
         third_party_settings: {  }
     include_default_blocks: 0
     saved: false
