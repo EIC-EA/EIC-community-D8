@@ -38,6 +38,11 @@ class GroupOverviewPages {
   const MEMBERS = 'eic_overviews.groups.overview_page.members';
 
   /**
+   * Route to the group team from organisation overview.
+   */
+  const ORGANISATIONS_TEAM = 'eic_overviews.groups.overview_page.team';
+
+  /**
    * Route to the group news overview.
    */
   const NEWS = 'eic_overviews.groups.overview_page.news';
@@ -80,6 +85,11 @@ class GroupOverviewPages {
       case 'group_search':
         $page_id = self::SEARCH;
         break;
+
+      case 'events':
+        $page_id = self::EVENTS;
+        break;
+
     }
 
     if (!empty($page_id) && !$group->isNew()) {

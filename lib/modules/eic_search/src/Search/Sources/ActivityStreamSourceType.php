@@ -3,7 +3,6 @@
 namespace Drupal\eic_search\Search\Sources;
 
 use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Drupal\eic_groups\Plugin\Block\LastGroupMembersBlock;
 
 /**
  * Class ActivityStreamSourceType

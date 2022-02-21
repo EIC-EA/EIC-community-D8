@@ -7,6 +7,7 @@
 
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\eic_groups\Constants\NodeProperty;
+use Drupal\group_content_menu\GroupContentMenuInterface;
 use Drupal\group_permissions\Entity\GroupPermission;
 
 /**
@@ -25,7 +26,12 @@ function eic_groups_install() {
     ->setDisplayConfigurable('view', TRUE);
 
   \Drupal::entityDefinitionUpdateManager()
-    ->installFieldStorageDefinition(NodeProperty::MEMBER_CONTENT_EDIT_ACCESS, 'node', 'node', $field_storage_definition);
+    ->installFieldStorageDefinition(
+      NodeProperty::MEMBER_CONTENT_EDIT_ACCESS,
+      'node',
+      'node',
+      $field_storage_definition
+    );
 }
 
 /**
@@ -124,7 +130,11 @@ function eic_groups_update_9002(&$sandbox) {
     }
 
     foreach ($roles as $role) {
-      \Drupal::service('eic_groups.helper')->removeRolePermissionsFromGroup($group_permission, $role, ['view comments']);
+      \Drupal::service('eic_groups.helper')->removeRolePermissionsFromGroup(
+        $group_permission,
+        $role,
+        ['view comments']
+      );
     }
 
     $group_permission->setNewRevision();
@@ -142,3 +152,38 @@ function eic_groups_update_9002(&$sandbox) {
     $group->save();
   }
 }
+
+/**
+ * Remove old menu link "/members" link from the Organisation.
+ */
+function eic_groups_update_9003(&$sandbox) {
+  /** @var \Drupal\Core\Entity\EntityTypeManagerInterface $em */
+  $em = \Drupal::service('entity_type.manager');
+  $organisations = $em->getStorage('group')->loadByProperties([
+    'type' => 'organisation',
+  ]);
+  $menu_name = 'group_main_menu';
+
+  foreach ($organisations as $organisation) {
+    foreach (group_content_menu_get_menus_per_group($organisation) as $group_menu) {
+      if (
+        $group_menu->getGroupContentType()->getContentPlugin()->getPluginId() ==
+        "group_content_menu:$menu_name"
+      ) {
+        $items = $em->getStorage('menu_link_content')->loadByProperties([
+          'menu_name' => GroupContentMenuInterface::MENU_PREFIX . $group_menu->getEntity()->id(),
+          'title' => 'Team',
+        ]);
+
+        if (empty($items)) {
+          continue;
+        }
+
+        /** @var \Drupal\menu_link_content\Entity\MenuLinkContent $menu_item_people */
+        $menu_item_people = reset($items);
+        $menu_item_people->delete();
+      }
+    }
+  }
+}
+

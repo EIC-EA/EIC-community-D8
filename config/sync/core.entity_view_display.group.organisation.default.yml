@@ -51,6 +51,15 @@ content:
     third_party_settings: {  }
     weight: 6
     region: content
+  field_locations:
+    type: entity_reference_revisions_entity_view
+    label: above
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    weight: 10
+    region: content
   field_needs:
     type: entity_reference_revisions_entity_view
     label: above
@@ -111,7 +120,6 @@ hidden:
   field_body: true
   field_date_establishement: true
   field_header_visual: true
-  field_locations: true
   field_organisation_employees: true
   field_organisation_link: true
   field_organisation_turnover: true

@@ -81,14 +81,18 @@ function eic_community_preprocess_node__document(array &$variables) {
         }
       }
 
+      $file_type = strstr($file->get('filemime')->getString(), '/', TRUE);
+
       $document = [
         'language' => $language,
         'timestamp' => eic_community_get_teaser_time_display($node->get('changed')->getString()),
         'filesize' => format_size($file->get('filesize')->getString()),
         'highlight' => FALSE,
         'icon' => [
-          'type' => 'custom',
-          'name' => substr(strrchr($file->get('filemime')->getString(), '/'), 1),
+          'type' => in_array($file_type, ['video', 'image']) ? 'general' : 'custom',
+          'name' => in_array($file_type, ['video', 'image']) ? $file_type : 'document_' . _eic_community_get_file_type_icon_name(
+            pathinfo($file->getFilename(), PATHINFO_EXTENSION)
+          ),
         ],
       ];
 
@@ -123,7 +127,9 @@ function eic_community_preprocess_node__document(array &$variables) {
               'value' => format_size($download->get('filesize')->getString()),
             ],
           ],
-          'mime_type' => substr(strrchr($download->get('filemime')->getString(), '/'), 1),
+          'mime_type' => _eic_community_get_file_type_icon_name(
+            pathinfo($download->getFilename(), PATHINFO_EXTENSION)
+          ),
           'path' => $download_url,
         ];
       }
@@ -145,19 +151,21 @@ function eic_community_preprocess_node__document(array &$variables) {
         return _eic_community_get_flag_access(str_replace('flag_', '', $key), $node);
       }, ARRAY_FILTER_USE_KEY);
 
-    foreach ($flags as $flag) {
-      $variables['editorial_actions']['items'][] = [
-        'content' => $flag,
-      ];
-    }
-    $variables['editorial_actions']['items'][]['content'] = _eic_community_get_social_share_block();
-    $group = \Drupal::service('eic_groups.helper')->getGroupFromRoute();
-    if ($group instanceof GroupInterface) {
-      $variables['editorial_actions']['items'][]['content'] = _eic_community_get_share_group_content_link(
-        $group,
-        $node
-      );
-    }
-    _eic_community_display_topics($variables);
+      foreach ($flags as $flag) {
+        $variables['editorial_actions']['items'][] = [
+          'content' => $flag,
+        ];
+      }
+      $variables['editorial_actions']['items'][]['content'] = _eic_community_get_social_share_block();
+      $group = \Drupal::service('eic_groups.helper')->getGroupFromRoute();
+      if ($group instanceof GroupInterface) {
+        $variables['editorial_actions']['items'][]['content'] = _eic_community_get_share_group_content_link(
+          $group,
+          $node
+        );
+      }
+      _eic_community_display_topics($variables);
+      break;
+
   }
 }
