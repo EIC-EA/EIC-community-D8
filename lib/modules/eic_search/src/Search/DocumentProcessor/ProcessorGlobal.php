@@ -117,7 +117,7 @@ class ProcessorGlobal extends DocumentProcessor {
           $fields,
           $group_id
         );
-        $document->addField('ss_global_group_parent_id', $group_id);
+        $document->addField('its_global_group_parent_id', $group_id);
         $group = Group::load($group_id);
         if ($group && $owner = EICGroupsHelper::getGroupOwner($group)) {
           $fullname = realname_load($owner);
