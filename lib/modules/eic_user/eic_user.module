@@ -31,8 +31,8 @@ function eic_user_theme() {
     'user_notifications_settings' => [
       'variables' => [
         'menu_items' => [],
-        'items' => NULL
-      ]
+        'items' => NULL,
+      ],
     ],
     'notification_settings' => [
       'variables' => [
