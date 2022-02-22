@@ -90,6 +90,16 @@ class ProcessorGlobal extends DocumentProcessor {
           $fields['ss_content_language_string'] :
           t('English', [], ['context' => 'eic_search'])->render();
         $user_url = '';
+        if (array_key_exists('ss_content_introduction_string', $fields)) {
+          $introduction = strip_tags($fields['ss_content_introduction_string']);
+
+          $this->addOrUpdateDocumentField(
+            $document,
+            'ss_content_introduction_string',
+            $fields,
+            $introduction
+          );
+        }
         if (array_key_exists('its_content_uid', $fields)) {
           $user = User::load($fields['its_content_uid']);
           $user_url = $user instanceof UserInterface ? $user->toUrl()
