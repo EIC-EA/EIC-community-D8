@@ -6,7 +6,7 @@ dependencies:
     - eic_user
     - route_condition
 label: 'My settings'
-name: my_settingsu
+name: my_settings
 group: User
 description: ''
 requireAllConditions: false
@@ -35,7 +35,7 @@ reactions:
         theme: eic_community
         css_class: ''
         unique: 0
-        context_id: my_settingsu
+        context_id: my_settings
         context_mapping: {  }
         title: 'My settings'
         third_party_settings: {  }
@@ -51,7 +51,7 @@ reactions:
         theme: eic_community
         css_class: ''
         unique: 0
-        context_id: my_settingsu
+        context_id: my_settings
         context_mapping: {  }
         third_party_settings: {  }
     include_default_blocks: 0
