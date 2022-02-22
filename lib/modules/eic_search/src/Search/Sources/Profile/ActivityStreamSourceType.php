@@ -18,9 +18,7 @@ class ActivityStreamSourceType extends SourceType {
    * @inheritDoc
    */
   public function getSourcesId(): array {
-    return [
-      'node',
-    ];
+    return ['message'];
   }
 
   /**
@@ -42,7 +40,7 @@ class ActivityStreamSourceType extends SourceType {
    */
   public function getAvailableFacets(): array {
     return [
-      'ss_global_content_type' => $this->t('Content type', [], ['context' => 'eic_search']),
+      'ss_type' => $this->t('Content type', [], ['context' => 'eic_search']),
       'sm_content_field_vocab_topics_string' => $this->t('Topics', [], ['context' => 'eic_search']),
     ];
   }
@@ -51,7 +49,7 @@ class ActivityStreamSourceType extends SourceType {
    * @inheritDoc
    */
   public function getDefaultSort(): array {
-    return ['ds_created', 'DESC'];
+    return ['ss_drupal_timestamp', 'DESC'];
   }
 
   /**
@@ -112,7 +110,14 @@ class ActivityStreamSourceType extends SourceType {
    * @inheritDoc
    */
   public function prefilterByGroupsMembership(): bool {
-    return TRUE;
+    return FALSE;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function getLabelFilterMyGroups(): string {
+    return $this->t('Only my groups', [], ['context' => 'eic_search']);
   }
 
 }

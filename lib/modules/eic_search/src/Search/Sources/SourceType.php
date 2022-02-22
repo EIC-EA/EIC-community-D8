@@ -159,4 +159,11 @@ abstract class SourceType implements SourceTypeInterface {
     return FALSE;
   }
 
+  /**
+   * @inheritDoc
+   */
+  public function getLabelFilterMyGroups(): string {
+    return $this->t('My groups & content only', [], ['context' => 'eic_search']);
+  }
+
 }
