@@ -93,10 +93,7 @@ class NotificationsSettingsBlock extends BlockBase implements ContainerFactoryPl
           'title' => $this->t('Your events notifications'),
           'content' => 'TBD'
         ],
-        'comments' => [
-          'title' => $this->t('Your comments notifications'),
-          'content' => 'TBD'
-        ],
+        'comments' => $this->getCommentsTab($member_profile)
       ],
     ];
   }
@@ -156,6 +153,49 @@ class NotificationsSettingsBlock extends BlockBase implements ContainerFactoryPl
           'global_action' => [
             'title' => 'Interest email notifications',
             'state' => true
+          ]
+        ]
+      ]
+    ];
+  }
+/**
+   * @param ProfileInterface|null $profile
+   * @return array
+   */
+  private function getCommentsTab(?ProfileInterface $profile): array
+  {
+    $topics = [];
+    $regions = [];
+    if ($profile instanceof ProfileInterface) {
+      foreach ($profile->get('field_vocab_topic_interest')->referencedEntities() as $topic) {
+        $topics[]['tag'] = [
+          'type' => 'link',
+          'path' => $topic->toUrl(),
+          'label' => $topic->label(),
+        ];
+      }
+
+      foreach ($profile->get('field_vocab_geo')->referencedEntities() as $region) {
+        $regions[]['tag'] = [
+          'type' => 'link',
+          'path' => $region->toUrl(),
+          'label' => $region->label(),
+        ];
+      }
+
+
+    }
+
+    return [
+      'title' => $this->t('Your comments notifications'),
+      'content' => [
+        '#theme' => 'notification_settings',
+        '#data' => [
+          'title' => $this->t('Your comments notifications'),
+          'body' => $this->t('By indication thematic of geographic interests, you are automatically subscribed to a periodic notification email bringing together the latest highlighted items.'),
+          'global_action' => [
+            'title' => $this->t('Comments email notifications'),
+            'state' => TRUE
           ]
         ]
       ]
