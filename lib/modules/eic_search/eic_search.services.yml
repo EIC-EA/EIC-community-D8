@@ -121,3 +121,7 @@ services:
     class: Drupal\eic_search\Search\DocumentProcessor\ProcessorGlobalEvent
     tags:
       - { name: eic_search.document_processor, priority: 30 }
+  eic_search.document_processor_organisation:
+    class: Drupal\eic_search\Search\DocumentProcessor\ProcessorOrganisation
+    tags:
+      - { name: eic_search.document_processor, priority: 32 }
