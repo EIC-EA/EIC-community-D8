@@ -20,8 +20,12 @@ function eic_user_theme() {
     'user_header_block' => [
       'variables' => [
         'title' => '',
-        'menu_items' => [],
         'actions' => [],
+      ],
+    ],
+    'user_activity_subnavigation_block' => [
+      'variables' => [
+        'menu_items' => [],
       ],
     ],
     'user_notifications_settings' => [
