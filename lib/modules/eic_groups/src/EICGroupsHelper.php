@@ -852,6 +852,8 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
     switch ($route_name) {
       case 'entity.group.canonical':
       case 'eic_groups.about_page':
+      case 'view.eic_group_members.page_group_members':
+      case 'view.admin_blocked_entities.page_admin_group_blocked_history':
       case GroupOverviewPages::DISCUSSIONS:
       case GroupOverviewPages::FILES:
       case GroupOverviewPages::MEMBERS:

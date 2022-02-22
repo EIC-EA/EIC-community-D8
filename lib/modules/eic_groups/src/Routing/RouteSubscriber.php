@@ -26,6 +26,7 @@ class RouteSubscriber extends RouteSubscriberBase {
     }
 
     $this->alterGroupInviteRoutes($collection);
+    $this->alterGroupPagesRoutes($collection);
   }
 
   /**
@@ -52,6 +53,27 @@ class RouteSubscriber extends RouteSubscriberBase {
       // Overrides bulk group members invitation confirm form.
       if ($route_name === 'ginvite.invitation.bulk.confirm') {
         $group_invite_route->setDefault('_form', '\Drupal\eic_groups\Form\BulkGroupInvitationConfirm');
+      }
+    }
+  }
+
+  /**
+   * Alters group pages route definitions.
+   *
+   * @param \Symfony\Component\Routing\RouteCollection $collection
+   *   The route collection.
+   */
+  private function alterGroupPagesRoutes(RouteCollection $collection): void {
+    $target_routes = [
+      'view.eic_group_members.page_group_members',
+      'view.admin_blocked_entities.page_admin_group_blocked_history',
+    ];
+
+    foreach ($target_routes as $route_name) {
+      if ($route = $collection->get($route_name)) {
+        $route->setRequirements([
+          '_group_pages_access_check' => 'TRUE',
+        ]);
       }
     }
   }
