@@ -31,6 +31,7 @@ use Drupal\eic_groups\Hooks\GroupTokens;
 use Drupal\eic_groups\Hooks\Pathauto;
 use Drupal\eic_groups\Hooks\Preprocess;
 use Drupal\eic_user\UserHelper;
+use Drupal\flag\FlagInterface;
 use Drupal\group\Access\GroupAccessResult;
 use Drupal\group\Entity\GroupContent;
 use Drupal\pathauto\PathautoGeneratorInterface;
@@ -714,4 +715,86 @@ function eic_field_location_type_allowed_values() {
     'on_site' => t('On site', [], ['eic_groups']),
     'remote' => t('Remote', [], ['eic_groups']),
   ];
+}
+
+/**
+ * Implements hook_flag_action_access().
+ */
+function eic_groups_flag_action_access($action, FlagInterface $flag, AccountInterface $account, EntityInterface $flaggable = NULL) {
+  $access = AccessResult::neutral();
+
+  if (!$flaggable) {
+    return $access;
+  }
+
+  switch ($flaggable->getEntityTypeId()) {
+    case 'comment':
+      /** @var \Drupal\Core\Entity\EntityInterface $commented_entity */
+      $commented_entity = $flaggable->getCommentedEntity();
+
+      $group_contents = GroupContent::loadByEntity($commented_entity);
+
+      // Entity does not belong to any group, so we do nothing.
+      if (empty($group_contents)) {
+        break;
+      }
+
+      // Load the first group content entity found.
+      $group_content = reset($group_contents);
+
+      // Load the group.
+      $group = $group_content->getGroup();
+
+      // Deny access to flag if the group is not flaggable or the user doesn't
+      // have permission to view comments in the group.
+      if (
+        !EICGroupsHelper::groupIsFlaggable($group) ||
+        !$group->hasPermission('view comments', $account)
+      ) {
+        $access = AccessResult::forbidden()
+          ->addCacheableDependency($group)
+          ->addCacheableDependency($flaggable);
+      }
+      break;
+
+    case 'group':
+      // Deny access to flag if the group IS in pending or draft state.
+      if (!EICGroupsHelper::groupIsFlaggable($flaggable)) {
+        $access = AccessResult::forbidden()
+          ->addCacheableDependency($flaggable);
+      }
+      break;
+
+    case 'node':
+      if ($flaggable->isNew()) {
+        break;
+      }
+
+      // Get the group content entities related to the node.
+      $group_contents = GroupContent::loadByEntity($flaggable);
+
+      // Node does not belong to any group, so we do nothing.
+      if (empty($group_contents)) {
+        break;
+      }
+
+      // Load the first group content entity found.
+      $group_content = reset($group_contents);
+
+      // Load the group.
+      $group = $group_content->getGroup();
+
+      // Deny access to flag if the group IS in pending or draft state.
+      if (!EICGroupsHelper::groupIsFlaggable($group)) {
+        $access = AccessResult::forbidden();
+      }
+
+      // Add cacheable dependencies.
+      $access->addCacheableDependency($group)
+        ->addCacheableDependency($flaggable);
+      break;
+
+  }
+
+  return $access;
 }

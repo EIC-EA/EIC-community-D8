@@ -107,6 +107,32 @@ function eic_community_preprocess_comment(&$variables) {
   $link = $flag_link_builder->build('comment', $comment->id(), 'like_comment');
 
   $variables['comment']['flag_link'] = $link;
+
+  // Add tagged users.
+  if (!$comment->get('field_tagged_users')->isEmpty()) {
+    /** @var \Drupal\user\UserInterface[] $tagged_users */
+    $tagged_users = $comment->get('field_tagged_users')->referencedEntities();
+    foreach ($tagged_users as $tagged_user) {
+      $variables['comment']['tagged_users'][] = [
+        'name' => $tagged_user->getDisplayName(),
+        'path' => $tagged_user->toUrl('canonical', ['absolute' => TRUE])->toString(),
+      ];
+    }
+  }
+
+  $view_mode = $variables['elements']['#view_mode'];
+
+  switch ($view_mode) {
+    case 'notification_teaser':
+      $variables['comment']['author']['image'] = _get_profile_image_array($author, FALSE);
+      // Removes unneeded variables from notification teaser.
+      unset($variables['comment']['timestamp']);
+      unset($variables['comment']['is_owner']);
+      unset($variables['comment']['user']);
+      break;
+
+  }
+
 }
 
 /**

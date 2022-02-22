@@ -1,13 +1,13 @@
-uuid: dc524431-fa6e-412d-ad88-73534c55bb99
+uuid: eaaf5be0-abb9-4947-b33b-e21c88bf90d0
 langcode: en
 status: true
 dependencies:
   module:
-    - user
-id: user.field_updated_profile_by_user
-field_name: field_updated_profile_by_user
-entity_type: user
-type: timestamp
+    - comment
+id: comment.field_comment_is_archived
+field_name: field_comment_is_archived
+entity_type: comment
+type: boolean
 settings: {  }
 module: core
 locked: false

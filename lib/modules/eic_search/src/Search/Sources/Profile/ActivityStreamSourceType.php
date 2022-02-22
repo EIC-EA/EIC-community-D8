@@ -72,7 +72,7 @@ class ActivityStreamSourceType extends SourceType {
    * @inheritDoc
    */
   public function getPrefilteredGroupFieldId(): array {
-    return ['ss_global_group_parent_id'];
+    return ['its_global_group_parent_id'];
   }
 
   /**
@@ -106,6 +106,13 @@ class ActivityStreamSourceType extends SourceType {
    */
   public function getAuthorFieldId(): string {
     return 'its_content_uid';
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function prefilterByGroupsMembership(): bool {
+    return TRUE;
   }
 
 }

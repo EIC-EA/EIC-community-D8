@@ -135,7 +135,7 @@ class SolrSearchController extends ControllerBase {
       }
 
       if ($source->ignoreContentFromCurrentUser()) {
-        $author_ignore_content_query = ' AND (!' . $source->getAuthorFieldId() . ':' . $this->currentUser()->id() . ')';
+        $author_ignore_content_query = ' AND !(' . $source->getAuthorFieldId() . ':' . $this->currentUser()->id() . ')';
       }
 
       // If source supports date filter and query has a from or to date.
@@ -244,18 +244,20 @@ class SolrSearchController extends ControllerBase {
       $fq .= $author_ignore_content_query;
     }
 
-    /** @var \Drupal\group\GroupMembershipLoader $grp_membership_service */
-    $grp_membership_service = \Drupal::service('group.membership_loader');
-    $grps = $grp_membership_service->loadByUser($this->currentUser());
+    if ($source->prefilterByGroupsMembership()) {
+      /** @var \Drupal\group\GroupMembershipLoader $grp_membership_service */
+      $grp_membership_service = \Drupal::service('group.membership_loader');
+      $grps = $grp_membership_service->loadByUser($this->currentUser());
 
-    $grp_ids = array_map(function (GroupMembership $grp_membership) {
-      return $grp_membership->getGroup()->id();
-    }, $grps);
+      $grp_ids = array_map(function (GroupMembership $grp_membership) {
+        return $grp_membership->getGroup()->id();
+      }, $grps);
 
-    $group_filters_id = $source->getPrefilteredGroupFieldId();
+      $group_filters_id = $source->getPrefilteredGroupFieldId();
 
-    if ($group_filters_id) {
-      $fq .= ' AND (' . reset($group_filters_id) . ':(' . implode(' OR ', $grp_ids) . '))';
+      if ($group_filters_id) {
+        $fq .= ' AND (' . reset($group_filters_id) . ':(' . implode(' OR ', $grp_ids) . ' OR "-1"))';
+      }
     }
 
     $solariumQuery->addParam('fq', $fq);
@@ -384,7 +386,7 @@ class SolrSearchController extends ControllerBase {
 
     $groups_membership_string = $groups_membership_id ? implode(' OR ', $groups_membership_id) : -1;
 
-    $fq .= " AND (its_group_id_integer:($groups_membership_string) OR ss_global_group_parent_id:($groups_membership_string) OR its_content_uid:($groups_membership_string))";
+    $fq .= " AND (its_group_id_integer:($groups_membership_string) OR its_global_group_parent_id:($groups_membership_string) OR its_content_uid:($groups_membership_string))";
   }
 
   /**

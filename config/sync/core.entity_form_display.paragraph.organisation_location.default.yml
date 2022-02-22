@@ -1,0 +1,34 @@
+uuid: 46f6e6d7-a136-469b-84d3-51efb44df80f
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.organisation_location.field_city
+    - field.field.paragraph.organisation_location.field_country
+    - paragraphs.paragraphs_type.organisation_location
+id: paragraph.organisation_location.default
+targetEntityType: paragraph
+bundle: organisation_location
+mode: default
+content:
+  field_city:
+    type: string_textfield
+    weight: 1
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_country:
+    type: entity_reference_autocomplete
+    weight: 0
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+hidden:
+  created: true
+  status: true

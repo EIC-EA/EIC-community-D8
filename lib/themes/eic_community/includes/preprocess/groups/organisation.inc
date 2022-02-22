@@ -5,6 +5,7 @@
  * Prepares variables for group type organisation templates.
  */
 
+use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\eic_search\SearchHelper;
 use Drupal\eic_topics\Constants\Topics;
 use Drupal\file\Entity\File;
@@ -34,6 +35,8 @@ function eic_community_preprocess_group__organisation(&$variables) {
  * @throws \Drupal\Core\Entity\EntityMalformedException
  */
 function _eic_community_render_organisation_detail_page(&$variables, $group) {
+  /** @var TranslationInterface $string_translation */
+  $string_translation = \Drupal::service('string_translation');
   /** @var \Drupal\eic_group_statistics\GroupStatisticsHelperInterface $group_helper */
   $group_helper = Drupal::service('eic_group_statistics.helper');
   $group_statistics = $group_helper->loadGroupStatistics($group);
@@ -112,31 +115,30 @@ function _eic_community_render_organisation_detail_page(&$variables, $group) {
   if (!empty($locations)) {
     $locations_data = [
       'title' => t('Locations', [], ['context' => 'eic_community']),
-      'collapse_label' => t(
+      'collapse_label' => $string_translation->formatPlural(
+        count($locations),
+        '@count location',
         '@count locations',
         ['@count' => count($locations)],
         ['context' => 'eic_community']
       ),
-      'items' => array_map(function (\Drupal\taxonomy\Entity\Term $location) {
+      'items' => array_map(function (ParagraphInterface $location) {
+        $city = $location->get('field_city')->value;
+        $country = $location->get('field_country')->referencedEntities();
+        $country = reset($country);
         return [
-          'title' => $location->label(),
+          'title' => $country->label() . ' (' . $city . ')',
         ];
       }, $locations),
     ];
   }
 
   $addresses = $group->get('field_address')->getValue();
-  $address_index = 0;
-  $addresses_data = array_map(function ($address) use ($address_index) {
-    $address_index++;
+  $addresses_data = array_map(function ($address) {
     $location_formatted = \Drupal\eic_groups\EICGroupsHelper::formatAddress($address);
 
     return [
-      'title' => t(
-        'Address @index',
-        ['@index' => $address_index],
-        ['context' => 'eic_community']
-      ),
+      'title' => !empty($address['organization']) ? $address['organization'] : $address['locality'],
       'description' => $location_formatted,
     ];
   }, $addresses);
@@ -160,7 +162,7 @@ function _eic_community_render_organisation_detail_page(&$variables, $group) {
     ];
 
     $social_data = [
-      'title' => '',
+      'title' => t('Social media', [], ['context' => 'eic_community']),
       'icon_file_path' => $variables['eic_icon_path'],
       'size' => 's',
     ];
@@ -296,7 +298,7 @@ function _eic_community_render_organisation_detail_page(&$variables, $group) {
       'link' => [
         'label' => t('See all members', [], ['context' => 'eic_community']),
         'path' => Url::fromRoute(
-          GroupOverviewPages::MEMBERS,
+          GroupOverviewPages::ORGANISATIONS_TEAM,
           ['group' => $group instanceof GroupInterface ? $group->id() : 0]
         ),
       ],

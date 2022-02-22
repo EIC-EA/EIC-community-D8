@@ -1,0 +1,31 @@
+uuid: c5dc9e3d-508d-4eea-b073-c47f5db2b253
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.organisation_location.field_city
+    - field.field.paragraph.organisation_location.field_country
+    - paragraphs.paragraphs_type.organisation_location
+id: paragraph.organisation_location.default
+targetEntityType: paragraph
+bundle: organisation_location
+mode: default
+content:
+  field_city:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_country:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  search_api_excerpt: true

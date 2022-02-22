@@ -1,0 +1,23 @@
+uuid: fdbea03c-5ff7-4301-bdd1-edd03da7232b
+langcode: en
+status: true
+dependencies:
+  config:
+    - comment.type.node_comment
+    - field.storage.comment.field_comment_is_archived
+id: comment.node_comment.field_comment_is_archived
+field_name: field_comment_is_archived
+entity_type: comment
+bundle: node_comment
+label: 'Is archived'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean
