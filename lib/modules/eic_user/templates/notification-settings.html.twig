@@ -1,3 +1,8 @@
-{% include "@theme/patterns/compositions/member/email-notification.html.twig" with user_item|default({})|merge({
-  icon_file_path: eic_icon_path,
-}) %}
+{% include "@theme/patterns/compositions/member/email-notification.html.twig" with {
+  title: data.title,
+  body: data.body,
+  action: data.action,
+  interests: data.interests,
+  global_action: data.global_action,
+  icon_file_path: eic_icon_path
+} %}

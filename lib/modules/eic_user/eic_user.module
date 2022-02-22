@@ -30,11 +30,8 @@ function eic_user_theme() {
     ],
     'notification_settings' => [
       'variables' => [
-        'title' => NULL,
-        'body' => NULL,
-        'action' => [],
-        'interests' => [],
-      ]
+        'data' => [],
+      ],
     ]
   ];
 }

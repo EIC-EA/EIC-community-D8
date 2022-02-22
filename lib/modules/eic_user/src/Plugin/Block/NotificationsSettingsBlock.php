@@ -117,22 +117,30 @@ class NotificationsSettingsBlock extends BlockBase implements ContainerFactoryPl
       'title' => $this->t('Your interest notifications'),
       'content' => [
         '#theme' => 'notification_settings',
-        '#title' => $this->t('Your interest notifications'),
-        '#body' => $this->t('By indication thematic of geographic interests, you are automatically subscribed to a periodic notification email bringing together the latest highlighted items.'),
-        '#action' => $this->getEditProfileLink($profile),
-        '#interests' => [
-          [
-            'title' => $this->t('Topics'),
-            'type' => 'tags',
-            'is_collapsible' => FALSE,
-            'items' => $topics,
+        '#data' => [
+          'title' => $this->t('Your interest notifications'),
+          'body' => $this->t('By indication thematic of geographic interests, you are automatically subscribed to a periodic notification email bringing together the latest highlighted items.'),
+          'action' => $this->getEditProfileLink($profile),
+          'interests' => [
+            [
+              'title' => $this->t('Topics'),
+              'type' => 'tags',
+              'is_collapsible' => FALSE,
+              'grid' => TRUE,
+              'items' => $topics,
+            ],
+            [
+              'title' => $this->t('Region'),
+              'type' => 'tags',
+              'grid' => TRUE,
+              'is_collapsible' => FALSE,
+              'items' => $regions,
+            ],
           ],
-          [
-            'title' => $this->t('Region'),
-            'type' => 'tags',
-            'is_collapsible' => FALSE,
-            'items' => $regions,
-          ],
+          'global_action' => [
+            'title' => 'Interest email notifications',
+            'state' => true
+          ]
         ]
       ]
     ];
