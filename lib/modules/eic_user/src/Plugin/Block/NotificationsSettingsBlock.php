@@ -15,6 +15,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Class NotificationsSettingsBlock
+ *
  * @package Drupal\eic_user\Plugin\Block
  *
  * @Block(
@@ -23,8 +24,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   category = @Translation("European Innovation Council"),
  * )
  */
-class NotificationsSettingsBlock extends BlockBase implements ContainerFactoryPluginInterface
-{
+class NotificationsSettingsBlock extends BlockBase implements ContainerFactoryPluginInterface {
+
   /**
    * @var AccountProxyInterface
    */
@@ -38,8 +39,7 @@ class NotificationsSettingsBlock extends BlockBase implements ContainerFactoryPl
   /**
    * {@inheritdoc}
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, AccountProxyInterface $account_proxy, UserHelper $user_helper)
-  {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, AccountProxyInterface $account_proxy, UserHelper $user_helper) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     $this->currentUser = $account_proxy;
@@ -49,8 +49,7 @@ class NotificationsSettingsBlock extends BlockBase implements ContainerFactoryPl
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition)
-  {
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     return new static(
       $configuration,
       $plugin_id,
@@ -60,24 +59,23 @@ class NotificationsSettingsBlock extends BlockBase implements ContainerFactoryPl
     );
   }
 
-  public function build()
-  {
+  public function build() {
     $currentUser = User::load($this->currentUser->id());
     $member_profile = $this->userHelper->getUserMemberProfile($currentUser);
     $menu_items = [
       [
         'link' => [
           'label' => $this->t('My informations'),
-          'path' => $currentUser->toUrl()->toString()
-        ]
+          'path' => $currentUser->toUrl()->toString(),
+        ],
       ],
       [
         'link' => [
           'label' => $this->t('Email notifications'),
-          'path' => Url::fromRoute('eic_user.my_settings')->toString()
+          'path' => Url::fromRoute('eic_user.my_settings')->toString(),
         ],
         'is_active' => TRUE,
-      ]
+      ],
     ];
 
     return [
@@ -87,23 +85,23 @@ class NotificationsSettingsBlock extends BlockBase implements ContainerFactoryPl
         'interest' => $this->getInterestsTab($member_profile),
         'groups' => [
           'title' => $this->t('Your group notifications'),
-          'content' => 'TBD'
+          'content' => 'TBD',
         ],
         'events' => [
           'title' => $this->t('Your events notifications'),
-          'content' => 'TBD'
+          'content' => 'TBD',
         ],
-        'comments' => $this->getCommentsTab($member_profile)
+        'comments' => $this->getCommentsTab($member_profile),
       ],
     ];
   }
 
   /**
    * @param ProfileInterface|null $profile
+   *
    * @return array
    */
-  private function getInterestsTab(?ProfileInterface $profile): array
-  {
+  private function getInterestsTab(?ProfileInterface $profile): array {
     $topics = [];
     $regions = [];
     if ($profile instanceof ProfileInterface) {
@@ -152,39 +150,19 @@ class NotificationsSettingsBlock extends BlockBase implements ContainerFactoryPl
           ],
           'global_action' => [
             'title' => 'Interest email notifications',
-            'state' => true
-          ]
-        ]
-      ]
+            'state' => TRUE,
+          ],
+        ],
+      ],
     ];
   }
-/**
+
+  /**
    * @param ProfileInterface|null $profile
+   *
    * @return array
    */
-  private function getCommentsTab(?ProfileInterface $profile): array
-  {
-    $topics = [];
-    $regions = [];
-    if ($profile instanceof ProfileInterface) {
-      foreach ($profile->get('field_vocab_topic_interest')->referencedEntities() as $topic) {
-        $topics[]['tag'] = [
-          'type' => 'link',
-          'path' => $topic->toUrl(),
-          'label' => $topic->label(),
-        ];
-      }
-
-      foreach ($profile->get('field_vocab_geo')->referencedEntities() as $region) {
-        $regions[]['tag'] = [
-          'type' => 'link',
-          'path' => $region->toUrl(),
-          'label' => $region->label(),
-        ];
-      }
-
-
-    }
+  private function getCommentsTab(?ProfileInterface $profile): array {
 
     return [
       'title' => $this->t('Your comments notifications'),
@@ -195,18 +173,17 @@ class NotificationsSettingsBlock extends BlockBase implements ContainerFactoryPl
           'body' => $this->t('By indication thematic of geographic interests, you are automatically subscribed to a periodic notification email bringing together the latest highlighted items.'),
           'global_action' => [
             'title' => $this->t('Comments email notifications'),
-            'state' => TRUE
-          ]
-        ]
-      ]
+            'state' => TRUE,
+          ],
+        ],
+      ],
     ];
   }
 
   /**
    * @return array[]
    */
-  private function getEditProfileLink(?ProfileInterface $profile): array
-  {
+  private function getEditProfileLink(?ProfileInterface $profile): array {
     static $link;
     if (empty($link)) {
       $link = [
@@ -214,11 +191,12 @@ class NotificationsSettingsBlock extends BlockBase implements ContainerFactoryPl
           'label' => $this->t('Edit interests'),
           'path' => $profile instanceof ProfileInterface ?
             Url::fromRoute('entity.profile.edit_form', ['profile' => $profile->id()]) :
-            Url::fromRoute('profile.user_page.single', ['user' => $this->currentUser->id(), 'profile_type' => 'member'])
-        ]
+            Url::fromRoute('profile.user_page.single', ['user' => $this->currentUser->id(), 'profile_type' => 'member']),
+        ],
       ];
     }
 
     return $link;
   }
+
 }

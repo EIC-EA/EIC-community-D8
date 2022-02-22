@@ -60,6 +60,18 @@ function eic_community_preprocess_page(array &$variables): void {
           'path' => $account->toUrl()->toString(),
         ],
       ],
+      [
+        'link' => [
+          'label' => t('My settings'),
+          'path' => Url::fromRoute('eic_user.my_settings')->toString()
+        ],
+      ],
+      [
+        'link' => [
+          'label' => t('My activity'),
+          'path' => Url::fromRoute('eic_user.my_profile_activity')->toString()
+        ]
+      ]
     ];
 
     // Adds unmasquerade link if the user is masquerading.
