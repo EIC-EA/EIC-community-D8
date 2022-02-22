@@ -17,7 +17,7 @@ conditions:
     negate: true
     uuid: d8a54054-50a9-4f1a-a581-af9ee18b86af
     context_mapping: {  }
-    routes: "entity.overview_page.canonical\r\nentity.taxonomy_term.canonical"
+    routes: "entity.overview_page.canonical\r\nentity.taxonomy_term.canonical\r\ncontact.site_page"
 reactions:
   blocks:
     id: blocks

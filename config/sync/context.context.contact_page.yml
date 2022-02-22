@@ -8,6 +8,7 @@ dependencies:
   module:
     - block_content
     - route_condition
+    - system
     - user
 label: 'Contact page - Authenticated'
 name: contact_page
@@ -42,7 +43,7 @@ reactions:
         provider: block_content
         label_display: '0'
         region: page_header
-        weight: '0'
+        weight: '-1'
         custom_id: contact_banner
         theme: eic_community
         css_class: ''
@@ -60,7 +61,7 @@ reactions:
         provider: block_content
         label_display: '0'
         region: content_before
-        weight: '0'
+        weight: '-10'
         custom_id: contact_intro_authenticated
         theme: eic_community
         css_class: ''
@@ -70,6 +71,21 @@ reactions:
         status: true
         info: ''
         view_mode: full
+        third_party_settings: {  }
+      95c375dc-993c-4067-b59a-fd67385d9026:
+        uuid: 95c375dc-993c-4067-b59a-fd67385d9026
+        id: system_breadcrumb_block
+        label: Breadcrumbs
+        provider: system
+        label_display: '0'
+        region: page_header
+        weight: '0'
+        custom_id: system_breadcrumb_block
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: contact_page
+        context_mapping: {  }
         third_party_settings: {  }
     include_default_blocks: 0
     saved: false
