@@ -856,6 +856,8 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
       case GroupOverviewPages::FILES:
       case GroupOverviewPages::MEMBERS:
       case GroupOverviewPages::SEARCH:
+      case GroupOverviewPages::LATEST_ACTIVITY:
+      case GroupOverviewPages::EVENTS:
         if (is_numeric($route_parameters['group'])) {
           $group = Group::load($route_parameters['group']);
         }
