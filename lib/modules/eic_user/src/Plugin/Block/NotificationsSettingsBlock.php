@@ -111,6 +111,10 @@ class NotificationsSettingsBlock extends BlockBase implements ContainerFactoryPl
           'path' => $topic->toUrl(),
           'label' => $topic->label(),
         ];
+
+        usort($topics, function ($topicA, $topicB) {
+          return strcmp($topicA['tag']['label'], $topicB['tag']['label']);
+        });
       }
 
       foreach ($profile->get('field_vocab_geo')->referencedEntities() as $region) {
@@ -119,9 +123,11 @@ class NotificationsSettingsBlock extends BlockBase implements ContainerFactoryPl
           'path' => $region->toUrl(),
           'label' => $region->label(),
         ];
+
+        usort($regions, function ($topicA, $topicB) {
+          return strcmp($topicA['tag']['label'], $topicB['tag']['label']);
+        });
       }
-
-
     }
 
     return [
@@ -191,7 +197,10 @@ class NotificationsSettingsBlock extends BlockBase implements ContainerFactoryPl
           'label' => $this->t('Edit interests'),
           'path' => $profile instanceof ProfileInterface ?
             Url::fromRoute('entity.profile.edit_form', ['profile' => $profile->id()]) :
-            Url::fromRoute('profile.user_page.single', ['user' => $this->currentUser->id(), 'profile_type' => 'member']),
+            Url::fromRoute('profile.user_page.single', [
+              'user' => $this->currentUser->id(),
+              'profile_type' => 'member',
+            ]),
         ],
       ];
     }
