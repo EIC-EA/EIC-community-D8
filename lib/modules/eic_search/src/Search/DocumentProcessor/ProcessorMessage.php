@@ -21,6 +21,13 @@ use Solarium\QueryType\Update\Query\Document;
 class ProcessorMessage extends DocumentProcessor {
 
   /**
+   * We need to map weird machine name to the correct one for the activity overview.
+   */
+  private const MAP_ACTIVITY_TYPES = [
+    'node_comment' => 'comment',
+  ];
+
+  /**
    * @var \Drupal\eic_media_statistics\EntityFileDownloadCount $entityDownloadHelper
    */
   private $entityDownloadHelper;
@@ -103,6 +110,17 @@ class ProcessorMessage extends DocumentProcessor {
     }
 
     $views = $this->nodeStatisticsDatabaseStorage->fetchView($node->id());
+    $type = $fields['ss_type'];
+    $map_type = array_key_exists($type, self::MAP_ACTIVITY_TYPES) ?
+      self::MAP_ACTIVITY_TYPES[$type] :
+      $type;
+
+    $this->addOrUpdateDocumentField(
+      $document,
+      'ss_activity_type',
+      $fields,
+      $map_type
+    );
 
     if ($index_views) {
       $this->addOrUpdateDocumentField(

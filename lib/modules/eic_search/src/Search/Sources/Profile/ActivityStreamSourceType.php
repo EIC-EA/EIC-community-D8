@@ -40,7 +40,7 @@ class ActivityStreamSourceType extends SourceType {
    */
   public function getAvailableFacets(): array {
     return [
-      'ss_type' => $this->t('Content type', [], ['context' => 'eic_search']),
+      'ss_activity_type' => $this->t('Content type', [], ['context' => 'eic_search']),
       'sm_content_field_vocab_topics_string' => $this->t('Topics', [], ['context' => 'eic_search']),
     ];
   }
@@ -103,7 +103,7 @@ class ActivityStreamSourceType extends SourceType {
    * @inheritDoc
    */
   public function getAuthorFieldId(): string {
-    return 'its_content_uid';
+    return 'its_uid';
   }
 
   /**
