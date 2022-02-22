@@ -53,9 +53,17 @@
       text-align: left;
       font-weight: normal;
       padding: $ecl-spacing-xs $ecl-spacing-xs ;
+      border-bottom: 1px solid $ecl-color-grey-15;
+    }
+    & th:nth-child(2) {
+      width:75px;
+      white-space:nowrap;
     }
     & th:nth-child(3) {
-      width:1px;
+      width:115px;
+      white-space:nowrap;
+    }
+    & th:nth-child(3) {
       text-indent: -9999px;
     }
 
@@ -63,15 +71,13 @@
       td {
         padding: $ecl-spacing-xs $ecl-spacing-xs ;
         border: none;
-        border-top: 1px solid $ecl-color-grey-15;
-        border-bottom: 1px solid $ecl-color-grey-15;
         & > div {
           display: flex;
           align-items: center;
         }
       }
       & + & td {
-        border-top: none;
+        border-top: 1px solid $ecl-color-grey-15;
       }
       &--parent {
         background: $ecl-color-grey-5;
@@ -94,12 +100,11 @@
     }
 
     &__status {
-      width: 1%;
       white-space: nowrap;
     }
     &__unsubscribe {
-      width: 1%;
       white-space: nowrap;
+      text-align: right;
       button {
         color: $ecl-color-red-100;
         background: none;
@@ -109,6 +114,11 @@
           color: #004494;
         }
       }
+    }
+
+    &__no-results {
+      padding: $ecl-spacing-l $ecl-spacing-xs;
+      text-align: center;
     }
   }
 
