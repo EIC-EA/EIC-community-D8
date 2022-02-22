@@ -18,7 +18,7 @@ conditions:
     negate: false
     uuid: fdf0386a-7ba0-4fe6-ab65-a834868de23b
     context_mapping: {  }
-    routes: eic_user.my_profile_activity
+    routes: 'eic_user.user.*'
 reactions:
   blocks:
     id: blocks
@@ -45,6 +45,7 @@ reactions:
         provider: eic_search
         label_display: visible
         region: content
+        weight: '0'
         custom_id: eic_search_overview
         theme: eic_community
         css_class: ''

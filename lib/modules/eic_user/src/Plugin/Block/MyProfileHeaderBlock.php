@@ -66,7 +66,8 @@ class MyProfileHeaderBlock extends BlockBase {
     $menu_data = [
       [
         'label' => $this->t('Interesting for you', [], ['context' => 'eic_user']),
-        'route' => 'eic_user.my_profile_activity',
+        'route' => 'eic_user.user.activity',
+        'route_parameters' => ['user' => $current_user->id()]
       ],
       [
         'label' => $this->t('Following', [], ['context' => 'eic_user']),
@@ -83,10 +84,13 @@ class MyProfileHeaderBlock extends BlockBase {
     ];
 
     $menu_items = array_map(function(array $item) use ($current_route) {
+      $route_parameters = array_key_exists('route_parameters', $item) ?
+        $item['route_parameters'] :
+        [];
       return [
         'link' => [
           'label' => $item['label'],
-          'path' => Url::fromRoute($item['route'])->toString(),
+          'path' => Url::fromRoute($item['route'], $route_parameters)->toString(),
         ],
         'is_active' => $current_route === $item['route'],
       ];
