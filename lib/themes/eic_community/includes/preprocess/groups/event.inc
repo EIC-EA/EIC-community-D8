@@ -188,10 +188,82 @@ function eic_community_preprocess_group__event(&$variables) {
 function _preprocess_event_about_page(&$variables) {
   $sections = [];
 
-  _group_about_permissions_tab($variables, $sections);
+  _event_about_permissions_tab($variables, $sections);
 
   $variables['sections'] = [
     'as_tabs' => TRUE,
     'items' => $sections,
   ];
+}
+
+/**
+ * About permissions tab.
+ */
+function _event_about_permissions_tab($variables, &$sections) {
+  if (isset($variables['elements']['visibility'])) {
+    $admin_items = [];
+    $visibility = $variables['elements']['visibility'];
+    $visibility_id = $visibility['plugin_id'];
+    $access_items = [];
+
+    switch ($visibility_id) {
+      case 'custom_restricted':
+        $restrictions = array_map(function ($restriction) {
+          return [
+            'title' => $restriction['label'],
+            'content' => $restriction['options'],
+          ];
+        }, $visibility['settings']);
+
+        $access_items = $restrictions;
+        break;
+
+    }
+
+    $admin_items[] = [
+      'title' => t('Event access'),
+      'content' => [
+        '#theme' => 'eic_community_well',
+        '#content' => [
+          '#theme' => 'eic_community_harmonica',
+          '#title' => $visibility['title'],
+          '#description' => $visibility['description'],
+          '#icon' => [
+            'icon' => [
+              'name' => 'lock',
+              'type' => 'custom',
+            ],
+          ],
+          '#icon_file_path' => $variables['eic_icon_path'],
+          '#items' => $access_items,
+        ],
+      ],
+    ];
+
+    if (count($variables['elements']['joining_methods']) > 0) {
+      $request_title = $variables['elements']['joining_methods'][0]['title'];
+      $request_content = $variables['elements']['joining_methods'][0]['description'];
+
+      $admin_items[] = [
+        'title' => t('Membership Request type'),
+        'items' => [
+          [
+            'title' => $request_title,
+            'content' => $request_content,
+          ],
+        ],
+      ];
+    }
+
+    $sections[] = [
+      'id' => 'admin',
+      'title' => t('Permission and visibility'),
+      'content' => [
+        '#theme' => 'eic_community_extended_list',
+        '#title' => t('Event Permissions'),
+        '#description' => t("Below is explained to whom this event is visible in order to understand the private or public character of the event's content."),
+        '#items' => $admin_items,
+      ],
+    ];
+  }
 }
