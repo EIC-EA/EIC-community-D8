@@ -64,9 +64,25 @@ class NotificationsSettingsBlock extends BlockBase implements ContainerFactoryPl
   {
     $currentUser = User::load($this->currentUser->id());
     $member_profile = $this->userHelper->getUserMemberProfile($currentUser);
+    $menu_items = [
+      [
+        'link' => [
+          'label' => $this->t('My informations'),
+          'path' => $currentUser->toUrl()->toString()
+        ]
+      ],
+      [
+        'link' => [
+          'label' => $this->t('Email notifications'),
+          'path' => Url::fromRoute('eic_user.my_settings')->toString()
+        ],
+        'is_active' => TRUE,
+      ]
+    ];
 
     return [
       '#theme' => 'user_notifications_settings',
+      '#menu_items' => ['items' => $menu_items],
       '#items' => [
         'interest' => $this->getInterestsTab($member_profile),
         'groups' => [
