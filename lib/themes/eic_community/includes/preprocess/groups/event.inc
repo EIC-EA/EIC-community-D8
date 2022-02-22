@@ -175,4 +175,23 @@ function eic_community_preprocess_group__event(&$variables) {
       break;
 
   }
+
+  // About page preprocessing.
+  if (isset($variables['elements']['owners'])) {
+    _preprocess_event_about_page($variables);
+  }
+}
+
+/**
+ * The about page has two tabs with content.
+ */
+function _preprocess_event_about_page(&$variables) {
+  $sections = [];
+
+  _group_about_permissions_tab($variables, $sections);
+
+  $variables['sections'] = [
+    'as_tabs' => TRUE,
+    'items' => $sections,
+  ];
 }
