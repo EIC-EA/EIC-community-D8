@@ -1,4 +1,4 @@
-eic_user.my_profile_activity:
+eic_user.user.activity:
   path: '/user/{user}/activity'
   defaults:
     _controller: '\Drupal\eic_user\Controller\MyProfileController::interests'

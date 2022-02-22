@@ -66,7 +66,7 @@ class MyProfileHeaderBlock extends BlockBase {
     $menu_data = [
       [
         'label' => $this->t('Interesting for you', [], ['context' => 'eic_user']),
-        'route' => 'eic_user.my_profile_activity',
+        'route' => 'eic_user.user.activity',
         'route_parameters' => ['user' => $current_user->id()]
       ],
       [
