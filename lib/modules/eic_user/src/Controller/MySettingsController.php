@@ -6,13 +6,36 @@ use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\eic_user\Service\NotificationSettingsManager;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * The "my settings" controller.
  */
-class MySettingsController extends ControllerBase
-{
+class MySettingsController extends ControllerBase {
+
+  /**
+   * @var \Drupal\eic_user\Service\NotificationSettingsManager
+   */
+  private $notificationSettingsManager;
+
+  /**
+   * @param \Drupal\eic_user\Service\NotificationSettingsManager $notification_settings_manager
+   */
+  public function __construct(NotificationSettingsManager $notification_settings_manager) {
+    $this->notificationSettingsManager = $notification_settings_manager;
+  }
+
+  /**
+   * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
+   *
+   * @return \Drupal\eic_user\Controller\MySettingsController|static
+   */
+  public static function create(ContainerInterface $container) {
+    return new static($container->get('eic_user.notification_settings_manager'));
+  }
 
   /**
    * The member activities endpoint.
@@ -21,22 +44,35 @@ class MySettingsController extends ControllerBase
    *
    * @return array
    */
-  public function settings(Request $request): array
-  {
+  public function settings(Request $request): array {
     return [];
   }
 
   /**
-   * Checks access to the group about page.
+   * Toggles the value for fields 'field_interest_notifications' and 'field_comments_notifications'
+   * on current user's profile
    *
-   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
-   * @param \Drupal\Core\Session\AccountInterface $account
+   * @param string $notification_type
    *
-   * @return \Drupal\Core\Access\AccessResultInterface
+   * @return JsonResponse
    */
-  public function access(RouteMatchInterface $route_match, AccountInterface $account)
-  {
-    return $account->isAuthenticated() ? AccessResult::allowed() : AccessResult::forbidden();
+  public function toggleProfileNotificationSettings(string $notification_type) {
+    try {
+      $new_value = $this->notificationSettingsManager->toggleSetting($notification_type);
+    } catch (\Exception $exception) {
+      $this->messenger
+        ->addError(
+          'Something wrong happened when toggling settings for @notification_type: @error',
+          [
+            '@notification_type' => $notification_type,
+            '@error' => $exception->getMessage(),
+          ]);
+    }
+
+    return new JsonResponse([
+      'status' => $new_value ?? FALSE,
+      'value' => $new_value ?? FALSE,
+    ]);
   }
 
 }

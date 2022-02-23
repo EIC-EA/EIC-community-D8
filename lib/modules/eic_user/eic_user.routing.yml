@@ -11,4 +11,14 @@ eic_user.my_settings:
     _controller: '\Drupal\eic_user\Controller\MySettingsController::settings'
     _title: 'My settings'
   requirements:
-    _custom_access: '\Drupal\eic_user\Controller\MySettingsController::access'
+    _user_is_logged_in: 'TRUE'
+
+eic_user.toggle_notification_settings:
+  path: '/api/notification/{notification_type}/update'
+  methods: [ POST ]
+  defaults:
+    _controller: '\Drupal\eic_user\Controller\MySettingsController::toggleProfileNotificationSettings'
+    _title: 'Toggle settings'
+  requirements:
+    notification_type: 'interest|comments'
+    _user_is_logged_in: 'TRUE'

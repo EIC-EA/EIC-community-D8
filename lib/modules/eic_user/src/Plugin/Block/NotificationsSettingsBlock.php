@@ -7,6 +7,7 @@ use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Session\AccountProxy;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\Url;
+use Drupal\eic_user\ProfileConst;
 use Drupal\eic_user\UserHelper;
 use Drupal\profile\Entity\ProfileInterface;
 use Drupal\user\Entity\User;
@@ -156,7 +157,10 @@ class NotificationsSettingsBlock extends BlockBase implements ContainerFactoryPl
           ],
           'global_action' => [
             'title' => 'Interest email notifications',
-            'state' => TRUE,
+            'state' => $profile instanceof ProfileInterface ? $profile->get('field_interest_notifications')->value : FALSE,
+            'url' => Url::fromRoute('eic_user.toggle_notification_settings', [
+              'notification_type' => ProfileConst::INTEREST_NOTIFICATION_TYPE,
+            ]),
           ],
         ],
       ],
@@ -179,7 +183,10 @@ class NotificationsSettingsBlock extends BlockBase implements ContainerFactoryPl
           'body' => $this->t('By indication thematic of geographic interests, you are automatically subscribed to a periodic notification email bringing together the latest highlighted items.'),
           'global_action' => [
             'title' => $this->t('Comments email notifications'),
-            'state' => TRUE,
+            'state' => $profile instanceof ProfileInterface ? $profile->get('field_comments_notifications')->value : FALSE,
+            'url' => Url::fromRoute('eic_user.toggle_notification_settings', [
+              'notification_type' => ProfileConst::COMMENTS_NOTIFICATION_TYPE,
+            ]),
           ],
         ],
       ],

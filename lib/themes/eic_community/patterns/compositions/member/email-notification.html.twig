@@ -43,7 +43,8 @@
         <h4>{{ global_action.title }}</h4>
         {% include "@theme/patterns/components/toggle-switch.html.twig" with {
           name: global_action.title,
-          state: global_action.state
+          state: global_action.state,
+          url: global_action.url
         } %}
       </section>
     {% endif %}
