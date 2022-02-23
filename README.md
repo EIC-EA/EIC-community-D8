@@ -71,3 +71,4 @@ If you get such error messages reinitialize GrumPHP paths on your host machine
 ./vendor/bin/grumphp git:deinit
 ./vendor/bin/grumphp git:init
 ```
+
