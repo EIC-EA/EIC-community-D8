@@ -9,15 +9,13 @@ dependencies:
     - field.storage.user.field_last_name
     - field.storage.media.oe_media_image
     - field.storage.user.field_media
-    - field.storage.group.field_locations
-    - field.storage.paragraph.field_city
     - field.storage.group.field_location_type
     - field.storage.group.field_organisation_type
     - field.storage.group.field_vocab_geo
     - field.storage.group.field_vocab_services_products
     - field.storage.group.field_vocab_target_markets
-    - field.storage.group.field_thumbnail
     - field.storage.group.field_image
+    - field.storage.group.field_thumbnail
     - field.storage.group.field_vocab_topics
     - field.storage.group.field_body
     - field.storage.message.field_entity_type
@@ -64,7 +62,6 @@ dependencies:
     - user
     - file
     - media
-    - paragraphs
     - taxonomy
     - content_moderation
     - message
@@ -72,6 +69,7 @@ dependencies:
     - node
     - eic_private_content
     - path
+    - paragraphs
     - profile
     - search_api
     - address
@@ -751,17 +749,6 @@ field_settings:
     dependencies:
       config:
         - field.storage.group.field_location_type
-  group_field_locations_string:
-    label: 'Locations » Paragraph » City'
-    datasource_id: 'entity:group'
-    property_path: 'field_locations:entity:field_city'
-    type: string
-    dependencies:
-      config:
-        - field.storage.group.field_locations
-        - field.storage.paragraph.field_city
-      module:
-        - paragraphs
   group_field_organisation_type:
     label: '[Group] Organisation type'
     datasource_id: 'entity:group'

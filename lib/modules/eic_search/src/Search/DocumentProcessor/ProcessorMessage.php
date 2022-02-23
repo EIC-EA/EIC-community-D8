@@ -6,6 +6,8 @@ use Drupal\comment\CommentInterface;
 use Drupal\comment\Entity\Comment;
 use Drupal\eic_comments\CommentsHelper;
 use Drupal\eic_media_statistics\EntityFileDownloadCount;
+use Drupal\group\Entity\GroupContent;
+use Drupal\group\Entity\GroupInterface;
 use Drupal\node\Entity\Node;
 use Drupal\node\NodeInterface;
 use Drupal\statistics\NodeStatisticsDatabaseStorage;
@@ -17,6 +19,13 @@ use Solarium\QueryType\Update\Query\Document;
  * @package Drupal\eic_search\DocumentProcessor
  */
 class ProcessorMessage extends DocumentProcessor {
+
+  /**
+   * We need to map weird machine name to the correct one for the activity overview.
+   */
+  private const MAP_ACTIVITY_TYPES = [
+    'node_comment' => 'comment',
+  ];
 
   /**
    * @var \Drupal\eic_media_statistics\EntityFileDownloadCount $entityDownloadHelper
@@ -76,6 +85,18 @@ class ProcessorMessage extends DocumentProcessor {
       return;
     }
 
+    $group_contents = GroupContent::loadByEntity($node);
+
+    if (!empty($group_contents)) {
+      /** @var GroupContent $group_content */
+      $group_content = reset($group_contents);
+      $group_id = $group_content->getGroup() instanceof GroupInterface ?
+        $group_content->getGroup()->id() :
+        -1;
+
+      $this->addOrUpdateDocumentField($document, 'its_global_group_parent_id', $fields, $group_id);
+    }
+
     $index_views = TRUE;
     $index_comments = TRUE;
     $index_downloads = TRUE;
@@ -89,6 +110,17 @@ class ProcessorMessage extends DocumentProcessor {
     }
 
     $views = $this->nodeStatisticsDatabaseStorage->fetchView($node->id());
+    $type = $fields['ss_type'];
+    $map_type = array_key_exists($type, self::MAP_ACTIVITY_TYPES) ?
+      self::MAP_ACTIVITY_TYPES[$type] :
+      $type;
+
+    $this->addOrUpdateDocumentField(
+      $document,
+      'ss_activity_type',
+      $fields,
+      $map_type
+    );
 
     if ($index_views) {
       $this->addOrUpdateDocumentField(
@@ -122,4 +154,5 @@ class ProcessorMessage extends DocumentProcessor {
   public function supports(array $fields): bool {
     return $fields['ss_search_api_datasource'] === 'entity:message';
   }
+
 }

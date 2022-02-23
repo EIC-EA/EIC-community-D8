@@ -37,9 +37,6 @@ function eic_community_preprocess_group__organisation(&$variables) {
 function _eic_community_render_organisation_detail_page(&$variables, $group) {
   /** @var TranslationInterface $string_translation */
   $string_translation = \Drupal::service('string_translation');
-  /** @var \Drupal\eic_group_statistics\GroupStatisticsHelperInterface $group_helper */
-  $group_helper = Drupal::service('eic_group_statistics.helper');
-  $group_statistics = $group_helper->loadGroupStatistics($group);
 
   $topics = $group->get('field_vocab_topics')->referencedEntities();
   $markets = $group->get('field_vocab_target_markets')->referencedEntities();
@@ -324,7 +321,7 @@ function _eic_community_render_organisation_detail_page(&$variables, $group) {
           ],
           [
             'name' => t('Active members', [], ['context' => 'eic_community']),
-            'value' => $group_statistics->getMembersCount(),
+            'value' => count($group->getMembers()),
           ],
           [
             'name' => t('Annual turnover', [], ['context' => 'eic_community']),
