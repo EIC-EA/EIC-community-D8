@@ -113,6 +113,13 @@ abstract class SourceType implements SourceTypeInterface {
   /**
    * @inheritDoc
    */
+  public function getLoadMoreBatchItems(): int {
+    return SourceTypeInterface::READ_MORE_NUMBER_TO_LOAD;
+  }
+
+  /**
+   * @inheritDoc
+   */
   public function supportDateFilter(): bool {
     return FALSE;
   }
