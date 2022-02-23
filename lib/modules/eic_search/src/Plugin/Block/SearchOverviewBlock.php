@@ -293,7 +293,7 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
           $user_group_roles
         ),
         '#allow_pagination' => $source instanceof SourceTypeInterface ? (int) $source->allowPagination() : 1,
-        '#load_more_number' => SourceTypeInterface::READ_MORE_NUMBER_TO_LOAD,
+        '#load_more_number' => $source->getLoadMoreBatchItems(),
         '#is_route_group_search_results' =>
           (int) ('eic_overviews.groups.overview_page.search' === $route_name),
         '#enable_invite_user_action' =>

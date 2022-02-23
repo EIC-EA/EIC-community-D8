@@ -87,14 +87,21 @@ class ActivityStreamSourceType extends SourceType {
    * @inheritDoc
    */
   public function allowPagination(): bool {
-    return TRUE;
+    return FALSE;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function getLoadMoreBatchItems(): int {
+    return 10;
   }
 
   /**
    * @inheritDoc
    */
   public function ignoreContentFromCurrentUser(): bool {
-    return TRUE;
+    return FALSE;
   }
 
   /**
