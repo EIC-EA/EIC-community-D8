@@ -8,8 +8,6 @@ stages:
 .deploy_job: &deploy_job
   image: intractosre/deploy:1
   stage: deploy
-  tags:
-    - aws
   before_script:
     - eval $(ssh-agent -s)
     - echo "$DEPLOYMENT_SSH_KEY" | tr -d '\r' | ssh-add - > /dev/null
