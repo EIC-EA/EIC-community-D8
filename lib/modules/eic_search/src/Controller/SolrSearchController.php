@@ -231,7 +231,7 @@ class SolrSearchController extends ControllerBase {
     }
 
     $this->generateQueryInterests($fq, $facets_interests);
-    $this->generateQueryUserGroupsAndContents($fq, $facets_interests);
+    $this->generateQueryUserGroupsAndContents($fq, $facets_interests, $source);
     $this->generateQueryPrivateContent($fq);
     $this->generateQueryPublishedState($fq, $source);
     $this->generateQueryPager($solariumQuery, $page, $offset, $source);
@@ -359,8 +359,10 @@ class SolrSearchController extends ControllerBase {
    *  The field query stringify to send to SOLR
    * @param array $interests
    *  Values of interests facet
+   * @param SourceTypeInterface $source
+   *  The current source.
    */
-  private function generateQueryUserGroupsAndContents(string &$fq, array $interests) {
+  private function generateQueryUserGroupsAndContents(string &$fq, array $interests, SourceTypeInterface $source) {
     if (
       empty($interests) ||
       !array_key_exists('my_groups', $interests) ||
@@ -383,8 +385,10 @@ class SolrSearchController extends ControllerBase {
     }
 
     $groups_membership_string = $groups_membership_id ? implode(' OR ', $groups_membership_id) : -1;
+    $group_field_id = $source->getPrefilteredGroupFieldId();
+    $group_field_id = reset($group_field_id);
 
-    $fq .= " AND (its_group_id_integer:($groups_membership_string) OR its_global_group_parent_id:($groups_membership_string) OR its_content_uid:($groups_membership_string))";
+    $fq .= " AND ($group_field_id:($groups_membership_string) OR its_global_group_parent_id:($groups_membership_string) OR its_content_uid:($groups_membership_string))";
   }
 
   /**

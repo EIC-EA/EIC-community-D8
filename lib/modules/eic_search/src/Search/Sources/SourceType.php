@@ -113,6 +113,13 @@ abstract class SourceType implements SourceTypeInterface {
   /**
    * @inheritDoc
    */
+  public function getLoadMoreBatchItems(): int {
+    return SourceTypeInterface::READ_MORE_NUMBER_TO_LOAD;
+  }
+
+  /**
+   * @inheritDoc
+   */
   public function supportDateFilter(): bool {
     return FALSE;
   }
@@ -157,6 +164,13 @@ abstract class SourceType implements SourceTypeInterface {
    */
   public function prefilterByGroupsMembership(): bool {
     return FALSE;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function getLabelFilterMyGroups(): string {
+    return $this->t('My groups & content only', [], ['context' => 'eic_search']);
   }
 
 }

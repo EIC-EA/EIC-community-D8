@@ -69,7 +69,7 @@ function eic_community_preprocess_page(array &$variables): void {
       [
         'link' => [
           'label' => t('My activity'),
-          'path' => Url::fromRoute('eic_user.my_profile_activity')->toString()
+          'path' => Url::fromRoute('eic_user.user.activity', ['user' => $account->id()])->toString()
         ]
       ]
     ];

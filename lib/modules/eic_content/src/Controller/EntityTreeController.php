@@ -134,7 +134,7 @@ class EntityTreeController extends ControllerBase {
     $disable_top = (bool) $request->query->get('disableTop', FALSE);
 
     return new JsonResponse(
-      $this->treeManager->search($target_entity, $target_bundle, $text, $selected_values, $disable_top),
+      $this->treeManager->search($target_entity, $target_bundle, $text, $selected_values, $disable_top)
     );
   }
 

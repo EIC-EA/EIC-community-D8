@@ -38,7 +38,7 @@ class UserInvitesListSourceType extends SourceType {
    * @inheritDoc
    */
   public function getSearchFieldsId(): array {
-    return ['ss_global_fullname', 'ss_user_mail'];
+    return ['tm_global_fullname', 'tm_user_mail'];
   }
 
   /**

@@ -1,0 +1,18 @@
+uuid: 3e678500-41a5-4839-8dad-51b5bc60e31d
+langcode: en
+status: true
+dependencies:
+  config:
+    - group.type.event
+  module:
+    - eic_share_content
+    - node
+id: event-group_shared_content
+label: 'Event: Group Shared content'
+description: 'Adds shared content to groups.'
+group_type: event
+content_plugin: group_shared_content
+plugin_config:
+  group_cardinality: 0
+  entity_cardinality: 1
+  use_creation_wizard: false
