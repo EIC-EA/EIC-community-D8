@@ -77,38 +77,38 @@ security_check:
     - develop
     - /^release/.*$/
 
-code_style_test:
-  #stage: test
-  image: jakzal/phpqa:php7.4
-  tags:
-    - itr-hrt
-  script:
-    - ./vendor/bin/grumphp run --tasks=phpcs
-  allow_failure: true
-  only:
-    - develop
-
-phpmd_test:
-  #stage: test
-  image: jakzal/phpqa:php7.4
-  tags:
-    - itr-hrt
-  script:
-    - ./vendor/bin/grumphp run --tasks=phpmd
-  allow_failure: true
-  only:
-    - develop
-
-phpstan_test:
-  #stage: test
-  image: jakzal/phpqa:php7.4
-  tags:
-    - itr-hrt
-  script:
-    - phpstan
-  allow_failure: true
-  only:
-    - develop
+#code_style_test:
+#  stage: test
+#  image: jakzal/phpqa:php7.4
+#  tags:
+#    - itr-hrt
+#  script:
+#    - ./vendor/bin/grumphp run --tasks=phpcs
+#  allow_failure: true
+#  only:
+#    - develop
+#
+#phpmd_test:
+#  stage: test
+#  image: jakzal/phpqa:php7.4
+#  tags:
+#    - itr-hrt
+#  script:
+#    - ./vendor/bin/grumphp run --tasks=phpmd
+#  allow_failure: true
+#  only:
+#    - develop
+#
+#phpstan_test:
+#  stage: test
+#  image: jakzal/phpqa:php7.4
+#  tags:
+#    - itr-hrt
+#  script:
+#    - phpstan
+#  allow_failure: true
+#  only:
+#    - develop
 
 deploy_develop:
   <<: *deploy_job
