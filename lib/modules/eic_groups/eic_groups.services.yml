@@ -17,18 +17,6 @@ services:
     arguments: ['@book.breadcrumb', '@current_user', '@eic_user.helper', '@eic_flags.handler_collector', '@request_stack', '@eic_groups.helper']
     tags:
       - { name: breadcrumb_builder, priority: 1000 }
-  eic_groups.access_check.flag.action.decorator:
-    class: Drupal\eic_groups\Access\FlagAccessCheck
-    decorates: access_check.flag.action
-    decoration_priority: 1
-    public: true
-    arguments: ['@eic_groups.access_check.flag.action.decorator.inner', '@flag']
-  eic_groups.access_check.unflag.action.decorator:
-    class: Drupal\eic_groups\Access\UnFlagAccessCheck
-    decorates: access_check.unflag.action
-    decoration_priority: 1
-    public: true
-    arguments: ['@eic_groups.access_check.unflag.action.decorator.inner', '@flag']
   eic_groups.eic_flags.request_access_checker.decorator:
     class: Drupal\eic_groups\Access\FlagRequestAccessCheck
     decorates: eic_flags.request_access_checker
@@ -58,6 +46,10 @@ services:
     arguments: ['@flag']
     tags:
       - { name: access_check, applies_to: _like_group_content }
+  eic_groups.access_check.group_invitation_bulk:
+    class: Drupal\eic_groups\Access\GroupInvitationBulkAccessChecker
+    tags:
+      - { name: access_check, applies_to: _group_invitation_bulk }
   eic_groups.route_subscriber:
     class: Drupal\eic_groups\Routing\RouteSubscriber
     tags:

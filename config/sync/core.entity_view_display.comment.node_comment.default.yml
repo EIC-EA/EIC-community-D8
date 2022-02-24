@@ -7,6 +7,7 @@ dependencies:
     - field.field.comment.node_comment.comment_body
     - field.field.comment.node_comment.field_comment_attachment
     - field.field.comment.node_comment.field_comment_deletion_date
+    - field.field.comment.node_comment.field_comment_is_archived
     - field.field.comment.node_comment.field_comment_is_soft_deleted
     - field.field.comment.node_comment.field_tagged_users
   module:
@@ -41,6 +42,16 @@ content:
       format_type: medium
     third_party_settings: {  }
     weight: 103
+    region: content
+  field_comment_is_archived:
+    type: boolean
+    label: above
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    weight: 105
     region: content
   field_comment_is_soft_deleted:
     type: boolean

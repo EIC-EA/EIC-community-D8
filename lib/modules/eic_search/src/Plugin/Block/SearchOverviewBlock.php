@@ -14,6 +14,7 @@ use Drupal\Core\Url;
 use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_search\Collector\SourcesCollector;
 use Drupal\eic_search\Search\Sources\GroupSourceType;
+use Drupal\eic_search\Search\Sources\Profile\ActivityStreamSourceType;
 use Drupal\eic_search\Search\Sources\SourceTypeInterface;
 use Drupal\eic_search\SearchHelper;
 use Drupal\eic_user\UserHelper;
@@ -241,6 +242,7 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
         EICGroupsHelper::GROUP_OWNER_ROLE,
         $user_group_roles
       ),
+      'label_my_groups' => $source->getLabelFilterMyGroups(),
       'is_group_admin' => array_key_exists(
         EICGroupsHelper::GROUP_ADMINISTRATOR_ROLE,
         $user_group_roles
@@ -270,6 +272,7 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
         '#facets' => array_keys($facets),
         '#sorts' => array_keys($sorts),
         '#prefilters' => $this->extractFilterFromUrl(),
+        '#prefilter_my_interests' => $source instanceof ActivityStreamSourceType,
         '#search_string' => $search_value,
         '#source_class' => $source instanceof SourceTypeInterface ? get_class(
           $source
@@ -292,7 +295,7 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
           $user_group_roles
         ),
         '#allow_pagination' => $source instanceof SourceTypeInterface ? (int) $source->allowPagination() : 1,
-        '#load_more_number' => SourceTypeInterface::READ_MORE_NUMBER_TO_LOAD,
+        '#load_more_number' => $source->getLoadMoreBatchItems(),
         '#is_route_group_search_results' =>
           (int) ('eic_overviews.groups.overview_page.search' === $route_name),
         '#enable_invite_user_action' =>
@@ -310,6 +313,7 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
           'refine' => $this->t('Refine your search', [], ['context' => 'eic_group']),
           'topics' => $this->t('Topics', [], ['context' => 'eic_group']),
           'search_text' => $this->t('Search', [], ['context' => 'eic_group']),
+          'commented_on' => $this->t('commented on', [], ['context' => 'eic_group']),
           'custom_search_text' => [
             'user_gallery' => $this->t('Search for a member', [], ['context' => 'eic_group']),
           ],

@@ -14,6 +14,7 @@ dependencies:
     - field.field.user.user.field_last_name
     - field.field.user.user.field_media
     - field.field.user.user.field_smed_id
+    - field.field.user.user.field_user_can_contact
   module:
     - user
 id: user.user.compact
@@ -47,7 +48,6 @@ hidden:
   field_last_name: true
   field_smed_id: true
   field_user_can_contact: true
-  field_user_status: true
   flag_follow_user: true
   langcode: true
   member_for: true

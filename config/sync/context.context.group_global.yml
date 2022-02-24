@@ -30,7 +30,7 @@ conditions:
     negate: true
     uuid: df5ac6fd-1e86-44f6-9ff6-e46b4cfc36f1
     context_mapping: {  }
-    routes: "entity.user.*\r\nprofile.user_page.*"
+    routes: "entity.user.*\r\nprofile.user_page.*\r\neic_user.user.*"
 reactions:
   blocks:
     id: blocks

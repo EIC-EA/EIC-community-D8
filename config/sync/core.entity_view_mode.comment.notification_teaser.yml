@@ -1,0 +1,10 @@
+uuid: 8e437149-9ed9-44bf-92f1-8f9c405cadc1
+langcode: en
+status: true
+dependencies:
+  module:
+    - comment
+id: comment.notification_teaser
+label: 'Notification teaser'
+targetEntityType: comment
+cache: true

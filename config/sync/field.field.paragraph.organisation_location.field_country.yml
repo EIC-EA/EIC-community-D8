@@ -1,0 +1,29 @@
+uuid: 9e2a36a1-9e09-465e-877e-9c7e72e35af5
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_country
+    - paragraphs.paragraphs_type.organisation_location
+    - taxonomy.vocabulary.geo
+id: paragraph.organisation_location.field_country
+field_name: field_country
+entity_type: paragraph
+bundle: organisation_location
+label: Country
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      geo: geo
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

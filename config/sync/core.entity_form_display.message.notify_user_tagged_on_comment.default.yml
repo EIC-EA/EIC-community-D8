@@ -1,0 +1,45 @@
+uuid: c40ac14d-5192-44a6-9373-2912307d943f
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.message.notify_user_tagged_on_comment.field_event_executing_user
+    - field.field.message.notify_user_tagged_on_comment.field_referenced_comment
+    - field.field.message.notify_user_tagged_on_comment.field_rendered_content
+    - message.template.notify_user_tagged_on_comment
+  module:
+    - text
+id: message.notify_user_tagged_on_comment.default
+targetEntityType: message
+bundle: notify_user_tagged_on_comment
+mode: default
+content:
+  field_event_executing_user:
+    type: entity_reference_autocomplete
+    weight: 0
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_referenced_comment:
+    type: entity_reference_autocomplete
+    weight: 1
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_rendered_content:
+    type: text_textarea
+    weight: 2
+    region: content
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+hidden: {  }

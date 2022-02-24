@@ -9,7 +9,6 @@ dependencies:
     - field.storage.user.field_last_name
     - field.storage.media.oe_media_image
     - field.storage.user.field_media
-    - field.storage.group.field_locations
     - field.storage.group.field_location_type
     - field.storage.group.field_organisation_type
     - field.storage.group.field_vocab_geo
@@ -510,6 +509,18 @@ field_settings:
     dependencies:
       module:
         - node
+  content_teaser_image_fid:
+    label: 'Image teaser » Media » Image » File » File ID'
+    datasource_id: 'entity:node'
+    property_path: 'field_image:entity:oe_media_image:entity:fid'
+    type: integer
+    dependencies:
+      config:
+        - field.storage.media.oe_media_image
+        - field.storage.node.field_image
+      module:
+        - file
+        - media
   content_title:
     label: '[Content] Title'
     datasource_id: 'entity:node'
@@ -738,16 +749,6 @@ field_settings:
     dependencies:
       config:
         - field.storage.group.field_location_type
-  group_field_locations_string:
-    label: 'Locations » Taxonomy term » Name'
-    datasource_id: 'entity:group'
-    property_path: 'field_locations:entity:name'
-    type: string
-    dependencies:
-      config:
-        - field.storage.group.field_locations
-      module:
-        - taxonomy
   group_field_organisation_type:
     label: '[Group] Organisation type'
     datasource_id: 'entity:group'
@@ -979,11 +980,33 @@ field_settings:
         - field.storage.node.field_vocab_topics
       module:
         - node
+  message_node_ref_field_vocab_topics_name:
+    label: 'Referenced node » Content » Topics » Taxonomy term » Name'
+    datasource_id: 'entity:message'
+    property_path: 'field_referenced_node:entity:field_vocab_topics:entity:name'
+    type: string
+    dependencies:
+      config:
+        - field.storage.message.field_referenced_node
+        - field.storage.node.field_vocab_topics
+      module:
+        - node
+        - taxonomy
   message_node_ref_id:
     label: 'Referenced node » Content » ID'
     datasource_id: 'entity:message'
     property_path: 'field_referenced_node:entity:nid'
     type: integer
+    dependencies:
+      config:
+        - field.storage.message.field_referenced_node
+      module:
+        - node
+  node_type:
+    label: 'Referenced node » Content » Content type'
+    datasource_id: 'entity:message'
+    property_path: 'field_referenced_node:entity:type'
+    type: string
     dependencies:
       config:
         - field.storage.message.field_referenced_node
@@ -1059,7 +1082,9 @@ field_settings:
           content_moderation_state: ''
         'entity:flagging':
           bookmark_content: ''
+          follow_content: ''
           follow_group: ''
+          follow_taxonomy_term: ''
           follow_user: ''
           highlight_content: ''
           like_comment: ''
@@ -1069,33 +1094,74 @@ field_settings:
           request_archive_comment: ''
           request_archive_content: ''
           request_archive_group: ''
+          request_block_group: ''
           request_delete_comment: ''
           request_delete_content: ''
           request_delete_group: ''
+          transfer_owner_request_group: ''
         'entity:group':
+          event: ''
           group: no_html
+          organisation: ''
         'entity:group_content':
+          event-group_membership: ''
+          event-group_membership_request: ''
+          event-group_node-book: ''
+          event-group_node-discussion: ''
+          event-group_node-document: ''
+          event-group_node-gallery: ''
+          event-group_node-news: ''
+          event-group_node-page: ''
+          event-group_node-story: ''
+          event-group_node-video: ''
+          event-group_node-wiki_page: ''
+          event-group_request_archival: ''
+          event-group_request_delete: ''
           group-group_invitation: ''
           group-group_membership: ''
           group-group_membership_request: ''
           group-group_node-book: ''
           group-group_node-discussion: ''
           group-group_node-document: ''
+          group-group_node-event: ''
           group-group_node-gallery: ''
+          group-group_node-video: ''
           group-group_node-wiki_page: ''
           group-group_request_archival: ''
+          group-group_request_block: ''
           group-group_request_delete: ''
+          group_content_type_7f62828e3a84b: ''
+          group_content_type_dd4142e7f0cf7: ''
           group_content_type_ddd92dce39526: ''
+          organisation-group_membership: ''
+          organisation-group_node-event: ''
+          organisation-group_node-news: ''
         'entity:group_permission':
           group_permission: ''
+        'entity:message':
+          stream_article_insert_update: ''
+          stream_comment_insert_update: ''
+          stream_discussion_insert_update: ''
+          stream_document_insert_update: ''
+          stream_event_insert_update: ''
+          stream_gallery_insert_update: ''
+          stream_news_insert_update: ''
+          stream_photo_album_insert_update: ''
+          stream_photo_insert_update: ''
+          stream_share_content: ''
+          stream_share_insert_update: ''
+          stream_video_insert_update: ''
+          stream_wiki_page_insert_update: ''
         'entity:node':
           book: no_html
           discussion: no_html
           document: no_html
+          event: ''
           gallery: no_html
           news: no_html
           page: no_html
           story: no_html
+          video: ''
           wiki_page: no_html
         'entity:user':
           user: default

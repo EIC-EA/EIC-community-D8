@@ -1,0 +1,58 @@
+uuid: d5659ee6-cd17-451c-b51a-c3809725d220
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.organisation_member_external.field_full_name
+    - field.field.paragraph.organisation_member_external.field_job_title
+    - field.field.paragraph.organisation_member_external.field_location
+    - field.field.paragraph.organisation_member_external.field_media
+    - field.field.paragraph.organisation_member_external.field_organisations
+    - paragraphs.paragraphs_type.organisation_member_external
+id: paragraph.organisation_member_external.default
+targetEntityType: paragraph
+bundle: organisation_member_external
+mode: default
+content:
+  field_full_name:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  field_job_title:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 4
+    region: content
+  field_location:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 3
+    region: content
+  field_media:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_organisations:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 5
+    region: content
+hidden:
+  search_api_excerpt: true

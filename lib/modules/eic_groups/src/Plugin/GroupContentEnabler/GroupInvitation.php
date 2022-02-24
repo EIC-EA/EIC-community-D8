@@ -47,7 +47,9 @@ class GroupInvitation extends GroupInvitationBase {
     $access = parent::createAccess($group, $account);
     $is_power_user = UserHelper::isPowerUser($account);
     $is_group_admin = EICGroupsHelper::userIsGroupAdmin($group, $account);
-    $user_can_invite = (int) $group->get('field_group_invite_members')->value;
+    $user_can_invite = $group->hasField('field_group_invite_members') ?
+      (int) $group->get('field_group_invite_members')->value :
+      TRUE;
     $membership = $group->getMember($account);
 
     // If access is not allowed, we do nothing.
@@ -79,6 +81,7 @@ class GroupInvitation extends GroupInvitationBase {
       case GroupsModerationHelper::GROUP_PENDING_STATE:
       case GroupsModerationHelper::GROUP_DRAFT_STATE:
       case GroupsModerationHelper::GROUP_BLOCKED_STATE:
+      case GroupsModerationHelper::GROUP_ARCHIVED_STATE:
         // Deny access to the group invitation form if the group is NOT yet
         // published and the user is not a "site_admin" or a
         // "content_administrator".

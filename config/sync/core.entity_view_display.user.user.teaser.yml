@@ -66,7 +66,6 @@ hidden:
   field_last_name: true
   field_smed_id: true
   field_user_can_contact: true
-  field_user_status: true
   langcode: true
   member_for: true
   search_api_excerpt: true

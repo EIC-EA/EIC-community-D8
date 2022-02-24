@@ -141,7 +141,7 @@ class GroupAccessContent extends ProcessorPluginBase {
 
     $query = '
     ss_group_visibility:' . GroupVisibilityType::GROUP_VISIBILITY_PUBLIC . '
-    OR (ss_group_visibility:' . GroupVisibilityType::GROUP_VISIBILITY_PRIVATE . ' AND ss_global_group_parent_id:(' . $group_ids_formatted . '))
+    OR (ss_group_visibility:' . GroupVisibilityType::GROUP_VISIBILITY_PRIVATE . ' AND its_global_group_parent_id:(' . $group_ids_formatted . '))
     OR (ss_group_visibility:' . GroupVisibilityType::GROUP_VISIBILITY_OPTION_EMAIL_DOMAIN . ' AND ss_' . GroupVisibilityType::GROUP_VISIBILITY_OPTION_EMAIL_DOMAIN . ':*' . $domain . '*)
     OR (ss_group_visibility:' . GroupVisibilityType::GROUP_VISIBILITY_OPTION_ORGANISATIONS . ' AND itm_' . GroupVisibilityType::GROUP_VISIBILITY_OPTION_ORGANISATIONS . ':(' . $group_ids_formatted . '))
     OR (ss_group_visibility:' . GroupVisibilityType::GROUP_VISIBILITY_OPTION_ORGANISATION_TYPES . ' AND itm_' . GroupVisibilityType::GROUP_VISIBILITY_OPTION_ORGANISATION_TYPES . ':(' . $user_organisation_types_formatted . '))

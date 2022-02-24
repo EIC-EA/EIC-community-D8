@@ -1,0 +1,21 @@
+uuid: ff88163b-8402-486f-aa75-d183db013c93
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.message.field_rendered_content
+    - message.template.notify_user_tagged_on_comment
+  module:
+    - text
+id: message.notify_user_tagged_on_comment.field_rendered_content
+field_name: field_rendered_content
+entity_type: message
+bundle: notify_user_tagged_on_comment
+label: 'Rendered content'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long
