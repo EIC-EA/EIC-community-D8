@@ -15,4 +15,8 @@ audience: outsider
 group_type: event
 permissions_ui: false
 permissions:
+  - 'edit all comments'
+  - 'edit own comments'
   - 'highlight group content'
+  - 'post comments'
+  - 'view comments'

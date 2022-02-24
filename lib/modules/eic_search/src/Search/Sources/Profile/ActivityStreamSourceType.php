@@ -18,9 +18,7 @@ class ActivityStreamSourceType extends SourceType {
    * @inheritDoc
    */
   public function getSourcesId(): array {
-    return [
-      'node',
-    ];
+    return ['message'];
   }
 
   /**
@@ -42,7 +40,7 @@ class ActivityStreamSourceType extends SourceType {
    */
   public function getAvailableFacets(): array {
     return [
-      'ss_global_content_type' => $this->t('Content type', [], ['context' => 'eic_search']),
+      'ss_activity_type' => $this->t('Content type', [], ['context' => 'eic_search']),
       'sm_content_field_vocab_topics_string' => $this->t('Topics', [], ['context' => 'eic_search']),
     ];
   }
@@ -51,7 +49,7 @@ class ActivityStreamSourceType extends SourceType {
    * @inheritDoc
    */
   public function getDefaultSort(): array {
-    return ['ds_created', 'DESC'];
+    return ['ss_drupal_timestamp', 'DESC'];
   }
 
   /**
@@ -80,9 +78,7 @@ class ActivityStreamSourceType extends SourceType {
    */
   public function getSearchFieldsId(): array {
     return [
-      'tm_X3b_en_rendered_item',
-      'tm_global_title',
-      'ss_global_group_parent_label',
+      'ss_title',
       'ss_global_fullname'
     ];
   }
@@ -91,7 +87,14 @@ class ActivityStreamSourceType extends SourceType {
    * @inheritDoc
    */
   public function allowPagination(): bool {
-    return TRUE;
+    return FALSE;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function getLoadMoreBatchItems(): int {
+    return 10;
   }
 
   /**
@@ -105,14 +108,21 @@ class ActivityStreamSourceType extends SourceType {
    * @inheritDoc
    */
   public function getAuthorFieldId(): string {
-    return 'its_content_uid';
+    return 'its_uid';
   }
 
   /**
    * @inheritDoc
    */
   public function prefilterByGroupsMembership(): bool {
-    return TRUE;
+    return FALSE;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function getLabelFilterMyGroups(): string {
+    return $this->t('Only my groups', [], ['context' => 'eic_search']);
   }
 
 }

@@ -130,6 +130,13 @@ interface SourceTypeInterface {
   public function allowPagination(): bool;
 
   /**
+   * Get the number of items to load by batch.
+   *
+   * @return int
+   */
+  public function getLoadMoreBatchItems(): int;
+
+  /**
    * Check if Source allow to have a date filter.
    *
    * @return bool
@@ -178,4 +185,10 @@ interface SourceTypeInterface {
    */
   public function prefilterByGroupsMembership(): bool;
 
+  /**
+   * Get the label for the filter "my groups"
+   *
+   * @return string
+   */
+  public function getLabelFilterMyGroups(): string;
 }

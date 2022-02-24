@@ -18,7 +18,7 @@ conditions:
     negate: false
     uuid: fdf0386a-7ba0-4fe6-ab65-a834868de23b
     context_mapping: {  }
-    routes: eic_user.my_profile_activity
+    routes: 'eic_user.user.*'
 reactions:
   blocks:
     id: blocks
@@ -38,8 +38,8 @@ reactions:
         unique: 0
         context_id: my_profile
         context_mapping: {  }
-      6c509f98-b687-4e8d-a7f9-8d8f81c5bc9d:
-        uuid: 6c509f98-b687-4e8d-a7f9-8d8f81c5bc9d
+      0e7c3901-f227-4b04-a47c-d795b9e3477f:
+        uuid: 0e7c3901-f227-4b04-a47c-d795b9e3477f
         id: eic_search_overview
         label: ''
         provider: eic_search
@@ -53,15 +53,15 @@ reactions:
         context_mapping: {  }
         source_type: Drupal\eic_search\Search\Sources\Profile\ActivityStreamSourceType
         facets:
-          ss_global_content_type: ss_global_content_type
+          ss_activity_type: ss_activity_type
           sm_content_field_vocab_topics_string: sm_content_field_vocab_topics_string
         sort_options: {  }
         enable_search: 1
         page_options: normal
         prefilter_group: 0
         enable_date_filter: 0
-        add_facet_interests: 0
-        add_facet_my_groups: 0
+        add_facet_interests: 1
+        add_facet_my_groups: 1
         third_party_settings: {  }
     include_default_blocks: 0
     saved: false
