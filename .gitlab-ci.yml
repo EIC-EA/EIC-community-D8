@@ -78,7 +78,7 @@ security_check:
     - /^release/.*$/
 
 code_style_test:
-  stage: test
+  #stage: test
   image: jakzal/phpqa:php7.4
   tags:
     - itr-hrt
@@ -89,7 +89,7 @@ code_style_test:
     - develop
 
 phpmd_test:
-  stage: test
+  #stage: test
   image: jakzal/phpqa:php7.4
   tags:
     - itr-hrt
@@ -100,7 +100,7 @@ phpmd_test:
     - develop
 
 phpstan_test:
-  stage: test
+  #stage: test
   image: jakzal/phpqa:php7.4
   tags:
     - itr-hrt
