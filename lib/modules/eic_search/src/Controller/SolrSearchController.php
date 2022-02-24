@@ -255,7 +255,9 @@ class SolrSearchController extends ControllerBase {
 
       $group_filters_id = $source->getPrefilteredGroupFieldId();
 
-      $fq .= ' AND (' . reset($group_filters_id) . ':(' . implode(' OR ', $grp_ids) . ' OR "-1"))';
+      if ($group_filters_id) {
+        $fq .= ' AND (' . reset($group_filters_id) . ':(' . implode(' OR ', $grp_ids) . ' OR "-1"))';
+      }
     }
 
     $solariumQuery->addParam('fq', $fq);
