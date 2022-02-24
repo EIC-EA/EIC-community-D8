@@ -14,6 +14,7 @@ use Drupal\Core\Url;
 use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_search\Collector\SourcesCollector;
 use Drupal\eic_search\Search\Sources\GroupSourceType;
+use Drupal\eic_search\Search\Sources\Profile\ActivityStreamSourceType;
 use Drupal\eic_search\Search\Sources\SourceTypeInterface;
 use Drupal\eic_search\SearchHelper;
 use Drupal\eic_user\UserHelper;
@@ -271,6 +272,7 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
         '#facets' => array_keys($facets),
         '#sorts' => array_keys($sorts),
         '#prefilters' => $this->extractFilterFromUrl(),
+        '#prefilter_my_interests' => $source instanceof ActivityStreamSourceType,
         '#search_string' => $search_value,
         '#source_class' => $source instanceof SourceTypeInterface ? get_class(
           $source

@@ -27,6 +27,7 @@ function eic_search_theme($existing, $type, $theme, $path) {
         'facets' => [],
         'sorts' => [],
         'prefilters' => [],
+        'prefilter_my_interests' => FALSE,
         'page_options' => '',
         'currentGroup' => '',
         'currentGroupUrl' => '',
