@@ -480,31 +480,33 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
    *   - joining_method: the GroupJoiningMethod plugin type.
    * @param string $plugin_id
    *   The plugin ID.
+   * @param string $group_type
+   *   (optional) The group type.
    *
    * @return \Drupal\Core\StringTranslation\TranslatableMarkup|string
    *   The description for the given plugin.
    */
-  public function getGroupFlexPluginDescription(string $plugin_type, string $plugin_id) {
+  public function getGroupFlexPluginDescription(string $plugin_type, string $plugin_id, string $group_type = 'group') {
     $key = "$plugin_type-$plugin_id";
 
     switch ($key) {
       case 'visibility-' . GroupVisibilityType::GROUP_VISIBILITY_PUBLIC:
-        return $this->t("This group is visible to everyone visiting the group. You're welcome to scroll through the group's content. If you want to participate, please become a group member.");
+        return $this->t("This @group-type is visible to everyone visiting the @group-type. You're welcome to scroll through the @group-type's content. If you want to participate, please become a group member.", ['@group-type' => $group_type]);
 
       case 'visibility-' . GroupVisibilityType::GROUP_VISIBILITY_COMMUNITY:
-        return $this->t("This group is visible to every person that is a member of the EIC Community and has joined this platform. You're welcome to scroll through the group's content. If you want to participate, please become a group member.");
+        return $this->t("This @group-type is visible to every person that is a member of the EIC Community and has joined this platform. You're welcome to scroll through the @group-type's content. If you want to participate, please become a group member.", ['@group-type' => $group_type]);
 
       case 'visibility-' . GroupVisibilityType::GROUP_VISIBILITY_CUSTOM_RESTRICTED:
-        return $this->t('This group is visible to every person that has joined the EIC community that also complies with the following restrictions. You can see this group because the organisation you work for is allowed to see this content or the group owners and administrators have chosen to specifically grant you access to this group. If you want to participate, please become a group member.');
+        return $this->t('This @group-type is visible to every person that has joined the EIC community that also complies with the following restrictions. You can see this @group-type because the organisation you work for is allowed to see this content or the @group-type owners and administrators have chosen to specifically grant you access to this @group-type. If you want to participate, please become a group member.', ['@group-type' => $group_type]);
 
       case 'visibility-' . GroupVisibilityType::GROUP_VISIBILITY_PRIVATE:
-        return $this->t('A private group is only visible to people who received an invitation via email and accepted it. No one else can see this group.');
+        return $this->t('A private @group-type is only visible to people who received an invitation via email and accepted it. No one else can see this @group-type.', ['@group-type' => $group_type]);
 
       case 'joining_method-' . GroupJoiningMethodType::GROUP_JOINING_METHOD_TU_OPEN:
-        return $this->t('This means that EIC Community members can join this group immediately by clicking "join group".');
+        return $this->t('This means that EIC Community members can join this @group-type immediately by clicking "join group".', ['@group-type' => $group_type]);
 
       case 'joining_method-' . GroupJoiningMethodType::GROUP_JOINING_METHOD_TU_MEMBERSHIP_REQUEST:
-        return $this->t('This means that EIC Community members can request to join this group. This request needs to be validated by the group owner or administrator.');
+        return $this->t('This means that EIC Community members can request to join this @group-type. This request needs to be validated by the @group-type owner or administrator.', ['@group-type' => $group_type]);
 
       default:
         return '';
@@ -545,16 +547,23 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
    * @param string $format
    *   The format of the label. Can be 'default' or 'short'. Defaults to
    *   'default'.
+   * @param string $group_type
+   *   The group type. Defaults to 'group'.
    *
    * @return \Drupal\Core\StringTranslation\TranslatableMarkup|string
    *   The description for the given plugin.
    */
-  public function getGroupFlexPluginTitle(string $plugin_type, string $plugin_id, string $format = 'default') {
+  public function getGroupFlexPluginTitle(
+    string $plugin_type,
+    string $plugin_id,
+    string $format = 'default',
+    string $group_type = 'group'
+  ) {
     $key = "$plugin_type-$plugin_id";
 
     $labels = [
       'visibility-' . GroupVisibilityType::GROUP_VISIBILITY_PUBLIC => [
-        'default' => $this->t('Public group'),
+        'default' => $this->t('Public @group-type', ['@group-type' => $group_type]),
         'short' => $this->t('Public'),
       ],
       'visibility-' . GroupVisibilityType::GROUP_VISIBILITY_COMMUNITY => [
@@ -562,11 +571,11 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
         'short' => $this->t('Community members'),
       ],
       'visibility-' . GroupVisibilityType::GROUP_VISIBILITY_CUSTOM_RESTRICTED => [
-        'default' => $this->t('Restricted group'),
+        'default' => $this->t('Restricted @group-type', ['@group-type' => $group_type]),
         'short' => $this->t('Restricted'),
       ],
       'visibility-' . GroupVisibilityType::GROUP_VISIBILITY_PRIVATE => [
-        'default' => $this->t('Private group'),
+        'default' => $this->t('Private @group-type', ['@group-type' => $group_type]),
         'short' => $this->t('Private'),
       ],
       'joining_method-' . GroupJoiningMethodType::GROUP_JOINING_METHOD_TU_OPEN => [
@@ -954,9 +963,11 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
   /**
    * Format array of a field address to string.
    *
-   * @param $address
+   * @param mixed $address
+   *   The address field array.
    *
    * @return string
+   *   The formatted address.
    */
   public static function formatAddress($address) {
     $countries_map = CountryManager::getStandardList();
