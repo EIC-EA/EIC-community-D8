@@ -33,6 +33,8 @@ stages:
 build_backend:
   stage: build
   image: public.ecr.aws/h5g0v9w1/php-fpm:7.4
+  tags:
+    - itr-hrt
   artifacts:
     untracked: true
     expire_in: '2 hour'
@@ -50,6 +52,8 @@ build_backend:
 build_front:
   stage: build
   image: node:14
+  tags:
+    - itr-hrt
   artifacts:
     untracked: true
     expire_in: '2 hour'
@@ -65,38 +69,46 @@ build_front:
 security_check:
   stage: test
   image: jakzal/phpqa:php7.4
+  tags:
+    - itr-hrt
   script:
     - local-php-security-checker
   only:
     - develop
     - /^release/.*$/
 
-code_style_test:
-  stage: test
-  image: jakzal/phpqa:php7.4
-  script:
-    - ./vendor/bin/grumphp run --tasks=phpcs
-  allow_failure: true
-  only:
-    - develop
-
-phpmd_test:
-  stage: test
-  image: jakzal/phpqa:php7.4
-  script:
-    - ./vendor/bin/grumphp run --tasks=phpmd
-  allow_failure: true
-  only:
-    - develop
-
-phpstan_test:
-  stage: test
-  image: jakzal/phpqa:php7.4
-  script:
-    - phpstan
-  allow_failure: true
-  only:
-    - develop
+#code_style_test:
+#  stage: test
+#  image: jakzal/phpqa:php7.4
+#  tags:
+#    - itr-hrt
+#  script:
+#    - ./vendor/bin/grumphp run --tasks=phpcs
+#  allow_failure: true
+#  only:
+#    - develop
+#
+#phpmd_test:
+#  stage: test
+#  image: jakzal/phpqa:php7.4
+#  tags:
+#    - itr-hrt
+#  script:
+#    - ./vendor/bin/grumphp run --tasks=phpmd
+#  allow_failure: true
+#  only:
+#    - develop
+#
+#phpstan_test:
+#  stage: test
+#  image: jakzal/phpqa:php7.4
+#  tags:
+#    - itr-hrt
+#  script:
+#    - phpstan
+#  allow_failure: true
+#  only:
+#    - develop
 
 deploy_develop:
   <<: *deploy_job

@@ -143,6 +143,7 @@ class ProcessorGlobal extends DocumentProcessor {
           $user_url = $user instanceof UserInterface ? $user->toUrl()
             ->toString() : '';
         }
+        $fullname = $fields['ss_author_first_name'] . ' ' . $fields['ss_author_last_name'];
         $status = TRUE;
         $type = $fields['ss_type'];
         $topics = $fields['sm_message_node_ref_field_vocab_topics_name'] ?? [];

@@ -255,7 +255,9 @@ class SolrSearchController extends ControllerBase {
 
       $group_filters_id = $source->getPrefilteredGroupFieldId();
 
-      $fq .= ' AND (' . reset($group_filters_id) . ':(' . implode(' OR ', $grp_ids) . ' OR "-1"))';
+      if ($group_filters_id) {
+        $fq .= ' AND (' . reset($group_filters_id) . ':(' . implode(' OR ', $grp_ids) . ' OR "-1"))';
+      }
     }
 
     $solariumQuery->addParam('fq', $fq);
@@ -349,7 +351,7 @@ class SolrSearchController extends ControllerBase {
     }
 
     $user_topics_string = implode(' OR ', $user_topics_id);
-    $fq .= " AND (itm_group_field_vocab_topics:($user_topics_string) OR itm_content_field_vocab_topics:($user_topics_string))";
+    $fq .= " AND (itm_group_field_vocab_topics:($user_topics_string) OR itm_content_field_vocab_topics:($user_topics_string) OR itm_message_node_ref_field_vocab_topics:($user_topics_string))";
   }
 
   /**

@@ -19,6 +19,7 @@ dependencies:
     - field.storage.group.field_vocab_topics
     - field.storage.group.field_body
     - field.storage.message.field_entity_type
+    - field.storage.node.field_introduction
     - field.storage.message.field_group_ref
     - field.storage.message.field_operation_type
     - field.storage.message.field_referenced_comment
@@ -464,6 +465,14 @@ field_settings:
       module:
         - file
         - media
+  content_introduction_string:
+    label: 'Introduction » Processed text'
+    datasource_id: 'entity:node'
+    property_path: 'field_introduction:processed'
+    type: text
+    dependencies:
+      config:
+        - field.storage.node.field_introduction
   content_is_private:
     label: 'Only visible to community members'
     datasource_id: 'entity:node'
@@ -1505,6 +1514,18 @@ processor_settings:
     weights:
       preprocess_index: -20
       preprocess_query: -20
+    content_country_code:
+      enable: 0
+      concat: 0
+    content_event_locality:
+      enable: 0
+      concat: 0
+    group_country_code:
+      enable: 0
+      concat: 0
+    group_event_locality:
+      enable: 0
+      concat: 0
     user_profile_city_string:
       enable: 0
       concat: 0
@@ -1545,6 +1566,21 @@ processor_settings:
       content_field_vocab_topics: taxonomy_term-parent
       group_field_vocab_geo: taxonomy_term-parent
       group_field_vocab_topics: taxonomy_term-parent
+  html_filter:
+    weights:
+      preprocess_index: -15
+      preprocess_query: -15
+    all_fields: false
+    fields:
+      - content_introduction_string
+    title: false
+    alt: false
+    tags:
+      b: 2
+      h1: 5
+      h2: 3
+      h3: 2
+      strong: 2
   language_with_fallback: {  }
   rendered_item: {  }
   reverse_entity_references: {  }

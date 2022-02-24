@@ -78,9 +78,7 @@ class ActivityStreamSourceType extends SourceType {
    */
   public function getSearchFieldsId(): array {
     return [
-      'tm_X3b_en_rendered_item',
-      'tm_global_title',
-      'ss_global_group_parent_label',
+      'ss_title',
       'ss_global_fullname'
     ];
   }
@@ -89,7 +87,14 @@ class ActivityStreamSourceType extends SourceType {
    * @inheritDoc
    */
   public function allowPagination(): bool {
-    return TRUE;
+    return FALSE;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function getLoadMoreBatchItems(): int {
+    return 10;
   }
 
   /**

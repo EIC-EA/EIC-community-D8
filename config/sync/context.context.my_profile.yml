@@ -60,7 +60,7 @@ reactions:
         page_options: normal
         prefilter_group: 0
         enable_date_filter: 0
-        add_facet_interests: 0
+        add_facet_interests: 1
         add_facet_my_groups: 1
         third_party_settings: {  }
     include_default_blocks: 0
