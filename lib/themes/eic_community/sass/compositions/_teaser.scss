@@ -7,6 +7,7 @@
     align-items: stretch;
     height: 100%;
     box-sizing: border-box;
+    align-content: flex-start;
   }
 
   @include ecl-media-breakpoint-up('sm') {
@@ -98,6 +99,12 @@
   }
   &--organisation-member{
     flex-wrap: wrap;
+    flex-direction: column;
+
+    & .ecl-teaser__main-wrapper {
+      display: flex;
+      flex-direction: row;
+    }
 
     & #{$node}__title {
       color: $ecl-color-grey;
@@ -116,6 +123,7 @@
   &--organisation-member &__status{
     width: 100%;
     margin-bottom: $ecl-spacing-s;
+    max-height: 1.25rem;
   }
 
   &--organisation-member &__meta-footer{
@@ -135,6 +143,7 @@
     height: 80px;
     object-fit: cover;
     border-radius: 50%;
+    overflow: hidden;
   }
 
   &--organisation#{$node}--as-card-white &__main-wrapper{

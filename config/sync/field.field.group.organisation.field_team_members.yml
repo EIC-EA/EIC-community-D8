@@ -6,6 +6,7 @@ dependencies:
     - field.storage.group.field_team_members
     - group.type.organisation
     - paragraphs.paragraphs_type.organisation_member
+    - paragraphs.paragraphs_type.organisation_member_external
   module:
     - entity_reference_revisions
 id: group.organisation.field_team_members
@@ -23,6 +24,7 @@ settings:
   handler_settings:
     target_bundles:
       organisation_member: organisation_member
+      organisation_member_external: organisation_member_external
     negate: 0
     target_bundles_drag_drop:
       announcement:
@@ -48,6 +50,9 @@ settings:
         enabled: false
       organisation_member:
         weight: 19
+        enabled: true
+      organisation_member_external:
+        weight: 21
         enabled: true
       quote:
         weight: 20
