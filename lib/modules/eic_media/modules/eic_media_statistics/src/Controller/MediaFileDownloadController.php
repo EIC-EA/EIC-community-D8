@@ -65,7 +65,7 @@ class MediaFileDownloadController extends DownloadController {
     $config = $source->getConfiguration();
     $field = $config['source_field'];
     $request_query = $this->requestStack->getCurrentRequest()->query;
-    $request_query->get('node_id', NULL);
+    $request_query->get('node_id');
 
     // If a delta was provided, use that.
     $delta = $request_query->get('delta');
