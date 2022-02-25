@@ -105,7 +105,7 @@ class MyProfileHeaderBlock extends BlockBase {
             'path' => $user->toUrl(),
           ],
           'icon' => [
-            'name' => 'gear',
+            'name' => 'user',
             'type' => 'custom',
           ],
         ],

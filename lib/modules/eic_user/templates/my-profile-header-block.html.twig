@@ -1,7 +1,8 @@
 {% include "@theme/patterns/compositions/overview-header.html.twig" with {
     title_element: 'h1',
     title: title,
-    actions: actions
+    actions: actions,
+    icon_file_path: eic_icon_path
 } only %}
 
 {% include '@theme/patterns/compositions/subnavigation.html.twig' with menu_items|default({}) %}
