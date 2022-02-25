@@ -8,6 +8,5 @@ roles:
   - group-member
   - group-admin
   - group-owner
-  - organisation-member
   - organisation-admin
   - organisation-owner
