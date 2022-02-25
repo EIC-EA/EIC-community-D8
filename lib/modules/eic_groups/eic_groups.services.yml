@@ -50,6 +50,11 @@ services:
     class: Drupal\eic_groups\Access\GroupInvitationBulkAccessChecker
     tags:
       - { name: access_check, applies_to: _group_invitation_bulk }
+  eic_groups.access_check.group_pages:
+    class: Drupal\eic_groups\Access\GroupPageAccessChecker
+    arguments: ['@current_route_match']
+    tags:
+      - { name: access_check, applies_to: _group_pages_access_check }
   eic_groups.route_subscriber:
     class: Drupal\eic_groups\Routing\RouteSubscriber
     tags:
