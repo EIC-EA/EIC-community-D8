@@ -8,3 +8,9 @@ services:
     arguments: [ '@eic_user.helper' ]
     tags:
       - { name: event_subscriber }
+
+  eic_user.breadcrumb:
+    class: Drupal\eic_user\Breadcrumb\UserBreadcrumbBuilder
+    arguments: ['@current_user']
+    tags:
+      - { name: breadcrumb_builder, priority: 999 }

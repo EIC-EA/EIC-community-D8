@@ -62,4 +62,7 @@ function eic_community_preprocess_eic_content_actions(array &$variables) {
   }
 
   $variables['actions'] = $actions;
+  $variables['#cache'] = [
+    'contexts' => ['user', 'url.path', 'url.query_args'],
+  ];
 }

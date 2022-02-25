@@ -4,7 +4,6 @@ namespace Drupal\eic_user\Plugin\Block;
 
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Url;
-use Drupal\profile\Entity\ProfileInterface;
 use Drupal\user\Entity\User;
 
 /**
@@ -59,7 +58,6 @@ class MyProfileHeaderBlock extends BlockBase {
     $user = User::load($current_user->id());
 
     // Loads user member profile.
-    $member_profile = \Drupal::service('eic_user.helper')->getUserMemberProfile($user);
     $current_route = \Drupal::routeMatch()->getRouteName();
 
     /** @TODO Wait for other pages/overviews and replace default eic_search.global_search */
@@ -67,7 +65,7 @@ class MyProfileHeaderBlock extends BlockBase {
       [
         'label' => $this->t('Interesting for you', [], ['context' => 'eic_user']),
         'route' => 'eic_user.user.activity',
-        'route_parameters' => ['user' => $current_user->id()]
+        'route_parameters' => ['user' => $current_user->id()],
       ],
       [
         'label' => $this->t('Following', [], ['context' => 'eic_user']),
@@ -83,7 +81,7 @@ class MyProfileHeaderBlock extends BlockBase {
       ],
     ];
 
-    $menu_items = array_map(function(array $item) use ($current_route) {
+    $menu_items = array_map(function (array $item) use ($current_route) {
       $route_parameters = array_key_exists('route_parameters', $item) ?
         $item['route_parameters'] :
         [];
@@ -103,10 +101,8 @@ class MyProfileHeaderBlock extends BlockBase {
       '#actions' => [
         [
           'link' => [
-            'label' => $this->t('Manage profile', [], ['context' => 'eic_user']),
-            'path' => $member_profile instanceof ProfileInterface ?
-              Url::fromRoute('entity.profile.edit_form', ['profile' => $member_profile->id()]) :
-              Url::fromRoute('profile.user_page.single', ['user' => $user->id(), 'profile_type' => 'member'])
+            'label' => $this->t('My profile', [], ['context' => 'eic_user']),
+            'path' => $user->toUrl(),
           ],
           'icon' => [
             'name' => 'gear',
