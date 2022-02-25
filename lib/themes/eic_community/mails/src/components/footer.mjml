@@ -1,0 +1,23 @@
+<mj-section padding="0 0 30px" css-class="pre-footer">
+  <mj-column>
+    <mj-text css-class="pre-footer">
+      <em>The European Innovation Council team</em>
+      <br>
+    </mj-text>
+  </mj-column>
+</mj-section>
+<mj-hero>
+  <mj-divider border-width="5px" border-style="solid" border-color="#004494" />
+</mj-hero>
+<mj-section>
+  <mj-column>
+    <mj-text align="center">
+      <a href="#" target="_blank" style="color:#404040; font-size: 14px">Manage notifications</a>
+      &nbsp;
+      |
+      &nbsp;
+      <a href="#" target="_blank" style="color:#404040; font-size: 14px">Unsubscribe</a>
+    </mj-text>
+  </mj-column>
+</mj-section>
+
