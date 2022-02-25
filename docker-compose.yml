@@ -23,7 +23,9 @@ services:
       - ${REVERSE_PROXY_PORT}:80
 
   php:
-    image: public.ecr.aws/h5g0v9w1/php-fpm:7.4
+    build:
+      context: ./docker/php
+    image: eic-php-fpm:7.4
     container_name: ${APP_NAME}_php
     working_dir: /app
     volumes:
