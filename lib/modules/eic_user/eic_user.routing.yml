@@ -2,6 +2,6 @@ eic_user.user.activity:
   path: '/user/{user}/activity'
   defaults:
     _controller: '\Drupal\eic_user\Controller\MyProfileController::interests'
-    _title: 'My activity feed'
+    _title_callback: '\Drupal\eic_user\Controller\MyProfileController::title'
   requirements:
     _custom_access: '\Drupal\eic_user\Controller\MyProfileController::access'
