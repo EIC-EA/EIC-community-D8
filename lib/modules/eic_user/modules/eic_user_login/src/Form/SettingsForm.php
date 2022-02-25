@@ -37,7 +37,7 @@ class SettingsForm extends ConfigFormBase {
       '#type' => 'checkbox',
       '#title' => $this->t('Check/sync user'),
       '#default_value' => $this->config('eic_user_login.settings')->get('check_sync_user'),
-      '#description' => $this->t('Check this option if user should be checked/synchronised against SMED on user login.'),
+      '#description' => $this->t('Check this option if user should be checked/synchronised against SMED upon user login.'),
       '#group' => 'user_settings',
     ];
     $form['endpoint_url'] = [

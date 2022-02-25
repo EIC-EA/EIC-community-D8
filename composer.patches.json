@@ -12,6 +12,9 @@
     "drupal/block_content_permissions": {
       "2920739 - Allow accessing the \"Custom block library\" page without \"Administer blocks\" permission": "https://www.drupal.org/files/issues/2020-07-27/block_content_permissions-access_listing_page-2920739-38.patch"
     },
+    "drupal/cas": {
+      "Dispatch EVENT_PRE_LOGIN before active check": "patches/cas/cas-dispatch_EVENT_PRE_LOGIN_before_active_check.patch"
+    },
     "drupal/default_content": {
       "2698425 - Do not reimport existing entities": "https://www.drupal.org/files/issues/2021-01-20/default_content-integrity_constrait_violation-3162987-137-2.0.x.patch"
     },

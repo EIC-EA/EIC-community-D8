@@ -106,6 +106,27 @@ class SmedUserManager {
    */
   public function updateUserInformation(UserInterface $account, array $data = []) {
     $account->field_user_status->value = $data['field_user_status'];
+
+    switch ($account->field_user_status->value) {
+      case self::USER_VALID:
+      case self::USER_APPROVED_COMPLETE:
+        $account->activate();
+        break;
+
+      case self::USER_APPROVED_INCOMPLETE:
+      case self::USER_PENDING:
+      case self::USER_INVITED:
+      case self::USER_NOT_BOOTSTRAPPED:
+      case self::USER_BLOCKED:
+      case self::USER_UNSUBSCRIBED:
+      case self::USER_UNKNOWN:
+        $account->block();
+        break;
+
+      default:
+        // If status is not known, do nothing.
+        break;
+    }
     $account->save();
   }
 
@@ -207,7 +228,7 @@ class SmedUserManager {
 
       case self::USER_UNSUBSCRIBED:
       case self::USER_UNKNOWN:
-        $message = $this->t('Please register at %link_to_the_smed <a href=":smed_url">:smed_url</a>', [
+        $message = $this->t('Please register at <a href=":smed_url">:smed_url</a>', [
           ':smed_url' => 'https://google.be',
         ]);
         break;

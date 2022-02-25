@@ -3,16 +3,22 @@
 namespace Drupal\eic_user_login\Service;
 
 use Drupal\Component\Serialization\Json;
+use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Http\ClientFactory;
+use Drupal\Core\Logger\LoggerChannelTrait;
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Psr7\Request as GuzzleRequest;
-
+use GuzzleHttp\RequestOptions;
+use GuzzleHttp\Exception\GuzzleException;
 
 /**
- * Class SmedUserConnection.
+ * Class that handles communication with SMED for user accounts.
  *
  * @package Drupal\eic_user_login
  */
 class SmedUserConnection {
+
+  use LoggerChannelTrait;
 
   /**
    * The HTTP client.
@@ -47,21 +53,28 @@ class SmedUserConnection {
    *
    * @var string
    */
-  protected $auth_token;
+  protected $authToken;
 
   /**
    * Basic Auth username.
    *
    * @var string
    */
-  protected $basic_auth_username;
+  protected $basicAuthUsername;
 
   /**
    * Basic Auth password.
    *
    * @var string
    */
-  protected $basic_auth_password;
+  protected $basicAuthPassword;
+
+  /**
+   * Request timeout.
+   *
+   * @var int
+   */
+  protected $requestTimeout;
 
   /**
    * SmedUserConnection constructor.
@@ -81,106 +94,98 @@ class SmedUserConnection {
    * Sets the request configuration.
    *
    * @param array $config
+   *   An array containing key/value pairs.
    */
   public function setRequestConfig(array $config = []) {
     $this->endpoint = $config['endpoint_url'] ?? $this->config->get('endpoint_url');
     $this->method = $config['method'] ?? 'POST';
-    $this->endpoint = $config['api_key'] ?? $this->config->get('api_key');
-    $this->basic_auth_username = $config['basic_auth_username'] ?? $this->config->get('basic_auth_username');
-    $this->basic_auth_password = $config['basic_auth_password'] ?? $this->config->get('basic_auth_password');
-
-    $this->request_timeout = !is_null($request_timeout) ? $request_timeout : $smed_feeder['smed_feeder_timeout'];
-  }
-
-  protected static function getDefaultConfig() {
-    return [
-      //'auth' => ['', ''],
-      'headers' => [
-        'Content-Type' => 'application/json',
-      ],
-    ];
+    $this->authToken = $config['api_key'] ?? $this->config->get('api_key');
+    $this->basicAuthUsername = $config['basic_auth_username'] ?? $this->config->get('basic_auth_username');
+    $this->basicAuthPassword = $config['basic_auth_password'] ?? $this->config->get('basic_auth_password');
+    $this->requestTimeout = $config['request_timeout'] ?? 30;
   }
 
   /**
-   * Pings the Iguana API for data.
+   * Pings the SMED API for data.
    *
-   * @param string $endpoint division endpoint to query
-   * @param array  $options for Url building
+   * @param array $data
+   *   The payload to be sent.
    *
-   * @return object
+   * @return array|string|string[]
+   *   The processed result array.
    */
-  public function queryEndpoint($endpoint, $options = []) {
+  public function queryEndpoint(array $data = []) {
     try {
-      $response = $this->callEndpoint($endpoint, $options);
-      return json_decode($response->getBody());
-    } catch (\Exception $e) {
-      watchdog_exception('iguana', $e);
-      return (object) [
-        'response_type' => '',
-        'response_data' => [],
-        'pagination'    => (object) [
-          'total_count'    => 0,
-          'current_limit'  => 0,
-          'current_offset' => 0,
-        ],
-      ];
+      $response = $this->callEndpoint($data);
+      $result = JSON::decode($response->getBody());
+      return $this->processResponse($result);
+    }
+    catch (\Exception $e) {
+      $this->getLogger('eic_user_login')->error($e->getMessage());
+      return $e->getMessage();
     }
   }
 
   /**
-   * Call the Iguana API endpoint.
+   * Call the SMED API endpoint.
    *
-   * @param string $endpoint
-   * @param array  $options
+   * @param array $data
+   *   The payload to be sent.
    *
    * @return \Psr\Http\Message\ResponseInterface
+   *   The request response.
    */
-  public function callEndpoint($endpoint, $options = []) {
-    $headers = $this->generateHeaders($this->requestUri($endpoint));
-    $url     = isset($options['next_page']) ?
-      $options['next_page'] : $this->requestUrl($endpoint, $options)
-        ->toString();
-    $client  = new GuzzleClient();
-    $request = new GuzzleRequest($this->method, $url, $headers);
-    return $client->send($request, ['timeout' => 30]);
+  public function callEndpoint(array $data = []) {
+    $headers = $this->generateHeaders();
+    $client  = new GuzzleClient([
+      'auth' => [$this->basicAuthUsername, $this->basicAuthPassword],
+    ]);
+    $request = new GuzzleRequest($this->method, $this->endpoint, $headers);
+    try {
+      return $client->send($request, [
+        'timeout' => $this->requestTimeout,
+        RequestOptions::JSON => $data,
+      ]);
+    }
+    catch (GuzzleException $e) {
+      $this->getLogger('eic_user_login')->error($e->getMessage());
+    }
   }
 
   /**
-   * Build the URI part of the URL based on the endpoint and configuration.
+   * Processes the response to return a sanitised array.
    *
-   * @param string $endpoint to the API data
+   * @param array $result
+   *   The decoded response body.
    *
-   * @return string
+   * @return array|string[]
+   *   The sanitised result array.
    */
-  protected function requestUri($endpoint) {
-    $division = $this->getConfig('division');
-    return '/services/rest/' . $this->version . '/json/' . $division
-      . '/' . $endpoint . '/';
+  protected function processResponse(array $result) {
+    return [
+      'field_user_status' => $result['user']['data']['attributes']['user_status'] ?? '',
+      'name' => $result['user']['data']['attributes']['name'] ?? '',
+      'mail' => $result['user']['data']['attributes']['mail'] ?? '',
+      'field_smed_id' => $result['user']['data']['attributes']['field_smed_id'] ?? '',
+      'field_first_name' => $result['user']['data']['attributes']['field_user_first_name'] ?? '',
+      'field_last_name' => $result['user']['data']['attributes']['field_user_family_name'] ?? '',
+      // @todo Check if status is relevant. This one gives 0 or 1.
+      'status' => $result['user']['data']['attributes']['status'] ?? '',
+    ];
   }
 
   /**
-   * Build an array of headers to pass to the Iguana API such as the
-   * signature and account.
-   *
-   * @param string $request_uri to the API endpoint
+   * Builds an array of headers to pass to the SMED API.
    *
    * @return array
+   *   An array of headers with key/value pairs.
    */
-  protected function generateHeaders($request_uri) {
-    $username       = $this->getConfig('username');
-    $password       = $this->getConfig('password');
-    $private_key    = $this->getConfig('private_key');
-    $request_method = 'GET';
-    // Date must be UTC or signature will be invalid
-    $original_timezone = date_default_timezone_get();
-    date_default_timezone_set('UTC');
-    $message = $request_uri . $request_method . date('mdYHi');
-    $headers = [
-      'x-signature' => $this->generateXSignature($message, $private_key),
-      'x-account'   => $this->generateXAccount($username, $password),
+  protected function generateHeaders() {
+    return [
+      'Content-Type' => 'application/json',
+      'Authorization2' => $this->authToken,
+      'Cookie' => 'JSESSIONID=node01uwipbzg91yg1124gtxyxkk4ff197.node0',
     ];
-    date_default_timezone_set($original_timezone);
-    return $headers;
   }
 
 }

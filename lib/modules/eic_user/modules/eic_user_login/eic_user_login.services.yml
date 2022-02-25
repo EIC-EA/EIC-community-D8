@@ -7,6 +7,6 @@ services:
     arguments: ['@config.factory']
   eic_user_login.cas_event_subscriber:
     class: Drupal\eic_user_login\EventSubscriber\CasEventSubscriber
-    arguments: ['@config.factory', '@eic_user_login.smed_user_manager']
+    arguments: ['@config.factory', '@eic_user_login.smed_user_manager', '@eic_user_login.smed_user_connection']
     tags:
       - { name: event_subscriber }

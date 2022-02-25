@@ -7,6 +7,7 @@ use Drupal\cas\Event\CasPreLoginEvent;
 use Drupal\cas\Event\CasPreRegisterEvent;
 use Drupal\cas\Service\CasHelper;
 use Drupal\Core\Messenger\MessengerTrait;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\eic_user_login\Exception\SmedUserLoginException;
 use Drupal\eic_user_login\Service\SmedUserManager;
 use Drupal\eic_user_login\Service\SmedUserConnection;
@@ -19,6 +20,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class CasEventSubscriber implements EventSubscriberInterface {
 
   use MessengerTrait;
+  use StringTranslationTrait;
 
   /**
    * The config factory.
@@ -30,23 +32,35 @@ class CasEventSubscriber implements EventSubscriberInterface {
   /**
    * The SMED user manager.
    *
-   * @var Drupal\eic_user_login\Service\SmedUserManager
+   * @var \Drupal\eic_user_login\Service\SmedUserManager
    */
   protected $smedUserManager;
+
+  /**
+   * The SMED user connection.
+   *
+   * @var \Drupal\eic_user_login\Service\SmedUserConnection
+   */
+  protected $smedUserConnection;
 
   /**
    * Constructs a new CasEventSubscriber.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory.
-   * @param Drupal\eic_user_login\Service\SmedUserManager $smed_user_manager
-   *   The config factory.
+   * @param \Drupal\eic_user_login\Service\SmedUserManager $smed_user_manager
+   *   The SMED user manager.
+   * @param \Drupal\eic_user_login\Service\SmedUserConnection $smed_user_connection
+   *   The SMED user connection.
    */
   public function __construct(
     ConfigFactoryInterface $config_factory,
-    SmedUserManager $smed_user_manager) {
+    SmedUserManager $smed_user_manager,
+    SmedUserConnection $smed_user_connection
+  ) {
     $this->configFactory = $config_factory;
     $this->smedUserManager = $smed_user_manager;
+    $this->smedUserConnection = $smed_user_connection;
   }
 
   /**
@@ -71,14 +85,12 @@ class CasEventSubscriber implements EventSubscriberInterface {
       return;
     }
 
-    // Check from SMED if user can be created.
-    $smed_connection = new SmedUserConnection();
-    dpm($event->getPropertyValues());
-    dpm($event->getCasPropertyBag());
-    dpm($event->getDrupalUsername());
-
     // Prevent the creation of the user account.
     $event->cancelAutomaticRegistration();
+
+    $this->messenger()->addStatus($this->t('Please register at <a href=":smed_url">:smed_url</a>', [
+      ':smed_url' => 'https://google.be',
+    ]));
 
   }
 
@@ -92,12 +104,23 @@ class CasEventSubscriber implements EventSubscriberInterface {
     /** @var \Drupal\user\UserInterface $account */
     $account = $event->getAccount();
 
-    // We only check/sync user against SMED if account is not active.
-    // This is to avoid too much load on the SMED.
-    if (!$account->isActive() && $this->configFactory->get('eic_user_login.settings')->get('check_sync_user')) {
-      // Update user status from SMED to see if user status will be updated.
-      // @todo Implement code.
+    // Check if we have a proper value for the SMED ID.
+    if (!$account->hasField('field_smed_id') || $account->get('field_smed_id')->isEmpty()) {
+      // We only check/sync user against SMED if account is not active.
+      // This is to avoid too much load on the SMED.
+      if (!$account->isActive() && $this->configFactory->get('eic_user_login.settings')->get('check_sync_user')) {
 
+        // Fetch information from SMED.
+        $data = [
+          'dashboard_user_id' => 1,
+        ];
+        $result = $this->smedUserConnection->queryEndpoint($data);
+
+        // Update the user status.
+        // @todo Remove following test line.
+        $result['field_user_status'] = 'user_valid';
+        $this->smedUserManager->updateUserInformation($account, $result);
+      }
     }
 
     try {
