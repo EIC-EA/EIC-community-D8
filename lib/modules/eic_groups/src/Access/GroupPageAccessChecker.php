@@ -15,7 +15,7 @@ use Symfony\Component\Routing\Route;
 /**
  * Access check for various group related view pages.
  */
-class GroupViewPageAccessChecker implements AccessInterface {
+class GroupPageAccessChecker implements AccessInterface {
 
   /**
    * The route match service.
@@ -52,14 +52,6 @@ class GroupViewPageAccessChecker implements AccessInterface {
     AccountProxy $account,
     GroupInterface $group = NULL
   ) {
-    $view_id = $route->getDefault('view_id');
-    $display_id = $route->getDefault('display_id');
-
-    // Ensure we are accessing a view page. Otherwise we return access neutral.
-    if ($this->routeMatch->getRouteName() !== "view.$view_id.$display_id") {
-      return AccessResult::neutral();
-    }
-
     // Ensure we are accessing a view page of a group.
     if (!$group) {
       return AccessResult::neutral();

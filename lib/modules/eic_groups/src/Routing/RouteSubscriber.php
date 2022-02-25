@@ -72,7 +72,7 @@ class RouteSubscriber extends RouteSubscriberBase {
     foreach ($target_routes as $route_name) {
       if ($route = $collection->get($route_name)) {
         $route->addRequirements([
-          '_group_view_pages_access_check' => 'TRUE',
+          '_group_pages_access_check' => 'TRUE',
         ]);
       }
     }
