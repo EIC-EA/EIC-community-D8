@@ -10,8 +10,9 @@ dependencies:
     - node.type.gallery
     - node.type.page
     - node.type.video
+    - node.type.wiki_page
   module:
-    - content_moderation
+    - content_moderation_bypass
 id: default
 label: Default
 type: content_moderation
@@ -63,4 +64,5 @@ type_settings:
       - gallery
       - page
       - video
+      - wiki_page
   default_moderation_state: draft
