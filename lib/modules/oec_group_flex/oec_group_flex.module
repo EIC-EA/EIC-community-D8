@@ -145,6 +145,10 @@ function oec_group_flex_views_data() {
     'field' => [
       'id' => 'group_visibility',
     ],
+    'filter' => [
+      'title' => t('Visibility'),
+      'id' => 'group_visibility',
+    ],
   ];
   $data['groups_field_data']['group_visibility_custom_restricted_email_domains'] = [
     'title' => t('Visibility Custom: Restricted email domains'),
