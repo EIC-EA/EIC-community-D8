@@ -7,6 +7,7 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\eic_groups\Constants\GroupVisibilityType;
 use Drupal\eic_groups\EICGroupsHelperInterface;
+use Drupal\eic_groups\GroupsModerationHelper;
 use Drupal\eic_messages\ActivityStreamOperationTypes;
 use Drupal\eic_messages\Service\MessageBusInterface;
 use Drupal\eic_messages\Util\ActivityStreamMessageTemplates;
@@ -289,6 +290,11 @@ class ShareManager {
 
       // Exclude non published groups.
       if (!$group->isPublished()) {
+        continue;
+      }
+
+      // Exclude blocked groups.
+      if (GroupsModerationHelper::isBlocked($group)) {
         continue;
       }
 
