@@ -3,8 +3,11 @@
 namespace Drupal\eic_search\Search\DocumentProcessor;
 
 use Drupal\Core\Datetime\DrupalDateTime;
+use Drupal\Core\File\FileUrlGeneratorInterface;
 use Drupal\Core\Locale\CountryManager;
 use Drupal\eic_search\Search\Sources\GroupEventSourceType;
+use Drupal\file\Entity\File;
+use Drupal\image\Entity\ImageStyle;
 use Solarium\QueryType\Update\Query\Document;
 
 /**
@@ -15,9 +18,42 @@ use Solarium\QueryType\Update\Query\Document;
 class ProcessorGlobalEvent extends DocumentProcessor {
 
   /**
+   * @var FileUrlGeneratorInterface $urlGenerator
+   */
+  private $urlGenerator;
+
+  /**
+   * @param FileUrlGeneratorInterface $urlGenerator
+   */
+  public function __construct(FileUrlGeneratorInterface $urlGenerator) {
+    $this->urlGenerator = $urlGenerator;
+  }
+
+  /**
    * @inheritDoc
    */
   public function process(Document &$document, array $fields, array $items = []): void {
+    $fid = array_key_exists('its_group_teaser_fid', $fields) ?
+      $fields['its_group_teaser_fid'] :
+      NULL;
+
+    $teaser_relative = '';
+
+    if ($fid) {
+      $image_style = ImageStyle::load('large');
+      $file = File::load($fid);
+      $image_uri = $file->getFileUri();
+
+      $teaser_relative = $this->urlGenerator->transformRelative($image_style->buildUrl($image_uri));
+    }
+
+    $this->addOrUpdateDocumentField(
+      $document,
+      'ss_event_formatted_image',
+      $fields,
+      $teaser_relative
+    );
+
     $start_date = new DrupalDateTime($fields['ds_group_field_date_range']);
     $end_date = new DrupalDateTime($fields['ds_group_field_date_range_end_value']);
 
