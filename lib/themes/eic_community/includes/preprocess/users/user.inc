@@ -655,7 +655,7 @@ function _eic_community_get_user_operation_links(UserInterface $account, Profile
 /**
  * Creates image style array for twig templates.
  *
- * @param Drupal\Core\Entity\EntityInterface $user
+ * @param \Drupal\user\UserInterface $user
  *   User entity of which you want the image array.
  * @param string $image_style
  *   The image style to use.
@@ -663,7 +663,7 @@ function _eic_community_get_user_operation_links(UserInterface $account, Profile
  * @return mixed
  *   Returns array or NULL.
  */
-function _eic_community_get_user_profile_image_style(EntityInterface $user, string $image_style = 'thumbnail'): ?array {
+function _eic_community_get_user_profile_image_style(UserInterface $user, string $image_style = 'thumbnail'): ?array {
   if ($user->field_media->target_id == NULL) {
     return NULL;
   }
