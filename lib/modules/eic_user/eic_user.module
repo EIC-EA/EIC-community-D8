@@ -13,6 +13,21 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\group\Entity\GroupContentInterface;
 
 /**
+ * Implements hook_theme.
+ */
+function eic_user_theme() {
+  return [
+    'my_profile_header_block' => [
+      'variables' => [
+        'title' => '',
+        'menu_items' => [],
+        'actions' => [],
+      ],
+    ]
+  ];
+}
+
+/**
  * Implements hook_field_widget_WIDGET_TYPE_form_alter().
  */
 function eic_user_field_widget_social_links_form_alter(&$element, FormStateInterface $form_state, $context) {

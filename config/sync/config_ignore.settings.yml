@@ -21,3 +21,7 @@ ignored_config_entities:
   - 'smtp.settings:smtp_client_hostname'
   - 'smtp.settings:smtp_from'
   - 'smtp.settings:smtp_fromname'
+  - 's3fs.settings:credentials_file'
+  - 's3fs.settings:bucket'
+  - 's3fs.settings:region'
+  - 's3fs.settings:root_folder'

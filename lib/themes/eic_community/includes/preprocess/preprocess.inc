@@ -17,6 +17,7 @@ function eic_community_preprocess(&$variables) {
   $variables['current_language_id'] = \Drupal::languageManager()
     ->getCurrentLanguage()
     ->getId();
+  $variables['base_path'] = \Drupal::request()->getSchemeAndHttpHost();
 }
 
 /**

@@ -181,21 +181,42 @@ class EntityOperations implements ContainerInjectionInterface {
 
       if ($entity->access('close_request-' . $type)
         && $handler->supports($entity)) {
+
         // Create close request operations.
-        $operations['accept_request_' . $type] = [
-          'title' => $this->t('Accept request @type', ['@type' => $type]),
-          'url' => $entity->toUrl('user-close-request')
-            ->setRouteParameter('destination', $this->currentRequest->getRequestUri())
-            ->setRouteParameter('request_type', $type)
-            ->setRouteParameter('response', RequestStatus::ACCEPTED),
-        ];
-        $operations['deny_request_' . $type] = [
-          'title' => $this->t('Deny request @type', ['@type' => $type]),
-          'url' => $entity->toUrl('user-close-request')
-            ->setRouteParameter('destination', $this->currentRequest->getRequestUri())
-            ->setRouteParameter('request_type', $type)
-            ->setRouteParameter('response', RequestStatus::DENIED),
-        ];
+        $close_request_types = $handler->getSupportedResponsesForClosedRequests();
+        if (in_array(RequestStatus::ACCEPTED, $close_request_types)) {
+          $operations['accept_request_' . $type] = [
+            'title' => $this->t('Accept request @type', ['@type' => $type]),
+            'url' => $entity->toUrl('user-close-request')
+              ->setRouteParameter('destination', $this->currentRequest->getRequestUri())
+              ->setRouteParameter('request_type', $type)
+              ->setRouteParameter('response', RequestStatus::ACCEPTED),
+          ];
+        }
+        if (in_array(RequestStatus::DENIED, $close_request_types)) {
+          $operations['deny_request_' . $type] = [
+            'title' => $this->t('Deny request @type', ['@type' => $type]),
+            'url' => $entity->toUrl('user-close-request')
+              ->setRouteParameter('destination', $this->currentRequest->getRequestUri())
+              ->setRouteParameter('request_type', $type)
+              ->setRouteParameter('response', RequestStatus::DENIED),
+          ];
+        }
+      }
+
+      if ($entity->access('cancel_request-' . $type)
+        && $handler->supports($entity)) {
+
+        // Create cancel request operations.
+        $close_request_types = $handler->getSupportedResponsesForClosedRequests();
+        if (in_array(RequestStatus::CANCELLED, $close_request_types)) {
+          $operations['cancel_request_' . $type] = [
+            'title' => $this->t('Cancel request @type', ['@type' => $type]),
+            'url' => $entity->toUrl('user-cancel-request')
+              ->setRouteParameter('destination', $this->currentRequest->getRequestUri())
+              ->setRouteParameter('request_type', $type),
+          ];
+        }
       }
 
       // Alter operation titles for specific request types.
@@ -211,6 +232,7 @@ class EntityOperations implements ContainerInjectionInterface {
             'request_' . $type => $this->t('Request ownership transfer'),
             'accept_request_' . $type => $this->t('Accept ownership transfer'),
             'deny_request_' . $type => $this->t('Deny ownership transfer'),
+            'cancel_request_' . $type => $this->t('Cancel ownership transfer'),
           ];
           foreach ($operation_keys as $key => $value) {
             if (!isset($operations[$key])) {
@@ -224,10 +246,8 @@ class EntityOperations implements ContainerInjectionInterface {
     }
 
     // Removes operation links if user doesn't have access to it.
-    foreach ($operations as $key => $operation) {
-      if (!isset($operation['url']) || !$operation['url']->access()) {
-        unset($operations[$key]);
-      }
+    foreach ($operations as $key => &$operation) {
+      $operation['access'] = $operation['url']->access();
     }
 
     return $operations;

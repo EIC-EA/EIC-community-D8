@@ -45,13 +45,12 @@ function eic_messages_group_update(EntityInterface $entity) {
 
 /**
  * Implements hook_ENTITY_TYPE_update().
- *
- * @param \Drupal\comment\CommentInterface $entity
  */
 function eic_messages_comment_insert(EntityInterface $entity) {
   /** @var \Drupal\eic_messages\Service\CommentMessageCreator $group_message_create */
   $group_message_create = \Drupal::classResolver(CommentMessageCreator::class);
   $group_message_create->createCommentActivity($entity, ActivityStreamOperationTypes::NEW_ENTITY);
+  $group_message_create->createCommentTaggedUsersNotification($entity);
 }
 
 /**

@@ -10,9 +10,13 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\flag\FlaggingInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Utility\Token;
+use Drupal\eic_flags\RequestTypes;
+use Drupal\eic_flags\Service\RequestHandlerCollector;
 
 /**
  * Class FlagTokens.
+ *
+ * Implementations of token hooks.
  *
  * @package Drupal\eic_flags\Hooks
  */
@@ -42,6 +46,13 @@ class FlagTokens implements ContainerInjectionInterface {
   private $dateFormatter;
 
   /**
+   * The request collector service.
+   *
+   * @var \Drupal\eic_flags\Service\RequestHandlerCollector
+   */
+  protected $requestHandlerCollector;
+
+  /**
    * FlagTokens constructor.
    *
    * @param \Drupal\Core\Utility\Token $token_service
@@ -50,15 +61,19 @@ class FlagTokens implements ContainerInjectionInterface {
    *   The entity type manager.
    * @param \Drupal\Core\Datetime\DateFormatterInterface $date_formatter
    *   The date formatter service.
+   * @param \Drupal\eic_flags\Service\RequestHandlerCollector $request_handler_collector
+   *   The request collection service.
    */
   public function __construct(
     Token $token_service,
     EntityTypeManagerInterface $entity_type_manager,
-    DateFormatterInterface $date_formatter
+    DateFormatterInterface $date_formatter,
+    RequestHandlerCollector $request_handler_collector
   ) {
     $this->tokenService = $token_service;
     $this->entityTypeManager = $entity_type_manager;
     $this->dateFormatter = $date_formatter;
+    $this->requestHandlerCollector = $request_handler_collector;
   }
 
   /**
@@ -68,7 +83,8 @@ class FlagTokens implements ContainerInjectionInterface {
     return new static(
       $container->get('token'),
       $container->get('entity_type.manager'),
-      $container->get('date.formatter')
+      $container->get('date.formatter'),
+      $container->get('eic_flags.handler_collector')
     );
   }
 
@@ -99,6 +115,10 @@ class FlagTokens implements ContainerInjectionInterface {
             'type' => 'user',
             'description' => $this->t('User who flagged the entity'),
           ],
+          'request_timeout_date' => [
+            'name' => $this->t('Request timeout date'),
+            'description' => $this->t('Request timeout formatted as date'),
+          ],
         ],
       ],
     ];
@@ -120,7 +140,7 @@ class FlagTokens implements ContainerInjectionInterface {
     $replacements = [];
     $flag = NULL;
     if ($type == 'flagging' && isset($data['flagging'])) {
-      /** @var FlaggingInterface $flag */
+      /** @var \Drupal\flag\FlaggingInterface $flag */
       $flag = $data['flagging'];
       foreach ($tokens as $name => $original) {
         switch ($name) {
@@ -151,6 +171,22 @@ class FlagTokens implements ContainerInjectionInterface {
             $bubbleable_metadata->addCacheableDependency($account);
             $replacements[$original] = $account->label();
             break;
+
+          case 'request_timeout_date':
+            $handler = $this->requestHandlerCollector->getHandlerByType(RequestTypes::TRANSFER_OWNERSHIP);
+
+            $timeout = $flag->get('field_request_timeout')->value * 86400;
+            $timeout += $flag->get('created')->value;
+            $timeout_formatted = $this->t('no expiration');
+
+            // If request has expired, we show the expiration date.
+            if ($handler->hasExpiration($flag)) {
+              $timeout_formatted = $this->dateFormatter->format($timeout, 'eu_short_date_hour');
+            }
+
+            $replacements[$original] = $timeout_formatted;
+            break;
+
         }
       }
     }

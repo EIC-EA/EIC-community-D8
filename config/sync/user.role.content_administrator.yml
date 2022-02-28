@@ -41,6 +41,7 @@ dependencies:
     - filter
     - flag
     - group
+    - masquerade
     - media
     - message
     - node
@@ -122,6 +123,7 @@ permissions:
   - 'edit any video content'
   - 'edit any video media'
   - 'edit overview pages'
+  - 'edit own comments'
   - 'edit own discussion content'
   - 'edit own document content'
   - 'edit own eic_document media'
@@ -142,6 +144,7 @@ permissions:
   - 'manage blocked entities'
   - 'manage contact form emails'
   - 'mark private content'
+  - 'masquerade as trusted_user'
   - 'overview messages'
   - 'post comments'
   - 'publish archived content'
@@ -157,6 +160,7 @@ permissions:
   - 'revert video revisions'
   - 'revert wiki_page revisions'
   - 'schedule publishing of nodes'
+  - 'skip comment approval'
   - 'unflag recommend_group'
   - 'update any basic block content'
   - 'update any cta_tiles block content'

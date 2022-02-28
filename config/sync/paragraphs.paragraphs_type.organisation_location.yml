@@ -1,0 +1,10 @@
+uuid: ae1d127a-8069-44d9-bd86-9faf24543627
+langcode: en
+status: true
+dependencies: {  }
+id: organisation_location
+label: 'Organisation - location'
+icon_uuid: null
+icon_default: null
+description: ''
+behavior_plugins: {  }

@@ -1,5 +1,26 @@
 .ecl-organisation {
 
+  &__editorial-header {
+    & .ecl-editorial-header__image-wrapper {
+      position: relative;
+      border: 1px solid #cfcfcf;
+      border-radius: 50%;
+      overflow: hidden;
+      width: map-get($ecl-media, 'l');
+      height: map-get($ecl-media, 'l');
+      margin: 0 auto ecl-layout('gutter');
+
+      & .ecl-editorial-header__image {
+        width: 80%;
+        height: 80%;
+        object-fit: contain;
+        position: absolute;
+        left: 10%;
+        top: 10%;
+      }
+    }
+  }
+
   &__item {
     margin-bottom: $ecl-spacing-2-xl;
 
@@ -30,6 +51,13 @@
       & > ul {
         padding: 0;
         list-style: none;
+      }
+
+      & .ecl-tag {
+        text-decoration: none;
+        &:hover {
+          text-decoration: underline;
+        }
       }
     }
   }

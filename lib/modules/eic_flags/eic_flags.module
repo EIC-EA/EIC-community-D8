@@ -13,6 +13,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\eic_flags\Form\NewRequestForm;
+use Drupal\eic_flags\Form\RequestCancelForm;
 use Drupal\eic_flags\Form\RequestCloseForm;
 use Drupal\eic_flags\Hooks\CronOperations;
 use Drupal\eic_flags\Hooks\EntityOperations;
@@ -133,6 +134,7 @@ function eic_flags_entity_type_build(array &$entity_types) {
 
     $entity_type->setFormClass('new-request', NewRequestForm::class)
       ->setFormClass('close-request', RequestCloseForm::class)
+      ->setFormClass('cancel-request', RequestCancelForm::class)
       ->setHandlerClass('route_provider', $route_providers)
       ->setLinkTemplate(
         'new-request',
@@ -149,6 +151,10 @@ function eic_flags_entity_type_build(array &$entity_types) {
       ->setLinkTemplate(
         'user-close-request',
         "/$entity_id" . '/{' . $entity_id . '}' . '/request/{request_type}/close'
+      )
+      ->setLinkTemplate(
+        'user-cancel-request',
+        "/$entity_id" . '/{' . $entity_id . '}' . '/request/{request_type}/cancel'
       );
 
     // Support for group content entities. We add the group url as a prefix.
@@ -160,6 +166,10 @@ function eic_flags_entity_type_build(array &$entity_types) {
       $entity_type->setLinkTemplate(
         'user-close-request',
         "/group/{group}/content" . '/{' . $entity_id . '}' . '/request/{request_type}/close'
+      );
+      $entity_type->setLinkTemplate(
+        'user-cancel-request',
+        "/group/{group}/content" . '/{' . $entity_id . '}' . '/request/{request_type}/cancel'
       );
     }
   }
@@ -253,6 +263,7 @@ function eic_flags_entity_access(
       'request-archive',
       'request-transfer_ownership',
       'close_request-transfer_ownership',
+      'cancel_request-transfer_ownership',
     ])
   ) {
     return AccessResult::neutral();
@@ -268,6 +279,9 @@ function eic_flags_entity_access(
   switch ($request_status) {
     case 'close_request':
       return $handler->canCloseRequest($account, $entity);
+
+    case 'cancel_request':
+      return $handler->canCancelRequest($account, $entity);
 
     default:
       return $handler->canRequest($account, $entity);

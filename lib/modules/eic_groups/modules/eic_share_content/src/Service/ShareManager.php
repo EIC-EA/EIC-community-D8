@@ -4,7 +4,7 @@ namespace Drupal\eic_share_content\Service;
 
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Drupal\eic_content\EICContentHelperInterface;
+use Drupal\eic_groups\EICGroupsHelperInterface;
 use Drupal\eic_messages\ActivityStreamOperationTypes;
 use Drupal\eic_messages\Service\MessageBusInterface;
 use Drupal\eic_messages\Util\ActivityStreamMessageTemplates;
@@ -15,7 +15,7 @@ use Drupal\node\NodeInterface;
 use Drupal\search_api\Plugin\search_api\datasource\ContentEntity;
 
 /**
- * Class ShareManager
+ * Class that manages functions for the sharing feature.
  *
  * @package Drupal\eic_share_content\Service
  */
@@ -24,47 +24,72 @@ class ShareManager {
   use StringTranslationTrait;
 
   /**
-   * @var \Drupal\eic_content\EICContentHelperInterface
+   * The Group Content plugin ID for shared content.
+   *
+   * @var string
    */
-  private $contentHelper;
+  const GROUP_CONTENT_SHARED_PLUGIN_ID = 'group_shared_content';
 
   /**
+   * The EIC Groups helper.
+   *
+   * @var \Drupal\eic_groups\EICGroupsHelperInterface
+   */
+  private $groupsHelper;
+
+  /**
+   * The entity type manager.
+   *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
   private $entityTypeManager;
 
   /**
+   * The group content enabler manager.
+   *
    * @var \Drupal\group\Plugin\GroupContentEnablerManagerInterface
    */
   private $groupContentPluginManager;
 
   /**
+   * The EIC message bus.
+   *
    * @var \Drupal\eic_messages\Service\MessageBusInterface
    */
   private $messageBus;
 
   /**
-   * @param \Drupal\eic_content\EICContentHelperInterface $content_helper
+   * Constructs a new ShareManager object.
+   *
+   * @param \Drupal\eic_groups\EICGroupsHelperInterface $groups_helper
+   *   The EIC Groups helper.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
    * @param \Drupal\group\Plugin\GroupContentEnablerManagerInterface $plugin_manager
+   *   The group content enabler manager.
    * @param \Drupal\eic_messages\Service\MessageBusInterface $message_bus
+   *   The EIC message bus.
    */
   public function __construct(
-    EICContentHelperInterface $content_helper,
+    EICGroupsHelperInterface $groups_helper,
     EntityTypeManagerInterface $entity_type_manager,
     GroupContentEnablerManagerInterface $plugin_manager,
     MessageBusInterface $message_bus
   ) {
-    $this->contentHelper = $content_helper;
+    $this->groupsHelper = $groups_helper;
     $this->entityTypeManager = $entity_type_manager;
     $this->groupContentPluginManager = $plugin_manager;
     $this->messageBus = $message_bus;
   }
 
   /**
+   * Checks if a node bundle is eligible for group sharing.
+   *
    * @param string $node_bundle
+   *   The node bundle machine name.
    *
    * @return bool
+   *   TRUE if node bundle is supported.
    */
   public function isSupported(string $node_bundle): bool {
     static $shareableNodeBundles = [
@@ -74,16 +99,23 @@ class ShareManager {
       'discussion',
       'gallery',
       'event',
+      'news',
     ];
 
     return in_array($node_bundle, $shareableNodeBundles) ?? FALSE;
   }
 
   /**
+   * Shares a content from one group to another.
+   *
    * @param \Drupal\group\Entity\GroupInterface $source_group
+   *   The group entity from which we want to share.
    * @param \Drupal\group\Entity\GroupInterface $target_group
+   *   The group entity to which we want to share.
    * @param \Drupal\node\NodeInterface $node
+   *   The node entity we want to share.
    * @param string|null $message
+   *   The message that accompanies the share action.
    *
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
@@ -95,34 +127,30 @@ class ShareManager {
     NodeInterface $node,
     ?string $message
   ) {
-    $group_content = $this->contentHelper->getGroupContent($source_group, $node);
-    if (empty($group_content)) {
-      throw new \InvalidArgumentException($this->t('This content can\'t be shared'));
+    // First we check if this node belongs to a group.
+    if (!$this->groupsHelper->getGroupByEntity($node)) {
+      throw new \InvalidArgumentException("This content can't be shared");
     }
 
-    if (
-      $target_group->id() === $source_group->id() ||
-      $group_content->getGroup()->id() !== $source_group->id()
-    ) {
-      throw new \InvalidArgumentException($this->t('This content can\'t be shared'));
+    // If source and target groups are the same, we can't share.
+    if ($target_group->id() === $source_group->id()) {
+      throw new \InvalidArgumentException("This content can't be shared");
     }
 
+    // If the content is already shared to the target group, we can't share.
     if ($this->isShared($node, $target_group)) {
-      throw new \InvalidArgumentException($this->t('This content is already shared with this group'));
+      throw new \InvalidArgumentException('This content is already shared with this group');
     }
 
-    $plugin_id = $this->getGroupContentId($target_group, $node);
-    if (!$plugin_id) {
-      throw new \InvalidArgumentException($this->t('This content can\'t be shared'));
-    }
-
+    // Create the group content entity.
     $shared_group_content = GroupContent::create([
-      'type' => $plugin_id,
+      'type' => $target_group->getGroupType()->id() . '-' . self::GROUP_CONTENT_SHARED_PLUGIN_ID,
       'gid' => $target_group->id(),
       'entity_id' => $node->id(),
     ]);
     $shared_group_content->save();
 
+    // Dispatch the message.
     $this->messageBus->dispatch([
       'template' => ActivityStreamMessageTemplates::SHARE_CONTENT,
       'uid' => $node->getOwnerId(),
@@ -136,7 +164,7 @@ class ShareManager {
 
     // Reindex the node immediately.
     // There seem to be multiple implementation of reindexing logics.
-    // @TODO Write a single service for this.
+    // @todo Write a single service for this.
     $indexes = ContentEntity::getIndexesForEntity($node);
     foreach ($indexes as $index) {
       $index->trackItemsUpdated(
@@ -147,82 +175,46 @@ class ShareManager {
   }
 
   /**
+   * Determines if a node has been shared.
+   *
    * @param \Drupal\node\NodeInterface $node
-   * @param \Drupal\group\Entity\GroupInterface $group
+   *   The node entity for which we're looking shares.
+   * @param \Drupal\group\Entity\GroupInterface|null $target_group
+   *   The group to filter on. If null, will check for all groups.
    *
    * @return bool
+   *   TRUE if node has been shared.
+   *
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
-  public function isShared(NodeInterface $node, GroupInterface $group): bool {
-    return !empty($this->getShareEntity($node, $group));
+  public function isShared(NodeInterface $node, GroupInterface $target_group = NULL): bool {
+    return !empty($this->getSharedEntities($node, $target_group));
   }
 
   /**
-   * @param \Drupal\node\NodeInterface $node
-   * @param \Drupal\group\Entity\GroupInterface $group
+   * Returns the list of shared group_content entities.
    *
-   * @return \Drupal\Core\Entity\EntityInterface[]
+   * @param \Drupal\node\NodeInterface $node
+   *   The node entity for which we're looking shares.
+   * @param \Drupal\group\Entity\GroupInterface|null $target_group
+   *   The group to filter on. If null, shared entities will be returned for all
+   *   groups.
+   *
+   * @return \Drupal\group\Entity\GroupContentInterface[]
+   *   The list of found group_content entities.
+   *
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
-  public function getShareEntity(
-    NodeInterface $node,
-    GroupInterface $group
-  ): array {
-    return $this->entityTypeManager->getStorage('message')
-      ->loadByProperties([
-        'template' => ActivityStreamMessageTemplates::SHARE_CONTENT,
-        'field_group_ref' => $group->id(),
-        'field_referenced_node' => $node->id(),
-      ]);
-  }
-
-  /**
-   * Return the group content plugin id for the given node.
-   *
-   * @param \Drupal\group\Entity\GroupInterface $group
-   * @param \Drupal\node\NodeInterface $node
-   *
-   * @return string|null
-   */
-  public function getGroupContentId(
-    GroupInterface $group,
-    NodeInterface $node
-  ): ?string {
-    static $enabled_ids;
-    if (empty($enabled_ids)) {
-      $plugin_ids = $this->groupContentPluginManager
-        ->getInstalledIds($group->getGroupType());
-
-      foreach ($plugin_ids as $plugin_id) {
-        if (strpos($plugin_id, 'group_node:') !== 0) {
-          continue;
-        }
-
-        [, $content_type] = explode(':', $plugin_id);
-        $enabled_ids[$content_type] = $group->getGroupType()
-          ->getContentPlugin("group_node:$content_type")
-          ->getContentTypeConfigId();;
-      }
+  public function getSharedEntities(NodeInterface $node, GroupInterface $target_group = NULL): array {
+    $query = $this->entityTypeManager->getStorage('group_content')->getQuery();
+    $query->condition('type', '%-' . self::GROUP_CONTENT_SHARED_PLUGIN_ID, 'LIKE');
+    $query->condition('entity_id', $node->id());
+    if ($target_group) {
+      $query->condition('gid', $target_group->id());
     }
-
-    return $enabled_ids[$node->bundle()] ?? NULL;
-  }
-
-  /**
-   * @param \Drupal\node\NodeInterface $node
-   *
-   * @return \Drupal\Core\Entity\EntityInterface[]
-   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
-   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
-   */
-  public function getShares(NodeInterface $node): array {
-    return $this->entityTypeManager->getStorage('message')
-      ->loadByProperties([
-        'template' => ActivityStreamMessageTemplates::SHARE_CONTENT,
-        'field_referenced_node' => $node->id(),
-      ]);
+    return $this->entityTypeManager->getStorage('group_content')->loadMultiple($query->execute());
   }
 
 }

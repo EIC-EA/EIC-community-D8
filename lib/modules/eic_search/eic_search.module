@@ -27,6 +27,7 @@ function eic_search_theme($existing, $type, $theme, $path) {
         'facets' => [],
         'sorts' => [],
         'prefilters' => [],
+        'prefilter_my_interests' => FALSE,
         'page_options' => '',
         'currentGroup' => '',
         'currentGroupUrl' => '',
@@ -89,21 +90,19 @@ function eic_search_search_api_solr_documents_alter(
   $group_helper = \Drupal::service('eic_groups.helper');
   /** @var \Drupal\eic_search\Service\SolrDocumentProcessor $solr_document_processor */
   $solr_document_processor = \Drupal::service('eic_search.solr_document_processor');
+  /** @var \Drupal\eic_search\Collector\DocumentProcessorCollector $document_precessor_provider */
+  $document_precessor_provider = \Drupal::service('eic_search.document_processor_collector');
+  $processors = $document_precessor_provider->getProcessors();
 
   /** @var \Solarium\QueryType\Update\Query\Document $document */
   foreach ($documents as $document) {
     $fields = $document->getFields();
-
-    $solr_document_processor->processGlobalData($document, $fields);
-    $solr_document_processor->processGroupContentData($document, $fields);
-    $solr_document_processor->processMessageData($document, $fields);
-    $solr_document_processor->processDiscussionData($document, $fields);
-    $solr_document_processor->processDocumentData($document, $fields);
-    $solr_document_processor->processFlaggingData($document, $fields);
-    $solr_document_processor->processGroupVisibilityData($document, $fields, $items, $group_helper);
-    $solr_document_processor->processGroupUserData($document, $fields);
-    $solr_document_processor->processGroupEventData($document, $fields);
-    $solr_document_processor->processGlobalEventData($document, $fields);
+    /** @var \Drupal\eic_search\Search\DocumentProcessor\DocumentProcessorInterface $processor */
+    foreach ($processors as $processor) {
+      if ($processor->supports($fields)) {
+        $processor->process($document, $fields, $items);
+      }
+    }
   }
 }
 
