@@ -4,7 +4,6 @@ namespace Drupal\oec_group_flex\Plugin\views\filter;
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\group_flex\Plugin\GroupVisibilityManager;
-use Drupal\oec_group_flex\OECGroupFlexHelper;
 use Drupal\views\Plugin\views\filter\FilterPluginBase;
 use Drupal\views\Views;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -26,7 +25,7 @@ class GroupVisibility extends FilterPluginBase {
   protected $groupVisibilityManager;
 
   /**
-   * Constructs a PluginBase object.
+   * Constructs a GroupVisibility object.
    *
    * @param array $configuration
    *   A configuration array containing information about the plugin instance.
