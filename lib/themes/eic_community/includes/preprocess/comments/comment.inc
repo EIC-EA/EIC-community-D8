@@ -124,7 +124,10 @@ function eic_community_preprocess_comment(&$variables) {
 
   switch ($view_mode) {
     case 'notification_teaser':
-      $variables['comment']['author']['image'] = _get_profile_image_array($author, FALSE);
+      $variables['comment']['author']['image'] = [
+        'src' => $variables['eic_images_path'] . '/custom/svg/custom/user_circle.svg',
+        'alt' => $author->getDisplayName(),
+      ];
       // Removes unneeded variables from notification teaser.
       unset($variables['comment']['timestamp']);
       unset($variables['comment']['is_owner']);
