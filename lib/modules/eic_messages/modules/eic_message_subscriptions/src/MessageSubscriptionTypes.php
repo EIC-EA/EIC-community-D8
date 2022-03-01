@@ -58,6 +58,7 @@ final class MessageSubscriptionTypes implements MessageIdentifierInterface {
     switch ($message_template->id()) {
 
       case MessageSubscriptionTypes::GROUP_CONTENT_UPDATED:
+      case MessageSubscriptionTypes::NEW_GROUP_CONTENT_PUBLISHED:
         $primary_keys = [
           'field_event_executing_user',
           'field_referenced_node',
