@@ -37,9 +37,9 @@ reactions:
         css_class: ''
         unique: 0
         context_id: my_profile
-        context_mapping: { }
+        context_mapping: {  }
         title: 'My activity feed'
-        third_party_settings: { }
+        third_party_settings: {  }
       8527debb-4d1a-45d9-a495-967d0918f5bf:
         uuid: 8527debb-4d1a-45d9-a495-967d0918f5bf
         id: eic_user_activity_subnavigation_block
@@ -53,8 +53,8 @@ reactions:
         css_class: ''
         unique: 0
         context_id: my_profile
-        context_mapping: { }
-        third_party_settings: { }
+        context_mapping: {  }
+        third_party_settings: {  }
       0e7c3901-f227-4b04-a47c-d795b9e3477f:
         uuid: 0e7c3901-f227-4b04-a47c-d795b9e3477f
         id: eic_search_overview

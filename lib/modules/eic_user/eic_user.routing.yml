@@ -23,3 +23,13 @@ eic_user.toggle_notification_settings:
   requirements:
     notification_type: 'interest|comments'
     _user_is_logged_in: 'TRUE'
+
+eic_user.get_notification_settings:
+  path: '/api/notification/{notification_type}/list'
+  methods: [ GET ]
+  defaults:
+    _controller: '\Drupal\eic_user\Controller\MySettingsController::getFollowFlags'
+    _title: 'Get Notification settings'
+  requirements:
+    notification_type: 'groups|events'
+    _user_is_logged_in: 'TRUE'

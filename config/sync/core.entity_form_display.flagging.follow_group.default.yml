@@ -1,0 +1,19 @@
+uuid: e5d23bec-9c91-4507-8f69-cae9c41e8806
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.flagging.follow_group.field_notification_frequency
+    - flag.flag.follow_group
+id: flagging.follow_group.default
+targetEntityType: flagging
+bundle: follow_group
+mode: default
+content:
+  field_notification_frequency:
+    type: options_select
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden: {  }

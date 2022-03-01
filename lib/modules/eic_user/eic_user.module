@@ -7,6 +7,7 @@
 
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\eic_user\NotificationFrequencies;
 use Drupal\user\EntityOwnerInterface;
 use Drupal\eic_user\Hooks\FieldWidgetOperations;
 use Drupal\Core\Entity\EntityInterface;
@@ -38,8 +39,22 @@ function eic_user_theme() {
       'variables' => [
         'data' => [],
       ],
-    ]
+    ],
   ];
+}
+
+/**
+ * List allowed values for field 'field_notification_frequency'.
+ *
+ * @return array
+ */
+function eic_user_notification_frequency_allowed_values() {
+  $allowed_values = [
+    NotificationFrequencies::OFF,
+    NotificationFrequencies::ON,
+  ];
+
+  return array_combine($allowed_values, array_map('ucfirst', $allowed_values));
 }
 
 /**

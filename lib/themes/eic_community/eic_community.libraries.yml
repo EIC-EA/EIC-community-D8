@@ -31,7 +31,7 @@ react-notif-management:
     dist/react/block/notifmanagement/entrypoint.js: { minified: true }
   dependencies:
     - core/drupal
-    -
+
 react-block-modal:
   js:
     dist/react/custom/manifest.js: { minified: true }

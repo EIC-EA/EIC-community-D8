@@ -4,12 +4,14 @@ namespace Drupal\eic_user\Service;
 
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Session\AccountProxyInterface;
-use Drupal\eic_user\ProfileConst;
+use Drupal\eic_user\NotificationTypes;
 use Drupal\eic_user\UserHelper;
+use Drupal\flag\Entity\Flagging;
+use Drupal\flag\FlagInterface;
+use Drupal\flag\FlagService;
 use Drupal\profile\Entity\ProfileInterface;
 use Drupal\user\Entity\User;
 use Drupal\user\UserInterface;
-use http\Exception\InvalidArgumentException;
 
 /**
  * Class NotificationSettingsManager
@@ -17,6 +19,16 @@ use http\Exception\InvalidArgumentException;
  * @package Drupal\eic_user\Service
  */
 class NotificationSettingsManager {
+
+  /**
+   * Matching flags for each supported notification type.
+   *
+   * @var string[]
+   */
+  private static $flags = [
+    NotificationTypes::GROUPS_NOTIFICATION_TYPE => 'follow_group',
+    NotificationTypes::EVENTS_NOTIFICATION_TYPE => 'follow_event',
+  ];
 
   /**
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
@@ -34,12 +46,26 @@ class NotificationSettingsManager {
   private $userHelper;
 
   /**
+   * @var \Drupal\flag\FlagService
+   */
+  private $flagService;
+
+  /**
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    * @param \Drupal\Core\Session\AccountProxyInterface $account_proxy
    * @param \Drupal\eic_user\UserHelper $user_helper
+   * @param \Drupal\flag\FlagService $flag_service
    */
-  public function __construct(AccountProxyInterface $account_proxy, UserHelper $user_helper) {
+  public function __construct(
+    EntityTypeManagerInterface $entity_type_manager,
+    AccountProxyInterface $account_proxy,
+    UserHelper $user_helper,
+    FlagService $flag_service
+  ) {
+    $this->entityTypeManager = $entity_type_manager;
     $this->currentUser = $account_proxy;
     $this->userHelper = $user_helper;
+    $this->flagService = $flag_service;
   }
 
   /**
@@ -51,11 +77,11 @@ class NotificationSettingsManager {
   public function toggleSetting(string $notification_type): ?bool {
     $user = User::load($this->currentUser->id());
     if (!$user instanceof UserInterface) {
-      throw new InvalidArgumentException('Current user doesn\'t exist');
+      throw new \InvalidArgumentException('Current user doesn\'t exist');
     }
 
-    if (!in_array($notification_type, ProfileConst::ALLOWED_NOTIFICATION_TYPES)) {
-      throw new InvalidArgumentException('Given type isn\'t allowed');
+    if (!in_array($notification_type, NotificationTypes::ALLOWED_NOTIFICATION_TYPES)) {
+      throw new \InvalidArgumentException('Given type isn\'t allowed');
     }
 
     $profile = $this->userHelper->getUserMemberProfile($user);
@@ -65,14 +91,14 @@ class NotificationSettingsManager {
 
     //TODO adapt this when group & event settings are being implemented
     switch ($notification_type) {
-      case ProfileConst::INTEREST_NOTIFICATION_TYPE:
+      case NotificationTypes::INTEREST_NOTIFICATION_TYPE:
         $field = 'field_interest_notifications';
         break;
-      case ProfileConst::COMMENTS_NOTIFICATION_TYPE:
+      case NotificationTypes::COMMENTS_NOTIFICATION_TYPE:
         $field = 'field_comments_notifications';
         break;
       default:
-        throw new InvalidArgumentException('Unknown notification type');
+        throw new \InvalidArgumentException('Unknown notification type');
     }
 
     $value = !$profile->get($field)->value;
@@ -80,6 +106,38 @@ class NotificationSettingsManager {
     $profile->save();
 
     return $value;
+  }
+
+
+  /**
+   * @param string $type
+   *
+   * @return \Drupal\flag\FlaggingInterface[]
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   */
+  public function getValues(string $type): array {
+    if (!array_key_exists($type, self::$flags)) {
+      throw new \InvalidArgumentException('Given type is not supported');
+    }
+
+    $flag = $this->flagService->getFlagById(self::$flags[$type]);
+    $user = User::load($this->currentUser->id());
+    if (!$user instanceof UserInterface || !$flag instanceof FlagInterface) {
+      throw new \InvalidArgumentException('Something went wrong, either the flag doesn\'t exist or the user is invalid.');
+    }
+
+    $entity_ids = $this->entityTypeManager->getStorage('flagging')
+      ->getQuery()
+      ->condition('flag_id', $flag->id())
+      ->condition('uid', $user->id())
+      ->execute();
+
+    if (empty($entity_ids)) {
+      return [];
+    }
+
+    return Flagging::loadMultiple($entity_ids);
   }
 
 }

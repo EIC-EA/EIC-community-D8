@@ -4,6 +4,8 @@ namespace Drupal\eic_user\Controller;
 
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\eic_user\Service\NotificationSettingsManager;
@@ -24,7 +26,9 @@ class MySettingsController extends ControllerBase {
   /**
    * @param \Drupal\eic_user\Service\NotificationSettingsManager $notification_settings_manager
    */
-  public function __construct(NotificationSettingsManager $notification_settings_manager) {
+  public function __construct(
+    NotificationSettingsManager $notification_settings_manager
+  ) {
     $this->notificationSettingsManager = $notification_settings_manager;
   }
 
@@ -34,7 +38,9 @@ class MySettingsController extends ControllerBase {
    * @return \Drupal\eic_user\Controller\MySettingsController|static
    */
   public static function create(ContainerInterface $container) {
-    return new static($container->get('eic_user.notification_settings_manager'));
+    return new static(
+      $container->get('eic_user.notification_settings_manager'),
+    );
   }
 
   /**
@@ -49,8 +55,8 @@ class MySettingsController extends ControllerBase {
   }
 
   /**
-   * Toggles the value for fields 'field_interest_notifications' and 'field_comments_notifications'
-   * on current user's profile
+   * Toggles the value for fields 'field_interest_notifications' and
+   * 'field_comments_notifications' on current user's profile
    *
    * @param string $notification_type
    *
@@ -73,6 +79,35 @@ class MySettingsController extends ControllerBase {
       'status' => $new_value ?? FALSE,
       'value' => $new_value ?? FALSE,
     ]);
+  }
+
+  public function getFollowFlags($notification_type) {
+    $flaggings = $this->notificationSettingsManager->getValues($notification_type);
+    $formatted_flaggings = [
+      'title' => $this->t(ucfirst($notification_type)),
+      'items' => []
+    ];
+
+    foreach ($flaggings as $flagging) {
+      $target_entity = $this->entityTypeManager()
+        ->getStorage($flagging->get('entity_type')->value)
+        ->load($flagging->get('entity_id')->value);
+
+      if (!$target_entity instanceof ContentEntityInterface) {
+        continue;
+      }
+
+      $formatted_flaggings['items'][] = [
+        'id' => $flagging->id(),
+        'state' => TRUE,
+        'name' => [
+          'path' => $target_entity->toUrl()->toString(),
+          'label' => $target_entity->label(),
+        ],
+      ];
+    }
+
+    return new JsonResponse($formatted_flaggings);
   }
 
 }

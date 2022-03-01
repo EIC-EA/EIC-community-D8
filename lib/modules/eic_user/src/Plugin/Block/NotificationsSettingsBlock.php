@@ -4,14 +4,13 @@ namespace Drupal\eic_user\Plugin\Block;
 
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Drupal\Core\Session\AccountProxy;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\Url;
-use Drupal\eic_user\ProfileConst;
+use Drupal\eic_user\NotificationTypes;
+use Drupal\eic_user\Service\NotificationSettingsManager;
 use Drupal\eic_user\UserHelper;
 use Drupal\profile\Entity\ProfileInterface;
 use Drupal\user\Entity\User;
-use Drupal\user\UserInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -38,13 +37,26 @@ class NotificationsSettingsBlock extends BlockBase implements ContainerFactoryPl
   protected $userHelper;
 
   /**
+   * @var \Drupal\eic_user\Service\NotificationSettingsManager
+   */
+  protected $notificationSettingsManager;
+
+  /**
    * {@inheritdoc}
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, AccountProxyInterface $account_proxy, UserHelper $user_helper) {
+  public function __construct(
+    array $configuration,
+    $plugin_id,
+    $plugin_definition,
+    AccountProxyInterface $account_proxy,
+    UserHelper $user_helper,
+    NotificationSettingsManager $notification_settings_manager
+  ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     $this->currentUser = $account_proxy;
     $this->userHelper = $user_helper;
+    $this->notificationSettingsManager = $notification_settings_manager;
   }
 
   /**
@@ -56,7 +68,8 @@ class NotificationsSettingsBlock extends BlockBase implements ContainerFactoryPl
       $plugin_id,
       $plugin_definition,
       $container->get('current_user'),
-      $container->get('eic_user.helper')
+      $container->get('eic_user.helper'),
+      $container->get('eic_user.notification_settings_manager')
     );
   }
 
@@ -84,10 +97,7 @@ class NotificationsSettingsBlock extends BlockBase implements ContainerFactoryPl
       '#menu_items' => ['items' => $menu_items],
       '#items' => [
         'interest' => $this->getInterestsTab($member_profile),
-        'groups' => [
-          'title' => $this->t('Your group notifications'),
-          'content' => 'TBD',
-        ],
+        'groups' => $this->getGroupsTab($member_profile),
         'events' => [
           'title' => $this->t('Your events notifications'),
           'content' => 'TBD',
@@ -159,7 +169,31 @@ class NotificationsSettingsBlock extends BlockBase implements ContainerFactoryPl
             'title' => 'Interest email notifications',
             'state' => $profile instanceof ProfileInterface ? $profile->get('field_interest_notifications')->value : FALSE,
             'url' => Url::fromRoute('eic_user.toggle_notification_settings', [
-              'notification_type' => ProfileConst::INTEREST_NOTIFICATION_TYPE,
+              'notification_type' => NotificationTypes::INTEREST_NOTIFICATION_TYPE,
+            ]),
+          ],
+        ],
+      ],
+    ];
+  }
+
+  /**
+   * @param \Drupal\profile\Entity\ProfileInterface|null $profile
+   *
+   * @return array
+   */
+  private function getGroupsTab(?ProfileInterface $profile): array {
+    return [
+      'title' => $this->t('Your group notifications'),
+      'content' => [
+        '#theme' => 'notification_settings',
+        '#data' => [
+          'title' => $this->t('Your interest notifications'),
+          'body' => $this->t('You receive a periodic notification email for these groups because you\'re following them.'),
+          'table' => [
+            'title' => $this->t('Groups'),
+            'url' => Url::fromRoute('eic_user.get_notification_settings', [
+              'notification_type' => NotificationTypes::GROUPS_NOTIFICATION_TYPE,
             ]),
           ],
         ],
@@ -185,7 +219,7 @@ class NotificationsSettingsBlock extends BlockBase implements ContainerFactoryPl
             'title' => $this->t('Comments email notifications'),
             'state' => $profile instanceof ProfileInterface ? $profile->get('field_comments_notifications')->value : FALSE,
             'url' => Url::fromRoute('eic_user.toggle_notification_settings', [
-              'notification_type' => ProfileConst::COMMENTS_NOTIFICATION_TYPE,
+              'notification_type' => NotificationTypes::COMMENTS_NOTIFICATION_TYPE,
             ]),
           ],
         ],
