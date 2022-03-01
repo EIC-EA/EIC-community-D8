@@ -77,7 +77,7 @@ class NotificationSettingsManager {
    * @return bool|null
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
-  public function toggleSetting(string $notification_type, ?FlaggingInterface $flagging): ?bool {
+  public function toggleSetting(string $notification_type, ?FlaggingInterface $flagging = NULL): ?bool {
     $user = User::load($this->currentUser->id());
     if (!$user instanceof UserInterface) {
       throw new \InvalidArgumentException('Current user doesn\'t exist');
