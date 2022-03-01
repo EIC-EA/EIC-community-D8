@@ -148,6 +148,13 @@ abstract class SourceType implements SourceTypeInterface {
   /**
    * @inheritDoc
    */
+  public function prefilterByCurrentUser(): bool {
+    return FALSE;
+  }
+
+  /**
+   * @inheritDoc
+   */
   public function getAuthorFieldId(): string {
     return '';
   }
