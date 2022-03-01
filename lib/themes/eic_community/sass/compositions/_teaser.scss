@@ -744,7 +744,7 @@
     @include ecl-media-breakpoint-up('md') {
       #{$node}--event & {
         width: auto;
-        margin-left: map-get($ecl-spacing, 's');
+        margin-left: 0;
         margin-top: 0;
       }
     }
@@ -1072,7 +1072,7 @@
   }
 
   &__stat-icon {
-    color: ecl-typography('color', 'label');
+    color: ecl-typography('color', 'meta');
     margin-right: 4px;
     display: flex;
     align-items: center;
