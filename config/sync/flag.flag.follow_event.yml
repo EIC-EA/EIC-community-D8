@@ -1,22 +1,14 @@
-uuid: bc71996b-c036-40ef-acb0-e02fe329cc1b
+uuid: bbefff4f-8aef-4a2e-8a83-f48e4f59f841
 langcode: en
 status: true
 dependencies:
   module:
     - eic_flags
     - node
-id: follow_content
-label: 'Follow content'
+id: follow_event
+label: 'Follow (Event)'
 bundles:
-  - book
-  - discussion
-  - document
-  - gallery
-  - news
-  - page
-  - story
-  - video
-  - wiki_page
+  - event
 entity_type: node
 global: false
 flag_short: Follow

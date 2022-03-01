@@ -1,20 +1,20 @@
-uuid: e70aac38-30d5-44d8-a8cd-a3d54da6c018
+uuid: 87afc3da-fff6-4e79-99d6-99b427954528
 langcode: en
 status: true
 dependencies:
   config:
     - field.storage.flagging.field_notification_frequency
-    - flag.flag.follow_group
+    - flag.flag.follow_event
   module:
     - options
-id: flagging.follow_group.field_notification_frequency
+id: flagging.follow_event.field_notification_frequency
 field_name: field_notification_frequency
 entity_type: flagging
-bundle: follow_group
+bundle: follow_event
 label: 'Notification Frequency'
 description: ''
 required: true
-translatable: false
+translatable: true
 default_value:
   -
     value: 'on'

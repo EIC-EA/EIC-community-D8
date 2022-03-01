@@ -28,8 +28,8 @@ class NotificationSettingsManager {
    * @var string[]
    */
   private static $flags = [
-    NotificationTypes::GROUPS_NOTIFICATION_TYPE => 'follow_group',
-    NotificationTypes::EVENTS_NOTIFICATION_TYPE => 'follow_group',
+    NotificationTypes::GROUPS_NOTIFICATION_TYPE => ['follow_group'],
+    NotificationTypes::EVENTS_NOTIFICATION_TYPE => ['follow_group', 'follow_event'],
   ];
 
   /**
@@ -164,15 +164,14 @@ class NotificationSettingsManager {
       throw new \InvalidArgumentException('Given type is not supported');
     }
 
-    $flag = $this->flagService->getFlagById(self::$flags[$type]);
     $user = User::load($this->currentUser->id());
-    if (!$user instanceof UserInterface || !$flag instanceof FlagInterface) {
+    if (!$user instanceof UserInterface) {
       throw new \InvalidArgumentException('Something went wrong, either the flag doesn\'t exist or the user is invalid.');
     }
 
     $entity_ids = $this->entityTypeManager->getStorage('flagging')
       ->getQuery()
-      ->condition('flag_id', $flag->id())
+      ->condition('flag_id', self::$flags[$type], 'IN')
       ->condition('uid', $user->id())
       ->execute();
 

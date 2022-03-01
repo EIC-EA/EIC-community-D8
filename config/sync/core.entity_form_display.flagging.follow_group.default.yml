@@ -9,11 +9,6 @@ id: flagging.follow_group.default
 targetEntityType: flagging
 bundle: follow_group
 mode: default
-content:
-  field_notification_frequency:
-    type: options_select
-    weight: 0
-    region: content
-    settings: {  }
-    third_party_settings: {  }
-hidden: {  }
+content: {  }
+hidden:
+  field_notification_frequency: true
