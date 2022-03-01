@@ -6,7 +6,9 @@ use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\eic_groups\GroupsModerationHelper;
 use Drupal\eic_overviews\GroupOverviewPages;
+use Drupal\eic_user\UserHelper;
 use Drupal\group\Access\GroupAccessResult;
 use Drupal\group\Entity\GroupInterface;
 
@@ -40,6 +42,14 @@ class GroupOverviewsController extends ControllerBase {
    */
   public function access(RouteMatchInterface $route_match, GroupInterface $group, AccountInterface $account) {
     $overview_perm = NULL;
+
+    // Check if the group is in a blocked state.
+    if ($group->get('moderation_state')->value === GroupsModerationHelper::GROUP_BLOCKED_STATE
+      && !UserHelper::isPowerUser($account)) {
+      return AccessResult::forbidden()
+        ->addCacheableDependency($group)
+        ->addCacheableDependency($account);
+    }
 
     switch ($route_match->getRouteName()) {
       case GroupOverviewPages::DISCUSSIONS:

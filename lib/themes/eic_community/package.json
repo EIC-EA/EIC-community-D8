@@ -25,8 +25,8 @@
     "react-watch-poll": "mix watch -- --watch-options-poll=1000",
     "react-hot": "mix watch --hot",
     "react-production": "mix --production",
-    "mail-watch": "mjml -w mails/src/* -o mails/mail-dist/",
-    "mail-build": "mjml mails/src/* -o mails/mail-dist/"
+    "mail-watch": "mjml -w mails/src/templates/* -o mails/mail-dist/",
+    "mail-build": "mjml mails/src/templates/* -o mails/mail-dist/"
   },
   "author": "",
   "license": "ISC",

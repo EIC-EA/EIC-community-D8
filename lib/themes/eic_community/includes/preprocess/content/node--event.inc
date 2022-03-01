@@ -6,6 +6,9 @@
  */
 
 use Drupal\eic_helper\DateTimeHelper;
+use Drupal\eic_search\SearchHelper;
+use Drupal\eic_overviews\GroupOverviewPages;
+use Drupal\group\Entity\GroupInterface;
 
 /**
  * Implements hook_preprocess_node__event() for event node.
@@ -39,10 +42,31 @@ function eic_community_preprocess_node__event(array &$variables) {
 
       // Get the event type.
       $event_type_label = '';
-      if (!$node->field_vocab_event_type->isEmpty()) {
+      /** @var \Drupal\group\Entity\GroupInterface $group */
+      $group = \Drupal::routeMatch()->getParameter('group');
+      if (!$node->field_vocab_event_type->isEmpty() && $group instanceof GroupInterface) {
         /** @var \Drupal\taxonomy\Entity\Term $event_type */
         $event_type = $node->get('field_vocab_event_type')->entity;
-        $event_type_label = $event_type->get('name')->getString();
+
+        // Build solr query parameters for the events overview page to filter
+        // by topic.
+        $params = SearchHelper::buildSolrQueryParams(
+          [
+            'ss_content_event_type_string' => $event_type->label(),
+          ]
+        );
+
+        $url = GroupOverviewPages::getGroupOverviewPageUrl('events', $group);
+        $url->setOption('query', $params)->toString();
+
+        $teaser['tags'] = [
+          [
+            'type' => 'link',
+            'label' => $event_type->get('name')->getString(),
+            'path' => $url,
+            'aria_label' => '',
+          ]
+        ];
       }
       $teaser['type'] = [
         'label' => $event_type_label,

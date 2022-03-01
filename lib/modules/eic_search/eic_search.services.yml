@@ -115,10 +115,12 @@ services:
       - { name: eic_search.document_processor, priority: 22 }
   eic_search.document_processor_group_event:
     class: Drupal\eic_search\Search\DocumentProcessor\ProcessorGroupEvent
+    arguments: ['@file_url_generator']
     tags:
       - { name: eic_search.document_processor, priority: 28 }
   eic_search.document_processor_global_event:
     class: Drupal\eic_search\Search\DocumentProcessor\ProcessorGlobalEvent
+    arguments: ['@file_url_generator']
     tags:
       - { name: eic_search.document_processor, priority: 30 }
   eic_search.document_processor_organisation:
