@@ -35,6 +35,7 @@ use Drupal\flag\FlagInterface;
 use Drupal\group\Access\GroupAccessResult;
 use Drupal\group\Entity\GroupContent;
 use Drupal\pathauto\PathautoGeneratorInterface;
+use Drupal\eic_overviews\GlobalOverviewPages;
 
 /**
  * Implements hook_theme().
@@ -822,7 +823,7 @@ function eic_groups_flag_action_access(
 function eic_groups_overview_page_access(EntityInterface $entity, $operation, AccountInterface $account) {
   $overview_type_id = $entity->get('field_overview_id')->value;
   $overview_type_forbidden_anonymous = [
-    \Drupal\eic_overviews\GlobalOverviewPages::ORGANISATIONS,
+    GlobalOverviewPages::ORGANISATIONS,
   ];
   $access = AccessResult::neutral();
 
