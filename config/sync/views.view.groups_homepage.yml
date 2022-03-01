@@ -651,6 +651,9 @@ display:
         empty: false
         cache: false
         title: false
+        use_more: false
+        use_more_always: false
+        use_more_text: false
         link_display: false
         link_url: false
         sorts: false
@@ -658,6 +661,9 @@ display:
         filter_groups: false
         header: false
       display_description: ''
+      use_more: true
+      use_more_always: false
+      use_more_text: 'View all events'
       link_display: custom_url
       link_url: /events
       header: {  }

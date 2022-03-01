@@ -158,6 +158,7 @@ class CommentMessageCreator implements ContainerInjectionInterface {
         'template' => NotificationMessageTemplates::USER_TAGGED_ON_COMMENT,
         'uid' => $user->id(),
         'field_referenced_comment' => $entity,
+        'field_referenced_node' => $entity->getCommentedEntity()->id(),
         'field_event_executing_user' => $entity->getOwner(),
         MessageTokens::RENDERED_CONTENT_FIELD => $rendered_comment_teaser,
       ]);
