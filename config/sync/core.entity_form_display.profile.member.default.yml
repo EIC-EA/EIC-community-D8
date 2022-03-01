@@ -35,13 +35,6 @@ content:
       rows: 5
       placeholder: ''
     third_party_settings: {  }
-  field_comments_notifications:
-    type: boolean_checkbox
-    weight: 33
-    region: content
-    settings:
-      display_label: true
-    third_party_settings: {  }
   field_cv_link:
     type: link_default
     weight: 1
@@ -50,22 +43,15 @@ content:
       placeholder_url: ''
       placeholder_title: ''
     third_party_settings: {  }
-  field_interest_notifications:
-    type: boolean_checkbox
-    weight: 32
-    region: content
-    settings:
-      display_label: true
-    third_party_settings: {  }
   field_location_address:
     type: address_default
-    weight: 7
+    weight: 6
     region: content
     settings: {  }
     third_party_settings: {  }
   field_social_links:
     type: social_links
-    weight: 31
+    weight: 9
     region: content
     settings:
       select_social: false
@@ -73,7 +59,7 @@ content:
     third_party_settings: {  }
   field_vocab_geo:
     type: entity_reference_autocomplete
-    weight: 4
+    weight: 3
     region: content
     settings:
       match_operator: CONTAINS
@@ -83,7 +69,7 @@ content:
     third_party_settings: {  }
   field_vocab_job_title:
     type: entity_reference_autocomplete
-    weight: 27
+    weight: 8
     region: content
     settings:
       match_operator: CONTAINS
@@ -93,7 +79,7 @@ content:
     third_party_settings: {  }
   field_vocab_language:
     type: entity_reference_autocomplete
-    weight: 26
+    weight: 7
     region: content
     settings:
       match_operator: CONTAINS
@@ -103,7 +89,7 @@ content:
     third_party_settings: {  }
   field_vocab_topic_expertise:
     type: entity_tree
-    weight: 5
+    weight: 4
     region: content
     settings:
       match_top_level_limit: '0'
@@ -115,7 +101,7 @@ content:
     third_party_settings: {  }
   field_vocab_topic_interest:
     type: entity_tree
-    weight: 6
+    weight: 5
     region: content
     settings:
       match_top_level_limit: '0'
@@ -127,7 +113,7 @@ content:
     third_party_settings: {  }
   field_vocab_user_type:
     type: entity_reference_autocomplete
-    weight: 3
+    weight: 2
     region: content
     settings:
       match_operator: CONTAINS
@@ -136,4 +122,6 @@ content:
       placeholder: ''
     third_party_settings: {  }
 hidden:
+  field_comments_notifications: true
+  field_interest_notifications: true
   is_default: true

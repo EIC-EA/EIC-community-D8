@@ -11,4 +11,4 @@ services:
 
   eic_user.notification_settings_manager:
     class: Drupal\eic_user\Service\NotificationSettingsManager
-    arguments: [ '@entity_type.manager', '@current_user', '@eic_user.helper', '@flag' ]
+    arguments: [ '@entity_type.manager', '@current_user', '@eic_user.helper' ]

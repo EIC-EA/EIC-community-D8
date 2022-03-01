@@ -59,16 +59,24 @@ class MySettingsController extends ControllerBase {
   }
 
   /**
-   * Toggles the value for fields 'field_interest_notifications' and
-   * 'field_comments_notifications' on current user's profile
-   *
    * @param string $notification_type
+   * @param \Symfony\Component\HttpFoundation\Request $request
    *
-   * @return JsonResponse
+   * @return \Symfony\Component\HttpFoundation\JsonResponse
    */
-  public function toggleProfileNotificationSettings(string $notification_type) {
+  public function setProfileNotificationSettings(string $notification_type, Request $request): JsonResponse {
+    $body = json_decode($request->getContent(), TRUE);
+    if (!isset($body['value'])) {
+      throw new \InvalidArgumentException('Invalid request');
+    }
+
+    $value = filter_var($body['value'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
+    if (!is_bool($value)) {
+      throw new \InvalidArgumentException('Invalid request');
+    }
+
     try {
-      $new_value = $this->notificationSettingsManager->toggleSetting($notification_type);
+      $new_value = $this->notificationSettingsManager->setSettingValue($notification_type, $value);
     } catch (\Exception $exception) {
       $this->messenger
         ->addError(
@@ -88,12 +96,27 @@ class MySettingsController extends ControllerBase {
   /**
    * @param string $notification_type
    * @param \Drupal\flag\FlaggingInterface $flagging
+   * @param \Symfony\Component\HttpFoundation\Request $request
    *
-   * @return JsonResponse
+   * @return \Symfony\Component\HttpFoundation\JsonResponse
    */
-  public function toggleFollowFlagValue(string $notification_type, FlaggingInterface $flagging): JsonResponse {
+  public function setFollowFlagValue(
+    string $notification_type,
+    FlaggingInterface $flagging,
+    Request $request
+  ): JsonResponse {
+    $body = json_decode($request->getContent(), TRUE);
+    if (!isset($body['value'])) {
+      throw new \InvalidArgumentException('Invalid request');
+    }
+
+    $value = filter_var($body['value'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
+    if (!is_bool($value)) {
+      throw new \InvalidArgumentException('Invalid request');
+    }
+
     try {
-      $new_value = $this->notificationSettingsManager->toggleSetting($notification_type, $flagging);
+      $new_value = $this->notificationSettingsManager->setSettingValue($notification_type, $value, $flagging);
     } catch (\Exception $exception) {
       $this->messenger
         ->addError(

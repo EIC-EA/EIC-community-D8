@@ -3,6 +3,7 @@
 namespace Drupal\eic_user\Plugin\Block;
 
 use Drupal\Core\Block\BlockBase;
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\Url;
@@ -177,6 +178,17 @@ class NotificationsSettingsBlock extends BlockBase implements ContainerFactoryPl
         ],
       ],
     ];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheTags() {
+    $currentUser = User::load($this->currentUser->id());
+    $member_profile = $this->userHelper->getUserMemberProfile($currentUser);
+    $flag_tags = $member_profile->getCacheTags();
+
+    return Cache::mergeTags(parent::getCacheTags(), $flag_tags);
   }
 
   /**
