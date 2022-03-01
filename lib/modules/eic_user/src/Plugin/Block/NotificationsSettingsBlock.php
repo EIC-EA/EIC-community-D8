@@ -62,7 +62,12 @@ class NotificationsSettingsBlock extends BlockBase implements ContainerFactoryPl
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+  public static function create(
+    ContainerInterface $container,
+    array $configuration,
+    $plugin_id,
+    $plugin_definition
+  ) {
     return new static(
       $configuration,
       $plugin_id,
@@ -98,10 +103,7 @@ class NotificationsSettingsBlock extends BlockBase implements ContainerFactoryPl
       '#items' => [
         'interest' => $this->getInterestsTab($member_profile),
         'groups' => $this->getGroupsTab($member_profile),
-        'events' => [
-          'title' => $this->t('Your events notifications'),
-          'content' => 'TBD',
-        ],
+        'events' => $this->getEventsTab($member_profile),
         'comments' => $this->getCommentsTab($member_profile),
       ],
     ];
@@ -188,12 +190,36 @@ class NotificationsSettingsBlock extends BlockBase implements ContainerFactoryPl
       'content' => [
         '#theme' => 'notification_settings',
         '#data' => [
-          'title' => $this->t('Your interest notifications'),
+          'title' => $this->t('Your group notifications'),
           'body' => $this->t('You receive a periodic notification email for these groups because you\'re following them.'),
           'table' => [
             'title' => $this->t('Groups'),
             'url' => Url::fromRoute('eic_user.get_notification_settings', [
               'notification_type' => NotificationTypes::GROUPS_NOTIFICATION_TYPE,
+            ]),
+          ],
+        ],
+      ],
+    ];
+  }
+
+  /**
+   * @param \Drupal\profile\Entity\ProfileInterface|null $profile
+   *
+   * @return array
+   */
+  private function getEventsTab(?ProfileInterface $profile): array {
+    return [
+      'title' => $this->t('Your event notifications'),
+      'content' => [
+        '#theme' => 'notification_settings',
+        '#data' => [
+          'title' => $this->t('Your event notifications'),
+          'body' => $this->t('You receive a periodic notification email for these events because you\'re following them.'),
+          'table' => [
+            'title' => $this->t('Events'),
+            'url' => Url::fromRoute('eic_user.get_notification_settings', [
+              'notification_type' => NotificationTypes::EVENTS_NOTIFICATION_TYPE,
             ]),
           ],
         ],
@@ -237,7 +263,8 @@ class NotificationsSettingsBlock extends BlockBase implements ContainerFactoryPl
         'link' => [
           'label' => $this->t('Edit interests'),
           'path' => $profile instanceof ProfileInterface ?
-            Url::fromRoute('entity.profile.edit_form', ['profile' => $profile->id()]) :
+            Url::fromRoute('entity.profile.edit_form',
+              ['profile' => $profile->id()]) :
             Url::fromRoute('profile.user_page.single', [
               'user' => $this->currentUser->id(),
               'profile_type' => 'member',

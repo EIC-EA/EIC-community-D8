@@ -8,7 +8,11 @@ use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Url;
+use Drupal\eic_user\NotificationFrequencies;
+use Drupal\eic_user\NotificationTypes;
 use Drupal\eic_user\Service\NotificationSettingsManager;
+use Drupal\flag\FlaggingInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -81,13 +85,47 @@ class MySettingsController extends ControllerBase {
     ]);
   }
 
-  public function getFollowFlags($notification_type) {
+  /**
+   * @param string $notification_type
+   * @param \Drupal\flag\FlaggingInterface $flagging
+   *
+   * @return JsonResponse
+   */
+  public function toggleFollowFlagValue(string $notification_type, FlaggingInterface $flagging): JsonResponse {
+    try {
+      $new_value = $this->notificationSettingsManager->toggleSetting($notification_type, $flagging);
+    } catch (\Exception $exception) {
+      $this->messenger
+        ->addError(
+          'Something wrong happened when toggling settings for @notification_type: @error',
+          [
+            '@notification_type' => $notification_type,
+            '@error' => $exception->getMessage(),
+          ]);
+    }
+
+    return new JsonResponse([
+      'status' => $new_value ?? FALSE,
+      'value' => $new_value ?? FALSE,
+    ]);
+  }
+
+  /**
+   * @param $notification_type
+   *
+   * @return \Symfony\Component\HttpFoundation\JsonResponse
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   * @throws \Drupal\Core\Entity\EntityMalformedException
+   */
+  public function getFollowFlags($notification_type): JsonResponse {
     $flaggings = $this->notificationSettingsManager->getValues($notification_type);
     $formatted_flaggings = [
       'title' => $this->t(ucfirst($notification_type)),
-      'items' => []
+      'items' => [],
     ];
 
+    $target_bundle = $notification_type === NotificationTypes::EVENTS_NOTIFICATION_TYPE ? 'event' : 'group';
     foreach ($flaggings as $flagging) {
       $target_entity = $this->entityTypeManager()
         ->getStorage($flagging->get('entity_type')->value)
@@ -97,9 +135,17 @@ class MySettingsController extends ControllerBase {
         continue;
       }
 
+      if ($target_entity->bundle() !== $target_bundle) {
+        continue;
+      }
+
       $formatted_flaggings['items'][] = [
         'id' => $flagging->id(),
-        'state' => TRUE,
+        'state' => $flagging->get('field_notification_frequency')->value === NotificationFrequencies::ON,
+        'update_url' => Url::fromRoute('eic_user.toggle_follow_flag', [
+          'notification_type' => $notification_type,
+          'flagging' => $flagging->id(),
+        ])->toString(),
         'name' => [
           'path' => $target_entity->toUrl()->toString(),
           'label' => $target_entity->label(),

@@ -4,9 +4,11 @@ namespace Drupal\eic_user\Service;
 
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Session\AccountProxyInterface;
+use Drupal\eic_user\NotificationFrequencies;
 use Drupal\eic_user\NotificationTypes;
 use Drupal\eic_user\UserHelper;
 use Drupal\flag\Entity\Flagging;
+use Drupal\flag\FlaggingInterface;
 use Drupal\flag\FlagInterface;
 use Drupal\flag\FlagService;
 use Drupal\profile\Entity\ProfileInterface;
@@ -27,7 +29,7 @@ class NotificationSettingsManager {
    */
   private static $flags = [
     NotificationTypes::GROUPS_NOTIFICATION_TYPE => 'follow_group',
-    NotificationTypes::EVENTS_NOTIFICATION_TYPE => 'follow_event',
+    NotificationTypes::EVENTS_NOTIFICATION_TYPE => 'follow_group',
   ];
 
   /**
@@ -70,11 +72,12 @@ class NotificationSettingsManager {
 
   /**
    * @param string $notification_type
+   * @param \Drupal\flag\FlaggingInterface|null $flagging
    *
    * @return bool|null
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
-  public function toggleSetting(string $notification_type): ?bool {
+  public function toggleSetting(string $notification_type, ?FlaggingInterface $flagging): ?bool {
     $user = User::load($this->currentUser->id());
     if (!$user instanceof UserInterface) {
       throw new \InvalidArgumentException('Current user doesn\'t exist');
@@ -84,6 +87,47 @@ class NotificationSettingsManager {
       throw new \InvalidArgumentException('Given type isn\'t allowed');
     }
 
+    $new_value = NULL;
+    switch ($notification_type) {
+      case NotificationTypes::GROUPS_NOTIFICATION_TYPE:
+      case NotificationTypes::EVENTS_NOTIFICATION_TYPE:
+        $new_value = $this->updateFollowFlag($flagging, $user);
+        break;
+      case NotificationTypes::COMMENTS_NOTIFICATION_TYPE:
+      case NotificationTypes::INTEREST_NOTIFICATION_TYPE:
+        $new_value = $this->updateProfileSetting($notification_type, $user);
+    }
+
+    return $new_value;
+  }
+
+  /**
+   * @param \Drupal\flag\FlaggingInterface $flagging
+   * @param \Drupal\user\UserInterface $user
+   *
+   * @return string
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   */
+  public function updateFollowFlag(FlaggingInterface $flagging, UserInterface $user) {
+    $current_value = $flagging->get('field_notification_frequency')->value;
+    $new_value = empty($current_value) || $current_value === NotificationFrequencies::OFF
+      ? NotificationFrequencies::ON
+      : NotificationFrequencies::OFF;
+
+    $flagging->set('field_notification_frequency', $new_value);
+    $flagging->save();
+
+    return $new_value;
+  }
+
+  /**
+   * @param string $notification_type
+   * @param \Drupal\user\UserInterface $user
+   *
+   * @return bool
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   */
+  private function updateProfileSetting(string $notification_type, UserInterface $user) {
     $profile = $this->userHelper->getUserMemberProfile($user);
     if (!$profile instanceof ProfileInterface) {
       return FALSE;
@@ -107,7 +151,6 @@ class NotificationSettingsManager {
 
     return $value;
   }
-
 
   /**
    * @param string $type
