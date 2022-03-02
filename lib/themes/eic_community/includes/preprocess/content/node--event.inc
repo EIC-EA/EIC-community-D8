@@ -62,41 +62,51 @@ function eic_community_preprocess_node__event(array &$variables) {
 
       // Get the event state.
       $teaser['date']['variant'] = _eic_community_get_ecl_date_block_variant($node, 'field_date_range');
-      $location_type = $node->get('field_location_type')->value;
+      $locations_type = $node->get('field_location_type')->getValue();
 
       $location = $node->hasField('field_location') ?
         $node->get('field_location')->getValue() :
         NULL;
-      $location_formatted = '';
 
-      if (!empty($location)) {
-        $location = reset($location);
-        $city = $location ? $location['locality'] : '';
-        $country = $node->get('field_vocab_geo')->entity;
-        $locality_data = [
-          $city,
-          $country instanceof \Drupal\taxonomy\TermInterface ? $country->label() : NULL,
-        ];
+      $locations_type_data = [];
+      foreach ($locations_type as $location_type) {
+        if ('remote' === $location_type['value']) {
+          $locations_type_data[] = [
+            'label' => t('Remote event', [], ['context' => 'eic_community']),
+            'icon' => [
+              'name' => 'video',
+              'type' => 'general',
+            ],
+          ];
+        }
+        // Handle on site.
+        elseif (!empty($location)) {
+          $location = reset($location);
+          $city = $location ? $location['locality'] : '';
+          $country = $node->get('field_vocab_geo')->entity;
+          $locality_data = [
+            $city,
+            $country instanceof \Drupal\taxonomy\TermInterface ? $country->label() : NULL,
+          ];
 
-        $locality_data = array_filter($locality_data, function ($locality) {
-          return $locality;
-        });
+          $locality_data = array_filter($locality_data, function ($locality) {
+            return $locality;
+          });
 
-        $location_formatted = !empty($locality_data) ? implode(', ', $locality_data) : '';
+          $location_formatted = !empty($locality_data) ? implode(', ', $locality_data) : '';
+          $locations_type_data[] = [
+            'label' => $location_formatted,
+            'icon' => [
+              'name' => 'mappin',
+              'type' => 'custom',
+            ],
+          ];
+        }
       }
 
-      $teaser['type'] = [
-        'label' => $location_type == 'remote' ?
-          t('Remote event', [], ['context' => 'eic_community']) :
-          $location_formatted,
-        'icon' => [
-          'name' => $location_type === 'remote' ? 'video' : 'mappin',
-          'type' => $location_type === 'remote' ? 'general' : 'custom',
-        ],
-      ];
+      $teaser['type'] = $locations_type_data;
 
       // Get the event type.
-      $event_type_label = '';
       /** @var \Drupal\group\Entity\GroupInterface $group */
       $group = \Drupal::routeMatch()->getParameter('group');
       if (!$node->field_vocab_event_type->isEmpty() && $group instanceof GroupInterface) {
