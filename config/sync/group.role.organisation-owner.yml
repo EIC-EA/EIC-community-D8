@@ -13,6 +13,7 @@ group_type: organisation
 permissions_ui: true
 permissions:
   - 'access group search overview'
+  - 'administer members'
   - 'create group_node:event entity'
   - 'create group_node:news entity'
   - 'delete activity item'

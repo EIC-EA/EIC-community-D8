@@ -25,6 +25,7 @@ permissions:
   - 'access members overview'
   - 'access news overview'
   - 'access wiki overview'
+  - 'administer members'
   - 'create group_node:event entity'
   - 'create group_node:news entity'
   - 'delete any invitation'
