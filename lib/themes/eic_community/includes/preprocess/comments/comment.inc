@@ -125,7 +125,7 @@ function eic_community_preprocess_comment(&$variables) {
   switch ($view_mode) {
     case 'notification_teaser':
       $variables['comment']['author']['image'] = [
-        'src' => $variables['eic_images_path'] . '/custom/svg/custom/user_circle.svg',
+        'src' => $variables['eic_images_path'] . '/sprite/custom/svg/custom/user_circle.svg',
         'alt' => $author->getDisplayName(),
       ];
       // Removes unneeded variables from notification teaser.
