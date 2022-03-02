@@ -3,7 +3,6 @@ langcode: en
 status: true
 dependencies:
   module:
-    - eic_search
     - eic_user
     - route_condition
 label: 'My profile'

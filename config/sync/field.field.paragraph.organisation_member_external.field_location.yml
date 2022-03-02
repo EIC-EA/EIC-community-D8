@@ -1,0 +1,29 @@
+uuid: f1f042b0-b079-4ab0-a256-4d4637f3e5a0
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_location
+    - paragraphs.paragraphs_type.organisation_member_external
+    - taxonomy.vocabulary.geo
+id: paragraph.organisation_member_external.field_location
+field_name: field_location
+entity_type: paragraph
+bundle: organisation_member_external
+label: Location
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      geo: geo
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

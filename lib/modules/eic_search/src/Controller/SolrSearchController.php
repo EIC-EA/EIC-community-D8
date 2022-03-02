@@ -138,6 +138,11 @@ class SolrSearchController extends ControllerBase {
         $author_ignore_content_query = ' AND !(' . $source->getAuthorFieldId() . ':' . $this->currentUser()->id() . ')';
       }
 
+      if ($source->prefilterByCurrentUser() && $source->getAuthorFieldId()) {
+        $prefilter_current_user_query =
+          ' AND (' . $source->getAuthorFieldId() . ':(' . $this->currentUser()->id() . '))';
+      }
+
       // If source supports date filter and query has a from or to date.
       if ($source->supportDateFilter() && ($from_date || $end_date)) {
         $date_fields_id = $source->getDateIntervalField();
@@ -244,6 +249,10 @@ class SolrSearchController extends ControllerBase {
       $fq .= $author_ignore_content_query;
     }
 
+    if ($prefilter_current_user_query) {
+      $fq .= $prefilter_current_user_query;
+    }
+
     if ($source->prefilterByGroupsMembership()) {
       /** @var \Drupal\group\GroupMembershipLoader $grp_membership_service */
       $grp_membership_service = \Drupal::service('group.membership_loader');
@@ -255,7 +264,9 @@ class SolrSearchController extends ControllerBase {
 
       $group_filters_id = $source->getPrefilteredGroupFieldId();
 
-      $fq .= ' AND (' . reset($group_filters_id) . ':(' . implode(' OR ', $grp_ids) . ' OR "-1"))';
+      if ($group_filters_id) {
+        $fq .= ' AND (' . reset($group_filters_id) . ':(' . implode(' OR ', $grp_ids) . ' OR "-1"))';
+      }
     }
 
     $solariumQuery->addParam('fq', $fq);
@@ -349,7 +360,7 @@ class SolrSearchController extends ControllerBase {
     }
 
     $user_topics_string = implode(' OR ', $user_topics_id);
-    $fq .= " AND (itm_group_field_vocab_topics:($user_topics_string) OR itm_content_field_vocab_topics:($user_topics_string))";
+    $fq .= " AND (itm_group_field_vocab_topics:($user_topics_string) OR itm_content_field_vocab_topics:($user_topics_string) OR itm_message_node_ref_field_vocab_topics:($user_topics_string))";
   }
 
   /**

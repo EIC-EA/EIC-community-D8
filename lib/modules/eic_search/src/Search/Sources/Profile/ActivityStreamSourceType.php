@@ -101,7 +101,7 @@ class ActivityStreamSourceType extends SourceType {
    * @inheritDoc
    */
   public function ignoreContentFromCurrentUser(): bool {
-    return FALSE;
+    return TRUE;
   }
 
   /**

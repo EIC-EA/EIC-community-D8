@@ -51,7 +51,5 @@ type_settings:
         - unpublished
       to: unpublished
       weight: 2
-  entity_types:
-    node:
-      - wiki_page
+  entity_types: { }
   default_moderation_state: draft

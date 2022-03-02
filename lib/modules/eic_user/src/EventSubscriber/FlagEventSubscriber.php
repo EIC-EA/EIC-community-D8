@@ -3,15 +3,20 @@
 namespace Drupal\eic_user\EventSubscriber;
 
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\eic_flags\FlagType;
+use Drupal\eic_search\Service\SolrDocumentProcessor;
 use Drupal\eic_topics\Constants\Topics;
 use Drupal\eic_user\UserHelper;
 use Drupal\flag\Event\FlagEvents;
 use Drupal\flag\Event\FlaggingEvent;
 use Drupal\flag\Event\UnflaggingEvent;
 use Drupal\flag\FlaggingInterface;
+use Drupal\group\Entity\GroupInterface;
+use Drupal\node\NodeInterface;
 use Drupal\profile\Entity\ProfileInterface;
 use Drupal\taxonomy\TermInterface;
+use Drupal\user\UserInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -27,13 +32,31 @@ class FlagEventSubscriber implements EventSubscriberInterface {
   private $eicUserHelper;
 
   /**
+   * The solr document processor service.
+   *
+   * @var \Drupal\eic_search\Service\SolrDocumentProcessor $solrDocumentProcessor
+   */
+  private $solrDocumentProcessor;
+
+  /**
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface $em
+   */
+  private $em;
+
+  /**
    * FlagEventSubscriber constructor.
    *
    * @param \Drupal\eic_user\UserHelper $eic_user_helper
    *   The EIC User Helper service.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $em ;
+   *   The entity type manager.
    */
-  public function __construct(UserHelper $eic_user_helper) {
+  public function __construct(
+    UserHelper $eic_user_helper,
+    EntityTypeManagerInterface $em
+  ) {
     $this->eicUserHelper = $eic_user_helper;
+    $this->em = $em;
   }
 
   /**
@@ -55,6 +78,7 @@ class FlagEventSubscriber implements EventSubscriberInterface {
   public function onFlag(FlaggingEvent $event) {
     $flagging = $event->getFlagging();
     $this->flagUnFlag($flagging, FlagEvents::ENTITY_FLAGGED);
+    $this->handleFollowContentReindex($flagging);
   }
 
   /**
@@ -66,6 +90,7 @@ class FlagEventSubscriber implements EventSubscriberInterface {
   public function onUnFlag(UnflaggingEvent $event) {
     $flaggings = $event->getFlaggings();
     $this->flagUnFlag(reset($flaggings), FlagEvents::ENTITY_UNFLAGGED);
+    $this->handleFollowContentReindex(reset($flaggings));
   }
 
   /**
@@ -167,6 +192,93 @@ class FlagEventSubscriber implements EventSubscriberInterface {
       $profile->$vocab_field_name = $topics;
       $profile->save();
     }
+  }
+
+  /**
+   * Reindex messages link to the flag entity.
+   *
+   * @param \Drupal\flag\FlaggingInterface $flagging
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   * @throws \Drupal\search_api\SearchApiException
+   */
+  private function handleFollowContentReindex(FlaggingInterface $flagging): void {
+    $entity = $flagging->getFlaggable();
+
+    switch ($flagging->getFlagId()) {
+      case 'follow_content':
+        if (!$entity instanceof NodeInterface) {
+          break;
+        }
+
+        $messages = $this->em->getStorage('message')->loadByProperties([
+          'field_referenced_node' => $entity->id(),
+        ]);
+
+        $this->solrDocumentProcessor->reIndexEntities($messages);
+        break;
+      case 'follow_user':
+        if (!$entity instanceof UserInterface) {
+          break;
+        }
+
+        $messages = $this->em->getStorage('message')->loadByProperties([
+          'uid' => $entity->id(),
+        ]);
+
+        $this->solrDocumentProcessor->reIndexEntities($messages);
+        break;
+      case 'follow_group':
+        if (!$entity instanceof GroupInterface) {
+          break;
+        }
+
+        $messages = $this->em->getStorage('message')->loadByProperties([
+          'field_group_ref' => $entity->id(),
+        ]);
+
+        $this->solrDocumentProcessor->reIndexEntities($messages);
+        break;
+      case 'follow_taxonomy_term':
+        if (!$entity instanceof TermInterface) {
+          break;
+        }
+
+        $groups = $this->em->getStorage('group')->loadByProperties([
+          'field_vocab_topics' => $entity->id(),
+        ]);
+
+        $message_groups = $this->em->getStorage('message')->loadByProperties([
+          'field_group_ref' => array_map(function (GroupInterface $group) {
+            return $group->id();
+          }, $groups),
+        ]);
+
+        $nodes = $this->em->getStorage('node')->loadByProperties([
+          'field_vocab_topics' => $entity->id(),
+        ]);
+
+        $message_nodes = $this->em->getStorage('message')->loadByProperties([
+          'field_referenced_node' => array_map(function (NodeInterface $node) {
+            return $node->id();
+          }, $nodes),
+        ]);
+
+        $this->solrDocumentProcessor->reIndexEntities($message_groups);
+        $this->solrDocumentProcessor->reIndexEntities($message_nodes);
+        break;
+    }
+  }
+
+  /**
+   * Setter method to inject the SolrDocumentProcessor.
+   *
+   * @param \Drupal\eic_search\Service\SolrDocumentProcessor|null $solr_document_processor
+   *   The EIC Search Solr Document Processor.
+   */
+  public function setDocumentProcessor(?SolrDocumentProcessor $solr_document_processor) {
+    $this->solrDocumentProcessor = $solr_document_processor;
   }
 
 }

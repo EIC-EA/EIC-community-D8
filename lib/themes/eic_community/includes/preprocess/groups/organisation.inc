@@ -24,6 +24,11 @@ function eic_community_preprocess_group__organisation(&$variables) {
   /** @var \Drupal\group\Entity\GroupInterface $group */
   $group = $variables['group'];
   _eic_community_render_organisation_detail_page($variables, $group);
+
+  // About page preprocessing.
+  if (isset($variables['elements']['owners'])) {
+    _preprocess_about_page($variables);
+  }
 }
 
 /**
@@ -423,7 +428,6 @@ function eic_community_preprocess_paragraph__organisation_member(&$variables) {
   /** @var ParagraphInterface $paragraph */
   $paragraph = $variables['paragraph'];
   /** @var GroupInterface $group */
-  $group = \Drupal::service('eic_groups.helper')->getGroupFromRoute();
   $user_ref = $paragraph->get('field_user_ref')->referencedEntities();
   /** @var \Drupal\user\UserInterface $user */
   $user = reset($user_ref);
@@ -438,16 +442,6 @@ function eic_community_preprocess_paragraph__organisation_member(&$variables) {
   ) : NULL;
   $last_activity_ago = eic_community_get_teaser_time_display(
     $user->get('changed')->value
-  );
-
-  /** @var \Drupal\eic_organisations\OrganisationsHelper $organisations_helper */
-  $organisations_helper = \Drupal::service('eic_organisations.helper');
-  $organisations = $organisations_helper->getUserOrganisations($user);
-  $organisations = array_filter(
-    $organisations,
-    function ($organisation) use ($group) {
-      return $group instanceof GroupInterface && $organisation->id() !== $group->id();
-    }
   );
 
   $variables['member_data'] = [
@@ -465,15 +459,12 @@ function eic_community_preprocess_paragraph__organisation_member(&$variables) {
     ],
     'title' => realname_load($user),
     'job_titles' => $paragraph->get('field_job_title')->value,
-    'organisations' => array_map(
-      function (GroupInterface $group) use ($organisations_helper) {
-        return [
-          'label' => $group->label(),
-          'path' => $group->toUrl()->toString(),
-        ];
-      },
-      $organisations
-    ),
+    'organisations' => array_map(function(array $organisation) {
+      return [
+        'label' => $organisation['value'],
+        'path' => '#'
+      ];
+    }, $paragraph->get('field_organisations')->getValue()),
     'location' => _eic_community_get_user_location($user),
     'stats' => [
       [
@@ -493,6 +484,47 @@ function eic_community_preprocess_paragraph__organisation_member(&$variables) {
         ],
       ],
     ],
+  ];
+}
+
+/**
+ * Implement hook_preprocess_paragraph__PARAGRAPH_TYPE.
+ */
+function eic_community_preprocess_paragraph__organisation_member_external(&$variables) {
+  /** @var ParagraphInterface $paragraph */
+  $paragraph = $variables['paragraph'];
+
+  $media_picture = $paragraph->get('field_media')->referencedEntities();
+  $file = $media_picture ? File::load(
+    $media_picture[0]->get('oe_media_image')->target_id
+  ) : NULL;
+  $file_url = $file ? file_url_transform_relative(
+    file_create_url($file->get('uri')->value)
+  ) : NULL;
+
+  $location = $paragraph->get('field_location')->referencedEntities();
+
+  $variables['member_data'] = [
+    'icon_file_path' => $variables['eic_icon_path'],
+    'image' => [
+      'src' => $file_url,
+    ],
+    'title' => $paragraph->get('field_full_name')->value,
+    'job_titles' => $paragraph->get('field_job_title')->value,
+    'status' => [
+      'label' => $paragraph->get('field_role')->value,
+      'icon' => [
+        'type' => 'custom',
+        'name' => 'trophy_circle',
+      ],
+    ],
+    'organisations' => array_map(function($value) {
+      return [
+        'label' => $value,
+        'path' => '#'
+      ];
+    }, $paragraph->get('field_organisations')->getValue()),
+    'location' => $location ? ['label' => reset($location)->label()] : '',
   ];
 }
 
@@ -517,3 +549,4 @@ function _generate_overview_prefilter_url(string $filter, string $value): string
     $query_options
   )->getUrl()->toString();
 }
+

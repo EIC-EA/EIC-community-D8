@@ -17,6 +17,7 @@ use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
+use Drupal\eic_content\Constants\DefaultContentModerationStates;
 use Drupal\eic_content_wiki_page\WikiPageBookManager;
 use Drupal\eic_groups\Constants\NodeProperty;
 use Drupal\eic_groups\EICGroupsHelper;
@@ -218,11 +219,11 @@ class EntityOperations implements ContainerInjectionInterface {
         $variables['joining_methods'] = $this->oecGroupFlexHelper->getGroupJoiningMethod($entity);
 
         // Get the title and descriptions for each plugin.
-        $variables['visibility']['title'] = $this->eicGroupsHelper->getGroupFlexPluginTitle('visibility', $variables['visibility']['plugin_id']);
-        $variables['visibility']['description'] = $this->eicGroupsHelper->getGroupFlexPluginDescription('visibility', $variables['visibility']['plugin_id']);
+        $variables['visibility']['title'] = $this->eicGroupsHelper->getGroupFlexPluginTitle('visibility', $variables['visibility']['plugin_id'], 'default', $entity->bundle());
+        $variables['visibility']['description'] = $this->eicGroupsHelper->getGroupFlexPluginDescription('visibility', $variables['visibility']['plugin_id'], $entity->bundle());
         foreach ($variables['joining_methods'] as $index => $joining_method) {
           $variables['joining_methods'][$index]['title'] = $this->eicGroupsHelper->getGroupFlexPluginTitle('joining_method', $joining_method['plugin_id']);
-          $variables['joining_methods'][$index]['description'] = $this->eicGroupsHelper->getGroupFlexPluginDescription('joining_method', $joining_method['plugin_id']);
+          $variables['joining_methods'][$index]['description'] = $this->eicGroupsHelper->getGroupFlexPluginDescription('joining_method', $joining_method['plugin_id'], $entity->bundle());
         }
 
         $build += $variables;
@@ -398,7 +399,7 @@ class EntityOperations implements ContainerInjectionInterface {
     if (!empty($results)) {
       $group_content = GroupContent::load(reset($results));
       if (($node_book = $group_content->getEntity()) && $node_book instanceof NodeInterface) {
-        $node_book->setPublished();
+        $node_book->set('moderation_state', DefaultContentModerationStates::PUBLISHED_STATE);
         $node_book->save();
       }
     }

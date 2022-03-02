@@ -1,8 +1,16 @@
 eic_user.user.activity:
   path: '/user/{user}/activity'
   defaults:
-    _controller: '\Drupal\eic_user\Controller\MyProfileController::interests'
+    _controller: '\Drupal\eic_user\Controller\MyProfileController::activity'
     _title: 'My interests'
+  requirements:
+    _custom_access: '\Drupal\eic_user\Controller\MyProfileController::access'
+
+eic_user.user.following:
+  path: '/user/{user}/following'
+  defaults:
+    _controller: '\Drupal\eic_user\Controller\MyProfileController::activity'
+    _title: 'My followings'
   requirements:
     _custom_access: '\Drupal\eic_user\Controller\MyProfileController::access'
 

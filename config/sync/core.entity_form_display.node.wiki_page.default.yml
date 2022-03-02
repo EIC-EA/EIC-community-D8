@@ -9,7 +9,7 @@ dependencies:
     - field.field.node.wiki_page.field_vocab_geo
     - field.field.node.wiki_page.field_vocab_topics
     - node.type.wiki_page
-    - workflows.workflow.group_wiki
+    - workflows.workflow.default
   module:
     - content_moderation
     - media_library
