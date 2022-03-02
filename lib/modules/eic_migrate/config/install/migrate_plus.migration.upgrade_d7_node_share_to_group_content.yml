@@ -15,7 +15,7 @@ source:
   track_changes: true
 process:
   type:
-    - plugin: eic_d7_og_group_ref
+    - plugin: eic_d7_og_membership
       source: nid
       entity_type: node
     - plugin: migration_lookup
@@ -45,7 +45,7 @@ process:
       migration:
         - upgrade_d7_user
   gid:
-    - plugin: eic_d7_og_group_ref
+    - plugin: eic_d7_og_membership
       source: nid
       entity_type: node
     - plugin: migration_lookup
