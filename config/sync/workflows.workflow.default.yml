@@ -1,16 +1,28 @@
-uuid: 4b5eb05e-e026-4924-9267-b4b3decc2dca
+uuid: a7b8dde7-3298-4c09-9e37-89ac70087eb7
 langcode: en
 status: true
 dependencies:
   config:
+    - node.type.book
+    - node.type.discussion
+    - node.type.document
+    - node.type.event
+    - node.type.gallery
+    - node.type.page
+    - node.type.video
     - node.type.wiki_page
   module:
-    - content_moderation
-id: group_wiki
-label: 'Group Wiki'
+    - content_moderation_bypass
+id: default
+label: Default
 type: content_moderation
 type_settings:
   states:
+    archived:
+      label: Archived
+      weight: 2
+      published: false
+      default_revision: true
     draft:
       label: Draft
       weight: 0
@@ -21,18 +33,19 @@ type_settings:
       weight: 1
       published: true
       default_revision: true
-    unpublished:
-      label: Unpublished
-      weight: 2
-      published: false
-      default_revision: true
   transitions:
+    archive:
+      label: Archive
+      from:
+        - archived
+        - published
+      to: archived
+      weight: 2
     create_new_draft:
       label: 'Create New Draft'
       from:
         - draft
         - published
-        - unpublished
       to: draft
       weight: 0
     publish:
@@ -40,16 +53,16 @@ type_settings:
       from:
         - draft
         - published
-        - unpublished
       to: published
       weight: 1
-    unpublish:
-      label: Unpublish
-      from:
-        - draft
-        - published
-        - unpublished
-      to: unpublished
-      weight: 2
-  entity_types: { }
+  entity_types:
+    node:
+      - book
+      - discussion
+      - document
+      - event
+      - gallery
+      - page
+      - video
+      - wiki_page
   default_moderation_state: draft
