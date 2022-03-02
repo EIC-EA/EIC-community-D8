@@ -24,6 +24,11 @@ function eic_community_preprocess_group__organisation(&$variables) {
   /** @var \Drupal\group\Entity\GroupInterface $group */
   $group = $variables['group'];
   _eic_community_render_organisation_detail_page($variables, $group);
+
+  // About page preprocessing.
+  if (isset($variables['elements']['owners'])) {
+    _preprocess_about_page($variables);
+  }
 }
 
 /**
