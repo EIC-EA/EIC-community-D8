@@ -70,32 +70,31 @@ function eic_community_preprocess_group__event(&$variables) {
       }
 
       // Add event topics to the theme variables.
-      if (!$group->get('field_vocab_topics')->isEmpty()) {
-        $event_topics = $group->get('field_vocab_topics')->referencedEntities();
+      if (!$group->get('field_vocab_event_type')->isEmpty()) {
+        /** @var \Drupal\taxonomy\TermInterface $event_type */
+        $event_type = $group->get('field_vocab_event_type')->entity;
 
         $teaser['tags'] = [];
-        foreach ($event_topics as $event_topic) {
-          // Build solr query parameters for the events overview page to filter
-          // by topic.
-          $params = SearchHelper::buildSolrQueryParams(
-            [
-              'itm_aggregated_field_vocab_topics' => $event_topic->id(),
-            ]
-          );
-          $tag = [
-            'label' => $event_topic->getName(),
-          ];
+        // Build solr query parameters for the events overview page to filter
+        // by topic.
+        $params = SearchHelper::buildSolrQueryParams(
+          [
+            'ss_group_event_type_string' => $event_type->label(),
+          ]
+        );
+        $tag = [
+          'label' => $event_type->getName(),
+        ];
 
-          $url = GlobalOverviewPages::getGlobalOverviewPageLink(GlobalOverviewPages::EVENTS)->getUrl();
+        $url = GlobalOverviewPages::getGlobalOverviewPageLink(GlobalOverviewPages::EVENTS)->getUrl();
 
-          if ($url) {
-            $url->setOption('query', $params)
-              ->toString();
-            $tag['path'] = $url;
-          }
-
-          $teaser['tags'][] = $tag;
+        if ($url) {
+          $url->setOption('query', $params)
+            ->toString();
+          $tag['path'] = $url;
         }
+
+        $teaser['tags'][] = $tag;
       }
 
       // Adds number of group members to the theme variables.
@@ -111,7 +110,10 @@ function eic_community_preprocess_group__event(&$variables) {
         $event_date_status = \Drupal::service('eic_helper.datetime')->getDateRangeStatus($group, 'field_date_range');
         $registration_start_date = strtotime($group->get('field_event_registration_date')->value);
         $registration_end_date = strtotime($group->get('field_event_registration_date')->end_value);
-        $registration_status = \Drupal::service('eic_helper.datetime')->getDateRangeStatus($group, 'field_event_registration_date');
+        $registration_status = \Drupal::service('eic_helper.datetime')->getDateRangeStatus(
+          $group,
+          'field_event_registration_date'
+        );
 
         switch ($registration_status) {
           case DateTimeHelper::DATE_RANGE_UPCOMING:
@@ -166,8 +168,16 @@ function eic_community_preprocess_group__event(&$variables) {
         ];
       }
 
-      $teaser['date']['start'] = _eic_community_preprocess_ecl_date_block($event_start_date, NULL, DateTimeHelper::DATE_FORMAT_SHORT);
-      $teaser['date']['end'] = _eic_community_preprocess_ecl_date_block($event_end_date, NULL, DateTimeHelper::DATE_FORMAT_SHORT);
+      $teaser['date']['start'] = _eic_community_preprocess_ecl_date_block(
+        $event_start_date,
+        NULL,
+        DateTimeHelper::DATE_FORMAT_SHORT
+      );
+      $teaser['date']['end'] = _eic_community_preprocess_ecl_date_block(
+        $event_end_date,
+        NULL,
+        DateTimeHelper::DATE_FORMAT_SHORT
+      );
 
       // Get the event state.
       $teaser['date']['variant'] = _eic_community_get_ecl_date_block_variant($group, 'field_date_range');
@@ -261,7 +271,9 @@ function _event_about_permissions_tab($variables, &$sections) {
       'content' => [
         '#theme' => 'eic_community_extended_list',
         '#title' => t('Event Permissions'),
-        '#description' => t("Below is explained to whom this event is visible in order to understand the private or public character of the event's content."),
+        '#description' => t(
+          "Below is explained to whom this event is visible in order to understand the private or public character of the event's content."
+        ),
         '#items' => $admin_items,
       ],
     ];
