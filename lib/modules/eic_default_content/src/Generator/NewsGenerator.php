@@ -2,10 +2,11 @@
 
 namespace Drupal\eic_default_content\Generator;
 
+use Drupal\eic_private_content\PrivateContentConst;
 use Drupal\node\Entity\Node;
 
 /**
- * Class NewsGenerator
+ * Class to generate news using fixtures.
  *
  * @package Drupal\eic_default_content\Generator
  */
@@ -31,6 +32,7 @@ class NewsGenerator extends CoreGenerator {
         'field_vocab_topics' => $this->getRandomEntities('taxonomy_term', ['vid' => 'topics'], 1),
         'field_vocab_geo' => $this->getRandomEntities('taxonomy_term', ['vid' => 'geo'], 1),
         'moderation_state' => 'published',
+        PrivateContentConst::FIELD_NAME => FALSE,
       ];
 
       $node = Node::create($values);
