@@ -4,10 +4,16 @@ namespace Drupal\eic_search\Search\DocumentProcessor;
 
 use Drupal\comment\CommentInterface;
 use Drupal\comment\Entity\Comment;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\eic_comments\CommentsHelper;
 use Drupal\eic_media_statistics\EntityFileDownloadCount;
+use Drupal\flag\FlaggingInterface;
+use Drupal\flag\FlagServiceInterface;
+use Drupal\group\Entity\Group;
 use Drupal\group\Entity\GroupContent;
 use Drupal\group\Entity\GroupInterface;
+use Drupal\message\Entity\Message;
+use Drupal\message\MessageInterface;
 use Drupal\node\Entity\Node;
 use Drupal\node\NodeInterface;
 use Drupal\statistics\NodeStatisticsDatabaseStorage;
@@ -43,18 +49,32 @@ class ProcessorMessage extends DocumentProcessor {
   private $commentsHelper;
 
   /**
+   * The flag service.
+   *
+   * @var \Drupal\flag\FlagServiceInterface
+   */
+  private $flagService;
+
+  /**
    * @param \Drupal\eic_media_statistics\EntityFileDownloadCount $entityDownloadHelper
+   *   The entity file download count service.
    * @param \Drupal\statistics\NodeStatisticsDatabaseStorage $nodeStatisticsDatabaseStorage
+   *   The node statistics database storage service.
    * @param CommentsHelper $commentsHelper
+   *   The comment helper service.
+   * @param FlagServiceInterface $flag_service
+   *   The flag service.
    */
   public function __construct(
     EntityFileDownloadCount $entityDownloadHelper,
     NodeStatisticsDatabaseStorage $nodeStatisticsDatabaseStorage,
-    CommentsHelper $commentsHelper
+    CommentsHelper $commentsHelper,
+    FlagServiceInterface $flag_service
   ) {
     $this->entityDownloadHelper = $entityDownloadHelper;
     $this->nodeStatisticsDatabaseStorage = $nodeStatisticsDatabaseStorage;
     $this->commentsHelper = $commentsHelper;
+    $this->flagService = $flag_service;
   }
 
   /**
@@ -122,6 +142,41 @@ class ProcessorMessage extends DocumentProcessor {
       $map_type
     );
 
+    $message = Message::load($fields['its_message_id']);
+    // Index all followers link to the message data.
+    if ($message instanceof MessageInterface) {
+      $topics = $node->get('field_vocab_topics')->referencedEntities();
+      $topics_follows = [];
+      foreach ($topics as $topic) {
+        $topics_follows = array_merge(
+          $topics_follows,
+          $this->getFollowUidByFlag('follow_taxonomy_term', $topic)
+        );
+      }
+      $user_follows = $this->getFollowUidByFlag('follow_user', $message->getOwner());
+      $node_follows = $this->getFollowUidByFlag('follow_content', $node);
+      $group_follows = [];
+      $node_group_id = array_key_exists('its_group_id', $fields) ? $fields['its_group_id'] : NULL;
+
+      if ($group = Group::load($node_group_id)) {
+        $group_follows = $this->getFollowUidByFlag('follow_group', $group);
+      }
+
+      $follows = array_merge(
+        $user_follows,
+        $node_follows,
+        $group_follows,
+        $topics_follows
+      );
+
+      $this->addOrUpdateDocumentField(
+        $document,
+        'itm_follow_uid',
+        $fields,
+        array_unique($follows)
+      );
+    }
+
     if ($index_views) {
       $this->addOrUpdateDocumentField(
         $document,
@@ -153,6 +208,24 @@ class ProcessorMessage extends DocumentProcessor {
    */
   public function supports(array $fields): bool {
     return $fields['ss_search_api_datasource'] === 'entity:message';
+  }
+
+  /**
+   * @param string $flag_id
+   *   The flag id.
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The entity to get flaggings.
+   *
+   * @return array
+   *   Return the array of user flagged.
+   */
+  private function getFollowUidByFlag(string $flag_id, EntityInterface $entity): array {
+    $flag_follow = $this->flagService->getFlagById($flag_id);
+    $follows = $this->flagService->getEntityFlaggings($flag_follow, $entity);
+
+    return array_map(function (FlaggingInterface $flagging) {
+      return (int) $flagging->getOwnerId();
+    }, $follows);
   }
 
 }

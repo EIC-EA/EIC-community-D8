@@ -165,6 +165,13 @@ interface SourceTypeInterface {
   public function ignoreContentFromCurrentUser(): bool;
 
   /**
+   * Prefilter content by current user ID (field will be taken from the getAuthorFieldId).
+   *
+   * @return bool
+   */
+  public function prefilterByCurrentUser(): bool;
+
+  /**
    * Get the SOLR field for the user_id (author).
    *
    * @return string

@@ -1,0 +1,70 @@
+uuid: 093c1feb-051c-4362-94b5-54470e338c04
+langcode: en
+status: true
+dependencies:
+  module:
+    - eic_search
+    - route_condition
+label: Following
+name: following
+group: 'My profile'
+description: ''
+requireAllConditions: false
+disabled: false
+conditions:
+  route:
+    id: route
+    negate: false
+    uuid: 32d8c454-78f3-473f-a548-b90f18ade3cc
+    context_mapping: {  }
+    routes: eic_user.user.following
+reactions:
+  blocks:
+    id: blocks
+    uuid: 87b0741d-5025-4278-bf36-e332c1eb01bd
+    blocks:
+      4e797e58-b472-44b4-b386-2e56497f13b0:
+        id: eic_search_overview
+        label: ''
+        provider: eic_search
+        label_display: visible
+        context_mapping: {  }
+        source_type: Drupal\eic_search\Search\Sources\Profile\FollowingSourceType
+        facets:
+          ss_activity_type: ss_activity_type
+          sm_content_field_vocab_topics_string: sm_content_field_vocab_topics_string
+        sort_options: {  }
+        enable_search: 1
+        page_options: normal
+        prefilter_group: 0
+        enable_date_filter: 0
+        add_facet_interests: 0
+        add_facet_my_groups: 0
+      e2190297-1c0e-48df-8a25-e930bd42251b:
+        uuid: e2190297-1c0e-48df-8a25-e930bd42251b
+        id: eic_search_overview
+        label: ''
+        provider: eic_search
+        label_display: visible
+        region: content
+        custom_id: eic_search_overview
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: following
+        context_mapping: {  }
+        source_type: Drupal\eic_search\Search\Sources\Profile\FollowingSourceType
+        facets:
+          ss_activity_type: ss_activity_type
+          sm_content_field_vocab_topics_string: sm_content_field_vocab_topics_string
+        sort_options: {  }
+        enable_search: 1
+        page_options: normal
+        prefilter_group: 0
+        enable_date_filter: 0
+        add_facet_interests: 0
+        add_facet_my_groups: 0
+        third_party_settings: {  }
+    include_default_blocks: 0
+    saved: false
+weight: 0

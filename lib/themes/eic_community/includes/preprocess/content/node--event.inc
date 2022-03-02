@@ -7,6 +7,9 @@
 
 use Drupal\eic_helper\DateTimeHelper;
 use Drupal\eic_community\ValueObject\ImageValueObject;
+use Drupal\eic_search\SearchHelper;
+use Drupal\eic_overviews\GroupOverviewPages;
+use Drupal\group\Entity\GroupInterface;
 
 /**
  * Implements hook_preprocess_node__event() for event node.
@@ -43,10 +46,18 @@ function eic_community_preprocess_node__event(array &$variables) {
         $start_date = strtotime($node->get('field_date_range')->value);
         $end_date = strtotime($node->get('field_date_range')->end_value);
       }
-      $start_date_formatted = _eic_community_preprocess_ecl_date_block($start_date, NULL, DateTimeHelper::DATE_FORMAT_SHORT);
+      $start_date_formatted = _eic_community_preprocess_ecl_date_block(
+        $start_date,
+        NULL,
+        DateTimeHelper::DATE_FORMAT_SHORT
+      );
       $teaser['date'] = $start_date_formatted;
       $teaser['date']['start'] = $start_date_formatted;
-      $teaser['date']['end'] = _eic_community_preprocess_ecl_date_block($end_date, NULL, DateTimeHelper::DATE_FORMAT_SHORT);
+      $teaser['date']['end'] = _eic_community_preprocess_ecl_date_block(
+        $end_date,
+        NULL,
+        DateTimeHelper::DATE_FORMAT_SHORT
+      );
       $teaser['timestamp']['label'] = eic_community_get_teaser_time_display($node->get('published_at')->value);
 
       // Get the event state.
@@ -67,7 +78,7 @@ function eic_community_preprocess_node__event(array &$variables) {
           $country instanceof \Drupal\taxonomy\TermInterface ? $country->label() : NULL,
         ];
 
-        $locality_data = array_filter($locality_data, function($locality) {
+        $locality_data = array_filter($locality_data, function ($locality) {
           return $locality;
         });
 
@@ -83,6 +94,35 @@ function eic_community_preprocess_node__event(array &$variables) {
           'type' => $location_type === 'remote' ? 'general' : 'custom',
         ],
       ];
+
+      // Get the event type.
+      $event_type_label = '';
+      /** @var \Drupal\group\Entity\GroupInterface $group */
+      $group = \Drupal::routeMatch()->getParameter('group');
+      if (!$node->field_vocab_event_type->isEmpty() && $group instanceof GroupInterface) {
+        /** @var \Drupal\taxonomy\Entity\Term $event_type */
+        $event_type = $node->get('field_vocab_event_type')->entity;
+
+        // Build solr query parameters for the events overview page to filter
+        // by topic.
+        $params = SearchHelper::buildSolrQueryParams(
+          [
+            'ss_content_event_type_string' => $event_type->label(),
+          ]
+        );
+
+        $url = GroupOverviewPages::getGroupOverviewPageUrl('events', $group);
+        $url->setOption('query', $params)->toString();
+
+        $teaser['tags'] = [
+          [
+            'type' => 'link',
+            'label' => $event_type->get('name')->getString(),
+            'path' => $url,
+            'aria_label' => '',
+          ],
+        ];
+      }
 
       // Remove unwanted items.
       $teaser['flags'] = [];

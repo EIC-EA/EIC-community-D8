@@ -71,7 +71,8 @@ class MyProfileHeaderBlock extends BlockBase {
       ],
       [
         'label' => $this->t('Following', [], ['context' => 'eic_user']),
-        'route' => 'eic_search.global_search',
+        'route' => 'eic_user.user.following',
+        'route_parameters' => ['user' => $current_user->id()]
       ],
       [
         'label' => $this->t('Bookmarked', [], ['context' => 'eic_user']),
@@ -98,6 +99,7 @@ class MyProfileHeaderBlock extends BlockBase {
 
     return [
       '#theme' => 'my_profile_header_block',
+      '#cache' => ['contexts' => ['url.path', 'url.query_args']],
       '#title' => $this->t('My activity feed', [], ['context' => 'eic_user']),
       '#menu_items' => ['items' => $menu_items],
       '#actions' => [

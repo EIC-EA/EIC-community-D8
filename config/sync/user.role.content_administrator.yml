@@ -21,7 +21,7 @@ dependencies:
     - node.type.story
     - node.type.video
     - node.type.wiki_page
-    - workflows.workflow.group_wiki
+    - workflows.workflow.default
     - workflows.workflow.groups
     - workflows.workflow.news_stories
   module:
@@ -170,9 +170,9 @@ permissions:
   - 'update any social_media block content'
   - 'update any tiles_reference block content'
   - 'update own member profile'
-  - 'use group_wiki transition create_new_draft'
-  - 'use group_wiki transition publish'
-  - 'use group_wiki transition unpublish'
+  - 'use default transition archive'
+  - 'use default transition create_new_draft'
+  - 'use default transition publish'
   - 'use groups transition archive'
   - 'use groups transition block'
   - 'use groups transition create_new_group'
