@@ -48,18 +48,14 @@ class FlagEventSubscriber implements EventSubscriberInterface {
    *
    * @param \Drupal\eic_user\UserHelper $eic_user_helper
    *   The EIC User Helper service.
-   * @param SolrDocumentProcessor $solr_document_processor
-   *   The solr document processor service.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $em ;
    *   The entity type manager.
    */
   public function __construct(
     UserHelper $eic_user_helper,
-    SolrDocumentProcessor $solr_document_processor,
     EntityTypeManagerInterface $em
   ) {
     $this->eicUserHelper = $eic_user_helper;
-    $this->solrDocumentProcessor = $solr_document_processor;
     $this->em = $em;
   }
 
@@ -273,6 +269,16 @@ class FlagEventSubscriber implements EventSubscriberInterface {
         $this->solrDocumentProcessor->reIndexEntities($message_nodes);
         break;
     }
+  }
+
+  /**
+   * Setter method to inject the SolrDocumentProcessor.
+   *
+   * @param \Drupal\eic_search\Service\SolrDocumentProcessor|null $solr_document_processor
+   *   The EIC Search Solr Document Processor.
+   */
+  public function setDocumentProcessor(?SolrDocumentProcessor $solr_document_processor) {
+    $this->solrDocumentProcessor = $solr_document_processor;
   }
 
 }

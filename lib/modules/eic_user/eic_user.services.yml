@@ -5,6 +5,8 @@ services:
 
   eic_user.flag_event_subscriber:
     class: Drupal\eic_user\EventSubscriber\FlagEventSubscriber
-    arguments: [ '@eic_user.helper', '@eic_search.solr_document_processor', '@entity_type.manager' ]
+    arguments: [ '@eic_user.helper', '@entity_type.manager' ]
+    calls:
+      - [ setDocumentProcessor, [ '@?eic_search.solr_document_processor' ] ]
     tags:
       - { name: event_subscriber }
