@@ -2,6 +2,7 @@
 
 namespace Drupal\eic_user\Service;
 
+use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\eic_user\NotificationFrequencies;
@@ -9,11 +10,12 @@ use Drupal\eic_user\NotificationTypes;
 use Drupal\eic_user\UserHelper;
 use Drupal\flag\Entity\Flagging;
 use Drupal\flag\FlaggingInterface;
-use Drupal\flag\FlagInterface;
 use Drupal\flag\FlagService;
 use Drupal\profile\Entity\ProfileInterface;
 use Drupal\user\Entity\User;
 use Drupal\user\UserInterface;
+use InvalidArgumentException;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 /**
  * Class NotificationSettingsManager
@@ -35,12 +37,12 @@ class NotificationSettingsManager {
   /**
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-  private $entityTypeManager;
+  private EntityTypeManagerInterface $entityTypeManager;
 
   /**
    * @var \Drupal\Core\Session\AccountProxyInterface
    */
-  private $currentUser;
+  private AccountProxyInterface $currentUser;
 
   /**
    * @var \Drupal\eic_user\UserHelper
@@ -48,18 +50,26 @@ class NotificationSettingsManager {
   private $userHelper;
 
   /**
+   * @var \Drupal\flag\FlagService
+   */
+  private $flagService;
+
+  /**
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    * @param \Drupal\Core\Session\AccountProxyInterface $account_proxy
    * @param \Drupal\eic_user\UserHelper $user_helper
+   * @param \Drupal\flag\FlagService $flag_service
    */
   public function __construct(
     EntityTypeManagerInterface $entity_type_manager,
     AccountProxyInterface $account_proxy,
-    UserHelper $user_helper
+    UserHelper $user_helper,
+    FlagService $flag_service
   ) {
     $this->entityTypeManager = $entity_type_manager;
     $this->currentUser = $account_proxy;
     $this->userHelper = $user_helper;
+    $this->flagService = $flag_service;
   }
 
   /**
@@ -110,7 +120,7 @@ class NotificationSettingsManager {
     $flagging->set('field_notification_frequency', $new_value);
     $flagging->save();
 
-    return $new_value;
+    return $new_value === NotificationFrequencies::ON;
   }
 
   /**
@@ -172,6 +182,32 @@ class NotificationSettingsManager {
     }
 
     return Flagging::loadMultiple($entity_ids);
+  }
+
+  /**
+   * @param \Drupal\flag\FlaggingInterface $flagging
+   *
+   * @return bool
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   */
+  public function unsubscribe(FlaggingInterface $flagging): bool {
+    $user = User::load($this->currentUser->id());
+    if ($user->id() !== $flagging->getOwnerId()) {
+      throw new AccessDeniedHttpException('Operation is not allowed');
+    }
+
+    $target_entity = $this->entityTypeManager
+      ->getStorage($flagging->get('entity_type')->value)
+      ->load($flagging->get('entity_id')->value);
+
+    if (!$target_entity instanceof ContentEntityInterface) {
+      throw new InvalidArgumentException('Entity does not exists');
+    }
+
+    $this->flagService->unflag($flagging->getFlag(), $target_entity, $user);
+
+    return TRUE;
   }
 
 }

@@ -5,7 +5,6 @@ namespace Drupal\eic_user\Controller;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Entity\ContentEntityInterface;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
@@ -23,9 +22,9 @@ use Symfony\Component\HttpFoundation\Request;
 class MySettingsController extends ControllerBase {
 
   /**
-   * @var \Drupal\eic_user\Service\NotificationSettingsManager
+   * The service which manages notification settings.
    */
-  private $notificationSettingsManager;
+  private NotificationSettingsManager $notificationSettingsManager;
 
   /**
    * @param \Drupal\eic_user\Service\NotificationSettingsManager $notification_settings_manager
@@ -43,7 +42,7 @@ class MySettingsController extends ControllerBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('eic_user.notification_settings_manager'),
+      $container->get('eic_user.notification_settings_manager')
     );
   }
 
@@ -75,20 +74,19 @@ class MySettingsController extends ControllerBase {
       throw new \InvalidArgumentException('Invalid request');
     }
 
+    $new_value = NULL;
     try {
       $new_value = $this->notificationSettingsManager->setSettingValue($notification_type, $value);
     } catch (\Exception $exception) {
-      $this->messenger
-        ->addError(
-          'Something wrong happened when toggling settings for @notification_type: @error',
-          [
-            '@notification_type' => $notification_type,
-            '@error' => $exception->getMessage(),
-          ]);
+      $this->messenger()->addError('Something wrong happened when toggling settings for @notification_type: @error',
+        [
+          '@notification_type' => $notification_type,
+          '@error' => $exception->getMessage(),
+        ]);
     }
 
     return new JsonResponse([
-      'status' => $new_value ?? FALSE,
+      'status' => is_bool($new_value),
       'value' => $new_value ?? FALSE,
     ]);
   }
@@ -115,20 +113,19 @@ class MySettingsController extends ControllerBase {
       throw new \InvalidArgumentException('Invalid request');
     }
 
+    $new_value = NULL;
     try {
       $new_value = $this->notificationSettingsManager->setSettingValue($notification_type, $value, $flagging);
     } catch (\Exception $exception) {
-      $this->messenger
-        ->addError(
-          'Something wrong happened when toggling settings for @notification_type: @error',
-          [
-            '@notification_type' => $notification_type,
-            '@error' => $exception->getMessage(),
-          ]);
+      $this->messenger()->addError('Something wrong happened when toggling settings for @notification_type: @error',
+        [
+          '@notification_type' => $notification_type,
+          '@error' => $exception->getMessage(),
+        ]);
     }
 
     return new JsonResponse([
-      'status' => $new_value ?? FALSE,
+      'status' => is_bool($new_value),
       'value' => $new_value ?? FALSE,
     ]);
   }
@@ -141,7 +138,7 @@ class MySettingsController extends ControllerBase {
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    * @throws \Drupal\Core\Entity\EntityMalformedException
    */
-  public function getFollowFlags($notification_type): JsonResponse {
+  public function getFollowFlags(string $notification_type): JsonResponse {
     $flaggings = $this->notificationSettingsManager->getValues($notification_type);
     $formatted_flaggings = [
       'title' => $this->t(ucfirst($notification_type)),
@@ -169,6 +166,10 @@ class MySettingsController extends ControllerBase {
           'notification_type' => $notification_type,
           'flagging' => $flagging->id(),
         ])->toString(),
+        'unsubscribe_url' => Url::fromRoute('eic_user.unsubscribe_follow_flag', [
+          'notification_type' => $notification_type,
+          'flagging' => $flagging->id(),
+        ])->toString(),
         'name' => [
           'path' => $target_entity->toUrl()->toString(),
           'label' => $target_entity->label(),
@@ -177,6 +178,51 @@ class MySettingsController extends ControllerBase {
     }
 
     return new JsonResponse($formatted_flaggings);
+  }
+
+  /**
+   * @param string $notification_type
+   * @param \Drupal\flag\FlaggingInterface $flagging
+   *
+   * @return \Symfony\Component\HttpFoundation\JsonResponse
+   */
+  public function unsubscribe(string $notification_type, FlaggingInterface $flagging): JsonResponse {
+    if (!in_array($notification_type, [
+      NotificationTypes::GROUPS_NOTIFICATION_TYPE,
+      NotificationTypes::EVENTS_NOTIFICATION_TYPE,
+    ])) {
+      throw new \InvalidArgumentException('Invalid request');
+    }
+
+    $result = FALSE;
+    try {
+      $result = $this->notificationSettingsManager->unsubscribe($flagging);
+    } catch (\Exception $exception) {
+      $this->messenger()->addError('Something wrong happened when toggling settings for @notification_type: @error',
+        [
+          '@notification_type' => $notification_type,
+          '@error' => $exception->getMessage(),
+        ]);
+    }
+
+    return new JsonResponse([
+      'status' => $result,
+    ]);
+  }
+
+  /**
+   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *
+   * @return \Drupal\Core\Access\AccessResultInterface
+   */
+  public function access(RouteMatchInterface $route_match, AccountInterface $account) {
+    /** @var FlaggingInterface $flagging */
+    $flagging = $route_match->getParameter('flagging');
+
+    return $flagging->getOwnerId() === $account->id() ?
+      AccessResult::allowed() :
+      AccessResult::forbidden();
   }
 
 }

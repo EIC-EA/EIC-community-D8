@@ -40,7 +40,21 @@ eic_user.toggle_follow_flag:
     _title: 'Toggle settings'
   requirements:
     notification_type: 'groups|events'
-    _user_is_logged_in: 'TRUE'
+    _custom_access: '\Drupal\eic_user\Controller\MySettingsController::access'
+    flagging: \d+
+  options:
+    parameters:
+      flagging:
+        type: entity:flagging
+
+eic_user.unsubscribe_follow_flag:
+  path: '/api/notification/{notification_type}/{flagging}/unsubscribe'
+  methods: [ POST ]
+  defaults:
+    _controller: '\Drupal\eic_user\Controller\MySettingsController::unsubscribe'
+  requirements:
+    notification_type: 'groups|events'
+    _custom_access: '\Drupal\eic_user\Controller\MySettingsController::access'
     flagging: \d+
   options:
     parameters:
