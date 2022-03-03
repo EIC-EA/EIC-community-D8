@@ -179,7 +179,7 @@ class GroupBreadcrumbBuilder implements BreadcrumbBuilderInterface {
             $breadcrumb->addCacheableDependency($access);
           }
 
-          if ($group = $this->eicGroupsHelper->getGroupByEntity($node)) {
+          if ($group = $this->eicGroupsHelper->getOwnerGroupByEntity($node)) {
             $links[] = $group->toLink();
 
             switch ($node->bundle()) {
