@@ -5,6 +5,7 @@ dependencies:
   config:
     - field.field.message.notify_user_tagged_on_comment.field_event_executing_user
     - field.field.message.notify_user_tagged_on_comment.field_referenced_comment
+    - field.field.message.notify_user_tagged_on_comment.field_referenced_node
     - field.field.message.notify_user_tagged_on_comment.field_rendered_content
     - message.template.notify_user_tagged_on_comment
   module:
@@ -27,6 +28,16 @@ content:
   field_referenced_comment:
     type: entity_reference_autocomplete
     weight: 1
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_referenced_node:
+    type: entity_reference_autocomplete
+    weight: 3
     region: content
     settings:
       match_operator: CONTAINS

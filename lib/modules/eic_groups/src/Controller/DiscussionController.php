@@ -136,7 +136,7 @@ class DiscussionController extends ControllerBase {
         'value' => $text,
         'format' => 'plain_text',
       ],
-      'field_tagged_users' => array_map(function($tagged_user) {
+      'field_tagged_users' => array_map(function ($tagged_user) {
         return [
           'target_id' => $tagged_user['tid'],
         ];
@@ -160,9 +160,11 @@ class DiscussionController extends ControllerBase {
    * @throws \Drupal\Core\Entity\EntityMalformedException
    */
   public function fetchComments(Request $request, $discussion_id) {
+    $highlighted_comment = $request->query->get('highlightedComment', 0);
     $page = $request->query->get('page', 1);
     $parent_id = $request->query->get('parentId', 0);
     $total_to_load = $page * self::BATCH_PAGE;
+    $highlighted_comment = Comment::load($highlighted_comment);
 
     $query = $this->entityTypeManager->getStorage('comment')
       ->getQuery()
@@ -170,6 +172,10 @@ class DiscussionController extends ControllerBase {
       ->condition('status', Node::PUBLISHED)
       ->sort('created', 'DESC')
       ->range(0, $total_to_load);
+
+    if ($highlighted_comment) {
+      $query->condition('cid', $highlighted_comment->id(), '<>');
+    }
 
     if (!$parent_id) {
       $query->condition('entity_id', $discussion_id);
@@ -185,90 +191,16 @@ class DiscussionController extends ControllerBase {
       ->count()
       ->execute();
 
-    $account = $this->currentUser();
     $comments = Comment::loadMultiple($comments);
     $comments_data = [];
 
+    // Put highlighted comment at the top.
+    if ($highlighted_comment instanceof CommentInterface) {
+      $comments_data[] = $this->renderCommentElement($highlighted_comment);
+    }
+
     foreach ($comments as $comment) {
-      $user = $comment->getOwner();
-
-      /** @var \Drupal\media\MediaInterface|null $media_picture */
-      $media_picture = $user->get('field_media')->referencedEntities();
-      /** @var File|NULL $file */
-      $file = $media_picture ? File::load($media_picture[0]->get('oe_media_image')->target_id) : NULL;
-      $file_url = $file ? file_url_transform_relative(file_create_url($file->get('uri')->value)) : NULL;
-
-      $archive_flags = $this->flagService->getEntityFlaggings($this->flagService->getFlagById('request_archive_comment'), $comment);
-      $archived_flag_time = NULL;
-      if (!empty($archive_flags)) {
-        foreach ($archive_flags as $archive_flag) {
-          if ($archive_flag->get('field_request_status')->value === RequestStatus::ACCEPTED) {
-            $archived_flag_time = $this->dateFormatter->format($archive_flag->get('created')->value, 'eu_short_date_hour');
-            break;
-          }
-        }
-      }
-
-      $delete_flags = $this->flagService->getEntityFlaggings($this->flagService->getFlagById('request_delete_comment'), $comment);
-      $deleted_flag_time = NULL;
-      if (!empty($delete_flags)) {
-        foreach ($delete_flags as $delete_flag) {
-          if ($delete_flag->get('field_request_status')->value === RequestStatus::ACCEPTED) {
-            $deleted_flag_time = $this->dateFormatter->format($delete_flag->get('created')->value, 'eu_short_date_hour');
-            break;
-          }
-        }
-      }
-
-      $edited_time = $comment->getCreatedTime() !== $comment->getChangedTime() && !$deleted_flag_time && !$archived_flag_time ?
-        $this->dateFormatter->format($comment->getChangedTime(), 'eu_short_date_hour') :
-        NULL;
-
-      $created_time = $this->dateFormatter->format(
-        $comment->getCreatedTime(),
-        'eu_short_date_hour'
-      );
-      $soft_deleted = $comment->get('field_comment_is_soft_deleted')->value;
-      $archived = $comment->get('field_comment_is_archived')->value;
-
-      $tagged_users = $comment->get('field_tagged_users')->referencedEntities();
-
-      $comments_data[] = [
-        'user_image' => $file_url,
-        'user_id' => $user->id(),
-        'user_fullname' => $user->get('field_first_name')->value . ' ' . $user->get('field_last_name')->value,
-        'user_url' => $user->toUrl()->toString(),
-        'created_timestamp' => $comment->getCreatedTime(),
-        'text' => $comment->get('comment_body')->value,
-        'comment_id' => $comment->id(),
-        'tagged_users' => array_map(function(UserInterface $user) {
-          return [
-            'uid' => $user->id(),
-            'name' => realname_load($user),
-            'url' => $user->toUrl()->toString(),
-          ];
-        }, $tagged_users),
-        'likes' => $this->getCommentLikesData($comment, $account),
-        'archived_flag_time' => $archived_flag_time ?
-          $this->t('Archived on @time', ['@time' => $archived_flag_time], ['context' => 'eic_groups']) :
-          NULL,
-        'deleted_flag_time' => $deleted_flag_time ?
-          $this->t('Deleted on @time', ['@time' => $deleted_flag_time], ['context' => 'eic_groups']) :
-          NULL,
-        'soft_deleted_time' => $soft_deleted ?
-          $this->t('Deleted on @time', ['@time' => $edited_time], ['context' => 'eic_groups']) :
-          NULL,
-        'edited_time' => $edited_time ?
-          $this->t('Edited on @time', ['@time' => $edited_time ?: $created_time], ['context' => 'eic_groups']) :
-          NULL,
-        'is_soft_delete' => $soft_deleted,
-        'is_archived' => $archived,
-        'created_time' => $this->t(
-          'Created on @time',
-          ['@time' => $created_time],
-          ['context' => 'eic_groups']
-        ),
-      ];
+      $comments_data[] = $this->renderCommentElement($comment);
     }
 
     $data['comments'] = $comments_data;
@@ -535,7 +467,8 @@ class DiscussionController extends ControllerBase {
       );
 
       $has_access = $access->isAllowed();
-    } else {
+    }
+    else {
       $user_id = \Drupal::currentUser()->id();
       $user = User::load($user_id);
 
@@ -543,6 +476,107 @@ class DiscussionController extends ControllerBase {
     }
 
     return $has_access;
+  }
+
+  /**
+   * Render array of comment element.
+   *
+   * @param \Drupal\comment\CommentInterface $comment
+   *   The comment entity.
+   *
+   * @return array
+   * @throws \Drupal\Core\Entity\EntityMalformedException
+   */
+  private function renderCommentElement(CommentInterface $comment): array {
+    $user = $comment->getOwner();
+
+    /** @var \Drupal\media\MediaInterface|null $media_picture */
+    $media_picture = $user->get('field_media')->referencedEntities();
+    /** @var File|NULL $file */
+    $file = $media_picture ? File::load($media_picture[0]->get('oe_media_image')->target_id) : NULL;
+    $file_url = $file ? file_url_transform_relative(file_create_url($file->get('uri')->value)) : NULL;
+
+    $archive_flags = $this->flagService->getEntityFlaggings(
+      $this->flagService->getFlagById('request_archive_comment'),
+      $comment
+    );
+    $archived_flag_time = NULL;
+    if (!empty($archive_flags)) {
+      foreach ($archive_flags as $archive_flag) {
+        if ($archive_flag->get('field_request_status')->value === RequestStatus::ACCEPTED) {
+          $archived_flag_time = $this->dateFormatter->format(
+            $archive_flag->get('created')->value,
+            'eu_short_date_hour'
+          );
+          break;
+        }
+      }
+    }
+
+    $delete_flags = $this->flagService->getEntityFlaggings(
+      $this->flagService->getFlagById('request_delete_comment'),
+      $comment
+    );
+    $deleted_flag_time = NULL;
+    if (!empty($delete_flags)) {
+      foreach ($delete_flags as $delete_flag) {
+        if ($delete_flag->get('field_request_status')->value === RequestStatus::ACCEPTED) {
+          $deleted_flag_time = $this->dateFormatter->format($delete_flag->get('created')->value, 'eu_short_date_hour');
+          break;
+        }
+      }
+    }
+
+    $edited_time = $comment->getCreatedTime() !== $comment->getChangedTime(
+    ) && !$deleted_flag_time && !$archived_flag_time ?
+      $this->dateFormatter->format($comment->getChangedTime(), 'eu_short_date_hour') :
+      NULL;
+
+    $created_time = $this->dateFormatter->format(
+      $comment->getCreatedTime(),
+      'eu_short_date_hour'
+    );
+    $soft_deleted = $comment->get('field_comment_is_soft_deleted')->value;
+    $archived = $comment->get('field_comment_is_archived')->value;
+
+    $tagged_users = $comment->get('field_tagged_users')->referencedEntities();
+
+    return [
+      'user_image' => $file_url,
+      'user_id' => $user->id(),
+      'user_fullname' => $user->get('field_first_name')->value . ' ' . $user->get('field_last_name')->value,
+      'user_url' => $user->toUrl()->toString(),
+      'created_timestamp' => $comment->getCreatedTime(),
+      'text' => $comment->get('comment_body')->value,
+      'comment_id' => $comment->id(),
+      'tagged_users' => array_map(function (UserInterface $user) {
+        return [
+          'uid' => $user->id(),
+          'name' => realname_load($user),
+          'url' => $user->toUrl()->toString(),
+        ];
+      }, $tagged_users),
+      'likes' => $this->getCommentLikesData($comment, $this->currentUser()),
+      'archived_flag_time' => $archived_flag_time ?
+        $this->t('Archived on @time', ['@time' => $archived_flag_time], ['context' => 'eic_groups']) :
+        NULL,
+      'deleted_flag_time' => $deleted_flag_time ?
+        $this->t('Deleted on @time', ['@time' => $deleted_flag_time], ['context' => 'eic_groups']) :
+        NULL,
+      'soft_deleted_time' => $soft_deleted ?
+        $this->t('Deleted on @time', ['@time' => $edited_time], ['context' => 'eic_groups']) :
+        NULL,
+      'edited_time' => $edited_time ?
+        $this->t('Edited on @time', ['@time' => $edited_time ?: $created_time], ['context' => 'eic_groups']) :
+        NULL,
+      'is_soft_delete' => $soft_deleted,
+      'is_archived' => $archived,
+      'created_time' => $this->t(
+        'Created on @time',
+        ['@time' => $created_time],
+        ['context' => 'eic_groups']
+      ),
+    ];
   }
 
 }
