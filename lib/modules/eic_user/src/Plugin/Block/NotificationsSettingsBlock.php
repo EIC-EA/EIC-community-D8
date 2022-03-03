@@ -79,6 +79,9 @@ class NotificationsSettingsBlock extends BlockBase implements ContainerFactoryPl
     );
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function build() {
     $currentUser = User::load($this->currentUser->id());
     $member_profile = $this->userHelper->getUserMemberProfile($currentUser);
@@ -181,14 +184,26 @@ class NotificationsSettingsBlock extends BlockBase implements ContainerFactoryPl
   }
 
   /**
-   * {@inheritdoc}
+   * @return array[]
    */
-  public function getCacheTags() {
-    $currentUser = User::load($this->currentUser->id());
-    $member_profile = $this->userHelper->getUserMemberProfile($currentUser);
-    $flag_tags = $member_profile->getCacheTags();
+  private function getEditProfileLink(?ProfileInterface $profile): array {
+    static $link;
+    if (empty($link)) {
+      $link = [
+        'link' => [
+          'label' => $this->t('Edit interests'),
+          'path' => $profile instanceof ProfileInterface ?
+            Url::fromRoute('entity.profile.edit_form',
+              ['profile' => $profile->id()]) :
+            Url::fromRoute('profile.user_page.single', [
+              'user' => $this->currentUser->id(),
+              'profile_type' => 'member',
+            ]),
+        ],
+      ];
+    }
 
-    return Cache::mergeTags(parent::getCacheTags(), $flag_tags);
+    return $link;
   }
 
   /**
@@ -245,7 +260,6 @@ class NotificationsSettingsBlock extends BlockBase implements ContainerFactoryPl
    * @return array
    */
   private function getCommentsTab(?ProfileInterface $profile): array {
-
     return [
       'title' => $this->t('Your comments notifications'),
       'content' => [
@@ -266,26 +280,14 @@ class NotificationsSettingsBlock extends BlockBase implements ContainerFactoryPl
   }
 
   /**
-   * @return array[]
+   * {@inheritdoc}
    */
-  private function getEditProfileLink(?ProfileInterface $profile): array {
-    static $link;
-    if (empty($link)) {
-      $link = [
-        'link' => [
-          'label' => $this->t('Edit interests'),
-          'path' => $profile instanceof ProfileInterface ?
-            Url::fromRoute('entity.profile.edit_form',
-              ['profile' => $profile->id()]) :
-            Url::fromRoute('profile.user_page.single', [
-              'user' => $this->currentUser->id(),
-              'profile_type' => 'member',
-            ]),
-        ],
-      ];
-    }
+  public function getCacheTags() {
+    $currentUser = User::load($this->currentUser->id());
+    $member_profile = $this->userHelper->getUserMemberProfile($currentUser);
+    $flag_tags = $member_profile->getCacheTags();
 
-    return $link;
+    return Cache::mergeTags(parent::getCacheTags(), $flag_tags);
   }
 
 }

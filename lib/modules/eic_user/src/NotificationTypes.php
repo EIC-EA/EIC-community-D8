@@ -10,12 +10,6 @@ namespace Drupal\eic_user;
 final class NotificationTypes {
 
   /**
-   * Targets the interest notification choice.
-   * Value is stored in field 'field_interest_notifications'
-   */
-  const INTEREST_NOTIFICATION_TYPE = 'interest';
-
-  /**
    * List of allowed notification settings types.
    */
   const ALLOWED_NOTIFICATION_TYPES = [
@@ -24,6 +18,12 @@ final class NotificationTypes {
     self::EVENTS_NOTIFICATION_TYPE,
     self::GROUPS_NOTIFICATION_TYPE,
   ];
+
+  /**
+   * Targets the interest notification choice.
+   * Value is stored in field 'field_interest_notifications'
+   */
+  const INTEREST_NOTIFICATION_TYPE = 'interest';
 
   /**
    * Targets the comments notification choice.
