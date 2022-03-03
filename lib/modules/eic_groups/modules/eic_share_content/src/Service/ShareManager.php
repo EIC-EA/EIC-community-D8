@@ -160,8 +160,8 @@ class ShareManager {
       throw new \InvalidArgumentException("This content can't be shared");
     }
 
-    // If source and target groups are the same, we can't share.
-    if ($target_group->id() === $source_group->id()) {
+    // Check if we can share from source group to target group.
+    if (!$this->canShare($source_group, $target_group)) {
       throw new \InvalidArgumentException("This content can't be shared");
     }
 
@@ -283,30 +283,56 @@ class ShareManager {
     }
 
     foreach ($unfiltered_groups as $group) {
-      // Allow only selected visibility types.
-      if (!in_array($this->groupFlexGroup->getGroupVisibility($group), $visibility_types)) {
-        continue;
+      if ($this->canShare($source_group, $group, $visibility_types)) {
+        $groups[] = $group;
       }
-
-      // Exclude non published groups.
-      if (!$group->isPublished()) {
-        continue;
-      }
-
-      // Exclude blocked groups.
-      if (GroupsModerationHelper::isBlocked($group)) {
-        continue;
-      }
-
-      // Exclude source group.
-      if ($group->id() === $source_group->id()) {
-        continue;
-      }
-
-      $groups[] = $group;
     }
 
     return $groups;
+  }
+
+  /**
+   * Determines if a content can be shared from source group to target group.
+   *
+   * @param \Drupal\group\Entity\GroupInterface $source_group
+   *   The source group.
+   * @param \Drupal\group\Entity\GroupInterface $target_group
+   *   The target group.
+   * @param array $target_group_visibility_types
+   *   The target groups visibility types to filter on.
+   *   Allowed values are constants provided by GroupVisibilityType.
+   *
+   * @return bool
+   *   TRUE if content can be shed, FALSE otherwise.
+   *
+   * @throws \Drupal\Core\TypedData\Exception\MissingDataException
+   */
+  public function canShare(
+    GroupInterface $source_group,
+    GroupInterface $target_group,
+    array $target_group_visibility_types = [GroupVisibilityType::GROUP_VISIBILITY_PUBLIC]
+  ) {
+    // Allow only selected visibility types.
+    if (!in_array($this->groupFlexGroup->getGroupVisibility($target_group), $target_group_visibility_types)) {
+      return FALSE;
+    }
+
+    // Exclude non published groups.
+    if (!$target_group->isPublished()) {
+      return FALSE;
+    }
+
+    // Exclude archived groups.
+    if (GroupsModerationHelper::isArchived($target_group)) {
+      return FALSE;
+    }
+
+    // Exclude source group.
+    if ($target_group->id() === $source_group->id()) {
+      return FALSE;
+    }
+
+    return TRUE;
   }
 
 }

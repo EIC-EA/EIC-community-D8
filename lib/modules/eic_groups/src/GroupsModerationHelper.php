@@ -45,6 +45,23 @@ class GroupsModerationHelper {
   const GROUP_ARCHIVED_STATE = 'archived';
 
   /**
+   * Checks if a group is archived.
+   *
+   * @param \Drupal\group\Entity\GroupInterface $group
+   *   The group entity.
+   *
+   * @return bool
+   *   TRUE if group is archived, FALSE otherwise.
+   */
+  public static function isArchived(GroupInterface $group) {
+    if ($group->get('moderation_state')->value === GroupsModerationHelper::GROUP_ARCHIVED_STATE) {
+      return TRUE;
+    }
+
+    return FALSE;
+  }
+
+  /**
    * Checks if a group is blocked.
    *
    * @param \Drupal\group\Entity\GroupInterface $group
