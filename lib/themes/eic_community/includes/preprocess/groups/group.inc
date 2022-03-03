@@ -212,7 +212,7 @@ function _group_about_group_tab($variables, &$sections) {
   $about_items[] = [
     'title' => t('Group description'),
     'content' => $group->hasField('field_body') ?
-      strip_tags($group->get('field_body')->value) :
+      $group->get('field_body')->value :
       '',
   ];
 
