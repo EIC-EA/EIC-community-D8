@@ -23,25 +23,8 @@ reactions:
     id: blocks
     uuid: 87b0741d-5025-4278-bf36-e332c1eb01bd
     blocks:
-      4e797e58-b472-44b4-b386-2e56497f13b0:
-        id: eic_search_overview
-        label: ''
-        provider: eic_search
-        label_display: visible
-        context_mapping: {  }
-        source_type: Drupal\eic_search\Search\Sources\Profile\FollowingSourceType
-        facets:
-          ss_activity_type: ss_activity_type
-          sm_content_field_vocab_topics_string: sm_content_field_vocab_topics_string
-        sort_options: {  }
-        enable_search: 1
-        page_options: normal
-        prefilter_group: 0
-        enable_date_filter: 0
-        add_facet_interests: 0
-        add_facet_my_groups: 0
-      e2190297-1c0e-48df-8a25-e930bd42251b:
-        uuid: e2190297-1c0e-48df-8a25-e930bd42251b
+      ff37cec9-d27d-421e-9549-81aa82dd2857:
+        uuid: ff37cec9-d27d-421e-9549-81aa82dd2857
         id: eic_search_overview
         label: ''
         provider: eic_search
@@ -57,6 +40,7 @@ reactions:
         facets:
           ss_activity_type: ss_activity_type
           sm_content_field_vocab_topics_string: sm_content_field_vocab_topics_string
+          ss_content_language_label: ss_content_language_label
         sort_options: {  }
         enable_search: 1
         page_options: normal
