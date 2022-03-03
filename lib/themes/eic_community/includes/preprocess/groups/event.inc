@@ -67,6 +67,8 @@ function eic_community_preprocess_group__event(&$variables) {
           $value = strtolower($location_type_allowed_values[$value]);
           $teaser['type']['label'] .= " & {$value}";
         }
+
+        $teaser['type'] = [$teaser['type']];
       }
 
       // Add event topics to the theme variables.
