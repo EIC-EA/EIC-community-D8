@@ -88,7 +88,7 @@ class NotificationsSettingsBlock extends BlockBase implements ContainerFactoryPl
     $menu_items = [
       [
         'link' => [
-          'label' => $this->t('My informations'),
+          'label' => $this->t('My information'),
           'path' => $currentUser->toUrl()->toString(),
         ],
       ],
@@ -109,6 +109,25 @@ class NotificationsSettingsBlock extends BlockBase implements ContainerFactoryPl
         'groups' => $this->getGroupsTab($member_profile),
         'events' => $this->getEventsTab($member_profile),
         'comments' => $this->getCommentsTab($member_profile),
+      ],
+      '#attached' => [
+        'drupalSettings' => [
+          'translations' => [
+            'unsubscribe_modal_close' => $this->t('Close'),
+            'unsubscribe_modal_title' => $this->t('Unsubscribe'),
+            'unsubscribe_modal_desc' => $this->t('You are about to unsubscribe from this notification type.'),
+            'unsubscribe_modal_confirm' => $this->t('Confirm'),
+            'unsubscribe_modal_cancel' => $this->t('Cancel'),
+            'search_placeholder' => $this->t('Search'),
+            'notification_name' => $this->t('Name'),
+            'notification_status' => $this->t('Status'),
+            'notification_unsubscribe' => $this->t('Unsubscribe'),
+            'toggle_on' => $this->t('On'),
+            'toggle_off' => $this->t('Off'),
+            'no_results_title' => $this->t('No results'),
+            'no_results_body' => $this->t('Could not find any results.'),
+          ],
+        ],
       ],
     ];
   }
@@ -221,6 +240,7 @@ class NotificationsSettingsBlock extends BlockBase implements ContainerFactoryPl
           'body' => $this->t('You receive a periodic notification email for these groups because you\'re following them.'),
           'table' => [
             'title' => $this->t('Groups'),
+            'unsubscribe' => TRUE,
             'url' => Url::fromRoute('eic_user.get_notification_settings', [
               'notification_type' => NotificationTypes::GROUPS_NOTIFICATION_TYPE,
             ]),
@@ -245,6 +265,7 @@ class NotificationsSettingsBlock extends BlockBase implements ContainerFactoryPl
           'body' => $this->t('You receive a periodic notification email for these events because you\'re following them.'),
           'table' => [
             'title' => $this->t('Events'),
+            'unsubscribe' => TRUE,
             'url' => Url::fromRoute('eic_user.get_notification_settings', [
               'notification_type' => NotificationTypes::EVENTS_NOTIFICATION_TYPE,
             ]),
