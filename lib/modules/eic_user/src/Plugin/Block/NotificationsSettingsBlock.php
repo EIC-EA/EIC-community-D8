@@ -88,7 +88,7 @@ class NotificationsSettingsBlock extends BlockBase implements ContainerFactoryPl
     $menu_items = [
       [
         'link' => [
-          'label' => $this->t('My informations'),
+          'label' => $this->t('My information'),
           'path' => $currentUser->toUrl()->toString(),
         ],
       ],
