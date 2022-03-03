@@ -17,6 +17,7 @@ use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
+use Drupal\eic_content\Constants\DefaultContentModerationStates;
 use Drupal\eic_content_wiki_page\WikiPageBookManager;
 use Drupal\eic_groups\Constants\NodeProperty;
 use Drupal\eic_groups\EICGroupsHelper;
@@ -398,7 +399,7 @@ class EntityOperations implements ContainerInjectionInterface {
     if (!empty($results)) {
       $group_content = GroupContent::load(reset($results));
       if (($node_book = $group_content->getEntity()) && $node_book instanceof NodeInterface) {
-        $node_book->setPublished();
+        $node_book->set('moderation_state', DefaultContentModerationStates::PUBLISHED_STATE);
         $node_book->save();
       }
     }

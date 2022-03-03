@@ -366,6 +366,7 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
             ['context' => 'eic_group']
           ),
           'draft' => $this->t('Draft', [], ['context' => 'eic_group']),
+          'archived' => $this->t('Archived', [], ['context' => 'eic_group']),
           'pending' => $this->t('Pending', [], ['context' => 'eic_group']),
           'blocked' => $this->t('Blocked', [], ['context' => 'eic_group']),
           'load_more' => $this->t('Load more', [], ['context' => 'eic_group']),

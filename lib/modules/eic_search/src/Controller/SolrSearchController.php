@@ -138,6 +138,11 @@ class SolrSearchController extends ControllerBase {
         $author_ignore_content_query = ' AND !(' . $source->getAuthorFieldId() . ':' . $this->currentUser()->id() . ')';
       }
 
+      if ($source->prefilterByCurrentUser() && $source->getAuthorFieldId()) {
+        $prefilter_current_user_query =
+          ' AND (' . $source->getAuthorFieldId() . ':(' . $this->currentUser()->id() . '))';
+      }
+
       // If source supports date filter and query has a from or to date.
       if ($source->supportDateFilter() && ($from_date || $end_date)) {
         $date_fields_id = $source->getDateIntervalField();
@@ -242,6 +247,10 @@ class SolrSearchController extends ControllerBase {
 
     if ($author_ignore_content_query) {
       $fq .= $author_ignore_content_query;
+    }
+
+    if ($prefilter_current_user_query) {
+      $fq .= $prefilter_current_user_query;
     }
 
     if ($source->prefilterByGroupsMembership()) {
