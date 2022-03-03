@@ -298,6 +298,9 @@ function _group_about_permissions_tab($variables, &$sections) {
  *   The restriction type.
  * @param array $restriction
  *   The restriction options.
+ *
+ * @return array
+ *   The array of restricted options to print in twig template.
  */
 function _eic_community_get_group_custom_restricted_options_item_list(string $restriction_type, array $restriction) {
   $entity_type_manager = \Drupal::entityTypeManager();
