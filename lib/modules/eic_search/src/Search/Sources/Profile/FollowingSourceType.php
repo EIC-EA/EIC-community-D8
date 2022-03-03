@@ -42,6 +42,7 @@ class FollowingSourceType extends SourceType {
     return [
       'ss_activity_type' => $this->t('Content type', [], ['context' => 'eic_search']),
       'sm_content_field_vocab_topics_string' => $this->t('Topics', [], ['context' => 'eic_search']),
+      'ss_content_language_label' => $this->t('Language', [], ['context' => 'eic_search']),
     ];
   }
 
