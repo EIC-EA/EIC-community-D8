@@ -239,12 +239,11 @@ function _group_about_permissions_tab($variables, &$sections) {
 
     switch ($visibility_id) {
       case 'custom_restricted':
-        $restrictions = array_map(function ($restriction) {
-          return [
-            'title' => $restriction['label'],
-            'content' => $restriction['options'],
-          ];
-        }, $visibility['settings']);
+        $restrictions = array_map(
+          '_eic_community_get_group_custom_restricted_options_item_list',
+          array_keys($visibility['settings']),
+          $visibility['settings']
+        );
 
         $access_items = $restrictions;
         break;
@@ -299,4 +298,59 @@ function _group_about_permissions_tab($variables, &$sections) {
       ],
     ];
   }
+}
+
+/**
+ * Returns item list array for a given custom restricted visibility option.
+ *
+ * @param string $restriction_type
+ *   The restriction type.
+ * @param array $restriction
+ *   The restriction options.
+ *
+ * @return array
+ *   The array of restricted options to print in twig template.
+ */
+function _eic_community_get_group_custom_restricted_options_item_list(string $restriction_type, array $restriction) {
+  $entity_type_manager = \Drupal::entityTypeManager();
+  $items = [];
+  switch ($restriction_type) {
+    case 'restricted_email_domains':
+      $items = explode(',', $restriction['options']);
+      break;
+
+    case 'restricted_users':
+      foreach ($restriction['options'] as $option) {
+        if ($user = $entity_type_manager->getStorage('user')->load($option['target_id'])) {
+          $items[] = $user->getDisplayName();
+        }
+      }
+      break;
+
+    case 'restricted_organisation_types':
+      foreach ($restriction['options'] as $option) {
+        if ($term = $entity_type_manager->getStorage('taxonomy_term')->load($option)) {
+          $items[] = $term->label();
+        }
+      }
+      break;
+
+    case 'restricted_organisations':
+      foreach ($restriction['options'] as $option) {
+        if ($group = $entity_type_manager->getStorage('group')->load($option['target_id'])) {
+          $items[] = $group->label();
+        }
+      }
+      break;
+
+  }
+
+  return [
+    'title' => $restriction['label'],
+    'content' => [
+      '#theme' => 'item_list',
+      '#list_type' => 'ul',
+      '#items' => $items,
+    ],
+  ];
 }
