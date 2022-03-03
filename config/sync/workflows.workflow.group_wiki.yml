@@ -51,5 +51,5 @@ type_settings:
         - unpublished
       to: unpublished
       weight: 2
-  entity_types: {  }
+  entity_types: { }
   default_moderation_state: draft

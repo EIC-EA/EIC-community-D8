@@ -16,7 +16,7 @@
 
   &__icon {
     color: ecl-typography('color', 'title');
-    margin-right: ecl-box-model('margin', 'controls');
+    margin-right: map-get($ecl-spacing, 'xs');
     flex-shrink: 0;
   }
 

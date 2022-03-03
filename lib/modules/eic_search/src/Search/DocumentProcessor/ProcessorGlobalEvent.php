@@ -33,8 +33,8 @@ class ProcessorGlobalEvent extends DocumentProcessor {
    * @inheritDoc
    */
   public function process(Document &$document, array $fields, array $items = []): void {
-    $fid = array_key_exists('its_event_teaser_fid', $fields) ?
-      $fields['its_event_teaser_fid'] :
+    $fid = array_key_exists('its_group_teaser_fid', $fields) ?
+      $fields['its_group_teaser_fid'] :
       NULL;
 
     $teaser_relative = '';

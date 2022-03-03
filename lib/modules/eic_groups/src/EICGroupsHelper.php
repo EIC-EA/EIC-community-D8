@@ -977,7 +977,7 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
     $countries_map = CountryManager::getStandardList();
     $location_formatted = $address[FieldHelper::getPropertyName(AddressField::ADDRESS_LINE1)]
       . ' ' .
-      $address[$address[FieldHelper::getPropertyName(AddressField::ADDRESS_LINE2)]] . '<br />';
+      $address[FieldHelper::getPropertyName(AddressField::ADDRESS_LINE2)] . '<br />';
     $location_formatted .= $address[FieldHelper::getPropertyName(AddressField::POSTAL_CODE)]
       . ' ' .
       $address[FieldHelper::getPropertyName(AddressField::LOCALITY)] . '<br />';

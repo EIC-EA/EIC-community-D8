@@ -56,13 +56,6 @@ abstract class DocumentProcessor implements DocumentProcessorInterface {
       $weight_event_state = Event::WEIGHT_STATE_ONGOING;
     }
 
-    $this->addOrUpdateDocumentField(
-      $document,
-      Event::SOLR_FIELD_ID_WEIGHT_STATE,
-      $fields,
-      $weight_event_state
-    );
-
     $labels_map = Event::getStateLabelsMapping();
 
     $this->addOrUpdateDocumentField(
