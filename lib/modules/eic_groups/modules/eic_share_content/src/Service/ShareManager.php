@@ -3,14 +3,20 @@
 namespace Drupal\eic_share_content\Service;
 
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\eic_groups\Constants\GroupVisibilityType;
 use Drupal\eic_groups\EICGroupsHelperInterface;
+use Drupal\eic_groups\GroupsModerationHelper;
 use Drupal\eic_messages\ActivityStreamOperationTypes;
 use Drupal\eic_messages\Service\MessageBusInterface;
 use Drupal\eic_messages\Util\ActivityStreamMessageTemplates;
+use Drupal\eic_user\UserHelper;
 use Drupal\group\Entity\GroupContent;
 use Drupal\group\Entity\GroupInterface;
+use Drupal\group\GroupMembershipLoader;
 use Drupal\group\Plugin\GroupContentEnablerManagerInterface;
+use Drupal\group_flex\GroupFlexGroup;
 use Drupal\node\NodeInterface;
 use Drupal\search_api\Plugin\search_api\datasource\ContentEntity;
 
@@ -52,6 +58,20 @@ class ShareManager {
   private $groupContentPluginManager;
 
   /**
+   * The group membership loader.
+   *
+   * @var \Drupal\group\GroupMembershipLoader
+   */
+  private $groupMembershipLoader;
+
+  /**
+   * The group flex group service.
+   *
+   * @var \Drupal\group_flex\GroupFlexGroup
+   */
+  private $groupFlexGroup;
+
+  /**
    * The EIC message bus.
    *
    * @var \Drupal\eic_messages\Service\MessageBusInterface
@@ -67,6 +87,10 @@ class ShareManager {
    *   The entity type manager.
    * @param \Drupal\group\Plugin\GroupContentEnablerManagerInterface $plugin_manager
    *   The group content enabler manager.
+   * @param \Drupal\group\GroupMembershipLoader $group_membership_loader
+   *   The group membership loader.
+   * @param \Drupal\group_flex\GroupFlexGroup $group_flex_group
+   *   The group flex group service.
    * @param \Drupal\eic_messages\Service\MessageBusInterface $message_bus
    *   The EIC message bus.
    */
@@ -74,11 +98,15 @@ class ShareManager {
     EICGroupsHelperInterface $groups_helper,
     EntityTypeManagerInterface $entity_type_manager,
     GroupContentEnablerManagerInterface $plugin_manager,
+    GroupMembershipLoader $group_membership_loader,
+    GroupFlexGroup $group_flex_group,
     MessageBusInterface $message_bus
   ) {
     $this->groupsHelper = $groups_helper;
     $this->entityTypeManager = $entity_type_manager;
     $this->groupContentPluginManager = $plugin_manager;
+    $this->groupMembershipLoader = $group_membership_loader;
+    $this->groupFlexGroup = $group_flex_group;
     $this->messageBus = $message_bus;
   }
 
@@ -132,8 +160,8 @@ class ShareManager {
       throw new \InvalidArgumentException("This content can't be shared");
     }
 
-    // If source and target groups are the same, we can't share.
-    if ($target_group->id() === $source_group->id()) {
+    // Check if we can share from source group to target group.
+    if (!$this->canShare($source_group, $target_group)) {
       throw new \InvalidArgumentException("This content can't be shared");
     }
 
@@ -215,6 +243,96 @@ class ShareManager {
       $query->condition('gid', $target_group->id());
     }
     return $this->entityTypeManager->getStorage('group_content')->loadMultiple($query->execute());
+  }
+
+  /**
+   * Returns the list of target groups a user can share content to.
+   *
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *   The user account for which we build the list.
+   * @param \Drupal\group\Entity\GroupInterface $source_group
+   *   The source group from which we want to share.
+   * @param array $visibility_types
+   *   The target groups visibility types to filter on.
+   *   Allowed values are constants provided by GroupVisibilityType.
+   *
+   * @return \Drupal\group\Entity\GroupInterface[]
+   *   A list of group entities.
+   *
+   * @throws \Drupal\Core\TypedData\Exception\MissingDataException
+   */
+  public function getShareableTargetGroupsForUser(AccountInterface $account, GroupInterface $source_group, array $visibility_types = [GroupVisibilityType::GROUP_VISIBILITY_PUBLIC]) {
+    $groups = [];
+    $unfiltered_groups = [];
+
+    // If user is power user, we get all groups with given visibility types
+    // regardless of memberships.
+    if (UserHelper::isPowerUser($account)) {
+      foreach ($visibility_types as $visibility_type) {
+        foreach ($this->groupsHelper->getGroupsByVisibility($visibility_type) as $group) {
+          $unfiltered_groups[] = $group;
+        }
+      }
+    }
+    // Otherwise we get only groups the user is member of.
+    else {
+      /** @var \Drupal\group\GroupMembership $group_membership */
+      foreach ($this->groupMembershipLoader->loadByUser($account) as $group_membership) {
+        $unfiltered_groups[] = $group_membership->getGroup();
+      }
+    }
+
+    foreach ($unfiltered_groups as $group) {
+      if ($this->canShare($source_group, $group, $visibility_types)) {
+        $groups[] = $group;
+      }
+    }
+
+    return $groups;
+  }
+
+  /**
+   * Determines if a content can be shared from source group to target group.
+   *
+   * @param \Drupal\group\Entity\GroupInterface $source_group
+   *   The source group.
+   * @param \Drupal\group\Entity\GroupInterface $target_group
+   *   The target group.
+   * @param array $target_group_visibility_types
+   *   The target groups visibility types to filter on.
+   *   Allowed values are constants provided by GroupVisibilityType.
+   *
+   * @return bool
+   *   TRUE if content can be shed, FALSE otherwise.
+   *
+   * @throws \Drupal\Core\TypedData\Exception\MissingDataException
+   */
+  public function canShare(
+    GroupInterface $source_group,
+    GroupInterface $target_group,
+    array $target_group_visibility_types = [GroupVisibilityType::GROUP_VISIBILITY_PUBLIC]
+  ) {
+    // Allow only selected visibility types.
+    if (!in_array($this->groupFlexGroup->getGroupVisibility($target_group), $target_group_visibility_types)) {
+      return FALSE;
+    }
+
+    // Exclude non published groups.
+    if (!$target_group->isPublished()) {
+      return FALSE;
+    }
+
+    // Exclude archived groups.
+    if (GroupsModerationHelper::isArchived($target_group)) {
+      return FALSE;
+    }
+
+    // Exclude source group.
+    if ($target_group->id() === $source_group->id()) {
+      return FALSE;
+    }
+
+    return TRUE;
   }
 
 }
