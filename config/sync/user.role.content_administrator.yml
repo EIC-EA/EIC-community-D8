@@ -36,6 +36,7 @@ dependencies:
     - eic_private_content
     - eic_private_message
     - eic_topics
+    - entity_browser
     - file
     - filter
     - flag
@@ -65,6 +66,7 @@ permissions:
   - 'access files overview'
   - 'access group overview'
   - 'access media overview'
+  - 'access news_stories entity browser pages'
   - 'access overview page overview'
   - 'access toolbar'
   - 'access topics activity stream'
