@@ -75,6 +75,11 @@ class MyProfileHeaderBlock extends BlockBase {
         'route_parameters' => ['user' => $current_user->id()]
       ],
       [
+        'label' => $this->t('Contribution', [], ['context' => 'eic_user']),
+        'route' => 'eic_user.user.contribution',
+        'route_parameters' => ['user' => $current_user->id()]
+      ],
+      [
         'label' => $this->t('Bookmarked', [], ['context' => 'eic_user']),
         'route' => 'eic_search.global_search',
       ],
