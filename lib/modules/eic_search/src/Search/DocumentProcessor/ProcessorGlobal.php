@@ -148,6 +148,7 @@ class ProcessorGlobal extends DocumentProcessor {
         $type = $fields['ss_type'];
         $topics = $fields['sm_message_node_ref_field_vocab_topics_name'] ?? [];
         $date = $fields['ds_created'];
+        $title = $fields['ss_title'];
         break;
       case 'entity:user':
         $user = User::load($fields['its_user_id']);
