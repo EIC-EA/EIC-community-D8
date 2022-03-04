@@ -75,6 +75,7 @@ dependencies:
     - profile
     - search_api
     - address
+    - eic_events
     - eic_group_statistics
     - eic_search
     - flag_search_api
@@ -591,6 +592,22 @@ field_settings:
         - field.storage.node.field_discussion_type
       module:
         - node
+  event_weight_state:
+    label: 'Event weight state'
+    property_path: event_weight_state
+    type: integer
+  event_teaser_fid:
+    label: 'Thumbnail image » Media » Image » File » File ID'
+    datasource_id: 'entity:group'
+    property_path: 'field_image:entity:oe_media_image:entity:fid'
+    type: integer
+    dependencies:
+      config:
+        - field.storage.group.field_image
+        - field.storage.media.oe_media_image
+      module:
+        - file
+        - media
   field_share_message:
     label: 'Share message'
     datasource_id: 'entity:message'
@@ -1559,6 +1576,7 @@ processor_settings:
     all_fields: false
   aggregated_field: {  }
   entity_type: {  }
+  event_weight_state: {  }
   file_attachments:
     excluded_extensions: 'aif art avi bmp gif ico mov oga ogv png psd ra ram rgb flv'
     number_indexed: 0
