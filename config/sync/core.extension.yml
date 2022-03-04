@@ -191,6 +191,7 @@ module:
   views_data_export: 0
   views_data_export_phpspreadsheet: 0
   views_ui: 0
+  workflow_buttons: 0
   workflows: 0
   pathauto: 1
   views: 10
