@@ -4,6 +4,7 @@ namespace Drupal\eic_message_subscriptions;
 
 use Drupal\eic_messages\MessageIdentifierInterface;
 use Drupal\eic_messages\MessageTemplateTypes;
+use Drupal\eic_user\NotificationTypes;
 use Drupal\message\MessageTemplateInterface;
 
 /**
@@ -21,9 +22,28 @@ final class MessageSubscriptionTypes implements MessageIdentifierInterface {
 
   const GROUP_CONTENT_UPDATED = 'sub_group_content_updated';
 
+  const GROUP_CONTENT_SHARED = 'sub_group_content_shared';
+
+  const NEW_EVENT_PUBLISHED = 'sub_site_event_pub_interest';
+
   const NODE_PUBLISHED = 'sub_content_interest_published';
 
   const CONTENT_RECOMMENDED = 'sub_new_content_recommendation';
+
+  /**
+   * Categorises each subscription message using notification types defined in eic_user.
+   * These messages are supposed to be "unsubscribable/deniable". Meaning that the user can
+   * choose to not receive them.
+   */
+  const SUBSCRIPTION_MESSAGES_INTEREST_CATEGORIES = [
+    self::NEW_COMMENT_REPLY => NotificationTypes::COMMENTS_NOTIFICATION_TYPE,
+    self::NEW_COMMENT => NotificationTypes::COMMENTS_NOTIFICATION_TYPE,
+    self::NEW_GROUP_CONTENT_PUBLISHED => NotificationTypes::GROUPS_NOTIFICATION_TYPE,
+    self::GROUP_CONTENT_UPDATED => NotificationTypes::GROUPS_NOTIFICATION_TYPE,
+    self::NODE_PUBLISHED => NotificationTypes::INTEREST_NOTIFICATION_TYPE,
+    self::CONTENT_RECOMMENDED => NotificationTypes::INTEREST_NOTIFICATION_TYPE,
+    self::NEW_EVENT_PUBLISHED => NotificationTypes::EVENTS_NOTIFICATION_TYPE,
+  ];
 
   /**
    * Get message subscriptions events as array.

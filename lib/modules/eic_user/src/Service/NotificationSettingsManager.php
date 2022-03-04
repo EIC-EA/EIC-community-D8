@@ -185,6 +185,38 @@ class NotificationSettingsManager {
   }
 
   /**
+   * @param string $type
+   * @param \Drupal\user\UserInterface $user
+   * @param ContentEntityInterface $entity
+   *   Array of additional filters (e.g: the entity id, entity type, etc.)
+   *
+   * @return string
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   */
+  public function getValue(string $type, UserInterface $user, ContentEntityInterface $entity): ?string {
+    if (!array_key_exists($type, self::$flags)) {
+      throw new \InvalidArgumentException('Given type is not supported');
+    }
+
+    $query = $this->entityTypeManager->getStorage('flagging')
+      ->getQuery()
+      ->condition('flag_id', self::$flags[$type], 'IN')
+      ->condition('uid', $user->id())
+      ->condition('entity_type', $entity->getEntityTypeId())
+      ->condition('entity_id', $entity->id())
+      ->range(0, 1);
+
+    if (empty($query)) {
+      return NULL;
+    }
+
+    $flagging = Flagging::load($query);
+
+    return $flagging->get('field_notification_frequency')->value;
+  }
+
+  /**
    * @param \Drupal\flag\FlaggingInterface $flagging
    *
    * @return bool

@@ -61,7 +61,7 @@ class SubscriptionMessageCreator {
 
         $message = Message::create([
           'template' => $message_type,
-          'field_node_ref' => $entity,
+          'field_referenced_node' => $entity,
         ]);
 
         $group_contents = GroupContent::loadByEntity($entity);
@@ -120,7 +120,7 @@ class SubscriptionMessageCreator {
 
     return $message;
   }
-  
+
   /**
    * Creates a subscription message for a comment.
    *
@@ -214,4 +214,5 @@ class SubscriptionMessageCreator {
 
     return $message;
   }
+
 }
