@@ -1,0 +1,15 @@
+uuid: 9bb5bf4c-9b8e-4351-afeb-afaa76a3a7ca
+langcode: en
+status: true
+dependencies:
+  config:
+    - flag.flag.follow_event
+  module:
+    - flag
+id: flag_action.follow_event_flag
+label: Follow
+type: node
+plugin: 'flag_action:follow_event_flag'
+configuration:
+  flag_id: follow_event
+  flag_action: flag
