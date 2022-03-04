@@ -156,7 +156,7 @@ class ShareManager {
     ?string $message
   ) {
     // First we check if this node belongs to a group.
-    if (!$this->groupsHelper->getGroupByEntity($node)) {
+    if (!$this->groupsHelper->getOwnerGroupByEntity($node)) {
       throw new \InvalidArgumentException("This content can't be shared");
     }
 
