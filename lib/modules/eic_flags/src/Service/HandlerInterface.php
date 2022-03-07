@@ -314,4 +314,12 @@ interface HandlerInterface {
     ContentEntityInterface $content_entity
   );
 
+  /**
+   * Checks if a request should be logged as critical action.
+   *
+   * @return bool
+   *   TRUE if the request should be logged.
+   */
+  public function canLogRequest();
+
 }

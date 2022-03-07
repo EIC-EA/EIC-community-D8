@@ -167,7 +167,10 @@ abstract class AbstractRequestHandler implements HandlerInterface {
     );
 
     // For accepted requests we create a log entry.
-    if ($response === RequestStatus::ACCEPTED) {
+    if (
+      $response === RequestStatus::ACCEPTED &&
+      $this->canLogRequest()
+    ) {
       $log = $this->entityTypeManager->getStorage('message')
         ->create([
           'template' => 'log_request_accepted',
@@ -519,6 +522,13 @@ abstract class AbstractRequestHandler implements HandlerInterface {
 
     // We trigger the deny method to clear all related caches.
     $this->deny($flagging, $content_entity);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function canLogRequest() {
+    return TRUE;
   }
 
 }
