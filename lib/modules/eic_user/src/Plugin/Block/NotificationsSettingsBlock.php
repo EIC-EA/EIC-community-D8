@@ -309,10 +309,10 @@ class NotificationsSettingsBlock extends BlockBase implements ContainerFactoryPl
     }
 
     $additional_tags = [];
-    $currentUser = User::load($this->currentUser->id());
-    $member_profile = $this->userHelper->getUserMemberProfile($currentUser);
+    $current_user = User::load($this->currentUser->id());
+    $member_profile = $this->userHelper->getUserMemberProfile($current_user);
     if ($member_profile instanceof ProfileInterface) {
-      $additional_tags = $member_profile->getCacheTags();
+      $additional_tags = array_merge($member_profile->getCacheTags(), $current_user->getCacheTags());
     }
 
     return Cache::mergeTags(parent::getCacheTags(), $additional_tags);
