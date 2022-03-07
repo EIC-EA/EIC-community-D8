@@ -1,7 +1,7 @@
 services:
   eic_user.helper:
     class: Drupal\eic_user\UserHelper
-    arguments: ['@entity_type.manager', '@current_user', '@database', '@flag.count']
+    arguments: [ '@entity_type.manager', '@current_user', '@database', '@flag.count' ]
 
   eic_user.flag_event_subscriber:
     class: Drupal\eic_user\EventSubscriber\FlagEventSubscriber
@@ -10,3 +10,7 @@ services:
       - [ setDocumentProcessor, [ '@?eic_search.solr_document_processor' ] ]
     tags:
       - { name: event_subscriber }
+
+  eic_user.notification_settings_manager:
+    class: Drupal\eic_user\Service\NotificationSettingsManager
+    arguments: [ '@entity_type.manager', '@current_user', '@eic_user.helper', '@flag' ]

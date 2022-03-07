@@ -1,0 +1,13 @@
+{#
+  Switch toggle
+
+  Data exemple:
+  {
+    name: String,
+    label: String,
+    state: Boolean,
+    url: String
+  }
+
+#}
+<div class="ecl-toggle__container" data-checked="{{ state ? 1 : 0 }}" data-url="{{ url }}" data-name="{{ name }}" data-label="{{ label }}"></div>

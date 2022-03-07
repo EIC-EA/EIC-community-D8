@@ -78,8 +78,8 @@ class ContributionSourceType extends SourceType {
    */
   public function getSearchFieldsId(): array {
     return [
-      'ss_title',
-      'ss_global_fullname'
+      'tm_global_title',
+      'tm_global_fullname'
     ];
   }
 
