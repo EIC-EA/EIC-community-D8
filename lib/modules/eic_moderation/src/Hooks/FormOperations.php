@@ -59,6 +59,13 @@ class FormOperations implements ContainerInjectionInterface {
       return;
     }
 
+    // Move the revision information for better visibility.
+    if (isset($form['revision_information'])) {
+      unset($form['revision_information']['#group']);
+      $form['revision_information']['#weight'] = 100;
+    }
+
+    // Add our custom validation handler.
     $form['#validate'][] = [$this, 'eicModerationFormNodeFormValidate'];
   }
 
