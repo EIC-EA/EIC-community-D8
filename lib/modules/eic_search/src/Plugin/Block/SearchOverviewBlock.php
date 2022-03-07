@@ -316,6 +316,7 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
           'commented_on' => $this->t('commented on', [], ['context' => 'eic_group']),
           'custom_search_text' => [
             'user_gallery' => $this->t('Search for a member', [], ['context' => 'eic_group']),
+            'group' => $this->t('Search for a group', [], ['context' => 'eic_group']),
           ],
           'no_results_title' => $this->t(
             'We haven’t found any search results',
