@@ -1,0 +1,36 @@
+.entity-tree {
+
+    &__result-items {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        border: 1px solid #707070;
+        box-sizing: border-box;
+        padding: calc(0.75rem - 1px) calc(3.5rem - 1px) calc(0.75rem - 1px) calc(0.75rem- 1px);
+        min-height: 44px;
+        margin-bottom: $ecl-spacing-s;
+
+        & p {
+            margin: 0; 
+        }
+    }
+
+    &__input-wrapper {
+        width: 100%;
+        padding: 1px;
+        display: flex;
+        flex-wrap: wrap;
+
+        & input {
+            font-size: 14px;
+            box-sizing: border-box;
+            padding: 0;
+            width: 0;
+            min-width: 30px;
+            flex-grow: 1;
+            border: 0;
+            margin: 0;
+            outline: 0;
+        }
+    }
+}
