@@ -66,6 +66,7 @@ module:
   eic_message_subscriptions: 0
   eic_messages: 0
   eic_migrate: 0
+  eic_moderation: 0
   eic_organisations: 0
   eic_overviews: 0
   eic_paragraph_contributor: 0
