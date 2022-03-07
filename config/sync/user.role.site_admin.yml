@@ -183,6 +183,7 @@ permissions:
   - 'use eic_moderated_workflow transition create_new_draft'
   - 'use eic_moderated_workflow transition publish'
   - 'use eic_moderated_workflow transition submit_for_approval'
+  - 'use eic_moderated_workflow transition unpublish'
   - 'use groups transition archive'
   - 'use groups transition block'
   - 'use groups transition create_new_group'

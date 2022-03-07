@@ -23,6 +23,11 @@ type_settings:
       weight: 1
       published: true
       default_revision: true
+    unpublished:
+      label: Unpublished
+      weight: 2
+      published: false
+      default_revision: true
     waiting_for_approval:
       label: 'Waiting for approval'
       weight: -1
@@ -58,5 +63,15 @@ type_settings:
         - published
       to: waiting_for_approval
       weight: -2
+    unpublish:
+      label: 'Unpublish the content'
+      from:
+        - draft
+        - needs_review
+        - published
+        - unpublished
+        - waiting_for_approval
+      to: unpublished
+      weight: 2
   entity_types: {  }
   default_moderation_state: draft
