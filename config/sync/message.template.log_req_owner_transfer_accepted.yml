@@ -1,0 +1,24 @@
+uuid: a8cfc54a-318f-4c31-8566-8cb52b4fc5c1
+langcode: en
+status: true
+dependencies:
+  config:
+    - filter.format.full_html
+  module:
+    - eic_messages
+third_party_settings:
+  eic_messages:
+    message_template_type: log
+template: log_req_owner_transfer_accepted
+label: 'LOG :: Request ownership transfer accepted'
+description: 'Log message for accepted ownership transfer'
+text:
+  -
+    value: "<p>Request&nbsp;[message:field_entity_type:value] ownership transfer accepted:</p>\r\n\r\n<ul>\r\n\t<li>Entity:&nbsp;<a href=\"[message:field_entity_url:uri]\">[message:field_referenced_entity_label:value]</a></li>\r\n\t<li>Requester:&nbsp;[message:field_referenced_flag:entity:author:field_first_name:value]&nbsp;[message:field_referenced_flag:entity:author:field_last_name:value]</li>\r\n\t<li>Moderator:&nbsp;[message:field_referenced_flag:entity:field_request_moderator:entity:field_first_name:value]&nbsp;[message:field_referenced_flag:entity:field_request_moderator:entity:field_last_name:value]</li>\r\n\t<li>Request reason:&nbsp;[message:field_referenced_flag:entity:field_request_reason:value]</li>\r\n\t<li>Created at:&nbsp;[message:field_referenced_flag:entity:date]</li>\r\n\t<li>Closed at:&nbsp;[message:field_referenced_flag:entity:field_request_closed_date]</li>\r\n</ul>\r\n"
+    format: full_html
+settings:
+  'token options':
+    clear: false
+    'token replace': true
+  purge_override: false
+  purge_methods: {  }

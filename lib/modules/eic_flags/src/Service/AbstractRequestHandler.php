@@ -21,6 +21,7 @@ use Drupal\flag\FlaggingInterface;
 use Drupal\flag\FlagService;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\group\GroupMembership;
+use Drupal\message\MessageInterface;
 use Drupal\user\Entity\User;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -173,11 +174,18 @@ abstract class AbstractRequestHandler implements HandlerInterface {
     ) {
       $log = $this->entityTypeManager->getStorage('message')
         ->create([
-          'template' => 'log_request_accepted',
+          'template' => $this->logMessageTemplate(),
           'field_referenced_flag' => $flagging,
           'uid' => $flagging->getOwnerId(),
         ]);
 
+      $this->messageLogPreSave(
+        $flagging,
+        $content_entity,
+        $response,
+        $reason,
+        $log
+      );
       $log->save();
     }
   }
@@ -529,6 +537,26 @@ abstract class AbstractRequestHandler implements HandlerInterface {
    */
   public function canLogRequest() {
     return TRUE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function messageLogPreSave(
+    FlaggingInterface $flagging,
+    ContentEntityInterface $content_entity,
+    string $response,
+    string $reason,
+    MessageInterface $log
+  ) {
+    return $log;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function logMessageTemplate() {
+    return 'log_request_accepted';
   }
 
 }
