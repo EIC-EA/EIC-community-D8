@@ -1,0 +1,27 @@
+uuid: 6205ca4d-d295-4d74-8f9c-740a306a6ba9
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.message.log_masquerade_user.field_related_user
+    - message.template.log_masquerade_user
+id: message.log_masquerade_user.default
+targetEntityType: message
+bundle: log_masquerade_user
+mode: default
+content:
+  field_related_user:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  partial_0:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  search_api_excerpt: true

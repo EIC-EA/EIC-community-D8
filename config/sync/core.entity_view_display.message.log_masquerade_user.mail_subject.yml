@@ -1,0 +1,20 @@
+uuid: c2fc899c-4ded-40de-9e63-435fe3129c63
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.message.mail_subject
+    - field.field.message.log_masquerade_user.field_related_user
+    - message.template.log_masquerade_user
+id: message.log_masquerade_user.mail_subject
+targetEntityType: message
+bundle: log_masquerade_user
+mode: mail_subject
+content:
+  partial_0:
+    weight: 0
+    region: content
+hidden:
+  field_related_user: true
+  partial_1: true
+  search_api_excerpt: true

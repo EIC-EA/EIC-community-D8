@@ -14,6 +14,7 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
 use Drupal\eic_flags\RequestStatus;
 use Drupal\eic_groups\EICGroupsHelper;
+use Drupal\eic_messages\Util\LogMessageTemplates;
 use Drupal\eic_user\UserHelper;
 use Drupal\flag\Entity\Flag;
 use Drupal\flag\Entity\Flagging;
@@ -556,7 +557,7 @@ abstract class AbstractRequestHandler implements HandlerInterface {
    * {@inheritdoc}
    */
   public function logMessageTemplate() {
-    return 'log_request_accepted';
+    return LogMessageTemplates::REQUEST_ARCHIVAL_DELETE;
   }
 
 }

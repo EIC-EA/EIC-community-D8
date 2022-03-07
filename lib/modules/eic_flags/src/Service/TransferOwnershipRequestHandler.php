@@ -9,6 +9,7 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\eic_flags\RequestStatus;
 use Drupal\eic_flags\RequestTypes;
 use Drupal\eic_groups\EICGroupsHelper;
+use Drupal\eic_messages\Util\LogMessageTemplates;
 use Drupal\eic_search\Service\SolrDocumentProcessor;
 use Drupal\eic_user\UserHelper;
 use Drupal\flag\FlaggingInterface;
@@ -666,7 +667,7 @@ class TransferOwnershipRequestHandler extends AbstractRequestHandler {
    * {@inheritdoc}
    */
   public function logMessageTemplate() {
-    return 'log_req_owner_transfer_accepted';
+    return LogMessageTemplates::REQUEST_OWNERSHIP_TRANSFER;
   }
 
 }

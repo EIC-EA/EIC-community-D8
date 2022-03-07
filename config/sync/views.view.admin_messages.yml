@@ -5,6 +5,7 @@ dependencies:
   config:
     - field.storage.message.field_event_executing_user
     - message.template.log_group_state_change
+    - message.template.log_masquerade_user
     - message.template.log_req_owner_transfer_accepted
     - message.template.log_request_accepted
   module:
@@ -549,6 +550,7 @@ display:
           operator: in
           value:
             log_group_state_change: log_group_state_change
+            log_masquerade_user: log_masquerade_user
             log_request_accepted: log_request_accepted
             log_req_owner_transfer_accepted: log_req_owner_transfer_accepted
           group: 1

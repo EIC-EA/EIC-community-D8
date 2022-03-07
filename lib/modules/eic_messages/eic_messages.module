@@ -18,8 +18,10 @@ use Drupal\eic_messages\Service\CommentMessageCreator;
 use Drupal\eic_messages\Service\GroupContentMessageCreator;
 use Drupal\eic_messages\Service\GroupMessageCreator;
 use Drupal\eic_messages\Service\RequestMessageCreator;
+use Drupal\eic_messages\Util\LogMessageTemplates;
 use Drupal\flag\FlaggingInterface;
 use Drupal\node\Entity\NodeType;
+use Drupal\user\UserInterface;
 
 /**
  * Implements hook_ENTITY_TYPE_insert().
@@ -211,4 +213,35 @@ function eic_messages_tokens(
 ) {
   $class = \Drupal::classResolver(MessageTokens::class);
   return $class->tokens($type, $tokens, $data, $options, $bubbleable_metadata);
+}
+
+function eic_messages_user_login(UserInterface $account) {
+  /** @var \Drupal\masquerade\Masquerade $masquerade */
+  $masquerade = \Drupal::service('masquerade');
+
+  if ($masquerade->isMasquerading()) {
+    $session = \Drupal::service('session');
+    $current_user = \Drupal::currentUser();
+
+    // Check if user is masquerading as another account. Otherwise it means the
+    // user is no longer masquerading.
+    if ($current_user->id() !== $session->get('masquerading')) {
+      $entity_type_manager = \Drupal::entityTypeManager();
+
+      // Load previous user account and create log message.
+      if (
+        ($user = $entity_type_manager->getStorage('user')
+          ->load($session->get('masquerading'))) &&
+        $user instanceof UserInterface
+      ) {
+        $entity_type_manager->getStorage('message')
+          ->create([
+            'template' => LogMessageTemplates::MASQUERADE_USER,
+            'field_related_user' => \Drupal::currentUser()->id(),
+            'uid' => $user->id(),
+          ])
+          ->save();
+      }
+    }
+  }
 }
