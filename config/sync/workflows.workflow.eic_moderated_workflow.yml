@@ -2,6 +2,9 @@ uuid: 8eefbf2a-a744-410b-ae09-fdcbb8570a4b
 langcode: en
 status: true
 dependencies:
+  config:
+    - node.type.news
+    - node.type.story
   module:
     - content_moderation_bypass
 id: eic_moderated_workflow
@@ -58,5 +61,8 @@ type_settings:
         - needs_review
       to: waiting_for_approval
       weight: -2
-  entity_types: {  }
+  entity_types:
+    node:
+      - news
+      - story
   default_moderation_state: draft
