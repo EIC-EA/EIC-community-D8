@@ -16,6 +16,7 @@ final class Event {
   const WEIGHT_STATE_PAST = 3;
 
   const SOLR_FIELD_ID_WEIGHT_STATE = 'its_event_weight_state';
+  const SEARCH_API_FIELD_ID_WEIGHT_STATE = 'event_weight_state';
 
   const SOLR_FIELD_ID_WEIGHT_STATE_LABEL = 'ss_event_weight_state_label';
 

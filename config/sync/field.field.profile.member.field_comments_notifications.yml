@@ -1,0 +1,23 @@
+uuid: df41df55-adfc-4d35-a8de-a26089d632d3
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.profile.field_comments_notifications
+    - profile.type.member
+id: profile.member.field_comments_notifications
+field_name: field_comments_notifications
+entity_type: profile
+bundle: member
+label: 'Comments Notifications'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

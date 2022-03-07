@@ -2,6 +2,8 @@
 
 namespace Drupal\eic_groups;
 
+use Drupal\group\Entity\GroupInterface;
+
 /**
  * GroupsModerationHelper helper class.
  */
@@ -41,5 +43,39 @@ class GroupsModerationHelper {
    * @var string
    */
   const GROUP_ARCHIVED_STATE = 'archived';
+
+  /**
+   * Checks if a group is archived.
+   *
+   * @param \Drupal\group\Entity\GroupInterface $group
+   *   The group entity.
+   *
+   * @return bool
+   *   TRUE if group is archived, FALSE otherwise.
+   */
+  public static function isArchived(GroupInterface $group) {
+    if ($group->get('moderation_state')->value === GroupsModerationHelper::GROUP_ARCHIVED_STATE) {
+      return TRUE;
+    }
+
+    return FALSE;
+  }
+
+  /**
+   * Checks if a group is blocked.
+   *
+   * @param \Drupal\group\Entity\GroupInterface $group
+   *   The group entity.
+   *
+   * @return bool
+   *   TRUE if group is blocked, FALSE otherwise.
+   */
+  public static function isBlocked(GroupInterface $group) {
+    if ($group->get('moderation_state')->value === GroupsModerationHelper::GROUP_BLOCKED_STATE) {
+      return TRUE;
+    }
+
+    return FALSE;
+  }
 
 }

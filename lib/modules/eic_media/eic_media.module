@@ -23,7 +23,7 @@ function eic_media_media_access(EntityInterface $entity, $operation, AccountInte
   // If the route name is not the system files route, it means the user is not
   // accessing the file download route, so we don't need extra conditions to
   // check if the user has access to any entity that this media is attached to.
-  if ($route_name !== 'system.files') {
+  if (!in_array($route_name, ['system.files', 'image.style_private'])) {
     return AccessResult::neutral();
   }
 

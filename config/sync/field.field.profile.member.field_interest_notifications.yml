@@ -1,0 +1,23 @@
+uuid: e61f3442-2d12-4a69-92d1-11ae3f692ddb
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.profile.field_interest_notifications
+    - profile.type.member
+id: profile.member.field_interest_notifications
+field_name: field_interest_notifications
+entity_type: profile
+bundle: member
+label: 'Interest Notifications'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

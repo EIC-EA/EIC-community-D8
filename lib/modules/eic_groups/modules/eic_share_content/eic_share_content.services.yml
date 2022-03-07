@@ -1,4 +1,4 @@
 services:
   eic_share_content.share_manager:
     class: 'Drupal\eic_share_content\Service\ShareManager'
-    arguments: [ '@eic_groups.helper', '@entity_type.manager', '@plugin.manager.group_content_enabler', '@eic_messages.message_bus', '@eic_search.solr_document_processor' ]
+    arguments: [ '@eic_groups.helper', '@entity_type.manager', '@plugin.manager.group_content_enabler', '@group.membership_loader', '@group_flex.group', '@eic_messages.message_bus', '@eic_search.solr_document_processor' ]
