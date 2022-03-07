@@ -57,11 +57,17 @@ class UserActivitySubnavigationBlock extends BlockBase implements ContainerFacto
       [
         'label' => $this->t('Interesting for you', [], ['context' => 'eic_user']),
         'route' => 'eic_user.user.activity',
-        'route_parameters' => ['user' => $this->currentUser->id()],
+        'route_parameters' => ['user' => $this->currentUser->id()]
       ],
       [
         'label' => $this->t('Following', [], ['context' => 'eic_user']),
-        'route' => 'eic_search.global_search',
+        'route' => 'eic_user.user.following',
+        'route_parameters' => ['user' => $this->currentUser->id()]
+      ],
+      [
+        'label' => $this->t('Contribution', [], ['context' => 'eic_user']),
+        'route' => 'eic_user.user.contribution',
+        'route_parameters' => ['user' => $this->currentUser->id()]
       ],
       [
         'label' => $this->t('Bookmarked', [], ['context' => 'eic_user']),
@@ -73,11 +79,10 @@ class UserActivitySubnavigationBlock extends BlockBase implements ContainerFacto
       ],
     ];
 
-    $menu_items = array_map(function (array $item) use ($current_route) {
+    $menu_items = array_map(function(array $item) use ($current_route) {
       $route_parameters = array_key_exists('route_parameters', $item) ?
         $item['route_parameters'] :
         [];
-
       return [
         'link' => [
           'label' => $item['label'],
@@ -89,6 +94,7 @@ class UserActivitySubnavigationBlock extends BlockBase implements ContainerFacto
 
     return [
       '#theme' => 'user_activity_subnavigation_block',
+      '#cache' => ['contexts' => ['url.path', 'url.query_args']],
       '#menu_items' => ['items' => $menu_items],
     ];
   }

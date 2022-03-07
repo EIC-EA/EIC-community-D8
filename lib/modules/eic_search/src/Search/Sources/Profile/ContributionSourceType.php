@@ -6,11 +6,11 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\eic_search\Search\Sources\SourceType;
 
 /**
- * Class FollowingSourceType
+ * Class ContributionSourceType
  *
  * @package Drupal\eic_groups\Search\Sources
  */
-class FollowingSourceType extends SourceType {
+class ContributionSourceType extends SourceType {
 
   use StringTranslationTrait;
 
@@ -25,7 +25,7 @@ class FollowingSourceType extends SourceType {
    * @inheritDoc
    */
   public function getLabel(): string {
-    return $this->t('Profile - Following', [], ['context' => 'eic_search']);
+    return $this->t('Profile - Contribution', [], ['context' => 'eic_search']);
   }
 
   /**
@@ -42,7 +42,6 @@ class FollowingSourceType extends SourceType {
     return [
       'ss_activity_type' => $this->t('Content type', [], ['context' => 'eic_search']),
       'sm_content_field_vocab_topics_string' => $this->t('Topics', [], ['context' => 'eic_search']),
-      'ss_content_language_label' => $this->t('Language', [], ['context' => 'eic_search']),
     ];
   }
 
@@ -109,7 +108,7 @@ class FollowingSourceType extends SourceType {
    * @inheritDoc
    */
   public function getAuthorFieldId(): string {
-    return 'itm_follow_uid';
+    return 'its_uid';
   }
 
 }
