@@ -197,6 +197,7 @@ class SubscriptionMessageCreator {
         $message = Message::create([
           'template' => $message_type,
           'field_referenced_node' => $entity,
+          'field_group_ref' => $group,
         ]);
 
         // Set the owner of the message to the current user.

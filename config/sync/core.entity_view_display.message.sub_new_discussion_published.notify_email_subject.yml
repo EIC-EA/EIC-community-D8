@@ -5,6 +5,7 @@ dependencies:
   config:
     - core.entity_view_mode.message.notify_email_subject
     - field.field.message.sub_new_discussion_published.field_event_executing_user
+    - field.field.message.sub_new_discussion_published.field_group_ref
     - message.template.sub_new_discussion_published
 id: message.sub_new_discussion_published.notify_email_subject
 targetEntityType: message
@@ -18,6 +19,7 @@ content:
     region: content
 hidden:
   field_event_executing_user: true
+  field_group_ref: true
   partial_1: true
   partial_2: true
   search_api_excerpt: true

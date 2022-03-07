@@ -1,0 +1,33 @@
+uuid: bad07bca-aec7-44bc-9e1e-1ab5a1f2bdcb
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.message.field_group_ref
+    - group.type.event
+    - group.type.group
+    - group.type.organisation
+    - message.template.sub_new_discussion_published
+id: message.sub_new_discussion_published.field_group_ref
+field_name: field_group_ref
+entity_type: message
+bundle: sub_new_discussion_published
+label: Group
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:group'
+  handler_settings:
+    target_bundles:
+      event: event
+      group: group
+      organisation: organisation
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: event
+field_type: entity_reference

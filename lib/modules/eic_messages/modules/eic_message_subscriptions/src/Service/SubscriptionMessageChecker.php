@@ -3,6 +3,7 @@
 namespace Drupal\eic_message_subscriptions\Service;
 
 use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\eic_message_subscriptions\MessageSubscriptionTypes;
 use Drupal\eic_user\NotificationFrequencies;
 use Drupal\eic_user\NotificationTypes;
@@ -25,10 +26,20 @@ class SubscriptionMessageChecker {
   private NotificationSettingsManager $notificationSettingsManager;
 
   /**
-   * @param \Drupal\eic_user\Service\NotificationSettingsManager $notification_settings_manager
+   * The messenger service.
    */
-  public function __construct(NotificationSettingsManager $notification_settings_manager) {
+  private MessengerInterface $messenger;
+
+  /**
+   * @param \Drupal\eic_user\Service\NotificationSettingsManager $notification_settings_manager
+   * @param \Drupal\Core\Messenger\MessengerInterface $messenger
+   */
+  public function __construct(
+    NotificationSettingsManager $notification_settings_manager,
+    MessengerInterface $messenger
+  ) {
     $this->notificationSettingsManager = $notification_settings_manager;
+    $this->messenger = $messenger;
   }
 
   /**
@@ -45,7 +56,7 @@ class SubscriptionMessageChecker {
       return FALSE;
     }
 
-    if (!$notification_type = MessageSubscriptionTypes::SUBSCRIPTION_MESSAGES_INTEREST_CATEGORIES[$message->bundle()]) {
+    if (!$notification_type = MessageSubscriptionTypes::SUBSCRIPTION_MESSAGE_CATEGORIES[$message->bundle()]) {
       // By default, we suppose that every unsupported message is to be sent.
       return TRUE;
     }
@@ -83,6 +94,10 @@ class SubscriptionMessageChecker {
     string $notification_category
   ): bool {
     $followed_entity = $this->getReferencedEntity($message);
+    if (!$followed_entity instanceof ContentEntityInterface) {
+      return TRUE;
+    }
+
     $value = $this->notificationSettingsManager->getFollowFlagValue(
       $notification_category,
       $user,
@@ -98,16 +113,22 @@ class SubscriptionMessageChecker {
    * @return \Drupal\Core\Entity\ContentEntityInterface|NULL
    */
   private function getReferencedEntity(MessageInterface $message): ?ContentEntityInterface {
-    $notification_type = MessageSubscriptionTypes::SUBSCRIPTION_MESSAGES_INTEREST_CATEGORIES[$message->bundle()];
+    $notification_type = MessageSubscriptionTypes::SUBSCRIPTION_MESSAGE_CATEGORIES[$message->bundle()];
     switch ($notification_type) {
-      case NotificationTypes::COMMENTS_NOTIFICATION_TYPE:
-        $field = 'field_referenced_comment';
-        break;
       case NotificationTypes::GROUPS_NOTIFICATION_TYPE:
+      case NotificationTypes::EVENTS_NOTIFICATION_TYPE:
+        // Since only site-wide events(entity type: group) has a subscription message for the moment.
+        // We assume the field to use is field_group_ref. Change this when a message for group events is introduced.
         $field = 'field_group_ref';
         break;
-      case NotificationTypes::EVENTS_NOTIFICATION_TYPE:
-        break;
+    }
+
+    if (!$message->hasField($field)) {
+      $this->messenger->addError(
+        sprintf('Message template %s is supposed to have field %s, something seems wrong', $message->bundle(), $field)
+      );
+
+      return NULL;
     }
 
     $entities = $message->get($field)->referencedEntities();

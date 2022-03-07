@@ -29,7 +29,7 @@ class NotificationSettingsManager {
    *
    * @var string[]
    */
-  private static $flags = [
+  private static array $flags = [
     NotificationTypes::GROUPS_NOTIFICATION_TYPE => ['follow_group'],
     NotificationTypes::EVENTS_NOTIFICATION_TYPE => ['follow_group', 'follow_event'],
   ];
@@ -225,19 +225,20 @@ class NotificationSettingsManager {
       throw new \InvalidArgumentException('Given type is not supported');
     }
 
-    $query = $this->entityTypeManager->getStorage('flagging')
+    $flagging_ids = $this->entityTypeManager->getStorage('flagging')
       ->getQuery()
       ->condition('flag_id', self::$flags[$type], 'IN')
       ->condition('uid', $user->id())
       ->condition('entity_type', $entity->getEntityTypeId())
       ->condition('entity_id', $entity->id())
-      ->range(0, 1);
+      ->range(0, 1)
+      ->execute();
 
-    if (empty($query)) {
+    if (empty($flagging_ids)) {
       return NULL;
     }
 
-    $flagging = Flagging::load($query);
+    $flagging = Flagging::load(reset($flagging_ids));
 
     return $flagging->get('field_notification_frequency')->value;
   }

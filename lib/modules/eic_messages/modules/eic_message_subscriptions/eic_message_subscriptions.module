@@ -108,8 +108,9 @@ function eic_message_subscriptions_message_subscribe_get_subscribers_alter(array
 
   $subscription_message_checker = \Drupal::service('eic_message_subscriptions.subscription_message_checker');
   foreach ($uids as $delivery_candidate) {
-    if (!$subscription_message_checker->shouldSend($delivery_candidate->getAccountId(), $message)) {
-      unset($uids[$delivery_candidate->getAccountId()]);
+    $account_id = $delivery_candidate->getAccountId();
+    if (!$subscription_message_checker->shouldSend($account_id, $message) && isset($uids[$account_id])) {
+      unset($uids[$account_id]);
     }
   }
 }
