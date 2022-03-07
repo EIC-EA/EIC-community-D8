@@ -2,9 +2,14 @@ uuid: 1fe90ec0-5341-49a9-8812-cf5161fc5a11
 langcode: en
 status: true
 dependencies:
+  config:
+    - workflows.workflow.default
+    - workflows.workflow.eic_moderated_workflow
   module:
+    - content_moderation
     - node
     - user
+    - views_autocomplete_filters
   enforced:
     module:
       - content_moderation
@@ -677,7 +682,8 @@ display:
           plugin_id: moderation_state_filter
           operator: 'not in'
           value:
-            editorial-published: editorial-published
+            default-published: default-published
+            eic_moderated_workflow-published: eic_moderated_workflow-published
           group: 1
           exposed: false
           expose:
@@ -811,7 +817,8 @@ display:
         - url.query_args
         - 'user.node_grants:view'
         - user.permissions
-      tags: {  }
+      tags:
+        - 'config:workflow_list'
   moderated_content:
     id: moderated_content
     display_title: 'Moderated content'
@@ -830,4 +837,5 @@ display:
         - url.query_args
         - 'user.node_grants:view'
         - user.permissions
-      tags: {  }
+      tags:
+        - 'config:workflow_list'
