@@ -159,8 +159,6 @@ class SolrSearchController extends ControllerBase {
         $dates_query[] = "($date_from_id:[* TO $end_date] AND $date_end_id:[$from_date TO $end_date])";
         $dates_query[] = "($date_from_id:[$from_date TO $end_date] AND $date_end_id:[$end_date TO *])";
         $dates_query[] = "($date_from_id:[* TO $from_date] AND $date_end_id:[$end_date TO *])";
-
-
         $date_query = implode(' OR ', $dates_query);
 
         $date_query = "($date_query)";
