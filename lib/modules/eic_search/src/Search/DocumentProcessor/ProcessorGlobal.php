@@ -134,8 +134,7 @@ class ProcessorGlobal extends DocumentProcessor {
             $fields,
             UserHelper::getUserAvatar($owner)
           );
-          $user_url = $owner->toUrl()
-            ->toString();
+          $user_url = $owner->toUrl()->toString();
         }
         break;
       case 'entity:message':
