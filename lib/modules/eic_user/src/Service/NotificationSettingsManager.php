@@ -47,12 +47,12 @@ class NotificationSettingsManager {
   /**
    * @var \Drupal\eic_user\UserHelper
    */
-  private $userHelper;
+  private UserHelper $userHelper;
 
   /**
    * @var \Drupal\flag\FlagService
    */
-  private $flagService;
+  private FlagService $flagService;
 
   /**
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
@@ -83,11 +83,11 @@ class NotificationSettingsManager {
   public function setSettingValue(string $notification_type, $value, ?FlaggingInterface $flagging = NULL): ?bool {
     $user = User::load($this->currentUser->id());
     if (!$user instanceof UserInterface) {
-      throw new \InvalidArgumentException('Current user doesn\'t exist');
+      throw new \InvalidArgumentException('Current user does not exist');
     }
 
     if (!in_array($notification_type, NotificationTypes::ALLOWED_NOTIFICATION_TYPES)) {
-      throw new \InvalidArgumentException('Given type isn\'t allowed');
+      throw new \InvalidArgumentException('Given type is not allowed');
     }
 
     $new_value = NULL;
@@ -109,7 +109,7 @@ class NotificationSettingsManager {
    * @param \Drupal\user\UserInterface $user
    * @param $value
    *
-   * @return string
+   * @return bool
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
   public function updateFollowFlag(FlaggingInterface $flagging, UserInterface $user, $value) {
