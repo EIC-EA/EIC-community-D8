@@ -169,6 +169,16 @@ class SolrSearchController extends ControllerBase {
           " AND $date_query";
       }
 
+      $fields_filter_empty = $source->getFieldsToFilterEmptyValue();
+
+      if (!empty($fields_filter_empty)) {
+        foreach ($fields_filter_empty as $field) {
+          $query_fields_string .= empty($query_fields_string) ?
+            "$field:[* TO *]" :
+            " AND $field:[* TO *]";
+        }
+      }
+
       if (!empty($query_fields_string)) {
         $solariumQuery->addParam('q', $query_fields_string);
       }

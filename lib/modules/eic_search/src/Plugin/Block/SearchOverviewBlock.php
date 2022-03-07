@@ -376,7 +376,7 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
             ['context' => 'eic_group']
           ),
           'show_more' => $this->t('Show more', [], ['context' => 'eic_group']),
-          'collapse' => $this->t('Collapse', [], ['context' => 'eic_group']),
+          'collapse' => $this->t('Show less', [], ['context' => 'eic_group']),
           'highlight' => $this->t('Highlight this content', [], ['context' => 'eic_group']),
           'unHighlight' => $this->t('Disable highlighting of this content', [], ['context' => 'eic_group'])
         ],

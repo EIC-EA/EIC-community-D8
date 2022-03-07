@@ -112,4 +112,11 @@ class FollowingSourceType extends SourceType {
     return 'itm_follow_uid';
   }
 
+  /**
+   * @inheritDoc
+   */
+  public function getFieldsToFilterEmptyValue(): array {
+    return ['ss_type'];
+  }
+
 }
