@@ -131,7 +131,7 @@ class NotificationSettingsManager {
    * @return bool
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
-  private function updateProfileSetting(string $notification_type, UserInterface $user, $value) {
+  private function updateProfileSetting(string $notification_type, UserInterface $user, $value): bool {
     $profile = $this->userHelper->getUserMemberProfile($user);
     if (!$profile instanceof ProfileInterface) {
       return FALSE;
@@ -152,6 +152,32 @@ class NotificationSettingsManager {
     $profile->save();
 
     return $value;
+  }
+
+  /**
+   * @param \Drupal\user\UserInterface $user
+   * @param string $notification_type
+   *
+   * @return bool
+   */
+  public function getProfileSetting(UserInterface $user, string $notification_type): bool {
+    if (!in_array(
+      $notification_type,
+      [NotificationTypes::COMMENTS_NOTIFICATION_TYPE, NotificationTypes::INTEREST_NOTIFICATION_TYPE]
+    )) {
+      throw new InvalidArgumentException('Unsupported profile notification type');
+    }
+
+    $profile = $this->userHelper->getUserMemberProfile($user);
+    if (!$profile instanceof ProfileInterface) {
+      return TRUE;
+    }
+
+    $field = $notification_type === NotificationTypes::COMMENTS_NOTIFICATION_TYPE
+      ? 'field_comments_notifications'
+      : 'field_interest_notifications';
+
+    return (bool) $profile->get($field)->value;
   }
 
   /**
@@ -194,7 +220,7 @@ class NotificationSettingsManager {
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
-  public function getValue(string $type, UserInterface $user, ContentEntityInterface $entity): ?string {
+  public function getFollowFlagValue(string $type, UserInterface $user, ContentEntityInterface $entity): ?string {
     if (!array_key_exists($type, self::$flags)) {
       throw new \InvalidArgumentException('Given type is not supported');
     }

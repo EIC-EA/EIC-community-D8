@@ -45,19 +45,19 @@ class SubscriptionMessageChecker {
       return FALSE;
     }
 
-    if (!$notification_category = MessageSubscriptionTypes::SUBSCRIPTION_MESSAGES_INTEREST_CATEGORIES[$message->bundle()]) {
+    if (!$notification_type = MessageSubscriptionTypes::SUBSCRIPTION_MESSAGES_INTEREST_CATEGORIES[$message->bundle()]) {
       // By default, we suppose that every unsupported message is to be sent.
       return TRUE;
     }
 
-    $result = TRUE;
-    switch ($notification_category) {
+    switch ($notification_type) {
       case NotificationTypes::GROUPS_NOTIFICATION_TYPE:
       case NotificationTypes::EVENTS_NOTIFICATION_TYPE:
-        $result = $this->checkFollowFlagValue($user, $message, $notification_category);
+        $result = $this->checkFollowFlagValue($user, $message, $notification_type);
         break;
       case NotificationTypes::INTEREST_NOTIFICATION_TYPE:
       case NotificationTypes::COMMENTS_NOTIFICATION_TYPE:
+        $result = $this->notificationSettingsManager->getProfileSetting($user, $notification_type);
         break;
       default:
         throw new InvalidArgumentException(
@@ -83,7 +83,7 @@ class SubscriptionMessageChecker {
     string $notification_category
   ): bool {
     $followed_entity = $this->getReferencedEntity($message);
-    $value = $this->notificationSettingsManager->getValue(
+    $value = $this->notificationSettingsManager->getFollowFlagValue(
       $notification_category,
       $user,
       $followed_entity
@@ -105,6 +105,8 @@ class SubscriptionMessageChecker {
         break;
       case NotificationTypes::GROUPS_NOTIFICATION_TYPE:
         $field = 'field_group_ref';
+        break;
+      case NotificationTypes::EVENTS_NOTIFICATION_TYPE:
         break;
     }
 
