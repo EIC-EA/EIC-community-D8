@@ -59,6 +59,7 @@ type_settings:
       from:
         - draft
         - needs_review
+        - published
       to: waiting_for_approval
       weight: -2
   entity_types:
