@@ -12,7 +12,7 @@ entity_type: group
 bundle: organisation
 label: 'Banner Image'
 description: ''
-required: true
+required: false
 translatable: true
 default_value: {  }
 default_value_callback: ''

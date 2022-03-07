@@ -1,0 +1,34 @@
+.progress {
+  max-width: 100%;
+  margin: 2rem auto;
+  padding:0 1rem;
+  box-sizing: border-box;
+
+  @media (min-width: 480px) {
+    width: 480px;
+  }
+  @media (min-width: 768px) {
+    width: 768px;
+  }
+  @media (min-width: 996px) {
+    width: 996px;
+  }
+  @media (min-width: 1140px) {
+    width: 1140px;
+  }
+
+  .progress {
+    padding: 0;
+    width: auto;
+    margin: 0;
+  }
+
+  & &__bar {
+    height: 100%;
+    background: $ecl-color-blue;
+  }
+
+  & &__track {
+    border-color: $ecl-color-blue;
+  }
+}

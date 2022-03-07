@@ -29,7 +29,7 @@ interface EICGroupsHelperInterface {
    * @return bool|\Drupal\group\Entity\GroupInterface
    *   The Group entity.
    */
-  public function getGroupByEntity(EntityInterface $entity);
+  public function getOwnerGroupByEntity(EntityInterface $entity);
 
   /**
    * Get operations links of a given group.
