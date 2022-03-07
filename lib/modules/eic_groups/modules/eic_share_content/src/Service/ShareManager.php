@@ -172,7 +172,7 @@ class ShareManager {
 
     // Create the group content entity.
     $shared_group_content = GroupContent::create([
-      'type' => $target_group->getGroupType()->id() . '-' . self::GROUP_CONTENT_SHARED_PLUGIN_ID,
+      'type' => $this->defineGroupContentType($target_group),
       'gid' => $target_group->id(),
       'entity_id' => $node->id(),
     ]);
@@ -333,6 +333,19 @@ class ShareManager {
     }
 
     return TRUE;
+  }
+  
+  /**
+   * Returns the type for a shared content and given group type.
+   *
+   * @param \Drupal\group\Entity\GroupInterface $target_group
+   *   The target group.
+   *
+   * @return string
+   *   The type to be used for the group_content entity.
+   */
+  public function defineGroupContentType(GroupInterface $target_group) {
+    return $target_group->getGroupType()->id() . '-' . self::GROUP_CONTENT_SHARED_PLUGIN_ID;
   }
 
 }
