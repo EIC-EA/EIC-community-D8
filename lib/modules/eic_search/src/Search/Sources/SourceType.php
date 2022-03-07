@@ -180,4 +180,11 @@ abstract class SourceType implements SourceTypeInterface {
     return $this->t('My groups & content only', [], ['context' => 'eic_search']);
   }
 
+  /**
+   * @inheritDoc
+   */
+  public function getFieldsToFilterEmptyValue(): array {
+    return [];
+  }
+
 }

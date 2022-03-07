@@ -193,9 +193,16 @@ interface SourceTypeInterface {
   public function prefilterByGroupsMembership(): bool;
 
   /**
-   * Get the label for the filter "my groups"
+   * Get the label for the filter "my groups".
    *
    * @return string
    */
   public function getLabelFilterMyGroups(): string;
+
+  /**
+   * Get fields to prefilter empty values.
+   *
+   * @return array
+   */
+  public function getFieldsToFilterEmptyValue(): array;
 }

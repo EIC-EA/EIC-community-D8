@@ -14,6 +14,14 @@ eic_user.user.following:
   requirements:
     _custom_access: '\Drupal\eic_user\Controller\MyProfileController::access'
 
+eic_user.user.contribution:
+  path: '/user/{user}/contribution'
+  defaults:
+    _controller: '\Drupal\eic_user\Controller\MyProfileController::activity'
+    _title: 'My contributions'
+  requirements:
+    _custom_access: '\Drupal\eic_user\Controller\MyProfileController::access'
+
 eic_user.my_settings:
   path: '/my-settings'
   defaults:
