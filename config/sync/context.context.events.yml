@@ -1,0 +1,63 @@
+uuid: bfff752e-0402-4f20-83ef-18724f5f8950
+langcode: en
+status: true
+dependencies:
+  module:
+    - eic_search
+    - route_condition
+label: Events
+name: events
+group: 'My profile'
+description: ''
+requireAllConditions: false
+disabled: false
+conditions:
+  route:
+    id: route
+    negate: false
+    uuid: 5d5042e7-ffc0-4c75-9a69-73d9a764d222
+    context_mapping: {  }
+    routes: eic_user.user.my_events
+reactions:
+  blocks:
+    id: blocks
+    uuid: 55edfcc0-d241-43a4-9cda-a839fdc3d28c
+    blocks:
+      be433469-3926-4a01-9db1-22bbf4900468:
+        uuid: be433469-3926-4a01-9db1-22bbf4900468
+        id: eic_search_overview
+        label: ''
+        provider: eic_search
+        label_display: visible
+        region: content
+        weight: '0'
+        custom_id: eic_search_overview
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: events
+        context_mapping: {  }
+        source_type: Drupal\eic_search\Search\Sources\Profile\MyEventsSourceType
+        facets:
+          sm_group_topic_name: sm_group_topic_name
+          ss_group_event_type_string: ss_group_event_type_string
+          sm_group_field_location_type: sm_group_field_location_type
+          ss_group_event_country: ss_group_event_country
+          ss_event_weight_state_label: 0
+        sort_options:
+          its_event_weight_state: its_event_weight_state
+          timestamp: timestamp
+          ss_group_label_string: ss_group_label_string
+          its_content_field_date_range_start_value: its_content_field_date_range_start_value
+          score: score
+          its_last_flagged_like_content: 0
+        enable_search: 1
+        page_options: normal
+        prefilter_group: 0
+        enable_date_filter: 1
+        add_facet_interests: 0
+        add_facet_my_groups: 0
+        third_party_settings: {  }
+    include_default_blocks: 0
+    saved: false
+weight: 0
