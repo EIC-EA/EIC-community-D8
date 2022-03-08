@@ -1,0 +1,21 @@
+uuid: ee3d0975-b152-42af-83f3-b05c4eddf4d3
+langcode: en
+status: true
+dependencies:
+  module:
+    - message
+id: message.field_previous_moderation_state
+field_name: field_previous_moderation_state
+entity_type: message
+type: string
+settings:
+  max_length: 255
+  case_sensitive: false
+  is_ascii: false
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

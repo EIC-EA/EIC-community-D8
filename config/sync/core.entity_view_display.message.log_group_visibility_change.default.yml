@@ -1,18 +1,18 @@
-uuid: f5c3e1eb-2459-4001-955d-22247494a3d8
+uuid: ef520f0e-ee53-4a0d-b380-0e38a1f259e4
 langcode: en
 status: true
 dependencies:
   config:
-    - field.field.message.log_group_state_change.field_group_ref
-    - field.field.message.log_group_state_change.field_moderation_state
-    - field.field.message.log_group_state_change.field_previous_moderation_state
-    - field.field.message.log_group_state_change.field_rendered_content
-    - message.template.log_group_state_change
+    - field.field.message.log_group_visibility_change.field_group_ref
+    - field.field.message.log_group_visibility_change.field_group_visibility
+    - field.field.message.log_group_visibility_change.field_previous_group_visibility
+    - field.field.message.log_group_visibility_change.field_rendered_content
+    - message.template.log_group_visibility_change
   module:
     - text
-id: message.log_group_state_change.default
+id: message.log_group_visibility_change.default
 targetEntityType: message
-bundle: log_group_state_change
+bundle: log_group_visibility_change
 mode: default
 content:
   field_group_ref:
@@ -23,7 +23,7 @@ content:
     third_party_settings: {  }
     weight: 2
     region: content
-  field_moderation_state:
+  field_group_visibility:
     type: string
     label: above
     settings:
@@ -31,7 +31,7 @@ content:
     third_party_settings: {  }
     weight: 5
     region: content
-  field_previous_moderation_state:
+  field_previous_group_visibility:
     type: string
     label: above
     settings:
@@ -44,7 +44,7 @@ content:
     label: above
     settings: {  }
     third_party_settings: {  }
-    weight: 3
+    weight: 6
     region: content
   partial_0:
     settings: {  }

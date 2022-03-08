@@ -12,7 +12,7 @@ services:
     public: true
     calls:
       - [ setDocumentProcessor, [ '@?eic_search.solr_document_processor' ] ]
-    arguments: [ '@oec_group_flex.group_flex.group_saver.decorator.inner', '@oec_group_flex.group_visibility.storage', '@entity_type.manager', '@group_permission.group_permissions_manager', '@plugin.manager.group_visibility', '@plugin.manager.group_joining_method', '@group_flex.group' ]
+    arguments: [ '@oec_group_flex.group_flex.group_saver.decorator.inner', '@oec_group_flex.group_visibility.storage', '@module_handler', '@entity_type.manager', '@group_permission.group_permissions_manager', '@plugin.manager.group_visibility', '@plugin.manager.group_joining_method', '@group_flex.group' ]
   oec_group_flex.group_visibility.storage:
     class: Drupal\oec_group_flex\GroupVisibilityDatabaseStorage
     arguments: [ '@entity_type.manager', '@database' ]

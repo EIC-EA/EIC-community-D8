@@ -1,18 +1,18 @@
-uuid: d5a003e2-4512-460e-98e7-f3cbefd2f39a
+uuid: 12355e2c-2996-42c6-adc1-aee35cfd129e
 langcode: en
 status: true
 dependencies:
   config:
-    - field.field.message.log_group_state_change.field_group_ref
-    - field.field.message.log_group_state_change.field_moderation_state
-    - field.field.message.log_group_state_change.field_previous_moderation_state
-    - field.field.message.log_group_state_change.field_rendered_content
-    - message.template.log_group_state_change
+    - field.field.message.log_group_visibility_change.field_group_ref
+    - field.field.message.log_group_visibility_change.field_group_visibility
+    - field.field.message.log_group_visibility_change.field_previous_group_visibility
+    - field.field.message.log_group_visibility_change.field_rendered_content
+    - message.template.log_group_visibility_change
   module:
     - text
-id: message.log_group_state_change.default
+id: message.log_group_visibility_change.default
 targetEntityType: message
-bundle: log_group_state_change
+bundle: log_group_visibility_change
 mode: default
 content:
   field_group_ref:
@@ -25,7 +25,7 @@ content:
       size: 60
       placeholder: ''
     third_party_settings: {  }
-  field_moderation_state:
+  field_group_visibility:
     type: string_textfield
     weight: 4
     region: content
@@ -33,7 +33,7 @@ content:
       size: 60
       placeholder: ''
     third_party_settings: {  }
-  field_previous_moderation_state:
+  field_previous_group_visibility:
     type: string_textfield
     weight: 3
     region: content
@@ -43,7 +43,7 @@ content:
     third_party_settings: {  }
   field_rendered_content:
     type: text_textarea
-    weight: 2
+    weight: 5
     region: content
     settings:
       rows: 5
