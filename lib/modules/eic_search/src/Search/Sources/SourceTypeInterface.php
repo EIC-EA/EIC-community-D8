@@ -165,6 +165,13 @@ interface SourceTypeInterface {
   public function ignoreContentFromCurrentUser(): bool;
 
   /**
+   * Prefilter content by current user ID (field will be taken from the getAuthorFieldId).
+   *
+   * @return bool
+   */
+  public function prefilterByCurrentUser(): bool;
+
+  /**
    * Get the SOLR field for the user_id (author).
    *
    * @return string
@@ -186,9 +193,16 @@ interface SourceTypeInterface {
   public function prefilterByGroupsMembership(): bool;
 
   /**
-   * Get the label for the filter "my groups"
+   * Get the label for the filter "my groups".
    *
    * @return string
    */
   public function getLabelFilterMyGroups(): string;
+
+  /**
+   * Get fields to prefilter empty values.
+   *
+   * @return array
+   */
+  public function getFieldsToFilterEmptyValue(): array;
 }

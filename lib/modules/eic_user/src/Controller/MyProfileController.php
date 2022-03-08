@@ -31,7 +31,7 @@ class MyProfileController extends ControllerBase {
    * @return array
    *   An empty array.
    */
-  public function interests(Request $request, UserInterface $user): array {
+  public function activity(Request $request, UserInterface $user): array {
     return [];
   }
 

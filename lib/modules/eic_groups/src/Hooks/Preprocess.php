@@ -62,7 +62,7 @@ class Preprocess implements ContainerInjectionInterface {
         // group.
         if (($node = $this->routeMatch->getParameter('node')) && $node instanceof NodeInterface) {
           if (in_array($node->bundle(), ['book', 'wiki_page'])) {
-            if ($this->eicGroupsHelper->getGroupByEntity($node)) {
+            if ($this->eicGroupsHelper->getOwnerGroupByEntity($node)) {
               unset($variables['links']['book_add_child']);
             }
           }

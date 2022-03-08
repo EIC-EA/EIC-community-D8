@@ -15,7 +15,7 @@
 
   {% if content is not empty %}
     <div class="ecl-extended-list__item-content ecl-editable-wrapper">
-      {{ content }}
+      {{ content | raw }}
     </div>
   {% endif %}
 

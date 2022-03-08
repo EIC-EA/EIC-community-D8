@@ -7,7 +7,16 @@ dependencies:
     - node
 id: follow_content
 label: 'Follow content'
-bundles: {  }
+bundles:
+  - book
+  - discussion
+  - document
+  - gallery
+  - news
+  - page
+  - story
+  - video
+  - wiki_page
 entity_type: node
 global: false
 flag_short: Follow

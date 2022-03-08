@@ -3,19 +3,43 @@
 namespace Drupal\eic_user\Plugin\Block;
 
 use Drupal\Core\Block\BlockBase;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Drupal\user\Entity\User;
 
 /**
- * Provides a ActivityStreamBlock block.
- *
  * @Block(
- *   id = "eic_user_my_profile_header",
- *   admin_label = @Translation("EIC my profile header"),
+ *   id = "eic_user_header",
+ *   admin_label = @Translation("EIC User Header"),
  *   category = @Translation("European Innovation Council"),
  * )
  */
-class MyProfileHeaderBlock extends BlockBase {
+class UserHeaderBlock extends BlockBase {
+
+  /**
+   * {@inheritdoc}
+   */
+  public function blockForm($form, FormStateInterface $form_state) {
+    $form = parent::blockForm($form, $form_state);
+
+    $form['title'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Title'),
+      '#min' => 0,
+      '#step' => 3,
+      '#default_value' => $this->configuration['title'],
+    ];
+
+    return $form;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function blockSubmit($form, FormStateInterface $form_state) {
+    parent::blockSubmit($form, $form_state);
+    $this->configuration['title'] = $form_state->getValue('title');
+  }
 
   /**
    * The profile header block.
@@ -58,46 +82,12 @@ class MyProfileHeaderBlock extends BlockBase {
     $user = User::load($current_user->id());
 
     // Loads user member profile.
-    $current_route = \Drupal::routeMatch()->getRouteName();
-
-    /** @TODO Wait for other pages/overviews and replace default eic_search.global_search */
-    $menu_data = [
-      [
-        'label' => $this->t('Interesting for you', [], ['context' => 'eic_user']),
-        'route' => 'eic_user.user.activity',
-        'route_parameters' => ['user' => $current_user->id()],
-      ],
-      [
-        'label' => $this->t('Following', [], ['context' => 'eic_user']),
-        'route' => 'eic_search.global_search',
-      ],
-      [
-        'label' => $this->t('Bookmarked', [], ['context' => 'eic_user']),
-        'route' => 'eic_search.global_search',
-      ],
-      [
-        'label' => $this->t('Drafts', [], ['context' => 'eic_user']),
-        'route' => 'eic_search.global_search',
-      ],
-    ];
-
-    $menu_items = array_map(function (array $item) use ($current_route) {
-      $route_parameters = array_key_exists('route_parameters', $item) ?
-        $item['route_parameters'] :
-        [];
-      return [
-        'link' => [
-          'label' => $item['label'],
-          'path' => Url::fromRoute($item['route'], $route_parameters)->toString(),
-        ],
-        'is_active' => $current_route === $item['route'],
-      ];
-    }, $menu_data);
+    $member_profile = \Drupal::service('eic_user.helper')->getUserMemberProfile($user);
 
     return [
-      '#theme' => 'my_profile_header_block',
-      '#title' => $this->t('My activity feed', [], ['context' => 'eic_user']),
-      '#menu_items' => ['items' => $menu_items],
+      '#theme' => 'user_header_block',
+      '#cache' => ['contexts' => ['url.path', 'url.query_args']],
+      '#title' => $this->configuration['title'],
       '#actions' => [
         [
           'link' => [

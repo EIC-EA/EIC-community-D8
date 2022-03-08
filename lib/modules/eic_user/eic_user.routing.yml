@@ -1,7 +1,88 @@
 eic_user.user.activity:
   path: '/user/{user}/activity'
   defaults:
-    _controller: '\Drupal\eic_user\Controller\MyProfileController::interests'
-    _title_callback: '\Drupal\eic_user\Controller\MyProfileController::title'
+    _controller: '\Drupal\eic_user\Controller\MyProfileController::activity'
+    _title: 'My interests'
   requirements:
     _custom_access: '\Drupal\eic_user\Controller\MyProfileController::access'
+
+eic_user.user.following:
+  path: '/user/{user}/following'
+  defaults:
+    _controller: '\Drupal\eic_user\Controller\MyProfileController::activity'
+    _title: 'My followings'
+  requirements:
+    _custom_access: '\Drupal\eic_user\Controller\MyProfileController::access'
+
+eic_user.user.contribution:
+  path: '/user/{user}/contribution'
+  defaults:
+    _controller: '\Drupal\eic_user\Controller\MyProfileController::activity'
+    _title: 'My contributions'
+  requirements:
+    _custom_access: '\Drupal\eic_user\Controller\MyProfileController::access'
+
+eic_user.user.my_groups:
+  path: '/user/{user}/groups'
+  defaults:
+    _controller: '\Drupal\eic_user\Controller\MyProfileController::activity'
+    _title: 'My groups'
+  requirements:
+    _custom_access: '\Drupal\eic_user\Controller\MyProfileController::access'
+
+eic_user.my_settings:
+  path: '/my-settings'
+  defaults:
+    _controller: '\Drupal\eic_user\Controller\MySettingsController::settings'
+    _title: 'My settings'
+  requirements:
+    _user_is_logged_in: 'TRUE'
+
+eic_user.toggle_notification_settings:
+  path: '/api/notification/{notification_type}/update'
+  methods: [ POST ]
+  defaults:
+    _controller: '\Drupal\eic_user\Controller\MySettingsController::setProfileNotificationSettings'
+    _title: 'Toggle settings'
+  requirements:
+    notification_type: 'interest|comments'
+    _user_is_logged_in: 'TRUE'
+
+eic_user.toggle_follow_flag:
+  path: '/api/notification/{notification_type}/{flagging}/update'
+  methods: [ POST ]
+  defaults:
+    _controller: '\Drupal\eic_user\Controller\MySettingsController::setFollowFlagValue'
+    _title: 'Toggle settings'
+  requirements:
+    notification_type: 'groups|events'
+    _custom_access: '\Drupal\eic_user\Controller\MySettingsController::access'
+    flagging: \d+
+  options:
+    parameters:
+      flagging:
+        type: entity:flagging
+
+eic_user.unsubscribe_follow_flag:
+  path: '/api/notification/{notification_type}/{flagging}/unsubscribe'
+  methods: [ POST ]
+  defaults:
+    _controller: '\Drupal\eic_user\Controller\MySettingsController::unsubscribe'
+  requirements:
+    notification_type: 'groups|events'
+    _custom_access: '\Drupal\eic_user\Controller\MySettingsController::access'
+    flagging: \d+
+  options:
+    parameters:
+      flagging:
+        type: entity:flagging
+
+eic_user.get_notification_settings:
+  path: '/api/notification/{notification_type}/list'
+  methods: [ GET ]
+  defaults:
+    _controller: '\Drupal\eic_user\Controller\MySettingsController::getFollowFlags'
+    _title: 'Get Notification settings'
+  requirements:
+    notification_type: 'groups|events'
+    _user_is_logged_in: 'TRUE'

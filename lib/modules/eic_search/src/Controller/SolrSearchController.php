@@ -138,6 +138,11 @@ class SolrSearchController extends ControllerBase {
         $author_ignore_content_query = ' AND !(' . $source->getAuthorFieldId() . ':' . $this->currentUser()->id() . ')';
       }
 
+      if ($source->prefilterByCurrentUser() && $source->getAuthorFieldId()) {
+        $prefilter_current_user_query =
+          ' AND (' . $source->getAuthorFieldId() . ':(' . $this->currentUser()->id() . '))';
+      }
+
       // If source supports date filter and query has a from or to date.
       if ($source->supportDateFilter() && ($from_date || $end_date)) {
         $date_fields_id = $source->getDateIntervalField();
@@ -154,14 +159,22 @@ class SolrSearchController extends ControllerBase {
         $dates_query[] = "($date_from_id:[* TO $end_date] AND $date_end_id:[$from_date TO $end_date])";
         $dates_query[] = "($date_from_id:[$from_date TO $end_date] AND $date_end_id:[$end_date TO *])";
         $dates_query[] = "($date_from_id:[* TO $from_date] AND $date_end_id:[$end_date TO *])";
-
-
         $date_query = implode(' OR ', $dates_query);
 
         $date_query = "($date_query)";
         $query_fields_string .= empty($query_fields_string) ?
           "$date_query" :
           " AND $date_query";
+      }
+
+      $fields_filter_empty = $source->getFieldsToFilterEmptyValue();
+
+      if (!empty($fields_filter_empty)) {
+        foreach ($fields_filter_empty as $field) {
+          $query_fields_string .= empty($query_fields_string) ?
+            "$field:[* TO *]" :
+            " AND $field:[* TO *]";
+        }
       }
 
       if (!empty($query_fields_string)) {
@@ -242,6 +255,10 @@ class SolrSearchController extends ControllerBase {
 
     if ($author_ignore_content_query) {
       $fq .= $author_ignore_content_query;
+    }
+
+    if ($prefilter_current_user_query) {
+      $fq .= $prefilter_current_user_query;
     }
 
     if ($source->prefilterByGroupsMembership()) {

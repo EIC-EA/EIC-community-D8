@@ -316,6 +316,7 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
           'commented_on' => $this->t('commented on', [], ['context' => 'eic_group']),
           'custom_search_text' => [
             'user_gallery' => $this->t('Search for a member', [], ['context' => 'eic_group']),
+            'group' => $this->t('Search for a group', [], ['context' => 'eic_group']),
           ],
           'no_results_title' => $this->t(
             'We haven’t found any search results',
@@ -366,6 +367,7 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
             ['context' => 'eic_group']
           ),
           'draft' => $this->t('Draft', [], ['context' => 'eic_group']),
+          'archived' => $this->t('Archived', [], ['context' => 'eic_group']),
           'pending' => $this->t('Pending', [], ['context' => 'eic_group']),
           'blocked' => $this->t('Blocked', [], ['context' => 'eic_group']),
           'load_more' => $this->t('Load more', [], ['context' => 'eic_group']),
@@ -375,7 +377,7 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
             ['context' => 'eic_group']
           ),
           'show_more' => $this->t('Show more', [], ['context' => 'eic_group']),
-          'collapse' => $this->t('Collapse', [], ['context' => 'eic_group']),
+          'collapse' => $this->t('Show less', [], ['context' => 'eic_group']),
           'highlight' => $this->t('Highlight this content', [], ['context' => 'eic_group']),
           'unHighlight' => $this->t('Disable highlighting of this content', [], ['context' => 'eic_group'])
         ],

@@ -1,0 +1,18 @@
+uuid: 2e8c5218-e094-42fe-91af-3600efcf8f10
+langcode: en
+status: true
+dependencies:
+  module:
+    - profile
+id: profile.field_interest_notifications
+field_name: field_interest_notifications
+entity_type: profile
+type: boolean
+settings: {  }
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

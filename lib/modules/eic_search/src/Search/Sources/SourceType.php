@@ -148,6 +148,13 @@ abstract class SourceType implements SourceTypeInterface {
   /**
    * @inheritDoc
    */
+  public function prefilterByCurrentUser(): bool {
+    return FALSE;
+  }
+
+  /**
+   * @inheritDoc
+   */
   public function getAuthorFieldId(): string {
     return '';
   }
@@ -171,6 +178,13 @@ abstract class SourceType implements SourceTypeInterface {
    */
   public function getLabelFilterMyGroups(): string {
     return $this->t('My groups & content only', [], ['context' => 'eic_search']);
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function getFieldsToFilterEmptyValue(): array {
+    return [];
   }
 
 }
