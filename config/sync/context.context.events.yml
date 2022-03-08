@@ -23,14 +23,13 @@ reactions:
     id: blocks
     uuid: 55edfcc0-d241-43a4-9cda-a839fdc3d28c
     blocks:
-      be433469-3926-4a01-9db1-22bbf4900468:
-        uuid: be433469-3926-4a01-9db1-22bbf4900468
+      c1c8f02a-bd93-476a-b0c5-01a8ccaf525e:
+        uuid: c1c8f02a-bd93-476a-b0c5-01a8ccaf525e
         id: eic_search_overview
         label: ''
         provider: eic_search
         label_display: visible
         region: content
-        weight: '0'
         custom_id: eic_search_overview
         theme: eic_community
         css_class: ''
@@ -41,9 +40,13 @@ reactions:
         facets:
           sm_group_topic_name: sm_group_topic_name
           ss_group_event_type_string: ss_group_event_type_string
-          sm_group_field_location_type: sm_group_field_location_type
-          ss_group_event_country: ss_group_event_country
-          ss_event_weight_state_label: 0
+          ss_content_language_string: ss_content_language_string
+          ss_group_field_vocab_geo_string: ss_group_field_vocab_geo_string
+          ss_group_visibility: ss_group_visibility
+          ss_event_weight_state_label: ss_event_weight_state_label
+          sm_event_funding_source_string: sm_event_funding_source_string
+          sm_group_field_location_type: 0
+          ss_group_event_country: 0
         sort_options:
           its_event_weight_state: its_event_weight_state
           timestamp: timestamp

@@ -46,8 +46,12 @@ class MyEventsSourceType extends SourceType {
     return [
       'sm_group_topic_name' => $this->t('Topic', [], ['context' => 'eic_search']),
       'ss_group_event_type_string' => $this->t('Event type', [], ['context' => 'eic_search']),
+      'ss_content_language_string' => $this->t('Language', [], ['context' => 'eic_search']),
+      'ss_group_field_vocab_geo_string' => $this->t('Region and countries', [], ['context' => 'eic_search']),
+      'ss_group_visibility' => $this->t('Visibility', [], ['context' => 'eic_search']),
       'sm_group_field_location_type' => $this->t('Location', [], ['context' => 'eic_search']),
-      Event::SOLR_FIELD_ID_WEIGHT_STATE_LABEL => $this->t('Time', [], ['context' => 'eic_search']),
+      Event::SOLR_FIELD_ID_WEIGHT_STATE_LABEL => $this->t('Event status', [], ['context' => 'eic_search']),
+      'sm_event_funding_source_string' => $this->t('Funding source', [], ['context' => 'eic_search']),
       'ss_group_event_country' => $this->t('Country', [], ['context' => 'eic_search']),
     ];
   }
@@ -124,6 +128,16 @@ class MyEventsSourceType extends SourceType {
     return [
       'from' => GroupEventSourceType::START_DATE_SOLR_FIELD_ID,
       'to' => GroupEventSourceType::END_DATE_SOLR_FIELD_ID,
+    ];
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function getRegistrationDateIntervalField(): array {
+    return [
+      'from' => 'its_event_registration_date_start',
+      'to' => 'its_event_registration_date_end',
     ];
   }
 
