@@ -27,4 +27,9 @@ final class LogMessageTemplates {
    */
   const GROUP_VISIBILITY_CHANGE = 'log_group_visibility_change';
 
+  /**
+   * LOG Message template for group state change.
+   */
+  const GROUP_STATE_CHANGE = 'log_group_state_change';
+
 }
