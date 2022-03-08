@@ -11,6 +11,12 @@ services:
     tags:
       - { name: event_subscriber }
 
+  eic_user.breadcrumb:
+    class: Drupal\eic_user\Breadcrumb\UserBreadcrumbBuilder
+    arguments: ['@current_user']
+    tags:
+      - { name: breadcrumb_builder, priority: 999 }
+
   eic_user.notification_settings_manager:
     class: Drupal\eic_user\Service\NotificationSettingsManager
     arguments: [ '@entity_type.manager', '@current_user', '@eic_user.helper', '@flag' ]
