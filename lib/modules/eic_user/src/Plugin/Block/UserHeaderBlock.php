@@ -86,7 +86,7 @@ class UserHeaderBlock extends BlockBase {
 
     return [
       '#theme' => 'user_header_block',
-      '#cache' => ['contexts' => ['url.path', 'url.query_args']],
+      '#cache' => ['contexts' => ['url.path', 'url.query_args', 'user']],
       '#title' => $this->configuration['title'],
       '#actions' => [
         [

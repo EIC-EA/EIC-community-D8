@@ -99,7 +99,7 @@ class UserActivitySubnavigationBlock extends BlockBase implements ContainerFacto
 
     return [
       '#theme' => 'user_activity_subnavigation_block',
-      '#cache' => ['contexts' => ['url.path', 'url.query_args']],
+      '#cache' => ['contexts' => ['url.path', 'url.query_args', 'user']],
       '#menu_items' => ['items' => $menu_items],
     ];
   }
