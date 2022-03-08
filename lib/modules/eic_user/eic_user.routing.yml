@@ -22,6 +22,14 @@ eic_user.user.contribution:
   requirements:
     _custom_access: '\Drupal\eic_user\Controller\MyProfileController::access'
 
+eic_user.user.my_groups:
+  path: '/user/{user}/groups'
+  defaults:
+    _controller: '\Drupal\eic_user\Controller\MyProfileController::activity'
+    _title: 'My groups'
+  requirements:
+    _custom_access: '\Drupal\eic_user\Controller\MyProfileController::access'
+
 eic_user.my_settings:
   path: '/my-settings'
   defaults:
