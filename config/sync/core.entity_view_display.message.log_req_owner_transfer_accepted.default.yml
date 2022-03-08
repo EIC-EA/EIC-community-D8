@@ -7,9 +7,11 @@ dependencies:
     - field.field.message.log_req_owner_transfer_accepted.field_entity_url
     - field.field.message.log_req_owner_transfer_accepted.field_referenced_entity_label
     - field.field.message.log_req_owner_transfer_accepted.field_referenced_flag
+    - field.field.message.log_req_owner_transfer_accepted.field_rendered_content
     - message.template.log_req_owner_transfer_accepted
   module:
     - link
+    - text
 id: message.log_req_owner_transfer_accepted.default
 targetEntityType: message
 bundle: log_req_owner_transfer_accepted
@@ -35,7 +37,19 @@ content:
     third_party_settings: {  }
     weight: 1
     region: content
+  field_rendered_content:
+    type: text_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 3
+    region: content
   partial_0:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  partial_1:
     settings: {  }
     third_party_settings: {  }
     weight: 0

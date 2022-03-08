@@ -5,6 +5,7 @@ dependencies:
   config:
     - core.entity_view_mode.message.mail_body
     - field.field.message.log_masquerade_user.field_related_user
+    - field.field.message.log_masquerade_user.field_rendered_content
     - message.template.log_masquerade_user
 id: message.log_masquerade_user.mail_body
 targetEntityType: message
@@ -16,5 +17,6 @@ content:
     region: content
 hidden:
   field_related_user: true
+  field_rendered_content: true
   partial_0: true
   search_api_excerpt: true

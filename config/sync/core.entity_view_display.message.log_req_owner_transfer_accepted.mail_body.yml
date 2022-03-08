@@ -8,6 +8,7 @@ dependencies:
     - field.field.message.log_req_owner_transfer_accepted.field_entity_url
     - field.field.message.log_req_owner_transfer_accepted.field_referenced_entity_label
     - field.field.message.log_req_owner_transfer_accepted.field_referenced_flag
+    - field.field.message.log_req_owner_transfer_accepted.field_rendered_content
     - message.template.log_req_owner_transfer_accepted
 id: message.log_req_owner_transfer_accepted.mail_body
 targetEntityType: message
@@ -22,5 +23,6 @@ hidden:
   field_entity_url: true
   field_referenced_entity_label: true
   field_referenced_flag: true
+  field_rendered_content: true
   partial_0: true
   search_api_excerpt: true

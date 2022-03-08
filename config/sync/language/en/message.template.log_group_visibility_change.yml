@@ -1,4 +1,7 @@
 text:
   -
-    value: "<p>The visibility settings of <a href=\"[message:field_group_ref:entity:url]\">[message:field_group_ref:entity:title]</a> have been updated:</p>\r\n\r\n<ul>\r\n\t<li>Old visibility:&nbsp;[message:field_previous_group_visibility:value]</li>\r\n\t<li>New visibility:&nbsp;[message:field_group_visibility:value]</li>\r\n</ul>\r\n"
+    value: "<p>The visibility settings of <a href=\"[message:field_group_ref:entity:url]\">[message:field_group_ref:entity:title]</a> have been updated by <a href=\"[message:author:url]\">[message:author:display-name]</a>:</p>\r\n\r\n<ul>\r\n\t<li>Old visibility:&nbsp;[message:field_previous_group_visibility:value]</li>\r\n\t<li>New visibility:&nbsp;[message:field_group_visibility:value]</li>\r\n</ul>\r\n"
+    format: full_html
+  -
+    value: "<p>[message:raw-value:field_rendered_content]</p>\r\n"
     format: full_html

@@ -4,7 +4,10 @@ status: true
 dependencies:
   config:
     - field.field.message.log_masquerade_user.field_related_user
+    - field.field.message.log_masquerade_user.field_rendered_content
     - message.template.log_masquerade_user
+  module:
+    - text
 id: message.log_masquerade_user.default
 targetEntityType: message
 bundle: log_masquerade_user
@@ -18,7 +21,19 @@ content:
     third_party_settings: {  }
     weight: 1
     region: content
+  field_rendered_content:
+    type: text_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 2
+    region: content
   partial_0:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  partial_1:
     settings: {  }
     third_party_settings: {  }
     weight: 0
