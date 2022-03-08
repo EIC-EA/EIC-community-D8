@@ -81,9 +81,6 @@ class UserHeaderBlock extends BlockBase {
     $current_user = \Drupal::currentUser();
     $user = User::load($current_user->id());
 
-    // Loads user member profile.
-    $member_profile = \Drupal::service('eic_user.helper')->getUserMemberProfile($user);
-
     return [
       '#theme' => 'user_header_block',
       '#cache' => ['contexts' => ['url.path', 'url.query_args', 'user']],
