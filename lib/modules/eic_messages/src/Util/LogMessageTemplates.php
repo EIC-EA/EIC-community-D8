@@ -22,4 +22,9 @@ final class LogMessageTemplates {
    */
   const MASQUERADE_USER = 'log_masquerade_user';
 
+  /**
+   * LOG Message template for group visibility change.
+   */
+  const GROUP_VISIBILITY_CHANGE = 'log_group_visibility_change';
+
 }

@@ -1,0 +1,26 @@
+uuid: 6069bd5d-172c-4ec6-8be2-d31ee5b1ab49
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.message.field_event_executing_user
+    - message.template.log_group_visibility_change
+id: message.log_group_visibility_change.field_event_executing_user
+field_name: field_event_executing_user
+entity_type: message
+bundle: log_group_visibility_change
+label: 'Event executing user'
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:group_membership'
+  handler_settings:
+    target_bundles: null
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+field_type: entity_reference

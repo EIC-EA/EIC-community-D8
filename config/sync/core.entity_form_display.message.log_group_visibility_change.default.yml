@@ -1,0 +1,52 @@
+uuid: 12355e2c-2996-42c6-adc1-aee35cfd129e
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.message.log_group_visibility_change.field_event_executing_user
+    - field.field.message.log_group_visibility_change.field_group_ref
+    - field.field.message.log_group_visibility_change.field_group_visibility
+    - field.field.message.log_group_visibility_change.field_previous_group_visibility
+    - message.template.log_group_visibility_change
+id: message.log_group_visibility_change.default
+targetEntityType: message
+bundle: log_group_visibility_change
+mode: default
+content:
+  field_event_executing_user:
+    type: entity_reference_autocomplete
+    weight: 0
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_group_ref:
+    type: entity_reference_autocomplete
+    weight: 1
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_group_visibility:
+    type: string_textfield
+    weight: 4
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_previous_group_visibility:
+    type: string_textfield
+    weight: 3
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+hidden: {  }
