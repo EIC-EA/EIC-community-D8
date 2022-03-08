@@ -23,8 +23,8 @@ reactions:
     id: blocks
     uuid: 55edfcc0-d241-43a4-9cda-a839fdc3d28c
     blocks:
-      c1c8f02a-bd93-476a-b0c5-01a8ccaf525e:
-        uuid: c1c8f02a-bd93-476a-b0c5-01a8ccaf525e
+      f713fec5-e0c9-49a3-89c7-d8af3d27606d:
+        uuid: f713fec5-e0c9-49a3-89c7-d8af3d27606d
         id: eic_search_overview
         label: ''
         provider: eic_search
