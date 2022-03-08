@@ -14,7 +14,6 @@ permissions_ui: true
 permissions:
   - 'access discussions overview'
   - 'access group search overview'
-  - 'administer members'
   - 'create group_node:discussion entity'
   - 'create group_node:document entity'
   - 'create group_node:gallery entity'
