@@ -25,8 +25,8 @@
     "react-watch-poll": "mix watch -- --watch-options-poll=1000",
     "react-hot": "mix watch --hot",
     "react-production": "mix --production",
-    "mail-watch": "mjml -w mails/src/* -o mails/mail-dist/",
-    "mail-build": "mjml mails/src/* -o mails/mail-dist/"
+    "mail-watch": "mjml -w mails/src/templates/* -o mails/mail-dist/",
+    "mail-build": "mjml mails/src/templates/* -o mails/mail-dist/"
   },
   "author": "",
   "license": "ISC",
@@ -90,6 +90,7 @@
     "@material-ui/icons": "^4.11.2",
     "@material-ui/lab": "^4.0.0-alpha.58",
     "axios": "^0.21.1",
+    "classnames": "^2.3.1",
     "disqus-react": "^1.1.2",
     "postcss": "^8.3.6",
     "react": "^16.9.0",
@@ -97,6 +98,7 @@
     "react-dom": "^16.14.0",
     "react-notifications-component": "^3.1.0",
     "react-test-renderer": "^16.9.0",
+    "react-tooltip": "^4.2.21",
     "reactjs-popup": "^2.0.5",
     "semantic-ui-css": "^2.4.1",
     "semantic-ui-react": "^2.0.3",

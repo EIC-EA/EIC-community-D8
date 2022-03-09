@@ -1,0 +1,58 @@
+uuid: 0b5747c3-b489-43d7-b8d2-3044459bea64
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.group.field_offers
+    - group.type.organisation
+    - paragraphs.paragraphs_type.announcement
+  module:
+    - entity_reference_revisions
+id: group.organisation.field_offers
+field_name: field_offers
+entity_type: group
+bundle: organisation
+label: 'Announcements - offer'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    target_bundles:
+      announcement: announcement
+    negate: 0
+    target_bundles_drag_drop:
+      announcement:
+        weight: 11
+        enabled: true
+      banner:
+        weight: 12
+        enabled: false
+      contributor:
+        weight: 13
+        enabled: false
+      cta_tile:
+        weight: 14
+        enabled: false
+      full_media_content:
+        weight: 15
+        enabled: false
+      full_text_content:
+        weight: 16
+        enabled: false
+      gallery_slide:
+        weight: 17
+        enabled: false
+      quote:
+        weight: 18
+        enabled: false
+      text_and_media_content:
+        weight: 19
+        enabled: false
+      tiles_content:
+        weight: 20
+        enabled: false
+field_type: entity_reference_revisions

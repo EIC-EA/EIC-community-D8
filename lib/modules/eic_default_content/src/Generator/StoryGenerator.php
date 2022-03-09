@@ -2,6 +2,7 @@
 
 namespace Drupal\eic_default_content\Generator;
 
+use Drupal\eic_content\Constants\DefaultContentModerationStates;
 use Drupal\node\Entity\Node;
 
 /**
@@ -30,7 +31,7 @@ class StoryGenerator extends CoreGenerator {
         'field_image_caption' => $this->faker->sentence(10),
         'field_vocab_topics' => $this->getRandomEntities('taxonomy_term', ['vid' => 'topics'], 1),
         'field_vocab_geo' => $this->getRandomEntities('taxonomy_term', ['vid' => 'geo'], 1),
-        'moderation_state' => 'published',
+        'moderation_state' => DefaultContentModerationStates::PUBLISHED_STATE,
       ];
 
       $node = Node::create($values);

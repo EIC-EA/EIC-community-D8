@@ -7,6 +7,7 @@
 
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Menu\MenuTreeParameters;
+use Drupal\Core\Render\Markup;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Url;
 use Drupal\eic_community\ValueObject\ImageValueObject;
@@ -21,7 +22,7 @@ function eic_community_preprocess_page(array &$variables): void {
   ]);
 
   foreach ($variables['page']['content'] as $key => $content_section) {
-    if (isset($content_section['#theme']) && $content_section['#theme'] === 'block') {
+    if (is_array($content_section) && isset($content_section['#theme']) && $content_section['#theme'] === 'block') {
       $variables['page']['content'][$key]['#attributes']['class'][] = 'ecl-section-wrapper';
     }
   }
@@ -61,13 +62,41 @@ function eic_community_preprocess_page(array &$variables): void {
       ],
       [
         'link' => [
-          'label' => t('Log out'),
-          'path' => Url::fromRoute('user.logout'),
+          'label' => t('My settings'),
+          'path' => Url::fromRoute('eic_user.my_settings', ['user' => $account->id()])->toString(),
+        ],
+      ],
+      [
+        'link' => [
+          'label' => t('My activity'),
+          'path' => Url::fromRoute('eic_user.user.activity', ['user' => $account->id()])->toString(),
         ],
       ],
     ];
 
+    // Adds unmasquerade link if the user is masquerading.
+    if (\Drupal::service('masquerade')->isMasquerading()) {
+      $user['actions'][] = [
+        'link' => [
+          'label' => t('Unmasquerade'),
+          'path' => Url::fromRoute('masquerade.unmasquerade')->toString(),
+        ],
+      ];
+    }
+
+    // Adds logout link to the end of the dropdown.
+    $user['actions'][] = [
+      'link' => [
+        'label' => t('Log out'),
+        'path' => Url::fromRoute('user.logout'),
+      ],
+    ];
+
     $variables['site_header']['user'] = $user;
+    // We need to add the session cache context otherwise the header doesn't
+    // update when log in with another account with the same permissions.
+    // @todo In the future we should consider creating a block a load it here.
+    $variables['#cache']['contexts'][] = 'session';
   }
 
   $footer_sections = [];
@@ -78,13 +107,13 @@ function eic_community_preprocess_page(array &$variables): void {
 
   $first_section = array_shift($first_section);
 
-  if (!empty($block_content['#derivative_plugin_id'])) {
+  if (!empty($first_section['#derivative_plugin_id'])) {
     $block_content = \Drupal::service('entity.repository')
       ->loadEntityByUuid('block_content', $first_section['#derivative_plugin_id']);
 
     $footer_sections[] = [
       'title' => $block_content->field_title->value,
-      'description' => strip_tags($block_content->body->value),
+      'description' => Markup::create($block_content->body->value),
     ];
   }
 
@@ -92,20 +121,6 @@ function eic_community_preprocess_page(array &$variables): void {
     return strpos($key, 'menu') !== FALSE;
   }, ARRAY_FILTER_USE_BOTH);
   $menu_sections = array_values($menu_sections);
-
-  $footer_sections[] = [
-    'title' => t(
-      '@site_name Community',
-      ['@site_name' => \Drupal::config('system.site')->get('name')],
-      ['context' => 'eic_community']
-    ),
-    'description' => t(
-      'This site is managed by the Directorate-General for Communication',
-      [],
-      ['context' => 'eic_community']
-    ),
-    'list_class_name' => 'ecl-footer-core__section ecl-footer-core__section1',
-  ];
 
   foreach ($menu_sections as $key => $menu) {
     $menu_name = $menu['#derivative_plugin_id'];
@@ -131,6 +146,11 @@ function eic_community_preprocess_page(array &$variables): void {
     if ($key === 0) {
       $section['list_class_name'] = 'ecl-footer-core__list--columns';
       $section['section_class_name'] = 'ecl-footer-core__section--separator';
+    }
+
+    // If there are more than 3 links, we need to split the menu in 2 columns.
+    if (count($links) > 3) {
+      $section['list_class_name'] = 'ecl-footer-core__list--columns';
     }
 
     $footer_sections[] = $section;

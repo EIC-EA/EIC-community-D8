@@ -7,6 +7,7 @@ use Drupal\Core\Entity\ContentEntityConfirmFormBase;
 use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Routing\TrustedRedirectResponse;
 use Drupal\Core\Url;
 use Drupal\eic_flags\RequestStatus;
 use Drupal\eic_flags\RequestTypes;
@@ -151,12 +152,42 @@ class RequestCloseForm extends ContentEntityConfirmFormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $form = parent::buildForm($form, $form_state);
+    $response = $this->getRequest()->get('response');
+    $show_response_field = TRUE;
+    $handler = $this->collector->getHandlerByType($this->requestType);
 
-    $form['response_text'] = [
-      '#type' => 'textarea',
-      '#title' => $this->getResponseTitle(),
-      '#required' => TRUE,
-    ];
+    // Action is not supported. We show a message and remove the cancel link.
+    if (
+      !in_array($response, $handler->getSupportedResponsesForClosedRequests()) ||
+      $response === RequestStatus::CANCELLED
+    ) {
+      $form['response_title'] = [
+        '#markup' => $this->t('You are trying to execute an action which is not supported'),
+      ];
+      $form['actions']['submit']['#value'] = $this->t('Back');
+      unset($form['actions']['cancel']);
+      return $form;
+    }
+
+    switch ($this->requestType) {
+      case RequestTypes::TRANSFER_OWNERSHIP:
+        if ($response === RequestStatus::ACCEPTED) {
+          $show_response_field = FALSE;
+          $form['response_title'] = [
+            '#markup' => $this->getResponseTitle(),
+          ];
+        }
+        break;
+
+    }
+
+    if ($show_response_field) {
+      $form['response_text'] = [
+        '#type' => 'textarea',
+        '#title' => $this->getResponseTitle(),
+        '#required' => TRUE,
+      ];
+    }
 
     return $form;
   }
@@ -165,6 +196,31 @@ class RequestCloseForm extends ContentEntityConfirmFormBase {
    * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
+    $response = $this->getRequest()->get('response');
+    $has_response_field = TRUE;
+    $handler = $this->collector->getHandlerByType($this->requestType);
+
+    // Action is not supported, we do nothing.
+    if (
+      !in_array($response, $handler->getSupportedResponsesForClosedRequests()) ||
+      $response === RequestStatus::CANCELLED
+    ) {
+      return;
+    }
+
+    switch ($this->requestType) {
+      case RequestTypes::TRANSFER_OWNERSHIP:
+        if ($response === RequestStatus::ACCEPTED) {
+          $has_response_field = FALSE;
+        }
+        break;
+
+    }
+
+    if (!$has_response_field) {
+      return;
+    }
+
     if (!$form_state->getValue('response_text')) {
       $form_state->setErrorByName(
         'response_text',
@@ -222,9 +278,12 @@ class RequestCloseForm extends ContentEntityConfirmFormBase {
 
     }
 
-    // Action is not supported for the response type.
-    if (!in_array($response, $handler->getSupportedResponsesForClosedRequests())) {
-      throw new InvalidArgumentException('Action isnt\'t supported');
+    // Action is not supported for the response type, we do nothing.
+    if (
+      !in_array($response, $handler->getSupportedResponsesForClosedRequests()) ||
+      $response === RequestStatus::CANCELLED
+    ) {
+      return;
     }
 
     foreach ($entity_flags as $flag) {
@@ -233,7 +292,7 @@ class RequestCloseForm extends ContentEntityConfirmFormBase {
         $flag,
         $this->entity,
         $response,
-        $form_state->getValue('response_text')
+        $form_state->getValue('response_text') ?? ''
       );
     }
 
@@ -243,6 +302,42 @@ class RequestCloseForm extends ContentEntityConfirmFormBase {
       $flag,
       $this->entity
     );
+
+    $redirect_response = FALSE;
+    switch ($this->requestType) {
+      case RequestTypes::TRANSFER_OWNERSHIP:
+
+        if ($response === RequestStatus::DENIED) {
+          $this->messenger()->addStatus($this->t('Ownership transfer has been denied'));
+        }
+        else {
+          $this->messenger()->addStatus($this->t('Ownership transfer has been accepted'));
+        }
+
+        if ($this->getEntity()->getEntityTypeId() === 'group_content') {
+          // Builds response to redirect user to the group detail page.
+          $redirect_response = new TrustedRedirectResponse(
+            $this->getEntity()
+              ->getGroup()
+              ->toUrl()
+              ->toString()
+          );
+          break;
+        }
+
+        // Builds response to redirect user to the entity detail page.
+        $redirect_response = new TrustedRedirectResponse(
+          $this->getEntity()
+            ->toUrl()
+            ->toString()
+        );
+        break;
+
+    }
+
+    if ($redirect_response instanceof TrustedRedirectResponse) {
+      $form_state->setResponse($redirect_response);
+    }
   }
 
   /**
@@ -336,7 +431,7 @@ class RequestCloseForm extends ContentEntityConfirmFormBase {
       case RequestStatus::ACCEPTED:
         if ($this->getEntity()->getEntityTypeId() === 'group_content') {
           return $this->t(
-            'Are you sure you want to become the owner of @entity-type %group-label? Please provide a mandatory reason for accepting this request.',
+            'Are you sure you want to become the owner of @entity-type %group-label?',
             [
               '@entity-type' => $this->getEntity()
                 ->getGroup()
@@ -349,7 +444,7 @@ class RequestCloseForm extends ContentEntityConfirmFormBase {
           );
         }
         return $this->t(
-          'Are you sure you want to become the owner of @entity-type %group-label? Please provide a mandatory reason for accepting this request.',
+          'Are you sure you want to become the owner of @entity-type %group-label?',
           [
             '@entity-type' => $this->getEntity()
               ->getEntityType()

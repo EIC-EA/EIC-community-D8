@@ -2,6 +2,7 @@
 
 namespace Drupal\eic_search\Plugin\Block;
 
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Block\Annotation\Block;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Datetime\DateFormatter;
@@ -131,6 +132,13 @@ class ActivityStreamBlock extends BlockBase implements ContainerFactoryPluginInt
     $this->dateFormatter = $date_formatter;
     $this->currentUser = $current_user;
     $this->routeMatch = $route_match;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function access(AccountInterface $account, $return_as_object = FALSE) {
+    return AccessResult::allowedIfHasPermission($account, 'access topics activity stream');
   }
 
   /**

@@ -1,0 +1,60 @@
+uuid: e4e79df8-5b09-47c8-8203-f18b6a6f197c
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.message.notify_user_tagged_on_comment.field_event_executing_user
+    - field.field.message.notify_user_tagged_on_comment.field_referenced_comment
+    - field.field.message.notify_user_tagged_on_comment.field_referenced_node
+    - field.field.message.notify_user_tagged_on_comment.field_rendered_content
+    - message.template.notify_user_tagged_on_comment
+  module:
+    - text
+id: message.notify_user_tagged_on_comment.default
+targetEntityType: message
+bundle: notify_user_tagged_on_comment
+mode: default
+content:
+  field_event_executing_user:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_referenced_comment:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_referenced_node:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 4
+    region: content
+  field_rendered_content:
+    type: text_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 3
+    region: content
+  partial_0:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  partial_1:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  search_api_excerpt: true

@@ -1,0 +1,18 @@
+uuid: 04e6130e-d1e3-4a4a-948d-754b2989cd8f
+langcode: en
+status: true
+dependencies:
+  config:
+    - group.type.organisation
+  module:
+    - eic_share_content
+    - node
+id: group_content_type_4a2cdf9ed8847
+label: 'Organisation: Group Shared content'
+description: 'Adds shared content to groups.'
+group_type: organisation
+content_plugin: group_shared_content
+plugin_config:
+  group_cardinality: 0
+  entity_cardinality: 1
+  use_creation_wizard: false

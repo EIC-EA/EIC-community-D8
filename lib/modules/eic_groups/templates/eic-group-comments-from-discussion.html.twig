@@ -1,13 +1,13 @@
 {{ attach_library('eic_community/react-comments-discussion') }}
 
-{% if not is_anonymous %}
+{% if not is_anonymous and can_view_comments %}
   <div class="ecl-section-wrapper ecl-section-wrapper--is-grey ecl-comment-overview">
     <div class="ecl-container">
       <div class="ecl-editorial-article ecl-editorial-article--has-static-layout">
         <div class="ecl-container">
           <div class="ecl-editorial-article__wrapper">
             <div class="ecl-editorial-article__content">
-              <div id="comments-discussion" data-discussion-id="{{ discussion_id }}"></div>
+              <div id="comments-discussion" data-highlighted-comment="{{ highlighted_comment}}" data-discussion-id="{{ discussion_id }}"></div>
             </div>
             <aside class="ecl-editorial-article__aside">
               <div class="ecl-editorial-article__aside-wrapper">

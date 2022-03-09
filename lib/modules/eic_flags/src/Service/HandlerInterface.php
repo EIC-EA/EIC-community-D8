@@ -5,6 +5,7 @@ namespace Drupal\eic_flags\Service;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\flag\FlaggingInterface;
+use Drupal\message\MessageInterface;
 
 /**
  * Provides an interface for request handlers.
@@ -12,6 +13,8 @@ use Drupal\flag\FlaggingInterface;
  * @package Drupal\eic_flags\Service\Handler
  */
 interface HandlerInterface {
+
+  const REQUEST_TIMEOUT_FIELD = 'field_request_timeout';
 
   /**
    * Returns the type of request the handler is for.
@@ -73,17 +76,39 @@ interface HandlerInterface {
   );
 
   /**
+   * Starts the 'cancel' workflow for a request.
+   *
+   * @param \Drupal\flag\FlaggingInterface $flagging
+   *   Flag object representing the request.
+   * @param \Drupal\Core\Entity\ContentEntityInterface $content_entity
+   *   The concerned entity.
+   *
+   * @return bool
+   *   Result of the accept operation.
+   */
+  public function cancel(
+    FlaggingInterface $flagging,
+    ContentEntityInterface $content_entity
+  );
+
+  /**
    * Applies the given the corresponding flag to the given entity.
    *
    * @param \Drupal\Core\Entity\ContentEntityInterface $entity
    *   The concerned entity.
    * @param string $reason
    *   Reason given when opening the request.
+   * @param int $request_timeout
+   *   (optional) Number of days the request will remain open.
    *
    * @return \Drupal\flag\FlaggingInterface|null
    *   Result of the operation.
    */
-  public function applyFlag(ContentEntityInterface $entity, string $reason);
+  public function applyFlag(
+    ContentEntityInterface $entity,
+    string $reason,
+    int $request_timeout = 0
+  );
 
   /**
    * Alters the given the corresponding flag before saving it.
@@ -232,11 +257,103 @@ interface HandlerInterface {
   );
 
   /**
+   * Whether or not the requests can be cancelled by the given account.
+   *
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *   Currently logged in account, anonymous users are not allowed.
+   * @param \Drupal\Core\Entity\ContentEntityInterface $entity
+   *   The content entity against the access check is made.
+   *
+   * @return \Drupal\Core\Access\AccessResultInterface
+   *   The access result object.
+   */
+  public function canCancelRequest(
+    AccountInterface $account,
+    ContentEntityInterface $entity
+  );
+
+  /**
    * Get supported response types for closed requests.
    *
    * @return array
    *   Array of supported response types.
    */
   public function getSupportedResponsesForClosedRequests();
+
+  /**
+   * Whether or not the request flag has been expired.
+   *
+   * @param \Drupal\flag\FlaggingInterface $flag
+   *   The flagging entity to alter.
+   *
+   * @return bool
+   *   TRUE if has expiration.
+   */
+  public function hasExpiration(FlaggingInterface $flag);
+
+  /**
+   * Whether or not the request flag has been expired.
+   *
+   * @param \Drupal\flag\FlaggingInterface $flag
+   *   The flagging entity to alter.
+   *
+   * @return bool
+   *   TRUE if request has expired.
+   */
+  public function hasExpired(FlaggingInterface $flag);
+
+  /**
+   * Triggers request timeout.
+   *
+   * @param \Drupal\flag\FlaggingInterface $flagging
+   *   The flag object representing the request.
+   * @param \Drupal\Core\Entity\ContentEntityInterface $content_entity
+   *   The concerned entity.
+   */
+  public function requestTimeout(
+    FlaggingInterface $flagging,
+    ContentEntityInterface $content_entity
+  );
+
+  /**
+   * Checks if a request should be logged as critical action.
+   *
+   * @return bool
+   *   TRUE if the request should be logged.
+   */
+  public function canLogRequest();
+
+  /**
+   * Do changes before saving message log.
+   *
+   * @param \Drupal\flag\FlaggingInterface $flagging
+   *   The flag object representing the request.
+   * @param \Drupal\Core\Entity\ContentEntityInterface $content_entity
+   *   The concerned entity.
+   * @param string $response
+   *   The response given when closing the request.
+   * @param string $reason
+   *   The reason given when opening the request.
+   * @param \Drupal\message\MessageInterface $log
+   *   The log message.
+   *
+   * @return \Drupal\message\MessageInterface
+   *   The log message.
+   */
+  public function messageLogPreSave(
+    FlaggingInterface $flagging,
+    ContentEntityInterface $content_entity,
+    string $response,
+    string $reason,
+    MessageInterface $log
+  );
+
+  /**
+   * Gets the log message template machine name.
+   *
+   * @return string
+   *   The message template machine name.
+   */
+  public function logMessageTemplate();
 
 }

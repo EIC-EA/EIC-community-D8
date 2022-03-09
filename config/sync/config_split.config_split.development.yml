@@ -5,6 +5,7 @@ dependencies: {  }
 id: development
 label: Development
 description: 'Modules and configuration exclusive to development.'
+weight: 0
 folder: ../config/development
 module:
   devel: 0
@@ -16,4 +17,3 @@ blacklist: {  }
 graylist: {  }
 graylist_dependents: true
 graylist_skip_equal: true
-weight: 0

@@ -12,6 +12,7 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
 use Drupal\eic_flags\RequestTypes;
 use Drupal\eic_flags\Service\RequestHandlerCollector;
+use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_overviews\GlobalOverviewPages;
 use Drupal\eic_overviews\GroupOverviewPages;
 use Drupal\eic_user\UserHelper;
@@ -64,6 +65,13 @@ class GroupBreadcrumbBuilder implements BreadcrumbBuilderInterface {
   protected $requestStack;
 
   /**
+   * The EIC groups helper service.
+   *
+   * @var \Drupal\eic_groups\EICGroupsHelper
+   */
+  protected $eicGroupsHelper;
+
+  /**
    * Constructs the GroupBreadcrumbBuilder.
    *
    * @param \Drupal\book\BookBreadcrumbBuilder $book_breadcrumb_builder
@@ -76,19 +84,23 @@ class GroupBreadcrumbBuilder implements BreadcrumbBuilderInterface {
    *   The EIC Flags request handler collector service.
    * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
    *   The request stack service.
+   * @param \Drupal\eic_groups\EICGroupsHelper $eic_groups_helper
+   *   The groups helper service.
    */
   public function __construct(
     BookBreadcrumbBuilder $book_breadcrumb_builder,
     AccountInterface $account,
     UserHelper $eic_user_helper,
     RequestHandlerCollector $request_handler_collector,
-    RequestStack $request_stack
+    RequestStack $request_stack,
+    EICGroupsHelper $eic_groups_helper
   ) {
     $this->bookBreadcrumbBuilder = $book_breadcrumb_builder;
     $this->account = $account;
     $this->requestHandlerCollector = $request_handler_collector;
     $this->requestStack = $request_stack;
     $this->eicUserHelper = $eic_user_helper;
+    $this->eicGroupsHelper = $eic_groups_helper;
   }
 
   /**
@@ -130,7 +142,8 @@ class GroupBreadcrumbBuilder implements BreadcrumbBuilderInterface {
           break;
         }
 
-        $applies = $group_content->getContentPlugin()->getPluginId() === 'group_membership' ? TRUE : FALSE;
+        $applies = $group_content->getContentPlugin()->getPluginId(
+        ) === 'group_membership' ? TRUE : FALSE;
         break;
 
     }
@@ -146,8 +159,15 @@ class GroupBreadcrumbBuilder implements BreadcrumbBuilderInterface {
 
     // Adds homepage link.
     $links[] = Link::createFromRoute($this->t('Home'), '<front>');
+    $group = $this->eicGroupsHelper->getGroupFromRoute();
     // Adds link to navigate back to the list of groups.
-    $links[] = Link::fromTextAndUrl($this->t('Groups'), GlobalOverviewPages::getGlobalOverviewPageUrl(GlobalOverviewPages::GROUPS));
+    $links[] = GlobalOverviewPages::getGlobalOverviewPageLink(
+      GlobalOverviewPages::getOverviewPageIdFromGroupType(
+        $group instanceof GroupInterface ?
+          $group->getGroupType()->id() :
+          'group'
+      )
+    );
 
     switch ($route_match->getRouteName()) {
       case 'entity.node.canonical':
@@ -159,41 +179,85 @@ class GroupBreadcrumbBuilder implements BreadcrumbBuilderInterface {
             $breadcrumb->addCacheableDependency($access);
           }
 
-          if ($group_content = GroupContent::loadByEntity($node)) {
-            // Because a node can only belong to 1 group, we get the first
-            // group content entity from the array.
-            $group_content_entity = reset($group_content);
-            $group = $group_content_entity->getGroup();
+          if ($group = $this->eicGroupsHelper->getOwnerGroupByEntity($node)) {
             $links[] = $group->toLink();
 
             switch ($node->bundle()) {
               case 'book':
               case 'wiki_page':
-                $book_breadcrumb = $this->bookBreadcrumbBuilder->build($route_match);
+                $book_breadcrumb = $this->bookBreadcrumbBuilder->build(
+                  $route_match
+                );
                 // Replace links with book breadcrumb links.
                 $links = $book_breadcrumb->getLinks();
                 // Places the group link right after the "Home" link.
                 array_splice($links, 1, 0, [$group->toLink()]);
                 // Places the groups overview link right after the "Home" link.
-                array_splice($links, 1, 0, [Link::fromTextAndUrl($this->t('Groups'), GlobalOverviewPages::getGlobalOverviewPageUrl(GlobalOverviewPages::GROUPS))]);
+                array_splice(
+                  $links,
+                  1,
+                  0,
+                  [
+                    Link::fromTextAndUrl(
+                      $this->t('Groups'),
+                      GlobalOverviewPages::getGlobalOverviewPageLink(
+                        GlobalOverviewPages::GROUPS
+                      )->getUrl()
+                    ),
+                  ]
+                );
                 // Replaces book link text with "Wiki".
-                if ($node->bundle() === 'wiki_page') {
+                if (
+                  $node->bundle() === 'wiki_page'
+                  && isset($links[3])
+                ) {
                   $links[3]->setText($this->t('Wiki'));
                 }
                 // We want to keep cache contexts and cache tags from book
                 // breadcrumb.
-                $breadcrumb->addCacheContexts($book_breadcrumb->getCacheContexts());
+                $breadcrumb->addCacheContexts(
+                  $book_breadcrumb->getCacheContexts()
+                );
                 $breadcrumb->addCacheTags($book_breadcrumb->getCacheTags());
                 break;
 
               case 'discussion':
-                $links[] = Link::fromTextAndUrl($this->t('Discussions'), GroupOverviewPages::getGroupOverviewPageUrl('discussions', $group));
+                $links[] = Link::fromTextAndUrl(
+                  $this->t('Discussions'),
+                  GroupOverviewPages::getGroupOverviewPageUrl(
+                    'discussions',
+                    $group
+                  )
+                );
+                break;
+
+              case 'news':
+                $links[] = Link::fromTextAndUrl(
+                  $this->t('News'),
+                  GroupOverviewPages::getGroupOverviewPageUrl(
+                    'news',
+                    $group
+                  )
+                );
+                break;
+
+              case 'event':
+                $links[] = Link::fromTextAndUrl(
+                  $this->t('Events'),
+                  GroupOverviewPages::getGroupOverviewPageUrl(
+                    'events',
+                    $group
+                  )
+                );
                 break;
 
               case 'document':
               case 'gallery':
               case 'video':
-                $links[] = Link::fromTextAndUrl($this->t('Files'), GroupOverviewPages::getGroupOverviewPageUrl('files', $group));
+                $links[] = Link::fromTextAndUrl(
+                  $this->t('Files'),
+                  GroupOverviewPages::getGroupOverviewPageUrl('files', $group)
+                );
                 break;
 
             }
@@ -205,8 +269,6 @@ class GroupBreadcrumbBuilder implements BreadcrumbBuilderInterface {
         break;
 
       case 'entity.group.canonical':
-        $group = $route_match->getParameter('group');
-
         if ($group instanceof GroupInterface) {
           // Adds the user access as cacheable dependency.
           if ($access = $group->access('view', $this->account, TRUE)) {
@@ -239,9 +301,17 @@ class GroupBreadcrumbBuilder implements BreadcrumbBuilderInterface {
         }
 
         if ($request_handler->getType() === RequestTypes::TRANSFER_OWNERSHIP) {
-          $group_members_url = Url::fromRoute('view.eic_group_members.page_group_members', ['group' => $group->id()]);
-          $links[] = Link::fromTextAndUrl($this->t('Members'), $group_members_url);
-          $user_full_name = $this->eicUserHelper->getFullName($group_content->getEntity());
+          $group_members_url = Url::fromRoute(
+            'view.eic_group_members.page_group_members',
+            ['group' => $group->id()]
+          );
+          $links[] = Link::fromTextAndUrl(
+            $this->t('Members'),
+            $group_members_url
+          );
+          $user_full_name = $this->eicUserHelper->getFullName(
+            $group_content->getEntity()
+          );
           $links[] = $group_content->getEntity()->toLink($user_full_name);
         }
         break;
@@ -255,6 +325,7 @@ class GroupBreadcrumbBuilder implements BreadcrumbBuilderInterface {
 
     $breadcrumb->setLinks($links);
     $breadcrumb->addCacheContexts(['url.path']);
+
     return $breadcrumb;
   }
 

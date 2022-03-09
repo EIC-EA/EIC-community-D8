@@ -22,12 +22,10 @@ class FlagEventSubscriber implements EventSubscriberInterface {
   private $solrDocumentProcessor;
 
   /**
-   * FlagEventSubscriber constructor.
-   *
-   * @param \Drupal\eic_search\Service\SolrDocumentProcessor $solr_document_processor
+   * @param \Drupal\eic_search\Service\SolrDocumentProcessor|NULL $solr_document_processor
    *   The EIC Search Solr Document Processor.
    */
-  public function __construct(SolrDocumentProcessor $solr_document_processor) {
+  public function setDocumentProcessor(?SolrDocumentProcessor $solr_document_processor) {
     $this->solrDocumentProcessor = $solr_document_processor;
   }
 

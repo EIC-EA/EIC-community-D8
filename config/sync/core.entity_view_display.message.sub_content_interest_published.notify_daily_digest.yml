@@ -6,7 +6,7 @@ dependencies:
     - core.entity_view_mode.message.notify_daily_digest
     - field.field.message.sub_content_interest_published.field_event_executing_user
     - field.field.message.sub_content_interest_published.field_group_ref
-    - field.field.message.sub_content_interest_published.field_node_ref
+    - field.field.message.sub_content_interest_published.field_referenced_node
     - field.field.message.sub_content_interest_published.field_topic_term
     - message.template.sub_content_interest_published
 id: message.sub_content_interest_published.notify_daily_digest
@@ -15,14 +15,14 @@ bundle: sub_content_interest_published
 mode: notify_daily_digest
 content:
   partial_2:
-    weight: 0
-    region: content
     settings: {  }
     third_party_settings: {  }
+    weight: 0
+    region: content
 hidden:
   field_event_executing_user: true
   field_group_ref: true
-  field_node_ref: true
+  field_referenced_node: true
   field_topic_term: true
   partial_0: true
   partial_1: true

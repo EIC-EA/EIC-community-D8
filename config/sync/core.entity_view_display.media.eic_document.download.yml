@@ -18,38 +18,38 @@ bundle: eic_document
 mode: download
 content:
   field_body:
-    weight: 2
+    type: text_default
     label: hidden
     settings: {  }
     third_party_settings: {  }
-    type: text_default
+    weight: 2
     region: content
   field_media_file:
+    type: file_default
     label: visually_hidden
-    weight: 1
     settings:
       use_description_as_link_text: false
     third_party_settings: {  }
-    type: file_default
+    weight: 1
     region: content
   flag_bookmark_media:
-    weight: 10
     settings: {  }
     third_party_settings: {  }
+    weight: 10
     region: content
   flag_like_media:
-    weight: 10
     settings: {  }
     third_party_settings: {  }
+    weight: 10
     region: content
   name:
     type: string
-    weight: 0
-    region: content
     label: hidden
     settings:
       link_to_entity: false
     third_party_settings: {  }
+    weight: 0
+    region: content
 hidden:
   created: true
   field_language: true

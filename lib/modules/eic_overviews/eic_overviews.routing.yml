@@ -43,6 +43,13 @@ eic_overviews.groups.overview_page.members:
     _title: 'Members'
   requirements:
     _custom_access: '\Drupal\eic_overviews\Controller\GroupOverviewsController::access'
+eic_overviews.groups.overview_page.team:
+  path: '/group/{group}/team'
+  defaults:
+    _controller: '\Drupal\eic_overviews\Controller\GroupOverviewsController::buildGenericPage'
+    _title: 'Team'
+  requirements:
+    _custom_access: '\Drupal\eic_overviews\Controller\GroupOverviewsController::access'
 eic_overviews.groups.overview_page.latest_activity_stream:
   path: '/group/{group}/latest-activity'
   defaults:

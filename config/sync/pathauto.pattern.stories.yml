@@ -11,12 +11,12 @@ pattern: '[node:node_group_url]/stories/[node:title]'
 selection_criteria:
   77e61113-8d04-4de0-be65-d20cfe221a02:
     id: node_type
-    bundles:
-      story: story
     negate: false
+    uuid: 77e61113-8d04-4de0-be65-d20cfe221a02
     context_mapping:
       node: node
-    uuid: 77e61113-8d04-4de0-be65-d20cfe221a02
+    bundles:
+      story: story
 selection_logic: and
 weight: -6
 relationships: {  }

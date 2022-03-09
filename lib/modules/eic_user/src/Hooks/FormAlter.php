@@ -126,6 +126,11 @@ class FormAlter {
       $emails[] = $user->getEmail();
     }
 
+    // Remove empty string.
+    $emails = array_filter($emails, function ($email) {
+      return !empty($email);
+    });
+
     $tempstore_params['emails'] = $emails;
     $tempstore->set('params', $tempstore_params);
   }
@@ -155,9 +160,25 @@ class FormAlter {
           $this->t(
             'User with id @user_id does not exists in the platform.',
             ['@user_id' => $existing_user['target_id']],
-            ['context' => 'eic_user'],
+            ['context' => 'eic_user']
           )
         );
+      }
+
+      $email = $user->getEmail();
+
+      // If user does not have an e-mail field.
+      if (!$email) {
+        $form_state->setErrorByName(
+          'existing_users',
+          $this->t(
+            'User with id @user_id does not have an email.',
+            ['@user_id' => $user->id()],
+            ['context' => 'eic_user']
+          )
+        );
+
+        return;
       }
 
       $emails[] = $user->getEmail();
@@ -192,7 +213,7 @@ class FormAlter {
       if ($invitation_loader->loadByGroup($group, NULL, $email)) {
         $invalid_emails[] = $email;
 
-        $error_message .= "<li>User with $email already received an invitation.</li>";
+        $error_message .= "<li>User $email already received an invitation.</li>";
       }
     }
 

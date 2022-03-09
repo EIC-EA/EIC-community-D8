@@ -12,12 +12,8 @@ dependencies:
     - field.field.user.user.field_is_spammer
     - field.field.user.user.field_last_name
     - field.field.user.user.field_media
-    - field.field.user.user.field_message_from_service
     - field.field.user.user.field_smed_id
-    - field.field.user.user.field_updated_profile_by_service
-    - field.field.user.user.field_updated_profile_by_user
     - field.field.user.user.field_user_can_contact
-    - field.field.user.user.field_user_status
   module:
     - eic_content
     - media_library
@@ -33,30 +29,37 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
+  contact:
+    weight: 5
+    region: content
+    settings: {  }
+    third_party_settings: {  }
   field_first_name:
+    type: string_textfield
     weight: 3
+    region: content
     settings:
       size: 60
       placeholder: ''
     third_party_settings: {  }
-    type: string_textfield
-    region: content
   field_is_deleted:
+    type: boolean_checkbox
     weight: 15
+    region: content
     settings:
       display_label: true
     third_party_settings: {  }
-    type: boolean_checkbox
-    region: content
   field_is_deleted_anonymous:
+    type: boolean_checkbox
     weight: 16
+    region: content
     settings:
       display_label: true
     third_party_settings: {  }
-    type: boolean_checkbox
-    region: content
   field_is_deleted_by_uid:
+    type: entity_tree
     weight: 17
+    region: content
     settings:
       match_top_level_limit: '0'
       items_to_load: '25'
@@ -65,84 +68,56 @@ content:
       load_all: 0
       auto_select_parents: 0
     third_party_settings: {  }
-    type: entity_tree
-    region: content
   field_is_invalid_email:
+    type: boolean_checkbox
     weight: 20
+    region: content
     settings:
       display_label: true
     third_party_settings: {  }
-    type: boolean_checkbox
-    region: content
   field_is_organisation_user:
+    type: boolean_checkbox
     weight: 19
+    region: content
     settings:
       display_label: true
     third_party_settings: {  }
-    type: boolean_checkbox
-    region: content
   field_is_spammer:
+    type: boolean_checkbox
     weight: 18
+    region: content
     settings:
       display_label: true
     third_party_settings: {  }
-    type: boolean_checkbox
-    region: content
   field_last_name:
+    type: string_textfield
     weight: 4
+    region: content
     settings:
       size: 60
       placeholder: ''
     third_party_settings: {  }
-    type: string_textfield
-    region: content
   field_media:
     type: media_library_widget
     weight: 12
+    region: content
     settings:
       media_types: {  }
     third_party_settings: {  }
-    region: content
-  field_message_from_service:
-    weight: 23
-    settings:
-      rows: 5
-      placeholder: ''
-    third_party_settings: {  }
-    type: string_textarea
-    region: content
   field_smed_id:
+    type: number
     weight: 30
+    region: content
     settings:
       placeholder: ''
     third_party_settings: {  }
-    type: number
-    region: content
-  field_updated_profile_by_service:
-    weight: 22
-    settings: {  }
-    third_party_settings: {  }
-    type: datetime_timestamp
-    region: content
-  field_updated_profile_by_user:
-    weight: 21
-    settings: {  }
-    third_party_settings: {  }
-    type: datetime_timestamp
-    region: content
   field_user_can_contact:
+    type: boolean_checkbox
     weight: 31
+    region: content
     settings:
       display_label: true
     third_party_settings: {  }
-    type: boolean_checkbox
-    region: content
-  field_user_status:
-    weight: 24
-    settings: {  }
-    third_party_settings: {  }
-    type: options_select
-    region: content
   language:
     weight: 0
     region: content

@@ -6,7 +6,10 @@
  */
 
 use Drupal\eic_overviews\GlobalOverviewPages;
+use Drupal\eic_overviews\GroupOverviewPages;
+use Drupal\group\Entity\GroupInterface;
 use Drupal\views\Views;
+use Drupal\Core\Url;
 
 /**
  * Implements template_preprocess_views_view_field().
@@ -29,32 +32,7 @@ function eic_community_preprocess_views_view_field(&$variables) {
  * Implements template_preprocess_views_view().
  */
 function eic_community_preprocess_views_view(&$variables) {
-  $map_view_action = [
-    'taxonomy_related_content-groups' => [
-      'link' => [
-        'label' => t('Show more'),
-        'path' => GlobalOverviewPages::getGlobalOverviewPageUrl(
-          GlobalOverviewPages::GROUPS
-        ),
-      ],
-    ],
-    'taxonomy_related_content-news_stories' => [
-      'link' => [
-        'label' => t('View all stories'),
-        'path' => GlobalOverviewPages::getGlobalOverviewPageUrl(
-          GlobalOverviewPages::NEWS_STORIES
-        ),
-      ],
-    ],
-    'taxonomy_related_content-events' => [
-      'link' => [
-        'label' => t('View all events'),
-        'path' => GlobalOverviewPages::getGlobalOverviewPageUrl(
-          GlobalOverviewPages::EVENTS
-        ),
-      ],
-    ],
-  ];
+
   /** @var \Drupal\views\ViewExecutable $view */
   $view = $variables['view'];
 
@@ -65,9 +43,9 @@ function eic_community_preprocess_views_view(&$variables) {
       break;
 
     case 'groups_homepage-block_groups_homepage':
-      if ($call_to_action_url = GlobalOverviewPages::getGlobalOverviewPageUrl(
+      if ($call_to_action_url = GlobalOverviewPages::getGlobalOverviewPageLink(
         GlobalOverviewPages::GROUPS
-      )) {
+      )->getUrl()) {
         $variables['call_to_action'] = [
           'link' => [
             'label' => t('View all groups'),
@@ -78,9 +56,9 @@ function eic_community_preprocess_views_view(&$variables) {
       break;
 
     case 'groups_homepage-block_events_homepage':
-      if ($call_to_action_url = GlobalOverviewPages::getGlobalOverviewPageUrl(
+      if ($call_to_action_url = GlobalOverviewPages::getGlobalOverviewPageLink(
         GlobalOverviewPages::EVENTS
-      )) {
+      )->getUrl()) {
         $variables['call_to_action'] = [
           'link' => [
             'label' => t('View all events'),
@@ -99,7 +77,7 @@ function eic_community_preprocess_views_view(&$variables) {
 
         $items[] = [
           'label' => $term->getName(),
-          'title' => $term->toUrl(),
+          'path' => $term->toUrl()->toString(),
         ];
       }
       $variables['items'] = $items;
@@ -114,6 +92,68 @@ function eic_community_preprocess_views_view(&$variables) {
       $variables['extra_classes'] = 'ecl-section-wrapper--is-white ecl-featured-content-collection--has-overview-layout';
       $variables['items_extra_classes'] = 'ecl-featured-content-collection__item--big';
       $variables['no_container'] = TRUE;
+      break;
+
+    case 'organisation_content-organisation_news':
+      $variables['title'] = t('Latest news', [], ['context' => 'eic_community']);
+      $variables['extra_classes'] = 'ecl-section-wrapper--is-white ecl-featured-content-collection--has-list-layout';
+      $variables['extra_id'] = 'news';
+
+      /** @var \Drupal\group\Entity\GroupInterface $group */
+      $group = \Drupal::service('eic_groups.helper')->getGroupFromRoute();
+      if ($group instanceof GroupInterface && !empty($variables['rows'])) {
+        $variables['call_to_action'] = [
+          'link' => [
+            'label' => t('View all news'),
+            'path' => Url::fromRoute(GroupOverviewPages::NEWS, ['group' => $group->id()]),
+          ],
+        ];
+      }
+
+      $url_add_news = Url::fromRoute(
+        'entity.group_content.create_form',
+        ['group' => $group->id(), 'plugin_id' => 'group_node:news']
+      );
+
+      if ($group instanceof GroupInterface && $url_add_news->access() && empty($variables['rows'])) {
+        $variables['call_to_action'] = [
+          'link' => [
+            'label' => t('Add news'),
+            'path' => $url_add_news->toString(),
+          ],
+        ];
+      }
+      break;
+
+    case 'organisation_content-organisation_events':
+      $variables['title'] = t('Events attending', [], ['context' => 'eic_community']);
+      $variables['extra_id'] = 'events';
+      $variables['extra_classes'] = 'ecl-section-wrapper--is-white ecl-featured-content-collection--has-list-layout';
+
+      /** @var \Drupal\group\Entity\GroupInterface $group */
+      $group = \Drupal::service('eic_groups.helper')->getGroupFromRoute();
+      if ($group instanceof GroupInterface && !empty($variables['rows'])) {
+        $variables['call_to_action'] = [
+          'link' => [
+            'label' => t('View all events'),
+            'path' => Url::fromRoute(GroupOverviewPages::EVENTS, ['group' => $group->id()]),
+          ],
+        ];
+      }
+
+      $url_add_event = Url::fromRoute(
+        'entity.group_content.create_form',
+        ['group' => $group->id(), 'plugin_id' => 'group_node:event']
+      );
+
+      if ($group instanceof GroupInterface && $url_add_event->access() && empty($variables['rows'])) {
+        $variables['call_to_action'] = [
+          'link' => [
+            'label' => t('Add event'),
+            'path' => $url_add_event->toString(),
+          ],
+        ];
+      }
       break;
 
     case 'taxonomy_related_content-files':
@@ -134,26 +174,16 @@ function eic_community_preprocess_views_view(&$variables) {
       $variables['no_container'] = TRUE;
       break;
 
-    case 'taxonomy_related_content-experts':
-      // Add the read more link if there is one.
-      if ($view->display_handler->getOption('use_more') == TRUE) {
-        $variables['call_to_action'] = [
-          'link' => [
-            'label' => $view->display_handler->getOption('use_more_text'),
-            'path' => $view->display_handler->getOption('link_url'),
-          ],
-        ];
-      }
-      break;
   }
 
-  $call_to_action = array_key_exists(
-    $key,
-    $map_view_action
-  ) ? $map_view_action[$key] : [];
-
-  if (!empty($call_to_action) && !empty($call_to_action['link']['path'])) {
-    $variables['call_to_action'] = $call_to_action;
+  // Add the read more link if there is one.
+  if ($view->display_handler->getOption('use_more') == TRUE) {
+    $variables['call_to_action'] = [
+      'link' => [
+        'label' => $view->display_handler->getOption('use_more_text'),
+        'path' => $view->display_handler->getOption('link_url'),
+      ],
+    ];
   }
 }
 

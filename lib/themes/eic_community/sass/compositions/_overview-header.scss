@@ -24,6 +24,11 @@
       border: none;
       padding: ecl-box-model('padding--md', 'banner') 0;
     }
+
+    #{$node}--my-activity & {
+      border: none;
+      padding: $ecl-spacing-4-xl 0;
+    }
   }
 
   &__main {

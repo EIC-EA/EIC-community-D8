@@ -4,8 +4,9 @@ status: true
 dependencies:
   config:
     - core.entity_view_mode.message.pre_render
-    - field.field.message.log_group_state_change.field_event_executing_user
     - field.field.message.log_group_state_change.field_group_ref
+    - field.field.message.log_group_state_change.field_moderation_state
+    - field.field.message.log_group_state_change.field_previous_moderation_state
     - field.field.message.log_group_state_change.field_rendered_content
     - message.template.log_group_state_change
 id: message.log_group_state_change.pre_render
@@ -13,32 +14,26 @@ targetEntityType: message
 bundle: log_group_state_change
 mode: pre_render
 content:
-  field_event_executing_user:
-    weight: 1
-    label: above
-    settings:
-      link: true
-    third_party_settings: {  }
-    type: entity_reference_label
-    region: content
   field_group_ref:
-    weight: 2
+    type: entity_reference_label
     label: above
     settings:
       link: true
     third_party_settings: {  }
-    type: entity_reference_label
+    weight: 2
     region: content
   partial_0:
-    weight: 0
     settings: {  }
     third_party_settings: {  }
+    weight: 0
     region: content
   partial_1:
-    weight: 0
     settings: {  }
     third_party_settings: {  }
+    weight: 0
     region: content
 hidden:
+  field_moderation_state: true
+  field_previous_moderation_state: true
   field_rendered_content: true
   search_api_excerpt: true

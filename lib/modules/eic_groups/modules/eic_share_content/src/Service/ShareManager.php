@@ -3,19 +3,25 @@
 namespace Drupal\eic_share_content\Service;
 
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Drupal\eic_content\EICContentHelperInterface;
+use Drupal\eic_groups\Constants\GroupVisibilityType;
+use Drupal\eic_groups\EICGroupsHelperInterface;
+use Drupal\eic_groups\GroupsModerationHelper;
 use Drupal\eic_messages\ActivityStreamOperationTypes;
 use Drupal\eic_messages\Service\MessageBusInterface;
 use Drupal\eic_messages\Util\ActivityStreamMessageTemplates;
+use Drupal\eic_user\UserHelper;
 use Drupal\group\Entity\GroupContent;
 use Drupal\group\Entity\GroupInterface;
+use Drupal\group\GroupMembershipLoader;
 use Drupal\group\Plugin\GroupContentEnablerManagerInterface;
+use Drupal\group_flex\GroupFlexGroup;
 use Drupal\node\NodeInterface;
 use Drupal\search_api\Plugin\search_api\datasource\ContentEntity;
 
 /**
- * Class ShareManager
+ * Class that manages functions for the sharing feature.
  *
  * @package Drupal\eic_share_content\Service
  */
@@ -24,47 +30,94 @@ class ShareManager {
   use StringTranslationTrait;
 
   /**
-   * @var \Drupal\eic_content\EICContentHelperInterface
+   * The Group Content plugin ID for shared content.
+   *
+   * @var string
    */
-  private $contentHelper;
+  const GROUP_CONTENT_SHARED_PLUGIN_ID = 'group_shared_content';
 
   /**
+   * The EIC Groups helper.
+   *
+   * @var \Drupal\eic_groups\EICGroupsHelperInterface
+   */
+  private $groupsHelper;
+
+  /**
+   * The entity type manager.
+   *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
   private $entityTypeManager;
 
   /**
+   * The group content enabler manager.
+   *
    * @var \Drupal\group\Plugin\GroupContentEnablerManagerInterface
    */
   private $groupContentPluginManager;
 
   /**
+   * The group membership loader.
+   *
+   * @var \Drupal\group\GroupMembershipLoader
+   */
+  private $groupMembershipLoader;
+
+  /**
+   * The group flex group service.
+   *
+   * @var \Drupal\group_flex\GroupFlexGroup
+   */
+  private $groupFlexGroup;
+
+  /**
+   * The EIC message bus.
+   *
    * @var \Drupal\eic_messages\Service\MessageBusInterface
    */
   private $messageBus;
 
   /**
-   * @param \Drupal\eic_content\EICContentHelperInterface $content_helper
+   * Constructs a new ShareManager object.
+   *
+   * @param \Drupal\eic_groups\EICGroupsHelperInterface $groups_helper
+   *   The EIC Groups helper.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
    * @param \Drupal\group\Plugin\GroupContentEnablerManagerInterface $plugin_manager
+   *   The group content enabler manager.
+   * @param \Drupal\group\GroupMembershipLoader $group_membership_loader
+   *   The group membership loader.
+   * @param \Drupal\group_flex\GroupFlexGroup $group_flex_group
+   *   The group flex group service.
    * @param \Drupal\eic_messages\Service\MessageBusInterface $message_bus
+   *   The EIC message bus.
    */
   public function __construct(
-    EICContentHelperInterface $content_helper,
+    EICGroupsHelperInterface $groups_helper,
     EntityTypeManagerInterface $entity_type_manager,
     GroupContentEnablerManagerInterface $plugin_manager,
+    GroupMembershipLoader $group_membership_loader,
+    GroupFlexGroup $group_flex_group,
     MessageBusInterface $message_bus
   ) {
-    $this->contentHelper = $content_helper;
+    $this->groupsHelper = $groups_helper;
     $this->entityTypeManager = $entity_type_manager;
     $this->groupContentPluginManager = $plugin_manager;
+    $this->groupMembershipLoader = $group_membership_loader;
+    $this->groupFlexGroup = $group_flex_group;
     $this->messageBus = $message_bus;
   }
 
   /**
+   * Checks if a node bundle is eligible for group sharing.
+   *
    * @param string $node_bundle
+   *   The node bundle machine name.
    *
    * @return bool
+   *   TRUE if node bundle is supported.
    */
   public function isSupported(string $node_bundle): bool {
     static $shareableNodeBundles = [
@@ -74,16 +127,23 @@ class ShareManager {
       'discussion',
       'gallery',
       'event',
+      'news',
     ];
 
     return in_array($node_bundle, $shareableNodeBundles) ?? FALSE;
   }
 
   /**
+   * Shares a content from one group to another.
+   *
    * @param \Drupal\group\Entity\GroupInterface $source_group
+   *   The group entity from which we want to share.
    * @param \Drupal\group\Entity\GroupInterface $target_group
+   *   The group entity to which we want to share.
    * @param \Drupal\node\NodeInterface $node
+   *   The node entity we want to share.
    * @param string|null $message
+   *   The message that accompanies the share action.
    *
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
@@ -95,34 +155,30 @@ class ShareManager {
     NodeInterface $node,
     ?string $message
   ) {
-    $group_content = $this->contentHelper->getGroupContent($source_group, $node);
-    if (empty($group_content)) {
-      throw new \InvalidArgumentException($this->t('This content can\'t be shared'));
+    // First we check if this node belongs to a group.
+    if (!$this->groupsHelper->getOwnerGroupByEntity($node)) {
+      throw new \InvalidArgumentException("This content can't be shared");
     }
 
-    if (
-      $target_group->id() === $source_group->id() ||
-      $group_content->getGroup()->id() !== $source_group->id()
-    ) {
-      throw new \InvalidArgumentException($this->t('This content can\'t be shared'));
+    // Check if we can share from source group to target group.
+    if (!$this->canShare($source_group, $target_group)) {
+      throw new \InvalidArgumentException("This content can't be shared");
     }
 
+    // If the content is already shared to the target group, we can't share.
     if ($this->isShared($node, $target_group)) {
-      throw new \InvalidArgumentException($this->t('This content is already shared with this group'));
+      throw new \InvalidArgumentException('This content is already shared with this group');
     }
 
-    $plugin_id = $this->getGroupContentId($target_group, $node);
-    if (!$plugin_id) {
-      throw new \InvalidArgumentException($this->t('This content can\'t be shared'));
-    }
-
+    // Create the group content entity.
     $shared_group_content = GroupContent::create([
-      'type' => $plugin_id,
+      'type' => $this->defineGroupContentType($target_group),
       'gid' => $target_group->id(),
       'entity_id' => $node->id(),
     ]);
     $shared_group_content->save();
 
+    // Dispatch the message.
     $this->messageBus->dispatch([
       'template' => ActivityStreamMessageTemplates::SHARE_CONTENT,
       'uid' => $node->getOwnerId(),
@@ -136,7 +192,7 @@ class ShareManager {
 
     // Reindex the node immediately.
     // There seem to be multiple implementation of reindexing logics.
-    // @TODO Write a single service for this.
+    // @todo Write a single service for this.
     $indexes = ContentEntity::getIndexesForEntity($node);
     foreach ($indexes as $index) {
       $index->trackItemsUpdated(
@@ -147,82 +203,149 @@ class ShareManager {
   }
 
   /**
+   * Determines if a node has been shared.
+   *
    * @param \Drupal\node\NodeInterface $node
-   * @param \Drupal\group\Entity\GroupInterface $group
+   *   The node entity for which we're looking shares.
+   * @param \Drupal\group\Entity\GroupInterface|null $target_group
+   *   The group to filter on. If null, will check for all groups.
    *
    * @return bool
+   *   TRUE if node has been shared.
+   *
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
-  public function isShared(NodeInterface $node, GroupInterface $group): bool {
-    return !empty($this->getShareEntity($node, $group));
+  public function isShared(NodeInterface $node, GroupInterface $target_group = NULL): bool {
+    return !empty($this->getSharedEntities($node, $target_group));
   }
 
   /**
-   * @param \Drupal\node\NodeInterface $node
-   * @param \Drupal\group\Entity\GroupInterface $group
+   * Returns the list of shared group_content entities.
    *
-   * @return \Drupal\Core\Entity\EntityInterface[]
+   * @param \Drupal\node\NodeInterface $node
+   *   The node entity for which we're looking shares.
+   * @param \Drupal\group\Entity\GroupInterface|null $target_group
+   *   The group to filter on. If null, shared entities will be returned for all
+   *   groups.
+   *
+   * @return \Drupal\group\Entity\GroupContentInterface[]
+   *   The list of found group_content entities.
+   *
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
-  public function getShareEntity(
-    NodeInterface $node,
-    GroupInterface $group
-  ): array {
-    return $this->entityTypeManager->getStorage('message')
-      ->loadByProperties([
-        'template' => ActivityStreamMessageTemplates::SHARE_CONTENT,
-        'field_group_ref' => $group->id(),
-        'field_referenced_node' => $node->id(),
-      ]);
+  public function getSharedEntities(NodeInterface $node, GroupInterface $target_group = NULL): array {
+    $query = $this->entityTypeManager->getStorage('group_content')->getQuery();
+    $query->condition('type', '%-' . self::GROUP_CONTENT_SHARED_PLUGIN_ID, 'LIKE');
+    $query->condition('entity_id', $node->id());
+    if ($target_group) {
+      $query->condition('gid', $target_group->id());
+    }
+    return $this->entityTypeManager->getStorage('group_content')->loadMultiple($query->execute());
   }
 
   /**
-   * Return the group content plugin id for the given node.
+   * Returns the list of target groups a user can share content to.
    *
-   * @param \Drupal\group\Entity\GroupInterface $group
-   * @param \Drupal\node\NodeInterface $node
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *   The user account for which we build the list.
+   * @param \Drupal\group\Entity\GroupInterface $source_group
+   *   The source group from which we want to share.
+   * @param array $visibility_types
+   *   The target groups visibility types to filter on.
+   *   Allowed values are constants provided by GroupVisibilityType.
    *
-   * @return string|null
+   * @return \Drupal\group\Entity\GroupInterface[]
+   *   A list of group entities.
+   *
+   * @throws \Drupal\Core\TypedData\Exception\MissingDataException
    */
-  public function getGroupContentId(
-    GroupInterface $group,
-    NodeInterface $node
-  ): ?string {
-    static $enabled_ids;
-    if (empty($enabled_ids)) {
-      $plugin_ids = $this->groupContentPluginManager
-        ->getInstalledIds($group->getGroupType());
+  public function getShareableTargetGroupsForUser(AccountInterface $account, GroupInterface $source_group, array $visibility_types = [GroupVisibilityType::GROUP_VISIBILITY_PUBLIC]) {
+    $groups = [];
+    $unfiltered_groups = [];
 
-      foreach ($plugin_ids as $plugin_id) {
-        if (strpos($plugin_id, 'group_node:') !== 0) {
-          continue;
+    // If user is power user, we get all groups with given visibility types
+    // regardless of memberships.
+    if (UserHelper::isPowerUser($account)) {
+      foreach ($visibility_types as $visibility_type) {
+        foreach ($this->groupsHelper->getGroupsByVisibility($visibility_type) as $group) {
+          $unfiltered_groups[] = $group;
         }
-
-        [, $content_type] = explode(':', $plugin_id);
-        $enabled_ids[$content_type] = $group->getGroupType()
-          ->getContentPlugin("group_node:$content_type")
-          ->getContentTypeConfigId();;
+      }
+    }
+    // Otherwise we get only groups the user is member of.
+    else {
+      /** @var \Drupal\group\GroupMembership $group_membership */
+      foreach ($this->groupMembershipLoader->loadByUser($account) as $group_membership) {
+        $unfiltered_groups[] = $group_membership->getGroup();
       }
     }
 
-    return $enabled_ids[$node->bundle()] ?? NULL;
+    foreach ($unfiltered_groups as $group) {
+      if ($this->canShare($source_group, $group, $visibility_types)) {
+        $groups[] = $group;
+      }
+    }
+
+    return $groups;
   }
 
   /**
-   * @param \Drupal\node\NodeInterface $node
+   * Determines if a content can be shared from source group to target group.
    *
-   * @return \Drupal\Core\Entity\EntityInterface[]
-   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
-   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   * @param \Drupal\group\Entity\GroupInterface $source_group
+   *   The source group.
+   * @param \Drupal\group\Entity\GroupInterface $target_group
+   *   The target group.
+   * @param array $target_group_visibility_types
+   *   The target groups visibility types to filter on.
+   *   Allowed values are constants provided by GroupVisibilityType.
+   *
+   * @return bool
+   *   TRUE if content can be shed, FALSE otherwise.
+   *
+   * @throws \Drupal\Core\TypedData\Exception\MissingDataException
    */
-  public function getShares(NodeInterface $node): array {
-    return $this->entityTypeManager->getStorage('message')
-      ->loadByProperties([
-        'template' => ActivityStreamMessageTemplates::SHARE_CONTENT,
-        'field_referenced_node' => $node->id(),
-      ]);
+  public function canShare(
+    GroupInterface $source_group,
+    GroupInterface $target_group,
+    array $target_group_visibility_types = [GroupVisibilityType::GROUP_VISIBILITY_PUBLIC]
+  ) {
+    // Allow only selected visibility types.
+    if (!in_array($this->groupFlexGroup->getGroupVisibility($target_group), $target_group_visibility_types)) {
+      return FALSE;
+    }
+
+    // Exclude non published groups.
+    if (!$target_group->isPublished()) {
+      return FALSE;
+    }
+
+    // Exclude archived groups.
+    if (GroupsModerationHelper::isArchived($target_group)) {
+      return FALSE;
+    }
+
+    // Exclude source group.
+    if ($target_group->id() === $source_group->id()) {
+      return FALSE;
+    }
+
+    return TRUE;
+  }
+  
+  /**
+   * Returns the type for a shared content and given group type.
+   *
+   * @param \Drupal\group\Entity\GroupInterface $target_group
+   *   The target group.
+   *
+   * @return string
+   *   The type to be used for the group_content entity.
+   */
+  public function defineGroupContentType(GroupInterface $target_group) {
+    return $target_group->getGroupType()->id() . '-' . self::GROUP_CONTENT_SHARED_PLUGIN_ID;
   }
 
 }

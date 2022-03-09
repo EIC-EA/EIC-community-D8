@@ -4,7 +4,9 @@ status: true
 dependencies:
   config:
     - field.field.profile.member.field_body
+    - field.field.profile.member.field_comments_notifications
     - field.field.profile.member.field_cv_link
+    - field.field.profile.member.field_interest_notifications
     - field.field.profile.member.field_location_address
     - field.field.profile.member.field_social_links
     - field.field.profile.member.field_vocab_geo
@@ -25,14 +27,24 @@ bundle: member
 mode: default
 content:
   field_body:
-    weight: 0
+    type: text_default
     label: above
     settings: {  }
     third_party_settings: {  }
-    type: text_default
+    weight: 0
+    region: content
+  field_comments_notifications:
+    type: boolean
+    label: above
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    weight: 18
     region: content
   field_cv_link:
-    weight: 3
+    type: link
     label: above
     settings:
       trim_length: 80
@@ -41,71 +53,81 @@ content:
       rel: ''
       target: ''
     third_party_settings: {  }
-    type: link
+    weight: 3
+    region: content
+  field_interest_notifications:
+    type: boolean
+    label: above
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    weight: 17
     region: content
   field_location_address:
-    weight: 1
+    type: address_default
     label: above
     settings: {  }
     third_party_settings: {  }
-    type: address_default
+    weight: 1
     region: content
   field_social_links:
-    weight: 16
+    type: network_name
     label: above
     settings:
       orientation: vertical
       new_tab: true
     third_party_settings: {  }
-    type: network_name
+    weight: 16
     region: content
   field_vocab_geo:
-    weight: 7
+    type: entity_reference_label
     label: above
     settings:
       link: true
     third_party_settings: {  }
-    type: entity_reference_label
+    weight: 7
     region: content
   field_vocab_job_title:
-    weight: 12
+    type: entity_reference_label
     label: above
     settings:
       link: true
     third_party_settings: {  }
-    type: entity_reference_label
+    weight: 12
     region: content
   field_vocab_language:
-    weight: 11
+    type: entity_reference_label
     label: above
     settings:
       link: true
     third_party_settings: {  }
-    type: entity_reference_label
+    weight: 11
     region: content
   field_vocab_topic_expertise:
-    weight: 8
+    type: entity_reference_label
     label: above
     settings:
       link: true
     third_party_settings: {  }
-    type: entity_reference_label
+    weight: 8
     region: content
   field_vocab_topic_interest:
-    weight: 9
+    type: entity_reference_label
     label: above
     settings:
       link: true
     third_party_settings: {  }
-    type: entity_reference_label
+    weight: 9
     region: content
   field_vocab_user_type:
-    weight: 10
+    type: entity_reference_label
     label: above
     settings:
       link: true
     third_party_settings: {  }
-    type: entity_reference_label
+    weight: 10
     region: content
 hidden:
   search_api_excerpt: true

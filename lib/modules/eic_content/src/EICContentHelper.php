@@ -4,11 +4,8 @@ namespace Drupal\eic_content;
 
 use Drupal\Component\Plugin\Exception\PluginException;
 use Drupal\Core\Entity\ContentEntityInterface;
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\group\Entity\GroupInterface;
-use Drupal\node\NodeInterface;
 
 /**
  * EICContentHelper service that provides helper functions for content.
@@ -58,39 +55,6 @@ class EICContentHelper implements EICContentHelperInterface {
     }
     catch (PluginException $e) {
       return FALSE;
-    }
-  }
-
-  /**
-   * @param \Drupal\group\Entity\GroupInterface $group
-   * @param \Drupal\node\NodeInterface $node
-   *
-   * @return \Drupal\Core\Entity\EntityInterface|null
-   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
-   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
-   */
-  public function getGroupContent(
-    GroupInterface $group,
-    NodeInterface $node
-  ): ?EntityInterface {
-    if (!$this->moduleHandler->moduleExists('group')) {
-      return NULL;
-    }
-
-    $storage = $this->entityTypeManager->getStorage('group_content');
-    try {
-      $group_contents = $storage->loadByProperties([
-        'gid' => $group->id(),
-        'entity_id' => $node->id(),
-      ]);
-
-      if (empty($group_contents)) {
-        return NULL;
-      }
-
-      return reset($group_contents);
-    } catch (\Exception $e) {
-      return NULL;
     }
   }
 

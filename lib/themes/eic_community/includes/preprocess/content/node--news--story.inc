@@ -52,11 +52,41 @@ function _eic_community_preprocess_node_news_story(array &$variables) {
         $node->get('field_header_visual')->entity,
         $node->language()->getId()
       );
-    $image_item = ImageValueObject::fromStyledImageItem($media->get('oe_media_image')->first(), 'gallery_teaser_crop_160x160');
+    $image_item = ImageValueObject::fromStyledImageItem(
+      $media->get('oe_media_image')->first(),
+      'large'
+    );
     $item['image'] = [
       'src' => $image_item->getSource(),
       'alt' => $image_item->getAlt(),
     ];
+  }
+
+  if ($variables['view_mode'] === 'teaser' && !$node->get('field_image')->isEmpty()) {
+    /** @var \Drupal\media\Entity\Media $media */
+    $media = \Drupal::service('entity.repository')
+      ->getTranslationFromContext(
+        $node->get('field_image')->entity,
+        $node->language()->getId()
+      );
+    $image_item = ImageValueObject::fromStyledImageItem(
+      $media->get('oe_media_image')->first(),
+      'large'
+    );
+    $item['image'] = [
+      'src' => $image_item->getSource(),
+      'alt' => $image_item->getAlt(),
+    ];
+  }
+
+  if ('teaser' === $variables['view_mode']) {
+    $stats = _eic_community_get_entity_stats($node);
+    // We do not need downloads for news/story stats.
+    if (array_key_exists('downloads', $stats)) {
+      unset($stats['downloads']);
+    }
+
+    $variables['stats'] = $stats;
   }
 
   $variables['story_item'] = $item;

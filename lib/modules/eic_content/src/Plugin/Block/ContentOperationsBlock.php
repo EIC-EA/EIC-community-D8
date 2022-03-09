@@ -7,6 +7,7 @@ use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -22,11 +23,18 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class ContentOperationsBlock extends BlockBase implements ContainerFactoryPluginInterface {
 
   /**
-   * The entity_type.manager service.
+   * The entity type manager service.
    *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-  private $entityTypeManager;
+  protected $entityTypeManager;
+
+  /**
+   * The current user account.
+   *
+   * @var \Drupal\Core\Session\AccountProxyInterface
+   */
+  protected $currentUser;
 
   /**
    * ContentOperationsBlock constructor.
@@ -38,17 +46,20 @@ class ContentOperationsBlock extends BlockBase implements ContainerFactoryPlugin
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
-   *   The entity_type.manager service.
+   *   The entity type manager service.
+   * @param \Drupal\Core\Session\AccountProxyInterface $current_user
+   *   The current user account.
    */
   public function __construct(
     array $configuration,
     $plugin_id,
     $plugin_definition,
-    EntityTypeManagerInterface $entity_type_manager
+    EntityTypeManagerInterface $entity_type_manager,
+    AccountProxyInterface $current_user
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-
     $this->entityTypeManager = $entity_type_manager;
+    $this->currentUser = $current_user;
   }
 
   /**
@@ -64,7 +75,8 @@ class ContentOperationsBlock extends BlockBase implements ContainerFactoryPlugin
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('entity_type.manager')
+      $container->get('entity_type.manager'),
+      $container->get('current_user')
     );
   }
 
@@ -122,7 +134,9 @@ class ContentOperationsBlock extends BlockBase implements ContainerFactoryPlugin
     $build = [];
     $supported_entities = [
       'group' => [
-        'add_route' => 'entity.group.add_page',
+        'add_route' => function ($entity, $bundle) {
+          return Url::fromRoute('entity.group.add_form', ['group_type' => $bundle]);
+        },
         'bundles' => [
           'group',
           'event',
@@ -150,16 +164,17 @@ class ContentOperationsBlock extends BlockBase implements ContainerFactoryPlugin
       $access_handler = $this->entityTypeManager->getAccessControlHandler($entity_id);
 
       switch ($entity_id) {
+        case 'group':
+          $storage_id = 'group_type';
+          $label_field = 'label';
+          break;
+
         case 'node':
         default:
           $storage_id = 'node_type';
           $label_field = 'name';
           break;
 
-        case 'group':
-          $storage_id = 'group_type';
-          $label_field = 'label';
-          break;
       }
       $entity_storage = $this->entityTypeManager->getStorage($storage_id);
 
@@ -216,9 +231,9 @@ class ContentOperationsBlock extends BlockBase implements ContainerFactoryPlugin
     // Add user's activity feed link to the renderable array.
     if ($this->configuration['show_user_activity_feed_link']) {
       $user_feed_link = Url::fromRoute(
-        'entity.user.canonical',
+        'eic_user.user.activity',
         [
-          'user' => \Drupal::currentUser()->id(),
+          'user' => $this->currentUser->id(),
         ]
       );
       $build['#user_activity_feed_link']['link'] = [

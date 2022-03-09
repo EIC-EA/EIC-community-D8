@@ -9,30 +9,50 @@
     display: flex;
     flex-direction: column;
 
-    @include ecl-media-breakpoint-up('md') {
+    @include ecl-media-breakpoint-up('lg') {
       align-items: stretch;
       flex-direction: row;
-
-      #{$node}--is-collapsible & {
-        @include ecl-media-breakpoint-up('md') {
-          flex-wrap: wrap;
-        }
-      }
     }
 
   }
 
   &__header,
-  &__content {
+  &__content,
+  &__container--wiki{
     #{$node}--is-ready#{$node}--is-collapsible & {
       @include ecl-media-breakpoint-up('md') {
-        margin-left: calc(100% / #{$ecl-grid-columns} * 4);
+        margin-left: 0;
       }
     }
+  }
 
-    #{$node}--is-ready#{$node}--is-collapsible[aria-collapsed="true"] & {
+  &__header--wiki {
+    display: flex;
+    flex-wrap: wrap;
+    & .contextual-region {
+      margin-bottom: 0 !important;
+      & .ecl-button__label {
+        white-space: nowrap;
+      }
+    }
+    & .ecl-inline-actions {
+      order: -1;
+      @include ecl-media-breakpoint-down('md') {
+        margin-bottom: $ecl-spacing-s;
+      }
       @include ecl-media-breakpoint-up('md') {
-        margin-left: 0;
+        margin: 0;
+      }
+    }
+  }
+
+  &__container--wiki,
+  &__content{
+    @include ecl-media-breakpoint-up('md') {
+      flex-grow: 1;
+
+      #{$node}--is-ready#{$node}--is-collapsible[aria-collapsed = true] &{
+        flex-basis: 100%;
       }
     }
   }
@@ -48,14 +68,6 @@
 
     &:first-child {
       margin-top: 0;
-    }
-
-    @include ecl-media-breakpoint-up('md') {
-      flex-grow: 1;
-
-      #{$node}--is-ready#{$node}--is-collapsible & {
-        flex-basis: 100%;
-      }
     }
 
     h1,
@@ -90,18 +102,27 @@
       @extend .ecl-u-type-heading-5;
     }
 
+    &--wiki img{
+      max-width: 100%;
+      width: 100%;
+      height: auto;
+    }
+
   }
 
   &__aside {
     position: relative;
     margin-top: ecl-layout('gutter');
 
-    @include ecl-media-breakpoint-down('md') {
-      width: 100%;
-      padding-left: 1rem;
-      padding-right: 1rem;
-      box-sizing: border-box;
+    &:not(&--wiki) {
+      @include ecl-media-breakpoint-down('md') {
+        width: 100%;
+        padding-left: 1rem;
+        padding-right: 1rem;
+        box-sizing: border-box;
+      }
     }
+
 
     #{$node}--is-collapsible & {
       margin-top: 0;
@@ -124,8 +145,8 @@
       }
 
       #{$node}--is-ready#{$node}--is-collapsible & {
-        height: 0;
         margin: 0;
+        margin-bottom: ecl-layout('gutter');
       }
 
       #{$node}--is-ready#{$node}--is-collapsible[aria-collapsed="true"] & {
@@ -139,7 +160,7 @@
 
     &__title {
       text-transform: uppercase;
-      color: map-get($ecl-colors, 'grey-50');
+      color: map-get($ecl-colors, 'grey');
       @include ecl-responsive-font('label');
       font-weight: $ecl-font-weight-regular;
     }
@@ -175,7 +196,7 @@
   &__meta-item {
     margin-right: ecl-layout('gutter');
 
-    &:last-chid {
+    &:last-child {
       margin-right: 0;
     }
   }

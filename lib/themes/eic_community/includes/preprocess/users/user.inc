@@ -15,6 +15,7 @@ use Drupal\eic_flags\FlagType;
 use Drupal\eic_helper\DateTimeHelper;
 use Drupal\eic_overviews\GlobalOverviewPages;
 use Drupal\eic_private_message\Constants\PrivateMessage;
+use Drupal\image\Entity\ImageStyle;
 use Drupal\profile\Entity\ProfileInterface;
 use Drupal\user\UserInterface;
 
@@ -60,7 +61,7 @@ function eic_community_preprocess_user(array &$variables) {
           'parent' => [
             'link' => [
               'label' => t('All members'),
-              'path' => GlobalOverviewPages::getGlobalOverviewPageUrl(GlobalOverviewPages::MEMBERS),
+              'path' => GlobalOverviewPages::getGlobalOverviewPageLink(GlobalOverviewPages::MEMBERS)->getUrl(),
             ],
           ],
         ],
@@ -171,7 +172,7 @@ function eic_community_preprocess_user(array &$variables) {
       ];
 
       $user_item['flagged_interests'] = [
-        'title' => t('My Interests'),
+        'title' => $current_user->id() === $user->id() ? t('My interests') : t('Interests'),
         'items' => [],
       ];
       // Gets user topics of interest.
@@ -190,8 +191,11 @@ function eic_community_preprocess_user(array &$variables) {
       }
 
       $user_item['flagged_groups'] = [
-        'title' => t('My groups'),
-        'content' => _eic_community_get_rendered_view('groups', 'block_user_profile_groups', [$user->id()]),
+        'title' => $current_user->id() === $user->id() ? t('My groups') : t('Groups'),
+        'content' => ($current_user->id() === $user->id()
+          ? _eic_community_get_rendered_view('groups', 'block_user_profile_my_groups', [$user->id()])
+          : _eic_community_get_rendered_view('groups', 'block_user_profile_groups', [$user->id()])
+        ),
       ];
 
       $variables['user_item'] = $user_item;
@@ -205,11 +209,13 @@ function eic_community_preprocess_user(array &$variables) {
  *
  * @param Drupal\Core\Entity\EntityInterface $user
  *   User entity of which you want the image array.
+ * @param bool $relative_url
+ *   Whether the image url is relative or absolute.
  *
  * @return mixed
  *   Returns array or NULL.
  */
-function _get_profile_image_array(EntityInterface $user): ?array {
+function _get_profile_image_array(EntityInterface $user, $relative_url = TRUE): ?array {
   if ($user->field_media->target_id == NULL) {
     return NULL;
   }
@@ -220,7 +226,7 @@ function _get_profile_image_array(EntityInterface $user): ?array {
   $user_image_file = File::load($user_image_media_fid);
 
   return [
-    'src' => $user_image_file->createFileUrl(),
+    'src' => $user_image_file->createFileUrl($relative_url),
     'alt' => $user_image_media->oe_media_image->alt,
   ];
 }
@@ -643,5 +649,45 @@ function _eic_community_get_user_operation_links(UserInterface $account, Profile
   return [
     'label' => 'Manage profile',
     'items' => $processed_user_operation_links,
+  ];
+}
+
+/**
+ * Creates image style array for twig templates.
+ *
+ * @param \Drupal\user\UserInterface $user
+ *   User entity of which you want the image array.
+ * @param string $image_style
+ *   The image style to use.
+ *
+ * @return mixed
+ *   Returns array or NULL.
+ */
+function _eic_community_get_user_profile_image_style(UserInterface $user, string $image_style = 'thumbnail'): ?array {
+  if ($user->field_media->target_id == NULL) {
+    return NULL;
+  }
+
+  $user_image_media = Media::load($user->field_media->target_id);
+  $user_image_media_fid = $user_image_media->getSource()
+    ->getSourceFieldValue($user_image_media);
+
+  $user_image_file = File::load($user_image_media_fid);
+  $style = ImageStyle::load($image_style);
+  $image_uri = $style->buildUri($user_image_file->get('uri')->value);
+
+  // If the derivative doesn't exist yet (as the image style may have been
+  // added post launch), create it.
+  if (!file_exists($image_uri)) {
+    $style->createDerivative(
+      $user_image_file->get('uri')->value,
+      $image_uri
+    );
+  }
+
+  $image_style_url = $style->buildUrl($user_image_file->get('uri')->value);
+  return [
+    'src' => $image_style_url,
+    'alt' => $user_image_media->oe_media_image->alt,
   ];
 }

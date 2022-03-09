@@ -47,10 +47,15 @@ function _eic_community_get_social_share_block() {
 }
 
 /**
- * @param \Drupal\group\Entity\GroupInterface $group
+ * Returns the build for the content share feature.
+ *
+ * @param \Drupal\group\Entity\GroupInterface $current_group
+ *   The group entity we're sharing from.
  * @param \Drupal\node\NodeInterface $node
+ *   The content entity we want to share.
  *
  * @return array
+ *   The build array.
  */
 function _eic_community_get_share_group_content_link(
   GroupInterface $current_group,
@@ -69,14 +74,9 @@ function _eic_community_get_share_group_content_link(
   }
 
   if (empty($formatted_groups)) {
-    /** @var \Drupal\group\Entity\GroupInterface[] $groups */
-    $groups = \Drupal::service('eic_groups.helper')
-      ->getGroupsByVisibility(GroupVisibilityType::GROUP_VISIBILITY_PUBLIC);
-    foreach ($groups as $group) {
-      if ($group->id() === $current_group->id()) {
-        continue;
-      }
-
+    $account = \Drupal::currentUser();
+    $share_manager = \Drupal::service('eic_share_content.share_manager');
+    foreach ($share_manager->getShareableTargetGroupsForUser($account, $current_group) as $group) {
       if (!isset($formatted_groups[$group->bundle()])) {
         $formatted_groups[$group->bundle()] = [
           'label' => $group->type->entity->label(),
@@ -138,7 +138,7 @@ function _eic_community_get_flag_access($flag_id, EntityInterface $entity) {
   $user_flag = $flag_service->getFlagging($flag, $entity);
   $action = $user_flag ? 'unflag' : 'flag';
 
-  return $flag->actionAccess($action);
+  return $flag->actionAccess($action, NULL, $entity);
 }
 
 /**

@@ -7,6 +7,7 @@ dependencies:
     - field.field.comment.node_comment.comment_body
     - field.field.comment.node_comment.field_comment_attachment
     - field.field.comment.node_comment.field_comment_deletion_date
+    - field.field.comment.node_comment.field_comment_is_archived
     - field.field.comment.node_comment.field_comment_is_soft_deleted
     - field.field.comment.node_comment.field_tagged_users
   module:
@@ -26,41 +27,48 @@ content:
   comment_body:
     type: text_textarea
     weight: 1
+    region: content
     settings:
       rows: 2
       placeholder: 'Write your message here...'
     third_party_settings: {  }
-    region: content
   field_comment_attachment:
     type: media_library_widget
     weight: 3
+    region: content
     settings:
       media_types: {  }
     third_party_settings: {  }
-    region: content
   field_comment_deletion_date:
+    type: datetime_default
     weight: 5
+    region: content
     settings: {  }
     third_party_settings: {  }
-    type: datetime_default
+  field_comment_is_archived:
+    type: boolean_checkbox
+    weight: 7
     region: content
-  field_comment_is_soft_deleted:
-    weight: 4
     settings:
       display_label: true
     third_party_settings: {  }
+  field_comment_is_soft_deleted:
     type: boolean_checkbox
+    weight: 4
     region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
   field_tagged_users:
+    type: entity_reference_autocomplete
     weight: 6
+    region: content
     settings:
       match_operator: CONTAINS
       match_limit: 10
       size: 60
       placeholder: ''
     third_party_settings: {  }
-    type: entity_reference_autocomplete
-    region: content
   langcode:
     type: language_select
     weight: 2

@@ -26,7 +26,7 @@ use Drupal\eic_overviews\OverviewPageInterface;
  *       "delete" = "Drupal\Core\Entity\ContentEntityDeleteForm"
  *     },
  *     "route_provider" = {
- *       "html" = "Drupal\Core\Entity\Routing\AdminHtmlRouteProvider",
+ *       "html" = "Drupal\eic_overviews\OverviewPageHtmlRouteProvider",
  *     }
  *   },
  *   base_table = "overview_page",

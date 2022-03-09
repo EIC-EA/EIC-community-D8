@@ -13,11 +13,8 @@ dependencies:
     - field.field.user.user.field_is_spammer
     - field.field.user.user.field_last_name
     - field.field.user.user.field_media
-    - field.field.user.user.field_message_from_service
     - field.field.user.user.field_smed_id
-    - field.field.user.user.field_updated_profile_by_service
-    - field.field.user.user.field_updated_profile_by_user
-    - field.field.user.user.field_user_status
+    - field.field.user.user.field_user_can_contact
   module:
     - user
 id: user.user.compact
@@ -27,12 +24,17 @@ mode: compact
 content:
   field_media:
     type: entity_reference_entity_view
-    weight: 0
     label: above
     settings:
       view_mode: default
       link: false
     third_party_settings: {  }
+    weight: 0
+    region: content
+  masquerade:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 50
     region: content
 hidden:
   field_first_name: true
@@ -44,12 +46,8 @@ hidden:
   field_is_organisation_user: true
   field_is_spammer: true
   field_last_name: true
-  field_message_from_service: true
   field_smed_id: true
-  field_updated_profile_by_service: true
-  field_updated_profile_by_user: true
   field_user_can_contact: true
-  field_user_status: true
   flag_follow_user: true
   langcode: true
   member_for: true

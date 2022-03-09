@@ -1,0 +1,21 @@
+uuid: d2ee0081-5201-413c-9d78-077d58f7e1e7
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.message.field_rendered_content
+    - message.template.log_group_visibility_change
+  module:
+    - text
+id: message.log_group_visibility_change.field_rendered_content
+field_name: field_rendered_content
+entity_type: message
+bundle: log_group_visibility_change
+label: 'Rendered content'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long

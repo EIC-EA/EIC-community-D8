@@ -2,6 +2,7 @@
 
 namespace Drupal\eic_groups\Hooks;
 
+use Drupal\book\BookManagerInterface;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
@@ -16,6 +17,7 @@ use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
+use Drupal\eic_content\Constants\DefaultContentModerationStates;
 use Drupal\eic_content_wiki_page\WikiPageBookManager;
 use Drupal\eic_groups\Constants\NodeProperty;
 use Drupal\eic_groups\EICGroupsHelper;
@@ -90,6 +92,13 @@ class EntityOperations implements ContainerInjectionInterface {
   private $solrDocumentProcessor;
 
   /**
+   * The book manager.
+   *
+   * @var \Drupal\book\BookManagerInterface
+   */
+  protected $bookManager;
+
+  /**
    * Constructs a new EntityOperations object.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
@@ -104,8 +113,10 @@ class EntityOperations implements ContainerInjectionInterface {
    *   The EIC User helper service.
    * @param \Drupal\oec_group_flex\OECGroupFlexHelper $oec_group_flex_helper
    *   The OEC Group Flex helper service.
-   * @param SolrDocumentProcessor $solr_document_processor
+   * @param \Drupal\eic_search\Service\SolrDocumentProcessor $solr_document_processor
    *   The Solr Document Processor service.
+   * @param \Drupal\book\BookManagerInterface $book_manager
+   *   The book manager.
    */
   public function __construct(
     EntityTypeManagerInterface $entity_type_manager,
@@ -114,7 +125,8 @@ class EntityOperations implements ContainerInjectionInterface {
     PathautoGeneratorInterface $pathauto_generator,
     UserHelper $user_helper,
     OECGroupFlexHelper $oec_group_flex_helper,
-    SolrDocumentProcessor $solr_document_processor
+    SolrDocumentProcessor $solr_document_processor,
+    BookManagerInterface $book_manager
   ) {
     $this->entityTypeManager = $entity_type_manager;
     $this->routeMatch = $route_match;
@@ -123,6 +135,7 @@ class EntityOperations implements ContainerInjectionInterface {
     $this->userHelper = $user_helper;
     $this->oecGroupFlexHelper = $oec_group_flex_helper;
     $this->solrDocumentProcessor = $solr_document_processor;
+    $this->bookManager = $book_manager;
   }
 
   /**
@@ -136,7 +149,8 @@ class EntityOperations implements ContainerInjectionInterface {
       $container->get('pathauto.generator'),
       $container->get('eic_user.helper'),
       $container->get('oec_group_flex.helper'),
-      $container->get('eic_search.solr_document_processor')
+      $container->get('eic_search.solr_document_processor'),
+      $container->get('book.manager')
     );
   }
 
@@ -158,12 +172,14 @@ class EntityOperations implements ContainerInjectionInterface {
       $this->publishGroupWiki($entity);
       // Invalidates group contents cache when the group has been published.
       $this->invalidateGroupContentCache($entity);
+      $this->solrDocumentProcessor->reIndexEntitiesFromGroup($entity);
     }
 
     // The group status has changed to unpublish.
     if ($entity->original->isPublished() && !$entity->isPublished()) {
       // Invalidates group contents cache when the group has been unpublished.
       $this->invalidateGroupContentCache($entity);
+      $this->solrDocumentProcessor->reIndexEntitiesFromGroup($entity);
     }
 
     // If title changed from original we need to reupdate group contents.
@@ -203,15 +219,47 @@ class EntityOperations implements ContainerInjectionInterface {
         $variables['joining_methods'] = $this->oecGroupFlexHelper->getGroupJoiningMethod($entity);
 
         // Get the title and descriptions for each plugin.
-        $variables['visibility']['title'] = $this->eicGroupsHelper->getGroupFlexPluginTitle('visibility', $variables['visibility']['plugin_id']);
-        $variables['visibility']['description'] = $this->eicGroupsHelper->getGroupFlexPluginDescription('visibility', $variables['visibility']['plugin_id']);
+        $variables['visibility']['title'] = $this->eicGroupsHelper->getGroupFlexPluginTitle('visibility', $variables['visibility']['plugin_id'], 'default', $entity->bundle());
+        $variables['visibility']['description'] = $this->eicGroupsHelper->getGroupFlexPluginDescription('visibility', $variables['visibility']['plugin_id'], $entity->bundle());
         foreach ($variables['joining_methods'] as $index => $joining_method) {
           $variables['joining_methods'][$index]['title'] = $this->eicGroupsHelper->getGroupFlexPluginTitle('joining_method', $joining_method['plugin_id']);
-          $variables['joining_methods'][$index]['description'] = $this->eicGroupsHelper->getGroupFlexPluginDescription('joining_method', $joining_method['plugin_id']);
+          $variables['joining_methods'][$index]['description'] = $this->eicGroupsHelper->getGroupFlexPluginDescription('joining_method', $joining_method['plugin_id'], $entity->bundle());
         }
 
         $build += $variables;
         break;
+
+    }
+  }
+
+  /**
+   * Clears cache of wiki parent book node.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The wiki page node.
+   */
+  public function clearWikiPageBookCache(EntityInterface $entity) {
+    if ($entity->bundle() !== 'wiki_page') {
+      return;
+    }
+
+    // If the wiki page is part of the first level, then we clear the book
+    // cache.
+    if (
+      !empty($entity->book['bid']) &&
+      $entity->book['bid'] === $entity->book['pid']
+    ) {
+      $book = $this->entityTypeManager->getStorage('node')
+        ->load($entity->book['bid']);
+
+      $data = $this->bookManager->bookTreeAllData($entity->book['bid'], $book->book, 2);
+      $book_data = reset($data);
+      if (!empty($book_data['below'])) {
+        $wiki_page_nid = reset($book_data['below'])['link']['nid'];
+        if ($entity->id() === $wiki_page_nid) {
+          Cache::invalidateTags($book->getCacheTagsToInvalidate());
+        }
+      }
 
     }
   }
@@ -223,7 +271,7 @@ class EntityOperations implements ContainerInjectionInterface {
     switch ($this->routeMatch->getRouteName()) {
       case 'entity.node.canonical':
         if ($entity->bundle() === 'book') {
-          if ($group = $this->eicGroupsHelper->getGroupByEntity($entity)) {
+          if ($group = $this->eicGroupsHelper->getOwnerGroupByEntity($entity)) {
             // Add empty wiki section message.
             $build['wiki_section_message'] = [
               '#type' => 'item',
@@ -247,7 +295,7 @@ class EntityOperations implements ContainerInjectionInterface {
           // Add wiki page create form url to the build array.
           if ($add_wiki_page_urls = $this->getWikiPageAddFormUrls($entity)) {
             if ($add_wiki_page_urls['add_current_level_wiki_page']->access()) {
-              $build['link_add_current_level_wiki_page_renderable'] = Link::fromTextAndUrl($this->t('Add a new page on the current level'), $add_wiki_page_urls['add_current_level_wiki_page'])
+              $build['link_add_current_level_wiki_page_renderable'] = Link::fromTextAndUrl($this->t('Add page on same level'), $add_wiki_page_urls['add_current_level_wiki_page'])
                 ->toRenderable();
               $build['link_add_current_level_wiki_page_renderable']['#suffix'] = '<br>';
             }
@@ -256,7 +304,7 @@ class EntityOperations implements ContainerInjectionInterface {
               // If the wiki page depth doesn't reach the maximum limit, then we
               // can show the button to add a new child wiki page.
               if (!$entity->book['p' . (WikiPageBookManager::BOOK_MAX_DEPTH + 1)]) {
-                $build['link_add_child_wiki_page_renderable'] = Link::fromTextAndUrl($this->t('Add a new wiki page below this page'), $add_wiki_page_urls['add_child_wiki_page'])
+                $build['link_add_child_wiki_page_renderable'] = Link::fromTextAndUrl($this->t('Add a child page'), $add_wiki_page_urls['add_child_wiki_page'])
                   ->toRenderable();
               }
             }
@@ -307,7 +355,7 @@ class EntityOperations implements ContainerInjectionInterface {
    */
   private function getWikiPageAddFormUrls(EntityInterface $entity, $group = FALSE) {
     if (!($group instanceof GroupInterface)) {
-      if (!$group = $this->eicGroupsHelper->getGroupByEntity($entity)) {
+      if (!$group = $this->eicGroupsHelper->getOwnerGroupByEntity($entity)) {
         return $group;
       }
     }
@@ -351,7 +399,7 @@ class EntityOperations implements ContainerInjectionInterface {
     if (!empty($results)) {
       $group_content = GroupContent::load(reset($results));
       if (($node_book = $group_content->getEntity()) && $node_book instanceof NodeInterface) {
-        $node_book->setPublished();
+        $node_book->set('moderation_state', DefaultContentModerationStates::PUBLISHED_STATE);
         $node_book->save();
       }
     }
@@ -368,12 +416,14 @@ class EntityOperations implements ContainerInjectionInterface {
    */
   protected function createGroupAboutPageMenuLink(EntityInterface $group) {
     foreach (group_content_menu_get_menus_per_group($group) as $group_menu) {
-      if ($group_menu->getGroupContentType()
+      if (
+        $group_menu->getGroupContentType()
           ->getContentPlugin()
-          ->getPluginId() == 'group_content_menu:group_main_menu') {
+          ->getPluginId() == 'group_content_menu:group_main_menu'
+      ) {
         // Create menu item.
         $menu_name = GroupContentMenuInterface::MENU_PREFIX . $group_menu->getEntity()
-            ->id();
+          ->id();
         $menu_item = $this->entityTypeManager->getStorage('menu_link_content')
           ->create([
             'title' => $this->t('About'),
@@ -387,7 +437,8 @@ class EntityOperations implements ContainerInjectionInterface {
         try {
           $menu_item->save();
           return $menu_item;
-        } catch (EntityStorageException $e) {
+        }
+        catch (EntityStorageException $e) {
           return FALSE;
         }
       }

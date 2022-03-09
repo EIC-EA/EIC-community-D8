@@ -2,7 +2,7 @@
 
 <article class="ecl-filelist">
   <header class="ecl-filelist__header">
-    <h1 class="ecl-filelist__title">{{ title }}</h1>
+    <{{file_title_element}} class="ecl-filelist__title">{{ title|striptags }}</{{file_title_element}}>
   </header>
   <div class="ecl-filelist__content">
     <div class="ecl-filelist__body">
@@ -29,22 +29,30 @@
                       extra_classes: 'ecl-filelist__file-stat-icon',
                     } only %}
                   {% endif %}
-                  <span class="ecl-filelist__file-stat-label">{{ stat.label }}</span>
+                  <span class="ecl-filelist__file-stat-label">&nbsp;{{ stat.label }}</span>
                   <span class="ecl-filelist__file-stat-value">{{ stat.value }}</span>
                 </div>
               {% endfor %}
             </div>
           </header>
           <figure class="ecl-filelist__file-image-wrapper">
-            {% include '@ecl-twig/ec-component-icon/ecl-icon.html.twig' with {
-              icon: {
-                size: 'm',
-                path: icon_file_path,
-                type: 'custom',
-                name: (file.mime_type in ['doc', 'dwg', 'html', 'ppt', 'xls', 'zip', 'txt'] ? 'document_' ~ file.mime_type : 'document'),
-              },
-              extra_classes: 'ecl-filelist__file-image',
-            } only %}
+            {% if file.image is not empty %}
+              <img class="ecl-filelist__file-image" src="{{ file.image.src }}" alt="{{ file.image.alt }}">
+            {% else %}
+              {% if (file.mime_type == 'png' or file.mime_type == 'jpg' or file.mime_type == 'jpeg' or file.mime_type == 'gif') %}
+                {% set mime_type = 'img' %}
+              {% else %}
+                {% set mime_type = file.mime_type %}
+              {% endif %}
+              {% include '@ecl-twig/ec-component-icon/ecl-icon.html.twig' with {
+                icon: {
+                  size: 'm',
+                  path: icon_file_path,
+                  type: 'custom',
+                  name: (mime_type in ['doc', 'dwg', 'html', 'ppt', 'xls', 'zip', 'txt', 'img'] ? 'document_' ~ mime_type : 'document'),
+                },
+              } only %}
+            {% endif %}
           </figure>
           <footer class="ecl-filelist__file-footer">
             {% include '@ecl-twig/ec-component-link/ecl-link.html.twig' with {

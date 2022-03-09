@@ -1,0 +1,8 @@
+uuid: 84e5b481-1c5e-4b4d-bcf6-223d86404ea6
+langcode: en
+status: true
+dependencies: {  }
+name: 'Contact - category'
+vid: contact_category
+description: ''
+weight: 0

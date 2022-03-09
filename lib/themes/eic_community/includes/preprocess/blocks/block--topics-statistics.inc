@@ -47,7 +47,7 @@ function eic_community_preprocess_block__eic_topics_statistics_block(&$variables
         $icon_name = 'user';
         break;
 
-      case 'organization':
+      case 'organisation':
         $icon_name = 'company';
         break;
 

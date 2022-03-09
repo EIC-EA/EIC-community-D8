@@ -9,6 +9,8 @@ namespace Drupal\eic_search\Search\Sources;
  */
 interface SourceTypeInterface {
 
+  const DEFAULT = 'default';
+
   const LAYOUT_COMPACT = 'compact';
 
   const LAYOUT_COLUMNS = 'columns';
@@ -128,11 +130,18 @@ interface SourceTypeInterface {
   public function allowPagination(): bool;
 
   /**
-   * Check if Source allow to have a date filter.
+   * Get the number of items to load by batch.
    *
-   * @return bool
+   * @return int
    */
-  public function supportDateFilter(): bool;
+  public function getLoadMoreBatchItems(): int;
+
+  /**
+   * Return the solr fields id for "from" and "to" date field.
+   *
+   * @return array
+   */
+  public function getRegistrationDateIntervalField(): array;
 
   /**
    * Return the solr fields id for "from" and "to" date field.
@@ -149,10 +158,51 @@ interface SourceTypeInterface {
   public function prefilterByGroupVisibility(): bool;
 
   /**
+   * Content will be ignored by user_id.
+   *
+   * @return bool
+   */
+  public function ignoreContentFromCurrentUser(): bool;
+
+  /**
+   * Prefilter content by current user ID (field will be taken from the getAuthorFieldId).
+   *
+   * @return bool
+   */
+  public function prefilterByCurrentUser(): bool;
+
+  /**
+   * Get the SOLR field for the user_id (author).
+   *
+   * @return string
+   */
+  public function getAuthorFieldId(): string;
+
+  /**
    * Prefilter results by excluding the current group.
    *
    * @return bool
    */
   public function excludingCurrentGroup(): bool;
 
+  /**
+   * Prefilter by groups where current user is a member.
+   *
+   * @return bool
+   */
+  public function prefilterByGroupsMembership(): bool;
+
+  /**
+   * Get the label for the filter "my groups".
+   *
+   * @return string
+   */
+  public function getLabelFilterMyGroups(): string;
+
+  /**
+   * Get fields to prefilter empty values.
+   *
+   * @return array
+   */
+  public function getFieldsToFilterEmptyValue(): array;
 }

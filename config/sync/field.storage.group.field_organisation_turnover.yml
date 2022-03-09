@@ -1,0 +1,21 @@
+uuid: c70c65a6-2d1d-42de-8675-2268bbe62afd
+langcode: en
+status: true
+dependencies:
+  module:
+    - group
+id: group.field_organisation_turnover
+field_name: field_organisation_turnover
+entity_type: group
+type: string
+settings:
+  max_length: 255
+  case_sensitive: false
+  is_ascii: false
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

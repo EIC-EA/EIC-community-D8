@@ -5,15 +5,12 @@
   word-wrap: break-word;
   text-decoration: none;
   padding: map-get($ecl-spacing, 'xs') map-get($ecl-spacing, 's');
+    background-color: map-get($ecl-colors, 'grey-15');
   &:hover {
     text-decoration: underline;
   }
   .ecl-teaser--is-highlighted & {
     background-color: map-get($ecl-colors, 'white');
-  }
-
-  @include adjust-from-section-color() {
-    background-color: map-get($ecl-colors, 'grey-15');
   }
 
   &--is-public {
@@ -38,8 +35,9 @@
 
   &--removable {
     font-weight: bold;
+    pointer-events: auto;
+    cursor: pointer;
     & .ecl-tag__icon {
-      cursor: pointer;
       color: $ecl-color-grey;
     }
     &:hover {

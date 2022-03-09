@@ -11,6 +11,7 @@ dependencies:
     - field.field.group.event.field_document_presentations
     - field.field.group.event.field_documents
     - field.field.group.event.field_event_registration_date
+    - field.field.group.event.field_funding_source
     - field.field.group.event.field_header_visual
     - field.field.group.event.field_image
     - field.field.group.event.field_link
@@ -41,90 +42,90 @@ bundle: event
 mode: teaser
 content:
   content_moderation_control:
-    weight: -20
     settings: {  }
     third_party_settings: {  }
+    weight: -20
     region: content
   field_body:
-    weight: 12
+    type: text_default
     label: above
     settings: {  }
     third_party_settings: {  }
-    type: text_default
+    weight: 12
     region: content
   field_date_range:
-    weight: 17
+    type: daterange_default
     label: above
     settings:
-      separator: '-'
-      format_type: medium
       timezone_override: ''
+      format_type: medium
+      separator: '-'
     third_party_settings: {  }
-    type: daterange_default
+    weight: 17
     region: content
   field_document_additional:
-    weight: 23
+    type: entity_reference_label
     label: above
     settings:
       link: true
     third_party_settings: {  }
-    type: entity_reference_label
+    weight: 23
     region: content
   field_document_agenda:
-    weight: 21
+    type: entity_reference_label
     label: above
     settings:
       link: true
     third_party_settings: {  }
-    type: entity_reference_label
+    weight: 21
     region: content
   field_document_presentations:
-    weight: 22
+    type: entity_reference_label
     label: above
     settings:
       link: true
     third_party_settings: {  }
-    type: entity_reference_label
+    weight: 22
     region: content
   field_documents:
     type: entity_reference_entity_view
-    weight: 31
     label: above
     settings:
       view_mode: default
       link: false
     third_party_settings: {  }
+    weight: 31
     region: content
   field_event_registration_date:
-    weight: 30
+    type: daterange_default
     label: above
     settings:
-      separator: '-'
-      format_type: medium
       timezone_override: ''
+      format_type: medium
+      separator: '-'
     third_party_settings: {  }
-    type: daterange_default
+    weight: 30
     region: content
   field_header_visual:
     type: entity_reference_entity_view
-    weight: 20
     label: above
     settings:
       view_mode: default
       link: false
     third_party_settings: {  }
+    weight: 20
     region: content
   field_image:
     type: entity_reference_entity_view
-    weight: 19
     label: above
     settings:
       view_mode: default
       link: false
     third_party_settings: {  }
+    weight: 19
     region: content
   field_link:
-    weight: 15
+    type: link
     label: above
     settings:
       trim_length: 80
@@ -133,98 +134,98 @@ content:
       rel: ''
       target: ''
     third_party_settings: {  }
-    type: link
+    weight: 15
     region: content
   field_location:
-    weight: 18
+    type: address_default
     label: above
     settings: {  }
     third_party_settings: {  }
-    type: address_default
+    weight: 18
     region: content
   field_location_type:
-    weight: 32
+    type: list_default
     label: above
     settings: {  }
     third_party_settings: {  }
-    type: list_default
+    weight: 32
     region: content
   field_organised_by:
-    weight: 14
+    type: string
     label: above
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    type: string
+    weight: 14
     region: content
   field_related_groups:
-    weight: 27
+    type: entity_reference_label
     label: above
     settings:
       link: true
     third_party_settings: {  }
-    type: entity_reference_label
+    weight: 27
     region: content
   field_smed_id:
-    weight: 28
+    type: string
     label: above
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    type: string
+    weight: 28
     region: content
   field_social_links:
-    weight: 16
+    type: font_awesome
     label: above
     settings:
       icon_type: common
       orientation: vertical
       new_tab: true
     third_party_settings: {  }
-    type: font_awesome
+    weight: 16
     region: content
   field_tag_line:
-    weight: 13
+    type: string
     label: above
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    type: string
+    weight: 13
     region: content
   field_vocab_event_type:
-    weight: 11
+    type: entity_reference_label
     label: above
     settings:
       link: true
     third_party_settings: {  }
-    type: entity_reference_label
+    weight: 11
     region: content
   field_vocab_geo:
-    weight: 26
+    type: entity_reference_label
     label: above
     settings:
       link: true
     third_party_settings: {  }
-    type: entity_reference_label
+    weight: 26
     region: content
   field_vocab_language:
-    weight: 25
+    type: entity_reference_label
     label: above
     settings:
       link: true
     third_party_settings: {  }
-    type: entity_reference_label
+    weight: 25
     region: content
   field_vocab_topics:
-    weight: 24
+    type: entity_reference_label
     label: above
     settings:
       link: true
     third_party_settings: {  }
-    type: entity_reference_label
+    weight: 24
     region: content
   field_website_url:
-    weight: 33
+    type: link
     label: above
     settings:
       trim_length: 80
@@ -233,36 +234,37 @@ content:
       rel: ''
       target: ''
     third_party_settings: {  }
-    type: link
+    weight: 33
     region: content
   field_welcome_message:
-    weight: 29
+    type: text_default
     label: above
     settings: {  }
     third_party_settings: {  }
-    type: text_default
+    weight: 29
     region: content
   flag_follow_group:
-    weight: 10
     settings: {  }
     third_party_settings: {  }
+    weight: 10
     region: content
   flag_recommend_group:
-    weight: 10
     settings: {  }
     third_party_settings: {  }
+    weight: 10
     region: content
   label:
-    label: hidden
     type: string
-    weight: -5
-    region: content
+    label: hidden
     settings:
       link_to_entity: false
     third_party_settings: {  }
+    weight: -5
+    region: content
 hidden:
   changed: true
   created: true
+  field_funding_source: true
   langcode: true
   search_api_excerpt: true
   uid: true

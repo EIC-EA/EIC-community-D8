@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - field.field.message.sub_group_content_updated.field_event_executing_user
+    - field.field.message.sub_group_content_updated.field_group_ref
     - field.field.message.sub_group_content_updated.field_referenced_node
     - message.template.sub_group_content_updated
 id: message.sub_group_content_updated.default
@@ -12,23 +13,33 @@ bundle: sub_group_content_updated
 mode: default
 content:
   field_event_executing_user:
+    type: entity_reference_autocomplete
     weight: 0
+    region: content
     settings:
       match_operator: CONTAINS
       match_limit: 10
       size: 60
       placeholder: ''
     third_party_settings: {  }
+  field_group_ref:
     type: entity_reference_autocomplete
+    weight: 2
     region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
   field_referenced_node:
+    type: entity_reference_autocomplete
     weight: 1
+    region: content
     settings:
       match_operator: CONTAINS
       match_limit: 10
       size: 60
       placeholder: ''
     third_party_settings: {  }
-    type: entity_reference_autocomplete
-    region: content
 hidden: {  }

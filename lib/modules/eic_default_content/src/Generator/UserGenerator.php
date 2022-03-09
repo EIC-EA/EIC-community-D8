@@ -61,6 +61,13 @@ class UserGenerator extends CoreGenerator {
           'site_admin',
         ],
       ],
+      [
+        'name' => 'web_service',
+        'pass' => 'secret',
+        'roles' => [
+          'service_authentication',
+        ],
+      ],
     ];
 
     foreach ($users as $key => $user) {
@@ -78,7 +85,7 @@ class UserGenerator extends CoreGenerator {
       $user->save();
     }
 
-    for ($i = 0; $i <= 50; $i++) {
+    for ($i = 0; $i <= 10; $i++) {
       $user = User::create($trusted_user_data + [
           'name' => 'trusted_user' . $i,
           'init' => 'email',

@@ -1,10 +1,16 @@
+{% set title_element = title_element|default('h2') %}
+{% if title is not empty %}
+  <{{ title_element }} class="ecl-navigation-list__title">{{ title }}</{{ title_element }}>
+{% endif %}
 {% if items is not empty %}
-  <ul class="ecl-navigation-list__items">
+  <ul class="ecl-navigation-list__items {{ extra_classes }}">
     {% for item in items %}
-      <li class="ecl-navigation-list__item {{ item.extra_classes }}" aria-active="{{ item.is_active ? 'true' : 'false' }}">
-        <a class="ecl-link ecl-navigation-list__link" href="{{ item.link.path }}">
-          {{ item.link.label }}
-            <span class="ecl-navigation-list__link-controls">
+      <li class="ecl-navigation-list__item {{ item.is_active ? 'ecl-navigation-list__item--current' : '' }} {{ item.extra_classes }}" aria-active="{{ item.is_active ? 'true' : 'false' }}">
+        <div class="ecl-link ecl-navigation-list__link">
+          <a  href="{{ item.link.path }}{{ anchor }}">
+            {{ item.link.label }}
+          </a>
+          <span class="ecl-navigation-list__link-controls">
             {% if item.updates %}
               {% include "@theme/patterns/components/update-indicator.html.twig" with item.updates|default({})|merge({
                 extra_classes: 'ecl-navigation-list__update-indicator',
@@ -21,13 +27,15 @@
                 extra_classes: 'ecl-navigation-list__item-icon',
               } only %}
             {% endif %}
-          <span>
-        </a>
+          </span>
+        </div>
         {% if item.items is not empty %}
           {% include "@theme/patterns/components/navigation-list/navigation-list-items.html.twig" with {
             icon_file_path: icon_file_path,
             items: item.items,
             collapse: null,
+            anchor: anchor,
+            extra_classes: 'ecl-navigation-list--child'
           } only %}
         {% endif %}
       </li>

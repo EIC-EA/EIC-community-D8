@@ -4,7 +4,9 @@ status: true
 dependencies:
   config:
     - field.field.profile.member.field_body
+    - field.field.profile.member.field_comments_notifications
     - field.field.profile.member.field_cv_link
+    - field.field.profile.member.field_interest_notifications
     - field.field.profile.member.field_location_address
     - field.field.profile.member.field_social_links
     - field.field.profile.member.field_vocab_geo
@@ -16,6 +18,7 @@ dependencies:
     - profile.type.member
   module:
     - address
+    - eic_content
     - link
     - social_link_field
     - text
@@ -25,94 +28,100 @@ bundle: member
 mode: default
 content:
   field_body:
+    type: text_textarea
     weight: 0
+    region: content
     settings:
       rows: 5
       placeholder: ''
     third_party_settings: {  }
-    type: text_textarea
-    region: content
   field_cv_link:
+    type: link_default
     weight: 1
+    region: content
     settings:
       placeholder_url: ''
       placeholder_title: ''
     third_party_settings: {  }
-    type: link_default
-    region: content
   field_location_address:
-    weight: 7
+    type: address_default
+    weight: 6
+    region: content
     settings: {  }
     third_party_settings: {  }
-    type: address_default
-    region: content
   field_social_links:
-    weight: 31
+    type: social_links
+    weight: 9
+    region: content
     settings:
       select_social: false
       disable_weight: false
     third_party_settings: {  }
-    type: social_links
-    region: content
   field_vocab_geo:
-    weight: 4
-    settings:
-      match_operator: CONTAINS
-      match_limit: 10
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
     type: entity_reference_autocomplete
-    region: content
-  field_vocab_job_title:
-    weight: 27
-    settings:
-      match_operator: CONTAINS
-      match_limit: 10
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
-    type: entity_reference_autocomplete
-    region: content
-  field_vocab_language:
-    weight: 26
-    settings:
-      match_operator: CONTAINS
-      match_limit: 10
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
-    type: entity_reference_autocomplete
-    region: content
-  field_vocab_topic_expertise:
-    weight: 5
-    settings:
-      match_operator: CONTAINS
-      match_limit: 10
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
-    type: entity_reference_autocomplete
-    region: content
-  field_vocab_topic_interest:
-    weight: 6
-    settings:
-      match_operator: CONTAINS
-      match_limit: 10
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
-    type: entity_reference_autocomplete
-    region: content
-  field_vocab_user_type:
     weight: 3
+    region: content
     settings:
       match_operator: CONTAINS
       match_limit: 10
       size: 60
       placeholder: ''
     third_party_settings: {  }
+  field_vocab_job_title:
     type: entity_reference_autocomplete
+    weight: 8
     region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_vocab_language:
+    type: entity_reference_autocomplete
+    weight: 7
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_vocab_topic_expertise:
+    type: entity_tree
+    weight: 4
+    region: content
+    settings:
+      match_top_level_limit: '0'
+      disable_top_choices: '1'
+      items_to_load: '25'
+      load_all: 0
+      auto_select_parents: 0
+      ignore_current_user: 0
+    third_party_settings: {  }
+  field_vocab_topic_interest:
+    type: entity_tree
+    weight: 5
+    region: content
+    settings:
+      match_top_level_limit: '0'
+      disable_top_choices: '1'
+      items_to_load: '25'
+      load_all: 0
+      auto_select_parents: 0
+      ignore_current_user: 0
+    third_party_settings: {  }
+  field_vocab_user_type:
+    type: entity_reference_autocomplete
+    weight: 2
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
 hidden:
+  field_comments_notifications: true
+  field_interest_notifications: true
   is_default: true

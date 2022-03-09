@@ -14,21 +14,21 @@ bundle: social_media
 mode: default
 content:
   field_social_media_links:
+    type: typed_link
     weight: 27
+    region: content
     settings:
       placeholder_url: ''
       placeholder_title: ''
     third_party_settings: {  }
-    type: typed_link
-    region: content
   field_title:
+    type: string_textfield
     weight: 26
+    region: content
     settings:
       size: 60
       placeholder: ''
     third_party_settings: {  }
-    type: string_textfield
-    region: content
   info:
     type: string_textfield
     weight: -5

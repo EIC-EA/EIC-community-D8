@@ -16,14 +16,14 @@
               {{ item.content }}
             {% else %}
               {% include "@theme/patterns/components/author.html.twig" with item|default({})|merge({
-                icon_file_path: icon_file_path,
                 size: 'medium',
                 display_avatar_only: grid|default(false),
               }) only %}
             {% endif %}
           </div>
         {% endfor %}
-        {% if is_collapsible %}
+
+        {% if  is_collapsible %}
           <div class="ecl-featured-list__item ecl-featured-list__item--expand">
             {% include "@ecl-twig/ec-component-button/ecl-button.html.twig" with {
               icon_position: 'after',
@@ -31,7 +31,7 @@
                 path: icon_file_path,
                 type: 'ui',
                 name: 'rounded-arrow',
-                transform: 'rotate-90',
+                transform: collapse_icon_transform|default('rotate-90'),
                 size: '2xs',
               } : {},
               label: collapse_label|default('Show all'),
@@ -40,6 +40,24 @@
             } %}
           </div>
         {% endif %}
+
+        {% if call_to_action.link is not empty %}
+            {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with {
+              link: call_to_action.link|default({})|merge({
+                type: 'standalone',
+                icon_position: 'after',
+              }),
+              icon: icon_file_path ? {
+                path: icon_file_path,
+                name: call_to_action.icon.name|default('rounded-arrow'),
+                type: call_to_action.icon.type|default('ui'),
+                size: call_to_action.icon.size|default('xs'),
+                transform: call_to_action.icon.transform|default('rotate-90')
+              } : {},
+              extra_classes: 'ecl-featured-content-collection__call-to-action ecl-link--button ecl-link--button-ghost',
+            } only %}
+        {% endif %}
+
       </div>
     </div>
   </div>

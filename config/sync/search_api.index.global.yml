@@ -2,32 +2,12 @@ uuid: 590b9406-6314-4246-a658-8e5ff93d713d
 langcode: en
 status: true
 dependencies:
-  module:
-    - search_api_solr
-    - group
-    - user
-    - file
-    - media
-    - taxonomy
-    - content_moderation
-    - message
-    - comment
-    - node
-    - eic_private_content
-    - path
-    - paragraphs
-    - profile
-    - search_api
-    - address
-    - eic_group_statistics
-    - eic_search
-    - flag_search_api
-    - search_api_attachments
-    - flag
-    - group_permissions
   config:
     - field.storage.group.field_date_range
     - field.storage.group.field_location
+    - field.storage.group.field_event_registration_date
+    - field.storage.group.field_vocab_event_type
+    - field.storage.group.field_funding_source
     - field.storage.user.field_first_name
     - field.storage.user.field_last_name
     - field.storage.media.oe_media_image
@@ -35,7 +15,10 @@ dependencies:
     - field.storage.group.field_location_type
     - field.storage.group.field_organisation_type
     - field.storage.group.field_vocab_geo
+    - field.storage.group.field_vocab_services_products
+    - field.storage.group.field_vocab_target_markets
     - field.storage.group.field_thumbnail
+    - field.storage.media.oe_media_file
     - field.storage.group.field_image
     - field.storage.group.field_vocab_topics
     - field.storage.group.field_body
@@ -56,12 +39,12 @@ dependencies:
     - field.storage.node.field_location
     - field.storage.node.field_vocab_event_type
     - field.storage.node.field_image
+    - field.storage.node.field_introduction
     - field.storage.node.field_language
     - field.storage.node.field_location_type
     - field.storage.node.field_vocab_geo
     - field.storage.node.field_gallery_slides
     - field.storage.paragraph.field_gallery_slide_legend
-    - field.storage.media.oe_media_file
     - field.storage.paragraph.field_gallery_slide_media
     - field.storage.node.field_date_range
     - field.storage.node.field_subtitle
@@ -76,24 +59,45 @@ dependencies:
     - search_api.server.global
     - core.entity_view_mode.group.no_html
     - core.entity_view_mode.node.no_html
+  module:
+    - search_api_solr
+    - flag
+    - taxonomy
+    - group
+    - user
+    - file
+    - media
+    - content_moderation
+    - message
+    - comment
+    - node
+    - eic_private_content
+    - path
+    - paragraphs
+    - profile
+    - search_api
+    - address
+    - eic_events
+    - eic_group_statistics
+    - eic_search
+    - flag_search_api
+    - search_api_attachments
+    - group_permissions
 third_party_settings:
   search_api_solr:
     finalize: false
     commit_before_finalize: false
     commit_after_finalize: false
-    multilingual:
-      limit_to_content_language: false
-      include_language_independent: true
     highlighter:
       maxAnalyzedChars: 51200
       fragmenter: gap
+      usePhraseHighlighter: true
+      highlightMultiTerm: true
+      preserveMulti: false
       regex:
         slop: 0.5
         pattern: blank
         maxAnalyzedChars: 10000
-      usePhraseHighlighter: true
-      highlightMultiTerm: true
-      preserveMulti: false
       highlight:
         mergeContiguous: false
         requireFieldMatch: false
@@ -117,6 +121,9 @@ third_party_settings:
       index_prefix: ''
       collection: ''
       timezone: ''
+    multilingual:
+      limit_to_content_language: false
+      include_language_independent: true
 id: global
 name: Global
 description: ''
@@ -462,6 +469,14 @@ field_settings:
       module:
         - file
         - media
+  content_introduction_string:
+    label: 'Introduction » Processed text'
+    datasource_id: 'entity:node'
+    property_path: 'field_introduction:processed'
+    type: text
+    dependencies:
+      config:
+        - field.storage.node.field_introduction
   content_is_private:
     label: 'Only visible to community members'
     datasource_id: 'entity:node'
@@ -507,6 +522,18 @@ field_settings:
     dependencies:
       module:
         - node
+  content_teaser_image_fid:
+    label: 'Image teaser » Media » Image » File » File ID'
+    datasource_id: 'entity:node'
+    property_path: 'field_image:entity:oe_media_image:entity:fid'
+    type: integer
+    dependencies:
+      config:
+        - field.storage.media.oe_media_image
+        - field.storage.node.field_image
+      module:
+        - file
+        - media
   content_title:
     label: '[Content] Title'
     datasource_id: 'entity:node'
@@ -567,6 +594,48 @@ field_settings:
         - field.storage.node.field_discussion_type
       module:
         - node
+  event_funding_source_string:
+    label: 'Funding source » Taxonomy term » Name'
+    datasource_id: 'entity:group'
+    property_path: 'field_funding_source:entity:name'
+    type: string
+    dependencies:
+      config:
+        - field.storage.group.field_funding_source
+      module:
+        - taxonomy
+  event_registration_date_end:
+    label: 'Event registration date » End date value'
+    datasource_id: 'entity:group'
+    property_path: 'field_event_registration_date:end_value'
+    type: date
+    dependencies:
+      config:
+        - field.storage.group.field_event_registration_date
+  event_registration_date_start:
+    label: 'Event registration date'
+    datasource_id: 'entity:group'
+    property_path: field_event_registration_date
+    type: date
+    dependencies:
+      config:
+        - field.storage.group.field_event_registration_date
+  event_teaser_fid:
+    label: 'Thumbnail image » Media » Image » File » File ID'
+    datasource_id: 'entity:group'
+    property_path: 'field_image:entity:oe_media_image:entity:fid'
+    type: integer
+    dependencies:
+      config:
+        - field.storage.group.field_image
+        - field.storage.media.oe_media_image
+      module:
+        - file
+        - media
+  event_weight_state:
+    label: 'Event weight state'
+    property_path: event_weight_state
+    type: integer
   field_share_message:
     label: 'Share message'
     datasource_id: 'entity:message'
@@ -619,6 +688,22 @@ field_settings:
     type: integer
     indexed_locked: true
     type_locked: true
+  flagging_entity_id:
+    label: 'Entity ID'
+    datasource_id: 'entity:flagging'
+    property_path: entity_id
+    type: integer
+    dependencies:
+      module:
+        - flag
+  flagging_flag_id:
+    label: Flag
+    datasource_id: 'entity:flagging'
+    property_path: flag_id
+    type: string
+    dependencies:
+      module:
+        - flag
   group_changed:
     label: '[Group] Changed on'
     datasource_id: 'entity:group'
@@ -687,6 +772,16 @@ field_settings:
       module:
         - file
         - media
+  group_event_type_string:
+    label: 'Event type » Taxonomy term » Name'
+    datasource_id: 'entity:group'
+    property_path: 'field_vocab_event_type:entity:name'
+    type: string
+    dependencies:
+      config:
+        - field.storage.group.field_vocab_event_type
+      module:
+        - taxonomy
   group_field_body:
     label: '[Group] Body'
     datasource_id: 'entity:group'
@@ -796,6 +891,16 @@ field_settings:
     dependencies:
       module:
         - content_moderation
+  group_organisation_type_string:
+    label: 'Organisation type » Taxonomy term » Name'
+    datasource_id: 'entity:group'
+    property_path: 'field_organisation_type:entity:name'
+    type: string
+    dependencies:
+      config:
+        - field.storage.group.field_organisation_type
+      module:
+        - taxonomy
   group_statistic_comments:
     label: 'Group statistics - Comments'
     property_path: group_statistic_comments
@@ -828,6 +933,18 @@ field_settings:
     dependencies:
       module:
         - group
+  group_teaser_fid:
+    label: 'Thumbnail image » Media » File » File » File ID'
+    datasource_id: 'entity:group'
+    property_path: 'field_thumbnail:entity:oe_media_file:entity:fid'
+    type: integer
+    dependencies:
+      config:
+        - field.storage.group.field_thumbnail
+        - field.storage.media.oe_media_file
+      module:
+        - file
+        - media
   group_teaser_url_string:
     label: 'Thumbnail image » Media » Image » File » URI » Root-relative file URL'
     datasource_id: 'entity:group'
@@ -940,11 +1057,33 @@ field_settings:
         - field.storage.node.field_vocab_topics
       module:
         - node
+  message_node_ref_field_vocab_topics_name:
+    label: 'Referenced node » Content » Topics » Taxonomy term » Name'
+    datasource_id: 'entity:message'
+    property_path: 'field_referenced_node:entity:field_vocab_topics:entity:name'
+    type: string
+    dependencies:
+      config:
+        - field.storage.message.field_referenced_node
+        - field.storage.node.field_vocab_topics
+      module:
+        - node
+        - taxonomy
   message_node_ref_id:
     label: 'Referenced node » Content » ID'
     datasource_id: 'entity:message'
     property_path: 'field_referenced_node:entity:nid'
     type: integer
+    dependencies:
+      config:
+        - field.storage.message.field_referenced_node
+      module:
+        - node
+  node_type:
+    label: 'Referenced node » Content » Content type'
+    datasource_id: 'entity:message'
+    property_path: 'field_referenced_node:entity:type'
+    type: string
     dependencies:
       config:
         - field.storage.message.field_referenced_node
@@ -958,6 +1097,26 @@ field_settings:
     dependencies:
       config:
         - field.storage.message.field_operation_type
+  organisation_services_products:
+    label: 'Services and products » Taxonomy term » Name'
+    datasource_id: 'entity:group'
+    property_path: 'field_vocab_services_products:entity:name'
+    type: string
+    dependencies:
+      config:
+        - field.storage.group.field_vocab_services_products
+      module:
+        - taxonomy
+  organisation_target_market_name:
+    label: 'Target markets » Taxonomy term » Name'
+    datasource_id: 'entity:group'
+    property_path: 'field_vocab_target_markets:entity:name'
+    type: string
+    dependencies:
+      config:
+        - field.storage.group.field_vocab_target_markets
+      module:
+        - taxonomy
   path:
     label: 'Referenced node » Content » URL alias'
     datasource_id: 'entity:message'
@@ -1000,7 +1159,9 @@ field_settings:
           content_moderation_state: ''
         'entity:flagging':
           bookmark_content: ''
+          follow_content: ''
           follow_group: ''
+          follow_taxonomy_term: ''
           follow_user: ''
           highlight_content: ''
           like_comment: ''
@@ -1010,33 +1171,74 @@ field_settings:
           request_archive_comment: ''
           request_archive_content: ''
           request_archive_group: ''
+          request_block_group: ''
           request_delete_comment: ''
           request_delete_content: ''
           request_delete_group: ''
+          transfer_owner_request_group: ''
         'entity:group':
+          event: ''
           group: no_html
+          organisation: ''
         'entity:group_content':
+          event-group_membership: ''
+          event-group_membership_request: ''
+          event-group_node-book: ''
+          event-group_node-discussion: ''
+          event-group_node-document: ''
+          event-group_node-gallery: ''
+          event-group_node-news: ''
+          event-group_node-page: ''
+          event-group_node-story: ''
+          event-group_node-video: ''
+          event-group_node-wiki_page: ''
+          event-group_request_archival: ''
+          event-group_request_delete: ''
           group-group_invitation: ''
           group-group_membership: ''
           group-group_membership_request: ''
           group-group_node-book: ''
           group-group_node-discussion: ''
           group-group_node-document: ''
+          group-group_node-event: ''
           group-group_node-gallery: ''
+          group-group_node-video: ''
           group-group_node-wiki_page: ''
           group-group_request_archival: ''
+          group-group_request_block: ''
           group-group_request_delete: ''
+          group_content_type_7f62828e3a84b: ''
+          group_content_type_dd4142e7f0cf7: ''
           group_content_type_ddd92dce39526: ''
+          organisation-group_membership: ''
+          organisation-group_node-event: ''
+          organisation-group_node-news: ''
         'entity:group_permission':
           group_permission: ''
+        'entity:message':
+          stream_article_insert_update: ''
+          stream_comment_insert_update: ''
+          stream_discussion_insert_update: ''
+          stream_document_insert_update: ''
+          stream_event_insert_update: ''
+          stream_gallery_insert_update: ''
+          stream_news_insert_update: ''
+          stream_photo_album_insert_update: ''
+          stream_photo_insert_update: ''
+          stream_share_content: ''
+          stream_share_insert_update: ''
+          stream_video_insert_update: ''
+          stream_wiki_page_insert_update: ''
         'entity:node':
           book: no_html
           discussion: no_html
           document: no_html
+          event: ''
           gallery: no_html
           news: no_html
           page: no_html
           story: no_html
+          video: ''
           wiki_page: no_html
         'entity:user':
           user: default
@@ -1352,11 +1554,13 @@ datasource_settings:
         - stream_discussion_insert_update
         - stream_document_insert_update
         - stream_event_insert_update
+        - stream_gallery_insert_update
         - stream_news_insert_update
         - stream_photo_album_insert_update
         - stream_photo_insert_update
         - stream_share_content
         - stream_share_insert_update
+        - stream_video_insert_update
         - stream_wiki_page_insert_update
     languages:
       default: true
@@ -1375,6 +1579,21 @@ datasource_settings:
 processor_settings:
   add_url: {  }
   address_abbreviations_to_full_form:
+    weights:
+      preprocess_index: -20
+      preprocess_query: -20
+    content_country_code:
+      enable: 0
+      concat: 0
+    content_event_locality:
+      enable: 0
+      concat: 0
+    group_country_code:
+      enable: 0
+      concat: 0
+    group_event_locality:
+      enable: 0
+      concat: 0
     user_profile_city_string:
       enable: 0
       concat: 0
@@ -1383,10 +1602,9 @@ processor_settings:
       concat: 0
     fields: {  }
     all_fields: false
-    weights:
-      preprocess_index: -20
-      preprocess_query: -20
   aggregated_field: {  }
+  entity_type: {  }
+  event_weight_state: {  }
   file_attachments:
     excluded_extensions: 'aif art avi bmp gif ico mov oga ogv png psd ra ram rgb flv'
     number_indexed: 0
@@ -1410,13 +1628,28 @@ processor_settings:
       - files
       - events
   hierarchy:
+    weights:
+      preprocess_index: -45
     fields:
       content_field_vocab_geo: taxonomy_term-parent
       content_field_vocab_topics: taxonomy_term-parent
       group_field_vocab_geo: taxonomy_term-parent
       group_field_vocab_topics: taxonomy_term-parent
+  html_filter:
     weights:
-      preprocess_index: -45
+      preprocess_index: -15
+      preprocess_query: -15
+    all_fields: false
+    fields:
+      - content_introduction_string
+    title: false
+    alt: false
+    tags:
+      b: 2
+      h1: 5
+      h2: 3
+      h3: 2
+      strong: 2
   language_with_fallback: {  }
   rendered_item: {  }
   reverse_entity_references: {  }
@@ -1427,7 +1660,7 @@ tracker_settings:
   default:
     indexing_order: fifo
 options:
-  index_directly: true
   cron_limit: 50
+  index_directly: true
   track_changes_in_references: true
 server: global

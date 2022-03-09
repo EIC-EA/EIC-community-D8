@@ -11,11 +11,11 @@ source: 'oembed:video'
 queue_thumbnail_downloads: false
 new_revision: false
 source_configuration:
+  source_field: oe_media_oembed_video
   thumbnails_directory: 'public://oembed_thumbnails'
   providers:
     - YouTube
     - Vimeo
     - Dailymotion
-  source_field: oe_media_oembed_video
 field_map:
   title: name

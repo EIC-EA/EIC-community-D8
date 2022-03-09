@@ -1,3 +1,11 @@
+eic_admin.settings:
+  title: 'Community settings'
+  description: 'Manage community settings.'
+  parent: system.admin_config
+  route_name: eic_admin.settings
+  weight: -50
+  # If menu_name is omitted, the "Tools" menu will be used.
+  menu_name: administration
 eic_admin.dashboard:
   title: 'Community'
   description: 'Manage community.'
@@ -14,10 +22,17 @@ eic_admin.logs:
 eic_admin.groups:
   title: 'Groups'
   description: 'Manage all Community Groups.'
-  route_name: view.admin_groups.page_admin_groups
+  route_name: eic_admin.groups
   parent: eic_admin.dashboard
-eic_admin.events:
+eic_admin.groups.groups:
+  title: 'Groups'
+  description: 'Manage all Community Groups.'
+  route_name: view.admin_groups.page_admin_groups
+  parent: eic_admin.groups
+  weight: 1
+eic_admin.groups.events:
   title: 'Events'
   description: 'Manage all Community Events.'
   route_name: view.admin_groups.page_admin_events
-  parent: eic_admin.dashboard
+  parent: eic_admin.groups
+  weight: 2

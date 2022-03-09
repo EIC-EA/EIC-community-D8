@@ -1,0 +1,48 @@
+uuid: ff243540-91e2-4dee-a80a-96069c7b1db5
+langcode: en
+status: true
+dependencies: {  }
+id: upgrade_d7_node_complete_article_external_contributors_paragraph
+class: Drupal\migrate\Plugin\Migration
+field_plugin_method: null
+cck_plugin_method: null
+migration_tags:
+  - 'Drupal 7'
+  - Content
+migration_group: migrate_drupal_7
+label: 'Node complete (Story) external contributors paragraph (c4m_link_multiple)'
+source:
+  plugin: eic_d7_field_value
+  field_name: c4m_link_multiple
+  bundle: article
+  ids:
+    c4m_link_multiple_title:
+      type: string
+  track_changes: true
+  constants:
+    PARAGRAPH_VIEW_MODE: external_person
+process:
+  paragraph_view_mode: constants/PARAGRAPH_VIEW_MODE
+  field_contributor_link/uri:
+    -
+      plugin: skip_on_empty
+      method: process
+      source: c4m_link_multiple_url
+  field_contributor_link/title:
+    -
+      plugin: skip_on_empty
+      method: process
+      source: c4m_link_multiple_url
+    -
+      plugin: get
+      source: c4m_link_multiple_title
+  field_title/value:
+    -
+      plugin: get
+      source: c4m_link_multiple_title
+destination:
+  plugin: 'entity_reference_revisions:paragraph'
+  default_bundle: contributor
+migration_dependencies:
+  required: {  }
+  optional: {  }

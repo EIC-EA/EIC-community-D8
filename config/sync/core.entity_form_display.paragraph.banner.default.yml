@@ -14,24 +14,24 @@ bundle: banner
 mode: default
 content:
   field_banner:
+    type: inline_entity_form_complex
     weight: 0
+    region: content
     settings:
       form_mode: default
+      override_labels: false
       label_singular: ''
       label_plural: ''
       allow_new: true
       allow_existing: true
       match_operator: CONTAINS
-      revision: false
-      override_labels: false
+      allow_duplicate: false
       collapsible: false
       collapsed: false
-      allow_duplicate: false
+      revision: false
     third_party_settings:
       entity_browser_entity_form:
         entity_browser_id: _none
-    type: inline_entity_form_complex
-    region: content
 hidden:
   created: true
   status: true

@@ -60,6 +60,13 @@ class SolrSearchController extends ControllerBase {
       unset($facets_value['interests']);
     }
 
+    $filter_registration = FALSE;
+
+    if (array_key_exists('filter_registration', $facets_value)) {
+      $filter_registration = $facets_value['filter_registration']['open_registration'];
+      unset($facets_value['filter_registration']);
+    }
+
     $page = $request->query->get('page');
     $datasources = json_decode($request->query->get('datasource'), TRUE);
     $offset = $request->query->get('offset', SourceTypeInterface::READ_MORE_NUMBER_TO_LOAD);
@@ -85,6 +92,7 @@ class SolrSearchController extends ControllerBase {
     $solariumQuery->setComponent(ComponentAwareQueryInterface::COMPONENT_SPELLCHECK, $spell_check);
 
     $content_type_query = '';
+    $author_ignore_content_query = '';
 
     if ($source_class) {
       /** @var \Drupal\eic_search\Search\Sources\SourceTypeInterface $source */
@@ -133,6 +141,15 @@ class SolrSearchController extends ControllerBase {
         $content_type_query = ' AND (' . SourceTypeInterface::SOLR_FIELD_CONTENT_TYPE_ID . ':(' . $allowed_content_type . '))';
       }
 
+      if ($source->ignoreContentFromCurrentUser()) {
+        $author_ignore_content_query = ' AND !(' . $source->getAuthorFieldId() . ':' . $this->currentUser()->id() . ')';
+      }
+
+      if ($source->prefilterByCurrentUser() && $source->getAuthorFieldId()) {
+        $prefilter_current_user_query =
+          ' AND (' . $source->getAuthorFieldId() . ':(' . $this->currentUser()->id() . '))';
+      }
+
       // If source supports date filter and query has a from or to date.
       if ($source->supportDateFilter() && ($from_date || $end_date)) {
         $date_fields_id = $source->getDateIntervalField();
@@ -149,14 +166,38 @@ class SolrSearchController extends ControllerBase {
         $dates_query[] = "($date_from_id:[* TO $end_date] AND $date_end_id:[$from_date TO $end_date])";
         $dates_query[] = "($date_from_id:[$from_date TO $end_date] AND $date_end_id:[$end_date TO *])";
         $dates_query[] = "($date_from_id:[* TO $from_date] AND $date_end_id:[$end_date TO *])";
-
-
         $date_query = implode(' OR ', $dates_query);
 
         $date_query = "($date_query)";
         $query_fields_string .= empty($query_fields_string) ?
           "$date_query" :
           " AND $date_query";
+      }
+
+      if ($source->getRegistrationDateIntervalField() && $filter_registration) {
+        $date_fields_id = $source->getRegistrationDateIntervalField();
+        $date_from_id = $date_fields_id['from'];
+        $date_end_id = $date_fields_id['to'];
+        $now = time();
+        $dates_query = [];
+
+        $dates_query[] = "($date_from_id:[* TO $now] AND $date_end_id:[$now TO *])";
+        $date_query = implode(' OR ', $dates_query);
+
+        $date_query = "($date_query)";
+        $query_fields_string .= empty($query_fields_string) ?
+          "$date_query" :
+          " AND $date_query";
+      }
+
+      $fields_filter_empty = $source->getFieldsToFilterEmptyValue();
+
+      if (!empty($fields_filter_empty)) {
+        foreach ($fields_filter_empty as $field) {
+          $query_fields_string .= empty($query_fields_string) ?
+            "$field:[* TO *]" :
+            " AND $field:[* TO *]";
+        }
       }
 
       if (!empty($query_fields_string)) {
@@ -226,13 +267,37 @@ class SolrSearchController extends ControllerBase {
     }
 
     $this->generateQueryInterests($fq, $facets_interests);
-    $this->generateQueryUserGroupsAndContents($fq, $facets_interests);
+    $this->generateQueryUserGroupsAndContents($fq, $facets_interests, $source);
     $this->generateQueryPrivateContent($fq);
     $this->generateQueryPublishedState($fq, $source);
     $this->generateQueryPager($solariumQuery, $page, $offset, $source);
 
     if ($content_type_query) {
       $fq .= $content_type_query;
+    }
+
+    if ($author_ignore_content_query) {
+      $fq .= $author_ignore_content_query;
+    }
+
+    if ($prefilter_current_user_query) {
+      $fq .= $prefilter_current_user_query;
+    }
+
+    if ($source->prefilterByGroupsMembership()) {
+      /** @var \Drupal\group\GroupMembershipLoader $grp_membership_service */
+      $grp_membership_service = \Drupal::service('group.membership_loader');
+      $grps = $grp_membership_service->loadByUser($this->currentUser());
+
+      $grp_ids = array_map(function (GroupMembership $grp_membership) {
+        return $grp_membership->getGroup()->id();
+      }, $grps);
+
+      $group_filters_id = $source->getPrefilteredGroupFieldId();
+
+      if ($group_filters_id) {
+        $fq .= ' AND (' . reset($group_filters_id) . ':(' . implode(' OR ', $grp_ids) . ' OR "-1"))';
+      }
     }
 
     $solariumQuery->addParam('fq', $fq);
@@ -269,7 +334,7 @@ class SolrSearchController extends ControllerBase {
       $values = array_keys($filtered_value);
 
       if ($filtered_value) {
-        array_walk($values, function(&$value) {
+        array_walk($values, function (&$value) {
           $value = "\"$value\"";
         });
 
@@ -326,7 +391,7 @@ class SolrSearchController extends ControllerBase {
     }
 
     $user_topics_string = implode(' OR ', $user_topics_id);
-    $fq .= " AND (itm_group_field_vocab_topics:($user_topics_string) OR itm_content_field_vocab_topics:($user_topics_string))";
+    $fq .= " AND (itm_group_field_vocab_topics:($user_topics_string) OR itm_content_field_vocab_topics:($user_topics_string) OR itm_message_node_ref_field_vocab_topics:($user_topics_string))";
   }
 
   /**
@@ -336,8 +401,10 @@ class SolrSearchController extends ControllerBase {
    *  The field query stringify to send to SOLR
    * @param array $interests
    *  Values of interests facet
+   * @param SourceTypeInterface $source
+   *  The current source.
    */
-  private function generateQueryUserGroupsAndContents(string &$fq, array $interests) {
+  private function generateQueryUserGroupsAndContents(string &$fq, array $interests, SourceTypeInterface $source) {
     if (
       empty($interests) ||
       !array_key_exists('my_groups', $interests) ||
@@ -360,17 +427,23 @@ class SolrSearchController extends ControllerBase {
     }
 
     $groups_membership_string = $groups_membership_id ? implode(' OR ', $groups_membership_id) : -1;
+    $group_field_id = $source->getPrefilteredGroupFieldId();
+    $group_field_id = reset($group_field_id);
 
-    $fq .= " AND (its_group_id_integer:($groups_membership_string) OR ss_global_group_parent_id:($groups_membership_string) OR its_content_uid:($groups_membership_string))";
+    $fq .= " AND ($group_field_id:($groups_membership_string) OR its_global_group_parent_id:($groups_membership_string) OR its_content_uid:($groups_membership_string))";
   }
 
   /**
    * @param string $fq
    */
   private function generateQueryPrivateContent(string &$fq) {
-    $roles = \Drupal::currentUser()->getRoles();
+    $current_user = \Drupal::currentUser();
+    $roles = $current_user->getRoles();
 
-    if (in_array(UserHelper::ROLE_TRUSTED_USER, $roles)) {
+    if (
+      in_array(UserHelper::ROLE_TRUSTED_USER, $roles) ||
+      UserHelper::isPowerUser($current_user)
+    ) {
       return;
     }
 
@@ -389,16 +462,30 @@ class SolrSearchController extends ControllerBase {
       return;
     }
 
+    $current_user = \Drupal::currentUser();
+    $user_id = $current_user->id();
+    $is_power_user = UserHelper::isPowerUser($current_user);
+
+    // We need to show all groups on the groups overview for power users,
+    // disregarding the published status.
+    if ($source instanceof GroupSourceType && $is_power_user) {
+      return;
+    }
+
     $status_query = ' AND (bs_global_status:true';
 
     if ($source instanceof GroupSourceType) {
-      $user_id = \Drupal::currentUser()->id();
       $status_query .= ' OR (its_group_owner_id:' . $user_id . ')';
     }
 
     $status_query .= ')';
 
     $fq .= $status_query;
+
+    // If it's not a power user or a group owner, add the filter query for published group parent.
+    if (!$is_power_user) {
+      $fq .= " AND (its_global_group_parent_published:1 OR its_group_owner_id:$user_id)";
+    }
   }
 
   /**

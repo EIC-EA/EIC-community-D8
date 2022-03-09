@@ -128,11 +128,26 @@ class GroupMenuBlock extends GroupMenuBlockBase implements ContainerFactoryPlugi
         );
         break;
 
+      case 'event':
+        $url = GroupOverviewPages::getGroupOverviewPageUrl(
+          'events',
+          $group
+        );
+        break;
+
       case 'wiki_page':
         // Gets group wiki url.
         $group_book_page_nid = $this->eicGroupsHelper->getGroupBookPage($group);
         $group_book_page_node = $this->entityTypeManager->getStorage('node')->load($group_book_page_nid);
         $url = $group_book_page_node->toUrl();
+        break;
+
+      case 'event':
+        // Gets group files overview page url.
+        $url = GroupOverviewPages::getGroupOverviewPageUrl(
+          'events',
+          $group
+        );
         break;
 
       default:

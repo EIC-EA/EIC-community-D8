@@ -13,5 +13,4 @@ group_type: group
 permissions_ui: true
 permissions:
   - 'share content between groups'
-  - 'view comments'
   - 'view group'

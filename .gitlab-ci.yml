@@ -8,6 +8,8 @@ stages:
 .deploy_job: &deploy_job
   image: intractosre/deploy:1
   stage: deploy
+  tags:
+    - aws
   before_script:
     - eval $(ssh-agent -s)
     - echo "$DEPLOYMENT_SSH_KEY" | tr -d '\r' | ssh-add - > /dev/null
@@ -26,12 +28,13 @@ stages:
       ./vendor/bin/drush updb -y &&
       ./vendor/bin/drush cr &&
       ./vendor/bin/drush cim -y &&
-      ./vendor/bin/drush pmu basic_auth -y &&
       ./vendor/bin/drush cr"
 
 build_backend:
   stage: build
-  image: intractosre/php:7.3
+  image: public.ecr.aws/h5g0v9w1/php-fpm:7.4
+  tags:
+    - itr-hrt
   artifacts:
     untracked: true
     expire_in: '2 hour'
@@ -49,6 +52,8 @@ build_backend:
 build_front:
   stage: build
   image: node:14
+  tags:
+    - itr-hrt
   artifacts:
     untracked: true
     expire_in: '2 hour'
@@ -63,39 +68,47 @@ build_front:
 
 security_check:
   stage: test
-  image: jakzal/phpqa:php7.3
+  image: jakzal/phpqa:php7.4
+  tags:
+    - itr-hrt
   script:
     - local-php-security-checker
   only:
     - develop
     - /^release/.*$/
 
-code_style_test:
-  stage: test
-  image: jakzal/phpqa:php7.3
-  script:
-    - ./vendor/bin/grumphp run --tasks=phpcs
-  allow_failure: true
-  only:
-    - develop
-
-phpmd_test:
-  stage: test
-  image: jakzal/phpqa:php7.3
-  script:
-    - ./vendor/bin/grumphp run --tasks=phpmd
-  allow_failure: true
-  only:
-    - develop
-
-phpstan_test:
-  stage: test
-  image: jakzal/phpqa:php7.3
-  script:
-    - phpstan
-  allow_failure: true
-  only:
-    - develop
+#code_style_test:
+#  stage: test
+#  image: jakzal/phpqa:php7.4
+#  tags:
+#    - itr-hrt
+#  script:
+#    - ./vendor/bin/grumphp run --tasks=phpcs
+#  allow_failure: true
+#  only:
+#    - develop
+#
+#phpmd_test:
+#  stage: test
+#  image: jakzal/phpqa:php7.4
+#  tags:
+#    - itr-hrt
+#  script:
+#    - ./vendor/bin/grumphp run --tasks=phpmd
+#  allow_failure: true
+#  only:
+#    - develop
+#
+#phpstan_test:
+#  stage: test
+#  image: jakzal/phpqa:php7.4
+#  tags:
+#    - itr-hrt
+#  script:
+#    - phpstan
+#  allow_failure: true
+#  only:
+#    - develop
 
 deploy_develop:
   <<: *deploy_job
@@ -122,14 +135,20 @@ deploy_uat:
   only:
     - /^release/.*$/
 
+deploy_migration_env:
+  <<: *deploy_job
+  stage: deploy_uat
+  when: manual
+  variables:
+    HOST: $MIGRATION_HOST
+  only:
+    - /^release/.*$/
+
 slack_notifier:
   stage: notify
-  before_script:
-    - apk update && apk add curl
+  image: curlimages/curl:latest
   script:
-    - 'eval "$DEPLOY_CURL_COMMAND"'
-  variables:
-    DEPLOY_CURL_COMMAND_BODY: "'{\"text\": \"New deployment running on QA. Environment will be updated in a few minutes...\"}'"
-    DEPLOY_CURL_COMMAND: 'curl -X POST $SLACK_URL -H "Content-Type: application/json" -d $DEPLOY_CURL_COMMAND_BODY'
+    - |
+      curl -X POST $SLACK_URL -H 'Content-Type: application/json' -d '{"text": "New deployment running on QA. Environment will be updated in a few minutes..."}'
   only:
     - /^release/.*$/

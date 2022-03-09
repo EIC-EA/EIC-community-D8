@@ -4,6 +4,7 @@ namespace Drupal\eic_groups\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Routing\RedirectDestinationInterface;
+use Drupal\eic_flags\FlagType;
 use Drupal\flag\FlaggingInterface;
 use Drupal\flag\FlagServiceInterface;
 use Drupal\group\Entity\GroupInterface;
@@ -11,6 +12,7 @@ use Drupal\node\NodeInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
@@ -120,6 +122,36 @@ class GroupOperationsController extends ControllerBase {
       $action = 'flag';
       $this->flagService->flag($flag, $node);
     }
+
+    return new JsonResponse(['action' => $action]);
+  }
+
+  /**
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   * @param \Drupal\group\Entity\GroupInterface $group
+   * @param string $action
+   * @param \Drupal\node\NodeInterface $node
+   *
+   * @return \Symfony\Component\HttpFoundation\JsonResponse
+   */
+  public function likeContent(Request $request, GroupInterface $group, string $action, NodeInterface $node) {
+    $flag = $this->flagService->getFlagById(FlagType::LIKE_CONTENT);
+    $this->flagService->{$action}($flag, $node);
+
+    return new JsonResponse();
+  }
+
+  /**
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   * @param \Drupal\group\Entity\GroupInterface $group
+   * @param string $action
+   * @param \Drupal\node\NodeInterface $node
+   *
+   * @return \Symfony\Component\HttpFoundation\JsonResponse
+   */
+  public function likeContentStatus(Request $request, GroupInterface $group, NodeInterface $node) {
+    $flag = $this->flagService->getFlagById(FlagType::LIKE_CONTENT);
+    $action = $flag->isFlagged($node) ? 'unflag' : 'flag';
 
     return new JsonResponse(['action' => $action]);
   }

@@ -5,8 +5,8 @@ dependencies:
   module:
     - eic_search
     - route_condition
-name: group_members_overviews
 label: 'Group - Members - Overviews'
+name: group_members_overviews
 group: Groups
 description: 'This context is used for all group members overviews'
 requireAllConditions: false
@@ -14,20 +14,29 @@ disabled: false
 conditions:
   route:
     id: route
-    routes: eic_overviews.groups.overview_page.members
     negate: false
     uuid: f43d7d69-4d35-4f45-adc7-347224f302b5
     context_mapping: {  }
+    routes: "eic_overviews.groups.overview_page.members\r\neic_overviews.groups.overview_page.team"
 reactions:
   blocks:
+    id: blocks
+    uuid: 52968c87-7333-4284-a1e0-68f19e8ed28d
     blocks:
       55c33d30-96b0-45e1-8d57-734991c89db8:
+        uuid: 55c33d30-96b0-45e1-8d57-734991c89db8
         id: eic_search_overview
         label: ''
         provider: eic_search
         label_display: visible
         region: content
         weight: '0'
+        custom_id: eic_search_overview_group_members
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: group_members_overviews
+        context_mapping: {  }
         source_type: Drupal\eic_search\Search\Sources\UserGallerySourceType
         facets:
           sm_user_profile_topic_expertise_string: sm_user_profile_topic_expertise_string
@@ -46,16 +55,7 @@ reactions:
         prefilter_group: 1
         add_facet_interests: 0
         add_facet_my_groups: 0
-        context_mapping: {  }
-        custom_id: eic_search_overview_group_members
-        theme: eic_community
-        css_class: ''
-        unique: 0
-        context_id: group_members_overviews
         third_party_settings: {  }
-        uuid: 55c33d30-96b0-45e1-8d57-734991c89db8
-    id: blocks
-    saved: false
-    uuid: 52968c87-7333-4284-a1e0-68f19e8ed28d
     include_default_blocks: 0
+    saved: false
 weight: 0

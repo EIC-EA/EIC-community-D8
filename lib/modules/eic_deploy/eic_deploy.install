@@ -5,6 +5,9 @@
  * Install, update and uninstall functions for the EIC Deploy module.
  */
 
+use Drupal\block_content\Entity\BlockContent;
+use Drupal\Core\Url;
+
 /**
  * Implements hook_install().
  */
@@ -58,4 +61,50 @@ function eic_deploy_requirements($phase) {
   }
 
   return $requirements;
+}
+
+/**
+ * Re-create moderation states for existing entities.
+ */
+function eic_deploy_update_9001(&$sandbox) {
+  $wiki_workflows = \Drupal::entityTypeManager()
+    ->getStorage('content_moderation_state')
+    ->loadByProperties([
+      'workflow' => 'group_wiki',
+    ]);
+  // Re-create wiki page workflows.
+  foreach ($wiki_workflows as $wiki_workflow) {
+    $state = $wiki_workflow->get('moderation_state')->value;
+    $entity_id = $wiki_workflow->get('content_entity_id')->value;
+    $wiki_workflow->delete();
+    $entity = \Drupal::entityTypeManager()
+      ->getStorage('node')
+      ->load($entity_id);
+    $entity->set('moderation_state', $state);
+    $entity->save();
+  }
+}
+
+/**
+ * Creates contact box block for the help and guidance pages.
+ */
+function eic_deploy_update_9002(&$sandbox) {
+  $block = BlockContent::create([
+    'status' => TRUE,
+    'type' => 'contact_box',
+    // We keep the same UUIDs since they are referenced in configs.
+    'uuid' => '63285e84-4aaf-475a-ae6f-169d5dae81e3',
+    'info' => 'Contact box - Help & Guidance',
+    'body' => [
+      'value' => 'Contact us at</br><a class="" href="mailto:support@eic.com">support@eic.com</a>',
+      'format' => 'full_html',
+    ],
+    'field_title' => "Didn't find what you were looking for?",
+    'field_cta_button' => [
+      'uri' => Url::fromRoute('<front>')->toUriString(),
+      'title' => 'Contact us',
+      'link_type' => 'default',
+    ],
+  ]);
+  $block->save();
 }

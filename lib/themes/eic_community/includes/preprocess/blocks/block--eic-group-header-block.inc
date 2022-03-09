@@ -5,11 +5,13 @@
  * Contains implementation for hook_preprocess_block() for eic_group_header.
  */
 
+use Drupal\Core\Url;
 use Drupal\eic_community\ValueObject\ImageValueObject;
 use Drupal\eic_overviews\GlobalOverviewPages;
+use Drupal\eic_search\SearchHelper;
 
 /**
- * Implements hook_preprocess_eic_group_header_block() for eic_group_header block.
+ * Implements hook_preprocess_eic_group_header_block().
  */
 function eic_community_preprocess_eic_group_header_block(array &$variables) {
   /** @var \Drupal\group\Entity\GroupInterface $group */
@@ -18,7 +20,10 @@ function eic_community_preprocess_eic_group_header_block(array &$variables) {
 
   // Adds group banner image.
   if ($group->hasField($hero_field_id) && !$group->get($hero_field_id)->isEmpty()) {
-    $media = \Drupal::service('entity.repository')->getTranslationFromContext($group->get($hero_field_id)->entity, $group->language()->getId());
+    $media = \Drupal::service('entity.repository')->getTranslationFromContext(
+      $group->get($hero_field_id)->entity,
+      $group->language()->getId()
+    );
     $image_item = ImageValueObject::fromImageItem($media->get('oe_media_image')->first());
     $variables['group_values']['image'] = [
       'src' => $image_item->getSource(),
@@ -54,7 +59,9 @@ function eic_community_preprocess_eic_group_header_block(array &$variables) {
   if (!empty($variables['group_values']['group_operation_links'])) {
     // Adds dropdown label if not presented.
     if (empty($variables['group_values']['group_operation_links'][0]['label'])) {
-      $variables['group_values']['group_operation_links'][0]['label'] = t('Group management');
+      $variables['group_values']['group_operation_links'][0]['label'] = t(
+        'Group management'
+      );
     }
     // Adds dropdown icon.
     $variables['group_values']['group_operation_links'][0]['icon'] = [
@@ -136,6 +143,7 @@ function eic_community_preprocess_eic_group_header_block(array &$variables) {
           break;
 
         case 'entity.group_content.add_form':
+        case 'ginvite.invitation.bulk':
           // Invite user.
           $icon_name = 'invite';
           break;
@@ -221,18 +229,69 @@ function eic_community_preprocess_eic_group_header_block(array &$variables) {
 
   $variables['group_values']['stats'] = $stats;
 
-  $tag = \Drupal::service('oec_group_flex.helper')
-    ->getGroupVisibilityTagLabel($group);
+  switch ($group->getGroupType()->id()) {
+    case 'group':
+      $tags[] = [
+        'type' => 'display',
+        'label' => \Drupal::service('oec_group_flex.helper')->getGroupVisibilityTagLabel($group),
+      ];
+      break;
+    case 'organisation':
+      $types = $group->get('field_organisation_type')->referencedEntities();
+      $tags = array_map(function (\Drupal\taxonomy\Entity\Term $type) {
+        $filters = [
+          'sm_group_organisation_type_string' => $type->label(),
+        ];
 
-  $variables['group_values']['tags'][] = [
-    'extra_classes' => 'ecl-tag--is-' . strtolower($tag),
-    'tag' => [
-      'type' => 'button',
-      'label' => $tag,
-    ],
-  ];
+        $query_options = [
+          'query' => SearchHelper::buildSolrQueryParams($filters),
+        ];
 
+        $overview_page = GlobalOverviewPages::getGlobalOverviewPageLink(GlobalOverviewPages::ORGANISATIONS);
+        $url = $overview_page instanceof \Drupal\Core\Link ? $overview_page->getUrl() : NULL;
+        $url = $url instanceof Url ? $url->setOptions($query_options) : NULL;
+
+        return [
+          'type' => 'link',
+          'label' => $type->label(),
+          'path' => $url->toString(),
+        ];
+      }, $types);
+      break;
+    default:
+      $tags = [];
+  }
+
+  if (!empty($tags)) {
+    foreach ($tags as $tag) {
+      $variables['group_values']['tags'][] = [
+        'extra_classes' => 'ecl-tag--is-' . strtolower($tag['label']),
+        'tag' => $tag
+      ];
+    }
+  }
+
+  switch ($group->getGroupType()->id()) {
+    case 'event':
+      $overview_id = GlobalOverviewPages::EVENTS;
+      $overview_label = t('All events', [], ['context' => 'eic_community']);
+      break;
+
+    case 'organisation':
+      $overview_id = GlobalOverviewPages::ORGANISATIONS;
+      $overview_label = t('All organisations', [], ['context' => 'eic_community']);
+      break;
+
+    default:
+      $overview_id = GlobalOverviewPages::GROUPS;
+      $overview_label = t('All groups', [], ['context' => 'eic_community']);
+      break;
+
+  }
   // Adds url to navigate back to the list of groups.
-  $back_url = GlobalOverviewPages::getGlobalOverviewPageUrl(GlobalOverviewPages::GROUPS);
-  $variables['group_values']['back_url'] = $back_url->toString();
+  $back_url = GlobalOverviewPages::getGlobalOverviewPageLink(
+    $overview_id
+  )->getUrl();
+  $variables['group_values']['back_url'] = $back_url ? $back_url->toString() : '';
+  $variables['group_values']['back_label'] = $overview_label;
 }
