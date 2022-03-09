@@ -2,10 +2,14 @@
 
 namespace Drupal\eic_groups\Plugin\Block;
 
+use Drupal\comment\CommentInterface;
+use Drupal\comment\Entity\Comment;
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Database\Connection;
+use Drupal\Core\Http\RequestStack;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
 use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_search\Search\Sources\UserTaggingCommentsSourceType;
@@ -40,28 +44,42 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
    *
    * @var \Drupal\eic_groups\EICGroupsHelper
    */
-  protected $groupsHelper;
+  private $groupsHelper;
 
   /**
    * The group permission checker.
    *
    * @var \Drupal\oec_group_comments\GroupPermissionChecker
    */
-  protected $groupPermissionChecker;
+  private $groupPermissionChecker;
 
   /**
    * The flag service.
    *
    * @var \Drupal\flag\FlagService
    */
-  protected $flagService;
+  private $flagService;
 
   /**
    * The database connection service.
    *
    * @var \Drupal\Core\Database\Connection
    */
-  protected $database;
+  private $database;
+
+  /**
+   * The route match service.
+   *
+   * @var \Drupal\Core\Routing\RouteMatchInterface
+   */
+  private $routeMatch;
+
+  /**
+   * The current request.
+   *
+   * @var \Drupal\Core\Http\RequestStack
+   */
+  private $request;
 
   /**
    * {@inheritdoc}
@@ -79,12 +97,14 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
       $container->get('eic_groups.helper'),
       $container->get('oec_group_comments.group_permission_checker'),
       $container->get('flag'),
-      $container->get('database')
+      $container->get('database'),
+      $container->get('current_route_match'),
+      $container->get('request_stack')
     );
   }
 
   /**
-   * LastGroupMembersBlock constructor.
+   * CommentsFromDiscussionBlock constructor.
    *
    * @param array $configuration
    *   The plugin configuration, i.e. an array with configuration values keyed
@@ -103,6 +123,10 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
    *   The flag service.
    * @param \Drupal\Core\Database\Connection $database
    *   The database connection service.
+   * @param RouteMatchInterface $route_match
+   *   The route match service.
+   * @param \Drupal\Core\Http\RequestStack $request
+   *   The current request.
    */
   public function __construct(
     array $configuration,
@@ -111,13 +135,17 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
     EICGroupsHelper $groups_helper,
     GroupPermissionChecker $group_permission_checker,
     FlagService $flag_service,
-    Connection $database
+    Connection $database,
+    RouteMatchInterface $route_match,
+    RequestStack $request
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->groupsHelper = $groups_helper;
     $this->groupPermissionChecker = $group_permission_checker;
     $this->flagService = $flag_service;
     $this->database = $database;
+    $this->routeMatch = $route_match;
+    $this->request = $request;
   }
 
   /**
@@ -125,10 +153,22 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
    */
   public function build() {
     /** @var \Drupal\node\NodeInterface|NULL $node */
-    $node = \Drupal::routeMatch()->getParameter('node');
+    $node = $this->routeMatch->getParameter('node');
+    $highlighted_comment = $this->request->getCurrentRequest()->query->get('highlighted-comment', 0);
+    $highlighted_comment = Comment::load($highlighted_comment);
 
     if (!$node instanceof NodeInterface) {
       return [];
+    }
+
+    // We need to highlight the top level.
+    if (
+      $highlighted_comment instanceof CommentInterface &&
+      $highlighted_comment->getCommentedEntityId() === $node->id()
+    ) {
+      while ($highlighted_comment->hasParentComment()) {
+        $highlighted_comment = $highlighted_comment->getParentComment();
+      }
     }
 
     $is_comment_closed = FALSE;
@@ -138,8 +178,7 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
       $node->hasField('field_comments') &&
       isset($node->get('field_comments')->getValue()[0])
     ) {
-      $comment_status = (int) $node->get('field_comments')->getValue(
-      )[0]['status'];
+      $comment_status = (int) $node->get('field_comments')->getValue()[0]['status'];
       if (CommentItemInterface::HIDDEN === $comment_status) {
         return [
           '#cache' => [
@@ -157,8 +196,7 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
 
     if ($current_group_route) {
       $membership = $current_group_route->getMember($account);
-      $user_group_roles = $membership instanceof GroupMembership ? $membership->getRoles(
-      ) : [];
+      $user_group_roles = $membership instanceof GroupMembership ? $membership->getRoles() : [];
     }
 
     $user_group_roles = array_merge(
@@ -170,8 +208,7 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
     $current_user = User::load(\Drupal::currentUser()->id());
 
     if ('story' === $node->getType()) {
-      $contributors = $node->get('field_story_paragraphs')->referencedEntities(
-      );
+      $contributors = $node->get('field_story_paragraphs')->referencedEntities();
     }
     else {
       $contributors = $node->hasField('field_related_contributors') ?
@@ -249,14 +286,14 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
       'user' => [
         'avatar' => $file_url,
         'fullname' => (
-          $current_user instanceof UserInterface ?
+        $current_user instanceof UserInterface ?
           $current_user->get(
             'field_first_name'
           )->value . ' ' . $current_user->get('field_last_name')->value :
           ''
         ),
         'url' => (
-          $current_user instanceof UserInterface ?
+        $current_user instanceof UserInterface ?
           $current_user->toUrl()->toString() :
           '#'
         ),
@@ -389,16 +426,19 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
     }
 
     return $build + [
-      '#cache' => [
-        'contexts' => $cache_context,
-        'tags' => $node->getCacheTags(),
-      ],
-      '#theme' => 'eic_group_comments_from_discussion',
-      '#discussion_id' => $node->id(),
-      '#contributors' => $contributors_data,
-      '#is_anonymous' => $current_user->isAnonymous(),
-      '#can_view_comments' => $can_view_comments,
-    ];
+        '#cache' => [
+          'contexts' => $cache_context,
+          'tags' => $node->getCacheTags(),
+        ],
+        '#highlighted_comment' => $highlighted_comment instanceof CommentInterface ?
+          $highlighted_comment->id() :
+          0,
+        '#theme' => 'eic_group_comments_from_discussion',
+        '#discussion_id' => $node->id(),
+        '#contributors' => $contributors_data,
+        '#is_anonymous' => $current_user->isAnonymous(),
+        '#can_view_comments' => $can_view_comments,
+      ];
   }
 
   /**
@@ -422,8 +462,8 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
     // If empty groups, that means we are not in group context.
     if (empty($group_contents)) {
       return $user instanceof UserInterface && $user->hasPermission(
-        $permission
-      );
+          $permission
+        );
     }
 
     return $this->groupPermissionChecker->getPermissionInGroups(

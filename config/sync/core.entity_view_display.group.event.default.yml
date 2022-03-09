@@ -10,6 +10,7 @@ dependencies:
     - field.field.group.event.field_document_presentations
     - field.field.group.event.field_documents
     - field.field.group.event.field_event_registration_date
+    - field.field.group.event.field_funding_source
     - field.field.group.event.field_header_visual
     - field.field.group.event.field_image
     - field.field.group.event.field_link
@@ -103,6 +104,14 @@ content:
       separator: '-'
     third_party_settings: {  }
     weight: 30
+    region: content
+  field_funding_source:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 34
     region: content
   field_header_visual:
     type: entity_reference_entity_view

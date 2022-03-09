@@ -2,6 +2,7 @@
 
 namespace Drupal\eic_default_content\Generator;
 
+use Drupal\eic_content\Constants\DefaultContentModerationStates;
 use Drupal\eic_groups\GroupsModerationHelper;
 use Drupal\group\Entity\Group;
 use Drupal\group\Entity\GroupContent;
@@ -86,6 +87,11 @@ class GroupGenerator extends CoreGenerator {
       $group->save();
       $this->groupFlexSaver->saveGroupVisibility($group, $visibility);
 
+      // Update moderation state of group book page.
+      $book = Node::load($this->eicGroupsHelper->getGroupBookPage($group));
+      $book->set('moderation_state', DefaultContentModerationStates::PUBLISHED_STATE);
+      $book->save();
+
       $this->createDiscussions($group);
       $this->createGroupEvents($group);
       $this->createWikiPages($group);
@@ -117,6 +123,7 @@ class GroupGenerator extends CoreGenerator {
       'field_vocab_geo' => $this->getRandomEntities('taxonomy_term', ['vid' => 'geo'], 2),
       'status' => TRUE,
       'uid' => 1,
+      'moderation_state' => DefaultContentModerationStates::PUBLISHED_STATE,
     ]);
 
     $node->save();
@@ -155,6 +162,7 @@ class GroupGenerator extends CoreGenerator {
       'field_vocab_geo' => $this->getRandomEntities('taxonomy_term', ['vid' => 'geo'], 2),
       'status' => TRUE,
       'uid' => 1,
+      'moderation_state' => DefaultContentModerationStates::PUBLISHED_STATE,
     ]);
 
     $node->save();
@@ -201,7 +209,7 @@ class GroupGenerator extends CoreGenerator {
         'field_vocab_geo' => $this->getRandomEntities('taxonomy_term', ['vid' => 'geo'], 2),
         'status' => TRUE,
         'uid' => 1,
-        'moderation_state' => 'published',
+        'moderation_state' => DefaultContentModerationStates::PUBLISHED_STATE,
         'book' => $wiki_page_book,
       ]);
 

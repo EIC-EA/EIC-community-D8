@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - field.field.message.sub_new_discussion_published.field_event_executing_user
+    - field.field.message.sub_new_discussion_published.field_group_ref
     - message.template.sub_new_discussion_published
 id: message.sub_new_discussion_published.default
 targetEntityType: message
@@ -17,6 +18,14 @@ content:
       link: true
     third_party_settings: {  }
     weight: 1
+    region: content
+  field_group_ref:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 2
     region: content
   partial_0:
     settings: {  }

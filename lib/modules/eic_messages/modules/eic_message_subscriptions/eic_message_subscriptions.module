@@ -77,6 +77,8 @@ function eic_message_subscriptions_cron() {
 
 /**
  * Implements hook_message_subscribe_get_subscribers_alter().
+ *
+ * @param \Drupal\message_subscribe\Subscribers\DeliveryCandidateInterface[] $uids
  */
 function eic_message_subscriptions_message_subscribe_get_subscribers_alter(array &$uids, array $values) {
   if (!isset($values['message'])) {
@@ -84,13 +86,11 @@ function eic_message_subscriptions_message_subscribe_get_subscribers_alter(array
   }
 
   $message = $values['message'];
-
   if (!$message instanceof MessageInterface) {
     return;
   }
 
   $message_subscription_templates = MessageSubscriptionTypes::getMessageSubscriptionTypesAsArray();
-
   if (!in_array($message->getTemplate()->id(), $message_subscription_templates)) {
     return;
   }
@@ -103,6 +103,14 @@ function eic_message_subscriptions_message_subscribe_get_subscribers_alter(array
     // Therefore, we remove it from the array of subscribed users.
     if (isset($uids[$executing_user->id()])) {
       unset($uids[$executing_user->id()]);
+    }
+  }
+
+  $subscription_message_checker = \Drupal::service('eic_message_subscriptions.subscription_message_checker');
+  foreach ($uids as $delivery_candidate) {
+    $account_id = $delivery_candidate->getAccountId();
+    if (!$subscription_message_checker->shouldSend($account_id, $message) && isset($uids[$account_id])) {
+      unset($uids[$account_id]);
     }
   }
 }

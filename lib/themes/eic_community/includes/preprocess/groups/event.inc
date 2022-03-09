@@ -67,6 +67,8 @@ function eic_community_preprocess_group__event(&$variables) {
           $value = strtolower($location_type_allowed_values[$value]);
           $teaser['type']['label'] .= " & {$value}";
         }
+
+        $teaser['type'] = [$teaser['type']];
       }
 
       // Add event topics to the theme variables.
@@ -218,12 +220,11 @@ function _event_about_permissions_tab($variables, &$sections) {
 
     switch ($visibility_id) {
       case 'custom_restricted':
-        $restrictions = array_map(function ($restriction) {
-          return [
-            'title' => $restriction['label'],
-            'content' => $restriction['options'],
-          ];
-        }, $visibility['settings']);
+        $restrictions = array_map(
+          '_eic_community_get_group_custom_restricted_options_item_list',
+          array_keys($visibility['settings']),
+          $visibility['settings']
+        );
 
         $access_items = $restrictions;
         break;

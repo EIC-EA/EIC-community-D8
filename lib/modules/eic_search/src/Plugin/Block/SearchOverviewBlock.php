@@ -243,6 +243,7 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
         $user_group_roles
       ),
       'label_my_groups' => $source->getLabelFilterMyGroups(),
+      'registration_filter' => $this->t('Open registration', [], ['context' => 'eic_search']),
       'is_group_admin' => array_key_exists(
         EICGroupsHelper::GROUP_ADMINISTRATOR_ROLE,
         $user_group_roles
@@ -294,6 +295,9 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
           EICGroupsHelper::GROUP_OWNER_ROLE,
           $user_group_roles
         ),
+        '#enable_registration_filter' =>
+          $source instanceof SourceTypeInterface &&
+          !empty($source->getRegistrationDateIntervalField()),
         '#allow_pagination' => $source instanceof SourceTypeInterface ? (int) $source->allowPagination() : 1,
         '#load_more_number' => $source->getLoadMoreBatchItems(),
         '#is_route_group_search_results' =>
@@ -316,6 +320,7 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
           'commented_on' => $this->t('commented on', [], ['context' => 'eic_group']),
           'custom_search_text' => [
             'user_gallery' => $this->t('Search for a member', [], ['context' => 'eic_group']),
+            'group' => $this->t('Search for a group', [], ['context' => 'eic_group']),
           ],
           'no_results_title' => $this->t(
             'We haven’t found any search results',
@@ -376,9 +381,9 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
             ['context' => 'eic_group']
           ),
           'show_more' => $this->t('Show more', [], ['context' => 'eic_group']),
-          'collapse' => $this->t('Collapse', [], ['context' => 'eic_group']),
+          'collapse' => $this->t('Show less', [], ['context' => 'eic_group']),
           'highlight' => $this->t('Highlight this content', [], ['context' => 'eic_group']),
-          'unHighlight' => $this->t('Disable highlighting of this content', [], ['context' => 'eic_group'])
+          'unHighlight' => $this->t('Disable highlighting of this content', [], ['context' => 'eic_group']),
         ],
       ];
   }

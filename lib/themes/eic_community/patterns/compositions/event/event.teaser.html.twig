@@ -135,10 +135,15 @@
       <div class="ecl-teaser__meta-footer">
         <div class="ecl-teaser__meta-column">
           {% if type is not empty %}
-            {% include "@theme/patterns/components/content-type-indicator.html.twig" with type|default({})|merge({
-              extra_classes: 'ecl-teaser__type ' ~ type.extra_classes,
-              icon_file_path: icon_file_path,
-            }) only %}
+            {% if type is not iterable %}
+              {% set type = [type] %}
+            {% endif %}
+            {% for typeRow in type %}
+              {% include "@theme/patterns/components/content-type-indicator.html.twig" with typeRow|default({})|merge({
+                extra_classes: 'ecl-teaser__type ' ~ typeRow.extra_classes,
+                icon_file_path: icon_file_path,
+              }) only %}
+            {% endfor %}
           {% endif %}
 
           {% if stats is not empty %}

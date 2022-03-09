@@ -5,6 +5,7 @@ dependencies:
   config:
     - core.entity_view_mode.message.notify_daily_digest
     - field.field.message.sub_new_group_content_published.field_event_executing_user
+    - field.field.message.sub_new_group_content_published.field_group_ref
     - field.field.message.sub_new_group_content_published.field_referenced_node
     - message.template.sub_new_group_content_published
 id: message.sub_new_group_content_published.notify_daily_digest
@@ -19,6 +20,7 @@ content:
     region: content
 hidden:
   field_event_executing_user: true
+  field_group_ref: true
   field_referenced_node: true
   partial_0: true
   partial_1: true

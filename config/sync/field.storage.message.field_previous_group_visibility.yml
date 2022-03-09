@@ -1,16 +1,17 @@
-uuid: 7463396b-430a-46fe-8e43-e912a1ce3328
+uuid: 976975a6-3672-4c4f-8dbb-2a7de8e33108
 langcode: en
 status: true
 dependencies:
   module:
     - message
-    - node
-id: message.field_node_ref
-field_name: field_node_ref
+id: message.field_previous_group_visibility
+field_name: field_previous_group_visibility
 entity_type: message
-type: entity_reference
+type: string
 settings:
-  target_type: node
+  max_length: 255
+  case_sensitive: false
+  is_ascii: false
 module: core
 locked: false
 cardinality: 1

@@ -5,7 +5,9 @@ dependencies:
   config:
     - field.storage.group.field_date_range
     - field.storage.group.field_location
+    - field.storage.group.field_event_registration_date
     - field.storage.group.field_vocab_event_type
+    - field.storage.group.field_funding_source
     - field.storage.user.field_first_name
     - field.storage.user.field_last_name
     - field.storage.media.oe_media_image
@@ -75,6 +77,7 @@ dependencies:
     - profile
     - search_api
     - address
+    - eic_events
     - eic_group_statistics
     - eic_search
     - flag_search_api
@@ -591,6 +594,48 @@ field_settings:
         - field.storage.node.field_discussion_type
       module:
         - node
+  event_funding_source_string:
+    label: 'Funding source » Taxonomy term » Name'
+    datasource_id: 'entity:group'
+    property_path: 'field_funding_source:entity:name'
+    type: string
+    dependencies:
+      config:
+        - field.storage.group.field_funding_source
+      module:
+        - taxonomy
+  event_registration_date_end:
+    label: 'Event registration date » End date value'
+    datasource_id: 'entity:group'
+    property_path: 'field_event_registration_date:end_value'
+    type: date
+    dependencies:
+      config:
+        - field.storage.group.field_event_registration_date
+  event_registration_date_start:
+    label: 'Event registration date'
+    datasource_id: 'entity:group'
+    property_path: field_event_registration_date
+    type: date
+    dependencies:
+      config:
+        - field.storage.group.field_event_registration_date
+  event_teaser_fid:
+    label: 'Thumbnail image » Media » Image » File » File ID'
+    datasource_id: 'entity:group'
+    property_path: 'field_image:entity:oe_media_image:entity:fid'
+    type: integer
+    dependencies:
+      config:
+        - field.storage.group.field_image
+        - field.storage.media.oe_media_image
+      module:
+        - file
+        - media
+  event_weight_state:
+    label: 'Event weight state'
+    property_path: event_weight_state
+    type: integer
   field_share_message:
     label: 'Share message'
     datasource_id: 'entity:message'
@@ -1559,6 +1604,7 @@ processor_settings:
     all_fields: false
   aggregated_field: {  }
   entity_type: {  }
+  event_weight_state: {  }
   file_attachments:
     excluded_extensions: 'aif art avi bmp gif ico mov oga ogv png psd ra ram rgb flv'
     number_indexed: 0

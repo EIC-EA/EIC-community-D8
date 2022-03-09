@@ -6,6 +6,7 @@ use Drupal\Component\Serialization\Json;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\eic_search\Service\SolrDocumentProcessor;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\group_flex\GroupFlexGroup;
@@ -22,6 +23,13 @@ use Drupal\group_permissions\GroupPermissionsManager;
  * @SuppressWarnings(PHPMD.MissingImport)
  */
 class OECGroupFlexGroupSaverDecorator extends GroupFlexGroupSaver {
+
+  /**
+   * The module handler service.
+   *
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface
+   */
+  protected $moduleHandler;
 
   /**
    * The group flex saver service.
@@ -51,6 +59,8 @@ class OECGroupFlexGroupSaverDecorator extends GroupFlexGroupSaver {
    *   The group flex saver inner service.
    * @param \Drupal\oec_group_flex\GroupVisibilityDatabaseStorageInterface $groupVisibilityStorage
    *   The group visibility storage service.
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   *   The module handler service.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager.
    * @param \Drupal\group_permissions\GroupPermissionsManager $groupPermManager
@@ -65,6 +75,7 @@ class OECGroupFlexGroupSaverDecorator extends GroupFlexGroupSaver {
   public function __construct(
     GroupFlexGroupSaver $groupFlexSaver,
     GroupVisibilityDatabaseStorageInterface $groupVisibilityStorage,
+    ModuleHandlerInterface $module_handler,
     EntityTypeManagerInterface $entityTypeManager,
     GroupPermissionsManager $groupPermManager,
     GroupVisibilityManager $visibilityManager,
@@ -75,6 +86,7 @@ class OECGroupFlexGroupSaverDecorator extends GroupFlexGroupSaver {
       $visibilityManager, $joiningMethodManager, $groupFlex);
     $this->groupFlexSaver = $groupFlexSaver;
     $this->groupVisibilityStorage = $groupVisibilityStorage;
+    $this->moduleHandler = $module_handler;
   }
 
   /**
@@ -152,11 +164,28 @@ class OECGroupFlexGroupSaverDecorator extends GroupFlexGroupSaver {
       ]);
     }
 
+    $oldVisibility = $this->groupVisibilityStorage->create([
+      'id' => $item->getId(),
+      'gid' => $item->getGroupId(),
+      'type' => $item->getType(),
+      'options' => $item->getOptions(),
+    ]);
     $oldVisibilityOptions = $item->getOptions();
     $item->setType($groupVisibility);
     $item->setOptions($groupVisibilityOptions);
 
     $this->groupVisibilityStorage->save($item);
+
+    // Invokes hook to implement logic after group visibility is saved in the
+    // database.
+    $this->moduleHandler->invokeAll(
+      'group_flex_visibility_save',
+      [
+        $group,
+        $oldVisibility,
+        $item,
+      ]
+    );
 
     // Invalidates group cache tags.
     Cache::invalidateTags($group->getCacheTagsToInvalidate());

@@ -11,6 +11,7 @@ dependencies:
     - field.field.group.event.field_document_presentations
     - field.field.group.event.field_documents
     - field.field.group.event.field_event_registration_date
+    - field.field.group.event.field_funding_source
     - field.field.group.event.field_header_visual
     - field.field.group.event.field_image
     - field.field.group.event.field_link
@@ -263,6 +264,7 @@ content:
 hidden:
   changed: true
   created: true
+  field_funding_source: true
   langcode: true
   search_api_excerpt: true
   uid: true
