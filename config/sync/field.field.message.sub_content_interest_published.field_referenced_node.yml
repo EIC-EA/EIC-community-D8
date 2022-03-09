@@ -1,23 +1,23 @@
-uuid: 60c6d03a-161d-4796-ac17-366addfb7c96
+uuid: 80ed9b6c-b093-4311-9550-31ba4dad9f0e
 langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.message.field_node_ref
+    - field.storage.message.field_referenced_node
     - message.template.sub_content_interest_published
     - node.type.discussion
     - node.type.document
     - node.type.news
     - node.type.story
     - node.type.wiki_page
-id: message.sub_content_interest_published.field_node_ref
-field_name: field_node_ref
+id: message.sub_content_interest_published.field_referenced_node
+field_name: field_referenced_node
 entity_type: message
 bundle: sub_content_interest_published
-label: 'Content Node'
+label: 'Referenced node'
 description: ''
 required: false
-translatable: false
+translatable: true
 default_value: {  }
 default_value_callback: ''
 settings:
@@ -31,6 +31,7 @@ settings:
       wiki_page: wiki_page
     sort:
       field: _none
+      direction: ASC
     auto_create: false
     auto_create_bundle: discussion
 field_type: entity_reference
