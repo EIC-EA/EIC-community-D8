@@ -302,7 +302,7 @@ function _eic_community_render_organisation_detail_page(&$variables, $group) {
         'path' => Url::fromRoute(
           GroupOverviewPages::ORGANISATIONS_TEAM,
           ['group' => $group instanceof GroupInterface ? $group->id() : 0]
-        ),
+        )->toString(),
       ],
     ],
     'items' => array_map(
