@@ -1,0 +1,11 @@
+uuid: 537830c2-17e6-4668-a465-99f90a9cc82c
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.contact_box
+id: block_content.contact_box
+target_entity_type_id: block_content
+target_bundle: contact_box
+default_langcode: site_default
+language_alterable: false

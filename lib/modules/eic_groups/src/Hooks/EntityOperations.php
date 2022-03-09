@@ -271,7 +271,7 @@ class EntityOperations implements ContainerInjectionInterface {
     switch ($this->routeMatch->getRouteName()) {
       case 'entity.node.canonical':
         if ($entity->bundle() === 'book') {
-          if ($group = $this->eicGroupsHelper->getGroupByEntity($entity)) {
+          if ($group = $this->eicGroupsHelper->getOwnerGroupByEntity($entity)) {
             // Add empty wiki section message.
             $build['wiki_section_message'] = [
               '#type' => 'item',
@@ -355,7 +355,7 @@ class EntityOperations implements ContainerInjectionInterface {
    */
   private function getWikiPageAddFormUrls(EntityInterface $entity, $group = FALSE) {
     if (!($group instanceof GroupInterface)) {
-      if (!$group = $this->eicGroupsHelper->getGroupByEntity($entity)) {
+      if (!$group = $this->eicGroupsHelper->getOwnerGroupByEntity($entity)) {
         return $group;
       }
     }

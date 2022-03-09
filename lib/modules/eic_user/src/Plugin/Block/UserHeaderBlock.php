@@ -5,7 +5,6 @@ namespace Drupal\eic_user\Plugin\Block;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
-use Drupal\profile\Entity\ProfileInterface;
 use Drupal\user\Entity\User;
 
 /**
@@ -82,23 +81,18 @@ class UserHeaderBlock extends BlockBase {
     $current_user = \Drupal::currentUser();
     $user = User::load($current_user->id());
 
-    // Loads user member profile.
-    $member_profile = \Drupal::service('eic_user.helper')->getUserMemberProfile($user);
-
     return [
       '#theme' => 'user_header_block',
-      '#cache' => ['contexts' => ['url.path', 'url.query_args']],
+      '#cache' => ['contexts' => ['url.path', 'url.query_args', 'user']],
       '#title' => $this->configuration['title'],
       '#actions' => [
         [
           'link' => [
-            'label' => $this->t('Manage profile', [], ['context' => 'eic_user']),
-            'path' => $member_profile instanceof ProfileInterface ?
-              Url::fromRoute('entity.profile.edit_form', ['profile' => $member_profile->id()]) :
-              Url::fromRoute('profile.user_page.single', ['user' => $user->id(), 'profile_type' => 'member']),
+            'label' => $this->t('My profile', [], ['context' => 'eic_user']),
+            'path' => $user->toUrl(),
           ],
           'icon' => [
-            'name' => 'gear',
+            'name' => 'user',
             'type' => 'custom',
           ],
         ],

@@ -2,25 +2,21 @@
 
 namespace Drupal\eic_flags\Service;
 
-use Drupal\content_moderation\ModerationInformationInterface;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\ContentEntityInterface;
-use Drupal\Core\Entity\EntityFieldManagerInterface;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\eic_flags\RequestStatus;
 use Drupal\eic_flags\RequestTypes;
 use Drupal\eic_groups\EICGroupsHelper;
+use Drupal\eic_messages\Util\LogMessageTemplates;
 use Drupal\eic_search\Service\SolrDocumentProcessor;
 use Drupal\eic_user\UserHelper;
 use Drupal\flag\FlaggingInterface;
-use Drupal\flag\FlagService;
 use Drupal\group\Entity\GroupContentInterface;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\group\GroupMembership;
-use Symfony\Component\HttpFoundation\RequestStack;
+use Drupal\message\MessageInterface;
 
 /**
  * Service that provides logic for transfer ownership requests.
@@ -37,7 +33,9 @@ class TransferOwnershipRequestHandler extends AbstractRequestHandler {
   private $solrDocumentProcessor;
 
   /**
-   * @param \Drupal\eic_search\Service\SolrDocumentProcessor|NULL $solr_document_processor
+   * Injects SOLR document processor service.
+   *
+   * @param \Drupal\eic_search\Service\SolrDocumentProcessor|null $solr_document_processor
    *   The EIC Search Solr Document Processor.
    */
   public function setDocumentProcessor(?SolrDocumentProcessor $solr_document_processor) {
@@ -633,6 +631,43 @@ class TransferOwnershipRequestHandler extends AbstractRequestHandler {
       // Invalidate flagged entity cache.
       Cache::invalidateTags($group_membership->getGroupContent()->getCacheTagsToInvalidate());
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function messageLogPreSave(
+    FlaggingInterface $flagging,
+    ContentEntityInterface $content_entity,
+    string $response,
+    string $reason,
+    MessageInterface $log
+  ) {
+    $entity_type = $content_entity->type->entity->label();
+    $entity_label = $content_entity->label();
+    $entity_url = $content_entity->toUrl()->toString();
+
+    switch ($content_entity->getEntityTypeId()) {
+      case 'group_content':
+        $entity_type = $content_entity->getGroup()->type->entity->label();
+        $entity_label = $content_entity->getGroup()->label();
+        $entity_url = $content_entity->getGroup()->toUrl()->toString();
+        break;
+
+    }
+
+    $log->set('field_entity_type', $entity_type);
+    $log->set('field_referenced_entity_label', $entity_label);
+    $log->set('field_entity_url', [
+      'uri' => $entity_url,
+    ]);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function logMessageTemplate() {
+    return LogMessageTemplates::REQUEST_OWNERSHIP_TRANSFER;
   }
 
 }

@@ -109,6 +109,7 @@ class ProcessorGlobal extends DocumentProcessor {
           }
         }
 
+        $changed = $fields['ds_aggregated_changed'];
         $title = $fields['tm_X3b_en_group_label_fulltext'];
         $type = $fields['ss_group_type'];
         $date = $fields['ds_group_created'];
@@ -134,6 +135,7 @@ class ProcessorGlobal extends DocumentProcessor {
             $fields,
             UserHelper::getUserAvatar($owner)
           );
+          $user_url = $owner->toUrl()->toString();
         }
         break;
       case 'entity:message':

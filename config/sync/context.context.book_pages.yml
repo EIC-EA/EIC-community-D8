@@ -2,7 +2,10 @@ uuid: bfebbc46-2f78-4d31-8949-a2edc65524a6
 langcode: en
 status: true
 dependencies:
+  content:
+    - 'block_content:contact_box:63285e84-4aaf-475a-ae6f-169d5dae81e3'
   module:
+    - block_content
     - eic_content_book
     - node
 label: 'Book pages'
@@ -40,6 +43,24 @@ reactions:
         context_id: book_pages
         context_mapping: {  }
         block_mode: null
+      ddc9b63b-5b9c-4947-afa4-e590b1c32561:
+        uuid: ddc9b63b-5b9c-4947-afa4-e590b1c32561
+        id: 'block_content:63285e84-4aaf-475a-ae6f-169d5dae81e3'
+        label: 'Contact box - Help & Guidance'
+        provider: block_content
+        label_display: '0'
+        region: sidebar
+        weight: '1'
+        custom_id: eic_contact_box_help_guindance
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: book_pages
+        context_mapping: {  }
+        status: true
+        info: ''
+        view_mode: full
+        third_party_settings: {  }
     include_default_blocks: 0
     saved: false
 weight: 0

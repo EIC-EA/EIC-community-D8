@@ -98,6 +98,9 @@ class FollowingSourceType extends SourceType {
     return 10;
   }
 
+  /**
+   * @inheritDoc
+   */
   public function prefilterByCurrentUser(): bool {
     return TRUE;
   }
@@ -107,6 +110,13 @@ class FollowingSourceType extends SourceType {
    */
   public function getAuthorFieldId(): string {
     return 'itm_follow_uid';
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function getFieldsToFilterEmptyValue(): array {
+    return ['ss_type'];
   }
 
 }

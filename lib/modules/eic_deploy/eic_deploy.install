@@ -5,6 +5,9 @@
  * Install, update and uninstall functions for the EIC Deploy module.
  */
 
+use Drupal\block_content\Entity\BlockContent;
+use Drupal\Core\Url;
+
 /**
  * Implements hook_install().
  */
@@ -80,4 +83,28 @@ function eic_deploy_update_9001(&$sandbox) {
     $entity->set('moderation_state', $state);
     $entity->save();
   }
+}
+
+/**
+ * Creates contact box block for the help and guidance pages.
+ */
+function eic_deploy_update_9002(&$sandbox) {
+  $block = BlockContent::create([
+    'status' => TRUE,
+    'type' => 'contact_box',
+    // We keep the same UUIDs since they are referenced in configs.
+    'uuid' => '63285e84-4aaf-475a-ae6f-169d5dae81e3',
+    'info' => 'Contact box - Help & Guidance',
+    'body' => [
+      'value' => 'Contact us at</br><a class="" href="mailto:support@eic.com">support@eic.com</a>',
+      'format' => 'full_html',
+    ],
+    'field_title' => "Didn't find what you were looking for?",
+    'field_cta_button' => [
+      'uri' => Url::fromRoute('<front>')->toUriString(),
+      'title' => 'Contact us',
+      'link_type' => 'default',
+    ],
+  ]);
+  $block->save();
 }

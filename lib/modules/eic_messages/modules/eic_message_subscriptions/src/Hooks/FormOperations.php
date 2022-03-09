@@ -120,12 +120,22 @@ class FormOperations implements ContainerInjectionInterface {
       'gallery',
     ];
 
+    // All content type which have the notification field hidden.
+    $disable_content_types = [
+      'book',
+    ];
+
     /** @var \Drupal\Core\Entity\EntityInterface $entity */
     $entity = $form_state->getFormObject()->getEntity();
     $show_notification_field = FALSE;
 
     switch ($entity->getEntityTypeId()) {
       case 'node':
+        // If node doesn't have notification we don't need to show the field.
+        if (in_array($entity->bundle(), $disable_content_types)) {
+          break;
+        }
+
         $show_notification_field = TRUE;
         break;
 
