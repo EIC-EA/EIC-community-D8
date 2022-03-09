@@ -26,6 +26,6 @@ final class DefaultContentModerationStates {
    *
    * @var string
    */
-  const GROUP_ARCHIVED_STATE = 'archived';
+  const ARCHIVED_STATE = 'archived';
 
 }

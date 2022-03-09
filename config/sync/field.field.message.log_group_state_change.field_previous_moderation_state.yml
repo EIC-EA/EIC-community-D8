@@ -1,0 +1,19 @@
+uuid: 1019e068-9fac-4431-915e-8ffe2a23827b
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.message.field_previous_moderation_state
+    - message.template.log_group_state_change
+id: message.log_group_state_change.field_previous_moderation_state
+field_name: field_previous_moderation_state
+entity_type: message
+bundle: log_group_state_change
+label: 'Previous moderation state'
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

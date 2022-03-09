@@ -75,6 +75,11 @@ class UserActivitySubnavigationBlock extends BlockBase implements ContainerFacto
         'route_parameters' => ['user' => $this->currentUser->id()]
       ],
       [
+        'label' => $this->t('My events', [], ['context' => 'eic_user']),
+        'route' => 'eic_user.user.my_events',
+        'route_parameters' => ['user' => $this->currentUser->id()]
+      ],
+      [
         'label' => $this->t('Bookmarked', [], ['context' => 'eic_user']),
         'route' => 'eic_search.global_search',
       ],
@@ -99,7 +104,7 @@ class UserActivitySubnavigationBlock extends BlockBase implements ContainerFacto
 
     return [
       '#theme' => 'user_activity_subnavigation_block',
-      '#cache' => ['contexts' => ['url.path', 'url.query_args']],
+      '#cache' => ['contexts' => ['url.path', 'url.query_args', 'user']],
       '#menu_items' => ['items' => $menu_items],
     ];
   }

@@ -51,6 +51,10 @@ function eic_community_preprocess_block(array &$variables) {
         eic_community_preprocess_block__basic($variables, $cache_tags);
         break;
 
+      case 'contact_box':
+        eic_community_preprocess_block__contact_box($variables, $cache_tags);
+        break;
+
     }
 
     // Adds cache tags.

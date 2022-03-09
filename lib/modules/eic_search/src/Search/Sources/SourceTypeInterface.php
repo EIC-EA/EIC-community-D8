@@ -137,11 +137,11 @@ interface SourceTypeInterface {
   public function getLoadMoreBatchItems(): int;
 
   /**
-   * Check if Source allow to have a date filter.
+   * Return the solr fields id for "from" and "to" date field.
    *
-   * @return bool
+   * @return array
    */
-  public function supportDateFilter(): bool;
+  public function getRegistrationDateIntervalField(): array;
 
   /**
    * Return the solr fields id for "from" and "to" date field.
