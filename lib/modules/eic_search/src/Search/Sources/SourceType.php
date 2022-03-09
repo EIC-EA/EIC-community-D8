@@ -134,6 +134,13 @@ abstract class SourceType implements SourceTypeInterface {
   /**
    * @inheritDoc
    */
+  public function getRegistrationDateIntervalField(): array {
+    return [];
+  }
+
+  /**
+   * @inheritDoc
+   */
   public function prefilterByGroupVisibility(): bool {
     return FALSE;
   }
