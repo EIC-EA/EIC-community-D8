@@ -93,3 +93,10 @@
     }
 
 }
+
+#media-library-add-form-wrapper {
+    & .js-form-wrapper,
+    & .js-form-wrapper .js-form-item {
+        margin: 0 !important;
+    }
+}
