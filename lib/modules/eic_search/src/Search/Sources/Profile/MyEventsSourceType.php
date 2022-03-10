@@ -151,6 +151,13 @@ class MyEventsSourceType extends SourceType {
   /**
    * @inheritDoc
    */
+  public function getPrefilteredGroupFieldId(): array {
+    return ['its_group_id_integer'];
+  }
+
+  /**
+   * @inheritDoc
+   */
   public function getDefaultSort(): array {
     return [Event::SOLR_FIELD_ID_WEIGHT_STATE, 'ASC'];
   }
