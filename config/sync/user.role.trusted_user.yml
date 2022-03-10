@@ -14,6 +14,7 @@ dependencies:
     - node.type.video
     - node.type.wiki_page
     - workflows.workflow.default
+    - workflows.workflow.eic_moderated_workflow
     - workflows.workflow.groups
     - workflows.workflow.news_stories
   module:
@@ -70,6 +71,8 @@ permissions:
   - 'use default transition archive'
   - 'use default transition create_new_draft'
   - 'use default transition publish'
+  - 'use eic_moderated_workflow transition create_new_draft'
+  - 'use eic_moderated_workflow transition submit_for_approval'
   - 'use groups transition create_new_draft'
   - 'use groups transition create_new_group'
   - 'use groups transition keep_blocked'

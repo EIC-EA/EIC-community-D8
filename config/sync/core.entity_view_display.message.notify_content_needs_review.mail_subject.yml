@@ -1,0 +1,22 @@
+uuid: b8b3c0bd-8d17-4003-a0f3-ec44f44990a3
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.message.mail_subject
+    - field.field.message.notify_content_needs_review.field_event_executing_user
+    - field.field.message.notify_content_needs_review.field_referenced_node
+    - message.template.notify_content_needs_review
+id: message.notify_content_needs_review.mail_subject
+targetEntityType: message
+bundle: notify_content_needs_review
+mode: mail_subject
+content:
+  partial_0:
+    weight: 0
+    region: content
+hidden:
+  field_event_executing_user: true
+  field_referenced_node: true
+  partial_1: true
+  search_api_excerpt: true
