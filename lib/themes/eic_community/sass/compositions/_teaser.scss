@@ -146,7 +146,7 @@
     object-fit: cover;
     border-radius: 50%;
     overflow: hidden;
-    margin-right: $ecl-spacing-m;
+    margin-right: map-get($ecl-spacing, 'l');
   }
 
   &--organisation#{$node}--as-card-white &__main-wrapper{
