@@ -8,6 +8,7 @@ use Drupal\Core\Link;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\Core\Url;
 use Drupal\user\UserInterface;
 
 /**
@@ -53,6 +54,13 @@ class UserBreadcrumbBuilder implements BreadcrumbBuilderInterface {
       $links[] = Link::fromTextAndUrl(
         $this->t('My profile', [], ['context' => 'eic_user']),
         $user->toUrl()
+      );
+    }
+
+    if ('eic_user.user.activity' !== $route_match->getRouteName()) {
+      $links[] = Link::fromTextAndUrl(
+        $this->t('My activty feed', [], ['context' => 'eic_user']),
+        Url::fromRoute('eic_user.user.activity', [], ['context' => 'eic_user'])
       );
     }
 
