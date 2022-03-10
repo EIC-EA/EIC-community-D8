@@ -5,7 +5,7 @@ dependencies:
   config:
     - field.field.message.sub_content_interest_published.field_event_executing_user
     - field.field.message.sub_content_interest_published.field_group_ref
-    - field.field.message.sub_content_interest_published.field_node_ref
+    - field.field.message.sub_content_interest_published.field_referenced_node
     - field.field.message.sub_content_interest_published.field_topic_term
     - message.template.sub_content_interest_published
 id: message.sub_content_interest_published.default
@@ -33,9 +33,9 @@ content:
       size: 60
       placeholder: ''
     third_party_settings: {  }
-  field_node_ref:
+  field_referenced_node:
     type: entity_reference_autocomplete
-    weight: 2
+    weight: 4
     region: content
     settings:
       match_operator: CONTAINS

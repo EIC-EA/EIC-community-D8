@@ -81,7 +81,7 @@ class EntityFlagType extends EntityFlagTypeBase {
       // Get the group from the flaggable, if any.
       $parent_group = NULL;
       if ($flaggable && !$flaggable->isNew()) {
-        $parent_group = $this->groupsHelper->getGroupByEntity($flaggable);
+        $parent_group = $this->groupsHelper->getOwnerGroupByEntity($flaggable);
       }
       if (
         $parent_group instanceof GroupInterface &&

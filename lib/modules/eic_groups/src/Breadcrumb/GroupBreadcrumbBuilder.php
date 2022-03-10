@@ -179,11 +179,7 @@ class GroupBreadcrumbBuilder implements BreadcrumbBuilderInterface {
             $breadcrumb->addCacheableDependency($access);
           }
 
-          if ($group_content = GroupContent::loadByEntity($node)) {
-            // Because a node can only belong to 1 group, we get the first
-            // group content entity from the array.
-            $group_content_entity = reset($group_content);
-            $group = $group_content_entity->getGroup();
+          if ($group = $this->eicGroupsHelper->getOwnerGroupByEntity($node)) {
             $links[] = $group->toLink();
 
             switch ($node->bundle()) {
@@ -230,6 +226,26 @@ class GroupBreadcrumbBuilder implements BreadcrumbBuilderInterface {
                   $this->t('Discussions'),
                   GroupOverviewPages::getGroupOverviewPageUrl(
                     'discussions',
+                    $group
+                  )
+                );
+                break;
+
+              case 'news':
+                $links[] = Link::fromTextAndUrl(
+                  $this->t('News'),
+                  GroupOverviewPages::getGroupOverviewPageUrl(
+                    'news',
+                    $group
+                  )
+                );
+                break;
+
+              case 'event':
+                $links[] = Link::fromTextAndUrl(
+                  $this->t('Events'),
+                  GroupOverviewPages::getGroupOverviewPageUrl(
+                    'events',
                     $group
                   )
                 );

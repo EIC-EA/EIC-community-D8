@@ -5,6 +5,7 @@ dependencies:
   config:
     - core.entity_view_mode.message.notify_monthly_digest
     - field.field.message.sub_group_content_shared.field_event_executing_user
+    - field.field.message.sub_group_content_shared.field_group_ref
     - message.template.sub_group_content_shared
 id: message.sub_group_content_shared.notify_monthly_digest
 targetEntityType: message
@@ -18,6 +19,7 @@ content:
     region: content
 hidden:
   field_event_executing_user: true
+  field_group_ref: true
   partial_0: true
   partial_1: true
   search_api_excerpt: true

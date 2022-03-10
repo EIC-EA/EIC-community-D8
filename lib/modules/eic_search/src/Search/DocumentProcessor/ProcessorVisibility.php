@@ -75,7 +75,7 @@ class ProcessorVisibility extends DocumentProcessor {
 
     $original_object = $item->getOriginalObject()->getEntity();
 
-    $group = $this->groupsHelper->getGroupByEntity($original_object);
+    $group = $this->groupsHelper->getOwnerGroupByEntity($original_object);
 
     if (!$group) {
       $document->addField('ss_group_visibility', $group_visibility);

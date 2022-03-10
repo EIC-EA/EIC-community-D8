@@ -203,7 +203,6 @@
 
     @include ecl-media-breakpoint-up('sm') {
       width: map-get($ecl-media, 'l');
-      height: map-get($ecl-media, 'm');
       margin: 0 ecl-box-model('padding') 0 0;
     }
 
@@ -215,6 +214,12 @@
       width: 3rem;
       height: 3rem;
       color: #ffffff;
+    }
+
+    #{$node}--story & {
+      @include ecl-media-breakpoint-up('sm') {
+        height: map-get($ecl-media, 'm');
+      }
     }
 
     #{$node}--as-card & {

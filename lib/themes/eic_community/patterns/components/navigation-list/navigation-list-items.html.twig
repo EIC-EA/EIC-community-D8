@@ -1,3 +1,7 @@
+{% set title_element = title_element|default('h2') %}
+{% if title is not empty %}
+  <{{ title_element }} class="ecl-navigation-list__title">{{ title }}</{{ title_element }}>
+{% endif %}
 {% if items is not empty %}
   <ul class="ecl-navigation-list__items {{ extra_classes }}">
     {% for item in items %}

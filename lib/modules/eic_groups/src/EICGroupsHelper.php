@@ -363,7 +363,7 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
       }
     }
     if ($entity) {
-      return $this->getGroupByEntity($entity);
+      return $this->getOwnerGroupByEntity($entity);
     }
     return FALSE;
   }
@@ -371,7 +371,7 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
   /**
    * {@inheritdoc}
    */
-  public function getGroupByEntity(EntityInterface $entity) {
+  public function getOwnerGroupByEntity(EntityInterface $entity) {
     $group = FALSE;
     if ($entity instanceof GroupInterface) {
       return $entity;
@@ -901,7 +901,7 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
           break;
         }
 
-        $group = $this->getGroupByEntity($node);
+        $group = $this->getOwnerGroupByEntity($node);
 
         if (!$group) {
           break;
