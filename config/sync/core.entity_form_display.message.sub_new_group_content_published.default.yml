@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - field.field.message.sub_new_group_content_published.field_event_executing_user
+    - field.field.message.sub_new_group_content_published.field_group_ref
     - field.field.message.sub_new_group_content_published.field_referenced_node
     - message.template.sub_new_group_content_published
 id: message.sub_new_group_content_published.default
@@ -14,6 +15,16 @@ content:
   field_event_executing_user:
     type: entity_reference_autocomplete
     weight: 0
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_group_ref:
+    type: entity_reference_autocomplete
+    weight: 2
     region: content
     settings:
       match_operator: CONTAINS

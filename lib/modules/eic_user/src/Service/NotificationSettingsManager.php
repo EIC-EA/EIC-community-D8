@@ -29,7 +29,7 @@ class NotificationSettingsManager {
    *
    * @var string[]
    */
-  private static $flags = [
+  private static array $flags = [
     NotificationTypes::GROUPS_NOTIFICATION_TYPE => ['follow_group'],
     NotificationTypes::EVENTS_NOTIFICATION_TYPE => ['follow_group', 'follow_event'],
   ];
@@ -47,12 +47,12 @@ class NotificationSettingsManager {
   /**
    * @var \Drupal\eic_user\UserHelper
    */
-  private $userHelper;
+  private UserHelper $userHelper;
 
   /**
    * @var \Drupal\flag\FlagService
    */
-  private $flagService;
+  private FlagService $flagService;
 
   /**
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
@@ -83,11 +83,11 @@ class NotificationSettingsManager {
   public function setSettingValue(string $notification_type, $value, ?FlaggingInterface $flagging = NULL): ?bool {
     $user = User::load($this->currentUser->id());
     if (!$user instanceof UserInterface) {
-      throw new \InvalidArgumentException('Current user doesn\'t exist');
+      throw new \InvalidArgumentException('Current user does not exist');
     }
 
     if (!in_array($notification_type, NotificationTypes::ALLOWED_NOTIFICATION_TYPES)) {
-      throw new \InvalidArgumentException('Given type isn\'t allowed');
+      throw new \InvalidArgumentException('Given type is not allowed');
     }
 
     $new_value = NULL;
@@ -109,7 +109,7 @@ class NotificationSettingsManager {
    * @param \Drupal\user\UserInterface $user
    * @param $value
    *
-   * @return string
+   * @return bool
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
   public function updateFollowFlag(FlaggingInterface $flagging, UserInterface $user, $value) {
@@ -131,7 +131,7 @@ class NotificationSettingsManager {
    * @return bool
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
-  private function updateProfileSetting(string $notification_type, UserInterface $user, $value) {
+  private function updateProfileSetting(string $notification_type, UserInterface $user, $value): bool {
     $profile = $this->userHelper->getUserMemberProfile($user);
     if (!$profile instanceof ProfileInterface) {
       return FALSE;
@@ -152,6 +152,32 @@ class NotificationSettingsManager {
     $profile->save();
 
     return $value;
+  }
+
+  /**
+   * @param \Drupal\user\UserInterface $user
+   * @param string $notification_type
+   *
+   * @return bool
+   */
+  public function getProfileSetting(UserInterface $user, string $notification_type): bool {
+    if (!in_array(
+      $notification_type,
+      [NotificationTypes::COMMENTS_NOTIFICATION_TYPE, NotificationTypes::INTEREST_NOTIFICATION_TYPE]
+    )) {
+      throw new InvalidArgumentException('Unsupported profile notification type');
+    }
+
+    $profile = $this->userHelper->getUserMemberProfile($user);
+    if (!$profile instanceof ProfileInterface) {
+      return TRUE;
+    }
+
+    $field = $notification_type === NotificationTypes::COMMENTS_NOTIFICATION_TYPE
+      ? 'field_comments_notifications'
+      : 'field_interest_notifications';
+
+    return (bool) $profile->get($field)->value;
   }
 
   /**
@@ -182,6 +208,39 @@ class NotificationSettingsManager {
     }
 
     return Flagging::loadMultiple($entity_ids);
+  }
+
+  /**
+   * @param string $type
+   * @param \Drupal\user\UserInterface $user
+   * @param ContentEntityInterface $entity
+   *   Array of additional filters (e.g: the entity id, entity type, etc.)
+   *
+   * @return string
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   */
+  public function getFollowFlagValue(string $type, UserInterface $user, ContentEntityInterface $entity): ?string {
+    if (!array_key_exists($type, self::$flags)) {
+      throw new \InvalidArgumentException('Given type is not supported');
+    }
+
+    $flagging_ids = $this->entityTypeManager->getStorage('flagging')
+      ->getQuery()
+      ->condition('flag_id', self::$flags[$type], 'IN')
+      ->condition('uid', $user->id())
+      ->condition('entity_type', $entity->getEntityTypeId())
+      ->condition('entity_id', $entity->id())
+      ->range(0, 1)
+      ->execute();
+
+    if (empty($flagging_ids)) {
+      return NULL;
+    }
+
+    $flagging = Flagging::load(reset($flagging_ids));
+
+    return $flagging->get('field_notification_frequency')->value;
   }
 
   /**
