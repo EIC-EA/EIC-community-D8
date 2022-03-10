@@ -59,8 +59,12 @@ class UserBreadcrumbBuilder implements BreadcrumbBuilderInterface {
 
     if ('eic_user.user.activity' !== $route_match->getRouteName()) {
       $links[] = Link::fromTextAndUrl(
-        $this->t('My activty feed', [], ['context' => 'eic_user']),
-        Url::fromRoute('eic_user.user.activity', [], ['context' => 'eic_user'])
+        $this->t('My activity feed', [], ['context' => 'eic_user']),
+        Url::fromRoute(
+          'eic_user.user.activity',
+          ['user' => $user->id()],
+          ['context' => 'eic_user']
+        )
       );
     }
 
