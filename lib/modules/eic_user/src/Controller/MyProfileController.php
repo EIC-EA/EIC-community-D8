@@ -19,7 +19,7 @@ class MyProfileController extends ControllerBase {
    *   The translatable markup.
    */
   public function title() {
-    return $this->t('My activity feed', [], ['context' => 'eic_user']);
+    return $this->t('My interests', [], ['context' => 'eic_user']);
   }
 
   /**
