@@ -60,6 +60,13 @@ class SolrSearchController extends ControllerBase {
       unset($facets_value['interests']);
     }
 
+    $filter_registration = FALSE;
+
+    if (array_key_exists('filter_registration', $facets_value)) {
+      $filter_registration = $facets_value['filter_registration']['open_registration'];
+      unset($facets_value['filter_registration']);
+    }
+
     $page = $request->query->get('page');
     $datasources = json_decode($request->query->get('datasource'), TRUE);
     $offset = $request->query->get('offset', SourceTypeInterface::READ_MORE_NUMBER_TO_LOAD);
@@ -159,14 +166,38 @@ class SolrSearchController extends ControllerBase {
         $dates_query[] = "($date_from_id:[* TO $end_date] AND $date_end_id:[$from_date TO $end_date])";
         $dates_query[] = "($date_from_id:[$from_date TO $end_date] AND $date_end_id:[$end_date TO *])";
         $dates_query[] = "($date_from_id:[* TO $from_date] AND $date_end_id:[$end_date TO *])";
-
-
         $date_query = implode(' OR ', $dates_query);
 
         $date_query = "($date_query)";
         $query_fields_string .= empty($query_fields_string) ?
           "$date_query" :
           " AND $date_query";
+      }
+
+      if ($source->getRegistrationDateIntervalField() && $filter_registration) {
+        $date_fields_id = $source->getRegistrationDateIntervalField();
+        $date_from_id = $date_fields_id['from'];
+        $date_end_id = $date_fields_id['to'];
+        $now = time();
+        $dates_query = [];
+
+        $dates_query[] = "($date_from_id:[* TO $now] AND $date_end_id:[$now TO *])";
+        $date_query = implode(' OR ', $dates_query);
+
+        $date_query = "($date_query)";
+        $query_fields_string .= empty($query_fields_string) ?
+          "$date_query" :
+          " AND $date_query";
+      }
+
+      $fields_filter_empty = $source->getFieldsToFilterEmptyValue();
+
+      if (!empty($fields_filter_empty)) {
+        foreach ($fields_filter_empty as $field) {
+          $query_fields_string .= empty($query_fields_string) ?
+            "$field:[* TO *]" :
+            " AND $field:[* TO *]";
+        }
       }
 
       if (!empty($query_fields_string)) {

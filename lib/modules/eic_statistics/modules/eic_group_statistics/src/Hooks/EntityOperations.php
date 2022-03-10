@@ -2,11 +2,13 @@
 
 namespace Drupal\eic_group_statistics\Hooks;
 
+use Drupal\content_moderation\ModerationInformation;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\eic_comments\CommentsHelper;
+use Drupal\eic_content\Constants\DefaultContentModerationStates;
 use Drupal\eic_group_statistics\GroupStatisticsHelper;
 use Drupal\eic_group_statistics\GroupStatisticsSearchApiReindex;
 use Drupal\eic_group_statistics\GroupStatisticsStorage;
@@ -83,6 +85,13 @@ class EntityOperations implements ContainerInjectionInterface {
   protected $commentsHelper;
 
   /**
+   * The content moderation information service.
+   *
+   * @var \Drupal\content_moderation\ModerationInformation
+   */
+  protected $contentModerationInfo;
+
+  /**
    * Constructs a EntityOperation object.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
@@ -97,6 +106,8 @@ class EntityOperations implements ContainerInjectionInterface {
    *   The Entity Usage service.
    * @param \Drupal\eic_comments\CommentsHelper $comments_helper
    *   The EIC Comments helper service.
+   * @param \Drupal\content_moderation\ModerationInformation $content_moderation_info
+   *   The content moderation information service.
    */
   public function __construct(
     EntityTypeManagerInterface $entity_type_manager,
@@ -104,7 +115,8 @@ class EntityOperations implements ContainerInjectionInterface {
     GroupStatisticsStorageInterface $group_statistics_storage,
     GroupStatisticsSearchApiReindex $group_statistics_sear_api_reindex,
     EntityUsageInterface $entity_usage,
-    CommentsHelper $comments_helper
+    CommentsHelper $comments_helper,
+    ModerationInformation $content_moderation_info
   ) {
     $this->entityTypeManager = $entity_type_manager;
     $this->groupStatisticsHelper = $group_statistics_helper;
@@ -112,6 +124,7 @@ class EntityOperations implements ContainerInjectionInterface {
     $this->groupStatisticsSearchApiReindex = $group_statistics_sear_api_reindex;
     $this->entityUsage = $entity_usage;
     $this->commentsHelper = $comments_helper;
+    $this->contentModerationInfo = $content_moderation_info;
   }
 
   /**
@@ -124,7 +137,8 @@ class EntityOperations implements ContainerInjectionInterface {
       $container->get('eic_group_statistics.storage'),
       $container->get('eic_group_statistics.search_api.reindex'),
       $container->get('entity_usage.usage'),
-      $container->get('eic_comments.helper')
+      $container->get('eic_comments.helper'),
+      $container->get('content_moderation.moderation_information')
     );
   }
 
@@ -150,6 +164,10 @@ class EntityOperations implements ContainerInjectionInterface {
       case 'group-group_node-event':
       case 'group-group_node-wiki_page':
       case 'group-group_node-gallery':
+        if (!$this->canUpdateGroupStatistics($entity, self::GROUP_FILE_STATISTICS_CREATE_OPERATION)) {
+          return;
+        }
+
         $re_index = $this->updateGroupFileStatistics($entity->getEntity(), $entity);
         // Invalidate cache for group latest activity.
         $this->groupStatisticsHelper->invalidateGroupLatestActivity($group);
@@ -201,7 +219,7 @@ class EntityOperations implements ContainerInjectionInterface {
   }
 
   /**
-   * Acts on hook_node_delete() for node entities that belong to a group.
+   * Acts on hook_entity_pre_delete() for node entities that belong to a group.
    *
    * We need to implement this hook in order to update some group statistics
    * that could not be updated in during
@@ -213,8 +231,12 @@ class EntityOperations implements ContainerInjectionInterface {
    * @param \Drupal\group\Entity\GroupContentInterface $group_content
    *   The group content entity object that relates to the node.
    */
-  public function groupContentNodeDelete(NodeInterface $entity, GroupContentInterface $group_content) {
+  public function groupContentNodePreDelete(NodeInterface $entity, GroupContentInterface $group_content) {
     $group = $group_content->getGroup();
+
+    if (!$this->canUpdateGroupStatistics($entity, self::GROUP_FILE_STATISTICS_DELETE_OPERATION)) {
+      return;
+    }
 
     // Invalidate cache for group latest activity.
     $this->groupStatisticsHelper->invalidateGroupLatestActivity($group);
@@ -236,6 +258,17 @@ class EntityOperations implements ContainerInjectionInterface {
 
     }
 
+    // Decrements group comments statistics.
+    if ($entity->hasField('field_comments') && $entity->isPublished()) {
+      // Decrements all node comments from the group statistics.
+      $num_comments = $this->commentsHelper->countEntityComments($entity);
+      $this->groupStatisticsStorage->decrement($group, GroupStatisticTypes::STAT_TYPE_COMMENTS, $num_comments);
+
+      if ($num_comments > 0) {
+        $re_index = TRUE;
+      }
+    }
+
     if (!$re_index) {
       return;
     }
@@ -245,18 +278,22 @@ class EntityOperations implements ContainerInjectionInterface {
   }
 
   /**
-   * Acts on hook_node_update() for node entities that belong to a group.
+   * Acts on hook_entity_presave() for node entities that belong to a group.
    *
    * @param \Drupal\node\NodeInterface $entity
    *   The node entity object.
    * @param \Drupal\group\Entity\GroupContentInterface $group_content
    *   The group content entity object that relates to the node.
    */
-  public function groupContentNodeUpdate(NodeInterface $entity, GroupContentInterface $group_content) {
+  public function groupContentNodePreSave(NodeInterface $entity, GroupContentInterface $group_content) {
     $group = $group_content->getGroup();
     /** @var \Drupal\node\NodeInterface $original_entity */
     $original_entity = $entity->original;
     $re_index = TRUE;
+
+    if (!$this->canUpdateGroupStatistics($entity, self::GROUP_FILE_STATISTICS_UPDATE_OPERATION)) {
+      return;
+    }
 
     // Invalidate cache for group latest activity only if node status has
     // changed.
@@ -311,6 +348,62 @@ class EntityOperations implements ContainerInjectionInterface {
   }
 
   /**
+   * Checks if group statistics can be updated by a given entity.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The entity object.
+   * @param string $operation
+   *   The entity operation:
+   *   - create
+   *   - update
+   *   - delete.
+   *
+   * @return bool
+   *   TRUE if the entity can update group statistics.
+   *
+   * @todo We should consider updating the operation constants to a more
+   * generic name.
+   */
+  private function canUpdateGroupStatistics(
+    EntityInterface $entity,
+    $operation
+  ) {
+    $can_update = TRUE;
+
+    // If entity is moderated, we need to check the moderation state before
+    // update the file statistics.
+    if ($this->contentModerationInfo->isModeratedEntity($entity)) {
+      switch ($entity->get('moderation_state')->value) {
+        case DefaultContentModerationStates::PUBLISHED_STATE:
+          // Entity is published, therefore we can update file statistics.
+          break;
+
+        case DefaultContentModerationStates::ARCHIVED_STATE:
+          // If entity is archived, we need to make sure there is currently a
+          // published version, otherwise we skip file statistics update.
+          if (!$this->contentModerationInfo->isDefaultRevisionPublished($entity)) {
+            $can_update = FALSE;
+          }
+          break;
+
+        default:
+          // If the entity is being created/updated and there is no published
+          // version, we don't update statistics.
+          if (
+            $operation !== self::GROUP_FILE_STATISTICS_DELETE_OPERATION ||
+            !$this->contentModerationInfo->isDefaultRevisionPublished($entity)
+          ) {
+            $can_update = FALSE;
+          }
+          break;
+
+      }
+    }
+
+    return $can_update;
+  }
+
+  /**
    * Updates group file statistics when a node is created/updated/deleted.
    *
    * @param \Drupal\Core\Entity\EntityInterface $entity
@@ -329,6 +422,40 @@ class EntityOperations implements ContainerInjectionInterface {
     $operation = self::GROUP_FILE_STATISTICS_CREATE_OPERATION
   ) {
     $group = $group_content->getGroup();
+
+    if (!$this->canUpdateGroupStatistics($entity, $operation)) {
+      return FALSE;
+    }
+
+    // If entity is moderated, we need to check the moderation state before
+    // update the file statistics.
+    if ($this->contentModerationInfo->isModeratedEntity($entity)) {
+      switch ($entity->get('moderation_state')->value) {
+        case DefaultContentModerationStates::PUBLISHED_STATE:
+          // Entity is published, therefore we can update file statistics.
+          break;
+
+        case DefaultContentModerationStates::ARCHIVED_STATE:
+          // At this point it means we are archiving an entity from a published
+          // state, and therefore we force the file statistics delete operation
+          // and load the published version in order to decrement statistics.
+          $operation = self::GROUP_FILE_STATISTICS_DELETE_OPERATION;
+          $entity = $this->entityTypeManager
+            ->getStorage($entity->getEntityTypeId())
+            ->load($entity->id());
+          break;
+
+        default:
+          // At this point it means we are deleting a entity with latest
+          // revision state different from published or archived, and therefore
+          // we load the published version in order to decrement statistics.
+          $entity = $this->entityTypeManager
+            ->getStorage($entity->getEntityTypeId())
+            ->load($entity->id());
+          break;
+
+      }
+    }
 
     // If operation is "create" we assume this group content node is new.
     $group_content_is_new = $operation === self::GROUP_FILE_STATISTICS_CREATE_OPERATION ? TRUE : FALSE;

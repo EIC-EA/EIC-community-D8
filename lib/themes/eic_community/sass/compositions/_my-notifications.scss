@@ -1,0 +1,125 @@
+.ecl-my-notifications {
+  &__header {
+    & > div:first-child {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+
+      & h2 {
+        margin-right: $ecl-spacing-xs;
+      }
+    }
+
+    & .ecl-link--button {
+      white-space: nowrap;
+    }
+  }
+
+  &__body p {
+    line-height: 1.5;
+    @include ecl-media-breakpoint-up('md') {
+      max-width: calc(100% - 150px);
+    }
+  }
+
+  &__section {
+    margin-bottom: $ecl-spacing-3-xl;
+  }
+
+  &__tags-list .ecl-featured-list__item,
+  &__tags-list .ecl-featured-list__item:first-child {
+    padding-left: 0;
+    padding-right: $ecl-spacing-xs;
+    & a {
+      color: $ecl-color-grey-75;
+      text-decoration: none;
+    }
+  }
+}
+
+.ecl-my-notifications-management {
+  &__header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &__table {
+    width: 100%;
+
+    & th {
+      text-align: left;
+      font-weight: normal;
+      padding: $ecl-spacing-xs $ecl-spacing-xs ;
+      border-bottom: 1px solid $ecl-color-grey-15;
+    }
+    & th:nth-child(2) {
+      width:75px;
+      white-space:nowrap;
+    }
+    & th:nth-child(3) {
+      width:115px;
+      white-space:nowrap;
+    }
+    & th:nth-child(3) {
+      text-indent: -9999px;
+    }
+
+    &__item {
+      td {
+        padding: $ecl-spacing-xs $ecl-spacing-xs ;
+        border: none;
+        & > div {
+          display: flex;
+          align-items: center;
+        }
+      }
+      & + & td {
+        border-top: 1px solid $ecl-color-grey-15;
+      }
+      &--parent {
+        background: $ecl-color-grey-5;
+        cursor: pointer;
+      }
+      &--as-no-child {
+        cursor: auto;
+        td:first-child {
+          padding-left: 1.75rem;
+        }
+      }
+    }
+
+    &__label {
+      font-weight: bold;
+      color: $ecl-color-blue;
+      & svg {
+        margin-right: $ecl-spacing-2-xs;
+      }
+    }
+
+    &__status {
+      white-space: nowrap;
+    }
+    &__unsubscribe {
+      white-space: nowrap;
+      text-align: right;
+      button {
+        color: $ecl-color-red-100;
+        background: none;
+        border: none;
+        cursor: pointer;
+        &:hover {
+          color: #004494;
+        }
+      }
+    }
+
+    &__no-results {
+      padding: $ecl-spacing-l $ecl-spacing-xs;
+      text-align: center;
+    }
+  }
+
+}

@@ -1,0 +1,21 @@
+uuid: 77d60772-cef0-4f1d-90a4-86c4d08386fc
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.message.field_rendered_content
+    - message.template.log_req_owner_transfer_accepted
+  module:
+    - text
+id: message.log_req_owner_transfer_accepted.field_rendered_content
+field_name: field_rendered_content
+entity_type: message
+bundle: log_req_owner_transfer_accepted
+label: 'Rendered content'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long

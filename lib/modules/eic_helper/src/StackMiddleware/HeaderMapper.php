@@ -34,12 +34,12 @@ class HeaderMapper implements HttpKernelInterface {
   /**
    * @var \Symfony\Component\HttpKernel\HttpKernelInterface
    */
-  protected $httpKernel;
+  protected HttpKernelInterface $httpKernel;
 
   /**
    * @var \Drupal\Core\Site\Settings
    */
-  protected $settings;
+  protected Settings $settings;
 
   /**
    * @param \Symfony\Component\HttpKernel\HttpKernelInterface $http_kernel
@@ -65,10 +65,26 @@ class HeaderMapper implements HttpKernelInterface {
       $this->settings->get('reverse_proxy') !== FALSE
       && !empty($this->settings->get(self::HEADER_MAPPING_SETTING))
     ) {
+      $this->encodeRequestUri($request);
       $this->mapHeaders($request);
     }
 
     return $this->httpKernel->handle($request, $type, $catch);
+  }
+
+  /**
+   * The platform relies on urls with special characters (e.g: create/group_node:book).
+   * The reverse proxy might send a not encoded value for REQUEST_URI.
+   * This method is intended to encode such values in any case.
+   *
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *
+   * @return void
+   */
+  protected function encodeRequestUri(Request $request) {
+    if (strpos($request->server->get('REQUEST_URI'), ':') !== FALSE) {
+      $request->server->set('REQUEST_URI', str_replace(':', urlencode(':'), $request->server->get('REQUEST_URI')));
+    }
   }
 
   /**

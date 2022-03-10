@@ -247,4 +247,11 @@ class BlockRequestHandler extends AbstractRequestHandler {
     ];
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function canLogRequest() {
+    return FALSE;
+  }
+
 }

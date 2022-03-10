@@ -1,0 +1,59 @@
+uuid: 5f1436ee-d316-4d5e-9c05-fefdc368c7dd
+langcode: en
+status: true
+dependencies:
+  module:
+    - eic_user
+    - route_condition
+label: 'My settings'
+name: my_settings
+group: User
+description: ''
+requireAllConditions: false
+disabled: false
+conditions:
+  route:
+    id: route
+    negate: false
+    uuid: 1048cbf5-1dac-42dd-9d84-febb27d19a53
+    context_mapping: {  }
+    routes: eic_user.my_settings
+reactions:
+  blocks:
+    id: blocks
+    uuid: 40d610c2-cbf5-4572-8b58-070486d98b3b
+    blocks:
+      271b368e-2983-403d-8248-59f3536a0027:
+        uuid: 271b368e-2983-403d-8248-59f3536a0027
+        id: eic_user_header
+        label: 'EIC User Header'
+        provider: eic_user
+        label_display: '0'
+        region: content_before
+        weight: '0'
+        custom_id: eic_user_header
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: my_settings
+        context_mapping: {  }
+        title: 'My settings'
+        third_party_settings: {  }
+      c6989399-789c-436b-86b2-ce597f9bd6ef:
+        uuid: c6989399-789c-436b-86b2-ce597f9bd6ef
+        id: eic_user_notifications_settings
+        label: 'EIC User Notifications Settings'
+        provider: eic_user
+        label_display: '0'
+        region: content
+        weight: '0'
+        custom_id: eic_user_notifications_settings
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: my_settings
+        context_mapping: {  }
+        third_party_settings: {  }
+    include_default_blocks: 0
+    saved: false
+weight: 0

@@ -14,6 +14,7 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
 use Drupal\eic_flags\RequestStatus;
 use Drupal\eic_groups\EICGroupsHelper;
+use Drupal\eic_messages\Util\LogMessageTemplates;
 use Drupal\eic_user\UserHelper;
 use Drupal\flag\Entity\Flag;
 use Drupal\flag\Entity\Flagging;
@@ -21,6 +22,7 @@ use Drupal\flag\FlaggingInterface;
 use Drupal\flag\FlagService;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\group\GroupMembership;
+use Drupal\message\MessageInterface;
 use Drupal\user\Entity\User;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -167,14 +169,24 @@ abstract class AbstractRequestHandler implements HandlerInterface {
     );
 
     // For accepted requests we create a log entry.
-    if ($response === RequestStatus::ACCEPTED) {
+    if (
+      $response === RequestStatus::ACCEPTED &&
+      $this->canLogRequest()
+    ) {
       $log = $this->entityTypeManager->getStorage('message')
         ->create([
-          'template' => 'log_request_accepted',
+          'template' => $this->logMessageTemplate(),
           'field_referenced_flag' => $flagging,
           'uid' => $flagging->getOwnerId(),
         ]);
 
+      $this->messageLogPreSave(
+        $flagging,
+        $content_entity,
+        $response,
+        $reason,
+        $log
+      );
       $log->save();
     }
   }
@@ -519,6 +531,33 @@ abstract class AbstractRequestHandler implements HandlerInterface {
 
     // We trigger the deny method to clear all related caches.
     $this->deny($flagging, $content_entity);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function canLogRequest() {
+    return TRUE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function messageLogPreSave(
+    FlaggingInterface $flagging,
+    ContentEntityInterface $content_entity,
+    string $response,
+    string $reason,
+    MessageInterface $log
+  ) {
+    return $log;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function logMessageTemplate() {
+    return LogMessageTemplates::REQUEST_ARCHIVAL_DELETE;
   }
 
 }

@@ -1,0 +1,23 @@
+uuid: 35723430-1fd8-4daa-8f63-77842346cdbe
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.contact_box
+    - field.storage.block_content.body
+  module:
+    - text
+id: block_content.contact_box.body
+field_name: body
+entity_type: block_content
+bundle: contact_box
+label: Body
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  display_summary: false
+  required_summary: false
+field_type: text_with_summary
