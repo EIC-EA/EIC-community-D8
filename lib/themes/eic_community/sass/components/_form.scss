@@ -329,6 +329,40 @@
     margin-top: map-get($ecl-spacing, "2xl");
     gap: map-get($ecl-spacing, "m");
   }
+
+  .js-media-library-widget {
+    border: none;
+    padding: 0;
+
+    & legend {
+      margin-bottom: $ecl-spacing-m;
+      & .fieldset-legend {
+        padding: 0;
+      }
+    }
+
+    & .fieldset-wrapper {
+      border: 1px solid $ecl-color-grey;
+      padding: $ecl-spacing-m;
+    }
+
+    & .description {
+      opacity: .7;
+      margin-top: $ecl-spacing-m;
+    }
+
+    & .js-media-library-item {
+      display: flex;
+      flex-direction: column-reverse;
+      align-items: flex-start;
+
+      & > article{
+        margin-bottom: $ecl-spacing-m;
+      }
+    }
+
+
+  }
 }
 
 .ecl-text-input {
