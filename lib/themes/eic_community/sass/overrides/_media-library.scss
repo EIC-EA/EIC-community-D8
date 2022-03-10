@@ -1,0 +1,95 @@
+#media-library-content{
+
+    & .ecl-container {
+        max-width: inherit;
+        width: 100%;
+        padding: 0;
+    }
+
+    & .ecl-form {
+        margin-left: 0;
+        border: 1px solid $ecl-color-grey;
+        max-width: inherit;
+        padding: $ecl-spacing-l;
+        box-sizing: border-box;
+    } 
+
+    & .js-media-library-view {
+        border: 1px solid $ecl-color-grey;
+        padding: $ecl-spacing-l;
+
+        & .ecl-form {
+            border: none;
+            padding: 0;
+        }
+
+        & header {
+            grid-area: switch;
+            display: none;
+        }
+
+        & > .ecl-container {
+            grid-area: filter;
+
+            & .ecl-form {
+                display: flex;
+                align-items: flex-end;
+                gap: $ecl-spacing-s;
+
+                & .js-form-item {
+                    margin: 0 !important;
+                }
+            }
+
+        }
+
+        & .views-form {
+            grid-area: view;
+
+            & .js-media-library-views-form {
+                grid-template-columns: repeat( auto-fit, minmax(250px, 1fr) );
+                display: grid;
+                // flex-wrap: wrap;
+
+                & .js-media-library-item {
+                    margin: 0 $ecl-spacing-m;
+
+                    & img {
+                        width: 220px;
+                        height: 140px;
+                        object-fit: cover;
+                        border: 4px solid transparent;
+                    }
+
+                    &.checked img {
+                        border-color: $ecl-color-blue;
+                    }
+
+                    &.media-library-item--disabled {
+                        opacity: .2;
+                        pointer-events: none;
+                    }
+                }
+
+                & .ecl-checkbox {
+                    display: none;
+                }
+            }
+        }
+
+        & .js-pager__items {
+            padding: 0;
+            list-style: none;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+        }
+
+        & .ecl-form {
+            margin: 0;
+        }
+
+
+    }
+
+}
