@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - field.field.message.notify_content_approved.field_event_executing_user
+    - field.field.message.notify_content_approved.field_message
     - field.field.message.notify_content_approved.field_referenced_node
     - message.template.notify_content_approved
 id: message.notify_content_approved.default
@@ -18,6 +19,13 @@ content:
       link: true
     third_party_settings: {  }
     weight: 1
+    region: content
+  field_message:
+    type: basic_string
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 3
     region: content
   field_referenced_node:
     type: entity_reference_label
