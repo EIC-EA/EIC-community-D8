@@ -161,7 +161,7 @@ class ShareManager {
     }
 
     // Check if we can share from source group to target group.
-    if (!$this->canShare($source_group, $target_group)) {
+    if (!$this->canShareToGroup($source_group, $target_group)) {
       throw new \InvalidArgumentException("This content can't be shared");
     }
 
@@ -283,7 +283,7 @@ class ShareManager {
     }
 
     foreach ($unfiltered_groups as $group) {
-      if ($this->canShare($source_group, $group, $visibility_types)) {
+      if ($this->canShareToGroup($source_group, $group, $visibility_types)) {
         $groups[] = $group;
       }
     }
@@ -307,7 +307,7 @@ class ShareManager {
    *
    * @throws \Drupal\Core\TypedData\Exception\MissingDataException
    */
-  public function canShare(
+  public function canShareToGroup(
     GroupInterface $source_group,
     GroupInterface $target_group,
     array $target_group_visibility_types = [GroupVisibilityType::GROUP_VISIBILITY_PUBLIC]
@@ -334,7 +334,7 @@ class ShareManager {
 
     return TRUE;
   }
-  
+
   /**
    * Returns the type for a shared content and given group type.
    *
