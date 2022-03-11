@@ -132,14 +132,41 @@
                 {% endblock %}
 
                 {% if contact.adresses %}
-                    <div class="ecl-organisation__contact__item">
-                        <h3 class="ecl-social-share__title">{{ contact.adresses.title }}</h3>
-                        {% for adresse in contact.adresses.items %}
-                            {% with adresse %}
-                                {{ block('contactAdresse') }}
-                            {% endwith %}
-                        {% endfor %}
-                    </div>
+
+<div class="ecl-organisation__contact__item">
+          <h3 class="ecl-social-share__title">{{ contact.adresses.title }}</h3>
+        {% if contact.adresses.items is not empty %}
+        <div class="ecl-featured-list ecl-featured-list--is-collapsible ecl-featured-list--is-organisation-adresses">
+          <div class="ecl-featured-list__items-wrapper">
+            <div class="ecl-featured-list__items">
+              {% for item in contact.adresses.items %}
+                <div class="ecl-featured-list__item">
+                  {% with item %}
+                    {{ block('contactAdresse') }}
+                  {% endwith %}
+                </div>
+              {% endfor %}
+              <div class="ecl-featured-list__item ecl-featured-list__item--expand">
+                {% include "@ecl-twig/ec-component-button/ecl-button.html.twig" with {
+                  icon_position: 'after',
+                  icon: icon_file_path ? {
+                    path: icon_file_path,
+                    type: 'ui',
+                    name: 'rounded-arrow',
+                    transform: 'rotate-180',
+                    size: '2xs',
+                  } : {},
+                  label: contact.adresses.collapse_label|default('Show all'),
+                  variant: 'ghost',
+                  extra_classes: 'ecl-featured-list__expand'
+                } %}
+              </div>
+            </div>
+          </div>
+          </div>
+        {% endif %}
+        </div>
+
                 {% endif %}
 
                 {% if contact.locations %}

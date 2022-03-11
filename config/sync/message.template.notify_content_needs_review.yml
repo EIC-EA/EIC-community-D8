@@ -1,0 +1,28 @@
+uuid: 73891587-800f-46f8-87b8-3240dd559f2c
+langcode: en
+status: true
+dependencies:
+  config:
+    - filter.format.full_html
+    - filter.format.plain_text
+  module:
+    - eic_messages
+third_party_settings:
+  eic_messages:
+    message_template_type: notification
+template: notify_content_needs_review
+label: 'NOTIFY :: MT52 :: Content needs review'
+description: 'Notification sent to content author when their content is being set as "Needs review".'
+text:
+  -
+    value: "Please review your [message:field_referenced_node:entity:content-type] \"[message:field_referenced_node:entity:title]\"\r\n"
+    format: plain_text
+  -
+    value: "<p>Dear [message:author:display-name],</p>\r\n\r\n<p>Thanks for your contribution!</p>\r\n\r\n<p>[message:field_event_executing_user:entity:display-name] has just reviewed your [message:field_referenced_node:entity:content-type]:&nbsp;<a href=\"[message:field_referenced_node:entity:url]\">[message:field_referenced_node:entity:title]</a>.<br />\r\nCould you review it?</p>\r\n\r\n<p>[message:field_referenced_node:entity:log]</p>\r\n\r\n<p>Please update it and submit your [message:field_referenced_node:entity:content-type] again for approval.</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p>Kind regards,<br />\r\n[message:field_event_executing_user:entity:display-name],<br />\r\nContent moderator for [site:name]</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<hr />\r\n<p>This notification is linked to your content submission.</p>\r\n"
+    format: full_html
+settings:
+  'token options':
+    clear: false
+    'token replace': true
+  purge_override: false
+  purge_methods: {  }
