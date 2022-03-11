@@ -219,7 +219,6 @@
   }
 
   & .fieldgroup .fieldset-legend {
-    //visibility: hidden;
     padding: 0;
   }
 
@@ -322,10 +321,6 @@
   }
 
   & &-group.form-actions {
-    //display: flex;
-    //align-items: center;
-    //justify-content: center;
-    //flex-direction: row;
     margin-top: map-get($ecl-spacing, "2xl");
     gap: map-get($ecl-spacing, "m");
   }
