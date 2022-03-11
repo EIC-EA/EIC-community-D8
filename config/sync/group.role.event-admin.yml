@@ -12,7 +12,6 @@ audience: member
 group_type: event
 permissions_ui: true
 permissions:
-  - 'administer members'
   - 'create group_node:discussion entity'
   - 'create group_node:document entity'
   - 'create group_node:gallery entity'
