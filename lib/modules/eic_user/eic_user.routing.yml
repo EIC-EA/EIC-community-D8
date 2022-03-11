@@ -7,7 +7,7 @@ eic_user.user.activity:
     _custom_access: '\Drupal\eic_user\Controller\MyProfileController::access'
 
 eic_user.user.following:
-  path: '/user/{user}/following'
+  path: '/user/{user}/activity/following'
   defaults:
     _controller: '\Drupal\eic_user\Controller\MyProfileController::activity'
     _title: 'My followings'
@@ -15,7 +15,7 @@ eic_user.user.following:
     _custom_access: '\Drupal\eic_user\Controller\MyProfileController::access'
 
 eic_user.user.contribution:
-  path: '/user/{user}/contribution'
+  path: '/user/{user}/activity/contribution'
   defaults:
     _controller: '\Drupal\eic_user\Controller\MyProfileController::activity'
     _title: 'My contributions'
@@ -23,7 +23,7 @@ eic_user.user.contribution:
     _custom_access: '\Drupal\eic_user\Controller\MyProfileController::access'
 
 eic_user.user.my_groups:
-  path: '/user/{user}/groups'
+  path: '/user/{user}/activity/groups'
   defaults:
     _controller: '\Drupal\eic_user\Controller\MyProfileController::activity'
     _title: 'My groups'
@@ -31,7 +31,7 @@ eic_user.user.my_groups:
     _custom_access: '\Drupal\eic_user\Controller\MyProfileController::access'
 
 eic_user.user.my_events:
-  path: '/user/{user}/events'
+  path: '/user/{user}/activity/events'
   defaults:
     _controller: '\Drupal\eic_user\Controller\MyProfileController::activity'
     _title: 'My events'
