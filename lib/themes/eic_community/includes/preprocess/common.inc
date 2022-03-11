@@ -61,6 +61,13 @@ function _eic_community_get_share_group_content_link(
   GroupInterface $current_group,
   NodeInterface $node
 ) {
+  $account = \Drupal::currentUser();
+
+  // Check if user has permission to share.
+  if (!$current_group->hasPermission('share content between groups', $account)) {
+    return [];
+  }
+
   static $formatted_groups;
   /** @var \Drupal\oec_group_flex\GroupVisibilityDatabaseStorage $group_visibility_storage */
   $group_visibility_storage = \Drupal::service('oec_group_flex.group_visibility.storage');
@@ -74,7 +81,6 @@ function _eic_community_get_share_group_content_link(
   }
 
   if (empty($formatted_groups)) {
-    $account = \Drupal::currentUser();
     $share_manager = \Drupal::service('eic_share_content.share_manager');
     foreach ($share_manager->getShareableTargetGroupsForUser($account, $current_group) as $group) {
       if (!isset($formatted_groups[$group->bundle()])) {
