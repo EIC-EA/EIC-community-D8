@@ -1,0 +1,7 @@
+text:
+  -
+    value: "Please review your [message:field_referenced_node:entity:content-type] \"[message:field_referenced_node:entity:title]\"\r\n"
+    format: plain_text
+  -
+    value: "<p>Dear [message:author:display-name],</p>\r\n\r\n<p>Thanks for your contribution!</p>\r\n\r\n<p>[message:field_event_executing_user:entity:display-name] has just reviewed your [message:field_referenced_node:entity:content-type]:&nbsp;<a href=\"[message:field_referenced_node:entity:url]\">[message:field_referenced_node:entity:title]</a>.<br />\r\nCould you review it?</p>\r\n\r\n<p>[message:field_referenced_node:entity:log]</p>\r\n\r\n<p>Please update it and submit your [message:field_referenced_node:entity:content-type] again for approval.</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p>Kind regards,<br />\r\n[message:field_event_executing_user:entity:display-name],<br />\r\nContent moderator for [site:name]</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<hr />\r\n<p>This notification is linked to your content submission.</p>\r\n"
+    format: full_html

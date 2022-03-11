@@ -14,7 +14,8 @@
   @include ecl-media-breakpoint-up('lg') {
     margin: map-get($ecl-spacing, '3xl') 0;
 
-    &:first-child {
+    &:first-child,
+    &--is-organisation-adresses {
       margin-top: 0;
     }
 
@@ -125,7 +126,8 @@
       }
     }
 
-    #{$node}--is-collapsible#{$node}--is-organisation-announcements#{$node}--is-ready:not([aria-collapsed="false"]) &{
+    #{$node}--is-collapsible#{$node}--is-organisation-announcements#{$node}--is-ready:not([aria-collapsed="false"]) &,
+    #{$node}--is-collapsible#{$node}--is-organisation-adresses#{$node}--is-ready:not([aria-collapsed="false"]) & {
       & ~ #{$node}__item--expand button {
         padding: 0;
       }
