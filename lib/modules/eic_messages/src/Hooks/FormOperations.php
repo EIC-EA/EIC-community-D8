@@ -8,6 +8,7 @@ use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\eic_content\Constants\DefaultContentModerationStates;
 use Drupal\eic_content\EICContentHelper;
 use Drupal\eic_messages\ActivityStreamOperationTypes;
 use Drupal\eic_messages\Service\GroupContentMessageCreator;
@@ -174,7 +175,7 @@ class FormOperations implements ContainerInjectionInterface {
     $entity = $form_state->getFormObject()->getEntity();
 
     // If entity is new or the current state is unpublished, then we set the
-    // acitivity stream operation to "created".
+    // activity stream operation to "created".
     if (
       $entity->isNew() ||
       !$this->contentModerationInfo->isDefaultRevisionPublished($entity)
@@ -205,6 +206,20 @@ class FormOperations implements ContainerInjectionInterface {
 
     /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
     $entity = $form_state->getFormObject()->getEntity();
+
+    // If moderation state is set to DRAFT, we don't create activity stream
+    // message.
+    if (
+      in_array(
+        $entity->get('moderation_state')->value,
+        [
+          DefaultContentModerationStates::DRAFT_STATE,
+        ]
+      )
+    ) {
+      return;
+    }
+
     $group = $this->routeMatch->getParameter('group');
     if (!$group instanceof GroupInterface) {
       $group_content = $this->eicContentHelper->getGroupContentByEntity($entity);
