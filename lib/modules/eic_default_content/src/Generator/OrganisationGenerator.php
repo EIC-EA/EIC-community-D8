@@ -3,8 +3,9 @@
 namespace Drupal\eic_default_content\Generator;
 
 use Drupal\Core\Url;
-use Drupal\eic_moderation\Constants\EICContentModeration;
+use Drupal\eic_content\Constants\DefaultContentModerationStates;
 use Drupal\eic_groups\GroupsModerationHelper;
+use Drupal\eic_moderation\Constants\EICContentModeration;
 use Drupal\group\Entity\Group;
 use Drupal\group\Entity\GroupContent;
 use Drupal\group\Entity\GroupInterface;
