@@ -308,15 +308,28 @@
       width: auto;
       margin: 0;
       display: flex;
+      padding-left: 0;
+      border-bottom: 3px solid $ecl-color-grey-5;
+    }
+
+    &__menu-item {
+      margin-bottom: -3px;
+      border-bottom: 3px solid $ecl-color-grey-5;
+      background: #fff;
+      text-align: center;
     }
 
     & .is-selected {
-      border-width: 1px;
+      border-bottom: 3px solid $ecl-color-blue;
     }
 
     &__pane {
       box-sizing: border-box;
       padding: map-get($ecl-spacing, 'xs');
+    }
+
+    & .form-textarea {
+      width: 100%;
     }
   }
 
@@ -357,6 +370,39 @@
     }
 
 
+  }
+
+  .field-multiple-table {
+    & .ecl-table__row {
+      border: none;
+    }
+
+    & .ecl-table__head {
+      background-color: transparent;
+
+
+      & .ecl-table__header {
+        padding: 0;
+
+        & .label {
+          font-weight: 400;
+          text-transform: uppercase;
+          color: #707070;
+          margin: 0 0 $ecl-spacing-m;
+        }
+      }
+    }
+
+    & .ecl-table__body {
+      & .ecl-table__row {
+        background-color: $ecl-color-grey-5;
+        border-bottom: $ecl-spacing-m solid #fff;
+      }
+    }
+  }
+
+  & .tabledrag-toggle-weight-wrapper {
+    display: none;
   }
 }
 
