@@ -20,3 +20,4 @@ permissions:
   - 'highlight group content'
   - 'post comments'
   - 'view comments'
+  - 'view group_membership content'
