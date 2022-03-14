@@ -98,4 +98,18 @@ class UserGallerySourceType extends SourceType {
     return ['itm_user__group_content__uid_gid', 'itm_shared_groups'];
   }
 
+  /**
+   * @inheritDoc
+   */
+  public function getAuthorFieldId(): string {
+    return 'its_user_id';
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function ignoreAnonymousUser(): bool {
+    return TRUE;
+  }
+
 }

@@ -260,6 +260,13 @@ class SolrSearchController extends ControllerBase {
 
     if (
       $source instanceof SourceTypeInterface &&
+      $source->ignoreAnonymousUser()
+    ) {
+      $fq .= ' AND !(' . $source->getAuthorFieldId() . ':0)';
+    }
+
+    if (
+      $source instanceof SourceTypeInterface &&
       $current_group &&
       $source->excludingCurrentGroup()
     ) {
@@ -560,19 +567,11 @@ class SolrSearchController extends ControllerBase {
         break;
     }
 
-    // Ignore anonymous user.
-    $condition_ignore_anon = "!(its_user_id:0)";
-
     if (empty($query)) {
-      $query = $condition_ignore_anon;
-    }
-
-    if (!empty($fq)) {
-      $fq .= " AND $query AND $condition_ignore_anon";
       return;
     }
 
-    $fq .= "$query AND $condition_ignore_anon";
+    $fq .= !empty($fq) ? " AND $query" : "$query";
   }
 
   /**
