@@ -316,7 +316,7 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
           'filter' => $this->t('Filter', [], ['context' => 'eic_group']),
           'refine' => $this->t('Refine your search', [], ['context' => 'eic_group']),
           'topics' => $this->t('Topics', [], ['context' => 'eic_group']),
-          'search_text' => $this->t('Search here', [], ['context' => 'eic_group']),
+          'search_text' => $this->t('Search', [], ['context' => 'eic_group']),
           'commented_on' => $this->t('commented on', [], ['context' => 'eic_group']),
           'custom_search_text' => [
             'user_gallery' => $this->t('Search for a member', [], ['context' => 'eic_group']),

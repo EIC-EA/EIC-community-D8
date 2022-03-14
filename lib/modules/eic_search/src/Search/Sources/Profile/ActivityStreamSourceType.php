@@ -41,7 +41,7 @@ class ActivityStreamSourceType extends SourceType {
   public function getAvailableFacets(): array {
     return [
       'ss_activity_type' => $this->t('Content type', [], ['context' => 'eic_search']),
-      'sm_content_field_vocab_topics_string' => $this->t('Topic', [], ['context' => 'eic_search']),
+      'sm_content_field_vocab_topics_string' => $this->t('Topics', [], ['context' => 'eic_search']),
     ];
   }
 
