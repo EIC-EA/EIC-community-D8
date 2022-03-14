@@ -99,6 +99,14 @@
       flex-direction: column;
       width: 100%;
       max-width: 100%;
+
+      & input {
+        margin: 0;
+      }
+    }
+
+    &.form-actions {
+      flex-direction: row;
     }
 
     &:first-child {
@@ -298,6 +306,10 @@
 
   & .ecl-table {
     margin: map-get($ecl-spacing, "m") 0;
+
+    &__cell > div {
+      width: 95%;
+    }
   }
 
   & .ecl-table *:not(.handle) {
@@ -344,7 +356,8 @@
   }
 
   .js-media-library-widget,
-  .field--type-daterange .js-form-item {
+  .field--type-daterange .js-form-item,
+  .field--name-field-document-media .js-form-item {
     border: none;
     padding: 0;
 
@@ -355,7 +368,8 @@
       }
     }
 
-    & .fieldset-wrapper {
+    & .fieldset-wrapper,
+    & > .js-form-item {
       border: 1px solid $ecl-color-grey;
       padding: $ecl-spacing-m;
     }
