@@ -4,11 +4,17 @@ namespace Drupal\eic_moderation\Hooks;
 
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
+use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\content_moderation\ModerationInformationInterface;
+use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_moderation\Constants\EICContentModeration;
+use Drupal\eic_moderation\Service\ContentModerationManager;
+use Drupal\group\Context\GroupRouteContextTrait;
+use Drupal\group\Entity\GroupInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -19,14 +25,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class FormOperations implements ContainerInjectionInterface {
 
   use DependencySerializationTrait;
+  use GroupRouteContextTrait;
   use StringTranslationTrait;
-
-  /**
-   * The current route match.
-   *
-   * @var \Drupal\Core\Routing\RouteMatchInterface
-   */
-  protected $currentRouteMatch;
 
   /**
    * The Moderation information service.
@@ -36,18 +36,48 @@ class FormOperations implements ContainerInjectionInterface {
   protected $moderationInformation;
 
   /**
+   * The Moderation information service.
+   *
+   * @var \Drupal\eic_moderation\Service\ContentModerationManager
+   */
+  protected $contentModerationManager;
+
+  /**
+   * The current route match.
+   *
+   * @var \Drupal\eic_groups\EICGroupsHelper
+   */
+  protected $groupsHelper;
+
+  /**
+   * The current user account.
+   *
+   * @var \Drupal\Core\Session\AccountProxyInterface
+   */
+  protected $currentUser;
+
+  /**
    * Constructs a new FormOperations object.
    *
-   * @param \Drupal\Core\Routing\RouteMatchInterface $current_route_match
-   *   The current route match.
    * @param \Drupal\content_moderation\ModerationInformationInterface $moderation_information
    *   The Moderation information service.
+   * @param \Drupal\eic_moderation\Service\ContentModerationManager $content_moderation_manager
+   *   The EIC Content Moderation manager.
+   * @param \Drupal\eic_groups\EICGroupsHelper $groups_helper
+   *   The EIC Groups helper service.
+   * @param \Drupal\Core\Session\AccountProxyInterface $current_user
+   *   The current suer account.
    */
   public function __construct(
-    RouteMatchInterface $current_route_match,
-    ModerationInformationInterface $moderation_information) {
-    $this->currentRouteMatch = $current_route_match;
+    ModerationInformationInterface $moderation_information,
+    ContentModerationManager $content_moderation_manager,
+    EICGroupsHelper $groups_helper,
+    AccountProxyInterface $current_user
+    ) {
     $this->moderationInformation = $moderation_information;
+    $this->contentModerationManager = $content_moderation_manager;
+    $this->groupsHelper = $groups_helper;
+    $this->currentUser = $current_user;
   }
 
   /**
@@ -55,8 +85,10 @@ class FormOperations implements ContainerInjectionInterface {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('current_route_match'),
-      $container->get('content_moderation.moderation_information')
+      $container->get('content_moderation.moderation_information'),
+      $container->get('eic_moderation.content_moderation_manager'),
+      $container->get('eic_groups.helper'),
+      $container->get('current_user')
     );
   }
 
@@ -79,9 +111,11 @@ class FormOperations implements ContainerInjectionInterface {
       $form['revision_information']['#weight'] = 100;
     }
 
-    // We add our custom validation handler, but not when adding a node inside a
-    // group, where we don't require a log message.
-    if (!in_array($this->currentRouteMatch->getRouteName(), $this->getGroupNodeFormRoutes())) {
+    // If we are in a group context.
+    if ($group = $this->hasGroupContext($entity)) {
+      // Make sure we show valid transitions only inside groups.
+      $this->filterFormElementTransitions($form['moderation_state'], $entity, $group, $this->currentUser);
+
       // Add our custom validation handler.
       $form['#validate'][] = [$this, 'eicModerationFormNodeFormValidate'];
     }
@@ -110,16 +144,72 @@ class FormOperations implements ContainerInjectionInterface {
   }
 
   /**
-   * Returns the list of possible routes for node form inside groups.
+   * Filters the allowed target states for moderation_state field.
    *
-   * @return string[]
-   *   A list of route names.
+   * This will filter out non-allowed states based on the user's transitions
+   * permissions.
+   *
+   * This function is needed since gcontent_moderation workflow also includes
+   * global permissions. In our case we need group permissions only.
+   * See https://www.drupal.org/project/gcontent_moderation/issues/3225717
+   *
+   * @param array $element
+   *   The form element coming from $form.
+   * @param \Drupal\Core\Entity\ContentEntityInterface $entity
+   *   The entity being edited.
+   * @param \Drupal\group\Entity\GroupInterface $group
+   *   The group context.
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *   The account for which we check permissions.
    */
-  public function getGroupNodeFormRoutes() {
-    return [
-      'entity.group_content.create_form',
-      'entity.group_content.group_node_add_page',
-    ];
+  public function filterFormElementTransitions(array &$element, ContentEntityInterface $entity, GroupInterface $group, AccountInterface $account) {
+    $target_states = [];
+    /** @var \Drupal\workflows\TransitionInterface $transition */
+    foreach ($this->contentModerationManager->getAllowedTransitions($entity, $group, $account) as $transition) {
+      $target_states[] = $transition->to()->id();
+    }
+
+    // @todo Find a cleaner way to check the form widget being used.
+    // In case of content_moderation widget.
+    if (!empty($element['widget'][0]['state']['#options'])) {
+      foreach ($element['widget'][0]['state']['#options'] as $state => $label) {
+        if (!in_array($state, $target_states)) {
+          unset($element['widget'][0]['state']['#options'][$state]);
+        }
+      }
+    }
+
+    // In case of workflow_buttons widget.
+    if (!empty($element['widget'][0]['#options'])) {
+      foreach ($element['widget'][0]['#options'] as $state => $label) {
+        if (!in_array($state, $target_states)) {
+          unset($element['widget'][0]['#options'][$state]);
+        }
+      }
+    }
+  }
+
+  /**
+   * Determines if we are editing the given entity in a group context.
+   *
+   * @param \Drupal\Core\Entity\ContentEntityInterface $entity
+   *   The entity.
+   *
+   * @return \Drupal\group\Entity\GroupInterface|false
+   *   The group entity if we are in a group context, FALSE otherwise.
+   */
+  public function hasGroupContext(ContentEntityInterface $entity) {
+    // New entities are not yet associated with a group, but if we are using the
+    // wizard we can discover the group from the route parameters.
+    if ($entity->isNew() && $group = $this->getGroupFromRoute()) {
+      return $group;
+    }
+
+    if ($group = $this->groupsHelper->getOwnerGroupByEntity($entity)) {
+      return $group;
+    }
+
+    return FALSE;
   }
 
 }
