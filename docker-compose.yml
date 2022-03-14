@@ -73,7 +73,7 @@ services:
     entrypoint:
       - docker-entrypoint.sh
       - solr-precreate
-      - eic
+      - ${SEARCH_INDEX}
 
   tika:
     image: apache/tika:2.1.0
