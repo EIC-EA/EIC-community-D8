@@ -53,7 +53,7 @@
             {% if organisation.path is not empty %}
               <a class="ecl-teaser__link" href="{{ organisation.path }}">{{ organisation.label }}</a>
             {% else %}
-              <span>{{ organisation.label }}</span>
+              <span class="ecl-teaser__link">{{ organisation.label }}</span>
             {% endif %}
           {% endfor %}
         </div>
