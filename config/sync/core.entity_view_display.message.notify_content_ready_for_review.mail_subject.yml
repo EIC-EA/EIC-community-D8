@@ -5,6 +5,7 @@ dependencies:
   config:
     - core.entity_view_mode.message.mail_subject
     - field.field.message.notify_content_ready_for_review.field_event_executing_user
+    - field.field.message.notify_content_ready_for_review.field_message
     - field.field.message.notify_content_ready_for_review.field_referenced_node
     - message.template.notify_content_ready_for_review
 id: message.notify_content_ready_for_review.mail_subject
@@ -17,6 +18,7 @@ content:
     region: content
 hidden:
   field_event_executing_user: true
+  field_message: true
   field_referenced_node: true
   partial_1: true
   search_api_excerpt: true

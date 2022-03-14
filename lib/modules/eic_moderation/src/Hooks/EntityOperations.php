@@ -125,6 +125,7 @@ class EntityOperations implements ContainerInjectionInterface {
             'uid' => $uid,
             'field_referenced_node' => $node->id(),
             'field_event_executing_user' => $this->userHelper->getCurrentUser()->id(),
+            'field_message' => $node->getRevisionLogMessage(),
           ]);
         }
         break;
@@ -136,6 +137,7 @@ class EntityOperations implements ContainerInjectionInterface {
           'uid' => $node->getOwnerId(),
           'field_referenced_node' => $node->id(),
           'field_event_executing_user' => $this->userHelper->getCurrentUser()->id(),
+          'field_message' => $node->getRevisionLogMessage(),
         ]);
         break;
 
@@ -146,6 +148,7 @@ class EntityOperations implements ContainerInjectionInterface {
           'uid' => $node->getOwnerId(),
           'field_referenced_node' => $node->id(),
           'field_event_executing_user' => $this->userHelper->getCurrentUser()->id(),
+          'field_message' => $node->getRevisionLogMessage(),
         ]);
         break;
     }

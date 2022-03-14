@@ -26,6 +26,7 @@ permissions:
   - 'access members overview'
   - 'access news overview'
   - 'access wiki overview'
+  - 'administer members'
   - 'join group'
   - 'view group'
   - 'view group_node:event content'
