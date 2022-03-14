@@ -120,6 +120,8 @@ function eic_community_preprocess_views_view(&$variables) {
             'label' => t('Add news'),
             'path' => $url_add_news->toString(),
           ],
+          'extra_classes' => 'ecl-link ecl-link--cta',
+          'type' => 'cta',
         ];
       }
       break;
@@ -151,6 +153,8 @@ function eic_community_preprocess_views_view(&$variables) {
             'label' => t('Add event'),
             'path' => $url_add_event->toString(),
           ],
+          'extra_classes' => 'ecl-link ecl-link--cta',
+          'type' => 'cta',
         ];
       }
       break;

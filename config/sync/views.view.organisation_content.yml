@@ -383,6 +383,19 @@ display:
             label: ''
             field_identifier: ''
           exposed: false
+        content_field_date_range:
+          id: content_field_date_range
+          table: search_api_index_global
+          field: content_field_date_range
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: search_api
+          order: ASC
+          expose:
+            label: ''
+            field_identifier: ''
+          exposed: false
       filters:
         content_type:
           id: content_type
