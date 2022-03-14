@@ -116,7 +116,9 @@ class FormOperations implements ContainerInjectionInterface {
       // Make sure we show valid transitions only inside groups.
       $this->filterFormElementTransitions($form['moderation_state'], $entity, $group, $this->currentUser);
 
-      // Add our custom validation handler.
+    }
+    else {
+      // In case of a global content, add our custom validation handler.
       $form['#validate'][] = [$this, 'eicModerationFormNodeFormValidate'];
     }
   }
