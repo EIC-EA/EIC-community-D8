@@ -11,12 +11,12 @@
             {{ item.link.label }}
           </a>
           <span class="ecl-navigation-list__link-controls">
-            {% if item.updates %}
-              {% include "@theme/patterns/components/update-indicator.html.twig" with item.updates|default({})|merge({
-                extra_classes: 'ecl-navigation-list__update-indicator',
-              }) %}
-            {% endif %}
             {% if item.items %}
+              {% include "@theme/patterns/components/update-indicator.html.twig" with {
+                label: 'items',
+                value: item.items|length,
+                extra_classes: 'ecl-navigation-list__update-indicator',
+              } %}
               {% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with {
                 icon: icon_file_path ? {
                   path: icon_file_path,
