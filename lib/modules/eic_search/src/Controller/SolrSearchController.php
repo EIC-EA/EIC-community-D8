@@ -474,7 +474,8 @@ class SolrSearchController extends ControllerBase {
 
     $status_query = ' AND (bs_global_status:true';
 
-    if ($source instanceof GroupSourceType) {
+    // User can see their group if status false but he is owner.
+    if ('group' === $source->getEntityBundle()) {
       $status_query .= ' OR (its_group_owner_id:' . $user_id . ')';
     }
 
