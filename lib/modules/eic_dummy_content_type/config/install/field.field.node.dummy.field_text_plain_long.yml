@@ -1,0 +1,18 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_text_plain_long
+    - node.type.dummy
+id: node.dummy.field_text_plain_long
+field_name: field_text_plain_long
+entity_type: node
+bundle: dummy
+label: 'Text (plain long)'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string_long
