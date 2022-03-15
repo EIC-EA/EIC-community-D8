@@ -104,6 +104,15 @@
     flex-wrap: wrap;
   }
 
+  &-form {
+    &__textarea-wrapper {
+      margin-bottom: $ecl-spacing-m;
+    }
+    &__toolbar-aside {
+      justify-content: flex-end;
+    }
+  }
+
   &__author-info {
     color: ecl-typography('color', 'meta');
 
@@ -207,16 +216,16 @@
       margin-right: 2px;
     }
 
-    &:after{
+    &:after {
       content: '•';
       position: absolute;
       top: 50%;
       right: 0px;
       transform: translateY(-50%);
-      color: #BFD0E4;
+      color: #bfd0e4;
     }
 
-    &:last-child:after{
+    &:last-child:after {
       display: none;
     }
   }
