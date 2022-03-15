@@ -207,7 +207,7 @@ class FormOperations implements ContainerInjectionInterface {
       return $group;
     }
 
-    if ($group = $this->groupsHelper->getOwnerGroupByEntity($entity)) {
+    if (!$entity->isNew() && $group = $this->groupsHelper->getOwnerGroupByEntity($entity)) {
       return $group;
     }
 
