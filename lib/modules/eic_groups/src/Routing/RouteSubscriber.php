@@ -67,6 +67,7 @@ class RouteSubscriber extends RouteSubscriberBase {
     $target_routes = [
       'view.eic_group_members.page_group_members',
       'view.admin_blocked_entities.page_admin_group_blocked_history',
+      'entity.group.edit_form',
     ];
 
     foreach ($target_routes as $route_name) {
