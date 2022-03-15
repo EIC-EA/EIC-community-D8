@@ -105,6 +105,11 @@
   }
 
   &-form {
+    &__tagged-user {
+      display: flex;
+      align-items: center;
+      justify-self: center;
+    }
     &__textarea-wrapper {
       margin-bottom: $ecl-spacing-m;
     }
