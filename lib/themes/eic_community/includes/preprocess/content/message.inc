@@ -7,6 +7,10 @@ use Drupal\message\MessageInterface;
  * Implements hook_preprocess_message().
  */
 function eic_community_preprocess_message(&$variables) {
+  if ($variables['view_mode'] !== 'mail_body') {
+    return;
+  }
+  
   $supported_templates = [
     'notify_user_tagged_on_comment' => function (MessageInterface $message) {
       /** @var \Drupal\node\NodeInterface $comment */
