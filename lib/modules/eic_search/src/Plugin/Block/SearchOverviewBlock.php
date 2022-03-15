@@ -243,7 +243,7 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
         $user_group_roles
       ),
       'label_my_groups' => $source->getLabelFilterMyGroups(),
-      'registration_filter' => $this->t('Open registration', [], ['context' => 'eic_search']),
+      'open_registration_filter' => $this->t('Open registration', [], ['context' => 'eic_search']),
       'is_group_admin' => array_key_exists(
         EICGroupsHelper::GROUP_ADMINISTRATOR_ROLE,
         $user_group_roles
@@ -316,11 +316,14 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
           'filter' => $this->t('Filter', [], ['context' => 'eic_group']),
           'refine' => $this->t('Refine your search', [], ['context' => 'eic_group']),
           'topics' => $this->t('Topics', [], ['context' => 'eic_group']),
-          'search_text' => $this->t('Search here', [], ['context' => 'eic_group']),
+          'search_placeholder' => $this->t('Search here', [], ['context' => 'eic_group']),
+          'search_text' => $this->t('Search for ' . $source->getEntityBundle(), [], ['context' => 'eic_group']),
+          'date_filter_label' => $this->t('Dates', [], ['context' => 'eic_group']),
           'commented_on' => $this->t('commented on', [], ['context' => 'eic_group']),
           'custom_search_text' => [
             'user_gallery' => $this->t('Search for a member', [], ['context' => 'eic_group']),
             'group' => $this->t('Search for a group', [], ['context' => 'eic_group']),
+            'global_event' => $this->t('Search for an event', [], ['context' => 'eic_group']),
           ],
           'no_results_title' => $this->t(
             'We haven’t found any search results',
