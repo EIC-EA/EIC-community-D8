@@ -206,14 +206,22 @@ class FormAlter {
         if (!empty($membership)) {
           $invalid_emails[] = $email;
 
-          $error_message .= "<li>Invitation to $email already a member of this group.</li>";
+          $error_message .= "<li>" . $this->t(
+              'User @email is already member of the group.',
+              ['@email' => $email],
+              ['context' => 'eic_user']
+            ) . "</li>";
         }
       }
 
       if ($invitation_loader->loadByGroup($group, NULL, $email)) {
         $invalid_emails[] = $email;
 
-        $error_message .= "<li>User $email already received an invitation.</li>";
+        $error_message .= "<li>" . $this->t(
+            'User @email already received an invitation.',
+            ['@email' => $email],
+            ['context' => 'eic_user']
+          ) . "</li>";
       }
     }
 
@@ -236,14 +244,20 @@ class FormAlter {
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the form.
    */
-  private function displayErrorMessage(array $invalid_emails, $message_singular, $message_plural, FormStateInterface $form_state) {
+  private function displayErrorMessage(
+    array $invalid_emails,
+    $message_singular,
+    $message_plural,
+    FormStateInterface $form_state
+  ) {
     if (($count = count($invalid_emails)) > 1) {
       $error_message = '<ul>';
       foreach ($invalid_emails as $line => $invalid_email) {
         $error_message .= "<li>{$invalid_email} on line {$line}</li>";
       }
       $error_message .= '</ul>';
-      $form_state->setErrorByName('email_address',
+      $form_state->setErrorByName(
+        'email_address',
         $this->formatPlural(
           $count,
           $message_singular,
@@ -256,7 +270,8 @@ class FormAlter {
     }
     elseif ($count == 1) {
       $error_message = reset($invalid_emails);
-      $form_state->setErrorByName('email_address',
+      $form_state->setErrorByName(
+        'email_address',
         $this->formatPlural(
           $count,
           $message_singular,

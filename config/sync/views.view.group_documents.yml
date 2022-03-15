@@ -300,7 +300,7 @@ display:
       use_more_always: true
       use_more_text: 'View all'
       link_display: custom_url
-      link_url: '<front>'
+      link_url: 'group/{{ raw_arguments.gid }}/library'
       header:
         area:
           id: area
