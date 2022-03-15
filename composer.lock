@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4479df8fae4b4e26f81d826d40841a01",
+    "content-hash": "56d71d3b22acda31b919bcd81903321a",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -7700,7 +7700,8 @@
                     }
                 },
                 "patches_applied": {
-                    "3173296 - Batch mode does not allow other modules to alter query": "https://www.drupal.org/files/issues/2021-02-12/3173296-9-batch-query-alter.patch"
+                    "3173296 - Batch mode does not allow other modules to alter query": "https://www.drupal.org/files/issues/2021-02-12/3173296-9-batch-query-alter.patch",
+                    "3241213 - Add S3 bucket support": "https://www.drupal.org/files/issues/2021-10-07/s3-bucket-support--3241213.patch"
                 }
             },
             "notification-url": "https://packages.drupal.org/8/downloads",
@@ -18845,7 +18846,7 @@
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=7.2",
+        "php": ">=7.4",
         "ext-json": "*"
     },
     "platform-dev": [],
