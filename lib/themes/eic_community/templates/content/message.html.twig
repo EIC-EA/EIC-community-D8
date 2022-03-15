@@ -33,7 +33,7 @@
     {% if additional_links is not empty %}
         <div class="message__text-wrapper">
             {% for link in additional_links %}
-                <a class="{{ 'cta__' ~ link.type }}" href="{{ link.path }}" target="_blank">{{ link.label }}</a>
+                <a {{ link.attributes}} href="{{ link.path }}" target="_blank">{{ link.label }}</a>
             {% endfor %}
         </div>
     {% endif %}

@@ -1,5 +1,6 @@
 <?php
 
+use Drupal\Core\Template\Attribute;
 use Drupal\Core\Url;
 use Drupal\message\MessageInterface;
 
@@ -10,7 +11,7 @@ function eic_community_preprocess_message(&$variables) {
   if ($variables['view_mode'] !== 'mail_body') {
     return;
   }
-  
+
   $supported_templates = [
     'notify_user_tagged_on_comment' => function (MessageInterface $message) {
       /** @var \Drupal\node\NodeInterface $comment */
@@ -24,7 +25,7 @@ function eic_community_preprocess_message(&$variables) {
           'path' => Url::fromRoute(
             'entity.node.canonical',
             ['node' => $node->id(), 'highlighted-comment' => $comment->id()])->toString(),
-          'type' => 'yellow',
+          'attributes' => new Attribute(['class' => ['cta__yellow', 'cta__centered']]),
         ],
       ];
     },
