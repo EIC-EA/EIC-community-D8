@@ -193,3 +193,10 @@ function eic_deploy_update_9004(&$sandbox) {
     $groupPermissions->save();
   }
 }
+
+/**
+ * Remove "view comments" permission from group outsider roles.
+ */
+function eic_deploy_update_9005(&$sandbox) {
+  eic_groups_update_9002($sandbox);
+}
