@@ -144,6 +144,22 @@ deploy_migration_env:
   only:
     - /^release/.*$/
 
+rollback_trigger_updb_develop:
+  <<: *deploy_job
+  script:
+    - >
+      ssh -p $SSH_PORT $PROJECT_USER@$HOST "source /.victhorious/conf/shell/envvars && cd $PROJECT_DIR &&
+      ./vendor/bin/drush php-eval "echo drupal_set_installed_schema_version('eic_deploy', $UPDB_VERSION);" &&
+      ./vendor/bin/drush updb -y &&
+      ./vendor/bin/drush cim -y &&
+      ./vendor/bin/drush cr
+  stage: deploy
+  when: manual
+  variables:
+    HOST: $DEVELOP_HOST
+  only:
+    - develop
+
 slack_notifier:
   stage: notify
   image: curlimages/curl:latest
