@@ -18,7 +18,7 @@ text:
     value: 'Your [message:field_group_ref:entity:type-name] request on European Innovation Council'
     format: plain_text
   -
-    value: "<p>Dear [message:author:display-name],</p>\r\n\r\n<p>Thank you for requesting the creation of the following [message:field_group_ref:entity:type-name] at European Innovation Council:<br />\r\n[message:field_group_ref:entity:type-name] [message:field_group_ref:entity:title]</p>\r\n\r\n<p>Your request is currently pending review by one of the site's administrators and should be treated shortly.</p>\r\n\r\n<p>If you have any questions, please feel free to <a href=\"mailto:EISMEA-SME-HELPDESK@ec.europa.eu\">contact us</a>.</p>\r\n\r\n<p>The EIC Community team</p>\r\n"
+    value: "<p>Dear [message:author:display-name],</p>\r\n\r\n<p>Thank you for requesting the creation of the following [message:field_group_ref:entity:type-name] at European Innovation Council: <a href=\"[message:field_group_ref:entity:url]\">[message:field_group_ref:entity:title]</a>.</p>\r\n\r\n<p>Your request is currently pending review by one of the site's administrators and should be treated shortly.</p>\r\n\r\n<p>If you have any questions, please feel free to <a href=\"mailto:EISMEA-SME-HELPDESK@ec.europa.eu\">contact us</a>.</p>\r\n\r\n<p>The EIC Community team</p>\r\n"
     format: full_html
 settings:
   'token options':
