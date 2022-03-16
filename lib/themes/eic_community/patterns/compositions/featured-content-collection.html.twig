@@ -61,17 +61,17 @@
             {% if call_to_action %}
                 {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with {
                     link: call_to_action.link|default({})|merge({
-                        type: 'standalone',
+                        type: call_to_action.type|default('standalone'),
                         icon_position: 'after',
                     }),
-                    icon: icon_file_path ? {
+                    icon: icon_file_path and call_to_action.type != 'cta' ? {
                         path: icon_file_path,
                         name: call_to_action.icon.name|default('rounded-arrow'),
                         type: call_to_action.icon.type|default('ui'),
                         size: call_to_action.icon.size|default('xs'),
                         transform: call_to_action.icon.transform|default('rotate-90')
                     } : {},
-                    extra_classes: 'ecl-featured-content-collection__call-to-action ecl-link--button ecl-link--button-ghost',
+                    extra_classes: call_to_action.extra_classes|default('ecl-featured-content-collection__call-to-action ecl-link--button ecl-link--button-ghost'),
                 } only %}
             {% endif %}
         </footer>

@@ -159,7 +159,7 @@ class SolrSearchController extends ControllerBase {
         // If user only selected one day, we will only filter on the start date.
         // for eg: user select on widget 23-11-2021 - 23-11-2021 (double click)
         // we only do a query from 23-11-2021 to *.
-        $end_date = $end_date === $from_date ? '*' : $end_date;
+        $end_date = $end_date === $from_date ? $end_date + 86400 : $end_date;
         $dates_query = [];
 
         $dates_query[] = "($date_from_id:[$from_date TO $end_date] AND $date_end_id:[$from_date TO $end_date])";
@@ -481,7 +481,8 @@ class SolrSearchController extends ControllerBase {
 
     $status_query = ' AND (bs_global_status:true';
 
-    if ($source instanceof GroupSourceType) {
+    // User can see their group if status false but he is owner.
+    if ('group' === $source->getEntityBundle()) {
       $status_query .= ' OR (its_group_owner_id:' . $user_id . ')';
     }
 

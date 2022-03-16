@@ -119,7 +119,7 @@ class BlockContentGenerator extends CoreGenerator {
       ],
       'field_title' => "Didn't find what you were looking for?",
       'field_cta_button' => [
-        'uri' => Url::fromRoute('<front>')->toUriString(),
+        'uri' => Url::fromRoute('contact.site_page')->toString(),
         'title' => 'Contact us',
         'link_type' => 'default',
       ],

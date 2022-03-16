@@ -18,7 +18,8 @@ function eic_community_preprocess_paragraph__quote(array &$variables) {
     case 'external_person':
       // Add external person name.
       if (!$paragraph->get('field_name')->isEmpty()) {
-        $variables['paragraph_content']['author'] = $paragraph->get('field_name')->value;
+        $variables['paragraph_content']['name'] = $paragraph->get('field_name')->value;
+        $variables['paragraph_content']['author'] = TRUE;
       }
 
       // Add external person image.
@@ -36,11 +37,12 @@ function eic_community_preprocess_paragraph__quote(array &$variables) {
 
     case 'platform_member':
       if (!$paragraph->get('field_user_ref')->isEmpty()) {
+        $variables['paragraph_content']['author'] = TRUE;
         /** @var \Drupal\user\UserInterface $user */
         $user = $paragraph->get('field_user_ref')->entity;
 
         // Add user full name to the theme variables.
-        $variables['paragraph_content']['author'] = $user->getDisplayName();
+        $variables['paragraph_content']['name'] = $user->getDisplayName();
 
         // Add user image.
         if (!$user->get('field_media')->isEmpty()) {
