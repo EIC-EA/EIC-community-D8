@@ -60,7 +60,7 @@ build_front:
   script:
     - cd lib/themes/eic_community
     - npm install && npm run build && npm run react-production
-    - npm run pregenerate-storybook && npm run generate-storybook && npm run postgenerate-storybook
+#    - npm run pregenerate-storybook && npm run generate-storybook && npm run postgenerate-storybook
     - cd node_modules && find . -mindepth 1 -maxdepth 1 -type d ! -name "@ecl*" -exec rm -rf {} +
   only:
     - /^release/.*$/
@@ -152,7 +152,7 @@ rollback_trigger_updb_develop:
       ./vendor/bin/drush php-eval \"echo drupal_set_installed_schema_version('eic_deploy', $UPDB_VERSION);\" &&
       ./vendor/bin/drush updb -y &&
       ./vendor/bin/drush cim -y &&
-      ./vendor/bin/drush cr
+      ./vendor/bin/drush cr"
   stage: deploy
   when: manual
   variables:
