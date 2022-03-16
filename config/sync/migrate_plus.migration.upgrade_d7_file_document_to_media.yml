@@ -1,0 +1,46 @@
+uuid: 8a22140a-3735-480b-b2e8-bc774bde29fa
+langcode: en
+status: true
+dependencies: {  }
+id: upgrade_d7_file_document_to_media
+class: Drupal\migrate\Plugin\Migration
+field_plugin_method: null
+cck_plugin_method: null
+migration_tags:
+  - 'Drupal 7'
+  - Content
+migration_group: migrate_drupal_7
+label: 'Public and private document files to media'
+source:
+  plugin: eic_d7_file_complete
+  file_type: document
+  scheme:
+    - public
+    - private
+  track_changes: true
+process:
+  name: filename
+  uid:
+    -
+      plugin: migration_lookup
+      source: uid
+      migration:
+        - upgrade_d7_user
+  created: timestamp
+  changed: timestamp
+  field_media_file/target_id:
+    -
+      plugin: migration_lookup
+      source: fid
+      migration:
+        - upgrade_d7_file
+        - upgrade_d7_file_private
+destination:
+  plugin: 'entity:media'
+  default_bundle: eic_document
+migration_dependencies:
+  required:
+    - upgrade_d7_user
+    - upgrade_d7_file
+    - upgrade_d7_file_private
+  optional: {  }

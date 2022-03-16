@@ -1,0 +1,58 @@
+# TODO: WIP migration
+langcode: en
+status: true
+dependencies: {  }
+id: upgrade_d7_node_complete_article_external_contributors_paragraph
+class: Drupal\migrate\Plugin\Migration
+field_plugin_method: null
+cck_plugin_method: null
+migration_tags:
+  - 'Drupal 7'
+  - Content
+migration_group: migrate_drupal_7
+label: 'Node complete (Story) external contributors paragraph (c4m_link_multiple)'
+source:
+  plugin: eic_d7_field_value
+  field_name: c4m_link_multiple
+  bundle: article
+  ids:
+    c4m_link_multiple_title:
+      type: string
+  track_changes: true
+  constants:
+    PARAGRAPH_VIEW_MODE: 'external_person'
+process:
+  # TODO: Perhaps needed for creating the paragraphs with revisions instead of a new paragraph for each revision
+  #  entity_id:
+  #    - plugin: migration_lookup
+  #      source: entity_id
+  #      migration:
+  #        - upgrade_d7_node_complete_article_internal_contributors_paragraph
+  # TODO: Depending on external or internal contributor (values: external_person / platform_member)
+  paragraph_view_mode: constants/PARAGRAPH_VIEW_MODE
+  # TODO: Use the following field for the internal contributors: c4m_related_user
+#  field_user_ref/target_id:
+#    - plugin: migration_lookup
+#      source: c4m_related_user_target_id
+#      migration:
+#        - upgrade_d7_user
+  # TODO: Use the following fields for the external contributors? c4m_link_multiple
+  field_contributor_link/uri:
+    - plugin: skip_on_empty
+      method: process
+      source: c4m_link_multiple_url
+  field_contributor_link/title:
+    - plugin: skip_on_empty
+      method: process
+      source: c4m_link_multiple_url
+    - plugin: get
+      source: c4m_link_multiple_title
+  field_title/value:
+    - plugin: get
+      source: c4m_link_multiple_title
+destination:
+  plugin: 'entity_reference_revisions:paragraph'
+  default_bundle: contributor
+migration_dependencies:
+  required: { }
+  optional: { }

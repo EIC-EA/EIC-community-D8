@@ -1,0 +1,64 @@
+uuid: 6eb1a9a3-7a68-41ee-87a9-67828ae9d79e
+langcode: en
+status: true
+dependencies:
+  config:
+    - group_content_menu.group_content_menu_type.group_main_menu
+  module:
+    - eic_groups
+    - route_condition
+label: 'Group Content - Global'
+name: group_content_global
+group: Groups
+description: 'This context is used as global Group content context'
+requireAllConditions: true
+disabled: false
+conditions:
+  route:
+    id: route
+    negate: false
+    uuid: df5ac6fd-1e86-44f6-9ff6-e46b4cfc36f1
+    context_mapping: {  }
+    routes: "entity.group_content.new_request\r\nentity.group_content.user_close_request\r\nentity.group_content.user_cancel_request"
+reactions:
+  blocks:
+    id: blocks
+    uuid: eee2af2a-bea1-4c9a-8012-20aa5543365a
+    blocks:
+      6ebffc8d-ce4c-45ab-b138-e6dd4e22db28:
+        uuid: 6ebffc8d-ce4c-45ab-b138-e6dd4e22db28
+        id: eic_group_header
+        label: 'EIC Group header'
+        provider: eic_groups
+        label_display: '0'
+        region: page_header
+        weight: '0'
+        custom_id: eic_group_header
+        theme: eic_community
+        css_class: ''
+        unique: 1
+        context_id: group_content_global
+        context_mapping:
+          group: '@group.group_route_context:group'
+      75a8b5e9-e237-4385-877d-0a462e12e2d7:
+        uuid: 75a8b5e9-e237-4385-877d-0a462e12e2d7
+        id: 'eic_group_content_menu:group_main_menu'
+        label: 'Group - Main menu'
+        provider: eic_groups
+        label_display: '0'
+        region: page_header
+        weight: '1'
+        custom_id: eic_group_content_menu_group_main_menu
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: group_content_global
+        context_mapping:
+          group: '@group.group_route_context:group'
+        level: '1'
+        depth: '0'
+        expand_all_items: 0
+        third_party_settings: {  }
+    include_default_blocks: 0
+    saved: false
+weight: -7

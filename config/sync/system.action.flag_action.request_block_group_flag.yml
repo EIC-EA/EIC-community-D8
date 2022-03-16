@@ -1,0 +1,15 @@
+uuid: 83c872e2-1d58-4bfb-a188-f1388681b7e3
+langcode: en
+status: true
+dependencies:
+  config:
+    - flag.flag.request_block_group
+  module:
+    - flag
+id: flag_action.request_block_group_flag
+label: 'Flag this item'
+type: group
+plugin: 'flag_action:request_block_group_flag'
+configuration:
+  flag_id: request_block_group
+  flag_action: flag

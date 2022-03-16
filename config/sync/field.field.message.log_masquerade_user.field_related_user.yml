@@ -1,0 +1,26 @@
+uuid: 1330b362-9081-49ab-94cd-78022b369154
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.message.field_related_user
+    - message.template.log_masquerade_user
+id: message.log_masquerade_user.field_related_user
+field_name: field_related_user
+entity_type: message
+bundle: log_masquerade_user
+label: 'Masqueraded user'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:group_membership'
+  handler_settings:
+    target_bundles: null
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+field_type: entity_reference

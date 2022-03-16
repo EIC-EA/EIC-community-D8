@@ -1,0 +1,12 @@
+permissions:
+  - 'access members overview'
+public_permissions: {  }
+roles:
+  - event-member
+  - event-admin
+  - event-owner
+  - group-member
+  - group-admin
+  - group-owner
+  - organisation-admin
+  - organisation-owner

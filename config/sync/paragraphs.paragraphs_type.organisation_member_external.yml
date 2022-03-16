@@ -1,0 +1,10 @@
+uuid: cf7a0941-be97-4e75-98c1-b91923c37f0f
+langcode: en
+status: true
+dependencies: {  }
+id: organisation_member_external
+label: 'Organisation - member (external)'
+icon_uuid: null
+icon_default: null
+description: ''
+behavior_plugins: {  }

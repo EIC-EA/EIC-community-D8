@@ -1,0 +1,35 @@
+uuid: eda209c9-e212-4f82-b1ce-82446f0c70ea
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.message.notify_content_ready_for_review.field_event_executing_user
+    - field.field.message.notify_content_ready_for_review.field_message
+    - field.field.message.notify_content_ready_for_review.field_referenced_node
+    - message.template.notify_content_ready_for_review
+id: message.notify_content_ready_for_review.default
+targetEntityType: message
+bundle: notify_content_ready_for_review
+mode: default
+content:
+  field_message:
+    type: basic_string
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  partial_0:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  partial_1:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  field_event_executing_user: true
+  field_referenced_node: true
+  search_api_excerpt: true

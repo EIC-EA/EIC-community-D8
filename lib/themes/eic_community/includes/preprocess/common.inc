@@ -47,15 +47,27 @@ function _eic_community_get_social_share_block() {
 }
 
 /**
- * @param \Drupal\group\Entity\GroupInterface $group
+ * Returns the build for the content share feature.
+ *
+ * @param \Drupal\group\Entity\GroupInterface $current_group
+ *   The group entity we're sharing from.
  * @param \Drupal\node\NodeInterface $node
+ *   The content entity we want to share.
  *
  * @return array
+ *   The build array.
  */
 function _eic_community_get_share_group_content_link(
   GroupInterface $current_group,
   NodeInterface $node
 ) {
+  $account = \Drupal::currentUser();
+
+  // Check if user has permission to share.
+  if (!$current_group->hasPermission('share content between groups', $account)) {
+    return [];
+  }
+
   static $formatted_groups;
   /** @var \Drupal\oec_group_flex\GroupVisibilityDatabaseStorage $group_visibility_storage */
   $group_visibility_storage = \Drupal::service('oec_group_flex.group_visibility.storage');
@@ -69,14 +81,8 @@ function _eic_community_get_share_group_content_link(
   }
 
   if (empty($formatted_groups)) {
-    /** @var \Drupal\group\Entity\GroupInterface[] $groups */
-    $groups = \Drupal::service('eic_groups.helper')
-      ->getGroupsByVisibility(GroupVisibilityType::GROUP_VISIBILITY_PUBLIC);
-    foreach ($groups as $group) {
-      if ($group->id() === $current_group->id()) {
-        continue;
-      }
-
+    $share_manager = \Drupal::service('eic_share_content.share_manager');
+    foreach ($share_manager->getShareableTargetGroupsForUser($account, $current_group) as $group) {
       if (!isset($formatted_groups[$group->bundle()])) {
         $formatted_groups[$group->bundle()] = [
           'label' => $group->type->entity->label(),
@@ -138,7 +144,7 @@ function _eic_community_get_flag_access($flag_id, EntityInterface $entity) {
   $user_flag = $flag_service->getFlagging($flag, $entity);
   $action = $user_flag ? 'unflag' : 'flag';
 
-  return $flag->actionAccess($action);
+  return $flag->actionAccess($action, NULL, $entity);
 }
 
 /**
@@ -320,4 +326,31 @@ function _eic_community_process_term_parents_tree(TermInterface $term, array $te
   }
 
   return $terms;
+}
+
+/**
+ * Loads breadcrumb block to use it in twig templates.
+ *
+ * @return array
+ *   The renderable array of the block.
+ */
+function _eic_community_load_breadcrumb_block() {
+  $block_manager = \Drupal::service('plugin.manager.block');
+  // You can hard code configuration or you load from settings.
+  $config = [];
+  $plugin_block = $block_manager->createInstance('system_breadcrumb_block', $config);
+  // Some blocks might implement access check.
+  $access_result = $plugin_block->access(\Drupal::currentUser());
+  // Return empty render array if user doesn't have access.
+  // $access_result can be boolean or an AccessResult class.
+  if (is_object($access_result) && $access_result->isForbidden() || is_bool($access_result) && !$access_result) {
+    // You might need to add some cache tags/contexts.
+    return [];
+  }
+  $render = $plugin_block->build();
+  // In some cases, you need to add the cache tags/context depending on
+  // the block implemention. As it's possible to add the cache tags and
+  // contexts in the render method and in ::getCacheTags and
+  // ::getCacheContexts methods.
+  return $render;
 }

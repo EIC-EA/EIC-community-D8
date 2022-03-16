@@ -1,0 +1,26 @@
+uuid: e86e8138-2c89-4a36-8797-7b571da39975
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.message.field_event_executing_user
+    - message.template.notify_content_ready_for_review
+id: message.notify_content_ready_for_review.field_event_executing_user
+field_name: field_event_executing_user
+entity_type: message
+bundle: notify_content_ready_for_review
+label: 'Event executing user'
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:group_membership'
+  handler_settings:
+    target_bundles: null
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+field_type: entity_reference

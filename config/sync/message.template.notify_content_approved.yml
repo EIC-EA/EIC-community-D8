@@ -1,0 +1,28 @@
+uuid: 4bef1ce3-fcf8-420c-929d-95a1aa139b0e
+langcode: en
+status: true
+dependencies:
+  config:
+    - filter.format.full_html
+    - filter.format.plain_text
+  module:
+    - eic_messages
+third_party_settings:
+  eic_messages:
+    message_template_type: notification
+template: notify_content_approved
+label: 'NOTIFY :: MT51 :: Content approved'
+description: 'Notification sent to content author when their content is being set as "Published".'
+text:
+  -
+    value: "Your [message:field_referenced_node:entity:content-type] \"[message:field_referenced_node:entity:title]\" is approved at [site:name]\r\n"
+    format: plain_text
+  -
+    value: "<p>Dear [message:author:display-name],</p>\r\n\r\n<p>Thanks for your contribution!</p>\r\n\r\n<p>[message:field_event_executing_user:entity:display-name] has just validated your [message:field_referenced_node:entity:content-type]: <strong><a href=\"[message:field_referenced_node:entity:url]\">[message:field_referenced_node:entity:title]</a></strong></p>\r\n\r\n<p>[message:field_message]</p>\r\n\r\n<p>Kind regards,<br />\r\n[site:name] team</p>\r\n\r\n<hr />\r\n<p>This notification is linked to your content submission.</p>\r\n"
+    format: full_html
+settings:
+  'token options':
+    clear: false
+    'token replace': true
+  purge_override: false
+  purge_methods: {  }

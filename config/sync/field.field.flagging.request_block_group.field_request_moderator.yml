@@ -1,0 +1,29 @@
+uuid: 144b34bb-4e5b-49c3-9d39-758d2500b3a6
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.flagging.field_request_moderator
+    - flag.flag.request_block_group
+id: flagging.request_block_group.field_request_moderator
+field_name: field_request_moderator
+entity_type: flagging
+bundle: request_block_group
+label: Moderator
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:user'
+  handler_settings:
+    target_bundles: null
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    filter:
+      type: _none
+    include_anonymous: false
+field_type: entity_reference

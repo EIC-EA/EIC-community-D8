@@ -1,0 +1,18 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the EIC Flags module.
+ */
+
+/**
+ * Remove old flag 'block_group'.
+ */
+function eic_flags_update_9001(&$sandbox) {
+  /** @var \Drupal\flag\FlagServiceInterface $flag_service */
+  $flag_service = \Drupal::service('flag');
+
+  if ($flag = $flag_service->getFlagById('block_group')) {
+    $flag->delete();
+  }
+}

@@ -1,0 +1,9 @@
+name: EIC Moderation
+type: module
+description: Provides funcitonnality for content moderation.
+package: European Innovation Council
+core: 8.x
+core_version_requirement: ^8 || ^9
+php: 7.4
+dependencies:
+  - drupal:content_moderation

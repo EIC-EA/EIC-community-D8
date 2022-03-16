@@ -1,0 +1,70 @@
+uuid: 42edd4ec-1749-4002-ba47-e2f6d4c8e58e
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.message.notify_new_transfer_owner_req.field_entity_type
+    - field.field.message.notify_new_transfer_owner_req.field_entity_url
+    - field.field.message.notify_new_transfer_owner_req.field_referenced_entity_label
+    - field.field.message.notify_new_transfer_owner_req.field_referenced_flag
+    - field.field.message.notify_new_transfer_owner_req.field_request_accept_url
+    - field.field.message.notify_new_transfer_owner_req.field_request_deny_url
+    - message.template.notify_new_transfer_owner_req
+  module:
+    - link
+id: message.notify_new_transfer_owner_req.default
+targetEntityType: message
+bundle: notify_new_transfer_owner_req
+mode: default
+content:
+  field_entity_type:
+    type: string_textfield
+    weight: 1
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_entity_url:
+    type: link_default
+    weight: 3
+    region: content
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: {  }
+  field_referenced_entity_label:
+    type: string_textfield
+    weight: 2
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_referenced_flag:
+    type: entity_reference_autocomplete
+    weight: 0
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_request_accept_url:
+    type: link_default
+    weight: 4
+    region: content
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: {  }
+  field_request_deny_url:
+    type: link_default
+    weight: 5
+    region: content
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: {  }
+hidden: {  }

@@ -1,0 +1,26 @@
+uuid: 7a744cf7-b96c-43a6-977d-b5035c879431
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.message.notify_email_body
+    - field.field.message.notify_content_needs_review.field_event_executing_user
+    - field.field.message.notify_content_needs_review.field_message
+    - field.field.message.notify_content_needs_review.field_referenced_node
+    - message.template.notify_content_needs_review
+id: message.notify_content_needs_review.notify_email_body
+targetEntityType: message
+bundle: notify_content_needs_review
+mode: notify_email_body
+content:
+  partial_1:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  field_event_executing_user: true
+  field_message: true
+  field_referenced_node: true
+  partial_0: true
+  search_api_excerpt: true

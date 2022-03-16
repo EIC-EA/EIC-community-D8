@@ -1,0 +1,35 @@
+<?php
+
+/**
+ * @file
+ * Primary module hooks for EIC Moderation module.
+ */
+
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\eic_moderation\Hooks\FormOperations;
+use Drupal\eic_moderation\Hooks\EntityOperations;
+
+/**
+ * Implements hook_node_insert().
+ */
+function eic_moderation_node_insert(EntityInterface $entity) {
+  \Drupal::classResolver(EntityOperations::class)
+    ->nodeInsert($entity);
+}
+
+/**
+ * Implements hook_node_update().
+ */
+function eic_moderation_node_update(EntityInterface $entity) {
+  \Drupal::classResolver(EntityOperations::class)
+    ->nodeUpdate($entity);
+}
+
+/**
+ * Implements hook_form_BASE_FORM_ID_alter().
+ */
+function eic_moderation_form_node_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  \Drupal::classResolver(FormOperations::class)
+    ->formNodeFormAlter($form, $form_state, $form_id);
+}

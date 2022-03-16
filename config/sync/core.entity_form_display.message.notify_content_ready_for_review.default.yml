@@ -1,0 +1,43 @@
+uuid: 0f84dade-aca7-44d6-bb06-c7e5fef69810
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.message.notify_content_ready_for_review.field_event_executing_user
+    - field.field.message.notify_content_ready_for_review.field_message
+    - field.field.message.notify_content_ready_for_review.field_referenced_node
+    - message.template.notify_content_ready_for_review
+id: message.notify_content_ready_for_review.default
+targetEntityType: message
+bundle: notify_content_ready_for_review
+mode: default
+content:
+  field_event_executing_user:
+    type: entity_reference_autocomplete
+    weight: 2
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_message:
+    type: string_textarea
+    weight: 3
+    region: content
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+  field_referenced_node:
+    type: entity_reference_autocomplete
+    weight: 0
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+hidden: {  }
