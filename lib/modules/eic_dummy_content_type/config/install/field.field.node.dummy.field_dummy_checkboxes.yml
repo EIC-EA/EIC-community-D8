@@ -1,0 +1,20 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_dummy_checkboxes
+    - node.type.dummy
+  module:
+    - options
+id: node.dummy.field_dummy_checkboxes
+field_name: field_dummy_checkboxes
+entity_type: node
+bundle: dummy
+label: Checkboxes
+description: 'Please select one or more options.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: list_string

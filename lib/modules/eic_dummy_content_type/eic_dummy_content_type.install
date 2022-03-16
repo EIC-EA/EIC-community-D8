@@ -1,0 +1,76 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for EIC Dummy Content Type module.
+ */
+
+use Drupal\workflows\Entity\Workflow;
+use Drupal\eic_user\UserHelper;
+use Drupal\user\Entity\Role;
+
+/**
+ * Implements hook_install().
+ */
+function eic_dummy_content_type_install() {
+  // Add permissions to roles.
+  $add_permissions = [
+    UserHelper::ROLE_TRUSTED_USER => [
+      'create dummy content',
+      'edit any dummy content',
+      'delete any dummy content',
+      'schedule publishing of nodes',
+    ],
+    UserHelper::ROLE_CONTENT_ADMINISTRATOR => [
+      'create dummy content',
+      'edit any dummy content',
+      'delete any dummy content',
+    ],
+    UserHelper::ROLE_SITE_ADMINISTRATOR => [
+      'create dummy content',
+      'edit any dummy content',
+      'delete any dummy content',
+    ],
+    UserHelper::ROLE_DRUPAL_ADMINISTRATOR => [
+      'create dummy content',
+      'edit any dummy content',
+      'delete any dummy content',
+    ],
+  ];
+
+  foreach ($add_permissions as $role_name => $permissions) {
+    $role = Role::load($role_name);
+    foreach ($permissions as $permission) {
+      $role->grantPermission($permission);
+    }
+    $role->save();
+  }
+
+  // Remove permissions.
+  $remove_permissions = [
+    UserHelper::ROLE_CONTENT_ADMINISTRATOR => [
+      'view the administration theme',
+    ],
+    UserHelper::ROLE_SITE_ADMINISTRATOR => [
+      'view the administration theme',
+    ],
+    UserHelper::ROLE_DRUPAL_ADMINISTRATOR => [
+      'view the administration theme',
+    ],
+  ];
+
+  foreach ($remove_permissions as $role_name => $permissions) {
+    $role = Role::load($role_name);
+    foreach ($permissions as $permission) {
+      $role->revokePermission($permission);
+    }
+    $role->save();
+  }
+
+  // Apply default workflow to Dummy CT.
+  $workflow = Workflow::load('default');
+  $config = $workflow->getTypePlugin()->getConfiguration();
+  $config['entity_types']['node'][] = 'dummy';
+  $workflow->getTypePlugin()->setConfiguration($config);
+  $workflow->save();
+}

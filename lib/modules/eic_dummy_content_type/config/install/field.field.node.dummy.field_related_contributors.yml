@@ -1,0 +1,66 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_related_contributors
+    - node.type.dummy
+    - paragraphs.paragraphs_type.contributor
+  module:
+    - entity_reference_revisions
+id: node.dummy.field_related_contributors
+field_name: field_related_contributors
+entity_type: node
+bundle: dummy
+label: 'Related Contributors'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    target_bundles:
+      contributor: contributor
+    negate: 0
+    target_bundles_drag_drop:
+      announcement:
+        weight: 14
+        enabled: false
+      banner:
+        weight: 15
+        enabled: false
+      contributor:
+        weight: 16
+        enabled: true
+      cta_tile:
+        weight: 17
+        enabled: false
+      full_media_content:
+        weight: 18
+        enabled: false
+      full_text_content:
+        weight: 19
+        enabled: false
+      gallery_slide:
+        weight: 20
+        enabled: false
+      organisation_location:
+        weight: 21
+        enabled: false
+      organisation_member:
+        weight: 22
+        enabled: false
+      organisation_member_external:
+        weight: 23
+        enabled: false
+      quote:
+        weight: 24
+        enabled: false
+      text_and_media_content:
+        weight: 25
+        enabled: false
+      tiles_content:
+        weight: 26
+        enabled: false
+field_type: entity_reference_revisions
