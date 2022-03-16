@@ -112,8 +112,7 @@ function eic_deploy_update_9002(&$sandbox) {
 /**
  * Re-create news_stories moderation states for existing entities.
  */
-function eic_deploy_update_9003(&$sandbox)
-{
+function eic_deploy_update_9003(&$sandbox) {
   $mapping = [
     'draft' => 'draft',
     'published' => 'published',
@@ -142,5 +141,55 @@ function eic_deploy_update_9003(&$sandbox)
       ->load($entity_id);
     $entity->set('moderation_state', $state);
     $entity->save();
+  }
+}
+
+/**
+ * Remove group permission to access latest activity stream from anonymous.
+ */
+function eic_deploy_update_9004(&$sandbox) {
+  $groups = Drupal::entityTypeManager()->getStorage('group')
+    ->loadByProperties([
+      'type' => 'group',
+    ]);
+
+  foreach ($groups as $group) {
+    $groupPermissionsManager = \Drupal::service('group_permission.group_permissions_manager');
+    $groupPermissions = $groupPermissionsManager->loadByGroup($group);
+
+    $rolePermissions = [
+      'access latest activity stream',
+    ];
+    $role = $group->getGroupType()->getAnonymousRoleId();
+
+    $permissions = $groupPermissions->getPermissions();
+    foreach ($rolePermissions as $permission) {
+      if (
+        array_key_exists($role, $permissions) ||
+        in_array($permission, $permissions[$role], TRUE)
+      ) {
+        $permissions[$role] = array_diff($permissions[$role], [$permission]);
+      }
+    }
+    $groupPermissions->setPermissions($permissions);
+
+    $violations = $groupPermissions->validate();
+
+    if (count($violations) > 0) {
+      $message = '';
+      foreach ($violations as $violation) {
+        $message .= "\n" . $violation->getMessage();
+      }
+      \Drupal::messenger()->addMessage('Group permissions are not saved correctly, because:' . $message);
+      continue;
+    }
+
+    // Saves the GroupPermission object with a new revision.
+    $groupPermissions->setNewRevision();
+    $groupPermissions->setRevisionUserId(1);
+    $groupPermissions->setRevisionCreationTime(\Drupal::service('datetime.time')
+      ->getRequestTime());
+    $groupPermissions->setRevisionLogMessage('Group features enabled/disabled.');
+    $groupPermissions->save();
   }
 }

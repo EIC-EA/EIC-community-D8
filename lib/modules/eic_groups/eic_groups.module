@@ -54,6 +54,7 @@ function eic_groups_theme($existing, $type, $theme, $path) {
         'edit_link' => NULL,
         'delete_link' => NULL,
         'invite_link' => NULL,
+        'help_link' => NULL,
         'actions' => [],
         'has_content' => NULL,
         'has_member' => FALSE,
