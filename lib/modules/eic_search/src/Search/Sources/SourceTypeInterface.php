@@ -205,4 +205,11 @@ interface SourceTypeInterface {
    * @return array
    */
   public function getFieldsToFilterEmptyValue(): array;
+
+  /**
+   * Ignore user field (from method: getAuthorFieldId) = 0.
+   *
+   * @return bool
+   */
+  public function ignoreAnonymousUser(): bool;
 }
