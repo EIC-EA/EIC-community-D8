@@ -1,0 +1,47 @@
+uuid: 7b1ec7f7-c046-422b-b433-17cbab6b529b
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.message.mail_body
+    - field.field.message.sub_new_content_recommendation.field_event_executing_user
+    - field.field.message.sub_new_content_recommendation.field_referenced_node
+    - message.template.sub_new_content_recommendation
+id: message.sub_new_content_recommendation.mail_body
+targetEntityType: message
+bundle: sub_new_content_recommendation
+mode: mail_body
+content:
+  field_event_executing_user:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_referenced_node:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  partial_0:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  partial_1:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  partial_2:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  search_api_excerpt: true
