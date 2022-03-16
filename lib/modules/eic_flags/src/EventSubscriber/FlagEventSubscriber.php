@@ -2,6 +2,7 @@
 
 namespace Drupal\eic_flags\EventSubscriber;
 
+use Drupal\Core\Cache\Cache;
 use Drupal\eic_flags\FlagType;
 use Drupal\eic_search\Service\SolrDocumentProcessor;
 use Drupal\flag\Event\FlagEvents;
@@ -52,6 +53,7 @@ class FlagEventSubscriber implements EventSubscriberInterface {
     if ($this->isReindexTargetedFlag($flagging)) {
       // Get the flagged entity to be updated.
       $parent_entity = $flagging->getFlaggable();
+      Cache::invalidateTags($parent_entity->getCacheTags());
       $this->solrDocumentProcessor->reIndexEntities([$parent_entity]);
     }
 
