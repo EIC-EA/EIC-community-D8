@@ -1,0 +1,18 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_dummy_test
+    - node.type.dummy
+id: node.dummy.field_dummy_test
+field_name: field_dummy_test
+entity_type: node
+bundle: dummy
+label: Test
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string
