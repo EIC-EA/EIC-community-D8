@@ -1,8 +1,10 @@
 <?php
 
+use Drupal\comment\CommentInterface;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Url;
 use Drupal\message\MessageInterface;
+use Drupal\node\NodeInterface;
 
 /**
  * Implements hook_preprocess_message().
@@ -18,7 +20,10 @@ function eic_community_preprocess_message(&$variables) {
       $node = $message->get('field_referenced_node')->entity;
       /** @var \Drupal\comment\CommentInterface $comment */
       $comment = $message->get('field_referenced_comment')->entity;
-
+      if (!$node instanceof NodeInterface || !$comment instanceof CommentInterface) {
+        return [];
+      }
+      
       return [
         'view_comment' => [
           'label' => t('View comment'),
