@@ -6,12 +6,6 @@ eic_admin.settings:
   weight: -50
   # If menu_name is omitted, the "Tools" menu will be used.
   menu_name: administration
-eic_admin.update_all_group_permissions:
-  title: 'Update permissions for all groups entities'
-  description: 'This will update permissions all groups from all group types permissions.'
-  parent: eic_admin.settings
-  route_name: eic_admin.update_all_group_permissions
-  weight: 11
 eic_admin.dashboard:
   title: 'Community'
   description: 'Manage community.'
