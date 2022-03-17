@@ -92,7 +92,7 @@ class UserHeaderBlock extends BlockBase {
             'path' => $user->toUrl(),
           ],
           'icon' => [
-            'name' => 'user',
+            'name' => 'gear',
             'type' => 'custom',
           ],
         ],
