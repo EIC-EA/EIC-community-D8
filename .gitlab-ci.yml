@@ -30,6 +30,26 @@ stages:
       ./vendor/bin/drush cim -y &&
       ./vendor/bin/drush cr"
 
+.rollback_trigger_updb: &rollback_trigger_updb
+  image: intractosre/deploy:1
+  stage: deploy
+  when: manual
+  tags:
+    - aws
+  before_script:
+    - eval $(ssh-agent -s)
+    - echo "$DEPLOYMENT_SSH_KEY" | tr -d '\r' | ssh-add - > /dev/null
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - ssh-keyscan -t rsa -p $SSH_PORT $HOST >> ~/.ssh/known_hosts
+  script:
+    - >
+      ssh -p $SSH_PORT $PROJECT_USER@$HOST "source /.victhorious/conf/shell/envvars && cd $PROJECT_DIR &&
+      ./vendor/bin/drush php-eval \"echo drupal_set_installed_schema_version('eic_deploy', $UPDB_VERSION);\" &&
+      ./vendor/bin/drush updb -y &&
+      ./vendor/bin/drush cim -y &&
+      ./vendor/bin/drush cr"
+
 build_backend:
   stage: build
   image: public.ecr.aws/h5g0v9w1/php-fpm:7.4
@@ -138,9 +158,29 @@ deploy_uat:
 deploy_migration_env:
   <<: *deploy_job
   stage: deploy_uat
-  when: manual
   variables:
     HOST: $MIGRATION_HOST
+  only:
+    - /^release/.*$/
+
+rollback_trigger_updb_develop:
+  <<: *rollback_trigger_updb
+  variables:
+    HOST: $DEVELOP_HOST
+  only:
+    - develop
+
+rollback_trigger_updb_qa:
+  <<: *rollback_trigger_updb
+  variables:
+    HOST: $QA_HOST
+  only:
+    - /^release/.*$/
+
+rollback_trigger_updb_uat:
+  <<: *rollback_trigger_updb
+  variables:
+    HOST: $UAT_HOST
   only:
     - /^release/.*$/
 

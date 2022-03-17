@@ -34,7 +34,11 @@
     <div class="ecl-teaser__content-wrapper">
       <div class="ecl-teaser__content">
         <{{ title_element }} class="ecl-teaser__title">
-          <a href="{{ path }}"><span class="ecl-teaser__title-overflow"><span>{{ title }}</span></span></a>
+          {% if path is not empty %}
+            <a href="{{ path }}"><span class="ecl-teaser__title-overflow"><span>{{ title }}</span></span></a>
+          {% else %}
+              <span class="ecl-teaser__title-overflow"><span>{{ title }}</span></span>
+          {% endif %}
         </{{ title_element }}>
 
       {% if job_titles is not empty %}
@@ -46,7 +50,11 @@
       {% if organisations is not empty %}
         <div class="ecl-teaser__links">
           {% for organisation in organisations %}
-            <a class="ecl-teaser__link" href="{{ organisation.path }}">{{ organisation.label }}</a>
+            {% if organisation.path is not empty %}
+              <a class="ecl-teaser__link" href="{{ organisation.path }}">{{ organisation.label }}</a>
+            {% else %}
+              <span class="ecl-teaser__link">{{ organisation.label }}</span>
+            {% endif %}
           {% endfor %}
         </div>
       {% endif %}

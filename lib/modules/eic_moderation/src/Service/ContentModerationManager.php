@@ -5,7 +5,10 @@ namespace Drupal\eic_moderation\Service;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\content_moderation\ModerationInformationInterface;
+use Drupal\group\Entity\GroupInterface;
+use Drupal\workflows\Transition;
 
 /**
  * Class that manages functions for the content moderation.
@@ -89,6 +92,33 @@ class ContentModerationManager {
     }
 
     return FALSE;
+  }
+
+  /**
+   * Returns allowed transitions for the given entity, group and user account.
+   *
+   * @param \Drupal\Core\Entity\ContentEntityInterface $entity
+   *   The moderated entity.
+   * @param \Drupal\group\Entity\GroupInterface $group
+   *   The group context.
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *   The user account.
+   *
+   * @return \Drupal\workflows\TransitionInterface[]
+   *   Array of allowed transitions.
+   */
+  public function getAllowedTransitions(ContentEntityInterface $entity, GroupInterface $group, AccountInterface $account) {
+    $workflow = $this->moderationInformation->getWorkflowForEntity($entity);
+    $current_state = $entity->moderation_state->value ?
+    $workflow->getTypePlugin()->getState($entity->moderation_state->value) :
+    $workflow->getTypePlugin()->getInitialState($entity);
+
+    // Check the group permissions.
+    return array_filter($current_state->getTransitions(), function (Transition $transition) use ($workflow, $account, $group) {
+      if ($group->hasPermission('use ' . $workflow->id() . ' transition ' . $transition->id(), $account)) {
+        return TRUE;
+      }
+    });
   }
 
 }

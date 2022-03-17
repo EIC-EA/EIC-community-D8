@@ -194,4 +194,11 @@ abstract class SourceType implements SourceTypeInterface {
     return [];
   }
 
+  /**
+   * @inheritDoc
+   */
+  public function ignoreAnonymousUser(): bool {
+    return FALSE;
+  }
+
 }

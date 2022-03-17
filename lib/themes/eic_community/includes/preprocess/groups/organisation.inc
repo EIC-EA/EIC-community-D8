@@ -462,7 +462,6 @@ function eic_community_preprocess_paragraph__organisation_member(&$variables) {
     'organisations' => array_map(function(array $organisation) {
       return [
         'label' => $organisation['value'],
-        'path' => '#'
       ];
     }, $paragraph->get('field_organisations')->getValue()),
     'location' => _eic_community_get_user_location($user),
@@ -520,8 +519,7 @@ function eic_community_preprocess_paragraph__organisation_member_external(&$vari
     ],
     'organisations' => array_map(function($value) {
       return [
-        'label' => $value,
-        'path' => '#'
+        'label' => $value['value'],
       ];
     }, $paragraph->get('field_organisations')->getValue()),
     'location' => $location ? ['label' => reset($location)->label()] : '',
