@@ -317,11 +317,19 @@ class DiscussionController extends ControllerBase {
       return new JsonResponse('You do not have access to edit all comments', Response::HTTP_FORBIDDEN);
     }
 
+    $tagged_users = $content['taggedUsers'] ?? NULL;
+
     try {
       $comment->set('comment_body', [
         'value' => $text,
         'format' => 'plain_text',
       ]);
+      $comment->set('field_tagged_users', array_map(function ($tagged_user) {
+        return [
+          'target_id' => $tagged_user['tid'],
+        ];
+      }, $tagged_users));
+
       $comment->save();
     } catch (EntityStorageException $e) {
       \Drupal::logger('eic_groups')->error($e->getMessage());
