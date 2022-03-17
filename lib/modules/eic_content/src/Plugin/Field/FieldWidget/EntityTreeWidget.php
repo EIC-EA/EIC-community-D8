@@ -4,13 +4,14 @@ namespace Drupal\eic_content\Plugin\Field\FieldWidget;
 
 use Drupal\Core\Entity\Element\EntityAutocomplete;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Field\Annotation\FieldWidget;
+use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\WidgetBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
-use Drupal\taxonomy\TermInterface;
-use Drupal\user\UserInterface;
+use Drupal\eic_content\Services\EntityTreeManager;
+use Drupal\eic_content\TreeWidget\TreeWidgetProperties;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Plugin implementation of the 'entity_tree' widget.
@@ -28,6 +29,43 @@ use Drupal\user\UserInterface;
 class EntityTreeWidget extends WidgetBase {
 
   /**
+   * @var \Drupal\eic_content\Services\EntityTreeManager
+   */
+  private EntityTreeManager $treeManager;
+
+  /**
+   * {@inheritdoc}
+   */
+  public function __construct(
+    $plugin_id,
+    $plugin_definition,
+    FieldDefinitionInterface $field_definition,
+    array $settings,
+    array $third_party_settings,
+    EntityTreeManager $tree_manager
+  ) {
+    parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $third_party_settings);
+    $this->fieldDefinition = $field_definition;
+    $this->settings = $settings;
+    $this->thirdPartySettings = $third_party_settings;
+    $this->treeManager = $tree_manager;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    return new static(
+      $plugin_id,
+      $plugin_definition,
+      $configuration['field_definition'],
+      $configuration['settings'],
+      $configuration['third_party_settings'],
+      $container->get('eic_content.entity_tree_manager')
+    );
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function settingsForm(array $form, FormStateInterface $form_state) {
@@ -36,7 +74,11 @@ class EntityTreeWidget extends WidgetBase {
       '#title' => $this->t('Max top-level choices', [], ['context' => 'eic_content']),
       '#default_value' => $this->getSetting('match_top_level_limit'),
       '#min' => 0,
-      '#description' => $this->t('The number of top-level choices to make. Use <em>0</em> to remove the limit.', [], ['context' => 'eic_content']),
+      '#description' => $this->t(
+        'The number of top-level choices to make. Use <em>0</em> to remove the limit.',
+        [],
+        ['context' => 'eic_content']
+      ),
     ];
 
     $element['disable_top_choices'] = [
@@ -49,28 +91,40 @@ class EntityTreeWidget extends WidgetBase {
       '#type' => 'checkbox',
       '#title' => $this->t('Load all items by default', [], ['context' => 'eic_content']),
       '#default_value' => $this->getSetting('load_all'),
-      '#description' => $this->t('It will disable the "load more" button and load all items on the current level of the tree in once.', [], ['context' => 'eic_content']),
+      '#description' => $this->t(
+        'It will disable the "load more" button and load all items on the current level of the tree in once.', [],
+        ['context' => 'eic_content']
+      ),
     ];
 
     $element['items_to_load'] = [
       '#type' => 'number',
       '#title' => $this->t('Items to load', [], ['context' => 'eic_content']),
       '#default_value' => $this->getSetting('items_to_load'),
-      '#description' => $this->t('The number of items to load when getting more datas', [], ['context' => 'eic_content']),
+      '#description' => $this->t('The number of items to load when getting more datas', [], ['context' => 'eic_content']
+      ),
     ];
 
     $element['auto_select_parents'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Auto-select parents ?'),
       '#default_value' => $this->getSetting('auto_select_parents'),
-      '#description' => $this->t('When checking an option it will auto select all parent values in the tree', [], ['context' => 'eic_content']),
+      '#description' => $this->t(
+        'When checking an option it will auto select all parent values in the tree',
+        [],
+        ['context' => 'eic_content']
+      ),
     ];
 
-    $element['ignore_current_user'] = [
+    $element[TreeWidgetProperties::OPTION_IGNORE_CURRENT_USER] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Ignore the current user in the users tree'),
-      '#default_value' => $this->getSetting('ignore_current_user'),
-      '#description' => $this->t('<b>Only for "User" entity.</b> if checked, the current user will not be available.', [], ['context' => 'eic_content']),
+      '#default_value' => $this->getSetting(TreeWidgetProperties::OPTION_IGNORE_CURRENT_USER),
+      '#description' => $this->t(
+        '<b>Only for "User" entity.</b> if checked, the current user will not be available.',
+        [],
+        ['context' => 'eic_content']
+      ),
     ];
 
     return $element;
@@ -86,7 +140,7 @@ class EntityTreeWidget extends WidgetBase {
         'auto_select_parents' => TRUE,
         'disable_top_choices' => FALSE,
         'load_all' => FALSE,
-        'ignore_current_user' => FALSE,
+        TreeWidgetProperties::OPTION_IGNORE_CURRENT_USER => FALSE,
         'target_bundles' => [],
         'is_required' => FALSE,
       ] + parent::defaultSettings();
@@ -95,18 +149,29 @@ class EntityTreeWidget extends WidgetBase {
   /**
    * {@inheritdoc}
    */
-  public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
+  public function formElement(
+    FieldItemListInterface $items,
+    $delta,
+    array $element,
+    array &$form,
+    FormStateInterface $form_state
+  ) {
     $settings = $this->getFieldSetting('handler_settings');
+    $entity_type = $this->getFieldSetting('target_type');
 
-    $preselected_items = self::formatPreselection($items->referencedEntities());
+    $preselected_items = $this->formatPreselection($items->referencedEntities(), $entity_type);
 
     $options = [
-      'match_top_level_limit' => $this->getSetting('items_to_load'),
-      'items_to_load' => $this->getSetting('items_to_load'),
+      'match_top_level_limit' => $this->getSetting(TreeWidgetProperties::OPTION_ITEMS_TO_LOAD),
+      TreeWidgetProperties::OPTION_ITEMS_TO_LOAD => $this->getSetting(
+        TreeWidgetProperties::OPTION_ITEMS_TO_LOAD
+      ),
       'auto_select_parents' => $this->getSetting('auto_select_parents'),
       'disable_top_choices' => $this->getSetting('disable_top_choices'),
-      'load_all' => $this->getSetting('load_all'),
-      'ignore_current_user' => $this->getSetting('ignore_current_user'),
+      TreeWidgetProperties::OPTION_LOAD_ALL => $this->getSetting(TreeWidgetProperties::OPTION_LOAD_ALL),
+      TreeWidgetProperties::OPTION_IGNORE_CURRENT_USER => $this->getSetting(
+        TreeWidgetProperties::OPTION_IGNORE_CURRENT_USER
+      ),
       'target_bundles' => $settings['target_bundles'] ?? [],
       'is_required' => $this->fieldDefinition->isRequired(),
     ];
@@ -122,8 +187,6 @@ class EntityTreeWidget extends WidgetBase {
       $options
     );
 
-    $element['#attached']['library'][] = 'eic_community/react-tree-field';
-
     return $element;
   }
 
@@ -133,28 +196,33 @@ class EntityTreeWidget extends WidgetBase {
    * @param \Drupal\Core\Entity\EntityInterface[] $entities
    *   Array of entities.
    *
+   * @param string $entity_type
+   *   The entity type.
+   *
    * @return string
    *   A JSON encoded string.
    */
-  public static function formatPreselection(array $entities) {
-    return json_encode(array_map(function (EntityInterface $entity) {
-      if ($entity instanceof TermInterface) {
+  private function formatPreselection(array $entities, string $entity_type) {
+    if ('taxonomy_term' !== $entity_type) {
+      return $this
+        ->treeManager
+        ->getTreeWidgetProperty($entity_type)
+        ->formatPreselection($entities);
+    }
+
+    return json_encode(
+      array_map(function (EntityInterface $entity) {
         $parents = $entity->get('parent')->getValue();
         $parent = reset($parents)['target_id'];
         $name = $entity->getName();
-      }
 
-      if ($entity instanceof UserInterface) {
-        $parent = 0;
-        $name = realname_load($entity) . ' ' . '('. $entity->getEmail() .')';
-      }
-
-      return [
-        'name' => $name,
-        'tid' => $entity->id(),
-        'parent' => $parent,
-      ];
-    }, $entities));
+        return [
+          'name' => $name,
+          'tid' => $entity->id(),
+          'parent' => $parent,
+        ];
+      }, $entities)
+    );
   }
 
   /**
@@ -228,7 +296,7 @@ class EntityTreeWidget extends WidgetBase {
    *
    * @return array
    */
-  public static function getEntityTreeFieldStructure (
+  public static function getEntityTreeFieldStructure(
     array $default_values,
     string $target_type,
     string $preselected_terms,
@@ -246,7 +314,7 @@ class EntityTreeWidget extends WidgetBase {
     // @todo We should be able to work with multiple bundles.
     $target_bundle = empty($options['target_bundles']) ? '' : reset($options['target_bundles']);
 
-    return [
+    $element = [
       '#type' => 'entity_autocomplete',
       '#default_value' => $default_values,
       '#tags' => TRUE,
@@ -267,7 +335,8 @@ class EntityTreeWidget extends WidgetBase {
           ),
           'search' => $translation_manager->translate('Search', [], ['context' => 'eic_search']),
           'your_values' => $translation_manager->translate('Your selected values', [], ['context' => 'eic_search']),
-          'required_field' => $translation_manager->translate('This field is required', [], ['context' => 'eic_content']),
+          'required_field' => $translation_manager->translate('This field is required', [], ['context' => 'eic_content']
+          ),
         ]),
         'data-terms-url' => $base_url,
         'data-terms-url-search' => $base_url_search,
@@ -282,6 +351,10 @@ class EntityTreeWidget extends WidgetBase {
         'data-is-required' => (int) $options['is_required'],
       ],
     ];
+
+    $element['#attached']['library'][] = 'eic_community/react-tree-field';
+
+    return $element;
   }
 
 }
