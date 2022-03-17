@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - filter.format.full_html
     - filter.format.plain_text
   module:
     - eic_messages
@@ -14,11 +15,11 @@ label: 'NOTIFY :: MT11 :: Group membership requested (to requester)'
 description: ''
 text:
   -
-    value: 'MT11 :: Group membership requested (to requester)'
+    value: 'Your request to join [message:field_group_ref:entity:title]'
     format: plain_text
   -
-    value: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
-    format: plain_text
+    value: "<p>Dear [message:author:display-name],</p>\r\n\r\n<p>Thank you for requesting membership to&nbsp;<a href=\"[message:field_group_ref:entity:url]\">[message:field_group_ref:entity:title]</a></p>\r\n\r\n<p>Your membership is currently waiting to be approved by one of the [message:field_group_ref:entity:type-name]’s administrators, and should be processed shortly.</p>\r\n\r\n<p>If you have any questions, please feel free to&nbsp;<a href=\"mailto:EISMEA-SME-HELPDESK@ec.europa.eu\">contact us</a>; we will be happy to help.</p>\r\n\r\n<p>The EIC Community team</p>\r\n"
+    format: full_html
 settings:
   'token options':
     clear: false
