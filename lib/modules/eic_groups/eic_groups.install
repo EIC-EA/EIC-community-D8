@@ -186,10 +186,3 @@ function eic_groups_update_9003(&$sandbox) {
     }
   }
 }
-
-/**
- * Remove "view comments" permission from group outsider roles.
- */
-function eic_groups_update_9004(&$sandbox) {
-  eic_groups_update_9002($sandbox);
-}
