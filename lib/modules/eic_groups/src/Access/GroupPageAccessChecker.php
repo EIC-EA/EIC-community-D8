@@ -10,7 +10,6 @@ use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_groups\GroupsModerationHelper;
 use Drupal\eic_user\UserHelper;
 use Drupal\group\Entity\GroupInterface;
-use Symfony\Component\Routing\Route;
 
 /**
  * Access check for various group related view pages.
@@ -37,7 +36,7 @@ class GroupPageAccessChecker implements AccessInterface {
   /**
    * Access method.
    *
-   * @param Symfony\Component\Routing\Route $route
+   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
    *   The route to check.
    * @param \Drupal\Core\Session\AccountProxy $account
    *   The AccountProxy.
@@ -48,40 +47,84 @@ class GroupPageAccessChecker implements AccessInterface {
    *   Return the access result.
    */
   public function access(
-    Route $route,
+    RouteMatchInterface $route_match,
     AccountProxy $account,
     GroupInterface $group = NULL
   ) {
-    // Ensure we are accessing a view page of a group.
     if (!$group) {
       return AccessResult::neutral();
     }
 
-    switch ($group->get('moderation_state')->value) {
-      case GroupsModerationHelper::GROUP_BLOCKED_STATE:
-        // If group is blocked and user is not a power user or a group admin,
-        // we deny access.
-        if (
-          !UserHelper::isPowerUser($account) &&
-          !EICGroupsHelper::userIsGroupAdmin($group, $account)
-        ) {
-          return AccessResult::forbidden()
-            ->addCacheableDependency($account)
-            ->addCacheableDependency($group);
-        }
-        break;
+    // Set a default access to neutral before other checks.
+    $access = AccessResult::neutral();
 
+    if ($route_name = $route_match->getRouteName()) {
+      switch ($route_name) {
+        case 'entity.group.edit_form':
+          $access = $this->accessGroupEditFormPage($account, $group);
+          break;
+
+        default:
+          $access = $this->accessGroupCommonPages($account, $group);
+          break;
+      }
     }
 
-    $access = AccessResult::allowed()
-      ->addCacheableDependency($account)
+    $access->addCacheableDependency($account)
       ->addCacheableDependency($group);
 
     if ($membership = $group->getMember($account)) {
       $access->addCacheableDependency($membership);
     }
 
-    // We return access allowed but other modules may alter the final access.
+    return $access;
+  }
+
+  /**
+   * Access check method for group common pages.
+   *
+   * @param \Drupal\Core\Session\AccountProxy $account
+   *   The user account.
+   * @param \Drupal\group\Entity\GroupInterface $group
+   *   The group entity.
+   *
+   * @return \Drupal\Core\Access\AccessResultInterface
+   *   Return the access result.
+   */
+  public function accessGroupCommonPages(AccountProxy $account, GroupInterface $group) {
+    if (GroupsModerationHelper::isBlocked($group)) {
+      $access = AccessResult::forbidden();
+      // If group is blocked and user is a power user or a group admin, we
+      // allow access.
+      if (UserHelper::isPowerUser($account) || EICGroupsHelper::userIsGroupAdmin($group, $account)) {
+        $access = AccessResult::allowed();
+      }
+    }
+    else {
+      $access = AccessResult::allowed();
+    }
+
+    return $access;
+  }
+
+  /**
+   * Access check method for group edit page.
+   *
+   * @param \Drupal\Core\Session\AccountProxy $account
+   *   The user account.
+   * @param \Drupal\group\Entity\GroupInterface $group
+   *   The group entity.
+   *
+   * @return \Drupal\Core\Access\AccessResultInterface
+   *   Return the access result.
+   */
+  public function accessGroupEditFormPage(AccountProxy $account, GroupInterface $group) {
+    $access = AccessResult::allowed();
+    // GO/GA users cannot edit the group when being blocked.
+    if (GroupsModerationHelper::isBlocked($group) && !UserHelper::isPowerUser($account)) {
+      $access = AccessResult::forbidden();
+    }
+
     return $access;
   }
 

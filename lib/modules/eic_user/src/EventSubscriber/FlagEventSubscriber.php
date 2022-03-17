@@ -82,18 +82,6 @@ class FlagEventSubscriber implements EventSubscriberInterface {
   }
 
   /**
-   * React to unflagging event.
-   *
-   * @param \Drupal\flag\Event\UnflaggingEvent $event
-   *   The flagging event.
-   */
-  public function onUnFlag(UnflaggingEvent $event) {
-    $flaggings = $event->getFlaggings();
-    $this->flagUnFlag(reset($flaggings), FlagEvents::ENTITY_UNFLAGGED);
-    $this->handleFollowContentReindex(reset($flaggings));
-  }
-
-  /**
    * Handles flag/unflag events.
    *
    * @param \Drupal\flag\FlaggingInterface $flagging
@@ -132,16 +120,6 @@ class FlagEventSubscriber implements EventSubscriberInterface {
     if ($invalidate_cache) {
       $this->invalidateFlaggedEntityCacheTags($flagging);
     }
-  }
-
-  /**
-   * Invalidate flagged entity cache tags.
-   *
-   * @param \Drupal\flag\FlaggingInterface $flagging
-   *   The flagging entity.
-   */
-  private function invalidateFlaggedEntityCacheTags(FlaggingInterface $flagging) {
-    Cache::invalidateTags($flagging->getFlaggable()->getCacheTagsToInvalidate());
   }
 
   /**
@@ -192,6 +170,16 @@ class FlagEventSubscriber implements EventSubscriberInterface {
       $profile->$vocab_field_name = $topics;
       $profile->save();
     }
+  }
+
+  /**
+   * Invalidate flagged entity cache tags.
+   *
+   * @param \Drupal\flag\FlaggingInterface $flagging
+   *   The flagging entity.
+   */
+  private function invalidateFlaggedEntityCacheTags(FlaggingInterface $flagging) {
+    Cache::invalidateTags($flagging->getFlaggable()->getCacheTagsToInvalidate());
   }
 
   /**
@@ -249,26 +237,43 @@ class FlagEventSubscriber implements EventSubscriberInterface {
           'field_vocab_topics' => $entity->id(),
         ]);
 
-        $message_groups = $this->em->getStorage('message')->loadByProperties([
-          'field_group_ref' => array_map(function (GroupInterface $group) {
-            return $group->id();
-          }, $groups),
-        ]);
+        if (!empty($groups)) {
+          $message_groups = $this->em->getStorage('message')->loadByProperties([
+            'field_group_ref' => array_map(function (GroupInterface $group) {
+              return $group->id();
+            }, $groups),
+          ]);
+
+          $this->solrDocumentProcessor->reIndexEntities($message_groups);
+        }
 
         $nodes = $this->em->getStorage('node')->loadByProperties([
           'field_vocab_topics' => $entity->id(),
         ]);
 
-        $message_nodes = $this->em->getStorage('message')->loadByProperties([
-          'field_referenced_node' => array_map(function (NodeInterface $node) {
-            return $node->id();
-          }, $nodes),
-        ]);
+        if (!empty($nodes)) {
+          $message_nodes = $this->em->getStorage('message')->loadByProperties([
+            'field_referenced_node' => array_map(function (NodeInterface $node) {
+              return $node->id();
+            }, $nodes),
+          ]);
 
-        $this->solrDocumentProcessor->reIndexEntities($message_groups);
-        $this->solrDocumentProcessor->reIndexEntities($message_nodes);
+          $this->solrDocumentProcessor->reIndexEntities($message_nodes);
+        }
         break;
     }
+  }
+
+  /**
+   * React to unflagging event.
+   *
+   * @param \Drupal\flag\Event\UnflaggingEvent $event
+   *   The flagging event.
+   */
+  public function onUnFlag(UnflaggingEvent $event) {
+    $flaggings = $event->getFlaggings();
+    $this->flagUnFlag(reset($flaggings), FlagEvents::ENTITY_UNFLAGGED);
+    $this->handleFollowContentReindex(reset($flaggings));
   }
 
   /**

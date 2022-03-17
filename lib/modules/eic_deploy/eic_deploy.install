@@ -5,6 +5,9 @@
  * Install, update and uninstall functions for the EIC Deploy module.
  */
 
+use Drupal\block_content\Entity\BlockContent;
+use Drupal\Core\Url;
+
 /**
  * Implements hook_install().
  */
@@ -79,5 +82,114 @@ function eic_deploy_update_9001(&$sandbox) {
       ->load($entity_id);
     $entity->set('moderation_state', $state);
     $entity->save();
+  }
+}
+
+/**
+ * Creates contact box block for the help and guidance pages.
+ */
+function eic_deploy_update_9002(&$sandbox) {
+  $block = BlockContent::create([
+    'status' => TRUE,
+    'type' => 'contact_box',
+    // We keep the same UUIDs since they are referenced in configs.
+    'uuid' => '63285e84-4aaf-475a-ae6f-169d5dae81e3',
+    'info' => 'Contact box - Help & Guidance',
+    'body' => [
+      'value' => 'Contact us at</br><a class="" href="mailto:support@eic.com">support@eic.com</a>',
+      'format' => 'full_html',
+    ],
+    'field_title' => "Didn't find what you were looking for?",
+    'field_cta_button' => [
+      'uri' => Url::fromRoute('contact.site_page')->toString(),
+      'title' => 'Contact us',
+      'link_type' => 'default',
+    ],
+  ]);
+  $block->save();
+}
+
+/**
+ * Re-create news_stories moderation states for existing entities.
+ */
+function eic_deploy_update_9003(&$sandbox) {
+  $mapping = [
+    'draft' => 'draft',
+    'published' => 'published',
+    'unpublished' => 'unpublished',
+    'archived' => 'unpublished',
+  ];
+
+  // Load existing states.
+  $news_stories_workflows = \Drupal::entityTypeManager()
+    ->getStorage('content_moderation_state')
+    ->loadByProperties([
+      'workflow' => 'news_stories',
+    ]);
+
+  // Re-create news_stories workflows.
+  foreach ($news_stories_workflows as $news_stories_workflow) {
+    $state = $news_stories_workflow->get('moderation_state')->value;
+    $entity_id = $news_stories_workflow->get('content_entity_id')->value;
+    $news_stories_workflow->delete();
+
+    // Map old state to the new one.
+    $state = $mapping[$state] ?? NULL;
+
+    $entity = \Drupal::entityTypeManager()
+      ->getStorage('node')
+      ->load($entity_id);
+    $entity->set('moderation_state', $state);
+    $entity->save();
+  }
+}
+
+/**
+ * Remove group permission to access latest activity stream from anonymous.
+ */
+function eic_deploy_update_9004(&$sandbox) {
+  $groups = Drupal::entityTypeManager()->getStorage('group')
+    ->loadByProperties([
+      'type' => 'group',
+    ]);
+
+  foreach ($groups as $group) {
+    $groupPermissionsManager = \Drupal::service('group_permission.group_permissions_manager');
+    $groupPermissions = $groupPermissionsManager->loadByGroup($group);
+
+    $rolePermissions = [
+      'access latest activity stream',
+    ];
+    $role = $group->getGroupType()->getAnonymousRoleId();
+
+    $permissions = $groupPermissions->getPermissions();
+    foreach ($rolePermissions as $permission) {
+      if (
+        array_key_exists($role, $permissions) ||
+        in_array($permission, $permissions[$role], TRUE)
+      ) {
+        $permissions[$role] = array_diff($permissions[$role], [$permission]);
+      }
+    }
+    $groupPermissions->setPermissions($permissions);
+
+    $violations = $groupPermissions->validate();
+
+    if (count($violations) > 0) {
+      $message = '';
+      foreach ($violations as $violation) {
+        $message .= "\n" . $violation->getMessage();
+      }
+      \Drupal::messenger()->addMessage('Group permissions are not saved correctly, because:' . $message);
+      continue;
+    }
+
+    // Saves the GroupPermission object with a new revision.
+    $groupPermissions->setNewRevision();
+    $groupPermissions->setRevisionUserId(1);
+    $groupPermissions->setRevisionCreationTime(\Drupal::service('datetime.time')
+      ->getRequestTime());
+    $groupPermissions->setRevisionLogMessage('Group features enabled/disabled.');
+    $groupPermissions->save();
   }
 }

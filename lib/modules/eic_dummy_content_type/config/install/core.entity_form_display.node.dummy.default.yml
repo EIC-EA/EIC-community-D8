@@ -1,0 +1,513 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.dummy.body
+    - field.field.node.dummy.field_date_range
+    - field.field.node.dummy.field_disclaimer
+    - field.field.node.dummy.field_discussion_type
+    - field.field.node.dummy.field_document_media
+    - field.field.node.dummy.field_document_type
+    - field.field.node.dummy.field_dummy_checkboxes
+    - field.field.node.dummy.field_dummy_file
+    - field.field.node.dummy.field_dummy_test
+    - field.field.node.dummy.field_dummy_test_2
+    - field.field.node.dummy.field_email
+    - field.field.node.dummy.field_image
+    - field.field.node.dummy.field_link
+    - field.field.node.dummy.field_location
+    - field.field.node.dummy.field_number_integer
+    - field.field.node.dummy.field_organised_by
+    - field.field.node.dummy.field_related_contributors
+    - field.field.node.dummy.field_related_groups
+    - field.field.node.dummy.field_social_links
+    - field.field.node.dummy.field_text_plain_long
+    - field.field.node.dummy.field_vocab_topics
+    - node.type.dummy
+  module:
+    - address
+    - datetime_range
+    - eic_content
+    - field_group
+    - file
+    - link
+    - media_library
+    - paragraphs
+    - path
+    - publication_date
+    - scheduler
+    - scheduler_content_moderation_integration
+    - social_link_field
+    - text
+    - workflow_buttons
+third_party_settings:
+  field_group:
+    group_tabs:
+      children:
+        - group_text
+        - group_media
+        - group_dates
+        - group_paragraphs
+        - group_entity_references
+        - group_taxonomies
+        - group_other
+      label: Tabs
+      region: content
+      parent_name: ''
+      weight: 1
+      format_type: tabs
+      format_settings:
+        classes: ''
+        show_empty_fields: false
+        id: ''
+        direction: horizontal
+        width_breakpoint: 640
+    group_taxonomies:
+      children:
+        - field_vocab_topics
+        - field_discussion_type
+        - field_document_type
+      label: Taxonomies
+      region: content
+      parent_name: group_tabs
+      weight: 21
+      format_type: tab
+      format_settings:
+        classes: ''
+        show_empty_fields: false
+        id: ''
+        formatter: closed
+        description: ''
+        required_fields: true
+    group_media:
+      children:
+        - field_image
+        - field_document_media
+      label: Media
+      region: content
+      parent_name: group_tabs
+      weight: 17
+      format_type: tab
+      format_settings:
+        classes: ''
+        show_empty_fields: false
+        id: ''
+        formatter: closed
+        description: ''
+        required_fields: true
+    group_dates:
+      children:
+        - field_date_range
+      label: Dates
+      region: content
+      parent_name: group_tabs
+      weight: 18
+      format_type: tab
+      format_settings:
+        classes: ''
+        show_empty_fields: false
+        id: ''
+        formatter: closed
+        description: ''
+        required_fields: true
+    group_paragraphs:
+      children:
+        - field_related_contributors
+      label: Paragraphs
+      region: content
+      parent_name: group_tabs
+      weight: 19
+      format_type: tab
+      format_settings:
+        classes: ''
+        show_empty_fields: false
+        id: ''
+        formatter: closed
+        description: ''
+        required_fields: true
+    group_entity_references:
+      children:
+        - field_related_groups
+        - field_disclaimer
+      label: 'Entity references'
+      region: content
+      parent_name: group_tabs
+      weight: 20
+      format_type: tab
+      format_settings:
+        classes: ''
+        show_empty_fields: false
+        id: ''
+        formatter: closed
+        description: ''
+        required_fields: true
+    group_text:
+      children:
+        - body
+        - field_organised_by
+        - field_text_plain_long
+      label: Text
+      region: content
+      parent_name: group_tabs
+      weight: 16
+      format_type: tab
+      format_settings:
+        classes: ''
+        show_empty_fields: false
+        id: ''
+        formatter: closed
+        description: 'Only text fields'
+        required_fields: true
+    group_other:
+      children:
+        - field_link
+        - field_location
+        - field_social_links
+        - field_send_notification
+        - member_content_edit_access
+        - private
+        - field_post_activity
+        - field_number_integer
+        - field_email
+        - field_dummy_checkboxes
+      label: Other
+      region: content
+      parent_name: group_tabs
+      weight: 22
+      format_type: tab
+      format_settings:
+        classes: ''
+        show_empty_fields: false
+        id: ''
+        formatter: closed
+        description: ''
+        required_fields: true
+    group_details_group:
+      children:
+        - field_dummy_test
+      label: 'Details group'
+      region: content
+      parent_name: ''
+      weight: 3
+      format_type: details
+      format_settings:
+        classes: ''
+        show_empty_fields: false
+        id: ''
+        open: false
+        description: 'With a description'
+        required_fields: true
+    group_fieldset_group:
+      children:
+        - field_dummy_test_2
+      label: 'Fieldset group'
+      region: content
+      parent_name: ''
+      weight: 4
+      format_type: fieldset
+      format_settings:
+        classes: ''
+        show_empty_fields: false
+        id: ''
+        description: 'A small description'
+        required_fields: true
+_core:
+  default_config_hash: YGk73E6NxFxrD2b1BX2E4JFlg1CuOlktvxnoI3N940c
+id: node.dummy.default
+targetEntityType: node
+bundle: dummy
+mode: default
+content:
+  body:
+    type: text_textarea_with_summary
+    weight: 13
+    region: content
+    settings:
+      rows: 9
+      summary_rows: 3
+      placeholder: ''
+      show_summary: false
+    third_party_settings: {  }
+  created:
+    type: datetime_timestamp
+    weight: 9
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_date_range:
+    type: daterange_default
+    weight: 12
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_disclaimer:
+    type: options_select
+    weight: 5
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_discussion_type:
+    type: options_buttons
+    weight: 5
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_document_media:
+    type: media_library_widget
+    weight: 17
+    region: content
+    settings:
+      media_types: {  }
+    third_party_settings: {  }
+  field_document_type:
+    type: options_select
+    weight: 6
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_dummy_checkboxes:
+    type: options_buttons
+    weight: 28
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_dummy_file:
+    type: file_generic
+    weight: 20
+    region: content
+    settings:
+      progress_indicator: throbber
+    third_party_settings: {  }
+  field_dummy_test:
+    type: string_textfield
+    weight: 7
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_dummy_test_2:
+    type: string_textfield
+    weight: 5
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_email:
+    type: email_default
+    weight: 27
+    region: content
+    settings:
+      placeholder: ''
+      size: 60
+    third_party_settings: {  }
+  field_image:
+    type: media_library_widget
+    weight: 16
+    region: content
+    settings:
+      media_types: {  }
+    third_party_settings: {  }
+  field_link:
+    type: link_default
+    weight: 19
+    region: content
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: {  }
+  field_location:
+    type: address_default
+    weight: 20
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_number_integer:
+    type: number
+    weight: 26
+    region: content
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+  field_organised_by:
+    type: string_textfield
+    weight: 14
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_post_activity:
+    weight: 25
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_related_contributors:
+    type: entity_reference_paragraphs
+    weight: 17
+    region: content
+    settings:
+      title: Paragraph
+      title_plural: Paragraphs
+      edit_mode: closed
+      add_mode: dropdown
+      form_display_mode: default
+      default_paragraph_type: _none
+    third_party_settings: {  }
+  field_related_groups:
+    type: entity_reference_autocomplete
+    weight: 4
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_send_notification:
+    weight: 22
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_social_links:
+    type: social_links
+    weight: 21
+    region: content
+    settings:
+      select_social: 0
+      disable_weight: 0
+    third_party_settings: {  }
+  field_text_plain_long:
+    type: string_textarea
+    weight: 15
+    region: content
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+  field_vocab_topics:
+    type: entity_tree
+    weight: 3
+    region: content
+    settings:
+      match_top_level_limit: '3'
+      disable_top_choices: '1'
+      items_to_load: '25'
+      auto_select_parents: '1'
+      load_all: 0
+      ignore_current_user: 0
+    third_party_settings: {  }
+  langcode:
+    type: language_select
+    weight: 5
+    region: content
+    settings:
+      include_locked: true
+    third_party_settings: {  }
+  member_content_edit_access:
+    type: boolean_checkbox
+    weight: 23
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  moderation_state:
+    type: workflow_buttons
+    weight: 7
+    region: content
+    settings:
+      show_current_state: false
+    third_party_settings: {  }
+  path:
+    type: path
+    weight: 16
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  private:
+    type: options_buttons
+    weight: 24
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  promote:
+    type: boolean_checkbox
+    weight: 10
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  publish_on:
+    type: datetime_timestamp_no_default
+    weight: 17
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  publish_state:
+    type: scheduler_moderation
+    weight: 13
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  published_at:
+    type: publication_date_timestamp
+    weight: 8
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  scheduler_settings:
+    weight: 12
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  status:
+    type: boolean_checkbox
+    weight: 19
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  sticky:
+    type: boolean_checkbox
+    weight: 11
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  title:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  uid:
+    type: entity_reference_autocomplete
+    weight: 6
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  unpublish_on:
+    type: datetime_timestamp_no_default
+    weight: 15
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  unpublish_state:
+    type: scheduler_moderation
+    weight: 14
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  url_redirects:
+    weight: 18
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden: {  }

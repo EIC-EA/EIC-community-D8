@@ -137,11 +137,11 @@ interface SourceTypeInterface {
   public function getLoadMoreBatchItems(): int;
 
   /**
-   * Check if Source allow to have a date filter.
+   * Return the solr fields id for "from" and "to" date field.
    *
-   * @return bool
+   * @return array
    */
-  public function supportDateFilter(): bool;
+  public function getRegistrationDateIntervalField(): array;
 
   /**
    * Return the solr fields id for "from" and "to" date field.
@@ -193,9 +193,23 @@ interface SourceTypeInterface {
   public function prefilterByGroupsMembership(): bool;
 
   /**
-   * Get the label for the filter "my groups"
+   * Get the label for the filter "my groups".
    *
    * @return string
    */
   public function getLabelFilterMyGroups(): string;
+
+  /**
+   * Get fields to prefilter empty values.
+   *
+   * @return array
+   */
+  public function getFieldsToFilterEmptyValue(): array;
+
+  /**
+   * Ignore user field (from method: getAuthorFieldId) = 0.
+   *
+   * @return bool
+   */
+  public function ignoreAnonymousUser(): bool;
 }

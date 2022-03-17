@@ -1,0 +1,50 @@
+<?php
+
+/**
+ * @file
+ * Primary module hooks for EIC Moderation module.
+ */
+
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\eic_moderation\Hooks\FormOperations;
+use Drupal\eic_moderation\Hooks\EntityOperations;
+
+/**
+ * Implements hook_node_insert().
+ */
+function eic_moderation_node_insert(EntityInterface $entity) {
+  \Drupal::classResolver(EntityOperations::class)
+    ->nodeInsert($entity);
+}
+
+/**
+ * Implements hook_node_update().
+ */
+function eic_moderation_node_update(EntityInterface $entity) {
+  \Drupal::classResolver(EntityOperations::class)
+    ->nodeUpdate($entity);
+}
+
+/**
+ * Implements hook_form_BASE_FORM_ID_alter().
+ */
+function eic_moderation_form_node_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  \Drupal::classResolver(FormOperations::class)
+    ->formNodeFormAlter($form, $form_state, $form_id);
+}
+
+/**
+ * Implements hook_module_implements_alter().
+ */
+function eic_moderation_module_implements_alter(&$implementations, $hook) {
+  if ($hook == 'form_alter' && isset($implementations['eic_moderation'])) {
+    // Move this module's implementation of form_alter to the end of the list.
+    // We are doing this so that the eic_moderation_form_node_page_form_alter
+    // function is called AFTER workflow_buttons_form_alter() which contains the
+    // code we are trying to alter.
+    $hookInit = $implementations['eic_moderation'];
+    unset($implementations['eic_moderation']);
+    $implementations['eic_moderation'] = $hookInit;
+  }
+}

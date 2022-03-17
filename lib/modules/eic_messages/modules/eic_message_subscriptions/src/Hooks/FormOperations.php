@@ -8,6 +8,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\State\StateInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\eic_content\Constants\DefaultContentModerationStates;
 use Drupal\eic_content\EICContentHelper;
 use Drupal\eic_message_subscriptions\Event\MessageSubscriptionEvent;
 use Drupal\eic_message_subscriptions\Event\MessageSubscriptionEvents;
@@ -120,12 +121,22 @@ class FormOperations implements ContainerInjectionInterface {
       'gallery',
     ];
 
+    // All content type which have the notification field hidden.
+    $disable_content_types = [
+      'book',
+    ];
+
     /** @var \Drupal\Core\Entity\EntityInterface $entity */
     $entity = $form_state->getFormObject()->getEntity();
     $show_notification_field = FALSE;
 
     switch ($entity->getEntityTypeId()) {
       case 'node':
+        // If node doesn't have notification we don't need to show the field.
+        if (in_array($entity->bundle(), $disable_content_types)) {
+          break;
+        }
+
         $show_notification_field = TRUE;
         break;
 
@@ -172,6 +183,20 @@ class FormOperations implements ContainerInjectionInterface {
 
     switch ($entity->getEntityTypeId()) {
       case 'node':
+        // We don't create message subscription if node is in DRAFT or ARCHIVED
+        // state.
+        if (
+          in_array(
+            $entity->get('moderation_state')->value,
+            [
+              DefaultContentModerationStates::DRAFT_STATE,
+              DefaultContentModerationStates::ARCHIVED_STATE,
+            ]
+          )
+        ) {
+          break;
+        }
+
         // Node is not published and therefore we don't send any notification.
         if (!$entity->isPublished()) {
           break;

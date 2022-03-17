@@ -5,6 +5,7 @@ namespace Drupal\eic_flags\Service;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\flag\FlaggingInterface;
+use Drupal\message\MessageInterface;
 
 /**
  * Provides an interface for request handlers.
@@ -313,5 +314,46 @@ interface HandlerInterface {
     FlaggingInterface $flagging,
     ContentEntityInterface $content_entity
   );
+
+  /**
+   * Checks if a request should be logged as critical action.
+   *
+   * @return bool
+   *   TRUE if the request should be logged.
+   */
+  public function canLogRequest();
+
+  /**
+   * Do changes before saving message log.
+   *
+   * @param \Drupal\flag\FlaggingInterface $flagging
+   *   The flag object representing the request.
+   * @param \Drupal\Core\Entity\ContentEntityInterface $content_entity
+   *   The concerned entity.
+   * @param string $response
+   *   The response given when closing the request.
+   * @param string $reason
+   *   The reason given when opening the request.
+   * @param \Drupal\message\MessageInterface $log
+   *   The log message.
+   *
+   * @return \Drupal\message\MessageInterface
+   *   The log message.
+   */
+  public function messageLogPreSave(
+    FlaggingInterface $flagging,
+    ContentEntityInterface $content_entity,
+    string $response,
+    string $reason,
+    MessageInterface $log
+  );
+
+  /**
+   * Gets the log message template machine name.
+   *
+   * @return string
+   *   The message template machine name.
+   */
+  public function logMessageTemplate();
 
 }

@@ -115,6 +115,16 @@ class UserHelper {
   }
 
   /**
+   * Returns the current user account.
+   *
+   * @return \Drupal\Core\Session\AccountInterface
+   *   The account for the current user.
+   */
+  public function getCurrentUser() {
+    return $this->currentUser;
+  }
+
+  /**
    * Provides a link to the given account with display name.
    *
    * If the current user doesn't have 'access user profiles' permission, the it

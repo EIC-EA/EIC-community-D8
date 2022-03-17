@@ -1,0 +1,59 @@
+uuid: b63296e2-b82c-4d84-be8f-6ee64da57920
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.contact_box
+    - field.field.block_content.contact_box.body
+    - field.field.block_content.contact_box.field_cta_button
+    - field.field.block_content.contact_box.field_title
+  module:
+    - text
+    - typed_link
+id: block_content.contact_box.default
+targetEntityType: block_content
+bundle: contact_box
+mode: default
+content:
+  body:
+    type: text_textarea_with_summary
+    weight: 2
+    region: content
+    settings:
+      rows: 9
+      summary_rows: 3
+      placeholder: ''
+      show_summary: false
+    third_party_settings: {  }
+  field_cta_button:
+    type: typed_link
+    weight: 3
+    region: content
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: {  }
+  field_title:
+    type: string_textfield
+    weight: 1
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  info:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  langcode:
+    type: language_select
+    weight: 4
+    region: content
+    settings:
+      include_locked: true
+    third_party_settings: {  }
+hidden: {  }

@@ -33,8 +33,8 @@ class ProcessorGlobalEvent extends DocumentProcessor {
    * @inheritDoc
    */
   public function process(Document &$document, array $fields, array $items = []): void {
-    $fid = array_key_exists('its_group_teaser_fid', $fields) ?
-      $fields['its_group_teaser_fid'] :
+    $fid = array_key_exists('its_event_teaser_fid', $fields) ?
+      $fields['its_event_teaser_fid'] :
       NULL;
 
     $teaser_relative = '';
@@ -56,6 +56,32 @@ class ProcessorGlobalEvent extends DocumentProcessor {
 
     $start_date = new DrupalDateTime($fields['ds_group_field_date_range']);
     $end_date = new DrupalDateTime($fields['ds_group_field_date_range_end_value']);
+
+    $registration_start_date = array_key_exists('ds_event_registration_date_start', $fields) ?
+      $fields['ds_event_registration_date_start'] :
+      NULL;
+    $registration_end_date = array_key_exists('ds_event_registration_date_end', $fields) ?
+      $fields['ds_event_registration_date_end'] :
+      NULL;
+
+    if ($registration_start_date || $registration_end_date) {
+      $registration_start_date = new DrupalDateTime($fields['ds_event_registration_date_start']);
+      $registration_end_date = new DrupalDateTime($fields['ds_event_registration_date_end']);
+
+      $this->addOrUpdateDocumentField(
+        $document,
+        'its_event_registration_date_start',
+        $fields,
+        $registration_start_date->getTimestamp()
+      );
+
+      $this->addOrUpdateDocumentField(
+        $document,
+        'its_event_registration_date_end',
+        $fields,
+        $registration_end_date->getTimestamp()
+      );
+    }
 
     $this->addOrUpdateDocumentField(
       $document,

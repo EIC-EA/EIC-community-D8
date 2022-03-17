@@ -119,6 +119,8 @@
     & .ecl-teaser__stat-value {
       font-size: .875em;
     }
+
+
   }
   &--organisation-member &__status{
     width: 100%;
@@ -144,6 +146,7 @@
     object-fit: cover;
     border-radius: 50%;
     overflow: hidden;
+    margin-right: map-get($ecl-spacing, 'l');
   }
 
   &--organisation#{$node}--as-card-white &__main-wrapper{

@@ -35,8 +35,72 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     {% block title %}
-    <title>Mime Mail message template</title>
+    <title>{{ 'EASME - Executive Agency for SMEs' | t }}</title>
     {% endblock %}
+
+    <style type="text/css">
+      #outlook a {
+        padding: 0;
+      }
+
+      body {
+        margin: 0;
+        padding: 0;
+        -webkit-text-size-adjust: 100%;
+        -ms-text-size-adjust: 100%;
+      }
+
+      table,
+      td {
+        border-collapse: collapse;
+        mso-table-lspace: 0pt;
+        mso-table-rspace: 0pt;
+      }
+
+      img {
+        border: 0;
+        height: auto;
+        line-height: 100%;
+        outline: none;
+        text-decoration: none;
+        -ms-interpolation-mode: bicubic;
+      }
+
+      p {
+        display: block;
+        margin: 13px 0;
+      }
+
+      a {
+        font-weight: normal;
+        text-decoration: none;
+        color: #004494
+      }
+
+      .cta__yellow {
+        display: inline-block;
+        width: 170px;
+        text-align: center;
+        background: #FFD617;
+        color: #000000;
+        font-family: Arial;
+        font-size: 14px;
+        font-weight: bold;
+        line-height: 120%;
+        margin: 0;
+        text-decoration: underline;
+        text-transform: none;
+        padding: 12px 15px;
+        mso-padding-alt: 0px;
+        border-radius: 0;
+      }
+
+      .cta__centered {
+        display: block;
+        margin: 0 auto;
+      }
+    </style>
+
     {% block styles %}
     {% endblock %}
   </head>
@@ -117,7 +181,28 @@
       </div>
     </div>
     <div>
-      {{ body|raw }}
+    <div style="margin:0px auto;max-width:600px;">
+      <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="width:100%;">
+        <tbody>
+        <tr>
+          <td style="direction:ltr;font-size:0px;padding:10px 0px 0px;text-align:center;"><!--[if mso | IE]><table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><td class="" style="vertical-align:top;width:600px;" ><![endif]-->
+            <div class="mj-column-per-100 mj-outlook-group-fix" style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;">
+              <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="vertical-align:top;" width="100%">
+                <tbody>
+                <tr>
+                  <td align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;">
+                    <div style="font-family:Arial;font-size:16px;line-height:1.4;text-align:left;color:#404040;">
+                      {{ body|raw }}
+                    </div>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+            <!--[if mso | IE]></td></tr></table><![endif]--></td>
+        </tr>
+        </tbody>
+      </table>
     </div>
     <div style="margin:0 auto;max-width:600px;">
       <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="width:100%;">

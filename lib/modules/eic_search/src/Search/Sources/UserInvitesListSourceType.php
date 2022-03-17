@@ -55,4 +55,18 @@ class UserInvitesListSourceType extends SourceType {
     return TRUE;
   }
 
+  /**
+   * @inheritDoc
+   */
+  public function getAuthorFieldId(): string {
+    return 'its_user_id';
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function ignoreAnonymousUser(): bool {
+    return TRUE;
+  }
+
 }

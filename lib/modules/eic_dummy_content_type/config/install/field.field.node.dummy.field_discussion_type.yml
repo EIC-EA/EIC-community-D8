@@ -1,0 +1,20 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_discussion_type
+    - node.type.dummy
+  module:
+    - options
+id: node.dummy.field_discussion_type
+field_name: field_discussion_type
+entity_type: node
+bundle: dummy
+label: 'Type of Discussion'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: list_string

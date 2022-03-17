@@ -1,0 +1,27 @@
+uuid: e72acb9d-737f-49a9-b0c8-523ce8416c92
+langcode: en
+status: true
+dependencies:
+  config:
+    - filter.format.full_html
+  module:
+    - eic_messages
+third_party_settings:
+  eic_messages:
+    message_template_type: log
+template: log_group_visibility_change
+label: 'LOG :: Group visibility settings change'
+description: 'Log message about changing group visibility settings'
+text:
+  -
+    value: "<p>The visibility settings of <a href=\"[message:field_group_ref:entity:url]\">[message:field_group_ref:entity:title]</a> have been updated by <a href=\"[message:author:url]\">[message:author:display-name]</a>:</p>\r\n\r\n<ul>\r\n\t<li>Old visibility:&nbsp;[message:field_previous_group_visibility:value]</li>\r\n\t<li>New visibility:&nbsp;[message:field_group_visibility:value]</li>\r\n</ul>\r\n"
+    format: full_html
+  -
+    value: "<p>[message:raw-value:field_rendered_content]</p>\r\n"
+    format: full_html
+settings:
+  'token options':
+    clear: false
+    'token replace': true
+  purge_override: false
+  purge_methods: {  }

@@ -1,0 +1,7 @@
+name: EIC Dummy Content Type
+type: module
+description: Provides a dummy content type for development purposes.
+package: European Innovation Council
+core: 8.x
+php: 7.4
+core_version_requirement: ^8 || ^9

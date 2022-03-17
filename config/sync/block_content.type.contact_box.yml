@@ -1,0 +1,8 @@
+uuid: e5f4ec22-faea-46ef-9d5b-6f9253041b2b
+langcode: en
+status: true
+dependencies: {  }
+id: contact_box
+label: 'Contact box'
+revision: 0
+description: 'A contact box block that shows a title, a description and a CTA button.'

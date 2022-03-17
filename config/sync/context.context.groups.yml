@@ -1,0 +1,61 @@
+uuid: 3974204b-99e9-49eb-b09a-b072df673869
+langcode: en
+status: true
+dependencies:
+  module:
+    - eic_search
+    - route_condition
+label: Groups
+name: groups
+group: 'My profile'
+description: ''
+requireAllConditions: false
+disabled: false
+conditions:
+  route:
+    id: route
+    negate: false
+    uuid: bd458314-a647-4ec3-9956-b2ca1b311580
+    context_mapping: {  }
+    routes: eic_user.user.my_groups
+reactions:
+  blocks:
+    id: blocks
+    uuid: 51f37ab4-072e-402d-83ae-1f389f21e09e
+    blocks:
+      79680eb5-d2aa-4cdf-ae18-6a558fe7a72a:
+        uuid: 79680eb5-d2aa-4cdf-ae18-6a558fe7a72a
+        id: eic_search_overview
+        label: ''
+        provider: eic_search
+        label_display: visible
+        region: content
+        custom_id: eic_search_overview
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: groups
+        context_mapping: {  }
+        source_type: Drupal\eic_search\Search\Sources\Profile\MyGroupsSourceType
+        facets:
+          ss_group_visibility_label: ss_group_visibility_label
+          sm_group_topic_name: sm_group_topic_name
+          ss_group_field_vocab_geo_string: ss_group_field_vocab_geo_string
+          ss_group_user_fullname: 0
+        sort_options:
+          ss_drupal_changed_timestamp: ss_drupal_changed_timestamp
+          timestamp: 0
+          tm_global_title: 0
+          ss_group_user_fullname: 0
+          its_last_flagged_like_content: 0
+          score: 0
+        enable_search: 1
+        page_options: normal
+        prefilter_group: 0
+        enable_date_filter: 0
+        add_facet_interests: 0
+        add_facet_my_groups: 0
+        third_party_settings: {  }
+    include_default_blocks: 0
+    saved: false
+weight: 0

@@ -1,0 +1,22 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_number_integer
+    - node.type.dummy
+id: node.dummy.field_number_integer
+field_name: field_number_integer
+entity_type: node
+bundle: dummy
+label: 'Number (integer)'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: null
+  max: null
+  prefix: Price
+  suffix: €
+field_type: integer

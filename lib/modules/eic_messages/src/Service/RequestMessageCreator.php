@@ -16,6 +16,7 @@ use Drupal\eic_flags\Service\HandlerInterface;
 use Drupal\eic_flags\Service\RequestHandlerCollector;
 use Drupal\eic_flags\Service\TransferOwnershipRequestHandler;
 use Drupal\eic_groups\EICGroupsHelper;
+use Drupal\eic_messages\Hooks\MessageTokens;
 use Drupal\eic_user\UserHelper;
 use Drupal\flag\FlaggingInterface;
 use Drupal\message\Entity\Message;
@@ -226,12 +227,16 @@ class RequestMessageCreator implements ContainerInjectionInterface {
       );
 
       if ($handler->getType() === RequestTypes::DELETE && RequestStatus::ACCEPTED === $response) {
+        if (!$message->hasField(MessageTokens::RENDERED_CONTENT_FIELD)) {
+          continue;
+        }
+
         // For accepted delete requests things are a bit more different. Since
         // it is a hard delete the entity is lost forever. This means tokens
         // won't return a valid value anymore. We have to render the content
         // and store it before the entity is gone.
         $content = $this->getRenderedContent($message);
-        $message->set('field_rendered_content',
+        $message->set(MessageTokens::RENDERED_CONTENT_FIELD,
           ['value' => $content, 'format' => 'full_html']);
       }
 

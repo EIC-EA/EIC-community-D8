@@ -40,6 +40,7 @@ reactions:
         facets:
           ss_activity_type: ss_activity_type
           sm_content_field_vocab_topics_string: sm_content_field_vocab_topics_string
+          ss_content_language_label: ss_content_language_label
         sort_options: {  }
         enable_search: 1
         page_options: normal

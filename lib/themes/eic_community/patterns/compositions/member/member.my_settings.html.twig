@@ -1,0 +1,13 @@
+{% extends "@theme/patterns/compositions/member/member.default.html.twig" %}
+
+{% block content %}
+  {% include "@theme/patterns/compositions/featured-content-sections.html.twig" with {
+    as_tabs: true,
+    items: [
+      flagged_interest|default({}),
+      flagged_groups|default({}),
+      flagged_event|default({}),
+      flagged_comments|default({}),
+    ]
+  } only %}
+{% endblock %}

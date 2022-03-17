@@ -17,6 +17,7 @@ use Drupal\message\MessageInterface;
 use Drupal\node\Entity\Node;
 use Drupal\node\NodeInterface;
 use Drupal\statistics\NodeStatisticsDatabaseStorage;
+use Drupal\taxonomy\TermInterface;
 use Solarium\QueryType\Update\Query\Document;
 
 /**
@@ -153,6 +154,19 @@ class ProcessorMessage extends DocumentProcessor {
           $this->getFollowUidByFlag('follow_taxonomy_term', $topic)
         );
       }
+
+      /** @var \Drupal\taxonomy\TermInterface|NULL $language */
+      $language = $node->hasField('field_language') ?
+        $node->get('field_language')->entity :
+        NULL;
+
+      $this->addOrUpdateDocumentField(
+        $document,
+        'ss_content_language_label',
+        $fields,
+        $language instanceof TermInterface ? $language->label() : NULL
+      );
+
       $user_follows = $this->getFollowUidByFlag('follow_user', $message->getOwner());
       $node_follows = $this->getFollowUidByFlag('follow_content', $node);
       $group_follows = [];

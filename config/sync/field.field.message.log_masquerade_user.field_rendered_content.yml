@@ -1,0 +1,21 @@
+uuid: 4a9f0598-7344-4276-9852-47b61053a6f1
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.message.field_rendered_content
+    - message.template.log_masquerade_user
+  module:
+    - text
+id: message.log_masquerade_user.field_rendered_content
+field_name: field_rendered_content
+entity_type: message
+bundle: log_masquerade_user
+label: 'Rendered content'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long

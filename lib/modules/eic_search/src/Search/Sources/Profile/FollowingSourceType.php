@@ -41,7 +41,8 @@ class FollowingSourceType extends SourceType {
   public function getAvailableFacets(): array {
     return [
       'ss_activity_type' => $this->t('Content type', [], ['context' => 'eic_search']),
-      'sm_content_field_vocab_topics_string' => $this->t('Topics', [], ['context' => 'eic_search']),
+      'sm_content_field_vocab_topics_string' => $this->t('Topic', [], ['context' => 'eic_search']),
+      'ss_content_language_label' => $this->t('Language', [], ['context' => 'eic_search']),
     ];
   }
 
@@ -78,8 +79,8 @@ class FollowingSourceType extends SourceType {
    */
   public function getSearchFieldsId(): array {
     return [
-      'ss_title',
-      'ss_global_fullname'
+      'tm_global_title',
+      'tm_global_fullname'
     ];
   }
 
@@ -97,6 +98,9 @@ class FollowingSourceType extends SourceType {
     return 10;
   }
 
+  /**
+   * @inheritDoc
+   */
   public function prefilterByCurrentUser(): bool {
     return TRUE;
   }
@@ -106,6 +110,13 @@ class FollowingSourceType extends SourceType {
    */
   public function getAuthorFieldId(): string {
     return 'itm_follow_uid';
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function getFieldsToFilterEmptyValue(): array {
+    return ['ss_type'];
   }
 
 }

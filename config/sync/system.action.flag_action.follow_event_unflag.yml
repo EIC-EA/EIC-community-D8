@@ -1,0 +1,15 @@
+uuid: fa5bf172-823e-4500-8e7c-dc1fcf5ac607
+langcode: en
+status: true
+dependencies:
+  config:
+    - flag.flag.follow_event
+  module:
+    - flag
+id: flag_action.follow_event_unflag
+label: Unfollow
+type: node
+plugin: 'flag_action:follow_event_unflag'
+configuration:
+  flag_id: follow_event
+  flag_action: unflag

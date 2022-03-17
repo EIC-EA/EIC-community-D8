@@ -363,7 +363,7 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
       }
     }
     if ($entity) {
-      return $this->getGroupByEntity($entity);
+      return $this->getOwnerGroupByEntity($entity);
     }
     return FALSE;
   }
@@ -371,7 +371,7 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
   /**
    * {@inheritdoc}
    */
-  public function getGroupByEntity(EntityInterface $entity) {
+  public function getOwnerGroupByEntity(EntityInterface $entity) {
     $group = FALSE;
     if ($entity instanceof GroupInterface) {
       return $entity;
@@ -867,6 +867,7 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
 
     switch ($route_name) {
       case 'entity.group.canonical':
+      case 'entity.group.edit_form':
       case 'eic_groups.about_page':
       case 'view.eic_group_members.page_group_members':
       case 'view.admin_blocked_entities.page_admin_group_blocked_history':
@@ -901,7 +902,7 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
           break;
         }
 
-        $group = $this->getGroupByEntity($node);
+        $group = $this->getOwnerGroupByEntity($node);
 
         if (!$group) {
           break;
