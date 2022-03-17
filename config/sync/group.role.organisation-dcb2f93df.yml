@@ -29,6 +29,7 @@ permissions:
   - 'join group'
   - 'share content between groups'
   - 'view any unpublished group'
+  - 'view comments'
   - 'view group'
   - 'view group_membership content'
   - 'view group_node:event content'
