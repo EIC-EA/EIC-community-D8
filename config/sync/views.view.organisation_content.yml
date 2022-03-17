@@ -543,6 +543,22 @@ display:
     display_plugin: block
     position: 1
     display_options:
+      sorts:
+        content_created:
+          id: content_created
+          table: search_api_index_global
+          field: content_created
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: search_api
+          order: DESC
+          expose:
+            label: ''
+            field_identifier: ''
+          exposed: false
+      defaults:
+        sorts: false
       display_description: ''
       display_extenders: {  }
     cache_metadata:
