@@ -148,6 +148,10 @@
     @include ecl-media-breakpoint-down('md') {
       position: absolute;
       left: -9px;
+      .ecl-discussion-thread__featured-items & {
+        position: relative;
+        left: 0;
+      }
       & .ecl-author__aside {
         width: 20px;
       }

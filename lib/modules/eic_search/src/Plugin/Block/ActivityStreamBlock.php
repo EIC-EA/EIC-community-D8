@@ -205,7 +205,7 @@ class ActivityStreamBlock extends BlockBase implements ContainerFactoryPluginInt
         'no_results_title' => $this->t('We haven’t found any search results', [], ['context' => 'eic_group']),
         'no_results_body' => $this->t('Please try again with another keyword', [], ['context' => 'eic_group']),
         'load_more' => $this->t('Load more', [], ['context' => 'eic_group']),
-        'block_title' => $this->t('Latest member activity', [], ['context' => 'eic_group']),
+        'block_title' => $this->t('Latest activity', [], ['context' => 'eic_group']),
         'commented_on' => $this->t('commented on', [], ['context' => 'eic_group']),
         'delete_modal_title' => $this->t('Delete activity from activity stream', [], ['context' => 'eic_group']),
         'delete_modal_desc' => $this->t('Are you sure you want to delete this activity from the activity stream? Important: this action cannot be undone.', [], ['context' => 'eic_group']),
