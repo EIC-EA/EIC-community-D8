@@ -5,6 +5,8 @@ namespace Drupal\eic_organisations\Plugin\CustomRestrictedVisibility;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\Core\Url;
+use Drupal\eic_content\Plugin\Field\FieldWidget\EntityTreeWidget;
 use Drupal\eic_organisations\Constants\Organisations;
 use Drupal\group\Access\GroupAccessResult;
 use Drupal\group\Entity\GroupInterface;
@@ -39,19 +41,36 @@ class RestrictedOrganisationTypes extends CustomRestrictedVisibilityBase {
     }
 
     // @todo Make use of a hierarchical widget.
-    $form[$this->getPluginId()][$this->getPluginId() . '_conf'] = [
-      '#title' => $this->t('Organisation types'),
-      '#type' => 'checkboxes',
-      '#options' => $options,
-      '#states' => [
-        'visible' => [
-          ':input[name="' . $this->getPluginId() . '_status"]' => [
-            'checked' => TRUE,
-          ],
+    $options = [
+      'match_top_level_limit' => 0,
+      'items_to_load' => 0,
+      'auto_select_parents' => 0,
+      'disable_top_choices' => 0,
+      'load_all' => 1,
+      'ignore_current_user' => 0,
+      'target_bundles' => ['organisation_types'],
+      'is_required' => 0,
+    ];
+
+    $form[$this->getPluginId()][$this->getPluginId() . '_conf'] = EntityTreeWidget::getEntityTreeFieldStructure(
+      [],
+      'taxonomy_term',
+      '',
+      0,
+      Url::fromRoute('eic_content.entity_tree')->toString(),
+      Url::fromRoute('eic_content.entity_tree_search')->toString(),
+      Url::fromRoute('eic_content.entity_tree_children')->toString(),
+      $options
+    );
+    $form[$this->getPluginId()][$this->getPluginId() . '_conf']['#title'] = $this->t('Organisation types');
+    $form[$this->getPluginId()][$this->getPluginId() . '_conf']['#states'] = [
+      'visible' => [
+        ':input[name="' . $this->getPluginId() . '_status"]' => [
+          'checked' => TRUE,
         ],
       ],
-      '#weight' => $this->getWeight() + 1,
     ];
+    $form[$this->getPluginId()][$this->getPluginId() . '_conf']['#weight'] = $this->getWeight() + 1;
     return $form;
   }
 
