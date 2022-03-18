@@ -1,0 +1,22 @@
+uuid: 1da388da-505e-4f06-a4ba-a88e2188c1c0
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.message.mail_subject
+    - field.field.message.notify_group_requested.field_group_ref
+    - message.template.notify_group_requested
+id: message.notify_group_requested.mail_subject
+targetEntityType: message
+bundle: notify_group_requested
+mode: mail_subject
+content:
+  partial_0:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  field_group_ref: true
+  partial_1: true
+  search_api_excerpt: true

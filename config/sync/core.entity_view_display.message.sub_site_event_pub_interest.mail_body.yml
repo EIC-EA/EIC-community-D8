@@ -1,0 +1,47 @@
+uuid: b6921b55-d455-4766-9507-22929916af45
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.message.mail_body
+    - field.field.message.sub_site_event_pub_interest.field_event_executing_user
+    - field.field.message.sub_site_event_pub_interest.field_topic_term
+    - message.template.sub_site_event_pub_interest
+id: message.sub_site_event_pub_interest.mail_body
+targetEntityType: message
+bundle: sub_site_event_pub_interest
+mode: mail_body
+content:
+  field_event_executing_user:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_topic_term:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  partial_0:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  partial_1:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  partial_2:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  search_api_excerpt: true

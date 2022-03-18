@@ -38,6 +38,11 @@ content:
     third_party_settings: {  }
     weight: 7
     region: content
+  content_moderation_control:
+    settings: {  }
+    third_party_settings: {  }
+    weight: -20
+    region: content
   field_date_range:
     type: daterange_default
     label: above
@@ -161,6 +166,11 @@ content:
     settings: {  }
     third_party_settings: {  }
     weight: 4
+    region: content
+  flag_follow_event:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 10
     region: content
   flag_highlight_content:
     settings: {  }
