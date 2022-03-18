@@ -187,6 +187,7 @@ function _preprocess_node_page(&$variables) {
           '#theme' => 'eic_community_author',
           '#name' => $author['name'],
           '#path' => $author['path'] ?? '',
+          '#image' => $author['image'] ?? NULL,
         ];
 
         if (isset($author['image'])) {

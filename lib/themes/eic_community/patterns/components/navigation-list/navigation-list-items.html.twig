@@ -5,7 +5,7 @@
 {% if items is not empty %}
   <ul class="ecl-navigation-list__items {{ extra_classes }}">
     {% for item in items %}
-      <li class="ecl-navigation-list__item {{ item.is_active ? 'ecl-navigation-list__item--current' : '' }} {{ item.extra_classes }}" aria-active="{{ item.is_active ? 'true' : 'false' }}">
+      <li class="ecl-navigation-list__item {{ item.is_current ? 'ecl-navigation-list__item--current' : '' }} {{ item.extra_classes }}" aria-active="{{ item.is_active ? 'true' : 'false' }}">
         <div class="ecl-link ecl-navigation-list__link">
           <a  href="{{ item.link.path }}{{ anchor }}">
             {{ item.link.label }}
