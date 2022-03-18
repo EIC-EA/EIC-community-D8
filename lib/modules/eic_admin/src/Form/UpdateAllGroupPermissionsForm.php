@@ -6,6 +6,8 @@ use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
+use Drupal\eic_content\Plugin\Field\FieldWidget\EntityTreeWidget;
 use Drupal\group\Entity\Group;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\group\Entity\GroupType;
@@ -77,22 +79,27 @@ class UpdateAllGroupPermissionsForm extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $form['groups'] = [
-      '#title' => $this->t('Select multiple groups', [], ['context' => 'eic_admin']),
-      '#description' => $this->t(
-        'Add multiple groups <b>separating them with a comma</b>.
-      If empty, it will select all.'
-      ),
-      '#type' => 'entity_autocomplete',
-      '#target_type' => 'group',
-      '#tags' => TRUE,
-      '#selection_settings' => [
-        'sort' => [
-          'field' => 'label',
-          'direction' => 'ASC',
-        ],
-      ],
+    $options = [
+      'match_top_level_limit' => 0,
+      'items_to_load' => 0,
+      'auto_select_parents' => 0,
+      'disable_top_choices' => 0,
+      'load_all' => 1,
+      'ignore_current_user' => 0,
+      'target_bundles' => ['organisation', 'group', 'event'],
+      'is_required' => 0,
     ];
+
+    $form['groups'] = EntityTreeWidget::getEntityTreeFieldStructure(
+      [],
+      'group',
+      '',
+      0,
+      Url::fromRoute('eic_content.entity_tree')->toString(),
+      Url::fromRoute('eic_content.entity_tree_search')->toString(),
+      Url::fromRoute('eic_content.entity_tree_children')->toString(),
+      $options
+    );
 
     $form['submit'] = [
       '#type' => 'submit',

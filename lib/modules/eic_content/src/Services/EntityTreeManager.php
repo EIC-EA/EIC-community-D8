@@ -2,7 +2,9 @@
 
 namespace Drupal\eic_content\Services;
 
-use Drupal\Core\Database\Database;
+use Drupal\eic_content\TreeWidget\TreeWidgetGroupProperty;
+use Drupal\eic_content\TreeWidget\TreeWidgetProperties;
+use Drupal\eic_content\TreeWidget\TreeWidgetUserProperty;
 use Drupal\taxonomy\Entity\Term;
 
 /**
@@ -76,43 +78,18 @@ class EntityTreeManager {
    */
   public function search($target_entity, $target_bundle, $text, $ignored_values, bool $disable_top_selection = FALSE) {
     //We need to ignore values in suggestions that are already selected by the user
-    $ignored_tids = array_map(function($selected_value) {
+    $ignored_tids = array_map(function ($selected_value) {
       $selected_value = json_decode($selected_value, TRUE);
 
       return $selected_value['tid'];
     }, $ignored_values);
 
-    if ($target_entity === 'user') {
-      $connection = Database::getConnection();
+    $tree_property = $this->getTreeWidgetProperty($target_entity);
 
-      $query = $connection->select('users_field_data', 'fd');
-      $query->join('realname', 'rn', 'fd.uid = rn.uid');
-      $query->fields('rn', ['realname']);
-      $query->fields('fd', ['uid', 'mail']);
-
-      if (!empty($ignored_tids)) {
-        $query->condition('fd.uid', $ignored_tids, 'NOT IN');
-      }
-
-      $query->distinct(TRUE);
-
-      $like_match = '%' . $query->escapeLike($text) . '%';
-
-      $orCondition = $query->orConditionGroup()
-        ->condition('fd.mail',  $like_match, 'LIKE')
-        ->condition('rn.realname', $like_match, 'LIKE');
-
-      $query->condition($orCondition);
-      $entities = $query->execute()->fetchAll(\PDO::FETCH_ASSOC);
-
-      return array_map(function ($user) {
-        return [
-          'name' => $user['realname'] . ' ' . '('. $user['mail'] .')',
-          'tid' => $user['uid'],
-          'parent' => 0,
-        ];
-      }, $entities);
-    } else {
+    if ($target_entity !== 'taxonomy_term') {
+      return $tree_property->generateSearchQueryResults($text);
+    }
+    else {
       $query = \Drupal::entityQuery($target_entity)
         ->condition('vid', $target_bundle)
         ->condition('name', $text, 'CONTAINS')
@@ -139,6 +116,26 @@ class EntityTreeManager {
         ];
       }, $entities);
     }
+  }
+
+  /**
+   * @param string $entity_type
+   *   The entity type.
+   *
+   * @return \Drupal\eic_content\TreeWidget\TreeWidgetProperties|null
+   *   Return the class link to the entity type.
+   */
+  public function getTreeWidgetProperty(string $entity_type): ?TreeWidgetProperties {
+    switch ($entity_type) {
+      case 'group':
+        return \Drupal::classResolver(TreeWidgetGroupProperty::class);
+        break;
+      case 'user':
+        return \Drupal::classResolver(TreeWidgetUserProperty::class);
+        break;
+    }
+
+    return NULL;
   }
 
   /**
@@ -182,4 +179,5 @@ class EntityTreeManager {
       }
     }
   }
+
 }
