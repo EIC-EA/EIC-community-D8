@@ -1,0 +1,24 @@
+uuid: 358b1c7e-bddb-473e-9bd6-ae71e0d2a800
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.message.mail_body
+    - field.field.message.notify_welcome_user_to_group.field_event_executing_user
+    - field.field.message.notify_welcome_user_to_group.field_group_ref
+    - message.template.notify_welcome_user_to_group
+id: message.notify_welcome_user_to_group.mail_body
+targetEntityType: message
+bundle: notify_welcome_user_to_group
+mode: mail_body
+content:
+  partial_1:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  field_event_executing_user: true
+  field_group_ref: true
+  partial_0: true
+  search_api_excerpt: true

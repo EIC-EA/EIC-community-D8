@@ -35,12 +35,22 @@ content:
     third_party_settings: {  }
     weight: 101
     region: content
+  content_moderation_control:
+    settings: {  }
+    third_party_settings: {  }
+    weight: -20
+    region: content
   flag_bookmark_content:
     settings: {  }
     third_party_settings: {  }
     weight: 10
     region: content
   flag_follow_content:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 10
+    region: content
+  flag_follow_event:
     settings: {  }
     third_party_settings: {  }
     weight: 10
