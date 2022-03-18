@@ -1,0 +1,24 @@
+uuid: ea5f0465-827a-4710-afa8-7f6d0983701a
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.message.mail_body
+    - field.field.message.notify_membership_request_rej.field_event_executing_user
+    - field.field.message.notify_membership_request_rej.field_group_ref
+    - message.template.notify_membership_request_rej
+id: message.notify_membership_request_rej.mail_body
+targetEntityType: message
+bundle: notify_membership_request_rej
+mode: mail_body
+content:
+  partial_1:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  field_event_executing_user: true
+  field_group_ref: true
+  partial_0: true
+  search_api_excerpt: true
