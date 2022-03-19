@@ -278,9 +278,13 @@ class EntityTreeWidget extends WidgetBase {
    * forms.
    *
    * @param array $default_values
+   *   Array of referenced entities.
    * @param string $target_type
+   *   The entity type target.
    * @param string $preselected_terms
+   *   Array of referenced entities formatted for FE (use formatPreselection() method).
    * @param int $number_to_load
+   *   Number to load by batch.
    * @param array $options
    *   A config array with following optional keys:
    *   - match_top_level_limit: (int) Maximum number of top-level selection.
@@ -295,6 +299,7 @@ class EntityTreeWidget extends WidgetBase {
    *   - is_required: (bool) Indicates if field is required.
    *
    * @return array
+   *   Return render array of entity tree widget.
    */
   public static function getEntityTreeFieldStructure(
     array $default_values,
