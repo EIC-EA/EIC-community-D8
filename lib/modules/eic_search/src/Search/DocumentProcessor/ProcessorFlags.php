@@ -150,8 +150,7 @@ class ProcessorFlags extends DocumentProcessor {
         ->condition('entity_id', $entity_id)
         ->execute()->fetchAssoc();
       if (!empty($result['last_updated'])) {
-        $document->addField('its_' . SolrDocumentProcessor::LAST_FLAGGED_KEY . '_' . $flag_type,
-          $result['last_updated']);
+        $document->addField('its_' . SolrDocumentProcessor::LAST_FLAGGED_KEY . '_' . $flag_type, $result['last_updated']);
       }
     }
   }

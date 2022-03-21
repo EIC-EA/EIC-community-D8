@@ -29,8 +29,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   category = @Translation("European Innovation Council"),
  *   context_definitions = {
  *     "group" = @ContextDefinition("entity:group", required = FALSE, label = @Translation("Group")),
- *     "taxonomy_term" = @ContextDefinition("entity:taxonomy_term", required = FALSE, label = @Translation("Taxonomy
- *   term"))
+ *     "taxonomy_term" = @ContextDefinition("entity:taxonomy_term", required = FALSE, label = @Translation("Taxonomy term"))
  *   }
  * )
  */
@@ -212,8 +211,7 @@ class ActivityStreamBlock extends BlockBase implements ContainerFactoryPluginInt
         'block_title' => $this->t('Latest activity', [], ['context' => 'eic_group']),
         'commented_on' => $this->t('commented on', [], ['context' => 'eic_group']),
         'delete_modal_title' => $this->t('Delete activity from activity stream', [], ['context' => 'eic_group']),
-        'delete_modal_desc' => $this->t('Are you sure you want to delete this activity from the activity stream? Important: this action cannot be undone.',
-          [], ['context' => 'eic_group']),
+        'delete_modal_desc' => $this->t('Are you sure you want to delete this activity from the activity stream? Important: this action cannot be undone.', [], ['context' => 'eic_group']),
         'delete_modal_confirm' => $this->t('Yes, delete activity', [], ['context' => 'eic_group']),
         'delete_modal_cancel' => $this->t('Cancel', [], ['context' => 'eic_group']),
         'delete_modal_close' => $this->t('Close', [], ['context' => 'eic_group']),
