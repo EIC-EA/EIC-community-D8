@@ -200,10 +200,12 @@ class EntityTreeController extends ControllerBase {
     }
 
     try {
-      $this->entityTypeManager()->getStorage('taxonomy_term')->create([
+      $term = $this->entityTypeManager()->getStorage('taxonomy_term')->create([
         'name' => $name,
         'vid' => $target_bundle,
-      ])->save();
+      ]);
+
+      $term->save();
     } catch (EntityStorageException $e) {
       return new JsonResponse(
         [
@@ -226,6 +228,14 @@ class EntityTreeController extends ControllerBase {
           ['context' => 'eic_content']
         ),
         'error' => 0,
+        'result' => [
+          'tid' => $term->id(),
+          'level' => 0,
+          'parents' => [0],
+          'depth' => 0,
+          'name' => $name,
+          'weight' => 0,
+        ],
       ],
       Response::HTTP_CREATED
     );
