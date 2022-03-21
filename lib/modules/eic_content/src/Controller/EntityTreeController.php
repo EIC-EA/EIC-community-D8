@@ -4,10 +4,12 @@ namespace Drupal\eic_content\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityStorageException;
 use Drupal\eic_content\TreeWidget\TreeWidgetProperties;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Class EntityTreeController
@@ -34,7 +36,9 @@ class EntityTreeController extends ControllerBase {
    * @return \Drupal\eic_content\Controller\EntityTreeController|static
    */
   public static function create(ContainerInterface $container) {
-    return new static($container->get('eic_content.entity_tree_manager'));
+    return new static(
+      $container->get('eic_content.entity_tree_manager')
+    );
   }
 
   /**
@@ -130,6 +134,86 @@ class EntityTreeController extends ControllerBase {
 
     return new JsonResponse(
       $this->treeManager->search($target_entity, $target_bundle, $text, $selected_values, $disable_top)
+    );
+  }
+
+  /**
+   * Create a taxonomy term with given bundle, name.
+   *
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *
+   * @return \Symfony\Component\HttpFoundation\JsonResponse
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   */
+  public function createTaxonomyTerm(Request $request): JsonResponse {
+    $content = json_decode($request->getContent(), TRUE);
+    $target_bundle = $content['target_bundle'];
+    $name = $content['name'];
+
+    if (empty($target_bundle) || empty ($name)) {
+      return new JsonResponse(
+        [
+          'message' => $this->t(
+            'Missing required parameters: target_bundle, name',
+            [],
+            ['context' => 'eic_content']
+          ),
+          'error' => 1,
+        ],
+        Response::HTTP_BAD_REQUEST
+      );
+    }
+
+    $results = $this->entityTypeManager()->getStorage('taxonomy_term')->loadByProperties([
+      'vid' => $target_bundle,
+      'name' => $name,
+    ]);
+
+    // We already have an entity with this label existing.
+    if (!empty($results)) {
+      return new JsonResponse(
+        [
+          'message' => $this->t(
+            'Entity with name @name already exists',
+            ['@name' => $name],
+            ['context' => 'eic_content']
+          ),
+          'error' => 1,
+        ],
+        Response::HTTP_BAD_REQUEST
+      );
+    }
+
+    try {
+      $this->entityTypeManager()->getStorage('taxonomy_term')->create([
+        'name' => $name,
+        'vid' => $target_bundle,
+      ])->save();
+    } catch (EntityStorageException $e) {
+      return new JsonResponse(
+        [
+          'message' => $this->t(
+            '@name cannot be created due to this error: @error',
+            ['@name' => $name, '@error' => $e->getMessage()],
+            ['context' => 'eic_content']
+          ),
+          'error' => 1,
+        ],
+        Response::HTTP_BAD_REQUEST
+      );
+    }
+
+    return new JsonResponse(
+      [
+        'message' => $this->t(
+          '@name has been correctly created.',
+          ['@name' => $name],
+          ['context' => 'eic_content']
+        ),
+        'error' => 0,
+      ],
+      Response::HTTP_CREATED
     );
   }
 
