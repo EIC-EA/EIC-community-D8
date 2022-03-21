@@ -186,4 +186,3 @@ function eic_groups_update_9003(&$sandbox) {
     }
   }
 }
-
