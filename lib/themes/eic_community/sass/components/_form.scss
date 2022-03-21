@@ -357,7 +357,8 @@
 
   .js-media-library-widget,
   .field--type-daterange .js-form-item,
-  .field--name-field-document-media .js-form-item {
+  .field--name-field-document-media .js-form-item,
+  .field-group-fieldset {
     border: none;
     padding: 0;
 
@@ -420,6 +421,14 @@
 
   & .tabledrag-toggle-weight-wrapper {
     display: none;
+  }
+
+  & .horizontal-tabs-panes {
+    padding-bottom: 1rem;
+  }
+
+  & .field-group-details {
+    margin-bottom: 1rem;
   }
 }
 
