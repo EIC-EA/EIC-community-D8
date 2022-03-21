@@ -341,8 +341,12 @@ class EntityTreeWidget extends WidgetBase {
           ),
           'search' => $translation_manager->translate('Search', [], ['context' => 'eic_search']),
           'your_values' => $translation_manager->translate('Your selected values', [], ['context' => 'eic_search']),
-          'required_field' => $translation_manager->translate('This field is required', [], ['context' => 'eic_content']
+          'required_field' => $translation_manager->translate(
+            'This field is required',
+            [],
+            ['context' => 'eic_content'],
           ),
+          'add_label' => $translation_manager->translate('Add', [], ['context' => 'eic_content']),
         ]),
         'data-terms-url' => $base_url,
         'data-terms-url-search' => $base_url_search,
@@ -356,7 +360,7 @@ class EntityTreeWidget extends WidgetBase {
         'data-target-entity' => $target_type,
         'data-is-required' => (int) $options['is_required'],
         // We can only create terms on the fly.
-        'data-can-create-tag' => (int) $current_user->hasPermission("create terms in $target_bundle")
+        'data-can-create-tag' => (int) $current_user->hasPermission("create terms in $target_bundle"),
       ],
     ];
 

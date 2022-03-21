@@ -161,7 +161,7 @@ class EntityTreeController extends ControllerBase {
           ),
           'error' => 1,
         ],
-        Response::HTTP_BAD_REQUEST
+        Response::HTTP_OK
       );
     }
 
@@ -175,7 +175,7 @@ class EntityTreeController extends ControllerBase {
           ),
           'error' => 1,
         ],
-        Response::HTTP_BAD_REQUEST
+        Response::HTTP_OK
       );
     }
 
@@ -195,7 +195,7 @@ class EntityTreeController extends ControllerBase {
           ),
           'error' => 1,
         ],
-        Response::HTTP_BAD_REQUEST
+        Response::HTTP_OK
       );
     }
 
@@ -216,7 +216,7 @@ class EntityTreeController extends ControllerBase {
           ),
           'error' => 1,
         ],
-        Response::HTTP_BAD_REQUEST
+        Response::HTTP_OK
       );
     }
 
