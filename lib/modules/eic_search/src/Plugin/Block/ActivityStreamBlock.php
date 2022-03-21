@@ -29,7 +29,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   category = @Translation("European Innovation Council"),
  *   context_definitions = {
  *     "group" = @ContextDefinition("entity:group", required = FALSE, label = @Translation("Group")),
- *     "taxonomy_term" = @ContextDefinition("entity:taxonomy_term", required = FALSE, label = @Translation("Taxonomy term"))
+ *     "taxonomy_term" = @ContextDefinition("entity:taxonomy_term", required = FALSE, label = @Translation("Taxonomy
+ *   term"))
  *   }
  * )
  */
@@ -66,28 +67,6 @@ class ActivityStreamBlock extends BlockBase implements ContainerFactoryPluginInt
    * @var \Drupal\Core\Routing\RouteMatchInterface $routeMatch
    */
   private $routeMatch;
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(
-    ContainerInterface $container,
-    array $configuration,
-    $plugin_id,
-    $plugin_definition
-  ) {
-    return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get('eic_groups.helper'),
-      $container->get('entity_type.manager'),
-      $container->get('eic_search.activity_stream_library'),
-      $container->get('date.formatter'),
-      $container->get('current_user'),
-      $container->get('current_route_match')
-    );
-  }
 
   /**
    * LastGroupMembersBlock constructor.
@@ -132,6 +111,28 @@ class ActivityStreamBlock extends BlockBase implements ContainerFactoryPluginInt
     $this->dateFormatter = $date_formatter;
     $this->currentUser = $current_user;
     $this->routeMatch = $route_match;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(
+    ContainerInterface $container,
+    array $configuration,
+    $plugin_id,
+    $plugin_definition
+  ) {
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->get('eic_groups.helper'),
+      $container->get('entity_type.manager'),
+      $container->get('eic_search.activity_stream_library'),
+      $container->get('date.formatter'),
+      $container->get('current_user'),
+      $container->get('current_route_match')
+    );
   }
 
   /**
@@ -192,8 +193,11 @@ class ActivityStreamBlock extends BlockBase implements ContainerFactoryPluginInt
       $has_delete_permission = EICGroupsHelper::userIsGroupAdmin($group, $this->currentUser);
     }
 
-    $build['#attached']['drupalSettings']['overview'] = [
-      'has_permission_delete' => $has_delete_permission,
+    $build['#attached']['drupalSettings'] = [
+      'overview' => [
+        'has_permission_delete' => $has_delete_permission,
+      ],
+      'node_statistics_url' => Url::fromRoute('eic_statistics.get_node_statistics')->toString(),
     ];
 
     return $build += [
@@ -208,7 +212,8 @@ class ActivityStreamBlock extends BlockBase implements ContainerFactoryPluginInt
         'block_title' => $this->t('Latest activity', [], ['context' => 'eic_group']),
         'commented_on' => $this->t('commented on', [], ['context' => 'eic_group']),
         'delete_modal_title' => $this->t('Delete activity from activity stream', [], ['context' => 'eic_group']),
-        'delete_modal_desc' => $this->t('Are you sure you want to delete this activity from the activity stream? Important: this action cannot be undone.', [], ['context' => 'eic_group']),
+        'delete_modal_desc' => $this->t('Are you sure you want to delete this activity from the activity stream? Important: this action cannot be undone.',
+          [], ['context' => 'eic_group']),
         'delete_modal_confirm' => $this->t('Yes, delete activity', [], ['context' => 'eic_group']),
         'delete_modal_cancel' => $this->t('Cancel', [], ['context' => 'eic_group']),
         'delete_modal_close' => $this->t('Close', [], ['context' => 'eic_group']),
@@ -236,7 +241,7 @@ class ActivityStreamBlock extends BlockBase implements ContainerFactoryPluginInt
    * @throws \Drupal\Core\Entity\EntityMalformedException
    */
   protected function getMembersData(GroupInterface $group = NULL, $limit = 5) {
-    $query= \Drupal::entityQuery('group_content')
+    $query = \Drupal::entityQuery('group_content')
       ->condition('type', 'group-group_membership')
       ->sort('created', 'DESC')
       ->range(0, $limit);
