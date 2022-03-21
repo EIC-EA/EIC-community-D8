@@ -1,0 +1,65 @@
+uuid: 269942e7-2107-42da-bb0c-4e16ed3f5b7f
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.message.mail_body
+    - field.field.message.sub_content_interest_published.field_event_executing_user
+    - field.field.message.sub_content_interest_published.field_group_ref
+    - field.field.message.sub_content_interest_published.field_referenced_node
+    - field.field.message.sub_content_interest_published.field_topic_term
+    - message.template.sub_content_interest_published
+id: message.sub_content_interest_published.mail_body
+targetEntityType: message
+bundle: sub_content_interest_published
+mode: mail_body
+content:
+  field_event_executing_user:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_group_ref:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 4
+    region: content
+  field_referenced_node:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 5
+    region: content
+  field_topic_term:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  partial_0:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  partial_1:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  partial_2:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  search_api_excerpt: true

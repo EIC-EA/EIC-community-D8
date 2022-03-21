@@ -11,6 +11,15 @@
 {% endif %}
 
 <div class="ecl-teaser ecl-teaser--member {{ highlight.is_active ? 'ecl-teaser--is-highlighted' }} {{ extra_classes }}">
+    {% if top_contributor is not empty%}
+      {% include "@theme/patterns/components/content-type-indicator.html.twig" with top_contributor|default({})|merge({
+            extra_classes: 'ecl-teaser__status',
+            icon: top_contributor.icon|default(defaults)|merge({
+              size: 's',
+            }),
+            icon_file_path: icon_file_path,
+        }) only %}
+    {% endif %}
   <div class="ecl-teaser__main-wrapper ecl-teaser--member__main-wrapper">
     <a href="{{ path }}">
       {% if image is not empty %}

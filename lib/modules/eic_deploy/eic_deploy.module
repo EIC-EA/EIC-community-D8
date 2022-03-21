@@ -1,0 +1,70 @@
+<?php
+
+/**
+ * @file
+ * Primary module hooks for EIC Deploy module.
+ */
+
+use Drupal\group_permissions\Entity\GroupPermission;
+
+/**
+ * Adds group permissions to a group role.
+ */
+function eic_deploy_add_group_permissions_to_role(array $new_permissions = [], array $roles = [], array $group_visibilities = ['public']) {
+  if (empty($roles) || empty($new_permissions)) {
+    return;
+  }
+
+  $group_permissions = \Drupal::entityQuery('group_permission')->execute();
+
+  $group_permissions = GroupPermission::loadMultiple($group_permissions);
+
+  $group_visibility_storage = \Drupal::service('oec_group_flex.group_visibility.storage');
+
+  /** @var \Drupal\group_permissions\Entity\GroupPermission $group_permission */
+  foreach ($group_permissions as &$group_permission) {
+    $permissions = $group_permission->getPermissions();
+
+    /** @var \Drupal\group\Entity\GroupInterface $group */
+    $group = $group_permission->getGroup();
+
+    $group_visibility = $group_visibility_storage->load($group->id());
+
+    if (
+      !in_array($group->getGroupType()->id(), ['group', 'event']) ||
+      empty($permissions) ||
+      !in_array($group_visibility->getType(), $group_visibilities)
+    ) {
+      continue;
+    }
+
+    foreach ($permissions as $key => &$permission) {
+      if (!in_array($key, $roles)) {
+        continue;
+      }
+
+      foreach ($new_permissions as &$new_permission) {
+        if (in_array($new_permission, $permission)) {
+          continue;
+        }
+
+        $permission[] = $new_permission;
+      }
+    }
+
+    $group_permission->setPermissions($permissions);
+    $group_permission->setNewRevision();
+    $group_permission->setRevisionUserId(1);
+    $group_permission->setRevisionCreationTime(time());
+    $group_permission->setRevisionLogMessage(t('Set default permissions for outsiders.'));
+
+    if (count($group_permission->validate()) > 0) {
+      continue;
+    }
+
+    $group_permission->save();
+
+    // Save the group entity to reset the cache tags.
+    $group->save();
+  }
+}

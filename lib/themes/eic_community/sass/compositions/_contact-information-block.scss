@@ -50,7 +50,7 @@
 
     &::before {
       padding-top: 100%;
-      content: " ";
+      content: ' ';
       display: block;
     }
 
@@ -115,6 +115,12 @@
     display: flex;
     flex-wrap: wrap;
     align-items: center;
+
+    &__top-contributor {
+      font-size: 0.875rem;
+      color: $ecl-color-grey-50;
+      padding-left: $ecl-spacing-2-xs;
+    }
   }
 
   &__title,
@@ -167,7 +173,7 @@
   }
 
   &__expertises-items,
-  &__stats-items, {
+  &__stats-items {
     flex-grow: 1;
     display: flex;
     flex-wrap: wrap;
