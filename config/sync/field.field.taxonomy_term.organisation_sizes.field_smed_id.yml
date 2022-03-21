@@ -1,0 +1,19 @@
+uuid: 28c1f922-dfc4-4d71-b79c-a6a5febc49a2
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.taxonomy_term.field_smed_id
+    - taxonomy.vocabulary.organisation_sizes
+id: taxonomy_term.organisation_sizes.field_smed_id
+field_name: field_smed_id
+entity_type: taxonomy_term
+bundle: organisation_sizes
+label: 'SME Dashboard ID'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

@@ -1,0 +1,8 @@
+uuid: 19c5728f-32c8-4872-9885-50b2cf44895a
+langcode: en
+status: true
+dependencies: {  }
+name: 'Organisation sizes'
+vid: organisation_sizes
+description: ''
+weight: 0
