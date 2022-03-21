@@ -36,6 +36,10 @@ class PublicVisibility extends PublicVisibilityBase {
     if ($groupType->getAnonymousRole()->hasPermission('view group')) {
       $anonymousPermissions = [$groupType->getAnonymousRoleId() => $group_view_permissions];
     }
+
+    // Add view comments permission to outsiders and group members.
+    $group_view_permissions[] = 'view comments';
+
     return array_merge($anonymousPermissions, [
       $groupType->getOutsiderRoleId() => $group_view_permissions,
       $groupType->getMemberRoleId() => $group_view_permissions,

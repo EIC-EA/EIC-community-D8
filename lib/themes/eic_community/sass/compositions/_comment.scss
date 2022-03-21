@@ -120,6 +120,13 @@
 
   &__author-info {
     color: ecl-typography('color', 'meta');
+    display: flex;
+    align-items: center;
+
+    & span {
+      display: flex;
+      align-items: center;
+    }
 
     @include ecl-media-breakpoint-down('md') {
       & > *,
@@ -141,6 +148,10 @@
     @include ecl-media-breakpoint-down('md') {
       position: absolute;
       left: -9px;
+      .ecl-discussion-thread__featured-items & {
+        position: relative;
+        left: 0;
+      }
       & .ecl-author__aside {
         width: 20px;
       }

@@ -193,3 +193,19 @@ function eic_deploy_update_9004(&$sandbox) {
     $groupPermissions->save();
   }
 }
+
+/**
+ * Adds group permission 'view comments' to group outsiders.
+ */
+function eic_deploy_update_9005(&$sandbox) {
+  $new_permissions = [
+    'view comments',
+  ];
+
+  $roles = [
+    'group-outsider',
+    'event-outsider',
+  ];
+
+  eic_deploy_add_group_permissions_to_role($new_permissions, $roles);
+}
