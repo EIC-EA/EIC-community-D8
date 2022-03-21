@@ -2,6 +2,7 @@
 
 namespace Drupal\eic_group_membership\Commands;
 
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Queue\QueueFactory;
 use Drupal\Core\Queue\SuspendQueueException;
@@ -54,6 +55,13 @@ class GroupMembershipCommands extends DrushCommands {
   protected $groupVisibilityStorage;
 
   /**
+   * The OEC Group visibility storage.
+   *
+   * @var \Drupal\oec_group_flex\GroupVisibilityDatabaseStorageInterface
+   */
+  protected $configFactory;
+
+  /**
    * Constructs a new GroupMembershipCommands object.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
@@ -66,19 +74,23 @@ class GroupMembershipCommands extends DrushCommands {
    *   The EIC Flag helper service.
    * @param \Drupal\oec_group_flex\GroupVisibilityDatabaseStorageInterface $group_visibility_storage
    *   The OEC Group visibility storage.
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   *   The config factory service.
    */
   public function __construct(
     EntityTypeManagerInterface $entity_type_manager,
     QueueFactory $queue_factory,
     FlagService $flag_service,
     FlagHelper $eic_flag_helper,
-    GroupVisibilityDatabaseStorageInterface $group_visibility_storage
+    GroupVisibilityDatabaseStorageInterface $group_visibility_storage,
+    ConfigFactoryInterface $config_factory
   ) {
     $this->entityTypeManager = $entity_type_manager;
     $this->queueFactory = $queue_factory;
     $this->flagService = $flag_service;
     $this->eicFlagHelper = $eic_flag_helper;
     $this->groupVisibilityStorage = $group_visibility_storage;
+    $this->configFactory = $config_factory;
   }
 
   /**
@@ -92,6 +104,13 @@ class GroupMembershipCommands extends DrushCommands {
    * @aliases unfollow_group_content_from_non_members
    */
   public function unfollowGroupContentFromNonMembers() {
+    $config = $this->configFactory->get('eic_group_membership.settings');
+    // Setting to unfollow group content nodes when leaving the group is
+    // disabled so we do nothing.
+    if (!$config->get('unfollow_group_content_dequeue_items')) {
+      return;
+    }
+
     $queue = $this->queueFactory->get('eic_group_membership_unfollow_content');
 
     $exclude_group_visibilities = [
@@ -162,6 +181,13 @@ class GroupMembershipCommands extends DrushCommands {
    * @aliases unfollow_group_content_on_visibility_change
    */
   public function unfollowGroupContentOnVisibilityChange() {
+    $config = $this->configFactory->get('eic_group_membership.settings');
+    // Setting to unfollow group content nodes on visibility change is disabled,
+    // so we do nothing.
+    if (!$config->get('unfollow_group_content_dequeue_items')) {
+      return;
+    }
+
     $queue = $this->queueFactory->get('eic_group_membership_visibility_change_unfollow_content');
 
     $exclude_group_visibilities = [
