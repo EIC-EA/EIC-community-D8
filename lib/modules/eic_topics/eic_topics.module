@@ -140,11 +140,12 @@ function eic_topics_views_pre_render(ViewExecutable $view) {
   $params = SearchHelper::buildSolrQueryParams($params);
 
   if ($route) {
-    $url = Url::fromRoute($route, [], ['query' => $params])->toString();
+    $url = Url::fromRoute($route, [], ['query' => $params, 'absolute' => TRUE])->toString();
     $view->display_handler->setOption('link_url', $url);
   }
   elseif ($url) {
     $url->setOption('query', $params);
+    $url->setAbsolute(TRUE);
     $view->display_handler->setOption('link_url', $url->toString());
   }
 }
