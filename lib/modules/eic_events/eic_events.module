@@ -1,6 +1,13 @@
 <?php
 
+/**
+ * @file
+ * Primary module hooks for EIC Events module.
+ */
+
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\eic_events\Constants\Event;
+use Drupal\eic_events\Hooks\FormOperations;
 
 /**
  * Implements hook_cron().
@@ -19,4 +26,12 @@ function eic_events_cron() {
 
     \Drupal::state()->set(Event::CRON_STATE_ID_LAST_REQUEST_TIME, $now);
   }
+}
+
+/**
+ * Implements hook_form_BASE_FORM_ID_alter().
+ */
+function eic_events_form_group_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  \Drupal::classResolver(FormOperations::class)
+    ->formGroupFormAlter($form, $form_state, $form_id);
 }
