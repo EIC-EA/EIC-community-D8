@@ -31,7 +31,7 @@ class FormOperations implements ContainerInjectionInterface {
     'field_body',
     'field_tag_line',
     'field_location',
-    'field_website_url',
+    'field_link',
     'field_social_links',
     'field_vocab_event_type',
     'field_date_range',
