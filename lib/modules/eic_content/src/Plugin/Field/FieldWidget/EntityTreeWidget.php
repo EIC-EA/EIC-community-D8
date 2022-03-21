@@ -313,6 +313,7 @@ class EntityTreeWidget extends WidgetBase {
   ): array {
     /** @var \Drupal\Core\StringTranslation\TranslationManager $translation_manager */
     $translation_manager = \Drupal::service('string_translation');
+    $current_user = \Drupal::currentUser();
 
     $options += self::defaultSettings();
 
@@ -354,6 +355,8 @@ class EntityTreeWidget extends WidgetBase {
         'data-target-bundle' => $target_bundle,
         'data-target-entity' => $target_type,
         'data-is-required' => (int) $options['is_required'],
+        // We can only create terms on the fly.
+        'data-can-create-tag' => (int) $current_user->hasPermission("create terms in $target_bundle")
       ],
     ];
 

@@ -165,6 +165,20 @@ class EntityTreeController extends ControllerBase {
       );
     }
 
+    if (!$this->currentUser()->hasPermission("create terms in $target_bundle")) {
+      return new JsonResponse(
+        [
+          'message' => $this->t(
+            'You do not have the permission to create term in @vocabulary',
+            ['@vocabulary' => $target_bundle],
+            ['context' => 'eic_content']
+          ),
+          'error' => 1,
+        ],
+        Response::HTTP_BAD_REQUEST
+      );
+    }
+
     $results = $this->entityTypeManager()->getStorage('taxonomy_term')->loadByProperties([
       'vid' => $target_bundle,
       'name' => $name,
