@@ -64,7 +64,7 @@ class FormOperations implements ContainerInjectionInterface {
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
-  protected function handleEventTypeField(array &$form, FormStateInterface $form_state, $form_id) {
+  protected function handleEventTypeField(array &$form, FormStateInterface $form_state, string $form_id) {
     if (!isset($form['field_vocab_event_type'])) {
       return;
     }
@@ -83,7 +83,10 @@ class FormOperations implements ContainerInjectionInterface {
       ['vid' => Event::GROUP_EVENT_TYPE_VOCABULARY_NAME]
     );
     foreach ($terms as $term) {
-      if ($term->field_display_to_users->value != 1) {
+      // We only hide the term if it's not to be displayed and is not being
+      // used already.
+      if ($term->field_display_to_users->value != 1
+          && !in_array($term->id(), $form['field_vocab_event_type']['widget']['#default_value'])) {
         unset($form['field_vocab_event_type']['widget']['#options'][$term->id()]);
       }
     }
