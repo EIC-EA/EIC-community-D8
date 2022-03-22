@@ -14,6 +14,7 @@ dependencies:
     - field.field.node.event.field_location_type
     - field.field.node.event.field_organised_by
     - field.field.node.event.field_social_links
+    - field.field.node.event.field_tags
     - field.field.node.event.field_vocab_event_type
     - field.field.node.event.field_vocab_geo
     - field.field.node.event.field_vocab_topics
@@ -106,6 +107,7 @@ hidden:
   field_location_type: true
   field_organised_by: true
   field_social_links: true
+  field_tags: true
   field_vocab_event_type: true
   field_vocab_geo: true
   field_vocab_topics: true

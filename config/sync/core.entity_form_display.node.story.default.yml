@@ -13,6 +13,7 @@ dependencies:
     - field.field.node.story.field_introduction
     - field.field.node.story.field_related_stories
     - field.field.node.story.field_story_paragraphs
+    - field.field.node.story.field_tags
     - field.field.node.story.field_video
     - field.field.node.story.field_vocab_geo
     - field.field.node.story.field_vocab_topics
@@ -134,6 +135,21 @@ content:
       form_display_mode: default
       default_paragraph_type: _none
     third_party_settings: {  }
+  field_tags:
+    type: entity_tree
+    weight: 51
+    region: content
+    settings:
+      match_top_level_limit: '0'
+      can_create_tag: '1'
+      items_to_load: '25'
+      disable_top_choices: 0
+      load_all: 0
+      auto_select_parents: 0
+      ignore_current_user: 0
+      target_bundles: {  }
+      is_required: false
+    third_party_settings: {  }
   field_video:
     type: media_library_widget
     weight: 7
@@ -162,6 +178,9 @@ content:
       load_all: 0
       auto_select_parents: 0
       ignore_current_user: false
+      target_bundles: {  }
+      is_required: false
+      can_create_tag: false
     third_party_settings: {  }
   langcode:
     type: language_select

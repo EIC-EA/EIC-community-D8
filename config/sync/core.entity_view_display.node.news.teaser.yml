@@ -15,6 +15,7 @@ dependencies:
     - field.field.node.news.field_news_paragraphs
     - field.field.node.news.field_related_groups
     - field.field.node.news.field_related_stories
+    - field.field.node.news.field_tags
     - field.field.node.news.field_video
     - field.field.node.news.field_vocab_geo
     - field.field.node.news.field_vocab_topics
@@ -108,6 +109,7 @@ hidden:
   field_news_paragraphs: true
   field_related_groups: true
   field_related_stories: true
+  field_tags: true
   field_video: true
   field_vocab_geo: true
   field_vocab_topics: true
