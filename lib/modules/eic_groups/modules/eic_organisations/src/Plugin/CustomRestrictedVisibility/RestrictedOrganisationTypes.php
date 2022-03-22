@@ -80,16 +80,19 @@ class RestrictedOrganisationTypes extends CustomRestrictedVisibilityBase {
       $conf_key = $this->getPluginId() . '_conf';
 
       $restricted_organisation_types = $options[$conf_key];
-      if ($restricted_organisation_types) {
-        $terms = [];
-        foreach ($restricted_organisation_types as $organisation_type) {
-          if ($term = Term::load($organisation_type['target_id'])) {
-            $terms[] = $term;
-            $pluginForm[$conf_key]['#default_value'][] = $term;
-          }
-        }
-        $pluginForm[$conf_key]['#attributes']['data-selected-terms'] = EntityTreeWidget::formatTaxonomyPreSelection($terms);
+
+      if (!$restricted_organisation_types) {
+        return $pluginForm;
       }
+
+      $terms = [];
+      foreach ($restricted_organisation_types as $organisation_type) {
+        if ($term = Term::load($organisation_type['target_id'])) {
+          $terms[] = $term;
+          $pluginForm[$conf_key]['#default_value'][] = $term;
+        }
+      }
+      $pluginForm[$conf_key]['#attributes']['data-selected-terms'] = EntityTreeWidget::formatTaxonomyPreSelection($terms);
     }
     return $pluginForm;
   }
