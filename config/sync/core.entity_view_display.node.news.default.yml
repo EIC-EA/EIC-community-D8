@@ -15,6 +15,7 @@ dependencies:
     - field.field.node.news.field_news_paragraphs
     - field.field.node.news.field_related_groups
     - field.field.node.news.field_related_stories
+    - field.field.node.news.field_tags
     - field.field.node.news.field_video
     - field.field.node.news.field_vocab_geo
     - field.field.node.news.field_vocab_topics
@@ -125,6 +126,14 @@ content:
       link: true
     third_party_settings: {  }
     weight: 12
+    region: content
+  field_tags:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 103
     region: content
   field_video:
     type: entity_reference_entity_view
