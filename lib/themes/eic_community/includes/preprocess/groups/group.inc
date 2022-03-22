@@ -329,7 +329,7 @@ function _eic_community_get_group_custom_restricted_options_item_list(string $re
 
     case 'restricted_organisation_types':
       foreach ($restriction['options'] as $option) {
-        if ($term = $entity_type_manager->getStorage('taxonomy_term')->load($option)) {
+        if ($term = $entity_type_manager->getStorage('taxonomy_term')->load($option['target_id'])) {
           $items[] = $term->label();
         }
       }

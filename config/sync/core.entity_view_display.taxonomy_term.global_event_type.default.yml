@@ -1,0 +1,43 @@
+uuid: f8306de3-2d71-4c2c-bac4-977db58bad26
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.taxonomy_term.global_event_type.field_display_to_users
+    - field.field.taxonomy_term.global_event_type.field_smed_id
+    - taxonomy.vocabulary.global_event_type
+  module:
+    - text
+id: taxonomy_term.global_event_type.default
+targetEntityType: taxonomy_term
+bundle: global_event_type
+mode: default
+content:
+  description:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  field_display_to_users:
+    type: boolean
+    label: above
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_smed_id:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 1
+    region: content
+hidden:
+  langcode: true
+  search_api_excerpt: true
