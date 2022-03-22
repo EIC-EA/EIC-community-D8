@@ -91,7 +91,7 @@ function _eic_community_render_event_detail_page(array &$variables, EntityInterf
   // Event detail items.
   $items = [
     [
-      'content' => ucfirst(implode($location_types, ' & ')),
+      'content' => ucfirst(implode(' & ', $location_types)),
       'icon' => [
         'type' => 'custom',
         'name' => 'tag',

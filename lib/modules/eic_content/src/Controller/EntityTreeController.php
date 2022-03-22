@@ -3,8 +3,8 @@
 namespace Drupal\eic_content\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
-use Drupal\user\Entity\User;
-use Drupal\user\UserInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\eic_content\TreeWidget\TreeWidgetProperties;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -53,42 +53,37 @@ class EntityTreeController extends ControllerBase {
     $load_all = (int) $request->query->get('loadAll', 0);
     $ignore_current_user = (int) $request->query->get('ignoreCurrentUser', 0);
 
-    if ('user' === $target_entity) {
-      $query = \Drupal::entityQuery('user')
-        ->condition('status', 1)
-        ->condition('uid', 0, '<>');
+    $options = [
+      TreeWidgetProperties::OPTION_IGNORE_CURRENT_USER => $ignore_current_user,
+    ];
 
-      if ($ignore_current_user) {
-        $andCondition = $query->andConditionGroup()
-          ->condition('uid', 0, '<>')
-          ->condition('uid', $this->currentUser()->id(), '<>');
+    if ('taxonomy_term' !== $target_entity) {
+      $tree_property = $this->treeManager->getTreeWidgetProperty($target_entity);
 
-        $query->condition($andCondition);
-      } else {
-        $query->condition('uid', 0, '<>');
-      }
+      $query = \Drupal::entityQuery($target_entity)
+        ->condition('status', 1);
 
       if (!$load_all) {
         $query->range($offset, $length);
       }
 
-      $query->sort('field_first_name', 'ASC');
+      $query->sort($tree_property->getSortField(), 'ASC');
+      $tree_property->generateExtraCondition($query, $options);
+      $entities_id = $query->execute();
+      $entities = $tree_property->loadEntities($entities_id);
 
-      $user_ids = $query->execute();
-
-      $users = User::loadMultiple($user_ids);
       return new JsonResponse([
-        'terms' => array_map(function(UserInterface $user) {
+        'terms' => array_map(function (EntityInterface $entity) use ($tree_property) {
           return [
-            'tid' => $user->id(),
+            'tid' => $entity->id(),
             'level' => 0,
             'parents' => [0],
             'depth' => 0,
-            'name' => $user->get('field_first_name')->value . ' ' . $user->get('field_last_name')->value . ' ' . '('. $user->getEmail() .')',
+            'name' => $tree_property->getLabelFromEntity($entity),
             'weight' => 0,
           ];
-        }, $users),
-        'total' => count($user_ids),
+        }, $entities),
+        'total' => count($entities),
       ]);
     }
 

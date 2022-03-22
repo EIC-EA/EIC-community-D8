@@ -63,6 +63,22 @@ services:
     class: Drupal\eic_search\Search\Sources\Profile\ActivityStreamSourceType
     tags:
       - { name: eic_search.source }
+  eic_search.source_my_profile_following:
+    class: Drupal\eic_search\Search\Sources\Profile\FollowingSourceType
+    tags:
+      - { name: eic_search.source }
+  eic_search.source_my_profile_contribution:
+    class: Drupal\eic_search\Search\Sources\Profile\ContributionSourceType
+    tags:
+      - { name: eic_search.source }
+  eic_search.source_my_profile_groups:
+    class: Drupal\eic_search\Search\Sources\Profile\MyGroupsSourceType
+    tags:
+      - { name: eic_search.source }
+  eic_search.source_my_profile_events:
+    class: Drupal\eic_search\Search\Sources\Profile\MyEventsSourceType
+    tags:
+      - { name: eic_search.source }
   eic_search.solr_document_processor:
     class: Drupal\eic_search\Service\SolrDocumentProcessor
     arguments: ['@search_api.post_request_indexing', '@queue', '@plugin.manager.queue_worker', '@entity_type.manager']
@@ -81,7 +97,7 @@ services:
       - { name: eic_search.document_processor, priority: 12 }
   eic_search.document_processor_message:
     class: Drupal\eic_search\Search\DocumentProcessor\ProcessorMessage
-    arguments: ['@eic_media_statistics.entity_file_download_count', '@eic_statistics.statistics.storage.node.decorator', '@eic_comments.helper']
+    arguments: ['@eic_media_statistics.entity_file_download_count', '@eic_statistics.statistics.storage.node.decorator', '@eic_comments.helper', '@flag']
     tags:
       - { name: eic_search.document_processor, priority: 14 }
   eic_search.document_processor_news_story:
@@ -115,10 +131,12 @@ services:
       - { name: eic_search.document_processor, priority: 22 }
   eic_search.document_processor_group_event:
     class: Drupal\eic_search\Search\DocumentProcessor\ProcessorGroupEvent
+    arguments: ['@file_url_generator']
     tags:
       - { name: eic_search.document_processor, priority: 28 }
   eic_search.document_processor_global_event:
     class: Drupal\eic_search\Search\DocumentProcessor\ProcessorGlobalEvent
+    arguments: ['@file_url_generator']
     tags:
       - { name: eic_search.document_processor, priority: 30 }
   eic_search.document_processor_organisation:

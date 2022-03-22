@@ -3,7 +3,9 @@
 namespace Drupal\eic_default_content\Generator;
 
 use Drupal\Core\Url;
+use Drupal\eic_content\Constants\DefaultContentModerationStates;
 use Drupal\eic_groups\GroupsModerationHelper;
+use Drupal\eic_moderation\Constants\EICContentModeration;
 use Drupal\group\Entity\Group;
 use Drupal\group\Entity\GroupContent;
 use Drupal\group\Entity\GroupInterface;
@@ -153,6 +155,7 @@ class OrganisationGenerator extends CoreGenerator {
       'field_vocab_geo' => $this->getRandomEntities('taxonomy_term', ['vid' => 'geo'], 2),
       'status' => TRUE,
       'uid' => 1,
+      'moderation_state' => DefaultContentModerationStates::PUBLISHED_STATE,
     ]);
 
     $node->save();
@@ -190,7 +193,7 @@ class OrganisationGenerator extends CoreGenerator {
       'field_image_caption' => $this->faker->sentence(10),
       'field_vocab_topics' => $this->getRandomEntities('taxonomy_term', ['vid' => 'topics'], 1),
       'field_vocab_geo' => $this->getRandomEntities('taxonomy_term', ['vid' => 'geo'], 1),
-      'moderation_state' => 'published',
+      'moderation_state' => EICContentModeration::STATE_PUBLISHED,
       'uid' => 1,
     ]);
 

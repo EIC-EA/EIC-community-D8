@@ -41,7 +41,7 @@
         <li>{{ 'Create content in the group'|t }}</li>
         <li>{{ 'Publish your group'|t }}</li>
       </ul>
-      <p>{{ '<a href="@help_link">Click here</a> if you need additional help'|t({'@help_link': '#'}) }}</p>
+      <p>{{ '<a href="@help_link">Click here</a> if you need additional help'|t({'@help_link': help_link}) }}</p>
     {% endblock %}
   {% endembed %}
 {% elseif moderation_state == 'published' and has_member == false %}

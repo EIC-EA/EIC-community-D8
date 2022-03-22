@@ -1,0 +1,19 @@
+uuid: 1e90ebfb-fc1b-4cd0-a053-bdda32b83afa
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.message.field_moderation_state
+    - message.template.log_group_state_change
+id: message.log_group_state_change.field_moderation_state
+field_name: field_moderation_state
+entity_type: message
+bundle: log_group_state_change
+label: 'Moderation state'
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

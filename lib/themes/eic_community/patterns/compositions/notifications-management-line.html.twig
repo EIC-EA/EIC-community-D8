@@ -1,0 +1,30 @@
+<tr class="ecl-my-notifications-management__table__item {{ extra_classes }}">
+  <td class="ecl-my-notifications-management__table__label">
+    <div >
+      {% if icon_file_path and icon %}
+        {% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with {
+          icon: {
+            path: icon_file_path,
+            name: icon,
+            type: 'custom',
+            size: 'xs',
+          },
+        } %}
+      {% endif %}
+      <a href="{{ name.path }}">{{ name.label }}</a>
+    </div>
+  </td>
+  <td class="ecl-my-notifications-management__table__status">
+    <div>
+      {% include "@theme/patterns/components/toggle-switch.html.twig" with {
+        name: name.label,
+        state: state
+      } %}
+    </div>
+  </td>
+  {% if unsubscribe %}
+    <td class="ecl-my-notifications-management__table__unsubscribe">
+      <button>Unsubscribe</button>
+    </td>
+  {% endif %}
+</tr>

@@ -109,6 +109,7 @@ class ProcessorGlobal extends DocumentProcessor {
           }
         }
 
+        $changed = $fields['ds_aggregated_changed'];
         $title = $fields['tm_X3b_en_group_label_fulltext'];
         $type = $fields['ss_group_type'];
         $date = $fields['ds_group_created'];
@@ -134,6 +135,7 @@ class ProcessorGlobal extends DocumentProcessor {
             $fields,
             UserHelper::getUserAvatar($owner)
           );
+          $user_url = $owner->toUrl()->toString();
         }
         break;
       case 'entity:message':
@@ -148,6 +150,7 @@ class ProcessorGlobal extends DocumentProcessor {
         $type = $fields['ss_type'];
         $topics = $fields['sm_message_node_ref_field_vocab_topics_name'] ?? [];
         $date = $fields['ds_created'];
+        $title = $fields['ss_title'];
         break;
       case 'entity:user':
         $user = User::load($fields['its_user_id']);

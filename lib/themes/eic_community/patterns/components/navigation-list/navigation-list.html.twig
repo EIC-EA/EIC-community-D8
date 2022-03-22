@@ -37,6 +37,10 @@
       {% include "@theme/patterns/components/contact-box.html.twig" with contact_box %}
     {% endif %}
 
+    {% if extra_blocks is not empty %}
+      {{ extra_blocks }}
+    {% endif %}
+
     {% if block('after') is not empty %}
       <div class="ecl-navigation-list__main-after">
         {%- block after -%}{%- endblock -%}

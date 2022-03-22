@@ -35,6 +35,7 @@ use Drupal\flag\FlagInterface;
 use Drupal\group\Access\GroupAccessResult;
 use Drupal\group\Entity\GroupContent;
 use Drupal\pathauto\PathautoGeneratorInterface;
+use Drupal\eic_overviews\GlobalOverviewPages;
 
 /**
  * Implements hook_theme().
@@ -53,6 +54,7 @@ function eic_groups_theme($existing, $type, $theme, $path) {
         'edit_link' => NULL,
         'delete_link' => NULL,
         'invite_link' => NULL,
+        'help_link' => NULL,
         'actions' => [],
         'has_content' => NULL,
         'has_member' => FALSE,
@@ -82,6 +84,7 @@ function eic_groups_theme($existing, $type, $theme, $path) {
         'contributors' => [],
         'is_anonymous' => TRUE,
         'can_view_comments' => FALSE,
+        'highlighted_comment' => 0,
       ],
     ],
   ];
@@ -228,7 +231,12 @@ function eic_groups_node_update(EntityInterface $entity) {
 /**
  * Implements hook_ENTITY_TYPE_view().
  */
-function eic_groups_group_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
+function eic_groups_group_view(
+  array &$build,
+  EntityInterface $entity,
+  EntityViewDisplayInterface $display,
+  $view_mode
+) {
   \Drupal::classResolver(EntityOperations::class)
     ->groupView($build, $entity, $display, $view_mode);
 }
@@ -387,7 +395,12 @@ function eic_groups_cron() {
 /**
  * Implements hook_entity_field_access().
  */
-function eic_groups_entity_field_access($operation, FieldDefinitionInterface $field_definition, AccountInterface $account, FieldItemListInterface $items = NULL) {
+function eic_groups_entity_field_access(
+  $operation,
+  FieldDefinitionInterface $field_definition,
+  AccountInterface $account,
+  FieldItemListInterface $items = NULL
+) {
   return \Drupal::classResolver(EntityOperations::class)
     ->entityFieldAccess($operation, $field_definition, $account, $items);
 }
@@ -425,12 +438,13 @@ function eic_groups_group_access(EntityInterface $entity, $operation, AccountInt
       // We allow access if the user is the group owner or a group admin, and
       // moderation state is set to DRAFT or BLOCKED.
       if (in_array(
-        $entity->get('moderation_state')->value,
-        [
-          GroupsModerationHelper::GROUP_DRAFT_STATE,
-          GroupsModerationHelper::GROUP_PENDING_STATE,
-          GroupsModerationHelper::GROUP_BLOCKED_STATE,
-        ]) && $is_group_admin
+          $entity->get('moderation_state')->value,
+          [
+            GroupsModerationHelper::GROUP_DRAFT_STATE,
+            GroupsModerationHelper::GROUP_PENDING_STATE,
+            GroupsModerationHelper::GROUP_BLOCKED_STATE,
+          ]
+        ) && $is_group_admin
       ) {
         $access = GroupAccessResult::allowed()
           ->addCacheableDependency($account)
@@ -459,7 +473,8 @@ function eic_groups_group_access(EntityInterface $entity, $operation, AccountInt
         [
           GroupsModerationHelper::GROUP_DRAFT_STATE,
           GroupsModerationHelper::GROUP_BLOCKED_STATE,
-        ])
+        ]
+      )
       ) {
         $access = GroupAccessResult::allowed()
           ->addCacheableDependency($account)
@@ -720,7 +735,12 @@ function eic_field_location_type_allowed_values() {
 /**
  * Implements hook_flag_action_access().
  */
-function eic_groups_flag_action_access($action, FlagInterface $flag, AccountInterface $account, EntityInterface $flaggable = NULL) {
+function eic_groups_flag_action_access(
+  $action,
+  FlagInterface $flag,
+  AccountInterface $account,
+  EntityInterface $flaggable = NULL
+) {
   $access = AccessResult::neutral();
 
   if (!$flaggable) {
@@ -794,6 +814,27 @@ function eic_groups_flag_action_access($action, FlagInterface $flag, AccountInte
         ->addCacheableDependency($flaggable);
       break;
 
+  }
+
+  return $access;
+}
+
+/**
+ * Implements hook_overview_page_access().
+ */
+function eic_groups_overview_page_access(EntityInterface $entity, $operation, AccountInterface $account) {
+  $overview_type_id = $entity->get('field_overview_id')->value;
+  $overview_type_forbidden_anonymous = [
+    GlobalOverviewPages::ORGANISATIONS,
+  ];
+  $access = AccessResult::neutral();
+
+  if ($account->isAnonymous() &&
+    in_array($overview_type_id, $overview_type_forbidden_anonymous)
+  ) {
+    $access = AccessResult::forbidden()
+      ->addCacheableDependency($account)
+      ->addCacheableDependency($entity);
   }
 
   return $access;

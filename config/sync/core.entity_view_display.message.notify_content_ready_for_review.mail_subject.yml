@@ -1,0 +1,24 @@
+uuid: f5c39a0a-68fd-444f-8ef3-156f2ca5cf22
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.message.mail_subject
+    - field.field.message.notify_content_ready_for_review.field_event_executing_user
+    - field.field.message.notify_content_ready_for_review.field_message
+    - field.field.message.notify_content_ready_for_review.field_referenced_node
+    - message.template.notify_content_ready_for_review
+id: message.notify_content_ready_for_review.mail_subject
+targetEntityType: message
+bundle: notify_content_ready_for_review
+mode: mail_subject
+content:
+  partial_0:
+    weight: 0
+    region: content
+hidden:
+  field_event_executing_user: true
+  field_message: true
+  field_referenced_node: true
+  partial_1: true
+  search_api_excerpt: true

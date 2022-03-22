@@ -1,6 +1,10 @@
 .ecl-blockquote {
   margin: ecl-box-model('margin') 0;
 
+  & p {
+    display: inline;
+  }
+
   &:first-child {
     margin-top: 0;
   }

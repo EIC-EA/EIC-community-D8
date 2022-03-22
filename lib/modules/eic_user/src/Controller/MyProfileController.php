@@ -15,6 +15,14 @@ use Symfony\Component\HttpFoundation\Request;
 class MyProfileController extends ControllerBase {
 
   /**
+   * @return \Drupal\Core\StringTranslation\TranslatableMarkup
+   *   The translatable markup.
+   */
+  public function title() {
+    return $this->t('My interests', [], ['context' => 'eic_user']);
+  }
+
+  /**
    * The member interests endpoint.
    *
    * @param \Symfony\Component\HttpFoundation\Request $request
@@ -23,7 +31,7 @@ class MyProfileController extends ControllerBase {
    * @return array
    *   An empty array.
    */
-  public function interests(Request $request, UserInterface $user): array {
+  public function activity(Request $request, UserInterface $user): array {
     return [];
   }
 

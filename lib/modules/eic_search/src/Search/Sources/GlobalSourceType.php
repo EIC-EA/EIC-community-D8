@@ -46,7 +46,7 @@ class GlobalSourceType extends SourceType {
     return [
       'ss_global_content_type' => $this->t('Content type', [], ['context' => 'eic_search']),
       'ss_group_user_fullname' => $this->t('Full name', [], ['context' => 'eic_search']),
-      'sm_content_field_vocab_topics_string' => $this->t('Topics', [], ['context' => 'eic_search']),
+      'sm_content_field_vocab_topics_string' => $this->t('Topic', [], ['context' => 'eic_search']),
       'sm_content_field_vocab_geo_string' => $this->t('Regions & countries', [], ['context' => 'eic_search']),
       'ss_content_language_string' => $this->t('Languages', [], ['context' => 'eic_search']),
     ];

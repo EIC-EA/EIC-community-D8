@@ -68,6 +68,7 @@ module:
   eic_message_subscriptions: 0
   eic_messages: 0
   eic_migrate: 0
+  eic_moderation: 0
   eic_organisations: 0
   eic_overviews: 0
   eic_paragraph_contributor: 0
@@ -116,6 +117,7 @@ module:
   inline_entity_form: 0
   language: 0
   link: 0
+  locale: 0
   mailsystem: 0
   masquerade: 0
   media: 0
@@ -194,6 +196,7 @@ module:
   views_data_export: 0
   views_data_export_phpspreadsheet: 0
   views_ui: 0
+  workflow_buttons: 0
   workflows: 0
   pathauto: 1
   externalauth: 10

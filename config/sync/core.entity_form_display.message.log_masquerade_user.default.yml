@@ -1,0 +1,34 @@
+uuid: 7d6b2726-4a62-40fd-b4a2-3559d3780437
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.message.log_masquerade_user.field_related_user
+    - field.field.message.log_masquerade_user.field_rendered_content
+    - message.template.log_masquerade_user
+  module:
+    - text
+id: message.log_masquerade_user.default
+targetEntityType: message
+bundle: log_masquerade_user
+mode: default
+content:
+  field_related_user:
+    type: entity_reference_autocomplete
+    weight: 0
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_rendered_content:
+    type: text_textarea
+    weight: 1
+    region: content
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+hidden: {  }

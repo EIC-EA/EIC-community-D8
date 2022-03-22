@@ -8,6 +8,7 @@ dependencies:
     - field.field.paragraph.organisation_member_external.field_location
     - field.field.paragraph.organisation_member_external.field_media
     - field.field.paragraph.organisation_member_external.field_organisations
+    - field.field.paragraph.organisation_member_external.field_role
     - paragraphs.paragraphs_type.organisation_member_external
 id: paragraph.organisation_member_external.default
 targetEntityType: paragraph
@@ -53,6 +54,14 @@ content:
       link_to_entity: false
     third_party_settings: {  }
     weight: 5
+    region: content
+  field_role:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 6
     region: content
 hidden:
   search_api_excerpt: true

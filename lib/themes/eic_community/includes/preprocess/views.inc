@@ -32,6 +32,7 @@ function eic_community_preprocess_views_view_field(&$variables) {
  * Implements template_preprocess_views_view().
  */
 function eic_community_preprocess_views_view(&$variables) {
+
   /** @var \Drupal\views\ViewExecutable $view */
   $view = $variables['view'];
 
@@ -120,6 +121,8 @@ function eic_community_preprocess_views_view(&$variables) {
             'label' => t('Add news'),
             'path' => $url_add_news->toString(),
           ],
+          'extra_classes' => 'ecl-link ecl-link--cta',
+          'type' => 'cta',
         ];
       }
       break;
@@ -151,6 +154,8 @@ function eic_community_preprocess_views_view(&$variables) {
             'label' => t('Add event'),
             'path' => $url_add_event->toString(),
           ],
+          'extra_classes' => 'ecl-link ecl-link--cta',
+          'type' => 'cta',
         ];
       }
       break;
@@ -176,11 +181,15 @@ function eic_community_preprocess_views_view(&$variables) {
   }
 
   // Add the read more link if there is one.
-  if ($view->display_handler->getOption('use_more') == TRUE) {
+  if (
+    $view->display_handler->getOption('use_more') == TRUE &&
+    !empty($variables['more'])
+  ) {
+    // $link_display = $view->display_handler->
     $variables['call_to_action'] = [
       'link' => [
-        'label' => $view->display_handler->getOption('use_more_text'),
-        'path' => $view->display_handler->getOption('link_url'),
+        'label' => $variables['more']['#title'],
+        'path' => $variables['more']['#url']->toString(),
       ],
     ];
   }

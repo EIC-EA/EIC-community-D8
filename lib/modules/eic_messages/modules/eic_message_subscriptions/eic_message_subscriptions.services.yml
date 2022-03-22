@@ -17,3 +17,7 @@ services:
     arguments: [ '@event_dispatcher' ]
     tags:
       - { name: event_subscriber }
+
+  eic_message_subscriptions.subscription_message_checker:
+    class: Drupal\eic_message_subscriptions\Service\SubscriptionMessageChecker
+    arguments: [ '@eic_user.notification_settings_manager' , '@messenger' ]

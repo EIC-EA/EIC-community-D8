@@ -1,0 +1,26 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_social_links
+    - node.type.dummy
+  module:
+    - social_link_field
+id: node.dummy.field_social_links
+field_name: field_social_links
+entity_type: node
+bundle: dummy
+label: 'Social links'
+description: ''
+required: false
+translatable: true
+default_value:
+  -
+    link: ''
+    social: facebook
+  -
+    link: ''
+    social: twitter
+default_value_callback: ''
+settings: {  }
+field_type: social_links

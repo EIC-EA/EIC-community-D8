@@ -6,7 +6,7 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "require": {
-        "php": ">=7.2",
+        "php": ">=7.4",
         "ext-json": "*",
         "composer/composer": "1.10.23 as 2.0.13",
         "composer/installers": "^1.9",
@@ -83,6 +83,7 @@
         "drupal/views_bulk_operations": "^3.10",
         "drupal/views_data_export": "^1.0",
         "drupal/views_data_export_phpspreadsheet": "^1.2",
+        "drupal/workflow_buttons": "^1.0@beta",
         "drush/drush": "^10.3",
         "ethosce/group_purl": "2.x-dev",
         "lramarojaona/purl": "^1.0@alpha",
@@ -92,7 +93,7 @@
         "openeuropa/oe_time_caching": "^1.1",
         "openeuropa/oe_webtools": "^1.13",
         "softcreatr/jsonpath": "^0.7.5",
-        "twig/twig": "2.14.3 as 1.44.2",
+        "twig/twig": "2.14.11 as 1.44.2",
         "webflo/drupal-finder": "^1.2",
         "webmozart/path-util": "^2.3"
     },

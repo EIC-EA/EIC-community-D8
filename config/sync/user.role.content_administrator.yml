@@ -21,7 +21,8 @@ dependencies:
     - node.type.story
     - node.type.video
     - node.type.wiki_page
-    - workflows.workflow.group_wiki
+    - workflows.workflow.default
+    - workflows.workflow.eic_moderated_workflow
     - workflows.workflow.groups
     - workflows.workflow.news_stories
   module:
@@ -36,6 +37,7 @@ dependencies:
     - eic_private_content
     - eic_private_message
     - eic_topics
+    - entity_browser
     - file
     - filter
     - flag
@@ -65,6 +67,7 @@ permissions:
   - 'access files overview'
   - 'access group overview'
   - 'access media overview'
+  - 'access news_stories entity browser pages'
   - 'access overview page overview'
   - 'access toolbar'
   - 'access topics activity stream'
@@ -122,6 +125,7 @@ permissions:
   - 'edit any video content'
   - 'edit any video media'
   - 'edit overview pages'
+  - 'edit own book content'
   - 'edit own comments'
   - 'edit own discussion content'
   - 'edit own document content'
@@ -170,9 +174,14 @@ permissions:
   - 'update any social_media block content'
   - 'update any tiles_reference block content'
   - 'update own member profile'
-  - 'use group_wiki transition create_new_draft'
-  - 'use group_wiki transition publish'
-  - 'use group_wiki transition unpublish'
+  - 'use default transition archive'
+  - 'use default transition create_new_draft'
+  - 'use default transition publish'
+  - 'use eic_moderated_workflow transition ask_changes'
+  - 'use eic_moderated_workflow transition create_new_draft'
+  - 'use eic_moderated_workflow transition publish'
+  - 'use eic_moderated_workflow transition submit_for_approval'
+  - 'use eic_moderated_workflow transition unpublish'
   - 'use groups transition archive'
   - 'use groups transition block'
   - 'use groups transition create_new_group'

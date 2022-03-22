@@ -1,0 +1,12 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.dummy
+_core:
+  default_config_hash: NPYMEGVraTN6xcAqzWDfQP-hdh4n-6Z4i3ET4rQh130
+id: node.dummy
+target_entity_type_id: node
+target_bundle: dummy
+default_langcode: site_default
+language_alterable: false

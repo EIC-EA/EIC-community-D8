@@ -60,6 +60,13 @@ class SolrSearchController extends ControllerBase {
       unset($facets_value['interests']);
     }
 
+    $filter_registration = FALSE;
+
+    if (array_key_exists('filter_registration', $facets_value)) {
+      $filter_registration = $facets_value['filter_registration']['open_registration'];
+      unset($facets_value['filter_registration']);
+    }
+
     $page = $request->query->get('page');
     $datasources = json_decode($request->query->get('datasource'), TRUE);
     $offset = $request->query->get('offset', SourceTypeInterface::READ_MORE_NUMBER_TO_LOAD);
@@ -138,6 +145,11 @@ class SolrSearchController extends ControllerBase {
         $author_ignore_content_query = ' AND !(' . $source->getAuthorFieldId() . ':' . $this->currentUser()->id() . ')';
       }
 
+      if ($source->prefilterByCurrentUser() && $source->getAuthorFieldId()) {
+        $prefilter_current_user_query =
+          ' AND (' . $source->getAuthorFieldId() . ':(' . $this->currentUser()->id() . '))';
+      }
+
       // If source supports date filter and query has a from or to date.
       if ($source->supportDateFilter() && ($from_date || $end_date)) {
         $date_fields_id = $source->getDateIntervalField();
@@ -147,21 +159,45 @@ class SolrSearchController extends ControllerBase {
         // If user only selected one day, we will only filter on the start date.
         // for eg: user select on widget 23-11-2021 - 23-11-2021 (double click)
         // we only do a query from 23-11-2021 to *.
-        $end_date = $end_date === $from_date ? '*' : $end_date;
+        $end_date = $end_date === $from_date ? $end_date + 86400 : $end_date;
         $dates_query = [];
 
         $dates_query[] = "($date_from_id:[$from_date TO $end_date] AND $date_end_id:[$from_date TO $end_date])";
         $dates_query[] = "($date_from_id:[* TO $end_date] AND $date_end_id:[$from_date TO $end_date])";
         $dates_query[] = "($date_from_id:[$from_date TO $end_date] AND $date_end_id:[$end_date TO *])";
         $dates_query[] = "($date_from_id:[* TO $from_date] AND $date_end_id:[$end_date TO *])";
-
-
         $date_query = implode(' OR ', $dates_query);
 
         $date_query = "($date_query)";
         $query_fields_string .= empty($query_fields_string) ?
           "$date_query" :
           " AND $date_query";
+      }
+
+      if ($source->getRegistrationDateIntervalField() && $filter_registration) {
+        $date_fields_id = $source->getRegistrationDateIntervalField();
+        $date_from_id = $date_fields_id['from'];
+        $date_end_id = $date_fields_id['to'];
+        $now = time();
+        $dates_query = [];
+
+        $dates_query[] = "($date_from_id:[* TO $now] AND $date_end_id:[$now TO *])";
+        $date_query = implode(' OR ', $dates_query);
+
+        $date_query = "($date_query)";
+        $query_fields_string .= empty($query_fields_string) ?
+          "$date_query" :
+          " AND $date_query";
+      }
+
+      $fields_filter_empty = $source->getFieldsToFilterEmptyValue();
+
+      if (!empty($fields_filter_empty)) {
+        foreach ($fields_filter_empty as $field) {
+          $query_fields_string .= empty($query_fields_string) ?
+            "$field:[* TO *]" :
+            " AND $field:[* TO *]";
+        }
       }
 
       if (!empty($query_fields_string)) {
@@ -224,6 +260,13 @@ class SolrSearchController extends ControllerBase {
 
     if (
       $source instanceof SourceTypeInterface &&
+      $source->ignoreAnonymousUser()
+    ) {
+      $fq .= ' AND !(' . $source->getAuthorFieldId() . ':0)';
+    }
+
+    if (
+      $source instanceof SourceTypeInterface &&
       $current_group &&
       $source->excludingCurrentGroup()
     ) {
@@ -244,6 +287,10 @@ class SolrSearchController extends ControllerBase {
       $fq .= $author_ignore_content_query;
     }
 
+    if ($prefilter_current_user_query) {
+      $fq .= $prefilter_current_user_query;
+    }
+
     if ($source->prefilterByGroupsMembership()) {
       /** @var \Drupal\group\GroupMembershipLoader $grp_membership_service */
       $grp_membership_service = \Drupal::service('group.membership_loader');
@@ -255,7 +302,9 @@ class SolrSearchController extends ControllerBase {
 
       $group_filters_id = $source->getPrefilteredGroupFieldId();
 
-      $fq .= ' AND (' . reset($group_filters_id) . ':(' . implode(' OR ', $grp_ids) . ' OR "-1"))';
+      if ($group_filters_id) {
+        $fq .= ' AND (' . reset($group_filters_id) . ':(' . implode(' OR ', $grp_ids) . ' OR "-1"))';
+      }
     }
 
     $solariumQuery->addParam('fq', $fq);
@@ -432,7 +481,8 @@ class SolrSearchController extends ControllerBase {
 
     $status_query = ' AND (bs_global_status:true';
 
-    if ($source instanceof GroupSourceType) {
+    // User can see their group if status false but he is owner.
+    if ('group' === $source->getEntityBundle()) {
       $status_query .= ' OR (its_group_owner_id:' . $user_id . ')';
     }
 
@@ -518,19 +568,11 @@ class SolrSearchController extends ControllerBase {
         break;
     }
 
-    // Ignore anonymous user.
-    $condition_ignore_anon = "!(its_user_id:0)";
-
     if (empty($query)) {
-      $query = $condition_ignore_anon;
-    }
-
-    if (!empty($fq)) {
-      $fq .= " AND $query AND $condition_ignore_anon";
       return;
     }
 
-    $fq .= "$query AND $condition_ignore_anon";
+    $fq .= !empty($fq) ? " AND $query" : "$query";
   }
 
   /**

@@ -1,0 +1,18 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.message.field_message
+    - message.template.notify_content_ready_for_review
+id: message.notify_content_ready_for_review.field_message
+field_name: field_message
+entity_type: message
+bundle: notify_content_ready_for_review
+label: Message
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string_long

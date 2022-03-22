@@ -14,6 +14,7 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
 use Drupal\eic_flags\RequestStatus;
 use Drupal\eic_groups\EICGroupsHelper;
+use Drupal\eic_messages\Util\LogMessageTemplates;
 use Drupal\eic_user\UserHelper;
 use Drupal\flag\Entity\Flag;
 use Drupal\flag\Entity\Flagging;
@@ -21,6 +22,7 @@ use Drupal\flag\FlaggingInterface;
 use Drupal\flag\FlagService;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\group\GroupMembership;
+use Drupal\message\MessageInterface;
 use Drupal\user\Entity\User;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -118,16 +120,6 @@ abstract class AbstractRequestHandler implements HandlerInterface {
   /**
    * {@inheritdoc}
    */
-  abstract public function getSupportedEntityTypes();
-
-  /**
-   * {@inheritdoc}
-   */
-  abstract public function getMessages();
-
-  /**
-   * {@inheritdoc}
-   */
   public function closeRequest(
     FlaggingInterface $flagging,
     ContentEntityInterface $content_entity,
@@ -167,14 +159,24 @@ abstract class AbstractRequestHandler implements HandlerInterface {
     );
 
     // For accepted requests we create a log entry.
-    if ($response === RequestStatus::ACCEPTED) {
+    if (
+      $response === RequestStatus::ACCEPTED &&
+      $this->canLogRequest()
+    ) {
       $log = $this->entityTypeManager->getStorage('message')
         ->create([
-          'template' => 'log_request_accepted',
+          'template' => $this->logMessageTemplate(),
           'field_referenced_flag' => $flagging,
           'uid' => $flagging->getOwnerId(),
         ]);
 
+      $this->messageLogPreSave(
+        $flagging,
+        $content_entity,
+        $response,
+        $reason,
+        $log
+      );
       $log->save();
     }
   }
@@ -182,12 +184,28 @@ abstract class AbstractRequestHandler implements HandlerInterface {
   /**
    * {@inheritdoc}
    */
-  public function deny(
-    FlaggingInterface $flagging,
-    ContentEntityInterface $content_entity
-  ) {
-    // Currently does nothing, this will change.
+  public function canLogRequest() {
     return TRUE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function logMessageTemplate() {
+    return LogMessageTemplates::REQUEST_ARCHIVAL_DELETE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function messageLogPreSave(
+    FlaggingInterface $flagging,
+    ContentEntityInterface $content_entity,
+    string $response,
+    string $reason,
+    MessageInterface $log
+  ) {
+    return $log;
   }
 
   /**
@@ -267,33 +285,7 @@ abstract class AbstractRequestHandler implements HandlerInterface {
   /**
    * {@inheritdoc}
    */
-  public function applyFlagAlter(FlaggingInterface $flag) {
-    return $flag;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function applyFlagPostSave(FlaggingInterface $flag) {
-    return $flag;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function supports(ContentEntityInterface $contentEntity) {
-    return in_array(
-      $contentEntity->getEntityTypeId(),
-      array_keys($this->getSupportedEntityTypes())
-    );
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getFlagId(string $entity_type) {
-    return $this->getSupportedEntityTypes()[$entity_type] ?? NULL;
-  }
+  abstract public function getSupportedEntityTypes();
 
   /**
    * {@inheritdoc}
@@ -342,6 +334,37 @@ abstract class AbstractRequestHandler implements HandlerInterface {
   /**
    * {@inheritdoc}
    */
+  public function applyFlagAlter(FlaggingInterface $flag) {
+    return $flag;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function applyFlagPostSave(FlaggingInterface $flag) {
+    return $flag;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function supports(ContentEntityInterface $contentEntity) {
+    return in_array(
+      $contentEntity->getEntityTypeId(),
+      array_keys($this->getSupportedEntityTypes())
+    );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getFlagId(string $entity_type) {
+    return $this->getSupportedEntityTypes()[$entity_type] ?? NULL;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getActions(ContentEntityInterface $entity) {
     return [
       'deny_request' => [
@@ -373,6 +396,11 @@ abstract class AbstractRequestHandler implements HandlerInterface {
 
     return $messages[$action] ?? NULL;
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  abstract public function getMessages();
 
   /**
    * {@inheritdoc}
@@ -409,9 +437,9 @@ abstract class AbstractRequestHandler implements HandlerInterface {
         ? array_keys($group_membership->getRoles())
         : [];
       $allowed_group_roles = [
-        EICGroupsHelper::GROUP_MEMBER_ROLE,
-        EICGroupsHelper::GROUP_ADMINISTRATOR_ROLE,
-        EICGroupsHelper::GROUP_OWNER_ROLE,
+        $entity->bundle() . '-' . EICGroupsHelper::GROUP_TYPE_OWNER_ROLE,
+        $entity->bundle() . '-' . EICGroupsHelper::GROUP_TYPE_ADMINISTRATOR_ROLE,
+        $entity->bundle() . '-' . EICGroupsHelper::GROUP_TYPE_MEMBER_ROLE,
       ];
 
       if (empty(array_intersect($user_roles, $allowed_global_roles))
@@ -466,16 +494,6 @@ abstract class AbstractRequestHandler implements HandlerInterface {
   /**
    * {@inheritdoc}
    */
-  public function hasExpiration(FlaggingInterface $flag) {
-    $fields = $this->entityFieldManager->getFieldDefinitions('flagging', $flag->getFlagId());
-
-    return isset($fields[HandlerInterface::REQUEST_TIMEOUT_FIELD]) &&
-      $flag->get(HandlerInterface::REQUEST_TIMEOUT_FIELD)->value > 0;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function hasExpired(FlaggingInterface $flag) {
     if (!$this->hasExpiration($flag)) {
       return FALSE;
@@ -485,6 +503,16 @@ abstract class AbstractRequestHandler implements HandlerInterface {
     $limit = ($flag->get(HandlerInterface::REQUEST_TIMEOUT_FIELD)->value * 86400) + $flag->get('created')->value;
 
     return $now->getTimestamp() >= $limit;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function hasExpiration(FlaggingInterface $flag) {
+    $fields = $this->entityFieldManager->getFieldDefinitions('flagging', $flag->getFlagId());
+
+    return isset($fields[HandlerInterface::REQUEST_TIMEOUT_FIELD]) &&
+      $flag->get(HandlerInterface::REQUEST_TIMEOUT_FIELD)->value > 0;
   }
 
   /**
@@ -519,6 +547,16 @@ abstract class AbstractRequestHandler implements HandlerInterface {
 
     // We trigger the deny method to clear all related caches.
     $this->deny($flagging, $content_entity);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function deny(
+    FlaggingInterface $flagging,
+    ContentEntityInterface $content_entity
+  ) {
+    return TRUE;
   }
 
 }

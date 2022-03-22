@@ -34,7 +34,7 @@ class MembershipSelection extends DefaultSelection {
 
       // Filter out the Anonymous user if the selection handler is configured to
       // exclude it.
-      if (!$configuration['include_anonymous']) {
+      if (array_key_exists('include_anonymous', $configuration) && !$configuration['include_anonymous']) {
         $query->condition('uid', 0, '<>');
       }
 

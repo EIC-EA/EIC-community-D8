@@ -1,0 +1,28 @@
+uuid: 6b621845-4a6f-48d7-aa30-93b93a8ac9e2
+langcode: en
+status: true
+dependencies:
+  config:
+    - filter.format.full_html
+    - filter.format.plain_text
+  module:
+    - eic_messages
+third_party_settings:
+  eic_messages:
+    message_template_type: notification
+template: notify_content_ready_for_review
+label: 'NOTIFY :: MT50 :: Content ready for review'
+description: 'Notification sent to moderators when a content is being set as "Waiting for approval".'
+text:
+  -
+    value: "The [message:field_referenced_node:entity:content-type] \"[message:field_referenced_node:entity:title]\" is ready for review at [site:name]\r\n"
+    format: plain_text
+  -
+    value: "<p>Dear [message:author:display-name],</p>\r\n\r\n<p>[message:field_event_executing_user:entity:display-name]&nbsp;submitted a draft&nbsp;[message:field_referenced_node:entity:content-type] for review: <a href=\"[message:field_referenced_node:entity:url]\">[message:field_referenced_node:entity:title]</a></p>\r\n\r\n<p>[message:field_message]</p>\r\n\r\n<p><strong><a href=\"[message:field_referenced_node:entity:url]/revisions/[message:field_referenced_node:entity:vid]/view\">Click here</a></strong> to review this submission.</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p>Kind regards,<br />\r\n[site:name] team</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<hr />\r\n<p>This notification is linked to your moderator role.</p>\r\n"
+    format: full_html
+settings:
+  'token options':
+    clear: false
+    'token replace': true
+  purge_override: false
+  purge_methods: {  }

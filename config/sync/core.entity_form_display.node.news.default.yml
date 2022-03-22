@@ -18,10 +18,8 @@ dependencies:
     - field.field.node.news.field_vocab_geo
     - field.field.node.news.field_vocab_topics
     - node.type.news
-    - workflows.workflow.news_stories
   module:
     - comment
-    - content_moderation
     - eic_content
     - media_library
     - paragraphs
@@ -30,6 +28,7 @@ dependencies:
     - scheduler
     - scheduler_content_moderation_integration
     - text
+    - workflow_buttons
 id: node.news.default
 targetEntityType: node
 bundle: news
@@ -170,6 +169,7 @@ content:
       items_to_load: '25'
       load_all: 0
       auto_select_parents: 0
+      ignore_current_user: false
     third_party_settings: {  }
   langcode:
     type: language_select
@@ -179,10 +179,11 @@ content:
       include_locked: true
     third_party_settings: {  }
   moderation_state:
-    type: moderation_state_default
+    type: workflow_buttons
     weight: 23
     region: content
-    settings: {  }
+    settings:
+      show_current_state: 0
     third_party_settings: {  }
   path:
     type: path

@@ -1,0 +1,32 @@
+uuid: df8264a9-eb96-4b5d-a801-48b360711eec
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.taxonomy_term.organisation_sizes.field_smed_id
+    - taxonomy.vocabulary.organisation_sizes
+  module:
+    - text
+id: taxonomy_term.organisation_sizes.default
+targetEntityType: taxonomy_term
+bundle: organisation_sizes
+mode: default
+content:
+  description:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  field_smed_id:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 1
+    region: content
+hidden:
+  langcode: true
+  search_api_excerpt: true

@@ -13,6 +13,8 @@ final class FlagType {
 
   const FOLLOW_GROUP = 'follow_group';
 
+  const FOLLOW_EVENT = 'follow_event';
+
   const FOLLOW_CONTENT = 'follow_content';
 
   const FOLLOW_TAXONOMY_TERM = 'follow_taxonomy_term';

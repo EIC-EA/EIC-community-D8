@@ -53,41 +53,15 @@ class FormAlter {
       'source_class' => UserInvitesListSourceType::class,
     ])->toString();
 
-    $form['existing_users'] =
-      [
-        '#type' => 'entity_autocomplete',
-        '#tags' => TRUE,
-        '#target_type' => 'user',
-        '#maxlength' => 5000,
-        '#weight' => -2,
-        '#attributes' => [
-          'class' => ['hidden', 'entity-tree-reference-widget'],
-          'data-selected-terms' => json_encode($default_values),
-          'data-translations' => json_encode([
-            'select_value' => t('Select a value', [], ['context' => 'eic_search']),
-            'match_limit' => t(
-              'You can select only <b>@match_limit</b> top-level items.',
-              ['@match_limit' => $match_limit],
-              ['context' => 'eic_search']
-            ),
-            'search' => t('Search', [], ['context' => 'eic_search']),
-            'your_values' => t('Your selected values', [], ['context' => 'eic_search']),
-            'required_field' => t('This field is required', [], ['context' => 'eic_content']),
-          ]),
-          'data-terms-url' => $url_search,
-          'data-terms-url-search' => $url_search,
-          'data-terms-url-children' => $url_search,
-          'data-match-limit' => $match_limit,
-          'data-items-to-load' => 50,
-          'data-disable-top' => 0,
-          'data-load-all' => 1,
-          'data-ignore-current-user' => 1,
-          'data-search-specific-users' => 1,
-          'data-target-entity' => 'user',
-          'data-is-required' => FALSE,
-          'data-group-id' => $group->id(),
-        ],
-      ];
+    $form['existing_users'] = EntityTreeWidget::getEntityTreeFieldStructure(
+      [],
+      'user',
+      '',
+      50,
+      $url_search,
+      $url_search,
+      $url_search
+    );
 
     $form['existing_users']['#attached']['library'][] = 'eic_community/react-tree-field';
 
@@ -206,14 +180,22 @@ class FormAlter {
         if (!empty($membership)) {
           $invalid_emails[] = $email;
 
-          $error_message .= "<li>Invitation to $email already a member of this group.</li>";
+          $error_message .= "<li>" . $this->t(
+              'User @email is already member of the group.',
+              ['@email' => $email],
+              ['context' => 'eic_user']
+            ) . "</li>";
         }
       }
 
       if ($invitation_loader->loadByGroup($group, NULL, $email)) {
         $invalid_emails[] = $email;
 
-        $error_message .= "<li>User $email already received an invitation.</li>";
+        $error_message .= "<li>" . $this->t(
+            'User @email already received an invitation.',
+            ['@email' => $email],
+            ['context' => 'eic_user']
+          ) . "</li>";
       }
     }
 
@@ -236,14 +218,20 @@ class FormAlter {
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the form.
    */
-  private function displayErrorMessage(array $invalid_emails, $message_singular, $message_plural, FormStateInterface $form_state) {
+  private function displayErrorMessage(
+    array $invalid_emails,
+    $message_singular,
+    $message_plural,
+    FormStateInterface $form_state
+  ) {
     if (($count = count($invalid_emails)) > 1) {
       $error_message = '<ul>';
       foreach ($invalid_emails as $line => $invalid_email) {
         $error_message .= "<li>{$invalid_email} on line {$line}</li>";
       }
       $error_message .= '</ul>';
-      $form_state->setErrorByName('email_address',
+      $form_state->setErrorByName(
+        'email_address',
         $this->formatPlural(
           $count,
           $message_singular,
@@ -256,7 +244,8 @@ class FormAlter {
     }
     elseif ($count == 1) {
       $error_message = reset($invalid_emails);
-      $form_state->setErrorByName('email_address',
+      $form_state->setErrorByName(
+        'email_address',
         $this->formatPlural(
           $count,
           $message_singular,
