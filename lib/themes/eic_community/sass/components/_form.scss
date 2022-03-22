@@ -22,8 +22,8 @@
 
   &,
   &__section {
-    margin-top: map-get($ecl-spacing, "2xl");
-    margin-bottom: map-get($ecl-spacing, "2xl");
+    margin-top: map-get($ecl-spacing, '2xl');
+    margin-bottom: map-get($ecl-spacing, '2xl');
 
     &:first-child {
       margin-top: 0;
@@ -34,8 +34,8 @@
     }
 
     &:only-child {
-      margin-top: map-get($ecl-spacing, "2xl");
-      margin-bottom: map-get($ecl-spacing, "2xl");
+      margin-top: map-get($ecl-spacing, '2xl');
+      margin-bottom: map-get($ecl-spacing, '2xl');
     }
   }
 
@@ -43,18 +43,18 @@
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    margin-bottom: map-get($ecl-spacing, "s");
+    margin-bottom: map-get($ecl-spacing, 's');
 
-    @include ecl-media-breakpoint-up("sm") {
+    @include ecl-media-breakpoint-up('sm') {
       flex-direction: row;
       align-items: center;
     }
 
     > * {
-      @include ecl-media-breakpoint-up("sm") {
+      @include ecl-media-breakpoint-up('sm') {
         flex-shrink: 0;
         margin-bottom: 0;
-        margin-right: map-get($ecl-spacing, "s");
+        margin-right: map-get($ecl-spacing, 's');
 
         &:last-child {
           margin-left: auto;
@@ -67,29 +67,29 @@
   &__items {
     display: inline-flex;
     flex-wrap: wrap;
-    margin-right: #{0 - map-get($ecl-spacing, "m")};
-    margin-bottom: #{0 - map-get($ecl-spacing, "s")};
+    margin-right: #{0 - map-get($ecl-spacing, 'm')};
+    margin-bottom: #{0 - map-get($ecl-spacing, 's')};
   }
 
   &__radio-item {
     display: inline-flex;
     align-items: center;
-    margin-right: map-get($ecl-spacing, "m");
-    margin-bottom: map-get($ecl-spacing, "s");
+    margin-right: map-get($ecl-spacing, 'm');
+    margin-bottom: map-get($ecl-spacing, 's');
   }
 
   &__radio-icon {
     flex-shrink: 0;
-    margin-right: map-get($ecl-spacing, "xs");
-    fill: ecl-typography("color", "title");
+    margin-right: map-get($ecl-spacing, 'xs');
+    fill: ecl-typography('color', 'title');
   }
 
   &__checkbox {
-    margin: map-get($ecl-spacing, "l") 0;
+    margin: map-get($ecl-spacing, 'l') 0;
   }
 
   .ecl-form-group {
-    margin: map-get($ecl-spacing, "l") 0;
+    margin: map-get($ecl-spacing, 'l') 0;
 
     & > div {
       width: 100%;
@@ -131,9 +131,9 @@
 
   &-group--info {
     border-top: 1px solid $ecl-color-grey-25;
-    margin-top: map-get($ecl-spacing, "l");
-    padding: map-get($ecl-spacing, "l") 0;
-    color: ecl-typography("color", "label");
+    margin-top: map-get($ecl-spacing, 'l');
+    padding: map-get($ecl-spacing, 'l') 0;
+    color: ecl-typography('color', 'label');
   }
 
   .ecl-feedback-message {
@@ -167,13 +167,14 @@
   }
 
   .ecl-form-label,
-  .fieldset-legend {
+  .fieldset-legend,
+  details summary {
     font-weight: $ecl-font-weight-regular;
     text-transform: uppercase;
-    color: ecl-typography("color", "label");
+    color: ecl-typography('color', 'label');
 
     &.form-required::after {
-      content: "*";
+      content: '*';
       color: $ecl-color-red;
     }
 
@@ -182,7 +183,7 @@
 
       &:last-child {
         &::before {
-          content: "\00A0";
+          content: '\00A0';
         }
       }
     }
@@ -190,7 +191,7 @@
 
   .ecl-help-block {
     font-style: italic;
-    color: ecl-typography("color", "meta");
+    color: ecl-typography('color', 'meta');
   }
 
   .ecl-text-input,
@@ -198,8 +199,8 @@
     &[disabled],
     &[readonly] {
       border-color: transparent;
-      background-color: map-get($ecl-colors, "blue-5");
-      box-shadow: 0 0 0 map-get($ecl-spacing, "2xs") map-get($ecl-colors, "blue-5");
+      background-color: map-get($ecl-colors, 'blue-5');
+      box-shadow: 0 0 0 map-get($ecl-spacing, '2xs') map-get($ecl-colors, 'blue-5');
 
       &,
       &:focus {
@@ -259,7 +260,7 @@
   }
 
   &__radio-items--list {
-    margin-top: map-get($ecl-spacing, "s");
+    margin-top: map-get($ecl-spacing, 's');
     display: flex;
     flex-direction: column;
 
@@ -277,10 +278,10 @@
     & > .ecl-radio__label {
       display: grid;
       grid-template-columns: 1.25rem auto;
-      grid-gap: map-get($ecl-spacing, "s");
+      grid-gap: map-get($ecl-spacing, 's');
       grid-template-areas:
-        "box content"
-        ". content";
+        'box content'
+        '. content';
     }
 
     & .ecl-radio__box {
@@ -292,20 +293,20 @@
     }
 
     & .ecl-radio__title {
-      margin: 0 0 map-get($ecl-spacing, "s");
+      margin: 0 0 map-get($ecl-spacing, 's');
       display: flex;
       align-items: center;
       font-weight: bold;
 
       & .ecl-icon {
         color: $ecl-color-blue;
-        margin-right: map-get($ecl-spacing, "xs");
+        margin-right: map-get($ecl-spacing, 'xs');
       }
     }
   }
 
   & .ecl-table {
-    margin: map-get($ecl-spacing, "m") 0;
+    margin: map-get($ecl-spacing, 'm') 0;
 
     &__cell > div {
       width: 95%;
@@ -342,7 +343,7 @@
 
     &__pane {
       box-sizing: border-box;
-      padding: map-get($ecl-spacing, "xs");
+      padding: map-get($ecl-spacing, 'xs');
     }
 
     & .form-textarea {
@@ -351,8 +352,8 @@
   }
 
   & &-group.form-actions {
-    margin-top: map-get($ecl-spacing, "2xl");
-    gap: map-get($ecl-spacing, "m");
+    margin-top: map-get($ecl-spacing, '2xl');
+    gap: map-get($ecl-spacing, 'm');
   }
 
   .js-media-library-widget,
@@ -429,9 +430,62 @@
 
   & .field-group-details {
     margin-bottom: 1rem;
+
+    & > summary {
+      margin-bottom: 1rem;
+    }
+
+    & .js-form-wrapper {
+      margin: 0;
+    }
+  }
+
+  & .js-form-type-number {
+    flex-direction: row !important;
+    flex-wrap: wrap;
+    align-items: center;
+
+    & label,
+    & .field-prefix {
+      width: 100%;
+    }
+
+    & .field-suffix {
+      margin-left: $ecl-spacing-s;
+    }
+
+    & .form-number {
+      width: auto;
+    }
+  }
+
+  & .field--type-daterange,
+  & .field--type-timestamp {
+    & h4 {
+      margin-bottom: 0;
+    }
+
+    & h4 + div .form-item {
+      margin: 0 !important;
+    }
+
+    & h4 + div {
+      margin-bottom: $ecl-spacing-m;
+    }
+  }
+
+  & .form-number,
+  input[type='time'] {
+    @extend .ecl-text-input;
   }
 }
 
 .ecl-text-input {
   width: 100%;
+}
+
+.ui-autocomplete a {
+  width: 100%;
+  display: block;
+  box-sizing: border-box;
 }
