@@ -179,10 +179,12 @@ class EntityTreeController extends ControllerBase {
       );
     }
 
-    $results = $this->entityTypeManager()->getStorage('taxonomy_term')->loadByProperties([
-      'vid' => $target_bundle,
-      'name' => $name,
-    ]);
+    $results = $this->entityTypeManager()
+      ->getStorage('taxonomy_term')
+      ->getQuery()
+      ->condition('vid', $target_bundle)
+      ->condition('name', $name, '= BINARY')
+      ->execute();
 
     // We already have an entity with this label existing.
     if (!empty($results)) {
