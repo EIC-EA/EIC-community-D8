@@ -2,7 +2,7 @@
   $node: &;
   position: relative;
 
-  @include ecl-media-breakpoint-up("sm") {
+  @include ecl-media-breakpoint-up('sm') {
     display: flex;
     align-items: stretch;
     height: 100%;
@@ -10,14 +10,14 @@
     align-content: flex-start;
   }
 
-  @include ecl-media-breakpoint-up("sm") {
+  @include ecl-media-breakpoint-up('sm') {
     &--event {
       flex-direction: column;
     }
   }
 
   &__main {
-    @include ecl-media-breakpoint-up("sm") {
+    @include ecl-media-breakpoint-up('sm') {
       display: flex;
       align-items: stretch;
     }
@@ -28,59 +28,60 @@
   }
 
   &--event#{$node}--as-card {
-    padding: ecl-box-model("padding");
-    background-color: map-get($ecl-colors, "grey-5");
+    padding: ecl-box-model('padding');
+    background-color: map-get($ecl-colors, 'grey-5');
 
     & .ecl-teaser__action a {
       white-space: nowrap;
     }
 
     @include adjust-from-section-color() {
-      background-color: map-get($ecl-colors, "white");
+      background-color: map-get($ecl-colors, 'white');
     }
   }
 
   &--event#{$node}--as-grey {
-    padding: ecl-box-model("padding");
-    background-color: map-get($ecl-colors, "grey-5");
+    padding: ecl-box-model('padding');
+    background-color: map-get($ecl-colors, 'grey-5');
   }
 
   &--as-card-white {
-    background-color: map-get($ecl-colors, "white");
+    background-color: map-get($ecl-colors, 'white');
   }
 
   &--grey,
   &--as-card-grey {
-    background-color: map-get($ecl-colors, "grey-5");
+    background-color: map-get($ecl-colors, 'grey-5');
   }
 
   .ecl-featured-content-collection
     .ecl-featured-content-collection__item:nth-child(odd)
     &--grey#{$node}--alternating-grey {
-    background: map-get($ecl-colors, "white");
+    background: map-get($ecl-colors, 'white');
   }
 
   &--grey,
   &--is-card {
-    padding: ecl-box-model("padding");
+    padding: ecl-box-model('padding');
   }
 
   @include adjust-from-section-color() {
     &:not(.ecl-teaser--event):not(.ecl-teaser--as-card) {
-      padding: ecl-box-model("padding");
+      padding: ecl-box-model('padding');
     }
 
-    &:not(.ecl-teaser--event):not(.ecl-teaser--group).ecl-teaser--as-card .ecl-teaser__main-wrapper {
-      padding: 0 ecl-box-model("padding") ecl-box-model("padding");
+    &:not(.ecl-teaser--event):not(.ecl-teaser--group).ecl-teaser--as-card
+      .ecl-teaser__main-wrapper {
+      padding: 0 ecl-box-model('padding') ecl-box-model('padding');
     }
 
     &:not(.ecl-teaser--grey) {
-      background-color: map-get($ecl-colors, "white");
+      background-color: map-get($ecl-colors, 'white');
     }
   }
 
   &--as-grey {
-    background-color: map-get($ecl-colors, "grey-5");
+    background-color: map-get($ecl-colors, 'grey-5');
   }
 
   &--member {
@@ -160,7 +161,7 @@
     object-fit: cover;
     border-radius: 50%;
     overflow: hidden;
-    margin-right: map-get($ecl-spacing, "l");
+    margin-right: map-get($ecl-spacing, 'l');
   }
 
   &--organisation#{$node}--as-card-white &__main-wrapper {
@@ -176,7 +177,7 @@
   &--organisation &__meta-footer {
     position: absolute;
     justify-content: flex-start;
-    left: ecl-box-model("padding");
+    left: ecl-box-model('padding');
     bottom: 1rem;
     &__stats {
       margin: 0;
@@ -185,42 +186,42 @@
 
   &--is-highlighted,
   &--event#{$node}--is-highlighted#{$node}--event {
-    padding: ecl-box-model("padding");
-    background-color: map-get($ecl-colors, "blue-5");
+    padding: ecl-box-model('padding');
+    background-color: map-get($ecl-colors, 'blue-5');
     & + #{$node}--is-highlighted {
-      margin-top: ecl-box-model("padding");
+      margin-top: ecl-box-model('padding');
     }
 
     &::before {
       position: absolute;
       width: 4px;
-      background-color: ecl-typography("color", "title");
+      background-color: ecl-typography('color', 'title');
       top: 0;
       left: 0;
       bottom: 0;
-      content: " ";
+      content: ' ';
     }
   }
 
   &__image-wrapper {
     position: relative;
-    margin: 0 0 ecl-box-model("padding");
+    margin: 0 0 ecl-box-model('padding');
     padding: 0;
     flex-shrink: 0;
     align-self: flex-start;
-    background-color: map-get($ecl-colors, "grey-10");
+    background-color: map-get($ecl-colors, 'grey-10');
 
-    @include ecl-media-breakpoint-down("xs") {
+    @include ecl-media-breakpoint-down('xs') {
       &::before {
         padding-top: calc(100% / 16 * 9);
-        content: " ";
+        content: ' ';
         display: block;
       }
     }
 
-    @include ecl-media-breakpoint-up("sm") {
-      width: map-get($ecl-media, "l");
-      margin: 0 ecl-box-model("padding") 0 0;
+    @include ecl-media-breakpoint-up('sm') {
+      width: map-get($ecl-media, 'l');
+      margin: 0 ecl-box-model('padding') 0 0;
     }
 
     &--is-empty svg {
@@ -234,25 +235,25 @@
     }
 
     #{$node}--story & {
-      @include ecl-media-breakpoint-up("sm") {
-        height: map-get($ecl-media, "m");
+      @include ecl-media-breakpoint-up('sm') {
+        height: map-get($ecl-media, 'm');
       }
     }
 
     #{$node}--as-card & {
       width: 100%;
       box-sizing: border-box;
-      margin: 0 0 ecl-box-model("padding");
+      margin: 0 0 ecl-box-model('padding');
 
       &::before {
         padding-top: calc(100% / 16 * 9);
-        content: " ";
+        content: ' ';
         display: block;
       }
     }
 
     // Enables layout adjustments for cards with a color.
-    [class*="ecl-teaser--as-card-"] & {
+    [class*='ecl-teaser--as-card-'] & {
       margin: 0;
     }
 
@@ -260,7 +261,7 @@
       display: none;
     }
 
-    @include ecl-media-breakpoint-down("sm") {
+    @include ecl-media-breakpoint-down('sm') {
       #{$node}--event & {
         display: none;
       }
@@ -270,41 +271,41 @@
       border-radius: 50%;
       overflow: hidden;
       position: relative;
-      width: map-get($ecl-media, "xs");
-      margin-right: ecl-box-model("padding");
+      width: map-get($ecl-media, 'xs');
+      margin-right: ecl-box-model('padding');
 
-      @include ecl-media-breakpoint-up("lg") {
-        width: map-get($ecl-media, "s");
+      @include ecl-media-breakpoint-up('lg') {
+        width: map-get($ecl-media, 's');
       }
 
       &::before {
         padding-top: 100%;
-        content: " ";
+        content: ' ';
         display: block;
       }
     }
 
     #{$node}--as-card#{$node}--member & {
       position: relative;
-      max-width: map-get($ecl-media, "l");
+      max-width: map-get($ecl-media, 'l');
       min-width: 118px;
-      margin: 0 auto ecl-box-model("padding");
+      margin: 0 auto ecl-box-model('padding');
     }
 
     #{$node}--as-grey#{$node}--member & {
-      @include ecl-media-breakpoint-up("sm") {
-        top: ecl-box-model("padding");
-        left: ecl-box-model("padding");
+      @include ecl-media-breakpoint-up('sm') {
+        top: ecl-box-model('padding');
+        left: ecl-box-model('padding');
       }
     }
 
     #{$node}--filelist & {
-      color: ecl-typography("color", "title");
+      color: ecl-typography('color', 'title');
       display: flex;
       justify-content: center;
       flex-direction: row;
       align-items: center;
-      @include ecl-media-breakpoint-up("sm") {
+      @include ecl-media-breakpoint-up('sm') {
         align-self: stretch;
       }
     }
@@ -336,7 +337,7 @@
     box-sizing: border-box;
     object-fit: cover;
 
-    @include ecl-media-breakpoint-down("xs") {
+    @include ecl-media-breakpoint-down('xs') {
       position: absolute;
       top: 0;
       left: 0;
@@ -359,7 +360,7 @@
       left: 50%;
       top: 50%;
       transform: translate(-50%, -50%);
-      color: map-get($ecl-colors, "white");
+      color: map-get($ecl-colors, 'white');
     }
   }
 
@@ -368,7 +369,7 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    color: map-get($ecl-colors, "white");
+    color: map-get($ecl-colors, 'white');
   }
 
   &__main-wrapper {
@@ -382,12 +383,12 @@
     }
 
     // Enables layout adjustments for cards with a color.
-    [class*="ecl-teaser--as-card-"] & {
-      padding: ecl-box-model("padding");
+    [class*='ecl-teaser--as-card-'] & {
+      padding: ecl-box-model('padding');
     }
 
-    #{$node}--as-card[class*="ecl-teaser--as-card-"] & {
-      padding: ecl-box-model("padding");
+    #{$node}--as-card[class*='ecl-teaser--as-card-'] & {
+      padding: ecl-box-model('padding');
     }
 
     #{$node}--filelist &,
@@ -396,8 +397,8 @@
       position: relative;
     }
 
-    @include ecl-media-breakpoint-up("sm") {
-      flex-basis: calc(100% - #{map-get($ecl-media, "l")} - #{ecl-box-model("padding")});
+    @include ecl-media-breakpoint-up('sm') {
+      flex-basis: calc(100% - #{map-get($ecl-media, 'l')} - #{ecl-box-model('padding')});
     }
   }
 
@@ -411,7 +412,7 @@
       color: $ecl-color-grey-75;
     }
     & svg {
-      margin-right: map-get($ecl-spacing, "s");
+      margin-right: map-get($ecl-spacing, 's');
     }
   }
 
@@ -419,8 +420,8 @@
     justify-content: space-between;
     width: 100%;
     display: flex;
-    margin-top: ecl-box-model("padding", "controls");
-    padding-top: ecl-box-model("padding", "controls");
+    margin-top: ecl-box-model('padding', 'controls');
+    padding-top: ecl-box-model('padding', 'controls');
     border-top: ecl-border();
   }
 
@@ -437,7 +438,7 @@
   }
 
   &__meta-header {
-    margin-bottom: ecl-box-model("padding");
+    margin-bottom: ecl-box-model('padding');
 
     &--is-hidden {
       display: none;
@@ -451,15 +452,15 @@
     #{$node}--filelist &,
     #{$node}--video &,
     #{$node}--gallery & {
-      margin-bottom: map-get($ecl-spacing, "xs");
+      margin-bottom: map-get($ecl-spacing, 'xs');
     }
 
     #{$node}--is-highlightable & {
-      padding-right: calc(#{map-get($ecl-spacing, "xs")} + 28px);
+      padding-right: calc(#{map-get($ecl-spacing, 'xs')} + 28px);
     }
 
     #{$node}--organisation & {
-      @include ecl-media-breakpoint-down("sm") {
+      @include ecl-media-breakpoint-down('sm') {
         margin-bottom: 0;
       }
     }
@@ -485,7 +486,7 @@
       display: none;
     }
 
-    @include ecl-media-breakpoint-down("sm") {
+    @include ecl-media-breakpoint-down('sm') {
       #{$node}--event & {
         display: none;
       }
@@ -502,11 +503,11 @@
     }
 
     #{$node}--group & {
-      margin-top: ecl-box-model("margin", "meta");
+      margin-top: ecl-box-model('margin', 'meta');
     }
 
     #{$node}--organisation & {
-      margin-top: ecl-box-model("margin", "controls");
+      margin-top: ecl-box-model('margin', 'controls');
     }
 
     #{$node}--filelist &,
@@ -514,8 +515,8 @@
     #{$node}--gallery & {
       width: 100%;
       border-top: ecl-border();
-      margin-top: ecl-layout("gutter", "controls");
-      padding-top: ecl-layout("gutter", "controls");
+      margin-top: ecl-layout('gutter', 'controls');
+      padding-top: ecl-layout('gutter', 'controls');
     }
 
     // // START: Event specific Card style for mobile
@@ -529,7 +530,7 @@
     //   }
     // }
 
-    @include ecl-media-breakpoint-down("sm") {
+    @include ecl-media-breakpoint-down('sm') {
       #{$node}--event #{$node}__content & {
         display: flex;
       }
@@ -539,7 +540,7 @@
       display: none;
     }
 
-    @include ecl-media-breakpoint-down("sm") {
+    @include ecl-media-breakpoint-down('sm') {
       #{$node}--event #{$node}__content & {
         display: none;
       }
@@ -549,7 +550,7 @@
       display: block;
     }
 
-    @include ecl-media-breakpoint-down("sm") {
+    @include ecl-media-breakpoint-down('sm') {
       #{$node}--event & {
         display: block;
       }
@@ -559,7 +560,7 @@
   }
 
   &__meta {
-    color: ecl-typography("color", "meta");
+    color: ecl-typography('color', 'meta');
   }
 
   &__content-wrapper {
@@ -567,10 +568,10 @@
     flex-grow: 1;
     align-items: flex-start;
 
-    @include ecl-media-breakpoint-down("md") {
+    @include ecl-media-breakpoint-down('md') {
       #{$node}--event & {
         flex-direction: row;
-        margin-bottom: map-get($ecl-spacing, "s");
+        margin-bottom: map-get($ecl-spacing, 's');
       }
     }
 
@@ -585,7 +586,7 @@
     display: flex;
     flex-direction: column;
     flex-grow: 1;
-    margin-bottom: map-get($ecl-spacing, "s");
+    margin-bottom: map-get($ecl-spacing, 's');
 
     &:last-child {
       margin-bottom: 0;
@@ -604,19 +605,19 @@
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    padding-left: ecl-box-model("padding");
+    padding-left: ecl-box-model('padding');
 
     // START: Event specific Card style for mobile
     #{$node}--as-card#{$node}--event & {
       order: -1;
-      padding-right: ecl-box-model("padding");
+      padding-right: ecl-box-model('padding');
       padding-left: 0;
     }
 
-    @include ecl-media-breakpoint-down("sm") {
+    @include ecl-media-breakpoint-down('sm') {
       #{$node}--event & {
         order: -1;
-        padding-right: ecl-box-model("padding");
+        padding-right: ecl-box-model('padding');
         padding-left: 0;
       }
     }
@@ -625,7 +626,7 @@
   }
 
   &__title {
-    color: ecl-typography("color", "title");
+    color: ecl-typography('color', 'title');
     font-weight: $ecl-font-weight-bold;
 
     &:first-child {
@@ -634,7 +635,7 @@
 
     display: flex;
 
-    @include ecl-responsive-font("label");
+    @include ecl-responsive-font('label');
 
     a {
       display: inline-flex;
@@ -655,14 +656,14 @@
     }
 
     #{$node}--is-highlightable & {
-      padding-right: calc(#{map-get($ecl-spacing, "xs")} + 28px);
+      padding-right: calc(#{map-get($ecl-spacing, 'xs')} + 28px);
     }
   }
 
   &__title-before,
   &__title-after {
     .ecl-teaser-overview--has-columns & {
-      @include ecl-media-breakpoint-up("md") {
+      @include ecl-media-breakpoint-up('md') {
         display: block;
         flex-shrink: 0;
       }
@@ -672,20 +673,20 @@
   &__title-before {
     &::after {
       display: inline;
-      content: "\00A0";
+      content: '\00A0';
     }
   }
 
   &__title-after {
     &::before {
       display: inline;
-      content: "\00A0";
+      content: '\00A0';
     }
   }
 
   &__title-overflow {
     .ecl-teaser-overview--has-columns & {
-      @include ecl-media-breakpoint-up("md") {
+      @include ecl-media-breakpoint-up('md') {
         flex: 1;
         min-width: 0;
         overflow: hidden;
@@ -696,7 +697,6 @@
         min-height: 2.5em;
         overflow: hidden;
         text-overflow: ellipsis;
-        white-space: initial;
         display: -webkit-box;
         -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
@@ -705,9 +705,9 @@
   }
 
   &__description {
-    color: ecl-typography("color", "meta");
+    color: ecl-typography('color', 'meta');
     font-style: inherit;
-    line-height: ecl-typography("line-height");
+    line-height: ecl-typography('line-height');
     text-overflow: ellipsis;
     overflow: hidden;
     display: -webkit-box;
@@ -715,13 +715,13 @@
     -webkit-box-orient: vertical;
 
     #{$node}--search & {
-      color: ecl-typography("color");
+      color: ecl-typography('color');
     }
 
     #{$node}--organisation &,
     #{$node}--member & {
       margin: 0;
-      @include ecl-responsive-font("label");
+      @include ecl-responsive-font('label');
     }
 
     #{$node}--story & {
@@ -736,7 +736,7 @@
   &__links {
     display: flex;
     flex-direction: column;
-    margin-bottom: #{0 - ecl-box-model("margin", "controls")};
+    margin-bottom: #{0 - ecl-box-model('margin', 'controls')};
 
     #{$node}--as-card & {
       align-items: center;
@@ -745,9 +745,9 @@
   }
 
   &__link {
-    margin-right: ecl-box-model("margin", "controls");
-    margin-bottom: ecl-box-model("margin", "controls");
-    line-height: ecl-typography("line-height");
+    margin-right: ecl-box-model('margin', 'controls');
+    margin-bottom: ecl-box-model('margin', 'controls');
+    line-height: ecl-typography('line-height');
   }
 
   &__meta-column {
@@ -755,18 +755,18 @@
     align-items: center;
     flex-wrap: wrap;
     justify-content: space-between;
-    margin-top: map-get($ecl-spacing, "s");
+    margin-top: map-get($ecl-spacing, 's');
 
     #{$node } & > * {
       margin: 0;
-      margin-right: ecl-box-model("margin", "controls");
+      margin-right: ecl-box-model('margin', 'controls');
 
       &:last-child {
         margin-right: 0;
       }
     }
 
-    @include ecl-media-breakpoint-up("md") {
+    @include ecl-media-breakpoint-up('md') {
       #{$node}--event & {
         width: auto;
         margin-left: 0;
@@ -777,7 +777,7 @@
     #{$node}--story & {
       margin: 0;
 
-      @include ecl-media-breakpoint-up("sm") {
+      @include ecl-media-breakpoint-up('sm') {
         width: 50%;
 
         &--right {
@@ -797,15 +797,15 @@
 
     #{$node}--as-card & {
       width: 100%;
-      margin-top: map-get($ecl-spacing, "s");
+      margin-top: map-get($ecl-spacing, 's');
 
-      @include ecl-media-breakpoint-up("sm") {
+      @include ecl-media-breakpoint-up('sm') {
         flex-shrink: 1;
       }
 
       & > :last-child {
         flex-shrink: 0;
-        margin-left: ecl-box-model("margin", "controls");
+        margin-left: ecl-box-model('margin', 'controls');
       }
 
       & > :only-child {
@@ -830,15 +830,15 @@
 
     #{$node}--event#{$node}--as-card #{$node}__main-wrapper > #{$node}__meta-footer & {
       & + #{$node}__meta-column {
-        padding-top: ecl-box-model("margin", "controls");
+        padding-top: ecl-box-model('margin', 'controls');
       }
     }
 
-    @include ecl-media-breakpoint-down("sm") {
+    @include ecl-media-breakpoint-down('sm') {
       #{$node}--event #{$node}__main-wrapper > #{$node}__meta-footer & {
         display: flex;
         justify-content: space-between;
-        padding-top: ecl-box-model("padding");
+        padding-top: ecl-box-model('padding');
         align-items: center;
         margin-left: 0;
 
@@ -858,13 +858,13 @@
   }
 
   #{$node}--member &__timestamp {
-    @include ecl-responsive-font("meta");
+    @include ecl-responsive-font('meta');
   }
 
   #{$node}--story &__author {
     margin-right: auto;
 
-    @include ecl-media-breakpoint-down("sm") {
+    @include ecl-media-breakpoint-down('sm') {
       width: 100%;
     }
   }
@@ -876,7 +876,7 @@
   &__meta-fields {
     display: flex;
     align-items: flex-start;
-    margin: map-get($ecl-spacing, "xs") 0;
+    margin: map-get($ecl-spacing, 'xs') 0;
 
     &:first-child {
       margin-top: 0;
@@ -892,21 +892,21 @@
   }
 
   &__meta-fields-icon {
-    margin-right: ecl-layout("gutter", "controls");
+    margin-right: ecl-layout('gutter', 'controls');
   }
 
   &__meta-fields-items {
     display: flex;
-    margin-bottom: #{0 - ecl-box-model("margin", "controls")};
+    margin-bottom: #{0 - ecl-box-model('margin', 'controls')};
   }
 
   &__meta-fields-item {
     display: block;
-    margin: 0 map-get($ecl-spacing, "xs") ecl-box-model("margin", "controls") 0;
+    margin: 0 map-get($ecl-spacing, 'xs') ecl-box-model('margin', 'controls') 0;
 
     &::after {
       display: inline;
-      content: ",";
+      content: ',';
     }
   }
 
@@ -915,11 +915,11 @@
 
     #{$node}--event &,
     #{$node}--group & {
-      color: ecl-typography("color", "meta");
+      color: ecl-typography('color', 'meta');
     }
 
     #{$node}--group & {
-      @include ecl-responsive-font("label");
+      @include ecl-responsive-font('label');
     }
 
     #{$node}--story &,
@@ -931,7 +931,7 @@
 
     #{$node}--event #{$node}__meta-header & {
       margin-top: 0;
-      margin-left: ecl-box-model("margin", "controls");
+      margin-left: ecl-box-model('margin', 'controls');
     }
 
     #{$node}--as-card #{$node}__main-wrapper > #{$node}__meta-footer & {
@@ -940,21 +940,21 @@
   }
 
   &__type-icon {
-    color: ecl-typography("color", "title");
-    margin-right: ecl-box-model("margin", "controls");
+    color: ecl-typography('color', 'title');
+    margin-right: ecl-box-model('margin', 'controls');
 
     #{$node}--event & {
-      color: ecl-typography("color", "meta");
+      color: ecl-typography('color', 'meta');
     }
 
     #{$node}--member & {
-      @include ecl-responsive-font("label");
+      @include ecl-responsive-font('label');
     }
   }
 
   &__actions {
-    margin-bottom: #{0 - ecl-box-model("margin", "controls")};
-    margin-right: #{0 - ecl-box-model("margin", "controls")};
+    margin-bottom: #{0 - ecl-box-model('margin', 'controls')};
+    margin-right: #{0 - ecl-box-model('margin', 'controls')};
     display: flex;
     flex-wrap: wrap;
     align-items: center;
@@ -972,11 +972,11 @@
 
   &__action {
     flex-shrink: 0;
-    margin-right: ecl-box-model("margin", "controls");
-    margin-bottom: ecl-box-model("margin", "controls");
+    margin-right: ecl-box-model('margin', 'controls');
+    margin-bottom: ecl-box-model('margin', 'controls');
 
     #{$node}--member#{$node}--as-card & {
-      margin: #{ecl-box-model("margin", "controls") / 2} #{ecl-box-model("margin", "controls") / 4};
+      margin: #{ecl-box-model('margin', 'controls') / 2} #{ecl-box-model('margin', 'controls') / 4};
     }
   }
 
@@ -990,20 +990,20 @@
   &__tags {
     display: flex;
     flex-wrap: wrap;
-    margin-bottom: #{0 - ecl-box-model("margin", "controls")};
-    margin-right: #{0 - ecl-box-model("margin", "controls")};
+    margin-bottom: #{0 - ecl-box-model('margin', 'controls')};
+    margin-right: #{0 - ecl-box-model('margin', 'controls')};
 
     #{$node}__meta-header & {
       width: 100%;
-      padding-bottom: map-get($ecl-spacing, "s");
+      padding-bottom: map-get($ecl-spacing, 's');
 
-      @include ecl-media-breakpoint-up("md") {
+      @include ecl-media-breakpoint-up('md') {
         width: auto;
         padding-bottom: 0;
       }
     }
 
-    @include ecl-media-breakpoint-down("sm") {
+    @include ecl-media-breakpoint-down('sm') {
       #{$node}--event #{$node}__content & {
         display: flex;
       }
@@ -1011,7 +1011,7 @@
   }
 
   &__tag {
-    margin: 0 ecl-box-model("margin", "controls") ecl-box-model("margin", "controls") 0;
+    margin: 0 ecl-box-model('margin', 'controls') ecl-box-model('margin', 'controls') 0;
 
     &:last-child {
       margin-right: 0;
@@ -1020,7 +1020,7 @@
 
   &__details,
   &__detail {
-    margin-bottom: map-get($ecl-spacing, "2xs");
+    margin-bottom: map-get($ecl-spacing, '2xs');
 
     &:last-child {
       margin-bottom: 0;
@@ -1028,17 +1028,17 @@
   }
 
   &__detail {
-    color: ecl-typography("color", "meta");
+    color: ecl-typography('color', 'meta');
 
     a:not([class]) {
-      color: ecl-typography("color", "label");
+      color: ecl-typography('color', 'label');
       font-weight: $ecl-font-weight-bold;
     }
   }
 
   &__detail-icon {
     vertical-align: middle;
-    color: ecl-typography("color", "title");
+    color: ecl-typography('color', 'title');
     #{$node}--search & {
       vertical-align: bottom;
     }
@@ -1050,11 +1050,11 @@
 
   &__detail-contributor {
     font-weight: $ecl-font-weight-bold;
-    color: ecl-typography("color", "title");
+    color: ecl-typography('color', 'title');
   }
 
   &__detail-parentgroup {
-    margin-top: map-get($ecl-spacing, "xs");
+    margin-top: map-get($ecl-spacing, 'xs');
     a:not([class]) {
       color: $ecl-color-blue;
       font-weight: $ecl-font-weight-regular;
@@ -1065,11 +1065,11 @@
     display: flex;
     align-items: center;
     flex-wrap: wrap;
-    margin-bottom: #{0 - ecl-box-model("margin", "controls")};
-    margin-right: #{0 - ecl-box-model("margin", "controls")};
+    margin-bottom: #{0 - ecl-box-model('margin', 'controls')};
+    margin-right: #{0 - ecl-box-model('margin', 'controls')};
 
     #{$node}__meta-footer & {
-      @include ecl-media-breakpoint-up("md") {
+      @include ecl-media-breakpoint-up('md') {
         margin-left: auto;
 
         #{$node}--search & {
@@ -1088,13 +1088,13 @@
     display: flex;
     align-items: center;
     flex-shrink: 0;
-    color: ecl-typography("color", "meta");
-    margin-right: ecl-box-model("margin", "controls");
-    margin-bottom: ecl-box-model("margin", "controls");
+    color: ecl-typography('color', 'meta');
+    margin-right: ecl-box-model('margin', 'controls');
+    margin-bottom: ecl-box-model('margin', 'controls');
   }
 
   &__stat-value {
-    @include ecl-responsive-font("label");
+    @include ecl-responsive-font('label');
   }
 
   &__stat-label {
@@ -1102,7 +1102,7 @@
   }
 
   &__stat-icon {
-    color: ecl-typography("color", "meta");
+    color: ecl-typography('color', 'meta');
     margin-right: 4px;
     display: flex;
     align-items: center;
@@ -1127,16 +1127,16 @@
   &--filelist,
   &--video,
   &--gallery {
-    padding: map-get($ecl-spacing, "s");
-    @include ecl-media-breakpoint-up("sm") {
+    padding: map-get($ecl-spacing, 's');
+    @include ecl-media-breakpoint-up('sm') {
       flex-wrap: wrap;
     }
   }
 
   &__files {
-    margin: map-get($ecl-spacing, "s") 0;
-    color: ecl-typography("color", "meta");
-    font-size: ecl-typography("font-size", "meta");
+    margin: map-get($ecl-spacing, 's') 0;
+    color: ecl-typography('color', 'meta');
+    font-size: ecl-typography('font-size', 'meta');
   }
 
   &__meta-content {
@@ -1146,11 +1146,11 @@
   }
 
   &__meta-content-item {
-    color: ecl-typography("color", "meta");
+    color: ecl-typography('color', 'meta');
     display: flex;
     align-items: flex-end;
-    margin-top: map-get($ecl-spacing, "s");
-    margin-right: map-get($ecl-spacing, "m");
+    margin-top: map-get($ecl-spacing, 's');
+    margin-right: map-get($ecl-spacing, 'm');
 
     > span {
       display: flex;
@@ -1158,7 +1158,7 @@
     }
 
     > a {
-      color: ecl-typography("color", "meta");
+      color: ecl-typography('color', 'meta');
       text-decoration: none;
       &:hover {
         text-decoration: underline;
@@ -1172,10 +1172,10 @@
 
     > .ecl-icon {
       flex-shrink: 0;
-      margin-right: ecl-layout("gutter", "meta");
+      margin-right: ecl-layout('gutter', 'meta');
 
-      @include ecl-media-breakpoint-up("lg") {
-        margin-right: ecl-layout("gutter--lg", "meta");
+      @include ecl-media-breakpoint-up('lg') {
+        margin-right: ecl-layout('gutter--lg', 'meta');
       }
     }
   }
@@ -1197,12 +1197,12 @@
   }
 
   &__gallery {
-    background: map-get($ecl-colors, "white");
+    background: map-get($ecl-colors, 'white');
     display: flex;
     flex-direction: column;
 
-    @include ecl-media-breakpoint-up("sm") {
-      height: map-get($ecl-media, "l");
+    @include ecl-media-breakpoint-up('sm') {
+      height: map-get($ecl-media, 'l');
     }
 
     &-featured {
@@ -1211,19 +1211,19 @@
       position: relative;
       img {
         display: block;
-        width: map-get($ecl-media, "l");
-        height: map-get($ecl-media, "l");
+        width: map-get($ecl-media, 'l');
+        height: map-get($ecl-media, 'l');
         object-fit: cover;
-        @include ecl-media-breakpoint-down("md") {
+        @include ecl-media-breakpoint-down('md') {
           width: 100%;
           height: 100%;
         }
       }
 
-      @include ecl-media-breakpoint-down("xs") {
+      @include ecl-media-breakpoint-down('xs') {
         &::before {
           padding-top: calc(100% / 16 * 9);
-          content: " ";
+          content: ' ';
           display: block;
         }
       }
@@ -1233,16 +1233,16 @@
       position: relative;
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      grid-template-areas: "one two three";
-      grid-gap: map-get($ecl-spacing, "2xs");
-      margin-top: map-get($ecl-spacing, "2xs");
+      grid-template-areas: 'one two three';
+      grid-gap: map-get($ecl-spacing, '2xs');
+      margin-top: map-get($ecl-spacing, '2xs');
     }
 
     &-other-image {
       position: relative;
       overflow: hidden;
       &:before {
-        content: "";
+        content: '';
         display: block;
         padding-top: 72%;
       }
@@ -1260,10 +1260,10 @@
     }
 
     &-other-more {
-      background: rgba(map-get($ecl-colors, "black"), 0.4);
+      background: rgba(map-get($ecl-colors, 'black'), 0.4);
       grid-area: three;
       text-align: center;
-      color: map-get($ecl-colors, "white");
+      color: map-get($ecl-colors, 'white');
       font-weight: $ecl-font-weight-bold;
       display: flex;
       justify-content: center;
@@ -1277,7 +1277,7 @@
   }
 
   &--story {
-    @include ecl-media-breakpoint-down("md") {
+    @include ecl-media-breakpoint-down('md') {
       display: flex;
       flex-direction: column;
 
