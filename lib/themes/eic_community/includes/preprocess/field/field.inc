@@ -49,4 +49,21 @@ function eic_community_preprocess_field(&$variables, $hook): void {
       ];
     }
   }
+
+  $field_type = $variables['field_type'];
+  switch ($field_type) {
+    case 'text_long':
+      // Adds custom css classes to long text fields.
+      $variables['attributes']['class'][] = str_replace('_', '-', "$field_type");
+      foreach ($variables['items'] as $item) {
+        $text_format = $item['content']['#format'];
+        if (count($variables['items']) === 1) {
+          $variables['attributes']['class'][] = str_replace('_', '-', "$field_type--$text_format");
+          break;
+        }
+        $item['attributes']->addClass(str_replace('_', '-', "$field_type--$text_format"));
+      }
+      break;
+
+  }
 }
