@@ -367,6 +367,7 @@ class EntityTreeWidget extends WidgetBase {
         'data-target-bundle' => $target_bundle,
         'data-target-entity' => $target_type,
         'data-is-required' => (int) $options['is_required'],
+        'data-search-specific-users' => (int) ('user' === $target_type),
       ],
     ];
 
