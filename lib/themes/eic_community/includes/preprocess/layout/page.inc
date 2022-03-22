@@ -165,6 +165,8 @@ function eic_community_preprocess_page(array &$variables): void {
   }
 
   _preprocess_group_page($variables);
+
+  _preprocess_page_not_found($variables);
 }
 
 /**
@@ -303,5 +305,15 @@ function _preprocess_group_page(&$variables) {
     // Adds url.path as cache context otherwise anonymous users will always see
     // the same message depending on which group the user visited first.
     $variables['#cache']['contexts'][] = 'url.path';
+  }
+}
+
+/**
+ * Preprocess page not found.
+ */
+function _preprocess_page_not_found(&$variables) {
+  if (\Drupal::routeMatch()->getRouteName() === 'system.404') {
+    // Adds URL to the frontpage.
+    $variables['front_url'] = Url::fromRoute('<front>')->toString();
   }
 }
