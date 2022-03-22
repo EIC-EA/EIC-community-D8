@@ -49,11 +49,13 @@
   {% set _items = [] %}
 
   {% for row in rows[0]['#rows'] %}
-    {%
-      set _items = _items|merge([{
-        content: row,
-      }])
-    %}
+    {% if row|render|striptags('<img>')|trim %}
+      {%
+        set _items = _items|merge([{
+          content: row,
+        }])
+      %}
+    {% endif %}
   {% endfor %}
 
   {% include "@theme/patterns/compositions/featured-content-collection.html.twig" with {
