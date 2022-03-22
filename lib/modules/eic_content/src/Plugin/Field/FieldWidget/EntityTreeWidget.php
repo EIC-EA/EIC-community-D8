@@ -97,6 +97,16 @@ class EntityTreeWidget extends WidgetBase {
       ),
     ];
 
+    $element['can_create_tag'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Can create tag?', [], ['context' => 'eic_content']),
+      '#default_value' => $this->getSetting('can_create_tag'),
+      '#description' => $this->t(
+        'It will allows user to create tag on the fly (only working with taxonomy terms).', [],
+        ['context' => 'eic_content']
+      ),
+    ];
+
     $element['items_to_load'] = [
       '#type' => 'number',
       '#title' => $this->t('Items to load', [], ['context' => 'eic_content']),
@@ -143,6 +153,7 @@ class EntityTreeWidget extends WidgetBase {
         TreeWidgetProperties::OPTION_IGNORE_CURRENT_USER => FALSE,
         'target_bundles' => [],
         'is_required' => FALSE,
+        'can_create_tag' => FALSE,
       ] + parent::defaultSettings();
   }
 
@@ -168,6 +179,7 @@ class EntityTreeWidget extends WidgetBase {
       ),
       'auto_select_parents' => $this->getSetting('auto_select_parents'),
       'disable_top_choices' => $this->getSetting('disable_top_choices'),
+      'can_create_tag' => $this->getSetting('can_create_tag'),
       TreeWidgetProperties::OPTION_LOAD_ALL => $this->getSetting(TreeWidgetProperties::OPTION_LOAD_ALL),
       TreeWidgetProperties::OPTION_IGNORE_CURRENT_USER => $this->getSetting(
         TreeWidgetProperties::OPTION_IGNORE_CURRENT_USER
@@ -360,7 +372,10 @@ class EntityTreeWidget extends WidgetBase {
         'data-target-entity' => $target_type,
         'data-is-required' => (int) $options['is_required'],
         // We can only create terms on the fly.
-        'data-can-create-tag' => (int) $current_user->hasPermission("create terms in $target_bundle"),
+        'data-can-create-tag' =>
+          (int) ($current_user->hasPermission("create terms in $target_bundle") &&
+          $options['can_create_tag'])
+        ,
       ],
     ];
 

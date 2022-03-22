@@ -13,6 +13,7 @@ dependencies:
     - field.field.node.event.field_location_type
     - field.field.node.event.field_organised_by
     - field.field.node.event.field_social_links
+    - field.field.node.event.field_tags
     - field.field.node.event.field_vocab_event_type
     - field.field.node.event.field_vocab_geo
     - field.field.node.event.field_vocab_topics
@@ -120,6 +121,14 @@ content:
       new_tab: true
     third_party_settings: {  }
     weight: 14
+    region: content
+  field_tags:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 21
     region: content
   field_vocab_event_type:
     type: entity_reference_label
