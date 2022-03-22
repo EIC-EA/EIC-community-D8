@@ -67,6 +67,8 @@ content:
       disable_top_choices: 0
       load_all: 0
       auto_select_parents: 0
+      target_bundles: {  }
+      is_required: false
     third_party_settings: {  }
   field_is_invalid_email:
     type: boolean_checkbox
@@ -113,7 +115,13 @@ content:
     third_party_settings: {  }
   field_user_can_contact:
     type: options_buttons
-    weight: 15
+    weight: 16
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_user_status:
+    type: options_select
+    weight: 14
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -124,7 +132,7 @@ content:
     third_party_settings: {  }
   path:
     type: path
-    weight: 14
+    weight: 15
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -138,6 +146,5 @@ hidden:
   field_message_from_service: true
   field_updated_profile_by_service: true
   field_updated_profile_by_user: true
-  field_user_status: true
   langcode: true
   member_profiles: true
