@@ -14,6 +14,7 @@
   <div {{ attributes }}>
     {{ title_prefix }}
     {{ title_suffix }}
+    {{ dump(event_item) }}
     {% include "@theme/patterns/compositions/event/event.teaser.html.twig" with event_item|default({})|merge({
       title: node.label|default(''),
       path: url,
