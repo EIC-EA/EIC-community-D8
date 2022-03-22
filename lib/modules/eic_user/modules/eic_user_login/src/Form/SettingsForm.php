@@ -40,6 +40,13 @@ class SettingsForm extends ConfigFormBase {
       '#description' => $this->t('Check this option if user should be checked/synchronised against SMED upon user login.'),
       '#group' => 'user_settings',
     ];
+    $form['allow_user_register'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Allow users to register within Drupal'),
+      '#default_value' => $this->config('eic_user_login.settings')->get('allow_user_register'),
+      '#description' => $this->t('Check this option if users should be able to register within Drupal without any initial check against the SMED.'),
+      '#group' => 'user_settings',
+    ];
     $form['endpoint_url'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Endpoint URL'),
@@ -94,6 +101,7 @@ class SettingsForm extends ConfigFormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->config('eic_user_login.settings')
       ->set('check_sync_user', $form_state->getValue('check_sync_user'))
+      ->set('allow_user_register', $form_state->getValue('allow_user_register'))
       ->save();
     parent::submitForm($form, $form_state);
   }

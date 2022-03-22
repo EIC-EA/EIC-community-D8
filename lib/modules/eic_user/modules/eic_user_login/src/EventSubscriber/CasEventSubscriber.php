@@ -81,7 +81,7 @@ class CasEventSubscriber implements EventSubscriberInterface {
    */
   public function userPreRegister(CasPreRegisterEvent $event) {
     // Check if user should checked/synced against SMED.
-    if ($this->configFactory->get('eic_user_login.settings')->get('check_sync_user') !== TRUE) {
+    if ($this->configFactory->get('eic_user_login.settings')->get('allow_user_register') !== TRUE) {
       return;
     }
 
@@ -89,7 +89,7 @@ class CasEventSubscriber implements EventSubscriberInterface {
     $event->cancelAutomaticRegistration();
 
     $this->messenger()->addStatus($this->t('Please register at <a href=":smed_url">:smed_url</a>', [
-      ':smed_url' => 'https://google.be',
+      ':smed_url' => $this->configFactory->get('eic_webservices.settings')->get('smed_url'),
     ]));
 
   }
@@ -115,9 +115,6 @@ class CasEventSubscriber implements EventSubscriberInterface {
           'user_dashboard_id' => $account->field_smed_id->value,
           'email' => $account->getEmail(),
           'username' => $account->getAccountName(),
-//          'user_dashboard_id' => 1,
-//          'email' => 'demo@com.com',
-//          'username' => 'nsireste',
         ];
 
         if ($result = $this->smedUserConnection->queryEndpoint($data)) {
@@ -132,7 +129,7 @@ class CasEventSubscriber implements EventSubscriberInterface {
       $this->messenger()->addStatus($this->smedUserManager->getLoginMessage($account));
     }
     catch (SmedUserLoginException $e) {
-      $this->messenger()->addError($e->getUserMessage());
+      $event->cancelLogin($e->getUserMessage());
     }
   }
 

@@ -8,6 +8,7 @@
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\eic_user_login\Constants\SmedUserStatuses;
 
 /**
  * Set dynamic allowed values for the user status field.
@@ -25,7 +26,7 @@ use Drupal\Core\Field\BaseFieldDefinition;
  * @see options_allowed_values()
  */
 function eic_user_login_user_status_allowed_values(BaseFieldDefinition $definition, ContentEntityInterface $entity = NULL, $cacheable) {
-  return \Drupal::service('eic_user_login.smed_user_manager')->getUserStatuses();
+  return SmedUserStatuses::getUserStatuses();
 }
 
 /**

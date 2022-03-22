@@ -4,6 +4,9 @@ eic_user_login.settings:
     check_sync_user:
       type: boolean
       label: 'Check/sync user against SMED option'
+    allow_user_register:
+      type: boolean
+      label: 'Allow users to register within Drupal'
     endpoint_url:
       type: string
       label: 'SMED Endpoint URL'

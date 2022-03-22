@@ -5,6 +5,8 @@ namespace Drupal\eic_user_login\Service;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\Url;
+use Drupal\eic_user_login\Constants\SmedUserStatuses;
 use Drupal\eic_user_login\Exception\SmedUserLoginException;
 use Drupal\user\UserInterface;
 
@@ -14,69 +16,6 @@ use Drupal\user\UserInterface;
 class SmedUserManager {
 
   use StringTranslationTrait;
-
-  /**
-   * User validated.
-   *
-   * @var string
-   */
-  const USER_VALID = 'user_valid';
-
-  /**
-   * User invited.
-   *
-   * @var string
-   */
-  const USER_INVITED = 'user_invited';
-
-  /**
-   * User approved incomplete.
-   *
-   * @var string
-   */
-  const USER_APPROVED_INCOMPLETE = 'user_approved_incomplete';
-
-  /**
-   * User pending.
-   *
-   * @var string
-   */
-  const USER_PENDING = 'user_pending';
-
-  /**
-   * User approved complete.
-   *
-   * @var string
-   */
-  const USER_APPROVED_COMPLETE = 'user_approved_complete';
-
-  /**
-   * User not bootstrapped.
-   *
-   * @var string
-   */
-  const USER_NOT_BOOTSTRAPPED = 'user_not_bootstrapped';
-
-  /**
-   * User unknown.
-   *
-   * @var string
-   */
-  const USER_UNKNOWN = 'user_unknown';
-
-  /**
-   * User blocked.
-   *
-   * @var string
-   */
-  const USER_BLOCKED = 'user_blocked';
-
-  /**
-   * User unsubscribed.
-   *
-   * @var string
-   */
-  const USER_UNSUBSCRIBED = 'user_unsubscribed';
 
   /**
    * The config factory.
@@ -109,18 +48,18 @@ class SmedUserManager {
     $account->field_user_status->value = $data['user_status'];
 
     switch ($account->field_user_status->value) {
-      case self::USER_VALID:
-      case self::USER_APPROVED_COMPLETE:
+      case SmedUserStatuses::USER_VALID:
+      case SmedUserStatuses::USER_APPROVED_COMPLETE:
         $account->activate();
         break;
 
-      case self::USER_APPROVED_INCOMPLETE:
-      case self::USER_PENDING:
-      case self::USER_INVITED:
-      case self::USER_NOT_BOOTSTRAPPED:
-      case self::USER_BLOCKED:
-      case self::USER_UNSUBSCRIBED:
-      case self::USER_UNKNOWN:
+      case SmedUserStatuses::USER_APPROVED_INCOMPLETE:
+      case SmedUserStatuses::USER_PENDING:
+      case SmedUserStatuses::USER_INVITED:
+      case SmedUserStatuses::USER_NOT_BOOTSTRAPPED:
+      case SmedUserStatuses::USER_BLOCKED:
+      case SmedUserStatuses::USER_UNSUBSCRIBED:
+      case SmedUserStatuses::USER_UNKNOWN:
         $account->block();
         break;
 
@@ -144,8 +83,8 @@ class SmedUserManager {
    */
   public function isUserLoginAuthorised(UserInterface $account) {
     $allowed_statuses = [
-      self::USER_VALID,
-      self::USER_APPROVED_COMPLETE,
+      SmedUserStatuses::USER_VALID,
+      SmedUserStatuses::USER_APPROVED_COMPLETE,
     ];
     $account_status = $account->field_user_status->value;
 
@@ -159,26 +98,6 @@ class SmedUserManager {
       $exception->setUserMessage($this->getLoginMessage($account));
       throw $exception;
     }
-  }
-
-  /**
-   * Returns a list of possible statuses with their labels.
-   *
-   * @return array
-   *   And array composed of key => label.
-   */
-  public function getUserStatuses() {
-    return [
-      self::USER_VALID => $this->t('User valid', [], ['context' => 'eic_user_login']),
-      self::USER_APPROVED_COMPLETE => $this->t('User approved complete', [], ['context' => 'eic_user_login']),
-      self::USER_APPROVED_INCOMPLETE => $this->t('User approved incomplete', [], ['context' => 'eic_user_login']),
-      self::USER_PENDING => $this->t('User pending', [], ['context' => 'eic_user_login']),
-      self::USER_INVITED => $this->t('User invited', [], ['context' => 'eic_user_login']),
-      self::USER_NOT_BOOTSTRAPPED => $this->t('User not boostrapped', [], ['context' => 'eic_user_login']),
-      self::USER_BLOCKED => $this->t('User blocked', [], ['context' => 'eic_user_login']),
-      self::USER_UNSUBSCRIBED => $this->t('User unsubscribed', [], ['context' => 'eic_user_login']),
-      self::USER_UNKNOWN => $this->t('User unknown', [], ['context' => 'eic_user_login']),
-    ];
   }
 
   /**
@@ -196,46 +115,48 @@ class SmedUserManager {
     $smed_url = $this->config->get('eic_webservices.settings')->get('smed_url');
 
     switch ($account_status) {
-      case self::USER_VALID:
-      case self::USER_APPROVED_COMPLETE:
+      case SmedUserStatuses::USER_VALID:
+      case SmedUserStatuses::USER_APPROVED_COMPLETE:
         $message = $this->t('Welcome @username', ['@username' => $account->getDisplayName()]);
         break;
 
-      case self::USER_APPROVED_INCOMPLETE:
-        $message = $this->t('Welcome @username, before you can continue please complete your profile at <a href=":smed_url" target="_blank">:smed_url</a>', [
+      case SmedUserStatuses::USER_APPROVED_INCOMPLETE:
+        $message = $this->t('Welcome @username, before you can continue please complete your profile at <a href=":smed_url" target="_blank">:smed_url</a>.', [
           '@username' => $account->getDisplayName(),
           ':smed_url' => $smed_url,
         ]);
         break;
 
-      case self::USER_PENDING:
-        $message = $this->t('Welcome @username, your account is pending approval, once approved you will receive a notification e-mail', [
+      case SmedUserStatuses::USER_PENDING:
+        $message = $this->t('Welcome @username, your account is pending approval, once approved you will receive a notification e-mail.', [
           '@username' => $account->getDisplayName(),
         ]);
         break;
 
-      case self::USER_INVITED:
-        $message = $this->t('Please complete your profile at <a href=":smed_url" target="_blank">:smed_url</a>', [
+      case SmedUserStatuses::USER_INVITED:
+        $message = $this->t('Please complete your profile at <a href=":smed_url" target="_blank">:smed_url</a>.', [
           ':smed_url' => $smed_url,
         ]);
         break;
 
-      case self::USER_NOT_BOOTSTRAPPED:
-      case self::USER_BLOCKED:
-        $message = $this->t('Please contact us via the <a href=":contact_form_url">contact form</a>', [
-          ':contact_form_url' => Url::fromRoute('contact.site_page'),
+      case SmedUserStatuses::USER_NOT_BOOTSTRAPPED:
+      case SmedUserStatuses::USER_BLOCKED:
+        $message = $this->t('Please contact us via the <a href=":contact_form_url">contact form</a>.', [
+          ':contact_form_url' => Url::fromRoute('contact.site_page')->toString(),
         ]);
         break;
 
-      case self::USER_UNSUBSCRIBED:
-      case self::USER_UNKNOWN:
-        $message = $this->t('Please register at <a href=":smed_url" target="_blank">:smed_url</a>', [
+      case SmedUserStatuses::USER_UNSUBSCRIBED:
+      case SmedUserStatuses::USER_UNKNOWN:
+        $message = $this->t('Please register at <a href=":smed_url" target="_blank">:smed_url</a>.', [
           ':smed_url' => $smed_url,
         ]);
         break;
 
       default:
-        $message = "";
+        $message = $this->t('An error occurred. Please contact us via the <a href=":contact_form_url">contact form</a>.', [
+          ':contact_form_url' => Url::fromRoute('contact.site_page')->toString(),
+        ]);
         break;
     }
 

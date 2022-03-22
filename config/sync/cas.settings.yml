@@ -29,7 +29,8 @@ user_accounts:
   email_assignment_strategy: 0
   email_hostname: eic
   email_attribute: ''
-  auto_assigned_roles: {  }
+  auto_assigned_roles:
+    - trusted_user
   restrict_password_management: true
   restrict_email_management: true
 error_handling:
