@@ -117,8 +117,27 @@ class SmedUserConnection {
   public function queryEndpoint(array $data = []) {
     try {
       $response = $this->callEndpoint($data);
-      $result = JSON::decode($response->getBody());
-      return $this->processResponse($result);
+      if (!$response) {
+        $debug_info = [
+          'request_payload' => $data,
+        ];
+        $this->getLogger('eic_user_login')->error('Could not get user information:' . PHP_EOL . print_r($debug_info, TRUE));
+        return NULL;
+      }
+      else {
+        $result = JSON::decode($response->getBody());
+        if ($result) {
+          return $this->processResponse($result);
+        }
+        else {
+          $debug_info = [
+            'request_payload' => $data,
+            'response_payload' => $result,
+          ];
+          $this->getLogger('eic_user_login')->error('Could not get user information:' . PHP_EOL . print_r($debug_info, TRUE));
+          return NULL;
+        }
+      }
     }
     catch (\Exception $e) {
       $this->getLogger('eic_user_login')->error($e->getMessage());
@@ -144,6 +163,7 @@ class SmedUserConnection {
     try {
       return $client->send($request, [
         'timeout' => $this->requestTimeout,
+        'http_errors' => FALSE,
         RequestOptions::JSON => $data,
       ]);
     }
@@ -163,14 +183,12 @@ class SmedUserConnection {
    */
   protected function processResponse(array $result) {
     return [
-      'field_user_status' => $result['user']['data']['attributes']['user_status'] ?? '',
-      'name' => $result['user']['data']['attributes']['name'] ?? '',
-      'mail' => $result['user']['data']['attributes']['mail'] ?? '',
-      'field_smed_id' => $result['user']['data']['attributes']['field_smed_id'] ?? '',
-      'field_first_name' => $result['user']['data']['attributes']['field_user_first_name'] ?? '',
-      'field_last_name' => $result['user']['data']['attributes']['field_user_family_name'] ?? '',
-      // @todo Check if status is relevant. This one gives 0 or 1.
-      'status' => $result['user']['data']['attributes']['status'] ?? '',
+      'user_dashboard_id' => $result['user']['user_dashboard_id'] ?? '',
+      'ecas_id' => $result['user']['ecas_id'] ?? '',
+      'email' => $result['user']['email'] ?? '',
+      'user_status' => $result['user']['user_status'] ?? '',
+      'first_name' => $result['user']['first_name'] ?? '',
+      'last_name' => $result['user']['last_name'] ?? '',
     ];
   }
 
@@ -184,7 +202,7 @@ class SmedUserConnection {
     return [
       'Content-Type' => 'application/json',
       'Authorization2' => $this->authToken,
-      'Cookie' => 'JSESSIONID=node01uwipbzg91yg1124gtxyxkk4ff197.node0',
+      'Cookie' => 'JSESSIONID=node01x0omb1iy32bfdv8xnsyxwe35183.node0',
     ];
   }
 

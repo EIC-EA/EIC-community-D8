@@ -4,6 +4,7 @@ namespace Drupal\eic_user_login\Service;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\eic_user_login\Exception\SmedUserLoginException;
 use Drupal\user\UserInterface;
 
@@ -78,7 +79,7 @@ class SmedUserManager {
   const USER_UNSUBSCRIBED = 'user_unsubscribed';
 
   /**
-   * EIC User login settings.
+   * The config factory.
    *
    * @var \Drupal\Core\Config\ConfigFactoryInterface
    */
@@ -91,7 +92,7 @@ class SmedUserManager {
    *   The config factory.
    */
   public function __construct(ConfigFactoryInterface $config_factory) {
-    $this->config = $config_factory->get('eic_user_login.settings');
+    $this->config = $config_factory;
   }
 
   /**
@@ -105,7 +106,7 @@ class SmedUserManager {
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
   public function updateUserInformation(UserInterface $account, array $data = []) {
-    $account->field_user_status->value = $data['field_user_status'];
+    $account->field_user_status->value = $data['user_status'];
 
     switch ($account->field_user_status->value) {
       case self::USER_VALID:
@@ -146,8 +147,7 @@ class SmedUserManager {
       self::USER_VALID,
       self::USER_APPROVED_COMPLETE,
     ];
-    // @todo Replace with real value.
-    $account_status = self::USER_VALID;
+    $account_status = $account->field_user_status->value;
 
     // Check the user status.
     if (in_array($account_status, $allowed_statuses)) {
@@ -162,7 +162,7 @@ class SmedUserManager {
   }
 
   /**
-   * Returns a list of possible statuses with thir labels.
+   * Returns a list of possible statuses with their labels.
    *
    * @return array
    *   And array composed of key => label.
@@ -187,12 +187,13 @@ class SmedUserManager {
    * @param \Drupal\user\UserInterface $account
    *   The user account.
    *
-   * @return string
+   * @return \Drupal\Core\StringTranslation\TranslatableMarkup
    *   The message associated to the status code.
    */
-  public function getLoginMessage(UserInterface $account): string {
-    // @todo Get real value.
-    $account_status = self::USER_VALID;
+  public function getLoginMessage(UserInterface $account): TranslatableMarkup {
+    $account_status = $account->field_user_status->value;
+
+    $smed_url = $this->config->get('eic_webservices.settings')->get('smed_url');
 
     switch ($account_status) {
       case self::USER_VALID:
@@ -201,9 +202,9 @@ class SmedUserManager {
         break;
 
       case self::USER_APPROVED_INCOMPLETE:
-        $message = $this->t('Welcome @username, before you can continue please complete your profile at <a href=":smed_url">:smed_url</a>', [
+        $message = $this->t('Welcome @username, before you can continue please complete your profile at <a href=":smed_url" target="_blank">:smed_url</a>', [
           '@username' => $account->getDisplayName(),
-          ':smed_url' => 'https://google.be',
+          ':smed_url' => $smed_url,
         ]);
         break;
 
@@ -214,8 +215,8 @@ class SmedUserManager {
         break;
 
       case self::USER_INVITED:
-        $message = $this->t('Please complete your profile at <a href=":smed_url">:smed_url</a>', [
-          ':smed_url' => 'https://google.be',
+        $message = $this->t('Please complete your profile at <a href=":smed_url" target="_blank">:smed_url</a>', [
+          ':smed_url' => $smed_url,
         ]);
         break;
 
@@ -228,8 +229,8 @@ class SmedUserManager {
 
       case self::USER_UNSUBSCRIBED:
       case self::USER_UNKNOWN:
-        $message = $this->t('Please register at <a href=":smed_url">:smed_url</a>', [
-          ':smed_url' => 'https://google.be',
+        $message = $this->t('Please register at <a href=":smed_url" target="_blank">:smed_url</a>', [
+          ':smed_url' => $smed_url,
         ]);
         break;
 
