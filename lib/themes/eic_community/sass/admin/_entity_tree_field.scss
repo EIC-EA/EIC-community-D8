@@ -10,11 +10,11 @@
   }
 
   .entity-tree--options {
-    width: 50%;
     max-height: 500px;
     overflow-y: auto;
 
-    .load-more, .load-more-loading {
+    .load-more,
+    .load-more-loading {
       cursor: pointer;
       font-size: 30px;
       display: block;
@@ -25,7 +25,8 @@
       margin: 0;
     }
 
-    .MuiAccordion-root, .MuiAccordion-root.Mui-expanded {
+    .MuiAccordion-root,
+    .MuiAccordion-root.Mui-expanded {
       margin: 0;
 
       .MuiAccordionSummary-root {
@@ -51,68 +52,72 @@
 }
 
 .entity-tree {
-
   &__result-items {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+  }
+  &__search-items {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+    border: 1px solid #707070;
+    box-sizing: border-box;
+    padding: calc(0.75rem - 1px) calc(3.5rem - 1px) calc(0.75rem - 1px) calc(0.75rem- 1px);
+    min-height: 44px;
+    position: relative;
+
+    & .MuiFormControl-marginNormal,
+    & label + .MuiInput-formControl {
+      margin: 0;
+    }
+    .MuiInputBase-root:after,
+    .MuiInputBase-root:before {
+      display: none;
+    }
+
+    & label {
+      display: none;
+    }
+
+    & input.MuiInputBase-input {
+      padding: 0 !important;
+      height: 100%;
+
+      &::placeholder {
+        color: #707070 !important;
+        opacity: 1;
+      }
+    }
+
+    & .ecl-select__icon {
+      min-height: 43px;
+      top: -1px;
+      right: -1px;
+      width: 43px;
+      position: absolute;
+      background: #404040;
       display: flex;
       align-items: center;
-      flex-wrap: wrap;
-      margin-bottom: 0.75rem;
-      border: 1px solid #707070;
-      box-sizing: border-box;
-      padding: calc(0.75rem - 1px) calc(3.5rem - 1px) calc(0.75rem - 1px) calc(0.75rem- 1px);
-      min-height: 44px;
-      position: relative;
+      justify-content: center;
 
-      & .MuiFormControl-marginNormal,
-      & label + .MuiInput-formControl {
-        margin: 0;
+      & svg {
+        height: 1.25rem;
+        width: 1.25rem;
+        fill: #fff;
       }
-      .MuiInputBase-root:after,
-      .MuiInputBase-root:before {
-        display: none;
-      }
+    }
 
-      & label {
-        display: none;
-      }
-
-      & input.MuiInputBase-input {
-        padding: 0!important;
-        height: 100%;
-
-        &::placeholder {
-          color: #707070 !important;
-          opacity: 1;
-        }
-      }
-
-     & .ecl-select__icon {
-        min-height: 43px;
-        top: -1px;
-        right: -1px;
-        width: 43px;
-        position: absolute;
-        background: #404040;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-        & svg {
-          height: 1.25rem;
-          width: 1.25rem;
-          fill: #fff;
-        }
-      }
-
-      & p {
-          margin: 0;
-      }
+    & p {
+      margin: 0;
+    }
   }
 
   &--options {
     border: 1px solid #707070;
     position: relative;
-
   }
 
   & .entity-tree--options .MuiAccordion-root {
@@ -133,7 +138,7 @@
   }
 
   &__select__first-item > .MuiAccordionSummary-expandIcon {
-    background-color:#404040;
+    background-color: #404040;
     height: 46px;
     width: 2.75rem;
     position: absolute;
@@ -147,9 +152,7 @@
       background-color: #404040;
     }
   }
-
 }
-
 
 .ecl-form {
   .entity-tree--options {
