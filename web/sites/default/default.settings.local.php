@@ -208,6 +208,7 @@ $settings['smed_api_taxonomy_endpoint'] = getenv('SMED_API_ENDPOINT');
  * Webservices settings (REST endpoints).
  */
 $config['eic_webservices.settings']['api_key'] = getenv('DRUPAL_WS_API_KEY');
+$config['eic_webservices.settings']['smed_url'] = getenv('DRUPAL_SMED_URL');
 
 $settings['reverse_proxy'] = TRUE;
 $settings['reverse_proxy_addresses'] = [gethostbyname('nginx')];

@@ -210,6 +210,19 @@ class EntityTreeWidget extends WidgetBase {
         ->formatPreselection($entities);
     }
 
+    return self::formatTaxonomyPreSelection($entities);
+
+  }
+
+  /**
+   * Returns the formatted preselection of taxonomy terms for the widget.
+   *
+   * @param \Drupal\taxonomy\TermInterface[] $entities
+   *   An array of taxonomy terms.
+   *
+   * @return false|string
+   */
+  public static function formatTaxonomyPreSelection(array $entities) {
     return json_encode(
       array_map(function (EntityInterface $entity) {
         $parents = $entity->get('parent')->getValue();

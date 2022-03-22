@@ -1,0 +1,17 @@
+<?php
+
+/**
+ * @file
+ * Primary module hooks for EIC Web Services module.
+ */
+
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\eic_webservices\Hooks\FormOperations;
+
+/**
+ * Implements hook_form_BASE_FORM_ID_alter().
+ */
+function eic_webservices_form_group_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  \Drupal::classResolver(FormOperations::class)
+    ->formGroupFormAlter($form, $form_state, $form_id);
+}

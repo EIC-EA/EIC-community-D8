@@ -132,8 +132,9 @@ abstract class AbstractRequestHandler implements HandlerInterface {
         'You must be authenticated to do this!'
       );
     }
+    $date_timezone = 'UTC';
+    $now = new DrupalDateTime('now', $date_timezone);
 
-    $now = DrupalDateTime::createFromTimestamp(time());
     $current_user = User::load($account_proxy->id());
     $flagging->set('field_request_moderator', $current_user);
 
@@ -145,7 +146,7 @@ abstract class AbstractRequestHandler implements HandlerInterface {
     $flagging->set('field_request_status', $response);
     $flagging->set(
       'field_request_closed_date',
-      $now->format(DateTimeItemInterface::DATETIME_STORAGE_FORMAT)
+      $now->format(DateTimeItemInterface::DATETIME_STORAGE_FORMAT, ['timezone' => $date_timezone])
     );
     $flagging->save();
 
