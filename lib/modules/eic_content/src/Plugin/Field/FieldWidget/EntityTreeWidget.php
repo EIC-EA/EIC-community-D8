@@ -115,6 +115,33 @@ class EntityTreeWidget extends WidgetBase {
       ),
     ];
 
+    $element['selected_terms_label'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Selected terms label', [], ['context' => 'eic_content']),
+      '#default_value' => $this->getSetting('selected_terms_label'),
+      '#description' => $this->t(
+        'The label to show above the search input where you can see your selected values.',
+        [],
+        ['context' => 'eic_content']
+      ),
+    ];
+
+    $element['search_label'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Label', [], ['context' => 'eic_content']),
+      '#default_value' => $this->getSetting('search_label'),
+      '#description' => $this->t('The label to show under the search input.', [], ['context' => 'eic_content']
+      ),
+    ];
+
+    $element['search_placeholder'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Placeholder', [], ['context' => 'eic_content']),
+      '#default_value' => $this->getSetting('search_placeholder'),
+      '#description' => $this->t('The placeholder in the search input.', [], ['context' => 'eic_content']
+      ),
+    ];
+
     $element['auto_select_parents'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Auto-select parents ?'),
@@ -154,6 +181,9 @@ class EntityTreeWidget extends WidgetBase {
         'target_bundles' => [],
         'is_required' => FALSE,
         'can_create_tag' => FALSE,
+        'search_label' => t('Select a value', [], ['context' => 'eic_search']),
+        'search_placeholder' => t('Search', [], ['context' => 'eic_search']),
+        'selected_terms_label' => t('Your selected values', [], ['context' => 'eic_search']),
       ] + parent::defaultSettings();
   }
 
@@ -186,6 +216,9 @@ class EntityTreeWidget extends WidgetBase {
       ),
       'target_bundles' => $settings['target_bundles'] ?? [],
       'is_required' => $this->fieldDefinition->isRequired(),
+      'selected_terms_label' => $this->getSetting('selected_terms_label'),
+      'search_label' => $this->getSetting('search_label'),
+      'search_placeholder' => $this->getSetting('search_placeholder'),
     ];
 
     $element += self::getEntityTreeFieldStructure(
@@ -345,14 +378,14 @@ class EntityTreeWidget extends WidgetBase {
         'class' => ['hidden', 'entity-tree-reference-widget'],
         'data-selected-terms' => $preselected_terms,
         'data-translations' => json_encode([
-          'select_value' => $translation_manager->translate('Select a value', [], ['context' => 'eic_search']),
+          'select_value' => $options['search_label'],
           'match_limit' => $translation_manager->translate(
             'You can select only <b>@match_limit</b> top-level items.',
             ['@match_limit' => $options['match_top_level_limit']],
             ['context' => 'eic_search']
           ),
-          'search' => $translation_manager->translate('Search', [], ['context' => 'eic_search']),
-          'your_values' => $translation_manager->translate('Your selected values', [], ['context' => 'eic_search']),
+          'search' => $options['search_placeholder'],
+          'your_values' => $options['selected_terms_label'],
           'required_field' => $translation_manager->translate(
             'This field is required',
             [],
@@ -374,7 +407,7 @@ class EntityTreeWidget extends WidgetBase {
         // We can only create terms on the fly.
         'data-can-create-tag' =>
           (int) ($current_user->hasPermission("create terms in $target_bundle") &&
-          $options['can_create_tag'])
+            $options['can_create_tag'])
         ,
       ],
     ];

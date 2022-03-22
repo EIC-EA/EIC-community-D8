@@ -103,6 +103,9 @@ content:
       match_top_level_limit: '0'
       can_create_tag: '1'
       items_to_load: '25'
+      selected_terms_label: 'Your selected tags'
+      search_label: 'Select tags'
+      search_placeholder: Search
       disable_top_choices: 0
       load_all: 0
       auto_select_parents: 0
@@ -134,6 +137,9 @@ content:
       target_bundles: {  }
       is_required: false
       can_create_tag: false
+      search_label: 'Select a value'
+      search_placeholder: Search
+      selected_terms_label: 'Your selected values'
     third_party_settings: {  }
   langcode:
     type: language_select
