@@ -469,13 +469,12 @@ class SolrSearchController extends ControllerBase {
       return;
     }
 
-    $current_user = \Drupal::currentUser();
+    $current_user = $this->currentUser();
     $user_id = $current_user->id();
     $is_power_user = UserHelper::isPowerUser($current_user);
 
-    // We need to show all groups on the groups overview for power users,
-    // disregarding the published status.
-    if ($source instanceof GroupSourceType && $is_power_user) {
+    // We need to ignore the publish state for power users.
+    if ($is_power_user) {
       return;
     }
 
@@ -486,14 +485,32 @@ class SolrSearchController extends ControllerBase {
       $status_query .= ' OR (its_group_owner_id:' . $user_id . ')';
     }
 
+    $query_bundle = [
+      "its_group_owner_id:$user_id",
+    ];
+
+    if (!$is_power_user) {
+      switch ($source->getEntityBundle()) {
+        case 'library':
+          // Show own content even if it's in draft, archived, ...
+          $query_bundle[] = "its_content_uid:$user_id";
+          break;
+        case 'group':
+          $query_bundle[] = 'its_global_group_parent_published:1';
+          break;
+        case 'activity_stream':
+          $query_bundle[] = "its_uid:$user_id";
+          break;
+        default:
+          break;
+      }
+
+      $status_query .= ' OR (' . implode(' OR ', $query_bundle) . ')';
+    }
+
     $status_query .= ')';
 
     $fq .= $status_query;
-
-    // If it's not a power user or a group owner, add the filter query for published group parent.
-    if (!$is_power_user) {
-      $fq .= " AND (its_global_group_parent_published:1 OR its_group_owner_id:$user_id)";
-    }
   }
 
   /**
