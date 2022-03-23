@@ -3,20 +3,15 @@
 namespace Drupal\eic_search\Search\DocumentProcessor;
 
 use Drupal\Core\Database\Connection;
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\eic_flags\FlagType;
 use Drupal\eic_messages\MessageTemplateTypes;
 use Drupal\eic_search\Service\SolrDocumentProcessor;
 use Drupal\flag\FlagCountManager;
-use Drupal\flag\FlaggingInterface;
-use Drupal\flag\FlagServiceInterface;
 use Drupal\group\Entity\Group;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\message\Entity\Message;
 use Drupal\node\Entity\Node;
 use Drupal\node\NodeInterface;
-use Drupal\user\Entity\User;
-use Drupal\user\UserInterface;
 use Solarium\QueryType\Update\Query\Document;
 
 /**
@@ -99,8 +94,11 @@ class ProcessorFlags extends DocumentProcessor {
           FlagType::LIKE_CONTENT,
         ];
 
-        $node = Node::load($entity_id);
+        if (!$entity_id) {
+          break;
+        }
 
+        $node = Node::load($entity_id);
         if (!$node instanceof NodeInterface) {
           break;
         }
