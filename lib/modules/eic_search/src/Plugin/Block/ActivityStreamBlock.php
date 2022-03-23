@@ -68,28 +68,6 @@ class ActivityStreamBlock extends BlockBase implements ContainerFactoryPluginInt
   private $routeMatch;
 
   /**
-   * {@inheritdoc}
-   */
-  public static function create(
-    ContainerInterface $container,
-    array $configuration,
-    $plugin_id,
-    $plugin_definition
-  ) {
-    return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get('eic_groups.helper'),
-      $container->get('entity_type.manager'),
-      $container->get('eic_search.activity_stream_library'),
-      $container->get('date.formatter'),
-      $container->get('current_user'),
-      $container->get('current_route_match')
-    );
-  }
-
-  /**
    * LastGroupMembersBlock constructor.
    *
    * @param array $configuration
@@ -132,6 +110,28 @@ class ActivityStreamBlock extends BlockBase implements ContainerFactoryPluginInt
     $this->dateFormatter = $date_formatter;
     $this->currentUser = $current_user;
     $this->routeMatch = $route_match;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(
+    ContainerInterface $container,
+    array $configuration,
+    $plugin_id,
+    $plugin_definition
+  ) {
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->get('eic_groups.helper'),
+      $container->get('entity_type.manager'),
+      $container->get('eic_search.activity_stream_library'),
+      $container->get('date.formatter'),
+      $container->get('current_user'),
+      $container->get('current_route_match')
+    );
   }
 
   /**
@@ -192,8 +192,11 @@ class ActivityStreamBlock extends BlockBase implements ContainerFactoryPluginInt
       $has_delete_permission = EICGroupsHelper::userIsGroupAdmin($group, $this->currentUser);
     }
 
-    $build['#attached']['drupalSettings']['overview'] = [
-      'has_permission_delete' => $has_delete_permission,
+    $build['#attached']['drupalSettings'] = [
+      'overview' => [
+        'has_permission_delete' => $has_delete_permission,
+      ],
+      'node_statistics_url' => Url::fromRoute('eic_statistics.get_node_statistics')->toString(),
     ];
 
     return $build += [
@@ -236,7 +239,7 @@ class ActivityStreamBlock extends BlockBase implements ContainerFactoryPluginInt
    * @throws \Drupal\Core\Entity\EntityMalformedException
    */
   protected function getMembersData(GroupInterface $group = NULL, $limit = 5) {
-    $query= \Drupal::entityQuery('group_content')
+    $query = \Drupal::entityQuery('group_content')
       ->condition('type', 'group-group_membership')
       ->sort('created', 'DESC')
       ->range(0, $limit);
