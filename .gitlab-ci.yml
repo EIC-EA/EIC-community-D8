@@ -203,5 +203,6 @@ cypress_test:
     expire_in: '2 hour'
   script:
     - cd e2e
+    - printenv
     - npm install
     - npx cypress run
