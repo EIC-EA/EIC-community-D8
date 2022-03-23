@@ -155,9 +155,9 @@ class SolrSearchManager {
   /**
    * Build the search query.
    *
-   * @param $search_value
+   * @param string|NULL $search_value
    */
-  public function buildSearchQuery($search_value) {
+  public function buildSearchQuery(?string $search_value) {
     $spell_check = $this->solrQuery->getSpellcheck();
     $spell_check->setQuery($search_value);
 
@@ -168,7 +168,9 @@ class SolrSearchManager {
 
     foreach ($search_fields_id as $search_field_id) {
       $query_fields[] = "$search_field_id:$search_query_value";
-      $this->rawQuery = '(' . implode(' OR ', $query_fields) . ')';
+      $this->rawQuery .= empty($this->rawQuery) ?
+        '(' . implode(' OR ', $query_fields) . ')' :
+        ' AND (' . implode(' OR ', $query_fields) . ')';
     }
   }
 
@@ -296,9 +298,9 @@ class SolrSearchManager {
   /**
    * Build group query.
    *
-   * @param string $current_group
+   * @param string|NULL $current_group
    */
-  public function buildGroupQuery(string $current_group) {
+  public function buildGroupQuery(?string $current_group) {
     if (!$current_group)
       return;
 

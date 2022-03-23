@@ -61,7 +61,9 @@ class FormAlter {
       50,
       $url_search,
       $url_search,
-      $url_search
+      $url_search,
+      [],
+      TRUE
     );
 
     $form['existing_users']['#attached']['library'][] = 'eic_community/react-tree-field';

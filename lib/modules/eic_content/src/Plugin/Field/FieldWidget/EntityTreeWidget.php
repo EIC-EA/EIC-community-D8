@@ -311,6 +311,9 @@ class EntityTreeWidget extends WidgetBase {
    *   - target_bundles: (array) The selectable bundles. Defaults to all.
    *   - is_required: (bool) Indicates if field is required.
    *
+   * @param bool $search_user_solr
+   *   Search users directly in solr and not DB.
+   *
    * @return array
    *   Return render array of entity tree widget.
    */
@@ -322,7 +325,8 @@ class EntityTreeWidget extends WidgetBase {
     string $base_url,
     string $base_url_search,
     string $base_url_search_children,
-    array $options = []
+    array $options = [],
+    bool $search_user_solr = FALSE
   ): array {
     /** @var \Drupal\Core\StringTranslation\TranslationManager $translation_manager */
     $translation_manager = \Drupal::service('string_translation');
@@ -367,7 +371,7 @@ class EntityTreeWidget extends WidgetBase {
         'data-target-bundle' => $target_bundle,
         'data-target-entity' => $target_type,
         'data-is-required' => (int) $options['is_required'],
-        'data-search-specific-users' => (int) ('user' === $target_type),
+        'data-search-specific-users' => (int) $search_user_solr,
       ],
     ];
 

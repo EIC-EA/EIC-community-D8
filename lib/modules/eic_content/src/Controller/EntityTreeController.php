@@ -47,6 +47,7 @@ class EntityTreeController extends ControllerBase {
   public function tree(Request $request) {
     $offset = $request->query->get('offset', 0);
     $length = $request->query->get('length', 25);
+    $page = $request->query->get('page', 1);
     $target_entity = $request->query->get('targetEntity');
     $target_bundle = $request->query->get('targetBundle');
     // This will check if we need to split result items
@@ -64,7 +65,7 @@ class EntityTreeController extends ControllerBase {
         ->condition('status', 1);
 
       if (!$load_all) {
-        $query->range($offset, $length);
+        $query->range(($page * $offset) - $offset, $length);
       }
 
       $query->sort($tree_property->getSortField(), 'ASC');

@@ -60,6 +60,8 @@ class ProcessorUser extends DocumentProcessor {
       $user->get(PrivateMessage::PRIVATE_MESSAGE_USER_ALLOW_CONTACT_ID)->value
     );
 
+    $grp_ids = [];
+
     if (array_key_exists('its_user_profile', $fields)) {
       $profile = Profile::load($fields['its_user_profile']);
       if ($profile instanceof ProfileInterface) {
@@ -73,10 +75,10 @@ class ProcessorUser extends DocumentProcessor {
         $grp_ids = array_map(function (GroupMembership $grp_membership) {
           return $grp_membership->getGroup()->id();
         }, $grps);
-
-        $document->setField('itm_user__group_content__uid_gid', $grp_ids);
       }
     }
+
+    $document->setField('itm_user__group_content__uid_gid', $grp_ids);
   }
 
   /**
