@@ -229,7 +229,7 @@ class FormOperations implements ContainerInjectionInterface {
 
         // Dispatch the event to trigger message subscription notification
         // about new content published.
-        if (!$is_published) {
+        if ($is_published) {
           if (empty($group_contents)) {
             // Node is not part of a group content so we dispatch the message
             // subscription event for node creation.
