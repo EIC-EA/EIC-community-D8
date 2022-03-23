@@ -51,6 +51,7 @@ class FormAlter {
     $url_search = Url::fromRoute('eic_search.solr_search', [
       'datasource' => json_encode(['user']),
       'source_class' => UserInvitesListSourceType::class,
+      'page' => 1
     ])->toString();
 
     $form['existing_users'] = EntityTreeWidget::getEntityTreeFieldStructure(
