@@ -1,17 +1,41 @@
 .ckeditor__content {
+
+  @include ecl-media-breakpoint-down('md') {
+    & div {
+      width: auto!important;
+      overflow-x: scroll;
+      padding-bottom: $ecl-spacing-m;
+
+      &::-webkit-scrollbar-track {
+        background: $ecl-color-grey-5;
+        border-radius: 20px;
+      }
+
+      &::-webkit-scrollbar {
+        height: 10px;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background: $ecl-color-blue;
+        border-radius: 20px;
+      }
+
+      /* Handle on hover */
+      &::-webkit-scrollbar-thumb:hover {
+        background: $ecl-color-blue-75;
+      }
+    }
+
+  }
   & table {
     width: 100%!important;
     border: 0;
     border-collapse: collapse;
-    @include ecl-media-breakpoint-down('md') {
-      width: auto!important;
-      overflow-x: scroll;
-    }
     & td, & th, & tbody tr td:first-child {
       border: 0;
       padding: $ecl-spacing-m $ecl-spacing-xs;
       @include ecl-media-breakpoint-down('md') {
-        min-width: 200px;
+        width: 200px;
       }
     }
 
