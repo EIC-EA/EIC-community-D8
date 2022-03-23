@@ -195,7 +195,7 @@ slack_notifier:
 
 cypress_test:
   stage: build
-  image: cypress
+  image: cypress/base:10
   tags:
     - itr-hrt
   artifacts:
