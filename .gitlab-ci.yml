@@ -3,6 +3,7 @@ stages:
   - test
   - notify
   - deploy
+  - cypress
   - deploy_uat
 
 .deploy_job: &deploy_job
@@ -193,8 +194,8 @@ slack_notifier:
   only:
     - /^release/.*$/
 
-cypress_test:
-  stage: build
+cypress_test_qa:
+  stage: cypress
   image: cypress/base:10
   tags:
     - itr-hrt
@@ -203,6 +204,7 @@ cypress_test:
     expire_in: '2 hour'
   script:
     - cd e2e
-    - printenv
     - npm install
     - npx cypress run
+  only:
+    - /^release/.*$/
