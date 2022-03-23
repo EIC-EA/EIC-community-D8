@@ -160,7 +160,9 @@ class StatisticsHelper {
       if (!in_array($flag->id(), $countable_flags)) {
         continue;
       }
-      $result[$flag->id()] = $this->flagCountManager->getEntityFlagCounts($entity)[$flag->id()];
+      
+      $entity_flag_counts = $this->flagCountManager->getEntityFlagCounts($entity);
+      $result[$flag->id()] = $entity_flag_counts[$flag->id()] ?? 0;
     }
 
     // Downloads statistics.
