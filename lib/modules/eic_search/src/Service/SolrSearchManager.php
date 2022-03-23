@@ -3,6 +3,7 @@
 namespace Drupal\eic_search\Service;
 
 use Drupal\Core\Entity\EntityTypeManager;
+use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\eic_groups\Constants\GroupVisibilityType;
 use Drupal\eic_search\Collector\SourcesCollector;
 use Drupal\eic_search\Plugin\search_api\processor\GroupAccessContent;
@@ -17,16 +18,15 @@ use Drupal\search_api\Entity\Index;
 use Drupal\search_api_solr\SolrConnectorInterface;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\user\Entity\User;
-use Drupal\user\UserInterface;
 use Solarium\Component\ComponentAwareQueryInterface;
 use Solarium\QueryType\Select\Query\Query;
 
 class SolrSearchManager {
 
   /**
-   * @var \Drupal\user\UserInterface
+   * @var AccountProxyInterface
    */
-  private UserInterface $currentUser;
+  private AccountProxyInterface $currentUser;
 
   /**
    * @var \Drupal\eic_search\Collector\SourcesCollector
@@ -93,14 +93,14 @@ class SolrSearchManager {
   private string $rawQuery;
 
   /**
-   * @param \Drupal\user\UserInterface $current_user
+   * @param AccountProxyInterface $current_user
    * @param \Drupal\eic_search\Collector\SourcesCollector $sources_collector
    * @param \Drupal\Core\Entity\EntityTypeManager $em
    * @param \Drupal\group\GroupMembershipLoaderInterface $membership_loader
    * @param \Drupal\oec_group_flex\GroupVisibilityDatabaseStorageInterface $group_visibility_storage
    */
   public function __construct(
-    UserInterface $current_user,
+    AccountProxyInterface $current_user,
     SourcesCollector $sources_collector,
     EntityTypeManager $em,
     GroupMembershipLoaderInterface $membership_loader,
@@ -113,11 +113,20 @@ class SolrSearchManager {
     $this->groupVisibilityStorage = $group_visibility_storage;
   }
 
-  public function init(string $source_class, array $facets_fields): self {
+  /**
+   * @param string $source_class
+   * @param array|null $facets_fields
+   *
+   * @return $this
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   * @throws \Drupal\search_api\SearchApiException
+   */
+  public function init(string $source_class, ?array $facets_fields): self {
     $index_storage = $this->em
       ->getStorage('search_api_index');
     $this->index = $index_storage->load('global');
-    $this->solrQuery->addParam('facet.field', $facets_fields);
 
     /** @var \Drupal\search_api_solr\Plugin\search_api\backend\SearchApiSolrBackend $backend */
     $backend = $this->index->getServerInstance()->getBackend();
@@ -125,7 +134,9 @@ class SolrSearchManager {
     $backend->setConfiguration($config);
     /** @var \Drupal\search_api_solr\Plugin\SolrConnector\BasicAuthSolrConnector $connector */
     $this->connector = $backend->getSolrConnector();
-    $this->solrQuery = $connector->getSelectQuery();
+    $this->solrQuery = $this->connector->getSelectQuery();
+    $this->solrQuery->addParam('facet.field', $facets_fields);
+    $this->rawQuery = '';
 
     $sources = $this->sourcesCollector->getSources();
     $this->source = array_key_exists($source_class, $sources) ? $sources[$source_class] : NULL;
@@ -136,18 +147,17 @@ class SolrSearchManager {
       $datasources_query[] = 'ss_search_api_datasource:"entity:' . $datasource . '"';
     }
 
-    $this->interests = [];
-
-    if (array_key_exists('interests', $this->facets)) {
-      $this->interests = $this->facets['interests'];
-    }
-
     $this->rawFieldQuery = '(' . implode(' OR ', $datasources_query) . ')';
 
     return $this;
   }
 
-  private function buildSearchQuery($search_value) {
+  /**
+   * Build the search query.
+   *
+   * @param $search_value
+   */
+  public function buildSearchQuery($search_value) {
     $spell_check = $this->solrQuery->getSpellcheck();
     $spell_check->setQuery($search_value);
 
@@ -155,7 +165,6 @@ class SolrSearchManager {
     $search_query_value = $search_value ? "*$search_value*" : '*';
 
     $query_fields = [];
-    $this->rawQuery = '';
 
     foreach ($search_fields_id as $search_field_id) {
       $query_fields[] = "$search_field_id:$search_query_value";
@@ -163,8 +172,19 @@ class SolrSearchManager {
     }
   }
 
-  private function buildSortFacets($facets_value, $sort_value) {
-    $this->facets = json_decode($facets_value, TRUE) ?: [];
+  /**
+   * Build the sort and facets to the query.
+   *
+   * @param array|null $facets_value
+   * @param string|null $sort_value
+   */
+  public function buildSortFacets(?array $facets_value, ?string $sort_value) {
+    $this->facets = $facets_value;
+    $this->interests = [];
+
+    if (array_key_exists('interests', $this->facets)) {
+      $this->interests = $this->facets['interests'];
+    }
 
     if ($sort_value) {
       $sorts = explode('__', $sort_value);
@@ -219,7 +239,13 @@ class SolrSearchManager {
     }
   }
 
-  private function buildDateQuery(string $from_date = '*', string $end_date = '*') {
+  /**
+   * Build date query.
+   *
+   * @param string $from_date
+   * @param string $end_date
+   */
+  public function buildDateQuery(string $from_date = '*', string $end_date = '*') {
     $filter_registration = FALSE;
 
     if (array_key_exists('filter_registration', $this->facets)) {
@@ -267,9 +293,16 @@ class SolrSearchManager {
     }
   }
 
-  private function buildGroupQuery(string $current_group) {
+  /**
+   * Build group query.
+   *
+   * @param string $current_group
+   */
+  public function buildGroupQuery(string $current_group) {
+    if (!$current_group)
+      return;
+
     if (
-      $current_group &&
       !$this->source->excludingCurrentGroup() &&
       $group_id_fields = $this->source->getPrefilteredGroupFieldId()
     ) {
@@ -285,7 +318,6 @@ class SolrSearchManager {
 
     if (
       $this->source instanceof SourceTypeInterface &&
-      $current_group &&
       $this->source->prefilterByGroupVisibility()
     ) {
       $this->generateUsersQueryVisibilityGroup($current_group);
@@ -293,7 +325,6 @@ class SolrSearchManager {
 
     if (
       $this->source instanceof SourceTypeInterface &&
-      $current_group &&
       $this->source->excludingCurrentGroup()
     ) {
       $this->generateExcludingUsersGroupQuery($current_group);
@@ -301,21 +332,24 @@ class SolrSearchManager {
   }
 
   /**
-   * @param int $topic_term_id
+   * Prefilter the query with the topic.
+   *
+   * @param int|null $topic_term_id
    */
-  private function buildPrefilterTopic(int $topic_term_id) {
+  public function buildPrefilterTopic(?int $topic_term_id) {
+    if (!$topic_term_id)
+      return;
+
     // Handle current term ID sub-query.
-    if ($topic_term_id) {
-      $term_id_fields = $this->source->getPrefilteredTopicsFieldId();
-      $term_query = [];
-      foreach ($term_id_fields as $term_id_field) {
-        $term_query[] = "$term_id_field:($topic_term_id)";
-      }
-      $term_query_string = '(' . implode(' OR ', $term_query) . ')';
-      $this->rawQuery .= empty($this->rawQuery) ?
-        "$term_query_string" :
-        " AND $term_query_string";
+    $term_id_fields = $this->source->getPrefilteredTopicsFieldId();
+    $term_query = [];
+    foreach ($term_id_fields as $term_id_field) {
+      $term_query[] = "$term_id_field:($topic_term_id)";
     }
+    $term_query_string = '(' . implode(' OR ', $term_query) . ')';
+    $this->rawQuery .= empty($this->rawQuery) ?
+      "$term_query_string" :
+      " AND $term_query_string";
   }
 
   /**
@@ -324,7 +358,7 @@ class SolrSearchManager {
    * @param int $page
    * @param int $offset
    */
-  private function buildQueryPager(int $page, int $offset) {
+  public function buildQueryPager(int $page, int $offset) {
     $this->solrQuery->setRows($offset);
 
     //Default value will be to work like pagination.
