@@ -16,7 +16,7 @@ type_settings:
     archived:
       label: Archived
       weight: 3
-      published: true
+      published: false
       default_revision: true
     blocked:
       label: Blocked
