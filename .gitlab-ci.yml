@@ -192,3 +192,16 @@ slack_notifier:
       curl -X POST $SLACK_URL -H 'Content-Type: application/json' -d '{"text": "New deployment running on QA. Environment will be updated in a few minutes..."}'
   only:
     - /^release/.*$/
+
+cypress_test:
+  stage: build
+  image: cypress
+  tags:
+    - itr-hrt
+  artifacts:
+    untracked: true
+    expire_in: '2 hour'
+  script:
+    - cd e2e
+    - npm install
+    - npx cypress run

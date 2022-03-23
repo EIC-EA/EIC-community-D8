@@ -170,7 +170,7 @@ endef
 
 define clear_indexes
 	echo 'Clearing indexes'
-	docker compose exec php bash -c "curl -X POST -H 'Content-Type: application/json' 'http://solr:8983/solr/${SEARCH_INDEX}/update?commit=true' -d '{\"delete\":{\"query\":\"*:*\"}}'"
+	docker-compose exec php bash -c "curl -X POST -H 'Content-Type: application/json' 'http://solr:8983/solr/${SEARCH_INDEX}/update?commit=true' -d '{\"delete\":{\"query\":\"*:*\"}}'"
 endef
 
 define do_destroy
