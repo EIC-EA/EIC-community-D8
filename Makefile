@@ -48,6 +48,9 @@ import-db:
 ssh:
 	docker exec -it --user web ${APP_NAME}_php bash
 
+ssh_cypress:
+	docker exec -it ${APP_NAME}_cypress bash
+
 help:
 	$(call do_display_commands)
 
