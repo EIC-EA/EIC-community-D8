@@ -17,6 +17,7 @@ use Drupal\group\Entity\GroupContentInterface;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\group\GroupMembership;
 use Drupal\message\MessageInterface;
+use Drupal\user\UserInterface;
 
 /**
  * Service that provides logic for transfer ownership requests.
@@ -236,8 +237,11 @@ class TransferOwnershipRequestHandler extends AbstractRequestHandler {
 
     // If current user is not a group owner or a power user, we return
     // access forbidden.
-    if (!(
-      $account->id() === EICGroupsHelper::getGroupOwner($group)->id() ||
+    $owner = EICGroupsHelper::getGroupOwner($group);
+    if (
+      !$owner instanceof UserInterface ||
+      !(
+      $account->id() === $owner->id() ||
       UserHelper::isPowerUser($account)
     )) {
       return $access;
