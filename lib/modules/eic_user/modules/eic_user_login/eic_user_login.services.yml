@@ -4,7 +4,7 @@ services:
     arguments: [ '@http_client_factory', '@config.factory']
   eic_user_login.smed_user_manager:
     class: Drupal\eic_user_login\Service\SmedUserManager
-    arguments: ['@config.factory']
+    arguments: ['@config.factory', '@datetime.time']
   eic_user_login.cas_event_subscriber:
     class: Drupal\eic_user_login\EventSubscriber\CasEventSubscriber
     arguments: ['@config.factory', '@eic_user_login.smed_user_manager', '@eic_user_login.smed_user_connection']

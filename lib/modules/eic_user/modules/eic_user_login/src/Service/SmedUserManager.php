@@ -25,13 +25,23 @@ class SmedUserManager {
   protected $config;
 
   /**
+   * The time service.
+   *
+   * @var \Drupal\Component\Datetime\TimeInterface
+   */
+  protected $time;
+
+  /**
    * SmedUserManager constructor.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory.
+   * @param \Drupal\Component\Datetime\TimeInterface $time
+   *   The time service.
    */
-  public function __construct(ConfigFactoryInterface $config_factory) {
+  public function __construct(ConfigFactoryInterface $config_factory, TimeInterface $time) {
     $this->config = $config_factory;
+    $this->time = $time;
   }
 
   /**
@@ -46,8 +56,7 @@ class SmedUserManager {
    */
   public function updateUserInformation(UserInterface $account, array $data = []) {
     $account->field_user_status->value = $data['user_status'];
-    // @todo User depedency injection.
-    $account->field_updated_profile_by_service->value = \Drupal::time()->getRequestTime();
+    $account->field_updated_profile_by_service->value = $this->time->getRequestTime();
 
     switch ($account->field_user_status->value) {
       case SmedUserStatuses::USER_VALID:
