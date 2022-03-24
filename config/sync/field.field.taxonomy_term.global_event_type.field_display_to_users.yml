@@ -1,0 +1,23 @@
+uuid: b3ecc309-6a1f-4fc8-98a9-5a14ea36c509
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.taxonomy_term.field_display_to_users
+    - taxonomy.vocabulary.global_event_type
+id: taxonomy_term.global_event_type.field_display_to_users
+field_name: field_display_to_users
+entity_type: taxonomy_term
+bundle: global_event_type
+label: 'Display to users?'
+description: 'Check this box if you want this term to be displayed and selectable by end users on the form.'
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

@@ -17,7 +17,6 @@ permissions_ui: false
 permissions:
   - 'access content overview'
   - 'access group content menu overview'
-  - 'access group_node overview'
   - 'administer members'
   - 'join group'
   - 'view group'

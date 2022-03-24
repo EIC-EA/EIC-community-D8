@@ -54,6 +54,10 @@
     background-color: map-get($ecl-colors, 'grey-5');
   }
 
+  .ecl-featured-content-collection .ecl-featured-content-collection__item:nth-child(odd) &--grey#{$node}--alternating-grey {
+    background: map-get($ecl-colors, 'white')
+  }
+
   &--grey,
   &--is-card {
     padding: ecl-box-model('padding');
@@ -466,10 +470,6 @@
 
     #{$node}--story & {
       justify-content: space-between;
-
-      @include ecl-media-breakpoint-up('sm') {
-        justify-content: inherit;
-      }
     }
 
     #{$node}--story#{$node}--has-compact-layout & {
@@ -780,6 +780,7 @@
           justify-content: flex-end;
         }
       }
+
     }
     #{$node}--filelist &,
     #{$node}--video &,

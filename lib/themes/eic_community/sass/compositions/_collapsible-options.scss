@@ -2,8 +2,8 @@
   $node: &;
 
   position: relative;
-  display: inline-block;
   cursor: pointer;
+  display: none;
 
   &__trigger-wrapper {
     display: none;

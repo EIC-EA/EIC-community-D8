@@ -32,6 +32,7 @@ function eic_community_preprocess_views_view_field(&$variables) {
  * Implements template_preprocess_views_view().
  */
 function eic_community_preprocess_views_view(&$variables) {
+
   /** @var \Drupal\views\ViewExecutable $view */
   $view = $variables['view'];
 
