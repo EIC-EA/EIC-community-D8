@@ -9,6 +9,7 @@ use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\BubbleableMetadata;
+use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_messages\ActivityStreamOperationTypes;
 use Drupal\eic_messages\Hooks\EntityOperations;
 use Drupal\eic_messages\Hooks\FormOperations;
@@ -19,6 +20,7 @@ use Drupal\eic_messages\Service\GroupContentMessageCreator;
 use Drupal\eic_messages\Service\GroupMessageCreator;
 use Drupal\eic_messages\Service\RequestMessageCreator;
 use Drupal\eic_messages\Util\LogMessageTemplates;
+use Drupal\eic_messages\Util\NotificationMessageTemplates;
 use Drupal\flag\FlaggingInterface;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\node\Entity\NodeType;
@@ -270,6 +272,21 @@ function eic_messages_group_flex_visibility_save(
       'default',
       $group->bundle()
     );
+
+    $members = $group->getMembers([
+      $group->bundle() . '-' . EICGroupsHelper::GROUP_TYPE_OWNER_ROLE,
+      $group->bundle() . '-' . EICGroupsHelper::GROUP_TYPE_ADMINISTRATOR_ROLE,
+    ]);
+    // Prepare messages to GO/GA about the group state change.
+    foreach ($members as $member) {
+      \Drupal::service('eic_messages.message_bus')->dispatch([
+        'template' => NotificationMessageTemplates::GROUP_VISIBILITY_CHANGE,
+        'uid' => $member->getUser()->id(),
+        'field_group_ref' => ['target_id' => $group->id()],
+        'field_group_visibility' => $new_visibility_label,
+        'field_event_executing_user' => ['target_id' => $current_user->id()],
+      ]);
+    }
 
     \Drupal::entityTypeManager()->getStorage('message')
       ->create([
