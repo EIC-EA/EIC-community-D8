@@ -29,6 +29,7 @@
 @import './overrides/datepicker';
 @import './overrides/mui';
 @import './overrides/viewport-modal';
+@import './overrides/media-library';
 
 @import './schema/border';
 @import './schema/box-model';
@@ -98,6 +99,7 @@
 @import "./components/contact-box";
 @import "./components/checkbox";
 @import "./components/emoji-picker";
+@import "./components/entity-tree";
 @import "./components/expandable-definitions";
 @import "./components/description_list";
 @import "./components/date-block";

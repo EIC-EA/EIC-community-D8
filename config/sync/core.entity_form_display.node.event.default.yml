@@ -13,11 +13,13 @@ dependencies:
     - field.field.node.event.field_location_type
     - field.field.node.event.field_organised_by
     - field.field.node.event.field_social_links
+    - field.field.node.event.field_tags
     - field.field.node.event.field_vocab_event_type
     - field.field.node.event.field_vocab_geo
     - field.field.node.event.field_vocab_topics
     - field.field.node.event.field_website_url
     - node.type.event
+    - workflows.workflow.default
   module:
     - address
     - content_moderation
@@ -86,6 +88,12 @@ content:
       disable_top_choices: 0
       auto_select_parents: 0
       ignore_current_user: 0
+      target_bundles: {  }
+      is_required: false
+      can_create_tag: false
+      search_label: 'Select a value'
+      search_placeholder: Search
+      selected_terms_label: 'Your selected values'
     third_party_settings: {  }
   field_link:
     type: link_default
@@ -133,6 +141,24 @@ content:
       select_social: false
       disable_weight: false
     third_party_settings: {  }
+  field_tags:
+    type: entity_tree
+    weight: 31
+    region: content
+    settings:
+      match_top_level_limit: '0'
+      can_create_tag: '1'
+      items_to_load: '25'
+      selected_terms_label: 'Your selected tags'
+      search_label: 'Select tags'
+      search_placeholder: Search
+      disable_top_choices: 0
+      load_all: 0
+      auto_select_parents: 0
+      ignore_current_user: 0
+      target_bundles: {  }
+      is_required: false
+    third_party_settings: {  }
   field_vocab_event_type:
     type: options_select
     weight: 1
@@ -150,6 +176,12 @@ content:
       disable_top_choices: 0
       load_all: 0
       ignore_current_user: 0
+      target_bundles: {  }
+      is_required: false
+      can_create_tag: false
+      search_label: 'Select a value'
+      search_placeholder: Search
+      selected_terms_label: 'Your selected values'
     third_party_settings: {  }
   field_vocab_topics:
     type: entity_tree
@@ -162,6 +194,12 @@ content:
       auto_select_parents: '1'
       load_all: 0
       ignore_current_user: 0
+      target_bundles: {  }
+      is_required: false
+      can_create_tag: false
+      search_label: 'Select a value'
+      search_placeholder: Search
+      selected_terms_label: 'Your selected values'
     third_party_settings: {  }
   field_website_url:
     type: link_default

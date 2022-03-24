@@ -14,6 +14,7 @@ dependencies:
     - field.field.node.story.field_introduction
     - field.field.node.story.field_related_stories
     - field.field.node.story.field_story_paragraphs
+    - field.field.node.story.field_tags
     - field.field.node.story.field_video
     - field.field.node.story.field_vocab_geo
     - field.field.node.story.field_vocab_topics
@@ -109,6 +110,14 @@ content:
       link: ''
     third_party_settings: {  }
     weight: 15
+    region: content
+  field_tags:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 20
     region: content
   field_video:
     type: entity_reference_entity_view

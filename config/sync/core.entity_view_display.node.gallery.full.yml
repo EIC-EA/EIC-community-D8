@@ -10,10 +10,12 @@ dependencies:
     - field.field.node.gallery.field_gallery_slides
     - field.field.node.gallery.field_language
     - field.field.node.gallery.field_related_contributors
+    - field.field.node.gallery.field_tags
     - field.field.node.gallery.field_vocab_geo
     - field.field.node.gallery.field_vocab_topics
     - node.type.gallery
   module:
+    - entity_reference_revisions
     - text
     - user
 id: node.gallery.full
@@ -21,6 +23,11 @@ targetEntityType: node
 bundle: gallery
 mode: full
 content:
+  content_moderation_control:
+    settings: {  }
+    third_party_settings: {  }
+    weight: -20
+    region: content
   field_body:
     type: text_default
     label: hidden
@@ -119,5 +126,6 @@ hidden:
   field_document_type: true
   field_language: true
   field_related_contributors: true
+  field_tags: true
   langcode: true
   search_api_excerpt: true
