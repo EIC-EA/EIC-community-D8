@@ -80,15 +80,15 @@ class CasEventSubscriber implements EventSubscriberInterface {
    *   Cas pre register event.
    */
   public function userPreRegister(CasPreRegisterEvent $event) {
-    // Check if user should checked/synced against SMED.
-    if ($this->configFactory->get('eic_user_login.settings')->get('allow_user_register') !== TRUE) {
+    // Check if user can register against SMED.
+    if ($this->configFactory->get('eic_user_login.settings')->get('allow_user_register') === TRUE) {
       return;
     }
 
     // Prevent the creation of the user account.
     $event->cancelAutomaticRegistration();
 
-    $this->messenger()->addStatus($this->t('Please register at <a href=":smed_url">:smed_url</a>', [
+    $this->messenger()->addStatus($this->t('Please register at <a href=":smed_url" target="_blank">:smed_url</a>', [
       ':smed_url' => $this->configFactory->get('eic_webservices.settings')->get('smed_url'),
     ]));
 

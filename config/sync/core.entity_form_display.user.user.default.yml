@@ -113,9 +113,15 @@ content:
     settings:
       placeholder: ''
     third_party_settings: {  }
+  field_updated_profile_by_service:
+    type: datetime_timestamp
+    weight: 15
+    region: content
+    settings: {  }
+    third_party_settings: {  }
   field_user_can_contact:
     type: options_buttons
-    weight: 16
+    weight: 17
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -132,7 +138,7 @@ content:
     third_party_settings: {  }
   path:
     type: path
-    weight: 15
+    weight: 16
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -144,7 +150,6 @@ content:
 hidden:
   field_full_name: true
   field_message_from_service: true
-  field_updated_profile_by_service: true
   field_updated_profile_by_user: true
   langcode: true
   member_profiles: true

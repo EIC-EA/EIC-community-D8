@@ -46,6 +46,8 @@ class SmedUserManager {
    */
   public function updateUserInformation(UserInterface $account, array $data = []) {
     $account->field_user_status->value = $data['user_status'];
+    // @todo User depedency injection.
+    $account->field_updated_profile_by_service->value = \Drupal::time()->getRequestTime();
 
     switch ($account->field_user_status->value) {
       case SmedUserStatuses::USER_VALID:
