@@ -406,6 +406,7 @@ class EntityTreeWidget extends WidgetBase {
           ),
           'add_label' => $translation_manager->translate('Add', [], ['context' => 'eic_content']),
         ]),
+        'data-create-term-url' => Url::fromRoute('eic_content.entity_tree_create_term')->toString(),
         'data-terms-url' => $base_url,
         'data-terms-url-search' => $base_url_search,
         'data-terms-url-children' => $base_url_search_children,
