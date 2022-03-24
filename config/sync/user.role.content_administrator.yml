@@ -162,6 +162,7 @@ permissions:
   - 'edit any video content'
   - 'edit any video media'
   - 'edit overview pages'
+  - 'edit own book content'
   - 'edit own comments'
   - 'edit own discussion content'
   - 'edit own document content'

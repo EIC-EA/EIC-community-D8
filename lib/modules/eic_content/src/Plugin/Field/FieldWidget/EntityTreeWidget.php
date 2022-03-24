@@ -255,6 +255,19 @@ class EntityTreeWidget extends WidgetBase {
         ->formatPreselection($entities);
     }
 
+    return self::formatTaxonomyPreSelection($entities);
+
+  }
+
+  /**
+   * Returns the formatted preselection of taxonomy terms for the widget.
+   *
+   * @param \Drupal\taxonomy\TermInterface[] $entities
+   *   An array of taxonomy terms.
+   *
+   * @return false|string
+   */
+  public static function formatTaxonomyPreSelection(array $entities) {
     return json_encode(
       array_map(function (EntityInterface $entity) {
         $parents = $entity->get('parent')->getValue();
@@ -404,11 +417,11 @@ class EntityTreeWidget extends WidgetBase {
         'data-target-bundle' => $target_bundle,
         'data-target-entity' => $target_type,
         'data-is-required' => (int) $options['is_required'],
+        'data-search-specific-users' => (int) ('user' === $target_type),
         // We can only create terms on the fly.
         'data-can-create-tag' =>
           (int) ($current_user->hasPermission("create terms in $target_bundle") &&
             $options['can_create_tag'])
-        ,
       ],
     ];
 

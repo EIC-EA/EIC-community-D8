@@ -5,7 +5,7 @@ dependencies:
   config:
     - field.storage.group.field_vocab_event_type
     - group.type.event
-    - taxonomy.vocabulary.event_type
+    - taxonomy.vocabulary.global_event_type
 id: group.event.field_vocab_event_type
 field_name: field_vocab_event_type
 entity_type: group
@@ -20,7 +20,7 @@ settings:
   handler: 'default:taxonomy_term'
   handler_settings:
     target_bundles:
-      event_type: event_type
+      global_event_type: global_event_type
     sort:
       field: name
       direction: asc

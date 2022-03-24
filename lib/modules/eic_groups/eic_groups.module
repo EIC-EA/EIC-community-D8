@@ -30,12 +30,12 @@ use Drupal\eic_groups\Hooks\FormOperations;
 use Drupal\eic_groups\Hooks\GroupTokens;
 use Drupal\eic_groups\Hooks\Pathauto;
 use Drupal\eic_groups\Hooks\Preprocess;
+use Drupal\eic_overviews\GlobalOverviewPages;
 use Drupal\eic_user\UserHelper;
 use Drupal\flag\FlagInterface;
 use Drupal\group\Access\GroupAccessResult;
 use Drupal\group\Entity\GroupContent;
 use Drupal\pathauto\PathautoGeneratorInterface;
-use Drupal\eic_overviews\GlobalOverviewPages;
 
 /**
  * Implements hook_theme().
@@ -586,14 +586,8 @@ function eic_groups_entity_operation_alter(array &$operations, EntityInterface $
     return;
   }
 
-  $url_options = [
-    'query' => [
-      'destination' => \Drupal::requestStack()->getCurrentRequest()->getRequestUri(),
-    ],
-  ];
-
   // Add publish group operation.
-  $publish_url = Url::fromRoute('eic_groups.group.publish.confirm_form', ['group' => $entity->id()], $url_options);
+  $publish_url = Url::fromRoute('eic_groups.group.publish.confirm_form', ['group' => $entity->id()]);
   if ($publish_url->access()) {
     $operations['publish'] = [
       'title' => t('Publish'),

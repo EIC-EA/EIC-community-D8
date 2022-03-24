@@ -5,11 +5,14 @@ namespace Drupal\eic_organisations\Plugin\CustomRestrictedVisibility;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\Core\Url;
+use Drupal\eic_content\Plugin\Field\FieldWidget\EntityTreeWidget;
 use Drupal\eic_organisations\Constants\Organisations;
 use Drupal\group\Access\GroupAccessResult;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\oec_group_flex\GroupVisibilityRecordInterface;
 use Drupal\oec_group_flex\Plugin\CustomRestrictedVisibilityBase;
+use Drupal\taxonomy\Entity\Term;
 
 /**
  * Provides a 'restricted_organisation_types' custom restricted visibility.
@@ -30,28 +33,36 @@ class RestrictedOrganisationTypes extends CustomRestrictedVisibilityBase {
   public function getPluginForm():array {
     $form = parent::getPluginForm();
 
-    // Get the terms.
-    // @todo Use a constant for the vocabulary name.
-    $terms = $this->entityTypeManager->getStorage('taxonomy_term')->loadTree(Organisations::VOCABULARY_ORGANISATION_TYPE);
-    $options = [];
-    foreach ($terms as $term_item) {
-      $options[$term_item->tid] = $term_item->name;
-    }
+    $options = [
+      'match_top_level_limit' => 0,
+      'items_to_load' => 0,
+      'auto_select_parents' => 0,
+      'disable_top_choices' => 0,
+      'load_all' => 1,
+      'ignore_current_user' => 0,
+      'target_bundles' => [Organisations::VOCABULARY_ORGANISATION_TYPE],
+      'is_required' => 0,
+    ];
 
-    // @todo Make use of a hierarchical widget.
-    $form[$this->getPluginId()][$this->getPluginId() . '_conf'] = [
-      '#title' => $this->t('Organisation types'),
-      '#type' => 'checkboxes',
-      '#options' => $options,
-      '#states' => [
-        'visible' => [
-          ':input[name="' . $this->getPluginId() . '_status"]' => [
-            'checked' => TRUE,
-          ],
+    $form[$this->getPluginId()][$this->getPluginId() . '_conf'] = EntityTreeWidget::getEntityTreeFieldStructure(
+      [],
+      'taxonomy_term',
+      '',
+      0,
+      Url::fromRoute('eic_content.entity_tree')->toString(),
+      Url::fromRoute('eic_content.entity_tree_search')->toString(),
+      Url::fromRoute('eic_content.entity_tree_children')->toString(),
+      $options
+    );
+    $form[$this->getPluginId()][$this->getPluginId() . '_conf']['#title'] = $this->t('Organisation types');
+    $form[$this->getPluginId()][$this->getPluginId() . '_conf']['#states'] = [
+      'visible' => [
+        ':input[name="' . $this->getPluginId() . '_status"]' => [
+          'checked' => TRUE,
         ],
       ],
-      '#weight' => $this->getWeight() + 1,
     ];
+    $form[$this->getPluginId()][$this->getPluginId() . '_conf']['#weight'] = $this->getWeight() + 1;
     return $form;
   }
 
@@ -68,8 +79,20 @@ class RestrictedOrganisationTypes extends CustomRestrictedVisibilityBase {
       $pluginForm[$this->getStatusKey()]['#default_value'] = 1;
       $conf_key = $this->getPluginId() . '_conf';
 
-      // Set the default values.
-      $pluginForm[$conf_key]['#default_value'] = $this->getEnabledOptions($options[$conf_key]);
+      $restricted_organisation_types = $options[$conf_key];
+
+      if (!$restricted_organisation_types) {
+        return $pluginForm;
+      }
+
+      $terms = [];
+      foreach ($restricted_organisation_types as $organisation_type) {
+        if ($term = Term::load($organisation_type['target_id'])) {
+          $terms[] = $term;
+          $pluginForm[$conf_key]['#default_value'][] = $term;
+        }
+      }
+      $pluginForm[$conf_key]['#attributes']['data-selected-terms'] = EntityTreeWidget::formatTaxonomyPreSelection($terms);
     }
     return $pluginForm;
   }
@@ -80,7 +103,8 @@ class RestrictedOrganisationTypes extends CustomRestrictedVisibilityBase {
   public function hasViewAccess(GroupInterface $entity, AccountInterface $account, GroupVisibilityRecordInterface $group_visibility_record) {
     $conf_key = $this->getPluginId() . '_conf';
     $options = $this->getOptionsForPlugin($group_visibility_record);
-    $restricted_organisation_types = $this->getEnabledOptions($options[$conf_key]);
+    $restricted_organisation_types = array_key_exists($conf_key, $options) ? $options[$conf_key] : '';
+    $restricted_organisation_types = array_column($restricted_organisation_types, 'target_id');
 
     // Search for a matching organisation the user belongs to.
     $user_organisation_types = \Drupal::service('eic_organisations.helper')->getUserOrganisationTypes($account);
@@ -106,33 +130,10 @@ class RestrictedOrganisationTypes extends CustomRestrictedVisibilityBase {
       return;
     }
     $conf_key = $this->getPluginId() . '_conf';
-    if (!empty($this->getEnabledOptions($form_state->getValue($conf_key)))) {
+    if (!empty($form_state->getValue($conf_key))) {
       return;
     }
     return $form_state->setError($element[$this->getPluginId() . '_conf'], $this->t('Please select at least 1 organisation type.'));
-  }
-
-  /**
-   * Returns the enabled options as an array of term IDs.
-   *
-   * @param array $value
-   *   The array as provided by the 'checkboxes' form element.
-   *
-   * @return array
-   *   Array of term IDs.
-   */
-  protected function getEnabledOptions(array $value) {
-    $result = [];
-
-    foreach ($value as $term_id => $status) {
-      // Status can be either 'O' for disabled options, and match the term ID
-      // for enabled options.
-      if ($term_id == $status) {
-        $result[] = $term_id;
-      }
-    }
-
-    return $result;
   }
 
 }
