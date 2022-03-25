@@ -197,29 +197,6 @@ function eic_community_preprocess_views_view(&$variables) {
 }
 
 /**
- * Implements hook_views_pre_render().
- */
-function eic_community_views_pre_render(ViewExecutable $view) {
-  $view_display = "{$view->id()}-{$view->current_display}";
-  switch ($view_display) {
-    case 'group_related_groups-block_related_groups':
-      // @todo Improve logic to hide entities which user doesn't have access
-      // to. The current implementation might be triggering duplicated access
-      // checkers which is not very optimal in terms of performance.
-      foreach ($view->result as $key => $row) {
-        /** @var \Drupal\group\Entity\GroupInterface $group */
-        foreach ($row->_relationship_entities as $group) {
-          if (!$group->access('view')) {
-            unset($view->result[$key]);
-          }
-        }
-      }
-      break;
-
-  }
-}
-
-/**
  * Executes a view and gets output as renderable array.
  *
  * @param string $view_id
