@@ -10,7 +10,6 @@ use Drupal\eic_overviews\GroupOverviewPages;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\views\Views;
 use Drupal\Core\Url;
-use Drupal\views\ViewExecutable;
 
 /**
  * Implements template_preprocess_views_view_field().
