@@ -53,6 +53,7 @@ function eic_community_preprocess_field(&$variables, $hook): void {
   $field_type = $variables['field_type'];
   switch ($field_type) {
     case 'text_long':
+    case 'text_with_summary':
       // Adds custom css classes to long text fields.
       $variables['attributes']['class'][] = str_replace('_', '-', "$field_type") . " ckeditor__content";
       foreach ($variables['items'] as $item) {
