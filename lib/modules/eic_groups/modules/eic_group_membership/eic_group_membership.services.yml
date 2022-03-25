@@ -1,0 +1,6 @@
+services:
+  eic_group_membership.transition_subscriber:
+    class: Drupal\eic_group_membership\EventSubscriber\MembershipTransitionSubscriber
+    arguments: [ '@eic_messages.message_bus' ]
+    tags:
+      - { name: event_subscriber }

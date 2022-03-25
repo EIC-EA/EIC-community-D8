@@ -1,0 +1,8 @@
+eic_statistics.get_node_statistics:
+  path: '/api/node/stats'
+  methods: [ 'GET' ]
+  defaults:
+    _controller: 'Drupal\eic_statistics\Controller\EntityStatisticsController::getStatistics'
+    _title: 'Get Statistics'
+  requirements:
+    _permission: 'access content'

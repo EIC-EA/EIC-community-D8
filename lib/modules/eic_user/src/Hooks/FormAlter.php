@@ -26,8 +26,6 @@ class FormAlter {
    * @param $form_id
    */
   public function alterBulkGroupInvitation(&$form, FormStateInterface $form_state, $form_id) {
-    $match_limit = 50;
-
     /** @var \Drupal\group\Entity\GroupInterface $group */
     $group = \Drupal::routeMatch()->getParameter('group');
 
@@ -51,6 +49,7 @@ class FormAlter {
     $url_search = Url::fromRoute('eic_search.solr_search', [
       'datasource' => json_encode(['user']),
       'source_class' => UserInvitesListSourceType::class,
+      'page' => 1
     ])->toString();
 
     $form['existing_users'] = EntityTreeWidget::getEntityTreeFieldStructure(
@@ -62,6 +61,7 @@ class FormAlter {
       $url_search,
       $url_search
     );
+    $form['existing_users']['#weight'] = -2;
 
     $form['existing_users']['#attached']['library'][] = 'eic_community/react-tree-field';
 
