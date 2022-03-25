@@ -158,8 +158,9 @@ class GroupMessageCreator implements ContainerInjectionInterface {
    * Sends out message notifications upon group deletion.
    */
   public function groupPredelete(array $entities) {
+    $power_users = $this->userHelper->getSitePowerUsers();
     foreach ($entities as $group) {
-      $send_to = $this->userHelper->getSitePowerUsers();
+      $send_to = $power_users;
       if ($group_owner = EICGroupsHelper::getGroupOwner($group)) {
         $send_to[] = $group_owner->id();
       }
