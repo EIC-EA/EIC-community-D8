@@ -23,6 +23,7 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
 use Drupal\eic_groups\Constants\NodeProperty;
 use Drupal\eic_groups\EICGroupsHelper;
+use Drupal\eic_groups\Entity\Group;
 use Drupal\eic_groups\GroupsModerationHelper;
 use Drupal\eic_groups\Hooks\CronOperations;
 use Drupal\eic_groups\Hooks\EntityOperations;
@@ -680,6 +681,7 @@ function eic_groups_entity_predelete(EntityInterface $entity) {
  * Implements hook_entity_type_alter().
  */
 function eic_groups_entity_type_alter(array &$entity_types) {
+  /** @var \Drupal\Core\Entity\EntityTypeInterface[] $entity_types */
   if (!isset($entity_types['group']) && !isset($entity_types['group_content'])) {
     return;
   }
@@ -687,6 +689,9 @@ function eic_groups_entity_type_alter(array &$entity_types) {
   // Add custom group membership validation constraint to the group_content
   // entity.
   $entity_types['group_content']->addConstraint('EICGroupMembership');
+
+  // Overrides entity group class.
+  $entity_types['group']->setClass(Group::class);
 }
 
 /**
