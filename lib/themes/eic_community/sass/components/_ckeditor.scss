@@ -1,4 +1,5 @@
 .ckeditor__content {
+  margin-bottom: $ecl-spacing-l;
 
   @include ecl-media-breakpoint-down('md') {
     & div {
