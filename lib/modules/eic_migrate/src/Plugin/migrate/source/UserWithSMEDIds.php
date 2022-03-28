@@ -25,6 +25,13 @@ use Drupal\user\Plugin\migrate\source\d7\User;
  */
 class UserWithSMEDIds extends User {
 
+  const MAP_USER_ROLES = [
+    3 => 'trusted_user',
+    4 => 'service_authentication',
+    5 => 'administrator',
+    6 => 'content_administrator',
+  ];
+
   /**
    * The SMED taxonomy reference fields.
    *
@@ -53,6 +60,20 @@ class UserWithSMEDIds extends User {
         $row->setSourceProperty($field, $this->getTaxonomyFieldValuesWithSmedIds($fieldValues));
       }
     }
+
+    $roles = [];
+    foreach ($row->getSourceProperty('roles') as $rid) {
+      $roles[] = self::MAP_USER_ROLES[$rid];
+    }
+
+    // Adds trusted_user role to all users.
+    if (empty($row->getSourceProperty('roles'))) {
+      $roles = [
+        'trusted_user',
+      ];
+    }
+
+    $row->setSourceProperty('roles', $roles);
 
     return $result;
   }
