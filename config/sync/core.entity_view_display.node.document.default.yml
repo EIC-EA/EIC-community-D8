@@ -9,6 +9,7 @@ dependencies:
     - field.field.node.document.field_document_type
     - field.field.node.document.field_image
     - field.field.node.document.field_language
+    - field.field.node.document.field_tags
     - field.field.node.document.field_vocab_geo
     - field.field.node.document.field_vocab_topics
     - node.type.document
@@ -64,6 +65,14 @@ content:
       link: true
     third_party_settings: {  }
     weight: 10
+    region: content
+  field_tags:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 14
     region: content
   field_vocab_geo:
     type: entity_reference_label
