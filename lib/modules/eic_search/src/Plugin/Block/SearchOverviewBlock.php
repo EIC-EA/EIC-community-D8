@@ -236,6 +236,9 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
         }, $admins),
       ];
     }
+    $build['#attached']['drupalSettings']['node_statistics_url'] = Url::fromRoute(
+      'eic_statistics.get_node_statistics'
+    )->toString();
 
     $build['#attached']['drupalSettings']['overview'] = [
       'is_group_owner' => array_key_exists(

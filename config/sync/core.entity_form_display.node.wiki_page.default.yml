@@ -6,12 +6,14 @@ dependencies:
     - field.field.node.wiki_page.field_body
     - field.field.node.wiki_page.field_related_downloads
     - field.field.node.wiki_page.field_related_media
+    - field.field.node.wiki_page.field_tags
     - field.field.node.wiki_page.field_vocab_geo
     - field.field.node.wiki_page.field_vocab_topics
     - node.type.wiki_page
     - workflows.workflow.default
   module:
     - content_moderation
+    - eic_content
     - media_library
     - path
     - publication_date
@@ -60,6 +62,24 @@ content:
     weight: 23
     region: content
     settings: {  }
+    third_party_settings: {  }
+  field_tags:
+    type: entity_tree
+    weight: 51
+    region: content
+    settings:
+      match_top_level_limit: '0'
+      can_create_tag: '1'
+      items_to_load: '25'
+      selected_terms_label: 'Your selected tags'
+      search_label: 'Select tags'
+      search_placeholder: Search
+      disable_top_choices: 0
+      load_all: 0
+      auto_select_parents: 0
+      ignore_current_user: 0
+      target_bundles: {  }
+      is_required: false
     third_party_settings: {  }
   field_vocab_geo:
     type: entity_reference_autocomplete
