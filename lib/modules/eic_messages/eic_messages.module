@@ -299,3 +299,12 @@ function eic_messages_group_flex_visibility_save(
       ->save();
   }
 }
+
+/**
+ * Implements hook_eic_groups_group_predelete().
+ */
+function eic_messages_eic_groups_group_predelete(array $entities) {
+  /** @var Drupal\eic_messages\Service\GroupMessageCreator $class */
+  $class = \Drupal::classResolver(GroupMessageCreator::class);
+  $class->groupPredelete($entities);
+}
