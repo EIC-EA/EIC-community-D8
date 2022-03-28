@@ -54,7 +54,7 @@ context('User - Group', () => {
 })
 
 function treeWidgetSelectUser(name) {
+  cy.wait(500)
   cy.get('.entity-tree .MuiAutocomplete-input').type(name)
-  cy.wait(200)
   cy.get('.MuiAutocomplete-popper').contains(name).click()
 }
