@@ -11,6 +11,8 @@ use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\eic_user\UserHelper;
 use Drupal\eic_user_login\Constants\SmedUserStatuses;
+use Drupal\eic_user_login\Hooks\FormAlter;
+use Drupal\user\UserInterface;
 
 /**
  * Implements hook_form_BASE_FORM_ID_alter().
@@ -20,7 +22,7 @@ function eic_user_login_form_user_form_alter(&$form, FormStateInterface $form_st
   if (isset($form['field_user_status']) && !UserHelper::isPowerUser(\Drupal::currentUser())) {
     $form['field_user_status']['#access'] = FALSE;
   }
-  
+
   // Remove access to field_updated_profile_by_service for non-power users.
   if (isset($form['field_updated_profile_by_service'])) {
     if (UserHelper::isPowerUser(\Drupal::currentUser())) {
@@ -115,4 +117,24 @@ function eic_user_login_entity_bundle_field_info(EntityTypeInterface $entity_typ
       'field_message_from_service' => $base_field_definitions['field_message_from_service']->setTargetBundle('user'),
     ];
   }
+}
+
+/**
+ * Implements hook_user_login().
+ */
+function eic_user_login_user_login(UserInterface $account) {
+  // Check if user profile is completed.
+  if (!\Drupal::service('eic_user.helper')->isUserProfileCompleted($account)) {
+    // Store a variable in session for later use.
+    $tempstore = \Drupal::service('tempstore.private')->get('eic_user_login');
+    $tempstore->set('is_profile_completed', FALSE);
+  }
+}
+
+/**
+ * Implements hook_form_BASE_FORM_ID_alter().
+ */
+function eic_user_login_form_profile_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  \Drupal::classResolver(FormAlter::class)
+    ->formProfileFormAlter($form, $form_state, $form_id);
 }

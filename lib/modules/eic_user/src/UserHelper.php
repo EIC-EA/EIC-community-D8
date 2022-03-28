@@ -243,6 +243,28 @@ class UserHelper {
   }
 
   /**
+   * Checks if a user has completed their profile.
+   *
+   * @param \Drupal\user\UserInterface $account
+   *   The user entity.
+   *
+   * @return bool
+   *   TRUE if profile is completed, FALSE otherwise.
+   */
+  public function isUserProfileCompleted(UserInterface $account) {
+    /** @var \Drupal\profile\Entity\ProfileInterface $profile */
+    if (!$profile = $this->getUserMemberProfile($account)) {
+      return FALSE;
+    }
+
+    if (!$profile->validate()) {
+      return FALSE;
+    }
+
+    return TRUE;
+  }
+
+  /**
    * Returns the number of users by topic of expertise.
    *
    * @param \Drupal\taxonomy\TermInterface $term

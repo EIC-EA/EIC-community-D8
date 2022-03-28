@@ -21,4 +21,11 @@ final class ProfileConst {
    */
   const MEMBER_PROFILE_TYPE_NAME = 'member';
 
+  /**
+   * Defines the route to the member profile edit page.
+   *
+   * @var string
+   */
+  const MEMBER_PROFILE_EDIT_ROUTE_NAME = 'profile.user_page.single';
+
 }
