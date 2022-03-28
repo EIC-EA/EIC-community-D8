@@ -257,7 +257,8 @@ class UserHelper {
       return FALSE;
     }
 
-    if (!$profile->validate()) {
+    $violations = $profile->validate();
+    if ($violations->count() > 0) {
       return FALSE;
     }
 
