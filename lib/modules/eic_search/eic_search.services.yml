@@ -147,3 +147,6 @@ services:
     class: Drupal\eic_search\Search\DocumentProcessor\ProcessorOrganisation
     tags:
       - { name: eic_search.document_processor, priority: 32 }
+  eic_search.solr_search_manager:
+    class: Drupal\eic_search\Search\DocumentProcessor\ProcessorOrganisation
+    arguments: ['@current_user', '@eic_search.sources_collector', '@entity_type.manager', '@group.membership_loader', '@oec_group_flex.group_visibility.storage']
