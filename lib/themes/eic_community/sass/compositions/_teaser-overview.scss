@@ -125,6 +125,7 @@
 
   &__options {
     order: -1;
+    margin-bottom: ecl-box-model('padding');
 
     @include ecl-media-breakpoint-up('sm') {
       padding: ecl-box-model('padding') 0;

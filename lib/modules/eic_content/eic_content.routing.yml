@@ -17,3 +17,11 @@ eic_content.entity_tree_search:
     _controller: '\Drupal\eic_content\Controller\EntityTreeController::search'
   requirements:
     _permission: 'access content'
+
+eic_content.entity_tree_create_term:
+  path: '/api/terms-tree/create-tag'
+  methods: [ POST ]
+  defaults:
+    _controller: '\Drupal\eic_content\Controller\EntityTreeController::createTaxonomyTerm'
+  requirements:
+    _permission: 'access content'

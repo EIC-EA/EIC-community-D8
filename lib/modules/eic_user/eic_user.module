@@ -173,6 +173,10 @@ function _eic_user_refresh_user_data(array $accounts) {
   $solr_helper->reIndexEntities($accounts);
 
   foreach ($accounts as $account) {
+    if (!$account instanceof \Drupal\Core\Session\AccountInterface) {
+      continue;
+    }
+    
     // Invalidate user cache tags after creating the profile entity.
     Cache::invalidateTags($account->getCacheTagsToInvalidate());
   }

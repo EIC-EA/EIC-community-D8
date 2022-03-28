@@ -221,7 +221,6 @@
 
   &__item-tag {
     display: block;
-    @include ecl-responsive-font('label');
 
     #{$node}--topics-filter & {
       text-decoration: none;

@@ -1,0 +1,23 @@
+{#
+/**
+ * @file
+ * Theme override to display a node event.
+ *
+ * @see ./themes/custom/eic_community/templates/content/node.html.twig
+ */
+#}
+{% extends "@eic_community/content/node.html.twig" %}
+{% set display_submitted = false %}
+{% set has_wrapper = false %}
+{% set extra_classes = 'ecl-teaser--as-card' %}
+
+{% block content %}
+    <div {{ attributes }}>
+        {{ title_prefix }}
+        {{ title_suffix }}
+        {% include "@theme/patterns/compositions/event/event.teaser.html.twig" with event_item|default({})|merge({
+            title: node.label|default(''),
+            path: url,
+        }) %}
+    </div>
+{% endblock %}

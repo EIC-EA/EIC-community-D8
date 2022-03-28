@@ -7,6 +7,7 @@ use Drupal\eic_flags\FlagType;
 use Drupal\eic_search\Service\SolrDocumentProcessor;
 use Drupal\flag\Event\FlagEvents;
 use Drupal\flag\Event\FlaggingEvent;
+use Drupal\flag\Event\UnflaggingEvent;
 use Drupal\flag\FlaggingInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -35,6 +36,7 @@ class FlagEventSubscriber implements EventSubscriberInterface {
    */
   public static function getSubscribedEvents() {
     $events[FlagEvents::ENTITY_FLAGGED] = ['onFlag', 50];
+    $events[FlagEvents::ENTITY_UNFLAGGED] = ['flagUnFlag', 50];
     return $events;
   }
 
@@ -45,9 +47,25 @@ class FlagEventSubscriber implements EventSubscriberInterface {
    *   The flagging event.
    */
   public function onFlag(FlaggingEvent $event) {
-    /** @var \Drupal\flag\FlaggingInterface $flagging */
-    $flagging = $event->getFlagging();
+    $this->invalidateDependencies($event->getFlagging());
+  }
 
+  /**
+   * React to unflagging event.
+   *
+   * @param \Drupal\flag\Event\UnflaggingEvent $event
+   */
+  public function flagUnFlag(UnflaggingEvent $event) {
+    $flaggings = $event->getFlaggings();
+    $this->invalidateDependencies(reset($flaggings));
+  }
+
+  /**
+   * @param \Drupal\flag\FlaggingInterface $flagging
+   *
+   * @throws \Drupal\search_api\SearchApiException
+   */
+  private function invalidateDependencies(FlaggingInterface $flagging) {
     // Some custom variables need to be updated in Solr, so we trigger the
     // re-index of the parent entity.
     if ($this->isReindexTargetedFlag($flagging)) {
@@ -56,13 +74,12 @@ class FlagEventSubscriber implements EventSubscriberInterface {
       Cache::invalidateTags($parent_entity->getCacheTags());
       $this->solrDocumentProcessor->reIndexEntities([$parent_entity]);
     }
-
   }
 
   /**
    * Checks if event relates to flag requiring a re-index of the host entity.
    *
-   * @param Drupal\flag\FlaggingInterface $flagging
+   * @param FlaggingInterface $flagging
    *   The flagging object.
    *
    * @return bool

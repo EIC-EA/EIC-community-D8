@@ -23,6 +23,7 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
 use Drupal\eic_groups\Constants\NodeProperty;
 use Drupal\eic_groups\EICGroupsHelper;
+use Drupal\eic_groups\Entity\Group;
 use Drupal\eic_groups\GroupsModerationHelper;
 use Drupal\eic_groups\Hooks\CronOperations;
 use Drupal\eic_groups\Hooks\EntityOperations;
@@ -30,12 +31,13 @@ use Drupal\eic_groups\Hooks\FormOperations;
 use Drupal\eic_groups\Hooks\GroupTokens;
 use Drupal\eic_groups\Hooks\Pathauto;
 use Drupal\eic_groups\Hooks\Preprocess;
+use Drupal\eic_overviews\GlobalOverviewPages;
 use Drupal\eic_user\UserHelper;
 use Drupal\flag\FlagInterface;
 use Drupal\group\Access\GroupAccessResult;
 use Drupal\group\Entity\GroupContent;
 use Drupal\pathauto\PathautoGeneratorInterface;
-use Drupal\eic_overviews\GlobalOverviewPages;
+use Drupal\views\ViewExecutable;
 
 /**
  * Implements hook_theme().
@@ -586,14 +588,8 @@ function eic_groups_entity_operation_alter(array &$operations, EntityInterface $
     return;
   }
 
-  $url_options = [
-    'query' => [
-      'destination' => \Drupal::requestStack()->getCurrentRequest()->getRequestUri(),
-    ],
-  ];
-
   // Add publish group operation.
-  $publish_url = Url::fromRoute('eic_groups.group.publish.confirm_form', ['group' => $entity->id()], $url_options);
+  $publish_url = Url::fromRoute('eic_groups.group.publish.confirm_form', ['group' => $entity->id()]);
   if ($publish_url->access()) {
     $operations['publish'] = [
       'title' => t('Publish'),
@@ -686,6 +682,7 @@ function eic_groups_entity_predelete(EntityInterface $entity) {
  * Implements hook_entity_type_alter().
  */
 function eic_groups_entity_type_alter(array &$entity_types) {
+  /** @var \Drupal\Core\Entity\EntityTypeInterface[] $entity_types */
   if (!isset($entity_types['group']) && !isset($entity_types['group_content'])) {
     return;
   }
@@ -693,6 +690,9 @@ function eic_groups_entity_type_alter(array &$entity_types) {
   // Add custom group membership validation constraint to the group_content
   // entity.
   $entity_types['group_content']->addConstraint('EICGroupMembership');
+
+  // Overrides entity group class.
+  $entity_types['group']->setClass(Group::class);
 }
 
 /**
@@ -838,4 +838,27 @@ function eic_groups_overview_page_access(EntityInterface $entity, $operation, Ac
   }
 
   return $access;
+}
+
+/**
+ * Implements hook_views_pre_render().
+ */
+function eic_groups_views_pre_render(ViewExecutable $view) {
+  $view_display = "{$view->id()}-{$view->current_display}";
+  switch ($view_display) {
+    case 'group_related_groups-block_related_groups':
+      // @todo Improve logic to hide entities which user doesn't have access
+      // to. The current implementation might be triggering duplicated access
+      // checkers which is not very optimal in terms of performance.
+      foreach ($view->result as $key => $row) {
+        /** @var \Drupal\group\Entity\GroupInterface $group */
+        foreach ($row->_relationship_entities as $group) {
+          if (!$group->access('view')) {
+            unset($view->result[$key]);
+          }
+        }
+      }
+      break;
+
+  }
 }

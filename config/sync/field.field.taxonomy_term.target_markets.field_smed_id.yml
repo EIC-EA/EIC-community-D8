@@ -1,0 +1,19 @@
+uuid: 2c249ff2-9429-4ced-bc85-adeec1d9b790
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.taxonomy_term.field_smed_id
+    - taxonomy.vocabulary.target_markets
+id: taxonomy_term.target_markets.field_smed_id
+field_name: field_smed_id
+entity_type: taxonomy_term
+bundle: target_markets
+label: 'SME Dashboard ID'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string
