@@ -156,7 +156,9 @@ function eic_user_profile_update(EntityInterface $entity) {
 function eic_user_profile_delete(EntityInterface $entity) {
   if ($entity instanceof EntityOwnerInterface) {
     $account = $entity->getOwner();
-    _eic_user_refresh_user_data([$account]);
+    if ($account) {
+      _eic_user_refresh_user_data([$account]);
+    }
   }
 }
 
