@@ -9,16 +9,24 @@ use Drupal\user\UserInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
- * Class MembershipTransitionSubscriber
+ * Handles membership request events.
  *
  * @package Drupal\eic_group_membership\EventSubscriber
  */
 class MembershipTransitionSubscriber implements EventSubscriberInterface {
 
+  /**
+   * The message bus service.
+   *
+   * @var \Drupal\eic_messages\Service\MessageBusInterface
+   */
   private MessageBusInterface $messageBus;
 
   /**
+   * Constructs a new MembershipTransitionSubscriber object.
+   *
    * @param \Drupal\eic_messages\Service\MessageBusInterface $message_bus
+   *   The message bus service.
    */
   public function __construct(MessageBusInterface $message_bus) {
     $this->messageBus = $message_bus;
@@ -30,11 +38,15 @@ class MembershipTransitionSubscriber implements EventSubscriberInterface {
   public static function getSubscribedEvents() {
     return [
       'group_membership_request.approve.post_transition' => ['onMembershipApprove'],
+      'group_membership_request.reject.post_transition' => ['onMembershipReject'],
     ];
   }
 
   /**
-   * @param WorkflowTransitionEvent $event
+   * Acts on membership approve.
+   *
+   * @param \Drupal\state_machine\Event\WorkflowTransitionEvent $event
+   *   The event.
    */
   public function onMembershipApprove(WorkflowTransitionEvent $event) {
     /** @var \Drupal\group\Entity\GroupContentInterface $membership */
@@ -67,6 +79,26 @@ class MembershipTransitionSubscriber implements EventSubscriberInterface {
         'field_related_user' => $user->id(),
       ]);
     }
+  }
+
+  /**
+   * Acts on membership reject.
+   *
+   * @param \Drupal\state_machine\Event\WorkflowTransitionEvent $event
+   *   The event.
+   */
+  public function onMembershipReject(WorkflowTransitionEvent $event) {
+    /** @var \Drupal\group\Entity\GroupContentInterface $membership */
+    $membership = $event->getEntity();
+    $group = $membership->getGroup();
+    $member = $membership->getEntity();
+
+    $this->messageBus->dispatch([
+      'template' => 'notify_membership_request_rej',
+      'uid' => $member->id(),
+      'field_group_ref' => $group->id(),
+      'field_event_executing_user' => $member->id(),
+    ]);
   }
 
 }

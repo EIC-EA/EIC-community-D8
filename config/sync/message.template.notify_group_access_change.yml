@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - filter.format.full_html
     - filter.format.plain_text
   module:
     - eic_messages
@@ -14,14 +15,14 @@ label: 'NOTIFY :: MT08 :: Group access change'
 description: ''
 text:
   -
-    value: 'MT08 :: Group access change'
+    value: 'Visibility settings of [message:field_group_ref:entity:title] has been modified to [message:field_group_visibility:value]'
     format: plain_text
   -
-    value: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
-    format: plain_text
+    value: "<p>Dear member,<br />\r\n<br />\r\nThe [message:field_group_ref:entity:type-name] visibility settings have been updated to [message:field_group_visibility:value].<br />\r\n<br />\r\nPlease consult the [message:field_group_ref:entity:type-name] <a href=\"[message:field_group_ref:entity:url]/about#featured-content-section-admin\">about page</a>&nbsp;for further details.<br />\r\n<br />\r\nPlease contact the [message:field_group_ref:entity:type-name] owner: [message:field_group_ref:entity:author:display-name] in case of questions.<br />\r\n<br />\r\n[message:field_group_ref:entity:author:display-name]<br />\r\n[message:field_group_ref:entity:type-name] Administrator - [message:field_group_ref:entity:title].</p>\r\n"
+    format: full_html
 settings:
   'token options':
-    clear: false
+    clear: true
     'token replace': true
   purge_override: false
   purge_methods: {  }

@@ -1,15 +1,14 @@
-uuid: ab0dc017-8a1e-45d1-8d0c-ce3205813e5b
+uuid: 937f4b22-2307-48f8-a3ee-ca66bcaa913d
 langcode: en
 status: true
 dependencies:
   config:
-    - field.field.message.notify_group_access_change.field_event_executing_user
-    - field.field.message.notify_group_access_change.field_group_ref
-    - field.field.message.notify_group_access_change.field_group_visibility
-    - message.template.notify_group_access_change
-id: message.notify_group_access_change.default
+    - field.field.message.notify_group_re_published.field_event_executing_user
+    - field.field.message.notify_group_re_published.field_group_ref
+    - message.template.notify_group_re_published
+id: message.notify_group_re_published.default
 targetEntityType: message
-bundle: notify_group_access_change
+bundle: notify_group_re_published
 mode: default
 content:
   field_event_executing_user:
@@ -18,7 +17,7 @@ content:
     settings:
       link: true
     third_party_settings: {  }
-    weight: 2
+    weight: 1
     region: content
   field_group_ref:
     type: entity_reference_label
@@ -26,15 +25,7 @@ content:
     settings:
       link: true
     third_party_settings: {  }
-    weight: 1
-    region: content
-  field_group_visibility:
-    type: string
-    label: above
-    settings:
-      link_to_entity: false
-    third_party_settings: {  }
-    weight: 3
+    weight: 2
     region: content
   partial_0:
     settings: {  }

@@ -1,0 +1,34 @@
+uuid: bbd025e2-ecf3-4247-83c4-dac1d431ac91
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.message.notify_group_re_published.field_event_executing_user
+    - field.field.message.notify_group_re_published.field_group_ref
+    - message.template.notify_group_re_published
+id: message.notify_group_re_published.default
+targetEntityType: message
+bundle: notify_group_re_published
+mode: default
+content:
+  field_event_executing_user:
+    type: entity_reference_autocomplete
+    weight: 0
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_group_ref:
+    type: entity_reference_autocomplete
+    weight: 1
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+hidden: {  }
