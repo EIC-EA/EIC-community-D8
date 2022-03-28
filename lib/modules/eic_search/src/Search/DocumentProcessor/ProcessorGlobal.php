@@ -4,6 +4,7 @@ namespace Drupal\eic_search\Search\DocumentProcessor;
 
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\File\FileUrlGeneratorInterface;
+use Drupal\eic_content\Constants\DefaultContentModerationStates;
 use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_user\UserHelper;
 use Drupal\file\Entity\File;
@@ -62,6 +63,7 @@ class ProcessorGlobal extends DocumentProcessor {
     $datasource = $fields['ss_search_api_datasource'];
     $changed = 0;
     $language = t('English', [], ['context' => 'eic_search'])->render();
+    $moderation_state = DefaultContentModerationStates::PUBLISHED_STATE;
 
     // Set by default parent group to TRUE and method processGroupContentData will update it.
     $this->addOrUpdateDocumentField($document, 'its_global_group_parent_published', $fields, 1);
@@ -77,6 +79,7 @@ class ProcessorGlobal extends DocumentProcessor {
         $date = $fields['ds_content_created'];
         $changed = $fields['ds_changed'];
         $status = $fields['bs_content_status'];
+        $moderation_state = $fields['ss_content_moderation_state'];
         $fullname = array_key_exists('ss_content_first_name', $fields) && array_key_exists(
           'ss_content_last_name',
           $fields
@@ -118,6 +121,7 @@ class ProcessorGlobal extends DocumentProcessor {
         $language = t('English', [], ['context' => 'eic_search'])->render();
         $user_url = '';
         $group_id = $fields['its_group_id_integer'] ?? -1;
+        $moderation_state = $fields['ss_group_moderation_state'];
         $this->addOrUpdateDocumentField(
           $document,
           'its_group_id_integer',
@@ -216,6 +220,7 @@ class ProcessorGlobal extends DocumentProcessor {
     $document->addField('ss_global_user_url', $user_url);
     $this->addOrUpdateDocumentField($document, 'sm_content_field_vocab_topics_string', $fields, $topics);
     $this->addOrUpdateDocumentField($document, 'sm_content_field_vocab_geo_string', $fields, $geo);
+    $this->addOrUpdateDocumentField($document, 'ss_global_moderation_state', $fields, $moderation_state);
 
     if (!array_key_exists('bs_content_is_private', $fields)) {
       $document->addField('bs_content_is_private', FALSE);

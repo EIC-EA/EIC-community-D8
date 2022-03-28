@@ -46,7 +46,7 @@ class DraftSourceType extends SourceType {
    */
   public function getAvailableFacets(): array {
     return [
-      'ss_global_content_type' => $this->t('Content type', [], ['context' => 'eic_search']),
+      'ss_global_content_type' => $this->t('Type', [], ['context' => 'eic_search']),
       'ss_group_user_fullname' => $this->t('Full name', [], ['context' => 'eic_search']),
       'sm_content_field_vocab_topics_string' => $this->t('Topic', [], ['context' => 'eic_search']),
       'sm_content_field_vocab_geo_string' => $this->t('Regions & countries', [], ['context' => 'eic_search']),
@@ -179,7 +179,7 @@ class DraftSourceType extends SourceType {
    */
   public function extraPrefilter(): array {
     return [
-      'ss_content_moderation_state' => DefaultContentModerationStates::DRAFT_STATE,
+      'ss_global_moderation_state' => DefaultContentModerationStates::DRAFT_STATE,
     ];
   }
 

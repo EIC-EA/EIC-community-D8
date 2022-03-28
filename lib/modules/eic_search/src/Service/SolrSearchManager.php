@@ -168,10 +168,11 @@ class SolrSearchManager {
 
     foreach ($search_fields_id as $search_field_id) {
       $query_fields[] = "$search_field_id:$search_query_value";
-      $this->rawQuery .= empty($this->rawQuery) ?
-        '(' . implode(' OR ', $query_fields) . ')' :
-        ' AND (' . implode(' OR ', $query_fields) . ')';
     }
+
+    $this->rawQuery .= empty($this->rawQuery) ?
+      '(' . implode(' OR ', $query_fields) . ')' :
+      ' AND (' . implode(' OR ', $query_fields) . ')';
   }
 
   /**
@@ -301,8 +302,9 @@ class SolrSearchManager {
    * @param string|NULL $current_group
    */
   public function buildGroupQuery(?string $current_group) {
-    if (!$current_group)
+    if (!$current_group) {
       return;
+    }
 
     if (
       !$this->source->excludingCurrentGroup() &&
@@ -339,8 +341,9 @@ class SolrSearchManager {
    * @param int|null $topic_term_id
    */
   public function buildPrefilterTopic(?int $topic_term_id) {
-    if (!$topic_term_id)
+    if (!$topic_term_id) {
       return;
+    }
 
     // Handle current term ID sub-query.
     $term_id_fields = $this->source->getPrefilteredTopicsFieldId();
@@ -397,6 +400,7 @@ class SolrSearchManager {
     $this->generateQueryPublishedState();
     $this->generatePrefilterGroupsMembership();
     $this->generatePrefilterContentTypes();
+    $this->generateExtraPrefilter();
 
     $this->solrQuery->addParam('q', $this->rawQuery);
     $this->solrQuery->addParam('fq', $this->rawFieldQuery);
@@ -683,6 +687,25 @@ class SolrSearchManager {
 
     $allowed_content_type = implode(' OR ', $content_types);
     $this->rawFieldQuery .= ' AND (' . SourceTypeInterface::SOLR_FIELD_CONTENT_TYPE_ID . ':(' . $allowed_content_type . '))';
+  }
+
+  /**
+   * Prefilter extra prefilter from source.
+   */
+  private function generateExtraPrefilter() {
+    $extra_filters = $this->source->extraPrefilter();
+
+    if (empty($extra_filters)) {
+      return;
+    }
+
+    $query_extra_filter = [];
+
+    foreach ($extra_filters as $field => $value) {
+      $query_extra_filter[] = "$field:($value)";
+    }
+    $query_extra_filter = implode(' AND ', $query_extra_filter);
+    $this->rawFieldQuery .= " AND ($query_extra_filter)";
   }
 
   /**
