@@ -79,6 +79,10 @@ services:
     class: Drupal\eic_search\Search\Sources\Profile\MyEventsSourceType
     tags:
       - { name: eic_search.source }
+  eic_search.source_my_profile_drafts:
+    class: Drupal\eic_search\Search\Sources\Profile\DraftSourceType
+    tags:
+      - { name: eic_search.source }
   eic_search.solr_document_processor:
     class: Drupal\eic_search\Service\SolrDocumentProcessor
     arguments: ['@search_api.post_request_indexing', '@queue', '@plugin.manager.queue_worker', '@entity_type.manager']
