@@ -156,6 +156,12 @@ class GroupMembershipCommands extends DrushCommands {
               if ($flagging->getFlaggable()->access('view', $user)) {
                 continue;
               }
+              // Anonymous users shouldn't be able to flag in the first place.
+              // Therefore, we delete the flagging.
+              if ($user->isAnonymous()) {
+                $flagging->delete();
+                continue;
+              }
               $this->flagService->unflag($flagging->getFlag(), $flagging->getFlaggable(), $user);
             }
           }
@@ -222,8 +228,15 @@ class GroupMembershipCommands extends DrushCommands {
           // view it.
           foreach ($flag_types as $flag_type) {
             $flaggings = $this->eicFlagHelper->getGroupFollowFlaggingsByNonMembers($group, $flag_type);
+
             foreach ($flaggings as $flagging) {
               if ($flagging->getFlaggable()->access('view', $flagging->getOwner())) {
+                continue;
+              }
+              // Anonymous users shouldn't be able to flag in the first place.
+              // Therefore, we delete the flagging.
+              if ($flagging->getOwner()->isAnonymous()) {
+                $flagging->delete();
                 continue;
               }
               $this->flagService->unflag($flagging->getFlag(), $flagging->getFlaggable(), $flagging->getOwner());

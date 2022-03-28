@@ -269,8 +269,13 @@ class FlagHelper {
       }
       $query->condition('f.uid', $member_uids, 'NOT IN');
     }
-    $query->join('group_content_field_data', 'gc', 'gc.entity_id = f.entity_id');
-    $query->condition('gc.gid', $group->id());
+    if ($flag_type === FlagType::FOLLOW_CONTENT) {
+      $query->join('group_content_field_data', 'gc', 'gc.entity_id = f.entity_id');
+      $query->condition('gc.gid', $group->id());
+    }
+    else {
+      $query->condition('f.entity_id', $group->id());
+    }
     $results = $query->execute()->fetchAssoc();
     $flaggings = [];
 
