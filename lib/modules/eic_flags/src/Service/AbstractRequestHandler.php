@@ -24,6 +24,7 @@ use Drupal\group\Entity\GroupInterface;
 use Drupal\group\GroupMembership;
 use Drupal\message\MessageInterface;
 use Drupal\user\Entity\User;
+use Drupal\user\UserInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
@@ -424,8 +425,9 @@ abstract class AbstractRequestHandler implements HandlerInterface {
       return AccessResult::forbidden();
     }
 
-    // For groups, the user must be GM/GO/GA or SA/SCM.
+    // For groups, the user must be GO/GA or SA/SCM.
     if ($entity instanceof GroupInterface) {
+      $author = $entity->getOwner();
       /** @var \Drupal\group\Entity\GroupInterface $entity */
       $user_roles = $account->getRoles(TRUE);
       $allowed_global_roles = [
@@ -440,11 +442,11 @@ abstract class AbstractRequestHandler implements HandlerInterface {
       $allowed_group_roles = [
         $entity->bundle() . '-' . EICGroupsHelper::GROUP_TYPE_OWNER_ROLE,
         $entity->bundle() . '-' . EICGroupsHelper::GROUP_TYPE_ADMINISTRATOR_ROLE,
-        $entity->bundle() . '-' . EICGroupsHelper::GROUP_TYPE_MEMBER_ROLE,
       ];
 
       if (empty(array_intersect($user_roles, $allowed_global_roles))
-        && empty(array_intersect($user_group_roles, $allowed_group_roles))) {
+        && empty(array_intersect($user_group_roles, $allowed_group_roles))
+        && !($author instanceof UserInterface && $author->id() === $account->id())) {
         return AccessResult::forbidden();
       }
     }
