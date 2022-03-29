@@ -3,19 +3,9 @@
 namespace Drupal\eic_search\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
-use Drupal\eic_groups\Constants\GroupVisibilityType;
-use Drupal\eic_search\Plugin\search_api\processor\GroupAccessContent;
-use Drupal\eic_search\Search\Sources\GroupSourceType;
 use Drupal\eic_search\Search\Sources\SourceTypeInterface;
 use Drupal\eic_search\Service\SolrSearchManager;
-use Drupal\eic_topics\Constants\Topics;
-use Drupal\eic_user\UserHelper;
-use Drupal\group\Entity\Group;
-use Drupal\group\GroupMembership;
-use Drupal\taxonomy\Entity\Term;
-use Drupal\user\Entity\User;
-use Solarium\Component\ComponentAwareQueryInterface;
-use Solarium\QueryType\Select\Query\Query;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -37,6 +27,17 @@ class SolrSearchController extends ControllerBase {
   }
 
   /**
+   * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
+   *
+   * @return \Drupal\eic_search\Controller\SolrSearchController
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('eic_search.solr_search_manager')
+    );
+  }
+
+  /**
    * @param \Symfony\Component\HttpFoundation\Request $request
    *
    * @return \Symfony\Component\HttpFoundation\Response
@@ -47,7 +48,6 @@ class SolrSearchController extends ControllerBase {
    * @throws \Drupal\search_api_solr\SearchApiSolrException
    */
   public function search(Request $request) {
-
     $source_class = $request->query->get('source_class');
     $search_value = $request->query->get('search_value', '');
     $current_group = $request->query->get('current_group');
@@ -59,11 +59,18 @@ class SolrSearchController extends ControllerBase {
     // timestamp value, if nothing set "*" (the default value on solr).
     $from_date = $request->query->get('from_date', '*');
     $end_date = $request->query->get('end_date', '*');
+    $page = $request->query->get('page');
+    $offset = $request->query->get('offset', SourceTypeInterface::READ_MORE_NUMBER_TO_LOAD);
 
     $search = $this->searchManager->init($source_class, $facets_options);
-    $search->
+    $search->buildSortFacets($facets_value, $sort_value);
+    $search->buildDateQuery($from_date, $end_date);
+    $search->buildGroupQuery($current_group);
+    $search->buildPrefilterTopic($topic_term_id);
+    $search->buildQueryPager($page, $offset);
+    $search->buildSearchQuery($search_value);
 
-    return new Response(, Response::HTTP_OK, [
+    return new Response($search->search(), Response::HTTP_OK, [
       'Content-Type' => 'application/json',
       'Accept' => 'application/json',
     ]);
