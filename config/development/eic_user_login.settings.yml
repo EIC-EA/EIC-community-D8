@@ -1,6 +1,6 @@
 check_sync_user: true
+allow_user_register: true
 endpoint_url: ''
 basic_auth_username: ''
 basic_auth_password: ''
 api_key: ''
-allow_user_register: 1
