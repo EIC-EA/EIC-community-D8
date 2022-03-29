@@ -79,6 +79,8 @@ services:
     #  2. any change that the developer applies to Cypress files on the host
     #     machine immediately takes effect within the e2e container (no docker
     #     rebuild required).
+    env_file:
+      - .env
 
   mailhog:
     image: mailhog/mailhog
