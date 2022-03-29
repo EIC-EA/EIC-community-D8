@@ -179,7 +179,7 @@ class DraftSourceType extends SourceType {
    */
   public function extraPrefilter(): array {
     return [
-      'ss_global_moderation_state' => DefaultContentModerationStates::DRAFT_STATE,
+      'ss_global_last_moderation_state' => DefaultContentModerationStates::DRAFT_STATE,
     ];
   }
 

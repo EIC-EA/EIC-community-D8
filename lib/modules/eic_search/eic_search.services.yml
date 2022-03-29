@@ -92,7 +92,7 @@ services:
       - { name: service_collector, tag: eic_search.document_processor, call: addProcessor }
   eic_search.document_processor_global:
     class: Drupal\eic_search\Search\DocumentProcessor\ProcessorGlobal
-    arguments: ['@eic_statistics.statistics.storage.node.decorator', '@file_url_generator']
+    arguments: ['@eic_statistics.statistics.storage.node.decorator', '@file_url_generator', '@entity_type.manager']
     tags:
       - { name: eic_search.document_processor }
   eic_search.document_processor_group_content:

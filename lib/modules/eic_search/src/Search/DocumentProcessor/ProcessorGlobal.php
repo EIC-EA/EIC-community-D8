@@ -3,6 +3,8 @@
 namespace Drupal\eic_search\Search\DocumentProcessor;
 
 use Drupal\Component\Utility\Unicode;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\File\FileUrlGeneratorInterface;
 use Drupal\eic_content\Constants\DefaultContentModerationStates;
 use Drupal\eic_groups\EICGroupsHelper;
@@ -10,7 +12,9 @@ use Drupal\eic_user\UserHelper;
 use Drupal\file\Entity\File;
 use Drupal\group\Entity\Group;
 use Drupal\image\Entity\ImageStyle;
+use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
+use Drupal\node\NodeInterface;
 use Drupal\node\NodeTypeInterface;
 use Drupal\paragraphs\Entity\Paragraph;
 use Drupal\statistics\NodeStatisticsDatabaseStorage;
@@ -36,15 +40,23 @@ class ProcessorGlobal extends DocumentProcessor {
   private $urlGenerator;
 
   /**
+   * @var \Drupal\Core\Entity\EntityTypeManager
+   */
+  private $em;
+
+  /**
    * @param \Drupal\statistics\NodeStatisticsDatabaseStorage $nodeStatisticsDatabaseStorage
    * @param FileUrlGeneratorInterface $urlGenerator
+   * @param EntityTypeManager $em
    */
   public function __construct(
     NodeStatisticsDatabaseStorage $nodeStatisticsDatabaseStorage,
-    FileUrlGeneratorInterface $urlGenerator
+    FileUrlGeneratorInterface $urlGenerator,
+    EntityTypeManager $em
   ) {
     $this->nodeStatisticsDatabaseStorage = $nodeStatisticsDatabaseStorage;
     $this->urlGenerator = $urlGenerator;
+    $this->em = $em;
   }
 
   /**
@@ -64,6 +76,7 @@ class ProcessorGlobal extends DocumentProcessor {
     $changed = 0;
     $language = t('English', [], ['context' => 'eic_search'])->render();
     $moderation_state = DefaultContentModerationStates::PUBLISHED_STATE;
+    $last_moderation_state = DefaultContentModerationStates::PUBLISHED_STATE;
 
     // Set by default parent group to TRUE and method processGroupContentData will update it.
     $this->addOrUpdateDocumentField($document, 'its_global_group_parent_published', $fields, 1);
@@ -100,6 +113,10 @@ class ProcessorGlobal extends DocumentProcessor {
           $user = User::load($fields['its_content_uid']);
           $user_url = $user instanceof UserInterface ? $user->toUrl()
             ->toString() : '';
+        }
+        $node = Node::load($fields['its_content_nid']);
+        if ($node instanceof NodeInterface) {
+          $last_moderation_state = $this->getLastRevisionModerationState($node);
         }
         break;
       case 'entity:group':
@@ -221,6 +238,12 @@ class ProcessorGlobal extends DocumentProcessor {
     $this->addOrUpdateDocumentField($document, 'sm_content_field_vocab_topics_string', $fields, $topics);
     $this->addOrUpdateDocumentField($document, 'sm_content_field_vocab_geo_string', $fields, $geo);
     $this->addOrUpdateDocumentField($document, 'ss_global_moderation_state', $fields, $moderation_state);
+    $this->addOrUpdateDocumentField(
+      $document,
+      'ss_global_last_moderation_state',
+      $fields,
+      $last_moderation_state
+    );
 
     if (!array_key_exists('bs_content_is_private', $fields)) {
       $document->addField('bs_content_is_private', FALSE);
@@ -251,6 +274,28 @@ class ProcessorGlobal extends DocumentProcessor {
         $views ? $views->getTotalCount() : 0
       );
     }
+  }
+
+  /**
+   * Return the last moderation state of an entity.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *  The entity.
+   * @return string
+   *   The moderation state.
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   */
+  private function getLastRevisionModerationState(EntityInterface $entity): string {
+    $entity_type = $entity->getEntityTypeId();
+    $revision_ids = \Drupal::entityTypeManager()->getStorage($entity_type)->revisionIds($entity);
+    $last_revision_id = end($revision_ids);
+
+    $last_revision = $entity->getRevisionId() !== $last_revision_id ?
+      $this->em->getStorage($entity_type)->loadRevision($last_revision_id) :
+      $this->em->getStorage($entity_type)->loadRevision($entity->getRevisionId());
+
+    return $last_revision->get('moderation_state')->value;
   }
 
 }
