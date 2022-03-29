@@ -232,12 +232,13 @@ class FlagHelper {
     $query->condition('f.uid', $account->id());
     $query->join('group_content_field_data', 'gc', 'gc.entity_id = f.entity_id');
     $query->condition('gc.gid', $group->id());
-    $results = $query->execute()->fetchAssoc();
+    $query->condition('gc.type', $group->bundle() . '-group_node-%', 'LIKE');
+    $results = $query->execute()->fetchAllAssoc('id');
     $flaggings = [];
 
     if (!empty($results)) {
       // Load the flaggings.
-      $flaggings = $this->entityTypeManager->getStorage('flagging')->loadMultiple($results);
+      $flaggings = $this->entityTypeManager->getStorage('flagging')->loadMultiple(array_keys($results));
     }
 
     return $flaggings;
@@ -272,16 +273,17 @@ class FlagHelper {
     if ($flag_type === FlagType::FOLLOW_CONTENT) {
       $query->join('group_content_field_data', 'gc', 'gc.entity_id = f.entity_id');
       $query->condition('gc.gid', $group->id());
+      $query->condition('gc.type', $group->bundle() . '-group_node-%', 'LIKE');
     }
     else {
       $query->condition('f.entity_id', $group->id());
     }
-    $results = $query->execute()->fetchAssoc();
+    $results = $query->execute()->fetchAllAssoc('id');
     $flaggings = [];
 
     if (!empty($results)) {
       // Load the flaggings.
-      $flaggings = $this->entityTypeManager->getStorage('flagging')->loadMultiple($results);
+      $flaggings = $this->entityTypeManager->getStorage('flagging')->loadMultiple(array_keys($results));
     }
 
     return $flaggings;
