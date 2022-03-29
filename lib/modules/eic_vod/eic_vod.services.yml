@@ -1,0 +1,6 @@
+services:
+  eic_vod.video_wrapper:
+    class: Drupal\eic_vod\StreamWrapper\VODStream
+    arguments: [ '@http_client' ]
+    tags:
+      - { name: stream_wrapper, scheme: vod }
