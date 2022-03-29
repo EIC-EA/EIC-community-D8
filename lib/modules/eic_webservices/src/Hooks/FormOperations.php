@@ -77,6 +77,16 @@ class FormOperations implements ContainerInjectionInterface {
   /**
    * Implements hook_form_BASE_FORM_ID_alter().
    */
+  public function formUserFormAlter(&$form, FormStateInterface $form_state, $form_id) {
+    // Hide the SMED field if user is not allowed.
+    if (isset($form[$this->wsHelper->getSmedIdFieldName()]) && !UserHelper::isPowerUser($this->currentUser)) {
+      $form[$this->wsHelper->getSmedIdFieldName()]['#access'] = FALSE;
+    }
+  }
+
+  /**
+   * Implements hook_form_BASE_FORM_ID_alter().
+   */
   public function formGroupFormAlter(&$form, FormStateInterface $form_state, $form_id) {
     // Get the entity.
     /** @var \Drupal\Core\Entity\EntityInterface $entity */
