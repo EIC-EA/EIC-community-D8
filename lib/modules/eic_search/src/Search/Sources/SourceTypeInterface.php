@@ -219,4 +219,11 @@ interface SourceTypeInterface {
    * @return array
    */
   public function extraPrefilter(): array;
+
+  /**
+   * Ignoring the publish state prefilter.
+   *
+   * @return bool
+   */
+  public function ignorePublishedState(): bool;
 }

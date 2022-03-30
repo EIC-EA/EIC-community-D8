@@ -399,6 +399,7 @@ class SolrSearchManager {
     $this->generateQueryPrivateContent();
     $this->generateQueryPublishedState();
     $this->generatePrefilterGroupsMembership();
+    $this->generatePrefilterByCurrentUser();
     $this->generatePrefilterContentTypes();
     $this->generateExtraPrefilter();
 
@@ -509,7 +510,7 @@ class SolrSearchManager {
    * to show draft/pending for group owner.
    */
   private function generateQueryPublishedState() {
-    if (!$this->source instanceof SourceTypeInterface) {
+    if (!$this->source instanceof SourceTypeInterface || $this->source->ignorePublishedState()) {
       return;
     }
 
@@ -653,10 +654,21 @@ class SolrSearchManager {
   }
 
   /**
+   * Get only items from current user.
+   */
+  private function generatePrefilterByCurrentUser() {
+    if (!$this->source->prefilterByCurrentUser()) {
+      return;
+    }
+
+    $this->rawFieldQuery .= ' AND (' . $this->source->getAuthorFieldId() . ':(' . $this->currentUser->id() . '))';
+  }
+
+  /**
    * Filter items by groups where user is member of.
    */
   private function generatePrefilterGroupsMembership() {
-    if (!$this->source->prefilterByCurrentUser()) {
+    if (!$this->source->prefilterByGroupsMembership()) {
       return;
     }
 

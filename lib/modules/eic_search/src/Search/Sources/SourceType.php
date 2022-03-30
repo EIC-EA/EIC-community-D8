@@ -208,4 +208,11 @@ abstract class SourceType implements SourceTypeInterface {
     return [];
   }
 
+  /**
+   * @inheritDoc
+   */
+  public function ignorePublishedState(): bool {
+    return FALSE;
+  }
+
 }
