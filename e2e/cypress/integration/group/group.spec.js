@@ -1,18 +1,12 @@
+import {login, preserveCookie} from '../../helper/login';
+
 context('User - Group', () => {
   before(() => {
-    cy.visit('/user/login')
-    cy.get('#edit-name').type('cypress')
-    cy.get('#edit-pass').type('cypress')
-    cy.get('.user-login-form').submit()
-    cy.location('pathname').should('contains', '/community/user/')
+    login('cypress', 'cypress');
   })
 
   beforeEach(() => {
-    Cypress.Cookies.defaults({
-      preserve: (cookie) => {
-        return true;
-      }
-    })
+    preserveCookie();
   })
 
   specify('Go to groups and click to Cypress public group', () => {

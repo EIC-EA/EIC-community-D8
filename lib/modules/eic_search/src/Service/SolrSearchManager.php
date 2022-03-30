@@ -400,6 +400,7 @@ class SolrSearchManager {
     $this->generateQueryPublishedState();
     $this->generatePrefilterGroupsMembership();
     $this->generatePrefilterContentTypes();
+    $this->generateExtraPrefilter();
 
     $this->solrQuery->addParam('q', $this->rawQuery);
     $this->solrQuery->addParam('fq', $this->rawFieldQuery);
@@ -686,6 +687,25 @@ class SolrSearchManager {
 
     $allowed_content_type = implode(' OR ', $content_types);
     $this->rawFieldQuery .= ' AND (' . SourceTypeInterface::SOLR_FIELD_CONTENT_TYPE_ID . ':(' . $allowed_content_type . '))';
+  }
+
+  /**
+   * Prefilter extra prefilter from source.
+   */
+  private function generateExtraPrefilter() {
+    $extra_filters = $this->source->extraPrefilter();
+
+    if (empty($extra_filters)) {
+      return;
+    }
+
+    $query_extra_filter = [];
+
+    foreach ($extra_filters as $field => $value) {
+      $query_extra_filter[] = "$field:($value)";
+    }
+    $query_extra_filter = implode(' AND ', $query_extra_filter);
+    $this->rawFieldQuery .= " AND ($query_extra_filter)";
   }
 
   /**
