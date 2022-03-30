@@ -15,11 +15,14 @@ settings:
         -
           name: Formatting
           items:
+            - Format
             - Bold
             - Italic
             - Underline
+            - Strike
             - Superscript
             - Subscript
+            - HorizontalRule
         -
           name: Lists
           items:
@@ -42,9 +45,12 @@ settings:
         -
           name: Tools
           items:
+            - Copy
+            - Paste
             - PasteText
             - PasteFromWord
             - RemoveFormat
+            - Cut
             - Undo
             - Redo
             - Maximize
