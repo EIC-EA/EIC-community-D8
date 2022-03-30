@@ -1,0 +1,27 @@
+uuid: e46cc027-406f-4dd8-967a-bc7ddf669d21
+langcode: en
+status: true
+dependencies:
+  config:
+    - filter.format.full_html
+  module:
+    - eic_messages
+third_party_settings:
+  eic_messages:
+    message_template_type: notification
+template: notify_group_re_published
+label: 'NOTIFY :: MT31 :: Group Re-published'
+description: 'Notifies the group owner that a group has changed its status.'
+text:
+  -
+    value: "<p>[message:field_group_ref:entity:title] was published once again</p>\r\n"
+    format: full_html
+  -
+    value: "<p>Dear [message:author:display-name],</p>\r\n\r\n<p><a href=\"[message:field_group_ref:entity:url]\">[message:field_group_ref:entity:title]</a> was published once again.</p>\r\n\r\n<p>[message:field_event_executing_user:entity:display-name] updated the status of this [message:field_group_ref:entity:type-name] to Published.</p>\r\n\r\n<p>You can consult <a href=\"[site:url]\">this help section</a> to find out more about [message:field_group_ref:entity:type-name] statuses and what they imply.</p>\r\n\r\n<p>The European Innovation Council team</p>\r\n"
+    format: full_html
+settings:
+  'token options':
+    clear: false
+    'token replace': true
+  purge_override: false
+  purge_methods: {  }

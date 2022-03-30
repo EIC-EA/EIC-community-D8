@@ -1,18 +1,12 @@
+import {login, preserveCookie} from '../../helper/login';
+
 context('User - Group', () => {
   before(() => {
-    cy.visit('/user/login')
-    cy.get('#edit-name').type('cypress')
-    cy.get('#edit-pass').type('cypress')
-    cy.get('.user-login-form').submit()
-    cy.location('pathname').should('contains', '/community/user/')
+    login('cypress', 'cypress');
   })
 
   beforeEach(() => {
-    Cypress.Cookies.defaults({
-      preserve: (cookie) => {
-        return true;
-      }
-    })
+    preserveCookie();
   })
 
   specify('Go to groups and click to Cypress public group', () => {
@@ -54,7 +48,7 @@ context('User - Group', () => {
 })
 
 function treeWidgetSelectUser(name) {
+  cy.wait(500)
   cy.get('.entity-tree .MuiAutocomplete-input').type(name)
-  cy.wait(200)
   cy.get('.MuiAutocomplete-popper').contains(name).click()
 }

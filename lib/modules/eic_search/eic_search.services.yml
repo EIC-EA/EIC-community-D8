@@ -79,6 +79,10 @@ services:
     class: Drupal\eic_search\Search\Sources\Profile\MyEventsSourceType
     tags:
       - { name: eic_search.source }
+  eic_search.source_my_profile_drafts:
+    class: Drupal\eic_search\Search\Sources\Profile\DraftSourceType
+    tags:
+      - { name: eic_search.source }
   eic_search.solr_document_processor:
     class: Drupal\eic_search\Service\SolrDocumentProcessor
     arguments: ['@search_api.post_request_indexing', '@queue', '@plugin.manager.queue_worker', '@entity_type.manager']
@@ -88,7 +92,7 @@ services:
       - { name: service_collector, tag: eic_search.document_processor, call: addProcessor }
   eic_search.document_processor_global:
     class: Drupal\eic_search\Search\DocumentProcessor\ProcessorGlobal
-    arguments: ['@eic_statistics.statistics.storage.node.decorator', '@file_url_generator']
+    arguments: ['@eic_statistics.statistics.storage.node.decorator', '@file_url_generator', '@entity_type.manager']
     tags:
       - { name: eic_search.document_processor }
   eic_search.document_processor_group_content:
@@ -143,3 +147,6 @@ services:
     class: Drupal\eic_search\Search\DocumentProcessor\ProcessorOrganisation
     tags:
       - { name: eic_search.document_processor, priority: 32 }
+  eic_search.solr_search_manager:
+    class: Drupal\eic_search\Service\SolrSearchManager
+    arguments: ['@current_user', '@eic_search.sources_collector', '@entity_type.manager', '@group.membership_loader', '@oec_group_flex.group_visibility.storage']

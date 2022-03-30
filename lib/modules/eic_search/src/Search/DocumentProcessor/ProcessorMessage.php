@@ -6,6 +6,7 @@ use Drupal\comment\CommentInterface;
 use Drupal\comment\Entity\Comment;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\eic_comments\CommentsHelper;
+use Drupal\eic_content\Constants\DefaultContentModerationStates;
 use Drupal\eic_media_statistics\EntityFileDownloadCount;
 use Drupal\flag\FlaggingInterface;
 use Drupal\flag\FlagServiceInterface;
@@ -84,6 +85,7 @@ class ProcessorMessage extends DocumentProcessor {
   public function process(Document &$document, array $fields, array $items = []): void {
     $node_ref = isset($fields['its_message_node_ref_id']) ? $fields['its_message_node_ref_id'] : NULL;
     $comment_ref = isset($fields['its_message_comment_ref_id']) ? $fields['its_message_comment_ref_id'] : NULL;
+    $moderation_state = DefaultContentModerationStates::PUBLISHED_STATE;
 
     if (!$node_ref && !$comment_ref) {
       return;
@@ -142,6 +144,13 @@ class ProcessorMessage extends DocumentProcessor {
       'ss_activity_type',
       $fields,
       $map_type
+    );
+
+    $this->addOrUpdateDocumentField(
+      $document,
+      'ss_message_moderation_state',
+      $fields,
+      $moderation_state
     );
 
     $message = Message::load($fields['its_message_id']);

@@ -30,6 +30,7 @@ dependencies:
     - taxonomy.vocabulary.languages
     - taxonomy.vocabulary.organisation_types
     - taxonomy.vocabulary.services_and_products
+    - taxonomy.vocabulary.tags
     - taxonomy.vocabulary.target_markets
     - taxonomy.vocabulary.topics
     - taxonomy.vocabulary.user_types
@@ -115,6 +116,7 @@ permissions:
   - 'create terms in languages'
   - 'create terms in organisation_types'
   - 'create terms in services_and_products'
+  - 'create terms in tags'
   - 'create terms in target_markets'
   - 'create terms in topics'
   - 'create terms in user_types'

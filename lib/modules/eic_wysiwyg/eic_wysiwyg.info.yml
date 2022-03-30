@@ -1,0 +1,7 @@
+name: EIC WYSIWYG
+type: module
+description: Provides WYSIWYG related functionnality.
+package: European Innovation Council
+core: 8.x
+php: 7.4
+core_version_requirement: ^8 || ^9
