@@ -3,8 +3,11 @@
 namespace Drupal\eic_vod\StreamWrapper;
 
 use Drupal\Core\StreamWrapper\StreamWrapperInterface;
+use Drupal\Core\StreamWrapper\StreamWrapperManager;
+use Drupal\Core\StreamWrapper\StreamWrapperManagerInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use GuzzleHttp\ClientInterface;
+use GuzzleHttp\Exception\GuzzleException;
 use Psr\Http\Message\StreamInterface;
 
 /**
@@ -16,7 +19,9 @@ class VODStream implements StreamWrapperInterface {
 
   use StringTranslationTrait;
   use RemoteStreamWrapperTrait;
-  
+
+  const FALLBACK_SCHEME = 'private';
+
   /**
    * Instance uri referenced as "<scheme>://key".
    */
@@ -26,11 +31,10 @@ class VODStream implements StreamWrapperInterface {
 
   protected ClientInterface $httpClient;
 
-  /**
-   * @param \GuzzleHttp\ClientInterface $http_client
-   */
-  public function __construct(ClientInterface $http_client) {
-    $this->httpClient = $http_client;
+  protected StreamWrapperManagerInterface $streamWrapperManager;
+
+  public function __construct() {
+    $this->streamWrapperManager = \Drupal::service('stream_wrapper_manager');
   }
 
   /**
@@ -76,7 +80,14 @@ class VODStream implements StreamWrapperInterface {
   }
 
   public function stream_open($path, $mode, $options, &$opened_path) {
-    // TODO: Implement stream_open() method.
+    $this->uri = $path;
+    try {
+      $url = $this->getExternalUrl();
+    } catch (\Exception $exception) {
+      return FALSE;
+    }
+
+    return $url ?? FALSE;
   }
 
   public function stream_read($count) {
@@ -92,7 +103,39 @@ class VODStream implements StreamWrapperInterface {
   }
 
   public function stream_stat() {
-    // TODO: Implement stream_stat() method.
+    // @see https://github.com/guzzle/psr7/blob/master/src/StreamWrapper.php
+    $stat = [
+      'dev' => 0,               // device number
+      'ino' => 0,               // inode number
+      'mode' => 0100000 | 0444, // inode protection (regular file + read only)
+      'nlink' => 0,             // number of links
+      'uid' => 0,               // userid of owner
+      'gid' => 0,               // groupid of owner
+      'rdev' => 0,              // device type, if inode device *
+      'size' => 0,              // size in bytes
+      'atime' => 0,             // time of last access (Unix timestamp)
+      'mtime' => 0,             // time of last modification (Unix timestamp)
+      'ctime' => 0,             // time of last inode change (Unix timestamp)
+      'blksize' => 0,           // blocksize of filesystem IO
+      'blocks' => 0,            // number of blocks allocated
+    ];
+
+    if (!$this->uri) {
+      return $stat;
+    }
+
+    $presigned_download_url = $this->getHttpClient()->getPresignedUrl('download', self::getTarget($this->uri));
+    if (!$presigned_download_url) {
+      return $stat;
+    }
+
+    try {
+      $response = $this->getHttpClient()->request('GET', $presigned_download_url);
+    } catch (GuzzleException $exception) {
+
+    }
+
+    return $stat;
   }
 
   public function stream_tell() {
@@ -107,8 +150,20 @@ class VODStream implements StreamWrapperInterface {
     // TODO: Implement unlink() method.
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function url_stat($path, $flags) {
-    // TODO: Implement url_stat() method.
+    if ($uri = self::getTarget($path)) {
+      $this->uri = $uri;
+    }
+
+    if ($flags & STREAM_URL_STAT_QUIET) {
+      return @$this->stream_stat();
+    }
+    else {
+      return $this->stream_stat();
+    }
   }
 
   /**
@@ -126,15 +181,63 @@ class VODStream implements StreamWrapperInterface {
   }
 
   public function getExternalUrl() {
-    // TODO: Implement getExternalUrl() method.
+    return $this->getHttpClient()->getPresignedUrl('download', self::getTarget($this->uri));
   }
 
   public function realpath() {
     // TODO: Implement realpath() method.
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function mkdir($path, $mode, $options) {
+    $fallback_wrapper = $this->streamWrapperManager->getViaScheme(self::FALLBACK_SCHEME);
+    $fallback_wrapper->mkdir($path, $mode, $options);
+
+    return TRUE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function dirname($uri = NULL) {
-    // TODO: Implement dirname() method.
+    if (!isset($uri)) {
+      $uri = $this->uri;
+    }
+
+    $scheme = StreamWrapperManager::getScheme($uri);
+    $dirname = dirname($this->streamWrapperManager::getTarget($uri));
+    if ($dirname == '.') {
+      $dirname = '';
+    }
+
+    return "$scheme://$dirname";
+  }
+
+  /**
+   * @param string|null $path
+   *
+   * @return mixed|string|null
+   */
+  public static function getTarget(string $path) {
+    [, $uri] = explode('://', $path);
+    if (preg_match('/^(\/)?([^\/\.]*\/)+?(.+\..+)$/', $uri)) {
+      return $uri;
+    }
+
+    return NULL;
+  }
+
+  /**
+   * @return \Drupal\eic_vod\Service\VODClient
+   */
+  private function getHttpClient() {
+    if (!isset($this->httpClient)) {
+      $this->httpClient = \Drupal::service('eic_vod.client');
+    }
+
+    return $this->httpClient;
   }
 
 }

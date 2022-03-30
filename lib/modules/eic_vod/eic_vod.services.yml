@@ -4,3 +4,11 @@ services:
     arguments: [ '@http_client' ]
     tags:
       - { name: stream_wrapper, scheme: vod }
+  eic_vod.file_service:
+    class: Drupal\eic_vod\Service\VODFileService
+    decorates: file_system
+    decoration_priority: 10
+    arguments: [ '@eic_vod.file_service.inner', '@stream_wrapper_manager', '@logger.channel.file', '@eic_vod.client' ]
+  eic_vod.client:
+    class: Drupal\eic_vod\Service\VODClient
+    arguments: [ '@http_client' , '@settings', '@messenger', '@file.mime_type.guesser' ]

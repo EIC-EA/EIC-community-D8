@@ -45,14 +45,6 @@ trait RemoteStreamWrapperTrait {
   /**
    * {@inheritdoc}
    */
-  public function mkdir($path, $mode, $options) {
-    $this->throw_warning();
-    return FALSE;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function rename($path_from, $path_to) {
     $this->throw_warning();
     return FALSE;
