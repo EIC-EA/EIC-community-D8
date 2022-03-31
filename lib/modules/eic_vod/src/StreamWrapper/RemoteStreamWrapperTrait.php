@@ -69,7 +69,16 @@ trait RemoteStreamWrapperTrait {
   /**
    * {@inheritdoc}
    */
+  public function stream_set_option($option, $arg1, $arg2) {
+    $this->throw_warning();
+    return FALSE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function stream_flush() {
+    $this->throw_warning();
     return FALSE;
   }
 
@@ -90,7 +99,7 @@ trait RemoteStreamWrapperTrait {
   }
 
   private function throw_warning() {
-    trigger_error(sprintf('%s not supported for remote stream wrappers', __FUNCTION__), E_USER_WARNING);
+    trigger_error(sprintf('%s not supported by the VOD stream wrapper', __FUNCTION__), E_USER_WARNING);
   }
 
 }

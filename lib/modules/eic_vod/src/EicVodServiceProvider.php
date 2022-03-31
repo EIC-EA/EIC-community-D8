@@ -14,10 +14,7 @@ use Drupal\Core\Site\Settings;
 class EicVodServiceProvider extends ServiceProviderBase {
 
   /**
-   * Modifies existing service definitions.
-   *
-   * @param \Drupal\Core\DependencyInjection\ContainerBuilder $container
-   *   The ContainerBuilder whose service definitions can be altered.
+   * {@inheritdoc}
    */
   public function alter(ContainerBuilder $container) {
     $eic_vod_settings = Settings::get('eic_vod');

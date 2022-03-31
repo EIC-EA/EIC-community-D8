@@ -6,8 +6,7 @@ use Drupal\Core\StreamWrapper\StreamWrapperInterface;
 use Drupal\Core\StreamWrapper\StreamWrapperManager;
 use Drupal\Core\StreamWrapper\StreamWrapperManagerInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
-use GuzzleHttp\ClientInterface;
-use GuzzleHttp\Exception\GuzzleException;
+use Drupal\eic_vod\Service\VODClient;
 use Psr\Http\Message\StreamInterface;
 
 /**
@@ -29,7 +28,7 @@ class VODStream implements StreamWrapperInterface {
 
   protected StreamInterface $stream;
 
-  protected ClientInterface $httpClient;
+  protected VODClient $httpClient;
 
   protected StreamWrapperManagerInterface $streamWrapperManager;
 
@@ -62,7 +61,14 @@ class VODStream implements StreamWrapperInterface {
    * {@inheritdoc}
    */
   public function stream_close() {
-    // Nothing to do when closing an HTTP stream.
+    $this->stream->close();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function stream_cast($cast_as) {
+    return $this->stream ?? FALSE;
   }
 
   /**
@@ -76,78 +82,124 @@ class VODStream implements StreamWrapperInterface {
    * {@inheritdoc}
    */
   public function stream_lock($operation) {
-    return TRUE;
+    // flock isn't supported.
+    return FALSE;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function stream_tell() {
+    $this->stream->tell();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function stream_write($data) {
+    $this->stream->write($data);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function stream_open($path, $mode, $options, &$opened_path) {
-    $this->uri = $path;
-    try {
-      $url = $this->getExternalUrl();
-    } catch (\Exception $exception) {
+    if (!in_array($mode, ['r', 'rb', 'rt'])) {
+      if ($options & STREAM_REPORT_ERRORS) {
+        trigger_error('stream_open() write modes not supported for HTTP stream wrappers', E_USER_WARNING);
+      }
       return FALSE;
     }
 
-    return $url ?? FALSE;
+    try {
+      $this->setUri($path);
+      $url = $this->getExternalUrl();
+      $response = \Drupal::httpClient()->request('GET', $url, ['stream' => TRUE]);
+      $this->stream = $response->getBody();
+    } catch (\Exception $e) {
+      if ($options & STREAM_REPORT_ERRORS) {
+        watchdog_exception('eic_vod', $e);
+      }
+      return FALSE;
+    }
+
+    if ($options & STREAM_USE_PATH) {
+      $opened_path = $path;
+    }
+
+    return TRUE;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function stream_read($count) {
-    // TODO: Implement stream_read() method.
+    return $this->stream->read($count);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function stream_seek($offset, $whence = SEEK_SET) {
-    // TODO: Implement stream_seek() method.
+    $this->stream->seek($offset, $whence);
   }
 
-  public function stream_set_option($option, $arg1, $arg2) {
-    // TODO: Implement stream_set_option() method.
-  }
-
+  /**
+   * {@inheritdoc}
+   */
   public function stream_stat() {
     // @see https://github.com/guzzle/psr7/blob/master/src/StreamWrapper.php
     $stat = [
-      'dev' => 0,               // device number
-      'ino' => 0,               // inode number
-      'mode' => 0100000 | 0444, // inode protection (regular file + read only)
-      'nlink' => 0,             // number of links
-      'uid' => 0,               // userid of owner
-      'gid' => 0,               // groupid of owner
-      'rdev' => 0,              // device type, if inode device *
-      'size' => 0,              // size in bytes
-      'atime' => 0,             // time of last access (Unix timestamp)
-      'mtime' => 0,             // time of last modification (Unix timestamp)
-      'ctime' => 0,             // time of last inode change (Unix timestamp)
-      'blksize' => 0,           // blocksize of filesystem IO
-      'blocks' => 0,            // number of blocks allocated
+      'dev' => 0,
+      'ino' => 0,
+      'mode' => 0100000 | 0444,
+      'nlink' => 0,
+      'uid' => 0,
+      'gid' => 0,
+      'rdev' => 0,
+      'size' => 0,
+      'atime' => 0,
+      'mtime' => 0,
+      'ctime' => 0,
+      'blksize' => 0,
+      'blocks' => 0,
     ];
 
     if (!$this->uri) {
       return $stat;
     }
 
-    $presigned_download_url = $this->getHttpClient()->getPresignedUrl('download', self::getTarget($this->uri));
+    $presigned_download_url = $this->getHttpClient()->getPresignedUrl('download', $this->uri);
     if (!$presigned_download_url) {
       return $stat;
     }
 
     try {
-      $response = $this->getHttpClient()->request('GET', $presigned_download_url);
-    } catch (GuzzleException $exception) {
+      $response = \Drupal::httpClient()->request('GET', $presigned_download_url);
 
+      if ($response->hasHeader('Content-Length')) {
+        $stat['size'] = (int) $response->getHeaderLine('Content-Length');
+      }
+      elseif ($size = $response->getBody()->getSize()) {
+        $stat['size'] = $size;
+      }
+      if ($response->hasHeader('Last-Modified')) {
+        if ($mtime = strtotime($response->getHeaderLine('Last-Modified'))) {
+          $stat['mtime'] = $mtime;
+        }
+      }
+    } catch (\Exception $exception) {
+      trigger_error(sprintf('Could not retrieve the file %s', $this->uri));
     }
 
     return $stat;
   }
 
-  public function stream_tell() {
-    // TODO: Implement stream_tell() method.
-  }
-
-  public function stream_write($data) {
-    // TODO: Implement stream_write() method.
-  }
-
+  /**
+   * {@inheritdoc}
+   */
   public function unlink($path) {
-    // TODO: Implement unlink() method.
+    // TODO: No delete endpoint provided for VODs for the moment.
   }
 
   /**
@@ -180,12 +232,18 @@ class VODStream implements StreamWrapperInterface {
     return $this->uri;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function getExternalUrl() {
     return $this->getHttpClient()->getPresignedUrl('download', self::getTarget($this->uri));
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function realpath() {
-    // TODO: Implement realpath() method.
+    return FALSE;
   }
 
   /**
@@ -221,8 +279,8 @@ class VODStream implements StreamWrapperInterface {
    * @return mixed|string|null
    */
   public static function getTarget(string $path) {
-    [, $uri] = explode('://', $path);
-    if (preg_match('/^(\/)?([^\/\.]*\/)+?(.+\..+)$/', $uri)) {
+    $uri = StreamWrapperManager::getTarget($path);
+    if (preg_match('/^(\/)?([^\/\.]*\/?)+?(.+\..+)$/', $uri)) {
       return $uri;
     }
 

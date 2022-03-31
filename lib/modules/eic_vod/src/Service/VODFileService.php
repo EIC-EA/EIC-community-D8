@@ -2,7 +2,9 @@
 
 namespace Drupal\eic_vod\Service;
 
+use Drupal\Core\File\Exception\DirectoryNotReadyException;
 use Drupal\Core\File\FileSystemInterface;
+use Drupal\Core\StreamWrapper\StreamWrapperManager;
 use Drupal\Core\StreamWrapper\StreamWrapperManagerInterface;
 use Drupal\eic_vod\StreamWrapper\VODStream;
 use Psr\Log\LoggerInterface;
@@ -122,8 +124,30 @@ class VODFileService implements FileSystemInterface {
   public function move($source, $destination, $replace = self::EXISTS_RENAME) {
     $wrapper = $this->streamWrapperManager->getViaUri($destination);
     if (is_a($wrapper, VODStream::class)) {
-      $destination = $destination . DIRECTORY_SEPARATOR . basename($source);
+      $this->prepareDestination($source, $destination, $replace);
       $this->vodClient->putVideo($source, $destination);
+
+      return $destination;
+    }
+    else {
+      return $this->decorated->move($source, $destination, $replace);
+    }
+  }
+
+  /**
+   * @param string $source
+   * @param string $destination
+   * @param $replace
+   *
+   * @return void
+   */
+  private function prepareDestination(string $source, string &$destination, $replace) {
+    $destination = StreamWrapperManager::getScheme($destination) . '://' . basename($source);
+    if (!VODStream::getTarget($destination)) {
+      $this->logger->error("The source '%original_source' is an invalid file format.", [
+        '%original_source' => $source,
+      ]);
+      throw new DirectoryNotReadyException("The specified file '$source' could not be copied because it is not a valid file.");
     }
   }
 
@@ -181,10 +205,16 @@ class VODFileService implements FileSystemInterface {
     }
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function copy($source, $destination, $replace = self::EXISTS_RENAME) {
     $wrapper = $this->streamWrapperManager->getViaUri($destination);
     if (is_a($wrapper, VODStream::class)) {
-      // send file
+      $this->prepareDestination($source, $destination, $replace);
+      $this->vodClient->putVideo($source, $destination);
+
+      return $destination;
     }
     else {
       return $this->decorated->copy($source, $destination, $replace);
