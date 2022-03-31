@@ -337,6 +337,10 @@
     box-sizing: border-box;
     object-fit: cover;
 
+    #{$node}-overview #{$node}-overview__item--organisation & {
+      object-fit: contain;
+    }
+
     @include ecl-media-breakpoint-down('xs') {
       position: absolute;
       top: 0;
