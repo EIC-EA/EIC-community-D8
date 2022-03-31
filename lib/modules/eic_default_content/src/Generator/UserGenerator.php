@@ -41,6 +41,13 @@ class UserGenerator extends CoreGenerator {
         ],
       ],
       [
+        'name' => 'cypress',
+        'pass' => 'cypress',
+        'roles' => [
+          'trusted_user',
+        ],
+      ],
+      [
         'name' => 'ungrouped_user',
         'pass' => 'secret',
         'roles' => [

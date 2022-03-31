@@ -21,7 +21,7 @@
     <div class="ecl-notification-banner__messages">
       {% for message in messages %}
         <div class="ecl-notification-banner__message">
-          {{ message }}
+          {{ message | raw }}
         </div>
       {% endfor %}
     </div>

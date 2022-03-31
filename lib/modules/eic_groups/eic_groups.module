@@ -682,6 +682,17 @@ function eic_groups_entity_predelete(EntityInterface $entity) {
  * Implements hook_entity_type_alter().
  */
 function eic_groups_entity_type_alter(array &$entity_types) {
+  _eic_groups_entity_type_alter_group($entity_types);
+  _eic_groups_entity_type_alter_node_content($entity_types);
+}
+
+/**
+ * Add group membership constraint to group content entity.
+ *
+ * @var array $entity_types
+ *   Array of entity types.
+ */
+function _eic_groups_entity_type_alter_group(array &$entity_types) {
   /** @var \Drupal\Core\Entity\EntityTypeInterface[] $entity_types */
   if (!isset($entity_types['group']) && !isset($entity_types['group_content'])) {
     return;
@@ -696,15 +707,91 @@ function eic_groups_entity_type_alter(array &$entity_types) {
 }
 
 /**
+ * Add group membership constraint to group content entity.
+ *
+ * @var array $entity_types
+ *   Array of entity types.
+ */
+function _eic_groups_entity_type_alter_node_content(array &$entity_types) {
+  /** @var \Drupal\Core\Entity\EntityTypeInterface[] $entity_types */
+  if (!isset($entity_types['node'])) {
+    return;
+  }
+
+  $handlers = $entity_types['node']->get('handlers');
+  $handlers['form']['default'] = 'Drupal\eic_groups\Form\AlterNodeContentForm';
+  $handlers['form']['edit'] = 'Drupal\eic_groups\Form\AlterNodeContentForm';
+  $entity_types['node']->set('handlers', $handlers);
+}
+
+/**
  * Implements hook_entity_presave().
  */
 function eic_groups_entity_presave(EntityInterface $entity) {
+  _eic_groups_entity_presave__group($entity);
+}
+
+/**
+ * Update alias on update group.
+ *
+ * @param \Drupal\Core\Entity\EntityInterface $entity
+ */
+function _eic_groups_entity_presave__group(EntityInterface $entity) {
   if ($entity->getEntityTypeId() !== 'group') {
     return;
   }
 
   if ($entity->isNew()) {
     return;
+  }
+
+  // If group alias is set to manual and has changed, we add the group into a
+  // queue so that all group content url aliases can be updated at a later
+  // stage with cron.
+  if (!$entity->get('path')->pathauto) {
+    if ($entity->original->get('path')->alias !== $entity->get('path')->alias) {
+      /** @var \Drupal\eic_groups\Hooks\Pathauto $class */
+      $class = \Drupal::classResolver(Pathauto::class);
+      $class->createGroupUrlAliasUpdateQueueItem($entity);
+    }
+  }
+}
+
+/**
+ * Implements hook_entity_insert().
+ */
+function eic_groups_entity_insert(EntityInterface $entity) {
+  _eic_groups_group_content_insert_update($entity, TRUE);
+}
+
+function eic_groups_entity_update(EntityInterface $entity) {
+  _eic_groups_group_content_insert_update($entity, FALSE);
+}
+
+function _eic_groups_group_content_insert_update(EntityInterface $entity, $is_create_form = FALSE) {
+  if ($entity->getEntityTypeId() !== 'group_content') {
+    return;
+  }
+
+  $link = $entity->toLink()->toString();
+  $type = $entity->getEntity()->getType();
+  if ($is_create_form) {
+    \Drupal::messenger()->addStatus(
+      t(
+        '@type: %link has been created.',
+        ['@type' => $type, '%link' => $link],
+        ['context' => 'eic_groups']
+      )
+    );
+  }
+  else {
+    \Drupal::messenger()->addStatus(
+      t(
+        '@type: %link has been updated.',
+        ['@type' => $type, '%link' => $link],
+        ['context' => 'eic_groups']
+      )
+    );
   }
 
   // If group alias is set to manual and has changed, we add the group into a
