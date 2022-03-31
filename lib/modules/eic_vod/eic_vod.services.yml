@@ -7,7 +7,7 @@ services:
   eic_vod.file_service:
     class: Drupal\eic_vod\Service\VODFileService
     decorates: file_system
-    decoration_priority: 10
+    decoration_priority: 1
     arguments: [ '@eic_vod.file_service.inner', '@stream_wrapper_manager', '@logger.channel.file', '@eic_vod.client' ]
   eic_vod.client:
     class: Drupal\eic_vod\Service\VODClient
