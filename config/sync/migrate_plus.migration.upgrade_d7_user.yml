@@ -60,6 +60,7 @@ process:
         target_id:
           - plugin: migration_lookup
             source: fid
+            no_stub: true
             migration:
               - upgrade_d7_file_image_to_media
   field_smed_id: c4m_user_dashboard_id
