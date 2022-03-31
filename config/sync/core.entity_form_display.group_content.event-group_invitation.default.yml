@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.group_content.event-group_invitation.field_invitation_counter
     - field.field.group_content.event-group_invitation.group_roles
     - field.field.group_content.event-group_invitation.invitation_status
     - field.field.group_content.event-group_invitation.invitee_mail
@@ -12,6 +13,13 @@ targetEntityType: group_content
 bundle: event-group_invitation
 mode: default
 content:
+  field_invitation_counter:
+    type: number
+    weight: 32
+    region: content
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
   group_roles:
     type: options_buttons
     weight: 31
