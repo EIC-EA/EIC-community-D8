@@ -15,6 +15,7 @@ module:
   book: 0
   breakpoint: 0
   ckeditor: 0
+  ckeditor_iframe: 0
   comment: 0
   components: 0
   config: 0
@@ -93,6 +94,7 @@ module:
   extra_field: 0
   facets: 0
   facets_summary: 0
+  fakeobjects: 0
   field: 0
   field_group: 0
   field_ui: 0

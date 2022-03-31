@@ -8,6 +8,8 @@
     "require": {
         "php": ">=7.4",
         "ext-json": "*",
+        "ckeditor/fakeobjects": "^4.18",
+        "ckeditor/iframe": "^4.18",
         "composer/composer": "1.10.23 as 2.0.13",
         "composer/installers": "^1.9",
         "composer/semver": "1.7.2 as 3.2.4",
@@ -17,6 +19,7 @@
         "drupal/antibot": "^1.5",
         "drupal/block_content_permissions": "^1.10",
         "drupal/block_field": "^1.0@RC",
+        "drupal/ckeditor_iframe": "^2.1",
         "drupal/components": "^2.2",
         "drupal/config_ignore": "^2.3",
         "drupal/config_split": "^1.7",
@@ -93,7 +96,8 @@
         "softcreatr/jsonpath": "^0.7.5",
         "twig/twig": "2.14.11 as 1.44.2",
         "webflo/drupal-finder": "^1.2",
-        "webmozart/path-util": "^2.3"
+        "webmozart/path-util": "^2.3",
+        "wikimedia/composer-merge-plugin": "^2.0"
     },
     "require-dev": {
         "drupal/data_fixtures": "^1.7",
@@ -119,6 +123,18 @@
         }
     },
     "extra": {
+        "merge-plugin": {
+            "require": [
+                "composer.libraries.json"
+            ],
+            "recurse": true,
+            "replace": false,
+            "ignore-duplicates": false,
+            "merge-dev": true,
+            "merge-extra": true,
+            "merge-extra-deep": true,
+            "merge-scripts": true
+        },
         "artifacts": {
             "openeuropa/oe_theme": {
                 "dist": {
@@ -141,6 +157,9 @@
             ],
             "web/libraries/{$name}": [
                 "type:drupal-library"
+            ],
+            "web/libraries/ckeditor/plugins/{$name}" : [
+                "type:ckeditor-plugin"
             ],
             "web/modules/contrib/{$name}": [
                 "type:drupal-module"

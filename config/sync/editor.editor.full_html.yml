@@ -42,6 +42,7 @@ settings:
           items:
             - DrupalImage
             - DrupalMediaLibrary
+            - Iframe
         -
           name: Tools
           items:
