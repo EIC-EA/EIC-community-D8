@@ -2,6 +2,7 @@
 
 namespace Drupal\eic_flags;
 
+use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -40,10 +41,16 @@ class FlagHelper {
   /**
    * The current user account.
    *
-   * @var Drupal\Core\Session\AccountProxyInterface
+   * @var \Drupal\Core\Session\AccountProxyInterface
    */
   protected $currentUser;
 
+  /**
+   * The database connection.
+   *
+   * @var \Drupal\Core\Database\Connection
+   */
+  protected $database;
 
   /**
    * The EIC Groups helper service.
@@ -63,6 +70,8 @@ class FlagHelper {
    *   The entity type manager.
    * @param \Drupal\Core\Session\AccountProxyInterface $currentUser
    *   The entity type manager.
+   * @param \Drupal\Core\Database\Connection $database
+   *   The database connection.
    * @param \Drupal\eic_groups\EICGroupsHelper $eic_groups_helper
    *   The EIC Groups helper service.
    */
@@ -71,12 +80,14 @@ class FlagHelper {
     FlagCountManager $flag_count_manager,
     EntityTypeManagerInterface $entity_type_manager,
     AccountProxyInterface $currentUser,
+    Connection $database,
     EICGroupsHelper $eic_groups_helper
   ) {
     $this->flagService = $flag_service;
     $this->flagCountManager = $flag_count_manager;
     $this->entityTypeManager = $entity_type_manager;
     $this->currentUser = $currentUser;
+    $this->database = $database;
     $this->groupsHelper = $eic_groups_helper;
   }
 
@@ -200,6 +211,82 @@ class FlagHelper {
    */
   public function setGroupsHelper(EICGroupsHelper $eic_groups_helper) {
     $this->groupsHelper = $eic_groups_helper;
+  }
+
+  /**
+   * Get a list of content follow flags (related to group content) from a user.
+   *
+   * @param \Drupal\group\Entity\GroupInterface $group
+   *   The group entity.
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *   The user account.
+   *
+   * @return \Drupal\flag\Entity\Flagging[]
+   *   An array user flaggings.
+   */
+  public function getGroupContentFollowFlaggingsFromUser(GroupInterface $group, AccountInterface $account) {
+    // Grab user follow content flag IDs for a given group.
+    $query = $this->database->select('flagging', 'f');
+    $query->addField('f', 'id');
+    $query->condition('f.flag_id', FlagType::FOLLOW_CONTENT);
+    $query->condition('f.uid', $account->id());
+    $query->join('group_content_field_data', 'gc', 'gc.entity_id = f.entity_id');
+    $query->condition('gc.gid', $group->id());
+    $query->condition('gc.type', $group->bundle() . '-group_node-%', 'LIKE');
+    $results = $query->execute()->fetchAllAssoc('id');
+    $flaggings = [];
+
+    if (!empty($results)) {
+      // Load the flaggings.
+      $flaggings = $this->entityTypeManager->getStorage('flagging')->loadMultiple(array_keys($results));
+    }
+
+    return $flaggings;
+  }
+
+  /**
+   * Get a list of group content flags from users (non-members).
+   *
+   * @param \Drupal\group\Entity\GroupInterface $group
+   *   The group entity.
+   * @param string $flag_type
+   *   The follow flag type.
+   *
+   * @return \Drupal\flag\Entity\Flagging[]
+   *   An array of flaggings.
+   */
+  public function getGroupFollowFlaggingsByNonMembers(GroupInterface $group, string $flag_type = FlagType::FOLLOW_CONTENT) {
+    $group_contents = $this->entityTypeManager->getStorage('group_content')
+      ->loadByGroup($group, 'group_membership');
+
+    // Grab user follow content flag IDs for a given group.
+    $query = $this->database->select('flagging', 'f');
+    $query->addField('f', 'id');
+    $query->condition('f.flag_id', $flag_type);
+    if (!empty($group_contents)) {
+      $member_uids = [];
+      foreach ($group_contents as $group_content) {
+        $member_uids[] = $group_content->getEntity()->id();
+      }
+      $query->condition('f.uid', $member_uids, 'NOT IN');
+    }
+    if ($flag_type === FlagType::FOLLOW_CONTENT) {
+      $query->join('group_content_field_data', 'gc', 'gc.entity_id = f.entity_id');
+      $query->condition('gc.gid', $group->id());
+      $query->condition('gc.type', $group->bundle() . '-group_node-%', 'LIKE');
+    }
+    else {
+      $query->condition('f.entity_id', $group->id());
+    }
+    $results = $query->execute()->fetchAllAssoc('id');
+    $flaggings = [];
+
+    if (!empty($results)) {
+      // Load the flaggings.
+      $flaggings = $this->entityTypeManager->getStorage('flagging')->loadMultiple(array_keys($results));
+    }
+
+    return $flaggings;
   }
 
 }
