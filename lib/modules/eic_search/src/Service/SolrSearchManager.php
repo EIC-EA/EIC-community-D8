@@ -162,6 +162,11 @@ class SolrSearchManager {
     $spell_check->setQuery($search_value);
 
     $search_fields_id = $this->source ? $this->source->getSearchFieldsId() : NULL;
+
+    if (!$search_fields_id) {
+      return;
+    }
+
     $search_query_value = $search_value ? "*$search_value*" : '*';
 
     $query_fields = [];

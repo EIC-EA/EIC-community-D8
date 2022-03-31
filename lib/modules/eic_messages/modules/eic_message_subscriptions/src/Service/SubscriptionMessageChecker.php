@@ -66,14 +66,28 @@ class SubscriptionMessageChecker {
       case NotificationTypes::EVENTS_NOTIFICATION_TYPE:
         $result = $this->checkFollowFlagValue($user, $message, $notification_type);
         break;
+
       case NotificationTypes::INTEREST_NOTIFICATION_TYPE:
       case NotificationTypes::COMMENTS_NOTIFICATION_TYPE:
         $result = $this->notificationSettingsManager->getProfileSetting($user, $notification_type);
         break;
+
       default:
         throw new InvalidArgumentException(
           sprintf('Something is wrong with the notification category assigned to message %s', $message->bundle())
         );
+
+    }
+
+    $referenced_entity = $this->getReferencedEntity($message);
+    if (!$referenced_entity) {
+      $result = FALSE;
+    }
+
+    // User doesn't have access to view the entity, therefore we don't send
+    // any notification.
+    if (!$referenced_entity->access('view', $user)) {
+      $result = FALSE;
     }
 
     return $result;
@@ -121,6 +135,15 @@ class SubscriptionMessageChecker {
         // We assume the field to use is field_group_ref. Change this when a message for group events is introduced.
         $field = 'field_group_ref';
         break;
+
+      case NotificationTypes::INTEREST_NOTIFICATION_TYPE:
+        $field = 'field_referenced_node';
+        break;
+
+      case NotificationTypes::COMMENTS_NOTIFICATION_TYPE:
+        $field = 'field_referenced_comment';
+        break;
+
     }
 
     if (!$message->hasField($field)) {
