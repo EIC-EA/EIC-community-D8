@@ -82,7 +82,7 @@ class VODStream implements StreamWrapperInterface {
    * {@inheritdoc}
    */
   public function stream_lock($operation) {
-    // flock isn't supported.
+    // Lock isn't supported.
     return FALSE;
   }
 
@@ -276,7 +276,7 @@ class VODStream implements StreamWrapperInterface {
   /**
    * @param string|null $path
    *
-   * @return mixed|string|null
+   * @return string|null
    */
   public static function getTarget(string $path) {
     $uri = StreamWrapperManager::getTarget($path);
@@ -290,7 +290,7 @@ class VODStream implements StreamWrapperInterface {
   /**
    * @return \Drupal\eic_vod\Service\VODClient
    */
-  private function getHttpClient() {
+  private function getHttpClient(): VODClient {
     if (!isset($this->httpClient)) {
       $this->httpClient = \Drupal::service('eic_vod.client');
     }

@@ -199,6 +199,7 @@ class VODFileService implements FileSystemInterface {
   public function moveUploadedFile($filename, $uri) {
     $wrapper = $this->streamWrapperManager->getViaUri($uri);
     if (is_a($wrapper, VODStream::class)) {
+      // Not supported for the moment.
     }
     else {
       return $this->decorated->moveUploadedFile($filename, $uri);

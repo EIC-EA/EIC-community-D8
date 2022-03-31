@@ -48,7 +48,10 @@ class VODController extends ControllerBase {
       throw new NotFoundHttpException();
     }
 
-    return new JsonResponse($cookies);
+    return new JsonResponse([
+      'cookies' => $cookies,
+      'stream' => $this->client->getStreamUrl($file),
+    ]);
   }
 
 }

@@ -46,7 +46,7 @@ class VODClient {
    * @param string $action
    * @param string $file
    *
-   * @return string|NULL
+   * @return string|null
    */
   public function getPresignedUrl(string $action, string $file): ?string {
     $url = $this->config['cloudfront_url'];
@@ -82,7 +82,7 @@ class VODClient {
    * @param string $source
    * @param string $destination
    *
-   * @return string|NULL
+   * @return string|null
    */
   public function putVideo(string $source, string $destination): ?string {
     $file_name = basename($destination);
@@ -112,7 +112,7 @@ class VODClient {
   /**
    * @param string $file
    *
-   * @return array|NULL
+   * @return array|null
    */
   public function getCookies(string $file): ?array {
     try {
@@ -134,6 +134,21 @@ class VODClient {
     }
 
     return $response->getHeader('Set-Cookie');
+  }
+
+  /**
+   * @param string $file
+   *
+   * @return string|null
+   */
+  public function getStreamUrl(string $file): ?string {
+    if (!isset($this->config['cloudfront_url'])) {
+      return NULL;
+    }
+
+    $url = $this->config['cloudfront_url'];
+
+    return "https://$url/streams/$file/AppleHLS1/$file.m3u8";
   }
 
 }
