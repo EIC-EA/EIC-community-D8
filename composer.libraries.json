@@ -1,0 +1,33 @@
+{
+    "repositories": [
+        {
+            "type": "package",
+            "package": {
+                "name": "ckeditor/fakeobjects",
+                "version": "4.18.0",
+                "type": "drupal-library",
+                "dist": {
+                    "url": "https://download.ckeditor.com/fakeobjects/releases/fakeobjects_4.18.0.zip",
+                    "type": "zip"
+                }
+            }
+        },
+        {
+            "type": "package",
+            "package": {
+                "name": "ckeditor/iframe",
+                "version": "4.18.0",
+                "type": "drupal-library",
+                "dist": {
+                    "url": "https://download.ckeditor.com/iframe/releases/iframe_4.18.0.zip",
+                    "type": "zip"
+                }
+            }
+        }
+    ],
+    "extra": {
+        "installer-types": [
+            "ckeditor-plugin"
+        ]
+    }
+}
