@@ -47,7 +47,6 @@ class VODClient {
    * @param string $file
    *
    * @return string|NULL
-   * @throws \GuzzleHttp\Exception\GuzzleException
    */
   public function getPresignedUrl(string $action, string $file): ?string {
     $url = $this->config['cloudfront_url'];
@@ -70,7 +69,7 @@ class VODClient {
       }
 
       return str_replace('"', '', (string) $response->getBody());
-    } catch (\Exception $exception) {
+    } catch (\Throwable $exception) {
       $this->messenger->addError(
         sprintf('Something went wrong while getting presigned %s url. Error: %s', $action, $exception->getMessage())
       );
@@ -84,7 +83,6 @@ class VODClient {
    * @param string $destination
    *
    * @return string|NULL
-   * @throws \GuzzleHttp\Exception\GuzzleException
    */
   public function putVideo(string $source, string $destination): ?string {
     $file_name = basename($destination);
@@ -102,13 +100,40 @@ class VODClient {
       ]);
 
       return $response->getStatusCode() === Response::HTTP_OK;
-    } catch (\Exception $exception) {
+    } catch (\Throwable $exception) {
       $this->messenger->addError(
         sprintf('Something went wrong while uploading video. Error: %s', $exception->getMessage())
       );
     }
 
     return FALSE;
+  }
+
+  /**
+   * @param string $file
+   *
+   * @return array|NULL
+   */
+  public function getCookies(string $file): ?array {
+    try {
+      $url = $this->config['cloudfront_url'];
+      $response = $this->httpClient->request('GET', "https://$url/stream/download", [
+        'query' => [
+          'file' => $file,
+        ],
+        'headers' => [
+          'X-Api-Key' => $this->config['cloudfront_api_key'],
+        ],
+      ]);
+
+      if ($response->getStatusCode() !== Response::HTTP_OK || !$response->hasHeader('Set-Cookie')) {
+        return NULL;
+      }
+    } catch (\Throwable $exception) {
+      return NULL;
+    }
+
+    return $response->getHeader('Set-Cookie');
   }
 
 }
