@@ -21,6 +21,7 @@ theme:
     dist/scripts/compositions/drupal.filter-sidebar.js: { minified: true }
     dist/scripts/compositions/drupal.language-selector.js: { minified: true }
     dist/scripts/compositions/drupal.media-wrapper.js: { minified: true }
+    dist/scripts/common/overides.js: { minified: true }
   dependencies:
     - core/drupal
 
