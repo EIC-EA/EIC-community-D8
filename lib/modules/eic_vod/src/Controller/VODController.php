@@ -48,9 +48,25 @@ class VODController extends ControllerBase {
       throw new NotFoundHttpException();
     }
 
+    $query_strings = [];
+    $header_mapping = [
+      'CloudFront-Policy' => 'Policy',
+      'CloudFront-Signature' => 'Signature',
+      'CloudFront-Key-Pair-Id' => 'Key-Pair-Id',
+    ];
+    foreach ($cookies as $cookie) {
+      [$cloudfront_cookie] = explode(';', $cookie);
+      [$key, $value] = explode('=', $cloudfront_cookie);
+      if (!isset($header_mapping[$key])) {
+        continue;
+      }
+      
+      $query_strings[$header_mapping[$key]] = $value;
+    }
+
     return new JsonResponse([
       'cookies' => $cookies,
-      'stream' => $this->client->getStreamUrl($file),
+      'stream' => $this->client->getStreamUrl($file) . '?' . http_build_query($query_strings),
     ]);
   }
 

@@ -166,12 +166,12 @@ class VODStream implements StreamWrapperInterface {
     ];
 
     if (!$this->uri) {
-      return $stat;
+      return FALSE;
     }
 
     $presigned_download_url = $this->getHttpClient()->getPresignedUrl('download', $this->uri);
     if (!$presigned_download_url) {
-      return $stat;
+      return FALSE;
     }
 
     try {
