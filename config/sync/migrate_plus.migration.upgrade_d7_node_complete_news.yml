@@ -68,17 +68,7 @@ process:
   revision_timestamp: timestamp
   content_translation_source: source_langcode
   node_comment/0/status: comment
-  field_body/0/format:
-    -
-      plugin: static_map
-      source: c4m_body/0/format
-      default_value: filtered_html
-      map:
-        full_html: full_html
-        filtered_html: filtered_html
-        plain_text: plain_text
-        mail: basic_text
-  field_body/0/value:
+  field_body:
     -
       plugin: eic_media_wysiwyg_filter
       source: c4m_body
