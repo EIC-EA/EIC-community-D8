@@ -106,16 +106,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.216.4",
+            "version": "3.217.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "fd16bb2ecc4e1a47b145163d0bd7744c4578656d"
+                "reference": "a8cca383b13fe6cde479a4745b4d3dfe893fdc69"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/fd16bb2ecc4e1a47b145163d0bd7744c4578656d",
-                "reference": "fd16bb2ecc4e1a47b145163d0bd7744c4578656d",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/a8cca383b13fe6cde479a4745b4d3dfe893fdc69",
+                "reference": "a8cca383b13fe6cde479a4745b4d3dfe893fdc69",
                 "shasum": ""
             },
             "require": {
@@ -188,7 +188,7 @@
                 "s3",
                 "sdk"
             ],
-            "time": "2022-03-29T18:29:23+00:00"
+            "time": "2022-03-30T18:18:30+00:00"
         },
         {
             "name": "chi-teck/drupal-code-generator",
@@ -2740,7 +2740,8 @@
                     "3007424 - Multiple usages of FieldPluginBase::getEntity do not check for NULL, leading to WSOD": "https://www.drupal.org/files/issues/2021-01-06/3007424-108.patch",
                     "2973863 - ValidReferenceConstraintValidator should not try to enforce data integrity on pre-existing references": "https://www.drupal.org/files/issues/2018-11-04/2973863-24.patch",
                     "2918537 - Cannot save unpublished versions of published content for users without manage book privileges": "https://www.drupal.org/files/issues/2021-11-16/2918537-68.patch",
-                    "2473873 - Views entity operations lack cacheability support, resulting in incorrect dropbuttons": "https://www.drupal.org/files/issues/2021-11-23/2473873-97.patch"
+                    "2473873 - Views entity operations lack cacheability support, resulting in incorrect dropbuttons": "https://www.drupal.org/files/issues/2021-11-23/2473873-97.patch",
+                    "2766369 - Add skip-method option to file_copy and download process plugins": "https://www.drupal.org/files/issues/2022-03-31/2766369-30.patch"
                 }
             },
             "autoload": {
@@ -10703,23 +10704,24 @@
         },
         {
             "name": "seld/jsonlint",
-            "version": "1.8.3",
+            "version": "1.8.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Seldaek/jsonlint.git",
-                "reference": "9ad6ce79c342fbd44df10ea95511a1b24dee5b57"
+                "reference": "d9a308b84277a7dd651ba89bf5ed37b88497b171"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/jsonlint/zipball/9ad6ce79c342fbd44df10ea95511a1b24dee5b57",
-                "reference": "9ad6ce79c342fbd44df10ea95511a1b24dee5b57",
+                "url": "https://api.github.com/repos/Seldaek/jsonlint/zipball/d9a308b84277a7dd651ba89bf5ed37b88497b171",
+                "reference": "d9a308b84277a7dd651ba89bf5ed37b88497b171",
                 "shasum": ""
             },
             "require": {
                 "php": "^5.3 || ^7.0 || ^8.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "^4.8.35 || ^5.7 || ^6.0"
+                "phpstan/phpstan": "^0.12.59",
+                "phpunit/phpunit": "^4.8.35 || ^5.7 || ^6.0 || ^8.5.13"
             },
             "bin": [
                 "bin/jsonlint"
@@ -10758,7 +10760,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-11-11T09:19:24+00:00"
+            "time": "2022-03-31T11:30:35+00:00"
         },
         {
             "name": "seld/phar-utils",
