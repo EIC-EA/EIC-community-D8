@@ -76,8 +76,18 @@ process:
         target_id:
           - plugin: migration_lookup
             source: target_id
-            migration:
-              - upgrade_d7_file_document_to_media
+            no_stub: true
+            migration: upgrade_d7_node_complete_document
+          - plugin: node_complete_node_lookup
+          - plugin: entity_value
+            entity_type: node
+            field_name: field_document_media
+          - plugin: skip_on_empty
+            method: process
+          - plugin: extract
+            index:
+              - 0
+              - target_id
   field_vocab_geo:
     - plugin: sub_process
       source: c4m_vocab_geo
