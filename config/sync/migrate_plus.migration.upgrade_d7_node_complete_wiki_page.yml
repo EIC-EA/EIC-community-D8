@@ -49,9 +49,10 @@ process:
     -
       plugin: static_map
       source: status
+      default: published
       map:
-        - draft
-        - published
+        0: draft
+        1: published
   created: created
   changed: timestamp
   published_at: timestamp

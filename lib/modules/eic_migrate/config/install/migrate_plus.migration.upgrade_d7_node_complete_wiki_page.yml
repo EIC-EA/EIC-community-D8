@@ -42,6 +42,7 @@ process:
   moderation_state:
     - plugin: static_map
       source: status
+      default: published
       map:
         0: draft
         1: published
