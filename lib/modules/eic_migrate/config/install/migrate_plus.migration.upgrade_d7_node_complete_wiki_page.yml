@@ -68,36 +68,50 @@ process:
         - upgrade_d7_file_image_to_media
         - upgrade_d7_file_undefined_to_media
         - upgrade_d7_file_video_to_media
-  # TODO
-#  c4m_edit_by_members:
-#    - plugin: get
-#      source: c4m_edit_by_members
-  # TODO
-#  c4m_related_document:
-#    - plugin: get
-#      source: c4m_related_document
-  # TODO: Implement when Regions & countries SMED migration is done.
-#  field_vocab_geo:
-#    - plugin: sub_process
-#      source: c4m_vocab_geo
-#      process:
-#        target_id:
-#          - plugin: migration_lookup
-#            source: smed_id
-#            no_stub: true
-#            migration:
-#              - smed_TODO
-  # TODO: Validate implementation when field_vocab_languages is added to CT Wiki page.
-  field_vocab_languages:
+  member_content_edit_access:
+    - plugin: get
+      source: c4m_edit_by_members
+  field_related_downloads:
     - plugin: sub_process
-      source: c4m_vocab_language
+      source: c4m_related_document
+      process:
+        target_id:
+          - plugin: migration_lookup
+            source: target_id
+            no_stub: true
+            migration: upgrade_d7_node_complete_document
+          - plugin: node_complete_node_lookup
+          - plugin: entity_value
+            entity_type: node
+            field_name: field_document_media
+          - plugin: skip_on_empty
+            method: process
+          - plugin: extract
+            index:
+              - 0
+              - target_id
+  field_vocab_geo:
+    - plugin: sub_process
+      source: c4m_vocab_geo
       process:
         target_id:
           - plugin: migration_lookup
             source: smed_id
             no_stub: true
             migration:
-              - smed_spoken_languages
+              - smed_regions_countries_lvl1
+              - smed_regions_countries_lvl2
+  # TODO: Validate implementation when field_vocab_languages is added to CT Wiki page.
+  # field_language:
+  #   - plugin: sub_process
+  #     source: c4m_vocab_language
+  #     process:
+  #       target_id:
+  #         - plugin: migration_lookup
+  #           source: smed_id
+  #           no_stub: true
+  #           migration:
+  #             - smed_spoken_languages
   field_vocab_topics:
     - plugin: sub_process
       source: c4m_vocab_topic
@@ -133,4 +147,7 @@ migration_dependencies:
     - smed_thematics_topics_lvl1
     - smed_thematics_topics_lvl2
     - smed_thematics_topics_lvl3
+    - smed_regions_countries_lvl1
+    - smed_regions_countries_lvl2
+    - upgrade_d7_node_complete_document
   optional: { }
