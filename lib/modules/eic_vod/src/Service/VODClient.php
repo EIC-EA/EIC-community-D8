@@ -37,7 +37,7 @@ class VODClient {
     MimeTypeGuesserInterface $mime_guesser
   ) {
     $this->httpClient = $http_client;
-    $this->config = $settings->get('eic_vod');
+    $this->config = $settings->get('eic_vod', []);
     $this->messenger = $messenger;
     $this->mimeTypeGuesser = $mime_guesser;
   }
