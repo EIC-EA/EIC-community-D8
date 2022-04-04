@@ -24,6 +24,14 @@ theme:
   dependencies:
     - core/drupal
 
+react-video-stream:
+  js:
+    dist/react/custom/manifest.js: { minified: true }
+    dist/react/vendor.js: { minified: true }
+    dist/react/block/streamvideo/entrypoint.js: { minified: true }
+  dependencies:
+    - core/drupal
+
 react-notif-management:
   js:
     dist/react/custom/manifest.js: { minified: true }

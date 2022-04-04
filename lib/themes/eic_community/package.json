@@ -83,6 +83,7 @@
     "twing": "2.3.7",
     "twing-loader": "2.0.2",
     "unicode-emoji-picker": "^1.1.1",
+    "video.js": "^7.18.1",
     "webpack": "^5.9.0"
   },
   "dependencies": {

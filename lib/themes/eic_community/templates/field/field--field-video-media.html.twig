@@ -1,9 +1,12 @@
 {% if documents is empty %}
-  {% for item in items %}
-    {{ item.content }}
-  {% endfor %}
+	{% for item in items %}
+		{{ item.content }}
+	{% endfor %}
 {% else %}
-  {% for document in documents %}
-    {% include "@theme/patterns/components/attachment.html.twig" with document only %}
-  {% endfor %}
+
+	{% for document in documents %}
+		<div id="react-stream-video-block"></div>
+		{% include "@theme/patterns/components/attachment.html.twig" with document only %}
+	{% endfor %}
 {% endif %}
+{{ attach_library('eic_community/react-video-stream') }}
