@@ -1,0 +1,5 @@
+services:
+  migrate_tools_override.commands:
+    class: Drupal\eic_migrate\Commands\MigrateToolsOverrideCommands
+    tags:
+      - { name: drush.command }
