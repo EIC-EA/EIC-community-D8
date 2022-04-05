@@ -20,14 +20,19 @@ class MigrationRunningMessagesValidator extends ConstraintValidator {
       return;
     }
 
+    // If no migrations running, just ignore that constraint.
+    if (!$state->get(MigrateToolsOverrideCommands::STATE_MIGRATIONS_IS_RUNNING)) {
+      return;
+    }
+
+    // If Message migration is running, ignore that constraint.
     if (
-      !$state->get(MigrateToolsOverrideCommands::STATE_MIGRATIONS_MESSAGES_IS_RUNNING) &&
-      $state->get(MigrateToolsOverrideCommands::STATE_MIGRATIONS_IS_RUNNING)
+      $state->get(MigrateToolsOverrideCommands::STATE_MIGRATIONS_MESSAGES_IS_RUNNING)
     ) {
       return;
     }
 
-    // If we are running migrations we do not allow Messages creations except for the Message migration itself.
+    // Add violation when migrations is running and entity tries to generate Message.
     $this->context->buildViolation($constraint->migrationRunning)->addViolation();
   }
 

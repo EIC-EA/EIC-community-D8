@@ -7,7 +7,6 @@ use Drupal\eic_message_subscriptions\Event\MessageSubscriptionEvents;
 use Drupal\eic_message_subscriptions\Service\SubscriptionMessageCreator;
 use Drupal\eic_message_subscriptions\SubscriptionOperationTypes;
 use Drupal\eic_messages\Util\QueuedMessageChecker;
-use Drupal\eic_migrate\Commands\MigrateToolsOverrideCommands;
 use Drupal\flag\FlaggingInterface;
 use Drupal\group\Entity\GroupContent;
 use Drupal\message_subscribe\SubscribersInterface;

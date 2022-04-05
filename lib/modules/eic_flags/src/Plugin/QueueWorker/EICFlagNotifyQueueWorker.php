@@ -7,7 +7,6 @@ use Drupal\Core\Logger\LoggerChannelTrait;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Queue\QueueFactory;
 use Drupal\Core\Queue\QueueWorkerBase;
-use Drupal\eic_migrate\Commands\MigrateToolsOverrideCommands;
 use Drupal\message\Entity\Message;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -49,7 +48,6 @@ class EICFlagNotifyQueueWorker extends QueueWorkerBase implements ContainerFacto
    * {@inheritdoc}
    */
   public function processItem($data) {
-
     $message = NULL;
 
     switch ($data['flag_id']) {
