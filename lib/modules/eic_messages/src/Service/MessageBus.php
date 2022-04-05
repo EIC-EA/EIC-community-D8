@@ -5,6 +5,7 @@ namespace Drupal\eic_messages\Service;
 use Drupal\Core\Logger\LoggerChannelTrait;
 use Drupal\eic_messages\Handler\MessageHandlerInterface;
 use Drupal\eic_messages\Util\QueuedMessageChecker;
+use Drupal\eic_migrate\Commands\MigrateToolsOverrideCommands;
 use Drupal\message\Entity\Message;
 use Drupal\message\MessageInterface;
 use Exception;
@@ -43,6 +44,11 @@ class MessageBus implements MessageBusInterface {
    * @param \Drupal\message\MessageInterface|array $message
    */
   public function dispatch($message): void {
+    // If we are running migrations, stop saving messages and sending notifications.
+    if (\Drupal::state()->get(MigrateToolsOverrideCommands::STATE_MIGRATIONS_IS_RUNNING)) {
+      return;
+    }
+
     if (!$message instanceof MessageInterface) {
       $message = Message::create($message);
     }

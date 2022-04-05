@@ -2,15 +2,49 @@
 
 namespace Drupal\eic_migrate\Commands;
 
+use Drupal\Core\Datetime\DateFormatter;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\KeyValueStore\KeyValueFactoryInterface;
+use Drupal\Core\State\StateInterface;
+use Drupal\migrate\Plugin\MigrationInterface;
+use Drupal\migrate\Plugin\MigrationPluginManager;
+use Drupal\migrate_tools\Commands\MigrateToolsCommands;
 use Drupal\migrate_tools\MigrateTools;
-use Drush\Commands\DrushCommands;
 
 /**
  * Migrate Tools Override drush commands.
  */
-class MigrateToolsOverrideCommands extends DrushCommands {
+class MigrateToolsOverrideCommands extends MigrateToolsCommands {
 
-  const STATE_MIGRATIONS_OVERRIDE = 'is_migrations_running';
+  const STATE_MIGRATIONS_IS_RUNNING = 'is_migrations_running';
+
+  const STATE_MIGRATIONS_MESSAGES_IS_RUNNING = 'is_migrations_messages_running';
+
+  /**
+   * @TODO Migration does not exist for the moment, update if needed when it will be developed.
+   */
+  const MIGRATION_ID_MESSAGES = 'upgrade_d7_messages';
+
+  private StateInterface $state;
+
+  /**
+   * @param \Drupal\migrate\Plugin\MigrationPluginManager $migration_plugin_manager
+   * @param \Drupal\Core\Datetime\DateFormatter $date_formatter
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   * @param \Drupal\Core\KeyValueStore\KeyValueFactoryInterface $key_value
+   * @param \Drupal\Core\State\StateInterface $state
+   */
+  public function __construct(
+    MigrationPluginManager $migration_plugin_manager,
+    DateFormatter $date_formatter,
+    EntityTypeManagerInterface $entity_type_manager,
+    KeyValueFactoryInterface $key_value,
+    StateInterface $state
+  ) {
+    parent::__construct($migration_plugin_manager, $date_formatter, $entity_type_manager, $key_value);
+
+    $this->state = $state;
+  }
 
   /**
    * Perform one or more migration processes.
@@ -20,7 +54,7 @@ class MigrateToolsOverrideCommands extends DrushCommands {
    * @param array $options
    *   Additional options for the command.
    *
-   * @command migrate-override:import
+   * @command migrate:import
    *
    * @option all Process all migrations.
    * @option group A comma-separated list of migration groups to import
@@ -42,26 +76,26 @@ class MigrateToolsOverrideCommands extends DrushCommands {
    *
    * @default $options []
    *
-   * @usage migrate-override:import --all
+   * @usage migrate:import --all
    *   Perform all migrations
-   * @usage migrate-override:import --group=beer
+   * @usage migrate:import --group=beer
    *   Import all migrations in the beer group
-   * @usage migrate-override:import --tag=user
+   * @usage migrate:import --tag=user
    *   Import all migrations with the user tag
-   * @usage migrate-override:import --group=beer --tag=user
+   * @usage migrate:import --group=beer --tag=user
    *   Import all migrations in the beer group and with the user tag
-   * @usage migrate-override:import beer_term,beer_node
+   * @usage migrate:import beer_term,beer_node
    *   Import new terms and nodes
-   * @usage migrate-override:import beer_user --limit=2
+   * @usage migrate:import beer_user --limit=2
    *   Import no more than 2 users
-   * @usage migrate-override:import beer_user --idlist=5
+   * @usage migrate:import beer_user --idlist=5
    *   Import the user record with source ID 5
-   * @usage migrate-override:import beer_node_revision --idlist=1:2,2:3,3:5
+   * @usage migrate:import beer_node_revision --idlist=1:2,2:3,3:5
    *   Import the node revision record with source IDs [1,2], [2,3], and [3,5]
    *
    * @validate-module-enabled migrate_tools
    *
-   * @aliases miom, migrate-override-import
+   * @aliases mim, migrate-import
    *
    * @throws \Exception
    *   If there are not enough parameters to the command.
@@ -70,11 +104,11 @@ class MigrateToolsOverrideCommands extends DrushCommands {
     $migration_names = '',
     array $options = [
       'all' => FALSE,
-      'group' => \Drupal\migrate_tools\Commands\MigrateToolsCommands::REQ,
-      'tag' => \Drupal\migrate_tools\Commands\MigrateToolsCommands::REQ,
-      'limit' => \Drupal\migrate_tools\Commands\MigrateToolsCommands::REQ,
-      'feedback' => \Drupal\migrate_tools\Commands\MigrateToolsCommands::REQ,
-      'idlist' => \Drupal\migrate_tools\Commands\MigrateToolsCommands::REQ,
+      'group' => MigrateToolsCommands::REQ,
+      'tag' => MigrateToolsCommands::REQ,
+      'limit' => MigrateToolsCommands::REQ,
+      'feedback' => MigrateToolsCommands::REQ,
+      'idlist' => MigrateToolsCommands::REQ,
       'idlist-delimiter' => MigrateTools::DEFAULT_ID_LIST_DELIMITER,
       'update' => FALSE,
       'force' => FALSE,
@@ -85,17 +119,25 @@ class MigrateToolsOverrideCommands extends DrushCommands {
     ]
   ) {
     $this->logger()->notice('Migrations import started.');
-    \Drupal::state()->set(self::STATE_MIGRATIONS_OVERRIDE, TRUE);
-    /** @var \Drupal\migrate_tools\Commands\MigrateToolsCommands $migrate_tools */
-    $migrate_tools = \Drupal::service('migrate_tools.commands');
+    $this->state->set(self::STATE_MIGRATIONS_IS_RUNNING, TRUE);
 
     try {
-      $migrate_tools->import($migration_names, $options);
+      parent::import($migration_names, $options);
     } catch (\Exception $e) {
       $this->logger()->error($e->getMessage());
     }
+
     $this->logger()->notice('Migrations import ended.');
-    \Drupal::state()->set(self::STATE_MIGRATIONS_OVERRIDE, FALSE);
+    $this->state->set(self::STATE_MIGRATIONS_IS_RUNNING, FALSE);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function executeMigration(MigrationInterface $migration, $migration_id, array $options = []) {
+    $this->state->set(self::STATE_MIGRATIONS_MESSAGES_IS_RUNNING, self::MIGRATION_ID_MESSAGES === $migration_id);
+    parent::executeMigration($migration, $migration_id, $options);
+    $this->state->set(self::STATE_MIGRATIONS_MESSAGES_IS_RUNNING, FALSE);
   }
 
 }

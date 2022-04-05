@@ -49,10 +49,6 @@ class EICFlagNotifyQueueWorker extends QueueWorkerBase implements ContainerFacto
    * {@inheritdoc}
    */
   public function processItem($data) {
-    // If we are running migrations, do not save any Message entities.
-    if (\Drupal::state()->get(MigrateToolsOverrideCommands::STATE_MIGRATIONS_OVERRIDE)) {
-      return;
-    }
 
     $message = NULL;
 

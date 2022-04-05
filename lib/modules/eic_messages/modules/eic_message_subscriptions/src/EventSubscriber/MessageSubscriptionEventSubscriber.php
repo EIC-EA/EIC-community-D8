@@ -75,10 +75,6 @@ class MessageSubscriptionEventSubscriber implements EventSubscriberInterface {
    *   The MessageSubscription event.
    */
   public function commentCreated(MessageSubscriptionEvent $event) {
-    // If we are running migrations, do not save any Message entities.
-    if (\Drupal::state()->get(MigrateToolsOverrideCommands::STATE_MIGRATIONS_OVERRIDE)) {
-      return;
-    }
     $entity = $event->getEntity();
     // Set the subscription operation.
     $operation = SubscriptionOperationTypes::NEW_ENTITY;
@@ -111,10 +107,6 @@ class MessageSubscriptionEventSubscriber implements EventSubscriberInterface {
    *   The MessageSubscription event.
    */
   public function groupContentCreated(MessageSubscriptionEvent $event) {
-    // If we are running migrations, do not save any Message entities.
-    if (\Drupal::state()->get(MigrateToolsOverrideCommands::STATE_MIGRATIONS_OVERRIDE)) {
-      return;
-    }
     $entity = $event->getEntity();
     $group_contents = GroupContent::loadByEntity($entity);
     if (empty($group_contents)) {
@@ -155,10 +147,6 @@ class MessageSubscriptionEventSubscriber implements EventSubscriberInterface {
    *   The MessageSubscription event.
    */
   public function groupContentUpdated(MessageSubscriptionEvent $event) {
-    // If we are running migrations, do not save any Message entities.
-    if (\Drupal::state()->get(MigrateToolsOverrideCommands::STATE_MIGRATIONS_OVERRIDE)) {
-      return;
-    }
     $entity = $event->getEntity();
     $group_contents = GroupContent::loadByEntity($entity);
     if (empty($group_contents)) {
@@ -199,10 +187,6 @@ class MessageSubscriptionEventSubscriber implements EventSubscriberInterface {
    *   The MessageSubscription event.
    */
   public function nodeCreated(MessageSubscriptionEvent $event) {
-    // If we are running migrations, do not save any Message entities.
-    if (\Drupal::state()->get(MigrateToolsOverrideCommands::STATE_MIGRATIONS_OVERRIDE)) {
-      return;
-    }
     $entity = $event->getEntity();
     // Set the subscription operation.
     $operation = SubscriptionOperationTypes::NEW_ENTITY;
@@ -230,10 +214,6 @@ class MessageSubscriptionEventSubscriber implements EventSubscriberInterface {
    *   The MessageSubscription event.
    */
   public function contentRecommended(MessageSubscriptionEvent $event) {
-    // If we are running migrations, do not save any Message entities.
-    if (\Drupal::state()->get(MigrateToolsOverrideCommands::STATE_MIGRATIONS_OVERRIDE)) {
-      return;
-    }
     $flagging = $event->getEntity();
     if (!($flagging instanceof FlaggingInterface)) {
       return;
