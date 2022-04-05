@@ -66,7 +66,8 @@ class VODController extends ControllerBase {
 
     return new JsonResponse([
       'cookies' => $cookies,
-      'stream' => $this->client->getStreamUrl($file) . '?' . http_build_query($query_strings),
+      'query_string' => '?' . http_build_query($query_strings),
+      'stream' => $this->client->getStreamUrl($file),
     ]);
   }
 
