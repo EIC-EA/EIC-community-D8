@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\eic_groups\Plugin\Validation\Constraint;
+namespace Drupal\eic_migrate\Plugin\Validation\Constraint;
 
 use Symfony\Component\Validator\Constraint;
 
