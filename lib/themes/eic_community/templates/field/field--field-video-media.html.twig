@@ -5,7 +5,7 @@
 {% else %}
 
 	{% for document in documents %}
-		<div id="react-stream-video-block"></div>
+		<div data-video-title="{{ document.title }}" id="react-stream-video-block"></div>
 		{% include "@theme/patterns/components/attachment.html.twig" with document only %}
 	{% endfor %}
 {% endif %}
