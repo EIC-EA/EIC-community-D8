@@ -6,6 +6,7 @@ use Drupal\comment\CommentInterface;
 use Drupal\comment\Entity\Comment;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Datetime\DateFormatter;
 use Drupal\Core\Datetime\DrupalDateTime;
@@ -125,6 +126,10 @@ class DiscussionController extends ControllerBase {
     $text = Xss::filter($content['text']);
     $tagged_users = $content['taggedUsers'] ?? NULL;
     $parent_id = $content['parentId'];
+
+    if ($node = Node::load($discussion_id)) {
+      Cache::invalidateTags($node->getCacheTags());
+    }
 
     $comment = Comment::create([
       'status' => CommentInterface::PUBLISHED,
@@ -312,11 +317,19 @@ class DiscussionController extends ControllerBase {
       return new JsonResponse('You do not have access to edit all comments', Response::HTTP_FORBIDDEN);
     }
 
+    $tagged_users = $content['taggedUsers'] ?? NULL;
+
     try {
       $comment->set('comment_body', [
         'value' => $text,
         'format' => 'plain_text',
       ]);
+      $comment->set('field_tagged_users', array_map(function ($tagged_user) {
+        return [
+          'target_id' => $tagged_user['tid'],
+        ];
+      }, $tagged_users));
+
       $comment->save();
     } catch (EntityStorageException $e) {
       \Drupal::logger('eic_groups')->error($e->getMessage());
@@ -340,6 +353,10 @@ class DiscussionController extends ControllerBase {
 
     if (!$comment instanceof CommentInterface) {
       return new JsonResponse('Cannot find comment entity', Response::HTTP_BAD_REQUEST);
+    }
+
+    if ($node = Node::load($discussion_id)) {
+      Cache::invalidateTags($node->getCacheTags());
     }
 
     try {

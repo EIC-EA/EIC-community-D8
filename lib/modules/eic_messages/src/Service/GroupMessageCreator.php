@@ -4,35 +4,70 @@ namespace Drupal\eic_messages\Service;
 
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Session\AccountProxyInterface;
+use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_groups\GroupsModerationHelper;
+use Drupal\eic_messages\Util\LogMessageTemplates;
+use Drupal\eic_messages\Util\NotificationMessageTemplates;
 use Drupal\eic_user\UserHelper;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Class GroupMessageCreator.
+ * Provides a message creator class for groups.
  */
 class GroupMessageCreator implements ContainerInjectionInterface {
 
   /**
+   * The message bus service.
+   *
    * @var \Drupal\eic_messages\Service\MessageBusInterface
    */
-  private $messageBus;
+  protected $messageBus;
 
   /**
+   * The EIC user helper service.
+   *
    * @var \Drupal\eic_user\UserHelper
    */
-  private $userHelper;
+  protected $userHelper;
 
   /**
+   * The entity type manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
+   * The current user account.
+   *
+   * @var \Drupal\Core\Session\AccountProxyInterface
+   */
+  protected $currentUser;
+
+  /**
+   * Constructs new GroupMessageCreator object.
+   *
    * @param \Drupal\eic_messages\Service\MessageBusInterface $message_bus
+   *   The message bus service.
    * @param \Drupal\eic_user\UserHelper $user_helper
+   *   The EIC user helper service.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
+   * @param \Drupal\Core\Session\AccountProxyInterface $current_user
+   *   The current user account.
    */
   public function __construct(
     MessageBusInterface $message_bus,
-    UserHelper $user_helper
+    UserHelper $user_helper,
+    EntityTypeManagerInterface $entity_type_manager,
+    AccountProxyInterface $current_user
   ) {
     $this->messageBus = $message_bus;
     $this->userHelper = $user_helper;
+    $this->entityTypeManager = $entity_type_manager;
+    $this->currentUser = $current_user;
   }
 
   /**
@@ -41,7 +76,9 @@ class GroupMessageCreator implements ContainerInjectionInterface {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('eic_messages.message_bus'),
-      $container->get('eic_user.helper')
+      $container->get('eic_user.helper'),
+      $container->get('entity_type.manager'),
+      $container->get('current_user')
     );
   }
 
@@ -101,6 +138,41 @@ class GroupMessageCreator implements ContainerInjectionInterface {
           'field_group_ref' => ['target_id' => $entity->id()],
         ]);
         break;
+    }
+
+    // Create log message about the group state change.
+    $this->entityTypeManager->getStorage('message')
+      ->create([
+        'template' => LogMessageTemplates::GROUP_STATE_CHANGE,
+        'field_group_ref' => ['target_id' => $entity->id()],
+        'field_previous_moderation_state' => $original_state,
+        'field_moderation_state' => $current_state,
+        'uid' => $this->currentUser->id(),
+      ])
+      ->save();
+  }
+
+  /**
+   * Implements hook_eic_groups_group_predelete().
+   *
+   * Sends out message notifications upon group deletion.
+   */
+  public function groupPredelete(array $entities) {
+    $power_users = $this->userHelper->getSitePowerUsers();
+    foreach ($entities as $group) {
+      $send_to = $power_users;
+      if ($group_owner = EICGroupsHelper::getGroupOwner($group)) {
+        $send_to[] = $group_owner->id();
+      }
+      foreach ($send_to as $uid) {
+        $this->messageBus->dispatch([
+          'template' => NotificationMessageTemplates::GROUP_DELETE,
+          'field_entity_type' => ['target_id' => $group->getEntityTypeId()],
+          'field_referenced_entity_label' => $group->label(),
+          'field_event_executing_user' => $this->currentUser->id(),
+          'uid' => $uid,
+        ]);
+      }
     }
   }
 

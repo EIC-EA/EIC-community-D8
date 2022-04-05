@@ -75,12 +75,14 @@ class UserActivitySubnavigationBlock extends BlockBase implements ContainerFacto
         'route_parameters' => ['user' => $this->currentUser->id()]
       ],
       [
-        'label' => $this->t('Bookmarked', [], ['context' => 'eic_user']),
-        'route' => 'eic_search.global_search',
+        'label' => $this->t('My events', [], ['context' => 'eic_user']),
+        'route' => 'eic_user.user.my_events',
+        'route_parameters' => ['user' => $this->currentUser->id()]
       ],
       [
-        'label' => $this->t('Drafts', [], ['context' => 'eic_user']),
-        'route' => 'eic_search.global_search',
+        'label' => $this->t('My drafts', [], ['context' => 'eic_user']),
+        'route' => 'eic_user.user.my_drafts',
+        'route_parameters' => ['user' => $this->currentUser->id()]
       ],
     ];
 

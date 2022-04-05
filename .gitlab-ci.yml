@@ -3,6 +3,7 @@ stages:
   - test
   - notify
   - deploy
+  - cypress
   - deploy_uat
 
 .deploy_job: &deploy_job
@@ -27,6 +28,26 @@ stages:
       chown -R $PROJECT_USER:$PROJECT_GROUP $PROJECT_DIR &&
       ./vendor/bin/drush updb -y &&
       ./vendor/bin/drush cr &&
+      ./vendor/bin/drush cim -y &&
+      ./vendor/bin/drush cr"
+
+.rollback_trigger_updb: &rollback_trigger_updb
+  image: intractosre/deploy:1
+  stage: deploy
+  when: manual
+  tags:
+    - aws
+  before_script:
+    - eval $(ssh-agent -s)
+    - echo "$DEPLOYMENT_SSH_KEY" | tr -d '\r' | ssh-add - > /dev/null
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - ssh-keyscan -t rsa -p $SSH_PORT $HOST >> ~/.ssh/known_hosts
+  script:
+    - >
+      ssh -p $SSH_PORT $PROJECT_USER@$HOST "source /.victhorious/conf/shell/envvars && cd $PROJECT_DIR &&
+      ./vendor/bin/drush php-eval \"echo drupal_set_installed_schema_version('eic_deploy', $UPDB_VERSION);\" &&
+      ./vendor/bin/drush updb -y &&
       ./vendor/bin/drush cim -y &&
       ./vendor/bin/drush cr"
 
@@ -138,9 +159,29 @@ deploy_uat:
 deploy_migration_env:
   <<: *deploy_job
   stage: deploy_uat
-  when: manual
   variables:
     HOST: $MIGRATION_HOST
+  only:
+    - /^release/.*$/
+
+rollback_trigger_updb_develop:
+  <<: *rollback_trigger_updb
+  variables:
+    HOST: $DEVELOP_HOST
+  only:
+    - develop
+
+rollback_trigger_updb_qa:
+  <<: *rollback_trigger_updb
+  variables:
+    HOST: $QA_HOST
+  only:
+    - /^release/.*$/
+
+rollback_trigger_updb_uat:
+  <<: *rollback_trigger_updb
+  variables:
+    HOST: $UAT_HOST
   only:
     - /^release/.*$/
 
@@ -150,5 +191,20 @@ slack_notifier:
   script:
     - |
       curl -X POST $SLACK_URL -H 'Content-Type: application/json' -d '{"text": "New deployment running on QA. Environment will be updated in a few minutes..."}'
+  only:
+    - /^release/.*$/
+
+cypress_test_qa:
+  stage: cypress
+  image: cypress/base:10
+  tags:
+    - itr-hrt
+  artifacts:
+    untracked: true
+    expire_in: '2 hour'
+  script:
+    - cd e2e
+    - npm install
+    - npx cypress run
   only:
     - /^release/.*$/

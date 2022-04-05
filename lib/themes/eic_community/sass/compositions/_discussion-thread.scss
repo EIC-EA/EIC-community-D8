@@ -138,10 +138,14 @@
     order: 1;
   }
 
-  &__meta,
-  &__featured-items {
+  &:not(.ecl-discussion-thread--as-no-image) &__meta,
+  &:not(.ecl-discussion-thread--as-no-image) &__featured-items {
     @include ecl-media-breakpoint-up('md') {
       padding-left: calc(#{map-get($ecl-media, 'xs')} + 1.25rem);
+
+      #{$node}--has-compact-layout & {
+        padding-left: calc(#{map-get($ecl-media, '2xs')} + #{ecl-box-model('padding', 'controls')});
+      }
     }
   }
 
@@ -167,8 +171,7 @@
     }
   }
 
-  &__highlight-label,
-  &__started-by-label {
+  &__highlight-label {
     @include visually-hidden;
   }
 
@@ -184,6 +187,9 @@
   &__author {
     @include ecl-responsive-font('label');
     font-weight: $ecl-font-weight-bold;
+    & span {
+      font-weight: normal;
+    }
   }
 
   &__members,

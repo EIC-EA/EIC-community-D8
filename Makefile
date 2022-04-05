@@ -48,6 +48,9 @@ import-db:
 ssh:
 	docker exec -it --user web ${APP_NAME}_php bash
 
+ssh_cypress:
+	docker exec -it ${APP_NAME}_cypress bash
+
 help:
 	$(call do_display_commands)
 
@@ -59,6 +62,9 @@ build-front:
 
 reload-fixtures:
 	$(call do_reload_fixtures)
+
+clear-indexes:
+	$(call clear_indexes)
 
 define do_build_front
 	echo -e 'Installing node modules and building...'
@@ -88,6 +94,7 @@ define do_setup
 	docker exec -it ${APP_NAME}_php bash -c 'cp -n ${APP_ROOT}/web/sites/default/default.settings.local.php ${APP_ROOT}/web/sites/default/settings.php'
 	docker exec -it ${APP_NAME}_php bash -c './vendor/bin/drush site-install minimal --site-name=${APP_NAME} --account-name=${DRUPAL_ADMIN_USER} --account-pass=${DRUPAL_ADMIN_PASSWORD} --existing-config -y'
 	docker exec -it ${APP_NAME}_php bash -c './vendor/bin/drush cr'
+	$(call clear_indexes)
 	$(call do_reload_fixtures)
 	docker exec -it ${APP_NAME}_php bash -c './vendor/bin/drush cr'
 	echo -e '\n'
@@ -162,6 +169,11 @@ define do_stop
 	docker-compose down
 	echo -e '\n'
 	echo -e '\e[42m${APP_NAME} stopped\e[0m'
+endef
+
+define clear_indexes
+	echo 'Clearing indexes'
+	docker compose exec php bash -c "curl -X POST -H 'Content-Type: application/json' 'http://solr:8983/solr/${SEARCH_INDEX}/update?commit=true' -d '{\"delete\":{\"query\":\"*:*\"}}'"
 endef
 
 define do_destroy

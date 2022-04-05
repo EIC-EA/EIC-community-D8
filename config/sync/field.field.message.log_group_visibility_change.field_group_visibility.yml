@@ -1,0 +1,19 @@
+uuid: 1025f7c2-7407-4c11-9322-c5752af91575
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.message.field_group_visibility
+    - message.template.log_group_visibility_change
+id: message.log_group_visibility_change.field_group_visibility
+field_name: field_group_visibility
+entity_type: message
+bundle: log_group_visibility_change
+label: 'Group visibility'
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

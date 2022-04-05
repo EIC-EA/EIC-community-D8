@@ -30,7 +30,10 @@ function eic_community_preprocess_node__document(array &$variables) {
 
       // Remove unwanted items.
       if (!empty($teaser['flags'])) {
-        $teaser['flags'] = [];
+        $supported_flags = ['like_content'];
+        $teaser['flags'] = array_filter($teaser['flags'], function ($key) use ($supported_flags) {
+          return in_array($key, $supported_flags);
+        }, ARRAY_FILTER_USE_KEY);
       }
 
       // If we have flags, attach the js library.
@@ -73,7 +76,8 @@ function eic_community_preprocess_node__document(array &$variables) {
 
       if (isset($lang_term)) {
         if ($lang_term->hasTranslation($node->language()->getId())) {
-          $translated_lang_term = \Drupal::service('entity.repository')->getTranslationFromContext($lang_term, $language);
+          $translated_lang_term = \Drupal::service('entity.repository')
+            ->getTranslationFromContext($lang_term, $language);
           $language = $translated_lang_term->getName();
         }
         else {
@@ -90,9 +94,10 @@ function eic_community_preprocess_node__document(array &$variables) {
         'highlight' => FALSE,
         'icon' => [
           'type' => in_array($file_type, ['video', 'image']) ? 'general' : 'custom',
-          'name' => in_array($file_type, ['video', 'image']) ? $file_type : 'document_' . _eic_community_get_file_type_icon_name(
-            pathinfo($file->getFilename(), PATHINFO_EXTENSION)
-          ),
+          'name' => in_array($file_type,
+            ['video', 'image']) ? $file_type : 'document_' . _eic_community_get_file_type_icon_name(
+              pathinfo($file->getFilename(), PATHINFO_EXTENSION)
+            ),
         ],
       ];
 

@@ -7,6 +7,7 @@
 
 use Drupal\comment\CommentInterface;
 use Drupal\comment\Entity\Comment;
+use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Render\Markup;
@@ -61,6 +62,13 @@ function _eic_community_get_share_group_content_link(
   GroupInterface $current_group,
   NodeInterface $node
 ) {
+  $account = \Drupal::currentUser();
+
+  // Check if user has permission to share.
+  if (!$current_group->hasPermission('share content between groups', $account)) {
+    return [];
+  }
+
   static $formatted_groups;
   /** @var \Drupal\oec_group_flex\GroupVisibilityDatabaseStorage $group_visibility_storage */
   $group_visibility_storage = \Drupal::service('oec_group_flex.group_visibility.storage');
@@ -74,7 +82,6 @@ function _eic_community_get_share_group_content_link(
   }
 
   if (empty($formatted_groups)) {
-    $account = \Drupal::currentUser();
     $share_manager = \Drupal::service('eic_share_content.share_manager');
     foreach ($share_manager->getShareableTargetGroupsForUser($account, $current_group) as $group) {
       if (!isset($formatted_groups[$group->bundle()])) {
@@ -227,8 +234,21 @@ function _eic_community_get_entity_stats(EntityInterface $entity, array $stat_ty
     }
 
     $item['icon']['type'] = 'custom';
-    $item['value'] = $value;
+    $item['value'] = $value ?: 0;
     $stats[$stat] = $item;
+  }
+
+  // If comment system is not open on the entity, do not show comments stats.
+  if (
+    array_key_exists('comments', $stats) &&
+    $entity->hasField('field_comments')
+  ) {
+    $field_comments = $entity->get('field_comments')->first()->getValue();
+    $status = intval($field_comments['status']);
+
+    if ($status !== CommentItemInterface::OPEN) {
+      unset($stats['comments']);
+    }
   }
 
   return $stats;
@@ -247,7 +267,11 @@ function _eic_community_get_entity_stats(EntityInterface $entity, array $stat_ty
  * @return \Drupal\comment\CommentInterface|null
  *   The comment object of NULL if not found.
  */
-function _eic_community_get_entity_last_comment(EntityInterface $entity, $first_level_only = TRUE, $published_only = TRUE) {
+function _eic_community_get_entity_last_comment(
+  EntityInterface $entity,
+  $first_level_only = TRUE,
+  $published_only = TRUE
+) {
   $query = \Drupal::entityQuery('comment')
     ->condition('entity_id', $entity->id())
     ->condition('entity_type', $entity->getEntityTypeId());
@@ -312,7 +336,11 @@ function _eic_community_process_term_parents_tree(TermInterface $term, array $te
   }
 
   if (!empty($loaded_parents)) {
-    $terms[$parent->id()]['items'] = _eic_community_process_term_parents_tree($term, $terms[$parent->id()]['items'], $loaded_parents);
+    $terms[$parent->id()]['items'] = _eic_community_process_term_parents_tree(
+      $term,
+      $terms[$parent->id()]['items'],
+      $loaded_parents
+    );
   }
   else {
     $terms[$parent->id()]['items'][$term->id()]['term'] = $term;

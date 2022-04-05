@@ -1,0 +1,35 @@
+uuid: 822581ae-bbe5-4cbf-8361-19d4c02c6092
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.message.notify_content_needs_review.field_event_executing_user
+    - field.field.message.notify_content_needs_review.field_message
+    - field.field.message.notify_content_needs_review.field_referenced_node
+    - message.template.notify_content_needs_review
+id: message.notify_content_needs_review.default
+targetEntityType: message
+bundle: notify_content_needs_review
+mode: default
+content:
+  field_message:
+    type: basic_string
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  partial_0:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  partial_1:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  field_event_executing_user: true
+  field_referenced_node: true
+  search_api_excerpt: true

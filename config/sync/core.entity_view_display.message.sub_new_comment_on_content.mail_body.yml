@@ -1,0 +1,29 @@
+uuid: 8a5f1f75-ad01-4eff-87ff-ac21028c341f
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.message.mail_body
+    - field.field.message.sub_new_comment_on_content.field_event_executing_user
+    - field.field.message.sub_new_comment_on_content.field_referenced_comment
+    - message.template.sub_new_comment_on_content
+id: message.sub_new_comment_on_content.mail_body
+targetEntityType: message
+bundle: sub_new_comment_on_content
+mode: mail_body
+content:
+  partial_1:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  partial_2:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 1
+    region: content
+hidden:
+  field_event_executing_user: true
+  field_referenced_comment: true
+  partial_0: true
+  search_api_excerpt: true

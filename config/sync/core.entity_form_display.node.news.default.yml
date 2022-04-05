@@ -14,14 +14,13 @@ dependencies:
     - field.field.node.news.field_news_paragraphs
     - field.field.node.news.field_related_groups
     - field.field.node.news.field_related_stories
+    - field.field.node.news.field_tags
     - field.field.node.news.field_video
     - field.field.node.news.field_vocab_geo
     - field.field.node.news.field_vocab_topics
     - node.type.news
-    - workflows.workflow.news_stories
   module:
     - comment
-    - content_moderation
     - eic_content
     - media_library
     - paragraphs
@@ -30,6 +29,7 @@ dependencies:
     - scheduler
     - scheduler_content_moderation_integration
     - text
+    - workflow_buttons
 id: node.news.default
 targetEntityType: node
 bundle: news
@@ -143,6 +143,24 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
+  field_tags:
+    type: entity_tree
+    weight: 51
+    region: content
+    settings:
+      match_top_level_limit: '0'
+      can_create_tag: '1'
+      items_to_load: '25'
+      selected_terms_label: 'Your selected tags'
+      search_label: 'Select tags'
+      search_placeholder: Search
+      disable_top_choices: 0
+      load_all: 0
+      auto_select_parents: 0
+      ignore_current_user: 0
+      target_bundles: {  }
+      is_required: false
+    third_party_settings: {  }
   field_video:
     type: media_library_widget
     weight: 8
@@ -170,6 +188,13 @@ content:
       items_to_load: '25'
       load_all: 0
       auto_select_parents: 0
+      ignore_current_user: false
+      target_bundles: {  }
+      is_required: false
+      can_create_tag: false
+      search_label: 'Select a value'
+      search_placeholder: Search
+      selected_terms_label: 'Your selected values'
     third_party_settings: {  }
   langcode:
     type: language_select
@@ -179,10 +204,11 @@ content:
       include_locked: true
     third_party_settings: {  }
   moderation_state:
-    type: moderation_state_default
+    type: workflow_buttons
     weight: 23
     region: content
-    settings: {  }
+    settings:
+      show_current_state: 0
     third_party_settings: {  }
   path:
     type: path

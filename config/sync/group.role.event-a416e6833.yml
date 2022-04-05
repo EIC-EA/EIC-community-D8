@@ -15,8 +15,21 @@ audience: outsider
 group_type: event
 permissions_ui: false
 permissions:
+  - 'access discussions overview'
+  - 'access events overview'
+  - 'access files overview'
+  - 'access group search overview'
+  - 'access latest activity stream'
+  - 'access members overview'
+  - 'access news overview'
+  - 'access wiki overview'
+  - 'delete any invitation'
+  - 'delete own invitations'
   - 'edit all comments'
   - 'edit own comments'
   - 'highlight group content'
+  - 'invite users to group'
   - 'post comments'
   - 'view comments'
+  - 'view group invitations'
+  - 'view group_membership content'

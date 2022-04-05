@@ -10,7 +10,9 @@
 {% endblock %}
 
 {% block content %}
-    {% embed "@theme/patterns/compositions/editorial-article.html.twig" with editorial_article|default({}) %}
+    {% embed "@theme/patterns/compositions/editorial-article.html.twig" with editorial_article|default({})|merge({
+      extra_classes: "ecl-editorial-article--organisation"
+    }) %}
         {% block content %}
             {% if details is not empty %}
                 <section class="ecl-organisation__details ecl-organisation__item">
@@ -64,12 +66,7 @@
                     extra_classes: "ecl-section-wrapper ecl-section-wrapper--is-white ecl-featured-content-collection--has-overview-layout ecl-organisation__item",
                     no_container: true,
                     extra_id: 'members',
-                    call_to_action: {
-                      link: {
-                        label: 'See more',
-                        path: '#'
-                      }
-                  }
+                    call_to_action: teams.call_to_action
                 }) only %}
             {% endif %}
 
@@ -137,51 +134,87 @@
                 {% endblock %}
 
                 {% if contact.adresses %}
-                    <div class="ecl-organisation__contact__item">
-                        <h3 class="ecl-social-share__title">{{ contact.adresses.title }}</h3>
-                        {% for adresse in contact.adresses.items %}
-                            {% with adresse %}
-                                {{ block('contactAdresse') }}
-                            {% endwith %}
-                        {% endfor %}
-                    </div>
-                {% endif %}
 
-                {% if contact.locations %}
-                    <div class="ecl-organisation__contact__item">
-                        <h3 class="ecl-social-share__title">{{ contact.locations.title }}</h3>
-                        {% if contact.locations.items is not empty %}
-                            <div class="ecl-featured-list ecl-featured-list--is-collapsible ecl-featured-list--is-organisation-locations">
-                                <div class="ecl-featured-list__items-wrapper">
-                                    <div class="ecl-featured-list__items">
-                                        {% for item in contact.locations.items %}
-                                            <div class="ecl-featured-list__item">
-                                                {% with item %}
-                                                    {{ block('contactAdresse') }}
-                                                {% endwith %}
-                                            </div>
-                                        {% endfor %}
-                                        <div class="ecl-featured-list__item ecl-featured-list__item--expand">
-                                            {% include "@ecl-twig/ec-component-button/ecl-button.html.twig" with {
-                                                icon_position: 'after',
-                                                icon: icon_file_path ? {
-                                                    path: icon_file_path,
-                                                    type: 'ui',
-                                                    name: 'rounded-arrow',
-                                                    transform: 'rotate-180',
-                                                    size: '2xs',
-                                                } : {},
-                                                label: contact.locations.collapse_label|default('Show all'),
-                                                variant: 'ghost',
-                                                extra_classes: 'ecl-featured-list__expand'
-                                            } %}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        {% endif %}
-                    </div>
-                {% endif %}
+  <div class="ecl-organisation__contact__item">
+    <h3 class="ecl-social-share__title">{{ contact.adresses.title }}</h3>
+    {% if contact.adresses.items is not empty %}
+    <div
+      class="ecl-featured-list ecl-featured-list--is-collapsible ecl-featured-list--is-organisation-adresses"
+    >
+      <div class="ecl-featured-list__items-wrapper">
+        <div class="ecl-featured-list__items">
+          {% for item in contact.adresses.items %}
+          <div class="ecl-featured-list__item">
+            {% with item %}
+            {{ block('contactAdresse') }}
+            {% endwith %}
+          </div>
+          {% endfor %}
+          {% if contact.adresses.items|length > 2 %}
+          <div
+            class="ecl-featured-list__item ecl-featured-list__item--expand ecl-featured-list__item--collapse"
+          >
+            {% include "@ecl-twig/ec-component-button/ecl-button.html.twig" with { icon_position:
+            'after', icon: icon_file_path ? { path: icon_file_path, type: 'ui', name:
+            'rounded-arrow', size: '2xs', } : {}, label:
+            contact.adresses.collapse_label|default('Show less'), variant: 'ghost', extra_classes:
+            'ecl-featured-list__collapse ecl-featured-list__btn-no-padding' } %}
+          </div>
+          <div class="ecl-featured-list__item ecl-featured-list__item--expand">
+            {% include "@ecl-twig/ec-component-button/ecl-button.html.twig" with { icon_position:
+            'after', icon: icon_file_path ? { path: icon_file_path, type: 'ui', name:
+            'rounded-arrow', transform: 'rotate-180', size: '2xs', } : {}, label:
+            contact.adresses.collapse_label|default('Show all'), variant: 'ghost', extra_classes:
+            'ecl-featured-list__expand' } %}
+          </div>
+          {% endif %}
+
+        </div>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+
+  {% endif %}
+
+  {% if contact.locations %}
+  <div class="ecl-organisation__contact__item">
+    <h3 class="ecl-social-share__title">{{ contact.locations.title }}</h3>
+    {% if contact.locations.items is not empty %}
+    <div
+      class="ecl-featured-list ecl-featured-list--is-collapsible ecl-featured-list--is-organisation-locations"
+    >
+      <div class="ecl-featured-list__items-wrapper">
+        <div class="ecl-featured-list__items">
+         {% for item in contact.locations.items %}
+          <div class="ecl-featured-list__item">
+            {% with item %}
+            {{ block('contactAdresse') }}
+            {% endwith %}
+          </div>
+          {% endfor %}
+          <div
+            class="ecl-featured-list__item ecl-featured-list__item--expand ecl-featured-list__item--collapse"
+          >
+            {% include "@ecl-twig/ec-component-button/ecl-button.html.twig" with { icon_position:
+            'after', icon: icon_file_path ? { path: icon_file_path, type: 'ui', name:
+            'rounded-arrow', size: '2xs', } : {}, label:
+            contact.adresses.collapse_label|default('Show less'), variant: 'ghost', extra_classes:
+            'ecl-featured-list__collapse ecl-featured-list__btn-no-padding' } %}
+          </div>
+          <div class="ecl-featured-list__item ecl-featured-list__item--expand">
+            {% include "@ecl-twig/ec-component-button/ecl-button.html.twig" with { icon_position:
+            'after', icon: icon_file_path ? { path: icon_file_path, type: 'ui', name:
+            'rounded-arrow', transform: 'rotate-180', size: '2xs', } : {}, label:
+            contact.adresses.collapse_label|default('Show all'), variant: 'ghost', extra_classes:
+            'ecl-featured-list__expand' } %}
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+  {% endif %}
             </div>
         {% endblock %}
     {% endembed %}

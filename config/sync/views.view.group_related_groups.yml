@@ -156,7 +156,7 @@ display:
           replica: false
           query_tags: {  }
       relationships: {  }
-      use_more: true
+      use_more: false
       use_more_always: true
       use_more_text: 'View all'
       link_display: custom_url
@@ -326,6 +326,9 @@ display:
         - url
       tags:
         - 'config:core.entity_view_display.group.event.default'
+        - 'config:core.entity_view_display.group.event.small_teaser'
+        - 'config:core.entity_view_display.group.event.teaser'
         - 'config:core.entity_view_display.group.group.about_page'
         - 'config:core.entity_view_display.group.group.default'
         - 'config:core.entity_view_display.group.group.teaser'
+        - 'config:core.entity_view_display.group.organisation.default'

@@ -3,7 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
-    - core.entity_view_mode.node.teaser
+    - core.entity_view_mode.node.small_teaser
     - node.type.event
   module:
     - datetime
@@ -305,7 +305,7 @@ display:
         type: 'entity:node'
         options:
           relationship: none
-          view_mode: teaser
+          view_mode: small_teaser
       query:
         type: views_query
         options:
@@ -340,7 +340,7 @@ display:
       use_more_always: true
       use_more_text: 'View all'
       link_display: custom_url
-      link_url: '<front>'
+      link_url: 'group/{{ raw_arguments.gid }}/events'
       header:
         area:
           id: area

@@ -1,0 +1,19 @@
+uuid: cc49bb57-831b-47f3-8ffe-1f2180191e70
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.message.field_entity_type
+    - message.template.log_req_owner_transfer_accepted
+id: message.log_req_owner_transfer_accepted.field_entity_type
+field_name: field_entity_type
+entity_type: message
+bundle: log_req_owner_transfer_accepted
+label: 'Entity type'
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

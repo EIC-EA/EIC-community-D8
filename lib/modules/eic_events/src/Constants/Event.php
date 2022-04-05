@@ -40,6 +40,13 @@ final class Event {
   const GROUP_MEMBER_ROLE = 'event-member';
 
   /**
+   * The Group event type vocabulary machine name.
+   *
+   * @var string
+   */
+  const GROUP_EVENT_TYPE_VOCABULARY_NAME = 'global_event_type';
+
+  /**
    * @return array
    */
   public static function getStateLabelsMapping(): array {

@@ -1,0 +1,24 @@
+uuid: bb174c72-c5b2-4b7a-bf2c-191d12210ddf
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.message.mail_body
+    - field.field.message.notify_content_approved.field_event_executing_user
+    - field.field.message.notify_content_approved.field_message
+    - field.field.message.notify_content_approved.field_referenced_node
+    - message.template.notify_content_approved
+id: message.notify_content_approved.mail_body
+targetEntityType: message
+bundle: notify_content_approved
+mode: mail_body
+content:
+  partial_1:
+    weight: 0
+    region: content
+hidden:
+  field_event_executing_user: true
+  field_message: true
+  field_referenced_node: true
+  partial_0: true
+  search_api_excerpt: true

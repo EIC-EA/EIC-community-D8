@@ -7,6 +7,7 @@ FROM php:${PHP_VERSION}-fpm
 ARG UID=1000
 ARG GID=1000
 ENV DEBIAN_FRONTEND noninteractive
+ARG DRUSH_LAUNCHER_VERSION=8
 
 RUN apt-get -o Acquire::Check-Valid-Until=false -o Acquire::Check-Date=false update \
   && apt-get -y install apt-transport-https apt-utils build-essential xorg \
@@ -41,6 +42,12 @@ RUN groupadd -o -g ${GID} web \
 
 
 COPY --from=composer /usr/bin/composer /usr/local/bin/
+
+RUN latest_drush_version=$(curl -s https://api.github.com/repos/drush-ops/drush/releases | grep tag_name | grep ${DRUSH_LAUNCHER_VERSION}'\.' | head -1 | awk -F '"' '{print $4}') \
+  && curl -s -L https://github.com/drush-ops/drush/releases/download/${latest_drush_version}/drush.phar -o /usr/local/bin/drush \
+  && chmod +x /usr/local/bin/drush \
+  # smoke test
+  && drush version
 
 ENV YARN_VERSION=1.22.15
 COPY --from=node:14 /usr/local/lib/node_modules /usr/local/lib/node_modules

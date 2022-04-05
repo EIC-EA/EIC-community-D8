@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - filter.format.full_html
     - filter.format.plain_text
   module:
     - eic_messages
@@ -14,11 +15,11 @@ label: 'NOTIFY :: MT02 :: Group request approved'
 description: ''
 text:
   -
-    value: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
+    value: 'Your group request for [message:field_group_ref:entity:title] was approved'
     format: plain_text
   -
-    value: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
-    format: plain_text
+    value: "<p>Dear [message:author:display-name],</p>\r\n\r\n<p>We're pleased to let you know your group was approved and is currently saved in draft status:&nbsp;<a href=\"[message:field_group_ref:entity:url]\">[message:field_group_ref:entity:title]</a></p>\r\n\r\n<p>You can access your new group&nbsp;<a href=\"[message:field_group_ref:entity:url]\"><u>here</u></a>.</p>\r\n\r\n<p>To get started, we encourage you to read&nbsp;<a href=\"[site:url]help-and-guidance\"><u>this short guide</u></a>. Here you’ll find tips and advice to make the most of your Group. Once you're ready to go live, don't forget to update the status of your Group to share it with the rest of the community.</p>\r\n\r\n<p>We hope you’ll enjoy using the Community platform of the European Innovation Council, and we’d like to remind you that we are available to provide&nbsp;<a href=\"mailto:EISMEA-SME-HELPDESK@ec.europa.eu\"><u>help and support</u></a>.</p>\r\n\r\n<p>The EIC Community team</p>\r\n"
+    format: full_html
 settings:
   'token options':
     clear: false

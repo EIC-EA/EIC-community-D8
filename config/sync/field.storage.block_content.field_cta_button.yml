@@ -1,0 +1,24 @@
+uuid: 3df1ce2a-078b-41cb-9322-8b8203ebb682
+langcode: en
+status: true
+dependencies:
+  module:
+    - block_content
+    - typed_link
+id: block_content.field_cta_button
+field_name: field_cta_button
+entity_type: block_content
+type: typed_link
+settings:
+  allowed_values:
+    default: Default
+    call: 'Call to action'
+    primary: Primary
+  allowed_values_function: ''
+module: typed_link
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

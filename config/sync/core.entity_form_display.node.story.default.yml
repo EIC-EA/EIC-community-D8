@@ -13,14 +13,13 @@ dependencies:
     - field.field.node.story.field_introduction
     - field.field.node.story.field_related_stories
     - field.field.node.story.field_story_paragraphs
+    - field.field.node.story.field_tags
     - field.field.node.story.field_video
     - field.field.node.story.field_vocab_geo
     - field.field.node.story.field_vocab_topics
     - node.type.story
-    - workflows.workflow.news_stories
   module:
     - comment
-    - content_moderation
     - eic_content
     - media_library
     - paragraphs
@@ -29,6 +28,7 @@ dependencies:
     - scheduler
     - scheduler_content_moderation_integration
     - text
+    - workflow_buttons
 _core:
   default_config_hash: LsDJlqOkQALFbvWkBxxCsPzY-CA2N2K9zdQZXXgCoIM
 id: node.story.default
@@ -135,6 +135,24 @@ content:
       form_display_mode: default
       default_paragraph_type: _none
     third_party_settings: {  }
+  field_tags:
+    type: entity_tree
+    weight: 51
+    region: content
+    settings:
+      match_top_level_limit: '0'
+      can_create_tag: '1'
+      items_to_load: '25'
+      selected_terms_label: 'Your selected tags'
+      search_label: 'Select tags'
+      search_placeholder: Search
+      disable_top_choices: 0
+      load_all: 0
+      auto_select_parents: 0
+      ignore_current_user: 0
+      target_bundles: {  }
+      is_required: false
+    third_party_settings: {  }
   field_video:
     type: media_library_widget
     weight: 7
@@ -162,6 +180,13 @@ content:
       items_to_load: '25'
       load_all: 0
       auto_select_parents: 0
+      ignore_current_user: false
+      target_bundles: {  }
+      is_required: false
+      can_create_tag: false
+      search_label: 'Select a value'
+      search_placeholder: Search
+      selected_terms_label: 'Your selected values'
     third_party_settings: {  }
   langcode:
     type: language_select
@@ -171,10 +196,11 @@ content:
       include_locked: true
     third_party_settings: {  }
   moderation_state:
-    type: moderation_state_default
+    type: workflow_buttons
     weight: 19
     region: content
-    settings: {  }
+    settings:
+      show_current_state: false
     third_party_settings: {  }
   path:
     type: path

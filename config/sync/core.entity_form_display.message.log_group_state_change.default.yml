@@ -3,8 +3,9 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.field.message.log_group_state_change.field_event_executing_user
     - field.field.message.log_group_state_change.field_group_ref
+    - field.field.message.log_group_state_change.field_moderation_state
+    - field.field.message.log_group_state_change.field_previous_moderation_state
     - field.field.message.log_group_state_change.field_rendered_content
     - message.template.log_group_state_change
   module:
@@ -14,16 +15,6 @@ targetEntityType: message
 bundle: log_group_state_change
 mode: default
 content:
-  field_event_executing_user:
-    type: entity_reference_autocomplete
-    weight: 0
-    region: content
-    settings:
-      match_operator: CONTAINS
-      match_limit: 10
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
   field_group_ref:
     type: entity_reference_autocomplete
     weight: 1
@@ -31,6 +22,22 @@ content:
     settings:
       match_operator: CONTAINS
       match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_moderation_state:
+    type: string_textfield
+    weight: 4
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_previous_moderation_state:
+    type: string_textfield
+    weight: 3
+    region: content
+    settings:
       size: 60
       placeholder: ''
     third_party_settings: {  }

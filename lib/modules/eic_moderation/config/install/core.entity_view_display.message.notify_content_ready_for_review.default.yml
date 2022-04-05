@@ -1,0 +1,21 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.message.notify_content_ready_for_review.field_event_executing_user
+    - field.field.message.notify_content_ready_for_review.field_referenced_node
+    - message.template.notify_content_ready_for_review
+id: message.notify_content_ready_for_review.default
+targetEntityType: message
+bundle: notify_content_ready_for_review
+mode: default
+content:
+  partial_0:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  field_event_executing_user: true
+  field_referenced_node: true
+  search_api_excerpt: true

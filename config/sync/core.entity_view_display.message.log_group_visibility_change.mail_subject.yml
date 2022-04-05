@@ -1,0 +1,26 @@
+uuid: c2e8389f-10b1-4046-8fd1-31ed53de0f03
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.message.mail_subject
+    - field.field.message.log_group_visibility_change.field_group_ref
+    - field.field.message.log_group_visibility_change.field_group_visibility
+    - field.field.message.log_group_visibility_change.field_previous_group_visibility
+    - field.field.message.log_group_visibility_change.field_rendered_content
+    - message.template.log_group_visibility_change
+id: message.log_group_visibility_change.mail_subject
+targetEntityType: message
+bundle: log_group_visibility_change
+mode: mail_subject
+content:
+  partial_0:
+    weight: 0
+    region: content
+hidden:
+  field_group_ref: true
+  field_group_visibility: true
+  field_previous_group_visibility: true
+  field_rendered_content: true
+  partial_1: true
+  search_api_excerpt: true

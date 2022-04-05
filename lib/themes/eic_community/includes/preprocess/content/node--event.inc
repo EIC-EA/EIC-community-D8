@@ -5,10 +5,11 @@
  * Prepares variables for node Event templates.
  */
 
-use Drupal\eic_helper\DateTimeHelper;
+use Drupal\Core\Locale\CountryManager;
 use Drupal\eic_community\ValueObject\ImageValueObject;
-use Drupal\eic_search\SearchHelper;
+use Drupal\eic_helper\DateTimeHelper;
 use Drupal\eic_overviews\GroupOverviewPages;
+use Drupal\eic_search\SearchHelper;
 use Drupal\group\Entity\GroupInterface;
 
 /**
@@ -23,6 +24,7 @@ function eic_community_preprocess_node__event(array &$variables) {
       _eic_community_render_event_detail_page($variables, $variables['node']);
       break;
     case 'teaser':
+    case 'small_teaser':
       $teaser = _eic_community_prepare_node_teaser_array($node);
 
       // Get the thumbnail.
@@ -83,10 +85,13 @@ function eic_community_preprocess_node__event(array &$variables) {
         elseif (!empty($location)) {
           $location = reset($location);
           $city = $location ? $location['locality'] : '';
-          $country = $node->get('field_vocab_geo')->entity;
+          $countries_map = CountryManager::getStandardList();
+          $country = array_key_exists($location['country_code'], $countries_map) ?
+            $countries_map[$location['country_code']] :
+            '';
           $locality_data = [
             $city,
-            $country instanceof \Drupal\taxonomy\TermInterface ? $country->label() : NULL,
+            $country,
           ];
 
           $locality_data = array_filter($locality_data, function ($locality) {
@@ -134,9 +139,39 @@ function eic_community_preprocess_node__event(array &$variables) {
         ];
       }
 
+      $flags_count = \Drupal::service('flag.count')->getEntityFlagCounts($node);
+      /** @var \Drupal\eic_statistics\NodeStatisticsDatabaseStorage $node_stats_storage */
+      $node_stats_storage = \Drupal::service('eic_statistics.statistics.storage.node.decorator');
+
+      $stats[] = [
+        'icon' => [
+          'type' => 'custom',
+          'name' => 'like',
+        ],
+        'label' => t('Likes'),
+        'value' => array_key_exists('like_content', $flags_count) ?
+          $flags_count['like_content'] :
+          0,
+      ];
+
+      $stats_views = 0;
+
+      if ($statistics_views_result = $node_stats_storage->fetchView($node->id())) {
+        $stats_views = $statistics_views_result->getTotalCount();
+      }
+
+      $stats[] = [
+        'icon' => [
+          'type' => 'custom',
+          'name' => 'views',
+        ],
+        'label' => t('Views'),
+        'value' => $stats_views
+      ];
+
       // Remove unwanted items.
       $teaser['flags'] = [];
-      $teaser['stats'] = [];
+      $teaser['stats'] = $stats;
       $teaser['icon_file_path'] = $variables['eic_icon_path'];
 
       // If we have flags, attach the js library.

@@ -9,6 +9,9 @@
     & .ecl-comment__content{
       @include ecl-media-breakpoint-down('md') {
         padding-left: 1rem;
+        .ecl-discussion-thread__featured-items & {
+          padding-left: 0;
+        }
       }
     }
   }

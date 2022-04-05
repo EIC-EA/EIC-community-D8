@@ -134,6 +134,13 @@ abstract class SourceType implements SourceTypeInterface {
   /**
    * @inheritDoc
    */
+  public function getRegistrationDateIntervalField(): array {
+    return [];
+  }
+
+  /**
+   * @inheritDoc
+   */
   public function prefilterByGroupVisibility(): bool {
     return FALSE;
   }
@@ -185,6 +192,27 @@ abstract class SourceType implements SourceTypeInterface {
    */
   public function getFieldsToFilterEmptyValue(): array {
     return [];
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function ignoreAnonymousUser(): bool {
+    return FALSE;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function extraPrefilter(): array {
+    return [];
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function ignorePublishedState(): bool {
+    return FALSE;
   }
 
 }

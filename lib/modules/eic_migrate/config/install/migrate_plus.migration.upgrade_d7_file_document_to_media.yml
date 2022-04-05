@@ -18,6 +18,8 @@ source:
     - public
     - private
   track_changes: true
+  smed_taxonomy_fields:
+    - c4m_vocab_language
 process:
   name: filename
   uid:
@@ -33,6 +35,18 @@ process:
       migration:
         - upgrade_d7_file
         - upgrade_d7_file_private
+  field_language:
+    -
+      plugin: sub_process
+      source: c4m_vocab_language
+      process:
+        target_id:
+          -
+            plugin: migration_lookup
+            source: smed_id
+            no_stub: true
+            migration:
+              - smed_spoken_languages
 destination:
   plugin: 'entity:media'
   default_bundle: eic_document
@@ -41,4 +55,5 @@ migration_dependencies:
     - upgrade_d7_user
     - upgrade_d7_file
     - upgrade_d7_file_private
+    - smed_spoken_languages
   optional: { }

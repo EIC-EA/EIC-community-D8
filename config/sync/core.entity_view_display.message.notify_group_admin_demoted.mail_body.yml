@@ -1,0 +1,24 @@
+uuid: d1d766c3-097d-4559-b53b-aa15d98f598b
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.message.mail_body
+    - field.field.message.notify_group_admin_demoted.field_event_executing_user
+    - field.field.message.notify_group_admin_demoted.field_group_ref
+    - message.template.notify_group_admin_demoted
+id: message.notify_group_admin_demoted.mail_body
+targetEntityType: message
+bundle: notify_group_admin_demoted
+mode: mail_body
+content:
+  partial_1:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  field_event_executing_user: true
+  field_group_ref: true
+  partial_0: true
+  search_api_excerpt: true

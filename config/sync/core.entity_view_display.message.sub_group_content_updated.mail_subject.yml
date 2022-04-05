@@ -1,0 +1,27 @@
+uuid: e180ed59-40be-48d5-af0d-848bcf079057
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.message.mail_subject
+    - field.field.message.sub_group_content_updated.field_event_executing_user
+    - field.field.message.sub_group_content_updated.field_group_ref
+    - field.field.message.sub_group_content_updated.field_referenced_node
+    - message.template.sub_group_content_updated
+id: message.sub_group_content_updated.mail_subject
+targetEntityType: message
+bundle: sub_group_content_updated
+mode: mail_subject
+content:
+  partial_0:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  field_event_executing_user: true
+  field_group_ref: true
+  field_referenced_node: true
+  partial_1: true
+  partial_2: true
+  search_api_excerpt: true
