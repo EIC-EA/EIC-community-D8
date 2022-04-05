@@ -12,7 +12,7 @@ migration_tags:
 migration_group: migrate_drupal_7
 label: Books
 source:
-  plugin: book
+  plugin: eic_book
   track_changes: true
 process:
   nid:
