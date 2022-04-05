@@ -6,8 +6,10 @@ use Drupal\Core\Database\Database;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\eic_groups\Constants\GroupJoiningMethodType;
 use Drupal\eic_groups\Constants\GroupVisibilityType;
 use Drupal\eic_organisations\Constants\Organisations;
+use Drupal\group\Entity\GroupInterface;
 use Drupal\group_flex\GroupFlexGroupSaver;
 use Drupal\group_flex\Plugin\GroupVisibilityInterface;
 use Drupal\migrate\Event\MigrateEvents;
@@ -113,29 +115,68 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
   public function onMigratePostRowSave(MigratePostRowSaveEvent $event) {
     switch ($event->getMigration()->getBaseId()) {
       case 'upgrade_d7_node_complete_group':
-        $this->setGroupVisibility($event);
+        // Check if we have a group ID.
+        if (!$gid = $event->getDestinationIdValues()[0]) {
+          return;
+        }
+
+        // Load the migrated group.
+        if ($group = $this->entityTypeManager->getStorage('group')->load($gid)) {
+          $this->setGroupVisibility($group, $event);
+          $this->setGroupJoiningMethod($group, $event);
+        }
         break;
 
     }
   }
 
   /**
+   * Sets the group joining methods after row has been saved.
+   *
+   * @param \Drupal\group\Entity\GroupInterface $group
+   *   The migrated group entity.
+   * @param \Drupal\migrate\Event\MigratePostRowSaveEvent $event
+   *   The post row save event object.
+   */
+  protected function setGroupJoiningMethod(GroupInterface $group, MigratePostRowSaveEvent $event) {
+    /** @var \Drupal\migrate\Row $row */
+    $row = $event->getRow();
+
+    // Get the group access for this group.
+    if (!isset($row->getSourceProperty('field_membership_open_request')[0]['value'])) {
+      $event->logMessage($this->t('No joining method found for group.'), 'warning');
+      return;
+    }
+
+    $joining_method = $row->getSourceProperty('field_membership_open_request')[0]['value'];
+
+    switch ($joining_method) {
+      // Open (auto-join).
+      case 1:
+        $this->groupFlexGroupSaver->saveGroupJoiningMethods($group, [
+          GroupJoiningMethodType::GROUP_JOINING_METHOD_TU_OPEN => GroupJoiningMethodType::GROUP_JOINING_METHOD_TU_OPEN,
+        ]);
+        break;
+
+      // Moderated (membership request).
+      case 0:
+        $this->groupFlexGroupSaver->saveGroupJoiningMethods($group, [
+          GroupJoiningMethodType::GROUP_JOINING_METHOD_TU_MEMBERSHIP_REQUEST => GroupJoiningMethodType::GROUP_JOINING_METHOD_TU_MEMBERSHIP_REQUEST,
+        ]);
+        break;
+    }
+  }
+
+  /**
    * Sets the group visibility after row has been saved.
    *
+   * @param \Drupal\group\Entity\GroupInterface $group
+   *   The migrated group entity.
    * @param \Drupal\migrate\Event\MigratePostRowSaveEvent $event
-   *   The import event object.
+   *   The post row save event object.
    */
-  protected function setGroupVisibility(MigratePostRowSaveEvent $event) {
-    // Check if we have a group ID.
-    if (!$gid = $event->getDestinationIdValues()[0]) {
-      return;
-    }
-
-    // Load the migrated group.
-    if (!$group = $this->entityTypeManager->getStorage('group')->load($gid)) {
-      return;
-    }
-
+  protected function setGroupVisibility(GroupInterface $group, MigratePostRowSaveEvent $event) {
+    /** @var \Drupal\migrate\Row $row */
     $row = $event->getRow();
 
     // Get the group access for this group.
