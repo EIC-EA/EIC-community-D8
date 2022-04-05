@@ -5,8 +5,14 @@ namespace Drupal\eic_migrate\EventSubscriber;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\eic_groups\Constants\GroupVisibilityType;
+use Drupal\eic_organisations\Constants\Organisations;
+use Drupal\group_flex\GroupFlexGroupSaver;
+use Drupal\group_flex\Plugin\GroupVisibilityInterface;
 use Drupal\migrate\Event\MigrateEvents;
 use Drupal\migrate\Event\MigrateImportEvent;
+use Drupal\migrate\Event\MigratePostRowSaveEvent;
 use Drupal\migrate\MigrateLookup;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -16,6 +22,8 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  * @package Drupal\eic_migrate
  */
 class PostMigrationSubscriber implements EventSubscriberInterface {
+
+  use StringTranslationTrait;
 
   /**
    * The database connection to the migrate DB.
@@ -39,19 +47,33 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
   protected $entityTypeManager;
 
   /**
+   * The Group Flex Group saver service.
+   *
+   * @var \Drupal\group_flex\GroupFlexGroupSaver
+   */
+  protected $groupFlexGroupSaver;
+
+  /**
    * Constructs a new MessageCreatorBase object.
    *
    * @param \Drupal\migrate\MigrateLookup $migrate_lookup
    *   The migrate lookup service.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
+   * @param \Drupal\group_flex\GroupFlexGroupSaver $group_flex_group_saver
+   *   The Group Flex Group saver service.
    */
-  public function __construct(MigrateLookup $migrate_lookup, EntityTypeManagerInterface $entity_type_manager) {
+  public function __construct(
+    MigrateLookup $migrate_lookup,
+    EntityTypeManagerInterface $entity_type_manager,
+    GroupFlexGroupSaver $group_flex_group_saver
+  ) {
     $connection = Database::getConnection('default', 'migrate');
 
     $this->connection = $connection;
     $this->migrateLookup = $migrate_lookup;
     $this->entityTypeManager = $entity_type_manager;
+    $this->groupFlexGroupSaver = $group_flex_group_saver;
   }
 
   /**
@@ -59,6 +81,7 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
    */
   public static function getSubscribedEvents() {
     $events[MigrateEvents::POST_IMPORT][] = ['onMigratePostImport'];
+    $events[MigrateEvents::POST_ROW_SAVE][] = ['onMigratePostRowSave'];
     return $events;
   }
 
@@ -79,6 +102,119 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
         break;
 
     }
+  }
+
+  /**
+   * Run tasks on row save event.
+   *
+   * @param \Drupal\migrate\Event\MigratePostRowSaveEvent $event
+   *   The post row save event object.
+   */
+  public function onMigratePostRowSave(MigratePostRowSaveEvent $event) {
+    switch ($event->getMigration()->getBaseId()) {
+      case 'upgrade_d7_node_complete_group':
+        $this->setGroupVisibility($event);
+        break;
+
+    }
+  }
+
+  /**
+   * Sets the group visibility after row has been saved.
+   *
+   * @param \Drupal\migrate\Event\MigratePostRowSaveEvent $event
+   *   The import event object.
+   */
+  protected function setGroupVisibility(MigratePostRowSaveEvent $event) {
+    // Check if we have a group ID.
+    if (!$gid = $event->getDestinationIdValues()[0]) {
+      return;
+    }
+
+    // Load the migrated group.
+    if (!$group = $this->entityTypeManager->getStorage('group')->load($gid)) {
+      return;
+    }
+
+    $row = $event->getRow();
+
+    // Get the group access for this group.
+    if (!isset($row->getSourceProperty('group_access')[0]['value'])) {
+      $event->logMessage($this->t('No group access found for group.'), 'warning');
+      return;
+    }
+
+    $group_access = $row->getSourceProperty('group_access')[0]['value'];
+
+    switch ($group_access) {
+      // Public.
+      case 0:
+        $this->groupFlexGroupSaver->saveGroupVisibility($group, GroupVisibilityInterface::GROUP_FLEX_TYPE_VIS_PUBLIC);
+        break;
+
+      case 1:
+        $access_conf = $this->getPluggableNodeAccessConfiguration($row->getSourceProperty('pluggable_node_access'));
+        if ($access_conf) {
+          // Custom restricted.
+          $options = [];
+          foreach ($access_conf as $restriction_type => $values) {
+            switch ($restriction_type) {
+              case 'email_domain':
+                $visibility_option = GroupVisibilityType::GROUP_VISIBILITY_OPTION_EMAIL_DOMAIN;
+                $email_domains = implode(',', array_values($values));
+                $options[$visibility_option] = $this->buildCustomRestrictedVisibilityRecord($visibility_option, $email_domains);
+                break;
+
+              case 'organisation':
+                $visibility_option = GroupVisibilityType::GROUP_VISIBILITY_OPTION_ORGANISATIONS;
+                $organisations = [];
+                foreach ($this->findOrganisationIds($values) as $org_id) {
+                  $organisations[]['target_id'] = $org_id;
+                }
+                $options[$visibility_option] = $this->buildCustomRestrictedVisibilityRecord($visibility_option, $organisations);
+                break;
+            }
+            $this->groupFlexGroupSaver->saveGroupVisibility($group, GroupVisibilityType::GROUP_VISIBILITY_CUSTOM_RESTRICTED, $options);
+          }
+        }
+        else {
+          // Private.
+          $this->groupFlexGroupSaver->saveGroupVisibility($group, GroupVisibilityInterface::GROUP_FLEX_TYPE_VIS_PRIVATE);
+        }
+        break;
+    }
+
+  }
+
+  /**
+   * Returns the configuration of the pluggable_node_access property.
+   *
+   * @param array $pluggable_node_access
+   *   The pluggable_node_access property from the row.
+   *
+   * @return array
+   *   The configuration items or FALSE if not found.
+   */
+  protected function getPluggableNodeAccessConfiguration(array $pluggable_node_access) {
+    $ids = [];
+    foreach ($pluggable_node_access as $item) {
+      $ids[] = $item['target_id'];
+    }
+
+    if (empty($ids)) {
+      return FALSE;
+    }
+
+    // Get the pluggable node access records.
+    $d7_query = $this->connection->select('pluggable_node_access', 'pna');
+    $d7_query->fields('pna', ['type', 'data']);
+    $d7_query->condition('pna.id', $ids, 'IN');
+
+    $results = [];
+    foreach ($d7_query->execute()->fetchAll(\PDO::FETCH_ASSOC) as $result) {
+      $results[$result['type']] = unserialize($result['data']);
+    }
+    return $results ?? FALSE;
   }
 
   /**
@@ -202,6 +338,50 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
     // Preserve the changed timestamp.
     $entity->setChangedTime($changed);
     $entity->save();
+  }
+
+  /**
+   * Builds the expected array for CustomRestrictedVisibility plugin.
+   *
+   * There is no available function to reproduce this through the oec_group_flex
+   * module, so we mimic this here.
+   * It can be used to set the visibility record.
+   *
+   * @param string $plugin_id
+   *   The CustomRestrictedVisibility plugin ID.
+   * @param mixed $value
+   *   The value to assign.
+   *
+   * @return array
+   *   The configuration array.
+   */
+  protected function buildCustomRestrictedVisibilityRecord(string $plugin_id, $value) {
+    return [
+      "{$plugin_id}_status" => 1,
+      "{$plugin_id}_conf" => $value,
+    ];
+  }
+
+  /**
+   * Returns the organisation destination IDs.
+   *
+   * @param string[] $names
+   *   The organisation names.
+   *
+   * @return int[]
+   *   Array of organisation IDs.
+   */
+  protected function findOrganisationIds(array $names = []) {
+    $results = [];
+    foreach ($names as $name) {
+      if ($group = $this->entityTypeManager->getStorage('group')->loadByProperties([
+        'label' => $name,
+        'type' => Organisations::GROUP_ORGANISATION_BUNDLE,
+      ])) {
+        $results[] = $group->id();
+      }
+    }
+    return $results;
   }
 
 }
