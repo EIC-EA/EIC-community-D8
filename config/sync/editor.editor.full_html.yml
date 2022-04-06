@@ -22,6 +22,8 @@ settings:
             - Strike
             - Superscript
             - Subscript
+            - TextColor
+            - BGColor
             - HorizontalRule
         -
           name: Lists
@@ -70,6 +72,8 @@ settings:
       styles: ''
     language:
       language_list: un
+    colorbutton:
+      colors: ''
 image_upload:
   status: false
   scheme: public
