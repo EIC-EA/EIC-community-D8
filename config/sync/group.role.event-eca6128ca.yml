@@ -33,3 +33,4 @@ permissions:
   - 'view comments'
   - 'view group invitations'
   - 'view group_membership content'
+  - 'view own unpublished group'

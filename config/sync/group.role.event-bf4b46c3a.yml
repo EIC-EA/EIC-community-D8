@@ -30,6 +30,8 @@ permissions:
   - 'highlight group content'
   - 'invite users to group'
   - 'post comments'
+  - 'view any unpublished group'
   - 'view comments'
   - 'view group invitations'
   - 'view group_membership content'
+  - 'view own unpublished group'
