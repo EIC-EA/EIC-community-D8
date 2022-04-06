@@ -218,6 +218,10 @@ process:
           source: value2
           from_format: 'Y-m-d H:i:s'
           to_format: 'Y-m-d\TH:i:s'
+  field_organised_by:
+    -
+      plugin: get
+      source: c4m_organised_by
 destination:
   plugin: 'entity_complete:node'
   translations: true

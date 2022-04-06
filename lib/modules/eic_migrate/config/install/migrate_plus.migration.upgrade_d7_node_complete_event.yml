@@ -165,9 +165,7 @@ process:
   field_location:
     - plugin: addressfield
       source: c4m_location_address
-  field_location_type:
-    - plugin: get
-      source: location_type
+  field_location_type: location_type
   field_link:
     - plugin: field_link
       uri_scheme: 'https://'
@@ -186,6 +184,7 @@ process:
           source: value2
           from_format: 'Y-m-d H:i:s'
           to_format: 'Y-m-d\TH:i:s'
+  field_organised_by: c4m_organised_by
 destination:
   plugin: 'entity_complete:node'
   translations: true
