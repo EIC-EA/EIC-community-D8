@@ -1,0 +1,10 @@
+<?php
+
+/**
+ * Implements hook_entity_type_alter().
+ *
+ * @param array $entity_types
+ */
+function eic_migrate_entity_type_alter(array &$entity_types) {
+  $entity_types['node']->addConstraint('migration_running_messages');
+}
