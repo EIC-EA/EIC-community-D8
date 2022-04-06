@@ -40,6 +40,8 @@ settings:
           items:
             - DrupalImage
             - DrupalMediaLibrary
+            - Twitter_ckeditor_button
+            - Fb_ckeditor_button
         -
           name: Tools
           items:

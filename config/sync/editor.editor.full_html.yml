@@ -43,6 +43,8 @@ settings:
             - DrupalImage
             - DrupalMediaLibrary
             - Iframe
+            - Twitter_ckeditor_button
+            - Fb_ckeditor_button
         -
           name: Tools
           items:

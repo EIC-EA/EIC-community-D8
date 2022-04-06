@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "432c3ee8d3829fef620b144b6b74ee06",
+    "content-hash": "b4e1e8c007d7ecae8baf2004606b9c51",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -2255,6 +2255,63 @@
             "support": {
                 "source": "https://git.drupalcode.org/project/ckeditor_iframe",
                 "issues": "https://drupal.org/project/issues/ckeditor_iframe"
+            }
+        },
+        {
+            "name": "drupal/ckeditor_oembed",
+            "version": "1.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/ckeditor_oembed.git",
+                "reference": "8.x-1.3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/ckeditor_oembed-8.x-1.3.zip",
+                "reference": "8.x-1.3",
+                "shasum": "d0dfc0fae9eb9d6218c4c83d767579d990b311d8"
+            },
+            "require": {
+                "drupal/core": "^8 || ^9"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "8.x-1.3",
+                    "datestamp": "1605885493",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "drctrue",
+                    "homepage": "https://www.drupal.org/user/3578934"
+                },
+                {
+                    "name": "gulab.bisht",
+                    "homepage": "https://www.drupal.org/user/1626218"
+                },
+                {
+                    "name": "kynafuro",
+                    "homepage": "https://www.drupal.org/user/3619196"
+                },
+                {
+                    "name": "macherif",
+                    "homepage": "https://www.drupal.org/user/1132022"
+                }
+            ],
+            "description": "This module Add a media embed button to CKEditor. using OEmbed Providers solution to get information from any web page (using oembed, opengraph, twitter-cards, scrapping the html, etc). It is compatible with any web service (youtube, vimeo, flickr, instagram, etc) and has adapters to some sites like (archive.org, github, facebook, etc).",
+            "homepage": "https://www.drupal.org/project/ckeditor_oembed",
+            "support": {
+                "source": "https://git.drupalcode.org/project/ckeditor_oembed",
+                "error": "authors.0 : should be an array, string given"
             }
         },
         {

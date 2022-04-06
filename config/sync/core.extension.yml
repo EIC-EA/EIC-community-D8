@@ -17,6 +17,7 @@ module:
   breakpoint: 0
   ckeditor: 0
   ckeditor_iframe: 0
+  ckeditor_oembed: 0
   comment: 0
   components: 0
   config: 0
