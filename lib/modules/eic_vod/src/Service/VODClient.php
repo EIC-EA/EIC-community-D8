@@ -18,7 +18,7 @@ class VODClient {
 
   private ClientInterface $httpClient;
 
-  private array $config = [];
+  private array $config;
 
   private MessengerInterface $messenger;
 
@@ -55,7 +55,7 @@ class VODClient {
     }
 
     try {
-      $response = $this->httpClient->request('GET', "https://$url/source/$action", [
+      $response = $this->httpClient->request('GET', "$url/source/$action", [
         'query' => [
           'file' => $file,
         ],
@@ -117,7 +117,7 @@ class VODClient {
   public function getCookies(string $file): ?array {
     try {
       $url = $this->config['cloudfront_url'];
-      $response = $this->httpClient->request('GET', "https://$url/stream/download", [
+      $response = $this->httpClient->request('GET', "$url/stream/download", [
         'query' => [
           'file' => $file,
         ],
@@ -148,7 +148,7 @@ class VODClient {
 
     $url = $this->config['cloudfront_url'];
 
-    return "https://$url/streams/$file/AppleHLS1/$file.m3u8";
+    return "$url/streams/$file/AppleHLS1/$file.m3u8";
   }
 
 }

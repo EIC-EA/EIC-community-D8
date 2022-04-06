@@ -143,7 +143,7 @@ class VODFileService implements FileSystemInterface {
    */
   private function prepareDestination(string $source, string &$destination, $replace) {
     // Files on S3 are always store with a lower case name, we must do the same with the URI on our side while also removing spaces.
-    $formatted_file_name = str_replace('/\s+/', '_', strtolower(basename($source)));
+    $formatted_file_name = preg_replace('/\s+/', '_', strtolower(basename($source)));
     $destination = StreamWrapperManager::getScheme($destination) . '://' . $formatted_file_name;
     if (!VODStream::getTarget($destination)) {
       $this->logger->error("The source '%original_source' is an invalid file format.", [
