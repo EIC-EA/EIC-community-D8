@@ -748,7 +748,8 @@ class SolrSearchManager {
    */
   private function generateAvoidGroupBookPage() {
     // Add filter if it's a book page not in a group. To avoid pre-generated book page.
-    $query = '(its_global_group_parent_id:("-1") OR !ss_global_content_type:book)';
+    // Solr cannot handle negate OR in parentheses, so we need to do the reverse condition by negate it.
+    $query = '-(!its_global_group_parent_id:("-1") OR (ss_global_content_type:book))';
 
     $this->rawFieldQuery.= empty($this->rawFieldQuery) ?
       "$query" :
