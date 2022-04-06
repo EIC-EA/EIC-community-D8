@@ -51,8 +51,8 @@ process:
       source: status
       default: published
       map:
-        0: draft
-        1: published
+        - draft
+        - published
   created: created
   changed: timestamp
   published_at: timestamp
@@ -130,6 +130,18 @@ process:
               - smed_thematics_topics_lvl1
               - smed_thematics_topics_lvl2
               - smed_thematics_topics_lvl3
+  field_language:
+    -
+      plugin: sub_process
+      source: c4m_vocab_language
+      process:
+        target_id:
+          -
+            plugin: migration_lookup
+            source: smed_id
+            no_stub: true
+            migration:
+              - smed_spoken_languages
 destination:
   plugin: 'entity_complete:node'
   translations: true
