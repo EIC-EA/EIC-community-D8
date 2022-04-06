@@ -1,0 +1,7 @@
+eic_vod.proxy_cookies:
+  path: '/api/vod/cookies'
+  defaults:
+    _title: 'Get cookies'
+    _controller: 'Drupal\eic_vod\Controller\VODController::proxyCookies'
+  requirements:
+    _permission: 'access content'
