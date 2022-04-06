@@ -4,7 +4,6 @@ namespace Drupal\eic_migrate;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\DependencyInjection\ServiceProviderBase;
-
 use Drupal\eic_migrate\Commands\MigrateToolsOverrideCommands;
 use Symfony\Component\DependencyInjection\Reference;
 
