@@ -145,6 +145,7 @@ class FormOperations implements ContainerInjectionInterface {
     if ($show_notification_field) {
       // We set the current publish status of the entity.
       $form_state->set('entity_is_published', $entity->isPublished());
+      $form_state->set('previous_state', $entity->get('moderation_state')->value);
 
       $form['field_send_notification'] = [
         '#title' => $this->t('Send notification'),
@@ -177,9 +178,6 @@ class FormOperations implements ContainerInjectionInterface {
 
     $form_id = $form_state->getFormObject()->getFormId();
     $route_name = $this->routeMatch->getRouteName();
-    // Gets the previous publish status.
-    $is_published = $form_state->get('entity_is_published');
-    $event = NULL;
 
     switch ($entity->getEntityTypeId()) {
       case 'node':
@@ -203,7 +201,6 @@ class FormOperations implements ContainerInjectionInterface {
         }
 
         $group_contents = $this->eicContentHelper->getGroupContentByEntity($entity);
-
         if (empty($group_contents)) {
           // If we are creating a new group content, we handle the notification
           // at a later stage because at this point we don't have the group
@@ -229,7 +226,7 @@ class FormOperations implements ContainerInjectionInterface {
 
         // Dispatch the event to trigger message subscription notification
         // about new content published.
-        if ($is_published && empty($group_contents)) {
+        if ($entity->isPublished() && empty($group_contents)) {
           // Node is not part of a group content so we dispatch the message
           // subscription event for node creation.
           $this->eventDispatcher->dispatch($event, MessageSubscriptionEvents::NODE_INSERT);
@@ -238,7 +235,12 @@ class FormOperations implements ContainerInjectionInterface {
 
         // Dispatch the event to trigger message subscription notification
         // about group content updated.
-        $this->eventDispatcher->dispatch($event, MessageSubscriptionEvents::GROUP_CONTENT_UPDATE);
+        $this->eventDispatcher->dispatch(
+          $event,
+          $form_state->get('previous_state') === DefaultContentModerationStates::DRAFT_STATE
+            ? MessageSubscriptionEvents::GROUP_CONTENT_INSERT
+            : MessageSubscriptionEvents::GROUP_CONTENT_UPDATE
+        );
         break;
 
     }
