@@ -31,8 +31,8 @@ settings:
         -
           name: Links
           items:
-            - DrupalLink
-            - DrupalUnlink
+            - Link
+            - Unlink
             - Blockquote
             - Table
         -

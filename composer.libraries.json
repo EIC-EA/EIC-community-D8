@@ -23,6 +23,18 @@
                     "type": "zip"
                 }
             }
+        },
+        {
+            "type": "package",
+            "package": {
+                "name": "ckeditor/link",
+                "version": "4.18.0",
+                "type": "drupal-library",
+                "dist": {
+                    "url": "https://download.ckeditor.com/link/releases/link_4.18.0.zip",
+                    "type": "zip"
+                }
+            }
         }
     ],
     "extra": {
