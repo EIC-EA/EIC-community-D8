@@ -71,6 +71,18 @@
 					"type": "zip"
 				}
 			}
+		},
+        {
+			"type": "package",
+			"package": {
+				"name": "ckeditor/pagebreak",
+				"version": "4.18.0",
+				"type": "drupal-library",
+				"dist": {
+					"url": "https://download.ckeditor.com/pagebreak/releases/pagebreak_4.18.0.zip",
+					"type": "zip"
+				}
+			}
 		}
     ],
     "extra": {

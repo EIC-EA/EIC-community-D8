@@ -25,7 +25,6 @@ settings:
             - Strike
             - Superscript
             - Subscript
-            - HorizontalRule
         -
           name: Lists
           items:
@@ -60,6 +59,8 @@ settings:
             - Cut
             - Undo
             - Redo
+            - HorizontalRule
+            - PageBreak
             - Maximize
             - Source
         -

@@ -156,6 +156,7 @@ module:
   openapi_rest: 0
   options: 0
   page_cache: 0
+  pagebreak: 0
   panelbutton: 0
   paragraph_view_mode: 0
   path: 0
