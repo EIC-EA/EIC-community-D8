@@ -301,7 +301,7 @@ class ProcessorGlobal extends DocumentProcessor {
     if ('group' === $entity_type) {
       $last_revision_id = $entity->getRevisionId();
     } else {
-      $revision_ids = \Drupal::entityTypeManager()->getStorage($entity_type)->revisionIds($entity);
+      $revision_ids = $this->em->getStorage($entity_type)->revisionIds($entity);
       $last_revision_id = end($revision_ids);
     }
 
