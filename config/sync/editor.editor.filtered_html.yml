@@ -33,6 +33,7 @@ settings:
           items:
             - Link
             - Unlink
+            - Anchor
             - Blockquote
             - Table
         -
@@ -63,6 +64,11 @@ settings:
       styles: ''
     language:
       language_list: un
+    font:
+      font_names: ''
+      font_sizes: ''
+    colorbutton:
+      colors: ''
 image_upload:
   status: false
   scheme: public

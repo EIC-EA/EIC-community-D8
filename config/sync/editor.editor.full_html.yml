@@ -16,14 +16,15 @@ settings:
           name: Formatting
           items:
             - Format
+            - FontSize
+            - TextColor
+            - BGColor
             - Bold
             - Italic
             - Underline
             - Strike
             - Superscript
             - Subscript
-            - TextColor
-            - BGColor
             - HorizontalRule
         -
           name: Lists
@@ -37,6 +38,7 @@ settings:
           items:
             - Link
             - Unlink
+            - Anchor
             - Blockquote
             - Table
         -
@@ -72,6 +74,9 @@ settings:
       styles: ''
     language:
       language_list: un
+    font:
+      font_names: ''
+      font_sizes: ''
     colorbutton:
       colors: ''
 image_upload:
