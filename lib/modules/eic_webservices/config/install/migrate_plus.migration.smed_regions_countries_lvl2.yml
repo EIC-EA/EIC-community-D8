@@ -1,5 +1,5 @@
 id: smed_regions_countries_lvl2
-label: SMED - Regions and Countries
+label: SMED - Regions and Countries - Level 2
 migration_group: eic_smed_taxonomy
 migration_tags:
   - eic_smed_api_authentication
