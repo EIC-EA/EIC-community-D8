@@ -114,6 +114,9 @@ process:
               - smed_thematics_topics_lvl2
               - smed_thematics_topics_lvl3
   field_message_to_site_admin: field_message_to_site_admin
+  features:
+    -
+      plugin: eic_group_features
 destination:
   plugin: 'entity_complete:group'
   default_bundle: group

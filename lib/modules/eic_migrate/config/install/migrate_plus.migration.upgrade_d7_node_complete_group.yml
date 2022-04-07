@@ -124,23 +124,13 @@ process:
               - smed_thematics_topics_lvl1
               - smed_thematics_topics_lvl2
               - smed_thematics_topics_lvl3
-  # TODO: Blocked
-#  field_membership_open_request:
-#    - plugin: get
-#      source: field_membership_open_request
   field_message_to_site_admin: field_message_to_site_admin
-  # TODO
-#  group_access:
-#    - plugin: get
-#      source: group_access
+  features:
+    - plugin: eic_group_features
   # TODO
 #  group_group:
 #    - plugin: get
 #      source: group_group
-  # TODO
-#  pluggable_node_access:
-#    - plugin: get
-#      source: pluggable_node_access
 destination:
   plugin: 'entity_complete:group'
   default_bundle: group
