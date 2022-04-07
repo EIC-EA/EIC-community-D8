@@ -15,7 +15,7 @@
   }
 
   & ul {
-    font-size: .85em;
+    font-size: 0.85em;
     padding-left: 1em;
     color: $ecl-color-grey-50;
   }
@@ -99,6 +99,14 @@
       flex-direction: column;
       width: 100%;
       max-width: 100%;
+
+      & input {
+        margin: 0;
+      }
+    }
+
+    &.form-actions {
+      flex-direction: row;
     }
 
     &:first-child {
@@ -157,23 +165,24 @@
       width: 100%;
     }
   }
+  & .form-required::after {
+    content: '*';
+    color: $ecl-color-red;
+  }
 
-  .ecl-form-label, .fieldset-legend {
+  .ecl-form-label,
+  .fieldset-legend,
+  details summary {
     font-weight: $ecl-font-weight-regular;
     text-transform: uppercase;
     color: ecl-typography('color', 'label');
-
-    &.form-required::after {
-      content: "*";
-      color: $ecl-color-red;
-    }
 
     &__required {
       font-weight: $ecl-font-weight-regular;
 
       &:last-child {
         &::before {
-          content: "\00A0";
+          content: '\00A0';
         }
       }
     }
@@ -184,7 +193,8 @@
     color: ecl-typography('color', 'meta');
   }
 
-  .ecl-text-input {
+  .ecl-text-input,
+  .form-url {
     &[disabled],
     &[readonly] {
       border-color: transparent;
@@ -198,6 +208,10 @@
     }
   }
 
+  .form-url {
+    @extend .ecl-text-input;
+  }
+
   .ecl-button {
     text-align: center;
   }
@@ -209,7 +223,7 @@
     }
   }
 
-  & .form-wrapper{
+  & .form-wrapper {
     width: 100%;
     box-sizing: border-box;
 
@@ -219,12 +233,11 @@
   }
 
   & .fieldgroup .fieldset-legend {
-    //visibility: hidden;
     padding: 0;
   }
 
   & .ecl-radio {
-    background: #F5F5F5;
+    background: #f5f5f5;
     padding: 16px;
     display: block;
     width: 100%;
@@ -232,7 +245,7 @@
     & .ecl-radio__label {
       display: flex;
       align-items: flex-start;
-      gap: .75rem;
+      gap: 0.75rem;
     }
 
     & .ecl-radio__box {
@@ -258,7 +271,6 @@
         border-radius: 0 !important;
       }
     }
-
   }
 
   & .ecl-radio-block {
@@ -267,8 +279,8 @@
       grid-template-columns: 1.25rem auto;
       grid-gap: map-get($ecl-spacing, 's');
       grid-template-areas:
-      "box content"
-      ". content"
+        'box content'
+        '. content';
     }
 
     & .ecl-radio__box {
@@ -294,6 +306,10 @@
 
   & .ecl-table {
     margin: map-get($ecl-spacing, 'm') 0;
+
+    &__cell > div {
+      width: 95%;
+    }
   }
 
   & .ecl-table *:not(.handle) {
@@ -309,26 +325,166 @@
       width: auto;
       margin: 0;
       display: flex;
+      padding-left: 0;
+      border-bottom: 3px solid $ecl-color-grey-5;
+    }
+
+    &__menu-item {
+      margin-bottom: -3px;
+      border-bottom: 3px solid $ecl-color-grey-5;
+      background: #fff;
+      text-align: center;
     }
 
     & .is-selected {
-      border-width: 1px;
+      border-bottom: 3px solid $ecl-color-blue;
     }
 
     &__pane {
       box-sizing: border-box;
       padding: map-get($ecl-spacing, 'xs');
     }
+
+    & .form-textarea {
+      width: 100%;
+    }
   }
 
   & &-group.form-actions {
-    //display: flex;
-    //align-items: center;
-    //justify-content: center;
-    //flex-direction: row;
-    margin-top: map-get($ecl-spacing, "2xl");
-    gap: map-get($ecl-spacing, "m");
+    margin-top: map-get($ecl-spacing, '2xl');
+    gap: map-get($ecl-spacing, 'm');
+  }
+
+  .js-media-library-widget,
+  .field--type-daterange .js-form-item,
+  .field--name-field-document-media .js-form-item,
+  .field-group-fieldset {
+    border: none;
+    padding: 0;
+
+    & legend {
+      margin-bottom: $ecl-spacing-m;
+      & .fieldset-legend {
+        padding: 0;
+      }
+    }
+
+    & .fieldset-wrapper,
+    & > .js-form-item {
+      border: 1px solid $ecl-color-grey;
+      padding: $ecl-spacing-m;
+    }
+
+    & .description {
+      opacity: 0.7;
+      margin-top: $ecl-spacing-m;
+    }
+
+    & .js-media-library-item {
+      display: flex;
+      flex-direction: column-reverse;
+      align-items: flex-start;
+
+      & > article {
+        margin-bottom: $ecl-spacing-m;
+      }
+    }
+  }
+
+  .field-multiple-table {
+    & .ecl-table__row {
+      border: none;
+    }
+
+    & .ecl-table__head {
+      background-color: transparent;
+
+      & .ecl-table__header {
+        padding: 0;
+
+        & .label {
+          font-weight: 400;
+          text-transform: uppercase;
+          color: #707070;
+          margin: 0 0 $ecl-spacing-m;
+        }
+      }
+    }
+
+    & .ecl-table__body {
+      & .ecl-table__row {
+        background-color: $ecl-color-grey-5;
+        border-bottom: $ecl-spacing-m solid #fff;
+      }
+    }
+  }
+
+  & .tabledrag-toggle-weight-wrapper {
+    display: none;
+  }
+
+  & .horizontal-tabs-panes {
+    padding-bottom: 1rem;
+  }
+
+  & .field-group-details {
+    margin-bottom: 1rem;
+
+    & > summary {
+      margin-bottom: 1rem;
+    }
+
+    & .js-form-wrapper {
+      margin: 0;
+    }
+  }
+
+  & .js-form-type-number {
+    flex-direction: row !important;
+    flex-wrap: wrap;
+    align-items: center;
+
+    & label,
+    & .field-prefix {
+      width: 100%;
+    }
+
+    & .field-suffix {
+      margin-left: $ecl-spacing-s;
+    }
+
+    & .form-number {
+      width: auto;
+    }
+  }
+
+  & .field--type-daterange,
+  & .field--type-timestamp {
+    & h4 {
+      margin-bottom: 0;
+    }
+
+    & h4 + div .form-item {
+      margin: 0 !important;
+    }
+
+    & h4 + div {
+      margin-bottom: $ecl-spacing-m;
+    }
+  }
+
+  & .form-number,
+  input[type='time'] {
+    @extend .ecl-text-input;
   }
 }
 
+.ecl-text-input {
+  width: 100%;
+}
 
+.ui-autocomplete a {
+  width: 100%;
+  display: block;
+  box-sizing: border-box;
+}

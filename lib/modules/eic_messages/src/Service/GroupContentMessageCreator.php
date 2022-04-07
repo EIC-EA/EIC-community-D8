@@ -66,6 +66,10 @@ class GroupContentMessageCreator implements ContainerInjectionInterface {
       $relatedUser = $entity->getEntity();
       $relatedGroup = $entity->getGroup();
 
+      if ($relatedUser->id() === $relatedGroup->getOwnerId()) {
+        return;
+      }
+      
       $this->messageBus->dispatch([
         'template' => 'notify_new_member_joined',
         'uid' => $relatedGroup->getOwnerId(),

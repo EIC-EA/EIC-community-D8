@@ -1,0 +1,90 @@
+.entity-tree {
+  &__result-items {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: $ecl-spacing-s;
+  }
+  &__search-items {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: $ecl-spacing-s;
+    border: 1px solid #707070;
+    box-sizing: border-box;
+    padding: calc(0.75rem - 1px) calc(3.5rem - 1px) calc(0.75rem - 1px) calc(0.75rem- 1px);
+    min-height: 44px;
+    position: relative;
+
+    & .MuiFormControl-marginNormal,
+    & label + .MuiInput-formControl {
+      margin: 0;
+    }
+    .MuiInputBase-root:after,
+    .MuiInputBase-root:before {
+      display: none;
+    }
+
+    & label {
+      display: none;
+    }
+
+    & input.MuiInputBase-input {
+      padding: 0 !important;
+      height: 100%;
+
+      &::placeholder {
+        color: $ecl-color-grey !important;
+        opacity: 1;
+      }
+    }
+
+    & .ecl-select__icon {
+      min-height: 43px;
+      top: -1px;
+      right: -1px;
+    }
+
+    & p {
+      margin: 0;
+    }
+  }
+
+  &--options {
+    border: 1px solid #707070;
+    position: relative;
+  }
+
+  & .entity-tree--options .MuiAccordion-root {
+    border: none !important;
+    border-radius: 0;
+  }
+
+  & .entity-tree--options .MuiAccordion-root.Mui-expanded .MuiAccordionSummary-root,
+  & .entity-tree--options .MuiAccordion-root .MuiAccordionSummary-root {
+    border: none !important;
+    min-height: 44px;
+    max-height: 44px;
+    overflow: hidden;
+  }
+
+  & .MuiButtonBase-root .MuiAccordionSummary-root {
+    min-height: 44px;
+  }
+
+  &__select__first-item > .MuiAccordionSummary-expandIcon {
+    background-color: #404040;
+    height: 46px;
+    width: 2.75rem;
+    position: absolute;
+    top: -2px;
+    right: 10px;
+    border-radius: 0;
+    box-sizing: border-box;
+    color: #fff;
+
+    &:hover {
+      background-color: #404040;
+    }
+  }
+}

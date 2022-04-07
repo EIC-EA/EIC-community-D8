@@ -1,0 +1,11 @@
+{
+    "name": "org/eic_group_membership",
+    "type": "drupal-drush",
+    "extra": {
+        "drush": {
+            "services": {
+                "drush.services.yml": "^10"
+            }
+        }
+    }
+}

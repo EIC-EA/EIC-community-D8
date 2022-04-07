@@ -1,0 +1,70 @@
+uuid: 2f22f8d7-f8d4-4599-a531-00ce6b9c2f4a
+langcode: en
+status: true
+dependencies:
+  module:
+    - eic_search
+    - route_condition
+label: Drafts
+name: drafts
+group: 'My profile'
+description: ''
+requireAllConditions: false
+disabled: false
+conditions:
+  route:
+    id: route
+    negate: false
+    uuid: 9cc874d0-10d7-4c1a-9ed3-153064a3af1a
+    context_mapping: {  }
+    routes: eic_user.user.my_drafts
+reactions:
+  blocks:
+    id: blocks
+    uuid: 9f7f9eb5-1a04-4d53-9b5a-bb5606f75eec
+    blocks:
+      8e094a5e-bc46-4c6e-a8ca-529ab1dac953:
+        uuid: 8e094a5e-bc46-4c6e-a8ca-529ab1dac953
+        id: eic_search_overview
+        label: ''
+        provider: eic_search
+        label_display: visible
+        region: content
+        weight: '0'
+        custom_id: eic_search_overview
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: drafts
+        context_mapping: {  }
+        source_type: Drupal\eic_search\Search\Sources\Profile\DraftSourceType
+        facets:
+          ss_global_content_type: ss_global_content_type
+          sm_content_field_vocab_topics_string: sm_content_field_vocab_topics_string
+          sm_content_field_vocab_geo_string: sm_content_field_vocab_geo_string
+          ss_content_language_string: ss_content_language_string
+          ss_group_user_fullname: 0
+        sort_options:
+          ss_global_created_date: ss_global_created_date
+          tm_global_title: tm_global_title
+          score: score
+          ss_group_user_fullname: 0
+          its_document_download_total: 0
+          its_statistics_view: 0
+          its_content_comment_count: 0
+          its_flag_like_content: 0
+          dm_aggregated_changed: 0
+          its_last_comment_timestamp: 0
+          its_last_flagged_like_content: 0
+          its_last_flagged_bookmark_content: 0
+          its_last_flagged_highlight_content: 0
+        enable_search: 1
+        page_options: normal
+        prefilter_group: 0
+        enable_date_filter: 0
+        add_facet_interests: 0
+        add_facet_my_groups: 0
+        third_party_settings: {  }
+    include_default_blocks: 0
+    saved: false
+weight: 0

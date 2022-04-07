@@ -1,0 +1,7 @@
+text:
+  -
+    value: "<p>The [message:field_entity_type:value] [message:field_referenced_entity_label:value] was deleted</p>\r\n"
+    format: full_html
+  -
+    value: "<p>Dear [message:author:display-name],</p>\r\n\r\n<p>[message:field_event_executing_user:entity:display-name] deleted [message:field_entity_type:value] [message:field_referenced_entity_label:value] and its content.</p>\r\n\r\n<p>The EIC Community team</p>\r\n"
+    format: full_html

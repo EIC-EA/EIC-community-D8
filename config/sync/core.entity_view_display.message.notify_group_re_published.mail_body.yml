@@ -1,0 +1,22 @@
+uuid: 3751f178-cb70-47ec-a2c5-5203fbcd8cfd
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.message.mail_body
+    - field.field.message.notify_group_re_published.field_event_executing_user
+    - field.field.message.notify_group_re_published.field_group_ref
+    - message.template.notify_group_re_published
+id: message.notify_group_re_published.mail_body
+targetEntityType: message
+bundle: notify_group_re_published
+mode: mail_body
+content:
+  partial_1:
+    weight: 0
+    region: content
+hidden:
+  field_event_executing_user: true
+  field_group_ref: true
+  partial_0: true
+  search_api_excerpt: true
