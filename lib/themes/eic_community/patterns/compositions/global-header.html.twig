@@ -48,7 +48,8 @@
                 image: user.image,
                 path: user.path,
                 extra_classes: 'ecl-author--has-compact-layout ecl-author--as-block',
-                updates: user.updates
+                updates: user.updates,
+                eic_icon_path: icon_file_path
               } %}
               {% if icon_file_path %}
                 {% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with {

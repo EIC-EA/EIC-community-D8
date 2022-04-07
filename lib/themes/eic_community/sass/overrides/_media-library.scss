@@ -12,11 +12,19 @@
         max-width: inherit;
         padding: $ecl-spacing-l;
         box-sizing: border-box;
-    } 
+    }
 
     & .js-media-library-view {
         border: 1px solid $ecl-color-grey;
         padding: $ecl-spacing-l;
+        display: grid;
+        grid-template-areas:"filter switch"
+        "view view";
+
+        @include ecl-media-breakpoint-down('md') {
+          display: flex;
+          flex-direction: column;
+        }
 
         & .ecl-form {
             border: none;
@@ -24,8 +32,18 @@
         }
 
         & header {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
             grid-area: switch;
-            display: none;
+            @include ecl-media-breakpoint-down('md') {
+              justify-content: flex-start;
+              margin-bottom: 1rem;
+            }
+
+            & + .ecl-container {
+              margin-bottom: 1rem;
+            }
         }
 
         & > .ecl-container {
@@ -44,37 +62,50 @@
         }
 
         & .views-form {
+          & .js-media-library-views-form {
+
+            & .js-media-library-item.media-library-item--disabled {
+              opacity: .2;
+              pointer-events: none;
+            }
+            }
+          }
+
+        &[data-view-display-id="widget"] .views-form {
             grid-area: view;
 
             & .js-media-library-views-form {
                 grid-template-columns: repeat( auto-fit, minmax(250px, 1fr) );
                 display: grid;
-                // flex-wrap: wrap;
+                gap: .5rem;
 
                 & .js-media-library-item {
-                    margin: 0 $ecl-spacing-m;
+                  background: $ecl-color-grey-5;
+                  padding: 1rem;
+                  box-sizing: border-box;
+                  position: relative;
 
                     & img {
-                        width: 220px;
+                        width: 100%;
                         height: 140px;
                         object-fit: cover;
-                        border: 4px solid transparent;
-                    }
-
-                    &.checked img {
-                        border-color: $ecl-color-blue;
-                    }
-
-                    &.media-library-item--disabled {
-                        opacity: .2;
-                        pointer-events: none;
                     }
                 }
 
-                & .ecl-checkbox {
-                    display: none;
+                & .js-form-type-checkbox {
+                  margin: 0 !important;
+                  margin-bottom: .5rem!important;
                 }
             }
+        }
+
+        &[data-view-display-id="widget_table"] .views-form {
+          grid-area: view;
+
+          & img {
+            aspect-ratio: 1/1;
+            object-fit: cover;
+          }
         }
 
         & .js-pager__items {
@@ -88,8 +119,6 @@
         & .ecl-form {
             margin: 0;
         }
-
-
     }
 
 }
