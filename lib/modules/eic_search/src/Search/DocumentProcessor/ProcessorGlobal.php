@@ -11,6 +11,7 @@ use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_user\UserHelper;
 use Drupal\file\Entity\File;
 use Drupal\group\Entity\Group;
+use Drupal\group\Entity\GroupInterface;
 use Drupal\image\Entity\ImageStyle;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
@@ -147,6 +148,15 @@ class ProcessorGlobal extends DocumentProcessor {
         );
         $document->addField('its_global_group_parent_id', $group_id);
         $group = Group::load($group_id);
+        if ($group instanceof GroupInterface) {
+          $last_moderation_state = $this->getLastRevisionModerationState($group);
+          $this->addOrUpdateDocumentField(
+            $document,
+            'its_content_uid',
+            $fields,
+            $group->getRevisionUserId()
+          );
+        }
         if ($group && $owner = EICGroupsHelper::getGroupOwner($group)) {
           $fullname = realname_load($owner);
 
@@ -288,8 +298,12 @@ class ProcessorGlobal extends DocumentProcessor {
    */
   private function getLastRevisionModerationState(EntityInterface $entity): string {
     $entity_type = $entity->getEntityTypeId();
-    $revision_ids = \Drupal::entityTypeManager()->getStorage($entity_type)->revisionIds($entity);
-    $last_revision_id = end($revision_ids);
+    if ('group' === $entity_type) {
+      $last_revision_id = $entity->getRevisionId();
+    } else {
+      $revision_ids = $this->em->getStorage($entity_type)->revisionIds($entity);
+      $last_revision_id = end($revision_ids);
+    }
 
     $last_revision = $entity->getRevisionId() !== $last_revision_id ?
       $this->em->getStorage($entity_type)->loadRevision($last_revision_id) :
