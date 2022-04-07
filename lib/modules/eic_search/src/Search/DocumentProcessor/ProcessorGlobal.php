@@ -78,9 +78,7 @@ class ProcessorGlobal extends DocumentProcessor {
     $language = t('English', [], ['context' => 'eic_search'])->render();
     $moderation_state = DefaultContentModerationStates::PUBLISHED_STATE;
     $last_moderation_state = DefaultContentModerationStates::PUBLISHED_STATE;
-
-    // Set by default parent group to TRUE and method processGroupContentData will update it.
-    $this->addOrUpdateDocumentField($document, 'its_global_group_parent_published', $fields, 1);
+    $is_group_parent_published = 1;
 
     switch ($datasource) {
       case 'entity:node':
@@ -135,6 +133,7 @@ class ProcessorGlobal extends DocumentProcessor {
         $type = $fields['ss_group_type'];
         $date = $fields['ds_group_created'];
         $status = $fields['bs_group_status'];
+        $is_group_parent_published = (int) $status;
         $geo = $fields['ss_group_field_vocab_geo_string'] ?? '';
         $language = t('English', [], ['context' => 'eic_search'])->render();
         $user_url = '';
@@ -255,6 +254,14 @@ class ProcessorGlobal extends DocumentProcessor {
       $last_moderation_state
     );
 
+    // Set by default parent group to TRUE and method processGroupContentData will update it.
+    $this->addOrUpdateDocumentField(
+      $document,
+      'its_global_group_parent_published',
+      $fields,
+      $is_group_parent_published
+    );
+
     if (!array_key_exists('bs_content_is_private', $fields)) {
       $document->addField('bs_content_is_private', FALSE);
     }
@@ -291,6 +298,7 @@ class ProcessorGlobal extends DocumentProcessor {
    *
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *  The entity.
+   *
    * @return string
    *   The moderation state.
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
