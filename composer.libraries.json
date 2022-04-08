@@ -98,6 +98,21 @@
 					"type": "zip"
 				}
 			}
+		},
+        {
+			"type": "package",
+			"package": {
+				"name": "ckeditor/find",
+				"version": "4.18.0",
+				"type": "drupal-library",
+                "extra": {
+                    "installer-name": "ckeditor/plugins/find"
+                },
+				"dist": {
+					"url": "https://download.ckeditor.com/find/releases/find_4.18.0.zip",
+					"type": "zip"
+				}
+			}
 		}
     ],
     "extra": {

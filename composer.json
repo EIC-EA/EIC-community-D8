@@ -27,6 +27,7 @@
         "drupal/block_content_permissions": "^1.10",
         "drupal/block_field": "^1.0@RC",
         "drupal/ckeditor_div_manager": "^2.0",
+        "drupal/ckeditor_find": "^1.0@beta",
         "drupal/ckeditor_font": "^1.2",
         "drupal/ckeditor_iframe": "^2.1",
         "drupal/ckeditor_oembed": "^1.3",
