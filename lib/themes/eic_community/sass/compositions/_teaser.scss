@@ -23,6 +23,8 @@
     }
   }
 
+
+
   &--as-card {
     flex-direction: column;
   }
@@ -82,6 +84,10 @@
 
   &--as-grey {
     background-color: map-get($ecl-colors, 'grey-5');
+  }
+
+  &-overview--is-loading {
+    position: relative;
   }
 
   &--member {
@@ -578,12 +584,6 @@
         margin-bottom: map-get($ecl-spacing, 's');
       }
     }
-
-    //@include ecl-media-breakpoint-up('md') {
-    //  .ecl-teaser-overview--has-columns & {
-    //    display: block;
-    //  }
-    //}
   }
 
   &__content {
