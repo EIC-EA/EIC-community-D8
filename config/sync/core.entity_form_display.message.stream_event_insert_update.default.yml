@@ -1,4 +1,4 @@
-uuid: 6f9dbc2d-d26a-4017-804c-459db1601c83
+uuid: 1f079aa2-d665-4657-9ed4-5a6aac02083e
 langcode: en
 status: true
 dependencies:
@@ -14,41 +14,39 @@ bundle: stream_event_insert_update
 mode: default
 content:
   field_entity_type:
-    type: string
-    label: above
-    settings:
-      link_to_entity: false
-    third_party_settings: {  }
-    weight: 1
-    region: content
-  field_group_ref:
-    type: entity_reference_label
-    label: above
-    settings:
-      link: true
-    third_party_settings: {  }
-    weight: 2
-    region: content
-  field_operation_type:
-    type: string
-    label: above
-    settings:
-      link_to_entity: false
-    third_party_settings: {  }
-    weight: 3
-    region: content
-  field_referenced_node:
-    type: entity_reference_label
-    label: above
-    settings:
-      link: true
-    third_party_settings: {  }
-    weight: 4
-    region: content
-  partial_0:
-    settings: {  }
-    third_party_settings: {  }
+    type: string_textfield
     weight: 0
     region: content
-hidden:
-  search_api_excerpt: true
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_group_ref:
+    type: entity_reference_autocomplete
+    weight: 1
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_operation_type:
+    type: string_textfield
+    weight: 2
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_referenced_node:
+    type: entity_reference_autocomplete
+    weight: 3
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+hidden: {  }
