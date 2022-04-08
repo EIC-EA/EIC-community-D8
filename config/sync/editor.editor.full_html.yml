@@ -38,7 +38,6 @@ settings:
             - Link
             - Unlink
             - Anchor
-            - Blockquote
             - Table
         -
           name: Media
