@@ -72,12 +72,10 @@ process:
             source: fid
             migration:
               - upgrade_d7_file_document_to_media
-#        display: display
-#        description: description
   # TODO
-#  c4m_document_add_to_library:
-#    - plugin: get
-#      source: c4m_document_add_to_library
+  # c4m_document_add_to_library:
+  #   - plugin: get
+  #     source: c4m_document_add_to_library
   field_document_type:
     - plugin: sub_process
       source: c4m_vocab_document_type
@@ -87,18 +85,17 @@ process:
             source: tid
             migration:
               - upgrade_d7_taxonomy_term_c4m_vocab_document_type
-  # TODO: Implement when Regions & countries SMED migration is done.
-#  field_vocab_geo:
-#    - plugin: sub_process
-#      source: c4m_vocab_geo
-#      process:
-#        target_id:
-#          - plugin: migration_lookup
-#            source: smed_id
-#            no_stub: true
-#            migration:
-#              - smed_TODO
-  # TODO: Validate implementation when field_vocab_languages is added to CT News.
+  field_vocab_geo:
+    - plugin: sub_process
+      source: c4m_vocab_geo
+      process:
+        target_id:
+          - plugin: migration_lookup
+            source: smed_id
+            no_stub: true
+            migration:
+              - smed_regions_countries_lvl1
+              - smed_regions_countries_lvl2
   field_language:
     - plugin: sub_process
       source: c4m_vocab_language
@@ -121,14 +118,20 @@ process:
               - smed_thematics_topics_lvl1
               - smed_thematics_topics_lvl2
               - smed_thematics_topics_lvl3
+  moderation_state:
+    - plugin: static_map
+      source: status
+      map:
+        0: draft
+        1: published
   # TODO
-#  og_group_ref:
-#    - plugin: get
-#      source: og_group_ref
+  # og_group_ref:
+  #   - plugin: get
+  #     source: og_group_ref
   # TODO
-#  og_vocabulary:
-#    - plugin: get
-#      source: og_vocabulary
+  # og_vocabulary:
+  #   - plugin: get
+  #     source: og_vocabulary
 destination:
   plugin: 'entity_complete:node'
   translations: true
@@ -146,4 +149,6 @@ migration_dependencies:
     - smed_thematics_topics_lvl1
     - smed_thematics_topics_lvl2
     - smed_thematics_topics_lvl3
+    - smed_regions_countries_lvl1
+    - smed_regions_countries_lvl2
   optional: { }
