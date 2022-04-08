@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2834a36c9bf0851774c0c1cd4bb46bab",
+    "content-hash": "32327f9901c143c285c8fb74c7565308",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -246,6 +246,18 @@
                 "url": "https://download.ckeditor.com/colorbutton/releases/colorbutton_4.18.0.zip"
             },
             "type": "drupal-library"
+        },
+        {
+            "name": "ckeditor/div",
+            "version": "4.18.0",
+            "dist": {
+                "type": "zip",
+                "url": "https://download.ckeditor.com/div/releases/div_4.18.0.zip"
+            },
+            "type": "drupal-library",
+            "extra": {
+                "installer-name": "ckeditor/plugins/div"
+            }
         },
         {
             "name": "ckeditor/fakeobjects",
@@ -2266,6 +2278,56 @@
             "homepage": "https://www.drupal.org/project/block_field",
             "support": {
                 "source": "https://git.drupalcode.org/project/block_field"
+            }
+        },
+        {
+            "name": "drupal/ckeditor_div_manager",
+            "version": "2.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://git.drupalcode.org/project/ckeditor_div_manager.git",
+                "reference": "2.0.0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://ftp.drupal.org/files/projects/ckeditor_div_manager-2.0.0.zip",
+                "reference": "2.0.0",
+                "shasum": "65c4529859775c24ca73feeb730c136038733a43"
+            },
+            "require": {
+                "drupal/core": "^8 || ^9"
+            },
+            "type": "drupal-module",
+            "extra": {
+                "drupal": {
+                    "version": "2.0.0",
+                    "datestamp": "1620063439",
+                    "security-coverage": {
+                        "status": "covered",
+                        "message": "Covered by Drupal's security advisory policy"
+                    }
+                }
+            },
+            "notification-url": "https://packages.drupal.org/8/downloads",
+            "license": [
+                "GPL-2.0+"
+            ],
+            "authors": [
+                {
+                    "name": "Corey Eiseman",
+                    "homepage": "https://www.drupal.org/u/toegristle",
+                    "role": "Maintainer"
+                },
+                {
+                    "name": "toegristle",
+                    "homepage": "https://www.drupal.org/user/1802910"
+                }
+            ],
+            "description": "Adds the Div Container Manager plugin to CKEditor.",
+            "homepage": "https://www.drupal.org/project/ckeditor_div_manager",
+            "support": {
+                "source": "https://cgit.drupalcode.org/ckeditor_div_manager",
+                "issues": "https://www.drupal.org/project/issues/ckeditor_div_manager"
             }
         },
         {
@@ -4419,7 +4481,7 @@
             "extra": {
                 "drupal": {
                     "version": "2.0.1",
-                    "datestamp": "1629113655",
+                    "datestamp": "1629113667",
                     "security-coverage": {
                         "status": "covered",
                         "message": "Covered by Drupal's security advisory policy"
