@@ -54,6 +54,7 @@ settings:
             - Paste
             - PasteText
             - PasteFromWord
+            - SelectAll
             - RemoveFormat
             - Cut
             - Undo

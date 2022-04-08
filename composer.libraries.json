@@ -113,6 +113,37 @@
 					"type": "zip"
 				}
 			}
+		},
+        {
+			"type": "package",
+			"package": {
+				"name": "ckeditor/selectall",
+				"version": "4.18.0",
+				"type": "drupal-library",
+                "extra": {
+                    "installer-name": "selectall"
+                },
+				"dist": {
+					"url": "https://download.ckeditor.com/selectall/releases/selectall_4.18.0.zip",
+					"type": "zip"
+				}
+			}
+		},
+        {
+			"type": "package",
+			"package": {
+				"name": "drupal/ckeditor_selectall",
+				"version": "1",
+				"type": "drupal-module",
+                "extra": {
+                    "installer-name": "ckeditor_selectall"
+                },
+                "source": {
+                    "url": "https://git.drupalcode.org/project/ckeditor_selectall.git",
+                    "type": "git",
+                    "reference": "8.x-1.x"
+                }
+			}
 		}
     ],
     "extra": {
