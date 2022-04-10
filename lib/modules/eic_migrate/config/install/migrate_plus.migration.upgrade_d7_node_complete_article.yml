@@ -168,6 +168,16 @@ process:
             migration:
               - smed_regions_countries_lvl1
               - smed_regions_countries_lvl2
+  field_language:
+    - plugin: sub_process
+      source: c4m_vocab_language
+      process:
+        target_id:
+          - plugin: migration_lookup
+            source: smed_id
+            no_stub: true
+            migration:
+              - smed_spoken_languages
   field_vocab_topics:
     - plugin: sub_process
       source: c4m_vocab_topic
@@ -194,6 +204,7 @@ migration_dependencies:
     - upgrade_d7_file_video_to_media
     - upgrade_d7_node_complete_article_external_contributors_paragraph
     - upgrade_d7_node_complete_article_internal_contributors_paragraph
+    - smed_spoken_languages
     - smed_thematics_topics_lvl1
     - smed_thematics_topics_lvl2
     - smed_thematics_topics_lvl3
