@@ -1,6 +1,7 @@
 .ecl-button {
   text-align: inherit;
   cursor: pointer;
+  border-style: solid;
   border-width: 2px;
   border-color: $ecl-color-blue;
 
@@ -15,6 +16,15 @@
 
   &--primary {
     border-color: $ecl-color-blue;
+  }
+
+  &--danger {
+    border-color: $ecl-color-red;
+    color: $ecl-color-red;
+    &:hover {
+      border-color: $ecl-color-red-130;
+    color: $ecl-color-red-130;
+    }
   }
 
   &--call {

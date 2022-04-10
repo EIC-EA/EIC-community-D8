@@ -1,90 +1,91 @@
 {% extends "@theme/patterns/layout/base.html.twig" %}
 
 {% block page_header %}
-    {% include "@theme/patterns/compositions/editorial-header.html.twig" with editorial_header|default({}) %}
-    {% if subnavigation %}
-        {% include "@theme/patterns/compositions/subnavigation.html.twig" with subnavigation|default({})|merge({
+	{% include "@theme/patterns/compositions/editorial-header.html.twig" with editorial_header|default({}) %}
+	{% if subnavigation %}
+		{% include "@theme/patterns/compositions/subnavigation.html.twig" with subnavigation|default({})|merge({
             icon_file_path: common.icon_file_path
         }) only %}
-    {% endif %}
+	{% endif %}
 {% endblock %}
 
 {% block content %}
-    {% embed "@theme/patterns/compositions/editorial-article.html.twig" with editorial_article|default({})|merge({
+	{% embed "@theme/patterns/compositions/editorial-article.html.twig" with editorial_article|default({})|merge({
       extra_classes: "ecl-editorial-article--organisation"
     }) %}
-        {% block content %}
-            {% if details is not empty %}
-                <section class="ecl-organisation__details ecl-organisation__item">
-                    <h2>{{ details.title }}</h2>
-                    {% for detailsItem in details.items %}
-                        {% if detailsItem.type == 'stats' %}
-                            <div class="ecl-organisation__details__item">
-                                <h4>{{ detailsItem.title }}</h4>
-                                <ul>
-                                    {% for stat in detailsItem.items %}
-                                        <li>
-                                            {{ stat.name }}: {{ stat.value }}
-                                        </li>
-                                    {% endfor %}
-                                </ul>
-                            </div>
-                        {% else %}
-                            {% include "@theme/patterns/compositions/list-tags.html.twig" with detailsItem|merge({
+		{% block content %}
+			{% if details is not empty %}
+				<section class="ecl-organisation__details ecl-organisation__item">
+					<h2>{{ details.title }}</h2>
+					{% for detailsItem in details.items %}
+						{% if detailsItem.type == 'stats' %}
+							<div class="ecl-organisation__details__item">
+								<h4>{{ detailsItem.title }}</h4>
+								<ul>
+									{% for stat in detailsItem.items %}
+										<li>
+											{{ stat.name }}:
+											{{ stat.value }}
+										</li>
+									{% endfor %}
+								</ul>
+							</div>
+						{% else %}
+							{% include "@theme/patterns/compositions/list-tags.html.twig" with detailsItem|merge({
                                 extra_classes: 'ecl-organisation__details__item'
                             }) %}
-                        {% endif %}
-                    {% endfor %}
-                </section>
-            {% endif %}
+						{% endif %}
+					{% endfor %}
+				</section>
+			{% endif %}
 
-            {% if block_enabled.announcements %}
-                {% if announcements is not empty %}
-                    {{ attach_library('eic_community/react-block-announcements') }}
-                    <section id="announcements" class="ecl-organisation__item ecl-organisation__announcements">
-                        <h2>{{ announcements.title }}</h2>
-                        <div id="react-announcements" data-items="{{ announcements.items | json_encode }}"></div>
-                    </section>
-                {% elseif can_add_announcement %}
-                    <section id="announcements" class="ecl-organisation__item ecl-organisation__announcements">
-                        <h2>{{ 'Announcements' | t }}</h2>
-                        <p>{{ 'No offers or needs for the moment.' }}</p>
-                        {% include '@ecl-twig/ec-component-link/ecl-link.html.twig' with empty_announcements|default({})|merge({
+			{% if block_enabled.announcements %}
+				{% if announcements is not empty %}
+					{{ attach_library('eic_community/react-block-announcements') }}
+					<section id="announcements" class="ecl-organisation__item ecl-organisation__announcements">
+						<h2>{{ announcements.title }}</h2>
+						<div id="react-announcements" data-items="{{ announcements.items | json_encode }}"></div>
+					</section>
+				{% elseif can_add_announcement %}
+					<section id="announcements" class="ecl-organisation__item ecl-organisation__announcements">
+						<h2>{{ 'Announcements' | t }}</h2>
+						<p>{{ 'No offers or needs for the moment.' }}</p>
+						{% include '@ecl-twig/ec-component-link/ecl-link.html.twig' with empty_announcements|default({})|merge({
                             icon_path: icon_file_path,
                         }) %}
-                    </section>
-                {% endif %}
-            {% endif %}
+					</section>
+				{% endif %}
+			{% endif %}
 
-            {% if block_enabled.news %}
-                {{ news }}
-            {% endif %}
+			{% if block_enabled.news %}
+				{{ news }}
+			{% endif %}
 
-            {% if teams is not empty and block_enabled.members %}
-                {% include "@theme/patterns/compositions/featured-content-collection.html.twig" with teams|default({})|merge({
+			{% if teams is not empty and block_enabled.members %}
+				{% include "@theme/patterns/compositions/featured-content-collection.html.twig" with teams|default({})|merge({
                     icon_file_path: icon_file_path,
                     extra_classes: "ecl-section-wrapper ecl-section-wrapper--is-white ecl-featured-content-collection--has-overview-layout ecl-organisation__item",
                     no_container: true,
                     extra_id: 'members',
                     call_to_action: teams.call_to_action
                 }) only %}
-            {% endif %}
+			{% endif %}
 
-            {% if block_enabled.events %}
-                {{ events }}
-            {% endif %}
-        {% endblock %}
+			{% if block_enabled.events %}
+				{{ events }}
+			{% endif %}
+		{% endblock %}
 
-        {% block sidebar %}
-            <div class="ecl-organisation__contact">
-                <h3>{{ 'Contact information' | t({}, {'context': 'eic_community'}) }}</h3>
+		{% block sidebar %}
+			<div class="ecl-organisation__contact">
+				<h3>{{ 'Contact information' | t({}, {'context': 'eic_community'}) }}</h3>
 
-                {% if contact.link %}
-                    <div class="ecl-organisation__contact__item">
-                        <h3 class="ecl-social-share__title">{{ contact.link.title }}</h3>
-                        {% for link in contact.link.items %}
-                            <div class="ecl-editorial-header__flag">
-                                {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with link|default({})|merge({
+				{% if contact.link %}
+					<div class="ecl-organisation__contact__item">
+						<h3 class="ecl-social-share__title">{{ contact.link.title }}</h3>
+						{% for link in contact.link.items %}
+							<div class="ecl-editorial-header__flag">
+								{% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with link|default({})|merge({
                                     link: link.link|default({})|merge({
                                         icon_position: 'before',
                                     }),
@@ -94,24 +95,24 @@
                                         size: 's',
                                     })
                                 }) %}
-                            </div>
-                        {% endfor %}
-                    </div>
-                {% endif %}
+							</div>
+						{% endfor %}
+					</div>
+				{% endif %}
 
-                {% if contact.social %}
-                    {% include '@theme/patterns/compositions/social-share.html.twig' with contact.social|merge({
+				{% if contact.social %}
+					{% include '@theme/patterns/compositions/social-share.html.twig' with contact.social|merge({
                         compact: true,
                     }) %}
-                {% endif %}
+				{% endif %}
 
-                {% if contact.data %}
-                    <div class="ecl-organisation__contact__item">
-                        <h3 class="ecl-social-share__title">{{ contact.data.title }}</h3>
-                        {% for dataItem in contact.data.items %}
-                            <p>{{ dataItem.name }}</p>
-                            <div class="ecl-editorial-header__flag">
-                                {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with dataItem.link|default({})|merge({
+				{% if contact.data %}
+					<div class="ecl-organisation__contact__item">
+						<h3 class="ecl-social-share__title">{{ contact.data.title }}</h3>
+						{% for dataItem in contact.data.items %}
+							<p>{{ dataItem.name }}</p>
+							<div class="ecl-editorial-header__flag">
+								{% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with dataItem.link|default({})|merge({
                                     link: dataItem.link.link|default({})|merge({
                                         icon_position: 'before',
                                     }),
@@ -121,102 +122,55 @@
                                         size: 's',
                                     })
                                 }) %}
-                            </div>
-                        {% endfor %}
-                    </div>
-                {% endif %}
+							</div>
+						{% endfor %}
+					</div>
+				{% endif %}
 
-                {% block contactAdresse %}
-                    <div class="ecl-organisation__contact__adresses__item">
-                        <p class="ecl-organisation__contact__adresses__item__name">{{ title }}</p>
-                        <p>{{ description|raw }}</p>
-                    </div>
-                {% endblock %}
+				{% if contact.adresses %}
+					{% embed "@theme/patterns/compositions/featured-content-collapse-expand.html.twig" with contact.adresses|merge({
+      extra_classes: 'ecl-featured-list--is-organisation-adresses',
+      min_items: 2
+    })
+  %}
+						{% block content %}
+							{% for item in items %}
+								<div class="ecl-featured-list__item">
+									{% with item %}
+									<div class="ecl-organisation__contact__adresses__item">
+										<p class="ecl-organisation__contact__adresses__item__name">{{ item.title }}</p>
+										<p>{{ item.description | raw }}</p>
+									</div>
+									{% endwith %}
+								</div>
+							{% endfor %}
+						{% endblock %}
+					{% endembed %}
+				{% endif %}
 
-                {% if contact.adresses %}
+				{% if contact.locations %}
 
-  <div class="ecl-organisation__contact__item">
-    <h3 class="ecl-social-share__title">{{ contact.adresses.title }}</h3>
-    {% if contact.adresses.items is not empty %}
-    <div
-      class="ecl-featured-list ecl-featured-list--is-collapsible ecl-featured-list--is-organisation-adresses"
-    >
-      <div class="ecl-featured-list__items-wrapper">
-        <div class="ecl-featured-list__items">
-          {% for item in contact.adresses.items %}
-          <div class="ecl-featured-list__item">
-            {% with item %}
-            {{ block('contactAdresse') }}
-            {% endwith %}
-          </div>
-          {% endfor %}
-          {% if contact.adresses.items|length > 2 %}
-          <div
-            class="ecl-featured-list__item ecl-featured-list__item--expand ecl-featured-list__item--collapse"
-          >
-            {% include "@ecl-twig/ec-component-button/ecl-button.html.twig" with { icon_position:
-            'after', icon: icon_file_path ? { path: icon_file_path, type: 'ui', name:
-            'rounded-arrow', size: '2xs', } : {}, label:
-            contact.adresses.collapse_label|default('Show less'), variant: 'ghost', extra_classes:
-            'ecl-featured-list__collapse ecl-featured-list__btn-no-padding' } %}
-          </div>
-          <div class="ecl-featured-list__item ecl-featured-list__item--expand">
-            {% include "@ecl-twig/ec-component-button/ecl-button.html.twig" with { icon_position:
-            'after', icon: icon_file_path ? { path: icon_file_path, type: 'ui', name:
-            'rounded-arrow', transform: 'rotate-180', size: '2xs', } : {}, label:
-            contact.adresses.collapse_label|default('Show all'), variant: 'ghost', extra_classes:
-            'ecl-featured-list__expand' } %}
-          </div>
-          {% endif %}
-
-        </div>
-      </div>
-    </div>
-    {% endif %}
-  </div>
-
-  {% endif %}
-
-  {% if contact.locations %}
-  <div class="ecl-organisation__contact__item">
-    <h3 class="ecl-social-share__title">{{ contact.locations.title }}</h3>
-    {% if contact.locations.items is not empty %}
-    <div
-      class="ecl-featured-list ecl-featured-list--is-collapsible ecl-featured-list--is-organisation-locations"
-    >
-      <div class="ecl-featured-list__items-wrapper">
-        <div class="ecl-featured-list__items">
-         {% for item in contact.locations.items %}
-          <div class="ecl-featured-list__item">
-            {% with item %}
-            {{ block('contactAdresse') }}
-            {% endwith %}
-          </div>
-          {% endfor %}
-          <div
-            class="ecl-featured-list__item ecl-featured-list__item--expand ecl-featured-list__item--collapse"
-          >
-            {% include "@ecl-twig/ec-component-button/ecl-button.html.twig" with { icon_position:
-            'after', icon: icon_file_path ? { path: icon_file_path, type: 'ui', name:
-            'rounded-arrow', size: '2xs', } : {}, label:
-            contact.adresses.collapse_label|default('Show less'), variant: 'ghost', extra_classes:
-            'ecl-featured-list__collapse ecl-featured-list__btn-no-padding' } %}
-          </div>
-          <div class="ecl-featured-list__item ecl-featured-list__item--expand">
-            {% include "@ecl-twig/ec-component-button/ecl-button.html.twig" with { icon_position:
-            'after', icon: icon_file_path ? { path: icon_file_path, type: 'ui', name:
-            'rounded-arrow', transform: 'rotate-180', size: '2xs', } : {}, label:
-            contact.adresses.collapse_label|default('Show all'), variant: 'ghost', extra_classes:
-            'ecl-featured-list__expand' } %}
-          </div>
-        </div>
-      </div>
-    </div>
-    {% endif %}
-  </div>
-  {% endif %}
-            </div>
-        {% endblock %}
-    {% endembed %}
+					{% embed "@theme/patterns/compositions/featured-content-collapse-expand.html.twig" with contact.locations|merge({
+      extra_classes: 'ecl-featured-list--is-organisation-locations',
+      min_items: 0
+      })
+    %}
+						{% block content %}
+							{% for item in items %}
+								<div class="ecl-featured-list__item">
+									{% with item %}
+									<div class="ecl-organisation__contact__adresses__item">
+										<p class="ecl-organisation__contact__adresses__item__name">{{ item.title }}</p>
+										<p>{{ item.description | raw }}</p>
+									</div>
+									{% endwith %}
+								</div>
+							{% endfor %}
+						{% endblock %}
+					{% endembed %}
+				{% endif %}
+			</div>
+		{% endblock %}
+	{% endembed %}
 
 {% endblock %}

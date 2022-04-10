@@ -4,7 +4,7 @@ services:
     arguments: [ '@datetime.time', '@config.factory', '@current_user', '@entity_type.manager' ]
   eic_messages.message_bus:
     class: Drupal\eic_messages\Service\MessageBus
-    arguments: [ '@eic_messages.queued_message_checker' ]
+    arguments: [ '@eic_messages.queued_message_checker', '@state' ]
     tags:
       - { name: service_collector, tag: message_producer, call: addHandler }
 

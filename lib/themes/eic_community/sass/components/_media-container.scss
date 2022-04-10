@@ -6,4 +6,32 @@
     color: ecl-typography('color');
     @include ecl-responsive-font('label');
   }
+
+  &--is-loading {
+    position: relative;
+    background-color: map-get($ecl-colors, 'grey-10');
+  }
+
+  &__loader {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    background: map-get($ecl-colors, 'grey-10');
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+  }
+
+  &__media > .video-js {
+    bottom: 0;
+    height: 100%;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 100%;
+  }
 }
