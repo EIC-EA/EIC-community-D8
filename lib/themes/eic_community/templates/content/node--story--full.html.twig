@@ -1,33 +1,37 @@
 {% block content %}
-  {% embed "@theme/patterns/compositions/editorial-article.html.twig" with editorial_article|default({}) %}
-    {% block content %}
-      {{ elements.field_body }}
-      {% if image_wrapper %}
-        {% include "@theme/patterns/compositions/media-wrapper.html.twig" with image_wrapper only %}
-      {% endif %}
-      {{ elements.field_news_paragraphs }}
-      {% if video_download %}
-        {% include "@theme/patterns/components/attachment.html.twig" with video_download only %}
-      {% else %}
-        {{ elements.field_video }}
-      {% endif %}
-      {% for download in downloads %}
-        {% include "@theme/patterns/components/attachment.html.twig" with download only %}
-      {% endfor %}
-      {{ elements.field_disclaimer }}
-    {% endblock %}
+	{% embed "@theme/patterns/compositions/editorial-article.html.twig" with editorial_article|default({}) %}
+		{% block content %}
+			{{ elements.field_body }}
+			{% if image_wrapper %}
+				{% include "@theme/patterns/compositions/media-wrapper.html.twig" with image_wrapper only %}
+			{% endif %}
+			{{ elements.field_news_paragraphs }}
+			{% if video_download %}
+				{% include "@theme/patterns/components/attachment.html.twig" with video_download only %}
+			{% else %}
+				{{ elements.field_video }}
+			{% endif %}
+			{% for download in downloads %}
+				{% include "@theme/patterns/components/attachment.html.twig" with download only %}
+			{% endfor %}
+			{{ elements.field_disclaimer }}
+		{% endblock %}
 
-    {% block sidebar %}
-      {{ eic_local_tasks }}
+		{% block sidebar %}
+			{{ eic_local_tasks }}
 
-      {% include "@theme/patterns/compositions/editorial-actions.html.twig" with editorial_actions|default({}) %}
+			{% include "@theme/patterns/compositions/editorial-actions.html.twig" with editorial_actions|default({}) %}
 
-      {% include "@theme/patterns/compositions/featured-contributors.html.twig" with contributors|default({}) %}
+			{% include "@theme/patterns/compositions/featured-contributors.html.twig" with contributors|default({})|merge({
+        title_extra_classes: "ecl-editorial-article__aside__title"
+      }) %}
 
-      {% include "@theme/patterns/compositions/featured-topics.html.twig" with topics|default({}) %}
+			{% include "@theme/patterns/compositions/featured-topics.html.twig" with topics|default({}) %}
 
-      {% include "@theme/patterns/compositions/featured-stories.html.twig" with stories|default({}) %}
-    {% endblock %}
-  {% endembed %}
+			{% include "@theme/patterns/compositions/featured-stories.html.twig" with stories|default({})|merge({
+        title_extra_classes: "ecl-editorial-article__aside__title"
+      }) %}
+		{% endblock %}
+	{% endembed %}
 
 {% endblock %}
