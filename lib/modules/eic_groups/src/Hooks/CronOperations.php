@@ -2,12 +2,16 @@
 
 namespace Drupal\eic_groups\Hooks;
 
+use Drupal\Core\Database\Connection;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Queue\QueueFactory;
 use Drupal\Core\Queue\QueueWorkerManagerInterface;
 use Drupal\Core\Queue\SuspendQueueException;
 use Drupal\Core\State\StateInterface;
+use Drupal\eic_groups\GroupsModerationHelper;
+use Drupal\eic_messages\Service\MessageBus;
+use Drupal\group\Entity\Group;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\pathauto\PathautoGeneratorInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -39,35 +43,49 @@ class CronOperations implements ContainerInjectionInterface {
    *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-  protected $entityTypeManager;
+  private $entityTypeManager;
 
   /**
    * The pathauto generator.
    *
    * @var \Drupal\pathauto\PathautoGeneratorInterface
    */
-  protected $pathautoGenerator;
+  private $pathautoGenerator;
 
   /**
    * The queue factory service.
    *
    * @var \Drupal\Core\Queue\QueueFactory
    */
-  protected $queueFactory;
+  private $queueFactory;
 
   /**
    * The state service.
    *
    * @var \Drupal\Core\State\StateInterface
    */
-  protected $state;
+  private $state;
 
   /**
    * The queue worker manager.
    *
    * @var \Drupal\Core\Queue\QueueWorkerManagerInterface
    */
-  protected $queueManager;
+  private $queueManager;
+
+  /**
+   * The message bus service.
+   *
+   * @var MessageBus
+   */
+  private $messageBus;
+
+  /**
+   * The database service.
+   *
+   * @var \Drupal\Core\Database\Connection
+   */
+  private $database;
 
   /**
    * Constructs a CronOperations object.
@@ -82,13 +100,27 @@ class CronOperations implements ContainerInjectionInterface {
    *   The queue worker manager.
    * @param \Drupal\Core\State\StateInterface $state
    *   The state service.
+   * @param MessageBus $bus
+   *   The message bus service.
+   * @param \Drupal\Core\Database\Connection $database
+   *   The database service.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, PathautoGeneratorInterface $pathauto_generator, QueueFactory $queue_factory, QueueWorkerManagerInterface $queue_worker_manager, StateInterface $state) {
+  public function __construct(
+    EntityTypeManagerInterface $entity_type_manager,
+    PathautoGeneratorInterface $pathauto_generator,
+    QueueFactory $queue_factory,
+    QueueWorkerManagerInterface $queue_worker_manager,
+    StateInterface $state,
+    MessageBus $bus,
+    Connection $database
+  ) {
     $this->entityTypeManager = $entity_type_manager;
     $this->pathautoGenerator = $pathauto_generator;
     $this->queueFactory = $queue_factory;
     $this->queueManager = $queue_worker_manager;
     $this->state = $state;
+    $this->messageBus = $bus;
+    $this->database = $database;
   }
 
   /**
@@ -100,7 +132,9 @@ class CronOperations implements ContainerInjectionInterface {
       $container->get('pathauto.generator'),
       $container->get('queue'),
       $container->get('plugin.manager.queue_worker'),
-      $container->get('state')
+      $container->get('state'),
+      $container->get('eic_messages.message_bus'),
+      $container->get('database')
     );
   }
 
@@ -110,6 +144,7 @@ class CronOperations implements ContainerInjectionInterface {
   public function cron() {
     $this->processGroupUrlAliasUpdateQueue();
     $this->processGroupContentUrlAliasUpdateQueue();
+    $this->processGroupWaitingApprovalReminder();
   }
 
   /**
@@ -117,7 +152,7 @@ class CronOperations implements ContainerInjectionInterface {
    *
    * @todo In the future this method should be called by ultimate cron module.
    */
-  protected function processGroupUrlAliasUpdateQueue() {
+  private function processGroupUrlAliasUpdateQueue() {
     $group_alias_queue = $this->queueFactory->get(self::GROUP_URL_ALIAS_UPDATE_QUEUE);
 
     while ($item = $group_alias_queue->claimItem()) {
@@ -141,7 +176,9 @@ class CronOperations implements ContainerInjectionInterface {
           $results = $query->execute();
 
           if (!empty($results)) {
-            $group_content_url_alias_update_queue = $this->queueFactory->get(self::GROUP_CONTENT_URL_ALIAS_UPDATE_QUEUE);
+            $group_content_url_alias_update_queue = $this->queueFactory->get(
+              self::GROUP_CONTENT_URL_ALIAS_UPDATE_QUEUE
+            );
 
             foreach ($results as $group_content_id) {
               $group_content_url_alias_update_queue->createItem($group_content_id);
@@ -151,8 +188,7 @@ class CronOperations implements ContainerInjectionInterface {
 
         $group_alias_queue->deleteItem($item);
         $this->state->delete(self::GROUP_URL_ALIAS_UPDATE_STATE_CACHE . $group->id());
-      }
-      catch (SuspendQueueException $e) {
+      } catch (SuspendQueueException $e) {
         $group_alias_queue->releaseItem($item);
         break;
       }
@@ -165,7 +201,7 @@ class CronOperations implements ContainerInjectionInterface {
    * @todo This method should be removed after installing and configure
    * ultimate cron module.
    */
-  protected function processGroupContentUrlAliasUpdateQueue() {
+  private function processGroupContentUrlAliasUpdateQueue() {
     $queue = $this->queueFactory->get(self::GROUP_CONTENT_URL_ALIAS_UPDATE_QUEUE);
     $queue_worker = $this->queueManager->createInstance(self::GROUP_CONTENT_URL_ALIAS_UPDATE_QUEUE);
 
@@ -173,10 +209,48 @@ class CronOperations implements ContainerInjectionInterface {
       try {
         $queue_worker->processItem($item->data);
         $queue->deleteItem($item);
-      }
-      catch (SuspendQueueException $e) {
+      } catch (SuspendQueueException $e) {
         $queue->releaseItem($item);
         break;
+      }
+    }
+  }
+
+  /**
+   * Notify all SA, SCM groups that are waiting for approval.
+   */
+  private function processGroupWaitingApprovalReminder() {
+    $query = $this->database->select('groups', 'g');
+    $query->condition('g.type', 'group');
+    $query->join('content_moderation_state_field_data', 'cm', 'cm.content_entity_id = g.id');
+    $query->fields('g', ['id']);
+    $query->condition('cm.moderation_state', GroupsModerationHelper::GROUP_PENDING_STATE);
+    $query->orderBy('g.id');
+    $results = $query->execute()->fetchAll(\PDO::FETCH_ASSOC);
+
+    $results = array_map(function (array $item) {
+      return $item['id'];
+    }, $results);
+
+    $groups = Group::loadMultiple($results);
+    $query = \Drupal::entityQuery('user')
+      ->condition('status', 1);
+
+    $or_condition = $query->orConditionGroup()
+      ->condition('roles', 'content_administrator')
+      ->condition('roles', 'site_admin');
+
+    $uids = $query->condition($or_condition)->execute();
+
+    foreach ($groups as $group) {
+      $template = [
+        'template' => 'notify_group_wait_approval',
+        'field_group_ref' => ['target_id' => $group->id()],
+        'field_event_executing_user' => ['target_id' => $group->getOwnerId()]
+      ];
+
+      foreach ($uids as $uid) {
+        $this->messageBus->dispatch($template + ['uid' => $uid]);
       }
     }
   }
