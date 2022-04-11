@@ -127,6 +127,7 @@ process:
   field_message_to_site_admin: field_message_to_site_admin
   features:
     - plugin: eic_group_features
+      group_bundle: group
   # TODO
 #  group_group:
 #    - plugin: get
