@@ -9,7 +9,7 @@ cck_plugin_method: null
 migration_tags:
   - eic_smed_api_authentication
 migration_group: eic_smed_taxonomy
-label: 'SMED - Thematics and Topics'
+label: 'SMED - Thematics and Topics - Level 3'
 source:
   plugin: eic_smed_url
   taxonomy_vocabulary_smed_id: ThematicsTopics

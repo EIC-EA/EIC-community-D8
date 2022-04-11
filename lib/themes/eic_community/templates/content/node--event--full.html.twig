@@ -3,7 +3,7 @@
     {% block content %}
       {% include "@theme/patterns/components/event.html.twig" with {
         title: node.title.value,
-        body: node.body.value|raw,
+        body: content.body|raw,
         tags: [
           {
             tag: {

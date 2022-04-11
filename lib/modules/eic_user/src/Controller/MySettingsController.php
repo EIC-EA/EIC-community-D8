@@ -131,7 +131,7 @@ class MySettingsController extends ControllerBase {
   }
 
   /**
-   * @param $notification_type
+   * @param string $notification_type
    *
    * @return \Symfony\Component\HttpFoundation\JsonResponse
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
@@ -161,6 +161,7 @@ class MySettingsController extends ControllerBase {
 
       $formatted_flaggings['items'][] = [
         'id' => $flagging->id(),
+        'created' => $flagging->get('created')->value,
         'state' => $flagging->get('field_notification_frequency')->value === NotificationFrequencies::ON,
         'update_url' => Url::fromRoute('eic_user.toggle_follow_flag', [
           'notification_type' => $notification_type,
@@ -176,6 +177,10 @@ class MySettingsController extends ControllerBase {
         ],
       ];
     }
+
+    usort($formatted_flaggings['items'], function ($a, $b) {
+      return $b['created'] <=> $a['created'];
+    });
 
     return new JsonResponse($formatted_flaggings);
   }

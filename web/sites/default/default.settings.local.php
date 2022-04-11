@@ -221,3 +221,6 @@ $settings['reverse_proxy_header_mapping'] = [
   Request::HEADER_X_FORWARDED_PORT => 'X-Request-Port',
   Request::HEADER_X_FORWARDED_PROTO => 'X-Request-Proto',
 ];
+
+$settings['eic_vod']['cloudfront_url'] = '';
+$settings['eic_vod']['cloudfront_api_key'] = '';

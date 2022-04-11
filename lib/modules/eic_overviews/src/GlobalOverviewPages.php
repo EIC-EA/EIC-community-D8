@@ -3,8 +3,8 @@
 namespace Drupal\eic_overviews;
 
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Link;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
 use Drupal\eic_overviews\Entity\OverviewPage;
 
@@ -137,6 +137,7 @@ class GlobalOverviewPages {
    *   - url: the operation URL string.
    */
   public function getGlobalOverviewPageOperations(int $page) {
+    $operations = [];
     switch ($page) {
       case GlobalOverviewPages::GROUPS:
         $entity_id = 'group';
