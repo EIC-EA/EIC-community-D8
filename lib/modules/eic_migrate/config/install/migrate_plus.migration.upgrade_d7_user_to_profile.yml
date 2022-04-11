@@ -126,17 +126,16 @@ process:
             no_stub: true
             migration:
               - smed_job_titles
-  # TODO: Implement after taxonomy vocabulary is coming from SMED.
-  # field_user_type:
-  #   - plugin: sub_process
-  #     source: c4m_user_types
-  #     process:
-  #       target_id:
-  #         - plugin: migration_lookup
-  #           source: smed_id
-  #           no_stub: true
-  #           migration:
-  #             - smed_user_types
+  field_vocab_user_type:
+    - plugin: sub_process
+      source: c4m_vocab_job_title
+      process:
+        target_id:
+          - plugin: migration_lookup
+            source: smed_id
+            no_stub: true
+            migration:
+              - smed_user_types
 destination:
   plugin: 'entity:profile'
 migration_dependencies:
@@ -149,4 +148,5 @@ migration_dependencies:
     - smed_regions_countries_lvl2
     - smed_job_titles
     - smed_spoken_languages
+    - smed_user_types
   optional: { }
