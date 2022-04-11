@@ -5,6 +5,7 @@
       "2973863 - ValidReferenceConstraintValidator should not try to enforce data integrity on pre-existing references": "https://www.drupal.org/files/issues/2018-11-04/2973863-24.patch",
       "2918537 - Cannot save unpublished versions of published content for users without manage book privileges": "https://www.drupal.org/files/issues/2021-11-16/2918537-68.patch",
       "2473873 - Views entity operations lack cacheability support, resulting in incorrect dropbuttons": "https://www.drupal.org/files/issues/2021-11-23/2473873-97.patch",
+      "2766369 - Add skip-method option to file_copy and download process plugins": "https://www.drupal.org/files/issues/2022-03-31/2766369-30.patch",
       "2760983 - array_flip(): Can only flip STRING and INTEGER values! EntityStorageBase.php:227": "https://www.drupal.org/files/issues/2020-02-06/2760983-8.patch"
     },
     "drupal/address": {
@@ -18,6 +19,9 @@
     },
     "drupal/entity_usage": {
       "3168418 - Batch update error when there are no entities to load": "https://www.drupal.org/files/issues/2021-12-07/batch-update-error-3168418-16.patch"
+    },
+    "drupal/ginvite": {
+      "3209902 - More graceful handling of missing plugin": "https://www.drupal.org/files/issues/2022-03-30/ginvite-fix__invite_route_permission-3209902-5.patch"
     },
     "drupal/group": {
       "2881769 - group/{group}/node/create uses the permissions of group/{group}/node/add": "https://www.drupal.org/files/issues/2020-10-01/2881769-22.patch",

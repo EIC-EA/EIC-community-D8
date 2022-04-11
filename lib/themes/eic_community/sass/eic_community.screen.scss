@@ -30,6 +30,7 @@
 @import './overrides/mui';
 @import './overrides/viewport-modal';
 @import './overrides/media-library';
+@import './overrides/videojs';
 
 @import './schema/border';
 @import './schema/box-model';
@@ -95,6 +96,7 @@
 @import "./components/banner";
 @import "./components/blockquote";
 @import "./components/button";
+@import "./components/ckeditor";
 @import "./components/content-type-indicator";
 @import "./components/contact-box";
 @import "./components/checkbox";

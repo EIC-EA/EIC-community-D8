@@ -1,10 +1,10 @@
 .ecl-navigation-list {
   $node: &;
-  padding: map-get($ecl-spacing, "xs");
+  padding: map-get($ecl-spacing, 'xs');
   outline: ecl-border();
   outline-offset: -1px;
 
-  @include ecl-media-breakpoint-down("sm") {
+  @include ecl-media-breakpoint-down('sm') {
     width: 100%;
     box-sizing: border-box;
   }
@@ -16,7 +16,7 @@
   &,
   &__main-before,
   &__main-after {
-    margin: ecl-box-model("margin") 0;
+    margin: ecl-box-model('margin') 0;
 
     &:first-child {
       margin-top: 0;
@@ -35,9 +35,9 @@
     }
   }
 
-  &--is-ready[aria-collapsed="true"] {
+  &--is-ready[aria-collapsed='true'] {
     display: inline-block;
-    padding: map-get($ecl-spacing, "2xs");
+    padding: map-get($ecl-spacing, '2xs');
   }
 
   &__items,
@@ -46,11 +46,11 @@
     margin: 0;
 
     #{$node}--child #{$node}__link {
-      padding-left: map-get($ecl-spacing, "m") * 2;
+      padding-left: map-get($ecl-spacing, 'm') * 2;
     }
 
     #{$node}--child #{$node}--child #{$node}__link {
-      padding-left: map-get($ecl-spacing, "m") * 3;
+      padding-left: map-get($ecl-spacing, 'm') * 3;
     }
   }
 
@@ -58,73 +58,65 @@
     list-style: none;
 
     & & {
-      margin-left: ecl-layout("box-model");
+      margin-left: ecl-layout('box-model');
     }
 
-    #{$node}--is-ready #{$node}__item:not([aria-active="true"]) > & {
+    #{$node}--is-ready #{$node}__item:not([aria-active='true']) > & {
       @include visually-hidden();
     }
   }
 
   &__item {
-    // &--current {
-    //   & > #{$node}__link {
-    //     background-color: map-get($ecl-colors, 'grey-5');
-    //     border-color: ecl-typography('color', 'title');
-    //     color: ecl-typography('color');
-    //   }
-
-    //   #{$node}__item--current > #{$node}__link {
-    //     border-color: transparent;
-    //   }
-    // }
-
     &--current {
       & > #{$node}__link {
-        background-color: map-get($ecl-colors, "grey-5");
-        border-color: ecl-typography("color", "title");
-        color: ecl-typography("color");
+        background-color: map-get($ecl-colors, 'grey-5');
+        border-color: ecl-typography('color', 'title');
+        color: map-get($ecl-colors, 'grey');
+        & a {
+          color: currentColor;
+          font-weight: bold;
+        }
       }
     }
 
-    &[aria-active="true"] > #{$node}__link #{$node}__link-controls #{$node}__item-icon {
+    &[aria-active='true'] > #{$node}__link #{$node}__link-controls #{$node}__item-icon {
       transform: none;
-      color: ecl-typography("color", "title");
+      color: ecl-typography('color', 'title');
     }
   }
 
   &__item-icon {
-    margin-left: map-get($ecl-spacing, "m");
+    margin-left: map-get($ecl-spacing, 'm');
     transform: rotate(180deg);
-    color: map-get($ecl-colors, "grey-75");
+    color: map-get($ecl-colors, 'grey-75');
   }
 
   &__link {
     display: flex;
     align-items: center;
-    padding: map-get($ecl-spacing, "xs") map-get($ecl-spacing, "s");
+    padding: map-get($ecl-spacing, 'xs') map-get($ecl-spacing, 's');
     text-decoration: none;
     font-weight: $ecl-font-weight-bold;
     border-left: solid 4px transparent;
-    color: ecl-typography("color", "title");
+    color: ecl-typography('color', 'title');
     justify-content: space-between;
     margin: $ecl-spacing-2-xs 0;
-    @include ecl-responsive-font("label");
+    @include ecl-responsive-font('label');
 
     #{$node}__items #{$node}__items & {
       font-weight: $ecl-font-weight-regular;
-      @include ecl-responsive-font("meta");
+      @include ecl-responsive-font('meta');
     }
   }
 
   &__controls {
     display: flex;
     flex-direction: row-reverse;
-    margin-bottom: ecl-box-model("padding");
+    margin-bottom: ecl-box-model('padding');
 
-    #{$node}--is-ready[aria-collapsed="true"] & {
+    #{$node}--is-ready[aria-collapsed='true'] & {
       margin-bottom: 0;
-      margin-left: ecl-box-model("padding");
+      margin-left: ecl-box-model('padding');
     }
   }
 
@@ -136,12 +128,12 @@
   }
 
   & &__update-indicator {
-    background-color: map-get($ecl-colors, "yellow-100");
-    color: ecl-typography("color");
+    background-color: map-get($ecl-colors, 'yellow-100');
+    color: ecl-typography('color');
   }
 
   &__main {
-    #{$node}--is-ready[aria-collapsed="true"] & {
+    #{$node}--is-ready[aria-collapsed='true'] & {
       @include visually-hidden();
     }
   }
@@ -150,13 +142,13 @@
     .ecl-icon {
       transition: none;
       transform: rotate(180deg);
-      @include ecl-media-breakpoint-up("sm") {
+      @include ecl-media-breakpoint-up('sm') {
         transform: rotate(90deg);
       }
 
-      #{$node}--is-ready[aria-collapsed="true"] & {
+      #{$node}--is-ready[aria-collapsed='true'] & {
         transform: rotate(0deg);
-        @include ecl-media-breakpoint-up("sm") {
+        @include ecl-media-breakpoint-up('sm') {
           transform: rotate(270deg);
         }
       }

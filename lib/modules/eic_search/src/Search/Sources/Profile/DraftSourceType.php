@@ -143,7 +143,7 @@ class DraftSourceType extends SourceType {
    * @inheritDoc
    */
   public function ableToPrefilteredByGroup(): bool {
-    return TRUE;
+    return FALSE;
   }
 
   /**
@@ -181,6 +181,13 @@ class DraftSourceType extends SourceType {
     return [
       'ss_global_last_moderation_state' => DefaultContentModerationStates::DRAFT_STATE,
     ];
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function ignorePublishedState(): bool {
+    return TRUE;
   }
 
 }

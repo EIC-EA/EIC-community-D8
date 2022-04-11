@@ -200,6 +200,7 @@ cypress_test_qa:
   tags:
     - itr-hrt
   artifacts:
+    when: always
     untracked: true
     expire_in: '2 hour'
   script:
