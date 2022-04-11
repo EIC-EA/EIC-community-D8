@@ -158,4 +158,6 @@ migration_dependencies:
     - smed_thematics_topics_lvl1
     - smed_thematics_topics_lvl2
     - smed_thematics_topics_lvl3
+    - smed_regions_countries_lvl1
+    - smed_regions_countries_lvl2
   optional: {  }
