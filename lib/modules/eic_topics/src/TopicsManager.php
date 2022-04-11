@@ -66,7 +66,7 @@ class TopicsManager {
       ],
       /** @TODO To define how media will be displayed in global search */
       'file' => [
-        'stat' => $this->getStatByEntityType($tid, 'media', 'eic_document'),
+        'stat' => $this->getStatByEntityType($tid, 'node', 'document'),
         'url' => '',
       ],
       'event' => [

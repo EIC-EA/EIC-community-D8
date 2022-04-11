@@ -4,13 +4,12 @@
  * Theme override for oe webtools social share block.
  */
 #}
-
 <div class="ecl-social-media-share ecl-link ecl-link--default ecl-link--icon ecl-link--icon-before ecl-link--standalone ecl-link--flag">
   {% include '@ecl-twig/ec-component-icon/ecl-icon.html.twig' with {
     extra_classes: "ecl-icon ecl-icon--s ecl-link__icon",
     icon: {
       size: 's',
-      path: "/themes/custom/eic_community/dist/images/sprite/custom/sprites/custom.svg",
+      path: eic_icon_path,
       type: "general",
       name: "share"
     }

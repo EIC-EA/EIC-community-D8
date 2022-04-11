@@ -10,7 +10,21 @@
 //
 //
 // -- This is a parent command --
-// Cypress.Commands.add("login", (email, password) => { ... })
+Cypress.Commands.add("login", (username = "cypress", password = "cypress") => {
+  cy.visit("/user/login");
+  cy.get("#edit-name").type(username);
+  cy.get("#edit-pass").type(password);
+  cy.get(".user-login-form").submit();
+  cy.location("pathname").should("contains", "/user/");
+});
+
+Cypress.Commands.add("preserveCookie", () => {
+  Cypress.Cookies.defaults({
+    preserve: (cookie) => {
+      return true;
+    },
+  });
+});
 //
 //
 // -- This is a child command --

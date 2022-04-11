@@ -1,0 +1,47 @@
+id: smed_user_types
+label: SMED - User types
+migration_group: eic_smed_taxonomy
+migration_tags:
+  - eic_smed_api_authentication
+source:
+  plugin: eic_smed_url
+  authentication:
+    plugin: basic
+    # Username and password will be set automatically by the eic_smed_url plugin
+    # we just keep them here with dummy data for reference.
+    username: xxx
+    password: xxx
+  # The URL will be set automatically by the eic_smed_url plugin, we just keep
+  # it here with dummy data for reference.
+  urls: { }
+  data_fetcher_plugin: eic_http_smed_taxonomy_post
+  taxonomy_vocabulary_smed_id: Functions
+  data_parser_plugin: json
+  include_raw_data: true
+  track_changes: true
+  item_selector: 'Taxonomy/Option'
+  ids:
+    value:
+      type: string
+  fields:
+    -
+      name: name
+      label: 'Name'
+      selector: Name
+    -
+      name: value
+      label: 'Value'
+      selector: Value
+process:
+  name:
+    - plugin: get
+      source: name
+  field_smed_id:
+    - plugin: get
+      source: value
+destination:
+  plugin: entity:taxonomy_term
+  default_bundle: user_types
+migration_dependencies:
+  required: { }
+  optional: { }

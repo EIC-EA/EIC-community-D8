@@ -99,17 +99,16 @@ process:
             migration:
               - smed_regions_countries_lvl1
               - smed_regions_countries_lvl2
-  # TODO: Validate implementation when field_vocab_languages is added to CT News.
-  # field_language:
-  #   - plugin: sub_process
-  #     source: c4m_vocab_language
-  #     process:
-  #       target_id:
-  #         - plugin: migration_lookup
-  #           source: smed_id
-  #           no_stub: true
-  #           migration:
-  #             - smed_spoken_languages
+  field_language:
+    - plugin: sub_process
+      source: c4m_vocab_language
+      process:
+        target_id:
+          - plugin: migration_lookup
+            source: smed_id
+            no_stub: true
+            migration:
+              - smed_spoken_languages
   field_vocab_topics:
     - plugin: sub_process
       source: c4m_vocab_topic

@@ -83,6 +83,7 @@ module:
   eic_theme_helper: 0
   eic_topics: 0
   eic_user: 0
+  eic_vod: 0
   eic_webservices: 0
   eic_wysiwyg: 0
   entity: 0

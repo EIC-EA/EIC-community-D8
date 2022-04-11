@@ -11,6 +11,7 @@ use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_user\UserHelper;
 use Drupal\file\Entity\File;
 use Drupal\group\Entity\Group;
+use Drupal\group\Entity\GroupInterface;
 use Drupal\image\Entity\ImageStyle;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
@@ -77,9 +78,7 @@ class ProcessorGlobal extends DocumentProcessor {
     $language = t('English', [], ['context' => 'eic_search'])->render();
     $moderation_state = DefaultContentModerationStates::PUBLISHED_STATE;
     $last_moderation_state = DefaultContentModerationStates::PUBLISHED_STATE;
-
-    // Set by default parent group to TRUE and method processGroupContentData will update it.
-    $this->addOrUpdateDocumentField($document, 'its_global_group_parent_published', $fields, 1);
+    $is_group_parent_published = 1;
 
     switch ($datasource) {
       case 'entity:node':
@@ -134,6 +133,7 @@ class ProcessorGlobal extends DocumentProcessor {
         $type = $fields['ss_group_type'];
         $date = $fields['ds_group_created'];
         $status = $fields['bs_group_status'];
+        $is_group_parent_published = (int) $status;
         $geo = $fields['ss_group_field_vocab_geo_string'] ?? '';
         $language = t('English', [], ['context' => 'eic_search'])->render();
         $user_url = '';
@@ -147,6 +147,15 @@ class ProcessorGlobal extends DocumentProcessor {
         );
         $document->addField('its_global_group_parent_id', $group_id);
         $group = Group::load($group_id);
+        if ($group instanceof GroupInterface) {
+          $last_moderation_state = $this->getLastRevisionModerationState($group);
+          $this->addOrUpdateDocumentField(
+            $document,
+            'its_content_uid',
+            $fields,
+            $group->getRevisionUserId()
+          );
+        }
         if ($group && $owner = EICGroupsHelper::getGroupOwner($group)) {
           $fullname = realname_load($owner);
 
@@ -245,6 +254,14 @@ class ProcessorGlobal extends DocumentProcessor {
       $last_moderation_state
     );
 
+    // Set by default parent group to TRUE and method processGroupContentData will update it.
+    $this->addOrUpdateDocumentField(
+      $document,
+      'its_global_group_parent_published',
+      $fields,
+      $is_group_parent_published
+    );
+
     if (!array_key_exists('bs_content_is_private', $fields)) {
       $document->addField('bs_content_is_private', FALSE);
     }
@@ -281,6 +298,7 @@ class ProcessorGlobal extends DocumentProcessor {
    *
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *  The entity.
+   *
    * @return string
    *   The moderation state.
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
@@ -288,8 +306,12 @@ class ProcessorGlobal extends DocumentProcessor {
    */
   private function getLastRevisionModerationState(EntityInterface $entity): string {
     $entity_type = $entity->getEntityTypeId();
-    $revision_ids = \Drupal::entityTypeManager()->getStorage($entity_type)->revisionIds($entity);
-    $last_revision_id = end($revision_ids);
+    if ('group' === $entity_type) {
+      $last_revision_id = $entity->getRevisionId();
+    } else {
+      $revision_ids = $this->em->getStorage($entity_type)->revisionIds($entity);
+      $last_revision_id = end($revision_ids);
+    }
 
     $last_revision = $entity->getRevisionId() !== $last_revision_id ?
       $this->em->getStorage($entity_type)->loadRevision($last_revision_id) :
