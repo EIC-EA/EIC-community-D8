@@ -4,6 +4,7 @@ status: true
 dependencies:
   module:
     - eic_wysiwyg
+    - media
     - oe_webtools_cookie_consent
 name: 'Filtered HTML'
 format: filtered_html
@@ -12,11 +13,11 @@ filters:
   filter_html:
     id: filter_html
     provider: filter
-    status: false
+    status: true
     weight: -10
     settings:
-      allowed_html: '<a href hreflang> <em> <strong> <cite> <blockquote cite> <code> <ul type> <ol type start> <li> <dl> <dt> <dd> <h2 id> <h3 id> <h4 id> <h5 id> <h6 id> <img src alt data-entity-type data-entity-uuid> <u> <sup> <sub>'
-      filter_html_help: true
+      allowed_html: '<a href hreflang target title rel name> <em> <i> <strong> <b> <strike> <s> <cite> <blockquote cite> <code> <ul type> <ol type start> <li> <dl> <dt> <dd> <h2 id> <h3 id> <h4 id> <h5 id> <h6 id> <img width height src alt data-entity-type data-entity-uuid title> <u> <sup> <sub> <table> <caption> <tbody> <thead> <tfoot> <th> <td> <tr> <drupal-media data-entity-type data-entity-uuid data-view-mode data-align data-caption alt title> <p align> <h1> <pre> <div data-align data-oembed data-oembed_provider data-resizetype class=""> <br> <address> <hr> <span> <iframe allowfullscreen allowscriptaccess frameborder height scrolling src width> <colgroup> <col>'
+      filter_html_help: false
       filter_html_nofollow: false
   filter_iframe_cck:
     id: filter_iframe_cck
@@ -31,3 +32,32 @@ filters:
     weight: 0
     settings:
       div_classes: ''
+  filter_url:
+    id: filter_url
+    provider: filter
+    status: true
+    weight: 0
+    settings:
+      filter_url_length: 72
+  filter_htmlcorrector:
+    id: filter_htmlcorrector
+    provider: filter
+    status: true
+    weight: 10
+    settings: {  }
+  filter_autop:
+    id: filter_autop
+    provider: filter
+    status: true
+    weight: 0
+    settings: {  }
+  media_embed:
+    id: media_embed
+    provider: media
+    status: true
+    weight: 100
+    settings:
+      default_view_mode: default
+      allowed_view_modes: {  }
+      allowed_media_types:
+        image: image

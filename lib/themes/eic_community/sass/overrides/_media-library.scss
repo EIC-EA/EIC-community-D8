@@ -54,6 +54,10 @@
                 align-items: flex-end;
                 gap: $ecl-spacing-s;
 
+                @include ecl-media-breakpoint-down('md') {
+                  flex-direction: column;
+                }
+
                 & .js-form-item {
                     margin: 0 !important;
                 }
@@ -63,6 +67,10 @@
 
         & .views-form {
           & .js-media-library-views-form {
+
+            & .js-media-library-item {
+              word-break: break-all;
+            }
 
             & .js-media-library-item.media-library-item--disabled {
               opacity: .2;

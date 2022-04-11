@@ -1,4 +1,4 @@
-uuid: dabd1681-2a8c-4175-a650-e73460a346fa
+uuid: 7d7942ec-2dd0-4fda-a80e-60476b293b5e
 langcode: en
 status: true
 dependencies: {  }
@@ -49,6 +49,7 @@ process:
     -
       plugin: static_map
       source: status
+      default: published
       map:
         - draft
         - published
@@ -86,12 +87,26 @@ process:
           -
             plugin: migration_lookup
             source: target_id
-            migration:
-              - upgrade_d7_file_document_to_media
-  field_vocab_languages:
+            no_stub: true
+            migration: upgrade_d7_node_complete_document
+          -
+            plugin: node_complete_node_lookup
+          -
+            plugin: entity_value
+            entity_type: node
+            field_name: field_document_media
+          -
+            plugin: skip_on_empty
+            method: process
+          -
+            plugin: extract
+            index:
+              - 0
+              - target_id
+  field_vocab_geo:
     -
       plugin: sub_process
-      source: c4m_vocab_language
+      source: c4m_vocab_geo
       process:
         target_id:
           -
@@ -99,7 +114,8 @@ process:
             source: smed_id
             no_stub: true
             migration:
-              - smed_spoken_languages
+              - smed_regions_countries_lvl1
+              - smed_regions_countries_lvl2
   field_vocab_topics:
     -
       plugin: sub_process
@@ -114,6 +130,18 @@ process:
               - smed_thematics_topics_lvl1
               - smed_thematics_topics_lvl2
               - smed_thematics_topics_lvl3
+  field_language:
+    -
+      plugin: sub_process
+      source: c4m_vocab_language
+      process:
+        target_id:
+          -
+            plugin: migration_lookup
+            source: smed_id
+            no_stub: true
+            migration:
+              - smed_spoken_languages
 destination:
   plugin: 'entity_complete:node'
   translations: true
@@ -130,4 +158,7 @@ migration_dependencies:
     - smed_thematics_topics_lvl1
     - smed_thematics_topics_lvl2
     - smed_thematics_topics_lvl3
+    - smed_regions_countries_lvl1
+    - smed_regions_countries_lvl2
+    - upgrade_d7_node_complete_document
   optional: {  }

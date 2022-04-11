@@ -1,0 +1,29 @@
+uuid: f7a794c9-102b-42a1-801c-1f99ec30630a
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_language
+    - node.type.wiki_page
+    - taxonomy.vocabulary.languages
+id: node.wiki_page.field_language
+field_name: field_language
+entity_type: node
+bundle: wiki_page
+label: Language
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      languages: languages
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

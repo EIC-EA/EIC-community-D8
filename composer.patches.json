@@ -5,13 +5,17 @@
       "2973863 - ValidReferenceConstraintValidator should not try to enforce data integrity on pre-existing references": "https://www.drupal.org/files/issues/2018-11-04/2973863-24.patch",
       "2918537 - Cannot save unpublished versions of published content for users without manage book privileges": "https://www.drupal.org/files/issues/2021-11-16/2918537-68.patch",
       "2473873 - Views entity operations lack cacheability support, resulting in incorrect dropbuttons": "https://www.drupal.org/files/issues/2021-11-23/2473873-97.patch",
-      "2766369 - Add skip-method option to file_copy and download process plugins": "https://www.drupal.org/files/issues/2022-03-31/2766369-30.patch"
+      "2766369 - Add skip-method option to file_copy and download process plugins": "https://www.drupal.org/files/issues/2022-03-31/2766369-30.patch",
+      "2760983 - array_flip(): Can only flip STRING and INTEGER values! EntityStorageBase.php:227": "https://www.drupal.org/files/issues/2020-02-06/2760983-8.patch"
     },
     "drupal/address": {
       "2812659 - Integrate Address with Search API (adds a Search API processor to convert country code to full country name)": "https://www.drupal.org/files/issues/2021-06-14/integrate-address-searchapi-2812659-57_0.patch"
     },
     "drupal/block_content_permissions": {
       "2920739 - Allow accessing the \"Custom block library\" page without \"Administer blocks\" permission": "https://www.drupal.org/files/issues/2020-07-27/block_content_permissions-access_listing_page-2920739-38.patch"
+    },
+    "drupal/ckeditor_selectall": {
+      "3226489 - Make this module compatible with Drupal 9": "https://www.drupal.org/files/issues/2021-08-09/3226489-3.patch"
     },
     "drupal/default_content": {
       "2698425 - Do not reimport existing entities": "https://www.drupal.org/files/issues/2021-01-20/default_content-integrity_constrait_violation-3162987-137-2.0.x.patch"

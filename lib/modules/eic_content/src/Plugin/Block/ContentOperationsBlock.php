@@ -208,6 +208,10 @@ class ContentOperationsBlock extends BlockBase implements ContainerFactoryPlugin
       return $build;
     }
 
+    usort($items, function($a, $b) {
+      return strcmp($a['title'], $b['title']);
+    });
+
     $build = [
       '#theme' => 'eic_content_actions',
       '#actions' => [

@@ -1,4 +1,3 @@
-# TODO: WIP migration
 langcode: en
 status: true
 dependencies: {  }
@@ -71,37 +70,29 @@ process:
         idea: idea
         question: question
         info: information
-  # TODO: Fix error '[error]  Value is not a valid entity. (/app/web/core/lib/Drupal/Core/Entity/Plugin/DataType/EntityReference.php:106)'
-#  field_related_documents:
-#    - plugin: sub_process
-#      source: c4m_related_document
-#      process:
-#        target_id:
-#          - plugin: migration_lookup
-#            source: target_id
-#            migration: upgrade_d7_node_complete_document
-  # TODO: Implement when Regions & countries SMED migration is done.
-#  field_vocab_geo:
-#    - plugin: sub_process
-#      source: c4m_vocab_geo
-#      process:
-#        target_id:
-#          - plugin: migration_lookup
-#            source: smed_id
-#            no_stub: true
-#            migration:
-#              - smed_TODO
-  # TODO: Validate implementation when field_vocab_languages is added to CT News.
-  field_vocab_languages:
+  field_related_documents:
+    - plugin: multiple_values
+      source: c4m_related_document
     - plugin: sub_process
-      source: c4m_vocab_language
+      process:
+        target_id:
+          - plugin: migration_lookup
+            source:
+              - target_id
+            no_stub: true
+            migration: upgrade_d7_node_complete_document
+          - plugin: node_complete_node_lookup
+  field_vocab_geo:
+    - plugin: sub_process
+      source: c4m_vocab_geo
       process:
         target_id:
           - plugin: migration_lookup
             source: smed_id
             no_stub: true
             migration:
-              - smed_spoken_languages
+              - smed_regions_countries_lvl1
+              - smed_regions_countries_lvl2
   field_vocab_topics:
     - plugin: sub_process
       source: c4m_vocab_topic
@@ -114,6 +105,24 @@ process:
               - smed_thematics_topics_lvl1
               - smed_thematics_topics_lvl2
               - smed_thematics_topics_lvl3
+  field_language:
+    -
+      plugin: sub_process
+      source: c4m_vocab_language
+      process:
+        target_id:
+          -
+            plugin: migration_lookup
+            source: smed_id
+            no_stub: true
+            migration:
+              - smed_spoken_languages
+  moderation_state:
+    - plugin: static_map
+      source: status
+      map:
+        0: draft
+        1: published
 #  og_group_ref:
 #    - plugin: get
 #      source: og_group_ref
@@ -137,4 +146,6 @@ migration_dependencies:
     - smed_thematics_topics_lvl1
     - smed_thematics_topics_lvl2
     - smed_thematics_topics_lvl3
+    - smed_regions_countries_lvl1
+    - smed_regions_countries_lvl2
   optional: { }

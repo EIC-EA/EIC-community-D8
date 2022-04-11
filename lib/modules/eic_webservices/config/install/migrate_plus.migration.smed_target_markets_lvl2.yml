@@ -1,5 +1,5 @@
 id: smed_target_markets_lvl2
-label: SMED - Target markets
+label: SMED - Target markets - Level 2
 migration_group: eic_smed_taxonomy
 migration_tags:
   - eic_smed_api_authentication
