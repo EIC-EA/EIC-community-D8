@@ -1,0 +1,26 @@
+uuid: 4886299c-0d3d-40dc-bcf1-d65aebe73b0a
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.message.field_invitee
+    - message.template.notify_group_invitation_reminder
+id: message.notify_group_invitation_reminder.field_invitee
+field_name: field_invitee
+entity_type: message
+bundle: notify_group_invitation_reminder
+label: Invitee
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:group_membership'
+  handler_settings:
+    target_bundles: null
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+field_type: entity_reference
