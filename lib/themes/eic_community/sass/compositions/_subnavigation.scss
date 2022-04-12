@@ -47,7 +47,7 @@
         justify-content: center;
       }
     }
-   @include ecl-media-breakpoint-up('lg') {
+    @include ecl-media-breakpoint-up('lg') {
       display: none;
     }
   }
@@ -107,7 +107,6 @@
         background-color: map-get($ecl-colors, 'grey-5');
       }
 
-
       &:not(:focus):hover {
         outline: none;
       }
@@ -138,7 +137,7 @@
     .ecl-text-input {
       border-top-left-radius: map-get($ecl-spacing, '2xs');
       border-bottom-left-radius: map-get($ecl-spacing, '2xs');
-      @include ecl-responsive-font('label');
+      font-size: 16px;
       padding: map-get($ecl-spacing, 'xs');
 
       #{$node}__collapsible-options & {
