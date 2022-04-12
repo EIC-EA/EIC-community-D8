@@ -23,8 +23,6 @@
     }
   }
 
-
-
   &--as-card {
     flex-direction: column;
   }
@@ -88,6 +86,12 @@
 
   &-overview--is-loading {
     position: relative;
+  }
+
+  &-overview__loader {
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   &--member {
