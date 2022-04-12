@@ -12,9 +12,14 @@ use Drupal\Core\Site\Settings;
 use Drupal\Core\State\StateInterface;
 use Drupal\eic_groups\GroupsModerationHelper;
 use Drupal\eic_messages\Service\MessageBus;
+use Drupal\ginvite\Plugin\GroupContentEnabler\GroupInvitation;
 use Drupal\group\Entity\Group;
+use Drupal\group\Entity\GroupContent;
 use Drupal\group\Entity\GroupInterface;
+use Drupal\message\Entity\Message;
 use Drupal\pathauto\PathautoGeneratorInterface;
+use Drupal\user\Entity\User;
+use Drupal\user\UserInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -146,6 +151,7 @@ class CronOperations implements ContainerInjectionInterface {
     $this->processGroupUrlAliasUpdateQueue();
     $this->processGroupContentUrlAliasUpdateQueue();
     $this->processGroupWaitingApprovalReminder();
+    $this->processGroupInvitationsReminder();
   }
 
   /**
@@ -225,7 +231,6 @@ class CronOperations implements ContainerInjectionInterface {
     $last_reminder_time = $this->state->get('last_cron_pending_group_approval_time', 0);
     $now = time();
 
-    // Re-sync each 2 hours.
     if (0 < ($last_reminder_time + Settings::get('cron_interval_pending_approval_time', 86400)) - $now) {
       return;
     }
@@ -256,7 +261,7 @@ class CronOperations implements ContainerInjectionInterface {
       $template = [
         'template' => 'notify_group_wait_approval',
         'field_group_ref' => ['target_id' => $group->id()],
-        'field_event_executing_user' => ['target_id' => $group->getOwnerId()]
+        'field_event_executing_user' => ['target_id' => $group->getOwnerId()],
       ];
 
       foreach ($uids as $uid) {
@@ -265,6 +270,62 @@ class CronOperations implements ContainerInjectionInterface {
     }
 
     $this->state->set('last_cron_pending_group_approval_time', $now);
+  }
+
+  /**
+   * This notification is sent to SU to remind him of his pending invitation to a group.
+   */
+  private function processGroupInvitationsReminder() {
+    // Value returned is timestamp.
+    $last_reminder_time = $this->state->get('last_cron_group_invite_time', 0);
+    $now = time();
+
+    if (0 < ($last_reminder_time + Settings::get('cron_interval_group_invite_time', 86400)) - $now) {
+      return;
+    }
+
+    $query = $this->database->select('group_content_field_data', 'gc_fd');
+    $query->condition('gc_fd.type', '%-group_invitation', 'LIKE');
+    $query->join('group_content__invitation_status', 'gc_is', 'gc_is.entity_id = gc_fd.id');
+    $query->fields('gc_fd', ['id', 'gid', 'entity_id']);
+    $query->condition('gc_is.invitation_status_value', GroupInvitation::INVITATION_PENDING);
+    $query->orderBy('gc_fd.id');
+    $results = $query->execute()->fetchAll(\PDO::FETCH_ASSOC);
+
+    foreach ($results as $result) {
+      $uid = $result['entity_id'];
+      $gid = $result['gid'];
+      $group_content_id = $result['id'];
+
+      $group = Group::load($gid);
+      $invitee = User::load($uid);
+      $group_content = GroupContent::load($group_content_id);
+
+      if (
+        !$group instanceof GroupInterface ||
+        !$invitee instanceof UserInterface ||
+        !$group_content instanceof GroupContent
+      ) {
+        continue;
+      }
+
+      $owner = $group_content->getOwner();
+
+      $message = Message::create([
+        'template' => 'notify_group_invitation_reminder',
+        'field_group_ref' => ['target_id' => $group->id()],
+        'field_event_executing_user' => ['target_id' => $group->getOwnerId()],
+        'field_invitee' => $invitee,
+        'field_group_invitation' => $group_content,
+        'field_inviter' => $owner,
+      ]);
+
+      $message->setOwnerId($uid);
+
+      $this->messageBus->dispatch($message);
+    }
+
+    $this->state->set('last_cron_group_invite_time', $now);
   }
 
 }
