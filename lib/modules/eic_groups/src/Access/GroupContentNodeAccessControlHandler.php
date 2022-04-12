@@ -65,7 +65,7 @@ class GroupContentNodeAccessControlHandler extends GroupContentAccessControlHand
         // At this point it means the user is not a poweruser neither a group
         // admin. Therefore, if group is blocked no user other can view its
         // content besides powerusers or group admins.
-        if ($moderation_state !== GroupsModerationHelper::GROUP_PUBLISHED_STATE) {
+        if ($moderation_state === GroupsModerationHelper::GROUP_BLOCKED_STATE) {
           $access = AccessResult::forbidden()
             ->addCacheableDependency($account)
             ->addCacheableDependency($group)
