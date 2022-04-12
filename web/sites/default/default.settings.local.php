@@ -224,3 +224,5 @@ $settings['reverse_proxy_header_mapping'] = [
 
 $settings['eic_vod']['cloudfront_url'] = '';
 $settings['eic_vod']['cloudfront_api_key'] = '';
+// Interval time for the notification reminder to SA/SCM listing all groups pending for approval.
+$settings['cron_interval_pending_approval_time'] = 86400;

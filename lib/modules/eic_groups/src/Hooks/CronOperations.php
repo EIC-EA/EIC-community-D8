@@ -8,6 +8,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Queue\QueueFactory;
 use Drupal\Core\Queue\QueueWorkerManagerInterface;
 use Drupal\Core\Queue\SuspendQueueException;
+use Drupal\Core\Site\Settings;
 use Drupal\Core\State\StateInterface;
 use Drupal\eic_groups\GroupsModerationHelper;
 use Drupal\eic_messages\Service\MessageBus;
@@ -220,6 +221,15 @@ class CronOperations implements ContainerInjectionInterface {
    * Notify all SA, SCM groups that are waiting for approval.
    */
   private function processGroupWaitingApprovalReminder() {
+    // Value returned is timestamp.
+    $last_reminder_time = $this->state->get('last_cron_pending_group_approval_time', 0);
+    $now = time();
+
+    // Re-sync each 2 hours.
+    if (0 < ($last_reminder_time + Settings::get('cron_interval_pending_approval_time', 86400)) - $now) {
+      return;
+    }
+
     $query = $this->database->select('groups', 'g');
     $query->condition('g.type', 'group');
     $query->join('content_moderation_state_field_data', 'cm', 'cm.content_entity_id = g.id');
@@ -253,6 +263,8 @@ class CronOperations implements ContainerInjectionInterface {
         $this->messageBus->dispatch($template + ['uid' => $uid]);
       }
     }
+
+    $this->state->set('last_cron_pending_group_approval_time', $now);
   }
 
 }
