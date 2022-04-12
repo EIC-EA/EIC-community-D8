@@ -63,6 +63,9 @@
     "drupal/message_subscribe": {
       "3086125 - Prevent infinite loop when sending messages with queue": "https://www.drupal.org/files/issues/2021-10-01/3086125-skip-if-we-have-last-item-14.patch"
     },
+    "drupal/migrate_tools": {
+      "3134245 - Run drush imports as user=1" : "https://www.drupal.org/files/issues/2020-05-06/3134245.patch"
+    },
     "drupal/migrate_plus": {
       "3007709 - Add XPath-style filtering ability in JSON data parser plugin" : "https://www.drupal.org/files/issues/2020-11-16/migrate_plus-json-xpath-filtering-3007709-24.patch"
     },
