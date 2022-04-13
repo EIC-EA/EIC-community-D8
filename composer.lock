@@ -5553,7 +5553,8 @@
                     }
                 },
                 "patches_applied": {
-                    "3086125 - Prevent infinite loop when sending messages with queue": "https://www.drupal.org/files/issues/2021-10-01/3086125-skip-if-we-have-last-item-14.patch"
+                    "3086125 - Prevent infinite loop when sending messages with queue": "https://www.drupal.org/files/issues/2021-10-01/3086125-skip-if-we-have-last-item-14.patch",
+                    "3190511 - Trying to access array offset on value of type bool in Drupal\\message_subscribe\\Subscribers->sendMessage()": "https://www.drupal.org/files/issues/2020-12-31/message_subscribe-Wrong_End_Time_Option-3190511-2-9.x.patch"
                 }
             },
             "notification-url": "https://packages.drupal.org/8/downloads",
