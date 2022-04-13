@@ -15,6 +15,7 @@ use Drupal\eic_user\UserHelper;
 use Drupal\group\Entity\Form\GroupContentForm;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\oec_group_flex\GroupVisibilityRecordInterface;
+use Drupal\message\Entity\Message;
 
 /**
  * Implements hook_entity_operation_alter().
@@ -124,6 +125,32 @@ function eic_group_membership_update_membership_role_form_submit(
   /** @var \Drupal\group\Entity\GroupContentInterface $entity */
   $entity = $form_state->getFormObject()->getEntity();
   $current_group_owner = EICGroupsHelper::getGroupOwner($entity->getGroup());
+  $specific_user = $entity->getEntity();
+  $old_roles = $entity->get('group_roles')->getValue();
+  $new_roles = $form_state->getValue('group_roles');
+  $group_owner = EICGroupsHelper::getGroupOwner($entity->getGroup());
+
+  $is_new_group_admin = array_filter($new_roles, function (array $role) use ($entity) {
+    return
+      $entity->getContentPlugin()->getGroupTypeId() . '-' . EICGroupsHelper::GROUP_TYPE_ADMINISTRATOR_ROLE
+      === $role['target_id'];
+  });
+
+  // if user has no role and he's promoted group_admin, send message.
+  if (empty($old_roles) && count($is_new_group_admin) > 0) {
+    /** @var \Drupal\eic_messages\Service\MessageBus $bus */
+    $bus = \Drupal::service('eic_messages.message_bus');
+    $message = Message::create([
+      'template' => 'notify_group_admin_promoted',
+      'field_group_ref' => ['target_id' => $entity->getGroup()->id()],
+      'field_group_owner' => ['target_id' => $group_owner->id()],
+      'field_event_executing_user' => ['target_id' => \Drupal::currentUser()->id()],
+    ]);
+
+    $message->setOwnerId($specific_user->id());
+
+    $bus->dispatch($message);
+  }
 
   // Keep the group owner role if we are editing the owner membership.
   if ($entity->getEntity()->id() === $current_group_owner->id()) {
