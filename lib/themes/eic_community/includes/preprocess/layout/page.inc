@@ -201,12 +201,12 @@ function _preprocess_node_page(&$variables) {
         $is_restricted = $node->private->value === '1';
         $tag = [
           'type' => 'display',
-          'label' =>  $is_restricted ? t('Community members only') : t('Public'),
+          'label' =>  $is_restricted ? t('Restricted') : t('Public'),
         ];
         $variables['editorial_header'] = [
           'tags' => [
             [
-              'extra_classes' => 'ecl-tag--is-' . ($is_restricted ? 'private' : 'public'),
+              'extra_classes' => 'ecl-tag--is-' . ($is_restricted ? 'restricted' : 'public'),
               'tag' => $tag,
             ],
           ],
