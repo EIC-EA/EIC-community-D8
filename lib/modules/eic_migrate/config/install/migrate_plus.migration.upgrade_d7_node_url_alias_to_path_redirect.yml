@@ -1,0 +1,75 @@
+langcode: en
+status: true
+dependencies: {  }
+id: upgrade_d7_node_url_alias_to_path_redirect
+class: Drupal\migrate\Plugin\Migration
+field_plugin_method: null
+cck_plugin_method: null
+migration_tags:
+  - 'Drupal 7'
+  - Content
+migration_group: migrate_drupal_7
+label: 'Node Url Alias to Path Redirect'
+source:
+  plugin: eic_d7_url_alias_to_path_redirect
+  track_changes: true
+  constants:
+    entity_type: node
+process:
+  uid:
+    - plugin: default_value
+      default_value: 1
+  redirect_source/path:
+    - plugin: get
+      source: source
+  redirect_source/query:
+    - plugin: d7_redirect_source_query
+      source: source_options
+  _node_redirect_nid:
+    - plugin: explode
+      source: redirect
+      delimiter: /
+    - plugin: extract
+      index:
+        - 1
+    - plugin: migration_lookup
+      migration:
+        - upgrade_d7_node_complete_article
+        - upgrade_d7_node_complete_discussion
+        - upgrade_d7_node_complete_document
+        - upgrade_d7_node_complete_news
+        - upgrade_d7_node_complete_wiki_page
+        - upgrade_d7_node_complete_event
+        - upgrade_d7_node_complete_photoalbum
+    - plugin: node_complete_node_translation_lookup
+    - plugin: skip_on_empty
+      method: row
+  _node_redirect_uri:
+    - plugin: concat
+      source:
+        - constants/entity_type
+        - '@_node_redirect_nid/0'
+      delimiter: /
+    - plugin: skip_on_empty
+      method: row
+  redirect_redirect/uri:
+    - plugin: d7_path_redirect
+      source:
+        - '@_node_redirect_uri'
+        - redirect_options
+  language:
+    - plugin: static_map
+      source: language
+      bypass: true
+      map:
+        und: en
+    - plugin: default_value
+      default_value: en
+  status_code:
+    - plugin: get
+      source: status_code
+destination:
+  plugin: 'entity:redirect'
+migration_dependencies:
+  required: {  }
+  optional: {  }
