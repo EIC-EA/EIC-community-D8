@@ -7,6 +7,7 @@ use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageManager;
 use Drupal\Core\Mail\MailManager;
+use Drupal\eic_messages\Service\MessageBus;
 use Drupal\eic_private_message\Constants\PrivateMessage;
 use Drupal\eic_user\UserHelper;
 use Drupal\group\Entity\GroupInterface;
@@ -50,6 +51,13 @@ class PrivateMessageForm extends FormBase {
   private $languageManager;
 
   /**
+   * The message bus service.
+   *
+   * @var \Drupal\eic_messages\Service\MessageBus
+   */
+  private $bus;
+
+  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
@@ -58,6 +66,7 @@ class PrivateMessageForm extends FormBase {
       $container->get('config.factory'),
       $container->get('plugin.manager.mail'),
       $container->get('language_manager'),
+      $container->get('eic_messages.message_bus')
     );
   }
 
@@ -72,17 +81,21 @@ class PrivateMessageForm extends FormBase {
    *   The mail manager.
    * @param \Drupal\Core\Language\LanguageManager $language_manager
    *   The language manager.
+   * @param MessageBus $bus
+   *   The message bus service.
    */
   public function __construct(
     UserHelper $user_helper,
     ConfigFactory $config_factory,
     MailManager $mail_manager,
-    LanguageManager $language_manager
+    LanguageManager $language_manager,
+    MessageBus $bus
   ) {
     $this->userHelper = $user_helper;
     $this->systemSettings = $config_factory->get('system.site');
     $this->mailManager = $mail_manager;
     $this->languageManager = $language_manager;
+    $this->bus = $bus;
   }
 
   /**
@@ -212,27 +225,21 @@ class PrivateMessageForm extends FormBase {
       }, $recipients);
     }
 
-    $recipients = array_map(function (int $id) {
-      $user = User::load($id);
-
-      return $user instanceof UserInterface ? $user->getEmail() : '';
-    }, $recipients);
-
-    $mail = $this->mailManager->mail(
-      'eic_private_message',
-      PrivateMessage::PRIVATE_MESSAGE_USER_MAIL_KEY,
-      implode($recipients, ','),
-      $current_langauge,
-      $values
-    );
-
-    if ($mail['result']) {
-      $this->messenger()->addMessage($this->t(
-        'Your message was successfully sent!',
-        [],
-        ['context' => 'eic_private_message']
-      ));
+    foreach ($recipients as $recipient) {
+      $this->bus->dispatch([
+        'template' => 'notify_contact_user',
+        'field_sender' => ['target_id' => $this->currentUser()->id()],
+        'field_body' => $form_state->getValue('message')[0]['value'],
+        'field_subject' => $form_state->getValue('subject')[0]['value'],
+        'uid' => $recipient
+      ]);
     }
+
+    $this->messenger()->addMessage($this->t(
+      'Your message was successfully sent!',
+      [],
+      ['context' => 'eic_private_message']
+    ));
 
     if ($values['send_copy']) {
       $values['subject'] = $this->t(
