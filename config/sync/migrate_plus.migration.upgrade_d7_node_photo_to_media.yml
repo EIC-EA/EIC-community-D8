@@ -40,7 +40,7 @@ process:
               - upgrade_d7_file_private
 destination:
   plugin: 'entity:media'
-  default_bundle: photo
+  default_bundle: image
 migration_dependencies:
   required:
     - upgrade_d7_user
