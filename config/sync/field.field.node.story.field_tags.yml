@@ -1,26 +1,26 @@
-uuid: 16e7e676-2127-4925-b7f2-3d3f55cb9b66
+uuid: da5f5e6a-5c2f-4d06-9cde-abd84aaddaf3
 langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.media.field_vocab_topics
-    - media.type.eic_document
-    - taxonomy.vocabulary.topics
-id: media.eic_document.field_vocab_topics
-field_name: field_vocab_topics
-entity_type: media
-bundle: eic_document
-label: Topics
+    - field.storage.node.field_tags
+    - node.type.story
+    - taxonomy.vocabulary.tags
+id: node.story.field_tags
+field_name: field_tags
+entity_type: node
+bundle: story
+label: Tags
 description: ''
 required: false
-translatable: false
+translatable: true
 default_value: {  }
 default_value_callback: ''
 settings:
   handler: 'default:taxonomy_term'
   handler_settings:
     target_bundles:
-      topics: topics
+      tags: tags
     sort:
       field: name
       direction: asc

@@ -38,6 +38,14 @@ eic_user.user.my_events:
   requirements:
     _custom_access: '\Drupal\eic_user\Controller\MyProfileController::access'
 
+eic_user.user.my_drafts:
+  path: '/user/{user}/activity/drafts'
+  defaults:
+    _controller: '\Drupal\eic_user\Controller\MyProfileController::activity'
+    _title: 'My drafts'
+  requirements:
+    _custom_access: '\Drupal\eic_user\Controller\MyProfileController::access'
+
 eic_user.my_settings:
   path: '/user/{user}/settings'
   defaults:

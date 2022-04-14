@@ -7,9 +7,11 @@ dependencies:
     - field.field.node.discussion.field_body
     - field.field.node.discussion.field_comments
     - field.field.node.discussion.field_discussion_type
+    - field.field.node.discussion.field_language
     - field.field.node.discussion.field_related_contributors
     - field.field.node.discussion.field_related_documents
     - field.field.node.discussion.field_related_downloads
+    - field.field.node.discussion.field_tags
     - field.field.node.discussion.field_vocab_geo
     - field.field.node.discussion.field_vocab_topics
     - node.type.discussion
@@ -24,6 +26,11 @@ targetEntityType: node
 bundle: discussion
 mode: default
 content:
+  content_moderation_control:
+    settings: {  }
+    third_party_settings: {  }
+    weight: -20
+    region: content
   field_body:
     type: text_default
     label: hidden
@@ -46,6 +53,14 @@ content:
     settings: {  }
     third_party_settings: {  }
     weight: 8
+    region: content
+  field_language:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 16
     region: content
   field_related_contributors:
     type: entity_reference_revisions_entity_view
@@ -72,6 +87,14 @@ content:
       link: true
     third_party_settings: {  }
     weight: 14
+    region: content
+  field_tags:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 15
     region: content
   field_vocab_geo:
     type: entity_reference_label

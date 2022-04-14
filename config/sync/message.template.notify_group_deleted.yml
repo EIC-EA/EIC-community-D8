@@ -1,0 +1,27 @@
+uuid: d290f33d-7abc-43d3-8fcd-a4e7cdaa0296
+langcode: en
+status: true
+dependencies:
+  config:
+    - filter.format.full_html
+  module:
+    - eic_messages
+third_party_settings:
+  eic_messages:
+    message_template_type: notification
+template: notify_group_deleted
+label: 'NOTIFY :: MT32 :: Group deleted'
+description: 'Notifies the group owner, SA and SCM users that a group has been deleted'
+text:
+  -
+    value: "<p>The [message:field_entity_type:value] [message:field_referenced_entity_label:value] was deleted</p>\r\n"
+    format: full_html
+  -
+    value: "<p>Dear [message:author:display-name],</p>\r\n\r\n<p><a href=\"[message:field_event_executing_user:entity:url]\">[message:field_event_executing_user:entity:display-name]</a> deleted [message:field_entity_type:value] [message:field_referenced_entity_label:value] and its content.</p>\r\n\r\n<p>The EIC Community team</p>\r\n"
+    format: full_html
+settings:
+  'token options':
+    clear: true
+    'token replace': true
+  purge_override: false
+  purge_methods: {  }

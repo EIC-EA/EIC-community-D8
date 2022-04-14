@@ -98,31 +98,35 @@ class EICFlagCountLink extends AJAXactionLink {
   public function getAsFlagLink(FlagInterface $flag, EntityInterface $entity) {
     $build = [];
 
-    $action = $this->getAction($flag, $entity);
-    $access = $flag->actionAccess($action, $this->currentUser, $entity);
-    if ($access->isAllowed()) {
-      // Get the render array.
-      $build = parent::getAsFlagLink($flag, $entity);
-
-      // Normally, you'd just override flag.html.twig in your site's theme.
-      // For this example module, we do something more advanced:
-      // Provide a new @ActionLinkType that changes the default theme function.
-      $build['#theme'] = 'eic_flag_count';
-    }
-    else {
-      $action = 'view';
+    try {
+      $action = $this->getAction($flag, $entity);
       $access = $flag->actionAccess($action, $this->currentUser, $entity);
       if ($access->isAllowed()) {
-        $build['#flag_id'] = $flag->id();
-        $entity_flag_counts = $this->flagCountManager->getEntityFlagCounts($entity);
-        $build['#flag_count'] = $entity_flag_counts[$flag->id()] ?? 0;
-        $build['#title'] = $flag->label();
-        $build['#theme'] = 'eic_flag_count_text';
-      }
-    }
+        // Get the render array.
+        $build = parent::getAsFlagLink($flag, $entity);
 
-    // Return the modified render array.
-    return $build;
+        // Normally, you'd just override flag.html.twig in your site's theme.
+        // For this example module, we do something more advanced:
+        // Provide a new @ActionLinkType that changes the default theme function.
+        $build['#theme'] = 'eic_flag_count';
+      }
+      else {
+        $action = 'view';
+        $access = $flag->actionAccess($action, $this->currentUser, $entity);
+        if ($access->isAllowed()) {
+          $build['#flag_id'] = $flag->id();
+          $entity_flag_counts = $this->flagCountManager->getEntityFlagCounts($entity);
+          $build['#flag_count'] = $entity_flag_counts[$flag->id()] ?? 0;
+          $build['#title'] = $flag->label();
+          $build['#theme'] = 'eic_flag_count_text';
+        }
+      }
+
+      // Return the modified render array.
+      return $build;
+    } catch (\Exception $exception) {
+      return $build;
+    }
   }
 
 }

@@ -1,13 +1,13 @@
-uuid: 735821d8-5a98-4673-8f93-2e156999cda9
+uuid: 27eea125-1645-472b-974f-6adce01d92c2
 langcode: en
 status: true
 dependencies:
   module:
-    - media
+    - node
     - taxonomy
-id: media.field_vocab_topics
-field_name: field_vocab_topics
-entity_type: media
+id: node.field_tags
+field_name: field_tags
+entity_type: node
 type: entity_reference
 settings:
   target_type: taxonomy_term

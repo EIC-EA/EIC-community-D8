@@ -212,4 +212,18 @@ interface SourceTypeInterface {
    * @return bool
    */
   public function ignoreAnonymousUser(): bool;
+
+  /**
+   * Return an array of key as the field and the value of it.
+   *
+   * @return array
+   */
+  public function extraPrefilter(): array;
+
+  /**
+   * Ignoring the publish state prefilter.
+   *
+   * @return bool
+   */
+  public function ignorePublishedState(): bool;
 }

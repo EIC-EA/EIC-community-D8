@@ -6,8 +6,10 @@ use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Session\AccountProxyInterface;
+use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_groups\GroupsModerationHelper;
 use Drupal\eic_messages\Util\LogMessageTemplates;
+use Drupal\eic_messages\Util\NotificationMessageTemplates;
 use Drupal\eic_user\UserHelper;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -148,6 +150,30 @@ class GroupMessageCreator implements ContainerInjectionInterface {
         'uid' => $this->currentUser->id(),
       ])
       ->save();
+  }
+
+  /**
+   * Implements hook_eic_groups_group_predelete().
+   *
+   * Sends out message notifications upon group deletion.
+   */
+  public function groupPredelete(array $entities) {
+    $power_users = $this->userHelper->getSitePowerUsers();
+    foreach ($entities as $group) {
+      $send_to = $power_users;
+      if ($group_owner = EICGroupsHelper::getGroupOwner($group)) {
+        $send_to[] = $group_owner->id();
+      }
+      foreach ($send_to as $uid) {
+        $this->messageBus->dispatch([
+          'template' => NotificationMessageTemplates::GROUP_DELETE,
+          'field_entity_type' => ['target_id' => $group->getEntityTypeId()],
+          'field_referenced_entity_label' => $group->label(),
+          'field_event_executing_user' => $this->currentUser->id(),
+          'uid' => $uid,
+        ]);
+      }
+    }
   }
 
 }

@@ -1,0 +1,129 @@
+#media-library-content {
+  & .ecl-container {
+    max-width: inherit;
+    width: 100%;
+    padding: 0;
+  }
+
+  & .ecl-form {
+    margin-left: 0;
+    border: 1px solid $ecl-color-grey;
+    max-width: inherit;
+    padding: $ecl-spacing-l;
+    box-sizing: border-box;
+  }
+
+  & .js-media-library-view {
+    border: 1px solid $ecl-color-grey;
+    padding: $ecl-spacing-l;
+    display: grid;
+    grid-template-areas:
+      'filter switch'
+      'view view';
+
+    @include ecl-media-breakpoint-down('md') {
+      display: flex;
+      flex-direction: column;
+    }
+
+    & .ecl-form {
+      border: none;
+      padding: 0;
+    }
+
+    & header {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      grid-area: switch;
+      @include ecl-media-breakpoint-down('md') {
+        justify-content: flex-start;
+        margin-bottom: 1rem;
+      }
+
+      & + .ecl-container {
+        margin-bottom: 1rem;
+      }
+    }
+
+    & > .ecl-container {
+      grid-area: filter;
+
+      & .ecl-form {
+        display: flex;
+        align-items: flex-end;
+        gap: $ecl-spacing-s;
+
+        @include ecl-media-breakpoint-down('md') {
+          flex-direction: column;
+        }
+
+        & .js-form-item {
+          margin: 0 !important;
+        }
+      }
+    }
+
+    & .views-form {
+      & .js-media-library-views-form {
+        & .js-media-library-item {
+          word-break: break-all;
+        }
+
+        & .js-media-library-item.media-library-item--disabled {
+          opacity: 0.2;
+          pointer-events: none;
+        }
+      }
+    }
+
+    &[data-view-display-id='widget'] .views-form {
+      grid-area: view;
+
+      & .js-media-library-views-form {
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        display: grid;
+        gap: 0.5rem;
+
+        & .js-media-library-item {
+          background: $ecl-color-grey-5;
+          padding: 1rem;
+          box-sizing: border-box;
+          position: relative;
+
+          & img {
+            width: 100%;
+            height: 140px;
+            object-fit: cover;
+          }
+        }
+
+        & .js-form-type-checkbox {
+          margin: 0 !important;
+          margin-bottom: 0.5rem !important;
+        }
+      }
+    }
+
+    &[data-view-display-id='widget_table'] .views-form {
+      grid-area: view;
+
+      & img {
+        aspect-ratio: 1/1;
+        object-fit: cover;
+      }
+    }
+
+    & .js-pager__items {
+      padding: 0;
+      list-style: none;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+    }
+
+    & .ecl-form {
+      margin: 0;
+    }
+  }
+}

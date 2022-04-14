@@ -1,0 +1,19 @@
+uuid: 70d07f32-aa31-4c9f-b47b-1b580c37e8ae
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.message.field_operation_type
+    - message.template.stream_event_insert_update
+id: message.stream_event_insert_update.field_operation_type
+field_name: field_operation_type
+entity_type: message
+bundle: stream_event_insert_update
+label: 'Operation type'
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

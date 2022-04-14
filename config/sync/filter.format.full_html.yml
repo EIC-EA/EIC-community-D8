@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   module:
+    - eic_wysiwyg
     - media
     - oe_webtools_cookie_consent
 name: 'Full HTML'
@@ -15,7 +16,7 @@ filters:
     status: false
     weight: -10
     settings:
-      allowed_html: '<a href hreflang> <em> <strong> <cite> <blockquote cite> <code> <ul type> <ol start type> <li> <dl> <dt> <dd> <h2 id> <h3 id> <h4 id> <h5 id> <h6 id> <u> <sup> <sub> <table> <caption> <tbody> <thead> <tfoot> <th> <td> <tr>'
+      allowed_html: '<em> <strong> <cite> <blockquote cite> <code> <ul type> <ol type start> <li> <dl> <dt> <dd> <h2 id> <h3 id> <h4 id> <h5 id> <h6 id> <u> <sup> <sub> <table> <caption> <tbody> <thead> <tfoot> <th> <td> <tr> <img src alt data-entity-type data-entity-uuid> <drupal-media data-entity-type data-entity-uuid data-view-mode data-align data-caption alt title> <s> <p> <h1> <pre> <hr> <iframe> <span> <a href hreflang name> <div>'
       filter_html_help: true
       filter_html_nofollow: false
   media_embed:
@@ -28,6 +29,26 @@ filters:
       allowed_view_modes: {  }
       allowed_media_types:
         image: image
+  eic_filter_div_tables:
+    id: eic_filter_div_tables
+    provider: eic_wysiwyg
+    status: true
+    weight: 0
+    settings:
+      div_classes: ''
+  filter_url:
+    id: filter_url
+    provider: filter
+    status: true
+    weight: 0
+    settings:
+      filter_url_length: 72
+  filter_autop:
+    id: filter_autop
+    provider: filter
+    status: true
+    weight: 0
+    settings: {  }
   filter_iframe_cck:
     id: filter_iframe_cck
     provider: oe_webtools_cookie_consent

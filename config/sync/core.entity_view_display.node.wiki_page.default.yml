@@ -4,8 +4,10 @@ status: true
 dependencies:
   config:
     - field.field.node.wiki_page.field_body
+    - field.field.node.wiki_page.field_language
     - field.field.node.wiki_page.field_related_downloads
     - field.field.node.wiki_page.field_related_media
+    - field.field.node.wiki_page.field_tags
     - field.field.node.wiki_page.field_vocab_geo
     - field.field.node.wiki_page.field_vocab_topics
     - node.type.wiki_page
@@ -29,6 +31,14 @@ content:
     third_party_settings: {  }
     weight: 2
     region: content
+  field_language:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 12
+    region: content
   field_related_downloads:
     type: entity_reference_entity_view
     label: hidden
@@ -46,6 +56,14 @@ content:
       link: false
     third_party_settings: {  }
     weight: 3
+    region: content
+  field_tags:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 11
     region: content
   flag_follow_content:
     settings: {  }

@@ -12,9 +12,11 @@ dependencies:
     - field.field.node.news.field_image
     - field.field.node.news.field_image_caption
     - field.field.node.news.field_introduction
+    - field.field.node.news.field_language
     - field.field.node.news.field_news_paragraphs
     - field.field.node.news.field_related_groups
     - field.field.node.news.field_related_stories
+    - field.field.node.news.field_tags
     - field.field.node.news.field_video
     - field.field.node.news.field_vocab_geo
     - field.field.node.news.field_vocab_topics
@@ -101,6 +103,14 @@ content:
     third_party_settings: {  }
     weight: 3
     region: content
+  field_language:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 104
+    region: content
   field_news_paragraphs:
     type: entity_reference_revisions_entity_view
     label: hidden
@@ -125,6 +135,14 @@ content:
       link: true
     third_party_settings: {  }
     weight: 12
+    region: content
+  field_tags:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 103
     region: content
   field_video:
     type: entity_reference_entity_view

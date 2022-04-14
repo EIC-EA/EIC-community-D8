@@ -236,6 +236,9 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
         }, $admins),
       ];
     }
+    $build['#attached']['drupalSettings']['node_statistics_url'] = Url::fromRoute(
+      'eic_statistics.get_node_statistics'
+    )->toString();
 
     $build['#attached']['drupalSettings']['overview'] = [
       'is_group_owner' => array_key_exists(
@@ -317,7 +320,11 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
           'refine' => $this->t('Refine your search', [], ['context' => 'eic_group']),
           'topics' => $this->t('Topics', [], ['context' => 'eic_group']),
           'search_placeholder' => $this->t('Search here', [], ['context' => 'eic_group']),
-          'search_text' => $this->t('Search for ' . $source->getEntityBundle(), [], ['context' => 'eic_group']),
+          'search_text' => $this->t(
+            'Search for ' . (new \ReflectionClass($source))->getShortName(),
+            [],
+            ['context' => 'eic_group']
+          ),
           'date_filter_label' => $this->t('Dates', [], ['context' => 'eic_group']),
           'commented_on' => $this->t('commented on', [], ['context' => 'eic_group']),
           'custom_search_text' => [

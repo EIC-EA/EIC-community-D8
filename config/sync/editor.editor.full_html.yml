@@ -15,9 +15,14 @@ settings:
         -
           name: Formatting
           items:
+            - Format
+            - FontSize
+            - TextColor
+            - BGColor
             - Bold
             - Italic
             - Underline
+            - Strike
             - Superscript
             - Subscript
         -
@@ -30,24 +35,35 @@ settings:
         -
           name: Links
           items:
-            - DrupalLink
-            - DrupalUnlink
-            - Blockquote
+            - Link
+            - Unlink
+            - Anchor
             - Table
         -
           name: Media
           items:
             - DrupalImage
             - DrupalMediaLibrary
+            - Iframe
+            - Twitter_ckeditor_button
+            - Fb_ckeditor_button
         -
           name: Tools
           items:
+            - Copy
+            - Paste
             - PasteText
             - PasteFromWord
+            - SelectAll
             - RemoveFormat
+            - Cut
             - Undo
             - Redo
+            - HorizontalRule
+            - PageBreak
             - Maximize
+            - Find
+            - CreateDiv
             - Source
         -
           name: Alignment
@@ -61,6 +77,11 @@ settings:
       styles: ''
     language:
       language_list: un
+    font:
+      font_names: ''
+      font_sizes: ''
+    colorbutton:
+      colors: ''
 image_upload:
   status: false
   scheme: public

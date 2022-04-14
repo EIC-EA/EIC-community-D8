@@ -154,6 +154,18 @@ class MediaWysiwygFilter extends ProcessPluginBase implements ConfigurableInterf
   ];
 
   /**
+   * Text format mappings.
+   *
+   * @var string[]
+   */
+  protected const TEXT_FORMAT_MAPPINGS = [
+    'full_html' => 'full_html',
+    'filtered_html' => 'filtered_html',
+    'plain_text' => 'plain_text',
+    'mail' => 'basic_text',
+  ];
+
+  /**
    * The migration entity.
    *
    * @var \Drupal\migrate\Plugin\MigrationInterface
@@ -287,6 +299,8 @@ class MediaWysiwygFilter extends ProcessPluginBase implements ConfigurableInterf
       throw new MigrateException("The embed token's destination filter plugin ID is invalid.");
     }
 
+    // Update format with the one defined in the mappings.
+    $value['format'] = self::TEXT_FORMAT_MAPPINGS[$value['format']];
     $pattern = '/\[\[\s*(?<tag_info>\{.+\})\s*\]\]/sU';
     $decoder = new JsonDecode(TRUE);
     $entity_type_id = explode(':', $this->migration->getDestinationConfiguration()['plugin'])[1];

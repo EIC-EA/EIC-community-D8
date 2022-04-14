@@ -14,6 +14,10 @@
       transform: translate(-50%, -50%);
     }
   }
+
+  & label svg {
+    display: none;
+  }
 }
 
 

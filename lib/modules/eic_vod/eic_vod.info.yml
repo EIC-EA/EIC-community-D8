@@ -1,0 +1,7 @@
+name: EIC VOD
+type: module
+description: Provides video on demand integration with the service provided by the EIC.
+package: European Innovation Council
+core: 8.x
+core_version_requirement: ^8 || ^9
+php: 7.4

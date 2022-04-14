@@ -201,4 +201,18 @@ abstract class SourceType implements SourceTypeInterface {
     return FALSE;
   }
 
+  /**
+   * @inheritDoc
+   */
+  public function extraPrefilter(): array {
+    return [];
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function ignorePublishedState(): bool {
+    return FALSE;
+  }
+
 }

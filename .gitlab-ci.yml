@@ -3,6 +3,7 @@ stages:
   - test
   - notify
   - deploy
+  - cypress
   - deploy_uat
 
 .deploy_job: &deploy_job
@@ -190,5 +191,21 @@ slack_notifier:
   script:
     - |
       curl -X POST $SLACK_URL -H 'Content-Type: application/json' -d '{"text": "New deployment running on QA. Environment will be updated in a few minutes..."}'
+  only:
+    - /^release/.*$/
+
+cypress_test_qa:
+  stage: cypress
+  image: cypress/base:10
+  tags:
+    - itr-hrt
+  artifacts:
+    when: always
+    untracked: true
+    expire_in: '2 hour'
+  script:
+    - cd e2e
+    - npm install
+    - npx cypress run
   only:
     - /^release/.*$/
