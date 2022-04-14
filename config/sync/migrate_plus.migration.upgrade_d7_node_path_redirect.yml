@@ -88,5 +88,12 @@ process:
 destination:
   plugin: 'entity:redirect'
 migration_dependencies:
-  required: {  }
+  required:
+    - upgrade_d7_node_complete_article
+    - upgrade_d7_node_complete_discussion
+    - upgrade_d7_node_complete_document
+    - upgrade_d7_node_complete_news
+    - upgrade_d7_node_complete_wiki_page
+    - upgrade_d7_node_complete_event
+    - upgrade_d7_node_complete_photoalbum
   optional: {  }
