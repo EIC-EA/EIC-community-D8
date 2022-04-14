@@ -1,25 +1,25 @@
 {% set file_title_element = file_title_element|default('h2') %}
 
 <article class="ecl-filelist">
-  <header class="ecl-filelist__header">
-    <{{file_title_element}} class="ecl-filelist__title">{{ title|striptags }}</{{file_title_element}}>
-  </header>
-  <div class="ecl-filelist__content">
-    <div class="ecl-filelist__body">
-      {{ body|raw }}
-    </div>
+	<header class="ecl-filelist__header">
+		<{{file_title_element}} class="ecl-filelist__title">{{ title|striptags }}</{{file_title_element}}>
+	</header>
+	<div class="ecl-filelist__content">
+		<div class="ecl-filelist__body">
+			{{ body|raw }}
+		</div>
 
-    <div class="ecl-filelist__list">
-      {% for file in files %}
-        <article class="ecl-filelist__file">
-          <header class="ecl-filelist__file-header">
-            <a href="{{ file.path }}" class="ecl-filelist__file-name">{{ file.name }}</a>
-            <div class="ecl-filelist__file-type">{{ file.type }}</div>
-            <div class="ecl-filelist__file-stats">
-              {% for stat in file.stats %}
-                <div class="ecl-filelist__file-stat {{ stat.hide_label ? 'ecl-filelist__file-stat--hide-label' }}">
-                  {% if stat.icon is not empty and icon_file_path %}
-                    {% include '@ecl-twig/ec-component-icon/ecl-icon.html.twig' with {
+		<div class="ecl-filelist__list">
+			{% for file in files %}
+				<article class="ecl-filelist__file">
+					<header class="ecl-filelist__file-header">
+						<a href="{{ file.path }}" class="ecl-filelist__file-name">{{ file.name }}</a>
+						<div class="ecl-filelist__file-type">{{ file.type }}</div>
+						<div class="ecl-filelist__file-stats">
+							{% for stat in file.stats %}
+								<div class="ecl-filelist__file-stat {{ stat.hide_label ? 'ecl-filelist__file-stat--hide-label' }}">
+									{% if stat.icon is not empty and icon_file_path %}
+										{% include '@ecl-twig/ec-component-icon/ecl-icon.html.twig' with {
                       icon: {
                         size: 'xs',
                         path: icon_file_path,
@@ -28,34 +28,34 @@
                       },
                       extra_classes: 'ecl-filelist__file-stat-icon',
                     } only %}
-                  {% endif %}
-                  <span class="ecl-filelist__file-stat-label">&nbsp;{{ stat.label }}</span>
-                  <span class="ecl-filelist__file-stat-value">{{ stat.value }}</span>
-                </div>
-              {% endfor %}
-            </div>
-          </header>
-          <figure class="ecl-filelist__file-image-wrapper">
-            {% if file.image is not empty %}
-              <img class="ecl-filelist__file-image" src="{{ file.image.src }}" alt="{{ file.image.alt }}">
-            {% else %}
-              {% if (file.mime_type == 'png' or file.mime_type == 'jpg' or file.mime_type == 'jpeg' or file.mime_type == 'gif') %}
-                {% set mime_type = 'img' %}
-              {% else %}
-                {% set mime_type = file.mime_type %}
-              {% endif %}
-              {% include '@ecl-twig/ec-component-icon/ecl-icon.html.twig' with {
+									{% endif %}
+									<span class="ecl-filelist__file-stat-label">&nbsp;{{ stat.label }}</span>
+									<span class="ecl-filelist__file-stat-value">{{ stat.value }}</span>
+								</div>
+							{% endfor %}
+						</div>
+					</header>
+					<figure class="ecl-filelist__file-image-wrapper">
+						{% if file.image is not empty %}
+							<img class="ecl-filelist__file-image" src="{{ file.image.src }}" alt="{{ file.image.alt }}">
+						{% else %}
+							{% if (file.mime_type == 'png' or file.mime_type == 'jpg' or file.mime_type == 'jpeg' or file.mime_type == 'gif') %}
+								{% set mime_type = 'img' %}
+							{% else %}
+								{% set mime_type = file.mime_type %}
+							{% endif %}
+							{% include '@ecl-twig/ec-component-icon/ecl-icon.html.twig' with {
                 icon: {
                   size: 'm',
                   path: icon_file_path,
                   type: 'custom',
-                  name: (mime_type in ['doc', 'dwg', 'html', 'ppt', 'xls', 'zip', 'txt', 'img'] ? 'document_' ~ mime_type : 'document'),
+                  name: (mime_type in ['doc', 'pdf', 'dwg', 'html', 'ppt', 'xls', 'zip', 'txt', 'img'] ? 'document_' ~ mime_type : 'document'),
                 },
               } only %}
-            {% endif %}
-          </figure>
-          <footer class="ecl-filelist__file-footer">
-            {% include '@ecl-twig/ec-component-link/ecl-link.html.twig' with {
+						{% endif %}
+					</figure>
+					<footer class="ecl-filelist__file-footer">
+						{% include '@ecl-twig/ec-component-link/ecl-link.html.twig' with {
               icon: {
                 size: 'xs',
                 path: icon_file_path,
@@ -69,11 +69,16 @@
                 label: download,
               },
               type: 'cta',
+              extra_attributes: [
+                {
+                  name: "download"
+                }
+              ],
               extra_classes: 'ecl-link--button ecl-link--button-primary',
             } only %}
-          </footer>
-        </article>
-      {% endfor %}
-    </div>
-  </div>
+					</footer>
+				</article>
+			{% endfor %}
+		</div>
+	</div>
 </article>

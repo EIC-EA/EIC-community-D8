@@ -227,7 +227,12 @@ class RequestMessageCreator implements ContainerInjectionInterface {
     }
 
     /** @var \Drupal\user\UserInterface[] $to */
-    $to = [$entity_owner, $flagging->getOwner()];
+    $to = [$flagging->getOwner()];
+    // If the user who made the request is not the owner of the entity, we want
+    // to make sure the owner also receives a notification.
+    if ($entity_owner->id() !== $flagging->getOwner()->id()) {
+      $to[] = $entity_owner;
+    }
     $response = $flagging->get('field_request_status')->value;
     $message_name = $handler->getMessageByAction($response);
     if (!$message_name) {
@@ -275,6 +280,7 @@ class RequestMessageCreator implements ContainerInjectionInterface {
     // a group is deleted via request, at that point the group owner has already
     // been deleted.
     if (
+      $entity_owner->id() !== $flagging->getOwner()->id() &&
       $handler->getType() === RequestTypes::DELETE &&
       RequestStatus::ACCEPTED === $response &&
       $entity instanceof GroupInterface

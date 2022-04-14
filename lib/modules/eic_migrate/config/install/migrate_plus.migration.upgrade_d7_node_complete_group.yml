@@ -19,24 +19,20 @@ source:
     - c4m_vocab_geo
     - c4m_vocab_topic
 process:
-  # TODO
-#  id:
-#    - plugin: migration_lookup
-#      migration: upgrade_d7_node_complete_group
-#      source: tnid
-#    - plugin: node_complete_node_lookup
-#  nid:
-#    - plugin: get
-#      source: tnid
-#  vid:
-#    - plugin: get
-#      source: vid
+  id:
+    - plugin: migration_lookup
+      migration: upgrade_d7_node_complete_group
+      source: tnid
+    - plugin: node_complete_node_lookup
+  revision_id:
+    - plugin: get
+      source: vid
   langcode:
-    - plugin: static_map
-      source: language
-      bypass: true
-      map:
-        und: en
+#    - plugin: static_map
+#      source: language
+#      bypass: true
+#      map:
+#        und: en
     - plugin: default_value
       default_value: en
   label: title
@@ -46,6 +42,16 @@ process:
       migration:
         - upgrade_d7_user
   status: status
+  moderation_state:
+    - plugin: static_map
+      source: c4m_og_status
+      map:
+        pending: pending
+        draft: draft
+        published: published
+        archived: archived
+        # TODO: what should we do with (soft) deleted groups?
+        deleted: archived
   created: created
   changed: timestamp
   revision_user:
@@ -85,11 +91,9 @@ process:
 #        title: title
 #        width: width
 #        height: height
-  # TODO: Blocked
-#  c4m_og_status:
-#    - plugin: get
-#      source: c4m_og_status
-  # TODO
+# field_related_groups is handled through a post migration so we don't
+# migrate it here.
+# @see Drupal\eic_migrate\EventSuscriber\PostMigrationSubscriber
 #  field_related_groups:
 #    - plugin: get
 #      source: c4m_related_group
@@ -97,17 +101,17 @@ process:
 #  field_related_projects:
 #    - plugin: get
 #      source: c4m_related_projects
-  # TODO: Implement when Regions & countries SMED migration is done.
-#  field_vocab_geo:
-#    - plugin: sub_process
-#      source: c4m_vocab_geo
-#      process:
-#        target_id:
-#          - plugin: migration_lookup
-#            source: smed_id
-#            no_stub: true
-#            migration:
-#              - smed_TODO
+  field_vocab_geo:
+    - plugin: sub_process
+      source: c4m_vocab_geo
+      process:
+        target_id:
+          - plugin: migration_lookup
+            source: smed_id
+            no_stub: true
+            migration:
+              - smed_regions_countries_lvl1
+              - smed_regions_countries_lvl2
   field_vocab_topics:
     - plugin: sub_process
       source: c4m_vocab_topic
@@ -120,30 +124,23 @@ process:
               - smed_thematics_topics_lvl1
               - smed_thematics_topics_lvl2
               - smed_thematics_topics_lvl3
-  # TODO: Blocked
-#  field_membership_open_request:
-#    - plugin: get
-#      source: field_membership_open_request
   field_message_to_site_admin: field_message_to_site_admin
-  # TODO
-#  group_access:
-#    - plugin: get
-#      source: group_access
+  features:
+    - plugin: eic_group_features
   # TODO
 #  group_group:
 #    - plugin: get
 #      source: group_group
-  # TODO
-#  pluggable_node_access:
-#    - plugin: get
-#      source: pluggable_node_access
 destination:
   plugin: 'entity_complete:group'
   default_bundle: group
+  translations: true
 migration_dependencies:
   required:
     - upgrade_d7_user
     - upgrade_d7_file_image_to_media
+    - smed_regions_countries_lvl1
+    - smed_regions_countries_lvl2
     - smed_thematics_topics_lvl1
     - smed_thematics_topics_lvl2
     - smed_thematics_topics_lvl3
