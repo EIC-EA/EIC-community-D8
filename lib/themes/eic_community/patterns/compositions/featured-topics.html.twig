@@ -1,18 +1,18 @@
 {% set title_element = title_element|default('h3') %}
 
 {% if items is not empty %}
-  <div class="ecl-featured-list ecl-featured-list--topics {{ is_collapsible ? 'ecl-featured-list--is-collapsible' }} {{ extra_classes }}">
-    {% if title is not empty %}
-      {% if title is not empty %}
-        <{{ title_element }} class="ecl-editorial-article__aside__title">{{ title }}</{{ title_element }}>
-      {% endif %}
-    {% endif %}
+	<div class="ecl-featured-list ecl-featured-list--topics {{ is_collapsible ? 'ecl-featured-list--is-collapsible' }} {{ extra_classes }}">
+		{% if title is not empty %}
+			{% if title is not empty %}
+				<{{title_element}} class="ecl-editorial-article__aside__title {{ title_extra_classes }}">{{ title }}</{{title_element}}>
+			{% endif %}
+		{% endif %}
 
-    <div class="ecl-featured-list__items-wrapper">
-      <div class="ecl-featured-list__items">
-        {% for item in items %}
-          <div class="ecl-featured-list__item {{ item.is_active ? 'ecl-featured-list__item--is-active' }} {{ item.extra_classes }}">
-            {% include '@ecl-twig/ec-component-tag/ecl-tag.html.twig' with {
+		<div class="ecl-featured-list__items-wrapper">
+			<div class="ecl-featured-list__items">
+				{% for item in items %}
+					<div class="ecl-featured-list__item {{ item.is_active ? 'ecl-featured-list__item--is-active' }} {{ item.extra_classes }}">
+						{% include '@ecl-twig/ec-component-tag/ecl-tag.html.twig' with {
               extra_classes: 'ecl-featured-list__item-tag',
               tag: {
                 type: 'link',
@@ -20,11 +20,11 @@
                 label: item.label
               }
             } only %}
-          </div>
-        {% endfor %}
-        {% if is_collapsible %}
-          <div class="ecl-featured-list__item ecl-featured-list__item--expand">
-            {% include "@ecl-twig/ec-component-button/ecl-button.html.twig" with {
+					</div>
+				{% endfor %}
+				{% if is_collapsible %}
+					<div class="ecl-featured-list__item ecl-featured-list__item--expand">
+						{% include "@ecl-twig/ec-component-button/ecl-button.html.twig" with {
               icon_position: 'after',
               icon: icon_file_path ? {
                 path: icon_file_path,
@@ -37,10 +37,10 @@
               variant: 'ghost',
               extra_classes: 'ecl-featured-list__expand'
             } %}
-          </div>
-        {% endif %}
-      </div>
-    </div>
+					</div>
+				{% endif %}
+			</div>
+		</div>
 
-  </div>
+	</div>
 {% endif %}

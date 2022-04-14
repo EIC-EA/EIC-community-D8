@@ -22,15 +22,13 @@
 
 			{% include "@theme/patterns/compositions/editorial-actions.html.twig" with editorial_actions|default({}) %}
 
-			{% include "@theme/patterns/compositions/featured-contributors.html.twig" with contributors|default({})|merge({
-        title_extra_classes: "ecl-editorial-article__aside__title"
+			{% include "@theme/patterns/compositions/featured-contributors.html.twig" with contributors|default({}) %}
+
+			{% include "@theme/patterns/compositions/featured-topics.html.twig" with topics|default({})|merge({
+        title_extra_classes: "ecl-featured-list__title"
       }) %}
 
-			{% include "@theme/patterns/compositions/featured-topics.html.twig" with topics|default({}) %}
-
-			{% include "@theme/patterns/compositions/featured-stories.html.twig" with stories|default({})|merge({
-        title_extra_classes: "ecl-editorial-article__aside__title"
-      }) %}
+			{% include "@theme/patterns/compositions/featured-stories.html.twig" with stories|default({})|merge({}) %}
 		{% endblock %}
 	{% endembed %}
 

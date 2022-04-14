@@ -2,7 +2,8 @@
 
 {% block page_header %}
 	{% include "@theme/patterns/compositions/editorial-header.html.twig" with editorial_header|default({})|merge({
-    extra_classes: "ecl-editorial-header--story"
+    extra_classes: "ecl-editorial-header--story",
+    is_stories: true
   }) %}
 
 	{% include "@theme/patterns/compositions/hero.html.twig" with hero|default({}) %}

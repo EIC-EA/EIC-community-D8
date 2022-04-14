@@ -157,13 +157,6 @@
 
       flex-shrink: 0;
     }
-
-    &__title {
-      text-transform: uppercase;
-      color: map-get($ecl-colors, 'grey');
-      font-size: 1rem !important;
-      font-weight: $ecl-font-weight-regular !important;
-    }
   }
 
   &:not(#{$node}--organisation) &__aside-wrapper {
