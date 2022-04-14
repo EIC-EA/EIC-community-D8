@@ -253,10 +253,17 @@ function eic_groups_update_9004(&$sandbox) {
           ['administer membership requests']
         );
 
+        $adminGroupRoleId = EICGroupsHelper::getGroupTypeRole($group_type, 'admin');
+        \Drupal::service('eic_groups.helper')->addRolePermissionsToGroup(
+          $group_permission,
+          $adminGroupRoleId,
+          ['administer membership requests']
+        );
+
         $group_permission->setNewRevision();
         $group_permission->setRevisionUserId(1);
         $group_permission->setRevisionCreationTime(time());
-        $group_permission->setRevisionLogMessage(t('Add "administer membership requests" permission to group owner role.'));
+        $group_permission->setRevisionLogMessage(t('Add "administer membership requests" permission to group owner and admin roles.'));
 
         if (count($group_permission->validate()) > 0) {
           break;

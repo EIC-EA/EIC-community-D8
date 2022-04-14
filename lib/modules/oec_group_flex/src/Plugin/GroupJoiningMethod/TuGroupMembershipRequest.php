@@ -3,11 +3,11 @@
 namespace Drupal\oec_group_flex\Plugin\GroupJoiningMethod;
 
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\group\Entity\GroupTypeInterface;
 use Drupal\group\GroupRoleSynchronizer;
 use Drupal\group_flex\Plugin\GroupJoiningMethodBase;
+use Drupal\oec_group_flex\OECGroupFlexHelper;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -81,7 +81,7 @@ class TuGroupMembershipRequest extends GroupJoiningMethodBase implements Contain
 
     $tuGroupRoleId = $this->getTrustedUserRoleId($groupType);
 
-    $ownerGroupRoleId = EICGroupsHelper::getGroupTypeRole($groupType->id(), 'owner');
+    $ownerGroupRoleId = OECGroupFlexHelper::getGroupTypeRole($groupType->id(), 'owner');
 
     $mappedPerm = [
       $ownerGroupRoleId => [
@@ -99,7 +99,7 @@ class TuGroupMembershipRequest extends GroupJoiningMethodBase implements Contain
    */
   public function disableGroupType(GroupTypeInterface $groupType) {
     $tuGroupRoleId = $this->getTrustedUserRoleId($groupType);
-    $ownerGroupRoleId = EICGroupsHelper::getGroupTypeRole($groupType->id(), 'owner');
+    $ownerGroupRoleId = OECGroupFlexHelper::getGroupTypeRole($groupType->id(), 'owner');
     $mappedPerm = [
       $ownerGroupRoleId => [
         'administer membership requests' => FALSE,
@@ -116,7 +116,7 @@ class TuGroupMembershipRequest extends GroupJoiningMethodBase implements Contain
    */
   public function getGroupPermissions(GroupInterface $group): array {
     $tuGroupRoleId = $this->getTrustedUserRoleId($group->getGroupType());
-    $ownerGroupRoleId = EICGroupsHelper::getGroupTypeRole($group->bundle(), 'owner');
+    $ownerGroupRoleId = OECGroupFlexHelper::getGroupTypeRole($group->bundle(), 'owner');
     return [
       $ownerGroupRoleId => ['administer membership requests'],
       $tuGroupRoleId => ['request group membership'],
@@ -128,7 +128,7 @@ class TuGroupMembershipRequest extends GroupJoiningMethodBase implements Contain
    */
   public function getDisallowedGroupPermissions(GroupInterface $group): array {
     $tuGroupRoleId = $this->getTrustedUserRoleId($group->getGroupType());
-    $ownerGroupRoleId = EICGroupsHelper::getGroupTypeRole($group->bundle(), 'owner');
+    $ownerGroupRoleId = OECGroupFlexHelper::getGroupTypeRole($group->bundle(), 'owner');
     return [
       $ownerGroupRoleId => ['administer membership requests'],
       $tuGroupRoleId => ['request group membership'],
