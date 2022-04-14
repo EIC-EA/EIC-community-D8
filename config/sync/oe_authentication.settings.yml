@@ -1,0 +1,7 @@
+_core:
+  default_config_hash: QqXrdnYD_oVmsY_aKMaDLRwxQfZ8eveMW5HTuTrXY7o
+protocol: eulogin
+register_path: eim/external/register.cgi
+validation_path: TicketValidationService
+assurance_level: TOP
+ticket_types: 'SERVICE,PROXY'
