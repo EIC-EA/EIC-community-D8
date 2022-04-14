@@ -3,6 +3,7 @@
 namespace Drupal\eic_user_login\EventSubscriber;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\cas\Event\CasPostLoginEvent;
 use Drupal\cas\Event\CasPreLoginEvent;
 use Drupal\cas\Event\CasPreRegisterEvent;
 use Drupal\cas\Service\CasHelper;
@@ -70,6 +71,7 @@ class CasEventSubscriber implements EventSubscriberInterface {
     return [
       CasHelper::EVENT_PRE_REGISTER => ['userPreRegister'],
       CasHelper::EVENT_PRE_LOGIN => ['userPreLogin'],
+      CasHelper::EVENT_POST_LOGIN => ['userPostLogin'],
     ];
   }
 
@@ -98,7 +100,7 @@ class CasEventSubscriber implements EventSubscriberInterface {
    * React to a user trying to login with cas.
    *
    * @param \Drupal\cas\Event\CasPreLoginEvent $event
-   *   Cas pre register event.
+   *   Cas pre login event.
    */
   public function userPreLogin(CasPreLoginEvent $event) {
     /** @var \Drupal\user\UserInterface $account */
@@ -131,6 +133,21 @@ class CasEventSubscriber implements EventSubscriberInterface {
     catch (SmedUserLoginException $e) {
       $event->cancelLogin($e->getUserMessage());
     }
+  }
+
+  /**
+   * React to a user just logged in with cas.
+   *
+   * @param \Drupal\cas\Event\CasPostLoginEvent $event
+   *   Cas prost login event.
+   */
+  public function userPostLogin(CasPostLoginEvent $event) {
+    $account = $event->getAccount();
+    $properties = $event->getCasPropertyBag();
+    $account->setEmail($properties->getAttribute('email'));
+    $account->field_first_name->value = $properties->getAttribute('firstName');
+    $account->field_first_name->value = $properties->getAttribute('lastName');
+    $account->save();
   }
 
   /**
