@@ -153,7 +153,7 @@ class ProcessorGlobal extends DocumentProcessor {
             $document,
             'its_content_uid',
             $fields,
-            $group->getRevisionUserId()
+            $group->getOwnerId()
           );
         }
         if ($group && $owner = EICGroupsHelper::getGroupOwner($group)) {
