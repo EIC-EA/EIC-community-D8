@@ -79,6 +79,7 @@ class UserGenerator extends CoreGenerator {
           'mail' => $user['name'] . '@eic.local',
           'langcode' => 'en',
           'preferred_langcode' => 'en',
+          'field_user_status' => 'user_valid',
         ]);
 
       $user->activate();
@@ -95,6 +96,7 @@ class UserGenerator extends CoreGenerator {
           'mail' =>  'trusted_user' . $i . '@eic.local',
           'langcode' => 'en',
           'preferred_langcode' => 'en',
+          'field_user_status' => 'user_valid',
         ]);
 
       $user->activate();
