@@ -126,9 +126,9 @@ const Gallery = ({files}) => {
               <img
                 style={{objectFit: "cover", cursor:"pointer"}}
                 className="swiper-lazy"
-                title={file.image.alt}
-                src={file.image.src}
-                alt={file.image.alt}
+                title={file.thumb.alt}
+                src={file.thumb.src}
+                alt={file.thumb.alt}
               />
             </SwiperSlide>
           ))}

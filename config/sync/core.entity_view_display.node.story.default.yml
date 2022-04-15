@@ -12,6 +12,7 @@ dependencies:
     - field.field.node.story.field_image
     - field.field.node.story.field_image_caption
     - field.field.node.story.field_introduction
+    - field.field.node.story.field_language
     - field.field.node.story.field_related_stories
     - field.field.node.story.field_story_paragraphs
     - field.field.node.story.field_tags
@@ -93,6 +94,14 @@ content:
     settings: {  }
     third_party_settings: {  }
     weight: 3
+    region: content
+  field_language:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 21
     region: content
   field_related_stories:
     type: entity_reference_label

@@ -4,6 +4,7 @@ namespace Drupal\eic_groups\Plugin\Block;
 
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Url;
 use Drupal\eic_overviews\GroupOverviewPages;
 use Drupal\group\Entity\GroupContent;
 use Drupal\group\Entity\GroupInterface;
@@ -139,7 +140,9 @@ class GroupMenuBlock extends GroupMenuBlockBase implements ContainerFactoryPlugi
         // Gets group wiki url.
         $group_book_page_nid = $this->eicGroupsHelper->getGroupBookPage($group);
         $group_book_page_node = $this->entityTypeManager->getStorage('node')->load($group_book_page_nid);
-        $url = $group_book_page_node->toUrl();
+        $url = $group_book_page_node instanceof NodeInterface ?
+          $group_book_page_node->toUrl() :
+          Url::fromRoute('<front>');
         break;
 
       case 'event':
