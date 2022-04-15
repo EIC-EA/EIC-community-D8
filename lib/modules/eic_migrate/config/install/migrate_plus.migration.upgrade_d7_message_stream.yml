@@ -64,6 +64,13 @@ process:
         - upgrade_d7_node_complete_wiki_page
         - upgrade_d7_node_complete_photoalbum
     - plugin: node_complete_node_translation_lookup
+  # field_referenced_comment:
+  #   - plugin: skip_on_empty
+  #     method: process
+  #     source: field_comment
+  #   - plugin: migration_lookup
+  #     migration:
+  #       - upgrade_d7_comment
   field_entity_type:
     - plugin: default_value
       default_value: node
@@ -88,4 +95,5 @@ migration_dependencies:
     - upgrade_d7_node_complete_wiki_page
     - upgrade_d7_node_complete_photoalbum
     - upgrade_d7_node_complete_group
+    # - upgrade_d7_comment
   optional: {  }
