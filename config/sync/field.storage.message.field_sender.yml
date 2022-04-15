@@ -1,0 +1,20 @@
+uuid: fb055b39-5031-43b4-ad85-5f1206a5dc93
+langcode: en
+status: true
+dependencies:
+  module:
+    - message
+    - user
+id: message.field_sender
+field_name: field_sender
+entity_type: message
+type: entity_reference
+settings:
+  target_type: user
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false
