@@ -36,7 +36,7 @@ process:
         - upgrade_d7_node_complete_document
         - upgrade_d7_node_complete_news
         - upgrade_d7_node_complete_wiki_page
-#        - upgrade_d7_node_complete_event
+        - upgrade_d7_node_complete_event
     - plugin: node_complete_node_lookup
     - plugin: skip_on_empty
       method: row
@@ -65,28 +65,24 @@ process:
   changed: changed
   status: status
   thread: thread
-  comment_body:
-    - plugin: eic_media_wysiwyg_filter
-      source: comment_body
-      media_migrations:
-        - upgrade_d7_file_audio_to_media
-        - upgrade_d7_file_document_to_media
-        - upgrade_d7_file_image_to_media
-        - upgrade_d7_file_undefined_to_media
-        - upgrade_d7_file_video_to_media
+  'comment_body/value':
+    plugin: extract
+    source: comment_body
+    index:
+      - 0
+      - value
+  'comment_body/format':
+    plugin: default_value
+    default_value: 'basic_text'
 destination:
   plugin: 'entity:comment'
 migration_dependencies:
   required:
     - upgrade_d7_user
-    - upgrade_d7_file_audio_to_media
-    - upgrade_d7_file_document_to_media
-    - upgrade_d7_file_image_to_media
-    - upgrade_d7_file_undefined_to_media
-    - upgrade_d7_file_video_to_media
     - upgrade_d7_node_complete_article
     - upgrade_d7_node_complete_discussion
     - upgrade_d7_node_complete_document
     - upgrade_d7_node_complete_news
     - upgrade_d7_node_complete_wiki_page
+    - upgrade_d7_node_complete_event
   optional: { }
