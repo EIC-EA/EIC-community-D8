@@ -7,17 +7,19 @@ dependencies:
     - field.field.message.notify_contact_user.field_sender
     - field.field.message.notify_contact_user.field_subject
     - message.template.notify_contact_user
+  module:
+    - text
 id: message.notify_contact_user.default
 targetEntityType: message
 bundle: notify_contact_user
 mode: default
 content:
   field_body:
-    type: basic_string
+    type: text_default
     label: above
     settings: {  }
     third_party_settings: {  }
-    weight: 2
+    weight: 4
     region: content
   field_sender:
     type: entity_reference_label

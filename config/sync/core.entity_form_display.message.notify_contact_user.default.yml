@@ -7,14 +7,16 @@ dependencies:
     - field.field.message.notify_contact_user.field_sender
     - field.field.message.notify_contact_user.field_subject
     - message.template.notify_contact_user
+  module:
+    - text
 id: message.notify_contact_user.default
 targetEntityType: message
 bundle: notify_contact_user
 mode: default
 content:
   field_body:
-    type: string_textarea
-    weight: 1
+    type: text_textarea
+    weight: 3
     region: content
     settings:
       rows: 5

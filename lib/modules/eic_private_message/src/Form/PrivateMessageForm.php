@@ -229,8 +229,8 @@ class PrivateMessageForm extends FormBase {
       $this->bus->dispatch([
         'template' => 'notify_contact_user',
         'field_sender' => ['target_id' => $this->currentUser()->id()],
-        'field_body' => $form_state->getValue('message')[0]['value'],
-        'field_subject' => $form_state->getValue('subject')[0]['value'],
+        'field_body' => $form_state->getValue('body'),
+        'field_subject' => $form_state->getValue('subject'),
         'uid' => $recipient
       ]);
     }
