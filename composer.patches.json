@@ -14,6 +14,9 @@
     "drupal/block_content_permissions": {
       "2920739 - Allow accessing the \"Custom block library\" page without \"Administer blocks\" permission": "https://www.drupal.org/files/issues/2020-07-27/block_content_permissions-access_listing_page-2920739-38.patch"
     },
+    "drupal/ckeditor_selectall": {
+      "3226489 - Make this module compatible with Drupal 9": "https://www.drupal.org/files/issues/2021-08-09/3226489-3.patch"
+    },
     "drupal/default_content": {
       "2698425 - Do not reimport existing entities": "https://www.drupal.org/files/issues/2021-01-20/default_content-integrity_constrait_violation-3162987-137-2.0.x.patch"
     },
@@ -58,7 +61,11 @@
       "3251270 - Error when trying to send a message to a deleted owner": "https://www.drupal.org/files/issues/2021-11-25/message_notify-check_owner_account-3251270-2.patch"
     },
     "drupal/message_subscribe": {
-      "3086125 - Prevent infinite loop when sending messages with queue": "https://www.drupal.org/files/issues/2021-10-01/3086125-skip-if-we-have-last-item-14.patch"
+      "3086125 - Prevent infinite loop when sending messages with queue": "https://www.drupal.org/files/issues/2021-10-01/3086125-skip-if-we-have-last-item-14.patch",
+      "3190511 - Trying to access array offset on value of type bool in Drupal\\message_subscribe\\Subscribers->sendMessage()": "https://www.drupal.org/files/issues/2020-12-31/message_subscribe-Wrong_End_Time_Option-3190511-2-9.x.patch"
+    },
+    "drupal/migrate_tools": {
+      "3134245 - Run drush imports as user=1" : "https://www.drupal.org/files/issues/2020-05-06/3134245.patch"
     },
     "drupal/migrate_plus": {
       "3007709 - Add XPath-style filtering ability in JSON data parser plugin" : "https://www.drupal.org/files/issues/2020-11-16/migrate_plus-json-xpath-filtering-3007709-24.patch"

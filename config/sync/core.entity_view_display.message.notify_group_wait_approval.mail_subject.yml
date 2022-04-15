@@ -1,0 +1,22 @@
+uuid: 57e88744-fb53-4f6c-8f0e-e559fb1bf47d
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.message.mail_subject
+    - field.field.message.notify_group_wait_approval.field_event_executing_user
+    - field.field.message.notify_group_wait_approval.field_group_ref
+    - message.template.notify_group_wait_approval
+id: message.notify_group_wait_approval.mail_subject
+targetEntityType: message
+bundle: notify_group_wait_approval
+mode: mail_subject
+content:
+  partial_0:
+    weight: 0
+    region: content
+hidden:
+  field_event_executing_user: true
+  field_group_ref: true
+  partial_1: true
+  search_api_excerpt: true

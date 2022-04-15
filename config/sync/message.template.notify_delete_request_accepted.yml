@@ -14,7 +14,7 @@ label: 'NOTIFY :: MT40 :: Deletion request - request accepted'
 description: 'Notification sent to the request/author when a delete request is accepted'
 text:
   -
-    value: "<p>Dear <a href=\"[message:author:url]\">[message:author:field_first_name:value]&nbsp;[message:author:field_last_name:value]</a>,</p>\r\n\r\n<p><a href=\"[message:field_referenced_flag:entity:field_request_moderator:entity:url]\">[message:field_referenced_flag:entity:field_request_moderator:entity:field_first_name:value] [message:field_referenced_flag:entity:field_request_moderator:entity:field_last_name:value]</a> has deleted [message:field_referenced_flag:entity:target_entity:title].</p>\r\n\r\n<p>The EIC Community team</p>\r\n"
+    value: "<p>Dear <a href=\"[message:author:url]\">[message:author:display-name]</a>,</p>\r\n\r\n<p><a href=\"[message:field_referenced_flag:entity:field_request_moderator:entity:url]\">[message:field_referenced_flag:entity:field_request_moderator:entity:display-name]</a> has deleted [message:field_referenced_flag:entity:target_entity:title].</p>\r\n\r\n<p>The EIC Community team</p>\r\n"
     format: full_html
   -
     value: "<p>[message:raw-value:field_rendered_content]</p>\r\n"
