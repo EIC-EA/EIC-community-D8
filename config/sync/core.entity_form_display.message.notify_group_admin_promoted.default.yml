@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - field.field.message.notify_group_admin_promoted.field_event_executing_user
+    - field.field.message.notify_group_admin_promoted.field_group_owner
     - field.field.message.notify_group_admin_promoted.field_group_ref
     - message.template.notify_group_admin_promoted
 id: message.notify_group_admin_promoted.default
@@ -14,6 +15,16 @@ content:
   field_event_executing_user:
     type: entity_reference_autocomplete
     weight: 1
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_group_owner:
+    type: entity_reference_autocomplete
+    weight: 2
     region: content
     settings:
       match_operator: CONTAINS

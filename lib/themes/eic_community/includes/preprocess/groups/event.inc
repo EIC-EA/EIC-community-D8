@@ -81,11 +81,11 @@ function eic_community_preprocess_group__event(&$variables) {
         // by topic.
         $params = SearchHelper::buildSolrQueryParams(
           [
-            'ss_group_event_type_string' => $event_type->label(),
+            'ss_group_event_type_string' => $event_type ? $event_type->label() : '',
           ]
         );
         $tag = [
-          'label' => $event_type->getName(),
+          'label' => $event_type ? $event_type->getName() : '',
         ];
 
         $url = GlobalOverviewPages::getGlobalOverviewPageLink(GlobalOverviewPages::EVENTS)->getUrl();

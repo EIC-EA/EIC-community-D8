@@ -54,11 +54,13 @@ process:
   field_is_spammer: c4m_is_spammer
   field_last_name: c4m_last_name
   field_media:
-    - plugin: sub_process
+    -
+      plugin: sub_process
       source: c4m_media
       process:
         target_id:
-          - plugin: migration_lookup
+          -
+            plugin: migration_lookup
             source: fid
             no_stub: true
             migration:

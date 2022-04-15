@@ -105,6 +105,7 @@ permissions:
   - 'create member profile'
   - 'create new books'
   - 'create news content'
+  - 'create page content'
   - 'create remote_video media'
   - 'create story content'
   - 'create terms in contact_category'
