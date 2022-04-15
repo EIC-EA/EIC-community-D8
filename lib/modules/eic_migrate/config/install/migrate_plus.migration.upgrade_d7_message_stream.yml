@@ -72,8 +72,8 @@ process:
       migration:
         - upgrade_d7_comment
   field_entity_type:
-    - plugin: default_value
-      default_value: node
+    - plugin: skip_on_empty
+      source: field_entity_type
   field_operation_type:
     - plugin: skip_on_empty
       method: process

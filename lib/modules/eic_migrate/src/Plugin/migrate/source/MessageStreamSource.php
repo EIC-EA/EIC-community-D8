@@ -55,8 +55,43 @@ class MessageStreamSource extends MessageSource {
   public function prepareRow(Row $row) {
     $result = parent::prepareRow($row);
 
-    if ($row->getSourceProperty('type') === 'c4m_insert__node__share') {
-      $row->setSourceProperty('field_operation', 'share');
+    switch ($row->getSourceProperty('type')) {
+      case 'c4m_insert__comment':
+        $row->setSourceProperty('field_entity_type', 'Comment');
+        break;
+
+      case 'c4m_insert__node__article':
+        $row->setSourceProperty('field_entity_type', 'Story');
+        break;
+
+      case 'c4m_insert__node__discussion':
+        $row->setSourceProperty('field_entity_type', 'Discussion');
+        break;
+
+      case 'c4m_insert__node__document':
+        $row->setSourceProperty('field_entity_type', 'Document');
+        break;
+
+      case 'c4m_insert__node__event':
+        $row->setSourceProperty('field_entity_type', 'Event');
+        break;
+
+      case 'c4m_insert__node__news':
+        $row->setSourceProperty('field_entity_type', 'News');
+        break;
+
+      case 'c4m_insert__node__photoalbum':
+        $row->setSourceProperty('field_entity_type', 'Gallery');
+        break;
+
+      case 'c4m_insert__node__wiki_page':
+        $row->setSourceProperty('field_entity_type', 'Wiki page');
+        break;
+
+      case 'c4m_insert__node__share':
+        $row->setSourceProperty('field_operation', 'share');
+        break;
+
     }
 
     return $result;
