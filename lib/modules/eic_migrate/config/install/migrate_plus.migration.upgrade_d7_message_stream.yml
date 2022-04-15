@@ -73,6 +73,7 @@ process:
         - upgrade_d7_comment
   field_entity_type:
     - plugin: skip_on_empty
+      method: process
       source: field_entity_type
   field_operation_type:
     - plugin: skip_on_empty
