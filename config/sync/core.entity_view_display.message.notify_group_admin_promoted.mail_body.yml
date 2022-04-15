@@ -5,6 +5,7 @@ dependencies:
   config:
     - core.entity_view_mode.message.mail_body
     - field.field.message.notify_group_admin_promoted.field_event_executing_user
+    - field.field.message.notify_group_admin_promoted.field_group_owner
     - field.field.message.notify_group_admin_promoted.field_group_ref
     - message.template.notify_group_admin_promoted
 id: message.notify_group_admin_promoted.mail_body
@@ -19,6 +20,7 @@ content:
     region: content
 hidden:
   field_event_executing_user: true
+  field_group_owner: true
   field_group_ref: true
   partial_0: true
   search_api_excerpt: true

@@ -1,0 +1,26 @@
+uuid: 65e3f421-4751-4ecd-a7a9-5a86f47d8c3f
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.message.field_group_owner
+    - message.template.notify_group_admin_promoted
+id: message.notify_group_admin_promoted.field_group_owner
+field_name: field_group_owner
+entity_type: message
+bundle: notify_group_admin_promoted
+label: 'Group owner'
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:group_membership'
+  handler_settings:
+    target_bundles: null
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+field_type: entity_reference

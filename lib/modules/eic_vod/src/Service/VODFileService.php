@@ -143,7 +143,8 @@ class VODFileService implements FileSystemInterface {
    */
   private function prepareDestination(string $source, string &$destination, $replace) {
     // Files on S3 are always store with a lower case name, we must do the same with the URI on our side while also removing spaces.
-    $formatted_file_name = preg_replace('/\s+/', '_', strtolower(basename($source)));
+    $formatted_file_name = $this->cleanString(pathinfo($source, PATHINFO_FILENAME))
+      . '.' . pathinfo($source, PATHINFO_EXTENSION);
     $destination = StreamWrapperManager::getScheme($destination) . '://' . $formatted_file_name;
     if (!VODStream::getTarget($destination)) {
       $this->logger->error("The source '%original_source' is an invalid file format.", [
@@ -216,6 +217,40 @@ class VODFileService implements FileSystemInterface {
     else {
       return $this->decorated->copy($source, $destination, $replace);
     }
+  }
+
+  /**
+   * @param string $string
+   *
+   * @return string
+   */
+  private function cleanString(string $string): string {
+    $mapping = [
+      '/[áàâãªä]/u' => 'a',
+      '/[ÁÀÂÃÄ]/u' => 'A',
+      '/[ÍÌÎÏ]/u' => 'I',
+      '/[íìîï]/u' => 'i',
+      '/[éèêë]/u' => 'e',
+      '/[ÉÈÊË]/u' => 'E',
+      '/[óòôõºö]/u' => 'o',
+      '/[ÓÒÔÕÖ]/u' => 'O',
+      '/[úùûü]/u' => 'u',
+      '/[ÚÙÛÜ]/u' => 'U',
+      '/ç/' => 'c',
+      '/Ç/' => 'C',
+      '/ñ/' => 'n',
+      '/Ñ/' => 'N',
+      '/–/' => '-',
+      '/[’‘‹›‚]/u' => ' ',
+      '/[“”«»„]/u' => ' ',
+      '/ /' => ' ',
+      '/\s+/' => '_',
+      '/-/' => '',
+    ];
+
+    $mapped_string = preg_replace(array_keys($mapping), array_values($mapping), $string);
+
+    return strtolower(preg_replace('/[^A-Za-z0-9\_]/', '', $mapped_string));
   }
 
 }
