@@ -43,6 +43,7 @@ dependencies:
     - book
     - comment
     - content_moderation
+    - content_moderation_bypass
     - contextual
     - eic_admin
     - eic_flags
@@ -92,6 +93,7 @@ permissions:
   - 'administer menu'
   - 'administer message templates'
   - 'administer users'
+  - 'bypass groups transition restrictions'
   - 'close archive request'
   - 'close delete request'
   - 'create book content'
