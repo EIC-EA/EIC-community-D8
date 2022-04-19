@@ -1,31 +1,31 @@
 {% set title_element = title_element|default('h3') %}
 
 {% if items is not empty %}
-<div class="ecl-featured-list {{ is_collapsible ? 'ecl-featured-list--is-collapsible' }} {{ grid ? 'ecl-featured-list--has-grid-layout' }} {{ extra_classes }} ecl-featured-list--contributors">
-    {% if title is not empty %}
-      {% if title is not empty %}
-        <{{ title_element }} class="ecl-featured-list__titledo">{{ title }}</{{ title_element }}>
-      {% endif %}
-    {% endif %}
+	<div class="ecl-featured-list {{ is_collapsible ? 'ecl-featured-list--is-collapsible' }} {{ grid ? 'ecl-featured-list--has-grid-layout' }} {{ extra_classes }} ecl-featured-list--contributors">
+		{% if title is not empty %}
+			{% if title is not empty %}
+				<{{title_element}} class="ecl-featured-list__title {{ title_extra_classes }}">{{ title }}</{{title_element}}>
+			{% endif %}
+		{% endif %}
 
-    <div class="ecl-featured-list__items-wrapper">
-      <div class="ecl-featured-list__items">
-        {% for item in items %}
-          <div class="ecl-featured-list__item">
-            {% if item.content %}
-              {{ item.content }}
-            {% else %}
-              {% include "@theme/patterns/components/author.html.twig" with item|default({})|merge({
+		<div class="ecl-featured-list__items-wrapper">
+			<div class="ecl-featured-list__items">
+				{% for item in items %}
+					<div class="ecl-featured-list__item">
+						{% if item.content %}
+							{{ item.content }}
+						{% else %}
+							{% include "@theme/patterns/components/author.html.twig" with item|default({})|merge({
                 size: 'medium',
                 display_avatar_only: grid|default(false),
               }) only %}
-            {% endif %}
-          </div>
-        {% endfor %}
+						{% endif %}
+					</div>
+				{% endfor %}
 
-        {% if  is_collapsible %}
-          <div class="ecl-featured-list__item ecl-featured-list__item--expand">
-            {% include "@ecl-twig/ec-component-button/ecl-button.html.twig" with {
+				{% if  is_collapsible %}
+					<div class="ecl-featured-list__item ecl-featured-list__item--expand">
+						{% include "@ecl-twig/ec-component-button/ecl-button.html.twig" with {
               icon_position: 'after',
               icon: icon_file_path ? {
                 path: icon_file_path,
@@ -38,11 +38,11 @@
               variant: 'ghost',
               extra_classes: 'ecl-featured-list__expand'
             } %}
-          </div>
-        {% endif %}
+					</div>
+				{% endif %}
 
-        {% if call_to_action.link is not empty %}
-            {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with {
+				{% if call_to_action.link is not empty %}
+					{% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with {
               link: call_to_action.link|default({})|merge({
                 type: 'standalone',
                 icon_position: 'after',
@@ -56,9 +56,9 @@
               } : {},
               extra_classes: 'ecl-featured-content-collection__call-to-action ecl-link--button ecl-link--button-ghost',
             } only %}
-        {% endif %}
+				{% endif %}
 
-      </div>
-    </div>
-  </div>
+			</div>
+		</div>
+	</div>
 {% endif %}
