@@ -119,21 +119,25 @@ class PrivateMessageForm extends FormBase {
       $user = User::load($user_id);
 
       if (!$user instanceof UserInterface) {
-        $this->messenger()->addError($this->t(
-          'User not found.',
-          [],
-          ['context' => 'eic_private_message']
-        ));
+        $this->messenger()->addError(
+          $this->t(
+            'User not found.',
+            [],
+            ['context' => 'eic_private_message']
+          )
+        );
 
         return [];
       }
 
       if (!$user->get(PrivateMessage::PRIVATE_MESSAGE_USER_ALLOW_CONTACT_ID)->value) {
-        $this->messenger()->addError($this->t(
-          'The user you are trying to contact has disabled private messages from its profile. The operation you are requesting cannot be completed.',
-          [],
-          ['context' => 'eic_private_message']
-        ));
+        $this->messenger()->addError(
+          $this->t(
+            'The user you are trying to contact has disabled private messages from its profile. The operation you are requesting cannot be completed.',
+            [],
+            ['context' => 'eic_private_message']
+          )
+        );
 
         return [];
       }
@@ -231,30 +235,25 @@ class PrivateMessageForm extends FormBase {
         'field_sender' => ['target_id' => $this->currentUser()->id()],
         'field_body' => $form_state->getValue('body'),
         'field_subject' => $form_state->getValue('subject'),
-        'uid' => $recipient
+        'uid' => $recipient,
       ]);
     }
 
-    $this->messenger()->addMessage($this->t(
-      'Your message was successfully sent!',
-      [],
-      ['context' => 'eic_private_message']
-    ));
+    $this->messenger()->addMessage(
+      $this->t(
+        'Your message was successfully sent!',
+        [],
+        ['context' => 'eic_private_message']
+      )
+    );
 
     if ($values['send_copy']) {
-      $values['subject'] = $this->t(
-        'Self copy: @subject',
-        ['@subject' => $values['subject']],
-        ['eic_private_message']
-      );
-
-      $this->mailManager->mail(
-        'eic_private_message',
-        PrivateMessage::PRIVATE_MESSAGE_USER_MAIL_KEY,
-        $this->currentUser()->getEmail(),
-        $current_langauge,
-        $values
-      );
+      $this->bus->dispatch([
+        'template' => 'notify_contact_user_copy',
+        'field_body' => $form_state->getValue('body'),
+        'field_subject' => $form_state->getValue('subject'),
+        'uid' => $this->currentUser()->id(),
+      ]);
     }
   }
 

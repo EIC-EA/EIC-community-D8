@@ -1,0 +1,27 @@
+uuid: ed265218-6e60-4385-a164-18ae0c957911
+langcode: en
+status: true
+dependencies:
+  config:
+    - filter.format.full_html
+  module:
+    - eic_messages
+third_party_settings:
+  eic_messages:
+    message_template_type: notification
+template: notify_contact_user_copy
+label: 'NOTIFY :: MT :: Contact user (copy)'
+description: 'Send a copy of email to the current user in user contact form.'
+text:
+  -
+    value: "<p>Self copy: [message:field_subject]</p>\r\n"
+    format: full_html
+  -
+    value: "<p>Dear <u><a href=\"[message:author:url:absolute]\">[message:author:display-name]</a></u>,<br />\r\n<br />\r\nHere's a copy of the message you just sent on the European Innovation Council platform:<br />\r\n[message:field_body]</p>\r\n\r\n<p>The EIC Community team</p>\r\n"
+    format: full_html
+settings:
+  'token options':
+    clear: true
+    'token replace': true
+  purge_override: false
+  purge_methods: {  }
