@@ -1,0 +1,19 @@
+uuid: 94e069d3-ebe5-4925-a109-b157737772a8
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.message.field_subject
+    - message.template.notify_mt_contact_global
+id: message.notify_mt_contact_global.field_subject
+field_name: field_subject
+entity_type: message
+bundle: notify_mt_contact_global
+label: Subject
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string
