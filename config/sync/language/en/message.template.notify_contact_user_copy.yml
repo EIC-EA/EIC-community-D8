@@ -1,0 +1,7 @@
+text:
+  -
+    value: "<p>Self copy: [message:field_subject]</p>\r\n"
+    format: full_html
+  -
+    value: "<p>Dear <u><a href=\"[message:author:url:absolute]\">[message:author:display-name]</a></u>,<br />\r\n<br />\r\nHere's a copy of the message you just sent on the European Innovation Council platform:<br />\r\n[message:field_body]</p>\r\n\r\n<p>The EIC Community team</p>\r\n"
+    format: full_html

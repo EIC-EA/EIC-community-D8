@@ -110,6 +110,9 @@ class NotificationsSettingsBlock extends BlockBase implements ContainerFactoryPl
         'events' => $this->getEventsTab($member_profile),
         'comments' => $this->getCommentsTab($member_profile),
       ],
+      '#cache' => [
+        'contexts' => ['user'],
+      ],
       '#attached' => [
         'drupalSettings' => [
           'translations' => [

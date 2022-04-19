@@ -11,7 +11,7 @@ third_party_settings:
     message_template_type: notification
 template: notify_contact_user
 label: 'NOTIFY :: MT :: Contact user'
-description: ''
+description: 'Send an email to the target user in user contact form.'
 text:
   -
     value: "<p>[message:field_subject]</p>\r\n"

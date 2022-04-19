@@ -1,0 +1,22 @@
+uuid: d7916348-f377-4977-b2ac-992c95c4bc71
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.message.mail_subject
+    - field.field.message.notify_contact_user_copy.field_body
+    - field.field.message.notify_contact_user_copy.field_subject
+    - message.template.notify_contact_user_copy
+id: message.notify_contact_user_copy.mail_subject
+targetEntityType: message
+bundle: notify_contact_user_copy
+mode: mail_subject
+content:
+  partial_0:
+    weight: 0
+    region: content
+hidden:
+  field_body: true
+  field_subject: true
+  partial_1: true
+  search_api_excerpt: true

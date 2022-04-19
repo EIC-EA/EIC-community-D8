@@ -29,7 +29,6 @@ permissions:
   - 'unflag like_media'
   - 'unflag recommend_group'
   - 'view banner fragments'
-  - 'view bookmark_content'
   - 'view bookmark_media'
   - 'view disclaimer fragments'
   - 'view fact_figure fragments'
