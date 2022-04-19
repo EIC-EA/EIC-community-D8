@@ -34,6 +34,22 @@ final class Groups {
   ];
 
   /**
+   * Maps the old node types the new ones.
+   *
+   * @var array
+   */
+  const NODE_TYPE_MAPPING = [
+    'book' => 'book',
+    'discussion' => 'discussion',
+    'document' => 'document',
+    'event' => 'event',
+    'news' => 'news',
+    'photoalbum' => 'gallery',
+    'article' => 'story',
+    'wiki_page' => 'wiki_page',
+  ];
+
+  /**
    * Maps old group type names to new ones.
    *
    * @param string $old_group_type
@@ -44,6 +60,19 @@ final class Groups {
    */
   public static function getDestinationGroupType(string $old_group_type) {
     return self::GROUP_TYPES_MAPPING[$old_group_type] ?? FALSE;
+  }
+
+  /**
+   * Maps old node type names to new ones.
+   *
+   * @param string $old_node_type
+   *   The old node type machine name.
+   *
+   * @return false|mixed|string
+   *   The new group type machine name or FALSE if not found.
+   */
+  public static function getDestinationNodeType(string $old_node_type) {
+    return self::NODE_TYPE_MAPPING[$old_node_type] ?? FALSE;
   }
 
 }

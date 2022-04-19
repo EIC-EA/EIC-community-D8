@@ -11,8 +11,7 @@ migration_tags:
 migration_group: migrate_drupal_7
 label: 'User memberships'
 source:
-  plugin: eic_d7_og_membership
-  entity_type: user
+  plugin: eic_d7_og_user_membership
   type: og_membership_type_default
   state: 1
   include_roles: true
