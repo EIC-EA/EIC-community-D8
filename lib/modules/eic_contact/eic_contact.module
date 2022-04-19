@@ -52,7 +52,7 @@ function _eic_contact_category_allowed_values() {
   $categories = Drupal::entityTypeManager()
     ->getStorage('taxonomy_term')
     ->loadByProperties([
-      'vid' => 'contact_category'
+      'vid' => 'contact_category',
     ]);
 
   $values = [];
@@ -62,6 +62,18 @@ function _eic_contact_category_allowed_values() {
   }
 
   return $values;
+}
+
+/**
+ * Implements hook_field_widget_form_alter().
+ */
+function eic_contact_field_widget_form_alter(&$element, \Drupal\Core\Form\FormStateInterface $form_state, $context) {
+  $field = $context['items']->getFieldDefinition();
+  if ($field->getName() !== 'field_contact_message') {
+    return;
+  }
+
+  $element['#allowed_formats'] = ['basic_text'];
 }
 
 /**
