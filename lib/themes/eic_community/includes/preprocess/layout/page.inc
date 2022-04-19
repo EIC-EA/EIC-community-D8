@@ -198,11 +198,17 @@ function _preprocess_node_page(&$variables) {
         /* @todo Missing follow author flag when user is logged in. */
 
         $publish_date_format = $variables['node']->getType() === 'news' ? 'd F' : 'd F Y';
-
+        $is_restricted = $node->private->value === '1';
+        $tag = [
+          'type' => 'display',
+          'label' =>  $is_restricted ? t('Restricted') : t('Public'),
+        ];
         $variables['editorial_header'] = [
-          // @todo Not the correct display, has to be created in storybook.
-          'type' => [
-            'label' => $node->private->value === '1' ? t('Community members only') : t('Public'),
+          'tags' => [
+            [
+              'extra_classes' => 'ecl-tag--is-' . ($is_restricted ? 'restricted' : 'public'),
+              'tag' => $tag,
+            ],
           ],
           'meta' => [
             ['label' => $node->type->entity->label()],
