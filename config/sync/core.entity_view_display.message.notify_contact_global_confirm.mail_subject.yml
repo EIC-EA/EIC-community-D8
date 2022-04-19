@@ -1,0 +1,22 @@
+uuid: 02526576-e4fc-4fd5-81b9-3c54fa4b9720
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.message.mail_subject
+    - field.field.message.notify_contact_global_confirm.field_sender
+    - field.field.message.notify_contact_global_confirm.field_subject
+    - message.template.notify_contact_global_confirm
+id: message.notify_contact_global_confirm.mail_subject
+targetEntityType: message
+bundle: notify_contact_global_confirm
+mode: mail_subject
+content:
+  partial_0:
+    weight: 0
+    region: content
+hidden:
+  field_sender: true
+  field_subject: true
+  partial_1: true
+  search_api_excerpt: true

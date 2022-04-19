@@ -1,0 +1,41 @@
+uuid: 3994cd5b-d173-4982-a7df-beaf918a72d2
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.message.notify_contact_global_confirm.field_sender
+    - field.field.message.notify_contact_global_confirm.field_subject
+    - message.template.notify_contact_global_confirm
+id: message.notify_contact_global_confirm.default
+targetEntityType: message
+bundle: notify_contact_global_confirm
+mode: default
+content:
+  field_sender:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_subject:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  partial_0:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  partial_1:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  search_api_excerpt: true
