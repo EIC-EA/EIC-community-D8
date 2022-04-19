@@ -121,7 +121,6 @@ permissions:
   - 'create url aliases'
   - 'create video media'
   - 'delete all revisions'
-  - 'delete any book content'
   - 'delete any discussion content'
   - 'delete any document content'
   - 'delete any gallery content'
