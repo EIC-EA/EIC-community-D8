@@ -1,0 +1,51 @@
+uuid: 3f430258-7b24-48e7-af1f-33599e153f06
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.message.notify_contact_user.field_body
+    - field.field.message.notify_contact_user.field_sender
+    - field.field.message.notify_contact_user.field_subject
+    - message.template.notify_contact_user
+  module:
+    - text
+id: message.notify_contact_user.default
+targetEntityType: message
+bundle: notify_contact_user
+mode: default
+content:
+  field_body:
+    type: text_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 4
+    region: content
+  field_sender:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_subject:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 3
+    region: content
+  partial_0:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  partial_1:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  search_api_excerpt: true

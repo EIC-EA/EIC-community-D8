@@ -62,18 +62,17 @@ process:
         - upgrade_d7_file_image_to_media
         - upgrade_d7_file_undefined_to_media
         - upgrade_d7_file_video_to_media
-  # TODO: Implement when Regions & countries SMED migration is done.
-#  field_vocab_geo:
-#    - plugin: sub_process
-#      source: c4m_vocab_geo
-#      process:
-#        target_id:
-#          - plugin: migration_lookup
-#            source: smed_id
-#            no_stub: true
-#            migration:
-#              - smed_TODO
-  # TODO: Validate implementation when field_vocab_languages is added to CT News.
+  field_vocab_geo:
+    - plugin: sub_process
+      source: c4m_vocab_geo
+      process:
+        target_id:
+          - plugin: migration_lookup
+            source: smed_id
+            no_stub: true
+            migration:
+              - smed_regions_countries_lvl1
+              - smed_regions_countries_lvl2
   field_language:
     - plugin: sub_process
       source: c4m_vocab_language
@@ -128,4 +127,7 @@ migration_dependencies:
     - smed_thematics_topics_lvl1
     - smed_thematics_topics_lvl2
     - smed_thematics_topics_lvl3
+    - smed_regions_countries_lvl1
+    - smed_regions_countries_lvl2
+    - upgrade_d7_node_complete_photoalbum_gallery_slides_paragraph
   optional: { }
