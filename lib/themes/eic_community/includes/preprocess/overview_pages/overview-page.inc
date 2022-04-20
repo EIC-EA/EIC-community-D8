@@ -21,12 +21,22 @@ function eic_community_preprocess_overview_page(array &$variables) {
 
   $operations = $overview_helper->getGlobalOverviewPageOperations($overview_id);
   if (!empty($operations)) {
-    foreach ($operations as $operation) {
+    if (count($operations) > 1) {
+      $items = [];
+      foreach($operations as $operation) {
+        $items[] = [
+          'link' => $operation
+        ];
+      }
+
       $variables['overview_page_actions'][] = [
-        'link' => [
-          'label' => $operation['title'],
-          'path' => $operation['url'],
-        ],
+        'label' => t('Create Content'),
+        'items' => $items
+      ];
+    }
+    else {
+      $variables['overview_page_actions'][] = [
+        'link' => reset($operations),
         'type' => 'cta',
       ];
     }

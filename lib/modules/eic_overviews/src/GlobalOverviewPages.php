@@ -136,7 +136,7 @@ class GlobalOverviewPages {
    *   - title: the operation link title;
    *   - url: the operation URL string.
    */
-  public function getGlobalOverviewPageOperations(int $page) {
+  public function getGlobalOverviewPageOperations(int $page): array {
     $operations = [];
     switch ($page) {
       case GlobalOverviewPages::GROUPS:
@@ -170,8 +170,8 @@ class GlobalOverviewPages {
           : Url::fromRoute($add_route, [$entity_id . '_type' => $bundle]);
 
         $operations[] = [
-          'title' => $this->t("Create a new $bundle"),
-          'url' => $url->toString(),
+          'label' => $this->t("Create a new $bundle"),
+          'path' => $url->toString(),
         ];
       }
     }
