@@ -15,7 +15,6 @@ function eic_community_preprocess_overview_page(array &$variables) {
   $overview_helper = \Drupal::service('eic_overviews.global_overview_pages');
   // Adds overview page operations.
   $overview_id = $overview_helper->getCurrentOverviewPageId();
-
   if (!$overview_id) {
     return;
   }

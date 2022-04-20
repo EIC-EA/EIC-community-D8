@@ -141,22 +141,39 @@ class GlobalOverviewPages {
     switch ($page) {
       case GlobalOverviewPages::GROUPS:
         $entity_id = 'group';
-        $bundle = 'group';
+        $bundles = ['group'];
         $add_route = "entity.$entity_id.add_form";
-        $access_handler = $this->entityTypeManager->getAccessControlHandler($entity_id);
-
-        if ($access_handler->createAccess($bundle)) {
-          $url = is_callable($add_route)
-            ? call_user_func($add_route, $entity_id, $bundle)
-            : Url::fromRoute($add_route, [$entity_id . '_type' => $bundle]);
-
-          $operations[] = [
-            'title' => $this->t("Create a new group"),
-            'url' => $url->toString(),
-          ];
-        }
         break;
+      case GlobalOverviewPages::EVENTS:
+        $entity_id = 'group';
+        $bundles = ['event'];
+        $add_route = "entity.$entity_id.add_form";
+        break;
+      case GlobalOverviewPages::NEWS_STORIES:
+        $entity_id = 'node';
+        $bundles = ['story', 'news'];
+        $add_route = function (string $entity_id, string $bundle) {
+          return Url::fromRoute('node.add_page');
+        };
+        break;
+    }
 
+    if (!$bundles || !$entity_id) {
+      return [];
+    }
+
+    $access_handler = $this->entityTypeManager->getAccessControlHandler($entity_id);
+    foreach ($bundles as $bundle) {
+      if ($access_handler->createAccess($bundle)) {
+        $url = is_callable($add_route)
+          ? call_user_func($add_route, $entity_id, $bundle)
+          : Url::fromRoute($add_route, [$entity_id . '_type' => $bundle]);
+
+        $operations[] = [
+          'title' => $this->t("Create a new $bundle"),
+          'url' => $url->toString(),
+        ];
+      }
     }
 
     return $operations;
