@@ -1,0 +1,24 @@
+uuid: bc02e8e0-7d32-43c9-9fae-cb1aec8258c9
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.message.mail_body
+    - field.field.message.notify_contact_global_copy.field_body
+    - field.field.message.notify_contact_global_copy.field_sender
+    - field.field.message.notify_contact_global_copy.field_subject
+    - message.template.notify_contact_global_copy
+id: message.notify_contact_global_copy.mail_body
+targetEntityType: message
+bundle: notify_contact_global_copy
+mode: mail_body
+content:
+  partial_1:
+    weight: 0
+    region: content
+hidden:
+  field_body: true
+  field_sender: true
+  field_subject: true
+  partial_0: true
+  search_api_excerpt: true
