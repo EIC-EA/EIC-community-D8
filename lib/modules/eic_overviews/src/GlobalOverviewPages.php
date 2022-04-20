@@ -153,7 +153,7 @@ class GlobalOverviewPages {
         $entity_id = 'node';
         $bundles = ['story', 'news'];
         $add_route = function (string $entity_id, string $bundle) {
-          return Url::fromRoute('node.add_page');
+          return Url::fromRoute('node.add', ['node_type' => $bundle]);
         };
         break;
     }
