@@ -1,0 +1,26 @@
+uuid: 34404ab5-457b-45e3-b8c3-8337787e25f8
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.message.field_sender
+    - message.template.notify_contact_global_copy
+id: message.notify_contact_global_copy.field_sender
+field_name: field_sender
+entity_type: message
+bundle: notify_contact_global_copy
+label: Sender
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:group_membership'
+  handler_settings:
+    target_bundles: null
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+field_type: entity_reference

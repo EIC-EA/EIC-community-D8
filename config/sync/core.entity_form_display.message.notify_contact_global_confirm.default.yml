@@ -1,0 +1,32 @@
+uuid: 778440a8-1ad3-4ca9-bd79-ee0bf6a43eff
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.message.notify_contact_global_confirm.field_sender
+    - field.field.message.notify_contact_global_confirm.field_subject
+    - message.template.notify_contact_global_confirm
+id: message.notify_contact_global_confirm.default
+targetEntityType: message
+bundle: notify_contact_global_confirm
+mode: default
+content:
+  field_sender:
+    type: entity_reference_autocomplete
+    weight: 0
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_subject:
+    type: string_textfield
+    weight: 1
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+hidden: {  }

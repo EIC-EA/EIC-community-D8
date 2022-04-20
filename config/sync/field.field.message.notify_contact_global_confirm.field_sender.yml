@@ -1,0 +1,26 @@
+uuid: e1aa8cb6-b44e-4121-b23b-ff1b8cc7d901
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.message.field_sender
+    - message.template.notify_contact_global_confirm
+id: message.notify_contact_global_confirm.field_sender
+field_name: field_sender
+entity_type: message
+bundle: notify_contact_global_confirm
+label: Sender
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:group_membership'
+  handler_settings:
+    target_bundles: null
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+field_type: entity_reference
