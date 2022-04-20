@@ -140,6 +140,10 @@ content:
     region: content
 hidden:
   field_full_name: true
+  field_message_from_service: true
+  field_updated_profile_by_service: true
+  field_updated_profile_by_user: true
+  field_user_status: true
   langcode: true
   member_profiles: true
   realname: true

@@ -1,0 +1,19 @@
+uuid: d36b0334-9adc-4023-9dff-5d3c2b7b68cb
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.message.field_subject
+    - message.template.notify_contact_global_confirm
+id: message.notify_contact_global_confirm.field_subject
+field_name: field_subject
+entity_type: message
+bundle: notify_contact_global_confirm
+label: Subject
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

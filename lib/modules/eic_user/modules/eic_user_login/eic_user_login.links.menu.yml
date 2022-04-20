@@ -1,0 +1,6 @@
+eic_user_login.settings:
+  title: EIC SMED settings
+  description: Manage SMED settings.
+  route_name: eic_user_login.settings
+  parent: eic_admin.settings
+  weight: 10

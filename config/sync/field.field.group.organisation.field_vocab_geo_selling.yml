@@ -1,0 +1,29 @@
+uuid: b936d108-add6-4bc5-95dc-35b951373eb6
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.group.field_vocab_geo_selling
+    - group.type.organisation
+    - taxonomy.vocabulary.geo
+id: group.organisation.field_vocab_geo_selling
+field_name: field_vocab_geo_selling
+entity_type: group
+bundle: organisation
+label: 'Country(ies) the organisation is selling to'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      geo: geo
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

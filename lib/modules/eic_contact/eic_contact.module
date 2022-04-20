@@ -38,6 +38,7 @@ function eic_contact_form_alter(&$form, FormStateInterface &$form_state) {
     return;
   }
 
+  $form['copy']['#default_value'] = TRUE;
   $form['actions']['submit']['#submit'][] = '_eic_contact_alter_submit';
 }
 
@@ -52,7 +53,7 @@ function _eic_contact_category_allowed_values() {
   $categories = Drupal::entityTypeManager()
     ->getStorage('taxonomy_term')
     ->loadByProperties([
-      'vid' => 'contact_category'
+      'vid' => 'contact_category',
     ]);
 
   $values = [];
@@ -62,6 +63,18 @@ function _eic_contact_category_allowed_values() {
   }
 
   return $values;
+}
+
+/**
+ * Implements hook_field_widget_form_alter().
+ */
+function eic_contact_field_widget_form_alter(&$element, \Drupal\Core\Form\FormStateInterface $form_state, $context) {
+  $field = $context['items']->getFieldDefinition();
+  if ($field->getName() !== 'field_contact_message') {
+    return;
+  }
+
+
 }
 
 /**
@@ -107,6 +120,52 @@ function _eic_contact_alter_submit(
     'recipients' => $email,
     'contact_form' => $message_form->getEntity()->getContactForm(),
   ];
+
+  $query = \Drupal::entityQuery('user')
+    ->condition('status', 1);
+
+  $or_condition = $query->orConditionGroup()
+    ->condition('roles', 'content_administrator')
+    ->condition('roles', 'site_admin');
+
+  $uids = $query->condition($or_condition)->execute();
+
+  /** @var \Drupal\eic_messages\Service\MessageBus $bus */
+  $bus = \Drupal::service('eic_messages.message_bus');
+
+  // Send notification to all SCM/SA
+  foreach ($uids as $uid) {
+    $bus->dispatch([
+      'template' => 'notify_mt_contact_global',
+      'field_sender' => ['target_id' => $current_user->id()],
+      'field_body' => $form_state->getValue('message')[0]['value'],
+      'field_subject' => $form_state->getValue('subject')[0]['value'],
+      'field_contact_category' => ['target_id' => $category_id],
+      'uid' => $uid
+    ]);
+  }
+
+  $send_copy = $form_state->getValue('copy');
+
+  if ($send_copy) {
+    // Send a copy of the contact form to the current user.
+    $bus->dispatch([
+      'template' => 'notify_contact_global_copy',
+      'field_sender' => ['target_id' => $current_user->id()],
+      'field_subject' => $form_state->getValue('subject')[0]['value'],
+      'field_body' => $form_state->getValue('message')[0]['value'],
+      'uid' => ['target_id' => $current_user->id()]
+    ]);
+  } else {
+    // Send notification to the sender to confirm email has been sent.
+    $bus->dispatch([
+      'template' => 'notify_contact_global_confirm',
+      'field_sender' => ['target_id' => $current_user->id()],
+      'field_subject' => $form_state->getValue('subject')[0]['value'],
+      'uid' => ['target_id' => $current_user->id()]
+    ]);
+  }
+
   /** @var \Drupal\Core\Mail\MailManagerInterface $mail_manager */
   $mail_manager = Drupal::service('plugin.manager.mail');
   $mail_manager->mail(

@@ -15,6 +15,8 @@ module:
   block_field: 0
   book: 0
   breakpoint: 0
+  cas: 0
+  cas_mock_server: 0
   ckeditor: 0
   ckeditor_div_manager: 0
   ckeditor_find: 0
@@ -91,6 +93,7 @@ module:
   eic_theme_helper: 0
   eic_topics: 0
   eic_user: 0
+  eic_user_login: 0
   eic_vod: 0
   eic_webservices: 0
   eic_wysiwyg: 0
@@ -148,6 +151,7 @@ module:
   mimemail: 0
   node: 0
   node_read_time: 0
+  oe_authentication: 0
   oe_media: 0
   oe_time_caching: 0
   oe_webtools: 0
@@ -209,6 +213,7 @@ module:
   workflow_buttons: 0
   workflows: 0
   pathauto: 1
+  externalauth: 10
   views: 10
   paragraphs: 11
   publication_date: 99

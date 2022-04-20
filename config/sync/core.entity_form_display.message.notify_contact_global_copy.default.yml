@@ -1,0 +1,43 @@
+uuid: e3bcc7c9-38dc-41a8-b903-5fc166dbde77
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.message.notify_contact_global_copy.field_body
+    - field.field.message.notify_contact_global_copy.field_sender
+    - field.field.message.notify_contact_global_copy.field_subject
+    - message.template.notify_contact_global_copy
+  module:
+    - text
+id: message.notify_contact_global_copy.default
+targetEntityType: message
+bundle: notify_contact_global_copy
+mode: default
+content:
+  field_body:
+    type: text_textarea
+    weight: 1
+    region: content
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+  field_sender:
+    type: entity_reference_autocomplete
+    weight: 0
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_subject:
+    type: string_textfield
+    weight: 2
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+hidden: {  }

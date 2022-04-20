@@ -1,0 +1,26 @@
+uuid: 32bca242-061b-452f-a838-da71c6bf7c41
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.message.mail_subject
+    - field.field.message.notify_mt_contact_global.field_body
+    - field.field.message.notify_mt_contact_global.field_contact_category
+    - field.field.message.notify_mt_contact_global.field_sender
+    - field.field.message.notify_mt_contact_global.field_subject
+    - message.template.notify_mt_contact_global
+id: message.notify_mt_contact_global.mail_subject
+targetEntityType: message
+bundle: notify_mt_contact_global
+mode: mail_subject
+content:
+  partial_0:
+    weight: 0
+    region: content
+hidden:
+  field_body: true
+  field_contact_category: true
+  field_sender: true
+  field_subject: true
+  partial_1: true
+  search_api_excerpt: true

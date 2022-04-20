@@ -1,0 +1,25 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the EIC User Login module.
+ */
+
+use Drupal\eic_user_login\Constants\SmedUserStatuses;
+use Drupal\user\Entity\User;
+
+/**
+ * Set field_user_status field value as 'user_valid' for all users.
+ */
+function eic_user_login_update_9001(&$sandbox) {
+  $users = \Drupal::entityQuery('user')
+    ->execute();
+
+  $users = User::loadMultiple($users);
+
+  /** @var \Drupal\user\UserInterface $user */
+  foreach ($users as $user) {
+    $user->set('field_user_status', SmedUserStatuses::USER_VALID);
+    $user->save();
+  }
+}
