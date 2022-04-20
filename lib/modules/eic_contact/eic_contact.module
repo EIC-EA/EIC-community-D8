@@ -120,6 +120,31 @@ function _eic_contact_alter_submit(
     'recipients' => $email,
     'contact_form' => $message_form->getEntity()->getContactForm(),
   ];
+
+  $query = \Drupal::entityQuery('user')
+    ->condition('status', 1);
+
+  $or_condition = $query->orConditionGroup()
+    ->condition('roles', 'content_administrator')
+    ->condition('roles', 'site_admin');
+
+  $uids = $query->condition($or_condition)->execute();
+
+  /** @var \Drupal\eic_messages\Service\MessageBus $bus */
+  $bus = \Drupal::service('eic_messages.message_bus');
+
+  // Send notification to all SCM/SA
+  foreach ($uids as $uid) {
+    $bus->dispatch([
+      'template' => 'notify_mt_contact_global',
+      'field_sender' => ['target_id' => $current_user->id()],
+      'field_body' => $form_state->getValue('message')[0]['value'],
+      'field_subject' => $form_state->getValue('subject')[0]['value'],
+      'field_contact_category' => ['target_id' => $category_id],
+      'uid' => $uid
+    ]);
+  }
+
   /** @var \Drupal\Core\Mail\MailManagerInterface $mail_manager */
   $mail_manager = Drupal::service('plugin.manager.mail');
   $mail_manager->mail(
