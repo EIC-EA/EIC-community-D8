@@ -87,7 +87,8 @@
       "3188768 - Install from configuration fails due to missing dependencies": "./patches/subpathauto/3188768-subpathauto-add-dependencies.patch"
     },
     "drupal/views_data_export": {
-      "3173296 - Batch mode does not allow other modules to alter query": "https://www.drupal.org/files/issues/2021-02-12/3173296-9-batch-query-alter.patch"
+      "3173296 - Batch mode does not allow other modules to alter query": "https://www.drupal.org/files/issues/2021-02-12/3173296-9-batch-query-alter.patch",
+      "3241213 - Add S3 bucket support": "https://www.drupal.org/files/issues/2021-10-07/s3-bucket-support--3241213.patch"
     },
     "openeuropa/ecl-twig-loader": {
       "7f697ba - Add OpenEuropa\\Twig\\Loader\\EuropaComponentLibraryLoader::parseName() function (protected parseName() function from twig function is private since D9)": "patches/ecl-twig-loader/7f697ba-add-parsename-function-to-ecl-loader.patch",
