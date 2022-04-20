@@ -38,6 +38,7 @@ function eic_contact_form_alter(&$form, FormStateInterface &$form_state) {
     return;
   }
 
+  $form['copy']['#default_value'] = TRUE;
   $form['actions']['submit']['#submit'][] = '_eic_contact_alter_submit';
 }
 
@@ -73,7 +74,7 @@ function eic_contact_field_widget_form_alter(&$element, \Drupal\Core\Form\FormSt
     return;
   }
 
-  $element['#allowed_formats'] = ['basic_text'];
+
 }
 
 /**
