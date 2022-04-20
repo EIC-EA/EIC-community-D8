@@ -29,6 +29,7 @@ function eic_community_preprocess_page(array &$variables): void {
 
   $variables['site_header'] = [
     'icon_file_path' => $variables['eic_icon_path'],
+    'site_name' => \Drupal::config('system.site')->get('name'),
     'logo' => [
       'title' => t('European Commission'),
       'alt' => t('European Commission logo'),
