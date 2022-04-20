@@ -11,6 +11,7 @@ module:
   data_fixtures: 0
   devel: 0
   devel_generate: 0
+  eic_default_content: 0
 theme: {  }
 blacklist:
   - eic_user_login.settings
