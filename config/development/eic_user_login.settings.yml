@@ -1,0 +1,6 @@
+check_sync_user: false
+allow_user_register: true
+endpoint_url: ''
+basic_auth_username: ''
+basic_auth_password: ''
+api_key: ''

@@ -46,8 +46,12 @@ hidden:
   field_is_organisation_user: true
   field_is_spammer: true
   field_last_name: true
+  field_message_from_service: true
   field_smed_id: true
+  field_updated_profile_by_service: true
+  field_updated_profile_by_user: true
   field_user_can_contact: true
+  field_user_status: true
   flag_follow_user: true
   langcode: true
   member_for: true
