@@ -785,6 +785,10 @@
     #{$node}--story & {
       margin: 0;
 
+      & .ecl-tag {
+        margin: 0 auto 0 0;
+      }
+
       @include ecl-media-breakpoint-up('sm') {
         width: 50%;
 
