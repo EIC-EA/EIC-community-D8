@@ -415,10 +415,10 @@ class PostMigrationSubscriber implements EventSubscriberInterface {
   protected function findOrganisationIds(array $names = []) {
     $results = [];
     foreach ($names as $name) {
-      if ($group = $this->entityTypeManager->getStorage('group')->loadByProperties([
+      foreach ($this->entityTypeManager->getStorage('group')->loadByProperties([
         'label' => $name,
         'type' => Organisations::GROUP_ORGANISATION_BUNDLE,
-      ])) {
+      ]) as $group) {
         $results[] = $group->id();
       }
     }

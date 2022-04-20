@@ -13,7 +13,8 @@ use Drupal\migrate\Plugin\migrate\source\SqlBase;
  * source:
  *   plugin: eic_d7_field_value
  *   field_name: some_field_name
- *   bundle: some_bundle
+ *   entity_type: (optional) some_entity_type
+ *   bundle: (optional) some_bundle
  *   ids:
  *     some_db_column:
  *       type: integer
@@ -30,8 +31,14 @@ class FieldValue extends SqlBase {
    * {@inheritdoc}
    */
   public function query() {
-    $query = $this->select('field_revision_'.$this->configuration['field_name'], 'fr')
+    $query = $this->select('field_revision_' . $this->configuration['field_name'], 'fr')
       ->fields('fr');
+    if (!empty($this->configuration['entity_type'])) {
+      $query->condition('entity_type', $this->configuration['entity_type']);
+    }
+    if (!empty($this->configuration['bundle'])) {
+      $query->condition('bundle', $this->configuration['bundle']);
+    }
     return $query;
   }
 

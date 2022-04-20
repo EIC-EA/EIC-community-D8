@@ -1,0 +1,20 @@
+uuid: 7fbb3574-0b7a-447f-b156-a9cb95f16b84
+langcode: en
+status: true
+dependencies:
+  module:
+    - group
+    - taxonomy
+id: group.field_vocab_geo_selling
+field_name: field_vocab_geo_selling
+entity_type: group
+type: entity_reference
+settings:
+  target_type: taxonomy_term
+module: core
+locked: false
+cardinality: -1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

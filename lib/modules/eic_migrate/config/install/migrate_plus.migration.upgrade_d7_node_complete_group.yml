@@ -127,6 +127,7 @@ process:
   field_message_to_site_admin: field_message_to_site_admin
   features:
     - plugin: eic_group_features
+      group_bundle: group
   # TODO
 #  group_group:
 #    - plugin: get
@@ -139,6 +140,7 @@ migration_dependencies:
   required:
     - upgrade_d7_user
     - upgrade_d7_file_image_to_media
+    - upgrade_d7_node_complete_organisation
     - smed_regions_countries_lvl1
     - smed_regions_countries_lvl2
     - smed_thematics_topics_lvl1
