@@ -1,0 +1,27 @@
+uuid: 514999b8-50df-4f25-b640-c591c2fd8649
+langcode: en
+status: true
+dependencies:
+  config:
+    - filter.format.full_html
+  module:
+    - eic_messages
+third_party_settings:
+  eic_messages:
+    message_template_type: notification
+template: notify_mt_contact_global
+label: 'NOTIFY :: MT :: Contact global'
+description: ''
+text:
+  -
+    value: "<p>[message:field_subject]</p>\r\n"
+    format: full_html
+  -
+    value: "<p>Dear,<br />\r\n<br />\r\n<a href=\"[message:field_sender:entity:url]\">[message:field_sender:entity:display-name]</a> sent you a message on the European Innovation Council platform:</p>\r\n\r\n<ul>\r\n\t<li>[message:created:eu_short_date_hour]</li>\r\n\t<li>[message:field_sender:entity:display-name]</li>\r\n\t<li>[message:field_sender:entity:mail]</li>\r\n\t<li>[message:field_subject]</li>\r\n\t<li>[message:field_contact_category:entity:name]</li>\r\n\t<li>[message:field_body]</li>\r\n</ul>\r\n\r\n<p>You can reply to <u><a href=\"[message:field_sender:entity:url]\">[message:field_sender:entity:display-name]</a></u>&nbsp;by&nbsp;<a href=\"[message:author:url:absolute]/contact\"><u>clicking here</u></a>.</p>\r\n\r\n<p><em>The EIC Community team</em></p>\r\n"
+    format: full_html
+settings:
+  'token options':
+    clear: true
+    'token replace': true
+  purge_override: false
+  purge_methods: {  }

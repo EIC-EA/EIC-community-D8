@@ -1,0 +1,26 @@
+uuid: 13545a4c-5348-433d-8565-e5a0aba5a848
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.message.field_sender
+    - message.template.notify_contact_user
+id: message.notify_contact_user.field_sender
+field_name: field_sender
+entity_type: message
+bundle: notify_contact_user
+label: Sender
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:group_membership'
+  handler_settings:
+    target_bundles: null
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+field_type: entity_reference

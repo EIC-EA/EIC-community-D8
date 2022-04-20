@@ -1,5 +1,5 @@
 {% set label_element = label_element|default('span') %}
-{% set icon_file_path = icon_file_path ? icon_file_path : '/themes/custom/eic_community/dist/images/sprite/custom/sprites/custom.svg' %}
+{% set icon_file_path = eic_icon_path ? eic_icon_path : '/themes/custom/eic_community/dist/images/sprite/custom/sprites/custom.svg' %}
 {% if name is not empty %}
   <div class="ecl-author ecl-author--is-{{ size|default('default') }} {{ updates.value ? ' ecl-author--has-updates ' }} {{ extra_classes }}">
     {% if not display_avatar_only %}

@@ -16,16 +16,7 @@ group_type: organisation
 permissions_ui: false
 permissions:
   - 'access content overview'
-  - 'access discussions overview'
-  - 'access events overview'
-  - 'access files overview'
   - 'access group content menu overview'
-  - 'access group search overview'
-  - 'access group_node overview'
-  - 'access latest activity stream'
-  - 'access members overview'
-  - 'access news overview'
-  - 'access wiki overview'
   - 'administer members'
   - 'join group'
   - 'view group'

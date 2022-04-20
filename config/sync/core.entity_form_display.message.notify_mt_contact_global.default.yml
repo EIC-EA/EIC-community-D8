@@ -1,0 +1,54 @@
+uuid: a70264a3-b0ab-4187-9cbe-7e2ff38f47d2
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.message.notify_mt_contact_global.field_body
+    - field.field.message.notify_mt_contact_global.field_contact_category
+    - field.field.message.notify_mt_contact_global.field_sender
+    - field.field.message.notify_mt_contact_global.field_subject
+    - message.template.notify_mt_contact_global
+  module:
+    - text
+id: message.notify_mt_contact_global.default
+targetEntityType: message
+bundle: notify_mt_contact_global
+mode: default
+content:
+  field_body:
+    type: text_textarea
+    weight: 0
+    region: content
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+  field_contact_category:
+    type: entity_reference_autocomplete
+    weight: 2
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_sender:
+    type: entity_reference_autocomplete
+    weight: 3
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_subject:
+    type: string_textfield
+    weight: 1
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+hidden: {  }

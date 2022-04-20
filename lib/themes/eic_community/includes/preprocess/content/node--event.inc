@@ -6,10 +6,10 @@
  */
 
 use Drupal\Core\Locale\CountryManager;
-use Drupal\eic_helper\DateTimeHelper;
 use Drupal\eic_community\ValueObject\ImageValueObject;
-use Drupal\eic_search\SearchHelper;
+use Drupal\eic_helper\DateTimeHelper;
 use Drupal\eic_overviews\GroupOverviewPages;
+use Drupal\eic_search\SearchHelper;
 use Drupal\group\Entity\GroupInterface;
 
 /**
@@ -24,6 +24,7 @@ function eic_community_preprocess_node__event(array &$variables) {
       _eic_community_render_event_detail_page($variables, $variables['node']);
       break;
     case 'teaser':
+    case 'small_teaser':
       $teaser = _eic_community_prepare_node_teaser_array($node);
 
       // Get the thumbnail.

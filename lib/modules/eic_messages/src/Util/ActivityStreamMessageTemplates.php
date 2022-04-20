@@ -6,7 +6,6 @@ use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\eic_messages\MessageIdentifierInterface;
 use Drupal\eic_messages\MessageTemplateTypes;
 use Drupal\message\MessageTemplateInterface;
-use InvalidArgumentException;
 
 /**
  * Helper class for activity stream message templates.
@@ -17,6 +16,11 @@ final class ActivityStreamMessageTemplates implements MessageIdentifierInterface
    * Message template for inserted/updated articles.
    */
   const ARTICLE_INSERT_UPDATE = 'stream_article_insert_update';
+
+  /**
+   * Message template for inserted/updated events.
+   */
+  const EVENT_INSERT_UPDATE = 'stream_event_insert_update';
 
   /**
    * Message template for inserted/updated discussions.
@@ -49,7 +53,7 @@ final class ActivityStreamMessageTemplates implements MessageIdentifierInterface
   const COMMENT_INSERT_UPDATE = 'stream_wiki_page_insert_update';
 
   /**
-   * Used for shared content activity items
+   * Used for shared content activity items.
    */
   const SHARE_CONTENT = 'stream_share_content';
 
@@ -61,15 +65,16 @@ final class ActivityStreamMessageTemplates implements MessageIdentifierInterface
   private static $templates = [
     'node' => [
       'article' => self::ARTICLE_INSERT_UPDATE,
+      'event' => self::EVENT_INSERT_UPDATE,
       'discussion' => self::DISCUSSION_INSERT_UPDATE,
       'document' => self::DOCUMENT_INSERT_UPDATE,
       'gallery' => self::GALLERY_INSERT_UPDATE,
       'video' => self::VIDEO_INSERT_UPDATE,
-      'wiki_page' => self::WIKI_INSERT_UPDATE
+      'wiki_page' => self::WIKI_INSERT_UPDATE,
     ],
     'comment' => [
       'node_comment' => self::COMMENT_INSERT_UPDATE,
-    ]
+    ],
   ];
 
   /**
@@ -97,7 +102,7 @@ final class ActivityStreamMessageTemplates implements MessageIdentifierInterface
     try {
       self::getTemplate($entity);
     }
-    catch (InvalidArgumentException $e) {
+    catch (\InvalidArgumentException $e) {
       return FALSE;
     }
 
@@ -115,7 +120,7 @@ final class ActivityStreamMessageTemplates implements MessageIdentifierInterface
    */
   public static function getTemplate(ContentEntityInterface $entity): string {
     if (!isset(self::$templates[$entity->getEntityTypeId()][$entity->bundle()])) {
-      throw new InvalidArgumentException('Invalid entity / bundle provided');
+      throw new \InvalidArgumentException('Invalid entity / bundle provided');
     }
 
     return self::$templates[$entity->getEntityTypeId()][$entity->bundle()];

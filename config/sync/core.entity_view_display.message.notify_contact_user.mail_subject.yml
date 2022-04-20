@@ -1,0 +1,24 @@
+uuid: 21098602-7e99-4989-aecf-712c89c1bdcb
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.message.mail_subject
+    - field.field.message.notify_contact_user.field_body
+    - field.field.message.notify_contact_user.field_sender
+    - field.field.message.notify_contact_user.field_subject
+    - message.template.notify_contact_user
+id: message.notify_contact_user.mail_subject
+targetEntityType: message
+bundle: notify_contact_user
+mode: mail_subject
+content:
+  partial_0:
+    weight: 0
+    region: content
+hidden:
+  field_body: true
+  field_sender: true
+  field_subject: true
+  partial_1: true
+  search_api_excerpt: true

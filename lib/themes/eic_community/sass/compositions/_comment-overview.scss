@@ -1,7 +1,7 @@
 .ecl-comment-overview {
   $node: &;
 
-  @include ecl-media-breakpoint-down('xs') {
+  @include ecl-media-breakpoint-down("xs") {
     .ecl-container {
       padding: 0;
     }
@@ -12,17 +12,15 @@
     transition: padding 200ms ease-in-out;
 
     #{$node}--is-pending & {
-      padding-bottom: #{map-get($ecl-media, '4xs') * 3};
+      padding-bottom: #{map-get($ecl-media, "4xs") * 3};
     }
   }
-
-
 
   &__form-wrapper,
   &__items,
   &__item {
     padding-top: 0;
-    //margin: map-get($ecl-spacing, 'xl') 0;
+    margin: map-get($ecl-spacing, "xl") 0 0;
     transition: opacity 200ms ease-in-out;
 
     &:first-child {
@@ -40,15 +38,15 @@
 
   &__form-wrapper,
   &__item {
-    padding: map-get($ecl-spacing, 'xl') ;
-    margin: map-get($ecl-spacing, 'xl') 0;
-    background-color: map-get($ecl-colors, 'white');
+    padding: map-get($ecl-spacing, "xl");
+    margin: map-get($ecl-spacing, "xl") 0 0;
+    background-color: map-get($ecl-colors, "white");
   }
 
   &__form-wrapper {
-    padding: map-get($ecl-spacing, 'xl');
-    @include ecl-media-breakpoint-down('md') {
-      padding: map-get($ecl-spacing, 'l');
+    padding: map-get($ecl-spacing, "xl");
+    @include ecl-media-breakpoint-down("md") {
+      padding: map-get($ecl-spacing, "l");
       & .ecl-comment__author {
         display: none;
       }
@@ -71,15 +69,11 @@
     left: 50%;
     bottom: 0;
     transform: translateX(-50%);
-    width: map-get($ecl-media, '4xs');
-    height: map-get($ecl-media, '4xs');
+    width: map-get($ecl-media, "4xs");
+    height: map-get($ecl-media, "4xs");
     opacity: 0;
     visibility: hidden;
-    transition:
-      bottom 200ms ease-in-out 0ms,
-      opacity 200ms ease-in-out 0ms,
-      visibility 0ms ease-in-out 200ms
-    ;
+    transition: bottom 200ms ease-in-out 0ms, opacity 200ms ease-in-out 0ms, visibility 0ms ease-in-out 200ms;
 
     &::before,
     &::after {
@@ -91,30 +85,27 @@
       height: 100%;
       left: 50%;
       border-radius: 50%;
-      margin-left: #{0 - map-get($ecl-media, '4xs') / 2};
-      margin-top: #{0 - map-get($ecl-media, '4xs') / 2};
-      animation: scale-up-and-down 1.0s infinite ease-in-out;
+      margin-left: #{0 - map-get($ecl-media, "4xs") / 2};
+      margin-top: #{0 - map-get($ecl-media, "4xs") / 2};
+      animation: scale-up-and-down 1s infinite ease-in-out;
     }
 
     &::before {
       opacity: 0.5;
-      background-color: map-get($ecl-colors, 'blue-100');
+      background-color: map-get($ecl-colors, "blue-100");
     }
 
     &::after {
       opacity: 0.5;
-      background-color: map-get($ecl-colors, 'blue-50');
+      background-color: map-get($ecl-colors, "blue-50");
       animation-delay: -0.5s;
     }
 
     #{$node}--is-pending & {
       opacity: 1;
       visibility: visible;
-      bottom: map-get($ecl-media, '4xs');
-      transition:
-        bottom 200ms ease-in-out 0ms,
-        opacity 200ms ease-in-out 0ms,
-        visibility 0ms ease-in-out 0ms;
+      bottom: map-get($ecl-media, "4xs");
+      transition: bottom 200ms ease-in-out 0ms, opacity 200ms ease-in-out 0ms, visibility 0ms ease-in-out 0ms;
     }
   }
 
@@ -122,12 +113,12 @@
   &__no-items {
     text-align: center;
     font-weight: $ecl-font-weight-bold;
-    @include ecl-responsive-font('introduction');
-    margin: map-get($ecl-spacing, 'xl') 0;
-    color: ecl-typography('color', 'meta');
+    @include ecl-responsive-font("introduction");
+    margin: map-get($ecl-spacing, "xl") 0;
+    color: ecl-typography("color", "meta");
 
-    @include ecl-media-breakpoint-up('md') {
-      margin: map-get($ecl-spacing, '2xl') 0;
+    @include ecl-media-breakpoint-up("md") {
+      margin: map-get($ecl-spacing, "2xl") 0;
     }
 
     &:first-child {
@@ -143,7 +134,7 @@
     @extend .ecl-u-type-heading-3;
 
     margin-top: 0;
-    @include ecl-media-breakpoint-down('md') {
+    @include ecl-media-breakpoint-down("md") {
       padding-left: 1rem;
     }
   }

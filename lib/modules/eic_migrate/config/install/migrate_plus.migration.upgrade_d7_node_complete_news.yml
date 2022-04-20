@@ -76,21 +76,30 @@ process:
         target_id:
           - plugin: migration_lookup
             source: target_id
+            no_stub: true
+            migration: upgrade_d7_node_complete_document
+          - plugin: node_complete_node_lookup
+          - plugin: entity_value
+            entity_type: node
+            field_name: field_document_media
+          - plugin: skip_on_empty
+            method: process
+          - plugin: extract
+            index:
+              - 0
+              - target_id
+  field_vocab_geo:
+    - plugin: sub_process
+      source: c4m_vocab_geo
+      process:
+        target_id:
+          - plugin: migration_lookup
+            source: smed_id
+            no_stub: true
             migration:
-              - upgrade_d7_file_document_to_media
-  # TODO: Implement when Regions & countries SMED migration is done.
-#  field_vocab_geo:
-#    - plugin: sub_process
-#      source: c4m_vocab_geo
-#      process:
-#        target_id:
-#          - plugin: migration_lookup
-#            source: smed_id
-#            no_stub: true
-#            migration:
-#              - smed_TODO
-  # TODO: Validate implementation when field_vocab_languages is added to CT News.
-  field_vocab_languages:
+              - smed_regions_countries_lvl1
+              - smed_regions_countries_lvl2
+  field_language:
     - plugin: sub_process
       source: c4m_vocab_language
       process:
@@ -136,4 +145,7 @@ migration_dependencies:
     - smed_thematics_topics_lvl1
     - smed_thematics_topics_lvl2
     - smed_thematics_topics_lvl3
+    - smed_regions_countries_lvl1
+    - smed_regions_countries_lvl2
+    - upgrade_d7_node_complete_document
   optional: { }

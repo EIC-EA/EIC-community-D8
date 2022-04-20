@@ -6,6 +6,7 @@ use Drupal\comment\CommentInterface;
 use Drupal\comment\Entity\Comment;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\eic_comments\CommentsHelper;
+use Drupal\eic_content\Constants\DefaultContentModerationStates;
 use Drupal\eic_media_statistics\EntityFileDownloadCount;
 use Drupal\flag\FlaggingInterface;
 use Drupal\flag\FlagServiceInterface;
@@ -84,11 +85,13 @@ class ProcessorMessage extends DocumentProcessor {
   public function process(Document &$document, array $fields, array $items = []): void {
     $node_ref = isset($fields['its_message_node_ref_id']) ? $fields['its_message_node_ref_id'] : NULL;
     $comment_ref = isset($fields['its_message_comment_ref_id']) ? $fields['its_message_comment_ref_id'] : NULL;
+    $moderation_state = DefaultContentModerationStates::PUBLISHED_STATE;
 
     if (!$node_ref && !$comment_ref) {
       return;
     }
 
+    $node = NULL;
     if ($comment_ref) {
       $comment = Comment::load($comment_ref);
 
@@ -98,7 +101,7 @@ class ProcessorMessage extends DocumentProcessor {
 
       $node = $comment->getCommentedEntity();
     }
-    else {
+    elseif ($node_ref) {
       $node = Node::load($node_ref);
     }
 
@@ -143,6 +146,13 @@ class ProcessorMessage extends DocumentProcessor {
       $map_type
     );
 
+    $this->addOrUpdateDocumentField(
+      $document,
+      'ss_message_moderation_state',
+      $fields,
+      $moderation_state
+    );
+
     $message = Message::load($fields['its_message_id']);
     // Index all followers link to the message data.
     if ($message instanceof MessageInterface) {
@@ -171,6 +181,10 @@ class ProcessorMessage extends DocumentProcessor {
       $node_follows = $this->getFollowUidByFlag('follow_content', $node);
       $group_follows = [];
       $node_group_id = array_key_exists('its_group_id', $fields) ? $fields['its_group_id'] : NULL;
+
+      if (!$node_group_id) {
+        return;
+      }
 
       if ($group = Group::load($node_group_id)) {
         $group_follows = $this->getFollowUidByFlag('follow_group', $group);
@@ -218,13 +232,6 @@ class ProcessorMessage extends DocumentProcessor {
   }
 
   /**
-   * @inerhitDoc
-   */
-  public function supports(array $fields): bool {
-    return $fields['ss_search_api_datasource'] === 'entity:message';
-  }
-
-  /**
    * @param string $flag_id
    *   The flag id.
    * @param \Drupal\Core\Entity\EntityInterface $entity
@@ -240,6 +247,13 @@ class ProcessorMessage extends DocumentProcessor {
     return array_map(function (FlaggingInterface $flagging) {
       return (int) $flagging->getOwnerId();
     }, $follows);
+  }
+
+  /**
+   * @inerhitDoc
+   */
+  public function supports(array $fields): bool {
+    return $fields['ss_search_api_datasource'] === 'entity:message';
   }
 
 }

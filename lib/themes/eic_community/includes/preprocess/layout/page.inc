@@ -165,6 +165,8 @@ function eic_community_preprocess_page(array &$variables): void {
   }
 
   _preprocess_group_page($variables);
+
+  _preprocess_page_not_found($variables);
 }
 
 /**
@@ -187,6 +189,7 @@ function _preprocess_node_page(&$variables) {
           '#theme' => 'eic_community_author',
           '#name' => $author['name'],
           '#path' => $author['path'] ?? '',
+          '#image' => $author['image'] ?? NULL,
         ];
 
         if (isset($author['image'])) {
@@ -195,11 +198,17 @@ function _preprocess_node_page(&$variables) {
         /* @todo Missing follow author flag when user is logged in. */
 
         $publish_date_format = $variables['node']->getType() === 'news' ? 'd F' : 'd F Y';
-
+        $is_restricted = $node->private->value === '1';
+        $tag = [
+          'type' => 'display',
+          'label' =>  $is_restricted ? t('Restricted') : t('Public'),
+        ];
         $variables['editorial_header'] = [
-          // @todo Not the correct display, has to be created in storybook.
-          'type' => [
-            'label' => $node->private->value === '1' ? t('Community members only') : t('Public'),
+          'tags' => [
+            [
+              'extra_classes' => 'ecl-tag--is-' . ($is_restricted ? 'restricted' : 'public'),
+              'tag' => $tag,
+            ],
           ],
           'meta' => [
             ['label' => $node->type->entity->label()],
@@ -302,5 +311,15 @@ function _preprocess_group_page(&$variables) {
     // Adds url.path as cache context otherwise anonymous users will always see
     // the same message depending on which group the user visited first.
     $variables['#cache']['contexts'][] = 'url.path';
+  }
+}
+
+/**
+ * Preprocess page not found.
+ */
+function _preprocess_page_not_found(&$variables) {
+  if (\Drupal::routeMatch()->getRouteName() === 'system.404') {
+    // Adds URL to the frontpage.
+    $variables['front_url'] = Url::fromRoute('<front>')->toString();
   }
 }

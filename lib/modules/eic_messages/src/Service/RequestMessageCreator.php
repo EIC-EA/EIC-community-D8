@@ -8,6 +8,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Logger\LoggerChannelTrait;
 use Drupal\Core\Render\RendererInterface;
+use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\eic_flags\RequestStatus;
 use Drupal\eic_flags\RequestTypes;
@@ -17,8 +18,10 @@ use Drupal\eic_flags\Service\RequestHandlerCollector;
 use Drupal\eic_flags\Service\TransferOwnershipRequestHandler;
 use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_messages\Hooks\MessageTokens;
+use Drupal\eic_messages\Util\NotificationMessageTemplates;
 use Drupal\eic_user\UserHelper;
 use Drupal\flag\FlaggingInterface;
+use Drupal\group\Entity\GroupInterface;
 use Drupal\message\Entity\Message;
 use Drupal\message_notify\MessageNotifier;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -74,6 +77,13 @@ class RequestMessageCreator implements ContainerInjectionInterface {
   protected $notifier;
 
   /**
+   * The current user account.
+   *
+   * @var \Drupal\Core\Session\AccountProxyInterface
+   */
+  protected $currentUser;
+
+  /**
    * RequestMessageCreator constructor.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
@@ -88,6 +98,8 @@ class RequestMessageCreator implements ContainerInjectionInterface {
    *   The renderer service.
    * @param \Drupal\message_notify\MessageNotifier $notifier
    *   The message notifier.
+   * @param \Drupal\Core\Session\AccountProxyInterface $current_user
+   *   The current user account.
    */
   public function __construct(
     EntityTypeManagerInterface $entity_type_manager,
@@ -95,7 +107,8 @@ class RequestMessageCreator implements ContainerInjectionInterface {
     MessageBusInterface $message_bus,
     RequestHandlerCollector $collector,
     RendererInterface $renderer,
-    MessageNotifier $notifier
+    MessageNotifier $notifier,
+    AccountProxyInterface $current_user
   ) {
     $this->entityTypeManager = $entity_type_manager;
     $this->userHelper = $user_helper;
@@ -103,6 +116,7 @@ class RequestMessageCreator implements ContainerInjectionInterface {
     $this->collector = $collector;
     $this->renderer = $renderer;
     $this->notifier = $notifier;
+    $this->currentUser = $current_user;
   }
 
   /**
@@ -115,7 +129,8 @@ class RequestMessageCreator implements ContainerInjectionInterface {
       $container->get('eic_messages.message_bus'),
       $container->get('eic_flags.handler_collector'),
       $container->get('renderer'),
-      $container->get('message_notify.sender')
+      $container->get('message_notify.sender'),
+      $container->get('current_user')
     );
   }
 
@@ -199,8 +214,25 @@ class RequestMessageCreator implements ContainerInjectionInterface {
 
     }
 
+    // Default entity owner.
+    $entity_owner = $entity->getOwner();
+
+    // Group owner might not be the group creator. Therefore we need to make
+    // sure we get the correct owner.
+    if (
+      $entity instanceof GroupInterface &&
+      $group_owner = EICGroupsHelper::getGroupOwner($entity)
+    ) {
+      $entity_owner = $group_owner;
+    }
+
     /** @var \Drupal\user\UserInterface[] $to */
-    $to = [$entity->getOwner(), $flagging->getOwner()];
+    $to = [$flagging->getOwner()];
+    // If the user who made the request is not the owner of the entity, we want
+    // to make sure the owner also receives a notification.
+    if ($entity_owner->id() !== $flagging->getOwner()->id()) {
+      $to[] = $entity_owner;
+    }
     $response = $flagging->get('field_request_status')->value;
     $message_name = $handler->getMessageByAction($response);
     if (!$message_name) {
@@ -241,6 +273,25 @@ class RequestMessageCreator implements ContainerInjectionInterface {
       }
 
       $this->messageBus->dispatch($message);
+    }
+
+    // Sends notification about group deletion to group the owner. We cannot
+    // send the notification in hook_eic_groups_group_predelete() because when
+    // a group is deleted via request, at that point the group owner has already
+    // been deleted.
+    if (
+      $entity_owner->id() !== $flagging->getOwner()->id() &&
+      $handler->getType() === RequestTypes::DELETE &&
+      RequestStatus::ACCEPTED === $response &&
+      $entity instanceof GroupInterface
+    ) {
+      $this->messageBus->dispatch([
+        'template' => NotificationMessageTemplates::GROUP_DELETE,
+        'field_entity_type' => ['target_id' => $entity->getEntityTypeId()],
+        'field_referenced_entity_label' => $entity->label(),
+        'field_event_executing_user' => $this->currentUser->id(),
+        'uid' => $entity_owner->id(),
+      ]);
     }
   }
 

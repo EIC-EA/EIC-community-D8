@@ -14,6 +14,7 @@ dependencies:
     - field.field.node.event.field_location_type
     - field.field.node.event.field_organised_by
     - field.field.node.event.field_social_links
+    - field.field.node.event.field_tags
     - field.field.node.event.field_vocab_event_type
     - field.field.node.event.field_vocab_geo
     - field.field.node.event.field_vocab_topics
@@ -38,6 +39,11 @@ content:
     settings: {  }
     third_party_settings: {  }
     weight: 101
+    region: content
+  content_moderation_control:
+    settings: {  }
+    third_party_settings: {  }
+    weight: -20
     region: content
   field_date_range:
     type: daterange_default
@@ -163,6 +169,11 @@ content:
     third_party_settings: {  }
     weight: 10
     region: content
+  flag_follow_event:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 10
+    region: content
   flag_highlight_content:
     settings: {  }
     third_party_settings: {  }
@@ -205,6 +216,7 @@ content:
     region: content
 hidden:
   extra_field_eic_theme_helper_short_title_with_fallback: true
+  field_tags: true
   langcode: true
   published_at: true
   search_api_excerpt: true

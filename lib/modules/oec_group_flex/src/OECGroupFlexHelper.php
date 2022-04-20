@@ -13,6 +13,12 @@ use Drupal\oec_group_flex\Plugin\CustomRestrictedVisibilityManager;
  */
 class OECGroupFlexHelper {
 
+  const GROUP_TYPE_OWNER_ROLE = 'owner';
+
+  const GROUP_TYPE_ADMINISTRATOR_ROLE = 'admin';
+
+  const GROUP_TYPE_MEMBER_ROLE = 'member';
+
   /**
    * The group_flex group service.
    *
@@ -190,6 +196,25 @@ class OECGroupFlexHelper {
       }
     }
     return $settings;
+  }
+
+  /**
+   * Returns the correct role machine name for the given group type and role.
+   *
+   * @param string $group_type
+   *   The group type ID.
+   * @param string $role
+   *   The role to check. Can be either "admin", "owner" or "member".
+   *
+   * @return string|null
+   *   The group role machine name or NULL if not found.
+   */
+  public static function getGroupTypeRole(string $group_type, string $role) {
+    return in_array($role, [
+      self::GROUP_TYPE_ADMINISTRATOR_ROLE,
+      self::GROUP_TYPE_OWNER_ROLE,
+      self::GROUP_TYPE_MEMBER_ROLE,
+    ]) ? $group_type . '-' . $role : NULL;
   }
 
 }

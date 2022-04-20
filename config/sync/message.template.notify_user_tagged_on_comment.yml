@@ -17,7 +17,7 @@ text:
     value: "<p>[message:field_event_executing_user:entity:display-name]&nbsp;tagged you in a comment</p>\r\n"
     format: full_html
   -
-    value: "<div style=\"font-family:Arial;font-size:16px;line-height:1.4;text-align:left;color:#404040;\"><a href=\"[message:field_event_executing_user:entity:url]\" style=\"font-weight: normal; text-decoration: none; color: #004494\" target=\"_blank\">[message:field_event_executing_user:entity:display-name]</a> tagged you in a comment:</div>\r\n\r\n<div style=\"font-family:Arial;font-size:16px;line-height:1.4;text-align:left;color:#404040;\">[message:field_rendered_content:value]</div>\r\n\r\n<div style=\"font-family:Arial;font-size:16px;line-height:1.4;text-align:left;color:#404040;\"><a href=\"[message:field_referenced_node:entity:url]?highlighted-comment=[message:field_referenced_comment:entity:cid]\" style=\"display:inline-block;width:170px;background:#FFD617;color:#000000;font-family:Arial;font-size:14px;font-weight:bold;line-height:120%;margin:0;text-decoration:underline;text-transform:none;padding:12px 15px;mso-padding-alt:0px;border-radius:0;\" target=\"_blank\">View comment </a></div>\r\n"
+    value: "<div><a href=\"[message:field_event_executing_user:entity:url]\" target=\"_blank\">[message:field_event_executing_user:entity:display-name]</a> tagged you in a comment:</div>\r\n\r\n<div>[message:field_rendered_content:value]</div>\r\n"
     format: full_html
 settings:
   'token options':

@@ -14,14 +14,14 @@ label: 'LOG :: Request Accepted'
 description: 'Log message for accepted delete or archival requests'
 text:
   -
-    value: "<p>Request&nbsp;[message:field_referenced_flag:entity:flag-type] accepted</p>\r\n\r\n<ul>\r\n\t<li>Entity:&nbsp;[message:field_referenced_flag:entity:target_entity:title]</li>\r\n\t<li>Type of entity:&nbsp;[message:field_referenced_flag:entity:entity-type]</li>\r\n\t<li>Author:&nbsp;[message:field_referenced_flag:entity:target_entity:author:field_first_name:value]&nbsp;[message:field_referenced_flag:entity:target_entity:author:field_last_name:value]</li>\r\n\t<li>Requester:&nbsp;[message:field_referenced_flag:entity:author:field_first_name:value]&nbsp;[message:field_referenced_flag:entity:author:field_last_name:value]</li>\r\n\t<li>Moderator:&nbsp;[message:field_referenced_flag:entity:field_request_moderator:entity:field_first_name:value]&nbsp;[message:field_referenced_flag:entity:field_request_moderator:entity:field_last_name:value]</li>\r\n\t<li>Request reason:&nbsp;[message:field_referenced_flag:entity:field_request_reason:value]</li>\r\n\t<li>Response:&nbsp;[message:field_referenced_flag:entity:field_request_response:value]</li>\r\n\t<li>Created at:&nbsp;[message:field_referenced_flag:entity:date]</li>\r\n\t<li>Closed at:&nbsp;[message:field_referenced_flag:entity:field_request_closed_date]</li>\r\n</ul>\r\n"
+    value: "<p>Request&nbsp;[message:field_referenced_flag:entity:flag-type] accepted</p>\r\n\r\n<ul>\r\n\t<li>Entity:&nbsp;[message:field_referenced_flag:entity:target_entity:title]</li>\r\n\t<li>Type of entity:&nbsp;[message:field_referenced_flag:entity:entity-type]</li>\r\n\t<li>Author:&nbsp;[message:field_referenced_flag:entity:target_entity:author:display-name]</li>\r\n\t<li>Requester:&nbsp;[message:field_referenced_flag:entity:author:display-name]</li>\r\n\t<li>Moderator:&nbsp;[message:field_referenced_flag:entity:field_request_moderator:entity:display-name]</li>\r\n\t<li>Request reason:&nbsp;[message:field_referenced_flag:entity:field_request_reason:value]</li>\r\n\t<li>Response:&nbsp;[message:field_referenced_flag:entity:field_request_response:value]</li>\r\n\t<li>Created at:&nbsp;[message:field_referenced_flag:entity:date]</li>\r\n\t<li>Closed at:&nbsp;[message:field_referenced_flag:entity:field_request_closed_date]</li>\r\n</ul>\r\n"
     format: full_html
   -
     value: "<p>[message:raw-value:field_rendered_content]</p>\r\n"
     format: full_html
 settings:
   'token options':
-    clear: false
+    clear: true
     'token replace': true
   purge_override: false
   purge_methods: {  }

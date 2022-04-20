@@ -17,17 +17,25 @@ use Drupal\group\Plugin\GroupContentAccessControlHandler;
  */
 class GroupContentNodeAccessControlHandler extends GroupContentAccessControlHandler {
 
+  const LIMITED_OPERATIONS_FOR_CONTENT_ADMINS = [
+    'delete' => [
+      'book'
+    ]
+  ];
+
   /**
    * {@inheritdoc}
    */
-  public function entityAccess(EntityInterface $entity, $operation, AccountInterface $account, $return_as_object = FALSE) {
+  public function entityAccess(
+    EntityInterface $entity,
+    $operation,
+    AccountInterface $account,
+    $return_as_object = FALSE
+  ) {
     $access = parent::entityAccess($entity, $operation, $account, $return_as_object);
 
-    /** @var \Drupal\group\Entity\Storage\GroupContentStorageInterface $storage */
-    $storage = $this->entityTypeManager->getStorage('group_content');
-    $group_contents = $storage->loadByEntity($entity);
-
-    if (empty($group_contents)) {
+    /** @var \Drupal\group\Entity\GroupInterface $group */
+    if (empty($group = \Drupal::service('eic_groups.helper')->getOwnerGroupByEntity($entity))) {
       return $access;
     }
 
@@ -44,12 +52,10 @@ class GroupContentNodeAccessControlHandler extends GroupContentAccessControlHand
           break;
         }
 
-        $group_content = reset($group_contents);
-        $group = $group_content->getGroup();
         $membership = $group->getMember($account);
         $moderation_state = $group->get('moderation_state')->value;
 
-        // User is a group admin, so we allow access.
+        // If user is a group admin, we allow access.
         if ($membership && EICGroupsHelper::userIsGroupAdmin($group, $account, $membership)) {
           $access = GroupAccessResult::allowed()
             ->addCacheableDependency($account)
@@ -58,10 +64,19 @@ class GroupContentNodeAccessControlHandler extends GroupContentAccessControlHand
           break;
         }
 
+        // Check if user has access to the group, if not we deny access to the
+        // node.
+        if (!$group->access('view')) {
+          $access = AccessResult::forbidden()
+            ->addCacheableDependency($account)
+            ->addCacheableDependency($membership)
+            ->addCacheableDependency($entity);
+        }
+
         // At this point it means the user is not a poweruser neither a group
-        // admin. Therefore, If group is blocked no user other can view the its
+        // admin. Therefore, if group is blocked no user other can view its
         // content besides powerusers or group admins.
-        if ($moderation_state !== GroupsModerationHelper::GROUP_PUBLISHED_STATE) {
+        if ($moderation_state === GroupsModerationHelper::GROUP_BLOCKED_STATE) {
           $access = AccessResult::forbidden()
             ->addCacheableDependency($account)
             ->addCacheableDependency($group)
@@ -86,31 +101,38 @@ class GroupContentNodeAccessControlHandler extends GroupContentAccessControlHand
           break;
         }
 
-        // We check if the user is a member of a group where this node is
+        // We check if the user is a member of the group where this node is
         // referenced and if so, we allow access to edit the node if the owner
         // allowed members to do so via "member_content_edit_access" property.
-        foreach ($group_contents as $group_content) {
-          $group = $group_content->getGroup();
+        $editable_by_members = $entity->get(NodeProperty::MEMBER_CONTENT_EDIT_ACCESS)->value;
 
-          $editable_by_members = $entity->get(NodeProperty::MEMBER_CONTENT_EDIT_ACCESS)->value;
+        if ($editable_by_members) {
+          $membership = $group->getMember($account);
 
-          if ($editable_by_members) {
-            $membership = $group->getMember($account);
-
-            $access = AccessResult::allowedIf($membership)
-              ->addCacheableDependency($account)
-              ->addCacheableDependency($membership)
-              ->addCacheableDependency($entity);
-            break;
-          }
+          $access = AccessResult::allowedIf($membership)
+            ->addCacheableDependency($account)
+            ->addCacheableDependency($membership)
+            ->addCacheableDependency($entity);
+          break;
         }
         break;
 
       case 'delete':
+        $roles = $account->getRoles();
+        $allowed_roles = [
+          UserHelper::ROLE_DRUPAL_ADMINISTRATOR
+        ];
+
         // Allow access to power users.
-        if ($is_power_user) {
-          break;
+        if (
+          in_array($entity->bundle(), self::LIMITED_OPERATIONS_FOR_CONTENT_ADMINS[$operation])
+          && empty(array_intersect($roles, $allowed_roles))
+        ) {
+          $access = AccessResult::forbidden()
+            ->addCacheableDependency($account)
+            ->addCacheableDependency($entity);
         }
+
         break;
 
     }

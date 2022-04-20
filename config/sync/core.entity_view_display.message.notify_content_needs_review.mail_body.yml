@@ -1,6 +1,6 @@
 uuid: a2dd4e5b-9480-4794-966d-c8dcdb99bdb4
 langcode: en
-status: false
+status: true
 dependencies:
   config:
     - core.entity_view_mode.message.mail_body

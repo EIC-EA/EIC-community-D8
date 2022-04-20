@@ -90,10 +90,14 @@
         {% endif %}
       </div>
 
-      {% if output_content_after %}
+      {% set content_after %}
         <div class="ecl-base-layout__content-after">
           {{ output_content_after }}
         </div>
+      {% endset %}
+
+      {% if content_after|striptags|trim is not empty %}
+        {{ content_after }}
       {% endif %}
     </div>
   </div>

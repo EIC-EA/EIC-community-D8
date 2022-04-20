@@ -1,0 +1,6 @@
+services:
+  eic_group_membership.commands:
+    class: \Drupal\eic_group_membership\Commands\GroupMembershipCommands
+    arguments: ['@entity_type.manager', '@queue', '@flag', '@eic_flags.helper', '@oec_group_flex.group_visibility.storage', '@config.factory']
+    tags:
+      - { name: drush.command }

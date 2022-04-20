@@ -1,0 +1,21 @@
+uuid: 4c674f62-2ed7-484e-9b85-2b2e182f17eb
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.message.field_body
+    - message.template.notify_contact_user
+  module:
+    - text
+id: message.notify_contact_user.field_body
+field_name: field_body
+entity_type: message
+bundle: notify_contact_user
+label: Body
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long

@@ -7,3 +7,4 @@ core_version_requirement: ^8 || ^9
 php: 7.3
 dependencies:
   - eic_groups:eic_groups
+  - eic_messages

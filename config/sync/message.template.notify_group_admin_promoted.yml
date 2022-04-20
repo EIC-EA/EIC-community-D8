@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - filter.format.full_html
     - filter.format.plain_text
   module:
     - eic_messages
@@ -14,14 +15,14 @@ label: 'NOTIFY :: MT09 :: Group admin promoted'
 description: ''
 text:
   -
-    value: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
+    value: 'You are now administrator for [message:field_group_ref:entity:type-name]: [message:field_group_ref:entity:title]'
     format: plain_text
   -
-    value: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
-    format: plain_text
+    value: "<p>Dear <a href=\"[message:author:url]\">[message:author:display-name]</a>,</p>\r\n\r\n<p>You are now an administrator of the [message:field_group_ref:entity:type-name]&nbsp;<u><a href=\"[message:field_group_ref:entity:url]\">[message:field_group_ref:entity:title]</a></u></p>\r\n\r\n<p>Discover new functionalities and find out how you can administer this [message:field_group_ref:entity:type-name] by consulting the following&nbsp;<a href=\"[site:url]help-and-guidance\"><u>help section</u></a>.</p>\r\n\r\n<p>If you have any questions about your role as administrator, please feel free to&nbsp;<a href=\"[message:field_group_owner:entity:url]/contact\"><u>contact me</u></a>.<br />\r\n<br />\r\n<u><a href=\"[message:field_group_owner:entity:url]\">[message:field_group_owner:entity:display-name]</a></u><br />\r\n[message:field_group_ref:entity:type-name] Administrator -&nbsp;<u><a href=\"[message:field_group_ref:entity:url]\">[message:field_group_ref:entity:title]</a></u></p>\r\n"
+    format: full_html
 settings:
   'token options':
-    clear: false
+    clear: true
     'token replace': true
   purge_override: false
   purge_methods: {  }

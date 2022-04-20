@@ -1,0 +1,26 @@
+uuid: 2a7b15b4-953a-4d9a-b842-c8556c5f77c7
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.message.field_event_executing_user
+    - message.template.notify_group_wait_approval
+id: message.notify_group_wait_approval.field_event_executing_user
+field_name: field_event_executing_user
+entity_type: message
+bundle: notify_group_wait_approval
+label: 'Event executing user'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:group_membership'
+  handler_settings:
+    target_bundles: null
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+field_type: entity_reference

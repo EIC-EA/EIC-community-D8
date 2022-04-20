@@ -1,0 +1,19 @@
+uuid: 38bf80e1-cf46-46d2-837f-8925ca41dca5
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.message.field_entity_type
+    - message.template.stream_event_insert_update
+id: message.stream_event_insert_update.field_entity_type
+field_name: field_entity_type
+entity_type: message
+bundle: stream_event_insert_update
+label: 'Entity type'
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

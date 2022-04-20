@@ -26,8 +26,6 @@ class FormAlter {
    * @param $form_id
    */
   public function alterBulkGroupInvitation(&$form, FormStateInterface $form_state, $form_id) {
-    $match_limit = 50;
-
     /** @var \Drupal\group\Entity\GroupInterface $group */
     $group = \Drupal::routeMatch()->getParameter('group');
 
@@ -51,43 +49,19 @@ class FormAlter {
     $url_search = Url::fromRoute('eic_search.solr_search', [
       'datasource' => json_encode(['user']),
       'source_class' => UserInvitesListSourceType::class,
+      'page' => 1
     ])->toString();
 
-    $form['existing_users'] =
-      [
-        '#type' => 'entity_autocomplete',
-        '#tags' => TRUE,
-        '#target_type' => 'user',
-        '#maxlength' => 5000,
-        '#weight' => -2,
-        '#attributes' => [
-          'class' => ['hidden', 'entity-tree-reference-widget'],
-          'data-selected-terms' => json_encode($default_values),
-          'data-translations' => json_encode([
-            'select_value' => t('Select a value', [], ['context' => 'eic_search']),
-            'match_limit' => t(
-              'You can select only <b>@match_limit</b> top-level items.',
-              ['@match_limit' => $match_limit],
-              ['context' => 'eic_search']
-            ),
-            'search' => t('Search', [], ['context' => 'eic_search']),
-            'your_values' => t('Your selected values', [], ['context' => 'eic_search']),
-            'required_field' => t('This field is required', [], ['context' => 'eic_content']),
-          ]),
-          'data-terms-url' => $url_search,
-          'data-terms-url-search' => $url_search,
-          'data-terms-url-children' => $url_search,
-          'data-match-limit' => $match_limit,
-          'data-items-to-load' => 50,
-          'data-disable-top' => 0,
-          'data-load-all' => 1,
-          'data-ignore-current-user' => 1,
-          'data-search-specific-users' => 1,
-          'data-target-entity' => 'user',
-          'data-is-required' => FALSE,
-          'data-group-id' => $group->id(),
-        ],
-      ];
+    $form['existing_users'] = EntityTreeWidget::getEntityTreeFieldStructure(
+      [],
+      'user',
+      '',
+      50,
+      $url_search,
+      $url_search,
+      $url_search
+    );
+    $form['existing_users']['#weight'] = -2;
 
     $form['existing_users']['#attached']['library'][] = 'eic_community/react-tree-field';
 

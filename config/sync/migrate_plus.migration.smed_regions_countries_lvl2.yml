@@ -1,0 +1,64 @@
+uuid: 3d331c23-359e-43b0-b282-189d71618885
+langcode: en
+status: true
+dependencies: {  }
+id: smed_regions_countries_lvl2
+class: null
+field_plugin_method: null
+cck_plugin_method: null
+migration_tags:
+  - eic_smed_api_authentication
+migration_group: eic_smed_taxonomy
+label: 'SMED - Regions and Countries - Level 2'
+source:
+  plugin: eic_smed_url
+  taxonomy_vocabulary_smed_id: GeographicalMarkets
+  authentication:
+    plugin: basic
+    username: xxx
+    password: xxx
+  data_fetcher_plugin: eic_http_smed_taxonomy_post
+  data_parser_plugin: jsonpath
+  include_raw_data: true
+  track_changes: true
+  urls: {  }
+  item_selector: '$.Taxonomy.Group[*].Selector.Option[*]'
+  ids:
+    id:
+      type: string
+  fields:
+    -
+      name: id
+      label: ID
+      selector: Value
+    -
+      name: name
+      label: Name
+      selector: Name
+    -
+      name: parent
+      label: Parent
+      selector: Parent
+process:
+  name:
+    -
+      plugin: get
+      source: name
+  field_smed_id:
+    -
+      plugin: get
+      source: id
+  parent:
+    -
+      plugin: get
+      source: parent
+    -
+      plugin: migration_lookup
+      migration: smed_regions_countries_lvl1
+destination:
+  plugin: 'entity:taxonomy_term'
+  default_bundle: geo
+migration_dependencies:
+  required:
+    - smed_regions_countries_lvl1
+  optional: {  }

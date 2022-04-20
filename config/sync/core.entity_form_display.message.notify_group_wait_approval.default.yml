@@ -1,0 +1,34 @@
+uuid: 8b4cd22b-0dd1-4791-af36-e1403ac00fc8
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.message.notify_group_wait_approval.field_event_executing_user
+    - field.field.message.notify_group_wait_approval.field_group_ref
+    - message.template.notify_group_wait_approval
+id: message.notify_group_wait_approval.default
+targetEntityType: message
+bundle: notify_group_wait_approval
+mode: default
+content:
+  field_event_executing_user:
+    type: entity_reference_autocomplete
+    weight: 1
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_group_ref:
+    type: entity_reference_autocomplete
+    weight: 0
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+hidden: {  }

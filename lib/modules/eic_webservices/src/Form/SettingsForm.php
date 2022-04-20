@@ -61,6 +61,14 @@ class SettingsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
+    // SMED Url.
+    $form['smed_url'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('SMED Url'),
+      '#default_value' => $this->config('eic_webservices.settings')->get('smed_url'),
+      '#description' => $this->t('Defines the URL to the SME dashboard.'),
+    ];
+
     // API Key.
     $form['api_key'] = [
       '#type' => 'textfield',
@@ -119,6 +127,7 @@ class SettingsForm extends ConfigFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->config('eic_webservices.settings')
+      ->set('smed_url', $form_state->getValue('smed_url'))
       ->set('api_key', $form_state->getValue('api_key'))
       ->set('smed_id_field', $form_state->getValue('smed_id_field'))
       ->set('webservice_user_account', $form_state->getValue('webservice_user_account'))

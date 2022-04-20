@@ -22,6 +22,16 @@ final class NotificationMessageTemplates implements MessageIdentifierInterface {
   const USER_TAGGED_ON_COMMENT = 'notify_user_tagged_on_comment';
 
   /**
+   * Message template for notifying group visibility changes.
+   */
+  const GROUP_VISIBILITY_CHANGE = 'notify_group_access_change';
+
+  /**
+   * Message template for notifying group visibility changes.
+   */
+  const GROUP_DELETE = 'notify_group_deleted';
+
+  /**
    * {@inheritdoc}
    */
   public static function getMessageTemplatePrimaryKeys(MessageTemplateInterface $message_template) {

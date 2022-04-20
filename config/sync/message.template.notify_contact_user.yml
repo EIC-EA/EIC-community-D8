@@ -1,0 +1,27 @@
+uuid: f3903ec9-96d2-4218-b338-fe703f3f6ae1
+langcode: en
+status: true
+dependencies:
+  config:
+    - filter.format.full_html
+  module:
+    - eic_messages
+third_party_settings:
+  eic_messages:
+    message_template_type: notification
+template: notify_contact_user
+label: 'NOTIFY :: MT :: Contact user'
+description: 'Send an email to the target user in user contact form.'
+text:
+  -
+    value: "<p>[message:field_subject]</p>\r\n"
+    format: full_html
+  -
+    value: "<p>Dear <u><a href=\"[message:author:url:absolute]\">[message:author:display-name]</a></u>,<br />\r\n<br />\r\n<a href=\"[message:field_sender:entity:url]\">[message:field_sender:entity:display-name]</a>&nbsp;sent you a message on the European Innovation Council platform:<br />\r\n[message:field_body]<br />\r\n<br />\r\nYou can reply to <u><a href=\"[message:field_sender:entity:url]\">[message:field_sender:entity:display-name]</a></u>&nbsp;by&nbsp;<a href=\"[message:author:url:absolute]/contact\"><u>clicking here</u></a>.<br />\r\n<br />\r\nThe EIC Community team</p>\r\n"
+    format: full_html
+settings:
+  'token options':
+    clear: true
+    'token replace': true
+  purge_override: false
+  purge_methods: {  }

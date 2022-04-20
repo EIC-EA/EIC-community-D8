@@ -1,0 +1,24 @@
+uuid: 42a54078-6681-420c-9d3a-935b429a6b11
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.message.mail_body
+    - field.field.message.notify_admin_group_new_member.field_group_ref
+    - field.field.message.notify_admin_group_new_member.field_related_user
+    - message.template.notify_admin_group_new_member
+id: message.notify_admin_group_new_member.mail_body
+targetEntityType: message
+bundle: notify_admin_group_new_member
+mode: mail_body
+content:
+  partial_1:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  field_group_ref: true
+  field_related_user: true
+  partial_0: true
+  search_api_excerpt: true
