@@ -22,15 +22,15 @@
             <img class="ecl-global-header__logo-image ecl-global-header__logo-image--desktop" src="{{ logo.src_desktop }}" />
             <img class="ecl-global-header__logo-image ecl-global-header__logo-mobile" src="{{ logo.src_mobile }}" />
           {% endif %}
-          <span class="ecl-global-header__logo-title">{{ site_name }}</span>
+          <span class="ecl-global-header__logo-title"></span>
           {% if logo.href %}
             </a>
           {% endif %}
         </div>
       {% endif %}
 
-      {% if baseline %}
-        <span class="ecl-global-header__logo-baseline"><b>European Innovation Council</b><br>community</span>
+      {% if site_name %}
+        <span class="ecl-global-header__logo-baseline">{{ site_name }}</span>
       {% endif %}
 
       </div>
