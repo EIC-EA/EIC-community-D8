@@ -294,6 +294,11 @@ class CronOperations implements ContainerInjectionInterface {
 
     foreach ($results as $result) {
       $uid = $result['entity_id'];
+
+      if (0 === (int) $uid) {
+        continue;
+      }
+
       $gid = $result['gid'];
       $group_content_id = $result['id'];
 
