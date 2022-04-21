@@ -295,6 +295,7 @@ class CronOperations implements ContainerInjectionInterface {
     foreach ($results as $result) {
       $uid = $result['entity_id'];
 
+      /** @TODO handle the anonymous invite */
       if (0 === (int) $uid) {
         continue;
       }
