@@ -7,6 +7,7 @@ use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\eic_groups\Constants\GroupVisibilityType;
 use Drupal\eic_search\Collector\SourcesCollector;
 use Drupal\eic_search\Plugin\search_api\processor\GroupAccessContent;
+use Drupal\eic_search\Search\Sources\NewsStorySourceType;
 use Drupal\eic_search\Search\Sources\SourceTypeInterface;
 use Drupal\eic_topics\Constants\Topics;
 use Drupal\eic_user\UserHelper;
@@ -408,6 +409,7 @@ class SolrSearchManager {
     $this->generatePrefilterContentTypes();
     $this->generateExtraPrefilter();
     $this->generateAvoidGroupBookPage();
+    $this->generateIgnoreAnonymousNewsStoriesContent();
 
     $this->solrQuery->addParam('q', $this->rawQuery);
     $this->solrQuery->addParam('fq', $this->rawFieldQuery);
@@ -750,6 +752,22 @@ class SolrSearchManager {
     // Add filter if it's a book page not in a group. To avoid pre-generated book page.
     // Solr cannot handle negate OR in parentheses, so we need to do the reverse condition by negate it.
     $query = '-(!its_global_group_parent_id:("-1") OR (ss_global_content_type:book))';
+
+    $this->rawFieldQuery.= empty($this->rawFieldQuery) ?
+      "$query" :
+      " AND $query";
+  }
+
+  /**
+   * Prefilter news/story from content where user is anonymous and content coming from Organisation.
+   */
+  private function generateIgnoreAnonymousNewsStoriesContent() {
+    if (!$this->source instanceof NewsStorySourceType || !$this->currentUser->isAnonymous()) {
+      return;
+    }
+
+    // Do not include organisation news as anonymous.
+    $query = '(ss_global_group_parent_type:("" OR event OR group))';
 
     $this->rawFieldQuery.= empty($this->rawFieldQuery) ?
       "$query" :
