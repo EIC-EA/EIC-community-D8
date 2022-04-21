@@ -1,0 +1,26 @@
+uuid: ae6213d8-dfc0-45e2-8479-14ff87caa50d
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.message.field_event_executing_user
+    - message.template.notify_group_invitation_reminder
+id: message.notify_group_invitation_reminder.field_event_executing_user
+field_name: field_event_executing_user
+entity_type: message
+bundle: notify_group_invitation_reminder
+label: 'Event executing user'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:group_membership'
+  handler_settings:
+    target_bundles: null
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+field_type: entity_reference
