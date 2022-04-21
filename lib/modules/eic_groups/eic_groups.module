@@ -36,6 +36,7 @@ use Drupal\eic_user\UserHelper;
 use Drupal\flag\FlagInterface;
 use Drupal\group\Access\GroupAccessResult;
 use Drupal\group\Entity\GroupContent;
+use Drupal\group\Entity\GroupInterface;
 use Drupal\pathauto\PathautoGeneratorInterface;
 use Drupal\views\ViewExecutable;
 
@@ -840,6 +841,25 @@ function eic_groups_overview_page_access(EntityInterface $entity, $operation, Ac
   }
 
   return $access;
+}
+
+/**
+ * Implements hook_group_operations_alter().
+ */
+function eic_groups_entity_operation(EntityInterface $entity) {
+  if (!$entity instanceof GroupInterface) {
+    return [];
+  }
+
+  $current_user = \Drupal::currentUser();
+  if ($entity->hasPermission('administer members', $current_user->getAccount())) {
+    return [
+      'edit-members' => [
+        'title' => t('Edit members'),
+        'url' => Url::fromRoute('view.eic_group_members.page_group_members', ['group' => $entity->id()]),
+      ],
+    ];
+  }
 }
 
 /**
