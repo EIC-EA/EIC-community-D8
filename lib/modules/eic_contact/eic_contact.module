@@ -138,7 +138,7 @@ function _eic_contact_alter_submit(
     $bus->dispatch([
       'template' => 'notify_mt_contact_global',
       'field_sender' => ['target_id' => $current_user->id()],
-      'field_body' => $form_state->getValue('message')[0]['value'],
+      'field_body' => $form_state->getValue('field_contact_message')[0]['value'],
       'field_subject' => $form_state->getValue('subject')[0]['value'],
       'field_contact_category' => ['target_id' => $category_id],
       'uid' => $uid
@@ -153,7 +153,7 @@ function _eic_contact_alter_submit(
       'template' => 'notify_contact_global_copy',
       'field_sender' => ['target_id' => $current_user->id()],
       'field_subject' => $form_state->getValue('subject')[0]['value'],
-      'field_body' => $form_state->getValue('message')[0]['value'],
+      'field_body' => $form_state->getValue('field_contact_message')[0]['value'],
       'uid' => ['target_id' => $current_user->id()]
     ]);
   } else {
