@@ -5,6 +5,7 @@
  * Primary module hooks for EIC Message Notifications module.
  */
 
+use Drupal\comment\CommentInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\eic_message_subscriptions\Hooks\CronOperations;
@@ -95,6 +96,10 @@ function eic_message_subscriptions_message_subscribe_get_subscribers_alter(array
     return;
   }
 
+  if ($message->getTemplate()->id() === MessageSubscriptionTypes::NEW_COMMENT_REPLY) {
+    _eic_subscription_filter_comment_reply_subscribers($uids, $message);
+  }
+
   // Gets the executing user if exists.
   if ($message->hasField('field_event_executing_user')) {
     $executing_user = $message->get('field_event_executing_user')->entity;
@@ -111,6 +116,24 @@ function eic_message_subscriptions_message_subscribe_get_subscribers_alter(array
     $account_id = $delivery_candidate->getAccountId();
     if (!$subscription_message_checker->shouldSend($account_id, $message) && isset($uids[$account_id])) {
       unset($uids[$account_id]);
+    }
+  }
+}
+
+/**
+ * @param \Drupal\message_subscribe\Subscribers\DeliveryCandidateInterface[] $delivery_candidates
+ * @param \Drupal\message\MessageInterface $message
+ */
+function _eic_subscription_filter_comment_reply_subscribers(array &$delivery_candidates, MessageInterface $message) {
+  $comment = $message->get('field_referenced_comment')->entity;
+  if (!$comment instanceof CommentInterface || !$comment->hasParentComment()) {
+    return;
+  }
+
+  $parent_owner_id = (int) $comment->getParentComment()->getOwnerId();
+  foreach ($delivery_candidates as $key => $delivery_candidate) {
+    if ($parent_owner_id !== (int) $delivery_candidate->getAccountId()) {
+      unset($delivery_candidates[$key]);
     }
   }
 }
