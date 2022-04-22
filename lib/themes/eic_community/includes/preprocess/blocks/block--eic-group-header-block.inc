@@ -231,6 +231,7 @@ function eic_community_preprocess_eic_group_header_block(array &$variables) {
 
   switch ($group->getGroupType()->id()) {
     case 'group':
+    case 'event':
       $tags[] = [
         'type' => 'display',
         'label' => \Drupal::service('oec_group_flex.helper')->getGroupVisibilityTagLabel($group),
@@ -266,7 +267,7 @@ function eic_community_preprocess_eic_group_header_block(array &$variables) {
     foreach ($tags as $tag) {
       $variables['group_values']['tags'][] = [
         'extra_classes' => 'ecl-tag--is-' . strtolower($tag['label']),
-        'tag' => $tag
+        'tag' => $tag,
       ];
     }
   }
