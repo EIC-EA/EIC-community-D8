@@ -24,6 +24,10 @@
 
   &__logo {
     flex-shrink: 0;
+    @include ecl-media-breakpoint-down('md') {
+      max-width: 65px;
+      margin-right: .5em;
+    }
 
     @include ecl-media-breakpoint-up('md') {
       width: 100%;
@@ -45,15 +49,25 @@
     @include visually-hidden();
   }
 
+  &__logo-baseline {
+    @include ecl-media-breakpoint-down('sm') {
+      font-size: 11px;
+      margin-bottom: -3px;
+    }
+  }
+
   &__login-link {
     padding: map-get($ecl-spacing, 's');
+    @include ecl-media-breakpoint-down('md') {
+      padding: map-get($ecl-spacing, 'xs');
+    }
   }
 
   &__language-selector-wrapper,
   &__auth-wrapper {
     flex-shrink: 0;
     @include ecl-media-breakpoint-down('md') {
-      font-size: .85em;
+      font-size: .75em;
     }
   }
 
