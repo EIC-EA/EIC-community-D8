@@ -5,10 +5,15 @@ body {
 }
 
 .ecl-viewport {
+  min-height: 100vh;
   height: 100%;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+
+  .toolbar-fixed & {
+    min-height: calc(100vh - 80px);
+  }
 
   & > * {
     width: 100%;
