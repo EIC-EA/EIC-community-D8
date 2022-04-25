@@ -20,7 +20,7 @@
             {% endif %}
           {% else %}
             <picture>
-              <source media="(max-width: 768px)" srcset="{{ logo.src_mobile }}">
+              <source media="(max-width: 767px)" srcset="{{ logo.src_mobile }}">
               <source media="(min-width: 768px)" srcset="{{ logo.src_desktop }}">
               <img class="ecl-global-header__logo-image" src="{{ logo.src_desktop }}" alt="European Commission">
             </picture>
