@@ -195,6 +195,10 @@ function _eic_community_display_flags(&$variables) {
 function _eic_community_display_contributors(&$variables) {
   /** @var \Drupal\node\NodeInterface $node */
   $node = $variables['node'];
+  if ($node->bundle() !== 'story') {
+    return [];
+  }
+  
   $contributors = [];
 
   $contributors_fields = [
