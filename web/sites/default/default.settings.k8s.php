@@ -106,18 +106,6 @@ $settings['smed_api_taxonomy_endpoint'] = getenv('SMED_API_ENDPOINT');
 $config['eic_webservices.settings']['api_key'] = getenv('DRUPAL_WS_API_KEY');
 $config['eic_webservices.settings']['smed_url'] = getenv('DRUPAL_SMED_URL');
 
-$settings['reverse_proxy'] = TRUE;
-$settings['reverse_proxy_addresses'] = [gethostbyname('nginx')];
-$settings['reverse_proxy_trusted_headers'] = \Symfony\Component\HttpFoundation\Request::HEADER_X_FORWARDED_FOR | \Symfony\Component\HttpFoundation\Request::HEADER_X_FORWARDED_HOST | \Symfony\Component\HttpFoundation\Request::HEADER_X_FORWARDED_PORT | \Symfony\Component\HttpFoundation\Request::HEADER_X_FORWARDED_PROTO | \Symfony\Component\HttpFoundation\Request::HEADER_FORWARDED;
-// Only for local & dev environments as we do not support X-Forwarded-* headers for them.
-// Production/acceptance can use them instead.
-$settings['reverse_proxy_header_mapping'] = [
-  Request::HEADER_X_FORWARDED_HOST => 'X-Request-Host',
-  Request::HEADER_X_FORWARDED_FOR => 'X-Request-For',
-  Request::HEADER_X_FORWARDED_PORT => 'X-Request-Port',
-  Request::HEADER_X_FORWARDED_PROTO => 'X-Request-Proto',
-];
-
 $settings['eic_vod']['cloudfront_url'] = '';
 $settings['eic_vod']['cloudfront_api_key'] = '';
 
