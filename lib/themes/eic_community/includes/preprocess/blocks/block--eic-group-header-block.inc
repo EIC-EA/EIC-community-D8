@@ -265,13 +265,24 @@ function eic_community_preprocess_eic_group_header_block(array &$variables) {
   }
 
   if ($group->get('moderation_state')->value !== GroupsModerationHelper::GROUP_PUBLISHED_STATE) {
+    $id = 'public';
+    switch ($group->get('moderation_state')->value) {
+      case GroupsModerationHelper::GROUP_DRAFT_STATE:
+      case GroupsModerationHelper::GROUP_BLOCKED_STATE:
+        $id = 'private';
+        break;
+      case GroupsModerationHelper::GROUP_PENDING_STATE:
+        $id = 'restricted';
+        break;
+    }
+
     $tags[] = [
       'type' => 'display',
       'label' => ucfirst($group->get('moderation_state')->value),
-      'id' => 'restricted'
+      'id' => $id,
     ];
   }
-  
+
   if (!empty($tags)) {
     foreach ($tags as $tag) {
       $variables['group_values']['tags'][] = [
