@@ -286,7 +286,7 @@ function eic_community_preprocess_eic_group_header_block(array &$variables) {
   if (!empty($tags)) {
     foreach ($tags as $tag) {
       $variables['group_values']['tags'][] = [
-        'extra_classes' => 'ecl-tag--is-' . strtolower($tag['id']),
+        'extra_classes' => isset($tag['id']) ? 'ecl-tag--is-' . strtolower($tag['id']) : '',
         'tag' => $tag,
       ];
     }
