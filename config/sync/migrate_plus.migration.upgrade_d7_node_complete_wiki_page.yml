@@ -51,8 +51,8 @@ process:
       source: status
       default: published
       map:
-        0: draft
-        1: published
+        - draft
+        - published
   created: created
   changed: timestamp
   published_at: timestamp

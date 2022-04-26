@@ -72,17 +72,17 @@ process:
   changed: changed
   status: status
   thread: thread
-  'comment_body/value':
+  comment_body/value:
     -
       plugin: extract
       source: comment_body
       index:
         - 0
         - value
-  'comment_body/format':
+  comment_body/format:
     -
       plugin: default_value
-      default_value: 'basic_text'
+      default_value: basic_text
 destination:
   plugin: 'entity:comment'
 migration_dependencies:
