@@ -126,6 +126,24 @@ class GroupMessageCreator implements ContainerInjectionInterface {
     $original_state = $entity->original->get('moderation_state')
       ->getValue()[0]['value'];
 
+    // We never keep a refused state group, put default pending state.
+    if (GroupsModerationHelper::GROUP_REFUSED_STATE === $current_state) {
+      $entity->set('moderation_state', GroupsModerationHelper::GROUP_PENDING_STATE);
+
+      // If group was pending and has been refused, notify the user.
+      if (GroupsModerationHelper::GROUP_PENDING_STATE === $original_state) {
+        $message = Message::create([
+          'template' => 'notify_group_request_denied',
+          'field_group_ref' => ['target_id' => $entity->id()],
+          'field_reason' => $entity->getRevisionLogMessage(),
+        ]);
+
+        $message->setOwnerId($author_id);
+        $this->messageBus->dispatch($message);
+        return;
+      }
+    }
+
     // Get the transition.
     $delimiter = '-->';
     $workflow_transition = $original_state . $delimiter . $current_state;

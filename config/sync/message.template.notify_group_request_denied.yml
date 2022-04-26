@@ -1,0 +1,27 @@
+uuid: c5394072-4b3e-4c5c-8b32-ade2dcc17128
+langcode: en
+status: true
+dependencies:
+  config:
+    - filter.format.full_html
+  module:
+    - eic_messages
+third_party_settings:
+  eic_messages:
+    message_template_type: notification
+template: notify_group_request_denied
+label: 'NOTIFY :: MT03 :: Group type request rejected'
+description: ''
+text:
+  -
+    value: "<p>Your [message:field_group_ref:entity:type] request for [message:field_group_ref:entity:title] was denied</p>\r\n"
+    format: full_html
+  -
+    value: "<p>Dear <u><a href=\"[message:author:url]\">[message:author:display-name]</a></u>,</p>\r\n\r\n<p>We're letting you know your request to create your [message:field_group_ref:entity:type] was rejected:</p>\r\n\r\n<p><a href=\"[message:field_group_ref:entity:url]\">[message:field_group_ref:entity:title]</a><br />\r\nReason for rejecting this new [message:field_group_ref:entity:type]:<br />\r\n[message:field_reason]</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p>The EIC Community team</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p>&nbsp;</p>\r\n"
+    format: full_html
+settings:
+  'token options':
+    clear: true
+    'token replace': true
+  purge_override: false
+  purge_methods: {  }

@@ -14,13 +14,12 @@ dependencies:
     - field.field.group.group.field_vocab_topics
     - field.field.group.group.field_welcome_message
     - group.type.group
-    - workflows.workflow.groups
   module:
-    - content_moderation
     - eic_content
     - media_library
     - path
     - text
+    - workflow_buttons
 id: group.group.default
 targetEntityType: group
 bundle: group
@@ -110,6 +109,12 @@ content:
       auto_select_parents: '1'
       load_all: 0
       ignore_current_user: 0
+      target_bundles: {  }
+      is_required: false
+      can_create_tag: false
+      search_label: 'Select a value'
+      search_placeholder: Search
+      selected_terms_label: 'Your selected values'
     third_party_settings: {  }
   field_welcome_message:
     type: text_textarea
@@ -140,10 +145,11 @@ content:
       include_locked: true
     third_party_settings: {  }
   moderation_state:
-    type: moderation_state_default
+    type: workflow_buttons
     weight: 3
     region: content
-    settings: {  }
+    settings:
+      show_current_state: '1'
     third_party_settings: {  }
   path:
     type: path
