@@ -206,9 +206,9 @@ class UserHelper {
     $media_picture = $user->get('field_media')->referencedEntities();
     /** @var File|NULL $file */
     $file = $media_picture ? File::load($media_picture[0]->get('oe_media_image')->target_id) : '';
-    $file_url = $file ? file_url_transform_relative(file_create_url($file->get('uri')->value)) : '';
 
-    return $file_url;
+    return $file ? \Drupal::service('file_url_generator')
+      ->transformRelative(file_create_url($file->get('uri')->value)) : '';;
   }
 
   /**
