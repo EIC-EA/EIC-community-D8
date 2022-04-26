@@ -7,6 +7,7 @@
 
 use Drupal\Core\Url;
 use Drupal\eic_community\ValueObject\ImageValueObject;
+use Drupal\eic_groups\GroupsModerationHelper;
 use Drupal\eic_overviews\GlobalOverviewPages;
 use Drupal\eic_search\SearchHelper;
 
@@ -229,11 +230,14 @@ function eic_community_preprocess_eic_group_header_block(array &$variables) {
 
   $variables['group_values']['stats'] = $stats;
 
+  $tags = [];
   switch ($group->getGroupType()->id()) {
     case 'group':
+      $visibility = \Drupal::service('oec_group_flex.helper')->getGroupVisibilityTagLabel($group);
       $tags[] = [
         'type' => 'display',
-        'label' => \Drupal::service('oec_group_flex.helper')->getGroupVisibilityTagLabel($group),
+        'label' => $visibility,
+        'id' => strtolower($visibility),
       ];
       break;
     case 'organisation':
@@ -258,15 +262,21 @@ function eic_community_preprocess_eic_group_header_block(array &$variables) {
         ];
       }, $types);
       break;
-    default:
-      $tags = [];
   }
 
+  if ($group->get('moderation_state')->value !== GroupsModerationHelper::GROUP_PUBLISHED_STATE) {
+    $tags[] = [
+      'type' => 'display',
+      'label' => ucfirst($group->get('moderation_state')->value),
+      'id' => 'restricted'
+    ];
+  }
+  
   if (!empty($tags)) {
     foreach ($tags as $tag) {
       $variables['group_values']['tags'][] = [
-        'extra_classes' => 'ecl-tag--is-' . strtolower($tag['label']),
-        'tag' => $tag
+        'extra_classes' => 'ecl-tag--is-' . strtolower($tag['id']),
+        'tag' => $tag,
       ];
     }
   }
