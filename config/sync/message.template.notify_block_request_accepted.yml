@@ -18,7 +18,7 @@ text:
     value: "<p>[message:field_referenced_flag:entity:target_entity:title] is blocked</p>\r\n"
     format: basic_text
   -
-    value: "<p>Dear <a href=\"[message:author:url]\">[message:author:display-name]</a>,</p>\r\n\r\n<p><a href=\"[message:field_referenced_flag:entity:target_entity:url]\">[message:field_referenced_flag:entity:target_entity:title]</a> was blocked by <a href=\"[message:field_referenced_flag:entity:author:url]\">[message:field_referenced_flag:entity:author:display-name]</a>.</p>\r\n\r\n<p>Reason:<br />\r\n[message:field_referenced_flag:entity:field_request_reason:value]</p>\r\n\r\n<p>If you have any questions, please feel free to <a href=\"mailto:EISMEA-SME-HELPDESK@ec.europa.eu\"><u>contact us</u></a>.</p>\r\n\r\n<p>The European Innovation Council team</p>\r\n"
+    value: "<p>Dear <a href=\"[message:author:url]\"><u>[message:author:display-name]</u></a>,</p>\r\n\r\n<p><a href=\"[message:field_referenced_flag:entity:target_entity:url]\"><u>[message:field_referenced_flag:entity:target_entity:title]</u></a> was blocked by <a href=\"[message:field_referenced_flag:entity:author:url]\"><u>[message:field_referenced_flag:entity:author:display-name]</u></a>.</p>\r\n\r\n<p>Reason:<br />\r\n[message:field_referenced_flag:entity:field_request_reason:value]</p>\r\n\r\n<p>If you have any questions, please feel free to <a href=\"mailto:EISMEA-SME-HELPDESK@ec.europa.eu\"><u>contact us</u></a>.</p>\r\n\r\n<p>The European Innovation Council team</p>\r\n"
     format: full_html
 settings:
   'token options':

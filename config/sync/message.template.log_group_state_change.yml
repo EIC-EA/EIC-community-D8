@@ -14,7 +14,7 @@ label: 'LOG :: MT37 :: Group state change'
 description: 'Log message about group state change'
 text:
   -
-    value: "<p>The group <a href=\"[message:field_group_ref:entity:url]\">[message:field_group_ref:entity:title]</a> changed from [message:field_previous_moderation_state:value] to [message:field_moderation_state:value] state by <a href=\"[message:author:url]\">[message:author:display-name]</a>.</p>\r\n"
+    value: "<p>The group <a href=\"[message:field_group_ref:entity:url]\"><u>[message:field_group_ref:entity:title]</u></a> changed from [message:field_previous_moderation_state:value] to [message:field_moderation_state:value] state by <a href=\"[message:author:url]\"><u>[message:author:display-name]</u></a>.</p>\r\n"
     format: full_html
   -
     value: "<p>[message:raw-value:field_rendered_content]</p>\r\n"

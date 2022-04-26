@@ -18,7 +18,7 @@ text:
     value: 'MT19 :: New comment on content'
     format: plain_text
   -
-    value: "<p>New comment from [message:field_event_executing_user:entity:display-name] on content <a href=\"[message:field_referenced_comment:entity:entity:url]\">[message:field_referenced_comment:entity:entity:title]</a></p>\r\n"
+    value: "<p>New comment from [message:field_event_executing_user:entity:display-name] on content <a href=\"[message:field_referenced_comment:entity:entity:url]\"><u>[message:field_referenced_comment:entity:entity:title]</u></a></p>\r\n"
     format: full_html
 settings:
   'token options':
