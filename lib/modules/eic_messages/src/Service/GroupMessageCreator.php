@@ -135,7 +135,11 @@ class GroupMessageCreator implements ContainerInjectionInterface {
         $message = Message::create([
           'template' => 'notify_group_request_denied',
           'field_group_ref' => ['target_id' => $entity->id()],
-          'field_reason' => $entity->getRevisionLogMessage(),
+          'field_reason' => $entity->getRevisionLogMessage() ?: t(
+            'No message left from the moderator.',
+            [],
+            ['context' => 'eic_messages']
+          ),
         ]);
 
         $message->setOwnerId($author_id);
