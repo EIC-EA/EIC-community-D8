@@ -69,7 +69,6 @@ function _eic_community_get_share_group_content_link(
     return [];
   }
 
-  static $formatted_groups;
   /** @var \Drupal\oec_group_flex\GroupVisibilityDatabaseStorage $group_visibility_storage */
   $group_visibility_storage = \Drupal::service('oec_group_flex.group_visibility.storage');
   $group_visibility_entity = $group_visibility_storage->load($current_group->id());
@@ -81,26 +80,12 @@ function _eic_community_get_share_group_content_link(
     return [];
   }
 
-  if (empty($formatted_groups)) {
-    $share_manager = \Drupal::service('eic_share_content.share_manager');
-    foreach ($share_manager->getShareableTargetGroupsForUser($account, $current_group) as $group) {
-      if (!isset($formatted_groups[$group->bundle()])) {
-        $formatted_groups[$group->bundle()] = [
-          'label' => $group->type->entity->label(),
-          'entities' => [],
-        ];
-      }
-
-      $formatted_groups[$group->bundle()]['entities'][] = [
-        'id' => $group->id(),
-        'label' => $group->label(),
-      ];
-    }
-  }
-
   return [
     '#theme' => 'eic_share_content_link',
-    '#groups' => $formatted_groups,
+    '#get_groups_url' => Url::fromRoute('eic_share_content.groups',[
+      'user' => $account->id(),
+      'group' => $current_group->id()
+    ])->toString(),
     '#endpoint' => Url::fromRoute('eic_share_content.share', [
       'group' => $current_group->id(),
       'node' => $node->id(),
