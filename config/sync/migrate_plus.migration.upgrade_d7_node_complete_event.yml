@@ -70,8 +70,8 @@ process:
       plugin: static_map
       source: status
       map:
-        0: draft
-        1: published
+        - draft
+        - published
   field_body:
     -
       plugin: eic_media_wysiwyg_filter

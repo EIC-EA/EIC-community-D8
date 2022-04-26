@@ -17,7 +17,7 @@ text:
     value: "<p>[message:field_subject]</p>\r\n"
     format: full_html
   -
-    value: "<p>Dear <u><a href=\"[message:author:url:absolute]\">[message:author:display-name]</a></u>,<br />\r\n<br />\r\n<a href=\"[message:field_sender:entity:url]\">[message:field_sender:entity:display-name]</a>&nbsp;sent you a message on the European Innovation Council platform:<br />\r\n[message:field_body]<br />\r\n<br />\r\nYou can reply to <u><a href=\"[message:field_sender:entity:url]\">[message:field_sender:entity:display-name]</a></u>&nbsp;by&nbsp;<a href=\"[message:author:url:absolute]/contact\"><u>clicking here</u></a>.<br />\r\n<br />\r\nThe EIC Community team</p>\r\n"
+    value: "<p>Dear <u><a href=\"[message:author:url:absolute]\">[message:author:display-name]</a></u>,<br />\r\n<br />\r\n<a href=\"[message:field_sender:entity:url]\">[message:field_sender:entity:display-name]</a>&nbsp;sent you a message on the European Innovation Council platform:<br />\r\n[message:field_body]<br />\r\n<br />\r\nYou can reply to <u><a href=\"[message:field_sender:entity:url]\">[message:field_sender:entity:display-name]</a></u>&nbsp;by&nbsp;<a href=\"[message:field_sender:entity:url:absolute]/contact\"><u>clicking here</u></a>.<br />\r\n<br />\r\nThe EIC Community team</p>\r\n"
     format: full_html
 settings:
   'token options':
