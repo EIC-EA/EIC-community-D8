@@ -193,6 +193,7 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
     $current_group_route = $this->groupsHelper->getGroupFromRoute();
     $user_group_roles = [];
     $account = \Drupal::currentUser();
+    $current_user = User::load(\Drupal::currentUser()->id());
 
     if ($current_group_route) {
       $membership = $current_group_route->getMember($account);
@@ -205,57 +206,8 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
     );
 
     $contributors_data = [];
-    $current_user = User::load(\Drupal::currentUser()->id());
-
-    if ('story' === $node->getType()) {
-      $contributors = $node->get('field_story_paragraphs')->referencedEntities();
-    }
-    else {
-      $contributors = $node->hasField('field_related_contributors') ?
-        $node->get('field_related_contributors')->referencedEntities() :
-        [];
-    }
-
-    $contributors = array_filter(
-      $contributors,
-      function (ParagraphInterface $paragraph) {
-        return !empty($paragraph->get('field_user_ref')->referencedEntities());
-      }
-    );
-
-    $users = array_map(function (ParagraphInterface $paragraph) {
-      return $paragraph->get('field_user_ref')->referencedEntities()[0]->id();
-    }, $contributors);
-
-    // Grab users who commented the node to the list of contributors.
-    if ($comment_contributorIds = $this->getNodeCommentContributorIds($node)) {
-      foreach ($comment_contributorIds as $comment_contributorId) {
-        if (!in_array($comment_contributorId['uid'], $users)) {
-          $users[] = intval($comment_contributorId['uid']);
-        }
-      }
-    }
-
-    $users = array_unique(array_values($users), SORT_NUMERIC);
-
-    $contributors_data['items'] = [];
-
-    if (
-      $node->getOwner() instanceof UserInterface &&
-      (int) $node->getOwnerId() !== 0 &&
-      !in_array($node->getOwnerId(), $users)
-    ) {
-      $contributors_data['items'][] = eic_community_get_teaser_user_display(
-        $node->getOwner()
-      );
-    }
-
-    $users = User::loadMultiple($users);
-
-    foreach ($users as $user) {
-      $contributors_data['items'][] = eic_community_get_teaser_user_display(
-        $user
-      );
+;    if ($node->bundle() !== 'news') {
+      $contributors_data = $this->getContributors($node);
     }
 
     $group_contents = GroupContent::loadByEntity($node);
@@ -439,6 +391,68 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
         '#is_anonymous' => $current_user->isAnonymous(),
         '#can_view_comments' => $can_view_comments,
       ];
+  }
+
+  /**
+   * @param \Drupal\node\NodeInterface $node
+   *
+   * @return array
+   * @throws \Drupal\Core\Entity\EntityMalformedException
+   * @throws \Drupal\Core\TypedData\Exception\MissingDataException
+   */
+  private function getContributors(NodeInterface $node): array {
+    $contributors_data = [];
+    if ('story' === $node->getType()) {
+      $contributors = $node->get('field_story_paragraphs')->referencedEntities();
+    }
+    else {
+      $contributors = $node->hasField('field_related_contributors') ?
+        $node->get('field_related_contributors')->referencedEntities() :
+        [];
+    }
+
+    $contributors = array_filter(
+      $contributors,
+      function (ParagraphInterface $paragraph) {
+        return !empty($paragraph->get('field_user_ref')->referencedEntities());
+      }
+    );
+
+    $users = array_map(function (ParagraphInterface $paragraph) {
+      return $paragraph->get('field_user_ref')->referencedEntities()[0]->id();
+    }, $contributors);
+
+    // Grab users who commented the node to the list of contributors.
+    if ($comment_contributorIds = $this->getNodeCommentContributorIds($node)) {
+      foreach ($comment_contributorIds as $comment_contributorId) {
+        if (!in_array($comment_contributorId['uid'], $users)) {
+          $users[] = intval($comment_contributorId['uid']);
+        }
+      }
+    }
+
+    $users = array_unique(array_values($users), SORT_NUMERIC);
+    $contributors_data['items'] = [];
+
+    if (
+      $node->getOwner() instanceof UserInterface &&
+      (int) $node->getOwnerId() !== 0 &&
+      !in_array($node->getOwnerId(), $users)
+    ) {
+      $contributors_data['items'][] = eic_community_get_teaser_user_display(
+        $node->getOwner()
+      );
+    }
+
+    $users = User::loadMultiple($users);
+
+    foreach ($users as $user) {
+      $contributors_data['items'][] = eic_community_get_teaser_user_display(
+        $user
+      );
+    }
+
+    return $contributors_data;
   }
 
   /**
