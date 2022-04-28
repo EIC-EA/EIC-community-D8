@@ -94,6 +94,12 @@ if (!\Drupal\Core\Installer\InstallerKernel::installationAttempted() && extensio
 }
 
 /**
+ * EU Login settings.
+ */
+// Allow self-registered users to login.
+$config['oe_authentication.settings']['assurance_level'] ='LOW';
+
+/**
  * SMED API connection information.
  */
 $settings['smed_api_taxonomy_username'] = getenv('SMED_API_USER');
