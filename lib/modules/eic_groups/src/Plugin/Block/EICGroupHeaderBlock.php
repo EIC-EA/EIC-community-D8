@@ -12,10 +12,12 @@ use Drupal\Core\Render\Markup;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\Url;
+use Drupal\eic_content\Constants\DefaultContentModerationStates;
 use Drupal\eic_group_statistics\GroupStatisticsHelperInterface;
 use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_groups\EICGroupsHelperInterface;
 use Drupal\eic_groups\GroupsModerationHelper;
+use Drupal\eic_user\UserHelper;
 use Drupal\flag\FlagServiceInterface;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\group\GroupMembership;
@@ -192,6 +194,26 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
     // Get group content operation links.
     $node_operation_links = $this->eicGroupsHelper->getGroupContentOperationLinks($group, ['node'], $cacheable_metadata);
     $user_operation_links = $this->eicGroupsHelper->getGroupContentOperationLinks($group, ['user'], $cacheable_metadata);
+
+    // If groups is archived, we remove all actions except the request delete.
+    if (
+      DefaultContentModerationStates::ARCHIVED_STATE === $group->get('moderation_state')->value &&
+      !UserHelper::isPowerUser($this->currentUser)
+    ) {
+      foreach ($group_operation_links as $key => $groupOperationLink) {
+        if ($key !== 'request_delete') {
+          unset($group_operation_links[$key]);
+        }
+      }
+
+      foreach ($user_operation_links as $key => $user_operation_link) {
+        if ($key !== 'group-request-delete') {
+          unset($user_operation_links[$key]);
+        }
+      }
+
+      $node_operation_links = [];
+    }
 
     $operation_links = [];
     // Get login link for anonymous users.
