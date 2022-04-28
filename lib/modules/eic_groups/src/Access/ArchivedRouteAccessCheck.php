@@ -31,21 +31,13 @@ class ArchivedRouteAccessCheck implements AccessInterface {
     }
 
     if (
-      !$group instanceof GroupInterface ||
-      $group->get('moderation_state')->value !== DefaultContentModerationStates::ARCHIVED_STATE
+      $group instanceof GroupInterface &&
+      $group->get('moderation_state')->value === DefaultContentModerationStates::ARCHIVED_STATE
     ) {
-      return AccessResult::allowed()->addCacheableDependency($group);
+      return AccessResult::forbidden()->addCacheableDependency($group);
     }
 
-    // Keep the request delete.
-    if (
-      'entity.group.new_request' === $route_match->getRouteName() &&
-      'delete' === $route_match->getParameter('request_type')
-    ) {
-      return AccessResult::allowed()->addCacheableDependency($group);
-    }
-
-    return AccessResult::forbidden()->addCacheableDependency($group);
+    return AccessResult::allowed()->addCacheableDependency($group);
   }
 
 }

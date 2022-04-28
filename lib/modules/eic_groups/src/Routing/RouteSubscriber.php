@@ -34,6 +34,8 @@ class RouteSubscriber extends RouteSubscriberBase {
       'entity.group.edit_form',
       'view.eic_group_members.page_group_members',
       'ginvite.invitation.bulk',
+      'entity.group.join',
+      'entity.group.group_request_membership',
     ];
 
     foreach ($denied_routes_archived_group as $route_name) {
