@@ -151,7 +151,7 @@ function eic_groups_preprocess_views_view_field(&$vars) {
     if ($group->access('view')) {
       $group_url = $group->toUrl('canonical', ['language' => $group->language()]);
       $group_link = Link::fromTextAndUrl($group->label(), $group_url)->toRenderable();
-      $group_label = render($group_link);
+      $group_label = \Drupal::service('renderer')->render($group_link);
     }
     else {
       $group_label = $group->label();
