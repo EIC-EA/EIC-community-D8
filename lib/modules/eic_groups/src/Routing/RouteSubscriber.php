@@ -25,6 +25,27 @@ class RouteSubscriber extends RouteSubscriberBase {
       $add_route->setRequirement('_orphan_group_content_access_check', 'TRUE');
     }
 
+    $denied_routes_archived_group = [
+      'entity.group.new_request',
+      'entity.group_content.create_form',
+      'entity.group_content.add_form',
+      'entity.group.leave',
+      'entity.group.new_request',
+      'entity.group.edit_form',
+      'view.eic_group_members.page_group_members',
+      'ginvite.invitation.bulk',
+    ];
+
+    foreach ($denied_routes_archived_group as $route_name) {
+      $route = $collection->get($route_name);
+
+      if (!$route instanceof Route) {
+        continue;
+      }
+
+      $route->addRequirements(['_archived_route_access_check' => 'TRUE']);
+    }
+
     $this->alterGroupInviteRoutes($collection);
     $this->alterGroupPagesRoutes($collection);
   }

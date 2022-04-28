@@ -195,26 +195,6 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
     $node_operation_links = $this->eicGroupsHelper->getGroupContentOperationLinks($group, ['node'], $cacheable_metadata);
     $user_operation_links = $this->eicGroupsHelper->getGroupContentOperationLinks($group, ['user'], $cacheable_metadata);
 
-    // If groups is archived, we remove all actions except the request delete.
-    if (
-      DefaultContentModerationStates::ARCHIVED_STATE === $group->get('moderation_state')->value &&
-      !UserHelper::isPowerUser($this->currentUser)
-    ) {
-      foreach ($group_operation_links as $key => $groupOperationLink) {
-        if ($key !== 'request_delete') {
-          unset($group_operation_links[$key]);
-        }
-      }
-
-      foreach ($user_operation_links as $key => $user_operation_link) {
-        if ($key !== 'group-request-delete') {
-          unset($user_operation_links[$key]);
-        }
-      }
-
-      $node_operation_links = [];
-    }
-
     $operation_links = [];
     // Get login link for anonymous users.
     if ($login_link = $this->getAnonymousLoginLink($group)) {
@@ -378,6 +358,10 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
    *   A renderable array of flag links.
    */
   private function getGroupFlagLinks(GroupInterface $group) {
+    if ($group->get('moderation_state')->value === DefaultContentModerationStates::ARCHIVED_STATE) {
+      return [];
+    }
+
     $group_flags = [];
 
     $group_flag_ids = self::getGroupHeaderFlagsIds();
