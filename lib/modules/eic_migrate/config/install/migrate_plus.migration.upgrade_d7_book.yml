@@ -12,27 +12,34 @@ migration_tags:
 migration_group: migrate_drupal_7
 label: Books
 source:
-  plugin: eic_book
+  plugin: eic_d7_book
   track_changes: true
 process:
   nid:
-    - plugin: get
+    -
+      plugin: get
       source: nid/0/nid
-    - plugin: skip_on_empty
+    -
+      plugin: skip_on_empty
       method: row
   book/bid:
-    - plugin: get
+    -
+      plugin: get
       source: bid/0/nid
-    - plugin: skip_on_empty
+    -
+      plugin: skip_on_empty
       method: process
   book/weight:
-    - plugin: get
+    -
+      plugin: get
       source: weight
   book/pid:
-    - plugin: skip_on_empty
+    -
+      plugin: skip_on_empty
       method: process
       source: plid
-    - plugin: migration_lookup
+    -
+      plugin: migration_lookup
       migration: upgrade_d7_book
 destination:
   plugin: eic_book
