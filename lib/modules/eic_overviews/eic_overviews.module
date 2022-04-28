@@ -34,7 +34,7 @@ function template_preprocess_overview_page(array &$variables) {
   /** @var \Drupal\eic_overviews\Entity\OverviewPage $entity */
   $entity = $variables['elements']['#overview_page'];
   $file = $entity->get('banner_image')->referencedEntities();
-  $file_url = $file ? file_url_transform_relative(file_create_url(reset($file)->get('uri')->value)) : NULL;
+  $file_url = $file ? \Drupal::service('file_url_generator')->transformRelative(file_create_url(reset($file)->get('uri')->value)) : NULL;
   $variables['banner_image_url'] = $file_url;
 
   foreach (Element::children($variables['elements']) as $key) {

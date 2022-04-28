@@ -5,14 +5,13 @@ namespace Drupal\eic_groups;
 use CommerceGuys\Addressing\AddressFormat\AddressField;
 use Drupal\address\FieldHelper;
 use Drupal\Component\Datetime\TimeInterface;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\Locale\CountryManager;
-use Drupal\message\MessageInterface;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageException;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Locale\CountryManager;
 use Drupal\Core\Path\CurrentPathStack;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -33,6 +32,7 @@ use Drupal\group\GroupMembership;
 use Drupal\group\Plugin\GroupContentEnablerManagerInterface;
 use Drupal\group_flex\Plugin\GroupVisibilityManager;
 use Drupal\group_permissions\Entity\GroupPermissionInterface;
+use Drupal\message\MessageInterface;
 use Drupal\node\Entity\Node;
 use Drupal\node\NodeInterface;
 use Drupal\oec_group_flex\OECGroupFlexHelper;
@@ -415,7 +415,6 @@ class EICGroupsHelper implements EICGroupsHelperInterface {
     CacheableMetadata $cacheable_metadata = NULL
   ) {
     $operation_links = [];
-
     foreach ($group->getGroupType()->getInstalledContentPlugins() as $plugin) {
       /** @var \Drupal\group\Plugin\GroupContentEnablerInterface $plugin */
       if (!empty($limit_entities) && !in_array($plugin->getEntityTypeId(), $limit_entities)) {

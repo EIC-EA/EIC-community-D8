@@ -11,6 +11,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Drupal\eic_content\Services\EntityTreeManager;
 use Drupal\eic_content\TreeWidget\TreeWidgetProperties;
+use Drupal\taxonomy\Entity\Term;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -200,7 +201,24 @@ class EntityTreeWidget extends WidgetBase {
     $settings = $this->getFieldSetting('handler_settings');
     $entity_type = $this->getFieldSetting('target_type');
 
-    $preselected_items = $this->formatPreselection($items->referencedEntities(), $entity_type);
+    $user_input = $form_state->getUserInput();
+    $input_topics = array_key_exists($items->getName(), $user_input) ?
+      $user_input[$items->getName()] :
+      NULL;
+
+    if ($input_topics) {
+      $entities_id = explode(',', $input_topics);
+      $entities_id = array_map(function($input_topic) {
+        return EntityAutocomplete::extractEntityIdFromAutocompleteInput($input_topic);
+      }, $entities_id);
+      $entities = 'taxonomy_term' !== $entity_type ?
+        $this->treeManager->getTreeWidgetProperty($entity_type)->loadEntities($entities_id) :
+        Term::loadMultiple($entities_id);
+      $preselected_items = $this->formatPreselection($entities, $entity_type);
+    } else {
+      $preselected_items = $this->formatPreselection($items->referencedEntities(), $entity_type);
+    }
+
 
     $options = [
       'match_top_level_limit' => $this->getSetting(TreeWidgetProperties::OPTION_ITEMS_TO_LOAD),
@@ -279,7 +297,7 @@ class EntityTreeWidget extends WidgetBase {
           'tid' => $entity->id(),
           'parent' => $parent,
         ];
-      }, $entities)
+      }, array_values($entities))
     );
   }
 

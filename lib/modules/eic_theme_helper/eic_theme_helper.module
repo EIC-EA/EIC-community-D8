@@ -195,5 +195,6 @@ function template_preprocess_eic_theme_helper_call_status(array &$variables) {
  * Implements hook_locale_translation_projects_alter().
  */
 function eic_theme_helper_locale_translation_projects_alter(&$projects) {
-  $projects['eic_theme_helper']['info']['interface translation server pattern'] = drupal_get_path('module', 'eic_theme_helper') . '/translations/%project-%language.po';
+  $projects['eic_theme_helper']['info']['interface translation server pattern'] = \Drupal::service('extension.path.resolver')
+      ->getPath('module', 'eic_theme_helper') . '/translations/%project-%language.po';
 }

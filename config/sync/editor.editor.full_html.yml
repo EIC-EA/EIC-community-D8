@@ -21,6 +21,7 @@ settings:
             - BGColor
             - Bold
             - Italic
+            - Blockquote
             - Underline
             - Strike
             - Superscript

@@ -37,6 +37,14 @@ class GroupFeatures extends ProcessPluginBase implements ContainerFactoryPluginI
    * @var array
    */
   const GROUP_FEATURES_MAPPING = [
+    'event' => [
+      'c4m_features_og_documents' => 'eic_groups_files',
+      'c4m_features_og_highlights' => NULL,
+      'c4m_features_og_media' => 'eic_groups_files',
+      'c4m_features_og_members' => 'eic_groups_members',
+      'c4m_features_og_news' => 'eic_groups_news',
+      'c4m_features_og_wiki' => 'eic_groups_wiki',
+    ],
     'group' => [
       'c4m_features_og_discussions' => 'eic_groups_discussions',
       'c4m_features_og_documents' => 'eic_groups_files',

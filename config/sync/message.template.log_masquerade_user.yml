@@ -14,7 +14,7 @@ label: 'LOG :: Masquerade user'
 description: 'Log message when user masquerades as another user'
 text:
   -
-    value: "<p>User <a href=\"[message:author:url]\">[message:author:display-name]</a> masqueraded as <a href=\"[message:field_related_user:entity:url]\">[message:field_related_user:entity:display-name]</a> on&nbsp;[message:created:eu_short_date_hour].</p>\r\n"
+    value: "<p>User <a href=\"[message:author:url]\"><u>[message:author:display-name]</u></a> masqueraded as <a href=\"[message:field_related_user:entity:url]\"><u>[message:field_related_user:entity:display-name]</u></a> on&nbsp;[message:created:eu_short_date_hour].</p>\r\n"
     format: full_html
   -
     value: "<p>[message:raw-value:field_rendered_content]</p>\r\n"

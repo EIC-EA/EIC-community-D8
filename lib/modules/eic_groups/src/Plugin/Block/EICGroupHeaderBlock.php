@@ -261,7 +261,7 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
     $visible_group_operation_links = array_filter($group_operation_links, function ($item, $key) {
       return in_array(
         $key,
-        ['edit', 'delete', 'publish', 'request_block']
+        ['edit', 'delete', 'publish', 'request_block', 'edit-members']
       ) && $item['url']->access();
     }, ARRAY_FILTER_USE_BOTH);
 
