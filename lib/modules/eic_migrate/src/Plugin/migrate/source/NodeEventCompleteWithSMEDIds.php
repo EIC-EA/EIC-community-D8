@@ -14,7 +14,7 @@ use Drupal\migrate\Row;
  *
  * @code
  * source:
- *   plugin: eic_d7_node_complete_with_smed_ids
+ *   plugin: eic_d7_node_event_complete_with_smed_ids
  *   smed_taxonomy_fields:
  *     - taxonomy_field_x
  *     - taxonomy_field_y

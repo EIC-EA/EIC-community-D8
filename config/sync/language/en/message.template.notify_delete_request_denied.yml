@@ -1,4 +1,4 @@
 text:
   -
-    value: "<p>Dear [message:author:field_first_name:value]&nbsp;[message:author:field_last_name:value]</p>\r\n\r\n<p>The request to delete&nbsp;<a href=\"[message:field_referenced_flag:entity:target_entity:url]\">[message:field_referenced_flag:entity:target_entity:title]</a>&nbsp;has been denied.</p>\r\n\r\n<p>Reason: [message:field_referenced_flag:entity:field_request_response:value]</p>\r\n\r\n<p>The EIC Community team</p>\r\n"
+    value: "<p>Dear [message:author:field_first_name:value]&nbsp;[message:author:field_last_name:value]</p>\r\n\r\n<p>The request to delete&nbsp;<a href=\"[message:field_referenced_flag:entity:target_entity:url]\"><u>[message:field_referenced_flag:entity:target_entity:title]</u></a>&nbsp;has been denied.</p>\r\n\r\n<p>Reason: [message:field_referenced_flag:entity:field_request_response:value]</p>\r\n\r\n<p>The EIC Community team</p>\r\n"
     format: full_html

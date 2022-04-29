@@ -66,7 +66,7 @@ class ProcessorDiscussion extends DocumentProcessor {
     $author_file = $author_media instanceof MediaInterface ? File::load(
       $author_media->get('oe_media_image')->target_id
     ) : NULL;
-    $author_file_url = $author_file ? file_url_transform_relative(
+    $author_file_url = $author_file ? \Drupal::service('file_url_generator')->transformRelative(
       file_create_url($author_file->get('uri')->value)
     ) : NULL;
 

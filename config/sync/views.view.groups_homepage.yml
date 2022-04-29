@@ -5,7 +5,6 @@ dependencies:
   config:
     - search_api.index.global
   module:
-    - eic_search
     - search_api
 id: groups_homepage
 label: 'Groups - Homepage'
@@ -405,7 +404,7 @@ display:
     display_options:
       title: 'Upcoming events'
       cache:
-        type: search_api_tag
+        type: none
         options: {  }
       empty:
         area_text_custom:
@@ -682,7 +681,7 @@ display:
     position: 1
     display_options:
       cache:
-        type: search_api_tag_per_user
+        type: none
         options: {  }
       defaults:
         cache: false
@@ -692,7 +691,6 @@ display:
       max-age: -1
       contexts:
         - 'languages:language_interface'
-        - user
         - 'user.node_grants:view'
       tags:
         - 'config:search_api.index.global'

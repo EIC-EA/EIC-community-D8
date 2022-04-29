@@ -12,10 +12,10 @@ use Drupal\Core\Datetime\DateFormatter;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\File\FileUrlGeneratorInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
 use Drupal\eic_flags\RequestStatus;
-use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_user\UserHelper;
 use Drupal\file\Entity\File;
 use Drupal\flag\FlaggingInterface;
@@ -26,9 +26,9 @@ use Drupal\node\Entity\Node;
 use Drupal\oec_group_comments\GroupPermissionChecker;
 use Drupal\user\Entity\User;
 use Drupal\user\UserInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -64,14 +64,14 @@ class DiscussionController extends ControllerBase {
   private $groupPermissionChecker;
 
   /**
-   * @var \Drupal\eic_groups\EICGroupsHelper $groupsHelper
-   */
-  private $groupsHelper;
-
-  /**
    * @var \Drupal\Core\Datetime\DateFormatter $dateFormatter
    */
   private $dateFormatter;
+
+  /**
+   * @var \Drupal\Core\File\FileUrlGeneratorInterface
+   */
+  private $fileUrlGenerator;
 
   /**
    * DiscussionController constructor.
@@ -79,21 +79,21 @@ class DiscussionController extends ControllerBase {
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    * @param \Drupal\flag\FlagService $flag_service
    * @param \Drupal\oec_group_comments\GroupPermissionChecker $group_permission_checker
-   * @param EICGroupsHelper $groups_helper
    * @param \Drupal\Core\Datetime\DateFormatter $date_formatter
+   * @param \Drupal\Core\File\FileUrlGeneratorInterface $file_url_generator
    */
   public function __construct(
     EntityTypeManagerInterface $entity_type_manager,
     FlagService $flag_service,
     GroupPermissionChecker $group_permission_checker,
-    EICGroupsHelper $groups_helper,
-    DateFormatter $date_formatter
+    DateFormatter $date_formatter,
+    FileUrlGeneratorInterface $file_url_generator
   ) {
     $this->entityTypeManager = $entity_type_manager;
     $this->flagService = $flag_service;
     $this->groupPermissionChecker = $group_permission_checker;
-    $this->groupsHelper = $groups_helper;
     $this->dateFormatter = $date_formatter;
+    $this->fileUrlGenerator = $file_url_generator;
   }
 
   /**
@@ -104,8 +104,8 @@ class DiscussionController extends ControllerBase {
       $container->get('entity_type.manager'),
       $container->get('flag'),
       $container->get('oec_group_comments.group_permission_checker'),
-      $container->get('eic_groups.helper'),
-      $container->get('date.formatter')
+      $container->get('date.formatter'),
+      $container->get('file_url_generator')
     );
   }
 
@@ -511,7 +511,7 @@ class DiscussionController extends ControllerBase {
     $media_picture = $user->get('field_media')->referencedEntities();
     /** @var File|NULL $file */
     $file = $media_picture ? File::load($media_picture[0]->get('oe_media_image')->target_id) : NULL;
-    $file_url = $file ? file_url_transform_relative(file_create_url($file->get('uri')->value)) : NULL;
+    $file_url = $file ? $this->fileUrlGenerator->transformRelative(file_create_url($file->get('uri')->value)) : NULL;
 
     $archive_flags = $this->flagService->getEntityFlaggings(
       $this->flagService->getFlagById('request_archive_comment'),

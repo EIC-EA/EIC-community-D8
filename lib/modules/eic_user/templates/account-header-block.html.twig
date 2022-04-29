@@ -1,0 +1,51 @@
+{% if user or login %}
+  <div class="ecl-global-header__auth-wrapper">
+    {% if user %}
+      {% embed "@theme/patterns/compositions/collapsible-options.html.twig" with {
+        extra_classes: 'ecl-collapsible-options--aligns-from-right ecl-collapsible-options--has-compact-layout',
+        items: user.actions,
+      } %}
+        {% block trigger %}
+          <div class="ecl-global-header__author">
+            {% include "@theme/patterns/components/author.html.twig" with {
+              name: user.name,
+              image: user.image,
+              path: user.path,
+              extra_classes: 'ecl-author--has-compact-layout ecl-author--as-block',
+              updates: user.updates,
+              eic_icon_path: icon_file_path
+            } %}
+            {% if icon_file_path %}
+              {% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with {
+                icon: icon_file_path ? {
+                  path: icon_file_path,
+                  type: 'ui',
+                  name: 'corner-arrow',
+                  size: '2xs',
+                  transform: "rotate-180",
+                  color: "primary"
+                }
+              } %}
+            {% endif %}
+          </div>
+        {% endblock %}
+      {% endembed %}
+    {% elseif login and login.link %}
+      <a href="{{ login.link.path }}" class="ecl-link ecl-link--standalone ecl-global-header__login-link">
+        {% if eic_icon_path %}
+          {% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with {
+            icon: eic_icon_path ? {
+              path: eic_icon_path,
+              name: 'user_circle',
+              type: 'custom',
+              size: 'l',
+            },
+            extra_classes: 'ecl-global-header__login-link-icon'
+          } %}
+        {% endif %}
+        {{ login.link.label }}
+      </a>
+
+    {% endif %}
+  </div>
+{% endif %}

@@ -642,7 +642,7 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
 
     $form['search']['configuration']['date']['enable_date_filter'] = [
       '#type' => 'checkbox',
-      '#default_value' => $this->configuration['enable_date_filter'],
+      '#default_value' => $this->configuration['enable_date_filter'] ?? FALSE,
       '#title' => $this->t('Enable date filter', [], ['context' => 'eic_search']
       ),
       '#description' => $this->t(
