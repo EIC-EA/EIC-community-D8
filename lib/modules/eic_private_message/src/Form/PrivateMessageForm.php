@@ -5,8 +5,6 @@ namespace Drupal\eic_private_message\Form;
 use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Language\LanguageManager;
-use Drupal\Core\Mail\MailManager;
 use Drupal\eic_messages\Service\MessageBus;
 use Drupal\eic_private_message\Constants\PrivateMessage;
 use Drupal\eic_user\UserHelper;
@@ -23,7 +21,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class PrivateMessageForm extends FormBase {
 
   /**
-   * The EIC User herlper service.
+   * The EIC User helper service.
    *
    * @var \Drupal\eic_user\UserHelper
    */
@@ -35,21 +33,7 @@ class PrivateMessageForm extends FormBase {
    * @var \Drupal\Core\Config\Config
    */
   private $systemSettings;
-
-  /**
-   * The mail manager.
-   *
-   * @var \Drupal\Core\Mail\MailManager
-   */
-  private $mailManager;
-
-  /**
-   * The language manager.
-   *
-   * @var \Drupal\Core\Language\LanguageManager
-   */
-  private $languageManager;
-
+  
   /**
    * The message bus service.
    *
@@ -64,8 +48,6 @@ class PrivateMessageForm extends FormBase {
     return new static(
       $container->get('eic_user.helper'),
       $container->get('config.factory'),
-      $container->get('plugin.manager.mail'),
-      $container->get('language_manager'),
       $container->get('eic_messages.message_bus')
     );
   }
@@ -74,27 +56,19 @@ class PrivateMessageForm extends FormBase {
    * PrivateMessageForm constructor.
    *
    * @param \Drupal\eic_user\UserHelper $user_helper
-   *   The EIC User herlper service.
+   *   The EIC User helper service.
    * @param \Drupal\Core\Config\ConfigFactory $config_factory
    *   The config factory.
-   * @param \Drupal\Core\Mail\MailManager $mail_manager
-   *   The mail manager.
-   * @param \Drupal\Core\Language\LanguageManager $language_manager
-   *   The language manager.
    * @param MessageBus $bus
    *   The message bus service.
    */
   public function __construct(
     UserHelper $user_helper,
     ConfigFactory $config_factory,
-    MailManager $mail_manager,
-    LanguageManager $language_manager,
     MessageBus $bus
   ) {
     $this->userHelper = $user_helper;
     $this->systemSettings = $config_factory->get('system.site');
-    $this->mailManager = $mail_manager;
-    $this->languageManager = $language_manager;
     $this->bus = $bus;
   }
 
@@ -107,9 +81,6 @@ class PrivateMessageForm extends FormBase {
 
   /**
    * {@inheritdoc}
-   *
-   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
-   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $user_id = $this->getRouteMatch()->getParameter('user');
@@ -195,6 +166,7 @@ class PrivateMessageForm extends FormBase {
     $form['send_copy'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Send me a copy', [], ['context' => 'eic_private_message']),
+      '#default_value' => TRUE,
     ];
 
     $form['recipients'] = [
@@ -217,8 +189,6 @@ class PrivateMessageForm extends FormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $values = $form_state->getValues();
-    $current_langauge = $this->languageManager->getCurrentLanguage()->getId();
-
     $recipients = $values['recipients'];
 
     if (array_key_exists('to_recipients', $values)) {
