@@ -1,7 +1,5 @@
 <?php
 
-use Symfony\Component\HttpFoundation\Request;
-
 /**
  * Show all error messages, with backtrace information.
  *
@@ -97,7 +95,7 @@ if (!\Drupal\Core\Installer\InstallerKernel::installationAttempted() && extensio
  * EU Login settings.
  */
 // Allow self-registered users to login.
-$config['oe_authentication.settings']['assurance_level'] ='LOW';
+$config['oe_authentication.settings']['assurance_level'] = 'LOW';
 
 /**
  * SMED API connection information.
