@@ -33,7 +33,7 @@ class PrivateMessageForm extends FormBase {
    * @var \Drupal\Core\Config\Config
    */
   private $systemSettings;
-  
+
   /**
    * The message bus service.
    *
@@ -85,7 +85,6 @@ class PrivateMessageForm extends FormBase {
   public function buildForm(array $form, FormStateInterface $form_state) {
     $user_id = $this->getRouteMatch()->getParameter('user');
     $group = $this->getRouteMatch()->getParameter('group');
-
     if ($user_id) {
       $user = User::load($user_id);
 
@@ -113,6 +112,12 @@ class PrivateMessageForm extends FormBase {
         return [];
       }
     }
+
+    $form['title'] = [
+      '#type' => 'html_tag',
+      '#tag' => 'h2',
+      '#value' => $this->t('Contact @user', ['@user' => $this->userHelper->getFullName($user)])
+    ];
 
     $form['from'] = [
       '#type' => 'textfield',
