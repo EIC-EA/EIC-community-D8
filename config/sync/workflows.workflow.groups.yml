@@ -57,7 +57,7 @@ type_settings:
       to: blocked
       weight: 4
     create_new_group:
-      label: 'Create new group'
+      label: 'Update group'
       from:
         - pending
       to: pending
@@ -101,7 +101,7 @@ type_settings:
       to: pending
       weight: 1
     upgrade_to_draft:
-      label: 'Upgrade to draft'
+      label: Approve
       from:
         - pending
       to: draft
