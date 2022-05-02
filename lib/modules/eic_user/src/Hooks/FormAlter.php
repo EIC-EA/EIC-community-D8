@@ -38,12 +38,13 @@ class FormAlter {
     $default_values = [];
 
     foreach ($existing_users as $existing_user) {
-      $user = User::load($existing_user['target_id']);
-      $default_values[] = [
-        'name' => realname_load($user),
-        'tid' => $user->id(),
-        'parent' => -1,
-      ];
+      if ($user = User::load($existing_user['target_id'])) {
+        $default_values[] = [
+          'name' => realname_load($user),
+          'tid' => $user->id(),
+          'parent' => -1,
+        ];
+      }
     }
 
     $url_search = Url::fromRoute('eic_search.solr_search', [
@@ -137,6 +138,8 @@ class FormAlter {
             ['context' => 'eic_user']
           )
         );
+
+        return;
       }
 
       $email = $user->getEmail();
@@ -155,7 +158,7 @@ class FormAlter {
         return;
       }
 
-      $emails[] = $user->getEmail();
+      $emails[] = $email;
     }
 
     $emails = array_merge($emails, $unexisting_users);
