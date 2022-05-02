@@ -39,6 +39,12 @@ function eic_contact_form_alter(&$form, FormStateInterface &$form_state) {
   }
 
   $form['copy']['#default_value'] = TRUE;
+  $form['self_copy'] = [
+    '#type' => 'checkbox',
+    '#default_value' => TRUE,
+  ];
+  $form['self_copy'] = $form['copy'] + ['#weight' => 5];
+  unset($form['copy']);
   $form['actions']['submit']['#submit'][] = '_eic_contact_alter_submit';
 }
 
@@ -145,7 +151,7 @@ function _eic_contact_alter_submit(
     ]);
   }
 
-  $send_copy = $form_state->getValue('copy');
+  $send_copy = $form_state->getValue('self_copy');
 
   if ($send_copy) {
     // Send a copy of the contact form to the current user.
@@ -170,7 +176,7 @@ function _eic_contact_alter_submit(
   $mail_manager = Drupal::service('plugin.manager.mail');
   $mail_manager->mail(
     'contact',
-    'page' . '_mail',
+    'page_mail',
     $email,
     Drupal::languageManager()->getDefaultLanguage()->getId(),
     $params,
