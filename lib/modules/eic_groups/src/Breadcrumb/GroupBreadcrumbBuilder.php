@@ -163,7 +163,8 @@ class GroupBreadcrumbBuilder implements BreadcrumbBuilderInterface {
       $group_type = $group->getGroupType()->id();
     }
 
-    if (!$group_type && $route_match->getParameter('group_type') instanceof GroupTypeInterface) {
+    if ($route_match->getParameter('group_type') instanceof GroupTypeInterface) {
+    // This has higher priority because of add group pages where a group doesn't exists yet.
       $group_type = $route_match->getParameter('group_type')->id();
     }
 
