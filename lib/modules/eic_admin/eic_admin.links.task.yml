@@ -3,6 +3,11 @@ eic_admin.groups.groups:
   description: 'Manage all Community Groups.'
   route_name: view.admin_groups.page_admin_groups
   base_route: eic_admin.groups
+eic_admin.groups.organisations:
+  title: 'Organisations'
+  description: 'Manage all Community Organisations.'
+  route_name: view.admin_groups.page_admin_organisations
+  base_route: eic_admin.groups
 eic_admin.groups.events:
   title: 'Events'
   description: 'Manage all Community Events.'
