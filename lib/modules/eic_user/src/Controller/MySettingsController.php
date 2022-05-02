@@ -145,7 +145,17 @@ class MySettingsController extends ControllerBase {
       'items' => [],
     ];
 
-    $target_bundle = $notification_type === NotificationTypes::EVENTS_NOTIFICATION_TYPE ? 'event' : 'group';
+    switch ($notification_type) {
+      case NotificationTypes::EVENTS_NOTIFICATION_TYPE:
+        $target_bundle = 'event';
+        break;
+      case NotificationTypes::ORGANISATION_NOTIFICATION_TYPE:
+        $target_bundle = 'organisation';
+        break;
+      default:
+        $target_bundle = 'group';
+    }
+
     foreach ($flaggings as $flagging) {
       $target_entity = $this->entityTypeManager()
         ->getStorage($flagging->get('entity_type')->value)
