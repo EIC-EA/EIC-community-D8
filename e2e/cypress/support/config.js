@@ -1,1 +1,0 @@
-const USER_ID_CYPRESS = 15530

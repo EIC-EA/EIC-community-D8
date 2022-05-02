@@ -14,14 +14,11 @@ context("User - invitations", () => {
   specify(
     "get 403 if this is not /user/USER_ID_CYPRESS/invitations",
     () =>{
-      cy.request(`/user/${USER_ID_CYPRESS}/invitations`).as('my_invitation')
-      cy.request(`/user/1/invitations`).as('other_invitaion')
-
-      cy.get('@my_invitation').should((response) => {
+      cy.request(`/user/${Cypress.env('USER_ID_CYPRESS')}/invitations`).should((response) => {
         expect(response.status).to.equal(200)
       })
-
-      cy.get('@other_invitaion').should((response) => {
+      cy.request(`/user/1/invitations`).should((response) => {
+        console.log(response);
         expect(response.status).to.equal(403)
       })
     }
