@@ -19,6 +19,7 @@ use Drupal\eic_user\UserHelper;
 use Drupal\group\Entity\GroupContent;
 use Drupal\group\Entity\GroupContentInterface;
 use Drupal\group\Entity\GroupInterface;
+use Drupal\group\Entity\GroupTypeInterface;
 use Drupal\node\NodeInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -110,6 +111,10 @@ class GroupBreadcrumbBuilder implements BreadcrumbBuilderInterface {
     $applies = FALSE;
 
     switch ($route_match->getRouteName()) {
+      case 'entity.group.add_form':
+      case 'entity.group.canonical':
+        $applies = TRUE;
+        break;
       case 'entity.node.canonical':
         $node = $route_match->getParameter('node');
 
@@ -117,11 +122,6 @@ class GroupBreadcrumbBuilder implements BreadcrumbBuilderInterface {
           $applies = GroupContent::loadByEntity($node) ? TRUE : FALSE;
         }
         break;
-
-      case 'entity.group.canonical':
-        $applies = TRUE;
-        break;
-
       case 'entity.group_content.new_request':
       case 'entity.group_content.user_close_request':
         $group_content = $route_match->getParameter('group_content');
@@ -142,8 +142,7 @@ class GroupBreadcrumbBuilder implements BreadcrumbBuilderInterface {
           break;
         }
 
-        $applies = $group_content->getContentPlugin()->getPluginId(
-        ) === 'group_membership' ? TRUE : FALSE;
+        $applies = $group_content->getContentPlugin()->getPluginId() === 'group_membership';
         break;
 
     }
@@ -160,13 +159,14 @@ class GroupBreadcrumbBuilder implements BreadcrumbBuilderInterface {
     // Adds homepage link.
     $links[] = Link::createFromRoute($this->t('Home'), '<front>');
     $group = $this->eicGroupsHelper->getGroupFromRoute();
+    $group_type = 'group';
+    if ($route_match->getParameter('group_type') instanceof GroupTypeInterface) {
+      $group_type = $route_match->getParameter('group_type')->id();
+    }
+
     // Adds link to navigate back to the list of groups.
     $links[] = GlobalOverviewPages::getGlobalOverviewPageLink(
-      GlobalOverviewPages::getOverviewPageIdFromGroupType(
-        $group instanceof GroupInterface ?
-          $group->getGroupType()->id() :
-          'group'
-      )
+      GlobalOverviewPages::getOverviewPageIdFromGroupType($group_type)
     );
 
     switch ($route_match->getRouteName()) {
