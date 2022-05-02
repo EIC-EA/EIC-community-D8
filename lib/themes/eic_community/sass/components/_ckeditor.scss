@@ -44,6 +44,13 @@
     font-weight: 400;
   }
 
+  & blockquote {
+    @extend .ecl-blockquote;
+    & > * {
+      @extend .ecl-blockquote__body
+    }
+  }
+
   & table {
     width: 100%!important;
     border: 0;
