@@ -154,13 +154,16 @@ class GroupBreadcrumbBuilder implements BreadcrumbBuilderInterface {
    * {@inheritdoc}
    */
   public function build(RouteMatchInterface $route_match) {
+    $group_type = 'group';
     $breadcrumb = new Breadcrumb();
-
     // Adds homepage link.
     $links[] = Link::createFromRoute($this->t('Home'), '<front>');
     $group = $this->eicGroupsHelper->getGroupFromRoute();
-    $group_type = 'group';
-    if ($route_match->getParameter('group_type') instanceof GroupTypeInterface) {
+    if ($group instanceof GroupInterface) {
+      $group_type = $group->getGroupType()->id();
+    }
+
+    if (!$group_type && $route_match->getParameter('group_type') instanceof GroupTypeInterface) {
       $group_type = $route_match->getParameter('group_type')->id();
     }
 
