@@ -20,3 +20,9 @@ services:
   eic_user.notification_settings_manager:
     class: Drupal\eic_user\Service\NotificationSettingsManager
     arguments: [ '@entity_type.manager', '@current_user', '@eic_user.helper', '@flag' ]
+
+  eic_user.route_current_user_access:
+    class: Drupal\eic_user\Access\MatchCurrentUserRouteAccess
+    arguments: [ '@current_route_match' ]
+    tags:
+      - { name: access_check, applies_to: _route_current_user_access }

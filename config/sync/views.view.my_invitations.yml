@@ -4,8 +4,8 @@ status: true
 dependencies:
   config:
     - field.storage.group_content.group_roles
-    - user.role.authenticated
   module:
+    - eic_user
     - group
     - user
 _core:
@@ -538,10 +538,8 @@ display:
           sort_asc_label: Asc
           sort_desc_label: Desc
       access:
-        type: role
-        options:
-          role:
-            authenticated: authenticated
+        type: current_user_match_access
+        options: {  }
       cache:
         type: tag
         options: {  }
@@ -757,7 +755,6 @@ display:
         - 'languages:language_interface'
         - url
         - url.query_args
-        - user.roles
       tags:
         - 'config:field.storage.group_content.group_roles'
   page_1:
@@ -784,6 +781,5 @@ display:
         - 'languages:language_interface'
         - url
         - url.query_args
-        - user.roles
       tags:
         - 'config:field.storage.group_content.group_roles'
