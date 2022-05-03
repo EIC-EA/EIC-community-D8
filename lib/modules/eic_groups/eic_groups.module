@@ -852,7 +852,7 @@ function eic_groups_entity_operation(EntityInterface $entity) {
   }
 
   $current_user = \Drupal::currentUser();
-  if ($entity->hasPermission('administer members', $current_user->getAccount())) {
+  if ($entity->hasPermission('view group_membership content', $current_user->getAccount())) {
     return [
       'edit-members' => [
         'title' => t('Edit members'),
