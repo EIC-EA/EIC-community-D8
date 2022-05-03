@@ -107,8 +107,8 @@ class EicUserUpdateResource extends ResourceBase {
       $current_request->headers->all()
     );
 
-    // @todo Handle the authmap in case the email address of the user has
-    //   changed.
+    // If user was updated, make sure we update the authmap as well with the new
+    // email address.
     if ($response->getStatusCode() == 200) {
       // Get the user being updated.
       /** @var \Drupal\user\UserInterface $account */
