@@ -17,10 +17,21 @@ use Drupal\group\Plugin\GroupContentAccessControlHandler;
  */
 class GroupContentNodeAccessControlHandler extends GroupContentAccessControlHandler {
 
+  const LIMITED_OPERATIONS_FOR_CONTENT_ADMINS = [
+    'delete' => [
+      'book'
+    ]
+  ];
+
   /**
    * {@inheritdoc}
    */
-  public function entityAccess(EntityInterface $entity, $operation, AccountInterface $account, $return_as_object = FALSE) {
+  public function entityAccess(
+    EntityInterface $entity,
+    $operation,
+    AccountInterface $account,
+    $return_as_object = FALSE
+  ) {
     $access = parent::entityAccess($entity, $operation, $account, $return_as_object);
 
     /** @var \Drupal\group\Entity\GroupInterface $group */
@@ -55,7 +66,7 @@ class GroupContentNodeAccessControlHandler extends GroupContentAccessControlHand
 
         // Check if user has access to the group, if not we deny access to the
         // node.
-        if (!$group->access('view')) {
+        if (!$group->access('view', $account)) {
           $access = AccessResult::forbidden()
             ->addCacheableDependency($account)
             ->addCacheableDependency($membership)
@@ -65,7 +76,7 @@ class GroupContentNodeAccessControlHandler extends GroupContentAccessControlHand
         // At this point it means the user is not a poweruser neither a group
         // admin. Therefore, if group is blocked no user other can view its
         // content besides powerusers or group admins.
-        if ($moderation_state !== GroupsModerationHelper::GROUP_PUBLISHED_STATE) {
+        if ($moderation_state === GroupsModerationHelper::GROUP_BLOCKED_STATE) {
           $access = AccessResult::forbidden()
             ->addCacheableDependency($account)
             ->addCacheableDependency($group)
@@ -107,10 +118,21 @@ class GroupContentNodeAccessControlHandler extends GroupContentAccessControlHand
         break;
 
       case 'delete':
+        $roles = $account->getRoles();
+        $allowed_roles = [
+          UserHelper::ROLE_DRUPAL_ADMINISTRATOR
+        ];
+
         // Allow access to power users.
-        if ($is_power_user) {
-          break;
+        if (
+          in_array($entity->bundle(), self::LIMITED_OPERATIONS_FOR_CONTENT_ADMINS[$operation])
+          && empty(array_intersect($roles, $allowed_roles))
+        ) {
+          $access = AccessResult::forbidden()
+            ->addCacheableDependency($account)
+            ->addCacheableDependency($entity);
         }
+
         break;
 
     }

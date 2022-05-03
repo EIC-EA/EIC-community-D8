@@ -382,6 +382,7 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
           ),
           'draft' => $this->t('Draft', [], ['context' => 'eic_group']),
           'archived' => $this->t('Archived', [], ['context' => 'eic_group']),
+          'restricted' => $this->t('Restricted', [], ['context' => 'eic_group']),
           'pending' => $this->t('Pending', [], ['context' => 'eic_group']),
           'blocked' => $this->t('Blocked', [], ['context' => 'eic_group']),
           'load_more' => $this->t('Load more', [], ['context' => 'eic_group']),
@@ -641,7 +642,7 @@ class SearchOverviewBlock extends BlockBase implements ContainerFactoryPluginInt
 
     $form['search']['configuration']['date']['enable_date_filter'] = [
       '#type' => 'checkbox',
-      '#default_value' => $this->configuration['enable_date_filter'],
+      '#default_value' => $this->configuration['enable_date_filter'] ?? FALSE,
       '#title' => $this->t('Enable date filter', [], ['context' => 'eic_search']
       ),
       '#description' => $this->t(

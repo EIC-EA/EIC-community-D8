@@ -116,7 +116,7 @@ class EICGroupOverviewMessageBlock extends BlockBase implements ContainerFactory
       'group_content_list:group:' . $group->id(),
     ]);
 
-    $required_roles = [EICGroupsHelper::GROUP_OWNER_ROLE];
+    $required_roles = [$group->bundle() . '-' . EICGroupsHelper::GROUP_TYPE_OWNER_ROLE];
     $group_membership = $group->getMember($this->account);
     $user_group_roles = $group_membership instanceof GroupMembership
       ? array_keys($group_membership->getRoles())

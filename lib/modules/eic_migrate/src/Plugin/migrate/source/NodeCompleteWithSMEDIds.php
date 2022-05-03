@@ -62,7 +62,15 @@ class NodeCompleteWithSMEDIds extends NodeComplete {
     foreach ($this->smedTaxonomyFields as $field) {
       $fieldValues = $row->getSourceProperty($field);
       if (!empty($fieldValues)) {
-        $row->setSourceProperty($field, $this->getTaxonomyFieldValuesWithSmedIds($fieldValues));
+        switch ($field) {
+          case 'c4m_vocab_event_type':
+            $row->setSourceProperty($field, $this->getTaxonomyFieldValuesWithSmedIds($fieldValues, 'c4m_external_event_type_id'));
+            break;
+
+          default:
+            $row->setSourceProperty($field, $this->getTaxonomyFieldValuesWithSmedIds($fieldValues));
+            break;
+        }
       }
     }
 
@@ -74,13 +82,15 @@ class NodeCompleteWithSMEDIds extends NodeComplete {
    *
    * @param array $fieldValues
    *   The array of source field values. Should include taxonomy tid.
+   * @param string $d7_field_smed_id
+   *   The D7 field that represents the SMED ID.
    *
    * @return array
    *   The array of new source field values. Includes SMED ids if present.
    */
-  protected function getTaxonomyFieldValuesWithSmedIds(array $fieldValues): array {
+  protected function getTaxonomyFieldValuesWithSmedIds(array $fieldValues, $d7_field_smed_id = 'c4m_dashboard_key'): array {
     foreach ($fieldValues as $key => $fieldValue) {
-      $dashboardKeyValues = $this->getFieldValues('taxonomy_term', 'c4m_dashboard_key', $fieldValue['tid']);
+      $dashboardKeyValues = $this->getFieldValues('taxonomy_term', $d7_field_smed_id, $fieldValue['tid']);
       if (isset($dashboardKeyValues[0]['value'])) {
         $fieldValue['smed_id'] = $dashboardKeyValues[0]['value'];
       }

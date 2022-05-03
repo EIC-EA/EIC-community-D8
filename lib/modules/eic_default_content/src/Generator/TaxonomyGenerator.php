@@ -22,6 +22,7 @@ class TaxonomyGenerator extends CoreGenerator {
     $this->createTopics();
     $this->createFundingSources();
     $this->createEventTypes();
+    $this->createGlobalEventTypes();
     $this->createOrganisationTypes();
     $this->createContactCategories();
     $this->createTargetMarket();
@@ -39,6 +40,7 @@ class TaxonomyGenerator extends CoreGenerator {
     $this->unloadEntities('taxonomy_term', ['vid' => 'job_titles']);
     $this->unloadEntities('taxonomy_term', ['vid' => 'funding_source']);
     $this->unloadEntities('taxonomy_term', ['vid' => 'event_type']);
+    $this->unloadEntities('taxonomy_term', ['vid' => 'global_event_type']);
     $this->unloadEntities('taxonomy_term', ['vid' => 'organisation_types']);
     $this->unloadEntities('taxonomy_term', ['vid' => 'contact_category']);
   }
@@ -155,11 +157,28 @@ class TaxonomyGenerator extends CoreGenerator {
       'Learning / Training',
       'Meeting',
       'Academy',
-      'Hackaton',
+      'Hackathon',
       'Investor Days',
     ];
     foreach ($terms as $term) {
       $this->createTerm('event_type', ['name' => $term]);
+    }
+  }
+
+  /**
+   * Creates 'event_type' terms.
+   */
+  private function createGlobalEventTypes() {
+    $terms = [
+      'Event',
+      'Learning / Training',
+      'Meeting',
+      'Academy',
+      'Hackathon',
+      'Investor Days',
+    ];
+    foreach ($terms as $term) {
+      $this->createTerm('global_event_type', ['name' => $term, 'field_display_to_users' => TRUE]);
     }
   }
 

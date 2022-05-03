@@ -5,9 +5,11 @@ dependencies:
   config:
     - contact.form.contact_form
     - field.field.contact_message.contact_form.field_contact_category
+    - field.field.contact_message.contact_form.field_contact_message
   module:
     - options
     - smart_trim
+    - text
 id: contact_message.contact_form.default
 targetEntityType: contact_message
 bundle: contact_form
@@ -19,6 +21,13 @@ content:
     settings: {  }
     third_party_settings: {  }
     weight: 0
+    region: content
+  field_contact_message:
+    type: text_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 2
     region: content
   message:
     type: smart_trim

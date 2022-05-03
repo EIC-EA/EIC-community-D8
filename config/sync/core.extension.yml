@@ -6,6 +6,7 @@ module:
   admin_toolbar_links_access_filter: 0
   admin_toolbar_search: 0
   admin_toolbar_tools: 0
+  anchor_link: 0
   antibot: 0
   big_pipe: 0
   block: 0
@@ -17,6 +18,13 @@ module:
   cas: 0
   cas_mock_server: 0
   ckeditor: 0
+  ckeditor_div_manager: 0
+  ckeditor_find: 0
+  ckeditor_font: 0
+  ckeditor_iframe: 0
+  ckeditor_oembed: 0
+  ckeditor_selectall: 0
+  colorbutton: 0
   comment: 0
   components: 0
   config: 0
@@ -97,6 +105,7 @@ module:
   extra_field: 0
   facets: 0
   facets_summary: 0
+  fakeobjects: 0
   field: 0
   field_group: 0
   field_ui: 0
@@ -142,6 +151,7 @@ module:
   mimemail: 0
   node: 0
   node_read_time: 0
+  oe_authentication: 0
   oe_media: 0
   oe_time_caching: 0
   oe_webtools: 0
@@ -154,10 +164,13 @@ module:
   openapi_rest: 0
   options: 0
   page_cache: 0
+  pagebreak: 0
+  panelbutton: 0
   paragraph_view_mode: 0
   path: 0
   path_alias: 0
   profile: 0
+  raven: 0
   realname: 0
   redirect: 0
   redis: 0

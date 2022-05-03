@@ -36,9 +36,15 @@ eic_admin.groups.groups:
   route_name: view.admin_groups.page_admin_groups
   parent: eic_admin.groups
   weight: 1
+eic_admin.groups.organisations:
+  title: 'Organisations'
+  description: 'Manage all Community Organisations.'
+  route_name: view.admin_groups.page_admin_organisations
+  parent: eic_admin.groups
+  weight: 2
 eic_admin.groups.events:
   title: 'Events'
   description: 'Manage all Community Events.'
   route_name: view.admin_groups.page_admin_events
   parent: eic_admin.groups
-  weight: 2
+  weight: 3

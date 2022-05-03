@@ -3,7 +3,8 @@
 <header class="ecl-global-header">
   <div class="ecl-container">
     <div class="ecl-global-header__wrapper">
-      {% if logo %}
+      <div class="ecl-global-header__logo-wrapper">
+        {% if logo %}
         <div class="ecl-global-header__logo">
           {% if logo.href %}
             <a class="ecl-global-header__logo-link" href="{{ logo.href }}">
@@ -21,70 +22,23 @@
             <img class="ecl-global-header__logo-image ecl-global-header__logo-image--desktop" src="{{ logo.src_desktop }}" />
             <img class="ecl-global-header__logo-image ecl-global-header__logo-mobile" src="{{ logo.src_mobile }}" />
           {% endif %}
-          <span class="ecl-global-header__logo-title">{{ title }}</span>
-
+          <span class="ecl-global-header__logo-title"></span>
           {% if logo.href %}
             </a>
           {% endif %}
         </div>
       {% endif %}
 
+      <span class="ecl-global-header__logo-baseline"><b>European Innovation Council</b><br>community</span>
+
+      </div>
       {% if language_selector is not empty %}
         <div class="ecl-global-header__language-selector-wrapper">
           {% include "@theme/patterns/compositions/language-selector.html.twig" with language_selector|default({}) %}
         </div>
       {% endif %}
 
-      <div class="ecl-global-header__auth-wrapper">
-        {% if user %}
-          {% embed "@theme/patterns/compositions/collapsible-options.html.twig" with {
-            extra_classes: 'ecl-collapsible-options--aligns-from-right ecl-collapsible-options--has-compact-layout',
-            items: user.actions,
-          } %}
-            {% block trigger %}
-            <div class="ecl-global-header__author">
-              {% include "@theme/patterns/components/author.html.twig" with {
-                name: user.name,
-                image: user.image,
-                path: user.path,
-                extra_classes: 'ecl-author--has-compact-layout ecl-author--as-block',
-                updates: user.updates,
-                eic_icon_path: icon_file_path
-              } %}
-              {% if icon_file_path %}
-                {% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with {
-                  icon: icon_file_path ? {
-                    path: icon_file_path,
-                    type: 'ui',
-                    name: 'corner-arrow',
-                    size: '2xs',
-                    transform: "rotate-180",
-                    color: "primary"
-                  }
-                } %}
-              {% endif %}
-              </div>
-            {% endblock %}
-          {% endembed %}
-
-        {% elseif login and login.link %}
-          {# Static ouput from the ECL link output due to the nbsp output issues. #}
-          <a href="{{ login.link.path }}" class="ecl-link ecl-link--standalone ecl-global-header__login-link">
-            {% if icon_file_path %}
-              {% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with {
-                icon: icon_file_path ? {
-                  path: icon_file_path,
-                  name: 'user_circle',
-                  type: 'custom',
-                  size: 'l',
-                },
-                extra_classes: 'ecl-global-header__login-link-icon'
-              } %}
-            {% endif %}
-            {{ login.link.label }}
-          </a>
-        {% endif %}
-      </div>
+        {{ account_block }}
     </div>
   </div>
 </header>

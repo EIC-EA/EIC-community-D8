@@ -36,6 +36,7 @@ use Drupal\eic_user\UserHelper;
 use Drupal\flag\FlagInterface;
 use Drupal\group\Access\GroupAccessResult;
 use Drupal\group\Entity\GroupContent;
+use Drupal\group\Entity\GroupInterface;
 use Drupal\pathauto\PathautoGeneratorInterface;
 use Drupal\views\ViewExecutable;
 
@@ -150,7 +151,7 @@ function eic_groups_preprocess_views_view_field(&$vars) {
     if ($group->access('view')) {
       $group_url = $group->toUrl('canonical', ['language' => $group->language()]);
       $group_link = Link::fromTextAndUrl($group->label(), $group_url)->toRenderable();
-      $group_label = render($group_link);
+      $group_label = \Drupal::service('renderer')->render($group_link);
     }
     else {
       $group_label = $group->label();
@@ -178,6 +179,7 @@ function eic_groups_group_insert(EntityInterface $entity) {
 function eic_groups_group_content_insert(EntityInterface $entity) {
   $pathauto_config = \Drupal::config('pathauto.settings');
   $related_entity = $entity->getEntity();
+
   // Re-creates URL alias of the group content related entity if pathauto
   // settings "update_action" setting is set to 0 (UPDATE_ACTION_NO_NEW).
   if (
@@ -191,7 +193,7 @@ function eic_groups_group_content_insert(EntityInterface $entity) {
     \Drupal::service('pathauto.alias_storage_helper')->deleteEntityPathAll($related_entity);
     $related_entity->get('path')->first()->get('pathauto')->purge();
     // Re-create entity alias.
-    \Drupal::service('pathauto.generator')->createEntityAlias($related_entity, 'insert');
+    \Drupal::service('pathauto.generator')->createEntityAlias($related_entity, 'insert_group_content_node');
   }
 
   switch ($entity->bundle()) {
@@ -839,6 +841,25 @@ function eic_groups_overview_page_access(EntityInterface $entity, $operation, Ac
   }
 
   return $access;
+}
+
+/**
+ * Implements hook_group_operations_alter().
+ */
+function eic_groups_entity_operation(EntityInterface $entity) {
+  if (!$entity instanceof GroupInterface) {
+    return [];
+  }
+
+  $current_user = \Drupal::currentUser();
+  if ($entity->hasPermission('administer members', $current_user->getAccount())) {
+    return [
+      'edit-members' => [
+        'title' => t('Edit members'),
+        'url' => Url::fromRoute('view.eic_group_members.page_group_members', ['group' => $entity->id()]),
+      ],
+    ];
+  }
 }
 
 /**

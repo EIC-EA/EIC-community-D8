@@ -1,0 +1,19 @@
+uuid: 5dab3d91-c98a-4aef-adf3-9fd8e1f34bcb
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.message.field_subject
+    - message.template.notify_contact_user
+id: message.notify_contact_user.field_subject
+field_name: field_subject
+entity_type: message
+bundle: notify_contact_user
+label: Subject
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

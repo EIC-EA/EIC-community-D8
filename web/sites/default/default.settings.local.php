@@ -198,6 +198,12 @@ $config['config_split.config_split.development']['status'] = TRUE;
 $settings['file_private_path'] = '/app/private_files';
 
 /**
+ * EU Login settings.
+ */
+// Allow self-registered users to login.
+$config['oe_authentication.settings']['assurance_level'] ='LOW';
+
+/**
  * SMED API connection information.
  */
 $settings['smed_api_taxonomy_username'] = getenv('SMED_API_USER');
@@ -224,3 +230,6 @@ $settings['reverse_proxy_header_mapping'] = [
 
 $settings['eic_vod']['cloudfront_url'] = '';
 $settings['eic_vod']['cloudfront_api_key'] = '';
+// Interval time for the notification reminder to SA/SCM listing all groups pending for approval.
+$settings['cron_interval_pending_approval_time'] = 86400;
+$settings['cron_interval_group_invite_time'] = 86400;

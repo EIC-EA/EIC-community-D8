@@ -1,0 +1,21 @@
+uuid: 54a2fc60-5804-470f-95ac-33bacec2bb1d
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.message.field_body
+    - message.template.notify_contact_user_copy
+  module:
+    - text
+id: message.notify_contact_user_copy.field_body
+field_name: field_body
+entity_type: message
+bundle: notify_contact_user_copy
+label: Body
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long

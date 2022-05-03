@@ -7,16 +7,16 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Logger\LoggerChannelTrait;
 use Drupal\Core\Render\Markup;
-use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
 use Drupal\eic_flags\FlagType;
-use Drupal\file\Entity\File;
 use Drupal\eic_topics\Constants\Topics;
+use Drupal\file\Entity\File;
 use Drupal\flag\FlagCountManagerInterface;
+use Drupal\taxonomy\TermInterface;
 use Drupal\user\Entity\User;
 use Drupal\user\UserInterface;
-use Drupal\taxonomy\TermInterface;
 
 /**
  * UserHelper service that provides helper functions for users.
@@ -188,7 +188,7 @@ class UserHelper {
         case static::ROLE_DRUPAL_ADMINISTRATOR:
         case static::ROLE_SITE_ADMINISTRATOR:
         case static::ROLE_CONTENT_ADMINISTRATOR:
-          // User is power user if has one of the administation roles.
+          // User is power user if has one of the administration roles.
           return TRUE;
 
       }
@@ -206,9 +206,9 @@ class UserHelper {
     $media_picture = $user->get('field_media')->referencedEntities();
     /** @var File|NULL $file */
     $file = $media_picture ? File::load($media_picture[0]->get('oe_media_image')->target_id) : '';
-    $file_url = $file ? file_url_transform_relative(file_create_url($file->get('uri')->value)) : '';
 
-    return $file_url;
+    return $file ? \Drupal::service('file_url_generator')
+      ->transformRelative(file_create_url($file->get('uri')->value)) : '';;
   }
 
   /**

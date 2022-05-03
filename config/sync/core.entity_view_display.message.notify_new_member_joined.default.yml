@@ -5,6 +5,7 @@ dependencies:
   config:
     - field.field.message.notify_new_member_joined.field_group_membership
     - field.field.message.notify_new_member_joined.field_group_ref
+    - field.field.message.notify_new_member_joined.field_related_organisation
     - field.field.message.notify_new_member_joined.field_related_user
     - message.template.notify_new_member_joined
 id: message.notify_new_member_joined.default
@@ -12,6 +13,14 @@ targetEntityType: message
 bundle: notify_new_member_joined
 mode: default
 content:
+  field_related_organisation:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 2
+    region: content
   partial_0:
     settings: {  }
     third_party_settings: {  }

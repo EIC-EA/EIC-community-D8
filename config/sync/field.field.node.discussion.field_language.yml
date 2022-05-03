@@ -1,0 +1,29 @@
+uuid: e3a077ac-bd24-45a1-b4c7-154be40337df
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_language
+    - node.type.discussion
+    - taxonomy.vocabulary.languages
+id: node.discussion.field_language
+field_name: field_language
+entity_type: node
+bundle: discussion
+label: Language
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      languages: languages
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

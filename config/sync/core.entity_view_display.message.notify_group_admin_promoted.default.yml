@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - field.field.message.notify_group_admin_promoted.field_event_executing_user
+    - field.field.message.notify_group_admin_promoted.field_group_owner
     - field.field.message.notify_group_admin_promoted.field_group_ref
     - message.template.notify_group_admin_promoted
 id: message.notify_group_admin_promoted.default
@@ -17,6 +18,14 @@ content:
     settings:
       link: true
     third_party_settings: {  }
+    weight: 3
+    region: content
+  field_group_owner:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
     weight: 2
     region: content
   field_group_ref:
@@ -25,7 +34,7 @@ content:
     settings:
       link: true
     third_party_settings: {  }
-    weight: 1
+    weight: 4
     region: content
   partial_0:
     settings: {  }
@@ -35,7 +44,7 @@ content:
   partial_1:
     settings: {  }
     third_party_settings: {  }
-    weight: 0
+    weight: 1
     region: content
 hidden:
   search_api_excerpt: true

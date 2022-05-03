@@ -252,4 +252,15 @@
   & + .ecl-base-layout > .ecl-base-layout__content > .ecl-base-layout__main > main > .ecl-section-wrapper:first-child {
     padding-top: 0;
   }
+
+  &--story #{$node}__main-content-wrapper {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+
+    #{$node}__content {
+      width: 100%;
+      margin-top: $ecl-spacing-s;
+    }
+  }
 }

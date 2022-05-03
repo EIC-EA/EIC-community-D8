@@ -1,0 +1,27 @@
+uuid: fcf75837-7557-404d-be9c-b130ad61e3d3
+langcode: en
+status: true
+dependencies:
+  config:
+    - filter.format.full_html
+  module:
+    - eic_messages
+third_party_settings:
+  eic_messages:
+    message_template_type: notification
+template: notify_contact_global_confirm
+label: 'NOTIFY :: MT :: Contact global confirmation'
+description: ''
+text:
+  -
+    value: "<p>[message:field_subject]</p>\r\n"
+    format: full_html
+  -
+    value: "<p>Dear <a href=\"[message:field_sender:entity:url]\">[message:field_sender:entity:display-name]</a>,</p>\r\n\r\n<p>We are informing you through this email that your message has been successfully delivered!</p>\r\n\r\n<p>One of our members will get back to you shortly.</p>\r\n\r\n<p><em>The EIC Community team</em></p>\r\n"
+    format: full_html
+settings:
+  'token options':
+    clear: true
+    'token replace': true
+  purge_override: false
+  purge_methods: {  }

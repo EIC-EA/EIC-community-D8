@@ -1,0 +1,19 @@
+uuid: 359fb113-9282-4790-a3c2-f95dc5bb28e5
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.message.field_subject
+    - message.template.notify_contact_user_copy
+id: message.notify_contact_user_copy.field_subject
+field_name: field_subject
+entity_type: message
+bundle: notify_contact_user_copy
+label: Subject
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

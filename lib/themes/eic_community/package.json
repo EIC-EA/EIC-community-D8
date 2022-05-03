@@ -106,6 +106,8 @@
     "reactjs-popup": "^2.0.5",
     "semantic-ui-css": "^2.4.1",
     "semantic-ui-react": "^2.0.3",
-    "swiper": "^7.0.6"
+    "swiper": "^7.0.6",
+    "videojs-contrib-quality-levels": "^2.1.0",
+    "videojs-http-source-selector": "^1.1.6"
   }
 }

@@ -11,6 +11,7 @@ use Drupal\eic_groups\GroupsModerationHelper;
 use Drupal\eic_messages\Util\LogMessageTemplates;
 use Drupal\eic_messages\Util\NotificationMessageTemplates;
 use Drupal\eic_user\UserHelper;
+use Drupal\message\Entity\Message;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -132,11 +133,13 @@ class GroupMessageCreator implements ContainerInjectionInterface {
     switch ($workflow_transition) {
       // Group has been approved.
       case GroupsModerationHelper::GROUP_PENDING_STATE . $delimiter . GroupsModerationHelper::GROUP_DRAFT_STATE:
-        $this->messageBus->dispatch([
+        $message = Message::create([
           'template' => 'notify_group_request_approved',
-          'uid' => $author_id,
           'field_group_ref' => ['target_id' => $entity->id()],
         ]);
+
+        $message->setOwnerId($author_id);
+        $this->messageBus->dispatch($message);
         break;
     }
 

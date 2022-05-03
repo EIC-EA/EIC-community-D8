@@ -6,6 +6,7 @@ dependencies:
     - core.entity_view_mode.message.mail_body
     - field.field.message.notify_new_member_joined.field_group_membership
     - field.field.message.notify_new_member_joined.field_group_ref
+    - field.field.message.notify_new_member_joined.field_related_organisation
     - field.field.message.notify_new_member_joined.field_related_user
     - message.template.notify_new_member_joined
 id: message.notify_new_member_joined.mail_body
@@ -21,6 +22,7 @@ content:
 hidden:
   field_group_membership: true
   field_group_ref: true
+  field_related_organisation: true
   field_related_user: true
   partial_0: true
   search_api_excerpt: true

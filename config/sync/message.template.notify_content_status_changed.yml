@@ -14,7 +14,7 @@ label: 'NOTIFY :: MT :: Content status changed'
 description: 'Notifies an author that a content has changed its status.'
 text:
   -
-    value: "<p>Dear [message:author:field_first_name:value]&nbsp;[message:author:field_last_name:value],</p>\r\n\r\n<p><a href=\"[message:field_entity_url:uri]\">[message:field_referenced_entity_label:value]</a>&nbsp;has changed status from [message:field_entity_prev_status_label:value] to [message:field_entity_status_label:value].</p>\r\n\r\n<p>The EIC Community team</p>\r\n"
+    value: "<p>Dear [message:author:field_first_name:value]&nbsp;[message:author:field_last_name:value],</p>\r\n\r\n<p><a href=\"[message:field_entity_url:uri]\"><u>[message:field_referenced_entity_label:value]</u></a>&nbsp;has changed status from [message:field_entity_prev_status_label:value] to [message:field_entity_status_label:value].</p>\r\n\r\n<p>The EIC Community team</p>\r\n"
     format: full_html
 settings:
   'token options':

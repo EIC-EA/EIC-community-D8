@@ -1,0 +1,114 @@
+uuid: fc668eb8-04e1-4a0f-819e-ddf24af86539
+langcode: en
+status: true
+dependencies: {  }
+id: upgrade_d7_message_stream
+class: null
+field_plugin_method: null
+cck_plugin_method: null
+migration_tags:
+  - 'Drupal 7'
+  - Content
+migration_group: migrate_drupal_7
+label: 'Drupal 7 stream messages.'
+source:
+  plugin: eic_d7_message_stream_source
+  track_changes: true
+process:
+  template:
+    -
+      plugin: static_map
+      source: type
+      map:
+        c4m_insert__comment: stream_article_insert_update
+        c4m_insert__node__article: stream_article_insert_update
+        c4m_insert__node__discussion: stream_discussion_insert_update
+        c4m_insert__node__document: stream_document_insert_update
+        c4m_insert__node__event: stream_event_insert_update
+        c4m_insert__node__news: stream_news_insert_update
+        c4m_insert__node__photoalbum: stream_gallery_insert_update
+        c4m_insert__node__share: stream_share_insert_update
+        c4m_insert__node__wiki_page: stream_wiki_page_insert_update
+  created: timestamp
+  uid:
+    -
+      plugin: migration_lookup
+      source: uid
+      migration:
+        - upgrade_d7_user
+  arguments:
+    -
+      plugin: d7_message_arguments
+      source:
+        - arguments
+  langcode:
+    -
+      plugin: default_value
+      source: language
+      default_value: en
+  field_group_ref:
+    -
+      plugin: skip_on_empty
+      method: process
+      source: field_group_node
+    -
+      plugin: migration_lookup
+      migration:
+        - upgrade_d7_node_complete_group
+    -
+      plugin: node_complete_node_lookup
+  field_referenced_node:
+    -
+      plugin: skip_on_empty
+      method: process
+      source: field_node
+    -
+      plugin: migration_lookup
+      migration:
+        - upgrade_d7_node_complete_article
+        - upgrade_d7_node_complete_discussion
+        - upgrade_d7_node_complete_document
+        - upgrade_d7_node_complete_event
+        - upgrade_d7_node_complete_news
+        - upgrade_d7_node_complete_wiki_page
+        - upgrade_d7_node_complete_photoalbum
+    -
+      plugin: node_complete_node_translation_lookup
+  field_referenced_comment:
+    -
+      plugin: skip_on_empty
+      method: process
+      source: field_comment
+    -
+      plugin: migration_lookup
+      migration:
+        - upgrade_d7_comment
+  field_entity_type:
+    -
+      plugin: skip_on_empty
+      method: process
+      source: field_entity_type
+  field_operation_type:
+    -
+      plugin: skip_on_empty
+      method: process
+      source: field_operation
+    -
+      plugin: static_map
+      map:
+        insert: created
+        update: updated
+        share: shared
+destination:
+  plugin: 'entity:message'
+migration_dependencies:
+  required:
+    - upgrade_d7_node_complete_article
+    - upgrade_d7_node_complete_discussion
+    - upgrade_d7_node_complete_document
+    - upgrade_d7_node_complete_event
+    - upgrade_d7_node_complete_news
+    - upgrade_d7_node_complete_wiki_page
+    - upgrade_d7_node_complete_photoalbum
+    - upgrade_d7_node_complete_group
+  optional: {  }

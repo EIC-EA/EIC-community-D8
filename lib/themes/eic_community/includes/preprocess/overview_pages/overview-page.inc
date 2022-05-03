@@ -15,19 +15,32 @@ function eic_community_preprocess_overview_page(array &$variables) {
   $overview_helper = \Drupal::service('eic_overviews.global_overview_pages');
   // Adds overview page operations.
   $overview_id = $overview_helper->getCurrentOverviewPageId();
-
   if (!$overview_id) {
     return;
   }
 
   $operations = $overview_helper->getGlobalOverviewPageOperations($overview_id);
   if (!empty($operations)) {
-    foreach ($operations as $operation) {
+    if (count($operations) > 1) {
+      $items = [];
+      foreach ($operations as $operation) {
+        $items[] = [
+          'link' => $operation,
+        ];
+      }
+
       $variables['overview_page_actions'][] = [
-        'link' => [
-          'label' => $operation['title'],
-          'path' => $operation['url'],
+        'label' => t('Create Content'),
+        'items' => $items,
+        'icon' => [
+          'name' => 'plus',
+          'type' => 'ui',
         ],
+      ];
+    }
+    else {
+      $variables['overview_page_actions'][] = [
+        'link' => reset($operations),
         'type' => 'cta',
       ];
     }

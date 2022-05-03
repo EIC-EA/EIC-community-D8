@@ -9,6 +9,7 @@ use Drupal\eic_community\ValueObject\ImageValueObject;
 use Drupal\eic_media\MediaHelper;
 use Drupal\file\Entity\File;
 use Drupal\group\Entity\GroupInterface;
+use Drupal\image\Entity\ImageStyle;
 
 /**
  * Implements hook_preprocess_node__bundle() for gallery node.
@@ -63,7 +64,7 @@ function eic_community_preprocess_node__gallery(array &$variables) {
           'mime_type' => substr(strrchr($download->get('filemime')->getString(), '/'), 1),
           'path' => $download_url,
           'image' => [
-            'src' => $download->createFileUrl(),
+            'src' => ImageStyle::load('oe_theme_ratio_3_2_medium')->buildUrl($download->getFileUri()),
             'alt' => $download->getFileName(),
           ],
         ];
@@ -89,7 +90,11 @@ function eic_community_preprocess_node__gallery(array &$variables) {
           'mime_type' => substr(strrchr($download->get('filemime')->getString(), '/'), 1),
           'path' => $download_url,
           'image' => [
-            'src' => $download->createFileUrl(),
+            'src' => ImageStyle::load('oe_theme_small_2x_no_crop')->buildUrl($download->getFileUri()),
+            'alt' => $download->getFileName(),
+          ],
+          'thumb' => [
+            'src' => ImageStyle::load('media_library')->buildUrl($download->getFileUri()),
             'alt' => $download->getFileName(),
           ],
         ];

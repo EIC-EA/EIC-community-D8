@@ -103,14 +103,15 @@ class UserGenerator extends CoreGenerator {
 
     foreach ($users as $key => $user) {
       $user = User::create($user + [
-        'init' => 'email',
-        'field_first_name' => 'User #' . $key,
-        'field_last_name' => 'Role ' . reset($user['roles']),
-        'field_media' => $this->getRandomImage('public://'),
-        'mail' => $user['name'] . '@eic.local',
-        'langcode' => 'en',
-        'preferred_langcode' => 'en',
-      ]);
+          'init' => 'email',
+          'field_first_name' => 'User #' . $key,
+          'field_last_name' => 'Role ' . reset($user['roles']),
+          'field_media' => $this->getRandomImage('public://'),
+          'mail' => $user['name'] . '@eic.local',
+          'langcode' => 'en',
+          'preferred_langcode' => 'en',
+          'field_user_status' => 'user_valid',
+        ]);
 
       $user->activate();
       $user->save();
@@ -119,15 +120,16 @@ class UserGenerator extends CoreGenerator {
     for ($i = 0; $i <= 10; $i++) {
       // Create user account.
       $user = User::create($trusted_user_data + [
-        'name' => 'trusted_user' . $i,
-        'init' => 'email',
-        'field_first_name' => 'User #' . $i,
-        'field_last_name' => 'Trusted User #' . $i,
-        'field_media' => $this->getRandomImage('public://'),
-        'mail' => 'trusted_user' . $i . '@eic.local',
-        'langcode' => 'en',
-        'preferred_langcode' => 'en',
-      ]);
+          'name' => 'trusted_user' . $i,
+          'init' => 'email',
+          'field_first_name' => 'User #' . $i,
+          'field_last_name' => 'Trusted User #' . $i,
+          'field_media' => $this->getRandomImage('public://'),
+          'mail' =>  'trusted_user' . $i . '@eic.local',
+          'langcode' => 'en',
+          'preferred_langcode' => 'en',
+          'field_user_status' => 'user_valid',
+        ]);
 
       $user->activate();
       $user->save();

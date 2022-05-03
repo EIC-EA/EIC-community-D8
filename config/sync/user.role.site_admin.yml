@@ -45,6 +45,7 @@ dependencies:
     - comment
     - contact
     - content_moderation
+    - content_moderation_bypass
     - contextual
     - eic_admin
     - eic_flags
@@ -95,6 +96,7 @@ permissions:
   - 'administer menu'
   - 'administer message templates'
   - 'administer users'
+  - 'bypass groups transition restrictions'
   - 'close archive request'
   - 'close delete request'
   - 'create book content'
@@ -105,6 +107,7 @@ permissions:
   - 'create member profile'
   - 'create new books'
   - 'create news content'
+  - 'create page content'
   - 'create remote_video media'
   - 'create story content'
   - 'create terms in contact_category'
@@ -123,7 +126,6 @@ permissions:
   - 'create url aliases'
   - 'create video media'
   - 'delete all revisions'
-  - 'delete any book content'
   - 'delete any discussion content'
   - 'delete any document content'
   - 'delete any gallery content'
@@ -141,6 +143,7 @@ permissions:
   - 'delete own book content'
   - 'delete own member profile'
   - 'delete own news content'
+  - 'delete own page content'
   - 'delete own story content'
   - 'delete page revisions'
   - 'delete story revisions'

@@ -1,0 +1,33 @@
+uuid: 51f92971-d756-491d-b709-11516b8da3c3
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.message.field_group_ref
+    - group.type.event
+    - group.type.group
+    - group.type.organisation
+    - message.template.notify_group_wait_approval
+id: message.notify_group_wait_approval.field_group_ref
+field_name: field_group_ref
+entity_type: message
+bundle: notify_group_wait_approval
+label: Group
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:group'
+  handler_settings:
+    target_bundles:
+      event: event
+      group: group
+      organisation: organisation
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: event
+field_type: entity_reference

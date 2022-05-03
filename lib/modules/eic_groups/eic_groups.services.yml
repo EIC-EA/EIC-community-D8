@@ -63,3 +63,9 @@ services:
     class: Drupal\eic_groups\Commands\CreateFieldEditAccess
     tags:
       - { name: drush.command }
+  eic_groups.pathauto.generator.decorator:
+    class: Drupal\eic_groups\PathautoGenerator
+    decorates: pathauto.generator
+    decoration_priority: 1
+    public: true
+    arguments: ['@eic_groups.pathauto.generator.decorator.inner', '@current_route_match', '@config.factory', '@module_handler', '@token', '@pathauto.alias_cleaner', '@pathauto.alias_storage_helper', '@pathauto.alias_uniquifier', '@pathauto.verbose_messenger', '@string_translation', '@token.entity_mapper', '@entity_type.manager', '@plugin.manager.alias_type']

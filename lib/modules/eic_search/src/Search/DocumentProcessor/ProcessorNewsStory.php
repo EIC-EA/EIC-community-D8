@@ -5,6 +5,7 @@ namespace Drupal\eic_search\Search\DocumentProcessor;
 use Drupal\Core\File\FileUrlGeneratorInterface;
 use Drupal\file\Entity\File;
 use Drupal\image\Entity\ImageStyle;
+use Drupal\node\Entity\Node;
 use Solarium\QueryType\Update\Query\Document;
 
 /**
@@ -33,7 +34,8 @@ class ProcessorNewsStory extends DocumentProcessor {
     $teaser_image_fid = array_key_exists('its_content_teaser_image_fid', $fields) ?
       $fields['its_content_teaser_image_fid'] :
       NULL;
-
+    $node = Node::load($fields['its_content_nid']);
+    $is_restricted = $node->private->value === '1';
     $teaser_relative = '';
 
     if ($teaser_image_fid) {
@@ -45,6 +47,7 @@ class ProcessorNewsStory extends DocumentProcessor {
     }
 
     $this->addOrUpdateDocumentField($document, 'ss_content_teaser_image_url', $fields, $teaser_relative);
+    $this->addOrUpdateDocumentField($document, 'bs_is_restricted', $fields, $is_restricted);
   }
 
   /**

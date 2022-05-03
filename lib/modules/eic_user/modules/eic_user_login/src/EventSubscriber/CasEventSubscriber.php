@@ -80,7 +80,7 @@ class CasEventSubscriber implements EventSubscriberInterface {
    *   Cas pre register event.
    */
   public function userPreRegister(CasPreRegisterEvent $event) {
-    // Check if user can register against SMED.
+    // Check if user can register without SMED.
     if ($this->configFactory->get('eic_user_login.settings')->get('allow_user_register') === TRUE) {
       return;
     }
@@ -98,11 +98,18 @@ class CasEventSubscriber implements EventSubscriberInterface {
    * React to a user trying to login with cas.
    *
    * @param \Drupal\cas\Event\CasPreLoginEvent $event
-   *   Cas pre register event.
+   *   Cas pre login event.
    */
   public function userPreLogin(CasPreLoginEvent $event) {
     /** @var \Drupal\user\UserInterface $account */
     $account = $event->getAccount();
+
+    // Update user information based on EU Login attributes.
+    $properties = $event->getCasPropertyBag();
+    $account->setEmail($properties->getAttribute('email'));
+    $account->field_first_name->value = $properties->getAttribute('firstName');
+    $account->field_last_name->value = $properties->getAttribute('lastName');
+    $account->save();
 
     // Check if we have a proper value for the SMED ID.
     if ($account->hasField('field_smed_id') && !$account->get('field_smed_id')->isEmpty()) {
