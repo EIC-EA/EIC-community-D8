@@ -164,6 +164,11 @@ class EntityOperations implements ContainerInjectionInterface {
       case 'group-group_node-event':
       case 'group-group_node-wiki_page':
       case 'group-group_node-gallery':
+        if ('group-group_node-event' === $entity->bundle()) {
+          $event_count = $this->groupStatisticsStorage->calculateGroupEventsStatistics($group);
+          $this->groupStatisticsStorage->increment($group, GroupStatisticTypes::STAT_TYPE_EVENTS, $event_count);
+        }
+
         if (!$this->canUpdateGroupStatistics($entity, self::GROUP_FILE_STATISTICS_CREATE_OPERATION)) {
           return;
         }
@@ -249,7 +254,11 @@ class EntityOperations implements ContainerInjectionInterface {
       case 'event':
       case 'gallery':
       case 'wiki_page':
-        $re_index = $this->updateGroupFileStatistics($entity, $group_content, self::GROUP_FILE_STATISTICS_DELETE_OPERATION);
+        $re_index = $this->updateGroupFileStatistics(
+          $entity,
+          $group_content,
+          self::GROUP_FILE_STATISTICS_DELETE_OPERATION
+        );
         break;
 
       default:
@@ -307,7 +316,11 @@ class EntityOperations implements ContainerInjectionInterface {
       case 'event':
       case 'gallery':
       case 'wiki_page':
-        $re_index = $this->updateGroupFileStatistics($entity, $group_content, self::GROUP_FILE_STATISTICS_UPDATE_OPERATION);
+        $re_index = $this->updateGroupFileStatistics(
+          $entity,
+          $group_content,
+          self::GROUP_FILE_STATISTICS_UPDATE_OPERATION
+        );
         break;
 
       default:
