@@ -1,6 +1,6 @@
 langcode: en
 status: true
-dependencies: { }
+dependencies: {  }
 id: upgrade_d7_file_document_to_media
 class: Drupal\migrate\Plugin\Migration
 field_plugin_method: null
@@ -11,8 +11,7 @@ migration_tags:
 migration_group: migrate_drupal_7
 label: 'Public and private document files to media'
 source:
-  plugin: eic_d7_file_complete
-  # batch_size: 100
+  plugin: eic_d7_file_complete_with_smed_ids
   file_type: document
   scheme:
     - public
@@ -23,14 +22,16 @@ source:
 process:
   name: filename
   uid:
-    - plugin: migration_lookup
+    -
+      plugin: migration_lookup
       source: uid
       migration:
         - upgrade_d7_user
   created: timestamp
   changed: timestamp
   field_media_file/target_id:
-    - plugin: migration_lookup
+    -
+      plugin: migration_lookup
       source: fid
       migration:
         - upgrade_d7_file
@@ -56,4 +57,4 @@ migration_dependencies:
     - upgrade_d7_file
     - upgrade_d7_file_private
     - smed_spoken_languages
-  optional: { }
+  optional: {  }
