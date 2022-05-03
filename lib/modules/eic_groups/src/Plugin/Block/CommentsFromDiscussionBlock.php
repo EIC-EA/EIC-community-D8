@@ -158,6 +158,22 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
       return [];
     }
 
+    $cache_context = [
+      'url.path',
+      'url.query_args',
+      'user.group_permissions',
+      'session',
+      'route',
+    ];
+
+    if ('entity.node.delete_form' === $this->routeMatch->getRouteName()) {
+      return [
+        '#cache' => [
+          'contexts' => $cache_context,
+        ],
+      ];
+    }
+
     // We need to highlight the top level.
     if (
       $highlighted_comment instanceof CommentInterface &&
@@ -351,13 +367,6 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
     ];
 
     $group_id = $current_group_route ? $current_group_route->id() : 0;
-
-    $cache_context = [
-      'url.path',
-      'url.query_args',
-      'user.group_permissions',
-      'session',
-    ];
 
     if ($group_id) {
       $cache_context[] = "user.is_group_member:$group_id";
