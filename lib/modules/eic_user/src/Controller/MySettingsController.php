@@ -205,6 +205,7 @@ class MySettingsController extends ControllerBase {
     if (!in_array($notification_type, [
       NotificationTypes::GROUPS_NOTIFICATION_TYPE,
       NotificationTypes::EVENTS_NOTIFICATION_TYPE,
+      NotificationTypes::ORGANISATION_NOTIFICATION_TYPE,
     ])) {
       throw new \InvalidArgumentException('Invalid request');
     }
