@@ -57,6 +57,13 @@ abstract class SourceType implements SourceTypeInterface {
   /**
    * @inheritDoc
    */
+  public function getSecondDefaultSort(): array {
+    return [];
+  }
+
+  /**
+   * @inheritDoc
+   */
   public function getSearchFieldsId(): array {
     return [];
   }
@@ -85,6 +92,13 @@ abstract class SourceType implements SourceTypeInterface {
   /**
    * @inheritDoc
    */
+  public function getPrefilteredTopicsFieldId(): array {
+    return [];
+  }
+
+  /**
+   * @inheritDoc
+   */
   public function getPrefilteredContentType(): array {
     return [];
   }
@@ -95,4 +109,110 @@ abstract class SourceType implements SourceTypeInterface {
   public function allowPagination(): bool {
     return TRUE;
   }
+
+  /**
+   * @inheritDoc
+   */
+  public function getLoadMoreBatchItems(): int {
+    return SourceTypeInterface::READ_MORE_NUMBER_TO_LOAD;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function supportDateFilter(): bool {
+    return FALSE;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function getDateIntervalField(): array {
+    return [];
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function getRegistrationDateIntervalField(): array {
+    return [];
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function prefilterByGroupVisibility(): bool {
+    return FALSE;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function ignoreContentFromCurrentUser(): bool {
+    return FALSE;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function prefilterByCurrentUser(): bool {
+    return FALSE;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function getAuthorFieldId(): string {
+    return '';
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function excludingCurrentGroup(): bool {
+    return FALSE;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function prefilterByGroupsMembership(): bool {
+    return FALSE;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function getLabelFilterMyGroups(): string {
+    return $this->t('My groups & content only', [], ['context' => 'eic_search']);
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function getFieldsToFilterEmptyValue(): array {
+    return [];
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function ignoreAnonymousUser(): bool {
+    return FALSE;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function extraPrefilter(): array {
+    return [];
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function ignorePublishedState(): bool {
+    return FALSE;
+  }
+
 }

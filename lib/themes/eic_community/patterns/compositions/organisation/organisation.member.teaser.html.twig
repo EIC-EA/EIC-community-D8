@@ -1,0 +1,109 @@
+{% set title_element = title_element|default('h2') %}
+
+<div class="ecl-teaser ecl-teaser--organisation-member {{ highlight.is_active ? 'ecl-teaser--is-highlighted' }} {{ extra_classes }}">
+  {% if status is not empty %}
+    <div class="ecl-teaser__status">
+      {% include "@theme/patterns/components/content-type-indicator.html.twig" with status|default({})|merge({
+        extra_classes: 'ecl-teaser__type',
+        icon: status.icon|default(defaults)|merge({
+          size: 's',
+        }),
+        icon_file_path: icon_file_path,
+      }) only %}
+    </div>
+  {% endif %}
+  <div class="ecl-teaser__main-wrapper">
+    {% if image is not empty and image.src is not null %}
+      <a href="{{ path }}">
+        <figure class="ecl-teaser__image-wrapper">
+          <img class="ecl-teaser__image" src="{{ image.src }}" alt="{{ image.alt }}" />
+        </figure>
+      </a>
+    {% else %}
+      <figure class="ecl-teaser__image-wrapper ecl-teaser__image-wrapper--no-image">
+        {% include '@ecl-twig/ec-component-icon/ecl-icon.html.twig' with {
+          icon: {
+            size: 'm',
+            path: icon_file_path,
+            type: "custom",
+            name: "user"
+          }
+        } only %}
+      </figure>
+    {% endif %}
+    <div class="ecl-teaser__content-wrapper">
+      <div class="ecl-teaser__content">
+        <{{ title_element }} class="ecl-teaser__title">
+          {% if path is not empty %}
+            <a href="{{ path }}"><span class="ecl-teaser__title-overflow"><span>{{ title }}</span></span></a>
+          {% else %}
+              <span class="ecl-teaser__title-overflow"><span>{{ title }}</span></span>
+          {% endif %}
+        </{{ title_element }}>
+
+      {% if job_titles is not empty %}
+        <div class="ecl-teaser__description">
+          {{ job_titles }}
+        </div>
+      {% endif %}
+
+      {% if organisations is not empty %}
+        <div class="ecl-teaser__links">
+          {% for organisation in organisations %}
+            {% if organisation.path is not empty %}
+              <a class="ecl-teaser__link" href="{{ organisation.path }}">{{ organisation.label }}</a>
+            {% else %}
+              <span class="ecl-teaser__link">{{ organisation.label }}</span>
+            {% endif %}
+          {% endfor %}
+        </div>
+      {% endif %}
+
+        {% if location is not empty %}
+          <address class="ecl-teaser__description">
+            {{ location.label }}
+          </address>
+        {% endif %}
+
+        {% if size is not empty %}
+          <p class="ecl-teaser__description">
+            {% if icon_file_path %}
+              {% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with {
+                icon: {
+                  size: 'xs',
+                  path: icon_file_path,
+                  name: size.icon.name|default('company'),
+                  type: size.icon.type|default('custom'),
+                }
+              } only %}
+            {% endif %}
+            {{ size.label }}
+          </p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+{% if stats is not empty %}
+  <div class="ecl-teaser__meta-footer">
+    <div class="ecl-teaser__stats">
+      {% for stat in stats %}
+        <div class="ecl-teaser__stat">
+          {% if stat.icon is not empty and icon_file_path %}
+            {% include '@ecl-twig/ec-component-icon/ecl-icon.html.twig' with {
+              icon: {
+                size: 'xs',
+                path: icon_file_path,
+                type: stat.icon.type|default('branded'),
+                name: stat.icon.name,
+              },
+              extra_classes: 'ecl-teaser__stat-icon',
+            } only %}
+          {% endif %}
+          <span class="ecl-teaser__stat-label">{{ stat.label }}</span>
+          <span class="ecl-teaser__stat-value">{{ stat.value }}</span>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+{% endif %}
+</div>

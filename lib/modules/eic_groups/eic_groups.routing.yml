@@ -4,7 +4,54 @@ eic_groups.about_page:
     _controller: '\Drupal\eic_groups\Controller\AboutPageController::build'
     _title_callback: '\Drupal\eic_groups\Controller\AboutPageController::title'
   requirements:
-    _group_permission: 'view group'
+    _custom_access: '\Drupal\eic_groups\Controller\AboutPageController::access'
+
+eic_groups.discussion_add_comment:
+  path: '/api/discussion/{discussion_id}/comment'
+  methods: [ POST ]
+  defaults:
+    _controller: '\Drupal\eic_groups\Controller\DiscussionController::addComment'
+  requirements:
+    _permission: 'access content'
+
+eic_groups.discussion_fetch_comment:
+  path: '/api/discussion/{discussion_id}/comments'
+  defaults:
+    _controller: '\Drupal\eic_groups\Controller\DiscussionController::fetchComments'
+  requirements:
+    _permission: 'access content'
+
+eic_groups.discussion_flag_comment:
+  path: '/api/discussion/{discussion_id}/{flag}/{comment_id}/{type}'
+  methods: [ POST ]
+  defaults:
+    _controller: '\Drupal\eic_groups\Controller\DiscussionController::flagComment'
+  requirements:
+    _permission: 'access content'
+
+eic_groups.discussion_update_comment:
+  path: '/api/discussion/{discussion_id}/edit/{comment_id}'
+  methods: [ PATCH ]
+  defaults:
+    _controller: '\Drupal\eic_groups\Controller\DiscussionController::editComment'
+  requirements:
+    _permission: 'access content'
+
+eic_groups.discussion_delete_comment:
+  path: '/api/discussion/{group_id}/{discussion_id}/delete/{comment_id}'
+  methods: [ DELETE ]
+  defaults:
+    _controller: '\Drupal\eic_groups\Controller\DiscussionController::deleteComment'
+  requirements:
+    _custom_access: '\Drupal\eic_groups\Controller\DiscussionController::accessDelete'
+
+eic_groups.discussion_comment_has_permission:
+  path: '/api/discussion/{discussion_id}/has-flag-permission/{comment_id}/{flag}'
+  methods: [ GET ]
+  defaults:
+    _controller: '\Drupal\eic_groups\Controller\DiscussionController::hasFlagPermission'
+  requirements:
+    _permission: 'access content'
 
 eic_groups.group.publish:
   path: '/group/{group}/publish'
@@ -39,18 +86,39 @@ eic_groups.group.highlight_content:
     node: \d+
     group: \d+
 
-eic_overviews.groups.overview_page.files:
-  path: '/group/{group}/library'
+eic_groups.group.like_content:
+  path: '/group/{group}/like-content/{action}/{node}'
+  methods: [ POST ]
   defaults:
-    _controller: '\Drupal\eic_overviews\Controller\GroupOverviewsController::buildGenericPage'
-    _title: 'Files'
+    _controller: '\Drupal\eic_groups\Controller\GroupOperationsController::likeContent'
+    _title: 'Like group content'
   requirements:
-    _group_permission: 'access files overview'
+    _like_group_content: 'TRUE'
+    node: \d+
+    group: \d+
 
-eic_overviews.groups.overview_page.latest_activity_stream:
-  path: '/group/{group}/latest-activity'
+eic_groups.group.like_content_status:
+  path: '/group/{group}/like-status/{node}'
+  methods: [ GET ]
   defaults:
-    _controller: '\Drupal\eic_overviews\Controller\GroupOverviewsController::buildGenericPage'
-    _title: 'Latest activity'
+    _controller: '\Drupal\eic_groups\Controller\GroupOperationsController::likeContentStatus'
+    _title: 'Like group content status'
   requirements:
-    _group_permission: 'access latest activity stream'
+    _like_group_content: 'TRUE'
+    node: \d+
+    group: \d+
+
+eic_groups.group_content.resend_invite:
+  path: '/group/{group}/invite/{group_content}/resend'
+  defaults:
+    _controller: '\Drupal\eic_groups\Controller\GroupMembershipInvitationController::resendInvite'
+  requirements:
+    _group_permission: 'administer members'
+    group: \d+
+    group_content: \d+
+  options:
+    parameters:
+      group_content:
+        type: entity:group_content
+      group:
+        type: entity:group

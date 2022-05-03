@@ -1,16 +1,16 @@
 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <path d="M18.0126 4C16.6971 4 15.3887 4 14.0732 4C13.9537 4 13.8411 4 13.7215 3.97473C13.2572 3.87365 12.9618 3.44408 13.004 2.91343C13.0392 2.40805 13.405 2.00374 13.8622 2.00374C14.6219 1.99532 15.3887 2.00374 16.1484 2.00374C18.1181 2.00374 20.0877 2.00374 22.0503 2.00374C22.6483 2.00374 23 2.37436 23 2.99766C23 3.61254 22.6412 4 22.0503 4C20.7138 4 19.3632 4 18.0126 4Z" fill="#004494"/>
+  <path d="M18.0126 4C16.6971 4 15.3887 4 14.0732 4C13.9537 4 13.8411 4 13.7215 3.97473C13.2572 3.87365 12.9618 3.44408 13.004 2.91343C13.0392 2.40805 13.405 2.00374 13.8622 2.00374C14.6219 1.99532 15.3887 2.00374 16.1484 2.00374C18.1181 2.00374 20.0877 2.00374 22.0503 2.00374C22.6483 2.00374 23 2.37436 23 2.99766C23 3.61254 22.6412 4 22.0503 4C20.7138 4 19.3632 4 18.0126 4Z" fill="currentColor"/>
   <mask id="path-2-inside-1" fill="white">
   <rect x="1" y="1" width="10" height="10" rx="1"/>
   </mask>
-  <rect x="1" y="1" width="10" height="10" rx="1" stroke="#004494" stroke-width="4" mask="url(#path-2-inside-1)"/>
+  <rect x="1" y="1" width="10" height="10" rx="1" stroke="currentColor" stroke-width="4" mask="url(#path-2-inside-1)" fill-opacity="0"/>
   <mask id="path-3-inside-2" fill="white">
   <rect x="13" y="13" width="10" height="10" rx="1"/>
   </mask>
-  <rect x="13" y="13" width="10" height="10" rx="1" stroke="#004494" stroke-width="4" mask="url(#path-3-inside-2)"/>
-  <rect x="13" y="5" width="6" height="2" rx="1" fill="#004494"/>
-  <rect x="2" y="20" width="9" height="2" rx="1" fill="#004494"/>
-  <rect x="13" y="8" width="8" height="2" rx="1" fill="#004494"/>
-  <rect x="3" y="17" width="8" height="2" rx="1" fill="#004494"/>
-  <rect x="1" y="14" width="10" height="2" rx="1" fill="#004494"/>
+  <rect x="13" y="13" width="10" height="10" rx="1" stroke="currentColor" stroke-width="4" mask="url(#path-3-inside-2)" fill-opacity="0"/>
+  <rect x="13" y="5" width="6" height="2" rx="1" fill="currentColor"/>
+  <rect x="2" y="20" width="9" height="2" rx="1" fill="currentColor"/>
+  <rect x="13" y="8" width="8" height="2" rx="1" fill="currentColor"/>
+  <rect x="3" y="17" width="8" height="2" rx="1" fill="currentColor"/>
+  <rect x="1" y="14" width="10" height="2" rx="1" fill="currentColor"/>
 </svg>

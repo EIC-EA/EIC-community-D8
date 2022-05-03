@@ -1,0 +1,285 @@
+<?php
+
+/**
+ * @file
+ * Primary module hooks for EIC Group membership module.
+ */
+
+use Drupal\Component\Serialization\Json;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\eic_flags\FlagType;
+use Drupal\eic_groups\EICGroupsHelper;
+use Drupal\eic_overviews\GlobalOverviewPages;
+use Drupal\eic_user\UserHelper;
+use Drupal\group\Entity\Form\GroupContentForm;
+use Drupal\group\Entity\GroupInterface;
+use Drupal\oec_group_flex\GroupVisibilityRecordInterface;
+use Drupal\message\Entity\Message;
+
+/**
+ * Implements hook_entity_operation_alter().
+ */
+function eic_group_membership_entity_operation_alter(
+  array &$operations,
+  EntityInterface $entity
+) {
+  if ($entity->getEntityTypeId() !== 'group_content') {
+    return;
+  }
+
+  if ($entity->getContentPlugin()->getPluginId() !== 'group_membership') {
+    return;
+  }
+
+  // Changes operation titles.
+  foreach (array_keys($operations) as $key) {
+    switch ($key) {
+      case 'request_transfer_ownership':
+      case 'accept_request_transfer_ownership':
+      case 'deny_request_transfer_ownership':
+      case 'cancel_request_transfer_ownership':
+        break;
+
+      default:
+        $operations[$key]['title'] = t('@operation member', ['@operation' => ucfirst($key)]);
+        break;
+    }
+  }
+}
+
+/**
+ * Implements hook_views_data_alter().
+ */
+function eic_group_membership_views_data_alter(&$data) {
+  // Create a new views field for showing the group transfer ownership status
+  // for each group member.
+  $data['group_content']['transfer_ownership_status'] = [
+    'title' => t('Member: show group transfer ownership status'),
+    'group' => t('Group content'),
+    'field' => [
+      'id' => 'eic_group_membership_transfer_ownership_status',
+      'title' => t('Group transfer ownership status'),
+      'help' => t('Shows group transfer ownership status for the group member'),
+    ],
+  ];
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function eic_group_membership_form_alter(
+  &$form,
+  FormStateInterface $form_state,
+  $form_id
+) {
+  if ($form_id === 'group_content_group-group_membership_group-leave_form') {
+    $form['actions']['submit']['#submit'][] = 'eic_group_membership_leave_form_submit';
+    return;
+  }
+
+  /** @var \Drupal\Core\Entity\EntityForm $form_object */
+  $form_object = $form_state->getFormObject();
+  if (!$form_object instanceof GroupContentForm) {
+    return;
+  }
+
+  /** @var \Drupal\group\Entity\GroupContentInterface $entity */
+  $entity = $form_object->getEntity();
+
+  if ($entity->getContentPlugin()->getPluginId() !== 'group_membership') {
+    return;
+  }
+
+  $group_type = $entity->getContentPlugin()->getGroupTypeId();
+  $owner_role = $group_type . '-' . EICGroupsHelper::GROUP_TYPE_OWNER_ROLE;
+
+  switch ($form_id) {
+    case "group_content_{$group_type}-group_membership_add_form":
+      if (isset($form['group_roles']['widget']['#options'][$owner_role])) {
+        unset($form['group_roles']['widget']['#options'][$owner_role]);
+      }
+      break;
+
+    case "group_content_{$group_type}-group_membership_edit_form":
+      if (isset($form['group_roles']['widget']['#options'][$owner_role])) {
+        unset($form['group_roles']['widget']['#options'][$owner_role]);
+        array_unshift($form['actions']['submit']['#submit'], 'eic_group_membership_update_membership_role_form_submit');
+      }
+      break;
+  }
+}
+
+/**
+ * Custom submit handler to keep the group owner role when editing membership.
+ *
+ * @param array $form
+ *   An associative array containing the structure of the form.
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
+ *   The current state of the form.
+ */
+function eic_group_membership_update_membership_role_form_submit(
+  array $form,
+  FormStateInterface $form_state
+) {
+  /** @var \Drupal\group\Entity\GroupContentInterface $entity */
+  $entity = $form_state->getFormObject()->getEntity();
+  $current_group_owner = EICGroupsHelper::getGroupOwner($entity->getGroup());
+  $specific_user = $entity->getEntity();
+  $old_roles = $entity->get('group_roles')->getValue();
+  $new_roles = $form_state->getValue('group_roles');
+  $group_owner = EICGroupsHelper::getGroupOwner($entity->getGroup());
+
+  $is_new_group_admin = array_filter($new_roles, function (array $role) use ($entity) {
+    return
+      $entity->getContentPlugin()->getGroupTypeId() . '-' . EICGroupsHelper::GROUP_TYPE_ADMINISTRATOR_ROLE
+      === $role['target_id'];
+  });
+
+  // if user has no role and he's promoted group_admin, send message.
+  if (empty($old_roles) && count($is_new_group_admin) > 0) {
+    /** @var \Drupal\eic_messages\Service\MessageBus $bus */
+    $bus = \Drupal::service('eic_messages.message_bus');
+    $message = Message::create([
+      'template' => 'notify_group_admin_promoted',
+      'field_group_ref' => ['target_id' => $entity->getGroup()->id()],
+      'field_group_owner' => ['target_id' => $group_owner->id()],
+      'field_event_executing_user' => ['target_id' => \Drupal::currentUser()->id()],
+    ]);
+
+    $message->setOwnerId($specific_user->id());
+
+    $bus->dispatch($message);
+  }
+
+  // Keep the group owner role if we are editing the owner membership.
+  if ($entity->getEntity()->id() === $current_group_owner->id()) {
+    $owner_role = $entity->getContentPlugin()->getGroupTypeId() . '-' . EICGroupsHelper::GROUP_TYPE_OWNER_ROLE;
+    $group_roles = $form_state->getValue('group_roles');
+    $group_roles[] = [
+      'target_id' => $owner_role,
+    ];
+    $form_state->setValue('group_roles', $group_roles);
+  }
+}
+
+/**
+ * Submit handler to set another redirect URL.
+ *
+ * @param array $form
+ *   An associative array containing the structure of the form.
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
+ *   The current state of the form.
+ *
+ * @throws \Drupal\Core\Entity\EntityMalformedException
+ */
+function eic_group_membership_leave_form_submit(
+  array $form,
+  FormStateInterface $form_state
+) {
+  $group_overview = GlobalOverviewPages::getGlobalOverviewPageLink(GlobalOverviewPages::GROUPS);
+  $form_state->setRedirectUrl($group_overview->getUrl());
+
+  \Drupal::messenger()->addStatus(t('You successfully left the group'));
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_delete().
+ */
+function eic_group_membership_group_content_delete(EntityInterface $entity) {
+  /** @var \Drupal\group\Entity\GroupContentInterface $entity */
+  if ($entity->getContentPlugin()->getPluginId() !== 'group_membership') {
+    return;
+  }
+
+  $user = $entity->getEntity();
+  $flag_service = \Drupal::service('flag');
+  $flag_entity = $entity->getGroup();
+  $flag = $flag_service->getFlagById(FlagType::FOLLOW_GROUP);
+  $flagging = $flag_service->getFlagging($flag, $flag_entity, $user);
+
+  // User is following the group, so we force the unfollow when the user leaves
+  // the group.
+  if ($flagging) {
+    $flag_service->unflag($flag, $flag_entity, $user);
+  }
+
+  $config = \Drupal::config('eic_group_membership.settings');
+  // Setting to unfollow group content nodes when leaving the group is disabled
+  // so we do nothing.
+  if (!$config->get('unfollow_group_content_enqueue_items')) {
+    return;
+  }
+
+  $group_visibility_storage = \Drupal::service('oec_group_flex.group_visibility.storage');
+  $group_visibility = $group_visibility_storage->load($flag_entity->id());
+
+  $exclude_group_visibilities = [
+    'public',
+    'restricted_community_members',
+  ];
+
+  if (UserHelper::isPowerUser($user)) {
+    return;
+  }
+
+  // Creates queue items to unfollow group content nodes via drush command.
+  if (!in_array($group_visibility->getType(), $exclude_group_visibilities)) {
+    $queue = \Drupal::queue('eic_group_membership_unfollow_content');
+    $queue->createItem([
+      'gid' => $flag_entity->id(),
+      'uid' => $user->id(),
+    ]);
+  }
+}
+
+/**
+ * Implements hook_group_flex_visibility_save().
+ */
+function eic_group_membership_group_flex_visibility_save(
+  GroupInterface $group,
+  GroupVisibilityRecordInterface $old_group_visibility,
+  GroupVisibilityRecordInterface $new_group_visibility
+) {
+  $config = \Drupal::config('eic_group_membership.settings');
+  // Setting to unfollow group content nodes on visibility change is disabled,
+  // so we do nothing.
+  if (!$config->get('unfollow_group_content_enqueue_items')) {
+    return;
+  }
+
+  if ($old_group_visibility->getType() !== $new_group_visibility->getType()) {
+    switch ($new_group_visibility->getType()) {
+      case 'private':
+      case 'custom_restricted':
+        $queue = \Drupal::queue('eic_group_membership_visibility_change_unfollow_content');
+        $queue->createItem([
+          'gid' => $group->id(),
+        ]);
+        break;
+
+      default:
+        break;
+
+    }
+  }
+  else {
+    switch ($new_group_visibility->getType()) {
+      case 'custom_restricted':
+        if (
+          Json::encode($old_group_visibility->getOptions()) !==
+          Json::encode($new_group_visibility->getOptions())
+        ) {
+          $queue = \Drupal::queue('eic_group_membership_visibility_change_unfollow_content');
+          $queue->createItem([
+            'gid' => $group->id(),
+          ]);
+        }
+        break;
+
+      default:
+        break;
+
+    }
+  }
+}

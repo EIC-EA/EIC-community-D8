@@ -1,0 +1,51 @@
+uuid: c25f5ff7-7c1e-4f7a-bd49-fc4fae7c70ef
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.message.notify_contact_global_copy.field_body
+    - field.field.message.notify_contact_global_copy.field_sender
+    - field.field.message.notify_contact_global_copy.field_subject
+    - message.template.notify_contact_global_copy
+  module:
+    - text
+id: message.notify_contact_global_copy.default
+targetEntityType: message
+bundle: notify_contact_global_copy
+mode: default
+content:
+  field_body:
+    type: text_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_sender:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_subject:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 3
+    region: content
+  partial_0:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  partial_1:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  search_api_excerpt: true

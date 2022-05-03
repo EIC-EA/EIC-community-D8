@@ -7,6 +7,7 @@ dependencies:
     - field.field.node.video.field_body
     - field.field.node.video.field_comments
     - field.field.node.video.field_document_type
+    - field.field.node.video.field_image
     - field.field.node.video.field_language
     - field.field.node.video.field_related_contributors
     - field.field.node.video.field_video_media
@@ -25,80 +26,104 @@ mode: default
 content:
   field_body:
     type: text_default
-    weight: 1
-    region: content
     label: hidden
     settings: {  }
     third_party_settings: {  }
+    weight: 2
+    region: content
   field_comments:
     type: comment_group_content
-    weight: 4
-    region: content
     label: hidden
     settings:
       view_mode: default
       pager_id: 0
     third_party_settings: {  }
-  field_document_type:
     weight: 5
+    region: content
+  field_document_type:
+    type: entity_reference_label
     label: above
     settings:
       link: true
     third_party_settings: {  }
+    weight: 6
+    region: content
+  field_image:
     type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 12
     region: content
   field_related_contributors:
-    weight: 7
+    type: entity_reference_revisions_entity_view
     label: above
     settings:
       view_mode: default
       link: ''
     third_party_settings: {  }
-    type: entity_reference_revisions_entity_view
+    weight: 8
     region: content
   field_video_media:
     type: entity_reference_entity_view
-    weight: 2
-    region: content
     label: hidden
     settings:
       view_mode: oe_theme_main_content
       link: false
     third_party_settings: {  }
+    weight: 3
+    region: content
   field_vocab_geo:
-    weight: 6
+    type: entity_reference_label
     label: above
     settings:
       link: true
     third_party_settings: {  }
-    type: entity_reference_label
+    weight: 7
     region: content
   field_vocab_topics:
     type: entity_reference_label
-    weight: 3
-    region: content
     label: hidden
     settings:
       link: true
     third_party_settings: {  }
-  flag_highlight_content:
-    weight: 0
+    weight: 4
     region: content
+  flag_bookmark_content:
     settings: {  }
     third_party_settings: {  }
-  member_content_edit_access:
-    weight: 1
+    weight: 9
     region: content
+  flag_follow_content:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 10
+    region: content
+  flag_highlight_content:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  flag_like_content:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 11
+    region: content
+  member_content_edit_access:
+    type: boolean
     label: above
     settings:
       format: default
       format_custom_false: ''
       format_custom_true: ''
     third_party_settings: {  }
-    type: boolean
+    weight: 1
+    region: content
 hidden:
   extra_field_eic_theme_helper_short_title_with_fallback: true
   field_language: true
+  flag_recommend: true
   langcode: true
   links: true
   private: true

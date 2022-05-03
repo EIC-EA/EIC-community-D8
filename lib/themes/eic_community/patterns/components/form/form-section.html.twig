@@ -23,6 +23,11 @@
         {% include '@theme/patterns/components/form/form-radio.html.twig' with field|default({})|without('type')|merge({
           icon_file_path: icon_file_path
         }) only %}
+      {% elseif field.type == 'radio-block' %}
+        {% include '@theme/patterns/components/form/form-radio-block.html.twig' with field|default({})|without('type')|merge({
+          type: 'submit',
+          icon_path: icon_file_path
+        }) %}
       {% elseif field.type == 'select' %}
         {% include '@ecl-twig/ec-component-select/ecl-select.html.twig' with field|default({})|without('type')|merge({
           icon_path: icon_file_path,
@@ -54,6 +59,10 @@
           icon_path: icon_file_path,
           extra_classes: 'ecl-link--button ecl-link--button-ghost',
         }) %}
+      {% elseif field.type == 'info' %}
+        <div class="ecl-form-group ecl-form-group--info">
+          {{ field.text }}
+        </div>
       {% else %}
         {% include '@ecl-twig/ec-component-text-input/ecl-text-input.html.twig' with field|default({})|merge({
           width: 'full',

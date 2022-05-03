@@ -1,0 +1,16 @@
+.MuiCollapse-container {
+  max-height: 150px !important;
+  overflow-y: auto !important;
+}
+
+.MuiChip-root {
+  margin: 0 $ecl-spacing-xs $ecl-spacing-xs 0;
+}
+
+.MuiChip-colorPrimary {
+  background-color: $ecl-color-blue !important;
+}
+
+.MuiSvgIcon-colorPrimary {
+  color: $ecl-color-blue !important;
+}

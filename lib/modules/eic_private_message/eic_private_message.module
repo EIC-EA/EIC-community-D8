@@ -1,0 +1,35 @@
+<?php
+
+use Drupal\eic_private_message\Constants\PrivateMessage;
+
+/**
+ * Implements hook_theme.
+ */
+function eic_private_message_theme() {
+  return [
+    'user_private_message_mail' => [
+      'variables' => [
+        'from' => '',
+        'body' => '',
+      ],
+    ],
+  ];
+}
+
+/**
+ * Implements hook_mail.
+ */
+function eic_private_message_mail($key, &$message, $params) {
+  if (PrivateMessage::PRIVATE_MESSAGE_USER_MAIL_KEY === $key) {
+    $build = [
+      '#theme' => 'user_private_message_mail',
+      '#from' => $params['from'],
+      '#body' => $params['body']['value']
+    ];
+    /** @var \Drupal\Core\Render\Renderer $renderer */
+    $renderer = \Drupal::service('renderer');
+
+    $message['subject'] = $params['subject'];
+    $message['body'][] = $renderer->render($build);
+  }
+}

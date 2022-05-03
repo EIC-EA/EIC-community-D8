@@ -1,13 +1,53 @@
 .ecl-button {
   text-align: inherit;
+  cursor: pointer;
+  border-style: solid;
+  border-width: 2px;
+  border-color: $ecl-color-blue;
 
   $node: &;
   &__label {
     // Fixes the issue where the ECL Link button variant has a non breaking space after the icon,
     #{$node}__icon + &::before {
       display: inline;
-      content: "\00a0";
+      content: '\00a0';
     }
+  }
+
+  &--primary {
+    border-color: $ecl-color-blue;
+
+    &:hover {
+      color: #fff;
+      border-width: 2px;
+      font-weight: 700;
+      border-style: solid;
+      border-color: $ecl-color-blue;
+    }
+  }
+
+  &--danger {
+    border-color: $ecl-color-red;
+    color: $ecl-color-red;
+    &:hover {
+      border-color: $ecl-color-red-130;
+      color: $ecl-color-red-130;
+    }
+  }
+
+  &--call {
+    border: 2px solid $ecl-color-yellow;
+    &:hover {
+      padding: 0.75rem 1rem;
+    }
+  }
+
+  &--ghost {
+    border-color: transparent;
+  }
+
+  &--secondary {
+    padding: 0.75rem 1rem;
   }
 
   &--has-compact-layout,
@@ -17,7 +57,7 @@
       @include visually-hidden;
     }
 
-    #{$node}__label+#{$node}__icon,
+    #{$node}__label + #{$node}__icon,
     #{$node}__icon {
       margin-right: 0;
       margin-left: 0;
@@ -28,7 +68,6 @@
   &--as-form-option {
     padding: map-get($ecl-spacing, 'xs');
   }
-
 
   &--as-form-option {
     color: ecl-typography('color', 'meta');

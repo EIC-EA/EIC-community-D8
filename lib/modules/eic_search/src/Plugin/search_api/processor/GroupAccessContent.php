@@ -21,7 +21,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   label = @Translation("Group content access"),
  *   description = @Translation("Adds content access for group restriction."),
  *   stages = {
- *     "pre_index_save" = -10,
+ *     "preprocess_query" = 0,
  *   },
  * )
  */
@@ -95,7 +95,7 @@ class GroupAccessContent extends ProcessorPluginBase {
    */
   public function preprocessSolrSearchQuery(Query $query) {
     $visibility_condition = $this->buildGroupVisibilityQuery();
-    $field_query = $query->getParams()['fq'] ?: '';
+    $field_query = $query->getParams()['fq'] ?? '';
 
     $visibility_query = empty($field_query) ?
       $visibility_condition :
@@ -135,14 +135,20 @@ class GroupAccessContent extends ProcessorPluginBase {
     // If group is private, the user needs to be in group to view it.
     $group_ids_formatted = !empty($group_ids) ? implode(' OR ', $group_ids) : 0;
 
+    // Get user organisation types.
+    $user_organisation_types = \Drupal::service('eic_organisations.helper')->getUserOrganisationTypes($user);
+    $user_organisation_types_formatted = !empty($user_organisation_types) ? implode(' OR ', $user_organisation_types) : 0;
+
     $query = '
     ss_group_visibility:' . GroupVisibilityType::GROUP_VISIBILITY_PUBLIC . '
-    OR (ss_group_visibility:' . GroupVisibilityType::GROUP_VISIBILITY_PRIVATE . ' AND its_group_id_integer:(' . $group_ids_formatted . '))
+    OR (ss_group_visibility:' . GroupVisibilityType::GROUP_VISIBILITY_PRIVATE . ' AND its_global_group_parent_id:(' . $group_ids_formatted . '))
     OR (ss_group_visibility:' . GroupVisibilityType::GROUP_VISIBILITY_OPTION_EMAIL_DOMAIN . ' AND ss_' . GroupVisibilityType::GROUP_VISIBILITY_OPTION_EMAIL_DOMAIN . ':*' . $domain . '*)
+    OR (ss_group_visibility:' . GroupVisibilityType::GROUP_VISIBILITY_OPTION_ORGANISATIONS . ' AND itm_' . GroupVisibilityType::GROUP_VISIBILITY_OPTION_ORGANISATIONS . ':(' . $group_ids_formatted . '))
+    OR (ss_group_visibility:' . GroupVisibilityType::GROUP_VISIBILITY_OPTION_ORGANISATION_TYPES . ' AND itm_' . GroupVisibilityType::GROUP_VISIBILITY_OPTION_ORGANISATION_TYPES . ':(' . $user_organisation_types_formatted . '))
     ';
 
     // Restricted community group, only trusted_user role can view.
-    if (!$user->isAnonymous() && $user->hasRole('trusted_user')) {
+    if (!$user->isAnonymous() && ($user->hasRole(UserHelper::ROLE_TRUSTED_USER) || UserHelper::isPowerUser($this->getCurrentUser()))) {
       $query .= ' OR (ss_group_visibility:' . GroupVisibilityType::GROUP_VISIBILITY_COMMUNITY . ')';
     }
 

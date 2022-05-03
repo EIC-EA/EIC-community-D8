@@ -1,0 +1,15 @@
+uuid: a131a27f-6b8b-4235-9451-a0f034e80cde
+langcode: en
+status: true
+dependencies: {  }
+name: banner_1920x1080
+label: 'Banner (1920x1080)'
+effects:
+  9fed3c9e-231f-48f9-a298-2b53fa36efcf:
+    uuid: 9fed3c9e-231f-48f9-a298-2b53fa36efcf
+    id: image_scale_and_crop
+    weight: 1
+    data:
+      width: 1920
+      height: 1080
+      anchor: center-center

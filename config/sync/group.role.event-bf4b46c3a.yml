@@ -1,0 +1,37 @@
+uuid: c930f94f-d6da-416f-9f32-e1dd868e8fa3
+langcode: en
+status: true
+dependencies:
+  config:
+    - group.type.event
+  enforced:
+    config:
+      - user.role.site_admin
+id: event-bf4b46c3a
+label: 'Site Admin'
+weight: -5
+internal: true
+audience: outsider
+group_type: event
+permissions_ui: false
+permissions:
+  - 'access discussions overview'
+  - 'access events overview'
+  - 'access files overview'
+  - 'access group search overview'
+  - 'access latest activity stream'
+  - 'access members overview'
+  - 'access news overview'
+  - 'access wiki overview'
+  - 'delete any invitation'
+  - 'delete own invitations'
+  - 'edit all comments'
+  - 'edit own comments'
+  - 'highlight group content'
+  - 'invite users to group'
+  - 'post comments'
+  - 'view any unpublished group'
+  - 'view comments'
+  - 'view group invitations'
+  - 'view group_membership content'
+  - 'view own unpublished group'

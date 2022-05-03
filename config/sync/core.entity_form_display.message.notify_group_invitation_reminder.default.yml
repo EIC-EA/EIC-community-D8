@@ -1,0 +1,67 @@
+uuid: 1e27dba9-19e0-4a11-8701-4ef1c3355b2c
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.message.notify_group_invitation_reminder.field_event_executing_user
+    - field.field.message.notify_group_invitation_reminder.field_group_invitation
+    - field.field.message.notify_group_invitation_reminder.field_group_ref
+    - field.field.message.notify_group_invitation_reminder.field_invitee
+    - field.field.message.notify_group_invitation_reminder.field_inviter
+    - message.template.notify_group_invitation_reminder
+id: message.notify_group_invitation_reminder.default
+targetEntityType: message
+bundle: notify_group_invitation_reminder
+mode: default
+content:
+  field_event_executing_user:
+    type: entity_reference_autocomplete
+    weight: 1
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_group_invitation:
+    type: entity_reference_autocomplete
+    weight: 3
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_group_ref:
+    type: entity_reference_autocomplete
+    weight: 0
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_invitee:
+    type: entity_reference_autocomplete
+    weight: 2
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_inviter:
+    type: entity_reference_autocomplete
+    weight: 4
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+hidden: {  }

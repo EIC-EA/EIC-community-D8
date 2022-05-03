@@ -1,7 +1,6 @@
 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <rect width="24" height="24" fill="white"/>
-  <rect x="1" y="1" width="22" height="22" rx="1" stroke="#004494" stroke-width="2"/>
-  <path d="M6 6L9 18L12 8L15 18L18 6" stroke="#004494" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M4 5C3.44772 5 3 5.44772 3 6C3 6.55228 3.44772 7 4 7V5ZM8 7C8.55228 7 9 6.55228 9 6C9 5.44772 8.55228 5 8 5V7ZM4 7H8V5H4V7Z" fill="#004494"/>
-  <path d="M16 5C15.4477 5 15 5.44772 15 6C15 6.55228 15.4477 7 16 7V5ZM20 7C20.5523 7 21 6.55228 21 6C21 5.44772 20.5523 5 20 5V7ZM16 7H20V5H16V7Z" fill="#004494"/>
+  <rect x="1" y="1" width="22" height="22" rx="1" stroke="currentColor" stroke-width="2" fill-opacity="0" />
+  <path d="M6 6L9 18L12 8L15 18L18 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill-opacity="0" />
+  <path d="M4 5C3.44772 5 3 5.44772 3 6C3 6.55228 3.44772 7 4 7V5ZM8 7C8.55228 7 9 6.55228 9 6C9 5.44772 8.55228 5 8 5V7ZM4 7H8V5H4V7Z" fill="currentColor"/>
+  <path d="M16 5C15.4477 5 15 5.44772 15 6C15 6.55228 15.4477 7 16 7V5ZM20 7C20.5523 7 21 6.55228 21 6C21 5.44772 20.5523 5 20 5V7ZM16 7H20V5H16V7Z" fill="currentColor"/>
 </svg>

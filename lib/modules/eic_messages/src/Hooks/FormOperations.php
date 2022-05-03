@@ -2,11 +2,13 @@
 
 namespace Drupal\eic_messages\Hooks;
 
+use Drupal\content_moderation\ModerationInformation;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\eic_content\Constants\DefaultContentModerationStates;
 use Drupal\eic_content\EICContentHelper;
 use Drupal\eic_messages\ActivityStreamOperationTypes;
 use Drupal\eic_messages\Service\GroupContentMessageCreator;
@@ -46,6 +48,13 @@ class FormOperations implements ContainerInjectionInterface {
   protected $groupContentMessageCreator;
 
   /**
+   * The Content moderation information service.
+   *
+   * @var \Drupal\content_moderation\ModerationInformation
+   */
+  protected $contentModerationInfo;
+
+  /**
    * Constructs a new EntityOperations object.
    *
    * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
@@ -54,15 +63,19 @@ class FormOperations implements ContainerInjectionInterface {
    *   The EIC content helper service.
    * @param \Drupal\eic_messages\Service\GroupContentMessageCreator $group_content_message_creator
    *   The GroupContent Message Creator service.
+   * @param \Drupal\content_moderation\ModerationInformation $content_moderation_info
+   *   The Content moderation information service.
    */
   public function __construct(
     RouteMatchInterface $route_match,
     EICContentHelper $content_helper,
-    GroupContentMessageCreator $group_content_message_creator
+    GroupContentMessageCreator $group_content_message_creator,
+    ModerationInformation $content_moderation_info
   ) {
     $this->routeMatch = $route_match;
     $this->eicContentHelper = $content_helper;
     $this->groupContentMessageCreator = $group_content_message_creator;
+    $this->contentModerationInfo = $content_moderation_info;
   }
 
   /**
@@ -72,7 +85,8 @@ class FormOperations implements ContainerInjectionInterface {
     return new static(
       $container->get('current_route_match'),
       $container->get('eic_content.helper'),
-      $container->get('eic_messages.message_creator.group_content')
+      $container->get('class_resolver')->getInstanceFromDefinition(GroupContentMessageCreator::class),
+      $container->get('content_moderation.moderation_information')
     );
   }
 
@@ -98,6 +112,15 @@ class FormOperations implements ContainerInjectionInterface {
     FormStateInterface $form_state,
     string $form_id
   ) {
+    // All types that is by default unchecked.
+    $field_disable_by_default_types = [
+      'document',
+      'video',
+      'gallery',
+    ];
+
+    /** @var \Drupal\Core\Entity\EntityInterface $entity */
+    $entity = $form_state->getFormObject()->getEntity();
     $is_group_content = FALSE;
     $is_new_content = FALSE;
 
@@ -123,10 +146,44 @@ class FormOperations implements ContainerInjectionInterface {
         $form['field_post_activity'] = [
           '#title' => $this->t('Post message in the activity stream'),
           '#type' => 'checkbox',
-          '#default_value' => $is_new_content,
+          '#default_value' => $is_new_content && !in_array($entity->bundle(), $field_disable_by_default_types),
         ];
+        array_unshift(
+          $form['actions']['submit']['#submit'],
+          [$this, 'setActivityStreamOperation']
+        );
         $form['actions']['submit']['#submit'][] = [$this, 'postActivitySubmit'];
       }
+    }
+  }
+
+  /**
+   * Submit handler to set the activity stream operation.
+   *
+   * @param array $form
+   *   The form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The FormState object.
+   */
+  public function setActivityStreamOperation(array $form, FormStateInterface $form_state) {
+    // If field doesn't exist or value is 0 or empty.
+    if (empty($form_state->getValue('field_post_activity'))) {
+      return;
+    }
+
+    /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
+    $entity = $form_state->getFormObject()->getEntity();
+
+    // If entity is new or the current state is unpublished, then we set the
+    // activity stream operation to "created".
+    if (
+      $entity->isNew() ||
+      !$this->contentModerationInfo->isDefaultRevisionPublished($entity)
+    ) {
+      $form_state->set('activity_stream_operation', ActivityStreamOperationTypes::NEW_ENTITY);
+    }
+    else {
+      $form_state->set('activity_stream_operation', ActivityStreamOperationTypes::UPDATED_ENTITY);
     }
   }
 
@@ -140,11 +197,29 @@ class FormOperations implements ContainerInjectionInterface {
    */
   public function postActivitySubmit(array $form, FormStateInterface $form_state) {
     // If field doesn't exist or value is 0 or empty.
-    if (empty($form_state->getValue('field_post_activity'))) {
+    if (
+      empty($form_state->getValue('field_post_activity')) ||
+      empty($form_state->get('activity_stream_operation'))
+    ) {
       return;
     }
 
+    /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
     $entity = $form_state->getFormObject()->getEntity();
+
+    // If moderation state is set to DRAFT, we don't create activity stream
+    // message.
+    if (
+      in_array(
+        $entity->get('moderation_state')->value,
+        [
+          DefaultContentModerationStates::DRAFT_STATE,
+        ]
+      )
+    ) {
+      return;
+    }
+
     $group = $this->routeMatch->getParameter('group');
     if (!$group instanceof GroupInterface) {
       $group_content = $this->eicContentHelper->getGroupContentByEntity($entity);
@@ -156,9 +231,7 @@ class FormOperations implements ContainerInjectionInterface {
       $group = $group_content->getGroup();
     }
 
-    $operation = $form_state->getFormObject()->getOperation() === 'edit'
-      ? ActivityStreamOperationTypes::UPDATED_ENTITY
-      : ActivityStreamOperationTypes::NEW_ENTITY;
+    $operation = $form_state->get('activity_stream_operation');
 
     $this->groupContentMessageCreator->createGroupContentActivity(
       $entity,

@@ -1,10 +1,17 @@
 services:
   eic_statistics.storage:
     class: Drupal\eic_statistics\StatisticsStorage
-    arguments: ['@entity_type.manager', '@state']
+    arguments: [ '@entity_type.manager', '@state' ]
   eic_statistics.statistics.storage.node.decorator:
     class: Drupal\eic_statistics\NodeStatisticsDatabaseStorage
     decorates: statistics.storage.node
     decoration_priority: 1
     public: true
-    arguments: ['@eic_statistics.statistics.storage.node.decorator.inner', '@database', '@state', '@request_stack', '@event_dispatcher']
+    arguments: [ '@eic_statistics.statistics.storage.node.decorator.inner', '@database', '@state', '@request_stack', '@event_dispatcher' ]
+
+  eic_statistics.helper:
+    class: Drupal\eic_statistics\StatisticsHelper
+    calls:
+      - [ setFileDownloadCounter, [ '@?eic_media_statistics.entity_file_download_count' ] ]
+      - [ setGroupsHelper, [ '@?eic_groups.helper' ] ]
+    arguments: [ '@eic_statistics.storage', '@statistics.storage.node', '@flag', '@eic_comments.helper', '@eic_user.helper', '@flag.count' ]

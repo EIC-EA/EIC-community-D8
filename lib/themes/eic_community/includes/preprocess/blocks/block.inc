@@ -15,7 +15,9 @@ function eic_community_preprocess_block(array &$variables) {
       'class' => [
         'ecl-u-type-heading-2',
       ],
-    ]);
+    ]
+  );
+  $variables['icon_file_path'] = $variables['eic_icon_path'];
 
   if ($variables['base_plugin_id'] == 'block_content') {
     /** @var \Drupal\block_content\Entity\BlockContent $block_content */
@@ -45,13 +47,25 @@ function eic_community_preprocess_block(array &$variables) {
         eic_community_preprocess_block__latest_news_stories($variables, $cache_tags);
         break;
 
+      case 'basic':
+        eic_community_preprocess_block__basic($variables, $cache_tags);
+        break;
+
+      case 'contact_box':
+        eic_community_preprocess_block__contact_box($variables, $cache_tags);
+        break;
+
     }
 
     // Adds cache tags.
     $variables['#cache']['tags'] = $cache_tags;
   }
 
-  if ($variables['base_plugin_id'] === 'group_content_menu') {
+  // Preprocess group content menu plugin blocks.
+  if (in_array($variables['base_plugin_id'], [
+    'group_content_menu',
+    'eic_group_content_menu',
+  ])) {
     eic_community_preprocess_block__group_menu($variables);
   }
 }

@@ -1,0 +1,41 @@
+uuid: 42711a60-5657-4007-90f3-c482be7a7dfa
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.message.notify_group_wait_approval.field_event_executing_user
+    - field.field.message.notify_group_wait_approval.field_group_ref
+    - message.template.notify_group_wait_approval
+id: message.notify_group_wait_approval.default
+targetEntityType: message
+bundle: notify_group_wait_approval
+mode: default
+content:
+  field_event_executing_user:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_group_ref:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  partial_0:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  partial_1:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  search_api_excerpt: true

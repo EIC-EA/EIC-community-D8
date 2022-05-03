@@ -1,0 +1,52 @@
+uuid: 1f079aa2-d665-4657-9ed4-5a6aac02083e
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.message.stream_event_insert_update.field_entity_type
+    - field.field.message.stream_event_insert_update.field_group_ref
+    - field.field.message.stream_event_insert_update.field_operation_type
+    - field.field.message.stream_event_insert_update.field_referenced_node
+    - message.template.stream_event_insert_update
+id: message.stream_event_insert_update.default
+targetEntityType: message
+bundle: stream_event_insert_update
+mode: default
+content:
+  field_entity_type:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_group_ref:
+    type: entity_reference_autocomplete
+    weight: 1
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_operation_type:
+    type: string_textfield
+    weight: 2
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_referenced_node:
+    type: entity_reference_autocomplete
+    weight: 3
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+hidden: {  }

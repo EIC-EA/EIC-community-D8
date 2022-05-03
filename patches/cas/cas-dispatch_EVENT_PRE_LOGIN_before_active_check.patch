@@ -1,0 +1,30 @@
+diff --git a/src/Service/CasUserManager.php b/src/Service/CasUserManager.php
+index 2c2bd8a..eeabcce 100644
+--- a/src/Service/CasUserManager.php
++++ b/src/Service/CasUserManager.php
+@@ -203,17 +203,20 @@ class CasUserManager {
+       }
+     }
+ 
+-    // Check if the retrieved user is blocked before moving forward.
+-    if (!$account->isActive()) {
+-      throw new CasLoginException(sprintf('The username %s has not been activated or is blocked.', $account->getAccountName()), CasLoginException::ACCOUNT_BLOCKED);
+-    }
+-
+     // Dispatch an event that allows modules to prevent this user from logging
+     // in and/or alter the user entity before we save it.
+     $pre_login_event = new CasPreLoginEvent($account, $property_bag);
+     $this->casHelper->log(LogLevel::DEBUG, 'Dispatching EVENT_PRE_LOGIN.');
+     $this->eventDispatcher->dispatch(CasHelper::EVENT_PRE_LOGIN, $pre_login_event);
+ 
++    // Reload the user account in case it has changed meanwhile.
++    $account = $this->externalAuth->load($property_bag->getUsername(), $this->provider);
++
++    // Check if the retrieved user is blocked before moving forward.
++    if (!$account->isActive()) {
++      throw new CasLoginException(sprintf('The username %s has not been activated or is blocked.', $account->getAccountName()), CasLoginException::ACCOUNT_BLOCKED);
++    }
++
+     // Save user entity since event listeners may have altered it.
+     // @todo Don't take it for granted. Find if the account was really altered.
+     // @todo Should this be swapped with the following if(...) block? Why

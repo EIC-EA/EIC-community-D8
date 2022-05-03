@@ -8,3 +8,57 @@
  * This file is no longer required in Drupal 8.
  * @see https://www.drupal.org/node/2217931
  */
+
+use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\eic_user\UserHelper;
+
+/**
+ * Implements hook_ENTITY_TYPE_access().
+ */
+function eic_media_media_access(EntityInterface $entity, $operation, AccountInterface $account) {
+  $route_name = \Drupal::routeMatch()->getRouteName();
+
+  // If the route name is not the system files route, it means the user is not
+  // accessing the file download route, so we don't need extra conditions to
+  // check if the user has access to any entity that this media is attached to.
+  if (!in_array($route_name, ['system.files', 'image.style_private'])) {
+    return AccessResult::neutral();
+  }
+
+  // Allow access to power users.
+  if (UserHelper::isPowerUser($account)) {
+    return AccessResult::allowed()
+      ->cachePerUser();
+  }
+
+  // Loads up the entity usage for the media.
+  $media_usage = \Drupal::service('entity_usage.usage')->listSources($entity);
+
+  // We loop through all source entities and we try to find one the user has
+  // access to.
+  foreach (array_keys($media_usage) as $entity_type) {
+    foreach (array_keys($media_usage[$entity_type]) as $entity_id) {
+      $entity = \Drupal::entityTypeManager()->getStorage($entity_type)->load($entity_id);
+
+      // Allow access to user pictures if user has permission.
+      if ($entity_type === 'user' && $account->hasPermission('access user profiles')) {
+        return AccessResult::allowed()
+          ->cachePerUser();
+      }
+
+      $access = $entity->access('view', $account, TRUE);
+
+      if ($access->isAllowed()) {
+        // We found an entity the user has access to. The user can download
+        // the media.
+        return $access;
+      }
+    }
+  }
+
+  // At this point, it means the user has no access to any entity this media is
+  // attached to and therefore, we deny access.
+  return AccessResult::forbidden();
+}

@@ -1,0 +1,15 @@
+uuid: ef51ffcd-418a-4dbc-a298-3d797d5561d0
+langcode: en
+status: true
+dependencies:
+  config:
+    - flag.flag.follow_taxonomy_term
+  module:
+    - flag
+id: flag_action.follow_taxonomy_term_unflag
+label: Unfollow
+type: taxonomy_term
+plugin: 'flag_action:follow_taxonomy_term_unflag'
+configuration:
+  flag_id: follow_taxonomy_term
+  flag_action: unflag

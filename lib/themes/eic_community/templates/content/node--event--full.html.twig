@@ -1,0 +1,48 @@
+{% block content %}
+  {% embed "@theme/patterns/compositions/editorial-article.html.twig" with editorial_article|default({}) %}
+    {% block content %}
+      {% include "@theme/patterns/components/event.html.twig" with {
+        title: node.title.value,
+        body: content.body|raw,
+        tags: [
+          {
+            tag: {
+              label: event_type,
+            }
+          },
+        ],
+      } %}
+      {% include "@theme/patterns/components/filelist.html.twig" with file_list|default({}) %}
+    {% endblock %}
+
+    {% block sidebar %}
+      {{ eic_local_tasks }}
+
+      {% include "@theme/patterns/compositions/editorial-actions.html.twig" with editorial_actions|default({}) %}
+
+      {% include "@theme/patterns/compositions/featured-topics.html.twig" with topics|default({}) %}
+
+      {% if event_infos %}
+        {% include "@theme/patterns/components/event-infos.html.twig" with event_infos|default({}) %}
+      {% endif %}
+
+      {% if additional_sidebar_infos %}
+        {% include "@theme/patterns/components/additional_sidebar_infos.html.twig" with additional_sidebar_infos|default({}) %}
+      {% endif %}
+
+    {% endblock %}
+  {% endembed %}
+
+  {% if not user %}
+    {% embed "@theme/patterns/compositions/auth-banner.html.twig" with {
+      title: common.login_title,
+      icon_file_path: common.icon_file_path,
+      login: common.login,
+      register: common.register,
+      extra_classes: 'ecl-auth-banner--is-compact',
+    } only %}
+    {% endembed %}
+  {% else %}
+  {% endif %}
+
+{% endblock %}

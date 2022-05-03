@@ -5,9 +5,8 @@
  * Prepares variables for node News and Story templates.
  */
 
-use Drupal\Component\Utility\Xss;
-use Drupal\Core\Render\Markup;
 use Drupal\eic_community\ValueObject\ImageValueObject;
+use Drupal\eic_media\MediaHelper;
 use Drupal\eic_private_content\PrivateContentConst;
 use Drupal\file\Entity\File;
 
@@ -53,11 +52,41 @@ function _eic_community_preprocess_node_news_story(array &$variables) {
         $node->get('field_header_visual')->entity,
         $node->language()->getId()
       );
-    $image_item = ImageValueObject::fromImageItem($media->get('oe_media_image')->first());
+    $image_item = ImageValueObject::fromStyledImageItem(
+      $media->get('oe_media_image')->first(),
+      'large'
+    );
     $item['image'] = [
       'src' => $image_item->getSource(),
       'alt' => $image_item->getAlt(),
     ];
+  }
+
+  if ($variables['view_mode'] === 'teaser' && !$node->get('field_image')->isEmpty()) {
+    /** @var \Drupal\media\Entity\Media $media */
+    $media = \Drupal::service('entity.repository')
+      ->getTranslationFromContext(
+        $node->get('field_image')->entity,
+        $node->language()->getId()
+      );
+    $image_item = ImageValueObject::fromStyledImageItem(
+      $media->get('oe_media_image')->first(),
+      'large'
+    );
+    $item['image'] = [
+      'src' => $image_item->getSource(),
+      'alt' => $image_item->getAlt(),
+    ];
+  }
+
+  if ('teaser' === $variables['view_mode']) {
+    $stats = _eic_community_get_entity_stats($node);
+    // We do not need downloads for news/story stats.
+    if (array_key_exists('downloads', $stats)) {
+      unset($stats['downloads']);
+    }
+
+    $variables['stats'] = $stats;
   }
 
   $variables['story_item'] = $item;
@@ -65,15 +94,17 @@ function _eic_community_preprocess_node_news_story(array &$variables) {
   if ($variables['view_mode'] === 'full') {
     // Main elements.
     _eic_community_story_image_field($variables);
+    _eic_community_story_video_field($variables);
     _eic_community_story_document_field($variables);
     // Sidebar elements.
     _eic_community_display_flags($variables);
 
-    if ($node->hasField(PrivateContentConst::FIELD_NAME)
+    if (
+      $node->hasField(PrivateContentConst::FIELD_NAME)
       && !$node->get(PrivateContentConst::FIELD_NAME)->value
     ) {
       if ($share_block = _eic_community_get_social_share_block()) {
-        $variables['social_share'] = $share_block;
+        $variables['editorial_actions']['items'][]['content'] = $share_block;
       }
     }
 
@@ -106,22 +137,26 @@ function _eic_community_story_image_field(&$variables) {
  * Preproccess document field for full news/story.
  */
 function _eic_community_story_document_field(&$variables) {
-  if (isset($variables['content']['field_document_media'][0])) {
-    $media = $variables['content']['field_document_media'][0]['#media'];
-    $file = File::load($media->field_media_file->target_id);
-    $file_description = isset($media->field_body) ? Markup::create(Xss::filter($media->get('field_body')->value)) : $media->getName();
+  $node = $variables['node'];
+  $medias = $node->get('field_document_media')->referencedEntities();
 
-    $variables['download'] = [
-      'title' => $file_description,
+  foreach ($medias as $media) {
+    $file = File::load($media->field_media_file->target_id);
+    $download_url = MediaHelper::formatMediaDownloadLink($media)->toString();
+
+    $file_type = strstr($file->get('filemime')->getString(), '/', TRUE);
+
+    $variables['downloads'][] = [
+      'title' => $media->getName(),
       'language' => $media->language()->getName(),
       'timestamp' => eic_community_get_teaser_time_display($media->get('changed')->getString()),
       'filesize' => format_size($file->get('filesize')->getString()),
       'highlight' => FALSE,
-      'path' => file_create_url($file->getFileUri()),
+      'path' => $download_url,
       'icon_file_path' => $variables['eic_icon_path'],
       'icon' => [
-        'type' => 'custom',
-        'name' => substr(strrchr($file->get('filemime')->getString(), '/'), 1),
+        'type' => $file_type === 'video' ? 'general' : 'custom',
+        'name' => $file_type === 'video' ? $file_type : substr(strrchr($file->get('filemime')->getString(), '/'), 1),
       ],
     ];
   }
@@ -131,8 +166,20 @@ function _eic_community_story_document_field(&$variables) {
  * Preprocess flags.
  */
 function _eic_community_display_flags(&$variables) {
-  $flags = array_filter($variables['elements'], function ($key) {
-    return strpos($key, 'flag_') !== FALSE;
+  if (!isset($variables['elements']['#entity_type'])) {
+    return;
+  }
+
+  $entity_type = $variables['elements']['#entity_type'];
+  $entity = $variables[$entity_type];
+
+  $flags = array_filter($variables['elements'], function ($key) use ($entity) {
+    // If element is not a flag we skip it.
+    if (strpos($key, 'flag') === FALSE) {
+      return FALSE;
+    }
+
+    return _eic_community_get_flag_access(str_replace('flag_', '', $key), $entity);
   }, ARRAY_FILTER_USE_KEY);
 
   foreach ($flags as $flag) {
@@ -146,23 +193,69 @@ function _eic_community_display_flags(&$variables) {
  * Preproccess contributors.
  */
 function _eic_community_display_contributors(&$variables) {
-  if ($variables['node']->bundle() === 'story') {
-    $contributors = [];
+  /** @var \Drupal\node\NodeInterface $node */
+  $node = $variables['node'];
+  $contributors = [];
 
-    foreach ($variables['elements']['field_story_paragraphs'] as $key => $value) {
-      if (is_int($key)) {
-        $contributors[] = [
-          'content' => $value,
-        ];
+  $contributors_fields = [
+    'field_story_paragraphs',
+    'field_related_contributors',
+  ];
+
+  $field_title = FALSE;
+
+  foreach ($contributors_fields as $field_name) {
+    if ($node->hasField($field_name)) {
+      $field_title = isset($variables['elements'][$field_name]['#title']) ? $variables['elements'][$field_name]['#title'] : '';
+
+      foreach ($variables['elements'][$field_name] as $key => $value) {
+        $has_contributor = FALSE;
+
+        if (is_int($key)) {
+          /** @var \Drupal\paragraphs\ParagraphInterface $contributor */
+          $contributor = $value['#paragraph'];
+          $variant = $contributor->get('paragraph_view_mode')->value;
+
+          switch ($variant) {
+            case 'external_person':
+              if (!$contributor->get('field_name')->isEmpty()) {
+                $has_contributor = TRUE;
+              }
+              break;
+
+            case 'platform_member':
+              if (!$contributor->get('field_user_ref')->isEmpty()) {
+                $user = $contributor->get('field_user_ref')->entity;
+
+                // User entity has probably been deleted but the reference
+                // still exists. In this case, we do nothing.
+                if (!$user) {
+                  break;
+                }
+
+                $has_contributor = TRUE;
+              }
+              break;
+
+          }
+
+          if (!$has_contributor) {
+            continue;
+          }
+
+          $contributors[] = [
+            'content' => $value,
+          ];
+        }
       }
     }
+  }
 
-    if (count($contributors) > 0) {
-      $variables['contributors'] = [
-        'title' => $variables['elements']['field_story_paragraphs']['#title'],
-        'items' => $contributors,
-      ];
-    }
+  if (count($contributors) > 0) {
+    $variables['contributors'] = [
+      'title' => $field_title,
+      'items' => $contributors,
+    ];
   }
 }
 
@@ -214,5 +307,35 @@ function _eic_community_story_related_stories(&$variables) {
       'title' => $variables['elements']['field_related_stories']['#title'],
       'items' => $related_stories,
     ];
+  }
+}
+
+/**
+ * Preprocess video field full news/story.
+ */
+function _eic_community_story_video_field(&$variables) {
+  if (isset($variables['content']['field_video'][0])) {
+    $media = $variables['content']['field_video'][0]['#media'];
+
+    switch ($media->bundle()) {
+      case 'video':
+        $file = File::load($media->field_media_video_file->target_id);
+        $download_url = MediaHelper::formatMediaDownloadLink($media)->toString();
+        $variables['video_download'] = [
+          'title' => $media->getName(),
+          'language' => $media->language()->getName(),
+          'timestamp' => eic_community_get_teaser_time_display($media->get('changed')->getString()),
+          'filesize' => format_size($file->get('filesize')->getString()),
+          'highlight' => FALSE,
+          'path' => $download_url,
+          'icon_file_path' => $variables['eic_icon_path'],
+          'icon' => [
+            'type' => 'general',
+            'name' => 'video',
+          ],
+        ];
+        break;
+
+    }
   }
 }

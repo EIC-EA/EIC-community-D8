@@ -1,0 +1,24 @@
+uuid: c5d6ca68-65e4-4704-bc26-582d667f21f9
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.message.mail_subject
+    - field.field.message.notify_group_request_submitted.field_event_executing_user
+    - field.field.message.notify_group_request_submitted.field_group_ref
+    - message.template.notify_group_request_submitted
+id: message.notify_group_request_submitted.mail_subject
+targetEntityType: message
+bundle: notify_group_request_submitted
+mode: mail_subject
+content:
+  partial_0:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  field_event_executing_user: true
+  field_group_ref: true
+  partial_1: true
+  search_api_excerpt: true

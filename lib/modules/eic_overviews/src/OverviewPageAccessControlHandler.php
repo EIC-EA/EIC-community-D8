@@ -16,7 +16,6 @@ class OverviewPageAccessControlHandler extends EntityAccessControlHandler {
    * {@inheritdoc}
    */
   protected function checkAccess(EntityInterface $entity, $operation, AccountInterface $account) {
-
     switch ($operation) {
       case 'view':
         // Deny access if page is disabled.
@@ -42,13 +41,16 @@ class OverviewPageAccessControlHandler extends EntityAccessControlHandler {
         // No opinion.
         return AccessResult::neutral();
     }
-
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function checkCreateAccess(AccountInterface $account, array $context, $entity_bundle = NULL) {
+  protected function checkCreateAccess(
+    AccountInterface $account,
+    array $context,
+    $entity_bundle = NULL
+  ) {
     return AccessResult::allowedIfHasPermissions($account, [
       'create overview pages',
       'administer overview pages',

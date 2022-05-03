@@ -1,10 +1,11 @@
-{% embed "@theme/patterns/components/navigation-list/navigation-list.html.twig" with {
+{% embed "@theme/patterns/components/navigation-list/navigation-list-items.html.twig" with {
   extra_attributes: [{
     name: 'data-navigation-list-parent-selector',
     value: '.ecl-editorial-article',
   }],
   items: items,
   collapse: {"label": "collapse"},
-  icon_file_path: eic_icon_path
+  icon_file_path: eic_icon_path,
+  title: title
 } %}
 {% endembed %}

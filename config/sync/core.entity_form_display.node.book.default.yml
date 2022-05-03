@@ -26,15 +26,20 @@ content:
     settings: {  }
     third_party_settings: {  }
   field_body:
+    type: text_textarea
     weight: 2
+    region: content
     settings:
       rows: 5
       placeholder: ''
     third_party_settings: {  }
-    type: text_textarea
-    region: content
   field_post_activity:
     weight: 16
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_send_notification:
+    weight: 17
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -48,8 +53,8 @@ content:
   moderation_state:
     type: moderation_state_default
     weight: 15
-    settings: {  }
     region: content
+    settings: {  }
     third_party_settings: {  }
   path:
     type: path
@@ -58,18 +63,18 @@ content:
     settings: {  }
     third_party_settings: {  }
   private:
+    type: boolean_checkbox
     weight: 1
     region: content
     settings:
       display_label: true
     third_party_settings: {  }
-    type: boolean_checkbox
   promote:
     type: boolean_checkbox
-    settings:
-      display_label: true
     weight: 8
     region: content
+    settings:
+      display_label: true
     third_party_settings: {  }
   publish_on:
     type: datetime_timestamp_no_default
@@ -91,17 +96,17 @@ content:
     third_party_settings: {  }
   status:
     type: boolean_checkbox
-    settings:
-      display_label: true
     weight: 3
     region: content
+    settings:
+      display_label: true
     third_party_settings: {  }
   sticky:
     type: boolean_checkbox
-    settings:
-      display_label: true
     weight: 9
     region: content
+    settings:
+      display_label: true
     third_party_settings: {  }
   title:
     type: string_textfield
@@ -130,6 +135,11 @@ content:
   unpublish_state:
     type: scheduler_moderation
     weight: 14
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  url_redirects:
+    weight: 50
     region: content
     settings: {  }
     third_party_settings: {  }

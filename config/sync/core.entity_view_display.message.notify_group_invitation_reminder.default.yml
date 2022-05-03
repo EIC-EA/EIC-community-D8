@@ -1,0 +1,68 @@
+uuid: 8fa60a33-1c5e-466c-a978-93eff34a57ed
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.message.notify_group_invitation_reminder.field_event_executing_user
+    - field.field.message.notify_group_invitation_reminder.field_group_invitation
+    - field.field.message.notify_group_invitation_reminder.field_group_ref
+    - field.field.message.notify_group_invitation_reminder.field_invitee
+    - field.field.message.notify_group_invitation_reminder.field_inviter
+    - message.template.notify_group_invitation_reminder
+id: message.notify_group_invitation_reminder.default
+targetEntityType: message
+bundle: notify_group_invitation_reminder
+mode: default
+content:
+  field_event_executing_user:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_group_invitation:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 3
+    region: content
+  field_group_ref:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  field_invitee:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_inviter:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 4
+    region: content
+  partial_0:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  partial_1:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  search_api_excerpt: true

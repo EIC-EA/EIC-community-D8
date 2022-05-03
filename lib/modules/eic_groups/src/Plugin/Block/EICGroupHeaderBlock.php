@@ -199,8 +199,21 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
       $operation_links['anonymous_user_link'] = $login_link;
     }
 
-    $this->processInviteUserPermission($group, $user_operation_links);
     $this->processLeaveGroupPermission($group, $user_operation_links);
+
+    $invite_bulk_url = Url::fromRoute(
+      'ginvite.invitation.bulk',
+      ['group' => $group->id()]
+    );
+
+    // Replaces invite user operation with bulk invite.
+    if ($invite_bulk_url->access()) {
+      $user_operation_links['invite-user'] = [
+        'title' => $this->t('Invite users', [], ['context' => 'eic_groups']),
+        'url' => $invite_bulk_url,
+        'weight' => 0,
+      ];
+    }
 
     // Moves group joining methods operations to the operation_links array.
     foreach ($user_operation_links as $key => $action) {
@@ -231,10 +244,7 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
     $create_operations = [];
     foreach ($node_operation_links as $key => $link) {
       if (strpos($key, 'create') !== FALSE) {
-        // We discard the operation link if user doesn't have access to it.
-        if ($link['url']->access($this->currentUser)) {
-          $create_operations[$key] = $link;
-        }
+        $create_operations[$key] = $link;
         unset($node_operation_links[$key]);
       }
     }
@@ -249,16 +259,24 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
     // We extract only the group edit/delete/publish operation links into a new
     // array.
     $visible_group_operation_links = array_filter($group_operation_links, function ($item, $key) {
-      // We discard the operation link if user doesn't have access to it.
-      if (!$item['url']->access($this->currentUser)) {
-        return FALSE;
-      }
-      return in_array($key, ['edit', 'delete', 'publish']);
+      return in_array(
+        $key,
+        ['edit', 'delete', 'publish', 'request_block']
+      ) && $item['url']->access();
     }, ARRAY_FILTER_USE_BOTH);
 
     // Sorts group operation links by key. "Delete" operation needs to show
     // first.
     ksort($visible_group_operation_links);
+
+    if (!empty($visible_group_operation_links)) {
+      $visible_group_operation_links = [
+        [
+          'label' => $this->t('Group management'),
+          'links' => $visible_group_operation_links,
+        ],
+      ];
+    }
 
     // Get all group flags the user has access to.
     $membership_links = $this->getGroupFlagLinks($group);
@@ -274,7 +292,8 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
         'bundle' => $group->bundle(),
         'title' => $group->label(),
         'description' => $this->getTruncatedGroupDescription($group),
-        'operation_links' => array_merge($operation_links, $node_operation_links, $visible_group_operation_links),
+        'group_operation_links' => $visible_group_operation_links,
+        'operation_links' => array_merge($operation_links, $node_operation_links),
         'membership_links' => array_merge($membership_links, $user_operation_links),
         'stats' => [
           'members' => $group_statistics->getMembersCount(),
@@ -303,7 +322,7 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
    *   - url: An instance of \Drupal\Core\Url for the login URL.
    */
   private function getAnonymousLoginLink(GroupInterface $group) {
-    $link = FALSE;
+    $link = [];
     if ($this->currentUser->isAnonymous()) {
       if ($joining_methods = $this->oecGroupFlexHelper->getGroupJoiningMethod($group)) {
         $login_link_options = [
@@ -350,23 +369,14 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
         continue;
       }
 
+      // Check if we have a flagging for this user and entity. If we have one we
+      // check if the user can unflag, otherwise we check if the user can flag.
       $user_flag = $this->flagService->getFlagging($flag, $group);
-
-      // We need to create a fake flag if the user never flagged the content,
-      // otherwise we can't do an access check.
-      if (!$user_flag) {
-        $user_flag = $this->entityTypeManager->getStorage('flagging')->create([
-          'uid' => $this->currentUser->id(),
-          'flag_id' => $flag->id(),
-          'entity_id' => $group->id(),
-          'entity_type' => $group->getEntityTypeId(),
-          'global' => $flag->isGlobal(),
-        ]);
-      }
+      $action = $user_flag ? 'unflag' : 'flag';
 
       // If user has access to view the flag we add it to the results so that
       // it can be shown in the group header.
-      if ($user_flag->access('view')) {
+      if ($flag->actionAccess($action, NULL, $group)) {
         $group_flags[$flag_id] = [
           '#lazy_builder' => [
             'flag.link_builder:build',
@@ -382,33 +392,6 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
     }
 
     return $group_flags;
-  }
-
-  /**
-   * Removes the invite members link.
-   *
-   * If group does not allow to invite members, hide invite group link from the
-   * group header.
-   *
-   * @param \Drupal\group\Entity\GroupInterface $group
-   *   The group entity.
-   * @param array $user_operation_links
-   *   Array of user operation links.
-   */
-  private function processInviteUserPermission(GroupInterface $group, array &$user_operation_links) {
-    $key = 'invite-user';
-
-    if (!array_key_exists($key, $user_operation_links)) {
-      return;
-    }
-
-    $user_can_invite = (int) $group->get('field_group_invite_members')->value;
-
-    if ($user_can_invite) {
-      return;
-    }
-
-    unset($user_operation_links[$key]);
   }
 
   /**
@@ -467,13 +450,13 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
    * @param \Drupal\group\Entity\GroupInterface $group
    *   The group entity.
    *
-   * @return \Drupal\Component\Render\MarkupInterface
+   * @return \Drupal\Component\Render\MarkupInterface|string
    *   The group description HTML Markup.
    */
   private function getTruncatedGroupDescription(GroupInterface $group) {
     $limit = 350;
 
-    if ($group->get('field_body')->isEmpty()) {
+    if (!$group->hasField('field_body') || $group->get('field_body')->isEmpty()) {
       return '';
     }
 
@@ -503,7 +486,16 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
 
     // Adds link to the group about page.
     if ($has_read_more) {
-      $link = Link::createFromRoute($this->t('Read more'), 'eic_groups.about_page', ['group' => $group->id()]);
+      $link = Link::createFromRoute(
+        $this->t('Read more'),
+        'eic_groups.about_page',
+        [
+          'group' => $group->id(),
+        ],
+        [
+          'fragment' => 'group-description-full',
+        ],
+      );
       $output .= ' ' . $link->toString();
     }
 

@@ -51,15 +51,12 @@
           items: items,
           collapse: {
             label: 'Subjects',
-          }
+          },
+          contact_box: contact_box
         }  %}
 
           {% block before %}
             {{ new_wiki }}
-          {% endblock %}
-
-          {% block after %}
-            {{ contributors}}
           {% endblock %}
 
         {% endembed %}

@@ -2,36 +2,33 @@ uuid: ff152506-cc35-4d06-8454-2b0562b2bfcf
 langcode: en
 status: true
 dependencies:
-  config:
-    - node.type.news
-    - node.type.story
   module:
-    - content_moderation
+    - content_moderation_bypass
 id: news_stories
 label: 'News & Stories'
 type: content_moderation
 type_settings:
   states:
     archived:
-      published: false
-      default_revision: true
       label: Archived
       weight: 3
+      published: false
+      default_revision: true
     draft:
       label: Draft
+      weight: 0
       published: false
       default_revision: false
-      weight: 0
     published:
       label: Published
+      weight: 1
       published: true
       default_revision: true
-      weight: 1
     unpublished:
-      published: false
-      default_revision: true
       label: Unpublished
       weight: 2
+      published: false
+      default_revision: true
   transitions:
     archived:
       label: Archived
@@ -43,29 +40,26 @@ type_settings:
       weight: 3
     create_new_draft:
       label: 'Create New Draft'
-      to: draft
-      weight: 0
       from:
         - draft
         - published
         - unpublished
+      to: draft
+      weight: 0
     publish:
       label: Publish
-      to: published
-      weight: 1
       from:
         - archived
         - draft
         - published
         - unpublished
+      to: published
+      weight: 1
     unpublish:
       label: Unpublish
       from:
         - published
       to: unpublished
       weight: 2
-  entity_types:
-    node:
-      - news
-      - story
+  entity_types: {  }
   default_moderation_state: draft

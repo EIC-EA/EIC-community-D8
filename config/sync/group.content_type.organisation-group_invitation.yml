@@ -1,0 +1,28 @@
+uuid: 2fdf000f-617b-453e-8bb4-005657a906b7
+langcode: en
+status: true
+dependencies:
+  config:
+    - group.type.organisation
+  module:
+    - ginvite
+    - user
+id: organisation-group_invitation
+label: 'Organisation: Group Invitation'
+description: 'Creates invitations to group.'
+group_type: organisation
+content_plugin: group_invitation
+plugin_config:
+  group_cardinality: 0
+  entity_cardinality: 0
+  unblock_invitees: true
+  invitation_bypass_form: false
+  invitation_expire: null
+  invitation_subject: 'You have a pending group invitation'
+  invitation_body: "Dear,\r\n\r\n<a href=[current-user:url]>[current-user:name]</a> invited you to join the following group on the European Innovation Council's Community Platform: <a href=[group:url]>[group:title]</a>\r\n\r\nTo accept this invitation, click <a href=[group_content:register_link]>Join this group</a>\r\n\r\n<a href=[current-user:url]>[current-user:name]</a>,\r\nMember of <a href=[group:url]>[group:title]</a>"
+  existing_user_invitation_subject: 'You have a pending group invitation'
+  existing_user_invitation_body: "Dear,\r\n\r\n<a href=[current-user:url]>[current-user:name]</a> invited you to join the following group on the EuropeanInnovation Council's Community Platform: <a href=[group:url]>[group:title]</a>\r\n\r\nTo accept this invitation, click <a href=[group_content:my_invitations_link]>Join this group</a>\r\n\r\n<a href=[current-user:url]>[current-user:name]</a>,\r\nMember of <a href=[group:url]>[group:title]</a>"
+  send_email_existing_users: false
+  cancel_user_invitation_subject: 'Your invitation is no longer available'
+  cancel_user_invitation_body: "Hi there!\r\n\r\nYour invitation to the group [group:title] on [site:name] has been cancelled\r\nKind regards,\r\nThe [site:name] team"
+  send_cancel_email: false

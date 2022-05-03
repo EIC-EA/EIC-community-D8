@@ -104,8 +104,29 @@
     flex-wrap: wrap;
   }
 
+  &-form {
+    &__tagged-user {
+      display: flex;
+      align-items: center;
+      justify-self: center;
+    }
+    &__textarea-wrapper {
+      margin-bottom: $ecl-spacing-m;
+    }
+    &__toolbar-aside {
+      justify-content: flex-end;
+    }
+  }
+
   &__author-info {
     color: ecl-typography('color', 'meta');
+    display: flex;
+    align-items: center;
+
+    & span {
+      display: flex;
+      align-items: center;
+    }
 
     @include ecl-media-breakpoint-down('md') {
       & > *,
@@ -123,7 +144,18 @@
 
   &__author {
     margin-right: map-get($ecl-spacing, 'l');
-    display: none;
+
+    @include ecl-media-breakpoint-down('md') {
+      position: absolute;
+      left: -9px;
+      .ecl-discussion-thread__featured-items & {
+        position: relative;
+        left: 0;
+      }
+      & .ecl-author__aside {
+        width: 20px;
+      }
+    }
 
     @include ecl-media-breakpoint-up('sm') {
       display: block;
@@ -187,6 +219,33 @@
     align-items: center;
   }
 
+  &__action {
+    font-weight: 600;
+    font-size: 14px;
+    margin-right: 10px;
+    padding-right: 12px;
+    position: relative;
+
+    & svg {
+      color: currentColor;
+      fill: currentColor;
+      margin-right: 2px;
+    }
+
+    &:after {
+      content: '•';
+      position: absolute;
+      top: 50%;
+      right: 0px;
+      transform: translateY(-50%);
+      color: #bfd0e4;
+    }
+
+    &:last-child:after {
+      display: none;
+    }
+  }
+
   &__stats {
     margin-right: #{0 - ecl-layout('gutter', 'controls')};
     margin-bottom: #{0 - ecl-layout('gutter', 'controls')};
@@ -196,5 +255,12 @@
     margin-bottom: ecl-layout('gutter', 'controls');
     margin-right: ecl-layout('gutter', 'controls');
     color: ecl-typography('color', 'meta');
+  }
+
+  &__action a,
+  &__stat {
+    display: flex;
+    align-items: center;
+    gap: 4px;
   }
 }

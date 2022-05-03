@@ -16,7 +16,7 @@ use Drupal\eic_overviews\OverviewPageInterface;
  *   label = @Translation("Overview page"),
  *   label_collection = @Translation("Overview pages"),
  *   handlers = {
- *     "view_builder" = "Drupal\eic_overviews\OverviewPageViewBuilder",
+ *     "view_builder" = "Drupal\Core\Entity\EntityViewBuilder",
  *     "list_builder" = "Drupal\eic_overviews\OverviewPageListBuilder",
  *     "views_data" = "Drupal\views\EntityViewsData",
  *     "access" = "Drupal\eic_overviews\OverviewPageAccessControlHandler",
@@ -26,7 +26,7 @@ use Drupal\eic_overviews\OverviewPageInterface;
  *       "delete" = "Drupal\Core\Entity\ContentEntityDeleteForm"
  *     },
  *     "route_provider" = {
- *       "html" = "Drupal\Core\Entity\Routing\AdminHtmlRouteProvider",
+ *       "html" = "Drupal\eic_overviews\OverviewPageHtmlRouteProvider",
  *     }
  *   },
  *   base_table = "overview_page",

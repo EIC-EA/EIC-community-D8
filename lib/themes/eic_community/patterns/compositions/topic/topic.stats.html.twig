@@ -1,0 +1,18 @@
+<div class="ecl-topic__stats">
+  {% for stat in stats %}
+    <div class="ecl-topic__stats__item">
+      {% include '@ecl-twig/ec-component-icon/ecl-icon.html.twig' with {
+        icon: {
+          size: 'm',
+          path: icon_file_path,
+          type: stat.icon.type,
+          name: stat.icon.name
+        }
+      } only %}
+      <a href="{{ stat.url }}">
+        <span class="ecl-topic__stats__data">{{ stat.data }}</span>
+        <span>{{ stat.title }}</span>
+      </a>
+    </div>
+  {% endfor %}
+</div>

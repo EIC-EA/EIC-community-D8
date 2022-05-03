@@ -2,11 +2,14 @@ uuid: 092acf4e-0ac9-4e24-bad6-5ade6eab25d5
 langcode: en
 status: true
 dependencies:
+  config:
+    - group_content_menu.group_content_menu_type.group_main_menu
   module:
+    - eic_groups
     - group
     - route_condition
-name: group_global
 label: 'Group - Global'
+name: group_global
 group: Groups
 description: 'This context is used as global Group context'
 requireAllConditions: true
@@ -15,55 +18,58 @@ conditions:
   group_type:
     id: group_type
     group_types:
+      event: event
       group: group
+      organisation: organisation
     negate: 0
     uuid: dbdc709b-c8e7-40ed-aea8-338920304ee4
     context_mapping:
       group: '@group.group_route_context:group'
   route:
     id: route
-    routes: "entity.user.*\r\nprofile.user_page.*"
     negate: true
     uuid: df5ac6fd-1e86-44f6-9ff6-e46b4cfc36f1
     context_mapping: {  }
+    routes: "entity.user.*\r\nprofile.user_page.*\r\neic_user.user.*"
 reactions:
   blocks:
+    id: blocks
+    uuid: eee2af2a-bea1-4c9a-8012-20aa5543365a
     blocks:
-      8c64fa91-2806-4f88-a5f2-723a137c6b72:
-        id: 'group_content_menu:group_main_menu'
-        label: 'Group - Main menu'
-        provider: group_content_menu
-        label_display: '0'
-        level: '1'
-        depth: '0'
-        expand_all_items: 0
-        region: page_header
-        weight: '1'
-        context_mapping:
-          group: '@group.group_route_context:group'
-        custom_id: group_content_menu_group_main_menu
-        theme: eic_community
-        css_class: ''
-        unique: 0
-        context_id: group_global
-        uuid: 8c64fa91-2806-4f88-a5f2-723a137c6b72
       6ebffc8d-ce4c-45ab-b138-e6dd4e22db28:
+        uuid: 6ebffc8d-ce4c-45ab-b138-e6dd4e22db28
         id: eic_group_header
         label: 'EIC Group header'
         provider: eic_groups
         label_display: '0'
         region: page_header
         weight: '0'
-        context_mapping:
-          group: '@group.group_route_context:group'
         custom_id: eic_group_header
         theme: eic_community
         css_class: ''
         unique: 1
         context_id: group_global
-        uuid: 6ebffc8d-ce4c-45ab-b138-e6dd4e22db28
-    id: blocks
-    saved: false
-    uuid: eee2af2a-bea1-4c9a-8012-20aa5543365a
+        context_mapping:
+          group: '@group.group_route_context:group'
+      75a8b5e9-e237-4385-877d-0a462e12e2d7:
+        uuid: 75a8b5e9-e237-4385-877d-0a462e12e2d7
+        id: 'eic_group_content_menu:group_main_menu'
+        label: 'Group - Main menu'
+        provider: eic_groups
+        label_display: '0'
+        region: page_header
+        weight: '1'
+        custom_id: eic_group_content_menu_group_main_menu
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: group_global
+        context_mapping:
+          group: '@group.group_route_context:group'
+        level: '1'
+        depth: '0'
+        expand_all_items: 0
+        third_party_settings: {  }
     include_default_blocks: 0
+    saved: false
 weight: -7

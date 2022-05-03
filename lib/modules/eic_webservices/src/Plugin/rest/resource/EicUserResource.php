@@ -21,8 +21,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   entity_type = "user",
  *   serialization_class = "Drupal\user\Entity\User",
  *   uri_paths = {
- *     "canonical" = "/smed/api/user/{user}",
- *     "https://www.drupal.org/link-relations/create" = "/smed/api/user"
+ *     "canonical" = "/smed/api/v1/user/{user}",
+ *     "create" = "/smed/api/v1/user"
  *   }
  * )
  */
@@ -82,8 +82,11 @@ class EicUserResource extends EntityResource {
   /**
    * Responds to POST requests.
    *
-   * @param \Drupal\Core\Entity\EntityInterface|null $entity
+   * @param \Drupal\user\UserInterface|null $entity
    *   The entity.
+   *
+   * @return \Drupal\rest\ResourceResponseInterface
+   *   The response.
    */
   public function post(EntityInterface $entity = NULL) {
     // Get the field name that contains the SMED ID.
@@ -109,24 +112,13 @@ class EicUserResource extends EntityResource {
         'message' => 'Unprocessable Entity: validation failed. User already exists.',
         $smed_id_field => $user->{$smed_id_field}->value,
       ];
+
       return new ResourceResponse($data, 422);
     }
 
     parent::post($entity);
-    return new ResourceResponse($entity);
-  }
 
-  /**
-   * Responds to PATCH requests.
-   *
-   * @param \Drupal\Core\Entity\EntityInterface $original_entity
-   *   The original entity.
-   * @param \Drupal\Core\Entity\EntityInterface|null $entity
-   *   The current entity.
-   */
-  public function patch(EntityInterface $original_entity, EntityInterface $entity = NULL) {
-    parent::patch($original_entity, $entity);
-    return new ResourceResponse($entity, 200);
+    return new ResourceResponse($entity);
   }
 
 }

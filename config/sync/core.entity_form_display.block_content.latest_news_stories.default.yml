@@ -15,33 +15,33 @@ bundle: latest_news_stories
 mode: default
 content:
   field_articles:
+    type: entity_browser_entity_reference
     weight: 2
+    region: content
     settings:
       entity_browser: news_stories
       field_widget_display: label
+      field_widget_edit: false
       field_widget_remove: true
+      field_widget_replace: false
       open: true
+      field_widget_display_settings: {  }
       selection_mode: selection_append
-      field_widget_edit: false
-      field_widget_replace: false
-      field_widget_display_settings: {  }
     third_party_settings: {  }
-    type: entity_browser_entity_reference
-    region: content
   field_featured_article:
+    type: entity_browser_entity_reference
     weight: 1
+    region: content
     settings:
       entity_browser: news_stories
       field_widget_display: label
-      field_widget_remove: true
-      open: true
-      selection_mode: selection_edit
       field_widget_edit: false
+      field_widget_remove: true
       field_widget_replace: false
+      open: true
       field_widget_display_settings: {  }
+      selection_mode: selection_edit
     third_party_settings: {  }
-    type: entity_browser_entity_reference
-    region: content
   info:
     type: string_textfield
     weight: 0

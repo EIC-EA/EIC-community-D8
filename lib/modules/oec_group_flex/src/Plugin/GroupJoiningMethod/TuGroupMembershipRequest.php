@@ -7,6 +7,7 @@ use Drupal\group\Entity\GroupInterface;
 use Drupal\group\Entity\GroupTypeInterface;
 use Drupal\group\GroupRoleSynchronizer;
 use Drupal\group_flex\Plugin\GroupJoiningMethodBase;
+use Drupal\oec_group_flex\OECGroupFlexHelper;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -69,6 +70,7 @@ class TuGroupMembershipRequest extends GroupJoiningMethodBase implements Contain
     // Only enable plugin when it doesn't exist yet.
     $contentEnablers = $this->groupContentEnabler->getInstalledIds($groupType);
     if (!in_array('group_membership_request', $contentEnablers)) {
+      /** @var \Drupal\group\Entity\Storage\GroupContentTypeStorageInterface $storage */
       $storage = $this->entityTypeManager->getStorage('group_content_type');
       $config = [
         'group_cardinality' => 0,
@@ -79,7 +81,16 @@ class TuGroupMembershipRequest extends GroupJoiningMethodBase implements Contain
 
     $tuGroupRoleId = $this->getTrustedUserRoleId($groupType);
 
-    $mappedPerm = [$tuGroupRoleId => ['request group membership' => TRUE]];
+    $ownerGroupRoleId = OECGroupFlexHelper::getGroupTypeRole($groupType->id(), 'owner');
+
+    $mappedPerm = [
+      $ownerGroupRoleId => [
+        'administer membership requests' => TRUE,
+      ],
+      $tuGroupRoleId => [
+        'request group membership' => TRUE,
+      ],
+    ];
     $this->saveMappedPerm($mappedPerm, $groupType);
   }
 
@@ -88,8 +99,15 @@ class TuGroupMembershipRequest extends GroupJoiningMethodBase implements Contain
    */
   public function disableGroupType(GroupTypeInterface $groupType) {
     $tuGroupRoleId = $this->getTrustedUserRoleId($groupType);
-
-    $mappedPerm = [$tuGroupRoleId => ['request group membership' => FALSE]];
+    $ownerGroupRoleId = OECGroupFlexHelper::getGroupTypeRole($groupType->id(), 'owner');
+    $mappedPerm = [
+      $ownerGroupRoleId => [
+        'administer membership requests' => FALSE,
+      ],
+      $tuGroupRoleId => [
+        'request group membership' => FALSE,
+      ],
+    ];
     $this->saveMappedPerm($mappedPerm, $groupType);
   }
 
@@ -98,7 +116,9 @@ class TuGroupMembershipRequest extends GroupJoiningMethodBase implements Contain
    */
   public function getGroupPermissions(GroupInterface $group): array {
     $tuGroupRoleId = $this->getTrustedUserRoleId($group->getGroupType());
+    $ownerGroupRoleId = OECGroupFlexHelper::getGroupTypeRole($group->bundle(), 'owner');
     return [
+      $ownerGroupRoleId => ['administer membership requests'],
       $tuGroupRoleId => ['request group membership'],
     ];
   }
@@ -108,7 +128,9 @@ class TuGroupMembershipRequest extends GroupJoiningMethodBase implements Contain
    */
   public function getDisallowedGroupPermissions(GroupInterface $group): array {
     $tuGroupRoleId = $this->getTrustedUserRoleId($group->getGroupType());
+    $ownerGroupRoleId = OECGroupFlexHelper::getGroupTypeRole($group->bundle(), 'owner');
     return [
+      $ownerGroupRoleId => ['administer membership requests'],
       $tuGroupRoleId => ['request group membership'],
     ];
   }

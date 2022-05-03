@@ -1,0 +1,25 @@
+uuid: 34cd192a-b846-4812-88fc-903079c1996e
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.group_content.field_invitation_counter
+    - group.content_type.group-group_invitation
+id: group_content.group-group_invitation.field_invitation_counter
+field_name: field_invitation_counter
+entity_type: group_content
+bundle: group-group_invitation
+label: 'Invitation Counter'
+description: 'Counter for the number of time the invitation has been sent'
+required: true
+translatable: false
+default_value:
+  -
+    value: 1
+default_value_callback: ''
+settings:
+  min: 1
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: integer

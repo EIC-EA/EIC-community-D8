@@ -1,0 +1,31 @@
+uuid: 95a6cd9a-53f5-4c8d-b4cc-56539f8e24fd
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.message.field_group_ref
+    - group.type.event
+    - group.type.group
+    - message.template.log_group_visibility_change
+id: message.log_group_visibility_change.field_group_ref
+field_name: field_group_ref
+entity_type: message
+bundle: log_group_visibility_change
+label: Group
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:group'
+  handler_settings:
+    target_bundles:
+      event: event
+      group: group
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: event
+field_type: entity_reference

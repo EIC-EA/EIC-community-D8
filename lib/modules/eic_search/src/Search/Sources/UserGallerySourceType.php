@@ -61,8 +61,11 @@ class UserGallerySourceType extends SourceType {
       ],
       'ds_user_access' => [
         'label' => $this->t('Last active', [], ['context' => 'eic_search']),
-        'ASC' => $this->t('Last inactive', [], ['context' => 'eic_search']),
         'DESC' => $this->t('Last active', [], ['context' => 'eic_search']),
+      ],
+      'score' => [
+        'label' => $this->t('Relevance', [], ['context' => 'eic_search']),
+        'DESC' => $this->t('Relevance', [], ['context' => 'eic_search']),
       ],
     ];
   }
@@ -71,17 +74,14 @@ class UserGallerySourceType extends SourceType {
    * @inheritDoc
    */
   public function getSearchFieldsId(): array {
-    return [
-      'ss_user_first_name',
-      'ss_user_last_name',
-    ];
+    return ['tm_global_fullname'];
   }
 
   /**
    * @inheritDoc
    */
   public function getLayoutTheme(): string {
-    return self::LAYOUT_COLUMNS;
+    return self::LAYOUT_3_COLUMNS;
   }
 
   /**
@@ -95,7 +95,21 @@ class UserGallerySourceType extends SourceType {
    * @inheritDoc
    */
   public function getPrefilteredGroupFieldId(): array {
-    return ['itm_user__group_content__uid_gid'];
+    return ['itm_user__group_content__uid_gid', 'itm_shared_groups'];
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function getAuthorFieldId(): string {
+    return 'its_user_id';
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function ignoreAnonymousUser(): bool {
+    return TRUE;
   }
 
 }

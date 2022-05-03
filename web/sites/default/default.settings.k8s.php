@@ -90,6 +90,8 @@ if (!\Drupal\Core\Installer\InstallerKernel::installationAttempted() && extensio
     ],
   ];
 }
+$settings['s3fs.use_s3_for_private'] = TRUE;
+$settings['s3fs.use_s3_for_public'] = TRUE;
 
 /**
  * SMED API connection information.
@@ -98,3 +100,7 @@ $settings['smed_api_taxonomy_username'] = getenv('SMED_API_USER');
 $settings['smed_api_taxonomy_password'] = getenv('SMED_API_PASSWORD');
 $settings['smed_api_taxonomy_endpoint'] = getenv('SMED_API_ENDPOINT');
 
+$settings['eic_vod']['cloudfront_url'] = getenv('CLOUDFRONT_URL');
+$settings['eic_vod']['cloudfront_api_key'] = getenv('CLOUDFRONT_API_KEY');
+
+$config['oe_authentication.settings']['assurance_level'] ='LOW';

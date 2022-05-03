@@ -1,3 +1,5 @@
+_core:
+  default_config_hash: SwvLp8snyPEExF41CaJJYdPUVomofLqtXvwciHc4cPg
 enabled_entity_types:
   - user
 punctuation:
@@ -41,7 +43,7 @@ transliterate: true
 reduce_ascii: false
 case: true
 ignore_words: 'an, as, at, before, but, by, for, from, is, in, into, like, of, off, on, onto, per, since, than, the, this, that, to, up, via, with'
-update_action: 2
+update_action: 0
 safe_tokens:
   - alias
   - path
@@ -50,5 +52,4 @@ safe_tokens:
   - url
   - url-brief
   - node_group_url
-_core:
-  default_config_hash: SwvLp8snyPEExF41CaJJYdPUVomofLqtXvwciHc4cPg
+  - node_book_parent_url

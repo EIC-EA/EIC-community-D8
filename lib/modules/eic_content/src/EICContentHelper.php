@@ -34,7 +34,10 @@ class EICContentHelper implements EICContentHelperInterface {
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, ModuleHandlerInterface $module_handler) {
+  public function __construct(
+    EntityTypeManagerInterface $entity_type_manager,
+    ModuleHandlerInterface $module_handler
+  ) {
     $this->entityTypeManager = $entity_type_manager;
     $this->moduleHandler = $module_handler;
   }

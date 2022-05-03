@@ -1,33 +1,35 @@
 {% set title_element = title_element|default('h2') %}
 
 <div class="ecl-teaser ecl-teaser--video {{ highlight.show_button ? 'ecl-teaser--is-highlightable' }} {{ highlight.is_active ? 'ecl-teaser--is-highlighted' }} {{ extra_classes }}">
-  <figure class="ecl-teaser__image-wrapper">
-    {% if image is not empty %}
-      <img class="ecl-teaser__image" src="{{ image.src }}" alt="{{ image.alt }}" />
-      {% include '@ecl-twig/ec-component-icon/ecl-icon.html.twig' with {
-        icon: {
-          size: 'xl',
-          path: icon_file_path,
-          type: 'custom',
-          name: 'play',
-        },
-        extra_classes: 'ecl-teaser__image-play-icon'
-      } only %}
-    {% else %}
-      {% if icon_file_path %}
-        <div class="ecl-teaser__image-fallback-wrapper">
-          {% include '@ecl-twig/ec-component-icon/ecl-icon.html.twig' with {
-            icon: {
-              size: '3xl',
-              path: icon_file_path,
-              type: 'custom',
-              name: 'play',
-            },
-          } only %}
-        </div>
+  <a href="{{ path }}">
+    <figure class="ecl-teaser__image-wrapper">
+      {% if image is not empty %}
+        <img class="ecl-teaser__image" src="{{ image.src }}" alt="{{ image.alt }}" />
+        {% include '@ecl-twig/ec-component-icon/ecl-icon.html.twig' with {
+          icon: {
+            size: 'xl',
+            path: icon_file_path,
+            type: 'custom',
+            name: 'play',
+          },
+          extra_classes: 'ecl-teaser__image-play-icon'
+        } only %}
+      {% else %}
+        {% if icon_file_path %}
+          <div class="ecl-teaser__image-fallback-wrapper">
+            {% include '@ecl-twig/ec-component-icon/ecl-icon.html.twig' with {
+              icon: {
+                size: '3xl',
+                path: icon_file_path,
+                type: 'custom',
+                name: 'play',
+              },
+            } only %}
+          </div>
+        {% endif %}
       {% endif %}
-    {% endif %}
-  </figure>
+    </figure>
+  </a>
   <div class="ecl-teaser__main-wrapper">
     {% if type is not empty %}
       <div class="ecl-teaser__meta-header">
@@ -110,20 +112,11 @@
     </div>
   </div>
   <div class="ecl-teaser__meta-footer">
-    <div class="ecl-teaser__like">
-      <a href="{{ like.path }}">
-        {% include '@ecl-twig/ec-component-icon/ecl-icon.html.twig' with {
-          icon: {
-            size: 'xs',
-            path: icon_file_path,
-            type: 'custom',
-            name: 'like',
-          },
-          extra_classes: 'ecl-teaser__like-icon',
-        } only %}
-        {{ like.label }}
-      </a>
-    </div>
+    {% if flags.like_content.content is defined %}
+      <div class="ecl-teaser__like">
+        {{ flags.like_content.content }}
+      </div>
+    {% endif %}
     {% if stats is not empty %}
       <div class="ecl-teaser__stats">
         {% for stat in stats %}

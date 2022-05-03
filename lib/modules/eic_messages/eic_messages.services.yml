@@ -1,18 +1,21 @@
 services:
-  eic_messages.helper:
-    class: Drupal\eic_messages\MessageHelper
-    arguments: ['@queue']
+  eic_messages.queued_message_checker:
+    class: Drupal\eic_messages\Util\QueuedMessageChecker
+    arguments: [ '@datetime.time', '@config.factory', '@current_user', '@entity_type.manager' ]
+  eic_messages.message_bus:
+    class: Drupal\eic_messages\Service\MessageBus
+    arguments: [ '@eic_messages.queued_message_checker', '@state' ]
+    tags:
+      - { name: service_collector, tag: message_producer, call: addHandler }
 
-  # Message creator services
-  eic_messages.message_creator.group:
-    class: Drupal\eic_messages\Service\GroupMessageCreator
-    arguments: ['@entity_type.manager', '@eic_messages.helper', '@eic_user.helper']
-  eic_messages.message_creator.group_content:
-    class: Drupal\eic_messages\Service\GroupContentMessageCreator
-    arguments: ['@entity_type.manager', '@eic_messages.helper', '@eic_user.helper']
-  eic_messages.message_creator.request:
-    class: Drupal\eic_messages\Service\RequestMessageCreator
-    arguments: ['@entity_type.manager', '@eic_messages.helper', '@eic_user.helper', '@eic_flags.handler_collector', '@renderer']
-  eic_messages.message_creator.comment:
-    class: Drupal\eic_messages\Service\CommentMessageCreator
-    arguments: ['@entity_type.manager', '@eic_messages.helper', '@eic_user.helper', '@eic_content.helper']
+  eic_messages.stream_handler:
+    class: Drupal\eic_messages\Handler\StreamHandler
+    arguments: [ '@entity_type.manager' ]
+    tags:
+      - { name: message_producer }
+  eic_messages.notification_handler:
+    class: Drupal\eic_messages\Handler\NotificationHandler
+    tags:
+      - { name: message_producer }
+    calls:
+      - [ setQueue, [ '@queue' ] ]

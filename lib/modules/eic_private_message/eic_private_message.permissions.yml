@@ -1,0 +1,6 @@
+access contact user page:
+  title: 'Access contact user page'
+  description: 'Allow user to access the user contact page.'
+access contact group users page:
+  title: 'Access contact group users page'
+  description: 'Allow user to access the group users contact page.'

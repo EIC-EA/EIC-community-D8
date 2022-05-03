@@ -5,6 +5,7 @@ namespace Drupal\eic_media_statistics\Controller;
 use Drupal\Core\Cache\Cache;
 use Drupal\media\MediaInterface;
 use Drupal\media_entity_download\Controller\DownloadController;
+use Drupal\node\Entity\Node;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -28,6 +29,20 @@ class MediaFileDownloadController extends DownloadController {
   protected $fileStatisticsStorage;
 
   /**
+   * Cache backend.
+   *
+   * @var \Drupal\Core\Cache\CacheBackendInterface
+   */
+  protected $cacheBackend;
+
+  /**
+   * The current route match.
+   *
+   * @var \Drupal\eic_search\Service\SolrDocumentProcessor
+   */
+  protected $solrDocumentProcessor;
+
+  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
@@ -35,7 +50,8 @@ class MediaFileDownloadController extends DownloadController {
     $controller->eicMediaStatisticsSettings = $container->get('config.factory')
       ->get('eic_media_statistics.settings');
     $controller->fileStatisticsStorage = $container->get('eic_media_statistics.storage.file');
-
+    $controller->cacheBackend = $container->get('cache.default');
+    $controller->solrDocumentProcessor = $container->get('eic_search.solr_document_processor');
     return $controller;
   }
 
@@ -49,6 +65,7 @@ class MediaFileDownloadController extends DownloadController {
     $config = $source->getConfiguration();
     $field = $config['source_field'];
     $request_query = $this->requestStack->getCurrentRequest()->query;
+    $request_query->get('node_id');
 
     // If a delta was provided, use that.
     $delta = $request_query->get('delta');
@@ -74,8 +91,22 @@ class MediaFileDownloadController extends DownloadController {
 
     $success = $this->fileStatisticsStorage->recordView($fid);
 
+    if ($success && $node_id = $request_query->get('node_id')) {
+      $node = Node::load($node_id);
+      $messages = $this->entityTypeManager->getStorage('message')->loadByProperties([
+        'field_referenced_node' => $node_id,
+      ]);
+
+      $data_to_index = array_values($messages);
+      $data_to_index[] = $node;
+      $this->solrDocumentProcessor->reIndexEntities($data_to_index);
+    }
+
     if ($success) {
+      // Invalidate custom media file download cache tags.
       Cache::invalidateTags(self::getMediaFileDownloadCacheTags($fid));
+      // Invalidate file_download_stats cache.
+      $this->cacheBackend->invalidate('file_download_stats:' . $media->getEntityTypeId() . ':' . $media->id());
     }
 
     return $response;
@@ -92,7 +123,7 @@ class MediaFileDownloadController extends DownloadController {
    */
   public static function getMediaFileDownloadCacheTags($fid) {
     return [
-      "media_file_download: $fid",
+      "media_file_download:$fid",
     ];
   }
 

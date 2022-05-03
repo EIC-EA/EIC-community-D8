@@ -54,6 +54,7 @@ class RestrictedUsers extends CustomRestrictedVisibilityBase {
         ],
       ],
       '#weight' => $this->getWeight() + 1,
+      '#maxlength' => NULL,
     ];
     return $form;
   }

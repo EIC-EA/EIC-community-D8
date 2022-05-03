@@ -1,0 +1,42 @@
+uuid: bc71996b-c036-40ef-acb0-e02fe329cc1b
+langcode: en
+status: true
+dependencies:
+  module:
+    - eic_flags
+    - node
+id: follow_content
+label: 'Follow content'
+bundles:
+  - book
+  - discussion
+  - document
+  - gallery
+  - news
+  - page
+  - story
+  - video
+  - wiki_page
+entity_type: node
+global: false
+flag_short: Follow
+flag_long: ''
+flag_message: ''
+unflag_short: Unfollow
+unflag_long: ''
+unflag_message: ''
+unflag_denied_text: ''
+flood_control_active: false
+flood_control_limit: 0
+flood_control_window: 0
+weight: 0
+flag_type: 'entity:node'
+link_type: eic_count_link
+flagTypeConfig:
+  show_in_links: {  }
+  show_as_field: true
+  show_on_form: false
+  show_contextual_link: false
+  extra_permissions:
+    owner: '0'
+linkTypeConfig: {  }

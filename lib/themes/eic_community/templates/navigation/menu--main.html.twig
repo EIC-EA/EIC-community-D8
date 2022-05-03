@@ -39,6 +39,7 @@
   {% endfor %}
 
   {% include "@theme/patterns/compositions/mainmenu.html.twig" with {
+    icon_path: eic_icon_path,
     mainmenu: {
       items: _items
     },
@@ -54,12 +55,17 @@
         },
         {
           name: "placeholder",
-          value: "Search form"|t
+          value: "Search"|t
         }
       ],
       text_input : {
         name: "search",
         extra_classes: "ecl-search-form__text-input",
+        extra_attributes:[
+          {
+            name: "placeholder",
+            value: "Search"|t
+          }]
       },
       button: {
         variant: "search",

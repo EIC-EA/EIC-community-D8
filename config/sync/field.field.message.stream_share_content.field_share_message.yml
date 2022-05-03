@@ -1,0 +1,19 @@
+uuid: 6f2098f5-44f2-45ba-8ef6-85a7be594e55
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.message.field_share_message
+    - message.template.stream_share_content
+id: message.stream_share_content.field_share_message
+field_name: field_share_message
+entity_type: message
+bundle: stream_share_content
+label: 'Share message'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string_long

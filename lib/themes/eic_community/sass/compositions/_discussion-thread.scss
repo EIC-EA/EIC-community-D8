@@ -51,6 +51,7 @@
     flex-grow: 1;
     display: flex;
     flex-direction: column;
+    max-width: 100%;
   }
 
   &__title {
@@ -60,6 +61,11 @@
 
   &__description {
     margin-top: 0;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 5; /* number of lines to show */
+    -webkit-box-orient: vertical;
     @include ecl-responsive-font('label');
 
     #{$node}--has-compact-layout & {
@@ -75,7 +81,6 @@
 
   &__type {
     display: flex;
-    align-items: center;
     align-items: center;
     color: ecl-typography('color', 'meta');
     text-transform: uppercase;
@@ -133,10 +138,10 @@
     order: 1;
   }
 
-  &__meta,
-  &__featured-items {
+  &:not(.ecl-discussion-thread--as-no-image) &__meta,
+  &:not(.ecl-discussion-thread--as-no-image) &__featured-items {
     @include ecl-media-breakpoint-up('md') {
-      padding-left: calc(#{map-get($ecl-media, '2xs')} + #{ecl-box-model('padding')});
+      padding-left: calc(#{map-get($ecl-media, 'xs')} + 1.25rem);
 
       #{$node}--has-compact-layout & {
         padding-left: calc(#{map-get($ecl-media, '2xs')} + #{ecl-box-model('padding', 'controls')});
@@ -158,11 +163,15 @@
   &__meta {
     display: flex;
     position: relative;
-    align-items: center;
+    flex-wrap: wrap;
+    gap: ecl-box-model('margin', 'controls');
+    @include ecl-media-breakpoint-up('md') {
+      align-items: center;
+      flex-direction: row;
+    }
   }
 
-  &__highlight-label,
-  &__started-by-label {
+  &__highlight-label {
     @include visually-hidden;
   }
 
@@ -172,13 +181,15 @@
   }
 
   &__timestamp {
-    @include ecl-responsive-font('meta');
-    @include ecl-responsive-font('meta');
+    @include ecl-responsive-font('label');
   }
 
   &__author {
     @include ecl-responsive-font('label');
     font-weight: $ecl-font-weight-bold;
+    & span {
+      font-weight: normal;
+    }
   }
 
   &__members,
@@ -217,7 +228,7 @@
   &__stats-item {
     align-items: center;
     color: ecl-typography('color', 'meta');
-    @include ecl-responsive-font('meta');
+    @include ecl-responsive-font('label');
   }
 
   &__stats-item-label {
@@ -225,15 +236,19 @@
   }
 
   &__stats-item-icon {
-    margin-right: ecl-box-model('padding', 'controls');
+    margin-right: $ecl-spacing-2-xs;
   }
 
-  &__tag {
+  & &__tag {
     @include ecl-responsive-font('meta');
-    background-color: map-get($ecl-colors, 'white');
+    background: map-get($ecl-colors, 'white');
     text-decoration: none;
     color: ecl-typography('color', 'title');
     padding: map-get($ecl-spacing, '2xs') map-get($ecl-spacing, 'xs');
+  }
+
+  & .ecl-comment-thread {
+    padding: 0;
   }
 
   &__comment-thread {
@@ -245,8 +260,14 @@
         display: flex;
       }
 
-      &__author-info {
-        flex-grow: 1;
+      &__author {
+        left: 1rem;
+        &-info {
+          @include ecl-media-breakpoint-down('md') {
+            padding-left: 1.5rem !important;
+          }
+          flex-grow: 1;
+        }
       }
 
       &__footer {

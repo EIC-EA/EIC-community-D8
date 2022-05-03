@@ -17,12 +17,19 @@ function eic_community_preprocess(&$variables) {
   $variables['current_language_id'] = \Drupal::languageManager()
     ->getCurrentLanguage()
     ->getId();
+  $variables['base_path'] = \Drupal::request()->getSchemeAndHttpHost();
 }
 
 /**
  * Transform a timestamp for a storybook template.
+ *
+ * @param int $timestamp
+ *   The timestamp.
+ *
+ * @return \Drupal\Core\StringTranslation\TranslatableMarkup
+ *   The translated string.
  */
-function eic_community_get_teaser_time_display($timestamp) {
+function eic_community_get_teaser_time_display(int $timestamp) {
   $time_ago = \Drupal::service('date.formatter')->formatTimeDiffSince($timestamp, ['granularity' => 1]);
 
   return t('@time ago', ['@time' => $time_ago]);

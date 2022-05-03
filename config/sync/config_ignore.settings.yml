@@ -1,9 +1,28 @@
+_core:
+  default_config_hash: UVH1aJ4b44UM-VdPVN7hNNuuVqfReJxwfVeDQH1Hvsk
 ignored_config_entities:
   - 'search_api.server.global:backend_config.connector_config.scheme'
   - 'search_api.server.global:backend_config.connector_config.host'
   - 'search_api.server.global:backend_config.connector_config.port'
   - 'search_api.server.global:backend_config.connector_config.path'
   - 'search_api.server.global:backend_config.connector_config.core'
+  - 'contact.form.contact_form:message'
+  - 'contact.form.contact_form:recipients'
+  - 'contact.form.contact_form:reply'
+  - 'contact.form.contact_form:redirect'
   - system.site
-_core:
-  default_config_hash: UVH1aJ4b44UM-VdPVN7hNNuuVqfReJxwfVeDQH1Hvsk
+  - search_api_attachments.admin_config
+  - 'smtp.settings:smtp_host'
+  - 'smtp.settings:smtp_hostbackup'
+  - 'smtp.settings:smtp_port'
+  - 'smtp.settings:smtp_protocol'
+  - 'smtp.settings:smtp_username'
+  - 'smtp.settings:smtp_password'
+  - 'smtp.settings:smtp_client_hostname'
+  - 'smtp.settings:smtp_from'
+  - 'smtp.settings:smtp_fromname'
+  - 's3fs.settings:credentials_file'
+  - 's3fs.settings:bucket'
+  - 's3fs.settings:region'
+  - 's3fs.settings:root_folder'
+  - 'cas.settings:server'

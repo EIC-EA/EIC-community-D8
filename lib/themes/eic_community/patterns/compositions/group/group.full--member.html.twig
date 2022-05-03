@@ -6,11 +6,15 @@
     active_filters: active_filters,
     sort_options: sort_options,
     items: items,
-    extra_classes: 'ecl-teaser-overview--has-columns',
+    no_items_available: no_items_available,
+    no_items_available_header: no_items_available_header,
+    extra_classes: 'ecl-teaser-overview--has-columns ecl-teaser-overview--has-3-columns',
     icon_file_path: common.icon_file_path,
   } only %}
 
-  {% include "@theme/patterns/compositions/pagination.html.twig" with pagination|default({}) only %}
+  {% if items and items is not empty %}
+    {% include "@theme/patterns/compositions/pagination.html.twig" with pagination|default({}) only %}
+  {% endif %}
 {% endblock %}
 
 {% block sidebar %}

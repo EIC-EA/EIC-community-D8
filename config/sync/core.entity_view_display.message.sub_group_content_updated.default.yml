@@ -4,6 +4,8 @@ status: true
 dependencies:
   config:
     - field.field.message.sub_group_content_updated.field_event_executing_user
+    - field.field.message.sub_group_content_updated.field_group_ref
+    - field.field.message.sub_group_content_updated.field_referenced_node
     - message.template.sub_group_content_updated
 id: message.sub_group_content_updated.default
 targetEntityType: message
@@ -11,27 +13,43 @@ bundle: sub_group_content_updated
 mode: default
 content:
   field_event_executing_user:
-    weight: 1
+    type: entity_reference_label
     label: above
     settings:
       link: true
     third_party_settings: {  }
+    weight: 1
+    region: content
+  field_group_ref:
     type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 3
+    region: content
+  field_referenced_node:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 2
     region: content
   partial_0:
-    weight: 0
-    region: content
     settings: {  }
     third_party_settings: {  }
+    weight: 0
+    region: content
   partial_1:
-    weight: 0
-    region: content
     settings: {  }
     third_party_settings: {  }
+    weight: 0
+    region: content
   partial_2:
-    weight: 0
-    region: content
     settings: {  }
     third_party_settings: {  }
+    weight: 0
+    region: content
 hidden:
   search_api_excerpt: true

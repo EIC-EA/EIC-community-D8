@@ -1,21 +1,21 @@
 {% set title_element = title_element|default('h1') %}
 
 <section class="ecl-section-wrapper ecl-editorial-header {{ extra_classes }}">
-  <div class="ecl-container">
-    {% if parent is not empty %}
-      {% set _parent_icon = {} %}
+	<div class="ecl-container">
+		{% if parent is not empty %}
+			{% set _parent_icon = {} %}
 
-      {% if icon_file_path %}
-        {% set _parent_icon = {
+			{% if icon_file_path %}
+				{% set _parent_icon = {
           path: icon_file_path,
           type: 'ui',
           name: 'rounded-arrow',
           transform: 'rotate-270',
           size: 'xs',
         } %}
-      {% endif %}
+			{% endif %}
 
-      {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with parent|default({})|merge({
+			{% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with parent|default({})|merge({
         link: parent.link|default({})|merge({
           type: 'standalone',
           icon_position: 'before',
@@ -23,49 +23,45 @@
         extra_classes: 'ecl-editorial-header__parent-link ecl-link--call-to-action ' ~ parent.extra_classes|default(''),
         icon: _parent_icon,
       }) only %}
-    {% endif %}
+		{% endif %}
 
-    <div class="ecl-editorial-header__wrapper">
-      {% if image is not empty %}
-        <div class="ecl-editorial-header__aside">
-          {% if actions is not empty %}
-            <div class="ecl-editorial-header__push ecl-editorial-header__push--actions"></div>
-          {% elseif tags is not empty %}
-            <div class="ecl-editorial-header__push ecl-editorial-header__push--tags"></div>
-          {% endif %}
-          <figure class="ecl-editorial-header__image-wrapper">
-            <img class="ecl-editorial-header__image" src="{{ image.src }}" alt="{{ image.alt }}" />
-          </figure>
-        </div>
-      {% endif %}
-      <div class="ecl-editorial-header__main">
-        {% if tags is not empty or actions is not empty %}
-          <div class="ecl-editorial-header__main-header">
-            {% if tags is not empty %}
-              <div class="ecl-editorial-header__tags-wrapper">
-                <div class="ecl-editorial-header__tags">
-                  {% for tag in tags %}
-                    <div class="ecl-editorial-header__tag">
-                      {% include '@ecl-twig/ec-component-tag/ecl-tag.html.twig' with tag|default({})|merge({
-                        tag: tag.tag|merge({
-                          type: 'display'
-                        })
-                      }) only %}
-                    </div>
-                  {% endfor %}
-                </div>
-              </div>
-            {% endif %}
+		<div class="ecl-editorial-header__wrapper">
+			{% if image is not empty %}
+				<div class="ecl-editorial-header__aside">
+					{% if actions is not empty %}
+						<div class="ecl-editorial-header__push ecl-editorial-header__push--actions"></div>
+					{% elseif tags is not empty %}
+						<div class="ecl-editorial-header__push ecl-editorial-header__push--tags"></div>
+					{% endif %}
+					<figure class="ecl-editorial-header__image-wrapper">
+						<img class="ecl-editorial-header__image" src="{{ image.src }}" alt="{{ image.alt }}"/>
+					</figure>
+				</div>
+			{% endif %}
+			<div class="ecl-editorial-header__main">
+				{% if tags is not empty or actions is not empty %}
+					<div class="ecl-editorial-header__main-header">
+						{% if tags is not empty and is_stories != true %}
+							<div class="ecl-editorial-header__tags-wrapper">
+								<div class="ecl-editorial-header__tags">
+									{% for tag in tags %}
+										<div class="ecl-editorial-header__tag">
+											{% include '@ecl-twig/ec-component-tag/ecl-tag.html.twig' with tag|default({}) only %}
+										</div>
+									{% endfor %}
+								</div>
+							</div>
+						{% endif %}
 
-            {% if actions is not empty %}
-              <div class="ecl-editorial-header__actions">
-                {% for action in actions %}
-                  <div class="ecl-editorial-header__action">
-                    {% set trigger = '' %}
+						{% if actions is not empty %}
+							<div class="ecl-editorial-header__actions">
+								{% for action in actions %}
+									<div class="ecl-editorial-header__action">
+										{% set trigger = '' %}
 
-                    {% if action.items %}
-                      {% set trigger %}
-                        {% include "@ecl-twig/ec-component-button/ecl-button.html.twig" with {
+										{% if action.items %}
+											{% set trigger %}
+											{% include "@ecl-twig/ec-component-button/ecl-button.html.twig" with {
                           extra_classes: action.extra_classes|default('') ~ 'ecl-button--has-icon-layout',
                           icon: icon_file_path ? action.icon|default({})|merge({
                             path: icon_file_path,
@@ -73,19 +69,22 @@
                           }),
                           label: action.label|default(action.link.label),
                         } %}
-                      {% endset %}
+											{% endset %}
 
-                      {% include "@theme/patterns/compositions/collapsible-options.html.twig" with {
-                        extra_classes: 'ecl-collapsible-options--aligns-from-right',
+											{% include "@theme/patterns/compositions/collapsible-options.html.twig" with {
+                        extra_classes: 'ecl-collapsible-options--aligns-from-right ecl-collapsible-options--actions ' ~ action.extra_classes|default(''),
                         collapse_label: action.label|default(action.link.label),
+                        icon: action.icon|default(''),
                         icon_file_path: icon_file_path,
                         items: action.items,
                         trigger: action.is_compact and icon_file_path ? trigger : NULL,
                       } only %}
-                    {% else %}
-                      {% if action is not empty %}
-                        {% if action.link %}
-                          {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with action|default({})|merge({
+										{% elseif action.content is defined %}
+											{{ action.content }}
+										{% else %}
+											{% if action is not empty %}
+												{% if action.link %}
+													{% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with action|default({})|merge({
                             link: action.link|default({})|merge({
                               icon_position: 'before',
                             }),
@@ -95,9 +94,9 @@
                             }) : {},
                             extra_classes: (action.type == 'cta' ? 'ecl-link ecl-link--cta' : 'ecl-link--button ecl-link--' ~ (action.variant == 'secondary' ? 'button-secondary' : 'button-primary')) ~ (action.is_compact ? ' ecl-link--button-has-icon-layout ecl-link--action'),
                           }) only %}
-                        {% elseif action is not empty %}
-                          {% if action.link %}
-                            {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with action|default({})|merge({
+												{% elseif action is not empty %}
+													{% if action.link %}
+														{% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with action|default({})|merge({
                               link: action.link|merge({
                                 icon_position: 'before',
                               }),
@@ -107,93 +106,111 @@
                               }) : {},
                               extra_classes: (actions[0].items and not loop.first) or loop.first ? 'ecl-link--button ecl-link--button-primary' : 'ecl-link--button ecl-link--button-secondary' ~ (action.is_compact ? 'ecl-link--button-has-icon-layout'),
                             }) only %}
-                          {% else %}
-                            {% include "@ecl-twig/ec-component-button/ecl-button.html.twig" with action|default({})|merge({
+													{% else %}
+														{% include "@ecl-twig/ec-component-button/ecl-button.html.twig" with action|default({})|merge({
                               icon_position: 'before',
                               extra_classes: action.is_compact ? 'ecl-button--has-icon-layout',
-                              variant: (actions[0].items and not loop.first) or loop.first ? 'primary' : 'secondary',
+                              variant: (actions[0].items and not loop.first) or loop.first or (action.variant and action.variant == 'primary')  ? 'primary' : 'secondary',
                               icon: icon_file_path ? action.icon|default({})|merge({
                                 path: icon_file_path,
                                 size: 's',
                               }) : {},
                             }) only %}
-                          {% endif %}
-                        {% endif %}
-                      {% endif %}
-                    {% endif %}
-                  </div>
-                {% endfor %}
-              </div>
-            {% endif %}
-          </div>
-        {% endif %}
+													{% endif %}
+												{% endif %}
+											{% endif %}
+										{% endif %}
+									</div>
+								{% endfor %}
+							</div>
+						{% endif %}
+					</div>
+				{% endif %}
 
-        <div class="ecl-editorial-header__main-content">
-          <div class="ecl-editorial-header__main-content-wrapper">
-            {% include "@theme/patterns/components/meta-list.html.twig" with {
+				<div class="ecl-editorial-header__main-content">
+					<div class="ecl-editorial-header__main-content-wrapper">
+						{% include "@theme/patterns/components/meta-list.html.twig" with {
               extra_classes: "ecl-editorial-header__meta ecl-meta-list--large",
               items: meta
             } only %}
 
-            {% if type is not empty %}
-              {% include "@theme/patterns/components/content-type-indicator.html.twig" with type|default({})|merge({
+						{% if type is not empty %}
+							{% include "@theme/patterns/components/content-type-indicator.html.twig" with type|default({})|merge({
                 extra_classes: 'ecl-editorial-header__type',
                 icon_file_path: icon_file_path,
               }) only %}
-            {% endif %}
+						{% endif %}
 
-            {% if title or description %}
-              <div class="ecl-editorial-header__content">
-                {% if title is not empty %}
-                  <{{ title_element }} class="ecl-editorial-header__title">{{ title }}</{{ title_element }}>
-                {% endif %}
+						{% if tags is not empty and is_stories == true %}
+							<div class="ecl-editorial-header__tags-wrapper">
+								<div class="ecl-editorial-header__tags">
+									{% for tag in tags %}
+										<div class="ecl-editorial-header__tag">
+											{% include '@ecl-twig/ec-component-tag/ecl-tag.html.twig' with tag|default({}) only %}
+										</div>
+									{% endfor %}
+								</div>
+							</div>
+						{% endif %}
 
-                {% if description %}
-                  <div class="ecl-editorial-header__description ecl-editable-wrapper">{{ description }}</div>
-                {% endif %}
-              </div>
-            {% endif %}
-          </div>
-          {% if flags is not empty or stats is not empty %}
-            <div class="ecl-editorial-header__main-content-wrapper">
-              {% embed "@theme/patterns/components/well.html.twig" %}
-                {% block content %}
-                  {% if flags is not empty %}
-                    <div class="ecl-editorial-header__flags">
-                      {% for flag in flags %}
-                        <div class="ecl-editorial-header__flag">
-                          {% if flag.content is defined %}
-                            {{ flag.content }}
-                          {% else %}
-                            {% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with flag|default({})|merge({
-                              link: flag.link|default({})|merge({
-                                icon_position: 'before',
-                              }),
-                              extra_classes: 'ecl-link--standalone ecl-link--flag',
-                              icon: flag.icon|default({})|merge({
-                                path: icon_file_path,
-                                size: 's',
-                              })
-                            }) %}
-                          {% endif %}
-                        </div>
-                      {% endfor %}
-                    </div>
-                  {% endif %}
+						{% if title or description %}
+							<div class="ecl-editorial-header__content">
+								{% if title is not empty %}
+									<{{title_element}} class="ecl-editorial-header__title">{{ title }}</{{title_element}}>
+								{% endif %}
 
-                  {% if stats is not empty %}
-                    <div class="ecl-editorial-header__stats">
-                      {% include "@theme/patterns/components/inline-stats.html.twig" with {
+								{% if description %}
+									<div class="ecl-editorial-header__description ecl-editable-wrapper">{{ description }}</div>
+								{% endif %}
+							</div>
+						{% endif %}
+					</div>
+					{% if flags is not empty or stats is not empty or social_share is not empty%}
+						<div class="ecl-editorial-header__main-content-wrapper">
+							{% embed "@theme/patterns/components/well.html.twig" %}
+								{% block content %}
+									{% if flags is not empty or social_share is not empty%}
+										<div class="ecl-editorial-header__flags">
+											{% if flags is not empty %}
+												{% for flag in flags %}
+													<div class="ecl-editorial-header__flag">
+														{% if flag.content is defined %}
+															{{ flag.content }}
+														{% else %}
+															{% include "@ecl-twig/ec-component-link/ecl-link.html.twig" with flag|default({})|merge({
+                                  link: flag.link|default({})|merge({
+                                    icon_position: 'before',
+                                  }),
+                                  extra_classes: 'ecl-link--standalone ecl-link--flag',
+                                  icon: flag.icon|default({})|merge({
+                                    path: icon_file_path,
+                                    size: 's',
+                                  })
+                                }) %}
+														{% endif %}
+													</div>
+												{% endfor %}
+
+												<div class="ecl-editorial-header__flag">
+													{{ social_share }}
+												</div>
+											{% endif %}
+										</div>
+									{% endif %}
+
+									{% if stats is not empty %}
+										<div class="ecl-editorial-header__stats">
+											{% include "@theme/patterns/components/inline-stats.html.twig" with {
                         items: stats,
                       } %}
-                    </div>
-                  {% endif %}
-                {% endblock %}
-              {% endembed %}
-            </div>
-          {% endif %}
-        </div>
-      </div>
-    </div>
-  </div>
+										</div>
+									{% endif %}
+								{% endblock %}
+							{% endembed %}
+						</div>
+					{% endif %}
+				</div>
+			</div>
+		</div>
+	</div>
 </section>

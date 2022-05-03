@@ -1,16 +1,50 @@
 uuid: 7dc837fb-2dc3-49f8-b647-0ff006e590b7
 langcode: en
 status: true
-dependencies: {  }
+dependencies:
+  config:
+    - filter.format.basic_text
+    - filter.format.filtered_html
+    - media.type.eic_document
+    - media.type.image
+    - media.type.remote_video
+    - media.type.video
+    - node.type.news
+    - node.type.story
+    - node.type.video
+    - node.type.wiki_page
+    - workflows.workflow.default
+    - workflows.workflow.eic_moderated_workflow
+    - workflows.workflow.groups
+    - workflows.workflow.news_stories
+  module:
+    - book
+    - comment
+    - content_moderation
+    - eic_flags
+    - eic_private_content
+    - eic_private_message
+    - eic_topics
+    - filter
+    - flag
+    - group
+    - media
+    - node
+    - profile
 id: trusted_user
 label: 'Trusted user'
 weight: -8
 is_admin: null
 permissions:
   - 'access comments'
+  - 'access contact group users page'
+  - 'access contact user page'
   - 'access group overview'
+  - 'access topics activity stream'
+  - 'access user profiles'
   - 'add content to books'
   - 'create eic_document media'
+  - 'create event group'
   - 'create group group'
   - 'create image media'
   - 'create news content'
@@ -22,6 +56,10 @@ permissions:
   - 'edit own comments'
   - 'edit own eic_document media'
   - 'edit own image media'
+  - 'edit own news content'
+  - 'edit own story content'
+  - 'edit own video content'
+  - 'edit own wiki_page content'
   - 'flag recommend_group'
   - 'make archive request'
   - 'make delete request'
@@ -29,17 +67,27 @@ permissions:
   - 'post comments'
   - 'skip comment approval'
   - 'unflag recommend_group'
-  - 'use group_wiki transition create_new_draft'
-  - 'use group_wiki transition publish'
-  - 'use group_wiki transition unpublish'
+  - 'update own member profile'
+  - 'use default transition archive'
+  - 'use default transition create_new_draft'
+  - 'use default transition publish'
+  - 'use eic_moderated_workflow transition create_new_draft'
+  - 'use eic_moderated_workflow transition submit_for_approval'
   - 'use groups transition create_new_draft'
   - 'use groups transition create_new_group'
+  - 'use groups transition keep_blocked'
   - 'use groups transition keep_in_draft'
   - 'use groups transition publish'
+  - 'use news_stories transition create_new_draft'
   - 'use text format basic_text'
   - 'use text format filtered_html'
+  - 'view any member profile'
   - 'view any profile'
+  - 'view latest version'
+  - 'view own member profile'
   - 'view own profile'
+  - 'view own unpublished content'
   - 'view own unpublished media'
   - 'view private content'
   - 'view recommend_group'
+  - 'view user email addresses'

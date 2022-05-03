@@ -1,0 +1,24 @@
+uuid: 84467b50-4f85-4606-b595-b6c5d182af8f
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.message.mail_subject
+    - field.field.message.notify_group_unpublished.field_event_executing_user
+    - field.field.message.notify_group_unpublished.field_group_ref
+    - message.template.notify_group_unpublished
+id: message.notify_group_unpublished.mail_subject
+targetEntityType: message
+bundle: notify_group_unpublished
+mode: mail_subject
+content:
+  partial_0:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  field_event_executing_user: true
+  field_group_ref: true
+  partial_1: true
+  search_api_excerpt: true

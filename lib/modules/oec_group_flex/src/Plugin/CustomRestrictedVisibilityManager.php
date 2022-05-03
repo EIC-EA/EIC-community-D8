@@ -13,6 +13,11 @@ use Drupal\group_flex\Plugin\GroupFlexPluginCollection;
 class CustomRestrictedVisibilityManager extends DefaultPluginManager {
 
   /**
+   * @var \Drupal\group_flex\Plugin\GroupFlexPluginCollection
+   */
+  private $plugins;
+
+  /**
    * Constructs a new CustomRestrictedVisibilityManager object.
    *
    * @param \Traversable $namespaces
@@ -23,8 +28,14 @@ class CustomRestrictedVisibilityManager extends DefaultPluginManager {
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler to invoke the alter hook with.
    */
-  public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler) {
-    parent::__construct('Plugin/CustomRestrictedVisibility', $namespaces, $module_handler, 'Drupal\oec_group_flex\Plugin\CustomRestrictedVisibilityInterface', 'Drupal\oec_group_flex\Annotation\CustomRestrictedVisibility');
+  public function __construct(
+    \Traversable $namespaces,
+    CacheBackendInterface $cache_backend,
+    ModuleHandlerInterface $module_handler
+  ) {
+    parent::__construct('Plugin/CustomRestrictedVisibility', $namespaces, $module_handler,
+      'Drupal\oec_group_flex\Plugin\CustomRestrictedVisibilityInterface',
+      'Drupal\oec_group_flex\Annotation\CustomRestrictedVisibility');
 
     $this->alterInfo('oec_group_flex_custom_restricted_visibility_info');
     $this->setCacheBackend($cache_backend, 'oec_group_flex_custom_restricted_visibility_plugins');
@@ -37,7 +48,7 @@ class CustomRestrictedVisibilityManager extends DefaultPluginManager {
    *   The plugin collection.
    */
   public function getAll(): GroupFlexPluginCollection {
-    if (!isset($this->allPlugins)) {
+    if (!isset($this->plugins)) {
       $collection = new GroupFlexPluginCollection($this, []);
 
       // Add every known plugin to the collection with a vanilla configuration.
@@ -46,10 +57,10 @@ class CustomRestrictedVisibilityManager extends DefaultPluginManager {
       }
 
       // Sort and set the plugin collection.
-      $this->allPlugins = $collection->sort();
+      $this->plugins = $collection->sort();
     }
 
-    return $this->allPlugins;
+    return $this->plugins;
   }
 
   /**

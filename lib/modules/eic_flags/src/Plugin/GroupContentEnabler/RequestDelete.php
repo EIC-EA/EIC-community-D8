@@ -23,7 +23,7 @@ use Drupal\group\Annotation\GroupContentEnabler;
 class RequestDelete extends GroupContentEnablerBase {
 
   /**
-   * {@inheritdoc }
+   * {@inheritdoc}
    */
   public function getGroupOperations(GroupInterface $group) {
     $operations = [];
@@ -42,7 +42,7 @@ class RequestDelete extends GroupContentEnablerBase {
         'url' => $url,
       ];
     }
-    
+
     return $operations;
   }
 

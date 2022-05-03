@@ -1,0 +1,19 @@
+uuid: 9009e5f2-0c2f-43a3-88c1-1cd502dec206
+langcode: en
+status: true
+dependencies:
+  module:
+    - link
+    - message
+id: message.field_request_deny_url
+field_name: field_request_deny_url
+entity_type: message
+type: link
+settings: {  }
+module: link
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

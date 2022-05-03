@@ -14,18 +14,61 @@ eic_overviews.groups.overview_page.discussions:
     _controller: '\Drupal\eic_overviews\Controller\GroupOverviewsController::buildGenericPage'
     _title: 'Discussions'
   requirements:
-    _group_permission: 'access discussions overview'
+    _custom_access: '\Drupal\eic_overviews\Controller\GroupOverviewsController::access'
+eic_overviews.groups.overview_page.files:
+  path: '/group/{group}/library'
+  defaults:
+    _controller: '\Drupal\eic_overviews\Controller\GroupOverviewsController::buildGenericPage'
+    _title: 'Files'
+  requirements:
+    _custom_access: '\Drupal\eic_overviews\Controller\GroupOverviewsController::access'
+eic_overviews.groups.overview_page.events:
+  path: '/group/{group}/events'
+  defaults:
+    _controller: '\Drupal\eic_overviews\Controller\GroupOverviewsController::buildGenericPage'
+    _title: 'Events'
+  requirements:
+    _custom_access: '\Drupal\eic_overviews\Controller\GroupOverviewsController::access'
+eic_overviews.groups.overview_page.news:
+  path: '/group/{group}/news'
+  defaults:
+    _controller: '\Drupal\eic_overviews\Controller\GroupOverviewsController::buildGenericPage'
+    _title: 'News'
+  requirements:
+    _custom_access: '\Drupal\eic_overviews\Controller\GroupOverviewsController::access'
 eic_overviews.groups.overview_page.members:
   path: '/group/{group}/people'
   defaults:
     _controller: '\Drupal\eic_overviews\Controller\GroupOverviewsController::buildGenericPage'
     _title: 'Members'
   requirements:
-    _group_permission: 'access members overview'
+    _custom_access: '\Drupal\eic_overviews\Controller\GroupOverviewsController::access'
+eic_overviews.groups.overview_page.team:
+  path: '/group/{group}/team'
+  defaults:
+    _controller: '\Drupal\eic_overviews\Controller\GroupOverviewsController::buildGenericPage'
+    _title: 'Team'
+  requirements:
+    _custom_access: '\Drupal\eic_overviews\Controller\GroupOverviewsController::access'
+eic_overviews.groups.overview_page.latest_activity_stream:
+  path: '/group/{group}/latest-activity'
+  defaults:
+    _controller: '\Drupal\eic_overviews\Controller\GroupOverviewsController::buildGenericPage'
+    _title: 'Latest activity'
+  requirements:
+    _custom_access: '\Drupal\eic_overviews\Controller\GroupOverviewsController::access'
 eic_overviews.groups.overview_page.search:
   path: '/group/{group}/search'
   defaults:
     _controller: '\Drupal\eic_overviews\Controller\GroupOverviewsController::buildGenericPage'
     _title: 'Search group'
   requirements:
-    _group_permission: 'access group search overview'
+    _custom_access: '\Drupal\eic_overviews\Controller\GroupOverviewsController::access'
+eic_overviews.taxonomy.topics:
+  path: '/topics'
+  defaults:
+    _controller: '\Drupal\eic_overviews\Controller\TaxonomyOverviewController::buildPage'
+    _title: 'Topics'
+    vocabulary_id: 'topics'
+  requirements:
+    _permission: 'access content'

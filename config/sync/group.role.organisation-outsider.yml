@@ -1,0 +1,26 @@
+uuid: 6c60e438-d0d0-4352-afe1-9f94bc913fb1
+langcode: en
+status: true
+dependencies:
+  config:
+    - group.type.organisation
+id: organisation-outsider
+label: Outsider
+weight: -101
+internal: true
+audience: outsider
+group_type: organisation
+permissions_ui: true
+permissions:
+  - 'access content overview'
+  - 'access discussions overview'
+  - 'access events overview'
+  - 'access files overview'
+  - 'access group search overview'
+  - 'access latest activity stream'
+  - 'access members overview'
+  - 'access news overview'
+  - 'access wiki overview'
+  - 'join group'
+  - 'view group'
+  - 'view group_node:event content'

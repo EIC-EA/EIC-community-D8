@@ -1,0 +1,26 @@
+uuid: 003b1c52-8e3a-4211-a50a-52cb54e8e8c7
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.message.field_sender
+    - message.template.notify_mt_contact_global
+id: message.notify_mt_contact_global.field_sender
+field_name: field_sender
+entity_type: message
+bundle: notify_mt_contact_global
+label: Sender
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:group_membership'
+  handler_settings:
+    target_bundles: null
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+field_type: entity_reference

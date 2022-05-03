@@ -1,10 +1,13 @@
 services:
   eic_group_statistics.storage:
     class: Drupal\eic_group_statistics\GroupStatisticsStorage
-    arguments: ['@database']
+    arguments: ['@database', '@entity_field.manager']
   eic_group_statistics.search_api.reindex:
     class: Drupal\eic_group_statistics\GroupStatisticsSearchApiReindex
     arguments: ['@eic_group_statistics.storage']
   eic_group_statistics.helper:
     class: Drupal\eic_group_statistics\GroupStatisticsHelper
-    arguments: ['@entity_type.manager', '@eic_group_statistics.storage']
+    arguments: ['@database', '@cache.default', '@entity_type.manager', '@eic_group_statistics.storage', '@eic_groups.helper']
+  plugin.manager.group_metric:
+    class: Drupal\eic_group_statistics\GroupMetricPluginManager
+    parent: default_plugin_manager

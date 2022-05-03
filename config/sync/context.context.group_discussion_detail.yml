@@ -4,8 +4,9 @@ status: true
 dependencies:
   module:
     - ctools
-name: group_discussion_detail
+    - eic_groups
 label: 'Group - Discussion detail'
+name: group_discussion_detail
 group: Groups
 description: 'Group context of the discussion pages'
 requireAllConditions: false
@@ -13,17 +14,32 @@ disabled: false
 conditions:
   'entity_bundle:node':
     id: 'entity_bundle:node'
-    bundles:
-      discussion: discussion
     negate: false
     uuid: 04c46e1e-a4d8-4190-805b-04b921bca67f
     context_mapping:
       node: '@node.node_route_context:node'
+    bundles:
+      discussion: discussion
 reactions:
   blocks:
-    blocks: {  }
     id: blocks
-    saved: false
     uuid: 2638f701-9750-4f62-b60e-8cf9bb649629
+    blocks:
+      ad141b0c-8fec-4345-9194-0fc26cfcb4df:
+        uuid: ad141b0c-8fec-4345-9194-0fc26cfcb4df
+        id: eic_groups_comments_from_discussion
+        label: 'EIC comments from discussion'
+        provider: eic_groups
+        label_display: '0'
+        region: content
+        weight: '0'
+        custom_id: eic_groups_comments_from_discussion
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: group_discussion_detail
+        context_mapping: {  }
+        third_party_settings: {  }
     include_default_blocks: 0
+    saved: false
 weight: 0

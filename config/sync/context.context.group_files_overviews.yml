@@ -5,29 +5,39 @@ dependencies:
   module:
     - eic_search
     - route_condition
-name: group_files_overviews
 label: 'Group - Files - Overviews'
+name: group_files_overviews
 group: Groups
-description: ''
+description: 'This context is used for all group files overviews'
 requireAllConditions: false
 disabled: false
 conditions:
   route:
     id: route
-    routes: eic_overviews.groups.overview_page.files
     negate: false
     uuid: 10a20f3f-97b2-45b4-80a3-d9641b9bfa3f
     context_mapping: {  }
+    routes: eic_overviews.groups.overview_page.files
 reactions:
   blocks:
+    id: blocks
+    uuid: b8b6f9f3-68cc-4066-b69f-04528693c7d9
     blocks:
-      1f828322-eac8-4da7-af8f-7677a008a12d:
+      d84262ea-c6d8-45e9-87f2-1b2e08302841:
+        uuid: d84262ea-c6d8-45e9-87f2-1b2e08302841
         id: eic_search_overview
-        label: null
-        provider: null
-        label_display: null
+        label: ''
+        provider: eic_search
+        label_display: visible
         region: content
         weight: '0'
+        custom_id: eic_search_overview
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: group_files_overviews
+        context_mapping: {  }
+        source_type: Drupal\eic_search\Search\Sources\LibrarySourceType
         facets:
           ss_global_content_type: ss_global_content_type
           sm_content_field_vocab_topics_string: sm_content_field_vocab_topics_string
@@ -35,25 +45,25 @@ reactions:
           ss_content_language_string: ss_content_language_string
           ss_content_document_type_string: ss_content_document_type_string
         sort_options:
+          ss_content_title: ss_content_title
           its_flag_highlight_content: its_flag_highlight_content
+          its_document_download_total: its_document_download_total
+          its_statistics_view: its_statistics_view
+          its_flag_like_content: its_flag_like_content
           ss_global_created_date: ss_global_created_date
-          ss_global_title: ss_global_title
-        source_type: Drupal\eic_search\Search\Sources\LibrarySourceType
+          ss_drupal_changed_timestamp: 0
+          its_last_comment_timestamp: 0
+          its_last_flagged_like_content: 0
+          its_last_flagged_bookmark_content: 0
+          its_last_flagged_highlight_content: 0
+          score: 0
         enable_search: 1
         page_options: normal
         prefilter_group: 1
+        enable_date_filter: 0
         add_facet_interests: 0
         add_facet_my_groups: 0
-        context_mapping: {  }
-        custom_id: eic_search_overview
-        theme: eic_community
-        css_class: ''
-        unique: 0
-        context_id: group_files_overviews
         third_party_settings: {  }
-        uuid: 1f828322-eac8-4da7-af8f-7677a008a12d
-    id: blocks
-    saved: false
-    uuid: b8b6f9f3-68cc-4066-b69f-04528693c7d9
     include_default_blocks: 0
+    saved: false
 weight: 0

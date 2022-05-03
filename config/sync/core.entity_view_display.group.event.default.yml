@@ -1,0 +1,276 @@
+uuid: bc73ed71-acb0-421e-92a1-c6318ad45f57
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.group.event.field_body
+    - field.field.group.event.field_date_range
+    - field.field.group.event.field_document_additional
+    - field.field.group.event.field_document_agenda
+    - field.field.group.event.field_document_presentations
+    - field.field.group.event.field_documents
+    - field.field.group.event.field_event_registration_date
+    - field.field.group.event.field_funding_source
+    - field.field.group.event.field_header_visual
+    - field.field.group.event.field_image
+    - field.field.group.event.field_link
+    - field.field.group.event.field_location
+    - field.field.group.event.field_location_type
+    - field.field.group.event.field_organised_by
+    - field.field.group.event.field_related_groups
+    - field.field.group.event.field_smed_id
+    - field.field.group.event.field_social_links
+    - field.field.group.event.field_tag_line
+    - field.field.group.event.field_vocab_event_type
+    - field.field.group.event.field_vocab_geo
+    - field.field.group.event.field_vocab_language
+    - field.field.group.event.field_vocab_topics
+    - field.field.group.event.field_website_url
+    - field.field.group.event.field_welcome_message
+    - group.type.event
+  module:
+    - address
+    - datetime_range
+    - link
+    - options
+    - social_link_field
+    - text
+id: group.event.default
+targetEntityType: group
+bundle: event
+mode: default
+content:
+  content_moderation_control:
+    settings: {  }
+    third_party_settings: {  }
+    weight: -20
+    region: content
+  field_body:
+    type: text_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 12
+    region: content
+  field_date_range:
+    type: daterange_default
+    label: above
+    settings:
+      timezone_override: ''
+      format_type: medium
+      separator: '-'
+    third_party_settings: {  }
+    weight: 17
+    region: content
+  field_document_additional:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 23
+    region: content
+  field_document_agenda:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 21
+    region: content
+  field_document_presentations:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 22
+    region: content
+  field_documents:
+    type: entity_reference_entity_view
+    label: above
+    settings:
+      view_mode: default
+      link: false
+    third_party_settings: {  }
+    weight: 31
+    region: content
+  field_event_registration_date:
+    type: daterange_default
+    label: above
+    settings:
+      timezone_override: ''
+      format_type: medium
+      separator: '-'
+    third_party_settings: {  }
+    weight: 30
+    region: content
+  field_funding_source:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 34
+    region: content
+  field_header_visual:
+    type: entity_reference_entity_view
+    label: above
+    settings:
+      view_mode: default
+      link: false
+    third_party_settings: {  }
+    weight: 20
+    region: content
+  field_image:
+    type: entity_reference_entity_view
+    label: above
+    settings:
+      view_mode: default
+      link: false
+    third_party_settings: {  }
+    weight: 19
+    region: content
+  field_link:
+    type: link
+    label: above
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+    weight: 15
+    region: content
+  field_location:
+    type: address_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 18
+    region: content
+  field_location_type:
+    type: list_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 32
+    region: content
+  field_organised_by:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 14
+    region: content
+  field_related_groups:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 27
+    region: content
+  field_smed_id:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 28
+    region: content
+  field_social_links:
+    type: font_awesome
+    label: above
+    settings:
+      icon_type: common
+      orientation: vertical
+      new_tab: true
+    third_party_settings: {  }
+    weight: 16
+    region: content
+  field_tag_line:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 13
+    region: content
+  field_vocab_event_type:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 11
+    region: content
+  field_vocab_geo:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 26
+    region: content
+  field_vocab_language:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 25
+    region: content
+  field_vocab_topics:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 24
+    region: content
+  field_website_url:
+    type: link
+    label: above
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+    weight: 33
+    region: content
+  field_welcome_message:
+    type: text_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 29
+    region: content
+  flag_follow_group:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 10
+    region: content
+  flag_recommend_group:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 10
+    region: content
+  label:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: -5
+    region: content
+hidden:
+  changed: true
+  created: true
+  langcode: true
+  search_api_excerpt: true
+  uid: true

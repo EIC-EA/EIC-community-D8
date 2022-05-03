@@ -85,6 +85,20 @@
 
   &__item {
     margin-bottom: ecl-layout('gutter', 'controls');
+
+    & .ecl-link {
+      width: 100%;
+      justify-content: center;
+
+      &--showmore {
+        width: auto;
+        justify-content: flex-end;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
   }
 
   &__item-label {
@@ -114,6 +128,11 @@
       border-color: ecl-typography('color');
       margin-bottom: ecl-layout('gutter', 'controls');
       padding: ecl-layout('gutter', 'controls') 0;
+    }
+
+    &--facets {
+      padding: map-get($ecl-spacing, "m") 0;
+      border-bottom: 1px solid currentColor;
     }
   }
 
@@ -153,6 +172,36 @@
     display: flex;
     flex-direction: row-reverse;
   }
+
+  &__item--search {
+    width: calc(100% - 2.75rem);
+    & .ecl-form-group {
+      position: relative;
+    }
+
+    &#{$node}__item--full-width input {
+      width: 100%;
+    }
+
+    & .ecl-search__icon{
+      background-color: #404040;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      width: 2.75rem;
+      position: absolute;
+      left: 100%;
+      top: 0;
+      z-index: 0;
+      margin: 0;
+      color: $ecl-color-grey-50;
+      cursor: pointer;
+      border: none;
+    }
+  }
+
+
 
   &__item-collapse,
   &__item-expand {

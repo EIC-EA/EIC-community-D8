@@ -1,0 +1,250 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.dummy.body
+    - field.field.node.dummy.field_date_range
+    - field.field.node.dummy.field_disclaimer
+    - field.field.node.dummy.field_discussion_type
+    - field.field.node.dummy.field_document_media
+    - field.field.node.dummy.field_document_type
+    - field.field.node.dummy.field_dummy_checkboxes
+    - field.field.node.dummy.field_dummy_file
+    - field.field.node.dummy.field_dummy_test
+    - field.field.node.dummy.field_dummy_test_2
+    - field.field.node.dummy.field_email
+    - field.field.node.dummy.field_image
+    - field.field.node.dummy.field_link
+    - field.field.node.dummy.field_location
+    - field.field.node.dummy.field_number_integer
+    - field.field.node.dummy.field_organised_by
+    - field.field.node.dummy.field_related_contributors
+    - field.field.node.dummy.field_related_groups
+    - field.field.node.dummy.field_social_links
+    - field.field.node.dummy.field_text_plain_long
+    - field.field.node.dummy.field_vocab_topics
+    - node.type.dummy
+  module:
+    - address
+    - datetime_range
+    - entity_reference_revisions
+    - file
+    - link
+    - options
+    - social_link_field
+    - text
+    - user
+_core:
+  default_config_hash: uB_lDMeI9CFzTQYcbjwS_YTIAMrueoj6k9fq6sLVDE4
+id: node.dummy.default
+targetEntityType: node
+bundle: dummy
+mode: default
+content:
+  body:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 101
+    region: content
+  content_moderation_control:
+    settings: {  }
+    third_party_settings: {  }
+    weight: -20
+    region: content
+  field_date_range:
+    type: daterange_default
+    label: above
+    settings:
+      timezone_override: ''
+      format_type: medium
+      separator: '-'
+    third_party_settings: {  }
+    weight: 103
+    region: content
+  field_disclaimer:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 104
+    region: content
+  field_discussion_type:
+    type: list_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 111
+    region: content
+  field_document_media:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 105
+    region: content
+  field_document_type:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 106
+    region: content
+  field_dummy_checkboxes:
+    type: list_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 121
+    region: content
+  field_dummy_file:
+    type: file_default
+    label: above
+    settings:
+      use_description_as_link_text: true
+    third_party_settings: {  }
+    weight: 120
+    region: content
+  field_dummy_test:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 118
+    region: content
+  field_dummy_test_2:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 119
+    region: content
+  field_email:
+    type: basic_string
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 115
+    region: content
+  field_image:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 107
+    region: content
+  field_link:
+    type: link
+    label: above
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+    weight: 110
+    region: content
+  field_location:
+    type: address_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 102
+    region: content
+  field_number_integer:
+    type: number_integer
+    label: above
+    settings:
+      thousand_separator: ''
+      prefix_suffix: true
+    third_party_settings: {  }
+    weight: 114
+    region: content
+  field_organised_by:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 113
+    region: content
+  field_related_contributors:
+    type: entity_reference_revisions_entity_view
+    label: above
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    weight: 109
+    region: content
+  field_related_groups:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 117
+    region: content
+  field_social_links:
+    type: font_awesome
+    label: above
+    settings:
+      icon_type: common
+      orientation: vertical
+      new_tab: true
+    third_party_settings: {  }
+    weight: 112
+    region: content
+  field_text_plain_long:
+    type: basic_string
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 116
+    region: content
+  field_vocab_topics:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 108
+    region: content
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 100
+    region: content
+  member_content_edit_access:
+    type: boolean
+    label: above
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  private:
+    type: boolean
+    label: above
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    weight: 1
+    region: content
+hidden:
+  extra_field_eic_theme_helper_short_title_with_fallback: true
+  langcode: true
+  published_at: true
+  search_api_excerpt: true

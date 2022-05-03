@@ -1,0 +1,14 @@
+permissions:
+  - 'access news overview'
+  - 'create group_node:news entity'
+public_permissions:
+  - 'access news overview'
+roles:
+  - event-member
+  - event-admin
+  - event-owner
+  - group-member
+  - group-admin
+  - group-owner
+  - organisation-admin
+  - organisation-owner

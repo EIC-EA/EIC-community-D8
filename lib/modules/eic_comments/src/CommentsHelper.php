@@ -2,8 +2,9 @@
 
 namespace Drupal\eic_comments;
 
+use Drupal\comment\CommentInterface;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\node\NodeInterface;
 
 /**
  * Service that provides helper functions for comments.
@@ -28,19 +29,30 @@ class CommentsHelper {
   }
 
   /**
-   * Get the number of comments that belong to a node.
+   * Get the number of comments that belong to an entity.
    *
-   * @param \Drupal\node\NodeInterface $node
-   *   The node object.
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The entity object.
+   * @param bool $published_only
+   *   Whether to count published comments only.
    *
    * @return int
    *   The number of comments that belong to the node.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
-  public function countNodeComments(NodeInterface $node) {
+  public function countEntityComments(EntityInterface $entity, bool $published_only = TRUE) {
     $query = $this->entityTypeManager->getStorage('comment')
       ->getQuery()
-      ->condition('entity_id', $node->id())
-      ->count();
+      ->condition('entity_id', $entity->id())
+      ->condition('entity_type', $entity->getEntityTypeId());
+
+    if ($published_only) {
+      $query->condition('status', CommentInterface::PUBLISHED);
+    }
+
+    $query->count();
     $results = $query->execute();
     return (int) $results;
   }

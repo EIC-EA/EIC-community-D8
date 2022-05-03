@@ -32,6 +32,8 @@ class OverviewPageForm extends ContentEntityForm {
     }
 
     $form_state->setRedirect('entity.overview_page.canonical', ['overview_page' => $entity->id()]);
+
+    return $result;
   }
 
 }

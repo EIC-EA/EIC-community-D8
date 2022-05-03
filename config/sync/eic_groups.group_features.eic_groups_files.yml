@@ -2,9 +2,16 @@ permissions:
   - 'access files overview'
   - 'create group_node:document entity'
   - 'create group_node:gallery entity'
+  - 'create group_node:video entity'
 public_permissions:
   - 'access files overview'
 roles:
+  - event-member
+  - event-admin
+  - event-owner
   - group-member
   - group-admin
   - group-owner
+  - organisation-member
+  - organisation-admin
+  - organisation-owner

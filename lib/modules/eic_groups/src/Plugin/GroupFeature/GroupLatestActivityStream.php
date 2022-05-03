@@ -3,6 +3,7 @@
 namespace Drupal\eic_groups\Plugin\GroupFeature;
 
 use Drupal\Core\Url;
+use Drupal\group\Entity\GroupInterface;
 
 /**
  * Group feature plugin implementation for Latest activity stream.
@@ -28,10 +29,20 @@ class GroupLatestActivityStream extends EicGroupsGroupFeaturePluginBase {
    * {@inheritdoc}
    */
   protected function getMenuItem(Url $url, string $menu_name) {
+    /** @var \Drupal\Core\Entity\ContentEntityInterface $menu_item */
     $menu_item = parent::getMenuItem($url, $menu_name);
     // Set a specific weight for the menu item.
     $menu_item->set('weight', 1);
     return $menu_item;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getGroupPublicRoleIds(GroupInterface $group) {
+    return [
+      $group->getGroupType()->getOutsiderRoleId(),
+    ];
   }
 
 }

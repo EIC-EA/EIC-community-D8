@@ -2,7 +2,6 @@ langcode: en
 status: true
 dependencies:
   module:
-    - basic_auth
     - eic_webservices
     - hal
     - user
@@ -16,5 +15,4 @@ configuration:
   formats:
     - hal_json
   authentication:
-    - basic_auth
-    - cookie
+    - eic_webservices_token_auth

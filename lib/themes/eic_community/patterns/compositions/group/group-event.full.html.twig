@@ -1,0 +1,60 @@
+{% extends "@theme/patterns/layout/base.html.twig" %}
+
+{% block breadcrumbs %}
+  {% include "@theme/patterns/compositions/breadcrumb.html.twig" with breadcrumb|default({}) %}
+{% endblock %}
+
+{% block page_header %}
+  {% include "@theme/patterns/compositions/editorial-header.html.twig" with editorial_header|default({}) %}
+  {% if subnavigation %}
+    {% include "@theme/patterns/compositions/subnavigation.html.twig" with subnavigation|default({})|merge({
+      icon_file_path: common.icon_file_path
+    }) only %}
+  {% endif %}
+{% endblock %}
+
+
+
+{% block content %}
+  {% embed "@theme/patterns/compositions/editorial-article.html.twig" with editorial_article|default({}) %}
+    {% block content %}
+      {{ content }}
+    {% endblock %}
+
+    {% block sidebar %}
+      {% include "@theme/patterns/compositions/editorial-actions.html.twig" with editorial_actions|default({}) %}
+
+      {% include "@theme/patterns/compositions/social-share.html.twig" with social_share|default({})|merge({
+        extra_classes: 'ecl-featured-list',
+      }) %}
+
+      {% include "@theme/patterns/compositions/featured-topics.html.twig" with topics|default({}) %}
+
+      {% if event_infos %}
+        {% include "@theme/patterns/components/event-infos.html.twig" with event_infos|default({}) %}
+      {% endif %}
+
+      {% if additional_sidebar_infos %}
+        {% include "@theme/patterns/components/additional_sidebar_infos.html.twig" with additional_sidebar_infos|default({}) %}
+      {% endif %}
+
+    {% endblock %}
+  {% endembed %}
+
+  {% if not user %}
+    {% embed "@theme/patterns/compositions/auth-banner.html.twig" with {
+      title: common.login_title,
+      icon_file_path: common.icon_file_path,
+      login: common.login,
+      register: common.register,
+      extra_classes: 'ecl-auth-banner--is-compact',
+    } only %}
+    {% endembed %}
+  {% else %}
+    {% include "@theme/patterns/compositions/comment/comment-overview.html.twig" with comments|default({})|merge({
+      user: user,
+      icon_file_path: common.icon_file_path,
+    }) %}
+  {% endif %}
+
+{% endblock %}

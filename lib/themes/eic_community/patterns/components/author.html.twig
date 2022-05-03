@@ -1,11 +1,9 @@
 {% set label_element = label_element|default('span') %}
+{% set icon_file_path = eic_icon_path ? eic_icon_path : '/themes/custom/eic_community/dist/images/sprite/custom/sprites/custom.svg' %}
 {% if name is not empty %}
   <div class="ecl-author ecl-author--is-{{ size|default('default') }} {{ updates.value ? ' ecl-author--has-updates ' }} {{ extra_classes }}">
     {% if not display_avatar_only %}
       <div class="ecl-author__information">
-        {% if description is not empty %}
-          <span class="ecl-author__description">{{ description }}</span>
-        {% endif %}
         <{{ label_element}} class="ecl-author__label {{ label_classes }}">
           {% if path is not empty %}
             {% include '@ecl-twig/ec-component-link/ecl-link.html.twig' with {
@@ -20,6 +18,9 @@
             {{ name }}
           {% endif %}
         </{{ label_element}}>
+        {% if description is not empty %}
+          <span class="ecl-author__description">{{ description }}</span>
+        {% endif %}
         {% if meta is not empty %}
           <span class="ecl-author__meta">{{ meta }}</span>
         {% endif %}
@@ -54,23 +55,55 @@
     {% if image or name %}
       <div class="ecl-author__aside">
         {% if image is not empty %}
-          <a href="{{ path }}" class="ecl-author__media-wrapper">
-            {% include '@ecl-twig/ec-component-media-container/ecl-media-container.html.twig' with {
-              extra_classes: 'ecl-author__media',
-              description: false,
-              sources: [],
-              image: image.src,
-              alt: image.alt,
-            } only %}
-          </a>
-        {% elseif name is not empty %}
-          <a href="{{ path }}" class="ecl-author__initials-wrapper">
-            <span class="ecl-author__initials">
-              {% for author in name|split(' ')|slice(0,2) %}
-                {{- author|first -}}
-              {% endfor %}
-            </span>
-          </a>
+          {% if path is empty %}
+            <div class="ecl-author__media-wrapper">
+              {% include '@ecl-twig/ec-component-media-container/ecl-media-container.html.twig' with {
+                extra_classes: 'ecl-author__media',
+                description: false,
+                sources: [],
+                image: image.src,
+                alt: image.alt,
+              } only %}
+            </div>
+          {% else %}
+            <a href="{{ path }}" class="ecl-author__media-wrapper">
+              {% include '@ecl-twig/ec-component-media-container/ecl-media-container.html.twig' with {
+                extra_classes: 'ecl-author__media',
+                description: false,
+                sources: [],
+                image: image.src,
+                alt: image.alt,
+              } only %}
+            </a>
+          {% endif %}
+        {% else %}
+          {% if path is empty %}
+            <div class="ecl-author__media-wrapper">
+              <figure class="ecl-author__media ecl-author__media--empty">
+                {% include '@ecl-twig/ec-component-icon/ecl-icon.html.twig' with {
+                  icon: {
+                    size: 'm',
+                    path: icon_file_path,
+                    type: "custom",
+                    name: "user"
+                  }
+                } only %}
+              </figure>
+            </div>
+          {% else %}
+            <a href="{{ path }}" class="ecl-author__media-wrapper">
+              <figure class="ecl-author__media ecl-author__media--empty">
+                {% include '@ecl-twig/ec-component-icon/ecl-icon.html.twig' with {
+                  icon: {
+                    size: 'm',
+                    path: icon_file_path,
+                    type: "custom",
+                    name: "user"
+                  }
+                } only %}
+              </figure>
+            </a>
+          {% endif %}
         {% endif %}
         {% if updates %}
           {% include "@theme/patterns/components/update-indicator.html.twig" with updates|default({})|merge({

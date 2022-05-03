@@ -1,0 +1,23 @@
+services:
+  eic_message_subscriptions.event_subscriber:
+    class: Drupal\eic_message_subscriptions\EventSubscriber\MessageSubscriptionEventSubscriber
+    arguments: [ '@eic_message_subscriptions.message_creator', '@message_subscribe.subscribers', '@eic_messages.queued_message_checker' ]
+    tags:
+      - { name: event_subscriber }
+
+  eic_message_subscriptions.helper:
+    class: Drupal\eic_message_subscriptions\MessageSubscriptionHelper
+
+  eic_message_subscriptions.message_creator:
+    class: Drupal\eic_message_subscriptions\Service\SubscriptionMessageCreator
+    arguments: [ '@current_user' ]
+
+  eic_message_subscriptions.flag_event_subscriber:
+    class: Drupal\eic_message_subscriptions\EventSubscriber\FlagEventSubscriber
+    arguments: [ '@event_dispatcher' ]
+    tags:
+      - { name: event_subscriber }
+
+  eic_message_subscriptions.subscription_message_checker:
+    class: Drupal\eic_message_subscriptions\Service\SubscriptionMessageChecker
+    arguments: [ '@eic_user.notification_settings_manager' , '@messenger' ]

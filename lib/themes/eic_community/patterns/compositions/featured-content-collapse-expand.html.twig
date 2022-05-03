@@ -1,0 +1,32 @@
+<div class="ecl-organisation__contact__item">
+    <h3 class="ecl-social-share__title">{{ title }}</h3>
+   {% if items is not empty %}
+    <div class="ecl-featured-list ecl-featured-list--is-collapsible {{extra_classes}}">
+      <div class="ecl-featured-list__items-wrapper">
+        <div class="ecl-featured-list__items">
+          {% block content %}
+          {% endblock %}
+
+          {% if items|length > min_items %}
+          <div
+            class="ecl-featured-list__item ecl-featured-list__item--expand ecl-featured-list__item--collapse"
+          >
+            {% include "@ecl-twig/ec-component-button/ecl-button.html.twig" with { icon_position:
+            'after', icon: icon_file_path ? { path: icon_file_path, type: 'ui', name:
+            'rounded-arrow', size: '2xs', } : {}, label:
+            collapse_label|default('Show less'), variant: 'ghost', extra_classes:
+            'ecl-featured-list__collapse ecl-featured-list__btn-no-padding' } %}
+          </div>
+          <div class="ecl-featured-list__item ecl-featured-list__item--expand">
+            {% include "@ecl-twig/ec-component-button/ecl-button.html.twig" with { icon_position:
+            'after', icon: icon_file_path ? { path: icon_file_path, type: 'ui', name:
+            'rounded-arrow', transform: 'rotate-180', size: '2xs', } : {}, label:
+            collapse_label|default('Show all'), variant: 'ghost', extra_classes:
+            'ecl-featured-list__expand' } %}
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  {% endif %}
+</div>

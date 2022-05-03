@@ -1,0 +1,23 @@
+uuid: 855f6783-c4d8-4683-b974-93a4bc95f6c4
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.group.field_location_type
+    - group.type.event
+  module:
+    - options
+id: group.event.field_location_type
+field_name: field_location_type
+entity_type: group
+bundle: event
+label: 'Location type'
+description: ''
+required: true
+translatable: false
+default_value:
+  -
+    value: on_site
+default_value_callback: ''
+settings: {  }
+field_type: list_string

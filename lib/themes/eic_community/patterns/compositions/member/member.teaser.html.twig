@@ -11,27 +11,52 @@
 {% endif %}
 
 <div class="ecl-teaser ecl-teaser--member {{ highlight.is_active ? 'ecl-teaser--is-highlighted' }} {{ extra_classes }}">
-  <div class="ecl-teaser__main-wrapper">
-    <div class="ecl-teaser__meta-header {{ _is_default_type ? 'ecl-teaser__meta-header--is-hidden' }}"
-      aria-hidden="{{ _is_default_type ? 'true' : 'false'}}"
-    >
-      {% include "@theme/patterns/components/content-type-indicator.html.twig" with type|default({})|merge({
-        extra_classes: 'ecl-teaser__type',
-        icon: type.icon|default(defaults)|merge({
-          size: 's',
-        }),
-        icon_file_path: icon_file_path,
-      }) only %}
-    </div>
-
-    {% if image is not empty %}
-      <figure class="ecl-teaser__image-wrapper">
-        <img class="ecl-teaser__image" src="{{ image.src }}" alt="{{ image.alt }}" />
-      </figure>
+    {% if top_contributor is not empty%}
+      {% include "@theme/patterns/components/content-type-indicator.html.twig" with top_contributor|default({})|merge({
+            extra_classes: 'ecl-teaser__status',
+            icon: top_contributor.icon|default(defaults)|merge({
+              size: 's',
+            }),
+            icon_file_path: icon_file_path,
+        }) only %}
     {% endif %}
+  <div class="ecl-teaser__main-wrapper ecl-teaser--member__main-wrapper">
+    <a href="{{ path }}">
+      {% if image is not empty %}
+        <figure class="ecl-teaser__image-wrapper">
+          <img class="ecl-teaser__image" src="{{ image.src }}" alt="{{ image.alt }}" />
+        </figure>
+      {% else %}
+        <figure class="ecl-teaser__image-wrapper ecl-teaser__image-wrapper--no-image">
+          {% include '@ecl-twig/ec-component-icon/ecl-icon.html.twig' with {
+            icon: {
+              size: 'm',
+              path: icon_file_path,
+              type: "custom",
+              name: "user"
+            }
+          } only %}
+        </figure>
+      {% endif %}
+    </a>
 
-    <div class="ecl-teaser__content">
-      <{{ title_element }} class="ecl-teaser__title">
+    <div>
+      <div class="ecl-teaser__meta-header {{ _is_default_type ? 'ecl-teaser__meta-header--is-hidden' }}"
+           aria-hidden="{{ _is_default_type ? 'true' : 'false'}}"
+      >
+        {% include "@theme/patterns/components/content-type-indicator.html.twig" with type|default({})|merge({
+          extra_classes: 'ecl-teaser__type',
+          icon: type.icon|default(defaults)|merge({
+            size: 's',
+          }),
+          icon_file_path: icon_file_path,
+        }) only %}
+      </div>
+
+
+
+      <div class="ecl-teaser__content">
+        <{{ title_element }} class="ecl-teaser__title" title="{{ title }}">
         {% if path is not empty %}
           <a href="{{ path }}">
             {% if title_before %}
@@ -103,6 +128,7 @@
       {% endif %}
     </div>
   </div>
+    </div>
   {% if timestamp %}
     {% include "@theme/patterns/components/timestamp.html.twig" with timestamp|default({})|merge({
       extra_classes: "ecl-timestamp--meta ecl-teaser__timestamp",

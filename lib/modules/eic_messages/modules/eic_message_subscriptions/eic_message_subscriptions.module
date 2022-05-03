@@ -1,0 +1,139 @@
+<?php
+
+/**
+ * @file
+ * Primary module hooks for EIC Message Notifications module.
+ */
+
+use Drupal\comment\CommentInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\eic_message_subscriptions\Hooks\CronOperations;
+use Drupal\eic_message_subscriptions\Hooks\EntityOperations;
+use Drupal\eic_message_subscriptions\Hooks\FormOperations;
+use Drupal\eic_message_subscriptions\MessageSubscriptionTypes;
+use Drupal\message\MessageInterface;
+use Drupal\node\Entity\NodeType;
+
+/**
+ * Implements hook_entity_insert().
+ */
+function eic_message_subscriptions_entity_insert(EntityInterface $entity) {
+  switch ($entity->getEntityTypeId()) {
+    case 'comment':
+      \Drupal::classResolver(EntityOperations::class)
+        ->entityInsert($entity);
+      break;
+
+    case 'group_content':
+      \Drupal::classResolver(EntityOperations::class)
+        ->entityInsert($entity);
+      break;
+
+  }
+}
+
+/**
+ * Implements hook_entity_extra_field_info().
+ */
+function eic_message_subscriptions_entity_extra_field_info() {
+  $extra = [];
+
+  // We add the extra field for all content types. The display will be handled
+  // in the hook_form_BASE_FORM_ID_alter() function.
+  foreach (NodeType::loadMultiple() as $bundle) {
+    $extra['node'][$bundle->id()]['form']['field_send_notification'] = [
+      'label' => t('Send notification'),
+      'description' => '',
+      'visible' => TRUE,
+    ];
+  }
+
+  return $extra;
+}
+
+/**
+ * Implements hook_form_BASE_FORM_ID_alter().
+ */
+function eic_message_subscriptions_form_node_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  \Drupal::classResolver(FormOperations::class)
+    ->entityFormAlter($form, $form_state, $form_id);
+}
+
+/**
+ * Implements hook_form_BASE_FORM_ID_alter().
+ */
+function eic_message_subscriptions_form_node_edit_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  \Drupal::classResolver(FormOperations::class)
+    ->entityFormAlter($form, $form_state, $form_id);
+}
+
+/**
+ * Implements hook_cron().
+ */
+function eic_message_subscriptions_cron() {
+  \Drupal::classResolver(CronOperations::class)
+    ->cron();
+}
+
+/**
+ * Implements hook_message_subscribe_get_subscribers_alter().
+ *
+ * @param \Drupal\message_subscribe\Subscribers\DeliveryCandidateInterface[] $uids
+ */
+function eic_message_subscriptions_message_subscribe_get_subscribers_alter(array &$uids, array $values) {
+  if (!isset($values['message'])) {
+    return;
+  }
+
+  $message = $values['message'];
+  if (!$message instanceof MessageInterface) {
+    return;
+  }
+
+  $message_subscription_templates = MessageSubscriptionTypes::getMessageSubscriptionTypesAsArray();
+  if (!in_array($message->getTemplate()->id(), $message_subscription_templates)) {
+    return;
+  }
+
+  if ($message->getTemplate()->id() === MessageSubscriptionTypes::NEW_COMMENT_REPLY) {
+    _eic_subscription_filter_comment_reply_subscribers($uids, $message);
+  }
+
+  // Gets the executing user if exists.
+  if ($message->hasField('field_event_executing_user')) {
+    $executing_user = $message->get('field_event_executing_user')->entity;
+
+    // We don't want to notify the user who triggered the subscription.
+    // Therefore, we remove it from the array of subscribed users.
+    if (isset($uids[$executing_user->id()])) {
+      unset($uids[$executing_user->id()]);
+    }
+  }
+
+  $subscription_message_checker = \Drupal::service('eic_message_subscriptions.subscription_message_checker');
+  foreach ($uids as $delivery_candidate) {
+    $account_id = $delivery_candidate->getAccountId();
+    if (!$subscription_message_checker->shouldSend($account_id, $message) && isset($uids[$account_id])) {
+      unset($uids[$account_id]);
+    }
+  }
+}
+
+/**
+ * @param \Drupal\message_subscribe\Subscribers\DeliveryCandidateInterface[] $delivery_candidates
+ * @param \Drupal\message\MessageInterface $message
+ */
+function _eic_subscription_filter_comment_reply_subscribers(array &$delivery_candidates, MessageInterface $message) {
+  $comment = $message->get('field_referenced_comment')->entity;
+  if (!$comment instanceof CommentInterface || !$comment->hasParentComment()) {
+    return;
+  }
+
+  $parent_owner_id = (int) $comment->getParentComment()->getOwnerId();
+  foreach ($delivery_candidates as $key => $delivery_candidate) {
+    if ($parent_owner_id !== (int) $delivery_candidate->getAccountId()) {
+      unset($delivery_candidates[$key]);
+    }
+  }
+}

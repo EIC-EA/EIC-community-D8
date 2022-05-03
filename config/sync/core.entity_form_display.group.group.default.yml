@@ -17,6 +17,7 @@ dependencies:
     - workflows.workflow.groups
   module:
     - content_moderation
+    - eic_content
     - media_library
     - path
     - text
@@ -27,100 +28,102 @@ mode: default
 content:
   features:
     type: options_buttons
-    settings: {  }
-    weight: 12
+    weight: 13
     region: content
+    settings: {  }
     third_party_settings: {  }
   field_body:
-    weight: 4
+    type: text_textarea
+    weight: 2
+    region: content
     settings:
       rows: 5
       placeholder: ''
     third_party_settings: {  }
-    type: text_textarea
-    region: content
   field_group_invite_members:
-    weight: 9
+    type: boolean_checkbox
+    weight: 12
+    region: content
     settings:
       display_label: true
     third_party_settings: {  }
-    type: boolean_checkbox
-    region: content
   field_hero:
     type: media_library_widget
-    weight: 3
+    weight: 8
+    region: content
     settings:
       media_types: {  }
     third_party_settings: {  }
-    region: content
   field_message_to_site_admin:
-    weight: 10
+    type: text_textarea
+    weight: 9
+    region: content
     settings:
       rows: 5
       placeholder: ''
     third_party_settings: {  }
-    type: text_textarea
-    region: content
   field_related_groups:
-    weight: 5
+    type: entity_reference_autocomplete
+    weight: 10
+    region: content
     settings:
       match_operator: CONTAINS
       match_limit: 10
       size: 60
       placeholder: ''
     third_party_settings: {  }
-    type: entity_reference_autocomplete
-    region: content
   field_related_news_stories:
-    weight: 6
+    type: entity_reference_autocomplete
+    weight: 11
+    region: content
     settings:
       match_operator: CONTAINS
       match_limit: 10
       size: 60
       placeholder: ''
     third_party_settings: {  }
-    type: entity_reference_autocomplete
-    region: content
   field_thumbnail:
     type: media_library_widget
-    weight: 2
+    weight: 7
+    region: content
     settings:
       media_types: {  }
     third_party_settings: {  }
-    region: content
   field_vocab_geo:
-    weight: 8
+    type: entity_reference_autocomplete
+    weight: 5
+    region: content
     settings:
       match_operator: CONTAINS
       match_limit: 10
       size: 60
       placeholder: ''
     third_party_settings: {  }
-    type: entity_reference_autocomplete
-    region: content
   field_vocab_topics:
-    weight: 7
-    settings:
-      match_operator: CONTAINS
-      match_limit: 10
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
-    type: entity_reference_autocomplete
+    type: entity_tree
+    weight: 4
     region: content
+    settings:
+      match_top_level_limit: '0'
+      disable_top_choices: '1'
+      items_to_load: '25'
+      auto_select_parents: '1'
+      load_all: 0
+      ignore_current_user: 0
+    third_party_settings: {  }
   field_welcome_message:
-    weight: 11
+    type: text_textarea
+    weight: 1
+    region: content
     settings:
       rows: 5
       placeholder: ''
     third_party_settings: {  }
-    type: text_textarea
-    region: content
   flag:
     weight: 10
+    region: content
     settings: {  }
     third_party_settings: {  }
-    region: content
   label:
     type: string_textfield
     weight: 0
@@ -131,16 +134,16 @@ content:
     third_party_settings: {  }
   langcode:
     type: language_select
-    weight: 1
+    weight: 6
     region: content
     settings:
       include_locked: true
     third_party_settings: {  }
   moderation_state:
     type: moderation_state_default
-    weight: 13
-    settings: {  }
+    weight: 3
     region: content
+    settings: {  }
     third_party_settings: {  }
   path:
     type: path
@@ -150,10 +153,10 @@ content:
     third_party_settings: {  }
   status:
     type: boolean_checkbox
-    settings:
-      display_label: true
     weight: 15
     region: content
+    settings:
+      display_label: true
     third_party_settings: {  }
 hidden:
   uid: true

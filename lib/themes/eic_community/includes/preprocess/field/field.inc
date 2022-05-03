@@ -15,6 +15,18 @@ function eic_community_preprocess_field(&$variables, $hook): void {
     $variables['attributes']['class'][] = 'ecl-editor';
   }
 
+  if ($variables['field_name'] === 'field_body') {
+    switch ($variables['element']['#entity_type']) {
+      case 'group':
+        // Add attributes on field_body for the group about page.
+        if ($variables['element']['#view_mode'] === 'about_page') {
+          $variables['attributes']['id'] = 'group-description-full';
+        }
+        break;
+
+    }
+  }
+
   // Add the ECL image class to the image fields.
   $field_name = $variables['field_name'];
   if (in_array($field_name, ['oe_media_avportal_photo'])) {
@@ -36,5 +48,23 @@ function eic_community_preprocess_field(&$variables, $hook): void {
         ],
       ];
     }
+  }
+
+  $field_type = $variables['field_type'];
+  switch ($field_type) {
+    case 'text_long':
+    case 'text_with_summary':
+      // Adds custom css classes to long text fields.
+      $variables['attributes']['class'][] = str_replace('_', '-', "$field_type") . " ckeditor__content";
+      foreach ($variables['items'] as $item) {
+        $text_format = $item['content']['#format'];
+        if (count($variables['items']) === 1) {
+          $variables['attributes']['class'][] = str_replace('_', '-', "$field_type--$text_format");
+          break;
+        }
+        $item['attributes']->addClass(str_replace('_', '-', "$field_type--$text_format"));
+      }
+      break;
+
   }
 }

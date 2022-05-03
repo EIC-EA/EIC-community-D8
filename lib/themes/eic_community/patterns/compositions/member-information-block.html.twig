@@ -20,6 +20,18 @@
                 extra_classes: "ecl-contact-information-block__type-icon",
               } %}
             {% endif %}
+            {% if icon_file_path and top_contributor %}
+              {% if type is empty %}
+                {% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with {
+                  icon: top_contributor.icon|merge({
+                    path: icon_file_path,
+                    size: 's',
+                  }),
+                  extra_classes: "ecl-contact-information-block__type-icon",
+                } %}
+              {% endif %}
+              <span class="ecl-contact-information-block__title__top-contributor">{{top_contributor.label}}</span>
+            {% endif %}
           </{{ title_element }}>
         </div>
 
@@ -92,6 +104,17 @@
       {% if image is not empty %}
         <figure class="ecl-contact-information-block__image-wrapper">
           <img class="ecl-contact-information-block__image" src="{{ image.src }}" alt="{{ image.alt }}" />
+        </figure>
+      {% else %}
+        <figure class="ecl-contact-information-block__image-wrapper ecl-contact-information-block__image-wrapper--empty">
+          {% include '@ecl-twig/ec-component-icon/ecl-icon.html.twig' with {
+            icon: {
+              size: 'm',
+              path: icon_file_path,
+              type: "custom",
+              name: "user"
+            }
+          } only %}
         </figure>
       {% endif %}
     </div>

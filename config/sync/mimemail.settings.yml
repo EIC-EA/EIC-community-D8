@@ -1,0 +1,13 @@
+_core:
+  default_config_hash: rLKGzzC9TqjbEZiBoiyMpOSyZgldADa5SzvbA2gQDxE
+name: 'European Innovation Council'
+mail: no-reply@ec.europa.eu
+simple_address: false
+sitestyle: true
+textonly: false
+linkonly: false
+format: full_html
+preserve_class: false
+advanced:
+  incoming: false
+  key: CwPwilcwoeCJtUqF4LUZIza_Bvm95XFopE6eQr46MpA

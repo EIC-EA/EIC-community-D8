@@ -1,15 +1,23 @@
+{#
+/**
+ * @file
+ * Theme override to display a document.
+ *
+ * @see ./themes/custom/eic_community/templates/content/node.html.twig
+ */
+#}
 {% extends "@eic_community/content/node.html.twig" %}
 {% set display_submitted = false %}
 {% set has_wrapper = false %}
 
 {% block content %}
   <div {{ attributes }}>
-  {{ title_prefix }}
-  {{ title_suffix }}
-  {% include "@theme/patterns/components/attachment.html.twig" with document_item|default({})|merge({
-    title: label|default(''),
-    path: url,
-  }) %}
+    {{ title_prefix }}
+    {{ title_suffix }}
+    {% include "@theme/patterns/compositions/document/document.teaser.html.twig" with document_item|default({})|merge({
+      title: node.label|default(''),
+      path: url,
+      extra_classes: 'ecl-teaser--grey ecl-teaser--alternating-grey',
+    }) %}
   </div>
 {% endblock %}
-

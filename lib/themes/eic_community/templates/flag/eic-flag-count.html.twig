@@ -17,9 +17,9 @@
 
 {# Depending on the flag action, set the appropriate action class. #}
 {% if action == 'unflag' %}
-    {% set action_class = 'action-unflag' %}
+  {% set action_class = 'action-unflag' %}
 {% else %}
-    {% set action_class = 'action-flag' %}
+  {% set action_class = 'action-flag' %}
 {% endif %}
 
 {# Set the remaining Flag CSS classes. #}
@@ -38,29 +38,36 @@
 {# Set nofollow to prevent search bots from crawling anonymous flag links #}
 {% set attributes = attributes.setAttribute('rel', 'nofollow') %}
 
-{% if flag.id in ['follow_group' ,'recommend'] %}
+{% if flag.id in ['follow_group' , 'follow_content', 'follow_event'] %}
+  {% set icon_name = 'views' %}
+{% elseif flag.id == 'recommend' %}
   {% set icon_name = 'follow' %}
+{% elseif flag.id == 'bookmark_content' %}
+  {% set icon_name = 'tag' %}
+{% elseif flag.id == 'highlight_content' %}
+  {% set icon_name = 'highlight' %}
 {% else %}
   {% set icon_name = 'like' %}
 {% endif %}
 
+{% if showAsButton %}
+  {% set default_classes = 'ecl-button ecl-button--secondary ecl-link--button ecl-link--button-secondary' %}
+{% else %}
+  {% set default_classes = 'ecl-link ecl-link--default ecl-link--icon ecl-link--icon-before ecl-link--standalone ecl-link--flag' %}
+{% endif %}
+
 <span class="{{classes|join(' ')}}">
-  <a {{ attributes|without('class') }} class="{{ attributes.class }}">
+  <a {{ attributes|without('class') }} class="{{ default_classes }} {{ attributes.class }}">
     {% if eic_icon_path %}
       {% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with {
         icon: {
           path: eic_icon_path,
           type: 'custom',
           name: icon_name,
-          size: 'xs',
+          size: 's',
         },
         extra_classes: 'ecl-link__icon',
-      } %}
-      &nbsp;
-    {% endif %}
-    {{ title }}
-      &nbsp;
-    <span>{{ count }}</span>
+      } %}{% endif %}&nbsp;<span class="ecl-link__label">{{ title }}&nbsp;<span>{{ count }}</span></span>
   </a>
 </span>
 {% endspaceless %}

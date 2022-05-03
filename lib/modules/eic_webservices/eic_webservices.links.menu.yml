@@ -1,0 +1,6 @@
+eic_webservices.settings:
+  title: EIC Webservices settings
+  description: Manage settings for the webservices.
+  parent: eic_admin.settings
+  route_name: eic_webservices.settings
+  weight: 10

@@ -24,7 +24,8 @@
   }
 
   &__label {
-    @include ecl-responsive-font('label');
+    font-size: .875rem;
+    margin-right: 10px;
 
     #{$node}--meta & {
       font-size: inherit;
@@ -36,7 +37,12 @@
     margin-right: ecl-layout('gutter', 'meta');
 
     @include ecl-media-breakpoint-up('lg') {
-      margin-right: ecl-layout('gutter--lg', 'meta');
+      margin-right: ecl-layout('gutter', 'meta');
     }
+  }
+
+  & span {
+    display: flex;
+    align-items: center;
   }
 }

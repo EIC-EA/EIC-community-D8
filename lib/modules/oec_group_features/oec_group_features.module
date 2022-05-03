@@ -5,9 +5,12 @@
  * Primary module hooks for OEC Group Features module.
  */
 
+use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\group\Entity\GroupInterface;
+use Drupal\oec_group_features\GroupFeatureHelper;
 use Drupal\oec_group_features\Hooks\EntityOperations;
 
 /**
@@ -18,17 +21,11 @@ use Drupal\oec_group_features\Hooks\EntityOperations;
 function oec_group_features_entity_base_field_info(EntityTypeInterface $entity_type) {
   $fields = [];
   if ($entity_type->id() == 'group') {
-    // Get available features.
-    $available_features = [];
-    $plugin_manager = \Drupal::service('plugin.manager.group_feature');
-    foreach ($plugin_manager->getDefinitions() as $definition) {
-      $available_features[$definition['id']] = $definition['label'];
-    }
 
     // Add our extra field to the Group entity type.
     // @todo Switch the 'list_string' a 'map' field type to avoid having an
     // extra table for this.
-    $fields['features'] = BaseFieldDefinition::create('list_string')
+    $fields[GroupFeatureHelper::FEATURES_FIELD_NAME] = BaseFieldDefinition::create('list_string')
       ->setLabel(t('Features'))
       ->setDescription(t('Select the features you would like to enable.'))
       ->setDisplayOptions('form', [
@@ -39,7 +36,7 @@ function oec_group_features_entity_base_field_info(EntityTypeInterface $entity_t
         'weight' => -10,
       ])
       ->setSettings([
-        'allowed_values' => $available_features,
+        'allowed_values_function' => 'oec_group_features_get_options',
       ])
       ->setReadOnly(FALSE)
       ->setRevisionable(FALSE)
@@ -49,6 +46,29 @@ function oec_group_features_entity_base_field_info(EntityTypeInterface $entity_t
       ->setDisplayConfigurable('form', TRUE);
   }
   return $fields;
+}
+
+/**
+ * Set dynamic allowed values for the group features field.
+ *
+ * @param \Drupal\Core\Field\BaseFieldDefinition $definition
+ *   The base field definition.
+ * @param \Drupal\Core\Entity\ContentEntityInterface|null $entity
+ *   The entity.
+ * @param bool $cacheable
+ *   Boolean indicating if the results are cacheable.
+ *
+ * @return array
+ *   An array of possible key and value options.
+ *
+ * @see options_allowed_values()
+ */
+function oec_group_features_get_options(BaseFieldDefinition $definition, ContentEntityInterface $entity = NULL, $cacheable) {
+  if (!$entity instanceof GroupInterface) {
+    return [];
+  }
+
+  return \Drupal::service('oec_group_features.helper')->getGroupTypeAvailableFeatures($entity->bundle());
 }
 
 /**

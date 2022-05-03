@@ -4,11 +4,11 @@ namespace Drupal\eic_webservices\Plugin\rest\resource;
 
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Logger\LoggerChannel;
+use Drupal\Core\Logger\LoggerChannelInterface;
 use Drupal\eic_webservices\Controller\SubRequestController;
+use Drupal\rest\ModifiedResourceResponse;
 use Drupal\rest\Plugin\ResourceBase;
 use Drupal\rest\Plugin\Type\ResourcePluginManager;
-use Drupal\rest\ResourceResponse;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -23,8 +23,8 @@ use Symfony\Component\HttpKernel\HttpKernel;
  *   entity_type = "user",
  *   serialization_class = "Drupal\user\Entity\User",
  *   uri_paths = {
- *     "canonical" = "/smed/api/user/update/{user}",
- *     "https://www.drupal.org/link-relations/create" = "/smed/api/user/update/{user}"
+ *     "canonical" = "/smed/api/v1/user/update/{user}",
+ *     "create" = "/smed/api/v1/user/update/{user}"
  *   }
  * )
  */
@@ -33,7 +33,7 @@ class EicUserUpdateResource extends ResourceBase {
   /**
    * Request stack.
    *
-   * @var \Symfony\Component\HttpFoundation\Request
+   * @var \Symfony\Component\HttpFoundation\RequestStack
    */
   protected $requestStack;
 
@@ -62,17 +62,27 @@ class EicUserUpdateResource extends ResourceBase {
    *   The plugin implementation definition.
    * @param array $serializer_formats
    *   The available serialization formats.
-   * @param Drupal\Core\Logger\LoggerChannel $logger
+   * @param \Drupal\Core\Logger\LoggerChannelInterface $logger
    *   A logger instance.
-   * @param Symfony\Component\HttpFoundation\RequestStack $requestStack
+   * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
    *   The request stack.
-   * @param Symfony\Component\HttpKernel\HttpKernel $httpKernel
+   * @param \Symfony\Component\HttpKernel\HttpKernel $httpKernel
    *   The HTTP kernel.
    * @param \Drupal\rest\Plugin\Type\ResourcePluginManager $resourcePluginManager
    *   The REST resource plugin manager.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, array $serializer_formats, LoggerChannel $logger, RequestStack $requestStack, HttpKernel $httpKernel, ResourcePluginManager $resourcePluginManager) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition, $serializer_formats, $logger);
+  public function __construct(
+    array $configuration,
+    $plugin_id,
+    $plugin_definition,
+    array $serializer_formats,
+    LoggerChannelInterface $logger,
+    RequestStack $requestStack,
+    HttpKernel $httpKernel,
+    ResourcePluginManager $resourcePluginManager
+  ) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition, $serializer_formats,
+      $logger);
     $this->requestStack = $requestStack;
     $this->httpKernel = $httpKernel;
     $this->resourcePluginManager = $resourcePluginManager;
@@ -81,7 +91,12 @@ class EicUserUpdateResource extends ResourceBase {
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+  public static function create(
+    ContainerInterface $container,
+    array $configuration,
+    $plugin_id,
+    $plugin_definition
+  ) {
     return new static(
       $configuration,
       $plugin_id,
@@ -121,7 +136,8 @@ class EicUserUpdateResource extends ResourceBase {
       $current_request->getContent(),
       $current_request->headers->all()
     );
-    return new ResourceResponse(Json::decode($response->getContent()), $response->getStatusCode());
+
+    return new ModifiedResourceResponse(Json::decode($response->getContent()), $response->getStatusCode());
   }
 
 }

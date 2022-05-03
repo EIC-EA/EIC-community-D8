@@ -14,24 +14,78 @@ theme:
     dist/scripts/components/drupal.navigation-list.js: { minified: true }
     dist/scripts/compositions/drupal.collapsible-options.js: { minified: true }
     dist/scripts/compositions/drupal.comment-attachments.js: { minified: true }
+    dist/scripts/compositions/drupal.editorial-article.js: { minified: true }
     dist/scripts/compositions/drupal.featured-list.js: { minified: true }
     dist/scripts/compositions/drupal.featured-content-collection.js: { minified: true }
     dist/scripts/compositions/drupal.featured-content-sections.js: { minified: true }
     dist/scripts/compositions/drupal.filter-sidebar.js: { minified: true }
     dist/scripts/compositions/drupal.language-selector.js: { minified: true }
     dist/scripts/compositions/drupal.media-wrapper.js: { minified: true }
+    dist/scripts/common/overides.js: { minified: true }
+  dependencies:
+    - core/drupal
+
+react-video-stream:
+  js:
+    dist/react/custom/manifest.js: { minified: true }
+    dist/react/vendor.js: { minified: true }
+    dist/react/block/streamvideo/entrypoint.js: { minified: true }
+  dependencies:
+    - core/drupal
+
+react-notif-management:
+  js:
+    dist/react/custom/manifest.js: { minified: true }
+    dist/react/vendor.js: { minified: true }
+    dist/react/block/notifmanagement/entrypoint.js: { minified: true }
+  dependencies:
+    - core/drupal
+
+react-block-modal:
+  js:
+    dist/react/custom/manifest.js: { minified: true }
+    dist/react/vendor.js: { minified: true }
+    dist/react/block/share_modal/entrypoint.js: { minified: true }
+  dependencies:
+    - core/drupal
+
+react-block-announcements:
+  js:
+    dist/react/custom/manifest.js: { minified: true }
+    dist/react/vendor.js: { minified: true }
+    dist/react/block/announcements/entrypoint.js: { minified: true }
+  dependencies:
+    - core/drupal
+
+react-block-gallery:
+  js:
+    dist/react/custom/manifest.js: { minified: true }
+    dist/react/vendor.js: { minified: true }
+    dist/react/block/gallery/entrypoint.js: { minified: true }
   dependencies:
     - core/drupal
 
 react-block-overview-search:
   js:
+    dist/react/custom/manifest.js: { minified: true }
+    dist/react/vendor.js: { minified: true }
     dist/react/block/overview/entrypoint.js: { minified: true }
   dependencies:
     - core/drupal
 
 react-activity-stream:
   js:
+    dist/react/custom/manifest.js: { minified: true }
+    dist/react/vendor.js: { minified: true }
     dist/react/block/activity_stream/entrypoint.js: { minified: true }
+  dependencies:
+    - core/drupal
+
+react-comments-discussion:
+  js:
+    dist/react/custom/manifest.js: { minified: true }
+    dist/react/vendor.js: { minified: true }
+    dist/react/block/comments_discussion/entrypoint.js: { minified: true }
   dependencies:
     - core/drupal
 
@@ -40,4 +94,14 @@ react-tree-field:
     theme:
       dist/styles/eic_community_admin.css: { media: screen }
   js:
+    dist/react/custom/manifest.js: { minified: true }
+    dist/react/vendor.js: { minified: true }
     dist/react/field/entity_tree/entrypoint.js: { minified: true }
+
+react-toggle:
+  js:
+    dist/react/custom/manifest.js: { minified: true }
+    dist/react/vendor.js: { minified: true }
+    dist/react/block/toggle/entrypoint.js: { minified: true }
+  dependencies:
+    - core/drupal

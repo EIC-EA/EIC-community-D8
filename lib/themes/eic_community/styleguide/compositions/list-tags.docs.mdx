@@ -1,0 +1,41 @@
+# Tags list
+
+Displays tags in a list.
+
+## Example:
+
+```
+{% include "@theme/patterns/compositions/list-tags.html.twig" with tags %}
+```
+
+## Twig parameters:
+
+| Key            | Type     | Description                                                          | Mandatory |
+| -------------- | -------- | ---------------------------------------------------------------------| --------- |
+| title          | string   | Displays an optional title before the overview.                      | no        |
+| items          | object[] | Should contain an array with entries that match the Tags component.  | yes       |
+| items[]        | object   | Should be an object of type Tags component.                          | yes       |
+| is_collapsible | boolean  | Only shows the first 3 tags. The rest can be expanded with a button. | yes       |
+| collapse_label | string   | Adjusts the collapse label to show all items.                        | yes       |
+| expand_label   | string   | Adjusts the expand label to show all items.                          | yes       |
+
+
+## Data Example:
+
+```
+{
+  title: 'Tags',
+  icon_file_path: common.icon_file_path,
+  is_collapsible: true,
+  grid: true,
+  collapse_label: 'less',
+  expand_label: 'more',
+  items: [{
+    tag: {
+      type: "link",
+      path: "/component-library/example",
+      label: "Link tag"
+    }
+  }]
+}
+```

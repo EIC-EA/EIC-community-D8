@@ -66,7 +66,7 @@ class GroupVisibilityDatabaseStorage implements GroupVisibilityDatabaseStorageIn
   public function create(array $values = []) {
     $final_values = [];
 
-    // If the required parameters for GroupVisibilityItem are not setm then we
+    // If the required parameters for GroupVisibilityItem are not set then we
     // do nothing.
     if (!isset($values['id']) || !isset($values['gid']) || !isset($values['type'])) {
       return FALSE;

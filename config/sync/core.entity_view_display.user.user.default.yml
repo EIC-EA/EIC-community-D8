@@ -12,13 +12,9 @@ dependencies:
     - field.field.user.user.field_is_spammer
     - field.field.user.user.field_last_name
     - field.field.user.user.field_media
-    - field.field.user.user.field_message_from_service
     - field.field.user.user.field_smed_id
-    - field.field.user.user.field_updated_profile_by_service
-    - field.field.user.user.field_updated_profile_by_user
-    - field.field.user.user.field_user_status
+    - field.field.user.user.field_user_can_contact
   module:
-    - options
     - user
 id: user.user.default
 targetEntityType: user
@@ -26,143 +22,128 @@ bundle: user
 mode: default
 content:
   field_first_name:
-    weight: 1
+    type: string
     label: above
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    type: string
+    weight: 1
     region: content
   field_is_deleted:
-    weight: 4
+    type: boolean
     label: above
     settings:
       format: default
       format_custom_false: ''
       format_custom_true: ''
     third_party_settings: {  }
-    type: boolean
+    weight: 4
     region: content
   field_is_deleted_anonymous:
-    weight: 5
+    type: boolean
     label: above
     settings:
       format: default
       format_custom_false: ''
       format_custom_true: ''
     third_party_settings: {  }
-    type: boolean
+    weight: 5
     region: content
   field_is_deleted_by_uid:
-    weight: 6
+    type: entity_reference_label
     label: above
     settings:
       link: true
     third_party_settings: {  }
-    type: entity_reference_label
+    weight: 6
     region: content
   field_is_invalid_email:
-    weight: 9
+    type: boolean
     label: above
     settings:
       format: default
       format_custom_false: ''
       format_custom_true: ''
     third_party_settings: {  }
-    type: boolean
+    weight: 9
     region: content
   field_is_organisation_user:
-    weight: 8
+    type: boolean
     label: above
     settings:
       format: default
       format_custom_false: ''
       format_custom_true: ''
     third_party_settings: {  }
-    type: boolean
+    weight: 8
     region: content
   field_is_spammer:
-    weight: 7
+    type: boolean
     label: above
     settings:
       format: default
       format_custom_false: ''
       format_custom_true: ''
     third_party_settings: {  }
-    type: boolean
+    weight: 7
     region: content
   field_last_name:
-    weight: 2
+    type: string
     label: above
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    type: string
+    weight: 2
     region: content
   field_media:
     type: entity_reference_entity_view
-    weight: 3
     label: above
     settings:
       view_mode: default
       link: false
     third_party_settings: {  }
-    region: content
-  field_message_from_service:
-    weight: 12
-    label: above
-    settings: {  }
-    third_party_settings: {  }
-    type: basic_string
+    weight: 3
     region: content
   field_smed_id:
-    weight: 14
+    type: number_integer
     label: above
     settings:
       thousand_separator: ''
       prefix_suffix: true
     third_party_settings: {  }
-    type: number_integer
+    weight: 14
     region: content
-  field_updated_profile_by_service:
-    weight: 11
+  field_user_can_contact:
+    type: boolean
     label: above
     settings:
-      date_format: medium
-      custom_date_format: ''
-      timezone: ''
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
     third_party_settings: {  }
-    type: timestamp
-    region: content
-  field_updated_profile_by_user:
-    weight: 10
-    label: above
-    settings:
-      date_format: medium
-      custom_date_format: ''
-      timezone: ''
-    third_party_settings: {  }
-    type: timestamp
-    region: content
-  field_user_status:
-    weight: 13
-    label: above
-    settings: {  }
-    third_party_settings: {  }
-    type: list_default
+    weight: 15
     region: content
   flag_follow_user:
-    weight: 10
     settings: {  }
     third_party_settings: {  }
+    weight: 10
+    region: content
+  masquerade:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 50
     region: content
   member_for:
-    weight: 0
-    region: content
     settings: {  }
     third_party_settings: {  }
+    weight: 0
+    region: content
 hidden:
   field_full_name: true
+  field_message_from_service: true
+  field_updated_profile_by_service: true
+  field_updated_profile_by_user: true
+  field_user_status: true
   langcode: true
   member_profiles: true
   realname: true

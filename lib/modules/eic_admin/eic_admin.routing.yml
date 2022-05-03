@@ -1,8 +1,35 @@
+eic_admin.settings:
+  path: '/admin/config/eic'
+  defaults:
+    _title: 'Community settings'
+    _controller: '\Drupal\eic_admin\Controller\EicAdminController::settings'
+  requirements:
+    _permission: 'administer site configuration'
+  options:
+    _admin_route: TRUE
 eic_admin.dashboard:
   path: '/admin/community'
   defaults:
     _title: 'Community Management'
     _controller: '\Drupal\eic_admin\Controller\EicAdminController::dashboard'
+  requirements:
+    _permission: 'access eic_admin dashboard'
+  options:
+    _admin_route: TRUE
+eic_admin.groups:
+  path: '/admin/community/groups'
+  defaults:
+    _title: 'Groups'
+    _controller: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+  requirements:
+    _permission: 'access eic_admin dashboard'
+  options:
+    _admin_route: TRUE
+eic_admin.update_all_group_permissions:
+  path: '/admin/community/groups/rebuild-permissions'
+  defaults:
+    _title: 'Rebuild group permissions'
+    _form: '\Drupal\eic_admin\Form\UpdateAllGroupPermissionsForm'
   requirements:
     _permission: 'access eic_admin dashboard'
   options:

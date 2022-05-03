@@ -1,0 +1,15 @@
+uuid: 99c2e090-dbde-41aa-a0bb-2f6ad2ff07f1
+langcode: en
+status: true
+dependencies:
+  config:
+    - group.type.event
+id: event-anonymous
+label: Anonymous
+weight: -102
+internal: true
+audience: anonymous
+group_type: event
+permissions_ui: true
+permissions:
+  - 'view group'

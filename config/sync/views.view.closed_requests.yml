@@ -32,183 +32,12 @@ base_table: flagging
 base_field: id
 display:
   default:
-    display_plugin: default
     id: default
     display_title: Default
+    display_plugin: default
     position: 0
     display_options:
-      access:
-        type: none
-        options: {  }
-      cache:
-        type: tag
-        options: {  }
-      query:
-        type: views_query
-        options:
-          disable_sql_rewrite: false
-          distinct: false
-          replica: false
-          query_comment: ''
-          query_tags: {  }
-      exposed_form:
-        type: basic
-        options:
-          submit_button: Apply
-          reset_button: true
-          reset_button_label: Reset
-          exposed_sorts_label: 'Sort by'
-          expose_sort_order: false
-          sort_asc_label: Asc
-          sort_desc_label: Desc
-      pager:
-        type: full
-        options:
-          items_per_page: 20
-          offset: 0
-          id: 0
-          total_pages: null
-          tags:
-            previous: ‹‹
-            next: ››
-            first: '« First'
-            last: 'Last »'
-          expose:
-            items_per_page: false
-            items_per_page_label: 'Items per page'
-            items_per_page_options: '5, 10, 25, 50'
-            items_per_page_options_all: false
-            items_per_page_options_all_label: '- All -'
-            offset: false
-            offset_label: Offset
-          quantity: 9
-      style:
-        type: table
-        options:
-          grouping: {  }
-          row_class: ''
-          default_row_class: true
-          override: true
-          sticky: false
-          caption: ''
-          summary: ''
-          description: ''
-          columns:
-            title: title
-            subject: subject
-            label: label
-            nothing: nothing
-            entity_type: entity_type
-            flag_id: flag_id
-            field_request_moderator: field_request_moderator
-            field_request_reason: field_request_reason
-            field_request_response: field_request_response
-            field_request_status: field_request_status
-            field_request_closed_date: field_request_closed_date
-            operations: operations
-            operations_1: operations_1
-            operations_2: operations_2
-            nothing_1: nothing_1
-          info:
-            title:
-              sortable: false
-              default_sort_order: asc
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
-            subject:
-              sortable: false
-              default_sort_order: asc
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
-            label:
-              sortable: false
-              default_sort_order: asc
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
-            nothing:
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
-            entity_type:
-              sortable: true
-              default_sort_order: asc
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
-            flag_id:
-              sortable: true
-              default_sort_order: asc
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
-            field_request_moderator:
-              sortable: true
-              default_sort_order: asc
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
-            field_request_reason:
-              sortable: false
-              default_sort_order: asc
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
-            field_request_response:
-              sortable: true
-              default_sort_order: asc
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
-            field_request_status:
-              sortable: true
-              default_sort_order: asc
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
-            field_request_closed_date:
-              sortable: true
-              default_sort_order: desc
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
-            operations:
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
-            operations_1:
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
-            operations_2:
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
-            nothing_1:
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
-          default: field_request_closed_date
-          empty_table: false
-      row:
-        type: fields
+      title: 'Closed requests'
       fields:
         title:
           id: title
@@ -217,6 +46,9 @@ display:
           relationship: node
           group_type: group
           admin_label: ''
+          entity_type: node
+          entity_field: title
+          plugin_id: field
           label: ''
           exclude: true
           alter:
@@ -272,9 +104,6 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-          entity_type: node
-          entity_field: title
-          plugin_id: field
         subject:
           id: subject
           table: comment_field_data
@@ -282,6 +111,9 @@ display:
           relationship: comment
           group_type: group
           admin_label: ''
+          entity_type: comment
+          entity_field: subject
+          plugin_id: field
           label: ''
           exclude: true
           alter:
@@ -337,9 +169,6 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-          entity_type: comment
-          entity_field: subject
-          plugin_id: field
         label:
           id: label
           table: groups_field_data
@@ -347,6 +176,9 @@ display:
           relationship: group
           group_type: group
           admin_label: ''
+          entity_type: group
+          entity_field: label
+          plugin_id: field
           label: ''
           exclude: true
           alter:
@@ -402,9 +234,6 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-          entity_type: group
-          entity_field: label
-          plugin_id: field
         nothing:
           id: nothing
           table: views
@@ -412,6 +241,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: custom
           label: 'Content Title'
           exclude: false
           alter:
@@ -453,7 +283,6 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: false
-          plugin_id: custom
         entity_type:
           id: entity_type
           table: flagging
@@ -461,6 +290,9 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          entity_type: flagging
+          entity_field: entity_type
+          plugin_id: field
           label: 'Content Type'
           exclude: false
           alter:
@@ -515,9 +347,6 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-          entity_type: flagging
-          entity_field: entity_type
-          plugin_id: field
         flag_id:
           id: flag_id
           table: flagging
@@ -525,6 +354,9 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          entity_type: flagging
+          entity_field: flag_id
+          plugin_id: field
           label: 'Request type'
           exclude: false
           alter:
@@ -580,9 +412,6 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-          entity_type: flagging
-          entity_field: flag_id
-          plugin_id: field
         field_request_moderator:
           id: field_request_moderator
           table: flagging__field_request_moderator
@@ -590,6 +419,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: field
           label: Moderator
           exclude: false
           alter:
@@ -645,7 +475,6 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-          plugin_id: field
         field_request_reason:
           id: field_request_reason
           table: flagging__field_request_reason
@@ -653,6 +482,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: field
           label: 'Request reason'
           exclude: false
           alter:
@@ -707,7 +537,6 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-          plugin_id: field
         field_request_response:
           id: field_request_response
           table: flagging__field_request_response
@@ -715,6 +544,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: field
           label: 'Request response'
           exclude: false
           alter:
@@ -769,7 +599,6 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-          plugin_id: field
         field_request_status:
           id: field_request_status
           table: flagging__field_request_status
@@ -777,6 +606,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: field
           label: Status
           exclude: false
           alter:
@@ -831,7 +661,6 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-          plugin_id: field
         field_request_closed_date:
           id: field_request_closed_date
           table: flagging__field_request_closed_date
@@ -839,6 +668,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: field
           label: 'Closed date'
           exclude: false
           alter:
@@ -895,7 +725,6 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-          plugin_id: field
         operations:
           id: operations
           table: comment
@@ -903,6 +732,8 @@ display:
           relationship: comment
           group_type: group
           admin_label: ''
+          entity_type: comment
+          plugin_id: entity_operations
           label: 'Operations links'
           exclude: true
           alter:
@@ -945,8 +776,6 @@ display:
           empty_zero: false
           hide_alter_empty: true
           destination: false
-          entity_type: comment
-          plugin_id: entity_operations
         operations_1:
           id: operations_1
           table: groups
@@ -954,6 +783,8 @@ display:
           relationship: group
           group_type: group
           admin_label: ''
+          entity_type: group
+          plugin_id: entity_operations
           label: 'Operations links'
           exclude: true
           alter:
@@ -996,8 +827,6 @@ display:
           empty_zero: false
           hide_alter_empty: true
           destination: false
-          entity_type: group
-          plugin_id: entity_operations
         operations_2:
           id: operations_2
           table: node
@@ -1005,6 +834,8 @@ display:
           relationship: node
           group_type: group
           admin_label: ''
+          entity_type: node
+          plugin_id: entity_operations
           label: 'Operations links'
           exclude: true
           alter:
@@ -1047,8 +878,6 @@ display:
           empty_zero: false
           hide_alter_empty: true
           destination: false
-          entity_type: node
-          plugin_id: entity_operations
         nothing_1:
           id: nothing_1
           table: views
@@ -1056,6 +885,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: custom
           label: Operations
           exclude: false
           alter:
@@ -1097,7 +927,57 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: false
-          plugin_id: custom
+      pager:
+        type: full
+        options:
+          offset: 0
+          items_per_page: 20
+          total_pages: null
+          id: 0
+          tags:
+            next: ››
+            previous: ‹‹
+            first: '« First'
+            last: 'Last »'
+          expose:
+            items_per_page: false
+            items_per_page_label: 'Items per page'
+            items_per_page_options: '5, 10, 25, 50'
+            items_per_page_options_all: false
+            items_per_page_options_all_label: '- All -'
+            offset: false
+            offset_label: Offset
+          quantity: 9
+      exposed_form:
+        type: basic
+        options:
+          submit_button: Apply
+          reset_button: true
+          reset_button_label: Reset
+          exposed_sorts_label: 'Sort by'
+          expose_sort_order: false
+          sort_asc_label: Asc
+          sort_desc_label: Desc
+      access:
+        type: none
+        options: {  }
+      cache:
+        type: tag
+        options: {  }
+      empty:
+        area_text_custom:
+          id: area_text_custom
+          table: views
+          field: area_text_custom
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: text_custom
+          empty: true
+          content: 'No closed requests available.'
+          tokenize: false
+      sorts: {  }
+      arguments: {  }
       filters:
         combine:
           id: combine
@@ -1106,6 +986,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: combine
           operator: contains
           value: ''
           group: 1
@@ -1153,7 +1034,6 @@ display:
             title: title
             subject: subject
             label: label
-          plugin_id: combine
         flag_id:
           id: flag_id
           table: flagging
@@ -1161,6 +1041,9 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          entity_type: flagging
+          entity_field: flag_id
+          plugin_id: bundle
           operator: in
           value:
             request_archive_comment: request_archive_comment
@@ -1237,9 +1120,6 @@ display:
                   like_content: '0'
                   recommend: '0'
                   recommend_group: '0'
-          entity_type: flagging
-          entity_field: flag_id
-          plugin_id: bundle
         field_request_status_value:
           id: field_request_status_value
           table: flagging__field_request_status
@@ -1247,6 +1127,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: list_field
           operator: or
           value:
             accepted: accepted
@@ -1291,7 +1172,6 @@ display:
               2: {  }
               3: {  }
           reduce_duplicates: false
-          plugin_id: list_field
         entity_type:
           id: entity_type
           table: flagging
@@ -1299,6 +1179,9 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          entity_type: flagging
+          entity_field: entity_type
+          plugin_id: string
           operator: '='
           value: ''
           group: 1
@@ -1348,9 +1231,6 @@ display:
                 title: Group
                 operator: '='
                 value: group
-          entity_type: flagging
-          entity_field: entity_type
-          plugin_id: string
         field_request_closed_date_value:
           id: field_request_closed_date_value
           table: flagging__field_request_closed_date
@@ -1358,6 +1238,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: datetime
           operator: between
           value:
             min: ''
@@ -1386,9 +1267,9 @@ display:
               service_authentication: '0'
               site_admin: '0'
               administrator: '0'
-            placeholder: ''
             min_placeholder: ''
             max_placeholder: ''
+            placeholder: ''
           is_grouped: false
           group_info:
             label: ''
@@ -1401,36 +1282,145 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
-          plugin_id: datetime
-      sorts:
-        field_request_closed_date_value:
-          id: field_request_closed_date_value
-          table: flagging__field_request_closed_date
-          field: field_request_closed_date_value
-          relationship: none
-          group_type: group
-          admin_label: ''
-          order: DESC
-          exposed: false
-          expose:
-            label: 'Closed date (field_request_closed_date)'
-          granularity: minute
-          plugin_id: datetime
-      title: 'Closed requests'
-      header: {  }
-      footer: {  }
-      empty:
-        area_text_custom:
-          id: area_text_custom
-          table: views
-          field: area_text_custom
-          relationship: none
-          group_type: group
-          admin_label: ''
-          empty: true
-          tokenize: false
-          content: 'No closed requests available.'
-          plugin_id: text_custom
+      filter_groups:
+        operator: AND
+        groups:
+          1: AND
+      style:
+        type: table
+        options:
+          grouping: {  }
+          row_class: ''
+          default_row_class: true
+          columns:
+            title: title
+            subject: subject
+            label: label
+            nothing: nothing
+            entity_type: entity_type
+            flag_id: flag_id
+            field_request_moderator: field_request_moderator
+            field_request_reason: field_request_reason
+            field_request_response: field_request_response
+            field_request_status: field_request_status
+            field_request_closed_date: field_request_closed_date
+            operations: operations
+            operations_1: operations_1
+            operations_2: operations_2
+            nothing_1: nothing_1
+          default: field_request_closed_date
+          info:
+            title:
+              sortable: false
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            subject:
+              sortable: false
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            label:
+              sortable: false
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            nothing:
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            entity_type:
+              sortable: true
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            flag_id:
+              sortable: false
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            field_request_moderator:
+              sortable: true
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            field_request_reason:
+              sortable: false
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            field_request_response:
+              sortable: true
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            field_request_status:
+              sortable: true
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            field_request_closed_date:
+              sortable: true
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            operations:
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            operations_1:
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            operations_2:
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            nothing_1:
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+          override: true
+          sticky: false
+          summary: ''
+          empty_table: false
+          caption: ''
+          description: ''
+      row:
+        type: fields
+      query:
+        type: views_query
+        options:
+          query_comment: ''
+          disable_sql_rewrite: false
+          distinct: false
+          replica: false
+          query_tags: {  }
       relationships:
         comment:
           id: comment
@@ -1439,9 +1429,9 @@ display:
           relationship: none
           group_type: group
           admin_label: Comment
-          required: false
           entity_type: flagging
           plugin_id: standard
+          required: false
         node:
           id: node
           table: flagging
@@ -1449,9 +1439,9 @@ display:
           relationship: none
           group_type: group
           admin_label: Content
-          required: false
           entity_type: flagging
           plugin_id: standard
+          required: false
         group:
           id: group
           table: flagging
@@ -1459,9 +1449,9 @@ display:
           relationship: none
           group_type: group
           admin_label: Group
-          required: false
           entity_type: flagging
           plugin_id: standard
+          required: false
         user:
           id: user
           table: flagging
@@ -1469,16 +1459,13 @@ display:
           relationship: none
           group_type: group
           admin_label: User
-          required: false
           entity_type: flagging
           plugin_id: standard
-      arguments: {  }
-      display_extenders: {  }
+          required: false
       use_ajax: true
-      filter_groups:
-        operator: AND
-        groups:
-          1: AND
+      header: {  }
+      footer: {  }
+      display_extenders: {  }
     cache_metadata:
       max-age: -1
       contexts:
@@ -1493,9 +1480,9 @@ display:
         - 'config:field.storage.flagging.field_request_response'
         - 'config:field.storage.flagging.field_request_status'
   page_1:
-    display_plugin: page
     id: page_1
     display_title: Page
+    display_plugin: page
     position: 1
     display_options:
       display_extenders: {  }

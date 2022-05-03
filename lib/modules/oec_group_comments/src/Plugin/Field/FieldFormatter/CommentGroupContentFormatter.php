@@ -12,6 +12,7 @@ use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\group\Entity\GroupContent;
+use Drupal\group\Entity\GroupInterface;
 use Drupal\oec_group_comments\GroupPermissionChecker;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -136,6 +137,7 @@ class CommentGroupContentFormatter extends CommentDefaultFormatter {
    */
   public function viewElements(FieldItemListInterface $items, $langcode) {
     $output = parent::viewElements($items, $langcode);
+    /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
     $entity = $items->getEntity();
 
     // Exclude entities without the set id.
@@ -154,7 +156,10 @@ class CommentGroupContentFormatter extends CommentDefaultFormatter {
     // Add cache contexts.
     $output['#cache']['contexts'][] = 'route.group';
     $output['#cache']['contexts'][] = 'user.group_permissions';
-    $output['#cache']['contexts'][] = 'user.is_group_member:' . $group->id();
+
+    if ($group instanceof GroupInterface) {
+      $output['#cache']['contexts'][] = 'user.is_group_member:' . $group->id();
+    }
 
     $account = $this->currentUser;
 

@@ -5,18 +5,18 @@ dependencies:
   module:
     - node
 id: discussions
-label: Discussions
+label: 'Node - Discussions'
 type: 'canonical_entities:node'
 pattern: '[node:node_group_url]/discussions/[node:title]'
 selection_criteria:
-  070972a0-f22e-46fc-bed4-3fa7b8beb222:
+  6820c0e7-8784-4945-9a11-4a6c8a1069a6:
     id: node_type
-    bundles:
-      discussion: discussion
     negate: false
+    uuid: 6820c0e7-8784-4945-9a11-4a6c8a1069a6
     context_mapping:
       node: node
-    uuid: 070972a0-f22e-46fc-bed4-3fa7b8beb222
+    bundles:
+      discussion: discussion
 selection_logic: and
 weight: -9
 relationships: {  }

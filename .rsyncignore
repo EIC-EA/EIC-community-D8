@@ -8,9 +8,15 @@ UPDATE.txt
 .gitignore
 .git
 .gitlab-ci.yml
+.ssh
+docker
+docker-compose.yml
+Makefile
 web/sites/default/settings.php
 web/sites/default/files
-web/sites/default/private_files
+private_files
+web/sites/default/drush.local.yml
+web/.htaccess
 composer.lock
 web.config
 backups

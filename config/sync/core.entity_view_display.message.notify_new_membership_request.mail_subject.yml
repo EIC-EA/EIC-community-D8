@@ -1,0 +1,26 @@
+uuid: f0cac03a-4b3d-42c6-9130-c7199611629a
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.message.mail_subject
+    - field.field.message.notify_new_membership_request.field_group_membership
+    - field.field.message.notify_new_membership_request.field_group_ref
+    - field.field.message.notify_new_membership_request.field_related_user
+    - message.template.notify_new_membership_request
+id: message.notify_new_membership_request.mail_subject
+targetEntityType: message
+bundle: notify_new_membership_request
+mode: mail_subject
+content:
+  partial_0:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  field_group_membership: true
+  field_group_ref: true
+  field_related_user: true
+  partial_1: true
+  search_api_excerpt: true

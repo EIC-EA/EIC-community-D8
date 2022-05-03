@@ -11,12 +11,17 @@ migration_tags:
 migration_group: migrate_drupal_7
 label: 'User accounts to User profiles'
 source:
-  plugin: d7_user
+  plugin: eic_d7_user_with_smed_ids
   track_changes: true
   constants:
-    facebook_type: 'facebook'
-    linkedin_type: 'linkedin'
-    twitter_type: 'twitter'
+    FACEBOOK_LINK_TYPE: 'facebook'
+    LINKEDIN_LINK_TYPE: 'linkedin'
+    TWITTER_LINK_TYPE: 'twitter'
+  smed_taxonomy_fields:
+    - c4m_vocab_geo
+    - c4m_vocab_language
+    - c4m_vocab_topic
+    - c4m_vocab_job_title
 process:
   type:
     - plugin: default_value
@@ -25,26 +30,24 @@ process:
     - plugin: migration_lookup
       source: uid
       migration: upgrade_d7_user
-  field_body:
-    - plugin: get
-      source: c4m_body
+  field_body: c4m_body
   field_cv_link:
     - plugin: field_link
       source: c4m_cv_link
   _social_link_facebook:
     - plugin: get
       source:
-        - constants/facebook_type
+        - constants/FACEBOOK_LINK_TYPE
         - c4m_facebook/0/url
   _social_link_linkedin:
     - plugin: get
       source:
-        - constants/linkedin_type
+        - constants/LINKEDIN_LINK_TYPE
         - c4m_linkedin/0/url
   _social_link_twitter:
     - plugin: get
       source:
-        - constants/twitter_type
+        - constants/TWITTER_LINK_TYPE
         - c4m_twitter/0/url
   _field_social_links:
     - plugin: get
@@ -68,49 +71,82 @@ process:
   field_location_address:
     - plugin: addressfield
       source: c4m_location_address
-  # TODO: Implement after taxonomy vocabulary is coming from SMED.
-#  c4m_user_types:
-#    - plugin: sub_process
-#      source: c4m_user_types
-#      process:
-#        target_id: tid
-  # TODO: Implement after taxonomy vocabulary is coming from SMED.
-#  c4m_vocab_geo:
-#    - plugin: sub_process
-#      source: c4m_vocab_geo
-#      process:
-#        target_id: tid
-  # TODO: Implement after taxonomy vocabulary is coming from SMED.
-#  c4m_vocab_language:
-#    - plugin: sub_process
-#      source: c4m_vocab_language
-#      process:
-#        target_id: tid
-  # TODO: Implement after taxonomy vocabulary is coming from SMED.
-#  c4m_vocab_topic:
-#    - plugin: sub_process
-#      source: c4m_vocab_topic
-#      process:
-#        target_id: tid
-  # TODO: Implement after taxonomy vocabulary is coming from SMED.
-#  c4m_vocab_topic_expertise:
-#    - plugin: sub_process
-#      source: c4m_vocab_topic_expertise
-#      process:
-#        target_id: tid
-  # TODO: Implement after taxonomy vocabulary is coming from SMED.
-#  c4m_vocab_job_title:
-#    - plugin: sub_process
-#      source: c4m_vocab_job_title
-#      process:
-#        target_id: tid
-  # TODO: Implement after groups migration.
-#  og_user_node:
-#    - plugin: get
-#      source: og_user_node
+  field_vocab_topic_expertise:
+    - plugin: sub_process
+      source: c4m_vocab_topic
+      process:
+        target_id:
+          - plugin: migration_lookup
+            source: smed_id
+            no_stub: true
+            migration:
+              - smed_thematics_topics_lvl1
+              - smed_thematics_topics_lvl2
+              - smed_thematics_topics_lvl3
+  field_vocab_topic_interest:
+    - plugin: sub_process
+      source: c4m_vocab_topic
+      process:
+        target_id:
+          - plugin: migration_lookup
+            source: smed_id
+            no_stub: true
+            migration:
+              - smed_thematics_topics_lvl1
+              - smed_thematics_topics_lvl2
+              - smed_thematics_topics_lvl3
+  field_vocab_language:
+    - plugin: sub_process
+      source: c4m_vocab_language
+      process:
+        target_id:
+          - plugin: migration_lookup
+            source: smed_id
+            no_stub: true
+            migration:
+              - smed_spoken_languages
+  field_vocab_geo:
+    - plugin: sub_process
+      source: c4m_vocab_geo
+      process:
+        target_id:
+          - plugin: migration_lookup
+            source: smed_id
+            no_stub: true
+            migration:
+              - smed_regions_countries_lvl1
+              - smed_regions_countries_lvl2
+  field_vocab_job_title:
+    - plugin: sub_process
+      source: c4m_vocab_job_title
+      process:
+        target_id:
+          - plugin: migration_lookup
+            source: smed_id
+            no_stub: true
+            migration:
+              - smed_job_titles
+  field_vocab_user_type:
+    - plugin: sub_process
+      source: c4m_vocab_job_title
+      process:
+        target_id:
+          - plugin: migration_lookup
+            source: smed_id
+            no_stub: true
+            migration:
+              - smed_user_types
 destination:
   plugin: 'entity:profile'
 migration_dependencies:
-  required: { }
-  optional:
+  required:
     - upgrade_d7_user
+    - smed_thematics_topics_lvl1
+    - smed_thematics_topics_lvl2
+    - smed_thematics_topics_lvl3
+    - smed_regions_countries_lvl1
+    - smed_regions_countries_lvl2
+    - smed_job_titles
+    - smed_spoken_languages
+    - smed_user_types
+  optional: { }

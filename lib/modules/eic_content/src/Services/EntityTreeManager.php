@@ -2,6 +2,9 @@
 
 namespace Drupal\eic_content\Services;
 
+use Drupal\eic_content\TreeWidget\TreeWidgetGroupProperty;
+use Drupal\eic_content\TreeWidget\TreeWidgetProperties;
+use Drupal\eic_content\TreeWidget\TreeWidgetUserProperty;
 use Drupal\taxonomy\Entity\Term;
 
 /**
@@ -75,37 +78,64 @@ class EntityTreeManager {
    */
   public function search($target_entity, $target_bundle, $text, $ignored_values, bool $disable_top_selection = FALSE) {
     //We need to ignore values in suggestions that are already selected by the user
-    $ignored_tids = array_map(function($selected_value) {
+    $ignored_tids = array_map(function ($selected_value) {
       $selected_value = json_decode($selected_value, TRUE);
 
       return $selected_value['tid'];
     }, $ignored_values);
 
-    $query = \Drupal::entityQuery($target_entity)
-      ->condition('vid', $target_bundle)
-      ->condition('name', $text, 'CONTAINS')
-      ->range(0, 20);
+    $tree_property = $this->getTreeWidgetProperty($target_entity);
 
-    if ($disable_top_selection) {
-      $query->condition('parent', 0, '<>');
+    if ($target_entity !== 'taxonomy_term') {
+      return $tree_property->generateSearchQueryResults($text);
+    }
+    else {
+      $query = \Drupal::entityQuery($target_entity)
+        ->condition('vid', $target_bundle)
+        ->condition('name', $text, 'CONTAINS')
+        ->range(0, 20);
+
+      if ($disable_top_selection) {
+        $query->condition('parent', 0, '<>');
+      }
+
+      if (!empty($ignored_tids)) {
+        $query->condition('tid', $ignored_tids, 'NOT IN');
+      }
+
+      $entities = $query->execute();
+      $entities = Term::loadMultiple($entities);
+
+      return array_map(function (Term $term) {
+        $parent = $term->get('parent')->getValue();
+
+        return [
+          'name' => $term->getName(),
+          'tid' => $term->id(),
+          'parent' => (int) reset($parent)['target_id'],
+        ];
+      }, $entities);
+    }
+  }
+
+  /**
+   * @param string $entity_type
+   *   The entity type.
+   *
+   * @return \Drupal\eic_content\TreeWidget\TreeWidgetProperties|null
+   *   Return the class link to the entity type.
+   */
+  public function getTreeWidgetProperty(string $entity_type): ?TreeWidgetProperties {
+    switch ($entity_type) {
+      case 'group':
+        return \Drupal::classResolver(TreeWidgetGroupProperty::class);
+        break;
+      case 'user':
+        return \Drupal::classResolver(TreeWidgetUserProperty::class);
+        break;
     }
 
-    if (!empty($ignored_tids)) {
-      $query->condition('tid', $ignored_tids, 'NOT IN');
-    }
-
-    $entities = $query->execute();
-    $entities = Term::loadMultiple($entities);
-
-    return array_map(function (Term $term) {
-      $parent = $term->get('parent')->getValue();
-
-      return [
-        'name' => $term->getName(),
-        'tid' => $term->id(),
-        'parent' => (int) reset($parent)['target_id'],
-      ];
-    }, $entities);
+    return NULL;
   }
 
   /**
@@ -149,4 +179,5 @@ class EntityTreeManager {
       }
     }
   }
+
 }

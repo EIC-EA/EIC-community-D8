@@ -6,7 +6,7 @@ services:
       - { name: event_subscriber }
   eic_groups.helper:
     class: Drupal\eic_groups\EICGroupsHelper
-    arguments: ['@database', '@current_route_match', '@module_handler', '@current_user', '@datetime.time']
+    arguments: ['@database', '@current_route_match', '@module_handler', '@current_user', '@datetime.time', '@oec_group_flex.helper', '@plugin.manager.group_visibility', '@path.current', '@entity_type.manager', '@plugin.manager.group_content_enabler']
   eic_groups.book_page_redirect_subscriber:
     class: Drupal\eic_groups\EventSubscriber\BookPageRedirectSubscriber
     arguments: ['@book.manager', '@entity_type.manager']
@@ -14,21 +14,9 @@ services:
       - { name: event_subscriber }
   eic_groups.breadcrumb:
     class: Drupal\eic_groups\Breadcrumb\GroupBreadcrumbBuilder
-    arguments: ['@book.breadcrumb', '@current_user']
+    arguments: ['@book.breadcrumb', '@current_user', '@eic_user.helper', '@eic_flags.handler_collector', '@request_stack', '@eic_groups.helper']
     tags:
       - { name: breadcrumb_builder, priority: 1000 }
-  eic_groups.access_check.flag.action.decorator:
-    class: Drupal\eic_groups\Access\FlagAccessCheck
-    decorates: access_check.flag.action
-    decoration_priority: 1
-    public: true
-    arguments: ['@eic_groups.access_check.flag.action.decorator.inner', '@flag']
-  eic_groups.access_check.unflag.action.decorator:
-    class: Drupal\eic_groups\Access\UnFlagAccessCheck
-    decorates: access_check.unflag.action
-    decoration_priority: 1
-    public: true
-    arguments: ['@eic_groups.access_check.unflag.action.decorator.inner', '@flag']
   eic_groups.eic_flags.request_access_checker.decorator:
     class: Drupal\eic_groups\Access\FlagRequestAccessCheck
     decorates: eic_flags.request_access_checker
@@ -53,6 +41,20 @@ services:
     class: Drupal\eic_groups\Access\HighlightGroupContentAccessCheck
     tags:
       - { name: access_check, applies_to: _highlight_group_content }
+  eic_groups.access_check.like_group_content:
+    class: Drupal\eic_groups\Access\LikeGroupContentAccessCheck
+    arguments: ['@flag']
+    tags:
+      - { name: access_check, applies_to: _like_group_content }
+  eic_groups.access_check.group_invitation_bulk:
+    class: Drupal\eic_groups\Access\GroupInvitationBulkAccessChecker
+    tags:
+      - { name: access_check, applies_to: _group_invitation_bulk }
+  eic_groups.access_check.group_pages:
+    class: Drupal\eic_groups\Access\GroupPageAccessChecker
+    arguments: ['@current_route_match']
+    tags:
+      - { name: access_check, applies_to: _group_pages_access_check }
   eic_groups.route_subscriber:
     class: Drupal\eic_groups\Routing\RouteSubscriber
     tags:
@@ -61,3 +63,9 @@ services:
     class: Drupal\eic_groups\Commands\CreateFieldEditAccess
     tags:
       - { name: drush.command }
+  eic_groups.pathauto.generator.decorator:
+    class: Drupal\eic_groups\PathautoGenerator
+    decorates: pathauto.generator
+    decoration_priority: 1
+    public: true
+    arguments: ['@eic_groups.pathauto.generator.decorator.inner', '@current_route_match', '@config.factory', '@module_handler', '@token', '@pathauto.alias_cleaner', '@pathauto.alias_storage_helper', '@pathauto.alias_uniquifier', '@pathauto.verbose_messenger', '@string_translation', '@token.entity_mapper', '@entity_type.manager', '@plugin.manager.alias_type']

@@ -1,0 +1,27 @@
+uuid: 3c452ee2-23e4-4e39-b6fd-3300627a7c01
+langcode: en
+status: true
+dependencies:
+  config:
+    - filter.format.full_html
+  module:
+    - eic_messages
+third_party_settings:
+  eic_messages:
+    message_template_type: notification
+template: notify_new_transfer_owner_req
+label: 'NOTIFY :: MT :: New Transfer Ownership request'
+description: 'Notification sent to the new owner when a transfer ownership request is made'
+text:
+  -
+    value: "<p>[message:field_referenced_flag:entity:author:field_first_name:value] [message:field_referenced_flag:entity:author:field_last_name:value] has requested you to become the owner of [message:field_entity_type:value]&nbsp;[message:field_referenced_entity_label:value]</p>\r\n"
+    format: full_html
+  -
+    value: "<p>Dear <a href=\"[message:author:url]\">[message:author:field_first_name:value]&nbsp;[message:author:field_last_name:value]</a>,</p>\r\n\r\n<p><a href=\"[message:field_referenced_flag:entity:author:url]\">[message:field_referenced_flag:entity:author:field_first_name:value] [message:field_referenced_flag:entity:author:field_last_name:value]</a> has requested you to become the new owner of [message:field_entity_type:value] <a href=\"[message:field_entity_url:uri]\">[message:field_referenced_entity_label:value]</a>.</p>\r\n\r\n<p>Reason:&nbsp;[message:field_referenced_flag:entity:field_request_reason:value]</p>\r\n\r\n<p>Expiration date:&nbsp;[message:field_referenced_flag:entity:request_timeout_date]</p>\r\n\r\n<p>You can take the following actions:</p>\r\n\r\n<ul>\r\n\t<li><a href=\"[message:field_request_accept_url:uri]\">Accept ownership transfer</a></li>\r\n\t<li><a href=\"[message:field_request_deny_url:uri]\">Deny ownership transfer</a></li>\r\n</ul>\r\n\r\n<p>The EIC Community team</p>\r\n"
+    format: full_html
+settings:
+  'token options':
+    clear: false
+    'token replace': true
+  purge_override: false
+  purge_methods: {  }

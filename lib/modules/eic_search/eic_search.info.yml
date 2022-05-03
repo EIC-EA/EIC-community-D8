@@ -5,3 +5,10 @@ package: European Innovation Council
 core: 8.x
 core_version_requirement: ^8 || ^9
 php: 7.3
+dependencies:
+  - eic_statistics:eic_statistics
+  - flag:flag
+  - eic_comments:eic_comments
+  - eic_media_statistics:eic_media_statistics
+  - oec_group_flex:oec_group_flex
+  - eic_groups:eic_groups

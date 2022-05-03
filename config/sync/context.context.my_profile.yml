@@ -1,0 +1,59 @@
+uuid: 5853e1dd-f20a-43a9-b85a-fc94b6628666
+langcode: en
+status: true
+dependencies:
+  module:
+    - eic_user
+    - route_condition
+label: 'My profile'
+name: my_profile
+group: User
+description: ''
+requireAllConditions: false
+disabled: false
+conditions:
+  route:
+    id: route
+    negate: false
+    uuid: fdf0386a-7ba0-4fe6-ab65-a834868de23b
+    context_mapping: {  }
+    routes: 'eic_user.user.*'
+reactions:
+  blocks:
+    id: blocks
+    uuid: 76d3c136-5881-43f9-8ec7-14cf619fae69
+    blocks:
+      1497de88-1932-495e-9b7c-3ab99d7fa334:
+        uuid: 1497de88-1932-495e-9b7c-3ab99d7fa334
+        id: eic_user_header
+        label: 'EIC User Header'
+        provider: eic_user
+        label_display: '0'
+        region: content_before
+        weight: '-1'
+        custom_id: eic_user_header
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: my_profile
+        context_mapping: {  }
+        title: 'My activity feed'
+        third_party_settings: {  }
+      8527debb-4d1a-45d9-a495-967d0918f5bf:
+        uuid: 8527debb-4d1a-45d9-a495-967d0918f5bf
+        id: eic_user_activity_subnavigation_block
+        label: 'EIC User Activity Subnavigation'
+        provider: eic_user
+        label_display: '0'
+        region: content_before
+        weight: '0'
+        custom_id: eic_user_activity_subnavigation_block
+        theme: eic_community
+        css_class: ''
+        unique: 0
+        context_id: my_profile
+        context_mapping: {  }
+        third_party_settings: {  }
+    include_default_blocks: 0
+    saved: false
+weight: 0

@@ -1,0 +1,21 @@
+.react-datepicker{
+  &__day--in-range {
+    background-color: $ecl-color-blue-75 !important;
+  }
+  &__day--keyboard-selected {
+    background-color: $ecl-color-blue-100 !important;
+  }
+
+  &_input {
+    position: relative;
+  }
+
+  &_clear-btn {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    margin: 0 !important;
+    cursor: pointer;
+  }
+}

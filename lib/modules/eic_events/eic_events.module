@@ -1,0 +1,37 @@
+<?php
+
+/**
+ * @file
+ * Primary module hooks for EIC Events module.
+ */
+
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\eic_events\Constants\Event;
+use Drupal\eic_events\Hooks\FormOperations;
+
+/**
+ * Implements hook_cron().
+ */
+function eic_events_cron() {
+  // Value returned is timestamp.
+  $last_request_time = \Drupal::state()
+    ->get(Event::CRON_STATE_ID_LAST_REQUEST_TIME);
+
+  $now = time();
+
+  // Re-sync each 2 hours.
+  if (0 >= ($last_request_time + 43200) - $now) {
+    \Drupal::service('eic_events.update_solr_events')
+      ->updateSolrEvents();
+
+    \Drupal::state()->set(Event::CRON_STATE_ID_LAST_REQUEST_TIME, $now);
+  }
+}
+
+/**
+ * Implements hook_form_BASE_FORM_ID_alter().
+ */
+function eic_events_form_group_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  \Drupal::classResolver(FormOperations::class)
+    ->formGroupFormAlter($form, $form_state, $form_id);
+}

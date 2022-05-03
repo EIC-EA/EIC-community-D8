@@ -1,7 +1,8 @@
+{% set title_element = title_element|default('h3') %}
 {% if items is not empty %}
     <div class="ecl-activity-stream">
         {% if title is not empty %}
-            <h3 class="ecl-activity-stream__title">{{ title }}</h3>
+            <{{ title_element }} class="ecl-activity-stream__title">{{ title }}</{{ title_element }}>
         {% endif %}
 
         <div class="ecl-activity_stream__items-wrapper">
@@ -31,7 +32,7 @@
                                 } only %}
                             </div>
                         {% endif %}
-                        {% if item.description is not empty %}    
+                        {% if item.description is not empty %}
                             <div class="ecl-activity-stream__item__content">
                                 <div class="ecl-activity-stream__item__type">
                                     {% if item.type.icon and icon_file_path %}
@@ -46,7 +47,7 @@
                                     <span class="ecl-activity-stream__item__description">{{ item.description|raw }}</span>
                                 </div>
                             </div>
-                        {% endif %}  
+                        {% endif %}
                     </div>
                     <div class="ecl-activity-stream__item__footer">
                         <div class="ecl-activity-stream__item__timestamp">
@@ -105,5 +106,8 @@
     {% endif %}
 
 {% elseif no_items_available %}
+    {% if no_items_available_header %}
+      <h3 class="ecl-activity-stream__no-content-header">{{ no_items_available_header }}</h3>
+    {% endif %}
     <p class="ecl-activity-stream__no-content-message">{{ no_items_available }}</p>
 {% endif %}

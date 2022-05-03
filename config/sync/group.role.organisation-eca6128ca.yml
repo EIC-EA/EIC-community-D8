@@ -1,0 +1,47 @@
+uuid: 305ee767-51f2-489d-939d-7e6535801da6
+langcode: en
+status: true
+dependencies:
+  config:
+    - group.type.organisation
+  enforced:
+    config:
+      - user.role.content_administrator
+id: organisation-eca6128ca
+label: 'Content administrator'
+weight: -7
+internal: true
+audience: outsider
+group_type: organisation
+permissions_ui: false
+permissions:
+  - 'access content overview'
+  - 'access discussions overview'
+  - 'access events overview'
+  - 'access files overview'
+  - 'access group content menu overview'
+  - 'access group search overview'
+  - 'access latest activity stream'
+  - 'access members overview'
+  - 'access news overview'
+  - 'access wiki overview'
+  - 'administer members'
+  - 'create group_node:event entity'
+  - 'create group_node:news entity'
+  - 'delete any invitation'
+  - 'delete own invitations'
+  - 'edit all comments'
+  - 'edit own comments'
+  - 'highlight group content'
+  - 'invite users to group'
+  - 'join group'
+  - 'post comments'
+  - 'view comments'
+  - 'view group'
+  - 'view group invitations'
+  - 'view group_membership content'
+  - 'view group_node:event content'
+  - 'view group_node:event entity'
+  - 'view group_node:news content'
+  - 'view group_node:news entity'
+  - 'view latest group version'

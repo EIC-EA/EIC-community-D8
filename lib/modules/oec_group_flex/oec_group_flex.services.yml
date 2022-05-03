@@ -4,19 +4,21 @@ services:
     decorates: group_flex.group
     decoration_priority: 1
     public: false
-    arguments: ['@oec_group_flex.group_flex.group.decorator.inner', '@config.factory', '@oec_group_flex.group_visibility.storage', '@entity_type.manager', '@group_permission.group_permissions_manager', '@group_flex.group_type']
+    arguments: [ '@oec_group_flex.group_flex.group.decorator.inner', '@config.factory', '@oec_group_flex.group_visibility.storage', '@entity_type.manager', '@group_permission.group_permissions_manager', '@group_flex.group_type' ]
   oec_group_flex.group_flex.group_saver.decorator:
     class: Drupal\oec_group_flex\OECGroupFlexGroupSaverDecorator
     decorates: group_flex.group_saver
     decoration_priority: 1
     public: true
-    arguments: ['@oec_group_flex.group_flex.group_saver.decorator.inner', '@oec_group_flex.group_visibility.storage', '@entity_type.manager', '@group_permission.group_permissions_manager', '@plugin.manager.group_visibility', '@plugin.manager.group_joining_method', '@group_flex.group']
+    calls:
+      - [ setDocumentProcessor, [ '@?eic_search.solr_document_processor' ] ]
+    arguments: [ '@oec_group_flex.group_flex.group_saver.decorator.inner', '@oec_group_flex.group_visibility.storage', '@module_handler', '@entity_type.manager', '@group_permission.group_permissions_manager', '@plugin.manager.group_visibility', '@plugin.manager.group_joining_method', '@group_flex.group' ]
   oec_group_flex.group_visibility.storage:
     class: Drupal\oec_group_flex\GroupVisibilityDatabaseStorage
-    arguments: ['@entity_type.manager', '@database']
+    arguments: [ '@entity_type.manager', '@database' ]
   plugin.manager.custom_restricted_visibility:
     class: Drupal\oec_group_flex\Plugin\CustomRestrictedVisibilityManager
     parent: default_plugin_manager
   oec_group_flex.helper:
     class: Drupal\oec_group_flex\OECGroupFlexHelper
-    arguments: ['@group_flex.group', '@plugin.manager.group_visibility', '@plugin.manager.group_joining_method', '@plugin.manager.custom_restricted_visibility', '@oec_group_flex.group_visibility.storage']
+    arguments: [ '@group_flex.group', '@plugin.manager.group_visibility', '@plugin.manager.group_joining_method', '@plugin.manager.custom_restricted_visibility', '@oec_group_flex.group_visibility.storage' ]

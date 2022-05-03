@@ -1,0 +1,72 @@
+langcode: en
+status: true
+dependencies: {  }
+id: upgrade_d7_node_photo_to_media
+field_plugin_method: null
+cck_plugin_method: null
+migration_tags:
+  - 'Drupal 7'
+  - Content
+migration_group: migrate_drupal_7
+label: 'Node (Photo) to Media'
+source:
+  plugin: d7_node
+  node_type: photo
+  track_changes: true
+process:
+  name: title
+  uid:
+    - plugin: migration_lookup
+      source: node_uid
+      migration:
+        - upgrade_d7_user
+  status: status
+  created: created
+  changed: timestamp
+  # TODO: Blocked. Field not implemented in D9
+#  field_body:
+#    - plugin: eic_media_wysiwyg_filter
+#      source: c4m_body
+#      media_migrations:
+#        - upgrade_d7_file_audio_to_media
+#        - upgrade_d7_file_document_to_media
+#        - upgrade_d7_file_image_to_media
+#        - upgrade_d7_file_undefined_to_media
+#        - upgrade_d7_file_video_to_media
+  oe_media_image:
+    - plugin: sub_process
+      source: c4m_media
+      process:
+        target_id:
+          - plugin: migration_lookup
+            source: fid
+            migration:
+              - upgrade_d7_file
+              - upgrade_d7_file_private
+#        alt: alt
+#        title: title
+#        width: width
+#        height: height
+#  node_gallery_ref_1:
+#    - plugin: get
+#      source: node_gallery_ref_1
+#  og_group_ref:
+#    - plugin: get
+#      source: og_group_ref
+#  og_vocabulary:
+#    - plugin: get
+#      source: og_vocabulary
+destination:
+  plugin: 'entity:media'
+  default_bundle: image
+migration_dependencies:
+  required:
+    - upgrade_d7_user
+    - upgrade_d7_file
+    - upgrade_d7_file_private
+#    - upgrade_d7_file_audio_to_media
+#    - upgrade_d7_file_document_to_media
+#    - upgrade_d7_file_image_to_media
+#    - upgrade_d7_file_undefined_to_media
+#    - upgrade_d7_file_video_to_media
+  optional: { }

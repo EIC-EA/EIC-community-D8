@@ -1,0 +1,30 @@
+uuid: baddcb01-bdbd-4c06-9616-edc3f4170b22
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.group.field_social_links
+    - group.type.event
+  module:
+    - social_link_field
+id: group.event.field_social_links
+field_name: field_social_links
+entity_type: group
+bundle: event
+label: 'Social links'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    link: ''
+    social: facebook
+  -
+    link: ''
+    social: twitter
+  -
+    link: ''
+    social: linkedin
+default_value_callback: ''
+settings: {  }
+field_type: social_links

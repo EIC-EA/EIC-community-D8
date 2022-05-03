@@ -1,0 +1,33 @@
+uuid: d40b3739-1d28-477f-97cd-5043d027042a
+langcode: en
+status: true
+dependencies:
+  module:
+    - eic_flags
+    - taxonomy
+id: follow_taxonomy_term
+label: 'Follow taxonomy term'
+bundles:
+  - topics
+entity_type: taxonomy_term
+global: false
+flag_short: Follow
+flag_long: ''
+flag_message: ''
+unflag_short: Unfollow
+unflag_long: ''
+unflag_message: ''
+unflag_denied_text: ''
+flood_control_active: false
+flood_control_limit: 0
+flood_control_window: 0
+weight: 0
+flag_type: 'entity:taxonomy_term'
+link_type: eic_count_link
+flagTypeConfig:
+  show_in_links: {  }
+  show_as_field: true
+  show_on_form: false
+  show_contextual_link: false
+  extra_permissions: {  }
+linkTypeConfig: {  }

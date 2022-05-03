@@ -1,0 +1,143 @@
+uuid: d215901f-b0c0-449b-817f-3854b8d4b88f
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.group.organisation.field_address
+    - field.field.group.organisation.field_body
+    - field.field.group.organisation.field_contact_label
+    - field.field.group.organisation.field_date_establishement
+    - field.field.group.organisation.field_email
+    - field.field.group.organisation.field_header_visual
+    - field.field.group.organisation.field_locations
+    - field.field.group.organisation.field_needs
+    - field.field.group.organisation.field_offers
+    - field.field.group.organisation.field_organisation_employees
+    - field.field.group.organisation.field_organisation_link
+    - field.field.group.organisation.field_organisation_turnover
+    - field.field.group.organisation.field_organisation_type
+    - field.field.group.organisation.field_smed_id
+    - field.field.group.organisation.field_social_links
+    - field.field.group.organisation.field_team_members
+    - field.field.group.organisation.field_thumbnail
+    - field.field.group.organisation.field_vocab_geo_selling
+    - field.field.group.organisation.field_vocab_services_products
+    - field.field.group.organisation.field_vocab_target_markets
+    - field.field.group.organisation.field_vocab_topics
+    - group.type.organisation
+  module:
+    - entity_reference_revisions
+id: group.organisation.default
+targetEntityType: group
+bundle: organisation
+mode: default
+content:
+  content_moderation_control:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  field_contact_label:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 5
+    region: content
+  field_email:
+    type: basic_string
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 6
+    region: content
+  field_locations:
+    type: entity_reference_revisions_entity_view
+    label: above
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    weight: 10
+    region: content
+  field_needs:
+    type: entity_reference_revisions_entity_view
+    label: above
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    weight: 4
+    region: content
+  field_offers:
+    type: entity_reference_revisions_entity_view
+    label: above
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    weight: 3
+    region: content
+  field_smed_id:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 9
+    region: content
+  field_team_members:
+    type: entity_reference_revisions_entity_view
+    label: above
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    weight: 7
+    region: content
+  field_thumbnail:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 8
+    region: content
+  field_vocab_geo_selling:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 11
+    region: content
+  flag_follow_group:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  flag_recommend_group:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 2
+    region: content
+hidden:
+  changed: true
+  created: true
+  field_address: true
+  field_body: true
+  field_date_establishement: true
+  field_header_visual: true
+  field_organisation_employees: true
+  field_organisation_link: true
+  field_organisation_turnover: true
+  field_organisation_type: true
+  field_social_links: true
+  field_vocab_services_products: true
+  field_vocab_target_markets: true
+  field_vocab_topics: true
+  label: true
+  langcode: true
+  search_api_excerpt: true
+  uid: true

@@ -145,6 +145,12 @@ class Pathauto implements ContainerInjectionInterface {
         $group = $group_content->getGroup();
       }
 
+      // If group alias is set to manual, we use the manual alias instead.
+      if (!$group->get('path')->pathauto) {
+        $alias = "{$group->get('path')->alias}/wiki";
+        return;
+      }
+
       // If the group has an alias we use it as a prefix.
       if ($group_alias = $this->aliasStorageHelper->loadBySource($group->toUrl()->getInternalPath(), $group->language()->getId())) {
         $alias = "{$group_alias['alias']}/wiki";
@@ -182,8 +188,9 @@ class Pathauto implements ContainerInjectionInterface {
   protected function groupAliasAlter(&$alias, array &$context, GroupInterface $group) {
     // If group alias has changed we add the group id into a queue so that
     // all group content url aliases can be updated at a later stage with
-    // cron.
-    if ($group->get('path')->alias !== $alias) {
+    // cron. If pathauto generator is being used to return path alias
+    // (op = return), then we do nothing.
+    if ($group->get('path')->alias !== $alias && $context['op'] !== 'return') {
       $this->createGroupUrlAliasUpdateQueueItem($group);
     }
   }
@@ -194,7 +201,7 @@ class Pathauto implements ContainerInjectionInterface {
    * @param \Drupal\group\Entity\GroupInterface $entity
    *   The group entity object.
    */
-  private function createGroupUrlAliasUpdateQueueItem(GroupInterface $entity) {
+  public function createGroupUrlAliasUpdateQueueItem(GroupInterface $entity) {
     if (is_null($this->state->get(CronOperations::GROUP_URL_ALIAS_UPDATE_STATE_CACHE . $entity->id()))) {
       $queue = $this->queueFactory->get(CronOperations::GROUP_URL_ALIAS_UPDATE_QUEUE);
       $queue->createItem([

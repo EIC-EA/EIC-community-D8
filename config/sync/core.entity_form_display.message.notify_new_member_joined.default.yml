@@ -5,6 +5,7 @@ dependencies:
   config:
     - field.field.message.notify_new_member_joined.field_group_membership
     - field.field.message.notify_new_member_joined.field_group_ref
+    - field.field.message.notify_new_member_joined.field_related_organisation
     - field.field.message.notify_new_member_joined.field_related_user
     - message.template.notify_new_member_joined
 id: message.notify_new_member_joined.default
@@ -13,33 +14,43 @@ bundle: notify_new_member_joined
 mode: default
 content:
   field_group_membership:
+    type: entity_reference_autocomplete
     weight: 2
+    region: content
     settings:
       match_operator: CONTAINS
       match_limit: 10
       size: 60
       placeholder: ''
     third_party_settings: {  }
-    type: entity_reference_autocomplete
-    region: content
   field_group_ref:
+    type: entity_reference_autocomplete
     weight: 0
+    region: content
     settings:
       match_operator: CONTAINS
       match_limit: 10
       size: 60
       placeholder: ''
     third_party_settings: {  }
+  field_related_organisation:
     type: entity_reference_autocomplete
+    weight: 3
     region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
   field_related_user:
+    type: entity_reference_autocomplete
     weight: 1
+    region: content
     settings:
       match_operator: CONTAINS
       match_limit: 10
       size: 60
       placeholder: ''
     third_party_settings: {  }
-    type: entity_reference_autocomplete
-    region: content
 hidden: {  }

@@ -3,7 +3,6 @@
 namespace Drupal\eic_search\Search\Sources;
 
 use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Drupal\eic_groups\Plugin\Block\LastGroupMembersBlock;
 
 /**
  * Class ActivityStreamSourceType
@@ -61,6 +60,13 @@ class ActivityStreamSourceType extends SourceType {
    */
   public function getPrefilteredGroupFieldId(): array {
     return ['its_group_id'];
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function getPrefilteredTopicsFieldId(): array {
+    return ['itm_message_node_ref_field_vocab_topics'];
   }
 
   /**

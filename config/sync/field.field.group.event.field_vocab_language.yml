@@ -1,0 +1,29 @@
+uuid: 763dad96-8522-4095-837f-d12b1061d5a3
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.group.field_vocab_language
+    - group.type.event
+    - taxonomy.vocabulary.languages
+id: group.event.field_vocab_language
+field_name: field_vocab_language
+entity_type: group
+bundle: event
+label: Language
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      languages: languages
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

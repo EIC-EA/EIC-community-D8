@@ -6,7 +6,6 @@ dependencies:
     - field.field.media.eic_document.field_body
     - field.field.media.eic_document.field_language
     - field.field.media.eic_document.field_media_file
-    - field.field.media.eic_document.field_vocab_topics
     - media.type.eic_document
   module:
     - file
@@ -24,32 +23,26 @@ content:
     settings: {  }
     third_party_settings: {  }
   field_body:
+    type: text_textarea
     weight: 1
+    region: content
     settings:
       rows: 5
       placeholder: ''
     third_party_settings: {  }
-    type: text_textarea
-    region: content
   field_language:
+    type: options_select
     weight: 5
+    region: content
     settings: {  }
     third_party_settings: {  }
-    type: options_select
-    region: content
   field_media_file:
+    type: file_generic
     weight: 4
+    region: content
     settings:
       progress_indicator: throbber
     third_party_settings: {  }
-    type: file_generic
-    region: content
-  field_vocab_topics:
-    weight: 3
-    settings: {  }
-    third_party_settings: {  }
-    type: options_select
-    region: content
   langcode:
     type: language_select
     weight: 2
@@ -73,19 +66,19 @@ content:
     third_party_settings: {  }
   status:
     type: boolean_checkbox
-    settings:
-      display_label: true
     weight: 9
     region: content
+    settings:
+      display_label: true
     third_party_settings: {  }
   uid:
     type: entity_reference_autocomplete
     weight: 6
+    region: content
     settings:
       match_operator: CONTAINS
+      match_limit: 10
       size: 60
       placeholder: ''
-      match_limit: 10
-    region: content
     third_party_settings: {  }
 hidden: {  }

@@ -15,9 +15,10 @@
     {{ title_prefix }}
     {{ title_suffix }}
     {% include "@theme/patterns/compositions/story/story.teaser.html.twig" with story_item|default({})|merge({
-      title: label|default(''),
+      title: node.label|default(''),
       description: node.field_introduction.value|striptags|default(''),
       path: url,
+      extra_classes: 'ecl-teaser--grey',
     }) %}
   </div>
 {% endblock %}

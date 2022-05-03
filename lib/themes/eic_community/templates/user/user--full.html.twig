@@ -1,0 +1,11 @@
+{% set user_interests %}
+  {% include "@theme/patterns/compositions/extended-list/extended-list.html.twig" with user_item.flagged_interests %}
+{% endset %}
+
+{% include "@theme/patterns/compositions/member/member.full.html.twig" with user_item|default({})|merge({
+  sidebar_title: 'Contact information'|t,
+  flagged_interests: {
+    title: user_item.flagged_interests.title,
+    content: user_interests,
+  },
+}) %}

@@ -136,7 +136,8 @@ class GroupForm extends GroupFormBase {
       }
 
       // The group type visibility cannot be changed on group level.
-      if (array_key_exists($groupVisibility, $visibilityPlugins) && $this->groupTypeFlex->hasFlexibleGroupTypeVisibility($groupType) === FALSE) {
+      if (array_key_exists($groupVisibility,
+          $visibilityPlugins) && $this->groupTypeFlex->hasFlexibleGroupTypeVisibility($groupType) === FALSE) {
         $pluginInstance = $visibilityPlugins[$groupVisibility];
 
         $visExplanation = $pluginInstance->getValueDescription($groupType);
@@ -144,7 +145,7 @@ class GroupForm extends GroupFormBase {
           '@group_type_name' => $groupType->label(),
           '@visibility_value' => $pluginInstance->getLabel(),
         ]);
-        if ($visDescription && $visExplanation) {
+        if ($visExplanation) {
           $form['footer']['group_visibility']['#markup'] = '<p>' . $visDescription . ' (' . $visExplanation . ')' . '</p>';
         }
       }
@@ -218,9 +219,7 @@ class GroupForm extends GroupFormBase {
    * {@inheritdoc}
    */
   public function save(array $form, FormStateInterface $form_state): int {
-    $group = $form_state->getFormObject()->getEntity();
-    $is_new = $group->isNew();
-
+    $group = $this->entity;
     $return = parent::save($form, $form_state);
 
     if (!$groupFlexSettings = $this->getGroupFlexSettingsFormValues($form, $form_state)) {
@@ -232,8 +231,7 @@ class GroupForm extends GroupFormBase {
     }
 
     $group = $groupFlexSettings['group'];
-
-    if (!$group || !$group instanceof GroupInterface) {
+    if (!$group instanceof GroupInterface) {
       return $return;
     }
 
@@ -244,14 +242,18 @@ class GroupForm extends GroupFormBase {
             break;
           }
 
-          // Extract array into variables.
-          extract($value);
+          $visibility_options = [];
 
-          if (!isset($visibility_options) || is_null($visibility_options)) {
-            $visibility_options = [];
+          // Gets group visibility options.
+          if (isset($value['visibility_options'])) {
+            $visibility_options = $value['visibility_options'];
           }
 
-          $this->groupFlexSaver->saveGroupVisibility($group, $plugin_id, $visibility_options);
+          // Saves the group visibility. Note that Group flex service is being
+          // decorated by OECGroupFlexGroupSaverDecorator and the method
+          // saveGroupVisibility can receive a 3rd argument in case we need to
+          // save extra visibility options.
+          $this->groupFlexSaver->saveGroupVisibility($group, $value['plugin_id'], $visibility_options);
           break;
 
         case 'joining_methods':
@@ -266,24 +268,10 @@ class GroupForm extends GroupFormBase {
           }
           $this->groupFlexSaver->saveGroupJoiningMethods($group, $value);
           break;
-
       }
     }
 
-    // If the group is new and the selected joining method is
-    // "tu_group_membership_request", we enable member invitations by default.
-    // This logic needs to be triggered during this process because the group
-    // visibility and joining methods are saved previously after the group is
-    // saved in the Database.
-    if ($is_new &&
-      ($groupFlexSettings['settings']['visibility']['plugin_id'] === 'private' || $groupFlexSettings['settings']['joining_methods'] === 'tu_group_membership_request')
-    ) {
-      $group->set('field_group_invite_members', TRUE);
-      $group->save();
-    }
-
     $this->clearTempStore($form, $form_state);
-
     return $return;
   }
 
@@ -325,17 +313,13 @@ class GroupForm extends GroupFormBase {
           return FALSE;
         }
 
-        $group = $this->entity;
-
-        if (isset($group)) {
-          return [
-            'settings' => [
-              'visibility' => $store->get("$store_id:visibility"),
-              'joining_methods' => $store->get("$store_id:joining_methods"),
-            ],
-            'group' => $group,
-          ];
-        }
+        return [
+          'settings' => [
+            'visibility' => $store->get("$store_id:visibility"),
+            'joining_methods' => $store->get("$store_id:joining_methods"),
+          ],
+          'group' => $this->entity,
+        ];
       }
     }
 
@@ -359,7 +343,6 @@ class GroupForm extends GroupFormBase {
    */
   protected function setFormStateValuesFromTempStore(array $form, FormStateInterface $form_state) {
     if ($group_flex_settings = $this->getGroupFlexSettingsFormValues($form, $form_state)) {
-
       if (empty($group_flex_settings['settings']['visibility'])) {
         return;
       }
@@ -376,7 +359,8 @@ class GroupForm extends GroupFormBase {
           if (isset($group_visibility_settings['visibility_options'])) {
             foreach ($group_visibility_plugin->getPluginFormElementsFieldNames() as $key => $option_field_name) {
               if (in_array($key, array_keys($group_visibility_settings['visibility_options']))) {
-                $form_state->setValue($option_field_name, $group_visibility_settings['visibility_options'][$key]);
+                $form_state->setValue($option_field_name,
+                  $group_visibility_settings['visibility_options'][$key]);
               }
             }
           }

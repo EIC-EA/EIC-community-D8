@@ -5,10 +5,16 @@
  * Main module file for EIC Comments module.
  */
 
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\eic_comments\Hooks\EntityOperations;
+use Drupal\eic_groups\EICGroupsHelper;
+use Drupal\flag\FlagInterface;
+use Drupal\node\NodeForm;
+use Drupal\node\NodeInterface;
 
 /**
  * Implements hook_form_FORM_ID_alter().
@@ -48,4 +54,155 @@ function eic_comments_entity_view(array &$build, EntityInterface $entity, Entity
       break;
 
   }
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function eic_comments_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  $form_object = $form_state->getFormObject();
+
+  // If we are not in a node form, we do nothing.
+  if (!$form_object instanceof NodeForm) {
+    return;
+  }
+
+  $entity = $form_object->getEntity();
+
+  if (!$entity instanceof NodeInterface) {
+    return;
+  }
+
+  $current_user = \Drupal::currentUser();
+  $route_name = \Drupal::routeMatch()->getRouteName();
+  $can_edit_comment_settings = FALSE;
+
+  if ($entity->isNew()) {
+    if ($route_name === 'entity.group_content.create_form') {
+      $can_edit_comment_settings = TRUE;
+    }
+  }
+  else {
+    $group_contents = \Drupal::entityTypeManager()->getStorage('group_content')->loadByEntity($entity);
+
+    if (!empty($group_contents)) {
+      $group_content = reset($group_contents);
+      $group = $group_content->getGroup();
+      $groupType = $group->getGroupType();
+
+      $installedContentPlugins = $groupType->getInstalledContentPlugins()->getInstanceIds();
+      if (in_array("group_node:{$entity->bundle()}", $installedContentPlugins)) {
+        $can_edit_comment_settings = EICGroupsHelper::userIsGroupAdmin($group, $current_user);
+      }
+    }
+  }
+
+  /** @var \Drupal\Core\Field\FieldDefinitionInterface[] $field_definitions */
+  $field_definitions = \Drupal::service('entity_field.manager')->getFieldDefinitions('node', $entity->bundle());
+
+  // We allow the user who is creating the node to be able to manage comment
+  // settings. For existing nodes we only allow owners to manage comment
+  // settings.
+  foreach ($field_definitions as $field_definition) {
+    if ($field_definition->getType() !== 'comment') {
+      continue;
+    }
+
+    if (!isset($form[$field_definition->getName()])) {
+      continue;
+    }
+
+    if (!isset($form[$field_definition->getName()]['#access'])) {
+      continue;
+    }
+
+    // If the node is new, the user can manage comment settings.
+    if ($entity->isNew()) {
+      $form[$field_definition->getName()]['#access'] = TRUE;
+      continue;
+    }
+
+    // If the node already exists, the owner or group admin can manage the
+    // comment settings.
+    if (!$entity->isNew() &&
+      ($entity->getOwnerId() === $current_user->id() || $can_edit_comment_settings)
+    ) {
+      $form[$field_definition->getName()]['#access'] = TRUE;
+    }
+  }
+}
+
+/**
+ * Implements hook_flag_action_access().
+ */
+function eic_comments_flag_action_access($action, FlagInterface $flag, AccountInterface $account, EntityInterface $flaggable = NULL) {
+  $access = AccessResult::neutral();
+
+  if (!$flaggable) {
+    return $access;
+  }
+
+  switch ($flaggable->getEntityTypeId()) {
+    case 'comment':
+      // Deny access to flag/unflag the comment if the comment has been soft
+      // deleted, archived or if the user doesn't have permission to view
+      // comments.
+      if (
+        (
+          !$flaggable->get('field_comment_is_soft_deleted')->isEmpty() &&
+          $flaggable->get('field_comment_is_soft_deleted')->value
+        ) ||
+        (
+          !$flaggable->get('field_comment_is_archived')->isEmpty() &&
+          $flaggable->get('field_comment_is_archived')->value
+        ) ||
+        !$account->hasPermission('access comments')
+      ) {
+        $access = AccessResult::forbidden()
+          ->addCacheableDependency($flaggable);
+        break;
+      }
+
+      /** @var \Drupal\Core\Entity\EntityInterface $commented_entity */
+      $commented_entity = $flaggable->getCommentedEntity();
+
+      // If node is published, the access to flag/unflag the comment will be
+      // neutral and might be allowed or denied by other modules. Exception for
+      // request flags which also depends on extra permissions.
+      if (
+        $commented_entity->isPublished() &&
+        $commented_entity->access('view')
+      ) {
+
+        // Deny access to create archival or delete requests if the user
+        // doesn't have permission to do so.
+        if (
+          (
+            $flag->id() === 'request_archive_comment' &&
+            $account->hasPermission('make archive request')
+          ) ||
+          (
+            $flag->id() === 'request_delete_comment' &&
+            $account->hasPermission('make delete request')
+          )
+        ) {
+          $access = AccessResult::allowed()
+            ->addCacheableDependency($account)
+            ->addCacheableDependency($flaggable)
+            ->addCacheableDependency($commented_entity);
+        }
+        break;
+      }
+
+      // Deny access to flag/unflag the comment if the commented entity is not
+      // published.
+      $access = AccessResult::forbidden()
+        ->addCacheableDependency($flaggable)
+        ->addCacheableDependency($commented_entity);
+
+      break;
+
+  }
+
+  return $access;
 }

@@ -23,7 +23,7 @@
             {% if author %}
               <div class="ecl-editorial-article__meta-item">
                 {% include "@theme/patterns/components/author.html.twig" with {
-                  author: author.name,
+                  name: author.name,
                   path: author.path,
                   image: author.image,
                   extra_classes: 'ecl-editorial-article__author',
@@ -41,31 +41,23 @@
             {% endif %}
           </div>
         {% endif %}
+        {% if content.field_related_documents[0] is not empty %}
+          <h2>{{ 'Documents'|t }}</h2>
+          {{ content.field_related_documents }}
+        {% endif %}
+        {# {% if video_download %}
+          {% include "@theme/patterns/components/attachment.html.twig" with video_download only %}
+        {% else %} #}
+        {{ content.field_related_downloads }}
+        {# {% endif %} #}
       {% endblock %}
       {% block sidebar %}
+        {{ eic_local_tasks }}
+
         {% if flags %}
           {% include "@theme/patterns/components/flags.html.twig" with flags|default({}) %}
         {% endif %}
         {{ elements.field_vocab_topics }}
       {% endblock %}
     {% endembed %}
-    {% if logged_in %}
-    <section class="ecl-section-wrapper ecl-section-wrapper--is-grey ecl-comment-overview">
-      <div class="ecl-container">
-        {% embed "@theme/patterns/compositions/editorial-article.html.twig" with {
-          extra_classes: 'ecl-editorial-article--has-static-layout'
-        } %}
-          {% block content %}
-            {{ elements.field_comments }}
-          {% endblock %}
-          {% block sidebar %}
-              {% include "@theme/patterns/compositions/featured-contributors.html.twig" with contributors|default({})|merge({
-                grid: true,
-                title: "Contributors"|t
-              }) only %}
-          {% endblock %}
-        {% endembed %}
-      </div>
-    </section>
-    {% endif %}
 {% endblock %}

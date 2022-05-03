@@ -5,6 +5,7 @@ dependencies:
   config:
     - field.field.message.notify_group_access_change.field_event_executing_user
     - field.field.message.notify_group_access_change.field_group_ref
+    - field.field.message.notify_group_access_change.field_group_visibility
     - message.template.notify_group_access_change
 id: message.notify_group_access_change.default
 targetEntityType: message
@@ -12,30 +13,38 @@ bundle: notify_group_access_change
 mode: default
 content:
   field_event_executing_user:
-    weight: 2
+    type: entity_reference_label
     label: above
     settings:
       link: true
     third_party_settings: {  }
-    type: entity_reference_label
+    weight: 2
     region: content
   field_group_ref:
-    weight: 1
+    type: entity_reference_label
     label: above
     settings:
       link: true
     third_party_settings: {  }
-    type: entity_reference_label
+    weight: 1
+    region: content
+  field_group_visibility:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 3
     region: content
   partial_0:
-    weight: 0
-    region: content
     settings: {  }
     third_party_settings: {  }
+    weight: 0
+    region: content
   partial_1:
-    weight: 0
-    region: content
     settings: {  }
     third_party_settings: {  }
+    weight: 0
+    region: content
 hidden:
   search_api_excerpt: true

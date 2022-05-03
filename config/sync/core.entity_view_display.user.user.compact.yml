@@ -1,0 +1,60 @@
+uuid: 1fcdf573-a283-41c5-afb9-98f262eae133
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.user.compact
+    - field.field.user.user.field_first_name
+    - field.field.user.user.field_is_deleted
+    - field.field.user.user.field_is_deleted_anonymous
+    - field.field.user.user.field_is_deleted_by_uid
+    - field.field.user.user.field_is_invalid_email
+    - field.field.user.user.field_is_organisation_user
+    - field.field.user.user.field_is_spammer
+    - field.field.user.user.field_last_name
+    - field.field.user.user.field_media
+    - field.field.user.user.field_smed_id
+    - field.field.user.user.field_user_can_contact
+  module:
+    - user
+id: user.user.compact
+targetEntityType: user
+bundle: user
+mode: compact
+content:
+  field_media:
+    type: entity_reference_entity_view
+    label: above
+    settings:
+      view_mode: default
+      link: false
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  masquerade:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 50
+    region: content
+hidden:
+  field_first_name: true
+  field_full_name: true
+  field_is_deleted: true
+  field_is_deleted_anonymous: true
+  field_is_deleted_by_uid: true
+  field_is_invalid_email: true
+  field_is_organisation_user: true
+  field_is_spammer: true
+  field_last_name: true
+  field_message_from_service: true
+  field_smed_id: true
+  field_updated_profile_by_service: true
+  field_updated_profile_by_user: true
+  field_user_can_contact: true
+  field_user_status: true
+  flag_follow_user: true
+  langcode: true
+  member_for: true
+  member_profiles: true
+  realname: true
+  search_api_excerpt: true

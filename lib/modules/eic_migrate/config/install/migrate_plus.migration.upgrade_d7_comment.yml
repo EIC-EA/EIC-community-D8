@@ -1,0 +1,88 @@
+langcode: en
+status: true
+dependencies: {  }
+id: upgrade_d7_comment
+class: Drupal\comment\Plugin\migrate\D7Comment
+field_plugin_method: null
+cck_plugin_method: null
+migration_tags:
+  - 'Drupal 7'
+  - Content
+migration_group: migrate_drupal_7
+label: Comments
+source:
+  plugin: d7_comment
+  track_changes: true
+  constants:
+    entity_type: node
+    comment_type: node_comment
+    field_name: field_comments
+process:
+#  cid:
+#    - plugin: get
+#      source: cid
+  pid:
+    - plugin: skip_on_empty
+      method: process
+      source: pid
+    - plugin: migration_lookup
+      migration: upgrade_d7_comment
+  entity_id:
+    - plugin: migration_lookup
+      source: nid
+      migration:
+        - upgrade_d7_node_complete_article
+        - upgrade_d7_node_complete_discussion
+        - upgrade_d7_node_complete_document
+        - upgrade_d7_node_complete_news
+        - upgrade_d7_node_complete_wiki_page
+        - upgrade_d7_node_complete_event
+    - plugin: node_complete_node_lookup
+    - plugin: skip_on_empty
+      method: row
+  entity_type: constants/entity_type
+  comment_type: constants/comment_type
+  langcode:
+    - plugin: static_map
+      source: language
+      bypass: true
+      map:
+        und: en
+    - plugin: default_value
+      default_value: en
+  field_name: constants/field_name
+  subject: subject
+  uid:
+    - plugin: migration_lookup
+      source: uid
+      migration:
+        - upgrade_d7_user
+  name: name
+  mail: mail
+  homepage: homepage
+  hostname: hostname
+  created: created
+  changed: changed
+  status: status
+  thread: thread
+  'comment_body/value':
+    plugin: extract
+    source: comment_body
+    index:
+      - 0
+      - value
+  'comment_body/format':
+    plugin: default_value
+    default_value: 'basic_text'
+destination:
+  plugin: 'entity:comment'
+migration_dependencies:
+  required:
+    - upgrade_d7_user
+    - upgrade_d7_node_complete_article
+    - upgrade_d7_node_complete_discussion
+    - upgrade_d7_node_complete_document
+    - upgrade_d7_node_complete_news
+    - upgrade_d7_node_complete_wiki_page
+    - upgrade_d7_node_complete_event
+  optional: { }

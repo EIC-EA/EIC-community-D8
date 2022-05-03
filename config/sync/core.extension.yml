@@ -1,9 +1,13 @@
+_core:
+  default_config_hash: R4IF-ClDHXxblLcG0L7MgsLvfBIMAvi_skumNFQwkDc
 module:
   address: 0
   admin_toolbar: 0
   admin_toolbar_links_access_filter: 0
   admin_toolbar_search: 0
   admin_toolbar_tools: 0
+  anchor_link: 0
+  antibot: 0
   big_pipe: 0
   block: 0
   block_content: 0
@@ -11,20 +15,33 @@ module:
   block_field: 0
   book: 0
   breakpoint: 0
+  cas: 0
+  cas_mock_server: 0
   ckeditor: 0
+  ckeditor_div_manager: 0
+  ckeditor_find: 0
+  ckeditor_font: 0
+  ckeditor_iframe: 0
+  ckeditor_oembed: 0
+  ckeditor_selectall: 0
+  colorbutton: 0
   comment: 0
   components: 0
   config: 0
   config_filter: 0
   config_ignore: 0
   config_split: 0
+  contact: 0
   content_moderation: 0
+  content_moderation_bypass: 0
   context: 0
   context_ui: 0
   contextual: 0
+  csv_serialization: 0
   ctools: 0
   date_popup: 0
   datetime: 0
+  datetime_range: 0
   dblog: 0
   dynamic_page_cache: 0
   editor: 0
@@ -36,32 +53,50 @@ module:
   eic_block_types: 0
   eic_blocks: 0
   eic_comments: 0
+  eic_contact: 0
   eic_content: 0
   eic_content_book: 0
   eic_content_discussion: 0
   eic_content_story: 0
   eic_content_wiki_page: 0
   eic_deploy: 0
+  eic_events: 0
   eic_flags: 0
   eic_fragment_fact_figure: 0
+  eic_group_membership: 0
   eic_group_statistics: 0
   eic_groups: 0
+  eic_helper: 0
   eic_homepage: 0
   eic_media: 0
   eic_media_document: 0
   eic_media_statistics: 0
   eic_media_video: 0
+  eic_menus: 0
+  eic_message_subscriptions: 0
   eic_messages: 0
   eic_migrate: 0
+  eic_moderation: 0
+  eic_organisations: 0
   eic_overviews: 0
   eic_paragraph_contributor: 0
   eic_paragraph_cta_tile: 0
+  eic_paragraph_full_media_content: 0
+  eic_paragraph_quote: 0
+  eic_paragraphs: 0
   eic_private_content: 0
+  eic_private_message: 0
   eic_search: 0
   eic_seo: 0
+  eic_share_content: 0
+  eic_statistics: 0
   eic_theme_helper: 0
+  eic_topics: 0
   eic_user: 0
+  eic_user_login: 0
+  eic_vod: 0
   eic_webservices: 0
+  eic_wysiwyg: 0
   entity: 0
   entity_browser: 0
   entity_browser_entity_form: 0
@@ -70,7 +105,9 @@ module:
   extra_field: 0
   facets: 0
   facets_summary: 0
+  fakeobjects: 0
   field: 0
+  field_group: 0
   field_ui: 0
   file: 0
   file_link: 0
@@ -78,6 +115,7 @@ module:
   flag: 0
   flag_search_api: 0
   fragments: 0
+  gcontent_moderation: 0
   ginvite: 0
   gnode: 0
   grequest: 0
@@ -90,13 +128,18 @@ module:
   inline_entity_form: 0
   language: 0
   link: 0
+  locale: 0
+  mailsystem: 0
+  masquerade: 0
   media: 0
   media_entity_download: 0
   media_library: 0
   menu_link_content: 0
+  menu_trail_by_path: 0
   menu_ui: 0
   message: 0
   message_notify: 0
+  message_subscribe: 0
   metatag: 0
   metatag_open_graph: 0
   metatag_twitter_cards: 0
@@ -105,8 +148,10 @@ module:
   migrate_plus: 0
   migrate_tools: 0
   migrate_upgrade: 0
+  mimemail: 0
   node: 0
   node_read_time: 0
+  oe_authentication: 0
   oe_media: 0
   oe_time_caching: 0
   oe_webtools: 0
@@ -119,6 +164,8 @@ module:
   openapi_rest: 0
   options: 0
   page_cache: 0
+  pagebreak: 0
+  panelbutton: 0
   paragraph_view_mode: 0
   path: 0
   path_alias: 0
@@ -130,16 +177,19 @@ module:
   rest: 0
   restui: 0
   route_condition: 0
+  s3fs: 0
   scheduler: 0
   scheduler_content_moderation_integration: 0
   schemata: 0
   schemata_json_schema: 0
   search_api: 0
+  search_api_attachments: 0
   search_api_solr: 0
   search_api_sorts: 0
   search_api_spellcheck: 0
   serialization: 0
   smart_trim: 0
+  smtp: 0
   social_link_field: 0
   state_machine: 0
   statistics: 0
@@ -157,16 +207,16 @@ module:
   user: 0
   variationcache: 0
   views_autocomplete_filters: 0
+  views_data_export: 0
+  views_data_export_phpspreadsheet: 0
   views_ui: 0
+  workflow_buttons: 0
   workflows: 0
   pathauto: 1
+  externalauth: 10
   views: 10
   paragraphs: 11
-  eic_paragraphs: 12
-  eic_paragraph_full_media_content: 13
-  eic_paragraph_quote: 13
   publication_date: 99
-  eic_statistics: 1000
   minimal: 1000
 theme:
   stable: 0
@@ -174,5 +224,3 @@ theme:
   seven: 0
   eic_community: 0
 profile: minimal
-_core:
-  default_config_hash: R4IF-ClDHXxblLcG0L7MgsLvfBIMAvi_skumNFQwkDc

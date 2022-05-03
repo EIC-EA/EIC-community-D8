@@ -18,10 +18,10 @@
 
 {% if is_wiki_page %}
   {% set sidebar = "" %}
-  {% set extra_classes = "ecl-editorial-article--has-reversed-layout ecl-editorial-article--is-ready" %}
+  {% set extra_classes = "ecl-editorial-article--has-reversed-layout" %}
 {% else %}
   {% set sidebar = page.sidebar %}
-  {% set extra_classes = "ecl-editorial-article--has-reversed-layout ecl-editorial-article--is-collapsible ecl-editorial-article--is-ready" %}
+  {% set extra_classes = "ecl-editorial-article--has-reversed-layout ecl-editorial-article--is-collapsible" %}
 {% endif %}
 {% set page = page|merge({'sidebar': null}) %}
 
@@ -30,11 +30,22 @@
       <div class="ecl-editorial-article {{ extra_classes }}">
         <div class="ecl-container">
           <div class="ecl-editorial-article__wrapper">
+            <div>
             {{ page.content }}
+        </div>
             {% if is_wiki_page is same as(false) %}
               <aside class="ecl-editorial-article__aside">
                 <div class="ecl-editorial-article__aside-wrapper">
-                  {{ sidebar }}
+                  {% embed "@theme/patterns/components/navigation-list/navigation-list.html.twig" with {
+                    extra_attributes: [{
+                      name: 'data-navigation-list-parent-selector',
+                      value: '.ecl-editorial-article',
+                    }],
+                    collapse: {"label": "collapse"},
+                    icon_file_path: eic_icon_path,
+                    extra_blocks: sidebar,
+                  } %}
+                  {% endembed %}
                 </div>
               </aside>
             {% endif %}

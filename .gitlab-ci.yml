@@ -1,34 +1,68 @@
 stages:
   - build
   - test
+  - notify
   - deploy
+  - cypress
+  - deploy_uat
 
 .deploy_job: &deploy_job
   image: intractosre/deploy:1
   stage: deploy
+  tags:
+    - aws
   before_script:
     - eval $(ssh-agent -s)
     - echo "$DEPLOYMENT_SSH_KEY" | tr -d '\r' | ssh-add - > /dev/null
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
-    - ssh-keyscan -t rsa $WEB_SERVER_ADDRESS >> ~/.ssh/known_hosts
+    - ssh-keyscan -t rsa -p $SSH_PORT $HOST >> ~/.ssh/known_hosts
   script:
-    - rsync -avuz --no-perms --omit-dir-times --exclude-from=.rsyncignore --delete --delete-after $CI_PROJECT_DIR/ $PROJECT_USER@$WEB_SERVER_ADDRESS:$WEB_SERVER_PATH
+    - rsync -e "ssh -p $SSH_PORT" -avuz --no-perms --omit-dir-times --exclude-from=.rsyncignore --delete --delete-after $CI_PROJECT_DIR/ $PROJECT_USER@$HOST:$PROJECT_DIR
     - >
-      ssh -tt $PROJECT_USER@$WEB_SERVER_ADDRESS "cd $WEB_SERVER_PATH &&
-      bash $WEB_SERVER_PATH/../deploy.sh"
+      ssh -p $SSH_PORT $PROJECT_USER@$HOST "source /.victhorious/conf/shell/envvars && cd $PROJECT_DIR &&
+      ln -sf ../../lib/modules $PROJECT_DIR/web/modules/custom &&
+      ln -sf ../../lib/themes $PROJECT_DIR/web/themes/custom &&
+      ln -sf ../../lib/profiles $PROJECT_DIR/web/profiles/custom &&
+      ln -sf $PROJECT_DIR/web $PROJECT_DIR/web/community &&
+      chown -R $PROJECT_USER:$PROJECT_GROUP $PROJECT_DIR &&
+      ./vendor/bin/drush updb -y &&
+      ./vendor/bin/drush cr &&
+      ./vendor/bin/drush cim -y &&
+      ./vendor/bin/drush cr"
+
+.rollback_trigger_updb: &rollback_trigger_updb
+  image: intractosre/deploy:1
+  stage: deploy
+  when: manual
+  tags:
+    - aws
+  before_script:
+    - eval $(ssh-agent -s)
+    - echo "$DEPLOYMENT_SSH_KEY" | tr -d '\r' | ssh-add - > /dev/null
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - ssh-keyscan -t rsa -p $SSH_PORT $HOST >> ~/.ssh/known_hosts
+  script:
+    - >
+      ssh -p $SSH_PORT $PROJECT_USER@$HOST "source /.victhorious/conf/shell/envvars && cd $PROJECT_DIR &&
+      ./vendor/bin/drush php-eval \"echo drupal_set_installed_schema_version('eic_deploy', $UPDB_VERSION);\" &&
+      ./vendor/bin/drush updb -y &&
+      ./vendor/bin/drush cim -y &&
+      ./vendor/bin/drush cr"
 
 build_backend:
   stage: build
-  image: intractosre/php:7.3
+  image: public.ecr.aws/h5g0v9w1/php-fpm:7.4
+  tags:
+    - itr-hrt
   artifacts:
     untracked: true
-    expire_in: '1 day'
+    expire_in: '2 hour'
   script:
     # Current version of Gitlab (require > 14.2.0) doesn't support variable overrides using the 'rules' property
     # Dynamically define the --no-dev option once updated (e.g: added on develop and not other branches)
     - composer --no-ansi --no-interaction install --no-progress --prefer-dist --optimize-autoloader
-    # We don't have our php-qa image for the moment providing coding style standards
     # Gitlab CI will exclude any directory containing a .git folder from artifacts, remove it temporarily
     - find $CI_PROJECT_DIR/web/modules/contrib -type d -name ".git" -exec rm -rf {} +
     - find $CI_PROJECT_DIR/vendor -type d -name ".git" -exec rm -rf {} +
@@ -39,9 +73,11 @@ build_backend:
 build_front:
   stage: build
   image: node:14
+  tags:
+    - itr-hrt
   artifacts:
     untracked: true
-    expire_in: '1 day'
+    expire_in: '2 hour'
   script:
     - cd lib/themes/eic_community
     - npm install && npm run build && npm run react-production
@@ -53,41 +89,123 @@ build_front:
 
 security_check:
   stage: test
-  image: jakzal/phpqa:php7.3
+  image: jakzal/phpqa:php7.4
+  tags:
+    - itr-hrt
   script:
     - local-php-security-checker
   only:
     - develop
+    - /^release/.*$/
 
-code_style_test:
-  stage: test
-  image: jakzal/phpqa:php7.3
-  script:
-    - ./vendor/bin/grumphp run --tasks=phpcs
-  allow_failure: true
-  only:
-    - develop
+#code_style_test:
+#  stage: test
+#  image: jakzal/phpqa:php7.4
+#  tags:
+#    - itr-hrt
+#  script:
+#    - ./vendor/bin/grumphp run --tasks=phpcs
+#  allow_failure: true
+#  only:
+#    - develop
+#
+#phpmd_test:
+#  stage: test
+#  image: jakzal/phpqa:php7.4
+#  tags:
+#    - itr-hrt
+#  script:
+#    - ./vendor/bin/grumphp run --tasks=phpmd
+#  allow_failure: true
+#  only:
+#    - develop
+#
+#phpstan_test:
+#  stage: test
+#  image: jakzal/phpqa:php7.4
+#  tags:
+#    - itr-hrt
+#  script:
+#    - phpstan
+#  allow_failure: true
+#  only:
+#    - develop
 
-phpmd_test:
-  stage: test
-  image: jakzal/phpqa:php7.3
-  script:
-    - ./vendor/bin/grumphp run --tasks=phpmd
-  allow_failure: true
-  only:
-    - develop
-
-phpstan_test:
-  stage: test
-  image: jakzal/phpqa:php7.3
-  script:
-    - phpstan
-  allow_failure: true
-  only:
-    - develop
-
-deploy_staging:
+deploy_develop:
   <<: *deploy_job
   stage: deploy
+  variables:
+    HOST: $DEVELOP_HOST
+  only:
+    - develop
+
+deploy_qa:
+  <<: *deploy_job
+  stage: deploy
+  variables:
+    HOST: $QA_HOST
+  only:
+    - /^release/.*$/
+
+deploy_uat:
+  <<: *deploy_job
+  stage: deploy_uat
+  when: manual
+  variables:
+    HOST: $UAT_HOST
+  only:
+    - /^release/.*$/
+
+deploy_migration_env:
+  <<: *deploy_job
+  stage: deploy_uat
+  variables:
+    HOST: $MIGRATION_HOST
+  only:
+    - /^release/.*$/
+
+rollback_trigger_updb_develop:
+  <<: *rollback_trigger_updb
+  variables:
+    HOST: $DEVELOP_HOST
+  only:
+    - develop
+
+rollback_trigger_updb_qa:
+  <<: *rollback_trigger_updb
+  variables:
+    HOST: $QA_HOST
+  only:
+    - /^release/.*$/
+
+rollback_trigger_updb_uat:
+  <<: *rollback_trigger_updb
+  variables:
+    HOST: $UAT_HOST
+  only:
+    - /^release/.*$/
+
+slack_notifier:
+  stage: notify
+  image: curlimages/curl:latest
+  script:
+    - |
+      curl -X POST $SLACK_URL -H 'Content-Type: application/json' -d '{"text": "New deployment running on QA. Environment will be updated in a few minutes..."}'
+  only:
+    - /^release/.*$/
+
+cypress_test_qa:
+  stage: cypress
+  image: cypress/base:10
+  tags:
+    - itr-hrt
+  artifacts:
+    when: always
+    untracked: true
+    expire_in: '2 hour'
+  script:
+    - cd e2e
+    - npm install
+    - npx cypress run
   only:
     - /^release/.*$/

@@ -50,7 +50,7 @@
 <dynamicField name="ts_X3b_und_*" type="text_und" stored="true" indexed="true" multiValued="false" termVectors="true" omitNorms="false" />
 <dynamicField name="ts_*" type="text_und" stored="true" indexed="true" multiValued="false" termVectors="true" omitNorms="false" />
 <dynamicField name="tm_X3b_und_*" type="text_und" stored="true" indexed="true" multiValued="true" termVectors="true" omitNorms="false" />
-<dynamicField name="tm_*" type="text_und" stored="true" indexed="true" multiValued="true" termVectors="true" omitNorms="false" />
+<dynamicField name="tm_*" type="text_lower_case" stored="true" indexed="true" multiValued="true" termVectors="true" omitNorms="false" />
 <dynamicField name="tos_X3b_und_*" type="text_und" stored="true" indexed="true" multiValued="false" termVectors="true" omitNorms="true" />
 <dynamicField name="tos_*" type="text_und" stored="true" indexed="true" multiValued="false" termVectors="true" omitNorms="true" />
 <dynamicField name="tom_X3b_und_*" type="text_und" stored="true" indexed="true" multiValued="true" termVectors="true" omitNorms="true" />

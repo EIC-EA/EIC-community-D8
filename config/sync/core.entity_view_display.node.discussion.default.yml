@@ -7,8 +7,11 @@ dependencies:
     - field.field.node.discussion.field_body
     - field.field.node.discussion.field_comments
     - field.field.node.discussion.field_discussion_type
+    - field.field.node.discussion.field_language
     - field.field.node.discussion.field_related_contributors
     - field.field.node.discussion.field_related_documents
+    - field.field.node.discussion.field_related_downloads
+    - field.field.node.discussion.field_tags
     - field.field.node.discussion.field_vocab_geo
     - field.field.node.discussion.field_vocab_topics
     - node.type.discussion
@@ -23,114 +26,140 @@ targetEntityType: node
 bundle: discussion
 mode: default
 content:
+  content_moderation_control:
+    settings: {  }
+    third_party_settings: {  }
+    weight: -20
+    region: content
   field_body:
-    weight: 101
+    type: text_default
     label: hidden
     settings: {  }
     third_party_settings: {  }
-    type: text_default
+    weight: 7
     region: content
   field_comments:
-    weight: 106
+    type: comment_group_content
     label: hidden
     settings:
       view_mode: default
       pager_id: 0
     third_party_settings: {  }
-    type: comment_group_content
+    weight: 12
     region: content
   field_discussion_type:
-    weight: 102
+    type: list_default
     label: hidden
     settings: {  }
     third_party_settings: {  }
-    type: list_default
+    weight: 8
+    region: content
+  field_language:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 16
     region: content
   field_related_contributors:
     type: entity_reference_revisions_entity_view
-    weight: 107
     label: hidden
     settings:
       view_mode: default
       link: ''
     third_party_settings: {  }
+    weight: 13
     region: content
   field_related_documents:
-    weight: 105
+    type: entity_reference_entity_view
     label: hidden
+    settings:
+      view_mode: teaser
+      link: false
+    third_party_settings: {  }
+    weight: 11
+    region: content
+  field_related_downloads:
+    type: entity_reference_label
+    label: above
     settings:
       link: true
     third_party_settings: {  }
+    weight: 14
+    region: content
+  field_tags:
     type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 15
     region: content
   field_vocab_geo:
-    weight: 104
+    type: entity_reference_label
     label: hidden
     settings:
       link: true
     third_party_settings: {  }
-    type: entity_reference_label
+    weight: 10
     region: content
   field_vocab_topics:
-    weight: 103
+    type: entity_reference_label
     label: hidden
     settings:
       link: true
     third_party_settings: {  }
-    type: entity_reference_label
+    weight: 9
     region: content
   flag_bookmark_content:
-    weight: 10
-    region: content
     settings: {  }
     third_party_settings: {  }
+    weight: 2
+    region: content
   flag_follow_content:
-    weight: 10
-    region: content
     settings: {  }
     third_party_settings: {  }
+    weight: 3
+    region: content
   flag_highlight_content:
-    weight: 10
-    region: content
     settings: {  }
     third_party_settings: {  }
+    weight: 4
+    region: content
   flag_like_content:
-    weight: 10
-    region: content
     settings: {  }
     third_party_settings: {  }
-  flag_recommend:
-    weight: 10
+    weight: 5
     region: content
-    settings: {  }
-    third_party_settings: {  }
   links:
-    weight: 100
-    region: content
     settings: {  }
     third_party_settings: {  }
-  member_content_edit_access:
-    weight: 1
+    weight: 6
     region: content
+  member_content_edit_access:
+    type: boolean
     label: above
     settings:
       format: default
       format_custom_false: ''
       format_custom_true: ''
     third_party_settings: {  }
-    type: boolean
-  private:
-    weight: 1
+    weight: 0
     region: content
+  private:
+    type: boolean
     label: hidden
     settings:
       format: default
       format_custom_false: ''
       format_custom_true: ''
     third_party_settings: {  }
-    type: boolean
+    weight: 1
+    region: content
 hidden:
   extra_field_eic_theme_helper_short_title_with_fallback: true
+  flag_recommend: true
   langcode: true
   published_at: true
   search_api_excerpt: true

@@ -1,6 +1,13 @@
 .ecl-link {
   $node: &;
 
+  &--icon:focus, &--icon:hover {
+    text-decoration: none;
+    #{$node}__label {
+      text-decoration: underline;
+    }
+  }
+
   &--guest {
     color: ecl-typography('color', 'meta');
   }
@@ -18,6 +25,11 @@
 
     display: inline-flex;
     text-decoration: none;
+
+    &--big {
+      padding-left:map-get($ecl-spacing, '2xl') ;
+      padding-right:map-get($ecl-spacing, '2xl') ;
+    }
   }
 
   body #{$node}--button#{$node}--icon:not(#{$node}--standalone) &__label {
@@ -26,9 +38,21 @@
 
   body &--button-primary {
     @extend .ecl-button--primary;
+    border: 2px solid $ecl-color-blue;
 
     &:hover,
     &:focus {
+      color: map-get($ecl-colors, 'white');
+    }
+  }
+
+  body &--button-secondary {
+    @extend .ecl-button--secondary;
+
+    &:hover,
+    &:focus {
+      border: 2px solid $ecl-color-blue;
+      background-color: map-get($ecl-colors, 'blue');
       color: map-get($ecl-colors, 'white');
     }
   }
@@ -39,6 +63,10 @@
 
   body &--button-ghost {
     @extend .ecl-button--ghost;
+
+    &:focus {
+      outline: none;
+    }
   }
 
   body &--action {
@@ -60,11 +88,18 @@
 
   body &--button-secondary {
     @extend .ecl-button--secondary;
+    padding: .75rem 1rem;
   }
 
   &--icon {
     display: inline-flex;
     align-items: center;
+  }
+
+  &--svg svg {
+    height: 1em;
+    width: 1em;
+    margin-right: 8px;
   }
 
   &__icon {

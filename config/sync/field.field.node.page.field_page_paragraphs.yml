@@ -26,7 +26,6 @@ default_value_callback: ''
 settings:
   handler: 'default:paragraph'
   handler_settings:
-    negate: 0
     target_bundles:
       banner: banner
       full_media_content: full_media_content
@@ -34,10 +33,11 @@ settings:
       full_text_content: full_text_content
       text_and_media_content: text_and_media_content
       tiles_content: tiles_content
+    negate: 0
     target_bundles_drag_drop:
       banner:
-        enabled: true
         weight: -13
+        enabled: true
       contributor:
         weight: -12
         enabled: false
@@ -45,21 +45,21 @@ settings:
         weight: 12
         enabled: false
       full_media_content:
-        enabled: true
         weight: -11
+        enabled: true
       full_text_content:
-        enabled: true
         weight: -9
+        enabled: true
       latest_news_and_stories:
-        enabled: true
         weight: 15
+        enabled: true
       quote:
-        enabled: true
         weight: -10
+        enabled: true
       text_and_media_content:
-        enabled: true
         weight: -8
-      tiles_content:
         enabled: true
+      tiles_content:
         weight: -7
+        enabled: true
 field_type: entity_reference_revisions

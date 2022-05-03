@@ -39,7 +39,7 @@ interface StatisticsStorageInterface {
    * @param string $bundle
    *   The entity bundle.
    *
-   * @return string
+   * @return array|int
    *   Number of entities.
    */
   public function countTotalEntities($entity_type, $bundle = NULL);

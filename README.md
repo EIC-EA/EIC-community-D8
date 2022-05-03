@@ -71,44 +71,4 @@ If you get such error messages reinitialize GrumPHP paths on your host machine
 ./vendor/bin/grumphp git:deinit
 ./vendor/bin/grumphp git:init
 ```
-## Deploy STAG site on Blue4you hosting (https://eic-d8.stg.blue4you.be)
 
-TLDR; Command:
-
-```shell
-sh scripts/deploy.sh [BRANCH|-g] [-b] [-i] [-m PASSWORD]
-```
-
-### Deploy steps
-
-#### Step 1: Backup database (and drop database for re-install)
-
-Backup the database and drop all tables. Keep the empty database for the new installation.
-
-#### Step 2: Open a virtual terminal session with `screen` (optional, but highly recommended)
-
-Screen or GNU Screen is a terminal multiplexer. In other words, it means that you can start a screen session and then
-open any number of windows (virtual terminals) inside that session. Processes running in Screen will continue to run
-when their window is not visible even if you get disconnected.
-
-Open a **new virtual terminal session**. (change the git branch in the name to make it easily identifiable)
-
-```shell
-screen -S deploy-update-GIT_BRANCH
-```
-
-If you want to check the progress of the script after closing your terminal, you can **resume the virtual terminal
-session**.
-
-```shell
-screen -R deploy-install-GIT_BRANCH
-```
-
-#### Step 3: Run deploy script
-
-SSH into the staging server, go to the projects root directory `/home/blue4you/websites/eic-d8.stg.blue4you.be/www` and
-execute the deploy script.
-
-```shell
-sh scripts/deploy.sh [BRANCH|-g] [-b] [-i] [-m PASSWORD]
-```

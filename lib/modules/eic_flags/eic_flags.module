@@ -12,13 +12,13 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Session\AccountInterface;
-use Drupal\eic_flags\Form\RequestCloseForm;
 use Drupal\eic_flags\Form\NewRequestForm;
-use Drupal\eic_flags\Hooks\EntityAccess;
+use Drupal\eic_flags\Form\RequestCancelForm;
+use Drupal\eic_flags\Form\RequestCloseForm;
+use Drupal\eic_flags\Hooks\CronOperations;
 use Drupal\eic_flags\Hooks\EntityOperations;
 use Drupal\eic_flags\Hooks\FlagTokens;
 use Drupal\eic_flags\RequestStatus;
-use Drupal\eic_flags\RequestTypes;
 use Drupal\eic_flags\Routing\EntityRequestRouteProvider;
 use Drupal\eic_flags\Service\HandlerInterface;
 
@@ -34,6 +34,7 @@ function eic_flags_theme() {
         'action' => 'flag',
         'flag' => NULL,
         'flaggable' => NULL,
+        'showAsButton' => FALSE,
       ],
     ],
     'eic_flag_count_text' => [
@@ -83,10 +84,13 @@ function eic_flags_cron() {
     $row = (array) $row;
     $queue->createItem($row);
   }
+
+  $class = \Drupal::classResolver(CronOperations::class);
+  $class->processRequestTimeouts();
 }
 
 /**
- * Returns an array of allowed values for field 'field_request_status'
+ * Returns an array of allowed values for field 'field_request_status'.
  */
 function eic_flags_field_request_status_allowed_values() {
   return [
@@ -103,11 +107,21 @@ function eic_flags_field_request_status_allowed_values() {
  * @var \Drupal\Core\Entity\EntityTypeInterface[] $entity_types
  */
 function eic_flags_entity_type_build(array &$entity_types) {
-  /** @var \Drupal\eic_flags\Service\HandlerInterface $delete_request_handler */
-  $delete_request_handler = \Drupal::service('eic_flags.handler_collector')
-    ->getHandlerByType(RequestTypes::DELETE);
+  /** @var \Drupal\eic_flags\Service\HandlerInterface[] $request_handlers */
+  $request_handlers = \Drupal::service('eic_flags.handler_collector')
+    ->getHandlers();
 
-  $supported_entities = array_keys($delete_request_handler->getSupportedEntityTypes());
+  $supported_entities = [];
+  // Gets all supported entities from all request handlers.
+  foreach ($request_handlers as $request_handler) {
+    $supported_entities = array_unique(
+      array_merge(
+        $supported_entities,
+        array_keys($request_handler->getSupportedEntityTypes())
+      )
+    );
+  }
+
   foreach ($supported_entities as $entity_id) {
     if (!isset($entity_types[$entity_id])) {
       continue;
@@ -120,15 +134,44 @@ function eic_flags_entity_type_build(array &$entity_types) {
 
     $entity_type->setFormClass('new-request', NewRequestForm::class)
       ->setFormClass('close-request', RequestCloseForm::class)
+      ->setFormClass('cancel-request', RequestCancelForm::class)
       ->setHandlerClass('route_provider', $route_providers)
       ->setLinkTemplate(
         'new-request',
-        '/request/{request_type}/' . $entity_id . '/{' . $entity_id . '}'
+        "/$entity_id" . '/{' . $entity_id . '}' . '/request/{request_type}'
+      )
+      ->setLinkTemplate(
+        'new-request-api',
+        '/api/request/{request_type}/' . $entity_id . '/{' . $entity_id . '}'
       )
       ->setLinkTemplate(
         'close-request',
         '/admin/community/' . $entity_id . '/{' . $entity_id . '}/request/{request_type}/close'
+      )
+      ->setLinkTemplate(
+        'user-close-request',
+        "/$entity_id" . '/{' . $entity_id . '}' . '/request/{request_type}/close'
+      )
+      ->setLinkTemplate(
+        'user-cancel-request',
+        "/$entity_id" . '/{' . $entity_id . '}' . '/request/{request_type}/cancel'
       );
+
+    // Support for group content entities. We add the group url as a prefix.
+    if ($entity_id === 'group_content') {
+      $entity_type->setLinkTemplate(
+        'new-request',
+        "/group/{group}/content" . '/{' . $entity_id . '}' . '/request/{request_type}'
+      );
+      $entity_type->setLinkTemplate(
+        'user-close-request',
+        "/group/{group}/content" . '/{' . $entity_id . '}' . '/request/{request_type}/close'
+      );
+      $entity_type->setLinkTemplate(
+        'user-cancel-request',
+        "/group/{group}/content" . '/{' . $entity_id . '}' . '/request/{request_type}/cancel'
+      );
+    }
   }
 }
 
@@ -162,7 +205,7 @@ function eic_flags_entity_operation(EntityInterface $entity) {
     return [];
   }
 
-  /** @var EntityOperations $class */
+  /** @var \Drupal\eic_flags\Hooks\EntityOperations $class */
   $class = Drupal::classResolver(EntityOperations::class);
   return $class->getOperations($entity);
 }
@@ -213,16 +256,44 @@ function eic_flags_entity_access(
   $operation,
   AccountInterface $account
 ) {
-  if (!in_array($operation, ['request-delete', 'request-archive'])) {
+  if (!in_array(
+    $operation,
+    [
+      'request-delete',
+      'request-archive',
+      'request-transfer_ownership',
+      'close_request-transfer_ownership',
+      'cancel_request-transfer_ownership',
+    ])
+  ) {
     return AccessResult::neutral();
   }
 
-  $type = explode('-', $operation)[1];
+  $operation_type = explode('-', $operation);
+  $request_status = $operation_type[0];
+  $type = $operation_type[1];
   /** @var \Drupal\eic_flags\Service\HandlerInterface $handler */
   $handler = \Drupal::service('eic_flags.handler_collector')
     ->getHandlerByType($type);
 
-  return $handler->canRequest($account, $entity);
+  switch ($request_status) {
+    case 'close_request':
+      return $handler->canCloseRequest($account, $entity);
+
+    case 'cancel_request':
+      return $handler->canCancelRequest($account, $entity);
+
+    default:
+      return $handler->canRequest($account, $entity);
+
+  }
+}
+
+/**
+ * Implements hook_flag_type_info_alter().
+ */
+function eic_flags_flag_type_info_alter(array &$definitions) {
+  $definitions['entity:node']['class'] = 'Drupal\eic_flags\Plugin\Flag\EntityFlagType';
 }
 
 /**
@@ -231,4 +302,41 @@ function eic_flags_entity_access(
 function eic_flags_entity_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
   \Drupal::classResolver(EntityOperations::class)
     ->entityView($build, $entity, $display, $view_mode);
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_view_alter().
+ */
+function eic_flags_node_view_alter(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display) {
+  \Drupal::classResolver(EntityOperations::class)
+    ->nodeViewAlter($build, $entity, $display);
+}
+
+/**
+ * Implements hook_entity_insert().
+ */
+function eic_flags_entity_insert(EntityInterface $entity) {
+  switch ($entity->getEntityTypeId()) {
+    case 'comment':
+    case 'group_content':
+    case 'node':
+    case 'profile':
+      \Drupal::classResolver(EntityOperations::class)
+        ->entityInsert($entity);
+      break;
+
+  }
+}
+
+/**
+ * Implements hook_entity_update().
+ */
+function eic_flags_entity_update(EntityInterface $entity) {
+  switch ($entity->getEntityTypeId()) {
+    case 'profile':
+      \Drupal::classResolver(EntityOperations::class)
+        ->entityUpdate($entity);
+      break;
+
+  }
 }

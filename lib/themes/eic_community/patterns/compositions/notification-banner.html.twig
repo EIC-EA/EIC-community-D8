@@ -1,0 +1,31 @@
+{% set title_element = title_element|default('h3') %}
+
+<div class="ecl-notification-banner {{ extra_classes }}">
+  {% if icon and icon_file_path %}
+    {% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with {
+      icon: icon|merge({
+        path: icon_file_path,
+        size: 'm',
+      }),
+      extra_classes: 'ecl-notification-banner__icon',
+    } only %}
+  {% endif %}
+
+  {% if title is not empty %}
+  <{{ title_element }}>
+    {{ title }}
+  </{{ title_element }}>
+  {% endif %}
+
+  {% if messages %}
+    <div class="ecl-notification-banner__messages">
+      {% for message in messages %}
+        <div class="ecl-notification-banner__message">
+          {{ message }}
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+
+</div>

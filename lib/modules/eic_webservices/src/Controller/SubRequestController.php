@@ -18,7 +18,7 @@ class SubRequestController extends ControllerBase implements ContainerInjectionI
   /**
    * Symfony\Component\HttpKernel\HttpKernelInterface definition.
    *
-   * @var Symfony\Component\HttpKernel\HttpKernelInterface
+   * @var \Symfony\Component\HttpKernel\HttpKernelInterface
    */
   protected $httpKernel;
 
@@ -50,18 +50,34 @@ class SubRequestController extends ControllerBase implements ContainerInjectionI
    *   The request cookies ($_COOKIE).
    * @param array $files
    *   The request files ($_FILES).
-   * @param string|resource|null $content
+   * @param string|null $content
    *   The raw body data.
    * @param array $headers
    *   Additional headers to use in the request.
    *
-   * @return string
-   *   The response String.
+   * @return \Symfony\Component\HttpFoundation\Response
+   *   The response object.
    *
    * @throws \Exception
    */
-  public function subRequest($path, $method = Request::METHOD_GET, array $parameters = [], array $cookies = [], array $files = [], $content = NULL, array $headers = []) {
-    $sub_request = Request::create($path, $method, $parameters, $cookies = [], $files = [], $server = [], $content);
+  public function subRequest(
+    string $path,
+    string $method = Request::METHOD_GET,
+    array $parameters = [],
+    array $cookies = [],
+    array $files = [],
+    string $content = NULL,
+    array $headers = []
+  ) {
+    $sub_request = Request::create(
+      $path,
+      $method,
+      $parameters,
+      $cookies,
+      $files,
+      [],
+      $content
+    );
 
     // Set headers if any.
     if (!empty($headers)) {
@@ -72,9 +88,7 @@ class SubRequestController extends ControllerBase implements ContainerInjectionI
 
     $sub_request->setSession($this->requestStack->getCurrentRequest()->getSession());
 
-    $response = $this->httpKernel->handle($sub_request, HttpKernelInterface::SUB_REQUEST, FALSE);
-
-    return $response;
+    return $this->httpKernel->handle($sub_request, HttpKernelInterface::SUB_REQUEST, FALSE);
   }
 
 }

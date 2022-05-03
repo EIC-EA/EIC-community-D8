@@ -11,6 +11,10 @@
 
   &__wrapper {
     display: flex;
+    @include ecl-media-breakpoint-down('md') {
+      flex-direction: row-reverse;
+      justify-content: space-between;
+    }
   }
 
   &__label {
@@ -31,7 +35,6 @@
   }
 
   &__aside {
-    display: none;
     flex-shrink: 0;
     margin: auto 0;
 
@@ -42,6 +45,7 @@
 
   .ecl-menu__link {
     @include ecl-responsive-font('label');
+    text-transform: capitalize;
   }
 
   &__searchform {
@@ -76,6 +80,7 @@
       border-bottom-left-radius: map-get($ecl-spacing, '2xs');
       @include ecl-responsive-font('label');
       padding: map-get($ecl-spacing, 'xs');
+      min-width: 185px;
 
       @include placeholder-color(map-get($ecl-colors, 'blue-25'));
     }
@@ -107,6 +112,16 @@
     display: inline-flex;
     float: none;
     margin-top: 0;
+  }
+
+  .ecl-menu__close {
+    border: none;
+
+    & .ecl-button__label {
+      opacity: 0;
+      position: absolute;
+      pointer-events: none;
+    }
   }
 
   .ecl-menu__container {

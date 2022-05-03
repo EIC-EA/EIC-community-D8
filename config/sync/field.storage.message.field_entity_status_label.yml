@@ -1,0 +1,21 @@
+uuid: 812fd060-ebd8-4583-b94f-9d50038e970b
+langcode: en
+status: true
+dependencies:
+  module:
+    - message
+id: message.field_entity_status_label
+field_name: field_entity_status_label
+entity_type: message
+type: string
+settings:
+  max_length: 255
+  case_sensitive: false
+  is_ascii: false
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

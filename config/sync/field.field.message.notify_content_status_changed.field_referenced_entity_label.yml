@@ -1,0 +1,19 @@
+uuid: fe3e8d03-3310-4b57-bc64-b46f979e1a6c
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.message.field_referenced_entity_label
+    - message.template.notify_content_status_changed
+id: message.notify_content_status_changed.field_referenced_entity_label
+field_name: field_referenced_entity_label
+entity_type: message
+bundle: notify_content_status_changed
+label: 'Entity Label'
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

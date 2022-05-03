@@ -1,0 +1,15 @@
+uuid: f398d407-daf4-4e29-8f79-62fdfa2ff2f7
+langcode: en
+status: true
+dependencies:
+  config:
+    - flag.flag.transfer_owner_request_group
+  module:
+    - flag
+id: flag_action.transfer_owner_request_group_unflag
+label: 'Unflag this item'
+type: group_content
+plugin: 'flag_action:transfer_owner_request_group_unflag'
+configuration:
+  flag_id: transfer_owner_request_group
+  flag_action: unflag

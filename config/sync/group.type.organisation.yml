@@ -1,0 +1,23 @@
+uuid: dbad105b-9771-40e2-be19-8ed18841ac7d
+langcode: en
+status: true
+dependencies:
+  module:
+    - group_flex
+third_party_settings:
+  group_flex:
+    group_flex_enabler: false
+    group_type_visibility: public
+    group_type_joining_method:
+      tu_open_method: '0'
+      tu_group_membership_request: '0'
+      group_invitation: '0'
+    group_type_joining_method_override: false
+id: organisation
+label: Organisation
+description: ''
+new_revision: true
+creator_membership: true
+creator_wizard: false
+creator_roles:
+  - organisation-owner

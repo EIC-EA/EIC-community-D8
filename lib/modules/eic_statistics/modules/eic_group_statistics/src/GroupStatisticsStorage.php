@@ -4,6 +4,7 @@ namespace Drupal\eic_group_statistics;
 
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Database\Connection;
+use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\group\Entity\GroupInterface;
 
 /**
@@ -19,13 +20,26 @@ class GroupStatisticsStorage implements GroupStatisticsStorageInterface {
   protected $connection;
 
   /**
+   * The entity field manager.
+   *
+   * @var \Drupal\Core\Entity\EntityFieldManagerInterface
+   */
+  protected $entityFieldManager;
+
+  /**
    * Constructs a new GroupStatisticsStorage object.
    *
-   * @return \Drupal\Core\Database\Connection
+   * @param \Drupal\Core\Database\Connection $connection
    *   The current active database's master connection.
+   * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager
+   *   The entity field manager.
    */
-  public function __construct(Connection $connection) {
+  public function __construct(
+    Connection $connection,
+    EntityFieldManagerInterface $entity_field_manager
+  ) {
     $this->connection = $connection;
+    $this->entityFieldManager = $entity_field_manager;
   }
 
   /**
@@ -107,7 +121,7 @@ class GroupStatisticsStorage implements GroupStatisticsStorageInterface {
       ->execute()->fetchAssoc();
 
     if (empty($result)) {
-      return new GroupStatistics($result['gid']);
+      return new GroupStatistics($group->id());
     }
 
     return new GroupStatistics(
@@ -225,56 +239,166 @@ class GroupStatisticsStorage implements GroupStatisticsStorageInterface {
     // Initialize array of media target ids that will be used to count the
     // number of files in group.
     $media_target_ids = [];
-    // Array of media fields per group content where we want to count file
-    // statistics. Keyed by group content bundle.
+    // Array of group content to count file statistics.
     $files_group_content_types = [
-      "{$group->bundle()}-group_node-discussion" => [
-        'field_related_documents',
-      ],
-      "{$group->bundle()}-group_node-document" => [
-        'field_document_media',
-      ],
-      "{$group->bundle()}-group_node-gallery" => [
-        'field_photos',
-      ],
-      "{$group->bundle()}-group_node-wiki_page" => [
-        'field_related_downloads',
-      ],
+      'discussion',
+      'document',
+      'gallery',
+      'wiki_page',
     ];
+    // Get array of fields that will be used to count the group file
+    // statistics.
+    $file_statistic_fields = self::getGroupFileStatisticFields();
+
     // We want to count the number of files for each group content that
     // contains media files. Note that we take into account multiple media
-    // reference fields.
-    foreach ($files_group_content_types as $ctype => $fields) {
-      foreach ($fields as $field_name) {
-        // Query to count number of files per group content + media fields.
-        $query_files = $this->connection->select('group_content_field_data', 'gc_fd')
-          ->fields('n_field', ["{$field_name}_target_id"])
-          ->condition('gc_fd.gid', $group->id())
-          ->condition('gc_fd.type', $ctype, 'IN');
+    // reference fields and also paragraph fields that contain media.
+    foreach ($files_group_content_types as $node_type) {
+      // Get all field definitions of the node type.
+      $field_definitions = $this->entityFieldManager->getFieldDefinitions('node', $node_type);
 
-        // We discard medias that already been counted.
-        if (!empty($media_target_ids)) {
-          $query_files->condition("n_field.{$field_name}_target_id", $media_target_ids, 'NOT IN');
+      foreach ($file_statistic_fields as $field_name_key => $field_name) {
+
+        // Field doesn't exist in this node type, so we can skip it.
+        if (!isset($field_definitions[$field_name_key])) {
+          continue;
         }
 
-        $query_files->join("node__{$field_name}", 'n_field', 'gc_fd.entity_id = n_field.entity_id');
-        $query_files->join("node_field_data", 'n_fd', 'gc_fd.entity_id = n_fd.nid');
-        // We calculate statistics only for published nodes.
-        $query_files->condition('n_fd.status', TRUE);
-        $query_files->groupBy("n_field.{$field_name}_target_id");
-        $target_ids = $query_files->execute()->fetchAll();
-
-        // We save the media target ids returned by the query so we skip those
-        // in the next queries.
-        if (!empty($target_ids)) {
-          foreach ($target_ids as $target_id) {
-            $field_name_target_id = "{$field_name}_target_id";
-            $media_target_ids[] = $target_id->$field_name_target_id;
-          }
+        // If the current value of $field_name is an array of media fields, we
+        // assume this field as an entity reference field and so we count the
+        // file statistics on the entity reference level. Currently it works
+        // only with paragraph fields.
+        if (is_array($field_name)) {
+          $media_target_ids = $this->calculateEntityReferenceFieldFileStatistics($group, $node_type, $field_name_key, $field_name, $media_target_ids);
+          continue;
         }
+
+        // The field is a media reference field so we count the file statistics
+        // for the media.
+        $media_target_ids = $this->calculateMediaReferenceFieldFileStatistics($group, $node_type, $field_name, $media_target_ids);
       }
     }
     return count($media_target_ids);
+  }
+
+  /**
+   * Calculates files statistics for a given media reference field.
+   *
+   * @param \Drupal\group\Entity\GroupInterface $group
+   *   The Group entity.
+   * @param string $node_type
+   *   The node bundle name.
+   * @param string $field_name
+   *   The media reference field name.
+   * @param array $media_target_ids
+   *   The array of media entity IDs that was already calculated.
+   *
+   * @return array
+   *   The updated array of media entity IDs.
+   */
+  private function calculateMediaReferenceFieldFileStatistics(GroupInterface $group, $node_type, $field_name, array $media_target_ids) {
+    $group_content_type = "{$group->bundle()}-group_node-{$node_type}";
+
+    // Query to count number of files per group content + media fields.
+    $query_files = $this->connection->select('group_content_field_data', 'gc_fd')
+      ->fields('n_field', ["{$field_name}_target_id"])
+      ->condition('gc_fd.gid', $group->id())
+      ->condition('gc_fd.type', $group_content_type, 'IN');
+
+    // We discard medias that already been counted.
+    if (!empty($media_target_ids)) {
+      $query_files->condition("n_field.{$field_name}_target_id", $media_target_ids, 'NOT IN');
+    }
+
+    $query_files->join("node__{$field_name}", 'n_field', 'gc_fd.entity_id = n_field.entity_id');
+    $query_files->join("node_field_data", 'n_fd', 'gc_fd.entity_id = n_fd.nid');
+    // We calculate statistics only for published nodes.
+    $query_files->condition('n_fd.status', TRUE);
+    $query_files->groupBy("n_field.{$field_name}_target_id");
+    $target_ids = $query_files->execute()->fetchAll();
+
+    // We update the array of media target IDs with IDs by the query so that
+    // we can skip those in future queries.
+    if (!empty($target_ids)) {
+      foreach ($target_ids as $target_id) {
+        $field_name_target_id = "{$field_name}_target_id";
+        $media_target_ids[] = $target_id->$field_name_target_id;
+      }
+    }
+    return $media_target_ids;
+  }
+
+  /**
+   * Calculates files statistics for a given entity reference field.
+   *
+   * @param \Drupal\group\Entity\GroupInterface $group
+   *   The Group entity.
+   * @param string $node_type
+   *   The node bundle name.
+   * @param string $reference_field_name
+   *   The entity reference field name.
+   * @param array $fields
+   *   The entity reference fields containing the media field names.
+   * @param array $media_target_ids
+   *   The array of media entity IDs that was already calculated.
+   *
+   * @return array
+   *   The updated array of media entity IDs.
+   */
+  private function calculateEntityReferenceFieldFileStatistics(GroupInterface $group, $node_type, $reference_field_name, array $fields, array $media_target_ids) {
+    $group_content_type = "{$group->bundle()}-group_node-{$node_type}";
+
+    $field_definitions = $this->entityFieldManager->getFieldDefinitions('node', $node_type);
+
+    if (!isset($field_definitions[$reference_field_name])) {
+      return $media_target_ids;
+    }
+
+    // @todo We currently support only paragraph entities. We need to improve
+    // it in order to support all entity types.
+    if (
+      $field_definitions[$reference_field_name]->getType() !== 'entity_reference_revisions'
+    ) {
+      return $media_target_ids;
+    }
+
+    foreach ($fields as $field_name) {
+      // Query to count number of files per group content + media fields.
+      $query_files = $this->connection->select('group_content_field_data', 'gc_fd')
+        ->fields('p_field', ["{$field_name}_target_id"])
+        ->condition('gc_fd.gid', $group->id())
+        ->condition('gc_fd.type', $group_content_type, 'IN');
+
+      // Joins reference field table of the group content node.
+      $query_files->join("node__{$reference_field_name}", 'n_field', 'gc_fd.entity_id = n_field.entity_id');
+      $query_files->join("node_field_data", 'n_fd', 'gc_fd.entity_id = n_fd.nid');
+
+      // Joins the paragraph field table.
+      $query_files->join("paragraphs_item_field_data", 'p_fd', 'p_fd.parent_id = n_fd.nid');
+      $query_files->join("paragraph__{$field_name}", 'p_field', 'p_field.entity_id = p_fd.id');
+
+      // We discard medias that already been counted.
+      if (!empty($media_target_ids)) {
+        $query_files->condition("p_field.{$field_name}_target_id", $media_target_ids, 'NOT IN');
+      }
+
+      // We calculate statistics only for published nodes.
+      $query_files->condition('n_fd.status', TRUE);
+      // We group results by media target ID.
+      $query_files->groupBy("p_field.{$field_name}_target_id");
+      $target_ids = $query_files->execute()->fetchAll();
+
+      // We update the array of media target IDs with IDs by the query so that
+      // we can skip those in future queries.
+      if (!empty($target_ids)) {
+        foreach ($target_ids as $target_id) {
+          $field_name_target_id = "{$field_name}_target_id";
+          $media_target_ids[] = $target_id->$field_name_target_id;
+        }
+      }
+    }
+
+    return $media_target_ids;
   }
 
   /**
@@ -289,6 +413,26 @@ class GroupStatisticsStorage implements GroupStatisticsStorageInterface {
   private function calculateGroupEventsStatistics(GroupInterface $group) {
     // @todo Implement logic once we have the group type Event available.
     return 0;
+  }
+
+  /**
+   * Gets the list of fields used to calculate group file statistics.
+   *
+   * @return array
+   *   Array of media and entity reference fields.
+   *   - key: field machine name
+   *   - value: field machine name or array of field machine names in case of
+   *   entity reference fields.
+   */
+  public static function getGroupFileStatisticFields() {
+    return [
+      'field_document_media' => 'field_document_media',
+      'field_related_downloads' => 'field_related_downloads',
+      'field_related_documents' => 'field_related_documents',
+      'field_gallery_slides' => [
+        'field_gallery_slide_media',
+      ],
+    ];
   }
 
 }

@@ -26,7 +26,7 @@ interface GroupVisibilityDatabaseStorageInterface {
    * @param array $values
    *   (optional) An array of values to set, keyed by property name.
    *
-   * @return \Drupal\oec_group_flex\GroupVisibilityRecordInterface
+   * @return \Drupal\oec_group_flex\GroupVisibilityRecordInterface|FALSE
    *   A new GroupVisibilityRecord object.
    */
   public function create(array $values = []);

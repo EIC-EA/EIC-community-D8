@@ -2,13 +2,15 @@
 
 namespace Drupal\eic_flags\Service;
 
+use Drupal\comment\CommentInterface;
+use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\eic_flags\RequestStatus;
 use Drupal\eic_flags\RequestTypes;
 use Drupal\flag\FlaggingInterface;
 
 /**
- * Class ArchiveRequestHandler
+ * Service that provides logic to request entity archival.
  *
  * @package Drupal\eic_flags\Service
  */
@@ -43,14 +45,32 @@ class ArchiveRequestHandler extends AbstractRequestHandler {
       $content_entity->set('moderation_state', 'archived');
     }
     else {
-      $content_entity->set('status', FALSE);
+      if ($content_entity instanceof CommentInterface) {
+        $now = DrupalDateTime::createFromTimestamp(time());
+
+        $content_entity->set('comment_body', [
+          'value' => $this->t(
+            'This comment has been archived by a content administrator at @time.',
+            [
+              '@time' => $now->format('d/m/Y - H:i'),
+            ],
+            ['context' => 'eic_flags']
+          ),
+          'format' => 'plain_text',
+        ]);
+        $content_entity->set('field_comment_is_archived', TRUE);
+        $content_entity->save();
+      }
+      else {
+        $content_entity->set('status', FALSE);
+      }
     }
 
     $content_entity->save();
   }
 
   /**
-   * @return string[]
+   * {@inheritdoc}
    */
   public function getSupportedEntityTypes() {
     return [

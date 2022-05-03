@@ -1,0 +1,46 @@
+.ecl-pagination {
+
+  border-top: 0;
+
+  &__list {
+    padding: ecl-layout('gutter') 0;
+    border-top: 2px solid $ecl-color-grey;
+  }
+
+  &__item {
+    cursor: pointer;
+
+    &--current a {
+      color: $ecl-color-black;
+      pointer-events: none;
+      cursor: default;
+    }
+
+    &--page--constant {
+      display: flex;
+    }
+
+    button {
+      border: none;
+      background: transparent;
+      color: #004494;
+
+      &:hover {
+        text-decoration: underline;
+      }
+
+      & svg:only-child {
+        margin: 0 $ecl-spacing-2-xs;
+      }
+
+      &[disabled] {
+        opacity: .5;
+        cursor: text;
+        &:hover {
+          text-decoration: none;
+        }
+      }
+    }
+  }
+
+}

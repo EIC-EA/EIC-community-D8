@@ -69,8 +69,7 @@ class EICFlagNotifyQueueWorker extends QueueWorkerBase implements ContainerFacto
         // Save the message and create the message notify queue item.
         $message->save();
         $this->notifyQueue->createItem(['mid' => $message->id()]);
-      }
-      catch (\Exception $e) {
+      } catch (\Exception $e) {
         $logger = $this->getLogger('eic_flags');
         $logger->error($e->getMessage());
       }
@@ -83,16 +82,19 @@ class EICFlagNotifyQueueWorker extends QueueWorkerBase implements ContainerFacto
    * @param array $data
    *   Data needed for processing.
    *
-   * @return Message
+   * @return \Drupal\message\MessageInterface
    *   The message to be added.
    */
   private function processContentItem(array $data) {
-    $node = $this->entityTypeManager->getStorage('node')->load($data['entity_id']);
+    $node = $this->entityTypeManager->getStorage('node')->load(
+      $data['entity_id']
+    );
     $message = Message::create([
       'template' => 'like_content',
       'uid' => $node->getOwnerId(),
     ]);
     $message->set('field_referenced_node', $node);
+
     return $message;
   }
 
@@ -102,16 +104,19 @@ class EICFlagNotifyQueueWorker extends QueueWorkerBase implements ContainerFacto
    * @param array $data
    *   Data needed for processing.
    *
-   * @return Message
+   * @return \Drupal\message\MessageInterface
    *   The message to be added.
    */
   private function processMediaItem(array $data) {
-    $media = $this->entityTypeManager->getStorage('media')->load($data['entity_id']);
+    $media = $this->entityTypeManager->getStorage('media')->load(
+      $data['entity_id']
+    );
     $message = Message::create([
       'template' => 'like_media',
       'uid' => $media->getOwnerId(),
     ]);
     $message->set('field_referenced_media', $media);
+
     return $message;
   }
 
@@ -121,24 +126,34 @@ class EICFlagNotifyQueueWorker extends QueueWorkerBase implements ContainerFacto
    * @param array $data
    *   Data needed for processing.
    *
-   * @return Message
+   * @return \Drupal\message\MessageInterface
    *   The message to be added.
    */
   private function processCommentItem(array $data) {
-    $comment = $this->entityTypeManager->getStorage('comment')->load($data['entity_id']);
-    $node = $this->entityTypeManager->getStorage('node')->load($comment->getCommentedEntityId());
+    $comment = $this->entityTypeManager->getStorage('comment')->load(
+      $data['entity_id']
+    );
+    $node = $this->entityTypeManager->getStorage('node')->load(
+      $comment->getCommentedEntityId()
+    );
     $message = Message::create([
       'template' => 'like_comment',
       'uid' => $node->getOwnerId(),
     ]);
     $message->set('field_referenced_node', $node);
+
     return $message;
   }
 
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+  public static function create(
+    ContainerInterface $container,
+    array $configuration,
+    $plugin_id,
+    $plugin_definition
+  ) {
     /** @var \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager */
     $entityTypeManager = $container->get('entity_type.manager');
     /** @var \Drupal\Core\Logger\LoggerChannelInterface $logger */

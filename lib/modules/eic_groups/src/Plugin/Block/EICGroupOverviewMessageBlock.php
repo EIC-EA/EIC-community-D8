@@ -28,33 +28,45 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class EICGroupOverviewMessageBlock extends BlockBase implements ContainerFactoryPluginInterface {
 
   /**
+   * The current user account.
+   *
    * @var \Drupal\Core\Session\AccountProxyInterface
    */
   private $account;
 
   /**
+   * The content moderation information service.
+   *
    * @var \Drupal\content_moderation\ModerationInformationInterface
    */
   private $moderationInformation;
 
   /**
+   * The EIC group helper service.
+   *
    * @var \Drupal\eic_groups\EICGroupsHelper
    */
   private $groupHelper;
 
   /**
-   * EICGroupOverviewMessageBlock constructor.
+   * Constructs a new EICGroupOverviewMessageBlock object.
    *
    * @param array $configuration
-   * @param $plugin_id
-   * @param $plugin_definition
+   *   A configuration array containing information about the plugin instance.
+   * @param string $plugin_id
+   *   The plugin_id for the plugin instance.
+   * @param mixed $plugin_definition
+   *   The plugin implementation definition.
    * @param \Drupal\content_moderation\ModerationInformationInterface $moderation_information
+   *   The content moderation information service.
    * @param \Drupal\Core\Session\AccountProxyInterface $account
+   *   The current user account.
    * @param \Drupal\eic_groups\EICGroupsHelper $group_helper
+   *   The EIC group helper service.
    */
   public function __construct(
     array $configuration,
-    $plugin_id,
+    string $plugin_id,
     $plugin_definition,
     ModerationInformationInterface $moderation_information,
     AccountProxyInterface $account,
@@ -110,7 +122,7 @@ class EICGroupOverviewMessageBlock extends BlockBase implements ContainerFactory
       ? array_keys($group_membership->getRoles())
       : [];
 
-    // This block is only shown to group admins.
+    // This block is only shown to group owners.
     if (empty(array_intersect($user_group_roles, $required_roles))) {
       return $build;
     }
@@ -147,6 +159,7 @@ class EICGroupOverviewMessageBlock extends BlockBase implements ContainerFactory
             EICGroupsHelper::GROUP_MEMBER_ROLE,
           ])),
           '#actions' => $content_operations,
+          '#help_link' => Url::fromRoute('contact.site_page')->toString(),
         ];
       }
     }

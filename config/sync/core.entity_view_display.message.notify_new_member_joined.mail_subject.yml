@@ -1,0 +1,28 @@
+uuid: 0260b2c3-20d2-442a-908c-b5eb9bd902eb
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.message.mail_subject
+    - field.field.message.notify_new_member_joined.field_group_membership
+    - field.field.message.notify_new_member_joined.field_group_ref
+    - field.field.message.notify_new_member_joined.field_related_organisation
+    - field.field.message.notify_new_member_joined.field_related_user
+    - message.template.notify_new_member_joined
+id: message.notify_new_member_joined.mail_subject
+targetEntityType: message
+bundle: notify_new_member_joined
+mode: mail_subject
+content:
+  partial_0:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  field_group_membership: true
+  field_group_ref: true
+  field_related_organisation: true
+  field_related_user: true
+  partial_1: true
+  search_api_excerpt: true
