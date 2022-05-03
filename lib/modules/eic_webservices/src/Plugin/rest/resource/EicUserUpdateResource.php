@@ -4,15 +4,11 @@ namespace Drupal\eic_webservices\Plugin\rest\resource;
 
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Logger\LoggerChannelInterface;
 use Drupal\eic_webservices\Controller\SubRequestController;
 use Drupal\rest\ModifiedResourceResponse;
 use Drupal\rest\Plugin\ResourceBase;
-use Drupal\rest\Plugin\Type\ResourcePluginManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpKernel\HttpKernel;
 
 /**
  * Provides a resource to update users through a POST method.
@@ -52,41 +48,18 @@ class EicUserUpdateResource extends ResourceBase {
   protected $resourcePluginManager;
 
   /**
-   * Constructs a Drupal\rest\Plugin\ResourceBase object.
+   * The EIC Webservices helper class.
    *
-   * @param array $configuration
-   *   A configuration array containing information about the plugin instance.
-   * @param string $plugin_id
-   *   The plugin_id for the plugin instance.
-   * @param mixed $plugin_definition
-   *   The plugin implementation definition.
-   * @param array $serializer_formats
-   *   The available serialization formats.
-   * @param \Drupal\Core\Logger\LoggerChannelInterface $logger
-   *   A logger instance.
-   * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
-   *   The request stack.
-   * @param \Symfony\Component\HttpKernel\HttpKernel $httpKernel
-   *   The HTTP kernel.
-   * @param \Drupal\rest\Plugin\Type\ResourcePluginManager $resourcePluginManager
-   *   The REST resource plugin manager.
+   * @var \Drupal\eic_webservices\Utility\EicWsHelper
    */
-  public function __construct(
-    array $configuration,
-    $plugin_id,
-    $plugin_definition,
-    array $serializer_formats,
-    LoggerChannelInterface $logger,
-    RequestStack $requestStack,
-    HttpKernel $httpKernel,
-    ResourcePluginManager $resourcePluginManager
-  ) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition, $serializer_formats,
-      $logger);
-    $this->requestStack = $requestStack;
-    $this->httpKernel = $httpKernel;
-    $this->resourcePluginManager = $resourcePluginManager;
-  }
+  protected $wsHelper;
+
+  /**
+   * The CAS user manager.
+   *
+   * @var \Drupal\cas\Service\CasUserManager
+   */
+  protected $casUserManager;
 
   /**
    * {@inheritdoc}
@@ -97,16 +70,13 @@ class EicUserUpdateResource extends ResourceBase {
     $plugin_id,
     $plugin_definition
   ) {
-    return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->getParameter('serializer.formats'),
-      $container->get('logger.factory')->get('rest'),
-      $container->get('request_stack'),
-      $container->get('http_kernel.basic'),
-      $container->get('plugin.manager.rest')
-    );
+    $instance = parent::create($container, $configuration, $plugin_id, $plugin_definition);
+    $instance->requestStack = $container->get('request_stack');
+    $instance->httpKernel = $container->get('http_kernel.basic');
+    $instance->resourcePluginManager = $container->get('plugin.manager.rest');
+    $instance->wsHelper = $container->get('eic_webservices.ws_helper');
+    $instance->casUserManager = $container->get('cas.user_manager');
+    return $instance;
   }
 
   /**
@@ -136,6 +106,17 @@ class EicUserUpdateResource extends ResourceBase {
       $current_request->getContent(),
       $current_request->headers->all()
     );
+
+    // @todo Handle the authmap in case the email address of the user has
+    //   changed.
+    if ($response->getStatusCode() == 200) {
+      // Get the user being updated.
+      /** @var \Drupal\user\UserInterface $account */
+      if ($account = $this->wsHelper->getUserBySmedId($smed_id)) {
+        // Update the authmap with the new email address.
+        $this->casUserManager->setCasUsernameForAccount($account, $account->getEmail());
+      }
+    }
 
     return new ModifiedResourceResponse(Json::decode($response->getContent()), $response->getStatusCode());
   }
