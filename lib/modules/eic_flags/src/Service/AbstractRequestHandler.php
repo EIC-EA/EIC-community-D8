@@ -12,6 +12,7 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
+use Drupal\eic_content\Constants\DefaultContentModerationStates;
 use Drupal\eic_flags\RequestStatus;
 use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_messages\Util\LogMessageTemplates;
@@ -376,7 +377,8 @@ abstract class AbstractRequestHandler implements HandlerInterface {
           ->setRouteParameter('response', RequestStatus::DENIED)
           ->setRouteParameter(
             'destination',
-            $this->currentRequest->getRequestUri()),
+            $this->currentRequest->getRequestUri()
+          ),
       ],
       'accept_request' => [
         'title' => $this->t('Accept'),
@@ -385,7 +387,8 @@ abstract class AbstractRequestHandler implements HandlerInterface {
           ->setRouteParameter('response', RequestStatus::ACCEPTED)
           ->setRouteParameter(
             'destination',
-            $this->currentRequest->getRequestUri()),
+            $this->currentRequest->getRequestUri()
+          ),
       ],
     ];
   }
@@ -427,8 +430,15 @@ abstract class AbstractRequestHandler implements HandlerInterface {
 
     // For groups, the user must be GO/GA or SA/SCM.
     if ($entity instanceof GroupInterface) {
+      // If the group is archived, do not authorize any request types except the delete one.
+      if (
+        $entity->get('moderation_state')->value === DefaultContentModerationStates::ARCHIVED_STATE &&
+        $this->getType() !== 'delete'
+      ) {
+        return AccessResult::forbidden();
+      }
+
       $author = $entity->getOwner();
-      /** @var \Drupal\group\Entity\GroupInterface $entity */
       $user_roles = $account->getRoles(TRUE);
       $allowed_global_roles = [
         UserHelper::ROLE_CONTENT_ADMINISTRATOR,
