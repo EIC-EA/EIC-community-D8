@@ -1,7 +1,3 @@
-// import { login, preserveCookie } from "../../../helper/login";
-
-
-
 context("User - invitations", () => {
   before(() => {
     cy.login();
