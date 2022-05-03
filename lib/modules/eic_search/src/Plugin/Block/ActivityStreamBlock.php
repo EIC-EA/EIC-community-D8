@@ -126,7 +126,7 @@ class ActivityStreamBlock extends BlockBase implements ContainerFactoryPluginInt
    * {@inheritdoc}
    */
   public function access(AccountInterface $account, $return_as_object = FALSE) {
-    return AccessResult::allowedIfHasPermission($account, 'access topics activity stream');
+    return AccessResult::allowed();
   }
 
   /**
