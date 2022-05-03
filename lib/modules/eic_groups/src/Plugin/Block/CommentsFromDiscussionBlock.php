@@ -168,10 +168,11 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
 
     $routes_to_ignore = [
       'entity.node.delete_form',
-      'entity.node.edit_form'
+      'entity.node.edit_form',
+      'entity.node.new_request'
     ];
 
-    // Do not show comments block in delete/edit content.
+    // Do not show comments block in delete/edit/request content.
     if (in_array($this->routeMatch->getRouteName(), $routes_to_ignore)) {
       return [
         '#cache' => [
