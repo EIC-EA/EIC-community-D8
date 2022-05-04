@@ -72,6 +72,8 @@ process:
             source: fid
             migration:
               - upgrade_d7_file_document_to_media
+          - plugin: skip_on_empty
+            method: process
   # TODO
   # c4m_document_add_to_library:
   #   - plugin: get
