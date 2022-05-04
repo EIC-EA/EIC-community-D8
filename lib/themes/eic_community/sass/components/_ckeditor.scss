@@ -28,6 +28,29 @@
     }
 
   }
+
+  & img, & iframe{
+    width: 100%;
+    height: auto;
+  }
+
+  & iframe {
+    min-height: 400px;
+  }
+
+  & a {
+    text-decoration: underline;
+    color: $ecl-color-blue;
+    font-weight: 400;
+  }
+
+  & blockquote {
+    @extend .ecl-blockquote;
+    & > * {
+      @extend .ecl-blockquote__body
+    }
+  }
+
   & table {
     width: 100%!important;
     border: 0;

@@ -20,24 +20,29 @@ type_settings:
       default_revision: true
     blocked:
       label: Blocked
-      weight: 4
+      weight: 2
       published: false
       default_revision: true
     draft:
       label: Draft
-      weight: 0
+      weight: -2
       published: false
       default_revision: false
     pending:
       label: Pending
-      weight: 2
+      weight: 0
       published: false
       default_revision: true
     published:
       label: Published
-      weight: 1
+      weight: -1
       published: true
       default_revision: true
+    refused:
+      label: Refused
+      weight: -3
+      published: false
+      default_revision: false
   transitions:
     archive:
       label: Archive
@@ -77,6 +82,12 @@ type_settings:
         - published
       to: published
       weight: 0
+    refuse:
+      label: Refuse
+      from:
+        - pending
+      to: refused
+      weight: 7
     unblock:
       label: Unblock
       from:
@@ -90,7 +101,7 @@ type_settings:
       to: pending
       weight: 1
     upgrade_to_draft:
-      label: 'Upgrade to draft'
+      label: Approve
       from:
         - pending
       to: draft

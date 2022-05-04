@@ -692,6 +692,11 @@ class SolrSearchManager {
       return;
     }
 
+    if (empty($grp_ids)) {
+      $this->rawFieldQuery .= ' AND (' . reset($group_filters_id) . ':("-1"))';
+      return;
+    }
+
     $this->rawFieldQuery .= ' AND (' . reset($group_filters_id) . ':(' . implode(' OR ', $grp_ids) . ' OR "-1"))';
   }
 

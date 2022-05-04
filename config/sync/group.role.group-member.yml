@@ -35,7 +35,6 @@ permissions:
   - 'update own group_node:wiki_page entity'
   - 'view comments'
   - 'view group'
-  - 'view group_membership content'
   - 'view group_node:book entity'
   - 'view group_node:discussion entity'
   - 'view group_node:document entity'

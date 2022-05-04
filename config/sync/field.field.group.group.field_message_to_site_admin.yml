@@ -11,7 +11,7 @@ id: group.group.field_message_to_site_admin
 field_name: field_message_to_site_admin
 entity_type: group
 bundle: group
-label: 'Message to the site administrator'
+label: 'Reason for group creation'
 description: ''
 required: false
 translatable: false

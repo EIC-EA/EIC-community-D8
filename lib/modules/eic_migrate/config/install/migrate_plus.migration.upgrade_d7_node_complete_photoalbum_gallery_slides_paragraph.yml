@@ -19,6 +19,8 @@ process:
       source: nid
       migration:
         - upgrade_d7_node_photo_to_media
+    - plugin: skip_on_empty
+      method: row
 destination:
   plugin: 'entity_reference_revisions:paragraph'
   default_bundle: gallery_slide

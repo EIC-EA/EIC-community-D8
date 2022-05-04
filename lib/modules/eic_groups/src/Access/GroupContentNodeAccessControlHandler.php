@@ -66,7 +66,7 @@ class GroupContentNodeAccessControlHandler extends GroupContentAccessControlHand
 
         // Check if user has access to the group, if not we deny access to the
         // node.
-        if (!$group->access('view')) {
+        if (!$group->access('view', $account)) {
           $access = AccessResult::forbidden()
             ->addCacheableDependency($account)
             ->addCacheableDependency($membership)

@@ -18,7 +18,7 @@ text:
     value: 'Your request to join [message:field_group_ref:entity:title]'
     format: plain_text
   -
-    value: "<p>Dear [message:author:display-name],</p>\r\n\r\n<p>Thank you for requesting membership to&nbsp;<a href=\"[message:field_group_ref:entity:url]\">[message:field_group_ref:entity:title]</a></p>\r\n\r\n<p>Your membership is currently waiting to be approved by one of the [message:field_group_ref:entity:type-name]’s administrators, and should be processed shortly.</p>\r\n\r\n<p>If you have any questions, please feel free to&nbsp;<a href=\"/contact\">contact us</a>; we will be happy to help.</p>\r\n\r\n<p>The EIC Community team</p>\r\n"
+    value: "<p>Dear [message:author:display-name],</p>\r\n\r\n<p>Thank you for requesting membership to&nbsp;<a href=\"[message:field_group_ref:entity:url]\"><u>[message:field_group_ref:entity:title]</u></a></p>\r\n\r\n<p>Your membership is currently waiting to be approved by one of the [message:field_group_ref:entity:type]’s administrators, and should be processed shortly.</p>\r\n\r\n<p>If you have any questions, please feel free to&nbsp;<a href=\"/contact\"><u>contact us</u></a>; we will be happy to help.</p>\r\n\r\n<p>The EIC Community team</p>\r\n"
     format: full_html
 settings:
   'token options':

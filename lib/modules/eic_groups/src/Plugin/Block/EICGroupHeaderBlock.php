@@ -17,7 +17,8 @@ use Drupal\eic_group_statistics\GroupStatisticsHelperInterface;
 use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_groups\EICGroupsHelperInterface;
 use Drupal\eic_groups\GroupsModerationHelper;
-use Drupal\eic_user\UserHelper;
+use Drupal\eic_search\Search\Sources\GroupEventSourceType;
+use Drupal\eic_search\Service\SolrSearchManager;
 use Drupal\flag\FlagServiceInterface;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\group\GroupMembership;
@@ -88,6 +89,13 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
   protected $groupStatisticsHelper;
 
   /**
+   * The solr search manager service.
+   *
+   * @var SolrSearchManager
+   */
+  protected $solrSearchManager;
+
+  /**
    * Constructs a new EICGroupHeaderBlock instance.
    *
    * @param array $configuration
@@ -113,6 +121,8 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
    *   The flag service.
    * @param \Drupal\eic_group_statistics\GroupStatisticsHelperInterface $group_statistics_helper
    *   The group statistics helper service.
+   * @param SolrSearchManager $solr_search_manager
+   *   The solr search manager service.
    */
   public function __construct(
     array $configuration,
@@ -124,7 +134,8 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
     OECGroupFlexHelper $oec_group_flex_helper,
     AccountProxyInterface $current_user,
     FlagServiceInterface $flag_service,
-    GroupStatisticsHelperInterface $group_statistics_helper
+    GroupStatisticsHelperInterface $group_statistics_helper,
+    SolrSearchManager $solr_search_manager
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->routeMatch = $route_match;
@@ -134,6 +145,7 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
     $this->currentUser = $current_user;
     $this->flagService = $flag_service;
     $this->groupStatisticsHelper = $group_statistics_helper;
+    $this->solrSearchManager = $solr_search_manager;
   }
 
   /**
@@ -155,7 +167,8 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
       $container->get('oec_group_flex.helper'),
       $container->get('current_user'),
       $container->get('flag'),
-      $container->get('eic_group_statistics.helper')
+      $container->get('eic_group_statistics.helper'),
+      $container->get('eic_search.solr_search_manager')
     );
   }
 
@@ -285,6 +298,10 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
 
     // Load group statistics from Database.
     $group_statistics = $this->groupStatisticsHelper->loadGroupStatistics($group);
+    $this->solrSearchManager->init(GroupEventSourceType::class, []);
+    $this->solrSearchManager->buildGroupQuery($group->id());
+    $results = $this->solrSearchManager->search();
+    $results = json_decode($results, TRUE);
 
     $build['content'] = [
       '#theme' => 'eic_group_header_block',
@@ -301,7 +318,7 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
           'members' => $group_statistics->getMembersCount(),
           'comments' => $group_statistics->getCommentsCount(),
           'files' => $group_statistics->getFilesCount(),
-          'events' => $group_statistics->getEventsCount(),
+          'events' => !empty($results) ? $results['response']['numFound'] : 0,
         ],
       ],
     ];
