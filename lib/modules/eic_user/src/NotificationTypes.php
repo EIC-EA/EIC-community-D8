@@ -17,6 +17,7 @@ final class NotificationTypes {
     self::COMMENTS_NOTIFICATION_TYPE,
     self::EVENTS_NOTIFICATION_TYPE,
     self::GROUPS_NOTIFICATION_TYPE,
+    self::ORGANISATION_NOTIFICATION_TYPE,
   ];
 
   /**
@@ -26,21 +27,27 @@ final class NotificationTypes {
   const INTEREST_NOTIFICATION_TYPE = 'interest';
 
   /**
-   * Targets the comments notification choice.
+   * Targets the comment notification choice.
    * Value is stored in field 'field_comments_notifications'
    */
   const COMMENTS_NOTIFICATION_TYPE = 'comments';
 
   /**
-   * Targets the events notification choice.
+   * Targets the event notification choice.
    * Value is defined by follow flags.
    */
   const EVENTS_NOTIFICATION_TYPE = 'events';
 
   /**
-   * Targets the groups notification choice.
+   * Targets the group notification choice.
    * Value is defined by follow flags.
    */
   const GROUPS_NOTIFICATION_TYPE = 'groups';
+
+  /**
+   * Targets the organisation notification choice.
+   * Value is defined by follow flags.
+   */
+  const ORGANISATION_NOTIFICATION_TYPE = 'organisations';
 
 }

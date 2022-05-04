@@ -100,6 +100,8 @@ process:
       source: node_gallery_relationship
       migration:
         - upgrade_d7_node_complete_photoalbum_gallery_slides_paragraph
+    - plugin: skip_on_empty
+      method: process
     - plugin: sub_process
       process:
         target_id: '0'

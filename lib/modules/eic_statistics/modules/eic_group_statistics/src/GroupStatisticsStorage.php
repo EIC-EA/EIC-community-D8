@@ -411,8 +411,14 @@ class GroupStatisticsStorage implements GroupStatisticsStorageInterface {
    *   The number of comments in the group.
    */
   private function calculateGroupEventsStatistics(GroupInterface $group) {
-    // @todo Implement logic once we have the group type Event available.
-    return 0;
+    // Query to count number of members.
+    $query_members = $this->connection->select('group_content_field_data', 'gc_fd')
+      ->fields('gc_fd', ['gid'])
+      ->condition('gc_fd.gid', $group->id())
+      ->condition('gc_fd.type', "{$group->bundle()}-group_node-event");
+    $query_members->addExpression('COUNT(gc_fd.entity_id)', 'count');
+
+    return $query_members->execute()->fetchAssoc()['count'];
   }
 
   /**

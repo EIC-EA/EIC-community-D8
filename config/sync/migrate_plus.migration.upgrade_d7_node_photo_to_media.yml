@@ -38,6 +38,9 @@ process:
             migration:
               - upgrade_d7_file
               - upgrade_d7_file_private
+          -
+            plugin: skip_on_empty
+            method: row
 destination:
   plugin: 'entity:media'
   default_bundle: image

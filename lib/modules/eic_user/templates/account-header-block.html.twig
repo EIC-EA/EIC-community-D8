@@ -15,15 +15,14 @@
               updates: user.updates,
               eic_icon_path: icon_file_path
             } %}
-            {% if icon_file_path %}
+            {% if eic_icon_path %}
               {% include "@ecl-twig/ec-component-icon/ecl-icon.html.twig" with {
-                icon: icon_file_path ? {
-                  path: icon_file_path,
+                icon: eic_icon_path ? {
+                  path: eic_icon_path,
                   type: 'ui',
                   name: 'corner-arrow',
                   size: '2xs',
                   transform: "rotate-180",
-                  color: "primary"
                 }
               } %}
             {% endif %}

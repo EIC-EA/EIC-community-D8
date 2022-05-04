@@ -5,6 +5,7 @@ namespace Drupal\eic_search\Search\DocumentProcessor;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManager;
+use Drupal\Core\File\FileUrlGeneratorInterface;
 use Drupal\eic_content\Constants\DefaultContentModerationStates;
 use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_user\UserHelper;
@@ -35,19 +36,27 @@ class ProcessorGlobal extends DocumentProcessor {
   private $nodeStatisticsDatabaseStorage;
 
   /**
+   * @var FileUrlGeneratorInterface $urlGenerator
+   */
+  private $urlGenerator;
+
+  /**
    * @var \Drupal\Core\Entity\EntityTypeManager
    */
   private $em;
 
   /**
    * @param \Drupal\statistics\NodeStatisticsDatabaseStorage $nodeStatisticsDatabaseStorage
+   * @param \Drupal\Core\File\FileUrlGeneratorInterface $urlGenerator
    * @param EntityTypeManager $em
    */
   public function __construct(
     NodeStatisticsDatabaseStorage $nodeStatisticsDatabaseStorage,
+    FileUrlGeneratorInterface $urlGenerator,
     EntityTypeManager $em
   ) {
     $this->nodeStatisticsDatabaseStorage = $nodeStatisticsDatabaseStorage;
+    $this->urlGenerator = $urlGenerator;
     $this->em = $em;
   }
 

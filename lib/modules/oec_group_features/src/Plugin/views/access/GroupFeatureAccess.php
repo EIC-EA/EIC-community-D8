@@ -107,7 +107,7 @@ class GroupFeatureAccess extends AccessPluginBase {
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
    *
-   * @return \Drupal\oec_group_features\Plugin\views\access\GroupFeatureAccess|\Drupal\views\Plugin\views\PluginBase|static
+   * @return \Drupal\oec_group_features\Plugin\views\access\MatchCurrentUserRouteAccess|\Drupal\views\Plugin\views\PluginBase|static
    */
   public static function create(
     ContainerInterface $container,

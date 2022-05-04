@@ -158,6 +158,29 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
       return [];
     }
 
+    $cache_context = [
+      'url.path',
+      'url.query_args',
+      'user.group_permissions',
+      'session',
+      'route',
+    ];
+
+    $routes_to_ignore = [
+      'entity.node.delete_form',
+      'entity.node.edit_form',
+      'entity.node.new_request'
+    ];
+
+    // Do not show comments block in delete/edit/request content.
+    if (in_array($this->routeMatch->getRouteName(), $routes_to_ignore)) {
+      return [
+        '#cache' => [
+          'contexts' => $cache_context,
+        ],
+      ];
+    }
+
     // We need to highlight the top level.
     if (
       $highlighted_comment instanceof CommentInterface &&
@@ -351,13 +374,6 @@ class CommentsFromDiscussionBlock extends BlockBase implements ContainerFactoryP
     ];
 
     $group_id = $current_group_route ? $current_group_route->id() : 0;
-
-    $cache_context = [
-      'url.path',
-      'url.query_args',
-      'user.group_permissions',
-      'session',
-    ];
 
     if ($group_id) {
       $cache_context[] = "user.is_group_member:$group_id";

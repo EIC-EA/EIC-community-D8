@@ -107,6 +107,7 @@ class NotificationsSettingsBlock extends BlockBase implements ContainerFactoryPl
       '#items' => [
         'interest' => $this->getInterestsTab($member_profile),
         'groups' => $this->getGroupsTab($member_profile),
+        'organisations' => $this->getOrganisationsTab($member_profile),
         'events' => $this->getEventsTab($member_profile),
         'comments' => $this->getCommentsTab($member_profile),
       ],
@@ -246,6 +247,31 @@ class NotificationsSettingsBlock extends BlockBase implements ContainerFactoryPl
             'unsubscribe' => TRUE,
             'url' => Url::fromRoute('eic_user.get_notification_settings', [
               'notification_type' => NotificationTypes::GROUPS_NOTIFICATION_TYPE,
+            ]),
+          ],
+        ],
+      ],
+    ];
+  }
+
+  /**
+   * @param \Drupal\profile\Entity\ProfileInterface|null $profile
+   *
+   * @return array
+   */
+  private function getOrganisationsTab(?ProfileInterface $profile): array {
+    return [
+      'title' => $this->t('Your organisation notifications'),
+      'content' => [
+        '#theme' => 'notification_settings',
+        '#data' => [
+          'title' => $this->t('Your organisation notifications'),
+          'body' => $this->t('You receive a periodic notification email for these organisation because you\'re following them.'),
+          'table' => [
+            'title' => $this->t('Organisations'),
+            'unsubscribe' => TRUE,
+            'url' => Url::fromRoute('eic_user.get_notification_settings', [
+              'notification_type' => NotificationTypes::ORGANISATION_NOTIFICATION_TYPE,
             ]),
           ],
         ],
