@@ -206,9 +206,9 @@ class UserHelper {
     $media_picture = $user->get('field_media')->referencedEntities();
     /** @var File|NULL $file */
     $file = $media_picture ? File::load($media_picture[0]->get('oe_media_image')->target_id) : '';
-    $file_url = $file ? file_url_transform_relative(file_create_url($file->get('uri')->value)) : '';
 
-    return $file_url;
+    return $file ? \Drupal::service('file_url_generator')
+      ->transformRelative(file_create_url($file->get('uri')->value)) : '';;
   }
 
   /**
@@ -240,6 +240,29 @@ class UserHelper {
    */
   public function getUserMemberProfile(UserInterface $user) {
     return $this->entityTypeManager->getStorage('profile')->loadByUser($user, ProfileConst::MEMBER_PROFILE_TYPE_NAME);
+  }
+
+  /**
+   * Checks if a user has completed their profile.
+   *
+   * @param \Drupal\user\UserInterface $account
+   *   The user entity.
+   *
+   * @return bool
+   *   TRUE if profile is completed, FALSE otherwise.
+   */
+  public function isUserProfileCompleted(UserInterface $account) {
+    /** @var \Drupal\profile\Entity\ProfileInterface $profile */
+    if (!$profile = $this->getUserMemberProfile($account)) {
+      return FALSE;
+    }
+
+    $violations = $profile->validate();
+    if ($violations->count() > 0) {
+      return FALSE;
+    }
+
+    return TRUE;
   }
 
   /**

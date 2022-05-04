@@ -12,6 +12,10 @@ ignored_config_entities:
   - 'contact.form.contact_form:redirect'
   - system.site
   - search_api_attachments.admin_config
+  - 'raven.settings:public_dsn'
+  - 'raven.settings:environment'
+  - 'raven.settings:release'
+  - 'raven.settings:client_key'
   - 'smtp.settings:smtp_host'
   - 'smtp.settings:smtp_hostbackup'
   - 'smtp.settings:smtp_port'
