@@ -88,9 +88,10 @@ process:
         - upgrade_d7_node_complete_book
         - upgrade_d7_node_complete_discussion
         - upgrade_d7_node_complete_document
+        - upgrade_d7_node_complete_event
         - upgrade_d7_node_complete_news
         - upgrade_d7_node_complete_photoalbum
-        - upgrade_d7_node_complete_pwiki_page
+        - upgrade_d7_node_complete_wiki_page
       no_stub: true
     -
       plugin: skip_on_empty
@@ -104,7 +105,15 @@ destination:
 migration_dependencies:
   required:
     - upgrade_d7_user
-    # TODO: Add the remaining node migration once available.
+    - upgrade_d7_node_complete_group
+    - upgrade_d7_node_complete_organisation
+#    - upgrade_d7_node_complete_event_site
+    - upgrade_d7_node_complete_article
+    - upgrade_d7_node_complete_book
     - upgrade_d7_node_complete_discussion
     - upgrade_d7_node_complete_document
+    - upgrade_d7_node_complete_event
+    - upgrade_d7_node_complete_news
+    - upgrade_d7_node_complete_photoalbum
+    - upgrade_d7_node_complete_wiki_page
   optional: { }
