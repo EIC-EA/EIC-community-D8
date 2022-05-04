@@ -3,5 +3,5 @@ text:
     value: 'Your [message:field_group_ref:entity:type] request on European Innovation Council'
     format: plain_text
   -
-    value: "<p>Dear [message:author:display-name],</p>\r\n\r\n<p>Thank you for requesting the creation of the following [message:field_group_ref:entity:type] at European Innovation Council: <a href=\"[message:field_group_ref:entity:url]\"><u>[message:field_group_ref:entity:title]</u></a>.</p>\r\n\r\n<p>Your request is currently pending review by one of the site's administrators and should be treated shortly.</p>\r\n\r\n<p>If you have any questions, please feel free to <a href=\"mailto:EISMEA-SME-HELPDESK@ec.europa.eu\"><u>contact us</u></a>.</p>\r\n\r\n<p>The EIC Community team</p>\r\n"
+    value: "<p>Dear [message:author:display-name],</p>\r\n\r\n<p>Thank you for requesting the creation of the following [message:field_group_ref:entity:type] at European Innovation Council: <a href=\"[message:field_group_ref:entity:url]\"><u>[message:field_group_ref:entity:title]</u></a>.</p>\r\n\r\n<p>Your request is currently pending review by one of the site's administrators and should be treated shortly.</p>\r\n\r\n<p>If you have any questions, please feel free to <a href=\"[site:url]contact\"><u>contact us</u></a>.</p>\r\n\r\n<p>The EIC Community team</p>\r\n"
     format: full_html
