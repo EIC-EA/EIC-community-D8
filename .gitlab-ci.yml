@@ -54,8 +54,6 @@ stages:
 build_backend:
   stage: build
   image: public.ecr.aws/h5g0v9w1/php-fpm:7.4
-  tags:
-    - itr-hrt
   artifacts:
     untracked: true
     expire_in: '2 hour'
@@ -71,8 +69,6 @@ build_backend:
 build_front:
   stage: build
   image: node:14
-  tags:
-    - itr-hrt
   artifacts:
     untracked: true
     expire_in: '2 hour'
@@ -88,8 +84,6 @@ build_front:
 security_check:
   stage: test
   image: jakzal/phpqa:php7.4
-  tags:
-    - itr-hrt
   script:
     - local-php-security-checker
   only:
@@ -175,8 +169,7 @@ slack_notifier:
 cypress_test_qa:
   stage: cypress
   image: cypress/base:10
-  tags:
-    - itr-hrt
+  allow_failure: true
   artifacts:
     when: always
     untracked: true
