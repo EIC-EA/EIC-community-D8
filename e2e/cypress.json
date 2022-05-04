@@ -1,5 +1,5 @@
 {
-  "baseUrl": "http://localhost",
+  "baseUrl": "http://EIC_apache",
   "reporter": "junit",
   "reporterOptions": {
     "mochaFile": "cypress/results/eic-regressions-[hash].xml"
