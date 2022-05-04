@@ -36,7 +36,7 @@ class MatchCurrentUserRouteAccess implements AccessInterface {
     /** @var \Drupal\user\UserInterface|NULL $route_user */
     $route_user = (int) $this->routeMatch->getParameter('user');
 
-    return $route_user && $account->id() === $route_user ?
+    return $route_user && (int) $account->id() === $route_user ?
       AccessResult::allowed() :
       AccessResult::forbidden();
   }

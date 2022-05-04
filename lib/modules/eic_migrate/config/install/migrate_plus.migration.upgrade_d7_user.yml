@@ -62,6 +62,8 @@ process:
             no_stub: true
             migration:
               - upgrade_d7_file_image_to_media
+          - plugin: skip_on_empty
+            method: process
   field_smed_id: c4m_user_dashboard_id
   field_message_from_service: c4m_message_from_service
   field_updated_profile_by_service:

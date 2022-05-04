@@ -81,6 +81,9 @@ process:
             source: fid
             migration:
               - upgrade_d7_file_document_to_media
+          -
+            plugin: skip_on_empty
+            method: process
   field_document_type:
     -
       plugin: sub_process

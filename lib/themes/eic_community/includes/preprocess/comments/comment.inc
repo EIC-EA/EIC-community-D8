@@ -124,8 +124,11 @@ function eic_community_preprocess_comment(&$variables) {
 
   switch ($view_mode) {
     case 'notification_teaser':
+      $default_avatar = $variables['eic_images_path'] . '/sprite/custom/svg/custom/user_circle.svg';
+      $author_avatar = \Drupal\eic_user\UserHelper::getUserAvatar($author);
+
       $variables['comment']['author']['image'] = [
-        'src' => $variables['eic_images_path'] . '/sprite/custom/svg/custom/user_circle.svg',
+        'src' => !empty($author_avatar) ? $author_avatar : $default_avatar,
         'alt' => $author->getDisplayName(),
       ];
       // Removes unneeded variables from notification teaser.
