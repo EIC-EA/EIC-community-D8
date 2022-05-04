@@ -1,0 +1,33 @@
+uuid: 8ae6f971-bebe-49be-94e4-c2ccb01a39b1
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.message.field_group_ref
+    - group.type.event
+    - group.type.group
+    - group.type.organisation
+    - message.template.notify_group_request_denied
+id: message.notify_group_request_denied.field_group_ref
+field_name: field_group_ref
+entity_type: message
+bundle: notify_group_request_denied
+label: Group
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:group'
+  handler_settings:
+    target_bundles:
+      event: event
+      group: group
+      organisation: organisation
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: event
+field_type: entity_reference

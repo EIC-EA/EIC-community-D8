@@ -110,6 +110,12 @@ content:
       auto_select_parents: '1'
       load_all: 0
       ignore_current_user: 0
+      target_bundles: {  }
+      is_required: false
+      can_create_tag: false
+      search_label: 'Select a value'
+      search_placeholder: Search
+      selected_terms_label: 'Your selected values'
     third_party_settings: {  }
   field_welcome_message:
     type: text_textarea
