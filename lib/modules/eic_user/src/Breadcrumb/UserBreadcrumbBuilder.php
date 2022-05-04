@@ -66,7 +66,7 @@ class UserBreadcrumbBuilder implements BreadcrumbBuilderInterface {
 
     if ($user instanceof UserInterface) {
       $links[] = Link::fromTextAndUrl(
-        $this->t($this->userHelper->getFullName($user), [], ['context' => 'eic_user']),
+        $this->userHelper->getFullName($user),
         $user->toUrl()
       );
     }
