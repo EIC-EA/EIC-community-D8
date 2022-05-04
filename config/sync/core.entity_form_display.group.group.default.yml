@@ -14,12 +14,13 @@ dependencies:
     - field.field.group.group.field_vocab_topics
     - field.field.group.group.field_welcome_message
     - group.type.group
+    - workflows.workflow.groups
   module:
+    - content_moderation
     - eic_content
     - media_library
     - path
     - text
-    - workflow_buttons
 id: group.group.default
 targetEntityType: group
 bundle: group
@@ -145,11 +146,10 @@ content:
       include_locked: true
     third_party_settings: {  }
   moderation_state:
-    type: workflow_buttons
+    type: moderation_state_default
     weight: 3
     region: content
-    settings:
-      show_current_state: '1'
+    settings: {  }
     third_party_settings: {  }
   path:
     type: path
