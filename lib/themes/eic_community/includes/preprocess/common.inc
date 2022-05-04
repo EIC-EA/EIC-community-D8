@@ -314,6 +314,10 @@ function _eic_community_get_term_parents(TermInterface $term, array $loaded_pare
  */
 function _eic_community_process_term_parents_tree(TermInterface $term, array $terms, array $loaded_parents) {
   $parent = array_shift($loaded_parents);
+  if (!$parent) {
+    return [];
+  }
+  
   if (!isset($terms[$parent->id()])) {
     $terms[$parent->id()]['term'] = $parent;
     $terms[$parent->id()]['title'] = $parent->getName();
