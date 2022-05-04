@@ -11,6 +11,7 @@
 
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Url;
 use Drupal\eic_content\Hooks\EntityOperations;
 use Drupal\eic_content\Hooks\EntityOperationsContributor;
 use Drupal\node\NodeInterface;
@@ -34,7 +35,12 @@ function eic_content_theme() {
 /**
  * Implements hook_ENTITY_TYPE_view().
  */
-function eic_content_node_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
+function eic_content_node_view(
+  array &$build,
+  EntityInterface $entity,
+  EntityViewDisplayInterface $display,
+  $view_mode
+) {
   \Drupal::classResolver(EntityOperations::class)
     ->nodeView($build, $entity, $display, $view_mode);
 
@@ -81,4 +87,37 @@ function eic_content_views_data() {
   ];
 
   return $data;
+}
+
+/**
+ * Implements hook_metatags_attachments_alter().
+ */
+function eic_content_metatags_attachments_alter(array &$metatag_attachments) {
+  $attachments = $metatag_attachments['#attached']['html_head'];
+  if (!$attachments) {
+    return;
+  }
+
+  $attachments = array_filter($attachments, function ($attachment) {
+    [, $name] = $attachment;
+    return strpos($name, 'og_image') !== FALSE;
+  });
+
+  if (!empty($attachments)) {
+    return;
+  }
+
+  $default_image_path = \Drupal::service('extension.path.resolver')
+      ->getPath('theme', 'eic_community') . '/screenshot.png';
+  // No og_image is provided, add a default one
+  $metatag_attachments['#attached']['html_head'][] = [
+    [
+      '#tag' => 'meta',
+      '#attributes' => [
+        'property' => 'og:image',
+        'content' => Url::fromUserInput("/$default_image_path", ['absolute' => TRUE])->toString(),
+      ],
+    ],
+    'og_image_0',
+  ];
 }
