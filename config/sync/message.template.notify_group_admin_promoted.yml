@@ -15,10 +15,10 @@ label: 'NOTIFY :: MT09 :: Group admin promoted'
 description: ''
 text:
   -
-    value: 'You are now administrator for [message:field_group_ref:entity:type-name]: [message:field_group_ref:entity:title]'
+    value: 'You are now administrator for [message:field_group_ref:entity:type]: [message:field_group_ref:entity:title]'
     format: plain_text
   -
-    value: "<p>Dear <a href=\"[message:author:url]\"><u>[message:author:display-name]</u></a>,</p>\r\n\r\n<p>You are now an administrator of the [message:field_group_ref:entity:type-name]&nbsp;<a href=\"[message:field_group_ref:entity:url]\"><u>[message:field_group_ref:entity:title]</u></a></p>\r\n\r\n<p>Discover new functionalities and find out how you can administer this [message:field_group_ref:entity:type-name] by consulting the following&nbsp;<a href=\"[site:url]help-and-guidance\"><u>help section</u></a>.</p>\r\n\r\n<p>If you have any questions about your role as administrator, please feel free to&nbsp;<a href=\"[message:field_group_owner:entity:url]/contact\"><u>contact me</u></a>.<br />\r\n<br />\r\n<a href=\"[message:field_group_owner:entity:url]\"><u>[message:field_group_owner:entity:display-name]</u></a><br />\r\n[message:field_group_ref:entity:type-name] Administrator -&nbsp;<a href=\"[message:field_group_ref:entity:url]\"><u>[message:field_group_ref:entity:title]</u></a></p>\r\n"
+    value: "<p>Dear <a href=\"[message:author:url]\"><u>[message:author:display-name]</u></a>,</p>\r\n\r\n<p>You are now an administrator of the [message:field_group_ref:entity:type]&nbsp;<a href=\"[message:field_group_ref:entity:url]\"><u>[message:field_group_ref:entity:title]</u></a></p>\r\n\r\n<p>Discover new functionalities and find out how you can administer this [message:field_group_ref:entity:type] by consulting the following&nbsp;<a href=\"[site:url]help-and-guidance\"><u>help section</u></a>.</p>\r\n\r\n<p>If you have any questions about your role as administrator, please feel free to&nbsp;<a href=\"[message:field_group_owner:entity:url]/contact\"><u>contact me</u></a>.<br />\r\n<br />\r\n<a href=\"[message:field_group_owner:entity:url]\"><u>[message:field_group_owner:entity:display-name]</u></a><br />\r\n[message:field_group_ref:entity:type-name] Administrator -&nbsp;<a href=\"[message:field_group_ref:entity:url]\"><u>[message:field_group_ref:entity:title]</u></a></p>\r\n"
     format: full_html
 settings:
   'token options':
