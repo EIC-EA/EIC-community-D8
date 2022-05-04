@@ -9,8 +9,8 @@ function eic_share_content_theme() {
   return [
     'eic_share_content_link' => [
       'variables' => [
-        'groups' => [],
         'endpoint' => NULL,
+        'get_groups_url' => NULL,
       ],
     ],
   ];

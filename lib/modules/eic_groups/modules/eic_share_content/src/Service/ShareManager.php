@@ -261,7 +261,11 @@ class ShareManager {
    *
    * @throws \Drupal\Core\TypedData\Exception\MissingDataException
    */
-  public function getShareableTargetGroupsForUser(AccountInterface $account, GroupInterface $source_group, array $visibility_types = [GroupVisibilityType::GROUP_VISIBILITY_PUBLIC]) {
+  public function getShareableTargetGroupsForUser(
+    AccountInterface $account,
+    GroupInterface $source_group,
+    array $visibility_types = [GroupVisibilityType::GROUP_VISIBILITY_PUBLIC]
+  ): array {
     $groups = [];
     $unfiltered_groups = [];
 
@@ -274,7 +278,7 @@ class ShareManager {
         }
       }
     }
-    // Otherwise we get only groups the user is member of.
+    // Otherwise, we get only groups the user is member of.
     else {
       /** @var \Drupal\group\GroupMembership $group_membership */
       foreach ($this->groupMembershipLoader->loadByUser($account) as $group_membership) {
