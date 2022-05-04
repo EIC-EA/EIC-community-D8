@@ -10,3 +10,8 @@ services:
     arguments: ['@config.factory', '@eic_user_login.smed_user_manager', '@eic_user_login.smed_user_connection']
     tags:
       - { name: event_subscriber }
+  eic_user_login.request_event_subscriber:
+    class: Drupal\eic_user_login\EventSubscriber\RequestEventSubscriber
+    arguments: ['@tempstore.private', '@current_user']
+    tags:
+      - { name: event_subscriber }

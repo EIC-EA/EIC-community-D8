@@ -3,5 +3,8 @@
   "reporter": "junit",
   "reporterOptions": {
     "mochaFile": "cypress/results/eic-regressions-[hash].xml"
+  },
+  "env": {
+    "USER_ID_CYPRESS": 15530
   }
 }

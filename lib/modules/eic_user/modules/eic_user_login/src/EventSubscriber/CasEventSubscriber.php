@@ -5,6 +5,7 @@ namespace Drupal\eic_user_login\EventSubscriber;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\cas\Event\CasPreLoginEvent;
 use Drupal\cas\Event\CasPreRegisterEvent;
+use Drupal\cas\Event\CasPreUserLoadEvent;
 use Drupal\cas\Service\CasHelper;
 use Drupal\Core\Messenger\MessengerTrait;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
@@ -70,6 +71,7 @@ class CasEventSubscriber implements EventSubscriberInterface {
     return [
       CasHelper::EVENT_PRE_REGISTER => ['userPreRegister'],
       CasHelper::EVENT_PRE_LOGIN => ['userPreLogin'],
+      CasHelper::EVENT_PRE_USER_LOAD => ['userPreLoad'],
     ];
   }
 
@@ -138,6 +140,26 @@ class CasEventSubscriber implements EventSubscriberInterface {
     catch (SmedUserLoginException $e) {
       $event->cancelLogin($e->getUserMessage());
     }
+  }
+
+  /**
+   * React on the pre user load event.
+   *
+   * Due to EIC specificities, we need to use the email address as cas username
+   * instead of the real EU Login ID.
+   * So we modify the returned property directly from after validation.
+   *
+   * @param \Drupal\cas\Event\CasPreUserLoadEvent $event
+   *   Cas per user load event.
+   */
+  public function userPreLoad(CasPreUserLoadEvent $event) {
+    $property_bag = $event->getCasPropertyBag();
+
+    // Store the real username in a new property.
+    $property_bag->setAttribute('_real_username', $property_bag->getUsername());
+
+    // Replace the username with the email address.
+    $property_bag->setUsername($property_bag->getAttribute('email'));
   }
 
   /**

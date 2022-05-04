@@ -4,7 +4,6 @@ namespace Drupal\eic_migrate\Plugin\migrate\source;
 
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\State\StateInterface;
-use Drupal\file\Plugin\migrate\source\d7\File;
 use Drupal\migrate\Plugin\MigrationInterface;
 
 /**
@@ -27,7 +26,7 @@ use Drupal\migrate\Plugin\MigrationInterface;
  *   source_module = "file"
  * )
  */
-class FileComplete extends File {
+class FileComplete extends FieldableFile {
 
   /**
    * The file type to select.
