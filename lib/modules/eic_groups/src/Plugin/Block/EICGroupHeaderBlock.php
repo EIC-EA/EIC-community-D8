@@ -12,6 +12,7 @@ use Drupal\Core\Render\Markup;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\Url;
+use Drupal\eic_content\Constants\DefaultContentModerationStates;
 use Drupal\eic_group_statistics\GroupStatisticsHelperInterface;
 use Drupal\eic_groups\EICGroupsHelper;
 use Drupal\eic_groups\EICGroupsHelperInterface;
@@ -374,6 +375,10 @@ class EICGroupHeaderBlock extends BlockBase implements ContainerFactoryPluginInt
    *   A renderable array of flag links.
    */
   private function getGroupFlagLinks(GroupInterface $group) {
+    if ($group->get('moderation_state')->value === DefaultContentModerationStates::ARCHIVED_STATE) {
+      return [];
+    }
+
     $group_flags = [];
 
     $group_flag_ids = self::getGroupHeaderFlagsIds();

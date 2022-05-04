@@ -15,8 +15,8 @@ type_settings:
   states:
     archived:
       label: Archived
-      weight: 1
-      published: false
+      weight: 3
+      published: true
       default_revision: true
     blocked:
       label: Blocked
@@ -57,7 +57,7 @@ type_settings:
       to: blocked
       weight: 4
     create_new_group:
-      label: 'Update group'
+      label: 'Create new group'
       from:
         - pending
       to: pending
