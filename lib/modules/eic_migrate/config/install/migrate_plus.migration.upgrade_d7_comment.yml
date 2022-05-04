@@ -18,17 +18,17 @@ source:
     comment_type: node_comment
     field_name: field_comments
 process:
-#  cid:
-#    - plugin: get
-#      source: cid
   pid:
-    - plugin: skip_on_empty
+    -
+      plugin: skip_on_empty
       method: process
       source: pid
-    - plugin: migration_lookup
+    -
+      plugin: migration_lookup
       migration: upgrade_d7_comment
   entity_id:
-    - plugin: migration_lookup
+    -
+      plugin: migration_lookup
       source: nid
       migration:
         - upgrade_d7_node_complete_article
@@ -37,26 +37,31 @@ process:
         - upgrade_d7_node_complete_news
         - upgrade_d7_node_complete_wiki_page
         - upgrade_d7_node_complete_event
-    - plugin: node_complete_node_lookup
-    - plugin: skip_on_empty
+        - upgrade_d7_node_complete_photoalbum
+    -
+      plugin: node_complete_node_lookup
+    -
+      plugin: skip_on_empty
       method: row
   entity_type: constants/entity_type
   comment_type: constants/comment_type
   langcode:
-    - plugin: static_map
+    -
+      plugin: static_map
       source: language
       bypass: true
       map:
         und: en
-    - plugin: default_value
+    -
+      plugin: default_value
       default_value: en
   field_name: constants/field_name
   subject: subject
   uid:
-    - plugin: migration_lookup
-      source: uid
-      migration:
-        - upgrade_d7_user
+    plugin: migration_lookup
+    source: uid
+    migration:
+      - upgrade_d7_user
   name: name
   mail: mail
   homepage: homepage
@@ -65,15 +70,10 @@ process:
   changed: changed
   status: status
   thread: thread
-  'comment_body/value':
-    plugin: extract
-    source: comment_body
-    index:
-      - 0
-      - value
-  'comment_body/format':
+  comment_body/value: comment_body/0/value
+  comment_body/format:
     plugin: default_value
-    default_value: 'basic_text'
+    default_value: basic_text
 destination:
   plugin: 'entity:comment'
 migration_dependencies:
@@ -85,4 +85,5 @@ migration_dependencies:
     - upgrade_d7_node_complete_news
     - upgrade_d7_node_complete_wiki_page
     - upgrade_d7_node_complete_event
-  optional: { }
+    - upgrade_d7_node_complete_photoalbum
+  optional: {  }

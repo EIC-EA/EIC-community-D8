@@ -73,6 +73,9 @@ process:
             source: fid
             migration:
               - upgrade_d7_file_image_to_media
+          -
+            plugin: skip_on_empty
+            method: process
   field_body: c4m_body
   field_welcome_message: c4m_group_welcome_message
   field_thumbnail:
@@ -86,6 +89,9 @@ process:
             source: fid
             migration:
               - upgrade_d7_file_image_to_media
+          -
+            plugin: skip_on_empty
+            method: process
   field_vocab_geo:
     -
       plugin: sub_process
