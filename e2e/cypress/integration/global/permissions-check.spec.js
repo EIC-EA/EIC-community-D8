@@ -15,8 +15,9 @@ context('Permissions', () => {
     cy.visit('/groups/cypress-do-not-edit/library')
     cy.wait(500);
     cy.scrollTo(0, 300);
-    cy.get("#group-overview .ecl-collapsible-options__trigger .ecl-button__label").should('exist');
+    cy.get("#group-overview .ecl-collapsible-options--actions").should('exist');
   })
 
 })
+
 
