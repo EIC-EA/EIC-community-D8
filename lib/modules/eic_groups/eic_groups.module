@@ -280,6 +280,18 @@ function eic_groups_form_group_form_alter(&$form, FormStateInterface $form_state
 
     $moderation_state = $entity->get('moderation_state')->value;
 
+    //If we are in pending state and we just want to update the current group,
+    //change the transition label from "Create group" to "Update group"
+    if (
+      !$entity->isNew() &&
+      isset($form['moderation_state']['widget'][0]['#options'][GroupsModerationHelper::GROUP_PENDING_STATE])
+    ) {
+      $form['moderation_state']['widget'][0]['#options'][GroupsModerationHelper::GROUP_PENDING_STATE] = t(
+        'Update group', [],
+        ['context' => 'eic_groups']
+      );
+    }
+
     // If the group is not yet blocked, we remove the possibility to block it
     // from the group edit form.
     if ($moderation_state !== GroupsModerationHelper::GROUP_BLOCKED_STATE) {

@@ -101,7 +101,7 @@ type_settings:
       to: pending
       weight: 1
     upgrade_to_draft:
-      label: 'Upgrade to draft'
+      label: Approve
       from:
         - pending
       to: draft
