@@ -62,7 +62,7 @@ process:
       plugin: node_complete_node_translation_lookup
     -
       plugin: skip_on_empty
-      method: process
+      method: row
   global: global
   uid:
     -
