@@ -8,7 +8,7 @@ use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Row;
 
 /**
- * Drupal 7 URL aliases source from database.
+ * Drupal 7 flag taxonomy terms source from database.
  *
  * @MigrateSource(
  *   id = "eic_d7_flag_taxonomy_term_with_smed_ids",

@@ -5,11 +5,10 @@ namespace Drupal\eic_migrate\Plugin\migrate\source;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\State\StateInterface;
 use Drupal\migrate\Plugin\MigrationInterface;
-use Drupal\migrate\Row;
 use Drupal\migrate_drupal\Plugin\migrate\source\d7\FieldableEntity;
 
 /**
- * Drupal 7 URL aliases source from database.
+ * Drupal 7 flags source from database.
  *
  * @MigrateSource(
  *   id = "eic_d7_flag",
@@ -86,20 +85,6 @@ class Flag extends FieldableEntity {
         'alias' => 'fgid',
       ],
     ];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function prepareRow(Row $row) {
-    // We need to transform entity type into group for group nodes that come
-    // from the D7. This can be achieve by checking the flag type (in this case
-    // it's the "subscribe_c4m_follow_group").
-    if ($row->getSourceProperty('flag_type') === 'subscribe_c4m_follow_group') {
-      $row->setSourceProperty('entity_type', 'group');
-    }
-
-    return parent::prepareRow($row);
   }
 
 }

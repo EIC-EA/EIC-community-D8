@@ -2,17 +2,18 @@ uuid: e082961a-685a-48bc-b8fb-a01ec1507154
 langcode: en
 status: true
 dependencies: {  }
-id: upgrade_d7_flag_likes
+id: upgrade_d7_flag_like_node
 class: Drupal\migrate\Plugin\Migration
 field_plugin_method: null
 cck_plugin_method: null
 migration_tags:
   - 'Drupal 7'
   - Content
+  - Flags
 migration_group: migrate_drupal_7
 label: Flags
 source:
-  plugin: eic_d7_flag
+  plugin: eic_d7_flag_exclude_node_types
   track_changes: true
   constants:
     excluded_flags:
@@ -22,6 +23,10 @@ source:
       - subscribe_c4m_follow_content
       - subscribe_c4m_follow_group
       - subscribe_c4m_follow_term
+    excluded_node_types:
+      - event_site
+      - group
+      - organisation
 process:
   flag_id:
     -
@@ -29,8 +34,9 @@ process:
       source: flag_type
       map:
         c4m_og_content_recommend: like_content
-        c4m_og_content_recommend_group: recommend_group
-  entity_type: entity_type
+  entity_type:
+    plugin: default_value
+    default_value: node
   entity_id:
     -
       plugin: migration_lookup
@@ -43,9 +49,6 @@ process:
         - upgrade_d7_node_complete_wiki_page
         - upgrade_d7_node_complete_event
         - upgrade_d7_node_complete_photoalbum
-        - upgrade_d7_node_complete_group
-        - upgrade_d7_node_complete_event_site
-        - upgrade_d7_node_complete_organisation
     -
       plugin: node_complete_node_translation_lookup
     -
@@ -69,7 +72,4 @@ migration_dependencies:
     - upgrade_d7_node_complete_wiki_page
     - upgrade_d7_node_complete_event
     - upgrade_d7_node_complete_photoalbum
-    - upgrade_d7_node_complete_group
-    - upgrade_d7_node_complete_event_site
-    - upgrade_d7_node_complete_organisation
   optional: {  }
