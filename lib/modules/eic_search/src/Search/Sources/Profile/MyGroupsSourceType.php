@@ -63,7 +63,7 @@ class MyGroupsSourceType extends SourceType {
         'label' => $this->t('Recently updated', [], ['context' => 'eic_search']),
         'DESC' => $this->t('Recent', [], ['context' => 'eic_search']),
       ],
-      'tm_global_title' => [
+      'ss_global_title' => [
         'label' => $this->t('Group label', [], ['context' => 'eic_search']),
         'ASC' => $this->t('Group label A-Z', [], ['context' => 'eic_search']),
         'DESC' => $this->t('Group label Z-A', [], ['context' => 'eic_search']),

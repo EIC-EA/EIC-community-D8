@@ -232,6 +232,7 @@ class ProcessorGlobal extends DocumentProcessor {
 
     //We need to use only one field key for the global search on the FE side
     $document->addField('tm_global_title', $title);
+    $document->addField('ss_global_title', $title);
     $document->addField('ss_global_content_type', $type);
     $document->addField(
       'ss_global_content_type_label',

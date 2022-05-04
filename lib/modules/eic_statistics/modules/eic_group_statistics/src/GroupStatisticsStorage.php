@@ -6,6 +6,7 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\group\Entity\GroupInterface;
+use Drupal\node\NodeInterface;
 
 /**
  * Provides the default storage backend for Group statistics.
@@ -408,17 +409,19 @@ class GroupStatisticsStorage implements GroupStatisticsStorageInterface {
    *   The Group entity.
    *
    * @return int
-   *   The number of comments in the group.
+   *   The number of events in the group.
    */
-  private function calculateGroupEventsStatistics(GroupInterface $group) {
+  public function calculateGroupEventsStatistics(GroupInterface $group) {
     // Query to count number of members.
-    $query_members = $this->connection->select('group_content_field_data', 'gc_fd')
+    $query_events = $this->connection->select('group_content_field_data', 'gc_fd')
       ->fields('gc_fd', ['gid'])
+      ->condition('nfd.status', NodeInterface::PUBLISHED)
       ->condition('gc_fd.gid', $group->id())
       ->condition('gc_fd.type', "{$group->bundle()}-group_node-event");
-    $query_members->addExpression('COUNT(gc_fd.entity_id)', 'count');
+    $query_events->join('node_field_data', 'nfd', 'nfd.nid = gc_fd.entity_id');
+    $query_events->addExpression('COUNT(gc_fd.entity_id)', 'count');
 
-    return $query_members->execute()->fetchAssoc()['count'];
+    return $query_events->execute()->fetchAssoc()['count'];
   }
 
   /**

@@ -46,7 +46,7 @@ reactions:
           ss_group_user_fullname: 0
         sort_options:
           ss_global_created_date: ss_global_created_date
-          tm_global_title: tm_global_title
+          ss_global_title: ss_global_title
           its_document_download_total: its_document_download_total
           its_statistics_view: its_statistics_view
           its_content_comment_count: its_content_comment_count
