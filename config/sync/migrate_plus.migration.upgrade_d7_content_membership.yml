@@ -72,7 +72,7 @@ process:
       migration:
         - upgrade_d7_node_complete_group
         - upgrade_d7_node_complete_organisation
-        - upgrade_d7_node_complete_event
+        - upgrade_d7_node_complete_event_site
       no_stub: true
     -
       plugin: skip_on_empty
@@ -96,6 +96,12 @@ process:
       plugin: skip_on_empty
       method: row
       message: 'Node not found'
+    -
+      plugin: callback
+      callable: array_filter
+    -
+      plugin: skip_on_empty
+      method: row
   created: created
   changed: created
 destination:
@@ -105,6 +111,7 @@ migration_dependencies:
     - upgrade_d7_user
     - upgrade_d7_node_complete_group
     - upgrade_d7_node_complete_organisation
+    - upgrade_d7_node_complete_event_site
     - upgrade_d7_node_complete_article
     - upgrade_d7_node_complete_book
     - upgrade_d7_node_complete_discussion
