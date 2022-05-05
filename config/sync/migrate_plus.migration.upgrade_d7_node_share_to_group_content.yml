@@ -23,11 +23,18 @@ process:
       entity_type: node
     -
       plugin: migration_lookup
-      migration: upgrade_d7_node_complete_group
+      migration:
+        - upgrade_d7_node_complete_group
+        - upgrade_d7_node_complete_organisation
+        - upgrade_d7_node_complete_event_site
       no_stub: true
     -
       plugin: skip_on_empty
       method: row
+    -
+      plugin: extract
+      index:
+        - 0
     -
       plugin: eic_d7_node_share_group_content_type
   entity_id:
@@ -60,7 +67,10 @@ process:
       entity_type: node
     -
       plugin: migration_lookup
-      migration: upgrade_d7_node_complete_group
+      migration:
+        - upgrade_d7_node_complete_group
+        - upgrade_d7_node_complete_organisation
+        - upgrade_d7_node_complete_event_site
       no_stub: true
   created: created
   changed: changed
@@ -78,4 +88,6 @@ migration_dependencies:
     - upgrade_d7_node_complete_book
     - upgrade_d7_node_photo_to_media
     - upgrade_d7_node_complete_photoalbum
+    - upgrade_d7_node_complete_organisation
+    - upgrade_d7_node_complete_event_site
   optional: {  }
