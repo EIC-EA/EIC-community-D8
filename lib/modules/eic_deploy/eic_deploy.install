@@ -234,3 +234,12 @@ function eic_deploy_update_9006(&$sandbox) {
 
   eic_deploy_add_group_permissions_to_role($new_permissions, $roles, $group_visibilities);
 }
+
+/**
+ * Update all group statistics.
+ */
+function eic_deploy_update_9007(&$sandbox) {
+  /** @var \Drupal\eic_group_statistics\GroupStatisticsHelper $group_statistics_command */
+  $group_statistics_command = \Drupal::service('eic_group_statistics.helper');
+  $group_statistics_command->updateAllGroupsStatistics();
+}

@@ -1,6 +1,6 @@
 {% set title_element = title_element|default('h2') %}
 
-<section class="ecl-section-wrapper {{ invert ? 'ecl-section-wrapper--is-white' : 'ecl-section-wrapper--is-grey ecl-auth-banner' }} {{ extra_classes }}">
+<section class="ecl-section-wrapper {{ invert ? 'ecl-section-wrapper--is-white' : 'ecl-section-wrapper--is-grey ecl-auth-banner ecl-auth-banner--is-compact' }} {{ extra_classes }}">
   <div class="ecl-container">
     <div class="ecl-auth-banner__wrapper">
       {% block before %}{% endblock %}

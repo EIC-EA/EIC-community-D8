@@ -61,7 +61,7 @@ class NewsStorySourceType extends SourceType {
         'label' => $this->t('Created date', [], ['context' => 'eic_search']),
         'DESC' => $this->t('Most recent', [], ['context' => 'eic_search']),
       ],
-      'tm_global_title' => [
+      'ss_global_title' => [
         'label' => $this->t('Title', [], ['context' => 'eic_search']),
         'ASC' => $this->t('Title A-Z', [], ['context' => 'eic_search']),
         'DESC' => $this->t('Title Z-A', [], ['context' => 'eic_search']),

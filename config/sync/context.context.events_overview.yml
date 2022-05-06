@@ -43,7 +43,7 @@ reactions:
           ss_group_user_fullname: 0
         sort_options:
           timestamp: timestamp
-          tm_global_title: tm_global_title
+          ss_global_title: ss_global_title
           its_last_flagged_like_content: its_last_flagged_like_content
           ss_group_user_fullname: 0
         enable_search: 1

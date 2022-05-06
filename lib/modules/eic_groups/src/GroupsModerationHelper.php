@@ -10,6 +10,13 @@ use Drupal\group\Entity\GroupInterface;
 class GroupsModerationHelper {
 
   /**
+   * The refused state key for Group group type.
+   *
+   * @var string
+   */
+  const GROUP_REFUSED_STATE = 'refused';
+
+  /**
    * The pending state key for Group group type.
    *
    * @var string
